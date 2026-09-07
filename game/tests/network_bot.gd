@@ -29,7 +29,10 @@ var authority_probe_sent := false
 const Cosmetics = preload("res://scripts/cosmetics.gd")
 const Invite = preload("res://scripts/invitation.gd")
 const Brain = preload("res://scripts/bot_brain.gd")
+const PrivacyAudit = preload("res://tests/network_privacy_audit.gd")
 var pilot: RefCounted
+var privacy_audit := PrivacyAudit.new()
+var finishing := false
 
 func _ready() -> void:
 	network.local_cosmetics = Cosmetics.sanitize({"human":{"color": 3, "accessory": 1}, "mosquito":{"color": 4, "accessory": 2}})
@@ -136,7 +139,7 @@ func _lobby(data: Dictionary) -> void:
 	if str(me.get("role", "")) != "waiting":
 		report.errors.append("role assigned before round")
 	report["cosmetics_synced"] = me.get("cosmetics", {}) == network.local_cosmetics
-	if lobby_age < 2.0:
+	if lobby_age < 3.5 or not (report.lobby_movement_seen and report.lobby_jump_seen and report.lobby_crouch_seen and report.lobby_sprint_seen):
 		return
 	if not bool(me.get("ready", false)):
 		network.lobby_action("ready", true)
@@ -148,10 +151,7 @@ func _lobby(data: Dictionary) -> void:
 func _snapshot(data: Dictionary) -> void:
 	public_state = data
 	report.snapshots += 1
-	for id: int in data.get("actors", {}):
-		for key: String in ["assignment", "zone", "target", "rotation_at", "next_rotation", "blocked_zone", "focus"]:
-			if data.actors[id].has(key):
-				report.privacy_ok = false
+	privacy_audit.record_public(data,local_id)
 	if str(data.get("phase", "")) == "playing":
 		if not started:
 			pilot = Brain.new()
@@ -196,15 +196,15 @@ func _snapshot(data: Dictionary) -> void:
 			get_tree().create_timer(0.7).timeout.connect(_finish)
 
 func _private(data: Dictionary) -> void:
+	if finishing:
+		return
+	privacy_audit.record_private(data)
 	personal = data
 	if data.get("focus",{}).get("state","") == "charging":
 		report["focus_seen"] = true
 	report.private_packets += 1
-	var role := str(public_state.get("actors", {}).get(local_id, {}).get("role", ""))
 	if not data.get("assignment", {}).is_empty():
 		report.private_assignment_seen = true
-		if role != "mosquito":
-			report.privacy_ok = false
 
 func _process(dt: float) -> void:
 	elapsed += dt
@@ -217,7 +217,12 @@ func _process(dt: float) -> void:
 		lobby_age += dt
 		if not started and not roster.is_empty():
 			input_seq += 1
-			network.send_input(input_seq, Vector3(0.0, 0, 0.5) if lobby_age < 1.5 else Vector3.ZERO, 0.0, 0.0, false, lobby_age < 0.9, lobby_age > 1.0 and lobby_age < 1.6, lobby_age > 0.2 and lobby_age < 0.4)
+			# Advance after authoritative acknowledgement, not a narrow wall-clock
+			# pulse that can disappear while sixteen processes start together.
+			var moving := not (report.lobby_movement_seen and report.lobby_sprint_seen)
+			var jumping := not moving and not bool(report.lobby_jump_seen)
+			var crouching := not moving and not jumping and not bool(report.lobby_crouch_seen)
+			network.send_input(input_seq, Vector3(0.0,0,0.5) if moving else Vector3.ZERO, 0.0,0.0,false,moving,crouching,jumping and fmod(lobby_age,1.5)<1.0)
 		lobby_retry += dt
 		if not started and not roster.is_empty() and lobby_retry > 0.75:
 			lobby_retry = 0.0
@@ -226,7 +231,6 @@ func _process(dt: float) -> void:
 		return
 	if options.has("disconnect-after") and elapsed > float(options["disconnect-after"]):
 		report["intentional_disconnect"] = true
-		network.close_client()
 		_finish()
 		return
 	control_accumulator += dt
@@ -250,7 +254,21 @@ func act(verb: String) -> void:
 	action_delay = 0.5
 
 func _finish() -> void:
+	if finishing:
+		return
+	finishing = true
 	set_process(false)
+	# Freeze private observations, then wait for the corresponding public ticks.
+	# An unresolved packet makes this test fail instead of silently passing it.
+	for attempt: int in range(20):
+		if privacy_audit.pending_count() == 0:
+			break
+		await get_tree().create_timer(0.1).timeout
+	report.privacy_ok = privacy_audit.ok()
+	report["privacy_failures"] = privacy_audit.failures.duplicate()
+	report["privacy_pending"] = privacy_audit.pending_count()
+	report["privacy_deferred"] = privacy_audit.deferred_count
+	report["privacy_matched"] = privacy_audit.matched_count
 	report["peer_id"] = local_id
 	report["elapsed"] = elapsed
 	var report_path := str(options.get("report", ""))

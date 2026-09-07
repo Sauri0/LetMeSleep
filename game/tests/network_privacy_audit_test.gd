@@ -1,0 +1,82 @@
+extends SceneTree
+
+const Audit = preload("res://tests/network_privacy_audit.gd")
+var checks := 0
+var failures := 0
+
+func check(condition: bool, label: String) -> void:
+	checks += 1
+	if not condition:
+		failures += 1
+		printerr("NETWORK_PRIVACY_AUDIT_FAIL " + label)
+
+func public_packet(tick: int, role: String, phase: String = "playing") -> Dictionary:
+	return {"tick": tick, "phase": phase, "actors": {42: {"role": role, "alive": true, "threatened": false, "bitten": false}, 77: {"role": "human"}}}
+
+func _initialize() -> void:
+	var first = Audit.new()
+	first.record_private({"tick": 12, "assignment": {"human": 77, "zone": 3}})
+	check(first.pending_count() == 1 and first.failures.is_empty() and not first.ok(), "private before first public is pending, not a human leak or a premature pass")
+	first.record_public(public_packet(11, "mosquito"), 42)
+	check(first.pending_count() == 1 and first.matched_count == 0, "older public evidence cannot release a future private tick")
+	first.record_public(public_packet(12, "mosquito"), 42)
+	check(first.ok() and first.pending_count() == 0 and first.deferred_count == 1 and first.matched_count == 1, "matching first mosquito snapshot validates deferred assignment once")
+
+	var next_round = Audit.new()
+	next_round.record_public(public_packet(100, "human"), 42)
+	next_round.record_private({"tick": 201, "assignment": {"zone": 4}})
+	check(next_round.pending_count() == 1 and next_round.failures.is_empty(), "old human role cannot condemn a private packet from a future round")
+	next_round.record_public(public_packet(180, "human", "results"), 42)
+	next_round.record_public(public_packet(200, "waiting", "waiting"), 42)
+	check(next_round.pending_count() == 1 and not next_round.ok(), "older results and lobby do not validate next-round assignment")
+	next_round.record_public(public_packet(202, "mosquito"), 42)
+	check(next_round.ok() and next_round.matched_count == 1, "new-round mosquito evidence resolves packet despite skipped exact public tick")
+
+	var leak = Audit.new()
+	leak.record_public(public_packet(50, "human"), 42)
+	leak.record_private({"tick": 50, "assignment": {"zone": 7}})
+	check(not leak.ok() and leak.failures.size() == 1 and leak.pending_count() == 0, "assignment actually delivered to a human is a proven failure")
+	leak.record_public(public_packet(70, "mosquito"), 42)
+	check(not leak.ok(), "later role change cannot erase a detected leak")
+
+	for field: String in ["focus", "assignment", "zone", "target", "rotation_at", "next_rotation", "blocked_zone", "_focus_progress", "task"]:
+		var public_leak = Audit.new()
+		var packet: Dictionary = public_packet(10, "human")
+		packet.actors[77][field] = {}
+		public_leak.record_public(packet, 42)
+		check(not public_leak.ok() and public_leak.failures.size() == 1, "public forbidden field detected even on another actor: " + field)
+
+	var unresolved = Audit.new()
+	unresolved.record_private({"tick": 900, "assignment": {}})
+	unresolved.record_public(public_packet(899, "human"), 42)
+	check(not unresolved.ok() and unresolved.pending_count() == 1 and unresolved.matched_count == 0, "even empty private packets remain unverified at finish without fresh role evidence")
+
+	var result_packet = Audit.new()
+	result_packet.record_public(public_packet(50, "mosquito"), 42)
+	result_packet.record_private({"tick": 60, "assignment": {"zone": 2}})
+	result_packet.record_public(public_packet(60, "mosquito", "results"), 42)
+	check(result_packet.ok() and result_packet.pending_count() == 0, "final result snapshot verifies final private packet using authoritative retained role")
+
+	var ordered = Audit.new()
+	ordered.record_private({"tick": 20, "assignment": {"zone": 2}})
+	ordered.record_private({"tick": 10, "assignment": {}})
+	ordered.record_public(public_packet(10, "human"), 42)
+	check(ordered.pending_count() == 1 and ordered.matched_count == 1, "one public snapshot only resolves private ticks it actually covers")
+	ordered.record_public(public_packet(20, "mosquito"), 42)
+	check(ordered.ok() and ordered.matched_count == 2, "reordered private queue resolves against corresponding public role evidence")
+	ordered.record_private({"tick": 10, "assignment": {}})
+	check(ordered.ok() and ordered.matched_count == 3, "delayed private packet uses earliest sufficient historical public snapshot")
+
+	var copied = Audit.new()
+	var original := {"tick": 4, "assignment": {"zone": 2}}
+	copied.record_private(original)
+	original.assignment.clear()
+	copied.record_public(public_packet(4, "human"), 42)
+	check(not copied.ok(), "payload mutation cannot erase deferred evidence")
+
+	var malformed = Audit.new()
+	malformed.record_private({"tick": NAN, "assignment": {}})
+	malformed.record_public({"phase": "playing", "actors": {}}, 42)
+	check(not malformed.ok() and malformed.failures.size() == 2, "missing or malformed tick is reported rather than silently discarded")
+	print("NETWORK_PRIVACY_AUDIT_RESULT checks=%d failures=%d" % [checks, failures])
+	quit(failures)
