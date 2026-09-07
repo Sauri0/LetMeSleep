@@ -1,5 +1,11 @@
 # Let me sleep — prototipo 0.4.0
 
+**[Descargar para Windows](https://github.com/Sauri0/LetMeSleep/releases/download/v0.4.0/Let-me-sleep-0.4.0-Windows.zip)** · [Todas las versiones](https://github.com/Sauri0/LetMeSleep/releases)
+
+Descomprimí todo el ZIP y abrí **Let-me-sleep.exe**. Elegí **PRÁCTICA** para jugar contra bots. No necesitás Godot ni una cuenta de GitHub. La guía **LEEME.html** está en la carpeta.
+
+La descarga actual es la entrega 0.4 existente. La versión 0.5 está en desarrollo e incluirá correcciones al arranque local, dirección/puerto y mensajes de conexión. El timeout entre casas todavía no está resuelto ni verificado en Internet real.
+
 Juego nativo para Windows de humanos contra mosquitos: humano en primera persona, mosquito en tercera, casa caricaturesca y tres modos. Godot **4.5.2 stable**, GDScript y autoridad de juego en la PC anfitriona. No requiere Steam, navegador ni cuentas.
 
 La versión **0.4** amplía la casa a dos pisos y cambia el vuelo y la picadura: avanzar hacia la mira en 3D, frenar al soltar y mantener concentración antes del anclaje. La defensa propia se muestra antes de recibir la picadura. Se conservan práctica local, invitación única, personalización y estética de cómic.
