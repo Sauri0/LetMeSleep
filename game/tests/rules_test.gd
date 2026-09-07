@@ -1,0 +1,476 @@
+extends SceneTree
+
+const Sim = preload("res://scripts/simulation.gd")
+var checks := 0
+var failures := 0
+
+func _initialize() -> void:
+	_test_roster_config()
+	_test_privacy_and_reservations()
+	_test_inputs()
+	_test_surface_perch()
+	_test_attached_wall_clearance()
+	_test_station_routes()
+	_test_bite_calendar_and_blood()
+	_test_all_solo_zones()
+	_test_cooperative_rear()
+	_test_tools()
+	_test_lives_and_results()
+	_test_tasks()
+	_test_abort_rematch()
+	print("RULES_TEST_RESULT checks=%d failures=%d" % [checks, failures])
+	quit(0 if failures == 0 else 1)
+
+func check(condition: bool, description: String) -> void:
+	checks += 1
+	if not condition:
+		failures += 1
+		printerr("FAIL: " + description)
+
+func roster(humans := 1, mosquitoes := 2) -> Dictionary:
+	var players: Dictionary = {}
+	for index: int in range(humans + mosquitoes):
+		players[index + 1] = {"name": "Prueba %d" % (index + 1), "role": "human" if index < humans else "mosquito", "ready": true}
+	return players
+
+func make_sim(mode := "blood", humans := 1, mosquitoes := 2, options: Dictionary = {}) -> RefCounted:
+	var result = Sim.new()
+	var settings: Dictionary = {"mode": mode, "blood_goal": 1000.0, "round_seconds": 120.0, "rotation_seconds": 4.0}
+	settings.merge(options, true)
+	result.start(roster(humans, mosquitoes), settings)
+	return result
+
+func advance(sim: RefCounted, seconds: float) -> void:
+	var remaining := seconds
+	while remaining > 0.000001 and sim.phase == "playing":
+		var part: float = minf(remaining, 0.05)
+		sim.step(part)
+		remaining -= part
+
+func place_assignment(sim: RefCounted, mosquito: int, human: int, zone: int) -> void:
+	sim.actors[mosquito]._assignment = {"human": human, "zone": zone, "revision": int(sim.actors[mosquito]._revision)}
+	var pose: Dictionary = sim._zone_pose(sim.actors[mosquito]._assignment)
+	sim.actors[mosquito].p = Vector3(pose.p) + Vector3(pose.normal) * 0.20
+
+func attach(sim: RefCounted, mosquito: int, human: int, zone: int, sequence := 1) -> void:
+	place_assignment(sim, mosquito, human, zone)
+	sim.action(mosquito, sequence, "bite")
+	sim.step(0.05)
+
+func aim_at(sim: RefCounted, human: int, target: Vector3, sequence := 1) -> void:
+	var eye: Vector3 = Vector3(sim.actors[human].p) + Vector3.UP * 1.55
+	var direction: Vector3 = (target - eye).normalized()
+	sim.submit_input(human, sequence, Vector3.ZERO, atan2(-direction.x, -direction.z), asin(direction.y), false)
+
+func _test_roster_config() -> void:
+	check(Sim.validate_roster(roster()).is_empty(), "1v2 roster accepted")
+	check(Sim.validate_roster(roster(2, 4)).is_empty(), "2v4 roster accepted")
+	check(Sim.validate_roster(roster(1, 12)).is_empty(), "maximum solo mosquitoes have zone alternatives")
+	check(not Sim.validate_roster(roster(2, 3)).is_empty(), "ratio checked at start")
+	check(Sim.validate_roster(roster(5, 10)).is_empty(), "confirmed maximum 5v10 roster accepted")
+	check(not Sim.validate_roster(roster(6, 12)).is_empty(), "confirmed human capacity enforced")
+	check(not Sim.validate_roster(roster(5, 12)).is_empty(), "16-player transport room limit enforced")
+	check(not Sim.validate_roster(roster(1, 13)).is_empty(), "experimental mosquito capacity enforced")
+	var bad: Dictionary = roster()
+	bad[1].role = "admin"
+	check(not Sim.validate_roster(bad).is_empty(), "unknown role rejected")
+	var settings: Dictionary = Sim.sanitize_config({"mode": "unknown", "round_seconds": NAN, "mosquito_lives": 99, "task_interval": 15, "task_work": 8, "task_deadline": 99, "task_floor": 0})
+	check(settings.mode == "blood" and is_finite(float(settings.round_seconds)), "malformed config cannot introduce NaN or unknown mode")
+	check(int(settings.mosquito_lives) == 9, "sleep lives capped")
+	check(float(settings.task_deadline) < float(settings.task_interval) and float(settings.task_floor) >= float(settings.task_work) + 2.0, "tasks maintain interval and viable work floor")
+
+func _test_privacy_and_reservations() -> void:
+	var sim = make_sim("blood", 1, 12)
+	var seen: Dictionary = {}
+	for id: int in sim._mosquito_ids:
+		var assignment: Dictionary = sim.private_for(id).assignment
+		var key: String = Sim._zone_key(assignment)
+		check(not seen.has(key), "unique reservation for mosquito %d" % id)
+		seen[key] = true
+		check(int(assignment.zone) < 16, "solo never receives rear zone")
+	var snapshot: Dictionary = sim.public_snapshot()
+	for actor: Dictionary in snapshot.actors.values():
+		check(not actor.has("assignment") and not actor.has("zone") and not actor.has("_assignment") and not actor.has("_next_rotation"), "public actor contains no hidden assignments or rotation schedule")
+	check(not sim.private_for(1).has("assignment"), "human receives no assignment")
+	var private_data: Dictionary = sim.private_for(2)
+	private_data.assignment.zone = 99
+	check(int(sim.private_for(2).assignment.zone) != 99, "private snapshot cannot mutate simulation")
+	snapshot.pickups[1].holder = 999
+	check(int(sim.pickups[1].holder) == 0, "public snapshot pickups cloned")
+	for index: int in range(15):
+		advance(sim, 1.0)
+		seen.clear()
+		for id: int in sim._mosquito_ids:
+			var key: String = Sim._zone_key(sim.actors[id]._assignment)
+			check(not seen.has(key), "reservations remain unique through fixed rotations")
+			seen[key] = true
+	var pair = make_sim()
+	var first_revision: int = int(pair.actors[2]._revision)
+	var second_revision: int = int(pair.actors[3]._revision)
+	advance(pair, 4.0)
+	check(int(pair.actors[2]._revision) > first_revision and int(pair.actors[3]._revision) == second_revision, "mosquito schedules have independent fixed phase offsets")
+	var maximum = make_sim("blood", 5, 10)
+	seen.clear()
+	for id: int in maximum._mosquito_ids:
+		var key: String = Sim._zone_key(maximum.actors[id]._assignment)
+		check(not seen.has(key), "5v10 assignments remain distinct")
+		seen[key] = true
+
+func _test_inputs() -> void:
+	var sim = make_sim()
+	var before: Vector3 = sim.actors[1].p
+	sim.submit_input(1, 1, Vector3(1000, 0, 0), 0.0, 0.0, false)
+	sim.step(0.1)
+	check(Vector3(sim.actors[1].p).distance_to(before) <= 0.311, "movement intent bounded to human speed")
+	var valid_position: Vector3 = sim.actors[1].p
+	sim.submit_input(1, 0, Vector3(-1, 0, 0), 1.0, 1.0, true)
+	check(float(sim.actors[1].yaw) == 0.0 and not bool(sim.actors[1]._interact), "reordered movement input discarded")
+	sim.submit_input(1, 2, Vector3(NAN, 0, 0), NAN, INF, true)
+	check(int(sim.actors[1]._input_seq) == 1, "nonfinite input rejected without poisoning sequence")
+	sim.submit_input(1, 2, Vector3(0, 1000, 0), 0.0, 0.0, false)
+	sim.step(0.1)
+	check(is_equal_approx(float(sim.actors[1].p.y), 0.0), "human cannot fly")
+	sim.submit_input(1, 3, Vector3(0, 0, -1), PI / 2, 0.0, false)
+	sim.step(0.1)
+	check(float(sim.actors[1].p.x) < valid_position.x, "movement is local intent rotated by yaw")
+	advance(sim, 0.5)
+	var stopped: Vector3 = sim.actors[1].p
+	advance(sim, 0.3)
+	check(Vector3(sim.actors[1].p).is_equal_approx(stopped), "stale movement stops before disconnect timeout")
+	sim.actors[1].p = Vector3(5.6, 0, 0)
+	sim.submit_input(1, 4, Vector3.RIGHT, 0.0, 0.0, false)
+	sim.step(0.3)
+	check(float(sim.actors[1].p.x) <= 5.711, "server enforces arena wall")
+	sim.actors[1].p = Vector3(-3.0, 0, 2.0)
+	sim.submit_input(1, 5, Vector3.LEFT, 0.0, 0.0, false)
+	sim.step(0.3)
+	check(float(sim.actors[1].p.x) > -3.2, "server blocks movement through furniture")
+	sim.actors[1].p = Vector3.ZERO
+	sim.submit_input(1, 6, Vector3.ZERO, 0.0, 0.0, false)
+	sim.actors[2].p = Vector3(0, 1.1, -0.6)
+	sim.submit_input(2, 1, Vector3.BACK, 0.0, 0.0, false)
+	sim.step(0.1)
+	check(float(sim.actors[2].p.z) < -0.34, "mosquito body softly collides with human torso")
+	sim.step(0.2)
+	check(float(sim.actors[2].p.z) < -0.34, "continued input cannot tunnel through human torso")
+
+func _test_surface_perch() -> void:
+	var sim = make_sim()
+	sim.actors[2].p = Vector3(0, 1.5, 3)
+	sim.action(2, 1, "perch")
+	sim.step(0.05)
+	check(sim.actors[2].state == "flying", "perch cannot freeze insect in open air")
+	sim.actors[2].p = Vector3(0, 0.2, 3)
+	sim.action(2, 2, "perch")
+	sim.step(0.05)
+	check(sim.actors[2].state == "perched" and is_equal_approx(float(sim.actors[2].p.y), 0.1), "perch snaps mosquito onto floor")
+	sim.submit_input(2, 1, Vector3.UP, 0.0, 0.0, false)
+	sim.step(0.05)
+	check(sim.actors[2].state == "flying" and float(sim.actors[2].p.y) > 0.1, "movement lifts mosquito from surface")
+	sim.actors[2].p = Vector3(5.8, 1.2, 3.6)
+	sim.submit_input(2, 2, Vector3.ZERO, 0.0, 0.0, false)
+	sim.action(2, 3, "perch")
+	sim.step(0.05)
+	check(sim.actors[2].state == "perched" and is_equal_approx(float(sim.actors[2].p.x), 5.9), "perch snaps onto wall")
+	sim.actors[2].state = "flying"
+	sim.actors[2].p = Vector3(-4.1, 0.9, -0.2)
+	sim.action(2, 4, "perch")
+	sim.step(0.05)
+	check(sim.actors[2].state == "perched" and is_equal_approx(float(sim.actors[2].p.y), 0.605), "perch snaps onto furnished table surface")
+
+func _test_attached_wall_clearance() -> void:
+	var sim = make_sim("blood", 2, 4)
+	var edges: Array[Vector3] = [
+		Vector3(100, 0, 0), Vector3(-100, 0, 0), Vector3(0, 0, 100), Vector3(0, 0, -100),
+		Vector3(100, 0, 100), Vector3(100, 0, -100), Vector3(-100, 0, 100), Vector3(-100, 0, -100),
+	]
+	for edge: Vector3 in edges:
+		var legal_human: Vector3 = Sim.ArenaData.move_body(Vector3.ZERO, edge, true)
+		for zone: int in range(Sim.BODY_ZONES.size()):
+			for angle: int in range(16):
+				sim.actors[1].p = legal_human
+				sim.actors[1].yaw = TAU * float(angle) / 16.0
+				sim.actors[3]._assignment = {"human": 1, "zone": zone, "revision": 1}
+				sim.actors[3].state = "biting"
+				sim.step(0.001)
+				var point: Vector3 = sim.actors[3].p
+				var radius: float = Sim.ArenaData.MOSQUITO_RADIUS
+				var inside: bool = absf(point.x) + radius <= Sim.ArenaData.HALF_X + 0.00001 and absf(point.z) + radius <= Sim.ArenaData.HALF_Z + 0.00001 and point.y >= radius and point.y + radius <= Sim.ArenaData.CEILING
+				check(inside and sim.actors[3].state == "biting", "attached zone %d at yaw %d stays wholly inside map edge %s" % [zone, angle, str(edge)])
+
+func _test_station_routes() -> void:
+	# Traverse the actual collision API, so a large body radius cannot silently
+	# make a task station inaccessible behind the furniture or inside a wall.
+	var origin: Vector3 = Sim.ArenaData.human_spawn(0)
+	var visited: Dictionary = {Vector2i.ZERO: true}
+	var queue: Array[Vector2i] = [Vector2i.ZERO]
+	var positions: Array[Vector3] = [origin]
+	var cursor := 0
+	var directions: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
+	while cursor < queue.size():
+		var cell: Vector2i = queue[cursor]
+		cursor += 1
+		var from: Vector3 = origin + Vector3(float(cell.x), 0, float(cell.y)) * 0.25
+		for direction: Vector2i in directions:
+			var next: Vector2i = cell + direction
+			if visited.has(next):
+				continue
+			var target: Vector3 = origin + Vector3(float(next.x), 0, float(next.y)) * 0.25
+			var reached: Vector3 = Sim.ArenaData.move_body(from, target - from, true)
+			if reached.is_equal_approx(target):
+				visited[next] = true
+				queue.append(next)
+				positions.append(target)
+	check(positions.size() > 100, "expanded human collision retains a connected walkable room")
+	var sim = make_sim("sleep", 1, 2, {"task_work": 1.0})
+	sim.actors[1]._next_task = 100.0
+	var sequence := 0
+	for station_id: int in range(Sim.ArenaData.STATIONS.size()):
+		var station: Dictionary = Sim.ArenaData.STATIONS[station_id]
+		var nearest: Vector3 = origin
+		var best_distance := INF
+		for position: Vector3 in positions:
+			var distance: float = position.distance_to(station.p)
+			if distance < best_distance:
+				best_distance = distance
+				nearest = position
+		check(best_distance < 1.20, "station %d reachable on foot within interaction distance" % station_id)
+		sim.actors[1].p = nearest
+		sim.actors[1]._task = {"name": station.name, "station": station_id, "p": station.p, "remaining": 6.0, "progress": 0.0, "work": 1.0}
+		var completed_before: int = int(sim.tasks_done)
+		for tick: int in range(6):
+			sequence += 1
+			sim.submit_input(1, sequence, Vector3.ZERO, 0.0, 0.0, true)
+			sim.step(0.2)
+		check(int(sim.tasks_done) == completed_before + 1, "station %d task completes from reachable clear position" % station_id)
+
+func _test_bite_calendar_and_blood() -> void:
+	var sim = make_sim()
+	attach(sim, 2, 1, 5)
+	check(sim.actors[2].state == "biting", "valid nearby exposed mark permits bite")
+	sim.action(2, 1, "bite")
+	sim.step(0.05)
+	check(sim.actors[2].state == "biting", "duplicate action does not detach")
+	sim.submit_input(2, 1, Vector3.RIGHT, 0.0, 0.0, false)
+	sim.step(0.05)
+	check(sim.actors[2].state == "biting", "movement and released interact never detach")
+	var reserved: String = Sim._zone_key(sim.actors[2]._assignment)
+	var human_origin: Vector3 = sim.actors[1].p
+	var mosquito_origin: Vector3 = sim.actors[2].p
+	sim.submit_input(1, 1, Vector3.RIGHT, 0.0, 0.0, false)
+	sim.step(0.1)
+	check((Vector3(sim.actors[2].p) - mosquito_origin).is_equal_approx(Vector3(sim.actors[1].p) - human_origin), "attached mosquito travels with human")
+	advance(sim, 4.1)
+	check(Sim._zone_key(sim.actors[2]._assignment) == reserved, "attached reservation survives scheduled rotations")
+	check(float(sim.blood) > 3.0, "blood extracted progressively after preparation")
+	var earned: float = float(sim.blood)
+	var upcoming: float = float(sim.actors[2]._next_rotation)
+	var revision: int = int(sim.actors[2]._revision)
+	sim.actors[2]._next_rotation = float(sim.elapsed) + 0.05
+	var coincident: float = float(sim.actors[2]._next_rotation)
+	sim.action(2, 2, "bite")
+	sim.step(0.05)
+	check(sim.actors[2].state == "flying" and Sim._zone_key(sim.actors[2]._assignment) != reserved, "explicit detach immediately chooses another zone")
+	check(int(sim.actors[2]._revision) == revision + 1, "coincident detach and rotation perform only one assignment")
+	check(is_equal_approx(float(sim.actors[2]._next_rotation), coincident + 4.0), "detach preserves calendar at coincident boundary")
+	check(float(sim.blood) == earned, "detach does not grant or remove blood")
+	advance(sim, 4.0)
+	check(Sim._zone_key(sim.actors[2]._assignment) != reserved, "last detached zone excluded until successful new bite")
+	sim._kill(2)
+	sim.step(0.05)
+	check(float(sim.blood) == earned, "death preserves shared blood")
+	check(upcoming > 4.0, "calendar progressed while attached")
+	var invalid = make_sim()
+	place_assignment(invalid, 2, 1, 5)
+	var pose: Dictionary = invalid._zone_pose(invalid.actors[2]._assignment)
+	invalid.actors[2].p = Vector3(pose.p) - Vector3(pose.normal) * 0.2
+	invalid.action(2, 1, "bite")
+	invalid.step(0.05)
+	check(invalid.actors[2].state != "biting", "bite cannot approach through human torso")
+	invalid.actors[2].p = Vector3(5, 2, 4)
+	invalid.action(2, 2, "bite")
+	invalid.step(0.05)
+	check(invalid.actors[2].state != "biting", "distant bite rejected")
+
+func _test_all_solo_zones() -> void:
+	for zone: int in range(16):
+		var sim = make_sim()
+		attach(sim, 2, 1, zone)
+		check(sim.actors[2].state == "biting", "solo zone %d reachable for attachment" % zone)
+		var band: int = int(Sim.BODY_ZONES[zone].band)
+		var pitch: float = [0.0, -0.55, -1.1][band]
+		var wrong_pitch: float = [0.0, -0.55, -1.1][(band + 1) % 3]
+		sim.submit_input(1, 1, Vector3.ZERO, 0.0, wrong_pitch, false)
+		sim.action(1, 1, "self_swat")
+		sim.step(0.05)
+		check(bool(sim.actors[2].alive), "wrong body band cannot automatically swat zone %d" % zone)
+		sim.submit_input(1, 2, Vector3.ZERO, 0.0, pitch, false)
+		sim.action(1, 2, "self_swat")
+		sim.step(0.05)
+		check(bool(sim.actors[2].alive), "shared attack cooldown enforced")
+		advance(sim, 0.85)
+		sim.action(1, 3, "self_swat")
+		sim.step(0.05)
+		check(not bool(sim.actors[2].alive), "starting hands defend solo zone %d with correct band" % zone)
+
+func _test_cooperative_rear() -> void:
+	var sim = make_sim("blood", 2, 4)
+	var rear_assigned := false
+	for id: int in sim._mosquito_ids:
+		if int(sim.actors[id]._assignment.zone) >= 16:
+			rear_assigned = true
+	check(rear_assigned, "cooperative roster includes rear assignments")
+	sim.actors[1].p = Vector3.ZERO
+	sim.actors[2].p = Vector3(0, 0, 1.5)
+	attach(sim, 3, 1, 16)
+	check(sim.actors[3].state == "biting", "rear mark can be bitten from behind")
+	sim.action(1, 1, "self_swat")
+	sim.step(0.05)
+	check(bool(sim.actors[3].alive), "owner cannot self-swat rear zone")
+	sim.actors[1].tool = "broom"
+	advance(sim, 0.85)
+	aim_at(sim, 1, sim.actors[3].p, 1)
+	sim.action(1, 2, "attack")
+	sim.step(0.05)
+	check(bool(sim.actors[3].alive), "long tool cannot bypass own rear-zone restriction")
+	# Looking at one's own rear rotates the whole body; restore body facing before
+	# testing which side the teammate is on.
+	sim.submit_input(1, 2, Vector3.ZERO, 0.0, 0.0, false)
+	sim.step(0.05)
+	sim.actors[2].p = Vector3(0, 0, -0.65)
+	aim_at(sim, 2, sim.actors[3].p, 1)
+	sim.action(2, 1, "attack")
+	sim.step(0.05)
+	check(bool(sim.actors[3].alive), "teammate cannot hit rear mosquito through torso from front")
+	sim.actors[2].p = Vector3(0, 0, 1.3)
+	advance(sim, 0.85)
+	aim_at(sim, 2, sim.actors[3].p, 2)
+	sim.action(2, 2, "attack")
+	sim.step(0.05)
+	check(not bool(sim.actors[3].alive), "teammate aimed hands rescue exposed rear zone")
+
+func _test_tools() -> void:
+	var sim = make_sim("blood", 2, 4)
+	check(sim.actors[1].tool == "hands" and sim.actors[2].tool == "hands", "humans start with hands")
+	var pick_position: Vector3 = Vector3(sim.pickups[1].p)
+	pick_position.y = 0.0
+	sim.actors[1].p = pick_position
+	sim.actors[2].p = pick_position
+	sim.action(1, 1, "pickup")
+	sim.action(2, 1, "pickup")
+	sim.step(0.05)
+	check(int(sim.pickups[1].holder) == 1 and sim.actors[1].tool == "swatter" and sim.actors[2].tool == "hands", "simultaneous pickup has one atomic owner")
+	sim.action(1, 1, "drop")
+	sim.step(0.05)
+	check(int(sim.pickups[1].holder) == 1, "duplicated action sequence cannot drop tool")
+	sim.actors[1].p = Vector3(sim.pickups[2].p) * Vector3(1, 0, 1)
+	sim.action(1, 2, "pickup")
+	sim.step(0.05)
+	check(int(sim.pickups[1].holder) == 0 and int(sim.pickups[2].holder) == 1 and sim.actors[1].tool == "racket", "swap drops old tool and grants new instance atomically")
+	check(sim.pickups.size() == 4, "tool swap does not clone or destroy pickup instances")
+	sim.action(1, 3, "drop")
+	sim.step(0.05)
+	check(sim.actors[1].tool == "hands" and int(sim.pickups[2].holder) == 0, "drop returns starting hands")
+	sim.actors[3].p = sim.pickups[2].p
+	sim.action(3, 1, "pickup")
+	sim.step(0.05)
+	check(int(sim.pickups[2].holder) == 0, "mosquito cannot steal tool")
+	sim.actors[1].p = Vector3(5, 0, 4)
+	sim.action(1, 4, "pickup")
+	sim.step(0.05)
+	check(sim.actors[1].tool == "hands", "out-of-range pickup rejected")
+	check(float(Sim.TOOL_STATS.broom.reach) > float(Sim.TOOL_STATS.hands.reach) and float(Sim.TOOL_STATS.newspaper.cooldown) < float(Sim.TOOL_STATS.hands.cooldown) and float(Sim.TOOL_STATS.racket.radius) > float(Sim.TOOL_STATS.hands.radius), "tool catalog has distinct reach speed and area")
+
+func _test_lives_and_results() -> void:
+	var blood_sim = make_sim("blood", 1, 2, {"mosquito_lives": 9, "respawn_seconds": 1.0})
+	blood_sim._kill(2)
+	advance(blood_sim, 1.2)
+	check(not bool(blood_sim.actors[2].alive) and int(blood_sim.actors[2].lives) == 0, "blood never respawns despite sleep-life configuration")
+	blood_sim._kill(3)
+	blood_sim.step(0.05)
+	check(blood_sim.winner == "human", "all mosquitoes dead ends blood early for humans")
+	var quota = make_sim("blood", 1, 2, {"blood_goal": 1.0})
+	attach(quota, 2, 1, 5)
+	advance(quota, 2.0)
+	check(quota.winner == "mosquito" and is_equal_approx(float(quota.blood), 1.0), "shared quota ends blood exactly once")
+	var settled: float = float(quota.elapsed)
+	quota.step(0.5)
+	check(float(quota.elapsed) == settled, "finished round immutable under further simulation steps")
+	var timeout = make_sim("blood", 1, 2, {"round_seconds": 30.0})
+	advance(timeout, 30.0)
+	check(timeout.winner == "human", "blood time limit with insufficient quota awards humans")
+	var survival = make_sim("survival", 1, 2, {"round_seconds": 30.0})
+	survival._kill(2)
+	advance(survival, 30.0)
+	check(survival.winner == "mosquito", "one mosquito alive at survival deadline wins without needing to bite")
+	var survival_dead = make_sim("survival")
+	survival_dead._kill(2)
+	survival_dead._kill(3)
+	survival_dead.step(0.05)
+	check(survival_dead.winner == "human", "survival total elimination awards humans")
+	var sleep_sim = make_sim("sleep", 1, 2, {"mosquito_lives": 3, "respawn_seconds": 1.0})
+	for life: int in range(3):
+		sleep_sim._kill(2)
+		sleep_sim._kill(3)
+		sleep_sim.step(0.05)
+		check(int(sleep_sim.actors[2].lives) == 2 - life, "sleep death consumes one personal life")
+		if life < 2:
+			check(sleep_sim.phase == "playing", "all temporarily dead does not end sleep with lives remaining")
+			check(float(sleep_sim.private_for(2).respawn_left) > 0.0 and Dictionary(sleep_sim.private_for(2).assignment).is_empty(), "dead player gets respawn delay and no mark")
+			advance(sleep_sim, 1.0)
+			check(bool(sleep_sim.actors[2].alive) and not Dictionary(sleep_sim.private_for(2).assignment).is_empty(), "sleep respawn produces living actor and fresh private mark")
+			check(Vector3(sleep_sim.actors[2].p).distance_to(Vector3(sleep_sim.actors[1].p) + Vector3.UP * 1.2) > 2.2, "respawn is outside immediate longest tool reach")
+	check(sleep_sim.winner == "human" and int(sleep_sim.tasks_done) == 0, "all personal lives exhausted ends sleep immediately even without task goal")
+
+func _test_tasks() -> void:
+	var sim = make_sim("sleep", 2, 4, {"task_interval": 15.0, "task_deadline": 6.0, "task_work": 1.0, "task_penalty": 2.0, "task_floor": 4.0})
+	advance(sim, 4.55)
+	check(not Dictionary(sim.private_for(1).task).is_empty() and not Dictionary(sim.private_for(2).task).is_empty(), "each human receives personal task on staggered fixed calendar")
+	var next_one: float = float(sim.actors[1]._next_task)
+	var next_two: float = float(sim.actors[2]._next_task)
+	var round_length: float = float(sim.config.round_seconds)
+	var other_remaining: float = float(sim.actors[2]._task.remaining)
+	sim.actors[1]._task.remaining = 0.05
+	sim.step(0.05)
+	check(int(sim.private_for(1).failures) == 1 and float(sim.private_for(1).deadline) == 4.0, "failure penalizes only failing human's future deadline")
+	check(int(sim.private_for(2).failures) == 0 and float(sim.private_for(2).deadline) == 6.0 and is_equal_approx(float(sim.actors[2]._task.remaining), other_remaining - 0.05), "teammate deadline and active-task budget unaffected by other failure")
+	check(float(sim.actors[1]._next_task) == next_one and float(sim.actors[2]._next_task) == next_two and float(sim.config.round_seconds) == round_length, "failure never changes schedules or round duration")
+	var progress_sim = make_sim("sleep", 1, 2, {"task_work": 1.0})
+	advance(progress_sim, 3.05)
+	progress_sim.actors[1].p = progress_sim.actors[1]._task.p
+	progress_sim.submit_input(1, 1, Vector3.ZERO, 0.0, 0.0, true)
+	progress_sim.step(0.25)
+	var progress: float = float(progress_sim.actors[1]._task.progress)
+	check(progress > 0.0, "nearby held interaction advances personal task")
+	attach(progress_sim, 2, 1, 5)
+	progress_sim.submit_input(1, 2, Vector3.ZERO, 0.0, 0.0, true)
+	progress_sim.step(0.25)
+	check(is_equal_approx(float(progress_sim.actors[1]._task.progress), progress), "attached mosquito pauses and preserves task progress")
+	progress_sim.action(2, 2, "bite")
+	progress_sim.submit_input(1, 3, Vector3.ZERO, 0.0, 0.0, true)
+	progress_sim.step(0.25)
+	check(float(progress_sim.actors[1]._task.progress) > progress, "task can resume after explicit detach")
+	for index: int in range(4):
+		progress_sim.submit_input(1, 4 + index, Vector3.ZERO, 0.0, 0.0, true)
+		progress_sim.step(0.25)
+	check(int(progress_sim.tasks_done) == 1, "completed task increments collective total once")
+	var success = make_sim("sleep", 1, 2, {"round_seconds": 30.0})
+	success.tasks_done = success.task_goal
+	success.step(0.05)
+	check(success.phase == "playing", "task goal evaluated at round end as prototype rule")
+	advance(success, 30.0)
+	check(success.winner == "human", "sleep collective task goal awards humans at close")
+	var blocked = make_sim("sleep", 1, 2, {"round_seconds": 30.0})
+	advance(blocked, 30.0)
+	check(blocked.winner == "mosquito", "sleep incomplete collective goal awards mosquitoes at close")
+
+func _test_abort_rematch() -> void:
+	var sim = make_sim("sleep")
+	attach(sim, 2, 1, 5)
+	sim.abort("Participante desconectado")
+	check(sim.phase == "lobby" and sim.winner == "" and not bool(sim.actors[1].bitten), "disconnect abort returns lobby with no winner or ghost bite")
+	check(Dictionary(sim.private_for(2).assignment).is_empty(), "abort clears private assignments")
+	sim.start(roster(), {"mode": "sleep"})
+	check(sim.phase == "playing" and float(sim.blood) == 0.0 and int(sim.tasks_done) == 0 and int(sim.actors[2].lives) == 3 and sim.actors[1].tool == "hands", "rematch resets modes, lives, tools and score")
+	for pickup: Dictionary in sim.pickups.values():
+		check(int(pickup.holder) == 0, "rematch resets all pickup ownership")

@@ -1,0 +1,5 @@
+game/.godot/
+work/tools/
+work/*.log
+outputs/
+*.tmp
