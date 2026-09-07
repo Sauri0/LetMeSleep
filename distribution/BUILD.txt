@@ -1,8 +1,8 @@
 Let me sleep 0.6.0 — Windows x86_64
 Godot4.5.2 / Compatibility OpenGL / protocolo6 / invitaciónDD3
 Ejecutable: Let-me-sleep.exe
-SHA256: 4B47820C2238B12482CE6D38C557B89F701AA04C30C68129FE660E2818E902AE
-Commit de código: b794548399eac22f40f30d7cfa94027657f4d351
+SHA256: 6755C3C5078D54A9EB27BAC4CDF29D90C13FE1A9DF09612E2760A0D444040D0B
+Commit de código: 262620011a0230e2e8104b58e96cf68eb555aabf
 Paquetes: Let-me-sleep-0.6.0-Windows.zip / Let-me-sleep-0.6.0-fuentes.zip
 Hashes ZIP y commit de documentación: MANIFIESTO-0.6.0.json externo.
 Evidencias y límites: PRUEBAS.md.

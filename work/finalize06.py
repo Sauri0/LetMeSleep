@@ -7,7 +7,7 @@ OUT = ROOT / 'outputs'
 WORK = ROOT / 'work'
 VERSION = '0.6.0'
 EXE = OUT / f'Let-me-sleep-{VERSION}-Windows/Let-me-sleep.exe'
-CODE = 'b794548399eac22f40f30d7cfa94027657f4d351'
+CODE = '262620011a0230e2e8104b58e96cf68eb555aabf'
 def read(path): return json.loads(path.read_text(encoding='utf-8-sig'))
 def sha(path): return hashlib.file_digest(path.open('rb'), 'sha256').hexdigest().upper()
 def write(path, data): path.write_text(json.dumps(data, indent=2, ensure_ascii=False)+'\n', encoding='utf-8')
@@ -33,33 +33,43 @@ if '--manifest' not in sys.argv:
             assert all(r['returned_to_lobby'] and not r['result'].get('winner') for r in reports if not r.get('intentional_disconnect'))
         summaries.append({'scenario':name,'clients':count,'pass':True,'private_matched':sum(r['privacy_matched'] for r in reports),'private_deferred':sum(r['privacy_deferred'] for r in reports),'private_pending':0,'run':record['run']})
     network={'scenarios_passed':6,'clients_total':sum(s['clients'] for s in summaries),'private_packets_matched':sum(s['private_matched'] for s in summaries),'private_deferred':sum(s['private_deferred'] for s in summaries),'private_pending':0,'survival_clients':16,'internet_between_homes_verified':False,'integrated_relay':False,'scenarios':summaries,'runner_correction':'Successful PowerShell script now exits 0 explicitly. Previously LASTEXITCODE stayed null in a fresh caller; null -ne 0 was true. Complete original reports revalidated against every original assertion plus pending privacy count; no game rebuild.'}
+    smoke=read(WORK/'release06-network-audiofinal.json')
+    assert len(smoke['reports'])==2 and not smoke['stderr']
+    assert all(not r['errors'] and r['privacy_ok'] and r['privacy_pending']==0 and r['result']['winner']=='mosquito' and r['cosmetics_synced'] for r in smoke['reports'])
+    network['exe_sha256']='4B47820C2238B12482CE6D38C557B89F701AA04C30C68129FE660E2818E902AE'
+    network['final_audio_smoke']={'exe_sha256':sha(EXE),'pass':True,'scenario':'blood 1v1 by invitation','clients':2,'private_matched':sum(r['privacy_matched'] for r in smoke['reports']),'private_pending':0,'stderr':[],'run':smoke['run']}
     write(WORK/'release06-network-summary.json',network)
-    perf=read(WORK/'performance06-final.json')
+    perf=read(WORK/'performance06-audiofinal-isolated.json')
     before=read(WORK/'performance06-before.json')
-    demo=read(WORK/'release06-gameplay.json')
+    demo=read(WORK/'release06-gameplay-audiofinal.json')
     assert demo['checks']==25 and demo['failures']==0
     table='\n'.join(f"| {r['visible_actors']} / {'host + bots' if r['host_bots'] else 'cliente'} | {b['frame_p50_ms']:.3f} | {r['frame_p50_ms']:.3f} | {r['frame_p90_ms']:.3f} | {r['draws_p50']:.0f} |" for b,r in zip(before['cases'],perf['cases']))
     report=f'''# Let me sleep 0.6.0 — verificación de entrega
 
 7 de septiembre de 2026. Godot 4.5.2, Windows x86_64, Compatibility/OpenGL, protocolo 6 e invitaciones DD3. Código `{CODE}`. EXE SHA256 `{sha(EXE)}`. Los hashes de los ZIP y el commit final de documentación están en el manifiesto externo, sin referencias circulares.
 
-## Ejecutable exacto
+## Validación por compilación
 
-| Prueba | Resultado |
-|---|---|
-| Práctica nativa, ambos roles y tres modos | 73/73; menú, controles, bots, resultados, repetir y salir. |
-| Crear sala desde UI | 13/13; servidor propio, puerto, confirmación, reintento, cancelación y cierre. |
-| Ayuda F1 con Main/Client/Practice reales | 28/28; abre/cierra, bloquea entradas, mantiene estado y devuelve captura sin salto de cámara. |
-| Giro continuo mirando el cuerpo | 6/6 a 60 FPS; torso acompaña, movimiento y palmada siguen disponibles. |
-| Malla deformada y personalización | 166/166; rayos contra malla, posturas, combinaciones y editor. |
-| Contacto con Client y simulación | 86/86; ocho zonas propias de pie/agachado, concentración y defensa. Transporte de este fixture simulado. |
-| Casa GLB | 218/218, 52 muebles; posiciones, límites físicos y cinco vistas. |
-| Demo con audio del juego | 25/25; vuelo, frenado, carga, acople, sangre, desprenderse, LMB, caída y rescate. |
-| Red ENet | 6 escenarios; 24 informes de cliente, incluidos 16 simultáneos. |
+El EXE final difiere del candidato `4B47820C2238B12482CE6D38C557B89F701AA04C30C68129FE660E2818E902AE` únicamente en dos ganancias de audio: ayuda +20 dB y recuperación +10 dB. Se conservan sus informes completos y se repiten las pruebas afectadas sobre el final, sin atribuirle la matriz anterior como una nueva ejecución.
+
+| Prueba | Resultado | EXE |
+|---|---|---|
+| Práctica nativa, ambos roles y tres modos | 73/73; menú, controles, bots, resultados, repetir y salir. | Final |
+| Crear sala desde UI | 13/13; servidor propio, puerto, confirmación, reintento, cancelación y cierre. | Candidato 4B47 |
+| Ayuda F1 con Main/Client/Practice reales | 28/28; abre/cierra, bloquea entradas, mantiene estado y devuelve captura sin salto de cámara. | Final |
+| Giro continuo mirando el cuerpo | 6/6 a 60 FPS; torso acompaña, movimiento y palmada siguen disponibles. | Candidato 4B47 |
+| Malla deformada y personalización | 166/166; rayos contra malla, posturas, combinaciones y editor. | Candidato 4B47 |
+| Contacto con Client y simulación | 86/86; ocho zonas propias de pie/agachado, concentración y defensa. Transporte de este fixture simulado. | Candidato 4B47 |
+| Casa GLB | 218/218, 52 muebles; posiciones, límites físicos y cinco vistas. | Candidato 4B47 |
+| Demo con audio del juego | 25/25; vuelo, frenado, carga, acople, sangre, desprenderse, LMB, caída y rescate. | Final |
+| Red ENet completa | 6 escenarios; 24 informes de cliente, incluidos 16 simultáneos. | Candidato 4B47 |
+| ENet Sangre 1v1 por invitación | Dos clientes, resultado coincidente, cosméticos, privacidad y cierre sin errores. | Final |
 
 ENet verificó Sangre 1v1 por invitación y revancha con dos rondas, Tareas 1v1, Supervivencia 4 humanos + 12 mosquitos, desconexión sin ganador, rechazo de protocolo y rechazo del EXE 0.5 real. {network['private_packets_matched']} paquetes privados coinciden, {network['private_deferred']} diferidos resueltos, cero pendientes, errores de cliente o stderr. Todos los clientes de rondas completas comprobaron movimiento, salto, carrera, agacharse y cosméticos. Son procesos en una misma PC, no redes independientes. Aturdimiento/rescate se comprueban por separado; no se afirma que las rondas ENet naturales los hayan ejercitado.
 
-El vídeo dura 21,77 s, H.264/AAC, 1280×720, 30 FPS. MovieWriter capturó el mezclador real del EXE, sin sustituir ni normalizar audio: promedio −41,1 dB, pico −21,8 dB, decodificación completa sin errores. Preferencias observadas: master 0,59; música 0,55; efectos 0,80; ambiente 0,45; UI 0,65. La escena está rotulada como prueba preparada: rival quieto, un corte empieza con mosquito adherido y otro con aliado aturdido. Las acciones posteriores usan Client y autoridad reales. El rescate medido duró 8,63 s desde 34,43 s restantes, a una tasa observada de 3,95×. No representa una partida espontánea ni prueba de balance.
+El vídeo dura 21,77 s, H.264/AAC, 1280×720, 30 FPS. MovieWriter capturó el mezclador real del EXE final, sin sustituir ni normalizar audio: promedio −40,2 dB, pico −21,8 dB, decodificación completa sin errores. Preferencias observadas: master 0,59; música 0,55; efectos 0,80; ambiente 0,45; UI 0,65. La escena está rotulada como prueba preparada: rival quieto, un corte empieza con mosquito adherido y otro con aliado aturdido. Las acciones posteriores usan Client y autoridad reales. El rescate medido duró 8,63 s desde 34,43 s restantes, a una tasa observada de 3,95×. No representa una partida espontánea ni prueba de balance.
+
+Se detectó y corrigió un nivel insuficiente de ayuda respecto a la base musical: ganancia del player −15→+5 dB y recuperación espacial −14→−4 dB. SFX136 y música46 se repitieron después. La ventana de ayuda del PCM real pasó de −41,22 a −39,13 dB RMS y la recuperación de −46,08 a −44,72; los primeros ocho segundos permanecieron idénticos. La señal aislada de ayuda se acerca a −43,3 dB RMS, frente a aproximadamente −41,7 de base musical. La palmada destaca 10,07 dB de pico sobre el fondo previo y la música baja durante el golpe. Es una mezcla deliberadamente suave con mejor feedback; estas medidas no certifican escucha perceptual ni audibilidad en cualquier parlante. El master de fábrica0,60 sólo difiere0,15 dB del perfil0,59, y no se usa esa diferencia como explicación del nivel anterior.
 
 ## Fuente, arte y audio
 
@@ -110,6 +120,6 @@ else:
                 assert hashlib.sha256(z.read(item)).hexdigest().upper()==sha(EXE)
         p.with_suffix(p.suffix+'.sha256.txt').write_text(sha(p)+'  '+p.name+'\n',encoding='utf-8')
     network=read(WORK/'release06-network-summary.json')
-    record={'product':'Let me sleep','version':VERSION,'protocol':6,'invitation':{'prefix':'DD3','format':1},'platform':'Windows x86_64','engine':'Godot4.5.2','generated_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'code_commit':CODE,'source_and_docs_commit':commit,'artifacts':[artifact(p) for p in packages+[EXE,OUT/'0.6-preview/Let-me-sleep-0.6-gameplay-y-sonido.mp4']],'delivery_exe_checks':{'native_practice':73,'native_hosting':13,'native_help':28,'native_camera_60fps':6,'native_mesh':166,'client_contacts':86,'native_house':218,'native_audio_gameplay_demo':25},'network':network,'performance':read(WORK/'performance06-final.json'),'rules':{'stun_seconds':35,'help_total_rate':4,'helpers_stack':False,'repeated_hits_reset':False,'survival_only_elimination':True},'evidence':'0.6-validacion','preview':'0.6-preview','guide':f'Let-me-sleep-{VERSION}-Windows/LEEME.html','limits':['Direct ENet only; integrated EOS/WAN pending','ENet processes on one PC; no independent network test','Controls video uses explicit staged setups and real subsequent inputs/audio','No human balance or minimum hardware certification','Initial hosting fixture could not reserve port; unchanged repeat passes, cause undetermined'],'preserved_versions':['0.1.0','0.2.0','0.3.0','0.4.0','0.5.0']}
+    record={'product':'Let me sleep','version':VERSION,'protocol':6,'invitation':{'prefix':'DD3','format':1},'platform':'Windows x86_64','engine':'Godot4.5.2','generated_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'code_commit':CODE,'source_and_docs_commit':commit,'artifacts':[artifact(p) for p in packages+[EXE,OUT/'0.6-preview/Let-me-sleep-0.6-gameplay-y-sonido.mp4']],'delivery_exe_checks':{'native_practice':73,'native_help':28,'native_audio_gameplay_demo':25,'enet_invitation_clients':2},'pre_audio_candidate_checks':{'exe_sha256':'4B47820C2238B12482CE6D38C557B89F701AA04C30C68129FE660E2818E902AE','native_hosting':13,'native_camera_60fps':6,'native_mesh':166,'client_contacts':86,'native_house':218,'network_scenarios':6,'unchanged_runtime_except_two_audio_gains':True},'network':network,'performance':read(WORK/'performance06-audiofinal-isolated.json'),'rules':{'stun_seconds':35,'help_total_rate':4,'helpers_stack':False,'repeated_hits_reset':False,'survival_only_elimination':True},'evidence':'0.6-validacion','preview':'0.6-preview','guide':f'Let-me-sleep-{VERSION}-Windows/LEEME.html','limits':['Direct ENet only; integrated EOS/WAN pending','ENet processes on one PC; no independent network test','Controls video uses explicit staged setups and real subsequent inputs/audio','No human balance or minimum hardware certification','Initial hosting fixture could not reserve port; unchanged repeat passes, cause undetermined'],'preserved_versions':['0.1.0','0.2.0','0.3.0','0.4.0','0.5.0']}
     write(OUT/f'MANIFIESTO-{VERSION}.json',record)
     print(json.dumps(record['artifacts'],indent=2))
