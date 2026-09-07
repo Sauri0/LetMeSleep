@@ -64,4 +64,4 @@ Estos tiempos, cuotas y estadísticas de herramientas son hipótesis de prototip
 
 **Godot 4.5.2 / Windows 64 bits / OpenGL de compatibilidad.** Arte y audio originales. No hay cuentas, tienda ni servicios contratados. Licencias en **LICENCIAS-GODOT.txt**.
 
-Para **0.2.0** se verificaron reglas y sorteo de sala. La comprobación final de red, interfaz y exportación está pendiente de registrar en **PRUEBAS.md**; las validaciones de 0.1.0 no se presentan como pruebas de esta versión. El hash de la compilación final se completará en **BUILD.txt**.
+La entrega **0.2.0** tiene verificadas las reglas, el sorteo, la red local, la interfaz y la exportación Windows. La evidencia y los límites están en [PRUEBAS.md](PRUEBAS.md), y el SHA256 del ejecutable definitivo está en [BUILD.txt](BUILD.txt). Falta probar partidas humanas entre conexiones de Internet diferentes; las validaciones de 0.1.0 se conservan como historia y no certifican esta versión.
