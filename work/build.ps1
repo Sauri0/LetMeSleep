@@ -10,6 +10,10 @@ if (Test-Path -LiteralPath (Join-Path $projectRoot 'distribution')) {
 }
 & $godotExe --headless --path $gamePath --editor --import --quit
 if ($LASTEXITCODE -ne 0) { throw 'Godot import failed' }
+foreach ($entryPoint in @('scripts/main','scripts/client','tests/network_bot','tests/practice_ui_checks','tests/gameplay_demo')) {
+    & $godotExe --headless --path $gamePath --check-only --script "res://$entryPoint.gd"
+    if ($LASTEXITCODE -ne 0) { throw "$entryPoint parse failed" }
+}
 if (-not $SkipTests) {
     & $godotExe --headless --path $gamePath --script res://tests/rules_test.gd
     if ($LASTEXITCODE -ne 0) { throw 'Rules tests failed' }

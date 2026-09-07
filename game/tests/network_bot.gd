@@ -219,9 +219,9 @@ func _process(dt: float) -> void:
 			input_seq += 1
 			# Advance after authoritative acknowledgement, not a narrow wall-clock
 			# pulse that can disappear while sixteen processes start together.
-			var moving := not (report.lobby_movement_seen and report.lobby_sprint_seen)
-			var jumping := not moving and not bool(report.lobby_jump_seen)
-			var crouching := not moving and not jumping and not bool(report.lobby_crouch_seen)
+			var moving: bool = not (report.lobby_movement_seen and report.lobby_sprint_seen)
+			var jumping: bool = not moving and not bool(report.lobby_jump_seen)
+			var crouching: bool = not moving and not jumping and not bool(report.lobby_crouch_seen)
 			network.send_input(input_seq, Vector3(0.0,0,0.5) if moving else Vector3.ZERO, 0.0,0.0,false,moving,crouching,jumping and fmod(lobby_age,1.5)<1.0)
 		lobby_retry += dt
 		if not started and not roster.is_empty() and lobby_retry > 0.75:
