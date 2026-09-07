@@ -1,83 +1,52 @@
-# Let me sleep 0.4.0 — verificación de entrega
+# Let me sleep 0.5.0 — verificación de entrega
 
-7 de septiembre de 2026. Windows x86_64, Godot 4.5.2, protocolo 4; invitación DD3, formato interno 1.
+7 de septiembre de 2026. Windows x86_64, Godot 4.5.2, protocolo 5; invitación DD3.
 
-## Ejecutable entregado
+## Ejecutable
 
-**Cierre técnico completado.** Se ejecutó el mismo Let-me-sleep.exe que contiene el ZIP. SHA256:
+SHA256 del ejecutable comprobado:
 
-`F82635685B1D19E74F2788AF246179348091FD33311E5290A2DCD9151BF50332`
+`F52F96BACC0A54F229150EE42A3B6365C7D8675F780B51DA6F6AA6453BB47E38`
 
-Commit de código y diagnósticos: `3b6563815931e95c00ce8d09f6087903f7ebd772`. Las reglas y la interfaz jugable quedaron cerradas en `68e28d0034c613137b418eb43c5796d1b987cc59`; los cambios siguientes reforzaron los diagnósticos y la comprobación de compilación. Los hashes de los ZIP y el commit de documentación están en el manifiesto externo y sus archivos SHA256, para evitar una referencia circular dentro del propio ZIP.
+Código: `a55574c4a511d34d98bc4925baf2df85682aa304`. El manifiesto externo identifica los ZIP y el commit final de documentación, sin referencias circulares dentro de los paquetes.
 
-| Prueba del EXE de entrega | Resultado |
+| Prueba del EXE | Resultado |
 |---|---|
-| Práctica nativa desde menú: ambos roles y tres modos | 73/73; movimiento, cámara, W en 3D, frenado, salto, agacharse, ataque, pausa, resultado, repetir y salir. |
-| Demo nativa de controles | 8/8; concentración mantenida/cancelada, acople, extracción, desprenderse, retirada y escalera completa sin saltar. |
-| Plazos de Tareas mediante simulación embebida | 59/59; viaje caminando, penalización personal, límites, corte de encargos tardíos y partida completa. |
-| Encuentros completos mediante simulación embebida | 5/5 escenarios; cuotas y resultados reales, sin forzar posiciones ni finales. |
-| Auditor de privacidad con paquetes reordenados y filtraciones deliberadas | 24/24. |
-| ENet Sangre 1v1, invitación y dos rondas | PASS; cuota diagnóstica 3, retorno a sala, nuevo sorteo, cosméticos y controles de patio. |
-| ENet Tareas 1v1 | PASS; tarea real, objetivo diagnóstico 1 y resultado humano. |
-| ENet Supervivencia: 4 humanos + 12 mosquitos | PASS; 16 clientes, resultado correcto, privacidad y controles confirmados. |
-| Desconexión, protocolo inválido y EXE 0.3 real contra servidor 0.4 | PASS; interrupción sin ganador y rechazo de versión incompatible. |
+| Práctica nativa, ambos roles y tres modos | 73/73: menú, mundo, movimiento, controles, resultado, repetir y salir. |
+| Rescate con cliente, cámara y HUD reales | 20/20: golpe, caída, contador, compañero cercano, E mantenida, ayuda y recuperación del vuelo. |
+| Crear sala desde UI | 13/13: servidor propio, puerto independiente, confirmación real, puerto ocupado, reintento, cancelación y cierre sin huérfano. Preferencias restauradas byte a byte. |
+| Demo nativa de controles sin capturas PNG intermedias | 8/8: vuelo hacia la mira, frenado, concentración, cancelación, acople, extracción, desprenderse y escaleras. |
+| Aturdimiento y ayuda, simulación embebida | 297/297. |
+| Plazos de Tareas, simulación embebida | 59/59. |
+| Auditor de privacidad, simulación embebida | 37/37. |
+| ENet Sangre 1v1 por invitación, dos rondas | PASS: resultados coincidentes, regreso a sala, nuevo sorteo y 2308 paquetes privados auditados por cliente, sin pendientes. |
+| ENet Tareas 1v1 | PASS: tarea real y meta colectiva, 1216 privados auditados por cliente, sin pendientes. |
+| ENet Supervivencia 4 humanos + 12 mosquitos | PASS: 16/16 clientes, 19.433 privados auditados, 16 diferidos resueltos, cero pendientes, errores o stderr. Todos comprobaron movimiento, salto, carrera y agacharse en el lobby, cosméticos y el mismo resultado. |
+| Desconexión y rechazos de versión | PASS: ronda interrumpida sin ganador; protocolo inválido y cliente EXE 0.4 real rechazados en unos 0,175 s, sin recibir datos privados. |
 
-Los registros de entrega no contienen errores de stderr. Son procesos locales en una misma PC, no equipos ni conexiones de Internet independientes.
+Los ensayos ENet son procesos en una misma PC. No prueban redes independientes ni conexión entre casas. Sus rondas naturales no observaron aturdimiento o ayuda; esos estados se verificaron por separado en simulación y cliente nativo. Los registros aceptados no contienen errores de stderr. El cierre por muerte del proceso padre se comprobó también con el candidato anterior 697B, cuyo Main/Network es idéntico al entregado: hijo cerrado y puerto liberado.
 
-En los 16 clientes se verificaron **19.144 paquetes privados**; **92** esperaron un estado público del tick correspondiente, y quedaron **0 pendientes y 0 fallos**. Un intento anterior marcó dos saltos no observados y una alarma de privacidad con un verificador que comparaba el paquete privado contra un rol público todavía no confirmado. Se conservó ese informe. El verificador actualizado espera confirmación autoritativa del movimiento, correlaciona ticks y rechaza datos públicos prohibidos, asignaciones destinadas a humanos y paquetes que no pueda validar. No se descartaron pendientes para aprobar. El juego no cambió durante esta corrección del harness.
+## Reglas y presentación sobre fuente
 
-## Reglas, geometría e interfaz sobre fuente
+La compilación completa pasó reglas 1622, sala 321, mapas 431, rutas 303, locomoción 7325, defensa manual 5511, concentración 145, aturdimiento/ayuda 297, plazos 59, práctica 79, invitación 88, orden de red 11, conexión 23, privacidad 37, UI 106 y migración de preferencias 15. Cosméticos, geometría visual y audio también pasaron. La exportación final posterior sólo ajustó estilos de barras y fixtures de demostración/lobby; se repitieron sus pruebas relevantes en el EXE.
 
-| Suite | Comprobaciones sin fallos |
-|---|---:|
-| Reglas autoritativas | 3256 |
-| Sala social y sorteo | 321 |
-| Mapas y spawns | 431 |
-| Rutas físicas y alternativas | 303 |
-| Locomoción y colisiones | 16013 |
-| Concentración y combate | 277 |
-| Práctica: seis pares rol/modo | 69 |
-| Invitaciones | 51 |
-| Orden de mensajes de red | 11 |
-| UI nativa y límites de configuración | 77 |
-| Migración de preferencias | 13 |
-| Audio / privacidad visual / poses | 28 / 13 / 33 |
-| Presentación visual nativa 0.4 | 32 |
+El aturdimiento dura 35 segundos en Sangre y Tareas y conserva la sangre. Ayudar acelera a 4× sin acumular ayudantes; no se puede ayudar a través de paredes ni durante una picadura. Los golpes posteriores no reinician el contador. Se probaron caída, piso superior, escaleras, recuperación en el lugar, colas de marcas y ausencia de victoria por quedar todos aturdidos. Supervivencia conserva eliminación definitiva. Un bot ayudante recuperó a su compañero en 8,85 s, incluido su tiempo de reacción.
 
-También pasó la suite de cosméticos. La primera compilación ejecutó la matriz completa; tras los cambios de Tareas se repitieron reglas, práctica, plazos y UI. Los diagnósticos de red incorporaron sus propias regresiones. La compilación comprueba además la sintaxis de los puntos de entrada cargados dinámicamente. Las pruebas que modifican ajustes se ejecutaron secuencialmente y restauraron el perfil original byte por byte.
+Cinco encuentros completos de Sangre pasaron sobre fuente. El humano defensor aturdió cuatro veces y hubo tres recuperaciones; ganó al terminar los 120 s. El mosquito que permaneció adherido cayó a los 22,62 s y recuperó a los 57,62 s, sin morir. Dos pilotos con retirada ganaron a los 119,45 s y 99,18 s. Son sondas deterministas de reglas y bots, no evidencia de diversión o balance humano.
 
-## Encuentros y alcance del balance
+La revisión visual verificó 86 superficies y gestos de defensa, 19 casos de visualización del aturdimiento, audio de impacto y recuperación y personalización de ambos roles. El EXE final muestra relleno amarillo visible al 38% de ayuda, en una barra compacta de 104×4 px.
 
-| Escenario reproducible | Resultado real |
-|---|---|
-| Humano inmóvil contra dos mosquitos | Primera picadura 26,87 s; pierde por cuota a 52,47 s. |
-| Humano controlado por bot defensor | Gana a 32,67 s. |
-| Mosquito que permanece adherido 4,2 s | Muere a 22,15 s. |
-| Mosquito con retiradas a 2,75 s | Siete acoples; extrae 9,8 y muere a 115,85 s. |
-| Mosquito con retiradas a 3,25 s | Gana cuota 12 a 97,07 s: siete acoples, seis retiradas y supervivencia. |
+## Incidencias conservadas
 
-El ensayo usa inputs reales de PracticeSession y rutas físicas. La retirada ganadora combina desprendimiento, retroceso breve y nueva aproximación; no usa teleport ni concede sangre artificialmente. En la referencia 0.3, el primer contacto del escenario inmóvil ocurría a 1,38 s y la cuota a 25,77 s. Mapa, spawns y reglas cambiaron juntos: la comparación no aísla una sola causa. Estos resultados demuestran estrategias posibles, no diversión ni dificultad aprobadas por personas. Los humanos no tienen una barra de vida: Sangre se pierde por la cuota compartida.
+- Un primer harness de lobby caminaba siempre hacia el mismo borde; uno de 16 clientes podía empezar a observarse contra la pared y no confirmar desplazamiento. Se corrigió la dirección del bot de prueba hacia el centro, conservando las comprobaciones de movimiento, salto y agacharse. El informe fallido permanece archivado.
+- La demo con guardado de PNG intermedio no observó la primera carga de E y dio 7/8; la misma demo del EXE sin esas capturas pasó 8/8. No se reprodujo con instrumentación externa sobre el PCK final: PNG de 76–124 ms, E e interacción activas y edad de entrada máxima de 0,033 s. La demo original monitorizada también pasó 8/8 a 20 FPS con física de 60 Hz y a 20 Hz de física. El foco del sistema operativo durante el fallo original no fue verificado: la causa continúa indeterminada. Se conservan los registros y el caso queda en seguimiento si reaparece, sin afirmar que esté explicado o corregido. Las capturas independientes de rescate pasaron 20/20. No se modificó la lógica de concentración para aprobarla.
+- El primer ensayo del rescate exportado usó un directorio de capturas inexistente y falló sólo al guardar cinco PNG. Ejecutado con el directorio correcto, pasó completo.
+- La apariencia de zapatos suspendidos se midió: humano quieto, grounded=true y ambos zapatos a −5 mm del piso; al correr alternan pie de apoyo y elevación de 58 mm. No había salto congelado ni pivote alto. La puntera redonda y sombra débil a ras del piso aún pueden reducir la lectura visual del contacto.
 
-## Tareas alcanzables en la casa ampliada
+## Pendientes y límites
 
-Se midieron 104 trayectos físicos entre spawns y puestos: 61 superaban el antiguo piso de 8 s, ninguno el plazo inicial de 30 s. El análisis de 94 nodos por 8 puestos cubrió 752 rutas. La mayor mide 52,43 m horizontales; con Simulation real, sin correr, se llega a los 16,4 s y se completa el trabajo a los **19,4 s**.
+**Internet integrado sigue pendiente.** ENet directo requiere una dirección alcanzable. EOSG 2.3.0 se probó aislado para carga de clases, exportación y apertura nativa; eso no equivale a inicio DeviceID, creación/unión de sala ni P2P/relay funcionales. El alta/configuración del producto no fue recibida.
 
-El piso predeterminado es ahora **24 s**, con 4,6 s de margen en ese recorrido. La autoridad y la UI comparten un mínimo de **trabajo + 21 s**; la frecuencia debe superar ese mínimo en 0,5 s. Se mantienen plazo inicial 30 s, frecuencia 36 s, trabajo 3 s y penalización personal 2 s. Cinco fallos naturales producen 28, 26, 24, 24 y 24 s, sin acelerar el calendario ni afectar a otros humanos.
+La adaptación requiere listen server en una instancia, vinculación de identidad real con peer ID, fragmentación/reensamblado acotado y pruebas entre redes independientes. El codec local pasó 114 comprobaciones y 12 mensajes reales de la sonda anterior a aturdimiento; permanece sin conexión a Network. Se preparó un parche aislado de cabecera/PUID con 188 comprobaciones de diseño/aplicación, todavía sin compilar ni probar con SDK. Un primer import del plugin aislado tuvo crash al salir; los siguientes y el EXE aislado pasaron, pero la causa no está demostrada. Ningún SDK ni configuración EOS se incluye en el juego.
 
-No aparecen encargos si el tiempo real restante no alcanza para traslado y trabajo. La meta automática sigue siendo dos tercios de oportunidades válidas, redondeados hacia arriba: en 120 s y con un humano, hay encargos a 3, 39 y 75 s y meta 2; se omite el de 111 s. Una partida completa caminando realizó las tres tareas y ganó sin fallos ni colisiones. El HUD anuncia el tiempo efectivo disponible. La duración mínima configurable asegura una primera oportunidad por humano incluso con trabajo de 8 s: 33 s para uno y 39 s para cinco. La práctica ampliada de 180 s completó cinco tareas entre ambas plantas.
-
-## Capturas, video y reproducción
-
-El MP4 dura 13,4 s a 30 fps fijos y está rotulado **DEMO DE CONTROLES / RIVAL QUIETO**. Es una demostración controlada del EXE, separada de los encuentros automatizados. No representa FPS de juego. Las capturas de demo-final y practica-final proceden del mismo EXE; las ocho vistas de ambientes y poses son fixtures de la geometría final.
-
-Evidencias y capturas se entregan en `0.4-validacion/` y `0.4-preview/`, junto a los ZIP. Los informes `release04-delivery-*` corresponden al hash de entrega; los intentos anteriores conservan sus nombres y contexto. `work/build.ps1` importa, comprueba y exporta; `work/test-network.ps1` reproduce ENet. Ejemplo desde la carpeta del EXE:
-
-```powershell
-./Let-me-sleep.exe --headless --script res://tests/task_deadline_test.gd
-```
-
-Las mediciones visuales orientativas, con RTX 3060 Ti y vsync desactivado, dieron medianas de 4,86 ms en dormitorio, 4,91 ms en escalera y 7,22 ms en pasillo; son vistas de diagnóstico, no requisitos mínimos ni mediciones de una partida completa.
-
-## Límites de esta entrega
-
-Falta juego humano para validar comodidad, lectura de marcas, dificultad y balance. Tampoco se verificaron varias computadoras físicas, Internet entre casas ni el rendimiento mínimo del grupo. Loopback y 16 procesos en una PC no certifican una LAN real ni latencia/pérdidas externas. La invitación no abre puertos ni resuelve CGNAT; el servidor sigue alojado en la PC del usuario, sin relay contratado ni cambios automáticos de router o firewall. Las entregas 0.1–0.3 se conservan.
+No se certifican rendimiento mínimo, tolerancia a pérdida real de Internet, accesibilidad completa, balance humano ni hardware del grupo. El clip de controles es una demostración determinista rotulada, no un benchmark ni una partida competitiva. La música de menú, nuevos modelos y mejoras de la siguiente etapa quedan fuera de 0.5.

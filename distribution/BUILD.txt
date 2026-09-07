@@ -1,15 +1,11 @@
-Let me sleep 0.4.0 — entrega verificada
-Godot 4.5.2.stable.official.6ce3de25a
-Windows x86_64 / ENet UDP 27840 / protocolo 4
-Invitación DD3 / formato interno 1; cliente 0.3 incompatible.
+Let me sleep 0.5.0 — Windows x86_64
+Godot 4.5.2.stable.official.6ce3de25a / OpenGL de compatibilidad
+ENet UDP 27840 predeterminado / protocolo 5 / invitación DD3
 Ejecutable: Let-me-sleep.exe
-SHA256: F82635685B1D19E74F2788AF246179348091FD33311E5290A2DCD9151BF50332
-Commit de código y diagnósticos: 3b6563815931e95c00ce8d09f6087903f7ebd772
-Commit de reglas e interfaz jugable: 68e28d0034c613137b418eb43c5796d1b987cc59
-Práctica nativa 73/73; demo 8/8; plazos 59/59; encuentros 5/5; auditor 24/24.
-ENet: invitación 1v1/dos rondas, Tareas 1v1, Supervivencia 4v12, desconexión y versiones incompatibles: PASS.
-Reglas 3256; mapas 431; rutas 303; combate 277; locomoción 16013; práctica 69; UI 77; migración 13: sin fallos.
-Paquetes: Let-me-sleep-0.4.0-Windows.zip / Let-me-sleep-0.4.0-fuentes.zip.
-Hashes de ZIP y commit de documentación: MANIFIESTO-0.4.0.json externo y archivos .sha256.txt junto a los ZIP.
-Evidencias y límites: PRUEBAS.md, 0.4-validacion y 0.4-preview de la entrega.
-Fecha: 2026-09-07. Versiones históricas 0.1–0.3 preservadas.
+SHA256: F52F96BACC0A54F229150EE42A3B6365C7D8675F780B51DA6F6AA6453BB47E38
+Commit de código: a55574c4a511d34d98bc4925baf2df85682aa304
+Paquetes: Let-me-sleep-0.5.0-Windows.zip / Let-me-sleep-0.5.0-fuentes.zip
+Hashes de ZIP y commit final de documentación: MANIFIESTO-0.5.0.json externo.
+Evidencias, resultados y límites: PRUEBAS.md.
+EOS no integrado: requiere adaptación, configuración y pruebas entre casas.
+Fecha: 2026-09-07. Las entregas anteriores se conservan.

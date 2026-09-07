@@ -1,145 +1,78 @@
-# Let me sleep · 0.4.0 · Windows 64 bits
+# Let me sleep · 0.5.0 · Windows 64 bits
 
-**Descomprimí toda la carpeta antes de jugar.** Abrí **Let-me-sleep.exe** o **Jugar.cmd**. No necesitás instalar Godot. Para jugar juntos, todos necesitan **0.4.0 / protocolo 4**. El texto de invitación conserva el formato DD3; un cliente 0.3 es incompatible con la sesión 0.4.
+Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.5.0 / protocolo 5**.
 
-## Empezá con estos controles
+Esta versión mejora la defensa manual, la cámara, la casa, el HUD y la personalización. **La conexión integrada entre casas todavía está en desarrollo.** El servidor directo y la invitación DD3 necesitan una ruta de red alcanzable; el código por sí solo no resuelve eso.
 
-- **Mosquito: W hacia donde mirás.** Mirá arriba o abajo para volar en 3D; soltá W para frenar.
-- **Mantené E cerca de tu marca** para concentrarte y acoplarte. Soltar antes cancela. Ya picando, soltar no desprende: **soltá y pulsá E otra vez** para salir.
-- **Retirate con S**, ganá distancia y volvé a aproximarte mirando tu nueva marca.
-- **Humano: Q cubre tu cuerpo.** Mirada al frente/arriba: cabeza; algo abajo: torso; bien abajo: piernas. Podés anticiparte a la picadura.
+## Empezar a jugar
 
-Son las teclas iniciales; el HUD muestra las que hayas guardado en Ajustes.
+Elegí **PRÁCTICA**, tu personaje y un modo. El humano juega contra dos mosquitos automáticos; el mosquito, contra un humano automático. La práctica funciona sin conexión ni servidor externo. En partidas con amigos, los roles se sortean cada ronda.
 
-## Probar ahora, sin organizar una sala
-
-1. En el inicio elegí **PRÁCTICA**.
-2. Elegí **HUMANO** o **MOSQUITO** y uno de los tres modos: **Recolección de sangre**, **Supervivencia** o **Tareas**.
-3. Pulsá **¡A PRACTICAR!**.
-
-Como humano te enfrentás a dos mosquitos automáticos; como mosquito, a un humano automático. Los rivales tienen comportamiento de juego: buscan objetivos, se desplazan, atacan, pican y hacen tareas según el modo. En Supervivencia los mosquitos intentan seguir vivos y no necesitan picar. La práctica corre en tu PC, sin conectarte a una sala ni abrir un servidor de red.
-
-El cartel **PRÁCTICA / RIVALES AUTOMÁTICOS** identifica esta sesión. Al terminar podés **REPETIR PRÁCTICA** o **VOLVER AL MENÚ**. Las reglas de golpes, zonas, vidas y resultados son las mismas que con amigos. Los rivales son una ayuda para aprender; su dificultad y el balance siguen siendo valores de prototipo.
-
-**Solo en práctica elegís el rol.** En una sala con amigos se sortea al comenzar cada ronda.
-
-## Alojar una partida con amigos
-
-1. En el inicio elegí **CREAR SALA** y escribí tu nombre.
-2. Pulsá **1 · Encender servidor en esta PC** y luego **2 · Crear sala**. El servidor y tu juego corren como procesos separados. Tu cliente se conecta a **127.0.0.1:27840**.
-3. En la sala abrí **Dirección para amigos**. Indicá la dirección que ellos pueden alcanzar y el puerto correspondiente. En la misma red podés elegir tu IP local en la lista. Para otras casas, leé el apartado de Internet.
-4. Pulsá **GUARDAR Y COPIAR INVITACIÓN**. Compartí por tu chat habitual el texto completo que empieza por **DD3-**. **Invitar** permite copiarlo otra vez.
-5. Tus amigos eligen **UNIRME CON INVITACIÓN**, escriben su nombre, pegan ese único texto y pulsan **Unirme a la sala**.
-6. Elegí modo y **cantidad exacta de humanos, de 1 a 5**. Todos los demás serán mosquitos. Todos pulsan **Estoy listo** y el anfitrión inicia.
-7. Al terminar, **VOLVER A LA SALA** prepara otra ronda. Todos vuelven a estar listos y el servidor hace un sorteo nuevo.
-
-También podés iniciar el servidor con **Iniciar-servidor.cmd** y dejar su ventana abierta. Elegí una sola forma de arrancarlo para evitar que dos procesos intenten usar el mismo puerto. El servidor iniciado desde el juego se cierra al salir de ese juego.
-
-La sala requiere ambos bandos: **1 contra 1 es válido**. Los límites provisionales son **12 mosquitos y 16 participantes totales**. Si la cantidad exacta de humanos no deja un equipo mosquito válido, aparece el motivo y no se inicia; no se modifica esa cantidad automáticamente.
-
-**Nadie elige equipo en la sala social.** El sorteo es independiente en cada ronda y puede repetirte el mismo rol varias veces. Cambiar reglas vuelve a dejar a todos sin preparar.
-
-## Qué contiene la invitación
-
-La invitación **DD3-…** empaqueta **dirección, puerto y código de sala** para que el amigo pegue un solo texto. No está cifrada ni es un secreto criptográfico. Solo funciona mientras la sala exista y la dirección siga siendo alcanzable.
-
-La conexión del anfitrión y la **Dirección para amigos** se guardan por separado. El anfitrión puede usar **127.0.0.1** en su propia PC; compartirla enviaría a cada amigo a su propia computadora, por eso no se acepta como dirección de invitación.
-
-La invitación no abre puertos ni resuelve NAT. El juego no consulta servicios HTTP para detectar tu IP pública. No se instaló ni contrató relay, alojamiento o servicio externo.
-
-Si necesitás ingresar datos separados, **Opciones de conexión** muestra dirección, puerto y código. Para usar esa vía al unirte, dejá vacío el campo de invitación.
-
-## Amigos en la misma red / LAN
-
-En **Dirección para amigos**, elegí la IPv4 del adaptador Wi-Fi o Ethernet de la red compartida, por ejemplo **192.168.1.25**. Si aparecen varias direcciones, usá la del adaptador por el que ambos equipos se conectan; una VPN u otro adaptador puede tener una dirección distinta. Podés compararlas con la salida de **ipconfig**.
-
-Usá el puerto del servidor, **UDP 27840** por defecto, y copiá una invitación nueva si cambia la dirección o el puerto. La red debe permitir comunicación entre dispositivos; algunas redes de invitados la bloquean.
-
-Si Windows pregunta por acceso del servidor, permitilo en la red donde van a jugar. Esta entrega no crea reglas globales de firewall automáticamente.
-
-## Amigos desde otras casas / Internet
-
-En **Dirección para amigos**, escribí una IP pública o un nombre de servidor alcanzable por ellos. El acceso directo requiere una ruta UDP hasta tu servidor.
-
-Con un router doméstico que permita ese acceso, el esquema habitual es **UDP externo 27840 → IPv4 local de tu PC:27840**, junto con permiso de entrada al servidor en el firewall de esa PC. Si usás otro puerto externo, colocá ese número en **Puerto para amigos**. El cliente local puede seguir conectándose a 127.0.0.1:27840. La configuración concreta depende de tu router y conexión.
-
-Si tu proveedor usa **CGNAT**, una redirección en tu router puede no alcanzar; habrá que resolver la conectividad con el proveedor o una solución de red compatible con UDP. La invitación no corrige CGNAT, doble NAT ni bloqueos del proveedor. Una comprobación de puertos que solo use TCP no verifica este servidor UDP.
-
-Si un amigo no entra, revisen versión, invitación completa, servidor encendido, dirección elegida, puerto y ruta UDP. El juego no configura el router ni detecta públicamente esa ruta. La PC anfitriona debe seguir encendida y sin suspenderse.
-
-## La previa y tu apariencia
-
-La sala de espera es un **patio 3D separado de la casa de juego**, con bancos y espacio central. Usá el botón para caminar y recorré el patio con WASD, ratón, Shift para correr, Espacio para saltar y Ctrl para agacharte. **Esc** recupera los paneles de sala. Los avatares humanos de espera no anticipan el rol de la ronda.
-
-Desde **TU PINTA** elegís color y accesorio para humano y mosquito por separado, con vista previa 3D. Las dos apariencias se guardan localmente y se aplica la del rol que toque. Son cambios visuales; no modifican velocidad, alcance, vidas ni colisiones.
-
-Al pasar de la edición anterior a **Let me sleep**, el juego copia los ajustes anteriores cuando todavía no existen preferencias nuevas. Conserva apariencias y controles, deja intacto el archivo anterior y no sobrescribe un perfil nuevo.
-
-La casa ocupa **28 × 22 m**, con dos plantas a **0 y 3,2 m** y techo a **6,4 m**. Tiene **16 ambientes amueblados**, pasillos, puertas reales y dos escaleras laterales que ofrecen rutas alternativas. Las escaleras usan 16 peldaños de 0,2 m por lado y huecos reales en el entrepiso. Las **8 tareas y 8 herramientas recogibles** están distribuidas entre ambas plantas. Humanos y mosquitos aparecen separados, sin solapamiento ni línea de visión inicial entre bandos. Los bots pueden subir y bajar por rutas válidas.
-
-El mosquito es aproximadamente **65% menor visualmente** que en 0.3 y usa radio físico **0,04 m**. El humano se representa con **15 piezas corporales** y **22 zonas** posibles ligadas a la pose compartida; con un solo humano se usan las 16 frontales. Materiales estilizados de madera, tela y paredes, marcos y mobiliario dan identidad a los ambientes sin cambiar las colisiones autoritativas.
-
-## Controles iniciales
+## Controles esenciales
 
 | Acción | Humano | Mosquito |
 |---|---|---|
-| Desplazarse / mirar | WASD / ratón | W hacia la mira en 3D, A/S/D relativo / ratón; soltar avance frena |
-| Shift | Correr | — |
-| Espacio | Saltar | Altura auxiliar +, opcional |
-| Ctrl | Agacharse | Altura auxiliar −, opcional |
-| Clic izquierdo | Palmada o golpe | — |
-| Q | Cubrir cabeza/torso/piernas según mirada, incluso antes de picadura | — |
-| E | Mantener para hacer tarea | Mantener para concentrar/cargar; soltar cancela antes del anclaje; nueva pulsación al picar desprende |
-| R / G | Recoger o cambiar / soltar herramienta | — |
-| F | — | Posarse cerca de una superficie / volver a volar |
-| Esc | Abrir/cerrar menú | Abrir/cerrar menú |
+| Moverse | WASD | WASD respecto de la mirada |
+| Mirar | Mouse | Mouse; mirar arriba/abajo dirige el vuelo |
+| Acción principal | Clic izquierdo: palmada o herramienta | Mantener E: concentrarse en la marca propia |
+| Movimiento especial | Shift correr; Espacio saltar; Ctrl agacharse | Soltar movimiento frena; Espacio/Ctrl ajustan altura opcionalmente |
+| Objetos / superficies | R recoger o cambiar; G soltar | F posarse o volar |
+| Tareas | Mantener E cerca del puesto asignado | — |
+| Ayuda y ajustes | Esc | Esc |
 
-Podés reasignar controles y ajustar sensibilidad por rol, volumen, inversión y pulso de marca. Las ayudas del juego reflejan tus teclas guardadas.
+Son los valores iniciales; las teclas pueden reasignarse. Ajustes guarda sensibilidad separada por personaje, inversión vertical, volumen y controles. El menú libera el mouse y bloquea tus acciones, pero la ronda sigue avanzando.
 
-### Humano: defenderse y ayudar
+## Si te están picando
 
-Empezás con manos. Clic da una palmada; los objetos del mapa ofrecen golpes diferentes: matamoscas, raqueta eléctrica, diario enrollado y escoba. R recoge o cambia un objeto cercano; G lo deja y vuelve a las manos. Cada golpe necesita recuperarse antes de repetir. Las manos alcanzan 1,7 m; el impacto se comprueba durante una ventana de 0,08–0,25 s del gesto, no como golpe instantáneo al pulsar.
+Mirá hacia abajo y girá la vista hacia el mosquito visible sobre tu cuerpo. **Apuntale y hacé clic izquierdo.** La vista puede girar respecto del torso para alcanzar pecho, abdomen, antebrazos y muslos. Al volver a mirar al frente, el cuerpo acompaña suavemente.
 
-Podés usar Q antes de que el mosquito se adhiera. El HUD muestra la zona que cubrís y el aviso «Zumbido cerca» indica una amenaza sin revelar marcas privadas. Q defiende una banda del propio cuerpo según la mirada: **frente o arriba** para cabeza/hombros, **algo abajo** para torso y **bien abajo** para piernas. Con un solo humano, todas las marcas disponibles se pueden defender con las manos iniciales. Las marcas traseras se habilitan con varios humanos y requieren ayuda: acercate al lado expuesto de tu compañero y apuntá al mosquito con clic.
+La palmada tiene recorrido y recuperación: apuntar cerca no garantiza acertar. El aviso «¡Tocó!» confirma un impacto; el fallo también tiene respuesta. Q conserva una segunda tecla para la misma palmada manual. Si sostenés una herramienta y apuntás a su brazo, la otra mano puede dar la palmada.
 
-Correr, saltar y agacharse tienen colisiones y límites. El cuerpo, las extremidades y las marcas siguen la postura; saltar o agacharse no desprende por sí solo un mosquito adherido.
+Las marcas de espalda aparecen sólo con varios humanos y requieren ayuda de otro jugador. Los humanos ven avisos de picaduras reales; no ven las futuras marcas privadas de los mosquitos.
 
-### Mosquito: picar y desprenderse
+## Volar y picar
 
-El mosquito vuela hacia donde apunta la cámara: **W avanza en 3D**, incluso al mirar arriba o abajo, y **soltar avance frena**. A/S/D conservan movimiento relativo; Espacio/Ctrl son ayudas de altura opcionales. Cerca de la marca propia, **mantener E concentra durante 1,2 s**, estabiliza y asiste el acercamiento. Soltar antes del anclaje cancela la carga. Ya picando, **una nueva pulsación de E desprende; soltarla no libera**. La carga exige alcance, orientación, lado exterior y recorrido libres; no atraviesa paredes ni el cuerpo.
+W vuela hacia donde apuntás, incluso arriba o abajo. Soltalo para frenar. Acercate por el lado visible de **tu** marca y mantené E para concentrarte. Soltar antes de terminar cancela la carga. Ya adherido, soltar E te mantiene picando: soltá y pulsá E de nuevo para desprenderte, retrocedé con S y buscá tu nueva marca.
 
-El HUD distingue zona a alcance, concentración con progreso, intento bloqueado y picadura. Las ayudas usan tus teclas guardadas. Al quedar anclado conservás la zona y acompañás al humano aunque corra, salte o se agache.
+La sangre empieza a extraerse después de la preparación de la picadura. La marca rota con un calendario privado; mientras estás adherido queda fija. Si todas las zonas válidas están ocupadas, esperás turno sin recibir una marca imposible. No se muestra el temporizador de rotación.
 
-**Otra pulsación de E desprende; soltar la tecla no libera.** Al soltarte recibís otra zona inmediatamente, sin reiniciar el calendario individual de rotación. No hay cuenta regresiva de la marca. Si está detrás del cuerpo o de un mueble, rodealo para verla y alcanzarla.
+## Aturdimiento y ayuda entre mosquitos
 
-F permite posarte solo cerca de piso, pared, techo o mueble; no congela el vuelo en el aire. Moverte vuelve a volar. Los eliminados esperan sin cámara libre ni marcas de compañeros.
+En Recolección de sangre y Tareas, una palmada te hace caer aturdido al piso durante **35 segundos**. Seguís en la ronda y podés mirar alrededor, pero no volar ni picar hasta recuperarte. Los golpes sobre un mosquito ya aturdido no reinician el tiempo.
 
-## Tres modos
+Otro mosquito puede acercarse, apuntarte y **mantener E** para ayudarte. La recuperación avanza a cuatro veces la velocidad normal mientras siga cerca y sin obstáculos. Alejarse, soltar E o perder la línea de visión interrumpe la ayuda; varios compañeros no multiplican la velocidad. Al levantarte volvés a controlar al mosquito en ese lugar y recibís una marca válida cuando haya una disponible.
 
-| Modo | Victoria y vidas |
-|---|---|
-| Recolección de sangre | Los mosquitos deben alcanzar una cuota compartida antes del reloj. Humanos ganan si lo impiden o eliminan a todos. La sangre obtenida se conserva al desprenderse y morir. Una vida por mosquito, sin reapariciones. |
-| Supervivencia | Basta un mosquito vivo al terminar para que gane su equipo. Humanos ganan si eliminan a todos antes. Una vida; sin hambre ni obligación de picar. |
-| Tareas | Humanos cumplen la meta colectiva al final o ganan antes al agotar todas las vidas de los mosquitos. Cada mosquito tiene 3 vidas totales personales por defecto y reaparece mientras conserve alguna. |
+Si todos los mosquitos caen, la ronda continúa: los humanos aprovechan ese tiempo para defender la sangre o hacer tareas. En **Supervivencia**, los golpes siguen eliminando al mosquito por el resto de la ronda.
 
-En **Tareas**, mantené E junto al puesto indicado. Una picadura pausa el trabajo y conserva el avance. Cada fallo reduce **solo el plazo de futuras tareas del humano que falló**; no cambia la duración de ronda, frecuencia de tareas ni plazos de compañeros. La meta es colectiva, aunque el plazo y la penalización sean personales.
+## Crear una sala dentro del juego
 
-Tres vidas totales significan tres oportunidades de vivir, no tres reapariciones. Si todos están temporalmente muertos pero queda alguna vida, la ronda sigue. Si todos agotan sus vidas, los humanos ganan inmediatamente aunque falten tareas.
+1. Elegí **CREAR SALA**, escribí tu nombre y pulsá **CREAR SALA**. El juego abre y comprueba su servidor en tu PC y entra automáticamente al lobby.
+2. Para la red directa, configurá la **Dirección para amigos** según el alcance real y copiá la invitación DD3. En la misma red, usá la dirección local de la PC anfitriona.
+3. Tus amigos eligen **UNIRME CON INVITACIÓN**, escriben su nombre y pegan el texto completo.
+4. El anfitrión elige modo y cantidad de humanos. Todos se preparan y el anfitrión inicia.
 
-Valores candidatos: ronda **120 s**, cuota compartida **12**, rotación **14 s**. Extracción **0,8 unidades/s por mosquito**, con **tope agregado de equipo de 1 unidad/s**, después de **1 s de preparación** tras adherirse. La cuota configurada no cambia por escalado oculto. Tareas cada **36 s**, plazo inicial **30 s**, trabajo **3 s**, penalización propia **2 s**, piso **24 s**, meta **0 = automática** de dos tercios de oportunidades, redondeados hacia arriba. Tareas conserva **3 vidas totales personales** por defecto y **4 s** para reaparecer. Son hipótesis de prototipo; requieren juego humano para decidir balance.
+El juego gestiona su servidor oculto: no hace falta abrir una consola, otro ejecutable ni Iniciar-servidor.cmd. Salir de la sala o cerrar el juego termina el servidor propio. Si se cierra el anfitrión, la sala termina; no se transfiere a otra PC. Los scripts de servidor del paquete son herramientas avanzadas opcionales.
 
-El **piso predeterminado es 24 s**. El mínimo configurable de plazo y piso es **tiempo de trabajo + 21 s de traslado**; la frecuencia mínima es ese mínimo más **0,5 s**. Con el trabajo habitual de 3 s, los límites son 24 s de plazo y 24,5 s entre tareas; los valores iniciales siguen siendo 30 s y 36 s. La reserva permite recorrer la casa de dos pisos también caminando: el piso anterior de 8 s era menor que numerosos trayectos. La penalización continúa siendo personal y el piso queda visible en las reglas; no hay extensiones ocultas de plazo ni garantía de completar el trabajo bajo ataque.
+**Entre casas:** todavía no se verificó la conexión integrada con descubrimiento y relay. La opción de dirección de Internet sirve sólo si ya existe una ruta alcanzable hasta el anfitrión. No garantiza que cualquier red funcione. Estamos preparando una conexión integrada para que los amigos sólo descarguen el juego y peguen el código, sin otra aplicación.
 
-**No aparecen nuevos encargos si el tiempo restante de ronda no alcanza para traslado y trabajo.** El plazo visible de una tarea tampoco supera el tiempo que queda de ronda. La meta automática cuenta únicamente esas oportunidades: con los valores iniciales hay **3 encargos posibles por humano** y una meta colectiva equivalente a **2 tareas por humano**, sumadas entre todos. La cadencia y la penalización personal se conservan. Al configurar rondas muy cortas de Tareas, el mínimo mostrado deja tiempo para el primer encargo de cada humano; por ejemplo, con 8 s de trabajo exige 33 s para un humano o 39 s para cinco. Sangre y Supervivencia conservan su mínimo de 30 s.
+## Si no conecta
 
-## Menús, resultados y desconexión
+El estado distingue búsqueda de nombre, respuesta UDP y entrada a la sala. Un rechazo de versión, sala o capacidad conserva su motivo. Cancelar detiene el intento; Reintentar vuelve a abrirlo sin reutilizar un servidor ajeno al crear.
 
-Esc o Volver cierran la vista activa y recuperan el foco anterior; al reasignar una tecla, Esc cancela primero esa captura. En partida, Esc libera el ratón y bloquea tus controles. **La ronda continúa, tanto en práctica como online.**
+Si aparece «No llegó respuesta UDP», todavía no se sabe si falló la ruta, el servidor o una regla de red. Revisá el endpoint mostrado y que el anfitrión siga en su sala. No confundas 127.0.0.1 o una dirección de otra red local con una dirección disponible desde otra casa. Copiar una invitación no comprueba su alcance.
 
-Una desconexión durante la ronda online la interrumpe sin ganador y devuelve al grupo a sala. Reconectar permite volver a la sala, no recuperar esa ronda. Una salida después de un resultado ya cerrado no cambia el ganador.
+## Tu personaje
 
-## Archivos y comprobaciones
+Abrí **TU PINTA** en el menú principal. Elegí humano o mosquito; girá el modelo arrastrando, acercá/alejá con la rueda y usá restablecer vista. Cada personaje guarda su propio color, detalle, cara, pelo o antenas, ropa o patrón y accesorio. Los cambios aparecen en práctica y en la sala de los demás; son sólo visuales.
 
-**Godot 4.5.2 / Windows x86_64 / OpenGL de compatibilidad.** La carpeta incluye cliente, servidor mediante script, guía y avisos de licencia. Bangers para títulos de cómic y Atkinson Hyperlegible para lectura usan **SIL Open Font License**. Arte y audio procedural originales; no hay cuentas, tienda ni servicios contratados.
+## Modos
 
-La evidencia vigente, su alcance y los pendientes están en [PRUEBAS.md](PRUEBAS.md). La identificación de compilación y el SHA256 del ejecutable corresponden a [BUILD.txt](BUILD.txt). Las partidas locales automatizadas no sustituyen jugar entre conexiones distintas ni medir comodidad, balance o rendimiento en las PCs del grupo.
+- **Recolección de sangre:** los mosquitos comparten una meta de sangre que deben completar antes del final. Los humanos frenan la recolección aturdiéndolos durante 35 segundos; pueden ser ayudados por sus compañeros.
+- **Supervivencia:** los mosquitos deben sobrevivir hasta terminar el tiempo, con una vida y sin hambre. Los humanos intentan eliminarlos.
+- **Tareas:** los humanos comparten una meta de trabajos, con asignaciones y plazos personales. Fallar reduce plazos siguientes hasta el mínimo; no elimina la reserva necesaria para viajar. Los mosquitos pueden interrumpir tareas; si reciben un golpe, quedan aturdidos y pueden ser ayudados. No hay un límite de vidas en este modo.
+
+Se permiten de uno a cinco humanos, hasta doce mosquitos y dieciséis participantes totales; también uno contra uno. La casa tiene dos pisos, dieciséis ambientes y dos escaleras. Mirá los puestos cercanos para encontrar tareas y herramientas; las etiquetas lejanas se ocultan para dejar ver el escenario.
+
+## Archivos y límites de esta entrega
+
+**PRUEBAS.md** registra qué se comprobó y qué falta. **BUILD.txt**, el manifiesto y los archivos SHA256 identifican el ejecutable y los paquetes. No se ha certificado balance con jugadores humanos, requisitos mínimos ni rendimiento en todas las PCs. La documentación técnica y las fuentes están en el repositorio público de GitHub.
