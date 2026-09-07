@@ -42,11 +42,11 @@ const CONFIG_FIELDS := [
 	["blood_goal", "Cuota compartida", 1, 1000, 1, "blood"],
 	["mosquito_lives", "Vidas por mosquito", 1, 9, 1, "sleep"],
 	["respawn_seconds", "Demora para reaparecer · s", 1, 15, 1, "sleep"],
-	["task_interval", "Frecuencia de tareas · s", 15, 60, 1, "sleep"],
-	["task_deadline", "Plazo inicial por tarea · s", 3, 59.5, 0.5, "sleep"],
+	["task_interval", "Frecuencia de tareas · s", Simulation.TASK_TRAVEL_RESERVE + 1.5, 60, 0.5, "sleep"],
+	["task_deadline", "Plazo inicial por tarea · s", Simulation.TASK_TRAVEL_RESERVE + 1.0, 59.5, 0.5, "sleep"],
 	["task_work", "Trabajo por tarea · s", 1, 8, 1, "sleep"],
 	["task_penalty", "Menos plazo por fallo · s", 0.5, 8, 0.5, "sleep"],
-	["task_floor", "Plazo mínimo · s", 3, 59.5, 0.5, "sleep"],
+	["task_floor", "Plazo mínimo · s", Simulation.TASK_TRAVEL_RESERVE + 1.0, 59.5, 0.5, "sleep"],
 	["task_goal", "Meta de tareas · 0 = auto", 0, 100, 1, "sleep"],
 ]
 
@@ -743,6 +743,7 @@ func _build_lobby() -> void:
 func _mode_selected(_index: int) -> void:
 	_update_mode_fields()
 	if not _updating_config:
+		_update_dependent_ranges()
 		_config_apply.text = "Aplicar cambios"
 
 
@@ -756,17 +757,33 @@ func _update_mode_fields() -> void:
 		"sleep": _mode_description.text = "Humanos: alcancen la meta colectiva o agoten las vidas de todos los mosquitos. Cada fallo acorta solo el plazo futuro de quien falló. Las picaduras pausan el trabajo."
 
 
-func _update_dependent_ranges() -> void:
-	# Mirror the authoritative dependencies while editing, so every displayed
-	# value can actually be accepted by the server.
+func _update_dependent_ranges(received: Dictionary = {}) -> void:
+	# Read before changing ranges: their automatic clamps must not overwrite
+	# server values when a previous configuration had stricter minima.
 	if not _fields.has("task_floor"):
 		return
 	var was_updating: bool = _updating_config
 	_updating_config = true
-	_fields["task_deadline"].min_value = float(_fields["task_work"].value) + 2.0
-	_fields["task_deadline"].max_value = float(_fields["task_interval"].value) - 0.5
-	_fields["task_floor"].min_value = float(_fields["task_work"].value) + 2.0
-	_fields["task_floor"].max_value = float(_fields["task_deadline"].value)
+	var requested: Dictionary = {}
+	for key: String in _fields:
+		requested[key] = received.get(key, _fields[key].value)
+	requested["mode"] = received.get("mode", MODES[clampi(_mode.selected, 0, 2)])
+	var valid: Dictionary = Simulation.sanitize_config(requested)
+	_fields["round_seconds"].min_value = Simulation.minimum_round_seconds(valid)
+	_fields["round_seconds"].value = valid.round_seconds
+	_fields["round_seconds"].tooltip_text = "En Tareas, la ronda reserva traslado y trabajo para el primer encargo de cada humano." if valid.mode == "sleep" else ""
+	var minimum: float = Simulation.minimum_task_deadline(float(valid.task_work))
+	_fields["task_interval"].min_value = maxf(15.0, minimum + 0.5)
+	_fields["task_interval"].value = valid.task_interval
+	_fields["task_deadline"].max_value = 59.5
+	_fields["task_deadline"].min_value = minimum
+	_fields["task_deadline"].max_value = float(valid.task_interval) - 0.5
+	_fields["task_deadline"].value = valid.task_deadline
+	_fields["task_floor"].max_value = 59.5
+	_fields["task_floor"].min_value = minimum
+	_fields["task_floor"].max_value = float(valid.task_deadline)
+	_fields["task_floor"].value = valid.task_floor
+	_fields["task_floor"].tooltip_text = "Reserva %.0f s para llegar al puesto, además del tiempo de trabajo. Los fallos nunca bajan de este piso." % Simulation.TASK_TRAVEL_RESERVE
 	_updating_config = was_updating
 
 
@@ -1465,7 +1482,7 @@ func show_lobby(data: Dictionary, local_id: int) -> void:
 		for key: String in _fields:
 			_fields[key].value = _config.get(key, FALLBACK_CONFIG.get(key, 1 if key == "human_count" else 0))
 		_updating_config = false
-		_update_dependent_ranges()
+		_update_dependent_ranges(_config)
 		_update_mode_fields()
 		_config_apply.text = "Aplicar reglas" if _owner else "Las reglas las cambia el anfitrión"
 	_mode.disabled = not _owner

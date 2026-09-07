@@ -87,7 +87,7 @@ func _test_roster_config() -> void:
 	var settings: Dictionary = Sim.sanitize_config({"mode": "unknown", "round_seconds": NAN, "mosquito_lives": 99, "task_interval": 15, "task_work": 8, "task_deadline": 99, "task_floor": 0})
 	check(settings.mode == "blood" and is_finite(float(settings.round_seconds)), "malformed config cannot introduce NaN or unknown mode")
 	check(int(settings.mosquito_lives) == 9, "sleep lives capped")
-	check(float(settings.task_deadline) < float(settings.task_interval) and float(settings.task_floor) >= float(settings.task_work) + 2.0, "tasks maintain interval and viable work floor")
+	check(float(settings.task_deadline) < float(settings.task_interval) and float(settings.task_floor) >= Sim.minimum_task_deadline(float(settings.task_work)), "tasks maintain interval and walking travel allowance")
 	check(int(Sim.DEFAULT_CONFIG.human_count) == 1, "human-count setting defaults to one")
 	check(int(Sim.sanitize_config({"human_count": 5}).human_count) == 5, "human count sanitized independently of connected players")
 	check(int(Sim.sanitize_config({"human_count": 99}).human_count) == 5 and int(Sim.sanitize_config({"human_count": -5}).human_count) == 1, "human count retains fixed supported bounds")
@@ -450,7 +450,7 @@ func _test_lives_and_results() -> void:
 	check(sleep_sim.winner == "human" and int(sleep_sim.tasks_done) == 0, "all personal lives exhausted ends sleep immediately even without task goal")
 
 func _test_tasks() -> void:
-	var sim = make_sim("sleep", 2, 4, {"task_interval": 15.0, "task_deadline": 6.0, "task_work": 1.0, "task_penalty": 2.0, "task_floor": 4.0})
+	var sim = make_sim("sleep", 2, 4, {"task_interval": 36.0, "task_deadline": 26.0, "task_work": 1.0, "task_penalty": 2.0, "task_floor": 22.0})
 	advance(sim, 4.55)
 	check(not Dictionary(sim.private_for(1).task).is_empty() and not Dictionary(sim.private_for(2).task).is_empty(), "each human receives personal task on staggered fixed calendar")
 	var next_one: float = float(sim.actors[1]._next_task)
@@ -459,8 +459,8 @@ func _test_tasks() -> void:
 	var other_remaining: float = float(sim.actors[2]._task.remaining)
 	sim.actors[1]._task.remaining = 0.05
 	sim.step(0.05)
-	check(int(sim.private_for(1).failures) == 1 and float(sim.private_for(1).deadline) == 4.0, "failure penalizes only failing human's future deadline")
-	check(int(sim.private_for(2).failures) == 0 and float(sim.private_for(2).deadline) == 6.0 and is_equal_approx(float(sim.actors[2]._task.remaining), other_remaining - 0.05), "teammate deadline and active-task budget unaffected by other failure")
+	check(int(sim.private_for(1).failures) == 1 and float(sim.private_for(1).deadline) == 24.0, "failure penalizes only failing human's future deadline")
+	check(int(sim.private_for(2).failures) == 0 and float(sim.private_for(2).deadline) == 26.0 and is_equal_approx(float(sim.actors[2]._task.remaining), other_remaining - 0.05), "teammate deadline and active-task budget unaffected by other failure")
 	check(float(sim.actors[1]._next_task) == next_one and float(sim.actors[2]._next_task) == next_two and float(sim.config.round_seconds) == round_length, "failure never changes schedules or round duration")
 	var progress_sim = make_sim("sleep", 1, 2, {"task_work": 1.0, "rotation_seconds": 40.0})
 	advance(progress_sim, 3.05)

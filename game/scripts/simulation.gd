@@ -20,11 +20,15 @@ const SHARED_BLOOD_RATE_CAP := 1.0
 const STRIKE_START := 0.08
 const STRIKE_END := 0.25
 const INPUT_TIMEOUT := 0.40
+# Longest authored walking route takes 16.375 s without sprint. Keep an explicit
+# 21 s travel allowance in room settings, including turns and off-route starts.
+const TASK_TRAVEL_RESERVE := 21.0
+const TASK_DISPATCH_MARGIN := 0.05
 const DEFAULT_CONFIG := {
 	"mode": "blood", "map_id": "house", "human_count": 1, "round_seconds": 120.0, "blood_goal": 12.0,
 	"rotation_seconds": 14.0, "respawn_seconds": 4.0, "mosquito_lives": 3,
 	"task_interval": 36.0, "task_deadline": 30.0, "task_work": 3.0,
-	"task_penalty": 2.0, "task_floor": 8.0, "task_goal": 0,
+	"task_penalty": 2.0, "task_floor": 24.0, "task_goal": 0,
 }
 const TOOL_STATS := {
 	"hands": {"label": "Manos / palmadas", "reach": 1.70, "cooldown": 0.80, "radius": 0.34},
@@ -78,6 +82,24 @@ var _frame := 0
 var _assignment_serial := 0
 var _map_data: Dictionary = Maps.get_map("house")
 
+static func minimum_task_deadline(work: float) -> float:
+	return clampf(work if is_finite(work) else float(DEFAULT_CONFIG.task_work), 1.0, 8.0) + TASK_TRAVEL_RESERVE
+
+static func minimum_round_seconds(settings: Dictionary) -> float:
+	if str(settings.get("mode", "blood")) != "sleep":
+		return 30.0
+	var requested_count: Variant = settings.get("human_count", 1)
+	var count: int = clampi(int(requested_count), 1, MAX_HUMANS) if (requested_count is float or requested_count is int) and is_finite(float(requested_count)) else 1
+	var requested_work: Variant = settings.get("task_work", DEFAULT_CONFIG.task_work)
+	var work: float = float(requested_work) if requested_work is float or requested_work is int else float(DEFAULT_CONFIG.task_work)
+	var last_first_task: float = 3.0 + float(count - 1) * 1.5
+	return maxf(30.0, ceilf(last_first_task + minimum_task_deadline(work) + TASK_DISPATCH_MARGIN))
+
+static func last_task_start(settings: Dictionary) -> float:
+	# Leave one authority tick for dispatch after the scheduled instant. The
+	# exact same cutoff counts opportunities and prevents late task creation.
+	return float(settings.round_seconds) - minimum_task_deadline(float(settings.task_work)) - TASK_DISPATCH_MARGIN
+
 static func sanitize_config(requested: Dictionary) -> Dictionary:
 	var result: Dictionary = DEFAULT_CONFIG.duplicate(true)
 	var requested_map: String = str(requested.get("map_id", "house"))
@@ -94,12 +116,14 @@ static func sanitize_config(requested: Dictionary) -> Dictionary:
 	result.rotation_seconds = clampf(float(result.rotation_seconds), 4.0, 40.0)
 	result.respawn_seconds = clampf(float(result.respawn_seconds), 1.0, 15.0)
 	result.mosquito_lives = clampi(int(result.mosquito_lives), 1, 9)
-	result.task_interval = clampf(float(result.task_interval), 15.0, 60.0)
 	result.task_work = clampf(float(result.task_work), 1.0, 8.0)
-	result.task_deadline = clampf(float(result.task_deadline), float(result.task_work) + 2.0, float(result.task_interval) - 0.5)
-	result.task_floor = clampf(float(result.task_floor), float(result.task_work) + 2.0, float(result.task_deadline))
+	var minimum_deadline: float = minimum_task_deadline(float(result.task_work))
+	result.task_interval = clampf(float(result.task_interval), maxf(15.0, minimum_deadline + 0.5), 60.0)
+	result.task_deadline = clampf(float(result.task_deadline), minimum_deadline, float(result.task_interval) - 0.5)
+	result.task_floor = clampf(float(result.task_floor), minimum_deadline, float(result.task_deadline))
 	result.task_penalty = clampf(float(result.task_penalty), 0.5, 8.0)
 	result.task_goal = clampi(int(result.task_goal), 0, 100)
+	result.round_seconds = clampf(float(result.round_seconds), minimum_round_seconds(result), 180.0)
 	return result
 
 static func validate_roster(players: Dictionary) -> String:
@@ -186,12 +210,14 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 		pickup.holder = 0
 		pickups[index + 1] = pickup
 	var opportunities := 0
+	# Assigned rosters are authoritative, including direct offline callers.
+	config.human_count = _human_ids.size()
+	config.round_seconds = maxf(float(config.round_seconds), minimum_round_seconds(config))
 	for id: int in _human_ids:
 		var first: float = float(actors[id]._next_task)
-		# Count tasks with enough time to complete their work before round close.
-		var last_start: float = float(config.round_seconds) - float(config.task_work)
-		if first <= last_start:
-			opportunities += 1 + int(floor((last_start - first) / float(config.task_interval)))
+		var last_start: float = last_task_start(config)
+		if first <= last_start + 0.000001:
+			opportunities += 1 + int(floor(maxf(0.0, last_start - first) / float(config.task_interval)))
 	task_goal = int(ceil(float(opportunities) * 2.0 / 3.0)) if int(config.task_goal) == 0 else mini(int(config.task_goal), opportunities)
 
 func submit_input(id: int, seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool = false, crouch: bool = false, jump: bool = false) -> void:
@@ -663,12 +689,14 @@ func _update_tasks(dt: float) -> void:
 			var scheduled: float = float(human._next_task)
 			while elapsed + 0.000001 >= float(human._next_task):
 				human._next_task = float(human._next_task) + float(config.task_interval)
-			if scheduled + float(config.task_work) <= float(config.round_seconds) and Dictionary(human._task).is_empty():
+			var round_remaining: float = maxf(0.0, float(config.round_seconds) - elapsed)
+			var task_budget: float = minf(float(human._deadline), round_remaining)
+			if scheduled <= last_task_start(config) + 0.000001 and task_budget + 0.000001 >= minimum_task_deadline(float(config.task_work)) and Dictionary(human._task).is_empty():
 				var station_id: int = (int(human._tasks_given) + index) % _map_data.stations.size()
 				var station: Dictionary = _map_data.stations[station_id]
 				human._task = {
 					"name": station.name, "station": station_id, "p": station.p,
-					"remaining": float(human._deadline), "progress": 0.0, "work": float(config.task_work),
+					"remaining": task_budget, "progress": 0.0, "work": float(config.task_work),
 				}
 				human._tasks_given = int(human._tasks_given) + 1
 

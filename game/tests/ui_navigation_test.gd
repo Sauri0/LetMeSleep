@@ -14,6 +14,7 @@ var settings_existed: bool = false
 var practice_args: Array = []
 var practice_restarts: int = 0
 var connection_args: Array = []
+var applied_config: Dictionary = {}
 var checks: int = 0
 
 func _initialize() -> void:
@@ -58,6 +59,7 @@ func run() -> void:
 	ui.preview_closed.connect(func() -> void: preview_close_count += 1)
 	ui.practice_requested.connect(func(role: String, mode: String) -> void: practice_args = [role, mode])
 	ui.practice_restart_requested.connect(func() -> void: practice_restarts += 1)
+	ui.config_requested.connect(func(value: Dictionary) -> void: applied_config = value)
 	ui.connect_requested.connect(func(address: String, port: int, player: String, code: String, create: bool) -> void: connection_args = [address, port, player, code, create])
 	await process_frame
 	await process_frame
@@ -166,6 +168,7 @@ func run() -> void:
 	config.mode = "blood"
 	ui.show_lobby(lobby, 2)
 	check(not ui._field_rows.mosquito_lives.visible, "Blood life options hidden")
+	_task_config_limits(lobby)
 	ui.show_home()
 	ui._open_practice()
 	ui._select_practice_role("mosquito")
@@ -209,6 +212,39 @@ func run() -> void:
 	else:
 		printerr("UI_NAVIGATION_FAILED count=" + str(failures.size()))
 	quit(0 if failures.is_empty() else 1)
+
+
+func _task_config_limits(lobby: Dictionary) -> void:
+	lobby.config = Simulation.DEFAULT_CONFIG.duplicate(true)
+	lobby.config.mode = "sleep"
+	ui.show_lobby(lobby, 1)
+	check(is_equal_approx(ui._fields.task_floor.value, 24.0) and is_equal_approx(ui._fields.task_floor.min_value, 24.0) and is_equal_approx(ui._fields.task_interval.min_value, 24.5), "Task defaults visibly reserve 21 seconds for travel beyond three seconds of work")
+	ui._fields.task_work.value = 8.0
+	ui._fields.task_interval.value = 15.0
+	check(is_equal_approx(ui._fields.task_interval.value, 29.5) and is_equal_approx(ui._fields.task_deadline.value, 29.0) and is_equal_approx(ui._fields.task_floor.value, 29.0), "Editing longer work raises interval and both deadlines together to authoritative minima")
+	lobby.config = Simulation.sanitize_config({"mode": "sleep", "task_work": 1.0, "task_interval": 22.5, "task_deadline": 22.0, "task_floor": 22.0})
+	ui.show_lobby(lobby, 1)
+	check(is_equal_approx(ui._fields.task_work.value, 1.0) and is_equal_approx(ui._fields.task_interval.value, 22.5) and is_equal_approx(ui._fields.task_deadline.value, 22.0) and is_equal_approx(ui._fields.task_floor.value, 22.0) and is_equal_approx(ui._fields.task_deadline.max_value, 22.0), "Receiving lower valid rules removes previous clamps without changing server values")
+	ui._apply_config()
+	var accepted: Dictionary = Simulation.sanitize_config(applied_config)
+	var matches_authority: bool = not applied_config.is_empty()
+	for field: String in ["task_interval", "task_work", "task_deadline", "task_floor"]:
+		matches_authority = matches_authority and is_equal_approx(float(applied_config.get(field, -1)), float(accepted[field]))
+	check(matches_authority, "Applied visible task rules survive server sanitization without a second hidden clamp")
+	ui._fields.human_count.value = 5.0
+	ui._fields.task_work.value = 8.0
+	ui._fields.round_seconds.value = 30.0
+	check(is_equal_approx(ui._fields.round_seconds.min_value, 39.0) and is_equal_approx(ui._fields.round_seconds.value, 39.0), "Task round minimum includes the last human's first reachable assignment and a simulation tick")
+	ui._mode.select(0)
+	ui._mode_selected(0)
+	ui._fields.round_seconds.value = 30.0
+	check(is_equal_approx(ui._fields.round_seconds.min_value, 30.0) and is_equal_approx(ui._fields.round_seconds.value, 30.0), "Switching to Blood restores its independent 30-second round minimum")
+	ui._mode.select(2)
+	ui._mode_selected(2)
+	check(is_equal_approx(ui._fields.round_seconds.value, 39.0), "Switching back to Tasks immediately displays the valid longer round")
+	lobby.config = Simulation.sanitize_config({"mode": "sleep", "human_count": 1, "task_work": 1.0, "round_seconds": 30.0})
+	ui.show_lobby(lobby, 1)
+	check(is_equal_approx(ui._fields.round_seconds.value, 30.0) and is_equal_approx(ui._fields.round_seconds.min_value, 30.0), "Receiving a shorter valid task round clears the previous roster's minimum")
 
 
 func _hud_semantics() -> void:

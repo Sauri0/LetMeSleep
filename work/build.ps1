@@ -21,7 +21,7 @@ if (-not $SkipTests) {
     if ($LASTEXITCODE -ne 0) { throw 'Visual geometry tests failed' }
     & $godotExe --headless --path $gamePath --script res://tests/audio_checks.gd
     if ($LASTEXITCODE -ne 0) { throw 'Audio tests failed' }
-    foreach ($testName in @('maps_test','route_tests','locomotion_test','focus_combat_test','practice_test','invitation_test','network_order_test','ui_navigation_test','preferences_migration_test')) {
+    foreach ($testName in @('maps_test','route_tests','locomotion_test','focus_combat_test','task_deadline_test','practice_test','invitation_test','network_order_test','ui_navigation_test','preferences_migration_test')) {
         & $godotExe --headless --path $gamePath --script "res://tests/$testName.gd"
         if ($LASTEXITCODE -ne 0) { throw "$testName failed" }
     }
