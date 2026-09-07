@@ -100,3 +100,4 @@ try {
     foreach ($proc in $processes) { if (-not $proc.HasExited) { Stop-Process -Id $proc.Id -Force } }
 }
 if ($testFailed) { exit 1 }
+exit 0

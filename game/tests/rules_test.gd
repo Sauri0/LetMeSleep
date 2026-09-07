@@ -129,8 +129,8 @@ func _test_role_appearance() -> void:
 	players[1].cosmetics = "invalid"
 	players[2].cosmetics = {"mosquito": {"color": -1, "accessory": 999, "extra": "omit"}}
 	sim.start(players, {})
-	check(sim.public_snapshot().actors[1].appearance == {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "accent": 0}, "invalid appearance profile gets safe defaults")
-	check(sim.public_snapshot().actors[2].appearance == {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "accent": 0}, "out-of-range appearance fields cannot leak into actors")
+	check(sim.public_snapshot().actors[1].appearance == {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0}, "invalid appearance profile gets safe defaults")
+	check(sim.public_snapshot().actors[2].appearance == {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0}, "out-of-range appearance fields cannot leak into actors")
 
 func _test_privacy_and_reservations() -> void:
 	var sim = make_sim("blood", 1, 12)
@@ -199,10 +199,10 @@ func _test_inputs() -> void:
 	sim.submit_input(1, 4, Vector3.RIGHT, 0.0, 0.0, false)
 	sim.step(0.3)
 	check(float(sim.actors[1].p.x) <= float(Sim.ArenaData.HALF_X) - Sim.ArenaData.HUMAN_RADIUS + 0.001, "server enforces arena wall")
-	sim.actors[1].p = Vector3(-3.0, 0, 2.0)
+	sim.actors[1].p = Vector3(-5.2, 0, -1.15)
 	sim.submit_input(1, 5, Vector3.LEFT, 0.0, 0.0, false)
 	sim.step(0.3)
-	check(float(sim.actors[1].p.x) > -3.2, "server blocks movement through furniture")
+	check(float(sim.actors[1].p.x) >= -5.8 + Sim.ArenaData.HUMAN_RADIUS - 0.001, "server blocks movement through furniture")
 	sim.actors[1].p = Vector3.ZERO
 	sim.submit_input(1, 6, Vector3.ZERO, 0.0, 0.0, false)
 	sim.actors[2].p = Vector3(0, 1.1, -0.6)
@@ -232,7 +232,7 @@ func _test_surface_perch() -> void:
 	sim.step(0.05)
 	check(sim.actors[2].state == "perched" and float(sim.actors[2].p.x) > float(Sim.ArenaData.HALF_X) - 0.4 and Sim.ArenaData.move_body(sim.actors[2].p, Vector3.ZERO, false).is_equal_approx(sim.actors[2].p), "perch snaps onto inner wall surface")
 	sim.actors[2].state = "flying"
-	sim.actors[2].p = Vector3(-3.15, 0.8, 2.65)
+	sim.actors[2].p = Vector3(-6.5, 0.8, -1.15)
 	sim.action(2, 4, "perch")
 	sim.step(0.05)
 	check(sim.actors[2].state == "perched" and is_equal_approx(float(sim.actors[2].p.y), 0.62 + Sim.ArenaData.MOSQUITO_RADIUS + 0.005), "perch snaps onto furnished table surface")

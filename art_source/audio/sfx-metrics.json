@@ -1,0 +1,317 @@
+[
+  {
+    "name": "buzz",
+    "seconds": 4.0,
+    "channels": 1,
+    "loop": true,
+    "peak": 0.21285176277160645,
+    "rms": 0.09734497219324112,
+    "sha256": "61507a4b5a5fd05e534ea0461a815d0814e3786d2679b2cfc7ebdb1588e15c70"
+  },
+  {
+    "name": "buzz_perch",
+    "seconds": 4.0,
+    "channels": 1,
+    "loop": true,
+    "peak": 0.03299747407436371,
+    "rms": 0.00717155123129487,
+    "sha256": "438e9b2667d778901be33e9c77da81387f4996d875d73585708ab037afe8df03"
+  },
+  {
+    "name": "buzz_bite",
+    "seconds": 4.0,
+    "channels": 1,
+    "loop": true,
+    "peak": 0.04366151988506317,
+    "rms": 0.01858839951455593,
+    "sha256": "f97d7c78e08fe617054de59e42b4ced3857846396cbf7a052bd0ff921dc0584a"
+  },
+  {
+    "name": "clap",
+    "seconds": 0.28,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.4204615354537964,
+    "rms": 0.04027906432747841,
+    "sha256": "1e8dd153ed53f7aa8dbd795b7ec508dcdfef69f60208329af8ddd704378187ce"
+  },
+  {
+    "name": "swish",
+    "seconds": 0.29,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.2682548761367798,
+    "rms": 0.05009423941373825,
+    "sha256": "7a250f2d8cc2af32b1dce201d29ad5bc847ce670416acd383882e93e1faae280"
+  },
+  {
+    "name": "impact",
+    "seconds": 0.32,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.13966894149780273,
+    "rms": 0.02225250005722046,
+    "sha256": "621dcf2159cd590887f1f046cdcf2dad1e234915bce2b91c5f5af9466912e93e"
+  },
+  {
+    "name": "bite",
+    "seconds": 0.23,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.07360456883907318,
+    "rms": 0.020422231405973434,
+    "sha256": "b8d2bc2ec201e839088a35a8a1bd2ffb2db0e4bd145e0ed3ccd9c8b4146348e1"
+  },
+  {
+    "name": "detach",
+    "seconds": 0.26,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.08139780908823013,
+    "rms": 0.01918060891330242,
+    "sha256": "4de481fa0d731c9a915bbf663cd9a417f41a5be2bad9735237dcacbaf2d530cd"
+  },
+  {
+    "name": "perch",
+    "seconds": 0.17,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.11284998059272766,
+    "rms": 0.025591956451535225,
+    "sha256": "0e84fd711d6395c2ce031fd0d8fd90687ae600aa17fdf1d9f83244a3370fe992"
+  },
+  {
+    "name": "pickup",
+    "seconds": 0.28,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.0898149386048317,
+    "rms": 0.019153116270899773,
+    "sha256": "c2d2d6470bcb4098abf4e94b76e3e861990327a29fc0a6a8f5ac1fd003c53fb1"
+  },
+  {
+    "name": "drop",
+    "seconds": 0.32,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.17529386281967163,
+    "rms": 0.016345448791980743,
+    "sha256": "7c9c9ba11fd2fc43df59362927fce04e32cdf9671496e1e073b264ad18f0c539"
+  },
+  {
+    "name": "stun",
+    "seconds": 0.68,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.1774880290031433,
+    "rms": 0.020935721695423126,
+    "sha256": "b32d0c2cd20418d28fc1939899171172dcc420a35218d48f7fa3093650df9f1a"
+  },
+  {
+    "name": "fall",
+    "seconds": 0.32,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.1662047952413559,
+    "rms": 0.014871424064040184,
+    "sha256": "3716a49cedb174b2fe6ebcdd50a45651ffef23d61c3696f75d66139c92caa266"
+  },
+  {
+    "name": "help_loop",
+    "seconds": 1.88,
+    "channels": 1,
+    "loop": true,
+    "peak": 0.0421123243868351,
+    "rms": 0.008201375603675842,
+    "sha256": "d05234990cb2e8d97311cea189a56f1e1babe9075c3d5032df968af3ad85301b"
+  },
+  {
+    "name": "recover",
+    "seconds": 0.75,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.1326778084039688,
+    "rms": 0.0288070160895586,
+    "sha256": "7c855dccf337f771f3b4d4a468d998963dd2f4bff608bae26c262c319e4b8684"
+  },
+  {
+    "name": "focus_loop",
+    "seconds": 2.88,
+    "channels": 1,
+    "loop": true,
+    "peak": 0.029452726244926453,
+    "rms": 0.008454862050712109,
+    "sha256": "ea8b3757eaa2627c484d56dc35aa881d22310c6c7988a3fef64a496d8d9471b9"
+  },
+  {
+    "name": "task_start",
+    "seconds": 0.45,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.1485200822353363,
+    "rms": 0.034608323127031326,
+    "sha256": "49d6b3ac3a843427438cc915137db0446003c6c4e3a9837666a25cdf880d8c2a"
+  },
+  {
+    "name": "task_done",
+    "seconds": 0.65,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.1326778084039688,
+    "rms": 0.03094332106411457,
+    "sha256": "289630b41824cbddeecf3ca381c8eebd05735d2a9aaab78bc41174a65184765b"
+  },
+  {
+    "name": "task_fail",
+    "seconds": 0.4,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.12607420980930328,
+    "rms": 0.04106646776199341,
+    "sha256": "9be2809dc0e06a88f752ca42bb83546470cf4b280da1007b77c5eadbb7acfdec"
+  },
+  {
+    "name": "step_wood",
+    "seconds": 0.24,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.1845884770154953,
+    "rms": 0.018960721790790558,
+    "sha256": "deba4e0612ae627eba3580b8249797b21ff000ec70bc0aec404ef34f0a439172"
+  },
+  {
+    "name": "step_tile",
+    "seconds": 0.2,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.15187205374240875,
+    "rms": 0.02049044333398342,
+    "sha256": "64c5209952fb02541b855157e708733784f52cb6d579a4250fd68a29e9d40786"
+  },
+  {
+    "name": "step_cloth",
+    "seconds": 0.26,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.09998195618391037,
+    "rms": 0.0124342180788517,
+    "sha256": "8abbb5cdd44745f6b0bcb78d346177d3033a12a43a9376a6f3c37bb0a3ec85a2"
+  },
+  {
+    "name": "land",
+    "seconds": 0.3,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.1554635614156723,
+    "rms": 0.015940077602863312,
+    "sha256": "fb77a4ce759acf19da65574e1852b33017c6b7f3e6dc0722084419b1a45e510b"
+  },
+  {
+    "name": "cloth",
+    "seconds": 0.26,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.07705283910036087,
+    "rms": 0.01613456942141056,
+    "sha256": "e734e1b2396821d023fec1e04e008336d26180b5559bc6212525dde871aa48b9"
+  },
+  {
+    "name": "tool_swatter",
+    "seconds": 0.24,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.3299383521080017,
+    "rms": 0.05940832942724228,
+    "sha256": "9892e61656b314c3bf682163928b577024d6d0755f0e4887f77b2de71a75da2e"
+  },
+  {
+    "name": "tool_racket",
+    "seconds": 0.35,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.3287254571914673,
+    "rms": 0.060064129531383514,
+    "sha256": "b43316d12e17d2faf7f0753937b1e649975e65582b47b9b6fcdf4225d90d4af1"
+  },
+  {
+    "name": "tool_newspaper",
+    "seconds": 0.34,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.33250561356544495,
+    "rms": 0.061725322157144547,
+    "sha256": "b7ae62266f92962f89dbed0c9cf1a477a40296e5324172be05c69f8d598f97f6"
+  },
+  {
+    "name": "tool_broom",
+    "seconds": 0.42,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.3536425828933716,
+    "rms": 0.06090904399752617,
+    "sha256": "b08f8abed49c33ba07136ff9bd5389c32e427f2025c46ff1c508c6987da1a55f"
+  },
+  {
+    "name": "ui_select",
+    "seconds": 0.08,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.08025430887937546,
+    "rms": 0.010747116059064865,
+    "sha256": "771bc32d604d089a01703894e6d8179c252564e39bd174df2bb65caa4a95a291"
+  },
+  {
+    "name": "ui_confirm",
+    "seconds": 0.24,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.10030985623598099,
+    "rms": 0.02890773117542267,
+    "sha256": "9247f8cebf5a0ba30246917905d0c6f211003df0afdb51ddf31fffc3fbfa7b60"
+  },
+  {
+    "name": "ui_error",
+    "seconds": 0.23,
+    "channels": 1,
+    "loop": false,
+    "peak": 0.10444793105125427,
+    "rms": 0.0337853841483593,
+    "sha256": "9422fbc81cd07a38979e4775010f4fe3f6a567fd1e9d08205f0a7ab2112a5aaf"
+  },
+  {
+    "name": "room_fan",
+    "seconds": 7.88,
+    "channels": 1,
+    "loop": true,
+    "peak": 0.06613388657569885,
+    "rms": 0.016937023028731346,
+    "sha256": "61c46c5eee53c115dabdaaf80315c05c999d77f8171a9df00df73103b55db5f6"
+  },
+  {
+    "name": "room_fridge",
+    "seconds": 7.88,
+    "channels": 1,
+    "loop": true,
+    "peak": 0.06025595963001251,
+    "rms": 0.012917003594338894,
+    "sha256": "abbd33df5aa1a52c32c978089ee67de6f99662d0d8ecfb553e85dc10ddcb478d"
+  },
+  {
+    "name": "night_air",
+    "seconds": 7.88,
+    "channels": 1,
+    "loop": true,
+    "peak": 0.08520762622356415,
+    "rms": 0.01824336312711239,
+    "sha256": "65b200abe67575f2aeddfa3644fdebbd5c586b3d70bfeffa01e37b13a7f0da90"
+  },
+  {
+    "name": "clock",
+    "seconds": 3.88,
+    "channels": 1,
+    "loop": true,
+    "peak": 0.09101655334234238,
+    "rms": 0.0020528205204755068,
+    "sha256": "2723a398ad131208e54422cef4f28f279947e5234f18f7b168298048ecd3118e"
+  }
+]

@@ -6,7 +6,7 @@ const ArenaData = preload("res://scripts/arena.gd")
 const Pose = preload("res://scripts/human_pose.gd")
 const Sim = preload("res://scripts/simulation.gd")
 const DT := 0.05
-const APPEARANCES := {"human": {"color": 3, "accessory": 1, "face": 2, "hair": 1, "outfit": 2, "accent": 4}, "mosquito": {"color": 5, "accessory": 2, "face": 1, "hair": 2, "outfit": 1, "accent": 3}}
+const APPEARANCES := {"human": {"color": 3, "accessory": 1, "face": 2, "hair": 1, "outfit": 2, "footwear": 0, "accent": 4}, "mosquito": {"color": 5, "accessory": 2, "face": 1, "hair": 2, "outfit": 1, "footwear": 0, "accent": 3}}
 var checks := 0
 var failures := 0
 

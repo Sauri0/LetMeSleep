@@ -1,0 +1,79 @@
+extends RefCounted
+## Authored GLB visuals only. World/map_catalog remain collision authority.
+static var scenes: Dictionary = {}
+static var bounds_cache: Dictionary = {}
+static var tinted_materials: Dictionary = {}
+
+static func asset_for(data: Dictionary) -> String:
+	var label := str(data.get("label",""))
+	var style := str(data.get("style","cabinet"))
+	if label=="Mesada": return "stove"
+	if label=="Alacena": return "sink"
+	if label=="Despensa" and AABB(data.box).get_center().z < -5.9: return "fridge"
+	if label in ["Biblioteca","Estantes"]: return "bookcase"
+	if label=="Ropero": return "wardrobe"
+	if style in ["bed","table","desk"]: return style
+	if style=="sofa": return "armchair" if maxf(data.box.size.x,data.box.size.z)<1.6 else "sofa"
+	if label in ["Mesa de luz","Mesita"] or data.box.size.y<0.7: return "nightstand"
+	return "dresser"
+
+static func mesh_bounds(node: Node3D, parent_transform: Transform3D = Transform3D.IDENTITY) -> AABB:
+	var transform := parent_transform * node.transform
+	var result := AABB()
+	if node is MeshInstance3D and node.mesh != null:
+		result = transform * node.get_aabb()
+	for child: Node in node.get_children():
+		if child is Node3D:
+			var next := mesh_bounds(child,transform)
+			if next.has_surface(): result = result.merge(next) if result.has_surface() else next
+	return result
+
+static func instantiate_asset(asset: String) -> Node3D:
+	if not scenes.has(asset):
+		scenes[asset] = load("res://assets/art/house/%s.glb"%asset)
+	var model: Node3D = scenes[asset].instantiate()
+	if not bounds_cache.has(asset): bounds_cache[asset] = mesh_bounds(model)
+	model.set_meta("authored_asset",asset)
+	return model
+
+static func build(root: Node3D, data: Dictionary, tint: Color) -> void:
+	var size: Vector3 = data.box.size
+	var at: Vector3 = data.box.get_center()
+	var room_center: Vector3 = data.get("room_center",Vector3.ZERO)
+	root.position = Vector3(at.x,data.box.position.y,at.z)
+	# Front is -Z after explicit Blender Z-up to glTF Y-up export.
+	if size.z>size.x*1.25:
+		root.rotation.y = -PI/2.0 if room_center.x>at.x else PI/2.0
+		size = Vector3(size.z,size.y,size.x)
+	elif at.z<room_center.z:
+		root.rotation.y = PI
+	var asset := asset_for(data)
+	var model := instantiate_asset(asset)
+	var bounds: AABB = bounds_cache[asset]
+	# Faucet/pot sit above the counter, as in the previous visual fixtures.
+	var physical_height := 0.86 if asset in ["sink","stove"] else bounds.size.y
+	model.scale = Vector3(size.x/bounds.size.x,size.y/physical_height,size.z/bounds.size.z)
+	model.position = -Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*model.scale
+	root.add_child(model)
+	if asset in ["sofa","armchair","bed","dresser","wardrobe","bookcase","sink","stove"]:
+		_tint_cloth(model,tint)
+	if asset in ["nightstand","desk","table"]:
+		var decoration := instantiate_asset("lamp" if asset=="nightstand" else "mug")
+		var decoration_bounds: AABB = bounds_cache["lamp" if asset=="nightstand" else "mug"]
+		var factor := minf(1.0,minf(size.x,size.z)*.48/maxf(decoration_bounds.size.x,decoration_bounds.size.z))
+		decoration.scale = Vector3.ONE*factor
+		decoration.position = Vector3(size.x*.15,size.y,size.z*.05)
+		root.add_child(decoration)
+
+static func _tint_cloth(node: Node, tint: Color) -> void:
+	if node is MeshInstance3D:
+		for surface: int in range(node.mesh.get_surface_count()):
+			var material: Material = node.mesh.surface_get_material(surface)
+			if material is StandardMaterial3D and ("blue" in material.resource_name or "sage" in material.resource_name):
+				var key := material.resource_name+tint.to_html()
+				if not tinted_materials.has(key):
+					var variant: StandardMaterial3D = material.duplicate()
+					variant.albedo_color = tint
+					tinted_materials[key] = variant
+				node.set_surface_override_material(surface,tinted_materials[key])
+	for child: Node in node.get_children(): _tint_cloth(child,tint)

@@ -15,10 +15,10 @@ const TOOL_LENGTHS := {"hands": 0.0, "swatter": 0.46, "racket": 0.51, "newspaper
 static func body_yaw(actor: Dictionary) -> float:
 	return float(actor.get("body_yaw", actor.get("yaw", 0.0)))
 
-static func clamp_view_yaw(actor: Dictionary, yaw: float, pitch: float) -> float:
-	var inspecting: bool = pitch < INSPECT_ENTER or (bool(actor.get("inspecting", false)) and pitch < INSPECT_EXIT)
-	var body: float = body_yaw(actor)
-	return wrapf(body + clampf(wrapf(yaw - body, -PI, PI), -VIEW_YAW_LIMIT, VIEW_YAW_LIMIT), -PI, PI) if inspecting else wrapf(yaw, -PI, PI)
+static func clamp_view_yaw(_actor: Dictionary, yaw: float, _pitch: float) -> float:
+	# The neck's comfortable range controls torso follow, never mouse input.
+	# Keep this shared entry point so input and manual attack use the same ray.
+	return wrapf(yaw, -PI, PI)
 
 static func apply_view(actor: Dictionary, yaw: float, pitch: float, dt: float = 0.0) -> void:
 	if not is_finite(yaw) or not is_finite(pitch):
@@ -27,8 +27,13 @@ static func apply_view(actor: Dictionary, yaw: float, pitch: float, dt: float = 
 	actor.pitch = clampf(pitch, HUMAN_PITCH_MIN, HUMAN_PITCH_MAX)
 	actor.yaw = clamp_view_yaw(actor, yaw, actor.pitch)
 	actor.inspecting = actor.pitch < INSPECT_ENTER or (bool(actor.get("inspecting", false)) and actor.pitch < INSPECT_EXIT)
-	if not bool(actor.inspecting) and dt > 0.0:
-		actor.body_yaw = wrapf(float(actor.body_yaw) + clampf(wrapf(float(actor.yaw) - float(actor.body_yaw), -PI, PI), -dt * 6.0, dt * 6.0), -PI, PI)
+	if dt > 0.0:
+		var relative: float = wrapf(float(actor.yaw) - float(actor.body_yaw), -PI, PI)
+		var follow: float = relative
+		if bool(actor.inspecting):
+			follow = signf(relative) * maxf(0.0, absf(relative) - VIEW_YAW_LIMIT)
+		var turn: float = clampf(follow * (1.0 - exp(-12.0 * dt)), -dt * 6.0, dt * 6.0)
+		actor.body_yaw = wrapf(float(actor.body_yaw) + turn, -PI, PI)
 
 static func view_origin(actor: Dictionary) -> Vector3:
 	var crouch: float = clampf(float(actor.get("crouch_amount", 0.0)), 0.0, 1.0)
@@ -83,6 +88,12 @@ static func sample(actor: Dictionary) -> Dictionary:
 		result["shoulder" + suffix] = Vector3(side * 0.31, 1.30 - crouch * 0.45, crouch * 0.06)
 		var elbow := Vector3(side * 0.25, 1.09 - crouch * 0.45, -0.24 + step * 0.015)
 		var hand := Vector3(side * 0.23, 0.89 - crouch * 0.40, -0.41 + step * 0.015)
+		if bool(actor.get("relaxed_pose",false)):
+			# Lobby/editor presentation only: no bite reservations or combat
+			# happen there. Active-round pose/contact contracts stay unchanged.
+			result["shoulder"+suffix].x = side*.28
+			elbow = Vector3(side*.31,1.02-crouch*.45,.015+step*.8)
+			hand = Vector3(side*.31,.75-crouch*.40,-.015+step*1.5)
 		var active_hand: bool = str(strike.get("hand", "right")) == ("left" if side < 0 else "right")
 		if active_hand and swing > 0.0:
 			var contact: Vector3 = (Vector3(strike.point) - Vector3(actor.get("p", Vector3.ZERO))).rotated(Vector3.UP, -body_yaw(actor))

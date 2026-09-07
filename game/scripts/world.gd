@@ -4,7 +4,7 @@ const ActorModel = preload("res://scripts/actor_view.gd")
 const Map = preload("res://scripts/arena.gd")
 const AudioEffects = preload("res://scripts/audio_fx.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
-const Furnishings = preload("res://assets/house_furnishings.gd")
+const Furnishings = preload("res://assets/art/house/house_library.gd")
 const SculptedShape = preload("res://assets/procedural_shapes.gd")
 
 var menu_camera: Camera3D
@@ -18,6 +18,7 @@ var fan_blades: Node3D
 var clock_time: float = 0.0
 var built: bool = false
 var cream: StandardMaterial3D
+var ceiling_paint: StandardMaterial3D
 var wood: StandardMaterial3D
 var teal: StandardMaterial3D
 var coral: StandardMaterial3D
@@ -50,6 +51,10 @@ func build() -> void:
 		return
 	built = true
 	cream = ActorModel.material(Color("f1e7cb"))
+	ceiling_paint = ActorModel.material(Color("eddfc8"))
+	ceiling_paint.emission_enabled = true
+	ceiling_paint.emission = Color("c5aa87")
+	ceiling_paint.emission_energy_multiplier = 0.10
 	wood = ActorModel.material(Color("bc835b"))
 	teal = ActorModel.material(Color("518f88"))
 	coral = ActorModel.material(Color("d98069"))
@@ -86,8 +91,9 @@ func load_map(id: String) -> void:
 	station_labels.clear()
 	map_data = requested
 	current_map = str(map_data.get("id", "lobby"))
-	scene_environment.ambient_light_energy = 0.29 if current_map == "house" and map_data.has("structures") else 0.73
-	scene_environment.ambient_light_color = Color("b7bcd0") if current_map == "house" else Color("b6cacf")
+	audio_fx.set_context(current_map)
+	scene_environment.ambient_light_energy = 0.38 if current_map == "house" and map_data.has("structures") else 0.73
+	scene_environment.ambient_light_color = Color("adc4e4") if current_map == "house" else Color("b6cacf")
 	map_root = Node3D.new()
 	map_root.name = "Map_" + current_map
 	add_child(map_root)
@@ -204,7 +210,11 @@ func sync_actors(data: Dictionary, local_id: int, dt: float) -> void:
 			fresh.set_local(int(key) == local_id and local_role != "lobby")
 			actors[key] = fresh
 		var view: ActorView = actors[key]
-		view.update_state(actor_data, dt)
+		var visual_data: Dictionary = actor_data
+		if current_map == "lobby" and local_role == "lobby" and desired_role == "human":
+			visual_data = actor_data.duplicate()
+			visual_data.relaxed_pose = true
+		view.update_state(visual_data, dt)
 		if is_instance_valid(customization_actor):
 			view.visible = false
 	if is_instance_valid(audio_fx):
@@ -407,8 +417,10 @@ func _build_lighting() -> void:
 	var moon := DirectionalLight3D.new()
 	moon.rotation_degrees = Vector3(-44, -24, 0)
 	moon.light_color = Color("c9dfed")
-	moon.light_energy = 0.8 if current_map == "house" else 0.35
-	moon.shadow_enabled = true
+	# An outdoor directional lamp with a 20m shadow range illuminated interior
+	# walls beyond the cascade. House moonlight now comes from actual windows.
+	moon.light_energy = 0.0 if current_map == "house" else 0.35
+	moon.shadow_enabled = current_map != "house"
 	moon.directional_shadow_max_distance = 20.0
 	map_root.add_child(moon)
 	if current_map == "house" and map_data.has("structures"):
@@ -418,11 +430,11 @@ func _build_lighting() -> void:
 			var bounds: AABB = room.bounds
 			if str(room.name) in ["Dormitorio rosa","Sala de estar","Cocina"]:
 				var spot := SpotLight3D.new()
-				spot.position = Vector3(bounds.get_center().x - 0.85, bounds.position.y + 2.75, bounds.get_center().z - 0.4)
-				spot.light_color = Color("ffe2c0")
-				spot.light_energy = 0.92
-				spot.spot_range = 5.2
-				spot.spot_angle = 67.0
+				spot.position = Vector3(bounds.get_center().x, bounds.position.y + 2.67, bounds.get_center().z)
+				spot.light_color = Color("ffd29a")
+				spot.light_energy = 1.45
+				spot.spot_range = 5.0
+				spot.spot_angle = 76.0
 				spot.shadow_enabled = true
 				spot.shadow_bias = 0.1
 				spot.shadow_normal_bias = 1.0
@@ -431,13 +443,13 @@ func _build_lighting() -> void:
 				spot.distance_fade_shadow = 4.8
 				spot.distance_fade_length = 1.0
 				map_root.add_child(spot)
-				spot.look_at(Vector3(bounds.get_center().x + 0.6,bounds.position.y,bounds.get_center().z + 0.7))
+				spot.look_at(Vector3(bounds.get_center().x + 0.15,bounds.position.y,bounds.get_center().z + 0.15))
 				continue
 			var light := OmniLight3D.new()
 			light.position = Vector3(bounds.get_center().x, bounds.position.y + 2.6, bounds.get_center().z)
-			light.light_color = Color("ffe5c8")
-			light.light_energy = 0.70
-			light.omni_range = 5.1
+			light.light_color = Color("ffdaaf")
+			light.light_energy = 0.85
+			light.omni_range = 4.8
 			light.shadow_enabled = false
 			map_root.add_child(light)
 		var stair_light := SpotLight3D.new()
@@ -455,6 +467,15 @@ func _build_lighting() -> void:
 		stair_light.distance_fade_length = 1.0
 		map_root.add_child(stair_light)
 		stair_light.look_at(Vector3(-11.0,1.0,-2.4))
+		for floor_index: int in range(2):
+			for z: float in [-7.8,0.0,7.8]:
+				var hall_lamp := OmniLight3D.new()
+				hall_lamp.position = Vector3(0,2.45+floor_index*3.2,z)
+				hall_lamp.light_color = Color("ffd09a")
+				hall_lamp.light_energy = 0.95
+				hall_lamp.omni_range = 3.7
+				hall_lamp.shadow_enabled = false
+				map_root.add_child(hall_lamp)
 		return
 	var lamp := OmniLight3D.new()
 	lamp.position = Vector3(-3.1, 2.25, 1.0) if current_map == "house" else Vector3(0, 3.0, -1.8)
@@ -539,7 +560,11 @@ func _build_catalog_house() -> void:
 		piece.set_meta("catalog_box", bounds)
 		piece.set_meta("catalog_kind", kind)
 		if kind == "floor" and bounds.position.y > 1.0:
-			_box(self, Vector3(bounds.get_center().x, bounds.position.y - 0.006, bounds.get_center().z), Vector3(bounds.size.x, 0.01, bounds.size.z), cream)
+			_box(self, Vector3(bounds.get_center().x, bounds.position.y - 0.006, bounds.get_center().z), Vector3(bounds.size.x, 0.01, bounds.size.z), ceiling_paint)
+		if str(structure.get("label",""))=="Dintel":
+			# The apparent triangles at corridor door tops are visible lintel
+			# undersides (confirmed by physics rays), not holes in the shell.
+			_box(self,Vector3(bounds.get_center().x,bounds.position.y+.008,bounds.get_center().z),Vector3(bounds.size.x,.020,bounds.size.z),wood)
 		if kind == "wall" and bounds.size.y > 1.0:
 			var trim_height: float = 0.11
 			var trim_size: Vector3 = bounds.size + Vector3(0.028, 0, 0.028)
@@ -553,9 +578,10 @@ func _build_catalog_house() -> void:
 			_box(self, bounds.position + Vector3(bounds.size.x * 0.5, bounds.size.y - 0.016, front_z), nosing_size, gold)
 	# A quiet ceiling closes the top floor. The catalog ceiling is a physical
 	# limit, and the lower floor slabs already form the ground-floor ceilings.
-	_box(self, Vector3(0, float(map_data.ceiling) + 0.075, 0), Vector3(float(map_data.half_x) * 2.0, 0.15, float(map_data.half_z) * 2.0), cream)
+	_box(self, Vector3(0, float(map_data.ceiling) + 0.075, 0), Vector3(float(map_data.half_x) * 2.0, 0.15, float(map_data.half_z) * 2.0), ceiling_paint)
 	for room: Dictionary in map_data.get("rooms", []):
 		_build_room_details(room)
+	_finish_house_art()
 	for station: Dictionary in map_data.get("stations", []):
 		_build_station_at(station)
 	for floor_index: int in range(2):
@@ -571,6 +597,9 @@ func _furniture_from_catalog(data: Dictionary) -> void:
 	for room: Dictionary in map_data.get("rooms", []):
 		if AABB(room.bounds).has_point(bounds.get_center()):
 			detail.room_center = AABB(room.bounds).get_center()
+			detail.room_name = str(room.name)
+			if "Cocina" in str(room.name): tint = Color("93aca0")
+			elif "Dormitorio" in str(room.name): tint = _room_color(room).lightened(.25)
 			if str(data.get("style", "")) == "sofa":
 				tint = Color("648c88") if int(room.floor)==0 else Color("b77b64")
 			break
@@ -580,15 +609,7 @@ func _furniture_from_catalog(data: Dictionary) -> void:
 	root.set_meta("catalog_kind", "furniture")
 	map_root.add_child(root)
 	_add_contact_shadow(bounds)
-	var materials: Dictionary = {
-		"cloth":_surface_material(tint,"cloth"),
-		"accent":_surface_material(tint.lightened(0.12),"cloth"),
-		"timber":_surface_material(Color("765039"),"wood"),
-		"linen":_surface_material(Color("e1d2b2"),"cloth"),
-		"dark":ink,"metal":gold,"glass":ActorModel.material(Color("344d58")),"enamel":ActorModel.material(Color("c6d6cf")),
-		"stitch":ActorModel.material(tint.lightened(0.34))
-	}
-	Furnishings.build(root,detail,materials)
+	Furnishings.build(root,detail,tint)
 func _build_room_details(room: Dictionary) -> void:
 	var bounds: AABB = room.bounds
 	var center: Vector3 = bounds.get_center()
@@ -657,6 +678,87 @@ func _build_room_details(room: Dictionary) -> void:
 		for side: float in [-1.0,1.0]:
 			_box(window,Vector3(side*0.735,0,0.04),Vector3(0.07,1.47,0.06),wood)
 		_box(window,Vector3(0,-0.71,0.05),Vector3(1.55,0.07,0.09),wood)
+		_dress_window(window,color,label=="COCINA")
+
+func _dress_window(window: Node3D, tint: Color, short_curtain: bool = false) -> void:
+	_segment(window,Vector3(-1.04,0.85,0.13),Vector3(1.04,0.85,0.13),0.025,gold)
+	for side: float in [-1.0,1.0]:
+		var curtain := Furnishings.instantiate_asset("curtain")
+		curtain.position = Vector3(side*.81,-.73 if not short_curtain else -.11,.11)
+		curtain.scale = Vector3(1.0,.99 if not short_curtain else .60,1.0)
+		window.add_child(curtain)
+		Furnishings._tint_cloth(curtain,tint.lightened(.25))
+		_sphere(window,Vector3(side*1.06,.85,.13),Vector3.ONE*.045,gold)
+	var glass := ActorModel.material(Color("172e55"))
+	glass.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_box(window,Vector3(0,0,.04),Vector3(1.30,1.20,.006),glass)
+	var star := ActorModel.material(Color("bccde3"))
+	star.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_sphere(window,Vector3(-.35,.29,.047),Vector3(.105,.105,.003),star)
+	for point: Vector2 in [Vector2(.40,.39),Vector2(.22,-.28),Vector2(-.47,-.19)]:
+		_sphere(window,Vector3(point.x,point.y,.048),Vector3(.012,.012,.002),star)
+	var moonlight := SpotLight3D.new()
+	moonlight.position = Vector3(0,.05,.10)
+	moonlight.light_color = Color("90b8ff")
+	moonlight.light_energy = .65
+	moonlight.spot_range = 4.5
+	moonlight.spot_angle = 48
+	moonlight.shadow_enabled = false
+	window.add_child(moonlight)
+	moonlight.look_at(window.to_global(Vector3(0,-1.0,3.0)))
+
+func _finish_house_art() -> void:
+	var clock := Node3D.new()
+	clock.position = Vector3(0,1.9,10.70)
+	clock.rotation.y = PI
+	map_root.add_child(clock)
+	_disc(clock,Vector3.ZERO,.32,.04,wood).rotation.x = PI/2.0
+	_disc(clock,Vector3(0,0,.025),.285,.014,cream).rotation.x = PI/2.0
+	for hour: int in range(12):
+		var angle := hour*TAU/12.0
+		_segment(clock,Vector3(sin(angle)*.235,cos(angle)*.235,.036),Vector3(sin(angle)*.258,cos(angle)*.258,.036),.009,ink)
+	_segment(clock,Vector3(0,0,.042),Vector3(-.10,.12,.042),.012,ink)
+	_segment(clock,Vector3(0,0,.046),Vector3(.03,.21,.046),.008,coral)
+	for floor_index: int in range(2):
+		var floor_y := floor_index*3.2
+		_room_wall_finish(AABB(Vector3(-1.9,floor_y,-10.75),Vector3(3.8,3.0,21.5)),Color("b7a287"),false)
+		for z: float in [-7.8,0.0,7.8]:
+			_disc(self,Vector3(0,floor_y+2.93,z),.17,.055,gold)
+			_cone(self,Vector3(0,floor_y+2.75,z),.09,.24,.27,cream)
+		# Existing exterior walls close this axis. This is a recessed night
+		# window on that wall, never a fake doorway into inaccessible space.
+		var end_window := Node3D.new()
+		end_window.position = Vector3(0,floor_y+1.6,-10.71)
+		map_root.add_child(end_window)
+		_box(end_window,Vector3.ZERO,Vector3(1.62,1.44,.04),wood)
+		_dress_window(end_window,Color("839b98"))
+		_box(end_window,Vector3(0,0,.065),Vector3(.045,1.27,.035),cream)
+		_box(end_window,Vector3(0,0,.065),Vector3(1.41,.045,.035),cream)
+		_box(end_window,Vector3(0,-.74,.08),Vector3(1.80,.065,.21),wood)
+	# Large, recognizable objects on existing furniture surfaces only.
+	for furnishing: Node in map_root.get_children():
+		if furnishing.get_meta("catalog_kind","")!="furniture": continue
+		var model: Node3D = furnishing.get_child(0)
+		var asset := str(model.get_meta("authored_asset",""))
+		var box: AABB = furnishing.get_meta("catalog_box")
+		if asset in ["desk","table"]:
+			var lamp := Furnishings.instantiate_asset("lamp")
+			lamp.scale = Vector3.ONE*.78
+			lamp.position = Vector3(-minf(box.size.x,box.size.z)*.2,box.size.y,.12)
+			furnishing.add_child(lamp)
+			var glow := OmniLight3D.new()
+			glow.position = lamp.position+Vector3(0,.33,0)
+			glow.light_color = Color("ffbc76")
+			glow.light_energy = .18
+			glow.omni_range = 1.65
+			glow.shadow_enabled = false
+			furnishing.add_child(glow)
+			for book: int in range(2):
+				_box(furnishing,Vector3(.12,box.size.y+.025+book*.044,-.13),Vector3(.32,.038,.24),teal if book==0 else coral)
+		elif asset in ["dresser","bookcase"]:
+			var plant := Furnishings.instantiate_asset("plant")
+			plant.position = Vector3(0,box.size.y,0)
+			furnishing.add_child(plant)
 
 func _room_color(room: Dictionary) -> Color:
 	var label: String = str(room.get("label", ""))
@@ -954,6 +1056,13 @@ func _build_decor() -> void:
 	_label(self, "LET ME SLEEP", Vector3(-2.0, 2.15, 4.925), 0.006, Color("294851")).rotation.y = PI
 
 func _plant(at: Vector3, height: float) -> void:
+	var model := Furnishings.instantiate_asset("plant")
+	var bounds: AABB = Furnishings.bounds_cache["plant"]
+	model.scale = Vector3.ONE*height/bounds.size.y
+	model.position = at-Vector3(0,bounds.position.y,0)*model.scale
+	map_root.add_child(model)
+
+func _legacy_plant(at: Vector3, height: float) -> void:
 	var root := Node3D.new()
 	root.position = at
 	map_root.add_child(root)

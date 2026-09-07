@@ -1,0 +1,7 @@
+{
+  "checks": "48 assets decoded; sample provenance hashes; mono effects/stereo music; finite nonzero PCM; decoded peak<0.98; stems exact equal duration/frame count; WAV loop seams <=1 PCM unit",
+  "pass": true,
+  "assets": 48,
+  "bytes": 9410622,
+  "max_decoded_peak": 0.43373903632164
+}

@@ -4,11 +4,14 @@ extends Node3D
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const Pose = preload("res://scripts/human_pose.gd")
 const Rounded = preload("res://assets/procedural_shapes.gd")
+const ImportedSkin = preload("res://assets/art/characters/shared/character_skin.gd")
+const SwatterArt = preload("res://assets/art/house/swatter.glb")
+const NewspaperArt = preload("res://assets/art/house/newspaper.glb")
 const MOSQUITO_VISUAL_SCALE: float = 0.35
 const MOSQUITO_BODY_RADIUS: float = 0.04
 static var cloth_texture: ImageTexture
 
-# Original procedural characters. All transforms are cosmetic; the server owns play.
+# Editable imported characters follow the authoritative pose; capsules own play.
 var actor_role: String = ""
 var local_view: bool = false
 var current_tool: String = "hands"
@@ -59,6 +62,9 @@ var stun_blend: float = 0.0
 var mosquito_legs: Node3D
 var stun_sparkles: Node3D
 var help_icon: Label3D
+var imported_skin: Node3D
+var legacy_geometry_dirty := false
+var mosquito_orientation := Quaternion.IDENTITY
 
 func build(role: String, display_name: String, tint_index: int = 0) -> void:
 	actor_role = role
@@ -69,6 +75,10 @@ func build(role: String, display_name: String, tint_index: int = 0) -> void:
 		_build_human(tint_index)
 	else:
 		_build_mosquito()
+	imported_skin = ImportedSkin.new()
+	imported_skin.name = "ImportedCharacter"
+	model.add_child(imported_skin)
+	imported_skin.setup(role)
 	name_label = Label3D.new()
 	name_label.text = display_name
 	name_label.position.y = 1.98 if role == "human" else 0.12
@@ -81,6 +91,7 @@ func build(role: String, display_name: String, tint_index: int = 0) -> void:
 	name_label.no_depth_test = false
 	add_child(name_label)
 	apply_appearance({"color": fallback_color, "accessory": 0})
+	_hide_legacy_geometry()
 
 func set_local(value: bool) -> void:
 	local_view = value
@@ -91,7 +102,9 @@ func set_local(value: bool) -> void:
 		right_arm.visible = true
 		fps_root.visible = false
 		for collar: MeshInstance3D in collar_meshes:
-			collar.visible = true
+			collar.visible = not is_instance_valid(imported_skin)
+	if is_instance_valid(imported_skin):
+		imported_skin.set_first_person(value and actor_role=="human")
 	if is_instance_valid(name_label):
 		name_label.visible = not value
 
@@ -116,6 +129,8 @@ func body_collision_rids() -> Array[RID]:
 func update_state(data: Dictionary, dt: float) -> void:
 	clock_time += dt
 	apply_appearance(data.get("appearance", {"color": fallback_color, "accessory": 0}))
+	if legacy_geometry_dirty:
+		_hide_legacy_geometry()
 	var target: Vector3 = data.get("p", Vector3.ZERO)
 	if not initialized or global_position.distance_to(target) > 2.2:
 		global_position = target
@@ -142,8 +157,17 @@ func update_state(data: Dictionary, dt: float) -> void:
 		right_wing.rotation.z = lerpf(0.22-flutter,0.05,stun_blend)
 		left_wing.rotation.y = stun_blend*1.25
 		right_wing.rotation.y = -stun_blend*1.25
-		model.rotation.x = (float(data.get("pitch",0.0))*0.6 if flying else 0.0)*(1.0-stun_blend)
-		model.rotation.z = stun_blend*(1.25+sin(clock_time*2.7)*0.025)
+		var target_orientation := Basis.from_euler(Vector3((float(data.get("pitch",0.0))*0.6 if flying else 0.0)*(1.0-stun_blend),0,stun_blend*(1.25+sin(clock_time*2.7)*0.025)))
+		var surface_normal: Vector3 = data.get("surface_normal",Vector3.ZERO)
+		if state in ["biting","perched"] and surface_normal.length_squared()>0.5:
+			var up: Vector3 = (global_basis.inverse()*surface_normal).normalized()
+			var forward: Vector3 = Vector3.FORWARD-up*Vector3.FORWARD.dot(up)
+			if forward.length_squared()<0.01:
+				forward = Vector3.UP-up*Vector3.UP.dot(up)
+			forward = forward.normalized()
+			target_orientation = Basis(forward.cross(up).normalized(),up,-forward)
+		mosquito_orientation = mosquito_orientation.slerp(target_orientation.get_rotation_quaternion(),1.0-exp(-14.0*dt))
+		model.basis = Basis(mosquito_orientation).scaled(Vector3.ONE*MOSQUITO_VISUAL_SCALE)
 		mosquito_legs.scale = Vector3(lerpf(1.0,0.62,stun_blend),lerpf(1.0,0.28,stun_blend),1.0)
 		stun_sparkles.visible = state=="stunned"
 		stun_sparkles.rotation.y = clock_time*1.5
@@ -153,6 +177,25 @@ func update_state(data: Dictionary, dt: float) -> void:
 		model.position = Vector3(0,stun_blend*0.016,0)
 		if state!="stunned":
 			help_icon.visible = false
+		if is_instance_valid(imported_skin):
+			imported_skin.apply_mosquito(data,clock_time,stun_blend)
+
+func _hide_legacy_geometry() -> void:
+	# Retain the collider/socket scaffold while only the exported deformation
+	# meshes render. Tools remain attached to the authoritative hand socket.
+	for child: Node in model.get_children():
+		if child==imported_skin:
+			continue
+		_hide_scaffold(child)
+	legacy_geometry_dirty = false
+
+func _hide_scaffold(node: Node) -> void:
+	if node==held_tool:
+		return
+	if node is GeometryInstance3D:
+		(node as GeometryInstance3D).visible = false
+	for child: Node in node.get_children():
+		_hide_scaffold(child)
 
 func _build_human(tint_index: int) -> void:
 	var skin: StandardMaterial3D = material(Color("e8b186"))
@@ -285,6 +328,8 @@ func _apply_human_pose(data: Dictionary, dt: float) -> void:
 		var direction: Vector3 = body_pose.tool_direction if str(Dictionary(data.get("strike",{})).get("hand","right"))=="right" else Vector3.DOWN
 		if direction.length_squared()>0.001:
 			tool_socket.basis = (limb_hands["r"] as Node3D).basis.inverse()*Basis(Quaternion(Vector3.DOWN,direction.normalized()))
+	if is_instance_valid(imported_skin):
+		imported_skin.apply_human(body_pose,data,dt)
 
 func _pose_segment(key: String, from: Vector3, to: Vector3) -> void:
 	var direction: Vector3 = to - from
@@ -383,6 +428,9 @@ func apply_appearance(raw: Variant) -> void:
 		return
 	appearance_signature = signature
 	applied_appearance = safe
+	legacy_geometry_dirty = true
+	if is_instance_valid(imported_skin):
+		imported_skin.set_appearance(safe)
 	var tint: Color = CosmeticsData.PALETTE[int(safe.color)]
 	primary_tint.albedo_color = tint
 	secondary_tint.albedo_color = tint.darkened(0.20 if actor_role == "human" else 0.52)
@@ -581,6 +629,15 @@ static func make_tool(tool: String) -> Node3D:
 	var metal: StandardMaterial3D = material(Color("bcd5cb"))
 	var paper: StandardMaterial3D = material(Color("f6e7c9"))
 	if tool == "hands":
+		return root
+	if tool in ["swatter","newspaper"]:
+		var imported: Node3D = (SwatterArt if tool=="swatter" else NewspaperArt).instantiate()
+		imported.name = "AuthoredTool"
+		imported.rotation.z = PI
+		# Authoring origin is the grip base and +Y is the long axis. Match the
+		# shared active-face centre exactly, without changing contact statistics.
+		imported.scale = Vector3.ONE*(0.46/0.55 if tool=="swatter" else 0.30/0.32)
+		root.add_child(imported)
 		return root
 	if tool == "newspaper":
 		var roll: MeshInstance3D = _capsule(root, Vector3(0, -0.15, 0), 0.045, 0.40, paper)

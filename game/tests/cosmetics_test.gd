@@ -3,7 +3,11 @@ extends SceneTree
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 
 func _initialize() -> void:
-	var baseline: Dictionary = {"human": {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "accent": 0}, "mosquito": {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "accent": 0}}
+	var baseline: Dictionary = {"human": {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0}, "mosquito": {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0}}
+	var fresh: Dictionary = CosmeticsData.default_profile()
+	assert(fresh.human.accessory == 3 and fresh.human.face == 1 and fresh.human.outfit == 0 and fresh.human.footwear == 0)
+	assert(CosmeticsData.sanitize(fresh) == fresh)
+	assert(CosmeticsData.HUMAN_ACCESSORIES == ["none","cap","glasses","nightcap"])
 	for invalid: Variant in [null, 4, "human", [], true, {"human": null}, {"mosquito": []}]:
 		assert(CosmeticsData.sanitize(invalid) == baseline)
 	var malformed: Dictionary = {"human": {"color": 3.0, "accessory": "1", "reach": 999}, "mosquito": {"color": -1, "accessory": 999}, "owner": true}
@@ -22,7 +26,7 @@ func _initialize() -> void:
 				proposal[role][key] = invalid
 				assert(CosmeticsData.sanitize(proposal)[role][key] == 0)
 	var appearance: Dictionary = CosmeticsData.appearance_for(clean, "mosquito")
-	assert(appearance == {"color": 1, "accessory": 1, "face": 0, "hair": 0, "outfit": 0, "accent": 0})
+	assert(appearance == {"color": 1, "accessory": 1, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0})
 	assert(not appearance.has("human") and not appearance.has("mosquito"))
 	appearance.color = 4
 	assert(clean.mosquito.color == 1 and original.mosquito.color == 1)

@@ -33,6 +33,7 @@ func _run() -> void:
 	legacy.set_value("bindings", "bite", "key:%d" % KEY_H)
 	legacy.set_value("bindings", "self_swat", "key:%d" % KEY_T)
 	legacy.set_value("connection", "player_name", "Migración")
+	legacy.set_value("audio", "master_volume", 0.23)
 	legacy.save(source)
 	var source_bytes: PackedByteArray = FileAccess.get_file_as_bytes(source)
 	var isolated_copy: String = folder.path_join("new.cfg")
@@ -58,16 +59,28 @@ func _run() -> void:
 	# The actual load path proves appearances and bindings are restored, not just copied.
 	if existed:
 		check(DirAccess.remove_absolute(destination) == OK, "Backed-up destination can be removed for the migration fixture")
+	check(not FileAccess.file_exists(destination), "Destination is actually absent immediately before migration")
 	check(Prefs._migrate_legacy_settings(source) == OK, "Migration populates the actual preferences destination")
+	if FileAccess.get_file_as_bytes(destination) != source_bytes:
+		print("MIGRATION_DIAGNOSTIC equals_original=%s source_unchanged=%s destination_exists=%s" % [FileAccess.get_file_as_bytes(destination) == original, FileAccess.get_file_as_bytes(source) == source_bytes, FileAccess.file_exists(destination)])
 	check(FileAccess.get_file_as_bytes(destination) == source_bytes, "Actual destination contains the exact migration fixture before loading")
 	Prefs.cosmetics = {}
 	Prefs._loaded = false
 	Prefs.load_settings()
-	check(Prefs.cosmetics == {"human": {"color": 5, "accessory": 2, "face": 0, "hair": 0, "outfit": 0, "accent": 0}, "mosquito": {"color": 1, "accessory": 1, "face": 0, "hair": 0, "outfit": 0, "accent": 0}}, "Fresh load migrates independent appearances and defaults new categories")
+	check(Prefs.cosmetics == {"human": {"color": 5, "accessory": 2, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0}, "mosquito": {"color": 1, "accessory": 1, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0}}, "Fresh load preserves old appearance IDs and adds default footwear")
+	check(is_equal_approx(Prefs.master_volume,0.23), "Migration preserves the exact old master volume")
+	check(is_equal_approx(Prefs.music_volume,0.55) and is_equal_approx(Prefs.effects_volume,0.8) and is_equal_approx(Prefs.ambience_volume,0.45) and is_equal_approx(Prefs.ui_volume,0.65), "Missing audio categories use independent defaults")
 	Prefs.cosmetics.human.face = 2
 	Prefs.cosmetics.human.hair = 1
 	Prefs.cosmetics.mosquito.outfit = 2
 	Prefs.cosmetics.mosquito.accent = 4
+	Prefs.cosmetics.human.accessory = 3
+	Prefs.cosmetics.human.footwear = 2
+	Prefs.cosmetics.mosquito.footwear = 1
+	Prefs.music_volume = 0.12
+	Prefs.effects_volume = 0.34
+	Prefs.ambience_volume = 0.56
+	Prefs.ui_volume = 0.78
 	Prefs.local_host_port = 28451
 	Prefs.server_port = 29111
 	Prefs.sharing_scope = "virtual"
@@ -76,10 +89,26 @@ func _run() -> void:
 	Prefs._loaded = false
 	Prefs.load_settings()
 	check(Prefs.cosmetics.human.face == 2 and Prefs.cosmetics.human.hair == 1 and Prefs.cosmetics.mosquito.outfit == 2 and Prefs.cosmetics.mosquito.accent == 4, "Expanded role profiles persist across fresh settings load")
+	check(Prefs.cosmetics.human.accessory == 3 and Prefs.cosmetics.human.footwear == 2 and Prefs.cosmetics.mosquito.footwear == 1, "Nightcap and independent footwear persist for both roles")
+	check(is_equal_approx(Prefs.master_volume,0.23) and is_equal_approx(Prefs.music_volume,0.12) and is_equal_approx(Prefs.effects_volume,0.34) and is_equal_approx(Prefs.ambience_volume,0.56) and is_equal_approx(Prefs.ui_volume,0.78), "All five volume controls persist across a real save and reload")
 	check(Prefs.local_host_port == 28451 and Prefs.server_port == 29111 and Prefs.sharing_scope == "virtual", "Host port persists independently from previously joined server")
 	check(Prefs.binding_text("jump") == "J" and Prefs.binding_text("attack") == "Clic der.", "Fresh load restores keyboard and mouse bindings")
 	check(Prefs.binding_text("bite") == "H" and Prefs.binding_text("self_swat") == "T", "Migration preserves reassigned concentration and defense controls")
 	check(FileAccess.get_file_as_bytes(source) == source_bytes, "Legacy source remains unchanged")
+	# A new profile gets the confirmed night outfit; an old explicit ID never does.
+	legacy.erase_section("appearance")
+	legacy.save(destination)
+	Prefs.cosmetics = {}
+	Prefs._loaded = false
+	Prefs.load_settings()
+	check(Prefs.cosmetics.human.accessory == 3 and Prefs.cosmetics.human.face == 1 and Prefs.cosmetics.human.footwear == 0, "Absent appearance section gets nightcap, sleepy face and classic slippers")
+	check(is_equal_approx(Prefs.master_volume,0.23) and Prefs.binding_text("bite") == "H", "New appearance defaults do not reset existing audio or bindings")
+	var audio_values := ConfigFile.new()
+	for invalid_audio: Variant in [NAN, INF, "loud", true, null]:
+		audio_values.set_value("audio","music_volume",invalid_audio)
+		check(is_equal_approx(Prefs._audio_value(audio_values,"music_volume",0.55),0.55), "Malformed audio level safely defaults: " + str(invalid_audio))
+	audio_values.set_value("audio","music_volume",5.0)
+	check(is_equal_approx(Prefs._audio_value(audio_values,"music_volume",0.55),1.0), "Audio level is clamped to its upper bound")
 	if existed:
 		var restored := FileAccess.open(destination, FileAccess.WRITE)
 		restored.store_buffer(original)

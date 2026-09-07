@@ -1,0 +1,22 @@
+[
+  {
+    "species": "human",
+    "bones": 32,
+    "actions": 9,
+    "maximum_weight_error": 4.470348358154297e-08,
+    "maximum_influences": 4,
+    "bad_positions": 0,
+    "zero_area_triangles": 0,
+    "max_authoritative_action_error_m": 1.228781230931777e-07
+  },
+  {
+    "species": "mosquito",
+    "bones": 21,
+    "actions": 10,
+    "maximum_weight_error": 0,
+    "maximum_influences": 1,
+    "bad_positions": 0,
+    "zero_area_triangles": 0,
+    "max_authoritative_action_error_m": 0
+  }
+]

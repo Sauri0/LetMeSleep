@@ -10,6 +10,7 @@ const DEFAULT_KEYS: Dictionary = {
 	"bite": KEY_E, "self_swat": KEY_Q, "perch": KEY_F,
 	"interact": KEY_E, "pause": KEY_ESCAPE, "pickup": KEY_R, "drop": KEY_G,
 	"sprint": KEY_SHIFT, "jump": KEY_SPACE, "crouch": KEY_CTRL,
+	"toggle_help": KEY_F1,
 }
 const ACTION_NAMES: Dictionary = {
 	"move_forward": "Avanzar", "move_back": "Retroceder", "move_left": "Izquierda",
@@ -18,12 +19,17 @@ const ACTION_NAMES: Dictionary = {
 	"perch": "Posarse / volar", "interact": "Hacer tarea (mantener)",
 	"pickup": "Recoger / cambiar objeto", "drop": "Soltar objeto", "pause": "Menú",
 	"sprint": "Correr (humano)", "jump": "Saltar (humano)", "crouch": "Agacharse (humano)",
+	"toggle_help": "Abrir / cerrar guía",
 }
 static var human_sensitivity: float = 0.0025
 static var mosquito_sensitivity: float = 0.0025
 static var invert_y: bool = false
 static var marker_pulse: bool = true
 static var master_volume: float = 0.6
+static var music_volume: float = 0.55
+static var effects_volume: float = 0.8
+static var ambience_volume: float = 0.45
+static var ui_volume: float = 0.65
 static var player_name: String = ""
 static var server_address: String = "127.0.0.1"
 static var server_port: int = 27840
@@ -33,7 +39,7 @@ static var room_code: String = ""
 static var invitation: String = ""
 static var shared_address: String = ""
 static var shared_port: int = 27840
-static var cosmetics: Dictionary = {"human": {"color": 0, "accessory": 0}, "mosquito": {"color": 0, "accessory": 0}}
+static var cosmetics: Dictionary = CosmeticsData.default_profile()
 static var _loaded: bool = false
 
 
@@ -67,6 +73,10 @@ static func load_settings() -> void:
 		invert_y = bool(config.get_value("controls", "invert_y", invert_y))
 		marker_pulse = bool(config.get_value("accessibility", "marker_pulse", marker_pulse))
 		master_volume = clampf(float(config.get_value("audio", "master_volume", master_volume)), 0.0, 1.0)
+		music_volume = _audio_value(config, "music_volume", 0.55)
+		effects_volume = _audio_value(config, "effects_volume", 0.8)
+		ambience_volume = _audio_value(config, "ambience_volume", 0.45)
+		ui_volume = _audio_value(config, "ui_volume", 0.65)
 		player_name = str(config.get_value("connection", "player_name", "")).left(24)
 		server_address = str(config.get_value("connection", "address", "127.0.0.1"))
 		server_port = clampi(int(config.get_value("connection", "port", 27840)), 1, 65535)
@@ -78,7 +88,7 @@ static func load_settings() -> void:
 		invitation = str(config.get_value("connection", "invitation", "")).left(1024)
 		shared_address = str(config.get_value("sharing", "address", "")).left(253)
 		shared_port = clampi(int(config.get_value("sharing", "port", 27840)), 1024, 65535)
-		cosmetics = CosmeticsData.sanitize(config.get_value("appearance", "cosmetics", {}))
+		cosmetics = CosmeticsData.sanitize(config.get_value("appearance", "cosmetics", CosmeticsData.default_profile()))
 		for action: String in ACTION_NAMES:
 			var binding: String = str(config.get_value("bindings", action, ""))
 			var parts := binding.split(":")
@@ -124,6 +134,10 @@ static func save_settings() -> void:
 	config.set_value("controls", "invert_y", invert_y)
 	config.set_value("accessibility", "marker_pulse", marker_pulse)
 	config.set_value("audio", "master_volume", master_volume)
+	config.set_value("audio", "music_volume", music_volume)
+	config.set_value("audio", "effects_volume", effects_volume)
+	config.set_value("audio", "ambience_volume", ambience_volume)
+	config.set_value("audio", "ui_volume", ui_volume)
 	config.set_value("connection", "player_name", player_name)
 	config.set_value("connection", "address", server_address)
 	config.set_value("connection", "port", server_port)
@@ -153,6 +167,21 @@ static func save_settings() -> void:
 static func apply_audio() -> void:
 	AudioServer.set_bus_volume_db(0, linear_to_db(maxf(master_volume, 0.0001)))
 	AudioServer.set_bus_mute(0, master_volume <= 0.001)
+	var levels := {"Music": music_volume, "Effects": effects_volume, "Ambience": ambience_volume, "UI": ui_volume}
+	for bus: String in levels:
+		var index: int = AudioServer.get_bus_index(bus)
+		if index < 0:
+			continue
+		var level: float = clampf(float(levels[bus]), 0.0, 1.0)
+		AudioServer.set_bus_volume_db(index, linear_to_db(maxf(level, 0.0001)))
+		AudioServer.set_bus_mute(index, level <= 0.001)
+
+
+static func _audio_value(config: ConfigFile, key: String, fallback: float) -> float:
+	var value: Variant = config.get_value("audio", key, fallback)
+	if not (value is float or value is int) or not is_finite(float(value)):
+		return fallback
+	return clampf(float(value), 0.0, 1.0)
 
 
 static func bind_action(action: String, event: InputEvent, save: bool = true) -> void:

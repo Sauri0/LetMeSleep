@@ -9,10 +9,12 @@ const UIScript = preload("res://scripts/ui.gd")
 const PracticeScript = preload("res://scripts/practice_session.gd")
 const MapCatalog = preload("res://scripts/map_catalog.gd")
 const HumanPose = preload("res://scripts/human_pose.gd")
+const MusicScript = preload("res://scripts/music_director.gd")
 var network: Node
 var options: Dictionary
 var world: Node3D
 var ui: CanvasLayer
+var music: Node
 var local_id := 0
 var state: Dictionary = {}
 var personal: Dictionary = {}
@@ -46,6 +48,8 @@ func _ready() -> void:
 	world.name = "World"
 	add_child(world)
 	world.build()
+	music = MusicScript.new()
+	add_child(music)
 	rig = Node3D.new()
 	add_child(rig)
 	arm = SpringArm3D.new()
@@ -62,13 +66,12 @@ func _ready() -> void:
 	arm.add_child(camera)
 	ui = UIScript.new()
 	add_child(ui)
+	ui.ui_sound_requested.connect(music.ui_cue)
+	ui.screen_changed.connect(_music_screen)
 	practice = PracticeScript.new()
 	add_child(practice)
 	practice.snapshot_updated.connect(_snapshot)
-	practice.private_updated.connect(func(data: Dictionary) -> void:
-		personal = data
-		if playing:
-			ui.show_game(state, personal, local_id))
+	practice.private_updated.connect(_private)
 	ui.practice_requested.connect(_start_practice)
 	ui.practice_restart_requested.connect(func() -> void:
 		if practice_active:
@@ -106,18 +109,28 @@ func _ready() -> void:
 		if waiting:
 			waiting_state = data)
 	network.snapshot_updated.connect(_snapshot)
-	network.private_updated.connect(func(data: Dictionary) -> void:
-		personal = data
-		if playing:
-			ui.show_game(state, personal, local_id))
+	network.private_updated.connect(_private)
 	network.notice.connect(ui.show_status)
 	network.connection_state_changed.connect(ui.show_connection_state)
 	network.disconnected.connect(_disconnected)
 	ui.show_home()
+	_music_screen("home")
 	if options.has("visual-preview"):
 		_preview()
 	elif options.has("practice-role"):
 		_start_practice(str(options["practice-role"]), str(options.get("practice-mode", "blood")))
+
+func _music_screen(screen: String) -> void:
+	# Opening help/settings during a round keeps the same musical clock.
+	var context := "playing" if playing else "lobby" if waiting else "results" if screen == "results" else "customize" if screen == "customization" else "preferences" if screen == "settings" else "home"
+	music.set_context(context, state, personal, local_id)
+
+func _private(data: Dictionary) -> void:
+	personal = data
+	if playing:
+		world.audio_fx.sync_private(personal)
+		ui.show_game(state, personal, local_id)
+		music.set_context("playing", state, personal, local_id)
 
 func _start_practice(selected_role: String, mode: String) -> void:
 	network.close_client()
@@ -150,6 +163,7 @@ func _lobby(data: Dictionary) -> void:
 		camera.make_current()
 	world.set_local_role(local_id, "lobby")
 	ui.show_lobby(data, local_id)
+	_music_screen("lobby")
 	camera_initialized = false
 
 func _set_walking(value: bool) -> void:
@@ -163,8 +177,10 @@ func _snapshot(data: Dictionary) -> void:
 		playing = false
 		personal.clear()
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		world.audio_fx.clear()
 		world.show_assignment({}, camera, Vector3.ZERO)
 		ui.show_results(data)
+		music.set_context("results", state, personal, local_id)
 		return
 	if str(data.get("phase", "")) != "playing":
 		return
@@ -188,6 +204,7 @@ func _snapshot(data: Dictionary) -> void:
 		camera.make_current()
 	world.set_local_role(local_id, role)
 	ui.show_game(state, personal, local_id)
+	music.set_context("playing", state, personal, local_id)
 
 func _process(dt: float) -> void:
 	if waiting:

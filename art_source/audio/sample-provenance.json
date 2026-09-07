@@ -1,0 +1,225 @@
+{
+  "library": "VSCO 2 Community Edition",
+  "recorded_by": "Sam Gossner and Simon Dalzell; sample cutting Elan Hickler/Soundemote",
+  "source": "https://versilian-studios.com/vsco-community/",
+  "repository_commit": "440300901dfe9275fd84e0b7763af1f8443ae62e",
+  "license_url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/LICENSE",
+  "samples": [
+    {
+      "instrument": "bass",
+      "note_label": "C1",
+      "file": "instruments/vsco2ce/BKCtbss_Pizz_C1_v1_rr1.wav",
+      "bytes": 270720,
+      "sha256": "5591160a867b21ba193d601390c9e1f35ec8d5deb0de686a410d25a98a103b06",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Solo%20Contrabass/Pizz/BKCtbss_Pizz_C1_v1_rr1.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "bass",
+      "note_label": "C1",
+      "file": "instruments/vsco2ce/BKCtbss_Pizz_C1_v1_rr2.wav",
+      "bytes": 405984,
+      "sha256": "d880b29cafc4b537a5097c9b65a7e20d1be15d60efaf7ceb15e20517b6ad455b",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Solo%20Contrabass/Pizz/BKCtbss_Pizz_C1_v1_rr2.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "bass",
+      "note_label": "D1",
+      "file": "instruments/vsco2ce/BKCtbss_Pizz_D1_v1_rr1.wav",
+      "bytes": 856252,
+      "sha256": "c4db29ae6949cb6c0d24201bb444c1d5b3806505bae47785cb199f5f0f4f02d2",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Solo%20Contrabass/Pizz/BKCtbss_Pizz_D1_v1_rr1.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "bass",
+      "note_label": "D1",
+      "file": "instruments/vsco2ce/BKCtbss_Pizz_D1_v1_rr2.wav",
+      "bytes": 1062672,
+      "sha256": "4f17f7c828a9d9123c8c6498a27aa6b7a2772a5b937183f3d622f41f56ce21ce",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Solo%20Contrabass/Pizz/BKCtbss_Pizz_D1_v1_rr2.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "bass",
+      "note_label": "A1",
+      "file": "instruments/vsco2ce/BKCtbss_Pizz_A1_v1_rr1.wav",
+      "bytes": 623260,
+      "sha256": "c88e632ac4f716d4e85112d6ea5bbe2d27d67019296787c25d27178a9e5f18ac",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Solo%20Contrabass/Pizz/BKCtbss_Pizz_A1_v1_rr1.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "bass",
+      "note_label": "A1",
+      "file": "instruments/vsco2ce/BKCtbss_Pizz_A1_v1_rr2.wav",
+      "bytes": 485472,
+      "sha256": "e7aaefac5eb3986fcec86040e1f7310e84ea38be5d13abe2b3de101c41f43b2b",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Solo%20Contrabass/Pizz/BKCtbss_Pizz_A1_v1_rr2.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "bass",
+      "note_label": "C#2",
+      "file": "instruments/vsco2ce/BKCtbss_Pizz_C#2_v1_rr1.wav",
+      "bytes": 513824,
+      "sha256": "41804fc70cf82bd1c475611e315b14b1adf5effbd3369028302a681b54064b3f",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Solo%20Contrabass/Pizz/BKCtbss_Pizz_C%232_v1_rr1.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "bass",
+      "note_label": "C#2",
+      "file": "instruments/vsco2ce/BKCtbss_Pizz_C#2_v1_rr2.wav",
+      "bytes": 498308,
+      "sha256": "326fa0536c5487af2a500423e6b6d1c2acfe005cb40268c7c2f152b6ca71517c",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Solo%20Contrabass/Pizz/BKCtbss_Pizz_C%232_v1_rr2.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "pizz",
+      "note_label": "D3",
+      "file": "instruments/vsco2ce/ViolaEns_pizz_D3_v1_rr1.wav",
+      "bytes": 464972,
+      "sha256": "411baec47dcad3627ec9f774e8a78c0a6c39ff8ec7a16fec9bbd4039b85ad765",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Viola%20Section/pizz/ViolaEns_pizz_D3_v1_rr1.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "pizz",
+      "note_label": "D3",
+      "file": "instruments/vsco2ce/ViolaEns_pizz_D3_v1_rr2.wav",
+      "bytes": 197036,
+      "sha256": "e1d253bec46fe74fdca4be3f5283bf13d99d56ccfd2dde98ecada5a131647e95",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Viola%20Section/pizz/ViolaEns_pizz_D3_v1_rr2.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "pizz",
+      "note_label": "F3",
+      "file": "instruments/vsco2ce/ViolaEns_pizz_F3_v1_rr1.wav",
+      "bytes": 299774,
+      "sha256": "7ff4e7d2c5d311577ec4ee301248dc25464a5f971b3c31436134ebe8e8134c38",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Viola%20Section/pizz/ViolaEns_pizz_F3_v1_rr1.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "pizz",
+      "note_label": "F3",
+      "file": "instruments/vsco2ce/ViolaEns_pizz_F3_v1_rr2.wav",
+      "bytes": 149690,
+      "sha256": "d00fbddf0426cff8d2d1865d321b34af94e5e792c6492def965929710fe2bd38",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Viola%20Section/pizz/ViolaEns_pizz_F3_v1_rr2.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "pizz",
+      "note_label": "A3",
+      "file": "instruments/vsco2ce/ViolaEns_pizz_A3_v1_rr1.wav",
+      "bytes": 180950,
+      "sha256": "b90bbeee2427b90f8a9bd91e755d4b0265f6ef33d9dda8dacc696c72effc50cc",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Viola%20Section/pizz/ViolaEns_pizz_A3_v1_rr1.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "pizz",
+      "note_label": "A3",
+      "file": "instruments/vsco2ce/ViolaEns_pizz_A3_v1_rr2.wav",
+      "bytes": 169790,
+      "sha256": "af663d1ffacd36e638bdc2742b21f3fcfbbcbb748b73e63363528b85089bd691",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Viola%20Section/pizz/ViolaEns_pizz_A3_v1_rr2.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "pizz",
+      "note_label": "C4",
+      "file": "instruments/vsco2ce/ViolaEns_pizz_C4_v1_rr1.wav",
+      "bytes": 230726,
+      "sha256": "ae794a92443243816ff91a9a2ed0f9010ea3a6ffcbf011c6c6cb91b8c8597d1b",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Viola%20Section/pizz/ViolaEns_pizz_C4_v1_rr1.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "pizz",
+      "note_label": "C4",
+      "file": "instruments/vsco2ce/ViolaEns_pizz_C4_v1_rr2.wav",
+      "bytes": 226922,
+      "sha256": "3443ba56275c2b160dac32a2e7a49aa68651a0d1846d9ced94c76e695f9625fe",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Strings/Viola%20Section/pizz/ViolaEns_pizz_C4_v1_rr2.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "clarinet",
+      "note_label": "D3",
+      "file": "instruments/vsco2ce/DCClar_susLong_D3_v1_rr1_sum.wav",
+      "bytes": 2230948,
+      "sha256": "74ba0ec6cb0698f314b07cee2f63cd309d5fd30db262d10d1f69e6aec9cd5896",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Woodwinds/Clarinet/susLong/DCClar_susLong_D3_v1_rr1_sum.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "clarinet",
+      "note_label": "F3",
+      "file": "instruments/vsco2ce/DCClar_susLong_F3_v1_rr1_sum.wav",
+      "bytes": 1762976,
+      "sha256": "0677787afa8d1fdc99e267a1518a49dacf3f1899dc27239c1fbe93568fda2222",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Woodwinds/Clarinet/susLong/DCClar_susLong_F3_v1_rr1_sum.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "clarinet",
+      "note_label": "A#3",
+      "file": "instruments/vsco2ce/DCClar_susLong_A#3_v1_rr1_sum.wav",
+      "bytes": 1599888,
+      "sha256": "c314aa26ec148ffa30afe988d7f4f178941a38ca401f487ea2633ce635e78d3f",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Woodwinds/Clarinet/susLong/DCClar_susLong_A%233_v1_rr1_sum.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "clarinet",
+      "note_label": "D4",
+      "file": "instruments/vsco2ce/DCClar_susLong_D4_v1_rr1_sum.wav",
+      "bytes": 1987372,
+      "sha256": "61ff877d4b500c2e1b6b51f693cd1ea8df05c7473c2ea458a207b1450495e430",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Woodwinds/Clarinet/susLong/DCClar_susLong_D4_v1_rr1_sum.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "marimba",
+      "note_label": "C4",
+      "file": "instruments/vsco2ce/Marimba_hit_Outrigger_C4_loud_01.wav",
+      "bytes": 1016564,
+      "sha256": "4af539d47a452d7fad26e171b1c8adcca272cee97191f040d192680462c880b8",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Percussion/Marimba/Marimba_hit_Outrigger_C4_loud_01.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "marimba",
+      "note_label": "G4",
+      "file": "instruments/vsco2ce/Marimba_hit_Outrigger_G4_loud_01.wav",
+      "bytes": 800102,
+      "sha256": "36f39f9f24789001add2b4c440defb7641178b0e8449c5cb7f1960bccaf0aaaf",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Percussion/Marimba/Marimba_hit_Outrigger_G4_loud_01.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "marimba",
+      "note_label": "F3",
+      "file": "instruments/vsco2ce/Marimba_hit_Outrigger_F3_loud_01.wav",
+      "bytes": 1589876,
+      "sha256": "379e749add43b12959fae06cc272f1871899cc05460faf41ead77b93e5d01843",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Percussion/Marimba/Marimba_hit_Outrigger_F3_loud_01.wav",
+      "license": "CC0-1.0"
+    },
+    {
+      "instrument": "glock",
+      "note_label": "C5",
+      "file": "instruments/vsco2ce/glock_medium_C5.wav",
+      "bytes": 1271310,
+      "sha256": "635f898e0bcb6975b96b18efd9c896f6f1b97ff12174a339ada4814e49675660",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Percussion/Glock/glock_medium_C5.wav",
+      "license": "CC0-1.0"
+    }
+  ]
+}

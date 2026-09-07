@@ -11,6 +11,9 @@ var orbit_yaw := -0.25
 var orbit_pitch := -0.08
 var zoom := 1.0
 var dragging := false
+var focus_key := ""
+var focus_target := Vector3(0,0.91,0)
+var focus_distance := 3.65
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(280,300)
@@ -36,11 +39,17 @@ func _ready() -> void:
 	studio.add_child(environment_node)
 	for side: float in [-1.0,1.0]:
 		var light := OmniLight3D.new()
-		light.position = Vector3(side*1.8,2.9,-1.7)
+		light.position = Vector3(side*1.8,2.9,2.7)
 		light.light_color = Color("ffe0b4") if side<0 else Color("abd4e9")
-		light.light_energy = 1.5 if side<0 else 0.7
+		light.light_energy = 3.0 if side<0 else 1.1
 		light.omni_range = 7.0
 		studio.add_child(light)
+	var rim := OmniLight3D.new()
+	rim.position = Vector3(0,2.3,-2.0)
+	rim.light_color = Color("abd4e9")
+	rim.light_energy = 1.2
+	rim.omni_range = 6.0
+	studio.add_child(rim)
 	var base := CylinderMesh.new()
 	base.top_radius = 0.68
 	base.bottom_radius = 0.72
@@ -70,20 +79,49 @@ func set_avatar(selected_role: String, data: Dictionary) -> void:
 		avatar.name_label.visible = false
 		avatar.scale = Vector3.ONE*(3.1/Actor.MOSQUITO_VISUAL_SCALE if role=="mosquito" else 1.0)
 		reset_view()
-	avatar.update_state({"p":Vector3(0,0.88 if role=="mosquito" else 0,0),"yaw":PI,"body_yaw":PI,"state":"flying" if role=="mosquito" else "human","appearance":appearance},1.0)
+	avatar.update_state({"p":Vector3(0,0.88 if role=="mosquito" else 0,0),"yaw":PI,"body_yaw":PI,"state":"flying" if role=="mosquito" else "human","relaxed_pose":true,"appearance":appearance},1.0)
 	_update_camera()
 
 func reset_view() -> void:
 	orbit_yaw = -0.25
 	orbit_pitch = -0.08
 	zoom = 1.0
+	focus_key = ""
+	focus_target = Vector3(0,0.91,0)
+	focus_distance = 3.65
+	_update_camera()
+
+func set_view(view: String) -> void:
+	orbit_yaw = 0.0 if view=="front" else PI*0.5 if view=="side" else PI if view=="back" else -0.25
+	orbit_pitch = -0.08
+	_update_camera()
+
+func focus_category(key: String) -> void:
+	focus_key = key
+	zoom = 1.0
+	if role=="human":
+		if key in ["face","hair","accessory"]:
+			focus_target = Vector3(0,1.59,0)
+			focus_distance = 1.35 if key=="face" else 1.65
+		elif key=="footwear":
+			focus_target = Vector3(0,0.17,0)
+			focus_distance = 1.30
+		elif key=="outfit":
+			focus_target = Vector3(0,0.95,0)
+			focus_distance = 2.65
+		else:
+			focus_target = Vector3(0,0.91,0)
+			focus_distance = 3.65
+	else:
+		focus_target = Vector3(0,0.98 if key in ["face","hair","accessory"] else 0.74 if key=="footwear" else 0.90,0)
+		focus_distance = 2.4 if key in ["face","hair","accessory"] else 3.25
 	_update_camera()
 
 func _update_camera() -> void:
 	if not is_instance_valid(camera):
 		return
-	var target := Vector3(0,0.91,0)
-	var offset: Vector3 = Vector3(0,0,3.65*zoom).rotated(Vector3.RIGHT,orbit_pitch).rotated(Vector3.UP,orbit_yaw)
+	var target: Vector3 = focus_target
+	var offset: Vector3 = Vector3(0,0,focus_distance*zoom).rotated(Vector3.RIGHT,orbit_pitch).rotated(Vector3.UP,orbit_yaw)
 	camera.position = target+offset
 	camera.look_at(target)
 
@@ -106,5 +144,5 @@ func _gui_input(event: InputEvent) -> void:
 func _process(dt: float) -> void:
 	if dragging and not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		dragging = false
-	if is_instance_valid(avatar) and role=="mosquito":
-		avatar.update_state({"p":Vector3(0,0.88,0),"yaw":PI,"state":"flying","appearance":appearance},dt)
+	if is_instance_valid(avatar):
+		avatar.update_state({"p":Vector3(0,0.88 if role=="mosquito" else 0.0,0),"yaw":PI,"body_yaw":PI,"state":"flying" if role=="mosquito" else "human","relaxed_pose":true,"appearance":appearance},dt)

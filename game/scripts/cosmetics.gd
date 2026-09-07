@@ -7,21 +7,31 @@ const PALETTE: Array[Color] = [
 	Color("be9ccc"), Color("e0b966"), Color("8ca6d0"),
 ]
 const COLOR_NAMES: Array[String] = ["Durazno", "Laguna", "Oliva", "Lila", "Miel", "Niebla"]
-const HUMAN_ACCESSORIES: Array[String] = ["none", "cap", "glasses"]
+const HUMAN_ACCESSORIES: Array[String] = ["none", "cap", "glasses", "nightcap"]
 const MOSQUITO_ACCESSORIES: Array[String] = ["none", "bow", "goggles"]
-const CATEGORY_KEYS: Array[String] = ["color", "face", "hair", "outfit", "accessory", "accent"]
+const CATEGORY_KEYS: Array[String] = ["color", "face", "hair", "outfit", "accessory", "footwear", "accent"]
 const HUMAN_OPTIONS := {
 	"face": ["Despierto", "Soñoliento", "Cejas firmes"],
 	"hair": ["Corto", "Mechón", "Rulos"],
 	"outfit": ["Pijama clásico", "Mangas a rayas", "Chaleco"],
-	"accessory": ["Sin accesorio", "Gorra", "Anteojos"],
+	"accessory": ["Sin accesorio", "Gorra", "Anteojos", "Gorro de noche"],
+	"footwear": ["Pantuflas clásicas", "Pantuflas cruzadas", "Pantuflas acolchadas"],
 }
 const MOSQUITO_OPTIONS := {
 	"face": ["Redondo", "Alerta", "Soñoliento"],
 	"hair": ["Antenas rectas", "Antenas curvas", "Antenas plumosas"],
 	"outfit": ["Abdomen rayado", "Manchas", "Bandas anchas"],
 	"accessory": ["Sin accesorio", "Moño", "Gafas"],
+	"footwear": ["Patas lisas", "Patas anilladas", "Patas con puños"],
 }
+
+static func default_profile() -> Dictionary:
+	# Only new profiles receive the night outfit. Sanitizing existing/network
+	# data keeps every explicit 0.5 ID and defaults missing categories to zero.
+	var result := sanitize({})
+	result.human.accessory = 3
+	result.human.face = 1
+	return result
 
 static func option_names(role: String, key: String) -> Array:
 	if key in ["color", "accent"]:
@@ -35,8 +45,8 @@ static func option_count(role: String, key: String) -> int:
 
 static func sanitize(data: Variant) -> Dictionary:
 	var result: Dictionary = {
-		"human": {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "accent": 0},
-		"mosquito": {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "accent": 0},
+		"human": {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0},
+		"mosquito": {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0},
 	}
 	if not data is Dictionary:
 		return result

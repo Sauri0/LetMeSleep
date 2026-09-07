@@ -1,8 +1,8 @@
-# Let me sleep · 0.5.0 · Windows 64 bits
+# Let me sleep · 0.6.0 · Windows 64 bits
 
-Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.5.0 / protocolo 5**.
+Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.6.0 / protocolo 6**.
 
-Esta versión mejora la defensa manual, la cámara, la casa, el HUD y la personalización. **La conexión integrada entre casas todavía está en desarrollo.** El servidor directo y la invitación DD3 necesitan una ruta de red alcanzable; el código por sí solo no resuelve eso.
+Esta versión incorpora nuevos personajes y muebles, música por capas y efectos de sonido. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. **La conexión integrada entre casas todavía está en desarrollo.** El servidor directo y la invitación DD3 necesitan una ruta de red alcanzable; el código por sí solo no resuelve eso.
 
 ## Empezar a jugar
 
@@ -18,13 +18,14 @@ Elegí **PRÁCTICA**, tu personaje y un modo. El humano juega contra dos mosquit
 | Movimiento especial | Shift correr; Espacio saltar; Ctrl agacharse | Soltar movimiento frena; Espacio/Ctrl ajustan altura opcionalmente |
 | Objetos / superficies | R recoger o cambiar; G soltar | F posarse o volar |
 | Tareas | Mantener E cerca del puesto asignado | — |
-| Ayuda y ajustes | Esc | Esc |
+| Guía de controles | F1 abre/cierra | F1 abre/cierra |
+| Pausa y ajustes | Esc | Esc |
 
-Son los valores iniciales; las teclas pueden reasignarse. Ajustes guarda sensibilidad separada por personaje, inversión vertical, volumen y controles. El menú libera el mouse y bloquea tus acciones, pero la ronda sigue avanzando.
+Son los valores iniciales; las teclas pueden reasignarse. Ajustes guarda sensibilidad separada por personaje, inversión vertical, volumen general, Música, Efectos, Ambiente, Interfaz y controles. La guía está plegada durante la partida; los avisos importantes de picadura, aturdimiento, ayuda, tareas y tiempo permanecen visibles. El menú libera el mouse y bloquea tus acciones, pero la ronda sigue avanzando.
 
 ## Si te están picando
 
-Mirá hacia abajo y girá la vista hacia el mosquito visible sobre tu cuerpo. **Apuntale y hacé clic izquierdo.** La vista puede girar respecto del torso para alcanzar pecho, abdomen, antebrazos y muslos. Al volver a mirar al frente, el cuerpo acompaña suavemente.
+Mirá hacia abajo y girá la vista hacia el mosquito visible sobre tu cuerpo. **Apuntale y hacé clic izquierdo.** La vista puede girar respecto del torso para alcanzar pecho, abdomen, antebrazos y muslos. Podés seguir girando aunque estés mirando abajo: el torso acompaña al superar el giro cómodo de la cabeza. Al volver a mirar al frente, el cuerpo acompaña suavemente.
 
 La palmada tiene recorrido y recuperación: apuntar cerca no garantiza acertar. El aviso «¡Tocó!» confirma un impacto; el fallo también tiene respuesta. Q conserva una segunda tecla para la misma palmada manual. Si sostenés una herramienta y apuntás a su brazo, la otra mano puede dar la palmada.
 
@@ -63,7 +64,7 @@ Si aparece «No llegó respuesta UDP», todavía no se sabe si falló la ruta, e
 
 ## Tu personaje
 
-Abrí **TU PINTA** en el menú principal. Elegí humano o mosquito; girá el modelo arrastrando, acercá/alejá con la rueda y usá restablecer vista. Cada personaje guarda su propio color, detalle, cara, pelo o antenas, ropa o patrón y accesorio. Los cambios aparecen en práctica y en la sala de los demás; son sólo visuales.
+Abrí **TU PINTA** en el menú principal. Elegí humano o mosquito; girá el modelo arrastrando, acercá/alejá con la rueda y usá restablecer vista. Cada personaje guarda su propio color, detalle, cara, pelo o antenas, ropa o patrón, calzado y accesorio. Usá las tarjetas visuales y muestras de color; al elegir una categoría, la vista se acerca a esa parte. Los perfiles nuevos empiezan con pijama, pantuflas y gorro de noche; una apariencia guardada anteriormente se conserva. Los cambios aparecen en práctica y en la sala de los demás; son sólo visuales.
 
 ## Modos
 

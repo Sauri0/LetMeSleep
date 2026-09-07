@@ -1,10 +1,10 @@
-# Let me sleep — prototipo 0.5.0
+# Let me sleep — prototipo 0.6.0
 
-**[Descargar para Windows](https://github.com/Sauri0/LetMeSleep/releases/download/v0.5.0/Let-me-sleep-0.5.0-Windows.zip)** · [Todas las versiones](https://github.com/Sauri0/LetMeSleep/releases)
+**[Descargar para Windows](https://github.com/Sauri0/LetMeSleep/releases/download/v0.6.0/Let-me-sleep-0.6.0-Windows.zip)** · [Todas las versiones](https://github.com/Sauri0/LetMeSleep/releases)
 
 Descomprimí todo el ZIP y abrí **Let-me-sleep.exe**. Elegí **PRÁCTICA** para jugar contra bots. No necesitás Godot ni una cuenta de GitHub. La guía **LEEME.html** acompaña al juego.
 
-Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercera, casa caricaturesca de dos pisos y tres modos. La versión 0.5 reduce el HUD, incorpora defensa manual sobre el cuerpo visible, amplía la personalización y mejora el mobiliario y las animaciones.
+Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercera, casa caricaturesca de dos pisos y tres modos. La versión 0.6 incorpora personajes y muebles modelados en Blender, música original por capas y efectos nuevos. El HUD es más compacto; F1 abre una guía que permanece plegada durante el juego. La cámara permite seguir girando al mirar el cuerpo.
 
 **La conexión automática entre casas todavía está pendiente.** Esta entrega usa ENet directo: funciona en una LAN o con una dirección UDP alcanzable. La invitación DD3 contiene dirección, puerto y sala; no abre puertos ni supera CGNAT. La integración EOS requiere adaptación, configuración del producto y pruebas en conexiones independientes. No hay SDK ni credenciales EOS en este juego.
 
@@ -36,13 +36,13 @@ Valores iniciales de prototipo: ronda 120 s, cuota 12, rotación 14 s. Extracci�
 
 ## Interfaz y aspecto
 
-El HUD deja libre el centro y muestra indicaciones según la acción. **Esc** abre los controles y ajustes; la ronda sigue mientras el menú está abierto. **TU PINTA** tiene una vista previa 3D con color, accesorio, cara, pelo o antenas, ropa o abdomen y acento separados para cada rol. Los cosméticos no cambian estadísticas ni colisiones.
+El HUD deja libre el centro y muestra indicaciones según la acción. **F1** abre y cierra la guía; **Esc** abre la pausa y los ajustes; la ronda sigue mientras el menú está abierto. **TU PINTA** tiene una vista previa 3D con color, accesorio, cara, pelo o antenas, ropa o abdomen, calzado y acento separados para cada rol. Las opciones se eligen con tarjetas y muestras de color. Los perfiles nuevos usan pijama, pantuflas y gorro de noche; se conservan las elecciones guardadas en versiones anteriores. Los cosméticos no cambian estadísticas ni colisiones.
 
 La sala de espera es un patio independiente. La casa tiene 16 ambientes, dos escaleras y tareas y herramientas en ambas plantas. Una desconexión interrumpe la ronda sin ganador. Al salir el anfitrión se cierra su sala; no existe migración de anfitrión.
 
 ## Proyecto y verificación
 
-Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y protocolo **5**; 0.4 es incompatible. El proyecto está en **game/**. **work/setup-tools.ps1** prepara herramientas con sumas oficiales; **work/build.ps1** importa, prueba y exporta, y **work/package.ps1** empaqueta sin sobrescribir versiones publicadas.
+Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y protocolo **6**; las versiones anteriores son incompatibles. El proyecto está en **game/**. **work/setup-tools.ps1** prepara herramientas con sumas oficiales; **work/build.ps1** importa, prueba y exporta, y **work/package.ps1** empaqueta sin sobrescribir versiones publicadas.
 
 ```powershell
 & ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/stun_help_test.gd
@@ -50,4 +50,4 @@ Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y pro
 
 La evidencia y sus límites están en [PRUEBAS.md](distribution/PRUEBAS.md); el hash del ejecutable en [BUILD.txt](distribution/BUILD.txt); las instrucciones de juego en [LEEME.md](distribution/LEEME.md). Las pruebas entre procesos de una misma PC no certifican Internet entre casas, rendimiento mínimo ni balance humano.
 
-Arte y audio procedural originales. Bangers y Atkinson Hyperlegible se distribuyen bajo SIL Open Font License; sus avisos acompañan al paquete. Las versiones históricas se conservan en las Releases.
+Modelos originales con fuentes Blender y exportaciones GLB en `art_source/`. Composición musical y efectos originales; las notas instrumentales acústicas de VSCO 2 Community Edition son CC0 y tienen créditos y licencia incluidos. Los temas se funden entre menú, personalización y partida; Música, Efectos, Ambiente e Interfaz tienen volumen separado además del volumen general. Bangers y Atkinson Hyperlegible se distribuyen bajo SIL Open Font License; sus avisos acompañan al paquete. Las versiones históricas se conservan en las Releases.

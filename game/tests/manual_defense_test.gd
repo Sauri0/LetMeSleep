@@ -48,7 +48,7 @@ func _test_view() -> void:
 	Pose.apply_view(actor, 0.7, -0.8, 0.05)
 	check(actor.inspecting and actor.body_yaw == 0.0 and is_equal_approx(actor.yaw, 0.7), "looking down separates view yaw from torso")
 	Pose.apply_view(actor, 2.5, -0.6, 0.05)
-	check(actor.inspecting and is_equal_approx(actor.yaw, Pose.VIEW_YAW_LIMIT), "inspection hysteresis clamps head yaw to75degrees")
+	check(actor.inspecting and is_equal_approx(actor.yaw, 2.5) and actor.body_yaw > 0.0, "inspection consumes all mouse yaw and torso follows beyond comfortable range")
 	Pose.apply_view(actor, 0.7, -0.4, 0.05)
 	check(not actor.inspecting and actor.body_yaw > 0.0 and actor.body_yaw < actor.yaw, "looking forward recovers torso gradually")
 	var before: Dictionary = actor.duplicate(true)
@@ -64,6 +64,22 @@ func _test_view() -> void:
 	ArenaData.step_human(movement, {"yaw": 0.7, "pitch": -1.0, "move": Vector3.FORWARD}, 0.1)
 	var delta: Vector3 = Vector3(movement.p) - start
 	check(delta.normalized().dot(Vector3.FORWARD.rotated(Vector3.UP, 0.7)) > 0.999 and movement.body_yaw == 0.0, "WASD follows view while inspecting frozen torso")
+	for hz: int in [20, 60]:
+		for direction: float in [-1.0, 1.0]:
+			var turning: Dictionary = {"yaw":0.0,"body_yaw":0.0,"pitch":-1.65}
+			var view_sum := 0.0
+			var body_sum := 0.0
+			for frame: int in range(hz * 8):
+				var old_view: float = turning.yaw
+				var old_body: float = turning.body_yaw
+				var requested: float = direction * TAU * float(frame + 1) / float(hz * 4)
+				Pose.apply_view(turning, requested, -1.65, 1.0 / hz)
+				var view_step: float = wrapf(float(turning.yaw)-old_view,-PI,PI)
+				var body_step: float = wrapf(float(turning.body_yaw)-old_body,-PI,PI)
+				view_sum += view_step
+				body_sum += body_step
+				check(view_step * direction > 0.0 and body_step * direction >= -0.000001, "continuous downward turn never freezes or counter-rotates")
+			check(absf(view_sum-direction*TAU*2) < 0.001 and absf(body_sum) > TAU, "two full downward turns remain available without looking up at %dHz" % hz)
 
 func _test_visibility() -> void:
 	for crouch: float in [0.0, 0.5, 1.0]:

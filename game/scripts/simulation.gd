@@ -436,6 +436,7 @@ func _try_perch(id: int) -> void:
 		Vector3(-float(_map_data.half_x) + radius, position.y, position.z), Vector3(float(_map_data.half_x) - radius, position.y, position.z),
 		Vector3(position.x, position.y, -float(_map_data.half_z) + radius), Vector3(position.x, position.y, float(_map_data.half_z) - radius),
 	]
+	var normals: Array[Vector3] = [Vector3.UP,Vector3.DOWN,Vector3.RIGHT,Vector3.LEFT,Vector3.BACK,Vector3.FORWARD]
 	for obstacle: AABB in _map_data.obstacles:
 		var expanded: AABB = obstacle.grow(radius + 0.005)
 		for axis: int in range(3):
@@ -448,18 +449,25 @@ func _try_perch(id: int) -> void:
 						on_face = false
 				if on_face:
 					candidates.append(candidate)
+					var normal := Vector3.ZERO
+					normal[axis] = -1.0 if edge == expanded.position[axis] else 1.0
+					normals.append(normal)
 	var best_distance := 0.32
 	var best: Vector3 = position
 	var found := false
-	for candidate: Vector3 in candidates:
+	var best_normal := Vector3.UP
+	for index: int in range(candidates.size()):
+		var candidate: Vector3 = candidates[index]
 		var distance: float = position.distance_to(candidate)
 		if distance <= best_distance and ArenaData.clear_segment(position, candidate, str(config.map_id)):
 			best_distance = distance
 			best = candidate
+			best_normal = normals[index]
 			found = true
 	if found:
 		actor.p = best
 		actor.state = "perched"
+		actor._surface_normal = best_normal
 		actor._move = Vector3.ZERO
 		actor.velocity = Vector3.ZERO
 
@@ -930,12 +938,20 @@ func public_snapshot() -> Dictionary:
 	var public_actors: Dictionary = {}
 	for id: int in actors:
 		var actor: Dictionary = actors[id]
+		# Visible orientation only after physical contact. A free reservation
+		# never contributes a normal, target ID, body zone or rotation schedule.
+		var surface_normal := Vector3.ZERO
+		if actor.state == "biting" and bool(actor.alive):
+			surface_normal = _zone_pose(actor._assignment).get("normal",Vector3.ZERO)
+		elif actor.state == "perched" and bool(actor.alive):
+			surface_normal = actor.get("_surface_normal",Vector3.UP)
 		# Explicit allowlist: never serialize hidden target/zone reservations or tasks.
 		public_actors[id] = {
 			"name": actor.name, "role": actor.role, "p": actor.p, "yaw": actor.yaw,
 			"appearance": Dictionary(actor.appearance).duplicate(true),
 			"body_yaw": actor.body_yaw, "inspecting": actor.inspecting, "strike": Dictionary(actor.strike).duplicate(true),
 			"pitch": actor.pitch, "state": actor.state, "alive": actor.alive,
+			"surface_normal": surface_normal,
 			"help_target": actor.help_target,
 			"swing": actor.swing, "bitten": actor.bitten, "threatened": actor.threatened, "tool": actor.tool, "lives": actor.lives,
 			"velocity": actor.velocity, "grounded": actor.grounded, "sprinting": actor.sprinting,

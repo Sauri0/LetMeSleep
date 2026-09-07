@@ -1,0 +1,3637 @@
+{
+  "title": "La casa bosteza \u2014 variante tranquila",
+  "tempo": 80,
+  "meter": "4/4",
+  "bars": 24,
+  "composer": "Original composition created for Let me sleep",
+  "harmony": [
+    "Dm6/9",
+    "Dm6/9",
+    "Gm9",
+    "A7b9",
+    "Dm9",
+    "Fmaj9",
+    "Gm9",
+    "A7b9"
+  ],
+  "events": [
+    {
+      "instrument": "bass",
+      "beat": 0.0006502255985238271,
+      "midi": 41,
+      "duration": 0.95,
+      "velocity": 0.8023962759394431,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 1.9940222728201031,
+      "midi": 48,
+      "duration": 0.8,
+      "velocity": 0.5523243751827877,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 3.6197723154229755,
+      "midi": 53,
+      "duration": 0.25,
+      "velocity": 0.6080912325998243,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 0.634933179938022,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.29487658427600244,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 0.6371958778243612,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.2982305236778974,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 0.543193930603237,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.30371256046074746,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 2.6247594530035108,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.3110322637489285,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 2.645357466868913,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.32813039130612887,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 2.5228383585122622,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.2918928741991507,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 1,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 3,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 0.6314726817898437,
+      "midi": 72,
+      "duration": 0.35,
+      "velocity": 0.5943276474363202,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 0.9997328455827417,
+      "midi": 77,
+      "duration": 0.65,
+      "velocity": 0.6335290357952551,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 2.005580126820425,
+      "midi": 80,
+      "duration": 0.35,
+      "velocity": 0.574581179491115,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 2.6245827172840848,
+      "midi": 79,
+      "duration": 0.3,
+      "velocity": 0.645350942268895,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 2.9958142263438687,
+      "midi": 77,
+      "duration": 0.75,
+      "velocity": 0.5971656115983145,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 3.989446013394536,
+      "midi": 41,
+      "duration": 0.95,
+      "velocity": 0.7364361893519112,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 5.998055143547003,
+      "midi": 48,
+      "duration": 0.8,
+      "velocity": 0.5482943314135446,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 7.636522850404024,
+      "midi": 53,
+      "duration": 0.25,
+      "velocity": 0.580354382138563,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 4.602493980661474,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.29666470829392244,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 4.6515839527112135,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.29639565593626943,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 4.526555800064299,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.32251152507580966,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 6.621491673879774,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.29988055219126974,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 6.6517616303145175,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.30041596003304716,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 6.540324218414546,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.30759094814791554,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 5,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 7,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 4.011458599140987,
+      "midi": 74,
+      "duration": 0.5,
+      "velocity": 0.6214621444619877,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 4.99762972294887,
+      "midi": 72,
+      "duration": 0.4,
+      "velocity": 0.6025231625112365,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 6.005859724416619,
+      "midi": 68,
+      "duration": 0.7,
+      "velocity": 0.6310456008362052,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 7.645535481652004,
+      "midi": 72,
+      "duration": 0.25,
+      "velocity": 0.5828505375587434,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 7.989960739939799,
+      "midi": 46,
+      "duration": 0.95,
+      "velocity": 0.74583664373923,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 10.005676282105576,
+      "midi": 53,
+      "duration": 0.8,
+      "velocity": 0.5725315226461599,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 11.631954269595326,
+      "midi": 58,
+      "duration": 0.25,
+      "velocity": 0.5862612087851241,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 8.625630864220065,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.306627697636075,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 8.64698299706881,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.29386878251433596,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 8.533995237485671,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.2884070692928426,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 10.644576617925749,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.3170500413002348,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 10.654610842308259,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.2986520863051845,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 10.526655009703234,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.28978320936876334,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 9,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 11,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 7.992509813314722,
+      "midi": 73,
+      "duration": 0.4,
+      "velocity": 0.607315532197148,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 9.003858373465478,
+      "midi": 77,
+      "duration": 0.7,
+      "velocity": 0.6122957002109083,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 10.62522584398407,
+      "midi": 80,
+      "duration": 0.35,
+      "velocity": 0.6178740906752477,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 11.001385216907337,
+      "midi": 79,
+      "duration": 0.55,
+      "velocity": 0.573651647061353,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 11.985993308857706,
+      "midi": 48,
+      "duration": 0.95,
+      "velocity": 0.7732941721720836,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 13.98554595428525,
+      "midi": 55,
+      "duration": 0.8,
+      "velocity": 0.6026820447691863,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 15.62611415044357,
+      "midi": 60,
+      "duration": 0.25,
+      "velocity": 0.6181494928169355,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 12.637634019551484,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.28365974739232963,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 12.652735842411884,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.3244222235469737,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 12.535113401168351,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.30119370685857144,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 14.635338537639397,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.28962736412105733,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 14.650057353890114,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.2979315032866394,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 14.52142010657779,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.31691896752251536,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 13,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 15,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 12.008350460329014,
+      "midi": 76,
+      "duration": 0.6,
+      "velocity": 0.5802556846841217,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 13.637358056918755,
+      "midi": 73,
+      "duration": 0.25,
+      "velocity": 0.5875664424820939,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 14.006246120026292,
+      "midi": 72,
+      "duration": 1.15,
+      "velocity": 0.6136137490016536,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "glock",
+      "beat": 14.992903359120788,
+      "midi": 84,
+      "duration": 0.3,
+      "velocity": 0.34256397752767237,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "glock",
+      "beat": 15.6324513242023,
+      "midi": 80,
+      "duration": 0.3,
+      "velocity": 0.33324760885828864,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "bass",
+      "beat": 16.01811006673617,
+      "midi": 41,
+      "duration": 0.95,
+      "velocity": 0.7602679076881206,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 17.9956736078043,
+      "midi": 48,
+      "duration": 0.8,
+      "velocity": 0.566208122053697,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 19.629231613937687,
+      "midi": 53,
+      "duration": 0.25,
+      "velocity": 0.5462260169441913,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 16.629774727159873,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.2933209933466814,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 16.643955890588625,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3001868727765809,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 16.540553024745297,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.2920505811063462,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 18.623930017383266,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.32533752760748946,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 18.64910034745199,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3051304157490339,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 18.54201106153389,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.31805609429674747,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 17,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 19,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 16.631397961107574,
+      "midi": 72,
+      "duration": 0.3,
+      "velocity": 0.6075440331911273,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 16.99776563037894,
+      "midi": 77,
+      "duration": 0.4,
+      "velocity": 0.6008816767262084,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 17.63081705032903,
+      "midi": 80,
+      "duration": 0.3,
+      "velocity": 0.6348816246494597,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 17.999571231413526,
+      "midi": 84,
+      "duration": 0.6,
+      "velocity": 0.5795930396134019,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 19.0054697333314,
+      "midi": 82,
+      "duration": 0.55,
+      "velocity": 0.6465145809468479,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 20.006465075120982,
+      "midi": 44,
+      "duration": 0.95,
+      "velocity": 0.7044188166418349,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 21.993121225500076,
+      "midi": 51,
+      "duration": 0.8,
+      "velocity": 0.6329011846373912,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 23.613484110297907,
+      "midi": 56,
+      "duration": 0.25,
+      "velocity": 0.6030480422381156,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 20.643658586193343,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.29070648197602317,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 20.63915696521407,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.2907510412823877,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 20.536555007044278,
+      "midi": 67,
+      "duration": 0.28,
+      "velocity": 0.30706830196517515,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 22.626415436990186,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.31289414194913207,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 22.636740302780478,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.2973961567151577,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 22.534397592632732,
+      "midi": 67,
+      "duration": 0.28,
+      "velocity": 0.31259227001443,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 21,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 23,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 19.98260731456711,
+      "midi": 80,
+      "duration": 0.6,
+      "velocity": 0.647075343421116,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 21.00180634340244,
+      "midi": 79,
+      "duration": 0.35,
+      "velocity": 0.6432991621899973,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 21.99451004262143,
+      "midi": 75,
+      "duration": 0.5,
+      "velocity": 0.6282124403112525,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 22.996566110604327,
+      "midi": 72,
+      "duration": 0.6,
+      "velocity": 0.5931736054437461,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 23.992896574099685,
+      "midi": 46,
+      "duration": 0.95,
+      "velocity": 0.6950119606401666,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 26.00796848125828,
+      "midi": 53,
+      "duration": 0.8,
+      "velocity": 0.6328589080537267,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 27.63165799552993,
+      "midi": 58,
+      "duration": 0.25,
+      "velocity": 0.6162570091399542,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 24.62493332954439,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.3100880197613543,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 24.646334066436374,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3038654231730293,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 24.533670671997594,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.2985425922545436,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 26.622190029546616,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.30336091401051896,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 26.64060293754369,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3160080910364141,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 26.529532225418922,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.3178262220039997,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 25,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 27,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 24.62455973300708,
+      "midi": 73,
+      "duration": 0.4,
+      "velocity": 0.615526858818453,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 24.99924620417654,
+      "midi": 77,
+      "duration": 0.4,
+      "velocity": 0.6336973589866722,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 26.001343901084923,
+      "midi": 80,
+      "duration": 0.4,
+      "velocity": 0.5670439136721418,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 26.628422816965596,
+      "midi": 79,
+      "duration": 0.25,
+      "velocity": 0.621111474163621,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 27.01319214250147,
+      "midi": 77,
+      "duration": 0.5,
+      "velocity": 0.5833141220789427,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 27.984634840219865,
+      "midi": 48,
+      "duration": 0.95,
+      "velocity": 0.7749861810906408,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 30.01554689873945,
+      "midi": 55,
+      "duration": 0.8,
+      "velocity": 0.5667814970000019,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 31.620755738378502,
+      "midi": 60,
+      "duration": 0.25,
+      "velocity": 0.5563386710280084,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 28.627450695955403,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.30351361145826633,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 28.642624928617572,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.2868287031990562,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 28.5380406615844,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.28391601052608995,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 30.62828088401722,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.2878321200081288,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 30.638697151410504,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.319286634558012,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 30.54569314322382,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.3190639378148021,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 29,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 31,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 28.00813241936949,
+      "midi": 76,
+      "duration": 0.5,
+      "velocity": 0.5802906933149521,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 29.009181237667068,
+      "midi": 73,
+      "duration": 0.3,
+      "velocity": 0.6094791654805748,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 30.006284183133964,
+      "midi": 72,
+      "duration": 0.5,
+      "velocity": 0.6433386188165297,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 31.003833874636143,
+      "midi": 76,
+      "duration": 0.45,
+      "velocity": 0.6128841103511798,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "glock",
+      "beat": 30.993648803679037,
+      "midi": 84,
+      "duration": 0.3,
+      "velocity": 0.32301799191965574,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "glock",
+      "beat": 31.621389035433108,
+      "midi": 80,
+      "duration": 0.3,
+      "velocity": 0.36520019574082024,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "bass",
+      "beat": 31.98875148452662,
+      "midi": 41,
+      "duration": 0.95,
+      "velocity": 0.7580690140971557,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 34.00443469300739,
+      "midi": 48,
+      "duration": 0.8,
+      "velocity": 0.607786790750881,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 35.64404495749648,
+      "midi": 53,
+      "duration": 0.25,
+      "velocity": 0.5825870021663273,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 32.61862848293123,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.2882942131403318,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 32.64386547779104,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.29651542316598295,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 32.541826477864916,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.3148139452785556,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 34.631707152211035,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.30630164633137485,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 34.64585672602691,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.2892912282399512,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 34.53240836492569,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.3128523906133028,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 33,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 35,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 32.99908318814053,
+      "midi": 72,
+      "duration": 0.35,
+      "velocity": 0.6196825785953733,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 32.98138262884737,
+      "midi": 77,
+      "duration": 0.65,
+      "velocity": 0.6178579614834339,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 33.99762103725124,
+      "midi": 80,
+      "duration": 0.35,
+      "velocity": 0.6081681330260219,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 34.63751785793537,
+      "midi": 79,
+      "duration": 0.3,
+      "velocity": 0.6197016796183575,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 34.98805948419517,
+      "midi": 77,
+      "duration": 0.75,
+      "velocity": 0.6514764331434494,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 36.007591137598126,
+      "midi": 41,
+      "duration": 0.95,
+      "velocity": 0.7574330018293319,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 37.986905182810254,
+      "midi": 48,
+      "duration": 0.8,
+      "velocity": 0.5759371890086135,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 39.63204188553097,
+      "midi": 53,
+      "duration": 0.25,
+      "velocity": 0.6319508714809337,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 36.63058748519069,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.304092850866567,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 36.65023893920786,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3208859709568685,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 36.54497916540479,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.30065127447796636,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 38.632186294318686,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.29923962464548065,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 38.654174099262896,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.31498718899737305,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 38.53297772750135,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.30840744562587835,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 37,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 39,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 36.62717469736928,
+      "midi": 74,
+      "duration": 0.5,
+      "velocity": 0.6346189352672751,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 37.00666155612559,
+      "midi": 72,
+      "duration": 0.4,
+      "velocity": 0.5914344046623354,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 38.006773666585474,
+      "midi": 68,
+      "duration": 0.7,
+      "velocity": 0.6201940984813924,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 39.63006380483703,
+      "midi": 72,
+      "duration": 0.25,
+      "velocity": 0.6124970894921359,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 40.002554788825215,
+      "midi": 46,
+      "duration": 0.95,
+      "velocity": 0.7008222958700286,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 42.00063626428436,
+      "midi": 53,
+      "duration": 0.8,
+      "velocity": 0.5657808438219524,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 43.62693688476132,
+      "midi": 58,
+      "duration": 0.25,
+      "velocity": 0.5768943377828356,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 40.63381286375173,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.3220866896593938,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 40.64966748043492,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3113901482669152,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 40.527844664239154,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.289872182999223,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 42.629041968571684,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.3223597683789489,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 42.645850267747804,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.2942059981017984,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 42.540048583074544,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.3189620764399765,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 41,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 43,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 40.635530074586555,
+      "midi": 73,
+      "duration": 0.4,
+      "velocity": 0.6169821556733046,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 41.00010369429698,
+      "midi": 77,
+      "duration": 0.7,
+      "velocity": 0.58338328366039,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 42.6352277853494,
+      "midi": 80,
+      "duration": 0.35,
+      "velocity": 0.5982013692640957,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 42.99386011315976,
+      "midi": 79,
+      "duration": 0.55,
+      "velocity": 0.611593355339409,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 44.00651742298447,
+      "midi": 48,
+      "duration": 0.95,
+      "velocity": 0.720624385307569,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 46.002250440573306,
+      "midi": 55,
+      "duration": 0.8,
+      "velocity": 0.6088996488910345,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 47.625424123116716,
+      "midi": 60,
+      "duration": 0.25,
+      "velocity": 0.5492363136843211,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 44.63392635212014,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.30469172466537164,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 44.648468359933055,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.29075553859812325,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 44.53003747695396,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.29314938327591283,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 46.63361638029622,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.2926527202748305,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 46.65286612411167,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.31167584334598664,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 46.54543607600715,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.32005748194998784,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 45,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 47,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 44.63562062494865,
+      "midi": 76,
+      "duration": 0.6,
+      "velocity": 0.594853103252872,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 45.63045655252796,
+      "midi": 73,
+      "duration": 0.25,
+      "velocity": 0.6063514621005996,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 46.00796121153187,
+      "midi": 72,
+      "duration": 1.15,
+      "velocity": 0.5971029843246076,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "glock",
+      "beat": 46.99917531149961,
+      "midi": 84,
+      "duration": 0.3,
+      "velocity": 0.35637296598445617,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "glock",
+      "beat": 47.626467691350804,
+      "midi": 80,
+      "duration": 0.3,
+      "velocity": 0.3582854203924103,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "bass",
+      "beat": 47.99233599985928,
+      "midi": 41,
+      "duration": 0.95,
+      "velocity": 0.7986319192164092,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 49.985557744782234,
+      "midi": 48,
+      "duration": 0.8,
+      "velocity": 0.623522916075314,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 51.62804935082193,
+      "midi": 53,
+      "duration": 0.25,
+      "velocity": 0.6089673424562737,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 48.62948982422707,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.2999711365218881,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 48.63934857239093,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3098269844447846,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 48.54410215731835,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.32366829718070944,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 50.63402912943891,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.30720687264304936,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 50.64271812526415,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.2953616727828301,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 50.537543660649234,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.291662710255229,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 49,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 51,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 49.006054809354715,
+      "midi": 72,
+      "duration": 0.3,
+      "velocity": 0.5972229953580763,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 49.00936014118874,
+      "midi": 77,
+      "duration": 0.4,
+      "velocity": 0.6051105700299247,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 49.63102927338924,
+      "midi": 80,
+      "duration": 0.3,
+      "velocity": 0.6035259152122071,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 49.99764561803305,
+      "midi": 84,
+      "duration": 0.6,
+      "velocity": 0.6453100479085212,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 51.00090184028617,
+      "midi": 82,
+      "duration": 0.55,
+      "velocity": 0.6173969021951851,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 51.99714452731688,
+      "midi": 44,
+      "duration": 0.95,
+      "velocity": 0.7233542831439905,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 54.00009300414946,
+      "midi": 51,
+      "duration": 0.8,
+      "velocity": 0.5561353121288982,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 55.622444038310974,
+      "midi": 56,
+      "duration": 0.25,
+      "velocity": 0.5547539753316644,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 52.63016498454803,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.29001983533627057,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 52.639635435627824,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.32488503497279303,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 52.537596084840814,
+      "midi": 67,
+      "duration": 0.28,
+      "velocity": 0.30972780707721775,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 54.6361311485825,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.2980973304470725,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 54.65160294804864,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.3222038046326066,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 54.53936764118726,
+      "midi": 67,
+      "duration": 0.28,
+      "velocity": 0.28220026418980065,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 53,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 55,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 52.63757862791329,
+      "midi": 80,
+      "duration": 0.6,
+      "velocity": 0.6460539929828837,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 53.00648099140553,
+      "midi": 79,
+      "duration": 0.35,
+      "velocity": 0.5739613704269586,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 54.0033455555816,
+      "midi": 75,
+      "duration": 0.5,
+      "velocity": 0.586863453835703,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 54.99721025179061,
+      "midi": 72,
+      "duration": 0.6,
+      "velocity": 0.5684485688188606,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 56.02239951647015,
+      "midi": 46,
+      "duration": 0.95,
+      "velocity": 0.7571082423849254,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 58.00064816993685,
+      "midi": 53,
+      "duration": 0.8,
+      "velocity": 0.6358916155393134,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 59.63155745045567,
+      "midi": 58,
+      "duration": 0.25,
+      "velocity": 0.5855156601300398,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 56.62353462975836,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.2918791508729448,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 56.64558282827364,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.29442818528657155,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 56.53818892930562,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.28612080308925214,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 58.621677270442284,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.31611570847531534,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 58.65557035849431,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.2998519596474632,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 58.515990763253804,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.2848931345780252,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 57,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 59,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 56.98943322128729,
+      "midi": 73,
+      "duration": 0.4,
+      "velocity": 0.5835796530445235,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 56.99686052033601,
+      "midi": 77,
+      "duration": 0.4,
+      "velocity": 0.5727296150578712,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 58.00308526348925,
+      "midi": 80,
+      "duration": 0.4,
+      "velocity": 0.6056555931618406,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 58.62484473478019,
+      "midi": 79,
+      "duration": 0.25,
+      "velocity": 0.6464459196855864,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 59.001388621336794,
+      "midi": 77,
+      "duration": 0.5,
+      "velocity": 0.6275985494491649,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 59.998911077443914,
+      "midi": 48,
+      "duration": 0.95,
+      "velocity": 0.7183606443254492,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 62.006696850647394,
+      "midi": 55,
+      "duration": 0.8,
+      "velocity": 0.5889835606552459,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 63.62809227211195,
+      "midi": 60,
+      "duration": 0.25,
+      "velocity": 0.6121368173926265,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 60.61856617613896,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.29140348333761784,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 60.63643874674036,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.31946319432730996,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 60.54149973680299,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.30289043346910954,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 62.635875607261355,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.3116061196182847,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 62.65256910021032,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.2933216665398054,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 62.52945022000522,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.3116973514727666,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 61,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 63,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 60.63812638511518,
+      "midi": 76,
+      "duration": 0.5,
+      "velocity": 0.6440649441068782,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 60.99912262939317,
+      "midi": 73,
+      "duration": 0.3,
+      "velocity": 0.5746618988291148,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 62.01100445439002,
+      "midi": 72,
+      "duration": 0.5,
+      "velocity": 0.6542936936600748,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "clarinet",
+      "beat": 63.00221978709163,
+      "midi": 76,
+      "duration": 0.45,
+      "velocity": 0.6177245526619846,
+      "layer": "melody",
+      "pan": 0.17
+    },
+    {
+      "instrument": "glock",
+      "beat": 62.994641815760104,
+      "midi": 84,
+      "duration": 0.3,
+      "velocity": 0.364191967636703,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "glock",
+      "beat": 63.627670668561066,
+      "midi": 80,
+      "duration": 0.3,
+      "velocity": 0.31941121369873504,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "bass",
+      "beat": 63.991148903937265,
+      "midi": 41,
+      "duration": 0.95,
+      "velocity": 0.7367269495319767,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 66.01882527404773,
+      "midi": 48,
+      "duration": 0.8,
+      "velocity": 0.6047522320017592,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 67.63189217314076,
+      "midi": 53,
+      "duration": 0.25,
+      "velocity": 0.6075376205611993,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 64.6203060842205,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.2991855357940446,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 64.65689090612541,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.30490721040026403,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 64.5311514018649,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.3065566061214591,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 65.63215816433002,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.30127177896551016,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 65.64988815319164,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.2845316995631687,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 65.54711507128737,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.307472889901587,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 66.99243769633085,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.29648534701355733,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 67.03493496057638,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.29249035201526935,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 67.04848825706685,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.3127932016063248,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 65,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 67,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "pizz",
+      "beat": 64.62527513097935,
+      "midi": 60,
+      "duration": 0.35,
+      "velocity": 0.6285269302822366,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 64.99581787060558,
+      "midi": 65,
+      "duration": 0.65,
+      "velocity": 0.6016902476006976,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 66.00665372173471,
+      "midi": 68,
+      "duration": 0.35,
+      "velocity": 0.5809188170609791,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 66.63510472759447,
+      "midi": 67,
+      "duration": 0.3,
+      "velocity": 0.5674782787731939,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 67.00750846213029,
+      "midi": 65,
+      "duration": 0.75,
+      "velocity": 0.6233478326351984,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 67.98293658769349,
+      "midi": 41,
+      "duration": 0.95,
+      "velocity": 0.6990491137998024,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 70.00845154294835,
+      "midi": 48,
+      "duration": 0.8,
+      "velocity": 0.5863982355382087,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 71.60927616031947,
+      "midi": 53,
+      "duration": 0.25,
+      "velocity": 0.6203260824898592,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 68.6304604046917,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.31448567567143276,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 68.64259433316684,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3100086231957264,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 68.52416652225395,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.3154416115105953,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 69.6360307790468,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.32339614718538856,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 69.65437976930635,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3016399455086968,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 69.53142968690476,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.2985408641603514,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 71.00388060318755,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.3065802232653506,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 71.01660638111441,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.323943147788399,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 71.04464479065992,
+      "midi": 62,
+      "duration": 0.28,
+      "velocity": 0.3152340105280388,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 69,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 71,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "pizz",
+      "beat": 67.99612598104002,
+      "midi": 62,
+      "duration": 0.5,
+      "velocity": 0.6222132344414377,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 69.005215210476,
+      "midi": 60,
+      "duration": 0.4,
+      "velocity": 0.6297021356495803,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 69.9984083399538,
+      "midi": 56,
+      "duration": 0.7,
+      "velocity": 0.5737110785464851,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 71.63165682953196,
+      "midi": 60,
+      "duration": 0.25,
+      "velocity": 0.591909819121531,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 71.99779766760054,
+      "midi": 46,
+      "duration": 0.95,
+      "velocity": 0.7834860303163316,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 73.99955051864595,
+      "midi": 53,
+      "duration": 0.8,
+      "velocity": 0.5890765733750386,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 75.63789546270038,
+      "midi": 58,
+      "duration": 0.25,
+      "velocity": 0.6106746978970059,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 72.63817291718692,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.2951359000171955,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 72.65022091662487,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.29077213300605936,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 72.53213178605915,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.32679245004649604,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 73.6330108153595,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.3153047012655139,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 73.65838159152099,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.2898007909699016,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 73.53618669600512,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.32815941242555613,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 74.99851782242831,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.2981170102401389,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 75.03647299149816,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3173426689765318,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 75.04157583977488,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.2860460805770979,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 73,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 75,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "pizz",
+      "beat": 71.98971478980778,
+      "midi": 61,
+      "duration": 0.4,
+      "velocity": 0.6545570648498928,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 73.00060784273887,
+      "midi": 65,
+      "duration": 0.7,
+      "velocity": 0.5754391263166811,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 74.64088581265874,
+      "midi": 68,
+      "duration": 0.35,
+      "velocity": 0.6377083755170415,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 75.00809766477919,
+      "midi": 67,
+      "duration": 0.55,
+      "velocity": 0.6379653816347031,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 76.00760278502923,
+      "midi": 48,
+      "duration": 0.95,
+      "velocity": 0.791677120755723,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 78.00276324469257,
+      "midi": 55,
+      "duration": 0.8,
+      "velocity": 0.5871835202451858,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 79.63860560410166,
+      "midi": 60,
+      "duration": 0.25,
+      "velocity": 0.6126536162557082,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 76.64629474313126,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.3086508408624876,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 76.63954209025367,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.29980371961831526,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 76.55384971780681,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.31804057336262725,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 77.63234392180343,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.3252511073307171,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 77.65091974999653,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.31213268816440404,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 77.53962544338164,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.3225191189839001,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 79.00580310430237,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.3233346280428283,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 79.0215347848084,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.315168956263316,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 79.02793216125924,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.29336281160521926,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 77,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 79,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "pizz",
+      "beat": 76.00607127180315,
+      "midi": 64,
+      "duration": 0.6,
+      "velocity": 0.6089183182731023,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 77.63977410958056,
+      "midi": 61,
+      "duration": 0.25,
+      "velocity": 0.6417537797903652,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 78.00904002177731,
+      "midi": 60,
+      "duration": 1.15,
+      "velocity": 0.6428962527046459,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "glock",
+      "beat": 78.99570518263299,
+      "midi": 84,
+      "duration": 0.3,
+      "velocity": 0.3348287723726148,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "glock",
+      "beat": 79.63845777820156,
+      "midi": 80,
+      "duration": 0.3,
+      "velocity": 0.34775460005812375,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "bass",
+      "beat": 79.99936537669959,
+      "midi": 41,
+      "duration": 0.95,
+      "velocity": 0.7642561549467723,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 82.00084019424496,
+      "midi": 48,
+      "duration": 0.8,
+      "velocity": 0.6314518418815969,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 83.64151167633054,
+      "midi": 53,
+      "duration": 0.25,
+      "velocity": 0.626516469252795,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 80.6250797651419,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.3150093535378965,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 80.64238039353289,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3081868397668978,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 80.5381706943062,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.3101237947670826,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 81.63131488984448,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.3199277260093058,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 81.66947346215066,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.31078943745303445,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 81.54340601961577,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.3230721639706948,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 83.00295895827162,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.29962957976530746,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 83.02074965756341,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3273565571100431,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 83.04036752107211,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.304673737500714,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 81,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 83,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "pizz",
+      "beat": 80.63062678215223,
+      "midi": 60,
+      "duration": 0.3,
+      "velocity": 0.5787305729160338,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 81.0072534216833,
+      "midi": 65,
+      "duration": 0.4,
+      "velocity": 0.6125279787085232,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 81.62095761455723,
+      "midi": 68,
+      "duration": 0.3,
+      "velocity": 0.6079617612330709,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 81.99465034010817,
+      "midi": 72,
+      "duration": 0.6,
+      "velocity": 0.581231704335824,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 83.00261890912091,
+      "midi": 70,
+      "duration": 0.55,
+      "velocity": 0.6251487611590374,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 83.9947665642005,
+      "midi": 44,
+      "duration": 0.95,
+      "velocity": 0.7747443487984068,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 85.99479436588815,
+      "midi": 51,
+      "duration": 0.8,
+      "velocity": 0.6090604373492451,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 87.63552549334605,
+      "midi": 56,
+      "duration": 0.25,
+      "velocity": 0.6309764630018309,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 84.6362187768536,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3194707146841736,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 84.64616019036164,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.31102623921484585,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 84.53898765654574,
+      "midi": 67,
+      "duration": 0.28,
+      "velocity": 0.28910443694129945,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 85.61962893182842,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.2919190624250896,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 85.6326180323195,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.28578793719552686,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 85.52867378841177,
+      "midi": 67,
+      "duration": 0.28,
+      "velocity": 0.3099170644311905,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 87.00350986344972,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3110537491979266,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 87.01148671255356,
+      "midi": 63,
+      "duration": 0.28,
+      "velocity": 0.3149477882804997,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 87.03947896894796,
+      "midi": 67,
+      "duration": 0.28,
+      "velocity": 0.2835398226399386,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 85,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 87,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "pizz",
+      "beat": 83.98480672440772,
+      "midi": 68,
+      "duration": 0.6,
+      "velocity": 0.6127204788725261,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 84.99782828860437,
+      "midi": 67,
+      "duration": 0.35,
+      "velocity": 0.5932843175942799,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 86.00331603401551,
+      "midi": 63,
+      "duration": 0.5,
+      "velocity": 0.6180273252449298,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 86.99474881587521,
+      "midi": 60,
+      "duration": 0.6,
+      "velocity": 0.5739094538552476,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 87.99255106643096,
+      "midi": 46,
+      "duration": 0.95,
+      "velocity": 0.7213969321841934,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 90.00878580933538,
+      "midi": 53,
+      "duration": 0.8,
+      "velocity": 0.6162822774439034,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 91.62200788882733,
+      "midi": 58,
+      "duration": 0.25,
+      "velocity": 0.6278745172334308,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 88.63703686483076,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.29632365986517467,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 88.6455632298124,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.28819979089560394,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 88.52481762178357,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.2923945959049912,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 89.64742638097792,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.3214232115701586,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 89.64568781111801,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3214854372757209,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 89.53309090530526,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.3087176025584394,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 91.00900971428709,
+      "midi": 56,
+      "duration": 0.28,
+      "velocity": 0.2839047724675025,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 91.02446755103345,
+      "midi": 60,
+      "duration": 0.28,
+      "velocity": 0.3020133790939276,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 91.03584666595546,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.3277066048755634,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 89,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 91,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "pizz",
+      "beat": 88.61709806899557,
+      "midi": 61,
+      "duration": 0.4,
+      "velocity": 0.5728969835519289,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 89.00351642237182,
+      "midi": 65,
+      "duration": 0.4,
+      "velocity": 0.5975321400685402,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 90.00704877412778,
+      "midi": 68,
+      "duration": 0.4,
+      "velocity": 0.5773435004806895,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 90.6366633559325,
+      "midi": 67,
+      "duration": 0.25,
+      "velocity": 0.568606932243258,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 90.99114010277941,
+      "midi": 65,
+      "duration": 0.5,
+      "velocity": 0.6510894099169454,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "bass",
+      "beat": 92.01390410730168,
+      "midi": 48,
+      "duration": 0.95,
+      "velocity": 0.7173210114843047,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 94.01230890095633,
+      "midi": 55,
+      "duration": 0.8,
+      "velocity": 0.6324281530952961,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "bass",
+      "beat": 95.62642836463442,
+      "midi": 60,
+      "duration": 0.25,
+      "velocity": 0.5669577109217819,
+      "layer": "base",
+      "pan": -0.08
+    },
+    {
+      "instrument": "pizz",
+      "beat": 92.61382627823068,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.31374626571143543,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 92.63288345382922,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.28707673308921267,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 92.53195969459934,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.32700180053498257,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 93.62909279327727,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.29370995178434334,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 93.6295294292996,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.3034622392461068,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 93.52997509845174,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.29224681362160776,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 95.01338170026187,
+      "midi": 58,
+      "duration": 0.28,
+      "velocity": 0.3035573216899395,
+      "layer": "base",
+      "pan": -0.28
+    },
+    {
+      "instrument": "pizz",
+      "beat": 95.0129087092776,
+      "midi": 61,
+      "duration": 0.28,
+      "velocity": 0.31903013654243545,
+      "layer": "base",
+      "pan": -0.18000000000000002
+    },
+    {
+      "instrument": "pizz",
+      "beat": 95.04463837529974,
+      "midi": 64,
+      "duration": 0.28,
+      "velocity": 0.30545007530832075,
+      "layer": "base",
+      "pan": -0.08000000000000002
+    },
+    {
+      "instrument": "brush",
+      "beat": 93,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "brush",
+      "beat": 95,
+      "midi": 38,
+      "duration": 0.32,
+      "velocity": 0.45,
+      "layer": "rhythm",
+      "pan": 0.2
+    },
+    {
+      "instrument": "pizz",
+      "beat": 92.00644957778825,
+      "midi": 64,
+      "duration": 0.5,
+      "velocity": 0.628689955877295,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 92.9996703851456,
+      "midi": 61,
+      "duration": 0.3,
+      "velocity": 0.5838670396030985,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 93.9880899948606,
+      "midi": 60,
+      "duration": 0.5,
+      "velocity": 0.6455556021721556,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "pizz",
+      "beat": 95.00271553419158,
+      "midi": 64,
+      "duration": 0.45,
+      "velocity": 0.6356017710776332,
+      "layer": "melody",
+      "pan": -0.17
+    },
+    {
+      "instrument": "glock",
+      "beat": 94.99365822928792,
+      "midi": 84,
+      "duration": 0.3,
+      "velocity": 0.3477591739674686,
+      "layer": "melody",
+      "pan": 0.45
+    },
+    {
+      "instrument": "glock",
+      "beat": 95.64788114525203,
+      "midi": 80,
+      "duration": 0.3,
+      "velocity": 0.3277664071156215,
+      "layer": "melody",
+      "pan": 0.45
+    }
+  ]
+}

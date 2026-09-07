@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Pasos de puntillas \u2014 tema principal",
+    "seconds": 73.84615384615384,
+    "sample_rate": 44100,
+    "peak_dbfs": -7.830187964704781,
+    "rms_dbfs": -24.416473983717854,
+    "sample_count": 3256615,
+    "shared_stem_gain": 1.7
+  },
+  {
+    "title": "Pasos de puntillas \u2014 tres capas de partida",
+    "seconds": 73.84615384615384,
+    "sample_rate": 44100,
+    "peak_dbfs": -8.805972297831634,
+    "rms_dbfs": -25.729903167468585,
+    "sample_count": 3256615,
+    "shared_stem_gain": 1.7
+  },
+  {
+    "title": "La casa bosteza \u2014 variante tranquila",
+    "seconds": 72.0,
+    "sample_rate": 44100,
+    "peak_dbfs": -10.181790750589643,
+    "rms_dbfs": -25.23659344051502,
+    "sample_count": 3175200,
+    "shared_stem_gain": 1.7
+  }
+]

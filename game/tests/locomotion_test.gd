@@ -81,11 +81,11 @@ func _test_jump_and_furniture() -> void:
 	Map.step_human(jumper, {"jump": false}, 0.025)
 	Map.step_human(jumper, {"jump": true}, 0.025)
 	check(jumper.p.y > 0.0, "release and second press permits another grounded jump")
-	var platform: Dictionary = actor_at(Vector3(-3.15, 0.82, 2.65))
+	var platform: Dictionary = actor_at(Vector3(-6.5, 0.82, -1.15))
 	platform.grounded = false
 	Map.step_human(platform, {}, 0.5)
 	check(is_equal_approx(float(platform.p.y), 0.62) and platform.grounded, "fall lands exactly on table surface")
-	Map.step_human(platform, {"move": Vector3.FORWARD}, 0.7)
+	Map.step_human(platform, {"move": Vector3.RIGHT}, 0.7)
 	Map.step_human(platform, {}, 0.6)
 	check(platform.p.y == 0.0 and platform.grounded, "walking off furniture restores gravity and lands")
 	var cupboard: Dictionary = actor_at(Vector3(-6.7, 1.45, 2.7))

@@ -1,0 +1,20 @@
+Let me sleep — audio 0.6
+
+Original composition, arrangement, MIDI/event sources, sampling renderer,
+Foley synthesis and mix were created for this project, offline in Python.
+No external generative music service was used.
+
+Acoustic instrument samples: VSCO 2 Community Edition, CC0 1.0 Universal.
+Recorded by Sam Gossner and Simon Dalzell; sample cutting by Elan Hickler /
+Soundemote. Source: https://versilian-studios.com/vsco-community/
+Repository: https://github.com/sgossner/VSCO-2-CE
+Pinned commit: 440300901dfe9275fd84e0b7763af1f8443ae62e
+Only 24 instrument-note recordings were used. See sample-provenance.json in
+art_source/audio for exact URLs and hashes; LICENSE-VSCO2CE-CC0.txt included.
+
+Buzzes, cloth, brushes, impacts, footfalls and domestic ambience are modeled
+synthetically. They are not recordings of insects, people or household rooms.
+Music/recovery/task/UI mallets combine the original score with CC0 notes.
+
+Tools: Python 3.14 + NumPy; FFmpeg/Vorbis encoding; Godot 4.5.2 playback.
+FFmpeg and Python are production tools, not runtime game dependencies.

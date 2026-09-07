@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Pasos de puntillas",
+    "seconds": 27.692307692307693,
+    "sample_rate": 44100,
+    "peak_dbfs": -7.829800289789222,
+    "rms_dbfs": -24.241629393914227,
+    "sample_count": 1221231,
+    "shared_stem_gain": 1.7
+  },
+  {
+    "title": "La casa bosteza",
+    "seconds": 24.0,
+    "sample_rate": 44100,
+    "peak_dbfs": -10.720074669557082,
+    "rms_dbfs": -24.7933921300811,
+    "sample_count": 1058400,
+    "shared_stem_gain": 1.7
+  }
+]
