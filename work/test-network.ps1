@@ -1,7 +1,8 @@
 param(
     [string]$Mode = 'blood',
     [int]$Humans = 1,
-    [int]$Mosquitoes = 2,
+    [int]$Mosquitoes = 1,
+    [int]$Rounds = 1,
     [int]$Port = 27940,
     [switch]$DisconnectTest,
     [switch]$RematchTest,
@@ -27,7 +28,7 @@ try {
     $server = Start-GameProcess 'server' @('--server', "--port=$Port")
     Start-Sleep -Milliseconds 600
     $codeFile = Join-Path $runDir 'room-code.txt'
-    $creatorArgs = @('--bot', '--create', '--role=human', '--name=Humano1', "--mode=$Mode", "--port=$Port", "--players=$($Humans + $Mosquitoes)", ('--code-file="' + $codeFile + '"'), ('--report="' + (Join-Path $runDir 'human1.json') + '"'))
+    $creatorArgs = @('--bot', '--create', '--name=Amigo1', "--humans=$Humans", "--rounds=$Rounds", "--timeout=$($Rounds * 38 + 20)", "--mode=$Mode", "--port=$Port", "--players=$($Humans + $Mosquitoes)", ('--code-file="' + $codeFile + '"'), ('--report="' + (Join-Path $runDir 'human1.json') + '"'))
     if ($DisconnectTest) { $creatorArgs += '--disconnect-test' }
     if ($RematchTest) { $creatorArgs += '--rematch-test' }
     if ($Incompatible) { $creatorArgs += '--incompatible' }
@@ -38,17 +39,19 @@ try {
         if (-not (Test-Path -LiteralPath $codeFile)) { throw "No room code created. Inspect $runDir" }
         $code = [System.IO.File]::ReadAllText($codeFile)
         for ($i = 2; $i -le $Humans; $i++) {
-            $extra = @('--bot', '--role=human', "--name=Humano$i", "--code=$code", "--port=$Port", ('--report="' + (Join-Path $runDir "human$i.json") + '"'))
+            $extra = @('--bot', "--name=Amigo$i", "--rounds=$Rounds", "--timeout=$($Rounds * 38 + 20)", "--code=$code", "--port=$Port", ('--report="' + (Join-Path $runDir "human$i.json") + '"'))
+            if ($RematchTest) { $extra += '--rematch-test' }
             if ($DisconnectTest) { $extra += '--disconnect-test' }
             Start-GameProcess "human$i" $extra | Out-Null
         }
         for ($i = 1; $i -le $Mosquitoes; $i++) {
-            $extra = @('--bot', '--role=mosquito', "--name=Mosquito$i", "--code=$code", "--port=$Port", ('--report="' + (Join-Path $runDir "mosquito$i.json") + '"'))
+            $extra = @('--bot', "--name=Amigo$($Humans + $i)", "--rounds=$Rounds", "--timeout=$($Rounds * 38 + 20)", "--code=$code", "--port=$Port", ('--report="' + (Join-Path $runDir "mosquito$i.json") + '"'))
+            if ($RematchTest) { $extra += '--rematch-test' }
             if ($DisconnectTest) { $extra += if ($i -eq 1) { '--disconnect-after=6' } else { '--disconnect-test' } }
             Start-GameProcess "mosquito$i" $extra | Out-Null
         }
     }
-    $deadline = [DateTime]::UtcNow.AddSeconds(55)
+    $deadline = [DateTime]::UtcNow.AddSeconds($Rounds * 38 + 25)
     while ([DateTime]::UtcNow -lt $deadline) {
         $running = @($processes | Where-Object { $_.Id -ne $server.Id -and -not $_.HasExited })
         if ($running.Count -eq 0) { break }
@@ -64,6 +67,8 @@ try {
         $winners = @($reports.result.winner | Sort-Object -Unique)
         $expectedWinner = if ($Mode -eq 'sleep') { 'human' } else { 'mosquito' }
         $testFailed = $testFailed -or $winners.Count -ne 1 -or $winners[0] -ne $expectedWinner
+        $incomplete = @($reports | Where-Object { $_.roles_by_round.Count -ne $Rounds -or $_.results.Count -ne $Rounds -or -not $_.lobby_movement_seen -or -not $_.cosmetics_synced })
+        $testFailed = $testFailed -or $incomplete.Count -gt 0
     }
 } finally {
     foreach ($proc in $processes) { if (-not $proc.HasExited) { Stop-Process -Id $proc.Id -Force } }

@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 $godotExe = Join-Path $PSScriptRoot 'tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe'
 $gamePath = Join-Path $projectRoot 'game'
-$outDir = Join-Path $projectRoot 'outputs/Dejame-dormir-0.1.0-Windows'
+$outDir = Join-Path $projectRoot 'outputs/Dejame-dormir-0.2.0-Windows'
 [System.IO.Directory]::CreateDirectory($outDir) | Out-Null
 if (Test-Path -LiteralPath (Join-Path $projectRoot 'distribution')) {
     Get-ChildItem -LiteralPath (Join-Path $projectRoot 'distribution') -File | Copy-Item -Destination $outDir
@@ -13,6 +13,10 @@ if ($LASTEXITCODE -ne 0) { throw 'Godot import failed' }
 if (-not $SkipTests) {
     & $godotExe --headless --path $gamePath --script res://tests/rules_test.gd
     if ($LASTEXITCODE -ne 0) { throw 'Rules tests failed' }
+    & $godotExe --headless --path $gamePath --script res://tests/lobby_rules_test.gd
+    if ($LASTEXITCODE -ne 0) { throw 'Lobby rules tests failed' }
+    & $godotExe --headless --path $gamePath --script res://tests/cosmetics_test.gd
+    if ($LASTEXITCODE -ne 0) { throw 'Cosmetics tests failed' }
     & $godotExe --headless --path $gamePath --script res://tests/visual_checks.gd
     if ($LASTEXITCODE -ne 0) { throw 'Visual geometry tests failed' }
     & $godotExe --headless --path $gamePath --script res://tests/audio_checks.gd

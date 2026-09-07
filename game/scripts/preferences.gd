@@ -3,6 +3,7 @@ extends RefCounted
 ## Local preferences only. No network or gameplay authority belongs here.
 
 const FILE_PATH := "user://preferences.cfg"
+const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const DEFAULT_KEYS: Dictionary = {
 	"move_forward": KEY_W, "move_back": KEY_S, "move_left": KEY_A,
 	"move_right": KEY_D, "ascend": KEY_SPACE, "descend": KEY_CTRL,
@@ -25,6 +26,7 @@ static var player_name: String = ""
 static var server_address: String = "127.0.0.1"
 static var server_port: int = 27840
 static var room_code: String = ""
+static var cosmetics: Dictionary = {"human": {"color": 0, "accessory": 0}, "mosquito": {"color": 0, "accessory": 0}}
 static var _loaded: bool = false
 
 
@@ -60,6 +62,7 @@ static func load_settings() -> void:
 		server_address = str(config.get_value("connection", "address", "127.0.0.1"))
 		server_port = clampi(int(config.get_value("connection", "port", 27840)), 1, 65535)
 		room_code = str(config.get_value("connection", "code", "")).left(12)
+		cosmetics = CosmeticsData.sanitize(config.get_value("appearance", "cosmetics", {}))
 		for action: String in ACTION_NAMES:
 			var binding: String = str(config.get_value("bindings", action, ""))
 			var parts := binding.split(":")
@@ -88,6 +91,8 @@ static func save_settings() -> void:
 	config.set_value("connection", "address", server_address)
 	config.set_value("connection", "port", server_port)
 	config.set_value("connection", "code", room_code)
+	cosmetics = CosmeticsData.sanitize(cosmetics)
+	config.set_value("appearance", "cosmetics", cosmetics)
 	for action: String in ACTION_NAMES:
 		var events := InputMap.action_get_events(action)
 		if events.is_empty():

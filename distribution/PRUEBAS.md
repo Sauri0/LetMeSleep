@@ -1,63 +1,45 @@
-# Dejame dormir 0.1.0 — informe de pruebas
+# Dejame dormir 0.2.0 — verificación de entrega
 
-**7 de septiembre de 2026. Prototipo nativo Windows, con servidor en la PC anfitriona.**
+7 de septiembre de 2026. Godot 4.5.2, Windows x86_64, protocolo 2.
 
-El juego, los tres modos y el servidor están implementados y se exportaron. La validación se realizó en una sola computadora mediante procesos independientes conectados por ENet en loopback, pruebas deterministas y renderización gráfica real. **No se probó todavía una partida entre distintas computadoras o conexiones a Internet.**
+## Resultado
 
-## Evidencia ejecutada
+Importación, exportación, arranque nativo, reglas, red local y navegación verificados. Se incluyen seis capturas del EXE entregado y evidencia en validaciones/. No se probó una partida humana entre conexiones de Internet diferentes.
 
-| Verificación | Resultado |
+| Comprobación | Evidencia |
 |---|---|
-| Godot4.5.2 importación y exportación release Windows64bits | Correctas. Ejecutable con recursos embebidos; se ejecutó sin `--path` ni acceso al proyecto fuente. |
-| Reglas autoritativas headless | **3212 comprobaciones,0fallos.** |
-| Geometría visual y privacidad de marca | **13 comprobaciones,0fallos.** |
-| Audio original procedural | **28 comprobaciones,0fallos.** Corrida nativa con WASAPI activo. |
-| Sangre1humano/2mosquitos, EXE exportado | Cuota compartida alcanzada, mismo ganador en3clientes y vuelta a sala. |
-| Sangre5humanos/10mosquitos, EXE exportado |15clientes entraron, comenzó ronda, picaduras y cuota completada. Sin errores registrados en la repetición corregida. Es prueba técnica local, no capacidad pública garantizada. |
-| Supervivencia2humanos/4mosquitos, EXE exportado | Ronda completa; mosquitos ganaron al sobrevivir al reloj, sin picaduras obligatorias. |
-| Tareas2humanos/4mosquitos, EXE exportado | Ronda completa y tareas realizadas por humanos; meta colectiva y resultado compartido correctos. |
-| Desconexión de participante durante ronda | Regreso a sala sin ganador; sin personajes activos abandonados. |
-| Cliente de versión/protocolo incompatibles | Rechazado antes de entrar, mensaje legible y ningún snapshot de partida recibido. |
-| Gráficos reales1280×720 | Cliente nativo OpenGL en ambas perspectivas y menú; imágenes de viewport inspeccionadas. |
-| Interfaz |7pantallas renderizadas e inspeccionadas, controles y configuración por propietario, vidas solo enTareas. |
+| Simulación autoritativa | 3242 comprobaciones, 0 fallos: zonas privadas, picadura anclada, tareas, vidas, herramientas, colisiones y finales. |
+| Sala y sorteo | 321 comprobaciones, 0 fallos: humanos exactos 1..5, ambos equipos, 1v1, límites 12 mosquitos/16 total, listos y sorteos independientes. |
+| Cosméticos | Allowlist, tipos, límites, datos malformados, apariencia por rol y copias independientes aprobados. |
+| Geometría y audio | 13 comprobaciones de visibilidad y 28 de audio aprobadas. Otros 24 controles de personalización visual y cuatro capturas de accesorios aprobados. |
+| Navegación UI | 27 comprobaciones con InputEvents: Tab/Shift+Tab/Enter, Esc desde campos y subpantallas, foco modal, cancelar reasignación, permisos de configuración y guardado/recarga real de ambas apariencias. Preferencias originales restauradas byte por byte. |
+| Integración cliente/interfaz/mundo | 33 comprobaciones nativas, 0 fallos: paseo en sala, mouse capturado/liberado, pausa de ambos roles, bloqueo de movimiento/mirada/acciones en menús, retorno a resultados/sala/inicio. Solo el transporte fue sustituido en este fixture. |
+| Sangre ENet | 1v1, dos rondas consecutivas: sorteo, ready, movimiento en sala, apariencia sincronizada, picadura y cuota compartida. |
+| Tareas ENet | 1v1, dos rondas con fuente y una con EXE candidato: tareas completadas y resultado compartido. |
+| Supervivencia ENet | 5v1 con fuente y 4v12 con EXE candidato: 16 clientes reales ENet en procesos locales, resultado compartido y sin errores. |
+| Autoridad y privacidad | Intentos de elegir rol, iniciar/configurar sin ser anfitrión y cambiar reglas/apariencia durante ronda rechazados. Sin asignaciones privadas en estados públicos. |
+| Desconexión y compatibilidad | EXE candidato: desconexión aborta sin ganador y vuelve a sala; versión/protocolo incompatible rechazados. |
+| EXE definitivo | Nueva partida Sangre 1v1 aprobada tras el último ajuste de contraste; seis capturas nativas de inicio, sala, dos previews y dos roles, todas sin stderr. |
 
-Los informes JSON de las últimas ejecuciones se incluyen en `validaciones/`. Cada cliente registra recepción de estados y de datos privados, movimientos/picaduras observados, errores y resultado. No se presentan los bots como rivales jugables ni como personas reales. Las capturas son escenas de prueba deterministas renderizadas por el ejecutable, no imágenes generadas ni una sesión real por Internet.
+Los sorteos pueden repetir roles de una ronda a otra. Los tests comprueban independencia y cantidad exacta, no exigen alternancia. La prueba de 5v1 también confirma que las rotaciones no favorecen permanentemente al primer humano.
 
-## Reglas cubiertas específicamente
+## Trazabilidad
 
-- Rechazo de equipos inválidos; cinco humanos permitidos; tope técnico16participantes/12mosquitos; capacidad y alternativas de zonas verificadas incluso en5v10.
-- Asignaciones distintas y dirigidas solo al mosquito correspondiente. Snapshot público usa una lista explícita de campos permitidos y no contiene reservas, índices de zonas o calendarios.
-- Picadura persistente al soltar botón; anclaje al cuerpo; cambio inmediato al desprenderse sin reiniciar calendario. Coincidencia desprendimiento/rotación sin doble transición. Secuencias de acciones y movimiento repetidas o antiguas rechazadas.
-- Extracción progresiva y sangre conservada tras desprendimiento/muerte. Final único por cuota/reloj/eliminación.
-- Tareas interrumpidas conservan progreso; fallo solo reduce plazo futuro personal. Frecuencia y ronda se mantienen. Inicio/revancha reinician estado.
-- Tres vidas **totales** por mosquito enTareas. Muerte descuenta una de ese jugador; reaparición solo si quedan vidas. Todos temporalmente muertos con vidas pendientes no finaliza; todos sin vidas finaliza a favor humano.
-- Manos iniciales, bandas de autoayuda, zonas traseras que requieren compañero; golpes con orientación, distancia, obstáculos y recuperación. Recogida atómica, intercambio y devolución de objetos únicos.
-- Movimiento acotado, colisión con muebles/cuerpos y posado cercano a una superficie.
-- Marca privada oculta detrás de pared, mesa, torso o lado opuesto; vista desde insecto y cámara. Cabeza local humana oculta/cuerpo visible; muerto oculto y reaparición restaurada.
-- Audio espacial atenuado por obstáculos; muerte silencia; piscina fija de sonidos, ausencia de eventos repetidos y limpieza al cerrar.
+- EXE definitivo SHA256: `8E9231CA792C9A2E7B972850EFB341BFD5BD923B671AD4B96C71AE0B7C8FEFB6`.
+- Candidato que verificó tres modos, 16 clientes, desconexión y compatibilidad: `9FEDA5D28A7595DE2759BB65774DC4675C4A864248DB78B28077BC2B7064075C`.
+- Exportación intermedia tras corregir preview/foco, con dos rondas de Sangre aprobadas: `94483F860F71ED779F2CD8BCF11EC63F1E5F80E5A684876BC222199F944AF723`.
+- Entre esos candidatos y el definitivo solo se corrigieron UI de personalización, foco diferido y contraste de sus títulos. La red, simulación y sorteo no cambiaron.
+- `build-02.log` contiene la suite completa; `build-02-final.log`, la exportación final. `release02-*.json` contiene los informes de clientes. Los nombres históricos human/mosquito de los archivos del harness no determinan su rol: ver `roles_by_round`.
+- El fallo de preview detectado por pruebas fue corregido antes de entrega. Las capturas de entrega muestran el personaje, color y accesorio seleccionados.
 
-## Problemas encontrados y corregidos
+## Reproducción desde fuentes
 
-Se corrigieron nombres de métodos que chocaban con Godot, estados UDP demasiado grandes mediante compresión DEFLATE, un modo de descompresión incompatible, notificaciones ENet entre clientes innecesarias y duplicados de preparación de sala que saturaban los bots al entrar15a la vez. Se desactivó el relay entre clientes: toda intención pasa por el servidor.
+Ejecutar `work/setup-tools.ps1` si faltan editor/plantillas. `work/build.ps1` importa, ejecuta suites y exporta. `work/test-network.ps1 -Mode blood -Humans 1 -Mosquitoes 1 -Rounds 2` prueba revancha; `-Executable` permite indicar el EXE.
 
-La revisión independiente detectó un mosquito adherido que podía quedar detrás de una pared al arrimarse el humano. Se amplió su margen de colisión y se verificaron22zonas×16giros×8bordes/esquinas, además de rutas e interacción en los tres puestos. También se corrigió el ingreso durante resultados y una desconexión posterior a la victoria que se anunciaba incorrectamente sin ganador.
+El fixture nativo se ejecuta con Godot, `--path game --script res://tests/client_ui_checks.gd -- --screens`. El de navegación está en `work/ui_v02_navigation.gd` y respalda/restaura preferencias. Los bots son herramientas de validación, no rivales disponibles en el menú.
 
-La cámara de mosquito tiene un origen acotado para evitar comenzar dentro del techo o paredes; el brazo de cámara usa volumen de colisión. No se transparenta la geometría.
+## Límites pendientes
 
-## Límites conocidos
+Falta jugar entre PCs y conexiones distintas, medir latencia/pérdidas, balance y requisitos de hardware en los equipos de los amigos. Los 16 clientes locales no certifican capacidad en Internet. El código de sala requiere una dirección alcanzable y UDP 27840; no configura NAT. No se modificó router/firewall ni se contrató alojamiento. Una desconexión interrumpe la ronda; la reconexión ocurre en la sala. El menú no detiene una ronda online.
 
-1. Falta prueba humana porInternet con variasPCs. No se configuró router/firewall, no hay relay automático y no se contrató alojamiento. UDP27840 y código de sala necesitan una dirección alcanzable; CGNAT puede requerir otra solución.
-2. No hay balance validado ni requisitos mínimos medidos. El render gráfico observado usó unaRTX3060Ti; no representa el resto dePCs. No se midió una tasa de cuadros sostenida con todas las combinaciones de jugadores.
-3. Los clientes interpolan posiciones recibidas; no hay compensación histórica de golpes ni predicción de movimiento avanzada. La respuesta con latencia/pérdida real debe evaluarse.
-4. Arte y animaciones son originales y funcionales de prototipo. Falta evaluación de comprensión, accesibilidad práctica y comodidad de audio/cámaras con jugadores. AudioWASAPI activo no equivale a evaluación subjetiva con auriculares.
-5. Una sola sala por servidor, sin cuentas ni persistencia de ronda. Reiniciar servidor pierde la sala. Los eliminados ven espera neutra, sin cámara libre. El EXE no lleva firma comercial.
-
-## Reproducir
-
-En el ZIP de fuentes: `work/setup-tools.ps1` descarga editor/plantillas oficiales y verificaSHA512; `work/build.ps1` importa, ejecuta reglas/geometría/audio y exporta. `work/test-network.ps1` reproduce partidas locales y variantes de desconexión, incompatibilidad y vuelta a sala. `-Executable` dirige la prueba al EXEexportado. Cada ejecución conserva sus logs bajo`work/network-*`.
-
-La siguiente prueba útil es descargar el mismo ZIP en tresPCs, conectar1v2 entre al menos dosredes, alternar roles, completar/repetir cada modo y registrar latencia, comodidad de defensa y claridad de las tareas. La entrega actual permite preparar esa sesión, sin afirmar que ya ocurrió.
-
-## Identificación del paquete final
-
-SHA256 del EXE: `FBECC23497C38BD646B4727A5F79E07241382ADEB43A0613AD18D0ED3DF199A2`. Las tres capturas finales de inicio/humano/mosquito provienen de este ejecutable; las tres ejecuciones cerraron con código0 y stderr vacío. Se corrigieron la superposición del nombre de zona y una advertencia de limpieza al cerrar la captura.
+La versión 0.1.0 y sus artefactos se conservan por separado. Sus capturas y hashes no se usan como evidencia de 0.2.0.

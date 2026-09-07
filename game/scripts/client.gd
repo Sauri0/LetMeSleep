@@ -25,10 +25,14 @@ var camera_initialized := false
 var was_alive := true
 var screenshot_done := false
 var screenshot_age := 0.0
+var waiting := false
+var walking := false
+var waiting_state: Dictionary = {}
 
 func _ready() -> void:
 	PreferencesScript.load_settings()
 	PreferencesScript.setup_inputs()
+	network.local_cosmetics = PreferencesScript.cosmetics
 	world = WorldScript.new()
 	world.name = "World"
 	add_child(world)
@@ -51,7 +55,13 @@ func _ready() -> void:
 	add_child(ui)
 	ui.connect_requested.connect(network.connect_room)
 	ui.local_server_requested.connect(func() -> void: local_server_requested.emit())
-	ui.role_requested.connect(func(value: String) -> void: network.lobby_action("role", value))
+	ui.cosmetics_changed.connect(func(value: Dictionary) -> void:
+		network.local_cosmetics = value
+		network.lobby_action("cosmetics", value))
+	ui.preview_requested.connect(world.show_customization)
+	ui.preview_closed.connect(world.end_customization)
+	ui.walk_requested.connect(func() -> void: _set_walking(true))
+	ui.escape_requested.connect(_on_escape)
 	ui.ready_requested.connect(func(value: bool) -> void: network.lobby_action("ready", value))
 	ui.config_requested.connect(func(value: Dictionary) -> void: network.lobby_action("config", value))
 	ui.start_requested.connect(func() -> void: network.lobby_action("start"))
@@ -59,6 +69,9 @@ func _ready() -> void:
 	ui.leave_requested.connect(_leave)
 	network.accepted.connect(func(id: int) -> void: local_id = id)
 	network.lobby_updated.connect(_lobby)
+	network.waiting_updated.connect(func(data: Dictionary) -> void:
+		if waiting:
+			waiting_state = data)
 	network.snapshot_updated.connect(_snapshot)
 	network.private_updated.connect(func(data: Dictionary) -> void:
 		personal = data
@@ -71,15 +84,30 @@ func _ready() -> void:
 		_preview()
 
 func _lobby(data: Dictionary) -> void:
+	var entering := not waiting
+	waiting = true
 	playing = false
 	state.clear()
 	personal.clear()
+	waiting_state = {"actors": data.get("actors", {})}
 	world.visible = true
-	world.clear_actors()
-	world.menu_camera.make_current()
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if entering:
+		world.end_customization()
+		world.clear_actors()
+		sequence = 0
+		yaw = 0.0
+		pitch = -0.12
+		walking = false
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		camera.make_current()
+	world.set_local_role(local_id, "lobby")
 	ui.show_lobby(data, local_id)
 	camera_initialized = false
+
+func _set_walking(value: bool) -> void:
+	walking = value and waiting
+	ui.set_lobby_walking(walking)
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if walking else Input.MOUSE_MODE_VISIBLE
 
 func _snapshot(data: Dictionary) -> void:
 	state = data
@@ -94,9 +122,12 @@ func _snapshot(data: Dictionary) -> void:
 		return
 	var starting := not playing
 	playing = true
+	waiting = false
+	walking = false
 	var actor: Dictionary = data.get("actors", {}).get(local_id, {})
 	role = str(actor.get("role", "human"))
 	if starting:
+		world.clear_actors()
 		yaw = float(actor.get("yaw", 0.0))
 		pitch = 0.0
 		sequence = 0
@@ -110,6 +141,17 @@ func _snapshot(data: Dictionary) -> void:
 	ui.show_game(state, personal, local_id)
 
 func _process(dt: float) -> void:
+	if waiting:
+		world.sync_actors(waiting_state.get("actors", {}), local_id, dt)
+		world.set_local_role(local_id, "lobby")
+		var avatar: Node3D = world.get_actor(local_id)
+		if avatar != null:
+			rig.global_position = avatar.global_position + Vector3(0, 1.35, 0)
+			rig.rotation = Vector3(pitch, yaw, 0)
+			arm.spring_length = 2.2
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if walking and not ui.is_menu_open() else Input.MOUSE_MODE_VISIBLE
+		_screenshot_tick(dt)
+		return
 	if not playing:
 		_screenshot_tick(dt)
 		return
@@ -146,7 +188,7 @@ func _process(dt: float) -> void:
 	_screenshot_tick(dt)
 
 func _physics_process(dt: float) -> void:
-	if not playing or options.has("visual-preview"):
+	if (not playing and not waiting) or options.has("visual-preview"):
 		return
 	input_accumulator += dt
 	if input_accumulator < 1.0 / 30.0:
@@ -154,29 +196,33 @@ func _physics_process(dt: float) -> void:
 	input_accumulator = 0.0
 	var move := Vector3.ZERO
 	var interact := false
-	if not ui.is_menu_open():
+	if not ui.is_menu_open() and (not waiting or walking):
 		move.x = Input.get_axis("move_left", "move_right")
 		move.z = Input.get_axis("move_forward", "move_back")
 		move.y = Input.get_axis("descend", "ascend")
-		interact = Input.is_action_pressed("interact") and role == "human"
+		interact = Input.is_action_pressed("interact") and role == "human" and not waiting
 	sequence += 1
 	network.send_input(sequence, move, yaw, pitch, interact)
 
-func _unhandled_input(event: InputEvent) -> void:
-	if not playing:
-		return
-	if event.is_action_pressed("pause"):
+func _on_escape() -> void:
+	if waiting:
+		_set_walking(not walking)
+	elif playing:
 		ui.set_pause(not ui.is_menu_open())
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if ui.is_menu_open() else Input.MOUSE_MODE_CAPTURED
-		get_viewport().set_input_as_handled()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not playing and not waiting:
 		return
 	if ui.is_menu_open():
 		return
 	if event is InputEventMouseMotion:
-		var sensitivity: float = PreferencesScript.human_sensitivity if role == "human" else PreferencesScript.mosquito_sensitivity
+		var sensitivity: float = PreferencesScript.human_sensitivity if waiting or role == "human" else PreferencesScript.mosquito_sensitivity
 		yaw = wrapf(yaw - event.relative.x * sensitivity, -PI, PI)
 		pitch = clampf(pitch - event.relative.y * sensitivity * (-1.0 if PreferencesScript.invert_y else 1.0), -1.40, 1.30)
 	if event.is_echo():
+		return
+	if waiting:
 		return
 	for verb: String in ["bite", "attack", "self_swat", "perch", "pickup", "drop"]:
 		if event.is_action_pressed(verb):
@@ -193,6 +239,8 @@ func _leave() -> void:
 
 func _disconnected() -> void:
 	playing = false
+	waiting = false
+	walking = false
 	world.visible = true
 	world.clear_actors()
 	world.menu_camera.make_current()
@@ -201,6 +249,20 @@ func _disconnected() -> void:
 
 func _preview() -> void:
 	# Local visual fixture, never reachable through server RPC or used as game authority.
+	var kind := str(options.get("visual-preview", ""))
+	if kind.begins_with("custom-"):
+		PreferencesScript.cosmetics = {"human":{"color": 3, "accessory": 1}, "mosquito":{"color": 4, "accessory": 2}}
+		ui._open_customization()
+		ui._select_custom_role(kind.trim_prefix("custom-"))
+		return
+	if kind == "lobby":
+		local_id = 1
+		var players := {1:{"name":"Luna", "role":"waiting", "ready":false}, 2:{"name":"Mora", "role":"waiting", "ready":true}, 3:{"name":"Zeta", "role":"waiting", "ready":false}}
+		var actors := {}
+		for id: int in players:
+			actors[id] = {"name":players[id].name, "role":"human", "p":Vector3(-2.0 + (id-1) * 1.7, 0, -1.5), "yaw":0.0, "pitch":0.0, "state":"human", "alive":true, "swing":0.0, "bitten":false, "tool":"hands", "appearance":{"color":id, "accessory":id % 3}}
+		_lobby({"code":"CASA42", "owner":1, "players":players, "actors":actors, "config":load("res://scripts/simulation.gd").DEFAULT_CONFIG, "can_start":false, "start_reason":"Falta que todos pulsen Estoy listo."})
+		return
 	var simulation: RefCounted = load("res://scripts/simulation.gd").new()
 	var roster := {1:{"name":"Luna", "role":"human", "ready":true}, 2:{"name":"Zeta", "role":"mosquito", "ready":true}, 3:{"name":"Mora", "role":"mosquito", "ready":true}}
 	simulation.start(roster, load("res://scripts/simulation.gd").DEFAULT_CONFIG)
@@ -229,6 +291,7 @@ func _capture() -> void:
 	var result := get_viewport().get_texture().get_image().save_png(path)
 	print("SCREENSHOT %s code=%d" % [path, result])
 	playing = false
+	waiting = false
 	world.clear_actors()
 	await get_tree().process_frame
 	await get_tree().process_frame

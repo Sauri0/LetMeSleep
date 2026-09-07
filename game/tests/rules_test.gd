@@ -6,6 +6,8 @@ var failures := 0
 
 func _initialize() -> void:
 	_test_roster_config()
+	_test_one_versus_one()
+	_test_role_appearance()
 	_test_privacy_and_reservations()
 	_test_inputs()
 	_test_surface_perch()
@@ -35,7 +37,7 @@ func roster(humans := 1, mosquitoes := 2) -> Dictionary:
 
 func make_sim(mode := "blood", humans := 1, mosquitoes := 2, options: Dictionary = {}) -> RefCounted:
 	var result = Sim.new()
-	var settings: Dictionary = {"mode": mode, "blood_goal": 1000.0, "round_seconds": 120.0, "rotation_seconds": 4.0}
+	var settings: Dictionary = {"mode": mode, "human_count": humans, "blood_goal": 1000.0, "round_seconds": 120.0, "rotation_seconds": 4.0}
 	settings.merge(options, true)
 	result.start(roster(humans, mosquitoes), settings)
 	return result
@@ -66,7 +68,11 @@ func _test_roster_config() -> void:
 	check(Sim.validate_roster(roster()).is_empty(), "1v2 roster accepted")
 	check(Sim.validate_roster(roster(2, 4)).is_empty(), "2v4 roster accepted")
 	check(Sim.validate_roster(roster(1, 12)).is_empty(), "maximum solo mosquitoes have zone alternatives")
-	check(not Sim.validate_roster(roster(2, 3)).is_empty(), "ratio checked at start")
+	check(Sim.validate_roster(roster(1, 1)).is_empty(), "minimum 1v1 roster accepted")
+	check(Sim.validate_roster(roster(2, 3)).is_empty(), "old two-to-one ratio removed")
+	check(Sim.validate_roster(roster(5, 1)).is_empty(), "five humans versus one mosquito accepted")
+	check(not Sim.validate_roster(roster(1, 0)).is_empty(), "empty mosquito team rejected")
+	check(not Sim.validate_roster(roster(0, 1)).is_empty(), "empty human team rejected")
 	check(Sim.validate_roster(roster(5, 10)).is_empty(), "confirmed maximum 5v10 roster accepted")
 	check(not Sim.validate_roster(roster(6, 12)).is_empty(), "confirmed human capacity enforced")
 	check(not Sim.validate_roster(roster(5, 12)).is_empty(), "16-player transport room limit enforced")
@@ -78,6 +84,49 @@ func _test_roster_config() -> void:
 	check(settings.mode == "blood" and is_finite(float(settings.round_seconds)), "malformed config cannot introduce NaN or unknown mode")
 	check(int(settings.mosquito_lives) == 9, "sleep lives capped")
 	check(float(settings.task_deadline) < float(settings.task_interval) and float(settings.task_floor) >= float(settings.task_work) + 2.0, "tasks maintain interval and viable work floor")
+	check(int(Sim.DEFAULT_CONFIG.human_count) == 1, "human-count setting defaults to one")
+	check(int(Sim.sanitize_config({"human_count": 5}).human_count) == 5, "human count sanitized independently of connected players")
+	check(int(Sim.sanitize_config({"human_count": 99}).human_count) == 5 and int(Sim.sanitize_config({"human_count": -5}).human_count) == 1, "human count retains fixed supported bounds")
+
+func _test_one_versus_one() -> void:
+	for mode: String in ["blood", "survival", "sleep"]:
+		var sim = make_sim(mode, 1, 1)
+		check(sim.phase == "playing" and sim.actors.size() == 2, "1v1 starts in %s" % mode)
+		check(sim.actors[1].role == "human" and sim.actors[2].role == "mosquito", "1v1 has both assigned roles in %s" % mode)
+		var assignment: Dictionary = sim.private_for(2).assignment
+		check(int(assignment.human) == 1 and int(assignment.zone) < 16, "1v1 uses only self-defendable front zones in %s" % mode)
+		attach(sim, 2, 1, 5)
+		check(sim.actors[2].state == "biting", "1v1 allows a valid bite in %s" % mode)
+		var previous: String = Sim._zone_key(sim.actors[2]._assignment)
+		sim.action(2, 2, "bite")
+		sim.step(0.05)
+		check(Sim._zone_key(sim.actors[2]._assignment) != previous, "1v1 keeps a valid detach alternative in %s" % mode)
+	var sparse = make_sim("blood", 5, 1)
+	var visited_humans: Dictionary = {int(sparse.private_for(6).assignment.human): true}
+	for interval: int in range(4):
+		advance(sparse, 4.0)
+		visited_humans[int(sparse.private_for(6).assignment.human)] = true
+	check(visited_humans.size() == 5, "5v1 rotates equal-pressure targets instead of favoring the first human forever")
+
+func _test_role_appearance() -> void:
+	var players: Dictionary = roster(1, 1)
+	players[1].cosmetics = {"human": {"color": 4, "accessory": 2}, "mosquito": {"color": 1, "accessory": 1}, "secret": "omit"}
+	players[2].cosmetics = {"human": {"color": 0, "accessory": 1}, "mosquito": {"color": 5, "accessory": 2}}
+	var sim = Sim.new()
+	sim.start(players, {})
+	var snapshot: Dictionary = sim.public_snapshot()
+	check(snapshot.actors[1].appearance == {"color": 4, "accessory": 2}, "human actor copies only its human appearance")
+	check(snapshot.actors[2].appearance == {"color": 5, "accessory": 2}, "mosquito actor copies only its mosquito appearance")
+	check(not snapshot.actors[1].has("cosmetics") and not snapshot.actors[2].has("cosmetics"), "actors never publish entire cosmetics profile")
+	snapshot.actors[1].appearance.color = 99
+	players[2].cosmetics.mosquito.color = 99
+	check(int(sim.public_snapshot().actors[1].appearance.color) == 4, "public appearance snapshot cannot mutate authority")
+	check(int(sim.public_snapshot().actors[2].appearance.color) == 5, "source profile changes do not mutate an active-round appearance")
+	players[1].cosmetics = "invalid"
+	players[2].cosmetics = {"mosquito": {"color": -1, "accessory": 999, "extra": "omit"}}
+	sim.start(players, {})
+	check(sim.public_snapshot().actors[1].appearance == {"color": 0, "accessory": 0}, "invalid appearance profile gets safe defaults")
+	check(sim.public_snapshot().actors[2].appearance == {"color": 0, "accessory": 0}, "out-of-range appearance fields cannot leak into actors")
 
 func _test_privacy_and_reservations() -> void:
 	var sim = make_sim("blood", 1, 12)

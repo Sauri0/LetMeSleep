@@ -6,10 +6,14 @@ signal private_updated(data: Dictionary)
 signal notice(message: String)
 signal accepted(peer_id: int)
 signal disconnected
+signal waiting_updated(data: Dictionary)
 
 const Simulation = preload("res://scripts/simulation.gd")
-const VERSION := "0.1.0"
-const PROTOCOL := 1
+const LobbyRules = preload("res://scripts/lobby_rules.gd")
+const Cosmetics = preload("res://scripts/cosmetics.gd")
+const Map = preload("res://scripts/arena.gd")
+const VERSION := "0.2.0"
+const PROTOCOL := 2
 const DEFAULT_PORT := 27840
 const MAX_PLAYERS := 16
 var is_server := false
@@ -33,6 +37,9 @@ var peer_tokens: Dictionary = {}
 var menu_rates: Dictionary = {}
 var connect_age := 0.0
 var connecting := false
+var local_cosmetics: Dictionary = {}
+var waiting_actors: Dictionary = {}
+var waiting_inputs: Dictionary = {}
 
 func _ready() -> void:
 	config = Simulation.DEFAULT_CONFIG.duplicate(true)
@@ -114,6 +121,8 @@ func _peer_left(id: int) -> void:
 		tokens[peer_tokens[id]] = {"name": players[id].name, "role": players[id].role}
 		peer_tokens.erase(id)
 	players.erase(id)
+	waiting_actors.erase(id)
+	waiting_inputs.erase(id)
 	if sim != null:
 		var ended: Dictionary = sim.public_snapshot()
 		if str(ended.phase) == "playing":
@@ -124,6 +133,7 @@ func _peer_left(id: int) -> void:
 		sim = null
 		private_revisions.clear()
 		_set_unready()
+		_reset_waiting()
 	if room_owner == id:
 		room_owner = int(players.keys()[0]) if not players.is_empty() else 0
 	if players.is_empty():
@@ -166,15 +176,14 @@ func _request_join(version: String, protocol: int, player_name: String, code: St
 	var clean_name := player_name.strip_edges().left(20).replace("\n", " ").replace("\r", " ")
 	if clean_name.is_empty():
 		clean_name = "Amigo"
-	var chosen_role := "human" if players.is_empty() else "mosquito"
 	if previous_token.length() == 32 and tokens.has(previous_token):
-		chosen_role = str(tokens[previous_token].role)
 		tokens.erase(previous_token)
 	var new_token := Crypto.new().generate_random_bytes(16).hex_encode()
 	peer_tokens[sender] = new_token
-	players[sender] = {"name": clean_name, "role": chosen_role, "ready": false}
+	players[sender] = {"name": clean_name, "role": "waiting", "ready": false, "cosmetics": Cosmetics.sanitize({})}
+	_spawn_waiting(sender)
 	_welcome.rpc_id(sender, sender, new_token)
-	print("JOIN id=%d role=%s count=%d" % [sender, chosen_role, players.size()])
+	print("JOIN id=%d role=waiting count=%d" % [sender, players.size()])
 	_broadcast_lobby()
 
 func _new_code() -> String:
@@ -190,6 +199,7 @@ func _welcome(id: int, new_token: String) -> void:
 	connecting = false
 	token = new_token
 	accepted.emit(id)
+	lobby_action("cosmetics", local_cosmetics)
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _reject(message: String) -> void:
@@ -215,15 +225,15 @@ func _request_lobby(verb: String, value: Variant) -> void:
 	var sender := multiplayer.get_remote_sender_id()
 	if not players.has(sender) or not _menu_rate_ok(sender):
 		return
-	if sim != null and str(sim.public_snapshot().phase) == "playing":
+	if sim != null and verb != "rematch":
 		return
 	match verb:
 		"role":
-			if value is String and value in ["human", "mosquito"]:
-				if str(players[sender].role) == value:
-					return
-				players[sender].role = value
-				_set_unready()
+			_server_notice.rpc_id(sender, "Los roles se sortean al empezar. Nadie elige equipo.")
+			return
+		"cosmetics":
+			players[sender].cosmetics = Cosmetics.sanitize(value)
+			waiting_actors[sender].appearance = Cosmetics.appearance_for(players[sender].cosmetics, "human")
 		"ready":
 			if value is bool:
 				if bool(players[sender].ready) == value:
@@ -231,6 +241,10 @@ func _request_lobby(verb: String, value: Variant) -> void:
 				players[sender].ready = value
 		"config":
 			if sender == room_owner and value is Dictionary:
+				var chosen: Variant = value.get("human_count", config.get("human_count", 1))
+				if not (chosen is int or chosen is float) or not is_finite(float(chosen)) or float(chosen) != floorf(float(chosen)) or int(chosen) < 1 or int(chosen) > 5:
+					_server_notice.rpc_id(sender, "La cantidad de humanos debe ser un entero entre 1 y 5.")
+					return
 				config = sanitize_config(value)
 				_set_unready()
 		"start":
@@ -239,7 +253,8 @@ func _request_lobby(verb: String, value: Variant) -> void:
 				if reason.is_empty():
 					server_tick += 1
 					sim = Simulation.new()
-					sim.start(players, config)
+					var assigned: Dictionary = LobbyRules.draw(players, config)
+					sim.start(assigned, config)
 					private_revisions.clear()
 					last_phase = ""
 					print("ROUND_START mode=%s players=%d" % [config.mode, players.size()])
@@ -247,10 +262,13 @@ func _request_lobby(verb: String, value: Variant) -> void:
 					return
 				_server_notice.rpc_id(sender, reason)
 		"rematch":
-			if sender == room_owner:
+			if sender == room_owner and sim != null and str(sim.public_snapshot().phase) == "results":
 				sim = null
 				private_revisions.clear()
 				_set_unready()
+				_reset_waiting()
+			else:
+				return
 	_broadcast_lobby()
 
 func _menu_rate_ok(sender: int) -> bool:
@@ -270,20 +288,13 @@ func _set_unready() -> void:
 		players[id].ready = false
 
 func _start_reason() -> String:
-	var validator := Simulation.new()
-	var reason: String = validator.validate_roster(players)
-	if not reason.is_empty():
-		return reason
-	for id: int in players:
-		if not bool(players[id].ready):
-			return "Falta que todos pulsen Estoy listo."
-	return ""
+	return LobbyRules.validate(players, config, true)
 
 func _broadcast_lobby() -> void:
 	if players.is_empty():
 		return
 	var reason := _start_reason()
-	var data := {"code": room_code, "owner": room_owner, "players": players.duplicate(true), "config": config.duplicate(true), "can_start": reason.is_empty(), "start_reason": reason, "barrier_tick": server_tick}
+	var data := {"code": room_code, "owner": room_owner, "players": players.duplicate(true), "config": config.duplicate(true), "can_start": reason.is_empty(), "start_reason": reason, "barrier_tick": server_tick, "actors": waiting_actors.duplicate(true)}
 	for id: int in players:
 		if _peer_can_receive(id):
 			_receive_lobby.rpc_id(id, data)
@@ -316,6 +327,14 @@ func send_action(seq: int, verb: String) -> void:
 
 @rpc("any_peer", "call_remote", "unreliable_ordered", 1)
 func _request_movement(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool) -> void:
+	if is_server and sim == null:
+		var sender := multiplayer.get_remote_sender_id()
+		if not players.has(sender) or not move.is_finite() or not is_finite(yaw) or not is_finite(pitch):
+			return
+		if seq <= int(waiting_inputs.get(sender, {}).get("seq", -1)):
+			return
+		waiting_inputs[sender] = {"seq": seq, "move": Vector3(move.x, 0, move.z).limit_length(1.0), "yaw": wrapf(yaw, -PI, PI), "time": Time.get_ticks_msec()}
+		return
 	if is_server and sim != null:
 		var sender := multiplayer.get_remote_sender_id()
 		if players.has(sender):
@@ -334,14 +353,49 @@ func _physics_process(dt: float) -> void:
 		if connect_age > 10.0:
 			close_client()
 			notice.emit("El servidor no respondió en 10 segundos. Revisá que esté abierto y su dirección sea correcta.")
-	if not is_server or sim == null:
+	if not is_server:
 		return
-	sim.step(dt)
+	if sim != null:
+		sim.step(dt)
+	else:
+		_step_waiting(dt)
 	server_tick += 1
 	publish_accumulator += dt
 	if publish_accumulator >= 0.05:
 		publish_accumulator = 0.0
-		_publish(false)
+		if sim == null:
+			_publish_waiting()
+		else:
+			_publish(false)
+
+func _spawn_waiting(id: int) -> void:
+	var index := players.keys().find(id)
+	var position := Vector3(-2.0 + float(index % 4) * 1.4, 0, -2.0 + float(index / 4) * 1.35)
+	waiting_actors[id] = {"name": players[id].name, "role": "human", "p": position, "yaw": 0.0, "pitch": 0.0, "state": "human", "alive": true, "swing": 0.0, "bitten": false, "tool": "hands", "appearance": Cosmetics.appearance_for(players[id].cosmetics, "human")}
+
+func _reset_waiting() -> void:
+	waiting_actors.clear()
+	waiting_inputs.clear()
+	for id: int in players:
+		_spawn_waiting(id)
+
+func _step_waiting(dt: float) -> void:
+	for id: int in waiting_actors:
+		var intent: Dictionary = waiting_inputs.get(id, {})
+		if intent.is_empty() or Time.get_ticks_msec() - int(intent.time) > 400:
+			continue
+		var actor: Dictionary = waiting_actors[id]
+		actor.yaw = intent.yaw
+		actor.p = Map.move_body(actor.p, Vector3(intent.move).rotated(Vector3.UP, float(intent.yaw)) * Map.HUMAN_SPEED * dt, true)
+
+func _publish_waiting() -> void:
+	if players.is_empty():
+		return
+	var state := {"phase": "waiting", "tick": server_tick, "actors": waiting_actors.duplicate(true)}
+	var packet := var_to_bytes(state).compress(FileAccess.COMPRESSION_DEFLATE)
+	for id: int in players:
+		if _peer_can_receive(id):
+			_receive_snapshot.rpc_id(id, packet)
 
 func _publish(force_reliable: bool) -> void:
 	if sim == null:
@@ -389,7 +443,10 @@ func _accept_snapshot(data: Dictionary) -> void:
 		return
 	last_received_tick = tick
 	latest = data
-	snapshot_updated.emit(data)
+	if str(data.get("phase", "")) == "waiting":
+		waiting_updated.emit(data)
+	else:
+		snapshot_updated.emit(data)
 
 @rpc("authority", "call_remote", "unreliable_ordered", 2)
 func _receive_private(data: Dictionary) -> void:

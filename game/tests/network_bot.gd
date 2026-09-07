@@ -22,8 +22,26 @@ var initial_position := Vector3.INF
 var result_seen := false
 var rematch_requested := false
 var lobby_retry := 0.0
+var lobby_age := 0.0
+var lobby_origin := Vector3.INF
+var waiting_state: Dictionary = {}
+var authority_probe_sent := false
+const Cosmetics = preload("res://scripts/cosmetics.gd")
 
 func _ready() -> void:
+	network.local_cosmetics = Cosmetics.sanitize({"human":{"color": 3, "accessory": 1}, "mosquito":{"color": 4, "accessory": 2}})
+	report["roles_by_round"] = []
+	report["results"] = []
+	report["lobby_movement_seen"] = false
+	report["cosmetics_synced"] = false
+	network.waiting_updated.connect(func(data: Dictionary) -> void:
+		waiting_state = data
+		var me: Dictionary = data.get("actors", {}).get(local_id, {})
+		if not me.is_empty():
+			if lobby_origin == Vector3.INF:
+				lobby_origin = me.p
+			elif lobby_origin.distance_to(me.p) > 0.3:
+				report.lobby_movement_seen = true)
 	network.accepted.connect(func(id: int) -> void: local_id = id)
 	network.lobby_updated.connect(_lobby)
 	network.snapshot_updated.connect(_snapshot)
@@ -48,13 +66,23 @@ func _lobby(data: Dictionary) -> void:
 	roster = data
 	if started:
 		report["returned_to_lobby"] = true
-		if options.has("disconnect-test") or rematch_requested:
+		if options.has("disconnect-test") or rounds >= int(options.get("rounds", "1")):
 			_finish()
-		return
+			return
+		started = false
+		result_seen = false
+		start_sent = false
+		rematch_requested = false
+		input_seq = 0
+		action_seq = 0
+		lobby_age = 0.0
+		personal.clear()
+		initial_position = Vector3.INF
 	if options.has("create") and not configured:
 		configured = true
 		var config: Dictionary = data.config.duplicate(true)
 		config.mode = str(options.get("mode", "blood"))
+		config.human_count = int(options.get("humans", "1"))
 		config.round_seconds = 30
 		config.blood_goal = 5
 		config.task_goal = 1
@@ -70,15 +98,23 @@ func _lobby(data: Dictionary) -> void:
 			file.store_string(data.code)
 		return
 	var me: Dictionary = data.players.get(local_id, {})
-	var desired_role := str(options.get("role", "human" if options.has("create") else "mosquito"))
-	if str(me.get("role", "")) != desired_role:
-		network.lobby_action("role", desired_role)
-		ready_sent = false
+	if not authority_probe_sent and lobby_age > 0.4:
+		authority_probe_sent = true
+		network.lobby_action("role", "human")
+		if not options.has("create"):
+			var forbidden: Dictionary = data.config.duplicate(true)
+			forbidden.human_count = 5
+			network.lobby_action("config", forbidden)
+			network.lobby_action("start")
+	if str(me.get("role", "")) != "waiting":
+		report.errors.append("role assigned before round")
+	report["cosmetics_synced"] = me.get("cosmetics", {}) == network.local_cosmetics
+	if lobby_age < 2.0:
 		return
 	if not bool(me.get("ready", false)):
 		network.lobby_action("ready", true)
 		return
-	if options.has("create") and data.players.size() == int(options.get("players", "3")) and bool(data.can_start) and not start_sent:
+	if options.has("create") and data.players.size() == int(options.get("players", "2")) and bool(data.can_start) and not start_sent:
 		start_sent = true
 		network.lobby_action("start")
 
@@ -90,6 +126,26 @@ func _snapshot(data: Dictionary) -> void:
 			if data.actors[id].has(key):
 				report.privacy_ok = false
 	if str(data.get("phase", "")) == "playing":
+		if not started:
+			rounds += 1
+			input_seq = 0
+			action_seq = 0
+			var mine: Dictionary = data.get("actors", {}).get(local_id, {})
+			report.roles_by_round.append(mine.get("role", ""))
+			var humans := 0
+			for actor: Dictionary in data.get("actors", {}).values():
+				if actor.get("role", "") == "human":
+					humans += 1
+			if humans != int(data.config.human_count):
+				report.errors.append("incorrect human count")
+			if mine.get("appearance", {}) != Cosmetics.appearance_for(network.local_cosmetics, str(mine.get("role", ""))):
+				report.errors.append("round appearance mismatch")
+			if options.has("create"):
+				var forbidden: Dictionary = data.config.duplicate(true)
+				forbidden.human_count = 5
+				network.lobby_action("config", forbidden)
+				network.lobby_action("ready", false)
+				network.lobby_action("cosmetics", {})
 		started = true
 		var me: Dictionary = data.get("actors", {}).get(local_id, {})
 		if not me.is_empty():
@@ -102,16 +158,18 @@ func _snapshot(data: Dictionary) -> void:
 	elif str(data.get("phase", "")) == "results" and not result_seen:
 		result_seen = true
 		report.result = {"winner": data.get("winner", ""), "reason": data.get("reason", ""), "blood": data.get("blood", 0), "tasks_done": data.get("tasks_done", 0)}
-		if options.has("create") and options.has("rematch-test"):
-			rematch_requested = true
-			network.lobby_action("rematch")
+		report.results.append(report.result.duplicate(true))
+		if options.has("rematch-test") or rounds < int(options.get("rounds", "1")):
+			if options.has("create"):
+				rematch_requested = true
+				get_tree().create_timer(0.8).timeout.connect(func() -> void: network.lobby_action("rematch"))
 		else:
 			get_tree().create_timer(0.7).timeout.connect(_finish)
 
 func _private(data: Dictionary) -> void:
 	personal = data
 	report.private_packets += 1
-	var role := str(roster.get("players", {}).get(local_id, {}).get("role", ""))
+	var role := str(public_state.get("actors", {}).get(local_id, {}).get("role", ""))
 	if not data.get("assignment", {}).is_empty():
 		report.private_assignment_seen = true
 		if role != "mosquito":
@@ -125,6 +183,10 @@ func _process(dt: float) -> void:
 		_finish()
 		return
 	if not started or result_seen:
+		lobby_age += dt
+		if not started and not roster.is_empty():
+			input_seq += 1
+			network.send_input(input_seq, Vector3(0.0, 0, 0.5) if lobby_age < 1.5 else Vector3.ZERO, 0.0, 0.0, false)
 		lobby_retry += dt
 		if not started and not roster.is_empty() and lobby_retry > 0.75:
 			lobby_retry = 0.0

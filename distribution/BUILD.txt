@@ -1,5 +1,8 @@
-Dejame dormir 0.1.0
+Dejame dormir 0.2.0
 Godot 4.5.2.stable.official.6ce3de25a
-Windows x86_64 / ENet UDP27840 / protocolo1
-SHA256 EXE: FBECC23497C38BD646B4727A5F79E07241382ADEB43A0613AD18D0ED3DF199A2
-Exportado y verificado 2026-09-07
+Windows x86_64 / ENet UDP 27840 / protocolo 2
+SHA256 EXE: 8E9231CA792C9A2E7B972850EFB341BFD5BD923B671AD4B96C71AE0B7C8FEFB6
+Estado: exportado y verificado; evidencia y límites en PRUEBAS.md.
+Reglas 3242/0; sala/sorteo 321/0; UI 27/0; integración nativa 33/0.
+Tres modos, hasta 16 clientes ENet locales; Internet entre casas pendiente.
+Fecha: 2026-09-07. Artefactos 0.1.0 preservados.

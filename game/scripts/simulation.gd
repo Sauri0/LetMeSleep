@@ -4,6 +4,7 @@ extends RefCounted
 ## Authoritative, deterministic rules. This object never trusts client positions.
 ## Numbers below are reversible prototype hypotheses, not tested balance.
 const ArenaData = preload("res://scripts/arena.gd")
+const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const MAX_HUMANS := 5
 const MAX_MOSQUITOES := 12
 const MAX_PLAYERS := 16
@@ -12,7 +13,7 @@ const BITE_PREPARATION := 0.65
 const BLOOD_PER_SECOND := 1.0
 const INPUT_TIMEOUT := 0.40
 const DEFAULT_CONFIG := {
-	"mode": "blood", "round_seconds": 120.0, "blood_goal": 30.0,
+	"mode": "blood", "human_count": 1, "round_seconds": 120.0, "blood_goal": 30.0,
 	"rotation_seconds": 14.0, "respawn_seconds": 4.0, "mosquito_lives": 3,
 	"task_interval": 24.0, "task_deadline": 18.0, "task_work": 3.0,
 	"task_penalty": 2.0, "task_floor": 8.0, "task_goal": 0,
@@ -77,10 +78,11 @@ static func sanitize_config(requested: Dictionary) -> Dictionary:
 	var result: Dictionary = DEFAULT_CONFIG.duplicate(true)
 	if str(requested.get("mode", "blood")) in ["blood", "survival", "sleep"]:
 		result.mode = str(requested.get("mode", "blood"))
-	for key: String in ["round_seconds", "blood_goal", "rotation_seconds", "respawn_seconds", "mosquito_lives", "task_interval", "task_deadline", "task_work", "task_penalty", "task_floor", "task_goal"]:
+	for key: String in ["human_count", "round_seconds", "blood_goal", "rotation_seconds", "respawn_seconds", "mosquito_lives", "task_interval", "task_deadline", "task_work", "task_penalty", "task_floor", "task_goal"]:
 		var value: Variant = requested.get(key, result[key])
 		if (value is float or value is int) and is_finite(float(value)):
 			result[key] = float(value)
+	result.human_count = clampi(int(result.human_count), 1, MAX_HUMANS)
 	result.round_seconds = clampf(float(result.round_seconds), 30.0, 180.0)
 	result.blood_goal = clampf(float(result.blood_goal), 1.0, 1000.0)
 	result.rotation_seconds = clampf(float(result.rotation_seconds), 4.0, 40.0)
@@ -106,15 +108,15 @@ static func validate_roster(players: Dictionary) -> String:
 		elif role == "mosquito":
 			mosquitoes += 1
 		else:
-			return "Todos deben elegir humano o mosquito."
+			return "El sorteo debe asignar humano o mosquito a cada jugador."
 	if humans < 1:
 		return "Hace falta al menos un humano."
 	if humans > MAX_HUMANS or mosquitoes > MAX_MOSQUITOES:
 		return "Este prototipo admite hasta 5 humanos y 12 mosquitos."
 	if humans + mosquitoes > MAX_PLAYERS:
 		return "La sala admite hasta 16 jugadores en total."
-	if mosquitoes < humans * 2:
-		return "Hacen falta al menos 2 mosquitos por humano al comenzar."
+	if mosquitoes < 1:
+		return "Hace falta al menos un mosquito."
 	var capacity: int = humans * (16 if humans == 1 else BODY_ZONES.size())
 	if mosquitoes + 2 > capacity:
 		return "No quedan suficientes zonas distintas y alternativas libres."
@@ -151,6 +153,7 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 			_mosquito_ids.append(player_id)
 		actors[player_id] = {
 			"name": str(player.get("name", "Jugador")).substr(0, 24), "role": player.role,
+			"appearance": CosmeticsData.appearance_for(player.get("cosmetics", {}), str(player.role)).duplicate(true),
 			"p": ArenaData.human_spawn(role_index) if human else ArenaData.mosquito_spawn(role_index),
 			"yaw": 0.0, "pitch": 0.0, "state": "human" if human else "flying",
 			"alive": true, "swing": 0.0, "bitten": false, "tool": "hands",
@@ -380,13 +383,16 @@ func _assign(id: int) -> void:
 	var best_score := 1000000
 	var capacity: int = 16 if _human_ids.size() == 1 else BODY_ZONES.size()
 	for human_id: int in _human_ids:
+		# With the old minimum ratio removed, some humans can have no attackers.
+		# Rotate equal-pressure ties so e.g. 5v1 does not target the first peer forever.
+		var human_priority: int = posmod(_human_ids.find(human_id) - _assignment_serial, _human_ids.size())
 		for zone_index: int in range(capacity):
 			var candidate: Dictionary = {"human": human_id, "zone": zone_index}
 			var key: String = _zone_key(candidate)
 			if occupied.has(key) or key == old_key or key == str(actor._forbidden):
 				continue
 			var zone: Dictionary = BODY_ZONES[zone_index]
-			var score: int = int(pressure[human_id]) * 100 + posmod(zone_index - _assignment_serial * 5, capacity)
+			var score: int = int(pressure[human_id]) * 1000 + human_priority * 100 + posmod(zone_index - _assignment_serial * 5, capacity)
 			if bool(zone.rear) != preferred_rear:
 				score += 30
 			if score < best_score:
@@ -652,6 +658,7 @@ func public_snapshot() -> Dictionary:
 		# Explicit allowlist: never serialize hidden target/zone reservations or tasks.
 		public_actors[id] = {
 			"name": actor.name, "role": actor.role, "p": actor.p, "yaw": actor.yaw,
+			"appearance": Dictionary(actor.appearance).duplicate(true),
 			"pitch": actor.pitch, "state": actor.state, "alive": actor.alive,
 			"swing": actor.swing, "bitten": actor.bitten, "tool": actor.tool, "lives": actor.lives,
 		}

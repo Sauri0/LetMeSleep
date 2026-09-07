@@ -21,6 +21,14 @@ var coral: StandardMaterial3D
 var ink: StandardMaterial3D
 var gold: StandardMaterial3D
 var audio_fx: Node3D
+var local_role: String = "human"
+var customization_root: Node3D
+var customization_actor: ActorView
+var customization_role: String = ""
+var customization_appearance: Dictionary = {}
+var saved_menu_transform: Transform3D
+var saved_menu_fov: float = 74.0
+var customization_age: float = 0.0
 
 func build() -> void:
 	if built:
@@ -50,9 +58,13 @@ func build() -> void:
 	add_child(menu_camera)
 	menu_camera.look_at(Vector3(-1.0, 0.85, -1.25))
 	menu_camera.current = true
+	saved_menu_transform = menu_camera.transform
 
 func _process(dt: float) -> void:
 	clock_time += dt
+	if is_instance_valid(customization_actor):
+		customization_age += dt
+		_update_customization(dt)
 	if is_instance_valid(fan_blades):
 		fan_blades.rotation.z += dt * 3.5
 	for key: Variant in pickup_views:
@@ -71,25 +83,98 @@ func sync_actors(data: Dictionary, local_id: int, dt: float) -> void:
 			actors.erase(key)
 	for key: Variant in data:
 		var actor_data: Dictionary = data[key]
+		var desired_role: String = str(actor_data.get("role", "mosquito"))
+		if actors.has(key) and (actors[key] as ActorView).actor_role != desired_role:
+			(actors[key] as ActorView).queue_free()
+			actors.erase(key)
 		if not actors.has(key):
 			var fresh: ActorView = ActorModel.new()
 			add_child(fresh)
 			fresh.build(str(actor_data.get("role", "mosquito")), str(actor_data.get("name", "Amigo")), int(key))
-			fresh.set_local(int(key) == local_id)
+			fresh.set_local(int(key) == local_id and local_role != "lobby")
 			actors[key] = fresh
 		var view: ActorView = actors[key]
 		view.update_state(actor_data, dt)
+		if is_instance_valid(customization_actor):
+			view.visible = false
 	if is_instance_valid(audio_fx):
 		audio_fx.sync(data, actors, local_id)
 
 func get_actor(id: int) -> Node3D:
 	return actors.get(id, null) as Node3D
 
-func set_local_role(id: int, _role: String) -> void:
+func set_local_role(id: int, role: String) -> void:
 	local_actor_id = id
+	local_role = role
 	for key: Variant in actors:
 		var view: ActorView = actors[key]
-		view.set_local(int(key) == id)
+		view.set_local(int(key) == id and role != "lobby")
+
+func show_customization(role: String, appearance: Dictionary) -> void:
+	if role != "human" and role != "mosquito":
+		return
+	if not built:
+		build()
+	if not is_instance_valid(customization_root):
+		saved_menu_transform = menu_camera.transform
+		saved_menu_fov = menu_camera.fov
+		customization_root = Node3D.new()
+		customization_root.name = "CustomizationPreview"
+		customization_root.position = Vector3(-1.2, 0, 1.1)
+		add_child(customization_root)
+		_disc(customization_root, Vector3(0, 0.026, 0), 0.72, 0.05, teal)
+		_disc(customization_root, Vector3(0, 0.054, 0), 0.64, 0.010, cream)
+		var lamp := OmniLight3D.new()
+		lamp.position = Vector3(1.0, 1.8, -1.3)
+		lamp.light_color = Color("fff0db")
+		lamp.light_energy = 0.8
+		lamp.omni_range = 4.5
+		lamp.shadow_enabled = false
+		customization_root.add_child(lamp)
+	if not is_instance_valid(customization_actor) or customization_role != role:
+		if is_instance_valid(customization_actor):
+			customization_actor.get_parent().remove_child(customization_actor)
+			customization_actor.queue_free()
+		customization_actor = ActorModel.new()
+		customization_root.add_child(customization_actor)
+		customization_actor.build(role, "", 0)
+		customization_actor.preview_only = true
+		customization_actor.set_local(false)
+		customization_actor.name_label.visible = false
+		customization_actor.scale = Vector3.ONE * (3.5 if role == "mosquito" else 1.0)
+		customization_age = 0.0
+	customization_role = role
+	customization_appearance = appearance.duplicate(true)
+	_update_customization(1.0)
+	for value: Variant in actors.values():
+		(value as Node3D).visible = false
+	marker.visible = false
+	menu_camera.fov = 44.0
+	menu_camera.global_position = customization_root.global_position + Vector3(1.3, 1.45, -3.1)
+	# Offset the focus so the actor occupies the left/center beside the UI panel.
+	menu_camera.look_at(customization_root.global_position + Vector3(-0.82, 0.98, 0.15))
+	menu_camera.make_current()
+
+func _update_customization(dt: float) -> void:
+	if not is_instance_valid(customization_actor):
+		return
+	var position: Vector3 = customization_root.global_position + Vector3(0, 1.05 if customization_role == "mosquito" else 0.06, 0)
+	var yaw: float = (-0.72 if customization_role == "mosquito" else -0.22) + sin(customization_age * 0.6) * 0.26
+	customization_actor.update_state({"p":position, "yaw":yaw, "state":"flying" if customization_role == "mosquito" else "human", "alive":true, "appearance":customization_appearance}, dt)
+
+func end_customization() -> void:
+	if not is_instance_valid(customization_root):
+		return
+	customization_root.queue_free()
+	customization_root = null
+	customization_actor = null
+	customization_role = ""
+	customization_appearance = {}
+	for key: Variant in actors:
+		(actors[key] as Node3D).visible = bool(Dictionary(actor_state.get(key, {})).get("alive", true))
+	menu_camera.transform = saved_menu_transform
+	menu_camera.fov = saved_menu_fov
+	menu_camera.make_current()
 
 func sync_pickups(pickups: Dictionary) -> void:
 	for key: Variant in pickup_views.keys():

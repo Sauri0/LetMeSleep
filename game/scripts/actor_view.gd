@@ -1,6 +1,8 @@
 class_name ActorView
 extends Node3D
 
+const CosmeticsData = preload("res://scripts/cosmetics.gd")
+
 # Original procedural characters. All transforms are cosmetic; the server owns play.
 var actor_role: String = ""
 var local_view: bool = false
@@ -18,9 +20,17 @@ var body_shapes: Array[StaticBody3D] = []
 var clock_time: float = 0.0
 var last_position: Vector3 = Vector3.ZERO
 var initialized: bool = false
+var primary_tint: StandardMaterial3D
+var secondary_tint: StandardMaterial3D
+var accessory_root: Node3D
+var appearance_signature: String = ""
+var applied_appearance: Dictionary = {}
+var fallback_color: int = 0
+var preview_only: bool = false
 
 func build(role: String, display_name: String, tint_index: int = 0) -> void:
 	actor_role = role
+	fallback_color = posmod(tint_index, CosmeticsData.PALETTE.size())
 	model = Node3D.new()
 	add_child(model)
 	if role == "human":
@@ -38,6 +48,7 @@ func build(role: String, display_name: String, tint_index: int = 0) -> void:
 	name_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	name_label.no_depth_test = false
 	add_child(name_label)
+	apply_appearance({"color": fallback_color, "accessory": 0})
 
 func set_local(value: bool) -> void:
 	local_view = value
@@ -59,6 +70,7 @@ func body_collision_rids() -> Array[RID]:
 
 func update_state(data: Dictionary, dt: float) -> void:
 	clock_time += dt
+	apply_appearance(data.get("appearance", {"color": fallback_color, "accessory": 0}))
 	var target: Vector3 = data.get("p", Vector3.ZERO)
 	if not initialized or global_position.distance_to(target) > 2.2:
 		global_position = target
@@ -68,7 +80,7 @@ func update_state(data: Dictionary, dt: float) -> void:
 	rotation.y = lerp_angle(rotation.y, float(data.get("yaw", 0.0)), 1.0 - exp(-20.0 * dt))
 	visible = bool(data.get("alive", true))
 	for body: StaticBody3D in body_shapes:
-		body.collision_layer = 2 if visible else 0
+		body.collision_layer = 2 if visible and not preview_only else 0
 	var speed: float = global_position.distance_to(last_position) / maxf(dt, 0.001)
 	last_position = global_position
 	if actor_role == "human":
@@ -99,9 +111,11 @@ func _build_human(tint_index: int) -> void:
 	var skin: StandardMaterial3D = material(Color("e8b186"))
 	var dark: StandardMaterial3D = material(Color("27333f"))
 	var white: StandardMaterial3D = material(Color("fff6dd"))
-	var palette: Array[Color] = [Color("e78b73"), Color("72b9ac"), Color("e6bb63"), Color("9096d0")]
-	var shirt: StandardMaterial3D = material(palette[tint_index % palette.size()])
-	var trousers: StandardMaterial3D = material(palette[tint_index % palette.size()].darkened(0.2))
+	var tint: Color = CosmeticsData.PALETTE[posmod(tint_index, CosmeticsData.PALETTE.size())]
+	var shirt: StandardMaterial3D = material(tint)
+	var trousers: StandardMaterial3D = material(tint.darkened(0.2))
+	primary_tint = shirt
+	secondary_tint = trousers
 	_capsule(model, Vector3(0, 1.09, 0), 0.265, 0.73, shirt, Vector3(1, 1, 0.77))
 	_sphere(model, Vector3(0, 0.73, 0.025), Vector3(0.26, 0.17, 0.20), trousers)
 	# Pajama buttons, rounded collar, two trouser legs and soft slippers.
@@ -148,6 +162,8 @@ func _human_arm(side: float, shirt: StandardMaterial3D, skin: StandardMaterial3D
 func _build_mosquito() -> void:
 	var body: StandardMaterial3D = material(Color("294651"))
 	var teal: StandardMaterial3D = material(Color("5ca99b"))
+	primary_tint = teal
+	secondary_tint = body
 	var cream: StandardMaterial3D = material(Color("ffeab4"))
 	var eye: StandardMaterial3D = material(Color("f3ac4f"))
 	var pupil: StandardMaterial3D = material(Color("192c38"))
@@ -179,6 +195,65 @@ func _build_mosquito() -> void:
 	left_wing = _wing(-1.0, wing_mat)
 	right_wing = _wing(1.0, wing_mat)
 	_add_body_sphere(Vector3.ZERO, 0.10)
+
+func apply_appearance(raw: Variant) -> void:
+	# Catalog values are bounded here as well as on the server. The rendering
+	# path never allocates replacement materials or accessories on unchanged frames.
+	var safe: Dictionary = CosmeticsData.appearance_for({actor_role: raw}, actor_role)
+	var signature: String = "%d:%d" % [int(safe.color), int(safe.accessory)]
+	if signature == appearance_signature:
+		return
+	appearance_signature = signature
+	applied_appearance = safe
+	var tint: Color = CosmeticsData.PALETTE[int(safe.color)]
+	primary_tint.albedo_color = tint
+	secondary_tint.albedo_color = tint.darkened(0.20 if actor_role == "human" else 0.52)
+	if is_instance_valid(accessory_root):
+		accessory_root.get_parent().remove_child(accessory_root)
+		accessory_root.queue_free()
+	accessory_root = Node3D.new()
+	accessory_root.name = "CosmeticAccessory"
+	var attachment: Node3D = head if actor_role == "human" else model
+	attachment.add_child(accessory_root)
+	var accessory: int = int(safe.accessory)
+	if accessory == 0:
+		return
+	var frame: StandardMaterial3D = material(Color("243b4a"))
+	var cream: StandardMaterial3D = material(Color("fff0c9"))
+	if actor_role == "human":
+		if accessory == 1:
+			var cap_mat: StandardMaterial3D = material(tint.darkened(0.32))
+			_sphere(accessory_root, Vector3(0, 0.22, 0.025), Vector3(0.256, 0.137, 0.244), cap_mat)
+			_sphere(accessory_root, Vector3(0, 0.17, -0.235), Vector3(0.255, 0.022, 0.19), cap_mat)
+			_sphere(accessory_root, Vector3(0, 0.358, 0.025), Vector3(0.029, 0.021, 0.029), cream)
+			_sphere(accessory_root, Vector3(0, 0.235, -0.218), Vector3(0.047, 0.040, 0.013), cream)
+		else:
+			for side: float in [-1.0, 1.0]:
+				_accessory_ring(Vector3(side * 0.087, 0.033, -0.247), 0.058, 0.073, frame)
+				_segment(accessory_root, Vector3(side * 0.153, 0.038, -0.245), Vector3(side * 0.226, 0.040, -0.015), 0.011, frame)
+			_segment(accessory_root, Vector3(-0.021, 0.043, -0.249), Vector3(0.021, 0.043, -0.249), 0.011, frame)
+	else:
+		if accessory == 1:
+			var ribbon: StandardMaterial3D = material(Color("e88385"))
+			for side: float in [-1.0, 1.0]:
+				var bow: MeshInstance3D = _sphere(accessory_root, Vector3(side * 0.045, 0.095, -0.058), Vector3(0.052, 0.029, 0.023), ribbon)
+				bow.rotation.z = side * 0.32
+			_sphere(accessory_root, Vector3(0, 0.095, -0.075), Vector3(0.022, 0.023, 0.018), cream)
+		else:
+			var brass: StandardMaterial3D = material(Color("d8b763"))
+			for side: float in [-1.0, 1.0]:
+				_accessory_ring(Vector3(side * 0.047, 0.019, -0.141), 0.044, 0.055, brass)
+				_segment(accessory_root, Vector3(side * 0.098, 0.021, -0.133), Vector3(side * 0.078, 0.026, -0.013), 0.010, frame)
+			_segment(accessory_root, Vector3(-0.01, 0.018, -0.143), Vector3(0.01, 0.018, -0.143), 0.008, brass)
+
+func _accessory_ring(at: Vector3, inner: float, outer: float, mat: Material) -> void:
+	var geometry := TorusMesh.new()
+	geometry.inner_radius = inner
+	geometry.outer_radius = outer
+	geometry.rings = 20
+	geometry.ring_segments = 6
+	var result: MeshInstance3D = mesh(accessory_root, geometry, at, mat)
+	result.rotation.x = PI / 2.0
 
 func _wing(side: float, mat: StandardMaterial3D) -> Node3D:
 	var pivot := Node3D.new()

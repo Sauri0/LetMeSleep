@@ -1,8 +1,8 @@
 extends SceneTree
 
 func _initialize() -> void:
-	var destination := "res://../outputs/Dejame-dormir-0.1.0-Windows/LICENCIAS-GODOT.txt"
-	var text := "Dejame dormir 0.1.0 — Godot 4.5.2 estable\n\n"
+	var destination := "res://../outputs/Dejame-dormir-0.2.0-Windows/LICENCIAS-GODOT.txt"
+	var text := "Dejame dormir 0.2.0 — Godot 4.5.2 estable\n\n"
 	text += "Arte, sonidos y código de juego originales del prototipo.\nNo se han incorporado recursos de otros juegos.\n\nMOTOR GODOT\n\n"
 	text += Engine.get_license_text() + "\n\nCOMPONENTES INCLUIDOS POR GODOT\n\n"
 	for info: Dictionary in Engine.get_copyright_info():
