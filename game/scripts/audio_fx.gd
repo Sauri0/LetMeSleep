@@ -7,6 +7,14 @@ const EFFECT_VOICES: int = 12
 const OCCLUSION_INTERVAL: float = 0.12
 static var streams: Dictionary = {}
 
+func _exit_tree() -> void:
+	_stop_all()
+	for value: Variant in buzzes.values():
+		(value as AudioStreamPlayer3D).stream = null
+	for voice: AudioStreamPlayer3D in effect_pool:
+		voice.stream = null
+	streams.clear()
+
 var buzzes: Dictionary = {}
 var previous: Dictionary = {}
 var effect_pool: Array[AudioStreamPlayer3D] = []

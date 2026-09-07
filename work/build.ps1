@@ -5,11 +5,18 @@ $godotExe = Join-Path $PSScriptRoot 'tools/godot-4.5.2/Godot_v4.5.2-stable_win64
 $gamePath = Join-Path $projectRoot 'game'
 $outDir = Join-Path $projectRoot 'outputs/Dejame-dormir-0.1.0-Windows'
 [System.IO.Directory]::CreateDirectory($outDir) | Out-Null
+if (Test-Path -LiteralPath (Join-Path $projectRoot 'distribution')) {
+    Get-ChildItem -LiteralPath (Join-Path $projectRoot 'distribution') -File | Copy-Item -Destination $outDir
+}
 & $godotExe --headless --path $gamePath --editor --import --quit
 if ($LASTEXITCODE -ne 0) { throw 'Godot import failed' }
 if (-not $SkipTests) {
     & $godotExe --headless --path $gamePath --script res://tests/rules_test.gd
     if ($LASTEXITCODE -ne 0) { throw 'Rules tests failed' }
+    & $godotExe --headless --path $gamePath --script res://tests/visual_checks.gd
+    if ($LASTEXITCODE -ne 0) { throw 'Visual geometry tests failed' }
+    & $godotExe --headless --path $gamePath --script res://tests/audio_checks.gd
+    if ($LASTEXITCODE -ne 0) { throw 'Audio tests failed' }
 }
 & $godotExe --headless --path $gamePath --export-release 'Windows Desktop' (Join-Path $outDir 'Dejame-dormir.exe')
 if ($LASTEXITCODE -ne 0) { throw 'Windows export failed' }

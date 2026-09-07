@@ -57,6 +57,15 @@ try {
     $reports = @(Get-ChildItem -LiteralPath $runDir -Filter '*.json' | ForEach-Object { Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json })
     $errors = @(Get-ChildItem -LiteralPath $runDir -Filter '*.stderr.log' | Where-Object { $_.Length -gt 0 } | ForEach-Object { (Get-Content -LiteralPath $_.FullName -TotalCount 16) -join "`n" })
     [ordered]@{ run = $runDir; expectedClients = $(if ($Incompatible) { 1 } else { $Humans + $Mosquitoes }); reports = $reports; stderr = $errors } | ConvertTo-Json -Depth 12
+    $expectedClients = if ($Incompatible) { 1 } else { $Humans + $Mosquitoes }
+    $failedReports = @($reports | Where-Object { $_.errors.Count -gt 0 -or -not $_.privacy_ok })
+    $testFailed = $reports.Count -ne $expectedClients -or $failedReports.Count -gt 0 -or $errors.Count -gt 0
+    if (-not $Incompatible -and -not $DisconnectTest) {
+        $winners = @($reports.result.winner | Sort-Object -Unique)
+        $expectedWinner = if ($Mode -eq 'sleep') { 'human' } else { 'mosquito' }
+        $testFailed = $testFailed -or $winners.Count -ne 1 -or $winners[0] -ne $expectedWinner
+    }
 } finally {
     foreach ($proc in $processes) { if (-not $proc.HasExited) { Stop-Process -Id $proc.Id -Force } }
 }
+if ($testFailed) { exit 1 }

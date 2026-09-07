@@ -175,7 +175,8 @@ func show_assignment(data: Dictionary, camera: Camera3D, mosquito_position: Vect
 	var up: Vector3 = Vector3.UP if absf(normal.dot(Vector3.UP)) < 0.95 else Vector3.FORWARD
 	marker.look_at(surface + normal, up)
 	marker.scale = Vector3.ONE
-	marker_label.text = str(data.get("label", "PICAR"))
+	# The HUD names the zone; keep the body mark free of overlapping name labels.
+	marker_label.text = ""
 	marker.visible = true
 
 func _occluded(from: Vector3, to: Vector3, exclude: Array[RID]) -> bool:

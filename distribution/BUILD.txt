@@ -1,0 +1,5 @@
+Dejame dormir 0.1.0
+Godot 4.5.2.stable.official.6ce3de25a
+Windows x86_64 / ENet UDP27840 / protocolo1
+SHA256 EXE: FBECC23497C38BD646B4727A5F79E07241382ADEB43A0613AD18D0ED3DF199A2
+Exportado y verificado 2026-09-07

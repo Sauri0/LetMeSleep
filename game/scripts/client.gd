@@ -205,6 +205,11 @@ func _preview() -> void:
 	var roster := {1:{"name":"Luna", "role":"human", "ready":true}, 2:{"name":"Zeta", "role":"mosquito", "ready":true}, 3:{"name":"Mora", "role":"mosquito", "ready":true}}
 	simulation.start(roster, load("res://scripts/simulation.gd").DEFAULT_CONFIG)
 	local_id = 2 if str(options.get("visual-preview", "")) == "mosquito" else 1
+	if local_id == 2:
+		var preview_target: Dictionary = simulation.private_for(2).assignment
+		simulation.actors[2].p = preview_target.p + preview_target.normal * 1.1 + Vector3(0.32, -0.20, 0)
+		simulation.actors[2].yaw = PI
+		simulation.actors[3].p = Vector3(0.7, 1.4, -0.8)
 	_snapshot(simulation.public_snapshot())
 	personal = simulation.private_for(local_id)
 	ui.show_game(state, personal, local_id)
@@ -223,4 +228,8 @@ func _capture() -> void:
 	var path := str(options.screenshot)
 	var result := get_viewport().get_texture().get_image().save_png(path)
 	print("SCREENSHOT %s code=%d" % [path, result])
+	playing = false
+	world.clear_actors()
+	await get_tree().process_frame
+	await get_tree().process_frame
 	get_tree().quit()

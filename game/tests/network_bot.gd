@@ -21,6 +21,7 @@ var report: Dictionary = {"snapshots":0, "private_packets":0, "private_assignmen
 var initial_position := Vector3.INF
 var result_seen := false
 var rematch_requested := false
+var lobby_retry := 0.0
 
 func _ready() -> void:
 	network.accepted.connect(func(id: int) -> void: local_id = id)
@@ -124,6 +125,11 @@ func _process(dt: float) -> void:
 		_finish()
 		return
 	if not started or result_seen:
+		lobby_retry += dt
+		if not started and not roster.is_empty() and lobby_retry > 0.75:
+			lobby_retry = 0.0
+			start_sent = false
+			_lobby(roster)
 		return
 	if options.has("disconnect-after") and elapsed > float(options["disconnect-after"]):
 		report["intentional_disconnect"] = true

@@ -220,10 +220,14 @@ func _request_lobby(verb: String, value: Variant) -> void:
 	match verb:
 		"role":
 			if value is String and value in ["human", "mosquito"]:
+				if str(players[sender].role) == value:
+					return
 				players[sender].role = value
 				_set_unready()
 		"ready":
 			if value is bool:
+				if bool(players[sender].ready) == value:
+					return
 				players[sender].ready = value
 		"config":
 			if sender == room_owner and value is Dictionary:
