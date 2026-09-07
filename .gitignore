@@ -3,3 +3,9 @@ work/tools/
 work/*.log
 outputs/
 *.tmp
+work/eos-spike/
+work/eos-config.local.cfg
+*.local.cfg
+.env
+.env.*
+!.env.example

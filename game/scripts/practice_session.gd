@@ -63,9 +63,9 @@ func send_input(seq: int, move: Vector3, yaw: float, pitch: float, interact: boo
 	if active and sim != null:
 		sim.submit_input(1,seq,move,yaw,pitch,interact,sprint,crouch,jump)
 
-func send_action(seq: int, verb: String) -> void:
+func send_action(seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: float = NAN) -> void:
 	if active and sim != null:
-		sim.action(1,seq,verb)
+		sim.action(1,seq,verb,aim_yaw,aim_pitch)
 
 func advance(dt: float) -> void:
 	if not active or sim == null or sim.phase != "playing":
@@ -77,7 +77,7 @@ func advance(dt: float) -> void:
 		sim.submit_input(id,input_sequences[id],intent.move,intent.yaw,intent.pitch,intent.interact,intent.sprint,intent.crouch,intent.jump)
 		if not str(intent.action).is_empty():
 			action_sequences[id] += 1
-			sim.action(id,action_sequences[id],str(intent.action))
+			sim.action(id,action_sequences[id],str(intent.action),intent.yaw,intent.pitch)
 	sim.step(dt)
 	publication_age += dt
 	if publication_age >= 1.0/30.0 or sim.phase == "results":

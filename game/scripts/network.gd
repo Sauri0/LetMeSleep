@@ -7,13 +7,15 @@ signal notice(message: String)
 signal accepted(peer_id: int)
 signal disconnected
 signal waiting_updated(data: Dictionary)
+signal connection_state_changed(data: Dictionary)
 
 const Simulation = preload("res://scripts/simulation.gd")
 const LobbyRules = preload("res://scripts/lobby_rules.gd")
 const Cosmetics = preload("res://scripts/cosmetics.gd")
 const Map = preload("res://scripts/arena.gd")
-const VERSION := "0.4.0"
-const PROTOCOL := 4
+const InvitationCodec = preload("res://scripts/invitation.gd")
+const VERSION := "0.5.0"
+const PROTOCOL := 5
 const DEFAULT_PORT := 27840
 const MAX_PLAYERS := 16
 var is_server := false
@@ -40,6 +42,15 @@ var connecting := false
 var local_cosmetics: Dictionary = {}
 var waiting_actors: Dictionary = {}
 var waiting_inputs: Dictionary = {}
+var connection_state: Dictionary = {}
+var _attempt_id := 0
+var _connection_phase := "idle"
+var _last_request: Dictionary = {}
+var _resolver_id := -1
+var _had_session := false
+var _terminal_failure := false
+const TRANSPORT_TIMEOUT := 15.0
+const HANDSHAKE_TIMEOUT := 8.0
 
 func _ready() -> void:
 	config = Simulation.DEFAULT_CONFIG.duplicate(true)
@@ -50,6 +61,8 @@ func _ready() -> void:
 	multiplayer.peer_connected.connect(_peer_connected)
 
 func host(port: int) -> Error:
+	if port < 1024 or port > 65535:
+		return ERR_INVALID_PARAMETER
 	var peer := ENetMultiplayerPeer.new()
 	var error := peer.create_server(port, 32, 3)
 	if error != OK:
@@ -63,40 +76,100 @@ func host(port: int) -> Error:
 
 func connect_room(address: String, port: int, player_name: String, code: String, create: bool) -> void:
 	close_client()
+	_attempt_id += 1
+	_terminal_failure = false
+	address = address.strip_edges()
+	if address != str(_last_request.get("address", "")) or port != int(_last_request.get("port", 0)):
+		token = ""
+	_last_request = {"address":address,"port":port,"name":player_name,"code":code,"create":create}
 	pending_join = {"name": player_name.strip_edges().left(20), "code": code.strip_edges().to_upper(), "create": create}
 	if pending_join.name.is_empty():
 		pending_join.name = "Amigo"
+	if port < 1024 or port > 65535 or address.is_empty() or (address != "localhost" and not address.is_valid_ip_address() and not InvitationCodec.validate_host(address).is_empty()):
+		_fail_connection("invalid_endpoint", "Revisá la dirección y el puerto UDP (1024–65535).")
+		return
+	if not create and not InvitationCodec._room_ok(str(pending_join.code)):
+		_fail_connection("wrong_room", "El código de sala debe tener seis letras o números.")
+		return
+	connecting = true
+	if address.is_valid_ip_address():
+		_open_transport(address)
+	else:
+		_resolver_id = IP.resolve_hostname_queue_item(address, IP.TYPE_ANY)
+		if _resolver_id == IP.RESOLVER_INVALID_ID:
+			_fail_connection("dns_failed", "No se pudo resolver el nombre del servidor.")
+			return
+		_set_connection_state("resolving", "", "Buscando el servidor…")
+
+func _open_transport(resolved: String) -> void:
 	var peer := ENetMultiplayerPeer.new()
-	var error := peer.create_client(address.strip_edges(), port, 3)
+	var error := peer.create_client(resolved, int(_last_request.port), 3)
 	if error != OK:
-		notice.emit("No se pudo conectar. Revisá dirección y puerto UDP.")
+		_fail_connection("client_open_failed", "No se pudo abrir la conexión UDP: " + error_string(error))
 		return
 	multiplayer.multiplayer_peer = peer
 	connecting = true
+	_set_connection_state("connecting_transport", "", "Esperando respuesta UDP de %s:%d…" % [_last_request.address, _last_request.port])
+
+func _set_connection_state(phase: String, code: String = "", message: String = "") -> void:
+	_connection_phase = phase
 	connect_age = 0.0
-	notice.emit("Conectando con %s:%d…" % [address, port])
+	connection_state = {"attempt":_attempt_id,"phase":phase,"code":code,"message":message,"address":str(_last_request.get("address","")),"port":int(_last_request.get("port",DEFAULT_PORT)),"elapsed":0.0,"can_retry":phase == "failed" and not _last_request.is_empty(),"can_cancel":phase in ["resolving","connecting_transport","joining_room"],"version":VERSION,"protocol":PROTOCOL}
+	connection_state_changed.emit(connection_state.duplicate(true))
+	if not message.is_empty():
+		notice.emit(message)
+
+func _fail_connection(code: String, message: String) -> void:
+	_terminal_failure = true
+	close_client()
+	_set_connection_state("failed", code, message)
+
+func cancel_connect() -> void:
+	_attempt_id += 1
+	_terminal_failure = true
+	close_client()
+	_set_connection_state("cancelled", "cancelled", "Conexión cancelada.")
+
+func retry_connect() -> void:
+	if connecting or _last_request.is_empty() or _had_session:
+		return
+	var request := _last_request.duplicate(true)
+	connect_room(str(request.address), int(request.port), str(request.name), str(request.code), bool(request.create))
 
 func close_client() -> void:
+	connecting = false
+	_had_session = false
+	_terminal_failure = true
+	if _resolver_id != -1:
+		IP.erase_resolve_item(_resolver_id)
+		_resolver_id = -1
 	if not is_server and multiplayer.multiplayer_peer != null:
 		multiplayer.multiplayer_peer.close()
 		multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
+		room_owner = 0
+		room_code = ""
 	connecting = false
 	latest.clear()
 	private_latest.clear()
 	last_received_tick = -1
 
 func _connected() -> void:
+	if not connecting or _connection_phase != "connecting_transport":
+		return
+	_set_connection_state("joining_room", "", "El servidor respondió. Verificando versión y sala…")
 	_request_join.rpc_id(1, VERSION, PROTOCOL, str(pending_join.get("name", "Amigo")), str(pending_join.get("code", "")), bool(pending_join.get("create", false)), token)
 
 func _failed() -> void:
-	connecting = false
-	notice.emit("No se pudo llegar al servidor. Abrí Iniciar servidor y revisá dirección / UDP 27840.")
-	disconnected.emit()
+	if connecting:
+		_fail_connection("transport_failed", "No llegó respuesta UDP de %s:%d. Revisá el servidor y la ruta de conexión." % [_last_request.get("address",""),_last_request.get("port",DEFAULT_PORT)])
 
 func _server_lost() -> void:
-	connecting = false
-	notice.emit("Se perdió el servidor. La ronda terminó sin ganador. Podés volver a conectarte.")
-	disconnected.emit()
+	if _terminal_failure:
+		return
+	var accepted_session := _had_session
+	_fail_connection("server_lost" if accepted_session else "handshake_lost", "Se perdió la conexión con el servidor." if accepted_session else "Se perdió la conexión antes de aceptar la sala.")
+	if accepted_session:
+		disconnected.emit()
 
 func _peer_connected(id: int) -> void:
 	if is_server:
@@ -116,6 +189,9 @@ func _peer_left(id: int) -> void:
 	private_revisions.erase(id)
 	if not players.has(id):
 		return
+	if id == room_owner:
+		_close_room("El anfitrión cerró la sala.")
+		return
 	var departed_name: String = str(players[id].name)
 	if peer_tokens.has(id):
 		tokens[peer_tokens[id]] = {"name": players[id].name, "role": players[id].role}
@@ -134,13 +210,43 @@ func _peer_left(id: int) -> void:
 		private_revisions.clear()
 		_set_unready()
 		_reset_waiting()
-	if room_owner == id:
-		room_owner = int(players.keys()[0]) if not players.is_empty() else 0
 	if players.is_empty():
 		room_code = ""
 		config = Simulation.DEFAULT_CONFIG.duplicate(true)
 		tokens.clear()
 	_broadcast_lobby()
+
+func request_close_room() -> void:
+	if _client_connected() and multiplayer.get_unique_id() == room_owner:
+		_request_lobby.rpc_id(1,"close_room",null)
+
+func _close_room(message: String) -> void:
+	var recipients := players.keys()
+	for id: int in recipients:
+		if _peer_can_receive(id):
+			_server_notice.rpc_id(id,"@room_closed:" + message)
+	players.clear()
+	waiting_actors.clear()
+	waiting_inputs.clear()
+	private_revisions.clear()
+	peer_tokens.clear()
+	tokens.clear()
+	room_owner = 0
+	room_code = ""
+	sim = null
+	config = Simulation.DEFAULT_CONFIG.duplicate(true)
+	var peer := multiplayer.multiplayer_peer as ENetMultiplayerPeer
+	get_tree().create_timer(0.2).timeout.connect(func() -> void:
+		if peer != null:
+			for id: int in recipients:
+				if multiplayer.get_peers().has(id): peer.disconnect_peer(id))
+
+func _room_closed(message: String) -> void:
+	if not _had_session:
+		return
+	close_client()
+	_set_connection_state("closed","host_closed",message)
+	disconnected.emit()
 
 @rpc("any_peer", "call_remote", "reliable", 0)
 func _request_join(version: String, protocol: int, player_name: String, code: String, create: bool, previous_token: String) -> void:
@@ -196,19 +302,37 @@ func _new_code() -> String:
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _welcome(id: int, new_token: String) -> void:
+	if not connecting or _connection_phase != "joining_room":
+		return
 	connecting = false
+	_had_session = true
 	token = new_token
+	_set_connection_state("joined", "", "¡Ya estás en la sala!")
 	accepted.emit(id)
 	lobby_action("cosmetics", local_cosmetics)
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _reject(message: String) -> void:
-	connecting = false
-	notice.emit(message)
-	# Keep notice visible; next attempt replaces this transport.
+	if not connecting:
+		return
+	var code := "join_rejected"
+	if message.begins_with("Versión"):
+		code = "version_mismatch"
+	elif message.begins_with("Código"):
+		code = "wrong_room"
+	elif message.contains("llena"):
+		code = "room_full"
+	elif message.contains("está jugando"):
+		code = "room_playing"
+	elif message.begins_with("Ya hay"):
+		code = "room_exists"
+	_fail_connection(code, message)
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _server_notice(message: String) -> void:
+	if message.begins_with("@room_closed:"):
+		_room_closed(message.trim_prefix("@room_closed:"))
+		return
 	notice.emit(message)
 
 func lobby_action(verb: String, value: Variant = null) -> void:
@@ -224,6 +348,10 @@ func _request_lobby(verb: String, value: Variant) -> void:
 		return
 	var sender := multiplayer.get_remote_sender_id()
 	if not players.has(sender) or not _menu_rate_ok(sender):
+		return
+	if verb == "close_room":
+		if sender == room_owner:
+			_close_room("El anfitrión cerró la sala.")
 		return
 	if sim != null and verb != "rematch":
 		return
@@ -317,6 +445,8 @@ func _receive_lobby(data: Dictionary) -> void:
 	var barrier := int(data.get("barrier_tick", -1))
 	if str(latest.get("phase", "")) in ["playing", "results"] and barrier < last_received_tick:
 		return
+	room_owner = int(data.get("owner",0))
+	room_code = str(data.get("code",""))
 	latest.clear()
 	private_latest.clear()
 	last_received_tick = barrier + 1
@@ -326,9 +456,16 @@ func send_input(seq: int, move: Vector3, yaw: float, pitch: float, interact: boo
 	if _client_connected():
 		_request_movement.rpc_id(1, seq, move, yaw, pitch, interact, sprint, crouch, jump)
 
-func send_action(seq: int, verb: String) -> void:
+func send_action(seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: float = NAN) -> void:
 	if _client_connected():
-		_action.rpc_id(1, seq, verb)
+		# Keep the bootstrap RPC table/arity stable so older clients receive the
+		# explicit version rejection instead of calling the wrong RPC index.
+		var command := verb
+		if is_finite(aim_yaw) and is_finite(aim_pitch):
+			command = JSON.stringify({"verb":verb,"yaw":aim_yaw,"pitch":aim_pitch})
+		elif not (is_nan(aim_yaw) and is_nan(aim_pitch)):
+			return
+		_action.rpc_id(1, seq, command)
 
 @rpc("any_peer", "call_remote", "unreliable_ordered", 1)
 func _request_movement(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool=false, crouch: bool=false, jump: bool=false) -> void:
@@ -349,15 +486,40 @@ func _request_movement(seq: int, move: Vector3, yaw: float, pitch: float, intera
 func _action(seq: int, verb: String) -> void:
 	if is_server and sim != null:
 		var sender := multiplayer.get_remote_sender_id()
-		if players.has(sender) and verb.length() < 24:
-			sim.action(sender, seq, verb)
+		if not players.has(sender) or verb.length() > 256:
+			return
+		var aim_yaw := NAN
+		var aim_pitch := NAN
+		if verb.begins_with("{"):
+			var command: Variant = JSON.parse_string(verb)
+			if not command is Dictionary or not command.get("verb") is String or not command.get("yaw") is float or not command.get("pitch") is float:
+				return
+			verb = command.verb
+			aim_yaw = command.yaw
+			aim_pitch = command.pitch
+		if verb.length() < 24:
+			sim.action(sender, seq, verb, aim_yaw, aim_pitch)
 
 func _physics_process(dt: float) -> void:
 	if connecting:
 		connect_age += dt
-		if connect_age > 10.0:
-			close_client()
-			notice.emit("El servidor no respondió en 10 segundos. Revisá que esté abierto y su dirección sea correcta.")
+		connection_state["elapsed"] = connect_age
+		if _connection_phase == "resolving" and _resolver_id != -1:
+			var status := IP.get_resolve_item_status(_resolver_id)
+			if status == IP.RESOLVER_STATUS_DONE:
+				var resolved := IP.get_resolve_item_address(_resolver_id)
+				IP.erase_resolve_item(_resolver_id)
+				_resolver_id = -1
+				_open_transport(resolved)
+			elif status == IP.RESOLVER_STATUS_ERROR:
+				_fail_connection("dns_failed", "No se pudo resolver el nombre del servidor.")
+		if connecting and connect_age > (HANDSHAKE_TIMEOUT if _connection_phase == "joining_room" else TRANSPORT_TIMEOUT):
+			if _connection_phase == "joining_room":
+				_fail_connection("handshake_timeout", "El servidor respondió, pero no completó la entrada. Revisá que ambos usen Let me sleep %s." % VERSION)
+			elif _connection_phase == "resolving":
+				_fail_connection("dns_timeout", "El nombre del servidor no se resolvió a tiempo.")
+			else:
+				_fail_connection("transport_timeout", "Sin respuesta UDP de %s:%d. No se pudo comprobar la ruta hasta el anfitrión." % [_last_request.address,_last_request.port])
 	if not is_server:
 		return
 	if sim != null:

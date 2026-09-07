@@ -1,10 +1,14 @@
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 $outputsDir = Join-Path $projectRoot 'outputs'
-$packageDir = Join-Path $outputsDir 'Let-me-sleep-0.4.0-Windows'
-$zipPath = Join-Path $outputsDir 'Let-me-sleep-0.4.0-Windows.zip'
+$versionLine = Select-String -LiteralPath (Join-Path $projectRoot 'game/project.godot') -Pattern '^config/version="([0-9]+\.[0-9]+\.[0-9]+)"$'
+if (-not $versionLine) { throw 'Project version missing or invalid' }
+$packageVersion = $versionLine.Matches[0].Groups[1].Value
+$packageName = 'Let-me-sleep-' + $packageVersion + '-Windows'
+$packageDir = Join-Path $outputsDir $packageName
+$zipPath = Join-Path $outputsDir ($packageName + '.zip')
 if (Test-Path -LiteralPath $zipPath) {
-    $zipPath = Join-Path $outputsDir ('Let-me-sleep-0.4.0-Windows-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.zip')
+    throw 'The versioned ZIP already exists; inspect it before packaging again.'
 }
 [System.IO.Compression.ZipFile]::CreateFromDirectory($packageDir, $zipPath, [System.IO.Compression.CompressionLevel]::Optimal, $true)
 $hash = Get-FileHash -LiteralPath $zipPath -Algorithm SHA256

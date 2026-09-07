@@ -1,6 +1,8 @@
 extends Node
 
-signal local_server_requested
+signal local_server_requested(player_name: String, port: int)
+signal local_server_cancel_requested
+signal local_server_close_requested
 const PreferencesScript = preload("res://scripts/preferences.gd")
 const WorldScript = preload("res://scripts/world.gd")
 const UIScript = preload("res://scripts/ui.gd")
@@ -33,6 +35,8 @@ var walking := false
 var waiting_state: Dictionary = {}
 var practice: Node
 var practice_active := false
+var retry_local_host := false
+var leaving := false
 
 func _ready() -> void:
 	PreferencesScript.load_settings()
@@ -70,13 +74,23 @@ func _ready() -> void:
 		if practice_active:
 			playing = false
 			practice.restart())
-	ui.connect_requested.connect(network.connect_room)
-	ui.local_server_requested.connect(func() -> void: local_server_requested.emit())
+	ui.connect_requested.connect(func(address: String, port: int, player_name: String, code: String, create: bool) -> void:
+		retry_local_host = false
+		network.connect_room(address, port, player_name, code, create))
+	ui.host_requested.connect(func(player_name: String, port: int) -> void:
+		retry_local_host = true
+		local_server_requested.emit(player_name, port))
+	ui.cancel_connection_requested.connect(func() -> void:
+		local_server_cancel_requested.emit()
+		network.cancel_connect())
+	ui.retry_connection_requested.connect(func() -> void:
+		if retry_local_host:
+			local_server_requested.emit(PreferencesScript.player_name, PreferencesScript.local_host_port)
+		else:
+			network.retry_connect())
 	ui.cosmetics_changed.connect(func(value: Dictionary) -> void:
 		network.local_cosmetics = value
 		network.lobby_action("cosmetics", value))
-	ui.preview_requested.connect(world.show_customization)
-	ui.preview_closed.connect(world.end_customization)
 	ui.walk_requested.connect(func() -> void: _set_walking(true))
 	ui.escape_requested.connect(_on_escape)
 	ui.ready_requested.connect(func(value: bool) -> void: network.lobby_action("ready", value))
@@ -84,7 +98,9 @@ func _ready() -> void:
 	ui.start_requested.connect(func() -> void: network.lobby_action("start"))
 	ui.rematch_requested.connect(func() -> void: network.lobby_action("rematch"))
 	ui.leave_requested.connect(_leave)
-	network.accepted.connect(func(id: int) -> void: local_id = id)
+	network.accepted.connect(func(id: int) -> void:
+		local_id = id
+		retry_local_host = false)
 	network.lobby_updated.connect(_lobby)
 	network.waiting_updated.connect(func(data: Dictionary) -> void:
 		if waiting:
@@ -95,6 +111,7 @@ func _ready() -> void:
 		if playing:
 			ui.show_game(state, personal, local_id))
 	network.notice.connect(ui.show_status)
+	network.connection_state_changed.connect(ui.show_connection_state)
 	network.disconnected.connect(_disconnected)
 	ui.show_home()
 	if options.has("visual-preview"):
@@ -199,7 +216,7 @@ func _process(dt: float) -> void:
 	if alive:
 		var visual: Node3D = world.get_actor(local_id)
 		var position: Vector3 = visual.global_position if visual != null else actor.p
-		var offset: Vector3 = HumanPose.sample(actor).eye if role == "human" else Vector3(0, 0.12, 0) + Vector3.FORWARD.rotated(Vector3.RIGHT,pitch).rotated(Vector3.UP,yaw)*0.10
+		var offset: Vector3 = HumanPose.view_origin(actor) - Vector3(actor.p) if role == "human" else Vector3(0, 0.12, 0) + Vector3.FORWARD.rotated(Vector3.RIGHT,pitch).rotated(Vector3.UP,yaw)*0.10
 		var camera_origin := position + offset
 		if role == "mosquito":
 			var map: Dictionary = MapCatalog.get_map(str(state.get("config", {}).get("map_id", "house")))
@@ -233,7 +250,8 @@ func _physics_process(dt: float) -> void:
 	var sprint := false
 	var crouch := false
 	var jump := false
-	if not ui.is_menu_open() and (not waiting or walking):
+	var stunned: bool = playing and str(state.get("actors", {}).get(local_id, {}).get("state", "")) == "stunned"
+	if not ui.is_menu_open() and (not waiting or walking) and not stunned:
 		move.x = Input.get_axis("move_left", "move_right")
 		move.z = Input.get_axis("move_forward", "move_back")
 		move.y = Input.get_axis("descend", "ascend") if role == "mosquito" and not waiting else 0.0
@@ -261,10 +279,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		var sensitivity: float = PreferencesScript.human_sensitivity if waiting or role == "human" else PreferencesScript.mosquito_sensitivity
 		yaw = wrapf(yaw - event.relative.x * sensitivity, -PI, PI)
-		pitch = clampf(pitch - event.relative.y * sensitivity * (-1.0 if PreferencesScript.invert_y else 1.0), -1.40, 1.30)
+		pitch = clampf(pitch - event.relative.y * sensitivity * (-1.0 if PreferencesScript.invert_y else 1.0), -1.92 if role == "human" and not waiting else -1.40, 1.30)
+		if role == "human" and not waiting:
+			var actor: Dictionary = state.get("actors", {}).get(local_id, {})
+			yaw = HumanPose.clamp_view_yaw(actor, yaw, pitch)
 	if event.is_echo():
 		return
 	if waiting:
+		return
+	if str(state.get("actors", {}).get(local_id, {}).get("state", "")) == "stunned":
 		return
 	for verb: String in ["bite", "attack", "self_swat", "perch", "pickup", "drop"]:
 		if event.is_action_pressed(verb):
@@ -272,16 +295,24 @@ func _unhandled_input(event: InputEvent) -> void:
 				continue
 			action_sequence += 1
 			var transport: Node = practice if practice_active else network
-			transport.send_action(action_sequence, verb)
+			transport.send_action(action_sequence, verb, yaw, pitch)
 			break
 
 func _leave() -> void:
+	if leaving:
+		return
+	leaving = true
+	if not practice_active:
+		network.request_close_room()
+		await get_tree().create_timer(0.25).timeout
 	practice.stop()
 	practice_active = false
 	ui.set_practice(false)
 	network.close_client()
+	local_server_close_requested.emit()
 	_disconnected()
 	ui.show_home()
+	leaving = false
 
 func _disconnected() -> void:
 	if practice_active:

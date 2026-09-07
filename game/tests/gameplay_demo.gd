@@ -63,7 +63,10 @@ func _run() -> void:
 	await _capture("01-vuelo-y-freno")
 	_aim_at(client.practice.sim.private_for(1).assignment.p)
 	_key("bite",true)
-	await _wait(0.55)
+	# Follow the actual animated mark while assistance changes the approach angle.
+	for sample: int in range(11):
+		_aim_at(client.practice.sim.private_for(1).assignment.p)
+		await _wait(0.05)
 	var focus: Dictionary = client.practice.sim.private_for(1).focus
 	print("DEMO_TRACE focus=",focus," position=",me.p," assignment=",client.practice.sim.private_for(1).assignment," yaw=",client.yaw," pitch=",client.pitch)
 	_check(focus.progress>0.15 and focus.progress<1.0,"held input charges private focus")

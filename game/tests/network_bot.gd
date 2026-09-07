@@ -33,6 +33,7 @@ const PrivacyAudit = preload("res://tests/network_privacy_audit.gd")
 var pilot: RefCounted
 var privacy_audit := PrivacyAudit.new()
 var finishing := false
+var was_stunned := false
 
 func _ready() -> void:
 	network.local_cosmetics = Cosmetics.sanitize({"human":{"color": 3, "accessory": 1}, "mosquito":{"color": 4, "accessory": 2}})
@@ -47,6 +48,16 @@ func _ready() -> void:
 		waiting_state = data
 		var me: Dictionary = data.get("actors", {}).get(local_id, {})
 		if not me.is_empty():
+			var stunned: bool = str(me.get("state", "")) == "stunned"
+			if stunned:
+				report["stun_seen"] = true
+				if not bool(me.get("alive",false)):
+					report.errors.append("stunned actor incorrectly marked dead")
+			elif was_stunned:
+				report["stun_recovery_seen"] = true
+			was_stunned = stunned
+			if int(me.get("help_target",0)) != 0:
+				report["help_seen"] = true
 			if float(me.p.y) > 0.15:
 				report.lobby_jump_seen = true
 			if float(me.get("crouch_amount",0.0)) > 0.5:
@@ -74,7 +85,7 @@ func _ready() -> void:
 	if options.has("incompatible"):
 		network.multiplayer.connected_to_server.disconnect(network._connected)
 		network.multiplayer.connected_to_server.connect(func() -> void:
-			network._request_join.rpc_id(1, "0.0.invalid", -99, "OldClient", "", true, ""))
+			network._request_join.rpc_id(1, str(options.get("join-version", "0.0.invalid")), int(options.get("join-protocol", "-99")), "OldClient", "", true, ""))
 	var address := str(options.get("address", "127.0.0.1"))
 	var port := int(options.get("port", "27840"))
 	var room := str(options.get("code", ""))
@@ -202,6 +213,12 @@ func _private(data: Dictionary) -> void:
 	personal = data
 	if data.get("focus",{}).get("state","") == "charging":
 		report["focus_seen"] = true
+	if data.get("focus",{}).get("state","") == "waiting":
+		report["assignment_wait_seen"] = true
+	if str(data.get("attack",{}).get("state","idle")) in ["windup", "hit", "miss"]:
+		report["attack_feedback_seen"] = true
+	if bool(data.get("bite_feedback",{}).get("active",false)):
+		report["bite_feedback_seen"] = true
 	report.private_packets += 1
 	if not data.get("assignment", {}).is_empty():
 		report.private_assignment_seen = true
@@ -222,7 +239,10 @@ func _process(dt: float) -> void:
 			var moving: bool = not (report.lobby_movement_seen and report.lobby_sprint_seen)
 			var jumping: bool = not moving and not bool(report.lobby_jump_seen)
 			var crouching: bool = not moving and not jumping and not bool(report.lobby_crouch_seen)
-			network.send_input(input_seq, Vector3(0.0,0,0.5) if moving else Vector3.ZERO, 0.0,0.0,false,moving,crouching,jumping and fmod(lobby_age,1.5)<1.0)
+			# The first observation can arrive after earlier input already reached a
+			# wall. Walk toward the opposite half from that fixed observed origin.
+			var toward_center: float = -0.5 if lobby_origin != Vector3.INF and lobby_origin.z >= 0.0 else 0.5
+			network.send_input(input_seq, Vector3(0.0,0,toward_center) if moving else Vector3.ZERO, 0.0,0.0,false,moving,crouching,jumping and fmod(lobby_age,1.5)<1.0)
 		lobby_retry += dt
 		if not started and not roster.is_empty() and lobby_retry > 0.75:
 			lobby_retry = 0.0
@@ -247,10 +267,12 @@ func _process(dt: float) -> void:
 	input_seq += 1
 	network.send_input(input_seq,intent.move,intent.yaw,intent.pitch,intent.interact,intent.sprint,intent.crouch,intent.jump)
 	if not str(intent.action).is_empty():
-		act(intent.action)
-func act(verb: String) -> void:
+		act(intent.action, float(intent.yaw), float(intent.pitch))
+func act(verb: String, aim_yaw: float = NAN, aim_pitch: float = NAN) -> void:
 	action_seq += 1
-	network.send_action(action_seq, verb)
+	network.send_action(action_seq, verb, aim_yaw, aim_pitch)
+	if verb in ["attack", "self_swat"]:
+		report["manual_action_packets"] = int(report.get("manual_action_packets",0)) + 1
 	action_delay = 0.5
 
 func _finish() -> void:
@@ -271,6 +293,8 @@ func _finish() -> void:
 	report["privacy_matched"] = privacy_audit.matched_count
 	report["peer_id"] = local_id
 	report["elapsed"] = elapsed
+	report["lobby_origin"] = lobby_origin
+	report["lobby_final_position"] = waiting_state.get("actors",{}).get(local_id,{}).get("p",Vector3.INF)
 	var report_path := str(options.get("report", ""))
 	if not report_path.is_empty():
 		var file := FileAccess.open(report_path, FileAccess.WRITE)

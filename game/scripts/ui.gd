@@ -3,6 +3,9 @@ extends CanvasLayer
 
 signal connect_requested(address: String, port: int, player_name: String, code: String, create: bool)
 signal local_server_requested
+signal host_requested(player_name: String, local_port: int)
+signal cancel_connection_requested
+signal retry_connection_requested
 signal cosmetics_changed(data: Dictionary)
 signal preview_requested(role: String, appearance: Dictionary)
 signal preview_closed
@@ -20,6 +23,7 @@ const Prefs = preload("res://scripts/preferences.gd")
 const Simulation = preload("res://scripts/simulation.gd")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const InvitationCodec = preload("res://scripts/invitation.gd")
+const AvatarPreview = preload("res://scripts/avatar_preview.gd")
 const TITLE_FONT = preload("res://assets/fonts/Bangers/Bangers-Regular.ttf")
 const BODY_FONT = preload("res://assets/fonts/AtkinsonHyperlegible/AtkinsonHyperlegible-Regular.ttf")
 const BOLD_FONT = preload("res://assets/fonts/AtkinsonHyperlegible/AtkinsonHyperlegible-Bold.ttf")
@@ -40,8 +44,6 @@ const CONFIG_FIELDS := [
 	["round_seconds", "Duración de ronda · s", 30, 180, 1, "all"],
 	["rotation_seconds", "Cambio de zona · s", 4, 40, 1, "all"],
 	["blood_goal", "Cuota compartida", 1, 1000, 1, "blood"],
-	["mosquito_lives", "Vidas por mosquito", 1, 9, 1, "sleep"],
-	["respawn_seconds", "Demora para reaparecer · s", 1, 15, 1, "sleep"],
 	["task_interval", "Frecuencia de tareas · s", Simulation.TASK_TRAVEL_RESERVE + 1.5, 60, 0.5, "sleep"],
 	["task_deadline", "Plazo inicial por tarea · s", Simulation.TASK_TRAVEL_RESERVE + 1.0, 59.5, 0.5, "sleep"],
 	["task_work", "Trabajo por tarea · s", 1, 8, 1, "sleep"],
@@ -139,6 +141,13 @@ var _port_row: HBoxContainer
 var _code_box: VBoxContainer
 var _advanced_help: Label
 var _local_server_button: Button
+var _host_port_edit: SpinBox
+var _host_port_row: HBoxContainer
+var _existing_server: CheckButton
+var _connection_busy := false
+var _connection_cancel: Button
+var _connection_retry: Button
+var _connection_feedback: Label
 var _connect_submit: Button
 var _connection_title: Label
 var _advanced_button: Button
@@ -164,6 +173,9 @@ var _invite_address_edit: LineEdit
 var _invite_port_edit: SpinBox
 var _invite_lan: OptionButton
 var _invite_status: Label
+var _invite_scope: OptionButton
+var _invite_help: Label
+var _room_join_scope := ""
 var _room_join_address: String = ""
 var _room_join_port: int = 27840
 var _comic_feedback: Label
@@ -221,6 +233,17 @@ var _result_stats: Label
 var _rematch_button: Button
 var _binding_notice: Label
 var _settings_controls: Dictionary = {}
+var _avatar_preview: SubViewportContainer
+var _custom_category := "color"
+var _category_buttons: Dictionary = {}
+var _custom_options: VBoxContainer
+var _custom_option_buttons: Array[Button] = []
+var _hud_context: PanelContainer
+var _hud_equipment: Label
+var _attack_recovery: ProgressBar
+var _hud_context_key := ""
+var _hud_context_until := 0.0
+var _attack_feedback_key := ""
 
 
 func _ready() -> void:
@@ -456,7 +479,7 @@ func _build_home() -> void:
 	var intro := _vbox(columns, 16)
 	intro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	intro.size_flags_stretch_ratio = 1.05
-	intro.add_child(_label("EDICIÓN NOCTURNA / N.º 04", 15, INK))
+	intro.add_child(_label("EDICIÓN NOCTURNA / N.º 05", 15, INK))
 	var logo := _label("LET ME\nSLEEP", 112, SUN)
 	logo.add_theme_color_override("font_outline_color", INK)
 	logo.add_theme_constant_override("outline_size", 14)
@@ -474,7 +497,7 @@ func _build_home() -> void:
 	var space := Control.new()
 	space.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	intro.add_child(space)
-	intro.add_child(_label("PROTOTIPO 0.4.0  ·  WINDOWS", 13, MUTED))
+	intro.add_child(_label("PROTOTIPO 0.5.0  ·  WINDOWS", 13, MUTED))
 	var card := _panel(columns, Color(0.10, 0.21, 0.25, 0.96))
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var card_box := _vbox(card, 10)
@@ -493,7 +516,6 @@ func _build_home() -> void:
 	_home_menu.add_child(_small_button("Ajustes y controles", _open_settings))
 	_home_menu.add_child(_small_button("Salir del juego", func() -> void:
 		get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
-		get_tree().quit()
 	))
 	_home_menu.add_child(_label("Tab y flechas para navegar · Enter para elegir", 13, MUTED, true))
 	_connection_form = _vbox(content, 10)
@@ -534,10 +556,25 @@ func _build_home() -> void:
 	)
 	_local_server_button.tooltip_text = "El servidor aloja la sala. Queda en esta PC mientras jugás."
 	_connection_form.add_child(_local_server_button)
+	_local_server_button.hide()
 	_connect_submit = _button("Crear sala", func() -> void: _request_connection(_connection_mode_create), true)
 	_connection_form.add_child(_connect_submit)
 	_advanced_button = _small_button("Opciones de conexión  ▾", _toggle_connection_options)
 	_connection_form.add_child(_advanced_button)
+	_existing_server = CheckButton.new()
+	_existing_server.text = "Usar un servidor ya abierto"
+	_existing_server.toggled.connect(func(_value: bool) -> void: _update_connection_options())
+	_connection_form.add_child(_existing_server)
+	_host_port_row = HBoxContainer.new()
+	_connection_form.add_child(_host_port_row)
+	var host_port_label := _label("Puerto de esta PC", 15, MUTED)
+	host_port_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_host_port_row.add_child(host_port_label)
+	_host_port_edit = SpinBox.new()
+	_host_port_edit.min_value = 1024
+	_host_port_edit.max_value = 65535
+	_host_port_edit.value = Prefs.local_host_port
+	_host_port_row.add_child(_host_port_edit)
 	_port_row = HBoxContainer.new()
 	_connection_form.add_child(_port_row)
 	var port_label := _label("Puerto UDP", 15, MUTED)
@@ -552,6 +589,17 @@ func _build_home() -> void:
 	_port_row.add_child(_port_edit)
 	_advanced_help = _label("Sin invitación: dejá ese campo vacío y usá dirección, puerto y código. Compartir una dirección no configura tu router.", 14, MUTED, true)
 	_connection_form.add_child(_advanced_help)
+	_connection_feedback = _label("", 15, INK, true)
+	_connection_feedback.custom_minimum_size.x = 330
+	_connection_form.add_child(_connection_feedback)
+	var connection_actions := HBoxContainer.new()
+	_connection_form.add_child(connection_actions)
+	_connection_cancel = _small_button("Cancelar", func() -> void: cancel_connection_requested.emit())
+	connection_actions.add_child(_connection_cancel)
+	_connection_retry = _small_button("Reintentar", func() -> void: retry_connection_requested.emit())
+	connection_actions.add_child(_connection_retry)
+	_connection_cancel.hide()
+	_connection_retry.hide()
 	_connection_form.hide()
 	_status(card_box)
 
@@ -563,12 +611,15 @@ func _open_connection(create: bool) -> void:
 	_home_menu.hide()
 	_connection_form.show()
 	_connection_title.text = "Prepará la noche" if create else "Encontrá a tu grupo"
-	_connect_submit.text = "2 · Crear sala" if create else "Unirme a la sala"
+	_connect_submit.text = "CREAR SALA" if create else "UNIRME"
 	_update_connection_options()
 	_queue_focus(_name_edit)
 
 
 func _close_connection() -> void:
+	if _connection_busy:
+		cancel_connection_requested.emit()
+		show_connection_state({"phase":"cancelled"})
 	_connection_open = false
 	_advanced_open = false
 	_connection_form.hide()
@@ -582,20 +633,33 @@ func _toggle_connection_options() -> void:
 
 
 func _update_connection_options() -> void:
-	_address_box.visible = _advanced_open
+	var existing: bool = _connection_mode_create and _existing_server.button_pressed
+	_address_box.visible = _advanced_open and (not _connection_mode_create or existing)
 	_code_box.visible = not _connection_mode_create and _advanced_open
 	_invitation_box.visible = not _connection_mode_create
-	_port_row.visible = _advanced_open
+	_port_row.visible = _advanced_open and (not _connection_mode_create or existing)
+	_host_port_row.visible = _advanced_open and _connection_mode_create and not existing
+	_existing_server.visible = _advanced_open and _connection_mode_create
 	_advanced_help.visible = _advanced_open
-	_local_server_button.visible = _connection_mode_create
+	_advanced_help.text = ("Se abrirá un servidor en esta PC. Después podés configurar la invitación para tus amigos." if not existing else "Conectate al servidor que ya está encendido en esa dirección.") if _connection_mode_create else "Sin invitación: dejá ese campo vacío y usá dirección, puerto y código."
+	_local_server_button.hide()
 	_advanced_button.text = "Ocultar opciones  ▴" if _advanced_open else "Opciones de conexión  ▾"
 
 
 func _request_connection(create: bool) -> void:
+	if _connection_busy:
+		return
 	var username := _name_edit.text.strip_edges()
 	if username.is_empty():
 		show_status("Escribí tu nombre para entrar.")
 		_name_edit.grab_focus()
+		return
+	if create and not _existing_server.button_pressed:
+		Prefs.player_name = username
+		Prefs.local_host_port = int(_host_port_edit.value)
+		Prefs.save_settings()
+		show_connection_state({"phase":"starting_server","message":"Abriendo el servidor de esta PC…","can_cancel":true})
+		host_requested.emit(username, Prefs.local_host_port)
 		return
 	var address := _address_edit.text.strip_edges()
 	var port: int = int(_port_edit.value)
@@ -609,6 +673,7 @@ func _request_connection(create: bool) -> void:
 		address = str(decoded.host)
 		port = int(decoded.port)
 		code = str(decoded.room)
+		_room_join_scope = str(decoded.get("scope", ""))
 	elif not create and not _advanced_open:
 		show_status("Pegá la invitación que te pasó el anfitrión.")
 		_invitation_edit.grab_focus()
@@ -634,7 +699,20 @@ func _request_connection(create: bool) -> void:
 		Prefs.invitation = _invitation_edit.text.strip_edges()
 	Prefs.save_settings()
 	show_status("Conectando…")
+	show_connection_state({"phase":"connecting_transport","message":"Conectando con el anfitrión…","can_cancel":true})
 	connect_requested.emit(address, port, username, code, create)
+
+func show_connection_state(data: Dictionary) -> void:
+	_build()
+	var phase := str(data.get("phase", "idle"))
+	_connection_busy = phase in ["starting_server","resolving","connecting_transport","joining_room"]
+	_connect_submit.disabled = _connection_busy
+	_connection_cancel.visible = bool(data.get("can_cancel", _connection_busy))
+	_connection_retry.visible = bool(data.get("can_retry", phase == "failed"))
+	_connection_feedback.text = str(data.get("message", ""))
+	_connection_feedback.add_theme_color_override("font_color", _text_ink(CORAL) if phase == "failed" else INK)
+	if phase == "failed":
+		_queue_focus(_connection_retry if _connection_retry.visible else _connect_submit)
 
 
 func _build_lobby() -> void:
@@ -752,9 +830,9 @@ func _update_mode_fields() -> void:
 	for field: Array in CONFIG_FIELDS:
 		_field_rows[field[0]].visible = field[5] == "all" or field[5] == mode
 	match mode:
-		"blood": _mode_description.text = "Mosquitos: junten la cuota compartida. Humanos: evítenlo hasta el final o elimínenlos a todos. La sangre extraída se conserva."
+		"blood": _mode_description.text = "Mosquitos: junten la cuota compartida. Humanos: evítenlo hasta el final. Los golpes aturden 35 s; otro mosquito puede ayudar."
 		"survival": _mode_description.text = "Mosquitos: basta con que uno siga vivo al final. Humanos: elimínenlos a todos. Picar es opcional."
-		"sleep": _mode_description.text = "Humanos: alcancen la meta colectiva o agoten las vidas de todos los mosquitos. Cada fallo acorta solo el plazo futuro de quien falló. Las picaduras pausan el trabajo."
+		"sleep": _mode_description.text = "Humanos: alcancen la meta colectiva. Las picaduras pausan el trabajo; cada fallo acorta solo tu plazo futuro. Los golpes aturden 35 s y un compañero puede ayudar."
 
 
 func _update_dependent_ranges(received: Dictionary = {}) -> void:
@@ -791,6 +869,8 @@ func _apply_config() -> void:
 	if not _owner:
 		return
 	var config := _config.duplicate(true)
+	config.erase("mosquito_lives")
+	config.erase("respawn_seconds")
 	config["mode"] = MODES[clampi(_mode.selected, 0, 2)]
 	for key: String in _fields:
 		config[key] = _fields[key].value
@@ -800,99 +880,133 @@ func _apply_config() -> void:
 
 func _build_hud() -> void:
 	_hud = _full_control(_root)
-	_hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var left := _panel(_hud, Color(0.06, 0.12, 0.16, 0.90))
-	left.position = Vector2(22, 22)
-	left.custom_minimum_size = Vector2(360, 0)
-	var objectives := _vbox(left, 5)
-	_hud_role = _label("", 15, CORAL)
+	var left := _hud_card(_hud)
+	left.position = Vector2(18,18)
+	left.custom_minimum_size.x = 244
+	var objectives := _vbox(left,3)
+	_hud_role = _hud_label("",12)
 	objectives.add_child(_hud_role)
-	_hud_objective = _label("", 20, CREAM, true)
-	_hud_objective.custom_minimum_size.x = 320
+	_hud_objective = _hud_label("",14)
 	objectives.add_child(_hud_objective)
-	_hud_progress_text = _label("", 16, MINT)
+	_hud_objective.hide()
+	_hud_progress_text = _hud_label("",17)
 	objectives.add_child(_hud_progress_text)
 	_hud_progress = ProgressBar.new()
 	_hud_progress.show_percentage = false
-	_hud_progress.custom_minimum_size.y = 9
+	_hud_progress.custom_minimum_size.y = 4
 	objectives.add_child(_hud_progress)
-	var clock_panel := _panel(_hud, Color(0.06, 0.12, 0.16, 0.9))
+	var clock_panel := _hud_card(_hud)
 	clock_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	clock_panel.offset_left = -166
-	clock_panel.offset_top = 22
-	clock_panel.offset_right = -22
-	clock_panel.offset_bottom = 118
-	var clock_box := _vbox(clock_panel, 2)
-	var clock_label := _label("RONDA", 13, MUTED)
-	clock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	clock_box.add_child(clock_label)
-	_hud_time = _label("00:00", 32)
-	_hud_time.add_theme_font_size_override("font_size", 42)
+	clock_panel.offset_left = -112
+	clock_panel.offset_right = -18
+	clock_panel.offset_top = 18
+	clock_panel.offset_bottom = 76
+	_hud_time = _hud_label("00:00",30)
 	_hud_time.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	clock_box.add_child(_hud_time)
-	_task_panel = _panel(_hud, Color(0.06, 0.12, 0.16, 0.94))
-	_task_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
-	_task_panel.offset_left = -328
-	_task_panel.offset_right = -22
-	_task_panel.offset_top = -100
-	_task_panel.offset_bottom = 100
-	var task_box := _vbox(_task_panel, 6)
-	task_box.add_child(_label("TU TAREA PERSONAL", 13, CORAL))
-	_task_title = _label("", 20, CREAM, true)
-	_task_title.custom_minimum_size.x = 265
+	clock_panel.add_child(_hud_time)
+	_hud_equipment = _hud_label("",13)
+	_hud_equipment.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_hud_equipment.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_hud_equipment.offset_left = -255
+	_hud_equipment.offset_right = -18
+	_hud_equipment.offset_top = 84
+	_hud.add_child(_hud_equipment)
+	_task_panel = _hud_card(_hud)
+	_task_panel.position = Vector2(18,105)
+	_task_panel.custom_minimum_size.x = 244
+	var task_box := _vbox(_task_panel,3)
+	_task_title = _hud_label("",15,true)
+	_task_title.custom_minimum_size.x = 220
 	task_box.add_child(_task_title)
-	_task_time = _label("", 22, MINT)
+	_task_time = _hud_label("",18)
 	task_box.add_child(_task_time)
 	_task_progress = ProgressBar.new()
 	_task_progress.show_percentage = false
-	_task_progress.custom_minimum_size.y = 10
+	_task_progress.custom_minimum_size.y = 4
 	task_box.add_child(_task_progress)
-	_task_detail = _label("", 14, MUTED, true)
+	_task_detail = _hud_label("",12,true)
 	task_box.add_child(_task_detail)
-	var bottom := _panel(_hud, Color(0.06, 0.12, 0.16, 0.9))
-	bottom.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	bottom.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	bottom.offset_left = 22
-	bottom.offset_right = -22
-	bottom.offset_top = -131
-	bottom.offset_bottom = -22
-	var hints := _vbox(bottom, 4)
-	_hud_state = _label("", 20, MINT, true)
+	_hud_context = _hud_card(_hud)
+	_hud_context.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	_hud_context.offset_left = 18
+	_hud_context.offset_right = 330
+	_hud_context.offset_top = -102
+	_hud_context.offset_bottom = -18
+	_hud_context.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	var hints := _vbox(_hud_context,3)
+	_hud_state = _hud_label("",16,true)
+	_hud_state.custom_minimum_size.x = 288
 	hints.add_child(_hud_state)
+	_hud_tool = _hud_label("",12,true)
+	hints.add_child(_hud_tool)
+	_hud_hint = _hud_label("",13,true)
+	hints.add_child(_hud_hint)
 	_focus_progress = ProgressBar.new()
 	_focus_progress.show_percentage = false
-	_focus_progress.custom_minimum_size.y = 8
-	hints.add_child(_focus_progress)
+	_focus_progress.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	_focus_progress.offset_left = -52
+	_focus_progress.offset_right = 52
+	_focus_progress.offset_top = 25
+	_focus_progress.offset_bottom = 29
+	_hud.add_child(_focus_progress)
 	_focus_progress.hide()
-	_hud_tool = _label("", 16, CORAL, true)
-	hints.add_child(_hud_tool)
-	_hud_hint = _label("", 14, CREAM, true)
-	hints.add_child(_hud_hint)
-	_reticle = _label("·", 38, CREAM)
-	_reticle.add_theme_color_override("font_outline_color", PAPER)
-	_reticle.add_theme_constant_override("outline_size", 7)
+	_attack_recovery = ProgressBar.new()
+	_attack_recovery.show_percentage = false
+	_attack_recovery.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	_attack_recovery.offset_left = -18
+	_attack_recovery.offset_right = 18
+	_attack_recovery.offset_top = 21
+	_attack_recovery.offset_bottom = 24
+	_hud.add_child(_attack_recovery)
+	_attack_recovery.hide()
+	_reticle = _hud_label("·",30)
 	_reticle.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	_reticle.position -= Vector2(9, 25)
+	_reticle.position -= Vector2(6,21)
 	_hud.add_child(_reticle)
-	_practice_banner = _label("PRÁCTICA / RIVALES AUTOMÁTICOS", 14, INK)
-	_practice_banner.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	_practice_banner.position = Vector2(490, 27)
-	_practice_banner.add_theme_color_override("font_outline_color", PAPER)
-	_practice_banner.add_theme_constant_override("outline_size", 5)
+	_practice_banner = _hud_label("PRÁCTICA",11)
+	_practice_banner.position = Vector2(18,83)
 	_hud.add_child(_practice_banner)
 	_practice_banner.hide()
-	_comic_feedback = _label("", 64, SUN)
-	_comic_feedback.add_theme_color_override("font_outline_color", INK)
-	_comic_feedback.add_theme_constant_override("outline_size", 12)
+	_comic_feedback = _hud_label("",22)
 	_comic_feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_comic_feedback.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	_comic_feedback.offset_left = -180
-	_comic_feedback.offset_right = 180
-	_comic_feedback.offset_top = -130
-	_comic_feedback.offset_bottom = -48
+	_comic_feedback.offset_left = -90
+	_comic_feedback.offset_right = 90
+	_comic_feedback.offset_top = -55
+	_comic_feedback.offset_bottom = -26
 	_hud.add_child(_comic_feedback)
 	_comic_feedback.hide()
+	# Compact bars need their own thin styles: the menu's 3 px border hides
+	# the fill completely on a 3–4 px gameplay progress bar.
+	for bar: ProgressBar in [_hud_progress, _task_progress, _focus_progress, _attack_recovery]:
+		var track := StyleBoxFlat.new()
+		track.bg_color = Color(0.05, 0.07, 0.09, 0.85)
+		track.border_color = Color(1, 1, 1, 0.65)
+		track.set_border_width_all(1)
+		var fill := StyleBoxFlat.new()
+		fill.bg_color = SUN
+		bar.add_theme_stylebox_override("background", track)
+		bar.add_theme_stylebox_override("fill", fill)
 	_set_mouse_ignore_recursive(_hud)
+
+func _hud_card(parent: Node) -> PanelContainer:
+	var panel := PanelContainer.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.07,0.09,0.12,0.78)
+	style.set_corner_radius_all(4)
+	style.content_margin_left = 10
+	style.content_margin_right = 10
+	style.content_margin_top = 7
+	style.content_margin_bottom = 7
+	panel.add_theme_stylebox_override("panel",style)
+	parent.add_child(panel)
+	return panel
+
+func _hud_label(value: String, font_size: int, wrap: bool = false) -> Label:
+	var label := _label(value,font_size,PAPER,wrap)
+	label.add_theme_color_override("font_outline_color",INK)
+	label.add_theme_constant_override("outline_size",3)
+	return label
 
 
 func _set_mouse_ignore_recursive(node: Node) -> void:
@@ -948,73 +1062,55 @@ func _build_pause() -> void:
 
 
 func _build_customization() -> void:
-	_customization = _full_control(_root)
-	var heading := _label("TU PINTA", 16, INK)
-	heading.add_theme_color_override("font_outline_color", PAPER)
-	heading.add_theme_constant_override("outline_size", 5)
-	heading.position = Vector2(42, 34)
-	_customization.add_child(heading)
-	_custom_title = _label("Una cara conocida", 36, INK)
-	_custom_title.add_theme_color_override("font_outline_color", PAPER)
-	_custom_title.add_theme_constant_override("outline_size", 7)
-	_custom_title.position = Vector2(42, 61)
-	_customization.add_child(_custom_title)
-	var caption_panel := _panel(_customization, Color(0.05, 0.11, 0.16, 0.90))
-	caption_panel.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
-	caption_panel.offset_left = 42
-	caption_panel.offset_right = 684
-	caption_panel.offset_top = -78
-	caption_panel.offset_bottom = -28
-	caption_panel.add_theme_stylebox_override("panel", _style(Color(0.05, 0.11, 0.16, 0.90), 12, 18, 12))
-	_custom_caption = _label("", 17, CREAM, true)
-	_custom_caption.custom_minimum_size.x = 590
-	caption_panel.add_child(_custom_caption)
-	var panel := _panel(_customization, Color(0.08, 0.16, 0.20, 0.96))
-	panel.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
-	panel.offset_left = -390
-	panel.offset_right = -22
-	panel.offset_top = 22
-	panel.offset_bottom = -22
-	var body := _vbox(panel, 16)
-	body.add_child(_label("Dos looks. Un sorteo.", 25))
-	body.add_child(_label("Guardá una apariencia para cada rol.", 15, MUTED, true))
-	var roles := HBoxContainer.new()
-	body.add_child(roles)
-	for role: String in ["human", "mosquito"]:
-		var button := _small_button("Humano" if role == "human" else "Mosquito", _select_custom_role.bind(role))
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_customization = _menu_surface()
+	var frame := _vbox(_margin(_customization,24),14)
+	var header := HBoxContainer.new()
+	header.add_theme_constant_override("separation",14)
+	frame.add_child(header)
+	_custom_title = _label("TU PINTA",44)
+	_custom_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(_custom_title)
+	for role: String in ["human","mosquito"]:
+		var button := _small_button("Humano" if role == "human" else "Mosquito",_select_custom_role.bind(role))
 		button.toggle_mode = true
-		roles.add_child(button)
+		header.add_child(button)
 		_custom_role_buttons[role] = button
-	body.add_child(_label("COLOR", 13, CORAL))
-	var colors := GridContainer.new()
-	colors.columns = 3
-	colors.add_theme_constant_override("h_separation", 8)
-	colors.add_theme_constant_override("v_separation", 8)
-	body.add_child(colors)
-	for index: int in range(CosmeticsData.PALETTE.size()):
-		var button := _button(CosmeticsData.COLOR_NAMES[index], _select_color.bind(index))
-		button.custom_minimum_size = Vector2(94, 64)
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 14)
-		button.add_theme_font_override("font", BOLD_FONT)
-		button.add_theme_color_override("font_color", INK)
-		button.add_theme_color_override("font_hover_color", INK)
-		button.add_theme_color_override("font_pressed_color", INK)
-		button.add_theme_color_override("font_focus_color", INK)
-		button.tooltip_text = CosmeticsData.COLOR_NAMES[index]
-		colors.add_child(button)
-		_color_buttons.append(button)
-	body.add_child(_label("ACCESORIO", 13, CORAL))
+	header.add_child(_small_button("Listo · volver",_close_customization,true))
+	var columns := HBoxContainer.new()
+	columns.add_theme_constant_override("separation",16)
+	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	frame.add_child(columns)
+	var categories := _vbox(columns,8)
+	categories.custom_minimum_size.x = 178
+	var titles := {"color":"Color principal","face":"Cara","hair":"Pelo / antenas","outfit":"Ropa / cuerpo","accessory":"Accesorios","accent":"Color secundario"}
+	for key: String in CosmeticsData.CATEGORY_KEYS:
+		var button := _small_button(titles[key],_select_custom_category.bind(key))
+		button.toggle_mode = true
+		categories.add_child(button)
+		_category_buttons[key] = button
+	var studio := _vbox(columns,8)
+	studio.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_avatar_preview = AvatarPreview.new()
+	_avatar_preview.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_avatar_preview.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	studio.add_child(_avatar_preview)
+	var camera_row := HBoxContainer.new()
+	studio.add_child(camera_row)
+	var camera_help := _label("Arrastrá para girar · rueda para acercar",13,MUTED,true)
+	camera_help.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	camera_row.add_child(camera_help)
+	camera_row.add_child(_small_button("Restablecer vista",func() -> void: _avatar_preview.reset_view()))
+	var panel := _panel(columns)
+	panel.custom_minimum_size.x = 270
+	var scroll := _scroll(panel)
+	_custom_options = _vbox(scroll,10)
+	_custom_options.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_custom_caption = _label("Guardado en esta PC · solo apariencia",14,INK,true)
+	frame.add_child(_custom_caption)
+	# Kept as compatibility handles; category controls own the actual editor.
 	_accessory_select = OptionButton.new()
-	_accessory_select.item_selected.connect(_select_accessory)
-	body.add_child(_accessory_select)
-	var spacer := Control.new()
-	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	body.add_child(spacer)
-	body.add_child(_label("Solo cambia tu apariencia. Los roles se sortean al comenzar la ronda.", 14, MUTED, true))
-	body.add_child(_button("Listo · volver", _close_customization, true))
-	body.add_child(_label("Esc para volver", 13, MUTED))
+	_accessory_select.hide()
+	_customization.add_child(_accessory_select)
 
 
 func _open_customization() -> void:
@@ -1057,30 +1153,44 @@ func _commit_cosmetics() -> void:
 
 
 func _refresh_customization() -> void:
-	var appearance: Dictionary = CosmeticsData.appearance_for(Prefs.cosmetics, _custom_role)
+	var appearance: Dictionary = CosmeticsData.appearance_for(Prefs.cosmetics,_custom_role)
 	for role: String in _custom_role_buttons:
 		_custom_role_buttons[role].button_pressed = role == _custom_role
-	for index: int in range(_color_buttons.size()):
-		var color: Color = CosmeticsData.PALETTE[index]
-		var chosen: bool = int(appearance.color) == index
-		var style := _style(color, 10, 5, 11)
-		if chosen:
-			style.border_color = CREAM
-			style.set_border_width_all(3)
-		var button: Button = _color_buttons[index]
-		button.add_theme_stylebox_override("normal", style)
-		button.add_theme_stylebox_override("hover", _style(color.lightened(0.15), 10, 5, 11))
-		button.add_theme_stylebox_override("pressed", _style(color.darkened(0.08), 10, 5, 11))
-		button.text = ("✓ " if chosen else "") + CosmeticsData.COLOR_NAMES[index]
-	_accessory_select.clear()
-	var accessory_names: Array = ["Sin accesorio", "Gorra", "Anteojos"] if _custom_role == "human" else ["Sin accesorio", "Moño", "Antiparras"]
-	for accessory: String in accessory_names:
-		_accessory_select.add_item(accessory)
-	_accessory_select.select(int(appearance.accessory))
-	_custom_title.text = "Una cara conocida" if _custom_role == "human" else "Un zumbido con estilo"
-	_custom_caption.text = "HUMANO  /  " if _custom_role == "human" else "MOSQUITO  /  "
-	_custom_caption.text += CosmeticsData.COLOR_NAMES[int(appearance.color)] + " · " + accessory_names[int(appearance.accessory)]
-	preview_requested.emit(_custom_role, appearance)
+	for key: String in _category_buttons:
+		_category_buttons[key].button_pressed = key == _custom_category
+	for child: Node in _custom_options.get_children():
+		_custom_options.remove_child(child)
+		child.queue_free()
+	_custom_option_buttons.clear()
+	var names: Array = CosmeticsData.option_names(_custom_role,_custom_category)
+	_custom_options.add_child(_label("ELEGÍ TU ESTILO",20,INK))
+	for index: int in range(names.size()):
+		var button := _small_button(str(names[index]),_select_custom_option.bind(index))
+		button.toggle_mode = true
+		button.button_pressed = int(appearance.get(_custom_category,0)) == index
+		button.custom_minimum_size.y = 48
+		if _custom_category in ["color","accent"]:
+			button.add_theme_stylebox_override("normal",_style(CosmeticsData.PALETTE[index],3,10,12))
+			button.add_theme_stylebox_override("pressed",_style(CosmeticsData.PALETTE[index],3,10,12))
+			button.text = ("✓ " if button.button_pressed else "") + str(names[index])
+		_custom_options.add_child(button)
+		_custom_option_buttons.append(button)
+	_custom_caption.text = ("Humano" if _custom_role == "human" else "Mosquito") + " · " + str(names[int(appearance.get(_custom_category,0))]) + " · Guardado en esta PC"
+	_avatar_preview.set_avatar(_custom_role,appearance)
+	if _screen == "customization":
+		_set_focus_scope(_customization)
+
+func _select_custom_category(key: String) -> void:
+	if key not in CosmeticsData.CATEGORY_KEYS: return
+	_custom_category = key
+	_refresh_customization()
+	_queue_focus(_category_buttons[key])
+
+func _select_custom_option(index: int) -> void:
+	Prefs.cosmetics[_custom_role][_custom_category] = index
+	_commit_cosmetics()
+	if index < _custom_option_buttons.size():
+		_queue_focus(_custom_option_buttons[index])
 
 
 func _build_practice() -> void:
@@ -1156,9 +1266,9 @@ func _refresh_practice() -> void:
 	for mode: String in _practice_mode_buttons:
 		_practice_mode_buttons[mode].button_pressed = mode == _practice_mode
 	match _practice_mode:
-		"blood": _practice_detail.text = "Cuota compartida de sangre. Una vida por mosquito."
+		"blood": _practice_detail.text = "Cuota compartida de sangre. Los golpes aturden; los compañeros ayudan."
 		"survival": _practice_detail.text = "Al menos un mosquito debe llegar vivo al final."
-		"sleep": _practice_detail.text = "Tareas, interrupciones y vidas personales."
+		"sleep": _practice_detail.text = "Tareas, interrupciones y rescates entre mosquitos."
 
 
 func set_practice(value: bool) -> void:
@@ -1179,6 +1289,11 @@ func _build_invite_settings() -> void:
 	panel.custom_minimum_size.x = 600
 	var body := _vbox(panel, 14)
 	body.add_child(_label("INVITÁ A LA CASA", 46))
+	_invite_scope = OptionButton.new()
+	for choice: String in ["Misma red", "Otra casa · Internet", "Red virtual compartida"]:
+		_invite_scope.add_item(choice)
+	_invite_scope.item_selected.connect(func(_index: int) -> void: _update_invite_scope())
+	body.add_child(_invite_scope)
 	body.add_child(_label("DIRECCIÓN PARA TUS AMIGOS", 14, INK))
 	_invite_address_edit = LineEdit.new()
 	_invite_address_edit.placeholder_text = "IP de red, IP pública o nombre de servidor"
@@ -1201,7 +1316,9 @@ func _build_invite_settings() -> void:
 	_invite_port_edit.max_value = 65535
 	_invite_port_edit.custom_minimum_size.x = 126
 	port_row.add_child(_invite_port_edit)
-	body.add_child(_label("Misma red: elegí tu IP local. Desde otras casas: ingresá una dirección alcanzable desde Internet. La invitación no abre puertos ni evita CGNAT.", 15, MUTED, true))
+	_invite_help = _label("", 15, MUTED, true)
+	_invite_help.custom_minimum_size.x = 550
+	body.add_child(_invite_help)
 	_invite_status = _status(body)
 	body.add_child(_button("GUARDAR Y COPIAR INVITACIÓN", _save_invite_settings, true))
 	body.add_child(_small_button("← Volver", _close_invite_settings))
@@ -1211,11 +1328,14 @@ func _open_invite_settings() -> void:
 	_invite_settings_open = true
 	_invite_address_edit.text = Prefs.shared_address if _owner else _room_join_address
 	_invite_port_edit.value = Prefs.shared_port if _owner else _room_join_port
+	var scope: String = Prefs.sharing_scope if _owner else _room_join_scope
+	_invite_scope.select(maxi(0, ["lan","internet","virtual"].find(scope)))
 	_invite_lan.clear()
 	_invite_lan.add_item("Elegir dirección de esta red…")
 	for address: String in InvitationCodec.local_addresses():
 		_invite_lan.add_item(address + " · misma red")
 		_invite_lan.set_item_metadata(_invite_lan.item_count - 1, address)
+	_update_invite_scope()
 	_invite_settings.show()
 	_set_focus_scope(_invite_settings)
 	_queue_focus(_invite_address_edit)
@@ -1231,7 +1351,8 @@ func _close_invite_settings() -> void:
 
 func _save_invite_settings() -> void:
 	var address := _invite_address_edit.text.strip_edges()
-	var invalid: String = InvitationCodec.validate_host(address)
+	var scope: String = ["lan","internet","virtual"][_invite_scope.selected]
+	var invalid: String = InvitationCodec.validate_sharing_address(address, scope)
 	if not invalid.is_empty():
 		_invite_status.text = invalid
 		_invite_address_edit.grab_focus()
@@ -1239,10 +1360,12 @@ func _save_invite_settings() -> void:
 	if _owner:
 		Prefs.shared_address = address
 		Prefs.shared_port = int(_invite_port_edit.value)
+		Prefs.sharing_scope = scope
 		Prefs.save_settings()
 	else:
 		_room_join_address = address
 		_room_join_port = int(_invite_port_edit.value)
+		_room_join_scope = scope
 	_close_invite_settings()
 	_copy_invitation()
 
@@ -1251,13 +1374,23 @@ func _copy_invitation() -> void:
 	var code: String = str(_code_label.get_meta("code", ""))
 	var address: String = Prefs.shared_address if _owner else _room_join_address
 	var port: int = Prefs.shared_port if _owner else _room_join_port
-	var encoded: String = InvitationCodec.encode(address, port, code)
+	var scope: String = Prefs.sharing_scope if _owner else _room_join_scope
+	var encoded: String = InvitationCodec.encode(address, port, code, scope)
 	if encoded.is_empty():
 		_open_invite_settings()
-		_invite_status.text = "Indicá una dirección que puedan usar tus amigos. 127.0.0.1 no sirve para compartir."
+		_invite_status.text = "Revisá la dirección y el alcance para tus amigos. Copiar una invitación no comprueba Internet."
 		return
 	DisplayServer.clipboard_set(encoded)
-	show_status("¡Invitación copiada! Pegala en el chat de tus amigos.")
+	show_status("Invitación copiada · " + ("solo esta red" if scope == "lan" else ("red virtual compartida" if scope == "virtual" else "alcance externo aún sin comprobar")))
+
+func _update_invite_scope() -> void:
+	var scope: String = ["lan","internet","virtual"][_invite_scope.selected]
+	_invite_lan.visible = scope != "internet"
+	_invite_address_edit.placeholder_text = "IP pública o nombre de servidor" if scope == "internet" else ("Dirección de la red virtual compartida" if scope == "virtual" else "Dirección de esta red")
+	match scope:
+		"internet": _invite_help.text = "Tu servidor escucha en UDP %d. Indicá la dirección y el puerto públicos que lleguen a esa PC. La invitación no abre puertos ni resuelve CGNAT; una conexión desde fuera es la comprobación real." % Prefs.local_host_port
+		"virtual": _invite_help.text = "Todos deben estar conectados a la misma red virtual. Usá su dirección; el juego no instala ni configura esa red."
+		_: _invite_help.text = "Para equipos de la misma red. Esta dirección local no permite entrar desde otra casa."
 
 
 func _build_settings() -> void:
@@ -1282,6 +1415,7 @@ func _build_settings() -> void:
 	box.add_child(_label("Cámara y sonido", 24))
 	box.add_child(_label("Humano: tercera persona en la sala, primera al jugar. Podés correr, saltar y agacharte.", 15, INK, true))
 	box.add_child(_label("Mosquito: avanzás hacia donde apunta la cámara, también hacia arriba o abajo. Soltar avance frena. Mantené concentración cerca de tu zona para estabilizarte, cargar y acercarte; soltá para cancelar. Una nueva pulsación mientras picás te desprende.", 15, INK, true))
+	box.add_child(_label("Sangre y Tareas: un golpe te deja aturdido 35 s. Un mosquito cercano puede apuntarte y mantener concentración para ayudarte: la recuperación avanza cuatro veces más rápido. Varios ayudantes no suman velocidad. En Supervivencia, el golpe te elimina hasta la próxima ronda.", 15, INK, true))
 	_add_slider(box, "human", "Sensibilidad · humano", Prefs.human_sensitivity * 1000.0, 0.5, 8.0, 0.1)
 	_add_slider(box, "mosquito", "Sensibilidad · mosquito", Prefs.mosquito_sensitivity * 1000.0, 0.5, 8.0, 0.1)
 	_add_slider(box, "volume", "Volumen general", Prefs.master_volume * 100.0, 0.0, 100.0, 1.0)
@@ -1297,7 +1431,7 @@ func _build_settings() -> void:
 	box.add_child(pulse)
 	box.add_child(_label("Tu marca usa forma y color. Solo vos podés verla; no se muestra un contador de cambio de zona.", 16, MUTED, true))
 	box.add_child(_label("DEFENSA PROPIA", 14, CORAL))
-	box.add_child(_label("Podés cubrirte antes de que se adhiera un mosquito. La ayuda del HUD muestra qué zona cubrís con tu mirada:\n• Al frente o arriba: cabeza y hombros.\n• Un poco hacia abajo: torso.\n• Bien abajo: piernas.\nLa espalda necesita ayuda de otro humano.", 16, CREAM, true))
+	box.add_child(_label("La defensa es manual: mirá tu cuerpo, apuntá al mosquito y golpeá. La tecla de defensa anterior repite ese mismo golpe; no elige una zona automáticamente. Si te pican detrás, pedí ayuda a un compañero. El aviso de picadura solo indica contactos reales.", 16, CREAM, true))
 	box.add_child(_label("HERRAMIENTAS", 14, CORAL))
 	for tool_id: String in Simulation.TOOL_STATS:
 		var stats: Dictionary = Simulation.TOOL_STATS[tool_id]
@@ -1534,115 +1668,149 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 	_build()
 	var changed_screen: bool = _screen != "game"
 	_set_screen("game")
+	if changed_screen:
+		_hud_context_key = ""
+		_attack_feedback_key = ""
 	_local_id = local_id
-	var actors: Dictionary = snapshot.get("actors", {})
-	var actor: Dictionary = actors.get(local_id, actors.get(str(local_id), {}))
-	var role: String = str(actor.get("role", "mosquito"))
-	var human: bool = role == "human"
-	var alive: bool = bool(actor.get("alive", true))
-	_focus_progress.visible = false
-	_focus_progress.value = 0.0
-	var state: String = str(actor.get("state", "flying"))
-	var config: Dictionary = snapshot.get("config", FALLBACK_CONFIG)
-	var mode: String = str(config.get("mode", "blood"))
-	_hud_role.text = ("HUMANO" if human else "MOSQUITO") + "  /  " + str(MODE_NAMES.get(mode, mode)).to_upper()
-	_hud_time.text = _clock(float(snapshot.get("time_left", 0.0)))
-	_hud_time.add_theme_color_override("font_color", _text_ink(CORAL) if float(snapshot.get("time_left", 0.0)) < 20.0 else INK)
-	var swing: float = float(actor.get("swing", 0.0))
-	var bitten: bool = bool(actor.get("bitten", false))
-	if human and swing > 0.0 and _previous_swing <= 0.0:
-		_flash_comic("¡ZAS!")
-	elif human and bitten and not _previous_bitten:
-		_flash_comic("¡PIC!")
-	_previous_swing = swing
-	_previous_bitten = bitten
-	var living_mosquitoes: int = 0
+	var actors: Dictionary = snapshot.get("actors",{})
+	var actor: Dictionary = actors.get(local_id,actors.get(str(local_id),{}))
+	var human: bool = str(actor.get("role","mosquito")) == "human"
+	var alive: bool = bool(actor.get("alive",true))
+	var state: String = str(actor.get("state","flying"))
+	var config: Dictionary = snapshot.get("config",FALLBACK_CONFIG)
+	var mode: String = str(config.get("mode","blood"))
+	var now := float(Time.get_ticks_msec()) / 1000.0
+	_hud_role.text = ("HUMANO" if human else "MOSQUITO") + " · " + {"blood":"SANGRE","survival":"SUPERVIVENCIA","sleep":"TAREAS"}.get(mode,mode)
+	_hud_time.text = _clock(float(snapshot.get("time_left",0)))
+	_hud_time.add_theme_color_override("font_color",CORAL.lightened(0.3) if float(snapshot.get("time_left",0)) < 20 else PAPER)
+	var living := 0
 	for other: Variant in actors.values():
-		if other is Dictionary and other.get("role", "") == "mosquito" and other.get("alive", false):
-			living_mosquitoes += 1
+		if other is Dictionary and other.get("role","") == "mosquito" and other.get("alive",false): living += 1
 	_hud_progress.visible = mode != "survival"
 	match mode:
 		"blood":
-			var blood: float = float(snapshot.get("blood", 0.0))
-			var goal: float = maxf(1.0, float(config.get("blood_goal", 80.0)))
-			_hud_objective.text = "Frená la recolección de sangre" if human else "Llenen la cuota entre todos"
-			_hud_progress_text.text = "Sangre: %.1f / %.0f · %d mosquitos vivos" % [blood, goal, living_mosquitoes]
-			_hud_progress.value = blood / goal * 100.0
-		"survival":
-			_hud_objective.text = "Eliminá a todos los mosquitos" if human else "Que al menos uno llegue al final"
-			_hud_progress_text.text = "%d mosquitos vivos · sin reapariciones" % living_mosquitoes
+			var goal := maxf(1.0,float(config.get("blood_goal",12)))
+			_hud_progress_text.text = "Sangre %.1f / %.0f" % [float(snapshot.get("blood",0)),goal]
+			_hud_progress.value = float(snapshot.get("blood",0)) / goal * 100.0
+		"survival": _hud_progress_text.text = "%d mosquitos vivos" % living
 		"sleep":
-			var done: int = int(snapshot.get("tasks_done", 0))
-			var goal: int = maxi(1, int(snapshot.get("task_goal", config.get("task_goal", 6))))
-			_hud_objective.text = "Completen las tareas de la casa" if human else "Picá para interrumpir las tareas"
-			_hud_progress_text.text = "Tareas del equipo: %d / %d" % [done, goal]
-			_hud_progress.value = float(done) / float(goal) * 100.0
-	_task_panel.visible = human and mode == "sleep"
+			var goal := maxi(1,int(snapshot.get("task_goal",1)))
+			_hud_progress_text.text = "Tareas %d / %d" % [int(snapshot.get("tasks_done",0)),goal]
+			_hud_progress.value = float(snapshot.get("tasks_done",0)) / goal * 100.0
+	_hud_objective.text = ""
+	_hud_state.text = ""
+	_hud_hint.text = ""
+	_hud_tool.text = ""
+	_hud_state.add_theme_color_override("font_color",PAPER)
+	_focus_progress.hide()
+	_focus_progress.value = 0
+	_attack_recovery.hide()
 	_reticle.visible = alive
+	_task_panel.visible = human and mode == "sleep" and not Dictionary(private_data.get("task",{})).is_empty()
+	var context_key := "idle"
+	var persistent := false
 	if human:
-		var threatened: bool = bool(actor.get("threatened", false))
-		_hud_state.text = "¡Te están picando! Cubrite o pedí ayuda." if bitten else ("¡Zumbido cerca! Podés cubrirte." if threatened else "Podés cubrirte antes de que te piquen.")
-		_hud_state.add_theme_color_override("font_color", _text_ink(CORAL if bitten or threatened else MINT))
-		var tool: String = str(actor.get("tool", "hands"))
-		_hud_tool.text = "EQUIPADO  " + str(TOOL_NAMES.get(tool, tool))
-		_hud_hint.text = "%s golpear" % Prefs.binding_text("attack")
-		_hud_hint.text += " · %s cubrir %s" % [Prefs.binding_text("self_swat"), _defense_band(float(actor.get("pitch", 0.0)))]
-		var nearby_tool: String = _nearby_tool(snapshot, actor)
-		if not nearby_tool.is_empty():
-			_hud_hint.text += " · %s recoger %s" % [Prefs.binding_text("pickup"), TOOL_NAMES.get(nearby_tool, nearby_tool)]
-		if tool != "hands":
-			_hud_hint.text += " · %s soltar" % Prefs.binding_text("drop")
-		_hud_hint.text += " · %s menú" % Prefs.binding_text("pause")
-		if float(snapshot.get("elapsed", 0.0)) < 7.0:
-			_hud_hint.text += " · %s correr · %s saltar · %s agacharte" % [Prefs.binding_text("sprint"), Prefs.binding_text("jump"), Prefs.binding_text("crouch")]
-		if mode == "sleep":
-			_update_task(private_data, bool(actor.get("bitten", false)))
+		var tool := str(actor.get("tool","hands"))
+		_hud_equipment.text = str(TOOL_NAMES.get(tool,tool)).replace(" · palmadas","")
+		var attack: Dictionary = private_data.get("attack",{})
+		var attack_key := "%s:%s" % [attack.get("id",-1),attack.get("state","")]
+		if int(attack.get("id",-1)) >= 0 and attack_key != _attack_feedback_key:
+			_attack_feedback_key = attack_key
+			if attack.get("state","") in ["hit","miss"]:
+				_flash_comic("¡Tocó!" if attack.state == "hit" else "Falló")
+		var recovery := maxf(0.0,float(attack.get("recovery",0)))
+		_attack_recovery.visible = alive and recovery > 0
+		_attack_recovery.value = clampf(recovery / maxf(0.01,float(Simulation.TOOL_STATS.get(tool,Simulation.TOOL_STATS.hands).cooldown)),0,1) * 100
+		var contact: Dictionary = private_data.get("bite_feedback",{})
+		var bitten: bool = bool(contact.get("active",actor.get("bitten",false)))
+		if bitten:
+			var side := str(contact.get("side","front"))
+			_hud_state.text = "¡Te están picando!"
+			_hud_state.add_theme_color_override("font_color",CORAL.lightened(0.35))
+			_hud_hint.text = "Detrás · pedí ayuda" if side == "rear" else ("Mirá tu cuerpo a la " + ("izquierda" if side == "left" else "derecha") + " · " + Prefs.binding_text("attack") if side in ["left","right"] else "Mirá tu cuerpo · %s golpear" % Prefs.binding_text("attack"))
+			context_key = "bitten:" + side
+			persistent = true
+		elif not _nearby_tool(snapshot,actor).is_empty():
+			var nearby := _nearby_tool(snapshot,actor)
+			_hud_state.text = str(TOOL_NAMES.get(nearby,nearby))
+			_hud_hint.text = "%s recoger" % Prefs.binding_text("pickup")
+			context_key = "pickup:" + nearby
+		elif float(snapshot.get("elapsed",0)) < 5:
+			_hud_state.text = "Mirá y apuntá al mosquito"
+			_hud_hint.text = "%s golpear · %s controles" % [Prefs.binding_text("attack"),Prefs.binding_text("pause")]
+			context_key = "human_intro"
+		if mode == "sleep": _update_task(private_data,bitten)
 	else:
-		var assignment: Dictionary = private_data.get("assignment", {})
-		var focus: Dictionary = private_data.get("focus", {})
-		var focus_state: String = str(focus.get("state", "idle"))
-		var lives: int = int(private_data.get("lives", actor.get("lives", 0)))
-		_hud_tool.text = "TU ZONA  " + str(assignment.get("label", "Buscando zona…")) if alive else "Seguís con tu equipo hasta el resultado."
-		if mode == "sleep":
-			_hud_tool.text += " · TUS VIDAS: %d" % lives
-		_hud_state.add_theme_color_override("font_color", _text_ink(MINT))
-		if not alive or state == "dead":
-			if mode == "sleep" and lives > 0:
-				_hud_state.text = "Reaparecés en %.1f s · te quedan %d vidas" % [float(private_data.get("respawn_left", 0.0)), lives]
-				_hud_hint.text = "Esperá para volver a volar. · %s menú" % Prefs.binding_text("pause")
-			else:
-				_hud_state.text = "Eliminado · volvés en la próxima ronda"
-				_hud_hint.text = "%s menú · Esperá el resultado de tu equipo." % Prefs.binding_text("pause")
+		var assignment: Dictionary = private_data.get("assignment",{})
+		var focus: Dictionary = private_data.get("focus",{})
+		var focus_state := str(focus.get("state","idle"))
+		var stun: Dictionary = private_data.get("stun",{})
+		var help: Dictionary = private_data.get("help",{})
+		var help_state := str(help.get("state","idle"))
+		_hud_equipment.text = ""
+		_hud_tool.text = str(assignment.get("label",""))
+		if mode != "survival" and (state == "stunned" or bool(stun.get("active",false))):
+			_reticle.hide()
+			_hud_tool.text = ""
+			_hud_state.text = "Aturdido · %.0f s" % ceilf(maxf(0.0,float(stun.remaining))) if stun.has("remaining") else "Aturdido"
+			_hud_hint.text = "Te están ayudando · recuperación ×4" if bool(stun.get("helped",false)) else "Un compañero puede ayudarte"
+			context_key = "stunned"
+			persistent = true
+		elif not alive or state == "dead":
+			_hud_state.text = "Eliminado · volvés en la próxima ronda"
+			context_key = "dead"
+			persistent = true
+		elif mode != "survival" and help_state in ["ready","helping"]:
+			_hud_tool.text = ""
+			_hud_state.text = "Ayudando al compañero" if help_state == "helping" else "Compañero aturdido"
+			_hud_hint.text = "Mantené %s · ayuda ×4" % Prefs.binding_text("bite")
+			context_key = "help:" + help_state + ":" + str(help.get("target",0))
+			if help_state == "helping":
+				_focus_progress.show()
+				_focus_progress.value = clampf(float(help.get("progress",0)),0,1)*100.0
+				persistent = true
 		elif state == "biting" or focus_state == "attached":
-			_hud_state.text = "Picando · estás prendido al cuerpo"
-			_hud_hint.text = "Pulsá %s para desprenderte · %s menú" % [Prefs.binding_text("bite"), Prefs.binding_text("pause")]
-		elif state == "perched" and focus_state not in ["ready", "charging", "blocked"]:
-			_hud_state.text = "Posado · seguís siendo visible"
-			_hud_hint.text = "%s volver a volar · mantené %s para concentrarte · %s menú" % [Prefs.binding_text("perch"), Prefs.binding_text("bite"), Prefs.binding_text("pause")]
-		else:
-			_hud_hint.text = "%s hacia la mira · soltar frena · mantené %s concentrar · %s posarte · %s menú" % [Prefs.binding_text("move_forward"), Prefs.binding_text("bite"), Prefs.binding_text("perch"), Prefs.binding_text("pause")]
-			match focus_state:
-				"charging":
-					_hud_state.text = "Concentrando… %.0f%%" % (clampf(float(focus.get("progress", 0.0)), 0.0, 1.0) * 100.0)
-					_focus_progress.visible = true
-					_focus_progress.value = clampf(float(focus.get("progress", 0.0)), 0.0, 1.0) * 100.0
-					_hud_hint.text = "Soltá %s para cancelar · %s hacia la mira · %s menú" % [Prefs.binding_text("bite"), Prefs.binding_text("move_forward"), Prefs.binding_text("pause")]
-				"ready": _hud_state.text = "Zona a tu alcance · mantené %s para picar" % Prefs.binding_text("bite")
-				"blocked":
-					_hud_state.text = _focus_reason(str(focus.get("reason", "")), "Buscá una entrada libre hacia tu zona")
-					_hud_state.add_theme_color_override("font_color", _text_ink(CORAL))
-					_hud_hint.text = "Soltá %s para cancelar · %s hacia la mira · %s menú" % [Prefs.binding_text("bite"), Prefs.binding_text("move_forward"), Prefs.binding_text("pause")]
-				_:
-					var reason: String = str(focus.get("reason", ""))
-					_hud_state.text = _focus_reason(reason, "Acercate a tu zona por un paso libre")
-					if mode == "survival" and not reason.begins_with("Soltá "):
-						_hud_state.text = "Sobreviví: no necesitás picar"
+			_hud_state.text = "Picando"
+			_hud_hint.text = "%s para desprenderte" % Prefs.binding_text("bite")
+			context_key = "attached"
+			persistent = true
+		elif focus_state == "charging":
+			_focus_progress.show()
+			_focus_progress.value = clampf(float(focus.get("progress",0)),0,1) * 100
+			_hud_state.text = "Concentrando… %.0f%%" % _focus_progress.value
+			_hud_hint.text = "Soltá %s para cancelar" % Prefs.binding_text("bite")
+			context_key = "charging"
+			persistent = true
+		elif focus_state == "ready":
+			_hud_state.text = "Zona a tu alcance"
+			_hud_hint.text = "Mantené %s para picar" % Prefs.binding_text("bite")
+			context_key = "ready:" + str(assignment.get("revision",0))
+		elif focus_state == "blocked" or str(focus.get("reason","")).begins_with("Soltá "):
+			_hud_state.text = _focus_reason(str(focus.get("reason","")),"Buscá una entrada libre")
+			context_key = "blocked:" + _hud_state.text
+		elif focus_state == "waiting":
+			_hud_state.text = "Esperando una zona libre"
+			context_key = "waiting_assignment"
+		elif state == "perched":
+			_hud_state.text = "Posado"
+			_hud_hint.text = "%s volver a volar" % Prefs.binding_text("perch")
+			context_key = "perched"
+		elif float(snapshot.get("elapsed",0)) < 5:
+			_hud_state.text = "Sobreviví: picar es opcional" if mode == "survival" else "Buscá tu marca"
+			_hud_hint.text = "%s hacia la mira · soltar frena" % Prefs.binding_text("move_forward")
+			context_key = "mosquito_intro"
+	if context_key != _hud_context_key:
+		_hud_context_key = context_key
+		_hud_context_until = now + 4.0
+	_hud_context.visible = not _hud_state.text.is_empty() and (persistent or now < _hud_context_until)
+	_hud_hint.visible = not _hud_hint.text.is_empty()
+	_hud_tool.visible = not _hud_tool.text.is_empty()
 	if changed_screen and not _paused and not _settings_open:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-func _defense_band(pitch: float) -> String:
-	return "cabeza" if pitch >= -0.25 else ("torso" if pitch >= -0.85 else "piernas")
+func _defense_band(_pitch: float) -> String:
+	return "golpe manual"
 
 
 func _focus_reason(reason: String, fallback: String) -> String:
@@ -1663,19 +1831,15 @@ func _focus_reason(reason: String, fallback: String) -> String:
 
 
 func _update_task(private_data: Dictionary, bitten: bool) -> void:
-	var task: Dictionary = private_data.get("task", {})
-	var failures: int = int(private_data.get("failures", 0))
+	var task: Dictionary = private_data.get("task",{})
 	if task.is_empty():
-		_task_title.text = "Un momento de calma"
-		_task_time.text = "Sin tarea activa"
-		_task_progress.value = 0
-		_task_detail.text = "Ayudá a cuidar la casa. Tus fallos: %d. Próximo plazo: %.0f s." % [failures, float(private_data.get("deadline", 0.0))]
+		_task_panel.hide()
 		return
-	_task_title.text = str(task.get("name", "Tarea de la casa"))
-	_task_time.text = "TU PLAZO  " + _clock(float(task.get("remaining", 0.0)))
-	_task_time.add_theme_color_override("font_color", _text_ink(CORAL if float(task.get("remaining", 0.0)) < 8.0 else MINT))
-	_task_progress.value = float(task.get("progress", 0.0)) / maxf(0.01, float(task.get("work", 5.0))) * 100.0
-	_task_detail.text = "Trabajo pausado por picadura. El avance se conserva." if bitten else "Acercate al objeto indicado y mantené %s. Tus fallos: %d." % [Prefs.binding_text("interact"), failures]
+	_task_title.text = str(task.get("name","Tarea"))
+	_task_time.text = _clock(float(task.get("remaining",0))) + " · tu plazo"
+	_task_time.add_theme_color_override("font_color",CORAL.lightened(0.3) if float(task.get("remaining",0)) < 8 else PAPER)
+	_task_progress.value = float(task.get("progress",0)) / maxf(0.01,float(task.get("work",3))) * 100
+	_task_detail.text = "Picadura · trabajo pausado" if bitten else "Mantené %s junto al puesto" % Prefs.binding_text("interact")
 
 
 func _nearby_tool(snapshot: Dictionary, actor: Dictionary) -> String:
@@ -1701,8 +1865,8 @@ func _flash_comic(text_value: String) -> void:
 	_comic_feedback.modulate = Color.WHITE
 	_comic_feedback.show()
 	_comic_feedback_tween = create_tween()
-	_comic_feedback_tween.tween_interval(0.5)
-	_comic_feedback_tween.tween_property(_comic_feedback, "modulate:a", 0.0, 0.18)
+	_comic_feedback_tween.tween_interval(0.24)
+	_comic_feedback_tween.tween_property(_comic_feedback, "modulate:a", 0.0, 0.16)
 	_comic_feedback_tween.tween_callback(_comic_feedback.hide)
 
 

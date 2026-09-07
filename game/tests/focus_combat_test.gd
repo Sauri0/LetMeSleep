@@ -33,11 +33,12 @@ func make_sim(humans: int = 1, mosquitoes: int = 1, goal: float = 12.0) -> RefCo
 	return sim
 
 func aim(sim: RefCounted, id: int, target: Vector3, held: bool, move: Vector3 = Vector3.ZERO) -> void:
-	var origin: Vector3 = sim.actors[id].p
 	if sim.actors[id].role == "human":
-		origin += Vector3(Pose.sample(sim.actors[id]).eye).rotated(Vector3.UP, float(sim.actors[id].yaw))
-	var delta: Vector3 = (target - origin).normalized()
-	sim.submit_input(id, int(sim.actors[id]._input_seq) + 1, move, atan2(-delta.x, -delta.z), asin(delta.y), held)
+		var angles: Vector2 = Pose.aim_angles(sim.actors[id], target)
+		sim.submit_input(id, int(sim.actors[id]._input_seq) + 1, move, angles.x, angles.y, held)
+	else:
+		var delta: Vector3 = (target - Vector3(sim.actors[id].p)).normalized()
+		sim.submit_input(id, int(sim.actors[id]._input_seq) + 1, move, atan2(-delta.x, -delta.z), asin(delta.y), held)
 
 func place(sim: RefCounted, id: int, human: int, zone: int, distance: float = 0.8) -> void:
 	sim.actors[id]._assignment = {"human": human, "zone": zone, "revision": 1}
@@ -100,7 +101,7 @@ func _test_focus() -> void:
 	check(sim.actors[2].state == "flying" and sim.private_for(2).focus.progress == 0.0, "held key cannot reattach after explicit detach until released")
 	var public: Dictionary = sim.public_snapshot()
 	check(public.actors[1].has("threatened") and not public.actors[2].has("focus") and not public.actors[2].has("_assignment"), "only generic warning is public; focus and assignment remain private")
-	place(sim, 2, 1, 18, 0.8)
+	place(sim, 2, 1, Sim.FRONT_ZONE_COUNT, 0.8)
 	sim.actors[2]._focus_suppressed = false
 	var posed: Dictionary = sim._zone_pose(sim.actors[2]._assignment)
 	sim.actors[2].p = Vector3(posed.p) - Vector3(posed.normal) * 0.8
@@ -124,32 +125,31 @@ func _test_exposed_poses() -> void:
 					check(not sim._body_occludes(outward, posed.p, -1), "surface exposed %s crouch%.1f pitch%.1f swing%.2f" % [zone.label, crouch, pitch, swing])
 
 func _test_defense() -> void:
-	for zone: int in range(16):
+	for zone: int in range(Sim.FRONT_ZONE_COUNT):
 		var sim = make_sim()
 		place(sim, 2, 1, zone, 0.55)
 		concentrate(sim, 2, 1.6)
 		check(sim.actors[2].state == "biting", "all solo zones can concentrate and attach: %d" % zone)
-		var band: int = Sim.BODY_ZONES[zone].band
-		sim.submit_input(1, 1, Vector3.ZERO, 0.0, [0.0, -0.55, -1.2][band], false)
+		aim(sim, 1, sim.actors[2].p, false)
 		sim.action(1, 1, "self_swat")
 		sim.step(0.05)
-		check(sim.actors[2].alive, "swat has anticipation before physical gesture contact")
+		check(sim.actors[2].state == "biting", "swat has anticipation before physical gesture contact")
 		sim.step(0.2)
-		check(not sim.actors[2].alive, "hands defend matching solo zone during strike window: %d" % zone)
+		check(sim.actors[2].state == "stunned", "hands defend manually aimed solo zone during strike window: %d" % zone)
 	var coop = make_sim(2)
-	place(coop, 3, 1, 18, 0.5)
+	place(coop, 3, 1, Sim.FRONT_ZONE_COUNT, 0.5)
 	concentrate(coop, 3, 1.6)
 	coop.submit_input(1, 1, Vector3.ZERO, 0.0, -0.55, false)
 	coop.action(1, 1, "self_swat")
 	coop.step(0.3)
-	check(coop.actors[3].alive, "rear zone still requires teammate after combat adjustment")
+	check(coop.actors[3].state == "biting", "rear zone still requires teammate after combat adjustment")
 	var mark: Dictionary = coop.private_for(3).assignment
 	coop.actors[2].p = Vector3(coop.actors[1].p) + Vector3(mark.normal) * 1.0
 	coop.actors[2].p.y = coop.actors[1].p.y
 	aim(coop, 2, coop.actors[3].p, false)
 	coop.action(2, 1, "attack")
 	coop.step(0.3)
-	check(not coop.actors[3].alive, "teammate aimed slap removes rear insect from exposed side")
+	check(coop.actors[3].state == "stunned", "teammate aimed slap removes rear insect from exposed side")
 
 func _test_occlusion() -> void:
 	var blocked = make_sim(2)
@@ -160,17 +160,18 @@ func _test_occlusion() -> void:
 	blocked.submit_input(1, 1, Vector3.ZERO, 0.0, -0.55, false)
 	blocked.action(1, 1, "self_swat")
 	blocked.step(0.3)
-	check(blocked.actors[3].alive, "defensive palm does not kill a free insect through another human")
+	check(blocked.actors[3].state != "stunned", "defensive palm does not kill a free insect through another human")
 	blocked.actors[2].p = Vector3(-5.0, 0.0, 8.0)
-	blocked.actors[3].p = Vector3(-7.0, 1.2, 7.45)
+	blocked.actors[3].p = Vector3(-7.0, 1.2, 7.25)
+	blocked.actors[3].velocity = Vector3.ZERO
 	blocked.step(0.6)
-	blocked.submit_input(1, 2, Vector3.ZERO, 0.0, -0.55, false)
+	aim(blocked, 1, blocked.actors[3].p, false)
 	blocked.action(1, 2, "self_swat")
 	blocked.step(0.3)
-	check(not blocked.actors[3].alive, "same defensive palm reaches an exposed free insect in the selected band")
+	check(blocked.actors[3].state == "stunned", "same defensive palm reaches an exposed free insect under the clicked ray")
 	var floor_sim = make_sim()
 	floor_sim.actors[1].p = Vector3(-7.0, 3.2, 8.0)
-	floor_sim.actors[2]._assignment = {"human": 1, "zone": 14, "revision": 1}
+	floor_sim.actors[2]._assignment = {"human": 1, "zone": 6, "revision": 1}
 	var mark: Dictionary = floor_sim.private_for(2).assignment
 	floor_sim.actors[2].p = Vector3(mark.p.x, 2.7, mark.p.z)
 	aim(floor_sim, 2, mark.p, true)
@@ -188,6 +189,8 @@ func _test_extraction() -> void:
 		# This isolates feeding balance from navigation. Real focus is separately
 		# exercised above: permanent attachment must not exceed shared throughput.
 		for id: int in range(2, count + 2):
+			if Dictionary(sim.actors[id]._assignment).is_empty():
+				continue
 			sim.actors[id].state = "biting"
 			sim.actors[id]._bite_started = 0.0
 		for tick: int in range(240):

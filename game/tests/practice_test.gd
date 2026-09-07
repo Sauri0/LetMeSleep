@@ -6,7 +6,7 @@ const ArenaData = preload("res://scripts/arena.gd")
 const Pose = preload("res://scripts/human_pose.gd")
 const Sim = preload("res://scripts/simulation.gd")
 const DT := 0.05
-const APPEARANCES := {"human": {"color": 3, "accessory": 1}, "mosquito": {"color": 5, "accessory": 2}}
+const APPEARANCES := {"human": {"color": 3, "accessory": 1, "face": 2, "hair": 1, "outfit": 2, "accent": 4}, "mosquito": {"color": 5, "accessory": 2, "face": 1, "hair": 2, "outfit": 1, "accent": 3}}
 var checks := 0
 var failures := 0
 
@@ -20,11 +20,14 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
-	for role: String in ["human", "mosquito"]:
-		for mode: String in ["blood", "survival", "sleep"]:
-			_test_complete_round(role, mode)
+	if not OS.get_cmdline_user_args().has("--contact-only"):
+		for role: String in ["human", "mosquito"]:
+			for mode: String in ["blood", "survival", "sleep"]:
+				_test_complete_round(role, mode)
 	_test_human_reaction()
-	_test_contact_defense()
+	_test_contact_defense(1.0/60.0)
+	_test_contact_defense(0.05)
+	_test_bot_rescue()
 	_test_obstructed_observation()
 	print("PRACTICE_RESULT checks=%d failures=%d" % [checks, failures])
 	quit(failures)
@@ -99,7 +102,7 @@ func _test_human_reaction() -> void:
 	# plus perception latency. Imperfect aim deliberately need not guarantee a hit.
 	var brain := Brain.new()
 	brain.setup(101)
-	var actors := {101: {"role": "human", "alive": true, "p": Vector3(-7, 0, 8), "yaw": 0.0, "pitch": 0.0, "tool": "hands", "bitten": false}, 1: {"role": "mosquito", "alive": true, "p": Vector3(-7, 1.55, 7.2), "state": "flying"}}
+	var actors := {101: {"role": "human", "alive": true, "p": Vector3(-7, 0, 8), "yaw": 0.0, "pitch": 0.0, "tool": "hands", "bitten": false}, 1: {"role": "mosquito", "alive": true, "p": Vector3(-7, 1.55, 7.5), "state": "flying"}}
 	var first_attack := -1.0
 	for frame: int in range(200):
 		var intent: Dictionary = brain.decide({"phase": "playing", "actors": actors, "config": {"mode": "blood", "map_id": "house"}, "pickups": {}}, {}, DT)
@@ -110,40 +113,44 @@ func _test_human_reaction() -> void:
 	check(first_attack >= 7.0 and first_attack <= 9.0, "human perceives exposed target then attacks after orientation/reaction latency")
 	print("PRACTICE_REACTION first_attack=%.2f" % first_attack)
 
-func _test_contact_defense() -> void:
+func _test_contact_defense(contact_dt: float) -> void:
 	var session := Practice.new()
 	session.start("mosquito", "sleep", APPEARANCES)
 	var assignment: Dictionary = session.sim.private_for(1).assignment
 	# Only setup location is adjusted; acquisition, motion, charge, contact,
-	# defense, life consumption and respawn run through the production session.
+	# defense, stun and recovery run through the production session.
 	session.sim.actors[1].p = Vector3(assignment.p) + Vector3(assignment.normal) * 0.85
 	session.send_action(1, "bite")
-	session.advance(DT)
+	session.advance(contact_dt)
 	check(session.sim.actors[1].state != "biting", "practice bite action cannot bypass held concentration")
 	var attached_at := -1.0
 	var first_swat := -1.0
-	var died_at := -1.0
-	for frame: int in range(240):
+	var stunned_at := -1.0
+	for frame: int in range(int(12.0/contact_dt)):
 		var own: Dictionary = session.sim.private_for(1)
 		if not Dictionary(own.assignment).is_empty():
 			var delta: Vector3 = (Vector3(own.assignment.p) - Vector3(session.sim.actors[1].p)).normalized()
 			session.send_input(frame, Vector3.ZERO, atan2(-delta.x, -delta.z), asin(delta.y), true)
-		session.advance(DT)
+		session.advance(contact_dt)
 		if session.sim.actors[1].state == "biting" and attached_at < 0:
 			attached_at = session.sim.elapsed
-		if int(session.brains[101].stats.self_swats) > 0 and first_swat < 0:
+		if int(session.brains[101].stats.attacks) > 0 and first_swat < 0:
 			first_swat = session.sim.elapsed
-		if not bool(session.sim.actors[1].alive):
-			died_at = session.sim.elapsed
+		if session.sim.actors[1].state == "stunned":
+			stunned_at = session.sim.elapsed
 			break
 	check(attached_at >= Sim.FOCUS_SECONDS, "practice player attaches only after real held charge against moving bot")
 	check(first_swat > attached_at + 3.3 and first_swat < attached_at + 4.3, "human bot responds to public bite feedback after tactile latency")
-	check(died_at > first_swat and int(session.sim.actors[1].lives) == 2, "actual defensive contact consumes one personal task-mode life")
-	if died_at > 0:
-		for frame: int in range(int(ceil(float(session.sim.config.respawn_seconds) / DT)) + 2):
-			session.advance(DT)
-		check(session.sim.actors[1].alive and int(session.sim.actors[1].lives) == 2 and session.sim.phase == "playing", "remaining personal lives respawn through practice authority")
-	print("PRACTICE_CONTACT attached=%.2f swat=%.2f death=%.2f" % [attached_at, first_swat, died_at])
+	check(stunned_at > first_swat and bool(session.sim.actors[1].alive), "actual defensive contact stuns a living mosquito in task mode")
+	if stunned_at > 0:
+		var before: Vector3 = session.sim.actors[1].p
+		for frame: int in range(int(ceil(35.0 / contact_dt)) + 2):
+			if session.sim.actors[1].state == "stunned":
+				before = session.sim.actors[1].p
+			session.advance(contact_dt)
+		check(session.sim.actors[1].alive and session.sim.actors[1].state == "flying" and session.sim.phase == "playing", "unassisted mosquito recovers after35s without consuming lives or ending the round")
+		check(Vector3(session.sim.actors[1].p).distance_to(before) < 0.08, "recovery stays at the last fallen location instead of respawn teleport")
+	print("PRACTICE_CONTACT dt=%.4f attached=%.2f swat=%.2f stunned=%.2f" % [contact_dt, attached_at, first_swat, stunned_at])
 	session.stop()
 	session.free()
 
@@ -154,8 +161,32 @@ func _test_obstructed_observation() -> void:
 		var human_p: Vector3 = Vector3(-3, 0, 2.5) if obstruction == "wall" else Vector3(-7, 0, 8)
 		var mosquito_p: Vector3 = Vector3(-1.3, 1.55, 2.5) if obstruction == "wall" else Vector3(-7, 3.35, 7.4)
 		var actors := {101: {"role": "human", "alive": true, "p": human_p, "yaw": -PI / 2 if obstruction == "wall" else 0.0, "pitch": 0.0, "tool": "broom", "bitten": false}, 1: {"role": "mosquito", "alive": true, "p": mosquito_p, "state": "flying"}}
-		var eye: Vector3 = human_p + Vector3(Pose.sample(actors[101]).eye)
+		var eye: Vector3 = Pose.view_origin(actors[101])
 		check(eye.distance_to(mosquito_p) < float(Sim.TOOL_STATS.broom.reach) and not ArenaData.clear_segment(eye, mosquito_p), "occlusion fixture is in tool range behind " + obstruction)
 		for frame: int in range(240):
 			brain.decide({"phase": "playing", "actors": actors, "config": {"mode": "blood", "map_id": "house"}, "pickups": {}}, {}, DT)
 		check(int(brain.stats.attacks) == 0, "human does not attempt aimed attacks through " + obstruction)
+
+func _test_bot_rescue() -> void:
+	var session := Practice.new()
+	session.start("human", "blood", APPEARANCES)
+	# Place one fallen ally and a nearby observer; the helper's decisions and
+	# acceleration of recovery are entirely production BotBrain/Simulation.
+	session.sim.actors[101].p = Vector3(-7,0.25,8)
+	session.sim.actors[102].p = Vector3(-7.6,0.35,8)
+	session.sim._kill(101)
+	session.brains[101].age = 10.0
+	session.brains[102].age = 10.0
+	var recovered_at := -1.0
+	for frame: int in range(12*60):
+		session.send_input(frame,Vector3.ZERO,0,0,false)
+		session.advance(1.0/60.0)
+		if session.sim.actors[101].state == "flying":
+			recovered_at = session.sim.elapsed
+			break
+	check(session.brains[102].stats.helps > 0,"mosquito bot chooses held help from a visible fallen teammate")
+	check(recovered_at >= 8.75 and recovered_at < 12.0,"bot rescue accelerates real recovery without instantly reviving")
+	check(session.sim.actors[101].alive and session.sim.phase == "playing","rescued practice rival remains in the same round")
+	print("PRACTICE_RESCUE recovered=%.3f help_inputs=%d" % [recovered_at,session.brains[102].stats.helps])
+	session.stop()
+	session.free()

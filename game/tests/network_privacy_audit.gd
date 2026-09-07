@@ -2,7 +2,7 @@ extends RefCounted
 ## Test-only observer of accepted network packets. Channels can arrive in either
 ## order: a future private tick must never be classified using an older role.
 
-const FORBIDDEN_PUBLIC_KEYS := ["assignment", "assignments", "zone", "target", "rotation_at", "next_rotation", "blocked_zone", "focus", "task"]
+const FORBIDDEN_PUBLIC_KEYS := ["assignment", "assignments", "zone", "target", "target_id", "rotation_at", "next_rotation", "blocked_zone", "focus", "task", "attack", "bite_feedback", "stun", "help"]
 var failures: Array[String] = []
 var deferred_count := 0
 var matched_count := 0
@@ -49,7 +49,7 @@ func record_private(data: Dictionary) -> void:
 		_fail("private assignment must be a dictionary at tick%d" % int(data.tick))
 		return
 	# Store only immutable audit facts, not a reference to the received payload.
-	var packet := {"tick": int(data.tick), "assignment_present": not assignment.is_empty()}
+	var packet := {"tick": int(data.tick), "assignment_present": not assignment.is_empty(), "focus_present": data.has("focus") or data.has("stun") or data.has("help"), "human_feedback_present": data.has("attack") or data.has("bite_feedback")}
 	if not _match(packet):
 		_pending.append(packet)
 		deferred_count += 1
@@ -70,6 +70,10 @@ func _match(packet: Dictionary) -> bool:
 	matched_count += 1
 	if bool(packet.assignment_present) and str(evidence.role) != "mosquito":
 		_fail("private assignment reached human at tick%d (public evidence tick%d)" % [int(packet.tick), int(evidence.tick)])
+	if bool(packet.focus_present) and str(evidence.role) != "mosquito":
+		_fail("private mosquito concentration/recovery/help reached human at tick%d" % int(packet.tick))
+	if bool(packet.human_feedback_present) and str(evidence.role) != "human":
+		_fail("private human contact feedback reached mosquito at tick%d" % int(packet.tick))
 	return true
 
 func _lower_bound(tick: int) -> int:

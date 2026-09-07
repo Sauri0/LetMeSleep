@@ -63,7 +63,20 @@ func _run() -> void:
 	Prefs.cosmetics = {}
 	Prefs._loaded = false
 	Prefs.load_settings()
-	check(Prefs.cosmetics == {"human": {"color": 5, "accessory": 2}, "mosquito": {"color": 1, "accessory": 1}}, "Fresh load restores independent human and mosquito appearances")
+	check(Prefs.cosmetics == {"human": {"color": 5, "accessory": 2, "face": 0, "hair": 0, "outfit": 0, "accent": 0}, "mosquito": {"color": 1, "accessory": 1, "face": 0, "hair": 0, "outfit": 0, "accent": 0}}, "Fresh load migrates independent appearances and defaults new categories")
+	Prefs.cosmetics.human.face = 2
+	Prefs.cosmetics.human.hair = 1
+	Prefs.cosmetics.mosquito.outfit = 2
+	Prefs.cosmetics.mosquito.accent = 4
+	Prefs.local_host_port = 28451
+	Prefs.server_port = 29111
+	Prefs.sharing_scope = "virtual"
+	Prefs.save_settings()
+	Prefs.cosmetics = {}
+	Prefs._loaded = false
+	Prefs.load_settings()
+	check(Prefs.cosmetics.human.face == 2 and Prefs.cosmetics.human.hair == 1 and Prefs.cosmetics.mosquito.outfit == 2 and Prefs.cosmetics.mosquito.accent == 4, "Expanded role profiles persist across fresh settings load")
+	check(Prefs.local_host_port == 28451 and Prefs.server_port == 29111 and Prefs.sharing_scope == "virtual", "Host port persists independently from previously joined server")
 	check(Prefs.binding_text("jump") == "J" and Prefs.binding_text("attack") == "Clic der.", "Fresh load restores keyboard and mouse bindings")
 	check(Prefs.binding_text("bite") == "H" and Prefs.binding_text("self_swat") == "T", "Migration preserves reassigned concentration and defense controls")
 	check(FileAccess.get_file_as_bytes(source) == source_bytes, "Legacy source remains unchanged")

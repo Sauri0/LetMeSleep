@@ -33,10 +33,52 @@ static func _room_ok(room: String) -> bool:
 	pattern.compile("^[A-Z0-9]{6}$")
 	return pattern.search(room) != null
 
-static func encode(host: String, port: int, room: String) -> String:
+static func classify_host(value: String) -> String:
+	var host := value.strip_edges().to_lower()
+	if host.begins_with("::ffff:") and host.substr(7).is_valid_ip_address():
+		return classify_host(host.substr(7))
+	if host == "localhost" or host.ends_with(".localhost") or host == "::1":
+		return "loopback"
+	if host.is_valid_ip_address():
+		if host.contains(":"):
+			if host == "::": return "unspecified"
+			if host.begins_with("fc") or host.begins_with("fd"): return "private"
+			if host.begins_with("fe8") or host.begins_with("fe9") or host.begins_with("fea") or host.begins_with("feb"): return "link_local"
+			if host.begins_with("ff"): return "multicast"
+			if host.begins_with("2001:db8:"): return "reserved"
+			return "public_ipv6"
+		var parts := host.split(".")
+		var a := int(parts[0])
+		var b := int(parts[1])
+		var c := int(parts[2])
+		if a == 127: return "loopback"
+		if a == 0: return "unspecified"
+		if a == 10 or (a == 172 and b >= 16 and b <= 31) or (a == 192 and b == 168): return "private"
+		if a == 169 and b == 254: return "link_local"
+		if a == 100 and b >= 64 and b <= 127: return "shared"
+		if a >= 224: return "multicast"
+		if (a == 192 and b == 0 and c == 2) or (a == 198 and b == 51 and c == 100) or (a == 203 and b == 0 and c == 113) or (a == 198 and b in [18,19]): return "reserved"
+		return "public_ipv4"
+	return "local_name" if not host.contains(".") or host.ends_with(".local") else "hostname"
+
+static func validate_sharing_address(host: String, scope: String) -> String:
+	var error := validate_host(host)
+	if not error.is_empty(): return error
+	if scope not in ["lan", "internet", "virtual"]: return "Elegí cómo se conectan tus amigos."
+	var kind := classify_host(host)
+	if kind in ["loopback", "unspecified", "multicast", "link_local", "reserved"]:
+		return "Esa dirección no sirve para compartir una sala."
+	if scope == "internet" and kind in ["private", "shared", "local_name"]:
+		return "Esa dirección no es de Internet pública. Para otra casa usá un endpoint público, o elegí una red virtual compartida."
+	return ""
+
+static func encode(host: String, port: int, room: String, scope: String = "") -> String:
 	if not validate_host(host).is_empty() or port < 1024 or port > 65535 or not _room_ok(room):
 		return ""
 	var data := {"v":1, "host":host, "port":port, "room":room}
+	if not scope.is_empty():
+		if not validate_sharing_address(host, scope).is_empty(): return ""
+		data["scope"] = scope
 	return PREFIX + Marshalls.raw_to_base64(JSON.stringify(data).to_utf8_buffer()).replace("+", "-").replace("/", "_").trim_suffix("=").trim_suffix("=")
 
 static func decode(value: String) -> Dictionary:
@@ -70,7 +112,10 @@ static func decode(value: String) -> Dictionary:
 		return {"ok":false, "error":"El puerto de la invitación no es válido."}
 	if not _room_ok(str(data.room)):
 		return {"ok":false, "error":"El código de sala está incompleto."}
-	return {"ok":true, "error":"", "host":str(data.host), "port":int(port), "room":str(data.room)}
+	var scope: Variant = data.get("scope", "")
+	if not scope is String or (not str(scope).is_empty() and not validate_sharing_address(str(data.host), str(scope)).is_empty()):
+		return {"ok":false,"error":"El alcance de esa invitación no coincide con su dirección. Pedile una nueva al anfitrión."}
+	return {"ok":true, "error":"", "host":str(data.host), "port":int(port), "room":str(data.room), "scope":str(scope)}
 
 static func local_addresses() -> Array[String]:
 	var result: Array[String] = []

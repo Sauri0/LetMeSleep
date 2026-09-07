@@ -158,7 +158,7 @@ func _test_pose_geometry() -> void:
 							check(inside and point.is_finite() and is_equal_approx(Vector3(posed.normal).length(), 1.0), "zone %s within collision envelope c=%.1f ground=%s swing=%.2f phase=%d pitch=%.2f point=%s" % [zone.label, crouch, str(grounded), swing, phase, pitch, str(point)])
 
 func _test_biting_pose() -> void:
-	for zone: int in range(16):
+	for zone: int in range(Sim.FRONT_ZONE_COUNT):
 		var sim = new_sim()
 		sim.actors[1].p = Vector3.ZERO
 		sim.actors[2]._assignment = {"human": 1, "zone": zone, "revision": 1}
@@ -178,28 +178,27 @@ func _test_biting_pose() -> void:
 			var expected: Dictionary = sim.private_for(2).assignment
 			check(Vector3(sim.actors[2].p).is_equal_approx(Vector3(expected.p) + Vector3(expected.normal) * Sim.ATTACH_OFFSET), "attached mosquito follows authoritative pose every frame zone %d tick %d" % [zone, tick])
 		check(sim.actors[2].state == "biting" and sim.actors[2]._next_rotation == schedule and sim.blood > 0.0, "jump/crouch keep bite and schedule, blood persists zone %d" % zone)
-		var band: int = Sim.BODY_ZONES[zone].band
-		sim.submit_input(1, 100, Vector3.ZERO, 0.0, [0.0, -0.5, -1.2][band], false, false, true, false)
+		var angles: Vector2 = Pose.aim_angles(sim.actors[1], sim.actors[2].p)
+		sim.submit_input(1, 100, Vector3.ZERO, angles.x, angles.y, false, false, true, false)
 		sim.action(1, 1, "self_swat")
 		sim.step(0.3)
-		check(not sim.actors[2].alive, "all solo zones remain defendable when crouched zone %d" % zone)
+		check(sim.actors[2].state == "stunned", "all solo zones remain defendable when crouched zone %d" % zone)
 	var cooperative = new_sim(2)
 	cooperative.actors[1].p = Vector3.ZERO
 	cooperative.actors[1].crouch_amount = 1.0
-	cooperative.actors[2].p = Vector3(0, 0, 1.2)
-	cooperative.actors[3]._assignment = {"human": 1, "zone": 18, "revision": 1}
+	cooperative.actors[2].p = Vector3(0, 0, 0.85)
+	cooperative.actors[3]._assignment = {"human": 1, "zone": Sim.FRONT_ZONE_COUNT, "revision": 1}
 	cooperative.actors[3].state = "biting"
 	cooperative.submit_input(1, 1, Vector3.ZERO, 0.0, -0.5, false, false, true, false)
 	cooperative.step(0.025)
 	cooperative.action(1, 1, "self_swat")
 	cooperative.step(0.025)
-	check(cooperative.actors[3].alive, "crouching cannot self-swat cooperative rear zone")
-	var eye: Vector3 = Vector3(cooperative.actors[2].p) + Vector3(Pose.sample(cooperative.actors[2]).eye)
-	var direction: Vector3 = (Vector3(cooperative.actors[3].p) - eye).normalized()
-	cooperative.submit_input(2, 1, Vector3.ZERO, atan2(-direction.x, -direction.z), asin(direction.y), false)
+	check(cooperative.actors[3].state == "biting", "crouching cannot self-swat cooperative rear zone")
+	var angles: Vector2 = Pose.aim_angles(cooperative.actors[2], cooperative.actors[3].p)
+	cooperative.submit_input(2, 1, Vector3.ZERO, angles.x, angles.y, false)
 	cooperative.action(2, 1, "attack")
 	cooperative.step(0.3)
-	check(not cooperative.actors[3].alive, "teammate can aim at crouched rear zone using shared eye/body pose")
+	check(cooperative.actors[3].state == "stunned", "teammate can aim at crouched rear zone using shared eye/body pose")
 
 func _test_swings_and_exposed_marks() -> void:
 	var sim = new_sim()
@@ -217,7 +216,10 @@ func _test_swings_and_exposed_marks() -> void:
 					check(not sim._body_occludes(outward, posed.p, -1), "zone %s exposes its contact surface during %s swing frame=%d crouch=%.1f" % [zone.label, tool, frame, crouch])
 					check(Vector2(contact.x, contact.z).length() + Map.MOSQUITO_RADIUS <= Map.HUMAN_RADIUS + 0.00001, "animated %s %s contact stays inside reserved body envelope c=%.1f frame=%d p=%s" % [tool, zone.label, crouch, frame, str(contact)])
 	var hands_idle: Dictionary = Pose.sample({"tool": "hands"})
-	var hands_clap: Dictionary = Pose.sample({"tool": "hands", "swing": 0.62})
-	check(Vector3(hands_clap.hand_l).distance_to(hands_clap.hand_r) < Vector3(hands_idle.hand_l).distance_to(hands_idle.hand_r) * 0.3, "barehand attack brings both hands together in actual shared pose")
-	var tool_swing: Dictionary = Pose.sample({"tool": "swatter", "swing": 0.42})
-	check(tool_swing.hand_l == hands_idle.hand_l and tool_swing.hand_r.z < hands_idle.hand_r.z - 0.2, "equipped tool animates right hand with left at rest")
+	var point := Vector3(-0.12, 1.10, -0.30)
+	var strike := {"tool": "hands", "hand": "right", "point": point, "progress": 0.5, "active": true}
+	var hands_contact: Dictionary = Pose.sample({"tool": "hands", "strike": strike})
+	check(Vector3(hands_contact.hand_r).distance_to(point) < 0.0001 and hands_contact.hand_l == hands_idle.hand_l, "manual palm reaches clicked point while other arm stays still")
+	strike = {"tool": "swatter", "hand": "right", "point": Vector3(0, 1.2, -0.8), "progress": 0.5, "active": true}
+	var tool_swing: Dictionary = Pose.sample({"tool": "swatter", "strike": strike})
+	check(tool_swing.hand_l == hands_idle.hand_l and Vector3(tool_swing.strike_contact).distance_to(strike.point) < 0.0001, "equipped tool face reaches clicked point with left arm at rest")

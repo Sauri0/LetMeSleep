@@ -85,7 +85,7 @@ func sync(data: Dictionary, views: Dictionary, player_id: int) -> void:
 				buzzes[key] = buzz
 			var voice: AudioStreamPlayer3D = buzzes[key]
 			voice.position = position
-			if not alive or suspended:
+			if not alive or state=="stunned" or suspended:
 				voice.stop()
 			elif not voice.playing:
 				voice.play(float(int(key) % 17) / 17.0)
@@ -97,7 +97,7 @@ func sync(data: Dictionary, views: Dictionary, player_id: int) -> void:
 				if tool != str(before.tool) and tool != "hands":
 					_emit("pickup", position + Vector3(0, 1.0, 0), -18.0, 1.0)
 			if role == "mosquito":
-				if bool(before.alive) and not alive:
+				if (bool(before.alive) and not alive) or (alive and state=="stunned" and str(before.state)!="stunned"):
 					_emit("impact", position, -11.0, 0.95 + float(int(key) % 4) * 0.025)
 				elif alive and state == "biting" and str(before.state) != "biting":
 					_emit("bite", position, -19.0, 1.0)
@@ -130,7 +130,7 @@ func _process(dt: float) -> void:
 	for key: Variant in buzzes:
 		var voice: AudioStreamPlayer3D = buzzes[key]
 		var actor: Dictionary = latest_actors.get(key, {})
-		if not bool(actor.get("alive", false)):
+		if not bool(actor.get("alive", false)) or str(actor.get("state",""))=="stunned":
 			voice.stop()
 			continue
 		if latest_views.has(key) and is_instance_valid(latest_views[key]):

@@ -24,5 +24,16 @@ func _initialize() -> void:
 	for room: String in ["", "ABC", "abcdef", "ABC234;quit", "ABC2345"]:
 		check(not Invite.decode(envelope({"v":1,"host":"192.168.1.24","port":27840,"room":room})).ok, "reject room")
 	check(Invite.decode("  " + Invite.encode("192.168.1.24",27840,"ABC234") + "\n").ok, "paste whitespace")
+	for sample: Array in [["10.0.0.7","private"],["172.16.3.2","private"],["172.31.255.254","private"],["192.168.1.25","private"],["100.64.0.1","shared"],["100.127.255.254","shared"],["127.0.0.1","loopback"],["169.254.2.7","link_local"],["224.0.0.1","multicast"],["203.0.113.7","reserved"],["fd00::7","private"],["fe80::7","link_local"],["2001:db8::7","reserved"],["casa.local","local_name"],["casa.example.org","hostname"],["8.8.8.8","public_ipv4"],["2606:4700:4700::1111","public_ipv6"]]:
+		check(Invite.classify_host(sample[0]) == sample[1], "classify endpoint " + sample[0])
+	for host: String in ["192.168.1.25","10.0.0.7","172.20.1.8","100.70.4.3","fd00::7","casa.local"]:
+		check(Invite.encode(host,27840,"ABC234","internet").is_empty(), "other-house scope rejects non-public endpoint " + host)
+		check(not Invite.decode(envelope({"v":1,"host":host,"port":27840,"room":"ABC234","scope":"internet"})).ok, "decode enforces the scope/address match")
+	for scope: String in ["lan","virtual"]:
+		var decoded := Invite.decode(Invite.encode("192.168.1.25",27840,"ABC234",scope))
+		check(decoded.ok and decoded.scope == scope, "non-public scoped roundtrip " + scope)
+	check(Invite.decode(Invite.encode("casa.example.org",27840,"ABC234","internet")).scope == "internet", "public hostname carries an explicit other-house scope without claiming reachability")
+	for scope: Variant in [true,5,[],{},"unrecognized"]:
+		check(not Invite.decode(envelope({"v":1,"host":"casa.example.org","port":27840,"room":"ABC234","scope":scope})).ok, "malformed scope cannot bypass validation")
 	print("INVITATION_RESULT checks=%d failures=%d" % [checks,failures])
 	quit(failures)

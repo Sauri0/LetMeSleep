@@ -88,6 +88,6 @@ Visual insect scale is approximately 65% smaller than 0.3; human body 15 pieces,
 
 ## Verification handoff
 
-Source checks confirmed: rules 3256, maps 431, routes 303, focus/combat 277, locomotion 16013, native visual 32, privacy 13, poses 33, UI 77, migration 13 all passed. Final 0.4 EXE validation, captures and hashes remain PENDING integration; distribution/PRUEBAS.md and BUILD.txt are the closure record. Historical 0.1–0.3 binaries do not certify 0.4. Real Internet/multiple PCs, hardware and human balance remain unvalidated.
+Historical 0.4 closure: source checks and final EXE were completed, including practice73/73, demo8/8, task deadlines59/59, encounters5/5, privacy24/24 and ENet16clients. The immutable v0.4.0 release and MANIFIESTO-0.4.0.json preserve artifacts, hashes and evidence. This contract describes 0.4; the active revision is documented in CONTRACT-0.5.md. Real Internet/multiple PCs, hardware and human balance remain unvalidated.
 
 Packages: Let-me-sleep-0.4.0-Windows.zip and Let-me-sleep-0.4.0-fuentes.zip; executable Let-me-sleep.exe. Protocol 4 rejects 0.3; invitation envelope remains DD3 version 1. Preserve all history.

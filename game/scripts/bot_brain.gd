@@ -27,7 +27,7 @@ var retreat_left := 0.0
 var retreat_burst_left := 0.0
 var retreat_point := Vector3.INF
 var patrol_index := 0
-var stats := {"moves":0,"bites":0,"detaches":0,"attacks":0,"self_swats":0,"task_inputs":0,"pickups":0,"paths":0}
+var stats := {"moves":0,"bites":0,"detaches":0,"attacks":0,"self_swats":0,"task_inputs":0,"pickups":0,"paths":0,"helps":0}
 
 func setup(id: int) -> void:
 	peer_id = id
@@ -76,13 +76,13 @@ func _aim(result: Dictionary, from: Vector3, to: Vector3, turn_rate: float = 2.4
 	result.pitch = move_toward(float(result.pitch),clampf(asin(delta.normalized().y),-1.35,1.25),2.0*decision_dt)
 
 func _human(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dictionary, dt: float, map_id: String) -> void:
-	var eye: Vector3 = me.p + Vector3(Pose.sample(me).eye).rotated(Vector3.UP,float(me.yaw))
+	var eye: Vector3 = Pose.view_origin(me)
 	var mode := str(snapshot.config.mode)
 	var visible: Dictionary = {}
 	var closest := 6.5
 	for id: int in snapshot.actors:
 		var other: Dictionary = snapshot.actors[id]
-		if other.role != "mosquito" or not bool(other.alive):
+		if other.role != "mosquito" or not bool(other.alive) or other.get("state", "") == "stunned":
 			continue
 		var delta: Vector3 = other.p - eye
 		var forward := Vector3.FORWARD.rotated(Vector3.UP,float(me.yaw))
@@ -91,23 +91,25 @@ func _human(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dictiona
 			closest = delta.length()
 			visible = other.duplicate(true)
 			visible.id = id
-	# A bite is tactile feedback. Pick a self-defense band by contact height,
-	# never by reading the hidden zone assignment. Rear marks remain protected
-	# by the authoritative simulation even if the AI attempts a self swat.
+	# React to an actual attached insect, then aim the same manual ray as a player.
+	# No access to reservations or automatic selection of a body band.
 	if bool(me.get("bitten",false)):
 		reaction_target = 0
 		observation_wait = 1.6
 		reaction_age += dt
-		var contact_height := 1.5
+		var contact := Vector3.INF
+		var contact_distance := INF
 		for other: Dictionary in snapshot.actors.values():
 			if other.role == "mosquito" and other.get("state","") == "biting" and Vector2(other.p.x-me.p.x,other.p.z-me.p.z).length() < 0.65:
-				contact_height = (other.p.y-me.p.y) / maxf(0.6,1.0-float(me.get("crouch_amount",0))*0.35)
-		out.pitch = 0.0 if contact_height >= 1.28 else (-0.55 if contact_height >= 0.76 else -1.1)
-		if reaction_age >= 3.6 + 0.2*sin(float(peer_id)):
-			# A novice opponent occasionally chooses the adjacent body band.
-			if posmod(int(stats.self_swats),3) == 1:
-				out.pitch = -0.6 if out.pitch > -0.3 else 0.0
-			_action(out,"self_swat",1.8)
+				var distance: float = eye.distance_to(other.p)
+				if distance < contact_distance:
+					contact_distance = distance
+					contact = other.p
+		if contact != Vector3.INF:
+			_aim_body_contact(out, me, contact)
+			var direction := Vector3.FORWARD.rotated(Vector3.RIGHT, float(out.pitch)).rotated(Vector3.UP, float(out.yaw))
+			if reaction_age >= 3.6 + 0.2*sin(float(peer_id)) and direction.dot((contact-eye).normalized()) > 0.985:
+				_action(out,"attack",1.8)
 		return
 	reaction_age = 0.0
 	var task: Dictionary = own.get("task",{})
@@ -121,13 +123,15 @@ func _human(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dictiona
 			reaction_target = int(visible.id)
 			observation_wait = 2.5
 		observation_wait -= dt
-		_aim(out,eye,visible.p + Vector3(sin(age*1.7)*0.55,cos(age*1.3)*0.40,0),0.8)
-		var reach := float(SimData.TOOL_STATS[str(me.tool)].reach)
-		if observation_wait <= 0 and closest < reach + 0.05:
+		_aim(out,eye,visible.p + Vector3(sin(age*1.7)*0.12,cos(age*1.3)*0.09,0),1.2)
+		# The ray's maximum range is not the arm's physical reach. Approach far
+		# enough for the real hand/tool gesture to reach, then attempt the strike.
+		var contact_range := minf(1.3,0.60 + float(Pose.TOOL_LENGTHS[str(me.tool)]))
+		if observation_wait <= 0 and closest < contact_range + 0.10:
 			_action(out,"attack",1.65)
-		if not working and closest > 1.65:
+		if not working and closest > contact_range:
 			var direction := _walk_direction(me.p,visible.p,map_id)
-			out.move = direction.rotated(Vector3.UP,-float(out.yaw)) * 0.25
+			out.move = direction.rotated(Vector3.UP,-float(out.yaw)) * 0.45
 		if not working:
 			return
 	var destination: Vector3
@@ -155,8 +159,21 @@ func _human(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dictiona
 				_action(out,"pickup",0.9)
 				break
 
+func _aim_body_contact(out: Dictionary, me: Dictionary, contact: Vector3) -> void:
+	var body_yaw := float(me.get("body_yaw", me.yaw))
+	var aim: Vector2 = Pose.aim_angles(me, contact)
+	var target_yaw := aim.x
+	var target_pitch := aim.y
+	if absf(wrapf(target_yaw-body_yaw,-PI,PI)) > deg_to_rad(75.0):
+		out.pitch = move_toward(float(out.pitch), -1.0, decision_dt*1.4)
+		return
+	out.yaw = float(out.yaw) + clampf(wrapf(target_yaw-float(out.yaw),-PI,PI),-decision_dt,decision_dt)
+	out.pitch = move_toward(float(out.pitch),clampf(target_pitch,-1.92,1.30),decision_dt*1.4)
+
 func _mosquito(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dictionary, dt: float, map_id: String) -> void:
 	var mode := str(snapshot.config.mode)
+	if me.state == "stunned":
+		return
 	if me.state == "biting":
 		attached_age += dt
 		if attached_age > (4.2 if mode == "blood" else 2.8):
@@ -171,6 +188,8 @@ func _mosquito(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dicti
 	attached_age = 0.0
 	# Give learners time to orientate; opponents begin independently.
 	if age < 6.0 + float(peer_id % 3)*1.8:
+		return
+	if mode != "survival" and _help_ally(snapshot, me, out, map_id):
 		return
 	var definition: Dictionary = Catalog.get_map(map_id)
 	if retreat_left > 0.0 and retreat_point != Vector3.INF:
@@ -202,6 +221,28 @@ func _mosquito(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dicti
 			stats.bites += 1
 	else:
 		_fly_toward(me,out,outer,map_id,0.68)
+
+func _help_ally(snapshot: Dictionary, me: Dictionary, out: Dictionary, map_id: String) -> bool:
+	var target: Dictionary = {}
+	var nearest := 6.5
+	for id: int in snapshot.actors:
+		var other: Dictionary = snapshot.actors[id]
+		if id == peer_id or other.role != "mosquito" or other.get("state", "") != "stunned":
+			continue
+		var distance: float = Vector3(me.p).distance_to(other.p)
+		if distance < nearest and ArenaData.clear_segment(me.p, other.p, map_id):
+			nearest = distance
+			target = other
+	if target.is_empty():
+		return false
+	if nearest < 0.72:
+		_aim(out, me.p, target.p)
+		out.move = Vector3.ZERO
+		out.interact = true
+		stats.helps += 1
+	else:
+		_fly_toward(me, out, Vector3(target.p) + Vector3.UP*0.32, map_id, 0.60)
+	return true
 
 func _fly_toward(me: Dictionary, out: Dictionary, destination: Vector3, map_id: String, throttle: float) -> void:
 	var direction := _path_direction(me.p,destination,false,map_id)

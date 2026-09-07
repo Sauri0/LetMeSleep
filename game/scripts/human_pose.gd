@@ -3,6 +3,51 @@ extends RefCounted
 
 const SWING_SECONDS := {"hands": 0.80, "swatter": 0.60, "racket": 1.05, "newspaper": 0.43, "broom": 1.20}
 const SWING_GESTURE_SECONDS := 0.36
+const INSPECT_ENTER := -0.70
+const INSPECT_EXIT := -0.45
+const VIEW_YAW_LIMIT := 75.0 * PI / 180.0
+const HUMAN_PITCH_MIN := -1.92
+const HUMAN_PITCH_MAX := 1.30
+const ARM_REACH := 0.93
+# Distance from grip to the visible striking face, not the end of the handle.
+const TOOL_LENGTHS := {"hands": 0.0, "swatter": 0.46, "racket": 0.51, "newspaper": 0.30, "broom": 0.88}
+
+static func body_yaw(actor: Dictionary) -> float:
+	return float(actor.get("body_yaw", actor.get("yaw", 0.0)))
+
+static func clamp_view_yaw(actor: Dictionary, yaw: float, pitch: float) -> float:
+	var inspecting: bool = pitch < INSPECT_ENTER or (bool(actor.get("inspecting", false)) and pitch < INSPECT_EXIT)
+	var body: float = body_yaw(actor)
+	return wrapf(body + clampf(wrapf(yaw - body, -PI, PI), -VIEW_YAW_LIMIT, VIEW_YAW_LIMIT), -PI, PI) if inspecting else wrapf(yaw, -PI, PI)
+
+static func apply_view(actor: Dictionary, yaw: float, pitch: float, dt: float = 0.0) -> void:
+	if not is_finite(yaw) or not is_finite(pitch):
+		return
+	actor.body_yaw = body_yaw(actor)
+	actor.pitch = clampf(pitch, HUMAN_PITCH_MIN, HUMAN_PITCH_MAX)
+	actor.yaw = clamp_view_yaw(actor, yaw, actor.pitch)
+	actor.inspecting = actor.pitch < INSPECT_ENTER or (bool(actor.get("inspecting", false)) and actor.pitch < INSPECT_EXIT)
+	if not bool(actor.inspecting) and dt > 0.0:
+		actor.body_yaw = wrapf(float(actor.body_yaw) + clampf(wrapf(float(actor.yaw) - float(actor.body_yaw), -PI, PI), -dt * 6.0, dt * 6.0), -PI, PI)
+
+static func view_origin(actor: Dictionary) -> Vector3:
+	var crouch: float = clampf(float(actor.get("crouch_amount", 0.0)), 0.0, 1.0)
+	var local := Vector3(0, 1.63 - crouch * 0.51, -0.38 + crouch * 0.06)
+	return Vector3(actor.get("p", Vector3.ZERO)) + local.rotated(Vector3.UP, body_yaw(actor))
+
+static func view_direction(actor: Dictionary) -> Vector3:
+	return Vector3.FORWARD.rotated(Vector3.RIGHT, float(actor.get("pitch", 0.0))).rotated(Vector3.UP, float(actor.get("yaw", 0.0)))
+
+static func aim_angles(actor: Dictionary, point: Vector3) -> Vector2:
+	var direction: Vector3 = (point - view_origin(actor)).normalized()
+	var yaw: float = atan2(-direction.x, -direction.z)
+	var pitch: float = asin(clampf(direction.y, -1.0, 1.0))
+	var alternative_yaw: float = wrapf(yaw + PI, -PI, PI)
+	var alternative_pitch: float = -PI - pitch
+	if alternative_pitch >= HUMAN_PITCH_MIN and absf(wrapf(alternative_yaw - body_yaw(actor), -PI, PI)) < absf(wrapf(yaw - body_yaw(actor), -PI, PI)):
+		yaw = alternative_yaw
+		pitch = alternative_pitch
+	return Vector2(yaw, pitch)
 
 ## Shared deterministic skeletal points. No local wall clock or render delta enters
 ## this pose: body meshes, private zones and attached insects use the same snapshot.
@@ -16,16 +61,15 @@ static func sample(actor: Dictionary) -> Dictionary:
 	var gait: float = sin(phase) * stride
 	var lift_l: float = maxf(0.0, sin(phase)) * stride * 0.45
 	var lift_r: float = maxf(0.0, -sin(phase)) * stride * 0.45
-	var tool: String = str(actor.get("tool", "hands"))
-	var swing_left: float = maxf(0.0, float(actor.get("swing", 0.0)))
-	var swing_duration: float = float(SWING_SECONDS.get(tool, 0.8))
-	var swing: float = sin(clampf((swing_duration - swing_left) / SWING_GESTURE_SECONDS, 0.0, 1.0) * PI) if swing_left > 0.0 else 0.0
+	var strike: Dictionary = actor.get("strike", {})
+	var tool: String = str(strike.get("tool", actor.get("tool", "hands"))) if bool(strike.get("active", false)) else str(actor.get("tool", "hands"))
+	var swing: float = sin(clampf(float(strike.get("progress", 1.0)), 0.0, 1.0) * PI) if bool(strike.get("active", false)) else 0.0
 	var torso := Vector3(0, 1.09 - crouch * 0.45, crouch * 0.06)
 	var head := Vector3(0, 1.55 - crouch * 0.55, -crouch * 0.02)
 	var result: Dictionary = {
-		"torso": torso, "head": head, "eye": head,
+		"torso": torso, "head": head, "eye": (view_origin(actor) - Vector3(actor.get("p", Vector3.ZERO))).rotated(Vector3.UP, -body_yaw(actor)),
 		"pelvis": Vector3(0, 0.73 - crouch * 0.25, crouch * 0.10),
-		"head_basis": Basis(Vector3.RIGHT, clampf(float(actor.get("pitch", 0.0)), -1.48, 1.48) * 0.25),
+		"head_basis": Basis(Vector3.UP, clampf(wrapf(float(actor.get("yaw", 0.0)) - body_yaw(actor), -PI, PI), -VIEW_YAW_LIMIT, VIEW_YAW_LIMIT)) * Basis(Vector3.RIGHT, clampf(float(actor.get("pitch", 0.0)), HUMAN_PITCH_MIN, HUMAN_PITCH_MAX) * 0.25),
 		"torso_height": lerpf(0.68, 0.52, crouch),
 	}
 	for side: float in [-1.0, 1.0]:
@@ -33,17 +77,30 @@ static func sample(actor: Dictionary) -> Dictionary:
 		var step: float = gait * (-side)
 		var lift: float = lift_l if side < 0.0 else lift_r
 		var tuck: float = 0.0 if grounded else 1.0
-		result["hip" + suffix] = Vector3(side * 0.135, 0.75 - crouch * 0.25, 0.01 + crouch * 0.10)
-		result["knee" + suffix] = Vector3(side * 0.135, 0.42 - crouch * 0.12 + lift * 0.5 + tuck * 0.04, 0.01 - crouch * 0.12 + step * 0.6 - tuck * 0.055)
+		result["hip" + suffix] = Vector3(side * 0.135, 0.75 - crouch * 0.25, -0.11 + crouch * 0.10)
+		result["knee" + suffix] = Vector3(side * 0.135, 0.42 - crouch * 0.12 + lift * 0.5 + tuck * 0.04, -0.11 - crouch * 0.12 + step * 0.6 - tuck * 0.055)
 		result["ankle" + suffix] = Vector3(side * 0.135, 0.10 + lift + tuck * 0.05, -step)
 		result["shoulder" + suffix] = Vector3(side * 0.31, 1.30 - crouch * 0.45, crouch * 0.06)
-		var arm_swing: float = swing if tool == "hands" or side > 0.0 else 0.0
-		var elbow := Vector3(side * 0.33, 1.07 - crouch * 0.45, -0.005 + step * 0.3)
-		var hand := Vector3(side * 0.33, 0.86 - crouch * 0.40, -0.025 + step * 0.3)
-		var target_elbow := Vector3(side * 0.29, 1.14 - crouch * 0.43, -0.23)
-		var target_hand := Vector3(side * 0.08 if tool == "hands" else side * 0.27, 1.15 - crouch * 0.40, -0.36)
-		result["elbow" + suffix] = elbow.lerp(target_elbow, arm_swing)
-		result["hand" + suffix] = hand.lerp(target_hand, arm_swing)
+		var elbow := Vector3(side * 0.25, 1.09 - crouch * 0.45, -0.24 + step * 0.015)
+		var hand := Vector3(side * 0.23, 0.89 - crouch * 0.40, -0.41 + step * 0.015)
+		var active_hand: bool = str(strike.get("hand", "right")) == ("left" if side < 0 else "right")
+		if active_hand and swing > 0.0:
+			var contact: Vector3 = (Vector3(strike.point) - Vector3(actor.get("p", Vector3.ZERO))).rotated(Vector3.UP, -body_yaw(actor))
+			var shoulder: Vector3 = result["shoulder" + suffix]
+			var direction: Vector3 = (contact - shoulder).normalized()
+			var target_hand: Vector3 = contact - direction * float(TOOL_LENGTHS.get(tool, 0.0))
+			target_hand = shoulder + (target_hand - shoulder).limit_length(ARM_REACH)
+			var target_elbow: Vector3 = shoulder.lerp(target_hand, 0.50) + Vector3(side * 0.08, -0.06, -0.10)
+			elbow = elbow.lerp(target_elbow, swing)
+			hand = hand.lerp(target_hand, swing)
+			if side > 0.0:
+				result.tool_direction = Vector3.DOWN.slerp(direction, swing).normalized()
+		result["elbow" + suffix] = elbow
+		result["hand" + suffix] = hand
+	if not result.has("tool_direction"):
+		result.tool_direction = Vector3.DOWN
+	var suffix: String = "_l" if str(strike.get("hand", "right")) == "left" else "_r"
+	result.strike_contact = Vector3(result["hand" + suffix]) + Vector3(result.tool_direction) * float(TOOL_LENGTHS.get(tool, 0.0))
 	return result
 
 static func zone_pose(actor: Dictionary, zone: Dictionary) -> Dictionary:
@@ -78,13 +135,40 @@ static func zone_pose(actor: Dictionary, zone: Dictionary) -> Dictionary:
 	var inside: Vector3 = local_point - local_normal * 0.03
 	var first_distance := INF
 	for capsule: Dictionary in capsules:
+		if _striking_limb(actor, str(capsule.key)) and not str(capsule.key).begins_with(surface_key):
+			continue
 		var hit: Dictionary = ray_capsule(outside, inside, capsule)
 		if not hit.is_empty() and float(hit.distance) < first_distance:
 			first_distance = float(hit.distance)
 			local_point = hit.p
 			local_normal = hit.normal
-	var yaw: float = float(actor.get("yaw", 0.0))
+	var yaw: float = body_yaw(actor)
 	return {"p": Vector3(actor.get("p", Vector3.ZERO)) + local_point.rotated(Vector3.UP, yaw), "normal": local_normal.rotated(Vector3.UP, yaw).normalized(), "label": str(zone.get("label", "Zona"))}
+
+static func _striking_limb(actor: Dictionary, key: String) -> bool:
+	var strike: Dictionary = actor.get("strike", {})
+	var suffix: String = "_l" if str(strike.get("hand", "right")) == "left" else "_r"
+	return bool(strike.get("active", false)) and key in ["upperarm" + suffix, "forearm" + suffix, "hand" + suffix]
+
+static func ray_body(actor: Dictionary, from: Vector3, to: Vector3, own_view: bool = false, ignore_striking_limb: bool = false) -> Dictionary:
+	var position: Vector3 = actor.get("p", Vector3.ZERO)
+	var yaw: float = body_yaw(actor)
+	var local_from: Vector3 = (from - position).rotated(Vector3.UP, -yaw)
+	var local_to: Vector3 = (to - position).rotated(Vector3.UP, -yaw)
+	var first: Dictionary = {}
+	for capsule: Dictionary in collision_segments(actor):
+		if own_view and str(capsule.key) == "head":
+			continue
+		if ignore_striking_limb and _striking_limb(actor, str(capsule.key)):
+			continue
+		var hit: Dictionary = ray_capsule(local_from, local_to, capsule)
+		if not hit.is_empty() and (first.is_empty() or float(hit.distance) < float(first.distance)):
+			first = hit
+			first.key = capsule.key
+	if not first.is_empty():
+		first.p = position + Vector3(first.p).rotated(Vector3.UP, yaw)
+		first.normal = Vector3(first.normal).rotated(Vector3.UP, yaw)
+	return first
 
 static func ray_capsule(from: Vector3, to: Vector3, capsule: Dictionary) -> Dictionary:
 	var nearest: PackedVector3Array = Geometry3D.get_closest_points_between_segments(from, to, capsule.from, capsule.to)

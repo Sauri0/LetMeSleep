@@ -9,12 +9,34 @@ const PALETTE: Array[Color] = [
 const COLOR_NAMES: Array[String] = ["Durazno", "Laguna", "Oliva", "Lila", "Miel", "Niebla"]
 const HUMAN_ACCESSORIES: Array[String] = ["none", "cap", "glasses"]
 const MOSQUITO_ACCESSORIES: Array[String] = ["none", "bow", "goggles"]
+const CATEGORY_KEYS: Array[String] = ["color", "face", "hair", "outfit", "accessory", "accent"]
+const HUMAN_OPTIONS := {
+	"face": ["Despierto", "Soñoliento", "Cejas firmes"],
+	"hair": ["Corto", "Mechón", "Rulos"],
+	"outfit": ["Pijama clásico", "Mangas a rayas", "Chaleco"],
+	"accessory": ["Sin accesorio", "Gorra", "Anteojos"],
+}
+const MOSQUITO_OPTIONS := {
+	"face": ["Redondo", "Alerta", "Soñoliento"],
+	"hair": ["Antenas rectas", "Antenas curvas", "Antenas plumosas"],
+	"outfit": ["Abdomen rayado", "Manchas", "Bandas anchas"],
+	"accessory": ["Sin accesorio", "Moño", "Gafas"],
+}
+
+static func option_names(role: String, key: String) -> Array:
+	if key in ["color", "accent"]:
+		return COLOR_NAMES.duplicate()
+	var options: Dictionary = HUMAN_OPTIONS if role == "human" else MOSQUITO_OPTIONS
+	return options.get(key, []).duplicate()
+
+static func option_count(role: String, key: String) -> int:
+	return option_names(role, key).size()
 
 
 static func sanitize(data: Variant) -> Dictionary:
 	var result: Dictionary = {
-		"human": {"color": 0, "accessory": 0},
-		"mosquito": {"color": 0, "accessory": 0},
+		"human": {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "accent": 0},
+		"mosquito": {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "accent": 0},
 	}
 	if not data is Dictionary:
 		return result
@@ -22,13 +44,10 @@ static func sanitize(data: Variant) -> Dictionary:
 		var appearance: Variant = data.get(role, {})
 		if not appearance is Dictionary:
 			continue
-		var color: Variant = appearance.get("color", 0)
-		var accessory: Variant = appearance.get("accessory", 0)
-		if color is int and int(color) >= 0 and int(color) < PALETTE.size():
-			result[role]["color"] = int(color)
-		var count: int = HUMAN_ACCESSORIES.size() if role == "human" else MOSQUITO_ACCESSORIES.size()
-		if accessory is int and int(accessory) >= 0 and int(accessory) < count:
-			result[role]["accessory"] = int(accessory)
+		for key: String in CATEGORY_KEYS:
+			var value: Variant = appearance.get(key, 0)
+			if value is int and int(value) >= 0 and int(value) < option_count(role, key):
+				result[role][key] = int(value)
 	return result
 
 

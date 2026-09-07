@@ -39,7 +39,7 @@ func _initialize() -> void:
 	leak.record_public(public_packet(70, "mosquito"), 42)
 	check(not leak.ok(), "later role change cannot erase a detected leak")
 
-	for field: String in ["focus", "assignment", "zone", "target", "rotation_at", "next_rotation", "blocked_zone", "_focus_progress", "task"]:
+	for field: String in ["focus", "assignment", "zone", "target", "target_id", "rotation_at", "next_rotation", "blocked_zone", "_focus_progress", "task", "attack", "bite_feedback", "stun", "help"]:
 		var public_leak = Audit.new()
 		var packet: Dictionary = public_packet(10, "human")
 		packet.actors[77][field] = {}
@@ -78,5 +78,36 @@ func _initialize() -> void:
 	malformed.record_private({"tick": NAN, "assignment": {}})
 	malformed.record_public({"phase": "playing", "actors": {}}, 42)
 	check(not malformed.ok() and malformed.failures.size() == 2, "missing or malformed tick is reported rather than silently discarded")
+	var human_feedback = Audit.new()
+	human_feedback.record_private({"tick": 91, "attack": {"id": 1, "state": "hit"}, "bite_feedback": {"id": 2, "active": true}})
+	check(human_feedback.pending_count() == 1 and human_feedback.failures.is_empty(), "private human feedback waits for its matching public role")
+	human_feedback.record_public(public_packet(91, "human"),42)
+	check(human_feedback.ok(), "human recipient may receive its own manual hit and actual bite feedback")
+	var wrong_feedback = Audit.new()
+	wrong_feedback.record_public(public_packet(3, "mosquito"),42)
+	wrong_feedback.record_private({"tick":3,"bite_feedback":{"active":true}})
+	check(not wrong_feedback.ok(), "human contact feedback must not be sent to another role")
+	var wrong_focus = Audit.new()
+	wrong_focus.record_public(public_packet(3, "human"),42)
+	wrong_focus.record_private({"tick":3,"focus":{"state":"waiting"},"assignment":{}})
+	check(not wrong_focus.ok(), "even waiting concentration is mosquito-private")
+	var physical = Audit.new()
+	var gesture: Dictionary = public_packet(4,"human")
+	gesture.actors[42].strike = {"id":1,"origin":Vector3.ZERO,"point":Vector3.FORWARD,"direction":Vector3.FORWARD,"hand":"left","tool":"hands","kind":"body","progress":0.5,"active":true}
+	physical.record_public(gesture,42)
+	check(physical.ok(), "public physical gesture is allowed without target or reservation")
+	var stunned = Audit.new()
+	stunned.record_private({"tick":8,"stun":{"active":true,"remaining":35},"help":{"state":"idle"},"assignment":{}})
+	var visible_stun: Dictionary = public_packet(8,"mosquito")
+	visible_stun.actors[42].state = "stunned"
+	visible_stun.actors[42].alive = true
+	visible_stun.actors[77].help_target = 42
+	stunned.record_public(visible_stun,42)
+	check(stunned.ok(), "public stun state and physical helper target coexist with private recovery countdown")
+	for field: String in ["stun", "help"]:
+		var leaked = Audit.new()
+		leaked.record_public(public_packet(9,"human"),42)
+		leaked.record_private({"tick":9,field:{"remaining":12}})
+		check(not leaked.ok(), "private mosquito " + field + " cannot reach human")
 	print("NETWORK_PRIVACY_AUDIT_RESULT checks=%d failures=%d" % [checks, failures])
 	quit(failures)

@@ -75,6 +75,15 @@ func _run() -> void:
 	actors[4].state = "flying"
 	fx.sync(actors, world.actors, 1)
 	check(fx.buzzes[4].playing, "respawn restores buzzing")
+	actors[4].state = "stunned"
+	fx.sync(actors,world.actors,1)
+	for frame: int in range(40):
+		fx.sync(actors,world.actors,1)
+		fx._process(1.0/60.0)
+	check(not fx.buzzes[4].playing and int(fx.effects_started.get("impact",0))==2,"stunned stays silent and emits one confirmed impact across repeated snapshots")
+	actors[4].state = "flying"
+	fx.sync(actors,world.actors,1)
+	check(fx.buzzes[4].playing and int(fx.effects_started.get("impact",0))==2,"recovery resumes buzz without another impact")
 	fx._process(0.31)
 	var all_stopped: bool = true
 	for value: Variant in fx.buzzes.values():

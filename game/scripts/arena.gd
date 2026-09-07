@@ -1,5 +1,6 @@
 class_name Arena
 extends RefCounted
+const Pose = preload("res://scripts/human_pose.gd")
 
 const Maps = preload("res://scripts/map_catalog.gd")
 # House aliases preserve existing consumers. New code selects data by map_id.
@@ -22,6 +23,8 @@ const STEP_HEIGHT := 0.22
 const GRAVITY := 12.0
 const JUMP_SPEED := 4.6
 const MAX_FALL_SPEED := 16.0
+const STUN_GRAVITY := 6.0
+const STUN_FALL_SPEED := 6.0
 
 static func _map(map_id: String) -> Dictionary:
 	return Maps.LOBBY if map_id == "lobby" else Maps.HOUSE
@@ -86,6 +89,24 @@ static func step_mosquito(actor: Dictionary, local_move: Vector3, dt: float, map
 	var previous: Vector3 = actor.p
 	actor.p = move_body(previous, velocity * minf(dt, 0.1), false, map_id)
 	actor.velocity = (Vector3(actor.p) - previous) / minf(dt, 0.1)
+
+static func step_stunned(actor: Dictionary, dt: float, map_id: String = "house") -> void:
+	if not is_finite(dt) or dt <= 0.0:
+		return
+	var part: float = minf(dt, 0.05)
+	var position: Vector3 = actor.p
+	var velocity: Vector3 = actor.get("velocity", Vector3.ZERO)
+	velocity.x = 0.0
+	velocity.z = 0.0
+	velocity.y = maxf(-STUN_FALL_SPEED, minf(0.0, velocity.y) - STUN_GRAVITY * part)
+	var support: float = floor_below(position, map_id) + MOSQUITO_RADIUS
+	var requested_y: float = maxf(support, position.y + velocity.y * part)
+	actor.p = move_body(position, Vector3(0, requested_y - position.y, 0), false, map_id)
+	var blocked: bool = float(actor.p.y) > requested_y + 0.00001
+	actor.grounded = float(actor.p.y) <= support + 0.0001 or blocked
+	if bool(actor.grounded):
+		velocity.y = 0.0
+	actor.velocity = velocity
 
 static func _body_box(pos: Vector3, height: float) -> AABB:
 	return AABB(pos + Vector3(-HUMAN_RADIUS, 0.003, -HUMAN_RADIUS), Vector3(HUMAN_RADIUS * 2, maxf(0.01, height - 0.006), HUMAN_RADIUS * 2))
@@ -181,10 +202,10 @@ static func _human_tick(actor: Dictionary, intent: Dictionary, dt: float, map_id
 		local_move = Vector3.ZERO
 	local_move.y = 0.0
 	local_move = local_move.limit_length(1.0)
-	for key: String in ["yaw", "pitch"]:
-		var value: Variant = intent.get(key, actor.get(key, 0.0))
-		if (value is float or value is int) and is_finite(float(value)):
-			actor[key] = wrapf(float(value), -PI, PI) if key == "yaw" else clampf(float(value), -1.48, 1.48)
+	var yaw: Variant = intent.get("yaw", actor.get("yaw", 0.0))
+	var pitch: Variant = intent.get("pitch", actor.get("pitch", 0.0))
+	if (yaw is float or yaw is int) and (pitch is float or pitch is int):
+		Pose.apply_view(actor, float(yaw), float(pitch), dt)
 	var wants_crouch: bool = intent.get("crouch", false) is bool and bool(intent.get("crouch", false))
 	var wants_sprint: bool = intent.get("sprint", false) is bool and bool(intent.get("sprint", false))
 	var jump: bool = intent.get("jump", false) is bool and bool(intent.get("jump", false))
@@ -231,6 +252,28 @@ static func clear_segment(from: Vector3, to: Vector3, map_id: String = "house") 
 		if obstacle.intersects_segment(from, to) != null:
 			return false
 	return true
+
+static func ray_map(from: Vector3, to: Vector3, map_id: String = "house", padding: float = 0.0) -> Dictionary:
+	var first: Dictionary = {}
+	for obstacle: AABB in _map(map_id).obstacles:
+		var intersection: Variant = obstacle.grow(maxf(0.0, padding)).intersects_segment(from, to)
+		if intersection == null:
+			continue
+		var point: Vector3 = intersection
+		var distance: float = from.distance_to(point)
+		if not first.is_empty() and distance >= float(first.distance):
+			continue
+		var normal := Vector3.ZERO
+		var closest := INF
+		for axis: int in range(3):
+			for upper: bool in [false, true]:
+				var edge: float = obstacle.end[axis] if upper else obstacle.position[axis]
+				if absf(point[axis] - edge) < closest:
+					closest = absf(point[axis] - edge)
+					normal = Vector3.ZERO
+					normal[axis] = 1.0 if upper else -1.0
+		first = {"p": point, "normal": normal, "distance": distance, "kind": "map"}
+	return first
 
 static func floor_below(position: Vector3, map_id: String = "house") -> float:
 	var floor_y := 0.0

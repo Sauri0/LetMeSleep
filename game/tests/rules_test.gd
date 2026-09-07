@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Sim = preload("res://scripts/simulation.gd")
+const Pose = preload("res://scripts/human_pose.gd")
 var checks := 0
 var failures := 0
 
@@ -64,9 +65,8 @@ func attach(sim: RefCounted, mosquito: int, human: int, zone: int, sequence := 1
 		sim.step(0.025)
 
 func aim_at(sim: RefCounted, human: int, target: Vector3, sequence := 1) -> void:
-	var eye: Vector3 = Vector3(sim.actors[human].p) + Vector3.UP * 1.55
-	var direction: Vector3 = (target - eye).normalized()
-	sim.submit_input(human, sequence, Vector3.ZERO, atan2(-direction.x, -direction.z), asin(direction.y), false)
+	var angles: Vector2 = Pose.aim_angles(sim.actors[human], target)
+	sim.submit_input(human, sequence, Vector3.ZERO, angles.x, angles.y, false)
 
 func _test_roster_config() -> void:
 	check(Sim.validate_roster(roster()).is_empty(), "1v2 roster accepted")
@@ -86,7 +86,7 @@ func _test_roster_config() -> void:
 	check(not Sim.validate_roster(bad).is_empty(), "unknown role rejected")
 	var settings: Dictionary = Sim.sanitize_config({"mode": "unknown", "round_seconds": NAN, "mosquito_lives": 99, "task_interval": 15, "task_work": 8, "task_deadline": 99, "task_floor": 0})
 	check(settings.mode == "blood" and is_finite(float(settings.round_seconds)), "malformed config cannot introduce NaN or unknown mode")
-	check(int(settings.mosquito_lives) == 9, "sleep lives capped")
+	check(int(settings.mosquito_lives) == 9, "legacy lives option remains sanitized for old room presets")
 	check(float(settings.task_deadline) < float(settings.task_interval) and float(settings.task_floor) >= Sim.minimum_task_deadline(float(settings.task_work)), "tasks maintain interval and walking travel allowance")
 	check(int(Sim.DEFAULT_CONFIG.human_count) == 1, "human-count setting defaults to one")
 	check(int(Sim.sanitize_config({"human_count": 5}).human_count) == 5, "human count sanitized independently of connected players")
@@ -98,7 +98,7 @@ func _test_one_versus_one() -> void:
 		check(sim.phase == "playing" and sim.actors.size() == 2, "1v1 starts in %s" % mode)
 		check(sim.actors[1].role == "human" and sim.actors[2].role == "mosquito", "1v1 has both assigned roles in %s" % mode)
 		var assignment: Dictionary = sim.private_for(2).assignment
-		check(int(assignment.human) == 1 and int(assignment.zone) < 16, "1v1 uses only self-defendable front zones in %s" % mode)
+		check(int(assignment.human) == 1 and int(assignment.zone) < Sim.FRONT_ZONE_COUNT, "1v1 uses only self-defendable front zones in %s" % mode)
 		attach(sim, 2, 1, 5)
 		check(sim.actors[2].state == "biting", "1v1 allows a valid bite in %s" % mode)
 		var previous: String = Sim._zone_key(sim.actors[2]._assignment)
@@ -119,8 +119,8 @@ func _test_role_appearance() -> void:
 	var sim = Sim.new()
 	sim.start(players, {})
 	var snapshot: Dictionary = sim.public_snapshot()
-	check(snapshot.actors[1].appearance == {"color": 4, "accessory": 2}, "human actor copies only its human appearance")
-	check(snapshot.actors[2].appearance == {"color": 5, "accessory": 2}, "mosquito actor copies only its mosquito appearance")
+	check(snapshot.actors[1].appearance.color == 4 and snapshot.actors[1].appearance.accessory == 2 and not snapshot.actors[1].appearance.has("secret"), "human actor copies only its human appearance")
+	check(snapshot.actors[2].appearance.color == 5 and snapshot.actors[2].appearance.accessory == 2, "mosquito actor copies only its mosquito appearance")
 	check(not snapshot.actors[1].has("cosmetics") and not snapshot.actors[2].has("cosmetics"), "actors never publish entire cosmetics profile")
 	snapshot.actors[1].appearance.color = 99
 	players[2].cosmetics.mosquito.color = 99
@@ -129,18 +129,21 @@ func _test_role_appearance() -> void:
 	players[1].cosmetics = "invalid"
 	players[2].cosmetics = {"mosquito": {"color": -1, "accessory": 999, "extra": "omit"}}
 	sim.start(players, {})
-	check(sim.public_snapshot().actors[1].appearance == {"color": 0, "accessory": 0}, "invalid appearance profile gets safe defaults")
-	check(sim.public_snapshot().actors[2].appearance == {"color": 0, "accessory": 0}, "out-of-range appearance fields cannot leak into actors")
+	check(sim.public_snapshot().actors[1].appearance == {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "accent": 0}, "invalid appearance profile gets safe defaults")
+	check(sim.public_snapshot().actors[2].appearance == {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "accent": 0}, "out-of-range appearance fields cannot leak into actors")
 
 func _test_privacy_and_reservations() -> void:
 	var sim = make_sim("blood", 1, 12)
 	var seen: Dictionary = {}
 	for id: int in sim._mosquito_ids:
 		var assignment: Dictionary = sim.private_for(id).assignment
+		if assignment.is_empty():
+			check(sim.private_for(id).focus.state == "waiting", "overflow receives private waiting feedback")
+			continue
 		var key: String = Sim._zone_key(assignment)
 		check(not seen.has(key), "unique reservation for mosquito %d" % id)
 		seen[key] = true
-		check(int(assignment.zone) < 16, "solo never receives rear zone")
+		check(int(assignment.zone) < Sim.FRONT_ZONE_COUNT, "solo never receives rear zone")
 	var snapshot: Dictionary = sim.public_snapshot()
 	for actor: Dictionary in snapshot.actors.values():
 		check(not actor.has("assignment") and not actor.has("zone") and not actor.has("_assignment") and not actor.has("_next_rotation"), "public actor contains no hidden assignments or rotation schedule")
@@ -154,6 +157,8 @@ func _test_privacy_and_reservations() -> void:
 		advance(sim, 1.0)
 		seen.clear()
 		for id: int in sim._mosquito_ids:
+			if Dictionary(sim.actors[id]._assignment).is_empty():
+				continue
 			var key: String = Sim._zone_key(sim.actors[id]._assignment)
 			check(not seen.has(key), "reservations remain unique through fixed rotations")
 			seen[key] = true
@@ -244,6 +249,7 @@ func _test_attached_wall_clearance() -> void:
 			for angle: int in range(16):
 				sim.actors[1].p = legal_human
 				sim.actors[1].yaw = TAU * float(angle) / 16.0
+				sim.actors[1].body_yaw = sim.actors[1].yaw
 				sim.actors[3]._assignment = {"human": 1, "zone": zone, "revision": 1}
 				sim.actors[3].state = "biting"
 				sim.step(0.001)
@@ -286,7 +292,8 @@ func _test_bite_calendar_and_blood() -> void:
 	var mosquito_origin: Vector3 = sim.actors[2].p
 	sim.submit_input(1, 1, Vector3.RIGHT, 0.0, 0.0, false)
 	sim.step(0.1)
-	check((Vector3(sim.actors[2].p) - mosquito_origin).is_equal_approx(Vector3(sim.actors[1].p) - human_origin), "attached mosquito travels with human")
+	var moved_pose: Dictionary = sim._zone_pose(sim.actors[2]._assignment)
+	check(Vector3(sim.actors[2].p).is_equal_approx(Vector3(moved_pose.p) + Vector3(moved_pose.normal) * Sim.ATTACH_OFFSET) and Vector3(sim.actors[1].p) != human_origin and Vector3(sim.actors[2].p) != mosquito_origin, "attached mosquito follows translated and animated human surface")
 	advance(sim, 4.1)
 	check(Sim._zone_key(sim.actors[2]._assignment) == reserved, "attached reservation survives scheduled rotations")
 	check(float(sim.blood) > 2.5, "blood extracted progressively after preparation")
@@ -320,46 +327,43 @@ func _test_bite_calendar_and_blood() -> void:
 	check(invalid.actors[2].state != "biting", "distant bite rejected")
 
 func _test_all_solo_zones() -> void:
-	for zone: int in range(16):
+	for zone: int in range(Sim.FRONT_ZONE_COUNT):
 		var sim = make_sim()
 		attach(sim, 2, 1, zone)
 		check(sim.actors[2].state == "biting", "solo zone %d reachable for attachment" % zone)
-		var band: int = int(Sim.BODY_ZONES[zone].band)
-		var pitch: float = [0.0, -0.55, -1.1][band]
-		var wrong_pitch: float = [0.0, -0.55, -1.1][(band + 1) % 3]
-		sim.submit_input(1, 1, Vector3.ZERO, 0.0, wrong_pitch, false)
-		sim.action(1, 1, "self_swat")
+		sim.action(1, 1, "self_swat", 0.0, 0.0)
+		sim.step(0.30)
+		check(sim.actors[2].state == "biting", "wrong manual aim cannot automatically swat zone %d" % zone)
+		var angles: Vector2 = Pose.aim_angles(sim.actors[1], sim.actors[2].p)
+		sim.action(1, 2, "attack", angles.x, angles.y)
 		sim.step(0.05)
-		check(bool(sim.actors[2].alive), "wrong body band cannot automatically swat zone %d" % zone)
-		sim.submit_input(1, 2, Vector3.ZERO, 0.0, pitch, false)
-		sim.action(1, 2, "self_swat")
-		sim.step(0.05)
-		check(bool(sim.actors[2].alive), "shared attack cooldown enforced")
+		check(sim.actors[2].state == "biting", "Q and LMB share cooldown")
 		advance(sim, 0.85)
-		sim.action(1, 3, "self_swat")
+		angles = Pose.aim_angles(sim.actors[1], sim.actors[2].p)
+		sim.action(1, 3, "self_swat", angles.x, angles.y)
 		sim.step(0.3)
-		check(not bool(sim.actors[2].alive), "starting hands defend solo zone %d with correct band" % zone)
+		check(sim.actors[2].state == "stunned", "starting hands defend solo zone %d with manual ray" % zone)
 
 func _test_cooperative_rear() -> void:
 	var sim = make_sim("blood", 2, 4)
 	var rear_assigned := false
 	for id: int in sim._mosquito_ids:
-		if int(sim.actors[id]._assignment.zone) >= 16:
+		if int(sim.actors[id]._assignment.zone) >= Sim.FRONT_ZONE_COUNT:
 			rear_assigned = true
 	check(rear_assigned, "cooperative roster includes rear assignments")
 	sim.actors[1].p = Vector3.ZERO
 	sim.actors[2].p = Vector3(0, 0, 1.5)
-	attach(sim, 3, 1, 16)
+	attach(sim, 3, 1, Sim.FRONT_ZONE_COUNT)
 	check(sim.actors[3].state == "biting", "rear mark can be bitten from behind")
 	sim.action(1, 1, "self_swat")
 	sim.step(0.05)
-	check(bool(sim.actors[3].alive), "owner cannot self-swat rear zone")
+	check(sim.actors[3].state == "biting", "owner cannot self-swat rear zone")
 	sim.actors[1].tool = "broom"
 	advance(sim, 0.85)
 	aim_at(sim, 1, sim.actors[3].p, 1)
 	sim.action(1, 2, "attack")
 	sim.step(0.05)
-	check(bool(sim.actors[3].alive), "long tool cannot bypass own rear-zone restriction")
+	check(sim.actors[3].state == "biting", "long tool cannot bypass own rear-zone restriction")
 	# Looking at one's own rear rotates the whole body; restore body facing before
 	# testing which side the teammate is on.
 	sim.submit_input(1, 2, Vector3.ZERO, 0.0, 0.0, false)
@@ -368,13 +372,15 @@ func _test_cooperative_rear() -> void:
 	aim_at(sim, 2, sim.actors[3].p, 1)
 	sim.action(2, 1, "attack")
 	sim.step(0.05)
-	check(bool(sim.actors[3].alive), "teammate cannot hit rear mosquito through torso from front")
-	sim.actors[2].p = Vector3(0, 0, 1.3)
+	check(sim.actors[3].state == "biting", "teammate cannot hit rear mosquito through torso from front")
+	sim.actors[2].p = Vector3(0, 0, 1.0)
+	sim.actors[2].body_yaw = 0.0
+	sim.actors[2].yaw = 0.0
 	advance(sim, 0.85)
 	aim_at(sim, 2, sim.actors[3].p, 2)
 	sim.action(2, 2, "attack")
 	sim.step(0.3)
-	check(not bool(sim.actors[3].alive), "teammate aimed hands rescue exposed rear zone")
+	check(sim.actors[3].state == "stunned", "teammate aimed hands rescue exposed rear zone")
 
 func _test_tools() -> void:
 	var sim = make_sim("blood", 2, 4)
@@ -412,10 +418,10 @@ func _test_lives_and_results() -> void:
 	var blood_sim = make_sim("blood", 1, 2, {"mosquito_lives": 9, "respawn_seconds": 1.0})
 	blood_sim._kill(2)
 	advance(blood_sim, 1.2)
-	check(not bool(blood_sim.actors[2].alive) and int(blood_sim.actors[2].lives) == 0, "blood never respawns despite sleep-life configuration")
+	check(bool(blood_sim.actors[2].alive) and blood_sim.actors[2].state == "stunned" and int(blood_sim.actors[2].lives) == 0, "blood hit stuns rather than using legacy lives or respawn")
 	blood_sim._kill(3)
 	blood_sim.step(0.05)
-	check(blood_sim.winner == "human", "all mosquitoes dead ends blood early for humans")
+	check(blood_sim.phase == "playing" and blood_sim.winner.is_empty(), "all mosquitoes stunned does not end blood early")
 	var quota = make_sim("blood", 1, 2, {"blood_goal": 1.0})
 	attach(quota, 2, 1, 5)
 	advance(quota, 2.0)
@@ -435,19 +441,16 @@ func _test_lives_and_results() -> void:
 	survival_dead._kill(3)
 	survival_dead.step(0.05)
 	check(survival_dead.winner == "human", "survival total elimination awards humans")
-	var sleep_sim = make_sim("sleep", 1, 2, {"mosquito_lives": 3, "respawn_seconds": 1.0})
-	for life: int in range(3):
+	var sleep_sim = make_sim("sleep", 1, 2, {"mosquito_lives": 1, "respawn_seconds": 1.0})
+	for cycle: int in range(3):
 		sleep_sim._kill(2)
 		sleep_sim._kill(3)
 		sleep_sim.step(0.05)
-		check(int(sleep_sim.actors[2].lives) == 2 - life, "sleep death consumes one personal life")
-		if life < 2:
-			check(sleep_sim.phase == "playing", "all temporarily dead does not end sleep with lives remaining")
-			check(float(sleep_sim.private_for(2).respawn_left) > 0.0 and Dictionary(sleep_sim.private_for(2).assignment).is_empty(), "dead player gets respawn delay and no mark")
-			advance(sleep_sim, 1.0)
-			check(bool(sleep_sim.actors[2].alive) and not Dictionary(sleep_sim.private_for(2).assignment).is_empty(), "sleep respawn produces living actor and fresh private mark")
-			check(Vector3(sleep_sim.actors[2].p).distance_to(Vector3(sleep_sim.actors[1].p) + Vector3.UP * 1.2) > 2.2, "respawn is outside immediate longest tool reach")
-	check(sleep_sim.winner == "human" and int(sleep_sim.tasks_done) == 0, "all personal lives exhausted ends sleep immediately even without task goal")
+		check(sleep_sim.actors[2].alive and sleep_sim.actors[2].state == "stunned" and sleep_sim.phase == "playing", "Tasks repeated hits remain nonfatal without exhausting personal lives")
+		check(float(sleep_sim.private_for(2).stun.remaining) > 34.0 and Dictionary(sleep_sim.private_for(2).assignment).is_empty(), "stunned player gets own recovery timer and no reserved mark")
+		advance(sleep_sim, 35.0)
+		check(bool(sleep_sim.actors[2].alive) and sleep_sim.actors[2].state == "flying" and not Dictionary(sleep_sim.private_for(2).assignment).is_empty(), "automatic recovery keeps actor alive and grants fresh private mark")
+	check(sleep_sim.phase == "playing" and sleep_sim.winner.is_empty(), "repeated stuns do not manufacture a Tasks elimination winner")
 
 func _test_tasks() -> void:
 	var sim = make_sim("sleep", 2, 4, {"task_interval": 36.0, "task_deadline": 26.0, "task_work": 1.0, "task_penalty": 2.0, "task_floor": 22.0})
@@ -500,6 +503,6 @@ func _test_abort_rematch() -> void:
 	check(sim.phase == "lobby" and sim.winner == "" and not bool(sim.actors[1].bitten), "disconnect abort returns lobby with no winner or ghost bite")
 	check(Dictionary(sim.private_for(2).assignment).is_empty(), "abort clears private assignments")
 	sim.start(roster(), {"mode": "sleep"})
-	check(sim.phase == "playing" and float(sim.blood) == 0.0 and int(sim.tasks_done) == 0 and int(sim.actors[2].lives) == 3 and sim.actors[1].tool == "hands", "rematch resets modes, lives, tools and score")
+	check(sim.phase == "playing" and float(sim.blood) == 0.0 and int(sim.tasks_done) == 0 and int(sim.actors[2].lives) == 0 and not bool(sim.private_for(2).stun.active) and sim.actors[1].tool == "hands", "rematch resets modes, stun state, tools and score")
 	for pickup: Dictionary in sim.pickups.values():
 		check(int(pickup.holder) == 0, "rematch resets all pickup ownership")

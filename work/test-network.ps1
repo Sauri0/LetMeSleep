@@ -8,31 +8,44 @@ param(
     [switch]$RematchTest,
     [switch]$Incompatible,
     [switch]$InvitationTest,
-    [string]$Executable = ''
+    [string]$Executable = '',
+    [string]$ClientExecutable = '',
+    [switch]$LegacyHandshake,
+    [string]$JoinVersion = '0.0.invalid',
+    [int]$JoinProtocol = -99
 )
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 $godotExe = if ($Executable) { $Executable } else { Join-Path $projectRoot 'work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe' }
-$runId = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
+$runId = (Get-Date -Format 'yyyyMMdd-HHmmss-fff') + '-' + $Port + '-' + [Guid]::NewGuid().ToString('N').Substring(0, 6)
 $runDir = Join-Path $PSScriptRoot "network-$Mode-${Humans}v${Mosquitoes}-$runId"
 [System.IO.Directory]::CreateDirectory($runDir) | Out-Null
-$baseArgs = @('--headless')
-if (-not $Executable) { $baseArgs += @('--path', ('"' + (Join-Path $projectRoot 'game') + '"')) }
 $processes = [System.Collections.Generic.List[System.Diagnostics.Process]]::new()
 function Start-GameProcess([string]$Label, [string[]]$Extra) {
+    $isExternalClient = $Label -ne 'server' -and $ClientExecutable
+    $selectedExe = if ($isExternalClient) { $ClientExecutable } else { $godotExe }
+    $baseArgs = @('--headless')
+    if (-not $Executable -and -not $isExternalClient) { $baseArgs += @('--path', ('"' + (Join-Path $projectRoot 'game') + '"')) }
     $allArgs = $baseArgs + @('--') + $Extra
-    $proc = Start-Process -FilePath $godotExe -ArgumentList $allArgs -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $runDir "$Label.stdout.log") -RedirectStandardError (Join-Path $runDir "$Label.stderr.log")
+    $proc = Start-Process -FilePath $selectedExe -ArgumentList $allArgs -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $runDir "$Label.stdout.log") -RedirectStandardError (Join-Path $runDir "$Label.stderr.log")
     $processes.Add($proc)
     return $proc
 }
 try {
     $server = Start-GameProcess 'server' @('--server', "--port=$Port")
-    Start-Sleep -Milliseconds 600
+    $serverLog = Join-Path $runDir 'server.stdout.log'
+    $serverDeadline = [DateTime]::UtcNow.AddSeconds(10)
+    while ([DateTime]::UtcNow -lt $serverDeadline) {
+        if ($server.HasExited) { throw "Server exited before readiness. Inspect $runDir" }
+        if ((Test-Path -LiteralPath $serverLog) -and (Select-String -LiteralPath $serverLog -Pattern 'SERVER_READY' -Quiet)) { break }
+        Start-Sleep -Milliseconds 100
+    }
+    if (-not (Select-String -LiteralPath $serverLog -Pattern 'SERVER_READY' -Quiet)) { throw "Server did not become ready. Inspect $runDir" }
     $codeFile = Join-Path $runDir 'room-code.txt'
     $creatorArgs = @('--bot', '--create', '--name=Amigo1', "--humans=$Humans", "--rounds=$Rounds", "--timeout=$($Rounds * 75 + 20)", "--mode=$Mode", "--port=$Port", "--players=$($Humans + $Mosquitoes)", ('--code-file="' + $codeFile + '"'), ('--report="' + (Join-Path $runDir 'human1.json') + '"'))
     if ($DisconnectTest) { $creatorArgs += '--disconnect-test' }
     if ($RematchTest) { $creatorArgs += '--rematch-test' }
-    if ($Incompatible) { $creatorArgs += '--incompatible' }
+    if ($Incompatible -and -not $LegacyHandshake) { $creatorArgs += @('--incompatible', "--join-version=$JoinVersion", "--join-protocol=$JoinProtocol") }
     if ($InvitationTest) { $creatorArgs += '--shared-host=' + [System.Net.Dns]::GetHostName() }
     $creator = Start-GameProcess 'human1' $creatorArgs
     if (-not $Incompatible) {
@@ -67,6 +80,15 @@ try {
     $expectedClients = if ($Incompatible) { 1 } else { $Humans + $Mosquitoes }
     $failedReports = @($reports | Where-Object { $_.errors.Count -gt 0 -or -not $_.privacy_ok })
     $testFailed = $reports.Count -ne $expectedClients -or $failedReports.Count -gt 0 -or $errors.Count -gt 0
+    if ($Incompatible) {
+        $testFailed = $testFailed -or @($reports | Where-Object { -not $_.incompatible_rejected }).Count -gt 0
+    }
+    if ($DisconnectTest) {
+        $intentional = @($reports | Where-Object { $_.intentional_disconnect })
+        $survivors = @($reports | Where-Object { -not $_.intentional_disconnect })
+        $invalidAbort = @($survivors | Where-Object { -not $_.returned_to_lobby -or $_.result.winner })
+        $testFailed = $testFailed -or $intentional.Count -ne 1 -or $survivors.Count -lt 1 -or $invalidAbort.Count -gt 0
+    }
     if (-not $Incompatible -and -not $DisconnectTest) {
         $winners = @($reports.result.winner | Sort-Object -Unique)
         $expectedWinner = if ($Mode -eq 'sleep') { 'human' } else { 'mosquito' }

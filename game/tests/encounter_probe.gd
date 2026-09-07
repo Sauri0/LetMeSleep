@@ -12,7 +12,7 @@ func run() -> void:
 		practice.start("mosquito" if scenario.begins_with("mosquito") else "human","blood",{},"Probe")
 		var pilot := Brain.new()
 		pilot.setup(1)
-		var report := {"scenario":scenario,"first_bite":-1.0,"first_focus":-1.0,"first_blood":-1.0,"first_hit":-1.0,"blood_at_10":0.0,"blood_at_30":0.0,"result_time":0.0,"winner":"","bites":0,"player_death":-1.0,"events":[]}
+		var report := {"scenario":scenario,"first_bite":-1.0,"first_focus":-1.0,"first_blood":-1.0,"first_hit":-1.0,"blood_at_10":0.0,"blood_at_30":0.0,"result_time":0.0,"winner":"","bites":0,"stuns":0,"recoveries":0,"player_death":-1.0,"events":[]}
 		var previous := {}
 		var action_seq := 0
 		for frame: int in range(120*60+1):
@@ -28,7 +28,7 @@ func run() -> void:
 				practice.send_input(frame,intent.move,intent.yaw,intent.pitch,intent.interact,intent.sprint,intent.crouch,intent.jump)
 				if not str(intent.action).is_empty():
 					action_seq += 1
-					practice.send_action(action_seq,intent.action)
+					practice.send_action(action_seq,intent.action,intent.yaw,intent.pitch)
 			practice.advance(1.0/60)
 			var now: Dictionary = practice.sim.public_snapshot()
 			if now.blood > 0 and report.first_blood < 0: report.first_blood = practice.sim.elapsed
@@ -43,6 +43,13 @@ func run() -> void:
 				if not actor.alive and previous.get(id,"") != "dead":
 					if report.first_hit < 0: report.first_hit = practice.sim.elapsed
 					if id == 1 and report.player_death < 0: report.player_death = practice.sim.elapsed
+				if actor.state == "stunned" and previous.get(id,"") != "stunned":
+					report.stuns += 1
+					if report.first_hit < 0: report.first_hit = practice.sim.elapsed
+					report.events.append({"time":practice.sim.elapsed,"event":"stun","id":id})
+				if actor.state == "flying" and previous.get(id,"") == "stunned":
+					report.recoveries += 1
+					report.events.append({"time":practice.sim.elapsed,"event":"recover","id":id})
 				previous[id] = actor.state
 			if frame == 599: report.blood_at_10 = now.blood
 			if frame == 1799: report.blood_at_30 = now.blood
@@ -56,7 +63,7 @@ func run() -> void:
 		practice.queue_free()
 		await process_frame
 	print("ENCOUNTERS " + JSON.stringify(reports))
-	var destination := "user://encounters04.json"
+	var destination := "user://encounters05.json"
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--report="): destination = argument.substr(9)
 	var file := FileAccess.open(destination,FileAccess.WRITE)
@@ -65,7 +72,7 @@ func run() -> void:
 		reports[0].first_bite >= 10.0,
 		reports[0].winner == "mosquito" and reports[0].result_time > 30.0,
 		reports[1].winner == "human",
-		reports[2].player_death > reports[2].first_bite + 2.0,
+		reports[2].first_hit > reports[2].first_bite + 2.0 and reports[2].stuns >= 1 and reports[2].recoveries >= 1 and reports[2].player_death < 0.0,
 		reports[4].winner == "mosquito" and reports[4].bites >= 3 and reports[4].player_death < 0.0,
 	]
 	var failures := checks.count(false)
