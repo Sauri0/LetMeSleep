@@ -56,7 +56,8 @@ func setup() -> void:
 		var player := AudioStreamPlayer.new()
 		player.bus = &"Effects"
 		player.stream = streams.get(cue)
-		player.volume_db = -15.0
+		# Help is a quiet source recording; keep its feedback above the music bed.
+		player.volume_db = 5.0 if cue == "help_loop" else -15.0
 		add_child(player)
 		if cue == "focus_loop": focus_player = player
 		else: help_player = player
@@ -126,7 +127,7 @@ func sync(data: Dictionary, views: Dictionary, player_id: int) -> void:
 					_emit(_impact_material(position), position, -12.0, 1.0)
 					if state == "stunned": _emit("stun", position, -14.0, 1.0)
 				elif str(before.state) == "stunned" and state == "flying":
-					_emit("recover", position, -14.0, 1.0)
+					_emit("recover", position, -4.0, 1.0)
 				elif str(before.state) == "biting" and state == "flying":
 					_emit("detach", position, -15.0, 1.0)
 				elif state == "perched" and str(before.state) != "perched":
