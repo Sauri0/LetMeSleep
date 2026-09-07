@@ -10,18 +10,24 @@ const Pose = preload("res://scripts/human_pose.gd")
 const MAX_HUMANS := 5
 const MAX_MOSQUITOES := 12
 const MAX_PLAYERS := 16
-const BITE_DISTANCE := 0.58
-const BITE_PREPARATION := 0.65
-const BLOOD_PER_SECOND := 1.0
+const BITE_DISTANCE := 0.07
+const ATTACH_OFFSET := 0.045
+const FOCUS_DISTANCE := 1.60
+const FOCUS_SECONDS := 1.20
+const BITE_PREPARATION := 1.0
+const BLOOD_PER_SECOND := 0.80
+const SHARED_BLOOD_RATE_CAP := 1.0
+const STRIKE_START := 0.08
+const STRIKE_END := 0.25
 const INPUT_TIMEOUT := 0.40
 const DEFAULT_CONFIG := {
-	"mode": "blood", "map_id": "house", "human_count": 1, "round_seconds": 120.0, "blood_goal": 30.0,
+	"mode": "blood", "map_id": "house", "human_count": 1, "round_seconds": 120.0, "blood_goal": 12.0,
 	"rotation_seconds": 14.0, "respawn_seconds": 4.0, "mosquito_lives": 3,
-	"task_interval": 24.0, "task_deadline": 18.0, "task_work": 3.0,
+	"task_interval": 36.0, "task_deadline": 30.0, "task_work": 3.0,
 	"task_penalty": 2.0, "task_floor": 8.0, "task_goal": 0,
 }
 const TOOL_STATS := {
-	"hands": {"label": "Manos / palmadas", "reach": 1.35, "cooldown": 0.80, "radius": 0.24},
+	"hands": {"label": "Manos / palmadas", "reach": 1.70, "cooldown": 0.80, "radius": 0.34},
 	"swatter": {"label": "Matamoscas", "reach": 1.65, "cooldown": 0.60, "radius": 0.28},
 	"racket": {"label": "Raqueta eléctrica", "reach": 1.75, "cooldown": 1.05, "radius": 0.44},
 	"newspaper": {"label": "Diario enrollado", "reach": 1.50, "cooldown": 0.43, "radius": 0.18},
@@ -38,8 +44,8 @@ const BODY_ZONES := [
 	{"label": "Hombro derecho", "bone": "shoulder_r", "p": Vector3(0.33, 1.34, -0.22), "rear": false, "band": 0},
 	{"label": "Pecho izquierdo", "bone": "torso", "p": Vector3(-0.15, 1.18, -0.34), "rear": false, "band": 1},
 	{"label": "Pecho derecho", "bone": "torso", "p": Vector3(0.15, 1.18, -0.34), "rear": false, "band": 1},
-	{"label": "Antebrazo izquierdo", "bone": "forearm_l", "p": Vector3(-0.39, 1.03, -0.14), "rear": false, "band": 1},
-	{"label": "Antebrazo derecho", "bone": "forearm_r", "p": Vector3(0.39, 1.03, -0.14), "rear": false, "band": 1},
+	{"label": "Antebrazo izquierdo", "bone": "forearm_l", "p": Vector3(-0.39, 0.97, -0.14), "rear": false, "band": 1},
+	{"label": "Antebrazo derecho", "bone": "forearm_r", "p": Vector3(0.39, 0.97, -0.14), "rear": false, "band": 1},
 	{"label": "Abdomen izquierdo", "bone": "torso", "p": Vector3(-0.14, 0.84, -0.32), "rear": false, "band": 1},
 	{"label": "Abdomen derecho", "bone": "torso", "p": Vector3(0.14, 0.84, -0.32), "rear": false, "band": 1},
 	{"label": "Muslo izquierdo", "bone": "thigh_l", "p": Vector3(-0.16, 0.59, -0.23), "rear": false, "band": 2},
@@ -157,7 +163,9 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 			"appearance": CosmeticsData.appearance_for(player.get("cosmetics", {}), str(player.role)).duplicate(true),
 			"p": Maps.human_spawn(str(config.map_id), role_index) if human else Maps.mosquito_spawn(str(config.map_id), role_index),
 			"yaw": 0.0, "pitch": 0.0, "state": "human" if human else "flying",
-			"alive": true, "swing": 0.0, "bitten": false, "tool": "hands",
+			"alive": true, "swing": 0.0, "bitten": false, "threatened": false, "tool": "hands",
+			"_focus_progress": 0.0, "_focus_pulse_until": 0.0, "_focus_suppressed": false,
+			"_strike_at": -1.0, "_strike_until": -1.0, "_strike_self": false, "_strike_band": 0,
 			"velocity": Vector3.ZERO, "grounded": human, "sprinting": false, "crouching": false,
 			"crouch_amount": 0.0, "motion_phase": 0.0, "motion_speed": 0.0,
 			"_sprint": false, "_crouch": false, "_jump": false, "_jump_held": false,
@@ -198,7 +206,10 @@ func submit_input(id: int, seq: int, move: Vector3, yaw: float, pitch: float, in
 	actor._move = move.limit_length(1.0)
 	actor.yaw = wrapf(yaw, -PI, PI)
 	actor.pitch = clampf(pitch, -1.48, 1.48)
-	actor._interact = interact and actor.role == "human"
+	actor._interact = interact
+	if not interact:
+		actor._focus_suppressed = false
+		actor._focus_pulse_until = 0.0
 	actor._sprint = sprint and actor.role == "human"
 	actor._crouch = crouch and actor.role == "human"
 	actor._jump = jump and actor.role == "human"
@@ -236,6 +247,7 @@ func _tick(dt: float) -> void:
 	for id: int in actors:
 		var actor: Dictionary = actors[id]
 		actor.swing = maxf(0.0, float(actor.swing) - dt)
+		actor.threatened = false
 		if not bool(actor.alive) and actor.role == "mosquito" and config.mode == "sleep" and int(actor.lives) > 0 and elapsed + 0.000001 >= float(actor._respawn_at):
 			_respawn(id)
 		if not bool(actor.alive):
@@ -253,18 +265,36 @@ func _tick(dt: float) -> void:
 		var local_move: Vector3 = actor._move if elapsed - float(actor._last_input) <= INPUT_TIMEOUT else Vector3.ZERO
 		if actor.state == "biting":
 			continue
+		var focus: Dictionary = _focus_info(id)
+		var holding: bool = _focus_held(actor)
+		var assist: Variant = null
+		if holding and bool(focus.can_focus):
+			actor._focus_progress = minf(1.0, float(actor._focus_progress) + dt / FOCUS_SECONDS)
+			var target: Dictionary = actors[int(actor._assignment.human)]
+			if float(actor._focus_progress) >= 0.1:
+				target.threatened = true
+			var pose: Dictionary = _zone_pose(actor._assignment)
+			var destination: Vector3 = Vector3(pose.p) + Vector3(pose.normal) * ATTACH_OFFSET
+			assist = ((destination - Vector3(actor.p)) * 5.0 + Vector3(target.velocity)).limit_length(ArenaData.MOSQUITO_SPEED)
+			actor.state = "flying"
+		else:
+			actor._focus_progress = 0.0
 		if actor.state == "perched" and local_move.length_squared() > 0.01:
 			actor.state = "flying"
-		var displacement: Vector3 = local_move.rotated(Vector3.UP, float(actor.yaw)) * dt * ArenaData.MOSQUITO_SPEED
 		var previous: Vector3 = actor.p
-		actor.p = ArenaData.move_body(previous, displacement, false, str(config.map_id))
+		ArenaData.step_mosquito(actor, local_move, dt, str(config.map_id), assist)
 		actor.p = _avoid_humans(previous, actor.p)
 		actor.velocity = (Vector3(actor.p) - previous) / maxf(dt, 0.000001)
+		if float(actor._focus_progress) >= 1.0:
+			_attach(id)
 	_update_attached()
 	var commands: Array[Dictionary] = _pending_actions
 	_pending_actions = []
 	for command: Dictionary in commands:
 		_execute_action(int(command.id), str(command.verb))
+	for id: int in _human_ids:
+		if elapsed + 0.000001 >= float(actors[id]._strike_at) and elapsed <= float(actors[id]._strike_until) + 0.000001:
+			_resolve_strike(id)
 	for id: int in _mosquito_ids:
 		var actor: Dictionary = actors[id]
 		var due: bool = elapsed + 0.000001 >= float(actor._next_rotation)
@@ -276,6 +306,7 @@ func _tick(dt: float) -> void:
 	_update_attached()
 	for id: int in _human_ids:
 		actors[id].bitten = false
+	var blood_this_tick := 0.0
 	for id: int in _mosquito_ids:
 		var actor: Dictionary = actors[id]
 		if actor.state == "biting" and bool(actor.alive):
@@ -284,7 +315,8 @@ func _tick(dt: float) -> void:
 			if config.mode == "blood":
 				# Integrate only the portion after preparation; attach/detach never adds an instant award.
 				var active_start: float = maxf(elapsed - dt, float(actor._bite_started) + BITE_PREPARATION)
-				blood += maxf(0.0, elapsed - active_start) * BLOOD_PER_SECOND
+				blood_this_tick += maxf(0.0, elapsed - active_start) * BLOOD_PER_SECOND
+	blood += minf(blood_this_tick, dt * SHARED_BLOOD_RATE_CAP)
 	if config.mode == "sleep":
 		_update_tasks(dt)
 	_evaluate_result()
@@ -305,7 +337,8 @@ func _execute_action(id: int, verb: String) -> void:
 			if actor.state == "biting":
 				_detach(id)
 			else:
-				_attach(id)
+				# A press can begin the attempt, but it cannot bypass sustained charge.
+				actor._focus_pulse_until = elapsed + 0.20
 		"perch":
 			if actor.state == "flying":
 				_try_perch(id)
@@ -372,6 +405,7 @@ func _try_perch(id: int) -> void:
 
 func _assign(id: int) -> void:
 	var actor: Dictionary = actors[id]
+	actor._focus_progress = 0.0
 	if not bool(actor.alive):
 		actor._assignment = {}
 		return
@@ -431,12 +465,14 @@ func _zone_pose(assignment: Dictionary) -> Dictionary:
 
 func _attach(id: int) -> void:
 	var actor: Dictionary = actors[id]
+	if float(actor._focus_progress) < 1.0 or not _focus_held(actor):
+		return
 	var assignment: Dictionary = actor._assignment
 	var pose: Dictionary = _zone_pose(assignment)
-	if pose.is_empty():
+	if pose.is_empty() or not bool(_focus_info(id).can_focus):
 		return
-	var to_mosquito: Vector3 = actor.p - Vector3(pose.p)
-	if to_mosquito.length() > BITE_DISTANCE or to_mosquito.dot(pose.normal) < -0.03:
+	var destination: Vector3 = Vector3(pose.p) + Vector3(pose.normal) * ATTACH_OFFSET
+	if Vector3(actor.p).distance_to(destination) > BITE_DISTANCE:
 		return
 	if not ArenaData.clear_segment(actor.p, pose.p, str(config.map_id)) or _body_occludes(actor.p, pose.p, -1):
 		return
@@ -444,13 +480,18 @@ func _attach(id: int) -> void:
 	actor._bite_started = elapsed
 	actor._forbidden = "" # A successful new bite clears the previous-zone exclusion.
 	actor._move = Vector3.ZERO
-	actor.p = Vector3(pose.p) + Vector3(pose.normal) * 0.06
+	actor.velocity = Vector3.ZERO
+	actor.p = destination
 
 func _detach(id: int) -> void:
 	var actor: Dictionary = actors[id]
 	var pose: Dictionary = _zone_pose(actor._assignment)
 	actor._forbidden = _zone_key(actor._assignment)
 	actor.state = "flying"
+	actor._focus_suppressed = true
+	actor._focus_progress = 0.0
+	actor._focus_pulse_until = 0.0
+	actor.velocity = Vector3.ZERO
 	if not pose.is_empty():
 		actor.p = ArenaData.move_body(actor.p, Vector3(pose.normal) * 0.24, false, str(config.map_id))
 	_assign(id) # Deliberately never modifies _next_rotation.
@@ -461,7 +502,7 @@ func _update_attached() -> void:
 		if actor.state == "biting" and bool(actor.alive):
 			var pose: Dictionary = _zone_pose(actor._assignment)
 			if not pose.is_empty():
-				actor.p = Vector3(pose.p) + Vector3(pose.normal) * 0.06
+				actor.p = Vector3(pose.p) + Vector3(pose.normal) * ATTACH_OFFSET
 
 func _attack(id: int, self_only: bool) -> void:
 	var human: Dictionary = actors[id]
@@ -469,9 +510,18 @@ func _attack(id: int, self_only: bool) -> void:
 		return
 	var stats: Dictionary = TOOL_STATS[str(human.tool)]
 	human.swing = float(stats.cooldown)
+	human._strike_at = elapsed + STRIKE_START
+	human._strike_until = elapsed + STRIKE_END
+	human._strike_self = self_only
+	human._strike_band = 0 if float(human.pitch) >= -0.25 else (1 if float(human.pitch) >= -0.85 else 2)
+
+func _resolve_strike(id: int) -> void:
+	var human: Dictionary = actors[id]
+	var stats: Dictionary = TOOL_STATS[str(human.tool)]
+	var self_only: bool = human._strike_self
 	var eye: Vector3 = Vector3(human.p) + Vector3(Pose.sample(human).eye).rotated(Vector3.UP, float(human.yaw))
 	var direction: Vector3 = Vector3.FORWARD.rotated(Vector3.RIGHT, float(human.pitch)).rotated(Vector3.UP, float(human.yaw))
-	var band: int = 0 if float(human.pitch) >= -0.25 else (1 if float(human.pitch) >= -0.85 else 2)
+	var band: int = human._strike_band
 	for mosquito_id: int in _mosquito_ids:
 		var mosquito: Dictionary = actors[mosquito_id]
 		if not bool(mosquito.alive):
@@ -484,6 +534,12 @@ func _attack(id: int, self_only: bool) -> void:
 		if self_only:
 			if on_self and int(BODY_ZONES[int(assignment.zone)].band) == band:
 				_kill(mosquito_id)
+			elif not attached:
+				var local: Vector3 = (Vector3(mosquito.p) - Vector3(human.p)).rotated(Vector3.UP, -float(human.yaw))
+				var adjusted_y: float = local.y + float(human.crouch_amount) * 0.45
+				var near_band: int = 0 if adjusted_y >= 1.25 else (1 if adjusted_y >= 0.72 else 2)
+				if near_band == band and local.z < 0.18 and Vector2(local.x, local.z).length() <= 0.68 and ArenaData.clear_segment(eye, mosquito.p, str(config.map_id)) and not _body_occludes(eye, mosquito.p, id):
+					_kill(mosquito_id)
 			continue
 		var delta: Vector3 = Vector3(mosquito.p) - eye
 		var along: float = delta.dot(direction)
@@ -507,8 +563,9 @@ func _body_occludes(from: Vector3, to: Vector3, ignored_human: int) -> bool:
 		var human: Dictionary = actors[id]
 		var start_local: Vector3 = (from - Vector3(human.p)).rotated(Vector3.UP, -float(human.yaw))
 		var end_local: Vector3 = (to - Vector3(human.p)).rotated(Vector3.UP, -float(human.yaw))
-		for box: AABB in Pose.body_boxes(human):
-			if box.intersects_segment(start_local, end_local) != null:
+		for capsule: Dictionary in Pose.collision_segments(human):
+			var closest: PackedVector3Array = Geometry3D.get_closest_points_between_segments(start_local, end_local, capsule.from, capsule.to)
+			if closest[0].distance_to(closest[1]) < float(capsule.radius) - 0.008:
 				return true
 	return false
 
@@ -525,6 +582,8 @@ func _kill(id: int) -> void:
 	actor._move = Vector3.ZERO
 	actor.velocity = Vector3.ZERO
 	actor._interact = false
+	actor._focus_progress = 0.0
+	actor._focus_pulse_until = 0.0
 	# Shared blood is never deducted. Only sleep offers personal limited lives.
 
 func _respawn(id: int) -> void:
@@ -588,7 +647,7 @@ func _update_tasks(dt: float) -> void:
 		var task: Dictionary = human._task
 		if not task.is_empty():
 			var usable_dt: float = minf(dt, float(task.remaining))
-			var near: bool = Vector3(human.p).distance_to(Vector3(task.p)) < 1.20
+			var near: bool = Vector3(human.p).distance_to(Vector3(task.p)) < 1.20 and ArenaData.clear_segment(Vector3(human.p) + Vector3.UP * 0.65, Vector3(task.p) + Vector3.UP * 0.65, str(config.map_id))
 			var input_fresh: bool = elapsed - float(human._last_input) <= INPUT_TIMEOUT
 			if near and bool(human._interact) and input_fresh and not bool(human.bitten) and float(human.swing) <= 0.0:
 				task.progress = minf(float(task.work), float(task.progress) + usable_dt)
@@ -657,6 +716,9 @@ func abort(explanation: String) -> void:
 		actors[id]._move = Vector3.ZERO
 		actors[id]._interact = false
 		actors[id].bitten = false
+		actors[id].threatened = false
+		actors[id]._focus_progress = 0.0
+		actors[id]._focus_pulse_until = 0.0
 		if actors[id].state == "biting":
 			actors[id].state = "flying"
 
@@ -669,7 +731,7 @@ func public_snapshot() -> Dictionary:
 			"name": actor.name, "role": actor.role, "p": actor.p, "yaw": actor.yaw,
 			"appearance": Dictionary(actor.appearance).duplicate(true),
 			"pitch": actor.pitch, "state": actor.state, "alive": actor.alive,
-			"swing": actor.swing, "bitten": actor.bitten, "tool": actor.tool, "lives": actor.lives,
+			"swing": actor.swing, "bitten": actor.bitten, "threatened": actor.threatened, "tool": actor.tool, "lives": actor.lives,
 			"velocity": actor.velocity, "grounded": actor.grounded, "sprinting": actor.sprinting,
 			"crouching": actor.crouching, "crouch_amount": actor.crouch_amount,
 			"motion_phase": actor.motion_phase, "motion_speed": actor.motion_speed,
@@ -692,4 +754,40 @@ func private_for(id: int) -> Dictionary:
 		assignment = Dictionary(actor._assignment).duplicate(true)
 		assignment.merge(_zone_pose(assignment))
 	var respawn_left: float = maxf(0.0, float(actor._respawn_at) - elapsed) if config.mode == "sleep" and not bool(actor.alive) and int(actor.lives) > 0 else 0.0
-	return {"assignment": assignment, "state": actor.state, "respawn_left": respawn_left, "lives": actor.lives}
+	return {"assignment": assignment, "state": actor.state, "focus": _focus_info(id), "respawn_left": respawn_left, "lives": actor.lives}
+
+func _focus_held(actor: Dictionary) -> bool:
+	return not bool(actor._focus_suppressed) and ((bool(actor._interact) and elapsed - float(actor._last_input) <= INPUT_TIMEOUT) or elapsed < float(actor._focus_pulse_until))
+
+func _focus_info(id: int) -> Dictionary:
+	var actor: Dictionary = actors[id]
+	var result: Dictionary = {"state": "idle", "progress": float(actor._focus_progress), "distance": 0.0, "can_focus": false, "reason": "Acercate a tu marca"}
+	if not bool(actor.alive) or Dictionary(actor._assignment).is_empty():
+		result.progress = 0.0
+		return result
+	if actor.state == "biting":
+		result.state = "attached"
+		result.progress = 1.0
+		result.reason = "Pulsá E otra vez para desprenderte"
+		return result
+	var pose: Dictionary = _zone_pose(actor._assignment)
+	var delta: Vector3 = Vector3(pose.p) - Vector3(actor.p)
+	result.distance = delta.length()
+	var forward: Vector3 = ArenaData.flight_direction(Vector3.FORWARD, float(actor.yaw), float(actor.pitch))
+	if bool(actor._focus_suppressed):
+		result.reason = "Soltá E antes de concentrarte otra vez"
+	elif delta.length() > FOCUS_DISTANCE:
+		result.reason = "Acercate a tu marca"
+	elif (Vector3(actor.p) - Vector3(pose.p)).dot(pose.normal) < -0.015:
+		result.reason = "Rodeá el cuerpo hasta el lado de la marca"
+	elif forward.dot(delta.normalized()) < (0.25 if float(actor._focus_progress) > 0.0 else 0.40):
+		result.reason = "Apuntá hacia tu marca"
+	elif not ArenaData.clear_segment(actor.p, pose.p, str(config.map_id)) or _body_occludes(actor.p, pose.p, -1):
+		result.reason = "La marca está detrás de un obstáculo"
+	else:
+		result.can_focus = true
+		result.state = "charging" if _focus_held(actor) else "ready"
+		result.reason = "Mantené E para estabilizarte y picar"
+	if not bool(result.can_focus) and _focus_held(actor):
+		result.state = "blocked"
+	return result

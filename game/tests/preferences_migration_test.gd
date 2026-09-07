@@ -30,6 +30,8 @@ func _run() -> void:
 	legacy.set_value("appearance", "cosmetics", {"human": {"color": 5, "accessory": 2}, "mosquito": {"color": 1, "accessory": 1}})
 	legacy.set_value("bindings", "jump", "key:%d" % KEY_J)
 	legacy.set_value("bindings", "attack", "mouse:2")
+	legacy.set_value("bindings", "bite", "key:%d" % KEY_H)
+	legacy.set_value("bindings", "self_swat", "key:%d" % KEY_T)
 	legacy.set_value("connection", "player_name", "Migración")
 	legacy.save(source)
 	var source_bytes: PackedByteArray = FileAccess.get_file_as_bytes(source)
@@ -55,13 +57,15 @@ func _run() -> void:
 	check(copy_error != OK, "Copy failure is returned to the caller")
 	# The actual load path proves appearances and bindings are restored, not just copied.
 	if existed:
-		DirAccess.remove_absolute(destination)
+		check(DirAccess.remove_absolute(destination) == OK, "Backed-up destination can be removed for the migration fixture")
 	check(Prefs._migrate_legacy_settings(source) == OK, "Migration populates the actual preferences destination")
+	check(FileAccess.get_file_as_bytes(destination) == source_bytes, "Actual destination contains the exact migration fixture before loading")
 	Prefs.cosmetics = {}
 	Prefs._loaded = false
 	Prefs.load_settings()
 	check(Prefs.cosmetics == {"human": {"color": 5, "accessory": 2}, "mosquito": {"color": 1, "accessory": 1}}, "Fresh load restores independent human and mosquito appearances")
 	check(Prefs.binding_text("jump") == "J" and Prefs.binding_text("attack") == "Clic der.", "Fresh load restores keyboard and mouse bindings")
+	check(Prefs.binding_text("bite") == "H" and Prefs.binding_text("self_swat") == "T", "Migration preserves reassigned concentration and defense controls")
 	check(FileAccess.get_file_as_bytes(source) == source_bytes, "Legacy source remains unchanged")
 	if existed:
 		var restored := FileAccess.open(destination, FileAccess.WRITE)

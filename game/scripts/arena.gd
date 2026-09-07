@@ -3,9 +3,9 @@ extends RefCounted
 
 const Maps = preload("res://scripts/map_catalog.gd")
 # House aliases preserve existing consumers. New code selects data by map_id.
-const HALF_X := 6.0
-const HALF_Z := 5.0
-const CEILING := 2.8
+const HALF_X = Maps.HOUSE.half_x
+const HALF_Z = Maps.HOUSE.half_z
+const CEILING = Maps.HOUSE.ceiling
 const OBSTACLES = Maps.HOUSE.obstacles
 const STATIONS = Maps.HOUSE.stations
 const HUMAN_SPEED := 3.1
@@ -14,8 +14,11 @@ const HUMAN_CROUCH_SPEED := 1.55
 const HUMAN_HEIGHT := 1.95
 const HUMAN_CROUCH_HEIGHT := 1.40
 const HUMAN_RADIUS := 0.60
-const MOSQUITO_SPEED := 3.5
-const MOSQUITO_RADIUS := 0.10
+const MOSQUITO_SPEED := 3.8
+const MOSQUITO_RADIUS := 0.04
+const FLIGHT_ACCELERATION := 13.0
+const FLIGHT_BRAKING := 28.0
+const STEP_HEIGHT := 0.22
 const GRAVITY := 12.0
 const JUMP_SPEED := 4.6
 const MAX_FALL_SPEED := 16.0
@@ -37,6 +40,13 @@ static func move_body(pos: Vector3, displacement: Vector3, human: bool, map_id: 
 		return pos if pos.is_finite() else Vector3.ZERO
 	if human:
 		return move_human(pos, displacement, map_id, height).p
+	var pieces: int = maxi(1, int(ceil(displacement.length() / 0.06)))
+	var result: Vector3 = pos
+	for part: int in range(pieces):
+		result = _move_insect_part(result, displacement / pieces, map_id)
+	return result
+
+static func _move_insect_part(pos: Vector3, displacement: Vector3, map_id: String) -> Vector3:
 	var data: Dictionary = _map(map_id)
 	var next: Vector3 = pos
 	for axis: int in [0, 2, 1]:
@@ -54,6 +64,28 @@ static func move_body(pos: Vector3, displacement: Vector3, human: bool, map_id: 
 		if not blocked:
 			next = trial
 	return next
+
+static func flight_direction(local_move: Vector3, yaw: float, pitch: float) -> Vector3:
+	if not local_move.is_finite() or not is_finite(yaw) or not is_finite(pitch):
+		return Vector3.ZERO
+	# W follows the full aiming direction; explicit ascend/descend stays vertical
+	# in world space, so the player can still lift away while looking downward.
+	var forward: Vector3 = Vector3.FORWARD.rotated(Vector3.RIGHT, pitch).rotated(Vector3.UP, yaw)
+	var right: Vector3 = Vector3.RIGHT.rotated(Vector3.UP, yaw)
+	return (right * local_move.x - forward * local_move.z + Vector3.UP * local_move.y).limit_length(1.0)
+
+static func step_mosquito(actor: Dictionary, local_move: Vector3, dt: float, map_id: String = "house", assisted_velocity: Variant = null) -> void:
+	if not is_finite(dt) or dt <= 0.0:
+		return
+	var target: Vector3 = flight_direction(local_move, float(actor.yaw), float(actor.pitch)) * MOSQUITO_SPEED
+	if assisted_velocity is Vector3 and Vector3(assisted_velocity).is_finite():
+		target = Vector3(assisted_velocity).limit_length(MOSQUITO_SPEED)
+	var velocity: Vector3 = actor.get("velocity", Vector3.ZERO)
+	var rate: float = FLIGHT_BRAKING if target.length_squared() < 0.0001 else FLIGHT_ACCELERATION
+	velocity = velocity.move_toward(target, rate * minf(dt, 0.1))
+	var previous: Vector3 = actor.p
+	actor.p = move_body(previous, velocity * minf(dt, 0.1), false, map_id)
+	actor.velocity = (Vector3(actor.p) - previous) / minf(dt, 0.1)
 
 static func _body_box(pos: Vector3, height: float) -> AABB:
 	return AABB(pos + Vector3(-HUMAN_RADIUS, 0.003, -HUMAN_RADIUS), Vector3(HUMAN_RADIUS * 2, maxf(0.01, height - 0.006), HUMAN_RADIUS * 2))
@@ -116,6 +148,16 @@ static func move_human(pos: Vector3, displacement: Vector3, map_id: String = "ho
 				break
 		if not blocked:
 			next = trial
+		elif is_grounded(next, map_id) and displacement.y <= 0.0:
+			# Sweep the leading footprint onto one short step while keeping headroom.
+			var step_y: float = next.y
+			for obstacle: AABB in data.obstacles:
+				if body.intersects(obstacle) and obstacle.end.y > step_y:
+					step_y = obstacle.end.y
+			var raised: Vector3 = Vector3(trial.x, step_y, trial.z)
+			if step_y - next.y <= STEP_HEIGHT + 0.00001 and can_fit_human(raised, height, map_id):
+				next = raised
+				grounded = true
 	grounded = grounded and is_grounded(next, map_id)
 	if displacement.y == 0.0:
 		grounded = is_grounded(next, map_id)

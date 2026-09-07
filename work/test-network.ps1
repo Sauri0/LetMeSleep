@@ -29,7 +29,7 @@ try {
     $server = Start-GameProcess 'server' @('--server', "--port=$Port")
     Start-Sleep -Milliseconds 600
     $codeFile = Join-Path $runDir 'room-code.txt'
-    $creatorArgs = @('--bot', '--create', '--name=Amigo1', "--humans=$Humans", "--rounds=$Rounds", "--timeout=$($Rounds * 38 + 20)", "--mode=$Mode", "--port=$Port", "--players=$($Humans + $Mosquitoes)", ('--code-file="' + $codeFile + '"'), ('--report="' + (Join-Path $runDir 'human1.json') + '"'))
+    $creatorArgs = @('--bot', '--create', '--name=Amigo1', "--humans=$Humans", "--rounds=$Rounds", "--timeout=$($Rounds * 75 + 20)", "--mode=$Mode", "--port=$Port", "--players=$($Humans + $Mosquitoes)", ('--code-file="' + $codeFile + '"'), ('--report="' + (Join-Path $runDir 'human1.json') + '"'))
     if ($DisconnectTest) { $creatorArgs += '--disconnect-test' }
     if ($RematchTest) { $creatorArgs += '--rematch-test' }
     if ($Incompatible) { $creatorArgs += '--incompatible' }
@@ -41,21 +41,21 @@ try {
         if (-not (Test-Path -LiteralPath $codeFile)) { throw "No room code created. Inspect $runDir" }
         $code = [System.IO.File]::ReadAllText($codeFile)
         for ($i = 2; $i -le $Humans; $i++) {
-            $extra = @('--bot', "--name=Amigo$i", "--rounds=$Rounds", "--timeout=$($Rounds * 38 + 20)", "--code=$code", "--port=$Port", ('--report="' + (Join-Path $runDir "human$i.json") + '"'))
+            $extra = @('--bot', "--name=Amigo$i", "--rounds=$Rounds", "--timeout=$($Rounds * 75 + 20)", "--code=$code", "--port=$Port", ('--report="' + (Join-Path $runDir "human$i.json") + '"'))
             if ($RematchTest) { $extra += '--rematch-test' }
             if ($InvitationTest) { $extra += '--invitation=' + $code }
             if ($DisconnectTest) { $extra += '--disconnect-test' }
             Start-GameProcess "human$i" $extra | Out-Null
         }
         for ($i = 1; $i -le $Mosquitoes; $i++) {
-            $extra = @('--bot', "--name=Amigo$($Humans + $i)", "--rounds=$Rounds", "--timeout=$($Rounds * 38 + 20)", "--code=$code", "--port=$Port", ('--report="' + (Join-Path $runDir "mosquito$i.json") + '"'))
+            $extra = @('--bot', "--name=Amigo$($Humans + $i)", "--rounds=$Rounds", "--timeout=$($Rounds * 75 + 20)", "--code=$code", "--port=$Port", ('--report="' + (Join-Path $runDir "mosquito$i.json") + '"'))
             if ($RematchTest) { $extra += '--rematch-test' }
             if ($InvitationTest) { $extra += '--invitation=' + $code }
             if ($DisconnectTest) { $extra += if ($i -eq 1) { '--disconnect-after=6' } else { '--disconnect-test' } }
             Start-GameProcess "mosquito$i" $extra | Out-Null
         }
     }
-    $deadline = [DateTime]::UtcNow.AddSeconds($Rounds * 38 + 25)
+    $deadline = [DateTime]::UtcNow.AddSeconds($Rounds * 75 + 25)
     while ([DateTime]::UtcNow -lt $deadline) {
         $running = @($processes | Where-Object { $_.Id -ne $server.Id -and -not $_.HasExited })
         if ($running.Count -eq 0) { break }

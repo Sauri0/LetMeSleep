@@ -28,6 +28,8 @@ var waiting_state: Dictionary = {}
 var authority_probe_sent := false
 const Cosmetics = preload("res://scripts/cosmetics.gd")
 const Invite = preload("res://scripts/invitation.gd")
+const Brain = preload("res://scripts/bot_brain.gd")
+var pilot: RefCounted
 
 func _ready() -> void:
 	network.local_cosmetics = Cosmetics.sanitize({"human":{"color": 3, "accessory": 1}, "mosquito":{"color": 4, "accessory": 2}})
@@ -108,11 +110,11 @@ func _lobby(data: Dictionary) -> void:
 		var config: Dictionary = data.config.duplicate(true)
 		config.mode = str(options.get("mode", "blood"))
 		config.human_count = int(options.get("humans", "1"))
-		config.round_seconds = 30
-		config.blood_goal = 5
+		config.round_seconds = 60
+		config.blood_goal = 3
 		config.task_goal = 1
-		config.task_interval = 12
-		config.task_deadline = 8
+		config.task_interval = 25
+		config.task_deadline = 23
 		config.task_work = 1
 		config.task_floor = 4
 		config.mosquito_lives = 3
@@ -147,11 +149,13 @@ func _snapshot(data: Dictionary) -> void:
 	public_state = data
 	report.snapshots += 1
 	for id: int in data.get("actors", {}):
-		for key: String in ["assignment", "zone", "target", "rotation_at", "next_rotation", "blocked_zone"]:
+		for key: String in ["assignment", "zone", "target", "rotation_at", "next_rotation", "blocked_zone", "focus"]:
 			if data.actors[id].has(key):
 				report.privacy_ok = false
 	if str(data.get("phase", "")) == "playing":
 		if not started:
+			pilot = Brain.new()
+			pilot.setup(local_id)
 			rounds += 1
 			input_seq = 0
 			action_seq = 0
@@ -193,6 +197,8 @@ func _snapshot(data: Dictionary) -> void:
 
 func _private(data: Dictionary) -> void:
 	personal = data
+	if data.get("focus",{}).get("state","") == "charging":
+		report["focus_seen"] = true
 	report.private_packets += 1
 	var role := str(public_state.get("actors", {}).get(local_id, {}).get("role", ""))
 	if not data.get("assignment", {}).is_empty():
@@ -230,38 +236,14 @@ func _process(dt: float) -> void:
 	var me: Dictionary = public_state.get("actors", {}).get(local_id, {})
 	if me.is_empty() or not bool(me.get("alive", false)):
 		return
-	var move := Vector3.ZERO
-	var interact := false
-	var yaw := 0.0
-	var pitch := 0.0
 	var mode := str(public_state.get("config", {}).get("mode", "blood"))
-	if str(me.role) == "mosquito":
-		var assignment: Dictionary = personal.get("assignment", {})
-		if not assignment.is_empty() and str(me.state) != "biting" and mode == "blood":
-			var destination: Vector3 = assignment.p + assignment.normal * 0.20
-			if (Vector3(me.p) - Vector3(assignment.p)).dot(assignment.normal) < 0.35:
-				# Approach the exposed face above head height instead of crossing the human.
-				destination = assignment.p + assignment.normal * 0.80
-				destination.y = 2.30
-			var delta: Vector3 = destination - me.p
-			move = delta.normalized() if delta.length() > 0.15 else Vector3.ZERO
-			if delta.length() < 0.48 and action_delay <= 0.0:
-				act("bite")
-		elif mode == "survival":
-			move = Vector3(sin(elapsed), 0, cos(elapsed)) * 0.6
-	elif mode == "sleep" and not options.has("idle"):
-		var task: Dictionary = personal.get("task", {})
-		if not task.is_empty():
-			var delta: Vector3 = task.get("p", Vector3.ZERO) - me.p
-			delta.y = 0.0
-			move = delta.normalized() if delta.length() > 0.70 else Vector3.ZERO
-			interact = delta.length() < 1.35
-			if delta.length() > 0.05:
-				yaw = atan2(-delta.x, -delta.z)
-				move = move.rotated(Vector3.UP, -yaw)
+	var intent := {"move":Vector3.ZERO,"yaw":float(me.yaw),"pitch":float(me.pitch),"interact":false,"sprint":false,"crouch":false,"jump":false,"action":""}
+	if str(me.role) == "mosquito" or (mode == "sleep" and not options.has("idle")):
+		intent = pilot.decide(public_state,personal,0.0333)
 	input_seq += 1
-	network.send_input(input_seq, move, yaw, pitch, interact)
-
+	network.send_input(input_seq,intent.move,intent.yaw,intent.pitch,intent.interact,intent.sprint,intent.crouch,intent.jump)
+	if not str(intent.action).is_empty():
+		act(intent.action)
 func act(verb: String) -> void:
 	action_seq += 1
 	network.send_action(action_seq, verb)

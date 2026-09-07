@@ -52,13 +52,13 @@ func _run() -> void:
 	world.load_map("house")
 	check(not old_map.is_inside_tree(), "old map colliders leave physics tree immediately")
 	await settle()
-	check(world.current_map == "house" and _collider_count() == 10 and not _wall_hit(), "house replaces smaller lobby bounds and authored furniture")
+	check(world.current_map == "house" and _collider_count() == world.map_data.obstacles.size() + 6 and not _wall_hit(), "house replaces smaller lobby bounds and authored furniture")
 	world.load_map("unknown")
 	check(world.current_map == "house", "unknown map preserves current map")
 	for i: int in range(4):
 		world.load_map("lobby" if i % 2 == 0 else "house")
 		await settle()
-	check(world.find_children("Map_*", "Node3D", false, false).size() == 1 and _collider_count() == 10, "repeated map changes retain one geometry root")
+	check(world.find_children("Map_*", "Node3D", false, false).size() == 1 and _collider_count() == world.map_data.obstacles.size() + 6, "repeated map changes retain one geometry root")
 	world.set_local_role(0, "lobby")
 	var poses: Dictionary = {
 		"idle": _human(),
@@ -66,8 +66,8 @@ func _run() -> void:
 		"run": _human({"motion_phase":PI / 2, "motion_speed":5.0, "sprinting":true}),
 		"crouch": _human({"crouch_amount":1.0, "crouching":true, "motion_phase":PI / 2, "motion_speed":1.55}),
 		"jump": _human({"p":Vector3(0,0.48,0), "grounded":false, "velocity":Vector3(0,2.0,0)}),
-		"swat": _human({"swing":0.4, "tool":"hands", "pitch":0.4}),
-		"racket": _human({"swing":0.525, "tool":"racket"})
+		"swat": _human({"swing":0.62, "tool":"hands", "pitch":0.4}),
+		"racket": _human({"swing":0.87, "tool":"racket"})
 	}
 	var view: ActorView
 	for pose_name: String in poses:
@@ -89,7 +89,7 @@ func _run() -> void:
 			assignment["zone"] = zone_id
 			var point: Vector3 = assignment.p
 			var normal: Vector3 = assignment.normal
-			camera.position = point + normal * 1.7
+			camera.position = point + normal * 1.0
 			camera.look_at(point)
 			world.show_assignment(assignment, camera, point + normal * 0.9)
 			if not world.marker.visible:
@@ -112,7 +112,7 @@ func _run() -> void:
 	check(not view.head.visible and not view.left_arm.visible and view.fps_root.visible and view.model.visible, "first person retains torso and legs with separate visible arms")
 	world.sync_actors({1:_human({"swing":0.8})}, 1, 1.0)
 	var resting_arm_gap: float = view.fps_right_arm.position.x - view.fps_left_arm.position.x
-	world.sync_actors({1:_human({"swing":0.4})}, 1, 1.0)
+	world.sync_actors({1:_human({"swing":0.62})}, 1, 1.0)
 	check(view.fps_right_arm.position.x - view.fps_left_arm.position.x < resting_arm_gap * 0.4 and Vector3(view.body_pose.hand_l).distance_to(view.body_pose.hand_r) < 0.2, "palmada midpoint closes palms in shared body and first person arms")
 	world.sync_actors({1:_human({"swing":0.0})}, 1, 1.0)
 	check(is_equal_approx(view.fps_right_arm.position.x - view.fps_left_arm.position.x, resting_arm_gap), "completed palmada restores first person resting arms")
@@ -165,7 +165,7 @@ func _screens(poses: Dictionary) -> void:
 	lineup[2].motion_phase = PI * 1.5
 	lineup[1].swing = 0.8
 	world.sync_actors(lineup, 1, 1.0)
-	lineup[1].swing = 0.4
+	lineup[1].swing = 0.62
 	world.sync_actors(lineup, 1, 1.0)
 	await _capture("v03-lobby-rig-next-step.png")
 	world.clear_actors()
@@ -179,7 +179,7 @@ func _screens(poses: Dictionary) -> void:
 	human.tool = "hands"
 	human.swing = 0.8
 	world.sync_actors({1:human}, 1, 1.0)
-	human.swing = 0.4
+	human.swing = 0.62
 	world.sync_actors({1:human}, 1, 1.0)
 	await _capture("v03-human-clap-mid.png")
 	human.swing = 0.0

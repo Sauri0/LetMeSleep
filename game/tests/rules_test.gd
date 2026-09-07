@@ -57,7 +57,11 @@ func place_assignment(sim: RefCounted, mosquito: int, human: int, zone: int) -> 
 func attach(sim: RefCounted, mosquito: int, human: int, zone: int, sequence := 1) -> void:
 	place_assignment(sim, mosquito, human, zone)
 	sim.action(mosquito, sequence, "bite")
-	sim.step(0.05)
+	for tick: int in range(64):
+		var pose: Dictionary = sim._zone_pose(sim.actors[mosquito]._assignment)
+		var delta: Vector3 = (Vector3(pose.p) - Vector3(sim.actors[mosquito].p)).normalized()
+		sim.submit_input(mosquito, int(sim.actors[mosquito]._input_seq) + 1, Vector3.ZERO, atan2(-delta.x, -delta.z), asin(delta.y), true)
+		sim.step(0.025)
 
 func aim_at(sim: RefCounted, human: int, target: Vector3, sequence := 1) -> void:
 	var eye: Vector3 = Vector3(sim.actors[human].p) + Vector3.UP * 1.55
@@ -186,10 +190,10 @@ func _test_inputs() -> void:
 	var stopped: Vector3 = sim.actors[1].p
 	advance(sim, 0.3)
 	check(Vector3(sim.actors[1].p).is_equal_approx(stopped), "stale movement stops before disconnect timeout")
-	sim.actors[1].p = Vector3(5.6, 0, 0)
+	sim.actors[1].p = Vector3(float(Sim.ArenaData.HALF_X) - 0.7, 0, 0)
 	sim.submit_input(1, 4, Vector3.RIGHT, 0.0, 0.0, false)
 	sim.step(0.3)
-	check(float(sim.actors[1].p.x) <= 5.711, "server enforces arena wall")
+	check(float(sim.actors[1].p.x) <= float(Sim.ArenaData.HALF_X) - Sim.ArenaData.HUMAN_RADIUS + 0.001, "server enforces arena wall")
 	sim.actors[1].p = Vector3(-3.0, 0, 2.0)
 	sim.submit_input(1, 5, Vector3.LEFT, 0.0, 0.0, false)
 	sim.step(0.3)
@@ -199,33 +203,34 @@ func _test_inputs() -> void:
 	sim.actors[2].p = Vector3(0, 1.1, -0.6)
 	sim.submit_input(2, 1, Vector3.BACK, 0.0, 0.0, false)
 	sim.step(0.1)
-	check(float(sim.actors[2].p.z) < -0.34, "mosquito body softly collides with human torso")
+	check(float(sim.actors[2].p.z) < -0.279, "mosquito body softly collides with human torso")
 	sim.step(0.2)
-	check(float(sim.actors[2].p.z) < -0.34, "continued input cannot tunnel through human torso")
+	check(float(sim.actors[2].p.z) < -0.279, "continued input cannot tunnel through human torso")
 
 func _test_surface_perch() -> void:
 	var sim = make_sim()
-	sim.actors[2].p = Vector3(0, 1.5, 3)
+	sim.actors[2].p = Vector3(-7, 1.5, 8)
 	sim.action(2, 1, "perch")
 	sim.step(0.05)
 	check(sim.actors[2].state == "flying", "perch cannot freeze insect in open air")
-	sim.actors[2].p = Vector3(0, 0.2, 3)
+	sim.actors[2].p = Vector3(-7, 0.2, 8)
 	sim.action(2, 2, "perch")
 	sim.step(0.05)
-	check(sim.actors[2].state == "perched" and is_equal_approx(float(sim.actors[2].p.y), 0.1), "perch snaps mosquito onto floor")
+	check(sim.actors[2].state == "perched" and absf(float(sim.actors[2].p.y) - Sim.ArenaData.MOSQUITO_RADIUS) <= 0.0051, "perch snaps mosquito onto floor")
 	sim.submit_input(2, 1, Vector3.UP, 0.0, 0.0, false)
 	sim.step(0.05)
-	check(sim.actors[2].state == "flying" and float(sim.actors[2].p.y) > 0.1, "movement lifts mosquito from surface")
-	sim.actors[2].p = Vector3(5.8, 1.2, 3.6)
+	check(sim.actors[2].state == "flying" and float(sim.actors[2].p.y) > Sim.ArenaData.MOSQUITO_RADIUS, "movement lifts mosquito from surface")
+	sim.actors[2].p = Vector3(float(Sim.ArenaData.HALF_X) - 0.4, 1.2, 0)
+	sim.actors[2].velocity = Vector3.ZERO
 	sim.submit_input(2, 2, Vector3.ZERO, 0.0, 0.0, false)
 	sim.action(2, 3, "perch")
 	sim.step(0.05)
-	check(sim.actors[2].state == "perched" and is_equal_approx(float(sim.actors[2].p.x), 5.9), "perch snaps onto wall")
+	check(sim.actors[2].state == "perched" and float(sim.actors[2].p.x) > float(Sim.ArenaData.HALF_X) - 0.4 and Sim.ArenaData.move_body(sim.actors[2].p, Vector3.ZERO, false).is_equal_approx(sim.actors[2].p), "perch snaps onto inner wall surface")
 	sim.actors[2].state = "flying"
-	sim.actors[2].p = Vector3(-4.1, 0.9, -0.2)
+	sim.actors[2].p = Vector3(-3.15, 0.8, 2.65)
 	sim.action(2, 4, "perch")
 	sim.step(0.05)
-	check(sim.actors[2].state == "perched" and is_equal_approx(float(sim.actors[2].p.y), 0.605), "perch snaps onto furnished table surface")
+	check(sim.actors[2].state == "perched" and is_equal_approx(float(sim.actors[2].p.y), 0.62 + Sim.ArenaData.MOSQUITO_RADIUS + 0.005), "perch snaps onto furnished table surface")
 
 func _test_attached_wall_clearance() -> void:
 	var sim = make_sim("blood", 2, 4)
@@ -248,43 +253,16 @@ func _test_attached_wall_clearance() -> void:
 				check(inside and sim.actors[3].state == "biting", "attached zone %d at yaw %d stays wholly inside map edge %s" % [zone, angle, str(edge)])
 
 func _test_station_routes() -> void:
-	# Traverse the actual collision API, so a large body radius cannot silently
-	# make a task station inaccessible behind the furniture or inside a wall.
-	var origin: Vector3 = Sim.ArenaData.human_spawn(0)
-	var visited: Dictionary = {Vector2i.ZERO: true}
-	var queue: Array[Vector2i] = [Vector2i.ZERO]
-	var positions: Array[Vector3] = [origin]
-	var cursor := 0
-	var directions: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
-	while cursor < queue.size():
-		var cell: Vector2i = queue[cursor]
-		cursor += 1
-		var from: Vector3 = origin + Vector3(float(cell.x), 0, float(cell.y)) * 0.25
-		for direction: Vector2i in directions:
-			var next: Vector2i = cell + direction
-			if visited.has(next):
-				continue
-			var target: Vector3 = origin + Vector3(float(next.x), 0, float(next.y)) * 0.25
-			var reached: Vector3 = Sim.ArenaData.move_body(from, target - from, true)
-			if reached.is_equal_approx(target):
-				visited[next] = true
-				queue.append(next)
-				positions.append(target)
-	check(positions.size() > 100, "expanded human collision retains a connected walkable room")
+	# Whole-house physical routes and both staircases live in map_routes_test.
+	# Here retain the rules-level interaction check at every authored endpoint.
 	var sim = make_sim("sleep", 1, 2, {"task_work": 1.0})
 	sim.actors[1]._next_task = 100.0
 	var sequence := 0
-	for station_id: int in range(Sim.ArenaData.STATIONS.size()):
-		var station: Dictionary = Sim.ArenaData.STATIONS[station_id]
-		var nearest: Vector3 = origin
-		var best_distance := INF
-		for position: Vector3 in positions:
-			var distance: float = position.distance_to(station.p)
-			if distance < best_distance:
-				best_distance = distance
-				nearest = position
-		check(best_distance < 1.20, "station %d reachable on foot within interaction distance" % station_id)
-		sim.actors[1].p = nearest
+	for station_id: int in range(Sim.Maps.HOUSE.stations.size()):
+		var station: Dictionary = Sim.Maps.HOUSE.stations[station_id]
+		check(Sim.ArenaData.can_fit_human(station.p), "station %d has a valid standing endpoint" % station_id)
+		sim.actors[1].p = station.p
+		sim.actors[1].velocity = Vector3.ZERO
 		sim.actors[1]._task = {"name": station.name, "station": station_id, "p": station.p, "remaining": 6.0, "progress": 0.0, "work": 1.0}
 		var completed_before: int = int(sim.tasks_done)
 		for tick: int in range(6):
@@ -311,7 +289,7 @@ func _test_bite_calendar_and_blood() -> void:
 	check((Vector3(sim.actors[2].p) - mosquito_origin).is_equal_approx(Vector3(sim.actors[1].p) - human_origin), "attached mosquito travels with human")
 	advance(sim, 4.1)
 	check(Sim._zone_key(sim.actors[2]._assignment) == reserved, "attached reservation survives scheduled rotations")
-	check(float(sim.blood) > 3.0, "blood extracted progressively after preparation")
+	check(float(sim.blood) > 2.5, "blood extracted progressively after preparation")
 	var earned: float = float(sim.blood)
 	var upcoming: float = float(sim.actors[2]._next_rotation)
 	var revision: int = int(sim.actors[2]._revision)
@@ -359,7 +337,7 @@ func _test_all_solo_zones() -> void:
 		check(bool(sim.actors[2].alive), "shared attack cooldown enforced")
 		advance(sim, 0.85)
 		sim.action(1, 3, "self_swat")
-		sim.step(0.05)
+		sim.step(0.3)
 		check(not bool(sim.actors[2].alive), "starting hands defend solo zone %d with correct band" % zone)
 
 func _test_cooperative_rear() -> void:
@@ -395,7 +373,7 @@ func _test_cooperative_rear() -> void:
 	advance(sim, 0.85)
 	aim_at(sim, 2, sim.actors[3].p, 2)
 	sim.action(2, 2, "attack")
-	sim.step(0.05)
+	sim.step(0.3)
 	check(not bool(sim.actors[3].alive), "teammate aimed hands rescue exposed rear zone")
 
 func _test_tools() -> void:
@@ -416,7 +394,7 @@ func _test_tools() -> void:
 	sim.action(1, 2, "pickup")
 	sim.step(0.05)
 	check(int(sim.pickups[1].holder) == 0 and int(sim.pickups[2].holder) == 1 and sim.actors[1].tool == "racket", "swap drops old tool and grants new instance atomically")
-	check(sim.pickups.size() == 4, "tool swap does not clone or destroy pickup instances")
+	check(sim.pickups.size() == Sim.Maps.HOUSE.pickups.size(), "tool swap does not clone or destroy pickup instances")
 	sim.action(1, 3, "drop")
 	sim.step(0.05)
 	check(sim.actors[1].tool == "hands" and int(sim.pickups[2].holder) == 0, "drop returns starting hands")
@@ -484,7 +462,7 @@ func _test_tasks() -> void:
 	check(int(sim.private_for(1).failures) == 1 and float(sim.private_for(1).deadline) == 4.0, "failure penalizes only failing human's future deadline")
 	check(int(sim.private_for(2).failures) == 0 and float(sim.private_for(2).deadline) == 6.0 and is_equal_approx(float(sim.actors[2]._task.remaining), other_remaining - 0.05), "teammate deadline and active-task budget unaffected by other failure")
 	check(float(sim.actors[1]._next_task) == next_one and float(sim.actors[2]._next_task) == next_two and float(sim.config.round_seconds) == round_length, "failure never changes schedules or round duration")
-	var progress_sim = make_sim("sleep", 1, 2, {"task_work": 1.0})
+	var progress_sim = make_sim("sleep", 1, 2, {"task_work": 1.0, "rotation_seconds": 40.0})
 	advance(progress_sim, 3.05)
 	progress_sim.actors[1].p = progress_sim.actors[1]._task.p
 	progress_sim.submit_input(1, 1, Vector3.ZERO, 0.0, 0.0, true)
@@ -492,6 +470,8 @@ func _test_tasks() -> void:
 	var progress: float = float(progress_sim.actors[1]._task.progress)
 	check(progress > 0.0, "nearby held interaction advances personal task")
 	attach(progress_sim, 2, 1, 5)
+	check(progress_sim.actors[2].state == "biting", "task interruption fixture completes authoritative concentration")
+	progress = float(progress_sim.actors[1]._task.progress)
 	progress_sim.submit_input(1, 2, Vector3.ZERO, 0.0, 0.0, true)
 	progress_sim.step(0.25)
 	check(is_equal_approx(float(progress_sim.actors[1]._task.progress), progress), "attached mosquito pauses and preserves task progress")

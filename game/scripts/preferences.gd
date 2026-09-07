@@ -13,8 +13,8 @@ const DEFAULT_KEYS: Dictionary = {
 }
 const ACTION_NAMES: Dictionary = {
 	"move_forward": "Avanzar", "move_back": "Retroceder", "move_left": "Izquierda",
-	"move_right": "Derecha", "ascend": "Volar hacia arriba", "descend": "Volar hacia abajo",
-	"bite": "Picar / desprenderse", "attack": "Palmada / golpe", "self_swat": "Defensa propia",
+	"move_right": "Derecha", "ascend": "Altura auxiliar + (opcional)", "descend": "Altura auxiliar − (opcional)",
+	"bite": "Concentrar (mantener) / soltar picadura", "attack": "Palmada / golpe", "self_swat": "Defensa propia",
 	"perch": "Posarse / volar", "interact": "Hacer tarea (mantener)",
 	"pickup": "Recoger / cambiar objeto", "drop": "Soltar objeto", "pause": "Menú",
 	"sprint": "Correr (humano)", "jump": "Saltar (humano)", "crouch": "Agacharse (humano)",

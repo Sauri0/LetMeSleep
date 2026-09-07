@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 $godotExe = Join-Path $PSScriptRoot 'tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe'
 $gamePath = Join-Path $projectRoot 'game'
-$outDir = Join-Path $projectRoot 'outputs/Let-me-sleep-0.3.0-Windows'
+$outDir = Join-Path $projectRoot 'outputs/Let-me-sleep-0.4.0-Windows'
 [System.IO.Directory]::CreateDirectory($outDir) | Out-Null
 if (Test-Path -LiteralPath (Join-Path $projectRoot 'distribution')) {
     Get-ChildItem -LiteralPath (Join-Path $projectRoot 'distribution') -File | Copy-Item -Destination $outDir
@@ -21,7 +21,7 @@ if (-not $SkipTests) {
     if ($LASTEXITCODE -ne 0) { throw 'Visual geometry tests failed' }
     & $godotExe --headless --path $gamePath --script res://tests/audio_checks.gd
     if ($LASTEXITCODE -ne 0) { throw 'Audio tests failed' }
-    foreach ($testName in @('maps_test','locomotion_test','practice_test','invitation_test','network_order_test','ui_navigation_test','preferences_migration_test')) {
+    foreach ($testName in @('maps_test','route_tests','locomotion_test','focus_combat_test','practice_test','invitation_test','network_order_test','ui_navigation_test','preferences_migration_test')) {
         & $godotExe --headless --path $gamePath --script "res://tests/$testName.gd"
         if ($LASTEXITCODE -ne 0) { throw "$testName failed" }
     }

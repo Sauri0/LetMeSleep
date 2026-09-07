@@ -3,6 +3,9 @@ extends Node3D
 
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const Pose = preload("res://scripts/human_pose.gd")
+const MOSQUITO_VISUAL_SCALE: float = 0.35
+const MOSQUITO_BODY_RADIUS: float = 0.04
+static var cloth_texture: ImageTexture
 
 # Original procedural characters. All transforms are cosmetic; the server owns play.
 var actor_role: String = ""
@@ -56,9 +59,9 @@ func build(role: String, display_name: String, tint_index: int = 0) -> void:
 		_build_mosquito()
 	name_label = Label3D.new()
 	name_label.text = display_name
-	name_label.position.y = 1.98 if role == "human" else 0.38
+	name_label.position.y = 1.98 if role == "human" else 0.12
 	name_label.font_size = 30 if role == "human" else 24
-	name_label.pixel_size = 0.005 if role == "human" else 0.0025
+	name_label.pixel_size = 0.005 if role == "human" else 0.0018
 	name_label.modulate = Color("fff6d7")
 	name_label.outline_modulate = Color("193c45")
 	name_label.outline_size = 7
@@ -117,8 +120,10 @@ func update_state(data: Dictionary, dt: float) -> void:
 		var flutter: float = sin(clock_time * 80.0) * (0.6 if flying else 0.08)
 		left_wing.rotation.z = -0.22 + flutter
 		right_wing.rotation.z = 0.22 - flutter
-		model.rotation.x = -float(data.get("pitch", 0.0)) * 0.35 if flying else 0.0
-		model.position.y = sin(clock_time * 9.0) * 0.012 if flying else 0.0
+		model.rotation.x = float(data.get("pitch", 0.0)) * 0.6 if flying else 0.0
+		# Wing animation carries flight movement; body origin is the authoritative
+		# contact centre, without a cosmetic bob that suggests drifting controls.
+		model.position = Vector3.ZERO
 
 func _build_human(tint_index: int) -> void:
 	var skin: StandardMaterial3D = material(Color("e8b186"))
@@ -127,21 +132,25 @@ func _build_human(tint_index: int) -> void:
 	var tint: Color = CosmeticsData.PALETTE[posmod(tint_index, CosmeticsData.PALETTE.size())]
 	var shirt: StandardMaterial3D = material(tint)
 	var trousers: StandardMaterial3D = material(tint.darkened(0.2))
+	shirt.albedo_texture = _woven_texture()
+	trousers.albedo_texture = cloth_texture
+	shirt.uv1_scale = Vector3(6, 6, 1)
+	trousers.uv1_scale = Vector3(6, 6, 1)
 	primary_tint = shirt
 	secondary_tint = trousers
 	torso_node = Node3D.new()
 	model.add_child(torso_node)
-	_capsule(torso_node, Vector3.ZERO, 0.265, 0.68, shirt, Vector3(1, 1, 0.77))
-	pelvis_mesh = _sphere(model, Vector3(0, 0.73, 0.025), Vector3(0.26, 0.17, 0.20), trousers)
+	_capsule(torso_node, Vector3.ZERO, 0.24, 0.68, shirt)
+	pelvis_mesh = _sphere(model, Vector3(0, 0.73, 0.025), Vector3.ONE * 0.20, trousers)
 	# Pajama buttons, rounded collar, two trouser legs and soft slippers.
 	for height: float in [1.29, 1.13, 0.97]:
 		collar_meshes.append(_sphere(torso_node, Vector3(0, height - 1.09, -0.209), Vector3(0.023, 0.023, 0.015), white))
 	for side: float in [-1.0, 1.0]:
 		var suffix: String = "l" if side < 0 else "r"
-		limb_meshes["thigh_" + suffix] = _capsule(model, Vector3.ZERO, 0.116, 1.0, trousers)
-		limb_meshes["shin_" + suffix] = _capsule(model, Vector3.ZERO, 0.102, 1.0, trousers)
+		limb_meshes["thigh_" + suffix] = _capsule(model, Vector3.ZERO, 0.105, 1.0, trousers)
+		limb_meshes["shin_" + suffix] = _capsule(model, Vector3.ZERO, 0.105, 1.0, trousers)
 		joint_meshes["knee_" + suffix] = _sphere(model, Vector3.ZERO, Vector3.ONE * 0.105, trousers)
-		limb_feet[suffix] = _sphere(model, Vector3.ZERO, Vector3(0.145, 0.095, 0.245), dark)
+		limb_feet[suffix] = _capsule(model, Vector3.ZERO, 0.105, 0.43, dark)
 		collar_meshes.append(_sphere(torso_node, Vector3(side * 0.11, 0.28, -0.13), Vector3(0.11, 0.035, 0.085), white))
 	left_arm = _build_rig_arm("l", -1.0, shirt, skin)
 	right_arm = _build_rig_arm("r", 1.0, shirt, skin)
@@ -161,7 +170,7 @@ func _build_human(tint_index: int) -> void:
 	head = Node3D.new()
 	head.position.y = 1.55
 	model.add_child(head)
-	_sphere(head, Vector3.ZERO, Vector3(0.235, 0.265, 0.22), skin)
+	_sphere(head, Vector3.ZERO, Vector3.ONE * 0.235, skin)
 	_sphere(head, Vector3(0, 0.16, 0.035), Vector3(0.242, 0.125, 0.23), dark)
 	_sphere(head, Vector3(0.04, 0.25, 0.035), Vector3(0.11, 0.06, 0.08), dark)
 	for side: float in [-1.0, 1.0]:
@@ -173,16 +182,14 @@ func _build_human(tint_index: int) -> void:
 	_sphere(head, Vector3(0, -0.025, -0.225), Vector3(0.045, 0.055, 0.056), skin)
 	var mouth: MeshInstance3D = _capsule(head, Vector3(0, -0.13, -0.195), 0.012, 0.075, dark)
 	mouth.rotation.z = PI / 2.0
-	_add_body_capsule(Vector3(0, 1.07, 0), 0.235, 0.73)
-	pose_colliders["torso"] = body_shapes.back()
-	_add_body_sphere(Vector3(0, 1.55, 0), 0.22)
-	pose_colliders["head"] = body_shapes.back()
-	_add_body_sphere(Vector3(0, 0.73, 0), 0.22)
-	pose_colliders["pelvis"] = body_shapes.back()
-	for suffix: String in ["l", "r"]:
-		for part: String in ["thigh", "shin", "upper_arm", "forearm"]:
-			_add_body_capsule(Vector3.ZERO, 0.095 if part in ["thigh", "shin"] else 0.075, 0.4)
-			pose_colliders[part + "_" + suffix] = body_shapes.back()
+	for piece: Dictionary in Pose.collision_segments({}):
+		var key: String = str(piece.get("key", "piece%d" % body_shapes.size())).replace("upperarm_", "upper_arm_")
+		var length: float = Vector3(piece.from).distance_to(piece.to)
+		if length < 0.001:
+			_add_body_sphere(piece.from, float(piece.radius))
+		else:
+			_add_body_capsule((Vector3(piece.from) + Vector3(piece.to)) * 0.5, float(piece.radius), length + float(piece.radius) * 2.0)
+		pose_colliders[key] = body_shapes.back()
 	_apply_human_pose({}, 1.0)
 
 func _human_arm(side: float, shirt: StandardMaterial3D, skin: StandardMaterial3D, parent: Node3D = null) -> Node3D:
@@ -204,27 +211,36 @@ func _build_rig_arm(suffix: String, side: float, shirt: StandardMaterial3D, skin
 	joint_meshes["elbow_" + suffix] = _sphere(group, Vector3.ZERO, Vector3.ONE * 0.079, skin)
 	var hand := Node3D.new()
 	group.add_child(hand)
-	_sphere(hand, Vector3.ZERO, Vector3(0.088, 0.095, 0.058), skin)
+	_sphere(hand, Vector3.ZERO, Vector3.ONE * 0.088, skin)
 	_sphere(hand, Vector3(-side * 0.069, 0.025, -0.025), Vector3(0.037, 0.062, 0.032), skin)
+	# Small knuckle pads retain a hand silhouette when the palms meet.
+	for finger: int in range(3):
+		_sphere(hand, Vector3(-0.039 + finger * 0.039, -0.041, -0.058), Vector3(0.026, 0.043, 0.022), skin)
 	limb_hands[suffix] = hand
 	return group
 
 func _apply_human_pose(data: Dictionary, dt: float) -> void:
 	body_pose = Pose.sample(data)
 	torso_node.position = body_pose.torso
-	torso_node.scale.y = float(body_pose.torso_height) / 0.68
+	(torso_node.get_child(0).mesh as CapsuleMesh).height = float(body_pose.torso_height)
 	pelvis_mesh.position = body_pose.pelvis
 	head.position = body_pose.head
 	head.basis = body_pose.head_basis
 	model.position = Vector3.ZERO
 	if is_instance_valid(name_label):
 		name_label.position.y = Vector3(body_pose.head).y + 0.43
-	for point: String in ["torso", "head", "pelvis"]:
-		if pose_colliders.has(point):
-			(pose_colliders[point] as StaticBody3D).position = body_pose[point]
-	if pose_colliders.has("torso"):
-		var torso_shape: CapsuleShape3D = ((pose_colliders["torso"] as Node3D).get_child(0) as CollisionShape3D).shape
-		torso_shape.height = float(body_pose.torso_height)
+	for piece: Dictionary in Pose.collision_segments(data):
+		var key: String = str(piece.get("key", "")).replace("upperarm_", "upper_arm_")
+		if not pose_colliders.has(key):
+			continue
+		var collider: StaticBody3D = pose_colliders[key]
+		var from: Vector3 = piece.from
+		var to: Vector3 = piece.to
+		collider.position = (from + to) * 0.5
+		if from.distance_to(to) > 0.001:
+			collider.quaternion = Quaternion(Vector3.UP, (to - from).normalized())
+			var shape: CapsuleShape3D = (collider.get_child(0) as CollisionShape3D).shape
+			shape.height = from.distance_to(to) + float(piece.radius) * 2.0
 	for suffix: String in ["l", "r"]:
 		var hip: Vector3 = body_pose["hip_" + suffix]
 		var knee: Vector3 = body_pose["knee_" + suffix]
@@ -240,8 +256,8 @@ func _apply_human_pose(data: Dictionary, dt: float) -> void:
 		(joint_meshes["elbow_" + suffix] as Node3D).position = elbow
 		(limb_hands[suffix] as Node3D).position = hand
 		(limb_hands[suffix] as Node3D).quaternion = Quaternion(Vector3.DOWN, (hand - elbow).normalized())
-		(limb_feet[suffix] as Node3D).position = ankle + Vector3(0, 0, -0.085)
-		(limb_feet[suffix] as Node3D).rotation.x = 0.0 if bool(data.get("grounded", true)) else 0.22
+		(limb_feet[suffix] as Node3D).position = ankle + Vector3(0, 0, -0.09)
+		(limb_feet[suffix] as Node3D).rotation.x = PI / 2.0
 	_update_first_person_arms(data, dt)
 
 func _pose_segment(key: String, from: Vector3, to: Vector3) -> void:
@@ -250,7 +266,7 @@ func _pose_segment(key: String, from: Vector3, to: Vector3) -> void:
 	var segment: MeshInstance3D = limb_meshes[key]
 	segment.position = (from + to) * 0.5
 	segment.quaternion = Quaternion(Vector3.UP, direction / distance)
-	segment.scale = Vector3(1, distance, 1)
+	(segment.mesh as CapsuleMesh).height = distance + (segment.mesh as CapsuleMesh).radius * 2.0
 	if pose_colliders.has(key):
 		var collider: StaticBody3D = pose_colliders[key]
 		collider.position = segment.position
@@ -265,7 +281,8 @@ func _update_first_person_arms(data: Dictionary, dt: float) -> void:
 	if swing > previous_swing + 0.04:
 		swing_duration = maxf(swing, 0.12)
 	previous_swing = swing
-	var strike: float = sin(clampf(1.0 - swing / swing_duration, 0.0, 1.0) * PI) if swing > 0.0 else 0.0
+	var cooldown: float = float(Pose.SWING_SECONDS.get(current_tool, 0.8))
+	var strike: float = sin(clampf((cooldown - swing) / Pose.SWING_GESTURE_SECONDS, 0.0, 1.0) * PI) if swing > 0.0 else 0.0
 	var speed: float = float(data.get("motion_speed", 0.0))
 	var gait: float = float(data.get("motion_phase", 0.0))
 	var bob: float = sin(gait) * minf(speed, 5.0) * 0.018
@@ -280,6 +297,7 @@ func _update_first_person_arms(data: Dictionary, dt: float) -> void:
 	fps_right_arm.rotation.z = lerpf(fps_right_arm.rotation.z, strike * (-0.18 if current_tool == "hands" else 0.28), blend)
 
 func _build_mosquito() -> void:
+	model.scale = Vector3.ONE * MOSQUITO_VISUAL_SCALE
 	var body: StandardMaterial3D = material(Color("294651"))
 	var teal: StandardMaterial3D = material(Color("5ca99b"))
 	primary_tint = teal
@@ -308,13 +326,13 @@ func _build_mosquito() -> void:
 			_segment(model, Vector3(side * 0.045, -0.025, z), Vector3(side * 0.13, -0.09, z + 0.02), 0.006, body)
 			_segment(model, Vector3(side * 0.13, -0.09, z + 0.02), Vector3(side * 0.15, -0.15, z - 0.015), 0.005, body)
 	_segment(model, Vector3(0, -0.015, -0.11), Vector3(0, -0.034, -0.24), 0.009, body)
-	var wing_mat: StandardMaterial3D = material(Color(0.84, 0.96, 0.95, 0.67))
+	var wing_mat: StandardMaterial3D = material(Color(0.84, 0.96, 0.95, 0.80))
 	wing_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	wing_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	wing_mat.roughness = 0.35
 	left_wing = _wing(-1.0, wing_mat)
 	right_wing = _wing(1.0, wing_mat)
-	_add_body_sphere(Vector3.ZERO, 0.10)
+	_add_body_sphere(Vector3.ZERO, MOSQUITO_BODY_RADIUS)
 
 func apply_appearance(raw: Variant) -> void:
 	# Catalog values are bounded here as well as on the server. The rendering
@@ -382,7 +400,23 @@ func _wing(side: float, mat: StandardMaterial3D) -> Node3D:
 	var wing: MeshInstance3D = _sphere(pivot, Vector3(side * 0.10, 0, 0.035), Vector3(0.15, 0.006, 0.075), mat)
 	wing.rotation.y = side * 0.38
 	wing.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var vein: StandardMaterial3D = material(Color("a4d5cc"))
+	_segment(pivot, Vector3.ZERO, Vector3(side * 0.20, 0.005, 0.058), 0.003, vein).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	return pivot
+
+static func _woven_texture() -> ImageTexture:
+	if is_instance_valid(cloth_texture):
+		return cloth_texture
+	var pixels := Image.create(32, 32, false, Image.FORMAT_RGB8)
+	for y: int in range(32):
+		for x: int in range(32):
+			var thread: float = 0.975 if x % 4 == 0 or y % 4 == 0 else 1.0
+			if (x / 4 + y / 4) % 2 == 0:
+				thread -= 0.008
+			pixels.set_pixel(x, y, Color(thread, thread, thread))
+	pixels.generate_mipmaps()
+	cloth_texture = ImageTexture.create_from_image(pixels)
+	return cloth_texture
 
 func _equip_tool(tool: String) -> void:
 	current_tool = tool

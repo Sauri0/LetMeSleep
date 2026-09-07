@@ -52,6 +52,11 @@ func _ready() -> void:
 		checks.client = client
 		checks.options = options
 		add_child(checks)
+	if options.has("gameplay-demo"):
+		var demo: Node = load("res://tests/gameplay_demo.gd").new()
+		demo.client = client
+		demo.options = options
+		add_child(demo)
 
 func _start_local_server() -> void:
 	var client := get_node("Client")

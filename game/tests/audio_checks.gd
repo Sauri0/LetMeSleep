@@ -34,11 +34,11 @@ func _run() -> void:
 	var actors: Dictionary = {1:{"role":"human","alive":true,"tool":"hands","swing":0.0,"p":Vector3.ZERO}}
 	for id: int in range(2,14):
 		actors[id] = {"role":"mosquito","alive":true,"state":"flying","p":Vector3(float(id % 4)*0.3,1.2,-1.0)}
-	actors[2].p = Vector3(0,1.2,-7)
+	actors[2].p = Vector3(0,4.4,0)
 	var camera := Camera3D.new()
 	root.add_child(camera)
-	camera.position = Vector3(0,1.2,-3)
-	camera.look_at(Vector3.ZERO)
+	camera.position = Vector3(0,1.2,0)
+	camera.look_at(Vector3(0,1.2,-1))
 	camera.make_current()
 	world.sync_actors(actors, 1, 0.05)
 	await physics_frame
@@ -46,7 +46,7 @@ func _run() -> void:
 	fx._process(0.20)
 	check(fx.buzzes.size() == 12 and fx.effect_pool.size() == 12, "swarm 12 plus bounded effect pool")
 	check(fx.effects_started.is_empty(), "initial snapshot emits no false confirmation")
-	check(bool(fx.buzzes[2].get_meta("blocked", false)), "wall occludes buzzing source")
+	check(bool(fx.buzzes[2].get_meta("blocked", false)), "upper floor occludes buzzing source")
 	check(fx.buzzes[2].volume_db <= fx.buzzes[3].volume_db - 14.0, "occluded buzzing reduced 15dB")
 	var flying_db: float = fx.buzzes[3].volume_db
 	actors[3].state = "perched"

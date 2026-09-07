@@ -2,6 +2,7 @@ class_name HumanPose
 extends RefCounted
 
 const SWING_SECONDS := {"hands": 0.80, "swatter": 0.60, "racket": 1.05, "newspaper": 0.43, "broom": 1.20}
+const SWING_GESTURE_SECONDS := 0.36
 
 ## Shared deterministic skeletal points. No local wall clock or render delta enters
 ## this pose: body meshes, private zones and attached insects use the same snapshot.
@@ -18,7 +19,7 @@ static func sample(actor: Dictionary) -> Dictionary:
 	var tool: String = str(actor.get("tool", "hands"))
 	var swing_left: float = maxf(0.0, float(actor.get("swing", 0.0)))
 	var swing_duration: float = float(SWING_SECONDS.get(tool, 0.8))
-	var swing: float = sin(clampf(1.0 - swing_left / swing_duration, 0.0, 1.0) * PI) if swing_left > 0.0 else 0.0
+	var swing: float = sin(clampf((swing_duration - swing_left) / SWING_GESTURE_SECONDS, 0.0, 1.0) * PI) if swing_left > 0.0 else 0.0
 	var torso := Vector3(0, 1.09 - crouch * 0.45, crouch * 0.06)
 	var head := Vector3(0, 1.55 - crouch * 0.55, -crouch * 0.02)
 	var result: Dictionary = {
@@ -39,8 +40,8 @@ static func sample(actor: Dictionary) -> Dictionary:
 		var arm_swing: float = swing if tool == "hands" or side > 0.0 else 0.0
 		var elbow := Vector3(side * 0.33, 1.07 - crouch * 0.45, -0.005 + step * 0.3)
 		var hand := Vector3(side * 0.33, 0.86 - crouch * 0.40, -0.025 + step * 0.3)
-		var target_elbow := Vector3(side * 0.29, 1.14 - crouch * 0.43, -0.12)
-		var target_hand := Vector3(side * 0.08 if tool == "hands" else side * 0.27, 1.15 - crouch * 0.40, -0.27)
+		var target_elbow := Vector3(side * 0.29, 1.14 - crouch * 0.43, -0.23)
+		var target_hand := Vector3(side * 0.08 if tool == "hands" else side * 0.27, 1.15 - crouch * 0.40, -0.36)
 		result["elbow" + suffix] = elbow.lerp(target_elbow, arm_swing)
 		result["hand" + suffix] = hand.lerp(target_hand, arm_swing)
 	return result
@@ -54,8 +55,57 @@ static func zone_pose(actor: Dictionary, zone: Dictionary) -> Dictionary:
 	var delta_basis: Basis = _basis(pose, bone) * _basis(rest, bone).inverse()
 	var local_point: Vector3 = anchor + delta_basis * (Vector3(zone.p) - rest_anchor)
 	var local_normal: Vector3 = delta_basis * (Vector3.BACK if bool(zone.get("rear", false)) else Vector3.FORWARD)
+	var capsules: Array[Dictionary] = collision_segments(actor)
+	var surface_key: String = bone
+	if bone.begins_with("shoulder_"):
+		surface_key = "upperarm" + bone.right(2)
+	elif bone.begins_with("knee_"):
+		surface_key = "shin" + bone.right(2)
+	elif bone.begins_with("ankle_"):
+		surface_key = "foot" + bone.right(2)
+	for capsule: Dictionary in capsules:
+		if str(capsule.key) != surface_key:
+			continue
+		var segment: Vector3 = Vector3(capsule.to) - Vector3(capsule.from)
+		var center: Vector3 = Vector3(capsule.from) + segment * clampf((local_point - Vector3(capsule.from)).dot(segment) / maxf(segment.length_squared(), 0.000001), 0.0, 1.0)
+		local_normal = (local_point - center).normalized()
+		local_point = center + local_normal * float(capsule.radius)
+		break
+	# Joined body capsules overlap at elbows, hips and crouched pelvis. A point
+	# on one capsule may still be buried in its neighbour. Use the first skin of
+	# their union, preserving a real outward normal instead of a floating seed.
+	var outside: Vector3 = local_point + local_normal * 0.50
+	var inside: Vector3 = local_point - local_normal * 0.03
+	var first_distance := INF
+	for capsule: Dictionary in capsules:
+		var hit: Dictionary = ray_capsule(outside, inside, capsule)
+		if not hit.is_empty() and float(hit.distance) < first_distance:
+			first_distance = float(hit.distance)
+			local_point = hit.p
+			local_normal = hit.normal
 	var yaw: float = float(actor.get("yaw", 0.0))
 	return {"p": Vector3(actor.get("p", Vector3.ZERO)) + local_point.rotated(Vector3.UP, yaw), "normal": local_normal.rotated(Vector3.UP, yaw).normalized(), "label": str(zone.get("label", "Zona"))}
+
+static func ray_capsule(from: Vector3, to: Vector3, capsule: Dictionary) -> Dictionary:
+	var nearest: PackedVector3Array = Geometry3D.get_closest_points_between_segments(from, to, capsule.from, capsule.to)
+	var radius: float = capsule.radius
+	if nearest[0].distance_squared_to(nearest[1]) > radius * radius:
+		return {}
+	var travel: Vector3 = to - from
+	var high: float = clampf((nearest[0] - from).dot(travel) / maxf(travel.length_squared(), 0.000001), 0.0, 1.0)
+	var low := 0.0
+	var axis: Vector3 = Vector3(capsule.to) - Vector3(capsule.from)
+	for iteration: int in range(14):
+		var middle: float = (low + high) * 0.5
+		var point: Vector3 = from + travel * middle
+		var center: Vector3 = Vector3(capsule.from) + axis * clampf((point - Vector3(capsule.from)).dot(axis) / maxf(axis.length_squared(), 0.000001), 0.0, 1.0)
+		if point.distance_squared_to(center) <= radius * radius:
+			high = middle
+		else:
+			low = middle
+	var point: Vector3 = from + travel * high
+	var center: Vector3 = Vector3(capsule.from) + axis * clampf((point - Vector3(capsule.from)).dot(axis) / maxf(axis.length_squared(), 0.000001), 0.0, 1.0)
+	return {"p": point, "normal": (point - center).normalized(), "distance": from.distance_to(point)}
 
 static func _anchor(pose: Dictionary, bone: String) -> Vector3:
 	if bone.begins_with("thigh_"):
@@ -88,9 +138,16 @@ static func body_boxes(actor: Dictionary) -> Array[AABB]:
 static func collision_segments(actor: Dictionary) -> Array[Dictionary]:
 	var pose: Dictionary = sample(actor)
 	var torso_half_axis: float = maxf(0.0, float(pose.torso_height) * 0.5 - 0.24)
-	return [
-		{"from": Vector3(pose.torso) - Vector3.UP * torso_half_axis, "to": Vector3(pose.torso) + Vector3.UP * torso_half_axis, "radius": 0.24},
-		{"from": pose.head, "to": pose.head, "radius": 0.22},
-		{"from": pose.ankle_l, "to": pose.hip_l, "radius": 0.105},
-		{"from": pose.ankle_r, "to": pose.hip_r, "radius": 0.105},
+	var result: Array[Dictionary] = [
+		{"key": "torso", "from": Vector3(pose.torso) - Vector3.UP * torso_half_axis, "to": Vector3(pose.torso) + Vector3.UP * torso_half_axis, "radius": 0.24},
+		{"key": "head", "from": pose.head, "to": pose.head, "radius": 0.235},
+		{"key": "pelvis", "from": pose.pelvis, "to": pose.pelvis, "radius": 0.20},
 	]
+	for suffix: String in ["_l", "_r"]:
+		result.append({"key": "thigh" + suffix, "from": pose["hip" + suffix], "to": pose["knee" + suffix], "radius": 0.105})
+		result.append({"key": "shin" + suffix, "from": pose["knee" + suffix], "to": pose["ankle" + suffix], "radius": 0.105})
+		result.append({"key": "upperarm" + suffix, "from": pose["shoulder" + suffix], "to": pose["elbow" + suffix], "radius": 0.103})
+		result.append({"key": "forearm" + suffix, "from": pose["elbow" + suffix], "to": pose["hand" + suffix], "radius": 0.078})
+		result.append({"key": "hand" + suffix, "from": pose["hand" + suffix], "to": pose["hand" + suffix], "radius": 0.088})
+		result.append({"key": "foot" + suffix, "from": Vector3(pose["ankle" + suffix]) + Vector3(0, 0, 0.02), "to": Vector3(pose["ankle" + suffix]) + Vector3(0, 0, -0.20), "radius": 0.105})
+	return result

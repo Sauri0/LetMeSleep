@@ -38,7 +38,7 @@ func _run() -> void:
 	camera.look_at(Vector3(0,1.1,0))
 	world.show_assignment(assignment, camera, Vector3(0,1.15,-2))
 	check(not world.marker.visible, "camera behind torso cannot see frontal mark")
-	camera.position = Vector3(0,1.2,-7)
+	camera.position = Vector3(0,1.2,-float(world.map_data.half_z)-2.0)
 	camera.look_at(Vector3(0,1.1,0))
 	world.show_assignment(assignment, camera, Vector3(0,1.15,-2))
 	check(not world.marker.visible, "camera across wall cannot see mark")
@@ -51,7 +51,14 @@ func _run() -> void:
 	world.show_assignment(assignment, camera, Vector3(0,1.15,-2))
 	check(not world.marker.visible, "other human torso occludes mark")
 	var exclusions: Array[RID] = []
-	check(world._occluded(Vector3(-4,0.35,1), Vector3(-4,0.35,-1), exclusions), "coffee table blocks physical line")
+	var furniture: AABB
+	for structure: Dictionary in world.map_data.get("structures", []):
+		if str(structure.kind) == "furniture":
+			furniture = structure.box
+			break
+	var furniture_center: Vector3 = furniture.get_center()
+	var probe: Vector3 = Vector3.BACK * (furniture.size.z * 0.5 + 0.2)
+	check(world._occluded(furniture_center + probe, furniture_center - probe, exclusions), "catalog furniture blocks physical line")
 	world.sync_pickups({1:{"tool":"racket","p":Vector3(1,0,1),"holder":0}})
 	check(world.pickup_views[1].visible, "unheld tool visible")
 	world.sync_pickups({1:{"tool":"racket","p":Vector3(1,0,1),"holder":1}})

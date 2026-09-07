@@ -52,12 +52,12 @@ func _test_movement() -> void:
 	check(turned.p.x < -0.61 and absf(float(turned.p.z)) < 0.001, "local movement rotates with server yaw")
 	Map.step_human(run, {}, 0.1)
 	check(run.motion_speed == 0.0 and run.velocity == Vector3.ZERO and not run.sprinting, "empty intent stops walking immediately")
-	var wall: Dictionary = actor_at(Vector3(5.3, 0, 0))
+	var wall: Dictionary = actor_at(Vector3(float(Map.HALF_X) - 1.0, 0, 0))
 	Map.step_human(wall, {"move": Vector3.RIGHT, "sprint": true}, 1.0)
-	check(wall.p.x <= 5.40001 and Map.can_fit_human(wall.p), "sprint remains within wall collision envelope")
-	var obstacle: Dictionary = actor_at(Vector3(-2.4, 0, 2))
-	Map.step_human(obstacle, {"move": Vector3.LEFT, "sprint": true}, 1.0)
-	check(obstacle.p.x >= -2.5001 and Map.can_fit_human(obstacle.p), "sprint substeps cannot tunnel into sofa")
+	check(wall.p.x <= float(Map.HALF_X) - Map.HUMAN_RADIUS + 0.00001 and Map.can_fit_human(wall.p), "sprint remains within wall collision envelope")
+	var obstacle: Dictionary = actor_at(Vector3(-11.4, 0, 8.7))
+	Map.step_human(obstacle, {"move": Vector3.BACK, "sprint": true}, 1.0)
+	check(obstacle.p.z <= 8.8501 and Map.can_fit_human(obstacle.p), "sprint substeps cannot tunnel into sofa")
 	var invalid: Dictionary = actor_at()
 	Map.step_human(invalid, {"move": Vector3(NAN, 0, 0), "yaw": INF, "pitch": NAN, "jump": "yes", "sprint": 1, "crouch": 1}, 0.2)
 	check(invalid.p == Vector3.ZERO and invalid.yaw == 0.0 and not invalid.crouching and not invalid.sprinting, "direct integrator rejects malformed motion and flags")
@@ -81,21 +81,21 @@ func _test_jump_and_furniture() -> void:
 	Map.step_human(jumper, {"jump": false}, 0.025)
 	Map.step_human(jumper, {"jump": true}, 0.025)
 	check(jumper.p.y > 0.0, "release and second press permits another grounded jump")
-	var platform: Dictionary = actor_at(Vector3(-4, 0.82, -0.2))
+	var platform: Dictionary = actor_at(Vector3(-3.15, 0.82, 2.65))
 	platform.grounded = false
 	Map.step_human(platform, {}, 0.5)
-	check(is_equal_approx(float(platform.p.y), 0.5) and platform.grounded, "fall lands exactly on table surface")
-	Map.step_human(platform, {"move": Vector3.RIGHT}, 0.7)
+	check(is_equal_approx(float(platform.p.y), 0.62) and platform.grounded, "fall lands exactly on table surface")
+	Map.step_human(platform, {"move": Vector3.FORWARD}, 0.7)
 	Map.step_human(platform, {}, 0.6)
 	check(platform.p.y == 0.0 and platform.grounded, "walking off furniture restores gravity and lands")
-	var cupboard: Dictionary = actor_at(Vector3(4.3, 1.1, 2.5))
+	var cupboard: Dictionary = actor_at(Vector3(-6.7, 1.45, 2.7))
 	cupboard.crouch_amount = 1.0
 	Map.step_human(cupboard, {}, 0.3)
 	var height: float = lerpf(Map.HUMAN_HEIGHT, Map.HUMAN_CROUCH_HEIGHT, float(cupboard.crouch_amount))
-	check(cupboard.crouching and Map.can_fit_human(cupboard.p, height) and is_equal_approx(float(cupboard.p.y), 1.1), "standing is prevented when furniture and ceiling leave only crouch space: p=%s height=%.4f crouch=%.4f" % [str(cupboard.p), height, cupboard.crouch_amount])
+	check(cupboard.crouching and Map.can_fit_human(cupboard.p, height) and is_equal_approx(float(cupboard.p.y), 1.45), "standing is prevented when furniture and ceiling leave only crouch space: p=%s height=%.4f crouch=%.4f" % [str(cupboard.p), height, cupboard.crouch_amount])
 	Map.step_human(cupboard, {"jump": true, "crouch": true}, 0.2)
 	height = lerpf(Map.HUMAN_HEIGHT, Map.HUMAN_CROUCH_HEIGHT, float(cupboard.crouch_amount))
-	check(cupboard.p.y + height <= 2.80001 and cupboard.velocity.y <= 0.0, "crouched jump hits ceiling without penetration")
+	check(cupboard.p.y + height <= 3.00001 and cupboard.velocity.y <= 0.0, "crouched jump hits ceiling without penetration")
 
 func _test_authority() -> void:
 	var sim = new_sim()
@@ -152,7 +152,7 @@ func _test_pose_geometry() -> void:
 						active.merge({"crouch_amount": crouch, "grounded": grounded, "swing": swing, "motion_phase": TAU * phase / 8.0, "pitch": pitch}, true)
 						for zone: Dictionary in Sim.BODY_ZONES:
 							var posed: Dictionary = Pose.zone_pose(active, zone)
-							var point: Vector3 = Vector3(posed.p) + Vector3(posed.normal) * 0.06
+							var point: Vector3 = Vector3(posed.p) + Vector3(posed.normal) * Sim.ATTACH_OFFSET
 							var height: float = lerpf(Map.HUMAN_HEIGHT, Map.HUMAN_CROUCH_HEIGHT, crouch)
 							var inside: bool = Vector2(point.x, point.z).length() + Map.MOSQUITO_RADIUS <= Map.HUMAN_RADIUS + 0.00001 and point.y >= Map.MOSQUITO_RADIUS - 0.00001 and point.y + Map.MOSQUITO_RADIUS <= height + 0.00001
 							check(inside and point.is_finite() and is_equal_approx(Vector3(posed.normal).length(), 1.0), "zone %s within collision envelope c=%.1f ground=%s swing=%.2f phase=%d pitch=%.2f point=%s" % [zone.label, crouch, str(grounded), swing, phase, pitch, str(point)])
@@ -165,19 +165,23 @@ func _test_biting_pose() -> void:
 		var posed: Dictionary = sim._zone_pose(sim.actors[2]._assignment)
 		sim.actors[2].p = Vector3(posed.p) + Vector3(posed.normal) * 0.2
 		sim.action(2, 1, "bite")
-		sim.step(0.025)
+		for focus_tick: int in range(96):
+			posed = sim._zone_pose(sim.actors[2]._assignment)
+			var direction: Vector3 = (Vector3(posed.p) - Vector3(sim.actors[2].p)).normalized()
+			sim.submit_input(2, focus_tick + 1, Vector3.ZERO, atan2(-direction.x, -direction.z), asin(direction.y), true)
+			sim.step(0.025)
 		check(sim.actors[2].state == "biting", "front zone %d attach before locomotion" % zone)
 		var schedule: float = sim.actors[2]._next_rotation
 		for tick: int in range(30):
 			sim.submit_input(1, tick + 1, Vector3(0.2, 0, 0), 0.2, 0.0, false, true, tick >= 10, tick == 0)
 			sim.step(0.025)
 			var expected: Dictionary = sim.private_for(2).assignment
-			check(Vector3(sim.actors[2].p).is_equal_approx(Vector3(expected.p) + Vector3(expected.normal) * 0.06), "attached mosquito follows authoritative pose every frame zone %d tick %d" % [zone, tick])
+			check(Vector3(sim.actors[2].p).is_equal_approx(Vector3(expected.p) + Vector3(expected.normal) * Sim.ATTACH_OFFSET), "attached mosquito follows authoritative pose every frame zone %d tick %d" % [zone, tick])
 		check(sim.actors[2].state == "biting" and sim.actors[2]._next_rotation == schedule and sim.blood > 0.0, "jump/crouch keep bite and schedule, blood persists zone %d" % zone)
 		var band: int = Sim.BODY_ZONES[zone].band
 		sim.submit_input(1, 100, Vector3.ZERO, 0.0, [0.0, -0.5, -1.2][band], false, false, true, false)
 		sim.action(1, 1, "self_swat")
-		sim.step(0.025)
+		sim.step(0.3)
 		check(not sim.actors[2].alive, "all solo zones remain defendable when crouched zone %d" % zone)
 	var cooperative = new_sim(2)
 	cooperative.actors[1].p = Vector3.ZERO
@@ -194,7 +198,7 @@ func _test_biting_pose() -> void:
 	var direction: Vector3 = (Vector3(cooperative.actors[3].p) - eye).normalized()
 	cooperative.submit_input(2, 1, Vector3.ZERO, atan2(-direction.x, -direction.z), asin(direction.y), false)
 	cooperative.action(2, 1, "attack")
-	cooperative.step(0.025)
+	cooperative.step(0.3)
 	check(not cooperative.actors[3].alive, "teammate can aim at crouched rear zone using shared eye/body pose")
 
 func _test_swings_and_exposed_marks() -> void:
@@ -208,12 +212,12 @@ func _test_swings_and_exposed_marks() -> void:
 				human.merge({"tool": tool, "crouch_amount": crouch, "swing": float(Sim.TOOL_STATS[tool].cooldown) * frame / 8.0, "motion_phase": PI * 0.5, "motion_speed": 5.0, "sprinting": true}, true)
 				for zone: Dictionary in Sim.BODY_ZONES:
 					var posed: Dictionary = Pose.zone_pose(human, zone)
-					var contact: Vector3 = Vector3(posed.p) + Vector3(posed.normal) * 0.06
+					var contact: Vector3 = Vector3(posed.p) + Vector3(posed.normal) * Sim.ATTACH_OFFSET
 					var outward: Vector3 = Vector3(posed.p) + Vector3(posed.normal) * 0.2
 					check(not sim._body_occludes(outward, posed.p, -1), "zone %s exposes its contact surface during %s swing frame=%d crouch=%.1f" % [zone.label, tool, frame, crouch])
 					check(Vector2(contact.x, contact.z).length() + Map.MOSQUITO_RADIUS <= Map.HUMAN_RADIUS + 0.00001, "animated %s %s contact stays inside reserved body envelope c=%.1f frame=%d p=%s" % [tool, zone.label, crouch, frame, str(contact)])
 	var hands_idle: Dictionary = Pose.sample({"tool": "hands"})
-	var hands_clap: Dictionary = Pose.sample({"tool": "hands", "swing": 0.4})
+	var hands_clap: Dictionary = Pose.sample({"tool": "hands", "swing": 0.62})
 	check(Vector3(hands_clap.hand_l).distance_to(hands_clap.hand_r) < Vector3(hands_idle.hand_l).distance_to(hands_idle.hand_r) * 0.3, "barehand attack brings both hands together in actual shared pose")
-	var tool_swing: Dictionary = Pose.sample({"tool": "swatter", "swing": 0.3})
+	var tool_swing: Dictionary = Pose.sample({"tool": "swatter", "swing": 0.42})
 	check(tool_swing.hand_l == hands_idle.hand_l and tool_swing.hand_r.z < hands_idle.hand_r.z - 0.2, "equipped tool animates right hand with left at rest")

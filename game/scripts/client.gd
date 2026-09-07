@@ -46,13 +46,13 @@ func _ready() -> void:
 	add_child(rig)
 	arm = SpringArm3D.new()
 	arm.collision_mask = 1
-	arm.margin = 0.12
+	arm.margin = 0.045
 	var shape := SphereShape3D.new()
-	shape.radius = 0.12
+	shape.radius = 0.045
 	arm.shape = shape
 	rig.add_child(arm)
 	camera = Camera3D.new()
-	camera.near = 0.045
+	camera.near = 0.025
 	camera.far = 55.0
 	camera.fov = 78.0
 	arm.add_child(camera)
@@ -199,7 +199,7 @@ func _process(dt: float) -> void:
 	if alive:
 		var visual: Node3D = world.get_actor(local_id)
 		var position: Vector3 = visual.global_position if visual != null else actor.p
-		var offset: Vector3 = HumanPose.sample(actor).eye if role == "human" else Vector3(0, 0.15, 0)
+		var offset: Vector3 = HumanPose.sample(actor).eye if role == "human" else Vector3(0, 0.12, 0) + Vector3.FORWARD.rotated(Vector3.RIGHT,pitch).rotated(Vector3.UP,yaw)*0.10
 		var camera_origin := position + offset
 		if role == "mosquito":
 			var map: Dictionary = MapCatalog.get_map(str(state.get("config", {}).get("map_id", "house")))
@@ -208,9 +208,10 @@ func _process(dt: float) -> void:
 			camera_origin.y = clampf(camera_origin.y, 0.16, float(map.ceiling)-0.16)
 		rig.global_position = camera_origin
 		rig.rotation = Vector3(pitch, yaw, 0)
-		arm.spring_length = 0.0 if role == "human" else 0.95
+		arm.spring_length = 0.0 if role == "human" else 0.85
+		camera.fov = 78.0 if role == "human" else 70.0
 		if role == "mosquito":
-			world.show_assignment(personal.get("assignment", {}), camera, actor.p)
+			world.show_assignment(personal.get("assignment", {}), camera, actor.p, personal.get("focus",{}))
 		else:
 			world.show_assignment({}, camera, Vector3.ZERO)
 		camera_initialized = true
@@ -235,8 +236,8 @@ func _physics_process(dt: float) -> void:
 	if not ui.is_menu_open() and (not waiting or walking):
 		move.x = Input.get_axis("move_left", "move_right")
 		move.z = Input.get_axis("move_forward", "move_back")
-		move.y = Input.get_axis("descend", "ascend")
-		interact = Input.is_action_pressed("interact") and role == "human" and not waiting
+		move.y = Input.get_axis("descend", "ascend") if role == "mosquito" and not waiting else 0.0
+		interact = Input.is_action_pressed("interact" if role == "human" else "bite") and not waiting
 		if waiting or role == "human":
 			sprint = Input.is_action_pressed("sprint")
 			crouch = Input.is_action_pressed("crouch")
@@ -267,7 +268,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	for verb: String in ["bite", "attack", "self_swat", "perch", "pickup", "drop"]:
 		if event.is_action_pressed(verb):
-			if verb == "bite" and role != "mosquito":
+			if verb == "bite" and (role != "mosquito" or state.get("actors",{}).get(local_id,{}).get("state","") != "biting"):
 				continue
 			action_sequence += 1
 			var transport: Node = practice if practice_active else network

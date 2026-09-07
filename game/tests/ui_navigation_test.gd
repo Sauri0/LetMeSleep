@@ -14,11 +14,13 @@ var settings_existed: bool = false
 var practice_args: Array = []
 var practice_restarts: int = 0
 var connection_args: Array = []
+var checks: int = 0
 
 func _initialize() -> void:
 	call_deferred("run")
 
 func check(value: bool, detail: String) -> void:
+	checks += 1
 	if not value:
 		failures.append(detail)
 		printerr("UI_NAV_FAIL " + detail)
@@ -180,6 +182,7 @@ func run() -> void:
 	ui.show_home()
 	check(not ui._practice, "Return home clears practice state")
 	check(Prefs.DEFAULT_KEYS.sprint == KEY_SHIFT and Prefs.DEFAULT_KEYS.jump == KEY_SPACE and Prefs.DEFAULT_KEYS.crouch == KEY_CTRL and Prefs.DEFAULT_KEYS.ascend == KEY_SPACE and Prefs.DEFAULT_KEYS.descend == KEY_CTRL, "Human locomotion defaults share Space/Ctrl only across roles")
+	await _hud_semantics()
 	# Exercise the actual ConfigFile write/load path, then restore exact user bytes.
 	Prefs.cosmetics = {"human": {"color": 5, "accessory": 2}, "mosquito": {"color": 2, "accessory": 1}}
 	Prefs.shared_address = "192.168.1.25"
@@ -192,6 +195,7 @@ func run() -> void:
 	Prefs.load_settings()
 	check(Prefs.cosmetics == {"human": {"color": 5, "accessory": 2}, "mosquito": {"color": 2, "accessory": 1}}, "Real save plus fresh load preserves two independent appearances")
 	check(Prefs.shared_address == "192.168.1.25" and Prefs.shared_port == 29840, "Real save plus fresh load preserves explicit friend endpoint independently")
+	check(Prefs.binding_text("bite") == "H" and Prefs.binding_text("self_swat") == "T", "Reload keeps reassigned concentration and defense controls")
 	if settings_existed:
 		var restored := FileAccess.open(Prefs.FILE_PATH, FileAccess.WRITE)
 		restored.store_buffer(original_settings)
@@ -201,7 +205,93 @@ func run() -> void:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(Prefs.FILE_PATH))
 		check(not FileAccess.file_exists(Prefs.FILE_PATH), "Originally absent user preferences remain absent")
 	if failures.is_empty():
-		print("UI_NAVIGATION_PASS: real InputEvents, focus scopes, Escape levels, random-role lobby, personal cosmetics persistence; original preferences restored.")
+		print("UI_NAVIGATION_PASS checks=%d: real InputEvents, focus scopes, Escape levels, HUD states, bindings and persistence; original preferences restored." % checks)
 	else:
 		printerr("UI_NAVIGATION_FAILED count=" + str(failures.size()))
 	quit(0 if failures.is_empty() else 1)
+
+
+func _hud_semantics() -> void:
+	var actor: Dictionary = {"role": "human", "alive": true, "pitch": 0.0, "tool": "hands", "p": Vector3.ZERO, "bitten": false, "threatened": false}
+	var snapshot: Dictionary = {"config": {"mode": "blood", "blood_goal": 30}, "actors": {1: actor}, "elapsed": 12.0, "time_left": 90.0}
+	ui.show_game(snapshot, {}, 1)
+	var defense_key: String = Prefs.binding_text("self_swat")
+	for sample: Array in [[0.0,"cabeza"],[-0.25,"cabeza"],[-0.251,"torso"],[-0.85,"torso"],[-0.851,"piernas"]]:
+		actor.pitch = sample[0]
+		ui.show_game(snapshot, {}, 1)
+		check(defense_key + " cubrir " + str(sample[1]) in ui._hud_hint.text, "Defense available before attachment with exact pitch band %s" % sample[0])
+	actor.threatened = true
+	actor.pitch = -0.5
+	ui.show_game(snapshot, {"assignment": {"label": "zona privada enemiga"}}, 1)
+	check("Zumbido" in ui._hud_state.text and not "zona privada" in ui._hud_state.text, "Threat warning is generic and does not expose an enemy zone")
+	await _capture("ui04-defense")
+	# Bind through real input events while the settings layer is modal.
+	await key(KEY_ESCAPE)
+	ui._open_settings()
+	ui._begin_binding("bite")
+	await key(KEY_H)
+	ui._begin_binding("self_swat")
+	await key(KEY_T)
+	check(Prefs.binding_text("bite") == "H" and Prefs.binding_text("self_swat") == "T", "Real rebinding updates concentration and defense actions")
+	Prefs.setup_inputs()
+	check(Prefs.binding_text("bite") == "H" and Prefs.binding_text("self_swat") == "T", "Input setup does not replace existing bindings with defaults")
+	await key(KEY_ESCAPE)
+	check(ui._paused and ui.is_menu_open() and not ui._settings_open, "Closing game settings returns to pause without resuming")
+	await key(KEY_ESCAPE)
+	check(not ui.is_menu_open(), "Next Escape resumes gameplay")
+	ui.show_game(snapshot, {}, 1)
+	check("T cubrir torso" in ui._hud_hint.text, "Human defense hint uses reassigned key")
+	actor.role = "mosquito"
+	actor.state = "flying"
+	actor.lives = 1
+	var personal: Dictionary = {"assignment": {"label": "Antebrazo"}, "focus": {"state": "ready", "progress": 0.0, "reason": "Mantené E para estabilizarte y picar"}}
+	ui.show_game(snapshot, personal, 1)
+	check("mantené H" in ui._hud_state.text and not ui._focus_progress.visible and ui._reticle.visible, "Ready state uses rebound concentration key with visible mosquito reticle")
+	personal.focus = {"state": "charging", "progress": 0.45}
+	ui.show_game(snapshot, personal, 1)
+	check(ui._focus_progress.visible and is_equal_approx(ui._focus_progress.value,45.0) and "45%" in ui._hud_state.text and "Soltá H para cancelar" in ui._hud_hint.text, "Charging shows authoritative progress and rebound cancel instruction")
+	await _capture("ui04-charging")
+	await key(KEY_ESCAPE)
+	var pause_focus: Control = root.gui_get_focus_owner()
+	personal.focus = {"state": "idle", "progress": 0.0}
+	ui.show_game(snapshot, personal, 1)
+	await process_frame
+	check(ui._paused and ui.is_menu_open() and root.gui_get_focus_owner() == pause_focus, "Incoming canceled-focus snapshot preserves pause and its keyboard focus")
+	check(not ui._focus_progress.visible and is_zero_approx(ui._focus_progress.value), "Canceled concentration clears progress instead of showing stale charge")
+	await key(KEY_ESCAPE)
+	check(not ui.is_menu_open(), "Resume remains available after server cancels concentration")
+	personal.focus = {"state": "blocked", "reason": "Soltá E antes de concentrarte otra vez"}
+	ui.show_game(snapshot, personal, 1)
+	check("Soltá H" in ui._hud_state.text and not " E " in ui._hud_state.text and not ui._focus_progress.visible, "Blocked reason substitutes the current binding for default E")
+	personal.focus = {"state": "blocked", "reason": "  "}
+	ui.show_game(snapshot, personal, 1)
+	check(not ui._hud_state.text.strip_edges().is_empty(), "Blocked state with an empty reason still explains next step")
+	personal.focus = {"state": "idle", "reason": "Soltá E antes de concentrarte otra vez"}
+	ui.show_game(snapshot, personal, 1)
+	check("Soltá H" in ui._hud_state.text, "Suppressed idle concentration explains how to restart with rebound key")
+	personal.focus = {"state": "attached", "progress": 1.0}
+	ui.show_game(snapshot, personal, 1)
+	check("Picando" in ui._hud_state.text and "H para desprenderte" in ui._hud_hint.text and not ui._focus_progress.visible, "Attached private state shows rebound detach action")
+	actor.alive = false
+	ui.show_game(snapshot, {"focus": {"state":"charging","progress":0.8}}, 1)
+	check("Eliminado" in ui._hud_state.text and not ui._focus_progress.visible and not ui._reticle.visible, "Death clears live focus UI and reticle")
+	actor.alive = true
+	actor.role = "human"
+	actor.bitten = true
+	actor.tool = "racket"
+	snapshot.elapsed = 0.0
+	ui.show_game(snapshot, {}, 1)
+	await process_frame
+	await process_frame
+	var bottom: Control = ui._hud_hint.get_parent().get_parent()
+	check(bottom.get_global_rect().end.y <= root.size.y and ui._hud_hint.get_global_rect().end.y <= root.size.y, "Full human help with rebound controls stays inside the viewport")
+	ui.show_home()
+
+
+func _capture(filename: String) -> void:
+	if not OS.get_cmdline_user_args().has("--screens") or DisplayServer.get_name() == "headless":
+		return
+	await process_frame
+	await process_frame
+	await RenderingServer.frame_post_draw
+	root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../work/" + filename + ".png"))

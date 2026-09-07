@@ -206,6 +206,8 @@ var _hud_progress: ProgressBar
 var _hud_progress_text: Label
 var _hud_state: Label
 var _hud_hint: Label
+var _focus_progress: ProgressBar
+var _focus_key_pattern: RegEx
 var _hud_tool: Label
 var _task_panel: PanelContainer
 var _task_title: Label
@@ -454,7 +456,7 @@ func _build_home() -> void:
 	var intro := _vbox(columns, 16)
 	intro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	intro.size_flags_stretch_ratio = 1.05
-	intro.add_child(_label("EDICIÓN NOCTURNA / N.º 03", 15, INK))
+	intro.add_child(_label("EDICIÓN NOCTURNA / N.º 04", 15, INK))
 	var logo := _label("LET ME\nSLEEP", 112, SUN)
 	logo.add_theme_color_override("font_outline_color", INK)
 	logo.add_theme_constant_override("outline_size", 14)
@@ -472,7 +474,7 @@ func _build_home() -> void:
 	var space := Control.new()
 	space.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	intro.add_child(space)
-	intro.add_child(_label("PROTOTIPO 0.3.0  ·  WINDOWS", 13, MUTED))
+	intro.add_child(_label("PROTOTIPO 0.4.0  ·  WINDOWS", 13, MUTED))
 	var card := _panel(columns, Color(0.10, 0.21, 0.25, 0.96))
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var card_box := _vbox(card, 10)
@@ -832,6 +834,7 @@ func _build_hud() -> void:
 	task_box.add_child(_task_detail)
 	var bottom := _panel(_hud, Color(0.06, 0.12, 0.16, 0.9))
 	bottom.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	bottom.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	bottom.offset_left = 22
 	bottom.offset_right = -22
 	bottom.offset_top = -131
@@ -839,6 +842,11 @@ func _build_hud() -> void:
 	var hints := _vbox(bottom, 4)
 	_hud_state = _label("", 20, MINT, true)
 	hints.add_child(_hud_state)
+	_focus_progress = ProgressBar.new()
+	_focus_progress.show_percentage = false
+	_focus_progress.custom_minimum_size.y = 8
+	hints.add_child(_focus_progress)
+	_focus_progress.hide()
 	_hud_tool = _label("", 16, CORAL, true)
 	hints.add_child(_hud_tool)
 	_hud_hint = _label("", 14, CREAM, true)
@@ -1256,6 +1264,7 @@ func _build_settings() -> void:
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box.add_child(_label("Cámara y sonido", 24))
 	box.add_child(_label("Humano: tercera persona en la sala, primera al jugar. Podés correr, saltar y agacharte.", 15, INK, true))
+	box.add_child(_label("Mosquito: avanzás hacia donde apunta la cámara, también hacia arriba o abajo. Soltar avance frena. Mantené concentración cerca de tu zona para estabilizarte, cargar y acercarte; soltá para cancelar. Una nueva pulsación mientras picás te desprende.", 15, INK, true))
 	_add_slider(box, "human", "Sensibilidad · humano", Prefs.human_sensitivity * 1000.0, 0.5, 8.0, 0.1)
 	_add_slider(box, "mosquito", "Sensibilidad · mosquito", Prefs.mosquito_sensitivity * 1000.0, 0.5, 8.0, 0.1)
 	_add_slider(box, "volume", "Volumen general", Prefs.master_volume * 100.0, 0.0, 100.0, 1.0)
@@ -1271,7 +1280,7 @@ func _build_settings() -> void:
 	box.add_child(pulse)
 	box.add_child(_label("Tu marca usa forma y color. Solo vos podés verla; no se muestra un contador de cambio de zona.", 16, MUTED, true))
 	box.add_child(_label("DEFENSA PROPIA", 14, CORAL))
-	box.add_child(_label("Usá la tecla de defensa propia y orientá la mirada: al frente o arriba para cabeza y hombros; algo hacia abajo para torso; bien abajo para piernas. Las zonas de espalda necesitan ayuda de otro humano.", 16, CREAM, true))
+	box.add_child(_label("Podés cubrirte antes de que se adhiera un mosquito. La ayuda del HUD muestra qué zona cubrís con tu mirada:\n• Al frente o arriba: cabeza y hombros.\n• Un poco hacia abajo: torso.\n• Bien abajo: piernas.\nLa espalda necesita ayuda de otro humano.", 16, CREAM, true))
 	box.add_child(_label("HERRAMIENTAS", 14, CORAL))
 	for tool_id: String in Simulation.TOOL_STATS:
 		var stats: Dictionary = Simulation.TOOL_STATS[tool_id]
@@ -1514,6 +1523,8 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 	var role: String = str(actor.get("role", "mosquito"))
 	var human: bool = role == "human"
 	var alive: bool = bool(actor.get("alive", true))
+	_focus_progress.visible = false
+	_focus_progress.value = 0.0
 	var state: String = str(actor.get("state", "flying"))
 	var config: Dictionary = snapshot.get("config", FALLBACK_CONFIG)
 	var mode: String = str(config.get("mode", "blood"))
@@ -1550,15 +1561,15 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 			_hud_progress_text.text = "Tareas del equipo: %d / %d" % [done, goal]
 			_hud_progress.value = float(done) / float(goal) * 100.0
 	_task_panel.visible = human and mode == "sleep"
-	_reticle.visible = human and alive
+	_reticle.visible = alive
 	if human:
-		_hud_state.text = "¡Te están picando! Defendete o pedí ayuda." if actor.get("bitten", false) else "Cuidá tu espacio. Ayudá a tus compañeros."
-		_hud_state.add_theme_color_override("font_color", _text_ink(CORAL if actor.get("bitten", false) else MINT))
+		var threatened: bool = bool(actor.get("threatened", false))
+		_hud_state.text = "¡Te están picando! Cubrite o pedí ayuda." if bitten else ("¡Zumbido cerca! Podés cubrirte." if threatened else "Podés cubrirte antes de que te piquen.")
+		_hud_state.add_theme_color_override("font_color", _text_ink(CORAL if bitten or threatened else MINT))
 		var tool: String = str(actor.get("tool", "hands"))
 		_hud_tool.text = "EQUIPADO  " + str(TOOL_NAMES.get(tool, tool))
 		_hud_hint.text = "%s golpear" % Prefs.binding_text("attack")
-		if actor.get("bitten", false):
-			_hud_hint.text += " · %s defenderte según mirada" % Prefs.binding_text("self_swat")
+		_hud_hint.text += " · %s cubrir %s" % [Prefs.binding_text("self_swat"), _defense_band(float(actor.get("pitch", 0.0)))]
 		var nearby_tool: String = _nearby_tool(snapshot, actor)
 		if not nearby_tool.is_empty():
 			_hud_hint.text += " · %s recoger %s" % [Prefs.binding_text("pickup"), TOOL_NAMES.get(nearby_tool, nearby_tool)]
@@ -1571,6 +1582,8 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 			_update_task(private_data, bool(actor.get("bitten", false)))
 	else:
 		var assignment: Dictionary = private_data.get("assignment", {})
+		var focus: Dictionary = private_data.get("focus", {})
+		var focus_state: String = str(focus.get("state", "idle"))
 		var lives: int = int(private_data.get("lives", actor.get("lives", 0)))
 		_hud_tool.text = "TU ZONA  " + str(assignment.get("label", "Buscando zona…")) if alive else "Seguís con tu equipo hasta el resultado."
 		if mode == "sleep":
@@ -1583,17 +1596,53 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 			else:
 				_hud_state.text = "Eliminado · volvés en la próxima ronda"
 				_hud_hint.text = "%s menú · Esperá el resultado de tu equipo." % Prefs.binding_text("pause")
-		elif state == "biting":
+		elif state == "biting" or focus_state == "attached":
 			_hud_state.text = "Picando · estás prendido al cuerpo"
 			_hud_hint.text = "Pulsá %s para desprenderte · %s menú" % [Prefs.binding_text("bite"), Prefs.binding_text("pause")]
-		elif state == "perched":
+		elif state == "perched" and focus_state not in ["ready", "charging", "blocked"]:
 			_hud_state.text = "Posado · seguís siendo visible"
-			_hud_hint.text = "%s volver a volar · %s picar en tu marca · %s menú" % [Prefs.binding_text("perch"), Prefs.binding_text("bite"), Prefs.binding_text("pause")]
+			_hud_hint.text = "%s volver a volar · mantené %s para concentrarte · %s menú" % [Prefs.binding_text("perch"), Prefs.binding_text("bite"), Prefs.binding_text("pause")]
 		else:
-			_hud_state.text = "Mantenete vivo hasta el final" if mode == "survival" else "Buscá tu marca y acercate para picar"
-			_hud_hint.text = "%s picar · %s posarte · %s / %s subir y bajar · %s menú" % [Prefs.binding_text("bite"), Prefs.binding_text("perch"), Prefs.binding_text("ascend"), Prefs.binding_text("descend"), Prefs.binding_text("pause")]
+			_hud_hint.text = "%s hacia la mira · soltar frena · mantené %s concentrar · %s posarte · %s menú" % [Prefs.binding_text("move_forward"), Prefs.binding_text("bite"), Prefs.binding_text("perch"), Prefs.binding_text("pause")]
+			match focus_state:
+				"charging":
+					_hud_state.text = "Concentrando… %.0f%%" % (clampf(float(focus.get("progress", 0.0)), 0.0, 1.0) * 100.0)
+					_focus_progress.visible = true
+					_focus_progress.value = clampf(float(focus.get("progress", 0.0)), 0.0, 1.0) * 100.0
+					_hud_hint.text = "Soltá %s para cancelar · %s hacia la mira · %s menú" % [Prefs.binding_text("bite"), Prefs.binding_text("move_forward"), Prefs.binding_text("pause")]
+				"ready": _hud_state.text = "Zona a tu alcance · mantené %s para picar" % Prefs.binding_text("bite")
+				"blocked":
+					_hud_state.text = _focus_reason(str(focus.get("reason", "")), "Buscá una entrada libre hacia tu zona")
+					_hud_state.add_theme_color_override("font_color", _text_ink(CORAL))
+					_hud_hint.text = "Soltá %s para cancelar · %s hacia la mira · %s menú" % [Prefs.binding_text("bite"), Prefs.binding_text("move_forward"), Prefs.binding_text("pause")]
+				_:
+					var reason: String = str(focus.get("reason", ""))
+					_hud_state.text = _focus_reason(reason, "Acercate a tu zona por un paso libre")
+					if mode == "survival" and not reason.begins_with("Soltá "):
+						_hud_state.text = "Sobreviví: no necesitás picar"
 	if changed_screen and not _paused and not _settings_open:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func _defense_band(pitch: float) -> String:
+	return "cabeza" if pitch >= -0.25 else ("torso" if pitch >= -0.85 else "piernas")
+
+
+func _focus_reason(reason: String, fallback: String) -> String:
+	var value: String = reason.strip_edges()
+	if value.is_empty():
+		return fallback
+	# Simulation reasons describe a keyboard-independent action; old protocol
+	# wording can still contain the default E. Replace the token, never a letter
+	# inside another word, and avoid interpreting the new binding as regex syntax.
+	if _focus_key_pattern == null:
+		_focus_key_pattern = RegEx.new()
+		_focus_key_pattern.compile("\\bE\\b")
+	var matches: Array[RegExMatch] = _focus_key_pattern.search_all(value)
+	matches.reverse()
+	for token: RegExMatch in matches:
+		value = value.left(token.get_start()) + Prefs.binding_text("bite") + value.substr(token.get_end())
+	return value
 
 
 func _update_task(private_data: Dictionary, bitten: bool) -> void:
