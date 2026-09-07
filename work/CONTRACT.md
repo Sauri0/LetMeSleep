@@ -1,73 +1,81 @@
-# Integration contract — 0.2.0 / protocol 2
+# Integration contract — Let me sleep 0.3.0 / protocol 3
 
-Project: game/, Godot 4.5.2 stable, typed GDScript. Shared coordinates in scripts/arena.gd: human position is feet; front is -Z. Agents edit only assigned files and preserve parallel changes. Current code and confirmed decisions below supersede the original planning proposals.
+Project: game/, Godot 4.5.2 stable, typed GDScript. Human position p is feet; forward is -Z. Preserve parallel edits and assigned file ownership. Current code and confirmed decisions below supersede older proposals. The visible product name is Let me sleep; visible sleep mode is Tareas.
 
-## Confirmed team and lobby rules
+## Social lobby and invitation
 
-Native Windows client and headless ENet/UDP server in the user's PC; one registered room per server. Connection requires server address, UDP port (default 27840) and room code. Code alone does not resolve NAT.
+Windows client and separate headless ENet/UDP server hosted on the user's PC; one registered room per server. Default port 27840. No external hosted service, relay, NAT traversal or HTTP public-IP lookup.
 
-The owner chooses exact config.human_count, integer 1..5. Everyone else becomes a mosquito. Both teams must be nonempty; 1v1 is valid. Technical limits: 12 mosquitoes and 16 total participants. Never clamp human_count to the number currently connected; report invalid combinations.
+Primary guest flow takes one DD3 invitation containing address, port and room code. This is a versioned encoding, not encryption or cryptographic secrecy. invitation.gd exposes static encode(host:String,port:int,room:String)->String, decode(value:String)->Dictionary, validate_host(value:String)->String and local_addresses()->Array[String]. Valid decode returns {ok,error,host,port,room}; bad data returns an error. Host chooses a reachable shared address independently from the local connection (usually 127.0.0.1). LAN lists eligible local IPv4 addresses. WAN still needs an externally reachable UDP route; CGNAT remains unresolved. Advanced UI permits separate address/port/code when invitation is empty.
 
-Lobby players have role="waiting". There is no user role selection. The server draws a fresh random roster for every round, with no forced alternation or memory of previous teams. Consecutive repeats are valid.
+Owner chooses exact config.human_count integer1..5. Others become mosquitoes. Both teams nonempty, 1v1 valid, maximum12 mosquitoes and16 total. Do not clamp to connected count. Invalid capacity prevents start. All ready required. Every round draws independently and may repeat roles. Lobby role="waiting" is unrelated to later team.
 
-LobbyRules (scripts/lobby_rules.gd, RefCounted):
-- static validate(players: Dictionary, config: Dictionary, require_ready: bool = true) -> String: empty means valid.
-- static draw(players: Dictionary, config: Dictionary, rng: RandomNumberGenerator = null) -> Dictionary: deep-copied assigned roster with exact human_count; remaining players are mosquitoes; cosmetics/name/ready preserved.
-- draw returns an empty dictionary on invalid capacity/config, and does not require readiness itself. The start gate calls validate with require_ready=true.
-- Server supplies its RNG. Default draw creates and randomizes an RNG. Fisher–Yates operates on sorted peer IDs for deterministic injected-seed tests.
+LobbyRules.validate(players,config,require_ready=true)->String; empty means valid. LobbyRules.draw(players,config,rng=null)->Dictionary returns a deep copy with exact assigned roles, preserving cosmetics/name/ready; invalid draw returns{}. draw itself does not require readiness. Server passes RNG; default RNG randomizes. Sorted IDs plus Fisher–Yates permit deterministic injected-seed tests.
 
-## Simulation API — scripts/simulation.gd
+## Maps and locomotion
 
-RefCounted GameSimulation:
-- DEFAULT_CONFIG includes mode, human_count, round_seconds, blood_goal, rotation_seconds, respawn_seconds, mosquito_lives, task_interval, task_deadline, task_work, task_penalty, task_floor, task_goal.
-- static sanitize_config(requested: Dictionary) -> Dictionary.
-- static validate_roster(players: Dictionary) -> String validates already assigned roles, nonempty teams, limits and spare body zones.
-- start(players: Dictionary, config: Dictionary) -> void receives the server-drawn roster.
-- submit_input(id: int, seq: int, move: Vector3, yaw: float, pitch: float, interact: bool): local movement intent, yaw-only travel, finite inputs, bounded speed and stale-input stop.
-- action(id: int, seq: int, verb: String): bite, attack, self_swat, perch, pickup, drop. Movement and action sequences are separate.
-- step(dt: float), public_snapshot() -> Dictionary, private_for(id: int) -> Dictionary, abort(reason: String).
+MapCatalog.get_map(id="house")->Dictionary returns a deep copy; unknown ID returns{}. is_playable(id)->bool currently accepts only house. human_spawn(map_id,index) and mosquito_spawn(map_id,index) return authored positions.
 
-Public snapshot contains phase, elapsed, time_left, config, blood, winner, reason, tasks_done, task_goal, actors and pickups. Actor allowlist: name, role, p, yaw, pitch, state, alive, swing, bitten, tool, lives, appearance. Never broadcast assignments, target reservations, zone IDs or rotation schedules.
+Map schema: id,label,playable,bounds:AABB,half_x,half_z,ceiling,obstacles:Array[AABB],stations:Array[Dictionary],pickups:Array[Dictionary],human_spawns,mosquito_spawns,lobby_spawns,respawn_points.
 
-pickups: int -> {tool: String, p: Vector3, yaw: float, holder: int}; holder=0 means on floor, otherwise held by that human. TOOL_STATS and PICKUP_SPAWNS live in simulation.gd. Every human begins with hands. Pickup/swap/drop and hits are authoritative.
+House bounds12×10×2.8m, four furniture obstacles, three stations and four pickups. Lobby is separate8×6×4m with two benches and16 human waiting spawns; no round pickups/tasks. Simulation sanitizes config.map_id to a playable map, currently house.
 
-Mosquito private data: {assignment: {human, zone, p, normal, label, revision}, state, respawn_left, lives}. Dead players receive an empty assignment. Human private data: {task: {name, station, p, remaining, progress, work}, deadline, failures}. No visible rotation countdown.
+Arena.move_body(pos,displacement,human,map_id="house",height=HUMAN_HEIGHT)->Vector3 and clear_segment(from,to,map_id="house")->bool preserve old calls. Authoritative shared human integration: static step_human(actor:Dictionary,intent:Dictionary,dt:float,map_id:String="house")->void. Intent contains local move:Vector3,yaw,pitch,sprint,crouch,jump. Network owns sequence validation/freshness for waiting actors and always integrates zero intent after staleness so gravity lands.
 
-Each mosquito owns a fixed rotation phase. Bite attaches relative to the body and keeps its zone through rotation. Only an explicit bite action detaches; releasing a held key never does. Detach gets another valid reservation immediately without moving the timer. One human permits only self-defendable front zones; multiple humans also permit cooperative rear zones.
+Prototype values: walk3.1m/s,run5,crouch1.55,jump impulse4.6m/s,gravity12m/s². Human collision radius0.60m,height1.95m,crouched1.40m. Sprint is overridden by crouch. Jump is grounded rising-edge only; holding does not auto-repeat. Integrator substeps, clamps finite input, collides against selected bounds/furniture, lands on surfaces and blocks standing if there is no headroom. These are balance hypotheses.
 
-## Modes
+HumanPose.sample(actor)->Dictionary supplies local torso,head,eye,pelvis,hip_l/r,knee_l/r,ankle_l/r,shoulder_l/r,elbow_l/r,hand_l/r, plus head_basis:Basis and torso_height. It depends only on replicated motion and swing, never local wall clock. zone_pose(actor,zone)->{p,normal,label} gives world contact and outward normal; BODY_ZONES include bone. Visual body and private marks use these points. Hands clap together with normalized cooldown pulse; equipped tools animate the right arm. Human movement runs before insect projection regardless of peer IDs.
 
-Blood: shared quota, progressive extraction preserved after detach/death. One life, no respawn. Mosquitoes win at quota; humans at timeout or total elimination.
+## Simulation API
 
-Survival: one life, no respawn. Any mosquito alive at timeout wins for its team. No hunger or mandatory bite. Humans win at total elimination.
+GameSimulation extends RefCounted:
+- DEFAULT_CONFIG: mode,map_id,human_count,round_seconds,blood_goal,rotation_seconds,respawn_seconds,mosquito_lives,task_interval,task_deadline,task_work,task_penalty,task_floor,task_goal.
+- static sanitize_config(requested:Dictionary)->Dictionary; validate_roster(players:Dictionary)->String for already assigned roles and spare zone capacity.
+- start(players:Dictionary,config:Dictionary)->void.
+- submit_input(id:int,seq:int,move:Vector3,yaw:float,pitch:float,interact:bool,sprint:bool=false,crouch:bool=false,jump:bool=false)->void. Old six-argument callers remain valid. Human vertical move ignored; mosquito uses ascend/descend. Finite inputs and increasing sequence required; stale input stops movement.
+- action(id:int,seq:int,verb:String), with separate sequence: bite,attack,self_swat,perch,pickup,drop.
+- step(dt), public_snapshot()->Dictionary, private_for(id)->Dictionary, abort(reason).
 
-Sleep: default 3 personal total lives, configurable 1..9. Death subtracts one; respawn after configured delay only with remaining lives. All temporarily dead with pending lives does not end the round. Total exhausted lives awards humans immediately. Otherwise humans need the collective task goal at round close. A failed task reduces only that human's future deadline, leaving round length, task interval and other humans' deadlines unchanged. Bite pauses task progress while preserving it.
+Snapshot: phase,map_id,elapsed,time_left,config,blood,winner,reason,tasks_done,task_goal,actors,pickups. Public actor allowlist: name,role,p,yaw,pitch,state,alive,swing,bitten,tool,lives,appearance,velocity,grounded,sprinting,crouching,crouch_amount,motion_phase,motion_speed. Never serialize input bookkeeping, assignments, reservations, private zones or calendars.
 
-Disconnect during play aborts to lobby with no winner. Reconnection does not resume an old round. A departure after results must not erase the settled winner.
+Pickups int->{tool,p,yaw,holder}; holder0 means unheld. TOOL_STATS lives in simulation.gd; PICKUP_SPAWNS remains a house compatibility alias. Authored pickups now belong to MapCatalog. Humans start with hands; pickup/swap/drop and hits are authoritative and atomic.
 
-## Appearance and presentation
+Mosquito private: {assignment:{human,zone,p,normal,label,revision},state,respawn_left,lives}. Human private: {task:{name,station,p,remaining,progress,work},deadline,failures}. Dead insects have empty assignment; no rotation countdown.
 
-Cosmetics (scripts/cosmetics.gd):
-- static sanitize(data: Variant) -> Dictionary returns {human: {color: int, accessory: int}, mosquito: {color: int, accessory: int}}.
-- static appearance_for(data: Variant, role: String) -> Dictionary returns only the selected role's appearance.
-- Six palette entries and three accessory options per role; invalid values default to zero and extra fields are omitted.
+Fixed per-mosquito rotation phase. Bite attaches to animated body and preserves its zone across scheduled rotations. Only explicit bite action detaches, assigns a new reservation immediately and preserves the calendar. Single human uses all16 front zones defendable with initial hands and aimed-band self-swat; multiple humans also permit six cooperative rear zones. Owner cannot self-swat rear, teammate must aim from exposed side. Flight/body collision follows crouch and jump.
 
-Preferences stores both role profiles locally. Lobby draw preserves both; simulation.start copies only the assigned profile to actors[id].appearance. Public appearance is a clone and cannot mutate authority. Cosmetics do not affect gameplay statistics or hitboxes.
+## Modes and round states
 
-World builds the furnished house, lobby avatars and customization preview. Shared Arena human radius is 0.60 m so all rotated marks plus attached mosquito clearance remain inside walls. Human view is first-person with own head hidden and body visible; mosquito view uses a colliding third-person camera. Private markers require line of sight and exposed body side.
+Blood: shared progressive quota, persists on detach/death; one life/no respawn. Quota wins mosquitoes; timeout or elimination wins humans.
 
-Client controls waiting-room walking independently of match input. Lobby human avatars are presentation only and do not reveal future teams.
+Survival: one life/no respawn, any survivor at timeout wins mosquitoes; elimination wins humans. No hunger or required bite.
 
-## UI and input behavior
+Sleep, visible Tareas: default3 personal total lives, configurable1..9. Death consumes one; respawn after delay only with remaining lives. Temporary team death with remaining lives does not finish. No total lives means immediate human victory. Otherwise collective task goal evaluated at round close. A miss reduces only that human's future deadline; task progress persists through interrupted work, bite pauses it.
 
-UI signals include connect_requested, local_server_requested, cosmetics_changed, preview_requested, preview_closed, walk_requested, escape_requested, ready_requested, config_requested, start_requested, rematch_requested and leave_requested. No role_requested control is used in 0.2.0.
+Disconnect during play aborts without winner to lobby. Reconnection cannot restore interrupted round. Departure after settled results does not erase winner. Round start resets blood/tasks/lives/tools/movement/marks.
 
-Core UI methods: show_home, show_status, show_lobby, show_game, show_results, set_pause, is_menu_open, set_lobby_walking. Server lobby data carries exact human_count, player readiness, owner, code and waiting actors.
+## Practice session
 
-Esc/Volver closes the active customization/settings layer and restores previous menu focus. During key binding, Esc cancels capture first. During lobby walking, Esc returns access to panels. During play, the menu releases mouse input but does not pause the online simulation. Settings/cosmetics persist locally.
+PracticeSession is local in-process authority, with selected human/mosquito and blood/survival/sleep. Human faces two mosquito bots; mosquito faces one human bot. No ENet peer, hosted lobby or social role selection is involved. Both perspectives use the same GameSimulation and client rendering.
 
-Default controls: WASD, mouse; mosquito Space/Ctrl vertical movement, E explicit bite/detach, F surface perch; human LMB attack, Q aimed body-band self-swat, R pickup/swap, G drop, held E task. Sensitivity is separate per role; inputs are remappable.
+start(role,mode,cosmetics,display_name="Vos",config_override={}), restart(),stop(),send_input with matching optional locomotion flags,send_action,advance(dt). Signals snapshot_updated and private_updated match client consumption. Snapshot adds practice=true and bot_ids for presentation.
 
-## Verification state
+BotBrain.decide(snapshot,own_private,dt) consumes public observations and that bot's own private data only. Human AI navigates, reacts/aims, self-defends, picks tools and works on tasks; insects approach their own marks, bite/detach or avoid danger in Survival. Bots issue normal validated intentions/actions and are identified as bots. The separate ENet harness is diagnostic tooling.
 
-0.2.0 executed: rules_test.gd 3242 checks / 0 failures; lobby_rules_test.gd 321 checks / 0 failures, Godot 4.5.2 headless. Network, export, 3D lobby/customization UI, focus and native presentation validation remain pending until the root records new results in distribution/PRUEBAS.md. Historical 0.1.0 outputs must remain preserved and are not evidence for a new binary.
+## Cosmetics, typography and navigation
+
+Cosmetics.sanitize(data:Variant)->Dictionary contains human/mosquito profiles {color:int,accessory:int}; appearance_for(data,role) returns only the chosen profile. Invalid values fall back; extras omitted. Six colors/three accessories per role. Cosmetics never affect statistics or hitboxes.
+
+Preferences saves local settings and both appearances. Product rename migration validates and copies legacy Dejame dormir/preferences.cfg only if new preferences do not exist; old source is unchanged. Existing new profiles are preserved. Bangers is the comic title font and Atkinson Hyperlegible the body font; both have bundled SIL Open Font License notices.
+
+UI primary flows: PRÁCTICA,CREAR SALA,UNIRME CON INVITACIÓN,TU PINTA,Ajustes. Signals include practice_requested(role,mode),practice_restart_requested plus social connect/ready/config/start/rematch/leave and customization/preview/walking. No social role selector.
+
+Esc/Volver closes the active layer and restores focus. Key capture consumes Esc as cancel first. Lobby walking restores panels with Esc. In-game menu blocks local intentions and releases mouse; **simulation continues in both practice and online**.
+
+Controls: human WASD/mouse,Shift sprint,Space jump,Ctrl crouch,LMB attack,Q band defense,R pickup,G drop,heldE work. Mosquito WASD/mouse,Space ascend,Ctrl descend,E explicit bite/detach,F surface perch. Remapping and sensitivity per role persist.
+
+## Verification handoff
+
+Rules3242, lobby321, maps61, locomotion16013, practice49, invitation51, navigation46, migration10, network message order11, audio28, visual geometry13, native poses40, client/UI31 and native practice72 passed. Integration verified the final EXE with blood1v1 invitation/two rounds, sleep1v1, survival4v12 (16 clients), disconnect and incompatible client, without stderr. Final EXE SHA256: EBE45FB53262E8E8A6BAB35B57104BF5C7FC7043E024AD0EAB5BCDE0D65BD9A5. Packaging/captures and complete traceability are recorded in distribution/PRUEBAS.md and BUILD.txt. Internet between homes, hardware and human balance remain pending.
+
+Historical outputs remain untouched. The final executable is Let-me-sleep.exe; packages Let-me-sleep-0.3.0-Windows.zip and Let-me-sleep-0.3.0-fuentes.zip. Integration records final packaging and capture evidence for the actual binary. No historical hash certifies 0.3.

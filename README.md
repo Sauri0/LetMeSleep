@@ -1,60 +1,71 @@
-# Dejame dormir — prototipo 0.2.0
+# Let me sleep — prototipo 0.3.0
 
-Juego nativo para Windows de humanos contra mosquitos, con una casa estilizada y personajes caricaturescos. Godot **4.5.2 stable**, GDScript y servidor autoritativo ENet/UDP en la PC del anfitrión. No requiere Steam, navegador ni cuentas.
+Juego nativo para Windows de humanos contra mosquitos: humano en primera persona, mosquito en tercera, casa caricaturesca y tres modos. Godot **4.5.2 stable**, GDScript y autoridad de juego en la PC anfitriona. No requiere Steam, navegador ni cuentas.
 
-Esta versión incorpora sorteo de equipos por ronda, sala de espera 3D y apariencia guardada por rol. Reglas, red local, navegación, persistencia y exportación de **0.2.0** están verificadas. Ver **distribution/PRUEBAS.md**.
+La versión 0.3 incorpora **práctica local con rivales automáticos**, invitación de una sola entrada, carrera/salto/agacharse, animación corporal compartida y un patio de espera separado de la casa. La interfaz usa títulos de cómic con Bangers y texto Atkinson Hyperlegible. El nombre oficial es **Let me sleep**; al primer inicio se recuperan ajustes y apariencias de la edición anterior si todavía no existe un archivo nuevo.
 
-## Sala y equipos
+## Jugar y practicar
 
-Una persona inicia el servidor, crea la sala y comparte dirección, puerto **UDP 27840** y código. El código identifica la sala en ese servidor; requiere una dirección alcanzable y no resuelve NAT por sí solo. El juego del anfitrión y el servidor son procesos separados. No se contrató alojamiento ni se configuraron router o firewall automáticamente.
+Descomprimí **Let-me-sleep-0.3.0-Windows.zip** completo y abrí **Let-me-sleep.exe** o **Jugar.cmd**. No necesitás instalar Godot para jugar.
 
-El anfitrión define la **cantidad exacta de humanos: de 1 a 5**. Todos los demás serán mosquitos. Se puede jugar **1 contra 1**; ambos equipos deben tener participantes. Los límites provisionales son **12 mosquitos y 16 personas en total**. La sala explica una configuración imposible y no reduce automáticamente el número de humanos para acomodarla.
+Desde **PRÁCTICA**, elegí **Humano** o **Mosquito**, luego **Recolección de sangre**, **Supervivencia** o **Tareas**, y pulsá **¡A PRACTICAR!**. Corre localmente sin servidor de red ni otros jugadores: humano contra dos mosquitos automáticos, o mosquito contra un humano automático. Los rivales se mueven, buscan objetivos, atacan, pican y trabajan según el modo; usan las mismas reglas y solo estado público y datos privados propios. El resultado permite repetir o volver al menú.
 
-Nadie elige equipo. Todos pulsan **Estoy listo** y el servidor sortea los roles al comenzar cada ronda. Cada sorteo es independiente: puede tocarte el mismo rol varias veces seguidas. Al finalizar, el anfitrión vuelve a sala y el grupo vuelve a prepararse para un sorteo nuevo.
+La elección de rol existe en práctica. En las salas con amigos, el servidor lo sortea.
 
-En la sala 3D podés recorrer el espacio con **WASD y ratón** mediante el botón para caminar. **Esc** devuelve el control a los paneles de sala. Los personajes humanos de espera no anticipan el rol que tocará después.
+## Crear una sala e invitar
 
-## Apariencia y navegación
+1. Elegí **CREAR SALA**, escribí tu nombre y pulsá **1 · Encender servidor en esta PC** y **2 · Crear sala**. Esto conecta tu cliente a 127.0.0.1:27840. Como alternativa, arrancá **Iniciar-servidor.cmd** y usá ese servidor, sin encender otro.
+2. En la sala, abrí **Dirección para amigos** o **Invitar**. Elegí tu IP local si están en la misma LAN; para otras casas, indicá una dirección alcanzable desde Internet y el puerto público correspondiente.
+3. Pulsá **GUARDAR Y COPIAR INVITACIÓN** y compartí el texto **DD3-…**. Tus amigos abren **UNIRME CON INVITACIÓN**, escriben su nombre y pegan ese único texto.
+4. El anfitrión elige el modo y la cantidad exacta de humanos. Todos se preparan y el anfitrión inicia.
 
-Desde **Personalizar** podés guardar color y accesorio por separado para humano y mosquito, con vista previa 3D. Las preferencias persisten localmente al cerrar el juego. Al comenzar la ronda se aplica la apariencia del rol sorteado; colores y accesorios no alteran golpes, colisiones, alcance ni vidas.
+La dirección para compartir es independiente de la conexión local del anfitrión. **127.0.0.1 no sirve para invitar a otra PC.** La invitación empaqueta dirección, puerto y sala; no está cifrada, no es un secreto criptográfico y no abre puertos. No se consulta un servicio HTTP para averiguar la IP pública ni se instaló un relay. WAN necesita una ruta UDP alcanzable; CGNAT puede impedir el acceso directo. La guía [LEEME](distribution/LEEME.md) desarrolla LAN, Internet y diagnóstico. La conexión avanzada conserva campos separados de dirección/puerto/código.
 
-**Esc** y los botones **Volver** permiten salir de las vistas de personalización y ajustes, recuperando el foco del menú anterior. Mientras se espera una tecla para reasignar, Esc cancela esa captura. Durante la partida, Esc abre o cierra el menú y libera o captura el ratón. **El menú no pausa una partida online.**
+## Equipos y espacios
 
-## Reglas y controles
+El anfitrión define **entre 1 y 5 humanos exactos**; todos los demás serán mosquitos. Ambos bandos deben tener participantes: **1v1 es válido**. Límites técnicos provisionales: **12 mosquitos y 16 personas en total**. Una combinación imposible informa su motivo, sin reducir silenciosamente la cantidad elegida.
 
-**Humano, primera persona:** WASD y ratón; clic da una palmada o golpe. Q defiende una banda del propio cuerpo según la mirada: frente/arriba para cabeza y hombros, algo abajo para torso, bien abajo para piernas. Las zonas traseras requieren un compañero. R recoge o cambia una herramienta cercana y G la suelta. Empezás con manos; matamoscas, raqueta eléctrica, diario y escoba tienen alcance, área y recuperación distintos. E mantenida realiza la tarea junto a su puesto si no te están picando.
+Nadie elige equipo en la sala social. Cada ronda y revancha hacen un sorteo independiente; puede repetirse el rol varias veces. Cambiar reglas invalida los listos.
 
-**Mosquito, tercera persona:** WASD, Espacio para subir y Ctrl para bajar. E pulsada cerca de tu marca inicia la picadura; **otra pulsación de E desprende**. Soltar E no libera. Mientras picás quedás anclado al cuerpo y conservás esa zona. Desprenderte asigna otra inmediatamente sin reiniciar el calendario individual de rotación. No se muestra cuenta regresiva de la marca y solo recibís tu propia asignación. F permite posarte cerca de una superficie; moverte vuelve a volar.
+La espera transcurre en un **patio de 8 × 6 × 4 m**, con bancos y personajes de espera; no anticipa equipos ni reutiliza puestos u objetos de partida. La ronda usa la **casa de 12 × 10 × 2,8 m**. Desde el botón de caminar podés recorrer la sala; Esc devuelve los paneles.
 
-| Modo | Condición |
+## Controles y reglas
+
+| Personaje | Controles iniciales |
 |---|---|
-| Recolección de sangre | Mosquitos ganan al alcanzar la cuota compartida. Humanos ganan al vencer el reloj o eliminar a todos. La sangre obtenida se conserva al desprenderse o morir. Sin reapariciones. |
-| Supervivencia | Al menos un mosquito vivo al finalizar gana para su equipo. Humanos ganan si eliminan a todos antes. Sin hambre, picaduras obligatorias ni reapariciones. |
-| Dejanos dormir | Humanos cumplen una meta colectiva de tareas al final o ganan antes si los mosquitos agotan todas sus vidas. Cada mosquito tiene 3 vidas totales personales por defecto y reaparece mientras conserve alguna. Fallar solo reduce el plazo de futuras tareas del humano que falló. |
+| Humano | WASD y ratón; **Shift correr, Espacio saltar, Ctrl agacharse**; clic palmada/golpe; Q defensa propia; R recoger/cambiar; G soltar; E mantenida hacer tarea. |
+| Mosquito | WASD y ratón; Espacio subir, Ctrl bajar; E pulsada picar/desprenderse; F posarse cerca de una superficie. |
 
-Una desconexión durante la ronda la interrumpe sin ganador y devuelve al grupo a sala. La reconexión no restaura esa ronda. Los eliminados ven una espera neutra, sin cámara libre.
+La defensa propia con Q usa la mirada: frente/arriba para cabeza y hombros, algo abajo para torso y bien abajo para piernas. Con un humano, todas las zonas se defienden con las manos iniciales. Las traseras, habilitadas con varios humanos, requieren un compañero que apunte desde el lado expuesto. Matamoscas, raqueta eléctrica, diario y escoba ofrecen alcances, áreas y recuperaciones diferentes.
 
-## Fuente y verificación
+Cada mosquito recibe solo su marca. Picar lo ancla al cuerpo; sigue sus movimientos, salto, postura y extremidades animadas. Conserva su zona mientras pica. **Otra pulsación de E desprende; soltar E no libera.** Al soltarse recibe otra zona inmediatamente y mantiene el calendario individual de rotación, sin contador visible.
 
-El proyecto está en **game/**. Las herramientas oficiales se guardan en **work/tools/**, sin instalación global; **work/setup-tools.ps1** restaura editor y plantillas y verifica sus sumas oficiales. El ZIP de fuentes no necesita incluir esas dependencias.
+| Modo | Victoria y vidas |
+|---|---|
+| Recolección de sangre | Cuota compartida; sangre conservada al desprenderse y morir. Mosquitos ganan al alcanzarla. Humanos ganan al vencer el tiempo o eliminar a todos. Una vida, sin reapariciones. |
+| Supervivencia | Un mosquito vivo al final gana para su equipo. Humanos ganan si eliminan a todos antes. Una vida, sin hambre ni picadura obligatoria. |
+| Tareas | Humanos cumplen la meta colectiva al final o agotan antes todas las vidas de los mosquitos. Cada mosquito tiene 3 vidas totales propias por defecto y reaparece mientras conserve alguna. Fallar reduce solo el plazo de futuras tareas del humano que falló. |
 
-Pruebas directas desde PowerShell, una vez disponibles las herramientas:
+Una desconexión durante la ronda la interrumpe sin ganador y devuelve a sala. Un resultado ya cerrado se conserva. Los eliminados esperan sin cámara libre.
+
+## Apariencia y menús
+
+**TU PINTA** guarda color y accesorio por separado para cada rol, con vista previa 3D. Los cosméticos no cambian estadísticas ni colisiones. La migración por el cambio de nombre conserva las preferencias anteriores y no sobrescribe un perfil nuevo ya existente.
+
+Esc/Volver restauran la pantalla y el foco anteriores; Esc cancela primero una captura de tecla. En partida, el menú libera el ratón y bloquea tus controles, pero **la ronda sigue tanto en práctica como online**. Se pueden reasignar teclas y ajustar sensibilidad por rol, volumen, inversión y pulso de marca.
+
+## Fuentes y verificación
+
+El proyecto está en **game/**. **work/setup-tools.ps1** restaura Godot y plantillas con sumas oficiales; **work/build.ps1** importa, comprueba y exporta. Los scripts de prueba no sustituyen la práctica jugable: esta usa **practice_session.gd** y **bot_brain.gd**; el harness ENet sirve para diagnósticos entre procesos.
+
+Suites principales: **rules_test.gd**, **lobby_rules_test.gd**, **locomotion_test.gd**, **maps_test.gd**, **practice_test.gd** e **invitation_test.gd**. Se ejecutan con el editor Godot en modo headless, por ejemplo:
 
 ```powershell
-& ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/rules_test.gd
-& ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/lobby_rules_test.gd
+& ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/locomotion_test.gd
 ```
 
-**work/build.ps1** es el punto de entrada para importación y exportación. **work/test-network.ps1** ejecuta diagnósticos con procesos locales; los bots no son rivales disponibles para jugar. La evidencia vigente y las pruebas pendientes están en **distribution/PRUEBAS.md**. Ninguna prueba loopback sustituye una sesión entre computadoras y conexiones distintas.
+La evidencia vigente está en [PRUEBAS.md](distribution/PRUEBAS.md); compilación y hash corresponden a [BUILD.txt](distribution/BUILD.txt). Loopback no certifica juego entre casas ni balance o rendimiento en el hardware del grupo.
 
-## Módulos
+Los datos de mapa viven en **map_catalog.gd**, las colisiones y locomoción en **arena.gd**, las articulaciones y marcas compartidas en **human_pose.gd**, y las reglas en **simulation.gd**. **lobby_rules.gd** sortea equipos; **network.gd** aplica permisos y privacidad; **invitation.gd** codifica la conexión.
 
-- **simulation.gd**: autoridad de movimiento, vidas, zonas, tareas, herramientas y finales.
-- **lobby_rules.gd**: capacidad, preparación y sorteo independiente del equipo.
-- **arena.gd**: geometría y colisiones compartidas.
-- **network.gd**: sala registrada por código, compatibilidad, permisos y estados privados dirigidos.
-- **client.gd**: controles, cámaras, espera 3D y representación interpolada.
-- **world.gd**, **actor_view.gd**, **audio_fx.gd**: arte y audio procedural original.
-- **ui.gd**, **preferences.gd**, **cosmetics.gd**: menús, ajustes y apariencia persistente.
-
-La documentación vigente corresponde a **0.2.0 / protocolo 2**. Los entregables anteriores de 0.1.0 se conservan como historia y no certifican esta compilación.
+**0.3.0 / protocolo 3 / Windows x86_64 / OpenGL de compatibilidad.** Arte y audio procedural originales. Bangers y Atkinson Hyperlegible se distribuyen bajo SIL Open Font License; los avisos se incluyen con los recursos y licencias del paquete. Los artefactos 0.1 y 0.2 permanecen como historia, sin usarse como evidencia de esta compilación.

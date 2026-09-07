@@ -1,8 +1,18 @@
-Dejame dormir 0.2.0
+Let me sleep 0.3.0
 Godot 4.5.2.stable.official.6ce3de25a
-Windows x86_64 / ENet UDP 27840 / protocolo 2
-SHA256 EXE: 8E9231CA792C9A2E7B972850EFB341BFD5BD923B671AD4B96C71AE0B7C8FEFB6
-Estado: exportado y verificado; evidencia y límites en PRUEBAS.md.
-Reglas 3242/0; sala/sorteo 321/0; UI 27/0; integración nativa 33/0.
-Tres modos, hasta 16 clientes ENet locales; Internet entre casas pendiente.
-Fecha: 2026-09-07. Artefactos 0.1.0 preservados.
+Windows x86_64 / ENet UDP 27840 / protocolo 3
+Ejecutable: Let-me-sleep.exe
+Paquetes: Let-me-sleep-0.3.0-Windows.zip / Let-me-sleep-0.3.0-fuentes.zip
+Estado: exportación Windows verificada; práctica nativa y red final PASS.
+SHA256 EXE definitivo: EBE45FB53262E8E8A6BAB35B57104BF5C7FC7043E024AD0EAB5BCDE0D65BD9A5
+Commit del código de juego: f1ffa97 (documentación final posterior).
+Reglas 3242/0; sala 321/0; mapas 61/0; locomoción 16013/0.
+Práctica 49/0; invitación 51/0; visual nativo 40/0; cliente/UI 31/0.
+Navegación 46/0; práctica nativa 72/0; migración 10/0; orden de red 11/0.
+Audio 28/0; privacidad visual 13/0; cosméticos PASS.
+ENet EXE: Sangre 1v1 con invitación, dos rondas; Tareas 1v1; Supervivencia 4v12 PASS.
+EXE: desconexión sin ganador y rechazo de saludo incompatible PASS.
+Práctica nativa EXE: seis pares rol/modo, 72 comprobaciones, 0 fallos.
+Capturas EXE: inicio, patio, ambos editores de apariencia y cinco estados de práctica.
+Evidencia y límites: PRUEBAS.md.
+Fecha: 2026-09-07. Artefactos históricos 0.1 y 0.2 preservados.

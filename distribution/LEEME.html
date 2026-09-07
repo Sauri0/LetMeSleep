@@ -1,32 +1,117 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dejame dormir 0.2.0 · Cómo jugar</title><style>body{background:#eee9d9;color:#24383e;font:17px/1.65 Segoe UI,Arial,sans-serif;margin:0}article{max-width:860px;margin:40px auto;padding:32px;background:#fffdf4;border-radius:20px}h1,h2{line-height:1.2}h1{font-size:40px;color:#214b4d}h2{margin-top:42px}code{background:#e9eee7;padding:2px 6px;border-radius:4px}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #cdd7cf;padding:12px;text-align:left}a{color:#206b6b}@media(max-width:900px){article{margin:10px;padding:22px}h1{font-size:30px}}</style></head><body><article><h1 id="dejame-dormir-0.2.0-windows-64-bits">Dejame dormir · 0.2.0 · Windows 64 bits</h1>
-<p><strong>Descomprimí toda la carpeta antes de jugar. No necesitás instalar Godot.</strong> Todos los participantes deben usar la misma versión: <strong>0.2.0, protocolo 2</strong>.</p>
-<h2 id="tu-pc-aloja-la-partida">Tu PC aloja la partida</h2>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Let me sleep 0.3.0 · Cómo jugar</title><style>body{background:#f1ead9;color:#203139;font:17px/1.65 Segoe UI,Arial,sans-serif;margin:0}article{max-width:900px;margin:36px auto;padding:38px;background:#fffdf5;border:2px solid #203139;border-radius:16px}h1,h2,h3{line-height:1.22}h1{font-size:40px;color:#173d49}h2{margin-top:38px}h3{margin-top:25px}a{color:#155b6b;text-underline-offset:3px}code{background:#e5eee9;padding:2px 5px;border-radius:3px}table{display:block;overflow:auto;border-collapse:collapse;margin:22px 0}td,th{border:1px solid #c4d0ca;padding:10px;text-align:left;vertical-align:top}th{background:#e5eee9}li{margin:8px 0}strong{font-weight:700}@media(max-width:950px){article{margin:12px;padding:22px}h1{font-size:32px}}@media print{body{background:white}article{border:0;margin:0;padding:0}a{color:inherit}}</style></head><body><article><h1>Let me sleep · 0.3.0 · Windows 64 bits</h1>
+<p><strong>Descomprimí toda la carpeta antes de jugar.</strong> Abrí <strong>Let-me-sleep.exe</strong> o <strong>Jugar.cmd</strong>. No necesitás instalar Godot. Para jugar juntos, todos necesitan <strong>0.3.0 / protocolo 3</strong>.</p>
+<h2>Probar ahora, sin organizar una sala</h2>
 <ol>
-<li>Abrí <strong>Iniciar-servidor.cmd</strong> y dejá su ventana abierta. También podés usar <strong>Iniciar servidor local</strong> desde el juego; ese servidor se cierra al salir del juego que lo inició. Elegí una sola de estas formas.</li>
-<li>Abrí <strong>Dejame-dormir.exe</strong> o <strong>Jugar.cmd</strong>.</li>
-<li>Escribí tu nombre. En la propia PC anfitriona usá dirección <strong>127.0.0.1</strong>, puerto <strong>27840</strong>, y pulsá <strong>Crear sala</strong>.</li>
-<li>Compartí con tus amigos <strong>la dirección del servidor, el puerto y el código de sala</strong>. El código existe mientras dure esa sala y no reemplaza la dirección.</li>
-<li>El anfitrión elige modo y <strong>cantidad exacta de humanos, de 1 a 5</strong>. Todos los demás serán mosquitos. Ambos equipos deben tener al menos un jugador: <strong>1 contra 1 es válido</strong>. Hay un tope provisional de <strong>12 mosquitos y 16 personas en total</strong>.</li>
-<li>Todos pulsan <strong>Estoy listo</strong> y el anfitrión inicia. El servidor sortea quiénes serán humanos. <strong>Nadie elige equipo y puede repetirse el mismo rol en rondas consecutivas.</strong></li>
-<li>Al terminar, el anfitrión pulsa <strong>Volver a la sala · revancha</strong>. Todos vuelven a prepararse; se realiza un sorteo independiente para la próxima ronda.</li>
+<li>En el inicio elegí <strong>PRÁCTICA</strong>.</li>
+<li>Elegí <strong>HUMANO</strong> o <strong>MOSQUITO</strong> y uno de los tres modos: <strong>Recolección de sangre</strong>, <strong>Supervivencia</strong> o <strong>Tareas</strong>.</li>
+<li>Pulsá <strong>¡A PRACTICAR!</strong>.</li>
 </ol>
-<p>Si faltan jugadores para la cantidad de humanos elegida, la sala explica el motivo y espera una configuración válida. No cambia esa cantidad automáticamente.</p>
-<h2 id="sala-3d-y-apariencia">Sala 3D y apariencia</h2>
-<p>Mientras esperan, pueden recorrer la casa con <strong>WASD y ratón</strong> usando el botón para caminar. <strong>Esc</strong> permite recuperar los paneles de sala. En espera se usa una representación humana; el equipo real se decide al comenzar la ronda.</p>
-<p><strong>Personalizar</strong> permite elegir color y accesorio para el humano y para el mosquito por separado, con una vista previa 3D. Las dos apariencias se guardan en esa computadora y se conservan al cerrar el juego. El rol sorteado usa su apariencia correspondiente. Son cambios visuales: no dan ventajas ni modifican las colisiones.</p>
-<p><strong>Esc</strong> o <strong>Volver</strong> cierran personalización y ajustes y devuelven el foco al menú anterior. Si estás reasignando una tecla, Esc cancela esa captura. En partida, Esc abre o cierra el menú y libera o captura el ratón. <strong>La pausa no detiene el juego online.</strong></p>
-<h2 id="amigos-en-la-misma-casa-lan">Amigos en la misma casa / LAN</h2>
-<p>En la PC del servidor abrí una terminal y ejecutá <strong>ipconfig</strong>. Buscá la <strong>Dirección IPv4 del adaptador Wi-Fi o Ethernet conectado</strong>, por ejemplo 192.168.1.25. Los amigos usan esa dirección, puerto <strong>27840</strong> y código; <strong>127.0.0.1</strong> solo sirve en la propia PC que aloja el servidor. La red debe permitir comunicación entre dispositivos; algunas redes de invitados la bloquean.</p>
-<p>Si Windows pregunta por acceso del servidor, permitilo en la red donde van a jugar. Esta entrega no agrega reglas de firewall automáticamente.</p>
-<h2 id="amigos-desde-otras-casas-internet">Amigos desde otras casas / Internet</h2>
-<p>El acceso directo requiere una dirección pública alcanzable. En el router anfitrión se necesita redirigir <strong>UDP externo 27840 → IPv4 local de tu PC:27840</strong> y permitir ese tráfico al ejecutable en el firewall de esa PC. Conviene reservar esa IPv4 local en el router. Los amigos ingresan tu <strong>IP pública</strong>, el mismo puerto y el código.</p>
-<p>El código identifica la sala y <strong>no abre puertos ni resuelve NAT automáticamente</strong>. No se configuraron tu router o firewall desde esta tarea. Si tu conexión usa CGNAT, una redirección local puede no alcanzar; habrá que revisar la conexión con el proveedor o una solución de red compatible con UDP. No se instaló ni contrató un relay o servidor externo. Una comprobación de puertos que solo use TCP no verifica este servidor UDP.</p>
-<p><strong>Todavía falta probar entre computadoras y conexiones distintas.</strong> La PC anfitriona y el servidor deben seguir encendidos: suspenderlos corta la partida.</p>
-<h2 id="como-se-juega">Cómo se juega</h2>
-<p><strong>Humano:</strong> WASD y ratón; clic da palmada o golpe; Q defiende una parte del propio cuerpo. Mirá al frente o arriba para cabeza/hombros, algo abajo para torso y bien abajo para piernas. R recoge o cambia un objeto cercano; G lo suelta. Empezás con manos. Hay matamoscas, raqueta, diario y escoba con alcances, áreas y recuperaciones diferentes. Para quitar un mosquito de la espalda de un compañero, acercate por detrás y apuntale con clic. E mantenida realiza tu tarea junto al puesto.</p>
-<p><strong>Mosquito:</strong> WASD y ratón; Espacio sube y Ctrl baja. Acercate a tu marca privada sobre un humano y pulsá E para picar. <strong>Otra pulsación de E te desprende; soltar la tecla no libera.</strong> Mientras picás viajás con el cuerpo y conservás esa zona. Al soltarte cambia inmediatamente a otra y el calendario de rotación sigue su ritmo, sin contador visible. Si la marca queda detrás del cuerpo, volá alrededor. F permite posarte cerca de una superficie; moverte vuelve a volar.</p>
-<p>Podés reasignar controles y ajustar sensibilidad por rol, volumen, inversión y pulso de marca. Los eliminados esperan sin cámara libre.</p>
-<h2 id="tres-modos">Tres modos</h2>
+<p>Como humano te enfrentás a dos mosquitos automáticos; como mosquito, a un humano automático. Los rivales tienen comportamiento de juego: buscan objetivos, se desplazan, atacan, pican y hacen tareas según el modo. En Supervivencia los mosquitos intentan seguir vivos y no necesitan picar. La práctica corre en tu PC, sin conectarte a una sala ni abrir un servidor de red.</p>
+<p>El cartel <strong>PRÁCTICA / RIVALES AUTOMÁTICOS</strong> identifica esta sesión. Al terminar podés <strong>REPETIR PRÁCTICA</strong> o <strong>VOLVER AL MENÚ</strong>. Las reglas de golpes, zonas, vidas y resultados son las mismas que con amigos. Los rivales son una ayuda para aprender; su dificultad y el balance siguen siendo valores de prototipo.</p>
+<p><strong>Solo en práctica elegís el rol.</strong> En una sala con amigos se sortea al comenzar cada ronda.</p>
+<h2>Alojar una partida con amigos</h2>
+<ol>
+<li>En el inicio elegí <strong>CREAR SALA</strong> y escribí tu nombre.</li>
+<li>Pulsá <strong>1 · Encender servidor en esta PC</strong> y luego <strong>2 · Crear sala</strong>. El servidor y tu juego corren como procesos separados. Tu cliente se conecta a <strong>127.0.0.1:27840</strong>.</li>
+<li>En la sala abrí <strong>Dirección para amigos</strong>. Indicá la dirección que ellos pueden alcanzar y el puerto correspondiente. En la misma red podés elegir tu IP local en la lista. Para otras casas, leé el apartado de Internet.</li>
+<li>Pulsá <strong>GUARDAR Y COPIAR INVITACIÓN</strong>. Compartí por tu chat habitual el texto completo que empieza por <strong>DD3-</strong>. <strong>Invitar</strong> permite copiarlo otra vez.</li>
+<li>Tus amigos eligen <strong>UNIRME CON INVITACIÓN</strong>, escriben su nombre, pegan ese único texto y pulsan <strong>Unirme a la sala</strong>.</li>
+<li>Elegí modo y <strong>cantidad exacta de humanos, de 1 a 5</strong>. Todos los demás serán mosquitos. Todos pulsan <strong>Estoy listo</strong> y el anfitrión inicia.</li>
+<li>Al terminar, <strong>VOLVER A LA SALA</strong> prepara otra ronda. Todos vuelven a estar listos y el servidor hace un sorteo nuevo.</li>
+</ol>
+<p>También podés iniciar el servidor con <strong>Iniciar-servidor.cmd</strong> y dejar su ventana abierta. Elegí una sola forma de arrancarlo para evitar que dos procesos intenten usar el mismo puerto. El servidor iniciado desde el juego se cierra al salir de ese juego.</p>
+<p>La sala requiere ambos bandos: <strong>1 contra 1 es válido</strong>. Los límites provisionales son <strong>12 mosquitos y 16 participantes totales</strong>. Si la cantidad exacta de humanos no deja un equipo mosquito válido, aparece el motivo y no se inicia; no se modifica esa cantidad automáticamente.</p>
+<p><strong>Nadie elige equipo en la sala social.</strong> El sorteo es independiente en cada ronda y puede repetirte el mismo rol varias veces. Cambiar reglas vuelve a dejar a todos sin preparar.</p>
+<h2>Qué contiene la invitación</h2>
+<p>La invitación <strong>DD3-…</strong> empaqueta <strong>dirección, puerto y código de sala</strong> para que el amigo pegue un solo texto. No está cifrada ni es un secreto criptográfico. Solo funciona mientras la sala exista y la dirección siga siendo alcanzable.</p>
+<p>La conexión del anfitrión y la <strong>Dirección para amigos</strong> se guardan por separado. El anfitrión puede usar <strong>127.0.0.1</strong> en su propia PC; compartirla enviaría a cada amigo a su propia computadora, por eso no se acepta como dirección de invitación.</p>
+<p>La invitación no abre puertos ni resuelve NAT. El juego no consulta servicios HTTP para detectar tu IP pública. No se instaló ni contrató relay, alojamiento o servicio externo.</p>
+<p>Si necesitás ingresar datos separados, <strong>Opciones de conexión</strong> muestra dirección, puerto y código. Para usar esa vía al unirte, dejá vacío el campo de invitación.</p>
+<h2>Amigos en la misma red / LAN</h2>
+<p>En <strong>Dirección para amigos</strong>, elegí la IPv4 del adaptador Wi-Fi o Ethernet de la red compartida, por ejemplo <strong>192.168.1.25</strong>. Si aparecen varias direcciones, usá la del adaptador por el que ambos equipos se conectan; una VPN u otro adaptador puede tener una dirección distinta. Podés compararlas con la salida de <strong>ipconfig</strong>.</p>
+<p>Usá el puerto del servidor, <strong>UDP 27840</strong> por defecto, y copiá una invitación nueva si cambia la dirección o el puerto. La red debe permitir comunicación entre dispositivos; algunas redes de invitados la bloquean.</p>
+<p>Si Windows pregunta por acceso del servidor, permitilo en la red donde van a jugar. Esta entrega no crea reglas globales de firewall automáticamente.</p>
+<h2>Amigos desde otras casas / Internet</h2>
+<p>En <strong>Dirección para amigos</strong>, escribí una IP pública o un nombre de servidor alcanzable por ellos. El acceso directo requiere una ruta UDP hasta tu servidor.</p>
+<p>Con un router doméstico que permita ese acceso, el esquema habitual es <strong>UDP externo 27840 → IPv4 local de tu PC:27840</strong>, junto con permiso de entrada al servidor en el firewall de esa PC. Si usás otro puerto externo, colocá ese número en <strong>Puerto para amigos</strong>. El cliente local puede seguir conectándose a 127.0.0.1:27840. La configuración concreta depende de tu router y conexión.</p>
+<p>Si tu proveedor usa <strong>CGNAT</strong>, una redirección en tu router puede no alcanzar; habrá que resolver la conectividad con el proveedor o una solución de red compatible con UDP. La invitación no corrige CGNAT, doble NAT ni bloqueos del proveedor. Una comprobación de puertos que solo use TCP no verifica este servidor UDP.</p>
+<p>Si un amigo no entra, revisen versión, invitación completa, servidor encendido, dirección elegida, puerto y ruta UDP. El juego no configura el router ni detecta públicamente esa ruta. La PC anfitriona debe seguir encendida y sin suspenderse.</p>
+<h2>La previa y tu apariencia</h2>
+<p>La sala de espera es un <strong>patio 3D separado de la casa de juego</strong>, con bancos y espacio central. Usá el botón para caminar y recorré el patio con WASD, ratón, Shift para correr, Espacio para saltar y Ctrl para agacharte. <strong>Esc</strong> recupera los paneles de sala. Los avatares humanos de espera no anticipan el rol de la ronda.</p>
+<p>Desde <strong>TU PINTA</strong> elegís color y accesorio para humano y mosquito por separado, con vista previa 3D. Las dos apariencias se guardan localmente y se aplica la del rol que toque. Son cambios visuales; no modifican velocidad, alcance, vidas ni colisiones.</p>
+<p>Al pasar de la edición anterior a <strong>Let me sleep</strong>, el juego copia los ajustes anteriores cuando todavía no existen preferencias nuevas. Conserva apariencias y controles, deja intacto el archivo anterior y no sobrescribe un perfil nuevo.</p>
+<h2>Controles iniciales</h2>
+<table>
+<thead>
+<tr>
+<th>Acción</th>
+<th>Humano</th>
+<th>Mosquito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desplazarse / mirar</td>
+<td>WASD / ratón</td>
+<td>WASD / ratón</td>
+</tr>
+<tr>
+<td>Shift</td>
+<td>Correr</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Espacio</td>
+<td>Saltar</td>
+<td>Subir volando</td>
+</tr>
+<tr>
+<td>Ctrl</td>
+<td>Agacharse</td>
+<td>Bajar volando</td>
+</tr>
+<tr>
+<td>Clic izquierdo</td>
+<td>Palmada o golpe</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Q</td>
+<td>Defensa del propio cuerpo</td>
+<td>—</td>
+</tr>
+<tr>
+<td>E</td>
+<td>Mantener para hacer tarea</td>
+<td>Pulsar para picar; pulsar otra vez para desprenderse</td>
+</tr>
+<tr>
+<td>R / G</td>
+<td>Recoger o cambiar / soltar herramienta</td>
+<td>—</td>
+</tr>
+<tr>
+<td>F</td>
+<td>—</td>
+<td>Posarse cerca de una superficie / volver a volar</td>
+</tr>
+<tr>
+<td>Esc</td>
+<td>Abrir/cerrar menú</td>
+<td>Abrir/cerrar menú</td>
+</tr>
+</tbody>
+</table>
+<p>Podés reasignar controles y ajustar sensibilidad por rol, volumen, inversión y pulso de marca. Las ayudas del juego reflejan tus teclas guardadas.</p>
+<h3>Humano: defenderse y ayudar</h3>
+<p>Empezás con manos. Clic da una palmada; los objetos del mapa ofrecen golpes diferentes: matamoscas, raqueta eléctrica, diario enrollado y escoba. R recoge o cambia un objeto cercano; G lo deja y vuelve a las manos. Cada golpe necesita recuperarse antes de repetir.</p>
+<p>Q defiende una banda del propio cuerpo según la mirada: <strong>frente o arriba</strong> para cabeza/hombros, <strong>algo abajo</strong> para torso y <strong>bien abajo</strong> para piernas. Con un solo humano, todas las marcas disponibles se pueden defender con las manos iniciales. Las marcas traseras se habilitan con varios humanos y requieren ayuda: acercate al lado expuesto de tu compañero y apuntá al mosquito con clic.</p>
+<p>Correr, saltar y agacharse tienen colisiones y límites. El cuerpo, las extremidades y las marcas siguen la postura; saltar o agacharse no desprende por sí solo un mosquito adherido.</p>
+<h3>Mosquito: picar y desprenderse</h3>
+<p>Acercate a tu marca privada sobre un humano y pulsá E. Quedás anclado al cuerpo y conservás esa zona mientras picás, incluso si el humano corre, salta o se agacha.</p>
+<p><strong>Otra pulsación de E desprende; soltar la tecla no libera.</strong> Al soltarte recibís otra zona inmediatamente, sin reiniciar el calendario individual de rotación. No hay cuenta regresiva de la marca. Si está detrás del cuerpo o de un mueble, rodealo para verla y alcanzarla.</p>
+<p>F permite posarte solo cerca de piso, pared, techo o mueble; no congela el vuelo en el aire. Moverte vuelve a volar. Los eliminados esperan sin cámara libre ni marcas de compañeros.</p>
+<h2>Tres modos</h2>
 <table>
 <thead>
 <tr>
@@ -36,24 +121,26 @@
 </thead>
 <tbody>
 <tr>
-<td>Sangre</td>
-<td>Mosquitos alcanzan la cuota compartida antes del reloj. Humanos ganan si lo impiden o eliminan a todos. La sangre obtenida se conserva al desprenderse y morir. No hay reapariciones.</td>
+<td>Recolección de sangre</td>
+<td>Los mosquitos deben alcanzar una cuota compartida antes del reloj. Humanos ganan si lo impiden o eliminan a todos. La sangre obtenida se conserva al desprenderse y morir. Una vida por mosquito, sin reapariciones.</td>
 </tr>
 <tr>
 <td>Supervivencia</td>
-<td>Basta que quede un mosquito vivo al terminar. Humanos ganan si eliminan a todos antes. No hay hambre, picaduras obligatorias ni reapariciones.</td>
+<td>Basta un mosquito vivo al terminar para que gane su equipo. Humanos ganan si eliminan a todos antes. Una vida; sin hambre ni obligación de picar.</td>
 </tr>
 <tr>
-<td>Dejanos dormir</td>
-<td>Humanos cumplen la meta colectiva de tareas al final. También ganan inmediatamente si todos los mosquitos agotan sus vidas personales. Cada mosquito empieza con 3 vidas totales por defecto, pierde una al morir y reaparece si le queda alguna.</td>
+<td>Tareas</td>
+<td>Humanos cumplen la meta colectiva al final o ganan antes al agotar todas las vidas de los mosquitos. Cada mosquito tiene 3 vidas totales personales por defecto y reaparece mientras conserve alguna.</td>
 </tr>
 </tbody>
 </table>
-<p>En Dejanos dormir, cada fallo reduce <strong>solo el plazo de futuras tareas de ese humano</strong>. No cambia la ronda, la frecuencia ni el plazo del compañero. Una picadura pausa el trabajo conservando su progreso. Los relojes de tarea y ronda se muestran por separado.</p>
-<p>Si alguien pierde conexión durante una ronda, se interrumpe sin ganador y el grupo vuelve a sala. Puede reconectarse, pero no recuperar la ronda interrumpida.</p>
-<h2 id="valores-iniciales-y-estado-de-esta-version">Valores iniciales y estado de esta versión</h2>
-<p>Ronda <strong>120 s</strong>, sangre <strong>30 unidades</strong>, rotación <strong>14 s</strong>. Tareas cada <strong>24 s</strong>, plazo <strong>18 s</strong>, trabajo <strong>3 s</strong>, penalización <strong>2 s</strong>, piso <strong>8 s</strong>. Meta automática: dos tercios de las oportunidades de tarea, redondeado hacia arriba. En Dejanos dormir, reaparición después de <strong>4 s</strong> y <strong>3 vidas personales totales</strong> por defecto. El anfitrión puede configurar las vidas de ese modo entre 1 y 9. Cada modo utiliza sus parámetros correspondientes.</p>
-<p>Estos tiempos, cuotas y estadísticas de herramientas son hipótesis de prototipo, sin balance validado. Elegir la cantidad de humanos configura el equipo completo; el sorteo decide qué personas lo integran.</p>
-<p><strong>Godot 4.5.2 / Windows 64 bits / OpenGL de compatibilidad.</strong> Arte y audio originales. No hay cuentas, tienda ni servicios contratados. Licencias en <strong>LICENCIAS-GODOT.txt</strong>.</p>
-<p>La entrega <strong>0.2.0</strong> tiene verificadas las reglas, el sorteo, la red local, la interfaz y la exportación Windows. La evidencia y los límites están en <a href="PRUEBAS.md">PRUEBAS.md</a>, y el SHA256 del ejecutable definitivo está en <a href="BUILD.txt">BUILD.txt</a>. Falta probar partidas humanas entre conexiones de Internet diferentes; las validaciones de 0.1.0 se conservan como historia y no certifican esta versión.</p>
+<p>En <strong>Tareas</strong>, mantené E junto al puesto indicado. Una picadura pausa el trabajo y conserva el avance. Cada fallo reduce <strong>solo el plazo de futuras tareas del humano que falló</strong>; no cambia la duración de ronda, frecuencia de tareas ni plazos de compañeros. La meta es colectiva, aunque el plazo y la penalización sean personales.</p>
+<p>Tres vidas totales significan tres oportunidades de vivir, no tres reapariciones. Si todos están temporalmente muertos pero queda alguna vida, la ronda sigue. Si todos agotan sus vidas, los humanos ganan inmediatamente aunque falten tareas.</p>
+<p>Valores iniciales de prototipo: ronda <strong>120 s</strong>, cuota <strong>30</strong>, rotación <strong>14 s</strong>. Tareas cada <strong>24 s</strong>, plazo <strong>18 s</strong>, trabajo <strong>3 s</strong>, penalización <strong>2 s</strong>, piso <strong>8 s</strong>; meta automática de dos tercios de las oportunidades, redondeados hacia arriba. Tareas usa <strong>3 vidas personales</strong>, configurables entre 1 y 9, con reaparición tras <strong>4 s</strong> por defecto. No son valores de balance ya validados.</p>
+<h2>Menús, resultados y desconexión</h2>
+<p>Esc o Volver cierran la vista activa y recuperan el foco anterior; al reasignar una tecla, Esc cancela primero esa captura. En partida, Esc libera el ratón y bloquea tus controles. <strong>La ronda continúa, tanto en práctica como online.</strong></p>
+<p>Una desconexión durante la ronda online la interrumpe sin ganador y devuelve al grupo a sala. Reconectar permite volver a la sala, no recuperar esa ronda. Una salida después de un resultado ya cerrado no cambia el ganador.</p>
+<h2>Archivos y comprobaciones</h2>
+<p><strong>Godot 4.5.2 / Windows x86_64 / OpenGL de compatibilidad.</strong> La carpeta incluye cliente, servidor mediante script, guía y avisos de licencia. Bangers para títulos de cómic y Atkinson Hyperlegible para lectura usan <strong>SIL Open Font License</strong>. Arte y audio procedural originales; no hay cuentas, tienda ni servicios contratados.</p>
+<p>La evidencia vigente, su alcance y los pendientes están en <a href="PRUEBAS.md">PRUEBAS.md</a>. La identificación de compilación y el SHA256 del ejecutable corresponden a <a href="BUILD.txt">BUILD.txt</a>. Las partidas locales automatizadas no sustituyen jugar entre conexiones distintas ni medir comodidad, balance o rendimiento en las PCs del grupo.</p>
 </article></body></html>
