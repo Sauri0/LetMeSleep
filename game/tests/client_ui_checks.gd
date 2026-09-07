@@ -21,9 +21,9 @@ class NetworkDouble:
 		connects.append({"address":address,"port":port,"name":player_name,"code":code,"create":create})
 	func lobby_action(verb: String, value: Variant = null) -> void:
 		lobby_actions.append({"verb":verb,"value":value})
-	func send_input(sequence: int, movement: Vector3, yaw: float, pitch: float, interact: bool) -> void:
+	func send_input(sequence: int, movement: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool = false, crouch: bool = false, jump: bool = false) -> void:
 		input_count += 1
-		last_input = {"sequence":sequence,"move":movement,"yaw":yaw,"pitch":pitch,"interact":interact}
+		last_input = {"sequence":sequence,"move":movement,"yaw":yaw,"pitch":pitch,"interact":interact,"sprint":sprint,"crouch":crouch,"jump":jump}
 	func send_action(sequence: int, verb: String) -> void:
 		actions.append({"sequence":sequence,"verb":verb})
 	func close_client() -> void:
@@ -146,7 +146,10 @@ func _run() -> void:
 	root.add_child(client)
 	await _settle()
 	check(client.ui._screen == "home" and _mouse_matches(Input.MOUSE_MODE_VISIBLE), "home starts with pointer and menu")
-	client.ui._home_default_focus.pressed.emit()
+	for control: Node in client.ui._home_menu.get_children():
+		if control is Button and control.text == "CREAR SALA":
+			control.pressed.emit()
+			break
 	await _settle()
 	client.ui._name_edit.grab_focus()
 	var text_before: String = client.ui._name_edit.text

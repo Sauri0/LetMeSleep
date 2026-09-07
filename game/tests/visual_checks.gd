@@ -15,6 +15,7 @@ func _run() -> void:
 	world = load("res://scripts/world.gd").new()
 	root.add_child(world)
 	world.build()
+	world.load_map("house")
 	var actors: Dictionary = {
 		1: {"role":"human", "name":"Human", "p":Vector3.ZERO, "yaw":0.0, "alive":true},
 		2: {"role":"mosquito", "name":"Local", "p":Vector3(0, 1.15, -2), "yaw":0.0, "alive":true}
@@ -64,5 +65,12 @@ func _run() -> void:
 	actors[2]["alive"] = true
 	world.sync_actors(actors, 1, 1.0)
 	check(world.actors[2].visible, "respawned mosquito restored")
+	world.clear_actors()
+	await create_timer(0.12).timeout
+	world.queue_free()
+	camera.queue_free()
+	await process_frame
+	await process_frame
+	await create_timer(0.12).timeout
 	print("VISUAL_CHECK_RESULT failures=%d" % failures)
 	quit(failures)

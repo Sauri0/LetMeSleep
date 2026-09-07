@@ -9,6 +9,7 @@ const DEFAULT_KEYS: Dictionary = {
 	"move_right": KEY_D, "ascend": KEY_SPACE, "descend": KEY_CTRL,
 	"bite": KEY_E, "self_swat": KEY_Q, "perch": KEY_F,
 	"interact": KEY_E, "pause": KEY_ESCAPE, "pickup": KEY_R, "drop": KEY_G,
+	"sprint": KEY_SHIFT, "jump": KEY_SPACE, "crouch": KEY_CTRL,
 }
 const ACTION_NAMES: Dictionary = {
 	"move_forward": "Avanzar", "move_back": "Retroceder", "move_left": "Izquierda",
@@ -16,6 +17,7 @@ const ACTION_NAMES: Dictionary = {
 	"bite": "Picar / desprenderse", "attack": "Palmada / golpe", "self_swat": "Defensa propia",
 	"perch": "Posarse / volar", "interact": "Hacer tarea (mantener)",
 	"pickup": "Recoger / cambiar objeto", "drop": "Soltar objeto", "pause": "Menú",
+	"sprint": "Correr (humano)", "jump": "Saltar (humano)", "crouch": "Agacharse (humano)",
 }
 static var human_sensitivity: float = 0.0025
 static var mosquito_sensitivity: float = 0.0025
@@ -26,6 +28,9 @@ static var player_name: String = ""
 static var server_address: String = "127.0.0.1"
 static var server_port: int = 27840
 static var room_code: String = ""
+static var invitation: String = ""
+static var shared_address: String = ""
+static var shared_port: int = 27840
 static var cosmetics: Dictionary = {"human": {"color": 0, "accessory": 0}, "mosquito": {"color": 0, "accessory": 0}}
 static var _loaded: bool = false
 
@@ -51,6 +56,8 @@ static func load_settings() -> void:
 	if _loaded:
 		return
 	_loaded = true
+	if not FileAccess.file_exists(FILE_PATH):
+		_migrate_legacy_settings()
 	var config := ConfigFile.new()
 	if config.load(FILE_PATH) == OK:
 		human_sensitivity = clampf(float(config.get_value("controls", "human_sensitivity", human_sensitivity)), 0.0005, 0.008)
@@ -62,6 +69,9 @@ static func load_settings() -> void:
 		server_address = str(config.get_value("connection", "address", "127.0.0.1"))
 		server_port = clampi(int(config.get_value("connection", "port", 27840)), 1, 65535)
 		room_code = str(config.get_value("connection", "code", "")).left(12)
+		invitation = str(config.get_value("connection", "invitation", "")).left(1024)
+		shared_address = str(config.get_value("sharing", "address", "")).left(253)
+		shared_port = clampi(int(config.get_value("sharing", "port", 27840)), 1024, 65535)
 		cosmetics = CosmeticsData.sanitize(config.get_value("appearance", "cosmetics", {}))
 		for action: String in ACTION_NAMES:
 			var binding: String = str(config.get_value("bindings", action, ""))
@@ -80,6 +90,27 @@ static func load_settings() -> void:
 	apply_audio()
 
 
+static func _migrate_legacy_settings(legacy_path: String = "", destination: String = FILE_PATH) -> Error:
+	# Keep the previous product's directory name only as a migration key.
+	# Never modify the old file or replace preferences already saved by this app.
+	if FileAccess.file_exists(destination):
+		return OK
+	var source: String = legacy_path
+	if source.is_empty():
+		source = OS.get_user_data_dir().get_base_dir().path_join("Dejame dormir/preferences.cfg")
+	if not FileAccess.file_exists(source):
+		return ERR_FILE_NOT_FOUND
+	var parsed := ConfigFile.new()
+	var validation: Error = parsed.load(source)
+	if validation != OK:
+		push_warning("No se migraron los ajustes anteriores porque el archivo no se pudo validar: %s" % error_string(validation))
+		return validation
+	var error: Error = DirAccess.copy_absolute(ProjectSettings.globalize_path(source), ProjectSettings.globalize_path(destination))
+	if error != OK:
+		push_warning("No se pudieron copiar los ajustes anteriores: %s" % error_string(error))
+	return error
+
+
 static func save_settings() -> void:
 	var config := ConfigFile.new()
 	config.set_value("controls", "human_sensitivity", human_sensitivity)
@@ -91,6 +122,9 @@ static func save_settings() -> void:
 	config.set_value("connection", "address", server_address)
 	config.set_value("connection", "port", server_port)
 	config.set_value("connection", "code", room_code)
+	config.set_value("connection", "invitation", invitation)
+	config.set_value("sharing", "address", shared_address)
+	config.set_value("sharing", "port", shared_port)
 	cosmetics = CosmeticsData.sanitize(cosmetics)
 	config.set_value("appearance", "cosmetics", cosmetics)
 	for action: String in ACTION_NAMES:

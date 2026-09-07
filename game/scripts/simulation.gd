@@ -5,6 +5,8 @@ extends RefCounted
 ## Numbers below are reversible prototype hypotheses, not tested balance.
 const ArenaData = preload("res://scripts/arena.gd")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
+const Maps = preload("res://scripts/map_catalog.gd")
+const Pose = preload("res://scripts/human_pose.gd")
 const MAX_HUMANS := 5
 const MAX_MOSQUITOES := 12
 const MAX_PLAYERS := 16
@@ -13,7 +15,7 @@ const BITE_PREPARATION := 0.65
 const BLOOD_PER_SECOND := 1.0
 const INPUT_TIMEOUT := 0.40
 const DEFAULT_CONFIG := {
-	"mode": "blood", "human_count": 1, "round_seconds": 120.0, "blood_goal": 30.0,
+	"mode": "blood", "map_id": "house", "human_count": 1, "round_seconds": 120.0, "blood_goal": 30.0,
 	"rotation_seconds": 14.0, "respawn_seconds": 4.0, "mosquito_lives": 3,
 	"task_interval": 24.0, "task_deadline": 18.0, "task_work": 3.0,
 	"task_penalty": 2.0, "task_floor": 8.0, "task_goal": 0,
@@ -25,37 +27,32 @@ const TOOL_STATS := {
 	"newspaper": {"label": "Diario enrollado", "reach": 1.50, "cooldown": 0.43, "radius": 0.18},
 	"broom": {"label": "Escoba", "reach": 2.20, "cooldown": 1.20, "radius": 0.30},
 }
-const PICKUP_SPAWNS := [
-	{"tool": "swatter", "p": Vector3(-2.6, 0.15, 1.7), "yaw": 0.3},
-	{"tool": "racket", "p": Vector3(2.1, 0.15, 2.6), "yaw": -0.5},
-	{"tool": "newspaper", "p": Vector3(-2.0, 0.15, -2.2), "yaw": 0.8},
-	{"tool": "broom", "p": Vector3(3.0, 0.15, -0.2), "yaw": 1.1},
-]
+const PICKUP_SPAWNS = Maps.HOUSE.pickups
 # Front marks are all defendable with starting hands + an aimed body-band swat.
 # Rear marks exist only with multiple humans, and cannot be self-swatted.
 const BODY_ZONES := [
-	{"label": "Frente", "p": Vector3(0, 1.72, -0.24), "rear": false, "band": 0},
-	{"label": "Mejilla izquierda", "p": Vector3(-0.16, 1.54, -0.24), "rear": false, "band": 0},
-	{"label": "Mejilla derecha", "p": Vector3(0.16, 1.54, -0.24), "rear": false, "band": 0},
-	{"label": "Hombro izquierdo", "p": Vector3(-0.33, 1.34, -0.22), "rear": false, "band": 0},
-	{"label": "Hombro derecho", "p": Vector3(0.33, 1.34, -0.22), "rear": false, "band": 0},
-	{"label": "Pecho izquierdo", "p": Vector3(-0.15, 1.18, -0.34), "rear": false, "band": 1},
-	{"label": "Pecho derecho", "p": Vector3(0.15, 1.18, -0.34), "rear": false, "band": 1},
-	{"label": "Antebrazo izquierdo", "p": Vector3(-0.42, 1.03, -0.18), "rear": false, "band": 1},
-	{"label": "Antebrazo derecho", "p": Vector3(0.42, 1.03, -0.18), "rear": false, "band": 1},
-	{"label": "Abdomen izquierdo", "p": Vector3(-0.14, 0.84, -0.32), "rear": false, "band": 1},
-	{"label": "Abdomen derecho", "p": Vector3(0.14, 0.84, -0.32), "rear": false, "band": 1},
-	{"label": "Muslo izquierdo", "p": Vector3(-0.16, 0.59, -0.23), "rear": false, "band": 2},
-	{"label": "Muslo derecho", "p": Vector3(0.16, 0.59, -0.23), "rear": false, "band": 2},
-	{"label": "Rodilla izquierda", "p": Vector3(-0.16, 0.38, -0.23), "rear": false, "band": 2},
-	{"label": "Rodilla derecha", "p": Vector3(0.16, 0.38, -0.23), "rear": false, "band": 2},
-	{"label": "Tobillo", "p": Vector3(0.16, 0.19, -0.24), "rear": false, "band": 2},
-	{"label": "Espalda alta izquierda", "p": Vector3(-0.15, 1.27, 0.32), "rear": true, "band": 0},
-	{"label": "Espalda alta derecha", "p": Vector3(0.15, 1.27, 0.32), "rear": true, "band": 0},
-	{"label": "Espalda media izquierda", "p": Vector3(-0.15, 1.04, 0.32), "rear": true, "band": 1},
-	{"label": "Espalda media derecha", "p": Vector3(0.15, 1.04, 0.32), "rear": true, "band": 1},
-	{"label": "Espalda baja izquierda", "p": Vector3(-0.15, 0.82, 0.32), "rear": true, "band": 1},
-	{"label": "Espalda baja derecha", "p": Vector3(0.15, 0.82, 0.32), "rear": true, "band": 1},
+	{"label": "Frente", "bone": "head", "p": Vector3(0, 1.72, -0.24), "rear": false, "band": 0},
+	{"label": "Mejilla izquierda", "bone": "head", "p": Vector3(-0.16, 1.54, -0.24), "rear": false, "band": 0},
+	{"label": "Mejilla derecha", "bone": "head", "p": Vector3(0.16, 1.54, -0.24), "rear": false, "band": 0},
+	{"label": "Hombro izquierdo", "bone": "shoulder_l", "p": Vector3(-0.33, 1.34, -0.22), "rear": false, "band": 0},
+	{"label": "Hombro derecho", "bone": "shoulder_r", "p": Vector3(0.33, 1.34, -0.22), "rear": false, "band": 0},
+	{"label": "Pecho izquierdo", "bone": "torso", "p": Vector3(-0.15, 1.18, -0.34), "rear": false, "band": 1},
+	{"label": "Pecho derecho", "bone": "torso", "p": Vector3(0.15, 1.18, -0.34), "rear": false, "band": 1},
+	{"label": "Antebrazo izquierdo", "bone": "forearm_l", "p": Vector3(-0.39, 1.03, -0.14), "rear": false, "band": 1},
+	{"label": "Antebrazo derecho", "bone": "forearm_r", "p": Vector3(0.39, 1.03, -0.14), "rear": false, "band": 1},
+	{"label": "Abdomen izquierdo", "bone": "torso", "p": Vector3(-0.14, 0.84, -0.32), "rear": false, "band": 1},
+	{"label": "Abdomen derecho", "bone": "torso", "p": Vector3(0.14, 0.84, -0.32), "rear": false, "band": 1},
+	{"label": "Muslo izquierdo", "bone": "thigh_l", "p": Vector3(-0.16, 0.59, -0.23), "rear": false, "band": 2},
+	{"label": "Muslo derecho", "bone": "thigh_r", "p": Vector3(0.16, 0.59, -0.23), "rear": false, "band": 2},
+	{"label": "Rodilla izquierda", "bone": "knee_l", "p": Vector3(-0.16, 0.38, -0.23), "rear": false, "band": 2},
+	{"label": "Rodilla derecha", "bone": "knee_r", "p": Vector3(0.16, 0.38, -0.23), "rear": false, "band": 2},
+	{"label": "Tobillo", "bone": "ankle_r", "p": Vector3(0.16, 0.19, -0.24), "rear": false, "band": 2},
+	{"label": "Espalda alta izquierda", "bone": "torso", "p": Vector3(-0.15, 1.27, 0.32), "rear": true, "band": 0},
+	{"label": "Espalda alta derecha", "bone": "torso", "p": Vector3(0.15, 1.27, 0.32), "rear": true, "band": 0},
+	{"label": "Espalda media izquierda", "bone": "torso", "p": Vector3(-0.15, 1.04, 0.32), "rear": true, "band": 1},
+	{"label": "Espalda media derecha", "bone": "torso", "p": Vector3(0.15, 1.04, 0.32), "rear": true, "band": 1},
+	{"label": "Espalda baja izquierda", "bone": "torso", "p": Vector3(-0.15, 0.82, 0.32), "rear": true, "band": 1},
+	{"label": "Espalda baja derecha", "bone": "torso", "p": Vector3(0.15, 0.82, 0.32), "rear": true, "band": 1},
 ]
 
 var actors: Dictionary = {}
@@ -73,9 +70,12 @@ var _mosquito_ids: Array[int] = []
 var _pending_actions: Array[Dictionary] = []
 var _frame := 0
 var _assignment_serial := 0
+var _map_data: Dictionary = Maps.get_map("house")
 
 static func sanitize_config(requested: Dictionary) -> Dictionary:
 	var result: Dictionary = DEFAULT_CONFIG.duplicate(true)
+	var requested_map: String = str(requested.get("map_id", "house"))
+	result.map_id = requested_map if Maps.is_playable(requested_map) else "house"
 	if str(requested.get("mode", "blood")) in ["blood", "survival", "sleep"]:
 		result.mode = str(requested.get("mode", "blood"))
 	for key: String in ["human_count", "round_seconds", "blood_goal", "rotation_seconds", "respawn_seconds", "mosquito_lives", "task_interval", "task_deadline", "task_work", "task_penalty", "task_floor", "task_goal"]:
@@ -137,6 +137,7 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 	tasks_done = 0
 	task_goal = 0
 	config = sanitize_config(requested_config)
+	_map_data = Maps.get_map(str(config.map_id))
 	if not reason.is_empty():
 		phase = "lobby"
 		return
@@ -154,9 +155,12 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 		actors[player_id] = {
 			"name": str(player.get("name", "Jugador")).substr(0, 24), "role": player.role,
 			"appearance": CosmeticsData.appearance_for(player.get("cosmetics", {}), str(player.role)).duplicate(true),
-			"p": ArenaData.human_spawn(role_index) if human else ArenaData.mosquito_spawn(role_index),
+			"p": Maps.human_spawn(str(config.map_id), role_index) if human else Maps.mosquito_spawn(str(config.map_id), role_index),
 			"yaw": 0.0, "pitch": 0.0, "state": "human" if human else "flying",
 			"alive": true, "swing": 0.0, "bitten": false, "tool": "hands",
+			"velocity": Vector3.ZERO, "grounded": human, "sprinting": false, "crouching": false,
+			"crouch_amount": 0.0, "motion_phase": 0.0, "motion_speed": 0.0,
+			"_sprint": false, "_crouch": false, "_jump": false, "_jump_held": false,
 			"lives": 0 if human else (int(config.mosquito_lives) if config.mode == "sleep" else 1), "_respawn_at": 0.0,
 			"_move": Vector3.ZERO, "_interact": false, "_last_input": -100.0,
 			"_input_seq": -1, "_action_seq": -1, "_assignment": {}, "_revision": 0,
@@ -169,8 +173,8 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 		# Each mosquito owns a fixed phase offset; no synchronized global rotation.
 		actor._next_rotation = float(config.rotation_seconds) * (1.0 + float(index) / float(_mosquito_ids.size()))
 		_assign(_mosquito_ids[index])
-	for index: int in range(PICKUP_SPAWNS.size()):
-		var pickup: Dictionary = PICKUP_SPAWNS[index].duplicate(true)
+	for index: int in range(_map_data.pickups.size()):
+		var pickup: Dictionary = _map_data.pickups[index].duplicate(true)
 		pickup.holder = 0
 		pickups[index + 1] = pickup
 	var opportunities := 0
@@ -182,7 +186,7 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 			opportunities += 1 + int(floor((last_start - first) / float(config.task_interval)))
 	task_goal = int(ceil(float(opportunities) * 2.0 / 3.0)) if int(config.task_goal) == 0 else mini(int(config.task_goal), opportunities)
 
-func submit_input(id: int, seq: int, move: Vector3, yaw: float, pitch: float, interact: bool) -> void:
+func submit_input(id: int, seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool = false, crouch: bool = false, jump: bool = false) -> void:
 	if phase != "playing" or not actors.has(id) or seq < 0:
 		return
 	var actor: Dictionary = actors[id]
@@ -195,6 +199,9 @@ func submit_input(id: int, seq: int, move: Vector3, yaw: float, pitch: float, in
 	actor.yaw = wrapf(yaw, -PI, PI)
 	actor.pitch = clampf(pitch, -1.48, 1.48)
 	actor._interact = interact and actor.role == "human"
+	actor._sprint = sprint and actor.role == "human"
+	actor._crouch = crouch and actor.role == "human"
+	actor._jump = jump and actor.role == "human"
 	actor._last_input = elapsed
 
 func action(id: int, seq: int, verb: String) -> void:
@@ -233,19 +240,26 @@ func _tick(dt: float) -> void:
 			_respawn(id)
 		if not bool(actor.alive):
 			continue
+		if actor.role == "human":
+			var fresh: bool = elapsed - float(actor._last_input) <= INPUT_TIMEOUT
+			var local_move: Vector3 = actor._move if fresh else Vector3.ZERO
+			ArenaData.step_human(actor, {"move": local_move, "yaw": actor.yaw, "pitch": actor.pitch, "sprint": bool(actor._sprint) and fresh, "crouch": bool(actor._crouch) and fresh, "jump": bool(actor._jump) and fresh}, dt, str(config.map_id))
+	# Human roles are drawn across arbitrary peer IDs. Advance every human before
+	# projecting insects so body contact never depends on roster insertion order.
+	for id: int in _mosquito_ids:
+		var actor: Dictionary = actors[id]
+		if not bool(actor.alive):
+			continue
 		var local_move: Vector3 = actor._move if elapsed - float(actor._last_input) <= INPUT_TIMEOUT else Vector3.ZERO
-		var human: bool = actor.role == "human"
-		if human:
-			local_move.y = 0.0
 		if actor.state == "biting":
 			continue
 		if actor.state == "perched" and local_move.length_squared() > 0.01:
 			actor.state = "flying"
-		var displacement: Vector3 = local_move.rotated(Vector3.UP, float(actor.yaw)) * dt * (ArenaData.HUMAN_SPEED if human else ArenaData.MOSQUITO_SPEED)
+		var displacement: Vector3 = local_move.rotated(Vector3.UP, float(actor.yaw)) * dt * ArenaData.MOSQUITO_SPEED
 		var previous: Vector3 = actor.p
-		actor.p = ArenaData.move_body(previous, displacement, human)
-		if not human:
-			actor.p = _avoid_humans(previous, actor.p)
+		actor.p = ArenaData.move_body(previous, displacement, false, str(config.map_id))
+		actor.p = _avoid_humans(previous, actor.p)
+		actor.velocity = (Vector3(actor.p) - previous) / maxf(dt, 0.000001)
 	_update_attached()
 	var commands: Array[Dictionary] = _pending_actions
 	_pending_actions = []
@@ -302,18 +316,13 @@ func _avoid_humans(previous: Vector3, position: Vector3) -> Vector3:
 	var result: Vector3 = position
 	# Capsule endpoints model torso, head and legs; soft projection lets insects
 	# slide around bodies without treating the entire human as a rectangular wall.
-	var capsules: Array[Dictionary] = [
-		{"from": Vector3(0, 0.97, 0), "to": Vector3(0, 1.19, 0), "radius": 0.24},
-		{"from": Vector3(0, 1.56, 0), "to": Vector3(0, 1.56, 0), "radius": 0.22},
-		{"from": Vector3(-0.14, 0.18, 0), "to": Vector3(-0.14, 0.68, 0), "radius": 0.105},
-		{"from": Vector3(0.14, 0.18, 0), "to": Vector3(0.14, 0.68, 0), "radius": 0.105},
-	]
 	for id: int in _human_ids:
 		var human: Dictionary = actors[id]
-		for capsule: Dictionary in capsules:
+		for capsule: Dictionary in Pose.collision_segments(human):
 			var base: Vector3 = Vector3(human.p) + Vector3(capsule.from).rotated(Vector3.UP, float(human.yaw))
 			var tip: Vector3 = Vector3(human.p) + Vector3(capsule.to).rotated(Vector3.UP, float(human.yaw))
-			var nearest: Vector3 = Vector3(base.x, clampf(result.y, base.y, tip.y), base.z)
+			var segment: Vector3 = tip - base
+			var nearest: Vector3 = base + segment * clampf((result - base).dot(segment) / maxf(segment.length_squared(), 0.000001), 0.0, 1.0)
 			var delta: Vector3 = result - nearest
 			var radius: float = float(capsule.radius) + ArenaData.MOSQUITO_RADIUS
 			if delta.length_squared() < radius * radius:
@@ -322,7 +331,7 @@ func _avoid_humans(previous: Vector3, position: Vector3) -> Vector3:
 					outward = (previous - nearest).normalized()
 				if outward.length_squared() < 0.01:
 					outward = Vector3.FORWARD.rotated(Vector3.UP, float(human.yaw))
-				result = ArenaData.move_body(result, outward * (radius - delta.length() + 0.005), false)
+				result = ArenaData.move_body(result, outward * (radius - delta.length() + 0.005), false, str(config.map_id))
 	return result
 
 func _try_perch(id: int) -> void:
@@ -330,11 +339,11 @@ func _try_perch(id: int) -> void:
 	var position: Vector3 = actor.p
 	var radius: float = ArenaData.MOSQUITO_RADIUS
 	var candidates: Array[Vector3] = [
-		Vector3(position.x, radius, position.z), Vector3(position.x, ArenaData.CEILING - radius, position.z),
-		Vector3(-ArenaData.HALF_X + radius, position.y, position.z), Vector3(ArenaData.HALF_X - radius, position.y, position.z),
-		Vector3(position.x, position.y, -ArenaData.HALF_Z + radius), Vector3(position.x, position.y, ArenaData.HALF_Z - radius),
+		Vector3(position.x, radius, position.z), Vector3(position.x, float(_map_data.ceiling) - radius, position.z),
+		Vector3(-float(_map_data.half_x) + radius, position.y, position.z), Vector3(float(_map_data.half_x) - radius, position.y, position.z),
+		Vector3(position.x, position.y, -float(_map_data.half_z) + radius), Vector3(position.x, position.y, float(_map_data.half_z) - radius),
 	]
-	for obstacle: AABB in ArenaData.OBSTACLES:
+	for obstacle: AABB in _map_data.obstacles:
 		var expanded: AABB = obstacle.grow(radius + 0.005)
 		for axis: int in range(3):
 			for edge: float in [expanded.position[axis], expanded.end[axis]]:
@@ -351,7 +360,7 @@ func _try_perch(id: int) -> void:
 	var found := false
 	for candidate: Vector3 in candidates:
 		var distance: float = position.distance_to(candidate)
-		if distance <= best_distance and ArenaData.clear_segment(position, candidate):
+		if distance <= best_distance and ArenaData.clear_segment(position, candidate, str(config.map_id)):
 			best_distance = distance
 			best = candidate
 			found = true
@@ -359,6 +368,7 @@ func _try_perch(id: int) -> void:
 		actor.p = best
 		actor.state = "perched"
 		actor._move = Vector3.ZERO
+		actor.velocity = Vector3.ZERO
 
 func _assign(id: int) -> void:
 	var actor: Dictionary = actors[id]
@@ -417,11 +427,7 @@ func _zone_pose(assignment: Dictionary) -> Dictionary:
 	if assignment.is_empty() or not actors.has(int(assignment.human)):
 		return {}
 	var human: Dictionary = actors[int(assignment.human)]
-	var zone: Dictionary = BODY_ZONES[int(assignment.zone)]
-	var normal: Vector3 = Vector3.BACK if bool(zone.rear) else Vector3.FORWARD
-	normal = normal.rotated(Vector3.UP, float(human.yaw))
-	var point: Vector3 = human.p + Vector3(zone.p).rotated(Vector3.UP, float(human.yaw))
-	return {"p": point, "normal": normal, "label": zone.label}
+	return Pose.zone_pose(human, BODY_ZONES[int(assignment.zone)])
 
 func _attach(id: int) -> void:
 	var actor: Dictionary = actors[id]
@@ -432,7 +438,7 @@ func _attach(id: int) -> void:
 	var to_mosquito: Vector3 = actor.p - Vector3(pose.p)
 	if to_mosquito.length() > BITE_DISTANCE or to_mosquito.dot(pose.normal) < -0.03:
 		return
-	if not ArenaData.clear_segment(actor.p, pose.p) or _body_occludes(actor.p, pose.p, -1):
+	if not ArenaData.clear_segment(actor.p, pose.p, str(config.map_id)) or _body_occludes(actor.p, pose.p, -1):
 		return
 	actor.state = "biting"
 	actor._bite_started = elapsed
@@ -446,7 +452,7 @@ func _detach(id: int) -> void:
 	actor._forbidden = _zone_key(actor._assignment)
 	actor.state = "flying"
 	if not pose.is_empty():
-		actor.p = ArenaData.move_body(actor.p, Vector3(pose.normal) * 0.24, false)
+		actor.p = ArenaData.move_body(actor.p, Vector3(pose.normal) * 0.24, false, str(config.map_id))
 	_assign(id) # Deliberately never modifies _next_rotation.
 
 func _update_attached() -> void:
@@ -463,7 +469,7 @@ func _attack(id: int, self_only: bool) -> void:
 		return
 	var stats: Dictionary = TOOL_STATS[str(human.tool)]
 	human.swing = float(stats.cooldown)
-	var eye: Vector3 = Vector3(human.p) + Vector3(0, 1.55, 0)
+	var eye: Vector3 = Vector3(human.p) + Vector3(Pose.sample(human).eye).rotated(Vector3.UP, float(human.yaw))
 	var direction: Vector3 = Vector3.FORWARD.rotated(Vector3.RIGHT, float(human.pitch)).rotated(Vector3.UP, float(human.yaw))
 	var band: int = 0 if float(human.pitch) >= -0.25 else (1 if float(human.pitch) >= -0.85 else 2)
 	for mosquito_id: int in _mosquito_ids:
@@ -486,7 +492,7 @@ func _attack(id: int, self_only: bool) -> void:
 		var radial: float = (delta - direction * along).length()
 		if radial > float(stats.radius) + ArenaData.MOSQUITO_RADIUS:
 			continue
-		if not ArenaData.clear_segment(eye, mosquito.p) or _body_occludes(eye, mosquito.p, id):
+		if not ArenaData.clear_segment(eye, mosquito.p, str(config.map_id)) or _body_occludes(eye, mosquito.p, id):
 			continue
 		if attached and not on_self:
 			var pose: Dictionary = _zone_pose(assignment)
@@ -501,10 +507,9 @@ func _body_occludes(from: Vector3, to: Vector3, ignored_human: int) -> bool:
 		var human: Dictionary = actors[id]
 		var start_local: Vector3 = (from - Vector3(human.p)).rotated(Vector3.UP, -float(human.yaw))
 		var end_local: Vector3 = (to - Vector3(human.p)).rotated(Vector3.UP, -float(human.yaw))
-		var torso := AABB(Vector3(-0.25, 0.72, -0.25), Vector3(0.50, 0.68, 0.50))
-		var head := AABB(Vector3(-0.20, 1.38, -0.20), Vector3(0.40, 0.36, 0.40))
-		if torso.intersects_segment(start_local, end_local) != null or head.intersects_segment(start_local, end_local) != null:
-			return true
+		for box: AABB in Pose.body_boxes(human):
+			if box.intersects_segment(start_local, end_local) != null:
+				return true
 	return false
 
 func _kill(id: int) -> void:
@@ -518,12 +523,13 @@ func _kill(id: int) -> void:
 	actor._forbidden = _zone_key(actor._assignment)
 	actor._assignment = {}
 	actor._move = Vector3.ZERO
+	actor.velocity = Vector3.ZERO
 	actor._interact = false
 	# Shared blood is never deducted. Only sleep offers personal limited lives.
 
 func _respawn(id: int) -> void:
 	var actor: Dictionary = actors[id]
-	var candidates: Array[Vector3] = [Vector3(-5.0, 1.8, -4.0), Vector3(5.0, 1.8, -4.0), Vector3(-5.0, 1.8, 4.0), Vector3(5.0, 1.8, 4.0), Vector3(0, 2.0, 4.0), Vector3(0, 2.0, -4.0)]
+	var candidates: Array = _map_data.respawn_points
 	var best_position: Vector3 = candidates[0]
 	var best_distance := -1.0
 	for candidate: Vector3 in candidates:
@@ -538,6 +544,7 @@ func _respawn(id: int) -> void:
 	actor.state = "flying"
 	actor._respawn_at = 0.0
 	actor._move = Vector3.ZERO
+	actor.velocity = Vector3.ZERO
 	actor._interact = false
 	actor._last_input = -100.0
 	_assign(id)
@@ -551,7 +558,7 @@ func _pickup(id: int) -> void:
 		if int(pickup.holder) != 0:
 			continue
 		var distance: float = Vector3(actor.p).distance_to(Vector3(pickup.p))
-		if distance < nearest_distance and ArenaData.clear_segment(Vector3(actor.p) + Vector3.UP * 0.8, pickup.p):
+		if distance < nearest_distance and ArenaData.clear_segment(Vector3(actor.p) + Vector3.UP * 0.8, pickup.p, str(config.map_id)):
 			nearest_distance = distance
 			nearest = pickup_id
 	if nearest < 0:
@@ -567,7 +574,9 @@ func _drop(id: int) -> void:
 		if int(pickup.holder) == id:
 			pickup.holder = 0
 			var forward: Vector3 = Vector3.FORWARD.rotated(Vector3.UP, float(actor.yaw))
-			var landing: Vector3 = ArenaData.move_body(actor.p, forward * 0.55, true)
+			var height: float = lerpf(ArenaData.HUMAN_HEIGHT, ArenaData.HUMAN_CROUCH_HEIGHT, float(actor.crouch_amount))
+			var landing: Vector3 = ArenaData.move_body(actor.p, forward * 0.55, true, str(config.map_id), height)
+			landing.y = ArenaData.floor_below(landing + Vector3.UP * 0.15, str(config.map_id))
 			pickup.p = landing + Vector3.UP * 0.15
 			pickup.yaw = float(actor.yaw)
 	actor.tool = "hands"
@@ -596,8 +605,8 @@ func _update_tasks(dt: float) -> void:
 			while elapsed + 0.000001 >= float(human._next_task):
 				human._next_task = float(human._next_task) + float(config.task_interval)
 			if scheduled + float(config.task_work) <= float(config.round_seconds) and Dictionary(human._task).is_empty():
-				var station_id: int = (int(human._tasks_given) + index) % ArenaData.STATIONS.size()
-				var station: Dictionary = ArenaData.STATIONS[station_id]
+				var station_id: int = (int(human._tasks_given) + index) % _map_data.stations.size()
+				var station: Dictionary = _map_data.stations[station_id]
 				human._task = {
 					"name": station.name, "station": station_id, "p": station.p,
 					"remaining": float(human._deadline), "progress": 0.0, "work": float(config.task_work),
@@ -661,9 +670,12 @@ func public_snapshot() -> Dictionary:
 			"appearance": Dictionary(actor.appearance).duplicate(true),
 			"pitch": actor.pitch, "state": actor.state, "alive": actor.alive,
 			"swing": actor.swing, "bitten": actor.bitten, "tool": actor.tool, "lives": actor.lives,
+			"velocity": actor.velocity, "grounded": actor.grounded, "sprinting": actor.sprinting,
+			"crouching": actor.crouching, "crouch_amount": actor.crouch_amount,
+			"motion_phase": actor.motion_phase, "motion_speed": actor.motion_speed,
 		}
 	return {
-		"phase": phase, "elapsed": elapsed, "time_left": maxf(0.0, float(config.round_seconds) - elapsed),
+		"phase": phase, "map_id": config.map_id, "elapsed": elapsed, "time_left": maxf(0.0, float(config.round_seconds) - elapsed),
 		"config": config.duplicate(true), "blood": blood, "winner": winner, "reason": reason,
 		"tasks_done": tasks_done, "task_goal": task_goal, "actors": public_actors,
 		"pickups": pickups.duplicate(true),

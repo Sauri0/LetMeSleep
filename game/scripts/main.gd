@@ -47,6 +47,11 @@ func _ready() -> void:
 	add_child(client)
 	client.local_server_requested.connect(_start_local_server)
 	get_tree().auto_accept_quit = false
+	if options.has("practice-checks"):
+		var checks: Node = load("res://tests/practice_ui_checks.gd").new()
+		checks.client = client
+		checks.options = options
+		add_child(checks)
 
 func _start_local_server() -> void:
 	var client := get_node("Client")

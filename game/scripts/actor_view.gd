@@ -2,6 +2,7 @@ class_name ActorView
 extends Node3D
 
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
+const Pose = preload("res://scripts/human_pose.gd")
 
 # Original procedural characters. All transforms are cosmetic; the server owns play.
 var actor_role: String = ""
@@ -27,6 +28,22 @@ var appearance_signature: String = ""
 var applied_appearance: Dictionary = {}
 var fallback_color: int = 0
 var preview_only: bool = false
+var body_pose: Dictionary = {}
+var torso_node: Node3D
+var pelvis_mesh: MeshInstance3D
+var limb_meshes: Dictionary = {}
+var limb_hands: Dictionary = {}
+var limb_feet: Dictionary = {}
+var joint_meshes: Dictionary = {}
+var pose_colliders: Dictionary = {}
+var fps_root: Node3D
+var fps_left_arm: Node3D
+var fps_right_arm: Node3D
+var fps_tool_socket: Node3D
+var fps_held_tool: Node3D
+var previous_swing: float = 0.0
+var swing_duration: float = 0.8
+var collar_meshes: Array[MeshInstance3D] = []
 
 func build(role: String, display_name: String, tint_index: int = 0) -> void:
 	actor_role = role
@@ -55,12 +72,19 @@ func set_local(value: bool) -> void:
 	if is_instance_valid(head):
 		head.visible = not value
 	if actor_role == "human" and is_instance_valid(left_arm):
-		left_arm.position.y = 1.37 if value else 1.30
-		right_arm.position.y = 1.37 if value else 1.30
-		left_arm.position.z = -0.07 if value else 0.0
-		right_arm.position.z = -0.07 if value else 0.0
+		left_arm.visible = not value
+		right_arm.visible = not value
+		fps_root.visible = value
+		for collar: MeshInstance3D in collar_meshes:
+			collar.visible = not value
 	if is_instance_valid(name_label):
 		name_label.visible = not value
+
+func update_name_visibility(camera: Camera3D) -> void:
+	if not is_instance_valid(name_label) or preview_only:
+		return
+	var minimum_distance: float = 1.0 if actor_role == "mosquito" else 0.75
+	name_label.visible = visible and not local_view and (not is_instance_valid(camera) or camera.global_position.distance_to(global_position) >= minimum_distance)
 
 func body_collision_rids() -> Array[RID]:
 	var result: Array[RID] = []
@@ -81,23 +105,12 @@ func update_state(data: Dictionary, dt: float) -> void:
 	visible = bool(data.get("alive", true))
 	for body: StaticBody3D in body_shapes:
 		body.collision_layer = 2 if visible and not preview_only else 0
-	var speed: float = global_position.distance_to(last_position) / maxf(dt, 0.001)
 	last_position = global_position
 	if actor_role == "human":
 		var tool: String = str(data.get("tool", "hands"))
 		if tool != current_tool:
 			_equip_tool(tool)
-		var swing: float = float(data.get("swing", 0.0))
-		var swing_amount: float = minf(swing * 6.0, 1.0)
-		var walk: float = sin(clock_time * 8.0) * minf(speed, 2.0) * 0.045
-		var arm_target: float = lerpf(1.45 if local_view else 0.0, 1.9, swing_amount)
-		left_arm.rotation.x = lerpf(left_arm.rotation.x, arm_target + walk, minf(dt * 24.0, 1.0))
-		right_arm.rotation.x = lerpf(right_arm.rotation.x, arm_target - walk, minf(dt * 24.0, 1.0))
-		left_arm.rotation.z = lerpf(left_arm.rotation.z, -swing_amount * 0.52, minf(dt * 24.0, 1.0))
-		right_arm.rotation.z = lerpf(right_arm.rotation.z, swing_amount * 0.52, minf(dt * 24.0, 1.0))
-		model.position.y = absf(sin(clock_time * 4.0)) * minf(speed, 2.0) * 0.009
-		if is_instance_valid(head):
-			head.rotation.x = float(data.get("pitch", 0.0)) * 0.5
+		_apply_human_pose(data, dt)
 	else:
 		var state: String = str(data.get("state", "flying"))
 		var flying: bool = state == "flying"
@@ -116,20 +129,35 @@ func _build_human(tint_index: int) -> void:
 	var trousers: StandardMaterial3D = material(tint.darkened(0.2))
 	primary_tint = shirt
 	secondary_tint = trousers
-	_capsule(model, Vector3(0, 1.09, 0), 0.265, 0.73, shirt, Vector3(1, 1, 0.77))
-	_sphere(model, Vector3(0, 0.73, 0.025), Vector3(0.26, 0.17, 0.20), trousers)
+	torso_node = Node3D.new()
+	model.add_child(torso_node)
+	_capsule(torso_node, Vector3.ZERO, 0.265, 0.68, shirt, Vector3(1, 1, 0.77))
+	pelvis_mesh = _sphere(model, Vector3(0, 0.73, 0.025), Vector3(0.26, 0.17, 0.20), trousers)
 	# Pajama buttons, rounded collar, two trouser legs and soft slippers.
 	for height: float in [1.29, 1.13, 0.97]:
-		_sphere(model, Vector3(0, height, -0.209), Vector3(0.023, 0.023, 0.015), white)
+		collar_meshes.append(_sphere(torso_node, Vector3(0, height - 1.09, -0.209), Vector3(0.023, 0.023, 0.015), white))
 	for side: float in [-1.0, 1.0]:
-		_capsule(model, Vector3(side * 0.135, 0.44, 0.01), 0.115, 0.64, trousers)
-		_sphere(model, Vector3(side * 0.135, 0.09, -0.09), Vector3(0.145, 0.095, 0.245), dark)
-		_sphere(model, Vector3(side * 0.11, 1.37, -0.13), Vector3(0.11, 0.035, 0.085), white)
-	left_arm = _human_arm(-1.0, shirt, skin)
-	right_arm = _human_arm(1.0, shirt, skin)
+		var suffix: String = "l" if side < 0 else "r"
+		limb_meshes["thigh_" + suffix] = _capsule(model, Vector3.ZERO, 0.116, 1.0, trousers)
+		limb_meshes["shin_" + suffix] = _capsule(model, Vector3.ZERO, 0.102, 1.0, trousers)
+		joint_meshes["knee_" + suffix] = _sphere(model, Vector3.ZERO, Vector3.ONE * 0.105, trousers)
+		limb_feet[suffix] = _sphere(model, Vector3.ZERO, Vector3(0.145, 0.095, 0.245), dark)
+		collar_meshes.append(_sphere(torso_node, Vector3(side * 0.11, 0.28, -0.13), Vector3(0.11, 0.035, 0.085), white))
+	left_arm = _build_rig_arm("l", -1.0, shirt, skin)
+	right_arm = _build_rig_arm("r", 1.0, shirt, skin)
 	tool_socket = Node3D.new()
-	tool_socket.position = Vector3(0, -0.44, -0.025)
-	right_arm.add_child(tool_socket)
+	(limb_hands["r"] as Node3D).add_child(tool_socket)
+	fps_root = Node3D.new()
+	fps_root.name = "FirstPersonArms"
+	model.add_child(fps_root)
+	fps_left_arm = _human_arm(-1.0, shirt, skin, fps_root)
+	fps_right_arm = _human_arm(1.0, shirt, skin, fps_root)
+	fps_left_arm.position = Vector3(-0.31, -0.30, -0.24)
+	fps_right_arm.position = Vector3(0.31, -0.30, -0.24)
+	fps_tool_socket = Node3D.new()
+	fps_tool_socket.position = Vector3(0, -0.44, -0.025)
+	fps_right_arm.add_child(fps_tool_socket)
+	fps_root.visible = false
 	head = Node3D.new()
 	head.position.y = 1.55
 	model.add_child(head)
@@ -146,18 +174,110 @@ func _build_human(tint_index: int) -> void:
 	var mouth: MeshInstance3D = _capsule(head, Vector3(0, -0.13, -0.195), 0.012, 0.075, dark)
 	mouth.rotation.z = PI / 2.0
 	_add_body_capsule(Vector3(0, 1.07, 0), 0.235, 0.73)
+	pose_colliders["torso"] = body_shapes.back()
 	_add_body_sphere(Vector3(0, 1.55, 0), 0.22)
-	_add_body_capsule(Vector3(0, 0.50, 0), 0.23, 0.70)
+	pose_colliders["head"] = body_shapes.back()
+	_add_body_sphere(Vector3(0, 0.73, 0), 0.22)
+	pose_colliders["pelvis"] = body_shapes.back()
+	for suffix: String in ["l", "r"]:
+		for part: String in ["thigh", "shin", "upper_arm", "forearm"]:
+			_add_body_capsule(Vector3.ZERO, 0.095 if part in ["thigh", "shin"] else 0.075, 0.4)
+			pose_colliders[part + "_" + suffix] = body_shapes.back()
+	_apply_human_pose({}, 1.0)
 
-func _human_arm(side: float, shirt: StandardMaterial3D, skin: StandardMaterial3D) -> Node3D:
+func _human_arm(side: float, shirt: StandardMaterial3D, skin: StandardMaterial3D, parent: Node3D = null) -> Node3D:
 	var pivot := Node3D.new()
 	pivot.position = Vector3(side * 0.31, 1.30, 0)
-	model.add_child(pivot)
+	(model if parent == null else parent).add_child(pivot)
 	_capsule(pivot, Vector3(0, -0.14, 0), 0.105, 0.32, shirt)
 	_capsule(pivot, Vector3(0, -0.31, -0.006), 0.079, 0.27, skin)
 	_sphere(pivot, Vector3(0, -0.44, -0.025), Vector3(0.088, 0.105, 0.058), skin)
 	_sphere(pivot, Vector3(-side * 0.069, -0.415, -0.035), Vector3(0.037, 0.065, 0.032), skin)
 	return pivot
+
+func _build_rig_arm(suffix: String, side: float, shirt: StandardMaterial3D, skin: StandardMaterial3D) -> Node3D:
+	var group := Node3D.new()
+	group.name = "Arm_" + suffix
+	model.add_child(group)
+	limb_meshes["upper_arm_" + suffix] = _capsule(group, Vector3.ZERO, 0.103, 1.0, shirt)
+	limb_meshes["forearm_" + suffix] = _capsule(group, Vector3.ZERO, 0.078, 1.0, skin)
+	joint_meshes["elbow_" + suffix] = _sphere(group, Vector3.ZERO, Vector3.ONE * 0.079, skin)
+	var hand := Node3D.new()
+	group.add_child(hand)
+	_sphere(hand, Vector3.ZERO, Vector3(0.088, 0.095, 0.058), skin)
+	_sphere(hand, Vector3(-side * 0.069, 0.025, -0.025), Vector3(0.037, 0.062, 0.032), skin)
+	limb_hands[suffix] = hand
+	return group
+
+func _apply_human_pose(data: Dictionary, dt: float) -> void:
+	body_pose = Pose.sample(data)
+	torso_node.position = body_pose.torso
+	torso_node.scale.y = float(body_pose.torso_height) / 0.68
+	pelvis_mesh.position = body_pose.pelvis
+	head.position = body_pose.head
+	head.basis = body_pose.head_basis
+	model.position = Vector3.ZERO
+	if is_instance_valid(name_label):
+		name_label.position.y = Vector3(body_pose.head).y + 0.43
+	for point: String in ["torso", "head", "pelvis"]:
+		if pose_colliders.has(point):
+			(pose_colliders[point] as StaticBody3D).position = body_pose[point]
+	if pose_colliders.has("torso"):
+		var torso_shape: CapsuleShape3D = ((pose_colliders["torso"] as Node3D).get_child(0) as CollisionShape3D).shape
+		torso_shape.height = float(body_pose.torso_height)
+	for suffix: String in ["l", "r"]:
+		var hip: Vector3 = body_pose["hip_" + suffix]
+		var knee: Vector3 = body_pose["knee_" + suffix]
+		var ankle: Vector3 = body_pose["ankle_" + suffix]
+		var shoulder: Vector3 = body_pose["shoulder_" + suffix]
+		var elbow: Vector3 = body_pose["elbow_" + suffix]
+		var hand: Vector3 = body_pose["hand_" + suffix]
+		_pose_segment("thigh_" + suffix, hip, knee)
+		_pose_segment("shin_" + suffix, knee, ankle)
+		_pose_segment("upper_arm_" + suffix, shoulder, elbow)
+		_pose_segment("forearm_" + suffix, elbow, hand)
+		(joint_meshes["knee_" + suffix] as Node3D).position = knee
+		(joint_meshes["elbow_" + suffix] as Node3D).position = elbow
+		(limb_hands[suffix] as Node3D).position = hand
+		(limb_hands[suffix] as Node3D).quaternion = Quaternion(Vector3.DOWN, (hand - elbow).normalized())
+		(limb_feet[suffix] as Node3D).position = ankle + Vector3(0, 0, -0.085)
+		(limb_feet[suffix] as Node3D).rotation.x = 0.0 if bool(data.get("grounded", true)) else 0.22
+	_update_first_person_arms(data, dt)
+
+func _pose_segment(key: String, from: Vector3, to: Vector3) -> void:
+	var direction: Vector3 = to - from
+	var distance: float = maxf(direction.length(), 0.001)
+	var segment: MeshInstance3D = limb_meshes[key]
+	segment.position = (from + to) * 0.5
+	segment.quaternion = Quaternion(Vector3.UP, direction / distance)
+	segment.scale = Vector3(1, distance, 1)
+	if pose_colliders.has(key):
+		var collider: StaticBody3D = pose_colliders[key]
+		collider.position = segment.position
+		collider.quaternion = segment.quaternion
+		var shape: CapsuleShape3D = (collider.get_child(0) as CollisionShape3D).shape
+		shape.height = distance + shape.radius * 2.0
+
+func _update_first_person_arms(data: Dictionary, dt: float) -> void:
+	fps_root.position = body_pose.eye
+	fps_root.rotation.x = float(data.get("pitch", 0.0))
+	var swing: float = float(data.get("swing", 0.0))
+	if swing > previous_swing + 0.04:
+		swing_duration = maxf(swing, 0.12)
+	previous_swing = swing
+	var strike: float = sin(clampf(1.0 - swing / swing_duration, 0.0, 1.0) * PI) if swing > 0.0 else 0.0
+	var speed: float = float(data.get("motion_speed", 0.0))
+	var gait: float = float(data.get("motion_phase", 0.0))
+	var bob: float = sin(gait) * minf(speed, 5.0) * 0.018
+	var blend: float = minf(dt * 24.0, 1.0)
+	# Closing the palms changes their lateral anchor as well as their angle;
+	# rotation alone leaves a large gap when the arms already point forwards.
+	fps_left_arm.position.x = -0.31 + strike * (0.23 if current_tool == "hands" else 0.0)
+	fps_right_arm.position.x = 0.31 - strike * (0.23 if current_tool == "hands" else 0.0)
+	fps_left_arm.rotation.x = lerpf(fps_left_arm.rotation.x, 1.45 + bob + strike * (0.55 if current_tool == "hands" else 0.15), blend)
+	fps_right_arm.rotation.x = lerpf(fps_right_arm.rotation.x, 1.45 - bob + strike * 0.65, blend)
+	fps_left_arm.rotation.z = lerpf(fps_left_arm.rotation.z, strike * (0.18 if current_tool == "hands" else -0.12), blend)
+	fps_right_arm.rotation.z = lerpf(fps_right_arm.rotation.z, strike * (-0.18 if current_tool == "hands" else 0.28), blend)
 
 func _build_mosquito() -> void:
 	var body: StandardMaterial3D = material(Color("294651"))
@@ -270,6 +390,10 @@ func _equip_tool(tool: String) -> void:
 		held_tool.queue_free()
 	held_tool = make_tool(tool)
 	tool_socket.add_child(held_tool)
+	if is_instance_valid(fps_held_tool):
+		fps_held_tool.queue_free()
+	fps_held_tool = make_tool(tool)
+	fps_tool_socket.add_child(fps_held_tool)
 
 static func make_tool(tool: String) -> Node3D:
 	var root := Node3D.new()

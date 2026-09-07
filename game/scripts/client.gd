@@ -4,6 +4,9 @@ signal local_server_requested
 const PreferencesScript = preload("res://scripts/preferences.gd")
 const WorldScript = preload("res://scripts/world.gd")
 const UIScript = preload("res://scripts/ui.gd")
+const PracticeScript = preload("res://scripts/practice_session.gd")
+const MapCatalog = preload("res://scripts/map_catalog.gd")
+const HumanPose = preload("res://scripts/human_pose.gd")
 var network: Node
 var options: Dictionary
 var world: Node3D
@@ -28,6 +31,8 @@ var screenshot_age := 0.0
 var waiting := false
 var walking := false
 var waiting_state: Dictionary = {}
+var practice: Node
+var practice_active := false
 
 func _ready() -> void:
 	PreferencesScript.load_settings()
@@ -53,6 +58,18 @@ func _ready() -> void:
 	arm.add_child(camera)
 	ui = UIScript.new()
 	add_child(ui)
+	practice = PracticeScript.new()
+	add_child(practice)
+	practice.snapshot_updated.connect(_snapshot)
+	practice.private_updated.connect(func(data: Dictionary) -> void:
+		personal = data
+		if playing:
+			ui.show_game(state, personal, local_id))
+	ui.practice_requested.connect(_start_practice)
+	ui.practice_restart_requested.connect(func() -> void:
+		if practice_active:
+			playing = false
+			practice.restart())
 	ui.connect_requested.connect(network.connect_room)
 	ui.local_server_requested.connect(func() -> void: local_server_requested.emit())
 	ui.cosmetics_changed.connect(func(value: Dictionary) -> void:
@@ -82,6 +99,19 @@ func _ready() -> void:
 	ui.show_home()
 	if options.has("visual-preview"):
 		_preview()
+	elif options.has("practice-role"):
+		_start_practice(str(options["practice-role"]), str(options.get("practice-mode", "blood")))
+
+func _start_practice(selected_role: String, mode: String) -> void:
+	network.close_client()
+	practice_active = true
+	playing = false
+	waiting = false
+	walking = false
+	local_id = 1
+	ui.set_practice(true)
+	world.clear_actors()
+	practice.start(selected_role, mode, PreferencesScript.cosmetics, PreferencesScript.player_name)
 
 func _lobby(data: Dictionary) -> void:
 	var entering := not waiting
@@ -94,6 +124,7 @@ func _lobby(data: Dictionary) -> void:
 	if entering:
 		world.end_customization()
 		world.clear_actors()
+		world.load_map("lobby")
 		sequence = 0
 		yaw = 0.0
 		pitch = -0.12
@@ -128,6 +159,7 @@ func _snapshot(data: Dictionary) -> void:
 	role = str(actor.get("role", "human"))
 	if starting:
 		world.clear_actors()
+		world.load_map(str(data.get("config", {}).get("map_id", "house")))
 		yaw = float(actor.get("yaw", 0.0))
 		pitch = 0.0
 		sequence = 0
@@ -167,12 +199,13 @@ func _process(dt: float) -> void:
 	if alive:
 		var visual: Node3D = world.get_actor(local_id)
 		var position: Vector3 = visual.global_position if visual != null else actor.p
-		var offset := Vector3(0, 1.55, 0) if role == "human" else Vector3(0, 0.15, 0)
+		var offset: Vector3 = HumanPose.sample(actor).eye if role == "human" else Vector3(0, 0.15, 0)
 		var camera_origin := position + offset
 		if role == "mosquito":
-			camera_origin.x = clampf(camera_origin.x, -5.84, 5.84)
-			camera_origin.z = clampf(camera_origin.z, -4.84, 4.84)
-			camera_origin.y = clampf(camera_origin.y, 0.16, 2.64)
+			var map: Dictionary = MapCatalog.get_map(str(state.get("config", {}).get("map_id", "house")))
+			camera_origin.x = clampf(camera_origin.x, -float(map.half_x)+0.16, float(map.half_x)-0.16)
+			camera_origin.z = clampf(camera_origin.z, -float(map.half_z)+0.16, float(map.half_z)-0.16)
+			camera_origin.y = clampf(camera_origin.y, 0.16, float(map.ceiling)-0.16)
 		rig.global_position = camera_origin
 		rig.rotation = Vector3(pitch, yaw, 0)
 		arm.spring_length = 0.0 if role == "human" else 0.95
@@ -196,13 +229,21 @@ func _physics_process(dt: float) -> void:
 	input_accumulator = 0.0
 	var move := Vector3.ZERO
 	var interact := false
+	var sprint := false
+	var crouch := false
+	var jump := false
 	if not ui.is_menu_open() and (not waiting or walking):
 		move.x = Input.get_axis("move_left", "move_right")
 		move.z = Input.get_axis("move_forward", "move_back")
 		move.y = Input.get_axis("descend", "ascend")
 		interact = Input.is_action_pressed("interact") and role == "human" and not waiting
+		if waiting or role == "human":
+			sprint = Input.is_action_pressed("sprint")
+			crouch = Input.is_action_pressed("crouch")
+			jump = Input.is_action_pressed("jump")
 	sequence += 1
-	network.send_input(sequence, move, yaw, pitch, interact)
+	var transport: Node = practice if practice_active else network
+	transport.send_input(sequence, move, yaw, pitch, interact, sprint, crouch, jump)
 
 func _on_escape() -> void:
 	if waiting:
@@ -229,20 +270,27 @@ func _unhandled_input(event: InputEvent) -> void:
 			if verb == "bite" and role != "mosquito":
 				continue
 			action_sequence += 1
-			network.send_action(action_sequence, verb)
+			var transport: Node = practice if practice_active else network
+			transport.send_action(action_sequence, verb)
 			break
 
 func _leave() -> void:
+	practice.stop()
+	practice_active = false
+	ui.set_practice(false)
 	network.close_client()
 	_disconnected()
 	ui.show_home()
 
 func _disconnected() -> void:
+	if practice_active:
+		return
 	playing = false
 	waiting = false
 	walking = false
 	world.visible = true
 	world.clear_actors()
+	world.load_map("lobby")
 	world.menu_camera.make_current()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	ui.show_home()
@@ -292,6 +340,7 @@ func _capture() -> void:
 	print("SCREENSHOT %s code=%d" % [path, result])
 	playing = false
 	waiting = false
+	practice.stop()
 	world.clear_actors()
 	await get_tree().process_frame
 	await get_tree().process_frame

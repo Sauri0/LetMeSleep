@@ -27,6 +27,7 @@ var lobby_origin := Vector3.INF
 var waiting_state: Dictionary = {}
 var authority_probe_sent := false
 const Cosmetics = preload("res://scripts/cosmetics.gd")
+const Invite = preload("res://scripts/invitation.gd")
 
 func _ready() -> void:
 	network.local_cosmetics = Cosmetics.sanitize({"human":{"color": 3, "accessory": 1}, "mosquito":{"color": 4, "accessory": 2}})
@@ -34,10 +35,19 @@ func _ready() -> void:
 	report["results"] = []
 	report["lobby_movement_seen"] = false
 	report["cosmetics_synced"] = false
+	report["lobby_jump_seen"] = false
+	report["lobby_crouch_seen"] = false
+	report["lobby_sprint_seen"] = false
 	network.waiting_updated.connect(func(data: Dictionary) -> void:
 		waiting_state = data
 		var me: Dictionary = data.get("actors", {}).get(local_id, {})
 		if not me.is_empty():
+			if float(me.p.y) > 0.15:
+				report.lobby_jump_seen = true
+			if float(me.get("crouch_amount",0.0)) > 0.5:
+				report.lobby_crouch_seen = true
+			if bool(me.get("sprinting",false)):
+				report.lobby_sprint_seen = true
 			if lobby_origin == Vector3.INF:
 				lobby_origin = me.p
 			elif lobby_origin.distance_to(me.p) > 0.3:
@@ -60,9 +70,24 @@ func _ready() -> void:
 		network.multiplayer.connected_to_server.disconnect(network._connected)
 		network.multiplayer.connected_to_server.connect(func() -> void:
 			network._request_join.rpc_id(1, "0.0.invalid", -99, "OldClient", "", true, ""))
-	network.connect_room(str(options.get("address", "127.0.0.1")), int(options.get("port", "27840")), str(options.get("name", "Bot")), str(options.get("code", "")), create)
+	var address := str(options.get("address", "127.0.0.1"))
+	var port := int(options.get("port", "27840"))
+	var room := str(options.get("code", ""))
+	if options.has("invitation"):
+		var decoded: Dictionary = Invite.decode(str(options.invitation))
+		if not bool(decoded.ok):
+			report.errors.append(decoded.error)
+			_finish()
+			return
+		address = decoded.host
+		port = decoded.port
+		room = decoded.room
+		report["invitation_decoded"] = true
+	network.connect_room(address,port,str(options.get("name", "Bot")),room,create)
 
 func _lobby(data: Dictionary) -> void:
+	if roster.is_empty():
+		lobby_age = 0.0
 	roster = data
 	if started:
 		report["returned_to_lobby"] = true
@@ -95,7 +120,7 @@ func _lobby(data: Dictionary) -> void:
 		var code_file := str(options.get("code-file", ""))
 		if not code_file.is_empty():
 			var file := FileAccess.open(code_file, FileAccess.WRITE)
-			file.store_string(data.code)
+			file.store_string(Invite.encode(str(options["shared-host"]),int(options.get("port","27840")),data.code) if options.has("shared-host") else str(data.code))
 		return
 	var me: Dictionary = data.players.get(local_id, {})
 	if not authority_probe_sent and lobby_age > 0.4:
@@ -186,7 +211,7 @@ func _process(dt: float) -> void:
 		lobby_age += dt
 		if not started and not roster.is_empty():
 			input_seq += 1
-			network.send_input(input_seq, Vector3(0.0, 0, 0.5) if lobby_age < 1.5 else Vector3.ZERO, 0.0, 0.0, false)
+			network.send_input(input_seq, Vector3(0.0, 0, 0.5) if lobby_age < 1.5 else Vector3.ZERO, 0.0, 0.0, false, lobby_age < 0.9, lobby_age > 1.0 and lobby_age < 1.6, lobby_age > 0.2 and lobby_age < 0.4)
 		lobby_retry += dt
 		if not started and not roster.is_empty() and lobby_retry > 0.75:
 			lobby_retry = 0.0

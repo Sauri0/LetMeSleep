@@ -14,6 +14,7 @@ func _run() -> void:
 	var world: Node3D = load("res://scripts/world.gd").new()
 	root.add_child(world)
 	world.build()
+	world.load_map("house")
 	var fx: Node3D = world.audio_fx
 	fx.set_process(false)
 	var streams: Dictionary = load("res://scripts/audio_fx.gd").streams
@@ -91,4 +92,5 @@ func _run() -> void:
 	await process_frame
 	check(fx.buzzes.is_empty() and fx.get_child_count() == 12, "clear removes swarm nodes and retains only reusable pool")
 	print("AUDIO_CHECK_RESULT failures=%d bytes=%d" % [failures,total_bytes])
+	await create_timer(0.12).timeout
 	quit(failures)

@@ -12,8 +12,8 @@ const Simulation = preload("res://scripts/simulation.gd")
 const LobbyRules = preload("res://scripts/lobby_rules.gd")
 const Cosmetics = preload("res://scripts/cosmetics.gd")
 const Map = preload("res://scripts/arena.gd")
-const VERSION := "0.2.0"
-const PROTOCOL := 2
+const VERSION := "0.3.0"
+const PROTOCOL := 3
 const DEFAULT_PORT := 27840
 const MAX_PLAYERS := 16
 var is_server := false
@@ -156,7 +156,7 @@ func _request_join(version: String, protocol: int, player_name: String, code: St
 		_reject.rpc_id(sender, "Demasiados intentos. Reconectá y revisá el código.")
 		return
 	if version != VERSION or protocol != PROTOCOL:
-		_reject.rpc_id(sender, "Versión incompatible. Todos necesitan Dejame dormir %s (protocolo %d)." % [VERSION, PROTOCOL])
+		_reject.rpc_id(sender, "Versión incompatible. Todos necesitan Let me sleep %s (protocolo %d)." % [VERSION, PROTOCOL])
 		return
 	if sim != null:
 		_reject.rpc_id(sender, "El grupo está jugando o viendo resultados. Esperá a que el anfitrión pulse Volver a sala.")
@@ -312,33 +312,38 @@ func _notify_all(message: String) -> void:
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _receive_lobby(data: Dictionary) -> void:
+	# Reliable lobby updates may trail a newer round snapshot on another channel.
+	# A real return to the lobby carries the current round tick as its barrier.
+	var barrier := int(data.get("barrier_tick", -1))
+	if str(latest.get("phase", "")) in ["playing", "results"] and barrier < last_received_tick:
+		return
 	latest.clear()
 	private_latest.clear()
-	last_received_tick = int(data.get("barrier_tick", -1)) + 1
+	last_received_tick = barrier + 1
 	lobby_updated.emit(data)
 
-func send_input(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool) -> void:
+func send_input(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool=false, crouch: bool=false, jump: bool=false) -> void:
 	if _client_connected():
-		_request_movement.rpc_id(1, seq, move, yaw, pitch, interact)
+		_request_movement.rpc_id(1, seq, move, yaw, pitch, interact, sprint, crouch, jump)
 
 func send_action(seq: int, verb: String) -> void:
 	if _client_connected():
 		_action.rpc_id(1, seq, verb)
 
 @rpc("any_peer", "call_remote", "unreliable_ordered", 1)
-func _request_movement(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool) -> void:
+func _request_movement(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool=false, crouch: bool=false, jump: bool=false) -> void:
 	if is_server and sim == null:
 		var sender := multiplayer.get_remote_sender_id()
 		if not players.has(sender) or not move.is_finite() or not is_finite(yaw) or not is_finite(pitch):
 			return
 		if seq <= int(waiting_inputs.get(sender, {}).get("seq", -1)):
 			return
-		waiting_inputs[sender] = {"seq": seq, "move": Vector3(move.x, 0, move.z).limit_length(1.0), "yaw": wrapf(yaw, -PI, PI), "time": Time.get_ticks_msec()}
+		waiting_inputs[sender] = {"seq": seq, "move": Vector3(move.x, 0, move.z).limit_length(1.0), "yaw": wrapf(yaw, -PI, PI), "pitch":clampf(pitch,-1.4,1.3), "sprint":sprint, "crouch":crouch, "jump":jump, "time": Time.get_ticks_msec()}
 		return
 	if is_server and sim != null:
 		var sender := multiplayer.get_remote_sender_id()
 		if players.has(sender):
-			sim.submit_input(sender, seq, move, yaw, pitch, interact)
+			sim.submit_input(sender, seq, move, yaw, pitch, interact, sprint, crouch, jump)
 
 @rpc("any_peer", "call_remote", "reliable", 0)
 func _action(seq: int, verb: String) -> void:
@@ -370,7 +375,7 @@ func _physics_process(dt: float) -> void:
 
 func _spawn_waiting(id: int) -> void:
 	var index := players.keys().find(id)
-	var position := Vector3(-2.0 + float(index % 4) * 1.4, 0, -2.0 + float(index / 4) * 1.35)
+	var position: Vector3 = Map.human_spawn(index,"lobby")
 	waiting_actors[id] = {"name": players[id].name, "role": "human", "p": position, "yaw": 0.0, "pitch": 0.0, "state": "human", "alive": true, "swing": 0.0, "bitten": false, "tool": "hands", "appearance": Cosmetics.appearance_for(players[id].cosmetics, "human")}
 
 func _reset_waiting() -> void:
@@ -382,11 +387,10 @@ func _reset_waiting() -> void:
 func _step_waiting(dt: float) -> void:
 	for id: int in waiting_actors:
 		var intent: Dictionary = waiting_inputs.get(id, {})
-		if intent.is_empty() or Time.get_ticks_msec() - int(intent.time) > 400:
-			continue
 		var actor: Dictionary = waiting_actors[id]
-		actor.yaw = intent.yaw
-		actor.p = Map.move_body(actor.p, Vector3(intent.move).rotated(Vector3.UP, float(intent.yaw)) * Map.HUMAN_SPEED * dt, true)
+		if intent.is_empty() or Time.get_ticks_msec() - int(intent.time) > 400:
+			intent = {"move":Vector3.ZERO,"yaw":actor.yaw,"pitch":actor.pitch,"sprint":false,"crouch":false,"jump":false}
+		Map.step_human(actor,intent,dt,"lobby")
 
 func _publish_waiting() -> void:
 	if players.is_empty():

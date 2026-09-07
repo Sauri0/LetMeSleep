@@ -3,6 +3,7 @@ extends Node3D
 const ActorModel = preload("res://scripts/actor_view.gd")
 const Map = preload("res://scripts/arena.gd")
 const AudioEffects = preload("res://scripts/audio_fx.gd")
+const Maps = preload("res://scripts/map_catalog.gd")
 
 var menu_camera: Camera3D
 var actors: Dictionary = {}
@@ -29,6 +30,9 @@ var customization_appearance: Dictionary = {}
 var saved_menu_transform: Transform3D
 var saved_menu_fov: float = 74.0
 var customization_age: float = 0.0
+var map_root: Node3D
+var current_map: String = ""
+var map_data: Dictionary = {}
 
 func build() -> void:
 	if built:
@@ -40,28 +44,77 @@ func build() -> void:
 	coral = ActorModel.material(Color("d98069"))
 	ink = ActorModel.material(Color("233e4c"))
 	gold = ActorModel.material(Color("e8be68"))
-	_build_lighting()
-	_build_shell()
-	_build_sofa()
-	_build_tables()
-	_build_window()
-	_build_fan()
-	_build_decor()
+	_build_environment()
 	_build_marker()
 	audio_fx = AudioEffects.new()
 	add_child(audio_fx)
 	audio_fx.setup()
 	menu_camera = Camera3D.new()
-	menu_camera.position = Vector3(4.6, 2.35, 4.0)
 	menu_camera.fov = 74.0
 	menu_camera.near = 0.05
 	add_child(menu_camera)
-	menu_camera.look_at(Vector3(-1.0, 0.85, -1.25))
+	load_map("lobby")
 	menu_camera.current = true
 	saved_menu_transform = menu_camera.transform
 
+func load_map(id: String) -> void:
+	if not built:
+		build()
+	if id == current_map and is_instance_valid(map_root):
+		return
+	var requested: Dictionary = Maps.get_map(id)
+	if requested.is_empty():
+		return
+	end_customization()
+	if is_instance_valid(map_root):
+		# Remove from the scene tree first: old colliders cannot survive until the
+		# deferred deletion and obstruct a new map for one extra physics frame.
+		remove_child(map_root)
+		map_root.queue_free()
+	fan_blades = null
+	map_data = requested
+	current_map = str(map_data.get("id", "lobby"))
+	map_root = Node3D.new()
+	map_root.name = "Map_" + current_map
+	add_child(map_root)
+	_build_map_colliders()
+	_build_lighting()
+	if current_map == "house":
+		_build_shell()
+		_build_sofa()
+		_build_tables()
+		_build_window()
+		_build_fan()
+		_build_decor()
+		menu_camera.position = Vector3(4.6, 2.35, 4.0)
+		menu_camera.look_at(Vector3(-1.0, 0.85, -1.25))
+	else:
+		_build_lobby()
+		menu_camera.position = Vector3(3.25, 2.65, 2.45)
+		menu_camera.look_at(Vector3(-0.1, 1.0, -0.65))
+	menu_camera.fov = 74.0
+	saved_menu_transform = menu_camera.transform
+	saved_menu_fov = menu_camera.fov
+	if is_instance_valid(marker):
+		marker.visible = false
+
+func _build_map_colliders() -> void:
+	var half_x: float = float(map_data.get("half_x", 4.0))
+	var half_z: float = float(map_data.get("half_z", 3.0))
+	var ceiling: float = float(map_data.get("ceiling", 4.0))
+	_collider(Vector3(0, -0.10, 0), Vector3(half_x * 2 + 0.3, 0.2, half_z * 2 + 0.3))
+	_collider(Vector3(0, ceiling + 0.1, 0), Vector3(half_x * 2 + 0.3, 0.2, half_z * 2 + 0.3))
+	for side: float in [-1.0, 1.0]:
+		_collider(Vector3(side * (half_x + 0.08), ceiling * 0.5, 0), Vector3(0.16, ceiling, half_z * 2 + 0.3))
+		_collider(Vector3(0, ceiling * 0.5, side * (half_z + 0.08)), Vector3(half_x * 2 + 0.3, ceiling, 0.16))
+	for obstacle: AABB in map_data.get("obstacles", []):
+		_collider(obstacle.get_center(), obstacle.size)
+
 func _process(dt: float) -> void:
 	clock_time += dt
+	var active_camera: Camera3D = get_viewport().get_camera_3d()
+	for actor: Variant in actors.values():
+		(actor as ActorView).update_name_visibility(active_camera)
 	if is_instance_valid(customization_actor):
 		customization_age += dt
 		_update_customization(dt)
@@ -273,7 +326,7 @@ func _occluded(from: Vector3, to: Vector3, exclude: Array[RID]) -> bool:
 func play_event(_verb: String) -> void:
 	pass
 
-func _build_lighting() -> void:
+func _build_environment() -> void:
 	var environment_node := WorldEnvironment.new()
 	var environment := Environment.new()
 	environment.background_mode = Environment.BG_COLOR
@@ -284,42 +337,38 @@ func _build_lighting() -> void:
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	environment_node.environment = environment
 	add_child(environment_node)
+
+func _build_lighting() -> void:
 	var moon := DirectionalLight3D.new()
 	moon.rotation_degrees = Vector3(-44, -24, 0)
 	moon.light_color = Color("c9dfed")
-	moon.light_energy = 0.8
+	moon.light_energy = 0.8 if current_map == "house" else 0.35
 	moon.shadow_enabled = true
 	moon.directional_shadow_max_distance = 20.0
-	add_child(moon)
+	map_root.add_child(moon)
 	var lamp := OmniLight3D.new()
-	lamp.position = Vector3(-3.1, 2.25, 1.0)
+	lamp.position = Vector3(-3.1, 2.25, 1.0) if current_map == "house" else Vector3(0, 3.0, -1.8)
 	lamp.light_color = Color("ffd895")
-	lamp.light_energy = 1.7
+	lamp.light_energy = 1.7 if current_map == "house" else 0.65
 	lamp.omni_range = 7.5
 	lamp.shadow_enabled = false
-	add_child(lamp)
+	map_root.add_child(lamp)
 	var counter_light := OmniLight3D.new()
-	counter_light.position = Vector3(3.2, 2.3, -2.2)
+	counter_light.position = Vector3(3.2, 2.3, -2.2) if current_map == "house" else Vector3(-2.8, 2.5, 1.2)
 	counter_light.light_color = Color("ffe6af")
-	counter_light.light_energy = 1.0
+	counter_light.light_energy = 1.0 if current_map == "house" else 0.35
 	counter_light.omni_range = 5.5
 	counter_light.shadow_enabled = false
-	add_child(counter_light)
+	map_root.add_child(counter_light)
 
 func _build_shell() -> void:
 	_box(self, Vector3(0, -0.10, 0), Vector3(12.3, 0.2, 10.3), wood)
-	_collider(Vector3(0, -0.10, 0), Vector3(12.3, 0.2, 10.3))
 	var wall_mat: StandardMaterial3D = ActorModel.material(Color("cfdbc9"))
 	_box(self, Vector3(0, 1.4, -5.08), Vector3(12.2, 2.8, 0.16), wall_mat)
 	_box(self, Vector3(0, 1.4, 5.08), Vector3(12.2, 2.8, 0.16), wall_mat)
 	_box(self, Vector3(-6.08, 1.4, 0), Vector3(0.16, 2.8, 10.2), wall_mat)
 	_box(self, Vector3(6.08, 1.4, 0), Vector3(0.16, 2.8, 10.2), wall_mat)
-	_collider(Vector3(0, 1.4, -5.08), Vector3(12.2, 2.8, 0.16))
-	_collider(Vector3(0, 1.4, 5.08), Vector3(12.2, 2.8, 0.16))
-	_collider(Vector3(-6.08, 1.4, 0), Vector3(0.16, 2.8, 10.2))
-	_collider(Vector3(6.08, 1.4, 0), Vector3(0.16, 2.8, 10.2))
 	_box(self, Vector3(0, 2.90, 0), Vector3(12.2, 0.2, 10.2), cream)
-	_collider(Vector3(0, 2.90, 0), Vector3(12.2, 0.2, 10.2))
 	for z: float in [-4.965, 4.965]:
 		_box(self, Vector3(0, 0.08, z), Vector3(12, 0.16, 0.055), cream)
 		_box(self, Vector3(0, 2.69, z), Vector3(12, 0.12, 0.08), cream)
@@ -329,8 +378,6 @@ func _build_shell() -> void:
 	var seam_mat: StandardMaterial3D = ActorModel.material(Color("a76f4f"))
 	for x: int in range(-11, 12):
 		_box(self, Vector3(float(x) * 0.5, 0.002, 0), Vector3(0.012, 0.005, 10), seam_mat)
-	for obstacle: AABB in Map.OBSTACLES:
-		_collider(obstacle.get_center(), obstacle.size)
 	var rug_mat: StandardMaterial3D = ActorModel.material(Color("dfb77e"))
 	var rug: MeshInstance3D = _disc(self, Vector3(-2.8, 0.014, 0.1), 1.4, 0.022, teal)
 	rug.scale = Vector3(1.45, 1, 1.15)
@@ -414,7 +461,7 @@ func _build_fan() -> void:
 	var fan_root := Node3D.new()
 	fan_root.position = Vector3(5.66, 1.76, -0.6)
 	fan_root.rotation.y = -PI / 2.0
-	add_child(fan_root)
+	map_root.add_child(fan_root)
 	_box(fan_root, Vector3(0, -0.16, -0.04), Vector3(0.10, 0.49, 0.12), teal)
 	_sphere(fan_root, Vector3(0, 0, -0.11), Vector3(0.18, 0.18, 0.15), teal)
 	fan_blades = Node3D.new()
@@ -459,13 +506,12 @@ func _build_decor() -> void:
 	# Wall lights and a ceiling shade are rounded, lightweight meshes.
 	_disc(self, Vector3(0, 2.775, 0.6), 0.28, 0.05, gold)
 	_cone(self, Vector3(0, 2.59, 0.6), 0.14, 0.37, 0.32, cream)
-	_label(self, "DEJAME DORMIR", Vector3(-2.0, 2.15, 4.925), 0.006, Color("294851")).rotation.y = PI
-	_label(self, "UNA NOCHE. MUCHOS ZUMBIDOS.", Vector3(-2.0, 1.83, 4.925), 0.0025, Color("294851")).rotation.y = PI
+	_label(self, "LET ME SLEEP", Vector3(-2.0, 2.15, 4.925), 0.006, Color("294851")).rotation.y = PI
 
 func _plant(at: Vector3, height: float) -> void:
 	var root := Node3D.new()
 	root.position = at
-	add_child(root)
+	map_root.add_child(root)
 	_cone(root, Vector3(0, height * 0.18, 0), height * 0.23, height * 0.17, height * 0.36, coral)
 	var green: StandardMaterial3D = ActorModel.material(Color("4c7962"))
 	for i: int in range(7):
@@ -474,6 +520,81 @@ func _plant(at: Vector3, height: float) -> void:
 		_segment(root, Vector3(0, height * 0.3, 0), tip, 0.013, green)
 		var leaf: MeshInstance3D = _sphere(root, tip, Vector3(height * 0.14, height * 0.29, height * 0.05), green)
 		leaf.rotation = Vector3(0.35, angle, sin(angle) * 0.5)
+
+func _build_lobby() -> void:
+	# A separate outdoor waiting place: tiled courtyard, benches and the closed
+	# front door. Its walkable dimensions/colliders come from MapCatalog.
+	var facade: StandardMaterial3D = ActorModel.material(Color("568e92"))
+	var grout: StandardMaterial3D = ActorModel.material(Color("334b52"))
+	var tile_a: StandardMaterial3D = ActorModel.material(Color("d2c3a5"))
+	var tile_b: StandardMaterial3D = ActorModel.material(Color("b1bbb0"))
+	_box(self, Vector3(0, -0.10, 0), Vector3(8.3, 0.2, 6.3), grout)
+	for x: int in range(8):
+		for z: int in range(6):
+			_box(self, Vector3(-3.5 + x, 0.005, -2.5 + z), Vector3(0.965, 0.015, 0.965), tile_a if (x + z) % 2 == 0 else tile_b)
+	_box(self, Vector3(0, 2.0, -3.085), Vector3(8.2, 4.0, 0.17), facade)
+	_box(self, Vector3(0, 0.11, -2.95), Vector3(8, 0.22, 0.10), ink)
+	_box(self, Vector3(0, 3.65, -2.94), Vector3(8.1, 0.20, 0.14), cream)
+	# Big double door, rounded brass handles and an illustrated house number.
+	_box(self, Vector3(0, 1.30, -2.969), Vector3(2.05, 2.6, 0.028), ink)
+	for side: float in [-1.0, 1.0]:
+		_box(self, Vector3(side * 0.48, 1.29, -2.93), Vector3(0.91, 2.45, 0.075), coral)
+		_box(self, Vector3(side * 0.48, 1.73, -2.875), Vector3(0.67, 1.06, 0.035), wood)
+		_box(self, Vector3(side * 0.48, 0.56, -2.875), Vector3(0.67, 0.59, 0.035), wood)
+		_segment(self, Vector3(side * 0.18, 1.08, -2.82), Vector3(side * 0.18, 1.35, -2.82), 0.034, gold)
+		_box(self, Vector3(side * 1.10, 1.35, -2.88), Vector3(0.13, 2.70, 0.20), cream)
+	_box(self, Vector3(0, 2.69, -2.87), Vector3(2.34, 0.14, 0.20), cream)
+	_label(self, "LET ME SLEEP", Vector3(0, 3.12, -2.90), 0.007, Color("fff0cf"))
+	_label(self, "TODOS LISTOS, ENTRAMOS", Vector3(0, 2.89, -2.89), 0.0028, Color("fff0cf"))
+	# The awning silhouettes the entrance without adding a walkable obstacle.
+	for index: int in range(8):
+		_box(self, Vector3(-1.47 + index * 0.42, 3.47, -2.58), Vector3(0.42, 0.11, 0.78), cream if index % 2 == 0 else coral)
+		_sphere(self, Vector3(-1.47 + index * 0.42, 3.38, -2.19), Vector3(0.21, 0.14, 0.055), cream if index % 2 == 0 else coral)
+	var glass: StandardMaterial3D = ActorModel.material(Color("e5c885"))
+	glass.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	for side: float in [-1.0, 1.0]:
+		_box(self, Vector3(side * 2.70, 1.92, -2.966), Vector3(1.23, 1.18, 0.025), ink)
+		_box(self, Vector3(side * 2.70, 1.92, -2.944), Vector3(1.05, 1.00, 0.025), glass)
+		_box(self, Vector3(side * 2.70, 1.92, -2.910), Vector3(0.055, 1.05, 0.035), cream)
+		_box(self, Vector3(side * 2.70, 1.92, -2.910), Vector3(1.07, 0.055, 0.035), cream)
+		_box(self, Vector3(side * 2.70, 1.31, -2.80), Vector3(1.37, 0.10, 0.30), wood)
+	# Benches exactly fit the catalog obstacles; no extra backrest blocks jumping.
+	for obstacle: AABB in map_data.get("obstacles", []):
+		var center: Vector3 = obstacle.get_center()
+		for strip: int in range(3):
+			_box(self, Vector3(obstacle.position.x + obstacle.size.x * (float(strip) + 0.5) / 3.0, obstacle.end.y - 0.045, center.z), Vector3(obstacle.size.x / 3.0 - 0.012, 0.09, obstacle.size.z), wood)
+		for side: float in [-1.0, 1.0]:
+			_box(self, Vector3(center.x, obstacle.position.y + obstacle.size.y * 0.43, center.z + side * obstacle.size.z * 0.35), Vector3(obstacle.size.x * 0.70, obstacle.size.y * 0.86, 0.075), ink)
+	# Courtyard fences make a clear visual boundary; the catalog defines the
+	# full arena edge for both server movement and the third-person camera.
+	for side: float in [-1.0, 1.0]:
+		_box(self, Vector3(side * 4.04, 0.63, 0), Vector3(0.16, 1.26, 6.16), facade)
+		_box(self, Vector3(side * 3.97, 1.30, 0), Vector3(0.18, 0.12, 6.16), cream)
+		for z: float in [-2.8, 0.0, 2.8]:
+			_box(self, Vector3(side * 3.94, 1.04, z), Vector3(0.17, 2.08, 0.17), ink)
+			_sphere(self, Vector3(side * 3.94, 2.10, z), Vector3.ONE * 0.12, gold)
+	_box(self, Vector3(0, 0.48, 3.04), Vector3(8.1, 0.96, 0.16), facade)
+	_box(self, Vector3(0, 1.56, 3.03), Vector3(8.0, 0.07, 0.09), cream)
+	for x: int in range(19):
+		_box(self, Vector3(-3.78 + float(x) * 0.42, 1.24, 3.02), Vector3(0.035, 0.65, 0.045), ink)
+	# Small skyline and moon belong to this original porch scene only.
+	var night: StandardMaterial3D = ActorModel.material(Color("263f53"))
+	for index: int in range(9):
+		var height: float = 2.4 + float(index % 3) * 0.70
+		_box(self, Vector3(-9.0 + index * 2.2, height * 0.5 - 0.8, 8.8), Vector3(1.9, height, 1.2), night)
+		for window: int in range(3):
+			_box(self, Vector3(-9.55 + index * 2.2 + float(window) * 0.55, height * 0.60 - 0.8, 8.185), Vector3(0.18, 0.28, 0.012), glass)
+	_sphere(self, Vector3(-5.0, 6.8, 7.0), Vector3.ONE * 0.67, glass)
+	for index: int in range(15):
+		_sphere(self, Vector3(-9.0 + float(index) * 1.31, 5.5 + float(index % 4) * 0.74, 9.0), Vector3.ONE * 0.026, glass)
+	var previous_point := Vector3(-3.8, 3.35, -2.2)
+	for index: int in range(1, 13):
+		var fraction: float = float(index) / 12.0
+		var point: Vector3 = Vector3(-3.8, 3.35, -2.2).lerp(Vector3(3.8, 3.45, 2.6), fraction)
+		point.y -= sin(fraction * PI) * 0.46
+		_segment(self, previous_point, point, 0.012, ink)
+		_sphere(self, point - Vector3(0, 0.09, 0), Vector3(0.055, 0.075, 0.055), glass)
+		previous_point = point
 
 func _build_marker() -> void:
 	marker = Node3D.new()
@@ -495,7 +616,7 @@ func _collider(at: Vector3, size: Vector3) -> void:
 	body.position = at
 	body.collision_layer = 1
 	body.collision_mask = 0
-	add_child(body)
+	map_root.add_child(body)
 	var shape := BoxShape3D.new()
 	shape.size = size
 	var collision := CollisionShape3D.new()
@@ -513,20 +634,20 @@ func _label(parent: Node3D, text_value: String, at: Vector3, pixel: float, color
 	result.outline_size = 4 if billboard else 0
 	result.billboard = BaseMaterial3D.BILLBOARD_ENABLED if billboard else BaseMaterial3D.BILLBOARD_DISABLED
 	result.no_depth_test = false
-	parent.add_child(result)
+	_map_parent(parent).add_child(result)
 	return result
 
 func _box(parent: Node3D, at: Vector3, size: Vector3, mat: Material) -> MeshInstance3D:
-	return ActorModel._box(parent, at, size, mat)
+	return ActorModel._box(_map_parent(parent), at, size, mat)
 
 func _sphere(parent: Node3D, at: Vector3, size: Vector3, mat: Material) -> MeshInstance3D:
-	return ActorModel._sphere(parent, at, size, mat)
+	return ActorModel._sphere(_map_parent(parent), at, size, mat)
 
 func _capsule(parent: Node3D, at: Vector3, radius: float, height: float, mat: Material) -> MeshInstance3D:
-	return ActorModel._capsule(parent, at, radius, height, mat)
+	return ActorModel._capsule(_map_parent(parent), at, radius, height, mat)
 
 func _segment(parent: Node3D, from: Vector3, to: Vector3, radius: float, mat: Material) -> MeshInstance3D:
-	return ActorModel._segment(parent, from, to, radius, mat)
+	return ActorModel._segment(_map_parent(parent), from, to, radius, mat)
 
 func _disc(parent: Node3D, at: Vector3, radius: float, height: float, mat: Material) -> MeshInstance3D:
 	return _cone(parent, at, radius, radius, height, mat)
@@ -537,4 +658,7 @@ func _cone(parent: Node3D, at: Vector3, top: float, bottom: float, height: float
 	geometry.bottom_radius = bottom
 	geometry.height = height
 	geometry.radial_segments = 20
-	return ActorModel.mesh(parent, geometry, at, mat)
+	return ActorModel.mesh(_map_parent(parent), geometry, at, mat)
+
+func _map_parent(parent: Node3D) -> Node3D:
+	return map_root if parent == self and is_instance_valid(map_root) else parent

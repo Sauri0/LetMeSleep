@@ -13,18 +13,26 @@ signal config_requested(config: Dictionary)
 signal start_requested
 signal rematch_requested
 signal leave_requested
+signal practice_requested(role: String, mode: String)
+signal practice_restart_requested
 
 const Prefs = preload("res://scripts/preferences.gd")
 const Simulation = preload("res://scripts/simulation.gd")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
-const INK := Color("172935")
-const PANEL := Color("213743")
-const CREAM := Color("fff0d3")
-const MUTED := Color("b5c5c4")
-const CORAL := Color("ff966f")
-const MINT := Color("9addbd")
+const InvitationCodec = preload("res://scripts/invitation.gd")
+const TITLE_FONT = preload("res://assets/fonts/Bangers/Bangers-Regular.ttf")
+const BODY_FONT = preload("res://assets/fonts/AtkinsonHyperlegible/AtkinsonHyperlegible-Regular.ttf")
+const BOLD_FONT = preload("res://assets/fonts/AtkinsonHyperlegible/AtkinsonHyperlegible-Bold.ttf")
+const INK := Color("232532")
+const PAPER := Color("fff5da")
+const PANEL := PAPER
+const CREAM := INK
+const MUTED := Color("5c6068")
+const CORAL := Color("ef6652")
+const MINT := Color("50bea9")
+const SUN := Color("ffcf47")
 const MODES := ["blood", "survival", "sleep"]
-const MODE_NAMES := {"blood": "Recolección de sangre", "survival": "Supervivencia", "sleep": "Dejanos dormir"}
+const MODE_NAMES := {"blood": "Recolección de sangre", "survival": "Supervivencia", "sleep": "Tareas"}
 const TOOL_NAMES := {"hands": "Manos · palmadas", "swatter": "Matamoscas", "racket": "Raqueta eléctrica", "newspaper": "Diario enrollado", "broom": "Escoba"}
 const FALLBACK_CONFIG: Dictionary = Simulation.DEFAULT_CONFIG
 const CONFIG_FIELDS := [
@@ -41,6 +49,66 @@ const CONFIG_FIELDS := [
 	["task_floor", "Plazo mínimo · s", 3, 59.5, 0.5, "sleep"],
 	["task_goal", "Meta de tareas · 0 = auto", 0, 100, 1, "sleep"],
 ]
+
+class ComicBackdrop extends Control:
+	var kind: String = "dots"
+	var title_font: Font
+	const TINT := Color("232532")
+	const PAGE := Color("fff5da")
+	func _ready() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		resized.connect(queue_redraw)
+	func _ellipse(center: Vector2, radii: Vector2, angle: float, fill: Color) -> void:
+		var points := PackedVector2Array()
+		for index: int in range(48):
+			var t: float = TAU * float(index) / 48.0
+			points.append(center + Vector2(cos(t) * radii.x, sin(t) * radii.y).rotated(angle))
+		draw_colored_polygon(points, fill)
+		points.append(points[0])
+		draw_polyline(points, TINT, 4.0, true)
+	func _draw() -> void:
+		if size.x <= 0 or size.y <= 0:
+			return
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2(size.x / 1280.0, size.y / 720.0))
+		draw_rect(Rect2(0, 0, 1280, 720), PAGE)
+		if kind == "home":
+			var division := PackedVector2Array([Vector2(702, 0), Vector2(1280, 0), Vector2(1280, 720), Vector2(548, 720)])
+			draw_colored_polygon(division, Color("50bea9"))
+			draw_line(Vector2(702, 0), Vector2(548, 720), TINT, 6.0)
+		else:
+			for ray: int in range(16):
+				var start: float = TAU * float(ray) / 16.0
+				var center := Vector2(640, 350)
+				draw_colored_polygon(PackedVector2Array([center, center + Vector2.from_angle(start) * 1000, center + Vector2.from_angle(start + 0.16) * 1000]), Color("ffde76"))
+		for y: int in range(15, 720, 22):
+			for x: int in range(15, 1280, 22):
+				if kind != "home" or float(x) > 708.0 - float(y) * 0.21:
+					draw_circle(Vector2(x, y), 1.7, Color(0.14, 0.15, 0.20, 0.16))
+		if kind == "home":
+			# Original drawn window + mosquito; no raster asset or third-party art.
+			draw_rect(Rect2(59, 490, 119, 147), TINT)
+			draw_rect(Rect2(65, 496, 107, 135), Color("608aaf"))
+			draw_circle(Vector2(101, 527), 19, PAGE)
+			draw_circle(Vector2(110, 519), 18, Color("608aaf"))
+			draw_line(Vector2(119, 495), Vector2(119, 632), TINT, 5)
+			draw_line(Vector2(64, 566), Vector2(174, 566), TINT, 5)
+			draw_line(Vector2(49, 641), Vector2(188, 641), TINT, 7)
+			_ellipse(Vector2(304, 528), Vector2(53, 21), -0.72, PAGE)
+			_ellipse(Vector2(354, 514), Vector2(56, 22), -0.20, PAGE)
+			_ellipse(Vector2(327, 568), Vector2(59, 33), 0.16, Color("ef6652"))
+			draw_line(Vector2(310, 539), Vector2(300, 595), TINT, 5)
+			draw_line(Vector2(334, 537), Vector2(324, 600), TINT, 5)
+			draw_circle(Vector2(380, 554), 25, TINT)
+			draw_circle(Vector2(380, 552), 21, Color("ffcf47"))
+			draw_circle(Vector2(389, 547), 8, PAGE)
+			draw_circle(Vector2(392, 546), 4, TINT)
+			draw_line(Vector2(400, 554), Vector2(454, 535), TINT, 5)
+			for index: int in range(3):
+				var base := Vector2(309 + index * 23, 588)
+				draw_polyline(PackedVector2Array([base, base + Vector2(-18, 27), base + Vector2(-42, 30)]), TINT, 4.0, true)
+			draw_arc(Vector2(235, 551), 31, 1.5, 4.5, 24, TINT, 3.0, true)
+			if title_font != null:
+				draw_string(title_font, Vector2(425, 506), "¡BZZ!", HORIZONTAL_ALIGNMENT_LEFT, -1, 42, TINT)
 
 var _root: Control
 var _home: Control
@@ -77,6 +145,31 @@ var _advanced_button: Button
 var _home_default_focus: Button
 var _settings_default_focus: Button
 var _last_settings_focus: Control
+var _practice: bool = false
+var _practice_screen: Control
+var _practice_role: String = "human"
+var _practice_mode: String = "blood"
+var _practice_role_buttons: Dictionary = {}
+var _practice_mode_buttons: Dictionary = {}
+var _practice_detail: Label
+var _practice_start_button: Button
+var _practice_banner: Label
+var _result_leave: Button
+var _pause_leave: Button
+var _invitation_box: VBoxContainer
+var _invitation_edit: LineEdit
+var _invite_settings: Control
+var _invite_settings_open: bool = false
+var _invite_address_edit: LineEdit
+var _invite_port_edit: SpinBox
+var _invite_lan: OptionButton
+var _invite_status: Label
+var _room_join_address: String = ""
+var _room_join_port: int = 27840
+var _comic_feedback: Label
+var _comic_feedback_tween: Tween
+var _previous_bitten: bool = false
+var _previous_swing: float = 0.0
 var _screen: String = "home"
 var _built: bool = false
 var _paused: bool = false
@@ -151,44 +244,70 @@ func _build() -> void:
 	_build_results()
 	_build_pause()
 	_build_customization()
+	_build_practice()
 	_build_settings()
+	_build_invite_settings()
 
 
 func _make_theme() -> Theme:
 	var theme := Theme.new()
+	theme.default_font = BODY_FONT
 	theme.default_font_size = 18
-	theme.set_color("font_color", "Label", CREAM)
-	theme.set_color("font_color", "Button", CREAM)
-	theme.set_color("font_hover_color", "Button", Color.WHITE)
-	theme.set_color("font_disabled_color", "Button", Color("788c92"))
-	theme.set_color("font_color", "LineEdit", CREAM)
+	for type: String in ["Label", "Button", "OptionButton", "CheckButton", "LineEdit", "PopupMenu"]:
+		theme.set_color("font_color", type, INK)
+		theme.set_color("font_hover_color", type, INK)
+		theme.set_color("font_pressed_color", type, INK)
+		theme.set_color("font_focus_color", type, INK)
+		theme.set_color("font_disabled_color", type, MUTED)
+	theme.set_font("font", "Button", TITLE_FONT)
+	theme.set_font_size("font_size", "Button", 27)
+	theme.set_font("font", "OptionButton", BOLD_FONT)
+	theme.set_font("font", "CheckButton", BOLD_FONT)
+	theme.set_font("font", "PopupMenu", BOLD_FONT)
 	theme.set_color("font_placeholder_color", "LineEdit", MUTED)
-	theme.set_color("caret_color", "LineEdit", CORAL)
-	theme.set_color("font_color", "CheckButton", CREAM)
-	for kind: String in ["Button", "OptionButton"]:
-		theme.set_stylebox("normal", kind, _style(Color("344b55"), 10, 16, 11))
-		theme.set_stylebox("hover", kind, _style(Color("49626a"), 10, 16, 11))
-		theme.set_stylebox("pressed", kind, _style(Color("586d70"), 10, 16, 11))
-		theme.set_stylebox("disabled", kind, _style(Color("273d47"), 10, 16, 11))
-		theme.set_stylebox("focus", kind, _outline(MINT))
+	theme.set_color("caret_color", "LineEdit", INK)
+	for kind: String in ["Button", "OptionButton", "CheckButton"]:
+		theme.set_stylebox("normal", kind, _style(PAPER, 4, 16, 10))
+		theme.set_stylebox("hover", kind, _style(SUN, 4, 16, 10))
+		theme.set_stylebox("pressed", kind, _style(MINT.lightened(0.22), 4, 16, 10))
+		theme.set_stylebox("disabled", kind, _style(Color("e3dbc7"), 4, 16, 10))
+		theme.set_stylebox("focus", kind, _outline(CORAL))
 	for state: String in ["normal", "focus"]:
-		var entry_style := _style(Color("11232e"), 9, 12, 10)
+		var entry_style := _style(Color("fffdf3"), 3, 12, 10)
 		if state == "focus":
-			entry_style.border_color = MINT
-			entry_style.set_border_width_all(2)
+			entry_style.border_color = CORAL
+			entry_style.set_border_width_all(4)
 		theme.set_stylebox(state, "LineEdit", entry_style)
-	theme.set_stylebox("panel", "PopupMenu", _style(PANEL, 10, 8, 8))
-	theme.set_stylebox("background", "ProgressBar", _style(Color("122630"), 5, 0, 0))
-	theme.set_stylebox("fill", "ProgressBar", _style(CORAL, 5, 0, 0))
+	theme.set_stylebox("panel", "PopupMenu", _style(PAPER, 3, 10, 10))
+	theme.set_stylebox("hover", "PopupMenu", _style(SUN, 2, 8, 5))
+	theme.set_stylebox("background", "ProgressBar", _style(Color("e5dac0"), 2, 0, 0))
+	theme.set_stylebox("fill", "ProgressBar", _style(CORAL, 2, 0, 0))
+	theme.set_stylebox("slider", "HSlider", _style(Color("e5dac0"), 2, 0, 4))
+	theme.set_stylebox("grabber_area", "HSlider", _style(MINT, 2, 0, 4))
+	theme.set_stylebox("grabber_area_highlight", "HSlider", _style(SUN, 2, 0, 4))
+	var slider_handle := _ink_icon('<rect x="2" y="1" width="14" height="20" rx="2" fill="#232532"/><path d="M7 5v12m4-12v12" stroke="#fff5da" stroke-width="2"/>', 18, 22)
+	theme.set_icon("grabber", "HSlider", slider_handle)
+	theme.set_icon("grabber_highlight", "HSlider", slider_handle)
+	theme.set_icon("updown", "SpinBox", _ink_icon('<path d="M1 8L7 2l6 6M1 15l6 6 6-6" fill="none" stroke="#232532" stroke-width="3"/>', 14, 24))
+	theme.set_icon("arrow", "OptionButton", _ink_icon('<path d="M2 3l5 5 5-5" fill="none" stroke="#232532" stroke-width="3"/>', 14, 12))
 	theme.set_constant("separation", "VBoxContainer", 10)
 	theme.set_constant("separation", "HBoxContainer", 12)
 	return theme
 
 
+func _ink_icon(body: String, width: int, height: int) -> ImageTexture:
+	var image := Image.new()
+	image.load_svg_from_string('<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d">%s</svg>' % [width, height, body])
+	return ImageTexture.create_from_image(image)
+
+
 func _style(color: Color, radius: int = 14, horizontal: int = 20, vertical: int = 20) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = color
-	style.set_corner_radius_all(radius)
+	style.bg_color = PAPER if color.a > 0.0 and color.v < 0.5 else color
+	style.set_corner_radius_all(mini(radius, 5))
+	if color.a > 0.0:
+		style.border_color = INK
+		style.set_border_width_all(3)
 	style.content_margin_left = horizontal
 	style.content_margin_right = horizontal
 	style.content_margin_top = vertical
@@ -199,7 +318,11 @@ func _style(color: Color, radius: int = 14, horizontal: int = 20, vertical: int 
 func _outline(color: Color) -> StyleBoxFlat:
 	var style := _style(Color(0, 0, 0, 0), 10, 0, 0)
 	style.border_color = color
-	style.set_border_width_all(2)
+	style.set_border_width_all(4)
+	style.expand_margin_left = 3
+	style.expand_margin_right = 3
+	style.expand_margin_top = 3
+	style.expand_margin_bottom = 3
 	return style
 
 
@@ -207,11 +330,23 @@ func _label(text_value: String, size: int = 18, color: Color = CREAM, wrap: bool
 	var label := Label.new()
 	label.text = text_value
 	label.add_theme_font_size_override("font_size", size)
-	label.add_theme_color_override("font_color", color)
+	label.add_theme_color_override("font_color", _text_ink(color))
+	if size >= 24:
+		label.add_theme_font_override("font", TITLE_FONT)
+	elif size <= 16:
+		label.add_theme_font_override("font", BOLD_FONT)
 	if wrap:
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return label
+
+
+func _text_ink(color: Color) -> Color:
+	if color == MINT:
+		return Color("166452")
+	if color == CORAL:
+		return Color("a9362c")
+	return color
 
 
 func _button(text_value: String, callback: Callable, accent: bool = false) -> Button:
@@ -220,31 +355,39 @@ func _button(text_value: String, callback: Callable, accent: bool = false) -> Bu
 	button.focus_mode = Control.FOCUS_ALL
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	button.pressed.connect(callback)
-	if accent:
-		button.add_theme_stylebox_override("normal", _style(CORAL, 10, 16, 11))
-		button.add_theme_stylebox_override("hover", _style(Color("ffb38f"), 10, 16, 11))
-		button.add_theme_stylebox_override("pressed", _style(Color("e68262"), 10, 16, 11))
-		button.add_theme_color_override("font_color", INK)
-		button.add_theme_color_override("font_hover_color", INK)
-		button.add_theme_color_override("font_pressed_color", INK)
-		button.add_theme_color_override("font_focus_color", INK)
+	var base: Color = SUN if accent else PAPER
+	var normal := _style(base, 4, 16, 9)
+	normal.shadow_color = INK
+	normal.shadow_size = 0
+	normal.shadow_offset = Vector2(4, 5)
+	normal.shadow_size = 4
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", _style(MINT.lightened(0.28) if accent else SUN, 4, 16, 9))
+	button.add_theme_stylebox_override("pressed", _style(CORAL.lightened(0.28), 4, 16, 9))
+	for name: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		button.add_theme_color_override(name, INK)
 	return button
 
 
 func _panel(parent: Node, color: Color = PANEL) -> PanelContainer:
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", _style(color))
+	var style := _style(color, 5, 20, 18)
+	style.shadow_color = INK
+	style.shadow_size = 5
+	style.shadow_offset = Vector2(5, 6)
+	panel.add_theme_stylebox_override("panel", style)
 	parent.add_child(panel)
 	return panel
 
 
 func _small_button(text_value: String, callback: Callable, accent: bool = false) -> Button:
 	var button := _button(text_value, callback, accent)
+	button.add_theme_font_override("font", BOLD_FONT)
 	button.add_theme_font_size_override("font_size", 15)
-	button.add_theme_stylebox_override("normal", _style(CORAL if accent else Color("344b55"), 8, 11, 7))
-	button.add_theme_stylebox_override("hover", _style(Color("ffb38f") if accent else Color("49626a"), 8, 11, 7))
-	button.add_theme_stylebox_override("pressed", _style(Color("e68262") if accent else Color("586d70"), 8, 11, 7))
-	button.add_theme_stylebox_override("disabled", _style(Color("273d47"), 8, 11, 7))
+	button.add_theme_stylebox_override("normal", _style(SUN if accent else PAPER, 3, 10, 7))
+	button.add_theme_stylebox_override("hover", _style(MINT.lightened(0.25), 3, 10, 7))
+	button.add_theme_stylebox_override("pressed", _style(CORAL.lightened(0.3), 3, 10, 7))
+	button.add_theme_stylebox_override("disabled", _style(Color("e3dbc7"), 3, 10, 7))
 	return button
 
 
@@ -264,11 +407,16 @@ func _full_control(parent: Node) -> Control:
 
 func _menu_surface() -> Control:
 	var surface := _full_control(_root)
-	var backdrop := ColorRect.new()
-	backdrop.color = Color(0.055, 0.11, 0.16, 0.94)
-	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	surface.add_child(backdrop)
+	_add_comic_backdrop(surface, "rays")
 	return surface
+
+
+func _add_comic_backdrop(parent: Control, kind: String) -> void:
+	var backdrop := ComicBackdrop.new()
+	backdrop.kind = kind
+	backdrop.title_font = TITLE_FONT
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	parent.add_child(backdrop)
 
 
 func _margin(parent: Node, amount: int = 28) -> MarginContainer:
@@ -299,28 +447,22 @@ func _status(parent: Node) -> Label:
 
 func _build_home() -> void:
 	_home = _full_control(_root)
-	var shade := TextureRect.new()
-	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var texture := GradientTexture2D.new()
-	var gradient := Gradient.new()
-	gradient.colors = PackedColorArray([Color(0.035, 0.085, 0.13, 0.96), Color(0.045, 0.12, 0.16, 0.72), Color(0.035, 0.075, 0.12, 0.36)])
-	gradient.offsets = PackedFloat32Array([0.0, 0.55, 1.0])
-	texture.gradient = gradient
-	texture.fill_from = Vector2.ZERO
-	texture.fill_to = Vector2.RIGHT
-	shade.texture = texture
-	_home.add_child(shade)
+	_add_comic_backdrop(_home, "home")
 	var columns := HBoxContainer.new()
 	columns.add_theme_constant_override("separation", 62)
 	_margin(_home, 46).add_child(columns)
 	var intro := _vbox(columns, 16)
 	intro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	intro.size_flags_stretch_ratio = 1.05
-	intro.add_child(_label("☾   NOCHE DE CALOR", 15, CORAL))
-	intro.add_child(_label("Dejame\ndormir", 80))
-	intro.add_child(_label("Humanos contra mosquitos.", 24, MINT))
-	intro.add_child(_label("Dormir va a estar difícil.", 24, CREAM, true))
+	intro.add_child(_label("EDICIÓN NOCTURNA / N.º 03", 15, INK))
+	var logo := _label("LET ME\nSLEEP", 112, SUN)
+	logo.add_theme_color_override("font_outline_color", INK)
+	logo.add_theme_constant_override("outline_size", 14)
+	logo.add_theme_color_override("font_shadow_color", INK)
+	logo.add_theme_constant_override("shadow_offset_x", 5)
+	logo.add_theme_constant_override("shadow_offset_y", 6)
+	intro.add_child(logo)
+	intro.add_child(_label("HUMANOS CONTRA MOSQUITOS", 27, INK))
 	var details := HBoxContainer.new()
 	details.add_theme_constant_override("separation", 20)
 	intro.add_child(details)
@@ -330,8 +472,7 @@ func _build_home() -> void:
 	var space := Control.new()
 	space.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	intro.add_child(space)
-	intro.add_child(_label("Una casa. Tus amigos. Cero paz.", 18, MUTED, true))
-	intro.add_child(_label("PROTOTIPO 0.2.0  ·  WINDOWS", 13, MUTED))
+	intro.add_child(_label("PROTOTIPO 0.3.0  ·  WINDOWS", 13, MUTED))
 	var card := _panel(columns, Color(0.10, 0.21, 0.25, 0.96))
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var card_box := _vbox(card, 10)
@@ -339,14 +480,15 @@ func _build_home() -> void:
 	var content := _vbox(scroll, 8)
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_home_menu = _vbox(content, 14)
-	_home_menu.add_child(_label("Pasá, estás en casa.", 28))
-	_home_menu.add_child(_label("Reuní al grupo. El sorteo hace el resto.", 16, MUTED, true))
-	_home_menu.add_child(HSeparator.new())
-	_home_default_focus = _button("Crear una sala  →", _open_connection.bind(true), true)
+	_home_menu.add_child(_label("¿QUÉ SE ARMA HOY?", 38))
+	_home_default_focus = _button("PRÁCTICA", _open_practice, true)
 	_home_menu.add_child(_home_default_focus)
-	_home_menu.add_child(_button("Unirme a mis amigos  →", _open_connection.bind(false)))
-	_home_menu.add_child(_button("Personalizar personajes", _open_customization))
-	_home_menu.add_child(_button("Ajustes y controles", _open_settings))
+	_home_menu.add_child(_label("Entrá a probar con rivales automáticos.", 14, MUTED, true))
+	_home_menu.add_child(HSeparator.new())
+	_home_menu.add_child(_button("CREAR SALA", _open_connection.bind(true)))
+	_home_menu.add_child(_button("UNIRME CON INVITACIÓN", _open_connection.bind(false)))
+	_home_menu.add_child(_button("TU PINTA", _open_customization))
+	_home_menu.add_child(_small_button("Ajustes y controles", _open_settings))
 	_home_menu.add_child(_small_button("Salir del juego", func() -> void:
 		get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
 		get_tree().quit()
@@ -362,6 +504,13 @@ func _build_home() -> void:
 	_name_edit.placeholder_text = "Cómo te dicen tus amigos"
 	_name_edit.text = Prefs.player_name
 	_connection_form.add_child(_name_edit)
+	_invitation_box = _vbox(_connection_form, 5)
+	_invitation_box.add_child(_label("INVITACIÓN", 13, INK))
+	_invitation_edit = LineEdit.new()
+	_invitation_edit.max_length = 1024
+	_invitation_edit.placeholder_text = "Pegá acá la invitación DD3-…"
+	_invitation_edit.text = Prefs.invitation
+	_invitation_box.add_child(_invitation_edit)
 	_address_box = _vbox(_connection_form, 5)
 	_address_box.add_child(_label("DIRECCIÓN DEL ANFITRIÓN", 13, CORAL))
 	_address_edit = LineEdit.new()
@@ -394,12 +543,12 @@ func _build_home() -> void:
 	port_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_port_row.add_child(port_label)
 	_port_edit = SpinBox.new()
-	_port_edit.min_value = 1
+	_port_edit.min_value = 1024
 	_port_edit.max_value = 65535
 	_port_edit.value = Prefs.server_port
 	_port_edit.custom_minimum_size.x = 124
 	_port_row.add_child(_port_edit)
-	_advanced_help = _label("El código identifica la sala; la dirección permite llegar al servidor. Para otra casa, pedí dirección y código al anfitrión. Puerto habitual: UDP 27840.", 14, MUTED, true)
+	_advanced_help = _label("Sin invitación: dejá ese campo vacío y usá dirección, puerto y código. Compartir una dirección no configura tu router.", 14, MUTED, true)
 	_connection_form.add_child(_advanced_help)
 	_connection_form.hide()
 	_status(card_box)
@@ -431,8 +580,9 @@ func _toggle_connection_options() -> void:
 
 
 func _update_connection_options() -> void:
-	_address_box.visible = not _connection_mode_create or _advanced_open
-	_code_box.visible = not _connection_mode_create
+	_address_box.visible = _advanced_open
+	_code_box.visible = not _connection_mode_create and _advanced_open
+	_invitation_box.visible = not _connection_mode_create
 	_port_row.visible = _advanced_open
 	_advanced_help.visible = _advanced_open
 	_local_server_button.visible = _connection_mode_create
@@ -446,6 +596,21 @@ func _request_connection(create: bool) -> void:
 		_name_edit.grab_focus()
 		return
 	var address := _address_edit.text.strip_edges()
+	var port: int = int(_port_edit.value)
+	var code := _code_edit.text.strip_edges().to_upper()
+	if not create and not _invitation_edit.text.strip_edges().is_empty():
+		var decoded: Dictionary = InvitationCodec.decode(_invitation_edit.text)
+		if not bool(decoded.get("ok", false)):
+			show_status(str(decoded.get("error", "Revisá la invitación.")))
+			_invitation_edit.grab_focus()
+			return
+		address = str(decoded.host)
+		port = int(decoded.port)
+		code = str(decoded.room)
+	elif not create and not _advanced_open:
+		show_status("Pegá la invitación que te pasó el anfitrión.")
+		_invitation_edit.grab_focus()
+		return
 	if address.is_empty():
 		show_status("Falta la dirección del servidor.")
 		if not _address_box.visible:
@@ -453,18 +618,21 @@ func _request_connection(create: bool) -> void:
 			_update_connection_options()
 		_address_edit.grab_focus()
 		return
-	var code := _code_edit.text.strip_edges().to_upper()
 	if not create and code.is_empty():
-		show_status("Pedile el código de sala al anfitrión.")
+		show_status("Falta el código de sala en la conexión avanzada.")
 		_code_edit.grab_focus()
 		return
 	Prefs.player_name = username
 	Prefs.server_address = address
-	Prefs.server_port = int(_port_edit.value)
+	Prefs.server_port = port
 	Prefs.room_code = code
+	_room_join_address = "" if create else address
+	_room_join_port = port
+	if not create:
+		Prefs.invitation = _invitation_edit.text.strip_edges()
 	Prefs.save_settings()
-	show_status("Conectando con %s:%d…" % [address, int(_port_edit.value)])
-	connect_requested.emit(address, int(_port_edit.value), username, code, create)
+	show_status("Conectando…")
+	connect_requested.emit(address, port, username, code, create)
 
 
 func _build_lobby() -> void:
@@ -482,13 +650,10 @@ func _build_lobby() -> void:
 	frame.add_child(header)
 	var title := _vbox(header, 1)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title.add_child(_label("La previa", 28))
+	title.add_child(_label("LA PREVIA", 34))
 	_code_label = _label("SALA  —", 16, CORAL)
 	title.add_child(_code_label)
-	header.add_child(_small_button("Copiar", func() -> void:
-		DisplayServer.clipboard_set(_code_label.get_meta("code", ""))
-		show_status("Código copiado. Compartí también la dirección del servidor.")
-	))
+	header.add_child(_small_button("Invitar", _copy_invitation, true))
 	_players_label = _label("Esperando amigos…", 15, MINT, true)
 	frame.add_child(_players_label)
 	var navigation := HBoxContainer.new()
@@ -515,6 +680,7 @@ func _build_lobby() -> void:
 	var config_box := _vbox(rules_scroll, 8)
 	config_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	config_box.add_child(_label("El anfitrión fija la cantidad de humanos. Los roles se sortean de nuevo en cada ronda.", 14, MUTED, true))
+	config_box.add_child(_small_button("Dirección para amigos", _open_invite_settings))
 	_mode = OptionButton.new()
 	_mode.add_theme_font_size_override("font_size", 16)
 	for mode: String in MODES:
@@ -642,6 +808,7 @@ func _build_hud() -> void:
 	clock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	clock_box.add_child(clock_label)
 	_hud_time = _label("00:00", 32)
+	_hud_time.add_theme_font_size_override("font_size", 42)
 	_hud_time.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	clock_box.add_child(_hud_time)
 	_task_panel = _panel(_hud, Color(0.06, 0.12, 0.16, 0.94))
@@ -677,9 +844,29 @@ func _build_hud() -> void:
 	_hud_hint = _label("", 14, CREAM, true)
 	hints.add_child(_hud_hint)
 	_reticle = _label("·", 38, CREAM)
+	_reticle.add_theme_color_override("font_outline_color", PAPER)
+	_reticle.add_theme_constant_override("outline_size", 7)
 	_reticle.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	_reticle.position -= Vector2(9, 25)
 	_hud.add_child(_reticle)
+	_practice_banner = _label("PRÁCTICA / RIVALES AUTOMÁTICOS", 14, INK)
+	_practice_banner.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_practice_banner.position = Vector2(490, 27)
+	_practice_banner.add_theme_color_override("font_outline_color", PAPER)
+	_practice_banner.add_theme_constant_override("outline_size", 5)
+	_hud.add_child(_practice_banner)
+	_practice_banner.hide()
+	_comic_feedback = _label("", 64, SUN)
+	_comic_feedback.add_theme_color_override("font_outline_color", INK)
+	_comic_feedback.add_theme_constant_override("outline_size", 12)
+	_comic_feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_comic_feedback.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	_comic_feedback.offset_left = -180
+	_comic_feedback.offset_right = 180
+	_comic_feedback.offset_top = -130
+	_comic_feedback.offset_bottom = -48
+	_hud.add_child(_comic_feedback)
+	_comic_feedback.hide()
 	_set_mouse_ignore_recursive(_hud)
 
 
@@ -706,9 +893,15 @@ func _build_results() -> void:
 	_result_stats = _label("", 18, MUTED, true)
 	box.add_child(_result_stats)
 	box.add_child(HSeparator.new())
-	_rematch_button = _button("Volver a la sala · revancha", func() -> void: rematch_requested.emit(), true)
+	_rematch_button = _button("Volver a la sala · revancha", func() -> void:
+		if _practice:
+			practice_restart_requested.emit()
+		else:
+			rematch_requested.emit()
+	, true)
 	box.add_child(_rematch_button)
-	box.add_child(_button("Salir de la sala", func() -> void: leave_requested.emit()))
+	_result_leave = _button("Salir de la sala", func() -> void: leave_requested.emit())
+	box.add_child(_result_leave)
 	_status(box)
 
 
@@ -720,20 +913,25 @@ func _build_pause() -> void:
 	var panel := _panel(center)
 	panel.custom_minimum_size.x = 440
 	var box := _vbox(panel, 14)
-	box.add_child(_label("Un segundo…", 34))
-	box.add_child(_label("La partida online sigue en marcha.", 17, MUTED))
+	box.add_child(_label("¡UN SEGUNDO!", 48))
+	box.add_child(_label("La ronda sigue en marcha.", 17, MUTED))
 	box.add_child(_button("Seguir jugando", func() -> void: set_pause(false), true))
 	box.add_child(_button("Ajustes y controles", _open_settings))
-	box.add_child(_button("Salir de la sala", func() -> void: leave_requested.emit()))
+	_pause_leave = _button("Salir de la sala", func() -> void: leave_requested.emit())
+	box.add_child(_pause_leave)
 	box.add_child(_label("Si alguien se desconecta, la ronda se interrumpe sin ganador.", 15, MUTED, true))
 
 
 func _build_customization() -> void:
 	_customization = _full_control(_root)
 	var heading := _label("TU PINTA", 16, INK)
+	heading.add_theme_color_override("font_outline_color", PAPER)
+	heading.add_theme_constant_override("outline_size", 5)
 	heading.position = Vector2(42, 34)
 	_customization.add_child(heading)
 	_custom_title = _label("Una cara conocida", 36, INK)
+	_custom_title.add_theme_color_override("font_outline_color", PAPER)
+	_custom_title.add_theme_constant_override("outline_size", 7)
 	_custom_title.position = Vector2(42, 61)
 	_customization.add_child(_custom_title)
 	var caption_panel := _panel(_customization, Color(0.05, 0.11, 0.16, 0.90))
@@ -774,6 +972,7 @@ func _build_customization() -> void:
 		button.custom_minimum_size = Vector2(94, 64)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 14)
+		button.add_theme_font_override("font", BOLD_FONT)
 		button.add_theme_color_override("font_color", INK)
 		button.add_theme_color_override("font_hover_color", INK)
 		button.add_theme_color_override("font_pressed_color", INK)
@@ -859,6 +1058,183 @@ func _refresh_customization() -> void:
 	preview_requested.emit(_custom_role, appearance)
 
 
+func _build_practice() -> void:
+	_practice_screen = _menu_surface()
+	_practice_screen.hide()
+	var frame := _vbox(_margin(_practice_screen, 38), 18)
+	var header := HBoxContainer.new()
+	frame.add_child(header)
+	var heading := _label("ENTRÁ EN CALOR", 56)
+	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(heading)
+	header.add_child(_small_button("← Volver", _close_practice_setup))
+	frame.add_child(_label("PRÁCTICA LOCAL · Vos elegís tu rol. Los rivales son automáticos.", 16, INK, true))
+	var columns := HBoxContainer.new()
+	columns.add_theme_constant_override("separation", 28)
+	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	frame.add_child(columns)
+	var role_panel := _panel(columns)
+	role_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var roles := _vbox(role_panel, 16)
+	roles.add_child(_label("1. ¿DE QUÉ LADO?", 34))
+	for role: String in ["human", "mosquito"]:
+		var button := _button("HUMANO" if role == "human" else "MOSQUITO", _select_practice_role.bind(role))
+		button.toggle_mode = true
+		button.custom_minimum_size.y = 76
+		roles.add_child(button)
+		_practice_role_buttons[role] = button
+		roles.add_child(_label("Palmadas, objetos y defensa propia." if role == "human" else "Volá, buscá tu marca y picá.", 16, MUTED, true))
+	var modes_panel := _panel(columns)
+	modes_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var modes := _vbox(modes_panel, 12)
+	modes.add_child(_label("2. ¿QUÉ PROBAMOS?", 34))
+	for mode: String in MODES:
+		var button := _button(str(MODE_NAMES[mode]).to_upper(), _select_practice_mode.bind(mode))
+		button.toggle_mode = true
+		modes.add_child(button)
+		_practice_mode_buttons[mode] = button
+	_practice_detail = _label("", 17, INK, true)
+	modes.add_child(_practice_detail)
+	_practice_start_button = _button("¡A PRACTICAR!", func() -> void:
+		set_practice(true)
+		practice_requested.emit(_practice_role, _practice_mode)
+	, true)
+	_practice_start_button.custom_minimum_size.y = 58
+	frame.add_child(_practice_start_button)
+
+
+func _open_practice() -> void:
+	_set_screen("practice")
+	_refresh_practice()
+	_queue_focus(_practice_start_button)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+func _close_practice_setup() -> void:
+	_set_screen("home")
+	_queue_focus(_home_default_focus)
+
+
+func _select_practice_role(role: String) -> void:
+	_practice_role = role
+	_refresh_practice()
+
+
+func _select_practice_mode(mode: String) -> void:
+	_practice_mode = mode
+	_refresh_practice()
+
+
+func _refresh_practice() -> void:
+	for role: String in _practice_role_buttons:
+		_practice_role_buttons[role].button_pressed = role == _practice_role
+	for mode: String in _practice_mode_buttons:
+		_practice_mode_buttons[mode].button_pressed = mode == _practice_mode
+	match _practice_mode:
+		"blood": _practice_detail.text = "Cuota compartida de sangre. Una vida por mosquito."
+		"survival": _practice_detail.text = "Al menos un mosquito debe llegar vivo al final."
+		"sleep": _practice_detail.text = "Tareas, interrupciones y vidas personales."
+
+
+func set_practice(value: bool) -> void:
+	_practice = value
+	if is_instance_valid(_practice_banner):
+		_practice_banner.visible = value
+	if is_instance_valid(_pause_leave):
+		_pause_leave.text = "Volver al menú" if value else "Salir de la sala"
+
+
+func _build_invite_settings() -> void:
+	_invite_settings = _menu_surface()
+	_invite_settings.hide()
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_invite_settings.add_child(center)
+	var panel := _panel(center)
+	panel.custom_minimum_size.x = 600
+	var body := _vbox(panel, 14)
+	body.add_child(_label("INVITÁ A LA CASA", 46))
+	body.add_child(_label("DIRECCIÓN PARA TUS AMIGOS", 14, INK))
+	_invite_address_edit = LineEdit.new()
+	_invite_address_edit.placeholder_text = "IP de red, IP pública o nombre de servidor"
+	_invite_address_edit.max_length = 253
+	body.add_child(_invite_address_edit)
+	_invite_lan = OptionButton.new()
+	_invite_lan.item_selected.connect(func(index: int) -> void:
+		if index > 0:
+			_invite_address_edit.text = str(_invite_lan.get_item_metadata(index))
+	)
+	body.add_child(_invite_lan)
+	var port_row := HBoxContainer.new()
+	body.add_child(port_row)
+	var label := _label("Puerto para amigos", 16, INK)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	port_row.add_child(label)
+	_invite_port_edit = SpinBox.new()
+	_invite_port_edit.min_value = 1024
+	_invite_port_edit.max_value = 65535
+	_invite_port_edit.custom_minimum_size.x = 126
+	port_row.add_child(_invite_port_edit)
+	body.add_child(_label("Misma red: elegí tu IP local. Desde otras casas: ingresá una dirección alcanzable desde Internet. La invitación no abre puertos ni evita CGNAT.", 15, MUTED, true))
+	_invite_status = _status(body)
+	body.add_child(_button("GUARDAR Y COPIAR INVITACIÓN", _save_invite_settings, true))
+	body.add_child(_small_button("← Volver", _close_invite_settings))
+
+
+func _open_invite_settings() -> void:
+	_invite_settings_open = true
+	_invite_address_edit.text = Prefs.shared_address if _owner else _room_join_address
+	_invite_port_edit.value = Prefs.shared_port if _owner else _room_join_port
+	_invite_lan.clear()
+	_invite_lan.add_item("Elegir dirección de esta red…")
+	for address: String in InvitationCodec.local_addresses():
+		_invite_lan.add_item(address + " · misma red")
+		_invite_lan.set_item_metadata(_invite_lan.item_count - 1, address)
+	_invite_settings.show()
+	_set_focus_scope(_invite_settings)
+	_queue_focus(_invite_address_edit)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+func _close_invite_settings() -> void:
+	_invite_settings_open = false
+	_invite_settings.hide()
+	_set_focus_scope(_base_focus_scope())
+	_queue_focus(_ready_button)
+
+
+func _save_invite_settings() -> void:
+	var address := _invite_address_edit.text.strip_edges()
+	var invalid: String = InvitationCodec.validate_host(address)
+	if not invalid.is_empty():
+		_invite_status.text = invalid
+		_invite_address_edit.grab_focus()
+		return
+	if _owner:
+		Prefs.shared_address = address
+		Prefs.shared_port = int(_invite_port_edit.value)
+		Prefs.save_settings()
+	else:
+		_room_join_address = address
+		_room_join_port = int(_invite_port_edit.value)
+	_close_invite_settings()
+	_copy_invitation()
+
+
+func _copy_invitation() -> void:
+	var code: String = str(_code_label.get_meta("code", ""))
+	var address: String = Prefs.shared_address if _owner else _room_join_address
+	var port: int = Prefs.shared_port if _owner else _room_join_port
+	var encoded: String = InvitationCodec.encode(address, port, code)
+	if encoded.is_empty():
+		_open_invite_settings()
+		_invite_status.text = "Indicá una dirección que puedan usar tus amigos. 127.0.0.1 no sirve para compartir."
+		return
+	DisplayServer.clipboard_set(encoded)
+	show_status("¡Invitación copiada! Pegala en el chat de tus amigos.")
+
+
 func _build_settings() -> void:
 	_settings = _menu_surface()
 	var frame := _vbox(_margin(_settings, 30), 14)
@@ -879,6 +1255,7 @@ func _build_settings() -> void:
 	var box := _vbox(preference_scroll, 18)
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box.add_child(_label("Cámara y sonido", 24))
+	box.add_child(_label("Humano: tercera persona en la sala, primera al jugar. Podés correr, saltar y agacharte.", 15, INK, true))
 	_add_slider(box, "human", "Sensibilidad · humano", Prefs.human_sensitivity * 1000.0, 0.5, 8.0, 0.1)
 	_add_slider(box, "mosquito", "Sensibilidad · mosquito", Prefs.mosquito_sensitivity * 1000.0, 0.5, 8.0, 0.1)
 	_add_slider(box, "volume", "Volumen general", Prefs.master_volume * 100.0, 0.0, 100.0, 1.0)
@@ -975,8 +1352,12 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		if event.is_echo():
 			return
-		if _settings_open:
+		if _invite_settings_open:
+			_close_invite_settings()
+		elif _settings_open:
 			_close_settings()
+		elif _screen == "practice":
+			_close_practice_setup()
 		elif _screen == "customization":
 			_close_customization()
 		elif _screen == "home" and _connection_open:
@@ -1024,11 +1405,14 @@ func _close_settings() -> void:
 
 func show_home() -> void:
 	_build()
+	set_practice(false)
 	_set_screen("home")
 	_config_signature = ""
 	_roster_signature = ""
 	_owner = false
 	_local_id = 0
+	_room_join_address = ""
+	_room_join_port = 27840
 	_input_release()
 
 
@@ -1085,7 +1469,7 @@ func show_lobby(data: Dictionary, local_id: int) -> void:
 	if _start_reason.text.is_empty():
 		_start_reason.text = "Todos listos. ¡A jugar!" if data.get("can_start", false) else "Hace falta al menos un jugador por bando y todos listos."
 	var humans: int = int(_config.get("human_count", 1))
-	_players_label.text = "%d en la casa · %d humanos por sorteo\nEl resto juega como mosquito" % [_lobby_player_count, humans]
+	_players_label.text = "%d en la casa · %d %s por sorteo\nEl resto juega como mosquito" % [_lobby_player_count, humans, "humano" if humans == 1 else "humanos"]
 	_lobby_walking_label.text = "SALA " + code + "  ·  " + str(_lobby_player_count) + " amigos\n" + Prefs.binding_text("pause") + " menú de sala · " + Prefs.binding_text("move_forward") + "/" + Prefs.binding_text("move_left") + "/" + Prefs.binding_text("move_back") + "/" + Prefs.binding_text("move_right") + " caminar"
 	if changed_screen:
 		set_lobby_walking(false)
@@ -1135,7 +1519,15 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 	var mode: String = str(config.get("mode", "blood"))
 	_hud_role.text = ("HUMANO" if human else "MOSQUITO") + "  /  " + str(MODE_NAMES.get(mode, mode)).to_upper()
 	_hud_time.text = _clock(float(snapshot.get("time_left", 0.0)))
-	_hud_time.add_theme_color_override("font_color", CORAL if float(snapshot.get("time_left", 0.0)) < 20.0 else CREAM)
+	_hud_time.add_theme_color_override("font_color", _text_ink(CORAL) if float(snapshot.get("time_left", 0.0)) < 20.0 else INK)
+	var swing: float = float(actor.get("swing", 0.0))
+	var bitten: bool = bool(actor.get("bitten", false))
+	if human and swing > 0.0 and _previous_swing <= 0.0:
+		_flash_comic("¡ZAS!")
+	elif human and bitten and not _previous_bitten:
+		_flash_comic("¡PIC!")
+	_previous_swing = swing
+	_previous_bitten = bitten
 	var living_mosquitoes: int = 0
 	for other: Variant in actors.values():
 		if other is Dictionary and other.get("role", "") == "mosquito" and other.get("alive", false):
@@ -1161,7 +1553,7 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 	_reticle.visible = human and alive
 	if human:
 		_hud_state.text = "¡Te están picando! Defendete o pedí ayuda." if actor.get("bitten", false) else "Cuidá tu espacio. Ayudá a tus compañeros."
-		_hud_state.add_theme_color_override("font_color", CORAL if actor.get("bitten", false) else MINT)
+		_hud_state.add_theme_color_override("font_color", _text_ink(CORAL if actor.get("bitten", false) else MINT))
 		var tool: String = str(actor.get("tool", "hands"))
 		_hud_tool.text = "EQUIPADO  " + str(TOOL_NAMES.get(tool, tool))
 		_hud_hint.text = "%s golpear" % Prefs.binding_text("attack")
@@ -1173,6 +1565,8 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 		if tool != "hands":
 			_hud_hint.text += " · %s soltar" % Prefs.binding_text("drop")
 		_hud_hint.text += " · %s menú" % Prefs.binding_text("pause")
+		if float(snapshot.get("elapsed", 0.0)) < 7.0:
+			_hud_hint.text += " · %s correr · %s saltar · %s agacharte" % [Prefs.binding_text("sprint"), Prefs.binding_text("jump"), Prefs.binding_text("crouch")]
 		if mode == "sleep":
 			_update_task(private_data, bool(actor.get("bitten", false)))
 	else:
@@ -1181,7 +1575,7 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 		_hud_tool.text = "TU ZONA  " + str(assignment.get("label", "Buscando zona…")) if alive else "Seguís con tu equipo hasta el resultado."
 		if mode == "sleep":
 			_hud_tool.text += " · TUS VIDAS: %d" % lives
-		_hud_state.add_theme_color_override("font_color", MINT)
+		_hud_state.add_theme_color_override("font_color", _text_ink(MINT))
 		if not alive or state == "dead":
 			if mode == "sleep" and lives > 0:
 				_hud_state.text = "Reaparecés en %.1f s · te quedan %d vidas" % [float(private_data.get("respawn_left", 0.0)), lives]
@@ -1196,7 +1590,7 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 			_hud_state.text = "Posado · seguís siendo visible"
 			_hud_hint.text = "%s volver a volar · %s picar en tu marca · %s menú" % [Prefs.binding_text("perch"), Prefs.binding_text("bite"), Prefs.binding_text("pause")]
 		else:
-			_hud_state.text = "Buscá tu marca y acercate para picar"
+			_hud_state.text = "Mantenete vivo hasta el final" if mode == "survival" else "Buscá tu marca y acercate para picar"
 			_hud_hint.text = "%s picar · %s posarte · %s / %s subir y bajar · %s menú" % [Prefs.binding_text("bite"), Prefs.binding_text("perch"), Prefs.binding_text("ascend"), Prefs.binding_text("descend"), Prefs.binding_text("pause")]
 	if changed_screen and not _paused and not _settings_open:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -1213,7 +1607,7 @@ func _update_task(private_data: Dictionary, bitten: bool) -> void:
 		return
 	_task_title.text = str(task.get("name", "Tarea de la casa"))
 	_task_time.text = "TU PLAZO  " + _clock(float(task.get("remaining", 0.0)))
-	_task_time.add_theme_color_override("font_color", CORAL if float(task.get("remaining", 0.0)) < 8.0 else MINT)
+	_task_time.add_theme_color_override("font_color", _text_ink(CORAL if float(task.get("remaining", 0.0)) < 8.0 else MINT))
 	_task_progress.value = float(task.get("progress", 0.0)) / maxf(0.01, float(task.get("work", 5.0))) * 100.0
 	_task_detail.text = "Trabajo pausado por picadura. El avance se conserva." if bitten else "Acercate al objeto indicado y mantené %s. Tus fallos: %d." % [Prefs.binding_text("interact"), failures]
 
@@ -1234,15 +1628,29 @@ func _nearby_tool(snapshot: Dictionary, actor: Dictionary) -> String:
 	return tool
 
 
+func _flash_comic(text_value: String) -> void:
+	if is_instance_valid(_comic_feedback_tween):
+		_comic_feedback_tween.kill()
+	_comic_feedback.text = text_value
+	_comic_feedback.modulate = Color.WHITE
+	_comic_feedback.show()
+	_comic_feedback_tween = create_tween()
+	_comic_feedback_tween.tween_interval(0.5)
+	_comic_feedback_tween.tween_property(_comic_feedback, "modulate:a", 0.0, 0.18)
+	_comic_feedback_tween.tween_callback(_comic_feedback.hide)
+
+
 func show_results(snapshot: Dictionary) -> void:
 	_build()
 	_set_screen("results")
 	var winner: String = str(snapshot.get("winner", ""))
 	match winner:
-		"human", "humans": _result_title.text = "La casa está en paz."
-		"mosquito", "mosquitoes": _result_title.text = "El zumbido ganó."
+		"human", "humans": _result_title.text = "¡SE ACABÓ EL ZUMBIDO!"
+		"mosquito", "mosquitoes": _result_title.text = "¡A DORMIR... MAÑANA!"
 		_: _result_title.text = "Ronda interrumpida"
 	_result_subtitle.text = "Ganaron los humanos" if winner in ["human", "humans"] else ("Ganaron los mosquitos" if winner in ["mosquito", "mosquitoes"] else "Sin ganador")
+	if _practice:
+		_result_subtitle.text = "PRÁCTICA / " + _result_subtitle.text
 	var reason: String = str(snapshot.get("reason", ""))
 	var config: Dictionary = snapshot.get("config", FALLBACK_CONFIG)
 	var mode: String = str(config.get("mode", "blood"))
@@ -1254,8 +1662,9 @@ func show_results(snapshot: Dictionary) -> void:
 		"sleep": stats += "Tareas del equipo: %d / %d" % [int(snapshot.get("tasks_done", 0)), int(snapshot.get("task_goal", config.get("task_goal", 6)))]
 		_: stats += "Tiempo jugado: " + _clock(float(snapshot.get("elapsed", 0.0)))
 	_result_stats.text = stats
-	_rematch_button.disabled = not _owner
-	_rematch_button.text = "Volver a la sala · revancha" if _owner else "Esperando la revancha del anfitrión"
+	_rematch_button.disabled = not _practice and not _owner
+	_rematch_button.text = "REPETIR PRÁCTICA" if _practice else ("VOLVER A LA SALA" if _owner else "Esperando la revancha del anfitrión")
+	_result_leave.text = "VOLVER AL MENÚ" if _practice else "Salir de la sala"
 	_input_release()
 
 
@@ -1282,7 +1691,7 @@ func set_pause(open: bool) -> void:
 
 
 func is_menu_open() -> bool:
-	if _settings_open:
+	if _settings_open or _invite_settings_open:
 		return true
 	if _screen == "lobby":
 		return not _lobby_walking
@@ -1294,6 +1703,9 @@ func _input_release() -> void:
 	_pause.hide()
 	_settings_open = false
 	_settings.hide()
+	_invite_settings_open = false
+	_invite_settings.hide()
+	_binding_action = ""
 	_lobby_walking = false
 	_lobby_panel.show()
 	_lobby_walking_panel.hide()
@@ -1312,6 +1724,9 @@ func _set_screen(screen: String) -> void:
 		_pause.hide()
 		_settings_open = false
 		_settings.hide()
+		_invite_settings_open = false
+		_invite_settings.hide()
+		_binding_action = ""
 		_lobby_walking = false
 	_screen = screen
 	_home.visible = screen == "home"
@@ -1319,6 +1734,7 @@ func _set_screen(screen: String) -> void:
 	_hud.visible = screen == "game"
 	_results.visible = screen == "results"
 	_customization.visible = screen == "customization"
+	_practice_screen.visible = screen == "practice"
 	if changed:
 		_set_focus_scope(_base_focus_scope())
 		_focus_first(_base_focus_scope())
@@ -1329,6 +1745,7 @@ func _base_focus_scope() -> Control:
 		"home": return _home
 		"lobby": return _lobby_walking_panel if _lobby_walking else _lobby_panel
 		"customization": return _customization
+		"practice": return _practice_screen
 		"results": return _results
 		_: return _pause if _paused else _hud
 
@@ -1345,7 +1762,9 @@ func _set_focus_scope(scope: Control) -> void:
 				control.set_meta("original_focus_mode", control.focus_mode)
 			var in_scope: bool = control == scope or scope.is_ancestor_of(control)
 			control.focus_mode = int(control.get_meta("original_focus_mode")) if in_scope else Control.FOCUS_NONE
-		for child: Node in node.get_children():
+		# TabContainer's internal TabBar is focusable too; otherwise a modal's
+		# Tab cycle could slip behind it into the lobby.
+		for child: Node in node.get_children(true):
 			pending.append(child)
 
 
@@ -1372,7 +1791,7 @@ func _grab_focus_if_current(control: Control) -> void:
 		return
 	if control is BaseButton and control.disabled:
 		return
-	var scope: Control = _settings if _settings_open else _base_focus_scope()
+	var scope: Control = _invite_settings if _invite_settings_open else (_settings if _settings_open else _base_focus_scope())
 	if control != scope and not scope.is_ancestor_of(control):
 		return
 	control.grab_focus()

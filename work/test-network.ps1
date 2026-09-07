@@ -7,6 +7,7 @@ param(
     [switch]$DisconnectTest,
     [switch]$RematchTest,
     [switch]$Incompatible,
+    [switch]$InvitationTest,
     [string]$Executable = ''
 )
 $ErrorActionPreference = 'Stop'
@@ -32,6 +33,7 @@ try {
     if ($DisconnectTest) { $creatorArgs += '--disconnect-test' }
     if ($RematchTest) { $creatorArgs += '--rematch-test' }
     if ($Incompatible) { $creatorArgs += '--incompatible' }
+    if ($InvitationTest) { $creatorArgs += '--shared-host=' + [System.Net.Dns]::GetHostName() }
     $creator = Start-GameProcess 'human1' $creatorArgs
     if (-not $Incompatible) {
         $deadline = [DateTime]::UtcNow.AddSeconds(10)
@@ -41,12 +43,14 @@ try {
         for ($i = 2; $i -le $Humans; $i++) {
             $extra = @('--bot', "--name=Amigo$i", "--rounds=$Rounds", "--timeout=$($Rounds * 38 + 20)", "--code=$code", "--port=$Port", ('--report="' + (Join-Path $runDir "human$i.json") + '"'))
             if ($RematchTest) { $extra += '--rematch-test' }
+            if ($InvitationTest) { $extra += '--invitation=' + $code }
             if ($DisconnectTest) { $extra += '--disconnect-test' }
             Start-GameProcess "human$i" $extra | Out-Null
         }
         for ($i = 1; $i -le $Mosquitoes; $i++) {
             $extra = @('--bot', "--name=Amigo$($Humans + $i)", "--rounds=$Rounds", "--timeout=$($Rounds * 38 + 20)", "--code=$code", "--port=$Port", ('--report="' + (Join-Path $runDir "mosquito$i.json") + '"'))
             if ($RematchTest) { $extra += '--rematch-test' }
+            if ($InvitationTest) { $extra += '--invitation=' + $code }
             if ($DisconnectTest) { $extra += if ($i -eq 1) { '--disconnect-after=6' } else { '--disconnect-test' } }
             Start-GameProcess "mosquito$i" $extra | Out-Null
         }
@@ -67,7 +71,7 @@ try {
         $winners = @($reports.result.winner | Sort-Object -Unique)
         $expectedWinner = if ($Mode -eq 'sleep') { 'human' } else { 'mosquito' }
         $testFailed = $testFailed -or $winners.Count -ne 1 -or $winners[0] -ne $expectedWinner
-        $incomplete = @($reports | Where-Object { $_.roles_by_round.Count -ne $Rounds -or $_.results.Count -ne $Rounds -or -not $_.lobby_movement_seen -or -not $_.cosmetics_synced })
+        $incomplete = @($reports | Where-Object { $_.roles_by_round.Count -ne $Rounds -or $_.results.Count -ne $Rounds -or -not $_.lobby_movement_seen -or -not $_.lobby_jump_seen -or -not $_.lobby_crouch_seen -or -not $_.lobby_sprint_seen -or -not $_.cosmetics_synced })
         $testFailed = $testFailed -or $incomplete.Count -gt 0
     }
 } finally {

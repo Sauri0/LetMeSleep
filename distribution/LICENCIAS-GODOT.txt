@@ -1,7 +1,8 @@
-Dejame dormir 0.1.0 — Godot 4.5.2 estable
+Let me sleep 0.3.0 — Godot 4.5.2 estable
 
 Arte, sonidos y código de juego originales del prototipo.
 No se han incorporado recursos de otros juegos.
+Fuentes externas Bangers y Atkinson Hyperlegible: créditos y licencias OFL en Licencias-fuentes/.
 
 MOTOR GODOT
 
