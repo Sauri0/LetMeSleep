@@ -1,4 +1,4 @@
-Let me sleep 0.3.0 — Godot 4.5.2 estable
+Let me sleep 0.4.0 — Godot 4.5.2 estable
 
 Arte, sonidos y código de juego originales del prototipo.
 No se han incorporado recursos de otros juegos.

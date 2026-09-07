@@ -1,12 +1,12 @@
-# Let me sleep — prototipo 0.3.0
+# Let me sleep — prototipo 0.4.0
 
 Juego nativo para Windows de humanos contra mosquitos: humano en primera persona, mosquito en tercera, casa caricaturesca y tres modos. Godot **4.5.2 stable**, GDScript y autoridad de juego en la PC anfitriona. No requiere Steam, navegador ni cuentas.
 
-La versión 0.3 incorpora **práctica local con rivales automáticos**, invitación de una sola entrada, carrera/salto/agacharse, animación corporal compartida y un patio de espera separado de la casa. La interfaz usa títulos de cómic con Bangers y texto Atkinson Hyperlegible. El nombre oficial es **Let me sleep**; al primer inicio se recuperan ajustes y apariencias de la edición anterior si todavía no existe un archivo nuevo.
+La versión **0.4** amplía la casa a dos pisos y cambia el vuelo y la picadura: avanzar hacia la mira en 3D, frenar al soltar y mantener concentración antes del anclaje. La defensa propia se muestra antes de recibir la picadura. Se conservan práctica local, invitación única, personalización y estética de cómic.
 
 ## Jugar y practicar
 
-Descomprimí **Let-me-sleep-0.3.0-Windows.zip** completo y abrí **Let-me-sleep.exe** o **Jugar.cmd**. No necesitás instalar Godot para jugar.
+Descomprimí **Let-me-sleep-0.4.0-Windows.zip** completo y abrí **Let-me-sleep.exe** o **Jugar.cmd**. No necesitás instalar Godot para jugar.
 
 Desde **PRÁCTICA**, elegí **Humano** o **Mosquito**, luego **Recolección de sangre**, **Supervivencia** o **Tareas**, y pulsá **¡A PRACTICAR!**. Corre localmente sin servidor de red ni otros jugadores: humano contra dos mosquitos automáticos, o mosquito contra un humano automático. Los rivales se mueven, buscan objetivos, atacan, pican y trabajan según el modo; usan las mismas reglas y solo estado público y datos privados propios. El resultado permite repetir o volver al menú.
 
@@ -27,16 +27,22 @@ El anfitrión define **entre 1 y 5 humanos exactos**; todos los demás serán mo
 
 Nadie elige equipo en la sala social. Cada ronda y revancha hacen un sorteo independiente; puede repetirse el rol varias veces. Cambiar reglas invalida los listos.
 
-La espera transcurre en un **patio de 8 × 6 × 4 m**, con bancos y personajes de espera; no anticipa equipos ni reutiliza puestos u objetos de partida. La ronda usa la **casa de 12 × 10 × 2,8 m**. Desde el botón de caminar podés recorrer la sala; Esc devuelve los paneles.
+La espera transcurre en un **patio de 8 × 6 × 4 m**, con bancos y personajes de espera; no anticipa equipos ni reutiliza puestos u objetos de partida. La ronda usa la **casa de dos pisos, de 28 × 22 × 6,4 m**. Desde el botón de caminar podés recorrer la sala; Esc devuelve los paneles.
+
+La casa ocupa **28 × 22 m**, con dos plantas a **0 y 3,2 m** y techo a **6,4 m**. Tiene **16 ambientes amueblados**, pasillos, puertas reales y dos escaleras laterales que ofrecen rutas alternativas. Las escaleras usan 16 peldaños de 0,2 m por lado y huecos reales en el entrepiso. Las **8 tareas y 8 herramientas recogibles** están distribuidas entre ambas plantas. Humanos y mosquitos aparecen separados, sin solapamiento ni línea de visión inicial entre bandos. Los bots pueden subir y bajar por rutas válidas.
+
+El mosquito es aproximadamente **65% menor visualmente** que en 0.3 y usa radio físico **0,04 m**. El humano se representa con **15 piezas corporales** y **22 zonas** posibles ligadas a la pose compartida; con un solo humano se usan las 16 frontales. Materiales estilizados de madera, tela y paredes, marcos y mobiliario dan identidad a los ambientes sin cambiar las colisiones autoritativas.
 
 ## Controles y reglas
 
 | Personaje | Controles iniciales |
 |---|---|
 | Humano | WASD y ratón; **Shift correr, Espacio saltar, Ctrl agacharse**; clic palmada/golpe; Q defensa propia; R recoger/cambiar; G soltar; E mantenida hacer tarea. |
-| Mosquito | WASD y ratón; Espacio subir, Ctrl bajar; E pulsada picar/desprenderse; F posarse cerca de una superficie. |
+| Mosquito | W hacia la mira en 3D; soltar frena; A/S/D relativo y ratón; Espacio/Ctrl altura auxiliar opcional; E mantenida concentrar y cargar, nueva E al picar desprende; F posarse. |
 
-La defensa propia con Q usa la mirada: frente/arriba para cabeza y hombros, algo abajo para torso y bien abajo para piernas. Con un humano, todas las zonas se defienden con las manos iniciales. Las traseras, habilitadas con varios humanos, requieren un compañero que apunte desde el lado expuesto. Matamoscas, raqueta eléctrica, diario y escoba ofrecen alcances, áreas y recuperaciones diferentes.
+La defensa propia con Q está disponible antes de adherirse el mosquito. El HUD indica «Q cubrir cabeza/torso/piernas» según la mirada: frente/arriba para cabeza y hombros, algo abajo para torso y bien abajo para piernas. Con un humano, todas las zonas se defienden con las manos iniciales. Las traseras, habilitadas con varios humanos, requieren un compañero que apunte desde el lado expuesto. Matamoscas, raqueta eléctrica, diario y escoba ofrecen alcances, áreas y recuperaciones diferentes.
+
+El mosquito vuela hacia donde apunta la cámara: **W avanza en 3D**, incluso al mirar arriba o abajo, y **soltar avance frena**. A/S/D conservan movimiento relativo; Espacio/Ctrl son ayudas de altura opcionales. Cerca de la marca propia, **mantener E concentra durante 1,2 s**, estabiliza y asiste el acercamiento. Soltar antes del anclaje cancela la carga. Ya picando, **una nueva pulsación de E desprende; soltarla no libera**. La carga exige alcance, orientación, lado exterior y recorrido libres; no atraviesa paredes ni el cuerpo.
 
 Cada mosquito recibe solo su marca. Picar lo ancla al cuerpo; sigue sus movimientos, salto, postura y extremidades animadas. Conserva su zona mientras pica. **Otra pulsación de E desprende; soltar E no libera.** Al soltarse recibe otra zona inmediatamente y mantiene el calendario individual de rotación, sin contador visible.
 
@@ -47,6 +53,12 @@ Cada mosquito recibe solo su marca. Picar lo ancla al cuerpo; sigue sus movimien
 | Tareas | Humanos cumplen la meta colectiva al final o agotan antes todas las vidas de los mosquitos. Cada mosquito tiene 3 vidas totales propias por defecto y reaparece mientras conserve alguna. Fallar reduce solo el plazo de futuras tareas del humano que falló. |
 
 Una desconexión durante la ronda la interrumpe sin ganador y devuelve a sala. Un resultado ya cerrado se conserva. Los eliminados esperan sin cámara libre.
+
+Valores candidatos: ronda **120 s**, cuota compartida **12**, rotación **14 s**. Extracción **0,8 unidades/s por mosquito**, con **tope agregado de equipo de 1 unidad/s**, después de **1 s de preparación** tras adherirse. La cuota configurada no cambia por escalado oculto. Tareas cada **36 s**, plazo inicial **30 s**, trabajo **3 s**, penalización propia **2 s**, piso **24 s**, meta **0 = automática** de dos tercios de oportunidades, redondeados hacia arriba. Tareas conserva **3 vidas totales personales** por defecto y **4 s** para reaparecer. Son hipótesis de prototipo; requieren juego humano para decidir balance.
+
+El **piso predeterminado es 24 s**. El mínimo configurable de plazo y piso es **tiempo de trabajo + 21 s de traslado**; la frecuencia mínima es ese mínimo más **0,5 s**. Con el trabajo habitual de 3 s, los límites son 24 s de plazo y 24,5 s entre tareas; los valores iniciales siguen siendo 30 s y 36 s. La reserva permite recorrer la casa de dos pisos también caminando: el piso anterior de 8 s era menor que numerosos trayectos. La penalización continúa siendo personal y el piso queda visible en las reglas; no hay extensiones ocultas de plazo ni garantía de completar el trabajo bajo ataque.
+
+**No aparecen nuevos encargos si el tiempo restante de ronda no alcanza para traslado y trabajo.** El plazo visible de una tarea tampoco supera el tiempo que queda de ronda. La meta automática cuenta únicamente esas oportunidades: con los valores iniciales hay **3 encargos posibles por humano** y una meta colectiva equivalente a **2 tareas por humano**, sumadas entre todos. La cadencia y la penalización personal se conservan. Al configurar rondas muy cortas de Tareas, el mínimo mostrado deja tiempo para el primer encargo de cada humano; por ejemplo, con 8 s de trabajo exige 33 s para un humano o 39 s para cinco. Sangre y Supervivencia conservan su mínimo de 30 s.
 
 ## Apariencia y menús
 
@@ -66,6 +78,6 @@ Suites principales: **rules_test.gd**, **lobby_rules_test.gd**, **locomotion_tes
 
 La evidencia vigente está en [PRUEBAS.md](distribution/PRUEBAS.md); compilación y hash corresponden a [BUILD.txt](distribution/BUILD.txt). Loopback no certifica juego entre casas ni balance o rendimiento en el hardware del grupo.
 
-Los datos de mapa viven en **map_catalog.gd**, las colisiones y locomoción en **arena.gd**, las articulaciones y marcas compartidas en **human_pose.gd**, y las reglas en **simulation.gd**. **lobby_rules.gd** sortea equipos; **network.gd** aplica permisos y privacidad; **invitation.gd** codifica la conexión.
+Los datos de mapa viven en **map_catalog.gd**, las rutas reutilizables en **map_navigation.gd**, las colisiones y locomoción en **arena.gd**, las articulaciones y marcas compartidas en **human_pose.gd**, y las reglas en **simulation.gd**. **lobby_rules.gd** sortea equipos; **network.gd** aplica permisos y privacidad; **invitation.gd** codifica la conexión.
 
-**0.3.0 / protocolo 3 / Windows x86_64 / OpenGL de compatibilidad.** Arte y audio procedural originales. Bangers y Atkinson Hyperlegible se distribuyen bajo SIL Open Font License; los avisos se incluyen con los recursos y licencias del paquete. Los artefactos 0.1 y 0.2 permanecen como historia, sin usarse como evidencia de esta compilación.
+**0.4.0 / protocolo 4 / Windows x86_64 / OpenGL de compatibilidad.** Arte y audio procedural originales. Bangers y Atkinson Hyperlegible se distribuyen bajo SIL Open Font License; los avisos se incluyen con los recursos y licencias del paquete. Los artefactos 0.1, 0.2 y 0.3 permanecen como historia, sin usarse como evidencia de esta compilación.

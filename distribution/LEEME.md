@@ -1,6 +1,15 @@
-# Let me sleep · 0.3.0 · Windows 64 bits
+# Let me sleep · 0.4.0 · Windows 64 bits
 
-**Descomprimí toda la carpeta antes de jugar.** Abrí **Let-me-sleep.exe** o **Jugar.cmd**. No necesitás instalar Godot. Para jugar juntos, todos necesitan **0.3.0 / protocolo 3**.
+**Descomprimí toda la carpeta antes de jugar.** Abrí **Let-me-sleep.exe** o **Jugar.cmd**. No necesitás instalar Godot. Para jugar juntos, todos necesitan **0.4.0 / protocolo 4**. El texto de invitación conserva el formato DD3; un cliente 0.3 es incompatible con la sesión 0.4.
+
+## Empezá con estos controles
+
+- **Mosquito: W hacia donde mirás.** Mirá arriba o abajo para volar en 3D; soltá W para frenar.
+- **Mantené E cerca de tu marca** para concentrarte y acoplarte. Soltar antes cancela. Ya picando, soltar no desprende: **soltá y pulsá E otra vez** para salir.
+- **Retirate con S**, ganá distancia y volvé a aproximarte mirando tu nueva marca.
+- **Humano: Q cubre tu cuerpo.** Mirada al frente/arriba: cabeza; algo abajo: torso; bien abajo: piernas. Podés anticiparte a la picadura.
+
+Son las teclas iniciales; el HUD muestra las que hayas guardado en Ajustes.
 
 ## Probar ahora, sin organizar una sala
 
@@ -66,17 +75,21 @@ Desde **TU PINTA** elegís color y accesorio para humano y mosquito por separado
 
 Al pasar de la edición anterior a **Let me sleep**, el juego copia los ajustes anteriores cuando todavía no existen preferencias nuevas. Conserva apariencias y controles, deja intacto el archivo anterior y no sobrescribe un perfil nuevo.
 
+La casa ocupa **28 × 22 m**, con dos plantas a **0 y 3,2 m** y techo a **6,4 m**. Tiene **16 ambientes amueblados**, pasillos, puertas reales y dos escaleras laterales que ofrecen rutas alternativas. Las escaleras usan 16 peldaños de 0,2 m por lado y huecos reales en el entrepiso. Las **8 tareas y 8 herramientas recogibles** están distribuidas entre ambas plantas. Humanos y mosquitos aparecen separados, sin solapamiento ni línea de visión inicial entre bandos. Los bots pueden subir y bajar por rutas válidas.
+
+El mosquito es aproximadamente **65% menor visualmente** que en 0.3 y usa radio físico **0,04 m**. El humano se representa con **15 piezas corporales** y **22 zonas** posibles ligadas a la pose compartida; con un solo humano se usan las 16 frontales. Materiales estilizados de madera, tela y paredes, marcos y mobiliario dan identidad a los ambientes sin cambiar las colisiones autoritativas.
+
 ## Controles iniciales
 
 | Acción | Humano | Mosquito |
 |---|---|---|
-| Desplazarse / mirar | WASD / ratón | WASD / ratón |
+| Desplazarse / mirar | WASD / ratón | W hacia la mira en 3D, A/S/D relativo / ratón; soltar avance frena |
 | Shift | Correr | — |
-| Espacio | Saltar | Subir volando |
-| Ctrl | Agacharse | Bajar volando |
+| Espacio | Saltar | Altura auxiliar +, opcional |
+| Ctrl | Agacharse | Altura auxiliar −, opcional |
 | Clic izquierdo | Palmada o golpe | — |
-| Q | Defensa del propio cuerpo | — |
-| E | Mantener para hacer tarea | Pulsar para picar; pulsar otra vez para desprenderse |
+| Q | Cubrir cabeza/torso/piernas según mirada, incluso antes de picadura | — |
+| E | Mantener para hacer tarea | Mantener para concentrar/cargar; soltar cancela antes del anclaje; nueva pulsación al picar desprende |
 | R / G | Recoger o cambiar / soltar herramienta | — |
 | F | — | Posarse cerca de una superficie / volver a volar |
 | Esc | Abrir/cerrar menú | Abrir/cerrar menú |
@@ -85,15 +98,17 @@ Podés reasignar controles y ajustar sensibilidad por rol, volumen, inversión y
 
 ### Humano: defenderse y ayudar
 
-Empezás con manos. Clic da una palmada; los objetos del mapa ofrecen golpes diferentes: matamoscas, raqueta eléctrica, diario enrollado y escoba. R recoge o cambia un objeto cercano; G lo deja y vuelve a las manos. Cada golpe necesita recuperarse antes de repetir.
+Empezás con manos. Clic da una palmada; los objetos del mapa ofrecen golpes diferentes: matamoscas, raqueta eléctrica, diario enrollado y escoba. R recoge o cambia un objeto cercano; G lo deja y vuelve a las manos. Cada golpe necesita recuperarse antes de repetir. Las manos alcanzan 1,7 m; el impacto se comprueba durante una ventana de 0,08–0,25 s del gesto, no como golpe instantáneo al pulsar.
 
-Q defiende una banda del propio cuerpo según la mirada: **frente o arriba** para cabeza/hombros, **algo abajo** para torso y **bien abajo** para piernas. Con un solo humano, todas las marcas disponibles se pueden defender con las manos iniciales. Las marcas traseras se habilitan con varios humanos y requieren ayuda: acercate al lado expuesto de tu compañero y apuntá al mosquito con clic.
+Podés usar Q antes de que el mosquito se adhiera. El HUD muestra la zona que cubrís y el aviso «Zumbido cerca» indica una amenaza sin revelar marcas privadas. Q defiende una banda del propio cuerpo según la mirada: **frente o arriba** para cabeza/hombros, **algo abajo** para torso y **bien abajo** para piernas. Con un solo humano, todas las marcas disponibles se pueden defender con las manos iniciales. Las marcas traseras se habilitan con varios humanos y requieren ayuda: acercate al lado expuesto de tu compañero y apuntá al mosquito con clic.
 
 Correr, saltar y agacharse tienen colisiones y límites. El cuerpo, las extremidades y las marcas siguen la postura; saltar o agacharse no desprende por sí solo un mosquito adherido.
 
 ### Mosquito: picar y desprenderse
 
-Acercate a tu marca privada sobre un humano y pulsá E. Quedás anclado al cuerpo y conservás esa zona mientras picás, incluso si el humano corre, salta o se agacha.
+El mosquito vuela hacia donde apunta la cámara: **W avanza en 3D**, incluso al mirar arriba o abajo, y **soltar avance frena**. A/S/D conservan movimiento relativo; Espacio/Ctrl son ayudas de altura opcionales. Cerca de la marca propia, **mantener E concentra durante 1,2 s**, estabiliza y asiste el acercamiento. Soltar antes del anclaje cancela la carga. Ya picando, **una nueva pulsación de E desprende; soltarla no libera**. La carga exige alcance, orientación, lado exterior y recorrido libres; no atraviesa paredes ni el cuerpo.
+
+El HUD distingue zona a alcance, concentración con progreso, intento bloqueado y picadura. Las ayudas usan tus teclas guardadas. Al quedar anclado conservás la zona y acompañás al humano aunque corra, salte o se agache.
 
 **Otra pulsación de E desprende; soltar la tecla no libera.** Al soltarte recibís otra zona inmediatamente, sin reiniciar el calendario individual de rotación. No hay cuenta regresiva de la marca. Si está detrás del cuerpo o de un mueble, rodealo para verla y alcanzarla.
 
@@ -111,7 +126,11 @@ En **Tareas**, mantené E junto al puesto indicado. Una picadura pausa el trabaj
 
 Tres vidas totales significan tres oportunidades de vivir, no tres reapariciones. Si todos están temporalmente muertos pero queda alguna vida, la ronda sigue. Si todos agotan sus vidas, los humanos ganan inmediatamente aunque falten tareas.
 
-Valores iniciales de prototipo: ronda **120 s**, cuota **30**, rotación **14 s**. Tareas cada **24 s**, plazo **18 s**, trabajo **3 s**, penalización **2 s**, piso **8 s**; meta automática de dos tercios de las oportunidades, redondeados hacia arriba. Tareas usa **3 vidas personales**, configurables entre 1 y 9, con reaparición tras **4 s** por defecto. No son valores de balance ya validados.
+Valores candidatos: ronda **120 s**, cuota compartida **12**, rotación **14 s**. Extracción **0,8 unidades/s por mosquito**, con **tope agregado de equipo de 1 unidad/s**, después de **1 s de preparación** tras adherirse. La cuota configurada no cambia por escalado oculto. Tareas cada **36 s**, plazo inicial **30 s**, trabajo **3 s**, penalización propia **2 s**, piso **24 s**, meta **0 = automática** de dos tercios de oportunidades, redondeados hacia arriba. Tareas conserva **3 vidas totales personales** por defecto y **4 s** para reaparecer. Son hipótesis de prototipo; requieren juego humano para decidir balance.
+
+El **piso predeterminado es 24 s**. El mínimo configurable de plazo y piso es **tiempo de trabajo + 21 s de traslado**; la frecuencia mínima es ese mínimo más **0,5 s**. Con el trabajo habitual de 3 s, los límites son 24 s de plazo y 24,5 s entre tareas; los valores iniciales siguen siendo 30 s y 36 s. La reserva permite recorrer la casa de dos pisos también caminando: el piso anterior de 8 s era menor que numerosos trayectos. La penalización continúa siendo personal y el piso queda visible en las reglas; no hay extensiones ocultas de plazo ni garantía de completar el trabajo bajo ataque.
+
+**No aparecen nuevos encargos si el tiempo restante de ronda no alcanza para traslado y trabajo.** El plazo visible de una tarea tampoco supera el tiempo que queda de ronda. La meta automática cuenta únicamente esas oportunidades: con los valores iniciales hay **3 encargos posibles por humano** y una meta colectiva equivalente a **2 tareas por humano**, sumadas entre todos. La cadencia y la penalización personal se conservan. Al configurar rondas muy cortas de Tareas, el mínimo mostrado deja tiempo para el primer encargo de cada humano; por ejemplo, con 8 s de trabajo exige 33 s para un humano o 39 s para cinco. Sangre y Supervivencia conservan su mínimo de 30 s.
 
 ## Menús, resultados y desconexión
 

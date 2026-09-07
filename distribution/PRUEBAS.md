@@ -1,58 +1,83 @@
-# Let me sleep 0.3.0 — registro de verificación
+# Let me sleep 0.4.0 — verificación de entrega
 
-7 de septiembre de 2026. Godot 4.5.2, Windows x86_64, protocolo 3.
+7 de septiembre de 2026. Windows x86_64, Godot 4.5.2, protocolo 4; invitación DD3, formato interno 1.
 
-## Estado registrado
+## Ejecutable entregado
 
-**Entrega Windows verificada.** El ejecutable definitivo, con SHA256 **EBE45FB53262E8E8A6BAB35B57104BF5C7FC7043E024AD0EAB5BCDE0D65BD9A5**, aprobó práctica nativa, los tres modos por ENet, invitación, revancha, desconexión y rechazo de versión incompatible. Los ensayos finales terminaron sin errores ni avisos en stderr. El código de juego corresponde al commit **f1ffa97**; los registros de entrega se completaron después sin modificar el binario.
+**Cierre técnico completado.** Se ejecutó el mismo Let-me-sleep.exe que contiene el ZIP. SHA256:
 
-No se utiliza un hash, captura o resultado de 0.2.0 como certificación del ejecutable 0.3.0.
+`F82635685B1D19E74F2788AF246179348091FD33311E5290A2DCD9151BF50332`
 
-| Comprobación | Evidencia 0.3 |
+Commit de código y diagnósticos: `3b6563815931e95c00ce8d09f6087903f7ebd772`. Las reglas y la interfaz jugable quedaron cerradas en `68e28d0034c613137b418eb43c5796d1b987cc59`; los cambios siguientes reforzaron los diagnósticos y la comprobación de compilación. Los hashes de los ZIP y el commit de documentación están en el manifiesto externo y sus archivos SHA256, para evitar una referencia circular dentro del propio ZIP.
+
+| Prueba del EXE de entrega | Resultado |
 |---|---|
-| Simulación autoritativa | **3242 / 0 fallos**: zonas privadas, anclaje, calendario, sangre compartida, tareas, vidas, herramientas, colisiones, finales y revancha. |
-| Sala y sorteo | **321 / 0 fallos**: humanos exactos 1..5, ambos bandos, mínimo 1v1, topes 12 mosquitos/16 total, listos y sorteos independientes que pueden repetir rol. |
-| Mapas | **61 / 0 fallos**: patio y casa separados, datos copiados, spawns válidos, límites y obstáculos propios, lobby no seleccionable como mapa de ronda. |
-| Locomoción y poses | **16013 / 0 fallos**: correr/agacharse/saltar, aterrizar sobre muebles, techo, gravedad con entrada caducada, mensajes repetidos/reordenados, animación de palmada/herramientas, superficies expuestas y márgenes de cada zona. Anclaje, sangre, defensa propia y rescate trasero conservados al moverse. |
-| Práctica automática | **49 / 0 fallos**, según integración: ambos roles y tres modos, decisiones funcionales y estado público/privado propio. Es una sesión local jugable, distinta del harness de red. |
-| Invitación | **51 / 0 fallos**, según integración: paquete DD3 de dirección/puerto/sala, validación de versión, tipos, límites y entradas malformadas. |
-| Interfaz y cliente nativos | **31 / 0 fallos** en cliente/interfaz y **46 / 0 fallos** de navegación, según integración. |
-| Visual nativo | **40 / 0 fallos**, según integración: mundo y representación 0.3. |
-| Práctica nativa del EXE definitivo | **72 / 0 fallos**: los seis pares rol/modo desde botones reales, rivales activos, carrera, salto, agachado y cámara, palmada, vuelo, menú, resultado, reinicio y salida. Cinco capturas del propio ejecutable. Los finales de esta prueba de interfaz se inducen; la suite de práctica automática comprueba los objetivos y resultados por simulación. |
-| Migración de preferencias | **10 / 0 fallos**, según agente de UI: copia válida de ajustes/apariencias/bindings, origen intacto, sin sobrescribir destino y restauración exacta del fixture. |
-| ENet del EXE definitivo | **Sangre 1v1 con invitación y dos rondas; Tareas 1v1; Supervivencia 4v12: PASS**. Todos los clientes completan los resultados previstos, conservan privacidad/apariencias y reciben carrera/salto/agachado en el patio. El amigo decodifica dirección, puerto y sala del mismo DD3. Son procesos locales en una PC, no conexiones domésticas distintas. |
-| Desconexión e incompatibilidad del EXE | **PASS**: al salir un participante durante la ronda, el restante vuelve a sala sin ganador. Un saludo con versión/protocolo incompatibles es rechazado antes de entrar. |
-| Orden de mensajes de red | **11 / 0 fallos**: un mensaje tardío de sala desde otro canal no cancela una ronda cuyo snapshot ya comenzó. Corrección incorporada a la nueva exportación. |
-| Sonido y privacidad visual sobre fuente | **28 / 0** audio; **13 / 0** privacidad visual. Zumbido ocluido por la casa, eventos confirmados una vez, limpieza, y marcas de objetivo privadas. Cosméticos también aprobados. |
-| Exportación y capturas definitivas | **PASS**: Windows x86_64 exportado, inicio Let me sleep, patio y personalización de ambos roles capturados desde el EXE. Las pruebas visuales nativas adicionales observan fases distintas de animación y contacto de 22 zonas en siete poses. |
+| Práctica nativa desde menú: ambos roles y tres modos | 73/73; movimiento, cámara, W en 3D, frenado, salto, agacharse, ataque, pausa, resultado, repetir y salir. |
+| Demo nativa de controles | 8/8; concentración mantenida/cancelada, acople, extracción, desprenderse, retirada y escalera completa sin saltar. |
+| Plazos de Tareas mediante simulación embebida | 59/59; viaje caminando, penalización personal, límites, corte de encargos tardíos y partida completa. |
+| Encuentros completos mediante simulación embebida | 5/5 escenarios; cuotas y resultados reales, sin forzar posiciones ni finales. |
+| Auditor de privacidad con paquetes reordenados y filtraciones deliberadas | 24/24. |
+| ENet Sangre 1v1, invitación y dos rondas | PASS; cuota diagnóstica 3, retorno a sala, nuevo sorteo, cosméticos y controles de patio. |
+| ENet Tareas 1v1 | PASS; tarea real, objetivo diagnóstico 1 y resultado humano. |
+| ENet Supervivencia: 4 humanos + 12 mosquitos | PASS; 16 clientes, resultado correcto, privacidad y controles confirmados. |
+| Desconexión, protocolo inválido y EXE 0.3 real contra servidor 0.4 | PASS; interrupción sin ganador y rechazo de versión incompatible. |
 
-La matriz de poses comprueba contacto y margen con estados de carrera, salto, agachado, orientación, herramientas y pulso de golpe. Los sorteos se prueban por cantidad exacta e independencia, sin exigir alternancia entre rondas.
+Los registros de entrega no contienen errores de stderr. Son procesos locales en una misma PC, no equipos ni conexiones de Internet independientes.
 
-## Reproducción desde fuentes
+En los 16 clientes se verificaron **19.144 paquetes privados**; **92** esperaron un estado público del tick correspondiente, y quedaron **0 pendientes y 0 fallos**. Un intento anterior marcó dos saltos no observados y una alarma de privacidad con un verificador que comparaba el paquete privado contra un rol público todavía no confirmado. Se conservó ese informe. El verificador actualizado espera confirmación autoritativa del movimiento, correlaciona ticks y rechaza datos públicos prohibidos, asignaciones destinadas a humanos y paquetes que no pueda validar. No se descartaron pendientes para aprobar. El juego no cambió durante esta corrección del harness.
 
-Restaurar herramientas con **work/setup-tools.ps1** si faltan editor o plantillas. **work/build.ps1** importa el proyecto y exporta Windows. Las suites pueden ejecutarse directamente:
+## Reglas, geometría e interfaz sobre fuente
+
+| Suite | Comprobaciones sin fallos |
+|---|---:|
+| Reglas autoritativas | 3256 |
+| Sala social y sorteo | 321 |
+| Mapas y spawns | 431 |
+| Rutas físicas y alternativas | 303 |
+| Locomoción y colisiones | 16013 |
+| Concentración y combate | 277 |
+| Práctica: seis pares rol/modo | 69 |
+| Invitaciones | 51 |
+| Orden de mensajes de red | 11 |
+| UI nativa y límites de configuración | 77 |
+| Migración de preferencias | 13 |
+| Audio / privacidad visual / poses | 28 / 13 / 33 |
+| Presentación visual nativa 0.4 | 32 |
+
+También pasó la suite de cosméticos. La primera compilación ejecutó la matriz completa; tras los cambios de Tareas se repitieron reglas, práctica, plazos y UI. Los diagnósticos de red incorporaron sus propias regresiones. La compilación comprueba además la sintaxis de los puntos de entrada cargados dinámicamente. Las pruebas que modifican ajustes se ejecutaron secuencialmente y restauraron el perfil original byte por byte.
+
+## Encuentros y alcance del balance
+
+| Escenario reproducible | Resultado real |
+|---|---|
+| Humano inmóvil contra dos mosquitos | Primera picadura 26,87 s; pierde por cuota a 52,47 s. |
+| Humano controlado por bot defensor | Gana a 32,67 s. |
+| Mosquito que permanece adherido 4,2 s | Muere a 22,15 s. |
+| Mosquito con retiradas a 2,75 s | Siete acoples; extrae 9,8 y muere a 115,85 s. |
+| Mosquito con retiradas a 3,25 s | Gana cuota 12 a 97,07 s: siete acoples, seis retiradas y supervivencia. |
+
+El ensayo usa inputs reales de PracticeSession y rutas físicas. La retirada ganadora combina desprendimiento, retroceso breve y nueva aproximación; no usa teleport ni concede sangre artificialmente. En la referencia 0.3, el primer contacto del escenario inmóvil ocurría a 1,38 s y la cuota a 25,77 s. Mapa, spawns y reglas cambiaron juntos: la comparación no aísla una sola causa. Estos resultados demuestran estrategias posibles, no diversión ni dificultad aprobadas por personas. Los humanos no tienen una barra de vida: Sangre se pierde por la cuota compartida.
+
+## Tareas alcanzables en la casa ampliada
+
+Se midieron 104 trayectos físicos entre spawns y puestos: 61 superaban el antiguo piso de 8 s, ninguno el plazo inicial de 30 s. El análisis de 94 nodos por 8 puestos cubrió 752 rutas. La mayor mide 52,43 m horizontales; con Simulation real, sin correr, se llega a los 16,4 s y se completa el trabajo a los **19,4 s**.
+
+El piso predeterminado es ahora **24 s**, con 4,6 s de margen en ese recorrido. La autoridad y la UI comparten un mínimo de **trabajo + 21 s**; la frecuencia debe superar ese mínimo en 0,5 s. Se mantienen plazo inicial 30 s, frecuencia 36 s, trabajo 3 s y penalización personal 2 s. Cinco fallos naturales producen 28, 26, 24, 24 y 24 s, sin acelerar el calendario ni afectar a otros humanos.
+
+No aparecen encargos si el tiempo real restante no alcanza para traslado y trabajo. La meta automática sigue siendo dos tercios de oportunidades válidas, redondeados hacia arriba: en 120 s y con un humano, hay encargos a 3, 39 y 75 s y meta 2; se omite el de 111 s. Una partida completa caminando realizó las tres tareas y ganó sin fallos ni colisiones. El HUD anuncia el tiempo efectivo disponible. La duración mínima configurable asegura una primera oportunidad por humano incluso con trabajo de 8 s: 33 s para uno y 39 s para cinco. La práctica ampliada de 180 s completó cinco tareas entre ambas plantas.
+
+## Capturas, video y reproducción
+
+El MP4 dura 13,4 s a 30 fps fijos y está rotulado **DEMO DE CONTROLES / RIVAL QUIETO**. Es una demostración controlada del EXE, separada de los encuentros automatizados. No representa FPS de juego. Las capturas de demo-final y practica-final proceden del mismo EXE; las ocho vistas de ambientes y poses son fixtures de la geometría final.
+
+Evidencias y capturas se entregan en `0.4-validacion/` y `0.4-preview/`, junto a los ZIP. Los informes `release04-delivery-*` corresponden al hash de entrega; los intentos anteriores conservan sus nombres y contexto. `work/build.ps1` importa, comprueba y exporta; `work/test-network.ps1` reproduce ENet. Ejemplo desde la carpeta del EXE:
 
 ```powershell
-& ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/rules_test.gd
-& ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/lobby_rules_test.gd
-& ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/locomotion_test.gd
-& ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/maps_test.gd
-& ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/practice_test.gd
-& ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/invitation_test.gd
+./Let-me-sleep.exe --headless --script res://tests/task_deadline_test.gd
 ```
 
-El harness **work/test-network.ps1** prueba clientes ENet y revancha. La **práctica del menú** usa PracticeSession y BotBrain, corre sin red y aplica la simulación de juego. Sus rivales no reciben marcas o tareas privadas ajenas.
+Las mediciones visuales orientativas, con RTX 3060 Ti y vsync desactivado, dieron medianas de 4,86 ms en dormitorio, 4,91 ms en escalera y 7,22 ms en pasillo; son vistas de diagnóstico, no requisitos mínimos ni mediciones de una partida completa.
 
-## Cierre de compilación
+## Límites de esta entrega
 
-El nombre oficial es **Let me sleep**. Artefactos: **Let-me-sleep.exe**, **Let-me-sleep-0.3.0-Windows.zip** y **Let-me-sleep-0.3.0-fuentes.zip**. BUILD.txt identifica el EXE probado; MANIFIESTO-0.3.0.json y los archivos .sha256.txt acompañan los ZIP con sus hashes. La entrega conserva informes y logs en **0.3-validacion/** y capturas en **0.3-preview/** junto a los paquetes.
-
-El primer candidato permitió reproducir un mensaje de lobby tardío que llegaba después de una ronda nueva por otro canal. Fue corregido, se agregó una regresión de 11 comprobaciones y se repitieron los ensayos sobre el hash definitivo indicado arriba, incluida la carga de 16 clientes. El ajuste de audio fue de fixture: cargar la casa explícitamente, porque el mundo ahora comienza en el patio.
-
-Las guías LEEME remiten a este registro y BUILD.txt para el estado de entrega. Los entregables y documentos históricos 0.1 y 0.2 se conservan separados.
-
-## Pruebas humanas pendientes
-
-Jugar entre PCs y conexiones distintas; medir latencia, pérdidas, discrepancias de golpes, comodidad y comportamiento del hardware del grupo. Una GPU dedicada no demuestra requisitos mínimos. También falta balance humano de velocidades, salto, herramientas, sangre, tareas y capacidad máxima cómoda.
-
-La invitación DD3 requiere una dirección y ruta UDP alcanzables. El selector LAN enumera IPs locales; no consulta HTTP para descubrir la dirección pública, no abre puertos ni resuelve CGNAT. No se configuró router/firewall ni se contrató alojamiento. Una desconexión interrumpe la ronda; el menú no detiene la simulación online ni la práctica.
+Falta juego humano para validar comodidad, lectura de marcas, dificultad y balance. Tampoco se verificaron varias computadoras físicas, Internet entre casas ni el rendimiento mínimo del grupo. Loopback y 16 procesos en una PC no certifican una LAN real ni latencia/pérdidas externas. La invitación no abre puertos ni resuelve CGNAT; el servidor sigue alojado en la PC del usuario, sin relay contratado ni cambios automáticos de router o firewall. Las entregas 0.1–0.3 se conservan.

@@ -1,5 +1,13 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Let me sleep 0.3.0 · Cómo jugar</title><style>body{background:#f1ead9;color:#203139;font:17px/1.65 Segoe UI,Arial,sans-serif;margin:0}article{max-width:900px;margin:36px auto;padding:38px;background:#fffdf5;border:2px solid #203139;border-radius:16px}h1,h2,h3{line-height:1.22}h1{font-size:40px;color:#173d49}h2{margin-top:38px}h3{margin-top:25px}a{color:#155b6b;text-underline-offset:3px}code{background:#e5eee9;padding:2px 5px;border-radius:3px}table{display:block;overflow:auto;border-collapse:collapse;margin:22px 0}td,th{border:1px solid #c4d0ca;padding:10px;text-align:left;vertical-align:top}th{background:#e5eee9}li{margin:8px 0}strong{font-weight:700}@media(max-width:950px){article{margin:12px;padding:22px}h1{font-size:32px}}@media print{body{background:white}article{border:0;margin:0;padding:0}a{color:inherit}}</style></head><body><article><h1>Let me sleep · 0.3.0 · Windows 64 bits</h1>
-<p><strong>Descomprimí toda la carpeta antes de jugar.</strong> Abrí <strong>Let-me-sleep.exe</strong> o <strong>Jugar.cmd</strong>. No necesitás instalar Godot. Para jugar juntos, todos necesitan <strong>0.3.0 / protocolo 3</strong>.</p>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Let me sleep 0.4.0 · Cómo jugar</title><style>body{background:#f1ead9;color:#203139;font:17px/1.65 Segoe UI,Arial,sans-serif;margin:0}article{max-width:900px;margin:36px auto;padding:38px;background:#fffdf5;border:2px solid #203139;border-radius:16px}h1,h2,h3{line-height:1.22}h1{font-size:40px;color:#173d49}h2{margin-top:38px}h3{margin-top:25px}a{color:#155b6b;text-underline-offset:3px}code{background:#e5eee9;padding:2px 5px;border-radius:3px}table{display:block;overflow:auto;border-collapse:collapse;margin:22px 0}td,th{border:1px solid #c4d0ca;padding:10px;text-align:left;vertical-align:top}th{background:#e5eee9}li{margin:8px 0}strong{font-weight:700}@media(max-width:950px){article{margin:12px;padding:22px}h1{font-size:32px}}@media print{body{background:white}article{border:0;margin:0;padding:0}a{color:inherit}}</style></head><body><article><h1>Let me sleep · 0.4.0 · Windows 64 bits</h1>
+<p><strong>Descomprimí toda la carpeta antes de jugar.</strong> Abrí <strong>Let-me-sleep.exe</strong> o <strong>Jugar.cmd</strong>. No necesitás instalar Godot. Para jugar juntos, todos necesitan <strong>0.4.0 / protocolo 4</strong>. El texto de invitación conserva el formato DD3; un cliente 0.3 es incompatible con la sesión 0.4.</p>
+<h2>Empezá con estos controles</h2>
+<ul>
+<li><strong>Mosquito: W hacia donde mirás.</strong> Mirá arriba o abajo para volar en 3D; soltá W para frenar.</li>
+<li><strong>Mantené E cerca de tu marca</strong> para concentrarte y acoplarte. Soltar antes cancela. Ya picando, soltar no desprende: <strong>soltá y pulsá E otra vez</strong> para salir.</li>
+<li><strong>Retirate con S</strong>, ganá distancia y volvé a aproximarte mirando tu nueva marca.</li>
+<li><strong>Humano: Q cubre tu cuerpo.</strong> Mirada al frente/arriba: cabeza; algo abajo: torso; bien abajo: piernas. Podés anticiparte a la picadura.</li>
+</ul>
+<p>Son las teclas iniciales; el HUD muestra las que hayas guardado en Ajustes.</p>
 <h2>Probar ahora, sin organizar una sala</h2>
 <ol>
 <li>En el inicio elegí <strong>PRÁCTICA</strong>.</li>
@@ -40,107 +48,45 @@
 <p>La sala de espera es un <strong>patio 3D separado de la casa de juego</strong>, con bancos y espacio central. Usá el botón para caminar y recorré el patio con WASD, ratón, Shift para correr, Espacio para saltar y Ctrl para agacharte. <strong>Esc</strong> recupera los paneles de sala. Los avatares humanos de espera no anticipan el rol de la ronda.</p>
 <p>Desde <strong>TU PINTA</strong> elegís color y accesorio para humano y mosquito por separado, con vista previa 3D. Las dos apariencias se guardan localmente y se aplica la del rol que toque. Son cambios visuales; no modifican velocidad, alcance, vidas ni colisiones.</p>
 <p>Al pasar de la edición anterior a <strong>Let me sleep</strong>, el juego copia los ajustes anteriores cuando todavía no existen preferencias nuevas. Conserva apariencias y controles, deja intacto el archivo anterior y no sobrescribe un perfil nuevo.</p>
+<p>La casa ocupa <strong>28 × 22 m</strong>, con dos plantas a <strong>0 y 3,2 m</strong> y techo a <strong>6,4 m</strong>. Tiene <strong>16 ambientes amueblados</strong>, pasillos, puertas reales y dos escaleras laterales que ofrecen rutas alternativas. Las escaleras usan 16 peldaños de 0,2 m por lado y huecos reales en el entrepiso. Las <strong>8 tareas y 8 herramientas recogibles</strong> están distribuidas entre ambas plantas. Humanos y mosquitos aparecen separados, sin solapamiento ni línea de visión inicial entre bandos. Los bots pueden subir y bajar por rutas válidas.</p>
+<p>El mosquito es aproximadamente <strong>65% menor visualmente</strong> que en 0.3 y usa radio físico <strong>0,04 m</strong>. El humano se representa con <strong>15 piezas corporales</strong> y <strong>22 zonas</strong> posibles ligadas a la pose compartida; con un solo humano se usan las 16 frontales. Materiales estilizados de madera, tela y paredes, marcos y mobiliario dan identidad a los ambientes sin cambiar las colisiones autoritativas.</p>
 <h2>Controles iniciales</h2>
-<table>
-<thead>
-<tr>
-<th>Acción</th>
-<th>Humano</th>
-<th>Mosquito</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Desplazarse / mirar</td>
-<td>WASD / ratón</td>
-<td>WASD / ratón</td>
-</tr>
-<tr>
-<td>Shift</td>
-<td>Correr</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Espacio</td>
-<td>Saltar</td>
-<td>Subir volando</td>
-</tr>
-<tr>
-<td>Ctrl</td>
-<td>Agacharse</td>
-<td>Bajar volando</td>
-</tr>
-<tr>
-<td>Clic izquierdo</td>
-<td>Palmada o golpe</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Q</td>
-<td>Defensa del propio cuerpo</td>
-<td>—</td>
-</tr>
-<tr>
-<td>E</td>
-<td>Mantener para hacer tarea</td>
-<td>Pulsar para picar; pulsar otra vez para desprenderse</td>
-</tr>
-<tr>
-<td>R / G</td>
-<td>Recoger o cambiar / soltar herramienta</td>
-<td>—</td>
-</tr>
-<tr>
-<td>F</td>
-<td>—</td>
-<td>Posarse cerca de una superficie / volver a volar</td>
-</tr>
-<tr>
-<td>Esc</td>
-<td>Abrir/cerrar menú</td>
-<td>Abrir/cerrar menú</td>
-</tr>
-</tbody>
-</table>
+<table><thead><tr><th>Acción</th><th>Humano</th><th>Mosquito</th></tr></thead><tbody>
+<tr><td>Desplazarse / mirar</td><td>WASD / ratón</td><td>W hacia la mira en 3D, A/S/D relativo / ratón; soltar avance frena</td></tr>
+<tr><td>Shift</td><td>Correr</td><td>—</td></tr>
+<tr><td>Espacio</td><td>Saltar</td><td>Altura auxiliar +, opcional</td></tr>
+<tr><td>Ctrl</td><td>Agacharse</td><td>Altura auxiliar −, opcional</td></tr>
+<tr><td>Clic izquierdo</td><td>Palmada o golpe</td><td>—</td></tr>
+<tr><td>Q</td><td>Cubrir cabeza/torso/piernas según mirada, incluso antes de picadura</td><td>—</td></tr>
+<tr><td>E</td><td>Mantener para hacer tarea</td><td>Mantener para concentrar/cargar; soltar cancela antes del anclaje; nueva pulsación al picar desprende</td></tr>
+<tr><td>R / G</td><td>Recoger o cambiar / soltar herramienta</td><td>—</td></tr>
+<tr><td>F</td><td>—</td><td>Posarse cerca de una superficie / volver a volar</td></tr>
+<tr><td>Esc</td><td>Abrir/cerrar menú</td><td>Abrir/cerrar menú</td></tr>
+</tbody></table>
 <p>Podés reasignar controles y ajustar sensibilidad por rol, volumen, inversión y pulso de marca. Las ayudas del juego reflejan tus teclas guardadas.</p>
 <h3>Humano: defenderse y ayudar</h3>
-<p>Empezás con manos. Clic da una palmada; los objetos del mapa ofrecen golpes diferentes: matamoscas, raqueta eléctrica, diario enrollado y escoba. R recoge o cambia un objeto cercano; G lo deja y vuelve a las manos. Cada golpe necesita recuperarse antes de repetir.</p>
-<p>Q defiende una banda del propio cuerpo según la mirada: <strong>frente o arriba</strong> para cabeza/hombros, <strong>algo abajo</strong> para torso y <strong>bien abajo</strong> para piernas. Con un solo humano, todas las marcas disponibles se pueden defender con las manos iniciales. Las marcas traseras se habilitan con varios humanos y requieren ayuda: acercate al lado expuesto de tu compañero y apuntá al mosquito con clic.</p>
+<p>Empezás con manos. Clic da una palmada; los objetos del mapa ofrecen golpes diferentes: matamoscas, raqueta eléctrica, diario enrollado y escoba. R recoge o cambia un objeto cercano; G lo deja y vuelve a las manos. Cada golpe necesita recuperarse antes de repetir. Las manos alcanzan 1,7 m; el impacto se comprueba durante una ventana de 0,08–0,25 s del gesto, no como golpe instantáneo al pulsar.</p>
+<p>Podés usar Q antes de que el mosquito se adhiera. El HUD muestra la zona que cubrís y el aviso «Zumbido cerca» indica una amenaza sin revelar marcas privadas. Q defiende una banda del propio cuerpo según la mirada: <strong>frente o arriba</strong> para cabeza/hombros, <strong>algo abajo</strong> para torso y <strong>bien abajo</strong> para piernas. Con un solo humano, todas las marcas disponibles se pueden defender con las manos iniciales. Las marcas traseras se habilitan con varios humanos y requieren ayuda: acercate al lado expuesto de tu compañero y apuntá al mosquito con clic.</p>
 <p>Correr, saltar y agacharse tienen colisiones y límites. El cuerpo, las extremidades y las marcas siguen la postura; saltar o agacharse no desprende por sí solo un mosquito adherido.</p>
 <h3>Mosquito: picar y desprenderse</h3>
-<p>Acercate a tu marca privada sobre un humano y pulsá E. Quedás anclado al cuerpo y conservás esa zona mientras picás, incluso si el humano corre, salta o se agacha.</p>
+<p>El mosquito vuela hacia donde apunta la cámara: <strong>W avanza en 3D</strong>, incluso al mirar arriba o abajo, y <strong>soltar avance frena</strong>. A/S/D conservan movimiento relativo; Espacio/Ctrl son ayudas de altura opcionales. Cerca de la marca propia, <strong>mantener E concentra durante 1,2 s</strong>, estabiliza y asiste el acercamiento. Soltar antes del anclaje cancela la carga. Ya picando, <strong>una nueva pulsación de E desprende; soltarla no libera</strong>. La carga exige alcance, orientación, lado exterior y recorrido libres; no atraviesa paredes ni el cuerpo.</p>
+<p>El HUD distingue zona a alcance, concentración con progreso, intento bloqueado y picadura. Las ayudas usan tus teclas guardadas. Al quedar anclado conservás la zona y acompañás al humano aunque corra, salte o se agache.</p>
 <p><strong>Otra pulsación de E desprende; soltar la tecla no libera.</strong> Al soltarte recibís otra zona inmediatamente, sin reiniciar el calendario individual de rotación. No hay cuenta regresiva de la marca. Si está detrás del cuerpo o de un mueble, rodealo para verla y alcanzarla.</p>
 <p>F permite posarte solo cerca de piso, pared, techo o mueble; no congela el vuelo en el aire. Moverte vuelve a volar. Los eliminados esperan sin cámara libre ni marcas de compañeros.</p>
 <h2>Tres modos</h2>
-<table>
-<thead>
-<tr>
-<th>Modo</th>
-<th>Victoria y vidas</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Recolección de sangre</td>
-<td>Los mosquitos deben alcanzar una cuota compartida antes del reloj. Humanos ganan si lo impiden o eliminan a todos. La sangre obtenida se conserva al desprenderse y morir. Una vida por mosquito, sin reapariciones.</td>
-</tr>
-<tr>
-<td>Supervivencia</td>
-<td>Basta un mosquito vivo al terminar para que gane su equipo. Humanos ganan si eliminan a todos antes. Una vida; sin hambre ni obligación de picar.</td>
-</tr>
-<tr>
-<td>Tareas</td>
-<td>Humanos cumplen la meta colectiva al final o ganan antes al agotar todas las vidas de los mosquitos. Cada mosquito tiene 3 vidas totales personales por defecto y reaparece mientras conserve alguna.</td>
-</tr>
-</tbody>
-</table>
+<table><thead><tr><th>Modo</th><th>Victoria y vidas</th></tr></thead><tbody>
+<tr><td>Recolección de sangre</td><td>Los mosquitos deben alcanzar una cuota compartida antes del reloj. Humanos ganan si lo impiden o eliminan a todos. La sangre obtenida se conserva al desprenderse y morir. Una vida por mosquito, sin reapariciones.</td></tr>
+<tr><td>Supervivencia</td><td>Basta un mosquito vivo al terminar para que gane su equipo. Humanos ganan si eliminan a todos antes. Una vida; sin hambre ni obligación de picar.</td></tr>
+<tr><td>Tareas</td><td>Humanos cumplen la meta colectiva al final o ganan antes al agotar todas las vidas de los mosquitos. Cada mosquito tiene 3 vidas totales personales por defecto y reaparece mientras conserve alguna.</td></tr>
+</tbody></table>
 <p>En <strong>Tareas</strong>, mantené E junto al puesto indicado. Una picadura pausa el trabajo y conserva el avance. Cada fallo reduce <strong>solo el plazo de futuras tareas del humano que falló</strong>; no cambia la duración de ronda, frecuencia de tareas ni plazos de compañeros. La meta es colectiva, aunque el plazo y la penalización sean personales.</p>
 <p>Tres vidas totales significan tres oportunidades de vivir, no tres reapariciones. Si todos están temporalmente muertos pero queda alguna vida, la ronda sigue. Si todos agotan sus vidas, los humanos ganan inmediatamente aunque falten tareas.</p>
-<p>Valores iniciales de prototipo: ronda <strong>120 s</strong>, cuota <strong>30</strong>, rotación <strong>14 s</strong>. Tareas cada <strong>24 s</strong>, plazo <strong>18 s</strong>, trabajo <strong>3 s</strong>, penalización <strong>2 s</strong>, piso <strong>8 s</strong>; meta automática de dos tercios de las oportunidades, redondeados hacia arriba. Tareas usa <strong>3 vidas personales</strong>, configurables entre 1 y 9, con reaparición tras <strong>4 s</strong> por defecto. No son valores de balance ya validados.</p>
+<p>Valores candidatos: ronda <strong>120 s</strong>, cuota compartida <strong>12</strong>, rotación <strong>14 s</strong>. Extracción <strong>0,8 unidades/s por mosquito</strong>, con <strong>tope agregado de equipo de 1 unidad/s</strong>, después de <strong>1 s de preparación</strong> tras adherirse. La cuota configurada no cambia por escalado oculto. Tareas cada <strong>36 s</strong>, plazo inicial <strong>30 s</strong>, trabajo <strong>3 s</strong>, penalización propia <strong>2 s</strong>, piso <strong>24 s</strong>, meta <strong>0 = automática</strong> de dos tercios de oportunidades, redondeados hacia arriba. Tareas conserva <strong>3 vidas totales personales</strong> por defecto y <strong>4 s</strong> para reaparecer. Son hipótesis de prototipo; requieren juego humano para decidir balance.</p>
+<p>El <strong>piso predeterminado es 24 s</strong>. El mínimo configurable de plazo y piso es <strong>tiempo de trabajo + 21 s de traslado</strong>; la frecuencia mínima es ese mínimo más <strong>0,5 s</strong>. Con el trabajo habitual de 3 s, los límites son 24 s de plazo y 24,5 s entre tareas; los valores iniciales siguen siendo 30 s y 36 s. La reserva permite recorrer la casa de dos pisos también caminando: el piso anterior de 8 s era menor que numerosos trayectos. La penalización continúa siendo personal y el piso queda visible en las reglas; no hay extensiones ocultas de plazo ni garantía de completar el trabajo bajo ataque.</p>
+<p><strong>No aparecen nuevos encargos si el tiempo restante de ronda no alcanza para traslado y trabajo.</strong> El plazo visible de una tarea tampoco supera el tiempo que queda de ronda. La meta automática cuenta únicamente esas oportunidades: con los valores iniciales hay <strong>3 encargos posibles por humano</strong> y una meta colectiva equivalente a <strong>2 tareas por humano</strong>, sumadas entre todos. La cadencia y la penalización personal se conservan. Al configurar rondas muy cortas de Tareas, el mínimo mostrado deja tiempo para el primer encargo de cada humano; por ejemplo, con 8 s de trabajo exige 33 s para un humano o 39 s para cinco. Sangre y Supervivencia conservan su mínimo de 30 s.</p>
 <h2>Menús, resultados y desconexión</h2>
 <p>Esc o Volver cierran la vista activa y recuperan el foco anterior; al reasignar una tecla, Esc cancela primero esa captura. En partida, Esc libera el ratón y bloquea tus controles. <strong>La ronda continúa, tanto en práctica como online.</strong></p>
 <p>Una desconexión durante la ronda online la interrumpe sin ganador y devuelve al grupo a sala. Reconectar permite volver a la sala, no recuperar esa ronda. Una salida después de un resultado ya cerrado no cambia el ganador.</p>
 <h2>Archivos y comprobaciones</h2>
 <p><strong>Godot 4.5.2 / Windows x86_64 / OpenGL de compatibilidad.</strong> La carpeta incluye cliente, servidor mediante script, guía y avisos de licencia. Bangers para títulos de cómic y Atkinson Hyperlegible para lectura usan <strong>SIL Open Font License</strong>. Arte y audio procedural originales; no hay cuentas, tienda ni servicios contratados.</p>
-<p>La evidencia vigente, su alcance y los pendientes están en <a href="PRUEBAS.md">PRUEBAS.md</a>. La identificación de compilación y el SHA256 del ejecutable corresponden a <a href="BUILD.txt">BUILD.txt</a>. Las partidas locales automatizadas no sustituyen jugar entre conexiones distintas ni medir comodidad, balance o rendimiento en las PCs del grupo.</p>
-</article></body></html>
+<p>La evidencia vigente, su alcance y los pendientes están en <a href="PRUEBAS.md">PRUEBAS.md</a>. La identificación de compilación y el SHA256 del ejecutable corresponden a <a href="BUILD.txt">BUILD.txt</a>. Las partidas locales automatizadas no sustituyen jugar entre conexiones distintas ni medir comodidad, balance o rendimiento en las PCs del grupo.</p></article></body></html>

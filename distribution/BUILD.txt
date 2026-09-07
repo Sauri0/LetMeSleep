@@ -1,18 +1,15 @@
-Let me sleep 0.3.0
+Let me sleep 0.4.0 — entrega verificada
 Godot 4.5.2.stable.official.6ce3de25a
-Windows x86_64 / ENet UDP 27840 / protocolo 3
+Windows x86_64 / ENet UDP 27840 / protocolo 4
+Invitación DD3 / formato interno 1; cliente 0.3 incompatible.
 Ejecutable: Let-me-sleep.exe
-Paquetes: Let-me-sleep-0.3.0-Windows.zip / Let-me-sleep-0.3.0-fuentes.zip
-Estado: exportación Windows verificada; práctica nativa y red final PASS.
-SHA256 EXE definitivo: EBE45FB53262E8E8A6BAB35B57104BF5C7FC7043E024AD0EAB5BCDE0D65BD9A5
-Commit del código de juego: f1ffa97 (documentación final posterior).
-Reglas 3242/0; sala 321/0; mapas 61/0; locomoción 16013/0.
-Práctica 49/0; invitación 51/0; visual nativo 40/0; cliente/UI 31/0.
-Navegación 46/0; práctica nativa 72/0; migración 10/0; orden de red 11/0.
-Audio 28/0; privacidad visual 13/0; cosméticos PASS.
-ENet EXE: Sangre 1v1 con invitación, dos rondas; Tareas 1v1; Supervivencia 4v12 PASS.
-EXE: desconexión sin ganador y rechazo de saludo incompatible PASS.
-Práctica nativa EXE: seis pares rol/modo, 72 comprobaciones, 0 fallos.
-Capturas EXE: inicio, patio, ambos editores de apariencia y cinco estados de práctica.
-Evidencia y límites: PRUEBAS.md.
-Fecha: 2026-09-07. Artefactos históricos 0.1 y 0.2 preservados.
+SHA256: F82635685B1D19E74F2788AF246179348091FD33311E5290A2DCD9151BF50332
+Commit de código y diagnósticos: 3b6563815931e95c00ce8d09f6087903f7ebd772
+Commit de reglas e interfaz jugable: 68e28d0034c613137b418eb43c5796d1b987cc59
+Práctica nativa 73/73; demo 8/8; plazos 59/59; encuentros 5/5; auditor 24/24.
+ENet: invitación 1v1/dos rondas, Tareas 1v1, Supervivencia 4v12, desconexión y versiones incompatibles: PASS.
+Reglas 3256; mapas 431; rutas 303; combate 277; locomoción 16013; práctica 69; UI 77; migración 13: sin fallos.
+Paquetes: Let-me-sleep-0.4.0-Windows.zip / Let-me-sleep-0.4.0-fuentes.zip.
+Hashes de ZIP y commit de documentación: MANIFIESTO-0.4.0.json externo y archivos .sha256.txt junto a los ZIP.
+Evidencias y límites: PRUEBAS.md, 0.4-validacion y 0.4-preview de la entrega.
+Fecha: 2026-09-07. Versiones históricas 0.1–0.3 preservadas.
