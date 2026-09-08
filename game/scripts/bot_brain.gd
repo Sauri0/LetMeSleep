@@ -22,7 +22,10 @@ var approaching := true
 var attached_age := 0.0
 var path: PackedVector3Array = []
 var path_age := 0.0
+var path_review_age := 0.0
 var path_goal := Vector3.INF
+var path_map_id := ""
+var path_human := false
 var last_position := Vector3.INF
 var stuck_age := 0.0
 var decision_dt := 1.0/60.0
@@ -35,6 +38,12 @@ var stats := {"moves":0,"bites":0,"detaches":0,"attacks":0,"self_swats":0,"task_
 func setup(id: int) -> void:
 	peer_id = id
 
+static func prepare_navigation(map_id: String) -> void:
+	# Build the two immutable movement graphs before play starts, so an insect's
+	# first approach after its reaction pause does not trigger a graph-build hitch.
+	Routes.graph_info(true,map_id)
+	Routes.graph_info(false,map_id)
+
 func decide(snapshot: Dictionary, own_private: Dictionary, dt: float) -> Dictionary:
 	visible_doors = snapshot.get("doors",{})
 	age += dt
@@ -43,6 +52,7 @@ func decide(snapshot: Dictionary, own_private: Dictionary, dt: float) -> Diction
 	retreat_burst_left = maxf(0,retreat_burst_left-dt)
 	action_wait -= dt
 	path_age += dt
+	path_review_age += dt
 	var result := {"move":Vector3.ZERO,"yaw":0.0,"pitch":0.0,"interact":false,"sprint":false,"crouch":false,"jump":false,"action":""}
 	var me: Dictionary = snapshot.get("actors",{}).get(peer_id,{})
 	if me.is_empty() or not bool(me.get("alive",false)) or snapshot.get("phase","") != "playing":
@@ -317,9 +327,19 @@ func _walk_direction(from: Vector3, destination: Vector3, map_id: String) -> Vec
 	return direction.normalized()
 
 func _path_direction(from: Vector3, destination: Vector3, human: bool, map_id: String) -> Vector3:
-	if path_age > 1.0 or path_goal == Vector3.INF or path_goal.distance_to(destination) > 0.9 or (stuck_age > 0.9 and path_age > 0.4):
+	var rebuild: bool = path_map_id != map_id or path_human != human or path_goal == Vector3.INF or path_goal.distance_to(destination) > 0.9 or (stuck_age > 0.9 and path_age > 0.4)
+	if path_review_age > 1.0:
+		path_review_age = 0.0
+		# A fixed task/patrol destination does not require another graph search
+		# while its next segment remains traversable. Moving goals keep the same
+		# one-second review cadence, and changed/stuck routes invalidate promptly.
+		rebuild = rebuild or path_goal != destination or (not path.is_empty() and not Routes.can_travel(from,path[0],human,map_id))
+	if rebuild:
 		path_age = 0.0
+		path_review_age = 0.0
 		path_goal = destination
+		path_map_id = map_id
+		path_human = human
 		path = Routes.path(from,destination,human,map_id)
 		stats.paths += 1
 	while not path.is_empty() and from.distance_to(path[0]) < (0.29 if human else 0.25):
@@ -328,7 +348,7 @@ func _path_direction(from: Vector3, destination: Vector3, human: bool, map_id: S
 		while not door_passage.is_empty() and from.distance_to(door_passage[0])<0.085:
 			door_passage.remove_at(0)
 			if door_passage.is_empty():
-				path_age = 100.0
+				path_goal = Vector3.INF
 		if not door_passage.is_empty():
 			return (door_passage[0]-from).normalized()
 		if not path.is_empty():

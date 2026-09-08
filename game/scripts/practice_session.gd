@@ -5,6 +5,10 @@ signal snapshot_updated(data: Dictionary)
 signal private_updated(data: Dictionary)
 const Simulation = preload("res://scripts/simulation.gd")
 const Brain = preload("res://scripts/bot_brain.gd")
+## Decisions are spread over three physics ticks. Held input still reaches the
+## authority every tick; one-shot actions are submitted only on a new decision.
+const BOT_DECISION_SECONDS := 1.0/20.0
+var bot_schedule: Dictionary = {}
 var sim: RefCounted
 var brains: Dictionary = {}
 var input_sequences: Dictionary = {}
@@ -27,6 +31,7 @@ func start(role: String, mode: String, cosmetics: Dictionary, display_name: Stri
 	config.mode = selected_mode
 	config.human_count = 1
 	config.map_id = "house"
+	Brain.prepare_navigation(str(config.map_id))
 	# Two insects provide targets for the human. One human provides the enemy
 	# for the insect POV. Social rooms never pass through this roster builder.
 	var roster := {1:{"name":player_name,"role":selected_role,"ready":true,"cosmetics":local_cosmetics}}
@@ -57,6 +62,7 @@ func stop() -> void:
 	brains.clear()
 	input_sequences.clear()
 	action_sequences.clear()
+	bot_schedule.clear()
 	publication_age = 0.0
 
 func send_input(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool=false, crouch: bool=false, jump: bool=false) -> void:
@@ -70,12 +76,27 @@ func send_action(seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: float 
 func advance(dt: float) -> void:
 	if not active or sim == null or sim.phase != "playing":
 		return
-	var observed: Dictionary = sim.public_snapshot()
+	var observed: Dictionary = {}
 	for id: int in brains:
-		var intent: Dictionary = brains[id].decide(observed,sim.private_for(id),dt)
+		if not bot_schedule.has(id) or bot_schedule[id].brain != brains[id]:
+			bot_schedule[id] = {"brain":brains[id],"age":0.0,"wait":float(posmod(id,3))/60.0,"intent":{}}
+		var schedule: Dictionary = bot_schedule[id]
+		schedule.age += dt
+		schedule.wait -= dt
+		var decided: bool = float(schedule.wait) <= 0.000001
+		if decided:
+			if observed.is_empty():
+				observed = sim.public_snapshot()
+			schedule.intent = brains[id].decide(observed,sim.private_for(id),float(schedule.age))
+			schedule.age = 0.0
+			# Retain the phase after a long tick, without a burst of stale decisions.
+			schedule.wait = BOT_DECISION_SECONDS+fmod(float(schedule.wait),BOT_DECISION_SECONDS)
+		var intent: Dictionary = schedule.intent
+		if intent.is_empty():
+			continue
 		input_sequences[id] += 1
 		sim.submit_input(id,input_sequences[id],intent.move,intent.yaw,intent.pitch,intent.interact,intent.sprint,intent.crouch,intent.jump)
-		if not str(intent.action).is_empty():
+		if decided and not str(intent.action).is_empty():
 			action_sequences[id] += 1
 			sim.action(id,action_sequences[id],str(intent.action),intent.yaw,intent.pitch)
 	sim.step(dt)
