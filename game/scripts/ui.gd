@@ -2575,7 +2575,7 @@ func get_customization_preview() -> SubViewportContainer:
 func _build_voice_settings(parent: VBoxContainer) -> void:
 	var box := _vbox(parent,9)
 	box.add_child(_label("Voz por proximidad",24))
-	box.add_child(_label("Te escuchan humanos y mosquitos cercanos. El micrófono solo transmite mientras mantenés el control de hablar.",14,MUTED,true))
+	box.add_child(_label("Durante las rondas online te escuchan humanos y mosquitos cercanos. Mantené el control de hablar para transmitir.",14,MUTED,true))
 	box.add_child(_label("Entrada de micrófono",15))
 	var devices := HBoxContainer.new()
 	devices.add_theme_constant_override("separation",8)
@@ -2621,15 +2621,24 @@ func set_voice_state(data: Dictionary) -> void:
 	var muted: bool = bool(data.get("muted",str(data.get("status",""))=="muted"))
 	_voice_state["muted"] = muted
 	_voice_mute.set_pressed_no_signal(muted)
-	_voice_mute.disabled = not bool(data.get("available",data.get("can_test",false)))
+	_voice_mute.disabled = not bool(data.get("codec_available",data.get("available",false))) and not bool(data.get("can_test",false))
 	_voice_test.disabled = not bool(data.get("can_test",false)) or muted
 	if _voice_test.disabled: _set_voice_test(false)
 	var error: String = str(data.get("error",""))
 	var capturing: bool = str(data.get("status",""))=="capturing"
 	_sync_voice_devices(data,capturing)
-	_voice_status.text = error if not error.is_empty() else ("Micrófono activo mientras mantenés el botón." if capturing else "Micrófono cerrado · " + _social_binding("push_to_talk") + " para hablar al jugar.")
-	if error.is_empty() and not bool(data.get("available",false)) and not bool(data.get("can_test",false)):
-		_voice_status.text = "Voz no disponible en esta sesión."
+	if not error.is_empty():
+		_voice_status.text = error
+	elif capturing and bool(data.get("testing",false)):
+		_voice_status.text = "Prueba local · micrófono activo mientras mantenés el botón."
+	elif not _voice_can_transmit(data):
+		_voice_status.text = _voice_context_reason(data)
+	elif muted:
+		_voice_status.text = "Micrófono silenciado."
+	elif capturing:
+		_voice_status.text = "Transmitiendo mientras mantenés el control de hablar."
+	else:
+		_voice_status.text = "Micrófono cerrado · " + _social_binding("push_to_talk") + " para hablar."
 	_voice_status.modulate = CORAL if not error.is_empty() else Color.WHITE
 	var peers: Array = data.get("peers",[]) if data.get("peers",[]) is Array else []
 	var signature: String = JSON.stringify(peers)
@@ -2696,7 +2705,25 @@ func _sync_voice_controls() -> void:
 	var display: Dictionary = _voice_state.duplicate(true)
 	display["binding"] = str(display.get("binding",_social_binding("push_to_talk")))
 	display["visible"] = bool(display.get("visible",false)) and _screen in ["game","lobby"] and not _settings_open and not _help_open and not _paused and not _invite_settings_open and not (is_instance_valid(_emote_selector) and _emote_selector.visible)
+	var local_test: bool = str(display.get("status","")) == "capturing" and bool(display.get("testing",false))
+	var unavailable: bool = not _voice_can_transmit(display) and not local_test
+	if unavailable:
+		display["status"] = "unavailable"
+		display["reason"] = _voice_context_reason(display)
 	_voice_indicator.set_state(display)
+
+
+func _voice_can_transmit(data: Dictionary) -> bool:
+	# Codec presence alone never grants transmission. The session owns authority;
+	# the screen guard prevents a stale round update from promising voice in lobby.
+	return bool(data.get("can_transmit",false)) and _screen == "game" and not _practice
+
+
+func _voice_context_reason(data: Dictionary) -> String:
+	if _practice: return "Voz sólo online"
+	if _screen == "lobby": return "Disponible durante la ronda"
+	var reason: String = str(data.get("reason",""))
+	return reason if not reason.is_empty() else "Voz no disponible en esta sesión."
 
 
 func _set_voice_test(held: bool) -> void:

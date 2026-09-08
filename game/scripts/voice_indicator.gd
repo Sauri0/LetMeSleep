@@ -40,14 +40,16 @@ func set_state(value: Dictionary) -> void:
 	var status: String = str(data.get("status","unavailable"))
 	var binding: String = str(data.get("binding","—"))
 	var muted: bool = bool(data.get("muted",status=="muted"))
+	var reason: String = str(data.get("reason",""))
 	match status:
 		"capturing": text_label.text = "Transmitiendo" if not bool(data.get("testing",false)) else "Probando micrófono"
 		"idle": text_label.text = binding + " · hablar"
 		"muted": text_label.text = "Mic silenciado"
-		_: text_label.text = "Voz no disponible"
+		_: text_label.text = {"Disponible durante la ronda":"Voz durante la ronda","No disponible mientras estás eliminado":"Voz · eliminado","Voz sólo online":"Voz sólo online"}.get(reason,"Voz no disponible")
 	level_bar.visible = status=="capturing"
 	var level: float = float(data.get("level",0.0))
 	level_bar.value = clampf(level,0,1)*100.0 if level_bar.visible and is_finite(level) else 0.0
-	tooltip_text = str(data.get("error",""))
+	var error: String = str(data.get("error",""))
+	tooltip_text = error if not error.is_empty() else reason
 	mute_button.text = "Activar mic" if muted else "Silenciar mic"
 	visible = bool(data.get("visible",false))

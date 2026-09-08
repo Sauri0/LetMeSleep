@@ -84,6 +84,29 @@ esta continuación y no se debe atribuir su comportamiento al EXE anterior.
    estaciones, manteniendo los límites de tiempo y la ejecución física: 86/86
    comprobaciones correctas sobre la distribución nueva.
 
+## Continuación de modelos, rendimiento y voz (8 de septiembre)
+
+- La prenda humana tenía cruces visibles con cabeza, boca, barba y bigote.
+  Se abrió el cuello real y se corrigieron forma y pesos de hombros en la fuente
+  editable y el GLB. Los cuatro testigos corregidos suman 192 pares sin contacto
+  inesperado; fit3 sólo ajusta UV respecto de fit2 (1782 invariancias correctas).
+  Las 16 vistas actuales conservan la boca libre y corrigen los zigzags de las
+  rayas. La exportación completa de 285 poses se está renovando con estos hashes;
+  el resultado anterior de contactos no certifica esta fuente.
+- El coste aislado de DoorState bajó de 2,454 a 0,406 ms en el replay ABBA.
+  Pasaron 2578 equivalencias y 342 regresiones de puertas. No es un aumento de
+  FPS demostrado. La última medición nativa de casa generada con 16 actores a
+  1080p dio 28,308 / 60,754 / 91,729 ms (p50/p90/p99), todavía fuera del objetivo.
+  DoorCatalog está en revisión separada. Un ensayo de MultiMesh empeoró el coste
+  del pasillo y fue rechazado; no se integró al juego.
+- VoiceSession publica ahora permiso y motivo contextual. La UI no promete
+  hablar en práctica, sala o eliminación; conserva prueba local independiente.
+  Pasaron 38 controles nativos de UI (incluido ancho a 720p/1080p), 27 del selector
+  y 77 de Session con captura sintética/Dummy. No se abrió hardware real.
+- El empaquetado comprueba versión/protocolo, fuente limpia, DLL Opus, avisos y
+  hashes antes de crear el ZIP. Pasaron 13 casos de rechazo/aceptación en una
+  carpeta de prueba inerte; no se exportó ni empaquetó un candidato nuevo.
+
 ## Antes de una entrega nueva
 
 - Cerrar transporte y VoiceSession completos, regresiones de patas y corpus,

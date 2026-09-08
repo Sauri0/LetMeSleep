@@ -52,7 +52,16 @@ func _ready() -> void:
 	_publish_ui()
 
 func can_transmit() -> bool:
-	return client.playing and bool(client.state.get("actors",{}).get(client.local_id,{}).get("alive",false)) and not client.practice_active and not client.ui.is_menu_open() and transport.available() and encoder!=null
+	return _transmit_reason().is_empty()
+
+func _transmit_reason() -> String:
+	if not transport.available() or encoder==null: return "Voz no disponible"
+	if client.practice_active: return "Voz sólo online"
+	if not client.playing: return "Disponible durante la ronda"
+	if not bool(client.state.get("actors",{}).get(client.local_id,{}).get("alive",false)):
+		return "No disponible mientras estás eliminado"
+	if client.ui.is_menu_open(): return "Cerrá el menú para hablar"
+	return ""
 
 func start(manual_test: bool=false) -> void:
 	if _capturing or muted: return
@@ -220,7 +229,11 @@ func _publish_ui() -> void:
 	var members: Array=[]
 	for id: int in client.state.get("actors",{}):
 		if id!=int(client.local_id): members.append({"id":id,"name":str(client.state.actors[id].get("name","Jugador")),"muted":transport.muted_peers.has(id)})
-	client.ui.set_voice_state({"status":"capturing" if _capturing else "muted" if muted else "idle" if transport.available() else "unavailable", "available":transport.available(),"can_test":capture.hardware_allowed,"muted":muted,"level":level,"error":error,"testing":testing,"visible":client.playing,"peers":members,"input_devices":_input_devices,"input_device":capture.input_device})
+	var codec_available: bool=transport.available() and encoder!=null
+	var reason:=_transmit_reason()
+	var eligible:=reason.is_empty()
+	var status: String="capturing" if _capturing else "unavailable" if not eligible else "muted" if muted else "idle"
+	client.ui.set_voice_state({"status":status,"available":codec_available,"codec_available":codec_available,"can_transmit":eligible,"reason":reason,"can_test":capture.hardware_allowed,"muted":muted,"level":level,"error":error,"testing":testing,"visible":client.playing,"peers":members,"input_devices":_input_devices,"input_device":capture.input_device})
 
 func _exit_tree() -> void:
 	clear()
