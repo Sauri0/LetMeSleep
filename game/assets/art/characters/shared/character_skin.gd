@@ -69,6 +69,10 @@ func setup(role: String, source_path: String = "", contract_path: String = "") -
 	set_appearance({})
 
 func set_first_person(value: bool) -> void:
+	# Appearance changes rebuild their own selection. Repeating the same view
+	# mode at every snapshot need not walk all cosmetic meshes again.
+	if first_person == value:
+		return
 	first_person = value
 	_update_visibility()
 

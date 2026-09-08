@@ -1,0 +1,20 @@
+{
+	"checks": 1422,
+	"failures": [],
+	"records": [
+		{
+			"current_passes": 37,
+			"meshes": 33,
+			"reference_passes": 446,
+			"role": "human"
+		},
+		{
+			"current_passes": 37,
+			"meshes": 23,
+			"reference_passes": 446,
+			"role": "mosquito"
+		}
+	],
+	"scope": "Imported mesh selection equivalence and redundant setter work; no gameplay FPS or skin deformation claim",
+	"skin_sha256": "4b725c739410e813670ec5ca0c80c74d8ef65f06dedf316d56e77b6410d570b8"
+}
