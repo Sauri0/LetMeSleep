@@ -18,6 +18,8 @@ const VERSION := "0.7.0"
 const PROTOCOL := 7
 const DEFAULT_PORT := 27840
 const MAX_PLAYERS := 16
+# Leave room for Godot RPC and ENet headers below the transport's MTU.
+const MAX_UNRELIABLE_SNAPSHOT_BYTES := 1200
 var is_server := false
 var players: Dictionary = {}
 var config: Dictionary = {}
@@ -561,7 +563,13 @@ func _publish_waiting() -> void:
 	var packet := var_to_bytes(state).compress(FileAccess.COMPRESSION_DEFLATE)
 	for id: int in players:
 		if _peer_can_receive(id):
-			_receive_snapshot.rpc_id(id, packet)
+			_send_snapshot(id,packet)
+
+func _send_snapshot(id: int,packet: PackedByteArray) -> void:
+	if packet.size()>MAX_UNRELIABLE_SNAPSHOT_BYTES:
+		_receive_snapshot_reliable.rpc_id(id,packet)
+	else:
+		_receive_snapshot.rpc_id(id,packet)
 
 func _publish(force_reliable: bool) -> void:
 	if sim == null:
@@ -569,7 +577,8 @@ func _publish(force_reliable: bool) -> void:
 	var state: Dictionary = sim.public_snapshot()
 	state["tick"] = server_tick
 	# Repeated field names make compact dictionary snapshots highly compressible.
-	# Compression avoids unreliable ENet fragmentation even in the 5v10 test.
+	# Larger object-rich states use reliable ENet fragmentation on the snapshot
+	# channel; control and private messages retain their separate channels.
 	var packet := var_to_bytes(state).compress(FileAccess.COMPRESSION_DEFLATE)
 	var changed := str(state.phase) != last_phase
 	if changed:
@@ -582,7 +591,7 @@ func _publish(force_reliable: bool) -> void:
 		if changed or force_reliable:
 			_receive_round.rpc_id(id, state)
 		else:
-			_receive_snapshot.rpc_id(id, packet)
+			_send_snapshot(id,packet)
 		var private_data: Dictionary = sim.private_for(id)
 		private_data["tick"] = server_tick
 		var revision := int(private_data.get("assignment", {}).get("revision", -1))
@@ -602,6 +611,10 @@ func _receive_snapshot(packet: PackedByteArray) -> void:
 	var data: Variant = bytes_to_var(raw)
 	if data is Dictionary:
 		_accept_snapshot(data)
+
+@rpc("authority", "call_remote", "reliable", 1)
+func _receive_snapshot_reliable(packet: PackedByteArray) -> void:
+	_receive_snapshot(packet)
 
 func _accept_snapshot(data: Dictionary) -> void:
 	var tick := int(data.get("tick", 0))

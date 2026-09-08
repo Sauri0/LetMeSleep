@@ -1,0 +1,114 @@
+[
+  {
+    "cue": "equip_swatter",
+    "duration": 0.13,
+    "peak": 0.0995361328125,
+    "rms": 0.02200676745954463,
+    "sha256": "085c3cfcf6266b29cc0ed7748b745dd7d1b1f461510b999ec575939141f95489"
+  },
+  {
+    "cue": "hit_swatter",
+    "duration": 0.13,
+    "peak": 0.18043640136718825,
+    "rms": 0.03320400786713802,
+    "sha256": "709559c70d10ba2225baff3ca2dbca02866a7bda64469d75d0bd4ddf4bd524e0"
+  },
+  {
+    "cue": "equip_racket",
+    "duration": 0.17,
+    "peak": 0.10183593749995276,
+    "rms": 0.023067275461330656,
+    "sha256": "543f54c96dc7de358f65b50c93e587bc230eea482a5c44cd3f42b542e4a17bf8"
+  },
+  {
+    "cue": "hit_racket",
+    "duration": 0.17,
+    "peak": 0.1826187133789048,
+    "rms": 0.03397292528696218,
+    "sha256": "1a76f4dd169507eed15693f0929975725e421577e4e8e58d6d7c96f92b9b5e45"
+  },
+  {
+    "cue": "equip_newspaper",
+    "duration": 0.22,
+    "peak": 0.1019622802734375,
+    "rms": 0.01733077284436554,
+    "sha256": "6fc9c166bf854fe8582eac282fbf0c6381dd370ccfea39491d5de6692b8b2fe0"
+  },
+  {
+    "cue": "hit_newspaper",
+    "duration": 0.22,
+    "peak": 0.220501708984375,
+    "rms": 0.03458256315306809,
+    "sha256": "78606e0e83917558792f12b1221e4f788c03eb693557ac0e2d24366abf43471d"
+  },
+  {
+    "cue": "equip_broom",
+    "duration": 0.2,
+    "peak": 0.1357933044433595,
+    "rms": 0.021835222071896292,
+    "sha256": "b6b8d574c9a9c9dc06a2f8b6929eb852b509979ba1f7a94ed9b028b5a6a4fb4d"
+  },
+  {
+    "cue": "hit_broom",
+    "duration": 0.2,
+    "peak": 0.1830715942382812,
+    "rms": 0.031422267127223805,
+    "sha256": "999d41148d9d4063ae28f62e894562ed5cb41fa8c98e0bb989a9b902113ce120"
+  },
+  {
+    "cue": "equip_slipper",
+    "duration": 0.19,
+    "peak": 0.05779266357421875,
+    "rms": 0.01440232147900385,
+    "sha256": "237ff00d14209906cc4e76dcb42af6db8e5599c947639437d4229dae38172fe6"
+  },
+  {
+    "cue": "hit_slipper",
+    "duration": 0.19,
+    "peak": 0.10643005371093746,
+    "rms": 0.015640698818417415,
+    "sha256": "cbeeb31cbabd0a67a1520971195ea0ed766259c594ee5eb46d5caaa8a7608206"
+  },
+  {
+    "cue": "tool_slipper",
+    "duration": 0.29,
+    "peak": 0.16180572509765626,
+    "rms": 0.02581740835716097,
+    "sha256": "c0029c31efed85006d6cbc70e116da1acd69d63413d4190b581d2e566486c738"
+  },
+  {
+    "cue": "throw_newspaper",
+    "duration": 0.32,
+    "peak": 0.22141571044921876,
+    "rms": 0.035682110593094334,
+    "sha256": "3cb0626a67d1b878d41929e500182b46e4202f9cedeb5bbbad65cae11f548dd1"
+  },
+  {
+    "cue": "throw_slipper",
+    "duration": 0.38,
+    "peak": 0.1704473876953125,
+    "rms": 0.026881846520287685,
+    "sha256": "73d7b9bd2d5cd1f9e6d1857a7147d8330537ab7ebaa042bfb75eda618912fc9b"
+  },
+  {
+    "cue": "land_wood",
+    "duration": 0.18,
+    "peak": 0.15861083050163424,
+    "rms": 0.01688510964496007,
+    "sha256": "2832ad0acbc84a15f6566f4f643dc3df0158df0adc2dcb7657c27153cf648247"
+  },
+  {
+    "cue": "land_tile",
+    "duration": 0.16,
+    "peak": 0.11375854492187511,
+    "rms": 0.013688373042603204,
+    "sha256": "f4b8e0e5feeb7e970ab57c79ec90dbebc9104b5e0859ab344f4e252674a1112e"
+  },
+  {
+    "cue": "land_cloth",
+    "duration": 0.22,
+    "peak": 0.08747436523437499,
+    "rms": 0.013044344970375571,
+    "sha256": "ac04e8c79f81e0e24a6dc8df4b39e71d466a5d6091715ef0233413a9119f69b4"
+  }
+]

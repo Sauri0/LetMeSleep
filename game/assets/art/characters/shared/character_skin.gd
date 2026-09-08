@@ -4,6 +4,7 @@ extends Node3D
 const Clothing = preload("res://assets/art/characters/shared/cloth.gdshader")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const FacialExpression = preload("res://assets/art/characters/shared/facial_expression.gd")
+const Tools = preload("res://scripts/tool_catalog.gd")
 var species := "human"
 var asset: Node3D
 var skeleton: Skeleton3D
@@ -149,22 +150,84 @@ func apply_human(pose: Dictionary, data: Dictionary, dt: float) -> void:
 			_set_bone("foot_"+side,pose["ankle_"+side],Vector3(pose["ankle_"+side])+Vector3(pose.get("foot_direction_"+side,Vector3.FORWARD))*.22)
 			_set_bone("upperarm_"+side,pose["shoulder_"+side],pose["elbow_"+side])
 			_set_bone("forearm_"+side,pose["elbow_"+side],pose["hand_"+side])
+			if pose.has("hand_width_"+side):
+				var forearm_axis := (Vector3(pose["hand_"+side])-Vector3(pose["elbow_"+side])).normalized()
+				var original_forearm := (_point(contract["forearm_"+side].to)-_point(contract["forearm_"+side].from)).normalized()
+				var base_width := Basis(Quaternion(original_forearm,forearm_axis))*Vector3.RIGHT
+				base_width=(base_width-forearm_axis*base_width.dot(forearm_axis)).normalized()
+				var desired_width: Vector3 = pose["hand_width_"+side]
+				desired_width=(desired_width-forearm_axis*desired_width.dot(forearm_axis)).normalized()
+				if desired_width.length_squared()>.5:
+					var twist := atan2(forearm_axis.dot(base_width.cross(desired_width)),base_width.dot(desired_width))
+					_set_bone("forearm_"+side,pose["elbow_"+side],pose["hand_"+side],Basis(forearm_axis,twist*.80))
 			var hand: Vector3 = pose["hand_"+side]
-			var direction: Vector3 = (hand-Vector3(pose["elbow_"+side])).normalized()
+			var direction: Vector3 = pose.get("hand_direction_"+side,(hand-Vector3(pose["elbow_"+side])).normalized())
 			_set_bone("hand_"+side,hand,hand+direction*0.10)
-		var target_grip: float = .55 if side=="r" and str(data.get("tool","hands"))!="hands" else .10
+			if pose.has("hand_width_"+side):
+				var id: int = bone_ids["hand_"+side]
+				var original := (_point(contract["hand_"+side].to)-_point(contract["hand_"+side].from)).normalized()
+				var original_width := (Vector3.RIGHT-original*Vector3.RIGHT.dot(original)).normalized()
+				var width: Vector3 = pose["hand_width_"+side]
+				var change := Basis(width,direction,width.cross(direction))*Basis(original_width,original,original_width.cross(original)).inverse()
+				skeleton.set_bone_global_pose(id,Transform3D(change*skeleton.get_bone_global_rest(id).basis,hand))
+		var target_grip: float = 1.0 if side=="r" and Tools.GRASPS.has(str(data.get("tool","hands"))) else 0.0
+		var throwing: Dictionary = data.get("throw_gesture",{})
+		if side=="r" and str(throwing.get("state","idle"))=="release":
+			target_grip *= 1.0-smoothstep(.80,1.0,float(throwing.get("progress",0.0)))
 		if bool(strike.get("active",false)) and str(strike.get("hand","right"))==("left" if side=="l" else "right") and str(strike.get("tool","hands"))=="hands":
 			target_grip = 0.0
 		var previous_grip: float = hand_grip[side]
 		hand_grip[side] = lerpf(previous_grip,target_grip,1.0-exp(-16.0*dt))
 		var grip: float = hand_grip[side]
 		if not changed and absf(grip-previous_grip)<.0001: continue
-		for finger: int in range(4):
-			for section: String in ["a","b"]:
-				var name: String = "finger%d_%s_%s" % [finger,section,side]
-				if bone_ids.has(name):
-					var id: int = bone_ids[name]
-					skeleton.set_bone_pose_rotation(id,skeleton.get_bone_rest(id).basis.get_rotation_quaternion()*Quaternion(Vector3.RIGHT,grip))
+		_pose_fingers(side,grip,pose,str(data.get("tool","hands")))
+
+func _pose_fingers(side: String, grip: float, pose: Dictionary, tool: String) -> void:
+	var hand_id: int = bone_ids["hand_"+side]
+	var hand_change := skeleton.get_bone_global_pose(hand_id)*skeleton.get_bone_global_rest(hand_id).affine_inverse()
+	var original_axis := (_point(contract["hand_"+side].to)-_point(contract["hand_"+side].from)).normalized()
+	var width := (hand_change.basis*(Vector3.RIGHT-original_axis*Vector3.RIGHT.dot(original_axis))).normalized()
+	var longitudinal := (hand_change.basis*original_axis).normalized()
+	var normal := width.cross(longitudinal).normalized()
+	var radius := float(Tools.GRASPS.get(tool,{"radius":.015}).radius)+.014
+	var depth := float(Tools.GRASPS.get(tool,{}).get("depth",radius-.014))+.014
+	var centre: Vector3 = pose.get("tool_grip",Vector3.ZERO)
+	var bend := Basis(width,.10*(1.0-grip))
+	for finger: int in range(4):
+		var a := "finger%d_a_%s"%[finger,side]
+		var b := "finger%d_b_%s"%[finger,side]
+		if not contract.has(a) or not contract.has(b): continue
+		var base: Vector3 = hand_change*_point(contract[a].from)
+		var joint := base+bend*(hand_change.basis*(_point(contract[a].to)-_point(contract[a].from)))
+		var tip := joint+bend*(hand_change.basis*(_point(contract[b].to)-_point(contract[b].from)))
+		var along := (_point(contract[a].from)-_point(contract["hand_"+side].from)).dot(Vector3.RIGHT)
+		joint=joint.lerp(centre+width*along+longitudinal*depth*.82-normal*radius*.55,grip)
+		tip=tip.lerp(centre+width*along+longitudinal*depth*.50+normal*radius*.84,grip)
+		_set_digit_bone(a,base,joint,hand_change)
+		_set_digit_bone(b,joint,tip,hand_change)
+	var ta := "thumb_a_"+side
+	var tb := "thumb_b_"+side
+	if contract.has(ta) and contract.has(tb):
+		var base: Vector3 = hand_change*_point(contract[ta].from)
+		var joint: Vector3 = hand_change*_point(contract[ta].to)
+		var tip: Vector3 = hand_change*_point(contract[tb].to)
+		var target_tip := centre-width*.038-normal*radius*.25-longitudinal*depth*.90
+		var target_joint := base.lerp(target_tip,.52)-width*.012
+		joint=joint.lerp(target_joint,grip)
+		tip=tip.lerp(target_tip,grip)
+		_set_digit_bone(ta,base,joint,hand_change)
+		_set_digit_bone(tb,joint,tip,hand_change)
+
+func _set_digit_bone(name: String, from: Vector3, to: Vector3, palm_change: Transform3D) -> void:
+	var id: int = bone_ids[name]
+	var original := _point(contract[name].to)-_point(contract[name].from)
+	var direction := to-from
+	# Preserve palm roll when solving a phalanx in world space. A shortest arc
+	# from the unposed rest alone twists the finger relative to its own knuckle.
+	var change := Basis(Quaternion((palm_change.basis*original).normalized(),direction.normalized()))*palm_change.basis
+	var target := Transform3D(change*skeleton.get_bone_global_rest(id).basis,from)
+	target.basis.y *= direction.length()/maxf(original.length(),.001)
+	skeleton.set_bone_global_pose(id,target)
 
 func apply_mosquito(data: Dictionary, clock_time: float, stun: float) -> void:
 	time = clock_time

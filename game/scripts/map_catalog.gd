@@ -1,5 +1,6 @@
 class_name MapCatalog
 extends RefCounted
+const PickupPlacementScript = preload("res://scripts/pickup_placement.gd")
 
 ## Authored two-storey home: shared physical boxes, room identities and route graph.
 ## Feet levels: 0 / 3.2 m. Two open stairwells connect opposite ends of both loops.
@@ -680,15 +681,23 @@ const HOUSE := {
 		{"name": "Buscar las sábanas", "label": "SÁBANAS", "p": Vector3(-5, 3.2, 1.6)},
 		{"name": "Guardar la vajilla", "label": "VAJILLA", "p": Vector3(11, 0, -7)},
 	],
+	"pickup_supports": [
+		{"id":"lavadero_escoba","kind":"broom_rack","origin":Vector3(-9.44,0,-6.14)},
+		{"id":"taller_escoba","kind":"broom_rack","origin":Vector3(8.56,3.2,-6.14)},
+		{"id":"visitas_zapatero","kind":"shoe_bench","origin":Vector3(4.9,0,10.1)},
+		{"id":"verde_zapatero","kind":"shoe_bench","origin":Vector3(10.65,3.2,8.84),"depth":.34},
+	],
 	"pickups": [
-		{"tool": "swatter", "p": Vector3(-4, 0.15, 7), "yaw": 0},
-		{"tool": "racket", "p": Vector3(6, 0.15, -7), "yaw": 0.6},
-		{"tool": "newspaper", "p": Vector3(-6, 0.15, 1.5), "yaw": 1.2},
-		{"tool": "broom", "p": Vector3(11, 0.15, 6.8), "yaw": 1.8},
-		{"tool": "swatter", "p": Vector3(-5, 3.35, -7), "yaw": 0},
-		{"tool": "racket", "p": Vector3(5, 3.35, 7), "yaw": 0.6},
-		{"tool": "newspaper", "p": Vector3(-6, 3.35, 7), "yaw": 1.2},
-		{"tool": "broom", "p": Vector3(6, 3.35, -7), "yaw": 1.8},
+		{"tool":"swatter","p":Vector3(-6.9,.817,10.08),"support_point":Vector3(-6.9,.8,10.08),"support":"Consola del recibidor","support_origin":Vector3(-7.1,0,9.7),"approach":Vector3(-6.75,0,9.04),"yaw":PI/2},
+		{"tool":"racket","p":Vector3(2.60,.829,-9.9),"support_point":Vector3(2.60,.8,-9.9),"support":"Escritorio del comedor","support_origin":Vector3(2.45,0,-10.3),"approach":Vector3(3.1,0,-8.85),"yaw":PI/2},
+		{"tool":"newspaper","p":Vector3(-7.0,.670,-1.18),"support_point":Vector3(-7.0,.62,-1.18),"support":"Mesa baja de la sala","support_origin":Vector3(-7.2,0,-1.6),"approach":Vector3(-6.8,0,-.05),"yaw":PI/2},
+		{"tool":"broom","p":Vector3(-9.2,.986,-6.03),"support_point":Vector3(-9.2,.035,-6.03),"support":"Portaescobas del lavadero","support_origin":Vector3(-9.44,0,-6.14),"approach":Vector3(-9.2,0,-6.95),"rotation":Vector3(0,0,PI),"yaw":0},
+		{"tool":"swatter","p":Vector3(-7.35,4.167,-10.0),"support_point":Vector3(-7.35,4.15,-10.0),"support":"Cómoda del dormitorio azul","support_origin":Vector3(-7.6,3.2,-10.4),"approach":Vector3(-7.1,3.2,-9.08),"yaw":PI/2},
+		{"tool":"racket","p":Vector3(6.45,4.029,6.20),"support_point":Vector3(6.45,4.0,6.20),"support":"Escritorio del dormitorio rosa","support_origin":Vector3(6.25,3.2,6.1),"approach":Vector3(5.55,3.2,6.75),"rotation":Vector3(PI/2,0,0),"yaw":0},
+		{"tool":"newspaper","p":Vector3(-3.65,3.870,2.7),"support_point":Vector3(-3.65,3.82,2.7),"support":"Mesa de lectura","support_origin":Vector3(-3.85,3.2,2.2),"approach":Vector3(-3.55,3.2,1.53),"yaw":PI/2},
+		{"tool":"broom","p":Vector3(8.8,4.186,-6.03),"support_point":Vector3(8.8,3.235,-6.03),"support":"Portaescobas del taller","support_origin":Vector3(8.56,3.2,-6.14),"approach":Vector3(8.8,3.2,-7.0),"rotation":Vector3(0,0,PI),"yaw":0},
+		{"tool":"slipper","p":Vector3(5.25,.365,10.3),"support_point":Vector3(5.25,.34,10.3),"support":"Banco zapatero del cuarto de visitas","support_origin":Vector3(4.9,0,10.1),"approach":Vector3(5.25,0,9.25),"rotation":Vector3(-PI/2,-PI/2,0),"yaw":-PI/2},
+		{"tool":"slipper","p":Vector3(11.1,3.565,9.01),"support_point":Vector3(11.1,3.54,9.01),"support":"Banco zapatero del dormitorio verde","support_origin":Vector3(10.65,3.2,8.84),"approach":Vector3(11.1,3.2,8.03),"rotation":Vector3(-PI/2,-PI/2,0),"yaw":-PI/2},
 	],
 	"human_spawns": [Vector3(-11.4, 0, 7.5), Vector3(-9.4, 0, 8.5), Vector3(-7.4, 0, 7.5), Vector3(-5.4, 0, 8.5), Vector3(-3.5, 0, 7.2)],
 	"mosquito_spawns": [Vector3(3.8, 4.5, -9), Vector3(5.3, 4.5, -9), Vector3(6.8, 4.5, -9), Vector3(8.3, 4.5, -9), Vector3(9.8, 4.5, -9), Vector3(11.3, 4.5, -9), Vector3(3.8, 4.5, -7.3), Vector3(5.3, 4.5, -7.3), Vector3(6.8, 4.5, -7.3), Vector3(8.3, 4.5, -7.3), Vector3(9.8, 4.5, -7.3), Vector3(11.3, 4.5, -7.3)],
@@ -938,7 +947,10 @@ const LOBBY := {
 
 static func get_map(id: String = "house") -> Dictionary:
 	if id == "house":
-		return HOUSE.duplicate(true)
+		var data := HOUSE.duplicate(true)
+		for index: int in range(data.pickups.size()):
+			data.pickups[index] = PickupPlacementScript.resolve(data.pickups[index])
+		return data
 	if id == "lobby":
 		return LOBBY.duplicate(true)
 	return {}

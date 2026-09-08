@@ -5,6 +5,7 @@ extends RefCounted
 
 const Maps = preload("res://scripts/map_catalog.gd")
 const HouseBarriers = preload("res://scripts/house_barriers.gd")
+const PickupSupports = preload("res://scripts/pickup_supports.gd")
 const HUMAN_RADIUS := 0.60
 const HUMAN_HEIGHT := 1.95
 const MOSQUITO_RADIUS := 0.04
@@ -27,6 +28,7 @@ static func _geometry(human: bool, map_id: String) -> Dictionary:
 	for box: AABB in data.obstacles:
 		obstacles.append(box)
 	obstacles.append_array(HouseBarriers.get_boxes(map_id))
+	obstacles.append_array(PickupSupports.get_boxes(map_id))
 	for obstacle: AABB in obstacles:
 		if human:
 			expanded.append(AABB(obstacle.position - Vector3(HUMAN_RADIUS, HUMAN_HEIGHT - 0.003, HUMAN_RADIUS), obstacle.size + Vector3(HUMAN_RADIUS * 2.0, HUMAN_HEIGHT - 0.006, HUMAN_RADIUS * 2.0)))

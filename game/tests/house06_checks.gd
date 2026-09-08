@@ -2,6 +2,7 @@ extends SceneTree
 const Library = preload("res://assets/art/house/house_library.gd")
 const Barriers = preload("res://scripts/house_barriers.gd")
 const Doors = preload("res://scripts/door_catalog.gd")
+const Supports = preload("res://scripts/pickup_supports.gd")
 var checks := 0
 var failures := 0
 func _initialize() -> void:
@@ -17,7 +18,7 @@ func _run() -> void:
 	root.add_child(world)
 	world.build()
 	world.load_map("house")
-	check(world.map_root.find_children("*","StaticBody3D",true,false).size()==world.map_data.obstacles.size()+6+Barriers.get_boxes().size()+Doors.get_doors().size(),"collision authority includes shared railings and door leaves")
+	check(world.map_root.find_children("*","StaticBody3D",true,false).size()==world.map_data.obstacles.size()+6+Barriers.get_boxes().size()+Doors.get_doors().size()+Supports.get_boxes().size(),"collision authority includes shared railings, door leaves and domestic pickup supports")
 	var count := 0
 	for child: Node in world.map_root.get_children():
 		if child.get_meta("catalog_kind","")!="furniture": continue

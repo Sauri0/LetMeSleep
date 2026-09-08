@@ -37,6 +37,7 @@ var focus_player: AudioStreamPlayer
 var help_player: AudioStreamPlayer
 var ambience_pool: Array[AudioStreamPlayer3D] = []
 var previous_doors: Dictionary = {}
+var previous_pickups: Dictionary = {}
 
 func sync_doors(states: Dictionary, views: Dictionary = {}) -> void:
 	var definitions := Doors.get_doors(map_id)
@@ -139,9 +140,9 @@ func sync(data: Dictionary, views: Dictionary, player_id: int) -> void:
 			if role == "human" and alive:
 				if swing > float(before.swing) + 0.04:
 					var strike_tool := str(Dictionary(actor.get("strike", {})).get("tool", tool))
-					_emit("swish" if strike_tool == "hands" else "tool_" + strike_tool, position + Vector3(0, 1.18, 0), -12.0, 1.0)
+					_emit(Catalog.tool_cue(strike_tool,"swing"), position + Vector3(0, 1.18, 0), -12.0, 1.0)
 				if tool != str(before.tool):
-					_emit("drop" if tool == "hands" else "pickup", position + Vector3(0, 1.0, 0), -13.0, 1.0)
+					if tool != "hands": _emit(Catalog.tool_cue(tool,"equip"), position + Vector3(0, 1.0, 0), -13.0, 1.0)
 				var grounded := bool(actor.get("grounded", true))
 				if grounded and not bool(before.get("grounded", true)):
 					_emit("land", position, -12.0, 1.0)
@@ -150,7 +151,8 @@ func sync(data: Dictionary, views: Dictionary, player_id: int) -> void:
 			if role == "mosquito":
 				if (bool(before.alive) and not alive) or (alive and state=="stunned" and str(before.state)!="stunned"):
 					_emit("impact", position, -9.0, 0.95 + float(int(key) % 4) * 0.025)
-					_emit(_impact_material(position), position, -12.0, 1.0)
+					var impact: Dictionary = actor.get("impact",{})
+					_emit(Catalog.tool_cue(str(impact.get("tool","hands")),"hit"), position, -12.0, 1.0)
 					if state == "stunned": _emit("stun", position, -14.0, 1.0)
 				elif str(before.state) == "stunned" and state == "flying":
 					_emit("recover", position, -4.0, 1.0)
@@ -241,6 +243,7 @@ func clear() -> void:
 	buzzes.clear()
 	previous.clear()
 	previous_doors.clear()
+	previous_pickups.clear()
 	private_previous.clear()
 	private_age = 10.0
 	latest_actors = {}
@@ -289,20 +292,33 @@ func _blocked(from: Vector3, to: Vector3, ignored_body: RID = RID()) -> bool:
 	if ignored_body.is_valid(): ray.exclude = [ignored_body]
 	return not get_world_3d().direct_space_state.intersect_ray(ray).is_empty()
 
-func _impact_material(position: Vector3) -> String:
-	for actor_value: Variant in latest_actors.values():
-		var actor: Dictionary = actor_value
-		var strike: Dictionary = actor.get("strike", {})
-		if str(actor.get("role", "")) != "human" or not bool(strike.get("active", false)) or not strike.has("point"):
-			continue
-		if Vector3(strike.point).distance_to(position) <= .3:
-			var tool := str(strike.get("tool", "hands"))
-			return "clap" if tool == "hands" else "tool_" + tool
-	return "clap"
+func sync_pickups(pickups: Dictionary) -> void:
+	# Observe authoritative item transitions; changing hands cannot change the
+	# material of an already thrown object. No predicted release sound is played.
+	for key: Variant in pickups:
+		var item: Dictionary = pickups[key]
+		var old: Dictionary = previous_pickups.get(key,{})
+		if not old.is_empty() and not suspended:
+			var tool := str(item.get("tool","hands"))
+			var position: Vector3 = item.get("p",Vector3.ZERO)
+			var released: bool = int(old.get("holder",0)) != 0 and int(item.get("holder",0)) == 0
+			# A short flight can begin and land between snapshots. The server's
+			# retained launch owner still distinguishes it from a manual drop.
+			if (str(item.get("state","")) == "flying" and str(old.get("state","")) != "flying") or (released and int(item.get("owner",0))!=0):
+				_emit(Catalog.tool_cue(tool,"throw"),position,-14.0,1.0)
+			elif released:
+				_emit("drop",position,-16.0,1.0)
+			if int(item.get("impact_id",0)) > int(old.get("impact_id",0)):
+				var material := str(item.get("impact_material","wood"))
+				if material not in ["wood","tile","cloth"]: material = "wood"
+				_emit("land_"+material,position,-15.0,1.0)
+		previous_pickups[key] = item.duplicate()
+	for key: Variant in previous_pickups.keys():
+		if not pickups.has(key): previous_pickups.erase(key)
 
 static func _build_streams() -> void:
 	if not streams.is_empty(): return
-	for cue: String in Catalog.CUES:
+	for cue: String in Catalog.CUES + Catalog.TOOL_CUES:
 		var stream := Catalog.cue(cue)
 		if stream != null: streams[cue] = stream
 

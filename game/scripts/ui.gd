@@ -39,7 +39,7 @@ const MINT := Color("50bea9")
 const SUN := Color("ffcf47")
 const MODES := ["blood", "survival", "sleep"]
 const MODE_NAMES := {"blood": "Recolección de sangre", "survival": "Supervivencia", "sleep": "Tareas"}
-const TOOL_NAMES := {"hands": "Manos · palmadas", "swatter": "Matamoscas", "racket": "Raqueta eléctrica", "newspaper": "Diario enrollado", "broom": "Escoba"}
+const TOOL_NAMES := {"hands": "Manos · palmadas", "swatter": "Matamoscas", "racket": "Raqueta eléctrica", "newspaper": "Diario enrollado", "broom": "Escoba", "slipper": "Pantufla"}
 const FALLBACK_CONFIG: Dictionary = Simulation.DEFAULT_CONFIG
 const CONFIG_FIELDS := [
 	["human_count", "Humanos por ronda", 1, 5, 1, "all"],
@@ -1174,6 +1174,7 @@ func _open_help() -> void:
 		text_value = "HUMANO\n%s %s %s %s · moverte\n%s correr · %s saltar · %s agacharte\n\nAPUNTÁ Y GOLPEÁ\nMirá al mosquito o mirá tu cuerpo si te pica. %s da una palmada; %s es la alternativa. Detrás, pedí ayuda.\n%s recoger / cambiar herramienta · %s soltar\n" % [keys[0],keys[1],keys[2],keys[3],Prefs.binding_text("sprint"),Prefs.binding_text("jump"),Prefs.binding_text("crouch"),Prefs.binding_text("attack"),Prefs.binding_text("self_swat"),Prefs.binding_text("pickup"),Prefs.binding_text("drop")]
 		text_value += "Apuntá a una puerta cercana y pulsá %s para abrirla o cerrarla.\n" % Prefs.binding_text("interact")
 		text_value += "El aro junto a la mira señala una oportunidad de golpe: el mosquito puede moverse antes del contacto. La barra corta indica recuperación.\n"
+		text_value += "Diario o pantufla: mantené %s para cargar y soltá para lanzar. La potencia depende del objeto; podés recogerlo cuando se detenga. Abrir el menú o cambiar de herramienta cancela la carga.\n" % Prefs.binding_text("throw")
 		if _help_mode == "sleep": text_value += "Mantené %s en tu puesto para hacer la tarea. Una picadura pausa el trabajo.\n" % Prefs.binding_text("interact")
 	else:
 		text_value = "MOSQUITO\n%s avanza hacia la mira · soltar frena\n%s retrocede · %s / %s mueve a los lados\n%s posarse / volver a volar\n\nTU MARCA\nMantené %s cerca de la marca: concentrás, te acercás y picás. Soltar cancela la carga. Mientras picás, soltá y pulsá %s otra vez para desprenderte; retrocedé para retirarte.\n" % [keys[0],keys[2],keys[1],keys[3],Prefs.binding_text("perch"),Prefs.binding_text("bite"),Prefs.binding_text("bite")]
@@ -2011,6 +2012,16 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 			_hud_hint.text = "%s recoger" % Prefs.binding_text("pickup")
 			context_key = "pickup:" + nearby
 		if mode == "sleep": _update_task(private_data,bitten)
+		var throwing: Dictionary = private_data.get("throw",{})
+		if alive and str(throwing.get("state","")) == "charging":
+			var power := clampf(float(throwing.get("power",throwing.get("charge",0))),0,1)
+			_attack_recovery.show()
+			_attack_recovery.value = power * 100.0
+			_hud_tool.text = "%s · %.0f%% · soltá %s para lanzar" % [TOOL_NAMES.get(tool,tool),power*100.0,Prefs.binding_text("throw")]
+		elif alive and str(throwing.get("reason","")) == "blocked":
+			_hud_tool.text = "Sin espacio para lanzar"
+		elif alive and bool(throwing.get("can_throw",false)):
+			_hud_tool.text = "%s · %s mantener para cargar" % [TOOL_NAMES.get(tool,tool),Prefs.binding_text("throw")]
 	else:
 		var assignment: Dictionary = private_data.get("assignment",{})
 		var focus: Dictionary = private_data.get("focus",{})

@@ -1,0 +1,20 @@
+{
+  "original": true,
+  "units": "metres",
+  "shaft": "+Y",
+  "normal": "+Z",
+  "grip": [
+    0,
+    0.06,
+    0
+  ],
+  "contact_relative_grip": [
+    0,
+    0.24,
+    0
+  ],
+  "source": "newspaper.blend",
+  "triangles": 3132,
+  "materials": 3,
+  "distinct_from_foot_cosmetic": false
+}

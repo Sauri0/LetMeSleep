@@ -57,8 +57,9 @@ def door_frame():
     for x in (-.041,1.041):
         box('Jamb',(x,0,1.225),(.082,.24,2.45),'wood',.008)
         for side in (-1,1):
-            box('Architrave',(x,side*.13,1.255),(.105,.035,2.51),'cream',.012)
-            box('Architrave bead',(x,side*.151,1.25),(.025,.016,2.5),'wood',.007)
+            # Butt against the header at2.45m; old2.51m posts overlapped its face.
+            box('Architrave',(x,side*.13,1.225),(.105,.035,2.45),'cream',.012)
+            box('Architrave bead',(x,side*.151,1.225),(.025,.016,2.45),'wood',.007)
     box('Lintel',(0.5,0,2.49),(1.164,.24,.08),'wood',.009)
     for side in (-1,1):
         box('Header casing',(.5,side*.13,2.51),(1.19,.035,.12),'cream',.012)

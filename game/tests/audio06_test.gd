@@ -72,7 +72,7 @@ func _run() -> void:
 	actors[1].tool = "racket"
 	fx.sync(actors,{},1)
 	fx.sync(actors,{},1)
-	check(fx.effects_started.get("pickup",0)==1,"confirmed equip emits once")
+	check(fx.effects_started.get("equip_racket",0)==1 and fx.effects_started.get("pickup",0)==0,"confirmed equip emits racket Foley once without duplicate generic cue")
 	actors[3].state = "biting"
 	fx.sync(actors,{},1)
 	fx.sync(actors,{},1)

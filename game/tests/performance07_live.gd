@@ -5,6 +5,8 @@ extends SceneTree
 var resolution := Vector2i(1920,1080)
 var population := 16
 var seconds := 12.0
+var diagnostic_shadows := -1
+var diagnostic_batch := ""
 var path := ""
 var app: Node
 var client: Node
@@ -17,6 +19,8 @@ func _initialize() -> void:
 		if arg.begins_with("--population="): population=clampi(int(arg.trim_prefix("--population=")),1,16)
 		if arg.begins_with("--seconds="): seconds=clampf(float(arg.trim_prefix("--seconds=")),5,30)
 		if arg.begins_with("--report="): path=arg.trim_prefix("--report=")
+		if arg.begins_with("--diagnostic-shadows="): diagnostic_shadows=clampi(int(arg.trim_prefix("--diagnostic-shadows=")),0,2)
+		if arg.begins_with("--diagnostic-batch="): diagnostic_batch=arg.trim_prefix("--diagnostic-batch=")
 	_run.call_deferred()
 
 func distribution(samples: Array[float], milliseconds: bool = true) -> Dictionary:
@@ -44,6 +48,12 @@ func _run() -> void:
 	Engine.max_fps=0
 	client=app.get_node("Client")
 	client._start_practice("human","blood")
+	if not diagnostic_batch.is_empty():
+		print("DIAGNOSTIC_BATCH ",load(diagnostic_batch).apply(client.world.map_root))
+	if diagnostic_shadows>=0:
+		var quality: Script=load("res://scripts/preferences.gd")
+		quality.video_shadows=diagnostic_shadows
+		client.world.apply_video_settings()
 	client.practice.brains.clear()
 	client.practice.input_sequences.clear()
 	client.practice.action_sequences.clear()
@@ -72,6 +82,8 @@ func _run() -> void:
 	var physics: Array[float]=[]
 	var draws: Array[float]=[]
 	var vertices: Array[float]=[]
+	var physics_tick_histogram: Dictionary={}
+	var previous_physics_frame: int=Engine.get_physics_frames()
 	var moving_frames := 0
 	var transitions := 0
 	var last_toggle := -1
@@ -91,6 +103,7 @@ func _run() -> void:
 					if sim.door_state.toggle(id,float(sim.elapsed)): transitions+=1
 		await RenderingServer.frame_post_draw
 		var now := Time.get_ticks_usec()
+		var physics_ticks: int=Engine.get_physics_frames()-previous_physics_frame
 		if elapsed>=2.0:
 			frame_times.append(float(now-previous)/1000.0)
 			render_cpu.append(RenderingServer.viewport_get_measured_render_time_cpu(root.get_viewport_rid()))
@@ -98,15 +111,19 @@ func _run() -> void:
 			physics.append(Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)*1000)
 			draws.append(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
 			vertices.append(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
+			physics_tick_histogram[physics_ticks]=int(physics_tick_histogram.get(physics_ticks,0))+1
 			if doors_available:
 				for door: Dictionary in sim.doors.values():
 					if door.moving: moving_frames+=1; break
 		previous=now
+		previous_physics_frame=Engine.get_physics_frames()
 	Input.action_release("move_forward")
 	report={"version":ProjectSettings.get_setting("application/config/version"),"adapter":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"renderer":"Compatibility","resolution":root.content_scale_size,"window_size":root.size,"render_texture_size":root.get_texture().get_size(),"scenario":"real Main/Client/Practice, hallway input, live authoritative bots; periodic authoritative door commands when supported","actors":sim.actors.size(),"requested_population":population,"host_and_bots":true,"warmup_seconds":2,"measurement_seconds":seconds,"samples":frame_times.size(),"frame_ms":distribution(frame_times),"render_cpu_ms":distribution(render_cpu),"render_gpu_ms":distribution(render_gpu),"physics_ms":distribution(physics),"draws":distribution(draws,false),"primitives":distribution(vertices,false),"door_commands":transitions,"frames_with_moving_doors":moving_frames,"start_position":start_position,"end_position":sim.actors[1].p,"memory_bytes":Performance.get_monitor(Performance.MEMORY_STATIC),"video_memory_bytes":Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED),"physics_ticks_per_second":Engine.physics_ticks_per_second,"vsync":"disabled","fps_limit":0}
-	print("PERFORMANCE07_LIVE "+JSON.stringify(report))
 	var prefs: Script = load("res://scripts/preferences.gd")
 	report["video_quality"]={"shadows":prefs.video_shadows,"reflections":prefs.video_reflections,"msaa_3d":root.msaa_3d}
+	report["physics_ticks_per_rendered_frame"]=physics_tick_histogram
+	report["occlusion_culling"]=root.use_occlusion_culling
+	print("PERFORMANCE07_LIVE "+JSON.stringify(report))
 	if not path.is_empty():
 		var file:=FileAccess.open(path,FileAccess.WRITE)
 		file.store_string(JSON.stringify(report,"\t"))

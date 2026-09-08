@@ -15,6 +15,8 @@ art_source/audio for exact URLs and hashes; LICENSE-VSCO2CE-CC0.txt included.
 Buzzes, cloth, brushes, impacts, footfalls and domestic ambience are modeled
 synthetically. They are not recordings of insects, people or household rooms.
 Music/recovery/task/UI mallets combine the original score with CC0 notes.
+The 16 tool equip/hit/throw/landing variations are edited and layered from
+the original project Foley masters by tools07.py; no new outside samples.
 
 Tools: Python 3.14 + NumPy; FFmpeg/Vorbis encoding; Godot 4.5.2 playback.
 FFmpeg and Python are production tools, not runtime game dependencies.

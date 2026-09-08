@@ -50,7 +50,10 @@ func _moving_flight() -> void:
 			sim.actors[2].p=Vector3(7,4.5,-8)
 			var plan: Dictionary=sim._strike_plan(1)
 			var mosquito: Dictionary=sim.actors[2]
-			mosquito.p=Vector3(plan.point)-Vector3.RIGHT*ArenaData.MOSQUITO_SPEED*(dt+.12)
+			# Aim ahead for this object's actual preparation. The old universal
+			# .12s lead predates the heavier .52s broom gesture.
+			var contact_time: float=float(Sim.TOOL_STATS[tool].gesture)*.42
+			mosquito.p=Vector3(plan.point)-Vector3.RIGHT*ArenaData.MOSQUITO_SPEED*(dt+contact_time)
 			mosquito.velocity=Vector3.RIGHT*ArenaData.MOSQUITO_SPEED
 			sim.action(1,1,"attack",0.0,0.0)
 			var first_hit := -1.0
@@ -61,7 +64,7 @@ func _moving_flight() -> void:
 					first_hit=sim.elapsed-float(sim.actors[1]._strike_started)
 					break
 			print("ATTACK07_MOVING tool=",tool," hz=",1.0/dt," contact=",first_hit)
-			check(first_hit>=Sim.STRIKE_START and first_hit<=Sim.STRIKE_END+.05,"manual lead catches full-speed crossing within real gesture at%.1fHz tool=%s" % [1.0/dt,tool])
+			check(first_hit>=float(Sim.TOOL_STATS[tool].damage_start) and first_hit<=float(Sim.TOOL_STATS[tool].damage_end)+dt,"manual lead catches full-speed crossing within own contact window at%.1fHz tool=%s" % [1.0/dt,tool])
 
 func _attached_opportunity() -> void:
 	for tool: String in Sim.TOOL_STATS:

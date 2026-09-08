@@ -5,6 +5,7 @@ const Pose = preload("res://scripts/human_pose.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const Doors = preload("res://scripts/door_catalog.gd")
 const HouseBarriers = preload("res://scripts/house_barriers.gd")
+const PickupSupports = preload("res://scripts/pickup_supports.gd")
 # House aliases preserve existing consumers. New code selects data by map_id.
 const HALF_X = Maps.HOUSE.half_x
 const HALF_Z = Maps.HOUSE.half_z
@@ -42,6 +43,7 @@ static func obstacles(map_id: String = "house") -> Array[AABB]:
 		for box: AABB in _map(map_id).obstacles:
 			boxes.append(box)
 		boxes.append_array(HouseBarriers.get_boxes(map_id))
+		boxes.append_array(PickupSupports.get_boxes(map_id))
 		boxes.make_read_only()
 		_obstacle_cache[map_id] = boxes
 	return _obstacle_cache[map_id]

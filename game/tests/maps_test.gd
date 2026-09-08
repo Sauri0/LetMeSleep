@@ -13,7 +13,7 @@ func _initialize() -> void:
 	check(Maps.is_playable("house") and not Maps.is_playable("lobby") and not Maps.is_playable("unknown"), "lobby is not a selectable round map")
 	check(Maps.get_map("unknown").is_empty(), "unknown map produces no invented catalog entry")
 	check(lobby.stations.is_empty() and lobby.pickups.is_empty() and lobby.obstacles.size() == 2, "lobby has its own benches and no gameplay stations or pickups")
-	check(house.stations.size() == 8 and house.pickups.size() == 8 and house.rooms.size() == 16, "house has sixteen furnished rooms and objectives on both floors")
+	check(house.stations.size() == 8 and house.pickups.size() == 10 and house.rooms.size() == 16, "house has sixteen furnished rooms and ten supported tool instances")
 	var physical_count: int = house.obstacles.size()
 	check(house.structures.size() == physical_count, "every rendered structure has one authoritative obstacle")
 	for index: int in range(physical_count):
@@ -30,8 +30,8 @@ func _initialize() -> void:
 		for station: Dictionary in house.stations:
 			if is_equal_approx(station.p.y, floor_y): stations += 1
 		for pickup: Dictionary in house.pickups:
-			if is_equal_approx(pickup.p.y, floor_y + 0.15): pickups += 1
-		check(stations >= 3 and pickups == 4, "each floor contains several tasks and all four pickup tools")
+			if is_equal_approx(Vector3(pickup.approach).y, floor_y): pickups += 1
+		check(stations >= 3 and pickups == 5, "each floor contains several tasks and five supported pickup instances")
 	house.stations[0].name = "mutated"
 	house.obstacles.clear()
 	check(Maps.get_map("house").obstacles.size() == physical_count and Maps.get_map("house").stations[0].name != "mutated", "map callers cannot mutate catalog through returned dictionaries")
@@ -65,7 +65,7 @@ func _initialize() -> void:
 	check(ArenaData.clear_segment(Vector3(0, 2.7, 0), Vector3(0, 3.5, 0), "lobby") and not ArenaData.clear_segment(Vector3(0, 2.7, 0), Vector3(0, 3.5, 0)), "house slab blocks vertical LOS without affecting the lobby")
 	var sim = Sim.new()
 	sim.start({1: {"role": "human"}, 2: {"role": "mosquito"}}, {"map_id": "house"})
-	check(sim.public_snapshot().map_id == "house" and sim.pickups.size() == 8, "round snapshot publishes selected map with its pickups")
+	check(sim.public_snapshot().map_id == "house" and sim.pickups.size() == 10, "round snapshot publishes selected map with its ten pickups")
 	print("MAPS_TEST_RESULT checks=%d failures=%d" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 

@@ -21,6 +21,13 @@ $runId = (Get-Date -Format 'yyyyMMdd-HHmmss-fff') + '-' + $Port + '-' + [Guid]::
 $runDir = Join-Path $PSScriptRoot "network-$Mode-${Humans}v${Mosquitoes}-$runId"
 [System.IO.Directory]::CreateDirectory($runDir) | Out-Null
 $processes = [System.Collections.Generic.List[System.Diagnostics.Process]]::new()
+$processInfo = [System.Collections.Generic.List[object]]::new()
+$processResults = [System.Collections.Generic.List[object]]::new()
+$reports = @()
+$errors = @()
+$harnessErrors = [System.Collections.Generic.List[string]]::new()
+$expectedClients = if ($Incompatible) { 1 } else { $Humans + $Mosquitoes }
+$testFailed = $true
 function Start-GameProcess([string]$Label, [string[]]$Extra) {
     $isExternalClient = $Label -ne 'server' -and $ClientExecutable
     $selectedExe = if ($isExternalClient) { $ClientExecutable } else { $godotExe }
@@ -29,6 +36,7 @@ function Start-GameProcess([string]$Label, [string[]]$Extra) {
     $allArgs = $baseArgs + @('--') + $Extra
     $proc = Start-Process -FilePath $selectedExe -ArgumentList $allArgs -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $runDir "$Label.stdout.log") -RedirectStandardError (Join-Path $runDir "$Label.stderr.log")
     $processes.Add($proc)
+    $processInfo.Add([ordered]@{process=$proc;label=$Label;kind=$(if ($Label -eq 'server') {'server'} else {'client'});executable=$selectedExe;started_utc=[DateTime]::UtcNow.ToString('o');timed_out=$false})
     return $proc
 }
 try {
@@ -74,10 +82,14 @@ try {
         if ($running.Count -eq 0) { break }
         Start-Sleep -Milliseconds 250
     }
+    foreach ($entry in $processInfo) {
+        if ($entry.kind -ne 'client') { continue }
+        $entry.process.Refresh()
+        if (-not $entry.process.HasExited) { $entry.timed_out = $true }
+        else { $entry.process.WaitForExit() } # Drain redirected output before reading reports.
+    }
     $reports = @(Get-ChildItem -LiteralPath $runDir -Filter '*.json' | ForEach-Object { Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json })
     $errors = @(Get-ChildItem -LiteralPath $runDir -Filter '*.stderr.log' | Where-Object { $_.Length -gt 0 } | ForEach-Object { (Get-Content -LiteralPath $_.FullName -TotalCount 16) -join "`n" })
-    [ordered]@{ run = $runDir; expectedClients = $(if ($Incompatible) { 1 } else { $Humans + $Mosquitoes }); reports = $reports; stderr = $errors } | ConvertTo-Json -Depth 12
-    $expectedClients = if ($Incompatible) { 1 } else { $Humans + $Mosquitoes }
     $failedReports = @($reports | Where-Object { $_.errors.Count -gt 0 -or -not $_.privacy_ok })
     $testFailed = $reports.Count -ne $expectedClients -or $failedReports.Count -gt 0 -or $errors.Count -gt 0
     if ($Incompatible) {
@@ -96,8 +108,47 @@ try {
         $incomplete = @($reports | Where-Object { $_.roles_by_round.Count -ne $Rounds -or $_.results.Count -ne $Rounds -or -not $_.lobby_movement_seen -or -not $_.lobby_jump_seen -or -not $_.lobby_crouch_seen -or -not $_.lobby_sprint_seen -or -not $_.cosmetics_synced })
         $testFailed = $testFailed -or $incomplete.Count -gt 0
     }
+} catch {
+    $testFailed = $true
+    $harnessErrors.Add($_.Exception.Message)
 } finally {
-    foreach ($proc in $processes) { if (-not $proc.HasExited) { Stop-Process -Id $proc.Id -Force } }
+    foreach ($entry in $processInfo) {
+        $proc = $entry.process
+        $stopRequested = $false
+        $termination = 'natural'
+        $exitCode = $null
+        $exited = $false
+        $cleanupError = ''
+        try {
+            $proc.Refresh()
+            if (-not $proc.HasExited) {
+                $stopRequested = $true
+                $termination = if ($entry.kind -eq 'server') { 'harness_server_stop' } elseif ($entry.timed_out) { 'client_timeout' } else { 'harness_client_cleanup' }
+                Stop-Process -Id $proc.Id -Force
+                if (-not $proc.WaitForExit(5000)) { throw "Process $($entry.label) did not stop after cleanup" }
+            }
+            $proc.WaitForExit()
+            $proc.Refresh()
+            $exited = $proc.HasExited
+            if ($exited) { $exitCode = $proc.ExitCode }
+        } catch {
+            $cleanupError = $_.Exception.Message
+            $harnessErrors.Add($cleanupError)
+            $testFailed = $true
+        }
+        $processResults.Add([ordered]@{label=$entry.label;kind=$entry.kind;pid=$proc.Id;executable=$entry.executable;started_utc=$entry.started_utc;observed_exit_utc=[DateTime]::UtcNow.ToString('o');exited=$exited;exit_code=$exitCode;termination=$termination;stop_requested=$stopRequested;timed_out=[bool]$entry.timed_out;cleanup_error=$cleanupError})
+    }
 }
+# Forced client cleanup, a missing exit code, or a nonzero natural exit is a
+# failed run even if the client wrote a successful report before it crashed.
+$clientResults = @($processResults | Where-Object { $_.kind -eq 'client' })
+$serverResults = @($processResults | Where-Object { $_.kind -eq 'server' })
+$badClients = @($clientResults | Where-Object { -not $_.exited -or $null -eq $_.exit_code -or $_.exit_code -ne 0 -or $_.timed_out -or $_.stop_requested -or $_.termination -ne 'natural' })
+$badServers = @($serverResults | Where-Object { -not $_.exited -or $null -eq $_.exit_code -or -not $_.stop_requested -or $_.termination -ne 'harness_server_stop' })
+$testFailed = $testFailed -or $clientResults.Count -ne $expectedClients -or $serverResults.Count -ne 1 -or $badClients.Count -gt 0 -or $badServers.Count -gt 0 -or $harnessErrors.Count -gt 0
+# Read after all owned processes have stopped, including late server stderr.
+$errors = @(Get-ChildItem -LiteralPath $runDir -Filter '*.stderr.log' | Where-Object { $_.Length -gt 0 } | ForEach-Object { (Get-Content -LiteralPath $_.FullName -TotalCount 16) -join "`n" })
+$testFailed = $testFailed -or $errors.Count -gt 0
+[ordered]@{run=$runDir;expectedClients=$expectedClients;reports=$reports;stderr=$errors;harness_errors=$harnessErrors.ToArray();processes=$processResults.ToArray();process_validation=@{passed=($badClients.Count -eq 0 -and $badServers.Count -eq 0 -and $clientResults.Count -eq $expectedClients -and $serverResults.Count -eq 1);client_exit_codes_checked=$true;server_exit_policy='Server must remain running until intentionally stopped by the harness; its forced-stop exit code is recorded, not required to be zero.'}} | ConvertTo-Json -Depth 12
 if ($testFailed) { exit 1 }
 exit 0

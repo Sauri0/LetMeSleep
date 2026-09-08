@@ -39,7 +39,7 @@ func _initialize() -> void:
 	leak.record_public(public_packet(70, "mosquito"), 42)
 	check(not leak.ok(), "later role change cannot erase a detected leak")
 
-	for field: String in ["focus", "assignment", "zone", "target", "target_id", "rotation_at", "next_rotation", "blocked_zone", "_focus_progress", "task", "attack", "bite_feedback", "stun", "help"]:
+	for field: String in ["focus", "assignment", "zone", "target", "target_id", "rotation_at", "next_rotation", "blocked_zone", "_focus_progress", "task", "attack", "bite_feedback", "stun", "help", "throw"]:
 		var public_leak = Audit.new()
 		var packet: Dictionary = public_packet(10, "human")
 		packet.actors[77][field] = {}
@@ -96,6 +96,16 @@ func _initialize() -> void:
 	gesture.actors[42].strike = {"id":1,"origin":Vector3.ZERO,"point":Vector3.FORWARD,"direction":Vector3.FORWARD,"hand":"left","tool":"hands","kind":"body","progress":0.5,"active":true}
 	physical.record_public(gesture,42)
 	check(physical.ok(), "public physical gesture is allowed without target or reservation")
+	var throwing = Audit.new()
+	var throw_packet: Dictionary = public_packet(5,"human")
+	throw_packet.actors[42].throw_gesture = {"id":2,"state":"charging","progress":.4,"tool":"slipper","direction":Vector3.FORWARD}
+	throwing.record_public(throw_packet,42)
+	throwing.record_private({"tick":5,"throw":{"can_throw":true,"power":.4}})
+	check(throwing.ok(), "public throw pose and private owner authorization coexist")
+	var wrong_throw = Audit.new()
+	wrong_throw.record_public(public_packet(6,"mosquito"),42)
+	wrong_throw.record_private({"tick":6,"throw":{"can_throw":true}})
+	check(not wrong_throw.ok(), "throw authorization cannot reach mosquito role")
 	var stunned = Audit.new()
 	stunned.record_private({"tick":8,"stun":{"active":true,"remaining":35},"help":{"state":"idle"},"assignment":{}})
 	var visible_stun: Dictionary = public_packet(8,"mosquito")

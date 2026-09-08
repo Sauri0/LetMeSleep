@@ -1,0 +1,20 @@
+{
+  "original": true,
+  "units": "metres",
+  "shaft": "+Y",
+  "normal": "+Z",
+  "grip": [
+    0,
+    0.035,
+    0
+  ],
+  "contact_relative_grip": [
+    0,
+    0.18,
+    0
+  ],
+  "source": "slipper.blend",
+  "triangles": 3676,
+  "materials": 4,
+  "distinct_from_foot_cosmetic": true
+}

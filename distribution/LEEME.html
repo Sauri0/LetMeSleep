@@ -1,8 +1,8 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Let me sleep — Guía</title><style>
 body{margin:0;background:#f5efd9;color:#25313b;font:17px/1.6 system-ui,sans-serif}main{max-width:880px;margin:auto;padding:44px 24px 80px}h1{font-size:36px;line-height:1.12;max-width:680px;color:#244b4d}h2{margin-top:40px;font-size:24px;border-top:2px solid #d8ceb4;padding-top:18px}strong{color:#224b50}li{margin:10px 0}table{border-collapse:collapse;width:100%;font-size:15px}td,th{padding:12px;border:1px solid #cfc5ac;text-align:left}th{background:#e9dfc4}@media(max-width:600px){main{padding:24px 16px}h1{font-size:28px}table{font-size:12px}td,th{padding:7px}}
-</style><main><h1>Let me sleep · 0.6.0 · Windows 64 bits</h1>
-<p>Descomprimí toda la carpeta y abrí <strong>Let-me-sleep.exe</strong>. No necesitás Godot. Todos los jugadores de una sala deben usar <strong>0.6.0 / protocolo 6</strong>.</p>
-<p>Esta versión incorpora nuevos personajes y muebles, música por capas y efectos de sonido. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. <strong>La conexión integrada entre casas todavía está en desarrollo.</strong> El servidor directo y la invitación DD3 necesitan una ruta de red alcanzable; el código por sí solo no resuelve eso.</p>
+</style><main><h1>Let me sleep · 0.7.0 · Windows 64 bits</h1>
+<p>Descomprimí toda la carpeta y abrí <strong>Let-me-sleep.exe</strong>. No necesitás Godot. Todos los jugadores de una sala deben usar <strong>0.7.0 / protocolo 7</strong>.</p>
+<p>Esta versión mejora las proporciones y animaciones de los personajes, renueva los dieciséis ambientes e incorpora puertas con bisagras, iluminación local y ajustes gráficos. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. <strong>La conexión integrada entre casas todavía está en desarrollo.</strong> El servidor directo y la invitación DD3 necesitan una ruta de red alcanzable; el código por sí solo no resuelve eso.</p>
 <h2>Empezar a jugar</h2>
 <p>Elegí <strong>PRÁCTICA</strong>, tu personaje y un modo. El humano juega contra dos mosquitos automáticos; el mosquito, contra un humano automático. La práctica funciona sin conexión ni servidor externo. En partidas con amigos, los roles se sortean cada ronda.</p>
 <h2>Controles esenciales</h2>
@@ -11,15 +11,23 @@ body{margin:0;background:#f5efd9;color:#25313b;font:17px/1.6 system-ui,sans-seri
 <tr><td>Mirar</td><td>Mouse</td><td>Mouse; mirar arriba/abajo dirige el vuelo</td></tr>
 <tr><td>Acción principal</td><td>Clic izquierdo: palmada o herramienta</td><td>Mantener E: concentrarse en la marca propia</td></tr>
 <tr><td>Movimiento especial</td><td>Shift correr; Espacio saltar; Ctrl agacharse</td><td>Soltar movimiento frena; Espacio/Ctrl ajustan altura opcionalmente</td></tr>
+<tr><td>Lanzar objetos</td><td>Mantener clic derecho para cargar; soltar para lanzar diario o pantufla</td><td>—</td></tr>
 <tr><td>Objetos / superficies</td><td>R recoger o cambiar; G soltar</td><td>F posarse o volar</td></tr>
+<tr><td>Puertas</td><td>Pulsar E mirando una manija cercana</td><td>Pasar por debajo; no puede abrirlas</td></tr>
 <tr><td>Tareas</td><td>Mantener E cerca del puesto asignado</td><td>—</td></tr>
 <tr><td>Guía de controles</td><td>F1 abre/cierra</td><td>F1 abre/cierra</td></tr>
 <tr><td>Pausa y ajustes</td><td>Esc</td><td>Esc</td></tr>
 </tbody></table>
 <p>Son los valores iniciales; las teclas pueden reasignarse. Ajustes guarda sensibilidad separada por personaje, inversión vertical, volumen general, Música, Efectos, Ambiente, Interfaz y controles. La guía está plegada durante la partida; los avisos importantes de picadura, aturdimiento, ayuda, tareas y tiempo permanecen visibles. El menú libera el mouse y bloquea tus acciones, pero la ronda sigue avanzando.</p>
+<h2>Herramientas y lanzamientos</h2>
+<p>Los humanos empiezan con las manos libres. Hay matamoscas, raqueta eléctrica, diario enrollado, escoba y pantufla de mano sobre muebles de ambas plantas. Cada objeto tiene alcance, preparación y recuperación propios. El clic izquierdo conserva el golpe. Sólo el diario y la pantufla se lanzan: mantener clic derecho aumenta la fuerza; soltar inicia el lanzamiento. La gravedad curva la trayectoria y paredes, puertas, muebles y personajes la interrumpen. Cuando el objeto se detiene, puede recogerse de nuevo con R.</p>
+<p>Esc, F1, abrir un menú, perder foco o cambiar de objeto cancelan la carga. Después hace falta una nueva pulsación para lanzar. La pantufla de mano es un objeto independiente del calzado del personaje. Los proyectiles no dañan humanos; a los mosquitos los aturden en Sangre/Tareas y eliminan en Supervivencia.</p>
+<h2>Puertas e imagen</h2>
+<p>Mirá la manija de una puerta cercana y pulsá E cuando aparezca Abrir o Cerrar. Si alguien ocupa el recorrido de cierre, vuelve a abrirse; una apertura bloqueada se detiene. Las puertas cerradas frenan golpes y ocultan marcas. Los mosquitos pueden pasar por el hueco inferior.</p>
+<p>En <strong>Esc → Ajustes → Imagen y fluidez</strong> podés elegir 720p, 1080p, 1440p o 4K, pantalla completa, VSync, límite de FPS, sombras y reflejos. Un perfil nuevo empieza <strong>sin límite de FPS y con VSync desactivado</strong>. Podés elegir un tope o activar VSync; tus elecciones quedan guardadas. Con VSync, los FPS dependen de la frecuencia del monitor. La resolución elegida es la de la imagen, incluso si la ventana se ajusta al escritorio. Sombras ligeras o desactivadas y reflejos apagados reducen el trabajo gráfico. Los reflejos del baño son una aproximación estática del ambiente.</p>
 <h2>Si te están picando</h2>
 <p>Mirá hacia abajo y girá la vista hacia el mosquito visible sobre tu cuerpo. <strong>Apuntale y hacé clic izquierdo.</strong> La vista puede girar respecto del torso para alcanzar pecho, abdomen, antebrazos y muslos. Podés seguir girando aunque estés mirando abajo: el torso acompaña al superar el giro cómodo de la cabeza. Al volver a mirar al frente, el cuerpo acompaña suavemente.</p>
-<p>La palmada tiene recorrido y recuperación: apuntar cerca no garantiza acertar. El aviso «¡Tocó!» confirma un impacto; el fallo también tiene respuesta. Q conserva una segunda tecla para la misma palmada manual. Si sostenés una herramienta y apuntás a su brazo, la otra mano puede dar la palmada.</p>
+<p>El pequeño arco amarillo alrededor de la mira indica una oportunidad visible dentro del recorrido de la herramienta; no selecciona blancos ni garantiza acertar. La palmada tiene recorrido y recuperación: apuntar cerca no garantiza acertar. El aviso «¡Tocó!» confirma un impacto; el fallo también tiene respuesta. Q conserva una segunda tecla para la misma palmada manual. Si sostenés una herramienta y apuntás a su brazo, la otra mano puede dar la palmada.</p>
 <p>Las marcas de espalda aparecen sólo con varios humanos y requieren ayuda de otro jugador. Los humanos ven avisos de picaduras reales; no ven las futuras marcas privadas de los mosquitos.</p>
 <h2>Volar y picar</h2>
 <p>W vuela hacia donde apuntás, incluso arriba o abajo. Soltalo para frenar. Acercate por el lado visible de <strong>tu</strong> marca y mantené E para concentrarte. Soltar antes de terminar cancela la carga. Ya adherido, soltar E te mantiene picando: soltá y pulsá E de nuevo para desprenderte, retrocedé con S y buscá tu nueva marca.</p>
@@ -36,11 +44,12 @@ body{margin:0;background:#f5efd9;color:#25313b;font:17px/1.6 system-ui,sans-seri
 <li>El anfitrión elige modo y cantidad de humanos. Todos se preparan y el anfitrión inicia.</li>
 </ol>
 <p>El juego gestiona su servidor oculto: no hace falta abrir una consola, otro ejecutable ni Iniciar-servidor.cmd. Salir de la sala o cerrar el juego termina el servidor propio. Si se cierra el anfitrión, la sala termina; no se transfiere a otra PC. Los scripts de servidor del paquete son herramientas avanzadas opcionales.</p>
-<p><strong>Entre casas:</strong> todavía no se verificó la conexión integrada con descubrimiento y relay. La opción de dirección de Internet sirve sólo si ya existe una ruta alcanzable hasta el anfitrión. No garantiza que cualquier red funcione. Estamos preparando una conexión integrada para que los amigos sólo descarguen el juego y peguen el código, sin otra aplicación.</p>
+<p><strong>Entre casas:</strong> no hay relay ni EOS integrado. La opción de dirección de Internet sirve sólo si ya existe una ruta alcanzable hasta el anfitrión. La invitación contiene esa dirección, puerto y sala; no abre puertos ni supera NAT o CGNAT. Las pruebas en una misma PC no comprueban la conexión entre casas.</p>
 <h2>Si no conecta</h2>
 <p>El estado distingue búsqueda de nombre, respuesta UDP y entrada a la sala. Un rechazo de versión, sala o capacidad conserva su motivo. Cancelar detiene el intento; Reintentar vuelve a abrirlo sin reutilizar un servidor ajeno al crear.</p>
 <p>Si aparece «No llegó respuesta UDP», todavía no se sabe si falló la ruta, el servidor o una regla de red. Revisá el endpoint mostrado y que el anfitrión siga en su sala. No confundas 127.0.0.1 o una dirección de otra red local con una dirección disponible desde otra casa. Copiar una invitación no comprueba su alcance.</p>
 <h2>Tu personaje</h2>
+<p>La base humana es compacta y la del mosquito alargada. Las seis caras animadas conservan sus expresiones y las opciones de personalización. Paredes y suelo usan el acabado liso elegido, con los colores de cada habitación y sus juntas; los objetos mantienen sus materiales propios.</p>
 <p>Abrí <strong>TU PINTA</strong> en el menú principal. Elegí humano o mosquito; girá el modelo arrastrando, acercá/alejá con la rueda y usá restablecer vista. Cada personaje guarda su propio color, detalle, cara, pelo o antenas, ropa o patrón, calzado y accesorio. Usá las tarjetas visuales y muestras de color; al elegir una categoría, la vista se acerca a esa parte. Los perfiles nuevos empiezan con pijama, pantuflas y gorro de noche; una apariencia guardada anteriormente se conserva. Los cambios aparecen en práctica y en la sala de los demás; son sólo visuales.</p>
 <h2>Modos</h2>
 <ul>
@@ -50,4 +59,4 @@ body{margin:0;background:#f5efd9;color:#25313b;font:17px/1.6 system-ui,sans-seri
 </ul>
 <p>Se permiten de uno a cinco humanos, hasta doce mosquitos y dieciséis participantes totales; también uno contra uno. La casa tiene dos pisos, dieciséis ambientes y dos escaleras. Mirá los puestos cercanos para encontrar tareas y herramientas; las etiquetas lejanas se ocultan para dejar ver el escenario.</p>
 <h2>Archivos y límites de esta entrega</h2>
-<p><strong>PRUEBAS.md</strong> registra qué se comprobó y qué falta. <strong>BUILD.txt</strong>, el manifiesto y los archivos SHA256 identifican el ejecutable y los paquetes. No se ha certificado balance con jugadores humanos, requisitos mínimos ni rendimiento en todas las PCs. La documentación técnica y las fuentes están en el repositorio público de GitHub.</p></main></html>
+<p><strong>PRUEBAS.md</strong> registra qué se comprobó y qué falta. <strong>BUILD.txt</strong>, el manifiesto y los archivos SHA256 identifican el ejecutable y los paquetes. No se ha certificado balance con jugadores humanos, requisitos mínimos ni rendimiento en todas las PCs. La documentación técnica y las fuentes están en el repositorio público de GitHub.</p></main>

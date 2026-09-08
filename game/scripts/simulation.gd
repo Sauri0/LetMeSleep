@@ -8,6 +8,8 @@ const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const Pose = preload("res://scripts/human_pose.gd")
 const InsectPose = preload("res://scripts/mosquito_pose.gd")
+const ToolData = preload("res://scripts/tool_catalog.gd")
+const Projectiles = preload("res://scripts/projectile_collision.gd")
 const DoorCatalogData = preload("res://scripts/door_catalog.gd")
 const DoorStateScript = preload("res://scripts/door_state.gd")
 const DOOR_REACH := 2.2
@@ -38,13 +40,7 @@ const DEFAULT_CONFIG := {
 	"task_interval": 36.0, "task_deadline": 30.0, "task_work": 3.0,
 	"task_penalty": 2.0, "task_floor": 24.0, "task_goal": 0,
 }
-const TOOL_STATS := {
-	"hands": {"label": "Manos / palmadas", "reach": 1.70, "cooldown": 0.80, "radius": 0.095},
-	"swatter": {"label": "Matamoscas", "reach": 1.65, "cooldown": 0.60, "radius": 0.115},
-	"racket": {"label": "Raqueta eléctrica", "reach": 1.75, "cooldown": 1.05, "radius": 0.14},
-	"newspaper": {"label": "Diario enrollado", "reach": 1.50, "cooldown": 0.43, "radius": 0.06},
-	"broom": {"label": "Escoba", "reach": 2.20, "cooldown": 1.20, "radius": 0.17},
-}
+const TOOL_STATS = ToolData.MELEE_STATS
 const PICKUP_SPAWNS = Maps.HOUSE.pickups
 # Eight readable front surfaces; a solo human can aim at every one. Additional
 # insects wait privately instead of receiving marks hidden from the owner.
@@ -66,6 +62,9 @@ var actors: Dictionary = {}
 var door_state = DoorStateScript.new()
 var doors: Dictionary = {}
 var pickups: Dictionary = {}
+var _projectiles: Dictionary = {}
+const THROW_HOLD_TIMEOUT := 3.0
+const PROJECTILE_STEP := 1.0/60.0
 var config: Dictionary = DEFAULT_CONFIG.duplicate(true)
 var phase := "lobby"
 var elapsed := 0.0
@@ -156,6 +155,7 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 	_neutral_pose=Pose.sample({})
 	actors.clear()
 	pickups.clear()
+	_projectiles.clear()
 	_human_ids.clear()
 	_mosquito_ids.clear()
 	_pending_actions.clear()
@@ -196,6 +196,9 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 			"_focus_progress": 0.0, "_focus_pulse_until": 0.0, "_focus_suppressed": false,
 			"_strike_at": -1.0, "_strike_until": -1.0, "_strike_started": -1.0, "_strike_resolved": false,
 			"_attack": {"id": -1, "state": "idle", "hit": false, "point": Vector3.ZERO},
+			"impact":{"id":0,"tool":"hands","kind":"melee","material":"skin"},
+			"throw_gesture":{"id":-1,"state":"idle","progress":0.0,"power":0.0,"direction":Vector3.FORWARD,"tool":"hands"},
+			"_throw":{},"_throw_recovery":0.0,"_throw_reason":"",
 			"_bite_feedback": {"id": 0, "active": false, "count": 0, "side": "front"}, "_bite_signature": "",
 			"velocity": Vector3.ZERO, "grounded": human, "sprinting": false, "crouching": false,
 			"crouch_amount": 0.0, "motion_phase": 0.0, "motion_speed": 0.0,
@@ -215,6 +218,14 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 	for index: int in range(_map_data.pickups.size()):
 		var pickup: Dictionary = _map_data.pickups[index].duplicate(true)
 		pickup.holder = 0
+		pickup.state = "ground"
+		pickup.velocity = Vector3.ZERO
+		pickup.owner = 0
+		pickup.ttl = 0.0
+		pickup.rotation = pickup.get("rotation",Vector3(PI*.5,float(pickup.get("yaw",0.0)),0.0))
+		pickup.impact_id = 0
+		pickup.impact_kind = "ground"
+		pickup.impact_material = "wood"
 		pickups[index + 1] = pickup
 	var opportunities := 0
 	# Assigned rosters are authoritative, including direct offline callers.
@@ -261,7 +272,7 @@ func action(id: int, seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: fl
 	var actor: Dictionary = actors[id]
 	if seq <= int(actor._action_seq) or not bool(actor.alive) or actor.state == "stunned":
 		return
-	if verb not in ["bite", "attack", "self_swat", "perch", "pickup", "drop", "door"]:
+	if verb not in ["bite", "attack", "self_swat", "perch", "pickup", "drop", "door", "throw_start", "throw_release", "throw_cancel"]:
 		return
 	if is_nan(aim_yaw) and is_nan(aim_pitch):
 		aim_yaw = float(actor.yaw)
@@ -272,6 +283,11 @@ func action(id: int, seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: fl
 		aim_pitch = clampf(aim_pitch, Pose.HUMAN_PITCH_MIN, Pose.HUMAN_PITCH_MAX)
 		aim_yaw = Pose.clamp_view_yaw(actor, aim_yaw, aim_pitch)
 	actor._action_seq = seq
+	if verb=="throw_cancel":
+		for index: int in range(_pending_actions.size()-1,-1,-1):
+			if int(_pending_actions[index].id)==id and str(_pending_actions[index].verb) in ["throw_start","throw_release"]:_pending_actions.remove_at(index)
+		_cancel_throw(id,"cancelled")
+		return
 	# Reliable RPCs may arrive in a batch; bounded queue prevents action spam.
 	var queued := 0
 	for entry: Dictionary in _pending_actions:
@@ -293,7 +309,7 @@ func _tick(dt: float) -> void:
 	var previous_humans: Dictionary = {}
 	var previous_insects: Dictionary = {}
 	for id: int in _human_ids:
-		if not bool(actors[id]._strike_resolved) and elapsed<=float(actors[id]._strike_until):
+		if not _projectiles.is_empty() or (not bool(actors[id]._strike_resolved) and elapsed<=float(actors[id]._strike_until)):
 			previous_humans[id]=actors[id].duplicate(true)
 	for id: int in _mosquito_ids:
 		var insect: Dictionary=actors[id]
@@ -310,7 +326,7 @@ func _tick(dt: float) -> void:
 		actor.swing = maxf(0.0, float(actor.swing) - dt)
 		actor.threatened = false
 		if not Dictionary(actor.strike).is_empty():
-			actor.strike.progress = clampf((elapsed - float(actor._strike_started)) / Pose.SWING_GESTURE_SECONDS, 0.0, 1.0)
+			actor.strike.progress = clampf((elapsed - float(actor._strike_started)) / maxf(.01,float(actor.strike.get("duration",Pose.SWING_GESTURE_SECONDS))), 0.0, 1.0)
 			actor.strike.active = float(actor.strike.progress) < 1.0
 		if not bool(actor.alive):
 			continue
@@ -373,6 +389,9 @@ func _tick(dt: float) -> void:
 	for command: Dictionary in commands:
 		_execute_action(int(command.id), str(command.verb), command)
 	for id: int in _human_ids:
+		_update_throw(id)
+	_update_projectiles(dt,previous_humans,previous_insects)
+	for id: int in _human_ids:
 		_resolve_strike(id,previous_humans.get(id,{}),previous_insects,elapsed-dt)
 		if elapsed>float(actors[id]._strike_until) and str(actors[id]._attack.state)=="windup":
 			actors[id]._attack.state="miss"
@@ -410,10 +429,15 @@ func _execute_action(id: int, verb: String, command: Dictionary = {}) -> void:
 	var actor: Dictionary = actors[id]
 	if actor.role == "human":
 		match verb:
-			"attack", "self_swat": _attack(id, command)
+			"attack", "self_swat":
+				_cancel_throw(id,"melee")
+				_attack(id, command)
 			"pickup": _pickup(id)
 			"drop": _drop(id)
 			"door": _door_action(id, command)
+			"throw_start": _start_throw(id,command)
+			"throw_release": _release_throw(id,command)
+			"throw_cancel": _cancel_throw(id,"cancelled")
 		return
 	match verb:
 		"bite":
@@ -665,7 +689,14 @@ func _strike_plan(id: int, command: Dictionary = {}) -> Dictionary:
 	var eye: Vector3 = Pose.view_origin(aimed)
 	var direction: Vector3 = Pose.view_direction(aimed)
 	var stats: Dictionary = TOOL_STATS[str(human.tool)]
-	var end: Vector3 = eye + direction * float(stats.reach)
+	var skeleton: Dictionary = _pose_bundle(id).pose
+	var left_shoulder: Vector3=Vector3(human.p)+Vector3(skeleton.shoulder_l).rotated(Vector3.UP,Pose.body_yaw(human))
+	var right_shoulder: Vector3=Vector3(human.p)+Vector3(skeleton.shoulder_r).rotated(Vector3.UP,Pose.body_yaw(human))
+	# Catalog reach is shoulder -> face, including the shaft exactly once.
+	# This initial eye-ray bound only gathers contacts; the chosen shoulder's
+	# sphere intersection below determines the actual attainable depth.
+	var query_reach: float=float(stats.reach)+maxf(eye.distance_to(left_shoulder),eye.distance_to(right_shoulder))
+	var end: Vector3 = eye + direction * query_reach
 	var first: Dictionary = ArenaData.ray_map(eye, end, str(config.map_id), float(stats.radius), doors)
 	for other_id: int in _human_ids:
 		if ArenaData.human_envelope(actors[other_id]).intersects_segment(eye,end)==null:
@@ -680,9 +711,9 @@ func _strike_plan(id: int, command: Dictionary = {}) -> Dictionary:
 		var mosquito: Dictionary = actors[mosquito_id]
 		if not bool(mosquito.alive) or mosquito.state=="stunned":
 			continue
-		if not _impact_near_ray(mosquito,eye,direction,float(stats.reach),float(stats.radius)):
+		if not _impact_near_ray(mosquito,eye,direction,query_reach,float(stats.radius)):
 			continue
-		for candidate: Dictionary in InsectPose.ray_candidates(InsectPose.collision_segments(_impact_actor(mosquito)),eye,direction,float(stats.reach),float(stats.radius)):
+		for candidate: Dictionary in InsectPose.ray_candidates(InsectPose.collision_segments(_impact_actor(mosquito)),eye,direction,query_reach,float(stats.radius)):
 			if not _strike_visible(id,mosquito,eye,candidate.visible): continue
 			var along: float=candidate.along
 			if first.is_empty() or along<float(first.distance):
@@ -706,17 +737,16 @@ func _strike_plan(id: int, command: Dictionary = {}) -> Dictionary:
 		strike_tool = "hands"
 		stats = TOOL_STATS.hands
 	var hand: String = "right" if strike_tool != "hands" or local_point.x <= 0.0 else "left"
-	var skeleton: Dictionary = _pose_bundle(id).pose
 	var shoulder: Vector3 = Vector3(human.p) + Vector3(skeleton.shoulder_r if hand == "right" else skeleton.shoulder_l).rotated(Vector3.UP, Pose.body_yaw(human))
 	# The cartoon arm has a finite shared reach. The renderer and hit detector use
 	# the same resulting palm or tool-face point throughout the gesture.
-	var maximum: float = Pose.ARM_REACH + float(Pose.TOOL_LENGTHS.get(strike_tool, 0.0))
+	var maximum: float = float(stats.reach)
 	var offset: Vector3 = eye - shoulder
 	var projected: float = offset.dot(direction)
 	var discriminant: float = projected * projected - (offset.length_squared() - maximum * maximum)
-	var ray_reach: float = maxf(0.0, -projected + sqrt(maxf(0.0, discriminant)))
-	point = eye + direction * minf(eye.distance_to(point), minf(float(stats.reach), ray_reach))
-	return {"origin":eye,"point":point,"direction":direction,"normal":normal,"hand":hand,"tool":strike_tool,"radius":float(stats.radius),"reach":minf(float(stats.reach),ray_reach),"kind":"air" if first.is_empty() else str(first.kind)}
+	var ray_reach: float = maxf(0.0, -projected + sqrt(discriminant)) if discriminant>=0.0 else 0.0
+	point = eye + direction * minf(eye.distance_to(point),ray_reach)
+	return {"origin":eye,"point":point,"direction":direction,"normal":normal,"hand":hand,"tool":strike_tool,"radius":float(stats.radius),"reach":ray_reach,"reach_origin":"eye","kind":"air" if first.is_empty() else str(first.kind)}
 
 func _attack(id: int, command: Dictionary) -> void:
 	var human: Dictionary = actors[id]
@@ -726,11 +756,11 @@ func _attack(id: int, command: Dictionary) -> void:
 	var stats: Dictionary = TOOL_STATS[str(plan.tool)]
 	human.swing = float(stats.cooldown)
 	human._strike_started = elapsed
-	human._strike_at = elapsed + STRIKE_START
-	human._strike_until = elapsed + STRIKE_END
+	human._strike_at = elapsed + float(stats.get("damage_start",STRIKE_START))
+	human._strike_until = elapsed + float(stats.get("damage_end",STRIKE_END))
 	human._strike_resolved = false
 	human.strike = plan.duplicate(true)
-	human.strike.merge({"id":int(command.get("seq",human._action_seq)),"progress":0.0,"duration":Pose.SWING_GESTURE_SECONDS,"active":true},true)
+	human.strike.merge({"id":int(command.get("seq",human._action_seq)),"progress":0.0,"duration":float(stats.get("gesture",Pose.SWING_GESTURE_SECONDS)),"active":true},true)
 	human._attack={"id":human.strike.id,"state":"windup","hit":false,"point":plan.point}
 
 func _strike_visible(id: int, mosquito: Dictionary, eye: Vector3, position: Vector3) -> bool:
@@ -783,7 +813,7 @@ func _strike_actor_at(human: Dictionary, previous: Dictionary, from_time: float,
 		actor[key]=lerpf(float(previous.get(key,human.get(key,0.0))),float(human.get(key,0.0)),weight)
 	actor.motion_phase=lerp_angle(float(previous.get("motion_phase",0.0)),float(human.motion_phase),weight)
 	actor.strike=Dictionary(human.strike).duplicate(false)
-	actor.strike.progress=clampf((at_time-float(human._strike_started))/Pose.SWING_GESTURE_SECONDS,0.0,1.0)
+	actor.strike.progress=clampf((at_time-float(human._strike_started))/maxf(.01,float(human.strike.get("duration",Pose.SWING_GESTURE_SECONDS))),0.0,1.0)
 	return actor
 
 func _strike_contact(actor: Dictionary) -> Vector3:
@@ -807,7 +837,7 @@ func _resolve_strike(id: int, previous: Dictionary = {}, previous_insects: Dicti
 		var b: Vector3=_strike_contact(_strike_actor_at(human,previous,from_time,t1))
 		var selected: int=_swept_strike_hit(id,human.strike,a,b,previous_insects,from_time,t0,t1)
 		if selected>=0:
-			_kill(selected)
+			_kill(selected,str(human.strike.tool),"melee")
 			human._strike_resolved=true
 			human._attack.state="hit"
 			human._attack.hit=true
@@ -889,6 +919,7 @@ func _attack_info(id: int) -> Dictionary:
 	result.tool=str(human.tool)
 	result.radius=float(TOOL_STATS[result.tool].radius)
 	result.reach=0.0
+	result.reach_origin="eye"
 	if not result.can_swing:
 		return result
 	var plan: Dictionary=_strike_plan(id)
@@ -907,10 +938,14 @@ func _attack_info(id: int) -> Dictionary:
 	var posed: Dictionary=human.duplicate(false)
 	posed.strike=plan.duplicate(false)
 	posed.strike.active=true
-	posed.strike.progress=STRIKE_START/Pose.SWING_GESTURE_SECONDS
+	var stats: Dictionary=TOOL_STATS[str(plan.tool)]
+	var start: float=stats.get("damage_start",STRIKE_START)
+	var end: float=stats.get("damage_end",STRIKE_END)
+	var duration: float=stats.get("gesture",Pose.SWING_GESTURE_SECONDS)
+	posed.strike.progress=start/duration
 	var a: Vector3=_strike_contact(posed)
 	for index: int in range(1,23):
-		posed.strike.progress=lerpf(STRIKE_START,STRIKE_END,float(index)/22.0)/Pose.SWING_GESTURE_SECONDS
+		posed.strike.progress=lerpf(start,end,float(index)/22.0)/duration
 		var b: Vector3=_strike_contact(posed)
 		if _swept_strike_hit(id,plan,a,b,{},elapsed,elapsed,elapsed)>=0:
 			result.candidate=true
@@ -957,10 +992,12 @@ func _body_occludes(from: Vector3, to: Vector3, ignored_human: int) -> bool:
 				return true
 	return false
 
-func _kill(id: int) -> void:
+func _kill(id: int, tool: String="hands", kind: String="melee") -> void:
 	var actor: Dictionary = actors[id]
 	if not bool(actor.alive) or actor.state == "stunned":
 		return
+	var safe_tool: String=tool if ToolData.has_tool(tool) else "hands"
+	actor.impact={"id":int(actor.impact.id)+1,"tool":safe_tool,"kind":"projectile" if kind=="projectile" else "melee","material":str(ToolData.DATA[safe_tool].material)}
 	actor._forbidden = _zone_key(actor._assignment)
 	actor._assignment = {}
 	_assignment_waiters.erase(id)
@@ -1046,6 +1083,287 @@ func _update_help(dt: float) -> void:
 		if float(actor._stun_remaining) <= 0.000001:
 			_recover_stun(id)
 
+func _owned_pickup(id: int) -> int:
+	for pickup_id: int in pickups:
+		if int(pickups[pickup_id].holder)==id and str(pickups[pickup_id].tool)==str(actors[id].tool):return pickup_id
+	return -1
+
+func _throw_info(id: int) -> Dictionary:
+	var actor: Dictionary=actors[id]
+	var tool: String=str(actor.tool)
+	var stats: Dictionary=ToolData.throw_stats(tool)
+	var pending: Dictionary=actor._throw
+	var charge: float=clampf((elapsed-float(pending.get("started",elapsed)))/maxf(.01,float(stats.get("charge_seconds",1.0))),0.0,1.0) if not pending.is_empty() else 0.0
+	if str(pending.get("state",""))=="release":charge=float(pending.power)
+	var recovery: float=maxf(0.0,float(actor._throw_recovery)-elapsed)
+	var can: bool=phase=="playing" and bool(actor.alive) and ToolData.throwable(tool) and _owned_pickup(id)>=0 and float(actor.swing)<=0.0 and recovery<=0.0
+	var reason: String=str(actor._throw_reason)
+	if not ToolData.throwable(tool):reason="not_throwable"
+	elif reason.is_empty() and (recovery>0.0 or float(actor.swing)>0.0):reason="recovery"
+	return {"id":int(actor.throw_gesture.id),"state":str(actor.throw_gesture.state),"tool":tool,"charge":charge,"power":charge,"charge_seconds":float(stats.get("charge_seconds",0.0)),"speed":lerpf(float(stats.get("min_speed",0.0)),float(stats.get("max_speed",0.0)),charge),"can_throw":can,"recovery":recovery,"reason":reason}
+
+func _cancel_throw(id: int, reason: String) -> void:
+	if not actors.has(id) or actors[id].role!="human":return
+	var actor: Dictionary=actors[id]
+	if Dictionary(actor._throw).is_empty():return
+	actor._throw={}
+	actor._throw_reason=reason
+	actor.throw_gesture.state="idle"
+	actor.throw_gesture.progress=0.0
+	actor.throw_gesture.power=0.0
+
+func _start_throw(id: int, command: Dictionary) -> void:
+	var actor: Dictionary=actors[id]
+	if not Dictionary(actor._throw).is_empty():return
+	if not bool(_throw_info(id).can_throw):return
+	if elapsed-float(actor._last_input)>INPUT_TIMEOUT:
+		actor._throw_reason="stale"
+		return
+	var aimed: Dictionary=actor.duplicate(false)
+	aimed.yaw=command.yaw
+	aimed.pitch=command.pitch
+	actor._throw={"state":"charging","started":elapsed,"pickup":_owned_pickup(id),"tool":str(actor.tool)}
+	actor._throw_reason=""
+	actor.throw_gesture={"id":int(command.seq),"state":"charging","progress":0.0,"power":0.0,"direction":Pose.view_direction(aimed),"tool":str(actor.tool)}
+
+func _throw_aim_point(id: int, command: Dictionary) -> Vector3:
+	var aimed: Dictionary=actors[id].duplicate(false)
+	aimed.yaw=command.yaw
+	aimed.pitch=command.pitch
+	var eye: Vector3=Pose.view_origin(aimed)
+	var end: Vector3=eye+Pose.view_direction(aimed)*8.0
+	# Exact, zero-width camera ray: no melee footprint or target snapping.
+	var first: Dictionary=ArenaData.ray_map(eye,end,str(config.map_id),0.0,doors)
+	for human_id: int in _human_ids:
+		var hit: Dictionary=Pose.ray_body(actors[human_id],eye,end,human_id==id)
+		if not hit.is_empty() and (first.is_empty() or float(hit.distance)<float(first.distance)):first=hit
+	for mosquito_id: int in _mosquito_ids:
+		if not bool(actors[mosquito_id].alive) or actors[mosquito_id].state=="stunned":continue
+		for capsule: Dictionary in InsectPose.collision_segments(_impact_actor(actors[mosquito_id])):
+			var hit: Dictionary=Pose.ray_capsule(eye,end,capsule)
+			if not hit.is_empty() and (first.is_empty() or float(hit.distance)<float(first.distance)):first=hit
+	return end if first.is_empty() else Vector3(first.p)
+
+func _throw_direction(actor: Dictionary, pending: Dictionary) -> Vector3:
+	# Opposite shared grip endpoints recover the shoulder without duplicating
+	# pose dimensions. Both endpoints use the actual server charge.
+	var shoulder: Vector3=Pose.throw_origin(actor,Vector3.FORWARD,float(pending.power)).lerp(Pose.throw_origin(actor,Vector3.BACK,float(pending.power)),.5)
+	return (Vector3(pending.aim_point)-shoulder).normalized()
+
+func _release_throw(id: int, command: Dictionary) -> void:
+	var actor: Dictionary=actors[id]
+	var pending: Dictionary=actor._throw
+	if pending.is_empty() or str(pending.state)!="charging":return
+	if elapsed-float(actor._last_input)>INPUT_TIMEOUT or elapsed-float(pending.started)>THROW_HOLD_TIMEOUT:
+		_cancel_throw(id,"stale")
+		return
+	if _owned_pickup(id)!=int(pending.pickup) or str(actor.tool)!=str(pending.tool):
+		_cancel_throw(id,"equipment")
+		return
+	var stats:=ToolData.throw_stats(str(pending.tool))
+	pending.state="release"
+	pending.power=clampf((elapsed-float(pending.started))/float(stats.charge_seconds),0.0,1.0)
+	pending.release_at=elapsed+float(stats.launch_seconds)
+	pending.aim_point=_throw_aim_point(id,command)
+	pending.direction=_throw_direction(actor,pending)
+	actor.throw_gesture.state="release"
+	actor.throw_gesture.progress=0.0
+	actor.throw_gesture.power=pending.power
+	actor.throw_gesture.direction=pending.direction
+
+func _update_throw(id: int) -> void:
+	var actor: Dictionary=actors[id]
+	var pending: Dictionary=actor._throw
+	if pending.is_empty():
+		if str(actor.throw_gesture.state)=="recovering":
+			var seconds: float=ToolData.throw_stats(str(actor.throw_gesture.tool)).get("recovery_seconds",.45)
+			actor.throw_gesture.progress=clampf(1.0-(float(actor._throw_recovery)-elapsed)/seconds,0.0,1.0)
+			if elapsed>=float(actor._throw_recovery):actor.throw_gesture.state="idle"
+		return
+	if not bool(actor.alive) or _owned_pickup(id)!=int(pending.pickup) or str(actor.tool)!=str(pending.tool):
+		_cancel_throw(id,"equipment")
+		return
+	if elapsed-float(actor._last_input)>INPUT_TIMEOUT:
+		_cancel_throw(id,"stale")
+		return
+	var stats:=ToolData.throw_stats(str(pending.tool))
+	if str(pending.state)=="charging":
+		if elapsed-float(pending.started)>THROW_HOLD_TIMEOUT:
+			_cancel_throw(id,"timeout")
+			return
+		actor.throw_gesture.progress=clampf((elapsed-float(pending.started))/float(stats.charge_seconds),0.0,1.0)
+		actor.throw_gesture.power=actor.throw_gesture.progress
+		actor.throw_gesture.direction=Pose.view_direction(actor)
+	else:
+		# The captured world point stays fixed even if a mosquito moves away.
+		pending.direction=_throw_direction(actor,pending)
+		actor.throw_gesture.direction=pending.direction
+		actor.throw_gesture.progress=clampf(1.0-(float(pending.release_at)-elapsed)/float(stats.launch_seconds),0.0,1.0)
+		if elapsed+.000001>=float(pending.release_at):_launch_throw(id)
+
+func _human_capsules(actor: Dictionary) -> Array[Dictionary]:
+	var result: Array[Dictionary]=[]
+	var basis:=Basis(Vector3.UP,Pose.body_yaw(actor))
+	for piece: Dictionary in Pose.collision_segments(actor):
+		result.append({"key":piece.key,"from":Vector3(actor.p)+basis*Vector3(piece.from),"to":Vector3(actor.p)+basis*Vector3(piece.to),"radius":piece.radius})
+	return result
+
+func _launch_throw(id: int) -> void:
+	var actor: Dictionary=actors[id]
+	var pending: Dictionary=Dictionary(actor._throw).duplicate(true)
+	var tool: String=pending.tool
+	var stats:=ToolData.throw_stats(tool)
+	var direction: Vector3=pending.direction
+	var origin: Vector3=Pose.throw_origin(actor,direction,float(pending.power))
+	var rotation:=Projectiles.launch_basis(direction).get_euler()
+	var charged: Dictionary=actor.duplicate(true)
+	charged.throw_gesture.state="charging"
+	charged.throw_gesture.progress=1.0
+	var source: Vector3=Vector3(actor.p)+Vector3(Pose.sample(charged).tool_grip).rotated(Vector3.UP,Pose.body_yaw(actor))
+	var source_shape:=Projectiles.capsule(tool,source,rotation)
+	var final_shape:=Projectiles.capsule(tool,origin,rotation)
+	var blocked: bool=(Vector3(pending.aim_point)-origin).dot(direction)<=.005 or not Projectiles.map_hit(source_shape,origin-source,str(config.map_id),doors).is_empty()
+	for human_id: int in _human_ids:
+		for body: Dictionary in _human_capsules(actors[human_id]):
+			if human_id==id and Pose.limb_key(str(body.key)) in ["upperarm_r","forearm_r","hand_r"]:continue
+			if not Projectiles.sweep_capsules(source_shape,final_shape,body,body).is_empty():blocked=true
+	if blocked:
+		_cancel_throw(id,"blocked")
+		actor._throw_recovery=elapsed+.15
+		return
+	var pickup_id: int=pending.pickup
+	if not pickups.has(pickup_id) or int(pickups[pickup_id].holder)!=id:
+		_cancel_throw(id,"equipment")
+		return
+	var pickup: Dictionary=pickups[pickup_id]
+	pickup.holder=0
+	pickup.state="flying"
+	pickup.p=origin
+	pickup.rotation=rotation
+	pickup.yaw=float(actor.yaw)
+	pickup.velocity=direction*lerpf(float(stats.min_speed),float(stats.max_speed),float(pending.power))
+	pickup.owner=id
+	pickup.ttl=float(stats.lifetime)
+	var excluded: Dictionary={}
+	for mosquito_id: int in _mosquito_ids:
+		for body: Dictionary in InsectPose.collision_segments(_impact_actor(actors[mosquito_id])):
+			if not Projectiles.sweep_capsules(final_shape,final_shape,body,body).is_empty():excluded[mosquito_id]=true
+	_projectiles[pickup_id]={"launched":elapsed,"distance":0.0,"damaging":true,"last_impact":-1.0,"tool":tool,"excluded":excluded}
+	actor.tool="hands"
+	actor._throw={}
+	actor._throw_reason=""
+	actor._throw_recovery=elapsed+float(stats.recovery_seconds)
+	actor.throw_gesture.state="recovering"
+	actor.throw_gesture.progress=0.0
+
+func _projectile_event(pickup: Dictionary, flight: Dictionary, kind: String, material: String) -> void:
+	if elapsed-float(flight.last_impact)<.06:return
+	flight.last_impact=elapsed
+	pickup.impact_id=int(pickup.get("impact_id",0))+1
+	pickup.impact_kind=kind if kind in ["map","door","human","mosquito","ground"] else "map"
+	pickup.impact_material=material if material in ["wood","tile","cloth"] else "wood"
+
+func _settle_projectile(pickup_id: int) -> void:
+	var pickup: Dictionary=pickups[pickup_id]
+	var rotation:=Vector3(PI*.5,float(pickup.get("yaw",0.0)),0.0)
+	var floor_y: float=ArenaData.floor_below(Vector3(pickup.p)+Vector3.UP*.08,str(config.map_id),doors)
+	var position: Vector3=pickup.p
+	position.y=floor_y+Projectiles.resting_offset(str(pickup.tool),rotation)
+	# Only flatten if the final visual-sized object fits here. Never move it
+	# through a nearby leg, wall or table edge to manufacture a resting pose.
+	if Projectiles.visual_fits(str(pickup.tool),position,rotation,str(config.map_id),doors):
+		pickup.p=position
+		pickup.rotation=rotation
+	else:
+		position.y=floor_y+Projectiles.resting_offset(str(pickup.tool),pickup.rotation)
+		if Projectiles.visual_fits(str(pickup.tool),position,pickup.rotation,str(config.map_id),doors):pickup.p=position
+	pickup.state="ground"
+	pickup.velocity=Vector3.ZERO
+	pickup.ttl=0.0
+	_projectiles.erase(pickup_id)
+
+func _update_projectiles(dt: float, previous_humans: Dictionary, previous_insects: Dictionary) -> void:
+	for pickup_id: int in _projectiles.keys():
+		if not pickups.has(pickup_id):
+			_projectiles.erase(pickup_id)
+			continue
+		var pickup: Dictionary=pickups[pickup_id]
+		var flight: Dictionary=_projectiles[pickup_id]
+		if str(pickup.get("state",""))!="flying" or int(pickup.holder)!=0:
+			_projectiles.erase(pickup_id)
+			continue
+		var stats:=ToolData.throw_stats(str(flight.tool))
+		var remaining: float=minf(dt,maxf(0.0,elapsed-float(flight.launched)))
+		var consumed:=dt-remaining
+		while remaining>.000001 and _projectiles.has(pickup_id):
+			var part: float=minf(remaining,PROJECTILE_STEP)
+			var old: Vector3=pickup.p
+			var velocity: Vector3=pickup.velocity
+			var displacement:=velocity*part+Vector3.DOWN*float(stats.gravity)*part*part*.5
+			velocity.y-=float(stats.gravity)*part
+			var a:=Projectiles.capsule(str(flight.tool),old,pickup.rotation)
+			var b:=Projectiles.translated(a,displacement)
+			var first: Dictionary=Projectiles.map_hit(a,displacement,str(config.map_id),doors)
+			var u0: float=consumed/maxf(dt,.000001)
+			var u1: float=(consumed+part)/maxf(dt,.000001)
+			for human_id: int in _human_ids:
+				var current: Array[Dictionary]=_human_capsules(actors[human_id])
+				var before: Array[Dictionary]=_human_capsules(previous_humans.get(human_id,actors[human_id]))
+				for index: int in range(current.size()):
+					if human_id==int(pickup.owner) and float(flight.distance)<.30 and elapsed-float(flight.launched)<.15 and Pose.limb_key(str(current[index].key)) in ["upperarm_r","forearm_r","hand_r"]:continue
+					var hit:=Projectiles.sweep_capsules(a,b,Projectiles.lerp_capsule(before[index],current[index],u0),Projectiles.lerp_capsule(before[index],current[index],u1))
+					if hit.is_empty() or (not first.is_empty() and float(first.fraction)<=float(hit.fraction)):continue
+					hit.kind="human"
+					hit.material="cloth"
+					first=hit
+			var armed: bool=bool(flight.damaging) and float(pickup.ttl)>0.0
+			if armed:
+				for mosquito_id: int in _mosquito_ids:
+					var insect: Dictionary=actors[mosquito_id]
+					if not bool(insect.alive) or insect.state=="stunned":continue
+					var current: Dictionary=_impact_actor(insect)
+					var previous: Variant=previous_insects.get(mosquito_id,current)
+					if not previous is Dictionary:previous=current
+					var current_shapes:=InsectPose.collision_segments(current)
+					var before_shapes:=InsectPose.collision_segments(previous)
+					if Dictionary(flight.excluded).has(mosquito_id):
+						var overlaps:=false
+						for body: Dictionary in current_shapes:
+							if not Projectiles.sweep_capsules(b,b,body,body).is_empty():overlaps=true
+						if not overlaps:flight.excluded.erase(mosquito_id)
+						continue
+					for index: int in range(current_shapes.size()):
+						var hit:=Projectiles.sweep_capsules(a,b,Projectiles.lerp_capsule(before_shapes[index],current_shapes[index],u0),Projectiles.lerp_capsule(before_shapes[index],current_shapes[index],u1))
+						if hit.is_empty() or (not first.is_empty() and float(first.fraction)<=float(hit.fraction)):continue
+						if not ArenaData.clear_segment(old,hit.p,str(config.map_id),doors):continue
+						hit.kind="mosquito"
+						hit.material="cloth"
+						hit.id=mosquito_id
+						first=hit
+			if first.is_empty():
+				pickup.p=old+displacement
+			else:
+				pickup.p=old+displacement*float(first.fraction)+Vector3(first.normal)*.002
+				_projectile_event(pickup,flight,str(first.kind),str(first.material))
+				if str(first.kind)=="mosquito":_kill(int(first.id),str(flight.tool),"projectile")
+				flight.damaging=false
+				var normal: Vector3=first.normal
+				velocity=velocity.bounce(normal)*float(stats.bounce)
+				if normal.y>.55 and (velocity.length()<1.5 or elapsed-float(flight.launched)>float(stats.lifetime)):
+					_settle_projectile(pickup_id)
+			flight.distance=float(flight.distance)+old.distance_to(pickup.p)
+			if str(pickup.state)=="flying":pickup.velocity=velocity
+			pickup.ttl=maxf(0.0,float(pickup.ttl)-part)
+			remaining-=part
+			consumed+=part
+
+func _public_pickups() -> Dictionary:
+	var result: Dictionary={}
+	for id: int in pickups:
+		var item: Dictionary=pickups[id]
+		result[id]={"tool":str(item.tool),"p":item.p,"holder":int(item.holder),"yaw":float(item.get("yaw",0.0)),"rotation":item.get("rotation",Vector3.ZERO),"state":str(item.get("state","held" if int(item.holder)!=0 else "ground")),"velocity":item.get("velocity",Vector3.ZERO),"owner":int(item.get("owner",0)),"ttl":float(item.get("ttl",0.0)),"impact_id":int(item.get("impact_id",0)),"impact_kind":str(item.get("impact_kind","ground")),"impact_material":str(item.get("impact_material","wood"))}
+	return result
+
 func _pickup_info(id: int) -> Dictionary:
 	var result := {"tool":"","can_take":false,"distance":0.0}
 	if not actors.has(id) or actors[id].role!="human" or not bool(actors[id].alive) or phase!="playing":
@@ -1054,33 +1372,48 @@ func _pickup_info(id: int) -> Dictionary:
 	var nearest_distance := 1.45
 	for pickup_id: int in pickups:
 		var pickup: Dictionary=pickups[pickup_id]
-		if int(pickup.holder)!=0:
+		if int(pickup.holder)!=0 or str(pickup.get("state","ground"))!="ground":
 			continue
 		var distance: float=Vector3(actor.p).distance_to(pickup.p)
-		if distance<nearest_distance and ArenaData.clear_segment(Vector3(actor.p)+Vector3.UP*.8,pickup.p,str(config.map_id),doors):
+		if distance<nearest_distance and ArenaData.clear_segment(Pose.view_origin(actor),pickup.p,str(config.map_id),doors):
 			nearest_distance=distance
 			result={"_id":pickup_id,"tool":str(pickup.tool),"can_take":true,"distance":distance}
 	return result
 
 func _pickup(id: int) -> void:
+	_cancel_throw(id,"equipment")
 	var info: Dictionary=_pickup_info(id)
 	if not bool(info.can_take):
 		return
 	_drop(id)
 	pickups[int(info._id)].holder=id
+	pickups[int(info._id)].state="held"
+	pickups[int(info._id)].velocity=Vector3.ZERO
+	pickups[int(info._id)].owner=0
+	pickups[int(info._id)].ttl=0.0
 	actors[id].tool=str(info.tool)
 
 func _drop(id: int) -> void:
 	var actor: Dictionary = actors[id]
+	_cancel_throw(id,"equipment")
+	if not bool(actor._strike_resolved):
+		actor._strike_resolved=true
+		if not Dictionary(actor.strike).is_empty():actor.strike.active=false
+		if str(actor._attack.state)=="windup":actor._attack.state="miss"
 	for pickup_id: int in pickups:
 		var pickup: Dictionary = pickups[pickup_id]
 		if int(pickup.holder) == id:
 			pickup.holder = 0
+			pickup.state = "ground"
+			pickup.velocity=Vector3.ZERO
+			pickup.owner=0
+			pickup.ttl=0.0
 			var forward: Vector3 = Vector3.FORWARD.rotated(Vector3.UP, float(actor.yaw))
 			var height: float = lerpf(ArenaData.HUMAN_HEIGHT, ArenaData.HUMAN_CROUCH_HEIGHT, float(actor.crouch_amount))
 			var landing: Vector3 = ArenaData.move_body(actor.p, forward * 0.55, true, str(config.map_id), height, doors)
 			landing.y = ArenaData.floor_below(landing + Vector3.UP * 0.15, str(config.map_id), doors)
-			pickup.p = landing + Vector3.UP * 0.15
+			pickup.rotation=Vector3(PI*.5,float(actor.yaw),0.0)
+			pickup.p = landing + Vector3.UP * Projectiles.resting_offset(str(pickup.tool),pickup.rotation)
 			pickup.yaw = float(actor.yaw)
 	actor.tool = "hands"
 
@@ -1147,12 +1480,14 @@ func _finish(team: String, explanation: String) -> void:
 	reason = explanation
 	phase = "results"
 	_pending_actions.clear()
+	for id: int in _human_ids:_cancel_throw(id,"round_end")
 
 func abort(explanation: String) -> void:
 	phase = "lobby"
 	winner = ""
 	reason = explanation
 	_pending_actions.clear()
+	for id: int in _human_ids:_cancel_throw(id,"round_end")
 	_assignment_waiters.clear()
 	for id: int in actors:
 		actors[id]._assignment = {}
@@ -1180,6 +1515,7 @@ func public_snapshot() -> Dictionary:
 			"name": actor.name, "role": actor.role, "p": actor.p, "yaw": actor.yaw,
 			"appearance": Dictionary(actor.appearance).duplicate(true),
 			"body_yaw": actor.body_yaw, "inspecting": actor.inspecting, "strike": Dictionary(actor.strike).duplicate(true),
+			"throw_gesture":Dictionary(actor.throw_gesture).duplicate(true),"impact":Dictionary(actor.impact).duplicate(true),
 			"pitch": actor.pitch, "state": actor.state, "alive": actor.alive,
 			"surface_normal": surface_normal,
 			"help_target": actor.help_target,
@@ -1195,7 +1531,7 @@ func public_snapshot() -> Dictionary:
 		"phase": phase, "map_id": config.map_id, "elapsed": elapsed, "time_left": maxf(0.0, float(config.round_seconds) - elapsed),
 		"config": config.duplicate(true), "blood": blood, "winner": winner, "reason": reason,
 		"tasks_done": tasks_done, "task_goal": task_goal, "actors": public_actors,
-		"pickups": pickups.duplicate(true), "doors": door_state.snapshot(),
+		"pickups": _public_pickups(), "doors": door_state.snapshot(),
 	}
 
 func private_for(id: int) -> Dictionary:
@@ -1206,7 +1542,7 @@ func private_for(id: int) -> Dictionary:
 		var attack: Dictionary = _attack_info(id)
 		var pickup: Dictionary = _pickup_info(id)
 		pickup.erase("_id")
-		return {"pickup":pickup,"task": Dictionary(actor._task).duplicate(true), "deadline": actor._deadline, "failures": actor._failures, "attack": attack, "bite_feedback": Dictionary(actor._bite_feedback).duplicate(true), "interaction": _door_info(id)}
+		return {"throw":_throw_info(id),"pickup":pickup,"task": Dictionary(actor._task).duplicate(true), "deadline": actor._deadline, "failures": actor._failures, "attack": attack, "bite_feedback": Dictionary(actor._bite_feedback).duplicate(true), "interaction": _door_info(id)}
 	var assignment: Dictionary = {}
 	if bool(actor.alive) and not Dictionary(actor._assignment).is_empty():
 		assignment = Dictionary(actor._assignment).duplicate(true)

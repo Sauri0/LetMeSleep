@@ -1,4 +1,5 @@
 extends SceneTree
+const Supports=preload("res://scripts/pickup_supports.gd")
 const ArenaData = preload("res://scripts/arena.gd")
 const Barriers = preload("res://scripts/house_barriers.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
@@ -13,7 +14,7 @@ func check(ok: bool, label: String) -> void:
 		printerr("BARRIER_FAIL "+label)
 
 func _initialize() -> void:
-	check(ArenaData.obstacles().size()==Maps.HOUSE.obstacles.size()+Barriers.get_boxes().size(),"authority contains every rendered railing member")
+	check(ArenaData.obstacles().size()==Maps.HOUSE.obstacles.size()+Barriers.get_boxes().size()+Supports.get_boxes().size(),"authority contains every rendered railing member and domestic support part")
 	check(ArenaData.obstacles().is_read_only(),"cached static geometry cannot become mutable room state")
 	check(ArenaData.obstacles("lobby").size()==Maps.LOBBY.obstacles.size(),"house railings never enter lobby")
 	for side: float in [-1.0,1.0]:

@@ -4,7 +4,7 @@ Tema principal **Pasos de puntillas**, 104 BPM, 4/4, 32 compases (73,846 s). Var
 
 La partida tiene tres capas estéreo con exactamente 3.256.615 muestras cada una: base de contrabajo/pizzicatos, percusión suave y motivo melódico. Menú y lobby usan otras tres capas del arreglo principal; el lobby atenúa percusión y melodía. Personalización/ajustes puede usar la variante tranquila. Seis acentos breves: inicio, aturdimiento, recuperación, tarea, victoria y derrota.
 
-La biblioteca incluye 38 efectos y ambientes mono. Hay modelos diferenciados para vuelo/posado/picadura, movimiento de golpe/impacto, las cuatro herramientas, retirada, ropa, aterrizaje, pasos de madera/baldosa/tejido, tareas, interfaz, caída/aturdimiento/ayuda/recuperación y fuentes domésticas. El zumbido y el Foley son síntesis original; no se presentan como grabaciones de mosquitos o personas reales.
+La biblioteca incluye efectos y ambientes mono, ampliados con 16 variaciones para objetos en 0.7. Hay modelos diferenciados para vuelo/posado/picadura, movimiento de golpe/impacto, las cinco herramientas, retirada, ropa, aterrizaje, pasos de madera/baldosa/tejido, tareas, interfaz, caída/aturdimiento/ayuda/recuperación y fuentes domésticas. El zumbido y el Foley son síntesis original; no se presentan como grabaciones de mosquitos o personas reales.
 
 ## Material editable y procedencia
 
@@ -14,7 +14,7 @@ La biblioteca incluye 38 efectos y ambientes mono. Hay modelos diferenciados par
 - `accent-events.json`: notas/tiempos de los seis acentos.
 - `instruments/vsco2ce/`: 24 notas acústicas de contrabajo, viola pizzicato, clarinete, marimba y glockenspiel. Son grabaciones CC0 de VSCO 2 CE de Versilian Studios, Sam Gossner y Simon Dalzell; corte de muestras por Elan Hickler/Soundemote.
 - `sample-provenance.json`: URL primaria fijada a commit, hash y licencia de cada muestra. `instruments/vsco2ce/LICENSE-CC0.txt` contiene la licencia completa.
-- `game/assets/audio/manifest.json`, `CREDITS.txt` y `LICENSE-VSCO2CE-CC0.txt`: manifiesto de los 51 OGG y procedencia para distribución.
+- `game/assets/audio/manifest.json`, `CREDITS.txt` y `LICENSE-VSCO2CE-CC0.txt`: manifiesto de los 67 OGG y procedencia para distribución.
 
 Fuentes primarias: [VSCO 2 Community Edition](https://versilian-studios.com/vsco-community/) y [licencia del repositorio](https://github.com/sgossner/VSCO-2-CE/blob/440300901dfe9275fd84e0b7763af1f8443ae62e/LICENSE). No se usaron servicios de generación externos, cuotas ni suscripciones.
 
@@ -28,6 +28,7 @@ python art_source/audio/compose.py --sketches
 python art_source/audio/compose.py --sfx
 python art_source/audio/compose.py --music
 python art_source/audio/doors07.py
+python art_source/audio/tools07.py
 python art_source/audio/validate_assets.py
 ```
 
@@ -44,3 +45,7 @@ Pruebas: `game/tests/audio06_test.gd` (entrada anterior `audio_checks.gd` conser
 ## Puertas 0.7
 
 `doors07.py` genera tres efectos originales mediante resonancias amortiguadas, fricción armónica y ruido filtrado: giro de bisagra, pestillo y obstrucción. WAV editables bajo masters/sfx; reproducción espacial en Effects desde cambios de estado confirmados. Primer snapshot, repetición de snapshot y entrada a otra sala no disparan sonidos. No se usaron nuevas muestras externas.
+
+## Objetos 0.7
+
+`tools07.py` añade 16 variaciones de equipar, golpear, lanzar y caer sobre madera, baldosa o tejido. Edita y combina los masters originales del proyecto; conserva WAV y métricas de pico/RMS/hash. El manifiesto actualizado contiene 67 OGG. El servidor conserva el tipo de objeto que causó cada impacto; cambiar de herramienta después no cambia el sonido del proyectil. Las repeticiones de snapshots no repiten eventos y el lanzamiento no se sonoriza anticipadamente desde el botón local. `audio07_tools_checks.gd` comprueba ese flujo y `validate_assets.py` decodifica y verifica todos los archivos.

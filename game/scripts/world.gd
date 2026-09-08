@@ -7,6 +7,9 @@ const Maps = preload("res://scripts/map_catalog.gd")
 const Furnishings = preload("res://assets/art/house/house_library.gd")
 const SculptedShape = preload("res://assets/procedural_shapes.gd")
 const HouseDetails = preload("res://scripts/house_details.gd")
+const FrameJoinery = preload("res://scripts/frame_joinery.gd")
+const HouseOcclusion = preload("res://scripts/house_occlusion.gd")
+const PickupSupports = preload("res://scripts/pickup_supports.gd")
 const DoorViewScript = preload("res://scripts/door_view.gd")
 const VideoSettings = preload("res://scripts/video_settings.gd")
 const HOUSE_ROOM_LIGHT_ENERGY := 0.55
@@ -112,6 +115,7 @@ func load_map(id: String) -> void:
 	if current_map == "house":
 		if map_data.has("structures"):
 			_build_catalog_house()
+			PickupSupports.build(map_root, current_map)
 			var spawn: Vector3 = map_data.human_spawns[0]
 			menu_camera.position = spawn + Vector3(2.0, 2.2, 2.0)
 			menu_camera.look_at(spawn + Vector3(0, 1.1, -1.0))
@@ -131,6 +135,10 @@ func load_map(id: String) -> void:
 	door_views = DoorViewScript.new()
 	map_root.add_child(door_views)
 	door_views.setup(current_map)
+	if current_map == "house":
+		FrameJoinery.resolve(map_root)
+		HouseOcclusion.build(map_root)
+	get_viewport().use_occlusion_culling = current_map == "house"
 	menu_camera.fov = 74.0
 	saved_menu_transform = menu_camera.transform
 	saved_menu_fov = menu_camera.fov
@@ -170,6 +178,8 @@ func _build_map_colliders() -> void:
 		_collider(Vector3(0, ceiling * 0.5, side * (half_z + 0.08)), Vector3(half_x * 2 + 0.3, ceiling, 0.16))
 	for obstacle: AABB in map_data.get("obstacles", []):
 		_collider(obstacle.get_center(), obstacle.size)
+	for support: AABB in PickupSupports.get_boxes(current_map):
+		_collider(support.get_center(), support.size)
 
 func _process(dt: float) -> void:
 	clock_time += dt
@@ -188,10 +198,9 @@ func _process(dt: float) -> void:
 	for key: Variant in pickup_views:
 		var view: Node3D = pickup_views[key]
 		if view.visible:
-			var tool_mesh: Node3D = view.get_node("Tool")
-			tool_mesh.rotation.y = clock_time * 0.7 + float(int(key))
 			var label: Label3D = view.get_node("PickupLabel")
-			_update_world_label(label,active_camera)
+			if bool(view.get_meta("flying",false)): label.hide()
+			else: _update_world_label(label,active_camera)
 
 func _update_help_icon(view: ActorView, camera: Camera3D) -> void:
 	if not is_instance_valid(view.help_icon):
@@ -335,7 +344,7 @@ func end_customization() -> void:
 	menu_camera.fov = saved_menu_fov
 	menu_camera.make_current()
 
-func sync_pickups(pickups: Dictionary) -> void:
+func sync_pickups(pickups: Dictionary, dt: float = 1.0/60.0) -> void:
 	for key: Variant in pickup_views.keys():
 		if not pickups.has(key):
 			var stale: Node3D = pickup_views[key]
@@ -347,21 +356,22 @@ func sync_pickups(pickups: Dictionary) -> void:
 		if not pickup_views.has(key):
 			var stand := Node3D.new()
 			add_child(stand)
-			var halo: MeshInstance3D = _disc(stand, Vector3(0, 0.025, 0), 0.29, 0.022, teal)
-			halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			var tool_model: Node3D = ActorModel.make_tool(tool)
 			tool_model.name = "Tool"
-			tool_model.position.y = 0.66 if tool == "broom" else 0.46
-			tool_model.rotation.z = -0.6
 			stand.add_child(tool_model)
-			var names: Dictionary = {"swatter": "MATAMOSCAS", "racket": "RAQUETA", "newspaper": "DIARIO", "broom": "ESCOBA"}
-			var label: Label3D = _label(stand, str(names.get(tool, tool)), Vector3(0, 0.68, 0), 0.00155, Color("ffefba"), true)
+			var names: Dictionary = {"swatter": "MATAMOSCAS", "racket": "RAQUETA", "newspaper": "DIARIO", "broom": "ESCOBA", "slipper":"PANTUFLA"}
+			var label: Label3D = _label(stand, str(names.get(tool, tool)), Vector3(0, 0.24, 0), 0.00135, Color("ffefba"), true)
 			label.name = "PickupLabel"
-			label.font_size = 28
+			label.font_size = 24
+			stand.position = data.get("p",Vector3.ZERO)
 			pickup_views[key] = stand
 		var view: Node3D = pickup_views[key]
-		view.position = data.get("p", Vector3.ZERO)
-		view.rotation.y = float(data.get("yaw", 0.0))
+		var flying := str(data.get("state","ground")) == "flying"
+		view.set_meta("flying",flying)
+		var destination: Vector3 = data.get("p",Vector3.ZERO)
+		view.position = view.position.lerp(destination,1.0-exp(-28.0*dt)) if flying else destination
+		var model: Node3D = view.get_node("Tool")
+		model.rotation = data.get("rotation",Vector3(PI/2,float(data.get("yaw",0.0)),0))
 		view.visible = int(data.get("holder", 0)) == 0
 
 func clear_actors() -> void:
@@ -629,10 +639,6 @@ func _build_catalog_house() -> void:
 			piece.set_meta("catalog_kind",kind)
 		if kind == "floor" and bounds.position.y > 1.0:
 			_box(self, Vector3(bounds.get_center().x, bounds.position.y - 0.006, bounds.get_center().z), Vector3(bounds.size.x, 0.01, bounds.size.z), ceiling_paint)
-		if str(structure.get("label",""))=="Dintel":
-			# The apparent triangles at corridor door tops are visible lintel
-			# undersides (confirmed by physics rays), not holes in the shell.
-			_box(self,Vector3(bounds.get_center().x,bounds.position.y+.008,bounds.get_center().z),Vector3(bounds.size.x,.020,bounds.size.z),wood)
 		if kind == "wall":
 			HouseDetails.trim(self,bounds)
 		elif kind == "step":
@@ -762,6 +768,7 @@ func _finished_wall_box(at: Vector3, size: Vector3, material: Material) -> MeshI
 	var final_piece: MeshInstance3D
 	for piece: AABB in HouseDetails.wall_pieces(AABB(at-size*.5,size),_house_windows):
 		final_piece=_box(self,piece.get_center(),piece.size,material)
+		final_piece.set_meta("frame_join_wall",true)
 		final_piece.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	return final_piece
 

@@ -222,7 +222,10 @@ func _test_swings_and_exposed_marks() -> void:
 	var point := Vector3(-0.12, 1.10, -0.30)
 	var strike := {"tool": "hands", "hand": "right", "point": point, "progress": 0.5, "active": true}
 	var hands_contact: Dictionary = Pose.sample({"tool": "hands", "strike": strike})
-	check(Vector3(hands_contact.hand_r).distance_to(point) < 0.0001 and hands_contact.hand_l == hands_idle.hand_l, "manual palm reaches clicked point while other arm stays still")
+	# hand_r is the wrist joint. Verify the actual palm beyond it, independently
+	# of the reported strike centre, while both joints of the other arm stay put.
+	var palm_center: Vector3 = Vector3(hands_contact.hand_r) + (Vector3(hands_contact.hand_r) - Vector3(hands_contact.elbow_r)).normalized() * Pose.PALM_OFFSET
+	check(palm_center.distance_to(point) < 0.0001 and Vector3(hands_contact.strike_contact).distance_to(palm_center) < 0.0001 and hands_contact.hand_l == hands_idle.hand_l and hands_contact.elbow_l == hands_idle.elbow_l, "manual palm reaches clicked point while other arm stays still")
 	strike = {"tool": "swatter", "hand": "right", "point": Vector3(0, 1.2, -0.8), "progress": 0.5, "active": true}
 	var tool_swing: Dictionary = Pose.sample({"tool": "swatter", "strike": strike})
 	check(tool_swing.hand_l == hands_idle.hand_l and Vector3(tool_swing.strike_contact).distance_to(strike.point) < 0.0001, "equipped tool face reaches clicked point with left arm at rest")

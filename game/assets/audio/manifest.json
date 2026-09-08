@@ -6,8 +6,8 @@
     "source": "https://versilian-studios.com/vsco-community/",
     "commit": "440300901dfe9275fd84e0b7763af1f8443ae62e"
   },
-  "asset_count": 51,
-  "asset_bytes": 9436236,
+  "asset_count": 67,
+  "asset_bytes": 9537772,
   "items": [
     {
       "file": "music/accent_lose.ogg",
@@ -335,6 +335,71 @@
       "loop": false
     },
     {
+      "file": "sfx/equip_broom.ogg",
+      "bytes": 6368,
+      "sha256": "b6b8d574c9a9c9dc06a2f8b6929eb852b509979ba1f7a94ed9b028b5a6a4fb4d",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.2,
+      "decoded_frames": 8692,
+      "decoded_peak": 0.13380758464336395,
+      "decoded_rms": 0.021255871281027794,
+      "loop": false
+    },
+    {
+      "file": "sfx/equip_newspaper.ogg",
+      "bytes": 6368,
+      "sha256": "6fc9c166bf854fe8582eac282fbf0c6381dd370ccfea39491d5de6692b8b2fe0",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.22,
+      "decoded_frames": 9574,
+      "decoded_peak": 0.07815330475568771,
+      "decoded_rms": 0.016496259719133377,
+      "loop": false
+    },
+    {
+      "file": "sfx/equip_racket.ogg",
+      "bytes": 5969,
+      "sha256": "543f54c96dc7de358f65b50c93e587bc230eea482a5c44cd3f42b542e4a17bf8",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.17,
+      "decoded_frames": 7369,
+      "decoded_peak": 0.09643295407295227,
+      "decoded_rms": 0.022643499076366425,
+      "loop": false
+    },
+    {
+      "file": "sfx/equip_slipper.ogg",
+      "bytes": 6222,
+      "sha256": "237ff00d14209906cc4e76dcb42af6db8e5599c947639437d4229dae38172fe6",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.19,
+      "decoded_frames": 8251,
+      "decoded_peak": 0.06098148226737976,
+      "decoded_rms": 0.014178230427205563,
+      "loop": false
+    },
+    {
+      "file": "sfx/equip_swatter.ogg",
+      "bytes": 5517,
+      "sha256": "085c3cfcf6266b29cc0ed7748b745dd7d1b1f461510b999ec575939141f95489",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.13,
+      "decoded_frames": 5605,
+      "decoded_peak": 0.09408234059810638,
+      "decoded_rms": 0.02160835638642311,
+      "loop": false
+    },
+    {
       "file": "sfx/fall.ogg",
       "bytes": 7058,
       "sha256": "3716a49cedb174b2fe6ebcdd50a45651ffef23d61c3696f75d66139c92caa266",
@@ -374,6 +439,71 @@
       "loop": true
     },
     {
+      "file": "sfx/hit_broom.ogg",
+      "bytes": 6337,
+      "sha256": "999d41148d9d4063ae28f62e894562ed5cb41fa8c98e0bb989a9b902113ce120",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.2,
+      "decoded_frames": 8832,
+      "decoded_peak": 0.1956990361213684,
+      "decoded_rms": 0.030874675139784813,
+      "loop": false
+    },
+    {
+      "file": "sfx/hit_newspaper.ogg",
+      "bytes": 6583,
+      "sha256": "78606e0e83917558792f12b1221e4f788c03eb693557ac0e2d24366abf43471d",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.22,
+      "decoded_frames": 9728,
+      "decoded_peak": 0.20577220618724823,
+      "decoded_rms": 0.03326399251818657,
+      "loop": false
+    },
+    {
+      "file": "sfx/hit_racket.ogg",
+      "bytes": 6035,
+      "sha256": "1a76f4dd169507eed15693f0929975725e421577e4e8e58d6d7c96f92b9b5e45",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.17,
+      "decoded_frames": 7552,
+      "decoded_peak": 0.17989614605903625,
+      "decoded_rms": 0.033297378569841385,
+      "loop": false
+    },
+    {
+      "file": "sfx/hit_slipper.ogg",
+      "bytes": 5878,
+      "sha256": "cbeeb31cbabd0a67a1520971195ea0ed766259c594ee5eb46d5caaa8a7608206",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.19,
+      "decoded_frames": 8251,
+      "decoded_peak": 0.10386298596858978,
+      "decoded_rms": 0.015878228470683098,
+      "loop": false
+    },
+    {
+      "file": "sfx/hit_swatter.ogg",
+      "bytes": 5617,
+      "sha256": "709559c70d10ba2225baff3ca2dbca02866a7bda64469d75d0bd4ddf4bd524e0",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.13,
+      "decoded_frames": 5760,
+      "decoded_peak": 0.17600879073143005,
+      "decoded_rms": 0.032270967960357666,
+      "loop": false
+    },
+    {
       "file": "sfx/impact.ogg",
       "bytes": 7379,
       "sha256": "621dcf2159cd590887f1f046cdcf2dad1e234915bce2b91c5f5af9466912e93e",
@@ -397,6 +527,45 @@
       "decoded_frames": 14144,
       "decoded_peak": 0.15708765387535095,
       "decoded_rms": 0.015366398729383945,
+      "loop": false
+    },
+    {
+      "file": "sfx/land_cloth.ogg",
+      "bytes": 6294,
+      "sha256": "ac04e8c79f81e0e24a6dc8df4b39e71d466a5d6091715ef0233413a9119f69b4",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.22,
+      "decoded_frames": 9574,
+      "decoded_peak": 0.08683441579341888,
+      "decoded_rms": 0.013067806139588356,
+      "loop": false
+    },
+    {
+      "file": "sfx/land_tile.ogg",
+      "bytes": 5786,
+      "sha256": "f4b8e0e5feeb7e970ab57c79ec90dbebc9104b5e0859ab344f4e252674a1112e",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.16,
+      "decoded_frames": 8000,
+      "decoded_peak": 0.10970976203680038,
+      "decoded_rms": 0.012738681398332119,
+      "loop": false
+    },
+    {
+      "file": "sfx/land_wood.ogg",
+      "bytes": 5787,
+      "sha256": "2832ad0acbc84a15f6566f4f643dc3df0158df0adc2dcb7657c27153cf648247",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.18,
+      "decoded_frames": 7810,
+      "decoded_peak": 0.16272377967834473,
+      "decoded_rms": 0.016941186040639877,
       "loop": false
     },
     {
@@ -582,6 +751,32 @@
       "loop": false
     },
     {
+      "file": "sfx/throw_newspaper.ogg",
+      "bytes": 7540,
+      "sha256": "3cb0626a67d1b878d41929e500182b46e4202f9cedeb5bbbad65cae11f548dd1",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.32,
+      "decoded_frames": 13984,
+      "decoded_peak": 0.1989649534225464,
+      "decoded_rms": 0.03398255258798599,
+      "loop": false
+    },
+    {
+      "file": "sfx/throw_slipper.ogg",
+      "bytes": 8065,
+      "sha256": "73d7b9bd2d5cd1f9e6d1857a7147d8330537ab7ebaa042bfb75eda618912fc9b",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.38,
+      "decoded_frames": 16630,
+      "decoded_peak": 0.1598823368549347,
+      "decoded_rms": 0.026399236172437668,
+      "loop": false
+    },
+    {
       "file": "sfx/tool_broom.ogg",
       "bytes": 9469,
       "sha256": "b08f8abed49c33ba07136ff9bd5389c32e427f2025c46ff1c508c6987da1a55f",
@@ -618,6 +813,19 @@
       "decoded_frames": 15307,
       "decoded_peak": 0.353805273771286,
       "decoded_rms": 0.05926183983683586,
+      "loop": false
+    },
+    {
+      "file": "sfx/tool_slipper.ogg",
+      "bytes": 7170,
+      "sha256": "c0029c31efed85006d6cbc70e116da1acd69d63413d4190b581d2e566486c738",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.29,
+      "decoded_frames": 12800,
+      "decoded_peak": 0.15761183202266693,
+      "decoded_rms": 0.025278335437178612,
       "loop": false
     },
     {

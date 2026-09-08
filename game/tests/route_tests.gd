@@ -38,7 +38,9 @@ func _initialize() -> void:
 				var route: PackedVector3Array = Nav.path(source.p + offset, target_station.p + offset, human)
 				check(_route_clear(source.p + offset, route, human), "all station pairs: %s to %s role=%s" % [source.name,target_station.name,human])
 		for pickup: Dictionary in Maps.HOUSE.pickups:
-			var point: Vector3 = pickup.p + Vector3.UP * (1.05 if not human else -0.15)
+			# Tools rest on furniture; walking targets are their clear approach,
+			# never a point inside the supporting desk/cabinet.
+			var point: Vector3 = pickup.approach + Vector3.UP * (1.2 if not human else 0.0)
 			check(_route_clear(origins[0], Nav.path(origins[0], point, human), human), "pickup accessible on its floor for role")
 	check(not Nav.can_travel(Vector3(0, 1.2, 0), Vector3(0, 4.4, 0), false), "mosquito cannot fly through upper slab")
 	check(not Nav.can_travel(Vector3(-11, 3.2, -4.8), Vector3(-11, 3.2, 4.8), true), "human cannot walk across an unsupported stairwell")

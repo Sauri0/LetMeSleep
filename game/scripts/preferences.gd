@@ -16,6 +16,7 @@ const ACTION_NAMES: Dictionary = {
 	"move_forward": "Avanzar", "move_back": "Retroceder", "move_left": "Izquierda",
 	"move_right": "Derecha", "ascend": "Altura auxiliar + (opcional)", "descend": "Altura auxiliar − (opcional)",
 	"bite": "Concentrar (mantener) / soltar picadura", "attack": "Palmada / golpe", "self_swat": "Palmada manual (alternativa)",
+	"throw": "Cargar lanzamiento (mantener) / lanzar (soltar)",
 	"perch": "Posarse / volar", "interact": "Puerta / tarea (mantener)",
 	"pickup": "Recoger / cambiar objeto", "drop": "Soltar objeto", "pause": "Menú",
 	"sprint": "Correr (humano)", "jump": "Saltar (humano)", "crouch": "Agacharse (humano)",
@@ -63,6 +64,12 @@ static func setup_inputs() -> void:
 		var mouse := InputEventMouseButton.new()
 		mouse.button_index = MOUSE_BUTTON_LEFT
 		InputMap.action_add_event("attack", mouse)
+	if not InputMap.has_action("throw"):
+		InputMap.add_action("throw")
+	if InputMap.action_get_events("throw").is_empty():
+		var mouse := InputEventMouseButton.new()
+		mouse.button_index = MOUSE_BUTTON_RIGHT
+		InputMap.action_add_event("throw", mouse)
 
 
 static func load_settings(settings_path: String = FILE_PATH) -> void:

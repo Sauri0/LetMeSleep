@@ -1,16 +1,18 @@
 class_name HumanPose
 extends RefCounted
 
-const SWING_SECONDS := {"hands": 0.80, "swatter": 0.60, "racket": 1.05, "newspaper": 0.43, "broom": 1.20}
+const Tools = preload("res://scripts/tool_catalog.gd")
+const SWING_SECONDS := {"hands":Tools.DATA.hands.cooldown,"swatter":Tools.DATA.swatter.cooldown,"racket":Tools.DATA.racket.cooldown,"newspaper":Tools.DATA.newspaper.cooldown,"broom":Tools.DATA.broom.cooldown,"slipper":Tools.DATA.slipper.cooldown}
 const SWING_GESTURE_SECONDS := 0.36
 const INSPECT_ENTER := -0.70
 const INSPECT_EXIT := -0.45
 const VIEW_YAW_LIMIT := 75.0 * PI / 180.0
 const HUMAN_PITCH_MIN := -1.92
 const HUMAN_PITCH_MAX := 1.30
-const ARM_REACH := 0.93
+const ARM_REACH := Tools.ARM_REACH
+const PALM_OFFSET := .05
 # Distance from grip to the visible striking face, not the end of the handle.
-const TOOL_LENGTHS := {"hands": 0.0, "swatter": 0.46, "racket": 0.51, "newspaper": 0.30, "broom": 0.88}
+const TOOL_LENGTHS := {"hands":Tools.DATA.hands.length,"swatter":Tools.DATA.swatter.length,"racket":Tools.DATA.racket.length,"newspaper":Tools.DATA.newspaper.length,"broom":Tools.DATA.broom.length,"slipper":Tools.DATA.slipper.length}
 
 ## Exact value signature for an owning Simulation's bounded cache. No shared
 ## mutable actor state or hash-only equality is kept in this static pose module.
@@ -19,6 +21,7 @@ static func cache_key(actor: Dictionary) -> Array:
 	for field: String in ["p","yaw","body_yaw","pitch","crouch_amount","motion_phase","motion_speed","grounded","sprinting","motion_blend","air_blend","land_blend","motion_stride","motion_direction","pose_time","tool","relaxed_pose"]:
 		key.append(actor.get(field,null))
 	key.append(Dictionary(actor.get("strike",{})).duplicate(true))
+	key.append(Dictionary(actor.get("throw_gesture",{})).duplicate(true))
 	return key
 
 ## Updated by authority after collision resolution. These small public values are
@@ -105,11 +108,52 @@ static func strike_geometry(actor: Dictionary, point_world: Vector3, normal_worl
 	var reachable := grip.distance_to(shoulder)<=ARM_REACH+.0001
 	grip = shoulder+(grip-shoulder).limit_length(ARM_REACH)
 	var face_normal := normal-direction*normal.dot(direction)
-	var neutral_normal := Basis(Quaternion(Vector3.DOWN,direction))*Vector3.BACK
+	var neutral_normal := Basis(Quaternion(Vector3.UP,direction))*Vector3.BACK
 	if face_normal.length_squared()<.0001: face_normal = neutral_normal
 	face_normal = face_normal.normalized()
 	if face_normal.dot(neutral_normal)<0.0: face_normal = -face_normal
-	return {"hand":grip,"elbow":shoulder.lerp(grip,.50)+Vector3(side*.08,-.06,-.10),"direction":direction,"normal":face_normal,"contact":grip+direction*length,"reachable":reachable}
+	var elbow := shoulder.lerp(grip,.50)+Vector3(side*.08,-.06,-.10)
+	var wrist := grip-(grip-elbow).normalized()*PALM_OFFSET
+	if Tools.GRASPS.has(tool): wrist=grasp_geometry(grip,elbow,direction,tool).hand
+	return {"hand":wrist,"grip":grip,"elbow":elbow,"direction":direction,"normal":face_normal,"contact":grip+direction*length,"reachable":reachable}
+
+## A grasp puts the shaft across the fingers. Its centre remains the exact
+## requested grip; the palm sits against the shaft instead of containing it.
+static func grasp_geometry(grip: Vector3, elbow: Vector3, tool_axis: Vector3, tool: String) -> Dictionary:
+	var width := -tool_axis.normalized()
+	var longitudinal := grip-elbow
+	longitudinal -= width*longitudinal.dot(width)
+	if longitudinal.length_squared()<.0001: longitudinal=Vector3.FORWARD-width*Vector3.FORWARD.dot(width)
+	if longitudinal.length_squared()<.0001: longitudinal=Vector3.RIGHT-width*Vector3.RIGHT.dot(width)
+	longitudinal=longitudinal.normalized()
+	var palm_normal := width.cross(longitudinal).normalized()
+	var radius := float(Tools.GRASPS.get(tool,{"radius":.015}).radius)
+	var palm := grip-palm_normal*(radius+.018)
+	return {"hand":palm-longitudinal*PALM_OFFSET,"direction":longitudinal,"width":width,"normal":palm_normal}
+
+static func palm_center(wrist: Vector3, elbow: Vector3) -> Vector3:
+	return wrist+(wrist-elbow).normalized()*PALM_OFFSET
+
+static func tool_basis(direction: Vector3, normal: Vector3 = Vector3.BACK) -> Basis:
+	var axis := direction.normalized()
+	if axis.length_squared()<.5: axis=Vector3.UP
+	var face := normal-axis*normal.dot(axis)
+	if face.length_squared()<.0001: face=Vector3.FORWARD-axis*Vector3.FORWARD.dot(axis)
+	if face.length_squared()<.0001: face=Vector3.RIGHT-axis*Vector3.RIGHT.dot(axis)
+	face=face.normalized()
+	return Basis(axis.cross(face).normalized(),axis,face)
+
+static func _throw_grip_local(actor: Dictionary, direction: Vector3, power: float) -> Vector3:
+	var crouch := clampf(float(actor.get("crouch_amount",0.0)),0.0,1.0)
+	var shoulder := Vector3(.285,1.30-crouch*.45,crouch*.06)
+	var local_direction := direction.rotated(Vector3.UP,-body_yaw(actor)).normalized()
+	if local_direction.length_squared()<.5: local_direction=Vector3.FORWARD
+	return shoulder+local_direction*lerpf(.62,.72,clampf(power,0.0,1.0))
+
+## Exact WORLD grip at release progress1. Simulation spawns at this hand, never
+## at the eye; charging pose and recovery share the same endpoint in sample().
+static func throw_origin(actor: Dictionary, direction: Vector3, power: float) -> Vector3:
+	return Vector3(actor.get("p",Vector3.ZERO))+_throw_grip_local(actor,direction,power).rotated(Vector3.UP,body_yaw(actor))
 
 static func body_yaw(actor: Dictionary) -> float:
 	return float(actor.get("body_yaw", actor.get("yaw", 0.0)))
@@ -171,7 +215,9 @@ static func sample(actor: Dictionary) -> Dictionary:
 	var settle := -.012*blend*(.5+.5*cos(phase*2.0))-.025*landing
 	var breath := sin(pose_time*1.7)*.003*(1.0-blend)
 	var strike: Dictionary = actor.get("strike", {})
+	var equipped_tool := str(actor.get("tool","hands"))
 	var tool: String = str(strike.get("tool", actor.get("tool", "hands"))) if bool(strike.get("active", false)) else str(actor.get("tool", "hands"))
+	var rest_basis := tool_basis(Vector3(Tools.VISUALS.get(equipped_tool,Tools.VISUALS.hands).rest_direction))
 	var progress := clampf(float(strike.get("progress",1.0)),0.0,1.0)
 	var swing: float = strike_weight(progress) if bool(strike.get("active", false)) else 0.0
 	var torso := Vector3(0, 1.09 - crouch * 0.45+settle+breath, crouch * 0.06)
@@ -200,6 +246,11 @@ static func sample(actor: Dictionary) -> Dictionary:
 		# it stays inside the body-follow cone without moving the mark alone.
 		var elbow := Vector3(side * 0.25, 1.065 - crouch * 0.45+settle*.4+counter_swing*.03, -.23 + step * .09)
 		var hand := Vector3(side * 0.23, .845 - crouch * 0.40+settle*.35+counter_swing*.045, -.43 + step * .06)
+		var carried_grip := palm_center(hand,elbow)
+		if side>0.0 and Tools.GRASPS.has(equipped_tool):
+			carried_grip=Vector3(result.shoulder_r)+Vector3(Tools.GRASPS[equipped_tool].rest)+Vector3(0,settle*.35+counter_swing*.009,step*.02)
+			elbow=Vector3(result.shoulder_r).lerp(carried_grip,.50)+Vector3(.04,-.11,.015)
+			hand=grasp_geometry(carried_grip,elbow,rest_basis.y,equipped_tool).hand
 		if bool(actor.get("relaxed_pose",false)):
 			# Lobby/editor presentation only: no bite reservations or combat
 			# happen there. Active-round pose/contact contracts stay unchanged.
@@ -216,19 +267,62 @@ static func sample(actor: Dictionary) -> Dictionary:
 			elbow = elbow.lerp(geometry.elbow, swing)
 			hand = hand.lerp(geometry.hand, swing)
 			if side > 0.0:
-				var up: Vector3 = -Vector3(geometry.direction)
-				var back: Vector3 = geometry.normal
-				var target_basis := Basis(up.cross(back).normalized(),up,back)
-				var current_basis := Basis(Quaternion.IDENTITY.slerp(target_basis.get_rotation_quaternion(),swing))
-				result.tool_direction = -current_basis.y
+				carried_grip=carried_grip.lerp(geometry.grip,swing)
+				var target_basis := tool_basis(geometry.direction,geometry.normal)
+				var current_basis := Basis(rest_basis.get_rotation_quaternion().slerp(target_basis.get_rotation_quaternion(),swing))
+				result.tool_direction = current_basis.y
 				result.tool_normal = current_basis.z
 		result["elbow" + suffix] = elbow
 		result["hand" + suffix] = hand
+		if side>0.0: result.tool_grip=carried_grip if equipped_tool!="hands" else palm_center(hand,elbow)
 	if not result.has("tool_direction"):
-		result.tool_direction = Vector3.DOWN
-		result.tool_normal = Vector3.BACK
+		result.tool_direction = rest_basis.y
+		result.tool_normal = rest_basis.z
+	var throwing: Dictionary = actor.get("throw_gesture",{})
+	var throw_state := str(throwing.get("state","idle"))
+	if throw_state in ["charging","release","recovering"] and not bool(strike.get("active",false)):
+		var throw_progress := clampf(float(throwing.get("progress",0.0)),0.0,1.0)
+		var power := clampf(float(throwing.get("power",throw_progress)),0.0,1.0)
+		var direction: Vector3 = throwing.get("direction",view_direction(actor))
+		var base_grip: Vector3 = result.tool_grip
+		var charged_grip: Vector3 = Vector3(result.shoulder_r)+Vector3(-.08,.20,-.64)+Vector3(.01,.02,-.01)*power
+		var launch_grip := _throw_grip_local(actor,direction,power)
+		var grip: Vector3
+		var orientation: Basis
+		var charged_basis := tool_basis(Vector3(.1,.88,-.46))
+		var launch_basis := Basis(Vector3.UP,-body_yaw(actor))*Tools.launch_basis(direction)
+		if throw_state=="charging":
+			var weight := smoothstep(0.0,.25,throw_progress)
+			grip=base_grip.lerp(charged_grip,weight)
+			orientation=Basis(rest_basis.get_rotation_quaternion().slerp(charged_basis.get_rotation_quaternion(),weight))
+		elif throw_state=="release":
+			var weight := smoothstep(0.0,1.0,throw_progress)
+			grip=charged_grip.lerp(launch_grip,weight)
+			orientation=Basis(charged_basis.get_rotation_quaternion().slerp(launch_basis.get_rotation_quaternion(),weight))
+		else:
+			var weight := smoothstep(0.0,1.0,throw_progress)
+			grip=launch_grip.lerp(base_grip,weight)
+			orientation=Basis(launch_basis.get_rotation_quaternion().slerp(rest_basis.get_rotation_quaternion(),weight))
+		result.elbow_r=Vector3(result.shoulder_r).lerp(grip,.5)+Vector3(.07,-.05,-.06)
+		result.hand_r=grip-(grip-Vector3(result.elbow_r)).normalized()*PALM_OFFSET
+		result.tool_direction=orientation.y
+		result.tool_normal=orientation.z
+		result.tool_grip=grip
+	var grasp_tool := equipped_tool
+	if throw_state=="recovering": grasp_tool=str(throwing.get("tool",equipped_tool))
+	if Tools.GRASPS.has(grasp_tool):
+		var grasp := grasp_geometry(result.tool_grip,result.elbow_r,result.tool_direction,grasp_tool)
+		var grasp_weight := 1.0-smoothstep(0.0,1.0,float(throwing.get("progress",0.0))) if throw_state=="recovering" and equipped_tool=="hands" else 1.0
+		var free_direction := (Vector3(result.hand_r)-Vector3(result.elbow_r)).normalized()
+		var free_width := (Vector3.RIGHT-free_direction*Vector3.RIGHT.dot(free_direction)).normalized()
+		var free_basis := Basis(free_width,free_direction,free_width.cross(free_direction))
+		var grasp_basis := Basis(Vector3(grasp.width),Vector3(grasp.direction),Vector3(grasp.normal))
+		var hand_basis := Basis(free_basis.get_rotation_quaternion().slerp(grasp_basis.get_rotation_quaternion(),grasp_weight))
+		result.hand_r=Vector3(result.hand_r).lerp(grasp.hand,grasp_weight)
+		result.hand_direction_r=hand_basis.y
+		result.hand_width_r=hand_basis.x
 	var suffix: String = "_l" if str(strike.get("hand", "right")) == "left" else "_r"
-	result.strike_contact = Vector3(result["hand" + suffix]) + Vector3(result.tool_direction) * float(TOOL_LENGTHS.get(tool, 0.0))
+	result.strike_contact = (Vector3(result.tool_grip) if tool!="hands" else palm_center(result["hand" + suffix],result["elbow" + suffix])) + Vector3(result.tool_direction) * float(TOOL_LENGTHS.get(tool, 0.0))
 	return result
 
 static func zone_pose(actor: Dictionary, zone: Dictionary, posed: Dictionary = {}, shared_capsules: Array[Dictionary] = [], rest_pose: Dictionary = {}) -> Dictionary:
@@ -389,7 +483,8 @@ static func collision_segments(actor: Dictionary, posed: Dictionary = {}) -> Arr
 		result.append({"key":"forearm_proximal"+suffix,"from":elbow,"to":elbow+forearm*.30,"radius":.076})
 		result.append({"key":"forearm_mid"+suffix,"from":elbow+forearm*.30,"to":elbow+forearm*.60,"radius":.065})
 		result.append({"key":"forearm"+suffix,"from":elbow+forearm*.60,"to":elbow+forearm*.95,"radius":.050})
-		result.append({"key":"hand"+suffix,"from":hand+forearm.normalized()*.022,"to":hand+forearm.normalized()*.060,"radius":.046})
+		var hand_axis: Vector3 = pose.get("hand_direction"+suffix,forearm.normalized())
+		result.append({"key":"hand"+suffix,"from":hand+hand_axis*.022,"to":hand+hand_axis*.060,"radius":.046})
 		var foot_direction: Vector3 = pose.get("foot_direction"+suffix,Vector3.FORWARD)
 		result.append({"key": "foot" + suffix, "from": Vector3(pose["ankle" + suffix])-foot_direction*.02, "to": Vector3(pose["ankle" + suffix])+foot_direction*.20, "radius": 0.105})
 	return result

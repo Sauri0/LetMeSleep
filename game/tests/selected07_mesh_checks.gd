@@ -3,8 +3,10 @@ extends SceneTree
 const CharacterSkin=preload("res://assets/art/characters/shared/character_skin.gd")
 const Pose=preload("res://scripts/human_pose.gd")
 const Simulation=preload("res://scripts/simulation.gd")
+const Tools=preload("res://scripts/tool_catalog.gd")
 var use_selected:=true
 var verify:=false
+var include_tools:=false
 var checks:=0
 var failures:=0
 var folder:String
@@ -16,6 +18,7 @@ func _run()->void:
 	for arg:String in OS.get_cmdline_user_args():
 		if arg=="--production":use_selected=false
 		if arg=="--verify":verify=true
+		if arg=="--tools":include_tools=true
 		if arg.begins_with("--output="):folder=arg.trim_prefix("--output=")
 	DirAccess.make_dir_recursive_absolute(folder)
 	var skin:=CharacterSkin.new();root.add_child(skin)
@@ -29,11 +32,16 @@ func _run()->void:
 	var shape:=CollisionShape3D.new();body.add_child(shape)
 	var label:=Label.new();label.position=Vector2(14,14);label.add_theme_font_size_override("font_size",23);root.add_child(label)
 	var postures:Array[String]=["stand","walk","run","crouch","crouch_run","jump","land"]
-	for case_index:int in range(postures.size()*3):
-		var outfit:int=case_index/postures.size()
-		var posture:String=postures[case_index%postures.size()]
+	var cases:Array[Dictionary]=[]
+	for outfit_index:int in range(3):
+		for tool:String in Tools.IDS if include_tools else ["hands"]:
+			for posture_name:String in (["stand","run","crouch"] if include_tools else postures):cases.append({"outfit":outfit_index,"tool":tool,"posture":posture_name})
+	for selected_case:Dictionary in cases:
+		var outfit:int=selected_case.outfit
+		var posture:String=selected_case.posture
 		skin.set_appearance({"color":1,"accent":4,"face":1,"hair":0,"outfit":outfit,"accessory":3,"footwear":0})
 		var data:Dictionary={"p":Vector3.ZERO,"yaw":0.0,"body_yaw":0.0,"grounded":posture!="jump","state":"human","tool":"hands","pose_time":.5,"preview_only":true,"facial_preview":"neutral","velocity":Vector3(0,2.0 if posture=="jump" else 0,0),"motion_phase":1.2 if posture=="walk" else 2.4,"motion_speed":5.0 if posture in ["run","crouch_run"] else 3.1 if posture=="walk" else 0.0,"sprinting":posture in ["run","crouch_run"],"crouch_amount":1.0 if posture in ["crouch","crouch_run"] else 0.0,"land_blend":1.0 if posture=="land" else 0.0}
+		data.tool=selected_case.tool
 		skin.set_first_person(false);skin.apply_human(Pose.sample(data),data,1.0)
 		for frame:int in range(3):await process_frame
 		camera.position=Vector3(1.5,1.3,-3.4);camera.look_at(Vector3(0,.94,0));label.text=("Humano A elegido" if use_selected else "Producción")+" · "+posture+" · atuendo "+str(outfit)+" · malla real"
@@ -45,6 +53,9 @@ func _run()->void:
 		for mesh:MeshInstance3D in skin.meshes:
 			if not mesh.visible:continue
 			var baked:ArrayMesh=mesh.bake_mesh_from_current_skeleton_pose()
+			if baked==null:
+				push_error("Mesh deformation gate needs native renderer; headless cannot register skeleton skin.")
+				quit(2);return
 			for point:Vector3 in baked.get_faces():faces.append(mesh.global_transform*point)
 		var concave:=ConcavePolygonShape3D.new();concave.backface_collision=true;concave.set_faces(faces);shape.shape=concave
 		await physics_frame;await process_frame
@@ -58,14 +69,14 @@ func _run()->void:
 			query=PhysicsRayQueryParameters3D.create(Pose.view_origin(data),target,8)
 			var own_hit:Dictionary=body.get_world_3d().direct_space_state.intersect_ray(query)
 			var visible:=own_hit.is_empty() or Pose.view_origin(data).distance_to(own_hit.position)>=Pose.view_origin(data).distance_to(target)-.015
-			rows.append({"posture":posture,"outfit":outfit,"zone":zone_id,"surface_offset_m":offset if is_finite(offset) else 999.0,"own_target_visible":visible,"triangles":faces.size()/3})
+			rows.append({"posture":posture,"tool":data.tool,"outfit":outfit,"zone":zone_id,"surface_offset_m":offset if is_finite(offset) else 999.0,"own_target_visible":visible,"triangles":faces.size()/3})
 			if verify:
 				checks+=1
 				if not is_finite(offset) or offset<-.007 or offset>.015:failures+=1
 				if zone_id<8:
 					checks+=1
 					if not visible:failures+=1
-			print("SELECTED07_MESH ",posture," zone=",zone_id," offset=",snappedf(offset,.0001)," visible=",visible)
+			print("SELECTED07_MESH ",posture," tool=",data.tool," zone=",zone_id," offset=",snappedf(offset,.0001)," visible=",visible)
 	var file:=FileAccess.open(folder.path_join("mesh-surfaces.json"),FileAccess.WRITE);file.store_string(JSON.stringify(rows,"\t"));file.close()
 	print("SELECTED07_MESH_DONE records=",rows.size()," selected=",use_selected," checks=",checks," failures=",failures)
 	skin.queue_free();body.queue_free();camera.queue_free();label.queue_free();env_node.queue_free();key.queue_free();await process_frame;await process_frame;quit(failures)

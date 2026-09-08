@@ -385,8 +385,7 @@ func _test_cooperative_rear() -> void:
 func _test_tools() -> void:
 	var sim = make_sim("blood", 2, 4)
 	check(sim.actors[1].tool == "hands" and sim.actors[2].tool == "hands", "humans start with hands")
-	var pick_position: Vector3 = Vector3(sim.pickups[1].p)
-	pick_position.y = 0.0
+	var pick_position: Vector3 = Sim.Maps.HOUSE.pickups[0].approach
 	sim.actors[1].p = pick_position
 	sim.actors[2].p = pick_position
 	sim.action(1, 1, "pickup")
@@ -396,7 +395,7 @@ func _test_tools() -> void:
 	sim.action(1, 1, "drop")
 	sim.step(0.05)
 	check(int(sim.pickups[1].holder) == 1, "duplicated action sequence cannot drop tool")
-	sim.actors[1].p = Vector3(sim.pickups[2].p) * Vector3(1, 0, 1)
+	sim.actors[1].p = Sim.Maps.HOUSE.pickups[1].approach
 	sim.action(1, 2, "pickup")
 	sim.step(0.05)
 	check(int(sim.pickups[1].holder) == 0 and int(sim.pickups[2].holder) == 1 and sim.actors[1].tool == "racket", "swap drops old tool and grants new instance atomically")

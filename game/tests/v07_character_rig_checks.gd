@@ -2,6 +2,7 @@ extends SceneTree
 ## Checks the imported, currently deformed mesh, not only the gameplay capsules.
 const Actor = preload("res://scripts/actor_view.gd")
 const Pose = preload("res://scripts/human_pose.gd")
+const Tools = preload("res://scripts/tool_catalog.gd")
 const Simulation = preload("res://scripts/simulation.gd")
 const Preview = preload("res://scripts/avatar_preview.gd")
 var checks := 0
@@ -87,7 +88,13 @@ func _run() -> void:
 	insect.build("mosquito","",0)
 	insect.name_label.hide()
 	insect.hide()
-	check(human.imported_skin.skeleton.get_bone_count()==32,"human deformation rig has 32 bones")
+	# The selected A rig adds two independent thumb bones per hand for gripping.
+	var human_contract: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/characters/human/rig_contract.json"))
+	check(human_contract.get("selected_base","")=="A" and human_contract.get("rig_version","")=="LMS07.grip1" and human.imported_skin.skeleton.get_bone_count()==36 and human_contract.bones.size()==36,"selected A deformation rig has 36 bones including articulated thumbs")
+	for side: String in ["l","r"]:
+		var thumb_a: int = human.imported_skin.skeleton.find_bone("thumb_a_"+side)
+		var thumb_b: int = human.imported_skin.skeleton.find_bone("thumb_b_"+side)
+		check(thumb_a>=0 and thumb_b>=0 and human.imported_skin.skeleton.get_bone_parent(thumb_a)==human.imported_skin.skeleton.find_bone("hand_"+side) and human.imported_skin.skeleton.get_bone_parent(thumb_b)==thumb_a,"thumb chain is parented to the selected hand "+side)
 	check(insect.imported_skin.skeleton.get_bone_count()==21,"mosquito rig has six articulated legs, wings and proboscis")
 	var data: Dictionary = {"p":Vector3.ZERO,"yaw":0.0,"body_yaw":0.0,"pitch":0.0,"grounded":true,"state":"human","appearance":{"color":5,"accent":4,"face":1,"hair":0,"outfit":0,"accessory":3,"footwear":0}}
 	for posture: String in ["stand","walk","run","crouch","crouch_run","jump"]:
@@ -154,7 +161,7 @@ func _run() -> void:
 	camera.fov = 40
 	camera.position = Vector3(1.7,1.25,-2.8)
 	camera.look_at(Vector3(0,.95,0))
-	for tool: String in ["swatter","racket","newspaper","broom"]:
+	for tool: String in ["swatter","racket","newspaper","broom","slipper"]:
 		data.tool = tool
 		data.strike = {}
 		human.update_state(data,1.0)
@@ -163,7 +170,7 @@ func _run() -> void:
 		data.strike = {"active":true,"progress":.45,"point":Vector3(0,1.12,-.58),"normal":Vector3.BACK,"hand":"right","tool":tool}
 		human.update_state(data,1.0)
 		var pose: Dictionary = Pose.sample(data)
-		var tool_face: Vector3 = human.tool_socket.to_global(Vector3.DOWN*float(Pose.TOOL_LENGTHS[tool]))
+		var tool_face: Vector3 = human.tool_socket.to_global(Tools.visual(tool).contact)
 		check(tool_face.distance_to(pose.strike_contact)<.001,"visible tool face equals authoritative contact "+tool)
 		check(absf(human.tool_socket.global_basis.z.dot(pose.tool_normal))>.999,"tool broad face follows shared contact normal "+tool)
 		await settle()

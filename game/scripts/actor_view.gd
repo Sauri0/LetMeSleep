@@ -10,6 +10,7 @@ const SwatterArt = preload("res://assets/art/house/swatter.glb")
 const RacketArt = preload("res://assets/art/characters/tools/racket.glb")
 const BroomArt = preload("res://assets/art/characters/tools/broom.glb")
 const NewspaperArt = preload("res://assets/art/house/newspaper.glb")
+const ToolData = preload("res://scripts/tool_catalog.gd")
 const MOSQUITO_VISUAL_SCALE: float = 0.35
 const MOSQUITO_BODY_RADIUS: float = 0.04
 static var cloth_texture: ImageTexture
@@ -342,12 +343,12 @@ func _apply_human_pose(data: Dictionary, dt: float) -> void:
 		(limb_feet[suffix] as Node3D).position = ankle + Vector3(0, 0, -0.09)
 		(limb_feet[suffix] as Node3D).rotation.x = PI / 2.0
 	if body_pose.has("tool_direction"):
-		var direction: Vector3 = body_pose.tool_direction if str(Dictionary(data.get("strike",{})).get("hand","right"))=="right" else Vector3.DOWN
+		var direction: Vector3 = body_pose.tool_direction
 		if direction.length_squared()>0.001:
 			var normal: Vector3 = body_pose.get("tool_normal",Vector3.BACK)
-			var up := -direction.normalized()
-			var back := (normal-up*normal.dot(up)).normalized()
-			tool_socket.basis = (limb_hands["r"] as Node3D).basis.inverse()*Basis(up.cross(back).normalized(),up,back)
+			var parent_hand := limb_hands["r"] as Node3D
+			tool_socket.basis = parent_hand.basis.inverse()*Pose.tool_basis(direction,normal)
+			tool_socket.position = parent_hand.basis.inverse()*(Vector3(body_pose.tool_grip)-parent_hand.position)
 	if is_instance_valid(imported_skin):
 		imported_skin.apply_human(body_pose,data,dt)
 
@@ -643,61 +644,21 @@ func _equip_tool(tool: String) -> void:
 
 static func make_tool(tool: String) -> Node3D:
 	var root := Node3D.new()
-	var coral: StandardMaterial3D = material(Color("e47e65"))
-	var dark: StandardMaterial3D = material(Color("274b54"))
-	var metal: StandardMaterial3D = material(Color("bcd5cb"))
-	var paper: StandardMaterial3D = material(Color("f6e7c9"))
-	if tool == "hands":
+	root.name = "ToolGrip"
+	var visual: Dictionary = ToolData.visual(tool)
+	var scene_path: String = str(visual.scene)
+	if scene_path.is_empty() or not ResourceLoader.exists(scene_path):
 		return root
-	if tool in ["racket","broom"]:
-		var imported: Node3D = (RacketArt if tool=="racket" else BroomArt).instantiate()
-		imported.name = "AuthoredTool"
-		root.add_child(imported)
-		return root
-	if tool in ["swatter","newspaper"]:
-		var imported: Node3D = (SwatterArt if tool=="swatter" else NewspaperArt).instantiate()
-		imported.name = "AuthoredTool"
-		imported.rotation.z = PI
-		# Authoring origin is the grip base and +Y is the long axis. Match the
-		# shared active-face centre exactly, without changing contact statistics.
-		imported.scale = Vector3.ONE*(0.46/0.55 if tool=="swatter" else 0.30/0.32)
-		root.add_child(imported)
-		return root
-	if tool == "newspaper":
-		var roll: MeshInstance3D = _capsule(root, Vector3(0, -0.15, 0), 0.045, 0.40, paper)
-		roll.rotation.z = 0.04
-		for y: float in [-0.26, -0.22, -0.18]:
-			_box(root, Vector3(0, y, -0.045), Vector3(0.055, 0.012, 0.003), dark)
-		return root
-	var length: float = 0.78 if tool == "broom" else 0.40
-	_segment(root, Vector3(0, 0.06, 0), Vector3(0, -length, 0), 0.022 if tool == "broom" else 0.017, dark)
-	_capsule(root, Vector3(0, -0.025, 0), 0.027, 0.16, coral)
-	if tool == "broom":
-		_box(root, Vector3(0, -0.79, 0), Vector3(0.34, 0.065, 0.08), coral)
-		for i: int in range(10):
-			_capsule(root, Vector3(-0.153 + i * 0.034, -0.88, 0), 0.021, 0.19, paper)
-	elif tool == "racket":
-		var ring := TorusMesh.new()
-		ring.inner_radius = 0.115
-		ring.outer_radius = 0.142
-		ring.rings = 20
-		ring.ring_segments = 6
-		var frame: MeshInstance3D = mesh(root, ring, Vector3(0, -0.51, 0), coral)
-		frame.rotation.x = PI / 2.0
-		frame.scale.y = 1.2
-		for i: int in range(-3, 4):
-			var offset: float = i * 0.03
-			var span: float = sqrt(maxf(0.0, 0.12 * 0.12 - offset * offset))
-			_segment(root, Vector3(offset, -0.51 - span, 0), Vector3(offset, -0.51 + span, 0), 0.003, metal)
-			_segment(root, Vector3(-span, -0.51 + offset, 0), Vector3(span, -0.51 + offset, 0), 0.003, metal)
-	else:
-		var paddle: MeshInstance3D = _sphere(root, Vector3(0, -0.46, 0), Vector3(0.115, 0.15, 0.012), coral)
-		paddle.name = "SwatterPaddle"
-		for x: float in [-0.06, -0.02, 0.02, 0.06]:
-			for y: float in [-0.52, -0.47, -0.42]:
-				_box(root, Vector3(x, y, -0.013), Vector3(0.014, 0.025, 0.002), dark)
+	var packed := load(scene_path) as PackedScene
+	var imported := packed.instantiate() as Node3D
+	imported.name = "AuthoredTool"
+	# Each source has its own authored convention. Normalize it explicitly,
+	# then place the measured grip centre at the shared palm socket.
+	imported.rotation = visual.asset_rotation
+	imported.scale = visual.scale
+	imported.position = -Vector3(visual.grip)
+	root.add_child(imported)
 	return root
-
 func _add_body_capsule(at: Vector3, radius: float, height: float) -> void:
 	var shape := CapsuleShape3D.new()
 	shape.radius = radius

@@ -40,10 +40,13 @@ var practice: Node
 var practice_active := false
 var retry_local_host := false
 var leaving := false
+var _throw_pressed := false
+var _throw_tool := ""
 
 func _ready() -> void:
 	PreferencesScript.load_settings()
 	PreferencesScript.setup_inputs()
+	get_window().focus_exited.connect(_cancel_throw)
 	VideoSettings.apply_display(get_window())
 	network.local_cosmetics = PreferencesScript.cosmetics
 	world = WorldScript.new()
@@ -207,10 +210,15 @@ func _snapshot(data: Dictionary) -> void:
 	world.set_local_role(local_id, role)
 	world.sync_doors(data.get("doors",{}),1.0 if starting else 0.0)
 	world.audio_fx.sync_doors(data.get("doors",{}),world.door_views.views if is_instance_valid(world.door_views) else {})
+	world.audio_fx.sync_pickups(data.get("pickups",{}))
 	ui.show_game(state, personal, local_id)
 	music.set_context("playing", state, personal, local_id)
 
 func _process(dt: float) -> void:
+	if _throw_pressed:
+		var holder: Dictionary = state.get("actors",{}).get(local_id,{})
+		if not playing or role != "human" or ui.is_menu_open() or not bool(holder.get("alive",false)) or str(holder.get("tool","hands")) != _throw_tool:
+			_cancel_throw()
 	if waiting:
 		world.sync_actors(waiting_state.get("actors", {}), local_id, dt)
 		world.set_local_role(local_id, "lobby")
@@ -228,7 +236,7 @@ func _process(dt: float) -> void:
 	var actors: Dictionary = state.get("actors", {})
 	world.sync_actors(actors, local_id, dt)
 	world.sync_doors(state.get("doors",{}),dt)
-	world.sync_pickups(state.get("pickups", {}))
+	world.sync_pickups(state.get("pickups", {}),dt)
 	var actor: Dictionary = actors.get(local_id, {})
 	if actor.is_empty():
 		return
@@ -289,11 +297,35 @@ func _physics_process(dt: float) -> void:
 	transport.send_input(sequence, move, yaw, pitch, interact, sprint, crouch, jump)
 
 func _on_escape() -> void:
+	_cancel_throw()
 	if waiting:
 		_set_walking(not walking)
 	elif playing:
 		ui.set_pause(not ui.is_menu_open())
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if ui.is_menu_open() else Input.MOUSE_MODE_CAPTURED
+
+func _send_throw(verb: String) -> void:
+	if not playing: return
+	action_sequence += 1
+	var transport: Node = practice if practice_active else network
+	transport.send_action(action_sequence,verb,yaw,pitch)
+
+func _cancel_throw() -> void:
+	if not _throw_pressed: return
+	_throw_pressed = false
+	_throw_tool = ""
+	_send_throw("throw_cancel")
+
+func _input(event: InputEvent) -> void:
+	# Observe cancellation before UI consumes Escape/F1 or a release event.
+	if _throw_pressed and (event.is_action_pressed("pause") or event.is_action_pressed("toggle_help")):
+		_cancel_throw()
+	if _throw_pressed and event.is_action_released("throw"):
+		var holder: Dictionary = state.get("actors",{}).get(local_id,{})
+		var valid: bool = playing and role == "human" and not ui.is_menu_open() and bool(holder.get("alive",false)) and str(holder.get("tool","hands")) == _throw_tool
+		_throw_pressed = false
+		_throw_tool = ""
+		_send_throw("throw_release" if valid else "throw_cancel")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not playing and not waiting:
@@ -313,6 +345,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if str(state.get("actors", {}).get(local_id, {}).get("state", "")) == "stunned":
 		return
+	if role == "human" and event.is_action_pressed("throw"):
+		if not _throw_pressed and bool(Dictionary(personal.get("throw",{})).get("can_throw",false)):
+			_throw_pressed = true
+			_throw_tool = str(state.get("actors",{}).get(local_id,{}).get("tool","hands"))
+			_send_throw("throw_start")
+		return
 	if role == "human" and event.is_action_pressed("interact"):
 		var interaction: Dictionary = personal.get("interaction",{})
 		if str(interaction.get("kind","")) == "door" and bool(interaction.get("can_use",false)):
@@ -322,6 +360,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 	for verb: String in ["bite", "attack", "self_swat", "perch", "pickup", "drop"]:
 		if event.is_action_pressed(verb):
+			if verb in ["attack","self_swat","pickup","drop"]: _cancel_throw()
 			if verb == "bite" and (role != "mosquito" or state.get("actors",{}).get(local_id,{}).get("state","") != "biting"):
 				continue
 			action_sequence += 1
@@ -330,6 +369,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			break
 
 func _leave() -> void:
+	_cancel_throw()
 	if leaving:
 		return
 	leaving = true
