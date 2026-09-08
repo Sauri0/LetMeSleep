@@ -175,6 +175,9 @@ func _process(dt: float) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST and not closing:
 		closing = true
+		var client := get_node_or_null("Client")
+		if client != null:
+			client.music.shutdown()
 		network.request_close_room()
 		await get_tree().create_timer(0.25).timeout
 		_cleanup_server()

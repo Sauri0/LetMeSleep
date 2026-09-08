@@ -82,5 +82,10 @@ func _run() -> void:
 	if app.options.has("report"):
 		var file := FileAccess.open(str(app.options.report),FileAccess.WRITE)
 		file.store_string(JSON.stringify(report,"\t"))
+		file.close()
 	print("HOSTING05_RESULT checks=%d failures=%d" % [checks,failures])
-	get_tree().quit(0 if failures == 0 else 1)
+	if failures > 0:
+		get_tree().quit.call_deferred(1)
+	else:
+		# Exercise the same graceful close requested by the game's quit button.
+		get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)

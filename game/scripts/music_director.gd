@@ -23,6 +23,7 @@ var duck_left := 0.0
 var ui_cooldown := 0.0
 var accents_started: Dictionary = {}
 var ui_started: Dictionary = {}
+var shutting_down := false
 
 func _ready() -> void:
 	setup()
@@ -76,6 +77,7 @@ static func local_layers(snapshot: Dictionary, personal: Dictionary, player_id: 
 	return Vector3(-5.0, -3.0 if urgent else (-9.0 if activity else -22.0), -11.0 if urgent else (-19.0 if activity else -32.0))
 
 func set_context(next_screen: String, snapshot: Dictionary = {}, personal: Dictionary = {}, player_id: int = 0) -> void:
+	if shutting_down: return
 	setup()
 	var normalized := "home" if next_screen == "menu" else next_screen
 	var changed := normalized != screen
@@ -140,6 +142,7 @@ func _process(dt: float) -> void:
 	if screen != "playing" and game_player.volume_db < -65.0: game_player.stop()
 
 func accent(name: String) -> void:
+	if shutting_down: return
 	var stream := Catalog.accent(name)
 	if stream == null or accents.is_empty(): return
 	var voice: AudioStreamPlayer = accents[0]
@@ -155,6 +158,7 @@ func accent(name: String) -> void:
 	accents_started[name] = int(accents_started.get(name, 0)) + 1
 
 func ui_cue(name: String) -> void:
+	if shutting_down: return
 	setup()
 	if name not in ["select", "confirm", "error"] or ui_cooldown > 0.0: return
 	var stream := Catalog.cue("ui_" + name)
@@ -170,6 +174,13 @@ func ui_cue(name: String) -> void:
 	voice.volume_db = -8.0
 	voice.play()
 	ui_started[name] = int(ui_started.get(name, 0)) + 1
+
+func shutdown() -> void:
+	# Stop the mixer before Main's existing close grace period. Late UI/network
+	# signals must not restart synchronized playback while the app is closing.
+	shutting_down = true
+	clear()
+	set_process(false)
 
 func clear() -> void:
 	screen = ""

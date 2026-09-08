@@ -1,0 +1,59 @@
+{
+	"checks": 13,
+	"events": [
+		{
+			"message": "Repeated create uses one owned child",
+			"ok": true
+		},
+		{
+			"message": "Create button enters room automatically after real server bind",
+			"ok": true
+		},
+		{
+			"message": "Custom listening port and loopback ignore stale friend endpoint",
+			"ok": true
+		},
+		{
+			"message": "Accepted local player owns room with actual code",
+			"ok": true
+		},
+		{
+			"message": "Launch acknowledgement removed after nonce/PID/port validation",
+			"ok": true
+		},
+		{
+			"message": "Leaving closes owned server without orphan",
+			"ok": true
+		},
+		{
+			"message": "Test owns occupied-port fixture",
+			"ok": true
+		},
+		{
+			"message": "Bind failure is shown instead of false server-ready",
+			"ok": true
+		},
+		{
+			"message": "Failed child cannot join the unrelated listener",
+			"ok": true
+		},
+		{
+			"message": "Retry after host failure starts own server instead of old remote request",
+			"ok": true
+		},
+		{
+			"message": "Cancel during startup terminates only the owned child",
+			"ok": true
+		},
+		{
+			"message": "Cancellation leaves no pending connection",
+			"ok": true
+		},
+		{
+			"message": "User preferences restored byte for byte",
+			"ok": true
+		}
+	],
+	"failures": 0,
+	"port": 28571
+}
