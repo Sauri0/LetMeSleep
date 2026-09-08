@@ -7,8 +7,9 @@ var report_path := ""
 
 class QuietClient extends Client:
 	func _ready() -> void: pass
-	func _process(_dt: float) -> void: pass
 	func _physics_process(_dt: float) -> void: pass
+	func _sync_emotes() -> void: pass
+	func _screenshot_tick(_dt: float) -> void: pass
 
 class HudWitness extends CanvasLayer:
 	var updates: Array[Dictionary] = []
@@ -20,6 +21,8 @@ class HudWitness extends CanvasLayer:
 	func show_results(_data: Dictionary) -> void: screen="results"
 	func show_lobby(_data: Dictionary, _id: int) -> void: screen="lobby"
 	func set_pause(value: bool) -> void: paused=value
+	func is_menu_open() -> bool: return paused
+	func show_home() -> void: screen="home"
 
 class AudioWitness extends Node:
 	var private_updates := 0
@@ -31,10 +34,14 @@ class AudioWitness extends Node:
 class WorldWitness extends Node3D:
 	var audio_fx: Node
 	var door_views: Node3D
+	var menu_camera: Camera3D
 	func clear_actors() -> void: pass
 	func load_map(_id: String) -> void: pass
 	func set_local_role(_id: int, _role: String) -> void: pass
 	func sync_doors(_data: Dictionary, _dt: float) -> void: pass
+	func sync_actors(_data: Dictionary, _id: int, _dt: float, _critical: int=0) -> void: pass
+	func sync_pickups(_data: Dictionary, _dt: float) -> void: pass
+	func get_actor(_id: int) -> Node3D: return null
 	func show_assignment(_data: Dictionary, _camera: Camera3D, _point: Vector3) -> void: pass
 	func end_customization() -> void: pass
 
@@ -53,10 +60,10 @@ func check(ok: bool, label: String) -> void:
 	if not ok: failures.append(label);printerr("HUD09_COALESCING_FAIL "+label)
 
 func snapshot(time: float) -> Dictionary:
-	return {"phase":"playing","time_left":time,"actors":{1:{"role":"human","alive":true,"yaw":0.0}},"config":{"map_id":"house"}}
+	return {"phase":"playing","time_left":time,"actors":{1:{"role":"human","alive":true,"yaw":0.0,"p":Vector3.ZERO}},"config":{"map_id":"house"}}
 
 func drain() -> void:
-	# Observe after the engine's deferred queue, not by calling the flush helper.
+	# Exercise actual Client._process callbacks, never call the flush directly.
 	await process_frame
 	await process_frame
 
@@ -68,10 +75,14 @@ func _run() -> void:
 	var sound := AudioWitness.new()
 	var music := MusicWitness.new()
 	var camera := Camera3D.new()
+	var rig := Node3D.new()
+	var arm := SpringArm3D.new()
 	client.ui=hud;client.world=world;client.music=music;client.camera=camera;client.local_id=1
+	client.rig=rig;client.arm=arm
 	world.audio_fx=sound
+	world.menu_camera=camera
 	client.add_child(hud);client.add_child(world);world.add_child(sound)
-	client.add_child(music);client.add_child(camera)
+	client.add_child(music);client.add_child(rig);rig.add_child(arm);arm.add_child(camera)
 	root.add_child(client)
 
 	client._snapshot(snapshot(100))
@@ -88,7 +99,7 @@ func _run() -> void:
 	var music_before := music.contexts
 	client._snapshot(public)
 	client._private(private_data)
-	check(hud.updates.is_empty(),"steady pair waits only for deferred queue")
+	check(hud.updates.is_empty(),"steady pair waits for the next presentation frame")
 	check(client.state==public and client.personal==private_data,"received gameplay state remains immediate")
 	check(sound.private_updates==audio_before+1 and music.contexts==music_before+2,"audio callbacks remain immediate and complete")
 	await drain()
@@ -113,6 +124,22 @@ func _run() -> void:
 	await drain()
 	check(hud.updates.size()==1,"same-frame packet burst coalesces")
 	check(hud.updates.back().public.time_left==93 and hud.updates.back().private.attack.id==8,"burst presents newest data, not first queued data")
+
+	# Reproduce several queue drains before the next presentation callback.
+	# The previous call_deferred implementation would redraw after each pair.
+	hud.updates.clear()
+	client.set_process(false)
+	for index: int in range(4):
+		client._snapshot(snapshot(92.8-index*.1))
+		client._private({"attack":{"id":20+index,"status":"hit"}})
+		await drain()
+		check(hud.updates.is_empty(),"deferred drain %d cannot render HUD without a presentation callback"%index)
+	check(client.personal.attack.id==23,"state keeps advancing while presentation is pending")
+	client.set_process(true)
+	await drain()
+	check(hud.updates.size()==1 and hud.updates.back().private.attack.id==23,"first presentation after several queue drains applies latest pair once")
+	await drain()
+	check(hud.updates.size()==1,"idle frames without fresh state do not redraw HUD")
 
 	hud.updates.clear()
 	client._snapshot(snapshot(92))
@@ -144,10 +171,21 @@ func _run() -> void:
 	await drain()
 	check(hud.paused,"steady refresh does not dismiss pause")
 
+	hud.updates.clear()
+	client.leaving=true
+	client._snapshot(snapshot(68));client._private({"attack":{"id":14}})
+	await drain()
+	check(hud.updates.is_empty(),"late playing packets during leave do not redraw HUD")
+	client.leaving=false
+	client._private({"attack":{"id":15}})
+	client._disconnected()
+	await drain()
+	check(hud.screen=="home" and hud.updates.is_empty(),"disconnect clears pending presentation before returning home")
+
 	client.queue_free()
 	await drain()
 	Input.mouse_mode=old_mouse
-	var result := {"checks":checks,"failures":failures,"scope":"real Client callbacks and deferred queue; inert HUD/world/audio, no rendered layout, network or FPS claim"}
+	var result := {"checks":checks,"failures":failures,"scope":"real Client callbacks and idle process, including deferred drains with presentation held; inert HUD/world/audio, no rendered layout, network or FPS claim"}
 	if not report_path.is_empty():
 		var file := FileAccess.open(report_path,FileAccess.WRITE)
 		if file!=null: file.store_string(JSON.stringify(result,"\t"));file.close()

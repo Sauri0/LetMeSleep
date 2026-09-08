@@ -1,0 +1,24 @@
+{
+	"cases": [
+		{
+			"finished": true,
+			"first_map": {
+				"fingerprint": "05d7e1c97dd86d190c23b7fe1936180d697bc4613f0264789431f66e403adaeb",
+				"map_id": "house-v1-1577431130"
+			},
+			"mode": "blood",
+			"rematch_map": {
+				"fingerprint": "e3ca4dd4ff4d7f4cb071d0bc9d7f08f0f1ace038fb1fbe2a42bff4ccbdd6b494",
+				"map_id": "house-v1-201831161"
+			},
+			"role": "human"
+		}
+	],
+	"checks": 29,
+	"failed_checks": [],
+	"failures": 0,
+	"microphone_allowed": false,
+	"native": true,
+	"preferences_unchanged": true,
+	"scope": "Real menu/client/practice/bots/camera; end-of-round result is injected solely for navigation. No WAN or packaged-build claim unless run against that executable."
+}

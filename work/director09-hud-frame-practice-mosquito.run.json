@@ -1,0 +1,24 @@
+{
+  "engine_sha256": "446E08F71624052572F96DE9031850BA96382CE6752ADDE38BB955B0A49BED01",
+  "stderr_bytes": 241,
+  "started_utc": "2026-09-08T14:30:40.8599642Z",
+  "finished_utc": "2026-09-08T14:30:46.7712871Z",
+  "name": "director09-hud-frame-practice-mosquito",
+  "arguments": [
+    "--path",
+    "\"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\game\"",
+    "--audio-driver",
+    "Dummy",
+    "--rendering-method",
+    "gl_compatibility",
+    "--",
+    "--practice-checks",
+    "--no-microphone",
+    "--check-role=mosquito",
+    "--check-mode=sleep",
+    "--check-report=C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/director09-hud-frame-practice-mosquito.json"
+  ],
+  "exit_code": 0,
+  "timeout": false,
+  "client_sha256": "783A412E2255943391E157AAEB9440FD317C8B3852FFEB5C609970EAED9EFCFB"
+}

@@ -156,18 +156,15 @@ func _private(data: Dictionary) -> void:
 		music.set_context("playing", state, personal, local_id)
 
 func _queue_game_hud() -> void:
-	# Public/private callbacks can arrive back to back before drawing. Keep
-	# their other effects immediate and present their latest combined HUD once.
-	if _hud_refresh_pending:
-		return
+	# Deferred calls can drain between catch-up physics ticks. Mark dirty here;
+	# the idle process presents the newest public/private pair once per frame.
 	_hud_refresh_pending = true
-	_flush_game_hud.call_deferred()
 
 func _flush_game_hud() -> void:
 	if not _hud_refresh_pending:
 		return
 	_hud_refresh_pending = false
-	if playing and str(state.get("phase", "")) == "playing":
+	if playing and not waiting and not leaving and str(state.get("phase", "")) == "playing":
 		ui.show_game(state, personal, local_id)
 
 func _apply_surface_view_transition() -> void:
@@ -278,6 +275,7 @@ func _snapshot(data: Dictionary) -> void:
 	music.set_context("playing", state, personal, local_id)
 
 func _process(dt: float) -> void:
+	_flush_game_hud()
 	_sync_emotes()
 	if _throw_pressed:
 		var holder: Dictionary = state.get("actors",{}).get(local_id,{})
@@ -492,6 +490,7 @@ func _leave() -> void:
 	if leaving:
 		return
 	leaving = true
+	_hud_refresh_pending = false
 	if not practice_active:
 		network.request_close_room()
 		await get_tree().create_timer(0.25).timeout
@@ -508,6 +507,7 @@ func _disconnected() -> void:
 	if is_instance_valid(voice): voice.clear()
 	if practice_active:
 		return
+	_hud_refresh_pending = false
 	playing = false
 	waiting = false
 	walking = false

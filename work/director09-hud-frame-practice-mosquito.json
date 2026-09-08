@@ -1,0 +1,24 @@
+{
+	"cases": [
+		{
+			"finished": true,
+			"first_map": {
+				"fingerprint": "4ab0ba1d0b3c5c9484fb8537c4ffb4d72c6a29be489fd3e29706135cf512440d",
+				"map_id": "house-v1-425573016"
+			},
+			"mode": "sleep",
+			"rematch_map": {
+				"fingerprint": "5fcc88559d5c271a95c787620643b4ba07d85cf2970088d8fe8eee5435c845a9",
+				"map_id": "house-v1-1319187501"
+			},
+			"role": "mosquito"
+		}
+	],
+	"checks": 25,
+	"failed_checks": [],
+	"failures": 0,
+	"microphone_allowed": false,
+	"native": true,
+	"preferences_unchanged": true,
+	"scope": "Real menu/client/practice/bots/camera; end-of-round result is injected solely for navigation. No WAN or packaged-build claim unless run against that executable."
+}

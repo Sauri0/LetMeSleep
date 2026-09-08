@@ -1,0 +1,5 @@
+{
+	"checks": 29,
+	"failures": [],
+	"scope": "real Client callbacks and idle process, including deferred drains with presentation held; inert HUD/world/audio, no rendered layout, network or FPS claim"
+}
