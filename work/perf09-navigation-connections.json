@@ -1,0 +1,17 @@
+{
+	"checks": 5896,
+	"current_sha256": "0afa857f13329ed742b6a9c0d72513465475013e68bc84b1d6411c76d535068f",
+	"failures": [],
+	"map_checks": {
+		"house-v1-1/human": 1316,
+		"house-v1-1/mosquito": 1316,
+		"house-v1-2/human": 840,
+		"house-v1-2/mosquito": 840,
+		"house/human": 658,
+		"house/mosquito": 658,
+		"lobby/human": 112,
+		"lobby/mosquito": 112
+	},
+	"reference_sha256": "76c68602dfe5df8edb440c62263d61659dc6d5590ff96f7d8e03f73959522761",
+	"scope": "exact connections and full routes; same-floor borders; ties and repeated nodes; no navigation predicate changed"
+}

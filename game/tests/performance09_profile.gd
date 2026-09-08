@@ -15,7 +15,15 @@ class Collector:
 	var errors: Array[String] = []
 	var path_rebuilds := 0
 	var path_rebuild_us := 0
+	var trace_paths := false
+	var path_queries: Array = []
 	var max_depth := 0
+	func record_path(from: Vector3, to: Vector3, human: bool, map_id: String, rebuilds: int) -> void:
+		if not enabled or not trace_paths or rebuilds<=0:return
+		if rebuilds!=1:errors.append("unexpected multiple path calls in one _path_direction")
+		# Numeric triples round-trip the actual Vector3 values. Godot's default
+		# JSON representation of a Vector3 is a display string with less precision.
+		path_queries.append({"from":[from.x,from.y,from.z],"to":[to.x,to.y,to.z],"human":human,"map_id":map_id,"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames()})
 	func enter(label: String) -> bool:
 		if not enabled: return false
 		stack.append([label,Time.get_ticks_usec(),0,Engine.get_physics_frames(),Engine.get_process_frames()])
@@ -65,6 +73,7 @@ class Collector:
 		for label: String in labels:
 			var row: Dictionary=labels[label]
 			result.labels[label]={"calls":row.calls,"inclusive_total_ms":float(row.inclusive_us)/1000.0,"residual_total_ms":float(row.residual_us)/1000.0,"inclusive_ms":distribution(row.inclusive_samples),"residual_ms":distribution(row.residual_samples),"worst":row.worst}
+		if trace_paths:result.path_queries=path_queries
 		return result
 
 class ProfilePractice:
@@ -92,6 +101,7 @@ class ProfileBrain:
 		var tracked: bool=collector.enter("Brain._path_direction")
 		var result: Vector3=super._path_direction(from,destination,human,map_id)
 		collector.leave("Brain._path_direction",tracked,int(stats.paths)-before)
+		collector.record_path(from,destination,human,map_id,int(stats.paths)-before)
 		return result
 
 class ProfileDoors:
@@ -228,6 +238,7 @@ func _initialize() -> void:
 		if argument.begins_with("--report="):destination=argument.trim_prefix("--report=")
 		if argument.begins_with("--seconds="):seconds=clampf(float(argument.trim_prefix("--seconds=")),5,30)
 		if argument.begins_with("--concurrent-work="):concurrent_work=argument.trim_prefix("--concurrent-work=")
+		if argument=="--trace-paths":collector.trace_paths=true
 	_run.call_deferred()
 
 func _require(condition: bool, message: String) -> bool:

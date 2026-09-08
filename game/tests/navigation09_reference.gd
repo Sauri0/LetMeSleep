@@ -1,4 +1,3 @@
-class_name MapNavigation
 extends RefCounted
 ## Small authored graph shared by offline bots. No engine navigation bake or 3D grid.
 ## Human points are feet; mosquito points are centers. Reuse routes between repaths.
@@ -83,14 +82,9 @@ static func graph_info(human: bool, map_id: String = "house") -> Dictionary:
 
 static func _connections(point: Vector3, graph: Dictionary) -> Array[int]:
 	var order: Array[int] = []
-	var distances := PackedFloat64Array()
-	distances.resize(graph.nodes.size())
 	for index: int in range(graph.nodes.size()):
 		order.append(index)
-		distances[index] = point.distance_squared_to(graph.nodes[index])
-	# Same comparator and input order, including equal-distance ties. Distances
-	# belong only to this exact query; no position rounding or persistent cache.
-	order.sort_custom(func(first: int, second: int) -> bool: return distances[first] < distances[second])
+	order.sort_custom(func(first: int, second: int) -> bool: return point.distance_squared_to(graph.nodes[first]) < point.distance_squared_to(graph.nodes[second]))
 	var result: Array[int] = []
 	for index: int in order:
 		if graph.human and absf(point.y - Vector3(graph.nodes[index]).y) > 0.25:

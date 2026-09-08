@@ -9,6 +9,8 @@ Escenarios separados:
 
 Ambos usan dos segundos de calentamiento y doce de medición, 1920×1080 internos, VSync desactivado y sin límite de FPS. El preámbulo de práctica también fija semilla 1; se registra su tiempo por separado. Se reinicia `client.playing` antes de publicar el roster final y se comprueba que World, Client y Simulation compartan mapa. Esto corrige el desajuste detectado en el benchmark anterior, que podía dejar renderizada la casa aleatoria del preámbulo mientras la autoridad ya usaba `house`.
 
+La versión actual registra `renderer` y `rendering_driver` obtenidos del motor, así como hashes de DoorState/DoorCatalog. La última corrida usa explícitamente `--rendering-method gl_compatibility`; no cambia el renderer dentro de la fixture.
+
 ## Qué significan las mediciones
 
 | Etiqueta | Alcance inclusivo |
