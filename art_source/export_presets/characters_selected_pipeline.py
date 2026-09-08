@@ -14,6 +14,7 @@ SELECTED={'human':'A','mosquito':'B'}
 sys.path.insert(0,str(ROOT/'art_source/characters/shared'))
 from facial_parts import separate_faces, add_human_facial_hair, weld_human_hair_roots
 from garment_fit import repair_human_garments
+from garment_trim import conform_human_central_trim
 
 def srgb_to_linear(value):
     return value/12.92 if value<=.04045 else ((value+.055)/1.055)**2.4
@@ -168,6 +169,7 @@ def export_selected(species):
     cheek_repair=refine_human_cheeks() if species=='human' else {}
     thumb_bones=add_thumb_controls(rigs[0],frozen_manifest['bones']) if species=='human' else {}
     garment_fit=repair_human_garments() if species=='human' else []
+    garment_trim=conform_human_central_trim() if species=='human' else []
     separate_faces(species)
     if species=='human':
         add_human_facial_hair(rigs[0])
@@ -211,12 +213,14 @@ def export_selected(species):
         'eyelid_arc_correctives':[blink+'Arc'+str(k) for blink in ['BlinkL','BlinkR'] for k in range(1,8)]}
     if cheek_repair:manifest['cheek_repair']=cheek_repair
     if garment_fit:manifest['garment_fit09']=garment_fit
+    if garment_trim:manifest['garment_trim09']=garment_trim
     (source/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf8')
     (output/'rig_contract.json').write_text(json.dumps({'id':manifest['id'],'rig_version':manifest['rig_version'],'selected_base':variant,'bones':manifest['bones']},indent=2),encoding='utf8')
     model=json.loads((frozen/'model.json').read_text())
     model['bones']=manifest['bones']
     model['facial_parts']=manifest['facial_parts']
     if garment_fit:model['garment_fit09']=garment_fit
+    if garment_trim:model['garment_trim09']=garment_trim
     if cheek_repair:
         model['cheek_repair']=cheek_repair
         for part in model['parts']:

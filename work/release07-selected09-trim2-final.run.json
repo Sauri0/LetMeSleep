@@ -1,0 +1,23 @@
+{
+  "name": "selected09-trim2-final",
+  "exe_sha256": "446E08F71624052572F96DE9031850BA96382CE6752ADDE38BB955B0A49BED01",
+  "source": true,
+  "arguments": [
+    "--path",
+    "\"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\game\"",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/selected07_mesh_checks.gd",
+    "--",
+    "--production",
+    "--verify",
+    "--tools",
+    "--output=C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/outputs/0.9-garment-trim/selected-final"
+  ],
+  "started_utc": "2026-09-08T14:02:59.3497738Z",
+  "finished_utc": "2026-09-08T14:03:12.8703460Z",
+  "exit_code": 0,
+  "stderr_bytes": 0,
+  "passed": true
+}

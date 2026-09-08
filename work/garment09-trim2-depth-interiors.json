@@ -1,0 +1,326 @@
+{
+  "scope": "Bind mesh only, actual GLB triangle depth; does not claim posed trim coverage.",
+  "source_recipe": "characters_pipeline.py:248-249, central secondary tube radius .005 m, y1.30 to .80.",
+  "sources": [
+    {
+      "label": "before",
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-motion-witnesses\\source-before\\game\\assets\\art\\characters\\human\\human_lms06.glb",
+      "sha256": "e95cdfe70323bcf03488a2662a6d23f3e913997fa22d47583b8f9fb2421ea3b7",
+      "outfits": [
+        {
+          "mesh": "human_outfit_0_trim",
+          "material": "secondary",
+          "seam_vertices": 144,
+          "bbox_min": [
+            -0.005649999715387821,
+            0.7978814244270325,
+            -0.28143203258514404
+          ],
+          "bbox_max": [
+            0.005649999715387821,
+            1.3015040159225464,
+            -0.1637529730796814
+          ],
+          "rays_hitting_cloth": 144,
+          "front_of_cloth_vertices": 56,
+          "behind_cloth_vertices": 88,
+          "gap_min_m": -0.02178938778582301,
+          "gap_max_m": 0.0181055116411179,
+          "deepest": {
+            "point": [
+              9.661182109356501e-19,
+              0.8021185994148254,
+              -0.1637529730796814
+            ],
+            "cloth_front_z": -0.1855423608655044,
+            "outward_gap_m": -0.02178938778582301
+          },
+          "most_exposed": {
+            "point": [
+              -3.459627077311691e-19,
+              1.056557536125183,
+              -0.28143203258514404
+            ],
+            "cloth_front_z": -0.26332652094402614,
+            "outward_gap_m": 0.0181055116411179
+          },
+          "front_triangle_samples": 840,
+          "front_samples_buried": 463,
+          "front_sample_gap_min_m": -0.01571753259598377,
+          "front_sample_gap_max_m": 0.017584958661710337,
+          "front_deepest": {
+            "point": [
+              0.005649999715387821,
+              1.2655199766159058,
+              -0.23329679667949677
+            ],
+            "cloth_front_z": -0.24901432927548053,
+            "outward_gap_m": -0.01571753259598377
+          }
+        },
+        {
+          "mesh": "human_outfit_1_trim",
+          "material": "secondary",
+          "seam_vertices": 144,
+          "bbox_min": [
+            -0.005649999715387821,
+            0.7978814244270325,
+            -0.28143203258514404
+          ],
+          "bbox_max": [
+            0.005649999715387821,
+            1.3015040159225464,
+            -0.1637529730796814
+          ],
+          "rays_hitting_cloth": 144,
+          "front_of_cloth_vertices": 56,
+          "behind_cloth_vertices": 88,
+          "gap_min_m": -0.02178938778582301,
+          "gap_max_m": 0.0181055116411179,
+          "deepest": {
+            "point": [
+              9.661182109356501e-19,
+              0.8021185994148254,
+              -0.1637529730796814
+            ],
+            "cloth_front_z": -0.1855423608655044,
+            "outward_gap_m": -0.02178938778582301
+          },
+          "most_exposed": {
+            "point": [
+              -3.459627077311691e-19,
+              1.056557536125183,
+              -0.28143203258514404
+            ],
+            "cloth_front_z": -0.26332652094402614,
+            "outward_gap_m": 0.0181055116411179
+          },
+          "front_triangle_samples": 840,
+          "front_samples_buried": 463,
+          "front_sample_gap_min_m": -0.01571753259598377,
+          "front_sample_gap_max_m": 0.017584958661710337,
+          "front_deepest": {
+            "point": [
+              0.005649999715387821,
+              1.2655199766159058,
+              -0.23329679667949677
+            ],
+            "cloth_front_z": -0.24901432927548053,
+            "outward_gap_m": -0.01571753259598377
+          }
+        },
+        {
+          "mesh": "human_outfit_2_trim",
+          "material": "secondary",
+          "seam_vertices": 144,
+          "bbox_min": [
+            -0.005649999715387821,
+            0.7978814244270325,
+            -0.28143203258514404
+          ],
+          "bbox_max": [
+            0.005649999715387821,
+            1.3015040159225464,
+            -0.1637529730796814
+          ],
+          "rays_hitting_cloth": 144,
+          "front_of_cloth_vertices": 56,
+          "behind_cloth_vertices": 88,
+          "gap_min_m": -0.02178938778582301,
+          "gap_max_m": 0.0181055116411179,
+          "deepest": {
+            "point": [
+              9.661182109356501e-19,
+              0.8021185994148254,
+              -0.1637529730796814
+            ],
+            "cloth_front_z": -0.1855423608655044,
+            "outward_gap_m": -0.02178938778582301
+          },
+          "most_exposed": {
+            "point": [
+              -3.459627077311691e-19,
+              1.056557536125183,
+              -0.28143203258514404
+            ],
+            "cloth_front_z": -0.26332652094402614,
+            "outward_gap_m": 0.0181055116411179
+          },
+          "front_triangle_samples": 840,
+          "front_samples_buried": 463,
+          "front_sample_gap_min_m": -0.01571753259598377,
+          "front_sample_gap_max_m": 0.017584958661710337,
+          "front_deepest": {
+            "point": [
+              0.005649999715387821,
+              1.2655199766159058,
+              -0.23329679667949677
+            ],
+            "cloth_front_z": -0.24901432927548053,
+            "outward_gap_m": -0.01571753259598377
+          }
+        }
+      ]
+    },
+    {
+      "label": "trim2",
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\game\\assets\\art\\characters\\human\\human_lms06.glb",
+      "sha256": "90cd6a695b32c3b98395df8f8da496ee56ffebd6026db757c03f9006eb777a06",
+      "outfits": [
+        {
+          "mesh": "human_outfit_0_trim",
+          "material": "secondary",
+          "seam_vertices": 1154,
+          "bbox_min": [
+            -0.005649999715387821,
+            0.7978814244270325,
+            -0.26510539650917053
+          ],
+          "bbox_max": [
+            0.005649999715387821,
+            1.2927334308624268,
+            -0.18504026532173157
+          ],
+          "rays_hitting_cloth": 1154,
+          "front_of_cloth_vertices": 940,
+          "behind_cloth_vertices": 190,
+          "gap_min_m": -0.00019980683968165436,
+          "gap_max_m": 0.0017999662292377816,
+          "deepest": {
+            "point": [
+              1.0378880197959307e-18,
+              1.2813459634780884,
+              -0.23574085533618927
+            ],
+            "cloth_front_z": -0.23594066217587092,
+            "outward_gap_m": -0.00019980683968165436
+          },
+          "most_exposed": {
+            "point": [
+              -3.459627077311691e-19,
+              1.056557536125183,
+              -0.26489654183387756
+            ],
+            "cloth_front_z": -0.2630965756046398,
+            "outward_gap_m": 0.0017999662292377816
+          },
+          "front_triangle_samples": 7560,
+          "front_samples_buried": 0,
+          "front_sample_gap_min_m": 0.0001894214502763114,
+          "front_sample_gap_max_m": 0.002214607910523775,
+          "front_deepest": {
+            "point": [
+              0.005374191794544458,
+              1.2856481671333313,
+              -0.2333836480975151
+            ],
+            "cloth_front_z": -0.2331942266472388,
+            "outward_gap_m": 0.0001894214502763114
+          }
+        },
+        {
+          "mesh": "human_outfit_1_trim",
+          "material": "secondary",
+          "seam_vertices": 1154,
+          "bbox_min": [
+            -0.005649999715387821,
+            0.7978814244270325,
+            -0.26510539650917053
+          ],
+          "bbox_max": [
+            0.005649999715387821,
+            1.2927334308624268,
+            -0.18504026532173157
+          ],
+          "rays_hitting_cloth": 1154,
+          "front_of_cloth_vertices": 940,
+          "behind_cloth_vertices": 190,
+          "gap_min_m": -0.00019980683968165436,
+          "gap_max_m": 0.0017999662292377816,
+          "deepest": {
+            "point": [
+              1.0378880197959307e-18,
+              1.2813459634780884,
+              -0.23574085533618927
+            ],
+            "cloth_front_z": -0.23594066217587092,
+            "outward_gap_m": -0.00019980683968165436
+          },
+          "most_exposed": {
+            "point": [
+              -3.459627077311691e-19,
+              1.056557536125183,
+              -0.26489654183387756
+            ],
+            "cloth_front_z": -0.2630965756046398,
+            "outward_gap_m": 0.0017999662292377816
+          },
+          "front_triangle_samples": 7560,
+          "front_samples_buried": 0,
+          "front_sample_gap_min_m": 0.0001894214502763114,
+          "front_sample_gap_max_m": 0.002214607910523775,
+          "front_deepest": {
+            "point": [
+              0.005374191794544458,
+              1.2856481671333313,
+              -0.2333836480975151
+            ],
+            "cloth_front_z": -0.2331942266472388,
+            "outward_gap_m": 0.0001894214502763114
+          }
+        },
+        {
+          "mesh": "human_outfit_2_trim",
+          "material": "secondary",
+          "seam_vertices": 1154,
+          "bbox_min": [
+            -0.005649999715387821,
+            0.7978814244270325,
+            -0.26510539650917053
+          ],
+          "bbox_max": [
+            0.005649999715387821,
+            1.2927334308624268,
+            -0.18504026532173157
+          ],
+          "rays_hitting_cloth": 1154,
+          "front_of_cloth_vertices": 940,
+          "behind_cloth_vertices": 190,
+          "gap_min_m": -0.00019980683968165436,
+          "gap_max_m": 0.0017999662292377816,
+          "deepest": {
+            "point": [
+              1.0378880197959307e-18,
+              1.2813459634780884,
+              -0.23574085533618927
+            ],
+            "cloth_front_z": -0.23594066217587092,
+            "outward_gap_m": -0.00019980683968165436
+          },
+          "most_exposed": {
+            "point": [
+              -3.459627077311691e-19,
+              1.056557536125183,
+              -0.26489654183387756
+            ],
+            "cloth_front_z": -0.2630965756046398,
+            "outward_gap_m": 0.0017999662292377816
+          },
+          "front_triangle_samples": 7560,
+          "front_samples_buried": 0,
+          "front_sample_gap_min_m": 0.0001894214502763114,
+          "front_sample_gap_max_m": 0.002214607910523775,
+          "front_deepest": {
+            "point": [
+              0.005374191794544458,
+              1.2856481671333313,
+              -0.2333836480975151
+            ],
+            "cloth_front_z": -0.2331942266472388,
+            "outward_gap_m": 0.0001894214502763114
+          }
+        }
+      ]
+    }
+  ]
+}

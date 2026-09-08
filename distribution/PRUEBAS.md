@@ -17,29 +17,44 @@ no se atribuyen a esta versión.
 - Puertas: 2578 equivalencias de cierre, 17117 de consultas de colisión y
   342 regresiones. Las mejoras de CPU se midieron en replays idénticos;
   sus porcentajes no representan una mejora equivalente de FPS.
+- Navegación: 5896 equivalencias y 1374 replays mantienen las rutas tras
+  reutilizar las distancias de selección. Práctica: seis combinaciones de rol
+  y modo, 157 controles sobre las casas generadas y las revanchas.
+- Cierre: hosting nativo 13/13 sin fugas; música 49/49 con PCM del mezclador.
+- Postura: 1457 controles de transición remota, más 8 de caché y 537 del actor.
+  El cambio suaviza crouch remoto no crítico. La cámara en primera persona,
+  la marca de picadura y los contactos conservan la pose exacta recibida.
 - Voz: PCM 4758, transporte de producción 212, Session 77 con captura
   sintética/Dummy. Contexto de UI 38 y selector 27. La sesión comprobó
   conservación de duración, tono agudo del mosquito y fin de frase, con enlace
   estabilizado previamente. No prueba arranque frío en cualquier red.
-- El micrófono real no se abrió durante estas automatizaciones. Los checks
-  iniciados desde el ejecutable reciben explícitamente --no-microphone.
+- El micrófono real no se abrió durante estas automatizaciones. Las pruebas
+  de escena principal usan --no-microphone; los fixtures --script deshabilitan
+  el hardware desde VoiceSession, también dentro del ejecutable.
 
 ## Cierre pendiente
 
 La prenda humana se corrigió en su fuente editable y en el GLB; los últimos
 nueve casos de cuello quedaron corregidos. La exportación y consumidor finales
-cubren 285 poses y 13176 pares con cero contactos inesperados, y las
-comprobaciones de contacto de herramientas pasan 972/972. Sigue pendiente
-la galería de personalización y la revisión visual continua de animaciones.
+de fit4 cubren 285 poses y 13176 pares con cero contactos inesperados, y las
+comprobaciones de contacto de herramientas pasan 972/972 también en trim2.
+El ribete central posterior pasó 2691 comprobaciones de invariancia y un
+recálculo de sus tres componentes en 243 poses humanas: 5832 pares sin
+contactos. Las 42 poses de mosquito se conservan por identidad; no son 285
+capturas nuevas. La secuencia continua de 21 segundos pasó 4484 controles,
+con doce gestos completos. Sigue pendiente terminar la galería de
+personalización y su revisión visual; esas comprobaciones no aprueban todas
+las combinaciones o todas las animaciones posibles.
 
-También están pendientes el recorrido completo de práctica con mapas nuevos,
-la exportación, pruebas del EXE, matriz final de red y vídeo. BUILD identificará
+También están pendientes la exportación, pruebas del EXE, matriz final de red
+y vídeo. BUILD identificará
 el hash y los archivos exactos del paquete cuando exista.
 
 ## Rendimiento y conexión
 
 La casa generada de 16 actores todavía no cumple 60 FPS sostenidos en la
-medición de estrés a 1080p sobre RTX 3060 Ti / Ryzen 5600X. Se midió Forward+
+medición a 1080p sobre RTX 3060 Ti / Ryzen 5600X, incluso sin órdenes globales
+de puertas. Se midió Forward+
 como alternativa, con menor coste de dibujo, pero cambia la iluminación y
 sigue siendo sólo un diagnóstico; el proyecto conserva Compatibility.
 No se certifican requisitos mínimos ni rendimiento en otros equipos.

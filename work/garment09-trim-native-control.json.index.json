@@ -1,0 +1,49 @@
+{
+	"bytes": 3025835,
+	"coverage": {
+		"case_ids": [
+			"human-0"
+		],
+		"expected_totals": {
+			"human": 243,
+			"mosquito": 42
+		},
+		"requested_ranges": {
+			"human": {
+				"end_exclusive": 1,
+				"start": 0,
+				"total": 243
+			}
+		},
+		"span_complete": true
+	},
+	"elapsed_seconds": 0.930863,
+	"file": "C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/game/../work/garment09-trim-native-control.json",
+	"format": "LMS_FACIAL_MOTION_08_PART",
+	"sha256": "e82ebd8c276952a83cd61a09b962af41078e08d40b8b18a306fe14e62b914a20",
+	"source_sha256": {
+		"res://assets/art/characters/human/human_lms06.glb": "90cd6a695b32c3b98395df8f8da496ee56ffebd6026db757c03f9006eb777a06",
+		"res://assets/art/characters/human/model.json": "dd6d1b28a9ff2b6956b5cb98f516b29ff1ca505ebbc6b14d74b87203dc2344fd",
+		"res://assets/art/characters/mosquito/model.json": "29379b78bfe59d231257bb560df2588c9542f25b560eea3c9858e35b836e7138",
+		"res://assets/art/characters/mosquito/mosquito_lms06.glb": "d249474f537b50594ff4f76ae5c97fc938d9e6d61cdc7fa91909db0bc860ac85",
+		"res://assets/art/characters/shared/character_skin.gd": "35a723b2de561de6b290a9578c0029e73cb5ce2cbfc0b20e47862ce1eb9d1a55",
+		"res://assets/art/characters/shared/facial_expression.gd": "4fa4869d70350b2918c5c919caf8ec7c3cc005bfbdf8d9890d8a57e85460a556",
+		"res://scripts/human_pose.gd": "36c69f5a2273db33950776e8c81153f3d5b76a28be6a944e7bbe4ea8ce794190",
+		"res://scripts/mosquito_pose.gd": "9cf62024a199b097f5649598a0934783d6affc47bf2beb7262ea05383221f8d9"
+	},
+	"summary": {
+		"base_tolerance_m": 0.00015,
+		"case_limit": 1,
+		"case_start": 0,
+		"cases": 1,
+		"checks": 84611,
+		"elapsed_before_serialization_seconds": 0.653786,
+		"export_complete": false,
+		"failures": [],
+		"geometries": 14,
+		"max_base_error_m": 0.0000261808363575256,
+		"native_compared_vertices": 37039,
+		"vertices": 37039
+	},
+	"version": 1
+}

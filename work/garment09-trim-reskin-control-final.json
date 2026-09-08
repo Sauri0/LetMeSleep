@@ -1,0 +1,596 @@
+{
+  "tolerance_m": 0.00015,
+  "controls": [
+    {
+      "tag": "old-native-controls",
+      "case": "human-0",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-1",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-2",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-3",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-4",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-5",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-6",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-7",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-8",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-9",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-10",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-11",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-12",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-13",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-14",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-15",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-16",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-17",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-18",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-19",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-20",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-21",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-22",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-23",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-24",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-25",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-26",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-0",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-1",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-2",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-3",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-4",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-5",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-6",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-7",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-8",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-9",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-10",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-11",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-12",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-13",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-14",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-15",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-16",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-17",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-18",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-19",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-20",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-21",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-22",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-23",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-24",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-25",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-26",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 952,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-0",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-1",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-2",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-3",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-4",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-5",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-6",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-7",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-8",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-9",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-10",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-11",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-12",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-13",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-14",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-15",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-16",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-17",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-18",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-19",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-20",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-21",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-22",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-23",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-24",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-25",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "old-native-controls",
+      "case": "human-26",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 1258,
+      "max_error_m": 2.3058933982058843e-07
+    },
+    {
+      "tag": "current-native-control",
+      "case": "human-0",
+      "mesh": "human_outfit_0_trim",
+      "vertices": 1962,
+      "max_error_m": 1.3242214353286881e-05
+    },
+    {
+      "tag": "current-native-control",
+      "case": "human-0",
+      "mesh": "human_outfit_1_trim",
+      "vertices": 1962,
+      "max_error_m": 1.3242214353286881e-05
+    },
+    {
+      "tag": "current-native-control",
+      "case": "human-0",
+      "mesh": "human_outfit_2_trim",
+      "vertices": 2268,
+      "max_error_m": 1.3242214353286881e-05
+    }
+  ],
+  "maximum_error_m": 1.3242214353286881e-05,
+  "current_control_supplied": true,
+  "complete_285": false
+}

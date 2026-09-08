@@ -1,0 +1,162 @@
+{
+  "format": "LMS_TRIM09_FACTORED_CLOSURE",
+  "source_sha256": {
+    "res://assets/art/characters/human/human_lms06.glb": "90cd6a695b32c3b98395df8f8da496ee56ffebd6026db757c03f9006eb777a06",
+    "res://assets/art/characters/human/model.json": "dd6d1b28a9ff2b6956b5cb98f516b29ff1ca505ebbc6b14d74b87203dc2344fd",
+    "res://assets/art/characters/mosquito/model.json": "29379b78bfe59d231257bb560df2588c9542f25b560eea3c9858e35b836e7138",
+    "res://assets/art/characters/mosquito/mosquito_lms06.glb": "d249474f537b50594ff4f76ae5c97fc938d9e6d61cdc7fa91909db0bc860ac85",
+    "res://assets/art/characters/shared/character_skin.gd": "35a723b2de561de6b290a9578c0029e73cb5ce2cbfc0b20e47862ce1eb9d1a55",
+    "res://assets/art/characters/shared/facial_expression.gd": "4fa4869d70350b2918c5c919caf8ec7c3cc005bfbdf8d9890d8a57e85460a556",
+    "res://scripts/human_pose.gd": "36c69f5a2273db33950776e8c81153f3d5b76a28be6a944e7bbe4ea8ce794190",
+    "res://scripts/mosquito_pose.gd": "9cf62024a199b097f5649598a0934783d6affc47bf2beb7262ea05383221f8d9"
+  },
+  "original_native_index": {
+    "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\index.json",
+    "sha256": "4cb87fb72873e8b7ad7754e392167df2f91807ab9fa0a9a45b6ea018b184f478",
+    "poses": 285
+  },
+  "original_consumer_index": {
+    "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-consumer-fit4\\consumer-index.json",
+    "sha256": "07475bea3a146a35b79cff53c8f5bd7567358515fdef671457b60fa93af4441f",
+    "case_pairs": 13176,
+    "unexpected_contacts": 0
+  },
+  "glb_invariance": {
+    "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-invariance.json",
+    "sha256": "0ec3f6d197e50d1e63aefa6d060875835f39d6231d20898a2271adce0baeecd4"
+  },
+  "native_control": {
+    "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-native-control.json",
+    "sha256": "e82ebd8c276952a83cd61a09b962af41078e08d40b8b18a306fe14e62b914a20",
+    "poses": 1
+  },
+  "skin_control": {
+    "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-reskin-control-final.json",
+    "sha256": "6a114d2fccd5b3e9d15c7641ca20e1e8995d71c6755879d70ad33b9c024535dc"
+  },
+  "reports": [
+    {
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-motion-final\\human-000-026.json",
+      "sha256": "6cd9eb884d64a4844f9042a1393043ec6f1ad1ee7a7330989a19d682b8015da4",
+      "cases": 27,
+      "pairs": 648,
+      "contacts": 0
+    },
+    {
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-motion-final\\human-027-053.json",
+      "sha256": "fea51d9e4b9cab736b6f6a4190e8f3704bde39c4531a0f0c90ddab4e847f781b",
+      "cases": 27,
+      "pairs": 648,
+      "contacts": 0
+    },
+    {
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-motion-final\\human-054-080.json",
+      "sha256": "5b26d2e2fcacce52936461d50026acaf518c2f8732c4533f24b4517210d18ec2",
+      "cases": 27,
+      "pairs": 648,
+      "contacts": 0
+    },
+    {
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-motion-final\\human-081-107.json",
+      "sha256": "9b3d4f0378336fd2fc86a9529010049ee31e631f4c32a9763578b331be04b65d",
+      "cases": 27,
+      "pairs": 648,
+      "contacts": 0
+    },
+    {
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-motion-final\\human-108-134.json",
+      "sha256": "8bfdd40735bcb326472cf560658d2f0fbf7b98690fe30da181db07575783f4e1",
+      "cases": 27,
+      "pairs": 648,
+      "contacts": 0
+    },
+    {
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-motion-final\\human-135-161.json",
+      "sha256": "eaf65c893f8dc4b112abea896c32e26e79110daf44981ec7c6eddaef120bb0b1",
+      "cases": 27,
+      "pairs": 648,
+      "contacts": 0
+    },
+    {
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-motion-final\\human-162-188.json",
+      "sha256": "b6322dd9ea87a72ea711c4c877b1b3544f35e99c4b889aeea2759ec8ce3aed28",
+      "cases": 27,
+      "pairs": 648,
+      "contacts": 0
+    },
+    {
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-motion-final\\human-189-215.json",
+      "sha256": "30d120f047edd5ae67a6f9cb5bd26fa4ec34c22185575749cdda648f2f1d949d",
+      "cases": 27,
+      "pairs": 648,
+      "contacts": 0
+    },
+    {
+      "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\garment09-trim-motion-final\\human-216-242.json",
+      "sha256": "0ce2d4127338576b6448f42102064e15e42c0660aff97e5780005c0fbdf1ece5",
+      "cases": 27,
+      "pairs": 648,
+      "contacts": 0
+    }
+  ],
+  "runs": [
+    {
+      "part": "human-000-026",
+      "seconds": 2.700322700002289,
+      "exit": 0
+    },
+    {
+      "part": "human-027-053",
+      "seconds": 2.863989400000719,
+      "exit": 0
+    },
+    {
+      "part": "human-054-080",
+      "seconds": 2.697851199998695,
+      "exit": 0
+    },
+    {
+      "part": "human-081-107",
+      "seconds": 2.738407199998619,
+      "exit": 0
+    },
+    {
+      "part": "human-108-134",
+      "seconds": 2.572501900001953,
+      "exit": 0
+    },
+    {
+      "part": "human-135-161",
+      "seconds": 2.869485800001712,
+      "exit": 0
+    },
+    {
+      "part": "human-162-188",
+      "seconds": 2.739014099999622,
+      "exit": 0
+    },
+    {
+      "part": "human-189-215",
+      "seconds": 2.601354699996591,
+      "exit": 0
+    },
+    {
+      "part": "human-216-242",
+      "seconds": 2.5524795000019367,
+      "exit": 0
+    }
+  ],
+  "changed_component_case_pairs": 5832,
+  "changed_components": 3,
+  "human_poses_recalculated": 243,
+  "mosquito_poses_retained_by_identity": 42,
+  "unexpected_contacts": 0,
+  "finite_pose_coverage_preserved": true,
+  "new_native285_export": false,
+  "limits": [
+    "Uses the original285 native world bone poses and morph-deformed invariant targets; only new trim is recalculated on CPU.",
+    "Every other mesh/trim triangle and skin driver is verified invariant. A current native pose verifies import order, topology and actual packed weights.",
+    "Floating-point comparison is bounded by the recorded native control; it is not bit-exact.",
+    "No new exhaustive gallery, all-continuous-pose, containment or visual approval is inferred."
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "before_sha256": "88db54d28af6a4225179c51c3b5179e6ae493a51357d51a872d8e13f0841ebac",
+  "after_sha256": "90cd6a695b32c3b98395df8f8da496ee56ffebd6026db757c03f9006eb777a06",
+  "checks": 2691,
+  "failures": 0,
+  "unchanged_complete_meshes": [
+    "human_accessory_1_mesh",
+    "human_accessory_2_mesh",
+    "human_accessory_3_mesh",
+    "human_beard_1_mesh",
+    "human_beard_2_mesh",
+    "human_brows_0_mesh",
+    "human_brows_1_mesh",
+    "human_brows_2_mesh",
+    "human_core_mesh",
+    "human_eyes_0_mesh",
+    "human_eyes_1_mesh",
+    "human_eyes_2_mesh",
+    "human_footwear_0_mesh",
+    "human_footwear_1_mesh",
+    "human_footwear_2_mesh",
+    "human_hair_0_mesh",
+    "human_hair_0_capped_mesh",
+    "human_hair_1_mesh",
+    "human_hair_1_capped_mesh",
+    "human_hair_2_mesh",
+    "human_hair_2_capped_mesh",
+    "human_head_mesh",
+    "human_mouth_0_mesh",
+    "human_mouth_1_mesh",
+    "human_mouth_2_mesh",
+    "human_mustache_1_mesh",
+    "human_mustache_2_mesh",
+    "human_outfit_0_mesh",
+    "human_outfit_1_mesh",
+    "human_outfit_2_mesh"
+  ],
+  "trim_components": [
+    {
+      "mesh": "human_outfit_0_trim_mesh",
+      "before_central_export_vertices": 144,
+      "after_central_export_vertices": 1154
+    },
+    {
+      "mesh": "human_outfit_1_trim_mesh",
+      "before_central_export_vertices": 144,
+      "after_central_export_vertices": 1154
+    },
+    {
+      "mesh": "human_outfit_2_trim_mesh",
+      "before_central_export_vertices": 144,
+      "after_central_export_vertices": 1154
+    }
+  ],
+  "scope": "Complete mesh positions/normals/UV/weights/morphs/materials/triangles exact for30meshes; noncentral trim exact. No motion clearance inferred."
+}

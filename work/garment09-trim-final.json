@@ -1,0 +1,78 @@
+{
+  "format": "LMS_GARMENT09_TRIM_FINAL",
+  "source_files": {
+    "art_source/characters/shared/garment_trim.py": "2d40b4b3c897694723c6b939f09ea6f122244b677e9d71869a5cc025ce3d64f1",
+    "art_source/export_presets/characters_trim_repair.py": "6739609ceb162e52f51c8dfd50c8e7579a16f7f434ed922f11f67ca7332b992b",
+    "art_source/export_presets/characters_selected_pipeline.py": "732de7ca67b39241bb11f07f5aae42304aaf2710371a8b50d4adce52273863f5",
+    "art_source/characters/human/human_lms06.blend": "b4185fb5d731ff4bd5b5ac09a1d6f74339d647347e6c7e1c8c0d021baddff6b5",
+    "art_source/characters/human/model.json": "dd6d1b28a9ff2b6956b5cb98f516b29ff1ca505ebbc6b14d74b87203dc2344fd",
+    "art_source/characters/human/manifest.json": "811cddbf6d6adba35f7b17cff1e071ab4f31b08021dc639b8cdb885b3dd16617",
+    "game/assets/art/characters/human/human_lms06.glb": "90cd6a695b32c3b98395df8f8da496ee56ffebd6026db757c03f9006eb777a06",
+    "game/assets/art/characters/human/model.json": "dd6d1b28a9ff2b6956b5cb98f516b29ff1ca505ebbc6b14d74b87203dc2344fd",
+    "game/assets/art/characters/human/rig_contract.json": "27dd6ea469927ce88f5dbcfdb9e18d41d791708c48eb3e919b78257e3ad58ab1",
+    "game/assets/art/characters/shared/character_skin.gd": "35a723b2de561de6b290a9578c0029e73cb5ce2cbfc0b20e47862ce1eb9d1a55",
+    "game/scripts/human_pose.gd": "36c69f5a2273db33950776e8c81153f3d5b76a28be6a944e7bbe4ea8ce794190",
+    "game/scripts/actor_view.gd": "90bf7163a767f6ccfc0223aae625e7541dfe61f49ede67e8fb0ca473f37f6a0c",
+    "game/scripts/human_presentation.gd": "cc60bf97eafc6a0350f28089ae964b2961a03a088bbf39d17af2a3347c299d02",
+    "game/tests/garment09_continuous_views.gd": "7f1c6fc93ccc80321be0338e8eeae8f87a71591a652f1d6fc0d29f167d8f4f3d"
+  },
+  "current_glb_sha256": "90cd6a695b32c3b98395df8f8da496ee56ffebd6026db757c03f9006eb777a06",
+  "continuous_before": "outputs/0.9-garment-continuous-final1",
+  "continuous_after": "outputs/0.9-garment-trim/continuous-after2",
+  "continuous_video_sha256": "95c02b3ef5a8d18d4af8a018e5a1441ec27ce962c95e9eede0e276e09cf03f4c",
+  "continuous_frames": 630,
+  "continuous_seconds": 21,
+  "continuous_checks": 4484,
+  "continuous_failures": 0,
+  "authority_inputs_results_identical": true,
+  "presentation_comparison": {
+    "crouch": {
+      "before_max_vertex_step_m": 0.149287313222885,
+      "after_max_vertex_step_m": 0.101007796823978
+    },
+    "stand": {
+      "before_max_vertex_step_m": 0.151742205023766,
+      "after_max_vertex_step_m": 0.101228661835194
+    },
+    "wave": {
+      "before_max_vertex_step_m": 0.060761172324419,
+      "after_max_vertex_step_m": 0.060761172324419
+    },
+    "celebrate": {
+      "before_max_vertex_step_m": 0.122105196118355,
+      "after_max_vertex_step_m": 0.122105196118355
+    }
+  },
+  "comparison_scope": "Remote noncritical crouch; no FPS/focus/strike/throw. Includes actual rig displacement, not isolated cloth deformation.",
+  "invariance": {
+    "path": "work/garment09-trim-invariance.json",
+    "sha256": "0ec3f6d197e50d1e63aefa6d060875835f39d6231d20898a2271adce0baeecd4",
+    "checks": 2691
+  },
+  "triangle_support": {
+    "path": "work/garment09-trim2-depth-interiors.json",
+    "sha256": "1fbbb84722606ce5973856a69e6d4405d878f322b0353ed92ad985beb09bbf0f",
+    "samples_per_outfit": 7560,
+    "buried_front_samples": 0
+  },
+  "factored_motion": {
+    "path": "work/garment09-trim-motion-final/index.json",
+    "sha256": "7307cff49bb212a4ad6a4dd5003ff5fd52dd29588549d942dba1bca5255e29bf",
+    "recalculated_human_poses": 243,
+    "mosquito_poses_by_identity": 42,
+    "changed_pairs": 5832,
+    "contacts": 0
+  },
+  "preserved_before": "outputs/0.9-garment-trim/source-fit4",
+  "authoring_source_vertices_per_piping": 1104,
+  "export_vertices_per_piping": 1154,
+  "extra_triangles_per_visible_outfit": 1952,
+  "default_source_triangles": 54644,
+  "visual_approved": false,
+  "limits": [
+    "The earlier native972 contact gate belongs to trim1 before local subdivision; do not relabel its GLB hash as trim2.",
+    "Finite-pose closure reuses native matrices and unchanged geometry with a current control; it is not285 newly exported/rendered poses.",
+    "The clip covers three representative outfit/tool combinations from the front; hands/broom can reach the frame boundary.",
+    "Angular shoulders and the unsmoothed20Hz emote presentation remain recorded limitations. No further art change is made."
+  ]
+}

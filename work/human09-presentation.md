@@ -1,7 +1,8 @@
 # Remote crouch presentation
 
-Status: runtime frozen; parse and focused/regression tests passed. Full native
-before/after garment recording is still pending with Visual.
+Status: runtime frozen and integrated by Root in commit `55b4e5c`; parse and
+focused/regression tests passed. Full native before/after garment recording is
+owned by Visual and remains separate from this technical gate.
 
 ## Observed defect
 

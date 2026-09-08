@@ -1,0 +1,161 @@
+{
+  "format": "LMS_TRIM09_REUSED_NATIVE_MOTION",
+  "part": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-081-107.json",
+  "part_sha256": "8e7a8567f29daffa157ddb1bfd15d8281272ca2637ec79be11b5261ed3491297",
+  "analyzer_sha256": "407d1be61363517542aacc85f4f275a91d1b71a2d33f85f4b945ce9eff6b8bfc",
+  "reskin_script_sha256": "7fcf614620b0c4c7e00f343b1bee22db09be4b4afd4a2cbb36a89f77e6febe6b",
+  "kernel_sha256": "775a16376e4f223966725b38f2bc37dff1f89ece4e1e71f2f98da0a31380074f",
+  "current_glb_sha256": "90cd6a695b32c3b98395df8f8da496ee56ffebd6026db757c03f9006eb777a06",
+  "native_control_sha256": "e82ebd8c276952a83cd61a09b962af41078e08d40b8b18a306fe14e62b914a20",
+  "invariance_sha256": "0ec3f6d197e50d1e63aefa6d060875835f39d6231d20898a2271adce0baeecd4",
+  "reskin_control_sha256": "6a114d2fccd5b3e9d15c7641ca20e1e8995d71c6755879d70ad33b9c024535dc",
+  "cases": [
+    {
+      "id": "human-81",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-82",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-83",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-84",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-85",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-86",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-87",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-88",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-89",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-90",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-91",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-92",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-93",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-94",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-95",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-96",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-97",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-98",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-99",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-100",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-101",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-102",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-103",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-104",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-105",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-106",
+      "pairs": 24,
+      "contacts": 0
+    },
+    {
+      "id": "human-107",
+      "pairs": 24,
+      "contacts": 0
+    }
+  ],
+  "evaluated_changed_component_pairs": 648,
+  "candidate_triangle_pairs": 0,
+  "contacts": [],
+  "unexpected_contacts": 0,
+  "elapsed_seconds": 2.29040370000439,
+  "basis": "Current imported trim topology/weights and GLB rest positions; frozen native world bone matrices; original invariant head geometry and morphs.",
+  "limits": [
+    "Recalculated CPU trim geometry, not285 newly rendered or newly exported poses.",
+    "Float JSON precision1e-7; native control maximum error is recorded, not bit-exact.",
+    "Only declared changed-component semantic pairs are retested. Prior finite-pose clearance is reused outside those components via complete GLB invariance.",
+    "No all-continuous-pose, containment or visual approval."
+  ]
+}
