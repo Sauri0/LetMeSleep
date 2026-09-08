@@ -1,0 +1,25 @@
+{
+  "name": "render09-forward-linear-pilot",
+  "exe_sha256": "446E08F71624052572F96DE9031850BA96382CE6752ADDE38BB955B0A49BED01",
+  "source": true,
+  "arguments": [
+    "--path",
+    "\"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\game\"",
+    "--audio-driver",
+    "Dummy",
+    "--rendering-method",
+    "forward_plus",
+    "--rendering-driver",
+    "vulkan",
+    "--script",
+    "res://tests/render09_backend_probe.gd",
+    "--",
+    "--linear-tonemap",
+    "--output=C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/outputs/0.9-render-forward-linear-pilot"
+  ],
+  "started_utc": "2026-09-08T13:29:36.5660389Z",
+  "finished_utc": "2026-09-08T13:29:40.3440145Z",
+  "exit_code": 0,
+  "stderr_bytes": 0,
+  "passed": true
+}

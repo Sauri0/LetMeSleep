@@ -6,10 +6,12 @@ const Maps = preload("res://scripts/map_catalog.gd")
 var output := ""
 var world: Node3D
 var records: Array[Dictionary] = []
+var linear_tonemap := false
 
 func _initialize() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--output="): output=argument.trim_prefix("--output=")
+		if argument=="--linear-tonemap": linear_tonemap=true
 	_run.call_deferred()
 
 func _median(values: Array[float]) -> float:
@@ -60,6 +62,7 @@ func _run() -> void:
 	root.add_child(world)
 	world.build()
 	world.load_map("house-v1-1")
+	if linear_tonemap: world.scene_environment.tonemap_mode=Environment.TONE_MAPPER_LINEAR
 	world.set_process(false)
 	world.audio_fx.set_process(false)
 	var data: Dictionary=world.map_data
@@ -77,6 +80,8 @@ func _run() -> void:
 	]
 	await _capture("native",views)
 	var report: Dictionary={"scope":"static environment renderer diagnostic; no actors, UI, simulation, gameplay FPS or visual approval","map_id":world.current_map,"fingerprint":data.fingerprint,"texture_size":root.get_texture().get_size(),"window_size":root.size,"adapter":RenderingServer.get_video_adapter_name(),"renderer":RenderingServer.get_current_rendering_method(),"rendering_driver":RenderingServer.get_current_rendering_driver_name(),"records":records,"visual_review":"pending","fixture_sha256":FileAccess.get_sha256("res://tests/render09_backend_probe.gd")}
+	report["tonemap_mode"]=world.scene_environment.tonemap_mode
+	report["linear_tonemap_override"]=linear_tonemap
 	FileAccess.open(output+"/report.json",FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
 	print("RENDER09_BACKEND "+JSON.stringify(report))
 	world.queue_free()
