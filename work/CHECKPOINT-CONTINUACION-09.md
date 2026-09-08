@@ -146,6 +146,30 @@ continuar desde `coverage.json`, que es la fuente de avance. No alterar
 dependencias incluidas en el plan durante las capturas. La validación técnica
 no sustituye los registros de inspección visual con hashes de cada hoja.
 
+## Pausa de galería y correcciones derivadas
+
+La galería trim2 se detuvo tras la tanda 3: 48 trabajos, 1152 cabezas,
+9216 vistas y 192 PNG. Conserva su plan y hashes como baseline diagnosticado,
+no como candidato final. Ver `outputs/0.9-facial-gallery-baseline48`.
+Se confirmó que las gafas A2 invaden la nariz hasta 37 mm y sus patillas
+terminan al menos 14,61 mm antes de la cabeza. Las exenciones genéricas de
+contacto ocultaban ese problema; se prepara una reparación sólo de A2 y
+un control específico de nariz/orejas y vecinos faciales. No continuar el
+plan viejo con nuevos hashes. Visual conserva el before en
+`outputs/0.9-glasses-fit/source-trim2` y prepara candidato separado.
+
+Perfil ampliado integrado en `86977c9`: Client/World/Actor y física separados,
+con registro de overhead. Su carga llevó a catch-up; no usar esos FPS como
+benchmark limpio. Hay trabajo evitable en cápsulas ocultas, selección de
+visibilidad y múltiples actualizaciones HUD entre ticks del mismo cuadro.
+
+La guardia de `CharacterSkin.set_first_person` está integrada en `9311bf0`:
+1422 comparaciones correctas con el setter anterior, mismas partes visibles,
+446 a 37 pasadas de selección por rol en el fixture. Sim trabaja en la
+guardia de dimensiones del scaffold en ActorView; Director en el drenaje
+del HUD desde Client._process. Ambos requieren terminar sus pruebas antes
+de la próxima medición sin instrumentación y del nuevo plan de galería.
+
 ## Antes de una entrega nueva
 
 - Completar la revisión continua de animaciones y la galería facial completa;
