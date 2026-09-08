@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "scope": "Three native source pages only; neutral full-catalog timing is extrapolated, visual approval remains pending",
+  "plan_sha256": "b983d027192dfc2b5c11e74d492d307b49c396e1f30bc432b451f23b5b3253f5",
+  "rows": [
+    {
+      "job": "neutral-human-000",
+      "elapsed_seconds": 13.0648697,
+      "heads": 24,
+      "tiles": 192,
+      "sheets": 4,
+      "capture_status": "validated",
+      "visual_review_status": "pending"
+    },
+    {
+      "job": "neutral-mosquito-000",
+      "elapsed_seconds": 12.4788318,
+      "heads": 24,
+      "tiles": 192,
+      "sheets": 4,
+      "capture_status": "validated",
+      "visual_review_status": "pending"
+    },
+    {
+      "job": "neutral-mosquito-010",
+      "elapsed_seconds": 5.3143999,
+      "heads": 3,
+      "tiles": 24,
+      "sheets": 4,
+      "capture_status": "validated",
+      "visual_review_status": "pending"
+    }
+  ],
+  "neutral_extrapolated_seconds": 1724.0168212999997,
+  "review_time_included": false,
+  "all_neutral_pages_captured": false,
+  "visual_review_status": "pending"
+}

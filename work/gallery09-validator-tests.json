@@ -1,0 +1,272 @@
+{
+  "schema": 1,
+  "scope": "Offline validator tests only. Synthetic PNGs are not native game captures or visual approval. No Godot launched.",
+  "checks": 52,
+  "failures": 0,
+  "tests": [
+    {
+      "test": "synthetic valid human page 0, including partial tail",
+      "passed": true,
+      "result": "accepted"
+    },
+    {
+      "test": "synthetic valid human page 121, including partial tail",
+      "passed": true,
+      "result": "accepted"
+    },
+    {
+      "test": "synthetic valid mosquito page 0, including partial tail",
+      "passed": true,
+      "result": "accepted"
+    },
+    {
+      "test": "synthetic valid mosquito page 10, including partial tail",
+      "passed": true,
+      "result": "accepted"
+    },
+    {
+      "test": "synthetic single-head multistate dimensions",
+      "passed": true,
+      "result": "accepted"
+    },
+    {
+      "test": "six angles rejected",
+      "passed": true,
+      "result": "Exact eight-angle schema with projected head framing required"
+    },
+    {
+      "test": "wrong native dimensions rejected",
+      "passed": true,
+      "result": "Native tile dimensions changed"
+    },
+    {
+      "test": "camera pitch altered rejected",
+      "passed": true,
+      "result": "Wrong camera pitch contract"
+    },
+    {
+      "test": "wrong page rejected",
+      "passed": true,
+      "result": "Wrong page identity"
+    },
+    {
+      "test": "unrequested state rejected",
+      "passed": true,
+      "result": "Wrong expression states"
+    },
+    {
+      "test": "incomplete page count rejected",
+      "passed": true,
+      "result": "Incomplete page"
+    },
+    {
+      "test": "changed category order rejected",
+      "passed": true,
+      "result": "Changed mixed-radix category order"
+    },
+    {
+      "test": "failed capture rejected",
+      "passed": true,
+      "result": "Capture gate failed"
+    },
+    {
+      "test": "capture cannot assert visual approval",
+      "passed": true,
+      "result": "Capture must not invent visual review"
+    },
+    {
+      "test": "missing record rejected",
+      "passed": true,
+      "result": "Missing, duplicate or foreign record"
+    },
+    {
+      "test": "duplicate record rejected",
+      "passed": true,
+      "result": "Missing, duplicate or foreign record"
+    },
+    {
+      "test": "mismatched head ID rejected",
+      "passed": true,
+      "result": "Head ID does not match ordinal"
+    },
+    {
+      "test": "wrong cosmetic ordinal rejected",
+      "passed": true,
+      "result": "Appearance does not match exhaustive ordinal"
+    },
+    {
+      "test": "legacy combined face rejected",
+      "passed": true,
+      "result": "Wrong independent facial pieces"
+    },
+    {
+      "test": "missing expression channel rejected",
+      "passed": true,
+      "result": "Incomplete expression channels"
+    },
+    {
+      "test": "non-neutral expression rejected",
+      "passed": true,
+      "result": "Neutral catalog contains a non-neutral expression"
+    },
+    {
+      "test": "missing angle tile rejected",
+      "passed": true,
+      "result": "Missing or duplicate tile"
+    },
+    {
+      "test": "duplicate angle tile rejected",
+      "passed": true,
+      "result": "Missing or duplicate tile"
+    },
+    {
+      "test": "blank first avatar rejected",
+      "passed": true,
+      "result": "Blank avatar tile"
+    },
+    {
+      "test": "missing source hashes rejected",
+      "passed": true,
+      "result": "Incomplete source identity in report"
+    },
+    {
+      "test": "changed source hash rejected",
+      "passed": true,
+      "result": "Report does not match frozen source"
+    },
+    {
+      "test": "missing sheet rejected",
+      "passed": true,
+      "result": "Missing sheets"
+    },
+    {
+      "test": "reused sheet file rejected",
+      "passed": true,
+      "result": "Repeated sheet file"
+    },
+    {
+      "test": "sheet path traversal rejected",
+      "passed": true,
+      "result": "Sheet filename escapes job directory"
+    },
+    {
+      "test": "incorrect last head rejected",
+      "passed": true,
+      "result": "Sheet range differs from records"
+    },
+    {
+      "test": "incorrect layout rejected",
+      "passed": true,
+      "result": "Sheet layout differs from capture contract"
+    },
+    {
+      "test": "old eight-angle schema without head bounds rejected",
+      "passed": true,
+      "result": "Exact eight-angle schema with projected head framing required"
+    },
+    {
+      "test": "framing gate missing rejected",
+      "passed": true,
+      "result": "Missing useful-viewport framing contract"
+    },
+    {
+      "test": "antenna or head part omitted rejected",
+      "passed": true,
+      "result": "Projected bounds omit a selected head/antenna part"
+    },
+    {
+      "test": "clipped projected head rejected",
+      "passed": true,
+      "result": "Head part exceeds useful capture rectangle"
+    },
+    {
+      "test": "head rectangle beyond margin rejected",
+      "passed": true,
+      "result": "Projected head rectangle exceeds explicit margins"
+    },
+    {
+      "test": "unreliable native skin bake rejected",
+      "passed": true,
+      "result": "Deformation palette differs from native geometry"
+    },
+    {
+      "test": "separately articulated proboscis omitted rejected",
+      "passed": true,
+      "result": "Projected bounds omit the separately articulated proboscis"
+    },
+    {
+      "test": "truncated PNG rejected",
+      "passed": true,
+      "result": "Truncated PNG: missing chunk or IEND"
+    },
+    {
+      "test": "corrupt PNG CRC rejected",
+      "passed": true,
+      "result": "PNG chunk CRC mismatch"
+    },
+    {
+      "test": "extra PNG bytes rejected",
+      "passed": true,
+      "result": "Data after PNG IEND"
+    },
+    {
+      "test": "wrong full sheet size rejected",
+      "passed": true,
+      "result": "Unexpected sheet dimensions"
+    },
+    {
+      "test": "real historical six-view page rejected as obsolete",
+      "passed": true,
+      "result": "Exact eight-angle schema with projected head framing required"
+    },
+    {
+      "test": "historical first-frame blank evidence retained",
+      "passed": true,
+      "result": "accepted"
+    },
+    {
+      "test": "unchanged frozen input accepted",
+      "passed": true,
+      "result": "accepted"
+    },
+    {
+      "test": "changed executable hash rejected",
+      "passed": true,
+      "result": "Executable changed; create a new plan and output directory."
+    },
+    {
+      "test": "changed source hash rejected before launch",
+      "passed": true,
+      "result": "Source/import changed: work/gallery09-validator-h12luqfj/synthetic-source.txt"
+    },
+    {
+      "test": "matching GLB and compiled import accepted",
+      "passed": true,
+      "result": "accepted"
+    },
+    {
+      "test": "stale compiled model import rejected",
+      "passed": true,
+      "result": "Model GLB has not been imported at its current bytes"
+    },
+    {
+      "test": "changed compiled cache rejected",
+      "passed": true,
+      "result": "Imported model cache differs from Godot import metadata"
+    },
+    {
+      "test": "complete catalog remains 133 pages and 25272 tiles",
+      "passed": true,
+      "result": "accepted"
+    },
+    {
+      "test": "11 original expressive witnesses retained",
+      "passed": true,
+      "result": "accepted"
+    }
+  ],
+  "source_sha256": {
+    "work/gallery09-manifest.py": "672d36409298459dec611db9195fcdb505b129c5c323ee51af24f64bc586aec6",
+    "work/gallery09-validator-tests.py": "821bb1206521b3039f8d1a4d8640691f8b7953495e45adffb8a5ce2aff611a59"
+  }
+}
