@@ -1,0 +1,7 @@
+{
+  "format": "LMS_FACIAL09_CONSUMER_SYNTHETIC_TESTS",
+  "checks": 972,
+  "failures": [],
+  "analyzer_sha256": "775a16376e4f223966725b38f2bc37dff1f89ece4e1e71f2f98da0a31380074f",
+  "scope": "Synthetic numeric regressions plus historical schema validation; no current game geometry certification."
+}

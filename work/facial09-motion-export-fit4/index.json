@@ -1,0 +1,863 @@
+{
+    "format":  "LMS_FACIAL_MOTION_08_INDEX",
+    "version":  1,
+    "complete":  true,
+    "expected_totals":  {
+                            "human":  243,
+                            "mosquito":  42
+                        },
+    "executable":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\tools\\godot-4.5.2\\Godot_v4.5.2-stable_win64_console.exe",
+    "executable_sha256":  "446E08F71624052572F96DE9031850BA96382CE6752ADDE38BB955B0A49BED01",
+    "fixture":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\game\\tests\\facial_parts08_motion_export.gd",
+    "fixture_sha256":  "5C66BE8517CA36A77B831B051DCBB42F2AC71A0EA7EB7648E5F7D51D596CA624",
+    "packed":  false,
+    "max_process_seconds":  55,
+    "started_utc":  "2026-09-08T12:39:30.5840215Z",
+    "parts":  [
+                  {
+                      "label":  "human-000-026",
+                      "role":  "human",
+                      "start":  0,
+                      "count":  27,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-000-026.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-000-026.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-000-026.stderr.log",
+                      "verified":  true,
+                      "pid":  28996,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  4.923985,
+                      "sha256":  "C9AA5B90EEC0795E08633D3FEEE79E627E71765CF8401CF71FBD0303CFC90EFB",
+                      "bytes":  12856817,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "human-0",
+                                                        "human-1",
+                                                        "human-2",
+                                                        "human-3",
+                                                        "human-4",
+                                                        "human-5",
+                                                        "human-6",
+                                                        "human-7",
+                                                        "human-8",
+                                                        "human-9",
+                                                        "human-10",
+                                                        "human-11",
+                                                        "human-12",
+                                                        "human-13",
+                                                        "human-14",
+                                                        "human-15",
+                                                        "human-16",
+                                                        "human-17",
+                                                        "human-18",
+                                                        "human-19",
+                                                        "human-20",
+                                                        "human-21",
+                                                        "human-22",
+                                                        "human-23",
+                                                        "human-24",
+                                                        "human-25",
+                                                        "human-26"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "human":  {
+                                                                              "end_exclusive":  27,
+                                                                              "start":  0,
+                                                                              "total":  243
+                                                                          }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  27,
+                                      "case_start":  0,
+                                      "cases":  27,
+                                      "checks":  78845,
+                                      "elapsed_before_serialization_seconds":  1.54108,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  180,
+                                      "max_base_error_m":  0.0000261808363575256,
+                                      "native_compared_vertices":  334269,
+                                      "vertices":  334269
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-000-026.json.index.json"
+                  },
+                  {
+                      "label":  "human-027-053",
+                      "role":  "human",
+                      "start":  27,
+                      "count":  27,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-027-053.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-027-053.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-027-053.stderr.log",
+                      "verified":  true,
+                      "pid":  20564,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  4.9047582,
+                      "sha256":  "7873E8CF53FF57243D2E20625F6BC953D9E00D6850DEE43DECA8BD570007A414",
+                      "bytes":  12856255,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "human-27",
+                                                        "human-28",
+                                                        "human-29",
+                                                        "human-30",
+                                                        "human-31",
+                                                        "human-32",
+                                                        "human-33",
+                                                        "human-34",
+                                                        "human-35",
+                                                        "human-36",
+                                                        "human-37",
+                                                        "human-38",
+                                                        "human-39",
+                                                        "human-40",
+                                                        "human-41",
+                                                        "human-42",
+                                                        "human-43",
+                                                        "human-44",
+                                                        "human-45",
+                                                        "human-46",
+                                                        "human-47",
+                                                        "human-48",
+                                                        "human-49",
+                                                        "human-50",
+                                                        "human-51",
+                                                        "human-52",
+                                                        "human-53"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "human":  {
+                                                                              "end_exclusive":  54,
+                                                                              "start":  27,
+                                                                              "total":  243
+                                                                          }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  27,
+                                      "case_start":  27,
+                                      "cases":  27,
+                                      "checks":  78845,
+                                      "elapsed_before_serialization_seconds":  1.618673,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  180,
+                                      "max_base_error_m":  0.0000261808363575256,
+                                      "native_compared_vertices":  334269,
+                                      "vertices":  334269
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-027-053.json.index.json"
+                  },
+                  {
+                      "label":  "human-054-080",
+                      "role":  "human",
+                      "start":  54,
+                      "count":  27,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-054-080.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-054-080.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-054-080.stderr.log",
+                      "verified":  true,
+                      "pid":  38500,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  4.3174258,
+                      "sha256":  "6C4EEE6013E90D71694799AC208ECB142CD297C4880A958FC52D4D3F2D7BFA71",
+                      "bytes":  12858279,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "human-54",
+                                                        "human-55",
+                                                        "human-56",
+                                                        "human-57",
+                                                        "human-58",
+                                                        "human-59",
+                                                        "human-60",
+                                                        "human-61",
+                                                        "human-62",
+                                                        "human-63",
+                                                        "human-64",
+                                                        "human-65",
+                                                        "human-66",
+                                                        "human-67",
+                                                        "human-68",
+                                                        "human-69",
+                                                        "human-70",
+                                                        "human-71",
+                                                        "human-72",
+                                                        "human-73",
+                                                        "human-74",
+                                                        "human-75",
+                                                        "human-76",
+                                                        "human-77",
+                                                        "human-78",
+                                                        "human-79",
+                                                        "human-80"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "human":  {
+                                                                              "end_exclusive":  81,
+                                                                              "start":  54,
+                                                                              "total":  243
+                                                                          }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  27,
+                                      "case_start":  54,
+                                      "cases":  27,
+                                      "checks":  78845,
+                                      "elapsed_before_serialization_seconds":  1.590173,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  180,
+                                      "max_base_error_m":  0.0000261805435002316,
+                                      "native_compared_vertices":  334269,
+                                      "vertices":  334269
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-054-080.json.index.json"
+                  },
+                  {
+                      "label":  "human-081-107",
+                      "role":  "human",
+                      "start":  81,
+                      "count":  27,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-081-107.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-081-107.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-081-107.stderr.log",
+                      "verified":  true,
+                      "pid":  37920,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  4.6814741999999994,
+                      "sha256":  "8E7A8567F29DAFFA157DDB1BFD15D8281272CA2637EC79BE11B5261ED3491297",
+                      "bytes":  12859142,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "human-81",
+                                                        "human-82",
+                                                        "human-83",
+                                                        "human-84",
+                                                        "human-85",
+                                                        "human-86",
+                                                        "human-87",
+                                                        "human-88",
+                                                        "human-89",
+                                                        "human-90",
+                                                        "human-91",
+                                                        "human-92",
+                                                        "human-93",
+                                                        "human-94",
+                                                        "human-95",
+                                                        "human-96",
+                                                        "human-97",
+                                                        "human-98",
+                                                        "human-99",
+                                                        "human-100",
+                                                        "human-101",
+                                                        "human-102",
+                                                        "human-103",
+                                                        "human-104",
+                                                        "human-105",
+                                                        "human-106",
+                                                        "human-107"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "human":  {
+                                                                              "end_exclusive":  108,
+                                                                              "start":  81,
+                                                                              "total":  243
+                                                                          }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  27,
+                                      "case_start":  81,
+                                      "cases":  27,
+                                      "checks":  78845,
+                                      "elapsed_before_serialization_seconds":  1.537985,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  180,
+                                      "max_base_error_m":  0.0000261226032307604,
+                                      "native_compared_vertices":  334269,
+                                      "vertices":  334269
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-081-107.json.index.json"
+                  },
+                  {
+                      "label":  "human-108-134",
+                      "role":  "human",
+                      "start":  108,
+                      "count":  27,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-108-134.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-108-134.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-108-134.stderr.log",
+                      "verified":  true,
+                      "pid":  30576,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  4.4041437,
+                      "sha256":  "DF1BACA4C2A6F825FA4FC003EBBA81DCCB4CF8ABD0DE264FE6D50670F594086B",
+                      "bytes":  12871729,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "human-108",
+                                                        "human-109",
+                                                        "human-110",
+                                                        "human-111",
+                                                        "human-112",
+                                                        "human-113",
+                                                        "human-114",
+                                                        "human-115",
+                                                        "human-116",
+                                                        "human-117",
+                                                        "human-118",
+                                                        "human-119",
+                                                        "human-120",
+                                                        "human-121",
+                                                        "human-122",
+                                                        "human-123",
+                                                        "human-124",
+                                                        "human-125",
+                                                        "human-126",
+                                                        "human-127",
+                                                        "human-128",
+                                                        "human-129",
+                                                        "human-130",
+                                                        "human-131",
+                                                        "human-132",
+                                                        "human-133",
+                                                        "human-134"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "human":  {
+                                                                              "end_exclusive":  135,
+                                                                              "start":  108,
+                                                                              "total":  243
+                                                                          }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  27,
+                                      "case_start":  108,
+                                      "cases":  27,
+                                      "checks":  78845,
+                                      "elapsed_before_serialization_seconds":  1.624127,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  180,
+                                      "max_base_error_m":  0.0000262387839029543,
+                                      "native_compared_vertices":  334269,
+                                      "vertices":  334269
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-108-134.json.index.json"
+                  },
+                  {
+                      "label":  "human-135-161",
+                      "role":  "human",
+                      "start":  135,
+                      "count":  27,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-135-161.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-135-161.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-135-161.stderr.log",
+                      "verified":  true,
+                      "pid":  6016,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  4.7731835999999994,
+                      "sha256":  "A804C9DA14305F66F9B9C7A1B2B777DC8890B27E3418E1F3D9BA03BCEC6DB0B8",
+                      "bytes":  12911005,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "human-135",
+                                                        "human-136",
+                                                        "human-137",
+                                                        "human-138",
+                                                        "human-139",
+                                                        "human-140",
+                                                        "human-141",
+                                                        "human-142",
+                                                        "human-143",
+                                                        "human-144",
+                                                        "human-145",
+                                                        "human-146",
+                                                        "human-147",
+                                                        "human-148",
+                                                        "human-149",
+                                                        "human-150",
+                                                        "human-151",
+                                                        "human-152",
+                                                        "human-153",
+                                                        "human-154",
+                                                        "human-155",
+                                                        "human-156",
+                                                        "human-157",
+                                                        "human-158",
+                                                        "human-159",
+                                                        "human-160",
+                                                        "human-161"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "human":  {
+                                                                              "end_exclusive":  162,
+                                                                              "start":  135,
+                                                                              "total":  243
+                                                                          }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  27,
+                                      "case_start":  135,
+                                      "cases":  27,
+                                      "checks":  78845,
+                                      "elapsed_before_serialization_seconds":  1.580391,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  180,
+                                      "max_base_error_m":  0.0000261228960880544,
+                                      "native_compared_vertices":  334269,
+                                      "vertices":  334269
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-135-161.json.index.json"
+                  },
+                  {
+                      "label":  "human-162-188",
+                      "role":  "human",
+                      "start":  162,
+                      "count":  27,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-162-188.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-162-188.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-162-188.stderr.log",
+                      "verified":  true,
+                      "pid":  38152,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  4.527151,
+                      "sha256":  "D977B110EA9534D3E34C2F8FC3B02343FA4AD20EE4454F7ACC40FB9A7E5BC649",
+                      "bytes":  12870001,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "human-162",
+                                                        "human-163",
+                                                        "human-164",
+                                                        "human-165",
+                                                        "human-166",
+                                                        "human-167",
+                                                        "human-168",
+                                                        "human-169",
+                                                        "human-170",
+                                                        "human-171",
+                                                        "human-172",
+                                                        "human-173",
+                                                        "human-174",
+                                                        "human-175",
+                                                        "human-176",
+                                                        "human-177",
+                                                        "human-178",
+                                                        "human-179",
+                                                        "human-180",
+                                                        "human-181",
+                                                        "human-182",
+                                                        "human-183",
+                                                        "human-184",
+                                                        "human-185",
+                                                        "human-186",
+                                                        "human-187",
+                                                        "human-188"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "human":  {
+                                                                              "end_exclusive":  189,
+                                                                              "start":  162,
+                                                                              "total":  243
+                                                                          }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  27,
+                                      "case_start":  162,
+                                      "cases":  27,
+                                      "checks":  78845,
+                                      "elapsed_before_serialization_seconds":  1.565827,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  180,
+                                      "max_base_error_m":  0.0000262386365648126,
+                                      "native_compared_vertices":  334269,
+                                      "vertices":  334269
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-162-188.json.index.json"
+                  },
+                  {
+                      "label":  "human-189-215",
+                      "role":  "human",
+                      "start":  189,
+                      "count":  27,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-189-215.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-189-215.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-189-215.stderr.log",
+                      "verified":  true,
+                      "pid":  30852,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  4.8211286,
+                      "sha256":  "CF1D119DFE3D7FCF6E1027CE3DA1CFDE431D33B12F1FC32A4021D114270330F8",
+                      "bytes":  12897091,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "human-189",
+                                                        "human-190",
+                                                        "human-191",
+                                                        "human-192",
+                                                        "human-193",
+                                                        "human-194",
+                                                        "human-195",
+                                                        "human-196",
+                                                        "human-197",
+                                                        "human-198",
+                                                        "human-199",
+                                                        "human-200",
+                                                        "human-201",
+                                                        "human-202",
+                                                        "human-203",
+                                                        "human-204",
+                                                        "human-205",
+                                                        "human-206",
+                                                        "human-207",
+                                                        "human-208",
+                                                        "human-209",
+                                                        "human-210",
+                                                        "human-211",
+                                                        "human-212",
+                                                        "human-213",
+                                                        "human-214",
+                                                        "human-215"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "human":  {
+                                                                              "end_exclusive":  216,
+                                                                              "start":  189,
+                                                                              "total":  243
+                                                                          }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  27,
+                                      "case_start":  189,
+                                      "cases":  27,
+                                      "checks":  78845,
+                                      "elapsed_before_serialization_seconds":  1.605822,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  180,
+                                      "max_base_error_m":  0.0000261808363575256,
+                                      "native_compared_vertices":  334269,
+                                      "vertices":  334269
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-189-215.json.index.json"
+                  },
+                  {
+                      "label":  "human-216-242",
+                      "role":  "human",
+                      "start":  216,
+                      "count":  27,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-216-242.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-216-242.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-216-242.stderr.log",
+                      "verified":  true,
+                      "pid":  7236,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  4.3868215,
+                      "sha256":  "41B188D234DE79B12952590E1C75673197CD617071A3213A8EC5711C6BA745BD",
+                      "bytes":  12855168,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "human-216",
+                                                        "human-217",
+                                                        "human-218",
+                                                        "human-219",
+                                                        "human-220",
+                                                        "human-221",
+                                                        "human-222",
+                                                        "human-223",
+                                                        "human-224",
+                                                        "human-225",
+                                                        "human-226",
+                                                        "human-227",
+                                                        "human-228",
+                                                        "human-229",
+                                                        "human-230",
+                                                        "human-231",
+                                                        "human-232",
+                                                        "human-233",
+                                                        "human-234",
+                                                        "human-235",
+                                                        "human-236",
+                                                        "human-237",
+                                                        "human-238",
+                                                        "human-239",
+                                                        "human-240",
+                                                        "human-241",
+                                                        "human-242"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "human":  {
+                                                                              "end_exclusive":  243,
+                                                                              "start":  216,
+                                                                              "total":  243
+                                                                          }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  27,
+                                      "case_start":  216,
+                                      "cases":  27,
+                                      "checks":  78845,
+                                      "elapsed_before_serialization_seconds":  1.661256,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  180,
+                                      "max_base_error_m":  0.0000261806890193839,
+                                      "native_compared_vertices":  334269,
+                                      "vertices":  334269
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\human-216-242.json.index.json"
+                  },
+                  {
+                      "label":  "mosquito-000-020",
+                      "role":  "mosquito",
+                      "start":  0,
+                      "count":  21,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\mosquito-000-020.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\mosquito-000-020.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\mosquito-000-020.stderr.log",
+                      "verified":  true,
+                      "pid":  23516,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  4.8421205999999994,
+                      "sha256":  "D4FC440E2DE5AFD92E8F68959461437FA7097754F2002A4F1EA09EE64EBA4B9C",
+                      "bytes":  11002312,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "mosquito-0",
+                                                        "mosquito-1",
+                                                        "mosquito-2",
+                                                        "mosquito-3",
+                                                        "mosquito-4",
+                                                        "mosquito-5",
+                                                        "mosquito-6",
+                                                        "mosquito-7",
+                                                        "mosquito-8",
+                                                        "mosquito-9",
+                                                        "mosquito-10",
+                                                        "mosquito-11",
+                                                        "mosquito-12",
+                                                        "mosquito-13",
+                                                        "mosquito-14",
+                                                        "mosquito-15",
+                                                        "mosquito-16",
+                                                        "mosquito-17",
+                                                        "mosquito-18",
+                                                        "mosquito-19",
+                                                        "mosquito-20"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "mosquito":  {
+                                                                                 "end_exclusive":  21,
+                                                                                 "start":  0,
+                                                                                 "total":  42
+                                                                             }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  21,
+                                      "case_start":  0,
+                                      "cases":  21,
+                                      "checks":  33695,
+                                      "elapsed_before_serialization_seconds":  1.730425,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  267,
+                                      "max_base_error_m":  0.0000000298604732051899,
+                                      "native_compared_vertices":  308491,
+                                      "vertices":  308491
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\mosquito-000-020.json.index.json"
+                  },
+                  {
+                      "label":  "mosquito-021-041",
+                      "role":  "mosquito",
+                      "start":  21,
+                      "count":  21,
+                      "file":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\mosquito-021-041.json",
+                      "stdout":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\mosquito-021-041.stdout.log",
+                      "stderr":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\mosquito-021-041.stderr.log",
+                      "verified":  true,
+                      "pid":  25324,
+                      "exit_code":  0,
+                      "timed_out":  false,
+                      "elapsed_seconds":  3.7437272999999998,
+                      "sha256":  "5F22FDA5A719D217C9EACE89D1CF8D91B58473E017B84953CEC3ABFEC67DB858",
+                      "bytes":  7796003,
+                      "coverage":  {
+                                       "case_ids":  [
+                                                        "mosquito-21",
+                                                        "mosquito-22",
+                                                        "mosquito-23",
+                                                        "mosquito-24",
+                                                        "mosquito-25",
+                                                        "mosquito-26",
+                                                        "mosquito-27",
+                                                        "mosquito-28",
+                                                        "mosquito-29",
+                                                        "mosquito-30",
+                                                        "mosquito-31",
+                                                        "mosquito-32",
+                                                        "mosquito-33",
+                                                        "mosquito-34",
+                                                        "mosquito-35",
+                                                        "mosquito-36",
+                                                        "mosquito-37",
+                                                        "mosquito-38",
+                                                        "mosquito-39",
+                                                        "mosquito-40",
+                                                        "mosquito-41"
+                                                    ],
+                                       "expected_totals":  {
+                                                               "human":  243,
+                                                               "mosquito":  42
+                                                           },
+                                       "requested_ranges":  {
+                                                                "mosquito":  {
+                                                                                 "end_exclusive":  42,
+                                                                                 "start":  21,
+                                                                                 "total":  42
+                                                                             }
+                                                            },
+                                       "span_complete":  true
+                                   },
+                      "summary":  {
+                                      "base_tolerance_m":  0.00015,
+                                      "case_limit":  21,
+                                      "case_start":  21,
+                                      "cases":  21,
+                                      "checks":  33320,
+                                      "elapsed_before_serialization_seconds":  1.312088,
+                                      "export_complete":  false,
+                                      "failures":  [
+
+                                                   ],
+                                      "geometries":  186,
+                                      "max_base_error_m":  0.0000000235608048626546,
+                                      "native_compared_vertices":  210382,
+                                      "vertices":  210382
+                                  },
+                      "index":  "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\mosquito-021-041.json.index.json"
+                  }
+              ],
+    "failures":  [
+
+                 ],
+    "limits":  [
+                   "Every requested case must be present once across verified parts; no intersection verdict is inferred from a successful export.",
+                   "Geometry IDs are local to each part; resolve through that part topologies/geometries.",
+                   "Finite conservative poses and seeded expression witnesses do not prove continuous-motion or full morph-domain clearance."
+               ],
+    "updated_utc":  "2026-09-08T12:40:21.4049674Z",
+    "source_sha256":  {
+                          "res://assets/art/characters/human/human_lms06.glb":  "88db54d28af6a4225179c51c3b5179e6ae493a51357d51a872d8e13f0841ebac",
+                          "res://assets/art/characters/human/model.json":  "be4f88f31fbdd619044b34d6f1d1e9ef5e1dbd177c42f3886b949f9ac05cd1e4",
+                          "res://assets/art/characters/mosquito/model.json":  "29379b78bfe59d231257bb560df2588c9542f25b560eea3c9858e35b836e7138",
+                          "res://assets/art/characters/mosquito/mosquito_lms06.glb":  "d249474f537b50594ff4f76ae5c97fc938d9e6d61cdc7fa91909db0bc860ac85",
+                          "res://assets/art/characters/shared/character_skin.gd":  "35a723b2de561de6b290a9578c0029e73cb5ce2cbfc0b20e47862ce1eb9d1a55",
+                          "res://assets/art/characters/shared/facial_expression.gd":  "4fa4869d70350b2918c5c919caf8ec7c3cc005bfbdf8d9890d8a57e85460a556",
+                          "res://scripts/human_pose.gd":  "36c69f5a2273db33950776e8c81153f3d5b76a28be6a944e7bbe4ea8ce794190",
+                          "res://scripts/mosquito_pose.gd":  "9cf62024a199b097f5649598a0934783d6affc47bf2beb7262ea05383221f8d9"
+                      },
+    "case_count":  285,
+    "finished_utc":  "2026-09-08T12:40:21.4049674Z"
+}

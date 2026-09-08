@@ -755,5 +755,79 @@
     "facial_morph_meshes_unchanged": true,
     "rig_weights_unchanged": true,
     "scope": "human_head cheeks only; excludes nose, ears, jaw and all body/hand meshes"
-  }
+  },
+  "garment_fit09": [
+    {
+      "mesh": "human_outfit_0",
+      "moved_vertices": 1376,
+      "max_neckline_lowering_m": 0.133,
+      "reweighted_vertices": 1562,
+      "vertices": 7452,
+      "topology_unchanged": true,
+      "method": "Tailored neckline and sleeve-cap height; bounded 20mm upper-garment relaxation; continuous shoulder binding field",
+      "upper_surface_relaxation_iterations": 8,
+      "upper_surface_relaxation_limit_m": 0.02,
+      "cloth_uv_loops_reparameterized": 11299
+    },
+    {
+      "mesh": "human_outfit_0_trim",
+      "moved_vertices": 218,
+      "max_neckline_lowering_m": 0.12197433051115322,
+      "reweighted_vertices": 0,
+      "vertices": 796,
+      "topology_unchanged": true,
+      "method": "Tailored neckline and sleeve-cap height; bounded 20mm upper-garment relaxation; continuous shoulder binding field",
+      "upper_surface_relaxation_iterations": 0,
+      "upper_surface_relaxation_limit_m": 0,
+      "cloth_uv_loops_reparameterized": 0
+    },
+    {
+      "mesh": "human_outfit_1",
+      "moved_vertices": 1376,
+      "max_neckline_lowering_m": 0.133,
+      "reweighted_vertices": 1562,
+      "vertices": 7452,
+      "topology_unchanged": true,
+      "method": "Tailored neckline and sleeve-cap height; bounded 20mm upper-garment relaxation; continuous shoulder binding field",
+      "upper_surface_relaxation_iterations": 8,
+      "upper_surface_relaxation_limit_m": 0.02,
+      "cloth_uv_loops_reparameterized": 11299
+    },
+    {
+      "mesh": "human_outfit_1_trim",
+      "moved_vertices": 218,
+      "max_neckline_lowering_m": 0.12197433051115322,
+      "reweighted_vertices": 0,
+      "vertices": 796,
+      "topology_unchanged": true,
+      "method": "Tailored neckline and sleeve-cap height; bounded 20mm upper-garment relaxation; continuous shoulder binding field",
+      "upper_surface_relaxation_iterations": 0,
+      "upper_surface_relaxation_limit_m": 0,
+      "cloth_uv_loops_reparameterized": 0
+    },
+    {
+      "mesh": "human_outfit_2",
+      "moved_vertices": 1376,
+      "max_neckline_lowering_m": 0.133,
+      "reweighted_vertices": 1562,
+      "vertices": 7452,
+      "topology_unchanged": true,
+      "method": "Tailored neckline and sleeve-cap height; bounded 20mm upper-garment relaxation; continuous shoulder binding field",
+      "upper_surface_relaxation_iterations": 8,
+      "upper_surface_relaxation_limit_m": 0.02,
+      "cloth_uv_loops_reparameterized": 11299
+    },
+    {
+      "mesh": "human_outfit_2_trim",
+      "moved_vertices": 290,
+      "max_neckline_lowering_m": 0.12197433051115322,
+      "reweighted_vertices": 0,
+      "vertices": 1072,
+      "topology_unchanged": true,
+      "method": "Tailored neckline and sleeve-cap height; bounded 20mm upper-garment relaxation; continuous shoulder binding field",
+      "upper_surface_relaxation_iterations": 0,
+      "upper_surface_relaxation_limit_m": 0,
+      "cloth_uv_loops_reparameterized": 0
+    }
+  ]
 }

@@ -27,9 +27,10 @@ no se atribuyen a esta versión.
 ## Cierre pendiente
 
 La prenda humana se corrigió en su fuente editable y en el GLB; los últimos
-nueve casos de cuello dieron cero contactos inesperados en un bloque de 27
-poses. La revisión completa de 285 poses y la galería de personalización se
-están renovando con la malla actual; no se consideran cerradas por ese bloque.
+nueve casos de cuello quedaron corregidos. La exportación y consumidor finales
+cubren 285 poses y 13176 pares con cero contactos inesperados, y las
+comprobaciones de contacto de herramientas pasan 972/972. Sigue pendiente
+la galería de personalización y la revisión visual continua de animaciones.
 
 También están pendientes el recorrido completo de práctica con mapas nuevos,
 la exportación, pruebas del EXE, matriz final de red y vídeo. BUILD identificará

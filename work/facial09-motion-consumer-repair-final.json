@@ -1,0 +1,87 @@
+{
+  "format": "LMS_GARMENT09_REPAIR_FINAL",
+  "version": 1,
+  "source_files": {
+    "art_source/characters/shared/garment_fit.py": "2fa3d95e0def296065abe628f4e6ae7a4ad3c50c1d523d7760db6a802aef841a",
+    "art_source/export_presets/characters_garment_repair.py": "3e7c6306ee8f73f39a9ad597415971458663407562baf8692d3a1290f6654217",
+    "art_source/export_presets/characters_selected_pipeline.py": "4e75b4ce14a010d2cbb61bb611568281bb2a110821210c5fb584b9a1f8eade74",
+    "art_source/characters/human/human_lms06.blend": "adf1a882f2e3afb07bc55d3fd633b281aa83c64c7acfaba5b4d14ce56dbef647",
+    "art_source/characters/human/manifest.json": "a58dbe6e9dcd154c8ec16ad4c9e19d793b21036b7fe72c04e469ff11f85dfa7e",
+    "art_source/characters/human/model.json": "be4f88f31fbdd619044b34d6f1d1e9ef5e1dbd177c42f3886b949f9ac05cd1e4",
+    "game/assets/art/characters/human/human_lms06.glb": "88db54d28af6a4225179c51c3b5179e6ae493a51357d51a872d8e13f0841ebac",
+    "game/assets/art/characters/human/rig_contract.json": "27dd6ea469927ce88f5dbcfdb9e18d41d791708c48eb3e919b78257e3ad58ab1",
+    "game/assets/art/characters/human/model.json": "be4f88f31fbdd619044b34d6f1d1e9ef5e1dbd177c42f3886b949f9ac05cd1e4",
+    "game/assets/art/characters/shared/character_skin.gd": "35a723b2de561de6b290a9578c0029e73cb5ce2cbfc0b20e47862ce1eb9d1a55",
+    "game/scripts/human_pose.gd": "36c69f5a2273db33950776e8c81153f3d5b76a28be6a944e7bbe4ea8ce794190"
+  },
+  "native_export": {
+    "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-export-fit4\\index.json",
+    "sha256": "4cb87fb72873e8b7ad7754e392167df2f91807ab9fa0a9a45b6ea018b184f478",
+    "cases": 285,
+    "verified_parts": 11
+  },
+  "consumer": {
+    "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-consumer-fit4\\consumer-index.json",
+    "sha256": "07475bea3a146a35b79cff53c8f5bd7567358515fdef671457b60fa93af4441f",
+    "cases": 285,
+    "case_pairs": 13176,
+    "unexpected_contacts": 0,
+    "anatomical_policy": {
+      "version": 1,
+      "world_contact_epsilon_m": 1e-07,
+      "neck_head_local": {
+        "y": [
+          -0.245,
+          -0.115
+        ],
+        "ellipse_x_radius": 0.097,
+        "ellipse_z_radius": 0.089,
+        "ellipse_z_center": 0.012
+      },
+      "antenna_root_bone_local_radius": 0.015,
+      "attachment_vertex_bone_weight_minimum": 0.99,
+      "other_contacts": "review_required_even_when_only_tangent",
+      "scope": "boundary triangle contacts at exported finite poses"
+    }
+  },
+  "contact_gate": {
+    "path": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\facial09-motion-consumer-selected-fit4.log",
+    "sha256": "29fea31eabcbde6ec263084dc795757c063f8f4669557383b727b820400e9258",
+    "checks": 972,
+    "failures": 0,
+    "measurements": 540
+  },
+  "source_invariance": {
+    "non_garment_meshes_unchanged": 27,
+    "bones": 36,
+    "authority_pose_camera_unchanged": true
+  },
+  "regression_cases": [
+    "human-57",
+    "human-119",
+    "human-102",
+    "human-90",
+    "human-54",
+    "human-55",
+    "human-56",
+    "human-63",
+    "human-64",
+    "human-65",
+    "human-72",
+    "human-73",
+    "human-74"
+  ],
+  "visual_approved": false,
+  "limits": [
+    "No visual approval, full customization-gallery approval, or continuous-motion proof.",
+    "All exported effective morphs including correctives are retained. Finite seeded states do not span the full morph domain.",
+    "Only head/garment and antenna/head-piece relations are covered. Static head/head pairs require the separate facial08 audit.",
+    "Touching and coplanar seams are contacts. A flagged relation requires review; it is not automatically a visible defect.",
+    "Complete containment without boundary contact, minimum clearance, floating pieces and self-intersections are not certified.",
+    "No colors/outfits/footwear combinations are counted as independently verified classes by this report.",
+    "Coordinates and numeric contact epsilon are 0.1 micrometre; this is not a collision-radius allowance.",
+    "Native export and exact triangle contacts cover the declared finite poses and compatible pairs only.",
+    "No exhaustive gallery, continuous-motion, complete containment or all-cosmetic-combination approval is inferred.",
+    "Images remain review evidence; numerical gate results are not a substitute for visual review."
+  ]
+}

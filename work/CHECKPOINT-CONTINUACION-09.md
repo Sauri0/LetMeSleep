@@ -6,7 +6,7 @@ fallos y capturas históricos se conservan. No es una certificación de entrega.
 El ejecutable en `outputs/Let-me-sleep-0.7.0-Windows` sigue siendo el anterior
 al trabajo de personalización, con SHA-256
 `675342F018EFCF9F7A2171A6F9062CA7FE17BB475B537D3C760E8D2AC1CE7D9A`.
-La fuente actual usa protocolo 9 / invitaciones DD5. No se publicó ni exportó
+La fuente actual es 0.9.0, con protocolo 9 / invitaciones DD5. No se publicó ni exportó
 esta continuación y no se debe atribuir su comportamiento al EXE anterior.
 
 ## Cambios implementados
@@ -91,13 +91,17 @@ esta continuación y no se debe atribuir su comportamiento al EXE anterior.
   editable y el GLB. Los cuatro testigos corregidos suman 192 pares sin contacto
   inesperado; fit3 sólo ajusta UV respecto de fit2 (1782 invariancias correctas).
   Las 16 vistas actuales conservan la boca libre y corrigen los zigzags de las
-  rayas. La exportación completa de 285 poses se está renovando con estos hashes;
-  el resultado anterior de contactos no certifica esta fuente.
+  rayas. Fit4 añade 8 mm de descenso sólo en el campo central del cuello.
+  La exportación y consumidor finales cubren 285 poses y 13176 pares, con cero
+  contactos inesperados; contacto de herramientas 972/972 y 540 mediciones.
+  No sustituyen la galería ni la revisión continua de animaciones.
 - El coste aislado de DoorState bajó de 2,454 a 0,406 ms en el replay ABBA.
   Pasaron 2578 equivalencias y 342 regresiones de puertas. No es un aumento de
   FPS demostrado. La última medición nativa de casa generada con 16 actores a
   1080p dio 28,308 / 60,754 / 91,729 ms (p50/p90/p99), todavía fuera del objetivo.
-  DoorCatalog está en revisión separada. Un ensayo de MultiMesh empeoró el coste
+  DoorCatalog también pasó 17117 equivalencias y 342 regresiones; su replay
+  aislado bajó de 1,834 a 0,330 ms por tick. El perfil integrado sitúa el
+  siguiente pico en las rutas de bots, con 22,21 ms en un tick. Un ensayo de MultiMesh empeoró el coste
   del pasillo y fue rechazado; no se integró al juego.
 - VoiceSession publica ahora permiso y motivo contextual. La UI no promete
   hablar en práctica, sala o eliminación; conserva prueba local independiente.
