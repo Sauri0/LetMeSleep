@@ -538,6 +538,10 @@ func _surface_material(tint: Color, kind: String) -> Material:
 render_mode diffuse_burley;
 uniform vec4 tint : source_color = vec4(1.0);
 uniform float surface_kind = 0.0;
+// Approved liso sample: flat colour inside each architectural piece, with
+// readable joints. Object textiles keep their existing independent finish.
+uniform float detail_amount = 0.0;
+uniform float finish_roughness = 0.82;
 varying vec3 p;
 varying vec3 n;
 void vertex(){ p = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz; n = mat3(MODEL_MATRIX) * NORMAL; }
@@ -554,14 +558,14 @@ void fragment(){
   vec2 board_edge = 1.0-smoothstep(vec2(.0075),vec2(.0075)+board_aa,min(f,1.0-f));
   float seam = max(board_edge.x,board_edge.y);
   float grain = sin(plane.x*22.0 + sin(plane.y*2.8)*1.3)*0.012;
-  shade = 0.96 + hash(floor(board))*0.055 + grain - min(seam,1.0)*0.10;
+  shade = 0.98 + (hash(floor(board))*0.055 + grain - 0.02)*detail_amount - min(seam,1.0)*0.10;
  } else if(surface_kind < 1.5){
-  shade = 0.98 + (hash(floor(p.xy*18.0+p.zy*13.0))-0.5)*0.02;
+  shade = 0.98 + (hash(floor(p.xy*18.0+p.zy*13.0))-0.5)*0.02*detail_amount;
  } else if(surface_kind < 2.5){
-  shade = 0.98 + sin(UV.x*70.0)*sin(UV.y*70.0)*0.012;
+  shade = 0.98 + sin(UV.x*70.0)*sin(UV.y*70.0)*0.012*detail_amount;
  } else if(surface_kind < 3.5){
   float top = step(0.5,normalize(n).y);
-  shade = mix(0.66,0.99,top) + sin(UV.x*32.0+sin(UV.y*5.0))*0.025;
+  shade = mix(0.66,0.99,top) + sin(UV.x*32.0+sin(UV.y*5.0))*0.025*detail_amount;
  } else if(surface_kind < 4.5){
   vec3 face = abs(normalize(n));
   vec2 plane = face.y>0.5 ? p.xz : (face.z>0.5 ? p.xy : p.zy);
@@ -582,11 +586,14 @@ void fragment(){
   shade = .96 - joint*.12;
  }
  ALBEDO = tint.rgb * shade;
- ROUGHNESS = 0.88;
+ ROUGHNESS = finish_roughness;
 }"""
 	var material := ShaderMaterial.new()
 	material.shader = surface_shader
 	material.set_shader_parameter("tint", tint)
+	var architectural := kind in ["wood", "wall", "step", "tile", "panel"]
+	material.set_shader_parameter("detail_amount", 0.0 if architectural else 1.0)
+	material.set_shader_parameter("finish_roughness", 0.82 if architectural else 0.88)
 	material.set_shader_parameter("surface_kind", 0.0 if kind == "wood" else 1.0 if kind == "wall" else 3.0 if kind == "step" else 4.0 if kind == "tile" else 5.0 if kind == "panel" else 2.0)
 	surface_materials[key] = material
 	return material

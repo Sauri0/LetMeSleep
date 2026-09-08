@@ -44,7 +44,7 @@ if (-not $SkipTests) {
     # Skin baking requires a rendering backend; Godot's headless dummy backend
     # cannot register the skeleton used by this actual-deformed-mesh test.
     # UI checks also need real mouse capture, unavailable in the dummy backend.
-    foreach ($nativeTest in @('v07_character_rig_checks','v07_character_client_checks','selected07_mesh_checks','selected07_actor_checks','selected07_facial_envelope_checks','house07_checks','house07_lighting_probe','ui_navigation_test','video07_checks','doors07_client_checks')) {
+    foreach ($nativeTest in @('v07_character_rig_checks','v07_character_client_checks','selected07_mesh_checks','selected07_actor_checks','selected07_facial_envelope_checks','house07_checks','house07_lighting_probe','house07_liso_checks','ui_navigation_test','video07_checks','doors07_client_checks')) {
     $rigLog = Join-Path $PSScriptRoot ('build-' + $nativeTest + '.log')
     $rigError = Join-Path $PSScriptRoot ('build-' + $nativeTest + '.err')
     $nativeArguments = @('--path', ('"' + $gamePath + '"'), '--script', ('res://tests/' + $nativeTest + '.gd'))

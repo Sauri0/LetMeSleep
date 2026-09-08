@@ -105,6 +105,8 @@ func _run() -> void:
 	Input.action_release("move_forward")
 	report={"version":ProjectSettings.get_setting("application/config/version"),"adapter":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"renderer":"Compatibility","resolution":root.content_scale_size,"window_size":root.size,"render_texture_size":root.get_texture().get_size(),"scenario":"real Main/Client/Practice, hallway input, live authoritative bots; periodic authoritative door commands when supported","actors":sim.actors.size(),"requested_population":population,"host_and_bots":true,"warmup_seconds":2,"measurement_seconds":seconds,"samples":frame_times.size(),"frame_ms":distribution(frame_times),"render_cpu_ms":distribution(render_cpu),"render_gpu_ms":distribution(render_gpu),"physics_ms":distribution(physics),"draws":distribution(draws,false),"primitives":distribution(vertices,false),"door_commands":transitions,"frames_with_moving_doors":moving_frames,"start_position":start_position,"end_position":sim.actors[1].p,"memory_bytes":Performance.get_monitor(Performance.MEMORY_STATIC),"video_memory_bytes":Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED),"physics_ticks_per_second":Engine.physics_ticks_per_second,"vsync":"disabled","fps_limit":0}
 	print("PERFORMANCE07_LIVE "+JSON.stringify(report))
+	var prefs: Script = load("res://scripts/preferences.gd")
+	report["video_quality"]={"shadows":prefs.video_shadows,"reflections":prefs.video_reflections,"msaa_3d":root.msaa_3d}
 	if not path.is_empty():
 		var file:=FileAccess.open(path,FileAccess.WRITE)
 		file.store_string(JSON.stringify(report,"\t"))
