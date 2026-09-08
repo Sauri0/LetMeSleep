@@ -1,0 +1,727 @@
+{
+  "proposal": "A",
+  "label": "Curva compacta",
+  "species": "mosquito",
+  "status": "Real staged geometry; not selected for production",
+  "original": true,
+  "runtime_scale": 0.35,
+  "bounds_min_m": [
+    -0.08678749203681946,
+    -0.05354999899864196,
+    -0.09248334169387817
+  ],
+  "bounds_max_m": [
+    0.08678749203681946,
+    0.060471260547637934,
+    0.08297799751162528
+  ],
+  "size_m": [
+    0.17357498407363892,
+    0.1140212595462799,
+    0.17546133920550344
+  ],
+  "triangles_default": 14236,
+  "surfaces_default": 15,
+  "textures": [
+    "Original procedural cloth at runtime; no external image textures"
+  ],
+  "bones": {
+    "root": {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        0,
+        0.08,
+        0
+      ],
+      "parent": ""
+    },
+    "thorax": {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        0,
+        0.08,
+        0
+      ],
+      "parent": "root"
+    },
+    "head": {
+      "from": [
+        0,
+        0.018,
+        -0.091
+      ],
+      "to": [
+        0,
+        0.1,
+        -0.091
+      ],
+      "parent": "root"
+    },
+    "abdomen": {
+      "from": [
+        0,
+        -0.008,
+        0.08
+      ],
+      "to": [
+        0,
+        -0.02,
+        0.235
+      ],
+      "parent": "root"
+    },
+    "wing_l": {
+      "from": [
+        -0.033,
+        0.047,
+        0.045
+      ],
+      "to": [
+        -0.23,
+        0.06,
+        0.1
+      ],
+      "parent": "root"
+    },
+    "wing_r": {
+      "from": [
+        0.033,
+        0.047,
+        0.045
+      ],
+      "to": [
+        0.23,
+        0.06,
+        0.1
+      ],
+      "parent": "root"
+    },
+    "proboscis": {
+      "from": [
+        0,
+        -0.013,
+        -0.135
+      ],
+      "to": [
+        0,
+        -0.043,
+        -0.264
+      ],
+      "parent": "head"
+    },
+    "leg0_a_l": {
+      "from": [
+        -0.048,
+        -0.02,
+        -0.035
+      ],
+      "to": [
+        -0.132,
+        -0.083,
+        -0.021000000000000005
+      ],
+      "parent": "root"
+    },
+    "leg0_b_l": {
+      "from": [
+        -0.132,
+        -0.083,
+        -0.021000000000000005
+      ],
+      "to": [
+        -0.156,
+        -0.148,
+        -0.044000000000000004
+      ],
+      "parent": "leg0_a_l"
+    },
+    "leg1_a_l": {
+      "from": [
+        -0.048,
+        -0.02,
+        0.035
+      ],
+      "to": [
+        -0.118,
+        -0.083,
+        0.049
+      ],
+      "parent": "root"
+    },
+    "leg1_b_l": {
+      "from": [
+        -0.118,
+        -0.083,
+        0.049
+      ],
+      "to": [
+        -0.143,
+        -0.148,
+        0.026000000000000002
+      ],
+      "parent": "leg1_a_l"
+    },
+    "leg2_a_l": {
+      "from": [
+        -0.048,
+        -0.02,
+        0.102
+      ],
+      "to": [
+        -0.132,
+        -0.083,
+        0.11599999999999999
+      ],
+      "parent": "root"
+    },
+    "leg2_b_l": {
+      "from": [
+        -0.132,
+        -0.083,
+        0.11599999999999999
+      ],
+      "to": [
+        -0.156,
+        -0.148,
+        0.093
+      ],
+      "parent": "leg2_a_l"
+    },
+    "antenna_l": {
+      "from": [
+        -0.033,
+        0.073,
+        -0.105
+      ],
+      "to": [
+        -0.065,
+        0.177,
+        -0.108
+      ],
+      "parent": "head"
+    },
+    "leg0_a_r": {
+      "from": [
+        0.048,
+        -0.02,
+        -0.035
+      ],
+      "to": [
+        0.132,
+        -0.083,
+        -0.021000000000000005
+      ],
+      "parent": "root"
+    },
+    "leg0_b_r": {
+      "from": [
+        0.132,
+        -0.083,
+        -0.021000000000000005
+      ],
+      "to": [
+        0.156,
+        -0.148,
+        -0.044000000000000004
+      ],
+      "parent": "leg0_a_r"
+    },
+    "leg1_a_r": {
+      "from": [
+        0.048,
+        -0.02,
+        0.035
+      ],
+      "to": [
+        0.118,
+        -0.083,
+        0.049
+      ],
+      "parent": "root"
+    },
+    "leg1_b_r": {
+      "from": [
+        0.118,
+        -0.083,
+        0.049
+      ],
+      "to": [
+        0.143,
+        -0.148,
+        0.026000000000000002
+      ],
+      "parent": "leg1_a_r"
+    },
+    "leg2_a_r": {
+      "from": [
+        0.048,
+        -0.02,
+        0.102
+      ],
+      "to": [
+        0.132,
+        -0.083,
+        0.11599999999999999
+      ],
+      "parent": "root"
+    },
+    "leg2_b_r": {
+      "from": [
+        0.132,
+        -0.083,
+        0.11599999999999999
+      ],
+      "to": [
+        0.156,
+        -0.148,
+        0.093
+      ],
+      "parent": "leg2_a_r"
+    },
+    "antenna_r": {
+      "from": [
+        0.033,
+        0.073,
+        -0.105
+      ],
+      "to": [
+        0.065,
+        0.177,
+        -0.108
+      ],
+      "parent": "head"
+    }
+  },
+  "parts": [
+    {
+      "name": "mosquito_core",
+      "category": "core",
+      "selected_default": true,
+      "vertices": 1112,
+      "triangles": 2212,
+      "materials": [
+        "insect_dark",
+        "insect_primary"
+      ],
+      "bounds_min_m": [
+        -0.08055999875068665,
+        -0.06499999761581421,
+        -0.2642381191253662
+      ],
+      "bounds_max_m": [
+        0.08055999875068665,
+        0.08423999696969986,
+        0.12200000882148743
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_outfit_0",
+      "category": "outfit",
+      "selected_default": true,
+      "vertices": 1570,
+      "triangles": 3120,
+      "materials": [
+        "insect_primary",
+        "insect_dark"
+      ],
+      "bounds_min_m": [
+        -0.058649998158216476,
+        -0.05552000179886818,
+        0.06655999273061752
+      ],
+      "bounds_max_m": [
+        0.058649998158216476,
+        0.04383999854326248,
+        0.23707999289035797
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_outfit_1",
+      "category": "outfit",
+      "selected_default": false,
+      "vertices": 2170,
+      "triangles": 4296,
+      "materials": [
+        "insect_primary",
+        "insect_dark",
+        "accent"
+      ],
+      "bounds_min_m": [
+        -0.06210000067949295,
+        -0.05552000179886818,
+        0.06655999273061752
+      ],
+      "bounds_max_m": [
+        0.06210000067949295,
+        0.04383999854326248,
+        0.23707999289035797
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_outfit_2",
+      "category": "outfit",
+      "selected_default": false,
+      "vertices": 1570,
+      "triangles": 3120,
+      "materials": [
+        "insect_primary"
+      ],
+      "bounds_min_m": [
+        -0.058649998158216476,
+        -0.05552000179886818,
+        0.06655999273061752
+      ],
+      "bounds_max_m": [
+        0.058649998158216476,
+        0.04383999854326248,
+        0.23707999289035797
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_face_0",
+      "category": "face",
+      "selected_default": true,
+      "vertices": 2301,
+      "triangles": 4552,
+      "materials": [
+        "eye_white",
+        "pupil",
+        "insect_primary",
+        "insect_dark",
+        "ink"
+      ],
+      "bounds_min_m": [
+        -0.09115999937057495,
+        -0.027656475082039833,
+        -0.16500000655651093
+      ],
+      "bounds_max_m": [
+        0.09115999937057495,
+        0.09931372106075287,
+        -0.10299999266862869
+      ],
+      "morphs": [
+        "BlinkL",
+        "BlinkR",
+        "GazeX",
+        "GazeY",
+        "BrowUp",
+        "BrowDown",
+        "MouthOpen",
+        "MouthSmile",
+        "MouthPress",
+        "CheekLift"
+      ]
+    },
+    {
+      "name": "mosquito_face_1",
+      "category": "face",
+      "selected_default": false,
+      "vertices": 2301,
+      "triangles": 4552,
+      "materials": [
+        "eye_white",
+        "pupil",
+        "insect_primary",
+        "insect_dark",
+        "ink"
+      ],
+      "bounds_min_m": [
+        -0.0917912945151329,
+        -0.027096539735794067,
+        -0.16500000655651093
+      ],
+      "bounds_max_m": [
+        0.0917912945151329,
+        0.11275964230298996,
+        -0.10299999266862869
+      ],
+      "morphs": [
+        "BlinkL",
+        "BlinkR",
+        "GazeX",
+        "GazeY",
+        "BrowUp",
+        "BrowDown",
+        "MouthOpen",
+        "MouthSmile",
+        "MouthPress",
+        "CheekLift"
+      ]
+    },
+    {
+      "name": "mosquito_face_2",
+      "category": "face",
+      "selected_default": false,
+      "vertices": 2301,
+      "triangles": 4552,
+      "materials": [
+        "eye_white",
+        "pupil",
+        "insect_primary",
+        "insect_dark",
+        "ink"
+      ],
+      "bounds_min_m": [
+        -0.09115999937057495,
+        -0.02664000168442726,
+        -0.16500000655651093
+      ],
+      "bounds_max_m": [
+        0.09115999937057495,
+        0.09931796044111252,
+        -0.10299999266862869
+      ],
+      "morphs": [
+        "BlinkL",
+        "BlinkR",
+        "GazeX",
+        "GazeY",
+        "BrowUp",
+        "BrowDown",
+        "MouthOpen",
+        "MouthSmile",
+        "MouthPress",
+        "CheekLift"
+      ]
+    },
+    {
+      "name": "mosquito_hair_0",
+      "category": "hair",
+      "selected_default": true,
+      "vertices": 208,
+      "triangles": 408,
+      "materials": [
+        "insect_dark"
+      ],
+      "bounds_min_m": [
+        -0.06553975492715836,
+        0.06966083496809006,
+        -0.11598775535821915
+      ],
+      "bounds_max_m": [
+        0.06553975492715836,
+        0.1727750301361084,
+        -0.09426005184650421
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_hair_1",
+      "category": "hair",
+      "selected_default": false,
+      "vertices": 208,
+      "triangles": 408,
+      "materials": [
+        "insect_dark"
+      ],
+      "bounds_min_m": [
+        -0.08417510241270065,
+        0.06974449753761292,
+        -0.11598777025938034
+      ],
+      "bounds_max_m": [
+        0.08417510241270065,
+        0.17326709628105164,
+        -0.09421417862176895
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_hair_2",
+      "category": "hair",
+      "selected_default": false,
+      "vertices": 384,
+      "triangles": 728,
+      "materials": [
+        "insect_dark"
+      ],
+      "bounds_min_m": [
+        -0.07866112887859344,
+        0.06966083496809006,
+        -0.11598775535821915
+      ],
+      "bounds_max_m": [
+        0.07866112887859344,
+        0.1727750301361084,
+        -0.09426005184650421
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_footwear_0",
+      "category": "footwear",
+      "selected_default": true,
+      "vertices": 972,
+      "triangles": 1848,
+      "materials": [
+        "insect_dark"
+      ],
+      "bounds_min_m": [
+        -0.16674315929412842,
+        -0.15299999713897705,
+        -0.060980524867773056
+      ],
+      "bounds_max_m": [
+        0.16674315929412842,
+        -0.015412556007504463,
+        0.12229999899864197
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_footwear_1",
+      "category": "footwear",
+      "selected_default": false,
+      "vertices": 3036,
+      "triangles": 5880,
+      "materials": [
+        "insect_dark",
+        "accent"
+      ],
+      "bounds_min_m": [
+        -0.16674315929412842,
+        -0.15299999713897705,
+        -0.060980524867773056
+      ],
+      "bounds_max_m": [
+        0.16674315929412842,
+        -0.015412556007504463,
+        0.12229999899864197
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_footwear_2",
+      "category": "footwear",
+      "selected_default": false,
+      "vertices": 1740,
+      "triangles": 3360,
+      "materials": [
+        "insect_dark",
+        "primary"
+      ],
+      "bounds_min_m": [
+        -0.16674315929412842,
+        -0.15299999713897705,
+        -0.060980524867773056
+      ],
+      "bounds_max_m": [
+        0.16674315929412842,
+        -0.015412556007504463,
+        0.12229999899864197
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_wing_l",
+      "category": "wing",
+      "selected_default": true,
+      "vertices": 557,
+      "triangles": 1048,
+      "materials": [
+        "wing",
+        "wing_vein"
+      ],
+      "bounds_min_m": [
+        -0.2479642629623413,
+        0.05498967319726944,
+        -0.006710974965244532
+      ],
+      "bounds_max_m": [
+        -0.012903186492621899,
+        0.06899181008338928,
+        0.14951618015766144
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_wing_r",
+      "category": "wing",
+      "selected_default": true,
+      "vertices": 557,
+      "triangles": 1048,
+      "materials": [
+        "wing",
+        "wing_vein"
+      ],
+      "bounds_min_m": [
+        0.012903186492621899,
+        0.05498967319726944,
+        -0.006710974965244532
+      ],
+      "bounds_max_m": [
+        0.2479642629623413,
+        0.06899181008338928,
+        0.14951618015766144
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_accessory_1",
+      "category": "accessory",
+      "selected_default": false,
+      "vertices": 590,
+      "triangles": 1168,
+      "materials": [
+        "accent",
+        "primary"
+      ],
+      "bounds_min_m": [
+        -0.09540000557899475,
+        0.059279996901750565,
+        -0.0279999990016222
+      ],
+      "bounds_max_m": [
+        0.09540000557899475,
+        0.11112000048160553,
+        0.009999999776482582
+      ],
+      "morphs": []
+    },
+    {
+      "name": "mosquito_accessory_2",
+      "category": "accessory",
+      "selected_default": false,
+      "vertices": 548,
+      "triangles": 1092,
+      "materials": [
+        "accent"
+      ],
+      "bounds_min_m": [
+        -0.098580002784729,
+        -0.0175199992954731,
+        -0.1549999862909317
+      ],
+      "bounds_max_m": [
+        0.09856204688549042,
+        0.08231999725103378,
+        -0.1469999998807907
+      ],
+      "morphs": []
+    }
+  ],
+  "implemented": [
+    "Six selectable facial styles across both species",
+    "Ten named facial morphs per style",
+    "Shared skeleton names and cosmetic categories",
+    "Editable Blender sources and explicit GLB"
+  ],
+  "pending": [
+    "Direction selection",
+    "Final gameplay retarget and eight-zone collision validation for changed silhouette",
+    "Performance verification after selection"
+  ]
+}

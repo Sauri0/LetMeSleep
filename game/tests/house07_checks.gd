@@ -53,9 +53,17 @@ func _run() -> void:
 			if material is StandardMaterial3D and material.emission_enabled and "linen" in material.resource_name:emitting_diffusers+=1
 	check(emitting_diffusers==16,"all16 room pendant diffusers have restrained warm emission")
 	var shadows:=0
+	var positional:=0
+	var room_lights:Dictionary={}
 	for lamp:Light3D in world.map_root.find_children("*","Light3D",true,false):
 		if lamp.shadow_enabled and lamp.light_energy>0:shadows+=1
-	check(shadows<=4,"shadow light budget remains at most4")
+		if lamp is SpotLight3D and lamp.light_energy>0:
+			positional+=1
+			check(lamp.shadow_enabled and not lamp.distance_fade_enabled,"room boundaries remain shadowed without camera-triggered fade")
+			if lamp.has_meta("house_room"):room_lights[str(lamp.get_meta("house_room"))]=true
+	check(room_lights.size()==world.map_data.rooms.size(),"every authored room has its own continuous key")
+	check(positional<=int(ProjectSettings.get_setting("rendering/limits/opengl/max_renderable_lights",32)),"whole-scene positional sources fit Compatibility cap")
+	check(shadows==positional,"all active house sources can be blocked by walls and doors")
 	check(not world.scene_environment.ssr_enabled and not world.scene_environment.ssao_enabled,"unsupported screen-space effects stay disabled")
 	for structure:Dictionary in world.map_data.structures:
 		if structure.kind!="floor":continue

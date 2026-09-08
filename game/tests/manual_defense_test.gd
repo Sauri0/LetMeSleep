@@ -3,6 +3,7 @@ extends SceneTree
 const Sim = preload("res://scripts/simulation.gd")
 const Pose = preload("res://scripts/human_pose.gd")
 const ArenaData = preload("res://scripts/arena.gd")
+const InsectPose = preload("res://scripts/mosquito_pose.gd")
 var checks := 0
 var failures := 0
 
@@ -120,7 +121,15 @@ func _test_manual_contact() -> void:
 					if was_alive and not bool(sim.actors[2].alive):
 						var actor: Dictionary = sim.actors[1]
 						var contact: Vector3 = Vector3(actor.p) + Vector3(Pose.sample(actor).strike_contact).rotated(Vector3.UP, Pose.body_yaw(actor))
-						witnessed = contact.distance_to(sim.actors[2].p) <= float(Sim.TOOL_STATS[str(actor.strike.tool)].radius) + ArenaData.MOSQUITO_RADIUS + 0.0001
+						# The dead actor no longer exposes contact orientation. Rebuild
+						# the witnessed biting pose from the still-visible human skin;
+						# the new head/abdomen are real targets outside the old core.
+						var insect: Dictionary = sim.actors[2].duplicate(false)
+						insect.state = "biting"
+						insect.surface_normal = Pose.zone_pose(actor,Sim.BODY_ZONES[zone]).normal
+						for capsule: Dictionary in InsectPose.collision_segments(insect):
+							var distance: float = contact.distance_to(InsectPose.closest_axis(contact,capsule.from,capsule.to))-float(capsule.radius)
+							witnessed = witnessed or distance<=float(Sim.TOOL_STATS[str(actor.strike.tool)].radius)+0.0001
 				check(not sim.actors[2].alive and witnessed, "visible palm/tool physically hits zone%d crouch%.1f tool%s" % [zone, crouch, tool])
 				if zone == 5 and tool != "hands":
 					check(sim.actors[1].strike.hand == "left" and sim.actors[1].strike.tool == "hands", "own right forearm uses free left palm without moving bitten arm")

@@ -19,13 +19,15 @@ func _initialize() -> void:
 		if arg.begins_with("--report="): path=arg.trim_prefix("--report=")
 	_run.call_deferred()
 
-func distribution(samples: Array[float]) -> Dictionary:
+func distribution(samples: Array[float], milliseconds: bool = true) -> Dictionary:
 	var sorted := samples.duplicate()
 	sorted.sort()
 	var over := 0
 	for value: float in sorted:
 		if value>1000.0/60.0: over+=1
-	return {"p50":sorted[int(sorted.size()*.5)],"p90":sorted[int(sorted.size()*.9)],"p99":sorted[mini(sorted.size()-1,int(sorted.size()*.99))],"max":sorted[-1],"over_16_67ms_percent":100.0*over/sorted.size()}
+	var result := {"p50":sorted[int(sorted.size()*.5)],"p90":sorted[int(sorted.size()*.9)],"p99":sorted[mini(sorted.size()-1,int(sorted.size()*.99))],"max":sorted[-1]}
+	if milliseconds: result["over_16_67ms_percent"] = 100.0*over/sorted.size()
+	return result
 
 func _run() -> void:
 	if DisplayServer.get_name()=="headless": quit(1); return
@@ -101,7 +103,7 @@ func _run() -> void:
 					if door.moving: moving_frames+=1; break
 		previous=now
 	Input.action_release("move_forward")
-	report={"version":ProjectSettings.get_setting("application/config/version"),"adapter":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"renderer":"Compatibility","resolution":root.content_scale_size,"window_size":root.size,"render_texture_size":root.get_texture().get_size(),"scenario":"real Main/Client/Practice, hallway input, live authoritative bots; periodic authoritative door commands when supported","actors":sim.actors.size(),"requested_population":population,"host_and_bots":true,"warmup_seconds":2,"measurement_seconds":seconds,"samples":frame_times.size(),"frame_ms":distribution(frame_times),"render_cpu_ms":distribution(render_cpu),"render_gpu_ms":distribution(render_gpu),"physics_ms":distribution(physics),"draws":distribution(draws),"primitives":distribution(vertices),"door_commands":transitions,"frames_with_moving_doors":moving_frames,"start_position":start_position,"end_position":sim.actors[1].p,"memory_bytes":Performance.get_monitor(Performance.MEMORY_STATIC),"video_memory_bytes":Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED),"physics_ticks_per_second":Engine.physics_ticks_per_second,"vsync":"disabled","fps_limit":0}
+	report={"version":ProjectSettings.get_setting("application/config/version"),"adapter":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"renderer":"Compatibility","resolution":root.content_scale_size,"window_size":root.size,"render_texture_size":root.get_texture().get_size(),"scenario":"real Main/Client/Practice, hallway input, live authoritative bots; periodic authoritative door commands when supported","actors":sim.actors.size(),"requested_population":population,"host_and_bots":true,"warmup_seconds":2,"measurement_seconds":seconds,"samples":frame_times.size(),"frame_ms":distribution(frame_times),"render_cpu_ms":distribution(render_cpu),"render_gpu_ms":distribution(render_gpu),"physics_ms":distribution(physics),"draws":distribution(draws,false),"primitives":distribution(vertices,false),"door_commands":transitions,"frames_with_moving_doors":moving_frames,"start_position":start_position,"end_position":sim.actors[1].p,"memory_bytes":Performance.get_monitor(Performance.MEMORY_STATIC),"video_memory_bytes":Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED),"physics_ticks_per_second":Engine.physics_ticks_per_second,"vsync":"disabled","fps_limit":0}
 	print("PERFORMANCE07_LIVE "+JSON.stringify(report))
 	if not path.is_empty():
 		var file:=FileAccess.open(path,FileAccess.WRITE)

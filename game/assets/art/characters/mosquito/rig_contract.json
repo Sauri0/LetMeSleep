@@ -1,6 +1,7 @@
 {
-  "id": "lms06_mosquito",
+  "id": "lms07_selected_mosquito",
   "rig_version": "LMS06.1",
+  "selected_base": "B",
   "bones": {
     "root": {
       "from": [

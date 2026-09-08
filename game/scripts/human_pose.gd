@@ -195,8 +195,11 @@ static func sample(actor: Dictionary) -> Dictionary:
 		result["foot_direction"+suffix] = Vector3.FORWARD.rotated(Vector3.RIGHT,foot.z*blend*(1.0-air))
 		result["shoulder" + suffix] = Vector3(side * .285, 1.30 - crouch * 0.45, crouch * 0.06)
 		var counter_swing := sin(phase+(PI if side>0 else 0.0))*blend*(1.0-air)
-		var elbow := Vector3(side * 0.25, 1.065 - crouch * 0.45+settle*.4+counter_swing*.03, -.22 + step * .13)
-		var hand := Vector3(side * 0.23, .845 - crouch * 0.40+settle*.35+counter_swing*.045, -.41 + step * .12)
+		# The selected tapered wrist puts the skin closer to the bone. Keep the
+		# real forearm ahead of the eye during its backward stride, so inspecting
+		# it stays inside the body-follow cone without moving the mark alone.
+		var elbow := Vector3(side * 0.25, 1.065 - crouch * 0.45+settle*.4+counter_swing*.03, -.23 + step * .09)
+		var hand := Vector3(side * 0.23, .845 - crouch * 0.40+settle*.35+counter_swing*.045, -.43 + step * .06)
 		if bool(actor.get("relaxed_pose",false)):
 			# Lobby/editor presentation only: no bite reservations or combat
 			# happen there. Active-round pose/contact contracts stay unchanged.
@@ -253,7 +256,8 @@ static func zone_pose(actor: Dictionary, zone: Dictionary, posed: Dictionary = {
 		if bone.begins_with("forearm_"):
 			# A forearm mark belongs on its shaft, not on the inflated wrist cap
 			# reached by projecting a distant front seed along a bent arm.
-			along = .83
+			var nominal: Vector3 = Vector3(pose["elbow"+bone.right(2)]).lerp(Vector3(pose["hand"+bone.right(2)]),.83)
+			along = clampf((nominal-Vector3(capsule.from)).dot(segment)/maxf(segment.length_squared(),.000001),0.0,1.0)
 		var center: Vector3 = Vector3(capsule.from)+segment*along
 		local_normal = local_point-center
 		if bone.begins_with("forearm_"):
@@ -269,7 +273,7 @@ static func zone_pose(actor: Dictionary, zone: Dictionary, posed: Dictionary = {
 	for iteration: int in range(4):
 		var changed := false
 		for capsule: Dictionary in capsules:
-			if _striking_limb(actor,str(capsule.key)) and not str(capsule.key).begins_with(surface_key): continue
+			if _striking_limb(actor,str(capsule.key)) and limb_key(str(capsule.key))!=surface_key: continue
 			var axis: Vector3 = Vector3(capsule.to)-Vector3(capsule.from)
 			var closest: Vector3 = Vector3(capsule.from)+axis*clampf((local_point-Vector3(capsule.from)).dot(axis)/maxf(axis.length_squared(),.000001),0.0,1.0)
 			if local_point.distance_to(closest)>=float(capsule.radius)-.0001: continue
@@ -282,10 +286,13 @@ static func zone_pose(actor: Dictionary, zone: Dictionary, posed: Dictionary = {
 	var yaw: float = body_yaw(actor)
 	return {"p": Vector3(actor.get("p", Vector3.ZERO)) + local_point.rotated(Vector3.UP, yaw), "normal": local_normal.rotated(Vector3.UP, yaw).normalized(), "label": str(zone.get("label", "Zona"))}
 
+static func limb_key(key: String) -> String:
+	return key.replace("forearm_proximal_","forearm_").replace("forearm_mid_","forearm_")
+
 static func _striking_limb(actor: Dictionary, key: String) -> bool:
 	var strike: Dictionary = actor.get("strike", {})
 	var suffix: String = "_l" if str(strike.get("hand", "right")) == "left" else "_r"
-	return bool(strike.get("active", false)) and key in ["upperarm" + suffix, "forearm" + suffix, "hand" + suffix]
+	return bool(strike.get("active", false)) and limb_key(key) in ["upperarm" + suffix, "forearm" + suffix, "hand" + suffix]
 
 static func ray_body(actor: Dictionary, from: Vector3, to: Vector3, own_view: bool = false, ignore_striking_limb: bool = false) -> Dictionary:
 	var position: Vector3 = actor.get("p", Vector3.ZERO)
@@ -360,18 +367,29 @@ static func body_boxes(actor: Dictionary) -> Array[AABB]:
 
 static func collision_segments(actor: Dictionary, posed: Dictionary = {}) -> Array[Dictionary]:
 	var pose: Dictionary = sample(actor) if posed.is_empty() else posed
-	var torso_half_axis: float = maxf(0.0, float(pose.torso_height) * 0.5 - 0.24)
+	var torso_radius := .267
+	var crouch := clampf(float(actor.get("crouch_amount",0.0)),0.0,1.0)
+	# The tailored front folds forward below the ribs when the torso shortens.
+	# This sphere stays enclosed at rest and follows that measured lower surface.
+	var lower_torso: Vector3 = Vector3(pose.torso)+Vector3(0,-.050,-.030)*crouch
+	var torso_half_axis: float = maxf(0.0, float(pose.torso_height) * 0.5 - torso_radius)
 	var result: Array[Dictionary] = [
-		{"key": "torso", "from": Vector3(pose.torso) - Vector3.UP * torso_half_axis, "to": Vector3(pose.torso) + Vector3.UP * torso_half_axis, "radius": 0.24},
+		{"key": "torso", "from": Vector3(pose.torso) - Vector3.UP * torso_half_axis, "to": Vector3(pose.torso) + Vector3.UP * torso_half_axis, "radius": torso_radius},
+		{"key":"torso_lower","from":lower_torso,"to":lower_torso,"radius":.245},
 		{"key": "head", "from": pose.head, "to": pose.head, "radius": 0.235},
-		{"key": "pelvis", "from": pose.pelvis, "to": pose.pelvis, "radius": 0.20},
+		{"key": "pelvis", "from": pose.pelvis, "to": pose.pelvis, "radius": 0.22},
 	]
 	for suffix: String in ["_l", "_r"]:
 		result.append({"key": "thigh" + suffix, "from": pose["hip" + suffix], "to": pose["knee" + suffix], "radius": 0.105})
 		result.append({"key": "shin" + suffix, "from": pose["knee" + suffix], "to": pose["ankle" + suffix], "radius": 0.105})
 		result.append({"key": "upperarm" + suffix, "from": pose["shoulder" + suffix], "to": pose["elbow" + suffix], "radius": 0.103})
-		result.append({"key": "forearm" + suffix, "from": pose["elbow" + suffix], "to": pose["hand" + suffix], "radius": 0.078})
-		result.append({"key": "hand" + suffix, "from": pose["hand" + suffix], "to": pose["hand" + suffix], "radius": 0.088})
+		var elbow: Vector3 = pose["elbow"+suffix]
+		var hand: Vector3 = pose["hand"+suffix]
+		var forearm: Vector3 = hand-elbow
+		result.append({"key":"forearm_proximal"+suffix,"from":elbow,"to":elbow+forearm*.30,"radius":.076})
+		result.append({"key":"forearm_mid"+suffix,"from":elbow+forearm*.30,"to":elbow+forearm*.60,"radius":.065})
+		result.append({"key":"forearm"+suffix,"from":elbow+forearm*.60,"to":elbow+forearm*.95,"radius":.050})
+		result.append({"key":"hand"+suffix,"from":hand+forearm.normalized()*.022,"to":hand+forearm.normalized()*.060,"radius":.046})
 		var foot_direction: Vector3 = pose.get("foot_direction"+suffix,Vector3.FORWARD)
 		result.append({"key": "foot" + suffix, "from": Vector3(pose["ankle" + suffix])-foot_direction*.02, "to": Vector3(pose["ankle" + suffix])+foot_direction*.20, "radius": 0.105})
 	return result

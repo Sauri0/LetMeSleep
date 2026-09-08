@@ -1,5 +1,5 @@
 {
-  "id": "lms06_human",
+  "id": "lms07_selected_human",
   "rig_version": "LMS06.1",
   "blender": "4.5.3 LTS",
   "units": "metres",
@@ -7,7 +7,7 @@
   "source": "art_source\\characters\\human\\human_lms06.blend",
   "glb": "game\\assets\\art\\characters\\human\\human_lms06.glb",
   "original": true,
-  "authoring": "art_source/export_presets/characters_pipeline.py",
+  "authoring": "art_source/export_presets/characters_selected_pipeline.py",
   "license": "Project-original; no third-party source assets",
   "bones": {
     "root": {
@@ -430,58 +430,58 @@
   "meshes": [
     {
       "name": "human_head",
-      "vertices": 2528,
-      "triangles": 5052
+      "vertices": 4264,
+      "triangles": 8524
     },
     {
       "name": "human_core",
-      "vertices": 3693,
-      "triangles": 7378
+      "vertices": 5742,
+      "triangles": 11476
     },
     {
       "name": "human_outfit_0",
-      "vertices": 4892,
-      "triangles": 9780
+      "vertices": 7452,
+      "triangles": 14900
     },
     {
       "name": "human_outfit_0_trim",
-      "vertices": 760,
-      "triangles": 1484
+      "vertices": 796,
+      "triangles": 1556
     },
     {
       "name": "human_outfit_1",
-      "vertices": 4892,
-      "triangles": 9780
+      "vertices": 7452,
+      "triangles": 14900
     },
     {
       "name": "human_outfit_1_trim",
-      "vertices": 760,
-      "triangles": 1484
+      "vertices": 796,
+      "triangles": 1556
     },
     {
       "name": "human_outfit_2",
-      "vertices": 4892,
-      "triangles": 9780
+      "vertices": 7452,
+      "triangles": 14900
     },
     {
       "name": "human_outfit_2_trim",
-      "vertices": 1036,
-      "triangles": 2020
+      "vertices": 1072,
+      "triangles": 2092
     },
     {
       "name": "human_face_0",
-      "vertices": 2052,
-      "triangles": 4052
+      "vertices": 2446,
+      "triangles": 4832
     },
     {
       "name": "human_face_1",
-      "vertices": 2052,
-      "triangles": 4052
+      "vertices": 2446,
+      "triangles": 4832
     },
     {
       "name": "human_face_2",
-      "vertices": 2234,
-      "triangles": 4412
+      "vertices": 2446,
+      "triangles": 4832
     },
     {
       "name": "human_hair_0",
@@ -540,8 +540,8 @@
     },
     {
       "name": "human_accessory_3",
-      "vertices": 2068,
-      "triangles": 4100
+      "vertices": 1848,
+      "triangles": 3656
     }
   ],
   "default": {
@@ -564,5 +564,37 @@
     "human_tool_hold",
     "human_turn",
     "human_walk"
-  ]
+  ],
+  "selected_base": "A",
+  "selected_source": "art_source\\samples07\\characters\\A\\human\\human_lms06.blend",
+  "selected_source_sha256": "7af7b61ff82806147970d84ae6d505359c71bef3eb619f7d3d57d4cc364a0cbb",
+  "colour_management": {
+    "skin": {
+      "intended_srgb": "e3ac83",
+      "export_linear": [
+        0.768151147247507,
+        0.41254261348390375,
+        0.22696587351009836,
+        1.0
+      ]
+    },
+    "skin_shadow": {
+      "intended_srgb": "c88e6a",
+      "export_linear": [
+        0.5775804404296506,
+        0.2704977910130658,
+        0.14412847085805777,
+        1.0
+      ]
+    },
+    "lip": {
+      "intended_srgb": "ab735a",
+      "export_linear": [
+        0.4072402119017367,
+        0.1714411007328226,
+        0.10224173308810132,
+        1.0
+      ]
+    }
+  }
 }

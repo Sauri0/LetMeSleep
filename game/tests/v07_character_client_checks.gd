@@ -40,6 +40,8 @@ func capture(file_name: String) -> void:
 func _run() -> void:
 	root.size = Vector2i(1280,720)
 	output_dir = ProjectSettings.globalize_path("res://../outputs/0.7-animacion/cliente")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="): output_dir=arg.trim_prefix("--output=")
 	DirAccess.make_dir_recursive_absolute(output_dir)
 	var transport := Transport.new()
 	root.add_child(transport)
@@ -91,7 +93,7 @@ func _run() -> void:
 			var query := PhysicsRayQueryParameters3D.create(client.camera.global_position,position,2)
 			var hit: Dictionary = client.world.get_world_3d().direct_space_state.intersect_ray(query)
 			var insect: ActorView = client.world.get_actor(2)
-			check(not hit.is_empty() and hit.collider==insect.body_shapes[0],"rendered body cannot hide target ray "+posture+str(zone_id))
+			check(not hit.is_empty() and hit.collider in insect.body_shapes,"rendered body cannot hide anatomical target ray "+posture+str(zone_id))
 			await capture("propio-%s-zona-%d" % [posture,zone_id])
 			if posture=="stand" and zone_id==4:
 				simulation.action(1,1,"attack",human.yaw,human.pitch)

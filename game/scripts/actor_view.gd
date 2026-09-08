@@ -3,6 +3,7 @@ extends Node3D
 
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const Pose = preload("res://scripts/human_pose.gd")
+const MosquitoPoseData = preload("res://scripts/mosquito_pose.gd")
 const Rounded = preload("res://assets/procedural_shapes.gd")
 const ImportedSkin = preload("res://assets/art/characters/shared/character_skin.gd")
 const SwatterArt = preload("res://assets/art/house/swatter.glb")
@@ -67,8 +68,6 @@ var help_icon: Label3D
 var imported_skin: Node3D
 var legacy_geometry_dirty := false
 var mosquito_orientation := Quaternion.IDENTITY
-var mosquito_velocity := Vector3.ZERO
-var mosquito_bank := Vector2.ZERO
 var human_snapshot_hash := 0
 var human_snapshot_values: Dictionary = {}
 
@@ -163,24 +162,13 @@ func update_state(data: Dictionary, dt: float) -> void:
 		right_wing.rotation.z = lerpf(0.22-flutter,0.05,stun_blend)
 		left_wing.rotation.y = stun_blend*1.25
 		right_wing.rotation.y = -stun_blend*1.25
-		var velocity: Vector3 = data.get("velocity",Vector3.ZERO)
-		var acceleration := (velocity-mosquito_velocity)/maxf(dt,.001)
-		mosquito_velocity = velocity
-		var local_velocity := global_basis.inverse()*velocity
-		var local_acceleration := global_basis.inverse()*acceleration.limit_length(28.0)
-		var requested_bank := Vector2(clampf(local_velocity.z*.065+local_acceleration.z*.009,-.32,.32),clampf(-local_velocity.x*.065-local_acceleration.x*.009,-.38,.38)) if flying else Vector2.ZERO
-		mosquito_bank = mosquito_bank.lerp(requested_bank,1.0-exp(-8.0*dt))
-		var target_orientation := Basis.from_euler(Vector3((mosquito_bank.x+float(data.get("pitch",0.0))*.18)*(1.0-stun_blend),0,mosquito_bank.y*(1.0-stun_blend)+stun_blend*(1.25+sin(clock_time*2.7)*.025)))
-		var surface_normal: Vector3 = data.get("surface_normal",Vector3.ZERO)
-		if state in ["biting","perched"] and surface_normal.length_squared()>0.5:
-			var up: Vector3 = (global_basis.inverse()*surface_normal).normalized()
-			var forward: Vector3 = Vector3.FORWARD-up*Vector3.FORWARD.dot(up)
-			if forward.length_squared()<0.01:
-				forward = Vector3.UP-up*Vector3.UP.dot(up)
-			forward = forward.normalized()
-			target_orientation = Basis(forward.cross(up).normalized(),up,-forward)
+		# Authoritative public-state anatomy owns banking and surface alignment.
+		# Interpolate snapshots in world space, then put both mesh and ray shapes
+		# in that same displayed frame; no independent acceleration-only tilt.
+		var target_orientation: Basis = MosquitoPoseData.orientation(data)
 		mosquito_orientation = mosquito_orientation.slerp(target_orientation.get_rotation_quaternion(),1.0-exp(-14.0*dt))
-		model.basis = Basis(mosquito_orientation).scaled(Vector3.ONE*MOSQUITO_VISUAL_SCALE)
+		var local_orientation: Basis = global_basis.orthonormalized().inverse()*Basis(mosquito_orientation)
+		model.basis = local_orientation.scaled(Vector3.ONE*MOSQUITO_VISUAL_SCALE)
 		mosquito_legs.scale = Vector3(lerpf(1.0,0.62,stun_blend),lerpf(1.0,0.28,stun_blend),1.0)
 		stun_sparkles.visible = state=="stunned"
 		stun_sparkles.rotation.y = clock_time*1.5
@@ -188,6 +176,13 @@ func update_state(data: Dictionary, dt: float) -> void:
 		# contact centre, without a cosmetic bob that suggests drifting controls.
 		# The folded pose reserves 16mm for the eye rim above the physical floor.
 		model.position = Vector3(0,stun_blend*0.016,0)
+		for index: int in range(MosquitoPoseData.LOCAL_SEGMENTS.size()):
+			var piece: Dictionary = MosquitoPoseData.LOCAL_SEGMENTS[index]
+			var from: Vector3 = local_orientation*Vector3(piece.from)+model.position
+			var to: Vector3 = local_orientation*Vector3(piece.to)+model.position
+			var collider: StaticBody3D = body_shapes[index]
+			collider.position = (from+to)*.5
+			if from.distance_to(to)>.001:collider.quaternion=Quaternion(Vector3.UP,(to-from).normalized())
 		if state!="stunned":
 			help_icon.visible = false
 		if is_instance_valid(imported_skin):
@@ -322,10 +317,13 @@ func _apply_human_pose(data: Dictionary, dt: float) -> void:
 		var from: Vector3 = piece.from
 		var to: Vector3 = piece.to
 		collider.position = (from + to) * 0.5
-		if from.distance_to(to) > 0.001:
-			collider.quaternion = Quaternion(Vector3.UP, (to - from).normalized())
-			var shape: CapsuleShape3D = (collider.get_child(0) as CollisionShape3D).shape
-			shape.height = from.distance_to(to) + float(piece.radius) * 2.0
+		var shape: Shape3D = (collider.get_child(0) as CollisionShape3D).shape
+		if shape is CapsuleShape3D:
+			collider.quaternion = Quaternion(Vector3.UP, (to-from).normalized()) if from.distance_to(to)>.001 else Quaternion.IDENTITY
+			shape.radius = float(piece.radius)
+			shape.height = from.distance_to(to)+float(piece.radius)*2.0
+		elif shape is SphereShape3D:
+			shape.radius = float(piece.radius)
 	for suffix: String in ["l", "r"]:
 		var hip: Vector3 = body_pose["hip_" + suffix]
 		var knee: Vector3 = body_pose["knee_" + suffix]
@@ -360,12 +358,8 @@ func _pose_segment(key: String, from: Vector3, to: Vector3) -> void:
 	segment.position = (from + to) * 0.5
 	segment.quaternion = Quaternion(Vector3.UP, direction / distance)
 	(segment.mesh as CapsuleMesh).height = distance + (segment.mesh as CapsuleMesh).radius * 2.0
-	if pose_colliders.has(key):
-		var collider: StaticBody3D = pose_colliders[key]
-		collider.position = segment.position
-		collider.quaternion = segment.quaternion
-		var shape: CapsuleShape3D = (collider.get_child(0) as CollisionShape3D).shape
-		shape.height = distance + shape.radius * 2.0
+	# The shared capsule loop above owns ray shapes. The hidden scaffold's full
+	# limb must not stretch a tapered distal collider back over the entire arm.
 
 func _update_first_person_arms(data: Dictionary, dt: float) -> void:
 	fps_root.position = body_pose.eye
@@ -439,7 +433,10 @@ func _build_mosquito() -> void:
 	help_icon.no_depth_test = false
 	help_icon.visible = false
 	add_child(help_icon)
-	_add_body_sphere(Vector3.ZERO, MOSQUITO_BODY_RADIUS)
+	for piece: Dictionary in MosquitoPoseData.local_segments():
+		var distance: float = Vector3(piece.from).distance_to(piece.to)
+		if distance<.001:_add_body_sphere(piece.from,float(piece.radius))
+		else:_add_body_capsule((Vector3(piece.from)+Vector3(piece.to))*.5,float(piece.radius),distance+float(piece.radius)*2.0)
 
 func apply_appearance(raw: Variant) -> void:
 	# Catalog values are bounded here as well as on the server. The rendering

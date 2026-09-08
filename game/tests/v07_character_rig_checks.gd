@@ -49,6 +49,8 @@ func mesh_ray(from: Vector3, to: Vector3, faces: PackedVector3Array) -> float:
 func _run() -> void:
 	root.size = Vector2i(1280,720)
 	folder = ProjectSettings.globalize_path("res://../outputs/0.7-animacion/rig")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="): folder=arg.trim_prefix("--output=")
 	DirAccess.make_dir_recursive_absolute(folder)
 	var environment_node := WorldEnvironment.new()
 	var environment := Environment.new()

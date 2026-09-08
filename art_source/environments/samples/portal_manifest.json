@@ -1,0 +1,80 @@
+{
+  "original_models_and_textures": true,
+  "source": "MapCatalog kitchen portal + DoorCatalog.kitchen + build_house07 door carpentry",
+  "options": [
+    {
+      "finish": "liso",
+      "meshes": 6,
+      "triangles": 10884,
+      "materials": [
+        "House_brass",
+        "House_cream",
+        "House_ink",
+        "House_sage",
+        "House_wood",
+        "portal_liso_pared",
+        "portal_liso_suelo"
+      ],
+      "geometry_sha256": "5ab905ad2ea6bee22e10d087d9e695704e7d28e7512d318d2efb0fe68ab907fb",
+      "bytes": 365352,
+      "door_width_m": 2.2,
+      "door_top_m": 2.45,
+      "door_gap_m": 0.14,
+      "wall_thickness_m": 0.2,
+      "ceiling_visible_m": 2.989,
+      "floor_size_m": [
+        4.6,
+        2.66
+      ],
+      "world_hinge_godot": [
+        -2.14,
+        0,
+        -7.1
+      ],
+      "world_closed_yaw_radians": 1.5707963267948966,
+      "pivot_blender": [
+        0,
+        0,
+        0
+      ],
+      "animation": "0 to90deg, closed-open-closed,151frames@30fps"
+    },
+    {
+      "finish": "sutil",
+      "meshes": 6,
+      "triangles": 10884,
+      "materials": [
+        "House_brass.001",
+        "House_cream.001",
+        "House_ink.001",
+        "House_sage.001",
+        "House_wood.001",
+        "portal_sutil_pared",
+        "portal_sutil_suelo"
+      ],
+      "geometry_sha256": "5ab905ad2ea6bee22e10d087d9e695704e7d28e7512d318d2efb0fe68ab907fb",
+      "bytes": 487932,
+      "door_width_m": 2.2,
+      "door_top_m": 2.45,
+      "door_gap_m": 0.14,
+      "wall_thickness_m": 0.2,
+      "ceiling_visible_m": 2.989,
+      "floor_size_m": [
+        4.6,
+        2.66
+      ],
+      "world_hinge_godot": [
+        -2.14,
+        0,
+        -7.1
+      ],
+      "world_closed_yaw_radians": 1.5707963267948966,
+      "pivot_blender": [
+        0,
+        0,
+        0
+      ],
+      "animation": "0 to90deg, closed-open-closed,151frames@30fps"
+    }
+  ]
+}

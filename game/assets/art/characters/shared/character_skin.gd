@@ -3,6 +3,7 @@ extends Node3D
 ## body capsules, motion rules and private surface assignment remain in gameplay.
 const Clothing = preload("res://assets/art/characters/shared/cloth.gdshader")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
+const FacialExpression = preload("res://assets/art/characters/shared/facial_expression.gd")
 var species := "human"
 var asset: Node3D
 var skeleton: Skeleton3D
@@ -20,10 +21,17 @@ var bite_blend := 0.0
 var insect_previous_time := 0.0
 var human_pose_hash := 0
 var human_pose_values: Dictionary = {}
+var facial: RefCounted
+var facial_values: Dictionary = {}
+var facial_elapsed := 0.0
+var facial_distance := 0.0
+var face_channels: Dictionary = {}
+var facial_applied: Dictionary = {}
 
-func setup(role: String) -> void:
+func setup(role: String, source_path: String = "", contract_path: String = "") -> void:
 	species = role
-	var packed: PackedScene = load("res://assets/art/characters/%s/%s_lms06.glb" % [role,role])
+	facial = FacialExpression.new(float(posmod(get_instance_id()*197,997))/997.0)
+	var packed: PackedScene = load(source_path if not source_path.is_empty() else "res://assets/art/characters/%s/%s_lms06.glb" % [role,role])
 	asset = packed.instantiate()
 	add_child(asset)
 	skeleton = asset.find_child("*Skeleton*",true,false) as Skeleton3D
@@ -32,12 +40,17 @@ func setup(role: String) -> void:
 			skeleton = child as Skeleton3D
 			break
 	assert(skeleton!=null,"Character GLB requires a deformation skeleton")
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/characters/%s/rig_contract.json" % role))
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(contract_path if not contract_path.is_empty() else "res://assets/art/characters/%s/rig_contract.json" % role))
 	contract = Dictionary(parsed).get("bones",{})
 	for i: int in range(skeleton.get_bone_count()):
 		bone_ids[skeleton.get_bone_name(i)] = i
 	for node: Node in asset.find_children("*","MeshInstance3D",true,false):
 		meshes.append(node as MeshInstance3D)
+		if str(node.name).begins_with(species+"_face_"):
+			var channels: Dictionary = {}
+			for index: int in range(node.mesh.get_blend_shape_count()):
+				channels[str(node.mesh.get_blend_shape_name(index))] = index
+			face_channels[node] = channels
 	for node: Node in asset.find_children("*","AnimationPlayer",true,false):
 		(node as AnimationPlayer).stop()
 		(node as AnimationPlayer).active = false
@@ -119,19 +132,8 @@ func _set_bone(name: String, from: Vector3, to: Vector3, orientation: Basis=Basi
 
 func apply_human(pose: Dictionary, data: Dictionary, dt: float) -> void:
 	time += dt
-	var blink_phase: float = fmod(time+float(appearance.get("face",0))*.17,6.3)
-	var blink: float = sin(clampf((blink_phase-3.87)/.25,0.0,1.0)*PI) if blink_phase>3.87 and blink_phase<4.12 else 0.0
-	if int(appearance.get("face",0))==1 and blink_phase>4.26 and blink_phase<4.56:
-		blink = sin((blink_phase-4.26)/.30*PI)*.85
 	var strike: Dictionary = data.get("strike",{})
-	if bool(strike.get("active",false)):
-		blink = maxf(blink,sin(clampf(float(strike.get("progress",0.0)),0.0,1.0)*PI)*.16)
-	for mesh: MeshInstance3D in meshes:
-		if mesh.visible and mesh.mesh.get_blend_shape_count()>0:
-			mesh.set_blend_shape_value(0,blink)
-			if mesh.mesh.get_blend_shape_count()>1:
-				var sleepy := maxf(0.0,sin(time*.73))*.30 if int(appearance.get("face",0))==1 else 0.0
-				mesh.set_blend_shape_value(1,sleepy)
+	_animate_face(data,dt)
 	var new_hash := hash(pose)
 	var changed := new_hash!=human_pose_hash or human_pose_values!=pose
 	human_pose_hash = new_hash
@@ -173,11 +175,7 @@ func apply_mosquito(data: Dictionary, clock_time: float, stun: float) -> void:
 	flight_blend = move_toward(flight_blend,1.0 if flying else 0.0,dt*6.0)
 	bite_blend = move_toward(bite_blend,1.0 if state=="biting" else 0.0,dt*8.0)
 	var speed := clampf(Vector3(data.get("velocity",Vector3.ZERO)).length()/3.8,0.0,1.0)
-	var blink_phase := fmod(time,4.8)
-	var blink := sin((blink_phase-4.40)/.21*PI) if blink_phase>4.40 and blink_phase<4.61 else 0.0
-	for mesh: MeshInstance3D in meshes:
-		if mesh.visible and mesh.mesh.get_blend_shape_count()>0:
-			mesh.set_blend_shape_value(0,maxf(blink,stun*.65))
+	_animate_face(data,dt)
 	var proboscis_id: int = int(bone_ids.get("proboscis",-1))
 	if proboscis_id>=0:
 		var rest: Transform3D = skeleton.get_bone_global_rest(proboscis_id)
@@ -208,3 +206,30 @@ func apply_mosquito(data: Dictionary, clock_time: float, stun: float) -> void:
 		var antenna: String = "antenna_"+side
 		var antenna_id: int = bone_ids[antenna]
 		skeleton.set_bone_pose_rotation(antenna_id,skeleton.get_bone_rest(antenna_id).basis.get_rotation_quaternion()*Quaternion(Vector3.FORWARD,sign*(sin(time*2.2)*.07+speed*.08)*(1.0-stun)))
+
+func _animate_face(data: Dictionary, dt: float) -> void:
+	if facial==null: return
+	facial_values = facial.advance(data,species,dt,int(appearance.get("face",0)))
+	facial_elapsed += dt
+	if first_person and species=="human": return
+	var camera := get_viewport().get_camera_3d()
+	var distance := camera.global_position.distance_to(skeleton.to_global(skeleton.get_bone_global_pose(int(bone_ids.head)).origin)) if camera!=null else 0.0
+	var near := 7.0 if species=="human" else 1.8
+	var interval := 1.0/30.0 if distance<near else .10 if distance<near*3.0 else .30
+	var approaching := facial_distance>=near and distance<near
+	facial_distance = distance
+	if facial_elapsed<interval and not approaching: return
+	facial_elapsed = 0.0
+	for mesh: MeshInstance3D in face_channels:
+		if not mesh.visible: continue
+		var channels: Dictionary = face_channels[mesh]
+		var applied: Dictionary = facial_applied.get(mesh,{})
+		for channel: String in FacialExpression.CHANNELS:
+			var value := float(facial_values[channel])
+			if channels.has(channel) and (not applied.has(channel) or absf(float(applied[channel])-value)>.0001):
+				mesh.set_blend_shape_value(int(channels[channel]),value)
+				applied[channel] = value
+		facial_applied[mesh] = applied
+		# Allows the source script to run while the previous GLB is still imported.
+		if channels.has("Blink") and not channels.has("BlinkL"):
+			mesh.set_blend_shape_value(int(channels.Blink),maxf(float(facial_values.BlinkL),float(facial_values.BlinkR)))

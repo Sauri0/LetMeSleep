@@ -1,5 +1,5 @@
 {
-  "id": "lms06_mosquito",
+  "id": "lms07_selected_mosquito",
   "rig_version": "LMS06.1",
   "blender": "4.5.3 LTS",
   "units": "metres",
@@ -7,7 +7,7 @@
   "source": "art_source\\characters\\mosquito\\mosquito_lms06.blend",
   "glb": "game\\assets\\art\\characters\\mosquito\\mosquito_lms06.glb",
   "original": true,
-  "authoring": "art_source/export_presets/characters_pipeline.py",
+  "authoring": "art_source/export_presets/characters_selected_pipeline.py",
   "license": "Project-original; no third-party source assets",
   "bones": {
     "root": {
@@ -307,18 +307,18 @@
     },
     {
       "name": "mosquito_face_0",
-      "vertices": 1851,
-      "triangles": 3664
+      "vertices": 2301,
+      "triangles": 4552
     },
     {
       "name": "mosquito_face_1",
-      "vertices": 1851,
-      "triangles": 3664
+      "vertices": 2301,
+      "triangles": 4552
     },
     {
       "name": "mosquito_face_2",
-      "vertices": 1995,
-      "triangles": 3944
+      "vertices": 2301,
+      "triangles": 4552
     },
     {
       "name": "mosquito_hair_0",
@@ -389,5 +389,9 @@
     "mosquito_recover",
     "mosquito_rescue",
     "mosquito_stunned"
-  ]
+  ],
+  "selected_base": "B",
+  "selected_source": "art_source\\samples07\\characters\\B\\mosquito\\mosquito_lms06.blend",
+  "selected_source_sha256": "06efc74410714e467b86651c43272cece0c75735aec05f350ef0215e3e1461b7",
+  "colour_management": {}
 }

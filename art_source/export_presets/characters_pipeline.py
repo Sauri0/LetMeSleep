@@ -12,10 +12,14 @@ from mathutils import Vector, Matrix, Quaternion, kdtree
 
 TAU=math.tau
 ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'art_source/characters/shared'))
+from facial_geometry import build_face
 MATS={}
 BONES={}
 RIG=None
 OBJECTS=[]
+OUTPUT_PATHS={}
+SAMPLE_QUALITY=False
 
 def g(v): return Vector((v[0],-v[2],v[1]))
 def p(v): return Vector(v)
@@ -222,7 +226,7 @@ def human():
             if y<.92:radius=max(radius,.18)
             centers.append((0,y,0));radii.append((radius,radius))
         mesh.loft(centers,radii,'primary','torso',32)
-        mesh.ellipsoid((0,.75,.025),(.20,.12,.18),'primary','pelvis',24,14)
+        mesh.ellipsoid((0,.755 if SAMPLE_QUALITY else .75,.025),(.22,.14,.195) if SAMPLE_QUALITY else (.20,.12,.18),'primary','pelvis',24,14)
         for side,s in [(-1,'l'),(1,'r')]:
             hip=p(BONES['thigh_'+s][0]);knee=p(BONES['shin_'+s][0]);ankle=p(BONES['shin_'+s][1])
             points=[hip+Vector((0,.09,0)),hip,hip.lerp(knee,.3),hip.lerp(knee,.75),knee,knee.lerp(ankle,.25),knee.lerp(ankle,.65),ankle,ankle+Vector((0,-.025,0))]
@@ -236,10 +240,11 @@ def human():
             points=[a-d*.022,a,a.lerp(b,.35),a.lerp(b,.82),b+d*.014]
             mesh.tube(points,[.054,.082,.087,.090,.080],'primary','upperarm_'+s,24)
             # Rolled sleeve cuff has a clear seam but leaves the forearm target skin exposed.
-            trim.tube([b-d*.024,b-d*.016,b+d*.010],[.106,.109,.087],'secondary','upperarm_'+s,24)
+            trim.tube([b-d*.024,b-d*.016,b+d*.010],[.095,.098,.087] if SAMPLE_QUALITY else [.106,.109,.087],'secondary','upperarm_'+s,24)
             # Swept fabric collar, not a block on the first-person abdomen.
             collar=curve([(side*.078,1.395,-.088),(side*.113,1.345,-.123),(side*.068,1.307,-.171)],4)
-            trim.tube(collar,[.030,.030,.028,.027,.027,.025,.023,.02,.012],'secondary','torso',8)
+            collar_width=[.030,.030,.028,.027,.027,.025,.023,.020,.012]
+            trim.tube(collar,[(r,.004) for r in collar_width] if SAMPLE_QUALITY else collar_width,'secondary','torso',10)
         seam=curve([(0,1.30,-.201),(0,1.15,-.243),(0,.99,-.243),(0,.80,-.162)],5)
         trim.tube(seam,.005,'secondary','torso',8)
         for y,z in [(1.255,-.231),(1.105,-.246),(.947,-.238),(.835,-.185)]:
@@ -260,46 +265,14 @@ def human():
     finish('human')
 
 def human_face(expression):
-    mesh=Mesh('human_face_%d'%expression)
-    blink_vertices={}
-    drowsy_vertices={}
-    for side in [-1,1]:
-        eye_start=len(mesh.v)
-        mesh.ellipsoid((side*.068,1.596,-.142),(.051,.043,.029),'eye_white','head',24,16)
-        gaze=-.006 if expression==1 else .005
-        mesh.ellipsoid((side*.068+gaze,1.59,-.168),(.018,.023,.011),'pupil','head',20,12)
-        mesh.ellipsoid((side*.065+gaze,1.601,-.179),(.0055,.007,.002),'eye_white','head',12,8)
-        for index in range(eye_start,len(mesh.v)):
-            value=Vector(mesh.v[index]);value.z=1.579+(value.z-1.579)*.025;blink_vertices[index]=value
-        # Upper eyelid is sculpted skin; the sleeping style has a lowered arc.
-        lid=curve([(side*.020,1.602 if expression==1 else 1.616,-.156),(side*.066,1.612 if expression==1 else 1.637,-.173),(side*.115,1.606 if expression==1 else 1.615,-.148)],5)
-        lid_start=len(mesh.v)
-        mesh.tube(lid,.011 if expression==1 else .006,'skin','head',10)
-        for index in range(lid_start,len(mesh.v)):
-            value=Vector(mesh.v[index]);value.z-=.024 if expression==1 else .037;blink_vertices[index]=value
-        brow=curve([(side*.022,1.656 if expression!=2 else 1.646,-.136),(side*.064,1.67,-.135),(side*.112,1.650 if expression!=2 else 1.675,-.119)],5)
-        brow_start=len(mesh.v)
-        mesh.tube(brow,[.005+math.sin(math.pi*i/(len(brow)-1))*.009 for i in range(len(brow))],'hair','head',10)
-        for index in range(brow_start,len(mesh.v)):
-            value=Vector(mesh.v[index]);value.z+=.013*(1-min(1,abs(value.x)/.13));drowsy_vertices[index]=value
-        bag=curve([(side*.025,1.566,-.154),(side*.065,1.557,-.161),(side*.105,1.568,-.14)],4)
-        mesh.tube(bag,.003,'skin_shadow','head',8)
-    mouth=curve([(-.060,1.459,-.132),(-.026,1.449 if expression!=2 else 1.462,-.149),(.016,1.451,-.151),(.061,1.466,-.129)],5)
-    mesh.tube(mouth,.0045,'lip','head',8)
-    if expression==2:mesh.ellipsoid((0,1.45,-.146),(.024,.009,.005),'ink','head',20,10)
-    obj=mesh.finish()
-    obj.shape_key_add(name='Basis')
-    blink=obj.shape_key_add(name='Blink')
-    for index,value in blink_vertices.items():blink.data[index].co=value
-    drowsy=obj.shape_key_add(name='DrowsyBrow')
-    for index,value in drowsy_vertices.items():drowsy.data[index].co=value
+    return build_face(globals(),'human',expression)
 
 def human_hair(style,capped=False):
     mesh=Mesh('human_hair_%d'%style+('_capped' if capped else ''))
     if capped:
         # A separate fitted haircut under hats: no flattened poles or pointed
         # tufts penetrating the brim. Rounded fringes retain the three styles.
-        mesh.loft([(0,1.683,.010),(0,1.710,.015),(0,1.738,.015)],[(.152,.150),(.170,.151),(.169,.145)],'hair','head',40)
+        mesh.loft([(0,1.710 if SAMPLE_QUALITY else 1.683,.010),(0,1.728 if SAMPLE_QUALITY else 1.710,.015),(0,1.738,.015)],[(.152,.150),(.170,.151),(.169,.145)],'hair','head',40)
         for index in range(41):
             x,y,z=mesh.v[index]
             frequency=10 if style==2 else 3 if style==1 else 4
@@ -360,8 +333,13 @@ def human_accessories():
         glasses.tube([(side*.118,1.608,-.173),(side*.173,1.610,-.042)],.004,'ink','head',8)
     glasses.tube([(-.01,1.600,-.18),(0,1.611,-.182),(.01,1.600,-.18)],.005,'ink','head',8);glasses.finish()
     cap=Mesh('human_accessory_3')
-    path=curve([(0,1.73,.015),(0,1.80,.02),(-.075,1.84,.025),(-.17,1.78,.016),(-.218,1.69,.008)],6)
-    cap.tube(path,[.18*pow(1-i/(len(path)-1),.95)+.006 for i in range(len(path))],'cap_cloth','head',32)
+    if SAMPLE_QUALITY:
+        cap.loft([(0,1.735,.015),(0,1.775,.018),(-.018,1.813,.022),(-.058,1.837,.024),(-.095,1.824,.021)],[(.18,.158),(.158,.139),(.118,.104),(.064,.056),(.035,.030)],'cap_cloth','head',40)
+        path=curve([(-.078,1.832,.022),(-.123,1.811,.018),(-.179,1.743,.011),(-.211,1.69,.006)],6)
+        cap.tube(path,[.037*(1-i/(len(path)-1))+.005 for i in range(len(path))],'cap_cloth','head',20)
+    else:
+        path=curve([(0,1.73,.015),(0,1.80,.02),(-.075,1.84,.025),(-.17,1.78,.016),(-.218,1.69,.008)],6)
+        cap.tube(path,[.18*pow(1-i/(len(path)-1),.95)+.006 for i in range(len(path))],'cap_cloth','head',32)
     brim=[(math.cos(TAU*i/48)*.182,1.747,math.sin(TAU*i/48)*.159+.015) for i in range(49)]
     cap.tube(brim,.018,'secondary','head',10)
     cap.ellipsoid((-.219,1.665,.004),(.034,.039,.034),'secondary','head',20,14)
@@ -426,24 +404,7 @@ def mosquito():
     create_actions('mosquito');finish('mosquito')
 
 def mosquito_face(expression):
-    mesh=Mesh('mosquito_face_%d'%expression)
-    blink_vertices={}
-    for side in [-1,1]:
-        eye_start=len(mesh.v)
-        mesh.ellipsoid((side*.043,.033,-.129),(.043,.047,.026),'eye_white','head',24,16)
-        mesh.ellipsoid((side*.040,.029,-.153),(.016,.023,.008),'pupil','head',20,12)
-        mesh.ellipsoid((side*.037,.039,-.160),(.0045,.006,.002),'eye_white','head',12,8)
-        for index in range(eye_start,len(mesh.v)):
-            value=Vector(mesh.v[index]);value.z=.012+(value.z-.012)*.035;blink_vertices[index]=value
-        brow=curve([(side*.009,.087,-.131),(side*.040,.097+(.018 if expression==1 else 0),-.126),(side*.078,.083,-.118)],5)
-        mesh.tube(brow,[.003+math.sin(math.pi*i/(len(brow)-1))*.004 for i in range(len(brow))],'insect_dark','head',8)
-        if expression==2:
-            lid=curve([(side*.004,.043,-.153),(side*.042,.047,-.159),(side*.082,.041,-.137)],4)
-            mesh.tube(lid,.008,'insect_primary','head',8)
-    mesh.ellipsoid((0,-.028,-.131),(.034,.018,.011),'ink','head',20,12)
-    mesh.ellipsoid((.009,-.023,-.140),(.020,.005,.004),'eye_white','head',16,8)
-    obj=mesh.finish();obj.shape_key_add(name='Basis');blink=obj.shape_key_add(name='Blink')
-    for index,value in blink_vertices.items():blink.data[index].co=value
+    return build_face(globals(),'mosquito',expression)
 
 def mosquito_antennae(style):
     mesh=Mesh('mosquito_hair_%d'%style)
@@ -581,7 +542,7 @@ def create_authoritative_human_actions(payload):
     bpy.context.scene.frame_set(1)
 
 def finish(species):
-    output=ROOT/'game/assets/art/characters'/species;source=ROOT/'art_source/characters'/species
+    output,source=OUTPUT_PATHS.get(species,(ROOT/'game/assets/art/characters'/species,ROOT/'art_source/characters'/species))
     output.mkdir(parents=True,exist_ok=True);source.mkdir(parents=True,exist_ok=True)
     # Clean manifold duplicate poles/seams and recalculate outward normals.
     for obj in OBJECTS:
@@ -604,9 +565,9 @@ def finish(species):
             bpy.context.view_layer.objects.active=obj
             remesh=obj.modifiers.new('Continuous tailored garment' if garment else 'Integrated palm and fingers','REMESH');remesh.mode='VOXEL';remesh.voxel_size=.010 if garment else .0035
             remesh.use_smooth_shade=True;bpy.ops.object.modifier_apply(modifier=remesh.name)
-            smooth=obj.modifiers.new('Surface relaxation','SMOOTH');smooth.factor=.45 if garment else .28;smooth.iterations=2
+            smooth=obj.modifiers.new('Surface relaxation','SMOOTH');smooth.factor=(.48 if garment else .35) if SAMPLE_QUALITY else (.45 if garment else .28);smooth.iterations=3 if SAMPLE_QUALITY else 2
             bpy.ops.object.modifier_apply(modifier=smooth.name)
-            decimate=obj.modifiers.new('Character surface budget','DECIMATE');decimate.ratio=.15 if garment else .09
+            decimate=obj.modifiers.new('Character surface budget','DECIMATE');decimate.ratio=(.22 if garment else .14) if SAMPLE_QUALITY else (.15 if garment else .09)
             bpy.ops.object.modifier_apply(modifier=decimate.name)
             for group in list(obj.vertex_groups):obj.vertex_groups.remove(group)
             groups={name:obj.vertex_groups.new(name=name) for name in set(group_names.values())}
@@ -657,7 +618,7 @@ def finish(species):
             bpy.ops.object.modifier_apply(modifier=remesh.name)
             smooth=obj.modifiers.new('Polished face planes','SMOOTH');smooth.factor=.65;smooth.iterations=4
             bpy.ops.object.modifier_apply(modifier=smooth.name)
-            decimate=obj.modifiers.new('Character surface budget','DECIMATE');decimate.ratio=.18
+            decimate=obj.modifiers.new('Character surface budget','DECIMATE');decimate.ratio=.30 if SAMPLE_QUALITY else .18
             bpy.ops.object.modifier_apply(modifier=decimate.name)
             for group in list(obj.vertex_groups):obj.vertex_groups.remove(group)
             group=obj.vertex_groups.new(name='head');group.add(list(range(len(obj.data.vertices))),1.0,'REPLACE')

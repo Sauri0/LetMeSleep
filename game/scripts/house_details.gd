@@ -1,5 +1,5 @@
 extends RefCounted
-## Authored dressing aligned to the physical map. No gameplay colliders are added.
+## Authored dressing aligned to the physical map and shared open balustrades.
 const Library = preload("res://assets/art/house/house_library.gd")
 const Doors = preload("res://scripts/door_catalog.gd")
 const Barriers = preload("res://scripts/house_barriers.gd")
@@ -76,19 +76,40 @@ static func trim(world: Node3D, bounds: AABB) -> void:
 	var along := 0 if bounds.size.x>bounds.size.z else 2
 	var axis := 2 if along==0 else 0
 	for floor_y: float in [0.0,3.2]:
-		if bounds.position.y>floor_y+.02 or bounds.end.y<floor_y+2.4:continue
+		var ceiling:=2.989 if floor_y==0.0 else 6.4
+		var baseboard:=bounds.position.y<=floor_y+.001 and bounds.end.y>=floor_y+.13
+		var cornice:=bounds.position.y<ceiling and bounds.end.y>=ceiling-.001
+		if not baseboard and not cornice:continue
 		for side: float in [-1.0,1.0]:
-			var p := bounds.position
-			p[axis] = bounds.get_center()[axis]+side*(bounds.size[axis]*.5+.007)
-			p.y=floor_y
-			var root := Node3D.new();world.map_root.add_child(root);root.position=p
-			# X follows the solid wall segment; the carved profile faces into room.
-			if along==2:
-				root.rotation.y=-PI/2
-			if side<0:
-				root.scale.z=-1
-			asset(root,"molding",Vector3.ZERO,Vector3(bounds.size[along],1,1))
-			asset(root,"molding",Vector3(0,2.94 if floor_y==0 else 3.14,0),Vector3(bounds.size[along],.6,1))
+			var normal:=Vector3.ZERO;normal[axis]=side
+			# The authored profile protrudes towards local-Z negative. A proper
+			# rotation preserves winding; mirrored scales inverted two wall runs.
+			var tangent:=Vector3.UP.cross(-normal)
+			var p:=bounds.position
+			p[axis]=bounds.get_center()[axis]+side*(bounds.size[axis]*.5+.002)
+			p[along]=bounds.position[along] if tangent[along]>0.0 else bounds.end[along]
+			for is_cornice:bool in [false,true]:
+				if (is_cornice and not cornice) or (not is_cornice and not baseboard):continue
+				var root:=Node3D.new();world.map_root.add_child(root)
+				root.name="Cornice" if is_cornice else "Baseboard"
+				root.position=p;root.position.y=ceiling-.078 if is_cornice else floor_y
+				root.basis=Basis(tangent,Vector3.UP,-normal)
+				asset(root,"molding",Vector3.ZERO,Vector3(bounds.size[along],.6 if is_cornice else 1.0,1))
+
+static func interior_bounds(world:Node3D,bounds:AABB) -> AABB:
+	var start:=bounds.position;var end:=bounds.end
+	# Room labels intentionally leave a10cm margin. Finish surfaces meet the
+	# actual wall faces, instead of reproducing that metadata margin as a stripe.
+	for axis:int in [0,2]:
+		var other:=2 if axis==0 else 0
+		for entry:Dictionary in world.map_data.structures:
+			if entry.kind!="wall":continue
+			var wall:AABB=entry.box
+			if wall.size[axis]>.35 or wall.position.y>bounds.position.y+.01 or wall.end.y<bounds.position.y+2.0:continue
+			if minf(wall.end[other],bounds.end[other])-maxf(wall.position[other],bounds.position[other])<.3:continue
+			if absf(wall.end[axis]-bounds.position[axis])<.151:start[axis]=wall.end[axis]
+			if absf(wall.position[axis]-bounds.end[axis])<.151:end[axis]=wall.position[axis]
+	return AABB(start,end-start)
 
 static func build_room(world: Node3D, room: Dictionary) -> void:
 	var bounds: AABB=room.bounds
@@ -208,10 +229,9 @@ static func build_windows(world: Node3D, specs: Array[Dictionary]) -> void:
 			var curtain:=asset(root,"curtain",Vector3(side*.91,-.74,.18),Vector3(1.05,.95,1))
 			Library._tint_cloth(curtain,Color(spec.tint).lightened(.15))
 		world._segment(root,Vector3(-1.10,.88,.18),Vector3(1.10,.88,.18),.024,world.gold)
-		var light:=SpotLight3D.new();root.add_child(light)
-		light.position=Vector3(0,.05,.10);light.light_color=Color("829ed5")
-		light.light_energy=.48;light.spot_range=2.8;light.spot_angle=46;light.shadow_enabled=false
-		light.look_at(root.to_global(Vector3(0,-.7,3)))
+		# The cool environment already supplies the night fill. A second,
+		# unshadowed source at every window leaked across nearby room walls and
+		# raised the scene from23 to39 positional lights (Compatibility cap32).
 
 static func build_portals(world: Node3D) -> void:
 	var doors:Dictionary=Doors.get_doors("house")
@@ -272,7 +292,7 @@ static func finish(world: Node3D) -> void:
 	build_stairs(world)
 	build_exterior(world)
 	for floor_y:float in [0.0,3.2]:
-		world._room_wall_finish(AABB(Vector3(-1.9,floor_y,-10.75),Vector3(3.8,3.0,21.5)),Color("a9a191"),false)
+		world._room_wall_finish(AABB(Vector3(-1.9,floor_y,-10.75),Vector3(3.8,3.0 if floor_y==0.0 else 3.2,21.5)),Color("a9a191"),false)
 		for z:float in [-7.8,0.0,7.8]:asset(world.map_root,"pendant",Vector3(0,floor_y+(2.99 if floor_y==0 else 3.19),z),Vector3.ONE*.85)
 
 static func place_station_radio(world:Node3D,point:Vector3) -> void:

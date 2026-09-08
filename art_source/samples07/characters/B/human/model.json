@@ -1,0 +1,1006 @@
+{
+  "proposal": "B",
+  "label": "Alargada desgarbada",
+  "species": "human",
+  "status": "Real staged geometry; not selected for production",
+  "original": true,
+  "runtime_scale": 1.0,
+  "bounds_min_m": [
+    -0.4057401716709137,
+    0.006000000052154064,
+    -0.31550002098083496
+  ],
+  "bounds_max_m": [
+    0.4057401716709137,
+    1.9458436965942383,
+    0.2248881459236145
+  ],
+  "size_m": [
+    0.8114803433418274,
+    1.9398436965420842,
+    0.5403881669044495
+  ],
+  "triangles_default": 48710,
+  "surfaces_default": 20,
+  "textures": [
+    "Original procedural cloth at runtime; no external image textures"
+  ],
+  "bones": {
+    "root": {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        0,
+        0.12,
+        0
+      ],
+      "parent": ""
+    },
+    "pelvis": {
+      "from": [
+        0,
+        0.73,
+        0.0
+      ],
+      "to": [
+        0,
+        0.91,
+        0.0
+      ],
+      "parent": "root"
+    },
+    "torso": {
+      "from": [
+        0,
+        1.09,
+        0
+      ],
+      "to": [
+        0,
+        1.25,
+        0
+      ],
+      "parent": "root"
+    },
+    "head": {
+      "from": [
+        0,
+        1.55,
+        0
+      ],
+      "to": [
+        0,
+        1.74,
+        0
+      ],
+      "parent": "root"
+    },
+    "thigh_l": {
+      "from": [
+        -0.135,
+        0.75,
+        -0.11
+      ],
+      "to": [
+        -0.135,
+        0.42,
+        -0.11
+      ],
+      "parent": "root"
+    },
+    "shin_l": {
+      "from": [
+        -0.135,
+        0.42,
+        -0.11
+      ],
+      "to": [
+        -0.135,
+        0.1,
+        0
+      ],
+      "parent": "root"
+    },
+    "foot_l": {
+      "from": [
+        -0.135,
+        0.1,
+        0
+      ],
+      "to": [
+        -0.135,
+        0.1,
+        -0.22
+      ],
+      "parent": "root"
+    },
+    "upperarm_l": {
+      "from": [
+        -0.28,
+        1.3,
+        0
+      ],
+      "to": [
+        -0.31,
+        1.02,
+        0.015
+      ],
+      "parent": "root"
+    },
+    "forearm_l": {
+      "from": [
+        -0.31,
+        1.02,
+        0.015
+      ],
+      "to": [
+        -0.31,
+        0.75,
+        -0.015
+      ],
+      "parent": "root"
+    },
+    "hand_l": {
+      "from": [
+        -0.31,
+        0.75,
+        -0.015
+      ],
+      "to": [
+        -0.3100000023841858,
+        0.6506116390228271,
+        -0.026043152436614037
+      ],
+      "parent": "root"
+    },
+    "finger0_a_l": {
+      "from": [
+        -0.26899999380111694,
+        0.7271406650543213,
+        -0.01753992587327957
+      ],
+      "to": [
+        -0.26899999380111694,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "parent": "hand_l"
+    },
+    "finger0_b_l": {
+      "from": [
+        -0.26899999380111694,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "to": [
+        -0.26899999380111694,
+        0.6693850159645081,
+        -0.05011722818017006
+      ],
+      "parent": "finger0_a_l"
+    },
+    "finger1_a_l": {
+      "from": [
+        -0.29600000381469727,
+        0.7271406650543213,
+        -0.01753992587327957
+      ],
+      "to": [
+        -0.29600000381469727,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "parent": "hand_l"
+    },
+    "finger1_b_l": {
+      "from": [
+        -0.29600000381469727,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "to": [
+        -0.29600000381469727,
+        0.6614339351654053,
+        -0.0510006807744503
+      ],
+      "parent": "finger1_a_l"
+    },
+    "finger2_a_l": {
+      "from": [
+        -0.3230000138282776,
+        0.7271406650543213,
+        -0.01753992587327957
+      ],
+      "to": [
+        -0.3230000138282776,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "parent": "hand_l"
+    },
+    "finger2_b_l": {
+      "from": [
+        -0.3230000138282776,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "to": [
+        -0.3230000138282776,
+        0.6614339351654053,
+        -0.0510006807744503
+      ],
+      "parent": "finger2_a_l"
+    },
+    "finger3_a_l": {
+      "from": [
+        -0.3499999940395355,
+        0.7271406650543213,
+        -0.01753992587327957
+      ],
+      "to": [
+        -0.3499999940395355,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "parent": "hand_l"
+    },
+    "finger3_b_l": {
+      "from": [
+        -0.3499999940395355,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "to": [
+        -0.3499999940395355,
+        0.6693850159645081,
+        -0.05011722818017006
+      ],
+      "parent": "finger3_a_l"
+    },
+    "thigh_r": {
+      "from": [
+        0.135,
+        0.75,
+        -0.11
+      ],
+      "to": [
+        0.135,
+        0.42,
+        -0.11
+      ],
+      "parent": "root"
+    },
+    "shin_r": {
+      "from": [
+        0.135,
+        0.42,
+        -0.11
+      ],
+      "to": [
+        0.135,
+        0.1,
+        0
+      ],
+      "parent": "root"
+    },
+    "foot_r": {
+      "from": [
+        0.135,
+        0.1,
+        0
+      ],
+      "to": [
+        0.135,
+        0.1,
+        -0.22
+      ],
+      "parent": "root"
+    },
+    "upperarm_r": {
+      "from": [
+        0.28,
+        1.3,
+        0
+      ],
+      "to": [
+        0.31,
+        1.02,
+        0.015
+      ],
+      "parent": "root"
+    },
+    "forearm_r": {
+      "from": [
+        0.31,
+        1.02,
+        0.015
+      ],
+      "to": [
+        0.31,
+        0.75,
+        -0.015
+      ],
+      "parent": "root"
+    },
+    "hand_r": {
+      "from": [
+        0.31,
+        0.75,
+        -0.015
+      ],
+      "to": [
+        0.3100000023841858,
+        0.6506116390228271,
+        -0.026043152436614037
+      ],
+      "parent": "root"
+    },
+    "finger0_a_r": {
+      "from": [
+        0.26899999380111694,
+        0.7271406650543213,
+        -0.01753992587327957
+      ],
+      "to": [
+        0.26899999380111694,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "parent": "hand_r"
+    },
+    "finger0_b_r": {
+      "from": [
+        0.26899999380111694,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "to": [
+        0.26899999380111694,
+        0.6693850159645081,
+        -0.05011722818017006
+      ],
+      "parent": "finger0_a_r"
+    },
+    "finger1_a_r": {
+      "from": [
+        0.29600000381469727,
+        0.7271406650543213,
+        -0.01753992587327957
+      ],
+      "to": [
+        0.29600000381469727,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "parent": "hand_r"
+    },
+    "finger1_b_r": {
+      "from": [
+        0.29600000381469727,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "to": [
+        0.29600000381469727,
+        0.6614339351654053,
+        -0.0510006807744503
+      ],
+      "parent": "finger1_a_r"
+    },
+    "finger2_a_r": {
+      "from": [
+        0.3230000138282776,
+        0.7271406650543213,
+        -0.01753992587327957
+      ],
+      "to": [
+        0.3230000138282776,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "parent": "hand_r"
+    },
+    "finger2_b_r": {
+      "from": [
+        0.3230000138282776,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "to": [
+        0.3230000138282776,
+        0.6614339351654053,
+        -0.0510006807744503
+      ],
+      "parent": "finger2_a_r"
+    },
+    "finger3_a_r": {
+      "from": [
+        0.3499999940395355,
+        0.7271406650543213,
+        -0.01753992587327957
+      ],
+      "to": [
+        0.3499999940395355,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "parent": "hand_r"
+    },
+    "finger3_b_r": {
+      "from": [
+        0.3499999940395355,
+        0.6916921734809875,
+        -0.03355249762535095
+      ],
+      "to": [
+        0.3499999940395355,
+        0.6693850159645081,
+        -0.05011722818017006
+      ],
+      "parent": "finger3_a_r"
+    }
+  },
+  "parts": [
+    {
+      "name": "human_head",
+      "category": "head",
+      "selected_default": true,
+      "vertices": 4187,
+      "triangles": 8370,
+      "materials": [
+        "skin",
+        "skin_shadow",
+        "lip"
+      ],
+      "bounds_min_m": [
+        -0.1824847161769867,
+        1.310001254081726,
+        -0.2686004936695099
+      ],
+      "bounds_max_m": [
+        0.18252325057983398,
+        1.7887089252471924,
+        0.15026403963565826
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_core",
+      "category": "core",
+      "selected_default": true,
+      "vertices": 5742,
+      "triangles": 11476,
+      "materials": [
+        "skin"
+      ],
+      "bounds_min_m": [
+        -0.38964590430259705,
+        0.6494068503379822,
+        -0.07455265522003174
+      ],
+      "bounds_max_m": [
+        0.3895959258079529,
+        1.050906777381897,
+        0.09196911007165909
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_outfit_0",
+      "category": "outfit",
+      "selected_default": true,
+      "vertices": 7182,
+      "triangles": 14360,
+      "materials": [
+        "primary"
+      ],
+      "bounds_min_m": [
+        -0.3928535580635071,
+        0.07499929517507553,
+        -0.22488714754581451
+      ],
+      "bounds_max_m": [
+        0.39297717809677124,
+        1.424985647201538,
+        0.2248881459236145
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_outfit_0_trim",
+      "category": "outfit",
+      "selected_default": true,
+      "vertices": 796,
+      "triangles": 1556,
+      "materials": [
+        "secondary",
+        "accent"
+      ],
+      "bounds_min_m": [
+        -0.4057401716709137,
+        0.7978814244270325,
+        -0.2404964715242386
+      ],
+      "bounds_max_m": [
+        0.4057401716709137,
+        1.397806167602539,
+        0.11201020330190659
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_outfit_1",
+      "category": "outfit",
+      "selected_default": false,
+      "vertices": 7182,
+      "triangles": 14360,
+      "materials": [
+        "primary"
+      ],
+      "bounds_min_m": [
+        -0.3928535580635071,
+        0.07499929517507553,
+        -0.22488714754581451
+      ],
+      "bounds_max_m": [
+        0.39297717809677124,
+        1.424985647201538,
+        0.2248881459236145
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_outfit_1_trim",
+      "category": "outfit",
+      "selected_default": false,
+      "vertices": 796,
+      "triangles": 1556,
+      "materials": [
+        "secondary",
+        "accent"
+      ],
+      "bounds_min_m": [
+        -0.4057401716709137,
+        0.7978814244270325,
+        -0.2404964715242386
+      ],
+      "bounds_max_m": [
+        0.4057401716709137,
+        1.397806167602539,
+        0.11201020330190659
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_outfit_2",
+      "category": "outfit",
+      "selected_default": false,
+      "vertices": 7182,
+      "triangles": 14360,
+      "materials": [
+        "primary"
+      ],
+      "bounds_min_m": [
+        -0.3928535580635071,
+        0.07499929517507553,
+        -0.22488714754581451
+      ],
+      "bounds_max_m": [
+        0.39297717809677124,
+        1.424985647201538,
+        0.2248881459236145
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_outfit_2_trim",
+      "category": "outfit",
+      "selected_default": false,
+      "vertices": 1072,
+      "triangles": 2092,
+      "materials": [
+        "secondary",
+        "accent"
+      ],
+      "bounds_min_m": [
+        -0.4057401716709137,
+        0.7978814244270325,
+        -0.24296031892299652
+      ],
+      "bounds_max_m": [
+        0.4057401716709137,
+        1.397806167602539,
+        0.11201020330190659
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_face_0",
+      "category": "face",
+      "selected_default": false,
+      "vertices": 2446,
+      "triangles": 4832,
+      "materials": [
+        "eye_white",
+        "pupil",
+        "skin",
+        "hair",
+        "skin_shadow",
+        "ink",
+        "lip"
+      ],
+      "bounds_min_m": [
+        -0.1071000024676323,
+        1.4380576610565186,
+        -0.19477000832557678
+      ],
+      "bounds_max_m": [
+        0.1071000024676323,
+        1.6919583082199097,
+        -0.11521000415086746
+      ],
+      "morphs": [
+        "BlinkL",
+        "BlinkR",
+        "GazeX",
+        "GazeY",
+        "BrowUp",
+        "BrowDown",
+        "MouthOpen",
+        "MouthSmile",
+        "MouthPress",
+        "CheekLift"
+      ]
+    },
+    {
+      "name": "human_face_1",
+      "category": "face",
+      "selected_default": true,
+      "vertices": 2446,
+      "triangles": 4832,
+      "materials": [
+        "eye_white",
+        "pupil",
+        "skin",
+        "hair",
+        "skin_shadow",
+        "ink",
+        "lip"
+      ],
+      "bounds_min_m": [
+        -0.10723678022623062,
+        1.4386405944824219,
+        -0.19477000832557678
+      ],
+      "bounds_max_m": [
+        0.10723678022623062,
+        1.6919583082199097,
+        -0.11521000415086746
+      ],
+      "morphs": [
+        "BlinkL",
+        "BlinkR",
+        "GazeX",
+        "GazeY",
+        "BrowUp",
+        "BrowDown",
+        "MouthOpen",
+        "MouthSmile",
+        "MouthPress",
+        "CheekLift"
+      ]
+    },
+    {
+      "name": "human_face_2",
+      "category": "face",
+      "selected_default": false,
+      "vertices": 2446,
+      "triangles": 4832,
+      "materials": [
+        "eye_white",
+        "pupil",
+        "skin",
+        "hair",
+        "skin_shadow",
+        "ink",
+        "lip"
+      ],
+      "bounds_min_m": [
+        -0.1071000024676323,
+        1.4391093254089355,
+        -0.19477000832557678
+      ],
+      "bounds_max_m": [
+        0.1071000024676323,
+        1.6944986581802368,
+        -0.11521000415086746
+      ],
+      "morphs": [
+        "BlinkL",
+        "BlinkR",
+        "GazeX",
+        "GazeY",
+        "BrowUp",
+        "BrowDown",
+        "MouthOpen",
+        "MouthSmile",
+        "MouthPress",
+        "CheekLift"
+      ]
+    },
+    {
+      "name": "human_hair_0",
+      "category": "hair",
+      "selected_default": false,
+      "vertices": 1394,
+      "triangles": 2760,
+      "materials": [
+        "hair"
+      ],
+      "bounds_min_m": [
+        -0.16200000047683716,
+        1.4841200113296509,
+        -0.18276001513004303
+      ],
+      "bounds_max_m": [
+        0.16200000047683716,
+        1.8178400993347168,
+        0.16300000250339508
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_hair_0_capped",
+      "category": "hair",
+      "selected_default": true,
+      "vertices": 564,
+      "triangles": 1116,
+      "materials": [
+        "hair"
+      ],
+      "bounds_min_m": [
+        -0.15569999814033508,
+        1.5089601278305054,
+        -0.1467999964952469
+      ],
+      "bounds_max_m": [
+        0.15569999814033508,
+        1.753040075302124,
+        0.16599999368190765
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_hair_1",
+      "category": "hair",
+      "selected_default": false,
+      "vertices": 1394,
+      "triangles": 2760,
+      "materials": [
+        "hair"
+      ],
+      "bounds_min_m": [
+        -0.16200000047683716,
+        1.4841200113296509,
+        -0.18149951100349426
+      ],
+      "bounds_max_m": [
+        0.16200000047683716,
+        1.8516086339950562,
+        0.16300000250339508
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_hair_1_capped",
+      "category": "hair",
+      "selected_default": false,
+      "vertices": 564,
+      "triangles": 1116,
+      "materials": [
+        "hair"
+      ],
+      "bounds_min_m": [
+        -0.15569999814033508,
+        1.5089601278305054,
+        -0.1467999964952469
+      ],
+      "bounds_max_m": [
+        0.15569999814033508,
+        1.753040075302124,
+        0.16599999368190765
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_hair_2",
+      "category": "hair",
+      "selected_default": false,
+      "vertices": 2180,
+      "triangles": 4312,
+      "materials": [
+        "hair"
+      ],
+      "bounds_min_m": [
+        -0.16200000047683716,
+        1.4841200113296509,
+        -0.199453204870224
+      ],
+      "bounds_max_m": [
+        0.16200000047683716,
+        1.8394330739974976,
+        0.16300000250339508
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_hair_2_capped",
+      "category": "hair",
+      "selected_default": false,
+      "vertices": 564,
+      "triangles": 1116,
+      "materials": [
+        "hair"
+      ],
+      "bounds_min_m": [
+        -0.15569999814033508,
+        1.5089601278305054,
+        -0.1467999964952469
+      ],
+      "bounds_max_m": [
+        0.15569999814033508,
+        1.753040075302124,
+        0.16599999368190765
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_footwear_0",
+      "category": "footwear",
+      "selected_default": true,
+      "vertices": 1692,
+      "triangles": 3344,
+      "materials": [
+        "accent",
+        "sole",
+        "secondary"
+      ],
+      "bounds_min_m": [
+        -0.23899999260902405,
+        0.006000000052154064,
+        -0.31550002098083496
+      ],
+      "bounds_max_m": [
+        0.23899781703948975,
+        0.17000000178813934,
+        0.13220000267028809
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_footwear_1",
+      "category": "footwear",
+      "selected_default": false,
+      "vertices": 1844,
+      "triangles": 3648,
+      "materials": [
+        "accent",
+        "sole",
+        "secondary"
+      ],
+      "bounds_min_m": [
+        -0.23899999260902405,
+        0.006000000052154064,
+        -0.31550002098083496
+      ],
+      "bounds_max_m": [
+        0.23899781703948975,
+        0.17000000178813934,
+        0.13220000267028809
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_footwear_2",
+      "category": "footwear",
+      "selected_default": false,
+      "vertices": 1836,
+      "triangles": 3624,
+      "materials": [
+        "accent",
+        "sole",
+        "secondary"
+      ],
+      "bounds_min_m": [
+        -0.23899999260902405,
+        0.006000000052154064,
+        -0.31550002098083496
+      ],
+      "bounds_max_m": [
+        0.23899781703948975,
+        0.17000000178813934,
+        0.13220000267028809
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_accessory_1",
+      "category": "accessory",
+      "selected_default": false,
+      "vertices": 676,
+      "triangles": 1344,
+      "materials": [
+        "primary",
+        "secondary"
+      ],
+      "bounds_min_m": [
+        -0.1647000014781952,
+        1.6450400352478027,
+        -0.2871999740600586
+      ],
+      "bounds_max_m": [
+        0.1647000014781952,
+        1.8761600255966187,
+        0.17999999225139618
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_accessory_2",
+      "category": "accessory",
+      "selected_default": false,
+      "vertices": 708,
+      "triangles": 1404,
+      "materials": [
+        "ink"
+      ],
+      "bounds_min_m": [
+        -0.15901930630207062,
+        1.539199948310852,
+        -0.201789990067482
+      ],
+      "bounds_max_m": [
+        0.15901930630207062,
+        1.6601600646972656,
+        -0.040451548993587494
+      ],
+      "morphs": []
+    },
+    {
+      "name": "human_accessory_3",
+      "category": "accessory",
+      "selected_default": true,
+      "vertices": 1848,
+      "triangles": 3656,
+      "materials": [
+        "cap_cloth",
+        "secondary"
+      ],
+      "bounds_min_m": [
+        -0.2698439955711365,
+        1.6320799589157104,
+        -0.17253999412059784
+      ],
+      "bounds_max_m": [
+        0.17995458841323853,
+        1.9458436965942383,
+        0.19200000166893005
+      ],
+      "morphs": []
+    }
+  ],
+  "implemented": [
+    "Six selectable facial styles across both species",
+    "Ten named facial morphs per style",
+    "Shared skeleton names and cosmetic categories",
+    "Editable Blender sources and explicit GLB"
+  ],
+  "pending": [
+    "Direction selection",
+    "Final gameplay retarget and eight-zone collision validation for changed silhouette",
+    "Performance verification after selection"
+  ]
+}

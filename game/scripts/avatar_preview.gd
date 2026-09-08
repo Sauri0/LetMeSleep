@@ -14,6 +14,7 @@ var dragging := false
 var focus_key := ""
 var focus_target := Vector3(0,0.91,0)
 var focus_distance := 3.65
+var expression := ""
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(280,300)
@@ -91,6 +92,9 @@ func reset_view() -> void:
 	focus_distance = 3.65
 	_update_camera()
 
+func set_expression(value: String) -> void:
+	expression = value if value in ["neutral","sleepy","alert","effort","impact"] else ""
+
 func set_view(view: String) -> void:
 	orbit_yaw = 0.0 if view=="front" else PI*0.5 if view=="side" else PI if view=="back" else -0.25
 	orbit_pitch = -0.08
@@ -145,4 +149,4 @@ func _process(dt: float) -> void:
 	if dragging and not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		dragging = false
 	if is_instance_valid(avatar):
-		avatar.update_state({"p":Vector3(0,0.88 if role=="mosquito" else 0.0,0),"yaw":PI,"body_yaw":PI,"state":"flying" if role=="mosquito" else "human","relaxed_pose":true,"pose_time":avatar.clock_time,"appearance":appearance},dt)
+		avatar.update_state({"p":Vector3(0,0.88 if role=="mosquito" else 0.0,0),"yaw":PI,"body_yaw":PI,"state":"flying" if role=="mosquito" else "human","relaxed_pose":true,"pose_time":avatar.clock_time,"appearance":appearance,"preview_only":true,"facial_preview":expression},dt)

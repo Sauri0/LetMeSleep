@@ -122,8 +122,20 @@ func _run() -> void:
 		await physics_frame
 	await settle()
 	check(server.sim.actors[mid].state=="stunned","manual lead catches a flying peer through production RPCs")
+	# Public and private unreliable channels may arrive on different frames.
+	# Freeze this completed fixture and send one final production reliable pair,
+	# so the audit cannot finish while its last private tick lacks public evidence.
+	server.set_physics_process(false)
+	var final_tick: int = server.server_tick
+	server._publish(true)
+	for attempt: int in range(60):
+		if human.last_received_tick >= final_tick and insect.last_received_tick >= final_tick and int(human.private_latest.get("tick",-1)) >= final_tick and int(insect.private_latest.get("tick",-1)) >= final_tick:
+			break
+		await physics_frame
+	for client: Node in [human,insect]:
+		check(client.last_received_tick >= final_tick and int(client.private_latest.get("tick",-1)) >= final_tick,"final public/private production barrier reaches client")
 	for audit in audits:
-		check(audit.ok(),"production public/private packets preserve privacy "+str(audit.failures))
+		check(audit.ok(),"production public/private packets preserve privacy pending=%d matched=%d "%[audit.pending_count(),audit.matched_count]+str(audit.failures))
 	human.close_client()
 	insect.close_client()
 	server.multiplayer.multiplayer_peer.close()

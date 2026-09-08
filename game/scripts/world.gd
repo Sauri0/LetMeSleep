@@ -9,6 +9,9 @@ const SculptedShape = preload("res://assets/procedural_shapes.gd")
 const HouseDetails = preload("res://scripts/house_details.gd")
 const DoorViewScript = preload("res://scripts/door_view.gd")
 const VideoSettings = preload("res://scripts/video_settings.gd")
+const HOUSE_ROOM_LIGHT_ENERGY := 0.55
+const HOUSE_SHADOW_BIAS := 0.20
+const HOUSE_SHADOW_NORMAL_BIAS := 2.0
 
 var menu_camera: Camera3D
 var actors: Dictionary = {}
@@ -137,6 +140,24 @@ func load_map(id: String) -> void:
 
 func apply_video_settings() -> void:
 	VideoSettings.apply_world(self)
+	# Keep the1024/2048 quality choices;32-bit depth reduces acne on moving skin
+	# and thin door joinery without changing the renderer or adding screen effects.
+	if current_map == "house":
+		get_viewport().positional_shadow_atlas_16_bits = false
+
+func build_portal_sample(finish: String = "liso") -> Node3D:
+	# Optional art-review slice: the same kitchen coordinates and hinge as the
+	# playable house. Callers control visibility; this never replaces collision.
+	if finish not in ["liso", "sutil"] or current_map != "house":
+		return null
+	var resource: PackedScene = load("res://assets/art/house/samples/portal_" + finish + ".glb")
+	if resource == null:
+		return null
+	var sample: Node3D = resource.instantiate()
+	map_root.add_child(sample)
+	sample.transform = HouseDetails.Doors.leaf_transform(HouseDetails.Doors.get_doors()["kitchen"], 0.0)
+	sample.set_meta("portal_finish", finish)
+	return sample
 
 func _build_map_colliders() -> void:
 	var half_x: float = float(map_data.get("half_x", 4.0))
@@ -442,50 +463,54 @@ func _build_lighting() -> void:
 	moon.directional_shadow_max_distance = 20.0
 	map_root.add_child(moon)
 	if current_map == "house" and map_data.has("structures"):
-		# Key lamps are warm, bounded and directional. Four distance-faded maps
-		# serve the three focal rooms and stairs; other rooms use cheap fill.
+		# Bounded, continuous keys: sixteen rooms plus six halls and one stair.
+		# Each casts through the same wall/door geometry. Camera distance must not
+		# remove a shadow while its source still illuminates the adjacent room.
 		for room: Dictionary in map_data.get("rooms", []):
 			var bounds: AABB = room.bounds
 			var spot := SpotLight3D.new()
+			spot.set_meta("house_room",str(room.name))
 			spot.position = Vector3(bounds.get_center().x,bounds.position.y+(2.49 if int(room.floor)==0 else 2.69),bounds.get_center().z)
 			spot.light_color = Color("f6d5ad")
-			spot.light_energy = 1.85
+			spot.light_energy = HOUSE_ROOM_LIGHT_ENERGY
 			spot.spot_range = 4.2
 			spot.spot_angle = 62.0
-			spot.shadow_enabled = str(room.name) in ["Dormitorio rosa","Sala de estar","Cocina"]
-			spot.shadow_bias = 0.1
-			spot.shadow_normal_bias = 1.0
-			spot.distance_fade_enabled = true
-			spot.distance_fade_begin = 6.5
-			spot.distance_fade_shadow = 5.5
-			spot.distance_fade_length = 1.5
+			spot.shadow_enabled = true
+			spot.shadow_bias = HOUSE_SHADOW_BIAS
+			spot.shadow_normal_bias = HOUSE_SHADOW_NORMAL_BIAS
+			spot.shadow_blur = 1.2
+			spot.distance_fade_enabled = false
 			map_root.add_child(spot)
 			spot.rotation.x=-PI/2
 		var stair_light := SpotLight3D.new()
+		stair_light.set_meta("house_stair",true)
 		stair_light.position = Vector3(-11.0,5.9,-1.4)
 		stair_light.light_color = Color("d1e6f0")
 		stair_light.light_energy = 1.2
 		stair_light.spot_range = 7.0
 		stair_light.spot_angle = 62.0
 		stair_light.shadow_enabled = true
-		stair_light.shadow_bias = 0.1
-		stair_light.shadow_normal_bias = 1.0
-		stair_light.distance_fade_enabled = true
-		stair_light.distance_fade_begin = 7.0
-		stair_light.distance_fade_shadow = 6.5
-		stair_light.distance_fade_length = 1.0
+		stair_light.shadow_bias = HOUSE_SHADOW_BIAS
+		stair_light.shadow_normal_bias = HOUSE_SHADOW_NORMAL_BIAS
+		stair_light.shadow_blur = 1.2
+		stair_light.distance_fade_enabled = false
 		map_root.add_child(stair_light)
 		stair_light.look_at(Vector3(-11.0,1.0,-2.4))
 		for floor_index: int in range(2):
 			for z: float in [-7.8,0.0,7.8]:
 				var hall_lamp := SpotLight3D.new()
+				hall_lamp.set_meta("house_hall",true)
 				hall_lamp.position = Vector3(0,2.45+floor_index*3.2,z)
 				hall_lamp.light_color = Color("ffd09a")
 				hall_lamp.light_energy = 0.9
 				hall_lamp.spot_range = 3.4
 				hall_lamp.spot_angle = 60.0
 				hall_lamp.rotation.x=-PI/2
-				hall_lamp.shadow_enabled = false
+				hall_lamp.shadow_enabled = true
+				hall_lamp.shadow_bias = HOUSE_SHADOW_BIAS
+				hall_lamp.shadow_normal_bias = HOUSE_SHADOW_NORMAL_BIAS
+				hall_lamp.shadow_blur = 1.2
+				hall_lamp.distance_fade_enabled = false
 				map_root.add_child(hall_lamp)
 		return
 	var lamp := OmniLight3D.new()
@@ -525,7 +550,9 @@ void fragment(){
   vec2 board = vec2(plane.x*3.2,plane.y*0.5);
   board.y += hash(vec2(floor(board.x),0.0));
   vec2 f = fract(board);
-  float seam = step(0.985,f.x) + step(0.985,f.y);
+  vec2 board_aa = max(fwidth(board),vec2(.001));
+  vec2 board_edge = 1.0-smoothstep(vec2(.0075),vec2(.0075)+board_aa,min(f,1.0-f));
+  float seam = max(board_edge.x,board_edge.y);
   float grain = sin(plane.x*22.0 + sin(plane.y*2.8)*1.3)*0.012;
   shade = 0.96 + hash(floor(board))*0.055 + grain - min(seam,1.0)*0.10;
  } else if(surface_kind < 1.5){
@@ -548,8 +575,11 @@ void fragment(){
  } else {
   vec3 face = abs(normalize(n));
   float horizontal = face.z>0.5 ? p.x : p.z;
-  float u = fract(horizontal*1.55);
-  shade = .96 - step(.974,u)*.12 + step(.02,u)*step(u,.035)*.04;
+  float panel = horizontal*1.55;
+  float u = fract(panel);
+  float panel_aa = max(fwidth(panel),.001);
+  float joint = 1.0-smoothstep(.013,.013+panel_aa,min(u,1.0-u));
+  shade = .96 - joint*.12;
  }
  ALBEDO = tint.rgb * shade;
  ROUGHNESS = 0.88;
@@ -596,7 +626,7 @@ func _build_catalog_house() -> void:
 			# The apparent triangles at corridor door tops are visible lintel
 			# undersides (confirmed by physics rays), not holes in the shell.
 			_box(self,Vector3(bounds.get_center().x,bounds.position.y+.008,bounds.get_center().z),Vector3(bounds.size.x,.020,bounds.size.z),wood)
-		if kind == "wall" and bounds.size.y > 1.0:
+		if kind == "wall":
 			HouseDetails.trim(self,bounds)
 		elif kind == "step":
 			var nosing_size := Vector3(bounds.size.x, 0.033, minf(bounds.size.z, 0.055))
@@ -682,6 +712,7 @@ func _room_color(room: Dictionary) -> Color:
 func _room_wall_finish(bounds: AABB, color: Color, kitchen: bool) -> void:
 	# Paint only existing vertical wall faces. Door/lintel AABBs remain gaps;
 	# no panels bridge the doorways or alter the catalogue collision envelope.
+	bounds=HouseDetails.interior_bounds(self,bounds)
 	for structure: Dictionary in map_data.structures:
 		if str(structure.kind)!="wall":
 			continue
@@ -704,8 +735,8 @@ func _room_wall_finish(bounds: AABB, color: Color, kitchen: bool) -> void:
 			var at := Vector3.ZERO
 			at[axis] = surface
 			at[other] = (low+high)*0.5
-			var paint_low:float=maxf(solid.position.y,bounds.position.y+.12)
-			var paint_high:float=minf(solid.end.y,bounds.end.y-.02)
+			var paint_low:float=maxf(solid.position.y,bounds.position.y+1.30)
+			var paint_high:float=minf(solid.end.y,bounds.end.y-(.011 if bounds.position.y<1.0 else 0.0))
 			if paint_high<=paint_low:continue
 			at.y = (paint_low+paint_high)*.5
 			var size := Vector3(0.007,paint_high-paint_low,0.007)
@@ -714,7 +745,6 @@ func _room_wall_finish(bounds: AABB, color: Color, kitchen: bool) -> void:
 			if solid.position.y>bounds.position.y+.2:continue
 			at.y = bounds.position.y+0.71
 			size.y = 1.18
-			at[axis] += 0.002 if surface>solid.end[axis] else -0.002
 			_finished_wall_box(at,size,_surface_material(Color("c5cec0") if kitchen else color.darkened(0.32),"tile" if kitchen else "panel")).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			at.y = bounds.position.y+1.32
 			size.y = 0.035
