@@ -1,0 +1,81 @@
+{
+	"actors": 2,
+	"adapter": "NVIDIA GeForce RTX 3060 Ti",
+	"authoritative_map_id": "house-v1-1",
+	"cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+	"door_commands": 138,
+	"draws": {
+		"max": 8205.0,
+		"p50": 685.0,
+		"p90": 6774.0,
+		"p99": 7998.0
+	},
+	"end_position": "(-12.05, 0.0, -6.706672)",
+	"fps_limit": 0,
+	"frame_ms": {
+		"max": 48.298,
+		"over_16_67ms_percent": 2.8436018957346,
+		"p50": 4.611,
+		"p90": 12.696,
+		"p99": 20.451
+	},
+	"frames_with_moving_doors": 678,
+	"host_and_bots": true,
+	"map_id": "house-v1-1",
+	"measurement_seconds": 12.0,
+	"memory_bytes": 155961812.0,
+	"occlusion_culling": true,
+	"physics_ms": {
+		"max": 6.103,
+		"over_16_67ms_percent": 0.0,
+		"p50": 3.884,
+		"p90": 5.445,
+		"p99": 6.103
+	},
+	"physics_ticks_per_rendered_frame": {
+		"0": 1186,
+		"1": 707,
+		"2": 5,
+		"3": 1
+	},
+	"physics_ticks_per_second": 60,
+	"primitives": {
+		"max": 2319922.0,
+		"p50": 234476.0,
+		"p90": 1774208.0,
+		"p99": 2181508.0
+	},
+	"render_cpu_ms": {
+		"max": 46.4930000305176,
+		"over_16_67ms_percent": 0.157977883096367,
+		"p50": 1.88300001621246,
+		"p90": 9.05700016021729,
+		"p99": 13.3959999084473
+	},
+	"render_gpu_ms": {
+		"max": 39.1520004272461,
+		"over_16_67ms_percent": 0.0526592943654555,
+		"p50": 1.18900001049042,
+		"p90": 4.8899998664856,
+		"p99": 7.77699995040894
+	},
+	"render_texture_size": "(1920.0, 1080.0)",
+	"rendered_map_id": "house-v1-1",
+	"renderer": "gl_compatibility",
+	"rendering_driver": "opengl3",
+	"requested_population": 2,
+	"resolution": "(1920, 1080)",
+	"samples": 1899,
+	"scenario": "real Main/Client/Practice, generated valid spawn, forward/reverse input, live authoritative bots and periodic door commands",
+	"start_position": "(-12.05, 0.0, -8.825001)",
+	"version": "0.9.0",
+	"video_memory_bytes": 70216872.0,
+	"video_quality": {
+		"msaa_3d": 0,
+		"reflections": true,
+		"shadows": 2
+	},
+	"vsync": "disabled",
+	"warmup_seconds": 2,
+	"window_size": "(999, 562)"
+}

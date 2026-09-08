@@ -1,0 +1,83 @@
+{
+	"actors": 16,
+	"adapter": "NVIDIA GeForce RTX 3060 Ti",
+	"authoritative_map_id": "house-v1-1",
+	"cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+	"door_commands": 137,
+	"draws": {
+		"max": 9105.0,
+		"p50": 2476.0,
+		"p90": 7642.0,
+		"p99": 8370.0
+	},
+	"end_position": "(-12.05, 0.2, -4.226668)",
+	"fps_limit": 0,
+	"frame_ms": {
+		"max": 85.265,
+		"over_16_67ms_percent": 61.7234468937876,
+		"p50": 21.198,
+		"p90": 45.506,
+		"p99": 65.591
+	},
+	"frames_with_moving_doors": 271,
+	"host_and_bots": true,
+	"map_id": "house-v1-1",
+	"measurement_seconds": 12.0,
+	"memory_bytes": 209025883.0,
+	"occlusion_culling": true,
+	"physics_ms": {
+		"max": 26.712,
+		"over_16_67ms_percent": 43.8877755511022,
+		"p50": 11.78,
+		"p90": 26.712,
+		"p99": 26.712
+	},
+	"physics_ticks_per_rendered_frame": {
+		"0": 54,
+		"1": 254,
+		"2": 115,
+		"3": 71,
+		"4": 2,
+		"5": 3
+	},
+	"physics_ticks_per_second": 60,
+	"primitives": {
+		"max": 2566350.0,
+		"p50": 803898.0,
+		"p90": 2064330.0,
+		"p99": 2449708.0
+	},
+	"render_cpu_ms": {
+		"max": 69.2990036010742,
+		"over_16_67ms_percent": 12.4248496993988,
+		"p50": 5.43300008773804,
+		"p90": 18.3409996032715,
+		"p99": 25.9640007019043
+	},
+	"render_gpu_ms": {
+		"max": 68.2870025634766,
+		"over_16_67ms_percent": 10.6212424849699,
+		"p50": 4.18599987030029,
+		"p90": 16.7950000762939,
+		"p99": 31.0319995880127
+	},
+	"render_texture_size": "(1920.0, 1080.0)",
+	"rendered_map_id": "house-v1-1",
+	"renderer": "gl_compatibility",
+	"rendering_driver": "opengl3",
+	"requested_population": 16,
+	"resolution": "(1920, 1080)",
+	"samples": 499,
+	"scenario": "real Main/Client/Practice, generated valid spawn, forward/reverse input, live authoritative bots and periodic door commands",
+	"start_position": "(-12.05, 0.0, -8.825001)",
+	"version": "0.9.0",
+	"video_memory_bytes": 98512383.0,
+	"video_quality": {
+		"msaa_3d": 0,
+		"reflections": true,
+		"shadows": 2
+	},
+	"vsync": "disabled",
+	"warmup_seconds": 2,
+	"window_size": "(999, 562)"
+}
