@@ -1,0 +1,2598 @@
+{
+  "schema": 1,
+  "created_utc": "2026-09-08T13:48:22.404591+00:00",
+  "status": "prepared_not_executed",
+  "execution_mode": "source_with_Godot_not_exported_game",
+  "root": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir",
+  "exe": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\tools\\godot-4.5.2\\Godot_v4.5.2-stable_win64_console.exe",
+  "exe_sha256": "446e08f71624052572f96de9031850ba96382ce6752adde38bb955b0a49bed01",
+  "source_sha256": {
+    "game/.godot/imported/broom.glb-f3fa871372390deac2bccf69c0e0ba6c.md5": "5984d5b00eb40edbbdc348753dc21a2eeb9e1f97c885816f6e00ea6cce0e9f7c",
+    "game/.godot/imported/broom.glb-f3fa871372390deac2bccf69c0e0ba6c.scn": "dd69a627e5245d2c4371f676704f336e963aa1abe89c7b3cca89f5fa80cb1139",
+    "game/.godot/imported/human_lms06.glb-37faa87c837d825c5641c4c0347e05c4.md5": "ee17d25d0ee862bb5c2d1d97a13cf100a6a3e1eec3fc5d9f6277e443345461fc",
+    "game/.godot/imported/human_lms06.glb-37faa87c837d825c5641c4c0347e05c4.scn": "82ead1cc3eecb012569bf7d811b73fb7f444f02bb8a4c379734fe567c433c578",
+    "game/.godot/imported/mosquito_lms06.glb-7baf2fc2aa9a1e4d557715090c3fc0b9.md5": "4fc5da3a959f17f80d8860c4f1ff7438aa679c520f8bdf9895a9b04a4378ff91",
+    "game/.godot/imported/mosquito_lms06.glb-7baf2fc2aa9a1e4d557715090c3fc0b9.scn": "6a536e6f46f1ded5cbeb08d1b336580514efd04a7f947d238786aa53764206db",
+    "game/.godot/imported/newspaper.glb-3c36f08fba96267791bb343f6eef87f9.md5": "62bfaba52c0008cf64173095d65a5e3ba85be1d1ded86846e8074f06450465e8",
+    "game/.godot/imported/newspaper.glb-3c36f08fba96267791bb343f6eef87f9.scn": "0bb1cc38a23cfa0c8f309c08521425079fbf3abc416d98510969657177c6a47f",
+    "game/.godot/imported/newspaper.glb-d7c616230bed8b8b6d08b4f5ddaa08b9.md5": "b2a35131144c836bf4a2c1b95e75596ed58efccebcfed1a0930b5b574aae3e43",
+    "game/.godot/imported/newspaper.glb-d7c616230bed8b8b6d08b4f5ddaa08b9.scn": "f0738ac68abd399bad5d7b33590eaba46b09541f3f11c6b4eacea021794bfad4",
+    "game/.godot/imported/racket.glb-82f8d0797a84fe8b2a29f6822927e24b.md5": "23d5ebc8567e7cb4aad4a5a07cabf2ef56e46f60d407b31739fac7efe4297702",
+    "game/.godot/imported/racket.glb-82f8d0797a84fe8b2a29f6822927e24b.scn": "7a00126105ca44b3c539f7fee11be15c7c4ddde9458b35ab5e3302791036226e",
+    "game/.godot/imported/slipper.glb-8571c993da3ae0fa60fa3526460ef30f.md5": "a05fd5c92d9c625030a987859824d4dab4584670c411a5624ef6574d9437a523",
+    "game/.godot/imported/slipper.glb-8571c993da3ae0fa60fa3526460ef30f.scn": "c6f90423d44a0d71287699e7617f029600948b4c298860b78fa87d3d35d78921",
+    "game/.godot/imported/swatter.glb-1e727c270cf37a24089165d4f9aeb41d.md5": "75f28319ab564caab580816c4d0c3a7705cead91948122e6c705d2e42edbf116",
+    "game/.godot/imported/swatter.glb-1e727c270cf37a24089165d4f9aeb41d.scn": "a9879ade9a0b329d77b64202c39c67203711ef45680c7f3581cab66f0ad298d7",
+    "game/assets/art/characters/human/human_lms06.glb": "90cd6a695b32c3b98395df8f8da496ee56ffebd6026db757c03f9006eb777a06",
+    "game/assets/art/characters/human/human_lms06.glb.import": "c4030e675d81467782cddb70109b8299fff5d73e5385d3edb3390dd36e68bb2d",
+    "game/assets/art/characters/human/model.json": "dd6d1b28a9ff2b6956b5cb98f516b29ff1ca505ebbc6b14d74b87203dc2344fd",
+    "game/assets/art/characters/human/rig_contract.json": "27dd6ea469927ce88f5dbcfdb9e18d41d791708c48eb3e919b78257e3ad58ab1",
+    "game/assets/art/characters/mosquito/model.json": "29379b78bfe59d231257bb560df2588c9542f25b560eea3c9858e35b836e7138",
+    "game/assets/art/characters/mosquito/mosquito_lms06.glb": "d249474f537b50594ff4f76ae5c97fc938d9e6d61cdc7fa91909db0bc860ac85",
+    "game/assets/art/characters/mosquito/mosquito_lms06.glb.import": "d17d2b02c621a8287ff37db97f8f3a71f8e418252e61f2a527a7c2fd80f973aa",
+    "game/assets/art/characters/mosquito/rig_contract.json": "481dcd3a7c22a7cb2ec4dd9ef229529154355687b29147097058f3a89893f345",
+    "game/assets/art/characters/shared/character_skin.gd": "35a723b2de561de6b290a9578c0029e73cb5ce2cbfc0b20e47862ce1eb9d1a55",
+    "game/assets/art/characters/shared/cloth.gdshader": "a422d810b6bf4fa1d88b8f68858dd1b2d1fc5054ce5b5717cf564836a3d678d7",
+    "game/assets/art/characters/shared/facial_expression.gd": "4fa4869d70350b2918c5c919caf8ec7c3cc005bfbdf8d9890d8a57e85460a556",
+    "game/assets/art/characters/tools/broom.glb": "c41cdf35d8d70e44eeb492d6ef9e5e6628f15c5333fea6176de3ac401aa991de",
+    "game/assets/art/characters/tools/broom.glb.import": "7a4bdbdfafdd3ced0f237eeb544d48a95f6c84eab56e8e29f8c045dfd2d5e798",
+    "game/assets/art/characters/tools/newspaper.glb": "2d876fc1897738d19fef536d7215123d16495612ab8ab01a77956c5dfecb89f2",
+    "game/assets/art/characters/tools/newspaper.glb.import": "897f8cc126685687d4cf069ceebbe9b78c0fbe0da7db280e93e58b37428b248f",
+    "game/assets/art/characters/tools/racket.glb": "f655f907c8af226566078df1ac239b997c7089cd7f1cca02f7e7c2144d8c3a67",
+    "game/assets/art/characters/tools/racket.glb.import": "d1f60389ba2a1cbe42ef13858a865fadc72c69de13c2a99fb86b2ef4ff06068c",
+    "game/assets/art/characters/tools/slipper.glb": "c3f1778fe5b1837f6218a0c205e12fb18f6c11eed0a9603f45f4c9e64669f12e",
+    "game/assets/art/characters/tools/slipper.glb.import": "91cbad111778774ca46e74bcafbb1f8e9ab6e57cb619a177961255b2787064a5",
+    "game/assets/art/house/newspaper.glb": "660adf238a2b23bb4b5ac87036a34006f63df39ce45c28e54cb872c46c23f34d",
+    "game/assets/art/house/newspaper.glb.import": "2e50d366fcfff8b86a02454cc49a48fd7e7fd2bcc3d9866c030e79bc32834301",
+    "game/assets/art/house/swatter.glb": "74f2d8898ea04c0378fc302b5fbc9c36fd2bf1b89e104d3c65afd21eca4f0f0a",
+    "game/assets/art/house/swatter.glb.import": "38e6c8695491dadea38efa45a2221d3799521dac43878d3e3be9a6070fb6fccf",
+    "game/assets/procedural_shapes.gd": "f6272b69552eb2da97de0756af25ce1eccc574602240afffa81612f1cec42d38",
+    "game/project.godot": "c3a3f13cdd78f08d16bd502d65902165b74bb5e977804d2ac4d02a4ab836313e",
+    "game/scripts/actor_view.gd": "90bf7163a767f6ccfc0223aae625e7541dfe61f49ede67e8fb0ca473f37f6a0c",
+    "game/scripts/avatar_preview.gd": "110e7fbf0f63302464acf389c08466cdd25c4a0906eb929f7cb19bc82cd7eb97",
+    "game/scripts/cosmetics.gd": "3de5804574572058daae5be4353d2a8dd421526074127449bba4cb5b296e9106",
+    "game/scripts/emote_catalog.gd": "b34b47a5895ad7de1e052ffc4591edc76805d085a88036496bb6cd6e30091667",
+    "game/scripts/emote_pose.gd": "f97aa2254316c1449296fe554cec22356d5dd185b87a27f16d4af576e42bb232",
+    "game/scripts/human_pose.gd": "36c69f5a2273db33950776e8c81153f3d5b76a28be6a944e7bbe4ea8ce794190",
+    "game/scripts/human_presentation.gd": "cc60bf97eafc6a0350f28089ae964b2961a03a088bbf39d17af2a3347c299d02",
+    "game/scripts/mosquito_pose.gd": "9cf62024a199b097f5649598a0934783d6affc47bf2beb7262ea05383221f8d9",
+    "game/scripts/surface_appendage_pose.gd": "828a28e3fa0f30b4c69028c7d6c280e493ba583cc374bfe0b76b3068eb2eb201",
+    "game/scripts/surface_presentation.gd": "5d6717f2f73d3898f5bfd9b733fed431b5c1f0ac45aea44c047fd00e668bac83",
+    "game/scripts/tool_catalog.gd": "9be4594989e21f9028731b6f01e730a060687c5a3deb7251d23eece630d4cd00",
+    "game/scripts/voice_mouth_envelope.gd": "ddb02a38d571c0b8f2b34e3dc5e3956fe151c3174ad80bc02a1cc6bf5c40ece7",
+    "game/tests/facial_catalog08_gallery.gd": "3e159a6e3a30ff93c7240ee6f602686fdd354631d1df1925c9e6230f8c0fe242",
+    "work/gallery09-manifest.py": "672d36409298459dec611db9195fcdb505b129c5c323ee51af24f64bc586aec6",
+    "work/gallery09-run.ps1": "81767f7d69e5129357575978255cef7d15a4212e501a5de625a5b19a239e6d93",
+    "work/gallery09-trim2-prepare.py": "d41070087714fdf7501549937342a3c84400d584679e3c1e80bb2d255492b2a6",
+    "work/gallery09-trim2-batch.ps1": "91bc0e431b20e694ef15895fee75b3e48d322f4fedb52b5a7dc8a2d785998ee3"
+  },
+  "model_imports": [
+    {
+      "source": "game/assets/art/characters/human/human_lms06.glb",
+      "destination": "game/.godot/imported/human_lms06.glb-37faa87c837d825c5641c4c0347e05c4.scn",
+      "import_md5": "game/.godot/imported/human_lms06.glb-37faa87c837d825c5641c4c0347e05c4.md5"
+    },
+    {
+      "source": "game/assets/art/characters/mosquito/mosquito_lms06.glb",
+      "destination": "game/.godot/imported/mosquito_lms06.glb-7baf2fc2aa9a1e4d557715090c3fc0b9.scn",
+      "import_md5": "game/.godot/imported/mosquito_lms06.glb-7baf2fc2aa9a1e4d557715090c3fc0b9.md5"
+    }
+  ],
+  "page_timeout_seconds": 55,
+  "views": [
+    "front",
+    "quarter-left",
+    "profile-left",
+    "profile-right",
+    "quarter-right",
+    "back",
+    "above-quarter",
+    "below-quarter"
+  ],
+  "tile_pixels": [
+    480,
+    560
+  ],
+  "head_counts": {
+    "human": 2916,
+    "mosquito": 243
+  },
+  "neutral_pages": 133,
+  "neutral_tiles": 25272,
+  "neutral_sheets": 532,
+  "witness_jobs": 11,
+  "jobs": [
+    {
+      "id": "neutral-human-000",
+      "kind": "catalog",
+      "role": "human",
+      "page": 0,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 0,
+      "last": 23,
+      "index": 0,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-000",
+      "expected_report": "human-page-000.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-001",
+      "kind": "catalog",
+      "role": "human",
+      "page": 1,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 24,
+      "last": 47,
+      "index": 1,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-001",
+      "expected_report": "human-page-001.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-002",
+      "kind": "catalog",
+      "role": "human",
+      "page": 2,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 48,
+      "last": 71,
+      "index": 2,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-002",
+      "expected_report": "human-page-002.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-003",
+      "kind": "catalog",
+      "role": "human",
+      "page": 3,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 72,
+      "last": 95,
+      "index": 3,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-003",
+      "expected_report": "human-page-003.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-004",
+      "kind": "catalog",
+      "role": "human",
+      "page": 4,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 96,
+      "last": 119,
+      "index": 4,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-004",
+      "expected_report": "human-page-004.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-005",
+      "kind": "catalog",
+      "role": "human",
+      "page": 5,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 120,
+      "last": 143,
+      "index": 5,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-005",
+      "expected_report": "human-page-005.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-006",
+      "kind": "catalog",
+      "role": "human",
+      "page": 6,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 144,
+      "last": 167,
+      "index": 6,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-006",
+      "expected_report": "human-page-006.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-007",
+      "kind": "catalog",
+      "role": "human",
+      "page": 7,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 168,
+      "last": 191,
+      "index": 7,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-007",
+      "expected_report": "human-page-007.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-008",
+      "kind": "catalog",
+      "role": "human",
+      "page": 8,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 192,
+      "last": 215,
+      "index": 8,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-008",
+      "expected_report": "human-page-008.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-009",
+      "kind": "catalog",
+      "role": "human",
+      "page": 9,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 216,
+      "last": 239,
+      "index": 9,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-009",
+      "expected_report": "human-page-009.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-010",
+      "kind": "catalog",
+      "role": "human",
+      "page": 10,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 240,
+      "last": 263,
+      "index": 10,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-010",
+      "expected_report": "human-page-010.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-011",
+      "kind": "catalog",
+      "role": "human",
+      "page": 11,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 264,
+      "last": 287,
+      "index": 11,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-011",
+      "expected_report": "human-page-011.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-012",
+      "kind": "catalog",
+      "role": "human",
+      "page": 12,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 288,
+      "last": 311,
+      "index": 12,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-012",
+      "expected_report": "human-page-012.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-013",
+      "kind": "catalog",
+      "role": "human",
+      "page": 13,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 312,
+      "last": 335,
+      "index": 13,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-013",
+      "expected_report": "human-page-013.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-014",
+      "kind": "catalog",
+      "role": "human",
+      "page": 14,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 336,
+      "last": 359,
+      "index": 14,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-014",
+      "expected_report": "human-page-014.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-015",
+      "kind": "catalog",
+      "role": "human",
+      "page": 15,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 360,
+      "last": 383,
+      "index": 15,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-015",
+      "expected_report": "human-page-015.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-016",
+      "kind": "catalog",
+      "role": "human",
+      "page": 16,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 384,
+      "last": 407,
+      "index": 16,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-016",
+      "expected_report": "human-page-016.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-017",
+      "kind": "catalog",
+      "role": "human",
+      "page": 17,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 408,
+      "last": 431,
+      "index": 17,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-017",
+      "expected_report": "human-page-017.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-018",
+      "kind": "catalog",
+      "role": "human",
+      "page": 18,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 432,
+      "last": 455,
+      "index": 18,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-018",
+      "expected_report": "human-page-018.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-019",
+      "kind": "catalog",
+      "role": "human",
+      "page": 19,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 456,
+      "last": 479,
+      "index": 19,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-019",
+      "expected_report": "human-page-019.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-020",
+      "kind": "catalog",
+      "role": "human",
+      "page": 20,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 480,
+      "last": 503,
+      "index": 20,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-020",
+      "expected_report": "human-page-020.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-021",
+      "kind": "catalog",
+      "role": "human",
+      "page": 21,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 504,
+      "last": 527,
+      "index": 21,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-021",
+      "expected_report": "human-page-021.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-022",
+      "kind": "catalog",
+      "role": "human",
+      "page": 22,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 528,
+      "last": 551,
+      "index": 22,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-022",
+      "expected_report": "human-page-022.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-023",
+      "kind": "catalog",
+      "role": "human",
+      "page": 23,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 552,
+      "last": 575,
+      "index": 23,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-023",
+      "expected_report": "human-page-023.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-024",
+      "kind": "catalog",
+      "role": "human",
+      "page": 24,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 576,
+      "last": 599,
+      "index": 24,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-024",
+      "expected_report": "human-page-024.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-025",
+      "kind": "catalog",
+      "role": "human",
+      "page": 25,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 600,
+      "last": 623,
+      "index": 25,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-025",
+      "expected_report": "human-page-025.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-026",
+      "kind": "catalog",
+      "role": "human",
+      "page": 26,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 624,
+      "last": 647,
+      "index": 26,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-026",
+      "expected_report": "human-page-026.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-027",
+      "kind": "catalog",
+      "role": "human",
+      "page": 27,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 648,
+      "last": 671,
+      "index": 27,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-027",
+      "expected_report": "human-page-027.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-028",
+      "kind": "catalog",
+      "role": "human",
+      "page": 28,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 672,
+      "last": 695,
+      "index": 28,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-028",
+      "expected_report": "human-page-028.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-029",
+      "kind": "catalog",
+      "role": "human",
+      "page": 29,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 696,
+      "last": 719,
+      "index": 29,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-029",
+      "expected_report": "human-page-029.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-030",
+      "kind": "catalog",
+      "role": "human",
+      "page": 30,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 720,
+      "last": 743,
+      "index": 30,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-030",
+      "expected_report": "human-page-030.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-031",
+      "kind": "catalog",
+      "role": "human",
+      "page": 31,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 744,
+      "last": 767,
+      "index": 31,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-031",
+      "expected_report": "human-page-031.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-032",
+      "kind": "catalog",
+      "role": "human",
+      "page": 32,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 768,
+      "last": 791,
+      "index": 32,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-032",
+      "expected_report": "human-page-032.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-033",
+      "kind": "catalog",
+      "role": "human",
+      "page": 33,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 792,
+      "last": 815,
+      "index": 33,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-033",
+      "expected_report": "human-page-033.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-034",
+      "kind": "catalog",
+      "role": "human",
+      "page": 34,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 816,
+      "last": 839,
+      "index": 34,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-034",
+      "expected_report": "human-page-034.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-035",
+      "kind": "catalog",
+      "role": "human",
+      "page": 35,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 840,
+      "last": 863,
+      "index": 35,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-035",
+      "expected_report": "human-page-035.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-036",
+      "kind": "catalog",
+      "role": "human",
+      "page": 36,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 864,
+      "last": 887,
+      "index": 36,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-036",
+      "expected_report": "human-page-036.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-037",
+      "kind": "catalog",
+      "role": "human",
+      "page": 37,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 888,
+      "last": 911,
+      "index": 37,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-037",
+      "expected_report": "human-page-037.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-038",
+      "kind": "catalog",
+      "role": "human",
+      "page": 38,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 912,
+      "last": 935,
+      "index": 38,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-038",
+      "expected_report": "human-page-038.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-039",
+      "kind": "catalog",
+      "role": "human",
+      "page": 39,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 936,
+      "last": 959,
+      "index": 39,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-039",
+      "expected_report": "human-page-039.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-040",
+      "kind": "catalog",
+      "role": "human",
+      "page": 40,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 960,
+      "last": 983,
+      "index": 40,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-040",
+      "expected_report": "human-page-040.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-041",
+      "kind": "catalog",
+      "role": "human",
+      "page": 41,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 984,
+      "last": 1007,
+      "index": 41,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-041",
+      "expected_report": "human-page-041.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-042",
+      "kind": "catalog",
+      "role": "human",
+      "page": 42,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1008,
+      "last": 1031,
+      "index": 42,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-042",
+      "expected_report": "human-page-042.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-043",
+      "kind": "catalog",
+      "role": "human",
+      "page": 43,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1032,
+      "last": 1055,
+      "index": 43,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-043",
+      "expected_report": "human-page-043.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-044",
+      "kind": "catalog",
+      "role": "human",
+      "page": 44,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1056,
+      "last": 1079,
+      "index": 44,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-044",
+      "expected_report": "human-page-044.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-045",
+      "kind": "catalog",
+      "role": "human",
+      "page": 45,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1080,
+      "last": 1103,
+      "index": 45,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-045",
+      "expected_report": "human-page-045.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-046",
+      "kind": "catalog",
+      "role": "human",
+      "page": 46,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1104,
+      "last": 1127,
+      "index": 46,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-046",
+      "expected_report": "human-page-046.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-047",
+      "kind": "catalog",
+      "role": "human",
+      "page": 47,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1128,
+      "last": 1151,
+      "index": 47,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-047",
+      "expected_report": "human-page-047.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-048",
+      "kind": "catalog",
+      "role": "human",
+      "page": 48,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1152,
+      "last": 1175,
+      "index": 48,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-048",
+      "expected_report": "human-page-048.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-049",
+      "kind": "catalog",
+      "role": "human",
+      "page": 49,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1176,
+      "last": 1199,
+      "index": 49,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-049",
+      "expected_report": "human-page-049.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-050",
+      "kind": "catalog",
+      "role": "human",
+      "page": 50,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1200,
+      "last": 1223,
+      "index": 50,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-050",
+      "expected_report": "human-page-050.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-051",
+      "kind": "catalog",
+      "role": "human",
+      "page": 51,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1224,
+      "last": 1247,
+      "index": 51,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-051",
+      "expected_report": "human-page-051.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-052",
+      "kind": "catalog",
+      "role": "human",
+      "page": 52,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1248,
+      "last": 1271,
+      "index": 52,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-052",
+      "expected_report": "human-page-052.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-053",
+      "kind": "catalog",
+      "role": "human",
+      "page": 53,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1272,
+      "last": 1295,
+      "index": 53,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-053",
+      "expected_report": "human-page-053.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-054",
+      "kind": "catalog",
+      "role": "human",
+      "page": 54,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1296,
+      "last": 1319,
+      "index": 54,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-054",
+      "expected_report": "human-page-054.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-055",
+      "kind": "catalog",
+      "role": "human",
+      "page": 55,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1320,
+      "last": 1343,
+      "index": 55,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-055",
+      "expected_report": "human-page-055.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-056",
+      "kind": "catalog",
+      "role": "human",
+      "page": 56,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1344,
+      "last": 1367,
+      "index": 56,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-056",
+      "expected_report": "human-page-056.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-057",
+      "kind": "catalog",
+      "role": "human",
+      "page": 57,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1368,
+      "last": 1391,
+      "index": 57,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-057",
+      "expected_report": "human-page-057.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-058",
+      "kind": "catalog",
+      "role": "human",
+      "page": 58,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1392,
+      "last": 1415,
+      "index": 58,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-058",
+      "expected_report": "human-page-058.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-059",
+      "kind": "catalog",
+      "role": "human",
+      "page": 59,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1416,
+      "last": 1439,
+      "index": 59,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-059",
+      "expected_report": "human-page-059.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-060",
+      "kind": "catalog",
+      "role": "human",
+      "page": 60,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1440,
+      "last": 1463,
+      "index": 60,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-060",
+      "expected_report": "human-page-060.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-061",
+      "kind": "catalog",
+      "role": "human",
+      "page": 61,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1464,
+      "last": 1487,
+      "index": 61,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-061",
+      "expected_report": "human-page-061.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-062",
+      "kind": "catalog",
+      "role": "human",
+      "page": 62,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1488,
+      "last": 1511,
+      "index": 62,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-062",
+      "expected_report": "human-page-062.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-063",
+      "kind": "catalog",
+      "role": "human",
+      "page": 63,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1512,
+      "last": 1535,
+      "index": 63,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-063",
+      "expected_report": "human-page-063.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-064",
+      "kind": "catalog",
+      "role": "human",
+      "page": 64,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1536,
+      "last": 1559,
+      "index": 64,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-064",
+      "expected_report": "human-page-064.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-065",
+      "kind": "catalog",
+      "role": "human",
+      "page": 65,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1560,
+      "last": 1583,
+      "index": 65,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-065",
+      "expected_report": "human-page-065.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-066",
+      "kind": "catalog",
+      "role": "human",
+      "page": 66,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1584,
+      "last": 1607,
+      "index": 66,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-066",
+      "expected_report": "human-page-066.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-067",
+      "kind": "catalog",
+      "role": "human",
+      "page": 67,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1608,
+      "last": 1631,
+      "index": 67,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-067",
+      "expected_report": "human-page-067.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-068",
+      "kind": "catalog",
+      "role": "human",
+      "page": 68,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1632,
+      "last": 1655,
+      "index": 68,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-068",
+      "expected_report": "human-page-068.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-069",
+      "kind": "catalog",
+      "role": "human",
+      "page": 69,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1656,
+      "last": 1679,
+      "index": 69,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-069",
+      "expected_report": "human-page-069.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-070",
+      "kind": "catalog",
+      "role": "human",
+      "page": 70,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1680,
+      "last": 1703,
+      "index": 70,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-070",
+      "expected_report": "human-page-070.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-071",
+      "kind": "catalog",
+      "role": "human",
+      "page": 71,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1704,
+      "last": 1727,
+      "index": 71,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-071",
+      "expected_report": "human-page-071.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-072",
+      "kind": "catalog",
+      "role": "human",
+      "page": 72,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1728,
+      "last": 1751,
+      "index": 72,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-072",
+      "expected_report": "human-page-072.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-073",
+      "kind": "catalog",
+      "role": "human",
+      "page": 73,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1752,
+      "last": 1775,
+      "index": 73,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-073",
+      "expected_report": "human-page-073.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-074",
+      "kind": "catalog",
+      "role": "human",
+      "page": 74,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1776,
+      "last": 1799,
+      "index": 74,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-074",
+      "expected_report": "human-page-074.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-075",
+      "kind": "catalog",
+      "role": "human",
+      "page": 75,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1800,
+      "last": 1823,
+      "index": 75,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-075",
+      "expected_report": "human-page-075.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-076",
+      "kind": "catalog",
+      "role": "human",
+      "page": 76,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1824,
+      "last": 1847,
+      "index": 76,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-076",
+      "expected_report": "human-page-076.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-077",
+      "kind": "catalog",
+      "role": "human",
+      "page": 77,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1848,
+      "last": 1871,
+      "index": 77,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-077",
+      "expected_report": "human-page-077.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-078",
+      "kind": "catalog",
+      "role": "human",
+      "page": 78,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1872,
+      "last": 1895,
+      "index": 78,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-078",
+      "expected_report": "human-page-078.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-079",
+      "kind": "catalog",
+      "role": "human",
+      "page": 79,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1896,
+      "last": 1919,
+      "index": 79,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-079",
+      "expected_report": "human-page-079.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-080",
+      "kind": "catalog",
+      "role": "human",
+      "page": 80,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1920,
+      "last": 1943,
+      "index": 80,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-080",
+      "expected_report": "human-page-080.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-081",
+      "kind": "catalog",
+      "role": "human",
+      "page": 81,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1944,
+      "last": 1967,
+      "index": 81,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-081",
+      "expected_report": "human-page-081.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-082",
+      "kind": "catalog",
+      "role": "human",
+      "page": 82,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1968,
+      "last": 1991,
+      "index": 82,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-082",
+      "expected_report": "human-page-082.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-083",
+      "kind": "catalog",
+      "role": "human",
+      "page": 83,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 1992,
+      "last": 2015,
+      "index": 83,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-083",
+      "expected_report": "human-page-083.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-084",
+      "kind": "catalog",
+      "role": "human",
+      "page": 84,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2016,
+      "last": 2039,
+      "index": 84,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-084",
+      "expected_report": "human-page-084.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-085",
+      "kind": "catalog",
+      "role": "human",
+      "page": 85,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2040,
+      "last": 2063,
+      "index": 85,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-085",
+      "expected_report": "human-page-085.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-086",
+      "kind": "catalog",
+      "role": "human",
+      "page": 86,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2064,
+      "last": 2087,
+      "index": 86,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-086",
+      "expected_report": "human-page-086.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-087",
+      "kind": "catalog",
+      "role": "human",
+      "page": 87,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2088,
+      "last": 2111,
+      "index": 87,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-087",
+      "expected_report": "human-page-087.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-088",
+      "kind": "catalog",
+      "role": "human",
+      "page": 88,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2112,
+      "last": 2135,
+      "index": 88,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-088",
+      "expected_report": "human-page-088.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-089",
+      "kind": "catalog",
+      "role": "human",
+      "page": 89,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2136,
+      "last": 2159,
+      "index": 89,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-089",
+      "expected_report": "human-page-089.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-090",
+      "kind": "catalog",
+      "role": "human",
+      "page": 90,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2160,
+      "last": 2183,
+      "index": 90,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-090",
+      "expected_report": "human-page-090.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-091",
+      "kind": "catalog",
+      "role": "human",
+      "page": 91,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2184,
+      "last": 2207,
+      "index": 91,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-091",
+      "expected_report": "human-page-091.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-092",
+      "kind": "catalog",
+      "role": "human",
+      "page": 92,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2208,
+      "last": 2231,
+      "index": 92,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-092",
+      "expected_report": "human-page-092.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-093",
+      "kind": "catalog",
+      "role": "human",
+      "page": 93,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2232,
+      "last": 2255,
+      "index": 93,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-093",
+      "expected_report": "human-page-093.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-094",
+      "kind": "catalog",
+      "role": "human",
+      "page": 94,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2256,
+      "last": 2279,
+      "index": 94,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-094",
+      "expected_report": "human-page-094.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-095",
+      "kind": "catalog",
+      "role": "human",
+      "page": 95,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2280,
+      "last": 2303,
+      "index": 95,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-095",
+      "expected_report": "human-page-095.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-096",
+      "kind": "catalog",
+      "role": "human",
+      "page": 96,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2304,
+      "last": 2327,
+      "index": 96,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-096",
+      "expected_report": "human-page-096.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-097",
+      "kind": "catalog",
+      "role": "human",
+      "page": 97,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2328,
+      "last": 2351,
+      "index": 97,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-097",
+      "expected_report": "human-page-097.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-098",
+      "kind": "catalog",
+      "role": "human",
+      "page": 98,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2352,
+      "last": 2375,
+      "index": 98,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-098",
+      "expected_report": "human-page-098.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-099",
+      "kind": "catalog",
+      "role": "human",
+      "page": 99,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2376,
+      "last": 2399,
+      "index": 99,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-099",
+      "expected_report": "human-page-099.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-100",
+      "kind": "catalog",
+      "role": "human",
+      "page": 100,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2400,
+      "last": 2423,
+      "index": 100,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-100",
+      "expected_report": "human-page-100.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-101",
+      "kind": "catalog",
+      "role": "human",
+      "page": 101,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2424,
+      "last": 2447,
+      "index": 101,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-101",
+      "expected_report": "human-page-101.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-102",
+      "kind": "catalog",
+      "role": "human",
+      "page": 102,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2448,
+      "last": 2471,
+      "index": 102,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-102",
+      "expected_report": "human-page-102.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-103",
+      "kind": "catalog",
+      "role": "human",
+      "page": 103,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2472,
+      "last": 2495,
+      "index": 103,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-103",
+      "expected_report": "human-page-103.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-104",
+      "kind": "catalog",
+      "role": "human",
+      "page": 104,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2496,
+      "last": 2519,
+      "index": 104,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-104",
+      "expected_report": "human-page-104.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-105",
+      "kind": "catalog",
+      "role": "human",
+      "page": 105,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2520,
+      "last": 2543,
+      "index": 105,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-105",
+      "expected_report": "human-page-105.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-106",
+      "kind": "catalog",
+      "role": "human",
+      "page": 106,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2544,
+      "last": 2567,
+      "index": 106,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-106",
+      "expected_report": "human-page-106.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-107",
+      "kind": "catalog",
+      "role": "human",
+      "page": 107,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2568,
+      "last": 2591,
+      "index": 107,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-107",
+      "expected_report": "human-page-107.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-108",
+      "kind": "catalog",
+      "role": "human",
+      "page": 108,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2592,
+      "last": 2615,
+      "index": 108,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-108",
+      "expected_report": "human-page-108.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-109",
+      "kind": "catalog",
+      "role": "human",
+      "page": 109,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2616,
+      "last": 2639,
+      "index": 109,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-109",
+      "expected_report": "human-page-109.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-110",
+      "kind": "catalog",
+      "role": "human",
+      "page": 110,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2640,
+      "last": 2663,
+      "index": 110,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-110",
+      "expected_report": "human-page-110.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-111",
+      "kind": "catalog",
+      "role": "human",
+      "page": 111,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2664,
+      "last": 2687,
+      "index": 111,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-111",
+      "expected_report": "human-page-111.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-112",
+      "kind": "catalog",
+      "role": "human",
+      "page": 112,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2688,
+      "last": 2711,
+      "index": 112,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-112",
+      "expected_report": "human-page-112.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-113",
+      "kind": "catalog",
+      "role": "human",
+      "page": 113,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2712,
+      "last": 2735,
+      "index": 113,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-113",
+      "expected_report": "human-page-113.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-114",
+      "kind": "catalog",
+      "role": "human",
+      "page": 114,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2736,
+      "last": 2759,
+      "index": 114,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-114",
+      "expected_report": "human-page-114.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-115",
+      "kind": "catalog",
+      "role": "human",
+      "page": 115,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2760,
+      "last": 2783,
+      "index": 115,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-115",
+      "expected_report": "human-page-115.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-116",
+      "kind": "catalog",
+      "role": "human",
+      "page": 116,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2784,
+      "last": 2807,
+      "index": 116,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-116",
+      "expected_report": "human-page-116.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-117",
+      "kind": "catalog",
+      "role": "human",
+      "page": 117,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2808,
+      "last": 2831,
+      "index": 117,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-117",
+      "expected_report": "human-page-117.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-118",
+      "kind": "catalog",
+      "role": "human",
+      "page": 118,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2832,
+      "last": 2855,
+      "index": 118,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-118",
+      "expected_report": "human-page-118.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-119",
+      "kind": "catalog",
+      "role": "human",
+      "page": 119,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2856,
+      "last": 2879,
+      "index": 119,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-119",
+      "expected_report": "human-page-119.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-120",
+      "kind": "catalog",
+      "role": "human",
+      "page": 120,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2880,
+      "last": 2903,
+      "index": 120,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-120",
+      "expected_report": "human-page-120.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-human-121",
+      "kind": "catalog",
+      "role": "human",
+      "page": 121,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 2904,
+      "last": 2915,
+      "index": 121,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-human-121",
+      "expected_report": "human-page-121.json",
+      "expected_sheets": 4,
+      "expected_tiles": 96
+    },
+    {
+      "id": "neutral-mosquito-000",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 0,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 0,
+      "last": 23,
+      "index": 122,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-000",
+      "expected_report": "mosquito-page-000.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-mosquito-001",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 1,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 24,
+      "last": 47,
+      "index": 123,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-001",
+      "expected_report": "mosquito-page-001.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-mosquito-002",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 2,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 48,
+      "last": 71,
+      "index": 124,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-002",
+      "expected_report": "mosquito-page-002.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-mosquito-003",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 3,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 72,
+      "last": 95,
+      "index": 125,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-003",
+      "expected_report": "mosquito-page-003.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-mosquito-004",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 4,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 96,
+      "last": 119,
+      "index": 126,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-004",
+      "expected_report": "mosquito-page-004.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-mosquito-005",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 5,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 120,
+      "last": 143,
+      "index": 127,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-005",
+      "expected_report": "mosquito-page-005.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-mosquito-006",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 6,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 144,
+      "last": 167,
+      "index": 128,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-006",
+      "expected_report": "mosquito-page-006.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-mosquito-007",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 7,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 168,
+      "last": 191,
+      "index": 129,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-007",
+      "expected_report": "mosquito-page-007.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-mosquito-008",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 8,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 192,
+      "last": 215,
+      "index": 130,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-008",
+      "expected_report": "mosquito-page-008.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-mosquito-009",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 9,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 216,
+      "last": 239,
+      "index": 131,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-009",
+      "expected_report": "mosquito-page-009.json",
+      "expected_sheets": 4,
+      "expected_tiles": 192
+    },
+    {
+      "id": "neutral-mosquito-010",
+      "kind": "catalog",
+      "role": "mosquito",
+      "page": 10,
+      "head": null,
+      "states": [
+        "neutral"
+      ],
+      "first": 240,
+      "last": 242,
+      "index": 132,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\neutral-mosquito-010",
+      "expected_report": "mosquito-page-010.json",
+      "expected_sheets": 4,
+      "expected_tiles": 24
+    },
+    {
+      "id": "witness-human-brow-hair",
+      "kind": "witness",
+      "role": "human",
+      "page": 0,
+      "head": 18,
+      "states": [
+        "neutral",
+        "brow-up",
+        "blink-half",
+        "blink"
+      ],
+      "first": 18,
+      "last": 18,
+      "index": 133,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-human-brow-hair",
+      "expected_report": "human-page-000.json",
+      "expected_sheets": 16,
+      "expected_tiles": 32
+    },
+    {
+      "id": "witness-human-eyes-1",
+      "kind": "witness",
+      "role": "human",
+      "page": 0,
+      "head": 1,
+      "states": [
+        "neutral",
+        "blink-half",
+        "blink"
+      ],
+      "first": 1,
+      "last": 1,
+      "index": 134,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-human-eyes-1",
+      "expected_report": "human-page-000.json",
+      "expected_sheets": 12,
+      "expected_tiles": 24
+    },
+    {
+      "id": "witness-human-eyes-2",
+      "kind": "witness",
+      "role": "human",
+      "page": 0,
+      "head": 2,
+      "states": [
+        "neutral",
+        "blink-half",
+        "blink"
+      ],
+      "first": 2,
+      "last": 2,
+      "index": 135,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-human-eyes-2",
+      "expected_report": "human-page-000.json",
+      "expected_sheets": 12,
+      "expected_tiles": 24
+    },
+    {
+      "id": "witness-human-mustache-mouth",
+      "kind": "witness",
+      "role": "human",
+      "page": 13,
+      "head": 324,
+      "states": [
+        "neutral",
+        "smile"
+      ],
+      "first": 324,
+      "last": 324,
+      "index": 136,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-human-mustache-mouth",
+      "expected_report": "human-page-013.json",
+      "expected_sheets": 8,
+      "expected_tiles": 16
+    },
+    {
+      "id": "witness-human-beard-jaw",
+      "kind": "witness",
+      "role": "human",
+      "page": 81,
+      "head": 1944,
+      "states": [
+        "neutral",
+        "mouth-open"
+      ],
+      "first": 1944,
+      "last": 1944,
+      "index": 137,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-human-beard-jaw",
+      "expected_report": "human-page-081.json",
+      "expected_sheets": 8,
+      "expected_tiles": 16
+    },
+    {
+      "id": "witness-mosquito-goggles-mouth",
+      "kind": "witness",
+      "role": "mosquito",
+      "page": 6,
+      "head": 162,
+      "states": [
+        "neutral",
+        "mouth-open-smile"
+      ],
+      "first": 162,
+      "last": 162,
+      "index": 138,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-mosquito-goggles-mouth",
+      "expected_report": "mosquito-page-006.json",
+      "expected_sheets": 8,
+      "expected_tiles": 16
+    },
+    {
+      "id": "witness-mosquito-eyes-1",
+      "kind": "witness",
+      "role": "mosquito",
+      "page": 0,
+      "head": 1,
+      "states": [
+        "neutral",
+        "blink-half",
+        "blink"
+      ],
+      "first": 1,
+      "last": 1,
+      "index": 139,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-mosquito-eyes-1",
+      "expected_report": "mosquito-page-000.json",
+      "expected_sheets": 12,
+      "expected_tiles": 24
+    },
+    {
+      "id": "witness-mosquito-eyes-2",
+      "kind": "witness",
+      "role": "mosquito",
+      "page": 0,
+      "head": 2,
+      "states": [
+        "neutral",
+        "blink-half",
+        "blink"
+      ],
+      "first": 2,
+      "last": 2,
+      "index": 140,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-mosquito-eyes-2",
+      "expected_report": "mosquito-page-000.json",
+      "expected_sheets": 12,
+      "expected_tiles": 24
+    },
+    {
+      "id": "witness-mosquito-brows-0",
+      "kind": "witness",
+      "role": "mosquito",
+      "page": 0,
+      "head": 0,
+      "states": [
+        "neutral",
+        "brow-up",
+        "brow-down",
+        "brow-up-blink",
+        "brow-down-blink"
+      ],
+      "first": 0,
+      "last": 0,
+      "index": 141,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-mosquito-brows-0",
+      "expected_report": "mosquito-page-000.json",
+      "expected_sheets": 20,
+      "expected_tiles": 40
+    },
+    {
+      "id": "witness-mosquito-brows-1",
+      "kind": "witness",
+      "role": "mosquito",
+      "page": 0,
+      "head": 9,
+      "states": [
+        "neutral",
+        "brow-up",
+        "brow-down",
+        "brow-up-blink",
+        "brow-down-blink"
+      ],
+      "first": 9,
+      "last": 9,
+      "index": 142,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-mosquito-brows-1",
+      "expected_report": "mosquito-page-000.json",
+      "expected_sheets": 20,
+      "expected_tiles": 40
+    },
+    {
+      "id": "witness-mosquito-brows-2",
+      "kind": "witness",
+      "role": "mosquito",
+      "page": 0,
+      "head": 18,
+      "states": [
+        "neutral",
+        "brow-up",
+        "brow-down",
+        "brow-up-blink",
+        "brow-down-blink"
+      ],
+      "first": 18,
+      "last": 18,
+      "index": 143,
+      "output": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\outputs\\0.9-facial-gallery-trim2\\witness-mosquito-brows-2",
+      "expected_report": "mosquito-page-000.json",
+      "expected_sheets": 20,
+      "expected_tiles": 40
+    }
+  ],
+  "capture_status": "pending",
+  "visual_review_status": "pending",
+  "review_rule": "Review must name the exact sheet hash and findings. A valid capture never marks visual approval. Witness states supplement, not replace, the exhaustive neutral catalog.",
+  "preparation_identity": {
+    "runtime_checkpoint": "55b4e5c",
+    "repository_head_at_preparation": "fafc60f284ddddc41c8c769236df6fdf604814b5",
+    "character_revision": "trim2",
+    "head_framing_report_schema": 4,
+    "calibrated_camera_checkpoint": "9afd45a",
+    "human_presentation_sha256": "cc60bf97eafc6a0350f28089ae964b2961a03a088bbf39d17af2a3347c299d02"
+  },
+  "batch_policy": {
+    "jobs_per_batch": 12,
+    "batches": 12,
+    "pause_after_each_batch": true,
+    "automatic_next_batch": false,
+    "first_job_review_before_continuing": true
+  }
+}

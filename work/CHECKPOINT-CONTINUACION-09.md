@@ -125,6 +125,27 @@ esta continuación y no se debe atribuir su comportamiento al EXE anterior.
   tres páginas, 51 cabezas, 408 vistas, 12 hojas. La captura está validada;
   la galería completa y la revisión visual siguen pendientes.
 
+## Estado posterior de trim2 y galería (8 de septiembre)
+
+Trim2 está integrado en `1faf525`, GLB humano
+`90cd6a695b32c3b98395df8f8da496ee56ffebd6026db757c03f9006eb777a06`.
+El cierre focal conserva la evidencia anterior por invariancia y recalcula
+los tres ribetes en 243 poses / 5832 pares sin contactos; no son 285 capturas
+nuevas. Selected actual 972/972; secuencia continua 4484 controles y doce
+gestos completos. Ver `work/garment09-trim-final.md` para límites y archivos.
+
+HUD coalescido `fafc60f`, presentación remota `55b4e5c`. Mediciones posteriores
+de 16 actores siguen lentas incluso con puertas ordinarias, sin órdenes
+globales; evidencia actual en `work/perf09-live-after-navigation.md`.
+Los pilotos de LINEAR y alcance de luces se descartaron; no cambian World
+ni Compatibility. Un perfil ampliado test-only está en preparación.
+
+Galería activa congelada: `work/gallery09-trim2-plan.json` (144 trabajos,
+25.568 vistas / 680 PNG). Tandas 0 y 1 completas, 24 trabajos validados;
+continuar desde `coverage.json`, que es la fuente de avance. No alterar
+dependencias incluidas en el plan durante las capturas. La validación técnica
+no sustituye los registros de inspección visual con hashes de cada hoja.
+
 ## Antes de una entrega nueva
 
 - Completar la revisión continua de animaciones y la galería facial completa;
