@@ -49,6 +49,7 @@ var retry_local_host := false
 var leaving := false
 var _throw_pressed := false
 var _throw_tool := ""
+var _hud_refresh_pending := false
 
 func _ready() -> void:
 	PreferencesScript.load_settings()
@@ -151,8 +152,23 @@ func _private(data: Dictionary) -> void:
 	_apply_surface_view_transition()
 	if playing:
 		world.audio_fx.sync_private(personal)
-		ui.show_game(state, personal, local_id)
+		_queue_game_hud()
 		music.set_context("playing", state, personal, local_id)
+
+func _queue_game_hud() -> void:
+	# Public/private callbacks can arrive back to back before drawing. Keep
+	# their other effects immediate and present their latest combined HUD once.
+	if _hud_refresh_pending:
+		return
+	_hud_refresh_pending = true
+	_flush_game_hud.call_deferred()
+
+func _flush_game_hud() -> void:
+	if not _hud_refresh_pending:
+		return
+	_hud_refresh_pending = false
+	if playing and str(state.get("phase", "")) == "playing":
+		ui.show_game(state, personal, local_id)
 
 func _apply_surface_view_transition() -> void:
 	if not playing or role!="mosquito": return
@@ -186,6 +202,7 @@ func _start_practice(selected_role: String, mode: String) -> void:
 	practice.start(selected_role, mode, PreferencesScript.cosmetics, PreferencesScript.player_name,{"map_id":generated.id})
 
 func _lobby(data: Dictionary) -> void:
+	_hud_refresh_pending = false
 	var entering := not waiting
 	waiting = true
 	playing = false
@@ -216,6 +233,7 @@ func _set_walking(value: bool) -> void:
 func _snapshot(data: Dictionary) -> void:
 	state = data
 	if str(data.get("phase", "")) == "results":
+		_hud_refresh_pending = false
 		playing = false
 		personal.clear()
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -250,7 +268,13 @@ func _snapshot(data: Dictionary) -> void:
 	world.sync_doors(data.get("doors",{}),1.0 if starting else 0.0)
 	world.audio_fx.sync_doors(data.get("doors",{}),world.door_views.views if is_instance_valid(world.door_views) else {})
 	world.audio_fx.sync_pickups(data.get("pickups",{}))
-	ui.show_game(state, personal, local_id)
+	if starting:
+		# Enter the game immediately; a queued callback from the previous round
+		# must not apply another screen transition after this one.
+		_hud_refresh_pending = false
+		ui.show_game(state, personal, local_id)
+	else:
+		_queue_game_hud()
 	music.set_context("playing", state, personal, local_id)
 
 func _process(dt: float) -> void:

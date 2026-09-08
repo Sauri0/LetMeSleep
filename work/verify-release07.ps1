@@ -38,7 +38,7 @@ if ($Suite -eq 'native') {
     }
     Invoke-CandidateCheck -Name hosting -GameArguments @('--','--no-microphone','--hosting-checks',('--report='+$evidenceDirectory+'/hosting.json'))
     Invoke-CandidateCheck -Name combat -GameArguments @('--headless','--script','res://tests/network07_combat_checks.gd')
-    foreach ($test in @('human09_presentation_test','stun_help_test','surface09_test','emote09_authority_test','procedural09_test','map_tasks09_test','voice09_acoustics_checks','voice09_pcm_test','network09_map_social_checks','network09_view_ack_checks','network09_voice_checks')) {
+    foreach ($test in @('hud09_coalescing_checks','human09_presentation_test','stun_help_test','surface09_test','emote09_authority_test','procedural09_test','map_tasks09_test','voice09_acoustics_checks','voice09_pcm_test','network09_map_social_checks','network09_view_ack_checks','network09_voice_checks')) {
         Invoke-CandidateCheck -Name $test -GameArguments @('--headless','--script',("res://tests/$test.gd"))
     }
     Invoke-CandidateCheck -Name voice09_session_checks -GameArguments @('--headless','--frame-delay','2','--script','res://tests/voice09_session_checks.gd')

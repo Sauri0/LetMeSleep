@@ -1,0 +1,5 @@
+{
+	"checks": 20,
+	"failures": [],
+	"scope": "real Client callbacks and deferred queue; inert HUD/world/audio, no rendered layout, network or FPS claim"
+}
