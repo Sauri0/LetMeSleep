@@ -3,6 +3,25 @@ $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 $godotExe = Join-Path $PSScriptRoot 'tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe'
 $gamePath = Join-Path $projectRoot 'game'
+$buildWorkRoot = $PSScriptRoot
+function Invoke-CheckedHeadless {
+    param([string]$CheckName, [string[]]$GameArguments)
+    $errorLog = Join-Path $buildWorkRoot ('build-' + $CheckName + '.err')
+    $savedPreference = $ErrorActionPreference
+    try {
+        # A Godot script can log an error and still return zero. Inspect stderr
+        # as well as its exit code before allowing a distributable export.
+        $ErrorActionPreference = 'Continue'
+        & $godotExe --headless --path $gamePath @GameArguments 2> $errorLog
+        $nativeExitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $savedPreference
+    }
+    if ($nativeExitCode -ne 0 -or (Get-Item -LiteralPath $errorLog).Length -gt 0) {
+        Get-Content -LiteralPath $errorLog -TotalCount 12
+        throw ('Godot check failed: ' + $CheckName + ', exit ' + $nativeExitCode)
+    }
+}
 $versionLine = Select-String -LiteralPath (Join-Path $gamePath 'project.godot') -Pattern '^config/version="([0-9]+\.[0-9]+\.[0-9]+)"$'
 if (-not $versionLine) { throw 'Project version missing or invalid' }
 $buildVersion = $versionLine.Matches[0].Groups[1].Value
@@ -11,26 +30,16 @@ $outDir = Join-Path $projectRoot ('outputs/Let-me-sleep-' + $buildVersion + '-Wi
 if (Test-Path -LiteralPath (Join-Path $projectRoot 'distribution')) {
     Get-ChildItem -LiteralPath (Join-Path $projectRoot 'distribution') -File | Copy-Item -Destination $outDir
 }
-& $godotExe --headless --path $gamePath --editor --import --quit
-if ($LASTEXITCODE -ne 0) { throw 'Godot import failed' }
+Invoke-CheckedHeadless -CheckName 'import' -GameArguments @('--editor','--import','--quit')
 foreach ($entryPoint in @('scripts/main','scripts/client','tests/network_bot','tests/practice_ui_checks','tests/gameplay_demo','tests/gameplay06_demo','tests/camera_turn_checks','tests/hud_input06_checks','tests/hosting_checks','tests/gameplay07_demo','tests/performance07_live','tests/network07_combat_checks','tests/video07_checks','tests/doors07_client_checks')) {
-    & $godotExe --headless --path $gamePath --check-only --script "res://$entryPoint.gd"
-    if ($LASTEXITCODE -ne 0) { throw "$entryPoint parse failed" }
+    Invoke-CheckedHeadless -CheckName ('parse-' + $entryPoint.Replace('/','-')) -GameArguments @('--check-only','--script',"res://$entryPoint.gd")
 }
 if (-not $SkipTests) {
-    & $godotExe --headless --path $gamePath --script res://tests/rules_test.gd
-    if ($LASTEXITCODE -ne 0) { throw 'Rules tests failed' }
-    & $godotExe --headless --path $gamePath --script res://tests/lobby_rules_test.gd
-    if ($LASTEXITCODE -ne 0) { throw 'Lobby rules tests failed' }
-    & $godotExe --headless --path $gamePath --script res://tests/cosmetics_test.gd
-    if ($LASTEXITCODE -ne 0) { throw 'Cosmetics tests failed' }
-    & $godotExe --headless --path $gamePath --script res://tests/visual_checks.gd
-    if ($LASTEXITCODE -ne 0) { throw 'Visual geometry tests failed' }
-    & $godotExe --headless --path $gamePath --script res://tests/audio_checks.gd
-    if ($LASTEXITCODE -ne 0) { throw 'Audio tests failed' }
-    foreach ($testName in @('maps_test','route_tests','locomotion_test','focus_combat_test','manual_defense_test','stun_help_test','online_packet_codec_test','task_deadline_test','practice_test','invitation_test','network_order_test','network_connection_test','network_privacy_audit_test','contact_orientation06_test','house06_checks','music06_test','preferences_migration_test','doors07_test','door_navigation07_test','attack07_test','arena_spatial07_test','pose_cache07_test','barriers07_test','v07_character_motion_checks','v07_character_cache_checks','network07_combat_checks')) {
-        & $godotExe --headless --path $gamePath --script "res://tests/$testName.gd"
-        if ($LASTEXITCODE -ne 0) { throw "$testName failed" }
+    foreach ($initialTest in @('rules_test','lobby_rules_test','cosmetics_test','visual_checks','audio_checks')) {
+        Invoke-CheckedHeadless -CheckName $initialTest -GameArguments @('--script',"res://tests/$initialTest.gd")
+    }
+    foreach ($testName in @('maps_test','route_tests','locomotion_test','focus_combat_test','manual_defense_test','stun_help_test','online_packet_codec_test','task_deadline_test','practice_test','invitation_test','network_order_test','network_connection_test','network_privacy_audit_test','contact_orientation06_test','house06_checks','music06_test','preferences_migration_test','doors07_test','door_navigation07_test','attack07_test','arena_spatial07_test','pose_cache07_test','barriers07_test','v07_character_motion_checks','v07_character_cache_checks','video_preferences07_test','bot_scheduler07_test','network07_combat_checks')) {
+        Invoke-CheckedHeadless -CheckName $testName -GameArguments @('--script',"res://tests/$testName.gd")
     }
     # Skin baking requires a rendering backend; Godot's headless dummy backend
     # cannot register the skeleton used by this actual-deformed-mesh test.
@@ -49,8 +58,7 @@ if (-not $SkipTests) {
     }
     }
 }
-& $godotExe --headless --path $gamePath --export-release 'Windows Desktop' (Join-Path $outDir 'Let-me-sleep.exe')
-if ($LASTEXITCODE -ne 0) { throw 'Windows export failed' }
+Invoke-CheckedHeadless -CheckName 'export' -GameArguments @('--export-release','Windows Desktop',(Join-Path $outDir 'Let-me-sleep.exe'))
 $exe = Get-Item -LiteralPath (Join-Path $outDir 'Let-me-sleep.exe')
 if ($exe.Length -lt 1000000) { throw 'Exported executable incomplete' }
 $fontRoot = Join-Path $gamePath 'assets/fonts'
