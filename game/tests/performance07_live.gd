@@ -8,6 +8,7 @@ var map_id := "house"
 var seconds := 12.0
 var diagnostic_shadows := -1
 var diagnostic_batch := ""
+var scripted_door_stress := true
 var path := ""
 var app: Node
 var client: Node
@@ -23,6 +24,7 @@ func _initialize() -> void:
 		if arg.begins_with("--report="): path=arg.trim_prefix("--report=")
 		if arg.begins_with("--diagnostic-shadows="): diagnostic_shadows=clampi(int(arg.trim_prefix("--diagnostic-shadows=")),0,2)
 		if arg.begins_with("--diagnostic-batch="): diagnostic_batch=arg.trim_prefix("--diagnostic-batch=")
+		if arg=="--natural-doors": scripted_door_stress=false
 	_run.call_deferred()
 
 func distribution(samples: Array[float], milliseconds: bool = true) -> Dictionary:
@@ -111,7 +113,7 @@ func _run() -> void:
 		var elapsed := float(Time.get_ticks_usec()-started)/1e6
 		# A bounded hall walk uses the real input/locomotion/camera loop.
 		client.yaw=0.0 if posmod(int(elapsed/4),2)==0 else PI
-		if doors_available and int(elapsed/2.5)!=last_toggle:
+		if scripted_door_stress and doors_available and int(elapsed/2.5)!=last_toggle:
 			last_toggle=int(elapsed/2.5)
 			for id: String in sim.doors:
 				if not sim.doors[id].moving:
@@ -142,12 +144,16 @@ func _run() -> void:
 	report["video_quality"]={"shadows":prefs.video_shadows,"reflections":prefs.video_reflections,"msaa_3d":root.msaa_3d}
 	report["physics_ticks_per_rendered_frame"]=physics_tick_histogram
 	report["occlusion_culling"]=root.use_occlusion_culling
+	report["door_policy"]="all_doors_every_2_5_seconds" if scripted_door_stress else "ordinary_bot_and_player_interactions"
+	report["scripted_door_commands"]=transitions
+	if not scripted_door_stress:
+		report["scenario"]="real Main/Client/Practice, generated valid spawn, forward/reverse input and live authoritative bots; no scripted global door toggles"
 	print("PERFORMANCE07_LIVE "+JSON.stringify(report))
 	if not path.is_empty():
 		var file:=FileAccess.open(path,FileAccess.WRITE)
 		file.store_string(JSON.stringify(report,"\t"))
+		file.close()
 	await client._leave()
-	app.queue_free()
-	await process_frame
-	# Leave the coroutine and release local resource references before shutdown.
-	quit.call_deferred()
+	# Use the game's real close path, which drains music during the existing
+	# network grace period. Directly freeing Main skips that shutdown sequence.
+	root.propagate_notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)

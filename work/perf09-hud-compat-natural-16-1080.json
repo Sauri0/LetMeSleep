@@ -1,0 +1,86 @@
+{
+	"actors": 16,
+	"adapter": "NVIDIA GeForce RTX 3060 Ti",
+	"authoritative_map_id": "house-v1-1",
+	"cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+	"door_commands": 0,
+	"door_policy": "ordinary_bot_and_player_interactions",
+	"draws": {
+		"max": 8811.0,
+		"p50": 1184.0,
+		"p90": 6983.0,
+		"p99": 7808.0
+	},
+	"end_position": "(-12.05, 0.0, -5.001669)",
+	"fps_limit": 0,
+	"frame_ms": {
+		"max": 104.421,
+		"over_16_67ms_percent": 78.698224852071,
+		"p50": 33.066,
+		"p90": 65.611,
+		"p99": 79.973
+	},
+	"frames_with_moving_doors": 0,
+	"host_and_bots": true,
+	"map_id": "house-v1-1",
+	"measurement_seconds": 12.0,
+	"memory_bytes": 240144551.0,
+	"occlusion_culling": true,
+	"physics_ms": {
+		"max": 30.786,
+		"over_16_67ms_percent": 33.4319526627219,
+		"p50": 15.191,
+		"p90": 27.341,
+		"p99": 30.786
+	},
+	"physics_ticks_per_rendered_frame": {
+		"0": 6,
+		"1": 125,
+		"2": 93,
+		"3": 63,
+		"4": 39,
+		"5": 11,
+		"6": 1
+	},
+	"physics_ticks_per_second": 60,
+	"primitives": {
+		"max": 2379390.0,
+		"p50": 422892.0,
+		"p90": 1893838.0,
+		"p99": 2167486.0
+	},
+	"render_cpu_ms": {
+		"max": 72.7289962768555,
+		"over_16_67ms_percent": 19.5266272189349,
+		"p50": 4.04500007629395,
+		"p90": 22.1590003967285,
+		"p99": 31.253999710083
+	},
+	"render_gpu_ms": {
+		"max": 70.7900009155273,
+		"over_16_67ms_percent": 21.301775147929,
+		"p50": 5.6269998550415,
+		"p90": 23.2110004425049,
+		"p99": 31.2180004119873
+	},
+	"render_texture_size": "(1920.0, 1080.0)",
+	"rendered_map_id": "house-v1-1",
+	"renderer": "gl_compatibility",
+	"rendering_driver": "opengl3",
+	"requested_population": 16,
+	"resolution": "(1920, 1080)",
+	"samples": 338,
+	"scenario": "real Main/Client/Practice, generated valid spawn, forward/reverse input and live authoritative bots; no scripted global door toggles",
+	"scripted_door_commands": 0,
+	"start_position": "(-12.05, 0.0, -8.825001)",
+	"version": "0.9.0",
+	"video_memory_bytes": 96763499.0,
+	"video_quality": {
+		"msaa_3d": 0,
+		"reflections": true,
+		"shadows": 2
+	},
+	"vsync": "disabled",
+	"warmup_seconds": 2,
+	"window_size": "(999, 562)"
+}

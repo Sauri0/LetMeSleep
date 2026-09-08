@@ -1,0 +1,24 @@
+{
+  "name": "perf09-hud-compat-natural-16-1080",
+  "exe_sha256": "446E08F71624052572F96DE9031850BA96382CE6752ADDE38BB955B0A49BED01",
+  "source": true,
+  "arguments": [
+    "--path",
+    "\"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\game\"",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/performance07_live.gd",
+    "--",
+    "--no-microphone",
+    "--population=16",
+    "--map-id=house-v1-1",
+    "--natural-doors",
+    "--report=../work/perf09-hud-compat-natural-16-1080.json"
+  ],
+  "started_utc": "2026-09-08T13:46:37.3190837Z",
+  "finished_utc": "2026-09-08T13:46:57.1107882Z",
+  "exit_code": 0,
+  "stderr_bytes": 0,
+  "passed": true
+}
