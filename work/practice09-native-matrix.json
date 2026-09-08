@@ -1,0 +1,156 @@
+{
+  "checks": 157,
+  "cases": [
+    {
+      "role": "human",
+      "mode": "blood",
+      "checks": 29,
+      "case": {
+        "finished": true,
+        "first_map": {
+          "fingerprint": "1b34a7206283c854a1fae77ef36c6b8e8d06af30e31044edd35d7d1c842621d9",
+          "map_id": "house-v1-1"
+        },
+        "mode": "blood",
+        "rematch_map": {
+          "fingerprint": "ab49260dca39370656b19805330be87f7289f59e8ece3c7a46c6a67c50d64f00",
+          "map_id": "house-v1-66477273"
+        },
+        "role": "human"
+      },
+      "started_utc": "2026-09-08T12:42:26.0210885Z",
+      "finished_utc": "2026-09-08T12:42:34.5566602Z"
+    },
+    {
+      "role": "human",
+      "mode": "survival",
+      "checks": 25,
+      "case": {
+        "finished": true,
+        "first_map": {
+          "fingerprint": "dc1401f2e1ae252ede9acbcbadcb7bcc8fbffce092b3e8dc11f125a75a8864c1",
+          "map_id": "house-v1-2"
+        },
+        "mode": "survival",
+        "rematch_map": {
+          "fingerprint": "f14333213af089a4b723bba07e621e76c0acaa0069b27dc13935425b9cbc54ed",
+          "map_id": "house-v1-2063084346"
+        },
+        "role": "human"
+      },
+      "started_utc": "2026-09-08T12:43:58.8350213Z",
+      "finished_utc": "2026-09-08T12:44:04.8426837Z"
+    },
+    {
+      "role": "human",
+      "mode": "sleep",
+      "checks": 25,
+      "case": {
+        "finished": true,
+        "first_map": {
+          "fingerprint": "1b34a7206283c854a1fae77ef36c6b8e8d06af30e31044edd35d7d1c842621d9",
+          "map_id": "house-v1-1"
+        },
+        "mode": "sleep",
+        "rematch_map": {
+          "fingerprint": "20916db25e98e3d5400d0341310875d0399a2366ea4ad295e19e2cc75855d172",
+          "map_id": "house-v1-631824577"
+        },
+        "role": "human"
+      },
+      "started_utc": "2026-09-08T12:44:12.5034170Z",
+      "finished_utc": "2026-09-08T12:44:19.3612691Z"
+    },
+    {
+      "role": "mosquito",
+      "mode": "blood",
+      "checks": 28,
+      "case": {
+        "finished": true,
+        "first_map": {
+          "fingerprint": "1b34a7206283c854a1fae77ef36c6b8e8d06af30e31044edd35d7d1c842621d9",
+          "map_id": "house-v1-1"
+        },
+        "mode": "blood",
+        "rematch_map": {
+          "fingerprint": "888b2d18b08b241b947b5758f0608cac2ab9442754487cbd10a3d38a1f5e79d4",
+          "map_id": "house-v1-1502296856"
+        },
+        "role": "mosquito"
+      },
+      "started_utc": "2026-09-08T12:44:28.0152625Z",
+      "finished_utc": "2026-09-08T12:44:35.3195081Z"
+    },
+    {
+      "role": "mosquito",
+      "mode": "survival",
+      "checks": 25,
+      "case": {
+        "finished": true,
+        "first_map": {
+          "fingerprint": "dc1401f2e1ae252ede9acbcbadcb7bcc8fbffce092b3e8dc11f125a75a8864c1",
+          "map_id": "house-v1-2"
+        },
+        "mode": "survival",
+        "rematch_map": {
+          "fingerprint": "ef5b74c774777482860b36d4ac0f26714e1e7da7ab89c2e3d90cf02e8edf0abb",
+          "map_id": "house-v1-1588696170"
+        },
+        "role": "mosquito"
+      },
+      "started_utc": "2026-09-08T12:44:42.5664766Z",
+      "finished_utc": "2026-09-08T12:44:48.4518447Z"
+    },
+    {
+      "role": "mosquito",
+      "mode": "sleep",
+      "checks": 25,
+      "case": {
+        "finished": true,
+        "first_map": {
+          "fingerprint": "1b34a7206283c854a1fae77ef36c6b8e8d06af30e31044edd35d7d1c842621d9",
+          "map_id": "house-v1-1"
+        },
+        "mode": "sleep",
+        "rematch_map": {
+          "fingerprint": "ead77bec2e6d37d6fe6a1eecd9fb8de9232ded160e669c7b6eaee087b0ef4f25",
+          "map_id": "house-v1-388177416"
+        },
+        "role": "mosquito"
+      },
+      "started_utc": "2026-09-08T12:44:57.1874915Z",
+      "finished_utc": "2026-09-08T12:45:03.8053459Z"
+    }
+  ],
+  "failures": 0,
+  "hashes": {
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\director09-practice-human-blood.json": "016a781d1ff8ebf1167da83ed25923fa718429380b8a8fe463af36518a746d91",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-human-blood.run.json": "656097a4ec4a75387c2f11c1afad12b245207227fd975f1e672a12bd20c40db6",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-human-blood.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-human-blood.log": "28e6f84c624402d0a65d80ea686a4ac2d43b7c696bb4d109343b7f8d253cc49d",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\director09-practice-human-survival.json": "06f42e9873d963287230380ab6f6cb108bc768cbe1714aa7470ca0cf91e0e44d",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-human-survival.run.json": "f1d6545675296e4c96b6697c1beb65ef3cc63b204f5bd49f3644471be97a3ef3",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-human-survival.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-human-survival.log": "8f0da878eb481d4d1725d4ffb1255719c202096d742d601a34f28412a14efd63",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\director09-practice-human-sleep.json": "41cceda0ea247e1348a3518a100d1583d934809ed9b6055a9e1a318b418f9631",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-human-sleep.run.json": "ee20ee7a6c6931d07c0778fa57656ceea3d309da17505ddc491cc81e11a2625a",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-human-sleep.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-human-sleep.log": "d17e694fefd90407df06bbae9b86109fb7876fccf45d5e2a7eb3cfdbff19144e",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\director09-practice-mosquito-blood.json": "5312242d43ba3d64d501cf2fa499a49e48babca64769fe7aea38082e3b1d1d2a",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-mosquito-blood.run.json": "84eb1063cd6aa0c8633d613fa9a145050ff298ade217f04cc55ef3161ddfbcdf",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-mosquito-blood.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-mosquito-blood.log": "d9f028105737a350395eb57cd4d8609835d934334ecad0e820e43a1ece241bb9",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\director09-practice-mosquito-survival.json": "2cda063ea52132dfa6fd940ad3ee51a299dec6d7602a136a3358bb07363440d0",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-mosquito-survival.run.json": "59fce8c3a88921db93e58e2afa746beb17696c489dc24862aa038f31240e5511",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-mosquito-survival.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-mosquito-survival.log": "546aff39211cf14b74bb4c65c0c7d3dbcdc0a779eca8334cd016ee5f48cb5add",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\director09-practice-mosquito-sleep.json": "5e5e4bae5184f5252ec4afd165b5935d9d167fd36ef146668a641cb14dd54b12",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-mosquito-sleep.run.json": "019413c219871335db94f65043565f05640968a22b82c45971181b5cc4a91ff6",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-mosquito-sleep.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\release07-director09-practice-mosquito-sleep.log": "8f017e4c095f4f655d32818db0dd41123f443adec8e1fb1807d78f3497ecf9fd",
+    "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\game\\tests\\practice_ui_checks.gd": "6982b8429df045242c567e7916c9d20d9821b745193d89353b2e6ab5bff85439"
+  },
+  "fixture_hash_observed": "After final native run, before ownership returned to Worker",
+  "scope": "Six real native source game flows; result injection for navigation, no victory-rule certification, no microphone, no WAN, no final EXE or FPS claim",
+  "concurrency": "Exclusive Godot window; fit4 offline mesh consumer ran concurrently during part of the matrix, so not a performance benchmark"
+}
