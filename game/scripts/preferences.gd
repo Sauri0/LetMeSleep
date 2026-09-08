@@ -32,7 +32,7 @@ static var ambience_volume: float = 0.45
 static var ui_volume: float = 0.65
 static var video_resolution: int = 1
 static var video_fullscreen: bool = false
-static var video_vsync: bool = true
+static var video_vsync: bool = false
 static var video_fps: int = 0
 static var video_shadows: int = 2
 static var video_reflections: bool = true
@@ -65,15 +65,18 @@ static func setup_inputs() -> void:
 		InputMap.action_add_event("attack", mouse)
 
 
-static func load_settings() -> void:
+static func load_settings(settings_path: String = FILE_PATH) -> void:
 	setup_inputs()
 	if _loaded:
 		return
 	_loaded = true
-	if not FileAccess.file_exists(FILE_PATH):
+	if settings_path == FILE_PATH and not FileAccess.file_exists(FILE_PATH):
 		_migrate_legacy_settings()
 	var config := ConfigFile.new()
-	if config.load(FILE_PATH) == OK:
+	# A fresh profile is genuinely uncapped. Explicit saved choices win below.
+	video_vsync = false
+	video_fps = 0
+	if config.load(settings_path) == OK:
 		human_sensitivity = clampf(float(config.get_value("controls", "human_sensitivity", human_sensitivity)), 0.0005, 0.008)
 		mosquito_sensitivity = clampf(float(config.get_value("controls", "mosquito_sensitivity", mosquito_sensitivity)), 0.0005, 0.008)
 		invert_y = bool(config.get_value("controls", "invert_y", invert_y))
@@ -85,7 +88,7 @@ static func load_settings() -> void:
 		ui_volume = _audio_value(config, "ui_volume", 0.65)
 		video_resolution = clampi(int(config.get_value("video","resolution",1)),0,3)
 		video_fullscreen = bool(config.get_value("video","fullscreen",false))
-		video_vsync = bool(config.get_value("video","vsync",true))
+		video_vsync = bool(config.get_value("video","vsync",false))
 		video_fps = int(config.get_value("video","fps",0))
 		if video_fps not in [0,60,120,144,165,240]: video_fps=0
 		video_shadows = clampi(int(config.get_value("video","shadows",2)),0,2)
@@ -140,7 +143,7 @@ static func _migrate_legacy_settings(legacy_path: String = "", destination: Stri
 	return error
 
 
-static func save_settings() -> void:
+static func save_settings(settings_path: String = FILE_PATH) -> void:
 	var config := ConfigFile.new()
 	config.set_value("controls", "human_sensitivity", human_sensitivity)
 	config.set_value("controls", "mosquito_sensitivity", mosquito_sensitivity)
@@ -177,7 +180,7 @@ static func save_settings() -> void:
 			config.set_value("bindings", action, "key:%s" % event.physical_keycode)
 		elif event is InputEventMouseButton:
 			config.set_value("bindings", action, "mouse:%s" % event.button_index)
-	var error: Error = config.save(FILE_PATH)
+	var error: Error = config.save(settings_path)
 	if error != OK:
 		push_warning("No se pudieron guardar las preferencias: %s" % error_string(error))
 	apply_audio()

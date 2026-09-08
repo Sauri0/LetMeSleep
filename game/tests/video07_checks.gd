@@ -13,6 +13,12 @@ func _run() -> void:
 	Prefs.load_settings()
 	var existed:=FileAccess.file_exists(Prefs.FILE_PATH)
 	var original:=FileAccess.get_file_as_bytes(Prefs.FILE_PATH) if existed else PackedByteArray()
+	var clean_path:=OS.get_user_data_dir().path_join("video-clean-native-%d.cfg" % Time.get_ticks_usec())
+	Prefs._loaded=false
+	Prefs.load_settings(clean_path)
+	Video.apply_display(root)
+	check(Engine.max_fps==0 and DisplayServer.window_get_vsync_mode()==DisplayServer.VSYNC_DISABLED,"clean profile applies truly unlimited FPS without forced VSync")
+	check(not FileAccess.file_exists(clean_path),"clean native profile check creates no preference file")
 	var scene:=Node3D.new()
 	root.add_child(scene)
 	var light:=SpotLight3D.new()
