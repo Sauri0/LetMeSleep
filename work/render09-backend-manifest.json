@@ -1,0 +1,21 @@
+{
+  "scope": "selected source and reports for renderer diagnostic, not a complete build manifest",
+  "files": {
+    "game/tests/render09_backend_probe.gd": "31ea9712afe289b7ee06c764d96b03bd9ed745b0902817171beea5c22c32ff01",
+    "game/tests/performance07_live.gd": "fdea6af27929f9a0a1d5112b4547d2939dc77c3bd7f2e2d2a55e03a25ec10806",
+    "game/scripts/door_catalog.gd": "fc6da39cb7d11a7f6c43f271e68212bae0f90238a685d3c719fd4a3ebcf3aafc",
+    "game/scripts/door_state.gd": "c9771faabf4fa3d068937afbd2a4b73ea0a20d2b7d498363be52cb29257f0606",
+    "game/scripts/world.gd": "e6a51e251d821fd480e21f8dc92ac172d877d04c5bf2cb1765ea4971db47e3c5",
+    "game/scripts/map_catalog.gd": "8e4cc03ac62dd619958c4c3901286330098cf3935d5b9b803635648345311ab0",
+    "game/scripts/procedural_house.gd": "e0af4f10186a64aa513b5e84a460a6eb7b9d9497579a6bca069fc7dc1649e6ad",
+    "game/assets/art/characters/human/human_lms06.glb": "9f0df72a68bcc05942a910636c6b1d600ead6e3c9b20352656ada886ec211208",
+    "work/perf09-catalog-forward-fit3.json": "63350df56b9d315444d45fa718608d7429a4bc1135e03a143cfa50ebc55f8f3d",
+    "work/perf09-catalog-compat-fit3-clean.json": "46241140b6973df0e77304e8145ec675c45d2440b85098cd8d73b1bbac3cdfd5",
+    "outputs/0.9-render-backend-compat-fit3/report.json": "4ea9795d5f2f1095d4f6aa6458c301953b8248add11415aaa7240ee445164431",
+    "outputs/0.9-render-backend-forward-fit3/report.json": "c97bae019714c75c35c678f88af9158afa515f955aa0383b0c54184cfe73a715",
+    "work/release07-render09-backend-compat-fit3.run.json": "668d192fa100b2886e9abecc6380430c1b0c341b2bb7d907567744c4c45f0b16",
+    "work/release07-render09-backend-forward-fit3.run.json": "47af490182da58c3d4251e8292acc9c65e83277fef0554e98c43db7b9df4dfda",
+    "work/release07-perf09-catalog-forward-fit3.run.json": "179de508883cb8363e33305101d261f6385b170dac61bb8667c9bbab32ed26f0",
+    "work/release07-perf09-catalog-compat-fit3-clean.run.json": "854dd83596fb20f2e1c0c25c1390ba0370898d7f7de3d7c92efb256a75d19d97"
+  }
+}
