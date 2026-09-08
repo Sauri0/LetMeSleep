@@ -86,7 +86,7 @@ class Mesh:
             r=radii[j] if isinstance(radii,(list,tuple)) else radii
             for i in range(segments+1):
                 a=TAU*i/segments
-                q=center+(math.cos(a)*u+math.sin(a)*v)*r
+                q=center+(math.cos(a)*u*r[0]+math.sin(a)*v*r[1]) if isinstance(r,(list,tuple)) else center+(math.cos(a)*u+math.sin(a)*v)*r
                 self.vertex(q,(i/segments,j/max(1,len(points)-1)),weights(j,q) if weights else {bone:1})
         for j in range(len(points)-1):
             for i in range(segments):
@@ -192,12 +192,12 @@ def human():
     # Skin sleeves and articulated hands, weighted to the same game arm rig.
     for side,s in [(-1,'l'),(1,'r')]:
         a=p(BONES['forearm_'+s][0]);b=p(BONES['forearm_'+s][1]);direction=(b-a).normalized()
-        points=[a-direction*.025,a,a.lerp(b,.35),a.lerp(b,.75),b,b+direction*.024]
-        mesh.tube(points,[.060,.078,.080,.077,.070,.052],'skin','forearm_'+s,24)
+        points=[a-direction*.025,a,a.lerp(b,.35),a.lerp(b,.75),b-direction*.015,b+direction*.022,b+direction*.045,b+direction*.060]
+        mesh.tube(points,[(.060,.060),(.078,.078),(.080,.080),(.062,.060),(.042,.034),(.058,.032),(.056,.027),(.041,.020)],'skin','forearm_'+s,24,
+                  lambda j,q,s=s:{'forearm_'+s:1-min(1,max(0,(j-3)/2)),'hand_'+s:min(1,max(0,(j-3)/2))})
         hand=p(BONES['hand_'+s][0])
         palm_start=len(mesh.v)
-        mesh.ellipsoid(hand+Vector((0,-.003,0)),(.060,.043,.033),'skin','hand_'+s,24,16)
-        thumb=curve([hand+Vector((-side*.044,.014,0)),hand+Vector((-side*.070,-.018,-.006)),hand+Vector((-side*.058,-.052,-.021))],4)
+        thumb=curve([hand+Vector((-side*.038,-.012,0)),hand+Vector((-side*.068,-.038,-.006)),hand+Vector((-side*.058,-.069,-.021))],4)
         mesh.tube(thumb,[.022*(1-.36*i/(len(thumb)-1)) for i in range(len(thumb))],'skin','hand_'+s,10)
         align=Vector((0,-1,0)).rotation_difference(direction)
         for index in range(palm_start,len(mesh.v)):
@@ -229,12 +229,12 @@ def human():
             mesh.tube(points,[.075,.105,.105,.105,.105,.105,.105,.101,.086],'primary','thigh_'+s,28,
                       lambda j,q,s=s:{'thigh_'+s:1-min(1,max(0,(j-3)/2)),'shin_'+s:min(1,max(0,(j-3)/2))})
             a=p(BONES['upperarm_'+s][0]);b=p(BONES['upperarm_'+s][1]);d=(b-a).normalized()
-            mesh.ellipsoid(a+Vector((0,-.013,0)),(.096,.103,.095),'primary','upperarm_'+s,24,16)
-            bridge=[Vector((side*.13,1.285,0)),Vector((side*.22,1.285,0)),a]
-            mesh.tube(bridge,[.095,.095,.091],'primary','torso',24,
+            mesh.ellipsoid(a+Vector((0,-.020,0)),(.087,.079,.087),'primary','upperarm_'+s,24,16)
+            bridge=[Vector((side*.13,1.30,0)),Vector((side*.22,1.285,0)),a]
+            mesh.tube(bridge,[.078,.077,.078],'primary','torso',24,
                       lambda j,q,s=s:{'torso':1-j/2,'upperarm_'+s:j/2})
             points=[a-d*.022,a,a.lerp(b,.35),a.lerp(b,.82),b+d*.014]
-            mesh.tube(points,[.060,.093,.093,.096,.080],'primary','upperarm_'+s,24)
+            mesh.tube(points,[.054,.082,.087,.090,.080],'primary','upperarm_'+s,24)
             # Rolled sleeve cuff has a clear seam but leaves the forearm target skin exposed.
             trim.tube([b-d*.024,b-d*.016,b+d*.010],[.106,.109,.087],'secondary','upperarm_'+s,24)
             # Swept fabric collar, not a block on the first-person abdomen.
@@ -262,6 +262,7 @@ def human():
 def human_face(expression):
     mesh=Mesh('human_face_%d'%expression)
     blink_vertices={}
+    drowsy_vertices={}
     for side in [-1,1]:
         eye_start=len(mesh.v)
         mesh.ellipsoid((side*.068,1.596,-.142),(.051,.043,.029),'eye_white','head',24,16)
@@ -277,7 +278,10 @@ def human_face(expression):
         for index in range(lid_start,len(mesh.v)):
             value=Vector(mesh.v[index]);value.z-=.024 if expression==1 else .037;blink_vertices[index]=value
         brow=curve([(side*.022,1.656 if expression!=2 else 1.646,-.136),(side*.064,1.67,-.135),(side*.112,1.650 if expression!=2 else 1.675,-.119)],5)
+        brow_start=len(mesh.v)
         mesh.tube(brow,[.005+math.sin(math.pi*i/(len(brow)-1))*.009 for i in range(len(brow))],'hair','head',10)
+        for index in range(brow_start,len(mesh.v)):
+            value=Vector(mesh.v[index]);value.z+=.013*(1-min(1,abs(value.x)/.13));drowsy_vertices[index]=value
         bag=curve([(side*.025,1.566,-.154),(side*.065,1.557,-.161),(side*.105,1.568,-.14)],4)
         mesh.tube(bag,.003,'skin_shadow','head',8)
     mouth=curve([(-.060,1.459,-.132),(-.026,1.449 if expression!=2 else 1.462,-.149),(.016,1.451,-.151),(.061,1.466,-.129)],5)
@@ -287,9 +291,23 @@ def human_face(expression):
     obj.shape_key_add(name='Basis')
     blink=obj.shape_key_add(name='Blink')
     for index,value in blink_vertices.items():blink.data[index].co=value
+    drowsy=obj.shape_key_add(name='DrowsyBrow')
+    for index,value in drowsy_vertices.items():drowsy.data[index].co=value
 
 def human_hair(style,capped=False):
     mesh=Mesh('human_hair_%d'%style+('_capped' if capped else ''))
+    if capped:
+        # A separate fitted haircut under hats: no flattened poles or pointed
+        # tufts penetrating the brim. Rounded fringes retain the three styles.
+        mesh.loft([(0,1.683,.010),(0,1.710,.015),(0,1.738,.015)],[(.152,.150),(.170,.151),(.169,.145)],'hair','head',40)
+        for index in range(41):
+            x,y,z=mesh.v[index]
+            frequency=10 if style==2 else 3 if style==1 else 4
+            mesh.v[index]=(x,y,z+.004*(1+math.sin(index/40*TAU*frequency+style)))
+        for side in [-1,1]:
+            mesh.ellipsoid((side*.145,1.603,.035),(.028,.091,.048),'hair','head',20,12)
+        mesh.finish()
+        return
     mesh.ellipsoid((0,1.70,.020),(.171,.098,.143),'hair','head',28,16,
         lambda q,v:Vector((q.x,q.y*(.75 if v.z<-.2 else 1),q.z)))
     count=4 if style<2 else 9
@@ -303,8 +321,6 @@ def human_hair(style,capped=False):
             path=curve([(x*.85,1.73,z+.02),(x+.025,1.721 if style==0 else height,z-.016),(x+.047,1.67 if style==0 else height+.010,z-.038)],5)
             mesh.tube(path,[.038*(1-i/(len(path)-1))+.002 for i in range(len(path))],'hair','head',12)
     for side in [-1,1]:mesh.ellipsoid((side*.145,1.604,.039),(.035,.115,.054),'hair','head',20,12)
-    if capped:
-        mesh.v=[(x,y,min(z,1.722)) for x,y,z in mesh.v]
     mesh.finish()
 
 def human_shoes(style):
@@ -393,6 +409,8 @@ def mosquito():
             a=TAU*i/radial;q=center+Vector((side*math.cos(a)*.134,math.sin(a)*.006,math.sin(a)*.064))
             mesh.vertex(q,((math.cos(a)+1)/2,(math.sin(a)+1)/2),{'wing_'+s:1})
         for i in range(radial):mesh.face((start,start+1+i,start+1+(i+1)%radial),'wing')
+        rim=[center+Vector((side*math.cos(TAU*i/radial)*.134,math.sin(TAU*i/radial)*.006,math.sin(TAU*i/radial)*.064)) for i in range(radial+1)]
+        mesh.tube(rim,.0011,'wing_vein','wing_'+s,6)
         for i in range(5):
             z=-.04+i*.023
             mesh.tube(curve([(side*.037,.060,.045),(side*.12,.064,.058+z*.4),(side*.23,.064,.067+z)],4),.0015,'wing_vein','wing_'+s,6)
@@ -409,10 +427,14 @@ def mosquito():
 
 def mosquito_face(expression):
     mesh=Mesh('mosquito_face_%d'%expression)
+    blink_vertices={}
     for side in [-1,1]:
+        eye_start=len(mesh.v)
         mesh.ellipsoid((side*.043,.033,-.129),(.043,.047,.026),'eye_white','head',24,16)
         mesh.ellipsoid((side*.040,.029,-.153),(.016,.023,.008),'pupil','head',20,12)
         mesh.ellipsoid((side*.037,.039,-.160),(.0045,.006,.002),'eye_white','head',12,8)
+        for index in range(eye_start,len(mesh.v)):
+            value=Vector(mesh.v[index]);value.z=.012+(value.z-.012)*.035;blink_vertices[index]=value
         brow=curve([(side*.009,.087,-.131),(side*.040,.097+(.018 if expression==1 else 0),-.126),(side*.078,.083,-.118)],5)
         mesh.tube(brow,[.003+math.sin(math.pi*i/(len(brow)-1))*.004 for i in range(len(brow))],'insect_dark','head',8)
         if expression==2:
@@ -420,7 +442,8 @@ def mosquito_face(expression):
             mesh.tube(lid,.008,'insect_primary','head',8)
     mesh.ellipsoid((0,-.028,-.131),(.034,.018,.011),'ink','head',20,12)
     mesh.ellipsoid((.009,-.023,-.140),(.020,.005,.004),'eye_white','head',16,8)
-    mesh.finish()
+    obj=mesh.finish();obj.shape_key_add(name='Basis');blink=obj.shape_key_add(name='Blink')
+    for index,value in blink_vertices.items():blink.data[index].co=value
 
 def mosquito_antennae(style):
     mesh=Mesh('mosquito_hair_%d'%style)
@@ -440,6 +463,8 @@ def mosquito_legs(style):
             for part in ['a','b']:
                 bone='leg%d_%s_%s'%(i,part,s);a=p(BONES[bone][0]);b=p(BONES[bone][1])
                 mesh.tube([a,a.lerp(b,.3),b],[.006,.0055,.0035],'insect_dark',bone,10)
+                if part=='b':
+                    mesh.ellipsoid(a,(.0063,.0063,.0063),'insect_dark',bone,12,8)
                 if style==1:
                     for t in [.3,.6]:mesh.ellipsoid(a.lerp(b,t),(.0065,.0065,.0065),'accent',bone,12,8)
                 elif style==2 and part=='b':
@@ -453,6 +478,10 @@ def create_actions(species):
     pose_file=ROOT/'art_source/characters/human/authoritative_pose_clips.json'
     if species=='human' and pose_file.exists():
         create_authoritative_human_actions(json.loads(pose_file.read_text(encoding='utf8')))
+        return
+    mosquito_file=ROOT/'art_source/characters/mosquito/authoritative_pose_clips.json'
+    if species=='mosquito' and mosquito_file.exists():
+        create_authoritative_mosquito_actions(json.loads(mosquito_file.read_text(encoding='utf8')))
         return
     names=['idle','walk','run','crouch','jump','inspect','clap','tool_hold','task'] if species=='human' else ['hover','accelerate','brake','perch','focus','bite','detach','stunned','recover','rescue']
     RIG.animation_data_create()
@@ -485,6 +514,28 @@ def create_actions(species):
     for bone in RIG.pose.bones:bone.matrix_basis=Matrix.Identity(4)
     bpy.context.scene.frame_set(1)
 
+def create_authoritative_mosquito_actions(payload):
+    """State transitions sampled from the real runtime deformation skeleton."""
+    RIG.animation_data_create();bpy.context.scene.render.fps=int(payload['fps'])
+    conversion=Matrix(((1,0,0),(0,0,-1),(0,1,0)))
+    for label,frames in payload['clips'].items():
+        action=bpy.data.actions.new('mosquito_'+label);RIG.animation_data.action=action
+        for sample in frames:
+            for bone in RIG.pose.bones:bone.matrix_basis=Matrix.Identity(4)
+            for name,pose in sample['bones'].items():
+                values=pose['basis'];basis=Matrix((values[0:3],values[3:6],values[6:9])).transposed()
+                matrix=(conversion@basis@conversion.inverted()).to_4x4();matrix.translation=g(pose['p'])
+                bone=RIG.pose.bones[name];bone.matrix=matrix
+                bpy.context.view_layer.update()
+            for bone in RIG.pose.bones:
+                bone.rotation_mode='QUATERNION'
+                for key in ['location','rotation_quaternion','scale']:bone.keyframe_insert(key,frame=sample['frame'],group=bone.name)
+        track=RIG.animation_data.nla_tracks.new();track.name=action.name
+        track.strips.new(action.name,1,action);track.mute=True
+    RIG.animation_data.action=None
+    for bone in RIG.pose.bones:bone.matrix_basis=Matrix.Identity(4)
+    bpy.context.scene.frame_set(1)
+
 def create_authoritative_human_actions(payload):
     """Editable clip curves sampled from the exact shared Godot pose contract."""
     RIG.animation_data_create();bpy.context.scene.render.fps=int(payload['fps'])
@@ -509,13 +560,13 @@ def create_authoritative_human_actions(payload):
             bpy.context.view_layer.update()
             for name,length in [('pelvis',.18),('torso',.16*sample['torso_height']/.68),('head',.19)]:
                 orientation=None
-                if name=='head':
-                    q=sample['head_basis'];orientation=Quaternion((q[3],q[0],-q[2],q[1])).to_matrix()
+                if name=='head' or (name=='torso' and 'torso_basis' in sample):
+                    q=sample[name+'_basis'];orientation=Quaternion((q[3],q[0],-q[2],q[1])).to_matrix()
                 bone_transform(name,point(name),point(name)+Vector((0,length,0)),orientation)
             for side in ['l','r']:
                 for name,start,end in [('thigh','hip','knee'),('shin','knee','ankle'),('upperarm','shoulder','elbow'),('forearm','elbow','hand')]:
                     bone_transform(name+'_'+side,point(start+'_'+side),point(end+'_'+side))
-                bone_transform('foot_'+side,point('ankle_'+side),point('ankle_'+side)+Vector((0,0,-.22)))
+                bone_transform('foot_'+side,point('ankle_'+side),point('ankle_'+side)+p(sample.get('foot_direction_'+side,[0,0,-1]))*.22)
                 hand=point('hand_'+side);direction=(hand-point('elbow_'+side)).normalized()
                 bone_transform('hand_'+side,hand,hand+direction*.10)
             for bone in RIG.pose.bones:
@@ -575,6 +626,11 @@ def finish(species):
                     if along<1.04:
                         blend=min(1,max(0,(along-.82)/.22));blend=blend*blend*(3-2*blend)
                         combined={'forearm_'+side:1-blend,'hand_'+side:blend}
+                    elif 'forearm_'+side in combined:
+                        # The tube extends beyond the wrist. Never revert those
+                        # terminal vertices to a stretched forearm after the
+                        # interpolation interval: it folds a false wrist seam.
+                        combined['hand_'+side]=combined.get('hand_'+side,0)+combined.pop('forearm_'+side)
                 top=sorted(combined.items(),key=lambda item:-item[1])[:4];normalizer=sum(w for _,w in top)
                 for key,weight in top:groups[key].add([vertex.index],weight/normalizer,'REPLACE')
                 nearest.append(samples[0][1])

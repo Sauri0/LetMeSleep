@@ -14,6 +14,12 @@ var appearance: Dictionary = {}
 var first_person := false
 var time := 0.0
 var signature := ""
+var hand_grip := {"l":0.0,"r":0.0}
+var flight_blend := 1.0
+var bite_blend := 0.0
+var insect_previous_time := 0.0
+var human_pose_hash := 0
+var human_pose_values: Dictionary = {}
 
 func setup(role: String) -> void:
 	species = role
@@ -113,24 +119,44 @@ func _set_bone(name: String, from: Vector3, to: Vector3, orientation: Basis=Basi
 
 func apply_human(pose: Dictionary, data: Dictionary, dt: float) -> void:
 	time += dt
-	var blink_phase: float = fmod(time+float(appearance.get("face",0))*0.17,4.2)
-	var blink: float = sin(clampf((blink_phase-3.87)/0.22,0.0,1.0)*PI) if blink_phase>3.87 and blink_phase<4.09 else 0.0
+	var blink_phase: float = fmod(time+float(appearance.get("face",0))*.17,6.3)
+	var blink: float = sin(clampf((blink_phase-3.87)/.25,0.0,1.0)*PI) if blink_phase>3.87 and blink_phase<4.12 else 0.0
+	if int(appearance.get("face",0))==1 and blink_phase>4.26 and blink_phase<4.56:
+		blink = sin((blink_phase-4.26)/.30*PI)*.85
+	var strike: Dictionary = data.get("strike",{})
+	if bool(strike.get("active",false)):
+		blink = maxf(blink,sin(clampf(float(strike.get("progress",0.0)),0.0,1.0)*PI)*.16)
 	for mesh: MeshInstance3D in meshes:
 		if mesh.visible and mesh.mesh.get_blend_shape_count()>0:
 			mesh.set_blend_shape_value(0,blink)
-	_set_bone("pelvis",pose.pelvis,Vector3(pose.pelvis)+Vector3.UP*0.18)
-	_set_bone("torso",pose.torso,Vector3(pose.torso)+Vector3.UP*(0.16*float(pose.get("torso_height",0.68))/0.68))
-	_set_bone("head",pose.head,Vector3(pose.head)+Vector3.UP*0.19,pose.head_basis,false)
+			if mesh.mesh.get_blend_shape_count()>1:
+				var sleepy := maxf(0.0,sin(time*.73))*.30 if int(appearance.get("face",0))==1 else 0.0
+				mesh.set_blend_shape_value(1,sleepy)
+	var new_hash := hash(pose)
+	var changed := new_hash!=human_pose_hash or human_pose_values!=pose
+	human_pose_hash = new_hash
+	if changed:
+		human_pose_values = pose.duplicate(true)
+		_set_bone("pelvis",pose.pelvis,Vector3(pose.pelvis)+Vector3.UP*0.18)
+		_set_bone("torso",pose.torso,Vector3(pose.torso)+Vector3.UP*(0.16*float(pose.get("torso_height",0.68))/0.68),pose.get("torso_basis",Basis.IDENTITY))
+		_set_bone("head",pose.head,Vector3(pose.head)+Vector3.UP*0.19,pose.head_basis,false)
 	for side: String in ["l","r"]:
-		_set_bone("thigh_"+side,pose["hip_"+side],pose["knee_"+side])
-		_set_bone("shin_"+side,pose["knee_"+side],pose["ankle_"+side])
-		_set_bone("foot_"+side,pose["ankle_"+side],Vector3(pose["ankle_"+side])+Vector3.FORWARD*0.22)
-		_set_bone("upperarm_"+side,pose["shoulder_"+side],pose["elbow_"+side])
-		_set_bone("forearm_"+side,pose["elbow_"+side],pose["hand_"+side])
-		var hand: Vector3 = pose["hand_"+side]
-		var direction: Vector3 = (hand-Vector3(pose["elbow_"+side])).normalized()
-		_set_bone("hand_"+side,hand,hand+direction*0.10)
-		var grip: float = 0.55 if side=="r" and str(data.get("tool","hands"))!="hands" else 0.0
+		if changed:
+			_set_bone("thigh_"+side,pose["hip_"+side],pose["knee_"+side])
+			_set_bone("shin_"+side,pose["knee_"+side],pose["ankle_"+side])
+			_set_bone("foot_"+side,pose["ankle_"+side],Vector3(pose["ankle_"+side])+Vector3(pose.get("foot_direction_"+side,Vector3.FORWARD))*.22)
+			_set_bone("upperarm_"+side,pose["shoulder_"+side],pose["elbow_"+side])
+			_set_bone("forearm_"+side,pose["elbow_"+side],pose["hand_"+side])
+			var hand: Vector3 = pose["hand_"+side]
+			var direction: Vector3 = (hand-Vector3(pose["elbow_"+side])).normalized()
+			_set_bone("hand_"+side,hand,hand+direction*0.10)
+		var target_grip: float = .55 if side=="r" and str(data.get("tool","hands"))!="hands" else .10
+		if bool(strike.get("active",false)) and str(strike.get("hand","right"))==("left" if side=="l" else "right") and str(strike.get("tool","hands"))=="hands":
+			target_grip = 0.0
+		var previous_grip: float = hand_grip[side]
+		hand_grip[side] = lerpf(previous_grip,target_grip,1.0-exp(-16.0*dt))
+		var grip: float = hand_grip[side]
+		if not changed and absf(grip-previous_grip)<.0001: continue
 		for finger: int in range(4):
 			for section: String in ["a","b"]:
 				var name: String = "finger%d_%s_%s" % [finger,section,side]
@@ -140,26 +166,45 @@ func apply_human(pose: Dictionary, data: Dictionary, dt: float) -> void:
 
 func apply_mosquito(data: Dictionary, clock_time: float, stun: float) -> void:
 	time = clock_time
+	var dt := clampf(clock_time-insect_previous_time,0.0,.10)
+	insect_previous_time = clock_time
 	var state: String = str(data.get("state","flying"))
 	var flying: bool = state=="flying"
+	flight_blend = move_toward(flight_blend,1.0 if flying else 0.0,dt*6.0)
+	bite_blend = move_toward(bite_blend,1.0 if state=="biting" else 0.0,dt*8.0)
+	var speed := clampf(Vector3(data.get("velocity",Vector3.ZERO)).length()/3.8,0.0,1.0)
+	var blink_phase := fmod(time,4.8)
+	var blink := sin((blink_phase-4.40)/.21*PI) if blink_phase>4.40 and blink_phase<4.61 else 0.0
+	for mesh: MeshInstance3D in meshes:
+		if mesh.visible and mesh.mesh.get_blend_shape_count()>0:
+			mesh.set_blend_shape_value(0,maxf(blink,stun*.65))
 	var proboscis_id: int = int(bone_ids.get("proboscis",-1))
 	if proboscis_id>=0:
 		var rest: Transform3D = skeleton.get_bone_global_rest(proboscis_id)
-		var bend := Basis(Vector3.RIGHT,-0.82 if state=="biting" else 0.0)
+		var bend := Basis(Vector3.RIGHT,-.82*bite_blend)
 		skeleton.set_bone_global_pose(proboscis_id,Transform3D(bend*rest.basis,rest.origin))
 	for side: String in ["l","r"]:
 		var sign: float = -1.0 if side=="l" else 1.0
 		var wing: String = "wing_"+side
 		var rest: Transform3D = skeleton.get_bone_global_rest(bone_ids[wing])
-		var flap: float = sin(time*80.0)*(0.62 if flying else 0.05)*(1.0-stun)
-		var folded := Basis(Vector3.UP,sign*stun*1.25)*Basis(Vector3.BACK,sign*(0.20+flap))
+		var flap: float = sin(time*(80.0+speed*9.0)+sign*.09)*lerpf(.035,.64,flight_blend)*(1.0-stun)
+		var folded := Basis(Vector3.UP,sign*(stun*1.25+(1.0-flight_blend)*.35))*Basis(Vector3.BACK,sign*(0.20+flap))
 		skeleton.set_bone_global_pose(bone_ids[wing],Transform3D(folded*rest.basis,rest.origin))
 		for leg: int in range(3):
 			for section: String in ["a","b"]:
 				var name: String = "leg%d_%s_%s" % [leg,section,side]
-				var amount: float = stun*0.65 + (sin(time*4.0+leg)*0.06 if flying else 0.0)
+				var amount: float = stun*.65+flight_blend*(.12+speed*.13+sin(time*4.1+leg*1.7+sign)*.055)
+				if section=="b": amount *= -0.7
 				var id: int = bone_ids[name]
 				skeleton.set_bone_pose_rotation(id,skeleton.get_bone_rest(id).basis.get_rotation_quaternion()*Quaternion(Vector3.FORWARD,sign*amount))
+				if section=="b" and state in ["perched","biting"]:
+					# Local +Y is the real surface normal after ActorView's alignment.
+					# End the tarsus on that plane instead of burying it in the wall.
+					var posed: Transform3D = skeleton.get_bone_global_pose(id)
+					var authored: Vector3 = Vector3(contract[name].to[0],contract[name].to[1],contract[name].to[2])-Vector3(contract[name].from[0],contract[name].from[1],contract[name].from[2])
+					var end: Vector3 = posed.origin+posed.basis*skeleton.get_bone_global_rest(id).basis.inverse()*authored
+					end.y = lerpf(end.y,-.1235 if state=="biting" else -.1095,1.0-flight_blend)
+					_set_bone(name,posed.origin,end)
 		var antenna: String = "antenna_"+side
 		var antenna_id: int = bone_ids[antenna]
-		skeleton.set_bone_pose_rotation(antenna_id,skeleton.get_bone_rest(antenna_id).basis.get_rotation_quaternion()*Quaternion(Vector3.FORWARD,sign*sin(time*2.2)*0.07))
+		skeleton.set_bone_pose_rotation(antenna_id,skeleton.get_bone_rest(antenna_id).basis.get_rotation_quaternion()*Quaternion(Vector3.FORWARD,sign*(sin(time*2.2)*.07+speed*.08)*(1.0-stun)))

@@ -337,28 +337,28 @@
     },
     {
       "name": "mosquito_footwear_0",
-      "vertices": 456,
-      "triangles": 840
+      "vertices": 972,
+      "triangles": 1848
     },
     {
       "name": "mosquito_footwear_1",
-      "vertices": 2520,
-      "triangles": 4872
+      "vertices": 3036,
+      "triangles": 5880
     },
     {
       "name": "mosquito_footwear_2",
-      "vertices": 1224,
-      "triangles": 2352
+      "vertices": 1740,
+      "triangles": 3360
     },
     {
       "name": "mosquito_wing_l",
-      "vertices": 311,
-      "triangles": 560
+      "vertices": 557,
+      "triangles": 1048
     },
     {
       "name": "mosquito_wing_r",
-      "vertices": 311,
-      "triangles": 560
+      "vertices": 557,
+      "triangles": 1048
     },
     {
       "name": "mosquito_accessory_1",

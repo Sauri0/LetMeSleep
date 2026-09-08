@@ -120,6 +120,7 @@ func _run() -> void:
 	root.size = Vector2i(1280, 720)
 	app = load("res://scripts/main.gd").new()
 	root.add_child(app)
+	root.content_scale_size = Vector2i(1280, 720)
 	client = app.get_node("Client")
 	client.set_process_unhandled_input(false)
 	overlay = CanvasLayer.new()

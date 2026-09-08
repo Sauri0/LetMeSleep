@@ -1,4 +1,4 @@
-Let me sleep — audio 0.6
+Let me sleep — audio 0.7
 
 Original composition, arrangement, MIDI/event sources, sampling renderer,
 Foley synthesis and mix were created for this project, offline in Python.

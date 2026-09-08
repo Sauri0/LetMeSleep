@@ -10,6 +10,7 @@ const PracticeScript = preload("res://scripts/practice_session.gd")
 const MapCatalog = preload("res://scripts/map_catalog.gd")
 const HumanPose = preload("res://scripts/human_pose.gd")
 const MusicScript = preload("res://scripts/music_director.gd")
+const VideoSettings = preload("res://scripts/video_settings.gd")
 var network: Node
 var options: Dictionary
 var world: Node3D
@@ -43,6 +44,7 @@ var leaving := false
 func _ready() -> void:
 	PreferencesScript.load_settings()
 	PreferencesScript.setup_inputs()
+	VideoSettings.apply_display(get_window())
 	network.local_cosmetics = PreferencesScript.cosmetics
 	world = WorldScript.new()
 	world.name = "World"
@@ -203,6 +205,8 @@ func _snapshot(data: Dictionary) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		camera.make_current()
 	world.set_local_role(local_id, role)
+	world.sync_doors(data.get("doors",{}),1.0 if starting else 0.0)
+	world.audio_fx.sync_doors(data.get("doors",{}),world.door_views.views if is_instance_valid(world.door_views) else {})
 	ui.show_game(state, personal, local_id)
 	music.set_context("playing", state, personal, local_id)
 
@@ -223,6 +227,7 @@ func _process(dt: float) -> void:
 		return
 	var actors: Dictionary = state.get("actors", {})
 	world.sync_actors(actors, local_id, dt)
+	world.sync_doors(state.get("doors",{}),dt)
 	world.sync_pickups(state.get("pickups", {}))
 	var actor: Dictionary = actors.get(local_id, {})
 	if actor.is_empty():
@@ -273,6 +278,8 @@ func _physics_process(dt: float) -> void:
 		move.z = Input.get_axis("move_forward", "move_back")
 		move.y = Input.get_axis("descend", "ascend") if role == "mosquito" and not waiting else 0.0
 		interact = Input.is_action_pressed("interact" if role == "human" else "bite") and not waiting
+		if role == "human" and str(Dictionary(personal.get("interaction",{})).get("kind","")) == "door":
+			interact = false
 		if waiting or role == "human":
 			sprint = Input.is_action_pressed("sprint")
 			crouch = Input.is_action_pressed("crouch")
@@ -306,6 +313,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if str(state.get("actors", {}).get(local_id, {}).get("state", "")) == "stunned":
 		return
+	if role == "human" and event.is_action_pressed("interact"):
+		var interaction: Dictionary = personal.get("interaction",{})
+		if str(interaction.get("kind","")) == "door" and bool(interaction.get("can_use",false)):
+			action_sequence += 1
+			var transport: Node = practice if practice_active else network
+			transport.send_action(action_sequence,"door",yaw,pitch)
+			return
 	for verb: String in ["bite", "attack", "self_swat", "perch", "pickup", "drop"]:
 		if event.is_action_pressed(verb):
 			if verb == "bite" and (role != "mosquito" or state.get("actors",{}).get(local_id,{}).get("state","") != "biting"):

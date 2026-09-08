@@ -6,6 +6,9 @@ const AudioEffects = preload("res://scripts/audio_fx.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const Furnishings = preload("res://assets/art/house/house_library.gd")
 const SculptedShape = preload("res://assets/procedural_shapes.gd")
+const HouseDetails = preload("res://scripts/house_details.gd")
+const DoorViewScript = preload("res://scripts/door_view.gd")
+const VideoSettings = preload("res://scripts/video_settings.gd")
 
 var menu_camera: Camera3D
 var actors: Dictionary = {}
@@ -45,11 +48,14 @@ var surface_materials: Dictionary = {}
 var station_labels: Array[Label3D] = []
 var scene_environment: Environment
 var contact_material: StandardMaterial3D
+var door_views: Node3D
+var _house_windows: Array[Dictionary] = []
 
 func build() -> void:
 	if built:
 		return
 	built = true
+	add_to_group("video_settings")
 	cream = ActorModel.material(Color("f1e7cb"))
 	ceiling_paint = ActorModel.material(Color("eddfc8"))
 	ceiling_paint.emission_enabled = true
@@ -89,6 +95,7 @@ func load_map(id: String) -> void:
 		map_root.queue_free()
 	fan_blades = null
 	station_labels.clear()
+	door_views = null
 	map_data = requested
 	current_map = str(map_data.get("id", "lobby"))
 	audio_fx.set_context(current_map)
@@ -118,11 +125,18 @@ func load_map(id: String) -> void:
 		_build_lobby()
 		menu_camera.position = Vector3(3.25, 2.65, 2.45)
 		menu_camera.look_at(Vector3(-0.1, 1.0, -0.65))
+	door_views = DoorViewScript.new()
+	map_root.add_child(door_views)
+	door_views.setup(current_map)
 	menu_camera.fov = 74.0
 	saved_menu_transform = menu_camera.transform
 	saved_menu_fov = menu_camera.fov
 	if is_instance_valid(marker):
 		marker.visible = false
+	apply_video_settings()
+
+func apply_video_settings() -> void:
+	VideoSettings.apply_world(self)
 
 func _build_map_colliders() -> void:
 	var half_x: float = float(map_data.get("half_x", 4.0))
@@ -219,6 +233,10 @@ func sync_actors(data: Dictionary, local_id: int, dt: float) -> void:
 			view.visible = false
 	if is_instance_valid(audio_fx):
 		audio_fx.sync(data, actors, local_id)
+
+func sync_doors(states: Dictionary, dt: float) -> void:
+	if is_instance_valid(door_views):
+		door_views.sync(states,dt)
 
 func get_actor(id: int) -> Node3D:
 	return actors.get(id, null) as Node3D
@@ -428,30 +446,21 @@ func _build_lighting() -> void:
 		# serve the three focal rooms and stairs; other rooms use cheap fill.
 		for room: Dictionary in map_data.get("rooms", []):
 			var bounds: AABB = room.bounds
-			if str(room.name) in ["Dormitorio rosa","Sala de estar","Cocina"]:
-				var spot := SpotLight3D.new()
-				spot.position = Vector3(bounds.get_center().x, bounds.position.y + 2.67, bounds.get_center().z)
-				spot.light_color = Color("ffd29a")
-				spot.light_energy = 1.45
-				spot.spot_range = 5.0
-				spot.spot_angle = 76.0
-				spot.shadow_enabled = true
-				spot.shadow_bias = 0.1
-				spot.shadow_normal_bias = 1.0
-				spot.distance_fade_enabled = true
-				spot.distance_fade_begin = 5.6
-				spot.distance_fade_shadow = 4.8
-				spot.distance_fade_length = 1.0
-				map_root.add_child(spot)
-				spot.look_at(Vector3(bounds.get_center().x + 0.15,bounds.position.y,bounds.get_center().z + 0.15))
-				continue
-			var light := OmniLight3D.new()
-			light.position = Vector3(bounds.get_center().x, bounds.position.y + 2.6, bounds.get_center().z)
-			light.light_color = Color("ffdaaf")
-			light.light_energy = 0.85
-			light.omni_range = 4.8
-			light.shadow_enabled = false
-			map_root.add_child(light)
+			var spot := SpotLight3D.new()
+			spot.position = Vector3(bounds.get_center().x,bounds.position.y+(2.49 if int(room.floor)==0 else 2.69),bounds.get_center().z)
+			spot.light_color = Color("f6d5ad")
+			spot.light_energy = 1.85
+			spot.spot_range = 4.2
+			spot.spot_angle = 62.0
+			spot.shadow_enabled = str(room.name) in ["Dormitorio rosa","Sala de estar","Cocina"]
+			spot.shadow_bias = 0.1
+			spot.shadow_normal_bias = 1.0
+			spot.distance_fade_enabled = true
+			spot.distance_fade_begin = 6.5
+			spot.distance_fade_shadow = 5.5
+			spot.distance_fade_length = 1.5
+			map_root.add_child(spot)
+			spot.rotation.x=-PI/2
 		var stair_light := SpotLight3D.new()
 		stair_light.position = Vector3(-11.0,5.9,-1.4)
 		stair_light.light_color = Color("d1e6f0")
@@ -469,11 +478,13 @@ func _build_lighting() -> void:
 		stair_light.look_at(Vector3(-11.0,1.0,-2.4))
 		for floor_index: int in range(2):
 			for z: float in [-7.8,0.0,7.8]:
-				var hall_lamp := OmniLight3D.new()
+				var hall_lamp := SpotLight3D.new()
 				hall_lamp.position = Vector3(0,2.45+floor_index*3.2,z)
 				hall_lamp.light_color = Color("ffd09a")
-				hall_lamp.light_energy = 0.95
-				hall_lamp.omni_range = 3.7
+				hall_lamp.light_energy = 0.9
+				hall_lamp.spot_range = 3.4
+				hall_lamp.spot_angle = 60.0
+				hall_lamp.rotation.x=-PI/2
 				hall_lamp.shadow_enabled = false
 				map_root.add_child(hall_lamp)
 		return
@@ -524,12 +535,21 @@ void fragment(){
  } else if(surface_kind < 3.5){
   float top = step(0.5,normalize(n).y);
   shade = mix(0.66,0.99,top) + sin(UV.x*32.0+sin(UV.y*5.0))*0.025;
+ } else if(surface_kind < 4.5){
+  vec3 face = abs(normalize(n));
+  vec2 plane = face.y>0.5 ? p.xz : (face.z>0.5 ? p.xy : p.zy);
+  vec2 grid = plane*4.0;
+  vec2 tile = fract(grid);
+  vec2 distance_to_joint = min(tile,1.0-tile);
+  vec2 footprint = max(fwidth(grid),vec2(0.002));
+  vec2 joint = 1.0-smoothstep(vec2(0.018),vec2(0.018)+footprint,distance_to_joint);
+  float seam = max(joint.x,joint.y);
+  shade = 1.0-seam*0.22;
  } else {
   vec3 face = abs(normalize(n));
-  vec2 plane = face.z>0.5 ? p.xy : p.zy;
-  vec2 tile = fract(plane*4.0);
-  float seam = max(step(0.965,tile.x),step(0.965,tile.y));
-  shade = 1.0-seam*0.30;
+  float horizontal = face.z>0.5 ? p.x : p.z;
+  float u = fract(horizontal*1.55);
+  shade = .96 - step(.974,u)*.12 + step(.02,u)*step(u,.035)*.04;
  }
  ALBEDO = tint.rgb * shade;
  ROUGHNESS = 0.88;
@@ -537,11 +557,12 @@ void fragment(){
 	var material := ShaderMaterial.new()
 	material.shader = surface_shader
 	material.set_shader_parameter("tint", tint)
-	material.set_shader_parameter("surface_kind", 0.0 if kind == "wood" else 1.0 if kind == "wall" else 3.0 if kind == "step" else 4.0 if kind == "tile" else 2.0)
+	material.set_shader_parameter("surface_kind", 0.0 if kind == "wood" else 1.0 if kind == "wall" else 3.0 if kind == "step" else 4.0 if kind == "tile" else 5.0 if kind == "panel" else 2.0)
 	surface_materials[key] = material
 	return material
 
 func _build_catalog_house() -> void:
+	_house_windows = HouseDetails.window_specs(map_data)
 	# Every solid starts with the same AABB the server uses. Doorways and both
 	# stair wells are actual gaps in the catalog, not decorative painted doors.
 	for structure: Dictionary in map_data.get("structures", []):
@@ -556,9 +577,19 @@ func _build_catalog_house() -> void:
 			_furniture_from_catalog(structure)
 			continue
 		var material: Material = _surface_material(tint, "wood" if kind == "floor" else "step" if kind == "step" else "wall")
-		var piece: MeshInstance3D = _box(self, bounds.get_center(), bounds.size, material)
-		piece.set_meta("catalog_box", bounds)
-		piece.set_meta("catalog_kind", kind)
+		var visual_parts: Array[AABB] = []
+		if kind=="wall":
+			visual_parts = HouseDetails.wall_pieces(bounds,_house_windows)
+		elif kind=="floor":
+			# Keep light selection local: one house-wide mesh exceeded the eight
+			# Compatibility spot lights per object even with bounded lamps.
+			visual_parts = HouseDetails.floor_pieces(bounds)
+		else:
+			visual_parts.append(bounds)
+		for visual_box: AABB in visual_parts:
+			var piece: MeshInstance3D = _box(self,visual_box.get_center(),visual_box.size,material)
+			piece.set_meta("catalog_box",bounds)
+			piece.set_meta("catalog_kind",kind)
 		if kind == "floor" and bounds.position.y > 1.0:
 			_box(self, Vector3(bounds.get_center().x, bounds.position.y - 0.006, bounds.get_center().z), Vector3(bounds.size.x, 0.01, bounds.size.z), ceiling_paint)
 		if str(structure.get("label",""))=="Dintel":
@@ -566,12 +597,7 @@ func _build_catalog_house() -> void:
 			# undersides (confirmed by physics rays), not holes in the shell.
 			_box(self,Vector3(bounds.get_center().x,bounds.position.y+.008,bounds.get_center().z),Vector3(bounds.size.x,.020,bounds.size.z),wood)
 		if kind == "wall" and bounds.size.y > 1.0:
-			var trim_height: float = 0.11
-			var trim_size: Vector3 = bounds.size + Vector3(0.028, 0, 0.028)
-			trim_size.y = trim_height
-			_box(self, bounds.position + Vector3(bounds.size.x * 0.5, trim_height * 0.5, bounds.size.z * 0.5), trim_size, cream)
-			trim_size.y = 0.07
-			_box(self, bounds.position + Vector3(bounds.size.x * 0.5, bounds.size.y - 0.045, bounds.size.z * 0.5), trim_size, cream)
+			HouseDetails.trim(self,bounds)
 		elif kind == "step":
 			var nosing_size := Vector3(bounds.size.x, 0.033, minf(bounds.size.z, 0.055))
 			var front_z: float = bounds.size.z - 0.026 if bounds.get_center().x > 0.0 else 0.026
@@ -611,74 +637,7 @@ func _furniture_from_catalog(data: Dictionary) -> void:
 	_add_contact_shadow(bounds)
 	Furnishings.build(root,detail,tint)
 func _build_room_details(room: Dictionary) -> void:
-	var bounds: AABB = room.bounds
-	var center: Vector3 = bounds.get_center()
-	var floor_y: float = bounds.position.y
-	var label: String = str(room.get("label", room.get("name", ""))).to_upper()
-	var color: Color = _room_color(room)
-	if label in ["COCINA","SALA DE ESTAR"]:
-		_room_wall_finish(bounds,color,label=="COCINA")
-	if label.begins_with("DORMITORIO"):
-		var rear: bool = center.z > 0.0
-		var wall_z: float = (float(map_data.half_z)-0.262)*(1.0 if rear else -1.0)
-		_box(self,Vector3(center.x,floor_y+1.65,wall_z),Vector3(bounds.size.x,2.93,0.008),_surface_material(color,"wall")).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	# Decorative rugs lie flush with the physical floor; room labels stay small.
-	var rug_size := Vector3(minf(bounds.size.x * 0.5, 2.4), 0.016, minf(bounds.size.z * 0.5, 2.2))
-	var rug := SculptedShape.rounded(map_root,Vector3(center.x,floor_y+0.012,center.z),rug_size,0.008,_surface_material(color.darkened(0.2),"cloth"))
-	rug.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	for stripe: int in range(2):
-		var inset: float = 0.10+stripe*0.05
-		for side: float in [-1.0,1.0]:
-			_box(self,Vector3(center.x+side*(rug_size.x*0.5-inset),floor_y+0.022,center.z),Vector3(0.014,0.003,rug_size.z-inset*2.0),cream).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-			_box(self,Vector3(center.x,floor_y+0.023,center.z+side*(rug_size.z*0.5-inset)),Vector3(rug_size.x-inset*2.0,0.003,0.014),cream).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	_disc(self, Vector3(center.x, floor_y + 2.91, center.z), 0.22, 0.055, gold)
-	_cone(self, Vector3(center.x, floor_y + 2.78, center.z), 0.10, 0.29, 0.22, cream)
-	var bulb: StandardMaterial3D = ActorModel.material(Color("ffdfa6"))
-	bulb.emission_enabled = true
-	bulb.emission = Color("ffd89b")
-	bulb.emission_energy_multiplier = 1.25
-	bulb.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	_disc(self,Vector3(center.x,floor_y+2.665,center.z),0.21,0.016,bulb).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	# Find an actual solid wall face so a sign or accent panel never spans a door.
-	var wall: Dictionary = _room_wall_surface(bounds)
-	if not wall.is_empty():
-		var sign := Node3D.new()
-		sign.position = Vector3(wall.p) + Vector3(wall.normal) * 0.018
-		map_root.add_child(sign)
-		sign.look_at(sign.global_position - Vector3(wall.normal))
-		_box(sign, Vector3.ZERO, Vector3(0.90,0.21,0.028), wood)
-		_box(sign, Vector3(0,0,0.018), Vector3(0.85,0.17,0.015), cream)
-		_label(sign,label,Vector3(0,0,0.031),0.00155,Color("254b55"))
-		# A small original still-life replaces the repeated giant moon graphic.
-		_box(sign,Vector3(0,-0.53,0.005),Vector3(0.60,0.62,0.03),wood)
-		_box(sign,Vector3(0,-0.53,0.025),Vector3(0.53,0.55,0.014),_surface_material(color.darkened(0.24),"wall"))
-		_disc(sign,Vector3(-0.12,-0.40,0.043),0.085,0.009,gold).rotation.x = PI/2.0
-		_box(sign,Vector3(0.04,-0.65,0.044),Vector3(0.14,0.13,0.008),coral)
-		for leaf: int in range(3):
-			var stem: MeshInstance3D = _sphere(sign,Vector3(0.04+(leaf-1)*0.07,-0.52,0.05),Vector3(0.038,0.12,0.006),cream)
-			stem.rotation.z = (leaf-1)*0.4
-		if label in ["SALA DE ESTAR","DORMITORIO ROSA"]:
-			_segment(sign,Vector3(0.48,-0.16,0.03),Vector3(0.48,-0.06,0.18),0.018,gold)
-			_cone(sign,Vector3(0.48,-0.11,0.18),0.055,0.115,0.14,cream)
-	# Windows are recessed illustrations on the exterior shell, with no fake
-	# opening in the movement geometry. Their night sky keeps both floors legible.
-	if absf(bounds.position.z) > 8.0 or bounds.end.z > float(map_data.half_z) - 0.7:
-		var rear: bool = bounds.get_center().z > 0.0
-		var window := Node3D.new()
-		window.position = Vector3(center.x + minf(bounds.size.x * 0.33, 2.6), floor_y + 1.55, (float(map_data.half_z) - 0.275) * (1.0 if rear else -1.0))
-		window.rotation.y = PI if rear else 0.0
-		map_root.add_child(window)
-		_box(window, Vector3.ZERO, Vector3(1.45, 1.35, 0.03), ink)
-		_box(window, Vector3(0, 0, 0.02), Vector3(1.31, 1.21, 0.015), ActorModel.material(Color("304d70")))
-		_box(window, Vector3(0, 0, 0.055), Vector3(0.055, 1.34, 0.07), cream)
-		_box(window, Vector3(0, 0, 0.055), Vector3(1.44, 0.055, 0.07), cream)
-		_sphere(window, Vector3(-0.34, 0.28, 0.036), Vector3(0.12, 0.12, 0.008), gold)
-		# Warm wood surround and sill turn the window into a small architectural
-		# object, remaining only a centimetre in front of the existing wall.
-		for side: float in [-1.0,1.0]:
-			_box(window,Vector3(side*0.735,0,0.04),Vector3(0.07,1.47,0.06),wood)
-		_box(window,Vector3(0,-0.71,0.05),Vector3(1.55,0.07,0.09),wood)
-		_dress_window(window,color,label=="COCINA")
+	HouseDetails.build_room(self,room)
 
 func _dress_window(window: Node3D, tint: Color, short_curtain: bool = false) -> void:
 	_segment(window,Vector3(-1.04,0.85,0.13),Vector3(1.04,0.85,0.13),0.025,gold)
@@ -708,57 +667,7 @@ func _dress_window(window: Node3D, tint: Color, short_curtain: bool = false) -> 
 	moonlight.look_at(window.to_global(Vector3(0,-1.0,3.0)))
 
 func _finish_house_art() -> void:
-	var clock := Node3D.new()
-	clock.position = Vector3(0,1.9,10.70)
-	clock.rotation.y = PI
-	map_root.add_child(clock)
-	_disc(clock,Vector3.ZERO,.32,.04,wood).rotation.x = PI/2.0
-	_disc(clock,Vector3(0,0,.025),.285,.014,cream).rotation.x = PI/2.0
-	for hour: int in range(12):
-		var angle := hour*TAU/12.0
-		_segment(clock,Vector3(sin(angle)*.235,cos(angle)*.235,.036),Vector3(sin(angle)*.258,cos(angle)*.258,.036),.009,ink)
-	_segment(clock,Vector3(0,0,.042),Vector3(-.10,.12,.042),.012,ink)
-	_segment(clock,Vector3(0,0,.046),Vector3(.03,.21,.046),.008,coral)
-	for floor_index: int in range(2):
-		var floor_y := floor_index*3.2
-		_room_wall_finish(AABB(Vector3(-1.9,floor_y,-10.75),Vector3(3.8,3.0,21.5)),Color("b7a287"),false)
-		for z: float in [-7.8,0.0,7.8]:
-			_disc(self,Vector3(0,floor_y+2.93,z),.17,.055,gold)
-			_cone(self,Vector3(0,floor_y+2.75,z),.09,.24,.27,cream)
-		# Existing exterior walls close this axis. This is a recessed night
-		# window on that wall, never a fake doorway into inaccessible space.
-		var end_window := Node3D.new()
-		end_window.position = Vector3(0,floor_y+1.6,-10.71)
-		map_root.add_child(end_window)
-		_box(end_window,Vector3.ZERO,Vector3(1.62,1.44,.04),wood)
-		_dress_window(end_window,Color("839b98"))
-		_box(end_window,Vector3(0,0,.065),Vector3(.045,1.27,.035),cream)
-		_box(end_window,Vector3(0,0,.065),Vector3(1.41,.045,.035),cream)
-		_box(end_window,Vector3(0,-.74,.08),Vector3(1.80,.065,.21),wood)
-	# Large, recognizable objects on existing furniture surfaces only.
-	for furnishing: Node in map_root.get_children():
-		if furnishing.get_meta("catalog_kind","")!="furniture": continue
-		var model: Node3D = furnishing.get_child(0)
-		var asset := str(model.get_meta("authored_asset",""))
-		var box: AABB = furnishing.get_meta("catalog_box")
-		if asset in ["desk","table"]:
-			var lamp := Furnishings.instantiate_asset("lamp")
-			lamp.scale = Vector3.ONE*.78
-			lamp.position = Vector3(-minf(box.size.x,box.size.z)*.2,box.size.y,.12)
-			furnishing.add_child(lamp)
-			var glow := OmniLight3D.new()
-			glow.position = lamp.position+Vector3(0,.33,0)
-			glow.light_color = Color("ffbc76")
-			glow.light_energy = .18
-			glow.omni_range = 1.65
-			glow.shadow_enabled = false
-			furnishing.add_child(glow)
-			for book: int in range(2):
-				_box(furnishing,Vector3(.12,box.size.y+.025+book*.044,-.13),Vector3(.32,.038,.24),teal if book==0 else coral)
-		elif asset in ["dresser","bookcase"]:
-			var plant := Furnishings.instantiate_asset("plant")
-			plant.position = Vector3(0,box.size.y,0)
-			furnishing.add_child(plant)
+	HouseDetails.finish(self)
 
 func _room_color(room: Dictionary) -> Color:
 	var label: String = str(room.get("label", ""))
@@ -773,12 +682,11 @@ func _room_color(room: Dictionary) -> Color:
 func _room_wall_finish(bounds: AABB, color: Color, kitchen: bool) -> void:
 	# Paint only existing vertical wall faces. Door/lintel AABBs remain gaps;
 	# no panels bridge the doorways or alter the catalogue collision envelope.
-	var decorated: bool = false
 	for structure: Dictionary in map_data.structures:
 		if str(structure.kind)!="wall":
 			continue
 		var solid: AABB = structure.box
-		if solid.position.y>bounds.position.y+0.2 or solid.end.y<bounds.position.y+2.0:
+		if solid.position.y>=bounds.end.y or solid.end.y<=bounds.position.y:
 			continue
 		for axis: int in [0,2]:
 			var other: int = 2 if axis==0 else 0
@@ -796,42 +704,29 @@ func _room_wall_finish(bounds: AABB, color: Color, kitchen: bool) -> void:
 			var at := Vector3.ZERO
 			at[axis] = surface
 			at[other] = (low+high)*0.5
-			at.y = bounds.position.y+1.49
-			var size := Vector3(0.007,2.75,0.007)
+			var paint_low:float=maxf(solid.position.y,bounds.position.y+.12)
+			var paint_high:float=minf(solid.end.y,bounds.end.y-.02)
+			if paint_high<=paint_low:continue
+			at.y = (paint_low+paint_high)*.5
+			var size := Vector3(0.007,paint_high-paint_low,0.007)
 			size[other] = high-low
-			_box(self,at,size,_surface_material(Color("a4b8ac") if kitchen else color.darkened(0.08),"wall")).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			_finished_wall_box(at,size,_surface_material(Color("a4b8ac") if kitchen else color.lightened(0.20),"wall")).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			if solid.position.y>bounds.position.y+.2:continue
 			at.y = bounds.position.y+0.71
 			size.y = 1.18
 			at[axis] += 0.002 if surface>solid.end[axis] else -0.002
-			_box(self,at,size,_surface_material(Color("c5cec0") if kitchen else Color("536f72"),"tile" if kitchen else "wood")).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			_finished_wall_box(at,size,_surface_material(Color("c5cec0") if kitchen else color.darkened(0.32),"tile" if kitchen else "panel")).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			at.y = bounds.position.y+1.32
 			size.y = 0.035
 			size[axis] = 0.022
-			_box(self,at,size,wood).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-			if not decorated and high-low>1.20:
-				var decoration := Node3D.new()
-				at.y = bounds.position.y+1.99
-				decoration.position = at
-				map_root.add_child(decoration)
-				var normal := Vector3.ZERO
-				normal[axis] = 1.0 if surface>solid.end[axis] else -1.0
-				decoration.look_at(decoration.global_position-normal)
-				if kitchen:
-					_segment(decoration,Vector3(-0.4,0,0.04),Vector3(0.4,0,0.04),0.018,gold)
-					for index: int in range(3):
-						var x: float = -0.27+index*0.27
-						_segment(decoration,Vector3(x,-0.025,0.05),Vector3(x,-0.25,0.05),0.014,gold)
-						_sphere(decoration,Vector3(x,-0.31,0.048),Vector3(0.055 if index else 0.12,0.085 if index else 0.12,0.017),ink if index==0 else cream)
-				else:
-					_box(decoration,Vector3(0,-0.12,0.02),Vector3(0.78,0.66,0.045),wood)
-					_box(decoration,Vector3(0,-0.12,0.048),Vector3(0.70,0.58,0.015),cream)
-					_disc(decoration,Vector3(0.19,0.055,0.06),0.075,0.008,coral).rotation.x=PI/2.0
-					for side: float in [-1.0,1.0]:
-						var page: MeshInstance3D = _box(decoration,Vector3(side*0.14,-0.15,0.065),Vector3(0.22,0.20,0.009),teal)
-						page.rotation.z = side*0.12
-						for line: int in range(3):
-							_box(decoration,Vector3(side*0.14,-0.095-line*0.045,0.073),Vector3(0.15,0.012,0.006),cream)
-				decorated = true
+			_finished_wall_box(at,size,wood).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+func _finished_wall_box(at: Vector3, size: Vector3, material: Material) -> MeshInstance3D:
+	var final_piece: MeshInstance3D
+	for piece: AABB in HouseDetails.wall_pieces(AABB(at-size*.5,size),_house_windows):
+		final_piece=_box(self,piece.get_center(),piece.size,material)
+		final_piece.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return final_piece
 
 func _add_contact_shadow(bounds: AABB) -> void:
 	if not is_instance_valid(contact_material):
@@ -898,10 +793,10 @@ func _build_station_at(station: Dictionary) -> void:
 		for layer: int in range(5):
 			_disc(root,Vector3(0,0.04+layer*0.025,0),0.16,0.022,cream)
 	elif label=="EQUIPO":
-		SculptedShape.rounded(root,Vector3(0,0.17,0),Vector3(0.48,0.28,0.22),0.04,teal)
-		for side: float in [-1.0,1.0]:
-			_disc(root,Vector3(side*0.13,0.17,-0.116),0.085,0.015,ink).rotation.x=PI/2.0
-		_segment(root,Vector3(0.19,0.29,0),Vector3(0.12,0.49,0),0.009,gold)
+		HouseDetails.place_station_radio(self,point)
+		# The floor disc marks the working position beside the actual furniture.
+		for side:float in [-1.0,1.0]:
+			_segment(root,Vector3(side*.11,.033,-.03),Vector3(0,.033,-.15),.013,cream)
 	else:
 		_capsule(root,Vector3(0,0.16,0),0.115,0.29,teal)
 		_disc(root,Vector3(0,0.315,0),0.062,0.06,gold)

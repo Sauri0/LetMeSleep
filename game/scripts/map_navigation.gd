@@ -4,6 +4,7 @@ extends RefCounted
 ## Human points are feet; mosquito points are centers. Reuse routes between repaths.
 
 const Maps = preload("res://scripts/map_catalog.gd")
+const HouseBarriers = preload("res://scripts/house_barriers.gd")
 const HUMAN_RADIUS := 0.60
 const HUMAN_HEIGHT := 1.95
 const MOSQUITO_RADIUS := 0.04
@@ -22,7 +23,11 @@ static func _geometry(human: bool, map_id: String) -> Dictionary:
 		return _cache[key]
 	var data: Dictionary = _data(map_id)
 	var expanded: Array[AABB] = []
-	for obstacle: AABB in data.obstacles:
+	var obstacles: Array[AABB] = []
+	for box: AABB in data.obstacles:
+		obstacles.append(box)
+	obstacles.append_array(HouseBarriers.get_boxes(map_id))
+	for obstacle: AABB in obstacles:
 		if human:
 			expanded.append(AABB(obstacle.position - Vector3(HUMAN_RADIUS, HUMAN_HEIGHT - 0.003, HUMAN_RADIUS), obstacle.size + Vector3(HUMAN_RADIUS * 2.0, HUMAN_HEIGHT - 0.006, HUMAN_RADIUS * 2.0)))
 		else:

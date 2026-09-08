@@ -1,0 +1,14 @@
+{
+  "original": true,
+  "units": "metres",
+  "forward": "-Z",
+  "shaft": "-Y",
+  "active_face": [
+    0,
+    -0.51,
+    0
+  ],
+  "source": "racket.blend",
+  "triangles": 3164,
+  "surfaces": 4
+}

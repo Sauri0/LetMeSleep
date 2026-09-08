@@ -13,7 +13,7 @@ if (Test-Path -LiteralPath (Join-Path $projectRoot 'distribution')) {
 }
 & $godotExe --headless --path $gamePath --editor --import --quit
 if ($LASTEXITCODE -ne 0) { throw 'Godot import failed' }
-foreach ($entryPoint in @('scripts/main','scripts/client','tests/network_bot','tests/practice_ui_checks','tests/gameplay_demo','tests/gameplay06_demo','tests/camera_turn_checks','tests/hud_input06_checks','tests/hosting_checks')) {
+foreach ($entryPoint in @('scripts/main','scripts/client','tests/network_bot','tests/practice_ui_checks','tests/gameplay_demo','tests/gameplay06_demo','tests/camera_turn_checks','tests/hud_input06_checks','tests/hosting_checks','tests/gameplay07_demo','tests/performance07_live','tests/network07_combat_checks','tests/video07_checks','tests/doors07_client_checks')) {
     & $godotExe --headless --path $gamePath --check-only --script "res://$entryPoint.gd"
     if ($LASTEXITCODE -ne 0) { throw "$entryPoint parse failed" }
 }
@@ -28,14 +28,14 @@ if (-not $SkipTests) {
     if ($LASTEXITCODE -ne 0) { throw 'Visual geometry tests failed' }
     & $godotExe --headless --path $gamePath --script res://tests/audio_checks.gd
     if ($LASTEXITCODE -ne 0) { throw 'Audio tests failed' }
-    foreach ($testName in @('maps_test','route_tests','locomotion_test','focus_combat_test','manual_defense_test','stun_help_test','online_packet_codec_test','task_deadline_test','practice_test','invitation_test','network_order_test','network_connection_test','network_privacy_audit_test','contact_orientation06_test','house06_checks','music06_test','preferences_migration_test')) {
+    foreach ($testName in @('maps_test','route_tests','locomotion_test','focus_combat_test','manual_defense_test','stun_help_test','online_packet_codec_test','task_deadline_test','practice_test','invitation_test','network_order_test','network_connection_test','network_privacy_audit_test','contact_orientation06_test','house06_checks','music06_test','preferences_migration_test','doors07_test','door_navigation07_test','attack07_test','arena_spatial07_test','pose_cache07_test','barriers07_test','v07_character_motion_checks','v07_character_cache_checks','network07_combat_checks')) {
         & $godotExe --headless --path $gamePath --script "res://tests/$testName.gd"
         if ($LASTEXITCODE -ne 0) { throw "$testName failed" }
     }
     # Skin baking requires a rendering backend; Godot's headless dummy backend
     # cannot register the skeleton used by this actual-deformed-mesh test.
     # UI checks also need real mouse capture, unavailable in the dummy backend.
-    foreach ($nativeTest in @('v06_character_rig_checks','ui_navigation_test')) {
+    foreach ($nativeTest in @('v07_character_rig_checks','v07_character_client_checks','ui_navigation_test','video07_checks','doors07_client_checks')) {
     $rigLog = Join-Path $PSScriptRoot ('build-' + $nativeTest + '.log')
     $rigError = Join-Path $PSScriptRoot ('build-' + $nativeTest + '.err')
     $rig = Start-Process -FilePath $godotExe -ArgumentList @('--path', ('"' + $gamePath + '"'), '--script', ('res://tests/' + $nativeTest + '.gd')) -WindowStyle Hidden -PassThru -RedirectStandardOutput $rigLog -RedirectStandardError $rigError

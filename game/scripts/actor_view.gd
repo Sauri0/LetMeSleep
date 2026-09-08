@@ -6,6 +6,8 @@ const Pose = preload("res://scripts/human_pose.gd")
 const Rounded = preload("res://assets/procedural_shapes.gd")
 const ImportedSkin = preload("res://assets/art/characters/shared/character_skin.gd")
 const SwatterArt = preload("res://assets/art/house/swatter.glb")
+const RacketArt = preload("res://assets/art/characters/tools/racket.glb")
+const BroomArt = preload("res://assets/art/characters/tools/broom.glb")
 const NewspaperArt = preload("res://assets/art/house/newspaper.glb")
 const MOSQUITO_VISUAL_SCALE: float = 0.35
 const MOSQUITO_BODY_RADIUS: float = 0.04
@@ -65,6 +67,10 @@ var help_icon: Label3D
 var imported_skin: Node3D
 var legacy_geometry_dirty := false
 var mosquito_orientation := Quaternion.IDENTITY
+var mosquito_velocity := Vector3.ZERO
+var mosquito_bank := Vector2.ZERO
+var human_snapshot_hash := 0
+var human_snapshot_values: Dictionary = {}
 
 func build(role: String, display_name: String, tint_index: int = 0) -> void:
 	actor_role = role
@@ -157,7 +163,14 @@ func update_state(data: Dictionary, dt: float) -> void:
 		right_wing.rotation.z = lerpf(0.22-flutter,0.05,stun_blend)
 		left_wing.rotation.y = stun_blend*1.25
 		right_wing.rotation.y = -stun_blend*1.25
-		var target_orientation := Basis.from_euler(Vector3((float(data.get("pitch",0.0))*0.6 if flying else 0.0)*(1.0-stun_blend),0,stun_blend*(1.25+sin(clock_time*2.7)*0.025)))
+		var velocity: Vector3 = data.get("velocity",Vector3.ZERO)
+		var acceleration := (velocity-mosquito_velocity)/maxf(dt,.001)
+		mosquito_velocity = velocity
+		var local_velocity := global_basis.inverse()*velocity
+		var local_acceleration := global_basis.inverse()*acceleration.limit_length(28.0)
+		var requested_bank := Vector2(clampf(local_velocity.z*.065+local_acceleration.z*.009,-.32,.32),clampf(-local_velocity.x*.065-local_acceleration.x*.009,-.38,.38)) if flying else Vector2.ZERO
+		mosquito_bank = mosquito_bank.lerp(requested_bank,1.0-exp(-8.0*dt))
+		var target_orientation := Basis.from_euler(Vector3((mosquito_bank.x+float(data.get("pitch",0.0))*.18)*(1.0-stun_blend),0,mosquito_bank.y*(1.0-stun_blend)+stun_blend*(1.25+sin(clock_time*2.7)*.025)))
 		var surface_normal: Vector3 = data.get("surface_normal",Vector3.ZERO)
 		if state in ["biting","perched"] and surface_normal.length_squared()>0.5:
 			var up: Vector3 = (global_basis.inverse()*surface_normal).normalized()
@@ -286,6 +299,12 @@ func _build_rig_arm(suffix: String, side: float, shirt: StandardMaterial3D, skin
 	return group
 
 func _apply_human_pose(data: Dictionary, dt: float) -> void:
+	var snapshot_hash := hash(data)
+	if snapshot_hash==human_snapshot_hash and human_snapshot_values==data and not body_pose.is_empty():
+		if is_instance_valid(imported_skin): imported_skin.apply_human(body_pose,data,dt)
+		return
+	human_snapshot_hash = snapshot_hash
+	human_snapshot_values = data.duplicate(true)
 	body_pose = Pose.sample(data)
 	torso_node.position = body_pose.torso
 	(torso_node.get_child(0).mesh as CapsuleMesh).height = float(body_pose.torso_height)
@@ -327,7 +346,10 @@ func _apply_human_pose(data: Dictionary, dt: float) -> void:
 	if body_pose.has("tool_direction"):
 		var direction: Vector3 = body_pose.tool_direction if str(Dictionary(data.get("strike",{})).get("hand","right"))=="right" else Vector3.DOWN
 		if direction.length_squared()>0.001:
-			tool_socket.basis = (limb_hands["r"] as Node3D).basis.inverse()*Basis(Quaternion(Vector3.DOWN,direction.normalized()))
+			var normal: Vector3 = body_pose.get("tool_normal",Vector3.BACK)
+			var up := -direction.normalized()
+			var back := (normal-up*normal.dot(up)).normalized()
+			tool_socket.basis = (limb_hands["r"] as Node3D).basis.inverse()*Basis(up.cross(back).normalized(),up,back)
 	if is_instance_valid(imported_skin):
 		imported_skin.apply_human(body_pose,data,dt)
 
@@ -629,6 +651,11 @@ static func make_tool(tool: String) -> Node3D:
 	var metal: StandardMaterial3D = material(Color("bcd5cb"))
 	var paper: StandardMaterial3D = material(Color("f6e7c9"))
 	if tool == "hands":
+		return root
+	if tool in ["racket","broom"]:
+		var imported: Node3D = (RacketArt if tool=="racket" else BroomArt).instantiate()
+		imported.name = "AuthoredTool"
+		root.add_child(imported)
 		return root
 	if tool in ["swatter","newspaper"]:
 		var imported: Node3D = (SwatterArt if tool=="swatter" else NewspaperArt).instantiate()

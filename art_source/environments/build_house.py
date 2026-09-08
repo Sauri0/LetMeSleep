@@ -303,6 +303,7 @@ def export_asset(asset):
     return {'asset':asset,'triangles':len(obj.data.loop_triangles),'materials':len(obj.data.materials),'bounds_blender':{'min':lower,'max':upper},'glb_bytes':(OUT/(asset+'.glb')).stat().st_size}
 
 ASSETS=['sofa','armchair','bed','table','desk','nightstand','wardrobe','dresser','bookcase','sink','stove','fridge','lamp','plant','mug','swatter','newspaper','curtain']
-report=[export_asset(asset) for asset in ASSETS]
-(SOURCE/'manifest.json').write_text(json.dumps({'blender':bpy.app.version_string,'original_art':True,'unit':'metre','assets':report},indent=2),encoding='utf-8')
-print('HOUSE_EXPORT_COMPLETE',json.dumps(report))
+if __name__ == '__main__':
+    report=[export_asset(asset) for asset in ASSETS]
+    (SOURCE/'manifest.json').write_text(json.dumps({'blender':bpy.app.version_string,'original_art':True,'unit':'metre','assets':report},indent=2),encoding='utf-8')
+    print('HOUSE_EXPORT_COMPLETE',json.dumps(report))

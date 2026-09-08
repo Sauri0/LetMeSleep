@@ -31,9 +31,9 @@ for theme in ['menu','gameplay']:
         with wave.open(str(ROOT/'masters/music'/f'{theme}_{layer}.wav')) as w:
             pcm=np.frombuffer(w.readframes(w.getnframes()),dtype='<i2')
             assert w.getnframes()==3256615 and abs(int(pcm[0])-int(pcm[-1]))<=1
-assert len(items)==48
+assert len(items)==51
 shutil.copy2(ROOT/'instruments/vsco2ce/LICENSE-CC0.txt',ASSETS/'LICENSE-VSCO2CE-CC0.txt')
-credits='''Let me sleep — audio 0.6
+credits='''Let me sleep — audio 0.7
 
 Original composition, arrangement, MIDI/event sources, sampling renderer,
 Foley synthesis and mix were created for this project, offline in Python.
@@ -55,7 +55,7 @@ Tools: Python 3.14 + NumPy; FFmpeg/Vorbis encoding; Godot 4.5.2 playback.
 FFmpeg and Python are production tools, not runtime game dependencies.
 '''
 (ASSETS/'CREDITS.txt').write_text(credits,encoding='utf-8')
-manifest={'version':'0.6 audio production','sample_library':{'name':sample_data['library'],'license':'CC0-1.0','source':sample_data['source'],'commit':sample_data['repository_commit']},'asset_count':len(items),'asset_bytes':sum(e['bytes'] for e in items),'items':items}
+manifest={'version':'0.7 audio production','sample_library':{'name':sample_data['library'],'license':'CC0-1.0','source':sample_data['source'],'commit':sample_data['repository_commit']},'asset_count':len(items),'asset_bytes':sum(e['bytes'] for e in items),'items':items}
 (ASSETS/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
-(ROOT/'asset-validation.json').write_text(json.dumps({'checks':'48 assets decoded; sample provenance hashes; mono effects/stereo music; finite nonzero PCM; decoded peak<0.98; stems exact equal duration/frame count; WAV loop seams <=1 PCM unit','pass':True,'assets':len(items),'bytes':manifest['asset_bytes'],'max_decoded_peak':max(e['decoded_peak'] for e in items)},indent=2),encoding='utf-8')
+(ROOT/'asset-validation.json').write_text(json.dumps({'checks':'51 assets decoded; sample provenance hashes; mono effects/stereo music; finite nonzero PCM; decoded peak<0.98; stems exact equal duration/frame count; WAV loop seams <=1 PCM unit','pass':True,'assets':len(items),'bytes':manifest['asset_bytes'],'max_decoded_peak':max(e['decoded_peak'] for e in items)},indent=2),encoding='utf-8')
 print(json.dumps({'pass':True,'assets':len(items),'bytes':manifest['asset_bytes'],'max_peak':max(e['decoded_peak'] for e in items)}))

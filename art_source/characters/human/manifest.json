@@ -435,13 +435,13 @@
     },
     {
       "name": "human_core",
-      "vertices": 4039,
-      "triangles": 8070
+      "vertices": 3693,
+      "triangles": 7378
     },
     {
       "name": "human_outfit_0",
-      "vertices": 4932,
-      "triangles": 9860
+      "vertices": 4892,
+      "triangles": 9780
     },
     {
       "name": "human_outfit_0_trim",
@@ -450,8 +450,8 @@
     },
     {
       "name": "human_outfit_1",
-      "vertices": 4932,
-      "triangles": 9860
+      "vertices": 4892,
+      "triangles": 9780
     },
     {
       "name": "human_outfit_1_trim",
@@ -460,8 +460,8 @@
     },
     {
       "name": "human_outfit_2",
-      "vertices": 4932,
-      "triangles": 9860
+      "vertices": 4892,
+      "triangles": 9780
     },
     {
       "name": "human_outfit_2_trim",
@@ -490,8 +490,8 @@
     },
     {
       "name": "human_hair_0_capped",
-      "vertices": 1394,
-      "triangles": 2760
+      "vertices": 564,
+      "triangles": 1116
     },
     {
       "name": "human_hair_1",
@@ -500,8 +500,8 @@
     },
     {
       "name": "human_hair_1_capped",
-      "vertices": 1394,
-      "triangles": 2760
+      "vertices": 564,
+      "triangles": 1116
     },
     {
       "name": "human_hair_2",
@@ -510,8 +510,8 @@
     },
     {
       "name": "human_hair_2_capped",
-      "vertices": 1876,
-      "triangles": 3704
+      "vertices": 564,
+      "triangles": 1116
     },
     {
       "name": "human_footwear_0",
@@ -557,9 +557,12 @@
     "human_idle",
     "human_inspect",
     "human_jump",
+    "human_land",
+    "human_lobby_walk",
     "human_run",
     "human_task",
     "human_tool_hold",
+    "human_turn",
     "human_walk"
   ]
 }

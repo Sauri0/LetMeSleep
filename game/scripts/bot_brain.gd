@@ -7,6 +7,9 @@ const Catalog = preload("res://scripts/map_catalog.gd")
 const SimData = preload("res://scripts/simulation.gd")
 const Routes = preload("res://scripts/map_navigation.gd")
 const Pose = preload("res://scripts/human_pose.gd")
+const Doors = preload("res://scripts/door_catalog.gd")
+var visible_doors: Dictionary = {}
+var door_passage: PackedVector3Array = []
 var peer_id := 0
 var age := 0.0
 var action_wait := 0.0
@@ -27,12 +30,13 @@ var retreat_left := 0.0
 var retreat_burst_left := 0.0
 var retreat_point := Vector3.INF
 var patrol_index := 0
-var stats := {"moves":0,"bites":0,"detaches":0,"attacks":0,"self_swats":0,"task_inputs":0,"pickups":0,"paths":0,"helps":0}
+var stats := {"moves":0,"bites":0,"detaches":0,"attacks":0,"self_swats":0,"task_inputs":0,"pickups":0,"paths":0,"helps":0,"doors":0,"door_passages":0}
 
 func setup(id: int) -> void:
 	peer_id = id
 
 func decide(snapshot: Dictionary, own_private: Dictionary, dt: float) -> Dictionary:
+	visible_doors = snapshot.get("doors",{})
 	age += dt
 	decision_dt = dt
 	retreat_left = maxf(0,retreat_left-dt)
@@ -63,7 +67,7 @@ func _action(result: Dictionary, verb: String, delay: float) -> void:
 	if action_wait <= 0.0:
 		result.action = verb
 		action_wait = delay
-		var key: String = {"bite":"bites","attack":"attacks","self_swat":"self_swats","pickup":"pickups"}.get(verb,"")
+		var key: String = {"bite":"bites","attack":"attacks","self_swat":"self_swats","pickup":"pickups","door":"doors"}.get(verb,"")
 		if not str(key).is_empty():
 			stats[key] += 1
 
@@ -87,7 +91,7 @@ func _human(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dictiona
 		var delta: Vector3 = other.p - eye
 		var forward := Vector3.FORWARD.rotated(Vector3.UP,float(me.yaw))
 		var observed := delta.length() < 0.9 or delta.normalized().dot(forward) > 0.25
-		if observed and delta.length() < closest and ArenaData.clear_segment(eye,other.p,map_id):
+		if observed and delta.length() < closest and ArenaData.clear_segment(eye,other.p,map_id,visible_doors):
 			closest = delta.length()
 			visible = other.duplicate(true)
 			visible.id = id
@@ -131,6 +135,8 @@ func _human(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dictiona
 			_action(out,"attack",1.65)
 		if not working and closest > contact_range:
 			var direction := _walk_direction(me.p,visible.p,map_id)
+			if _human_door(me,out,direction,map_id):
+				return
 			out.move = direction.rotated(Vector3.UP,-float(out.yaw)) * 0.45
 		if not working:
 			return
@@ -149,6 +155,8 @@ func _human(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dictiona
 		if Vector3(me.p).distance_to(destination) < 0.8:
 			patrol_index += 1
 	var direction := _walk_direction(me.p,destination,map_id)
+	if _human_door(me,out,direction,map_id):
+		return
 	if direction.length() > 0.01:
 		_aim(out,eye,eye+direction)
 		out.move = direction.rotated(Vector3.UP,-float(out.yaw)) * (0.9 if working else 0.50)
@@ -158,6 +166,46 @@ func _human(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dictiona
 			if int(pickup.holder) == 0 and Vector3(me.p).distance_to(pickup.p) < 1.2:
 				_action(out,"pickup",0.9)
 				break
+
+func _human_door(me: Dictionary, out: Dictionary, direction: Vector3, map_id: String) -> bool:
+	if direction.length_squared()<0.01 or visible_doors.is_empty():
+		return false
+	var from: Vector3 = Vector3(me.p)+Vector3.UP
+	var nearest: Dictionary = {}
+	for id: String in visible_doors:
+		if not Doors.DEFINITIONS.has(id) or float(visible_doors[id].angle)>Doors.OPEN_ANGLE-0.02:
+			continue
+		var hit: Dictionary = Doors.ray_leaf(Doors.DEFINITIONS[id],0.0,from,from+direction*2.7)
+		if not hit.is_empty() and (nearest.is_empty() or float(hit.distance)<float(nearest.distance)):
+			nearest = hit
+	if nearest.is_empty():
+		return false
+	var id: String = nearest.door_id
+	var definition: Dictionary = Doors.DEFINITIONS[id]
+	var state: Dictionary = visible_doors[id]
+	var point: Vector3 = Doors.handle_point(definition,float(state.angle))
+	var eye: Vector3 = Pose.view_origin(me)
+	_aim(out,eye,point,4.0)
+	if bool(state.blocked) and float(state.target_angle)>0.1:
+		# Step away from an opening leaf's room side, rather than continuously
+		# walking into the sweep and keeping our own doorway blocked.
+		var away: Vector3 = Vector3(me.p)-Vector3(definition.hinge)
+		away.y = 0
+		var room_direction := Vector3(signf(float(definition.hinge.x)),0,0)
+		if away.dot(room_direction)>0:
+			away = room_direction
+		out.move = away.normalized().rotated(Vector3.UP,-float(out.yaw))*0.75
+		return true
+	if bool(state.moving):
+		return true
+	if eye.distance_to(point)>SimData.DOOR_REACH-0.05:
+		out.move = direction.rotated(Vector3.UP,-float(out.yaw))*0.65
+		return true
+	var wanted: Vector3 = (point-eye).normalized()
+	var forward := Vector3.FORWARD.rotated(Vector3.RIGHT,float(out.pitch)).rotated(Vector3.UP,float(out.yaw))
+	if forward.dot(wanted)>0.995 and float(state.target_angle)<0.1:
+		_action(out,"door",0.6)
+	return true
 
 func _aim_body_contact(out: Dictionary, me: Dictionary, contact: Vector3) -> void:
 	var body_yaw := float(me.get("body_yaw", me.yaw))
@@ -183,7 +231,7 @@ func _mosquito(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dicti
 				retreat_left = 4.0 + float(peer_id % 3)*0.4
 				retreat_burst_left = 0.6
 				var assignment: Dictionary = own.get("assignment",{})
-				retreat_point = escape_point(me.p,Vector3(assignment.get("normal",Vector3.FORWARD)),map_id)
+				retreat_point = escape_point(me.p,Vector3(assignment.get("normal",Vector3.FORWARD)),map_id,visible_doors)
 		return
 	attached_age = 0.0
 	# Give learners time to orientate; opponents begin independently.
@@ -213,7 +261,7 @@ func _mosquito(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dicti
 	var outer: Vector3 = target+normal*1.05
 	var focus: Dictionary = own.get("focus",{})
 	var exposed := (Vector3(me.p)-target).dot(normal) > 0.012
-	if Vector3(me.p).distance_to(target) < 1.45 and exposed and ArenaData.clear_segment(me.p,target,map_id):
+	if Vector3(me.p).distance_to(target) < 1.45 and exposed and ArenaData.clear_segment(me.p,target,map_id,visible_doors):
 		_aim(out,me.p,target)
 		out.interact = true
 		out.move = Vector3.ZERO
@@ -230,7 +278,7 @@ func _help_ally(snapshot: Dictionary, me: Dictionary, out: Dictionary, map_id: S
 		if id == peer_id or other.role != "mosquito" or other.get("state", "") != "stunned":
 			continue
 		var distance: float = Vector3(me.p).distance_to(other.p)
-		if distance < nearest and ArenaData.clear_segment(me.p, other.p, map_id):
+		if distance < nearest and ArenaData.clear_segment(me.p, other.p, map_id, visible_doors):
 			nearest = distance
 			target = other
 	if target.is_empty():
@@ -254,12 +302,12 @@ func _fly_toward(me: Dictionary, out: Dictionary, destination: Vector3, map_id: 
 	var alignment := forward.dot(direction.normalized())
 	out.move = Vector3(0,0,-throttle*clampf((alignment-0.25)/0.65,0,1))
 
-static func escape_point(from: Vector3, normal: Vector3, map_id: String) -> Vector3:
+static func escape_point(from: Vector3, normal: Vector3, map_id: String, doors: Dictionary = {}) -> Vector3:
 	var outward := Vector3(normal.x,clampf(normal.y,-0.15,0.3),normal.z).normalized()
 	for distance: float in [3.2,2.4,1.6]:
 		for angle: float in [0.0,0.65,-0.65,1.1,-1.1]:
 			var candidate := from+outward.rotated(Vector3.UP,angle)*distance
-			if Routes.can_travel(from,candidate,false,map_id):
+			if Routes.can_travel(from,candidate,false,map_id) and ArenaData.clear_segment(from,candidate,map_id,doors):
 				return candidate
 	return from
 
@@ -276,4 +324,25 @@ func _path_direction(from: Vector3, destination: Vector3, human: bool, map_id: S
 		stats.paths += 1
 	while not path.is_empty() and from.distance_to(path[0]) < (0.29 if human else 0.25):
 		path.remove_at(0)
+	if not human:
+		while not door_passage.is_empty() and from.distance_to(door_passage[0])<0.085:
+			door_passage.remove_at(0)
+			if door_passage.is_empty():
+				path_age = 100.0
+		if not door_passage.is_empty():
+			return (door_passage[0]-from).normalized()
+		if not path.is_empty():
+			var hit: Dictionary = Doors.ray_doors(from,path[0],visible_doors,map_id)
+			if not hit.is_empty() and float(hit.distance)<3.0:
+				var definition: Dictionary = Doors.DEFINITIONS[str(hit.door_id)]
+				var transform: Transform3D = Doors.leaf_transform(definition,0.0)
+				var center: Vector3 = transform*Vector3(float(definition.width)*0.5,Doors.GAP*0.5,0)
+				var normal: Vector3 = transform.basis.z
+				var side: float = 1.0 if (from-center).dot(normal)>=0.0 else -1.0
+				var entry: Vector3 = center+normal*side*0.25
+				var exit_point: Vector3 = center-normal*side*0.25
+				if Routes.can_travel(from,entry,false,map_id) and Routes.can_travel(entry,exit_point,false,map_id):
+					door_passage = PackedVector3Array([entry,exit_point])
+					stats.door_passages += 1
+					return (entry-from).normalized()
 	return Vector3.ZERO if path.is_empty() else (path[0]-from).normalized()

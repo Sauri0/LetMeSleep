@@ -2,12 +2,12 @@
   {
     "species": "human",
     "bones": 32,
-    "actions": 9,
-    "maximum_weight_error": 4.470348358154297e-08,
+    "actions": 12,
+    "maximum_weight_error": 4.76837158203125e-07,
     "maximum_influences": 4,
     "bad_positions": 0,
     "zero_area_triangles": 0,
-    "max_authoritative_action_error_m": 1.228781230931777e-07
+    "max_authoritative_action_error_m": 2.457562461863554e-07
   },
   {
     "species": "mosquito",

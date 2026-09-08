@@ -145,4 +145,4 @@ func _process(dt: float) -> void:
 	if dragging and not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		dragging = false
 	if is_instance_valid(avatar):
-		avatar.update_state({"p":Vector3(0,0.88 if role=="mosquito" else 0.0,0),"yaw":PI,"body_yaw":PI,"state":"flying" if role=="mosquito" else "human","relaxed_pose":true,"appearance":appearance},dt)
+		avatar.update_state({"p":Vector3(0,0.88 if role=="mosquito" else 0.0,0),"yaw":PI,"body_yaw":PI,"state":"flying" if role=="mosquito" else "human","relaxed_pose":true,"pose_time":avatar.clock_time,"appearance":appearance},dt)

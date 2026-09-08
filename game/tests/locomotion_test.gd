@@ -52,7 +52,10 @@ func _test_movement() -> void:
 	check(turned.p.x < -0.61 and absf(float(turned.p.z)) < 0.001, "local movement rotates with server yaw")
 	Map.step_human(run, {}, 0.1)
 	check(run.motion_speed == 0.0 and run.velocity == Vector3.ZERO and not run.sprinting, "empty intent stops walking immediately")
-	var wall: Dictionary = actor_at(Vector3(float(Map.HALF_X) - 1.0, 0, 0))
+	# The stair-side post occupies the old z=0 start. Begin on the clear
+	# landing so this measures wall collision from a valid body position.
+	var wall: Dictionary = actor_at(Vector3(float(Map.HALF_X) - 1.0, 0, 4.8))
+	check(Map.can_fit_human(wall.p), "wall sprint fixture begins clear of stairs and railing")
 	Map.step_human(wall, {"move": Vector3.RIGHT, "sprint": true}, 1.0)
 	check(wall.p.x <= float(Map.HALF_X) - Map.HUMAN_RADIUS + 0.00001 and Map.can_fit_human(wall.p), "sprint remains within wall collision envelope")
 	var obstacle: Dictionary = actor_at(Vector3(-11.4, 0, 8.7))

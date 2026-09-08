@@ -7,6 +7,28 @@ static var tinted_materials: Dictionary = {}
 static func asset_for(data: Dictionary) -> String:
 	var label := str(data.get("label",""))
 	var style := str(data.get("style","cabinet"))
+	var room := str(data.get("room_name",""))
+	if room=="Lavadero":
+		if label=="Lavado": return "washer"
+		if label=="Canasto": return "hamper"
+		return "wardrobe"
+	if room=="Baño":
+		if label=="Lavado": return "bath_vanity"
+		if label=="Canasto": return "toilet"
+		return "bath_shower"
+	if room=="Dormitorio azul":
+		if label=="Mesada": return "bed"
+		return "wardrobe" if label=="Despensa" else "dresser"
+	if room=="Despensa":
+		if label=="Cama": return "pantry_crates"
+		return "pantry_shelf" if label=="Ropero" else "table"
+	if room=="Taller de costura":
+		if label=="Mesa grande": return "sewing_table"
+		if label=="Vajillero": return "bookcase"
+	if room=="Sala de TV" and label=="Equipo": return "television"
+	if room=="Sala de música" and label=="Equipo": return "piano"
+	if room=="Sala de juegos" and label=="Consola": return "game_table"
+	if room=="Comedor" and label=="Mesa grande": return "dining_set"
 	if label=="Mesada": return "stove"
 	if label=="Alacena": return "sink"
 	if label=="Despensa" and AABB(data.box).get_center().z < -5.9: return "fridge"
@@ -51,18 +73,20 @@ static func build(root: Node3D, data: Dictionary, tint: Color) -> void:
 	var model := instantiate_asset(asset)
 	var bounds: AABB = bounds_cache[asset]
 	# Faucet/pot sit above the counter, as in the previous visual fixtures.
-	var physical_height := 0.86 if asset in ["sink","stove"] else bounds.size.y
+	var physical_height := 0.86 if asset in ["sink","stove"] else 0.78 if asset=="bath_vanity" else bounds.size.y
 	model.scale = Vector3(size.x/bounds.size.x,size.y/physical_height,size.z/bounds.size.z)
 	model.position = -Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*model.scale
 	root.add_child(model)
 	if asset in ["sofa","armchair","bed","dresser","wardrobe","bookcase","sink","stove"]:
 		_tint_cloth(model,tint)
+	var room := str(data.get("room_name",""))
 	if asset in ["nightstand","desk","table"]:
-		var decoration := instantiate_asset("lamp" if asset=="nightstand" else "mug")
-		var decoration_bounds: AABB = bounds_cache["lamp" if asset=="nightstand" else "mug"]
+		var decor_asset := "tea_service" if room in ["Sala de estar","Sala de TV","Comedor"] else "bedside_set" if "Dormitorio" in room or "visitas" in room else "mug"
+		var decoration := instantiate_asset(decor_asset)
+		var decoration_bounds: AABB = bounds_cache[decor_asset]
 		var factor := minf(1.0,minf(size.x,size.z)*.48/maxf(decoration_bounds.size.x,decoration_bounds.size.z))
 		decoration.scale = Vector3.ONE*factor
-		decoration.position = Vector3(size.x*.15,size.y,size.z*.05)
+		decoration.position = Vector3(0,size.y,0)
 		root.add_child(decoration)
 
 static func _tint_cloth(node: Node, tint: Color) -> void:

@@ -1,0 +1,14 @@
+{
+  "original": true,
+  "units": "metres",
+  "forward": "-Z",
+  "shaft": "-Y",
+  "active_face": [
+    0,
+    -0.88,
+    0
+  ],
+  "source": "broom.blend",
+  "triangles": 6320,
+  "surfaces": 4
+}

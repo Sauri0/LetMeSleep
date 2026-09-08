@@ -54,6 +54,30 @@ const CONFIG_FIELDS := [
 	["task_goal", "Meta de tareas · 0 = auto", 0, 100, 1, "sleep"],
 ]
 
+class AttackCue extends Control:
+	var candidate := false
+	var blocked := false
+	var hit_until := 0.0
+	func update_state(opportunity: bool, obstruction: bool) -> void:
+		if candidate==opportunity and blocked==obstruction: return
+		candidate=opportunity
+		blocked=obstruction
+		queue_redraw()
+	func confirm_hit() -> void:
+		hit_until=float(Time.get_ticks_msec())/1000.0+.20
+		queue_redraw()
+		get_tree().create_timer(.21).timeout.connect(queue_redraw)
+	func _draw() -> void:
+		var center := size*.5
+		if float(Time.get_ticks_msec())/1000.0<hit_until:
+			for angle: float in [PI*.25,PI*.75,PI*1.25,PI*1.75]:
+				draw_line(center+Vector2.from_angle(angle)*6,center+Vector2.from_angle(angle)*11,Color("fff5da"),2,true)
+		elif candidate:
+			for angle: float in [0.0,PI*.5,PI,PI*1.5]:
+				draw_arc(center,10,angle-.22,angle+.22,5,Color("ffcf47"),1.5,true)
+		elif blocked:
+			draw_line(center+Vector2(-4,9),center+Vector2(4,9),Color("c8b5a0"),1.2,true)
+
 class ComicBackdrop extends Control:
 	var kind: String = "dots"
 	var title_font: Font
@@ -229,6 +253,8 @@ var _task_time: Label
 var _task_detail: Label
 var _task_progress: ProgressBar
 var _reticle: Label
+var _attack_cue: AttackCue
+var _door_hint: Label
 var _result_title: Label
 var _result_subtitle: Label
 var _result_stats: Label
@@ -994,6 +1020,22 @@ func _build_hud() -> void:
 	_reticle.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	_reticle.position -= Vector2(6,21)
 	_hud.add_child(_reticle)
+	_attack_cue=AttackCue.new()
+	_attack_cue.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	_attack_cue.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	_attack_cue.offset_left=-16
+	_attack_cue.offset_right=16
+	_attack_cue.offset_top=-16
+	_attack_cue.offset_bottom=16
+	_hud.add_child(_attack_cue)
+	_door_hint=_hud_label("",14)
+	_door_hint.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	_door_hint.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	_door_hint.offset_left=-110
+	_door_hint.offset_right=110
+	_door_hint.offset_top=32
+	_door_hint.offset_bottom=56
+	_hud.add_child(_door_hint)
 	_practice_banner = _hud_label("PRÁCTICA",11)
 	_practice_banner.position = Vector2(12,46)
 	_hud.add_child(_practice_banner)
@@ -1130,6 +1172,8 @@ func _open_help() -> void:
 	var text_value := ""
 	if _help_role == "human":
 		text_value = "HUMANO\n%s %s %s %s · moverte\n%s correr · %s saltar · %s agacharte\n\nAPUNTÁ Y GOLPEÁ\nMirá al mosquito o mirá tu cuerpo si te pica. %s da una palmada; %s es la alternativa. Detrás, pedí ayuda.\n%s recoger / cambiar herramienta · %s soltar\n" % [keys[0],keys[1],keys[2],keys[3],Prefs.binding_text("sprint"),Prefs.binding_text("jump"),Prefs.binding_text("crouch"),Prefs.binding_text("attack"),Prefs.binding_text("self_swat"),Prefs.binding_text("pickup"),Prefs.binding_text("drop")]
+		text_value += "Apuntá a una puerta cercana y pulsá %s para abrirla o cerrarla.\n" % Prefs.binding_text("interact")
+		text_value += "El aro junto a la mira señala una oportunidad de golpe: el mosquito puede moverse antes del contacto. La barra corta indica recuperación.\n"
 		if _help_mode == "sleep": text_value += "Mantené %s en tu puesto para hacer la tarea. Una picadura pausa el trabajo.\n" % Prefs.binding_text("interact")
 	else:
 		text_value = "MOSQUITO\n%s avanza hacia la mira · soltar frena\n%s retrocede · %s / %s mueve a los lados\n%s posarse / volver a volar\n\nTU MARCA\nMantené %s cerca de la marca: concentrás, te acercás y picás. Soltar cancela la carga. Mientras picás, soltá y pulsá %s otra vez para desprenderte; retrocedé para retirarte.\n" % [keys[0],keys[2],keys[1],keys[3],Prefs.binding_text("perch"),Prefs.binding_text("bite"),Prefs.binding_text("bite")]
@@ -1566,6 +1610,7 @@ func _build_settings() -> void:
 	var preference_scroll := _scroll(preferences_panel)
 	var box := _vbox(preference_scroll, 18)
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_build_video_settings(box)
 	box.add_child(_label("Sonido", 24))
 	_add_slider(box, "volume", "Volumen general", Prefs.master_volume * 100.0, 0.0, 100.0, 1.0)
 	_add_slider(box, "music_volume", "Música", Prefs.music_volume * 100.0, 0.0, 100.0, 1.0)
@@ -1621,6 +1666,41 @@ func _build_settings() -> void:
 	))
 	frame.add_child(_label("Los ajustes se guardan en esta computadora. El menú no detiene una ronda online.", 14, MUTED))
 
+
+func _build_video_settings(box: VBoxContainer) -> void:
+	var video = preload("res://scripts/video_settings.gd")
+	box.add_child(_label("Imagen y fluidez",24))
+	box.add_child(_label("Resolución de imagen",16))
+	var resolution := OptionButton.new()
+	for size: Vector2i in video.SIZES: resolution.add_item("%d × %d" % [size.x,size.y])
+	resolution.select(Prefs.video_resolution)
+	resolution.item_selected.connect(func(index: int) -> void: Prefs.video_resolution=index; video.apply_display(get_window()))
+	box.add_child(resolution)
+	for setting: String in ["fullscreen","vsync","reflections"]:
+		var button := CheckButton.new()
+		button.text={"fullscreen":"Pantalla completa","vsync":"Sincronizar con la pantalla","reflections":"Reflejos del entorno"}[setting]
+		button.button_pressed={"fullscreen":Prefs.video_fullscreen,"vsync":Prefs.video_vsync,"reflections":Prefs.video_reflections}[setting]
+		button.toggled.connect(func(enabled: bool) -> void:
+			match setting:
+				"fullscreen": Prefs.video_fullscreen=enabled
+				"vsync": Prefs.video_vsync=enabled
+				"reflections": Prefs.video_reflections=enabled
+			video.apply_display(get_window())
+		)
+		box.add_child(button)
+	box.add_child(_label("Límite de cuadros por segundo",16))
+	var cap := OptionButton.new()
+	for value: int in video.CAPS: cap.add_item("Sin límite" if value==0 else "%d FPS" % value)
+	cap.select(maxi(0,video.CAPS.find(Prefs.video_fps)))
+	cap.item_selected.connect(func(index: int) -> void: Prefs.video_fps=video.CAPS[index]; video.apply_display(get_window()))
+	box.add_child(cap)
+	box.add_child(_label("Sombras",16))
+	var shadows := OptionButton.new()
+	for label: String in ["Desactivadas","Ligeras","Detalladas"]: shadows.add_item(label)
+	shadows.select(Prefs.video_shadows)
+	shadows.item_selected.connect(func(index: int) -> void: Prefs.video_shadows=index; video.apply_display(get_window()))
+	box.add_child(shadows)
+	box.add_child(_label("En ventana, la imagen se ajusta al espacio disponible. Más resolución y detalle requieren más potencia.",13,MUTED,true))
 
 func _add_slider(parent: Node, key: String, label_text: String, value: float, minimum: float, maximum: float, increment: float) -> void:
 	var box := _vbox(parent, 5)
@@ -1892,6 +1972,8 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 	_focus_progress.value = 0
 	_attack_recovery.hide()
 	_reticle.visible = alive
+	_attack_cue.visible=human and alive
+	_door_hint.hide()
 	_task_panel.visible = human and mode == "sleep" and not Dictionary(private_data.get("task",{})).is_empty()
 	var context_key := "idle"
 	var persistent := false
@@ -1899,15 +1981,19 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 		var tool := str(actor.get("tool","hands"))
 		_hud_equipment.text = str(TOOL_NAMES.get(tool,tool)).replace(" · palmadas","")
 		var attack: Dictionary = private_data.get("attack",{})
+		_attack_cue.update_state(bool(attack.get("candidate",false)) and bool(attack.get("can_swing",false)),str(attack.get("status",""))=="blocked")
 		var attack_key := "%s:%s" % [attack.get("id",-1),attack.get("state","")]
 		if int(attack.get("id",-1)) >= 0 and attack_key != _attack_feedback_key:
 			_attack_feedback_key = attack_key
 			if attack.get("state","") in ["hit","miss"]:
 				_flash_comic("¡Tocó!" if attack.state == "hit" else "Falló")
+				if attack.state=="hit": _attack_cue.confirm_hit()
 		var recovery := maxf(0.0,float(attack.get("recovery",0)))
 		_attack_recovery.visible = alive and recovery > 0
 		_attack_recovery.value = clampf(recovery / maxf(0.01,float(Simulation.TOOL_STATS.get(tool,Simulation.TOOL_STATS.hands).cooldown)),0,1) * 100
 		var contact: Dictionary = private_data.get("bite_feedback",{})
+		var interaction: Dictionary = private_data.get("interaction",{})
+		var pickup: Dictionary=private_data.get("pickup",{})
 		var bitten: bool = bool(contact.get("active",actor.get("bitten",false)))
 		if bitten:
 			var side := str(contact.get("side","front"))
@@ -1916,8 +2002,11 @@ func show_game(snapshot: Dictionary, private_data: Dictionary, local_id: int) ->
 			_hud_hint.text = "Pedí ayuda a un compañero" if side == "rear" else "Mirá tu cuerpo · %s" % Prefs.binding_text("attack")
 			context_key = "bitten:" + side
 			persistent = true
-		elif not _nearby_tool(snapshot,actor).is_empty():
-			var nearby := _nearby_tool(snapshot,actor)
+		elif alive and interaction.get("kind","") == "door":
+			_door_hint.text = "[%s] %s puerta" % [Prefs.binding_text("interact"),interaction.get("verb","Abrir")] if bool(interaction.get("can_use",false)) else "Puerta en movimiento"
+			_door_hint.show()
+		elif bool(pickup.get("can_take",false)):
+			var nearby := str(pickup.get("tool",""))
 			_hud_state.text = str(TOOL_NAMES.get(nearby,nearby))
 			_hud_hint.text = "%s recoger" % Prefs.binding_text("pickup")
 			context_key = "pickup:" + nearby
@@ -2019,22 +2108,6 @@ func _update_task(private_data: Dictionary, bitten: bool) -> void:
 	_task_progress.value = float(task.get("progress",0)) / maxf(0.01,float(task.get("work",3))) * 100
 	_task_detail.text = "Picadura · trabajo pausado" if bitten else ""
 	_task_detail.visible = bitten
-
-
-func _nearby_tool(snapshot: Dictionary, actor: Dictionary) -> String:
-	if not actor.get("p") is Vector3:
-		return ""
-	var pickups: Dictionary = snapshot.get("pickups", {})
-	var nearest: float = 1.45
-	var tool: String = ""
-	for pickup: Variant in pickups.values():
-		if not pickup is Dictionary or int(pickup.get("holder", 0)) != 0 or not pickup.get("p") is Vector3:
-			continue
-		var distance: float = Vector3(actor.p).distance_to(Vector3(pickup.p))
-		if distance < nearest:
-			nearest = distance
-			tool = str(pickup.get("tool", ""))
-	return tool
 
 
 func _flash_comic(text_value: String) -> void:

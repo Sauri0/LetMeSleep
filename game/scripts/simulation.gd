@@ -7,6 +7,9 @@ const ArenaData = preload("res://scripts/arena.gd")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const Pose = preload("res://scripts/human_pose.gd")
+const DoorCatalogData = preload("res://scripts/door_catalog.gd")
+const DoorStateScript = preload("res://scripts/door_state.gd")
+const DOOR_REACH := 2.2
 const MAX_HUMANS := 5
 const MAX_MOSQUITOES := 12
 const MAX_PLAYERS := 16
@@ -48,8 +51,8 @@ const FRONT_ZONE_COUNT := 8
 const BODY_ZONES := [
 	{"label": "Pecho izquierdo", "bone": "torso", "p": Vector3(-0.10, 1.16, -0.30), "rear": false},
 	{"label": "Pecho derecho", "bone": "torso", "p": Vector3(0.10, 1.16, -0.30), "rear": false},
-	{"label": "Abdomen izquierdo", "bone": "torso", "p": Vector3(-0.10, 0.94, -0.30), "rear": false},
-	{"label": "Abdomen derecho", "bone": "torso", "p": Vector3(0.10, 0.94, -0.30), "rear": false},
+	{"label": "Abdomen izquierdo", "bone": "torso", "p": Vector3(-0.065, 0.94, -0.30), "rear": false},
+	{"label": "Abdomen derecho", "bone": "torso", "p": Vector3(0.065, 0.94, -0.30), "rear": false},
 	{"label": "Antebrazo izquierdo", "bone": "forearm_l", "p": Vector3(-0.24, 0.98, -0.48), "rear": false},
 	{"label": "Antebrazo derecho", "bone": "forearm_r", "p": Vector3(0.24, 0.98, -0.48), "rear": false},
 	{"label": "Muslo izquierdo", "bone": "thigh_l", "p": Vector3(-0.135, 0.59, -0.20), "rear": false},
@@ -59,6 +62,8 @@ const BODY_ZONES := [
 ]
 
 var actors: Dictionary = {}
+var door_state = DoorStateScript.new()
+var doors: Dictionary = {}
 var pickups: Dictionary = {}
 var config: Dictionary = DEFAULT_CONFIG.duplicate(true)
 var phase := "lobby"
@@ -75,6 +80,8 @@ var _frame := 0
 var _assignment_serial := 0
 var _assignment_waiters: Array[int] = []
 var _map_data: Dictionary = Maps.get_map("house")
+var _human_pose_cache: Dictionary = {}
+var _neutral_pose: Dictionary = {}
 
 static func minimum_task_deadline(work: float) -> float:
 	return clampf(work if is_finite(work) else float(DEFAULT_CONFIG.task_work), 1.0, 8.0) + TASK_TRAVEL_RESERVE
@@ -144,6 +151,8 @@ static func validate_roster(players: Dictionary) -> String:
 	return ""
 
 func start(players: Dictionary, requested_config: Dictionary) -> void:
+	_human_pose_cache.clear()
+	_neutral_pose=Pose.sample({})
 	actors.clear()
 	pickups.clear()
 	_human_ids.clear()
@@ -160,6 +169,8 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 	task_goal = 0
 	config = sanitize_config(requested_config)
 	_map_data = Maps.get_map(str(config.map_id))
+	door_state.reset(str(config.map_id))
+	doors = door_state.states
 	if not reason.is_empty():
 		phase = "lobby"
 		return
@@ -190,7 +201,7 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 			"_sprint": false, "_crouch": false, "_jump": false, "_jump_held": false,
 			"lives": 1 if not human and config.mode == "survival" else 0, "_respawn_at": 0.0,
 			"_move": Vector3.ZERO, "_interact": false, "_last_input": -100.0,
-			"_input_seq": -1, "_action_seq": -1, "_assignment": {}, "_revision": 0,
+			"_input_seq": -1, "_action_seq": -1, "_door_at": -100.0, "_assignment": {}, "_revision": 0,
 			"_next_rotation": 0.0, "_assignment_frame": -1, "_forbidden": "",
 			"_bite_started": 0.0, "_task": {}, "_deadline": float(config.task_deadline),
 			"_next_task": 3.0 + role_index * 1.5, "_failures": 0, "_tasks_given": 0,
@@ -249,7 +260,7 @@ func action(id: int, seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: fl
 	var actor: Dictionary = actors[id]
 	if seq <= int(actor._action_seq) or not bool(actor.alive) or actor.state == "stunned":
 		return
-	if verb not in ["bite", "attack", "self_swat", "perch", "pickup", "drop"]:
+	if verb not in ["bite", "attack", "self_swat", "perch", "pickup", "drop", "door"]:
 		return
 	if is_nan(aim_yaw) and is_nan(aim_pitch):
 		aim_yaw = float(actor.yaw)
@@ -278,8 +289,20 @@ func step(dt: float) -> void:
 		remaining -= part
 
 func _tick(dt: float) -> void:
+	var previous_humans: Dictionary = {}
+	var previous_insects: Dictionary = {}
+	for id: int in _human_ids:
+		if not bool(actors[id]._strike_resolved) and elapsed<=float(actors[id]._strike_until):
+			previous_humans[id]=actors[id].duplicate(true)
+	for id: int in _mosquito_ids:
+		var insect: Dictionary=actors[id]
+		previous_insects[id]=insect.p
+		insect._focus_previous_point=Vector3(INF,INF,INF)
+		if float(insect._focus_progress)>0.0 and insect.state=="flying" and not Dictionary(insect._assignment).is_empty():
+			insect._focus_previous_point=_zone_pose(insect._assignment).p
 	_frame += 1
 	elapsed += dt
+	door_state.step(dt, actors)
 	for id: int in actors:
 		var actor: Dictionary = actors[id]
 		actor.swing = maxf(0.0, float(actor.swing) - dt)
@@ -292,13 +315,13 @@ func _tick(dt: float) -> void:
 		if actor.role == "human":
 			var fresh: bool = elapsed - float(actor._last_input) <= INPUT_TIMEOUT
 			var local_move: Vector3 = actor._move if fresh else Vector3.ZERO
-			ArenaData.step_human(actor, {"move": local_move, "yaw": actor.yaw, "pitch": actor.pitch, "sprint": bool(actor._sprint) and fresh, "crouch": bool(actor._crouch) and fresh, "jump": bool(actor._jump) and fresh}, dt, str(config.map_id))
+			ArenaData.step_human(actor, {"move": local_move, "yaw": actor.yaw, "pitch": actor.pitch, "sprint": bool(actor._sprint) and fresh, "crouch": bool(actor._crouch) and fresh, "jump": bool(actor._jump) and fresh}, dt, str(config.map_id), doors)
 	for id: int in _mosquito_ids:
 		var actor: Dictionary = actors[id]
 		actor.help_target = 0
 		if actor.state == "stunned":
 			var previous: Vector3 = actor.p
-			ArenaData.step_stunned(actor, dt, str(config.map_id))
+			ArenaData.step_stunned(actor, dt, str(config.map_id), doors)
 			actor.p = _avoid_humans(previous, actor.p)
 	_update_help(dt)
 	# Human roles are drawn across arbitrary peer IDs. Advance every human before
@@ -313,7 +336,7 @@ func _tick(dt: float) -> void:
 		if int(actor.help_target) != 0:
 			actor._focus_progress = 0.0
 			var previous: Vector3 = actor.p
-			ArenaData.step_mosquito(actor, local_move, dt, str(config.map_id))
+			ArenaData.step_mosquito(actor, local_move, dt, str(config.map_id), null, doors)
 			actor.p = _avoid_humans(previous, actor.p)
 			continue
 		var focus: Dictionary = _focus_info(id)
@@ -337,7 +360,7 @@ func _tick(dt: float) -> void:
 		if actor.state == "perched" and local_move.length_squared() > 0.01:
 			actor.state = "flying"
 		var previous: Vector3 = actor.p
-		ArenaData.step_mosquito(actor, local_move, dt, str(config.map_id), assist)
+		ArenaData.step_mosquito(actor, local_move, dt, str(config.map_id), assist, doors)
 		actor.p = _avoid_humans(previous, actor.p)
 		actor.velocity = (Vector3(actor.p) - previous) / maxf(dt, 0.000001)
 		if float(actor._focus_progress) >= 1.0:
@@ -348,10 +371,9 @@ func _tick(dt: float) -> void:
 	for command: Dictionary in commands:
 		_execute_action(int(command.id), str(command.verb), command)
 	for id: int in _human_ids:
-		if elapsed + 0.000001 >= float(actors[id]._strike_at) and elapsed <= float(actors[id]._strike_until) + 0.000001:
-			_resolve_strike(id)
-		elif elapsed > float(actors[id]._strike_until) and str(actors[id]._attack.state) == "windup":
-			actors[id]._attack.state = "miss"
+		_resolve_strike(id,previous_humans.get(id,{}),previous_insects,elapsed-dt)
+		if elapsed>float(actors[id]._strike_until) and str(actors[id]._attack.state)=="windup":
+			actors[id]._attack.state="miss"
 	for id: int in _mosquito_ids:
 		var actor: Dictionary = actors[id]
 		var due: bool = elapsed + 0.000001 >= float(actor._next_rotation)
@@ -389,6 +411,7 @@ func _execute_action(id: int, verb: String, command: Dictionary = {}) -> void:
 			"attack", "self_swat": _attack(id, command)
 			"pickup": _pickup(id)
 			"drop": _drop(id)
+			"door": _door_action(id, command)
 		return
 	match verb:
 		"bite":
@@ -405,13 +428,44 @@ func _execute_action(id: int, verb: String, command: Dictionary = {}) -> void:
 			elif actor.state == "perched":
 				actor.state = "flying"
 
+func _door_info(id: int, aim_yaw: float = NAN, aim_pitch: float = NAN) -> Dictionary:
+	if phase != "playing" or not actors.has(id):
+		return {}
+	var actor: Dictionary = actors[id]
+	if actor.role != "human" or not bool(actor.alive):
+		return {}
+	var aimed: Dictionary = actor.duplicate(false)
+	if is_finite(aim_yaw) and is_finite(aim_pitch):
+		aimed.yaw = aim_yaw
+		aimed.pitch = aim_pitch
+	var eye: Vector3 = Pose.view_origin(aimed)
+	var point: Vector3 = eye+Pose.view_direction(aimed)*DOOR_REACH
+	var hit: Dictionary = ArenaData.ray_map(eye,point,str(config.map_id),0.0,doors)
+	if hit.is_empty() or str(hit.kind) != "door" or _body_occludes(eye,hit.p,id):
+		return {}
+	var door_id: String = hit.door_id
+	var state: Dictionary = doors[door_id]
+	var cooling: bool = elapsed-float(actor._door_at)<DoorStateScript.COOLDOWN or elapsed-float(door_state.last_toggle.get(door_id,-100.0))<DoorStateScript.COOLDOWN
+	var available: bool = (not bool(state.moving) or bool(state.blocked)) and not cooling
+	return {"kind":"door","door_id":door_id,"label":DoorCatalogData.DEFINITIONS[door_id].label,"verb":"Cerrar" if float(state.target_angle)>0.1 else "Abrir","p":hit.p,"can_use":available,"reason":"" if available else "Esperá que termine de moverse"}
+
+func _door_action(id: int, command: Dictionary) -> void:
+	var actor: Dictionary = actors[id]
+	var info: Dictionary = _door_info(id,float(command.get("yaw",actor.yaw)),float(command.get("pitch",actor.pitch)))
+	if info.is_empty() or not bool(info.can_use):
+		return
+	if door_state.toggle(str(info.door_id),elapsed):
+		actor._door_at = elapsed
+
 func _avoid_humans(previous: Vector3, position: Vector3) -> Vector3:
 	var result: Vector3 = position
 	# Capsule endpoints model torso, head and legs; soft projection lets insects
 	# slide around bodies without treating the entire human as a rectangular wall.
 	for id: int in _human_ids:
 		var human: Dictionary = actors[id]
-		for capsule: Dictionary in Pose.collision_segments(human):
+		if not ArenaData.human_envelope(human).grow(ArenaData.MOSQUITO_RADIUS+.005).has_point(result):
+			continue
+		for capsule: Dictionary in _pose_bundle(id).capsules:
 			var base: Vector3 = Vector3(human.p) + Vector3(capsule.from).rotated(Vector3.UP, Pose.body_yaw(human))
 			var tip: Vector3 = Vector3(human.p) + Vector3(capsule.to).rotated(Vector3.UP, Pose.body_yaw(human))
 			var segment: Vector3 = tip - base
@@ -424,7 +478,7 @@ func _avoid_humans(previous: Vector3, position: Vector3) -> Vector3:
 					outward = (previous - nearest).normalized()
 				if outward.length_squared() < 0.01:
 					outward = Vector3.FORWARD.rotated(Vector3.UP, Pose.body_yaw(human))
-				result = ArenaData.move_body(result, outward * (radius - delta.length() + 0.005), false, str(config.map_id))
+				result = ArenaData.move_body(result, outward * (radius - delta.length() + 0.005), false, str(config.map_id), ArenaData.HUMAN_HEIGHT, doors)
 	return result
 
 func _try_perch(id: int) -> void:
@@ -437,7 +491,7 @@ func _try_perch(id: int) -> void:
 		Vector3(position.x, position.y, -float(_map_data.half_z) + radius), Vector3(position.x, position.y, float(_map_data.half_z) - radius),
 	]
 	var normals: Array[Vector3] = [Vector3.UP,Vector3.DOWN,Vector3.RIGHT,Vector3.LEFT,Vector3.BACK,Vector3.FORWARD]
-	for obstacle: AABB in _map_data.obstacles:
+	for obstacle: AABB in ArenaData.obstacles(str(config.map_id)):
 		var expanded: AABB = obstacle.grow(radius + 0.005)
 		for axis: int in range(3):
 			for edge: float in [expanded.position[axis], expanded.end[axis]]:
@@ -459,7 +513,11 @@ func _try_perch(id: int) -> void:
 	for index: int in range(candidates.size()):
 		var candidate: Vector3 = candidates[index]
 		var distance: float = position.distance_to(candidate)
-		if distance <= best_distance and ArenaData.clear_segment(position, candidate, str(config.map_id)):
+		# Leaves are not perch supports. Even a fixed wall/floor candidate must
+		# leave the insect's whole radius clear of every current dynamic leaf.
+		if DoorCatalogData.body_blocked(AABB(candidate-Vector3.ONE*radius,Vector3.ONE*radius*2.0),doors,str(config.map_id)) or not DoorCatalogData.ray_doors(position,candidate,doors,str(config.map_id),radius).is_empty():
+			continue
+		if distance <= best_distance and ArenaData.clear_segment(position, candidate, str(config.map_id), doors):
 			best_distance = distance
 			best = candidate
 			best_normal = normals[index]
@@ -533,11 +591,28 @@ static func _zone_key(assignment: Dictionary) -> String:
 		return ""
 	return "%d:%d" % [int(assignment.human), int(assignment.zone)]
 
+# Each simulation owns its cache. Exact dependency arrays invalidate on any
+# within-tick pose change; no frame-only key or shared mutable actor state.
+func _pose_bundle(id: int) -> Dictionary:
+	var human: Dictionary=actors[id]
+	var key: Array=Pose.cache_key(human)
+	var cached: Dictionary=_human_pose_cache.get(id,{})
+	if not cached.is_empty() and cached.key==key:
+		return cached
+	var posed: Dictionary=Pose.sample(human)
+	cached={"key":key,"pose":posed,"capsules":Pose.collision_segments(human,posed),"zones":{}}
+	_human_pose_cache[id]=cached
+	return cached
+
 func _zone_pose(assignment: Dictionary) -> Dictionary:
 	if assignment.is_empty() or not actors.has(int(assignment.human)):
 		return {}
-	var human: Dictionary = actors[int(assignment.human)]
-	return Pose.zone_pose(human, BODY_ZONES[int(assignment.zone)])
+	var human_id: int=int(assignment.human)
+	var zone_id: int=int(assignment.zone)
+	var cached: Dictionary=_pose_bundle(human_id)
+	if not cached.zones.has(zone_id):
+		cached.zones[zone_id]=Pose.zone_pose(actors[human_id],BODY_ZONES[zone_id],cached.pose,cached.capsules,_neutral_pose)
+	return Dictionary(cached.zones[zone_id]).duplicate(false)
 
 func _attach(id: int) -> void:
 	var actor: Dictionary = actors[id]
@@ -550,7 +625,7 @@ func _attach(id: int) -> void:
 	var destination: Vector3 = Vector3(pose.p) + Vector3(pose.normal) * ATTACH_OFFSET
 	if Vector3(actor.p).distance_to(destination) > BITE_DISTANCE:
 		return
-	if not ArenaData.clear_segment(actor.p, pose.p, str(config.map_id)) or _body_occludes(actor.p, pose.p, -1):
+	if not ArenaData.clear_segment(actor.p, pose.p, str(config.map_id), doors) or _body_occludes(actor.p, pose.p, -1):
 		return
 	actor.state = "biting"
 	actor._bite_started = elapsed
@@ -569,7 +644,7 @@ func _detach(id: int) -> void:
 	actor._focus_pulse_until = 0.0
 	actor.velocity = Vector3.ZERO
 	if not pose.is_empty():
-		actor.p = ArenaData.move_body(actor.p, Vector3(pose.normal) * 0.24, false, str(config.map_id))
+		actor.p = ArenaData.move_body(actor.p, Vector3(pose.normal) * 0.24, false, str(config.map_id), ArenaData.HUMAN_HEIGHT, doors)
 	_assign(id) # Deliberately never modifies _next_rotation.
 
 func _update_attached() -> void:
@@ -580,10 +655,8 @@ func _update_attached() -> void:
 			if not pose.is_empty():
 				actor.p = Vector3(pose.p) + Vector3(pose.normal) * ATTACH_OFFSET
 
-func _attack(id: int, command: Dictionary) -> void:
+func _strike_plan(id: int, command: Dictionary = {}) -> Dictionary:
 	var human: Dictionary = actors[id]
-	if float(human.swing) > 0.0:
-		return
 	var aimed: Dictionary = human.duplicate(false)
 	aimed.yaw = float(command.get("yaw", human.yaw))
 	aimed.pitch = float(command.get("pitch", human.pitch))
@@ -591,28 +664,36 @@ func _attack(id: int, command: Dictionary) -> void:
 	var direction: Vector3 = Pose.view_direction(aimed)
 	var stats: Dictionary = TOOL_STATS[str(human.tool)]
 	var end: Vector3 = eye + direction * float(stats.reach)
-	var first: Dictionary = ArenaData.ray_map(eye, end, str(config.map_id), float(stats.radius) + 0.05)
+	var first: Dictionary = ArenaData.ray_map(eye, end, str(config.map_id), float(stats.radius), doors)
 	for other_id: int in _human_ids:
+		if ArenaData.human_envelope(actors[other_id]).intersects_segment(eye,end)==null:
+			continue
 		var hit: Dictionary = Pose.ray_body(actors[other_id], eye, end, other_id == id)
 		if not hit.is_empty() and (first.is_empty() or float(hit.distance) < float(first.distance)):
 			first = hit
 			first.kind = "body"
-	# Actual ray/sphere intersection is allowed; no nearest-insect selection or
-	# aim correction. A near miss lands on the body/air under the clicked reticle.
+	# The face sweeps along the captured manual ray. A visible insect inside
+	# that physical footprint may set depth, but never rotates or snaps the ray.
 	for mosquito_id: int in _mosquito_ids:
 		var mosquito: Dictionary = actors[mosquito_id]
-		if not bool(mosquito.alive) or mosquito.state == "stunned":
+		if not bool(mosquito.alive) or mosquito.state=="stunned":
 			continue
-		var hit: Dictionary = Pose.ray_capsule(eye, end, {"from": mosquito.p, "to": mosquito.p, "radius": ArenaData.MOSQUITO_RADIUS})
-		if not hit.is_empty() and (first.is_empty() or float(hit.distance) < float(first.distance)):
-			first = hit
-			first.kind = "body"
+		var delta: Vector3 = Vector3(mosquito.p)-eye
+		var along: float = delta.dot(direction)
+		if along<0.0 or along>float(stats.reach):
+			continue
+		if (delta-direction*along).length()>float(stats.radius)+ArenaData.MOSQUITO_RADIUS:
+			continue
+		if not _strike_visible(id,mosquito,eye,mosquito.p):
+			continue
+		if first.is_empty() or along<float(first.distance):
+			first={"p":eye+direction*along,"normal":-direction,"distance":along,"kind":"body"}
 	var point: Vector3 = end if first.is_empty() else Vector3(first.p)
 	var normal: Vector3 = -direction if first.is_empty() else Vector3(first.normal)
 	var local_point: Vector3 = (point - Vector3(human.p)).rotated(Vector3.UP, -Pose.body_yaw(human))
 	var strike_tool: String = str(human.tool)
 	var own_right_contact := false
-	for capsule: Dictionary in Pose.collision_segments(human):
+	for capsule: Dictionary in _pose_bundle(id).capsules:
 		if str(capsule.key) not in ["upperarm_r", "forearm_r", "hand_r"]:
 			continue
 		var segment: Vector3 = Vector3(capsule.to) - Vector3(capsule.from)
@@ -626,7 +707,7 @@ func _attack(id: int, command: Dictionary) -> void:
 		strike_tool = "hands"
 		stats = TOOL_STATS.hands
 	var hand: String = "right" if strike_tool != "hands" or local_point.x <= 0.0 else "left"
-	var skeleton: Dictionary = Pose.sample(human)
+	var skeleton: Dictionary = _pose_bundle(id).pose
 	var shoulder: Vector3 = Vector3(human.p) + Vector3(skeleton.shoulder_r if hand == "right" else skeleton.shoulder_l).rotated(Vector3.UP, Pose.body_yaw(human))
 	# The cartoon arm has a finite shared reach. The renderer and hit detector use
 	# the same resulting palm or tool-face point throughout the gesture.
@@ -636,64 +717,185 @@ func _attack(id: int, command: Dictionary) -> void:
 	var discriminant: float = projected * projected - (offset.length_squared() - maximum * maximum)
 	var ray_reach: float = maxf(0.0, -projected + sqrt(maxf(0.0, discriminant)))
 	point = eye + direction * minf(eye.distance_to(point), minf(float(stats.reach), ray_reach))
+	return {"origin":eye,"point":point,"direction":direction,"normal":normal,"hand":hand,"tool":strike_tool,"radius":float(stats.radius),"reach":minf(float(stats.reach),ray_reach),"kind":"air" if first.is_empty() else str(first.kind)}
+
+func _attack(id: int, command: Dictionary) -> void:
+	var human: Dictionary = actors[id]
+	if float(human.swing)>0.0:
+		return
+	var plan: Dictionary = _strike_plan(id,command)
+	var stats: Dictionary = TOOL_STATS[str(plan.tool)]
 	human.swing = float(stats.cooldown)
 	human._strike_started = elapsed
 	human._strike_at = elapsed + STRIKE_START
 	human._strike_until = elapsed + STRIKE_END
 	human._strike_resolved = false
-	human.strike = {"id": int(command.get("seq", human._action_seq)), "origin": eye, "point": point, "direction": direction, "normal": normal, "progress": 0.0, "duration": Pose.SWING_GESTURE_SECONDS, "hand": hand, "tool": strike_tool, "active": true, "kind": "air" if first.is_empty() else str(first.kind)}
-	human._attack = {"id": human.strike.id, "state": "windup", "hit": false, "point": point}
+	human.strike = plan.duplicate(true)
+	human.strike.merge({"id":int(command.get("seq",human._action_seq)),"progress":0.0,"duration":Pose.SWING_GESTURE_SECONDS,"active":true},true)
+	human._attack={"id":human.strike.id,"state":"windup","hit":false,"point":plan.point}
 
-func _resolve_strike(id: int) -> void:
-	var human: Dictionary = actors[id]
+func _strike_visible(id: int, mosquito: Dictionary, eye: Vector3, position: Vector3) -> bool:
+	if not bool(mosquito.alive) or mosquito.state=="stunned":
+		return false
+	var assignment: Dictionary = mosquito._assignment
+	var attached: bool = mosquito.state=="biting" and not assignment.is_empty()
+	var on_self: bool = attached and int(assignment.human)==id
+	if on_self and bool(BODY_ZONES[int(assignment.zone)].rear):
+		return false
+	if not ArenaData.clear_segment(eye,position,str(config.map_id),doors):
+		return false
+	for other_id: int in _human_ids:
+		if ArenaData.human_envelope(actors[other_id]).intersects_segment(eye,position)==null:
+			continue
+		var hit: Dictionary = Pose.ray_body(actors[other_id],eye,position,other_id==id,other_id==id)
+		if not hit.is_empty() and float(hit.distance)<eye.distance_to(position)-ArenaData.MOSQUITO_RADIUS*.5:
+			return false
+	if attached and not on_self:
+		var zone: Dictionary = _zone_pose(assignment)
+		if (eye-Vector3(zone.p)).dot(zone.normal)<=.02:
+			return false
+	return true
+
+# Subsample the actual shared gesture, then sweep relative face/insect motion
+# continuously inside each interval. A fast insect cannot tunnel between ticks.
+func _strike_actor_at(human: Dictionary, previous: Dictionary, from_time: float, at_time: float) -> Dictionary:
+	var actor: Dictionary=human.duplicate(false)
+	var weight: float=clampf((at_time-from_time)/maxf(elapsed-from_time,.000001),0.0,1.0)
+	actor.p=Vector3(previous.get("p",human.p)).lerp(human.p,weight)
+	actor.body_yaw=lerp_angle(Pose.body_yaw(previous),Pose.body_yaw(human),weight)
+	for key: String in ["crouch_amount","motion_blend","air_blend","land_blend","turn_blend","pose_time"]:
+		actor[key]=lerpf(float(previous.get(key,human.get(key,0.0))),float(human.get(key,0.0)),weight)
+	actor.motion_phase=lerp_angle(float(previous.get("motion_phase",0.0)),float(human.motion_phase),weight)
+	actor.strike=Dictionary(human.strike).duplicate(false)
+	actor.strike.progress=clampf((at_time-float(human._strike_started))/Pose.SWING_GESTURE_SECONDS,0.0,1.0)
+	return actor
+
+func _strike_contact(actor: Dictionary) -> Vector3:
+	return Vector3(actor.p)+Vector3(Pose.sample(actor).strike_contact).rotated(Vector3.UP,Pose.body_yaw(actor))
+
+func _resolve_strike(id: int, previous: Dictionary = {}, previous_insects: Dictionary = {}, from_time: float = -1.0) -> void:
+	var human: Dictionary=actors[id]
 	if bool(human._strike_resolved) or Dictionary(human.strike).is_empty():
 		return
-	var stats: Dictionary = TOOL_STATS[str(human.strike.tool)]
-	var eye: Vector3 = human.strike.origin
-	var direction: Vector3 = human.strike.direction
-	var pose: Dictionary = Pose.sample(human)
-	var contact: Vector3 = Vector3(human.p) + Vector3(pose.strike_contact).rotated(Vector3.UP, Pose.body_yaw(human))
+	if from_time<0.0:
+		from_time=elapsed
+	var start: float=maxf(from_time,float(human._strike_at))
+	var end: float=minf(elapsed,float(human._strike_until))
+	if start>end+.000001:
+		return
+	var samples: int=maxi(1,int(ceilf((end-start)/.008)))
+	var a: Vector3=_strike_contact(_strike_actor_at(human,previous,from_time,start))
+	for index: int in range(samples):
+		var t0: float=lerpf(start,end,float(index)/samples)
+		var t1: float=lerpf(start,end,float(index+1)/samples)
+		var b: Vector3=_strike_contact(_strike_actor_at(human,previous,from_time,t1))
+		var selected: int=_swept_strike_hit(id,human.strike,a,b,previous_insects,from_time,t0,t1)
+		if selected>=0:
+			_kill(selected)
+			human._strike_resolved=true
+			human._attack.state="hit"
+			human._attack.hit=true
+			return
+		a=b
+
+func _swept_strike_hit(id: int, plan: Dictionary, a: Vector3, b: Vector3, previous_insects: Dictionary, from_time: float, t0: float, t1: float) -> int:
+	var stats: Dictionary=TOOL_STATS[str(plan.tool)]
+	var radius: float=float(stats.radius)+ArenaData.MOSQUITO_RADIUS
+	var eye: Vector3=plan.origin
+	var direction: Vector3=plan.direction
 	var nearest := -1
-	var nearest_distance := INF
+	var nearest_time := INF
 	for mosquito_id: int in _mosquito_ids:
-		var mosquito: Dictionary = actors[mosquito_id]
-		if not bool(mosquito.alive) or mosquito.state == "stunned":
+		var mosquito: Dictionary=actors[mosquito_id]
+		if not bool(mosquito.alive) or mosquito.state=="stunned":
 			continue
-		var assignment: Dictionary = mosquito._assignment
-		var attached: bool = mosquito.state == "biting" and not assignment.is_empty()
-		var on_self: bool = attached and int(assignment.human) == id
-		if on_self and bool(BODY_ZONES[int(assignment.zone)].rear):
-			continue
-		var delta: Vector3 = Vector3(mosquito.p) - eye
-		var along: float = delta.dot(direction)
-		if along < 0.0 or along > float(stats.reach):
-			continue
-		var radius: float = float(stats.radius) + ArenaData.MOSQUITO_RADIUS
-		if (delta - direction * along).length() > radius or contact.distance_to(mosquito.p) > radius:
-			continue
-		if not ArenaData.clear_segment(eye, mosquito.p, str(config.map_id)) or not ArenaData.clear_segment(contact, mosquito.p, str(config.map_id)):
-			continue
-		var blocked := false
-		for other_id: int in _human_ids:
-			var hit: Dictionary = Pose.ray_body(actors[other_id], eye, mosquito.p, other_id == id, other_id == id)
-			if not hit.is_empty() and float(hit.distance) < eye.distance_to(mosquito.p) - ArenaData.MOSQUITO_RADIUS * 0.5:
-				blocked = true
-				break
-		if blocked:
-			continue
-		if attached and not on_self:
-			var zone: Dictionary = _zone_pose(assignment)
-			if (eye - Vector3(zone.p)).dot(zone.normal) <= 0.02:
+		# An insect carried on the striking arm is not struck merely because
+		# that arm enters the aiming corridor. Self-defence on that forearm
+		# requires the opposite hand, selected by the same manual ray plan.
+		var attachment: Dictionary=mosquito._assignment
+		if mosquito.state=="biting" and not attachment.is_empty() and int(attachment.human)==id:
+			var suffix: String="_r" if str(plan.hand)=="right" else "_l"
+			var bone: String=str(BODY_ZONES[int(attachment.zone)].bone)
+			if bone in ["forearm"+suffix,"shoulder"+suffix,"upperarm"+suffix,"hand"+suffix]:
 				continue
-		var distance: float = contact.distance_to(mosquito.p)
-		if distance < nearest_distance:
-			nearest = mosquito_id
-			nearest_distance = distance
-	if nearest >= 0:
-		_kill(nearest)
-		human._strike_resolved = true
-		human._attack.state = "hit"
-		human._attack.hit = true
+		var before: Vector3=previous_insects.get(mosquito_id,mosquito.p)
+		var u0: float=clampf((t0-from_time)/maxf(elapsed-from_time,.000001),0.0,1.0)
+		var u1: float=clampf((t1-from_time)/maxf(elapsed-from_time,.000001),0.0,1.0)
+		var m0: Vector3=before.lerp(mosquito.p,u0)
+		var m1: Vector3=before.lerp(mosquito.p,u1)
+		var relative: Vector3=m0-a
+		var change: Vector3=(m1-b)-relative
+		var fraction: float=clampf(-relative.dot(change)/maxf(change.length_squared(),.000000001),0.0,1.0)
+		if (relative+change*fraction).length()>radius:
+			continue
+		var position: Vector3=m0.lerp(m1,fraction)
+		var contact: Vector3=a.lerp(b,fraction)
+		var delta: Vector3=position-eye
+		var along: float=delta.dot(direction)
+		if along<0.0 or along>float(plan.get("reach",stats.reach))+radius or (delta-direction*along).length()>radius:
+			continue
+		if not _strike_visible(id,mosquito,eye,position):
+			continue
+		if not ArenaData.clear_segment(contact,position,str(config.map_id),doors):
+			continue
+		if not ArenaData.ray_map(a,contact,str(config.map_id),float(stats.radius),doors).is_empty():
+			continue
+		# The face cannot travel through a torso to reach a visible insect.
+		var blocked := false
+		for human_id: int in _human_ids:
+			var body: Dictionary=Pose.ray_body(actors[human_id],a,contact,human_id==id,human_id==id)
+			if not body.is_empty() and float(body.distance)<a.distance_to(contact)-.008:
+				blocked=true
+				break
+		if not blocked and fraction<nearest_time:
+			nearest=mosquito_id
+			nearest_time=fraction
+	return nearest
+
+func _attack_info(id: int) -> Dictionary:
+	var human: Dictionary=actors[id]
+	var result: Dictionary=Dictionary(human._attack).duplicate(true)
+	result.recovery=maxf(0.0,float(human.swing))
+	result.can_swing=result.recovery<=0.0 and phase=="playing"
+	result.candidate=false
+	result.status="recovery" if not result.can_swing else "ready"
+	result.tool=str(human.tool)
+	result.radius=float(TOOL_STATS[result.tool].radius)
+	result.reach=0.0
+	if not result.can_swing:
+		return result
+	var plan: Dictionary=_strike_plan(id)
+	result.tool=plan.tool
+	result.radius=plan.radius
+	result.reach=plan.reach
+	var potential := false
+	for mosquito_id: int in _mosquito_ids:
+		var mosquito: Dictionary=actors[mosquito_id]
+		var delta: Vector3=Vector3(mosquito.p)-Vector3(plan.origin)
+		var along: float=delta.dot(plan.direction)
+		var radius: float=float(plan.radius)+ArenaData.MOSQUITO_RADIUS
+		if bool(mosquito.alive) and mosquito.state!="stunned" and along>=0.0 and along<=float(plan.reach)+radius and (delta-Vector3(plan.direction)*along).length()<=radius:
+			potential=true
+			break
+	if not potential:
+		if str(plan.kind) in ["map","door"]:result.status="blocked"
+		return result
+	var posed: Dictionary=human.duplicate(false)
+	posed.strike=plan.duplicate(false)
+	posed.strike.active=true
+	posed.strike.progress=STRIKE_START/Pose.SWING_GESTURE_SECONDS
+	var a: Vector3=_strike_contact(posed)
+	for index: int in range(1,23):
+		posed.strike.progress=lerpf(STRIKE_START,STRIKE_END,float(index)/22.0)/Pose.SWING_GESTURE_SECONDS
+		var b: Vector3=_strike_contact(posed)
+		if _swept_strike_hit(id,plan,a,b,{},elapsed,elapsed,elapsed)>=0:
+			result.candidate=true
+			result.status="opportunity"
+			break
+		a=b
+	if not result.candidate and str(plan.kind) in ["map","door"]:
+		result.status="blocked"
+	return result
 
 func _update_bite_feedback() -> void:
 	for id: int in _human_ids:
@@ -721,9 +923,11 @@ func _body_occludes(from: Vector3, to: Vector3, ignored_human: int) -> bool:
 		if id == ignored_human:
 			continue
 		var human: Dictionary = actors[id]
+		if ArenaData.human_envelope(human).intersects_segment(from,to)==null:
+			continue
 		var start_local: Vector3 = (from - Vector3(human.p)).rotated(Vector3.UP, -Pose.body_yaw(human))
 		var end_local: Vector3 = (to - Vector3(human.p)).rotated(Vector3.UP, -Pose.body_yaw(human))
-		for capsule: Dictionary in Pose.collision_segments(human):
+		for capsule: Dictionary in _pose_bundle(id).capsules:
 			var closest: PackedVector3Array = Geometry3D.get_closest_points_between_segments(start_local, end_local, capsule.from, capsule.to)
 			if closest[0].distance_to(closest[1]) < float(capsule.radius) - 0.008:
 				return true
@@ -791,7 +995,7 @@ func _help_info(id: int) -> Dictionary:
 			continue
 		if distance > 0.12 and ArenaData.flight_direction(Vector3.FORWARD, float(helper.yaw), float(helper.pitch)).dot(delta.normalized()) < HELP_FACING:
 			continue
-		if not ArenaData.clear_segment(helper.p, target.p, str(config.map_id)) or _body_occludes(helper.p, target.p, -1):
+		if not ArenaData.clear_segment(helper.p, target.p, str(config.map_id), doors) or _body_occludes(helper.p, target.p, -1):
 			continue
 		best_distance = distance
 		result.target = target_id
@@ -818,23 +1022,29 @@ func _update_help(dt: float) -> void:
 		if float(actor._stun_remaining) <= 0.000001:
 			_recover_stun(id)
 
-func _pickup(id: int) -> void:
-	var actor: Dictionary = actors[id]
-	var nearest := -1
+func _pickup_info(id: int) -> Dictionary:
+	var result := {"tool":"","can_take":false,"distance":0.0}
+	if not actors.has(id) or actors[id].role!="human" or not bool(actors[id].alive) or phase!="playing":
+		return result
+	var actor: Dictionary=actors[id]
 	var nearest_distance := 1.45
 	for pickup_id: int in pickups:
-		var pickup: Dictionary = pickups[pickup_id]
-		if int(pickup.holder) != 0:
+		var pickup: Dictionary=pickups[pickup_id]
+		if int(pickup.holder)!=0:
 			continue
-		var distance: float = Vector3(actor.p).distance_to(Vector3(pickup.p))
-		if distance < nearest_distance and ArenaData.clear_segment(Vector3(actor.p) + Vector3.UP * 0.8, pickup.p, str(config.map_id)):
-			nearest_distance = distance
-			nearest = pickup_id
-	if nearest < 0:
+		var distance: float=Vector3(actor.p).distance_to(pickup.p)
+		if distance<nearest_distance and ArenaData.clear_segment(Vector3(actor.p)+Vector3.UP*.8,pickup.p,str(config.map_id),doors):
+			nearest_distance=distance
+			result={"_id":pickup_id,"tool":str(pickup.tool),"can_take":true,"distance":distance}
+	return result
+
+func _pickup(id: int) -> void:
+	var info: Dictionary=_pickup_info(id)
+	if not bool(info.can_take):
 		return
 	_drop(id)
-	pickups[nearest].holder = id
-	actor.tool = str(pickups[nearest].tool)
+	pickups[int(info._id)].holder=id
+	actors[id].tool=str(info.tool)
 
 func _drop(id: int) -> void:
 	var actor: Dictionary = actors[id]
@@ -844,8 +1054,8 @@ func _drop(id: int) -> void:
 			pickup.holder = 0
 			var forward: Vector3 = Vector3.FORWARD.rotated(Vector3.UP, float(actor.yaw))
 			var height: float = lerpf(ArenaData.HUMAN_HEIGHT, ArenaData.HUMAN_CROUCH_HEIGHT, float(actor.crouch_amount))
-			var landing: Vector3 = ArenaData.move_body(actor.p, forward * 0.55, true, str(config.map_id), height)
-			landing.y = ArenaData.floor_below(landing + Vector3.UP * 0.15, str(config.map_id))
+			var landing: Vector3 = ArenaData.move_body(actor.p, forward * 0.55, true, str(config.map_id), height, doors)
+			landing.y = ArenaData.floor_below(landing + Vector3.UP * 0.15, str(config.map_id), doors)
 			pickup.p = landing + Vector3.UP * 0.15
 			pickup.yaw = float(actor.yaw)
 	actor.tool = "hands"
@@ -857,9 +1067,9 @@ func _update_tasks(dt: float) -> void:
 		var task: Dictionary = human._task
 		if not task.is_empty():
 			var usable_dt: float = minf(dt, float(task.remaining))
-			var near: bool = Vector3(human.p).distance_to(Vector3(task.p)) < 1.20 and ArenaData.clear_segment(Vector3(human.p) + Vector3.UP * 0.65, Vector3(task.p) + Vector3.UP * 0.65, str(config.map_id))
+			var near: bool = Vector3(human.p).distance_to(Vector3(task.p)) < 1.20 and ArenaData.clear_segment(Vector3(human.p) + Vector3.UP * 0.65, Vector3(task.p) + Vector3.UP * 0.65, str(config.map_id), doors)
 			var input_fresh: bool = elapsed - float(human._last_input) <= INPUT_TIMEOUT
-			if near and bool(human._interact) and input_fresh and not bool(human.bitten) and float(human.swing) <= 0.0:
+			if near and bool(human._interact) and input_fresh and _door_info(id).is_empty() and not bool(human.bitten) and float(human.swing) <= 0.0:
 				task.progress = minf(float(task.work), float(task.progress) + usable_dt)
 			task.remaining = maxf(0.0, float(task.remaining) - dt)
 			if float(task.progress) + 0.000001 >= float(task.work):
@@ -957,12 +1167,15 @@ func public_snapshot() -> Dictionary:
 			"velocity": actor.velocity, "grounded": actor.grounded, "sprinting": actor.sprinting,
 			"crouching": actor.crouching, "crouch_amount": actor.crouch_amount,
 			"motion_phase": actor.motion_phase, "motion_speed": actor.motion_speed,
+			"pose_time":actor.get("pose_time",0.0),"motion_blend":actor.get("motion_blend",0.0),"motion_stride":actor.get("motion_stride",1.15),
+			"air_blend":actor.get("air_blend",0.0),"land_blend":actor.get("land_blend",0.0),"turn_blend":actor.get("turn_blend",0.0),
+			"motion_direction":actor.get("motion_direction",Vector3.FORWARD),
 		}
 	return {
 		"phase": phase, "map_id": config.map_id, "elapsed": elapsed, "time_left": maxf(0.0, float(config.round_seconds) - elapsed),
 		"config": config.duplicate(true), "blood": blood, "winner": winner, "reason": reason,
 		"tasks_done": tasks_done, "task_goal": task_goal, "actors": public_actors,
-		"pickups": pickups.duplicate(true),
+		"pickups": pickups.duplicate(true), "doors": door_state.snapshot(),
 	}
 
 func private_for(id: int) -> Dictionary:
@@ -970,9 +1183,10 @@ func private_for(id: int) -> Dictionary:
 		return {}
 	var actor: Dictionary = actors[id]
 	if actor.role == "human":
-		var attack: Dictionary = Dictionary(actor._attack).duplicate(true)
-		attack.recovery = maxf(0.0, float(actor.swing))
-		return {"task": Dictionary(actor._task).duplicate(true), "deadline": actor._deadline, "failures": actor._failures, "attack": attack, "bite_feedback": Dictionary(actor._bite_feedback).duplicate(true)}
+		var attack: Dictionary = _attack_info(id)
+		var pickup: Dictionary = _pickup_info(id)
+		pickup.erase("_id")
+		return {"pickup":pickup,"task": Dictionary(actor._task).duplicate(true), "deadline": actor._deadline, "failures": actor._failures, "attack": attack, "bite_feedback": Dictionary(actor._bite_feedback).duplicate(true), "interaction": _door_info(id)}
 	var assignment: Dictionary = {}
 	if bool(actor.alive) and not Dictionary(actor._assignment).is_empty():
 		assignment = Dictionary(actor._assignment).duplicate(true)
@@ -1017,9 +1231,9 @@ func _focus_info(id: int) -> Dictionary:
 		result.reason = "Acercate a tu marca"
 	elif (Vector3(actor.p) - Vector3(pose.p)).dot(pose.normal) < -0.015:
 		result.reason = "Rodeá el cuerpo hasta el lado de la marca"
-	elif forward.dot(delta.normalized()) < (0.25 if float(actor._focus_progress) > 0.0 else 0.40):
+	elif not _focus_facing(actor,pose,forward,delta):
 		result.reason = "Apuntá hacia tu marca"
-	elif not ArenaData.clear_segment(actor.p, pose.p, str(config.map_id)) or _body_occludes(actor.p, pose.p, -1):
+	elif not ArenaData.clear_segment(actor.p, pose.p, str(config.map_id), doors) or _body_occludes(actor.p, pose.p, -1):
 		result.reason = "La marca está detrás de un obstáculo"
 	else:
 		result.can_focus = true
@@ -1028,3 +1242,16 @@ func _focus_info(id: int) -> Dictionary:
 	if not bool(result.can_focus) and _focus_held(actor):
 		result.state = "blocked"
 	return result
+
+# Close stabilization may retain aim at the preceding authoritative pose: input
+# observes that pose, never the human movement which follows in this tick. This
+# allowance changes only facing; current range, side and LOS remain mandatory.
+func _focus_facing(actor: Dictionary, pose: Dictionary, forward: Vector3, delta: Vector3) -> bool:
+	var charging: bool=float(actor._focus_progress)>0.0
+	if forward.dot(delta.normalized()) >= (.25 if charging else .40):
+		return true
+	var previous: Vector3=actor.get("_focus_previous_point",Vector3(INF,INF,INF))
+	if not charging or delta.length()>.35 or not previous.is_finite() or previous.distance_to(pose.p)>.31:
+		return false
+	var observed: Vector3=previous-Vector3(actor.p)
+	return observed.length()>.005 and forward.dot(observed.normalized())>=.25

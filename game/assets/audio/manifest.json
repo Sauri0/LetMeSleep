@@ -1,13 +1,13 @@
 {
-  "version": "0.6 audio production",
+  "version": "0.7 audio production",
   "sample_library": {
     "name": "VSCO 2 Community Edition",
     "license": "CC0-1.0",
     "source": "https://versilian-studios.com/vsco-community/",
     "commit": "440300901dfe9275fd84e0b7763af1f8443ae62e"
   },
-  "asset_count": 48,
-  "asset_bytes": 9410622,
+  "asset_count": 51,
+  "asset_bytes": 9436236,
   "items": [
     {
       "file": "music/accent_lose.ogg",
@@ -280,6 +280,45 @@
       "decoded_frames": 11338,
       "decoded_peak": 0.07819697260856628,
       "decoded_rms": 0.019077155739068985,
+      "loop": false
+    },
+    {
+      "file": "sfx/door_block.ogg",
+      "bytes": 6191,
+      "sha256": "619daec9ad4207f186d439d6ef6c59051477801da78c23216697c865f3cdd126",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.28,
+      "decoded_frames": 12220,
+      "decoded_peak": 0.26139742136001587,
+      "decoded_rms": 0.04656340554356575,
+      "loop": false
+    },
+    {
+      "file": "sfx/door_latch.ogg",
+      "bytes": 6655,
+      "sha256": "33b5b0dde6df81e924e060fa82540102bb7b8c56d6ab1a407c60416161aca087",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.32,
+      "decoded_frames": 13984,
+      "decoded_peak": 0.2690836489200592,
+      "decoded_rms": 0.044340647757053375,
+      "loop": false
+    },
+    {
+      "file": "sfx/door_move.ogg",
+      "bytes": 12768,
+      "sha256": "3486da189078fc60fa84d2e52fe929e178a0ad1163737d52fdb9d34cd35aa657",
+      "codec": "Vorbis",
+      "sample_rate": 44100,
+      "channels": 1,
+      "seconds": 0.82,
+      "decoded_frames": 36034,
+      "decoded_peak": 0.3799280524253845,
+      "decoded_rms": 0.11770233511924744,
       "loop": false
     },
     {

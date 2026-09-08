@@ -16,7 +16,7 @@ const ACTION_NAMES: Dictionary = {
 	"move_forward": "Avanzar", "move_back": "Retroceder", "move_left": "Izquierda",
 	"move_right": "Derecha", "ascend": "Altura auxiliar + (opcional)", "descend": "Altura auxiliar − (opcional)",
 	"bite": "Concentrar (mantener) / soltar picadura", "attack": "Palmada / golpe", "self_swat": "Palmada manual (alternativa)",
-	"perch": "Posarse / volar", "interact": "Hacer tarea (mantener)",
+	"perch": "Posarse / volar", "interact": "Puerta / tarea (mantener)",
 	"pickup": "Recoger / cambiar objeto", "drop": "Soltar objeto", "pause": "Menú",
 	"sprint": "Correr (humano)", "jump": "Saltar (humano)", "crouch": "Agacharse (humano)",
 	"toggle_help": "Abrir / cerrar guía",
@@ -30,6 +30,12 @@ static var music_volume: float = 0.55
 static var effects_volume: float = 0.8
 static var ambience_volume: float = 0.45
 static var ui_volume: float = 0.65
+static var video_resolution: int = 1
+static var video_fullscreen: bool = false
+static var video_vsync: bool = true
+static var video_fps: int = 0
+static var video_shadows: int = 2
+static var video_reflections: bool = true
 static var player_name: String = ""
 static var server_address: String = "127.0.0.1"
 static var server_port: int = 27840
@@ -77,6 +83,13 @@ static func load_settings() -> void:
 		effects_volume = _audio_value(config, "effects_volume", 0.8)
 		ambience_volume = _audio_value(config, "ambience_volume", 0.45)
 		ui_volume = _audio_value(config, "ui_volume", 0.65)
+		video_resolution = clampi(int(config.get_value("video","resolution",1)),0,3)
+		video_fullscreen = bool(config.get_value("video","fullscreen",false))
+		video_vsync = bool(config.get_value("video","vsync",true))
+		video_fps = int(config.get_value("video","fps",0))
+		if video_fps not in [0,60,120,144,165,240]: video_fps=0
+		video_shadows = clampi(int(config.get_value("video","shadows",2)),0,2)
+		video_reflections = bool(config.get_value("video","reflections",true))
 		player_name = str(config.get_value("connection", "player_name", "")).left(24)
 		server_address = str(config.get_value("connection", "address", "127.0.0.1"))
 		server_port = clampi(int(config.get_value("connection", "port", 27840)), 1, 65535)
@@ -138,6 +151,12 @@ static func save_settings() -> void:
 	config.set_value("audio", "effects_volume", effects_volume)
 	config.set_value("audio", "ambience_volume", ambience_volume)
 	config.set_value("audio", "ui_volume", ui_volume)
+	config.set_value("video","resolution",video_resolution)
+	config.set_value("video","fullscreen",video_fullscreen)
+	config.set_value("video","vsync",video_vsync)
+	config.set_value("video","fps",video_fps)
+	config.set_value("video","shadows",video_shadows)
+	config.set_value("video","reflections",video_reflections)
 	config.set_value("connection", "player_name", player_name)
 	config.set_value("connection", "address", server_address)
 	config.set_value("connection", "port", server_port)

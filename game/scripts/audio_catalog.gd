@@ -9,7 +9,7 @@ const MUSIC_BARS := 32
 const MUSIC_SECONDS := MUSIC_BARS * 4.0 * 60.0 / MUSIC_BPM
 const BUSES: Array[StringName] = [&"Music", &"Effects", &"Ambience", &"UI"]
 const LOOPS: Array[String] = ["buzz", "buzz_perch", "buzz_bite", "help_loop", "focus_loop", "room_fan", "room_fridge", "night_air", "clock"]
-const CUES: Array[String] = ["buzz", "buzz_perch", "buzz_bite", "clap", "swish", "impact", "bite", "detach", "perch", "pickup", "drop", "stun", "fall", "help_loop", "recover", "focus_loop", "task_start", "task_done", "task_fail", "step_wood", "step_tile", "step_cloth", "land", "cloth", "tool_swatter", "tool_racket", "tool_newspaper", "tool_broom", "ui_select", "ui_confirm", "ui_error", "room_fan", "room_fridge", "night_air", "clock"]
+const CUES: Array[String] = ["buzz", "buzz_perch", "buzz_bite", "clap", "swish", "impact", "bite", "detach", "perch", "pickup", "drop", "stun", "fall", "help_loop", "recover", "focus_loop", "task_start", "task_done", "task_fail", "step_wood", "step_tile", "step_cloth", "land", "cloth", "tool_swatter", "tool_racket", "tool_newspaper", "tool_broom", "ui_select", "ui_confirm", "ui_error", "room_fan", "room_fridge", "night_air", "clock", "door_move", "door_latch", "door_block"]
 const ACCENTS: Array[String] = ["start", "stun", "recover", "task", "win", "lose"]
 static var cache: Dictionary = {}
 
