@@ -1,7 +1,7 @@
-param([Parameter(Mandatory=$true)][string]$Name, [string[]]$GameArguments, [switch]$Source)
+param([Parameter(Mandatory=$true)][string]$Name, [string[]]$GameArguments, [switch]$Source, [string]$Executable)
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
-$exe = if ($Source) { Join-Path $PSScriptRoot 'tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe' } else { Join-Path $projectRoot 'outputs/Let-me-sleep-0.7.0-Windows/Let-me-sleep.exe' }
+$exe = & "$PSScriptRoot/resolve-game-executable.ps1" -Source:$Source -Executable $Executable
 if ($Name -notmatch '^[a-zA-Z0-9_-]+$') { throw 'Invalid evidence name' }
 $stdout = Join-Path $PSScriptRoot ('release07-' + $Name + '.log')
 $stderr = Join-Path $PSScriptRoot ('release07-' + $Name + '.err')

@@ -1,11 +1,12 @@
 param(
     [Parameter(Mandatory=$true)][ValidatePattern('^[A-Fa-f0-9]{64}$')][string]$ExpectedExeSHA256,
     [ValidateSet('blood','tasks','survival','disconnect','invalid','legacy06')][string[]]$Scenario = @('blood','tasks','survival','disconnect','invalid','legacy06'),
-    [string]$ReportPrefix = 'release07-network'
+    [string]$ReportPrefix = 'release07-network',
+    [string]$Executable
 )
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path $PSScriptRoot -Parent
-$exe = Join-Path $taskRoot 'outputs/Let-me-sleep-0.7.0-Windows/Let-me-sleep.exe'
+$exe = & "$PSScriptRoot/resolve-game-executable.ps1" -Executable $Executable
 $legacyExe = Join-Path $taskRoot 'outputs/Let-me-sleep-0.6.0-Windows/Let-me-sleep.exe'
 $harness = Join-Path $PSScriptRoot 'test-network.ps1'
 $shellExe = (Get-Process -Id $PID).Path

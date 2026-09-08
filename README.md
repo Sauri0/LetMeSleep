@@ -1,18 +1,23 @@
-# Let me sleep — prototipo 0.7.0
+# Let me sleep — próxima versión en desarrollo
+
+Esta rama contiene cambios posteriores al ejecutable 0.7.0. El nuevo candidato
+todavía no está exportado ni publicado. El estado de implementación, pruebas y
+pendientes está en [el punto de control](work/CHECKPOINT-CONTINUACION-09.md).
+Las descargas anteriores no incluyen necesariamente las funciones descritas aquí.
 
 **[Versiones publicadas y descargas](https://github.com/Sauri0/LetMeSleep/releases)**
 
 Descomprimí todo el ZIP y abrí **Let-me-sleep.exe**. Elegí **PRÁCTICA** para jugar contra bots. No necesitás Godot ni una cuenta de GitHub. La guía **LEEME.html** acompaña al juego.
 
-Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercera, casa caricaturesca de dos pisos y tres modos. La versión 0.7 mejora personajes, animaciones y habitaciones, con puertas interactivas y ajustes de imagen. El HUD es compacto; F1 abre una guía que permanece plegada durante el juego. La cámara permite seguir girando al mirar el cuerpo.
+Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercera y tres modos. Cada ronda genera una casa de 16–24 ambientes y dos o tres pisos, con puertas interactivas, tareas y herramientas. El HUD es compacto; F1 abre una guía que permanece plegada durante el juego. La cámara permite seguir girando al mirar el cuerpo.
 
-**La conexión automática entre casas todavía está pendiente.** Esta entrega usa ENet directo: funciona en una LAN o con una dirección UDP alcanzable. La invitación DD4 contiene dirección, puerto y sala; no abre puertos ni supera CGNAT. La integración EOS requiere adaptación, configuración del producto y pruebas en conexiones independientes. No hay SDK ni credenciales EOS en este juego.
+**La conexión automática entre casas todavía está pendiente.** La fuente actual usa ENet directo: necesita una LAN o una dirección UDP alcanzable. La invitación DD5 contiene dirección, puerto y sala; no abre puertos ni supera CGNAT. La integración EOS requiere adaptación, configuración del producto y pruebas en conexiones independientes. No hay SDK ni credenciales EOS en este juego.
 
 ## Jugar
 
 - **Práctica:** elegí humano o mosquito y uno de los tres modos. Los bots se mueven, atacan, pican, completan tareas y ayudan a sus compañeros aturdidos.
 - **Crear sala:** un botón inicia el servidor en la PC y entra automáticamente. No hace falta abrir otra consola. El puerto local se conserva separado de la dirección para amigos.
-- **Invitar:** copiá la invitación DD4 desde la sala; tus amigos la pegan en **UNIRME CON INVITACIÓN**. La conexión directa necesita una ruta de red alcanzable.
+- **Invitar:** copiá la invitación DD5 desde la sala; tus amigos la pegan en **UNIRME CON INVITACIÓN**. Todos deben usar la misma versión; la conexión directa necesita una ruta de red alcanzable.
 - **Equipos:** el anfitrión elige entre 1 y 5 humanos exactos; el resto son mosquitos, con un máximo de 12 y 16 jugadores totales. 1v1 es válido. Los roles se sortean en cada ronda.
 
 ## Controles y modos
@@ -20,7 +25,13 @@ Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercer
 | Personaje | Controles iniciales |
 |---|---|
 | Humano | WASD y ratón; Shift correr, Espacio saltar, Ctrl agacharse; mirar hacia abajo para inspeccionar el cuerpo y clic para golpear donde apuntás. Q es otra tecla para la misma palmada manual. R recoge, G suelta; mantener clic derecho carga el diario o la pantufla y soltar lanza. E abre/cierra una puerta cercana y E mantenida hace tareas. |
-| Mosquito | W avanza hacia la mira en 3D; soltar frena. A/S/D relativo, Espacio/Ctrl altura auxiliar. E mantenida concentra antes de picar; una nueva pulsación desprende. E mantenida cerca de un compañero caído ayuda a recuperarlo. |
+| Mosquito | W avanza hacia la mira en 3D; soltar frena. A/S/D relativo, Espacio/Ctrl altura auxiliar. F permite posarse o despegar; WASD recorre pisos, paredes y techos al posarse. E mantenida concentra antes de picar; una nueva pulsación desprende. E mantenida cerca de un compañero caído ayuda a recuperarlo. |
+
+**B** abre los gestos humanos y **V** mantenida transmite voz a jugadores cercanos.
+Las teclas se pueden cambiar en ajustes. Elegí allí la entrada de micrófono,
+el silencio propio y los controles por interlocutor. Los mosquitos tienen un
+tono más agudo sin hablar más rápido; los humanos los oyen a menor volumen y
+distancia. Las puertas y el recorrido entre habitaciones afectan la escucha.
 
 La defensa no selecciona automáticamente zonas. La cámara permite inspeccionar pecho, abdomen, antebrazos y muslos; las marcas y golpes siguen la misma pose física. Con varios humanos pueden aparecer zonas traseras que requieren ayuda de un compañero. Cada mosquito ve únicamente su propia marca. Al desprenderse recibe otra y conserva su calendario individual de rotación.
 
@@ -40,18 +51,18 @@ Se eligieron el humano A compacto, el mosquito B alargado y el acabado liso de p
 
 El HUD deja libre el centro y muestra indicaciones según la acción. **F1** abre y cierra la guía; **Esc** abre la pausa y los ajustes; la ronda sigue mientras el menú está abierto. **TU PINTA** tiene una vista previa 3D con color, accesorio, cara, pelo o antenas, ropa o abdomen, calzado y acento separados para cada rol. Las opciones se eligen con tarjetas y muestras de color. Los perfiles nuevos usan pijama, pantuflas y gorro de noche; se conservan las elecciones guardadas en versiones anteriores. Los cosméticos no cambian estadísticas ni colisiones.
 
-La versión 0.7 renueva la composición de la casa, las articulaciones y el movimiento de ambos personajes. Diez puertas autoritativas tienen bisagras, bloqueo seguro y sonido espacial; los bots las usan y los mosquitos caben bajo ellas. La mira muestra una oportunidad discreta basada en el mismo recorrido manual y línea de visión del golpe. Ajustes permite resolución real hasta 4K, VSync, FPS, sombras y reflejos.
+Las puertas tienen bisagras, bloqueo seguro y sonido espacial; los bots las usan y los mosquitos caben bajo ellas. La mira muestra una oportunidad discreta basada en el mismo recorrido manual y línea de visión del golpe. Ajustes permite resolución real hasta 4K, VSync, FPS, sombras y reflejos. La prueba actual de 16 participantes a 1080p todavía no alcanza una fluidez sostenida de 60 FPS; la optimización sigue pendiente.
 
-La sala de espera es un patio independiente. La casa tiene 16 ambientes, dos escaleras y tareas y herramientas en ambas plantas. Una desconexión interrumpe la ronda sin ganador. Al salir el anfitrión se cierra su sala; no existe migración de anfitrión.
+La sala de espera es un patio independiente. El anfitrión comparte la semilla y la huella de la casa antes de empezar, para que todos jueguen en la misma distribución. Hay tareas y herramientas en todos los pisos. Una desconexión interrumpe la ronda sin ganador. Al salir el anfitrión se cierra su sala; no existe migración de anfitrión.
 
 ## Proyecto y verificación
 
-Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y protocolo **7**; las versiones anteriores son incompatibles. El proyecto está en **game/**. **work/setup-tools.ps1** prepara herramientas con sumas oficiales; **work/build.ps1** importa, prueba y exporta, y **work/package.ps1** empaqueta sin sobrescribir versiones publicadas.
+Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y protocolo **9**; las versiones anteriores son incompatibles. El proyecto está en **game/**. **work/setup-tools.ps1** prepara herramientas con sumas oficiales; **work/build.ps1** importa, prueba y exporta, y **work/package.ps1** empaqueta sin sobrescribir versiones publicadas. La voz usa la extensión Opus incluida; sus fuentes, construcción reproducible y avisos están en **native/voice/** y **game/addons/lms_opus/licenses/**.
 
 ```powershell
 & ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/stun_help_test.gd
 ```
 
-La evidencia y sus límites están en [PRUEBAS.md](distribution/PRUEBAS.md); el hash del ejecutable en [BUILD.txt](distribution/BUILD.txt); las instrucciones de juego en [LEEME.md](distribution/LEEME.md). Las pruebas entre procesos de una misma PC no certifican Internet entre casas, rendimiento mínimo ni balance humano.
+La documentación de **distribution/** y **ENTREGA-0.7.md** identifica el paquete anterior. Para esta fuente, consultá [el punto de control actual](work/CHECKPOINT-CONTINUACION-09.md). Las pruebas entre procesos de una misma PC no certifican Internet entre casas, rendimiento mínimo ni balance humano.
 
 Modelos originales con fuentes Blender y exportaciones GLB en `art_source/`. Composición musical y efectos originales; las notas instrumentales acústicas de VSCO 2 Community Edition son CC0 y tienen créditos y licencia incluidos. Los temas se funden entre menú, personalización y partida; Música, Efectos, Ambiente e Interfaz tienen volumen separado además del volumen general. Bangers y Atkinson Hyperlegible se distribuyen bajo SIL Open Font License; sus avisos acompañan al paquete. Las versiones históricas se conservan en las Releases.
