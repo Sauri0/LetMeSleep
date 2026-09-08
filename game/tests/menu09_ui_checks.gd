@@ -31,6 +31,8 @@ func _run() -> void:
 	_backup()
 	root.size = Vector2i(1280,720)
 	output = ProjectSettings.globalize_path("res://../outputs/0.9-menu")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="): output=arg.trim_prefix("--output=")
 	DirAccess.make_dir_recursive_absolute(output)
 	ui = UI.new()
 	root.add_child(ui)

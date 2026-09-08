@@ -29,6 +29,8 @@ var output: String
 func _run() -> void:
 	_backup()
 	output = ProjectSettings.globalize_path("res://../outputs/0.9-voice-context-ui")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="): output=arg.trim_prefix("--output=")
 	DirAccess.make_dir_recursive_absolute(output)
 	root.size = Vector2i(1280,720)
 	root.content_scale_size = Vector2i(1280,720)

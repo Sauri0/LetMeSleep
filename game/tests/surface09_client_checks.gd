@@ -34,6 +34,8 @@ func _reset_at(position: Vector3, facing: float=0.0) -> void:
 func _run() -> void:
 	_backup()
 	output=ProjectSettings.globalize_path("res://../outputs/0.9-social-integration")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="): output=arg.trim_prefix("--output=")
 	DirAccess.make_dir_recursive_absolute(output)
 	Prefs.load_settings()
 	Prefs.video_resolution=0

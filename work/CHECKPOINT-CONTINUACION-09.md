@@ -97,11 +97,17 @@ esta continuación y no se debe atribuir su comportamiento al EXE anterior.
   No sustituyen la galería ni la revisión continua de animaciones.
 - El coste aislado de DoorState bajó de 2,454 a 0,406 ms en el replay ABBA.
   Pasaron 2578 equivalencias y 342 regresiones de puertas. No es un aumento de
-  FPS demostrado. La última medición nativa de casa generada con 16 actores a
-  1080p dio 28,308 / 60,754 / 91,729 ms (p50/p90/p99), todavía fuera del objetivo.
+  FPS demostrado. La medición nativa posterior de casa generada con 16 actores a
+  1080p dio 48,241 / 94,347 / 123,682 ms (p50/p90/p99) en Compatibility.
+  El diagnóstico Forward+ dio 17,936 / 36,755 / 60,133 ms; ambos quedan fuera
+  del objetivo sostenido. La configuración publicada sigue siendo Compatibility.
   DoorCatalog también pasó 17117 equivalencias y 342 regresiones; su replay
   aislado bajó de 1,834 a 0,330 ms por tick. El perfil integrado sitúa el
-  siguiente pico en las rutas de bots, con 22,21 ms en un tick. Un ensayo de MultiMesh empeoró el coste
+  siguiente pico en las rutas de bots, con 22,21 ms en un tick. MapNavigation
+  ahora calcula una vez las distancias de cada selección, conservando empates,
+  orden y rutas: 5896 equivalencias y 1374 replays correctos. Su coste aislado
+  bajó de 2,861 a 2,219 ms; resta medir esa última fuente en partida.
+  Un ensayo de MultiMesh empeoró el coste
   del pasillo y fue rechazado; no se integró al juego.
 - VoiceSession publica ahora permiso y motivo contextual. La UI no promete
   hablar en práctica, sala o eliminación; conserva prueba local independiente.
@@ -110,12 +116,19 @@ esta continuación y no se debe atribuir su comportamiento al EXE anterior.
 - El empaquetado comprueba versión/protocolo, fuente limpia, DLL Opus, avisos y
   hashes antes de crear el ZIP. Pasaron 13 casos de rechazo/aceptación en una
   carpeta de prueba inerte; no se exportó ni empaquetó un candidato nuevo.
+- La práctica nativa pasó las seis combinaciones de rol y modo (157 controles),
+  incluida la identidad de las casas generadas y las revanchas. Los resultados
+  inyectados prueban navegación de pantallas, no victorias naturales.
+- Se corrigió la música durante el cierre: hosting nativo 13/13 sin fugas y
+  música 49/49 con PCM del mezclador Dummy, sin abrir micrófono.
+- La nueva calibración facial incluye la probóscide del mosquito y sus antenas:
+  tres páginas, 51 cabezas, 408 vistas, 12 hojas. La captura está validada;
+  la galería completa y la revisión visual siguen pendientes.
 
 ## Antes de una entrega nueva
 
-- Cerrar transporte y VoiceSession completos, regresiones de patas y corpus,
-  capturas nativas actualizadas, rutas de bots y roster completo.
-- Galería facial completa y 285 poses sobre una fuente congelada; resultados
+- Completar la revisión continua de animaciones y la galería facial completa;
+  las 285 poses ya pasaron sobre fit4, pero los resultados
   parciales y exportaciones históricas no cuentan como aprobación nueva.
 - Exportar a un directorio/versionado nuevo, conservar avisos de Opus y verificar
   la DLL exportada. Repetir pruebas del EXE, matriz de red, vídeo y rendimiento.
