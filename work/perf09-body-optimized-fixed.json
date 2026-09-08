@@ -1,0 +1,85 @@
+{
+	"baseline_only": false,
+	"checks": 17117,
+	"details": {
+		"boundaries": {
+			"blocked": 4650,
+			"clear": 7950,
+			"maps": 3
+		},
+		"capture": {
+			"body_blocked_ms": 684.741,
+			"fingerprint": "1b34a7206283c854a1fae77ef36c6b8e8d06af30e31044edd35d7d1c842621d9",
+			"fraction_instrumented": 0.841137992666433,
+			"limit": "Nested body spans exclude trace append; movement includes trace overhead and static geometry. No body-only fraction is asserted for the earlier native profile.",
+			"mosquitoes": 12,
+			"movement_inclusive_ms": 814.065,
+			"query_calls": 15318,
+			"ticks": 360
+		},
+		"full_simulation": {
+			"actors": 16,
+			"source_substitution": "Same Simulation source with preloaded Arena source under work/perf09-traced-arena.gd using reference body_blocked only. All other algorithms unchanged; original file hashes recorded.",
+			"ticks": 120
+		}
+	},
+	"failures": [],
+	"query_trace_sha256": "0a179163b17dfd811da7ec0f4f246d58d3903e0adf8dda58d648a026123f8f2c",
+	"replay_abba": [
+		{
+			"implementation": "reference",
+			"max_per_tick_ms": 4.442,
+			"mean_per_tick_ms": 1.79888888888889,
+			"mismatches": 0,
+			"p90_per_tick_ms": 3.007,
+			"p99_per_tick_ms": 3.334,
+			"queries": 15318,
+			"ticks": 360,
+			"total_ms": 647.6
+		},
+		{
+			"implementation": "current",
+			"max_per_tick_ms": 0.84,
+			"mean_per_tick_ms": 0.327219444444444,
+			"mismatches": 0,
+			"p90_per_tick_ms": 0.536,
+			"p99_per_tick_ms": 0.772,
+			"queries": 15318,
+			"ticks": 360,
+			"total_ms": 117.799
+		},
+		{
+			"implementation": "current",
+			"max_per_tick_ms": 1.947,
+			"mean_per_tick_ms": 0.332761111111111,
+			"mismatches": 0,
+			"p90_per_tick_ms": 0.543,
+			"p99_per_tick_ms": 0.667,
+			"queries": 15318,
+			"ticks": 360,
+			"total_ms": 119.794
+		},
+		{
+			"implementation": "reference",
+			"max_per_tick_ms": 4.342,
+			"mean_per_tick_ms": 1.86895,
+			"mismatches": 0,
+			"p90_per_tick_ms": 3.083,
+			"p99_per_tick_ms": 3.783,
+			"queries": 15318,
+			"ticks": 360,
+			"total_ms": 672.822
+		}
+	],
+	"scope": "CPU query attribution only; no renderer/FPS inference. Captured real Arena calls with dependency interception, validated against unmodified Arena every step.",
+	"source_sha256": {
+		"res://scripts/arena.gd": "768b26c2b776b7d04e9c17f676b5cee0b75853dad3977e9ada448d25aca11772",
+		"res://scripts/door_catalog.gd": "fc6da39cb7d11a7f6c43f271e68212bae0f90238a685d3c719fd4a3ebcf3aafc",
+		"res://scripts/door_geometry.gd": "264c406bd5d3a295f285f93aa2c18ce6510b24febffe1c8e957488642390da76",
+		"res://scripts/door_state.gd": "c9771faabf4fa3d068937afbd2a4b73ea0a20d2b7d498363be52cb29257f0606",
+		"res://scripts/simulation.gd": "4745999cebe72e7b0841d55518d629c1c27905bebde60b29cab04fcbfc4fab8d",
+		"res://tests/door09_body_query_test.gd": "3b491cf490754cabaa39855d4bbbfe8995397a470c975dbf2f225ad90bc4e6ee",
+		"res://tests/door09_catalog_reference.gd": "27726e5fb06799eb5a0202e4104bcdf1c2abc3098de0e6fb3ac69ab859a01c06",
+		"res://tests/door09_query_trace.gd": "d8cd9212c71b1fbde820b859315f7ff1a0f9d8d00407073ddd8be2d3847def2b"
+	}
+}

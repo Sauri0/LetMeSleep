@@ -1,12 +1,11 @@
-class_name DoorCatalog
+# Frozen body-query baseline; only class_name removed.
+# Original source SHA256: 995AEE9689DEBC47357BF984F010B178FEC2256CA50A30E5A734CE542C5B4FF7
 extends RefCounted
 const Geometry=preload("res://scripts/door_geometry.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const GeometryCache=preload("res://scripts/geometry_cache.gd")
 static var _cache_order: Array[String]=[]
 static var _generated: Dictionary={}
-static var _generated_sweeps: Dictionary={}
-static var _authored_sweeps: Dictionary={}
 ## Immutable geometry only. Angles and reservations belong to each simulation.
 const GAP := 0.14
 const THICKNESS := 0.07
@@ -30,7 +29,7 @@ static func get_doors(map_id: String = "house") -> Dictionary:
 
 static func _definitions(map_id: String) -> Dictionary:
 	if map_id=="house": return DEFINITIONS
-	GeometryCache.touch(_cache_order,map_id,24,[_generated,_generated_sweeps])
+	GeometryCache.touch(_cache_order,map_id,24,[_generated])
 	if not _generated.has(map_id): _generated[map_id]=Maps.get_map(map_id).get("doors",{})
 	return _generated[map_id]
 
@@ -48,33 +47,10 @@ static func intersects_body(definition: Dictionary, angle: float, body: AABB) ->
 
 static func body_blocked(body: AABB, states: Dictionary, map_id: String = "house") -> bool:
 	var definitions:=_definitions(map_id)
-	var sweeps:=_sweep_bounds(map_id,definitions)
-	var valid_box := body.position.is_finite() and body.size.is_finite() and body.size.x>=0.0 and body.size.y>=0.0 and body.size.z>=0.0
 	for id: String in states:
-		if not definitions.has(id):continue
-		# Full hinge sweep is immutable map geometry, not a cached door angle.
-		# Reject distant bodies before the original exact oriented SAT. The tiny
-		# padding belongs only to this rejection bound, never to collision.
-		if valid_box and not AABB(sweeps[id]).intersects(body):continue
-		if intersects_body(definitions[id],float(states[id].get("angle",OPEN_ANGLE)),body):
+		if definitions.has(id) and intersects_body(definitions[id],float(states[id].get("angle",OPEN_ANGLE)),body):
 			return true
 	return false
-
-static func _sweep_bounds(map_id: String, definitions: Dictionary) -> Dictionary:
-	if map_id=="house":
-		if _authored_sweeps.is_empty():_authored_sweeps=_build_sweep_bounds(definitions)
-		return _authored_sweeps
-	if not _generated_sweeps.has(map_id):_generated_sweeps[map_id]=_build_sweep_bounds(definitions)
-	return _generated_sweeps[map_id]
-
-static func _build_sweep_bounds(definitions: Dictionary) -> Dictionary:
-	var result: Dictionary={}
-	for id: String in definitions:
-		var definition: Dictionary=definitions[id]
-		var radius := sqrt(pow(float(definition.width),2.0)+pow(float(definition.thickness)*.5,2.0))
-		result[id]=AABB(Vector3(definition.hinge)+Vector3(-radius,GAP,-radius),Vector3(radius*2,float(definition.height)-GAP,radius*2)).grow(.00001)
-	result.make_read_only()
-	return result
 
 static func ray_leaf(definition: Dictionary, angle: float, from: Vector3, to: Vector3, padding: float = 0.0) -> Dictionary:
 	var transform := leaf_transform(definition,angle)
