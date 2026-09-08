@@ -1,0 +1,370 @@
+{
+  "source": "work\\perf09-view-natural-house-v1-1.json",
+  "source_sha256": "11082a40f5013d101b729994671e434871518e4fb61d777b1211cb647586c025",
+  "frames": 108,
+  "physics_ticks": 655,
+  "top_level_total_ms": 9736.984,
+  "recorder_bookkeeping_ms": 1115.116,
+  "recorder_ms_per_physics_tick_all_scopes": 1.7024671755725191,
+  "recorder_mean_us_per_pair": 14.312139025078933,
+  "hud_flushes_per_process_counter": {
+    "0": 1,
+    "1": 20,
+    "2": 20,
+    "4": 66,
+    "3": 1
+  },
+  "scopes": {
+    "Actor.human.colliders": {
+      "calls": 432,
+      "total_ms": 156.185,
+      "ms_per_rendered_frame": 1.4461574074074075,
+      "ms_per_physics_tick": 0.2384503816793893,
+      "mean_ms_per_call": 0.361539351851852,
+      "p90_ms_per_call": 0.402,
+      "residual_ms_per_rendered_frame": 1.4461574074074075
+    },
+    "Actor.human.pose": {
+      "calls": 432,
+      "total_ms": 674.526,
+      "ms_per_rendered_frame": 6.245611111111111,
+      "ms_per_physics_tick": 1.0298106870229007,
+      "mean_ms_per_call": 1.56140277777778,
+      "p90_ms_per_call": 1.827,
+      "residual_ms_per_rendered_frame": 4.799453703703704
+    },
+    "Actor.human.update_state": {
+      "calls": 432,
+      "total_ms": 795.158,
+      "ms_per_rendered_frame": 7.362574074074074,
+      "ms_per_physics_tick": 1.213981679389313,
+      "mean_ms_per_call": 1.84064351851852,
+      "p90_ms_per_call": 2.133,
+      "residual_ms_per_rendered_frame": 1.116962962962963
+    },
+    "Actor.mosquito.update_state": {
+      "calls": 1296,
+      "total_ms": 430.259,
+      "ms_per_rendered_frame": 3.9838796296296297,
+      "ms_per_physics_tick": 0.6568839694656489,
+      "mean_ms_per_call": 0.331989969135802,
+      "p90_ms_per_call": 0.433,
+      "residual_ms_per_rendered_frame": 3.9838796296296297
+    },
+    "Brain._path_direction": {
+      "calls": 1755,
+      "total_ms": 712.037,
+      "ms_per_rendered_frame": 6.592935185185185,
+      "ms_per_physics_tick": 1.087079389312977,
+      "mean_ms_per_call": 0.405719088319088,
+      "p90_ms_per_call": 0.325,
+      "residual_ms_per_rendered_frame": 6.592935185185185
+    },
+    "Brain.decide": {
+      "calls": 3275,
+      "total_ms": 960.648,
+      "ms_per_rendered_frame": 8.89488888888889,
+      "ms_per_physics_tick": 1.4666381679389313,
+      "mean_ms_per_call": 0.293327633587787,
+      "p90_ms_per_call": 0.223,
+      "residual_ms_per_rendered_frame": 2.3019537037037034
+    },
+    "Client._flush_game_hud": {
+      "calls": 327,
+      "total_ms": 185.359,
+      "ms_per_rendered_frame": 1.716287037037037,
+      "ms_per_physics_tick": 0.2829908396946565,
+      "mean_ms_per_call": 0.566847094801224,
+      "p90_ms_per_call": 0.63,
+      "residual_ms_per_rendered_frame": 1.716287037037037
+    },
+    "Client._physics_process": {
+      "calls": 655,
+      "total_ms": 30.205,
+      "ms_per_rendered_frame": 0.2796759259259259,
+      "ms_per_physics_tick": 0.04611450381679389,
+      "mean_ms_per_call": 0.0461145038167939,
+      "p90_ms_per_call": 0.103,
+      "residual_ms_per_rendered_frame": 0.20393518518518516
+    },
+    "Client._private": {
+      "calls": 327,
+      "total_ms": 20.37,
+      "ms_per_rendered_frame": 0.18861111111111112,
+      "ms_per_physics_tick": 0.031099236641221377,
+      "mean_ms_per_call": 0.0622935779816514,
+      "p90_ms_per_call": 0.074,
+      "residual_ms_per_rendered_frame": 0.18861111111111112
+    },
+    "Client._process": {
+      "calls": 108,
+      "total_ms": 1680.002,
+      "ms_per_rendered_frame": 15.555574074074073,
+      "ms_per_physics_tick": 2.5648885496183205,
+      "mean_ms_per_call": 15.5555740740741,
+      "p90_ms_per_call": 21.697,
+      "residual_ms_per_rendered_frame": 0.21525
+    },
+    "Client._snapshot": {
+      "calls": 327,
+      "total_ms": 866.662,
+      "ms_per_rendered_frame": 8.024648148148149,
+      "ms_per_physics_tick": 1.3231480916030536,
+      "mean_ms_per_call": 2.65034250764526,
+      "p90_ms_per_call": 2.876,
+      "residual_ms_per_rendered_frame": 7.185481481481482
+    },
+    "Doors.step": {
+      "calls": 655,
+      "total_ms": 20.623,
+      "ms_per_rendered_frame": 0.1909537037037037,
+      "ms_per_physics_tick": 0.03148549618320611,
+      "mean_ms_per_call": 0.0314854961832061,
+      "p90_ms_per_call": 0.038,
+      "residual_ms_per_rendered_frame": 0.1909537037037037
+    },
+    "Practice._publish": {
+      "calls": 327,
+      "total_ms": 1477.961,
+      "ms_per_rendered_frame": 13.684824074074074,
+      "ms_per_physics_tick": 2.256429007633588,
+      "mean_ms_per_call": 4.51975840978593,
+      "p90_ms_per_call": 5.164,
+      "residual_ms_per_rendered_frame": 0.36569444444444443
+    },
+    "Practice.advance": {
+      "calls": 655,
+      "total_ms": 7811.411,
+      "ms_per_rendered_frame": 72.32787962962963,
+      "ms_per_physics_tick": 11.925818320610688,
+      "mean_ms_per_call": 11.9258183206107,
+      "p90_ms_per_call": 16.916,
+      "residual_ms_per_rendered_frame": 4.275972222222222
+    },
+    "Simulation._attack_info": {
+      "calls": 982,
+      "total_ms": 607.221,
+      "ms_per_rendered_frame": 5.622416666666667,
+      "ms_per_physics_tick": 0.927054961832061,
+      "mean_ms_per_call": 0.61835132382892,
+      "p90_ms_per_call": 0.709,
+      "residual_ms_per_rendered_frame": 5.622416666666667
+    },
+    "Simulation._avoid_humans": {
+      "calls": 7860,
+      "total_ms": 67.315,
+      "ms_per_rendered_frame": 0.623287037037037,
+      "ms_per_physics_tick": 0.10277099236641221,
+      "mean_ms_per_call": 0.0085642493638677,
+      "p90_ms_per_call": 0.01,
+      "residual_ms_per_rendered_frame": 0.623287037037037
+    },
+    "Simulation._door_info": {
+      "calls": 982,
+      "total_ms": 183.915,
+      "ms_per_rendered_frame": 1.7029166666666666,
+      "ms_per_physics_tick": 0.2807862595419847,
+      "mean_ms_per_call": 0.187286150712831,
+      "p90_ms_per_call": 0.21,
+      "residual_ms_per_rendered_frame": 1.7029166666666666
+    },
+    "Simulation._evaluate_result": {
+      "calls": 655,
+      "total_ms": 5.892,
+      "ms_per_rendered_frame": 0.05455555555555556,
+      "ms_per_physics_tick": 0.008995419847328245,
+      "mean_ms_per_call": 0.00899541984732818,
+      "p90_ms_per_call": 0.01,
+      "residual_ms_per_rendered_frame": 0.05455555555555556
+    },
+    "Simulation._focus_info": {
+      "calls": 10480,
+      "total_ms": 1273.186,
+      "ms_per_rendered_frame": 11.788759259259258,
+      "ms_per_physics_tick": 1.9437954198473282,
+      "mean_ms_per_call": 0.121487213740459,
+      "p90_ms_per_call": 0.236,
+      "residual_ms_per_rendered_frame": 11.788759259259258
+    },
+    "Simulation._help_info": {
+      "calls": 10480,
+      "total_ms": 93.876,
+      "ms_per_rendered_frame": 0.8692222222222222,
+      "ms_per_physics_tick": 0.14332213740458016,
+      "mean_ms_per_call": 0.00895763358778641,
+      "p90_ms_per_call": 0.012,
+      "residual_ms_per_rendered_frame": 0.8692222222222222
+    },
+    "Simulation._move_free_insect": {
+      "calls": 7860,
+      "total_ms": 972.084,
+      "ms_per_rendered_frame": 9.000777777777778,
+      "ms_per_physics_tick": 1.484097709923664,
+      "mean_ms_per_call": 0.123674809160306,
+      "p90_ms_per_call": 0.148,
+      "residual_ms_per_rendered_frame": 8.377490740740742
+    },
+    "Simulation._pickup_info": {
+      "calls": 982,
+      "total_ms": 46.562,
+      "ms_per_rendered_frame": 0.4311296296296296,
+      "ms_per_physics_tick": 0.07108702290076335,
+      "mean_ms_per_call": 0.0474154786150711,
+      "p90_ms_per_call": 0.056,
+      "residual_ms_per_rendered_frame": 0.4311296296296296
+    },
+    "Simulation._resolve_strike": {
+      "calls": 2620,
+      "total_ms": 9.481,
+      "ms_per_rendered_frame": 0.08778703703703704,
+      "ms_per_physics_tick": 0.014474809160305344,
+      "mean_ms_per_call": 0.00361870229007632,
+      "p90_ms_per_call": 0.006,
+      "residual_ms_per_rendered_frame": 0.08778703703703704
+    },
+    "Simulation._serve_assignments": {
+      "calls": 655,
+      "total_ms": 33.65,
+      "ms_per_rendered_frame": 0.31157407407407406,
+      "ms_per_physics_tick": 0.05137404580152671,
+      "mean_ms_per_call": 0.0513740458015266,
+      "p90_ms_per_call": 0.057,
+      "residual_ms_per_rendered_frame": 0.31157407407407406
+    },
+    "Simulation._tick": {
+      "calls": 655,
+      "total_ms": 3306.245,
+      "ms_per_rendered_frame": 30.61337962962963,
+      "ms_per_physics_tick": 5.0477022900763355,
+      "mean_ms_per_call": 5.04770229007634,
+      "p90_ms_per_call": 5.782,
+      "residual_ms_per_rendered_frame": 8.135527777777778
+    },
+    "Simulation._update_attached": {
+      "calls": 1310,
+      "total_ms": 9.482,
+      "ms_per_rendered_frame": 0.08779629629629629,
+      "ms_per_physics_tick": 0.014476335877862595,
+      "mean_ms_per_call": 0.00723816793893129,
+      "p90_ms_per_call": 0.009,
+      "residual_ms_per_rendered_frame": 0.08779629629629629
+    },
+    "Simulation._update_bite_feedback": {
+      "calls": 655,
+      "total_ms": 27.328,
+      "ms_per_rendered_frame": 0.253037037037037,
+      "ms_per_physics_tick": 0.041722137404580154,
+      "mean_ms_per_call": 0.0417221374045801,
+      "p90_ms_per_call": 0.046,
+      "residual_ms_per_rendered_frame": 0.253037037037037
+    },
+    "Simulation._update_emotes": {
+      "calls": 655,
+      "total_ms": 3.546,
+      "ms_per_rendered_frame": 0.03283333333333333,
+      "ms_per_physics_tick": 0.0054137404580152666,
+      "mean_ms_per_call": 0.00541374045801519,
+      "p90_ms_per_call": 0.007,
+      "residual_ms_per_rendered_frame": 0.03283333333333333
+    },
+    "Simulation._update_help": {
+      "calls": 655,
+      "total_ms": 159.172,
+      "ms_per_rendered_frame": 1.4738148148148147,
+      "ms_per_physics_tick": 0.24301068702290077,
+      "mean_ms_per_call": 0.2430106870229,
+      "p90_ms_per_call": 0.263,
+      "residual_ms_per_rendered_frame": 0.8927592592592594
+    },
+    "Simulation._update_projectiles": {
+      "calls": 655,
+      "total_ms": 4.032,
+      "ms_per_rendered_frame": 0.037333333333333336,
+      "ms_per_physics_tick": 0.006155725190839695,
+      "mean_ms_per_call": 0.00615572519083966,
+      "p90_ms_per_call": 0.007,
+      "residual_ms_per_rendered_frame": 0.037333333333333336
+    },
+    "Simulation._update_throw": {
+      "calls": 2620,
+      "total_ms": 9.855,
+      "ms_per_rendered_frame": 0.09125,
+      "ms_per_physics_tick": 0.015045801526717558,
+      "mean_ms_per_call": 0.00376145038167938,
+      "p90_ms_per_call": 0.006,
+      "residual_ms_per_rendered_frame": 0.09125
+    },
+    "Simulation.private_for": {
+      "calls": 3602,
+      "total_ms": 1353.784,
+      "ms_per_rendered_frame": 12.535037037037037,
+      "ms_per_physics_tick": 2.0668458015267177,
+      "mean_ms_per_call": 0.375842309827873,
+      "p90_ms_per_call": 0.942,
+      "residual_ms_per_rendered_frame": 3.557787037037037
+    },
+    "Simulation.public_snapshot": {
+      "calls": 982,
+      "total_ms": 671.432,
+      "ms_per_rendered_frame": 6.216962962962963,
+      "ms_per_physics_tick": 1.0250870229007634,
+      "mean_ms_per_call": 0.683739307535641,
+      "p90_ms_per_call": 0.763,
+      "residual_ms_per_rendered_frame": 6.216962962962963
+    },
+    "Simulation.step": {
+      "calls": 655,
+      "total_ms": 3322.4,
+      "ms_per_rendered_frame": 30.762962962962963,
+      "ms_per_physics_tick": 5.07236641221374,
+      "mean_ms_per_call": 5.07236641221374,
+      "p90_ms_per_call": 5.807,
+      "residual_ms_per_rendered_frame": 0.14958333333333335
+    },
+    "Simulation.submit_input": {
+      "calls": 10152,
+      "total_ms": 122.995,
+      "ms_per_rendered_frame": 1.1388425925925927,
+      "ms_per_physics_tick": 0.18777862595419847,
+      "mean_ms_per_call": 0.0121153467297086,
+      "p90_ms_per_call": 0.018,
+      "residual_ms_per_rendered_frame": 1.1388425925925927
+    },
+    "World._process": {
+      "calls": 108,
+      "total_ms": 30.007,
+      "ms_per_rendered_frame": 0.2778425925925926,
+      "ms_per_physics_tick": 0.04581221374045802,
+      "mean_ms_per_call": 0.277842592592593,
+      "p90_ms_per_call": 0.325,
+      "residual_ms_per_rendered_frame": 0.2778425925925926
+    },
+    "World.sync_actors": {
+      "calls": 108,
+      "total_ms": 1606.997,
+      "ms_per_rendered_frame": 14.879601851851852,
+      "ms_per_physics_tick": 2.453430534351145,
+      "mean_ms_per_call": 14.8796018518519,
+      "p90_ms_per_call": 20.872,
+      "residual_ms_per_rendered_frame": 3.533148148148148
+    },
+    "World.sync_doors": {
+      "calls": 435,
+      "total_ms": 118.724,
+      "ms_per_rendered_frame": 1.0992962962962964,
+      "ms_per_physics_tick": 0.18125801526717558,
+      "mean_ms_per_call": 0.272928735632184,
+      "p90_ms_per_call": 0.295,
+      "residual_ms_per_rendered_frame": 1.0992962962962964
+    },
+    "World.sync_pickups": {
+      "calls": 108,
+      "total_ms": 21.664,
+      "ms_per_rendered_frame": 0.2005925925925926,
+      "ms_per_physics_tick": 0.03307480916030535,
+      "mean_ms_per_call": 0.200592592592593,
+      "p90_ms_per_call": 0.217,
+      "residual_ms_per_rendered_frame": 0.2005925925925926
+    }
+  }
+}
