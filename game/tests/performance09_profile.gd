@@ -252,7 +252,7 @@ func _run() -> void:
 		await _finish({});return
 	create_timer(48).timeout.connect(func()->void:
 		if not completed:failures.append("48 second fixture watchdog");_finish.call_deferred({}))
-	for file_path: String in ["res://tests/performance09_profile.gd","res://tests/performance07_live.gd","res://scripts/practice_session.gd","res://scripts/bot_brain.gd","res://scripts/simulation.gd","res://scripts/arena.gd","res://scripts/map_navigation.gd","res://scripts/map_catalog.gd","res://scripts/client.gd","res://scripts/world.gd"]:
+	for file_path: String in ["res://tests/performance09_profile.gd","res://tests/performance07_live.gd","res://scripts/practice_session.gd","res://scripts/bot_brain.gd","res://scripts/simulation.gd","res://scripts/arena.gd","res://scripts/door_state.gd","res://scripts/door_catalog.gd","res://scripts/map_navigation.gd","res://scripts/map_catalog.gd","res://scripts/client.gd","res://scripts/world.gd"]:
 		source_hashes[file_path]=FileAccess.get_sha256(file_path) if FileAccess.file_exists(file_path) else "unavailable_in_pack"
 	root.size=Vector2i(1920,1080)
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED);Engine.max_fps=0
@@ -349,6 +349,8 @@ func _run() -> void:
 	for id: int in client.practice.brains:bot_stats[id]=client.practice.brains[id].stats.duplicate(true)
 	var prefs: Script=load("res://scripts/preferences.gd")
 	var result: Dictionary={"kind":"instrumented live diagnostic; not a clean FPS benchmark","scenario":"performance07_live hallway input and periodic doors; real Main/Client/Practice; 4 humans + 12 mosquitoes + 15 live brains","map_id":map_id,"map_fingerprint":simulation.config.map_fingerprint,"map_seed":simulation.config.map_seed,"world_map":client.world.current_map,"world_fingerprint":client.world.map_data.get("fingerprint",""),"actors":16,"bots":15,"warmup_seconds":2,"measurement_seconds":seconds,"simulation_elapsed":simulation.elapsed,"concurrent_work":concurrent_work,"frame_ms":Collector.distribution(frame_times),"render_cpu_ms":Collector.distribution(render_cpu),"render_gpu_ms":Collector.distribution(render_gpu),"physics_monitor_ms":Collector.distribution(physics),"draws":Collector.distribution(draws),"primitives":Collector.distribution(primitives),"physics_ticks_per_rendered_frame":tick_histogram,"frame_rows":frame_rows,"cpu_attribution":collector.summary(),"bot_stats":bot_stats,"preparation_ms":preparation,"start_position":start_position,"end_position":simulation.actors[1].p,"door_commands":transitions,"frames_with_moving_doors":moving_frames,"resolution":root.content_scale_size,"window_size":root.size,"render_texture_size":root.get_texture().get_size(),"video_quality":{"shadows":prefs.video_shadows,"reflections":prefs.video_reflections,"msaa_3d":root.msaa_3d},"occlusion_culling":root.use_occlusion_culling,"adapter":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"physics_ticks_per_second":Engine.physics_ticks_per_second,"vsync":"disabled","fps_limit":0,"source_sha256":source_hashes}
+	result.renderer=RenderingServer.get_current_rendering_method()
+	result.rendering_driver=RenderingServer.get_current_rendering_driver_name()
 	await _finish(result)
 
 func _finish(result: Dictionary) -> void:

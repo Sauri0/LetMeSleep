@@ -19,8 +19,13 @@ if ($Suite -eq 'native') {
     $catalogReport | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $catalogReportPath -Encoding utf8
     & "$PSScriptRoot/run-native07.ps1" -Executable $exe -Name selected07_mesh_checks -GameArguments @('--script','res://tests/selected07_mesh_checks.gd','--','--production','--verify','--tools')
     & "$PSScriptRoot/run-native07.ps1" -Executable $exe -Name house07_lighting_probe -GameArguments @('--script','res://tests/house07_lighting_probe.gd','--','--production','--candidate-only','--energy=0.55','--atlas=2048')
-    & "$PSScriptRoot/run-native07.ps1" -Executable $exe -Name practice -GameArguments @('--','--practice-checks',('--check-report='+$PSScriptRoot+'/release07-practice.json'),('--check-output='+$PSScriptRoot+'/release07-practice-states'))
-    & "$PSScriptRoot/run-native07.ps1" -Executable $exe -Name hosting -GameArguments @('--','--hosting-checks',('--report='+$PSScriptRoot+'/release07-hosting.json'))
+    foreach ($role in @('human','mosquito')) {
+        foreach ($mode in @('blood','survival','sleep')) {
+            $practiceLabel='practice-'+$role+'-'+$mode
+            & "$PSScriptRoot/run-native07.ps1" -Executable $exe -Name $practiceLabel -GameArguments @('--','--no-microphone','--practice-checks',('--check-role='+$role),('--check-mode='+$mode),('--check-report='+$PSScriptRoot+'/release07-'+$practiceLabel+'.json'),('--check-output='+$PSScriptRoot+'/release07-'+$practiceLabel+'-states'))
+        }
+    }
+    & "$PSScriptRoot/run-native07.ps1" -Executable $exe -Name hosting -GameArguments @('--','--no-microphone','--hosting-checks',('--report='+$PSScriptRoot+'/release07-hosting.json'))
     & "$PSScriptRoot/run-native07.ps1" -Executable $exe -Name combat -GameArguments @('--headless','--script','res://tests/network07_combat_checks.gd')
     $motionOutput=Join-Path $PSScriptRoot ('release07-facial-motion-'+(Get-Date -Format 'yyyyMMdd-HHmmss'))
     & "$PSScriptRoot/run-facial-motion08.ps1" -Packed -Executable $exe -OutputDirectory $motionOutput
@@ -30,9 +35,9 @@ if ($Suite -eq 'native') {
 }
 if ($Suite -eq 'performance') {
     $measuredExeHash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash
-    foreach ($case in @(@(1,1080),@(16,1080),@(16,1440),@(16,2160))) {
+    foreach ($case in @(@(2,1080),@(16,1080),@(16,1440),@(16,2160))) {
         $label='performance-'+$case[0]+'-'+$case[1]
-        & "$PSScriptRoot/run-native07.ps1" -Executable $exe -Name $label -GameArguments @('--script','res://tests/performance07_live.gd','--',('--population='+$case[0]),('--resolution='+$case[1]),('--report='+$PSScriptRoot+'/release07-'+$label+'.json'))
+        & "$PSScriptRoot/run-native07.ps1" -Executable $exe -Name $label -GameArguments @('--script','res://tests/performance07_live.gd','--','--map-id=house-v1-1',('--population='+$case[0]),('--resolution='+$case[1]),('--report='+$PSScriptRoot+'/release07-'+$label+'.json'))
         if ((Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash -ne $measuredExeHash) { throw 'Executable changed during measurement' }
         $reportPath = Join-Path $PSScriptRoot ('release07-'+$label+'.json')
         $measuredReport = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json -AsHashtable
