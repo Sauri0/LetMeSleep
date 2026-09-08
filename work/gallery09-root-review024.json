@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "job": "neutral-human-024",
+  "heads": "H0576-H0599",
+  "state": "neutral",
+  "reviewer": "root",
+  "sheets": [
+    {
+      "file": "human-page-024-neutral-pair-0.png",
+      "sha256": "a391ae31e7482e1e4fb7fe22beb38e9cfebecc28b20724b58ca9754064082c41",
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "scope": "Whole-sheet visual inspection rendered at 1682x1472 from 3840x3360; no native-resolution detail inspection",
+      "finding": "No new unmistakable facial clipping or head/accessory framing cut observed; inherited radial shirt stripes remain visible."
+    },
+    {
+      "file": "human-page-024-neutral-pair-1.png",
+      "sha256": "9d3df5c535204cd307ba12df38ac6e9b47eb8a77d9342b36d8d7e7080ebc39a8",
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "scope": "Whole-sheet visual inspection rendered at 1682x1472 from 3840x3360; no native-resolution detail inspection",
+      "finding": "No new unmistakable facial clipping or head/accessory framing cut observed; inherited radial shirt stripes remain visible."
+    },
+    {
+      "file": "human-page-024-neutral-pair-2.png",
+      "sha256": "e360c9688575ea3a505edb43d47e9defa0d574032f0d72204e17c393d436cf0f",
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "scope": "Whole-sheet visual inspection rendered at 1682x1472 from 3840x3360; no native-resolution detail inspection",
+      "finding": "No new unmistakable facial clipping or head/accessory framing cut observed; inherited radial shirt stripes remain visible."
+    },
+    {
+      "file": "human-page-024-neutral-pair-3.png",
+      "sha256": "4c2dc955188f3359593be3a23caa9783fd681272ea7f18870abd9467c7fd5065",
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "scope": "Whole-sheet visual inspection rendered at 1682x1472 from 3840x3360; no native-resolution detail inspection",
+      "finding": "No new unmistakable facial clipping or head/accessory framing cut observed; inherited radial shirt stripes remain visible."
+    }
+  ],
+  "limits": "Does not approve other pages, expressions, motion, subtle contacts or all customization."
+}

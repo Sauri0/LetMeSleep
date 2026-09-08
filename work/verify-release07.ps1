@@ -55,9 +55,12 @@ if ($Suite -eq 'native') {
 }
 if ($Suite -eq 'performance') {
     $measuredExeHash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash
-    foreach ($case in @(@(2,1080),@(16,1080),@(16,1440),@(16,2160))) {
+    foreach ($case in @(@(2,1080,$false),@(16,1080,$false),@(16,1440,$false),@(16,2160,$false),@(16,1080,$true))) {
         $label='performance-'+$case[0]+'-'+$case[1]
-        Invoke-CandidateCheck -Name $label -GameArguments @('--script','res://tests/performance07_live.gd','--','--map-id=house-v1-1',('--population='+$case[0]),('--resolution='+$case[1]),('--report='+$evidenceDirectory+'/'+$label+'.json'))
+        if ($case[2]) { $label+='-natural-doors' }
+        $performanceArguments=@('--script','res://tests/performance07_live.gd','--','--map-id=house-v1-1',('--population='+$case[0]),('--resolution='+$case[1]),('--report='+$evidenceDirectory+'/'+$label+'.json'))
+        if ($case[2]) { $performanceArguments+='--natural-doors' }
+        Invoke-CandidateCheck -Name $label -GameArguments $performanceArguments
         if ((Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash -ne $measuredExeHash) { throw 'Executable changed during measurement' }
         $reportPath = Join-Path $evidenceDirectory ($label+'.json')
         $measuredReport = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json -AsHashtable
