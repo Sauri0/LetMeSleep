@@ -1,0 +1,2542 @@
+{
+  "schema": 1,
+  "reviewer": "visual_world",
+  "created_utc": "2026-09-08T14:10:30.650999+00:00",
+  "scope": "Revision visual offline de las 48 laminas reales neutral-human-012..023; sin motor, recapturas ni cambios de fuente.",
+  "method": "Cada PNG completo fue abierto con view_image, en 12 tandas de cuatro hojas. La herramienta redujo 3840x3360 a1682x1472. Lectura por filas y parejas para encuadre, clipping amplio, presencia y asimetrias evidentes; no inspeccion pixel por pixel de cada celda.",
+  "sheet_count_inspected": 48,
+  "heads_represented": 288,
+  "view_cells_represented": 2304,
+  "pixelwise_all_cells_inspected": false,
+  "head_id_range": [
+    "H-H0288",
+    "H-H0575"
+  ],
+  "states": [
+    "neutral"
+  ],
+  "observed_appearance_domains": {
+    "accent": [
+      4
+    ],
+    "accessory": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "beard": [
+      0
+    ],
+    "brows": [
+      0,
+      1,
+      2
+    ],
+    "color": [
+      1
+    ],
+    "eyes": [
+      0,
+      1,
+      2
+    ],
+    "footwear": [
+      0
+    ],
+    "hair": [
+      0,
+      1,
+      2
+    ],
+    "hair_color": [
+      0
+    ],
+    "mouth": [
+      0,
+      1,
+      2
+    ],
+    "mustache": [
+      0,
+      1
+    ],
+    "outfit": [
+      0
+    ]
+  },
+  "result": "reviewed_no_new_unequivocal_defect_observed",
+  "new_unequivocal_findings": [],
+  "global_approval": false,
+  "source_sha256": {
+    "game/.godot/imported/broom.glb-f3fa871372390deac2bccf69c0e0ba6c.md5": "5984d5b00eb40edbbdc348753dc21a2eeb9e1f97c885816f6e00ea6cce0e9f7c",
+    "game/.godot/imported/broom.glb-f3fa871372390deac2bccf69c0e0ba6c.scn": "dd69a627e5245d2c4371f676704f336e963aa1abe89c7b3cca89f5fa80cb1139",
+    "game/.godot/imported/human_lms06.glb-37faa87c837d825c5641c4c0347e05c4.md5": "ee17d25d0ee862bb5c2d1d97a13cf100a6a3e1eec3fc5d9f6277e443345461fc",
+    "game/.godot/imported/human_lms06.glb-37faa87c837d825c5641c4c0347e05c4.scn": "82ead1cc3eecb012569bf7d811b73fb7f444f02bb8a4c379734fe567c433c578",
+    "game/.godot/imported/mosquito_lms06.glb-7baf2fc2aa9a1e4d557715090c3fc0b9.md5": "4fc5da3a959f17f80d8860c4f1ff7438aa679c520f8bdf9895a9b04a4378ff91",
+    "game/.godot/imported/mosquito_lms06.glb-7baf2fc2aa9a1e4d557715090c3fc0b9.scn": "6a536e6f46f1ded5cbeb08d1b336580514efd04a7f947d238786aa53764206db",
+    "game/.godot/imported/newspaper.glb-3c36f08fba96267791bb343f6eef87f9.md5": "62bfaba52c0008cf64173095d65a5e3ba85be1d1ded86846e8074f06450465e8",
+    "game/.godot/imported/newspaper.glb-3c36f08fba96267791bb343f6eef87f9.scn": "0bb1cc38a23cfa0c8f309c08521425079fbf3abc416d98510969657177c6a47f",
+    "game/.godot/imported/newspaper.glb-d7c616230bed8b8b6d08b4f5ddaa08b9.md5": "b2a35131144c836bf4a2c1b95e75596ed58efccebcfed1a0930b5b574aae3e43",
+    "game/.godot/imported/newspaper.glb-d7c616230bed8b8b6d08b4f5ddaa08b9.scn": "f0738ac68abd399bad5d7b33590eaba46b09541f3f11c6b4eacea021794bfad4",
+    "game/.godot/imported/racket.glb-82f8d0797a84fe8b2a29f6822927e24b.md5": "23d5ebc8567e7cb4aad4a5a07cabf2ef56e46f60d407b31739fac7efe4297702",
+    "game/.godot/imported/racket.glb-82f8d0797a84fe8b2a29f6822927e24b.scn": "7a00126105ca44b3c539f7fee11be15c7c4ddde9458b35ab5e3302791036226e",
+    "game/.godot/imported/slipper.glb-8571c993da3ae0fa60fa3526460ef30f.md5": "a05fd5c92d9c625030a987859824d4dab4584670c411a5624ef6574d9437a523",
+    "game/.godot/imported/slipper.glb-8571c993da3ae0fa60fa3526460ef30f.scn": "c6f90423d44a0d71287699e7617f029600948b4c298860b78fa87d3d35d78921",
+    "game/.godot/imported/swatter.glb-1e727c270cf37a24089165d4f9aeb41d.md5": "75f28319ab564caab580816c4d0c3a7705cead91948122e6c705d2e42edbf116",
+    "game/.godot/imported/swatter.glb-1e727c270cf37a24089165d4f9aeb41d.scn": "a9879ade9a0b329d77b64202c39c67203711ef45680c7f3581cab66f0ad298d7",
+    "game/assets/art/characters/human/human_lms06.glb": "90cd6a695b32c3b98395df8f8da496ee56ffebd6026db757c03f9006eb777a06",
+    "game/assets/art/characters/human/human_lms06.glb.import": "c4030e675d81467782cddb70109b8299fff5d73e5385d3edb3390dd36e68bb2d",
+    "game/assets/art/characters/human/model.json": "dd6d1b28a9ff2b6956b5cb98f516b29ff1ca505ebbc6b14d74b87203dc2344fd",
+    "game/assets/art/characters/human/rig_contract.json": "27dd6ea469927ce88f5dbcfdb9e18d41d791708c48eb3e919b78257e3ad58ab1",
+    "game/assets/art/characters/mosquito/model.json": "29379b78bfe59d231257bb560df2588c9542f25b560eea3c9858e35b836e7138",
+    "game/assets/art/characters/mosquito/mosquito_lms06.glb": "d249474f537b50594ff4f76ae5c97fc938d9e6d61cdc7fa91909db0bc860ac85",
+    "game/assets/art/characters/mosquito/mosquito_lms06.glb.import": "d17d2b02c621a8287ff37db97f8f3a71f8e418252e61f2a527a7c2fd80f973aa",
+    "game/assets/art/characters/mosquito/rig_contract.json": "481dcd3a7c22a7cb2ec4dd9ef229529154355687b29147097058f3a89893f345",
+    "game/assets/art/characters/shared/character_skin.gd": "35a723b2de561de6b290a9578c0029e73cb5ce2cbfc0b20e47862ce1eb9d1a55",
+    "game/assets/art/characters/shared/cloth.gdshader": "a422d810b6bf4fa1d88b8f68858dd1b2d1fc5054ce5b5717cf564836a3d678d7",
+    "game/assets/art/characters/shared/facial_expression.gd": "4fa4869d70350b2918c5c919caf8ec7c3cc005bfbdf8d9890d8a57e85460a556",
+    "game/assets/art/characters/tools/broom.glb": "c41cdf35d8d70e44eeb492d6ef9e5e6628f15c5333fea6176de3ac401aa991de",
+    "game/assets/art/characters/tools/broom.glb.import": "7a4bdbdfafdd3ced0f237eeb544d48a95f6c84eab56e8e29f8c045dfd2d5e798",
+    "game/assets/art/characters/tools/newspaper.glb": "2d876fc1897738d19fef536d7215123d16495612ab8ab01a77956c5dfecb89f2",
+    "game/assets/art/characters/tools/newspaper.glb.import": "897f8cc126685687d4cf069ceebbe9b78c0fbe0da7db280e93e58b37428b248f",
+    "game/assets/art/characters/tools/racket.glb": "f655f907c8af226566078df1ac239b997c7089cd7f1cca02f7e7c2144d8c3a67",
+    "game/assets/art/characters/tools/racket.glb.import": "d1f60389ba2a1cbe42ef13858a865fadc72c69de13c2a99fb86b2ef4ff06068c",
+    "game/assets/art/characters/tools/slipper.glb": "c3f1778fe5b1837f6218a0c205e12fb18f6c11eed0a9603f45f4c9e64669f12e",
+    "game/assets/art/characters/tools/slipper.glb.import": "91cbad111778774ca46e74bcafbb1f8e9ab6e57cb619a177961255b2787064a5",
+    "game/assets/art/house/newspaper.glb": "660adf238a2b23bb4b5ac87036a34006f63df39ce45c28e54cb872c46c23f34d",
+    "game/assets/art/house/newspaper.glb.import": "2e50d366fcfff8b86a02454cc49a48fd7e7fd2bcc3d9866c030e79bc32834301",
+    "game/assets/art/house/swatter.glb": "74f2d8898ea04c0378fc302b5fbc9c36fd2bf1b89e104d3c65afd21eca4f0f0a",
+    "game/assets/art/house/swatter.glb.import": "38e6c8695491dadea38efa45a2221d3799521dac43878d3e3be9a6070fb6fccf",
+    "game/assets/procedural_shapes.gd": "f6272b69552eb2da97de0756af25ce1eccc574602240afffa81612f1cec42d38",
+    "game/project.godot": "c3a3f13cdd78f08d16bd502d65902165b74bb5e977804d2ac4d02a4ab836313e",
+    "game/scripts/actor_view.gd": "90bf7163a767f6ccfc0223aae625e7541dfe61f49ede67e8fb0ca473f37f6a0c",
+    "game/scripts/avatar_preview.gd": "110e7fbf0f63302464acf389c08466cdd25c4a0906eb929f7cb19bc82cd7eb97",
+    "game/scripts/cosmetics.gd": "3de5804574572058daae5be4353d2a8dd421526074127449bba4cb5b296e9106",
+    "game/scripts/emote_catalog.gd": "b34b47a5895ad7de1e052ffc4591edc76805d085a88036496bb6cd6e30091667",
+    "game/scripts/emote_pose.gd": "f97aa2254316c1449296fe554cec22356d5dd185b87a27f16d4af576e42bb232",
+    "game/scripts/human_pose.gd": "36c69f5a2273db33950776e8c81153f3d5b76a28be6a944e7bbe4ea8ce794190",
+    "game/scripts/human_presentation.gd": "cc60bf97eafc6a0350f28089ae964b2961a03a088bbf39d17af2a3347c299d02",
+    "game/scripts/mosquito_pose.gd": "9cf62024a199b097f5649598a0934783d6affc47bf2beb7262ea05383221f8d9",
+    "game/scripts/surface_appendage_pose.gd": "828a28e3fa0f30b4c69028c7d6c280e493ba583cc374bfe0b76b3068eb2eb201",
+    "game/scripts/surface_presentation.gd": "5d6717f2f73d3898f5bfd9b733fed431b5c1f0ac45aea44c047fd00e668bac83",
+    "game/scripts/tool_catalog.gd": "9be4594989e21f9028731b6f01e730a060687c5a3deb7251d23eece630d4cd00",
+    "game/scripts/voice_mouth_envelope.gd": "ddb02a38d571c0b8f2b34e3dc5e3956fe151c3174ad80bc02a1cc6bf5c40ece7",
+    "game/tests/facial_catalog08_gallery.gd": "3e159a6e3a30ff93c7240ee6f602686fdd354631d1df1925c9e6230f8c0fe242",
+    "work/gallery09-manifest.py": "672d36409298459dec611db9195fcdb505b129c5c323ee51af24f64bc586aec6",
+    "work/gallery09-run.ps1": "81767f7d69e5129357575978255cef7d15a4212e501a5de625a5b19a239e6d93",
+    "work/gallery09-trim2-prepare.py": "d41070087714fdf7501549937342a3c84400d584679e3c1e80bb2d255492b2a6",
+    "work/gallery09-trim2-batch.ps1": "91bc0e431b20e694ef15895fee75b3e48d322f4fedb52b5a7dc8a2d785998ee3"
+  },
+  "limitations": [
+    "Estado neutral y encuadre de cabeza/hombros; no reemplaza pruebas de Blink, expresiones extremas o animacion continua.",
+    "2304 es cantidad de vistas representadas en las hojas, no 2304 aprobaciones visuales individuales.",
+    "La reduccion de la herramienta limita deteccion de separaciones pequenas, intersecciones subpixel, tangencias y normales finas.",
+    "Torso y hombros cortados por encuadre de busto; no se afirma encuadre corporal completo. Rasgos conocidos de hombros/rayas fuera de esta revision.",
+    "En vistas superiores las viseras pueden ocultar cejas/ojos; en perfil un ojo queda ocluido por la cabeza. No se clasifican como piezas ausentes.",
+    "Estos IDs no incluyen barba ni bigote2; los dominios enumerados no implican revision del producto cartesiano completo.",
+    "No modifica validated.json, coverage.json ni otros estados de aprobacion de la galeria."
+  ],
+  "sheets": [
+    {
+      "page": 12,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-012/human-page-012-neutral-pair-0.png",
+      "sha256": "76d8507e0d072b4b2ae333f22a7909ce942ea1ebfd293e8f4b007454b687f894",
+      "bytes": 1417584,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0288",
+        "H-H0289",
+        "H-H0290",
+        "H-H0291",
+        "H-H0292",
+        "H-H0293",
+        "H-H0294",
+        "H-H0295",
+        "H-H0296",
+        "H-H0297",
+        "H-H0298",
+        "H-H0299",
+        "H-H0300",
+        "H-H0301",
+        "H-H0302",
+        "H-H0303",
+        "H-H0304",
+        "H-H0305",
+        "H-H0306",
+        "H-H0307",
+        "H-H0308",
+        "H-H0309",
+        "H-H0310",
+        "H-H0311"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gorro A3 y pelo H1/H2; contornos de gorro, orejas y pompon completos. Diferencia entre perfiles coherente con el pompon lateral.",
+      "capture_validation_sha256": "58bf1628668500e387e4aef747efa86293cfa4ffdb07b1483c5223c123e810ad",
+      "capture_report_sha256": "ec50657071b0656376db1e14f42633eb24eee1bb8fb1dbe93c338dd6429afc5c"
+    },
+    {
+      "page": 12,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-012/human-page-012-neutral-pair-1.png",
+      "sha256": "beb4f10127d2830111b797ff63f5b82e9fc1846cba280d4edc835729cd96542d",
+      "bytes": 1120709,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0288",
+        "H-H0289",
+        "H-H0290",
+        "H-H0291",
+        "H-H0292",
+        "H-H0293",
+        "H-H0294",
+        "H-H0295",
+        "H-H0296",
+        "H-H0297",
+        "H-H0298",
+        "H-H0299",
+        "H-H0300",
+        "H-H0301",
+        "H-H0302",
+        "H-H0303",
+        "H-H0304",
+        "H-H0305",
+        "H-H0306",
+        "H-H0307",
+        "H-H0308",
+        "H-H0309",
+        "H-H0310",
+        "H-H0311"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gorro A3 y pelo H1/H2; contornos de gorro, orejas y pompon completos. Diferencia entre perfiles coherente con el pompon lateral.",
+      "capture_validation_sha256": "58bf1628668500e387e4aef747efa86293cfa4ffdb07b1483c5223c123e810ad",
+      "capture_report_sha256": "ec50657071b0656376db1e14f42633eb24eee1bb8fb1dbe93c338dd6429afc5c"
+    },
+    {
+      "page": 12,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-012/human-page-012-neutral-pair-2.png",
+      "sha256": "ec2aa5fadee21780f1d33304c7d3ae1f970acdecb1fdfbb85b80266d6d8fbe95",
+      "bytes": 1302250,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0288",
+        "H-H0289",
+        "H-H0290",
+        "H-H0291",
+        "H-H0292",
+        "H-H0293",
+        "H-H0294",
+        "H-H0295",
+        "H-H0296",
+        "H-H0297",
+        "H-H0298",
+        "H-H0299",
+        "H-H0300",
+        "H-H0301",
+        "H-H0302",
+        "H-H0303",
+        "H-H0304",
+        "H-H0305",
+        "H-H0306",
+        "H-H0307",
+        "H-H0308",
+        "H-H0309",
+        "H-H0310",
+        "H-H0311"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gorro A3 y pelo H1/H2; contornos de gorro, orejas y pompon completos. Diferencia entre perfiles coherente con el pompon lateral.",
+      "capture_validation_sha256": "58bf1628668500e387e4aef747efa86293cfa4ffdb07b1483c5223c123e810ad",
+      "capture_report_sha256": "ec50657071b0656376db1e14f42633eb24eee1bb8fb1dbe93c338dd6429afc5c"
+    },
+    {
+      "page": 12,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-012/human-page-012-neutral-pair-3.png",
+      "sha256": "88176f3be934cf965294f4f5053dbe01be0312ae07c8a590766956003c51b2b0",
+      "bytes": 1410865,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0288",
+        "H-H0289",
+        "H-H0290",
+        "H-H0291",
+        "H-H0292",
+        "H-H0293",
+        "H-H0294",
+        "H-H0295",
+        "H-H0296",
+        "H-H0297",
+        "H-H0298",
+        "H-H0299",
+        "H-H0300",
+        "H-H0301",
+        "H-H0302",
+        "H-H0303",
+        "H-H0304",
+        "H-H0305",
+        "H-H0306",
+        "H-H0307",
+        "H-H0308",
+        "H-H0309",
+        "H-H0310",
+        "H-H0311"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gorro A3 y pelo H1/H2; contornos de gorro, orejas y pompon completos. Diferencia entre perfiles coherente con el pompon lateral.",
+      "capture_validation_sha256": "58bf1628668500e387e4aef747efa86293cfa4ffdb07b1483c5223c123e810ad",
+      "capture_report_sha256": "ec50657071b0656376db1e14f42633eb24eee1bb8fb1dbe93c338dd6429afc5c"
+    },
+    {
+      "page": 13,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-013/human-page-013-neutral-pair-0.png",
+      "sha256": "a040326dc6c150a90398e752464a02dc1199b776f6cf569d9bd79020042db3b5",
+      "bytes": 1386997,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0312",
+        "H-H0313",
+        "H-H0314",
+        "H-H0315",
+        "H-H0316",
+        "H-H0317",
+        "H-H0318",
+        "H-H0319",
+        "H-H0320",
+        "H-H0321",
+        "H-H0322",
+        "H-H0323",
+        "H-H0324",
+        "H-H0325",
+        "H-H0326",
+        "H-H0327",
+        "H-H0328",
+        "H-H0329",
+        "H-H0330",
+        "H-H0331",
+        "H-H0332",
+        "H-H0333",
+        "H-H0334",
+        "H-H0335"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Transicion de gorro A3 sin bigote a pelo H0 con bigote T1. No desaparicion o desplazamiento lateral evidente de ojos, boca o bigote.",
+      "capture_validation_sha256": "ea9efc916a144610a5af2756ae9f07d583fd9984a8cd39a4b381b6a2f15f195c",
+      "capture_report_sha256": "e1ec1a7b80db2f618cb3f0b81de2c9a8b5806ab9690dfbc6985e30cf66c082f7"
+    },
+    {
+      "page": 13,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-013/human-page-013-neutral-pair-1.png",
+      "sha256": "db37c3c798d7783533830d035f85c15ea4149a9a7c96905fcd394c819272fae8",
+      "bytes": 1075462,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0312",
+        "H-H0313",
+        "H-H0314",
+        "H-H0315",
+        "H-H0316",
+        "H-H0317",
+        "H-H0318",
+        "H-H0319",
+        "H-H0320",
+        "H-H0321",
+        "H-H0322",
+        "H-H0323",
+        "H-H0324",
+        "H-H0325",
+        "H-H0326",
+        "H-H0327",
+        "H-H0328",
+        "H-H0329",
+        "H-H0330",
+        "H-H0331",
+        "H-H0332",
+        "H-H0333",
+        "H-H0334",
+        "H-H0335"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Transicion de gorro A3 sin bigote a pelo H0 con bigote T1. No desaparicion o desplazamiento lateral evidente de ojos, boca o bigote.",
+      "capture_validation_sha256": "ea9efc916a144610a5af2756ae9f07d583fd9984a8cd39a4b381b6a2f15f195c",
+      "capture_report_sha256": "e1ec1a7b80db2f618cb3f0b81de2c9a8b5806ab9690dfbc6985e30cf66c082f7"
+    },
+    {
+      "page": 13,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-013/human-page-013-neutral-pair-2.png",
+      "sha256": "24b82bf67ebba1d60fb84c9978e0a94920510eeea07b32793a67872af9dc22e1",
+      "bytes": 1227761,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0312",
+        "H-H0313",
+        "H-H0314",
+        "H-H0315",
+        "H-H0316",
+        "H-H0317",
+        "H-H0318",
+        "H-H0319",
+        "H-H0320",
+        "H-H0321",
+        "H-H0322",
+        "H-H0323",
+        "H-H0324",
+        "H-H0325",
+        "H-H0326",
+        "H-H0327",
+        "H-H0328",
+        "H-H0329",
+        "H-H0330",
+        "H-H0331",
+        "H-H0332",
+        "H-H0333",
+        "H-H0334",
+        "H-H0335"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Transicion de gorro A3 sin bigote a pelo H0 con bigote T1. No desaparicion o desplazamiento lateral evidente de ojos, boca o bigote.",
+      "capture_validation_sha256": "ea9efc916a144610a5af2756ae9f07d583fd9984a8cd39a4b381b6a2f15f195c",
+      "capture_report_sha256": "e1ec1a7b80db2f618cb3f0b81de2c9a8b5806ab9690dfbc6985e30cf66c082f7"
+    },
+    {
+      "page": 13,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-013/human-page-013-neutral-pair-3.png",
+      "sha256": "7bc45e9bace1ce37516ac382e99c7536c5663d0603b77df32b4031ed9c7a2f79",
+      "bytes": 1352749,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0312",
+        "H-H0313",
+        "H-H0314",
+        "H-H0315",
+        "H-H0316",
+        "H-H0317",
+        "H-H0318",
+        "H-H0319",
+        "H-H0320",
+        "H-H0321",
+        "H-H0322",
+        "H-H0323",
+        "H-H0324",
+        "H-H0325",
+        "H-H0326",
+        "H-H0327",
+        "H-H0328",
+        "H-H0329",
+        "H-H0330",
+        "H-H0331",
+        "H-H0332",
+        "H-H0333",
+        "H-H0334",
+        "H-H0335"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Transicion de gorro A3 sin bigote a pelo H0 con bigote T1. No desaparicion o desplazamiento lateral evidente de ojos, boca o bigote.",
+      "capture_validation_sha256": "ea9efc916a144610a5af2756ae9f07d583fd9984a8cd39a4b381b6a2f15f195c",
+      "capture_report_sha256": "e1ec1a7b80db2f618cb3f0b81de2c9a8b5806ab9690dfbc6985e30cf66c082f7"
+    },
+    {
+      "page": 14,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-014/human-page-014-neutral-pair-0.png",
+      "sha256": "473fe38e5e26467ea885b5ba7f65b0e15b403782a6aa0bc4561732d460e1e0ec",
+      "bytes": 1427422,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0336",
+        "H-H0337",
+        "H-H0338",
+        "H-H0339",
+        "H-H0340",
+        "H-H0341",
+        "H-H0342",
+        "H-H0343",
+        "H-H0344",
+        "H-H0345",
+        "H-H0346",
+        "H-H0347",
+        "H-H0348",
+        "H-H0349",
+        "H-H0350",
+        "H-H0351",
+        "H-H0352",
+        "H-H0353",
+        "H-H0354",
+        "H-H0355",
+        "H-H0356",
+        "H-H0357",
+        "H-H0358",
+        "H-H0359"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H0/H1 y bigote T1: ambos perfiles coherentes; no cruce nuevo inequivoco con cejas o nariz en la escala observada.",
+      "capture_validation_sha256": "6d78b24f67ac3de7122398aa0144c680fca88a74fa113ae568adaa113e654b48",
+      "capture_report_sha256": "70fac4de9aafc1c538bf4497e67638403cde03deccb491c5c2ef72fcc49f5319"
+    },
+    {
+      "page": 14,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-014/human-page-014-neutral-pair-1.png",
+      "sha256": "c9418d7489993f95ce7792299a837fcab35ecb4b2c80cefe4cd959ddda8bfae3",
+      "bytes": 1101579,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0336",
+        "H-H0337",
+        "H-H0338",
+        "H-H0339",
+        "H-H0340",
+        "H-H0341",
+        "H-H0342",
+        "H-H0343",
+        "H-H0344",
+        "H-H0345",
+        "H-H0346",
+        "H-H0347",
+        "H-H0348",
+        "H-H0349",
+        "H-H0350",
+        "H-H0351",
+        "H-H0352",
+        "H-H0353",
+        "H-H0354",
+        "H-H0355",
+        "H-H0356",
+        "H-H0357",
+        "H-H0358",
+        "H-H0359"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H0/H1 y bigote T1: ambos perfiles coherentes; no cruce nuevo inequivoco con cejas o nariz en la escala observada.",
+      "capture_validation_sha256": "6d78b24f67ac3de7122398aa0144c680fca88a74fa113ae568adaa113e654b48",
+      "capture_report_sha256": "70fac4de9aafc1c538bf4497e67638403cde03deccb491c5c2ef72fcc49f5319"
+    },
+    {
+      "page": 14,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-014/human-page-014-neutral-pair-2.png",
+      "sha256": "34cd3e5358cc972ff756f70fb133ba971c45b0c343593313aa3a8f8b022dd2ad",
+      "bytes": 1231177,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0336",
+        "H-H0337",
+        "H-H0338",
+        "H-H0339",
+        "H-H0340",
+        "H-H0341",
+        "H-H0342",
+        "H-H0343",
+        "H-H0344",
+        "H-H0345",
+        "H-H0346",
+        "H-H0347",
+        "H-H0348",
+        "H-H0349",
+        "H-H0350",
+        "H-H0351",
+        "H-H0352",
+        "H-H0353",
+        "H-H0354",
+        "H-H0355",
+        "H-H0356",
+        "H-H0357",
+        "H-H0358",
+        "H-H0359"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H0/H1 y bigote T1: ambos perfiles coherentes; no cruce nuevo inequivoco con cejas o nariz en la escala observada.",
+      "capture_validation_sha256": "6d78b24f67ac3de7122398aa0144c680fca88a74fa113ae568adaa113e654b48",
+      "capture_report_sha256": "70fac4de9aafc1c538bf4497e67638403cde03deccb491c5c2ef72fcc49f5319"
+    },
+    {
+      "page": 14,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-014/human-page-014-neutral-pair-3.png",
+      "sha256": "3a6d4f1c3b6717c1e739cf89f78de85aac5401b6684f3f9226de4b9c3c3425d8",
+      "bytes": 1377734,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0336",
+        "H-H0337",
+        "H-H0338",
+        "H-H0339",
+        "H-H0340",
+        "H-H0341",
+        "H-H0342",
+        "H-H0343",
+        "H-H0344",
+        "H-H0345",
+        "H-H0346",
+        "H-H0347",
+        "H-H0348",
+        "H-H0349",
+        "H-H0350",
+        "H-H0351",
+        "H-H0352",
+        "H-H0353",
+        "H-H0354",
+        "H-H0355",
+        "H-H0356",
+        "H-H0357",
+        "H-H0358",
+        "H-H0359"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H0/H1 y bigote T1: ambos perfiles coherentes; no cruce nuevo inequivoco con cejas o nariz en la escala observada.",
+      "capture_validation_sha256": "6d78b24f67ac3de7122398aa0144c680fca88a74fa113ae568adaa113e654b48",
+      "capture_report_sha256": "70fac4de9aafc1c538bf4497e67638403cde03deccb491c5c2ef72fcc49f5319"
+    },
+    {
+      "page": 15,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-015/human-page-015-neutral-pair-0.png",
+      "sha256": "f0cbb60615d04623bb1384658fd1f4e028db4a8fa8eae4b72e086fcc38afcace",
+      "bytes": 1479958,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0360",
+        "H-H0361",
+        "H-H0362",
+        "H-H0363",
+        "H-H0364",
+        "H-H0365",
+        "H-H0366",
+        "H-H0367",
+        "H-H0368",
+        "H-H0369",
+        "H-H0370",
+        "H-H0371",
+        "H-H0372",
+        "H-H0373",
+        "H-H0374",
+        "H-H0375",
+        "H-H0376",
+        "H-H0377",
+        "H-H0378",
+        "H-H0379",
+        "H-H0380",
+        "H-H0381",
+        "H-H0382",
+        "H-H0383"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H1/H2 con bigote T1. Extremos de mechones dentro del encuadre; no discontinuidad nueva evidente entre las filas.",
+      "capture_validation_sha256": "6e099df5ca7f6bbf86183b8e15e087e9c1439a7055d0994244ea00ebc410cd45",
+      "capture_report_sha256": "921636c7d6893c8f755c0f2a1f20d2156529d49dc1b45a1d0513bfa9c6a03d4d"
+    },
+    {
+      "page": 15,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-015/human-page-015-neutral-pair-1.png",
+      "sha256": "1cf19a76e976445ce7bd27561acac44235435643129f453ff7a6d7d7c991d1e6",
+      "bytes": 1144428,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0360",
+        "H-H0361",
+        "H-H0362",
+        "H-H0363",
+        "H-H0364",
+        "H-H0365",
+        "H-H0366",
+        "H-H0367",
+        "H-H0368",
+        "H-H0369",
+        "H-H0370",
+        "H-H0371",
+        "H-H0372",
+        "H-H0373",
+        "H-H0374",
+        "H-H0375",
+        "H-H0376",
+        "H-H0377",
+        "H-H0378",
+        "H-H0379",
+        "H-H0380",
+        "H-H0381",
+        "H-H0382",
+        "H-H0383"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H1/H2 con bigote T1. Extremos de mechones dentro del encuadre; no discontinuidad nueva evidente entre las filas.",
+      "capture_validation_sha256": "6e099df5ca7f6bbf86183b8e15e087e9c1439a7055d0994244ea00ebc410cd45",
+      "capture_report_sha256": "921636c7d6893c8f755c0f2a1f20d2156529d49dc1b45a1d0513bfa9c6a03d4d"
+    },
+    {
+      "page": 15,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-015/human-page-015-neutral-pair-2.png",
+      "sha256": "f0a94b476b297b43e0585e46af2c107d6a90aac4deb2830eba10de60dae66d45",
+      "bytes": 1295743,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0360",
+        "H-H0361",
+        "H-H0362",
+        "H-H0363",
+        "H-H0364",
+        "H-H0365",
+        "H-H0366",
+        "H-H0367",
+        "H-H0368",
+        "H-H0369",
+        "H-H0370",
+        "H-H0371",
+        "H-H0372",
+        "H-H0373",
+        "H-H0374",
+        "H-H0375",
+        "H-H0376",
+        "H-H0377",
+        "H-H0378",
+        "H-H0379",
+        "H-H0380",
+        "H-H0381",
+        "H-H0382",
+        "H-H0383"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H1/H2 con bigote T1. Extremos de mechones dentro del encuadre; no discontinuidad nueva evidente entre las filas.",
+      "capture_validation_sha256": "6e099df5ca7f6bbf86183b8e15e087e9c1439a7055d0994244ea00ebc410cd45",
+      "capture_report_sha256": "921636c7d6893c8f755c0f2a1f20d2156529d49dc1b45a1d0513bfa9c6a03d4d"
+    },
+    {
+      "page": 15,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-015/human-page-015-neutral-pair-3.png",
+      "sha256": "8da5be7fd7be62418f8794f92ba1004c1d45725ae8cf7683a362739aa3c975e4",
+      "bytes": 1449968,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0360",
+        "H-H0361",
+        "H-H0362",
+        "H-H0363",
+        "H-H0364",
+        "H-H0365",
+        "H-H0366",
+        "H-H0367",
+        "H-H0368",
+        "H-H0369",
+        "H-H0370",
+        "H-H0371",
+        "H-H0372",
+        "H-H0373",
+        "H-H0374",
+        "H-H0375",
+        "H-H0376",
+        "H-H0377",
+        "H-H0378",
+        "H-H0379",
+        "H-H0380",
+        "H-H0381",
+        "H-H0382",
+        "H-H0383"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H1/H2 con bigote T1. Extremos de mechones dentro del encuadre; no discontinuidad nueva evidente entre las filas.",
+      "capture_validation_sha256": "6e099df5ca7f6bbf86183b8e15e087e9c1439a7055d0994244ea00ebc410cd45",
+      "capture_report_sha256": "921636c7d6893c8f755c0f2a1f20d2156529d49dc1b45a1d0513bfa9c6a03d4d"
+    },
+    {
+      "page": 16,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-016/human-page-016-neutral-pair-0.png",
+      "sha256": "5f285b0c008c9e272aac1cebea2dbd6413bc12e20a4cb5857dea4e5a72cca6b7",
+      "bytes": 1498152,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0384",
+        "H-H0385",
+        "H-H0386",
+        "H-H0387",
+        "H-H0388",
+        "H-H0389",
+        "H-H0390",
+        "H-H0391",
+        "H-H0392",
+        "H-H0393",
+        "H-H0394",
+        "H-H0395",
+        "H-H0396",
+        "H-H0397",
+        "H-H0398",
+        "H-H0399",
+        "H-H0400",
+        "H-H0401",
+        "H-H0402",
+        "H-H0403",
+        "H-H0404",
+        "H-H0405",
+        "H-H0406",
+        "H-H0407"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H2 y primeras viseras A1. La vista desde arriba oculta parte de la frente por la visera; no es recorte del viewport.",
+      "capture_validation_sha256": "d0796cd106d5284af3155915559bd75763be708233e3c639efd85b9ef868833e",
+      "capture_report_sha256": "2d0240a7edcefe5362d1876d2036e014540a02413afede678e42f962d341907d"
+    },
+    {
+      "page": 16,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-016/human-page-016-neutral-pair-1.png",
+      "sha256": "8f74cbc391db7e13be20db555ad979c90439ecac281f284f18f6186aa617e884",
+      "bytes": 1166462,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0384",
+        "H-H0385",
+        "H-H0386",
+        "H-H0387",
+        "H-H0388",
+        "H-H0389",
+        "H-H0390",
+        "H-H0391",
+        "H-H0392",
+        "H-H0393",
+        "H-H0394",
+        "H-H0395",
+        "H-H0396",
+        "H-H0397",
+        "H-H0398",
+        "H-H0399",
+        "H-H0400",
+        "H-H0401",
+        "H-H0402",
+        "H-H0403",
+        "H-H0404",
+        "H-H0405",
+        "H-H0406",
+        "H-H0407"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H2 y primeras viseras A1. La vista desde arriba oculta parte de la frente por la visera; no es recorte del viewport.",
+      "capture_validation_sha256": "d0796cd106d5284af3155915559bd75763be708233e3c639efd85b9ef868833e",
+      "capture_report_sha256": "2d0240a7edcefe5362d1876d2036e014540a02413afede678e42f962d341907d"
+    },
+    {
+      "page": 16,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-016/human-page-016-neutral-pair-2.png",
+      "sha256": "6c6cb74075210c9967548a70667e9ea87f180e77a4ca5cb1bd07f6dc08f5d512",
+      "bytes": 1317290,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0384",
+        "H-H0385",
+        "H-H0386",
+        "H-H0387",
+        "H-H0388",
+        "H-H0389",
+        "H-H0390",
+        "H-H0391",
+        "H-H0392",
+        "H-H0393",
+        "H-H0394",
+        "H-H0395",
+        "H-H0396",
+        "H-H0397",
+        "H-H0398",
+        "H-H0399",
+        "H-H0400",
+        "H-H0401",
+        "H-H0402",
+        "H-H0403",
+        "H-H0404",
+        "H-H0405",
+        "H-H0406",
+        "H-H0407"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H2 y primeras viseras A1. La vista desde arriba oculta parte de la frente por la visera; no es recorte del viewport.",
+      "capture_validation_sha256": "d0796cd106d5284af3155915559bd75763be708233e3c639efd85b9ef868833e",
+      "capture_report_sha256": "2d0240a7edcefe5362d1876d2036e014540a02413afede678e42f962d341907d"
+    },
+    {
+      "page": 16,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-016/human-page-016-neutral-pair-3.png",
+      "sha256": "129de7b3c90db3256d27352cc1dfce401d5beb2c506ea1cd06d4e95c30c67d61",
+      "bytes": 1506254,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0384",
+        "H-H0385",
+        "H-H0386",
+        "H-H0387",
+        "H-H0388",
+        "H-H0389",
+        "H-H0390",
+        "H-H0391",
+        "H-H0392",
+        "H-H0393",
+        "H-H0394",
+        "H-H0395",
+        "H-H0396",
+        "H-H0397",
+        "H-H0398",
+        "H-H0399",
+        "H-H0400",
+        "H-H0401",
+        "H-H0402",
+        "H-H0403",
+        "H-H0404",
+        "H-H0405",
+        "H-H0406",
+        "H-H0407"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Pelo H2 y primeras viseras A1. La vista desde arriba oculta parte de la frente por la visera; no es recorte del viewport.",
+      "capture_validation_sha256": "d0796cd106d5284af3155915559bd75763be708233e3c639efd85b9ef868833e",
+      "capture_report_sha256": "2d0240a7edcefe5362d1876d2036e014540a02413afede678e42f962d341907d"
+    },
+    {
+      "page": 17,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-017/human-page-017-neutral-pair-0.png",
+      "sha256": "5eeeb196819f8fa981dbcb901d929e4d764d8ad557b9f9951c5386cf7eb08810",
+      "bytes": 1469416,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0408",
+        "H-H0409",
+        "H-H0410",
+        "H-H0411",
+        "H-H0412",
+        "H-H0413",
+        "H-H0414",
+        "H-H0415",
+        "H-H0416",
+        "H-H0417",
+        "H-H0418",
+        "H-H0419",
+        "H-H0420",
+        "H-H0421",
+        "H-H0422",
+        "H-H0423",
+        "H-H0424",
+        "H-H0425",
+        "H-H0426",
+        "H-H0427",
+        "H-H0428",
+        "H-H0429",
+        "H-H0430",
+        "H-H0431"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H0. Frente, nariz, orejas y visera completas. Boca y bigote pequenos pero separados en las vistas frontales/oblicuas.",
+      "capture_validation_sha256": "7980161012f71b03e94cf12d1851ef75c76cc824922e951f14c8fc67c0849921",
+      "capture_report_sha256": "89745fc140c068a80b637162c8abed603feeaa3bba2290a884e6619350e217bc"
+    },
+    {
+      "page": 17,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-017/human-page-017-neutral-pair-1.png",
+      "sha256": "102796473d464a3428c93d0c67d59e3b49bd4739440a27394292c2ac911e8ae5",
+      "bytes": 1201110,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0408",
+        "H-H0409",
+        "H-H0410",
+        "H-H0411",
+        "H-H0412",
+        "H-H0413",
+        "H-H0414",
+        "H-H0415",
+        "H-H0416",
+        "H-H0417",
+        "H-H0418",
+        "H-H0419",
+        "H-H0420",
+        "H-H0421",
+        "H-H0422",
+        "H-H0423",
+        "H-H0424",
+        "H-H0425",
+        "H-H0426",
+        "H-H0427",
+        "H-H0428",
+        "H-H0429",
+        "H-H0430",
+        "H-H0431"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H0. Frente, nariz, orejas y visera completas. Boca y bigote pequenos pero separados en las vistas frontales/oblicuas.",
+      "capture_validation_sha256": "7980161012f71b03e94cf12d1851ef75c76cc824922e951f14c8fc67c0849921",
+      "capture_report_sha256": "89745fc140c068a80b637162c8abed603feeaa3bba2290a884e6619350e217bc"
+    },
+    {
+      "page": 17,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-017/human-page-017-neutral-pair-2.png",
+      "sha256": "3bcdd7ff7693d10cbff6e5565217ed6714930a1cec540310220d62b147946966",
+      "bytes": 1348426,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0408",
+        "H-H0409",
+        "H-H0410",
+        "H-H0411",
+        "H-H0412",
+        "H-H0413",
+        "H-H0414",
+        "H-H0415",
+        "H-H0416",
+        "H-H0417",
+        "H-H0418",
+        "H-H0419",
+        "H-H0420",
+        "H-H0421",
+        "H-H0422",
+        "H-H0423",
+        "H-H0424",
+        "H-H0425",
+        "H-H0426",
+        "H-H0427",
+        "H-H0428",
+        "H-H0429",
+        "H-H0430",
+        "H-H0431"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H0. Frente, nariz, orejas y visera completas. Boca y bigote pequenos pero separados en las vistas frontales/oblicuas.",
+      "capture_validation_sha256": "7980161012f71b03e94cf12d1851ef75c76cc824922e951f14c8fc67c0849921",
+      "capture_report_sha256": "89745fc140c068a80b637162c8abed603feeaa3bba2290a884e6619350e217bc"
+    },
+    {
+      "page": 17,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-017/human-page-017-neutral-pair-3.png",
+      "sha256": "6ee28041a14669aeba4473661607e5ffe067c55bfb0f5b0685653284d7f55082",
+      "bytes": 1440807,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0408",
+        "H-H0409",
+        "H-H0410",
+        "H-H0411",
+        "H-H0412",
+        "H-H0413",
+        "H-H0414",
+        "H-H0415",
+        "H-H0416",
+        "H-H0417",
+        "H-H0418",
+        "H-H0419",
+        "H-H0420",
+        "H-H0421",
+        "H-H0422",
+        "H-H0423",
+        "H-H0424",
+        "H-H0425",
+        "H-H0426",
+        "H-H0427",
+        "H-H0428",
+        "H-H0429",
+        "H-H0430",
+        "H-H0431"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H0. Frente, nariz, orejas y visera completas. Boca y bigote pequenos pero separados en las vistas frontales/oblicuas.",
+      "capture_validation_sha256": "7980161012f71b03e94cf12d1851ef75c76cc824922e951f14c8fc67c0849921",
+      "capture_report_sha256": "89745fc140c068a80b637162c8abed603feeaa3bba2290a884e6619350e217bc"
+    },
+    {
+      "page": 18,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-018/human-page-018-neutral-pair-0.png",
+      "sha256": "b05bbe1615e91363bbe13cf8f828880502ddf5b8caca1b974f44d6b637b986a4",
+      "bytes": 1468557,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0432",
+        "H-H0433",
+        "H-H0434",
+        "H-H0435",
+        "H-H0436",
+        "H-H0437",
+        "H-H0438",
+        "H-H0439",
+        "H-H0440",
+        "H-H0441",
+        "H-H0442",
+        "H-H0443",
+        "H-H0444",
+        "H-H0445",
+        "H-H0446",
+        "H-H0447",
+        "H-H0448",
+        "H-H0449",
+        "H-H0450",
+        "H-H0451",
+        "H-H0452",
+        "H-H0453",
+        "H-H0454",
+        "H-H0455"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H1: composicion repetida coherente; sin recorte nuevo claro ni asimetria inexplicable de partes.",
+      "capture_validation_sha256": "63896a790ee04e4421c7c30daffd54842157c63b60493c5822c36695f9d11ecd",
+      "capture_report_sha256": "9118077c8e703ec34b638a426f7257d5f14ee17ff40218628ba8271bd6ea2c60"
+    },
+    {
+      "page": 18,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-018/human-page-018-neutral-pair-1.png",
+      "sha256": "4fb5133b613b41f4a00333a6f95f803708c85c08780b59e591fb4ada07abef2d",
+      "bytes": 1200044,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0432",
+        "H-H0433",
+        "H-H0434",
+        "H-H0435",
+        "H-H0436",
+        "H-H0437",
+        "H-H0438",
+        "H-H0439",
+        "H-H0440",
+        "H-H0441",
+        "H-H0442",
+        "H-H0443",
+        "H-H0444",
+        "H-H0445",
+        "H-H0446",
+        "H-H0447",
+        "H-H0448",
+        "H-H0449",
+        "H-H0450",
+        "H-H0451",
+        "H-H0452",
+        "H-H0453",
+        "H-H0454",
+        "H-H0455"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H1: composicion repetida coherente; sin recorte nuevo claro ni asimetria inexplicable de partes.",
+      "capture_validation_sha256": "63896a790ee04e4421c7c30daffd54842157c63b60493c5822c36695f9d11ecd",
+      "capture_report_sha256": "9118077c8e703ec34b638a426f7257d5f14ee17ff40218628ba8271bd6ea2c60"
+    },
+    {
+      "page": 18,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-018/human-page-018-neutral-pair-2.png",
+      "sha256": "39f0b019f2951ac084e9f83b2558ed535afeb541eb4458163143a53bbca912d3",
+      "bytes": 1347702,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0432",
+        "H-H0433",
+        "H-H0434",
+        "H-H0435",
+        "H-H0436",
+        "H-H0437",
+        "H-H0438",
+        "H-H0439",
+        "H-H0440",
+        "H-H0441",
+        "H-H0442",
+        "H-H0443",
+        "H-H0444",
+        "H-H0445",
+        "H-H0446",
+        "H-H0447",
+        "H-H0448",
+        "H-H0449",
+        "H-H0450",
+        "H-H0451",
+        "H-H0452",
+        "H-H0453",
+        "H-H0454",
+        "H-H0455"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H1: composicion repetida coherente; sin recorte nuevo claro ni asimetria inexplicable de partes.",
+      "capture_validation_sha256": "63896a790ee04e4421c7c30daffd54842157c63b60493c5822c36695f9d11ecd",
+      "capture_report_sha256": "9118077c8e703ec34b638a426f7257d5f14ee17ff40218628ba8271bd6ea2c60"
+    },
+    {
+      "page": 18,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-018/human-page-018-neutral-pair-3.png",
+      "sha256": "20e2c5b02349ef45fa783e277f0f932b4675d46c06a693b091441bdddf6d7a6b",
+      "bytes": 1440394,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0432",
+        "H-H0433",
+        "H-H0434",
+        "H-H0435",
+        "H-H0436",
+        "H-H0437",
+        "H-H0438",
+        "H-H0439",
+        "H-H0440",
+        "H-H0441",
+        "H-H0442",
+        "H-H0443",
+        "H-H0444",
+        "H-H0445",
+        "H-H0446",
+        "H-H0447",
+        "H-H0448",
+        "H-H0449",
+        "H-H0450",
+        "H-H0451",
+        "H-H0452",
+        "H-H0453",
+        "H-H0454",
+        "H-H0455"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H1: composicion repetida coherente; sin recorte nuevo claro ni asimetria inexplicable de partes.",
+      "capture_validation_sha256": "63896a790ee04e4421c7c30daffd54842157c63b60493c5822c36695f9d11ecd",
+      "capture_report_sha256": "9118077c8e703ec34b638a426f7257d5f14ee17ff40218628ba8271bd6ea2c60"
+    },
+    {
+      "page": 19,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-019/human-page-019-neutral-pair-0.png",
+      "sha256": "2373090e2819d999acebf2d8849ad057fa42c6eaa959447f90068eb8e2521ea9",
+      "bytes": 1468888,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0456",
+        "H-H0457",
+        "H-H0458",
+        "H-H0459",
+        "H-H0460",
+        "H-H0461",
+        "H-H0462",
+        "H-H0463",
+        "H-H0464",
+        "H-H0465",
+        "H-H0466",
+        "H-H0467",
+        "H-H0468",
+        "H-H0469",
+        "H-H0470",
+        "H-H0471",
+        "H-H0472",
+        "H-H0473",
+        "H-H0474",
+        "H-H0475",
+        "H-H0476",
+        "H-H0477",
+        "H-H0478",
+        "H-H0479"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H1/H2. Mismos limites de oclusion propia desde arriba; sin defecto nuevo inequivoco en esta inspeccion.",
+      "capture_validation_sha256": "ec2c84ed691d071241f98d4e7a9adb7bd087611597642799bf365d0d763c28e0",
+      "capture_report_sha256": "126898c30d3d862fb76cd876ecc139f351d8bc323ff3135d513dbf4e2131eddd"
+    },
+    {
+      "page": 19,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-019/human-page-019-neutral-pair-1.png",
+      "sha256": "3a9afa9e5cfbf056bdb7eea91e0c8f2a620a4db12fa6393ecbf07328b8567264",
+      "bytes": 1201389,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0456",
+        "H-H0457",
+        "H-H0458",
+        "H-H0459",
+        "H-H0460",
+        "H-H0461",
+        "H-H0462",
+        "H-H0463",
+        "H-H0464",
+        "H-H0465",
+        "H-H0466",
+        "H-H0467",
+        "H-H0468",
+        "H-H0469",
+        "H-H0470",
+        "H-H0471",
+        "H-H0472",
+        "H-H0473",
+        "H-H0474",
+        "H-H0475",
+        "H-H0476",
+        "H-H0477",
+        "H-H0478",
+        "H-H0479"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H1/H2. Mismos limites de oclusion propia desde arriba; sin defecto nuevo inequivoco en esta inspeccion.",
+      "capture_validation_sha256": "ec2c84ed691d071241f98d4e7a9adb7bd087611597642799bf365d0d763c28e0",
+      "capture_report_sha256": "126898c30d3d862fb76cd876ecc139f351d8bc323ff3135d513dbf4e2131eddd"
+    },
+    {
+      "page": 19,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-019/human-page-019-neutral-pair-2.png",
+      "sha256": "b103517818742388b0951b7eb36712edfc11fd1a0a9e44fe95ee6032c8633709",
+      "bytes": 1349496,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0456",
+        "H-H0457",
+        "H-H0458",
+        "H-H0459",
+        "H-H0460",
+        "H-H0461",
+        "H-H0462",
+        "H-H0463",
+        "H-H0464",
+        "H-H0465",
+        "H-H0466",
+        "H-H0467",
+        "H-H0468",
+        "H-H0469",
+        "H-H0470",
+        "H-H0471",
+        "H-H0472",
+        "H-H0473",
+        "H-H0474",
+        "H-H0475",
+        "H-H0476",
+        "H-H0477",
+        "H-H0478",
+        "H-H0479"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H1/H2. Mismos limites de oclusion propia desde arriba; sin defecto nuevo inequivoco en esta inspeccion.",
+      "capture_validation_sha256": "ec2c84ed691d071241f98d4e7a9adb7bd087611597642799bf365d0d763c28e0",
+      "capture_report_sha256": "126898c30d3d862fb76cd876ecc139f351d8bc323ff3135d513dbf4e2131eddd"
+    },
+    {
+      "page": 19,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-019/human-page-019-neutral-pair-3.png",
+      "sha256": "9eb06ec911b6c67c247528c1edd478dd6e009f5ef58622a40227797ed7ab55a1",
+      "bytes": 1441398,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0456",
+        "H-H0457",
+        "H-H0458",
+        "H-H0459",
+        "H-H0460",
+        "H-H0461",
+        "H-H0462",
+        "H-H0463",
+        "H-H0464",
+        "H-H0465",
+        "H-H0466",
+        "H-H0467",
+        "H-H0468",
+        "H-H0469",
+        "H-H0470",
+        "H-H0471",
+        "H-H0472",
+        "H-H0473",
+        "H-H0474",
+        "H-H0475",
+        "H-H0476",
+        "H-H0477",
+        "H-H0478",
+        "H-H0479"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Visera A1 con pelo H1/H2. Mismos limites de oclusion propia desde arriba; sin defecto nuevo inequivoco en esta inspeccion.",
+      "capture_validation_sha256": "ec2c84ed691d071241f98d4e7a9adb7bd087611597642799bf365d0d763c28e0",
+      "capture_report_sha256": "126898c30d3d862fb76cd876ecc139f351d8bc323ff3135d513dbf4e2131eddd"
+    },
+    {
+      "page": 20,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-020/human-page-020-neutral-pair-0.png",
+      "sha256": "f17ba1159b23cc61d9a6c41201bbd5faf85fe48bee3b55aaff9f26ab994c0abc",
+      "bytes": 1485033,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0480",
+        "H-H0481",
+        "H-H0482",
+        "H-H0483",
+        "H-H0484",
+        "H-H0485",
+        "H-H0486",
+        "H-H0487",
+        "H-H0488",
+        "H-H0489",
+        "H-H0490",
+        "H-H0491",
+        "H-H0492",
+        "H-H0493",
+        "H-H0494",
+        "H-H0495",
+        "H-H0496",
+        "H-H0497",
+        "H-H0498",
+        "H-H0499",
+        "H-H0500",
+        "H-H0501",
+        "H-H0502",
+        "H-H0503"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Transicion A1 a gafas A2/H0. Aros y patillas presentes en ambos perfiles; sin aro faltante, inversion o cruce amplio evidente con ojo/bigote.",
+      "capture_validation_sha256": "a2ab062b96d93e5a74b419905b697ad77c5fd3e8af97299e21fcaec0f7eff557",
+      "capture_report_sha256": "4a6b0cfaf8b5ac697d8b4e1f5621a838637692093b81480f5568d56dfae21c74"
+    },
+    {
+      "page": 20,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-020/human-page-020-neutral-pair-1.png",
+      "sha256": "f3187e198db4e928b6a50092d46752b12580aac77629ffb775aba43bcc8931fa",
+      "bytes": 1135190,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0480",
+        "H-H0481",
+        "H-H0482",
+        "H-H0483",
+        "H-H0484",
+        "H-H0485",
+        "H-H0486",
+        "H-H0487",
+        "H-H0488",
+        "H-H0489",
+        "H-H0490",
+        "H-H0491",
+        "H-H0492",
+        "H-H0493",
+        "H-H0494",
+        "H-H0495",
+        "H-H0496",
+        "H-H0497",
+        "H-H0498",
+        "H-H0499",
+        "H-H0500",
+        "H-H0501",
+        "H-H0502",
+        "H-H0503"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Transicion A1 a gafas A2/H0. Aros y patillas presentes en ambos perfiles; sin aro faltante, inversion o cruce amplio evidente con ojo/bigote.",
+      "capture_validation_sha256": "a2ab062b96d93e5a74b419905b697ad77c5fd3e8af97299e21fcaec0f7eff557",
+      "capture_report_sha256": "4a6b0cfaf8b5ac697d8b4e1f5621a838637692093b81480f5568d56dfae21c74"
+    },
+    {
+      "page": 20,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-020/human-page-020-neutral-pair-2.png",
+      "sha256": "b728dc0fc6a8130b9bd7549b0f380ac72bacc909c2f18469d7001ffafd5daa15",
+      "bytes": 1269709,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0480",
+        "H-H0481",
+        "H-H0482",
+        "H-H0483",
+        "H-H0484",
+        "H-H0485",
+        "H-H0486",
+        "H-H0487",
+        "H-H0488",
+        "H-H0489",
+        "H-H0490",
+        "H-H0491",
+        "H-H0492",
+        "H-H0493",
+        "H-H0494",
+        "H-H0495",
+        "H-H0496",
+        "H-H0497",
+        "H-H0498",
+        "H-H0499",
+        "H-H0500",
+        "H-H0501",
+        "H-H0502",
+        "H-H0503"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Transicion A1 a gafas A2/H0. Aros y patillas presentes en ambos perfiles; sin aro faltante, inversion o cruce amplio evidente con ojo/bigote.",
+      "capture_validation_sha256": "a2ab062b96d93e5a74b419905b697ad77c5fd3e8af97299e21fcaec0f7eff557",
+      "capture_report_sha256": "4a6b0cfaf8b5ac697d8b4e1f5621a838637692093b81480f5568d56dfae21c74"
+    },
+    {
+      "page": 20,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-020/human-page-020-neutral-pair-3.png",
+      "sha256": "42a2b21b5e05bcb385757c0d362894d67526442bb600d414dbda03c73cc4639e",
+      "bytes": 1440293,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0480",
+        "H-H0481",
+        "H-H0482",
+        "H-H0483",
+        "H-H0484",
+        "H-H0485",
+        "H-H0486",
+        "H-H0487",
+        "H-H0488",
+        "H-H0489",
+        "H-H0490",
+        "H-H0491",
+        "H-H0492",
+        "H-H0493",
+        "H-H0494",
+        "H-H0495",
+        "H-H0496",
+        "H-H0497",
+        "H-H0498",
+        "H-H0499",
+        "H-H0500",
+        "H-H0501",
+        "H-H0502",
+        "H-H0503"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Transicion A1 a gafas A2/H0. Aros y patillas presentes en ambos perfiles; sin aro faltante, inversion o cruce amplio evidente con ojo/bigote.",
+      "capture_validation_sha256": "a2ab062b96d93e5a74b419905b697ad77c5fd3e8af97299e21fcaec0f7eff557",
+      "capture_report_sha256": "4a6b0cfaf8b5ac697d8b4e1f5621a838637692093b81480f5568d56dfae21c74"
+    },
+    {
+      "page": 21,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-021/human-page-021-neutral-pair-0.png",
+      "sha256": "a3e60825c8dff12ec0bee423b5142d56f153a495198373ebf063c1289db82c59",
+      "bytes": 1499644,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0504",
+        "H-H0505",
+        "H-H0506",
+        "H-H0507",
+        "H-H0508",
+        "H-H0509",
+        "H-H0510",
+        "H-H0511",
+        "H-H0512",
+        "H-H0513",
+        "H-H0514",
+        "H-H0515",
+        "H-H0516",
+        "H-H0517",
+        "H-H0518",
+        "H-H0519",
+        "H-H0520",
+        "H-H0521",
+        "H-H0522",
+        "H-H0523",
+        "H-H0524",
+        "H-H0525",
+        "H-H0526",
+        "H-H0527"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2 con H0/H1. Parejas de perfiles y vistas superiores/inferiores coherentes; sin nuevo defecto claro de composicion.",
+      "capture_validation_sha256": "c6f2f4b0591c665885bb8654f229128007f07f7a3706e861120eb4217fe01d47",
+      "capture_report_sha256": "52cca32707c2bd7ca14b1e832bab75f82633ef2b9eaea7a927aab8e378314c7f"
+    },
+    {
+      "page": 21,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-021/human-page-021-neutral-pair-1.png",
+      "sha256": "ef547164131810b47f370d1e1ea87a34c20898360ab161257f6e2e941643dee0",
+      "bytes": 1132436,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0504",
+        "H-H0505",
+        "H-H0506",
+        "H-H0507",
+        "H-H0508",
+        "H-H0509",
+        "H-H0510",
+        "H-H0511",
+        "H-H0512",
+        "H-H0513",
+        "H-H0514",
+        "H-H0515",
+        "H-H0516",
+        "H-H0517",
+        "H-H0518",
+        "H-H0519",
+        "H-H0520",
+        "H-H0521",
+        "H-H0522",
+        "H-H0523",
+        "H-H0524",
+        "H-H0525",
+        "H-H0526",
+        "H-H0527"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2 con H0/H1. Parejas de perfiles y vistas superiores/inferiores coherentes; sin nuevo defecto claro de composicion.",
+      "capture_validation_sha256": "c6f2f4b0591c665885bb8654f229128007f07f7a3706e861120eb4217fe01d47",
+      "capture_report_sha256": "52cca32707c2bd7ca14b1e832bab75f82633ef2b9eaea7a927aab8e378314c7f"
+    },
+    {
+      "page": 21,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-021/human-page-021-neutral-pair-2.png",
+      "sha256": "1655bd6b6beeefd9237dcf141c630cf4f1e7a4e2128e2d773ad4c63d2ac4b708",
+      "bytes": 1276671,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0504",
+        "H-H0505",
+        "H-H0506",
+        "H-H0507",
+        "H-H0508",
+        "H-H0509",
+        "H-H0510",
+        "H-H0511",
+        "H-H0512",
+        "H-H0513",
+        "H-H0514",
+        "H-H0515",
+        "H-H0516",
+        "H-H0517",
+        "H-H0518",
+        "H-H0519",
+        "H-H0520",
+        "H-H0521",
+        "H-H0522",
+        "H-H0523",
+        "H-H0524",
+        "H-H0525",
+        "H-H0526",
+        "H-H0527"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2 con H0/H1. Parejas de perfiles y vistas superiores/inferiores coherentes; sin nuevo defecto claro de composicion.",
+      "capture_validation_sha256": "c6f2f4b0591c665885bb8654f229128007f07f7a3706e861120eb4217fe01d47",
+      "capture_report_sha256": "52cca32707c2bd7ca14b1e832bab75f82633ef2b9eaea7a927aab8e378314c7f"
+    },
+    {
+      "page": 21,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-021/human-page-021-neutral-pair-3.png",
+      "sha256": "dad96c75b00f0ac5992b504182dde5b2acc561f437f4164eb63c132a03bee17e",
+      "bytes": 1456225,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0504",
+        "H-H0505",
+        "H-H0506",
+        "H-H0507",
+        "H-H0508",
+        "H-H0509",
+        "H-H0510",
+        "H-H0511",
+        "H-H0512",
+        "H-H0513",
+        "H-H0514",
+        "H-H0515",
+        "H-H0516",
+        "H-H0517",
+        "H-H0518",
+        "H-H0519",
+        "H-H0520",
+        "H-H0521",
+        "H-H0522",
+        "H-H0523",
+        "H-H0524",
+        "H-H0525",
+        "H-H0526",
+        "H-H0527"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2 con H0/H1. Parejas de perfiles y vistas superiores/inferiores coherentes; sin nuevo defecto claro de composicion.",
+      "capture_validation_sha256": "c6f2f4b0591c665885bb8654f229128007f07f7a3706e861120eb4217fe01d47",
+      "capture_report_sha256": "52cca32707c2bd7ca14b1e832bab75f82633ef2b9eaea7a927aab8e378314c7f"
+    },
+    {
+      "page": 22,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-022/human-page-022-neutral-pair-0.png",
+      "sha256": "4bf067054af44b8f8db4bc1eef5b9f072110254bc6a570e6c4d664db2016af69",
+      "bytes": 1506669,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0528",
+        "H-H0529",
+        "H-H0530",
+        "H-H0531",
+        "H-H0532",
+        "H-H0533",
+        "H-H0534",
+        "H-H0535",
+        "H-H0536",
+        "H-H0537",
+        "H-H0538",
+        "H-H0539",
+        "H-H0540",
+        "H-H0541",
+        "H-H0542",
+        "H-H0543",
+        "H-H0544",
+        "H-H0545",
+        "H-H0546",
+        "H-H0547",
+        "H-H0548",
+        "H-H0549",
+        "H-H0550",
+        "H-H0551"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2 con H1/H2. Ojos y bocas siguen legibles de frente; patillas simetricas en ambos lados, sin recorte evidente.",
+      "capture_validation_sha256": "f1b51b231926fe8c04c1ba4e81dccbe7a4722266c894a0301c23837e8dc72160",
+      "capture_report_sha256": "0c2585c7031edf0dcdc061c95f0b691ac6efb7b71f688176f4dbb455b33fb694"
+    },
+    {
+      "page": 22,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-022/human-page-022-neutral-pair-1.png",
+      "sha256": "832338a3fa03f02e8c02b63a511070d7942a0c39a4ad9ea93dbfd6e91c681d44",
+      "bytes": 1130920,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0528",
+        "H-H0529",
+        "H-H0530",
+        "H-H0531",
+        "H-H0532",
+        "H-H0533",
+        "H-H0534",
+        "H-H0535",
+        "H-H0536",
+        "H-H0537",
+        "H-H0538",
+        "H-H0539",
+        "H-H0540",
+        "H-H0541",
+        "H-H0542",
+        "H-H0543",
+        "H-H0544",
+        "H-H0545",
+        "H-H0546",
+        "H-H0547",
+        "H-H0548",
+        "H-H0549",
+        "H-H0550",
+        "H-H0551"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2 con H1/H2. Ojos y bocas siguen legibles de frente; patillas simetricas en ambos lados, sin recorte evidente.",
+      "capture_validation_sha256": "f1b51b231926fe8c04c1ba4e81dccbe7a4722266c894a0301c23837e8dc72160",
+      "capture_report_sha256": "0c2585c7031edf0dcdc061c95f0b691ac6efb7b71f688176f4dbb455b33fb694"
+    },
+    {
+      "page": 22,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-022/human-page-022-neutral-pair-2.png",
+      "sha256": "640a54003f22743abd4dd2f621b991cf55a961392e5c2ac25d284c5efb33647e",
+      "bytes": 1292750,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0528",
+        "H-H0529",
+        "H-H0530",
+        "H-H0531",
+        "H-H0532",
+        "H-H0533",
+        "H-H0534",
+        "H-H0535",
+        "H-H0536",
+        "H-H0537",
+        "H-H0538",
+        "H-H0539",
+        "H-H0540",
+        "H-H0541",
+        "H-H0542",
+        "H-H0543",
+        "H-H0544",
+        "H-H0545",
+        "H-H0546",
+        "H-H0547",
+        "H-H0548",
+        "H-H0549",
+        "H-H0550",
+        "H-H0551"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2 con H1/H2. Ojos y bocas siguen legibles de frente; patillas simetricas en ambos lados, sin recorte evidente.",
+      "capture_validation_sha256": "f1b51b231926fe8c04c1ba4e81dccbe7a4722266c894a0301c23837e8dc72160",
+      "capture_report_sha256": "0c2585c7031edf0dcdc061c95f0b691ac6efb7b71f688176f4dbb455b33fb694"
+    },
+    {
+      "page": 22,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-022/human-page-022-neutral-pair-3.png",
+      "sha256": "531de06c994b27b6f2d3c4424c4b126e911998c2952c2fc1194578ee2a22c73d",
+      "bytes": 1487823,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0528",
+        "H-H0529",
+        "H-H0530",
+        "H-H0531",
+        "H-H0532",
+        "H-H0533",
+        "H-H0534",
+        "H-H0535",
+        "H-H0536",
+        "H-H0537",
+        "H-H0538",
+        "H-H0539",
+        "H-H0540",
+        "H-H0541",
+        "H-H0542",
+        "H-H0543",
+        "H-H0544",
+        "H-H0545",
+        "H-H0546",
+        "H-H0547",
+        "H-H0548",
+        "H-H0549",
+        "H-H0550",
+        "H-H0551"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2 con H1/H2. Ojos y bocas siguen legibles de frente; patillas simetricas en ambos lados, sin recorte evidente.",
+      "capture_validation_sha256": "f1b51b231926fe8c04c1ba4e81dccbe7a4722266c894a0301c23837e8dc72160",
+      "capture_report_sha256": "0c2585c7031edf0dcdc061c95f0b691ac6efb7b71f688176f4dbb455b33fb694"
+    },
+    {
+      "page": 23,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-023/human-page-023-neutral-pair-0.png",
+      "sha256": "c7dc92e7cee750f70853b6b02d01b982f9f8cf7df611db04d794ee8c358ebcd2",
+      "bytes": 1524538,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "front",
+        "quarter-left"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0552",
+        "H-H0553",
+        "H-H0554",
+        "H-H0555",
+        "H-H0556",
+        "H-H0557",
+        "H-H0558",
+        "H-H0559",
+        "H-H0560",
+        "H-H0561",
+        "H-H0562",
+        "H-H0563",
+        "H-H0564",
+        "H-H0565",
+        "H-H0566",
+        "H-H0567",
+        "H-H0568",
+        "H-H0569",
+        "H-H0570",
+        "H-H0571",
+        "H-H0572",
+        "H-H0573",
+        "H-H0574",
+        "H-H0575"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2/H2 y retorno a gorro A3/H0 con bigote. Cambio de accesorio coincide con las etiquetas; no celda vacia ni defecto nuevo claro observado.",
+      "capture_validation_sha256": "f3210e9524af6b5fb0090696194388ae590b25ef1249f9993d70aaa0686f41ea",
+      "capture_report_sha256": "b2fa50a22c0b2dac07108111e045c1e9583c19162bbfc6671ecdd783d2c2c0e6"
+    },
+    {
+      "page": 23,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-023/human-page-023-neutral-pair-1.png",
+      "sha256": "ebe92679083d72cafc616a32a67ca3f0f98205d6a70da279fd3c95deb858949b",
+      "bytes": 1171627,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "profile-left",
+        "profile-right"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0552",
+        "H-H0553",
+        "H-H0554",
+        "H-H0555",
+        "H-H0556",
+        "H-H0557",
+        "H-H0558",
+        "H-H0559",
+        "H-H0560",
+        "H-H0561",
+        "H-H0562",
+        "H-H0563",
+        "H-H0564",
+        "H-H0565",
+        "H-H0566",
+        "H-H0567",
+        "H-H0568",
+        "H-H0569",
+        "H-H0570",
+        "H-H0571",
+        "H-H0572",
+        "H-H0573",
+        "H-H0574",
+        "H-H0575"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2/H2 y retorno a gorro A3/H0 con bigote. Cambio de accesorio coincide con las etiquetas; no celda vacia ni defecto nuevo claro observado.",
+      "capture_validation_sha256": "f3210e9524af6b5fb0090696194388ae590b25ef1249f9993d70aaa0686f41ea",
+      "capture_report_sha256": "b2fa50a22c0b2dac07108111e045c1e9583c19162bbfc6671ecdd783d2c2c0e6"
+    },
+    {
+      "page": 23,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-023/human-page-023-neutral-pair-2.png",
+      "sha256": "7c5372972f713c88c9a266bdb21e7aca35ff788553ea420f25fca3f5264b82cf",
+      "bytes": 1342571,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "quarter-right",
+        "back"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0552",
+        "H-H0553",
+        "H-H0554",
+        "H-H0555",
+        "H-H0556",
+        "H-H0557",
+        "H-H0558",
+        "H-H0559",
+        "H-H0560",
+        "H-H0561",
+        "H-H0562",
+        "H-H0563",
+        "H-H0564",
+        "H-H0565",
+        "H-H0566",
+        "H-H0567",
+        "H-H0568",
+        "H-H0569",
+        "H-H0570",
+        "H-H0571",
+        "H-H0572",
+        "H-H0573",
+        "H-H0574",
+        "H-H0575"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2/H2 y retorno a gorro A3/H0 con bigote. Cambio de accesorio coincide con las etiquetas; no celda vacia ni defecto nuevo claro observado.",
+      "capture_validation_sha256": "f3210e9524af6b5fb0090696194388ae590b25ef1249f9993d70aaa0686f41ea",
+      "capture_report_sha256": "b2fa50a22c0b2dac07108111e045c1e9583c19162bbfc6671ecdd783d2c2c0e6"
+    },
+    {
+      "page": 23,
+      "file": "outputs/0.9-facial-gallery-trim2/neutral-human-023/human-page-023-neutral-pair-3.png",
+      "sha256": "86385186539a7c718127ef64df5e64e3aaf2948f3fb3a69b214d3080cfe1a3e8",
+      "bytes": 1532570,
+      "original_pixels": [
+        3840,
+        3360
+      ],
+      "observed_tool_pixels": [
+        1682,
+        1472
+      ],
+      "views": [
+        "above-quarter",
+        "below-quarter"
+      ],
+      "state": "neutral",
+      "head_ids": [
+        "H-H0552",
+        "H-H0553",
+        "H-H0554",
+        "H-H0555",
+        "H-H0556",
+        "H-H0557",
+        "H-H0558",
+        "H-H0559",
+        "H-H0560",
+        "H-H0561",
+        "H-H0562",
+        "H-H0563",
+        "H-H0564",
+        "H-H0565",
+        "H-H0566",
+        "H-H0567",
+        "H-H0568",
+        "H-H0569",
+        "H-H0570",
+        "H-H0571",
+        "H-H0572",
+        "H-H0573",
+        "H-H0574",
+        "H-H0575"
+      ],
+      "inspection": "full_sheet_visual_overview",
+      "result": "no_new_unequivocal_defect_observed",
+      "note": "Gafas A2/H2 y retorno a gorro A3/H0 con bigote. Cambio de accesorio coincide con las etiquetas; no celda vacia ni defecto nuevo claro observado.",
+      "capture_validation_sha256": "f3210e9524af6b5fb0090696194388ae590b25ef1249f9993d70aaa0686f41ea",
+      "capture_report_sha256": "b2fa50a22c0b2dac07108111e045c1e9583c19162bbfc6671ecdd783d2c2c0e6"
+    }
+  ]
+}
