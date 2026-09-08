@@ -264,6 +264,7 @@ var _settings_controls: Dictionary = {}
 var _avatar_preview: SubViewportContainer
 var _custom_category := "outfit"
 var _category_buttons: Dictionary = {}
+var _custom_category_scroll: ScrollContainer
 var _custom_options: VBoxContainer
 var _custom_option_buttons: Array[Button] = []
 var _custom_view_buttons: Dictionary = {}
@@ -579,7 +580,7 @@ func _build_home() -> void:
 	_invitation_box.add_child(_label("INVITACIÓN", 13, INK))
 	_invitation_edit = LineEdit.new()
 	_invitation_edit.max_length = 1024
-	_invitation_edit.placeholder_text = "Pegá acá la invitación DD3-…"
+	_invitation_edit.placeholder_text = "Pegá acá la invitación " + InvitationCodec.PREFIX + "…"
 	_invitation_edit.text = Prefs.invitation
 	_invitation_box.add_child(_invitation_edit)
 	_address_box = _vbox(_connection_form, 5)
@@ -1221,17 +1222,27 @@ func _build_customization() -> void:
 	columns.add_theme_constant_override("separation",16)
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	frame.add_child(columns)
-	var categories := _vbox(columns,8)
-	categories.custom_minimum_size.x = 160
-	var titles := {"color":"Color","face":"Cara","hair":"Pelo / antenas","outfit":"Ropa / cuerpo","accessory":"Accesorios","footwear":"Pies / patas","accent":"Detalles"}
-	for key: String in CosmeticsData.CATEGORY_KEYS:
+	_custom_category_scroll = _scroll(columns)
+	_custom_category_scroll.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_custom_category_scroll.custom_minimum_size.x = 182
+	_custom_category_scroll.follow_focus = true
+	var categories := _vbox(_custom_category_scroll,4)
+	categories.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var titles := {"color":"Color de ropa","eyes":"Ojos","brows":"Cejas","mouth":"Boca","mustache":"Bigote","beard":"Barba","hair":"Pelo","hair_color":"Color de pelo","outfit":"Ropa","accessory":"Accesorios","footwear":"Pantuflas","accent":"Detalles"}
+	var order:Array[String]=["eyes","brows","mouth","mustache","beard","hair","hair_color","accessory","outfit","footwear","color","accent"]
+	for key: String in order:
+		if key not in CosmeticsData.category_keys("human"):continue
+		if key in ["eyes","accessory"]:
+			categories.add_child(_label("ROSTRO" if key=="eyes" else "TU ESTILO",12,MUTED))
 		var button := _small_button(titles[key],_select_custom_category.bind(key))
 		button.toggle_mode = true
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.icon = _custom_thumbnail("human",key,0)
-		button.add_theme_constant_override("icon_max_width",30)
-		button.custom_minimum_size.y = 51
+		button.add_theme_constant_override("icon_max_width",24)
+		button.custom_minimum_size.y = 36
 		button.add_theme_font_size_override("font_size",14)
+		for state:String in ["normal","hover","pressed","hover_pressed"]:
+			button.add_theme_stylebox_override(state,_style(PAPER if state=="normal" else MINT,3,8,4))
 		categories.add_child(button)
 		_category_buttons[key] = button
 	var studio := _vbox(columns,8)
@@ -1261,6 +1272,7 @@ func _build_customization() -> void:
 	var panel := _panel(columns)
 	panel.custom_minimum_size.x = 336
 	var scroll := _scroll(panel)
+	scroll.follow_focus = true
 	_custom_options = _vbox(scroll,10)
 	_custom_options.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_custom_caption = _label("Guardado en esta PC · solo apariencia",14,INK,true)
@@ -1313,21 +1325,27 @@ func _commit_cosmetics() -> void:
 
 
 func _refresh_customization() -> void:
+	var valid_keys:Array[String]=CosmeticsData.category_keys(_custom_role)
+	if _custom_category not in valid_keys:_custom_category="eyes"
 	var appearance: Dictionary = CosmeticsData.appearance_for(Prefs.cosmetics,_custom_role)
 	for role: String in _custom_role_buttons:
 		_custom_role_buttons[role].button_pressed = role == _custom_role
 	for key: String in _category_buttons:
+		_category_buttons[key].visible = key in valid_keys
 		_category_buttons[key].button_pressed = key == _custom_category
-		_category_buttons[key].icon = _custom_thumbnail(_custom_role,key,0)
+		if key in valid_keys:_category_buttons[key].icon = _custom_thumbnail(_custom_role,key,0)
 	_category_buttons.hair.text = "Pelo" if _custom_role == "human" else "Antenas"
 	_category_buttons.outfit.text = "Ropa" if _custom_role == "human" else "Cuerpo"
 	_category_buttons.footwear.text = "Pantuflas" if _custom_role == "human" else "Patas"
+	_category_buttons.color.text = "Color de ropa" if _custom_role == "human" else "Color del cuerpo"
 	for child: Node in _custom_options.get_children():
 		_custom_options.remove_child(child)
 		child.queue_free()
 	_custom_option_buttons.clear()
 	var names: Array = CosmeticsData.option_names(_custom_role,_custom_category)
-	_custom_options.add_child(_label("ELEGÍ TU ESTILO",19,INK))
+	_custom_options.add_child(_label(str(_category_buttons[_custom_category].text).to_upper(),19,INK))
+	if _custom_category=="hair_color":
+		_custom_options.add_child(_label("Pelo, cejas, bigote y barba comparten este color.",13,INK,true))
 	var grid := GridContainer.new()
 	grid.columns = 2
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1358,13 +1376,14 @@ func _refresh_customization() -> void:
 		button.set_meta("appearance_index",index)
 		grid.add_child(button)
 		_custom_option_buttons.append(button)
-	_custom_caption.text = "✓ Guardado · " + ("Humano" if _custom_role == "human" else "Mosquito") + " · " + str(names[int(appearance.get(_custom_category,0))]) + "    /    Solo apariencia"
+	var selected_name:String=str(names[clampi(int(appearance.get(_custom_category,0)),0,names.size()-1)]) if not names.is_empty() else "Elegí una opción"
+	_custom_caption.text = "✓ Guardado · " + ("Humano" if _custom_role == "human" else "Mosquito") + " · " + selected_name + "    /    Solo apariencia"
 	_avatar_preview.set_avatar(_custom_role,appearance)
 	if _screen == "customization":
 		_set_focus_scope(_customization)
 
 func _select_custom_category(key: String) -> void:
-	if key not in CosmeticsData.CATEGORY_KEYS: return
+	if key not in CosmeticsData.category_keys(_custom_role): return
 	_custom_category = key
 	_refresh_customization()
 	_focus_custom_category()
@@ -1379,15 +1398,59 @@ func _select_custom_option(index: int) -> void:
 
 
 func _custom_thumbnail(role: String, category: String, index: int) -> Texture2D:
+	if category in ["eyes","brows","mouth","mustache","beard","hair_color"]:
+		var key:String="parts_%s_%s_%d"%[role,category,index]
+		if not _thumbnail_cache.has(key):
+			var picture:=Image.new()
+			if picture.load_svg_from_string(_feature_svg(role,category,index))==OK:
+				_thumbnail_cache[key]=ImageTexture.create_from_image(picture)
+		return _thumbnail_cache.get(key) as Texture2D
 	var file: String = "swatch_%d" % index if category in ["color","accent"] else "%s_%s_%d" % [role,category,index]
 	if not _thumbnail_cache.has(file):
 		_thumbnail_cache[file] = load("res://assets/icons/customization/%s.svg" % file)
 	return _thumbnail_cache[file] as Texture2D
 
 
+func _feature_svg(role:String,category:String,index:int)->String:
+	# Small original diagrams describe only the selected part; the adjacent 3D
+	# preview shows its exact mesh, expression, color and relationship to others.
+	var ink:="#263a43"
+	var part:String=""
+	if category=="hair_color":
+		var color:String=CosmeticsData.HAIR_PALETTE[clampi(index,0,CosmeticsData.HAIR_PALETTE.size()-1)].to_html(false)
+		part='<path d="M20 78 V44 Q20 18 59 17 Q99 18 100 48 V78 L88 65 L78 76 L67 65 L56 78 L43 65 L31 78Z" fill="#%s" stroke="%s" stroke-width="4"/>'%[color,ink]
+	elif category=="eyes":
+		var sleepy:bool=index==1 if role=="human" else index==2
+		if sleepy:part='<path d="M25 54 Q41 69 54 54 M66 54 Q82 69 95 54 M26 52H53 M67 52H94" fill="none" stroke="%s" stroke-width="5" stroke-linecap="round"/>'%ink
+		elif role=="human" and index==2:part='<path d="M25 49 Q40 68 55 49 M65 49 Q80 68 95 49" fill="#fff8e4"/><path d="M25 49H55 M65 49H95 M42 51V58 M78 51V58" fill="none" stroke="%s" stroke-width="5" stroke-linecap="round"/>'%ink
+		else:part='<ellipse cx="40" cy="54" rx="16" ry="20" fill="#fff8e4"/><ellipse cx="80" cy="54" rx="16" ry="20" fill="#fff8e4"/><ellipse cx="43" cy="56" rx="6" ry="11" fill="%s"/><ellipse cx="77" cy="56" rx="6" ry="11" fill="%s"/>'%[ink,ink]
+	elif category=="brows":
+		var paths:Array[String]=['M25 51 Q40 40 53 49 M67 49 Q82 40 96 51','M25 45 Q40 39 53 45 M67 45 Q82 39 96 45','M25 43L53 54 M67 54L96 43']
+		part='<path d="%s" fill="none" stroke="%s" stroke-width="9" stroke-linecap="round"/>'%[paths[index],ink]
+	elif category=="mouth":
+		var paths:Array[String]=['M31 50 Q60 77 90 50','M39 61 Q60 55 81 61','M33 58 L87 58']
+		part='<path d="%s" fill="none" stroke="%s" stroke-width="6" stroke-linecap="round"/>'%[paths[index],ink]
+	elif category=="mustache":
+		if index==1:part='<path d="M59 43 Q47 37 32 49 L25 64 Q45 66 60 54 Q76 66 97 64 L89 49 Q72 37 59 43Z" fill="%s"/>'%ink
+		elif index==2:part='<path d="M59 42 Q40 34 25 54 L23 82 L39 73 L43 58 L59 56 L78 59 L82 74 L97 82 L95 54 Q77 34 59 42Z" fill="%s"/>'%ink
+	else:
+		if index==1:part='<path d="M44 47 Q60 53 76 47 L73 78 Q60 90 47 78Z" fill="%s"/>'%ink
+		elif index==2:part='<path d="M25 35 L37 44 L42 61 Q60 77 78 61 L83 44 L95 35 L90 73 Q60 101 30 73Z" fill="%s"/>'%ink
+	if part.is_empty():part='<circle cx="60" cy="55" r="28" fill="none" stroke="#87959a" stroke-width="4"/><path d="M40 75L80 35" stroke="#87959a" stroke-width="4"/>'
+	return '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="100" viewBox="0 0 120 100"><rect x="3" y="3" width="114" height="94" rx="18" fill="#e6eee5"/>%s</svg>'%part
+
+
 func _focus_custom_category() -> void:
 	if _avatar_preview.has_method("focus_category"):
 		_avatar_preview.focus_category(_custom_category)
+	if _screen=="customization" and _category_buttons.has(_custom_category):
+		_reveal_custom_category.call_deferred()
+
+func _reveal_custom_category() -> void:
+	if _screen!="customization" or not _category_buttons.has(_custom_category): return
+	var button: Control = _category_buttons[_custom_category]
+	if button.is_visible_in_tree():
+		_custom_category_scroll.ensure_control_visible(button)
 
 
 func _build_practice() -> void:

@@ -4,16 +4,82 @@ Run with Blender 4.5.3: --background --python this.py -- --species both
 The input .blend files already contain the selected topology, weights, cosmetic
 parts and facial controls. Never remesh them a second time during promotion.
 """
-import argparse, hashlib, json, sys
+import argparse, hashlib, json, math, sys
 from pathlib import Path
 import bpy
 from mathutils import Vector
 
 ROOT=Path(__file__).resolve().parents[2]
 SELECTED={'human':'A','mosquito':'B'}
+sys.path.insert(0,str(ROOT/'art_source/characters/shared'))
+from facial_parts import separate_faces, add_human_facial_hair, weld_human_hair_roots
 
 def srgb_to_linear(value):
     return value/12.92 if value<=.04045 else ((value+.055)/1.055)**2.4
+
+def refine_human_cheeks():
+    """Flatten only the two inherited cheek lobes into the authored A skull.
+
+    The frozen mesh is already a single welded surface. Preserve its topology,
+    head weights, nose, jaw, all facial morph meshes and every body/hand vertex.
+    Work in the measured local cheek region and relax the resulting transition.
+    """
+    head=bpy.data.objects['human_head']
+    assert head.data.shape_keys is None
+    def smooth(a,b,x):
+        t=max(0,min(1,(x-a)/(b-a)));return t*t*(3-2*t)
+    def godot(v):return Vector((v.x,v.z,-v.y))
+    def blender(v):return Vector((v.x,-v.z,v.y))
+    original=[godot(v.co) for v in head.data.vertices]
+    weights=[]
+    points=[]
+    for q in original:
+        # Exclude the central nose and ears, including their smooth junctions.
+        weight=smooth(.065,.087,abs(q.x))*(1-smooth(.147,.175,abs(q.x)))
+        weight*=smooth(1.425,1.447,q.y)*(1-smooth(1.539,1.566,q.y))
+        weight*=smooth(-.165,-.145,q.z)*(1-smooth(-.090,-.061,q.z))
+        weights.append(weight)
+        r=q.copy()
+        if weight>0:
+            # Invert only A's scale mapping to recover the continuous skull's
+            # elliptical cross section at this height (the sample stays intact).
+            y=q.y
+            for _ in range(8):y=1.55+(q.y-1.55)/(1-.06*smooth(1.36,1.48,y))
+            vy=(y-1.55)/.222
+            cross=math.sqrt(max(.01,1-vy*vy))
+            rx=.169*(.8+.2*max(0,min(1,(vy+.85)/1.1)))*cross*(1+.08*smooth(1.36,1.48,y))
+            rz=.151*cross
+            shift=-.008*max(0,1-abs(vy+.42)*2)
+            z=-.10+(q.z+.10)/.96 if q.z<-.10 else q.z
+            radial=math.sqrt((q.x/rx)**2+((z-shift)/rz)**2)
+            factor=1-weight*max(0,1-1.0/radial)
+            r.x*=factor
+            z=shift+(z-shift)*factor
+            r.z=-.10+(z+.10)*.96 if z<-.10 else z
+        points.append(r)
+    neighbors=[set() for _ in points]
+    for edge in head.data.edges:
+        a,b=edge.vertices;neighbors[a].add(b);neighbors[b].add(a)
+    for _ in range(12):
+        result=[]
+        for i,q in enumerate(points):
+            if weights[i]>0 and neighbors[i]:
+                average=sum((points[j] for j in neighbors[i]),Vector())/len(neighbors[i])
+                result.append(q.lerp(average,.40*weights[i]))
+            else:result.append(q.copy())
+        points=result
+    changed=[]
+    for vertex,q,before in zip(head.data.vertices,points,original):
+        vertex.co=blender(q)
+        if (q-before).length>1e-7:changed.append((q-before).length)
+    head.data.update()
+    for polygon in head.data.polygons:polygon.use_smooth=True
+    head['cheek_repair']='Continuous A skull envelope; local cheek volume only'
+    return {'method':'Localized projection to authored A skull cross-section with twelve weighted relaxation passes',
+        'modified_vertices':len(changed),'total_head_vertices':len(points),
+        'max_displacement_m':max(changed,default=0),'topology_unchanged':True,
+        'facial_morph_meshes_unchanged':True,'rig_weights_unchanged':True,
+        'scope':'human_head cheeks only; excludes nose, ears, jaw and all body/hand meshes'}
 
 def add_thumb_controls(rig, bones):
     """Local hand binding repair. The selected vertex positions remain untouched."""
@@ -98,7 +164,22 @@ def export_selected(species):
     meshes=[obj for obj in bpy.context.scene.objects if obj.type=='MESH']
     assert len(rigs)==1
     frozen_manifest=json.loads((frozen/'manifest.json').read_text())
+    cheek_repair=refine_human_cheeks() if species=='human' else {}
     thumb_bones=add_thumb_controls(rigs[0],frozen_manifest['bones']) if species=='human' else {}
+    separate_faces(species)
+    if species=='human':
+        add_human_facial_hair(rigs[0])
+        weld_human_hair_roots(rigs[0])
+    meshes=[obj for obj in bpy.context.scene.objects if obj.type=='MESH']
+    default=dict(frozen_manifest['default'])
+    legacy_face=default.pop('face',0)
+    default.update(eyes=legacy_face,brows=legacy_face,mouth=legacy_face)
+    if species=='human':default.update(mustache=0,beard=0,hair_color=0)
+    for obj in meshes:
+        parts=obj.name.split('_')
+        visible=len(parts)<3 or parts[1] not in default or int(parts[2])==default[parts[1]]
+        if species=='human' and parts[1]=='hair':visible=visible and obj.name.endswith('_capped')
+        obj.hide_set(not visible);obj.hide_render=not visible
     # Store the default selection in the editable source before showing all
     # alternative pieces for explicit GLB export.
     bpy.context.scene['selected_base']=variant
@@ -120,10 +201,48 @@ def export_selected(species):
         'source':str((source/(species+'_lms06.blend')).relative_to(ROOT)),
         'glb':str((output/(species+'_lms06.glb')).relative_to(ROOT))})
     manifest['colour_management']=corrected
+    manifest['default']=default
+    manifest['facial_parts']={'categories':['eyes','brows','mouth'],'variants_each':3,'public_morph_channels_each':10,
+        'mosquito_brow_correctives':['BrowUpBlinkL','BrowUpBlinkR','BrowDownBlinkL','BrowDownBlinkR','BrowUpBrowDown','BrowUpBrowDownBlinkL','BrowUpBrowDownBlinkR'] if species=='mosquito' else [],
+        'human_hair_options':{'mustache':['none','short','drooping'],'beard':['none','goatee','short']} if species=='human' else {},
+        'rest_variation':{'eyes2':'authored curved lid aperture','brows1':'28% authored brow lift'} if species=='human' else {},
+        'eyelid_arc_correctives':[blink+'Arc'+str(k) for blink in ['BlinkL','BlinkR'] for k in range(1,8)]}
+    if cheek_repair:manifest['cheek_repair']=cheek_repair
     (source/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf8')
     (output/'rig_contract.json').write_text(json.dumps({'id':manifest['id'],'rig_version':manifest['rig_version'],'selected_base':variant,'bones':manifest['bones']},indent=2),encoding='utf8')
     model=json.loads((frozen/'model.json').read_text())
     model['bones']=manifest['bones']
+    model['facial_parts']=manifest['facial_parts']
+    if cheek_repair:
+        model['cheek_repair']=cheek_repair
+        for part in model['parts']:
+            if part['name']!='human_head':continue
+            points=[Vector((v.co.x,v.co.z,-v.co.y)) for v in bpy.data.objects['human_head'].data.vertices]
+            part['bounds_min_m']=[min(q[i] for q in points) for i in range(3)]
+            part['bounds_max_m']=[max(q[i] for q in points) for i in range(3)]
+    model['parts']=[]
+    for obj in meshes:
+        pieces=obj.name.split('_');category=pieces[1]
+        points=[Vector((v.co.x,v.co.z,-v.co.y)) for v in obj.data.vertices]
+        selected=len(pieces)<3 or category not in default or int(pieces[2])==default[category]
+        if species=='human' and category=='hair':selected=selected and obj.name.endswith('_capped')
+        model['parts'].append({'name':obj.name,'category':category,'selected_default':selected,
+            'partition_proof':json.loads(obj.get('partition_proof','{}')),
+            'surface_attachment':obj.get('surface_attachment',''),
+            'eyelid_replacement':json.loads(obj.get('eyelid_replacement','{}')) if category=='eyes' else {},
+            'root_union':json.loads(obj.get('root_union','{}')),
+            'vertices':len(points),'triangles':sum(len(p.vertices)-2 for p in obj.data.polygons),
+            'materials':sorted({obj.data.materials[p.material_index].name for p in obj.data.polygons}),
+            'bounds_min_m':[min(q[i] for q in points) for i in range(3)],
+            'bounds_max_m':[max(q[i] for q in points) for i in range(3)],
+            'morphs':[key.name for key in obj.data.shape_keys.key_blocks if key.name!='Basis'] if obj.data.shape_keys else []})
+    model['triangles_default']=sum(p['triangles'] for p in model['parts'] if p['selected_default'])
+    model['surfaces_default']=sum(len(p['materials']) for p in model['parts'] if p['selected_default'])
+    model['implemented']=['Independent eyes, brows and mouth selections with ten shared expression controls',
+        'Original selected base and shared gameplay skeleton preserved']+(['Optional mustaches and conforming jaw/chin beards; independent hair palette'] if species=='human' else [])
+    model['pending']=[]
+    manifest['meshes']=[{'name':part['name'],'vertices':part['vertices'],'triangles':part['triangles']} for part in model['parts']]
+    (source/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf8')
     model.update({'status':'Selected production base; integration evidence in outputs/0.7-integracion','selected_source_sha256':before,
         'authoring':'art_source/export_presets/characters_selected_pipeline.py'})
     (source/'model.json').write_text(json.dumps(model,indent=2),encoding='utf8')

@@ -6,11 +6,12 @@ Se está verificando un candidato para Windows, con el proyecto Godot y las fuen
 
 Al preparar el paquete local se incluyen `Let-me-sleep-0.7.0-Windows.zip`, `Let-me-sleep-0.7.0-fuentes.zip` y el vídeo `Let-me-sleep-0.7-objetos.mp4`. Las versiones efectivamente publicadas aparecen en [Releases](https://github.com/Sauri0/LetMeSleep/releases); crear estos paquetes no los publica.
 
-Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. Práctica permite elegir ambos personajes y los tres modos sin servidor externo. Todos los jugadores de una sala deben usar la misma versión y protocolo 7.
+Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. Práctica permite elegir ambos personajes y los tres modos sin servidor externo. Todos los jugadores de una sala deben usar la misma versión y protocolo 8.
 
 ## Cambios principales
 
-- Humano A compacto y mosquito B alargado, seis caras animadas y contacto coherente con la pose física.
+- Mejillas humanas continuas y piezas faciales combinables; bigotes, barbas y color de pelo compartido con cejas.
+- Humano A compacto y mosquito B alargado, ojos, boca y cejas combinables con expresiones animadas y contacto coherente con la pose física.
 - Acabado liso en paredes y suelo, conservando paletas por habitación, juntas y materiales de objetos.
 - Dieciséis ambientes domésticos renovados, puertas interactivas, barandas, ventanas nocturnas e iluminación local.
 - HUD compacto, guía con F1 e indicaciones de puerta y golpe junto a la mira.

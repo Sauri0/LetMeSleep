@@ -15,7 +15,7 @@ const Cosmetics = preload("res://scripts/cosmetics.gd")
 const Map = preload("res://scripts/arena.gd")
 const InvitationCodec = preload("res://scripts/invitation.gd")
 const VERSION := "0.7.0"
-const PROTOCOL := 7
+const PROTOCOL := InvitationCodec.PROTOCOL
 const DEFAULT_PORT := 27840
 const MAX_PLAYERS := 16
 # Leave room for Godot RPC and ENet headers below the transport's MTU.

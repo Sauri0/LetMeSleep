@@ -306,21 +306,6 @@
       "triangles": 3120
     },
     {
-      "name": "mosquito_face_0",
-      "vertices": 2301,
-      "triangles": 4552
-    },
-    {
-      "name": "mosquito_face_1",
-      "vertices": 2301,
-      "triangles": 4552
-    },
-    {
-      "name": "mosquito_face_2",
-      "vertices": 2301,
-      "triangles": 4552
-    },
-    {
       "name": "mosquito_hair_0",
       "vertices": 208,
       "triangles": 408
@@ -369,14 +354,61 @@
       "name": "mosquito_accessory_2",
       "vertices": 548,
       "triangles": 1092
+    },
+    {
+      "name": "mosquito_eyes_0",
+      "vertices": 3423,
+      "triangles": 6656
+    },
+    {
+      "name": "mosquito_brows_0",
+      "vertices": 220,
+      "triangles": 432
+    },
+    {
+      "name": "mosquito_mouth_0",
+      "vertices": 522,
+      "triangles": 1032
+    },
+    {
+      "name": "mosquito_eyes_1",
+      "vertices": 3423,
+      "triangles": 6656
+    },
+    {
+      "name": "mosquito_brows_1",
+      "vertices": 220,
+      "triangles": 432
+    },
+    {
+      "name": "mosquito_mouth_1",
+      "vertices": 522,
+      "triangles": 1032
+    },
+    {
+      "name": "mosquito_eyes_2",
+      "vertices": 3423,
+      "triangles": 6656
+    },
+    {
+      "name": "mosquito_brows_2",
+      "vertices": 220,
+      "triangles": 432
+    },
+    {
+      "name": "mosquito_mouth_2",
+      "vertices": 522,
+      "triangles": 1032
     }
   ],
   "default": {
-    "face": 0,
     "hair": 0,
     "outfit": 0,
     "footwear": 0,
-    "accessory": 0
+    "accessory": 0,
+    "eyes": 0,
+    "brows": 0,
+    "mouth": 0
   },
   "actions": [
     "mosquito_accelerate",
@@ -393,5 +425,41 @@
   "selected_base": "B",
   "selected_source": "art_source\\samples07\\characters\\B\\mosquito\\mosquito_lms06.blend",
   "selected_source_sha256": "06efc74410714e467b86651c43272cece0c75735aec05f350ef0215e3e1461b7",
-  "colour_management": {}
+  "colour_management": {},
+  "facial_parts": {
+    "categories": [
+      "eyes",
+      "brows",
+      "mouth"
+    ],
+    "variants_each": 3,
+    "public_morph_channels_each": 10,
+    "mosquito_brow_correctives": [
+      "BrowUpBlinkL",
+      "BrowUpBlinkR",
+      "BrowDownBlinkL",
+      "BrowDownBlinkR",
+      "BrowUpBrowDown",
+      "BrowUpBrowDownBlinkL",
+      "BrowUpBrowDownBlinkR"
+    ],
+    "human_hair_options": {},
+    "rest_variation": {},
+    "eyelid_arc_correctives": [
+      "BlinkLArc1",
+      "BlinkLArc2",
+      "BlinkLArc3",
+      "BlinkLArc4",
+      "BlinkLArc5",
+      "BlinkLArc6",
+      "BlinkLArc7",
+      "BlinkRArc1",
+      "BlinkRArc2",
+      "BlinkRArc3",
+      "BlinkRArc4",
+      "BlinkRArc5",
+      "BlinkRArc6",
+      "BlinkRArc7"
+    ]
+  }
 }

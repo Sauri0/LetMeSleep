@@ -5,6 +5,7 @@ const Brain = preload("res://scripts/bot_brain.gd")
 const ArenaData = preload("res://scripts/arena.gd")
 const Pose = preload("res://scripts/human_pose.gd")
 const Sim = preload("res://scripts/simulation.gd")
+const Cosmetics = preload("res://scripts/cosmetics.gd")
 const DT := 0.05
 const APPEARANCES := {"human": {"color": 3, "accessory": 1, "face": 2, "hair": 1, "outfit": 2, "footwear": 0, "accent": 4}, "mosquito": {"color": 5, "accessory": 2, "face": 1, "hair": 2, "outfit": 1, "footwear": 0, "accent": 3}}
 var checks := 0
@@ -41,7 +42,7 @@ func _test_complete_round(role: String, mode: String) -> void:
 	var label: String = role + "/" + mode
 	check(session.active and session.sim.actors[1].role == role, "selected POV " + label)
 	check(session.sim.config.mode == mode and session.sim.config.map_id == "house", "practice arena/mode " + label)
-	check(session.sim.actors[1].appearance == APPEARANCES[role], "chosen appearance " + label)
+	check(session.sim.actors[1].appearance == Cosmetics.appearance_for(APPEARANCES,role), "legacy chosen appearance migrates into independent pieces " + label)
 	var observed := {"bites": 0, "detaches": 0, "first_bite": -1.0, "motion_valid": true, "motion_error": "", "task_floors": {}}
 	for frame: int in range(int(duration / DT) + 4):
 		var before: Dictionary = session.sim.public_snapshot().actors
@@ -71,7 +72,7 @@ func _test_complete_round(role: String, mode: String) -> void:
 	print("PRACTICE_STATS " + JSON.stringify({"role": role, "mode": mode, "winner": session.sim.winner, "elapsed": session.sim.elapsed, "blood": session.sim.blood, "tasks": session.sim.tasks_done, "observed": observed, "bots": totals}))
 	session.restart()
 	check(session.sim.phase == "playing" and session.sim.elapsed == 0 and session.sim.actors[1].role == role, "restart keeps chosen POV and resets round " + label)
-	check(session.sim.actors[1].appearance == APPEARANCES[role] and session.sim.blood == 0 and session.sim.tasks_done == 0, "restart preserves appearance and clears objective totals " + label)
+	check(session.sim.actors[1].appearance == Cosmetics.appearance_for(APPEARANCES,role) and session.sim.blood == 0 and session.sim.tasks_done == 0, "restart preserves appearance and clears objective totals " + label)
 	session.stop()
 	check(not session.active and session.sim == null and session.brains.is_empty(), "leave clears local simulation " + label)
 	session.free()

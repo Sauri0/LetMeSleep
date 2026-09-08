@@ -14,6 +14,9 @@ func _run()->void:
 		skin.scale=Vector3.ONE*(.35 if role=="mosquito" else 1.0)
 		for face:int in range(3):
 			skin.set_appearance({"face":face})
+			checks+=1
+			if skin.face_channels.keys().filter(func(mesh:MeshInstance3D)->bool:return mesh.visible).size()!=3:
+				failures+=1;print("FACIAL_ENVELOPE_PARTITION_EXPECTS_THREE ",role," ",face)
 			for expression:String in ["sleepy","alert","effort","impact"]:
 				var data:Dictionary={"state":"human" if role=="human" else "flying","preview_only":true,"facial_preview":expression,"facial_no_blink":true}
 				for frame:int in range(60):

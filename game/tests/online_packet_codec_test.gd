@@ -1,5 +1,6 @@
 extends SceneTree
 const Codec = preload("res://scripts/online_packet_codec.gd")
+const CosmeticsData=preload("res://scripts/cosmetics.gd")
 var checks := 0
 var failures := 0
 func check(value: bool, label: String) -> void:
@@ -107,5 +108,10 @@ func _initialize() -> void:
 	check(not Codec.encode(deep,1,7,1,0).ok,"Excessive nesting is rejected")
 	for metadata: Array in [[0,7,1,0],[6,7,1,0],[1,-1,1,0],[1,7,-1,0],[1,7,1,-1],[1,7,0x100000000,0]]:
 		check(not Codec.encode({},metadata[0],metadata[1],metadata[2],metadata[3]).ok,"Invalid encode metadata rejected")
+	var pieces:=CosmeticsData.sanitize({"human":{"eyes":2,"mouth":0,"brows":1,"mustache":2,"beard":1,"hair_color":5},"mosquito":{"eyes":1,"mouth":2,"brows":0,"beard":2}})
+	codec.reset(8)
+	var appearance_packet:=Codec.encode({"cosmetics":pieces},Codec.Kind.CONTROL,8,1,1)
+	check(appearance_packet.ok and receive(codec,appearance_packet.frames).payload.cosmetics==pieces,"new piece combinations preserve exact integer IDs through framing")
+	check(not pieces.mosquito.has("beard"),"canonical data removes human-only field before framing")
 	print("ONLINE_PACKET_CODEC_RESULT checks=%d failures=%d" % [checks,failures])
 	quit(failures)

@@ -518,7 +518,9 @@ func _refresh_style(safe: Dictionary) -> void:
 	attachment.add_child(face_root)
 	attachment.add_child(hair_root)
 	(torso_node if actor_role=="human" else model).add_child(outfit_root)
-	var face: int = int(safe.get("face",0))
+	var eye_style: int = int(safe.get("eyes",0))
+	var brow_style: int = int(safe.get("brows",0))
+	var mouth_style: int = int(safe.get("mouth",0))
 	var hair: int = int(safe.get("hair",0))
 	var outfit: int = int(safe.get("outfit",0))
 	var accent: Color = CosmeticsData.PALETTE[int(safe.get("accent",0))]
@@ -531,15 +533,15 @@ func _refresh_style(safe: Dictionary) -> void:
 		primary_tint.albedo_color = Color.WHITE
 		primary_tint.uv1_scale = Vector3.ONE
 		for side: float in [-1.0,1.0]:
-			var eye_height: float = 0.038 if face==1 else 0.059
+			var eye_height: float = 0.038 if eye_style==1 else 0.059
 			_sphere(face_root,Vector3(side*0.082,0.037,-0.20),Vector3(0.054,eye_height,0.031),white)
 			_sphere(face_root,Vector3(side*0.082,0.028,-0.226),Vector3(0.023,eye_height*0.60,0.012),dark)
 			_sphere(face_root,Vector3(side*0.074,0.047,-0.237),Vector3(0.008,0.009,0.003),white)
-			var brow: MeshInstance3D = _capsule(face_root,Vector3(side*0.082,0.116 if face!=1 else 0.086,-0.204),0.014,0.085,dark)
-			brow.rotation.z = side*(0.95 if face==2 else 1.7 if face==1 else 1.35)
+			var brow: MeshInstance3D = _capsule(face_root,Vector3(side*0.082,0.116 if brow_style!=1 else 0.086,-0.204),0.014,0.085,dark)
+			brow.rotation.z = side*(0.95 if brow_style==2 else 1.7 if brow_style==1 else 1.35)
 			_sphere(face_root,Vector3(side*0.13,-0.069,-0.185),Vector3(0.036,0.023,0.009),material(Color("ce927c")))
-		var mouth: MeshInstance3D = _capsule(face_root,Vector3(0,-0.13,-0.197),0.011,0.070 if face!=1 else 0.036,dark)
-		mouth.rotation.z = PI/2.0 if face!=1 else 0.0
+		var mouth: MeshInstance3D = _capsule(face_root,Vector3(0,-0.13,-0.197),0.011,0.070 if mouth_style!=1 else 0.036,dark)
+		mouth.rotation.z = PI/2.0 if mouth_style!=1 else 0.0
 		_sphere(hair_root,Vector3(0,0.17,0.035),Vector3(0.239,0.105,0.218),dark)
 		if hair==0:
 			for i: int in range(3):
@@ -560,11 +562,11 @@ func _refresh_style(safe: Dictionary) -> void:
 				lapel.rotation.z = -side*0.4
 	else:
 		for side: float in [-1.0,1.0]:
-			var height: float = 0.033 if face==2 else 0.050
+			var height: float = 0.033 if eye_style==2 else 0.050
 			_sphere(face_root,Vector3(side*0.047,0.018,-0.095),Vector3(0.044,height,0.035),trim)
 			_sphere(face_root,Vector3(side*0.047,0.014,-0.124),Vector3(0.018,height*0.53,0.008),dark)
 			_sphere(face_root,Vector3(side*0.040,0.031,-0.132),Vector3(0.007,0.008,0.003),white)
-			if face==1:
+			if brow_style==1:
 				_segment(face_root,Vector3(side*0.022,0.065,-0.117),Vector3(side*0.083,0.049,-0.113),0.009,dark)
 			var base := Vector3(side*0.028,0.053,-0.08)
 			if hair==0:

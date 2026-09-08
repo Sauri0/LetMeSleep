@@ -177,6 +177,7 @@ static func save_settings(settings_path: String = FILE_PATH) -> void:
 	config.set_value("sharing", "address", shared_address)
 	config.set_value("sharing", "port", shared_port)
 	cosmetics = CosmeticsData.sanitize(cosmetics)
+	config.set_value("appearance", "schema", 2)
 	config.set_value("appearance", "cosmetics", cosmetics)
 	for action: String in ACTION_NAMES:
 		var events := InputMap.action_get_events(action)

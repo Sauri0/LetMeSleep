@@ -1,7 +1,8 @@
 class_name Invitation
 extends RefCounted
 ## Versioned address envelope, not encryption or authentication.
-const PREFIX := "DD3-"
+const PREFIX := "DD4-"
+const PROTOCOL := 8
 const MAX_LENGTH := 512
 
 static func validate_host(value: String) -> String:
@@ -75,7 +76,7 @@ static func validate_sharing_address(host: String, scope: String) -> String:
 static func encode(host: String, port: int, room: String, scope: String = "") -> String:
 	if not validate_host(host).is_empty() or port < 1024 or port > 65535 or not _room_ok(room):
 		return ""
-	var data := {"v":1, "host":host, "port":port, "room":room}
+	var data := {"v":1, "protocol":PROTOCOL, "host":host, "port":port, "room":room}
 	if not scope.is_empty():
 		if not validate_sharing_address(host, scope).is_empty(): return ""
 		data["scope"] = scope
@@ -86,7 +87,8 @@ static func decode(value: String) -> Dictionary:
 	if text.length() > MAX_LENGTH:
 		return {"ok":false, "error":"La invitación es demasiado larga."}
 	if not text.begins_with(PREFIX):
-		return {"ok":false, "error":"Pegá una invitación DD3 completa. Las versiones anteriores usan conexión avanzada."}
+		if text.begins_with("DD3-"):return {"ok":false,"error":"Esta invitación pertenece a una versión anterior. Ambos necesitan la misma versión; pedile al anfitrión una invitación DD4 nueva."}
+		return {"ok":false, "error":"Pegá una invitación DD4 completa de esta versión del juego."}
 	var encoded := text.substr(PREFIX.length())
 	var pattern := RegEx.new()
 	pattern.compile("^[A-Za-z0-9_-]+$")
@@ -102,6 +104,10 @@ static func decode(value: String) -> Dictionary:
 	var data: Dictionary = json.data
 	if data.get("v", 0) != 1:
 		return {"ok":false, "error":"Esta invitación necesita otra versión del juego."}
+	var protocol: Variant=data.get("protocol")
+	# JSON numbers decode as floats; require the exact finite integer value.
+	if not (protocol is int or protocol is float) or not is_finite(float(protocol)) or float(protocol)!=float(PROTOCOL):
+		return {"ok":false,"error":"Esta invitación usa otro protocolo. Actualizá el juego y pedile al anfitrión una invitación nueva."}
 	if not data.get("host") is String or not data.get("room") is String:
 		return {"ok":false, "error":"A la invitación le faltan datos de conexión."}
 	var host_error := validate_host(str(data.host))

@@ -180,7 +180,7 @@ func _run() -> void:
 	human.update_state(data,1.0)
 	human.set_local(true)
 	for mesh: MeshInstance3D in human.imported_skin.meshes:
-		if "_head" in str(mesh.name) or "_face_" in str(mesh.name) or "_hair_" in str(mesh.name) or "_accessory_" in str(mesh.name):
+		if str(mesh.name).split("_")[1] in ["head","face","eyes","brows","mouth","mustache","beard","hair","accessory"]:
 			check(not mesh.visible,"local head detail hidden "+str(mesh.name))
 	human.hide()
 	var preview := Preview.new()

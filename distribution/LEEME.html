@@ -1,8 +1,8 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Let me sleep — Guía</title><style>
 body{margin:0;background:#f5efd9;color:#25313b;font:17px/1.6 system-ui,sans-serif}main{max-width:880px;margin:auto;padding:44px 24px 80px}h1{font-size:36px;line-height:1.12;max-width:680px;color:#244b4d}h2{margin-top:40px;font-size:24px;border-top:2px solid #d8ceb4;padding-top:18px}strong{color:#224b50}li{margin:10px 0}table{border-collapse:collapse;width:100%;font-size:15px}td,th{padding:12px;border:1px solid #cfc5ac;text-align:left}th{background:#e9dfc4}@media(max-width:600px){main{padding:24px 16px}h1{font-size:28px}table{font-size:12px}td,th{padding:7px}}
 </style><main><h1>Let me sleep · 0.7.0 · Windows 64 bits</h1>
-<p>Descomprimí toda la carpeta y abrí <strong>Let-me-sleep.exe</strong>. No necesitás Godot. Todos los jugadores de una sala deben usar <strong>0.7.0 / protocolo 7</strong>.</p>
-<p>Esta versión mejora las proporciones y animaciones de los personajes, renueva los dieciséis ambientes e incorpora puertas con bisagras, iluminación local y ajustes gráficos. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. <strong>La conexión integrada entre casas todavía está en desarrollo.</strong> El servidor directo y la invitación DD3 necesitan una ruta de red alcanzable; el código por sí solo no resuelve eso.</p>
+<p>Descomprimí toda la carpeta y abrí <strong>Let-me-sleep.exe</strong>. No necesitás Godot. Todos los jugadores de una sala deben usar <strong>0.7.0 / protocolo 8</strong>.</p>
+<p>Esta versión mejora las proporciones y animaciones de los personajes, renueva los dieciséis ambientes e incorpora puertas con bisagras, iluminación local y ajustes gráficos. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. <strong>La conexión integrada entre casas todavía está en desarrollo.</strong> El servidor directo y la invitación DD4 necesitan una ruta de red alcanzable; el código por sí solo no resuelve eso.</p>
 <h2>Empezar a jugar</h2>
 <p>Elegí <strong>PRÁCTICA</strong>, tu personaje y un modo. El humano juega contra dos mosquitos automáticos; el mosquito, contra un humano automático. La práctica funciona sin conexión ni servidor externo. En partidas con amigos, los roles se sortean cada ronda.</p>
 <h2>Controles esenciales</h2>
@@ -39,7 +39,7 @@ body{margin:0;background:#f5efd9;color:#25313b;font:17px/1.6 system-ui,sans-seri
 <h2>Crear una sala dentro del juego</h2>
 <ol>
 <li>Elegí <strong>CREAR SALA</strong>, escribí tu nombre y pulsá <strong>CREAR SALA</strong>. El juego abre y comprueba su servidor en tu PC y entra automáticamente al lobby.</li>
-<li>Para la red directa, configurá la <strong>Dirección para amigos</strong> según el alcance real y copiá la invitación DD3. En la misma red, usá la dirección local de la PC anfitriona.</li>
+<li>Para la red directa, configurá la <strong>Dirección para amigos</strong> según el alcance real y copiá la invitación DD4. En la misma red, usá la dirección local de la PC anfitriona.</li>
 <li>Tus amigos eligen <strong>UNIRME CON INVITACIÓN</strong>, escriben su nombre y pegan el texto completo.</li>
 <li>El anfitrión elige modo y cantidad de humanos. Todos se preparan y el anfitrión inicia.</li>
 </ol>
@@ -49,7 +49,7 @@ body{margin:0;background:#f5efd9;color:#25313b;font:17px/1.6 system-ui,sans-seri
 <p>El estado distingue búsqueda de nombre, respuesta UDP y entrada a la sala. Un rechazo de versión, sala o capacidad conserva su motivo. Cancelar detiene el intento; Reintentar vuelve a abrirlo sin reutilizar un servidor ajeno al crear.</p>
 <p>Si aparece «No llegó respuesta UDP», todavía no se sabe si falló la ruta, el servidor o una regla de red. Revisá el endpoint mostrado y que el anfitrión siga en su sala. No confundas 127.0.0.1 o una dirección de otra red local con una dirección disponible desde otra casa. Copiar una invitación no comprueba su alcance.</p>
 <h2>Tu personaje</h2>
-<p>La base humana es compacta y la del mosquito alargada. Las seis caras animadas conservan sus expresiones y las opciones de personalización. Paredes y suelo usan el acabado liso elegido, con los colores de cada habitación y sus juntas; los objetos mantienen sus materiales propios.</p>
+<p>La base humana es compacta y la del mosquito alargada. Ojos, boca y cejas se eligen por separado y conservan sus expresiones animadas; el humano también permite bigote, barba y color de pelo compartido. Paredes y suelo usan el acabado liso elegido, con los colores de cada habitación y sus juntas; los objetos mantienen sus materiales propios.</p>
 <p>Abrí <strong>TU PINTA</strong> en el menú principal. Elegí humano o mosquito; girá el modelo arrastrando, acercá/alejá con la rueda y usá restablecer vista. Cada personaje guarda su propio color, detalle, cara, pelo o antenas, ropa o patrón, calzado y accesorio. Usá las tarjetas visuales y muestras de color; al elegir una categoría, la vista se acerca a esa parte. Los perfiles nuevos empiezan con pijama, pantuflas y gorro de noche; una apariencia guardada anteriormente se conserva. Los cambios aparecen en práctica y en la sala de los demás; son sólo visuales.</p>
 <h2>Modos</h2>
 <ul>
@@ -59,4 +59,6 @@ body{margin:0;background:#f5efd9;color:#25313b;font:17px/1.6 system-ui,sans-seri
 </ul>
 <p>Se permiten de uno a cinco humanos, hasta doce mosquitos y dieciséis participantes totales; también uno contra uno. La casa tiene dos pisos, dieciséis ambientes y dos escaleras. Mirá los puestos cercanos para encontrar tareas y herramientas; las etiquetas lejanas se ocultan para dejar ver el escenario.</p>
 <h2>Archivos y límites de esta entrega</h2>
-<p><strong>PRUEBAS.md</strong> registra qué se comprobó y qué falta. <strong>BUILD.txt</strong>, el manifiesto y los archivos SHA256 identifican el ejecutable y los paquetes. No se ha certificado balance con jugadores humanos, requisitos mínimos ni rendimiento en todas las PCs. La documentación técnica y las fuentes están en el repositorio público de GitHub.</p></main>
+<p><strong>PRUEBAS.md</strong> registra qué se comprobó y qué falta. <strong>BUILD.txt</strong>, el manifiesto y los archivos SHA256 identifican el ejecutable y los paquetes. No se ha certificado balance con jugadores humanos, requisitos mínimos ni rendimiento en todas las PCs. La documentación técnica y las fuentes están en el repositorio público de GitHub.</p>
+<h2>Tu pinta</h2>
+<p>En el menú principal podés combinar ojos, boca y cejas por separado para cada personaje. El humano también tiene bigotes y barbas opcionales; el color de pelo se comparte con cejas, bigote y barba. Ropa, piel, pantuflas y accesorios conservan sus colores propios. Arrastrá la vista para girar y usá la rueda para acercar. Los cambios se guardan en esta PC y se muestran en sala y partida; son sólo apariencia. Los perfiles anteriores conservan el estilo de cara al migrar a las tres piezas, con bigote y barba desactivados.</p></main>

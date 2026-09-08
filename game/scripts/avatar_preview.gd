@@ -103,10 +103,11 @@ func set_view(view: String) -> void:
 func focus_category(key: String) -> void:
 	focus_key = key
 	zoom = 1.0
+	var facial:bool=key in ["eyes","brows","mouth","mustache","beard","hair_color","face"]
 	if role=="human":
-		if key in ["face","hair","accessory"]:
+		if facial or key in ["hair","accessory"]:
 			focus_target = Vector3(0,1.59,0)
-			focus_distance = 1.35 if key=="face" else 1.65
+			focus_distance = 1.35 if facial else 1.65
 		elif key=="footwear":
 			focus_target = Vector3(0,0.17,0)
 			focus_distance = 1.30
@@ -117,8 +118,8 @@ func focus_category(key: String) -> void:
 			focus_target = Vector3(0,0.91,0)
 			focus_distance = 3.65
 	else:
-		focus_target = Vector3(0,0.98 if key in ["face","hair","accessory"] else 0.74 if key=="footwear" else 0.90,0)
-		focus_distance = 2.4 if key in ["face","hair","accessory"] else 3.25
+		focus_target = Vector3(0,0.98 if facial or key in ["hair","accessory"] else 0.74 if key=="footwear" else 0.90,0)
+		focus_distance = 2.4 if facial or key in ["hair","accessory"] else 3.25
 	_update_camera()
 
 func _update_camera() -> void:

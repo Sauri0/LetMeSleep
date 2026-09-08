@@ -6,13 +6,13 @@ Descomprimí todo el ZIP y abrí **Let-me-sleep.exe**. Elegí **PRÁCTICA** para
 
 Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercera, casa caricaturesca de dos pisos y tres modos. La versión 0.7 mejora personajes, animaciones y habitaciones, con puertas interactivas y ajustes de imagen. El HUD es compacto; F1 abre una guía que permanece plegada durante el juego. La cámara permite seguir girando al mirar el cuerpo.
 
-**La conexión automática entre casas todavía está pendiente.** Esta entrega usa ENet directo: funciona en una LAN o con una dirección UDP alcanzable. La invitación DD3 contiene dirección, puerto y sala; no abre puertos ni supera CGNAT. La integración EOS requiere adaptación, configuración del producto y pruebas en conexiones independientes. No hay SDK ni credenciales EOS en este juego.
+**La conexión automática entre casas todavía está pendiente.** Esta entrega usa ENet directo: funciona en una LAN o con una dirección UDP alcanzable. La invitación DD4 contiene dirección, puerto y sala; no abre puertos ni supera CGNAT. La integración EOS requiere adaptación, configuración del producto y pruebas en conexiones independientes. No hay SDK ni credenciales EOS en este juego.
 
 ## Jugar
 
 - **Práctica:** elegí humano o mosquito y uno de los tres modos. Los bots se mueven, atacan, pican, completan tareas y ayudan a sus compañeros aturdidos.
 - **Crear sala:** un botón inicia el servidor en la PC y entra automáticamente. No hace falta abrir otra consola. El puerto local se conserva separado de la dirección para amigos.
-- **Invitar:** copiá la invitación DD3 desde la sala; tus amigos la pegan en **UNIRME CON INVITACIÓN**. La conexión directa necesita una ruta de red alcanzable.
+- **Invitar:** copiá la invitación DD4 desde la sala; tus amigos la pegan en **UNIRME CON INVITACIÓN**. La conexión directa necesita una ruta de red alcanzable.
 - **Equipos:** el anfitrión elige entre 1 y 5 humanos exactos; el resto son mosquitos, con un máximo de 12 y 16 jugadores totales. 1v1 es válido. Los roles se sortean en cada ronda.
 
 ## Controles y modos

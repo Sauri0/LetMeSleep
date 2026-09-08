@@ -1,8 +1,8 @@
 # Let me sleep · 0.7.0 · Windows 64 bits
 
-Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.7.0 / protocolo 7**.
+Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.7.0 / protocolo 8**.
 
-Esta versión mejora las proporciones y animaciones de los personajes, renueva los dieciséis ambientes e incorpora puertas con bisagras, iluminación local y ajustes gráficos. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. **La conexión integrada entre casas todavía está en desarrollo.** El servidor directo y la invitación DD3 necesitan una ruta de red alcanzable; el código por sí solo no resuelve eso.
+Esta versión mejora las proporciones y animaciones de los personajes, renueva los dieciséis ambientes e incorpora puertas con bisagras, iluminación local y ajustes gráficos. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. **La conexión integrada entre casas todavía está en desarrollo.** El servidor directo y la invitación DD4 necesitan una ruta de red alcanzable; el código por sí solo no resuelve eso.
 
 ## Empezar a jugar
 
@@ -62,7 +62,7 @@ Si todos los mosquitos caen, la ronda continúa: los humanos aprovechan ese tiem
 ## Crear una sala dentro del juego
 
 1. Elegí **CREAR SALA**, escribí tu nombre y pulsá **CREAR SALA**. El juego abre y comprueba su servidor en tu PC y entra automáticamente al lobby.
-2. Para la red directa, configurá la **Dirección para amigos** según el alcance real y copiá la invitación DD3. En la misma red, usá la dirección local de la PC anfitriona.
+2. Para la red directa, configurá la **Dirección para amigos** según el alcance real y copiá la invitación DD4. En la misma red, usá la dirección local de la PC anfitriona.
 3. Tus amigos eligen **UNIRME CON INVITACIÓN**, escriben su nombre y pegan el texto completo.
 4. El anfitrión elige modo y cantidad de humanos. Todos se preparan y el anfitrión inicia.
 
@@ -78,7 +78,7 @@ Si aparece «No llegó respuesta UDP», todavía no se sabe si falló la ruta, e
 
 ## Tu personaje
 
-La base humana es compacta y la del mosquito alargada. Las seis caras animadas conservan sus expresiones y las opciones de personalización. Paredes y suelo usan el acabado liso elegido, con los colores de cada habitación y sus juntas; los objetos mantienen sus materiales propios.
+La base humana es compacta y la del mosquito alargada. Ojos, boca y cejas se eligen por separado y conservan sus expresiones animadas; el humano también permite bigote, barba y color de pelo compartido. Paredes y suelo usan el acabado liso elegido, con los colores de cada habitación y sus juntas; los objetos mantienen sus materiales propios.
 
 Abrí **TU PINTA** en el menú principal. Elegí humano o mosquito; girá el modelo arrastrando, acercá/alejá con la rueda y usá restablecer vista. Cada personaje guarda su propio color, detalle, cara, pelo o antenas, ropa o patrón, calzado y accesorio. Usá las tarjetas visuales y muestras de color; al elegir una categoría, la vista se acerca a esa parte. Los perfiles nuevos empiezan con pijama, pantuflas y gorro de noche; una apariencia guardada anteriormente se conserva. Los cambios aparecen en práctica y en la sala de los demás; son sólo visuales.
 
@@ -93,3 +93,7 @@ Se permiten de uno a cinco humanos, hasta doce mosquitos y dieciséis participan
 ## Archivos y límites de esta entrega
 
 **PRUEBAS.md** registra qué se comprobó y qué falta. **BUILD.txt**, el manifiesto y los archivos SHA256 identifican el ejecutable y los paquetes. No se ha certificado balance con jugadores humanos, requisitos mínimos ni rendimiento en todas las PCs. La documentación técnica y las fuentes están en el repositorio público de GitHub.
+
+## Tu pinta
+
+En el menú principal podés combinar ojos, boca y cejas por separado para cada personaje. El humano también tiene bigotes y barbas opcionales; el color de pelo se comparte con cejas, bigote y barba. Ropa, piel, pantuflas y accesorios conservan sus colores propios. Arrastrá la vista para girar y usá la rueda para acercar. Los cambios se guardan en esta PC y se muestran en sala y partida; son sólo apariencia. Los perfiles anteriores conservan el estilo de cara al migrar a las tres piezas, con bigote y barba desactivados.

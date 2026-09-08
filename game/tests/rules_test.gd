@@ -129,8 +129,8 @@ func _test_role_appearance() -> void:
 	players[1].cosmetics = "invalid"
 	players[2].cosmetics = {"mosquito": {"color": -1, "accessory": 999, "extra": "omit"}}
 	sim.start(players, {})
-	check(sim.public_snapshot().actors[1].appearance == {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0}, "invalid appearance profile gets safe defaults")
-	check(sim.public_snapshot().actors[2].appearance == {"color": 0, "accessory": 0, "face": 0, "hair": 0, "outfit": 0, "footwear": 0, "accent": 0}, "out-of-range appearance fields cannot leak into actors")
+	check(sim.public_snapshot().actors[1].appearance == {"color":0,"accessory":0,"eyes":0,"mouth":0,"brows":0,"hair":0,"hair_color":0,"mustache":0,"beard":0,"outfit":0,"footwear":0,"accent":0}, "invalid appearance profile gets safe defaults")
+	check(sim.public_snapshot().actors[2].appearance == {"color":0,"accessory":0,"eyes":0,"mouth":0,"brows":0,"hair":0,"outfit":0,"footwear":0,"accent":0}, "out-of-range appearance fields cannot leak into actors")
 
 func _test_privacy_and_reservations() -> void:
 	var sim = make_sim("blood", 1, 12)

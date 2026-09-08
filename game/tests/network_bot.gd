@@ -36,7 +36,7 @@ var finishing := false
 var was_stunned := false
 
 func _ready() -> void:
-	network.local_cosmetics = Cosmetics.sanitize({"human":{"color": 3, "accessory": 1}, "mosquito":{"color": 4, "accessory": 2}})
+	network.local_cosmetics = Cosmetics.sanitize({"human":{"color":3,"accessory":1,"eyes":2,"mouth":0,"brows":1,"mustache":1,"beard":2,"hair_color":4},"mosquito":{"color":4,"accessory":2,"eyes":0,"mouth":2,"brows":1}})
 	report["roles_by_round"] = []
 	report["results"] = []
 	report["lobby_movement_seen"] = false

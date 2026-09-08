@@ -28,6 +28,9 @@ var facial_elapsed := 0.0
 var facial_distance := 0.0
 var face_channels: Dictionary = {}
 var facial_applied: Dictionary = {}
+var facial_detail_near := false
+var facial_detail_initialized := false
+const FACIAL_NEAR_LOD_BIAS := 1000.0
 
 func setup(role: String, source_path: String = "", contract_path: String = "") -> void:
 	species = role
@@ -47,7 +50,8 @@ func setup(role: String, source_path: String = "", contract_path: String = "") -
 		bone_ids[skeleton.get_bone_name(i)] = i
 	for node: Node in asset.find_children("*","MeshInstance3D",true,false):
 		meshes.append(node as MeshInstance3D)
-		if str(node.name).begins_with(species+"_face_"):
+		var category: String = str(node.name).split("_")[1]
+		if category in ["face","eyes","brows","mouth"]:
 			var channels: Dictionary = {}
 			for index: int in range(node.mesh.get_blend_shape_count()):
 				channels[str(node.mesh.get_blend_shape_name(index))] = index
@@ -69,9 +73,11 @@ func set_appearance(value: Dictionary) -> void:
 	appearance = safe
 	signature = next_signature
 	_update_visibility()
+	facial_applied.clear()
 	material_cache.clear()
 	var primary: Color = CosmeticsData.PALETTE[int(safe.get("color",0))]
 	var accent: Color = CosmeticsData.PALETTE[int(safe.get("accent",0))]
+	var hair_tint: Color = CosmeticsData.human_hair_color(safe) if species=="human" else Color.WHITE
 	for mesh: MeshInstance3D in meshes:
 		for surface: int in range(mesh.mesh.get_surface_count()):
 			var original: Material = mesh.mesh.surface_get_material(surface)
@@ -93,6 +99,8 @@ func set_appearance(value: Dictionary) -> void:
 						standard.albedo_color = accent
 					elif key.begins_with("insect_dark"):
 						standard.albedo_color = primary.darkened(0.62)
+					elif species=="human" and key.begins_with("hair"):
+						standard.albedo_color = hair_tint
 					if key.begins_with("wing"):
 						standard.cull_mode = BaseMaterial3D.CULL_DISABLED
 				material_cache[key] = replacement
@@ -103,12 +111,12 @@ func _update_visibility() -> void:
 		var pieces: PackedStringArray = String(mesh.name).split("_")
 		var category: String = pieces[1] if pieces.size()>1 else "core"
 		var selected := true
-		if pieces.size()>2 and category in ["face","hair","outfit","accessory","footwear"]:
-			selected = int(pieces[2])==int(appearance.get(category,0))
+		if pieces.size()>2 and category in ["face","eyes","brows","mouth","mustache","beard","hair","outfit","accessory","footwear"]:
+			selected = int(pieces[2])==int(appearance.get("eyes",appearance.get("face",0)) if category=="face" else appearance.get(category,0))
 		if category=="hair" and species=="human":
 			var capped: bool = int(appearance.get("accessory",0)) in [1,3]
 			selected = selected and (String(mesh.name).ends_with("_capped")==capped)
-		if first_person and species=="human" and category in ["head","face","hair","accessory"]:
+		if first_person and species=="human" and category in ["head","face","eyes","brows","mouth","mustache","beard","hair","accessory"]:
 			selected = false
 		mesh.visible = selected
 
@@ -272,9 +280,10 @@ func apply_mosquito(data: Dictionary, clock_time: float, stun: float) -> void:
 
 func _animate_face(data: Dictionary, dt: float) -> void:
 	if facial==null: return
-	facial_values = facial.advance(data,species,dt,int(appearance.get("face",0)))
+	facial_values = facial.advance(data,species,dt,int(appearance.get("eyes",appearance.get("face",0))))
 	facial_elapsed += dt
 	if first_person and species=="human": return
+	_update_facial_detail()
 	var camera := get_viewport().get_camera_3d()
 	var distance := camera.global_position.distance_to(skeleton.to_global(skeleton.get_bone_global_pose(int(bone_ids.head)).origin)) if camera!=null else 0.0
 	var near := 7.0 if species=="human" else 1.8
@@ -283,16 +292,49 @@ func _animate_face(data: Dictionary, dt: float) -> void:
 	facial_distance = distance
 	if facial_elapsed<interval and not approaching: return
 	facial_elapsed = 0.0
+	apply_facial_values(facial_values)
+
+func apply_facial_values(values: Dictionary) -> void:
+	## Shared by gameplay and exact-state gallery fixtures. Correctives preserve
+	## the brow/eye attachment when either eyelid closes during an expression.
+	_update_facial_detail()
+	var effective: Dictionary = values.duplicate()
+	for control: String in ["BrowUp","BrowDown"]:
+		for blink: String in ["BlinkL","BlinkR"]:
+			effective[control+blink]=float(values.get(control,0.0))*float(values.get(blink,0.0))
+	effective.BrowUpBrowDown=float(values.get("BrowUp",0.0))*float(values.get("BrowDown",0.0))
+	for blink: String in ["BlinkL","BlinkR"]:
+		effective["BrowUpBrowDown"+blink]=float(effective.BrowUpBrowDown)*float(values.get(blink,0.0))
+		var closure := clampf(float(values.get(blink,0.0)),0.0,1.0)
+		for knot: int in range(1,8):
+			effective[blink+"Arc"+str(knot)]=maxf(0.0,1.0-absf(closure*8.0-float(knot)))
 	for mesh: MeshInstance3D in face_channels:
 		if not mesh.visible: continue
 		var channels: Dictionary = face_channels[mesh]
 		var applied: Dictionary = facial_applied.get(mesh,{})
-		for channel: String in FacialExpression.CHANNELS:
-			var value := float(facial_values[channel])
+		for channel: String in channels:
+			var value := float(effective.get(channel,0.0))
 			if channels.has(channel) and (not applied.has(channel) or absf(float(applied[channel])-value)>.0001):
 				mesh.set_blend_shape_value(int(channels[channel]),value)
 				applied[channel] = value
 		facial_applied[mesh] = applied
 		# Allows the source script to run while the previous GLB is still imported.
 		if channels.has("Blink") and not channels.has("BlinkL"):
-			mesh.set_blend_shape_value(int(channels.Blink),maxf(float(facial_values.BlinkL),float(facial_values.BlinkR)))
+			mesh.set_blend_shape_value(int(channels.Blink),maxf(float(values.get("BlinkL",0.0)),float(values.get("BlinkR",0.0))))
+
+func _update_facial_detail() -> void:
+	## Automatic LOD was simplified in the open pose and pierced closed lids.
+	## Keep the authored facial index set at reading distance; body/hair retain
+	## their existing LOD. Scale-aware distance also covers the isolated editor.
+	if skeleton==null: return
+	var camera := get_viewport().get_camera_3d()
+	var scale_factor := global_transform.basis.get_scale().abs()
+	var model_scale := maxf(scale_factor.x,maxf(scale_factor.y,scale_factor.z))
+	var near_distance := (7.0 if species=="human" else 1.8)*model_scale/(1.0 if species=="human" else .35)
+	var distance := camera.global_position.distance_to(skeleton.to_global(skeleton.get_bone_global_pose(int(bone_ids.head)).origin)) if camera!=null else 0.0
+	var near_now := distance<=near_distance
+	if facial_detail_initialized and near_now==facial_detail_near: return
+	facial_detail_initialized = true
+	facial_detail_near = near_now
+	for mesh: MeshInstance3D in face_channels:
+		mesh.lod_bias = FACIAL_NEAR_LOD_BIAS if near_now else 1.0

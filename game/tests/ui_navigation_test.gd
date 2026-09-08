@@ -116,7 +116,7 @@ func run() -> void:
 	ui._close_connection()
 	ui._open_connection(false)
 	check(ui._invitation_box.visible and not ui._address_box.visible and not ui._code_box.visible, "Join offers one invitation field and hides manual address/code")
-	ui._invitation_edit.text = "DD3-not-valid"
+	ui._invitation_edit.text = Invitation.PREFIX + "not-valid"
 	var sounds_before_error: int = sound_events.size()
 	ui._connect_submit.pressed.emit()
 	check(connection_args.is_empty(), "Malformed invitation cannot request a connection")
@@ -138,7 +138,7 @@ func run() -> void:
 	check(int(Prefs.cosmetics.mosquito.hair) == 2 and ui._custom_option_buttons.size() == 3, "Mosquito category editor changes its own antenna style")
 	ui._select_custom_role("human")
 	check(Prefs.cosmetics.human == human_before and int(Prefs.cosmetics.mosquito.hair) == 2, "Editing mosquito antennas leaves the entire human appearance unchanged")
-	for category: String in Cosmetics.CATEGORY_KEYS:
+	for category: String in Cosmetics.category_keys("human"):
 		ui._select_custom_category(category)
 		check(ui._custom_option_buttons.size() == Cosmetics.option_count("human",category), "Editor presents all options for human category " + category)
 		var all_visual := true
@@ -166,7 +166,7 @@ func run() -> void:
 	await _capture("ui06-human-outfit-0")
 	ui._select_custom_option(1)
 	await _capture("ui06-human-outfit-1")
-	ui._select_custom_category("face")
+	ui._select_custom_category("eyes")
 	await _capture("ui06-customization")
 	check(ui._avatar_preview.size.x >= 280 and ui._avatar_preview.size.y >= 300 and ui._avatar_preview.get_global_rect().end.y < root.size.y, "Isolated avatar studio fits the menu at 720p")
 	ui._select_custom_role("mosquito")
@@ -507,7 +507,7 @@ func _capture_editor_samples() -> void:
 		ui._select_custom_category("outfit")
 		ui._avatar_preview.reset_view()
 		await _capture("ui06-sample-"+role+"-a")
-		var variant: Dictionary = {"color":1,"accent":4,"face":0,"hair":2,"outfit":1,"accessory":0,"footwear":1} if role=="human" else {"color":3,"accent":4,"face":1,"hair":2,"outfit":1,"accessory":1,"footwear":2}
+		var variant: Dictionary = {"color":1,"accent":4,"eyes":0,"mouth":1,"brows":2,"hair":2,"outfit":1,"accessory":0,"footwear":1} if role=="human" else {"color":3,"accent":4,"eyes":1,"mouth":2,"brows":0,"hair":2,"outfit":1,"accessory":1,"footwear":2}
 		for key: String in variant:
 			ui._select_custom_category(key)
 			ui._select_custom_option(int(variant[key]))

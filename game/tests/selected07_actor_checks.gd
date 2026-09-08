@@ -14,9 +14,12 @@ func _run()->void:
 		var actor:=Actor.new();root.add_child(actor);actor.build(role,"",0)
 		for face:int in range(3):
 			actor.apply_appearance({"color":1,"accent":4,"face":face,"outfit":0,"accessory":3 if role=="human" else 0,"footwear":0})
+			var selected_parts:=0
 			for mesh:MeshInstance3D in actor.imported_skin.face_channels:
 				if not mesh.visible:continue
+				selected_parts+=1
 				for channel:String in Facial.CHANNELS:check(actor.imported_skin.face_channels[mesh].has(channel),role+str(face)+" "+channel)
+			check(selected_parts==3,role+str(face)+" three independent facial parts selected")
 		if role=="human":
 			for crouch:float in [0.0,1.0,.5,0.0]:
 				var data:Dictionary={"state":"human","p":Vector3.ZERO,"body_yaw":.7,"yaw":.9,"crouch_amount":crouch,"motion_phase":1.8,"motion_speed":3.1,"appearance":{"color":1,"accent":4,"face":1,"outfit":0,"accessory":3}}

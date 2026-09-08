@@ -63,7 +63,7 @@ func _run()->void:
 			cell.size_flags_vertical=Control.SIZE_EXPAND_FILL
 			grid.add_child(cell)
 			var label:=Label.new()
-			label.text=("Humano" if species=="human" else "Mosquito")+" · "+str(Cosmetics.option_names(species,"face")[face])
+			label.text=("Humano" if species=="human" else "Mosquito")+" · "+str(Cosmetics.option_names(species,"eyes")[face])
 			label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 			label.add_theme_font_size_override("font_size",23)
 			cell.add_child(label)
@@ -92,7 +92,7 @@ func _run()->void:
 				visible_faces+=1
 				for channel:String in Facial.CHANNELS:
 					check(skin.face_channels[mesh].has(channel),species+str(face)+" channel "+channel)
-			check(visible_faces==1,species+str(face)+" exactly one selected face")
+			check(visible_faces==(3 if sample_variant.is_empty() else 1),species+str(face)+" exactly one selection per facial category")
 	for state:String in ["sleepy","alert","effort","impact"]:
 		state_label.text={"sleepy":"Reposo somnoliento · mirada y parpadeo independientes","alert":"Alerta · ojos, cejas y boca","effort":"Esfuerzo · presión de labios y cejas","impact":"Reacción de impacto · transición breve en el juego"}[state]
 		for preview:SubViewportContainer in previews:preview.set_expression(state)

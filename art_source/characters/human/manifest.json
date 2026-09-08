@@ -521,24 +521,9 @@
       "triangles": 2092
     },
     {
-      "name": "human_face_0",
-      "vertices": 2446,
-      "triangles": 4832
-    },
-    {
-      "name": "human_face_1",
-      "vertices": 2446,
-      "triangles": 4832
-    },
-    {
-      "name": "human_face_2",
-      "vertices": 2446,
-      "triangles": 4832
-    },
-    {
       "name": "human_hair_0",
-      "vertices": 1394,
-      "triangles": 2760
+      "vertices": 3002,
+      "triangles": 6000
     },
     {
       "name": "human_hair_0_capped",
@@ -547,8 +532,8 @@
     },
     {
       "name": "human_hair_1",
-      "vertices": 1394,
-      "triangles": 2760
+      "vertices": 3004,
+      "triangles": 5999
     },
     {
       "name": "human_hair_1_capped",
@@ -557,8 +542,8 @@
     },
     {
       "name": "human_hair_2",
-      "vertices": 2180,
-      "triangles": 4312
+      "vertices": 3002,
+      "triangles": 6000
     },
     {
       "name": "human_hair_2_capped",
@@ -594,14 +579,84 @@
       "name": "human_accessory_3",
       "vertices": 1848,
       "triangles": 3656
+    },
+    {
+      "name": "human_eyes_0",
+      "vertices": 3424,
+      "triangles": 6656
+    },
+    {
+      "name": "human_brows_0",
+      "vertices": 220,
+      "triangles": 432
+    },
+    {
+      "name": "human_mouth_0",
+      "vertices": 522,
+      "triangles": 1032
+    },
+    {
+      "name": "human_eyes_1",
+      "vertices": 3424,
+      "triangles": 6656
+    },
+    {
+      "name": "human_brows_1",
+      "vertices": 220,
+      "triangles": 432
+    },
+    {
+      "name": "human_mouth_1",
+      "vertices": 522,
+      "triangles": 1032
+    },
+    {
+      "name": "human_eyes_2",
+      "vertices": 3424,
+      "triangles": 6656
+    },
+    {
+      "name": "human_brows_2",
+      "vertices": 220,
+      "triangles": 432
+    },
+    {
+      "name": "human_mouth_2",
+      "vertices": 522,
+      "triangles": 1032
+    },
+    {
+      "name": "human_mustache_1",
+      "vertices": 198,
+      "triangles": 352
+    },
+    {
+      "name": "human_mustache_2",
+      "vertices": 374,
+      "triangles": 672
+    },
+    {
+      "name": "human_beard_1",
+      "vertices": 225,
+      "triangles": 416
+    },
+    {
+      "name": "human_beard_2",
+      "vertices": 1445,
+      "triangles": 2688
     }
   ],
   "default": {
-    "face": 1,
     "hair": 0,
     "outfit": 0,
     "footwear": 0,
-    "accessory": 3
+    "accessory": 3,
+    "eyes": 1,
+    "brows": 1,
+    "mouth": 1,
+    "mustache": 0,
+    "beard": 0,
+    "hair_color": 0
   },
   "actions": [
     "human_clap",
@@ -648,5 +703,57 @@
         1.0
       ]
     }
+  },
+  "facial_parts": {
+    "categories": [
+      "eyes",
+      "brows",
+      "mouth"
+    ],
+    "variants_each": 3,
+    "public_morph_channels_each": 10,
+    "mosquito_brow_correctives": [],
+    "human_hair_options": {
+      "mustache": [
+        "none",
+        "short",
+        "drooping"
+      ],
+      "beard": [
+        "none",
+        "goatee",
+        "short"
+      ]
+    },
+    "rest_variation": {
+      "eyes2": "authored curved lid aperture",
+      "brows1": "28% authored brow lift"
+    },
+    "eyelid_arc_correctives": [
+      "BlinkLArc1",
+      "BlinkLArc2",
+      "BlinkLArc3",
+      "BlinkLArc4",
+      "BlinkLArc5",
+      "BlinkLArc6",
+      "BlinkLArc7",
+      "BlinkRArc1",
+      "BlinkRArc2",
+      "BlinkRArc3",
+      "BlinkRArc4",
+      "BlinkRArc5",
+      "BlinkRArc6",
+      "BlinkRArc7"
+    ]
+  },
+  "cheek_repair": {
+    "method": "Localized projection to authored A skull cross-section with twelve weighted relaxation passes",
+    "modified_vertices": 514,
+    "total_head_vertices": 4264,
+    "max_displacement_m": 0.03339569961747552,
+    "topology_unchanged": true,
+    "facial_morph_meshes_unchanged": true,
+    "rig_weights_unchanged": true,
+    "scope": "human_head cheeks only; excludes nose, ears, jaw and all body/hand meshes"
   }
 }

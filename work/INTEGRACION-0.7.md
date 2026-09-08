@@ -2,6 +2,8 @@
 
 Actualizado el 8 de septiembre de 2026. Esta nota no certifica una versión publicada.
 
+Decisión posterior del usuario: **LISO** para paredes y suelo, conservando paletas por habitación y materiales propios de los objetos. Humano A y mosquito B siguen elegidos. Se autoriza continuar desde `50dec0d` con propagación acotada, verificación visual, rendimiento del arte integrado, matriz final de red desde EXE y distribución al pasar. Los apartados de elección pendiente de abajo describen el cierre histórico de la tanda anterior. Evidencia nueva en `outputs/0.7-liso/`; cierre final en `outputs/0.7-validacion/`. Conexión WAN por relay/EOS y certificación GTX 1660 Ti permanecen sin implementar/verificar respectivamente.
+
 ## Decisiones y entrega de muestras
 
 El usuario eligió **humano A compacto y mosquito B alargado**. Se mantienen pijama, pantuflas, gorro y personalización. La elección de proporciones no aprueba sobreexposición, sombras defectuosas ni uniones pendientes. El acabado liso/sutil del módulo sigue sin elegir; esto no bloquea personajes e iluminación.
