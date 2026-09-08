@@ -10,6 +10,8 @@ $zipPath = Join-Path $outputsDir ($packageName + '.zip')
 if (Test-Path -LiteralPath $zipPath) {
     throw 'The versioned ZIP already exists; inspect it before packaging again.'
 }
+. (Join-Path $PSScriptRoot 'package-metadata.ps1')
+Test-PackageMetadata -ProjectRoot $projectRoot -OutputDirectory $packageDir -Version $packageVersion
 [System.IO.Compression.ZipFile]::CreateFromDirectory($packageDir, $zipPath, [System.IO.Compression.CompressionLevel]::Optimal, $true)
 $hash = Get-FileHash -LiteralPath $zipPath -Algorithm SHA256
 [System.IO.File]::WriteAllText($zipPath + '.sha256.txt', $hash.Hash + '  ' + [System.IO.Path]::GetFileName($zipPath) + "`n")

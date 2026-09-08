@@ -120,4 +120,6 @@ if ($codecCopies.Count -eq 0) { throw 'Opus extension DLL was not exported' }
 foreach ($codecCopy in $codecCopies) {
     if ((Get-FileHash -LiteralPath $codecCopy.FullName -Algorithm SHA256).Hash -ne $codecSourceHash) { throw 'Exported Opus DLL differs from verified source binary' }
 }
+. (Join-Path $PSScriptRoot 'package-metadata.ps1')
+Write-PackageMetadata -ProjectRoot $projectRoot -OutputDirectory $outDir -Version $buildVersion -HeadlessTests (-not $SkipTests -and -not $SkipHeadlessTests) -NativeTests (-not $SkipTests)
 Get-FileHash -LiteralPath $exe.FullName -Algorithm SHA256

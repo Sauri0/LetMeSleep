@@ -1,0 +1,60 @@
+{
+  "checks": 13,
+  "failures": 0,
+  "fixture": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work\\package-metadata09-test-dd4b6c38293f44498a0f6f360645c8d5",
+  "results": [
+    {
+      "passed": true,
+      "name": "valid committed package"
+    },
+    {
+      "passed": true,
+      "name": "version"
+    },
+    {
+      "passed": true,
+      "name": "protocol"
+    },
+    {
+      "passed": true,
+      "name": "source_dirty"
+    },
+    {
+      "passed": true,
+      "name": "checks"
+    },
+    {
+      "passed": true,
+      "name": "changed executable"
+    },
+    {
+      "passed": true,
+      "name": "wrong DLL before writer"
+    },
+    {
+      "passed": true,
+      "name": "wrong DLL at package time"
+    },
+    {
+      "passed": true,
+      "name": "changed notice"
+    },
+    {
+      "passed": true,
+      "name": "stale guide even with matching hash"
+    },
+    {
+      "passed": true,
+      "name": "untracked exported source"
+    },
+    {
+      "passed": true,
+      "name": "network/project mismatch"
+    },
+    {
+      "passed": true,
+      "name": "restored fixture remains valid"
+    }
+  ],
+  "scope": "Offline metadata validation using inert fixture files; no engine, export or ZIP."
+}
