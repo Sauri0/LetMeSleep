@@ -12,3 +12,9 @@ work/eos-config.local.cfg
 *.blend1
 *.blend2
 __pycache__/
+native/voice/deps/
+native/voice/_tools/
+native/voice/b/
+native/voice/logs/
+native/voice/extension/smoke/.godot/
+native/voice/extension/smoke/bin/

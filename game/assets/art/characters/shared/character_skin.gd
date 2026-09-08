@@ -5,6 +5,8 @@ const Clothing = preload("res://assets/art/characters/shared/cloth.gdshader")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const FacialExpression = preload("res://assets/art/characters/shared/facial_expression.gd")
 const Tools = preload("res://scripts/tool_catalog.gd")
+const Emotes = preload("res://scripts/emote_pose.gd")
+const SurfaceLegs = preload("res://scripts/surface_appendage_pose.gd")
 var species := "human"
 var asset: Node3D
 var skeleton: Skeleton3D
@@ -19,6 +21,10 @@ var signature := ""
 var hand_grip := {"l":0.0,"r":0.0}
 var flight_blend := 1.0
 var bite_blend := 0.0
+var surface_walk_blend := 0.0
+var surface_contacts: Dictionary = {}
+var surface_planted: Dictionary = {}
+var surface_foot_vertices: Dictionary = {}
 var insect_previous_time := 0.0
 var human_pose_hash := 0
 var human_pose_values: Dictionary = {}
@@ -30,6 +36,7 @@ var face_channels: Dictionary = {}
 var facial_applied: Dictionary = {}
 var facial_detail_near := false
 var facial_detail_initialized := false
+var voice_mouth_level := 0.0
 const FACIAL_NEAR_LOD_BIAS := 1000.0
 
 func setup(role: String, source_path: String = "", contract_path: String = "") -> void:
@@ -101,6 +108,11 @@ func set_appearance(value: Dictionary) -> void:
 						standard.albedo_color = primary.darkened(0.62)
 					elif species=="human" and key.begins_with("hair"):
 						standard.albedo_color = hair_tint
+					if key=="hair_matte":
+						# Godot 4.5 imports the GLB's KHR_materials_specular=0 as
+						# its default .5. Preserve the authored H0 finish explicitly.
+						standard.metallic_specular = 0.0
+						standard.roughness = 1.0
 					if key.begins_with("wing"):
 						standard.cull_mode = BaseMaterial3D.CULL_DISABLED
 				material_cache[key] = replacement
@@ -246,6 +258,9 @@ func apply_mosquito(data: Dictionary, clock_time: float, stun: float) -> void:
 	flight_blend = move_toward(flight_blend,1.0 if flying else 0.0,dt*6.0)
 	bite_blend = move_toward(bite_blend,1.0 if state=="biting" else 0.0,dt*8.0)
 	var speed := clampf(Vector3(data.get("velocity",Vector3.ZERO)).length()/3.8,0.0,1.0)
+	surface_walk_blend=move_toward(surface_walk_blend,1.0 if state=="perched" and float(data.get("motion_speed",0.0))>.005 else 0.0,dt*10.0)
+	surface_contacts.clear()
+	if state!="perched": surface_planted.clear()
 	_animate_face(data,dt)
 	var proboscis_id: int = int(bone_ids.get("proboscis",-1))
 	if proboscis_id>=0:
@@ -274,13 +289,158 @@ func apply_mosquito(data: Dictionary, clock_time: float, stun: float) -> void:
 					var end: Vector3 = posed.origin+posed.basis*skeleton.get_bone_global_rest(id).basis.inverse()*authored
 					end.y = lerpf(end.y,-.1235 if state=="biting" else -.1095,1.0-flight_blend)
 					_set_bone(name,posed.origin,end)
+			if state=="perched" and Vector3(data.get("surface_normal",Vector3.ZERO)).length_squared()>.5:
+				_apply_surface_leg(data,side,leg)
 		var antenna: String = "antenna_"+side
 		var antenna_id: int = bone_ids[antenna]
 		skeleton.set_bone_pose_rotation(antenna_id,skeleton.get_bone_rest(antenna_id).basis.get_rotation_quaternion()*Quaternion(Vector3.FORWARD,sign*(sin(time*2.2)*.07+speed*.08)*(1.0-stun)))
 
+func _apply_surface_leg(data: Dictionary, side: String, leg: int) -> void:
+	var proximal := "leg%d_a_%s"%[leg,side]
+	var distal := "leg%d_b_%s"%[leg,side]
+	var root_point := _point(contract[proximal].from)
+	var rest_knee := _point(contract[proximal].to)
+	var rest_tip := _point(contract[distal].to)
+	var step := SurfaceLegs.leg_target(rest_tip,float(data.get("motion_phase",0.0)),-1 if side=="l" else 1,leg,surface_walk_blend)
+	var tip: Vector3 = step.tip
+	var normal: Vector3 = Vector3(data.surface_normal).normalized()
+	var planted: Dictionary = surface_planted.get(distal,{})
+	var preserve_plant := false
+	if bool(step.stance) and bool(planted.get("stance",false)) and float(step.cycle)>=float(planted.get("cycle",0.0)) and Vector3(planted.get("normal",Vector3.ZERO)).dot(normal)>.25:
+		var planted_local := skeleton.to_local(Vector3(planted.point))
+		if planted_local.distance_to(root_point)<root_point.distance_to(rest_knee)+rest_knee.distance_to(rest_tip)-.001:
+			tip=planted_local
+			preserve_plant=true
+	var hit: Dictionary = {}
+	# Rendering queries only: a missed support retracts this foot instead of
+	# inventing an infinite plane beyond a ledge. The solver/root never moves.
+	if is_inside_tree():
+		for inset: float in [1.0,.65,.30]:
+			var probe := root_point.lerp(tip,inset)
+			var world_point := skeleton.to_global(probe)
+			var query := PhysicsRayQueryParameters3D.create(world_point+normal*.055,world_point-normal*.080,1)
+			hit=get_world_3d().direct_space_state.intersect_ray(query)
+			if not hit.is_empty() and Vector3(hit.normal).dot(normal)>.25:
+				var world_tip: Vector3 = Vector3(hit.position)+Vector3(hit.normal)*(SurfaceLegs.FOOT_RADIUS+float(step.lift)*SurfaceLegs.SCALE)
+				if preserve_plant and Vector3(hit.normal).dot(Vector3(planted.normal))>.97:
+					# An oblique probe must not drag an already planted joint
+					# tangentially as the body rotates above this same face.
+					var held: Vector3=planted.point
+					world_tip=held+Vector3(hit.normal)*((Vector3(hit.position)-held).dot(hit.normal)+SurfaceLegs.FOOT_RADIUS+float(step.lift)*SurfaceLegs.SCALE)
+				var candidate := skeleton.to_local(world_tip)
+				if candidate.distance_to(root_point)<root_point.distance_to(rest_knee)+rest_knee.distance_to(rest_tip)-.001:
+					tip=candidate
+					break
+				hit={}
+			else: hit={}
+	var supported := not hit.is_empty()
+	if supported: normal=Vector3(hit.normal).normalized()
+	if not supported:
+		tip=rest_tip.lerp(rest_knee,.42)
+		step.stance=false
+		# A missing finite ledge retracts the foot, but the retraction itself
+		# must not cut the neighbouring face at a convex corner. This ray is
+		# only an obstruction guard: it does not invent a planted contact.
+		if is_inside_tree():
+			hit=_surface_retraction_hit(distal,root_point,rest_knee,rest_tip,tip,normal)
+			if not hit.is_empty():
+				normal=Vector3(hit.normal).normalized()
+				tip=skeleton.to_local(Vector3(hit.position)+normal*SurfaceLegs.FOOT_RADIUS)
+	if not hit.is_empty():
+		# The authored tarsus continues past the distal bone endpoint. Solve the
+		# actual rigidly weighted footwear vertices against the support plane.
+		var normal_local := (skeleton.global_basis.transposed()*normal).normalized()
+		var plane := Vector3(hit.position).dot(normal)+float(step.lift)*SurfaceLegs.SCALE+.0003
+		# Tilted cuffs need more than three iterations near a corner; ordinary
+		# planar contacts finish early once the measured sole is within 10um.
+		for iteration: int in range(16):
+			var current_knee := SurfaceLegs.knee(root_point,rest_knee,rest_tip,tip)
+			var lowest := _surface_sole_height(distal,current_knee,tip,normal)
+			if not is_finite(lowest) or absf(plane-lowest)<.00001: break
+			var scale3 := skeleton.global_basis.get_scale().abs()
+			tip+=normal_local*(plane-lowest)/maxf(scale3.x,maxf(scale3.y,scale3.z))
+	surface_planted[distal]={"point":skeleton.to_global(tip),"normal":normal,"stance":supported and bool(step.stance),"cycle":float(step.cycle)}
+	var knee := SurfaceLegs.knee(root_point,rest_knee,rest_tip,tip)
+	# Blend landing/takeoff through the same skeleton, not through a second mesh.
+	var weight := 1.0-flight_blend
+	var before_knee := skeleton.get_bone_global_pose(bone_ids[distal]).origin
+	var distal_pose := skeleton.get_bone_global_pose(bone_ids[distal])
+	var before_tip := distal_pose.origin+distal_pose.basis*skeleton.get_bone_global_rest(bone_ids[distal]).basis.inverse()*(rest_tip-rest_knee)
+	knee=before_knee.lerp(knee,weight)
+	tip=before_tip.lerp(tip,weight)
+	_set_bone(proximal,root_point,knee)
+	_set_bone(distal,knee,tip)
+	surface_contacts[distal]={"supported":supported,"stance":bool(step.stance),"tip":skeleton.to_global(tip),"lift":float(step.lift),"normal":normal,"cycle":float(step.cycle),"sole_height":_surface_sole_height(distal,knee,tip,normal)}
+
+func _surface_retraction_hit(bone: String, root_point: Vector3, rest_knee: Vector3, rest_tip: Vector3, tip: Vector3, normal: Vector3) -> Dictionary:
+	var knee := SurfaceLegs.knee(root_point,rest_knee,rest_tip,tip)
+	# Populate the same authored-vertex cache used by the sole solver.
+	_surface_sole_height(bone,knee,tip,normal)
+	var style := int(appearance.get("footwear",0))
+	var points: PackedVector3Array=surface_foot_vertices.get(style,{}).get(bone,PackedVector3Array())
+	var rest := skeleton.get_bone_global_rest(bone_ids[bone])
+	var original := _point(contract[bone].to)-_point(contract[bone].from)
+	var direction := tip-knee
+	var target_basis := Basis(Quaternion(original.normalized(),direction.normalized()))*rest.basis
+	target_basis.y*=direction.length()/original.length()
+	var transform := skeleton.global_transform*Transform3D(target_basis,knee)*rest.affine_inverse()
+	var candidates: Array[Vector3] = [skeleton.to_global(tip)]
+	# The joint can miss a face that clips the tarsus thickness. Six extrema
+	# are real deformed vertices, not a new gameplay collision radius.
+	for axis: int in range(3):
+		for sign: float in [-1.0,1.0]:
+			var best := -INF
+			var extreme := Vector3.ZERO
+			for point: Vector3 in points:
+				var world := transform*point
+				if world[axis]*sign>best: best=world[axis]*sign;extreme=world
+			if best>-INF and not candidates.has(extreme): candidates.append(extreme)
+	for candidate: Vector3 in candidates:
+		var query := PhysicsRayQueryParameters3D.create(skeleton.to_global(root_point),candidate,1)
+		var hit := get_world_3d().direct_space_state.intersect_ray(query)
+		if not hit.is_empty(): return hit
+	return {}
+
+func _surface_sole_height(bone: String, knee: Vector3, tip: Vector3, normal: Vector3) -> float:
+	var style := int(appearance.get("footwear",0))
+	if not surface_foot_vertices.has(style):
+		var grouped: Dictionary = {}
+		for mesh: MeshInstance3D in meshes:
+			if str(mesh.name)!="mosquito_footwear_%d"%style: continue
+			for surface: int in range(mesh.mesh.get_surface_count()):
+				var arrays := mesh.mesh.surface_get_arrays(surface)
+				var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+				var bindings: PackedInt32Array = arrays[Mesh.ARRAY_BONES]
+				var weights: PackedFloat32Array = arrays[Mesh.ARRAY_WEIGHTS]
+				var influences: int = bindings.size()/vertices.size()
+				for vertex: int in range(vertices.size()):
+					var slot := vertex*influences
+					var binding := int(bindings[slot])
+					if weights[slot]<.999: continue
+					var name := str(mesh.skin.get_bind_name(binding))
+					if name.is_empty(): name=skeleton.get_bone_name(mesh.skin.get_bind_bone(binding))
+					if not name.begins_with("leg") or not "_b_" in name: continue
+					if not grouped.has(name): grouped[name]=PackedVector3Array()
+					var point := skeleton.get_bone_global_rest(bone_ids[name])*mesh.skin.get_bind_pose(binding)*vertices[vertex]
+					grouped[name].append(point)
+		surface_foot_vertices[style]=grouped
+	var points: PackedVector3Array = surface_foot_vertices[style].get(bone,PackedVector3Array())
+	if points.is_empty(): return INF
+	var rest := skeleton.get_bone_global_rest(bone_ids[bone])
+	var original := _point(contract[bone].to)-_point(contract[bone].from)
+	var direction := tip-knee
+	var target_basis := Basis(Quaternion(original.normalized(),direction.normalized()))*rest.basis
+	target_basis.y*=direction.length()/original.length()
+	var transform := skeleton.global_transform*Transform3D(target_basis,knee)*rest.affine_inverse()
+	var lowest := INF
+	var local_normal := transform.basis.transposed()*normal
+	for point: Vector3 in points: lowest=minf(lowest,point.dot(local_normal))
+	return lowest+transform.origin.dot(normal)
+
 func _animate_face(data: Dictionary, dt: float) -> void:
 	if facial==null: return
 	facial_values = facial.advance(data,species,dt,int(appearance.get("eyes",appearance.get("face",0))))
+	if species=="human": Emotes.apply_face(facial_values,data)
 	facial_elapsed += dt
 	if first_person and species=="human": return
 	_update_facial_detail()
@@ -294,11 +454,22 @@ func _animate_face(data: Dictionary, dt: float) -> void:
 	facial_elapsed = 0.0
 	apply_facial_values(facial_values)
 
+func set_voice_mouth_level(level: float) -> void:
+	var safe := clampf(level,0.0,1.0) if is_finite(level) else 0.0
+	if is_equal_approx(safe,voice_mouth_level): return
+	voice_mouth_level=safe
+	# Base expression remains separate so silence restores the current gesture,
+	# not a cached talking mouth. The common channel cache skips identical writes.
+	if is_inside_tree(): apply_facial_values(facial_values)
+	else: facial_applied.clear()
+
 func apply_facial_values(values: Dictionary) -> void:
 	## Shared by gameplay and exact-state gallery fixtures. Correctives preserve
 	## the brow/eye attachment when either eyelid closes during an expression.
 	_update_facial_detail()
 	var effective: Dictionary = values.duplicate()
+	if voice_mouth_level>0.0:
+		effective.MouthOpen=clampf(maxf(float(values.get("MouthOpen",0.0)),voice_mouth_level*.72),0.0,1.0)
 	for control: String in ["BrowUp","BrowDown"]:
 		for blink: String in ["BlinkL","BlinkR"]:
 			effective[control+blink]=float(values.get(control,0.0))*float(values.get(blink,0.0))

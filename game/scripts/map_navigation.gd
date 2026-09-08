@@ -3,6 +3,7 @@ extends RefCounted
 ## Small authored graph shared by offline bots. No engine navigation bake or 3D grid.
 ## Human points are feet; mosquito points are centers. Reuse routes between repaths.
 
+const Geometry = preload("res://scripts/navigation_geometry.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const HouseBarriers = preload("res://scripts/house_barriers.gd")
 const PickupSupports = preload("res://scripts/pickup_supports.gd")
@@ -10,112 +11,45 @@ const HUMAN_RADIUS := 0.60
 const HUMAN_HEIGHT := 1.95
 const MOSQUITO_RADIUS := 0.04
 const STEP_HEIGHT := 0.221
+const GeometryCache=preload("res://scripts/geometry_cache.gd")
+static var _cache_order: Array[String]=[]
 static var _cache: Dictionary = {}
 
 static func _data(map_id: String) -> Dictionary:
-	return Maps.LOBBY if map_id == "lobby" else Maps.HOUSE
+	return Maps.get_map(map_id)
 
 static func clear_cache() -> void:
 	_cache.clear()
+	_cache_order.clear()
 
 static func _geometry(human: bool, map_id: String) -> Dictionary:
 	var key: String = map_id + ("/human" if human else "/mosquito")
+	GeometryCache.touch(_cache_order,key,48,[_cache])
 	if _cache.has(key):
 		return _cache[key]
 	var data: Dictionary = _data(map_id)
-	var expanded: Array[AABB] = []
-	var obstacles: Array[AABB] = []
-	for box: AABB in data.obstacles:
-		obstacles.append(box)
-	obstacles.append_array(HouseBarriers.get_boxes(map_id))
-	obstacles.append_array(PickupSupports.get_boxes(map_id))
-	for obstacle: AABB in obstacles:
-		if human:
-			expanded.append(AABB(obstacle.position - Vector3(HUMAN_RADIUS, HUMAN_HEIGHT - 0.003, HUMAN_RADIUS), obstacle.size + Vector3(HUMAN_RADIUS * 2.0, HUMAN_HEIGHT - 0.006, HUMAN_RADIUS * 2.0)))
-		else:
-			expanded.append(obstacle.grow(MOSQUITO_RADIUS))
-	var supports: Array[AABB] = []
-	for obstacle: AABB in data.get("floors", []):
-		supports.append(obstacle)
-	for obstacle: AABB in data.get("steps", []):
-		supports.append(obstacle)
-	var result := {"data": data, "expanded": expanded, "supports": supports, "human": human, "nodes": [], "edges": [], "invalid_edges": []}
+	var extra: Array[AABB] = HouseBarriers.get_boxes(map_id)
+	extra.append_array(PickupSupports.get_boxes(map_id))
+	var result := Geometry.create(data, human, extra)
 	_cache[key] = result
 	return result
 
 static func _fits(point: Vector3, geometry: Dictionary) -> bool:
-	var data: Dictionary = geometry.data
-	var radius: float = HUMAN_RADIUS if geometry.human else MOSQUITO_RADIUS
-	var top: float = HUMAN_HEIGHT if geometry.human else MOSQUITO_RADIUS
-	var bottom: float = 0.0 if geometry.human else MOSQUITO_RADIUS
-	if absf(point.x) + radius > float(data.half_x) or absf(point.z) + radius > float(data.half_z) or point.y < bottom - 0.001 or point.y + top > float(data.ceiling) + 0.001:
-		return false
-	for obstacle: AABB in geometry.expanded:
-		if obstacle.has_point(point):
-			return false
-	return true
+	return Geometry._fits(point, geometry)
 
 static func _support_height(point: Vector3, geometry: Dictionary, tolerance: float) -> float:
-	var result: float = 0.0 if point.y <= tolerance else -INF
-	for obstacle: AABB in geometry.supports:
-		if obstacle.end.y > point.y + tolerance or obstacle.end.y < point.y - tolerance:
-			continue
-		if point.x + HUMAN_RADIUS > obstacle.position.x and point.x - HUMAN_RADIUS < obstacle.end.x and point.z + HUMAN_RADIUS > obstacle.position.z and point.z - HUMAN_RADIUS < obstacle.end.z:
-			result = maxf(result, obstacle.end.y)
-	return result
+	return Geometry._support_height(point, geometry, tolerance)
 
 static func _project_human(point: Vector3, geometry: Dictionary) -> Vector3:
-	var candidates: Array[float] = [0.0]
-	for obstacle: AABB in geometry.supports:
-		if obstacle.end.y <= point.y + STEP_HEIGHT and point.x + HUMAN_RADIUS > obstacle.position.x and point.x - HUMAN_RADIUS < obstacle.end.x and point.z + HUMAN_RADIUS > obstacle.position.z and point.z - HUMAN_RADIUS < obstacle.end.z:
-			if not candidates.has(obstacle.end.y):
-				candidates.append(obstacle.end.y)
-	candidates.sort()
-	candidates.reverse()
-	for height: float in candidates:
-		var trial := Vector3(point.x, height, point.z)
-		if _fits(trial, geometry):
-			return trial
-	return Vector3(INF, INF, INF)
-
-static func can_travel(from: Vector3, to: Vector3, human: bool, map_id: String = "house") -> bool:
-	if not from.is_finite() or not to.is_finite() or map_id not in ["house", "lobby"]:
-		return false
-	return _segment(from, to, _geometry(human, map_id))
+	return Geometry._project_human(point, geometry)
 
 static func _segment(from: Vector3, to: Vector3, geometry: Dictionary) -> bool:
-	if not _fits(from, geometry) or not _fits(to, geometry):
+	return Geometry._segment(from, to, geometry)
+
+static func can_travel(from: Vector3, to: Vector3, human: bool, map_id: String = "house") -> bool:
+	if not from.is_finite() or not to.is_finite() or (map_id!="lobby" and not Maps.is_playable(map_id)):
 		return false
-	if not geometry.human:
-		for obstacle: AABB in geometry.expanded:
-			if obstacle.intersects_segment(from, to) != null:
-				return false
-		return true
-	var flat_distance: float = Vector2(from.x - to.x, from.z - to.z).length()
-	if absf(from.y - to.y) > flat_distance * 0.6 + STEP_HEIGHT:
-		return false
-	if absf(from.y - to.y) < 0.01:
-		for obstacle: AABB in geometry.expanded:
-			if obstacle.intersects_segment(from, to) != null:
-				return false
-		# A clear line above a stairwell is not a walkable bridge.
-		for index: int in range(1, maxi(2, int(ceilf(flat_distance / 0.35)))):
-			var point: Vector3 = from.lerp(to, float(index) / float(maxi(2, int(ceilf(flat_distance / 0.35)))))
-			if not is_finite(_support_height(point, geometry, 0.025)):
-				return false
-		return true
-	var count: int = maxi(2, int(ceilf(flat_distance / 0.20)))
-	var previous: Vector3 = from
-	for index: int in range(1, count + 1):
-		var point: Vector3 = from.lerp(to, float(index) / float(count))
-		var floor_y: float = _support_height(point, geometry, STEP_HEIGHT)
-		if not is_finite(floor_y) or absf(floor_y - previous.y) > STEP_HEIGHT:
-			return false
-		point.y = floor_y
-		if not _fits(point, geometry):
-			return false
-		previous = point
-	return true
+	return _segment(from, to, _geometry(human, map_id))
 
 static func _graph(human: bool, map_id: String) -> Dictionary:
 	var graph: Dictionary = _geometry(human, map_id)
@@ -164,7 +98,7 @@ static func _connections(point: Vector3, graph: Dictionary) -> Array[int]:
 
 static func path(from: Vector3, to: Vector3, human: bool, map_id: String = "house") -> PackedVector3Array:
 	var empty := PackedVector3Array()
-	if not from.is_finite() or not to.is_finite() or map_id not in ["house", "lobby"]:
+	if not from.is_finite() or not to.is_finite() or (map_id!="lobby" and not Maps.is_playable(map_id)):
 		return empty
 	var graph: Dictionary = _graph(human, map_id)
 	var origin: Vector3 = _project_human(from, graph) if human else from

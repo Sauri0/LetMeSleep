@@ -105,6 +105,8 @@ func _run() -> void:
 					check(skeleton_signature(skin)==bone_poses,role+" tint never alters a bone pose")
 					if role=="human":
 						check(Color(skin.material_cache.hair.albedo_color).is_equal_approx(Cosmetics.HAIR_PALETTE[hair_color]),"hair brows mustache beard share independent tint")
+						check(Color(skin.material_cache.hair_matte.albedo_color).is_equal_approx(Cosmetics.HAIR_PALETTE[hair_color]),"matte H0 preserves the same independent hair palette")
+						check(is_zero_approx(float(skin.material_cache.hair_matte.metallic_specular)) and is_equal_approx(float(skin.material_cache.hair_matte.roughness),1.0),"H0 native material retains measured matte finish")
 		if role=="human":
 			for mustache: int in range(3):
 				for beard: int in range(3):

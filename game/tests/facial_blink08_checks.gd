@@ -54,17 +54,14 @@ func closure_coverage(mesh: MeshInstance3D) -> Dictionary:
 				for point: Vector3 in [a,b,c,(a+b)*.5,(b+c)*.5,(c+a)*.5,(a+b+c)/3.0]:
 					samples.append([mesh.global_transform*point,(mesh.global_basis*normal).normalized(),material])
 	var body := StaticBody3D.new();root.add_child(body)
-	if str(mesh.name)=="human_eyes_0":
-		var debug_points: Array=[]
-		for p: Vector3 in lid_faces:debug_points.append([p.x,p.y,p.z])
-		var file := FileAccess.open(ProjectSettings.globalize_path("res://../work/blink08-lid-debug.json"),FileAccess.WRITE)
-		file.store_string(JSON.stringify({"faces":debug_points}));file.close()
 	# Godot's absolute ray/triangle epsilon rejects sub-millimetre triangles.
 	# A uniform scale preserves all intersections and gives a stable numeric
 	# range. This isolated test collider never becomes gameplay geometry.
-	body.global_transform=Transform3D(mesh.global_basis.scaled(Vector3.ONE*RAY_NUMERIC_SCALE),mesh.global_position*RAY_NUMERIC_SCALE)
+	body.global_transform=Transform3D.IDENTITY
 	var shape_node := CollisionShape3D.new();body.add_child(shape_node)
-	var shape := ConcavePolygonShape3D.new();shape.backface_collision=true;shape.set_faces(lid_faces);shape_node.shape=shape
+	var numeric_faces := PackedVector3Array()
+	for p: Vector3 in lid_faces:numeric_faces.append((mesh.global_transform*p)*RAY_NUMERIC_SCALE)
+	var shape := ConcavePolygonShape3D.new();shape.backface_collision=true;shape.set_faces(numeric_faces);shape_node.shape=shape
 	await physics_frame
 	await physics_frame
 	var space := body.get_world_3d().direct_space_state
@@ -92,7 +89,7 @@ func closure_coverage(mesh: MeshInstance3D) -> Dictionary:
 	body.queue_free();await physics_frame
 	var weights: Dictionary={}
 	for key: int in range(mesh.mesh.get_blend_shape_count()):weights[str(mesh.mesh.get_blend_shape_name(key))]=mesh.get_blend_shape_value(key)
-	return {"rays":rays,"uncovered":uncovered,"witnesses":witnesses,"sampling":"vertices, 3 edge midpoints and triangle centroid; 7 view directions", "debug_surfaces":debug_surfaces,"debug_weights":weights,"debug_transform":str(mesh.global_transform),"debug_mode":mesh.mesh.blend_shape_mode}
+	return {"rays":rays,"uncovered":uncovered,"witnesses":witnesses,"sampling":"vertices, 3 edge midpoints and triangle centroid; 7 view directions", "numeric_uniform_scale":RAY_NUMERIC_SCALE,"surfaces":debug_surfaces,"applied_weights":weights,"mesh_transform":str(mesh.global_transform),"blend_shape_mode":mesh.mesh.blend_shape_mode}
 
 func _run() -> void:
 	var camera := Camera3D.new();root.add_child(camera);camera.current=true

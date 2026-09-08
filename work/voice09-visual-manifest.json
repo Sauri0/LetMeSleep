@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "path": "game/scripts/actor_view.gd",
+      "sha256": "ccdd6f43b2e238eebdae89ab5c2d27c3e3eda4b296ce824781b3ae67229cd397"
+    },
+    {
+      "path": "game/scripts/voice_mouth_envelope.gd",
+      "sha256": "ddb02a38d571c0b8f2b34e3dc5e3956fe151c3174ad80bc02a1cc6bf5c40ece7"
+    },
+    {
+      "path": "game/assets/art/characters/shared/character_skin.gd",
+      "sha256": "bb2921afd26b7dc544e827db93a9f2ad3a24bf497ea88c6096b3acc2e1d4f3e5"
+    },
+    {
+      "path": "game/tests/voice09_visual_checks.gd",
+      "sha256": "1cc07aced9ae6dca25d4747b1d3d921f53d43bb952a952e987b72c4eadb02929"
+    }
+  ],
+  "checks": 552,
+  "failures": 0,
+  "input": "synthetic levels without capture or playback",
+  "report": "work/voice09-visual.json"
+}

@@ -20,12 +20,25 @@ signal rematch_requested
 signal leave_requested
 signal practice_requested(role: String, mode: String)
 signal practice_restart_requested
+signal emote_requested(id: String)
+signal emote_favorite_requested(slot: int, id: String)
+signal emote_preview_requested(id: String)
+signal emote_preview_closed
+signal voice_mute_requested(muted: bool)
+signal voice_test_requested(held: bool)
+signal voice_peer_mute_requested(peer_id: int, muted: bool)
+signal voice_input_device_requested(device: String)
+signal voice_devices_refresh_requested
 
 const Prefs = preload("res://scripts/preferences.gd")
 const Simulation = preload("res://scripts/simulation.gd")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const InvitationCodec = preload("res://scripts/invitation.gd")
 const AvatarPreview = preload("res://scripts/avatar_preview.gd")
+const MenuMascot = preload("res://scripts/menu_mascot.gd")
+const EmoteSelector = preload("res://scripts/emote_selector.gd")
+const Emotes = preload("res://scripts/emote_catalog.gd")
+const VoiceIndicator = preload("res://scripts/voice_indicator.gd")
 const TITLE_FONT = preload("res://assets/fonts/Bangers/Bangers-Regular.ttf")
 const BODY_FONT = preload("res://assets/fonts/AtkinsonHyperlegible/AtkinsonHyperlegible-Regular.ttf")
 const BOLD_FONT = preload("res://assets/fonts/AtkinsonHyperlegible/AtkinsonHyperlegible-Bold.ttf")
@@ -112,31 +125,6 @@ class ComicBackdrop extends Control:
 			for x: int in range(15, 1280, 22):
 				if kind != "home" or float(x) > 708.0 - float(y) * 0.21:
 					draw_circle(Vector2(x, y), 1.7, Color(0.14, 0.15, 0.20, 0.16))
-		if kind == "home":
-			# Original drawn window + mosquito; no raster asset or third-party art.
-			draw_rect(Rect2(59, 490, 119, 147), TINT)
-			draw_rect(Rect2(65, 496, 107, 135), Color("608aaf"))
-			draw_circle(Vector2(101, 527), 19, PAGE)
-			draw_circle(Vector2(110, 519), 18, Color("608aaf"))
-			draw_line(Vector2(119, 495), Vector2(119, 632), TINT, 5)
-			draw_line(Vector2(64, 566), Vector2(174, 566), TINT, 5)
-			draw_line(Vector2(49, 641), Vector2(188, 641), TINT, 7)
-			_ellipse(Vector2(304, 528), Vector2(53, 21), -0.72, PAGE)
-			_ellipse(Vector2(354, 514), Vector2(56, 22), -0.20, PAGE)
-			_ellipse(Vector2(327, 568), Vector2(59, 33), 0.16, Color("ef6652"))
-			draw_line(Vector2(310, 539), Vector2(300, 595), TINT, 5)
-			draw_line(Vector2(334, 537), Vector2(324, 600), TINT, 5)
-			draw_circle(Vector2(380, 554), 25, TINT)
-			draw_circle(Vector2(380, 552), 21, Color("ffcf47"))
-			draw_circle(Vector2(389, 547), 8, PAGE)
-			draw_circle(Vector2(392, 546), 4, TINT)
-			draw_line(Vector2(400, 554), Vector2(454, 535), TINT, 5)
-			for index: int in range(3):
-				var base := Vector2(309 + index * 23, 588)
-				draw_polyline(PackedVector2Array([base, base + Vector2(-18, 27), base + Vector2(-42, 30)]), TINT, 4.0, true)
-			draw_arc(Vector2(235, 551), 31, 1.5, 4.5, 24, TINT, 3.0, true)
-			if title_font != null:
-				draw_string(title_font, Vector2(425, 506), "¡BZZ!", HORIZONTAL_ALIGNMENT_LEFT, -1, 42, TINT)
 
 var _root: Control
 var _home: Control
@@ -285,6 +273,26 @@ var _attack_recovery: ProgressBar
 var _hud_context_key := ""
 var _hud_context_until := 0.0
 var _attack_feedback_key := ""
+var _menu_mascot: Control
+var _emote_selector: Control
+var _emote_state: Dictionary = {}
+var _emote_return_focus: Control
+var _emote_button: Button
+var _custom_emotes := false
+var _custom_emote_button: Button
+var _favorite_slot := 0
+var _favorite_buttons: Dictionary = {}
+var _voice_state: Dictionary = {}
+var _voice_indicator: HBoxContainer
+var _voice_mute: CheckButton
+var _voice_test: Button
+var _voice_status: Label
+var _voice_peers: VBoxContainer
+var _voice_peer_signature := ""
+var _voice_test_held := false
+var _voice_input_device: OptionButton
+var _voice_devices_refresh: Button
+var _voice_device_signature := ""
 
 
 func _ready() -> void:
@@ -314,6 +322,7 @@ func _build() -> void:
 	_build_practice()
 	_build_settings()
 	_build_invite_settings()
+	_build_social_controls()
 
 
 func _make_theme() -> Theme:
@@ -522,38 +531,40 @@ func _build_home() -> void:
 	_home = _full_control(_root)
 	_add_comic_backdrop(_home, "home")
 	var columns := HBoxContainer.new()
-	columns.add_theme_constant_override("separation", 62)
-	_margin(_home, 46).add_child(columns)
-	var intro := _vbox(columns, 16)
+	columns.add_theme_constant_override("separation", 36)
+	_margin(_home, 36).add_child(columns)
+	var intro := _vbox(columns, 10)
 	intro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	intro.size_flags_stretch_ratio = 1.05
-	intro.add_child(_label("EDICIÓN NOCTURNA / N.º 05", 15, INK))
-	var logo := _label("LET ME\nSLEEP", 112, SUN)
+	intro.add_child(_label("LA NOCHE RECIÉN EMPIEZA", 14, INK))
+	var logo := _label("LET ME\nSLEEP", 94, SUN)
 	logo.add_theme_color_override("font_outline_color", INK)
 	logo.add_theme_constant_override("outline_size", 14)
 	logo.add_theme_color_override("font_shadow_color", INK)
 	logo.add_theme_constant_override("shadow_offset_x", 5)
 	logo.add_theme_constant_override("shadow_offset_y", 6)
 	intro.add_child(logo)
-	intro.add_child(_label("HUMANOS CONTRA MOSQUITOS", 27, INK))
+	intro.add_child(_label("HUMANOS CONTRA MOSQUITOS", 25, INK))
 	var details := HBoxContainer.new()
 	details.add_theme_constant_override("separation", 20)
 	intro.add_child(details)
 	details.add_child(_label("3 MODOS", 13, MUTED))
 	details.add_child(_label("ROLES POR SORTEO", 13, MUTED))
 	details.add_child(_label("DESDE 1v1", 13, MUTED))
-	var space := Control.new()
-	space.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	intro.add_child(space)
+	_menu_mascot = MenuMascot.new()
+	_menu_mascot.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_menu_mascot.set_appearance(CosmeticsData.appearance_for(Prefs.cosmetics,"mosquito"))
+	intro.add_child(_menu_mascot)
 	intro.add_child(_label("PROTOTIPO %s  ·  WINDOWS" % str(ProjectSettings.get_setting("application/config/version","0.6.0")), 13, MUTED))
-	var card := _panel(columns, Color(0.10, 0.21, 0.25, 0.96))
+	var card := _panel(columns, PAPER)
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var card_box := _vbox(card, 10)
 	var scroll := _scroll(card_box)
+	scroll.follow_focus = true
 	var content := _vbox(scroll, 8)
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_home_menu = _vbox(content, 14)
-	_home_menu.add_child(_label("¿QUÉ SE ARMA HOY?", 38))
+	_home_menu.add_child(_label("¿QUIÉN TE DEJA DORMIR?", 32))
 	_home_default_focus = _button("PRÁCTICA", _open_practice, true)
 	_home_menu.add_child(_home_default_focus)
 	_home_menu.add_child(_label("Entrá a probar con rivales automáticos.", 14, MUTED, true))
@@ -1138,6 +1149,9 @@ func _build_pause() -> void:
 	box.add_child(_label("La ronda sigue en marcha.", 17, MUTED))
 	box.add_child(_button("Seguir jugando", func() -> void: set_pause(false), true))
 	box.add_child(_button("Cómo jugar", _open_help))
+	_emote_button = _small_button("Emotes",func() -> void: _open_emote_selector(false))
+	_emote_button.disabled = true
+	box.add_child(_emote_button)
 	box.add_child(_button("Ajustes y controles", _open_settings))
 	_pause_leave = _button("Salir de la sala", func() -> void: leave_requested.emit())
 	box.add_child(_pause_leave)
@@ -1167,6 +1181,7 @@ func _build_help() -> void:
 
 func _open_help() -> void:
 	if _help_open or _screen != "game": return
+	_close_emote_selector()
 	_help_return_focus = get_viewport().gui_get_focus_owner()
 	_help_open = true
 	var keys := [Prefs.binding_text("move_forward"),Prefs.binding_text("move_left"),Prefs.binding_text("move_back"),Prefs.binding_text("move_right")]
@@ -1187,6 +1202,7 @@ func _open_help() -> void:
 	_queue_focus(_help_close)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	screen_changed.emit("help")
+	_sync_voice_controls()
 
 
 func _close_help() -> void:
@@ -1245,6 +1261,12 @@ func _build_customization() -> void:
 			button.add_theme_stylebox_override(state,_style(PAPER if state=="normal" else MINT,3,8,4))
 		categories.add_child(button)
 		_category_buttons[key] = button
+	categories.add_child(HSeparator.new())
+	_custom_emote_button = _small_button("Emotes",_show_custom_emotes)
+	_custom_emote_button.toggle_mode = true
+	_custom_emote_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	categories.add_child(_custom_emote_button)
+	categories.move_child(_custom_emote_button,0)
 	var studio := _vbox(columns,8)
 	studio.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_avatar_preview = AvatarPreview.new()
@@ -1284,6 +1306,7 @@ func _build_customization() -> void:
 
 
 func _open_customization() -> void:
+	_custom_emotes = false
 	Prefs.cosmetics = CosmeticsData.sanitize(Prefs.cosmetics)
 	_set_screen("customization")
 	_custom_role = "human"
@@ -1302,6 +1325,7 @@ func _close_customization() -> void:
 func _select_custom_role(role: String) -> void:
 	if role not in ["human", "mosquito"]:
 		return
+	_stop_emote_preview()
 	_custom_role = role
 	_refresh_customization()
 	_focus_custom_category()
@@ -1322,6 +1346,7 @@ func _commit_cosmetics() -> void:
 	Prefs.save_settings()
 	cosmetics_changed.emit(Prefs.cosmetics.duplicate(true))
 	_refresh_customization()
+	_sync_menu_mascot()
 
 
 func _refresh_customization() -> void:
@@ -1332,7 +1357,7 @@ func _refresh_customization() -> void:
 		_custom_role_buttons[role].button_pressed = role == _custom_role
 	for key: String in _category_buttons:
 		_category_buttons[key].visible = key in valid_keys
-		_category_buttons[key].button_pressed = key == _custom_category
+		_category_buttons[key].button_pressed = key == _custom_category and not _custom_emotes
 		if key in valid_keys:_category_buttons[key].icon = _custom_thumbnail(_custom_role,key,0)
 	_category_buttons.hair.text = "Pelo" if _custom_role == "human" else "Antenas"
 	_category_buttons.outfit.text = "Ropa" if _custom_role == "human" else "Cuerpo"
@@ -1342,6 +1367,11 @@ func _refresh_customization() -> void:
 		_custom_options.remove_child(child)
 		child.queue_free()
 	_custom_option_buttons.clear()
+	_custom_emote_button.visible = _custom_role == "human"
+	_custom_emote_button.button_pressed = _custom_emotes
+	if _custom_emotes and _custom_role == "human":
+		_build_custom_emotes()
+		return
 	var names: Array = CosmeticsData.option_names(_custom_role,_custom_category)
 	_custom_options.add_child(_label(str(_category_buttons[_custom_category].text).to_upper(),19,INK))
 	if _custom_category=="hair_color":
@@ -1384,6 +1414,7 @@ func _refresh_customization() -> void:
 
 func _select_custom_category(key: String) -> void:
 	if key not in CosmeticsData.category_keys(_custom_role): return
+	_stop_emote_preview()
 	_custom_category = key
 	_refresh_customization()
 	_focus_custom_category()
@@ -1681,6 +1712,7 @@ func _build_settings() -> void:
 	_add_slider(box, "effects_volume", "Efectos", Prefs.effects_volume * 100.0, 0.0, 100.0, 1.0)
 	_add_slider(box, "ambience_volume", "Ambiente", Prefs.ambience_volume * 100.0, 0.0, 100.0, 1.0)
 	_add_slider(box, "ui_volume", "Interfaz", Prefs.ui_volume * 100.0, 0.0, 100.0, 1.0)
+	_build_voice_settings(box)
 	box.add_child(_label("Cámara", 24))
 	_add_slider(box, "human", "Sensibilidad · humano", Prefs.human_sensitivity * 1000.0, 0.5, 8.0, 0.1)
 	_add_slider(box, "mosquito", "Sensibilidad · mosquito", Prefs.mosquito_sensitivity * 1000.0, 0.5, 8.0, 0.1)
@@ -1798,6 +1830,7 @@ func _add_slider(parent: Node, key: String, label_text: String, value: float, mi
 
 
 func _begin_binding(action: String) -> void:
+	_set_voice_test(false)
 	_binding_action = action
 	_refresh_binding_buttons()
 	_binding_notice.text = "Nuevo control para «%s»: pulsá una tecla o botón. Esc cancela." % Prefs.ACTION_NAMES[action]
@@ -1819,6 +1852,23 @@ func _input(event: InputEvent) -> void:
 			_binding_action = ""
 			_finish_binding()
 		return
+	if _emote_selector.visible:
+		if escape:
+			_close_emote_selector()
+			get_viewport().set_input_as_handled()
+			return
+		if InputMap.has_action("emote_menu") and event.is_action_released("emote_menu") and _emote_selector.held:
+			_emote_selector.finish_hold()
+			get_viewport().set_input_as_handled()
+			return
+		if _emote_selector.handle_event(event):
+			get_viewport().set_input_as_handled()
+			return
+	if InputMap.has_action("emote_menu") and event.is_action_pressed("emote_menu") and not event.is_echo():
+		if _screen in ["game","lobby"] and not is_menu_open():
+			_open_emote_selector(true)
+			get_viewport().set_input_as_handled()
+			return
 	if _screen == "game" and not _settings_open and not _invite_settings_open and event.is_action_pressed("toggle_help"):
 		get_viewport().set_input_as_handled()
 		if not event.is_echo():
@@ -1859,19 +1909,24 @@ func _finish_binding() -> void:
 func _refresh_binding_buttons() -> void:
 	for action: String in _binding_buttons:
 		_binding_buttons[action].text = Prefs.binding_text(action)
+	_sync_voice_controls()
 
 
 func _open_settings() -> void:
+	_close_emote_selector()
 	_last_settings_focus = get_viewport().gui_get_focus_owner()
 	_settings_open = true
 	_settings.show()
 	_set_focus_scope(_settings)
 	_queue_focus(_settings_default_focus)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_sync_menu_mascot()
+	_sync_voice_controls()
 	screen_changed.emit("settings")
 
 
 func _close_settings() -> void:
+	_set_voice_test(false)
 	_binding_action = ""
 	Prefs.save_settings()
 	_settings_open = false
@@ -1881,6 +1936,8 @@ func _close_settings() -> void:
 		_queue_focus(_last_settings_focus)
 	if _screen == "game" and not _paused:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_sync_menu_mascot()
+	_sync_voice_controls()
 	screen_changed.emit(_screen)
 
 
@@ -2225,6 +2282,7 @@ func show_results(snapshot: Dictionary) -> void:
 
 
 func set_pause(open: bool) -> void:
+	_close_emote_selector()
 	if _screen == "lobby":
 		if _settings_open:
 			_close_settings()
@@ -2244,10 +2302,11 @@ func set_pause(open: bool) -> void:
 	else:
 		get_viewport().gui_release_focus()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if open else Input.MOUSE_MODE_CAPTURED
+	_sync_voice_controls()
 
 
 func is_menu_open() -> bool:
-	if _settings_open or _invite_settings_open or _help_open:
+	if _settings_open or _invite_settings_open or _help_open or (is_instance_valid(_emote_selector) and _emote_selector.visible):
 		return true
 	if _screen == "lobby":
 		return not _lobby_walking
@@ -2255,6 +2314,8 @@ func is_menu_open() -> bool:
 
 
 func _input_release() -> void:
+	_close_emote_selector()
+	_set_voice_test(false)
 	_help_open = false
 	_help.hide()
 	_paused = false
@@ -2276,6 +2337,9 @@ func _input_release() -> void:
 func _set_screen(screen: String) -> void:
 	var changed: bool = _screen != screen
 	if changed:
+		_close_emote_selector()
+		_set_voice_test(false)
+		_stop_emote_preview()
 		_help_open = false
 		_help.hide()
 		if _screen == "customization":
@@ -2295,6 +2359,8 @@ func _set_screen(screen: String) -> void:
 	_results.visible = screen == "results"
 	_customization.visible = screen == "customization"
 	_practice_screen.visible = screen == "practice"
+	_sync_menu_mascot()
+	_sync_voice_controls()
 	if changed:
 		screen_changed.emit(screen)
 	if changed:
@@ -2303,6 +2369,7 @@ func _set_screen(screen: String) -> void:
 
 
 func _base_focus_scope() -> Control:
+	if is_instance_valid(_emote_selector) and _emote_selector.visible: return _emote_selector
 	if _help_open: return _help
 	match _screen:
 		"home": return _home
@@ -2363,3 +2430,277 @@ func _grab_focus_if_current(control: Control) -> void:
 func _clock(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceilf(seconds)))
 	return "%02d:%02d" % [whole / 60, whole % 60]
+
+
+func _sync_menu_mascot() -> void:
+	if not is_instance_valid(_menu_mascot): return
+	_menu_mascot.set_appearance(CosmeticsData.appearance_for(Prefs.cosmetics,"mosquito"))
+	_menu_mascot.set_active(_screen=="home" and not _settings_open and not _invite_settings_open)
+
+
+func _social_binding(action: String) -> String:
+	return Prefs.binding_text(action) if InputMap.has_action(action) else "Sin asignar"
+
+
+func _build_social_controls() -> void:
+	_voice_indicator = VoiceIndicator.new()
+	_root.add_child(_voice_indicator)
+	_voice_indicator.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_voice_indicator.offset_left = -214
+	_voice_indicator.offset_right = -12
+	_voice_indicator.offset_top = 80
+	_voice_indicator.offset_bottom = 102
+	_voice_indicator.mute_requested.connect(func(muted: bool) -> void: voice_mute_requested.emit(muted))
+	_emote_selector = EmoteSelector.new()
+	_root.add_child(_emote_selector)
+	_emote_selector.selected.connect(_submit_emote)
+	_emote_selector.cancelled.connect(_close_emote_selector)
+	get_window().focus_exited.connect(func() -> void:
+		_set_voice_test(false)
+		_close_emote_selector()
+	)
+	set_emote_state(_emote_state)
+	set_voice_state(_voice_state)
+
+
+func set_emote_state(data: Dictionary) -> void:
+	var previous: Dictionary = _emote_state
+	_emote_state = data.duplicate(true)
+	_emote_state["favorites"] = Emotes.normalize_favorites(data.get("favorites",[]))
+	if not is_instance_valid(_emote_button): return
+	_emote_button.disabled = not bool(data.get("available",false))
+	_emote_button.text = "Emotes · " + _social_binding("emote_menu")
+	_emote_button.tooltip_text = str(data.get("reason",""))
+	if is_instance_valid(_emote_selector) and _emote_selector.visible and not bool(data.get("available",false)):
+		_close_emote_selector()
+	if _custom_emotes and _screen=="customization" and previous!=_emote_state:
+		var focus: Control = get_viewport().gui_get_focus_owner()
+		var focused_id: String = str(focus.get_meta("emote_favorite","")) if is_instance_valid(focus) else ""
+		_refresh_customization()
+		if _favorite_buttons.has(focused_id): _queue_focus(_favorite_buttons[focused_id])
+
+
+func _open_emote_selector(held: bool) -> void:
+	if not bool(_emote_state.get("available",false)) or _screen not in ["game","lobby"]:
+		return
+	if _settings_open or _help_open or _invite_settings_open: return
+	_emote_return_focus = get_viewport().gui_get_focus_owner()
+	_emote_selector.show()
+	_set_focus_scope(_emote_selector)
+	_emote_selector.open_selector(_emote_state.get("favorites",[]),held,_social_binding("emote_menu"))
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_sync_voice_controls()
+	screen_changed.emit("emotes")
+
+
+func _close_emote_selector() -> void:
+	if not is_instance_valid(_emote_selector) or not _emote_selector.visible: return
+	_emote_selector.hide()
+	_set_focus_scope(_base_focus_scope())
+	if is_menu_open() and is_instance_valid(_emote_return_focus):
+		_queue_focus(_emote_return_focus)
+	else:
+		get_viewport().gui_release_focus()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if is_menu_open() else Input.MOUSE_MODE_CAPTURED
+	_sync_voice_controls()
+	screen_changed.emit(_screen)
+
+
+func _submit_emote(id: String) -> void:
+	var allowed: bool = Emotes.is_valid(id) and bool(_emote_state.get("available",false))
+	_close_emote_selector()
+	if allowed:
+		ui_sound_requested.emit("confirm")
+		emote_requested.emit(id)
+
+
+func _show_custom_emotes() -> void:
+	if _custom_role!="human": return
+	_custom_emotes = true
+	_refresh_customization()
+	_avatar_preview.reset_view()
+	_queue_focus(_custom_emote_button)
+
+
+func _stop_emote_preview() -> void:
+	if not _custom_emotes: return
+	_custom_emotes = false
+	emote_preview_closed.emit()
+
+func play_emote_preview(id: String) -> bool:
+	return _avatar_preview.play_emote(id) if is_instance_valid(_avatar_preview) and _custom_role=="human" else false
+
+func stop_emote_preview() -> void:
+	if is_instance_valid(_avatar_preview): _avatar_preview.stop_emote()
+
+
+func _build_custom_emotes() -> void:
+	_favorite_buttons.clear()
+	_custom_options.add_child(_label("EMOTES",25))
+	_custom_options.add_child(_label("Gestos de cuerpo entero. Elegí el orden de tus cuatro atajos.",14,MUTED,true))
+	if not bool(_emote_state.get("preview_available",false)):
+		_custom_options.add_child(_label(str(_emote_state.get("preview_reason","La vista del gesto aún no está disponible.")),13,MUTED,true))
+	var slots := OptionButton.new()
+	var favorites: Array[String] = Emotes.normalize_favorites(_emote_state.get("favorites",[]))
+	for index: int in range(favorites.size()):
+		slots.add_item("Atajo %d · %s" % [index+1,Emotes.get_emote(favorites[index]).label])
+	slots.select(_favorite_slot)
+	slots.item_selected.connect(func(index: int) -> void: _favorite_slot=index)
+	_custom_options.add_child(slots)
+	for entry: Dictionary in Emotes.entries():
+		var id: String = entry.id
+		var box := _vbox(_panel(_custom_options),6)
+		box.add_child(_label(entry.label,20))
+		var row := HBoxContainer.new()
+		box.add_child(row)
+		var play := _small_button("Probar",func() -> void:
+			if bool(_emote_state.get("preview_available",false)):
+				emote_preview_requested.emit(id)
+		)
+		play.disabled = not bool(_emote_state.get("preview_available",false))
+		play.tooltip_text = str(_emote_state.get("preview_reason","La vista del gesto se habilita al integrar su animación.")) if play.disabled else "Ver el gesto completo"
+		row.add_child(play)
+		var favorite := _small_button("Usar en atajo",func() -> void: emote_favorite_requested.emit(_favorite_slot,id))
+		favorite.set_meta("emote_favorite",id)
+		_favorite_buttons[id] = favorite
+		row.add_child(favorite)
+	_custom_caption.text = "Emotes humanos · " + _social_binding("emote_menu") + " abre el selector durante el juego"
+	_set_focus_scope(_customization)
+
+
+func get_customization_preview() -> SubViewportContainer:
+	return _avatar_preview
+
+
+func _build_voice_settings(parent: VBoxContainer) -> void:
+	var box := _vbox(parent,9)
+	box.add_child(_label("Voz por proximidad",24))
+	box.add_child(_label("Te escuchan humanos y mosquitos cercanos. El micrófono solo transmite mientras mantenés el control de hablar.",14,MUTED,true))
+	box.add_child(_label("Entrada de micrófono",15))
+	var devices := HBoxContainer.new()
+	devices.add_theme_constant_override("separation",8)
+	box.add_child(devices)
+	_voice_input_device = OptionButton.new()
+	_voice_input_device.fit_to_longest_item = false
+	_voice_input_device.clip_text = true
+	_voice_input_device.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_voice_input_device.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_voice_input_device.add_theme_font_size_override("font_size",15)
+	_voice_input_device.add_item("Default")
+	_voice_input_device.set_item_metadata(0,"Default")
+	_voice_input_device.disabled = true
+	_voice_input_device.item_selected.connect(_choose_voice_input_device)
+	devices.add_child(_voice_input_device)
+	_voice_devices_refresh = _small_button("Actualizar dispositivos",func() -> void:
+		if _settings_open and not _voice_devices_refresh.disabled:
+			voice_devices_refresh_requested.emit())
+	_voice_devices_refresh.add_theme_font_size_override("font_size",13)
+	_voice_devices_refresh.tooltip_text = "Volver a consultar las entradas disponibles, sin abrir el micrófono."
+	devices.add_child(_voice_devices_refresh)
+	_voice_mute = CheckButton.new()
+	_voice_mute.text = "Silenciar mi micrófono"
+	_voice_mute.toggled.connect(func(muted: bool) -> void:
+		_set_voice_test(false)
+		voice_mute_requested.emit(muted)
+	)
+	box.add_child(_voice_mute)
+	_voice_test = _small_button("Mantené para comprobar el micrófono",func() -> void: pass)
+	_voice_test.button_down.connect(func() -> void: _set_voice_test(true))
+	_voice_test.button_up.connect(func() -> void: _set_voice_test(false))
+	_voice_test.focus_exited.connect(func() -> void: _set_voice_test(false))
+	_voice_test.disabled = true
+	box.add_child(_voice_test)
+	_voice_status = _label("Micrófono cerrado.",14,MUTED,true)
+	box.add_child(_voice_status)
+	_voice_peers = _vbox(box,5)
+
+
+func set_voice_state(data: Dictionary) -> void:
+	_voice_state = data.duplicate(true)
+	if not is_instance_valid(_voice_status): return
+	var muted: bool = bool(data.get("muted",str(data.get("status",""))=="muted"))
+	_voice_state["muted"] = muted
+	_voice_mute.set_pressed_no_signal(muted)
+	_voice_mute.disabled = not bool(data.get("available",data.get("can_test",false)))
+	_voice_test.disabled = not bool(data.get("can_test",false)) or muted
+	if _voice_test.disabled: _set_voice_test(false)
+	var error: String = str(data.get("error",""))
+	var capturing: bool = str(data.get("status",""))=="capturing"
+	_sync_voice_devices(data,capturing)
+	_voice_status.text = error if not error.is_empty() else ("Micrófono activo mientras mantenés el botón." if capturing else "Micrófono cerrado · " + _social_binding("push_to_talk") + " para hablar al jugar.")
+	if error.is_empty() and not bool(data.get("available",false)) and not bool(data.get("can_test",false)):
+		_voice_status.text = "Voz no disponible en esta sesión."
+	_voice_status.modulate = CORAL if not error.is_empty() else Color.WHITE
+	var peers: Array = data.get("peers",[]) if data.get("peers",[]) is Array else []
+	var signature: String = JSON.stringify(peers)
+	if signature!=_voice_peer_signature:
+		_voice_peer_signature = signature
+		for child: Node in _voice_peers.get_children():
+			_voice_peers.remove_child(child)
+			child.queue_free()
+		if not peers.is_empty(): _voice_peers.add_child(_label("Silenciar a un jugador",16))
+		for value: Variant in peers:
+			if not value is Dictionary or int(value.get("id",0))<=0: continue
+			var peer_id: int = value.id
+			var button := CheckButton.new()
+			button.text = str(value.get("name","Jugador")).left(24)
+			button.button_pressed = bool(value.get("muted",false))
+			button.toggled.connect(func(enabled: bool) -> void: voice_peer_mute_requested.emit(peer_id,enabled))
+			_voice_peers.add_child(button)
+		if _settings_open: _set_focus_scope(_settings)
+	_sync_voice_controls()
+
+
+func _sync_voice_devices(data: Dictionary, capturing: bool) -> void:
+	var devices: Array[String] = []
+	var supplied: Variant = data.get("input_devices",[])
+	if supplied is Array or supplied is PackedStringArray:
+		for value: Variant in supplied:
+			if value is String and not value.is_empty() and not devices.has(value): devices.append(value)
+	var selected: String = data.get("input_device","Default") if data.get("input_device","Default") is String else "Default"
+	if selected.is_empty(): selected = "Default"
+	var signature := JSON.stringify({"devices":devices,"selected":selected})
+	if signature != _voice_device_signature:
+		_voice_device_signature = signature
+		_voice_input_device.clear()
+		for device: String in devices:
+			_voice_input_device.add_item(device.left(54)+"…" if device.length()>54 else device)
+			var index := _voice_input_device.item_count-1
+			_voice_input_device.set_item_metadata(index,device)
+			_voice_input_device.get_popup().set_item_tooltip(index,device)
+		var selected_index := devices.find(selected)
+		if selected_index < 0:
+			# Mirror a backend choice that disappeared without silently changing
+			# the saved device. Only an explicit user choice requests a change.
+			selected_index = _voice_input_device.item_count
+			var missing := selected.left(44)+"…" if selected.length()>44 else selected
+			_voice_input_device.add_item(missing+" · no disponible" if not devices.is_empty() else missing)
+			_voice_input_device.set_item_metadata(selected_index,selected)
+			_voice_input_device.set_item_disabled(selected_index,true)
+		_voice_input_device.select(selected_index)
+		_voice_input_device.tooltip_text = selected
+	_voice_input_device.disabled = capturing or devices.is_empty()
+	_voice_devices_refresh.disabled = capturing
+	if capturing: _voice_input_device.get_popup().hide()
+
+
+func _choose_voice_input_device(index: int) -> void:
+	if not _settings_open or _voice_input_device.disabled or index<0 or index>=_voice_input_device.item_count or _voice_input_device.is_item_disabled(index): return
+	var device: String = str(_voice_input_device.get_item_metadata(index))
+	if device == str(_voice_state.get("input_device","Default")): return
+	voice_input_device_requested.emit(device)
+
+
+func _sync_voice_controls() -> void:
+	if not is_instance_valid(_voice_indicator): return
+	var display: Dictionary = _voice_state.duplicate(true)
+	display["binding"] = str(display.get("binding",_social_binding("push_to_talk")))
+	display["visible"] = bool(display.get("visible",false)) and _screen in ["game","lobby"] and not _settings_open and not _help_open and not _paused and not _invite_settings_open and not (is_instance_valid(_emote_selector) and _emote_selector.visible)
+	_voice_indicator.set_state(display)
+
+
+func _set_voice_test(held: bool) -> void:
+	if held and (not _settings_open or not bool(_voice_state.get("can_test",false)) or bool(_voice_state.get("muted",false))): return
+	if _voice_test_held==held: return
+	_voice_test_held = held
+	voice_test_requested.emit(held)

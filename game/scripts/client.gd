@@ -1,8 +1,15 @@
 extends Node
+const MosquitoPoseScript=preload("res://scripts/mosquito_pose.gd")
+const MosquitoCameraScript=preload("res://scripts/mosquito_camera.gd")
+const Emotes=preload("res://scripts/emote_catalog.gd")
+var _emote_pending_until: int=0
+var _view_revision:=0
 
 signal local_server_requested(player_name: String, port: int)
 signal local_server_cancel_requested
 signal local_server_close_requested
+const VoiceSession=preload("res://scripts/voice_session.gd")
+var voice: Node
 const PreferencesScript = preload("res://scripts/preferences.gd")
 const WorldScript = preload("res://scripts/world.gd")
 const UIScript = preload("res://scripts/ui.gd")
@@ -73,6 +80,13 @@ func _ready() -> void:
 	add_child(ui)
 	ui.ui_sound_requested.connect(music.ui_cue)
 	ui.screen_changed.connect(_music_screen)
+	ui.screen_changed.connect(func(screen:String)->void:
+		if screen not in ["game","emotes"]: _cancel_emote())
+	get_window().focus_exited.connect(_cancel_emote)
+	ui.emote_requested.connect(_send_emote)
+	ui.emote_favorite_requested.connect(_favorite_emote)
+	ui.emote_preview_requested.connect(func(id:String)->void: ui.play_emote_preview(id))
+	ui.emote_preview_closed.connect(ui.stop_emote_preview)
 	practice = PracticeScript.new()
 	add_child(practice)
 	practice.snapshot_updated.connect(_snapshot)
@@ -118,7 +132,9 @@ func _ready() -> void:
 	network.notice.connect(ui.show_status)
 	network.connection_state_changed.connect(ui.show_connection_state)
 	network.disconnected.connect(_disconnected)
+	voice=VoiceSession.new();voice.name="VoiceSession";add_child(voice)
 	ui.show_home()
+	_sync_emotes()
 	_music_screen("home")
 	if options.has("visual-preview"):
 		_preview()
@@ -132,10 +148,26 @@ func _music_screen(screen: String) -> void:
 
 func _private(data: Dictionary) -> void:
 	personal = data
+	_apply_surface_view_transition()
 	if playing:
 		world.audio_fx.sync_private(personal)
 		ui.show_game(state, personal, local_id)
 		music.set_context("playing", state, personal, local_id)
+
+func _apply_surface_view_transition() -> void:
+	if not playing or role!="mosquito": return
+	var transition: Dictionary=personal.get("surface",{}).get("view_transition",{})
+	var revision:=int(transition.get("revision",0))
+	if revision<=_view_revision: return
+	var delta_yaw:=wrapf(yaw-float(transition.source_yaw),-PI,PI)
+	var delta_pitch:=pitch-float(transition.source_pitch)
+	yaw=wrapf(float(transition.yaw)+delta_yaw,-PI,PI)
+	pitch=clampf(float(transition.pitch)+delta_pitch,-MosquitoPoseScript.VIEW_PITCH_LIMIT,MosquitoPoseScript.VIEW_PITCH_LIMIT)
+	_view_revision=revision
+	sequence=maxi(sequence,int(transition.input_seq))
+	action_sequence+=1
+	var transport: Node=practice if practice_active else network
+	transport.send_view_ack(action_sequence,revision,sequence+1,yaw,pitch)
 
 func _start_practice(selected_role: String, mode: String) -> void:
 	network.close_client()
@@ -146,7 +178,12 @@ func _start_practice(selected_role: String, mode: String) -> void:
 	local_id = 1
 	ui.set_practice(true)
 	world.clear_actors()
-	practice.start(selected_role, mode, PreferencesScript.cosmetics, PreferencesScript.player_name)
+	var generated: Dictionary=MapCatalog.new_house(int(options.get("map-seed",0)))
+	if generated.is_empty():
+		practice_active=false
+		ui.show_status("No se pudo preparar una casa transitable. Volvé a intentar.")
+		return
+	practice.start(selected_role, mode, PreferencesScript.cosmetics, PreferencesScript.player_name,{"map_id":generated.id})
 
 func _lobby(data: Dictionary) -> void:
 	var entering := not waiting
@@ -196,12 +233,14 @@ func _snapshot(data: Dictionary) -> void:
 	var actor: Dictionary = data.get("actors", {}).get(local_id, {})
 	role = str(actor.get("role", "human"))
 	if starting:
+		if is_instance_valid(voice): voice.clear()
 		world.clear_actors()
 		world.load_map(str(data.get("config", {}).get("map_id", "house")))
 		yaw = float(actor.get("yaw", 0.0))
 		pitch = 0.0
 		sequence = 0
 		action_sequence = 0
+		_view_revision=0
 		personal.clear()
 		camera_initialized = false
 		ui.set_pause(false)
@@ -215,6 +254,7 @@ func _snapshot(data: Dictionary) -> void:
 	music.set_context("playing", state, personal, local_id)
 
 func _process(dt: float) -> void:
+	_sync_emotes()
 	if _throw_pressed:
 		var holder: Dictionary = state.get("actors",{}).get(local_id,{})
 		if not playing or role != "human" or ui.is_menu_open() or not bool(holder.get("alive",false)) or str(holder.get("tool","hands")) != _throw_tool:
@@ -246,16 +286,26 @@ func _process(dt: float) -> void:
 	if alive:
 		var visual: Node3D = world.get_actor(local_id)
 		var position: Vector3 = visual.global_position if visual != null else actor.p
-		var offset: Vector3 = HumanPose.view_origin(actor) - Vector3(actor.p) if role == "human" else Vector3(0, 0.12, 0) + Vector3.FORWARD.rotated(Vector3.RIGHT,pitch).rotated(Vector3.UP,yaw)*0.10
+		var mosquito_view: Dictionary=MosquitoCameraScript.target(actor,yaw,pitch) if role=="mosquito" else {}
+		var offset: Vector3 = HumanPose.view_origin(actor) - Vector3(actor.p) if role == "human" else mosquito_view.offset
 		var camera_origin := position + offset
 		if role == "mosquito":
-			var map: Dictionary = MapCatalog.get_map(str(state.get("config", {}).get("map_id", "house")))
+			var map: Dictionary = world.map_data
 			camera_origin.x = clampf(camera_origin.x, -float(map.half_x)+0.16, float(map.half_x)-0.16)
 			camera_origin.z = clampf(camera_origin.z, -float(map.half_z)+0.16, float(map.half_z)-0.16)
 			camera_origin.y = clampf(camera_origin.y, 0.16, float(map.ceiling)-0.16)
 		rig.global_position = camera_origin
-		rig.rotation = Vector3(pitch, yaw, 0)
+		if role=="mosquito":
+			rig.basis=MosquitoCameraScript.smooth_basis(rig.basis,mosquito_view.basis,dt) if camera_initialized else Basis(mosquito_view.basis)
+		else: rig.rotation = Vector3(pitch, yaw, 0)
 		arm.spring_length = 0.0 if role == "human" else 0.85
+		if role=="mosquito":
+			# SpringArm updates in physics, before this frame's interpolated rig
+			# rotation. Sweep again from the final pose so a corner cannot render
+			# one stale arm length through a floor or wall.
+			var placement: Dictionary=MosquitoCameraScript.resolve(world.get_world_3d().direct_space_state,actor,camera_origin,rig.basis,arm.shape,.85)
+			rig.global_position=placement.origin
+			camera.position=Vector3(0,0,placement.distance)
 		camera.fov = 78.0 if role == "human" else 70.0
 		if role == "mosquito":
 			world.show_assignment(personal.get("assignment", {}), camera, actor.p, personal.get("focus",{}))
@@ -298,11 +348,46 @@ func _physics_process(dt: float) -> void:
 
 func _on_escape() -> void:
 	_cancel_throw()
+	_cancel_emote()
 	if waiting:
 		_set_walking(not walking)
 	elif playing:
 		ui.set_pause(not ui.is_menu_open())
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if ui.is_menu_open() else Input.MOUSE_MODE_CAPTURED
+
+func _sync_emotes() -> void:
+	if not is_instance_valid(ui): return
+	var actor: Dictionary=state.get("actors",{}).get(local_id,{})
+	var available:=playing and role=="human" and bool(actor.get("alive",false)) and bool(actor.get("grounded",false))
+	available=available and Vector3(actor.get("velocity",Vector3.ZERO)).length()<.05 and float(actor.get("crouch_amount",0))<.05 and not bool(actor.get("crouching",false))
+	available=available and str(actor.get("emote_id","")).is_empty() and not bool(Dictionary(actor.get("strike",{})).get("active",false)) and not _throw_pressed
+	ui.set_emote_state({"available":available,"preview_available":true,"favorites":PreferencesScript.emote_favorites,
+		"reason":"Quedate quieto para hacer un gesto." if playing and role=="human" else "Los gestos se usan al jugar como humano.","preview_reason":""})
+
+func _favorite_emote(slot: int, id: String) -> void:
+	if slot<0 or slot>=4 or not Emotes.is_valid(id): return
+	var favorites: Array[String]=Emotes.normalize_favorites(PreferencesScript.emote_favorites)
+	var other:=favorites.find(id)
+	if other>=0: favorites[other]=favorites[slot]
+	favorites[slot]=id
+	PreferencesScript.emote_favorites=favorites
+	PreferencesScript.save_settings()
+	_sync_emotes()
+
+func _send_emote(id: String) -> void:
+	if not playing or role!="human" or not Emotes.is_valid(id): return
+	action_sequence+=1
+	var transport: Node=practice if practice_active else network
+	transport.send_emote(action_sequence,id)
+	_emote_pending_until=Time.get_ticks_msec()+500
+
+func _cancel_emote() -> void:
+	if not playing or role!="human": return
+	if str(state.get("actors",{}).get(local_id,{}).get("emote_id","")).is_empty() and Time.get_ticks_msec()>_emote_pending_until: return
+	action_sequence+=1
+	var transport: Node=practice if practice_active else network
+	transport.send_emote(action_sequence,"")
+	_emote_pending_until=0
 
 func _send_throw(verb: String) -> void:
 	if not playing: return
@@ -335,7 +420,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		var sensitivity: float = PreferencesScript.human_sensitivity if waiting or role == "human" else PreferencesScript.mosquito_sensitivity
 		yaw = wrapf(yaw - event.relative.x * sensitivity, -PI, PI)
-		pitch = clampf(pitch - event.relative.y * sensitivity * (-1.0 if PreferencesScript.invert_y else 1.0), -1.92 if role == "human" and not waiting else -1.40, 1.30)
+		var minimum: float=-1.92 if role=="human" and not waiting else -1.40
+		var maximum:=1.30
+		if role=="mosquito" and not waiting:
+			var perched: bool=str(state.get("actors",{}).get(local_id,{}).get("state",""))=="perched"
+			maximum=MosquitoPoseScript.SURFACE_PITCH_LIMIT if perched else MosquitoPoseScript.VIEW_PITCH_LIMIT
+			minimum=-maximum
+		pitch = clampf(pitch - event.relative.y * sensitivity * (-1.0 if PreferencesScript.invert_y else 1.0),minimum,maximum)
 		if role == "human" and not waiting:
 			var actor: Dictionary = state.get("actors", {}).get(local_id, {})
 			yaw = HumanPose.clamp_view_yaw(actor, yaw, pitch)
@@ -369,6 +460,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			break
 
 func _leave() -> void:
+	if is_instance_valid(voice): voice.clear()
 	_cancel_throw()
 	if leaving:
 		return
@@ -386,6 +478,7 @@ func _leave() -> void:
 	leaving = false
 
 func _disconnected() -> void:
+	if is_instance_valid(voice): voice.clear()
 	if practice_active:
 		return
 	playing = false

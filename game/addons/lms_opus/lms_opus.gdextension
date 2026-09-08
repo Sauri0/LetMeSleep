@@ -1,0 +1,7 @@
+[configuration]
+entry_symbol = "lms_opus_library_init"
+compatibility_minimum = "4.5"
+reloadable = false
+
+[libraries]
+windows.x86_64 = "res://addons/lms_opus/bin/lms_opus.windows.x86_64.dll"

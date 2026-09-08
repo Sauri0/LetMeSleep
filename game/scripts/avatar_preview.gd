@@ -1,6 +1,7 @@
 extends SubViewportContainer
 ## Isolated original avatar studio. It never renders the lobby or game world.
 const Actor = preload("res://scripts/actor_view.gd")
+const Emotes = preload("res://scripts/emote_catalog.gd")
 var viewport: SubViewport
 var studio: Node3D
 var camera: Camera3D
@@ -15,6 +16,8 @@ var focus_key := ""
 var focus_target := Vector3(0,0.91,0)
 var focus_distance := 3.65
 var expression := ""
+var emote_id := ""
+var emote_time := 0.0
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(280,300)
@@ -65,6 +68,7 @@ func _ready() -> void:
 	set_avatar(role,appearance)
 
 func set_avatar(selected_role: String, data: Dictionary) -> void:
+	if selected_role!=role: stop_emote()
 	role = selected_role if selected_role in ["human","mosquito"] else "human"
 	appearance = data.duplicate(true)
 	if not is_instance_valid(studio):
@@ -94,6 +98,16 @@ func reset_view() -> void:
 
 func set_expression(value: String) -> void:
 	expression = value if value in ["neutral","sleepy","alert","effort","impact"] else ""
+
+func play_emote(id: String) -> bool:
+	if role!="human" or not Emotes.is_valid(id): return false
+	emote_id=id
+	emote_time=0.0
+	return true
+
+func stop_emote() -> void:
+	emote_id=""
+	emote_time=0.0
 
 func set_view(view: String) -> void:
 	orbit_yaw = 0.0 if view=="front" else PI*0.5 if view=="side" else PI if view=="back" else -0.25
@@ -150,4 +164,11 @@ func _process(dt: float) -> void:
 	if dragging and not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		dragging = false
 	if is_instance_valid(avatar):
-		avatar.update_state({"p":Vector3(0,0.88 if role=="mosquito" else 0.0,0),"yaw":PI,"body_yaw":PI,"state":"flying" if role=="mosquito" else "human","relaxed_pose":true,"pose_time":avatar.clock_time,"appearance":appearance,"preview_only":true,"facial_preview":expression},dt)
+		var data := {"p":Vector3(0,0.88 if role=="mosquito" else 0.0,0),"yaw":PI,"body_yaw":PI,"state":"flying" if role=="mosquito" else "human","relaxed_pose":true,"pose_time":avatar.clock_time,"appearance":appearance,"preview_only":true,"facial_preview":expression}
+		if not emote_id.is_empty():
+			emote_time+=dt
+			if emote_time>=float(Emotes.get_emote(emote_id).duration): stop_emote()
+			else:
+				data.emote_id=emote_id
+				data.emote_time=emote_time
+		avatar.update_state(data,dt)

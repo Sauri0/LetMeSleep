@@ -1,8 +1,8 @@
 class_name Invitation
 extends RefCounted
 ## Versioned address envelope, not encryption or authentication.
-const PREFIX := "DD4-"
-const PROTOCOL := 8
+const PREFIX := "DD5-"
+const PROTOCOL := 9
 const MAX_LENGTH := 512
 
 static func validate_host(value: String) -> String:
@@ -87,8 +87,8 @@ static func decode(value: String) -> Dictionary:
 	if text.length() > MAX_LENGTH:
 		return {"ok":false, "error":"La invitación es demasiado larga."}
 	if not text.begins_with(PREFIX):
-		if text.begins_with("DD3-"):return {"ok":false,"error":"Esta invitación pertenece a una versión anterior. Ambos necesitan la misma versión; pedile al anfitrión una invitación DD4 nueva."}
-		return {"ok":false, "error":"Pegá una invitación DD4 completa de esta versión del juego."}
+		if text.begins_with("DD3-") or text.begins_with("DD4-"):return {"ok":false,"error":"Esta invitación pertenece a una versión anterior. Ambos necesitan la misma versión; pedile al anfitrión una invitación DD5 nueva."}
+		return {"ok":false, "error":"Pegá una invitación DD5 completa de esta versión del juego."}
 	var encoded := text.substr(PREFIX.length())
 	var pattern := RegEx.new()
 	pattern.compile("^[A-Za-z0-9_-]+$")

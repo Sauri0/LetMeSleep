@@ -140,7 +140,7 @@ func _test_perching() -> void:
 		sim.actors[2].p = start
 		sim.actors[2].velocity = Vector3.ZERO
 		sim.action(2, 1, "perch")
-		sim.step(0.025)
+		sim.step(0.4) # Acquisition travels to the support instead of snapping.
 		check(sim.actors[2].state == "perched", fixture.label + " accepts actual perch action")
 		var normal: Vector3 = _normal(sim, 2)
 		check(normal.distance_to(fixture.normal) < 0.00001, fixture.label + " normal faces open space")
@@ -152,9 +152,9 @@ func _test_perching() -> void:
 		sim.action(2, 2, "perch")
 		sim.step(0.025)
 		check(sim.actors[2].state == "flying" and _normal(sim, 2) == Vector3.ZERO, fixture.label + " takeoff clears cached surface normal")
-		# Re-perch and leave using movement rather than the toggle action.
+		# Re-perch and leave using a fresh Space edge, not tangent walking.
 		sim.action(2, 3, "perch")
-		sim.step(0.025)
+		sim.step(0.4)
 		sim.submit_input(2, 1, Vector3.UP, 0.0, 0.0, false)
 		sim.step(0.025)
 		check(sim.actors[2].state == "flying" and _normal(sim, 2) == Vector3.ZERO, fixture.label + " movement takeoff also clears normal")
@@ -180,7 +180,7 @@ func _test_stun_and_elimination() -> void:
 	var wall = make_sim()
 	wall.actors[2].p = Vector3(-13.55, 1.8, 8)
 	wall.action(2, 1, "perch")
-	wall.step(0.025)
+	wall.step(0.4)
 	check(_normal(wall, 2) == Vector3.RIGHT, "stun fixture stores a wall contact")
 	wall._kill(2)
 	check(_normal(wall, 2) == Vector3.ZERO, "stun suppresses a historical perched normal too")

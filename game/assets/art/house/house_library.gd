@@ -5,6 +5,7 @@ static var bounds_cache: Dictionary = {}
 static var tinted_materials: Dictionary = {}
 
 static func asset_for(data: Dictionary) -> String:
+	if data.has("asset_id"): return str(data.asset_id)
 	var label := str(data.get("label",""))
 	var style := str(data.get("style","cabinet"))
 	var room := str(data.get("room_name",""))
@@ -59,6 +60,9 @@ static func instantiate_asset(asset: String) -> Node3D:
 	return model
 
 static func build(root: Node3D, data: Dictionary, tint: Color) -> void:
+	if data.has("asset_id"):
+		_build_explicit(root,data,tint)
+		return
 	var size: Vector3 = data.box.size
 	var at: Vector3 = data.box.get_center()
 	var room_center: Vector3 = data.get("room_center",Vector3.ZERO)
@@ -88,6 +92,31 @@ static func build(root: Node3D, data: Dictionary, tint: Color) -> void:
 		decoration.scale = Vector3.ONE*factor
 		decoration.position = Vector3(0,size.y,0)
 		root.add_child(decoration)
+
+static func _build_explicit(root: Node3D, data: Dictionary, tint: Color) -> void:
+	var asset := str(data.asset_id)
+	if not asset.is_valid_identifier() or not ResourceLoader.exists("res://assets/art/house/%s.glb"%asset):
+		push_error("Unknown explicit furniture asset_id: "+asset)
+		return
+	var box: AABB = data.box
+	var at := box.get_center()
+	root.position=Vector3(at.x,box.position.y,at.z)
+	root.rotation.y=float(data.get("rotation_y",0.0))
+	var model := instantiate_asset(asset)
+	var bounds: AABB = bounds_cache[asset]
+	var scale := float(data.get("visual_scale",1.0))
+	if not is_finite(scale) or scale<=0.0:
+		push_error("Furniture visual_scale must be positive and finite")
+		model.free()
+		return
+	model.scale=Vector3.ONE*scale
+	model.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*scale
+	root.add_child(model)
+	root.set_meta("explicit_asset",asset)
+	root.set_meta("surface_height",float(data.get("surface_height",box.size.y)))
+	if asset in ["sofa","armchair","bed","dresser","wardrobe","bookcase","sink","stove"]: _tint_cloth(model,tint)
+	# Generated pickup surfaces stay clear. Decorative props already authored
+	# inside a GLB remain there; the legacy house keeps its old additions above.
 
 static func _tint_cloth(node: Node, tint: Color) -> void:
 	if node is MeshInstance3D:

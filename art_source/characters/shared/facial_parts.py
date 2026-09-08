@@ -419,6 +419,16 @@ def weld_human_hair_roots(rig):
             shading_report={'applied':True,'position_delta_m':0.0,'iterations':6,
                 'max_normal_angle_degrees':max(math.degrees(a.angle(b)) for a,b in zip(initial,shading)),
                 'region_blender_z_m':[1.70,1.735]}
+            # Native A/B with identical geometry showed the fine white root
+            # traces were specular reflections. Keep diffuse light and shadows
+            # while using the selected matte finish on H0 only.
+            matte=bpy.data.materials['hair'].copy();matte.name='hair_matte'
+            bsdf=matte.node_tree.nodes.get('Principled BSDF')
+            bsdf.inputs['Roughness'].default_value=1.0
+            bsdf.inputs['Specular IOR Level'].default_value=0.0
+            for slot in range(len(obj.data.materials)):obj.data.materials[slot]=matte
+            shading_report['material']={'name':'hair_matte','roughness':1.0,'specular_ior_level':0.0,
+                'albedo_unchanged':True,'runtime_tint':'human_hair_color; shared hair_ prefix mapping'}
         obj['root_union']=json.dumps({'old_triangles':old_tris,'new_triangles':new_tris,'voxel_m':.0018,
             'maximum_new_vertex_distance_to_old_surface_m':maximum,'maximum_bounds_delta_m':bounds_delta,
             'weights':'head=1; no new bones','capped_variants_untouched':True,'custom_smooth_normals':shading_report})

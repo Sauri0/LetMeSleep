@@ -1,0 +1,10 @@
+{
+  "codec_sha256": "e5c2f5dea7515d63e2218704bf457dbf806ee530c51c5c3c2befca4d603a49b1",
+  "codec_revision": "bootstrap-v2",
+  "native_smoke_checks": 312,
+  "native_bridge_checks": 608,
+  "jitter_checks": 1878,
+  "jitter_sha256": "fa773d21c4ac474b49f7f186b08374c3bba14d4e96f44570da3c071d69deb9ba",
+  "game_integration_tested": false,
+  "microphone_tested": false
+}

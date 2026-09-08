@@ -6,6 +6,17 @@ const Barriers = preload("res://scripts/house_barriers.gd")
 
 static func window_specs(data: Dictionary) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
+	if data.has("generator_version"):
+		for room: Dictionary in data.rooms:
+			var b: AABB=room.bounds
+			if absf(b.position.z+float(data.half_z)-.25)<.01 or absf(b.end.z-float(data.half_z)+.25)<.01:
+				var rear:=b.get_center().z>0
+				result.append({"p":Vector3(b.get_center().x,b.position.y+1.55,(float(data.half_z)-.125)*(1 if rear else -1)),"axis":2,"rear":rear,"room":str(room.name),"tint":room.color})
+		for floor_y: float in data.floor_levels:
+			result.append({"p":Vector3(0,floor_y+1.6,-float(data.half_z)+.125),"axis":2,"rear":false,"room":"Pasillo","tint":Color("91a4ab")})
+			for side: float in [-1.0,1.0]:
+				result.append({"p":Vector3(side*(float(data.half_x)-.125),floor_y+1.65,0),"axis":0,"rear":side>0,"room":"Escalera","tint":Color("7c9d9d")})
+		return result
 	for room: Dictionary in data.rooms:
 		var b: AABB = room.bounds
 		if b.position.z < -8.0 or b.end.z>10.5:
@@ -119,7 +130,8 @@ static func build_room(world: Node3D, room: Dictionary) -> void:
 	world._room_wall_finish(bounds,color,wet)
 	var room_root:=Node3D.new();room_root.name="RoomDetails_"+name.validate_node_name()
 	room_root.set_meta("room_name",name);room_root.set_meta("floor",int(room.floor));world.map_root.add_child(room_root)
-	_warm_diffuser(asset(room_root,"pendant",Vector3(center.x,y+(2.99 if int(room.floor)==0 else 3.19),center.z)))
+	var ceiling_height:=2.99 if int(room.floor)<world.map_data.floor_levels.size()-1 else 3.19
+	_warm_diffuser(asset(room_root,"pendant",Vector3(center.x,y+ceiling_height,center.z)))
 	if wet:
 		var floor_material:Material=world._surface_material(Color("a5b4ad") if name=="Baño" else Color("b5ac95"),"tile")
 		world._box(room_root,Vector3(center.x,y+.003,center.z),Vector3(bounds.size.x,.005,bounds.size.z),floor_material).cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -139,7 +151,7 @@ static func build_room(world: Node3D, room: Dictionary) -> void:
 		mounted.position=Vector3(wall.p)+Vector3(wall.normal)*.025
 		mounted.look_at(mounted.global_position-Vector3(wall.normal))
 		var model_name:=room_wall_asset(name) if decorated==0 else "wall_shelf" if room_wall_asset(name)=="wall_art" else "wall_art"
-		if model_name=="bath_mirror":
+		if model_name=="bath_mirror" and not world.map_data.has("generator_version"):
 			for furnishing:Node in world.map_root.get_children():
 				if furnishing.get_meta("catalog_kind","")!="furniture" or str(furnishing.get_child(0).get_meta("authored_asset",""))!="bath_vanity":continue
 				var box:AABB=furnishing.get_meta("catalog_box")
@@ -234,11 +246,11 @@ static func build_windows(world: Node3D, specs: Array[Dictionary]) -> void:
 		# raised the scene from23 to39 positional lights (Compatibility cap32).
 
 static func build_portals(world: Node3D) -> void:
-	var doors:Dictionary=Doors.get_doors("house")
+	var doors:Dictionary=Doors.get_doors(world.current_map)
 	for structure:Dictionary in world.map_data.structures:
 		if str(structure.get("label",""))!="Dintel":continue
 		var box:AABB=structure.box
-		var center:=box.get_center();var floor_y:=3.2 if box.position.y>3 else 0.0
+		var center:=box.get_center();var floor_y:=floorf(box.position.y/3.2)*3.2
 		var dynamic_portal:=false
 		for definition:Dictionary in doors.values():
 			var door_center:Vector3=Doors.leaf_transform(definition,0.0)*Vector3(float(definition.width)*.5,1.2,0)
@@ -255,7 +267,7 @@ static func build_portals(world: Node3D) -> void:
 
 static func build_stairs(world: Node3D) -> void:
 	var root:=Node3D.new();root.name="Balustrades";world.map_root.add_child(root)
-	for part:Dictionary in Barriers.get_parts():
+	for part:Dictionary in Barriers.get_parts(world.current_map):
 		if str(part.kind)=="post":
 			var box:AABB=part.box
 			asset(root,"rail_post",Vector3(box.get_center().x,box.position.y,box.get_center().z))
@@ -269,7 +281,7 @@ static func build_stairs(world: Node3D) -> void:
 			var up:=depth.cross(direction).normalized()
 			var rail:=asset(root,"rail_bar",start,Vector3(start.distance_to(end),1,1))
 			rail.basis=Basis(direction,up,depth).scaled_local(Vector3(start.distance_to(end),1,1))
-	for box:AABB in Barriers.get_boxes():
+	for box:AABB in Barriers.get_boxes(world.current_map):
 		world._collider(box.get_center(),box.size)
 
 static func build_exterior(world: Node3D) -> void:
@@ -291,6 +303,12 @@ static func finish(world: Node3D) -> void:
 	build_portals(world)
 	build_stairs(world)
 	build_exterior(world)
+	if world.map_data.has("generator_version"):
+		for corridor: AABB in world.map_data.corridors:
+			world._room_wall_finish(corridor,Color("a9a191"),false)
+			if corridor.size.x>corridor.size.z:
+				asset(world.map_root,"pendant",Vector3(0,corridor.position.y+2.99,corridor.get_center().z),Vector3.ONE*.85)
+		return
 	for floor_y:float in [0.0,3.2]:
 		world._room_wall_finish(AABB(Vector3(-1.9,floor_y,-10.75),Vector3(3.8,3.0 if floor_y==0.0 else 3.2,21.5)),Color("a9a191"),false)
 		for z:float in [-7.8,0.0,7.8]:asset(world.map_root,"pendant",Vector3(0,floor_y+(2.99 if floor_y==0 else 3.19),z),Vector3.ONE*.85)

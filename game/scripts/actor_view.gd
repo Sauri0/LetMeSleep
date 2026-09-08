@@ -11,6 +11,8 @@ const RacketArt = preload("res://assets/art/characters/tools/racket.glb")
 const BroomArt = preload("res://assets/art/characters/tools/broom.glb")
 const NewspaperArt = preload("res://assets/art/house/newspaper.glb")
 const ToolData = preload("res://scripts/tool_catalog.gd")
+const VoiceEnvelope = preload("res://scripts/voice_mouth_envelope.gd")
+const SurfaceDisplay = preload("res://scripts/surface_presentation.gd")
 const MOSQUITO_VISUAL_SCALE: float = 0.35
 const MOSQUITO_BODY_RADIUS: float = 0.04
 static var cloth_texture: ImageTexture
@@ -71,8 +73,12 @@ var legacy_geometry_dirty := false
 var mosquito_orientation := Quaternion.IDENTITY
 var human_snapshot_hash := 0
 var human_snapshot_values: Dictionary = {}
+var voice_envelope := VoiceEnvelope.new()
+var surface_presentation := SurfaceDisplay.new()
 
 func build(role: String, display_name: String, tint_index: int = 0) -> void:
+	clear_voice_level()
+	surface_presentation.clear()
 	actor_role = role
 	fallback_color = posmod(tint_index, CosmeticsData.PALETTE.size())
 	model = Node3D.new()
@@ -98,6 +104,34 @@ func build(role: String, display_name: String, tint_index: int = 0) -> void:
 	add_child(name_label)
 	apply_appearance({"color": fallback_color, "accessory": 0})
 	_hide_legacy_geometry()
+
+## Feed only the level of this actor's audio actually played for this listener.
+## Neither the level nor its envelope is added to authoritative snapshots.
+func set_voice_level(level: float) -> void:
+	if is_queued_for_deletion() or not visible or not is_inside_tree():
+		clear_voice_level()
+		return
+	voice_envelope.set_level(level)
+	set_process(voice_envelope.active())
+
+func configure_voice_response(attack: float=.045, release: float=.14, stale_after: float=.16) -> void:
+	voice_envelope.configure(attack,release,stale_after)
+
+func get_voice_level() -> float:
+	return voice_envelope.value
+
+func clear_voice_level() -> void:
+	voice_envelope.clear()
+	if is_instance_valid(imported_skin): imported_skin.set_voice_mouth_level(0.0)
+	set_process(false)
+
+func _process(dt: float) -> void:
+	var level := voice_envelope.advance(dt)
+	if is_instance_valid(imported_skin): imported_skin.set_voice_mouth_level(level)
+	if not voice_envelope.active(): set_process(false)
+
+func _exit_tree() -> void:
+	clear_voice_level()
 
 func set_local(value: bool) -> void:
 	local_view = value
@@ -138,13 +172,18 @@ func update_state(data: Dictionary, dt: float) -> void:
 	if legacy_geometry_dirty:
 		_hide_legacy_geometry()
 	var target: Vector3 = data.get("p", Vector3.ZERO)
-	if not initialized or global_position.distance_to(target) > 2.2:
+	var surface_data: Dictionary = surface_presentation.advance(data,dt,not initialized) if actor_role=="mosquito" else {}
+	if not surface_data.is_empty():
+		global_position=surface_data.p
+		initialized=true
+	elif not initialized or global_position.distance_to(target) > 2.2:
 		global_position = target
 		initialized = true
 	else:
 		global_position = global_position.lerp(target, 1.0 - exp(-18.0 * dt))
 	rotation.y = float(data.get("body_yaw",data.get("yaw",0.0))) if actor_role=="human" else lerp_angle(rotation.y,float(data.get("yaw",0.0)),1.0-exp(-20.0*dt))
 	visible = bool(data.get("alive", true))
+	if not visible: clear_voice_level()
 	movement_state = str(data.get("state",movement_state))
 	for body: StaticBody3D in body_shapes:
 		body.collision_layer = 2 if visible and not preview_only else 0
@@ -166,7 +205,10 @@ func update_state(data: Dictionary, dt: float) -> void:
 		# Authoritative public-state anatomy owns banking and surface alignment.
 		# Interpolate snapshots in world space, then put both mesh and ray shapes
 		# in that same displayed frame; no independent acceleration-only tilt.
+		var displayed: Dictionary = surface_data if not surface_data.is_empty() else data
 		var target_orientation: Basis = MosquitoPoseData.orientation(data)
+		if bool(displayed.get("presentation_reset",false)):
+			mosquito_orientation=target_orientation.get_rotation_quaternion()
 		mosquito_orientation = mosquito_orientation.slerp(target_orientation.get_rotation_quaternion(),1.0-exp(-14.0*dt))
 		var local_orientation: Basis = global_basis.orthonormalized().inverse()*Basis(mosquito_orientation)
 		model.basis = local_orientation.scaled(Vector3.ONE*MOSQUITO_VISUAL_SCALE)
@@ -187,7 +229,14 @@ func update_state(data: Dictionary, dt: float) -> void:
 		if state!="stunned":
 			help_icon.visible = false
 		if is_instance_valid(imported_skin):
-			imported_skin.apply_mosquito(data,clock_time,stun_blend)
+			var appendage_data: Dictionary=displayed
+			if not surface_data.is_empty():
+				appendage_data=displayed.duplicate()
+				# Individual feet query actual finite faces in the interpolated
+				# body's frame, then solve against each ray's real hit normal.
+				appendage_data.surface_normal=model.global_basis.y.normalized()
+				appendage_data.surface_forward=-model.global_basis.z.normalized()
+			imported_skin.apply_mosquito(appendage_data,clock_time,stun_blend)
 
 func _hide_legacy_geometry() -> void:
 	# Retain the collider/socket scaffold while only the exported deformation

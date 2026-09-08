@@ -1,0 +1,45 @@
+{
+  "artifacts": [
+    {
+      "name": "llvm-mingw-20260826-ucrt-x86_64.zip",
+      "url": "https://github.com/mstorsjo/llvm-mingw/releases/download/20260826/llvm-mingw-20260826-ucrt-x86_64.zip",
+      "sha256": "ae601f4e0f72bbdf441ad2df8bb16f037e2e9251559ea6b37b4057aef39c06c3",
+      "kind": "zip",
+      "target": "_tools",
+      "archive_bytes": 190721391,
+      "verified_sha256": "ae601f4e0f72bbdf441ad2df8bb16f037e2e9251559ea6b37b4057aef39c06c3",
+      "extracted_to": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\realtime-voice-chat\\outputs\\0.7-cierre\\voice-bootstrap\\_tools"
+    },
+    {
+      "name": "cmake-4.4.3-windows-x86_64.zip",
+      "url": "https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3-windows-x86_64.zip",
+      "sha256": "4d52ebab7193a698651639ed80d8d04fd903358843572cf44c7fd234cb7c26ab",
+      "kind": "zip",
+      "target": "_tools",
+      "archive_bytes": 54408599,
+      "verified_sha256": "4d52ebab7193a698651639ed80d8d04fd903358843572cf44c7fd234cb7c26ab",
+      "extracted_to": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\realtime-voice-chat\\outputs\\0.7-cierre\\voice-bootstrap\\_tools"
+    },
+    {
+      "name": "ninja-win.zip",
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-win.zip",
+      "sha256": "07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65",
+      "kind": "zip",
+      "target": "_tools/ninja-1.13.2",
+      "archive_bytes": 291570,
+      "verified_sha256": "07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65",
+      "extracted_to": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\realtime-voice-chat\\outputs\\0.7-cierre\\voice-bootstrap\\_tools\\ninja-1.13.2"
+    },
+    {
+      "name": "opus-1.6.1.tar.gz",
+      "url": "https://downloads.xiph.org/releases/opus/opus-1.6.1.tar.gz",
+      "sha256": "6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1",
+      "kind": "tar",
+      "target": "deps/opus",
+      "archive_bytes": 10472813,
+      "verified_sha256": "6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1",
+      "extracted_to": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\realtime-voice-chat\\outputs\\0.7-cierre\\voice-bootstrap\\deps\\opus"
+    }
+  ],
+  "source": "Official upstream releases; tool digests from GitHub API, Opus digest from opus-codec.org/downloads/"
+}

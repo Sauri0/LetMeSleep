@@ -25,6 +25,8 @@ var path_age := 0.0
 var path_review_age := 0.0
 var path_goal := Vector3.INF
 var path_map_id := ""
+var _catalog_cache: Dictionary={}
+var _doors_cache: Dictionary={}
 var path_human := false
 var last_position := Vector3.INF
 var stuck_age := 0.0
@@ -160,7 +162,7 @@ func _human(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dictiona
 			out.move = Vector3.ZERO
 			return
 	else:
-		var stations: Array = Catalog.get_map(map_id).stations
+		var stations: Array = _catalog(map_id).stations
 		destination = stations[(patrol_index+peer_id)%stations.size()].p
 		if Vector3(me.p).distance_to(destination) < 0.8:
 			patrol_index += 1
@@ -183,15 +185,15 @@ func _human_door(me: Dictionary, out: Dictionary, direction: Vector3, map_id: St
 	var from: Vector3 = Vector3(me.p)+Vector3.UP
 	var nearest: Dictionary = {}
 	for id: String in visible_doors:
-		if not Doors.DEFINITIONS.has(id) or float(visible_doors[id].angle)>Doors.OPEN_ANGLE-0.02:
+		if not _door_definitions(map_id).has(id) or float(visible_doors[id].angle)>Doors.OPEN_ANGLE-0.02:
 			continue
-		var hit: Dictionary = Doors.ray_leaf(Doors.DEFINITIONS[id],0.0,from,from+direction*2.7)
+		var hit: Dictionary = Doors.ray_leaf(_door_definitions(map_id)[id],0.0,from,from+direction*2.7)
 		if not hit.is_empty() and (nearest.is_empty() or float(hit.distance)<float(nearest.distance)):
 			nearest = hit
 	if nearest.is_empty():
 		return false
 	var id: String = nearest.door_id
-	var definition: Dictionary = Doors.DEFINITIONS[id]
+	var definition: Dictionary = _door_definitions(map_id)[id]
 	var state: Dictionary = visible_doors[id]
 	var point: Vector3 = Doors.handle_point(definition,float(state.angle))
 	var eye: Vector3 = Pose.view_origin(me)
@@ -249,7 +251,7 @@ func _mosquito(snapshot: Dictionary, own: Dictionary, me: Dictionary, out: Dicti
 		return
 	if mode != "survival" and _help_ally(snapshot, me, out, map_id):
 		return
-	var definition: Dictionary = Catalog.get_map(map_id)
+	var definition: Dictionary = _catalog(map_id)
 	if retreat_left > 0.0 and retreat_point != Vector3.INF:
 		if retreat_burst_left > 0.0:
 			out.move = Vector3.BACK*0.85
@@ -354,7 +356,7 @@ func _path_direction(from: Vector3, destination: Vector3, human: bool, map_id: S
 		if not path.is_empty():
 			var hit: Dictionary = Doors.ray_doors(from,path[0],visible_doors,map_id)
 			if not hit.is_empty() and float(hit.distance)<3.0:
-				var definition: Dictionary = Doors.DEFINITIONS[str(hit.door_id)]
+				var definition: Dictionary = _door_definitions(map_id)[str(hit.door_id)]
 				var transform: Transform3D = Doors.leaf_transform(definition,0.0)
 				var center: Vector3 = transform*Vector3(float(definition.width)*0.5,Doors.GAP*0.5,0)
 				var normal: Vector3 = transform.basis.z
@@ -366,3 +368,11 @@ func _path_direction(from: Vector3, destination: Vector3, human: bool, map_id: S
 					stats.door_passages += 1
 					return (entry-from).normalized()
 	return Vector3.ZERO if path.is_empty() else (path[0]-from).normalized()
+
+func _catalog(map_id: String) -> Dictionary:
+	if not _catalog_cache.has(map_id): _catalog_cache[map_id]=Catalog.get_map(map_id)
+	return _catalog_cache[map_id]
+
+func _door_definitions(map_id: String) -> Dictionary:
+	if not _doors_cache.has(map_id): _doors_cache[map_id]=Doors.get_doors(map_id)
+	return _doors_cache[map_id]

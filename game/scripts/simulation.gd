@@ -6,8 +6,11 @@ extends RefCounted
 const ArenaData = preload("res://scripts/arena.gd")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
+const Routes = preload("res://scripts/map_navigation.gd")
 const Pose = preload("res://scripts/human_pose.gd")
 const InsectPose = preload("res://scripts/mosquito_pose.gd")
+const SurfaceMotion = preload("res://scripts/surface_locomotion.gd")
+const Emotes = preload("res://scripts/emote_catalog.gd")
 const ToolData = preload("res://scripts/tool_catalog.gd")
 const Projectiles = preload("res://scripts/projectile_collision.gd")
 const DoorCatalogData = preload("res://scripts/door_catalog.gd")
@@ -30,10 +33,14 @@ const STUN_SECONDS := 35.0
 const HELP_DISTANCE := 0.80
 const HELP_RATE := 4.0
 const HELP_FACING := 0.35
+const EMOTE_RECOVERY := .5
 # Longest authored walking route takes 16.375 s without sprint. Keep an explicit
 # 21 s travel allowance in room settings, including turns and off-route starts.
 const TASK_TRAVEL_RESERVE := 21.0
 const TASK_DISPATCH_MARGIN := 0.05
+const TASK_ROUTE_SPEED_FACTOR := .85
+const TASK_ROUTE_MARGIN := .5
+const TASK_ROUTE_RETRY := .5
 const DEFAULT_CONFIG := {
 	"mode": "blood", "map_id": "house", "human_count": 1, "round_seconds": 120.0, "blood_goal": 12.0,
 	"rotation_seconds": 14.0, "respawn_seconds": 4.0, "mosquito_lives": 3,
@@ -82,6 +89,7 @@ var _assignment_waiters: Array[int] = []
 var _map_data: Dictionary = Maps.get_map("house")
 var _human_pose_cache: Dictionary = {}
 var _neutral_pose: Dictionary = {}
+var surface_motion = SurfaceMotion.new()
 
 static func minimum_task_deadline(work: float) -> float:
 	return clampf(work if is_finite(work) else float(DEFAULT_CONFIG.task_work), 1.0, 8.0) + TASK_TRAVEL_RESERVE
@@ -169,12 +177,47 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 	tasks_done = 0
 	task_goal = 0
 	config = sanitize_config(requested_config)
-	_map_data = Maps.get_map(str(config.map_id))
-	door_state.reset(str(config.map_id))
+	phase = "lobby"
+	_map_data = {}
+	surface_motion = SurfaceMotion.new()
+	door_state = DoorStateScript.new()
 	doors = door_state.states
 	if not reason.is_empty():
-		phase = "lobby"
 		return
+	# Validate the original identity before sanitization can substitute the UI
+	# default. Failed generation never starts a different house or reuses a room.
+	var requested_map: Variant = requested_config.get("map_id","house")
+	if not requested_map is String or not Maps.is_playable(requested_map):
+		reason = "No se pudo iniciar: el mapa solicitado no es jugable."
+		return
+	_map_data = Maps.get_map(requested_map)
+	if _map_data.is_empty() or not bool(_map_data.get("playable",false)):
+		reason = "No se pudo iniciar: la casa no superó su validación."
+		return
+	for key: String in ["human_spawns","mosquito_spawns","stations","pickups"]:
+		if not _map_data.get(key) is Array or Array(_map_data[key]).is_empty():
+			reason = "No se pudo iniciar: faltan datos válidos de la casa."
+			_map_data = {}
+			return
+	config.map_id = requested_map
+	config.map_fingerprint = str(_map_data.get("fingerprint",""))
+	if config.map_fingerprint.is_empty(): config.map_fingerprint = Maps.Validation.fingerprint(_map_data)
+	config.map_generator_version = int(_map_data.get("generator_version",0))
+	config.map_seed = int(_map_data.get("seed",0))
+	config.task_route_policy = "walkable-route-v1"
+	config.task_route_speed = ArenaData.HUMAN_SPEED * TASK_ROUTE_SPEED_FACTOR
+	config.task_route_margin = TASK_ROUTE_MARGIN
+	config.task_door_seconds = DoorCatalogData.OPEN_ANGLE / DoorStateScript.TURN_SPEED + DoorStateScript.COOLDOWN + .65
+	if config.mode=="sleep":
+		# A disconnected station is a broken map, not an obligation players can
+		# repair. Validate once before starting clocks or publishing any actors.
+		for station: Dictionary in _map_data.stations:
+			if Routes.path(_map_data.human_spawns[0],station.p,true,str(config.map_id)).is_empty():
+				reason = "No se pudo iniciar: una tarea no tiene una ruta recorrible."
+				return
+	surface_motion.configure(str(config.map_id))
+	door_state.reset(str(config.map_id))
+	doors = door_state.states
 	phase = "playing"
 	var ids: Array = players.keys()
 	ids.sort()
@@ -189,10 +232,13 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 		actors[player_id] = {
 			"name": str(player.get("name", "Jugador")).substr(0, 24), "role": player.role,
 			"appearance": CosmeticsData.appearance_for(player.get("cosmetics", {}), str(player.role)).duplicate(true),
-			"p": Maps.human_spawn(str(config.map_id), role_index) if human else Maps.mosquito_spawn(str(config.map_id), role_index),
+			"p": _map_data.human_spawns[posmod(role_index,_map_data.human_spawns.size())] if human else _map_data.mosquito_spawns[posmod(role_index,_map_data.mosquito_spawns.size())],
 			"yaw": 0.0, "pitch": 0.0, "body_yaw": 0.0, "inspecting": false, "strike": {}, "state": "human" if human else "flying",
 			"alive": true, "swing": 0.0, "bitten": false, "threatened": false, "tool": "hands",
+			"emote_id":"","emote_time":0.0,"_emote_until":0.0,"_emote_cooldown":0.0,"_emote_tool":"hands",
 			"help_target": 0, "_stun_remaining": 0.0, "_stun_helped": false,
+			"_surface":{},"_surface_pending":{},"_surface_normal":Vector3.ZERO,"_surface_forward":Vector3.ZERO,"_surface_view_yaw":0.0,"_surface_reason":"","_surface_jump":false,"_surface_jump_held":false,
+			"_view_transition":{},"_view_revision":0,"_view_input_floor":-1,"_view_buffer":{},
 			"_focus_progress": 0.0, "_focus_pulse_until": 0.0, "_focus_suppressed": false,
 			"_strike_at": -1.0, "_strike_until": -1.0, "_strike_started": -1.0, "_strike_resolved": false,
 			"_attack": {"id": -1, "state": "idle", "hit": false, "point": Vector3.ZERO},
@@ -209,6 +255,7 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 			"_next_rotation": 0.0, "_assignment_frame": -1, "_forbidden": "",
 			"_bite_started": 0.0, "_task": {}, "_deadline": float(config.task_deadline),
 			"_next_task": 3.0 + role_index * 1.5, "_failures": 0, "_tasks_given": 0,
+			"_task_dispatch":{},"_task_retry_at":0.0,
 		}
 	for index: int in range(_mosquito_ids.size()):
 		var actor: Dictionary = actors[_mosquito_ids[index]]
@@ -249,10 +296,14 @@ func submit_input(id: int, seq: int, move: Vector3, yaw: float, pitch: float, in
 	actor._input_seq = seq
 	actor._move = move.limit_length(1.0)
 	if actor.role == "human":
+		if Vector2(move.x,move.z).length_squared()>.0001 or interact or sprint or crouch or jump:
+			_cancel_emote(id)
 		Pose.apply_view(actor, yaw, pitch)
 	else:
-		actor.yaw = wrapf(yaw, -PI, PI)
-		actor.pitch = clampf(pitch, -1.48, 1.48)
+		_accept_insect_view(actor,seq,yaw,pitch)
+		var ascend_pressed: bool = move.y > .5
+		if actor.state == "perched" and ascend_pressed and not bool(actor._surface_jump_held): actor._surface_jump = true
+		actor._surface_jump_held = ascend_pressed
 	if actor.state == "stunned":
 		actor._move = Vector3.ZERO
 		actor._interact = false
@@ -265,6 +316,118 @@ func submit_input(id: int, seq: int, move: Vector3, yaw: float, pitch: float, in
 	actor._crouch = crouch and actor.role == "human"
 	actor._jump = jump and actor.role == "human"
 	actor._last_input = elapsed
+
+func _accept_insect_view(actor: Dictionary, seq: int, yaw: float, pitch: float) -> void:
+	var transition: Dictionary = actor._view_transition
+	if not transition.is_empty() and not bool(transition.acknowledged):
+		# Input and reliable ACK use independent channels. Keep just the newest
+		# orientation so a rebased input arriving first can be applied on ACK.
+		actor._view_buffer={"seq":seq,"yaw":yaw,"pitch":pitch}
+		return
+	if seq<int(actor._view_input_floor): return
+	actor.yaw=wrapf(yaw,-PI,PI)
+	var limit: float=InsectPose.SURFACE_PITCH_LIMIT if actor.state=="perched" else InsectPose.VIEW_PITCH_LIMIT
+	actor.pitch=clampf(pitch,-limit,limit)
+
+func submit_view_ack(id: int, action_seq: int, revision: int, first_input_seq: int, yaw: float, pitch: float) -> bool:
+	if phase!="playing" or not actors.has(id) or action_seq<0 or first_input_seq<0 or not is_finite(yaw) or not is_finite(pitch): return false
+	var actor: Dictionary=actors[id]
+	if actor.role!="mosquito" or not bool(actor.alive) or action_seq<=int(actor._action_seq): return false
+	var transition: Dictionary=actor._view_transition
+	if transition.is_empty() or revision!=int(transition.revision) or bool(transition.acknowledged) or first_input_seq<=int(transition.input_seq): return false
+	actor._action_seq=action_seq
+	transition.acknowledged=true
+	actor._view_input_floor=first_input_seq
+	# The ACK carries the first rebased aim atomically, so its input packet may
+	# arrive later or be lost without applying a frame of the old coordinate frame.
+	_accept_insect_view(actor,first_input_seq,yaw,pitch)
+	var buffered: Dictionary=actor._view_buffer
+	if not buffered.is_empty() and int(buffered.seq)>=first_input_seq:
+		_accept_insect_view(actor,int(buffered.seq),float(buffered.yaw),float(buffered.pitch))
+	actor._view_buffer={}
+	return true
+
+func _insect_view_direction(actor: Dictionary) -> Vector3:
+	if actor.state=="perched" and Vector3(actor._surface_normal).length_squared()>.5 and Vector3(actor._surface_forward).length_squared()>.5:
+		var normal: Vector3=actor._surface_normal
+		var yaw_delta: float=wrapf(float(actor.yaw)-float(actor._surface_view_yaw),-PI,PI)
+		var forward: Vector3=Vector3(actor._surface_forward).rotated(normal,yaw_delta)
+		return InsectPose.surface_view_direction(normal,forward,float(actor.pitch))
+	return ArenaData.flight_direction(Vector3.FORWARD,float(actor.yaw),float(actor.pitch))
+
+func _departure_view(actor: Dictionary) -> Dictionary:
+	var angles: Dictionary=InsectPose.view_angles(_insect_view_direction(actor),float(actor.yaw))
+	angles.source_yaw=float(actor.yaw)
+	angles.source_pitch=float(actor.pitch)
+	angles.input_seq=int(actor._input_seq)
+	return angles
+
+func _begin_view_transition(actor: Dictionary, departure: Dictionary) -> void:
+	actor._view_revision=int(actor._view_revision)+1
+	actor.yaw=departure.yaw
+	actor.pitch=departure.pitch
+	actor._view_transition={"revision":int(actor._view_revision),"yaw":float(departure.yaw),"pitch":float(departure.pitch),"input_seq":int(departure.input_seq),"source_yaw":float(departure.source_yaw),"source_pitch":float(departure.source_pitch),"acknowledged":false}
+	actor._view_buffer={}
+
+func _release_surface(actor: Dictionary, command: Dictionary={}) -> bool:
+	if not surface_motion.can_release(actor,doors):
+		actor._surface_reason="No hay espacio para despegar"
+		return false
+	# A reliable F click may precede its input packet. Its captured surface aim
+	# is valid unless we are still waiting for a previous coordinate-frame ACK.
+	if not command.is_empty() and (Dictionary(actor._view_transition).is_empty() or bool(actor._view_transition.acknowledged)):
+		actor.yaw=wrapf(float(command.yaw),-PI,PI)
+		actor.pitch=clampf(float(command.pitch),-InsectPose.SURFACE_PITCH_LIMIT,InsectPose.SURFACE_PITCH_LIMIT)
+	var departure: Dictionary=_departure_view(actor)
+	if not surface_motion.release(actor,doors): return false
+	_begin_view_transition(actor,departure)
+	return true
+
+func _cancel_emote(id: int) -> void:
+	if not actors.has(id): return
+	actors[id].emote_id = ""
+	actors[id].emote_time = 0.0
+	actors[id]._emote_until = 0.0
+
+func _emote_blocked(actor: Dictionary) -> bool:
+	return not bool(actor.alive) or actor.role!="human" or actor.state!="human" or not bool(actor.grounded) or Vector3(actor.velocity).length_squared()>.0001 or Vector2(Vector3(actor._move).x,Vector3(actor._move).z).length_squared()>.0001 or bool(actor._sprint) or bool(actor._crouch) or bool(actor._jump) or bool(actor._interact) or float(actor.crouch_amount)>.01 or float(actor.swing)>0.0 or not Dictionary(actor._throw).is_empty() or elapsed<float(actor._throw_recovery) or not Dictionary(actor._task).is_empty() or bool(actor.bitten) or bool(actor.threatened) or elapsed-float(actor._last_input)>INPUT_TIMEOUT
+
+func submit_emote(id: int, seq: int, emote_id: String) -> bool:
+	# Network authenticates the sender; gestures share the manual-action sequence.
+	if phase!="playing" or not actors.has(id) or seq<0 or emote_id.length()>=24: return false
+	if not emote_id.is_empty() and not Emotes.is_valid(emote_id): return false
+	var actor: Dictionary=actors[id]
+	if seq<=int(actor._action_seq) or not bool(actor.alive) or actor.role!="human": return false
+	actor._action_seq=seq
+	return request_emote(id,emote_id)
+
+func request_emote(id: int, emote_id: String) -> bool:
+	# Trusted authority entry point; external callers use submit_emote's sequence.
+	# This method accepts no client time, pose, root displacement or duration.
+	if phase!="playing" or not actors.has(id) or actors[id].role!="human" or not bool(actors[id].alive): return false
+	if emote_id.is_empty():
+		_cancel_emote(id)
+		return true
+	var actor: Dictionary = actors[id]
+	if not Emotes.is_valid(emote_id) or _emote_blocked(actor) or not str(actor.emote_id).is_empty() or elapsed<float(actor._emote_cooldown): return false
+	for pending: Dictionary in _pending_actions:
+		if int(pending.id)==id: return false
+	var duration: float = Emotes.get_emote(emote_id).duration
+	actor.emote_id = emote_id
+	actor.emote_time = 0.0
+	actor._emote_tool = str(actor.tool)
+	actor._emote_until = elapsed+duration
+	actor._emote_cooldown = elapsed+duration+EMOTE_RECOVERY
+	return true
+
+func _update_emotes(dt: float) -> void:
+	for id: int in _human_ids:
+		var actor: Dictionary = actors[id]
+		if str(actor.emote_id).is_empty(): continue
+		if _emote_blocked(actor) or str(actor.tool)!=str(actor._emote_tool) or elapsed>=float(actor._emote_until)-.000001:
+			_cancel_emote(id)
+		else:
+			actor.emote_time += dt
 
 func action(id: int, seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: float = NAN) -> void:
 	if phase != "playing" or not actors.has(id) or seq < 0:
@@ -283,6 +446,8 @@ func action(id: int, seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: fl
 		aim_pitch = clampf(aim_pitch, Pose.HUMAN_PITCH_MIN, Pose.HUMAN_PITCH_MAX)
 		aim_yaw = Pose.clamp_view_yaw(actor, aim_yaw, aim_pitch)
 	actor._action_seq = seq
+	if actor.role=="human" and verb in ["attack","self_swat","pickup","drop","door","throw_start","throw_release"]:
+		_cancel_emote(id)
 	if verb=="throw_cancel":
 		for index: int in range(_pending_actions.size()-1,-1,-1):
 			if int(_pending_actions[index].id)==id and str(_pending_actions[index].verb) in ["throw_start","throw_release"]:_pending_actions.remove_at(index)
@@ -320,6 +485,7 @@ func _tick(dt: float) -> void:
 			insect._focus_previous_point=_zone_pose(insect._assignment).p
 	_frame += 1
 	elapsed += dt
+	_update_emotes(dt)
 	door_state.step(dt, actors)
 	for id: int in actors:
 		var actor: Dictionary = actors[id]
@@ -351,16 +517,21 @@ func _tick(dt: float) -> void:
 		var local_move: Vector3 = actor._move if elapsed - float(actor._last_input) <= INPUT_TIMEOUT else Vector3.ZERO
 		if actor.state == "biting":
 			continue
+		if bool(actor._surface_jump):
+			actor._surface_jump = false
+			if actor.state == "perched" and elapsed-float(actor._last_input)<=INPUT_TIMEOUT:
+				_release_surface(actor)
 		if int(actor.help_target) != 0:
 			actor._focus_progress = 0.0
-			var previous: Vector3 = actor.p
-			ArenaData.step_mosquito(actor, local_move, dt, str(config.map_id), null, doors)
-			actor.p = _avoid_humans(previous, actor.p)
+			_move_free_insect(actor,local_move,dt)
 			continue
 		var focus: Dictionary = _focus_info(id)
 		var holding: bool = _focus_held(actor)
 		var assist: Variant = null
+		if holding and bool(focus.can_focus) and actor.state=="perched":
+			if not _release_surface(actor): focus.can_focus = false
 		if holding and bool(focus.can_focus):
+			if not Dictionary(actor._surface_pending).is_empty(): surface_motion.clear(actor)
 			actor._focus_progress = minf(1.0, float(actor._focus_progress) + dt / FOCUS_SECONDS)
 			if float(actor._focus_progress) >= 1.0:
 				_attach(id)
@@ -369,18 +540,14 @@ func _tick(dt: float) -> void:
 			var target: Dictionary = actors[int(actor._assignment.human)]
 			if float(actor._focus_progress) >= 0.1:
 				target.threatened = true
+				_cancel_emote(int(actor._assignment.human))
 			var pose: Dictionary = _zone_pose(actor._assignment)
 			var destination: Vector3 = Vector3(pose.p) + Vector3(pose.normal) * ATTACH_OFFSET
 			assist = ((destination - Vector3(actor.p)) * 5.0 + Vector3(target.velocity)).limit_length(ArenaData.MOSQUITO_SPEED)
 			actor.state = "flying"
 		else:
 			actor._focus_progress = 0.0
-		if actor.state == "perched" and local_move.length_squared() > 0.01:
-			actor.state = "flying"
-		var previous: Vector3 = actor.p
-		ArenaData.step_mosquito(actor, local_move, dt, str(config.map_id), assist, doors)
-		actor.p = _avoid_humans(previous, actor.p)
-		actor.velocity = (Vector3(actor.p) - previous) / maxf(dt, 0.000001)
+		_move_free_insect(actor,local_move,dt,assist)
 		if float(actor._focus_progress) >= 1.0:
 			_attach(id)
 	_update_attached()
@@ -450,9 +617,31 @@ func _execute_action(id: int, verb: String, command: Dictionary = {}) -> void:
 				actor._focus_pulse_until = elapsed + 0.20
 		"perch":
 			if actor.state == "flying":
-				_try_perch(id)
+				if not Dictionary(actor._surface_pending).is_empty(): surface_motion.clear(actor)
+				else: _try_perch(id)
 			elif actor.state == "perched":
-				actor.state = "flying"
+				_release_surface(actor,command)
+
+func _move_free_insect(actor: Dictionary, local_move: Vector3, dt: float, assist: Variant = null) -> void:
+	var previous: Vector3 = actor.p
+	var departure: Dictionary = _departure_view(actor) if actor.state=="perched" else {}
+	if actor.state=="perched":
+		surface_motion.step_surface(actor,local_move,dt,doors)
+		if actor.state=="flying": _begin_view_transition(actor,departure)
+	elif not Dictionary(actor._surface_pending).is_empty() and assist==null:
+		surface_motion.approach(actor,dt,doors)
+	else:
+		ArenaData.step_mosquito(actor,local_move,dt,str(config.map_id),assist,doors)
+	if actor.state=="perched": departure=_departure_view(actor)
+	actor.p = _avoid_humans(previous,actor.p)
+	if actor.state=="perched":
+		if not surface_motion.supported(actor,doors):
+			surface_motion.clear(actor)
+			actor.state = "flying"
+			actor.velocity = Vector3.ZERO
+			_begin_view_transition(actor,departure)
+	else:
+		actor.velocity = (Vector3(actor.p)-previous)/maxf(dt,.000001)
 
 func _door_info(id: int, aim_yaw: float = NAN, aim_pitch: float = NAN) -> Dictionary:
 	if phase != "playing" or not actors.has(id):
@@ -473,7 +662,7 @@ func _door_info(id: int, aim_yaw: float = NAN, aim_pitch: float = NAN) -> Dictio
 	var state: Dictionary = doors[door_id]
 	var cooling: bool = elapsed-float(actor._door_at)<DoorStateScript.COOLDOWN or elapsed-float(door_state.last_toggle.get(door_id,-100.0))<DoorStateScript.COOLDOWN
 	var available: bool = (not bool(state.moving) or bool(state.blocked)) and not cooling
-	return {"kind":"door","door_id":door_id,"label":DoorCatalogData.DEFINITIONS[door_id].label,"verb":"Cerrar" if float(state.target_angle)>0.1 else "Abrir","p":hit.p,"can_use":available,"reason":"" if available else "Esperá que termine de moverse"}
+	return {"kind":"door","door_id":door_id,"label":door_state.definitions[door_id].label,"verb":"Cerrar" if float(state.target_angle)>0.1 else "Abrir","p":hit.p,"can_use":available,"reason":"" if available else "Esperá que termine de moverse"}
 
 func _door_action(id: int, command: Dictionary) -> void:
 	var actor: Dictionary = actors[id]
@@ -508,52 +697,7 @@ func _avoid_humans(previous: Vector3, position: Vector3) -> Vector3:
 	return result
 
 func _try_perch(id: int) -> void:
-	var actor: Dictionary = actors[id]
-	var position: Vector3 = actor.p
-	var radius: float = ArenaData.MOSQUITO_RADIUS
-	var candidates: Array[Vector3] = [
-		Vector3(position.x, radius, position.z), Vector3(position.x, float(_map_data.ceiling) - radius, position.z),
-		Vector3(-float(_map_data.half_x) + radius, position.y, position.z), Vector3(float(_map_data.half_x) - radius, position.y, position.z),
-		Vector3(position.x, position.y, -float(_map_data.half_z) + radius), Vector3(position.x, position.y, float(_map_data.half_z) - radius),
-	]
-	var normals: Array[Vector3] = [Vector3.UP,Vector3.DOWN,Vector3.RIGHT,Vector3.LEFT,Vector3.BACK,Vector3.FORWARD]
-	for obstacle: AABB in ArenaData.obstacles(str(config.map_id)):
-		var expanded: AABB = obstacle.grow(radius + 0.005)
-		for axis: int in range(3):
-			for edge: float in [expanded.position[axis], expanded.end[axis]]:
-				var candidate: Vector3 = position
-				candidate[axis] = edge
-				var on_face := true
-				for other_axis: int in range(3):
-					if other_axis != axis and (candidate[other_axis] < expanded.position[other_axis] or candidate[other_axis] > expanded.end[other_axis]):
-						on_face = false
-				if on_face:
-					candidates.append(candidate)
-					var normal := Vector3.ZERO
-					normal[axis] = -1.0 if edge == expanded.position[axis] else 1.0
-					normals.append(normal)
-	var best_distance := 0.32
-	var best: Vector3 = position
-	var found := false
-	var best_normal := Vector3.UP
-	for index: int in range(candidates.size()):
-		var candidate: Vector3 = candidates[index]
-		var distance: float = position.distance_to(candidate)
-		# Leaves are not perch supports. Even a fixed wall/floor candidate must
-		# leave the insect's whole radius clear of every current dynamic leaf.
-		if DoorCatalogData.body_blocked(AABB(candidate-Vector3.ONE*radius,Vector3.ONE*radius*2.0),doors,str(config.map_id)) or not DoorCatalogData.ray_doors(position,candidate,doors,str(config.map_id),radius).is_empty():
-			continue
-		if distance <= best_distance and ArenaData.clear_segment(position, candidate, str(config.map_id), doors):
-			best_distance = distance
-			best = candidate
-			best_normal = normals[index]
-			found = true
-	if found:
-		actor.p = best
-		actor.state = "perched"
-		actor._surface_normal = best_normal
-		actor._move = Vector3.ZERO
-		actor.velocity = Vector3.ZERO
+	surface_motion.begin(actors[id],doors)
 
 func _assign(id: int) -> void:
 	var actor: Dictionary = actors[id]
@@ -653,6 +797,7 @@ func _attach(id: int) -> void:
 		return
 	if not ArenaData.clear_segment(actor.p, pose.p, str(config.map_id), doors) or _body_occludes(actor.p, pose.p, -1):
 		return
+	surface_motion.clear(actor)
 	actor.state = "biting"
 	actor._bite_started = elapsed
 	actor._forbidden = "" # A successful new bite clears the previous-zone exclusion.
@@ -662,6 +807,7 @@ func _attach(id: int) -> void:
 
 func _detach(id: int) -> void:
 	var actor: Dictionary = actors[id]
+	surface_motion.clear(actor)
 	var pose: Dictionary = _zone_pose(actor._assignment)
 	actor._forbidden = _zone_key(actor._assignment)
 	actor.state = "flying"
@@ -796,7 +942,10 @@ func _surface_normal(actor: Dictionary) -> Vector3:
 
 func _impact_actor(actor: Dictionary) -> Dictionary:
 	# Only public orientation inputs. A free assignment never changes anatomy.
-	return {"p":actor.p,"yaw":actor.yaw,"pitch":actor.pitch,"velocity":actor.velocity,"state":actor.state,"surface_normal":_surface_normal(actor)}
+	return {"p":actor.p,"yaw":actor.yaw,"pitch":actor.pitch,"velocity":actor.velocity,"state":actor.state,"surface_normal":_surface_normal(actor),"surface_forward":_surface_forward(actor)}
+
+func _surface_forward(actor: Dictionary) -> Vector3:
+	return actor.get("_surface_forward",Vector3.ZERO) if bool(actor.alive) and actor.state=="perched" else Vector3.ZERO
 
 func _impact_near_ray(actor: Dictionary, eye: Vector3, direction: Vector3, reach: float, radius: float) -> bool:
 	var nearest: Vector3=InsectPose.closest_axis(actor.p,eye,eye+direction*reach)
@@ -996,6 +1145,7 @@ func _kill(id: int, tool: String="hands", kind: String="melee") -> void:
 	var actor: Dictionary = actors[id]
 	if not bool(actor.alive) or actor.state == "stunned":
 		return
+	surface_motion.clear(actor)
 	var safe_tool: String=tool if ToolData.has_tool(tool) else "hands"
 	actor.impact={"id":int(actor.impact.id)+1,"tool":safe_tool,"kind":"projectile" if kind=="projectile" else "melee","material":str(ToolData.DATA[safe_tool].material)}
 	actor._forbidden = _zone_key(actor._assignment)
@@ -1023,6 +1173,7 @@ func _kill(id: int, tool: String="hands", kind: String="melee") -> void:
 
 func _recover_stun(id: int) -> void:
 	var actor: Dictionary = actors[id]
+	surface_motion.clear(actor)
 	for helper_id: int in _mosquito_ids:
 		if int(actors[helper_id].help_target) == id:
 			actors[helper_id].help_target = 0
@@ -1054,7 +1205,7 @@ func _help_info(id: int) -> Dictionary:
 		var distance: float = delta.length()
 		if distance > best_distance:
 			continue
-		if distance > 0.12 and ArenaData.flight_direction(Vector3.FORWARD, float(helper.yaw), float(helper.pitch)).dot(delta.normalized()) < HELP_FACING:
+		if distance > 0.12 and _insect_view_direction(helper).dot(delta.normalized()) < HELP_FACING:
 			continue
 		if not ArenaData.clear_segment(helper.p, target.p, str(config.map_id), doors) or _body_occludes(helper.p, target.p, -1):
 			continue
@@ -1417,6 +1568,76 @@ func _drop(id: int) -> void:
 			pickup.yaw = float(actor.yaw)
 	actor.tool = "hands"
 
+func _task_route(from: Vector3, station_id: int) -> Dictionary:
+	# Route points are supported human feet. Euclidean distance through a floor
+	# is never used as a travel estimate. The fixed speed reserves 15% for turns
+	# and alignment, without requiring sprint or changing movement authority.
+	var route: PackedVector3Array = Routes.path(from,_map_data.stations[station_id].p,true,str(config.map_id))
+	if route.is_empty(): return {}
+	var meters := 0.0
+	var previous := from
+	var crossed: Dictionary = {}
+	for point: Vector3 in route:
+		meters += Vector2(point.x-previous.x,point.z-previous.z).length()
+		var center_from: Vector3 = previous+Vector3.UP*(ArenaData.HUMAN_HEIGHT*.5)
+		var center_to: Vector3 = point+Vector3.UP*(ArenaData.HUMAN_HEIGHT*.5)
+		for door_id: String in doors:
+			if crossed.has(door_id): continue
+			var state: Dictionary = doors[door_id]
+			if float(state.angle)>=DoorCatalogData.OPEN_ANGLE-.02 and float(state.target_angle)>=DoorCatalogData.OPEN_ANGLE-.02: continue
+			var definition: Dictionary = door_state.definitions[door_id]
+			# The same oriented leaf and human footprint used by authority. A
+			# closing/closed leaf reserves one complete operation, even mid-turn.
+			if not DoorCatalogData.ray_leaf(definition,0.0,center_from,center_to,ArenaData.HUMAN_RADIUS).is_empty() or not DoorCatalogData.ray_leaf(definition,float(state.angle),center_from,center_to,ArenaData.HUMAN_RADIUS).is_empty():
+				crossed[door_id] = true
+		previous = point
+	var travel: float = meters / float(config.task_route_speed)
+	var door_seconds: float = float(crossed.size())*float(config.task_door_seconds)
+	var required: float = ceilf((travel+door_seconds+float(config.task_work)+TASK_ROUTE_MARGIN)*20.0)/20.0
+	return {"route_meters":meters,"travel_seconds":travel,"door_count":crossed.size(),"door_seconds":door_seconds,"required_seconds":required}
+
+func _select_task(human: Dictionary, preferred: int, available: float) -> Dictionary:
+	var budget: float = minf(float(human._deadline),available)
+	var fallback: Dictionary = {}
+	for offset: int in range(_map_data.stations.size()):
+		var station_id: int = posmod(preferred+offset,_map_data.stations.size())
+		var estimate: Dictionary = _task_route(human.p,station_id)
+		if estimate.is_empty() or float(estimate.required_seconds)>available+.000001: continue
+		estimate.station = station_id
+		estimate.budget = maxf(budget,float(estimate.required_seconds))
+		estimate.extended = float(estimate.budget)>float(human._deadline)+.000001
+		estimate.rerouted = station_id!=preferred
+		if float(estimate.required_seconds)<=budget+.000001: return estimate
+		if fallback.is_empty() or float(estimate.required_seconds)<float(fallback.required_seconds): fallback=estimate
+	return fallback
+
+func _dispatch_task(id: int) -> void:
+	var human: Dictionary = actors[id]
+	var pending: Dictionary = human._task_dispatch
+	if pending.is_empty() or not Dictionary(human._task).is_empty(): return
+	var available: float = float(pending.end)-elapsed
+	if available<float(config.task_work)+TASK_ROUTE_MARGIN:
+		# A player cannot lower the collective goal by jumping or hiding at a
+		# dispatch instant. An unissued slot expires without a personal penalty.
+		human._task_dispatch = {}
+		return
+	if elapsed<float(human._task_retry_at) or not bool(human.grounded): return
+	human._task_retry_at = elapsed+TASK_ROUTE_RETRY
+	var selected: Dictionary = _select_task(human,int(pending.preferred),available)
+	if selected.is_empty(): return
+	var station: Dictionary = _map_data.stations[int(selected.station)]
+	human._task = {
+		"name":station.name,"station":int(selected.station),"p":station.p,
+		"remaining":float(selected.budget),"progress":0.0,"work":float(config.task_work),
+		"budget":float(selected.budget),"base_deadline":float(human._deadline),
+		"route_meters":float(selected.route_meters),"travel_seconds":float(selected.travel_seconds),
+		"door_count":int(selected.door_count),"door_seconds":float(selected.door_seconds),
+		"required_seconds":float(selected.required_seconds),"extended":bool(selected.extended),"rerouted":bool(selected.rerouted),
+	}
+	human._task_dispatch = {}
+	human._tasks_given = int(human._tasks_given)+1
+	_cancel_emote(id)
+
 func _update_tasks(dt: float) -> void:
 	for index: int in range(_human_ids.size()):
 		var id: int = _human_ids[index]
@@ -1440,16 +1661,10 @@ func _update_tasks(dt: float) -> void:
 			var scheduled: float = float(human._next_task)
 			while elapsed + 0.000001 >= float(human._next_task):
 				human._next_task = float(human._next_task) + float(config.task_interval)
-			var round_remaining: float = maxf(0.0, float(config.round_seconds) - elapsed)
-			var task_budget: float = minf(float(human._deadline), round_remaining)
-			if scheduled <= last_task_start(config) + 0.000001 and task_budget + 0.000001 >= minimum_task_deadline(float(config.task_work)) and Dictionary(human._task).is_empty():
-				var station_id: int = (int(human._tasks_given) + index) % _map_data.stations.size()
-				var station: Dictionary = _map_data.stations[station_id]
-				human._task = {
-					"name": station.name, "station": station_id, "p": station.p,
-					"remaining": task_budget, "progress": 0.0, "work": float(config.task_work),
-				}
-				human._tasks_given = int(human._tasks_given) + 1
+			if scheduled <= last_task_start(config)+.000001 and Dictionary(human._task).is_empty():
+				human._task_dispatch={"preferred":(int(human._tasks_given)+index)%_map_data.stations.size(),"end":minf(float(config.round_seconds),float(human._next_task)-.5)}
+				human._task_retry_at=elapsed
+		_dispatch_task(id)
 
 func _evaluate_result() -> void:
 	if phase != "playing":
@@ -1480,14 +1695,20 @@ func _finish(team: String, explanation: String) -> void:
 	reason = explanation
 	phase = "results"
 	_pending_actions.clear()
-	for id: int in _human_ids:_cancel_throw(id,"round_end")
+	for id: int in _human_ids:
+		_cancel_throw(id,"round_end")
+		_cancel_emote(id)
+		actors[id]._task_dispatch = {}
 
 func abort(explanation: String) -> void:
 	phase = "lobby"
 	winner = ""
 	reason = explanation
 	_pending_actions.clear()
-	for id: int in _human_ids:_cancel_throw(id,"round_end")
+	for id: int in _human_ids:
+		_cancel_throw(id,"round_end")
+		_cancel_emote(id)
+		actors[id]._task_dispatch = {}
 	_assignment_waiters.clear()
 	for id: int in actors:
 		actors[id]._assignment = {}
@@ -1517,7 +1738,9 @@ func public_snapshot() -> Dictionary:
 			"body_yaw": actor.body_yaw, "inspecting": actor.inspecting, "strike": Dictionary(actor.strike).duplicate(true),
 			"throw_gesture":Dictionary(actor.throw_gesture).duplicate(true),"impact":Dictionary(actor.impact).duplicate(true),
 			"pitch": actor.pitch, "state": actor.state, "alive": actor.alive,
+			"emote_id":actor.emote_id,"emote_time":actor.emote_time,
 			"surface_normal": surface_normal,
+			"surface_forward": _surface_forward(actor),
 			"help_target": actor.help_target,
 			"swing": actor.swing, "bitten": actor.bitten, "threatened": actor.threatened, "tool": actor.tool, "lives": actor.lives,
 			"velocity": actor.velocity, "grounded": actor.grounded, "sprinting": actor.sprinting,
@@ -1542,13 +1765,16 @@ func private_for(id: int) -> Dictionary:
 		var attack: Dictionary = _attack_info(id)
 		var pickup: Dictionary = _pickup_info(id)
 		pickup.erase("_id")
-		return {"throw":_throw_info(id),"pickup":pickup,"task": Dictionary(actor._task).duplicate(true), "deadline": actor._deadline, "failures": actor._failures, "attack": attack, "bite_feedback": Dictionary(actor._bite_feedback).duplicate(true), "interaction": _door_info(id)}
+		var task_pending: bool = not Dictionary(actor._task_dispatch).is_empty()
+		return {"throw":_throw_info(id),"pickup":pickup,"task": Dictionary(actor._task).duplicate(true), "task_status":{"pending":task_pending,"reason":"Esperando una ruta con tiempo suficiente" if task_pending else ""},"deadline": actor._deadline, "failures": actor._failures, "attack": attack, "bite_feedback": Dictionary(actor._bite_feedback).duplicate(true), "interaction": _door_info(id)}
 	var assignment: Dictionary = {}
 	if bool(actor.alive) and not Dictionary(actor._assignment).is_empty():
 		assignment = Dictionary(actor._assignment).duplicate(true)
 		assignment.merge(_zone_pose(assignment))
 	var stun := {"active": actor.state == "stunned", "remaining": maxf(0.0, float(actor._stun_remaining)), "total": STUN_SECONDS, "helped": bool(actor._stun_helped)}
-	return {"assignment": assignment, "state": actor.state, "focus": _focus_info(id), "stun": stun, "help": _help_info(id), "respawn_left": 0.0, "lives": actor.lives}
+	var surface: Dictionary=surface_motion.info(actor,doors)
+	surface.view_transition=Dictionary(actor._view_transition).duplicate(true)
+	return {"assignment": assignment, "state": actor.state, "focus": _focus_info(id), "stun": stun, "help": _help_info(id), "surface":surface, "respawn_left": 0.0, "lives": actor.lives}
 
 func _focus_held(actor: Dictionary) -> bool:
 	return not bool(actor._focus_suppressed) and ((bool(actor._interact) and elapsed - float(actor._last_input) <= INPUT_TIMEOUT) or elapsed < float(actor._focus_pulse_until))
@@ -1580,7 +1806,7 @@ func _focus_info(id: int) -> Dictionary:
 	var pose: Dictionary = _zone_pose(actor._assignment)
 	var delta: Vector3 = Vector3(pose.p) - Vector3(actor.p)
 	result.distance = delta.length()
-	var forward: Vector3 = ArenaData.flight_direction(Vector3.FORWARD, float(actor.yaw), float(actor.pitch))
+	var forward: Vector3 = _insect_view_direction(actor)
 	if bool(actor._focus_suppressed):
 		result.reason = "Soltá E antes de concentrarte otra vez"
 	elif delta.length() > FOCUS_DISTANCE:

@@ -1,0 +1,5394 @@
+{
+	"checks": 212,
+	"evidence": {
+		"burst": {
+			"elapsed_ms": 82,
+			"maximum_tokens": 16.1,
+			"received": 12,
+			"retained_seen": 13,
+			"sent": 100
+		},
+		"opus": "libopus 1.6.1",
+		"packet_bytes": 60,
+		"reordering": {
+			"after": 8,
+			"before": 8,
+			"server": {
+				"epoch": 3,
+				"finish": -1,
+				"finish_at": 0,
+				"highest": 20,
+				"last": 1594,
+				"permission_due": 1735,
+				"rate_time": 1345,
+				"recipients": {
+					"1135066935": {
+						"cutoff": 12000.0,
+						"distance": 0.948683261871338,
+						"epoch": 3,
+						"first_sequence": 0,
+						"gain": 0.982081001360547,
+						"map_id": "house",
+						"permit": 9,
+						"pitch": 1.0
+					},
+					"1201704810": {
+						"cutoff": 12000.0,
+						"distance": 1.79999995231628,
+						"epoch": 3,
+						"first_sequence": 0,
+						"gain": 0.936249763321991,
+						"map_id": "house",
+						"permit": 7,
+						"pitch": 1.0
+					},
+					"2123696167": {
+						"cutoff": 12000.0,
+						"distance": 0.948683261871338,
+						"epoch": 3,
+						"first_sequence": 0,
+						"gain": 0.982081001360547,
+						"map_id": "house",
+						"permit": 8,
+						"pitch": 1.0
+					}
+				},
+				"seen": {
+					"8": true,
+					"20": true
+				},
+				"started": 1345,
+				"tokens": 12.0
+			},
+			"server_seen_8": true
+		},
+		"rounds": [
+			{
+				"fingerprint": "622e707b52b646567cd8df6d55dedf90b6ea887d6a55433c8ab7217017f08b77",
+				"map_id": "house",
+				"roles": [
+					"human",
+					"human",
+					"mosquito",
+					"mosquito"
+				]
+			},
+			{
+				"fingerprint": "dc1401f2e1ae252ede9acbcbadcb7bcc8fbffce092b3e8dc11f125a75a8864c1",
+				"map_id": "house-v1-2",
+				"roles": [
+					"mosquito",
+					"mosquito",
+					"human",
+					"human"
+				]
+			}
+		],
+		"source_sha256": {
+			"res://addons/lms_opus/bin/lms_opus.windows.x86_64.dll": "e5c2f5dea7515d63e2218704bf457dbf806ee530c51c5c3c2befca4d603a49b1",
+			"res://scripts/voice_acoustics.gd": "58800c497f7651fca8b1681a8b6f81c2d3365a07eb8aef007e67a541407c88c2",
+			"res://scripts/voice_codec.gd": "a35b231d13083783734c229a007ee07fea6e1a7501ef494cb1deee39a8d33142",
+			"res://scripts/voice_transport.gd": "0159a539f786f66584211f473373631e9632a0f0ce3c1e3bd5c3c3153d1c083b"
+		},
+		"trace": [
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 1,
+							"pitch": 1.0
+						},
+						"received": 1
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 2,
+							"pitch": 1.0
+						},
+						"received": 1
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 3,
+							"pitch": 1.0
+						},
+						"received": 1
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 1,
+				"packet_rate": {
+					"time": 931,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 0,
+				"server": {
+					"epoch": 1,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 0,
+					"last": 931,
+					"permission_due": 1011,
+					"rate_time": 911,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 3,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 1,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 2,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true
+					},
+					"started": 911,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 1,
+							"pitch": 1.0
+						},
+						"received": 2
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 2,
+							"pitch": 1.0
+						},
+						"received": 2
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 3,
+							"pitch": 1.0
+						},
+						"received": 2
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 1,
+				"packet_rate": {
+					"time": 966,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 1,
+				"server": {
+					"epoch": 1,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 1,
+					"last": 966,
+					"permission_due": 1011,
+					"rate_time": 911,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 3,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 1,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 2,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true
+					},
+					"started": 911,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 1,
+							"pitch": 1.0
+						},
+						"received": 3
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 2,
+							"pitch": 1.0
+						},
+						"received": 3
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 3,
+							"pitch": 1.0
+						},
+						"received": 3
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 1,
+				"packet_rate": {
+					"time": 993,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 2,
+				"server": {
+					"epoch": 1,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 2,
+					"last": 993,
+					"permission_due": 1114,
+					"rate_time": 911,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 3,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 1,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 2,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true
+					},
+					"started": 911,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 1,
+							"pitch": 1.0
+						},
+						"received": 4
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 2,
+							"pitch": 1.0
+						},
+						"received": 4
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 3,
+							"pitch": 1.0
+						},
+						"received": 4
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 1,
+				"packet_rate": {
+					"time": 1028,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 3,
+				"server": {
+					"epoch": 1,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 3,
+					"last": 1028,
+					"permission_due": 1114,
+					"rate_time": 911,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 3,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 1,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 1,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 2,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true
+					},
+					"started": 911,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 1,
+						"id": 508735902,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 4,
+							"pitch": 1.55
+						},
+						"received": 1
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 5,
+							"pitch": 1.55
+						},
+						"received": 1
+					},
+					{
+						"at_sequence": 0,
+						"id": 2123696167,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 6,
+							"pitch": 1.55
+						},
+						"received": 1
+					}
+				],
+				"enet": {
+					"last_rtt": 13.0,
+					"limit": 32.0,
+					"rtt": 12.0,
+					"throttle": 32.0
+				},
+				"epoch": 2,
+				"packet_rate": {
+					"time": 1145,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 0,
+				"server": {
+					"epoch": 2,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 0,
+					"last": 1145,
+					"permission_due": 1245,
+					"rate_time": 1131,
+					"recipients": {
+						"508735902": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 4,
+							"pitch": 1.55
+						},
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 6,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 5,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true
+					},
+					"started": 1131,
+					"tokens": 12.0
+				},
+				"speaker": 2123696167,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 1,
+						"id": 508735902,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 4,
+							"pitch": 1.55
+						},
+						"received": 2
+					},
+					{
+						"at_sequence": 0,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 5,
+							"pitch": 1.55
+						},
+						"received": 1
+					},
+					{
+						"at_sequence": 0,
+						"id": 2123696167,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 6,
+							"pitch": 1.55
+						},
+						"received": 2
+					}
+				],
+				"enet": {
+					"last_rtt": 13.0,
+					"limit": 32.0,
+					"rtt": 12.0,
+					"throttle": 32.0
+				},
+				"epoch": 2,
+				"packet_rate": {
+					"time": 1180,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 1,
+				"server": {
+					"epoch": 2,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 1,
+					"last": 1180,
+					"permission_due": 1245,
+					"rate_time": 1131,
+					"recipients": {
+						"508735902": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 4,
+							"pitch": 1.55
+						},
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 6,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 5,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true
+					},
+					"started": 1131,
+					"tokens": 12.0
+				},
+				"speaker": 2123696167,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 1,
+						"id": 508735902,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 4,
+							"pitch": 1.55
+						},
+						"received": 3
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 5,
+							"pitch": 1.55
+						},
+						"received": 2
+					},
+					{
+						"at_sequence": 0,
+						"id": 2123696167,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 6,
+							"pitch": 1.55
+						},
+						"received": 3
+					}
+				],
+				"enet": {
+					"last_rtt": 13.0,
+					"limit": 32.0,
+					"rtt": 12.0,
+					"throttle": 32.0
+				},
+				"epoch": 2,
+				"packet_rate": {
+					"time": 1214,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 2,
+				"server": {
+					"epoch": 2,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 2,
+					"last": 1214,
+					"permission_due": 1245,
+					"rate_time": 1131,
+					"recipients": {
+						"508735902": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 4,
+							"pitch": 1.55
+						},
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 6,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 5,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true
+					},
+					"started": 1131,
+					"tokens": 12.0
+				},
+				"speaker": 2123696167,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 1,
+						"id": 508735902,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 4,
+							"pitch": 1.55
+						},
+						"received": 4
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 5,
+							"pitch": 1.55
+						},
+						"received": 3
+					},
+					{
+						"at_sequence": 0,
+						"id": 2123696167,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 6,
+							"pitch": 1.55
+						},
+						"received": 4
+					}
+				],
+				"enet": {
+					"last_rtt": 13.0,
+					"limit": 32.0,
+					"rtt": 12.0,
+					"throttle": 32.0
+				},
+				"epoch": 2,
+				"packet_rate": {
+					"time": 1242,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 3,
+				"server": {
+					"epoch": 2,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 3,
+					"last": 1242,
+					"permission_due": 1245,
+					"rate_time": 1131,
+					"recipients": {
+						"508735902": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 4,
+							"pitch": 1.55
+						},
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 6,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 2,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 5,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true
+					},
+					"started": 1131,
+					"tokens": 12.0
+				},
+				"speaker": 2123696167,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 2,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 7,
+							"pitch": 1.0
+						},
+						"received": 5
+					},
+					{
+						"at_sequence": 2,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 8,
+							"pitch": 1.0
+						},
+						"received": 5
+					},
+					{
+						"at_sequence": 2,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 9,
+							"pitch": 1.0
+						},
+						"received": 5
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 3,
+				"packet_rate": {
+					"time": 1359,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 0,
+				"server": {
+					"epoch": 3,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 0,
+					"last": 1359,
+					"permission_due": 1459,
+					"rate_time": 1345,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 9,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 7,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 8,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true
+					},
+					"started": 1345,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 2,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 7,
+							"pitch": 1.0
+						},
+						"received": 6
+					},
+					{
+						"at_sequence": 2,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 8,
+							"pitch": 1.0
+						},
+						"received": 6
+					},
+					{
+						"at_sequence": 2,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 9,
+							"pitch": 1.0
+						},
+						"received": 6
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 3,
+				"packet_rate": {
+					"time": 1407,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 1,
+				"server": {
+					"epoch": 3,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 1,
+					"last": 1407,
+					"permission_due": 1459,
+					"rate_time": 1345,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 9,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 7,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 8,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true
+					},
+					"started": 1345,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 7,
+							"pitch": 1.0
+						},
+						"received": 7
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 8,
+							"pitch": 1.0
+						},
+						"received": 7
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 9,
+							"pitch": 1.0
+						},
+						"received": 7
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 3,
+				"packet_rate": {
+					"time": 1545,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 20,
+				"server": {
+					"epoch": 3,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 20,
+					"last": 1545,
+					"permission_due": 1631,
+					"rate_time": 1345,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 9,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 7,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 8,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"20": true
+					},
+					"started": 1345,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 7,
+							"pitch": 1.0
+						},
+						"received": 8
+					},
+					{
+						"at_sequence": 0,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 8,
+							"pitch": 1.0
+						},
+						"received": 7
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 9,
+							"pitch": 1.0
+						},
+						"received": 8
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 3,
+				"packet_rate": {
+					"time": 1594,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 8,
+				"server": {
+					"epoch": 3,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 20,
+					"last": 1594,
+					"permission_due": 1735,
+					"rate_time": 1345,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 9,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 7,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 3,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 8,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"8": true,
+						"20": true
+					},
+					"started": 1345,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 3,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 10,
+							"pitch": 1.0
+						},
+						"received": 9
+					},
+					{
+						"at_sequence": 3,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						},
+						"received": 8
+					},
+					{
+						"at_sequence": 3,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"received": 9
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 1773,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 0,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 0,
+					"last": 1773,
+					"permission_due": 1873,
+					"rate_time": 1759,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 10,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 3,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 10,
+							"pitch": 1.0
+						},
+						"received": 10
+					},
+					{
+						"at_sequence": 3,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						},
+						"received": 9
+					},
+					{
+						"at_sequence": 3,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"received": 10
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 1821,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 1,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 1,
+					"last": 1821,
+					"permission_due": 1873,
+					"rate_time": 1759,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 10,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 2,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 10,
+							"pitch": 1.0
+						},
+						"received": 11
+					},
+					{
+						"at_sequence": 2,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						},
+						"received": 10
+					},
+					{
+						"at_sequence": 2,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"received": 11
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 1877,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 2,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 2,
+					"last": 1877,
+					"permission_due": 1977,
+					"rate_time": 1759,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 10,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+
+						},
+						"received": 11
+					},
+					{
+						"at_sequence": 2,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						},
+						"received": 11
+					},
+					{
+						"at_sequence": 2,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"received": 12
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 1994,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 3,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 3,
+					"last": 1994,
+					"permission_due": 2025,
+					"rate_time": 1759,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 4,
+							"first_sequence": 4,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 13,
+							"pitch": 1.0
+						},
+						"received": 12
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						},
+						"received": 12
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"received": 13
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 2160,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 4,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 4,
+					"last": 2160,
+					"permission_due": 2252,
+					"rate_time": 1759,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 4,
+							"first_sequence": 4,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 13,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true,
+						"4": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 0,
+						"id": 1201704810,
+						"permission": {
+
+						},
+						"received": 12
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						},
+						"received": 13
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"received": 14
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 2325,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 5,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 5,
+					"last": 2325,
+					"permission_due": 2459,
+					"rate_time": 1759,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true,
+						"4": true,
+						"5": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 4,
+							"first_sequence": 6,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 14,
+							"pitch": 1.0
+						},
+						"received": 13
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						},
+						"received": 14
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"received": 15
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 2491,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 6,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 6,
+					"last": 2491,
+					"permission_due": 2563,
+					"rate_time": 1759,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 4,
+							"first_sequence": 6,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 14,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true,
+						"4": true,
+						"5": true,
+						"6": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 0,
+						"id": 1201704810,
+						"permission": {
+
+						},
+						"received": 13
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						},
+						"received": 15
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"received": 16
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 2656,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 7,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 7,
+					"last": 2656,
+					"permission_due": 2770,
+					"rate_time": 1759,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 12,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 4,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 11,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true,
+						"4": true,
+						"5": true,
+						"6": true,
+						"7": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+
+						},
+						"received": 13
+					},
+					{
+						"at_sequence": 0,
+						"id": 2123696167,
+						"permission": {
+
+						},
+						"received": 15
+					},
+					{
+						"at_sequence": 1,
+						"id": 1135066935,
+						"permission": {
+
+						},
+						"received": 16
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 2822,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 8,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 8,
+					"last": 2822,
+					"permission_due": 2873,
+					"rate_time": 1759,
+					"recipients": {
+
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true,
+						"4": true,
+						"5": true,
+						"6": true,
+						"7": true,
+						"8": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 2.0,
+							"epoch": 4,
+							"first_sequence": 9,
+							"gain": 0.9216,
+							"map_id": "house",
+							"permit": 15,
+							"pitch": 1.0
+						},
+						"received": 14
+					},
+					{
+						"at_sequence": 0,
+						"id": 2123696167,
+						"permission": {
+
+						},
+						"received": 15
+					},
+					{
+						"at_sequence": 0,
+						"id": 1135066935,
+						"permission": {
+
+						},
+						"received": 16
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 2987,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 9,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 9,
+					"last": 2987,
+					"permission_due": 3080,
+					"rate_time": 1759,
+					"recipients": {
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 2.0,
+							"epoch": 4,
+							"first_sequence": 9,
+							"gain": 0.9216,
+							"map_id": "house",
+							"permit": 15,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true,
+						"4": true,
+						"5": true,
+						"6": true,
+						"7": true,
+						"8": true,
+						"9": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 1200.0,
+							"distance": 2.0,
+							"epoch": 4,
+							"first_sequence": 9,
+							"gain": 0.2304,
+							"map_id": "house",
+							"permit": 15,
+							"pitch": 1.0
+						},
+						"received": 15
+					},
+					{
+						"at_sequence": 0,
+						"id": 2123696167,
+						"permission": {
+
+						},
+						"received": 15
+					},
+					{
+						"at_sequence": 0,
+						"id": 1135066935,
+						"permission": {
+
+						},
+						"received": 16
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 4,
+				"packet_rate": {
+					"time": 3160,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 10,
+				"server": {
+					"epoch": 4,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 10,
+					"last": 3160,
+					"permission_due": 3288,
+					"rate_time": 1759,
+					"recipients": {
+						"1201704810": {
+							"cutoff": 1200.0,
+							"distance": 2.0,
+							"epoch": 4,
+							"first_sequence": 9,
+							"gain": 0.2304,
+							"map_id": "house",
+							"permit": 15,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true,
+						"4": true,
+						"5": true,
+						"6": true,
+						"7": true,
+						"8": true,
+						"9": true,
+						"10": true
+					},
+					"started": 1759,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 4,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 16,
+							"pitch": 1.0
+						},
+						"received": 16
+					},
+					{
+						"at_sequence": 3,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 17,
+							"pitch": 1.0
+						},
+						"received": 15
+					},
+					{
+						"at_sequence": 4,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 18,
+							"pitch": 1.0
+						},
+						"received": 17
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 5,
+				"packet_rate": {
+					"time": 3291,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 0,
+				"server": {
+					"epoch": 5,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 0,
+					"last": 3291,
+					"permission_due": 3391,
+					"rate_time": 3277,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 18,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 16,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 17,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true
+					},
+					"started": 3277,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 4,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 16,
+							"pitch": 1.0
+						},
+						"received": 17
+					},
+					{
+						"at_sequence": 4,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 17,
+							"pitch": 1.0
+						},
+						"received": 16
+					},
+					{
+						"at_sequence": 4,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 18,
+							"pitch": 1.0
+						},
+						"received": 18
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 5,
+				"packet_rate": {
+					"time": 3340,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 1,
+				"server": {
+					"epoch": 5,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 1,
+					"last": 3340,
+					"permission_due": 3391,
+					"rate_time": 3277,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 18,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 16,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 17,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true
+					},
+					"started": 3277,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 3,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 5,
+							"first_sequence": 2,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 19,
+							"pitch": 1.0
+						},
+						"received": 18
+					},
+					{
+						"at_sequence": 3,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 17,
+							"pitch": 1.0
+						},
+						"received": 17
+					},
+					{
+						"at_sequence": 3,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 18,
+							"pitch": 1.0
+						},
+						"received": 19
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 5,
+				"packet_rate": {
+					"time": 3540,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 2,
+				"server": {
+					"epoch": 5,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 2,
+					"last": 3540,
+					"permission_due": 3543,
+					"rate_time": 3277,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 18,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 5,
+							"first_sequence": 2,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 19,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 17,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true
+					},
+					"started": 3277,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 2,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 5,
+							"first_sequence": 3,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 20,
+							"pitch": 1.0
+						},
+						"received": 19
+					},
+					{
+						"at_sequence": 3,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 17,
+							"pitch": 1.0
+						},
+						"received": 18
+					},
+					{
+						"at_sequence": 3,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 18,
+							"pitch": 1.0
+						},
+						"received": 20
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 5,
+				"packet_rate": {
+					"time": 3760,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 3,
+				"server": {
+					"epoch": 5,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 3,
+					"last": 3760,
+					"permission_due": 3805,
+					"rate_time": 3277,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 18,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 5,
+							"first_sequence": 3,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 20,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 5,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 17,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true,
+						"3": true
+					},
+					"started": 3277,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 1,
+						"id": 508735902,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 22,
+							"pitch": 1.55
+						},
+						"received": 1
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 23,
+							"pitch": 1.55
+						},
+						"received": 1
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 24,
+							"pitch": 1.55
+						},
+						"received": 1
+					},
+					{
+						"at_sequence": 0,
+						"id": 1135066935,
+						"permission": {
+
+						},
+						"received": 0
+					}
+				],
+				"enet": {
+					"last_rtt": 21.0,
+					"limit": 32.0,
+					"rtt": 16.0,
+					"throttle": 32.0
+				},
+				"epoch": 6,
+				"packet_rate": {
+					"time": 3988,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 0,
+				"server": {
+					"epoch": 6,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 0,
+					"last": 3988,
+					"permission_due": 4088,
+					"rate_time": 3974,
+					"recipients": {
+						"508735902": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 22,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 23,
+							"pitch": 1.55
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 24,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true
+					},
+					"started": 3974,
+					"tokens": 12.0
+				},
+				"speaker": 1135066935,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 1,
+						"id": 508735902,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 22,
+							"pitch": 1.55
+						},
+						"received": 2
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 23,
+							"pitch": 1.55
+						},
+						"received": 2
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 24,
+							"pitch": 1.55
+						},
+						"received": 2
+					},
+					{
+						"at_sequence": 0,
+						"id": 1135066935,
+						"permission": {
+
+						},
+						"received": 0
+					}
+				],
+				"enet": {
+					"last_rtt": 21.0,
+					"limit": 32.0,
+					"rtt": 16.0,
+					"throttle": 32.0
+				},
+				"epoch": 6,
+				"packet_rate": {
+					"time": 4043,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 1,
+				"server": {
+					"epoch": 6,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 1,
+					"last": 4043,
+					"permission_due": 4088,
+					"rate_time": 3974,
+					"recipients": {
+						"508735902": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 22,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 23,
+							"pitch": 1.55
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 6,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 24,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true
+					},
+					"started": 3974,
+					"tokens": 12.0
+				},
+				"speaker": 1135066935,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 2,
+						"id": 508735902,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 28,
+							"pitch": 1.55
+						},
+						"received": 15
+					},
+					{
+						"at_sequence": 2,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 29,
+							"pitch": 1.55
+						},
+						"received": 14
+					},
+					{
+						"at_sequence": 2,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 30,
+							"pitch": 1.55
+						},
+						"received": 15
+					},
+					{
+						"at_sequence": 0,
+						"id": 1135066935,
+						"permission": {
+
+						},
+						"received": 0
+					}
+				],
+				"enet": {
+					"last_rtt": 21.0,
+					"limit": 32.0,
+					"rtt": 12.0,
+					"throttle": 32.0
+				},
+				"epoch": 8,
+				"packet_rate": {
+					"time": 4540,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 0,
+				"server": {
+					"epoch": 8,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 0,
+					"last": 4540,
+					"permission_due": 4633,
+					"rate_time": 4492,
+					"recipients": {
+						"508735902": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 28,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 29,
+							"pitch": 1.55
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 30,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true
+					},
+					"started": 4492,
+					"tokens": 12.0
+				},
+				"speaker": 1135066935,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 2,
+						"id": 508735902,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 28,
+							"pitch": 1.55
+						},
+						"received": 16
+					},
+					{
+						"at_sequence": 2,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 29,
+							"pitch": 1.55
+						},
+						"received": 15
+					},
+					{
+						"at_sequence": 2,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 30,
+							"pitch": 1.55
+						},
+						"received": 16
+					},
+					{
+						"at_sequence": 0,
+						"id": 1135066935,
+						"permission": {
+
+						},
+						"received": 0
+					}
+				],
+				"enet": {
+					"last_rtt": 21.0,
+					"limit": 32.0,
+					"rtt": 12.0,
+					"throttle": 32.0
+				},
+				"epoch": 8,
+				"packet_rate": {
+					"time": 4589,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 1,
+				"server": {
+					"epoch": 8,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 1,
+					"last": 4589,
+					"permission_due": 4736,
+					"rate_time": 4492,
+					"recipients": {
+						"508735902": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 28,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 29,
+							"pitch": 1.55
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 30,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true
+					},
+					"started": 4492,
+					"tokens": 12.0
+				},
+				"speaker": 1135066935,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 2,
+						"id": 508735902,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 28,
+							"pitch": 1.55
+						},
+						"received": 17
+					},
+					{
+						"at_sequence": 2,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 29,
+							"pitch": 1.55
+						},
+						"received": 16
+					},
+					{
+						"at_sequence": 2,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 30,
+							"pitch": 1.55
+						},
+						"received": 17
+					},
+					{
+						"at_sequence": 0,
+						"id": 1135066935,
+						"permission": {
+
+						},
+						"received": 0
+					}
+				],
+				"enet": {
+					"last_rtt": 21.0,
+					"limit": 32.0,
+					"rtt": 11.0,
+					"throttle": 32.0
+				},
+				"epoch": 8,
+				"packet_rate": {
+					"time": 4671,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 2,
+				"server": {
+					"epoch": 8,
+					"finish": 2,
+					"finish_at": 5394,
+					"highest": 2,
+					"last": 4671,
+					"permission_due": 4736,
+					"rate_time": 4492,
+					"recipients": {
+						"508735902": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 28,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 29,
+							"pitch": 1.55
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 30,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true
+					},
+					"started": 4492,
+					"tokens": 12.0
+				},
+				"speaker": 1135066935,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 1,
+						"id": 508735902,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 28,
+							"pitch": 1.55
+						},
+						"received": 17
+					},
+					{
+						"at_sequence": 1,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 29,
+							"pitch": 1.55
+						},
+						"received": 16
+					},
+					{
+						"at_sequence": 1,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 30,
+							"pitch": 1.55
+						},
+						"received": 17
+					},
+					{
+						"at_sequence": 0,
+						"id": 1135066935,
+						"permission": {
+
+						},
+						"received": 0
+					}
+				],
+				"enet": {
+					"last_rtt": 21.0,
+					"limit": 32.0,
+					"rtt": 11.0,
+					"throttle": 32.0
+				},
+				"epoch": 8,
+				"packet_rate": {
+					"time": 4727,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 3,
+				"server": {
+					"epoch": 8,
+					"finish": 2,
+					"finish_at": 5394,
+					"highest": 2,
+					"last": 4671,
+					"permission_due": 4840,
+					"rate_time": 4492,
+					"recipients": {
+						"508735902": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 28,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.202500003432258,
+							"map_id": "house",
+							"permit": 29,
+							"pitch": 1.55
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.600000023841858,
+							"epoch": 8,
+							"first_sequence": 0,
+							"gain": 0.840464393775565,
+							"map_id": "house",
+							"permit": 30,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true
+					},
+					"started": 4492,
+					"tokens": 12.0
+				},
+				"speaker": 1135066935,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 5,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 31,
+							"pitch": 1.0
+						},
+						"received": 20
+					},
+					{
+						"at_sequence": 4,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 32,
+							"pitch": 1.0
+						},
+						"received": 19
+					},
+					{
+						"at_sequence": 5,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 33,
+							"pitch": 1.0
+						},
+						"received": 21
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 9,
+				"packet_rate": {
+					"time": 5555,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 0,
+				"server": {
+					"epoch": 9,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 0,
+					"last": 5555,
+					"permission_due": 5655,
+					"rate_time": 5541,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 33,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 31,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 32,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true
+					},
+					"started": 5541,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 5,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 31,
+							"pitch": 1.0
+						},
+						"received": 21
+					},
+					{
+						"at_sequence": 5,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 32,
+							"pitch": 1.0
+						},
+						"received": 20
+					},
+					{
+						"at_sequence": 5,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 33,
+							"pitch": 1.0
+						},
+						"received": 22
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 9,
+				"packet_rate": {
+					"time": 5610,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 1,
+				"server": {
+					"epoch": 9,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 1,
+					"last": 5610,
+					"permission_due": 5655,
+					"rate_time": 5541,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 33,
+							"pitch": 1.0
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 1.79999995231628,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.936249763321991,
+							"map_id": "house",
+							"permit": 31,
+							"pitch": 1.0
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.948683261871338,
+							"epoch": 9,
+							"first_sequence": 0,
+							"gain": 0.982081001360547,
+							"map_id": "house",
+							"permit": 32,
+							"pitch": 1.0
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true
+					},
+					"started": 5541,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 6,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.150000095367432,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.84940244804707,
+							"map_id": "house-v1-2",
+							"permit": 34,
+							"pitch": 1.55
+						},
+						"received": 22
+					},
+					{
+						"at_sequence": 5,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.300000190734863,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.245024993705748,
+							"map_id": "house-v1-2",
+							"permit": 35,
+							"pitch": 1.55
+						},
+						"received": 21
+					},
+					{
+						"at_sequence": 6,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.449999809265137,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.238876571822165,
+							"map_id": "house-v1-2",
+							"permit": 36,
+							"pitch": 1.55
+						},
+						"received": 23
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 10,
+				"packet_rate": {
+					"time": 5872,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 0,
+				"server": {
+					"epoch": 10,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 0,
+					"last": 5872,
+					"permission_due": 5971,
+					"rate_time": 5871,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.449999809265137,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.238876571822165,
+							"map_id": "house-v1-2",
+							"permit": 36,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.150000095367432,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.84940244804707,
+							"map_id": "house-v1-2",
+							"permit": 34,
+							"pitch": 1.55
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.300000190734863,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.245024993705748,
+							"map_id": "house-v1-2",
+							"permit": 35,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true
+					},
+					"started": 5871,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 6,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.150000095367432,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.84940244804707,
+							"map_id": "house-v1-2",
+							"permit": 34,
+							"pitch": 1.55
+						},
+						"received": 23
+					},
+					{
+						"at_sequence": 6,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.300000190734863,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.245024993705748,
+							"map_id": "house-v1-2",
+							"permit": 35,
+							"pitch": 1.55
+						},
+						"received": 22
+					},
+					{
+						"at_sequence": 6,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.449999809265137,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.238876571822165,
+							"map_id": "house-v1-2",
+							"permit": 36,
+							"pitch": 1.55
+						},
+						"received": 24
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 10,
+				"packet_rate": {
+					"time": 5899,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 1,
+				"server": {
+					"epoch": 10,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 1,
+					"last": 5899,
+					"permission_due": 5971,
+					"rate_time": 5871,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.449999809265137,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.238876571822165,
+							"map_id": "house-v1-2",
+							"permit": 36,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.150000095367432,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.84940244804707,
+							"map_id": "house-v1-2",
+							"permit": 34,
+							"pitch": 1.55
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.300000190734863,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.245024993705748,
+							"map_id": "house-v1-2",
+							"permit": 35,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true
+					},
+					"started": 5871,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			},
+			{
+				"clients": [
+					{
+						"at_sequence": 0,
+						"id": 508735902,
+						"permission": {
+
+						},
+						"received": 0
+					},
+					{
+						"at_sequence": 4,
+						"id": 1201704810,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.150000095367432,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.84940244804707,
+							"map_id": "house-v1-2",
+							"permit": 34,
+							"pitch": 1.55
+						},
+						"received": 24
+					},
+					{
+						"at_sequence": 4,
+						"id": 2123696167,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.300000190734863,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.245024993705748,
+							"map_id": "house-v1-2",
+							"permit": 35,
+							"pitch": 1.55
+						},
+						"received": 23
+					},
+					{
+						"at_sequence": 4,
+						"id": 1135066935,
+						"permission": {
+							"cutoff": 12000.0,
+							"distance": 0.449999809265137,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.238876571822165,
+							"map_id": "house-v1-2",
+							"permit": 36,
+							"pitch": 1.55
+						},
+						"received": 25
+					}
+				],
+				"enet": {
+					"last_rtt": 1.0,
+					"limit": 32.0,
+					"rtt": 8.0,
+					"throttle": 32.0
+				},
+				"epoch": 10,
+				"packet_rate": {
+					"time": 5948,
+					"tokens": 11.0
+				},
+				"sender_connected": true,
+				"sequence": 2,
+				"server": {
+					"epoch": 10,
+					"finish": -1,
+					"finish_at": 0,
+					"highest": 2,
+					"last": 5948,
+					"permission_due": 6075,
+					"rate_time": 5871,
+					"recipients": {
+						"1135066935": {
+							"cutoff": 12000.0,
+							"distance": 0.449999809265137,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.238876571822165,
+							"map_id": "house-v1-2",
+							"permit": 36,
+							"pitch": 1.55
+						},
+						"1201704810": {
+							"cutoff": 12000.0,
+							"distance": 0.150000095367432,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.84940244804707,
+							"map_id": "house-v1-2",
+							"permit": 34,
+							"pitch": 1.55
+						},
+						"2123696167": {
+							"cutoff": 12000.0,
+							"distance": 0.300000190734863,
+							"epoch": 10,
+							"first_sequence": 0,
+							"gain": 0.245024993705748,
+							"map_id": "house-v1-2",
+							"permit": 35,
+							"pitch": 1.55
+						}
+					},
+					"seen": {
+						"0": true,
+						"1": true,
+						"2": true
+					},
+					"started": 5871,
+					"tokens": 12.0
+				},
+				"speaker": 508735902,
+				"validator_error": 0,
+				"validator_message": ""
+			}
+		]
+	},
+	"failures": [],
+	"microphone": false,
+	"observer": "VoiceTransport.packet_received; no VoiceSession",
+	"playback": false,
+	"poll_native": false,
+	"preferences_modified": false,
+	"probe_ingress": false,
+	"protocol": 9,
+	"results": [
+		{
+			"label": "native v2 codec exposes structural frame validation",
+			"ok": true
+		},
+		{
+			"label": "synthetic 20ms mono PCM produces valid bounded Opus frame",
+			"ok": true
+		},
+		{
+			"label": "real ENet server binds four RPC channels",
+			"ok": true
+		},
+		{
+			"label": "client 0 authenticates through room RPC",
+			"ok": true
+		},
+		{
+			"label": "client 1 authenticates through room RPC",
+			"ok": true
+		},
+		{
+			"label": "client 2 authenticates through room RPC",
+			"ok": true
+		},
+		{
+			"label": "client 3 authenticates through room RPC",
+			"ok": true
+		},
+		{
+			"label": "codec ready in real voice transport VoiceAuthority",
+			"ok": true
+		},
+		{
+			"label": "codec ready in real voice transport VoiceClient0",
+			"ok": true
+		},
+		{
+			"label": "codec ready in real voice transport VoiceClient1",
+			"ok": true
+		},
+		{
+			"label": "codec ready in real voice transport VoiceClient2",
+			"ok": true
+		},
+		{
+			"label": "codec ready in real voice transport VoiceClient3",
+			"ok": true
+		},
+		{
+			"label": "staged authoritative round validates real map house",
+			"ok": true
+		},
+		{
+			"label": "raw four-channel peer opens without room authentication",
+			"ok": true
+		},
+		{
+			"label": "raw unauthenticated peer connects",
+			"ok": true
+		},
+		{
+			"label": "unauthenticated ENet peer cannot create or emit a stream",
+			"ok": true
+		},
+		{
+			"label": "authenticated begin epoch 1",
+			"ok": true
+		},
+		{
+			"label": "actual peer receives human->human",
+			"ok": true
+		},
+		{
+			"label": "permission stamps speaker pitch and authoritative map",
+			"ok": true
+		},
+		{
+			"label": "actual peer receives human->mosquito",
+			"ok": true
+		},
+		{
+			"label": "permission stamps speaker pitch and authoritative map",
+			"ok": true
+		},
+		{
+			"label": "actual peer receives human->mosquito",
+			"ok": true
+		},
+		{
+			"label": "permission stamps speaker pitch and authoritative map",
+			"ok": true
+		},
+		{
+			"label": "sender identity cannot create another participant's stream",
+			"ok": true
+		},
+		{
+			"label": "speaker does not receive relay of own voice",
+			"ok": true
+		},
+		{
+			"label": "authenticated begin epoch 2",
+			"ok": true
+		},
+		{
+			"label": "actual peer receives mosquito->human",
+			"ok": true
+		},
+		{
+			"label": "permission stamps speaker pitch and authoritative map",
+			"ok": true
+		},
+		{
+			"label": "actual peer receives mosquito->human",
+			"ok": true
+		},
+		{
+			"label": "permission stamps speaker pitch and authoritative map",
+			"ok": true
+		},
+		{
+			"label": "actual peer receives mosquito->mosquito",
+			"ok": true
+		},
+		{
+			"label": "permission stamps speaker pitch and authoritative map",
+			"ok": true
+		},
+		{
+			"label": "sender identity cannot create another participant's stream",
+			"ok": true
+		},
+		{
+			"label": "speaker does not receive relay of own voice",
+			"ok": true
+		},
+		{
+			"label": "authenticated begin epoch 3",
+			"ok": true
+		},
+		{
+			"label": "positive valid-frame baseline precedes malformed/replay checks",
+			"ok": true
+		},
+		{
+			"label": "adversarial TOCs are structurally invalid mono/duration frames",
+			"ok": true
+		},
+		{
+			"label": "malformed Opus framing is rejected by native validator",
+			"ok": true
+		},
+		{
+			"label": "epoch replay, invalid sequence, length and TOC cannot advance server stream",
+			"ok": true
+		},
+		{
+			"label": "replayed and malformed frames produce no client packet event",
+			"ok": true
+		},
+		{
+			"label": "bounded 12-frame reordering accepted once; older and duplicate packets denied",
+			"ok": true
+		},
+		{
+			"label": "authenticated begin epoch 4",
+			"ok": true
+		},
+		{
+			"label": "near listener has a permit before mute",
+			"ok": true
+		},
+		{
+			"label": "per-peer mute revokes local and server permission",
+			"ok": true
+		},
+		{
+			"label": "mute blocks only the selected receiver",
+			"ok": true
+		},
+		{
+			"label": "unmute in held PTT grants fresh permit and first sequence",
+			"ok": true
+		},
+		{
+			"label": "late old-permit and pre-first-sequence frames are discarded by receiver",
+			"ok": true
+		},
+		{
+			"label": "fresh next frame resumes same PTT after unmute",
+			"ok": true
+		},
+		{
+			"label": "host revokes receiver beyond acoustic range",
+			"ok": true
+		},
+		{
+			"label": "returning near gains a new permission",
+			"ok": true
+		},
+		{
+			"label": "dead listener loses host permission",
+			"ok": true
+		},
+		{
+			"label": "dead speaker has no recipients",
+			"ok": true
+		},
+		{
+			"label": "real door angle changes server gain/filter over ENet",
+			"ok": true
+		},
+		{
+			"label": "authenticated begin epoch 5",
+			"ok": true
+		},
+		{
+			"label": "resume starts with two real current recipient permissions",
+			"ok": true
+		},
+		{
+			"label": "resume cannot renew another listener's permit or an old epoch",
+			"ok": true
+		},
+		{
+			"label": "resume replaces own permission at server highest+1",
+			"ok": true
+		},
+		{
+			"label": "resume leaves the other recipient's permit intact",
+			"ok": true
+		},
+		{
+			"label": "stale resume and old-permit delayed packet cannot restart delivery",
+			"ok": true
+		},
+		{
+			"label": "renewed recipient receives subsequent same-PTT audio",
+			"ok": true
+		},
+		{
+			"label": "resume cannot restore a recipient now beyond range",
+			"ok": true
+		},
+		{
+			"label": "resume cannot bypass recipient mute",
+			"ok": true
+		},
+		{
+			"label": "authenticated begin epoch 6",
+			"ok": true
+		},
+		{
+			"label": "100-frame burst relay stays within token bucket and is not fully admitted",
+			"ok": true
+		},
+		{
+			"label": "authenticated begin epoch 7",
+			"ok": true
+		},
+		{
+			"label": "stop/begin cannot refill or reset sender token bucket",
+			"ok": true
+		},
+		{
+			"label": "begin spam cannot replace a stream younger than 200ms",
+			"ok": true
+		},
+		{
+			"label": "later fresh epoch replaces prior stream",
+			"ok": true
+		},
+		{
+			"label": "finish relays final sequence and denies packets beyond it",
+			"ok": true
+		},
+		{
+			"label": "finish tail expires and revokes permit",
+			"ok": true
+		},
+		{
+			"label": "late frame after tail revocation cannot reach observer",
+			"ok": true
+		},
+		{
+			"label": "authenticated begin epoch 9",
+			"ok": true
+		},
+		{
+			"label": "results phase revokes all active voice streams",
+			"ok": true
+		},
+		{
+			"label": "staged authoritative round validates real map house-v1-2",
+			"ok": true
+		},
+		{
+			"label": "authenticated begin epoch 10",
+			"ok": true
+		},
+		{
+			"label": "new round rebuilds pitch and map from reassigned server roles",
+			"ok": true
+		},
+		{
+			"label": "previous-round permitted packet cannot cross new epoch/permit",
+			"ok": true
+		},
+		{
+			"label": "client reset clears voice permits, mute and epoch state",
+			"ok": true
+		},
+		{
+			"label": "peer departure clears host mute state",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		},
+		{
+			"label": "received payload remains the exact encoded synthetic frame",
+			"ok": true
+		}
+	],
+	"staged": "Server simulation map/roles/positions and frozen gameplay tick only; real voice timers and RPCs",
+	"transport": "real ENet, one authority + four authenticated peers + one raw unauthenticated peer, loopback, separate SceneMultiplayer contexts"
+}

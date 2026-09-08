@@ -11,17 +11,38 @@ const LOCAL_SEGMENTS := [
 ]
 const BOUND_RADIUS := .114
 const CONTACT_EPSILON := .000001
+const VIEW_PITCH_LIMIT := PI*.5
+const SURFACE_PITCH_LIMIT := 1.35
 
 static func local_segments() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for capsule: Dictionary in LOCAL_SEGMENTS: result.append(capsule.duplicate())
 	return result
 
+static func surface_basis(normal: Vector3, forward: Vector3) -> Basis:
+	var up := normal.normalized() if normal.is_finite() and normal.length_squared()>.5 else Vector3.UP
+	var tangent := forward.slide(up) if forward.is_finite() else Vector3.ZERO
+	if tangent.length_squared()<.001: tangent = Vector3.FORWARD.slide(up)
+	if tangent.length_squared()<.001: tangent = Vector3.UP.slide(up)
+	tangent = tangent.normalized()
+	return Basis(tangent.cross(up).normalized(),up,-tangent)
+
+static func surface_view_direction(normal: Vector3, forward: Vector3, pitch: float) -> Vector3:
+	return (surface_basis(normal,forward)*Basis(Vector3.RIGHT,clampf(pitch,-SURFACE_PITCH_LIMIT,SURFACE_PITCH_LIMIT))*Vector3.FORWARD).normalized()
+
+static func view_angles(direction: Vector3, fallback_yaw: float=0.0) -> Dictionary:
+	var unit := direction.normalized()
+	var yaw := atan2(-unit.x,-unit.z) if Vector2(unit.x,unit.z).length_squared()>.00000001 else wrapf(fallback_yaw,-PI,PI)
+	return {"yaw":yaw,"pitch":asin(clampf(unit.y,-1.0,1.0))}
+
 ## A pure public-state orientation. No frame history, assignments or RNG.
 static func orientation(actor: Dictionary) -> Basis:
 	var yaw_basis := Basis(Vector3.UP,float(actor.get("yaw",0.0)))
 	var state := str(actor.get("state","flying"))
 	var normal: Vector3 = actor.get("surface_normal",Vector3.ZERO)
+	var surface_forward: Vector3 = actor.get("surface_forward",Vector3.ZERO)
+	if state=="perched" and normal.length_squared()>.5 and surface_forward.length_squared()>.5:
+		return surface_basis(normal,surface_forward)
 	if state in ["biting","perched"] and normal.length_squared()>.5:
 		var up := normal.normalized()
 		var forward := yaw_basis*Vector3.FORWARD

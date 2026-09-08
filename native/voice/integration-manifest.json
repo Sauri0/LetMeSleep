@@ -1,0 +1,30 @@
+{
+  "revision": "bootstrap-v2",
+  "native_smoke_checks": 312,
+  "jitter_checks": 1878,
+  "bridge_checks": 608,
+  "scope": "Synthetic isolated module checks. Game VoiceSession/ENet integration is still under verification. No microphone, WAN or performance approval.",
+  "historical_v1_manifest": "bootstrap-v1-manifest.json",
+  "files": [
+    {
+      "path": "game/addons/lms_opus/bin/lms_opus.windows.x86_64.dll",
+      "sha256": "e5c2f5dea7515d63e2218704bf457dbf806ee530c51c5c3c2befca4d603a49b1",
+      "bytes": 1868288
+    },
+    {
+      "path": "native/voice/extension/src/lms_opus_codec.cpp",
+      "sha256": "c1fe88f41ebe691e439ab6d727d83912de339d4833b9c02313e8e71492145879",
+      "bytes": 9205
+    },
+    {
+      "path": "native/voice/extension/src/lms_opus_codec.h",
+      "sha256": "df8953b15877602fb1692fb4f25b0c8309ad4c715ead2c9349cb7e229f8deb66",
+      "bytes": 2079
+    },
+    {
+      "path": "native/voice/extension/src/register_types.cpp",
+      "sha256": "dc8dc65c798163f28061699ee09130eb7cd422ec10b79e7c588bf86eb8ca6633",
+      "bytes": 861
+    }
+  ]
+}

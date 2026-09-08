@@ -226,7 +226,7 @@ func _interaction_and_perch() -> void:
 	check(sim.actors[2].state=="flying","dynamic leaf is excluded as perch support")
 	sim.actors[2].p = Vector3(-1.94,.26,-8.2)
 	sim.action(2,2,"perch")
-	sim.step(.025)
+	sim.step(.4) # Continuous physical acquisition, not the previous one-tick snap.
 	var floor_point: Vector3 = sim.actors[2].p
 	check(sim.actors[2].state=="perched" and sim.public_snapshot().actors[2].surface_normal==Vector3.UP,"nearby fixed floor remains a valid perch")
 	sim.door_state.toggle("kitchen",sim.elapsed)

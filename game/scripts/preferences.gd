@@ -4,6 +4,7 @@ extends RefCounted
 
 const FILE_PATH := "user://preferences.cfg"
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
+const Emotes = preload("res://scripts/emote_catalog.gd")
 const DEFAULT_KEYS: Dictionary = {
 	"move_forward": KEY_W, "move_back": KEY_S, "move_left": KEY_A,
 	"move_right": KEY_D, "ascend": KEY_SPACE, "descend": KEY_CTRL,
@@ -11,16 +12,18 @@ const DEFAULT_KEYS: Dictionary = {
 	"interact": KEY_E, "pause": KEY_ESCAPE, "pickup": KEY_R, "drop": KEY_G,
 	"sprint": KEY_SHIFT, "jump": KEY_SPACE, "crouch": KEY_CTRL,
 	"toggle_help": KEY_F1,
+	"emote_menu": KEY_B, "push_to_talk": KEY_V,
 }
 const ACTION_NAMES: Dictionary = {
 	"move_forward": "Avanzar", "move_back": "Retroceder", "move_left": "Izquierda",
-	"move_right": "Derecha", "ascend": "Altura auxiliar + (opcional)", "descend": "Altura auxiliar − (opcional)",
+	"move_right": "Derecha", "ascend": "Subir / despegar del apoyo", "descend": "Bajar en vuelo",
 	"bite": "Concentrar (mantener) / soltar picadura", "attack": "Palmada / golpe", "self_swat": "Palmada manual (alternativa)",
 	"throw": "Cargar lanzamiento (mantener) / lanzar (soltar)",
 	"perch": "Posarse / volar", "interact": "Puerta / tarea (mantener)",
 	"pickup": "Recoger / cambiar objeto", "drop": "Soltar objeto", "pause": "Menú",
 	"sprint": "Correr (humano)", "jump": "Saltar (humano)", "crouch": "Agacharse (humano)",
 	"toggle_help": "Abrir / cerrar guía",
+	"emote_menu": "Elegir gesto (humano)", "push_to_talk": "Hablar cerca (mantener)",
 }
 static var human_sensitivity: float = 0.0025
 static var mosquito_sensitivity: float = 0.0025
@@ -31,6 +34,9 @@ static var music_volume: float = 0.55
 static var effects_volume: float = 0.8
 static var ambience_volume: float = 0.45
 static var ui_volume: float = 0.65
+static var voice_muted: bool = false
+static var voice_input_device: String = "Default"
+static var emote_favorites: Array[String] = ["wave","celebrate","shrug","yawn"]
 static var video_resolution: int = 1
 static var video_fullscreen: bool = false
 static var video_vsync: bool = false
@@ -93,6 +99,9 @@ static func load_settings(settings_path: String = FILE_PATH) -> void:
 		effects_volume = _audio_value(config, "effects_volume", 0.8)
 		ambience_volume = _audio_value(config, "ambience_volume", 0.45)
 		ui_volume = _audio_value(config, "ui_volume", 0.65)
+		voice_muted = bool(config.get_value("voice","muted",false))
+		voice_input_device=str(config.get_value("voice","input_device","Default")).left(256)
+		emote_favorites = Emotes.normalize_favorites(config.get_value("emotes","favorites",[]))
 		video_resolution = clampi(int(config.get_value("video","resolution",1)),0,3)
 		video_fullscreen = bool(config.get_value("video","fullscreen",false))
 		video_vsync = bool(config.get_value("video","vsync",false))
@@ -161,6 +170,9 @@ static func save_settings(settings_path: String = FILE_PATH) -> void:
 	config.set_value("audio", "effects_volume", effects_volume)
 	config.set_value("audio", "ambience_volume", ambience_volume)
 	config.set_value("audio", "ui_volume", ui_volume)
+	config.set_value("voice","muted",voice_muted)
+	config.set_value("voice","input_device",voice_input_device)
+	config.set_value("emotes","favorites",Emotes.normalize_favorites(emote_favorites))
 	config.set_value("video","resolution",video_resolution)
 	config.set_value("video","fullscreen",video_fullscreen)
 	config.set_value("video","vsync",video_vsync)

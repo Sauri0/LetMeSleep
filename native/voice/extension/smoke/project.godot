@@ -1,0 +1,13 @@
+config_version=5
+
+[application]
+config/name="LMS Opus isolated synthetic smoke"
+run/main_scene="res://smoke.tscn"
+config/features=PackedStringArray("4.5")
+
+[audio]
+driver/enable_input=false
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

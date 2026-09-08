@@ -220,8 +220,8 @@ func _test_surface_perch() -> void:
 	check(sim.actors[2].state == "flying", "perch cannot freeze insect in open air")
 	sim.actors[2].p = Vector3(-7, 0.2, 8)
 	sim.action(2, 2, "perch")
-	sim.step(0.05)
-	check(sim.actors[2].state == "perched" and absf(float(sim.actors[2].p.y) - Sim.ArenaData.MOSQUITO_RADIUS) <= 0.0051, "perch snaps mosquito onto floor")
+	sim.step(0.4)
+	check(sim.actors[2].state == "perched" and absf(float(sim.actors[2].p.y) - Sim.ArenaData.MOSQUITO_RADIUS) <= 0.0051, "perch approaches and rests on floor")
 	sim.submit_input(2, 1, Vector3.UP, 0.0, 0.0, false)
 	sim.step(0.05)
 	check(sim.actors[2].state == "flying" and float(sim.actors[2].p.y) > Sim.ArenaData.MOSQUITO_RADIUS, "movement lifts mosquito from surface")
@@ -229,13 +229,13 @@ func _test_surface_perch() -> void:
 	sim.actors[2].velocity = Vector3.ZERO
 	sim.submit_input(2, 2, Vector3.ZERO, 0.0, 0.0, false)
 	sim.action(2, 3, "perch")
-	sim.step(0.05)
-	check(sim.actors[2].state == "perched" and float(sim.actors[2].p.x) > float(Sim.ArenaData.HALF_X) - 0.4 and Sim.ArenaData.move_body(sim.actors[2].p, Vector3.ZERO, false).is_equal_approx(sim.actors[2].p), "perch snaps onto inner wall surface")
+	sim.step(0.4)
+	check(sim.actors[2].state == "perched" and float(sim.actors[2].p.x) > float(Sim.ArenaData.HALF_X) - 0.4 and Sim.ArenaData.move_body(sim.actors[2].p, Vector3.ZERO, false).is_equal_approx(sim.actors[2].p), "perch approaches inner wall surface")
 	sim.actors[2].state = "flying"
 	sim.actors[2].p = Vector3(-6.5, 0.8, -1.15)
 	sim.action(2, 4, "perch")
-	sim.step(0.05)
-	check(sim.actors[2].state == "perched" and is_equal_approx(float(sim.actors[2].p.y), 0.62 + Sim.ArenaData.MOSQUITO_RADIUS + 0.005), "perch snaps onto furnished table surface")
+	sim.step(0.4)
+	check(sim.actors[2].state == "perched" and is_equal_approx(float(sim.actors[2].p.y), 0.62 + Sim.ArenaData.MOSQUITO_RADIUS + 0.005), "perch approaches furnished table surface")
 
 func _test_attached_wall_clearance() -> void:
 	var sim = make_sim("blood", 2, 4)

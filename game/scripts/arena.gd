@@ -29,8 +29,18 @@ const MAX_FALL_SPEED := 16.0
 const STUN_GRAVITY := 6.0
 const STUN_FALL_SPEED := 6.0
 
+const GeometryCache=preload("res://scripts/geometry_cache.gd")
+static var _cache_order: Array[String]=[]
+const MAP_CACHE_LIMIT:=24
+static var _map_cache: Dictionary = {}
+
+static func _touch_map(map_id: String) -> void:
+	GeometryCache.touch(_cache_order,map_id,MAP_CACHE_LIMIT,[_map_cache,_obstacle_cache,_spatial_cache])
+
 static func _map(map_id: String) -> Dictionary:
-	return Maps.LOBBY if map_id == "lobby" else Maps.HOUSE
+	_touch_map(map_id)
+	if not _map_cache.has(map_id): _map_cache[map_id] = Maps.get_map(map_id)
+	return _map_cache[map_id]
 
 # Only immutable map geometry is cached. Dynamic doors are supplied per call.
 static var _obstacle_cache: Dictionary = {}
@@ -38,6 +48,7 @@ static var _spatial_cache: Dictionary = {}
 const STATIC_CELL := 2.0
 
 static func obstacles(map_id: String = "house") -> Array[AABB]:
+	_touch_map(map_id)
 	if not _obstacle_cache.has(map_id):
 		var boxes: Array[AABB] = []
 		for box: AABB in _map(map_id).obstacles:
@@ -124,6 +135,17 @@ static func _move_insect_part(pos: Vector3, displacement: Vector3, map_id: Strin
 		if not blocked:
 			next = trial
 	return next
+
+static func can_fit_mosquito(pos: Vector3, map_id: String = "house", doors: Dictionary = {}) -> bool:
+	if not pos.is_finite(): return false
+	var data: Dictionary = _map(map_id)
+	if pos.x < -float(data.half_x)+MOSQUITO_RADIUS-.000001 or pos.x > float(data.half_x)-MOSQUITO_RADIUS+.000001 or pos.z < -float(data.half_z)+MOSQUITO_RADIUS-.000001 or pos.z > float(data.half_z)-MOSQUITO_RADIUS+.000001 or pos.y < MOSQUITO_RADIUS-.000001 or pos.y > float(data.ceiling)-MOSQUITO_RADIUS+.000001:
+		return false
+	var body := AABB(pos-Vector3.ONE*MOSQUITO_RADIUS,Vector3.ONE*MOSQUITO_RADIUS*2.0)
+	if Doors.body_blocked(body,doors,map_id): return false
+	for obstacle: AABB in _nearby(body,map_id):
+		if body.intersects(obstacle): return false
+	return true
 
 static func flight_direction(local_move: Vector3, yaw: float, pitch: float) -> Vector3:
 	if not local_move.is_finite() or not is_finite(yaw) or not is_finite(pitch):

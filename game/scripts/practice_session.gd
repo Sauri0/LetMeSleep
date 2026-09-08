@@ -5,6 +5,7 @@ signal snapshot_updated(data: Dictionary)
 signal private_updated(data: Dictionary)
 const Simulation = preload("res://scripts/simulation.gd")
 const Brain = preload("res://scripts/bot_brain.gd")
+const Maps = preload("res://scripts/map_catalog.gd")
 ## Decisions are spread over three physics ticks. Held input still reaches the
 ## authority every tick; one-shot actions are submitted only on a new decision.
 const BOT_DECISION_SECONDS := 1.0/20.0
@@ -19,18 +20,20 @@ var local_cosmetics: Dictionary = {}
 var player_name := "Vos"
 var publication_age := 0.0
 var active := false
+var selected_config: Dictionary={}
 
 func start(role: String, mode: String, cosmetics: Dictionary, display_name: String = "Vos", config_override: Dictionary = {}) -> void:
 	stop()
 	selected_role = role if role in ["human","mosquito"] else "human"
 	selected_mode = mode if mode in ["blood","survival","sleep"] else "blood"
 	local_cosmetics = cosmetics.duplicate(true)
+	selected_config=config_override.duplicate(true)
 	player_name = display_name if not display_name.is_empty() else "Vos"
 	var config: Dictionary = Simulation.DEFAULT_CONFIG.duplicate(true)
 	config.merge(config_override,true)
 	config.mode = selected_mode
 	config.human_count = 1
-	config.map_id = "house"
+	config.map_id = str(config_override.get("map_id","house"))
 	Brain.prepare_navigation(str(config.map_id))
 	# Two insects provide targets for the human. One human provides the enemy
 	# for the insect POV. Social rooms never pass through this roster builder.
@@ -50,11 +53,16 @@ func start(role: String, mode: String, cosmetics: Dictionary, display_name: Stri
 		action_sequences[id] = 0
 	sim = Simulation.new()
 	sim.start(roster,config)
-	active = true
+	active = sim.phase=="playing"
 	_publish()
 
 func restart() -> void:
-	start(selected_role,selected_mode,local_cosmetics,player_name)
+	var next_config:=selected_config.duplicate(true)
+	if str(next_config.get("map_id","house"))!="house":
+		var generated: Dictionary=Maps.new_house()
+		if generated.is_empty(): return
+		next_config.map_id=generated.id
+	start(selected_role,selected_mode,local_cosmetics,player_name,next_config)
 
 func stop() -> void:
 	active = false
@@ -72,6 +80,12 @@ func send_input(seq: int, move: Vector3, yaw: float, pitch: float, interact: boo
 func send_action(seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: float = NAN) -> void:
 	if active and sim != null:
 		sim.action(1,seq,verb,aim_yaw,aim_pitch)
+
+func send_emote(seq: int, emote_id: String) -> void:
+	if active and sim!=null: sim.submit_emote(1,seq,emote_id)
+
+func send_view_ack(seq: int, revision: int, first_input_seq: int, yaw: float, pitch: float) -> void:
+	if active and sim!=null: sim.submit_view_ack(1,seq,revision,first_input_seq,yaw,pitch)
 
 func advance(dt: float) -> void:
 	if not active or sim == null or sim.phase != "playing":

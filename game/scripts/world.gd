@@ -105,14 +105,14 @@ func load_map(id: String) -> void:
 	map_data = requested
 	current_map = str(map_data.get("id", "lobby"))
 	audio_fx.set_context(current_map)
-	scene_environment.ambient_light_energy = 0.38 if current_map == "house" and map_data.has("structures") else 0.73
-	scene_environment.ambient_light_color = Color("adc4e4") if current_map == "house" else Color("b6cacf")
+	scene_environment.ambient_light_energy = 0.38 if Maps.is_playable(current_map) and map_data.has("structures") else 0.73
+	scene_environment.ambient_light_color = Color("adc4e4") if Maps.is_playable(current_map) else Color("b6cacf")
 	map_root = Node3D.new()
 	map_root.name = "Map_" + current_map
 	add_child(map_root)
 	_build_map_colliders()
 	_build_lighting()
-	if current_map == "house":
+	if Maps.is_playable(current_map):
 		if map_data.has("structures"):
 			_build_catalog_house()
 			PickupSupports.build(map_root, current_map)
@@ -135,10 +135,10 @@ func load_map(id: String) -> void:
 	door_views = DoorViewScript.new()
 	map_root.add_child(door_views)
 	door_views.setup(current_map)
-	if current_map == "house":
+	if Maps.is_playable(current_map):
 		FrameJoinery.resolve(map_root)
 		HouseOcclusion.build(map_root)
-	get_viewport().use_occlusion_culling = current_map == "house"
+	get_viewport().use_occlusion_culling = Maps.is_playable(current_map)
 	menu_camera.fov = 74.0
 	saved_menu_transform = menu_camera.transform
 	saved_menu_fov = menu_camera.fov
@@ -150,7 +150,7 @@ func apply_video_settings() -> void:
 	VideoSettings.apply_world(self)
 	# Keep the1024/2048 quality choices;32-bit depth reduces acne on moving skin
 	# and thin door joinery without changing the renderer or adding screen effects.
-	if current_map == "house":
+	if Maps.is_playable(current_map):
 		get_viewport().positional_shadow_atlas_16_bits = false
 
 func build_portal_sample(finish: String = "liso") -> Node3D:
@@ -468,11 +468,14 @@ func _build_lighting() -> void:
 	moon.light_color = Color("c9dfed")
 	# An outdoor directional lamp with a 20m shadow range illuminated interior
 	# walls beyond the cascade. House moonlight now comes from actual windows.
-	moon.light_energy = 0.0 if current_map == "house" else 0.35
-	moon.shadow_enabled = current_map != "house"
+	moon.light_energy = 0.0 if Maps.is_playable(current_map) else 0.35
+	moon.shadow_enabled = not Maps.is_playable(current_map)
 	moon.directional_shadow_max_distance = 20.0
 	map_root.add_child(moon)
-	if current_map == "house" and map_data.has("structures"):
+	if map_data.has("generator_version"):
+		_build_generated_lighting()
+		return
+	if Maps.is_playable(current_map) and map_data.has("structures"):
 		# Bounded, continuous keys: sixteen rooms plus six halls and one stair.
 		# Each casts through the same wall/door geometry. Camera distance must not
 		# remove a shadow while its source still illuminates the adjacent room.
@@ -524,16 +527,16 @@ func _build_lighting() -> void:
 				map_root.add_child(hall_lamp)
 		return
 	var lamp := OmniLight3D.new()
-	lamp.position = Vector3(-3.1, 2.25, 1.0) if current_map == "house" else Vector3(0, 3.0, -1.8)
+	lamp.position = Vector3(-3.1, 2.25, 1.0) if Maps.is_playable(current_map) else Vector3(0, 3.0, -1.8)
 	lamp.light_color = Color("ffd895")
-	lamp.light_energy = 1.7 if current_map == "house" else 0.65
+	lamp.light_energy = 1.7 if Maps.is_playable(current_map) else 0.65
 	lamp.omni_range = 7.5
 	lamp.shadow_enabled = false
 	map_root.add_child(lamp)
 	var counter_light := OmniLight3D.new()
-	counter_light.position = Vector3(3.2, 2.3, -2.2) if current_map == "house" else Vector3(-2.8, 2.5, 1.2)
+	counter_light.position = Vector3(3.2, 2.3, -2.2) if Maps.is_playable(current_map) else Vector3(-2.8, 2.5, 1.2)
 	counter_light.light_color = Color("ffe6af")
-	counter_light.light_energy = 1.0 if current_map == "house" else 0.35
+	counter_light.light_energy = 1.0 if Maps.is_playable(current_map) else 0.35
 	counter_light.omni_range = 5.5
 	counter_light.shadow_enabled = false
 	map_root.add_child(counter_light)
@@ -620,6 +623,7 @@ func _build_catalog_house() -> void:
 			tint = tint.darkened(0.16)
 		elif kind == "step":
 			tint = Color("967150")
+		if kind=="task_prop": continue
 		if kind == "furniture":
 			_furniture_from_catalog(structure)
 			continue
@@ -653,10 +657,10 @@ func _build_catalog_house() -> void:
 	_finish_house_art()
 	for station: Dictionary in map_data.get("stations", []):
 		_build_station_at(station)
-	for floor_index: int in range(2):
-		var y: float = float(floor_index) * 3.2
+	for floor_index: int in range(map_data.floor_levels.size()):
+		var y: float = map_data.floor_levels[floor_index]
 		for side: float in [-1.0, 1.0]:
-			var label: Label3D = _label(self, "01 / PLANTA BAJA" if floor_index == 0 else "02 / PLANTA ALTA", Vector3(side * 11.0, y + 2.35, 4.0 if side < 0 else -4.0), 0.0045, Color("264c56"))
+			var label: Label3D = _label(self, "%02d / %s"%[floor_index+1,"PLANTA BAJA" if floor_index==0 else "PISO %d"%floor_index], Vector3(side*(float(map_data.half_x)-3.0), y+2.35, 4.0 if side<0 else -4.0), .0032, Color("264c56"))
 			label.rotation.y = PI if side < 0 else 0.0
 
 func _furniture_from_catalog(data: Dictionary) -> void:
@@ -818,7 +822,14 @@ func _build_station_at(station: Dictionary) -> void:
 	map_root.add_child(root)
 	_disc(root, Vector3(0, 0.012, 0), 0.33, 0.018, teal)
 	station_labels.append(_label(root, label, Vector3(0, 0.72, 0), 0.00155, Color("fff1bf"), true))
+	if map_data.has("generator_version") and label in ["MANTAS","SÁBANAS"]: return
+	if station.has("display_p"):
+		# The marker is a reachable standing point; props live on real furniture.
+		root=Node3D.new();root.position=station.display_p
+		root.rotation.y=float(station.get("display_yaw",0.0));root.scale=Vector3.ONE*float(station.get("display_scale",1.0))
+		map_root.add_child(root)
 	if "VENTIL" in label:
+		if station.has("display_p"): _disc(root,Vector3(0,.025,0),.22,.05,teal)
 		_segment(root, Vector3(0, 0.05, 0), Vector3(0, 1.15, 0), 0.035, ink)
 		_sphere(root, Vector3(0, 1.23, 0), Vector3(0.29, 0.29, 0.04), teal)
 		for angle: float in [0.0, TAU/3.0, TAU*2.0/3.0]:
@@ -837,6 +848,9 @@ func _build_station_at(station: Dictionary) -> void:
 		for layer: int in range(5):
 			_disc(root,Vector3(0,0.04+layer*0.025,0),0.16,0.022,cream)
 	elif label=="EQUIPO":
+		if station.has("display_p"):
+			HouseDetails.asset(root,"radio",Vector3.ZERO,Vector3.ONE*1.4)
+			return
 		HouseDetails.place_station_radio(self,point)
 		# The floor disc marks the working position beside the actual furniture.
 		for side:float in [-1.0,1.0]:
@@ -1169,3 +1183,25 @@ func _cone(parent: Node3D, at: Vector3, top: float, bottom: float, height: float
 
 func _map_parent(parent: Node3D) -> Node3D:
 	return map_root if parent == self and is_instance_valid(map_root) else parent
+
+func _generated_spot(at:Vector3, energy:float, reach:float, tint:Color, kind:String) -> SpotLight3D:
+	var spot:=SpotLight3D.new()
+	spot.position=at;spot.light_color=tint;spot.light_energy=energy
+	spot.spot_range=reach;spot.spot_angle=68.0;spot.rotation.x=-PI/2
+	spot.shadow_enabled=true;spot.shadow_bias=HOUSE_SHADOW_BIAS;spot.shadow_normal_bias=HOUSE_SHADOW_NORMAL_BIAS
+	spot.shadow_blur=1.2;spot.distance_fade_enabled=false;spot.set_meta(kind,true)
+	map_root.add_child(spot)
+	return spot
+
+func _build_generated_lighting() -> void:
+	# <=24 rooms + two hall lamps per floor + two stair stacks = <=32 lights.
+	for room: Dictionary in map_data.rooms:
+		var b:AABB=room.bounds
+		_generated_spot(Vector3(b.get_center().x,b.position.y+2.49,b.get_center().z),HOUSE_ROOM_LIGHT_ENERGY,clampf(Vector2(b.size.x,b.size.z).length()*.6+2,4.2,8),Color("f6d5ad"),"house_room")
+	for corridor:AABB in map_data.corridors:
+		if corridor.size.x<corridor.size.z: continue
+		_generated_spot(Vector3(0,corridor.position.y+2.45,corridor.get_center().z),.9,5.8,Color("ffd09a"),"house_hall")
+	for side:float in [-1.0,1.0]:
+		var top:=float(map_data.ceiling)-.5
+		var lamp:=_generated_spot(Vector3(side*(float(map_data.half_x)-3.0),top,0),1.2,top+1.0,Color("d1e6f0"),"house_stair")
+		lamp.spot_angle=52.0

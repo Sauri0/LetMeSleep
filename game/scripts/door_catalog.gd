@@ -1,5 +1,10 @@
 class_name DoorCatalog
 extends RefCounted
+const Geometry=preload("res://scripts/door_geometry.gd")
+const Maps = preload("res://scripts/map_catalog.gd")
+const GeometryCache=preload("res://scripts/geometry_cache.gd")
+static var _cache_order: Array[String]=[]
+static var _generated: Dictionary={}
 ## Immutable geometry only. Angles and reservations belong to each simulation.
 const GAP := 0.14
 const THICKNESS := 0.07
@@ -19,41 +24,30 @@ const DEFINITIONS := {
 }
 
 static func get_doors(map_id: String = "house") -> Dictionary:
-	return DEFINITIONS.duplicate(true) if map_id == "house" else {}
+	return _definitions(map_id).duplicate(true)
+
+static func _definitions(map_id: String) -> Dictionary:
+	if map_id=="house": return DEFINITIONS
+	GeometryCache.touch(_cache_order,map_id,24,[_generated])
+	if not _generated.has(map_id): _generated[map_id]=Maps.get_map(map_id).get("doors",{})
+	return _generated[map_id]
 
 static func leaf_transform(definition: Dictionary, angle: float) -> Transform3D:
-	return Transform3D(Basis(Vector3.UP, float(definition.closed_yaw) + float(definition.open_sign) * angle), definition.hinge)
+	return Geometry.leaf_transform(definition,angle)
 
 static func leaf_box(definition: Dictionary) -> AABB:
-	return AABB(Vector3(0,GAP,-float(definition.thickness)*0.5), Vector3(float(definition.width),float(definition.height)-GAP,float(definition.thickness)))
+	return Geometry.leaf_box(definition)
 
 static func handle_point(definition: Dictionary, angle: float) -> Vector3:
-	return leaf_transform(definition,angle) * Vector3(float(definition.width)*0.85,1.08,0)
+	return Geometry.handle_point(definition,angle)
 
 static func intersects_body(definition: Dictionary, angle: float, body: AABB) -> bool:
-	# Exact separating axes for a vertical oriented leaf against an axis-aligned
-	# body. Unlike its enclosing AABB, this does not block empty air at45degrees.
-	var transform := leaf_transform(definition,angle)
-	var local := leaf_box(definition)
-	var center: Vector3 = transform * local.get_center()
-	var half: Vector3 = local.size*0.5
-	var body_center: Vector3 = body.get_center()
-	var body_half: Vector3 = body.size*0.5
-	var delta: Vector3 = body_center-center
-	if absf(delta.y) >= half.y+body_half.y-0.000001:
-		return false
-	for axis: Vector3 in [Vector3.RIGHT,Vector3.BACK,transform.basis.x,transform.basis.z]:
-		var leaf_extent: float = absf(axis.dot(transform.basis.x))*half.x+absf(axis.dot(transform.basis.z))*half.z
-		var body_extent: float = absf(axis.x)*body_half.x+absf(axis.z)*body_half.z
-		if absf(delta.dot(axis)) >= leaf_extent+body_extent-0.000001:
-			return false
-	return true
+	return Geometry.intersects_body(definition,angle,body)
 
 static func body_blocked(body: AABB, states: Dictionary, map_id: String = "house") -> bool:
-	if map_id != "house":
-		return false
+	var definitions:=_definitions(map_id)
 	for id: String in states:
-		if DEFINITIONS.has(id) and intersects_body(DEFINITIONS[id],float(states[id].get("angle",OPEN_ANGLE)),body):
+		if definitions.has(id) and intersects_body(definitions[id],float(states[id].get("angle",OPEN_ANGLE)),body):
 			return true
 	return false
 
@@ -79,12 +73,11 @@ static func ray_leaf(definition: Dictionary, angle: float, from: Vector3, to: Ve
 
 static func ray_doors(from: Vector3, to: Vector3, states: Dictionary, map_id: String = "house", padding: float = 0.0) -> Dictionary:
 	var nearest: Dictionary = {}
-	if map_id != "house":
-		return nearest
+	var definitions:=_definitions(map_id)
 	for id: String in states:
-		if not DEFINITIONS.has(id):
+		if not definitions.has(id):
 			continue
-		var hit := ray_leaf(DEFINITIONS[id],float(states[id].get("angle",OPEN_ANGLE)),from,to,padding)
+		var hit := ray_leaf(definitions[id],float(states[id].get("angle",OPEN_ANGLE)),from,to,padding)
 		if not hit.is_empty() and (nearest.is_empty() or float(hit.distance)<float(nearest.distance)):
 			nearest = hit
 	return nearest

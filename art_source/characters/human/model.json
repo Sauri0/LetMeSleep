@@ -722,13 +722,20 @@
           "region_blender_z_m": [
             1.7,
             1.735
-          ]
+          ],
+          "material": {
+            "name": "hair_matte",
+            "roughness": 1.0,
+            "specular_ior_level": 0.0,
+            "albedo_unchanged": true,
+            "runtime_tint": "human_hair_color; shared hair_ prefix mapping"
+          }
         }
       },
       "vertices": 3002,
       "triangles": 6000,
       "materials": [
-        "hair"
+        "hair_matte"
       ],
       "bounds_min_m": [
         -0.19362960755825043,

@@ -9,9 +9,12 @@ signal disconnected
 signal waiting_updated(data: Dictionary)
 signal connection_state_changed(data: Dictionary)
 
+const VoiceTransport=preload("res://scripts/voice_transport.gd")
+var voice: Node
 const Simulation = preload("res://scripts/simulation.gd")
 const LobbyRules = preload("res://scripts/lobby_rules.gd")
 const Cosmetics = preload("res://scripts/cosmetics.gd")
+const Maps = preload("res://scripts/map_catalog.gd")
 const Map = preload("res://scripts/arena.gd")
 const InvitationCodec = preload("res://scripts/invitation.gd")
 const VERSION := "0.7.0"
@@ -51,11 +54,15 @@ var _last_request: Dictionary = {}
 var _resolver_id := -1
 var _had_session := false
 var _terminal_failure := false
+var _pending_map: Dictionary={}
+var _prepared_map: Dictionary={}
+const MAP_PREPARE_TIMEOUT:=20.0
 const TRANSPORT_TIMEOUT := 15.0
 const HANDSHAKE_TIMEOUT := 8.0
 
 func _ready() -> void:
 	config = Simulation.DEFAULT_CONFIG.duplicate(true)
+	voice=VoiceTransport.new();voice.name="Voice";add_child(voice)
 	multiplayer.connected_to_server.connect(_connected)
 	multiplayer.connection_failed.connect(_failed)
 	multiplayer.server_disconnected.connect(_server_lost)
@@ -66,9 +73,14 @@ func host(port: int) -> Error:
 	if port < 1024 or port > 65535:
 		return ERR_INVALID_PARAMETER
 	var peer := ENetMultiplayerPeer.new()
-	var error := peer.create_server(port, 32, 3)
+	var error := peer.create_server(port, 32, 4)
 	if error != OK:
 		return error
+	# Godot 4.5.2 passes max_channels + SYSCH_MAX as incoming bandwidth
+	# inside create_server. Restore unlimited bandwidth before peers connect;
+	# otherwise ENet throttles voice and movement packets to nearly zero.
+	# modules/enet/enet_multiplayer_peer.cpp, 4.5.2-stable, line 60.
+	peer.get_host().bandwidth_limit(0,0)
 	multiplayer.multiplayer_peer = peer
 	# All gameplay routes through server 1; no peer-to-peer RPC relay is needed.
 	(multiplayer as SceneMultiplayer).server_relay = false
@@ -105,7 +117,7 @@ func connect_room(address: String, port: int, player_name: String, code: String,
 
 func _open_transport(resolved: String) -> void:
 	var peer := ENetMultiplayerPeer.new()
-	var error := peer.create_client(resolved, int(_last_request.port), 3)
+	var error := peer.create_client(resolved, int(_last_request.port), 4)
 	if error != OK:
 		_fail_connection("client_open_failed", "No se pudo abrir la conexión UDP: " + error_string(error))
 		return
@@ -139,6 +151,8 @@ func retry_connect() -> void:
 	connect_room(str(request.address), int(request.port), str(request.name), str(request.code), bool(request.create))
 
 func close_client() -> void:
+	if is_instance_valid(voice): voice.reset()
+	_prepared_map.clear()
 	connecting = false
 	_had_session = false
 	_terminal_failure = true
@@ -184,6 +198,7 @@ func _peer_connected(id: int) -> void:
 				peer.disconnect_peer(id))
 
 func _peer_left(id: int) -> void:
+	if is_instance_valid(voice): voice.peer_left(id)
 	if not is_server:
 		return
 	join_attempts.erase(id)
@@ -191,6 +206,7 @@ func _peer_left(id: int) -> void:
 	private_revisions.erase(id)
 	if not players.has(id):
 		return
+	_pending_map.clear()
 	if id == room_owner:
 		_close_room("El anfitrión cerró la sala.")
 		return
@@ -223,6 +239,7 @@ func request_close_room() -> void:
 		_request_lobby.rpc_id(1,"close_room",null)
 
 func _close_room(message: String) -> void:
+	_pending_map.clear()
 	var recipients := players.keys()
 	for id: int in recipients:
 		if _peer_can_receive(id):
@@ -266,7 +283,7 @@ func _request_join(version: String, protocol: int, player_name: String, code: St
 	if version != VERSION or protocol != PROTOCOL:
 		_reject.rpc_id(sender, "Versión incompatible. Todos necesitan Let me sleep %s (protocolo %d)." % [VERSION, PROTOCOL])
 		return
-	if sim != null:
+	if sim != null or not _pending_map.is_empty():
 		_reject.rpc_id(sender, "El grupo está jugando o viendo resultados. Esperá a que el anfitrión pulse Volver a sala.")
 		return
 	if players.size() >= MAX_PLAYERS:
@@ -357,6 +374,12 @@ func _request_lobby(verb: String, value: Variant) -> void:
 		return
 	if sim != null and verb != "rematch":
 		return
+	if verb in ["map_ready","map_failed"]:
+		_receive_map_ack(sender,verb,value)
+		return
+	if not _pending_map.is_empty():
+		_server_notice.rpc_id(sender,"Estamos preparando la casa para todos los jugadores.")
+		return
 	match verb:
 		"role":
 			_server_notice.rpc_id(sender, "Los roles se sortean al empezar. Nadie elige equipo.")
@@ -381,14 +404,7 @@ func _request_lobby(verb: String, value: Variant) -> void:
 			if sender == room_owner:
 				var reason := _start_reason()
 				if reason.is_empty():
-					server_tick += 1
-					sim = Simulation.new()
-					var assigned: Dictionary = LobbyRules.draw(players, config)
-					sim.start(assigned, config)
-					private_revisions.clear()
-					last_phase = ""
-					print("ROUND_START mode=%s players=%d" % [config.mode, players.size()])
-					_publish(true)
+					_prepare_round()
 					return
 				_server_notice.rpc_id(sender, reason)
 		"rematch":
@@ -418,13 +434,55 @@ func _set_unready() -> void:
 		players[id].ready = false
 
 func _start_reason() -> String:
+	if not _pending_map.is_empty(): return "Preparando la misma casa para todos…"
 	return LobbyRules.validate(players, config, true)
+
+func _prepare_round() -> void:
+	var generated: Dictionary=Maps.new_house()
+	if generated.is_empty():
+		_notify_all("No se pudo generar una casa transitable. Intentá empezar otra vez.")
+		return
+	if str(generated.id)==str(config.get("map_id","")):
+		generated=Maps.new_house(1+int(generated.seed)%2147483646)
+		if generated.is_empty(): return
+	_pending_map={"id":generated.id,"fingerprint":generated.fingerprint,"version":generated.generator_version,"seed":generated.seed,"age":0.0,"ready":{}}
+	_broadcast_lobby()
+
+func _receive_map_ack(sender: int, verb: String, value: Variant) -> void:
+	if _pending_map.is_empty() or not value is Dictionary: return
+	if value.get("id")!=_pending_map.id: return
+	if verb=="map_failed" or value.get("fingerprint")!=_pending_map.fingerprint:
+		_pending_map.clear()
+		_notify_all("La casa no coincide en todas las computadoras. Revisen que tengan la misma versión.")
+		_broadcast_lobby()
+		return
+	_pending_map.ready[sender]=true
+	for id: int in players:
+		if not _pending_map.ready.has(id): return
+	var prepared:=_pending_map.duplicate(true)
+	_pending_map.clear()
+	config.map_id=prepared.id
+	server_tick+=1
+	sim=Simulation.new()
+	sim.start(LobbyRules.draw(players,config),config)
+	if sim.phase!="playing":
+		var reason: String=sim.reason
+		sim=null
+		_notify_all(reason)
+		_broadcast_lobby()
+		return
+	config=sim.config.duplicate(true)
+	private_revisions.clear();last_phase=""
+	print("ROUND_START mode=%s players=%d map=%s fingerprint=%s"%[config.mode,players.size(),prepared.id,prepared.fingerprint])
+	_publish(true)
 
 func _broadcast_lobby() -> void:
 	if players.is_empty():
 		return
 	var reason := _start_reason()
 	var data := {"code": room_code, "owner": room_owner, "players": players.duplicate(true), "config": config.duplicate(true), "can_start": reason.is_empty(), "start_reason": reason, "barrier_tick": server_tick, "actors": waiting_actors.duplicate(true)}
+	if not _pending_map.is_empty():
+		data.map_prepare={"id":_pending_map.id,"fingerprint":_pending_map.fingerprint,"version":_pending_map.version,"seed":_pending_map.seed}
 	for id: int in players:
 		if _peer_can_receive(id):
 			_receive_lobby.rpc_id(id, data)
@@ -453,6 +511,18 @@ func _receive_lobby(data: Dictionary) -> void:
 	private_latest.clear()
 	last_received_tick = barrier + 1
 	lobby_updated.emit(data)
+	if data.get("map_prepare") is Dictionary:
+		var prepare: Dictionary=data.map_prepare
+		var id: String=str(prepare.get("id",""))
+		var generated: Dictionary=Maps.get_map(id)
+		var matched: bool=not generated.is_empty() and generated.get("fingerprint")==prepare.get("fingerprint") and generated.get("generator_version")==prepare.get("version") and generated.get("seed")==prepare.get("seed")
+		if matched:
+			_prepared_map={"id":id,"fingerprint":generated.fingerprint}
+			_request_lobby.rpc_id(1,"map_ready",_prepared_map)
+		else:
+			_prepared_map.clear()
+			_request_lobby.rpc_id(1,"map_failed",{"id":id})
+			notice.emit("No se pudo verificar la casa de esta partida.")
 
 func send_input(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool=false, crouch: bool=false, jump: bool=false) -> void:
 	if _client_connected():
@@ -468,6 +538,14 @@ func send_action(seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: float 
 		elif not (is_nan(aim_yaw) and is_nan(aim_pitch)):
 			return
 		_action.rpc_id(1, seq, command)
+
+func send_emote(seq: int, emote_id: String) -> void:
+	if _client_connected() and emote_id.length()<24:
+		_action.rpc_id(1,seq,JSON.stringify({"verb":"emote","id":emote_id}))
+
+func send_view_ack(seq: int, revision: int, first_input_seq: int, yaw: float, pitch: float) -> void:
+	if _client_connected():
+		_action.rpc_id(1,seq,JSON.stringify({"verb":"view_ack","revision":revision,"first_input_seq":first_input_seq,"yaw":yaw,"pitch":pitch}))
 
 @rpc("any_peer", "call_remote", "unreliable_ordered", 1)
 func _request_movement(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool=false, crouch: bool=false, jump: bool=false) -> void:
@@ -494,6 +572,18 @@ func _action(seq: int, verb: String) -> void:
 		var aim_pitch := NAN
 		if verb.begins_with("{"):
 			var command: Variant = JSON.parse_string(verb)
+			if command is Dictionary and command.get("verb")=="view_ack":
+				if command.size()!=5: return
+				for key: String in ["revision","first_input_seq","yaw","pitch"]:
+					if not (command.get(key) is float or command.get(key) is int) or not is_finite(float(command[key])): return
+				for key: String in ["revision","first_input_seq"]:
+					if float(command[key])!=floorf(float(command[key])) or float(command[key])<0 or float(command[key])>2147483647: return
+				sim.submit_view_ack(sender,seq,int(command.revision),int(command.first_input_seq),float(command.yaw),float(command.pitch))
+				return
+			if command is Dictionary and command.get("verb")=="emote":
+				if command.size()==2 and command.get("id") is String and str(command.id).length()<24:
+					sim.submit_emote(sender,seq,command.id)
+				return
 			if not command is Dictionary or not command.get("verb") is String or not command.get("yaw") is float or not command.get("pitch") is float:
 				return
 			verb = command.verb
@@ -503,6 +593,12 @@ func _action(seq: int, verb: String) -> void:
 			sim.action(sender, seq, verb, aim_yaw, aim_pitch)
 
 func _physics_process(dt: float) -> void:
+	if is_server and not _pending_map.is_empty():
+		_pending_map.age=float(_pending_map.age)+dt
+		if float(_pending_map.age)>MAP_PREPARE_TIMEOUT:
+			_pending_map.clear()
+			_notify_all("Un jugador no terminó de preparar la casa. Intentá empezar de nuevo.")
+			_broadcast_lobby()
 	if connecting:
 		connect_age += dt
 		connection_state["elapsed"] = connect_age
@@ -617,6 +713,11 @@ func _receive_snapshot_reliable(packet: PackedByteArray) -> void:
 	_receive_snapshot(packet)
 
 func _accept_snapshot(data: Dictionary) -> void:
+	var map_id: String=str(data.get("config",{}).get("map_id","house"))
+	if Maps.Generator.parse_seed(map_id)>0:
+		if _prepared_map.get("id")!=map_id or _prepared_map.get("fingerprint")!=data.get("config",{}).get("map_fingerprint"):
+			notice.emit("Se rechazó una partida cuya casa no estaba verificada.")
+			return
 	var tick := int(data.get("tick", 0))
 	if tick < last_received_tick:
 		return

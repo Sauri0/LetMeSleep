@@ -1,17 +1,24 @@
 class_name HouseBarriers
 extends RefCounted
+const Maps = preload("res://scripts/map_catalog.gd")
 ## Open balustrades shared by authority, navigation and rendering.
 ## Only individual wooden members collide; air between balusters stays open.
 static var _parts: Array[Dictionary] = []
 static var _boxes: Array[AABB] = []
 
 static func get_parts(map_id: String = "house") -> Array[Dictionary]:
-	if map_id!="house":return []
+	if map_id!="house":
+		var result: Array[Dictionary]=[]
+		for part: Dictionary in Maps.get_map(map_id).get("barrier_parts",[]): result.append(part)
+		return result
 	_build()
 	return _parts.duplicate(true)
 
 static func get_boxes(map_id: String = "house") -> Array[AABB]:
-	if map_id!="house":return []
+	if map_id!="house":
+		var result: Array[AABB]=[]
+		for box: AABB in Maps.get_map(map_id).get("barrier_boxes",[]): result.append(box)
+		return result
 	_build()
 	return _boxes.duplicate()
 

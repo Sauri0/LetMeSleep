@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "description": "Prepared native convex-corner presentation regression; no ENet or performance claim",
+  "godot": "4.5.2 Compatibility",
+  "runtime_frozen": true,
+  "source_hashes": [
+    {
+      "path": "game/scripts/actor_view.gd",
+      "sha256": "a374ce1364f621e779eda06df5e6082665a5ee359777592230e7b1eb3ca4e717"
+    },
+    {
+      "path": "game/scripts/surface_presentation.gd",
+      "sha256": "5d6717f2f73d3898f5bfd9b733fed431b5c1f0ac45aea44c047fd00e668bac83"
+    },
+    {
+      "path": "game/scripts/surface_appendage_pose.gd",
+      "sha256": "828a28e3fa0f30b4c69028c7d6c280e493ba583cc374bfe0b76b3068eb2eb201"
+    },
+    {
+      "path": "game/assets/art/characters/shared/character_skin.gd",
+      "sha256": "35a723b2de561de6b290a9578c0029e73cb5ce2cbfc0b20e47862ce1eb9d1a55"
+    },
+    {
+      "path": "game/tests/surface09_actor_corner_checks.gd",
+      "sha256": "985b7446bd93d72ec88eb0e6456406c467d7bbb979eba83385a6df12129c366d"
+    },
+    {
+      "path": "game/tests/appendage09_visual_checks.gd",
+      "sha256": "9232bbdba314fad710445ac057c41f04bd5ca83f925d445e336e1d896debc760"
+    },
+    {
+      "path": "game/tests/voice09_visual_checks.gd",
+      "sha256": "1cc07aced9ae6dca25d4747b1d3d921f53d43bb952a952e987b72c4eadb02929"
+    },
+    {
+      "path": "game/scripts/surface_locomotion.gd",
+      "sha256": "127d25d4b858f489b9802e70a29339e0c8194d297ff44def79d12e378096dfb2"
+    },
+    {
+      "path": "game/scripts/mosquito_pose.gd",
+      "sha256": "9cf62024a199b097f5649598a0934783d6affc47bf2beb7262ea05383221f8d9"
+    },
+    {
+      "path": "game/assets/art/characters/mosquito/mosquito_lms06.glb",
+      "sha256": "d249474f537b50594ff4f76ae5c97fc938d9e6d61cdc7fa91909db0bc860ac85"
+    },
+    {
+      "path": "game/assets/art/characters/mosquito/rig_contract.json",
+      "sha256": "481dcd3a7c22a7cb2ec4dd9ef229529154355687b29147097058f3a89893f345"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "outputs/0.9-actor-corner/final-style0/actor-corner09.json",
+      "style": 0,
+      "checks": 18776,
+      "failures": 0,
+      "sha256": "bf555a4ef04c2b463621fa626dd2147577a99ed758866d48800703a29d0456e1"
+    },
+    {
+      "path": "outputs/0.9-actor-corner/final-style1/actor-corner09.json",
+      "style": 1,
+      "checks": 18776,
+      "failures": 0,
+      "sha256": "785e0fe1d700a41a6a8ef84c7c8e9d72843d302b8957243531f14464cf6fee57"
+    },
+    {
+      "path": "outputs/0.9-actor-corner/final-style2/actor-corner09.json",
+      "style": 2,
+      "checks": 18776,
+      "failures": 0,
+      "sha256": "8e01e3e01672305be0aeec5d1d8b1b33f7c07a0955e99859c2e4149b176263b2"
+    }
+  ],
+  "metrics_metres": {
+    "maximum_position_error": 0.0405720472335815,
+    "maximum_step": 0.0141944885253906,
+    "maximum_core_vertex_step": 0.0291100144386292,
+    "maximum_foot_vertex_step": 0.0362399257719517,
+    "maximum_stance_drift": 2.38418579101563E-07,
+    "minimum_supported_feet": 2.0
+  },
+  "render_hz": 60,
+  "snapshot_hz": 20,
+  "native_frames": 1728,
+  "corner_checks": 56328,
+  "corner_failures": 0,
+  "appendage_checks": 2547,
+  "voice_visual_checks": 552,
+  "authority_modified": false,
+  "glb_modified": false,
+  "phase_wrap_packet_hz": [
+    10,
+    20,
+    60
+  ],
+  "adjacent_normal_pairs": 24,
+  "helper_render_hz": [
+    30,
+    60,
+    144
+  ],
+  "limitations": [
+    "Finite box paths, not every room junction or network run",
+    "Tarsus obstruction probes use actual vertex extrema; they are not gameplay collision",
+    "Minimum two feet find finite support at edge; nominal tripod is not forced on air",
+    "Historical snapshots retain their original frame/camera/hash scope"
+  ]
+}

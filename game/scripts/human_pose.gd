@@ -2,6 +2,7 @@ class_name HumanPose
 extends RefCounted
 
 const Tools = preload("res://scripts/tool_catalog.gd")
+const Emotes = preload("res://scripts/emote_pose.gd")
 const SWING_SECONDS := {"hands":Tools.DATA.hands.cooldown,"swatter":Tools.DATA.swatter.cooldown,"racket":Tools.DATA.racket.cooldown,"newspaper":Tools.DATA.newspaper.cooldown,"broom":Tools.DATA.broom.cooldown,"slipper":Tools.DATA.slipper.cooldown}
 const SWING_GESTURE_SECONDS := 0.36
 const INSPECT_ENTER := -0.70
@@ -18,7 +19,7 @@ const TOOL_LENGTHS := {"hands":Tools.DATA.hands.length,"swatter":Tools.DATA.swat
 ## mutable actor state or hash-only equality is kept in this static pose module.
 static func cache_key(actor: Dictionary) -> Array:
 	var key: Array = []
-	for field: String in ["p","yaw","body_yaw","pitch","crouch_amount","motion_phase","motion_speed","grounded","sprinting","motion_blend","air_blend","land_blend","motion_stride","motion_direction","pose_time","tool","relaxed_pose"]:
+	for field: String in ["p","yaw","body_yaw","pitch","crouch_amount","motion_phase","motion_speed","grounded","sprinting","motion_blend","air_blend","land_blend","motion_stride","motion_direction","pose_time","tool","relaxed_pose","emote_id","emote_time"]:
 		key.append(actor.get(field,null))
 	key.append(Dictionary(actor.get("strike",{})).duplicate(true))
 	key.append(Dictionary(actor.get("throw_gesture",{})).duplicate(true))
@@ -308,6 +309,9 @@ static func sample(actor: Dictionary) -> Dictionary:
 		result.tool_direction=orientation.y
 		result.tool_normal=orientation.z
 		result.tool_grip=grip
+	Emotes.apply_human(result,actor)
+	if equipped_tool=="hands" and throw_state=="idle" and not Emotes.sample(actor).is_empty():
+		result.tool_grip=palm_center(result.hand_r,result.elbow_r)
 	var grasp_tool := equipped_tool
 	if throw_state=="recovering": grasp_tool=str(throwing.get("tool",equipped_tool))
 	if Tools.GRASPS.has(grasp_tool):

@@ -1,0 +1,466 @@
+{
+  "dll_sha256": "099083b562d51453364885bfe2d269c9c35a94dbababfa601d287c5f95c2c1da",
+  "dll_bytes": 1864704,
+  "godot_runtime": "4.5.2.stable.official.6ce3de25a",
+  "opus": "1.6.1",
+  "godot_cpp_commit": "e83fd0904c13356ed1d4c3d09f8bb9132bdc6b77",
+  "smoke_checks": 291,
+  "smoke_failures": 0,
+  "import_exit_code": 0,
+  "smoke_exit_code": 0,
+  "roundtrip_exit_code": 0,
+  "decoded_tone_assertions": 3,
+  "microphone_opened": false,
+  "game_integrated": false,
+  "wan_tested": false,
+  "pitch_filter_tested": false,
+  "spatial_playback_tested": false,
+  "scope": "Isolated synthetic codec tests only. CPU timings are not game FPS or player-count guarantees.",
+  "files": [
+    {
+      "path": "voice-bootstrap/README.md",
+      "bytes": 3215,
+      "sha256": "db7c3a410c7aa9adde416bda353882532832307ef6b587aa286c91675ef5cc3d"
+    },
+    {
+      "path": "voice-bootstrap/bootstrap_downloads.py",
+      "bytes": 3980,
+      "sha256": "47ca79f3883634a9ca707275134c2fd72860952f0546434a0b4a5be9646b47fb"
+    },
+    {
+      "path": "voice-bootstrap/build.ps1",
+      "bytes": 2536,
+      "sha256": "52cb3f3ad65c01e6dc60392a39cf6ec1f7fc0eac41b64a7d93608c70fa08ed19"
+    },
+    {
+      "path": "voice-bootstrap/dependency-downloads.json",
+      "bytes": 2408,
+      "sha256": "3c054a49772037bfab579605dcb0334d926d68c9f47e1987acf402de566d08c8"
+    },
+    {
+      "path": "voice-bootstrap/extension/CMakeLists.txt",
+      "bytes": 3816,
+      "sha256": "523adef91038bf194aa80244c3c8de5c80360a491edaeb313401de00a705eb34"
+    },
+    {
+      "path": "voice-bootstrap/extension/README.md",
+      "bytes": 9224,
+      "sha256": "26c077d7d8f37d73d6cd5f02a5ca3173a6c5098ab157ced4111c2fb4c8cd593a"
+    },
+    {
+      "path": "voice-bootstrap/extension/build_profile.json",
+      "bytes": 46,
+      "sha256": "7fed1570932453c2318b25e452f43d7ac530110b776779bb5babaa846ad6d24e"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/artifacts/opus-decoded-tone-48k-mono.wav",
+      "bytes": 288044,
+      "sha256": "f7bc2403c0b625c580adb2dd89538f640a98a31655fe59cdda1cc20998f01b7e"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/artifacts/opus-roundtrip-manifest.json",
+      "bytes": 4053,
+      "sha256": "a21b3834382ed841eba4d0a85600e65ad3b2dc1f1feb27c9492b74982cf3555b"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/bin/lms_opus.windows.x86_64.dll",
+      "bytes": 1864704,
+      "sha256": "099083b562d51453364885bfe2d269c9c35a94dbababfa601d287c5f95c2c1da"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/lms_opus.gdextension",
+      "bytes": 174,
+      "sha256": "b60f6b1a66391ebbe210b9db509b4f7a0c8c781483aaee67c8aceef9ab9d4a2a"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/lms_opus.gdextension.uid",
+      "bytes": 20,
+      "sha256": "00ecf5bc32981a27e8fad3d1309c415890db3ab200429bf49a2755c1fa1c9896"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/project.godot",
+      "bytes": 300,
+      "sha256": "d3cc1b438811466b7fcb9b3b6b8ee1a7ee6c11b6c9dda0c2a0b3d6466daf49a6"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/roundtrip_artifacts.gd",
+      "bytes": 10183,
+      "sha256": "ef1a5fce17f731ae397c10ad9bab27a75460911bd27f014eb4db7d8bf4637fd3"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/roundtrip_artifacts.gd.uid",
+      "bytes": 20,
+      "sha256": "40863dbb68a4bd35d2e3cc248e47aee7570f28a2a21efb2674edcaa736fa94b3"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/smoke.gd",
+      "bytes": 6850,
+      "sha256": "fcc21b8de4c14241702b0238493053e0ca7b19fcb364e372ef75b47eba3fad8e"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/smoke.gd.uid",
+      "bytes": 20,
+      "sha256": "f0296242b074e0d2f47c8052b4ebc92140a66826a6611825742c07b5735b9cba"
+    },
+    {
+      "path": "voice-bootstrap/extension/smoke/smoke.tscn",
+      "bytes": 176,
+      "sha256": "73fe5803be7ce85c668b3bd7eebbb40b7eb88363e17d15b4bed7ea3a042f316f"
+    },
+    {
+      "path": "voice-bootstrap/extension/src/lms_opus_codec.cpp",
+      "bytes": 8817,
+      "sha256": "96d4e511809ea9bfeb7d3457963d1fe160771c43d0d0774c1341303fdeb03f71"
+    },
+    {
+      "path": "voice-bootstrap/extension/src/lms_opus_codec.h",
+      "bytes": 2023,
+      "sha256": "b20ee534deb1f77e8737c0cd5fe89da83f613333ce29db39f9305c81596cf0e7"
+    },
+    {
+      "path": "voice-bootstrap/extension/src/register_types.cpp",
+      "bytes": 861,
+      "sha256": "dc8dc65c798163f28061699ee09130eb7cd422ec10b79e7c588bf86eb8ca6633"
+    },
+    {
+      "path": "voice-bootstrap/licenses/COPYING",
+      "bytes": 2326,
+      "sha256": "99a69660981156c21336fdb5661f89341b013c94e4bf9e1c7467b4745718397f"
+    },
+    {
+      "path": "voice-bootstrap/licenses/COPYING.MinGW-w64-runtime.txt",
+      "bytes": 12155,
+      "sha256": "1db8da07b436c68833c0673ffee3d9fcb2526047f3820b81661865dfedc79a1f"
+    },
+    {
+      "path": "voice-bootstrap/licenses/COPYING.MinGW-w64.txt",
+      "bytes": 5905,
+      "sha256": "f38e6194bd3bfa1b654f118e5acefe0aead437bbe669eee43957ccc65a7127f1"
+    },
+    {
+      "path": "voice-bootstrap/licenses/COPYING.winpthreads.txt",
+      "bytes": 2883,
+      "sha256": "63263614cdd29f2f93cba85e992f041b31f9fc7b4033692f31269489a8a1b177"
+    },
+    {
+      "path": "voice-bootstrap/licenses/COPYING.winstorecompat.txt",
+      "bytes": 1099,
+      "sha256": "fa7368d1f93d890c173177475d8ec7aff265a7d08f1f364d66f74d138978ce36"
+    },
+    {
+      "path": "voice-bootstrap/licenses/LLVM-LICENSE.txt",
+      "bytes": 15141,
+      "sha256": "8d85c1057d742e597985c7d4e6320b015a9139385cff4cbae06ffc0ebe89afee"
+    },
+    {
+      "path": "voice-bootstrap/licenses/Opus-COPYING.txt",
+      "bytes": 1945,
+      "sha256": "01e1167d54a096d123cf6dfbbeb19587278845c6481d2d66d545669846079551"
+    },
+    {
+      "path": "voice-bootstrap/licenses/godot-cpp-LICENSE.md",
+      "bytes": 1093,
+      "sha256": "26a5b210d90760156ce886267ce9df235787dcc6cebfd7ecd95ef5b6fdcc95bf"
+    },
+    {
+      "path": "voice-bootstrap/logs/build-repro.log",
+      "bytes": 193596,
+      "sha256": "835cba4aeb8f9ba421c1e211d3e5539f76f13e00fe37cd1d30b35b08b5247fc4"
+    },
+    {
+      "path": "voice-bootstrap/logs/build.log",
+      "bytes": 16953,
+      "sha256": "f14d7ca713a0d4a00c80c0e6eb056b8e91c9faacc699885e3e746f319f17e411"
+    },
+    {
+      "path": "voice-bootstrap/logs/configure-repro.log",
+      "bytes": 3796,
+      "sha256": "ffb965a725639c7f2025fcf878e86267354dcfb61a2a0f3331907e5378a1fb0b"
+    },
+    {
+      "path": "voice-bootstrap/logs/configure.log",
+      "bytes": 7571,
+      "sha256": "640d4cba0c5629dd105af9da167769107683074f803fd782511eeb81cbc96428"
+    },
+    {
+      "path": "voice-bootstrap/logs/decoded-tone-analysis.json",
+      "bytes": 14299,
+      "sha256": "a949f23b6eebaed1ab42784b6f6a0e12ec60c5214d816c9acbff0e600c9d2be1"
+    },
+    {
+      "path": "voice-bootstrap/logs/dll-imports.txt",
+      "bytes": 4778,
+      "sha256": "048afe376a8020c05ebc6a3c9c0ad1610e2717f934740eeb1e217255598e4d75"
+    },
+    {
+      "path": "voice-bootstrap/logs/import.log",
+      "bytes": 1019,
+      "sha256": "cf852356b511474c3f110963c4817ffa98b346c0f6e0c456ba3e767aa5359532"
+    },
+    {
+      "path": "voice-bootstrap/logs/lldb-backtrace.log",
+      "bytes": 2826,
+      "sha256": "47a5d3d3a5edbaded627f5c7b3c6ef53bbde2bc94f8a222eb7492e27c24bbe04"
+    },
+    {
+      "path": "voice-bootstrap/logs/lldb-native.log",
+      "bytes": 1119,
+      "sha256": "2bae8a040e8e805a57273a2a09af0e86bdf8d0ef76b7befa8379b658d7823c9e"
+    },
+    {
+      "path": "voice-bootstrap/logs/lldb-smoke.log",
+      "bytes": 824,
+      "sha256": "9217b88a33c02ad2f238c43a521b287f3a10e5937792ee93d9b494e3d5f9ce1a"
+    },
+    {
+      "path": "voice-bootstrap/logs/roundtrip.log",
+      "bytes": 473,
+      "sha256": "123184c570d1aa57de7e8cd3cca43d379f488c8652c41a79a2bf0cd898af4c61"
+    },
+    {
+      "path": "voice-bootstrap/logs/smoke.log",
+      "bytes": 163,
+      "sha256": "f94924678413fc0e12750d1f8c06d35c184fafb01e9ee0cb647f749a48758e9e"
+    },
+    {
+      "path": "voice-bootstrap/package_bootstrap.py",
+      "bytes": 2939,
+      "sha256": "a20b843179e8c3ca2b249ea8f1a33630d2228d1275d5731ed55ed4d619f5121f"
+    },
+    {
+      "path": "voice-fixtures/README.md",
+      "bytes": 4621,
+      "sha256": "d8cbe9b5e32c7cdcedf347156de56dee35eaeb3ea150e8e20934f99d9f96504d"
+    },
+    {
+      "path": "voice-fixtures/analyze_voice_wav.py",
+      "bytes": 7124,
+      "sha256": "ed61e69345ccab2f1b2cb45d4986272a9665e2e17391e57f61380a2c6b24d30d"
+    },
+    {
+      "path": "voice-fixtures/analyzer-controls/ideal-pitch-without-tempo-change.json",
+      "bytes": 14364,
+      "sha256": "3213e169c936b1cd42cbed0c618b6138f064c9d0607885c12c8f30b7f3e7284d"
+    },
+    {
+      "path": "voice-fixtures/analyzer-controls/negative-broadband-noise.wav",
+      "bytes": 192044,
+      "sha256": "fe1e0b543d381c6cbdf1a49b4d6f883bca1ae9836dacc2aaca1a72baee5696fe"
+    },
+    {
+      "path": "voice-fixtures/analyzer-controls/negative-speedup-only.wav",
+      "bytes": 288044,
+      "sha256": "da72e69e95e14ba7a993a33e084e696db9bfd1a564de5153f17f3441c8805ec0"
+    },
+    {
+      "path": "voice-fixtures/analyzer-controls/negative-speedup-padded.wav",
+      "bytes": 446444,
+      "sha256": "8df6232d3598b00bc49a4992329bad4fbb8457d1ac531224b8b102a24c84d954"
+    },
+    {
+      "path": "voice-fixtures/analyzer-controls/noise-is-not-a-tone.json",
+      "bytes": 10248,
+      "sha256": "253b831d1d844ca1d616eec1be6fdd8ccb00d7017c4b6026a0dd14097d7b02da"
+    },
+    {
+      "path": "voice-fixtures/analyzer-controls/padding-does-not-restore-speech-tempo.json",
+      "bytes": 13612,
+      "sha256": "08df151856d3588a88cb10e3c3d589dbb5bc95b6801f6ac881dd17a98f5062e2"
+    },
+    {
+      "path": "voice-fixtures/analyzer-controls/positive-ideal-tone682.wav",
+      "bytes": 288044,
+      "sha256": "50270c1bbb773cffafe5126ebee1356c3dca54924f3f75b3f7165718e2d0495e"
+    },
+    {
+      "path": "voice-fixtures/analyzer-controls/reference440.json",
+      "bytes": 14378,
+      "sha256": "0c68b47e42bf915ffb1e0d128add9b21ee5a10b6accdbab67fd2bef60b02b984"
+    },
+    {
+      "path": "voice-fixtures/analyzer-controls/silence-is-not-a-tone.json",
+      "bytes": 8253,
+      "sha256": "4fc7c973a43912f8a7dd9d9f82626a1ff6a5b827146b9ae86a4652143f482ac5"
+    },
+    {
+      "path": "voice-fixtures/analyzer-controls/speedup-is-not-pitch-only.json",
+      "bytes": 10000,
+      "sha256": "4914cb78827807c8ca34dd0e277dab836f8fe4afc55a296a0397771ff0ec413c"
+    },
+    {
+      "path": "voice-fixtures/analyzer-reference-tone.json",
+      "bytes": 14384,
+      "sha256": "9a3f5dd254e4c4023c42139a1a4a8cff50fa426645084916098b7af1678f3fef"
+    },
+    {
+      "path": "voice-fixtures/analyzer-selfcheck.json",
+      "bytes": 2078,
+      "sha256": "eda3161c3bfac34068a63f2d2c325c235f391e1b9603996b0d0257c8477a7940"
+    },
+    {
+      "path": "voice-fixtures/antiphase-48k-stereo.wav",
+      "bytes": 384044,
+      "sha256": "5679492702548526d9af978db9712c272b70cd6b3348c4165b6c4e2ad8a36fa6"
+    },
+    {
+      "path": "voice-fixtures/chirp180-1800-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "1c79d1902242b880491da743df7cc829bac425e52b0e1dc9d69d887d77961d16"
+    },
+    {
+      "path": "voice-fixtures/dual-mono-48k-stereo.wav",
+      "bytes": 384044,
+      "sha256": "0822d9fbf46811a7b01f97ba61bb1ac0dc34883376e73a7ad89888eb23dc7f26"
+    },
+    {
+      "path": "voice-fixtures/gated440-48k-mono-rms20ms.json",
+      "bytes": 27481,
+      "sha256": "862fd17ba52f5408d6503e6a9ffac8211980d495a37bf612347d577f1fcf4f4d"
+    },
+    {
+      "path": "voice-fixtures/gated440-48k-mono.wav",
+      "bytes": 480044,
+      "sha256": "755e69c6dbdb44bcf11cffa3f7f91f7dc27fafda79f792ad3ba9714086b12744"
+    },
+    {
+      "path": "voice-fixtures/generate_fixtures.py",
+      "bytes": 7489,
+      "sha256": "e691312959af55ae9cb099585b3aa41cd222dcd278ac2113e7fc8e45c74eaa9d"
+    },
+    {
+      "path": "voice-fixtures/left-only-48k-stereo.wav",
+      "bytes": 384044,
+      "sha256": "68f984ad159a0d9e48577e9fd621bc95fe54a19c60be8105f78ac029f24957d1"
+    },
+    {
+      "path": "voice-fixtures/manifest.json",
+      "bytes": 20596,
+      "sha256": "0ca2fc5e131444723f6d5269df48868b05e93b0e639a57229f31933fccacf6b4"
+    },
+    {
+      "path": "voice-fixtures/marker-pulses-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "023cfa197c69270ce2c4f0ce967ad41f17a13893f1d27c0d0de3a996f4fc4a4f"
+    },
+    {
+      "path": "voice-fixtures/pitch-tempo-sequence-48k-mono-rms20ms.json",
+      "bytes": 33617,
+      "sha256": "924e8c94d7940f5c342855d5af4dc794ff89d3d06da0d42959112fb30bb44e69"
+    },
+    {
+      "path": "voice-fixtures/pitch-tempo-sequence-48k-mono.wav",
+      "bytes": 576044,
+      "sha256": "f86ce3adaa3231b87281d79809182d8d4a38e73a60fc4a0aac8f5f70c51e0550"
+    },
+    {
+      "path": "voice-fixtures/selfcheck_analyzer.py",
+      "bytes": 2716,
+      "sha256": "0a214c95ce813e334677c8676b3ddffa621bcfd583c0429348e9772e1db43168"
+    },
+    {
+      "path": "voice-fixtures/silence-48k-mono-rms20ms.json",
+      "bytes": 10097,
+      "sha256": "beb4be75b4bf3ae9048e974a5b7e4565b1fa163c191eadc8e7b184e926fc429d"
+    },
+    {
+      "path": "voice-fixtures/silence-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "e294409b36a8ac1893b23336eeab5202d3e84ce4f66c7572aa1589c43d43c1ff"
+    },
+    {
+      "path": "voice-fixtures/speaker-00-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "dc455122b07434e9aafec2a69d022633c1925a412f64f159ef749c4d9d67f5cc"
+    },
+    {
+      "path": "voice-fixtures/speaker-01-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "cfb69989f185d64b93f99ec0d1f1a8cc17b322b8516b6a08e982f6da957f71c1"
+    },
+    {
+      "path": "voice-fixtures/speaker-02-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "d2e9516920c45226f14c45f7648c5dfe9fa7b24cc84dde5ddb1da086efdd0685"
+    },
+    {
+      "path": "voice-fixtures/speaker-03-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "30deadd8a5a2f0dd40fdb6846d47c4c4afefe8fc8689b3592fb156601d29af59"
+    },
+    {
+      "path": "voice-fixtures/speaker-04-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "ccd446adc38128202d2eb06796f464a2520df60d3159352fb8900965bd2c4bf9"
+    },
+    {
+      "path": "voice-fixtures/speaker-05-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "d3d14fc374d7b170f3bfb63a6e03c3277c51c6c5ec7d8c5aa2e0da8035e3b3b3"
+    },
+    {
+      "path": "voice-fixtures/speaker-06-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "68fa9594fa2ffbc76c5b2aa63c9510d28c51df4321b0ceea497dfe4795032ce6"
+    },
+    {
+      "path": "voice-fixtures/speaker-07-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "282567fdcf9ffe0a176255db797b2c61cdd1c0c5c4dacbb6f960e281eeb1068d"
+    },
+    {
+      "path": "voice-fixtures/speaker-08-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "039764ef717ab28cf0f1809ea02e8927f5f20bd354fc61a7b2e3a0b746abfa26"
+    },
+    {
+      "path": "voice-fixtures/speaker-09-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "f7c7b7fb4a2bcb840b6d783d978babba84e79e9f3313cb219d4efb6aca4843df"
+    },
+    {
+      "path": "voice-fixtures/speaker-10-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "66e05aa3e47469dae432ea31188136f85abf543d3e9bfb88519daec9f419edd8"
+    },
+    {
+      "path": "voice-fixtures/speaker-11-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "1ad1e432fa28ba5dfa26bcaf3f8a0646445db064bb0e50f5af6a2af188f92db9"
+    },
+    {
+      "path": "voice-fixtures/speaker-12-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "febcf4742eb75e317741e16e21d40c1d27dc45a6567138ac4410397333383e58"
+    },
+    {
+      "path": "voice-fixtures/speaker-13-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "08e967a8d89e6cddff1a5827ba2fde8649b1cf2047d4b0df815d0ae8ed1edf66"
+    },
+    {
+      "path": "voice-fixtures/speaker-14-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "6adc114638f4b28667bbbb2a8f9cd80709ab2b0102e012b7ed1100035348e70b"
+    },
+    {
+      "path": "voice-fixtures/speaker-15-48k-mono.wav",
+      "bytes": 192044,
+      "sha256": "0fc6dafde4cb325067f0ed7181a128c3393157d24739f998b3a0b554a1c1701d"
+    },
+    {
+      "path": "voice-fixtures/tone440-16000-mono.wav",
+      "bytes": 96044,
+      "sha256": "9d892db5341867dcf668d4095fa760b1a3f205ab79d28c1fafc2aee608194a1a"
+    },
+    {
+      "path": "voice-fixtures/tone440-44100-mono.wav",
+      "bytes": 264644,
+      "sha256": "3735a65a193068355af3f1538189d5ecd4f5a91c0e03338fd1f3421894715a25"
+    },
+    {
+      "path": "voice-fixtures/tone440-48000-mono.wav",
+      "bytes": 288044,
+      "sha256": "16861702252dabe4d49568de8966c496e82440bef67610cd6c4c75b370b0aa0e"
+    }
+  ]
+}

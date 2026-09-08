@@ -38,6 +38,11 @@ var help_player: AudioStreamPlayer
 var ambience_pool: Array[AudioStreamPlayer3D] = []
 var previous_doors: Dictionary = {}
 var previous_pickups: Dictionary = {}
+var acoustic_listener: AudioListener3D
+
+func _listener_node() -> Node3D:
+	if is_instance_valid(acoustic_listener) and acoustic_listener.is_current(): return acoustic_listener
+	return get_viewport().get_camera_3d()
 
 func sync_doors(states: Dictionary, views: Dictionary = {}) -> void:
 	var definitions := Doors.get_doors(map_id)
@@ -51,9 +56,9 @@ func sync_doors(states: Dictionary, views: Dictionary = {}) -> void:
 			var transform := Doors.leaf_transform(definitions[id],float(current.get("angle",0)))
 			var position := Doors.handle_point(definitions[id],float(current.get("angle",0)))
 			# Put the emitter on the listener's side of its own leaf.
-			var camera := get_viewport().get_camera_3d()
+			var listener := _listener_node()
 			var side := 1.0
-			if is_instance_valid(camera) and transform.basis.z.dot(camera.global_position-position)<0: side = -1.0
+			if is_instance_valid(listener) and transform.basis.z.dot(listener.global_position-position)<0: side = -1.0
 			position += transform.basis.z*.15*side
 			if bool(current.get("blocked",false)) and not bool(before.get("blocked",false)):
 				_emit("door_block",position,-13.0,1.0,own_leaf)
@@ -183,10 +188,10 @@ func _process(dt: float) -> void:
 	var update_occlusion: bool = occlusion_age >= OCCLUSION_INTERVAL
 	if update_occlusion:
 		occlusion_age = 0.0
-	var camera: Camera3D = get_viewport().get_camera_3d()
-	if not is_instance_valid(camera):
+	var listener_node := _listener_node()
+	if not is_instance_valid(listener_node):
 		return
-	var listener: Vector3 = camera.global_position
+	var listener: Vector3 = listener_node.global_position
 	# Fixed headroom for the six-voice cap; hidden swarm size cannot alter the mix.
 	var crowd_db := -3.0
 	var candidate_ids: Array = buzzes.keys()
@@ -263,8 +268,8 @@ func _stop_all() -> void:
 func _emit(cue: String, position: Vector3, gain_db: float, pitch_value: float, ignored_body: RID = RID()) -> void:
 	if suspended or effect_pool.is_empty() or not streams.has(cue):
 		return
-	var listener_camera := get_viewport().get_camera_3d()
-	if is_instance_valid(listener_camera) and (listener_camera.global_position.distance_to(position) > 10.0 or _blocked(listener_camera.global_position, position,ignored_body)):
+	var listener := _listener_node()
+	if is_instance_valid(listener) and (listener.global_position.distance_to(position) > 10.0 or _blocked(listener.global_position, position,ignored_body)):
 		return
 	var voice: AudioStreamPlayer3D = effect_pool[next_effect]
 	for candidate: AudioStreamPlayer3D in effect_pool:
@@ -276,8 +281,7 @@ func _emit(cue: String, position: Vector3, gain_db: float, pitch_value: float, i
 	voice.stream = streams[cue]
 	voice.position = position
 	voice.pitch_scale = pitch_value
-	var camera: Camera3D = get_viewport().get_camera_3d()
-	var blocked: bool = is_instance_valid(camera) and _blocked(camera.global_position, position,ignored_body)
+	var blocked: bool = is_instance_valid(listener) and _blocked(listener.global_position, position,ignored_body)
 	voice.volume_db = gain_db - (10.0 if blocked else 0.0)
 	voice.attenuation_filter_cutoff_hz = 1400.0 if blocked else 6500.0
 	voice.play()
@@ -324,13 +328,23 @@ static func _build_streams() -> void:
 
 func set_context(next_map: String) -> void:
 	previous_doors.clear()
-	map_id = next_map if next_map in ["house", "lobby"] else "house"
+	map_id = next_map if next_map=="lobby" or Maps.is_playable(next_map) else "house"
 	for voice: AudioStreamPlayer3D in ambience_pool: voice.queue_free()
 	ambience_pool.clear()
 	if effect_pool.is_empty(): return
 	var sources: Array[Dictionary] = []
 	if map_id == "lobby":
 		sources.append({"cue":"night_air", "p":Vector3(0,2.1,-2.5)})
+	elif map_id!="house":
+		var data: Dictionary=Maps.get_map(map_id)
+		for task: Dictionary in data.get("stations",[]):
+			if task.label=="VENTILADOR":
+				var fan_position: Vector3=Vector3(task.display_p)+Vector3.UP*1.23*float(task.get("display_scale",1.0)) if task.has("display_p") else Vector3(task.p)+Vector3.UP*1.2
+				sources.append({"cue":"room_fan","p":fan_position})
+		for room: Dictionary in data.get("rooms",[]):
+			if str(room.name)=="Cocina": sources.append({"cue":"room_fridge","p":Vector3(room.center)+Vector3.UP*.7})
+		sources.append({"cue":"clock","p":Vector3(0,1.9,float(data.half_z)-.35)})
+		sources.append({"cue":"night_air","p":Vector3(0,float(data.ceiling)-1.5,-float(data.half_z)+.35)})
 	else:
 		sources.append({"cue":"room_fan", "p":Vector3(5,1.6,-1.6)})
 		sources.append({"cue":"room_fridge", "p":Vector3(-6.95,.7,-6.94)})
