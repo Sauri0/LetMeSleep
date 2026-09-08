@@ -274,7 +274,10 @@ func _process(dt: float) -> void:
 		_screenshot_tick(dt)
 		return
 	var actors: Dictionary = state.get("actors", {})
-	world.sync_actors(actors, local_id, dt)
+	# Mark the private bite target before posing this frame. Its body must remain
+	# exactly aligned with the existing authoritative diamond and contact rays.
+	var marked_human: int=int(Dictionary(personal.get("assignment",{})).get("human",0)) if role=="mosquito" else 0
+	world.sync_actors(actors, local_id, dt, marked_human)
 	world.sync_doors(state.get("doors",{}),dt)
 	world.sync_pickups(state.get("pickups", {}),dt)
 	var actor: Dictionary = actors.get(local_id, {})

@@ -233,7 +233,7 @@ func _update_world_label(label: Label3D, camera: Camera3D) -> void:
 	var inside: bool = Rect2(Vector2(viewport_size.x*0.10,viewport_size.y*0.10),viewport_size*0.8).has_point(screen)
 	label.visible = distance>1.25 and distance<3.0 and inside and not camera.is_position_behind(label.global_position) and not _occluded(camera.global_position,label.global_position,[])
 
-func sync_actors(data: Dictionary, local_id: int, dt: float) -> void:
+func sync_actors(data: Dictionary, local_id: int, dt: float, critical_human_id: int=0) -> void:
 	local_actor_id = local_id
 	actor_state = data
 	for key: Variant in actors.keys():
@@ -254,6 +254,7 @@ func sync_actors(data: Dictionary, local_id: int, dt: float) -> void:
 			fresh.set_local(int(key) == local_id and local_role != "lobby")
 			actors[key] = fresh
 		var view: ActorView = actors[key]
+		view.set_pose_critical(desired_role=="human" and int(key)==critical_human_id)
 		var visual_data: Dictionary = actor_data
 		if current_map == "lobby" and local_role == "lobby" and desired_role == "human":
 			visual_data = actor_data.duplicate()

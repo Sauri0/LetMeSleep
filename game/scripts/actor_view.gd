@@ -13,6 +13,7 @@ const NewspaperArt = preload("res://assets/art/house/newspaper.glb")
 const ToolData = preload("res://scripts/tool_catalog.gd")
 const VoiceEnvelope = preload("res://scripts/voice_mouth_envelope.gd")
 const SurfaceDisplay = preload("res://scripts/surface_presentation.gd")
+const HumanDisplay = preload("res://scripts/human_presentation.gd")
 const MOSQUITO_VISUAL_SCALE: float = 0.35
 const MOSQUITO_BODY_RADIUS: float = 0.04
 static var cloth_texture: ImageTexture
@@ -75,10 +76,18 @@ var human_snapshot_hash := 0
 var human_snapshot_values: Dictionary = {}
 var voice_envelope := VoiceEnvelope.new()
 var surface_presentation := SurfaceDisplay.new()
+var human_presentation := HumanDisplay.new()
+var pose_critical := false
+var collider_snapshot_hash := 0
+var collider_snapshot_values: Dictionary = {}
+var collider_snapshot_initialized := false
 
 func build(role: String, display_name: String, tint_index: int = 0) -> void:
 	clear_voice_level()
 	surface_presentation.clear()
+	human_presentation.clear()
+	pose_critical=false
+	collider_snapshot_initialized=false
 	actor_role = role
 	fallback_color = posmod(tint_index, CosmeticsData.PALETTE.size())
 	model = Node3D.new()
@@ -134,6 +143,7 @@ func _exit_tree() -> void:
 	clear_voice_level()
 
 func set_local(value: bool) -> void:
+	if local_view!=value:human_presentation.clear()
 	local_view = value
 	if is_instance_valid(head):
 		head.visible = not value
@@ -147,6 +157,11 @@ func set_local(value: bool) -> void:
 		imported_skin.set_first_person(value and actor_role=="human")
 	if is_instance_valid(name_label):
 		name_label.visible = not value
+
+## Client supplies only its already-private marked human. Set before this
+## frame's update_state, so marker, body, ray shapes and authority stay aligned.
+func set_pose_critical(value: bool) -> void:
+	pose_critical=value
 
 func update_name_visibility(camera: Camera3D) -> void:
 	if not is_instance_valid(name_label) or preview_only:
@@ -172,6 +187,7 @@ func update_state(data: Dictionary, dt: float) -> void:
 	if legacy_geometry_dirty:
 		_hide_legacy_geometry()
 	var target: Vector3 = data.get("p", Vector3.ZERO)
+	var reset_human_pose := not initialized or global_position.distance_to(target)>2.2
 	var surface_data: Dictionary = surface_presentation.advance(data,dt,not initialized) if actor_role=="mosquito" else {}
 	if not surface_data.is_empty():
 		global_position=surface_data.p
@@ -192,7 +208,8 @@ func update_state(data: Dictionary, dt: float) -> void:
 		var tool: String = str(data.get("tool", "hands"))
 		if tool != current_tool:
 			_equip_tool(tool)
-		_apply_human_pose(data, dt)
+		var presented: Dictionary=human_presentation.advance(data,dt,local_view or pose_critical,reset_human_pose)
+		_apply_human_pose(presented, dt, data)
 	else:
 		var state: String = str(data.get("state", "flying"))
 		var flying: bool = state == "flying"
@@ -343,7 +360,8 @@ func _build_rig_arm(suffix: String, side: float, shirt: StandardMaterial3D, skin
 	limb_hands[suffix] = hand
 	return group
 
-func _apply_human_pose(data: Dictionary, dt: float) -> void:
+func _apply_human_pose(data: Dictionary, dt: float, authoritative_data: Dictionary={}) -> void:
+	_apply_human_colliders(data if authoritative_data.is_empty() else authoritative_data)
 	var snapshot_hash := hash(data)
 	if snapshot_hash==human_snapshot_hash and human_snapshot_values==data and not body_pose.is_empty():
 		if is_instance_valid(imported_skin): imported_skin.apply_human(body_pose,data,dt)
@@ -359,21 +377,6 @@ func _apply_human_pose(data: Dictionary, dt: float) -> void:
 	model.position = Vector3.ZERO
 	if is_instance_valid(name_label):
 		name_label.position.y = Vector3(body_pose.head).y + 0.43
-	for piece: Dictionary in Pose.collision_segments(data):
-		var key: String = str(piece.get("key", "")).replace("upperarm_", "upper_arm_")
-		if not pose_colliders.has(key):
-			continue
-		var collider: StaticBody3D = pose_colliders[key]
-		var from: Vector3 = piece.from
-		var to: Vector3 = piece.to
-		collider.position = (from + to) * 0.5
-		var shape: Shape3D = (collider.get_child(0) as CollisionShape3D).shape
-		if shape is CapsuleShape3D:
-			collider.quaternion = Quaternion(Vector3.UP, (to-from).normalized()) if from.distance_to(to)>.001 else Quaternion.IDENTITY
-			shape.radius = float(piece.radius)
-			shape.height = from.distance_to(to)+float(piece.radius)*2.0
-		elif shape is SphereShape3D:
-			shape.radius = float(piece.radius)
 	for suffix: String in ["l", "r"]:
 		var hip: Vector3 = body_pose["hip_" + suffix]
 		var knee: Vector3 = body_pose["knee_" + suffix]
@@ -400,6 +403,28 @@ func _apply_human_pose(data: Dictionary, dt: float) -> void:
 			tool_socket.position = parent_hand.basis.inverse()*(Vector3(body_pose.tool_grip)-parent_hand.position)
 	if is_instance_valid(imported_skin):
 		imported_skin.apply_human(body_pose,data,dt)
+
+func _apply_human_colliders(data: Dictionary) -> void:
+	var signature := hash(data)
+	if collider_snapshot_initialized and signature==collider_snapshot_hash and collider_snapshot_values==data:return
+	collider_snapshot_hash=signature
+	collider_snapshot_values=data.duplicate(true)
+	collider_snapshot_initialized=true
+	# These ray shapes always use the unmodified public authority pose. Cosmetic
+	# crouch interpolation must not alter LOS, picking or another actor's body.
+	for piece: Dictionary in Pose.collision_segments(data):
+		var key: String = str(piece.get("key", "")).replace("upperarm_", "upper_arm_")
+		if not pose_colliders.has(key):continue
+		var collider: StaticBody3D = pose_colliders[key]
+		var from: Vector3 = piece.from
+		var to: Vector3 = piece.to
+		collider.position=(from+to)*.5
+		var shape: Shape3D=(collider.get_child(0) as CollisionShape3D).shape
+		if shape is CapsuleShape3D:
+			collider.quaternion=Quaternion(Vector3.UP,(to-from).normalized()) if from.distance_to(to)>.001 else Quaternion.IDENTITY
+			shape.radius=float(piece.radius)
+			shape.height=from.distance_to(to)+float(piece.radius)*2.0
+		elif shape is SphereShape3D:shape.radius=float(piece.radius)
 
 func _pose_segment(key: String, from: Vector3, to: Vector3) -> void:
 	var direction: Vector3 = to - from

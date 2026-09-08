@@ -1,0 +1,12 @@
+{
+	"checks": 1457,
+	"failures": [],
+	"metrics": {
+		"120hz_max_crouch_delta": 0.05,
+		"30hz_max_crouch_delta": 0.2,
+		"60hz_max_crouch_delta": 0.1,
+		"authority_60hz_smoothed_head_step_m": 0.0550364181399345
+	},
+	"scope": "remote noncritical crouch only; local FPS/private mark/action/contact preserve exact pose; full authority snapshots and both private channels unchanged",
+	"visual_approval": false
+}
