@@ -1,7 +1,8 @@
 # Shared by build and package; importing this file performs no export or writes.
+. (Join-Path $PSScriptRoot 'online-package.ps1')
 function Get-PackageProtocol {
     param([string]$ProjectRoot)
-    $source = [System.IO.File]::ReadAllText((Join-Path $ProjectRoot 'game/scripts/invitation.gd'))
+    $source = [System.IO.File]::ReadAllText((Join-Path $ProjectRoot 'game/scripts/online_invitation.gd'))
     $protocol = [regex]::Match($source,'(?m)^const PROTOCOL := ([0-9]+)')
     $prefix = [regex]::Match($source,'(?m)^const PREFIX := "([A-Z0-9]+-)"')
     if (-not $protocol.Success -or -not $prefix.Success) { throw 'Invitation protocol metadata unavailable.' }
@@ -19,9 +20,9 @@ function Write-PackageMetadata {
     if ($Version -ne $protocol.version) { throw 'Requested build version differs from source.' }
     $commit = (& git -C $ProjectRoot rev-parse HEAD).Trim()
     if ($LASTEXITCODE -ne 0 -or $commit -notmatch '^[a-f0-9]{40}$') { throw 'Cannot identify source commit.' }
-    & git -C $ProjectRoot diff --quiet HEAD -- game native/voice art_source
+    & git -C $ProjectRoot diff --quiet HEAD -- game native/voice native/online art_source
     $sourceDirty = $LASTEXITCODE -ne 0
-    $untrackedSource = @(& git -C $ProjectRoot ls-files --others --exclude-standard -- game native/voice art_source)
+    $untrackedSource = @(& git -C $ProjectRoot ls-files --others --exclude-standard -- game native/voice native/online art_source)
     if ($LASTEXITCODE -ne 0) { throw 'Cannot inspect untracked build source.' }
     $sourceDirty = $sourceDirty -or $untrackedSource.Count -gt 0
     $exe = Join-Path $OutputDirectory 'Let-me-sleep.exe'
@@ -33,6 +34,7 @@ function Write-PackageMetadata {
     }
     $files = [ordered]@{}
     $required = @($exe) + @($dlls.FullName)
+    $required += @(Get-OnlinePackageFiles -ProjectRoot $ProjectRoot -OutputDirectory $OutputDirectory)
     foreach ($name in @('LEEME.md','LEEME.html','PRUEBAS.md')) { $required += Join-Path $OutputDirectory $name }
     $notices = @(Get-ChildItem -LiteralPath (Join-Path $OutputDirectory 'Licencias-voz') -File)
     $required += @($notices.FullName)
@@ -56,7 +58,7 @@ function Write-PackageMetadata {
         "Fuente con cambios sin commit: $sourceDirty"
         "Comprobaciones de build: headless=$HeadlessTests; nativas=$NativeTests"
         'Manifiesto de archivos: BUILD.json. Alcance y límites: PRUEBAS.md.'
-        'Conexión directa; acceso automático entre redes pendiente.'
+        'Online EOS por invitación LMS1-. El anfitrión ejecuta la sala dentro del juego. Alcance probado: PRUEBAS.md.'
     ) -join [Environment]::NewLine
     [System.IO.File]::WriteAllText((Join-Path $OutputDirectory 'BUILD.txt'),$text+[Environment]::NewLine)
     $files['BUILD.txt'] = (Get-FileHash -LiteralPath (Join-Path $OutputDirectory 'BUILD.txt') -Algorithm SHA256).Hash
@@ -86,6 +88,10 @@ function Test-PackageMetadata {
     foreach ($notice in Get-ChildItem -LiteralPath (Join-Path $ProjectRoot 'game/addons/lms_opus/licenses') -File) {
         $noticeName = 'Licencias-voz/'+$notice.Name
         if ($names -cnotcontains $noticeName -or (Get-FileHash -LiteralPath (Join-Path $OutputDirectory $noticeName) -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $notice.FullName -Algorithm SHA256).Hash) { throw ('Packaged voice notice differs from source: '+$notice.Name) }
+    }
+    foreach ($onlineFile in @(Get-OnlinePackageFiles -ProjectRoot $ProjectRoot -OutputDirectory $OutputDirectory)) {
+        $onlineName = [IO.Path]::GetRelativePath($OutputDirectory,$onlineFile).Replace('\','/')
+        if ($names -cnotcontains $onlineName) { throw ('Package manifest lacks online runtime file: '+$onlineName) }
     }
     foreach ($entry in $metadata.files.PSObject.Properties) {
         $path = [System.IO.Path]::GetFullPath((Join-Path $OutputDirectory $entry.Name))

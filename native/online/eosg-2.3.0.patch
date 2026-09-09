@@ -1,0 +1,218 @@
+diff --git a/SConstruct b/SConstruct
+index 75230fd..d15d8e1 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -95,7 +95,8 @@ if env["platform"] == "windows":
+ 	# TODO: dont ignore this warning
+ 	# this disables LINK : error LNK1218: warning treated as error;
+ 	# so that it can build in github action with scons cache
+-	env.Append(LINKFLAGS=["/ignore:4099"])
++	if not env.get("use_mingw", False):
++		env.Append(LINKFLAGS=["/ignore:4099"])
+ 	
+ 	env.Append(LIBS=["EOSSDK-Win64-Shipping"])
+ 
+@@ -150,4 +151,4 @@ else:
+ 
+ complete_command = Command('complete', library, on_complete)
+ Depends(complete_command, library)
+-Default(complete_command)
+\ No newline at end of file
++Default(complete_command)
+diff --git a/src/eosg_multiplayer_peer.cpp b/src/eosg_multiplayer_peer.cpp
+index 518afb4..583146b 100644
+--- a/src/eosg_multiplayer_peer.cpp
++++ b/src/eosg_multiplayer_peer.cpp
+@@ -103,6 +103,11 @@ Error EOSGMultiplayerPeer::create_client(const String &socket_id, const String &
+     ERR_FAIL_NULL_V_MSG(s_local_user_id, ERR_UNCONFIGURED, "Failed to create client. Local user id has not been set.");
+     ERR_FAIL_COND_V_MSG(_is_active(), ERR_ALREADY_IN_USE, "Failed to create client. Multiplayer instance is already active.");
+ 
++    EOS_ProductUserId remote_peer = eosg_string_to_product_user_id(remote_user_id.utf8());
++    ERR_FAIL_NULL_V_MSG(remote_peer, ERR_INVALID_PARAMETER, "Invalid remote product user id.");
++    ERR_FAIL_COND_V_MSG(eosg_product_user_id_to_string(remote_peer) == get_local_user_id(), ERR_INVALID_PARAMETER, "A client cannot connect to its own product user id.");
++    expected_server_user_id = eosg_product_user_id_to_string(remote_peer);
++
+     polling = true;
+     set_refuse_new_connections(false);
+ 
+@@ -133,7 +138,7 @@ Error EOSGMultiplayerPeer::create_client(const String &socket_id, const String &
+     packet.prepare();
+ 
+     //send peer id to the server
+-    Error result = _send_to(eosg_string_to_product_user_id(remote_user_id.utf8()), packet);
++    Error result = _send_to(remote_peer, packet);
+ 
+     if (result != OK) {
+         _close();
+@@ -688,12 +693,35 @@ void EOSGMultiplayerPeer::_poll() {
+     //process all the packets
+     for (PacketData &packet_data : packets) {
+         PackedByteArray *data_ptr = packet_data.get_data();
+-        Event event = static_cast<Event>(data_ptr->ptrw()[INDEX_EVENT_TYPE]);
++        if (data_ptr == nullptr || packet_data.size() < EOSGPacket::PACKET_HEADER_SIZE ||
++                packet_data.size() > EOS_P2P_MAX_PACKET_SIZE || data_ptr->size() != packet_data.size()) {
++            continue;
++        }
++        const uint8_t *header = data_ptr->ptr();
++        if (header[INDEX_EVENT_TYPE] > EVENT_MESH_CONNECTION_REQUEST ||
++                header[INDEX_TRANSFER_MODE] > static_cast<uint8_t>(EOS_EPacketReliability::EOS_PR_ReliableOrdered)) {
++            continue;
++        }
++        const String remote_user_id = packet_data.get_sender();
++        if (remote_user_id.is_empty() || remote_user_id == get_local_user_id()) {
++            continue;
++        }
++        if (active_mode == MODE_CLIENT && remote_user_id != expected_server_user_id) {
++            continue;
++        }
++        // Decode the little-endian wire field without an unaligned uint32_t read.
++        const uint32_t claimed_peer_id = uint32_t(header[INDEX_PEER_ID]) |
++                (uint32_t(header[INDEX_PEER_ID + 1]) << 8) |
++                (uint32_t(header[INDEX_PEER_ID + 2]) << 16) |
++                (uint32_t(header[INDEX_PEER_ID + 3]) << 24);
++        Event event = static_cast<Event>(header[INDEX_EVENT_TYPE]);
+         switch (event) {
+             case Event::EVENT_STORE_PACKET: {
+-                uint32_t peer_id = *reinterpret_cast<uint32_t *>(data_ptr->ptrw() + INDEX_PEER_ID);
+-                if (!peers.has(peer_id)) {
+-                    return; //ignore the packet if we don't have the peer
++                const uint32_t peer_id = claimed_peer_id;
++                // Packet identity is the SDK's sender PUID, never the wire claim.
++                if (!peers.has(peer_id) || get_peer_user_id(peer_id) != remote_user_id ||
++                        packet_data.size() <= EOSGPacket::PACKET_HEADER_SIZE) {
++                    continue;
+                 }
+ 
+                 EOS_EPacketReliability reliability = static_cast<EOS_EPacketReliability>(data_ptr->ptrw()[INDEX_TRANSFER_MODE]);
+@@ -709,25 +737,31 @@ void EOSGMultiplayerPeer::_poll() {
+                 break;
+             }
+             case Event::EVENT_RECIEVE_PEER_ID: {
+-                ERR_FAIL_COND_MSG(active_mode == MODE_CLIENT && connection_status == CONNECTION_CONNECTED, "Client has recieved a EVENT_RECIEVE_PEER_ID packet when already connected. This shouldn't have happened!");
+-
+-                uint32_t peer_id = *reinterpret_cast<uint32_t *>(data_ptr->ptrw() + INDEX_PEER_ID);
+-                if (active_mode == MODE_CLIENT && peer_id != 1) {
+-                    _close();
+-                    ERR_FAIL_MSG("Failed to connect. Instance is not a server.");
++                if (packet_data.size() != EOSGPacket::PACKET_HEADER_SIZE) {
++                    continue;
+                 }
+-
+-                EOS_ProductUserId remote_user = eosg_string_to_product_user_id(packet_data.get_sender().utf8());
+-                if (peer_id < 1 || peers.has(peer_id) || unique_id == peer_id) {
+-                    _disconnect_remote_user(remote_user); //Invalid peer id. reject the peer.
+-                    break;
++                const uint32_t peer_id = claimed_peer_id;
++                if (peer_id < 1 || peer_id > 0x7FFFFFFFu || peer_id == unique_id ||
++                        (active_mode == MODE_CLIENT && peer_id != 1) ||
++                        (active_mode == MODE_SERVER && peer_id == 1)) {
++                    continue;
+                 }
+-
+-                if (has_user_id(packet_data.get_sender())) {
+-                    //Peer may have reconnected with a new multiplayer instance. Remove their old peer id.
+-                    int old_id = get_peer_id(packet_data.get_sender());
+-                    peers.erase(old_id);
+-                    emit_signal("peer_disconnected", old_id);
++                if (peers.has(peer_id)) {
++                    // Repeated handshakes are idempotent; collisions never evict a peer.
++                    // A mismatching SDK sender also gets dropped without changing the map.
++                    continue;
++                }
++                if (has_user_id(remote_user_id)) {
++                    // Do not replace an active PUID binding with a second instance/ID.
++                    // A genuine reconnect must first complete the normal close callback.
++                    continue;
++                }
++                if (active_mode == MODE_CLIENT && connection_status == CONNECTION_CONNECTED) {
++                    continue;
++                }
++                EOS_ProductUserId remote_user = eosg_string_to_product_user_id(remote_user_id.utf8());
++                if (remote_user == nullptr) {
++                    continue;
+                 }
+ 
+                 peers.insert(peer_id, remote_user);
+@@ -759,6 +793,7 @@ void EOSGMultiplayerPeer::_close() {
+     active_mode = MODE_NONE;
+     connection_status = CONNECTION_DISCONNECTED;
+     pending_connection_requests.clear();
++    expected_server_user_id = String();
+     unique_id = 0;
+     set_refuse_new_connections(false);
+ 
+diff --git a/src/eosg_multiplayer_peer.h b/src/eosg_multiplayer_peer.h
+index 993733e..3b7fafa 100644
+--- a/src/eosg_multiplayer_peer.h
++++ b/src/eosg_multiplayer_peer.h
+@@ -204,6 +204,7 @@ private:
+     EOSGPacket current_packet;
+     uint32_t unique_id;
+     int target_peer = 0;
++    String expected_server_user_id;
+     ConnectionStatus connection_status = CONNECTION_DISCONNECTED;
+     Mode active_mode = MODE_NONE;
+     EOS_Bool allow_delayed_delivery = EOS_TRUE;
+diff --git a/src/eosg_packet_peer_mediator.cpp b/src/eosg_packet_peer_mediator.cpp
+index 2e589a0..d5619ba 100644
+--- a/src/eosg_packet_peer_mediator.cpp
++++ b/src/eosg_packet_peer_mediator.cpp
+@@ -87,22 +87,34 @@ void EOSGPacketPeerMediator::_on_process_frame() {
+ 
+         if (next_packet_available) {
+             PackedByteArray packet_data;
+-            packet_data.resize(max_packet_size);
+-            uint32_t buffer_size;
+-            uint8_t channel;
+-            EOS_P2P_SocketId socket;
+-            EOS_ProductUserId remote_user;
++            // ReceivePacket may report a different next packet; the allocation
++            // must match MaxDataSizeBytes, not only the earlier size query.
++            packet_data.resize(EOS_P2P_MAX_PACKET_SIZE);
++            uint32_t buffer_size = 0;
++            uint8_t channel = 0;
++            EOS_P2P_SocketId socket = {};
++            EOS_ProductUserId remote_user = nullptr;
+             result = IEOS::get_singleton()->_p2p_receive_packet(&recieve_packet_options, packet_data.ptrw(), &buffer_size, &channel, &remote_user, &socket);
++            // Never inspect output fields from an unsuccessful SDK call.
++            if (result != EOS_EResult::EOS_Success) {
++                break;
++            }
++            if (buffer_size < 6 || buffer_size > EOS_P2P_MAX_PACKET_SIZE || remote_user == nullptr) {
++                continue;
++            }
++            packet_data.resize(buffer_size);
++            const uint8_t *header = packet_data.ptr();
++            if (header[0] > 2 || header[1] > static_cast<uint8_t>(EOS_EPacketReliability::EOS_PR_ReliableOrdered)) {
++                continue;
++            }
++            socket.SocketName[EOS_P2P_SOCKETID_SOCKETNAME_SIZE - 1] = '\0';
+             String socket_id_str = socket.SocketName;
+-
+-            ERR_FAIL_COND_MSG(result == EOS_EResult::EOS_InvalidParameters, "Failed to get packet! Invalid parameters.");
+-            ERR_FAIL_COND_MSG(result == EOS_EResult::EOS_NotFound, "Failed to get packet! Packet is too large. This should not have happened.");
+-
+-            if (!socket_packet_queues.has(socket_id_str))
+-                return; //invalid socket. Drop the packet.
++            if (!socket_packet_queues.has(socket_id_str)) {
++                continue;
++            }
+ 
+             PacketData packet;
+-            packet.store(packet_data.ptrw(), max_packet_size);
++            packet.store(packet_data.ptrw(), buffer_size);
+             packet.set_channel(channel);
+             packet.set_sender(remote_user);
+             uint8_t event = packet.get_data()->ptrw()[0];
+@@ -285,7 +297,10 @@ bool EOSGPacketPeerMediator::next_packet_is_peer_id_packet(const String &socket_
+     if (socket_packet_queues[socket_id].size() == 0)
+         return false;
+     PacketData packet = socket_packet_queues[socket_id][0];
+-    uint8_t event = packet.get_data()->ptrw()[0];
++    if (packet.size() < 6 || packet.get_data() == nullptr || packet.get_data()->size() != packet.size()) {
++        return false;
++    }
++    uint8_t event = packet.get_data()->ptr()[0];
+     if (event == 1)
+         return true;
+     return false;

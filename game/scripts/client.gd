@@ -18,6 +18,7 @@ const MapCatalog = preload("res://scripts/map_catalog.gd")
 const HumanPose = preload("res://scripts/human_pose.gd")
 const MusicScript = preload("res://scripts/music_director.gd")
 const VideoSettings = preload("res://scripts/video_settings.gd")
+const OnlineConfig = preload("res://scripts/online_config.gd")
 var network: Node
 var options: Dictionary
 var world: Node3D
@@ -103,6 +104,17 @@ func _ready() -> void:
 	ui.host_requested.connect(func(player_name: String, port: int) -> void:
 		retry_local_host = true
 		local_server_requested.emit(player_name, port))
+	ui.online_host_requested.connect(func(player_name: String) -> void:
+		retry_local_host = false
+		local_server_cancel_requested.emit()
+		network.host_online(OnlineConfig.load_values(str(options.get("eos-config", ""))), player_name))
+	ui.online_join_requested.connect(func(player_name: String, invitation: String) -> void:
+		retry_local_host = false
+		local_server_cancel_requested.emit()
+		network.join_online(OnlineConfig.load_values(str(options.get("eos-config", ""))), player_name, invitation))
+	# Offline camera fixtures can provide a minimal transport without EOS.
+	if network.has_signal("invitation_updated"):
+		network.invitation_updated.connect(ui.set_online_invitation)
 	ui.cancel_connection_requested.connect(func() -> void:
 		local_server_cancel_requested.emit()
 		network.cancel_connect())

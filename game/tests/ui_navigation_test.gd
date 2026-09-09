@@ -4,6 +4,7 @@ const UI = preload("res://scripts/ui.gd")
 const Prefs = preload("res://scripts/preferences.gd")
 const Simulation = preload("res://scripts/simulation.gd")
 const Invitation = preload("res://scripts/invitation.gd")
+const OnlineInvitation = preload("res://scripts/online_invitation.gd")
 const Cosmetics = preload("res://scripts/cosmetics.gd")
 var ui: CanvasLayer
 var failures: Array[String] = []
@@ -18,6 +19,8 @@ var practice_restarts: int = 0
 var connection_args: Array = []
 var applied_config: Dictionary = {}
 var host_args: Array = []
+var online_host_args: Array = []
+var online_join_args: Array = []
 var sound_events: Array[String] = []
 var screen_events: Array[String] = []
 var checks: int = 0
@@ -72,6 +75,8 @@ func run() -> void:
 	ui.practice_restart_requested.connect(func() -> void: practice_restarts += 1)
 	ui.config_requested.connect(func(value: Dictionary) -> void: applied_config = value)
 	ui.host_requested.connect(func(player: String, port: int) -> void: host_args = [player,port])
+	ui.online_host_requested.connect(func(player: String) -> void: online_host_args = [player])
+	ui.online_join_requested.connect(func(player: String, invite: String) -> void: online_join_args = [player,invite])
 	ui.connect_requested.connect(func(address: String, port: int, player: String, code: String, create: bool) -> void: connection_args = [address, port, player, code, create])
 	await process_frame
 	await process_frame
@@ -95,7 +100,16 @@ func run() -> void:
 	ui._open_connection(true)
 	await process_frame
 	check(root.gui_get_focus_owner() == ui._name_edit, "Connection focuses player name")
+	ui._name_edit.text = "Online check"
+	ui._request_connection(true)
+	check(online_host_args == ["Online check"] and host_args.is_empty(), "Default Create requests integrated online hosting without a port or child server")
+	check(ui._connection_busy and ui._connect_submit.disabled, "Online startup blocks duplicate submissions")
+	ui.show_connection_state({"phase":"online_login","message":"Conectando…","can_cancel":true})
+	check(ui._connection_busy and ui._connection_cancel.visible, "SDK login retains the busy and cancel controls")
+	ui.show_connection_state({"phase":"cancelled"})
 	ui._toggle_connection_options()
+	check(not ui._host_port_edit.is_visible_in_tree(), "Online advanced options do not ask for a UDP port")
+	ui._direct_connection.button_pressed = true
 	await _capture("ui06-host-advanced")
 	check(ui._connect_submit.get_global_rect().end.y < root.size.y and ui._host_port_edit.is_visible_in_tree(), "Advanced host action remains visible inside a 720p window")
 	ui._host_port_edit.get_line_edit().grab_focus()
@@ -106,6 +120,7 @@ func run() -> void:
 	check(not ui._connection_open and ui._home_menu.visible, "Escape in LineEdit returns to home")
 	ui._open_connection(true)
 	ui._name_edit.text = "UI navigation check"
+	ui._direct_connection.button_pressed = true
 	ui._address_edit.text = ""
 	ui._request_connection(true)
 	check(host_args == ["UI navigation check",Prefs.local_host_port], "One Create action starts your own server without reading a saved remote address")
@@ -115,6 +130,14 @@ func run() -> void:
 	ui._address_edit.text = "127.0.0.1"
 	ui._close_connection()
 	ui._open_connection(false)
+	var online_code := OnlineInvitation.encode("test-lobby", "0123456789abcdef0123456789abcdef")
+	ui._invitation_edit.text = "  " + online_code + "  "
+	ui._request_connection(false)
+	check(online_join_args == ["UI navigation check",online_code] and connection_args.is_empty(), "Pasting an online invitation dispatches only the integrated transport")
+	ui.show_connection_state({"phase":"cancelled"})
+	ui._invitation_edit.text = "LMS1-invalid"
+	ui._request_connection(false)
+	check(not ui._connection_busy and online_join_args.size() == 2, "Malformed online code does not begin a connection")
 	check(ui._invitation_box.visible and not ui._address_box.visible and not ui._code_box.visible, "Join offers one invitation field and hides manual address/code")
 	ui._invitation_edit.text = Invitation.PREFIX + "not-valid"
 	var sounds_before_error: int = sound_events.size()
@@ -230,6 +253,12 @@ func run() -> void:
 	await key(KEY_ESCAPE)
 	check(not ui._settings_open and not ui._lobby_walking and escape_count == previous_escapes, "Closing lobby settings does not also enter walking")
 	Prefs.shared_address = ""
+	var original_clipboard := DisplayServer.clipboard_get()
+	ui.set_online_invitation(online_code)
+	ui._copy_invitation()
+	check(DisplayServer.clipboard_get() == online_code and not ui._invite_settings_open, "Online room copies its code without opening IP configuration")
+	DisplayServer.clipboard_set(original_clipboard)
+	ui.set_online_invitation("")
 	ui._copy_invitation()
 	await process_frame
 	check(ui._invite_settings_open and root.gui_get_focus_owner() == ui._invite_address_edit, "Copy without shared endpoint opens and focuses explicit invitation setup")

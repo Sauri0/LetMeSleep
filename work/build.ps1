@@ -4,6 +4,8 @@ $projectRoot = Split-Path $PSScriptRoot -Parent
 $godotExe = Join-Path $PSScriptRoot 'tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe'
 $gamePath = Join-Path $projectRoot 'game'
 $buildWorkRoot = $PSScriptRoot
+. (Join-Path $PSScriptRoot 'online-package.ps1')
+Initialize-OnlineBuildConfiguration -ProjectRoot $projectRoot
 function Invoke-CheckedHeadless {
     param([string]$CheckName, [string[]]$GameArguments)
     $errorLog = Join-Path $buildWorkRoot ('build-' + $CheckName + '.err')
@@ -65,11 +67,15 @@ if (-not $SkipTests) {
         Invoke-CheckedHeadless -CheckName $testName -GameArguments @('--script',"res://tests/$testName.gd")
     }
     Invoke-CheckedHeadless -CheckName 'voice09_session_checks' -GameArguments @('--audio-driver','Dummy','--frame-delay','2','--script','res://tests/voice09_session_checks.gd')
+    foreach ($onlineTest in @('online_invitation_test','online_session_test','online_network_checks','online_network_mtu_checks','online_network_payload_checks','online_pair_integration')) {
+        Invoke-CheckedHeadless -CheckName $onlineTest -GameArguments @('--script',"res://tests/$onlineTest.gd")
+    }
+    Invoke-CheckedHeadless -CheckName 'online_network_live_host' -GameArguments @('--script','res://tests/online_network_live_host.gd','--',('--config=' + (Join-Path $gamePath 'eos.local.cfg')))
     }
     # Skin baking requires a rendering backend; Godot's headless dummy backend
     # cannot register the skeleton used by this actual-deformed-mesh test.
     # UI checks also need real mouse capture, unavailable in the dummy backend.
-    foreach ($nativeTest in @('glasses09_fit_checks','actor09_legacy_geometry_test','v07_character_rig_checks','v07_character_client_checks','selected07_mesh_checks','selected07_actor_checks','selected07_facial_envelope_checks','facial_parts08_checks','facial_blink08_checks','customization08_checks','house07_checks','house07_lighting_probe','house07_liso_checks','ui_navigation_test','video07_checks','doors07_client_checks','throw_client07_checks','tool07_visual_checks','house07_occlusion_checks','appendage09_visual_checks','emote09_pose_checks','furniture09_blueprint_checks','voice09_visual_checks','menu09_ui_checks','social09_client_checks','surface09_client_checks','surface_view09_client_checks','voice_input09_ui_checks','voice_context09_ui_checks')) {
+    foreach ($nativeTest in @('online_main_lifecycle','glasses09_fit_checks','actor09_legacy_geometry_test','v07_character_rig_checks','v07_character_client_checks','selected07_mesh_checks','selected07_actor_checks','selected07_facial_envelope_checks','facial_parts08_checks','facial_blink08_checks','customization08_checks','house07_checks','house07_lighting_probe','house07_liso_checks','ui_navigation_test','video07_checks','doors07_client_checks','throw_client07_checks','tool07_visual_checks','house07_occlusion_checks','appendage09_visual_checks','emote09_pose_checks','furniture09_blueprint_checks','voice09_visual_checks','menu09_ui_checks','social09_client_checks','surface09_client_checks','surface_view09_client_checks','voice_input09_ui_checks','voice_context09_ui_checks')) {
     $rigLog = Join-Path $PSScriptRoot ('build-' + $nativeTest + '.log')
     $rigError = Join-Path $PSScriptRoot ('build-' + $nativeTest + '.err')
     $nativeArguments = @('--path', ('"' + $gamePath + '"'), '--script', ('res://tests/' + $nativeTest + '.gd'))
@@ -121,5 +127,10 @@ foreach ($codecCopy in $codecCopies) {
     if ((Get-FileHash -LiteralPath $codecCopy.FullName -Algorithm SHA256).Hash -ne $codecSourceHash) { throw 'Exported Opus DLL differs from verified source binary' }
 }
 . (Join-Path $PSScriptRoot 'package-metadata.ps1')
+$onlineNotices = Join-Path $gamePath 'addons/epic-online-services-godot/licenses'
+$onlineNoticeOutput = Join-Path $outDir 'Licencias-online'
+[IO.Directory]::CreateDirectory($onlineNoticeOutput) | Out-Null
+Get-ChildItem -LiteralPath $onlineNotices -File | Copy-Item -Destination $onlineNoticeOutput
+Get-OnlinePackageFiles -ProjectRoot $projectRoot -OutputDirectory $outDir | Out-Null
 Write-PackageMetadata -ProjectRoot $projectRoot -OutputDirectory $outDir -Version $buildVersion -HeadlessTests (-not $SkipTests -and -not $SkipHeadlessTests) -NativeTests (-not $SkipTests)
 Get-FileHash -LiteralPath $exe.FullName -Algorithm SHA256

@@ -1,6 +1,6 @@
 # Let me sleep 0.9.0 — estado del candidato
 
-8 de septiembre de 2026. Fuente Godot 4.5.2, protocolo 9 e invitaciones DD5.
+9 de septiembre de 2026. Fuente Godot 4.5.2, protocolo 9, invitaciones online LMS1- y modo directo avanzado DD5-.
 Este documento está en preparación: todavía no certifica un EXE 0.9.0.
 Los resultados anteriores de 0.6/0.7 permanecen con sus paquetes históricos y
 no se atribuyen a esta versión.
@@ -59,6 +59,15 @@ como alternativa, con menor coste de dibujo, pero cambia la iluminación y
 sigue siendo sólo un diagnóstico; el proyecto conserva Compatibility.
 No se certifican requisitos mínimos ni rendimiento en otros equipos.
 
-ENet local y una invitación válida no prueban conexión entre casas. La ruta
-WAN automática/EOS continúa pendiente. La voz real requiere además validación
-por escucha y micrófono en el equipo del jugador.
+La integración EOS está en la fuente. Ambas bibliotecas nativas propias
+(debug/release) pasaron 291 controles ABI. El anfitrión completó dos ciclos
+reales de identidad, creación de lobby, peer servidor, invitación, entrada local
+y cierre: 15/15, exit0 y stderr vacío. El recorrido real desde el botón del
+menú hasta la sala 3D y el cierre de Main pasó 7/7, también limpio. Estas pruebas
+no incluyeron un segundo jugador. La prueba de empaquetado exige las DLL de EOS,
+sus dependencias y avisos; el protocolo del manifiesto usa LMS1-.
+
+La partida P2P entre identidades independientes, la expulsión de un segundo
+usuario real y el relay entre casas siguen pendientes. ENet local, una invitación
+válida o la creación de un lobby no prueban esos recorridos. La voz real requiere
+además validación por escucha y micrófono en el equipo del jugador.

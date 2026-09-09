@@ -8,6 +8,21 @@ signal accepted(peer_id: int)
 signal disconnected
 signal waiting_updated(data: Dictionary)
 signal connection_state_changed(data: Dictionary)
+signal invitation_updated(text: String)
+const OnlineSession = preload("res://scripts/online_session.gd")
+const OnlineInvitation = preload("res://scripts/online_invitation.gd")
+const OnlineTransport = preload("res://scripts/online_transport.gd")
+var online_session: Node
+var online_transport: Node
+var invitation_text := ""
+var _online := false
+var _local_host := false
+var _online_capability := ""
+var _online_request: Dictionary = {}
+var _online_rejected: Dictionary = {}
+var _online_rejected_users: Dictionary = {}
+var _online_reject_serial := 0
+var _online_users: Dictionary = {}
 
 const VoiceTransport=preload("res://scripts/voice_transport.gd")
 var voice: Node
@@ -63,6 +78,8 @@ const HANDSHAKE_TIMEOUT := 8.0
 func _ready() -> void:
 	config = Simulation.DEFAULT_CONFIG.duplicate(true)
 	voice=VoiceTransport.new();voice.name="Voice";add_child(voice)
+	online_transport=OnlineTransport.new();online_transport.name="OnlineTransport";add_child(online_transport)
+	online_transport.send_failed.connect(_online_packet_failed)
 	multiplayer.connected_to_server.connect(_connected)
 	multiplayer.connection_failed.connect(_failed)
 	multiplayer.server_disconnected.connect(_server_lost)
@@ -88,7 +105,163 @@ func host(port: int) -> Error:
 	print("SERVER_READY version=%s protocol=%d UDP=%d" % [VERSION, PROTOCOL, port])
 	return OK
 
+func host_online(eos_config: Dictionary, player_name: String) -> void:
+	_start_online(eos_config, player_name, "", true)
+
+func join_online(eos_config: Dictionary, player_name: String, invite_text: String) -> void:
+	_start_online(eos_config, player_name, invite_text.strip_edges(), false)
+
+func _start_online(eos_config: Dictionary, player_name: String, invite_text: String, create: bool) -> void:
+	close_client()
+	_attempt_id += 1
+	_terminal_failure=false
+	_online_request={"config":eos_config.duplicate(true),"name":player_name,"invite":invite_text,"host":create}
+	_last_request={"address":"EOS","port":0,"name":player_name}
+	var invitation: Dictionary={} if create else OnlineInvitation.decode(invite_text)
+	if not create and not invitation.get("ok",false):
+		_fail_connection("invalid_invitation",str(invitation.get("error","Invitacion invalida.")))
+		return
+	_online=true
+	connecting=true
+	_online_capability=OnlineInvitation.generate_capability() if create else str(invitation.capability)
+	pending_join={"name":player_name.strip_edges().left(20),"create":create,"code":""}
+	if not is_instance_valid(online_session):
+		online_session=OnlineSession.new();online_session.name="OnlineSession";add_child(online_session)
+		online_session.state_changed.connect(_online_state)
+		online_session.failed.connect(_online_failed)
+		online_session.transport_ready.connect(_online_ready)
+		online_session.member_departed.connect(_online_member_departed)
+	if online_cleanup_pending():
+		_set_connection_state("online_cleanup","","Cerrando la conexión anterior…")
+		var attempt:=_attempt_id
+		var deadline:=Time.get_ticks_msec()+25000
+		while online_cleanup_pending() and Time.get_ticks_msec()<deadline:
+			await get_tree().process_frame
+			if attempt!=_attempt_id or not _online: return
+		if online_cleanup_pending():
+			_fail_connection("cleanup_timeout","La conexión anterior no terminó de cerrar. Esperá un momento y reintentá.")
+			return
+	if create: online_session.start_host(eos_config,player_name,PROTOCOL,_online_capability)
+	else: online_session.start_join(eos_config,player_name,invitation)
+
+func online_cleanup_pending() -> bool:
+	return is_instance_valid(online_session) and (online_session.backend.busy or not online_session._cleanup.is_empty())
+
+func shutdown_online_backend() -> bool:
+	if not is_instance_valid(online_session): return true
+	if online_cleanup_pending() or _online: return false
+	var outcome: Dictionary=online_session.backend.shutdown()
+	return bool(outcome.get("ok",false))
+
+func _online_state(state: String) -> void:
+	if not _online or state in ["idle","cancelled","error","transport_ready","renewing"]: return
+	var message: String="Preparando conexión online…"
+	if state in ["device","login","create_user"]: message="Conectando con el servicio online…"
+	elif state=="create": message="Creando tu sala privada…"
+	elif state in ["find","search"]: message="Buscando la sala de tu amigo…"
+	elif state=="join": message="Entrando a la sala…"
+	_set_connection_state("online_"+state,"",message)
+
+func _online_failed(code: String) -> void:
+	if not _online: return
+	var joined:=_had_session
+	var message: String="No se pudo completar la conexión online. Revisá tu conexión a Internet y reintentá."
+	if code in ["room_not_found","lobby_not_found"]: message="Esta sala ya no está disponible. Pedile una invitación nueva al anfitrión."
+	elif code in ["room_closed","room_owner_changed"]: message="El anfitrión cerró o dejó la sala."
+	elif code=="room_protocol_or_owner_mismatch": message="La sala no corresponde a esta versión. Todos deben descargar la misma actualización."
+	elif code in ["configuration_required","sdk_unavailable"]: message="A esta instalación le falta la configuración online. Descargá nuevamente la versión completa."
+	elif code=="room_cleanup_failed_restart_required": message="No se pudo cerrar la conexión anterior. Reiniciá el juego antes de volver a conectar."
+	_fail_connection(code,message)
+	if joined: disconnected.emit()
+
+func _online_packet_failed(_reason: String) -> void:
+	# Defer teardown so a failed publish does not mutate players during iteration.
+	var attempt:=_attempt_id
+	_fail_packet_attempt.call_deferred(attempt)
+
+func _fail_packet_attempt(attempt: int) -> void:
+	if attempt==_attempt_id and _online:
+		_fail_connection("online_packet_limit","La partida superó el tamaño permitido de mensajes. Volvé a crear la sala.")
+		disconnected.emit()
+
+func _online_ready(info: Dictionary) -> void:
+	if not _online or not connecting: return
+	_local_host=bool(info.is_host)
+	is_server=_local_host
+	var epoch: int=("LMS/epoch/"+str(info.lobby_id)).sha256_buffer().decode_u32(0)
+	online_transport.reset(epoch)
+	multiplayer.multiplayer_peer=info.peer
+	(multiplayer as SceneMultiplayer).server_relay=false
+	if _local_host:
+		invitation_text=OnlineInvitation.encode(str(info.lobby_id),_online_capability)
+		invitation_updated.emit(invitation_text)
+		_set_connection_state("joining_room","","Abriendo tu sala...")
+		_handle_request_join(1,VERSION,PROTOCOL,str(pending_join.name),_online_capability,true,"")
+	else:
+		invitation_text=OnlineInvitation.encode(str(info.lobby_id),_online_capability)
+		invitation_updated.emit(invitation_text)
+		_set_connection_state("connecting_transport","","Conectando con el anfitrion...")
+		if multiplayer.multiplayer_peer.get_connection_status()==MultiplayerPeer.CONNECTION_CONNECTED:
+			_connected()
+
+func online_member(id: int) -> bool:
+	if _local_host and id==1: return true
+	if not _online or not is_instance_valid(online_session): return false
+	return online_session.is_lobby_member(online_user_id(id))
+
+func online_user_id(id: int) -> String:
+	var peer: MultiplayerPeer=multiplayer.multiplayer_peer
+	return str(peer.call("get_peer_user_id",id)) if peer!=null and peer.has_method("get_peer_user_id") else ""
+
+func _online_member_departed(user_id: String) -> void:
+	if not _online or not is_server: return
+	# A confirmed EOS departure ends this membership's rejection generation.
+	# A P2P-only disconnect does not: reconnecting a socket cannot bypass it.
+	_online_rejected_users.erase(user_id)
+	for id: int in _online_rejected.keys():
+		if _online_rejected[id]==user_id: _online_rejected.erase(id)
+	for id: int in _online_users.keys():
+		if str(_online_users[id])!=user_id: continue
+		if multiplayer.get_peers().has(id): _disconnect_peer(id)
+		_peer_left(id)
+
+func _disconnect_peer(id: int) -> void:
+	var peer: MultiplayerPeer=multiplayer.multiplayer_peer
+	if peer!=null: peer.disconnect_peer(id)
+
+## Deferred local delivery mirrors network delivery, avoids map ACK reentrancy,
+## and copies containers so client presentation cannot mutate server state.
+func _send_to(id: int, method: String, args: Array) -> void:
+	if _local_host and id==1:
+		var attempt:=_attempt_id
+		_local_dispatch.call_deferred(attempt,method,args.duplicate(true))
+	elif _online:
+		# EOS lobby membership can be revoked before the P2P disconnect arrives.
+		# Apply this to every outbound route, including voice and permissions.
+		if online_member(id): online_transport.send_message(id,method,args)
+	else:
+		var parameters: Array=[id,method];parameters.append_array(args)
+		callv("rpc_id",parameters)
+
+func _local_dispatch(attempt: int, method: String, args: Array) -> void:
+	if attempt!=_attempt_id or not _local_host: return
+	_dispatch_message(1,method,args,true)
+
+func _dispatch_message(sender: int, method: String, args: Array, local: bool=false) -> void:
+	if not _online or not OnlineTransport.valid_message(method,args): return
+	if method.begins_with("voice:"):
+		voice.dispatch_online(sender,method.trim_prefix("voice:"),args,local)
+		return
+	if method in ["_request_join","_request_lobby","_request_movement","_action"]:
+		if not is_server or (not local and not online_member(sender)): return
+		if method!="_request_join" and not players.has(sender): return
+		var values: Array=[sender];values.append_array(args)
+		callv("_handle"+method,values)
+	elif sender==1 and (not is_server or local):
+		callv(method,args)
+
 func connect_room(address: String, port: int, player_name: String, code: String, create: bool) -> void:
+	_online_request.clear()
 	close_client()
 	_attempt_id += 1
 	_terminal_failure = false
@@ -128,7 +301,7 @@ func _open_transport(resolved: String) -> void:
 func _set_connection_state(phase: String, code: String = "", message: String = "") -> void:
 	_connection_phase = phase
 	connect_age = 0.0
-	connection_state = {"attempt":_attempt_id,"phase":phase,"code":code,"message":message,"address":str(_last_request.get("address","")),"port":int(_last_request.get("port",DEFAULT_PORT)),"elapsed":0.0,"can_retry":phase == "failed" and not _last_request.is_empty(),"can_cancel":phase in ["resolving","connecting_transport","joining_room"],"version":VERSION,"protocol":PROTOCOL}
+	connection_state = {"attempt":_attempt_id,"phase":phase,"code":code,"message":message,"address":str(_last_request.get("address","")),"port":int(_last_request.get("port",DEFAULT_PORT)),"elapsed":0.0,"can_retry":phase == "failed" and not _last_request.is_empty(),"can_cancel":phase.begins_with("online_") or phase in ["resolving","connecting_transport","joining_room"],"version":VERSION,"protocol":PROTOCOL}
 	connection_state_changed.emit(connection_state.duplicate(true))
 	if not message.is_empty():
 		notice.emit(message)
@@ -147,10 +320,29 @@ func cancel_connect() -> void:
 func retry_connect() -> void:
 	if connecting or _last_request.is_empty() or _had_session:
 		return
+	if not _online_request.is_empty():
+		var retry: Dictionary=_online_request.duplicate(true)
+		if retry.host: host_online(retry.config,retry.name)
+		else: join_online(retry.config,retry.name,retry.invite)
+		return
 	var request := _last_request.duplicate(true)
 	connect_room(str(request.address), int(request.port), str(request.name), str(request.code), bool(request.create))
 
 func close_client() -> void:
+	# Closing native peers can synchronously emit connection/loss callbacks.
+	connecting=false
+	_terminal_failure=true
+	if _online:
+		_online=false;_local_host=false;is_server=false
+		players.clear();waiting_actors.clear();waiting_inputs.clear();join_attempts.clear();menu_rates.clear();private_revisions.clear();tokens.clear();peer_tokens.clear();_pending_map.clear()
+		_online_rejected.clear()
+		_online_rejected_users.clear()
+		_online_users.clear()
+		sim=null;server_tick=0;publish_accumulator=0.0;last_phase=""
+		invitation_text="";_online_capability=""
+		invitation_updated.emit("")
+		if is_instance_valid(online_transport): online_transport.reset(0)
+		if is_instance_valid(online_session): online_session.close()
 	if is_instance_valid(voice): voice.reset()
 	_prepared_map.clear()
 	connecting = false
@@ -173,10 +365,13 @@ func _connected() -> void:
 	if not connecting or _connection_phase != "connecting_transport":
 		return
 	_set_connection_state("joining_room", "", "El servidor respondió. Verificando versión y sala…")
-	_request_join.rpc_id(1, VERSION, PROTOCOL, str(pending_join.get("name", "Amigo")), str(pending_join.get("code", "")), bool(pending_join.get("create", false)), token)
+	_send_to(1, "_request_join", [VERSION, PROTOCOL, str(pending_join.get("name", "Amigo")), _online_capability if _online else str(pending_join.get("code", "")), bool(pending_join.get("create", false)), token])
 
 func _failed() -> void:
 	if connecting:
+		if _online:
+			_fail_connection("transport_failed","No se pudo conectar con el anfitrión. Confirmá que la sala siga abierta y reintentá.")
+			return
 		_fail_connection("transport_failed", "No llegó respuesta UDP de %s:%d. Revisá el servidor y la ruta de conexión." % [_last_request.get("address",""),_last_request.get("port",DEFAULT_PORT)])
 
 func _server_lost() -> void:
@@ -191,13 +386,18 @@ func _peer_connected(id: int) -> void:
 	if is_server:
 		join_attempts[id] = {"count": 0, "since": Time.get_ticks_msec()}
 		var peer: ENetMultiplayerPeer = multiplayer.multiplayer_peer as ENetMultiplayerPeer
-		peer.get_peer(id).set_timeout(8, 3000, 6000)
+		if peer != null: peer.get_peer(id).set_timeout(8, 3000, 6000)
+		var attempt:=_attempt_id
+		var transport:=multiplayer.multiplayer_peer
 		# Peers that never introduce themselves cannot occupy server slots indefinitely.
 		get_tree().create_timer(12.0).timeout.connect(func() -> void:
-			if is_server and not players.has(id) and multiplayer.get_peers().has(id):
-				peer.disconnect_peer(id))
+			if attempt==_attempt_id and transport==multiplayer.multiplayer_peer and is_server and not players.has(id) and multiplayer.get_peers().has(id):
+				_disconnect_peer(id))
 
 func _peer_left(id: int) -> void:
+	_online_rejected.erase(id)
+	_online_users.erase(id)
+	if is_instance_valid(online_transport): online_transport.forget_sender(id)
 	if is_instance_valid(voice): voice.peer_left(id)
 	if not is_server:
 		return
@@ -236,14 +436,15 @@ func _peer_left(id: int) -> void:
 
 func request_close_room() -> void:
 	if _client_connected() and multiplayer.get_unique_id() == room_owner:
-		_request_lobby.rpc_id(1,"close_room",null)
+		_send_to(1, "_request_lobby", ["close_room",null])
 
 func _close_room(message: String) -> void:
 	_pending_map.clear()
 	var recipients := players.keys()
 	for id: int in recipients:
+		if _local_host and id==1: continue
 		if _peer_can_receive(id):
-			_server_notice.rpc_id(id,"@room_closed:" + message)
+			_send_to(id, "_server_notice", ["@room_closed:" + message])
 	players.clear()
 	waiting_actors.clear()
 	waiting_inputs.clear()
@@ -254,9 +455,14 @@ func _close_room(message: String) -> void:
 	room_code = ""
 	sim = null
 	config = Simulation.DEFAULT_CONFIG.duplicate(true)
-	var peer := multiplayer.multiplayer_peer as ENetMultiplayerPeer
+	var closing_online := _online
+	var peer := multiplayer.multiplayer_peer
+	var attempt:=_attempt_id
 	get_tree().create_timer(0.2).timeout.connect(func() -> void:
-		if peer != null:
+		if attempt!=_attempt_id or peer!=multiplayer.multiplayer_peer: return
+		if closing_online:
+			if _online: _room_closed(message)
+		elif peer != null:
 			for id: int in recipients:
 				if multiplayer.get_peers().has(id): peer.disconnect_peer(id))
 
@@ -269,35 +475,47 @@ func _room_closed(message: String) -> void:
 
 @rpc("any_peer", "call_remote", "reliable", 0)
 func _request_join(version: String, protocol: int, player_name: String, code: String, create: bool, previous_token: String) -> void:
+	if not _online: _handle_request_join(multiplayer.get_remote_sender_id(), version, protocol, player_name, code, create, previous_token)
+
+func _handle_request_join(sender: int, version: String, protocol: int, player_name: String, code: String, create: bool, previous_token: String) -> void:
 	if not is_server:
 		return
-	var sender := multiplayer.get_remote_sender_id()
+	if _online and (_online_rejected.has(sender) or _online_rejected_users.has(online_user_id(sender))): return
 	if players.has(sender):
 		return
 	var attempt: Dictionary = join_attempts.get(sender, {"count": 0, "since": Time.get_ticks_msec()})
 	attempt.count += 1
 	join_attempts[sender] = attempt
 	if int(attempt.count) > 5:
-		_reject.rpc_id(sender, "Demasiados intentos. Reconectá y revisá el código.")
+		_reject_join(sender, "Demasiados intentos. Reconectá y revisá el código.")
 		return
 	if version != VERSION or protocol != PROTOCOL:
-		_reject.rpc_id(sender, "Versión incompatible. Todos necesitan Let me sleep %s (protocolo %d)." % [VERSION, PROTOCOL])
+		_reject_join(sender, "Versión incompatible. Todos necesitan Let me sleep %s (protocolo %d)." % [VERSION, PROTOCOL])
 		return
 	if sim != null or not _pending_map.is_empty():
-		_reject.rpc_id(sender, "El grupo está jugando o viendo resultados. Esperá a que el anfitrión pulse Volver a sala.")
+		_reject_join(sender, "El grupo está jugando o viendo resultados. Esperá a que el anfitrión pulse Volver a sala.")
 		return
 	if players.size() >= MAX_PLAYERS:
-		_reject.rpc_id(sender, "La sala está llena (16 lugares de prueba).")
+		_reject_join(sender, "La sala está llena (16 lugares de prueba).")
+		return
+	if _online and ((sender!=1 and not online_member(sender)) or (create and sender!=1) or code!=_online_capability):
+		_reject_join(sender,"Invitación online inválida. Pedile una nueva al anfitrión.")
 		return
 	if create:
 		if not room_code.is_empty():
-			_reject.rpc_id(sender, "Ya hay una sala en este servidor. Pedile su código al anfitrión.")
+			_reject_join(sender, "Ya hay una sala en este servidor. Pedile su código al anfitrión.")
 			return
 		room_code = _new_code()
 		room_owner = sender
-	elif room_code.is_empty() or code.to_upper() != room_code:
-		_reject.rpc_id(sender, "Código de sala incorrecto. Revisá el código y la dirección del servidor.")
+	elif (_online and code != _online_capability) or (not _online and (room_code.is_empty() or code.to_upper() != room_code)):
+		_reject_join(sender, "Código de sala incorrecto. Revisá el código y la dirección del servidor.")
 		return
+	if _online and sender!=1:
+		var user_id: String=online_user_id(sender)
+		if not online_session.mark_peer_admitted(user_id):
+			_reject_join(sender,"La sala dejó de estar disponible. Pedile una invitación nueva al anfitrión.")
+			return
+		_online_users[sender]=user_id
 	var clean_name := player_name.strip_edges().left(20).replace("\n", " ").replace("\r", " ")
 	if clean_name.is_empty():
 		clean_name = "Amigo"
@@ -307,9 +525,30 @@ func _request_join(version: String, protocol: int, player_name: String, code: St
 	peer_tokens[sender] = new_token
 	players[sender] = {"name": clean_name, "role": "waiting", "ready": false, "cosmetics": Cosmetics.sanitize({})}
 	_spawn_waiting(sender)
-	_welcome.rpc_id(sender, sender, new_token)
+	_send_to(sender, "_welcome", [sender, new_token])
 	print("JOIN id=%d role=waiting count=%d" % [sender, players.size()])
 	_broadcast_lobby()
+
+func _reject_join(sender: int, message: String) -> void:
+	_send_to(sender,"_reject",[message])
+	if not _online or sender==1: return
+	var user_id: String=online_user_id(sender)
+	_online_rejected[sender]=user_id
+	if user_id.is_empty(): return
+	if _online_rejected_users.has(user_id): return
+	_online_reject_serial+=1
+	var serial:=_online_reject_serial
+	_online_rejected_users[user_id]=serial
+	var attempt:=_attempt_id
+	var peer:=multiplayer.multiplayer_peer
+	# Allow the explicit rejection to leave before removing the EOS lobby slot.
+	get_tree().create_timer(0.2).timeout.connect(func() -> void:
+		if attempt!=_attempt_id or not _online or peer!=multiplayer.multiplayer_peer: return
+		if int(_online_rejected_users.get(user_id,-1))!=serial: return
+		online_session.reject_peer(user_id)
+		# The same EOS member may already have replaced its P2P socket.
+		for id: int in multiplayer.get_peers():
+			if online_user_id(id)==user_id: _disconnect_peer(id))
 
 func _new_code() -> String:
 	const LETTERS := "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
@@ -356,16 +595,18 @@ func _server_notice(message: String) -> void:
 
 func lobby_action(verb: String, value: Variant = null) -> void:
 	if _client_connected():
-		_request_lobby.rpc_id(1, verb, value)
+		_send_to(1, "_request_lobby", [verb, value])
 
 func _client_connected() -> bool:
-	return not is_server and multiplayer.multiplayer_peer != null and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED and multiplayer.get_unique_id() != 1
+	return (_local_host and _had_session) or (not is_server and multiplayer.multiplayer_peer != null and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED and multiplayer.get_unique_id() != 1)
 
 @rpc("any_peer", "call_remote", "reliable", 0)
 func _request_lobby(verb: String, value: Variant) -> void:
+	if not _online: _handle_request_lobby(multiplayer.get_remote_sender_id(), verb, value)
+
+func _handle_request_lobby(sender: int, verb: String, value: Variant) -> void:
 	if not is_server:
 		return
-	var sender := multiplayer.get_remote_sender_id()
 	if not players.has(sender) or not _menu_rate_ok(sender):
 		return
 	if verb == "close_room":
@@ -378,11 +619,11 @@ func _request_lobby(verb: String, value: Variant) -> void:
 		_receive_map_ack(sender,verb,value)
 		return
 	if not _pending_map.is_empty():
-		_server_notice.rpc_id(sender,"Estamos preparando la casa para todos los jugadores.")
+		_send_to(sender, "_server_notice", ["Estamos preparando la casa para todos los jugadores."])
 		return
 	match verb:
 		"role":
-			_server_notice.rpc_id(sender, "Los roles se sortean al empezar. Nadie elige equipo.")
+			_send_to(sender, "_server_notice", ["Los roles se sortean al empezar. Nadie elige equipo."])
 			return
 		"cosmetics":
 			players[sender].cosmetics = Cosmetics.sanitize(value)
@@ -396,7 +637,7 @@ func _request_lobby(verb: String, value: Variant) -> void:
 			if sender == room_owner and value is Dictionary:
 				var chosen: Variant = value.get("human_count", config.get("human_count", 1))
 				if not (chosen is int or chosen is float) or not is_finite(float(chosen)) or float(chosen) != floorf(float(chosen)) or int(chosen) < 1 or int(chosen) > 5:
-					_server_notice.rpc_id(sender, "La cantidad de humanos debe ser un entero entre 1 y 5.")
+					_send_to(sender, "_server_notice", ["La cantidad de humanos debe ser un entero entre 1 y 5."])
 					return
 				config = sanitize_config(value)
 				_set_unready()
@@ -406,7 +647,7 @@ func _request_lobby(verb: String, value: Variant) -> void:
 				if reason.is_empty():
 					_prepare_round()
 					return
-				_server_notice.rpc_id(sender, reason)
+				_send_to(sender, "_server_notice", [reason])
 		"rematch":
 			if sender == room_owner and sim != null and str(sim.public_snapshot().phase) == "results":
 				sim = null
@@ -485,9 +726,11 @@ func _broadcast_lobby() -> void:
 		data.map_prepare={"id":_pending_map.id,"fingerprint":_pending_map.fingerprint,"version":_pending_map.version,"seed":_pending_map.seed}
 	for id: int in players:
 		if _peer_can_receive(id):
-			_receive_lobby.rpc_id(id, data)
+			_send_to(id, "_receive_lobby", [data])
 
 func _peer_can_receive(id: int) -> bool:
+	if _local_host and id==1: return _had_session or connecting
+	if _online: return multiplayer.get_peers().has(id) and online_member(id)
 	if not multiplayer.get_peers().has(id):
 		return false
 	var peer := multiplayer.multiplayer_peer as ENetMultiplayerPeer
@@ -496,7 +739,7 @@ func _peer_can_receive(id: int) -> bool:
 func _notify_all(message: String) -> void:
 	for id: int in players:
 		if _peer_can_receive(id):
-			_server_notice.rpc_id(id, message)
+			_send_to(id, "_server_notice", [message])
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _receive_lobby(data: Dictionary) -> void:
@@ -518,15 +761,15 @@ func _receive_lobby(data: Dictionary) -> void:
 		var matched: bool=not generated.is_empty() and generated.get("fingerprint")==prepare.get("fingerprint") and generated.get("generator_version")==prepare.get("version") and generated.get("seed")==prepare.get("seed")
 		if matched:
 			_prepared_map={"id":id,"fingerprint":generated.fingerprint}
-			_request_lobby.rpc_id(1,"map_ready",_prepared_map)
+			_send_to(1, "_request_lobby", ["map_ready",_prepared_map])
 		else:
 			_prepared_map.clear()
-			_request_lobby.rpc_id(1,"map_failed",{"id":id})
+			_send_to(1, "_request_lobby", ["map_failed",{"id":id}])
 			notice.emit("No se pudo verificar la casa de esta partida.")
 
 func send_input(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool=false, crouch: bool=false, jump: bool=false) -> void:
 	if _client_connected():
-		_request_movement.rpc_id(1, seq, move, yaw, pitch, interact, sprint, crouch, jump)
+		_send_to(1, "_request_movement", [seq, move, yaw, pitch, interact, sprint, crouch, jump])
 
 func send_action(seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: float = NAN) -> void:
 	if _client_connected():
@@ -537,20 +780,22 @@ func send_action(seq: int, verb: String, aim_yaw: float = NAN, aim_pitch: float 
 			command = JSON.stringify({"verb":verb,"yaw":aim_yaw,"pitch":aim_pitch})
 		elif not (is_nan(aim_yaw) and is_nan(aim_pitch)):
 			return
-		_action.rpc_id(1, seq, command)
+		_send_to(1, "_action", [seq, command])
 
 func send_emote(seq: int, emote_id: String) -> void:
 	if _client_connected() and emote_id.length()<24:
-		_action.rpc_id(1,seq,JSON.stringify({"verb":"emote","id":emote_id}))
+		_send_to(1, "_action", [seq,JSON.stringify({"verb":"emote","id":emote_id})])
 
 func send_view_ack(seq: int, revision: int, first_input_seq: int, yaw: float, pitch: float) -> void:
 	if _client_connected():
-		_action.rpc_id(1,seq,JSON.stringify({"verb":"view_ack","revision":revision,"first_input_seq":first_input_seq,"yaw":yaw,"pitch":pitch}))
+		_send_to(1, "_action", [seq,JSON.stringify({"verb":"view_ack","revision":revision,"first_input_seq":first_input_seq,"yaw":yaw,"pitch":pitch})])
 
 @rpc("any_peer", "call_remote", "unreliable_ordered", 1)
 func _request_movement(seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool=false, crouch: bool=false, jump: bool=false) -> void:
+	if not _online: _handle_request_movement(multiplayer.get_remote_sender_id(), seq, move, yaw, pitch, interact, sprint, crouch, jump)
+
+func _handle_request_movement(sender: int, seq: int, move: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool=false, crouch: bool=false, jump: bool=false) -> void:
 	if is_server and sim == null:
-		var sender := multiplayer.get_remote_sender_id()
 		if not players.has(sender) or not move.is_finite() or not is_finite(yaw) or not is_finite(pitch):
 			return
 		if seq <= int(waiting_inputs.get(sender, {}).get("seq", -1)):
@@ -558,14 +803,15 @@ func _request_movement(seq: int, move: Vector3, yaw: float, pitch: float, intera
 		waiting_inputs[sender] = {"seq": seq, "move": Vector3(move.x, 0, move.z).limit_length(1.0), "yaw": wrapf(yaw, -PI, PI), "pitch":clampf(pitch,-1.4,1.3), "sprint":sprint, "crouch":crouch, "jump":jump, "time": Time.get_ticks_msec()}
 		return
 	if is_server and sim != null:
-		var sender := multiplayer.get_remote_sender_id()
 		if players.has(sender):
 			sim.submit_input(sender, seq, move, yaw, pitch, interact, sprint, crouch, jump)
 
 @rpc("any_peer", "call_remote", "reliable", 0)
 func _action(seq: int, verb: String) -> void:
+	if not _online: _handle_action(multiplayer.get_remote_sender_id(), seq, verb)
+
+func _handle_action(sender: int, seq: int, verb: String) -> void:
 	if is_server and sim != null:
-		var sender := multiplayer.get_remote_sender_id()
 		if not players.has(sender) or verb.length() > 256:
 			return
 		var aim_yaw := NAN
@@ -599,7 +845,7 @@ func _physics_process(dt: float) -> void:
 			_pending_map.clear()
 			_notify_all("Un jugador no terminó de preparar la casa. Intentá empezar de nuevo.")
 			_broadcast_lobby()
-	if connecting:
+	if connecting and _connection_phase in ["resolving","connecting_transport","joining_room"]:
 		connect_age += dt
 		connection_state["elapsed"] = connect_age
 		if _connection_phase == "resolving" and _resolver_id != -1:
@@ -611,13 +857,16 @@ func _physics_process(dt: float) -> void:
 				_open_transport(resolved)
 			elif status == IP.RESOLVER_STATUS_ERROR:
 				_fail_connection("dns_failed", "No se pudo resolver el nombre del servidor.")
-		if connecting and connect_age > (HANDSHAKE_TIMEOUT if _connection_phase == "joining_room" else TRANSPORT_TIMEOUT):
+		if connecting and connect_age > (HANDSHAKE_TIMEOUT if _connection_phase == "joining_room" else (30.0 if _online else TRANSPORT_TIMEOUT)):
 			if _connection_phase == "joining_room":
 				_fail_connection("handshake_timeout", "El servidor respondió, pero no completó la entrada. Revisá que ambos usen Let me sleep %s." % VERSION)
 			elif _connection_phase == "resolving":
 				_fail_connection("dns_timeout", "El nombre del servidor no se resolvió a tiempo.")
 			else:
-				_fail_connection("transport_timeout", "Sin respuesta UDP de %s:%d. No se pudo comprobar la ruta hasta el anfitrión." % [_last_request.address,_last_request.port])
+				if _online:
+					_fail_connection("transport_timeout","El anfitrión no respondió a tiempo. Pedile que confirme que su sala sigue abierta y volvé a intentar.")
+				else:
+					_fail_connection("transport_timeout", "Sin respuesta UDP de %s:%d. No se pudo comprobar la ruta hasta el anfitrión." % [_last_request.address,_last_request.port])
 	if not is_server:
 		return
 	if sim != null:
@@ -663,9 +912,9 @@ func _publish_waiting() -> void:
 
 func _send_snapshot(id: int,packet: PackedByteArray) -> void:
 	if packet.size()>MAX_UNRELIABLE_SNAPSHOT_BYTES:
-		_receive_snapshot_reliable.rpc_id(id,packet)
+		_send_to(id, "_receive_snapshot_reliable", [packet])
 	else:
-		_receive_snapshot.rpc_id(id,packet)
+		_send_to(id, "_receive_snapshot", [packet])
 
 func _publish(force_reliable: bool) -> void:
 	if sim == null:
@@ -685,17 +934,17 @@ func _publish(force_reliable: bool) -> void:
 		if not _peer_can_receive(id):
 			continue
 		if changed or force_reliable:
-			_receive_round.rpc_id(id, state)
+			_send_to(id, "_receive_round", [state])
 		else:
 			_send_snapshot(id,packet)
 		var private_data: Dictionary = sim.private_for(id)
 		private_data["tick"] = server_tick
 		var revision := int(private_data.get("assignment", {}).get("revision", -1))
 		if changed or force_reliable or int(private_revisions.get(id, -2)) != revision:
-			_receive_private_reliable.rpc_id(id, private_data)
+			_send_to(id, "_receive_private_reliable", [private_data])
 			private_revisions[id] = revision
 		else:
-			_receive_private.rpc_id(id, private_data)
+			_send_to(id, "_receive_private", [private_data])
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _receive_round(data: Dictionary) -> void:

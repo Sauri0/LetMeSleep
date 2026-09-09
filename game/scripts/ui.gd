@@ -4,6 +4,8 @@ extends CanvasLayer
 signal connect_requested(address: String, port: int, player_name: String, code: String, create: bool)
 signal local_server_requested
 signal host_requested(player_name: String, local_port: int)
+signal online_host_requested(player_name: String)
+signal online_join_requested(player_name: String, invitation: String)
 signal cancel_connection_requested
 signal retry_connection_requested
 signal cosmetics_changed(data: Dictionary)
@@ -34,6 +36,9 @@ const Prefs = preload("res://scripts/preferences.gd")
 const Simulation = preload("res://scripts/simulation.gd")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const InvitationCodec = preload("res://scripts/invitation.gd")
+const OnlineInvitationCodec = preload("res://scripts/online_invitation.gd")
+var _online_invitation := ""
+var _direct_connection: CheckButton
 const AvatarPreview = preload("res://scripts/avatar_preview.gd")
 const MenuMascot = preload("res://scripts/menu_mascot.gd")
 const EmoteSelector = preload("res://scripts/emote_selector.gd")
@@ -591,7 +596,7 @@ func _build_home() -> void:
 	_invitation_box.add_child(_label("INVITACIÓN", 13, INK))
 	_invitation_edit = LineEdit.new()
 	_invitation_edit.max_length = 1024
-	_invitation_edit.placeholder_text = "Pegá acá la invitación " + InvitationCodec.PREFIX + "…"
+	_invitation_edit.placeholder_text = "Pegá el código de invitación LMS1-…"
 	_invitation_edit.text = Prefs.invitation
 	_invitation_box.add_child(_invitation_edit)
 	_address_box = _vbox(_connection_form, 5)
@@ -620,6 +625,10 @@ func _build_home() -> void:
 	_connection_form.add_child(_connect_submit)
 	_advanced_button = _small_button("Opciones de conexión  ▾", _toggle_connection_options)
 	_connection_form.add_child(_advanced_button)
+	_direct_connection = CheckButton.new()
+	_direct_connection.text = "Conexión directa / LAN"
+	_direct_connection.toggled.connect(func(_value: bool) -> void: _update_connection_options())
+	_connection_form.add_child(_direct_connection)
 	_existing_server = CheckButton.new()
 	_existing_server.text = "Usar un servidor ya abierto"
 	_existing_server.toggled.connect(func(_value: bool) -> void: _update_connection_options())
@@ -667,6 +676,7 @@ func _open_connection(create: bool) -> void:
 	_connection_open = true
 	_connection_mode_create = create
 	_advanced_open = false
+	_direct_connection.set_pressed_no_signal(false)
 	_home_menu.hide()
 	_connection_form.show()
 	_connection_title.text = "Prepará la noche" if create else "Encontrá a tu grupo"
@@ -692,15 +702,18 @@ func _toggle_connection_options() -> void:
 
 
 func _update_connection_options() -> void:
+	var direct := _direct_connection.button_pressed
+	var advanced_direct := _advanced_open and direct
 	var existing: bool = _connection_mode_create and _existing_server.button_pressed
-	_address_box.visible = _advanced_open and (not _connection_mode_create or existing)
-	_code_box.visible = not _connection_mode_create and _advanced_open
+	_direct_connection.visible = _advanced_open
+	_address_box.visible = advanced_direct and (not _connection_mode_create or existing)
+	_code_box.visible = not _connection_mode_create and advanced_direct
 	_invitation_box.visible = not _connection_mode_create
-	_port_row.visible = _advanced_open and (not _connection_mode_create or existing)
-	_host_port_row.visible = _advanced_open and _connection_mode_create and not existing
-	_existing_server.visible = _advanced_open and _connection_mode_create
+	_port_row.visible = advanced_direct and (not _connection_mode_create or existing)
+	_host_port_row.visible = advanced_direct and _connection_mode_create and not existing
+	_existing_server.visible = advanced_direct and _connection_mode_create
 	_advanced_help.visible = _advanced_open
-	_advanced_help.text = ("Se abrirá un servidor en esta PC. Después podés configurar la invitación para tus amigos." if not existing else "Conectate al servidor que ya está encendido en esa dirección.") if _connection_mode_create else "Sin invitación: dejá ese campo vacío y usá dirección, puerto y código."
+	_advanced_help.text = "La partida se aloja en tu PC. Tus amigos entran con el código que copiás desde la sala." if not direct else "Conexión directa avanzada: necesita una dirección y puerto accesibles. Para entrar por Internet con código, desactivá esta opción."
 	_local_server_button.hide()
 	_advanced_button.text = "Ocultar opciones  ▴" if _advanced_open else "Opciones de conexión  ▾"
 
@@ -713,6 +726,28 @@ func _request_connection(create: bool) -> void:
 		show_error("Escribí tu nombre para entrar.")
 		_name_edit.grab_focus()
 		return
+	if create and not _direct_connection.button_pressed:
+		Prefs.player_name = username
+		Prefs.save_settings()
+		set_online_invitation("")
+		show_connection_state({"phase":"connecting_transport","message":"Preparando tu sala online…","can_cancel":true})
+		online_host_requested.emit(username)
+		return
+	var invite := _invitation_edit.text.strip_edges()
+	if not create and invite.begins_with(OnlineInvitationCodec.PREFIX):
+		var online := OnlineInvitationCodec.decode(invite)
+		if not online.ok:
+			show_error(online.error)
+			_invitation_edit.grab_focus()
+			return
+		Prefs.player_name = username
+		Prefs.invitation = invite
+		Prefs.save_settings()
+		set_online_invitation("")
+		show_connection_state({"phase":"connecting_transport","message":"Buscando la sala de tus amigos…","can_cancel":true})
+		online_join_requested.emit(username, invite)
+		return
+	set_online_invitation("")
 	if create and not _existing_server.button_pressed:
 		Prefs.player_name = username
 		Prefs.local_host_port = int(_host_port_edit.value)
@@ -733,7 +768,7 @@ func _request_connection(create: bool) -> void:
 		port = int(decoded.port)
 		code = str(decoded.room)
 		_room_join_scope = str(decoded.get("scope", ""))
-	elif not create and not _advanced_open:
+	elif not create and (not _advanced_open or not _direct_connection.button_pressed):
 		show_error("Pegá la invitación que te pasó el anfitrión.")
 		_invitation_edit.grab_focus()
 		return
@@ -768,7 +803,7 @@ func show_connection_state(data: Dictionary) -> void:
 		_ui_error_serial += 1
 		ui_sound_requested.emit("error")
 	_connection_phase = phase
-	_connection_busy = phase in ["starting_server","resolving","connecting_transport","joining_room"]
+	_connection_busy = phase in ["starting_server","resolving","connecting_transport","joining_room"] or phase.begins_with("online_")
 	_connect_submit.disabled = _connection_busy
 	_connection_cancel.visible = bool(data.get("can_cancel", _connection_busy))
 	_connection_retry.visible = bool(data.get("can_retry", phase == "failed"))
@@ -1664,6 +1699,10 @@ func _save_invite_settings() -> void:
 
 
 func _copy_invitation() -> void:
+	if not _online_invitation.is_empty():
+		DisplayServer.clipboard_set(_online_invitation)
+		show_status("Código copiado. Tu amigo puede pegarlo en Unirme con invitación.")
+		return
 	var code: String = str(_code_label.get_meta("code", ""))
 	var address: String = Prefs.shared_address if _owner else _room_join_address
 	var port: int = Prefs.shared_port if _owner else _room_join_port
@@ -1675,6 +1714,9 @@ func _copy_invitation() -> void:
 		return
 	DisplayServer.clipboard_set(encoded)
 	show_status("Invitación copiada · " + ("solo esta red" if scope == "lan" else ("red virtual compartida" if scope == "virtual" else "alcance externo aún sin comprobar")))
+
+func set_online_invitation(value: String) -> void:
+	_online_invitation = value if value.is_empty() or OnlineInvitationCodec.decode(value).ok else ""
 
 func _update_invite_scope() -> void:
 	var scope: String = ["lan","internet","virtual"][_invite_scope.selected]

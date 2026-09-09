@@ -37,6 +37,7 @@ func _run() -> void:
 	Prefs.server_address = "203.0.113.77"
 	Prefs.server_port = port+7
 	ui._open_connection(true)
+	ui._direct_connection.button_pressed = true
 	ui._name_edit.text = "Anfitrión de prueba"
 	ui._host_port_edit.value = port
 	ui._connect_submit.pressed.emit()
@@ -52,6 +53,7 @@ func _run() -> void:
 	# Reserve the same UDP port in this test process; the child must fail bind.
 	check(reservation.create_server(port,2) == OK,"Test owns occupied-port fixture")
 	ui._open_connection(true)
+	ui._direct_connection.button_pressed = true
 	ui._name_edit.text = "Anfitrión de prueba"
 	ui._host_port_edit.value = port
 	ui._connect_submit.pressed.emit()
@@ -63,6 +65,7 @@ func _run() -> void:
 	client._leave()
 	await wait_until(func() -> bool: return app.local_server_pid == -1)
 	ui._open_connection(true)
+	ui._direct_connection.button_pressed = true
 	ui._name_edit.text = "Anfitrión de prueba"
 	ui._connect_submit.pressed.emit()
 	var cancelled_pid: int = app.local_server_pid
