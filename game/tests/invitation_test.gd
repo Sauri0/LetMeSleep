@@ -27,7 +27,7 @@ func _initialize() -> void:
 	for room: String in ["", "ABC", "abcdef", "ABC234;quit", "ABC2345"]:
 		check(not Invite.decode(envelope({"v":1,"host":"192.168.1.24","port":27840,"room":room})).ok, "reject room")
 	check(Invite.decode("  " + Invite.encode("192.168.1.24",27840,"ABC234") + "\n").ok, "paste whitespace")
-	for protocol: Variant in [null,true,"8",7,9,8.5]:
+	for protocol: Variant in [null,true,str(Invite.PROTOCOL),Invite.PROTOCOL-1,Invite.PROTOCOL+1,Invite.PROTOCOL+0.5]:
 		check(not Invite.decode(envelope({"v":1,"host":"192.168.1.24","port":27840,"room":"ABC234"},protocol)).ok,"reject mismatched or malformed protocol")
 	var old: String=Invite.encode("192.168.1.24",27840,"ABC234").replace(Invite.PREFIX,"DD3-")
 	check(not Invite.decode(old).ok and "anterior" in str(Invite.decode(old).error),"old checkpoint invitation gives a clear incompatibility reason")
