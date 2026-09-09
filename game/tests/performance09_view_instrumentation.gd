@@ -32,24 +32,11 @@ static func _wrapper(base: String, recorder: String, scopes: Array) -> String:
 		if scope[3]!="void":source+="\treturn result\n"
 	return source
 
-static func _close_exit(source: String, output: String, files: Dictionary, edits: Array) -> bool:
-	# Main owns the real music shutdown and network grace. Change only its final
-	# exit code in this test copy, so a failed gate cannot become exit 0 there.
-	if not FileAccess.file_exists(source):return false
-	var original := FileAccess.get_file_as_string(source)
-	var newline := "\r\n" if original.contains("\r\n") else "\n"
-	var close_text := "\t\t_cleanup_server()"+newline+"\t\tget_tree().quit()"
-	return _substitute(source,close_text,"\t\t_cleanup_server()"+newline+"\t\tget_tree().quit(int(get_tree().get_meta(\"profile09_exit_code\",0)))",output,files,edits)
-
 static func prepare_close_only() -> Dictionary:
-	var directory := ProjectSettings.globalize_path("res://../work/perf09-view-instrumentation/"+str(OS.get_process_id())).simplify_path()
-	if DirAccess.make_dir_recursive_absolute(directory)!=OK:return {"error":"cannot create test close directory"}
-	var files: Dictionary={};var edits: Array=[]
-	var main := directory.path_join("main-close.gd")
-	if not _close_exit("res://scripts/main.gd",main,files,edits):return {"error":"Main shutdown exit substitution must match exactly once"}
+	var main := "res://scripts/main.gd"
 	var script: Script=load(main)
-	if script==null or not script.can_instantiate():return {"error":"Main shutdown copy parse"}
-	return {"main":script,"manifest":{"directory":directory,"files_sha256":files,"substitutions":edits,"source_only":true,"runtime_files_modified":false,"view_scopes":false}}
+	if script==null or not script.can_instantiate():return {"error":"Main shutdown parse"}
+	return {"main":script,"manifest":{"files_sha256":{main:FileAccess.get_sha256(main)},"substitutions":[],"source_only":true,"runtime_files_modified":false,"view_scopes":false}}
 
 static func prepare(collector: RefCounted) -> Dictionary:
 	var directory := ProjectSettings.globalize_path("res://../work/perf09-view-instrumentation/"+str(OS.get_process_id())).simplify_path()
@@ -84,10 +71,8 @@ static func prepare(collector: RefCounted) -> Dictionary:
 		["_snapshot","data: Dictionary","data","void","\"Client._snapshot\""],
 		["_private","data: Dictionary","data","void","\"Client._private\""]]
 	if not _write(client,_wrapper(client_base,recorder,client_scopes),files):return {"error":"client wrapper write"}
-	var main_factory := directory.path_join("main-factory.gd")
-	if not _substitute("res://scripts/main.gd","load(\"res://scripts/client.gd\")","load("+JSON.stringify(client)+")",main_factory,files,substitutions):return {"error":"Main client factory substitution must match exactly once"}
 	var main := directory.path_join("main.gd")
-	if not _close_exit(main_factory,main,files,substitutions):return {"error":"Main shutdown exit substitution must match exactly once"}
+	if not _substitute("res://scripts/main.gd","load(\"res://scripts/client.gd\")","load("+JSON.stringify(client)+")",main,files,substitutions):return {"error":"Main client factory substitution must match exactly once"}
 	var recorder_script: Script=load(recorder)
 	if recorder_script==null or not recorder_script.can_instantiate():return {"error":"recorder parse"}
 	# Explicitly compile every generated dependency before Main starts. A dynamic

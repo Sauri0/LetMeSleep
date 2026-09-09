@@ -430,11 +430,9 @@ func _finish(result: Dictionary) -> void:
 		else:failures.append("report cannot be written")
 	print("PERFORMANCE09_PROFILE map=%s failures=%d"%[map_id,failures.size()])
 	var exit_code := 0 if failures.is_empty() and collector.errors.is_empty() else 1
-	set_meta("profile09_exit_code",exit_code)
 	if is_instance_valid(client):await client._leave()
 	if view_instrumentation.has("recorder"):view_instrumentation.recorder.current=null
 	if is_instance_valid(app):
-		# Exact test Main retains the game's shutdown/music drain and 0.25 s
-		# network grace. Its sole shutdown substitution preserves this exit code.
-		root.propagate_notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+		# Production shutdown preserves the diagnostic exit code and drains music.
+		app.request_exit(exit_code)
 	else:quit.call_deferred(exit_code)

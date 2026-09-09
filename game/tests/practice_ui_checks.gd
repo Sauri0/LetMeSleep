@@ -192,4 +192,4 @@ func _finish() -> void:
 		report_file.store_string(JSON.stringify(report,"\t"))
 		report_file.close()
 	print("PRACTICE_UI_RESULT " + JSON.stringify(report))
-	get_tree().quit.call_deferred(failures)
+	get_parent().request_exit(failures)

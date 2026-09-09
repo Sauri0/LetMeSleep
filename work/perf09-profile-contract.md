@@ -46,7 +46,7 @@ No hay objetivos nuevos de FPS ni relajación de validaciones. La reserva de eje
 
 ## Tercer nivel: presentación y callbacks fuera de publicación
 
-`--view-scopes` usa `performance09_view_instrumentation.gd` para generar copias aisladas en `work/perf09-view-instrumentation/<pid>/`. No escribe ningún módulo de producción. Las únicas sustituciones del cuerpo de Main/Client/World son sus factories Client/World/Actor; se exige una coincidencia exacta y reversibilidad de cada sustitución. La copia de Main cambia además únicamente el código final de salida para conservar exit 1 si falla el diagnóstico; ejecuta el mismo cierre real, drenaje de música y espera de red de 0,25 s.
+`--view-scopes` usa `performance09_view_instrumentation.gd` para generar copias aisladas en `work/perf09-view-instrumentation/<pid>/`. No escribe ningún módulo de producción. Las únicas sustituciones del cuerpo de Main/Client/World son sus factories Client/World/Actor; se exige una coincidencia exacta y reversibilidad de cada sustitución. Main.request_exit recibe directamente el código de salida del diagnóstico; ejecuta el cierre real, drenaje de música y espera de red de 0,25 s. No se reescribe su cierre. Sin --view-scopes se carga Main original, sin generar una copia.
 
 Las subclases llaman a `super` con los mismos argumentos, señales, nodos y orden de callbacks. Actor sigue heredando de ActorView, conservando los casts tipados de World. Se registran huellas de todos los archivos generados y de las fuentes antes/después; cualquier cambio invalida la corrida.
 
@@ -54,7 +54,7 @@ Las subclases llaman a `super` con los mismos argumentos, señales, nodos y orde
 |---|---|
 | Client._process | Sincronización visual, cámara y controles de presentación |
 | Client._physics_process | Muestreo/envío de input en su callback real |
-| Client._flush_game_hud | Actualización diferida/coalescida de HUD; fuera del callback de publicación |
+| Client._flush_game_hud | Intento de drenaje desde Client._process; puede retornar sin cambios si el HUD no está sucio. El número de llamadas no equivale a redibujos |
 | Client._snapshot / _private | Consumidores síncronos de ambos estados |
 | World._process | Visibilidad, etiquetas y consultas de presentación |
 | World.sync_actors / sync_doors / sync_pickups | Sincronización real por frame |

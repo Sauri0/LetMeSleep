@@ -173,15 +173,20 @@ func _process(dt: float) -> void:
 			get_tree().quit()
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST and not closing:
-		closing = true
-		var client := get_node_or_null("Client")
-		if client != null:
-			client.music.shutdown()
-		network.request_close_room()
-		await get_tree().create_timer(0.25).timeout
-		_cleanup_server()
-		get_tree().quit()
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		request_exit()
+
+func request_exit(exit_code: int = 0) -> void:
+	if closing:
+		return
+	closing = true
+	var client := get_node_or_null("Client")
+	if client != null:
+		client.music.shutdown()
+	network.request_close_room()
+	await get_tree().create_timer(0.25).timeout
+	_cleanup_server()
+	get_tree().quit(exit_code)
 
 func _cleanup_server() -> void:
 	launch_generation += 1

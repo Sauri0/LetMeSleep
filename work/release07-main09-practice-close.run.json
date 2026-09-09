@@ -1,0 +1,24 @@
+{
+  "name": "main09-practice-close",
+  "exe_sha256": "446E08F71624052572F96DE9031850BA96382CE6752ADDE38BB955B0A49BED01",
+  "source": true,
+  "arguments": [
+    "--path",
+    "\"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\game\"",
+    "--verbose",
+    "--audio-driver",
+    "Dummy",
+    "--",
+    "--practice-checks",
+    "--no-microphone",
+    "--check-role=mosquito",
+    "--check-mode=sleep",
+    "--map-seed=425573016",
+    "--check-report=C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/main09-practice-close.json"
+  ],
+  "started_utc": "2026-09-09T17:33:58.6875014Z",
+  "finished_utc": "2026-09-09T17:34:06.1911367Z",
+  "exit_code": 0,
+  "stderr_bytes": 0,
+  "passed": true
+}
