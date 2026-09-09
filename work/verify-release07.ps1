@@ -42,10 +42,12 @@ if ($Suite -eq 'native') {
         Invoke-CandidateCheck -Name $test -GameArguments @('--headless','--script',("res://tests/$test.gd"))
     }
     Invoke-CandidateCheck -Name voice09_session_checks -GameArguments @('--headless','--frame-delay','2','--script','res://tests/voice09_session_checks.gd')
-    foreach ($test in @('appendage09_visual_checks','emote09_pose_checks','furniture09_blueprint_checks','voice09_visual_checks','menu09_ui_checks','social09_client_checks','surface09_client_checks','surface_view09_client_checks','voice_input09_ui_checks','voice_context09_ui_checks')) {
+    foreach ($test in @('glasses09_fit_checks','actor09_legacy_geometry_test','appendage09_visual_checks','emote09_pose_checks','furniture09_blueprint_checks','voice09_visual_checks','menu09_ui_checks','social09_client_checks','surface09_client_checks','surface_view09_client_checks','voice_input09_ui_checks','voice_context09_ui_checks')) {
         $testOutput=Join-Path $evidenceDirectory $test
-        if ($test -eq 'voice09_visual_checks') { $testOutput+='.json' }
-        Invoke-CandidateCheck -Name $test -GameArguments @('--script',("res://tests/$test.gd"),'--',('--output='+$testOutput))
+        if ($test -in @('voice09_visual_checks','glasses09_fit_checks')) { $testOutput+='.json' }
+        $outputFlag = if ($test -eq 'actor09_legacy_geometry_test') { '--report=' } else { '--output=' }
+        if ($test -eq 'actor09_legacy_geometry_test') { $testOutput += '.json' }
+        Invoke-CandidateCheck -Name $test -GameArguments @('--script',("res://tests/$test.gd"),'--',($outputFlag+$testOutput))
     }
     $motionOutput=Join-Path $evidenceDirectory 'facial-motion'
     & "$PSScriptRoot/run-facial-motion08.ps1" -Packed -Executable $exe -OutputDirectory $motionOutput
