@@ -2,7 +2,7 @@
 
 Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.9.0 / protocolo 9**.
 
-Esta versión mejora las proporciones y animaciones de los personajes, genera una casa nueva en cada ronda e incorpora puertas con bisagras, iluminación local y ajustes gráficos. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. **La conexión integrada entre casas todavía está en desarrollo.** El servidor directo y la invitación DD5 necesitan una ruta de red alcanzable; el código por sí solo no resuelve eso.
+Esta versión mejora las proporciones y animaciones de los personajes, genera una casa nueva en cada ronda e incorpora puertas con bisagras, iluminación local y ajustes gráficos. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. El menú usa Epic Online Services para crear salas e invitar con un código **LMS1-**. **Esta candidata todavía requiere comprobar una partida entre dos casas; consultá PRUEBAS.md para ver el alcance validado.**
 
 ## Empezar a jugar
 
@@ -62,20 +62,22 @@ Si todos los mosquitos caen, la ronda continúa: los humanos aprovechan ese tiem
 
 ## Crear una sala dentro del juego
 
-1. Elegí **CREAR SALA**, escribí tu nombre y pulsá **CREAR SALA**. El juego abre y comprueba su servidor en tu PC y entra automáticamente al lobby.
-2. Para la red directa, configurá la **Dirección para amigos** según el alcance real y copiá la invitación DD5. En la misma red, usá la dirección local de la PC anfitriona.
+1. Elegí **CREAR SALA**, escribí tu nombre y pulsá **CREAR SALA**. El juego conecta con Epic y abre la sala 3D; tu misma aplicación ejecuta el servidor.
+2. Copiá la invitación **LMS1-** de la sala y pasásela a tus amigos. Conservá todo el texto; no hace falta indicar una IP ni un puerto.
 3. Tus amigos eligen **UNIRME CON INVITACIÓN**, escriben su nombre y pegan el texto completo.
 4. El anfitrión elige modo y cantidad de humanos. Todos se preparan y el anfitrión inicia.
 
-El juego gestiona su servidor oculto: no hace falta abrir una consola, otro ejecutable ni Iniciar-servidor.cmd. Salir de la sala o cerrar el juego termina el servidor propio. Si se cierra el anfitrión, la sala termina; no se transfiere a otra PC. Los scripts de servidor del paquete son herramientas avanzadas opcionales.
+No hace falta abrir una consola, otro ejecutable ni Iniciar-servidor.cmd. Salir de la sala o cerrar el juego termina la sala propia. Si se cierra el anfitrión, la sala termina; no se transfiere a otra PC. El juego usa una identidad local de Epic: no te pide crear una cuenta ni instalar otra aplicación. La primera conexión necesita Internet.
 
-**Entre casas:** no hay relay ni EOS integrado. La opción de dirección de Internet sirve sólo si ya existe una ruta alcanzable hasta el anfitrión. La invitación contiene esa dirección, puerto y sala; no abre puertos ni supera NAT o CGNAT. Las pruebas en una misma PC no comprueban la conexión entre casas.
+Epic permite intentar una conexión directa y usar su relay cuando haga falta. El código identifica la sala y autoriza el ingreso; no contiene la contraseña del cliente Epic. Compartilo sólo con quienes quieras invitar. Copiarlo no demuestra que la conexión se haya completado: esperá a que ambos aparezcan en la sala 3D.
+
+**Conexión directa / LAN**, dentro de Opciones, conserva el método avanzado anterior. Sus invitaciones **DD5-** sí contienen dirección y puerto y requieren una ruta de red alcanzable. Los scripts de servidor del paquete pertenecen a este modo avanzado; no son el procedimiento habitual de online.
 
 ## Si no conecta
 
-El estado distingue búsqueda de nombre, respuesta UDP y entrada a la sala. Un rechazo de versión, sala o capacidad conserva su motivo. Cancelar detiene el intento; Reintentar vuelve a abrirlo sin reutilizar un servidor ajeno al crear.
+El estado muestra el paso de conexión y permite cancelar o reintentar. Revisá que todos usen esta misma versión, que el anfitrión siga dentro de su sala y que la invitación esté completa. Una sala cerrada necesita una invitación nueva. Si vuelve a fallar, conservá el mensaje exacto y el archivo de registro para informar el problema.
 
-Si aparece «No llegó respuesta UDP», todavía no se sabe si falló la ruta, el servidor o una regla de red. Revisá el endpoint mostrado y que el anfitrión siga en su sala. No confundas 127.0.0.1 o una dirección de otra red local con una dirección disponible desde otra casa. Copiar una invitación no comprueba su alcance.
+El mensaje «No llegó respuesta UDP» corresponde al modo directo avanzado. En ese modo, 127.0.0.1 sólo apunta a la propia PC y una dirección local de otra casa no sirve como dirección de Internet. Para el online integrado usá la invitación **LMS1-** y dejá desmarcada Conexión directa / LAN.
 
 ## Voz cercana
 

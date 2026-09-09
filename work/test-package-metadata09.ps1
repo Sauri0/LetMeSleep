@@ -2,13 +2,13 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'package-metadata.ps1')
 $fixtureRoot = Join-Path $PSScriptRoot ('package-metadata09-test-'+[guid]::NewGuid().ToString('N'))
 $output = Join-Path $fixtureRoot 'output'
-foreach ($dir in @('game/scripts','game/addons/lms_opus/bin','game/addons/lms_opus/licenses','output/Licencias-voz')) {
+foreach ($dir in @('game/scripts','game/addons/lms_opus/bin','game/addons/lms_opus/licenses','output/Licencias-voz','game/addons/epic-online-services-godot/bin/windows/x64','game/addons/epic-online-services-godot/licenses','output/Licencias-online')) {
     [System.IO.Directory]::CreateDirectory((Join-Path $fixtureRoot $dir)) | Out-Null
 }
 function Put([string]$Relative,[string]$Value) { [System.IO.File]::WriteAllText((Join-Path $fixtureRoot $Relative),$Value) }
 Put 'game/project.godot' 'config/version="0.9.0"'
 Put 'game/scripts/network.gd' 'const VERSION := "0.9.0"'
-Put 'game/scripts/invitation.gd' "const PREFIX := `"DD5-`"`nconst PROTOCOL := 9`n"
+Put 'game/scripts/online_invitation.gd' "const PREFIX := `"LMS1-`"`nconst PROTOCOL := 9`n"
 Put 'game/addons/lms_opus/bin/lms_opus.windows.x86_64.dll' 'fixture DLL, never executable'
 foreach ($name in @('Opus-COPYING.txt','godot-cpp-LICENSE.md')) {
     Put ('game/addons/lms_opus/licenses/'+$name) 'fixture notice'
@@ -16,7 +16,13 @@ foreach ($name in @('Opus-COPYING.txt','godot-cpp-LICENSE.md')) {
 }
 Put 'output/Let-me-sleep.exe' 'fixture EXE, never executable'
 Put 'output/lms_opus.windows.x86_64.dll' 'fixture DLL, never executable'
-foreach ($name in @('LEEME.md','LEEME.html','PRUEBAS.md')) { Put ('output/'+$name) 'Fixture version 0.9.0, invitation DD5-.' }
+foreach ($relative in @('libeosg.windows.template_release.x86_64.dll','EOSSDK-Win64-Shipping.dll','x64/xaudio2_9redist.dll')) {
+    Put ('game/addons/epic-online-services-godot/bin/windows/'+$relative) 'inert online fixture'
+    Put ('output/'+[IO.Path]::GetFileName($relative)) 'inert online fixture'
+}
+Put 'game/addons/epic-online-services-godot/licenses/EOSG-LICENSE.md' 'fixture online notice'
+Put 'output/Licencias-online/EOSG-LICENSE.md' 'fixture online notice'
+foreach ($name in @('LEEME.md','LEEME.html','PRUEBAS.md')) { Put ('output/'+$name) 'Fixture version 0.9.0, invitation LMS1-.' }
 & git -C $fixtureRoot init --quiet
 if ($LASTEXITCODE -ne 0) { throw 'Fixture git init failed.' }
 & git -C $fixtureRoot add -- game
@@ -54,13 +60,23 @@ Put 'output/lms_opus.windows.x86_64.dll' 'wrong DLL before metadata creation'
 MustReject 'wrong DLL before writer' { WriteValid }
 MustReject 'wrong DLL at package time' { CheckValid }
 Put 'output/lms_opus.windows.x86_64.dll' 'fixture DLL, never executable'
+Put 'output/EOSSDK-Win64-Shipping.dll' 'tampered online runtime'
+MustReject 'wrong online DLL before writer' { WriteValid }
+MustReject 'wrong online DLL at package time' { CheckValid }
+Put 'output/EOSSDK-Win64-Shipping.dll' 'inert online fixture'
+Remove-Item -LiteralPath (Join-Path $output 'xaudio2_9redist.dll')
+MustReject 'missing online runtime dependency' { CheckValid }
+Put 'output/xaudio2_9redist.dll' 'inert online fixture'
+Put 'output/Licencias-online/EOSG-LICENSE.md' 'tampered online notice'
+MustReject 'changed online notice' { CheckValid }
+Put 'output/Licencias-online/EOSG-LICENSE.md' 'fixture online notice'
 Put 'output/Licencias-voz/Opus-COPYING.txt' 'changed notice'
 MustReject 'changed notice' { CheckValid }
 Put 'output/Licencias-voz/Opus-COPYING.txt' 'fixture notice'
 Put 'output/LEEME.md' 'Old invitation DD4-'
 WriteValid
 MustReject 'stale guide even with matching hash' { CheckValid }
-Put 'output/LEEME.md' 'Fixture version 0.9.0, invitation DD5-.'
+Put 'output/LEEME.md' 'Fixture version 0.9.0, invitation LMS1-.'
 Put 'game/scripts/untracked_runtime.gd' 'extends Node'
 WriteValid
 MustReject 'untracked exported source' { CheckValid }

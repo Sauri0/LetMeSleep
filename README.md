@@ -11,13 +11,13 @@ Descomprimí todo el ZIP y abrí **Let-me-sleep.exe**. Elegí **PRÁCTICA** para
 
 Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercera y tres modos. Cada ronda genera una casa de 16–24 ambientes y dos o tres pisos, con puertas interactivas, tareas y herramientas. El HUD es compacto; F1 abre una guía que permanece plegada durante el juego. La cámara permite seguir girando al mirar el cuerpo.
 
-**La conexión automática entre casas todavía está pendiente.** La fuente actual usa ENet directo: necesita una LAN o una dirección UDP alcanzable. La invitación DD5 contiene dirección, puerto y sala; no abre puertos ni supera CGNAT. La integración EOS requiere adaptación, configuración del producto y pruebas en conexiones independientes. No hay SDK ni credenciales EOS en este juego.
+La fuente integra **Epic Online Services**: Crear sala ejecuta el servidor dentro del juego y produce una invitación **LMS1-**. Los amigos pegan ese código, sin indicar IP ni instalar otra aplicación. Se probaron creación, autenticación y cierre reales del anfitrión; **la partida entre dos identidades y redes independientes sigue pendiente de validar**. El modo avanzado ENet directo conserva las invitaciones DD5 y sus requisitos de conectividad.
 
 ## Jugar
 
 - **Práctica:** elegí humano o mosquito y uno de los tres modos. Los bots se mueven, atacan, pican, completan tareas y ayudan a sus compañeros aturdidos.
-- **Crear sala:** un botón inicia el servidor en la PC y entra automáticamente. No hace falta abrir otra consola. El puerto local se conserva separado de la dirección para amigos.
-- **Invitar:** copiá la invitación DD5 desde la sala; tus amigos la pegan en **UNIRME CON INVITACIÓN**. Todos deben usar la misma versión; la conexión directa necesita una ruta de red alcanzable.
+- **Crear sala:** un botón conecta con Epic e inicia la sala dentro del juego. No hace falta abrir otra consola ni configurar un puerto.
+- **Invitar:** copiá la invitación LMS1- desde la sala; tus amigos la pegan en **UNIRME CON INVITACIÓN**. Todos deben usar la misma versión. La sala termina si sale el anfitrión.
 - **Equipos:** el anfitrión elige entre 1 y 5 humanos exactos; el resto son mosquitos, con un máximo de 12 y 16 jugadores totales. 1v1 es válido. Los roles se sortean en cada ronda.
 
 ## Controles y modos
