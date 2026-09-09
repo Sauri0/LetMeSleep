@@ -185,6 +185,17 @@ func request_exit(exit_code: int = 0) -> void:
 		client.music.shutdown()
 	network.request_close_room()
 	await get_tree().create_timer(0.25).timeout
+	# Guests and cancelled handshakes also own a lobby/SDK request to retire.
+	network.close_client()
+	# Keep the SDK tick and lobby node alive while leave/destroy callbacks drain.
+	# Quit remains bounded when Internet disappears during application shutdown.
+	if network.has_method("online_cleanup_pending"):
+		var cleanup_deadline := Time.get_ticks_msec() + 25000
+		while network.online_cleanup_pending() and Time.get_ticks_msec() < cleanup_deadline:
+			await get_tree().create_timer(0.05).timeout
+	if network.has_method("shutdown_online_backend"):
+		if not network.shutdown_online_backend():
+			push_warning("El servicio online no completó su cierre dentro del plazo.")
 	_cleanup_server()
 	get_tree().quit(exit_code)
 
