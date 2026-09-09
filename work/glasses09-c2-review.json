@@ -1,0 +1,14 @@
+{
+  "human_glb_sha256": "af812dd2151badf6ee0f2d196b6d368edbce95d11c857684e7730db570f3d9e8",
+  "viewed_pngs": [
+    {
+      "path": "outputs/0.9-glasses-fit/after2-162/human-page-006-neutral-pair-1.png",
+      "sha256": "4ead05a4bedadda189c1ffa0f5d0d87a876b5f1cf384fa5563f7676421a479df"
+    },
+    {
+      "path": "outputs/0.9-glasses-fit/after2-199/human-page-008-neutral-pair-3.png",
+      "sha256": "ec01d4dbe97a171729b16076947a60da6e772ede74e676a2efae665ab33c3ee9"
+    }
+  ],
+  "scope": "Root inspected H162 neutral profiles and H199 neutral above/below at native 960x560. No blanket full cosmetic approval."
+}

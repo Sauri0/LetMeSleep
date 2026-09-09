@@ -1,0 +1,883 @@
+{
+  "source_sha256": "67ff9ba585d0d47b008ca84a4b89276f35f954d721ede8c70d84c98bfd09ff86",
+  "group": "all",
+  "scope": "Actual authoring triangles, every compatible human A2 neighbour at listed finite morph samples; continuous morph-space not proven",
+  "exceptions": [],
+  "parts": [
+    {
+      "mesh": "human_head",
+      "states": [
+        {}
+      ],
+      "samples": 1,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_eyes_0",
+      "states": [
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": -0.72,
+          "GazeY": -0.6,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": -0.72,
+          "GazeY": 0.55,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": 0.72,
+          "GazeY": -0.6,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": 0.72,
+          "GazeY": 0.55,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 1,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": -0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": -0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": 0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": 0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 1,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 1,
+          "BlinkR": 0,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 1,
+          "BlinkR": 0.5,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 1,
+          "BlinkR": 1,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {},
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5
+        }
+      ],
+      "samples": 23,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_eyes_1",
+      "states": [
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": -0.72,
+          "GazeY": -0.6,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": -0.72,
+          "GazeY": 0.55,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": 0.72,
+          "GazeY": -0.6,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": 0.72,
+          "GazeY": 0.55,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 1,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": -0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": -0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": 0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": 0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 1,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 1,
+          "BlinkR": 0,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 1,
+          "BlinkR": 0.5,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 1,
+          "BlinkR": 1,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {},
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5
+        }
+      ],
+      "samples": 23,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_eyes_2",
+      "states": [
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": -0.72,
+          "GazeY": -0.6,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": -0.72,
+          "GazeY": 0.55,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": 0.72,
+          "GazeY": -0.6,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0,
+          "GazeX": 0.72,
+          "GazeY": 0.55,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0,
+          "BlinkR": 1,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": -0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": -0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": 0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0,
+          "GazeX": 0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": -0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": -0.3,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5,
+          "GazeX": 0.36,
+          "GazeY": 0.275,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 1,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 1,
+          "BlinkR": 0,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 1,
+          "BlinkR": 0.5,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {
+          "BlinkL": 1,
+          "BlinkR": 1,
+          "GazeX": -0.0,
+          "GazeY": -0.0,
+          "CheekLift": 0
+        },
+        {},
+        {
+          "BlinkL": 0.5,
+          "BlinkR": 0.5
+        }
+      ],
+      "samples": 23,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_brows_0",
+      "states": [
+        {
+          "BrowUp": 0,
+          "BrowDown": 0
+        },
+        {
+          "BrowUp": 0,
+          "BrowDown": 1
+        },
+        {
+          "BrowUp": 1,
+          "BrowDown": 0
+        },
+        {
+          "BrowUp": 1,
+          "BrowDown": 1
+        },
+        {
+          "BrowUp": 0.5,
+          "BrowDown": 0.5
+        }
+      ],
+      "samples": 5,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_brows_1",
+      "states": [
+        {
+          "BrowUp": 0,
+          "BrowDown": 0
+        },
+        {
+          "BrowUp": 0,
+          "BrowDown": 1
+        },
+        {
+          "BrowUp": 1,
+          "BrowDown": 0
+        },
+        {
+          "BrowUp": 1,
+          "BrowDown": 1
+        },
+        {
+          "BrowUp": 0.5,
+          "BrowDown": 0.5
+        }
+      ],
+      "samples": 5,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_brows_2",
+      "states": [
+        {
+          "BrowUp": 0,
+          "BrowDown": 0
+        },
+        {
+          "BrowUp": 0,
+          "BrowDown": 1
+        },
+        {
+          "BrowUp": 1,
+          "BrowDown": 0
+        },
+        {
+          "BrowUp": 1,
+          "BrowDown": 1
+        },
+        {
+          "BrowUp": 0.5,
+          "BrowDown": 0.5
+        }
+      ],
+      "samples": 5,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_mouth_0",
+      "states": [
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 0,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 0,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 1,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 1,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 0,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 0,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 1,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 1,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 0.5,
+          "MouthSmile": 0.5,
+          "MouthPress": 0.5
+        }
+      ],
+      "samples": 9,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_mouth_1",
+      "states": [
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 0,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 0,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 1,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 1,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 0,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 0,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 1,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 1,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 0.5,
+          "MouthSmile": 0.5,
+          "MouthPress": 0.5
+        }
+      ],
+      "samples": 9,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_mouth_2",
+      "states": [
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 0,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 0,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 1,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 0,
+          "MouthSmile": 1,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 0,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 0,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 1,
+          "MouthPress": 0
+        },
+        {
+          "MouthOpen": 1,
+          "MouthSmile": 1,
+          "MouthPress": 1
+        },
+        {
+          "MouthOpen": 0.5,
+          "MouthSmile": 0.5,
+          "MouthPress": 0.5
+        }
+      ],
+      "samples": 9,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_hair_0",
+      "states": [
+        {}
+      ],
+      "samples": 1,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_hair_1",
+      "states": [
+        {}
+      ],
+      "samples": 1,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_hair_2",
+      "states": [
+        {}
+      ],
+      "samples": 1,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_mustache_1",
+      "states": [
+        {}
+      ],
+      "samples": 1,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_mustache_2",
+      "states": [
+        {}
+      ],
+      "samples": 1,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_beard_1",
+      "states": [
+        {}
+      ],
+      "samples": 1,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "mesh": "human_beard_2",
+      "states": [
+        {}
+      ],
+      "samples": 1,
+      "contact_states": 0,
+      "maximum_triangle_contacts": 0,
+      "witnesses": []
+    }
+  ],
+  "failures": [],
+  "checks": 148,
+  "support": {
+    "minimum_signed_head_distance_m": 0.0002670483991096262,
+    "sample_count": 38780,
+    "parts": {
+      "ring_left": {
+        "samples": 13440,
+        "triangles": 1920
+      },
+      "temple_left": {
+        "samples": 5040,
+        "triangles": 720
+      },
+      "ring_right": {
+        "samples": 13440,
+        "triangles": 1920
+      },
+      "temple_right": {
+        "samples": 5040,
+        "triangles": 720
+      },
+      "bridge": {
+        "samples": 1820,
+        "triangles": 260
+      }
+    },
+    "buried_witnesses": [],
+    "nasal_witnesses": [],
+    "ear_support": {
+      "temple_left": {
+        "minimum_surface_gap_m": 0.00028069596737623215,
+        "sampled_points": 2830,
+        "point": [
+          -0.19295820593833923,
+          1.5899741649627686,
+          0.002303170505911112
+        ],
+        "head_point": [
+          -0.1928602010011673,
+          1.5897173881530762,
+          0.0022461535409092903
+        ]
+      },
+      "temple_right": {
+        "minimum_surface_gap_m": 0.00026704842457547784,
+        "sampled_points": 2830,
+        "point": [
+          0.20018479228019714,
+          1.5711599588394165,
+          0.01348685659468174
+        ],
+        "head_point": [
+          0.20007558166980743,
+          1.5710766315460205,
+          0.013257849030196667
+        ]
+      }
+    }
+  },
+  "motion_limit": "A2/head/facial/hair rigid head binding is checked; native render and joint-policy checks are separate. The 285-pose garment consumer does not test A2.",
+  "elapsed_seconds": 10.177268266677856,
+  "passed": true
+}

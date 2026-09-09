@@ -1,0 +1,126 @@
+{
+  "promoted": true,
+  "record": {
+    "version": 2,
+    "mesh": "human_accessory_2",
+    "method": "Closed rings with local lower-medial lateral clearance and limited depth, unchanged upper/external arc; curved ear hooks supported on actual head triangles",
+    "coordinate_system": "Godot metres X/Y/-Z front",
+    "parts": [
+      {
+        "name": "ring_left",
+        "vertex_start": 0,
+        "vertex_count": 960,
+        "polygon_start": 0,
+        "polygon_count": 960,
+        "radius_m": 0.006,
+        "closed_path": true
+      },
+      {
+        "name": "temple_left",
+        "vertex_start": 960,
+        "vertex_count": 362,
+        "polygon_start": 960,
+        "polygon_count": 370,
+        "radius_m": 0.004,
+        "closed_path": false
+      },
+      {
+        "name": "ring_right",
+        "vertex_start": 1322,
+        "vertex_count": 960,
+        "polygon_start": 1330,
+        "polygon_count": 960,
+        "radius_m": 0.006,
+        "closed_path": true
+      },
+      {
+        "name": "temple_right",
+        "vertex_start": 2282,
+        "vertex_count": 362,
+        "polygon_start": 2290,
+        "polygon_count": 370,
+        "radius_m": 0.004,
+        "closed_path": false
+      },
+      {
+        "name": "bridge",
+        "vertex_start": 2644,
+        "vertex_count": 132,
+        "polygon_start": 2660,
+        "polygon_count": 140,
+        "radius_m": 0.005,
+        "closed_path": false
+      }
+    ],
+    "vertices": 2776,
+    "triangles": 5540,
+    "head_weight": 1.0,
+    "ear_support_region": {
+      "abs_x": [
+        0.17,
+        0.23
+      ],
+      "y": [
+        1.54,
+        1.615
+      ],
+      "z": [
+        -0.03,
+        0.045
+      ]
+    },
+    "expected_root_gap_m": 0.0004,
+    "other_parts_unchanged": true,
+    "ring_changes": [
+      {
+        "side": -1,
+        "maximum_lateral_shift_m": 0.03200000000000002,
+        "maximum_forward_shift_m": 0.01888425373077393
+      },
+      {
+        "side": 1,
+        "maximum_lateral_shift_m": 0.03200000000000002,
+        "maximum_forward_shift_m": 0.01888127349853516
+      }
+    ],
+    "construction_report": "work/glasses09-construction.json",
+    "construction_sha256": "5a7f8fcfab2630d235084cee7684104517b599a5bdd801b29b1d6132f25b6a07"
+  },
+  "unchanged_meshes": [
+    "human_accessory_1",
+    "human_accessory_3",
+    "human_beard_1",
+    "human_beard_2",
+    "human_brows_0",
+    "human_brows_1",
+    "human_brows_2",
+    "human_core",
+    "human_eyes_0",
+    "human_eyes_1",
+    "human_eyes_2",
+    "human_footwear_0",
+    "human_footwear_1",
+    "human_footwear_2",
+    "human_hair_0",
+    "human_hair_0_capped",
+    "human_hair_1",
+    "human_hair_1_capped",
+    "human_hair_2",
+    "human_hair_2_capped",
+    "human_head",
+    "human_mouth_0",
+    "human_mouth_1",
+    "human_mouth_2",
+    "human_mustache_1",
+    "human_mustache_2",
+    "human_outfit_0",
+    "human_outfit_0_trim",
+    "human_outfit_1",
+    "human_outfit_1_trim",
+    "human_outfit_2",
+    "human_outfit_2_trim"
+  ],
+  "bones": 36,
+  "before_blend_sha256": "b4185fb5d731ff4bd5b5ac09a1d6f74339d647347e6c7e1c8c0d021baddff6b5",
+  "glb_sha256": "af812dd2151badf6ee0f2d196b6d368edbce95d11c857684e7730db570f3d9e8"
+}

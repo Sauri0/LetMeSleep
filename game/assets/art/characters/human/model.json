@@ -1013,20 +1013,20 @@
       "surface_attachment": "",
       "eyelid_replacement": {},
       "root_union": {},
-      "vertices": 708,
-      "triangles": 1404,
+      "vertices": 2776,
+      "triangles": 5540,
       "materials": [
         "ink"
       ],
       "bounds_min_m": [
-        -0.19082316756248474,
-        1.5405999422073364,
-        -0.18351998925209045
+        -0.2064693421125412,
+        1.5405336618423462,
+        -0.2026335597038269
       ],
       "bounds_max_m": [
-        0.19082316756248474,
-        1.645880103111267,
-        -0.040451548993587494
+        0.20640088617801666,
+        1.6459462642669678,
+        0.024448808282613754
       ],
       "morphs": []
     },
@@ -85343,5 +85343,91 @@
       "buttons_cuffs_collar_unchanged": true,
       "main_garment_unchanged": true
     }
-  ]
+  ],
+  "glasses_fit09": {
+    "version": 2,
+    "mesh": "human_accessory_2",
+    "method": "Closed rings with local lower-medial lateral clearance and limited depth, unchanged upper/external arc; curved ear hooks supported on actual head triangles",
+    "coordinate_system": "Godot metres X/Y/-Z front",
+    "parts": [
+      {
+        "name": "ring_left",
+        "vertex_start": 0,
+        "vertex_count": 960,
+        "polygon_start": 0,
+        "polygon_count": 960,
+        "radius_m": 0.006,
+        "closed_path": true
+      },
+      {
+        "name": "temple_left",
+        "vertex_start": 960,
+        "vertex_count": 362,
+        "polygon_start": 960,
+        "polygon_count": 370,
+        "radius_m": 0.004,
+        "closed_path": false
+      },
+      {
+        "name": "ring_right",
+        "vertex_start": 1322,
+        "vertex_count": 960,
+        "polygon_start": 1330,
+        "polygon_count": 960,
+        "radius_m": 0.006,
+        "closed_path": true
+      },
+      {
+        "name": "temple_right",
+        "vertex_start": 2282,
+        "vertex_count": 362,
+        "polygon_start": 2290,
+        "polygon_count": 370,
+        "radius_m": 0.004,
+        "closed_path": false
+      },
+      {
+        "name": "bridge",
+        "vertex_start": 2644,
+        "vertex_count": 132,
+        "polygon_start": 2660,
+        "polygon_count": 140,
+        "radius_m": 0.005,
+        "closed_path": false
+      }
+    ],
+    "vertices": 2776,
+    "triangles": 5540,
+    "head_weight": 1.0,
+    "ear_support_region": {
+      "abs_x": [
+        0.17,
+        0.23
+      ],
+      "y": [
+        1.54,
+        1.615
+      ],
+      "z": [
+        -0.03,
+        0.045
+      ]
+    },
+    "expected_root_gap_m": 0.0004,
+    "other_parts_unchanged": true,
+    "ring_changes": [
+      {
+        "side": -1,
+        "maximum_lateral_shift_m": 0.03200000000000002,
+        "maximum_forward_shift_m": 0.01888425373077393
+      },
+      {
+        "side": 1,
+        "maximum_lateral_shift_m": 0.03200000000000002,
+        "maximum_forward_shift_m": 0.01888127349853516
+      }
+    ],
+    "construction_report": "work/glasses09-construction.json",
+    "construction_sha256": "5a7f8fcfab2630d235084cee7684104517b599a5bdd801b29b1d6132f25b6a07"
+  }
 }

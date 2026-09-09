@@ -1,0 +1,303 @@
+{
+	"checks": 110,
+	"failures": 0,
+	"maximum_relative_error_m": 0.00000048537543761995,
+	"poses": 18,
+	"records": [
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.0,
+			"mesh": "human_accessory_2",
+			"pitch": -1.92,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.0,
+			"mesh": "human_head",
+			"pitch": -1.92,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000289334224135018,
+			"mesh": "human_accessory_2",
+			"pitch": 0.0,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000307336449623108,
+			"mesh": "human_head",
+			"pitch": 0.0,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000378149081825541,
+			"mesh": "human_accessory_2",
+			"pitch": 1.3,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000377634933101945,
+			"mesh": "human_head",
+			"pitch": 1.3,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000267210054971656,
+			"mesh": "human_accessory_2",
+			"pitch": -1.92,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000266560078898692,
+			"mesh": "human_head",
+			"pitch": -1.92,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000298024673384134,
+			"mesh": "human_accessory_2",
+			"pitch": 0.0,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000307195307414077,
+			"mesh": "human_head",
+			"pitch": 0.0,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000399909509951613,
+			"mesh": "human_accessory_2",
+			"pitch": 1.3,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000377138491103324,
+			"mesh": "human_head",
+			"pitch": 1.3,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000267259650854612,
+			"mesh": "human_accessory_2",
+			"pitch": -1.92,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000267495551042884,
+			"mesh": "human_head",
+			"pitch": -1.92,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000298029050327386,
+			"mesh": "human_accessory_2",
+			"pitch": 0.0,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000298116333397047,
+			"mesh": "human_head",
+			"pitch": 0.0,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000399996281430504,
+			"mesh": "human_accessory_2",
+			"pitch": 1.3,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 0.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.00000048537543761995,
+			"mesh": "human_head",
+			"pitch": 1.3,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000255066794352388,
+			"mesh": "human_accessory_2",
+			"pitch": -1.92,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000255066794352388,
+			"mesh": "human_head",
+			"pitch": -1.92,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000289334224135018,
+			"mesh": "human_accessory_2",
+			"pitch": 0.0,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.00000029830829362254,
+			"mesh": "human_head",
+			"pitch": 0.0,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000358886808271564,
+			"mesh": "human_accessory_2",
+			"pitch": 1.3,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000388074425927698,
+			"mesh": "human_head",
+			"pitch": 1.3,
+			"yaw": -1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000299509622436744,
+			"mesh": "human_accessory_2",
+			"pitch": -1.92,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000303925247635561,
+			"mesh": "human_head",
+			"pitch": -1.92,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000298024673384134,
+			"mesh": "human_accessory_2",
+			"pitch": 0.0,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000307195307414077,
+			"mesh": "human_head",
+			"pitch": 0.0,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000368709663689515,
+			"mesh": "human_accessory_2",
+			"pitch": 1.3,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000387501813747804,
+			"mesh": "human_head",
+			"pitch": 1.3,
+			"yaw": 0.0
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000304290324493195,
+			"mesh": "human_accessory_2",
+			"pitch": -1.92,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000304495472391864,
+			"mesh": "human_head",
+			"pitch": -1.92,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000298075605087433,
+			"mesh": "human_accessory_2",
+			"pitch": 0.0,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000298029050327386,
+			"mesh": "human_head",
+			"pitch": 0.0,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000387591342132509,
+			"mesh": "human_accessory_2",
+			"pitch": 1.3,
+			"yaw": 1.30899693899575
+		},
+		{
+			"crouch": 1.0,
+			"lod_bias": 1.0,
+			"maximum_error_m": 0.000000378149081825541,
+			"mesh": "human_head",
+			"pitch": 1.3,
+			"yaw": 1.30899693899575
+		}
+	],
+	"scope": "Native imported head/A2 skeleton bake invariant across18 poses;17 neighbouring pieces have rigid head weights. Morph contact and visual LOD evidence are separate.",
+	"source_sha256": {
+		"res://assets/art/characters/human/human_lms06.glb": "af812dd2151badf6ee0f2d196b6d368edbce95d11c857684e7730db570f3d9e8",
+		"res://assets/art/characters/human/model.json": "a8605fcc3d146674513cba51ba3d34606cfe79c0df6190d16c9d0a02ef6e0dcd",
+		"res://assets/art/characters/shared/character_skin.gd": "4b725c739410e813670ec5ca0c80c74d8ef65f06dedf316d56e77b6410d570b8",
+		"res://scripts/human_pose.gd": "36c69f5a2273db33950776e8c81153f3d5b76a28be6a944e7bbe4ea8ce794190"
+	}
+}

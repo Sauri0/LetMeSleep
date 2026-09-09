@@ -1,0 +1,23 @@
+{
+  "name": "glasses09-c2-199",
+  "exe_sha256": "446E08F71624052572F96DE9031850BA96382CE6752ADDE38BB955B0A49BED01",
+  "source": true,
+  "arguments": [
+    "--path",
+    "\"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\game\"",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/facial_catalog08_gallery.gd",
+    "--",
+    "--role=human",
+    "--head=199",
+    "--states=neutral,blink",
+    "--output=C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/outputs/0.9-glasses-fit/after2-199"
+  ],
+  "started_utc": "2026-09-09T17:33:55.2655381Z",
+  "finished_utc": "2026-09-09T17:33:58.6711604Z",
+  "exit_code": 0,
+  "stderr_bytes": 0,
+  "passed": true
+}

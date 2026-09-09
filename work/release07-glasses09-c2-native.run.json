@@ -1,0 +1,20 @@
+{
+  "name": "glasses09-c2-native",
+  "exe_sha256": "446E08F71624052572F96DE9031850BA96382CE6752ADDE38BB955B0A49BED01",
+  "source": true,
+  "arguments": [
+    "--path",
+    "\"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\game\"",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/glasses09_fit_checks.gd",
+    "--",
+    "--output=C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/glasses09-c2-native.json"
+  ],
+  "started_utc": "2026-09-09T17:33:48.2760167Z",
+  "finished_utc": "2026-09-09T17:33:51.8574940Z",
+  "exit_code": 0,
+  "stderr_bytes": 0,
+  "passed": true
+}

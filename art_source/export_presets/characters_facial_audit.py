@@ -128,6 +128,9 @@ def compatible(a,b):
 
 def contact_classification(a,b,count,exposed):
  if not count:return 'disjoint_at_all_samples'
+ # Glasses must fit the nose and ears. They are neither a cap root nor a
+ # general buried attachment; their specific audit has no contact exception.
+ if 'human_accessory_2' in [a,b]:return 'unexpected_accessory_contact'
  cats={a.split('_')[1],b.split('_')[1]}
  if 'head' in cats:return 'intentional_skin_attachment'
  if cats=={'accessory','hair'} and a.startswith('human'):
@@ -222,7 +225,7 @@ def run(role):
   if len(report['pairs'])%20==0:print('FACIAL_AUDIT_PROGRESS',role,len(report['pairs']),round(time.time()-start,1),flush=True)
  report['elapsed_seconds']=time.time()-start
  report['pair_samples']=sum(p['samples'] for p in report['pairs'])
- report['unexpected_pairs']=[{'a':p['a'],'b':p['b']} for p in report['pairs'] if p['classification']=='unexpected_exposed_contact']
+ report['unexpected_pairs']=[{'a':p['a'],'b':p['b']} for p in report['pairs'] if p['classification'] in ['unexpected_exposed_contact','unexpected_accessory_contact']]
  report['numerical_passed']=not report['semantic_failures'] and not report['unexpected_pairs']
  out=R/'work'/('facial08-geometry-'+role+'.json');out.write_text(json.dumps(report,indent=2))
  print('FACIAL_AUDIT_RESULT',role,len(report['pairs']),report['pair_samples'],'semantic_failures',len(report['semantic_failures']),flush=True)

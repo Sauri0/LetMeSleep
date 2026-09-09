@@ -15,6 +15,7 @@ sys.path.insert(0,str(ROOT/'art_source/characters/shared'))
 from facial_parts import separate_faces, add_human_facial_hair, weld_human_hair_roots
 from garment_fit import repair_human_garments
 from garment_trim import conform_human_central_trim
+from glasses_fit import repair_human_glasses
 
 def srgb_to_linear(value):
     return value/12.92 if value<=.04045 else ((value+.055)/1.055)**2.4
@@ -174,6 +175,12 @@ def export_selected(species):
     if species=='human':
         add_human_facial_hair(rigs[0])
         weld_human_hair_roots(rigs[0])
+    glasses_fit={}
+    if species=='human':
+        glasses_fit,glasses_details=repair_human_glasses()
+        glasses_report=ROOT/'work/glasses09-construction.json'
+        glasses_report.write_text(json.dumps(glasses_details,indent=2),encoding='utf8')
+        glasses_fit.update(construction_report='work/glasses09-construction.json',construction_sha256=hashlib.sha256(glasses_report.read_bytes()).hexdigest())
     meshes=[obj for obj in bpy.context.scene.objects if obj.type=='MESH']
     default=dict(frozen_manifest['default'])
     legacy_face=default.pop('face',0)
@@ -214,6 +221,7 @@ def export_selected(species):
     if cheek_repair:manifest['cheek_repair']=cheek_repair
     if garment_fit:manifest['garment_fit09']=garment_fit
     if garment_trim:manifest['garment_trim09']=garment_trim
+    if glasses_fit:manifest['glasses_fit09']=glasses_fit
     (source/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf8')
     (output/'rig_contract.json').write_text(json.dumps({'id':manifest['id'],'rig_version':manifest['rig_version'],'selected_base':variant,'bones':manifest['bones']},indent=2),encoding='utf8')
     model=json.loads((frozen/'model.json').read_text())
@@ -221,6 +229,7 @@ def export_selected(species):
     model['facial_parts']=manifest['facial_parts']
     if garment_fit:model['garment_fit09']=garment_fit
     if garment_trim:model['garment_trim09']=garment_trim
+    if glasses_fit:model['glasses_fit09']=glasses_fit
     if cheek_repair:
         model['cheek_repair']=cheek_repair
         for part in model['parts']:
