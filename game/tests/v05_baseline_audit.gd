@@ -14,6 +14,15 @@ class Transport:
 	signal waiting_updated(data: Dictionary)
 	signal connection_state_changed(data: Dictionary)
 	var local_cosmetics: Dictionary = {}
+	var is_server := false
+	var voice: Node
+	func _ready() -> void:
+		# Real Client now requires the voice transport even in staged camera
+		# fixtures. Keep its lifecycle real while this transport stays offline.
+		voice = load("res://scripts/voice_transport.gd").new()
+		add_child(voice)
+	func _client_connected() -> bool:
+		return false
 	func connect_room(_address: String,_port: int,_player_name: String,_code: String,_create: bool) -> void:
 		pass
 	func lobby_action(_verb: String,_value: Variant = null) -> void:
