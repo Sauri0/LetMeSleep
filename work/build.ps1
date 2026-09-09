@@ -67,7 +67,7 @@ if (-not $SkipTests) {
         Invoke-CheckedHeadless -CheckName $testName -GameArguments @('--script',"res://tests/$testName.gd")
     }
     Invoke-CheckedHeadless -CheckName 'voice09_session_checks' -GameArguments @('--audio-driver','Dummy','--frame-delay','2','--script','res://tests/voice09_session_checks.gd')
-    foreach ($onlineTest in @('online_invitation_test','online_session_test','online_network_checks','online_network_mtu_checks','online_network_payload_checks')) {
+    foreach ($onlineTest in @('online_invitation_test','online_session_test','online_network_checks','online_network_mtu_checks','online_network_payload_checks','online_pair_integration')) {
         Invoke-CheckedHeadless -CheckName $onlineTest -GameArguments @('--script',"res://tests/$onlineTest.gd")
     }
     Invoke-CheckedHeadless -CheckName 'online_network_live_host' -GameArguments @('--script','res://tests/online_network_live_host.gd','--',('--config=' + (Join-Path $gamePath 'eos.local.cfg')))
