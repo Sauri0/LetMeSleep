@@ -1,0 +1,36 @@
+{
+	"baseline": true,
+	"checks": 19,
+	"clear_queries": 2,
+	"door_cues": [
+		{
+			"cue": "door_move",
+			"gain": -18.0,
+			"p": "(-1.99, 1.08, -8.97)",
+			"pitch": 1.0
+		},
+		{
+			"cue": "door_move",
+			"gain": -18.0,
+			"p": "(-1.99, 1.08, -8.97)",
+			"pitch": 1.0
+		},
+		{
+			"cue": "door_block",
+			"gain": -13.0,
+			"p": "(-1.99, 1.08, -8.97)",
+			"pitch": 1.0
+		},
+		{
+			"cue": "door_latch",
+			"gain": -12.0,
+			"p": "(-1.99, 1.08, -8.97)",
+			"pitch": 1.0
+		}
+	],
+	"excluded_queries": 2,
+	"failures": [],
+	"quiet_listener_queries": 1000,
+	"scope": "Production emit/sync_doors with real physics and counting observers; no microphone, CPU cost or FPS claim",
+	"source_sha256": "c8d5289719d417144607ddf79b203deca3ec62c9f3f79be3951f497721adae41"
+}

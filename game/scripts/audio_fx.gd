@@ -51,21 +51,25 @@ func sync_doors(states: Dictionary, views: Dictionary = {}) -> void:
 		var current: Dictionary = states[id]
 		if previous_doors.has(id) and not suspended:
 			var before: Dictionary = previous_doors[id]
-			var own_leaf := RID()
-			if views.has(id) and is_instance_valid(views[id].get("body")): own_leaf = views[id].body.get_rid()
-			var transform := Doors.leaf_transform(definitions[id],float(current.get("angle",0)))
-			var position := Doors.handle_point(definitions[id],float(current.get("angle",0)))
-			# Put the emitter on the listener's side of its own leaf.
-			var listener := _listener_node()
-			var side := 1.0
-			if is_instance_valid(listener) and transform.basis.z.dot(listener.global_position-position)<0: side = -1.0
-			position += transform.basis.z*.15*side
+			var cue := ""
+			var gain := -18.0
 			if bool(current.get("blocked",false)) and not bool(before.get("blocked",false)):
-				_emit("door_block",position,-13.0,1.0,own_leaf)
+				cue = "door_block";gain = -13.0
 			elif bool(current.get("moving",false)) and (not bool(before.get("moving",false)) or current.get("revision",0)!=before.get("revision",0)):
-				_emit("door_move",position,-18.0,1.0,own_leaf)
+				cue = "door_move"
 			elif bool(before.get("moving",false)) and not bool(current.get("moving",false)) and float(current.get("angle",1))<.01:
-				_emit("door_latch",position,-12.0,1.0,own_leaf)
+				cue = "door_latch";gain = -12.0
+			if not cue.is_empty():
+				var own_leaf := RID()
+				if views.has(id) and is_instance_valid(views[id].get("body")): own_leaf = views[id].body.get_rid()
+				var transform := Doors.leaf_transform(definitions[id],float(current.get("angle",0)))
+				var position := Doors.handle_point(definitions[id],float(current.get("angle",0)))
+				# Prepare the listener-side emitter only for an actual door cue.
+				var listener := _listener_node()
+				var side := 1.0
+				if is_instance_valid(listener) and transform.basis.z.dot(listener.global_position-position)<0: side = -1.0
+				position += transform.basis.z*.15*side
+				_emit(cue,position,gain,1.0,own_leaf)
 		previous_doors[id] = current.duplicate()
 
 func setup() -> void:
@@ -281,9 +285,10 @@ func _emit(cue: String, position: Vector3, gain_db: float, pitch_value: float, i
 	voice.stream = streams[cue]
 	voice.position = position
 	voice.pitch_scale = pitch_value
-	var blocked: bool = is_instance_valid(listener) and _blocked(listener.global_position, position,ignored_body)
-	voice.volume_db = gain_db - (10.0 if blocked else 0.0)
-	voice.attenuation_filter_cutoff_hz = 1400.0 if blocked else 6500.0
+	# The admission check already rejected occluded sources. The physics world
+	# cannot advance inside this synchronous call, so do not repeat the ray.
+	voice.volume_db = gain_db
+	voice.attenuation_filter_cutoff_hz = 6500.0
 	voice.play()
 	effects_started[cue] = int(effects_started.get(cue, 0)) + 1
 
