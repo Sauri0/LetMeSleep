@@ -70,11 +70,12 @@ if (-not $SkipTests) {
     foreach ($onlineTest in @('online_invitation_test','online_session_test','online_network_checks','online_network_mtu_checks','online_network_payload_checks')) {
         Invoke-CheckedHeadless -CheckName $onlineTest -GameArguments @('--script',"res://tests/$onlineTest.gd")
     }
+    Invoke-CheckedHeadless -CheckName 'online_network_live_host' -GameArguments @('--script','res://tests/online_network_live_host.gd','--',('--config=' + (Join-Path $gamePath 'eos.local.cfg')))
     }
     # Skin baking requires a rendering backend; Godot's headless dummy backend
     # cannot register the skeleton used by this actual-deformed-mesh test.
     # UI checks also need real mouse capture, unavailable in the dummy backend.
-    foreach ($nativeTest in @('glasses09_fit_checks','actor09_legacy_geometry_test','v07_character_rig_checks','v07_character_client_checks','selected07_mesh_checks','selected07_actor_checks','selected07_facial_envelope_checks','facial_parts08_checks','facial_blink08_checks','customization08_checks','house07_checks','house07_lighting_probe','house07_liso_checks','ui_navigation_test','video07_checks','doors07_client_checks','throw_client07_checks','tool07_visual_checks','house07_occlusion_checks','appendage09_visual_checks','emote09_pose_checks','furniture09_blueprint_checks','voice09_visual_checks','menu09_ui_checks','social09_client_checks','surface09_client_checks','surface_view09_client_checks','voice_input09_ui_checks','voice_context09_ui_checks')) {
+    foreach ($nativeTest in @('online_main_lifecycle','glasses09_fit_checks','actor09_legacy_geometry_test','v07_character_rig_checks','v07_character_client_checks','selected07_mesh_checks','selected07_actor_checks','selected07_facial_envelope_checks','facial_parts08_checks','facial_blink08_checks','customization08_checks','house07_checks','house07_lighting_probe','house07_liso_checks','ui_navigation_test','video07_checks','doors07_client_checks','throw_client07_checks','tool07_visual_checks','house07_occlusion_checks','appendage09_visual_checks','emote09_pose_checks','furniture09_blueprint_checks','voice09_visual_checks','menu09_ui_checks','social09_client_checks','surface09_client_checks','surface_view09_client_checks','voice_input09_ui_checks','voice_context09_ui_checks')) {
     $rigLog = Join-Path $PSScriptRoot ('build-' + $nativeTest + '.log')
     $rigError = Join-Path $PSScriptRoot ('build-' + $nativeTest + '.err')
     $nativeArguments = @('--path', ('"' + $gamePath + '"'), '--script', ('res://tests/' + $nativeTest + '.gd'))

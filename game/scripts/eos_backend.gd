@@ -4,6 +4,7 @@ extends Node
 ## completing a later attempt. The owner must keep this node alive while draining.
 signal completed(ticket: int, operation: String, result: Dictionary)
 signal auth_expiring
+signal member_departed(lobby_id: String, user_id: String)
 var busy := false
 var initialized := false
 var local_user_id := ""
@@ -62,6 +63,8 @@ func _perform(operation: String, args: Dictionary) -> Dictionary:
 			_ieos.disconnect("connect_interface_auth_expiration", previous)
 		if not _ieos.is_connected("connect_interface_auth_expiration", _expiration):
 			_ieos.connect("connect_interface_auth_expiration", _expiration)
+		if not _ieos.is_connected("lobby_interface_lobby_member_status_received_callback", _membership_event):
+			_ieos.connect("lobby_interface_lobby_member_status_received_callback", _membership_event)
 		var credentials: Variant = load(ADDON + "heos/hcredentials.gd").new()
 		for field: String in ["product_id", "sandbox_id", "deployment_id", "client_id", "client_secret"]:
 			credentials.set(field, args.config[field])
@@ -132,6 +135,16 @@ func _perform(operation: String, args: Dictionary) -> Dictionary:
 				ok = await args.lobby.leave_async()
 			dispose_search(args.lobby)
 			return {"ok": ok, "error": "cleanup_failed"}
+		"kick":
+			var lobby: Variant = args.lobby
+			var target: String = str(args.user_id)
+			if target.is_empty() or target == local_user_id or lobby.owner_product_user_id != local_user_id:
+				return {"ok": false, "error": "invalid_kick_authority"}
+			var member: Variant = lobby.get_member_by_product_user_id(target)
+			if member == null:
+				return {"ok": true, "already_absent": true}
+			var ok: bool = await member.kick_member_async()
+			return {"ok": ok, "error": "member_kick_failed" if not ok else ""}
 	return {"ok": false, "error": "unsupported_operation"}
 
 func make_peer(is_host: bool, socket_id: String, owner_id: String, force_relay := false) -> Dictionary:
@@ -151,6 +164,11 @@ func make_peer(is_host: bool, socket_id: String, owner_id: String, force_relay :
 func _expiration(_data: Dictionary) -> void:
 	auth_expiring.emit()
 
+func _membership_event(data: Dictionary) -> void:
+	var status: int = int(data.get("current_status", -1))
+	if status in [_eos.Lobby.LobbyMemberStatus.Left, _eos.Lobby.LobbyMemberStatus.Disconnected, _eos.Lobby.LobbyMemberStatus.Kicked, _eos.Lobby.LobbyMemberStatus.Closed]:
+		member_departed.emit(str(data.get("lobby_id", "")), str(data.get("target_user_id", "")))
+
 ## Call only during application shutdown, after OnlineSession.close() has
 ## drained SDK callbacks and all game peers have closed their EOS sockets.
 func shutdown() -> Dictionary:
@@ -164,6 +182,8 @@ func shutdown() -> Dictionary:
 			return {"ok": false, "error": "peers_still_open"}
 	if _ieos.is_connected("connect_interface_auth_expiration", _expiration):
 		_ieos.disconnect("connect_interface_auth_expiration", _expiration)
+	if _ieos.is_connected("lobby_interface_lobby_member_status_received_callback", _membership_event):
+		_ieos.disconnect("lobby_interface_lobby_member_status_received_callback", _membership_event)
 	_runtime.set_process(false)
 	_ieos.platform_interface_release()
 	var code: int = _ieos.platform_interface_shutdown()

@@ -5,9 +5,11 @@ signal state_changed(state: String)
 signal failed(code: String)
 signal transport_ready(info: Dictionary)
 signal route_observed(network_type: int)
+signal member_departed(user_id: String)
 const Invitation = preload("res://scripts/online_invitation.gd")
 const Backend = preload("res://scripts/eos_backend.gd")
 const STEP_TIMEOUT_MS := 25000
+const ADMISSION_TIMEOUT_MS := 30000
 var state := "idle"
 ## Diagnostics only: forces an actual EOS relay; never synthesizes route evidence.
 var force_relay := false
@@ -30,6 +32,11 @@ var _renewing := false
 var _renew_pending := false
 var _cleanup: Array[Dictionary] = []
 var _cleanup_failed := false
+var _admission_deadlines: Dictionary = {}
+var _admitted: Dictionary = {}
+var _rejected: Dictionary = {}
+var _kick_queue: Array[String] = []
+var _kick_in_flight := ""
 
 func _ready() -> void:
 	if backend == null:
@@ -37,6 +44,7 @@ func _ready() -> void:
 		add_child(backend)
 	backend.completed.connect(_completed)
 	backend.auth_expiring.connect(_auth_expiring)
+	backend.member_departed.connect(_member_departed)
 
 ## Only inject a fake/alternate backend before adding this node to the tree.
 func set_backend(value: Node) -> void:
@@ -132,6 +140,15 @@ func _completed(ticket: int, operation: String, result: Dictionary) -> void:
 		_drain_cleanup()
 		return
 	_deadline = 0
+	if operation == "kick":
+		_kick_in_flight = ""
+		if not result.get("ok", false):
+			_fail("member_kick_failed")
+			return
+		if _renew_pending:
+			_auth_expiring()
+		_drain_kicks()
+		return
 	if operation == "login" and result.get("error") == "invalid_user" and not _renewing and not _created_user and result.get("continuance_token") != null:
 		_created_user = true
 		_request("create_user", {"continuance_token": result.continuance_token})
@@ -201,6 +218,8 @@ func _open_peer() -> void:
 	_peer.peer_connection_established.connect(_route)
 	_lobby.lobby_owner_changed.connect(_owner_changed)
 	_lobby.kicked_from_lobby.connect(_kicked)
+	_lobby.lobby_updated.connect(_refresh_members)
+	_refresh_members()
 	var ticket := _generation
 	var info := {"peer": _peer, "is_host": _host, "lobby_id": _lobby.lobby_id, "owner_id": _owner_id, "socket_id": _socket, "capability": _invitation.capability, "protocol": _protocol}
 	_set_state("transport_ready")
@@ -212,11 +231,98 @@ func _open_peer() -> void:
 func is_lobby_member(user_id: String) -> bool:
 	return _lobby != null and not user_id.is_empty() and _lobby.get_member_by_product_user_id(user_id) != null
 
+## Only Network calls this, after validating the invitation capability and the
+## entire game handshake. A P2P connection by itself does not admit a member.
+func mark_peer_admitted(user_id: String) -> bool:
+	if not _host or _lobby == null or _lobby.owner_product_user_id != _local_id or not state in ["transport_ready", "renewing"]:
+		return false
+	if user_id == _local_id:
+		return true
+	_refresh_members()
+	if not is_lobby_member(user_id) or _rejected.has(user_id) or _kick_in_flight == user_id:
+		return false
+	if _admitted.has(user_id):
+		return true
+	if not _admission_deadlines.has(user_id) or int(clock.call()) >= int(_admission_deadlines[user_id]):
+		reject_peer(user_id)
+		return false
+	_admitted[user_id] = true
+	_admission_deadlines.erase(user_id)
+	return true
+
+## Network can send its reliable rejection first, then call this after its
+## delivery grace period. Kicks serialize with authentication and cleanup.
+func reject_peer(user_id: String) -> bool:
+	if not _host or _lobby == null or _lobby.owner_product_user_id != _local_id or user_id == _local_id or user_id.is_empty():
+		return false
+	if not is_lobby_member(user_id):
+		return false
+	_admitted.erase(user_id)
+	_admission_deadlines.erase(user_id)
+	if not _rejected.has(user_id):
+		_rejected[user_id] = true
+		_kick_queue.append(user_id)
+	_drain_kicks()
+	return true
+
+func _refresh_members() -> void:
+	if not _host or _lobby == null:
+		return
+	var present: Dictionary = {}
+	for member: Variant in _lobby.members:
+		var user_id: String = member.product_user_id
+		if user_id.is_empty() or user_id == _local_id:
+			continue
+		present[user_id] = true
+		if not _admission_deadlines.has(user_id) and not _admitted.has(user_id) and not _rejected.has(user_id):
+			_admission_deadlines[user_id] = int(clock.call()) + ADMISSION_TIMEOUT_MS
+	for tracked: Dictionary in [_admission_deadlines, _admitted, _rejected]:
+		for user_id: String in tracked.keys():
+			if not present.has(user_id):
+				tracked.erase(user_id)
+	for user_id: String in _kick_queue.duplicate():
+		if not present.has(user_id):
+			_kick_queue.erase(user_id)
+
+func _member_departed(lobby_id: String, user_id: String) -> void:
+	if _lobby == null or _lobby.lobby_id != lobby_id:
+		return
+	_admission_deadlines.erase(user_id)
+	_admitted.erase(user_id)
+	_rejected.erase(user_id)
+	_kick_queue.erase(user_id)
+	member_departed.emit(user_id)
+
+func poll_admission() -> void:
+	if not _host or not state in ["transport_ready", "renewing"] or _lobby == null:
+		return
+	_refresh_members()
+	for user_id: String in _admission_deadlines.keys():
+		if int(clock.call()) >= int(_admission_deadlines[user_id]):
+			reject_peer(user_id)
+	_drain_kicks()
+
+func _drain_kicks() -> void:
+	if not _host or _lobby == null or backend.busy or _kick_queue.is_empty() or not state in ["transport_ready", "renewing"]:
+		return
+	if _lobby.owner_product_user_id != _local_id:
+		_fail("room_owner_changed")
+		return
+	var user_id: String = _kick_queue.pop_front()
+	if not is_lobby_member(user_id):
+		_drain_kicks()
+		return
+	_kick_in_flight = user_id
+	_operation = "kick"
+	_deadline = int(clock.call()) + STEP_TIMEOUT_MS
+	if not backend.request(_generation, "kick", {"lobby": _lobby, "user_id": user_id}):
+		_fail("backend_busy")
+
 func _incoming(data: Dictionary) -> void:
 	if _peer == null:
 		return
 	var user_id: String = str(data.get("remote_user_id", ""))
-	if _host and state in ["transport_ready", "renewing"] and data.get("socket", "") == _socket and user_id != _local_id and is_lobby_member(user_id):
+	if _host and state in ["transport_ready", "renewing"] and data.get("socket", "") == _socket and user_id != _local_id and is_lobby_member(user_id) and not _rejected.has(user_id):
 		_peer.accept_connection_request(user_id)
 	else:
 		_peer.deny_connection_request(user_id)
@@ -242,6 +348,7 @@ func _auth_expiring() -> void:
 
 func _process(_delta: float) -> void:
 	poll_timeout()
+	poll_admission()
 
 func poll_timeout() -> void:
 	if _deadline > 0 and int(clock.call()) >= _deadline:
@@ -266,6 +373,11 @@ func _invalidate() -> void:
 	_renew_pending = false
 	_renewing = false
 	_invitation.clear()
+	_admission_deadlines.clear()
+	_admitted.clear()
+	_rejected.clear()
+	_kick_queue.clear()
+	_kick_in_flight = ""
 	if _peer != null:
 		var old_peer: Variant = _peer
 		_peer = null
@@ -277,6 +389,8 @@ func _invalidate() -> void:
 			old.lobby_owner_changed.disconnect(_owner_changed)
 		if old.kicked_from_lobby.is_connected(_kicked):
 			old.kicked_from_lobby.disconnect(_kicked)
+		if old.lobby_updated.is_connected(_refresh_members):
+			old.lobby_updated.disconnect(_refresh_members)
 		_queue_cleanup(old, _host)
 	_drain_cleanup()
 

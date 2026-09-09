@@ -15,17 +15,25 @@ class FakePeer extends RefCounted:
 	func accept_connection_request(id: String) -> void: accepted.append(id)
 	func deny_connection_request(id: String) -> void: denied.append(id)
 	func close() -> void: closed = true
+class FakeMember extends RefCounted:
+	var product_user_id: String
+	func _init(id: String) -> void: product_user_id = id
 class FakeLobby extends RefCounted:
 	signal lobby_owner_changed
 	signal kicked_from_lobby
+	signal lobby_updated
 	var lobby_id := "Lobby123"
 	var owner_product_user_id := "host"
 	var bucket_id := "LMS-P9"
-	var members: Array = ["host", "guest"]
-	func get_member_by_product_user_id(id: String) -> Variant: return self if id in members else null
+	var members: Array = [FakeMember.new("host"), FakeMember.new("guest")]
+	func get_member_by_product_user_id(id: String) -> Variant:
+		for member: FakeMember in members:
+			if member.product_user_id == id: return member
+		return null
 class FakeBackend extends Node:
 	signal completed(ticket: int, operation: String, result: Dictionary)
 	signal auth_expiring
+	signal member_departed(lobby_id: String, user_id: String)
 	var busy := false
 	var installed := true
 	var pending: Dictionary = {}
@@ -213,6 +221,74 @@ func _run() -> void:
 	check(s.state == "cancelled" and cancelled_ready.is_empty() and b.peer.closed, "Synchronous cancellation at ready cannot expose closed peer")
 	b.finish({"ok":true})
 	dispose(p)
+	# Lobby membership consumes slots even without a P2P request. Admission is
+	# bounded from first observation; repeated lobby updates cannot renew it.
+	p = fixture(); s = p[0]; b = p[1]
+	s.start_host(Config,"Name",9,CAP); login(b)
+	lobby = FakeLobby.new(); b.finish({"ok":true,"lobby":lobby})
+	check(s.mark_peer_admitted("host") and not s.reject_peer("host"), "Owner is admitted and cannot be kicked")
+	check(not s.mark_peer_admitted("outsider"), "Nonmember cannot become admitted")
+	now += Session.ADMISSION_TIMEOUT_MS - 1
+	lobby.lobby_updated.emit(); s.poll_admission()
+	check(not b.busy, "Repeated lobby update does not shorten admission grace")
+	now += 1; s.poll_admission()
+	check(b.pending.operation == "kick" and b.pending.args.user_id == "guest" and b.peer.accepted.is_empty(), "Silent member expires without ever connecting P2P")
+	check(not s.mark_peer_admitted("guest"), "Handshake at/after deadline cannot bypass pending eviction")
+	lobby.members = [FakeMember.new("host")]
+	b.member_departed.emit("Lobby123", "guest")
+	lobby.members.append(FakeMember.new("guest")); lobby.lobby_updated.emit()
+	check(not s.mark_peer_admitted("guest"), "Rejoin cannot become admitted while its previous eviction is still in flight")
+	lobby.members = [FakeMember.new("host")]
+	b.finish({"ok":true}); s.poll_admission()
+	check(not b.busy and b.operations.count("kick") == 1, "Departed member does not receive duplicate kicks")
+	dispose(p)
+	p = fixture(); s = p[0]; b = p[1]
+	s.start_host(Config,"Name",9,CAP); login(b)
+	lobby = FakeLobby.new(); b.finish({"ok":true,"lobby":lobby})
+	check(s.mark_peer_admitted("guest"), "Valid handshake admits guest inside deadline")
+	now += Session.ADMISSION_TIMEOUT_MS * 2; s.poll_admission()
+	check(not b.busy, "Admitted guest is not evicted when grace expires")
+	var departures: Array = []
+	s.member_departed.connect(func(id): departures.append(id))
+	b.member_departed.emit("other-room", "guest")
+	check(departures.is_empty() and s.mark_peer_admitted("guest"), "Stale room notification cannot revoke current admission")
+	lobby.members = [FakeMember.new("host")]
+	b.member_departed.emit("Lobby123", "guest")
+	check(departures == ["guest"], "Membership departure notifies Network without requiring P2P disconnect")
+	lobby.members.append(FakeMember.new("guest")); lobby.lobby_updated.emit()
+	now += Session.ADMISSION_TIMEOUT_MS; s.poll_admission()
+	check(b.pending.operation == "kick", "Same identity rejoining needs a new handshake")
+	s.cancel(); b.finish({"ok":true})
+	check(s.state == "cancelled" and b.pending.operation == "cleanup", "Late kick completion after cancellation only drains room cleanup")
+	b.finish({"ok":true}); dispose(p)
+	# Multiple silent members are evicted serially without touching the owner.
+	p = fixture(); s = p[0]; b = p[1]
+	s.start_host(Config,"Name",9,CAP); login(b)
+	lobby = FakeLobby.new()
+	for index: int in 14: lobby.members.append(FakeMember.new("silent" + str(index)))
+	b.finish({"ok":true,"lobby":lobby})
+	now += Session.ADMISSION_TIMEOUT_MS; s.poll_admission()
+	var evicted: Array = []
+	while b.busy and b.pending.operation == "kick":
+		var target: String = b.pending.args.user_id
+		evicted.append(target)
+		lobby.members = lobby.members.filter(func(member): return member.product_user_id != target)
+		b.finish({"ok":true})
+	check(evicted.size() == 15 and not "host" in evicted and not b.busy, "All fifteen unauthenticated slots released via serialized kicks")
+	dispose(p)
+	# Authentication and eviction share the one-callback-at-a-time backend.
+	p = fixture(); s = p[0]; b = p[1]
+	s.start_host(Config,"Name",9,CAP); login(b)
+	lobby = FakeLobby.new(); b.finish({"ok":true,"lobby":lobby})
+	now += Session.ADMISSION_TIMEOUT_MS - 1000
+	b.auth_expiring.emit()
+	now += 1000; s.poll_admission()
+	check(b.pending.operation == "login", "Admission expiry does not overlap an outstanding login callback")
+	b.finish({"ok":true,"local_user_id":"host"}); s.poll_admission()
+	check(b.pending.operation == "kick", "Queued eviction resumes after authentication settles")
+	b.finish({"ok":false,"error":"not_owner"})
+	check(s.state == "error" and b.peer.closed and b.pending.operation == "cleanup", "Failed SDK eviction closes room instead of pretending capacity was freed")
+	b.finish({"ok":true}); dispose(p)
 	# Production adapter itself stays parseable and inert without addon.
 	var adapter := preload("res://scripts/eos_backend.gd").new()
 	root.add_child(adapter)
@@ -221,6 +297,15 @@ func _run() -> void:
 	adapter.busy = true
 	check(not adapter.shutdown().ok, "Shutdown refuses pending SDK callbacks")
 	adapter.busy = false
+	adapter.initialized = true
+	adapter.local_user_id = "host"
+	var guarded: Dictionary = await adapter._perform("kick", {"lobby": FakeLobby.new(), "user_id": "host"})
+	check(not guarded.ok and guarded.error == "invalid_kick_authority", "Real adapter refuses to kick its owner before reaching native API")
+	var foreign_lobby := FakeLobby.new()
+	foreign_lobby.owner_product_user_id = "someone-else"
+	guarded = await adapter._perform("kick", {"lobby": foreign_lobby, "user_id": "guest"})
+	check(not guarded.ok and guarded.error == "invalid_kick_authority", "Real adapter cannot kick from a lobby it does not own")
+	adapter.initialized = false
 	adapter.free()
 	print("ONLINE_SESSION_RESULT checks=%d failures=%d" % [checks, failures])
 	quit(1 if failures else 0)

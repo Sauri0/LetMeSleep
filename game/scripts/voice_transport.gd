@@ -29,25 +29,27 @@ func available() -> bool:
 	return is_instance_valid(_validator) and _validator.has_method("validate_frame") and _validator.is_ready()
 
 func begin(epoch: int) -> void:
-	if network._client_connected(): _request_control.rpc_id(1,"begin",epoch,-1)
+	if network._client_connected(): _send(1, "_request_control", ["begin",epoch,-1])
 
 func finish(epoch: int, last_sequence: int) -> void:
-	if network._client_connected(): _request_control.rpc_id(1,"finish",epoch,last_sequence)
+	if network._client_connected(): _send(1, "_request_control", ["finish",epoch,last_sequence])
 
 func hard_stop(epoch: int) -> void:
-	if network._client_connected(): _request_control.rpc_id(1,"stop",epoch,-1)
+	if network._client_connected(): _send(1, "_request_control", ["stop",epoch,-1])
 
 func send_frame(epoch: int, sequence: int, packet: PackedByteArray) -> void:
 	if network._client_connected() and packet.size()>0 and packet.size()<=MAX_PAYLOAD:
-		_request_frame.rpc_id(1,epoch,sequence,packet)
+		_send(1, "_request_frame", [epoch,sequence,packet])
 
 func request_resume(speaker: int, epoch: int, permit: int) -> void:
-	if network._client_connected(): _request_resume.rpc_id(1,speaker,epoch,permit)
+	if network._client_connected(): _send(1, "_request_resume", [speaker,epoch,permit])
 
 @rpc("any_peer","call_remote","reliable",3)
 func _request_resume(speaker: int, epoch: int, permit: int) -> void:
+	if not network.get("_online"): _handle_request_resume(multiplayer.get_remote_sender_id(), speaker, epoch, permit)
+
+func _handle_request_resume(receiver: int, speaker: int, epoch: int, permit: int) -> void:
 	if not network.is_server or network.sim==null or network.sim.phase!="playing": return
-	var receiver:=multiplayer.get_remote_sender_id()
 	if not network.players.has(receiver) or not network.players.has(speaker) or not network._menu_rate_ok(receiver): return
 	_ensure_map()
 	if not streams.has(speaker): return
@@ -55,14 +57,14 @@ func _request_resume(speaker: int, epoch: int, permit: int) -> void:
 	var previous: Dictionary=stream.recipients.get(receiver,{})
 	if previous.is_empty() or int(stream.epoch)!=epoch or int(previous.permit)!=permit or int(stream.finish_at)>0: return
 	stream.recipients.erase(receiver)
-	_permission.rpc_id(receiver,speaker,{})
+	_send(receiver, "_permission", [speaker,{}])
 	_update_permissions(speaker,int(stream.highest)+1,true)
 
 func set_peer_muted(id: int, muted: bool) -> void:
 	if muted: muted_peers[id]=true
 	else: muted_peers.erase(id)
 	if muted and permissions.has(id): permissions.erase(id);permission_changed.emit(id,{})
-	if network._client_connected(): _request_mute.rpc_id(1,id,muted)
+	if network._client_connected(): _send(1, "_request_mute", [id,muted])
 
 func reset() -> void:
 	for id: int in permissions: permission_changed.emit(id,{})
@@ -71,8 +73,10 @@ func reset() -> void:
 
 @rpc("any_peer","call_remote","reliable",3)
 func _request_mute(speaker: int, muted: bool) -> void:
+	if not network.get("_online"): _handle_request_mute(multiplayer.get_remote_sender_id(), speaker, muted)
+
+func _handle_request_mute(receiver: int, speaker: int, muted: bool) -> void:
 	if not network.is_server: return
-	var receiver:=multiplayer.get_remote_sender_id()
 	if not network.players.has(receiver) or not network.players.has(speaker) or not network._menu_rate_ok(receiver): return
 	if not _receiver_mutes.has(receiver): _receiver_mutes[receiver]={}
 	if muted: _receiver_mutes[receiver][speaker]=true
@@ -81,8 +85,10 @@ func _request_mute(speaker: int, muted: bool) -> void:
 
 @rpc("any_peer","call_remote","reliable",3)
 func _request_control(verb: String, epoch: int, last_sequence: int) -> void:
+	if not network.get("_online"): _handle_request_control(multiplayer.get_remote_sender_id(), verb, epoch, last_sequence)
+
+func _handle_request_control(sender: int, verb: String, epoch: int, last_sequence: int) -> void:
 	if not network.is_server or not available() or network.sim==null or network.sim.phase!="playing": return
-	var sender:=multiplayer.get_remote_sender_id()
 	_ensure_map()
 	if not network.players.has(sender) or not network._menu_rate_ok(sender) or epoch<1 or epoch>2147483647: return
 	if verb=="begin":
@@ -99,12 +105,14 @@ func _request_control(verb: String, epoch: int, last_sequence: int) -> void:
 		elif verb=="finish" and last_sequence>=-1 and last_sequence<=MAX_SEQUENCE:
 			streams[sender].finish=last_sequence;streams[sender].finish_at=Time.get_ticks_msec()+750
 			for receiver: int in streams[sender].recipients:
-				_end.rpc_id(receiver,sender,epoch,int(streams[sender].recipients[receiver].permit),last_sequence)
+				_send(receiver, "_end", [sender,epoch,int(streams[sender].recipients[receiver].permit),last_sequence])
 
 @rpc("any_peer","call_remote","unreliable",3)
 func _request_frame(epoch: int, sequence: int, packet: PackedByteArray) -> void:
+	if not network.get("_online"): _handle_request_frame(multiplayer.get_remote_sender_id(), epoch, sequence, packet)
+
+func _handle_request_frame(sender: int, epoch: int, sequence: int, packet: PackedByteArray) -> void:
 	if not network.is_server or not available() or network.sim==null or network.sim.phase!="playing": return
-	var sender:=multiplayer.get_remote_sender_id()
 	if not network.players.has(sender) or not streams.has(sender): return
 	var stream: Dictionary=streams[sender]
 	if epoch!=int(stream.epoch) or sequence<0 or sequence>MAX_SEQUENCE or sequence<int(stream.highest)-12 or stream.seen.has(sequence): return
@@ -123,7 +131,7 @@ func _request_frame(epoch: int, sequence: int, packet: PackedByteArray) -> void:
 	_update_permissions(sender,maxi(sequence,int(stream.highest)))
 	for receiver: int in stream.recipients:
 		var permit: Dictionary=stream.recipients[receiver]
-		if sequence>=int(permit.first_sequence): _deliver.rpc_id(receiver,sender,epoch,int(permit.permit),sequence,packet)
+		if sequence>=int(permit.first_sequence): _send(receiver, "_deliver", [sender,epoch,int(permit.permit),sequence,packet])
 
 func _update_permissions(sender: int, first_sequence: int, force: bool=false) -> void:
 	if not streams.has(sender) or network.sim==null: return
@@ -133,26 +141,29 @@ func _update_permissions(sender: int, first_sequence: int, force: bool=false) ->
 	var actors: Dictionary=network.sim.actors
 	for receiver: int in network.players:
 		if receiver==sender: continue
+		if network.get("_online") and not network.online_member(receiver):
+			stream.recipients.erase(receiver)
+			continue
 		var permission: Dictionary={}
 		if not _receiver_mutes.get(receiver,{}).has(sender) and actors.has(sender) and actors.has(receiver):
 			permission=_acoustics.permission(actors[sender],actors[receiver],network.sim.doors)
 		if permission.is_empty():
-			if stream.recipients.has(receiver): stream.recipients.erase(receiver);_permission.rpc_id(receiver,sender,{})
+			if stream.recipients.has(receiver): stream.recipients.erase(receiver);_send(receiver, "_permission", [sender,{}])
 			continue
 		if not stream.recipients.has(receiver):
 			_permit_counter+=1
 			permission.merge({"epoch":int(stream.epoch),"permit":_permit_counter,"first_sequence":maxi(0,first_sequence),"map_id":_map_id},true)
 			stream.recipients[receiver]=permission
-			_permission.rpc_id(receiver,sender,permission)
+			_send(receiver, "_permission", [sender,permission])
 		else:
 			var previous: Dictionary=stream.recipients[receiver]
 			if absf(float(previous.gain)-float(permission.gain))>.025 or absf(float(previous.cutoff)-float(permission.cutoff))>400:
-				previous.merge(permission,true);_permission.rpc_id(receiver,sender,previous)
+				previous.merge(permission,true);_send(receiver, "_permission", [sender,previous])
 
 func _revoke(sender: int) -> void:
 	if not streams.has(sender): return
 	for receiver: int in streams[sender].recipients:
-		if network._peer_can_receive(receiver): _permission.rpc_id(receiver,sender,{})
+		if network._peer_can_receive(receiver): _send(receiver, "_permission", [sender,{}])
 	streams.erase(sender)
 
 func _process(dt: float) -> void:
@@ -167,7 +178,7 @@ func _process(dt: float) -> void:
 	var now:=Time.get_ticks_msec()
 	for sender: int in streams.keys():
 		var stream: Dictionary=streams[sender]
-		if not network.players.has(sender) or (int(stream.finish_at)==0 and now-int(stream.last)>500) or (int(stream.finish_at)>0 and now>=int(stream.finish_at)):
+		if not network.players.has(sender) or (network.get("_online") and not network.online_member(sender)) or (int(stream.finish_at)==0 and now-int(stream.last)>500) or (int(stream.finish_at)>0 and now>=int(stream.finish_at)):
 			_revoke(sender);continue
 		_update_permissions(sender,int(stream.highest)+1)
 
@@ -178,6 +189,8 @@ func _ensure_map() -> void:
 		_map_id=id;_round_instance=int(network.sim.get_instance_id());_acoustics.configure(id)
 
 func peer_left(id: int) -> void:
+	if network.get("_local_host"):
+		permissions.erase(id);permission_changed.emit(id,{})
 	if network.is_server:
 		_revoke(id);last_epochs.erase(id);_packet_rates.erase(id);_receiver_mutes.erase(id)
 		for stream: Dictionary in streams.values(): stream.recipients.erase(id)
@@ -186,7 +199,7 @@ func peer_left(id: int) -> void:
 
 @rpc("authority","call_remote","reliable",3)
 func _permission(speaker: int, value: Dictionary) -> void:
-	if network.is_server: return
+	if network.is_server and not network.get("_local_host"): return
 	if value.is_empty() or muted_peers.has(speaker):
 		permissions.erase(speaker);permission_changed.emit(speaker,{});return
 	permissions[speaker]=value.duplicate();permission_changed.emit(speaker,value)
@@ -194,7 +207,7 @@ func _permission(speaker: int, value: Dictionary) -> void:
 @rpc("authority","call_remote","unreliable",3)
 func _deliver(speaker: int, epoch: int, permit: int, sequence: int, packet: PackedByteArray) -> void:
 	var allowed: Dictionary=permissions.get(speaker,{})
-	if network.is_server or allowed.is_empty() or muted_peers.has(speaker): return
+	if (network.is_server and not network.get("_local_host")) or allowed.is_empty() or muted_peers.has(speaker): return
 	if epoch!=int(allowed.epoch) or permit!=int(allowed.permit) or sequence<int(allowed.first_sequence): return
 	if packet.is_empty() or packet.size()>MAX_PAYLOAD: return
 	packet_received.emit(speaker,epoch,permit,sequence,packet)
@@ -202,5 +215,20 @@ func _deliver(speaker: int, epoch: int, permit: int, sequence: int, packet: Pack
 @rpc("authority","call_remote","reliable",3)
 func _end(speaker: int, epoch: int, permit: int, last_sequence: int) -> void:
 	var allowed: Dictionary=permissions.get(speaker,{})
-	if not network.is_server and not allowed.is_empty() and int(allowed.epoch)==epoch and int(allowed.permit)==permit:
+	if (not network.is_server or network.get("_local_host")) and not allowed.is_empty() and int(allowed.epoch)==epoch and int(allowed.permit)==permit:
 		stream_finished.emit(speaker,epoch,permit,last_sequence)
+
+func _send(target: int, method: String, args: Array) -> void:
+	if network.get("_online"):
+		network._send_to(target,"voice:"+method,args)
+	else:
+		var values: Array=[target,method];values.append_array(args)
+		callv("rpc_id",values)
+
+func dispatch_online(sender: int, method: String, args: Array, local: bool) -> void:
+	if method in ["_request_control","_request_frame","_request_resume","_request_mute"]:
+		if not network.is_server or not network.players.has(sender) or (not local and not network.online_member(sender)): return
+		var values: Array=[sender];values.append_array(args)
+		callv("_handle"+method,values)
+	elif sender==1 and (not network.is_server or local) and method in ["_permission","_deliver","_end"]:
+		callv(method,args)
