@@ -1,4 +1,3 @@
-class_name ActorView
 extends Node3D
 
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
@@ -16,7 +15,6 @@ const SurfaceDisplay = preload("res://scripts/surface_presentation.gd")
 const HumanDisplay = preload("res://scripts/human_presentation.gd")
 const MOSQUITO_VISUAL_SCALE: float = 0.35
 const MOSQUITO_BODY_RADIUS: float = 0.04
-const LEGACY_LIMB_JOINTS := {"thigh":["hip","knee"],"shin":["knee","ankle"],"upper_arm":["shoulder","elbow"],"forearm":["elbow","hand"]}
 static var cloth_texture: ImageTexture
 
 # Editable imported characters follow the authoritative pose; capsules own play.
@@ -365,14 +363,13 @@ func _apply_human_pose(data: Dictionary, dt: float, authoritative_data: Dictiona
 	_apply_human_colliders(data if authoritative_data.is_empty() else authoritative_data)
 	var snapshot_hash := hash(data)
 	if snapshot_hash==human_snapshot_hash and human_snapshot_values==data and not body_pose.is_empty():
-		_refresh_visible_legacy_dimensions()
 		if is_instance_valid(imported_skin): imported_skin.apply_human(body_pose,data,dt)
 		return
 	human_snapshot_hash = snapshot_hash
 	human_snapshot_values = data.duplicate(true)
 	body_pose = Pose.sample(data)
 	torso_node.position = body_pose.torso
-	_set_visible_capsule_height(torso_node.get_child(0),float(body_pose.torso_height))
+	(torso_node.get_child(0).mesh as CapsuleMesh).height = float(body_pose.torso_height)
 	pelvis_mesh.position = body_pose.pelvis
 	head.position = body_pose.head
 	head.basis = body_pose.head_basis
@@ -434,29 +431,9 @@ func _pose_segment(key: String, from: Vector3, to: Vector3) -> void:
 	var segment: MeshInstance3D = limb_meshes[key]
 	segment.position = (from + to) * 0.5
 	segment.quaternion = Quaternion(Vector3.UP, direction / distance)
-	_set_visible_capsule_height(segment,distance+(segment.mesh as CapsuleMesh).radius*2.0)
+	(segment.mesh as CapsuleMesh).height = distance + (segment.mesh as CapsuleMesh).radius * 2.0
 	# The shared capsule loop above owns ray shapes. The hidden scaffold's full
 	# limb must not stretch a tapered distal collider back over the entire arm.
-
-func _set_visible_capsule_height(view: MeshInstance3D, height: float) -> void:
-	# Hidden scaffold still supplies transforms and sockets, while its separate
-	# ray shapes above remain authoritative. Its mesh need not be regenerated.
-	if not view.visible:return
-	var capsule := view.mesh as CapsuleMesh
-	if capsule.height!=height:capsule.height=height
-
-func _refresh_visible_legacy_dimensions() -> void:
-	# A legacy/debug mesh can be revealed without a new snapshot. Restore its
-	# current dimensions even on the pose cache hit; locally visible meshes are
-	# updated regardless of ancestor visibility so a hidden parent stays ready.
-	_set_visible_capsule_height(torso_node.get_child(0),float(body_pose.torso_height))
-	for suffix: String in ["l","r"]:
-		for limb: String in LEGACY_LIMB_JOINTS:
-			var view: MeshInstance3D=limb_meshes[limb+"_"+suffix]
-			if not view.visible:continue
-			var joints: Array=LEGACY_LIMB_JOINTS[limb]
-			var distance := maxf(Vector3(body_pose[joints[0]+"_"+suffix]).distance_to(body_pose[joints[1]+"_"+suffix]),.001)
-			_set_visible_capsule_height(view,distance+(view.mesh as CapsuleMesh).radius*2.0)
 
 func _update_first_person_arms(data: Dictionary, dt: float) -> void:
 	fps_root.position = body_pose.eye

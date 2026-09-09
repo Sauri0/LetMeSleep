@@ -1,0 +1,93 @@
+{
+	"baseline_sha256": "90bf7163a767f6ccfc0223aae625e7541dfe61f49ede67e8fb0ca473f37f6a0c",
+	"checks": 49778,
+	"facial_seed": 0.375,
+	"failures": [],
+	"procedural_mesh_changed_events": {
+		"current": 0,
+		"reference": 1728
+	},
+	"public_pose_cases": 72,
+	"runs": [
+		{
+			"block": 0,
+			"calls": 48,
+			"limit": "post_draw includes renderer and scheduling, not isolated GPU cost",
+			"mean_submission_ms": 0.983479166666667,
+			"mode": "reference",
+			"post_draw_wait_ms": 8.98,
+			"submission_cpu_ms": 47.207
+		},
+		{
+			"block": 0,
+			"calls": 48,
+			"limit": "post_draw includes renderer and scheduling, not isolated GPU cost",
+			"mean_submission_ms": 0.405166666666667,
+			"mode": "current",
+			"post_draw_wait_ms": 4.674,
+			"submission_cpu_ms": 19.448
+		},
+		{
+			"block": 0,
+			"calls": 48,
+			"limit": "post_draw includes renderer and scheduling, not isolated GPU cost",
+			"mean_submission_ms": 0.522041666666667,
+			"mode": "current",
+			"post_draw_wait_ms": 5.683,
+			"submission_cpu_ms": 25.058
+		},
+		{
+			"block": 0,
+			"calls": 48,
+			"limit": "post_draw includes renderer and scheduling, not isolated GPU cost",
+			"mean_submission_ms": 1.01910416666667,
+			"mode": "reference",
+			"post_draw_wait_ms": 7.895,
+			"submission_cpu_ms": 48.917
+		},
+		{
+			"block": 1,
+			"calls": 48,
+			"limit": "post_draw includes renderer and scheduling, not isolated GPU cost",
+			"mean_submission_ms": 0.842666666666667,
+			"mode": "reference",
+			"post_draw_wait_ms": 6.696,
+			"submission_cpu_ms": 40.448
+		},
+		{
+			"block": 1,
+			"calls": 48,
+			"limit": "post_draw includes renderer and scheduling, not isolated GPU cost",
+			"mean_submission_ms": 0.482583333333333,
+			"mode": "current",
+			"post_draw_wait_ms": 5.871,
+			"submission_cpu_ms": 23.164
+		},
+		{
+			"block": 1,
+			"calls": 48,
+			"limit": "post_draw includes renderer and scheduling, not isolated GPU cost",
+			"mean_submission_ms": 0.454375,
+			"mode": "current",
+			"post_draw_wait_ms": 5.071,
+			"submission_cpu_ms": 21.81
+		},
+		{
+			"block": 1,
+			"calls": 48,
+			"limit": "post_draw includes renderer and scheduling, not isolated GPU cost",
+			"mean_submission_ms": 0.984583333333333,
+			"mode": "reference",
+			"post_draw_wait_ms": 6.446,
+			"submission_cpu_ms": 47.26
+		}
+	],
+	"scope": "same public pose, transforms, GLB bones, visible geometry bounds and all ray shapes; only hidden legacy mesh dimensions differ; source-level CPU diagnostic, not global FPS",
+	"source_sha256": {
+		"res://assets/art/characters/shared/character_skin.gd": "4b725c739410e813670ec5ca0c80c74d8ef65f06dedf316d56e77b6410d570b8",
+		"res://scripts/actor_view.gd": "7a519204a2acdb11a77623bfabf38475593876d3318a17211955a24ee60390a4",
+		"res://scripts/human_pose.gd": "36c69f5a2273db33950776e8c81153f3d5b76a28be6a944e7bbe4ea8ce794190",
+		"res://scripts/human_presentation.gd": "cc60bf97eafc6a0350f28089ae964b2961a03a088bbf39d17af2a3347c299d02",
+		"res://tests/actor09_legacy_reference.gd": "49a3f0776c271e6722c0a9880664f0c6b635ae3013dd2e1fd481400ff2fb3bae"
+	}
+}

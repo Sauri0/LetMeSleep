@@ -1,0 +1,25 @@
+{
+  "observed": "after successful native ABBA; source hashes also validated during run where listed in report",
+  "files": [
+    {
+      "path": "game/scripts/actor_view.gd",
+      "sha256": "7A519204A2ACDB11A77623BFABF38475593876D3318A17211955A24EE60390A4"
+    },
+    {
+      "path": "game/tests/actor09_legacy_reference.gd",
+      "sha256": "49A3F0776C271E6722C0A9880664F0C6B635AE3013DD2E1FD481400FF2FB3BAE"
+    },
+    {
+      "path": "game/tests/actor09_legacy_geometry_test.gd",
+      "sha256": "5E78FA46989C5C3579B1740933AFECA401B4CF85772B1701B9F39DC87DC1B4D4"
+    },
+    {
+      "path": "game/assets/art/characters/shared/character_skin.gd",
+      "sha256": "4B725C739410E813670EC5CA0C80C74D8EF65F06DEDF316D56E77B6410D570B8"
+    },
+    {
+      "path": "game/assets/art/characters/human/human_lms06.glb",
+      "sha256": "F0E686BC647327E483CD03FC60323CE706185B21A279BA1F82277C46A4388394"
+    }
+  ]
+}

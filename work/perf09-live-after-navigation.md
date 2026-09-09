@@ -57,3 +57,28 @@ constante sin calificar en SceneTree, corregida a `Node.NOTIFICATION_WM_CLOSE_RE
 Las ejecuciones Vulkan con `--verbose` también mostraron rutas obsoletas de
 capas externas instaladas en el equipo; no se modificó el sistema. Las dos
 mediciones aceptadas mantienen la comprobación estricta de stderr y salida.
+
+
+## Guardia de geometría oculta, visibilidad y HUD por frame
+
+El 8 de septiembre, la corrida limpia `perf09-guards-natural-16-1080` usa
+Compatibility a 1920 × 1080, 16 actores y puertas ordinarias. La escena incluye
+A2 candidato 1, aún rechazado estéticamente; no es evidencia de un EXE final.
+Las diez fuentes registradas coinciden antes y después. Proceso exit 0 y stderr
+vacío, dos segundos de calentamiento y doce de medición.
+
+369 muestras: p50 **27,533 ms**, p90 **61,344 ms**, p99 **79,018 ms**;
+**75,34 %** de cuadros superan 16,67 ms. Física p50/p90 14,084/25,755 ms;
+render CPU 3,215/23,073 ms y GPU 4,973/22,296 ms. Los monitores se solapan.
+No hubo órdenes globales ni cuadros con puertas moviéndose. Draw calls
+p50/p90 789/7007, máximo 8956; máximo 2,396 millones de primitivas.
+
+La mediana es menor que en la medición ordinaria previa, pero las trayectorias
+adaptativas y la carga visible difieren. No se atribuye causalmente ese cambio
+a una optimización individual ni se declara 60 FPS. El A/B aislado de
+`actor09-legacy-optimization.md` sí conserva el replay y acredita ahorro del
+método de pose, no de FPS globales. Falta resolver la fluidez con 16 actores.
+
+Evidencia: `work/perf09-guards-natural-16-1080.json`,
+`work/perf09-guards-natural-16-1080.source.json` y
+`work/release07-perf09-guards-natural-16-1080.run.json`.
