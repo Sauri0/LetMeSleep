@@ -1,0 +1,51 @@
+{
+  "upstream_repository": "https://github.com/3ddelano/epic-online-services-godot",
+  "upstream_tag": "2.3.0",
+  "upstream_commit": "e84320567a3a17d305478f5796707e69d2bdac4f",
+  "godot_cpp_commit": "54136ee8357c5140a3775c54f08db5f7deda2058",
+  "source_sha256": {
+    "SConstruct": "139d70f0addca054a8c109aed1ef6d1065ea8d67cedf0fe481bb4fe42130cdc3",
+    "src/eosg_multiplayer_peer.cpp": "ac12514f4516348601f42eba10afa53eed0ad253fd0285b2f72a4756a25bd799",
+    "src/eosg_multiplayer_peer.h": "3dbd52436b15a26735418d22165b24aa9a12ae0e79bd0b9a1d4e3ade8a27e178",
+    "src/eosg_packet_peer_mediator.cpp": "b0e1f457ab4f9081b07aa373fada812f916ea1101ae59386b654db88601a535b"
+  },
+  "changes": [
+    "Reviewed header/PUID receive-path patch",
+    "Two explicit uint8_t casts required for scoped-enum comparisons",
+    "MSVC-only linker option guarded for MinGW"
+  ],
+  "sdk": {
+    "sdk_version": "1.19.1.2",
+    "sdk_archive_sha256": "c4e8c7298c6685627227309e6b6532697eecbe7b2640a0cae68a1369dcfb7b28",
+    "sdk_source": "User-provided official Epic SDK archive",
+    "zip_members_path_checked": true
+  },
+  "toolchain": "LLVM-MinGW 20260826 UCRT x86_64 / Clang 23.1.0",
+  "scons": "4.10.1",
+  "variants": {
+    "template_release": {
+      "binary": "libeosg.windows.template_release.x86_64.dll",
+      "sha256": "836a8daa6679c1bf31f265941a810e8dcc7d4b898edd1bd11ad2d625d130d5f0",
+      "bytes": 1713664,
+      "compile_exit": 0,
+      "abi_smoke_checks": 291,
+      "abi_smoke_exit": 0,
+      "abi_smoke_stderr_bytes": 0,
+      "godot": "4.5.2"
+    },
+    "template_debug": {
+      "binary": "libeosg.windows.template_debug.dev.x86_64.dll",
+      "sha256": "7beeb738d7eb9535ab7ef84e7e075cc13fb35b7bfe76857d7d4df3e7f1629767",
+      "bytes": 18269184,
+      "compile_exit": 0,
+      "abi_smoke_checks": 291,
+      "abi_smoke_exit": 0,
+      "abi_smoke_stderr_bytes": 0,
+      "godot": "4.5.2"
+    }
+  },
+  "sdk_initialized_by_smoke": false,
+  "native_packet_rejection_tested": false,
+  "p2p_tested": false,
+  "wan_tested": false
+}

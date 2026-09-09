@@ -4,6 +4,8 @@ $projectRoot = Split-Path $PSScriptRoot -Parent
 $godotExe = Join-Path $PSScriptRoot 'tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe'
 $gamePath = Join-Path $projectRoot 'game'
 $buildWorkRoot = $PSScriptRoot
+. (Join-Path $PSScriptRoot 'online-package.ps1')
+Initialize-OnlineBuildConfiguration -ProjectRoot $projectRoot
 function Invoke-CheckedHeadless {
     param([string]$CheckName, [string[]]$GameArguments)
     $errorLog = Join-Path $buildWorkRoot ('build-' + $CheckName + '.err')
@@ -65,6 +67,9 @@ if (-not $SkipTests) {
         Invoke-CheckedHeadless -CheckName $testName -GameArguments @('--script',"res://tests/$testName.gd")
     }
     Invoke-CheckedHeadless -CheckName 'voice09_session_checks' -GameArguments @('--audio-driver','Dummy','--frame-delay','2','--script','res://tests/voice09_session_checks.gd')
+    foreach ($onlineTest in @('online_invitation_test','online_session_test','online_network_checks','online_network_mtu_checks','online_network_payload_checks')) {
+        Invoke-CheckedHeadless -CheckName $onlineTest -GameArguments @('--script',"res://tests/$onlineTest.gd")
+    }
     }
     # Skin baking requires a rendering backend; Godot's headless dummy backend
     # cannot register the skeleton used by this actual-deformed-mesh test.
@@ -121,5 +126,10 @@ foreach ($codecCopy in $codecCopies) {
     if ((Get-FileHash -LiteralPath $codecCopy.FullName -Algorithm SHA256).Hash -ne $codecSourceHash) { throw 'Exported Opus DLL differs from verified source binary' }
 }
 . (Join-Path $PSScriptRoot 'package-metadata.ps1')
+$onlineNotices = Join-Path $gamePath 'addons/epic-online-services-godot/licenses'
+$onlineNoticeOutput = Join-Path $outDir 'Licencias-online'
+[IO.Directory]::CreateDirectory($onlineNoticeOutput) | Out-Null
+Get-ChildItem -LiteralPath $onlineNotices -File | Copy-Item -Destination $onlineNoticeOutput
+Get-OnlinePackageFiles -ProjectRoot $projectRoot -OutputDirectory $outDir | Out-Null
 Write-PackageMetadata -ProjectRoot $projectRoot -OutputDirectory $outDir -Version $buildVersion -HeadlessTests (-not $SkipTests -and -not $SkipHeadlessTests) -NativeTests (-not $SkipTests)
 Get-FileHash -LiteralPath $exe.FullName -Algorithm SHA256

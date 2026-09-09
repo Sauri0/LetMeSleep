@@ -1,0 +1,11 @@
+[configuration]
+entry_symbol = "eosg_library_init"
+compatibility_minimum = 4.1
+
+[libraries]
+windows.debug.x86_64 = "bin/windows/libeosg.windows.template_debug.dev.x86_64.dll"
+windows.release.x86_64 = "bin/windows/libeosg.windows.template_release.x86_64.dll"
+
+[dependencies]
+windows.debug.x86_64 = {"bin/windows/EOSSDK-Win64-Shipping.dll": "", "bin/windows/x64/xaudio2_9redist.dll": ""}
+windows.release.x86_64 = {"bin/windows/EOSSDK-Win64-Shipping.dll": "", "bin/windows/x64/xaudio2_9redist.dll": ""}
