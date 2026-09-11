@@ -94,12 +94,15 @@ func _run() -> void:
 	await _event(KEY_B,false)
 	_check(requests.is_empty() and not ui._emote_selector.visible,"release without selection cancels")
 	await _event(KEY_B,true)
+	Input.warp_mouse(Vector2(5,5))
+	await _settle()
 	await _key(KEY_RIGHT)
+	var selected_gesture: String = ui._emote_selector.candidate
 	ui.show_game(snapshot,{},2)
 	_check(ui._emote_selector.visible,"network snapshots preserve modal")
 	await _capture("emote-selector")
 	await _event(KEY_B,false)
-	_check(requests==["wave"],"hold direction release sends one shared emote")
+	_check(Catalog.is_valid(selected_gesture) and requests==[selected_gesture],"hold direction release sends the selected shared emote exactly once")
 	_check(not ui.is_menu_open() and Input.mouse_mode==Input.MOUSE_MODE_CAPTURED,"selector returns capture to game")
 	await _event(KEY_B,true)
 	await _key(KEY_ESCAPE)
@@ -121,7 +124,7 @@ func _run() -> void:
 	await _event(KEY_N,true)
 	_check(ui._emote_selector.visible and ui._emote_selector.hint.text.begins_with("N"),"remapped shortcut and hint agree")
 	await _event(KEY_N,false)
-	var voice := {"available":true,"can_test":true,"visible":true,"status":"idle","muted":false,"level":0.0,"peers":[{"id":4,"name":"Vecino","muted":false}]}
+	var voice := {"available":true,"can_transmit":true,"can_test":true,"visible":true,"status":"idle","muted":false,"level":0.0,"peers":[{"id":4,"name":"Vecino","muted":false}]}
 	ui.set_voice_state(voice)
 	_check(ui._voice_indicator.visible and voice_requests.is_empty(),"idle voice visible without requesting capture")
 	ui._open_settings()

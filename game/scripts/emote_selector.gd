@@ -10,6 +10,7 @@ var held := false
 var panel: PanelContainer
 var hint: Label
 var opening := false
+var pointer_armed := false
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -57,7 +58,7 @@ func _ready() -> void:
 		button.toggle_mode = true
 		button.pressed.connect(func() -> void: selected.emit(id))
 		button.focus_entered.connect(func() -> void:
-			if not opening and visible:
+			if not opening and visible and not held:
 				candidate = id
 				for key: String in buttons: buttons[key].button_pressed = key==id
 		)
@@ -82,6 +83,7 @@ func open_selector(favorites: Array, hold_to_choose: bool, binding: String) -> v
 		button.button_pressed = false
 	candidate = ""
 	held = hold_to_choose
+	pointer_armed = false
 	hint.text = "%s: soltá para elegir · flechas o ratón · Esc cancela" % binding if held else "Elegí un gesto · flechas y Enter · Esc cancela"
 	show()
 	opening = true
@@ -97,6 +99,12 @@ func choose(id: String) -> void:
 func handle_event(event: InputEvent) -> bool:
 	if not visible: return false
 	if event is InputEventMouseMotion:
+		# Releasing captured mouse can synthesize a warp over a button. It is
+		# not an intentional selection, just as initial keyboard focus is not.
+		if not pointer_armed:
+			pointer_armed = true
+			return false
+		if event.relative.length_squared() < 1.0: return false
 		for id: String in order:
 			if buttons[id].get_global_rect().has_point(event.position): choose(id)
 		return false
