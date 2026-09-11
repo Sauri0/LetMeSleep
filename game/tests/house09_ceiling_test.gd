@@ -10,6 +10,10 @@ func run() -> void:
 	world.build()
 	for map_id: String in ["house", Generator.map_id(1), Generator.map_id(2)]:
 		world.load_map(map_id)
+		if world.current_map != map_id:
+			failures += 1
+			printerr("CEILING_FAIL requested map %s but World loaded %s" % [map_id, world.current_map])
+			continue
 		var area := 0.0
 		var paint_only := true
 		for node: Node in world.map_root.find_children("*", "MeshInstance3D", true, false):

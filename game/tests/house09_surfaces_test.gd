@@ -59,6 +59,8 @@ func run()->void:
 	var world:Node3D=load("res://scripts/world.gd").new();root.add_child(world);world.build()
 	for map_id:String in ["house",Generator.map_id(1),Generator.map_id(2)]:
 		world.load_map(map_id)
+		check(world.current_map==map_id,"World loads requested map "+map_id)
+		if world.current_map!=map_id:continue
 		var levels:Array=world.map_data.floor_levels;var crowns_per_floor:Array[int]=[];crowns_per_floor.resize(levels.size());crowns_per_floor.fill(0)
 		for node:Node in world.map_root.get_children():
 			if not str(node.name).begins_with("Cornice"):continue
