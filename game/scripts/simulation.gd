@@ -1731,6 +1731,13 @@ func public_snapshot() -> Dictionary:
 		# Visible orientation only after physical contact. A free reservation
 		# never contributes a normal, target ID, body zone or rotation schedule.
 		var surface_normal: Vector3 = _surface_normal(actor)
+		# A visible bite needs a shared render parent. Publish only the actual
+		# contact's human ID, never the reserved zone or a future target.
+		var attached_to := 0
+		if actor.role == "mosquito" and bool(actor.alive) and actor.state == "biting":
+			var contact_id := int(Dictionary(actor._assignment).get("human", 0))
+			if actors.has(contact_id) and actors[contact_id].role == "human" and bool(actors[contact_id].alive):
+				attached_to = contact_id
 		# Explicit allowlist: never serialize hidden target/zone reservations or tasks.
 		public_actors[id] = {
 			"name": actor.name, "role": actor.role, "p": actor.p, "yaw": actor.yaw,
@@ -1740,6 +1747,7 @@ func public_snapshot() -> Dictionary:
 			"pitch": actor.pitch, "state": actor.state, "alive": actor.alive,
 			"emote_id":actor.emote_id,"emote_time":actor.emote_time,
 			"surface_normal": surface_normal,
+			"attached_to": attached_to,
 			"surface_forward": _surface_forward(actor),
 			"help_target": actor.help_target,
 			"swing": actor.swing, "bitten": actor.bitten, "threatened": actor.threatened, "tool": actor.tool, "lives": actor.lives,

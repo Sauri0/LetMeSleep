@@ -7,6 +7,7 @@ const ArenaData = preload("res://scripts/arena.gd")
 const Pose = preload("res://scripts/human_pose.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const PrivacyAudit = preload("res://tests/network_privacy_audit.gd")
+const Codec = preload("res://scripts/online_packet_codec.gd")
 var checks := 0
 var failures := 0
 
@@ -35,6 +36,21 @@ func make_sim(humans: int = 1, mosquitoes: int = 1, mode: String = "blood") -> R
 func _audit(sim: RefCounted, message: String) -> void:
 	var snapshot: Dictionary = sim.public_snapshot()
 	snapshot.tick = int(sim._frame)
+	var encoded: Dictionary = Codec.encode(snapshot, Codec.Kind.PUBLIC, 1, 1, snapshot.tick)
+	check(encoded.ok, message + " contact snapshot fits online codec")
+	if encoded.ok:
+		var codec := Codec.new()
+		codec.reset(1)
+		var received: Dictionary = {}
+		for frame: PackedByteArray in encoded.frames:
+			received = codec.ingest(1, frame, 0)
+		check(received.get("complete", false) and received.get("payload", {}) == snapshot, message + " contact survives actual codec round trip")
+	for actor_id: int in snapshot.actors:
+		var shown: Dictionary = snapshot.actors[actor_id]
+		var expected := 0
+		if shown.role == "mosquito" and shown.alive and shown.state == "biting":
+			expected = int(sim.actors[actor_id]._assignment.human)
+		check(int(shown.attached_to) == expected, message + " only actual contact exposes human ID")
 	for id: int in [1, sim.actors.size()]:
 		var audit = PrivacyAudit.new()
 		var personal: Dictionary = sim.private_for(id)
@@ -97,6 +113,7 @@ func _test_attached_pose() -> void:
 		var human: Dictionary = sim.actors[1]
 		var initial: Vector3 = _normal(sim, id)
 		check(initial.is_normalized(), "biting orientation is unit length zone%d" % zone)
+		check(int(sim.public_snapshot().actors[id].attached_to) == 1, "active bite identifies its real human zone%d" % zone)
 		# Sample latest replicated poses without advancing the independent mark
 		# schedule: the serializer must not cache the attachment-time normal.
 		for pose_case: Dictionary in [
@@ -116,6 +133,7 @@ func _test_attached_pose() -> void:
 		sim.action(id, 1, "bite")
 		sim.step(0.025)
 		check(sim.actors[id].state == "flying" and _normal(sim, id) == Vector3.ZERO, "explicit detach immediately clears public normal zone%d" % zone)
+		check(int(sim.public_snapshot().actors[id].attached_to) == 0, "detach hides the newly reserved human zone%d" % zone)
 		check(sim.actors[id]._next_rotation == next_rotation, "orientation update does not reset private calendar zone%d" % zone)
 		_audit(sim, "detached zone%d" % zone)
 
