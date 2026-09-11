@@ -51,10 +51,12 @@ func _motion_trace(rate:int)->Dictionary:
 	var sprint_seen:=false
 	var crouch_seen:=false
 	var collision_free:=true
-	for tick:int in range(rate*4):
+	# Four seconds perform the two turns; the fifth holds the final forward view
+	# still, giving the torso the full one-second recenter window under test.
+	for tick:int in range(rate*5):
 		var elapsed:=float(tick+1)*dt
-		var yaw:=wrapf(elapsed/4.0*TAU*2.0,-PI,PI)
-		var pitch:=-1.30 if elapsed<3.0 else lerpf(-1.30,0.0,elapsed-3.0)
+		var yaw:=wrapf(minf(elapsed,4.0)/4.0*TAU*2.0,-PI,PI)
+		var pitch:=-1.30 if elapsed<3.0 else lerpf(-1.30,0.0,clampf(elapsed-3.0,0.0,1.0))
 		var moving:=elapsed<3.0
 		var sprint:=elapsed>=1.0 and elapsed<2.0
 		var crouch:=elapsed>=2.0 and elapsed<3.0
