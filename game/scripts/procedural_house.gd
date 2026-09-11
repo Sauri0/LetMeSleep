@@ -315,13 +315,18 @@ func _furnish() -> void:
 		for item: int in range(furnishings.size()):
 			var spec: Dictionary=furnishings[item]
 			var candidates: Array[Dictionary]=[]
-			for quarter: int in range(1 if bool(spec.pickup_surface) else 2):
-				var size: Vector3=spec.size if quarter==0 else Vector3(spec.size.z,spec.size.y,spec.size.x)
-				for fraction: float in [0.0,.125,.25,.375,.5,.625,.75,.875,1.0]:
-					for z: float in [b.position.z+.3,b.end.z-.3-size.z]: candidates.append({"box":AABB(Vector3(lerpf(b.position.x+.3,b.end.x-.3-size.x,fraction),b.position.y,z),size),"quarter":quarter})
-					for x: float in [b.position.x+.3,b.end.x-.3-size.x]: candidates.append({"box":AABB(Vector3(x,b.position.y,lerpf(b.position.z+.3,b.end.z-.3-size.z,fraction)),size),"quarter":quarter})
-			# Prefer corners far from the entrance; dimensions and theme vary by seed.
-			candidates.sort_custom(func(a:Dictionary,c:Dictionary)->bool:return AABB(a.box).position.distance_squared_to(portal)>AABB(c.box).position.distance_squared_to(portal))
+			# Preserve the preferred 30 cm layout, then search a second perimeter.
+			# A 20 cm inset still clears the 10 cm internal wall half-thickness;
+			# every fallback must pass the same door, window, lane and access checks.
+			for inset: float in [.3,.2]:
+				var perimeter: Array[Dictionary]=[]
+				for quarter: int in range(1 if bool(spec.pickup_surface) else 2):
+					var size: Vector3=spec.size if quarter==0 else Vector3(spec.size.z,spec.size.y,spec.size.x)
+					for fraction: float in [0.0,.125,.25,.375,.5,.625,.75,.875,1.0]:
+						for z: float in [b.position.z+inset,b.end.z-inset-size.z]: perimeter.append({"box":AABB(Vector3(lerpf(b.position.x+inset,b.end.x-inset-size.x,fraction),b.position.y,z),size),"quarter":quarter})
+						for x: float in [b.position.x+inset,b.end.x-inset-size.x]: perimeter.append({"box":AABB(Vector3(x,b.position.y,lerpf(b.position.z+inset,b.end.z-inset-size.z,fraction)),size),"quarter":quarter})
+				perimeter.sort_custom(func(a:Dictionary,c:Dictionary)->bool:return AABB(a.box).position.distance_squared_to(portal)>AABB(c.box).position.distance_squared_to(portal))
+				candidates.append_array(perimeter)
 			for candidate: Dictionary in candidates:
 				var box: AABB=candidate.box
 				var visual_box:=box
