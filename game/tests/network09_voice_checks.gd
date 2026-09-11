@@ -349,11 +349,11 @@ func _round_lifecycle() -> void:
 	await settle(7)
 	check(authority.voice.streams.is_empty() and receiver.voice.permissions.is_empty(),"results phase revokes all active voice streams")
 	# Same authenticated peers, new real generated geometry, inverted roles.
-	stage("house-v1-2",["mosquito","mosquito","human","human"])
+	stage(Maps.Generator.map_id(2),["mosquito","mosquito","human","human"])
 	if not await begin_stream(speaker): return
 	for sequence: int in range(3): await send(speaker,sequence)
 	var fresh: Dictionary=receiver.voice.permissions.get(id(speaker),{})
-	check(not fresh.is_empty() and float(fresh.pitch)==1.55 and fresh.map_id=="house-v1-2","new round rebuilds pitch and map from reassigned server roles")
+	check(not fresh.is_empty() and float(fresh.pitch)==1.55 and fresh.map_id==Maps.Generator.map_id(2),"new round rebuilds pitch and map from reassigned server roles")
 	var before:=accepted(receiver,id(speaker))
 	if not old.is_empty(): authority.voice._deliver.rpc_id(id(receiver),id(speaker),int(old.epoch),int(old.permit),99,sample)
 	await settle(3)
