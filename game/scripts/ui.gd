@@ -58,6 +58,7 @@ const SUN := Color("ffcf47")
 const MODES := ["blood", "survival", "sleep"]
 const MODE_NAMES := {"blood": "Recolección de sangre", "survival": "Supervivencia", "sleep": "Tareas"}
 const TOOL_NAMES := {"hands": "Manos · palmadas", "swatter": "Matamoscas", "racket": "Raqueta eléctrica", "newspaper": "Diario enrollado", "broom": "Escoba", "slipper": "Pantufla"}
+const CUSTOM_CATEGORY_TITLES := {"color":"Color de ropa","eyes":"Ojos","brows":"Cejas","mouth":"Boca","mustache":"Bigote","beard":"Barba","hair":"Pelo","hair_color":"Color de pelo","outfit":"Ropa","accessory":"Accesorios","footwear":"Pantuflas","accent":"Detalles"}
 const FALLBACK_CONFIG: Dictionary = Simulation.DEFAULT_CONFIG
 const CONFIG_FIELDS := [
 	["human_count", "Humanos por ronda", 1, 5, 1, "all"],
@@ -261,6 +262,7 @@ var _custom_category_scroll: ScrollContainer
 var _custom_options: VBoxContainer
 var _custom_option_buttons: Array[Button] = []
 var _custom_view_buttons: Dictionary = {}
+var _custom_zoom_buttons: Dictionary = {}
 var _thumbnail_cache: Dictionary = {}
 var _ui_error_serial: int = 0
 var _connection_phase: String = "idle"
@@ -1279,13 +1281,12 @@ func _build_customization() -> void:
 	_custom_category_scroll.follow_focus = true
 	var categories := _vbox(_custom_category_scroll,4)
 	categories.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var titles := {"color":"Color de ropa","eyes":"Ojos","brows":"Cejas","mouth":"Boca","mustache":"Bigote","beard":"Barba","hair":"Pelo","hair_color":"Color de pelo","outfit":"Ropa","accessory":"Accesorios","footwear":"Pantuflas","accent":"Detalles"}
 	var order:Array[String]=["eyes","brows","mouth","mustache","beard","hair","hair_color","accessory","outfit","footwear","color","accent"]
 	for key: String in order:
 		if key not in CosmeticsData.category_keys("human"):continue
 		if key in ["eyes","accessory"]:
-			categories.add_child(_label("ROSTRO" if key=="eyes" else "TU ESTILO",12,MUTED))
-		var button := _small_button(titles[key],_select_custom_category.bind(key))
+			categories.add_child(_label("ROSTRO" if key=="eyes" else "CUERPO Y ESTILO",12,MUTED))
+		var button := _small_button(CUSTOM_CATEGORY_TITLES[key],_select_custom_category.bind(key))
 		button.toggle_mode = true
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.icon = _custom_thumbnail("human",key,0)
@@ -1305,6 +1306,7 @@ func _build_customization() -> void:
 	var studio := _vbox(columns,8)
 	studio.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_avatar_preview = AvatarPreview.new()
+	_avatar_preview.view_changed.connect(_sync_custom_view_buttons)
 	_avatar_preview.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_avatar_preview.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	studio.add_child(_avatar_preview)
@@ -1312,18 +1314,33 @@ func _build_customization() -> void:
 	camera_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	studio.add_child(camera_row)
 	for view: String in ["front","side","back"]:
-		var captions := {"front":"Frente","side":"Lado","back":"Espalda"}
+		var captions := {"front":"Frente","side":"Perfil","back":"Espalda"}
 		var button := _small_button(captions[view],func() -> void:
 			if _avatar_preview.has_method("set_view"): _avatar_preview.set_view(view)
 		)
+		button.toggle_mode = true
 		button.add_theme_font_size_override("font_size",14)
 		camera_row.add_child(button)
 		_custom_view_buttons[view] = button
-	var reset := _small_button("↺",func() -> void: _avatar_preview.reset_view())
+	var reset := _small_button("Restablecer",func() -> void: _avatar_preview.reset_view())
 	reset.tooltip_text = "Restablecer la vista completa"
 	camera_row.add_child(reset)
 	_custom_view_buttons["reset"] = reset
-	var camera_help := _label("Arrastrá para girar · rueda para acercar",13,MUTED,true)
+	var zoom_row := HBoxContainer.new()
+	zoom_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	studio.add_child(zoom_row)
+	var zoom_out := _small_button("−",func() -> void: _avatar_preview.zoom_by(0.09))
+	zoom_out.tooltip_text = "Alejar"
+	zoom_out.custom_minimum_size.x = 44
+	zoom_row.add_child(zoom_out)
+	_custom_zoom_buttons["out"] = zoom_out
+	zoom_row.add_child(_label("ZOOM",12,MUTED))
+	var zoom_in := _small_button("+",func() -> void: _avatar_preview.zoom_by(-0.09))
+	zoom_in.tooltip_text = "Acercar"
+	zoom_in.custom_minimum_size.x = 44
+	zoom_row.add_child(zoom_in)
+	_custom_zoom_buttons["in"] = zoom_in
+	var camera_help := _label("Arrastrá o usá flechas para girar · rueda o +/− para acercar",13,MUTED,true)
 	camera_help.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	studio.add_child(camera_help)
 	var panel := _panel(columns)
@@ -1390,14 +1407,18 @@ func _refresh_customization() -> void:
 	var appearance: Dictionary = CosmeticsData.appearance_for(Prefs.cosmetics,_custom_role)
 	for role: String in _custom_role_buttons:
 		_custom_role_buttons[role].button_pressed = role == _custom_role
-	for key: String in _category_buttons:
-		_category_buttons[key].visible = key in valid_keys
-		_category_buttons[key].button_pressed = key == _custom_category and not _custom_emotes
-		if key in valid_keys:_category_buttons[key].icon = _custom_thumbnail(_custom_role,key,0)
 	_category_buttons.hair.text = "Pelo" if _custom_role == "human" else "Antenas"
 	_category_buttons.outfit.text = "Ropa" if _custom_role == "human" else "Cuerpo"
 	_category_buttons.footwear.text = "Pantuflas" if _custom_role == "human" else "Patas"
 	_category_buttons.color.text = "Color de ropa" if _custom_role == "human" else "Color del cuerpo"
+	for key: String in _category_buttons:
+		_category_buttons[key].visible = key in valid_keys
+		_category_buttons[key].button_pressed = key == _custom_category and not _custom_emotes
+		if key in valid_keys:
+			var selected_index := int(appearance.get(key,0))
+			var selected_names: Array = CosmeticsData.option_names(_custom_role,key)
+			_category_buttons[key].icon = _custom_thumbnail(_custom_role,key,selected_index)
+			_category_buttons[key].tooltip_text = str(_category_buttons[key].text) + " · " + str(selected_names[selected_index])
 	for child: Node in _custom_options.get_children():
 		_custom_options.remove_child(child)
 		child.queue_free()
@@ -1442,8 +1463,9 @@ func _refresh_customization() -> void:
 		grid.add_child(button)
 		_custom_option_buttons.append(button)
 	var selected_name:String=str(names[clampi(int(appearance.get(_custom_category,0)),0,names.size()-1)]) if not names.is_empty() else "Elegí una opción"
-	_custom_caption.text = "✓ Guardado · " + ("Humano" if _custom_role == "human" else "Mosquito") + " · " + selected_name + "    /    Solo apariencia"
+	_custom_caption.text = "✓ Guardado · " + ("Humano" if _custom_role == "human" else "Mosquito") + " · " + str(_category_buttons[_custom_category].text) + ": " + selected_name
 	_avatar_preview.set_avatar(_custom_role,appearance)
+	_sync_custom_view_buttons(_avatar_preview.view_key)
 	if _screen == "customization":
 		_set_focus_scope(_customization)
 
@@ -1453,7 +1475,15 @@ func _select_custom_category(key: String) -> void:
 	_custom_category = key
 	_refresh_customization()
 	_focus_custom_category()
-	_queue_focus(_category_buttons[key])
+	var selected_index := int(CosmeticsData.appearance_for(Prefs.cosmetics,_custom_role).get(key,0))
+	if selected_index < _custom_option_buttons.size():
+		_queue_focus(_custom_option_buttons[selected_index])
+
+func _sync_custom_view_buttons(view: String) -> void:
+	var active_key := view if view in ["front","side","back"] else ""
+	for key: String in _custom_view_buttons:
+		if _custom_view_buttons[key].toggle_mode:
+			_custom_view_buttons[key].button_pressed = key==active_key
 
 func _select_custom_option(index: int) -> void:
 	if index < 0 or index >= CosmeticsData.option_count(_custom_role,_custom_category): return

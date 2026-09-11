@@ -1,5 +1,7 @@
 extends SubViewportContainer
 ## Isolated original avatar studio. It never renders the lobby or game world.
+signal view_changed(view: String)
+
 const Actor = preload("res://scripts/actor_view.gd")
 const Emotes = preload("res://scripts/emote_catalog.gd")
 var viewport: SubViewport
@@ -11,6 +13,7 @@ var appearance: Dictionary = {}
 var orbit_yaw := -0.25
 var orbit_pitch := -0.08
 var zoom := 1.0
+var view_key := "general"
 var dragging := false
 var focus_key := ""
 var focus_target := Vector3(0,0.91,0)
@@ -90,12 +93,14 @@ func set_avatar(selected_role: String, data: Dictionary) -> void:
 func reset_view() -> void:
 	orbit_yaw = -0.25
 	orbit_pitch = -0.08
-	zoom = 1.0
+	view_key = "general"
+	_set_zoom(1.0)
 	focus_key = ""
 	expression = ""
 	focus_target = Vector3(0,0.91,0)
 	focus_distance = 3.65
 	_update_camera()
+	view_changed.emit(view_key)
 
 func set_expression(value: String) -> void:
 	expression = value if value in ["neutral","sleepy","alert","effort","impact"] else ""
@@ -112,13 +117,34 @@ func stop_emote() -> void:
 	emote_time=0.0
 
 func set_view(view: String) -> void:
-	orbit_yaw = 0.0 if view=="front" else PI*0.5 if view=="side" else PI if view=="back" else -0.25
+	if view not in ["front","side","back"]:
+		reset_view()
+		return
+	view_key = view
+	orbit_yaw = 0.0 if view=="front" else PI*0.5 if view=="side" else PI
 	orbit_pitch = -0.08
 	_update_camera()
+	view_changed.emit(view_key)
+
+func zoom_by(amount: float) -> void:
+	_set_zoom(zoom+amount)
+
+func _set_zoom(value: float) -> void:
+	var next_zoom := clampf(value,0.72,1.35)
+	if is_equal_approx(next_zoom,zoom):
+		return
+	zoom = next_zoom
+	_update_camera()
+
+func _mark_free_view() -> void:
+	if view_key=="free":
+		return
+	view_key = "free"
+	view_changed.emit(view_key)
 
 func focus_category(key: String) -> void:
 	focus_key = key
-	zoom = 1.0
+	_set_zoom(1.0)
 	var facial:bool=key in ["eyes","brows","mouth","mustache","beard","hair_color","face"]
 	# Compare the modeled shapes with a stable expression. Automatic sleepiness
 	# and blinks otherwise make "open" eyes look closed during selection.
@@ -156,13 +182,42 @@ func _gui_input(event: InputEvent) -> void:
 			grab_focus()
 			accept_event()
 		elif event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP,MOUSE_BUTTON_WHEEL_DOWN]:
-			zoom = clampf(zoom+(0.09 if event.button_index==MOUSE_BUTTON_WHEEL_DOWN else -0.09),0.72,1.35)
-			_update_camera()
+			zoom_by(0.09 if event.button_index==MOUSE_BUTTON_WHEEL_DOWN else -0.09)
 			accept_event()
 	elif event is InputEventMouseMotion and dragging:
 		orbit_yaw -= event.relative.x*0.012
 		orbit_pitch = clampf(orbit_pitch-event.relative.y*0.009,-0.45,0.55)
+		_mark_free_view()
 		_update_camera()
+		accept_event()
+	elif event is InputEventKey and event.pressed:
+		var keycode: int = event.keycode if event.keycode != 0 else event.physical_keycode
+		if event.echo and keycode in [KEY_HOME,KEY_0]:
+			return
+		match keycode:
+			KEY_LEFT:
+				orbit_yaw += 0.14
+				_mark_free_view()
+				_update_camera()
+			KEY_RIGHT:
+				orbit_yaw -= 0.14
+				_mark_free_view()
+				_update_camera()
+			KEY_UP:
+				orbit_pitch = clampf(orbit_pitch+0.08,-0.45,0.55)
+				_mark_free_view()
+				_update_camera()
+			KEY_DOWN:
+				orbit_pitch = clampf(orbit_pitch-0.08,-0.45,0.55)
+				_mark_free_view()
+			KEY_EQUAL,KEY_PLUS,KEY_KP_ADD:
+				zoom_by(-0.09)
+			KEY_MINUS,KEY_KP_SUBTRACT:
+				zoom_by(0.09)
+			KEY_HOME,KEY_0:
+				reset_view()
+			_:
+				return
 		accept_event()
 
 func _process(dt: float) -> void:
