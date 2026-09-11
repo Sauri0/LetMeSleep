@@ -1,0 +1,28 @@
+{
+  "version": "0.9.0-rc.1",
+  "wan_verified": false,
+  "runtime_commit": "3c3e8ba007c879f84d9652bc817f98c2fd969568",
+  "scope": "Additional source probes; same runtime as the release. Local pair uses real ENet RPC and simulated EOS identity. Host cancellation uses real EOS. No remote P2P or WAN certification.",
+  "results": [
+    {
+      "engine_sha256": "446E08F71624052572F96DE9031850BA96382CE6752ADDE38BB955B0A49BED01",
+      "exit_code": 0,
+      "source": true,
+      "finished_utc": "2026-09-11T21:53:29.6956093Z",
+      "name": "sep11-online-retry-pair",
+      "stderr_bytes": 0
+    },
+    {
+      "engine_sha256": "446E08F71624052572F96DE9031850BA96382CE6752ADDE38BB955B0A49BED01",
+      "exit_code": 0,
+      "source": true,
+      "finished_utc": "2026-09-11T21:53:53.3143065Z",
+      "name": "sep11-online-cancel-live",
+      "stderr_bytes": 0
+    }
+  ],
+  "checks": {
+    "real_eos_host_cancel_retry": 17,
+    "local_retry_pair": 25
+  }
+}
