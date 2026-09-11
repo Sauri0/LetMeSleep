@@ -958,6 +958,9 @@ static func get_map(id: String = "house") -> Dictionary:
 	if id == "lobby":
 		return LOBBY.duplicate(true)
 	var seed_value: int=Generator.parse_seed(id)
+	if seed_value<0 and id.begins_with("house-v"):
+		last_generation_error={"id":id,"reason":"Unsupported generator version or noncanonical seed; expected house-v%d-<seed>"%Generator.VERSION}
+		return {}
 	if seed_value>0:
 		if not _generated.has(id):
 			var data: Dictionary=Generator.new().generate(seed_value)

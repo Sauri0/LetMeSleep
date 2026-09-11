@@ -2,11 +2,23 @@ class_name ProceduralHouse
 extends RefCounted
 ## Deterministic spatial assembly. Runtime integration follows validation and
 ## furnishing; never substitute the authored house when generation fails.
-const VERSION := 1
+const VERSION := 2
 const FLOOR_HEIGHT := 3.2
 const WALL := .20
+const EXTERIOR_WALL := .25
 const DOOR_WIDTH := 2.0
 const DOOR_HEIGHT := 2.45
+const STAIR_WIDTH := 2.8
+const STAIR_HOLE_WIDTH := 3.2
+const STAIR_STEPS := 16
+const STAIR_RISE := .2
+const STAIR_TREAD := .5
+const STAIR_RUN_HALF := 4.0
+const STAIR_APPROACH := .65
+const CENTRAL_ROOM_HALF_DEPTH := 3.8
+const RAIL_HALF_WIDTH := .0475
+const FINISH_ALLOWANCE := .06
+const LAYOUT := {"stair_offset":3.65,"room_inset":7.1,"hall_end_min":6.4,"hall_end_max":6.9}
 const DoorGeometry=preload("res://scripts/door_geometry.gd")
 const Furniture=preload("res://scripts/furniture_blueprint.gd")
 const Placement = preload("res://scripts/pickup_placement.gd")
@@ -41,8 +53,13 @@ func _grid(low: float, high: float) -> float:
 static func map_id(seed_value: int) -> String:
 	return "house-v%d-%d"%[VERSION,clampi(seed_value,1,2147483646)]
 
+static func parse_version(id: String) -> int:
+	return VERSION if id.begins_with("house-v%d-"%VERSION) else -1
+
 static func parse_seed(id: String) -> int:
-	var prefix := "house-v%d-"%VERSION
+	var version := parse_version(id)
+	if version<0: return -1
+	var prefix := "house-v%d-"%version
 	if not id.begins_with(prefix): return -1
 	var digits := id.trim_prefix(prefix)
 	if not digits.is_valid_int(): return -1
@@ -66,13 +83,20 @@ func generate_structure(seed_value: int) -> Dictionary:
 		"barrier_parts":[],"barrier_boxes":[],"pickup_supports":[],"pickup_support_boxes":[],"pickups":[],"stations":[],
 		"human_spawns":[],"mosquito_spawns":[],"respawn_points":[],"lobby_spawns":[],
 		"nav_nodes":[],"nav_edges":[],"generation_stage":"structure_unvalidated"}
+	_data.layout_dimensions=LAYOUT.duplicate()
+	_data.layout_dimensions.merge({"floor_height":FLOOR_HEIGHT,"wall":WALL,"exterior_wall":EXTERIOR_WALL,
+		"stair_width":STAIR_WIDTH,"hole_width":STAIR_HOLE_WIDTH,"run_half":STAIR_RUN_HALF,
+		"rise":STAIR_RISE,"tread":STAIR_TREAD,"steps":STAIR_STEPS,"central_hall_width":hall_half*2-WALL,
+		"finish_allowance":FINISH_ALLOWANCE})
+	_data.circulation_routes=[]
+	_data.stair_light_anchors=[]
 	for floor_index: int in range(floor_count):
 		var y := floor_index*FLOOR_HEIGHT
 		_data.floor_levels.append(y)
 		var slabs: Array[AABB]=[AABB(Vector3(-half_x,y-.2,-half_z),Vector3(half_x*2,.2,half_z*2))]
 		if floor_index>0:
 			for side: float in [-1.0,1.0]:
-				var hole := AABB(Vector3(side*(half_x-3.0)-1.6,y-.2,-4.0),Vector3(3.2,.2,8.0))
+				var hole := AABB(Vector3(_stair_x(side)-STAIR_HOLE_WIDTH*.5,y-.2,-STAIR_RUN_HALF),Vector3(STAIR_HOLE_WIDTH,.2,STAIR_RUN_HALF*2))
 				_data.stair_holes.append(hole)
 				slabs=_subtract_slabs(slabs,hole)
 		for slab: AABB in slabs: _solid("floor",slab,floor_index,"Piso")
@@ -84,6 +108,7 @@ func generate_structure(seed_value: int) -> Dictionary:
 		if floor_index<floor_count-1:
 			for side: float in [-1.0,1.0]: _stairs(floor_index,side,half_x)
 	_solid("ceiling",AABB(Vector3(-half_x,floor_count*FLOOR_HEIGHT,-half_z),Vector3(half_x*2,.2,half_z*2)),floor_count-1,"Techo")
+	_layout_metadata()
 	return _data.duplicate(true)
 
 func generate(seed_value: int) -> Dictionary:
@@ -97,6 +122,9 @@ func generate(seed_value: int) -> Dictionary:
 	_build_routes()
 	_data.generation_stage = "furnished_unvalidated"
 	return _data.duplicate(true)
+
+func _stair_x(side: float) -> float:
+	return side*(float(_data.half_x)-float(LAYOUT.stair_offset))
 
 func _solid(kind: String, box: AABB, floor_index: int, label: String="") -> void:
 	if box.size.x<.001 or box.size.y<.001 or box.size.z<.001: return
@@ -125,17 +153,21 @@ func _subtract_slabs(slabs: Array[AABB], hole: AABB) -> Array[AABB]:
 
 func _floor_rooms(floor_index: int, total_floors: int, half_x: float, half_z: float, hall_half: float) -> void:
 	var y := floor_index*FLOOR_HEIGHT
-	var north_end := -_grid(5.65,6.45)
-	var south_start := _grid(5.65,6.45)
+	var north_end := -_grid(LAYOUT.hall_end_min,LAYOUT.hall_end_max)
+	var south_start := _grid(LAYOUT.hall_end_min,LAYOUT.hall_end_max)
 	var split_quadrants: Array[int]=[0,1,2,3]
 	for index: int in range(3,0,-1):
 		var swap := _integer(0,index)
 		var previous := split_quadrants[index]
 		split_quadrants[index]=split_quadrants[swap];split_quadrants[swap]=previous
 	var split_count := _integer(2,4) if total_floors==2 else _integer(0,2)
+	# 22 rooms + six cross-hall lights + four flight lights fit the 32-light budget.
+	if total_floors==3:
+		var used_splits: int=_data.rooms.size()-floor_index*6
+		split_count=mini(split_count,4-used_splits)
 	_data.corridors.append(AABB(Vector3(-hall_half,y,-half_z+.25),Vector3(hall_half*2,FLOOR_HEIGHT,half_z*2-.5)))
-	_data.corridors.append(AABB(Vector3(-half_x+.25,y,north_end),Vector3(half_x*2-.5,FLOOR_HEIGHT,-3.8-north_end)))
-	_data.corridors.append(AABB(Vector3(-half_x+.25,y,3.8),Vector3(half_x*2-.5,FLOOR_HEIGHT,south_start-3.8)))
+	_data.corridors.append(AABB(Vector3(-half_x+EXTERIOR_WALL,y,north_end),Vector3(half_x*2-EXTERIOR_WALL*2,FLOOR_HEIGHT,-CENTRAL_ROOM_HALF_DEPTH-north_end)))
+	_data.corridors.append(AABB(Vector3(-half_x+EXTERIOR_WALL,y,CENTRAL_ROOM_HALF_DEPTH),Vector3(half_x*2-EXTERIOR_WALL*2,FLOOR_HEIGHT,south_start-CENTRAL_ROOM_HALF_DEPTH)))
 	for quadrant: int in range(4):
 		var right := quadrant%2==1
 		var rear := quadrant>=2
@@ -149,9 +181,9 @@ func _floor_rooms(floor_index: int, total_floors: int, half_x: float, half_z: fl
 		for column: int in range(cuts.size()-1):
 			_room(AABB(Vector3(cuts[column],y,low_z),Vector3(cuts[column+1]-cuts[column],FLOOR_HEIGHT,high_z-low_z)),floor_index,2,low_z if rear else high_z,not rear)
 	for right: bool in [false,true]:
-		var low_x := hall_half if right else -half_x+4.8
-		var high_x := half_x-4.8 if right else -hall_half
-		_room(AABB(Vector3(low_x,y,-3.8),Vector3(high_x-low_x,FLOOR_HEIGHT,7.6)),floor_index,0,low_x if right else high_x,not right)
+		var low_x := hall_half if right else -half_x+float(LAYOUT.room_inset)
+		var high_x := half_x-float(LAYOUT.room_inset) if right else -hall_half
+		_room(AABB(Vector3(low_x,y,-CENTRAL_ROOM_HALF_DEPTH),Vector3(high_x-low_x,FLOOR_HEIGHT,CENTRAL_ROOM_HALF_DEPTH*2)),floor_index,0,low_x if right else high_x,not right)
 
 func _room(bounds: AABB, floor_index: int, door_axis: int, door_coordinate: float, _positive_side: bool) -> void:
 	var id := "room-%02d"%_data.rooms.size()
@@ -188,15 +220,62 @@ func _room(bounds: AABB, floor_index: int, door_axis: int, door_coordinate: floa
 	_data.portals.append({"id":id,"room":id,"p":door_center,"axis":door_axis,"width":DOOR_WIDTH,"height":DOOR_HEIGHT})
 
 func _stairs(floor_index: int, side: float, half_x: float) -> void:
-	var x := side*(half_x-3.0)
+	var x := side*(half_x-float(LAYOUT.stair_offset))
 	var y := floor_index*FLOOR_HEIGHT
 	var forward := 1.0 if side<0 else -1.0
-	for step: int in range(16):
-		var z := -4.0+float(step)*.5 if forward>0 else 3.5-float(step)*.5
+	for step: int in range(STAIR_STEPS):
+		var z := -STAIR_RUN_HALF+float(step)*STAIR_TREAD if forward>0 else STAIR_RUN_HALF-STAIR_TREAD-float(step)*STAIR_TREAD
 		# Thin treads keep a full floor-height of headroom between stacked flights.
-		_solid("step",AABB(Vector3(x-1.4,y+step*.2,z),Vector3(2.8,.2,.5)),floor_index,"Escalera")
+		_solid("step",AABB(Vector3(x-STAIR_WIDTH*.5,y+step*STAIR_RISE,z),Vector3(STAIR_WIDTH,STAIR_RISE,STAIR_TREAD)),floor_index,"Escalera")
 	_data.stair_connections.append({"id":"stair-%d-%d"%[floor_index,int(side)],"floor":floor_index,
-		"bottom":Vector3(x,y,-4.65*forward),"top":Vector3(x,y+FLOOR_HEIGHT,4.65*forward),"direction":forward,"width":2.8})
+		"bottom":Vector3(x,y,-(STAIR_RUN_HALF+STAIR_APPROACH)*forward),
+		"top":Vector3(x,y+FLOOR_HEIGHT,(STAIR_RUN_HALF+STAIR_APPROACH)*forward),"direction":forward,"width":STAIR_WIDTH})
+	var stair: Dictionary=_data.stair_connections.back()
+	stair.merge({"center_x":x,"run_start_z":-STAIR_RUN_HALF,"run_end_z":STAIR_RUN_HALF,
+		"hole_width":STAIR_HOLE_WIDTH,"rise":STAIR_RISE,"tread":STAIR_TREAD,"steps":STAIR_STEPS})
+
+func _circulation_route(kind: String, from: Vector3, to: Vector3, width: float) -> void:
+	var across:=Vector3(width*.5,0,0) if absf(to.z-from.z)>absf(to.x-from.x) else Vector3(0,0,width*.5)
+	var clearance:=AABB(from.min(to)-across+Vector3.UP*.01,(to-from).abs()+across*2+Vector3.UP*2.05)
+	_data.circulation_routes.append({"id":"route-%03d"%_data.circulation_routes.size(),"kind":kind,
+		"floor":roundi(from.y/FLOOR_HEIGHT),"from":from,"to":to,"clear_width":width,"clearance":clearance})
+
+func _layout_metadata() -> void:
+	var half_x: float=_data.half_x
+	# Reserve 6cm at either side for rendered finishes beyond physical faces.
+	var inner_low:=half_x-float(LAYOUT.room_inset)+WALL*.5
+	var inner_high:=absf(_stair_x(1))-STAIR_HOLE_WIDTH*.5-RAIL_HALF_WIDTH
+	var outer_low:=absf(_stair_x(1))+STAIR_HOLE_WIDTH*.5+RAIL_HALF_WIDTH
+	var outer_high:=half_x-EXTERIOR_WALL
+	for floor_index: int in range(_data.floor_levels.size()):
+		var y: float=_data.floor_levels[floor_index]
+		var north: AABB=_data.corridors[floor_index*3+1]
+		var south: AABB=_data.corridors[floor_index*3+2]
+		var n:=north.get_center().z
+		var s:=south.get_center().z
+		_circulation_route("central",Vector3(0,y,n),Vector3(0,y,s),float(_data.layout_dimensions.central_hall_width)-FINISH_ALLOWANCE*2)
+		var outer_x: float=(outer_low+outer_high)*.5
+		for z: float in [n,s]:
+			_circulation_route("cross_hall",Vector3(-outer_x,y,z),Vector3(outer_x,y,z),2.0)
+		for side: float in [-1.0,1.0]:
+			for span: Vector2 in [Vector2(inner_low,inner_high),Vector2(outer_low,outer_high)]:
+				var x:=side*(span.x+span.y)*.5
+				_circulation_route("stair_side",Vector3(x,y,n),Vector3(x,y,s),span.y-span.x-FINISH_ALLOWANCE*2)
+				for z: float in [n,s]: _circulation_route("landing_link",Vector3(0,y,z),Vector3(x,y,z),2.0)
+	for stair: Dictionary in _data.stair_connections:
+		for end_name: String in ["bottom","top"]:
+			var feet: Vector3=stair[end_name]
+			var floor_index:=roundi(feet.y/FLOOR_HEIGHT)
+			var corridor: AABB=_data.corridors[floor_index*3+(1 if feet.z<0 else 2)]
+			var near_z:=STAIR_RUN_HALF+.05
+			var far_z:=absf(corridor.position.z if feet.z<0 else corridor.end.z)-WALL*.5
+			stair[end_name+"_landing"]=AABB(Vector3(feet.x-STAIR_WIDTH*.5,feet.y,-far_z if feet.z<0 else near_z),Vector3(STAIR_WIDTH,2.05,far_z-near_z))
+	for stair: Dictionary in _data.stair_connections:
+		var y:=int(stair.floor)*FLOOR_HEIGHT
+		var direction: float=stair.direction
+		_data.stair_light_anchors.append({"id":str(stair.id)+"-light",
+			"p":Vector3(stair.center_x,y+3.6,-1.5*direction),
+			"target":Vector3(stair.center_x,y+1.8,.5*direction),"range":7.5})
 
 func _furnish() -> void:
 	var themes: Array = ROOM_THEMES.duplicate(true)
@@ -417,22 +496,22 @@ func _barriers() -> void:
 		var x: float=Vector3(stair.bottom).x
 		var floor_y: float=Vector3(stair.bottom).y
 		for side: float in [-1.0,1.0]:
-			var edge_x:=x+side*1.48
-			for step: int in range(9):
-				var z: float=-4.0+step
-				var y: float=floor_y+((z+4.0) if float(stair.direction)>0 else (4.0-z))*.4
+			var edge_x:=x+side*(STAIR_WIDTH*.5+.08)
+			for step: int in range(int(STAIR_RUN_HALF*2)+1):
+				var z: float=-STAIR_RUN_HALF+step
+				var y: float=floor_y+((z+STAIR_RUN_HALF) if float(stair.direction)>0 else (STAIR_RUN_HALF-z))*(STAIR_RISE/STAIR_TREAD)
 				_barrier_box("post",AABB(Vector3(edge_x-.035,y,z-.035),Vector3(.07,.96,.07)))
-			var a:=Vector3(edge_x,floor_y+(.99 if float(stair.direction)>0 else 4.19),-4)
-			var b:=Vector3(edge_x,floor_y+(4.19 if float(stair.direction)>0 else .99),4)
+			var a:=Vector3(edge_x,floor_y+(.99 if float(stair.direction)>0 else FLOOR_HEIGHT+.99),-STAIR_RUN_HALF)
+			var b:=Vector3(edge_x,floor_y+(FLOOR_HEIGHT+.99 if float(stair.direction)>0 else .99),STAIR_RUN_HALF)
 			_data.barrier_parts.append({"kind":"slope","from":a,"to":b})
 			for step: int in range(64):
 				var start:=a.lerp(b,float(step)/64);var end:=a.lerp(b,float(step+1)/64)
 				_data.barrier_boxes.append(AABB(Vector3(edge_x-.0475,minf(start.y,end.y)-.0425,start.z),Vector3(.095,absf(end.y-start.y)+.085,end.z-start.z)))
 			var top_y:=floor_y+FLOOR_HEIGHT
-			edge_x=x+side*1.6
-			for step: int in range(9): _barrier_box("post",AABB(Vector3(edge_x-.035,top_y,-4.035+step),Vector3(.07,.96,.07)))
-			_barrier_box("bar",AABB(Vector3(edge_x-.0475,top_y+.9475,-4),Vector3(.095,.085,8)))
-			_barrier_box("bar",AABB(Vector3(edge_x-.0225,top_y+.07,-4),Vector3(.045,.055,8)))
+			edge_x=x+side*STAIR_HOLE_WIDTH*.5
+			for step: int in range(int(STAIR_RUN_HALF*2)+1): _barrier_box("post",AABB(Vector3(edge_x-.035,top_y,-STAIR_RUN_HALF-.035+step),Vector3(.07,.96,.07)))
+			_barrier_box("bar",AABB(Vector3(edge_x-RAIL_HALF_WIDTH,top_y+.9475,-STAIR_RUN_HALF),Vector3(RAIL_HALF_WIDTH*2,.085,STAIR_RUN_HALF*2)))
+			_barrier_box("bar",AABB(Vector3(edge_x-.0225,top_y+.07,-STAIR_RUN_HALF),Vector3(.045,.055,STAIR_RUN_HALF*2)))
 
 func _node(point: Vector3) -> int:
 	var nodes: Array=_data.nav_nodes
@@ -472,15 +551,17 @@ func _build_routes() -> void:
 			if room.has("pickup_approach"): _link(center,room.pickup_approach)
 			for approach: Vector3 in room.get("support_approaches",[]): _link(center,approach)
 		for side: float in [-1.0,1.0]:
-			var x: float=side*(float(_data.half_x)-3.0)
+			var x: float=_stair_x(side)
 			for z: float in [north,south]: _link(Vector3(0,floor_y,z),Vector3(x,floor_y,z))
 	for stair: Dictionary in _data.stair_connections:
 		var previous: Vector3=stair.bottom
-		for step: int in range(16):
-			var point:=Vector3(previous.x,int(stair.floor)*FLOOR_HEIGHT+(step+1)*.2,(-4.25+step*.5)*float(stair.direction))
+		for step: int in range(STAIR_STEPS):
+			var point:=Vector3(previous.x,int(stair.floor)*FLOOR_HEIGHT+(step+1)*STAIR_RISE,(-STAIR_RUN_HALF-STAIR_TREAD*.5+step*STAIR_TREAD)*float(stair.direction))
 			_link(previous,point);previous=point
 		_link(previous,stair.top)
 		for landing: Vector3 in [Vector3(stair.bottom),Vector3(stair.top)]:
 			for corridor: AABB in _data.corridors:
 				if absf(corridor.position.y-landing.y)<.001 and corridor.size.x>corridor.size.z and corridor.has_point(landing+Vector3.UP*.1):
 					_link(landing,Vector3(landing.x,landing.y,corridor.get_center().z))
+	for route: Dictionary in _data.circulation_routes:
+		_link(route.from,route.to)
