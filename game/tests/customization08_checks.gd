@@ -124,6 +124,11 @@ func _camera_controls(role: String) -> void:
 	for part: String in ["eyes","brows","mouth"]:
 		preview.focus_category(part)
 		_check(preview.focus_target == target and is_equal_approx(preview.focus_distance,distance), role + " preserves legacy facial framing for " + part)
+		await _settle()
+		var neutral := true
+		for value: float in preview.avatar.imported_skin.facial_values.values():
+			if not is_zero_approx(value): neutral = false
+		_check(neutral, role + " compares " + part + " without transient eyelid/gaze/expression offsets")
 
 func _visible_categories(role: String) -> void:
 	var actual: Array[String] = []

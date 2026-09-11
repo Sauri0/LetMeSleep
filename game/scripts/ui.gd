@@ -1489,6 +1489,7 @@ func _feature_svg(role:String,category:String,index:int)->String:
 		var sleepy:bool=index==1 if role=="human" else index==2
 		if sleepy:part='<path d="M25 54 Q41 69 54 54 M66 54 Q82 69 95 54 M26 52H53 M67 52H94" fill="none" stroke="%s" stroke-width="5" stroke-linecap="round"/>'%ink
 		elif role=="human" and index==2:part='<path d="M25 49 Q40 68 55 49 M65 49 Q80 68 95 49" fill="#fff8e4"/><path d="M25 49H55 M65 49H95 M42 51V58 M78 51V58" fill="none" stroke="%s" stroke-width="5" stroke-linecap="round"/>'%ink
+		elif role=="mosquito" and index==1:part='<ellipse cx="38" cy="53" rx="20" ry="25" fill="#fff8e4"/><ellipse cx="82" cy="53" rx="20" ry="25" fill="#fff8e4"/><circle cx="42" cy="54" r="6" fill="%s"/><circle cx="78" cy="54" r="6" fill="%s"/><path d="M28 20L24 14 M60 17V10 M92 20L96 14" stroke="%s" stroke-width="4" stroke-linecap="round"/>'%[ink,ink,ink]
 		else:part='<ellipse cx="40" cy="54" rx="16" ry="20" fill="#fff8e4"/><ellipse cx="80" cy="54" rx="16" ry="20" fill="#fff8e4"/><ellipse cx="43" cy="56" rx="6" ry="11" fill="%s"/><ellipse cx="77" cy="56" rx="6" ry="11" fill="%s"/>'%[ink,ink]
 	elif category=="brows":
 		var paths:Array[String]=['M25 51 Q40 40 53 49 M67 49 Q82 40 96 51','M25 45 Q40 39 53 45 M67 45 Q82 39 96 45','M25 43L53 54 M67 54L96 43']

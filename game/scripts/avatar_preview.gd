@@ -92,6 +92,7 @@ func reset_view() -> void:
 	orbit_pitch = -0.08
 	zoom = 1.0
 	focus_key = ""
+	expression = ""
 	focus_target = Vector3(0,0.91,0)
 	focus_distance = 3.65
 	_update_camera()
@@ -101,6 +102,7 @@ func set_expression(value: String) -> void:
 
 func play_emote(id: String) -> bool:
 	if role!="human" or not Emotes.is_valid(id): return false
+	expression = ""
 	emote_id=id
 	emote_time=0.0
 	return true
@@ -118,6 +120,9 @@ func focus_category(key: String) -> void:
 	focus_key = key
 	zoom = 1.0
 	var facial:bool=key in ["eyes","brows","mouth","mustache","beard","hair_color","face"]
+	# Compare the modeled shapes with a stable expression. Automatic sleepiness
+	# and blinks otherwise make "open" eyes look closed during selection.
+	set_expression("neutral" if facial else "")
 	if role=="human":
 		if facial or key in ["hair","accessory"]:
 			focus_target = Vector3(0,1.59,0)
