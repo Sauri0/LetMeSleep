@@ -1,0 +1,11 @@
+{
+  "mode": "locomotion",
+  "cwd": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion",
+  "started_utc": "2026-09-11T23:48:52.7273227Z",
+  "finished_utc": "2026-09-11T23:48:57.2205724Z",
+  "exit_code": 1,
+  "timed_out": false,
+  "stderr_bytes": 2421,
+  "stdout_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion092-locomotion-r1.stdout.log",
+  "stderr_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion092-locomotion-r1.stderr.log"
+}

@@ -1,0 +1,4 @@
+SCRIPT ERROR: Parse Error: The member "Skin" shadows a native class.
+   at: GDScript::reload (res://tests/motion092_hand_test.gd:5)
+ERROR: Failed to load script "res://tests/motion092_hand_test.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:3041)

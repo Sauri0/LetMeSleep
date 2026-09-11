@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('import', 'presentation', 'legacy', 'camera', 'manual', 'visual', 'attachment', 'contact')]
+    [ValidateSet('import', 'presentation', 'legacy', 'camera', 'manual', 'visual', 'attachment', 'contact', 'handpose', 'handskin', 'emote', 'locomotion')]
     [string]$Mode = 'presentation',
     [ValidatePattern('^[a-zA-Z0-9_-]+$')]
     [string]$RunName = 'run1'
@@ -8,7 +8,8 @@ $ErrorActionPreference = 'Stop'
 # Only execute after Director grants the shared engine slot.
 $motionRepo = Split-Path -Parent $PSScriptRoot
 $motionEngine = 'C:\Users\brank\Documents\Codex\2026-09-06\dejame-dormir\work\tools\godot-4.5.2\Godot_v4.5.2-stable_win64_console.exe'
-$motionPrefix = Join-Path $PSScriptRoot "motion091-$Mode-$RunName"
+$motionVersion = if ($Mode -in @('handpose', 'handskin', 'emote', 'locomotion')) { 'motion092' } else { 'motion091' }
+$motionPrefix = Join-Path $PSScriptRoot "$motionVersion-$Mode-$RunName"
 $motionArgs = [System.Collections.Generic.List[string]]::new()
 if ($Mode -eq 'import') {
     foreach ($item in @('--headless', '--path', (Join-Path $motionRepo 'game'), '--editor', '--import', '--quit', '--frame-delay', '800')) { $motionArgs.Add($item) }
@@ -21,8 +22,13 @@ if ($Mode -eq 'import') {
         visual = 'motion091_camera_visual.gd'
         attachment = 'motion091_attachment_test.gd'
         contact = 'contact_orientation06_test.gd'
+        handpose = 'motion092_hand_test.gd'
+        handskin = 'motion092_hand_test.gd'
+        emote = 'emote09_pose_checks.gd'
+        locomotion = 'locomotion_test.gd'
     }
     foreach ($item in @('--path', (Join-Path $motionRepo 'game'), '--audio-driver', 'Dummy', '--script', ('res://tests/' + $motionScripts[$Mode]), '--', ('--report=' + $motionPrefix + '.json'))) { $motionArgs.Add($item) }
+    if ($Mode -eq 'handpose') { $motionArgs.Add('--pose-only') }
 }
 $motionStart = [System.Diagnostics.ProcessStartInfo]::new()
 $motionStart.FileName = $motionEngine

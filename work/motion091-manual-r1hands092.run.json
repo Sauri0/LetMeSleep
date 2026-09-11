@@ -1,0 +1,11 @@
+{
+  "mode": "manual",
+  "cwd": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion",
+  "started_utc": "2026-09-11T23:49:03.0792876Z",
+  "finished_utc": "2026-09-11T23:49:08.5818127Z",
+  "exit_code": 0,
+  "timed_out": false,
+  "stderr_bytes": 0,
+  "stdout_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-manual-r1hands092.stdout.log",
+  "stderr_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-manual-r1hands092.stderr.log"
+}

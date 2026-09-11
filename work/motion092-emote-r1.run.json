@@ -1,0 +1,11 @@
+{
+  "mode": "emote",
+  "cwd": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion",
+  "started_utc": "2026-09-11T23:48:28.7987284Z",
+  "finished_utc": "2026-09-11T23:48:33.0489574Z",
+  "exit_code": 0,
+  "timed_out": false,
+  "stderr_bytes": 0,
+  "stdout_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion092-emote-r1.stdout.log",
+  "stderr_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion092-emote-r1.stderr.log"
+}

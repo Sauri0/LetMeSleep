@@ -115,8 +115,18 @@ static func strike_geometry(actor: Dictionary, point_world: Vector3, normal_worl
 	if face_normal.dot(neutral_normal)<0.0: face_normal = -face_normal
 	var elbow := shoulder.lerp(grip,.50)+Vector3(side*.08,-.06,-.10)
 	var wrist := grip-(grip-elbow).normalized()*PALM_OFFSET
+	var hand_frame := Basis.IDENTITY
+	if tool=="hands":
+		# The palm faces into the struck surface. Finger direction lies along
+		# it, so wrist flexion does not turn a palm strike into a knuckle jab.
+		var fingers := (grip-elbow)-normal*(grip-elbow).dot(normal)
+		if fingers.length_squared()<.0001: fingers=Vector3.UP-normal*Vector3.UP.dot(normal)
+		if fingers.length_squared()<.0001: fingers=Vector3.FORWARD-normal*Vector3.FORWARD.dot(normal)
+		fingers=fingers.normalized()
+		hand_frame=Basis(fingers.cross(normal).normalized(),fingers,normal)
+		wrist=grip-fingers*PALM_OFFSET
 	if Tools.GRASPS.has(tool): wrist=grasp_geometry(grip,elbow,direction,tool).hand
-	return {"hand":wrist,"grip":grip,"elbow":elbow,"direction":direction,"normal":face_normal,"contact":grip+direction*length,"reachable":reachable}
+	return {"hand":wrist,"grip":grip,"elbow":elbow,"direction":direction,"normal":face_normal,"hand_basis":hand_frame,"contact":grip+direction*length,"reachable":reachable}
 
 ## A grasp puts the shaft across the fingers. Its centre remains the exact
 ## requested grip; the palm sits against the shaft instead of containing it.
@@ -127,13 +137,17 @@ static func grasp_geometry(grip: Vector3, elbow: Vector3, tool_axis: Vector3, to
 	if longitudinal.length_squared()<.0001: longitudinal=Vector3.FORWARD-width*Vector3.FORWARD.dot(width)
 	if longitudinal.length_squared()<.0001: longitudinal=Vector3.RIGHT-width*Vector3.RIGHT.dot(width)
 	longitudinal=longitudinal.normalized()
-	var palm_normal := width.cross(longitudinal).normalized()
+	# The selected rig's thumbs establish its palm on the negative frame Z.
+	# Keep the rotation frame right-handed; anatomy is a separate direction.
+	var frame_normal := width.cross(longitudinal).normalized()
+	var palm_normal := -frame_normal
 	var radius := float(Tools.GRASPS.get(tool,{"radius":.015}).radius)
 	var palm := grip-palm_normal*(radius+.018)
-	return {"hand":palm-longitudinal*PALM_OFFSET,"direction":longitudinal,"width":width,"normal":palm_normal}
+	return {"hand":palm-longitudinal*PALM_OFFSET,"direction":longitudinal,"width":width,"normal":frame_normal,"palm_normal":palm_normal}
 
-static func palm_center(wrist: Vector3, elbow: Vector3) -> Vector3:
-	return wrist+(wrist-elbow).normalized()*PALM_OFFSET
+static func palm_center(wrist: Vector3, elbow: Vector3, finger_direction: Vector3 = Vector3.ZERO) -> Vector3:
+	var direction := finger_direction.normalized() if finger_direction.length_squared()>.0001 else (wrist-elbow).normalized()
+	return wrist+direction*PALM_OFFSET
 
 static func tool_basis(direction: Vector3, normal: Vector3 = Vector3.BACK) -> Basis:
 	var axis := direction.normalized()
@@ -254,7 +268,9 @@ static func sample(actor: Dictionary) -> Dictionary:
 		var carried_grip := palm_center(hand,elbow)
 		if side>0.0 and Tools.GRASPS.has(equipped_tool):
 			carried_grip=Vector3(result.shoulder_r)+Vector3(Tools.GRASPS[equipped_tool].rest)+Vector3(0,settle*.35+counter_swing*.009,step*.02)
-			elbow=Vector3(result.shoulder_r).lerp(carried_grip,.50)+Vector3(.04,-.11,.015)
+			# Tuck the elbow beneath a carried object. The palmar grasp wraps on
+			# its outer side; a flared elbow pushes thick grips outside the body.
+			elbow=Vector3(result.shoulder_r).lerp(carried_grip,.50)+Vector3(-.06,-.11,.015)
 			hand=grasp_geometry(carried_grip,elbow,rest_basis.y,equipped_tool).hand
 		if bool(actor.get("relaxed_pose",false)):
 			# Lobby/editor presentation only: no bite reservations or combat
@@ -269,6 +285,13 @@ static func sample(actor: Dictionary) -> Dictionary:
 			elbow += Vector3(side*.005,.010,.010)*anticipation
 		if active_hand and swing > 0.0:
 			var geometry := strike_geometry(actor,strike.point,strike.get("normal",Vector3.ZERO),str(strike.get("hand","right")),tool)
+			if tool=="hands":
+				var free_direction := (hand-elbow).normalized()
+				var free_width := (Vector3.RIGHT-free_direction*Vector3.RIGHT.dot(free_direction)).normalized()
+				var free_basis := Basis(free_width,free_direction,free_width.cross(free_direction))
+				var hand_basis := Basis(free_basis.get_rotation_quaternion().slerp(Basis(geometry.hand_basis).get_rotation_quaternion(),swing))
+				result["hand_direction"+suffix]=hand_basis.y
+				result["hand_width"+suffix]=hand_basis.x
 			elbow = elbow.lerp(geometry.elbow, swing)
 			hand = hand.lerp(geometry.hand, swing)
 			if side > 0.0:
@@ -279,7 +302,7 @@ static func sample(actor: Dictionary) -> Dictionary:
 				result.tool_normal = current_basis.z
 		result["elbow" + suffix] = elbow
 		result["hand" + suffix] = hand
-		if side>0.0: result.tool_grip=carried_grip if equipped_tool!="hands" else palm_center(hand,elbow)
+		if side>0.0: result.tool_grip=carried_grip if equipped_tool!="hands" else palm_center(hand,elbow,result.get("hand_direction"+suffix,Vector3.ZERO))
 	if not result.has("tool_direction"):
 		result.tool_direction = rest_basis.y
 		result.tool_normal = rest_basis.z
@@ -315,7 +338,7 @@ static func sample(actor: Dictionary) -> Dictionary:
 		result.tool_grip=grip
 	Emotes.apply_human(result,actor)
 	if equipped_tool=="hands" and throw_state=="idle" and not Emotes.sample(actor).is_empty():
-		result.tool_grip=palm_center(result.hand_r,result.elbow_r)
+		result.tool_grip=palm_center(result.hand_r,result.elbow_r,result.get("hand_direction_r",Vector3.ZERO))
 	var grasp_tool := equipped_tool
 	if throw_state=="recovering": grasp_tool=str(throwing.get("tool",equipped_tool))
 	if Tools.GRASPS.has(grasp_tool):
@@ -330,7 +353,7 @@ static func sample(actor: Dictionary) -> Dictionary:
 		result.hand_direction_r=hand_basis.y
 		result.hand_width_r=hand_basis.x
 	var suffix: String = "_l" if str(strike.get("hand", "right")) == "left" else "_r"
-	result.strike_contact = (Vector3(result.tool_grip) if tool!="hands" else palm_center(result["hand" + suffix],result["elbow" + suffix])) + Vector3(result.tool_direction) * float(TOOL_LENGTHS.get(tool, 0.0))
+	result.strike_contact = (Vector3(result.tool_grip) if tool!="hands" else palm_center(result["hand" + suffix],result["elbow" + suffix],result.get("hand_direction"+suffix,Vector3.ZERO))) + Vector3(result.tool_direction) * float(TOOL_LENGTHS.get(tool, 0.0))
 	return result
 
 static func zone_pose(actor: Dictionary, zone: Dictionary, posed: Dictionary = {}, shared_capsules: Array[Dictionary] = [], rest_pose: Dictionary = {}) -> Dictionary:

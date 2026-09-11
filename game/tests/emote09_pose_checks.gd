@@ -41,6 +41,12 @@ func _initialize() -> void:
 				var actor := base.duplicate(true)
 				actor.emote_id=id
 				actor.emote_time=.7
+				var gesture := Pose.sample(actor)
+				var expected_palm := Vector3.UP if id=="shrug" else Vector3.BACK if id=="yawn" else Vector3.FORWARD
+				for side: String in ["l","r"]:
+					if not gesture.has("hand_width_"+side) or (side=="r" and tool!="hands"): continue
+					var palm := -Vector3(gesture["hand_width_"+side]).cross(gesture["hand_direction_"+side])
+					check(palm.dot(expected_palm)>.999,"gesture exposes anatomical palm "+id+" "+side)
 				check(Pose.cache_key(actor)!=Pose.cache_key(base),"emote changes owning simulation cache signature")
 				var previous_key := Pose.cache_key(actor)
 				actor.emote_time+=.01

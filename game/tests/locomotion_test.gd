@@ -224,7 +224,7 @@ func _test_swings_and_exposed_marks() -> void:
 	var hands_contact: Dictionary = Pose.sample({"tool": "hands", "strike": strike})
 	# hand_r is the wrist joint. Verify the actual palm beyond it, independently
 	# of the reported strike centre, while both joints of the other arm stay put.
-	var palm_center: Vector3 = Vector3(hands_contact.hand_r) + (Vector3(hands_contact.hand_r) - Vector3(hands_contact.elbow_r)).normalized() * Pose.PALM_OFFSET
+	var palm_center: Vector3 = Vector3(hands_contact.hand_r) + Vector3(hands_contact.hand_direction_r) * Pose.PALM_OFFSET
 	check(palm_center.distance_to(point) < 0.0001 and Vector3(hands_contact.strike_contact).distance_to(palm_center) < 0.0001 and hands_contact.hand_l == hands_idle.hand_l and hands_contact.elbow_l == hands_idle.elbow_l, "manual palm reaches clicked point while other arm stays still")
 	strike = {"tool": "swatter", "hand": "right", "point": Vector3(0, 1.2, -0.8), "progress": 0.5, "active": true}
 	var tool_swing: Dictionary = Pose.sample({"tool": "swatter", "strike": strike})

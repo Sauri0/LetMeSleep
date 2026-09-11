@@ -1,0 +1,11 @@
+{
+  "mode": "handpose",
+  "cwd": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion",
+  "started_utc": "2026-09-11T23:48:20.3553965Z",
+  "finished_utc": "2026-09-11T23:48:23.1108486Z",
+  "exit_code": 1,
+  "timed_out": false,
+  "stderr_bytes": 277,
+  "stdout_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion092-handpose-r1.stdout.log",
+  "stderr_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion092-handpose-r1.stderr.log"
+}

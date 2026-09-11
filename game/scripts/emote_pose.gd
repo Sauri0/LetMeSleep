@@ -58,7 +58,8 @@ static func apply_human(pose: Dictionary, actor: Dictionary) -> void:
 		pose["hand"+suffix]=Vector3(pose["hand"+suffix]).lerp(wrist,weight)
 		var base_direction := (Vector3(pose["hand"+suffix])-Vector3(pose["elbow"+suffix])).normalized()
 		var base_width := (Vector3.RIGHT-base_direction*base_direction.x).normalized()
-		var width := fingers.cross(normal).normalized()
+		# The imported hand's anatomical palm is negative frame Z.
+		var width := normal.cross(fingers).normalized()
 		var basis := Basis(base_width,base_direction,base_width.cross(base_direction))
 		var desired := Basis(width,fingers,width.cross(fingers))
 		var blended := Basis(basis.get_rotation_quaternion().slerp(desired.get_rotation_quaternion(),weight))
