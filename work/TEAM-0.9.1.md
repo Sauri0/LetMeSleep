@@ -65,3 +65,14 @@ Generador nuevo SOLO v2; house-v1-seed rechazado, sin reinterpretar ni mantener 
 Metadata de escaleras acordada: stair_light_anchors (p:Vector3,target:Vector3,range:float), layout_dimensions, stair_connections con extremos reales, circulation_routes. Modelador1 produce y Worker2 consume; propietario del contrato detallado Modelador1.
 Catálogo facial primer tramo conserva todos los IDs/nombres/conteos (acuerdo Modelador2/UI).
 QA mínimos de circulación: pasillo/descanso>=1.50m, puerta>=1.30m (plan conserva2m), escalera>=1.40m (plan2.8m), huella>=.28m, contrahuella<=.22m; verificarlos geométricamente, no confiar en metadata.
+
+## Segunda entrega aislada
+
+La fuente de 0.9.1 permanece en la integración hasta su validación/publicación.
+Modelador 1 puede implementar ya v3 en C:/Users/brank/Documents/Codex/2026-09-06/lms092-house,
+rama codex/092-house, base f037ab1. Su copia lms091-house queda disponible para
+correcciones de v2. Mantiene la misma propiedad de archivos y no cambia app/red.
+Esto reemplaza la espera de implementación mencionada en el plan092: la integración
+al producto publicado continúa en orden 0.9.1 y luego0.9.2.
+Modelador2 prepara personajes0.9.2 en lms091-characters; no se integran en0.9.1.
+UIc1fc717 (miniatura Seria) acompaña esas geometrías en0.9.2.
