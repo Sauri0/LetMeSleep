@@ -122,7 +122,7 @@ static func validate_circulation(data: Dictionary, human: Dictionary, extra: Arr
 static func _validate_clearance(clearance: AABB, floor_y: float, obstacles: Array, data: Dictionary, errors: Array[String], label: String) -> void:
 	for obstacle: AABB in obstacles:
 		if clearance.intersects(obstacle):
-			errors.append("Obstructed circulation volume: "+label);break
+			errors.append("Obstructed circulation volume: %s (overlap %s)"%[label,clearance.intersection(obstacle).size]);break
 	for door: Dictionary in data.doors.values():
 		if DoorGeometry.intersects_body(door,PI*.5,clearance):
 			errors.append("Open door intrudes into circulation volume: "+label);break

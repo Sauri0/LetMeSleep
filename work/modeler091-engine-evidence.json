@@ -1,0 +1,43 @@
+{
+  "failures": [],
+  "checks": 204,
+  "code_baseline": "b1d9fa4",
+  "processes": [
+    {
+      "timeout": false,
+      "stderr_bytes": 0,
+      "exit": -1073741819,
+      "name": "import-01"
+    },
+    {
+      "timeout": false,
+      "stderr_bytes": 0,
+      "exit": 0,
+      "name": "import-02"
+    },
+    {
+      "timeout": false,
+      "stderr_bytes": 0,
+      "exit": 1,
+      "name": "layout-01"
+    },
+    {
+      "timeout": false,
+      "stderr_bytes": 0,
+      "exit": 1,
+      "name": "layout-02"
+    },
+    {
+      "timeout": false,
+      "stderr_bytes": 0,
+      "exit": 0,
+      "name": "layout-03"
+    }
+  ],
+  "source_hashes": {
+    "test": "8DA4FF48289A294BF19CE7DD73A03BA13827871C2E70DA1504A9398DDE4528DA",
+    "procedural_house": "CD122704085029EF82D2830558DEFDEC1F5D63264D960648BEE464AD1C33119D",
+    "house_validation": "5C736EAA2C9AB802086CE84C79E11DD9B16D49558BE214090314B6880B29CF71"
+  },
+  "runtime": "Godot 4.5.2"
+}

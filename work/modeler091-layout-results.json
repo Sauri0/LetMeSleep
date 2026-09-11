@@ -1,0 +1,105 @@
+{
+	"cases": [
+		{
+			"errors": [],
+			"fingerprint": "450d1a62e9ca941ecd00159abd6e2486a550fc5bde5883b9953efc45d4c02d69",
+			"floors": 3,
+			"minimum_width": 1.58250034332275,
+			"rejected_edges": [],
+			"rooms": 22,
+			"seed": 1
+		},
+		{
+			"errors": [],
+			"fingerprint": "69f293863ae30ba7bda03308998753a1404ae62997627def3a601f1a8370dda3",
+			"floors": 2,
+			"minimum_width": 1.58250034332275,
+			"rejected_edges": [],
+			"rooms": 17,
+			"seed": 2
+		},
+		{
+			"errors": [],
+			"fingerprint": "4c8798524dde04e10913916008b5f0f18ca18f8e720dd9405d76f4d24d9fceef",
+			"floors": 3,
+			"minimum_width": 1.58250034332275,
+			"rejected_edges": [],
+			"rooms": 18,
+			"seed": 7
+		},
+		{
+			"errors": [],
+			"fingerprint": "70ec0522dc237c361be9eb7e7b852f191b4b9da94ec879236fa5ab083ee72953",
+			"floors": 3,
+			"minimum_width": 1.58250034332275,
+			"rejected_edges": [],
+			"rooms": 19,
+			"seed": 31
+		},
+		{
+			"errors": [],
+			"fingerprint": "4bdeae6f279abb43df9198fe94d70fff909ac6a80240acc5ec98f7c9ba0e6d35",
+			"floors": 3,
+			"minimum_width": 1.58249938964844,
+			"rejected_edges": [],
+			"rooms": 22,
+			"seed": 97
+		},
+		{
+			"errors": [],
+			"fingerprint": "658cf43f5dd8e93314256f3c46894f5caa37403ac79a22f3614c29cd52c073ba",
+			"floors": 3,
+			"minimum_width": 1.58250034332275,
+			"rejected_edges": [],
+			"rooms": 22,
+			"seed": 257
+		},
+		{
+			"errors": [],
+			"fingerprint": "dc050ee00cf5540cfd25749a285bb1d9c6a77a8b2f6fc9d76f18982e22c1a4fc",
+			"floors": 3,
+			"minimum_width": 1.58250034332275,
+			"rejected_edges": [],
+			"rooms": 21,
+			"seed": 997
+		},
+		{
+			"errors": [],
+			"fingerprint": "91562f362e59b2818907dd9d59a84520db835e416afdc39921804c0775c51eff",
+			"floors": 2,
+			"minimum_width": 1.58250034332275,
+			"rejected_edges": [],
+			"rooms": 19,
+			"seed": 2026
+		},
+		{
+			"errors": [],
+			"fingerprint": "7c928f656a428f409a56e8f63b4456955c948a065d3ed95fb2c8415995bc2cb5",
+			"floors": 2,
+			"minimum_width": 1.58250034332275,
+			"rejected_edges": [],
+			"rooms": 18,
+			"seed": 65537
+		},
+		{
+			"errors": [],
+			"fingerprint": "298091fdc8f7c3e0ccad0c1e8af395954420cb8f66e643d1c788ea4bc3a38b21",
+			"floors": 2,
+			"minimum_width": 1.58250034332275,
+			"rejected_edges": [],
+			"rooms": 16,
+			"seed": 1234567
+		},
+		{
+			"errors": [],
+			"fingerprint": "d7822aeef4f06ac6892a1333a3011323967ec33a41565d1de6947122f411aa58",
+			"floors": 2,
+			"minimum_width": 1.5824998664856,
+			"rejected_edges": [],
+			"rooms": 20,
+			"seed": 2147483646
+		}
+	],
+	"checks": 204,
+	"failures": []
+}

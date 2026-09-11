@@ -267,8 +267,8 @@ func _layout_metadata() -> void:
 			var feet: Vector3=stair[end_name]
 			var floor_index:=roundi(feet.y/FLOOR_HEIGHT)
 			var corridor: AABB=_data.corridors[floor_index*3+(1 if feet.z<0 else 2)]
-			var near_z:=STAIR_RUN_HALF+.05
-			var far_z:=absf(corridor.position.z if feet.z<0 else corridor.end.z)-WALL*.5
+			var near_z:=STAIR_RUN_HALF+.05+FINISH_ALLOWANCE
+			var far_z:=absf(corridor.position.z if feet.z<0 else corridor.end.z)-WALL*.5-FINISH_ALLOWANCE
 			stair[end_name+"_landing"]=AABB(Vector3(feet.x-STAIR_WIDTH*.5,feet.y,-far_z if feet.z<0 else near_z),Vector3(STAIR_WIDTH,2.05,far_z-near_z))
 	for stair: Dictionary in _data.stair_connections:
 		var y:=int(stair.floor)*FLOOR_HEIGHT

@@ -1,6 +1,7 @@
 # Casa v2: contrato de arquitectura y entorno
 
-Estado: implementación del primer tramo; pendiente de motor y revisión visual.
+Estado: prueba inicial en motor 204/0 sobre once semillas; corpus y revisión
+visual integrados pendientes. Ver `modeler091-layout-validation.md`.
 Propietario del generador: Modelador 1. Consumo visual: Worker 2.
 Sólo `house-v2-<seed>` canónico se acepta; v1 se rechaza. No cambia red aquí.
 
@@ -29,7 +30,8 @@ Los laterales tienen 1.5825 m interiores y 1.6325 m exteriores declarados
 libres, descontando una reserva de 6 cm por cara (12 cm total). Las distancias
 físicas entre sólidos son 1.7025 y 1.7525 m. Worker 2 debe respetar esa reserva
 y comprobar mallas/molduras reales durante QA. Los descansos miden 2.8 m de ancho
-y al menos 2.25 m de profundidad. El diámetro físico humano actual es 1.20 m.
+y al menos 2.13 m de profundidad libre, descontados también 6 cm por cada
+extremo para acabados. El diámetro físico humano actual es 1.20 m.
 Los mínimos QA 1.50 m de circulación, 1.40 m de escalera, puerta 1.00 m,
 huella .28 m y contrahuella máxima .22 m son compatibles. Se conservan
 puertas de 2.00 m y escaleras de 2.80 m; no se reducen a los mínimos.
