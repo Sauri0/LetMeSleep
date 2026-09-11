@@ -1,6 +1,7 @@
 extends SceneTree
-## Independent 0.9.1 motion/defense gate. Exercises authority dictionaries and
-## production collision/pose code without a renderer, input injection or prefs.
+## Independent 0.9.1 motion/defense gate. Exercises authority dictionaries,
+## production collision/pose code and native ActorView presentation. Requires a
+## renderer; does not inject OS input or exercise preferences/network/WAN.
 const Generator=preload("res://scripts/procedural_house.gd")
 const Maps=preload("res://scripts/map_catalog.gd")
 const ArenaData=preload("res://scripts/arena.gd")
