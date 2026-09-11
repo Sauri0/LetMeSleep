@@ -1,0 +1,268 @@
+{
+  "schema": 1,
+  "scope": "Static GLB JSON inventory and submission proxy only; no Godot render, visibility, FPS, GPU time, or actual draw-call claim. One contact quad is currently added per furniture instance. Shadow proxy assumes one affecting shadow-casting light and default furniture shadow casting.",
+  "source": {
+    "furniture_blueprint": "game/scripts/furniture_blueprint.gd",
+    "plan_entries": 64,
+    "unique_assets": 23,
+    "weighted_mean_vertices": 3460.09375,
+    "weighted_mean_triangles": 4236.1875,
+    "weighted_mean_material_primitives": 4.140625
+  },
+  "weighted_mean_material_primitives": 4.140625,
+  "count_comparison": {
+    "v2_upper_88": {
+      "furniture": 88,
+      "visible_surface_plus_contact_proxy": 452.38,
+      "shadow_surface_proxy_at_one_affecting_shadow_light": 364.38,
+      "triangle_instance_proxy": 372784.5,
+      "vertex_instance_proxy": 304488.25
+    },
+    "v3_cap_144": {
+      "furniture": 144,
+      "visible_surface_plus_contact_proxy": 740.25,
+      "shadow_surface_proxy_at_one_affecting_shadow_light": 596.25,
+      "triangle_instance_proxy": 610011.0,
+      "vertex_instance_proxy": 498253.5
+    },
+    "delta_56": {
+      "visible_surface_plus_contact_proxy": 287.88,
+      "shadow_surface_proxy_at_one_affecting_shadow_light": 231.88,
+      "furniture_growth_percent": 63.64,
+      "triangle_instance_proxy": 237226.5,
+      "vertex_instance_proxy": 193765.25
+    }
+  },
+  "assets": [
+    {
+      "asset_id": "armchair",
+      "mesh_nodes": 1,
+      "material_primitives": 5,
+      "materials": 5,
+      "vertices": 6736,
+      "triangles": 8352,
+      "bytes": 270724,
+      "sha256": "292213b22e107dc8e805021be7e1a70b3d9c7da8b3f57dece7f486d113d7bcf0"
+    },
+    {
+      "asset_id": "bath_shower",
+      "mesh_nodes": 1,
+      "material_primitives": 5,
+      "materials": 5,
+      "vertices": 2806,
+      "triangles": 3356,
+      "bytes": 114996,
+      "sha256": "eab7709a3e39bcef474bb1b3fed7ca03405efa0ee42db633abdd35979a4088f6"
+    },
+    {
+      "asset_id": "bath_vanity",
+      "mesh_nodes": 1,
+      "material_primitives": 7,
+      "materials": 7,
+      "vertices": 3112,
+      "triangles": 3756,
+      "bytes": 129068,
+      "sha256": "fd5942f0de414d623ed16dc599162bf0fba9a5a01a0d4a16ea59f0b570f5e2c4"
+    },
+    {
+      "asset_id": "bed",
+      "mesh_nodes": 1,
+      "material_primitives": 5,
+      "materials": 5,
+      "vertices": 7308,
+      "triangles": 8968,
+      "bytes": 292692,
+      "sha256": "4f5daa05d825162aeab17c8141e0db51f760d4f9a8dc1cf0e91147c88ab1c453"
+    },
+    {
+      "asset_id": "bookcase",
+      "mesh_nodes": 1,
+      "material_primitives": 7,
+      "materials": 7,
+      "vertices": 3864,
+      "triangles": 4788,
+      "bytes": 159304,
+      "sha256": "b2e5f2e39551c02f922b245bfd71ce92efafa8a516e64bc0479c70dcc0fa9827"
+    },
+    {
+      "asset_id": "desk",
+      "mesh_nodes": 1,
+      "material_primitives": 4,
+      "materials": 4,
+      "vertices": 947,
+      "triangles": 1148,
+      "bytes": 41264,
+      "sha256": "e987357ec2b255fd805a8cfa3fb89e1fe70e7fda57cea837a8b6c835700aa1d6"
+    },
+    {
+      "asset_id": "dining_set",
+      "mesh_nodes": 1,
+      "material_primitives": 6,
+      "materials": 6,
+      "vertices": 4180,
+      "triangles": 4740,
+      "bytes": 168180,
+      "sha256": "ff82d8c7b924d5687ffaa28309d665c8636358c7a5e4c1cb8b9679621f0498dd"
+    },
+    {
+      "asset_id": "dresser",
+      "mesh_nodes": 1,
+      "material_primitives": 3,
+      "materials": 3,
+      "vertices": 2412,
+      "triangles": 2976,
+      "bytes": 98188,
+      "sha256": "f42553fba25112e66cd310eea7edb488612447a08a055c74797106c27a14e546"
+    },
+    {
+      "asset_id": "fridge",
+      "mesh_nodes": 1,
+      "material_primitives": 4,
+      "materials": 4,
+      "vertices": 975,
+      "triangles": 1160,
+      "bytes": 42220,
+      "sha256": "3d1904ae1489032fd8aebfc0a77a6974b04b2d377f28b33ee68a93d0f38fb472"
+    },
+    {
+      "asset_id": "game_table",
+      "mesh_nodes": 1,
+      "material_primitives": 7,
+      "materials": 7,
+      "vertices": 3022,
+      "triangles": 2900,
+      "bytes": 121052,
+      "sha256": "9c2a29e7ded7b1892b4eb814bf8fb0b7fbbb4cc43bd7c76f7ba3ec18863030c0"
+    },
+    {
+      "asset_id": "hamper",
+      "mesh_nodes": 1,
+      "material_primitives": 5,
+      "materials": 5,
+      "vertices": 6816,
+      "triangles": 8208,
+      "bytes": 272412,
+      "sha256": "128937ee160bb4c77a2253f25bc85fb33542fbd2e010f39e13dd4e96850f39e4"
+    },
+    {
+      "asset_id": "nightstand",
+      "mesh_nodes": 1,
+      "material_primitives": 2,
+      "materials": 2,
+      "vertices": 870,
+      "triangles": 1028,
+      "bytes": 36212,
+      "sha256": "62866440091ee141e8fbb34d8713aa11ee459798010c62f41b1fe954393da989"
+    },
+    {
+      "asset_id": "pantry_crates",
+      "mesh_nodes": 1,
+      "material_primitives": 3,
+      "materials": 3,
+      "vertices": 12528,
+      "triangles": 16200,
+      "bytes": 501272,
+      "sha256": "d0daba540b251843bcd4a79411593f85f1c2d84c471c303310d105e06600fa0b"
+    },
+    {
+      "asset_id": "pantry_shelf",
+      "mesh_nodes": 1,
+      "material_primitives": 10,
+      "materials": 10,
+      "vertices": 5608,
+      "triangles": 6564,
+      "bytes": 228564,
+      "sha256": "56122ef7446cf133a4047e8d2dc7d5834fc151ea3f16ab7fd330bcf9522cc77a"
+    },
+    {
+      "asset_id": "piano",
+      "mesh_nodes": 1,
+      "material_primitives": 6,
+      "materials": 6,
+      "vertices": 7639,
+      "triangles": 9480,
+      "bytes": 307340,
+      "sha256": "b9abe2d0f61b9de74580b7a18758bad3b5597d1be95d71adf7a1600e250203d2"
+    },
+    {
+      "asset_id": "sewing_table",
+      "mesh_nodes": 1,
+      "material_primitives": 7,
+      "materials": 7,
+      "vertices": 2378,
+      "triangles": 2776,
+      "bytes": 99688,
+      "sha256": "c5049fdd6042985a3a6db351664b6e13852be70298da5d8cfd5bb9042b459b61"
+    },
+    {
+      "asset_id": "sink",
+      "mesh_nodes": 1,
+      "material_primitives": 7,
+      "materials": 7,
+      "vertices": 3817,
+      "triangles": 4532,
+      "bytes": 156276,
+      "sha256": "01afa34a66621cdd33a6166eb19bbcf4cb7825aad6312ec41124a5b419bb9d91"
+    },
+    {
+      "asset_id": "sofa",
+      "mesh_nodes": 1,
+      "material_primitives": 5,
+      "materials": 5,
+      "vertices": 11570,
+      "triangles": 14416,
+      "bytes": 461768,
+      "sha256": "2d0d4d5aadfdb0557dbe66f57c01d3de25f841e4b56fb304a20d6c53637c6b93"
+    },
+    {
+      "asset_id": "stove",
+      "mesh_nodes": 1,
+      "material_primitives": 7,
+      "materials": 7,
+      "vertices": 3792,
+      "triangles": 4416,
+      "bytes": 154756,
+      "sha256": "82bc913fe310318c7243709546f08efc22918618845993f98df95cd3db443afb"
+    },
+    {
+      "asset_id": "table",
+      "mesh_nodes": 1,
+      "material_primitives": 2,
+      "materials": 2,
+      "vertices": 722,
+      "triangles": 840,
+      "bytes": 30328,
+      "sha256": "dfc99785ecdbf6cc9f657aef785942c5fd5e62742c75b5dcb19e88d797bd3217"
+    },
+    {
+      "asset_id": "toilet",
+      "mesh_nodes": 1,
+      "material_primitives": 3,
+      "materials": 3,
+      "vertices": 1894,
+      "triangles": 2488,
+      "bytes": 78664,
+      "sha256": "480c21e962ff20768b6113915547ec3cddab78f81046a29eb5f280d1f487ec10"
+    },
+    {
+      "asset_id": "wardrobe",
+      "mesh_nodes": 1,
+      "material_primitives": 3,
+      "materials": 3,
+      "vertices": 2920,
+      "triangles": 3524,
+      "bytes": 117736,
+      "sha256": "6d6dc25e37cb176397cb4f591bc30ea3b0e286aa20c9e7762a095a838dece75c"
+    },
+    {
+      "asset_id": "washer",
+      "mesh_nodes": 1,
+      "material_primitives": 6,
+      "materials": 6,
+      "vertices": 5269,
+      "triangles": 7088,
+      "bytes": 217100,
+      "sha256": "be97a4279d0a60b6377c408883ff22c950292d0e82bb52c16174475204a6e0a3"
+    }
+  ]
+}
