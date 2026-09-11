@@ -145,6 +145,12 @@ func _case(seed_value:int,signatures:Dictionary)->void:
 	check(data.get("fingerprint","")==Validation.fingerprint(generated),"seed %d catalog matches generated geometry"%seed_value)
 	check(not signatures.has(row.layout_signature),"seed %d has a distinct structural layout"%seed_value)
 	signatures[row.layout_signature]=seed_value
+	var floor_count:=data.floor_levels.size()
+	check(floor_count in [2,3],"seed %d stays within the two/three-storey contract"%seed_value)
+	check(data.rooms.size()<=22,"seed %d stays within the 22-room cap"%seed_value)
+	check(data.stair_connections.size()==2*(floor_count-1) and data.stair_connections.size()<=4,"seed %d has opposite flights within the four-flight cap"%seed_value)
+	check(data.stair_light_anchors.size()==data.stair_connections.size(),"seed %d has one light anchor per stair flight"%seed_value)
+	check(data.rooms.size()+floor_count*2+data.stair_light_anchors.size()<=32,"seed %d stays within the 32-light Compatibility budget"%seed_value)
 	check(float(data.stair_tread)>=MIN_TREAD,"seed %d stair tread %.3fm >= %.2fm"%[seed_value,float(data.stair_tread),MIN_TREAD])
 	check(float(data.stair_rise)<=MAX_RISE,"seed %d stair rise %.3fm <= %.2fm"%[seed_value,float(data.stair_rise),MAX_RISE])
 	for corridor:AABB in data.corridors:
