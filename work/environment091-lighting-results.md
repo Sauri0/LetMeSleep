@@ -36,22 +36,31 @@ classes (`ActorView` / EOS); that process was terminated by exact PID after
 the script failed before `quit`. The required headless editor import then
 completed with exit 0. No EOS configuration or credentials were copied.
 
-After import, on Godot 4.5.2 Compatibility:
+After import and the final helper extraction, on Godot 4.5.2 Compatibility:
 
-- `environment091_stair_lighting_test`: 16 checks, 0 failures. It constructed
+- `environment091_stair_lighting_test`: 15 checks, 0 failures, exit 0 and
+  empty stderr. It constructed
   the full 32-light v2 budget, all four stair lights, and vertical aim bases.
-- `house09_surfaces_test`: 707 checks, 0 failures.
-- `house09_ceiling_test`: 3 maps, 0 failures.
-- `frame07_joinery_test`: 992 checks, 0 failures; overlap 0, normal errors 0.
-- `house07_joints_test`: 603 checks, 0 failures.
+- `environment091_v2_finish_test`: 108 checks, 0 failures, exit 0 and empty
+  stderr over seven real v2 seeds.
+- `frame07_joinery_test`: 992 checks, 0 failures; overlap 0, normal errors 0,
+  exit 0 and empty stderr.
+- `house07_joints_test`: 603 checks, 0 failures, exit 0 and empty stderr.
 
 The first successful lighting test deliberately constructed a 33-light
 negative runtime case and therefore wrote a warning to stderr. The final test
 uses the shared pure budget calculation for that negative case instead. The
 two v1 regressions also observed the historical 33-light warning before the
 final conditional warning change. The final helper extraction and clean
-stderr behavior still require a short rerun after integration or a new motor
-turn.
+stderr behavior are now verified.
 
-No captures, build, export or performance claim were made in this tranche.
-Raw local logs are under `work/environment091-lighting-run/`.
+The earlier surface and ceiling numbers in this report came from the original
+v1 regression tranche. A later 864/0 and 3/0 attempt against v2 was discarded
+because the old fixtures requested rejected v1 maps and silently observed the
+authored fallback map. Commit `0572155` migrates those fixtures; the combined
+build owns the authoritative rerun.
+
+Native capture and full visual findings are recorded in
+`work/environment091-v2-results.md`. No build, export or performance claim is
+made. Raw local logs remain uncommitted under the two
+`work/environment091-*-run*/` directories.

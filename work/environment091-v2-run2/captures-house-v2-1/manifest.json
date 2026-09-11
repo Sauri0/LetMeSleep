@@ -1,0 +1,453 @@
+{
+  "adapter": "NVIDIA GeForce RTX 3060 Ti",
+  "captures": [
+    {
+      "camera": [
+        -12.1000003814697,
+        1.54999995231628,
+        -4.65000009536743
+      ],
+      "file": "stair-0--1-up.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "e80d37c2f18011bce697deba4927cd11ed629d41432671e43d60741c85d63d2d",
+      "target": [
+        -12.1000003814697,
+        2.25,
+        0.0
+      ]
+    },
+    {
+      "camera": [
+        -12.1000003814697,
+        4.75,
+        4.65000009536743
+      ],
+      "file": "stair-0--1-down.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "564ea3eb8352b679ff6e037ca9c6541fbe300b9536cb78a1a8068c0812ed2079",
+      "target": [
+        -12.1000003814697,
+        2.25,
+        0.0
+      ]
+    },
+    {
+      "camera": [
+        12.1000003814697,
+        1.54999995231628,
+        4.65000009536743
+      ],
+      "file": "stair-0-1-up.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "1e852eb67a9b915fcfdfc3869f5c1b57238737a87b0015ae1fa4105668de3103",
+      "target": [
+        12.1000003814697,
+        2.25,
+        0.0
+      ]
+    },
+    {
+      "camera": [
+        12.1000003814697,
+        4.75,
+        -4.65000009536743
+      ],
+      "file": "stair-0-1-down.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "66a36e37869c5b5a7ee64bf8ebac4c1d5703cfd574615a9bc4f47ac5e464960a",
+      "target": [
+        12.1000003814697,
+        2.25,
+        0.0
+      ]
+    },
+    {
+      "camera": [
+        -12.1000003814697,
+        4.75,
+        -4.65000009536743
+      ],
+      "file": "stair-1--1-up.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "36cc32e3fca84d39c1476e7e5c759151c9b4c51c8d6188574ba93f25ce31f60b",
+      "target": [
+        -12.1000003814697,
+        5.45000028610229,
+        0.0
+      ]
+    },
+    {
+      "camera": [
+        -12.1000003814697,
+        7.94999980926514,
+        4.65000009536743
+      ],
+      "file": "stair-1--1-down.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "a228abd566cabd36ec86f6a76e61889fa577167f278d2b4101eacce92eb55466",
+      "target": [
+        -12.1000003814697,
+        5.45000028610229,
+        0.0
+      ]
+    },
+    {
+      "camera": [
+        12.1000003814697,
+        4.75,
+        4.65000009536743
+      ],
+      "file": "stair-1-1-up.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "b761bbf3708b456946a7377a9387de81964f39ef5201d68df971138b8801df86",
+      "target": [
+        12.1000003814697,
+        5.45000028610229,
+        0.0
+      ]
+    },
+    {
+      "camera": [
+        12.1000003814697,
+        7.94999980926514,
+        -4.65000009536743
+      ],
+      "file": "stair-1-1-down.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "1e743967a541a9ec4043fba9c71ddfd861cd560dbbd580192e0b0bf22f69645c",
+      "target": [
+        12.1000003814697,
+        5.45000028610229,
+        0.0
+      ]
+    },
+    {
+      "camera": [
+        0.0,
+        1.54999995231628,
+        -5.32499980926514
+      ],
+      "file": "route-000-central.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "976d8afa43a0c837869cdaab3d41e00f294753f587a9232cad5c281c43cd0b5a",
+      "target": [
+        0.0,
+        1.25,
+        5.32499980926514
+      ]
+    },
+    {
+      "camera": [
+        -9.60124969482422,
+        1.54999995231628,
+        -5.32499980926514
+      ],
+      "file": "route-003-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "93ffd97b8f951a1f4a95c163160604c64f4965f31cfa36f75485146df7ce3e62",
+      "target": [
+        -9.60124969482422,
+        1.25,
+        5.32499980926514
+      ]
+    },
+    {
+      "camera": [
+        -14.6237506866455,
+        1.54999995231628,
+        -5.32499980926514
+      ],
+      "file": "route-006-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "a53e9afe89cc521cbd9fe62896a3928217eec3dc107c3b0b18edc0e71fd63d0a",
+      "target": [
+        -14.6237506866455,
+        1.25,
+        5.32499980926514
+      ]
+    },
+    {
+      "camera": [
+        9.60124969482422,
+        1.54999995231628,
+        -5.32499980926514
+      ],
+      "file": "route-009-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "6c63967f2d78d79b618cf3d8cc1ceb8692afb7935d1355881c273dc4a70da4d3",
+      "target": [
+        9.60124969482422,
+        1.25,
+        5.32499980926514
+      ]
+    },
+    {
+      "camera": [
+        14.6237506866455,
+        1.54999995231628,
+        -5.32499980926514
+      ],
+      "file": "route-012-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "4731a47313fc333aec618bbfd4c4499297f2a5adc9cc81098e29c4ec1775e5ef",
+      "target": [
+        14.6237506866455,
+        1.25,
+        5.32499980926514
+      ]
+    },
+    {
+      "camera": [
+        0.0,
+        4.75,
+        -5.32499980926514
+      ],
+      "file": "route-015-central.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "709485ad7472ed0b949ae0c6fdf45f3dd49b08c3d60febca49d2ec8c8cc923dc",
+      "target": [
+        0.0,
+        4.44999980926514,
+        5.30000019073486
+      ]
+    },
+    {
+      "camera": [
+        -9.60124969482422,
+        4.75,
+        -5.32499980926514
+      ],
+      "file": "route-018-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "d19172859ca2325a4a01405c67c769ee73b1c35e793ee1bbf6c6d739d66a8416",
+      "target": [
+        -9.60124969482422,
+        4.44999980926514,
+        5.30000019073486
+      ]
+    },
+    {
+      "camera": [
+        -14.6237506866455,
+        4.75,
+        -5.32499980926514
+      ],
+      "file": "route-021-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "6f499a9aaad4594a035e415ec0bfe27b2d0b36b34cea4d189beea62abfbce287",
+      "target": [
+        -14.6237506866455,
+        4.44999980926514,
+        5.30000019073486
+      ]
+    },
+    {
+      "camera": [
+        9.60124969482422,
+        4.75,
+        -5.32499980926514
+      ],
+      "file": "route-024-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "08ca7b0621fbe9860d2e537bc5e13eea5ab378b97f0a38ab889acb5e038f2627",
+      "target": [
+        9.60124969482422,
+        4.44999980926514,
+        5.30000019073486
+      ]
+    },
+    {
+      "camera": [
+        14.6237506866455,
+        4.75,
+        -5.32499980926514
+      ],
+      "file": "route-027-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "2fbcde2d1ed7a403665ff9d720545f8c4970df63ea6f242ebff3e9d1df9eaeb3",
+      "target": [
+        14.6237506866455,
+        4.44999980926514,
+        5.30000019073486
+      ]
+    },
+    {
+      "camera": [
+        0.0,
+        7.94999980926514,
+        -5.125
+      ],
+      "file": "route-030-central.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "4e76e11fd1312ccd3fed9a0f95ba3028d58e595dba91d1aa47c0253ee53732f6",
+      "target": [
+        0.0,
+        7.65000009536743,
+        5.125
+      ]
+    },
+    {
+      "camera": [
+        -9.60124969482422,
+        7.94999980926514,
+        -5.125
+      ],
+      "file": "route-033-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "81d3d5f6167376d3bef5b427999de1ac858d8801cb1566faae496c38821ba556",
+      "target": [
+        -9.60124969482422,
+        7.65000009536743,
+        5.125
+      ]
+    },
+    {
+      "camera": [
+        -14.6237506866455,
+        7.94999980926514,
+        -5.125
+      ],
+      "file": "route-036-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "558d5fa66b6cb969716e68d2ddadcc49b29477d3a19423c47f0c5c8004c813e8",
+      "target": [
+        -14.6237506866455,
+        7.65000009536743,
+        5.125
+      ]
+    },
+    {
+      "camera": [
+        9.60124969482422,
+        7.94999980926514,
+        -5.125
+      ],
+      "file": "route-039-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "ae5f866e775e63a584676d6ab0b62a8437748be81c74de6d6c5b75e0e1dc00e5",
+      "target": [
+        9.60124969482422,
+        7.65000009536743,
+        5.125
+      ]
+    },
+    {
+      "camera": [
+        14.6237506866455,
+        7.94999980926514,
+        -5.125
+      ],
+      "file": "route-042-stair_side.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "4fd944ff23ea297e23279d484ee0b69ba85f87c29c13d39624d143dce4cdf0a7",
+      "target": [
+        14.6237506866455,
+        7.65000009536743,
+        5.125
+      ]
+    }
+  ],
+  "circulation_routes": 45,
+  "failures": [],
+  "generator_version": 2,
+  "lighting": {
+    "compatibility_cap": 32,
+    "created": 4,
+    "dropped": 0,
+    "local_lights": 32,
+    "over_budget": false,
+    "requested": 4
+  },
+  "map_id": "house-v2-1",
+  "renderer": "gl_compatibility",
+  "rendering_driver": "opengl3",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "schema": 1,
+  "scope": "Native source captures for stair lighting, joins and finish clearance; capture success is not visual approval.",
+  "stair_connections": 4,
+  "visual_review_status": "reviewed_with_limitations",
+  "visual_review": {
+    "reviewer": "Worker 2",
+    "reviewed_captures": 23,
+    "blocking_defects": 0,
+    "findings": [
+      "Stairs, landings, central halls and both lateral routes remain continuous and readable.",
+      "No broad duplicate planes, finish penetrations, blocked passages, detached shadows or visible z-fighting in stills.",
+      "Upper-flight undersides are very dark and rail/window shadows are hard; defer lighting polish to 0.9.2.",
+      "A rear-facing fixed label rendered mirrored; fixed labels were made single-sided after this capture and require integrated recapture.",
+      "Static images do not validate temporal flicker."
+    ]
+  }
+}

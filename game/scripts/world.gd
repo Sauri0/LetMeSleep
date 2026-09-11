@@ -1170,6 +1170,8 @@ func _label(parent: Node3D, text_value: String, at: Vector3, pixel: float, color
 	result.outline_modulate = Color("203b48")
 	result.outline_size = 4 if billboard else 0
 	result.billboard = BaseMaterial3D.BILLBOARD_ENABLED if billboard else BaseMaterial3D.BILLBOARD_DISABLED
+	# Fixed wall and floor signs must not expose mirrored text from behind.
+	result.double_sided = billboard
 	result.no_depth_test = false
 	_map_parent(parent).add_child(result)
 	return result
