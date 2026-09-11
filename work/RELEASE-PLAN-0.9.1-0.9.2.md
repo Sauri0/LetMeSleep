@@ -26,3 +26,13 @@ WAN real entre casas sigue pendiente por decisión de Branko hasta después del 
 ## Recuperación del reinicio del 11 de septiembre
 
 Se verificó ausencia de procesosGodot/Blender/juego. Los índices Git de worktreesUI yQA estaban corruptos; se respaldaron junto a sus índices y se reconstruyeron con read-treeHEAD, conservando workingfiles. gitfsck--connectivity-only no detectó errores. Director integró commitsQA c67771e y0572155 después de verificar los hashes locales; dos intentosimportWorker1 habían fallado antes de llegar a pruebas y sus resultados no cuentan como éxito. Nuevos logs llevarán nombres distintos.
+## Observación nueva: flexión de dedos
+
+Branko reportó dedos que parecen doblarse hacia el dorso desde primera y tercera
+persona. Worker1 investiga la pose y ejes runtime; Modelador2 la anatomía, rig y
+pesos de los modelos. Revisar ambas manos de frente, palma, dorso y perfil en
+reposo, cierre, palmada y agarre. La corrección debe cerrar hacia la palma y
+mantener oposición del pulgar, sin esconder el defecto con la cámara. Se suma
+al cierre de calidad de modelos/animaciones de0.9.2; cualquier arreglo runtime
+pequeño y validado puede incorporarse antes de publicar0.9.1 sin mezclar las
+mallas faciales aún en desarrollo.
