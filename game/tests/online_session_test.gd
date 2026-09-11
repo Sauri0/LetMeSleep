@@ -292,7 +292,14 @@ func _run() -> void:
 	# Production adapter itself stays parseable and inert without addon.
 	var adapter := preload("res://scripts/eos_backend.gd").new()
 	root.add_child(adapter)
-	check(not adapter.available(), "No SDK means unavailable, never simulated online")
+	var runtime := root.get_node_or_null("EOSGRuntime")
+	if runtime != null:
+		check(adapter.available(), "Installed native SDK and autoloads are available")
+		root.remove_child(runtime)
+		check(not adapter.available(), "Missing required runtime never simulates online availability")
+		root.add_child(runtime)
+	else:
+		check(not adapter.available(), "No SDK means unavailable, never simulated online")
 	check(adapter.shutdown().ok, "Uninitialized backend shutdown is inert")
 	adapter.busy = true
 	check(not adapter.shutdown().ok, "Shutdown refuses pending SDK callbacks")
