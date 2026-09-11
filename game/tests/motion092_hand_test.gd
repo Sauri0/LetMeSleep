@@ -2,10 +2,12 @@ extends SceneTree
 ## 0.9.2 hand correction: imported bone geometry, palm contact and shared poses.
 const Pose = preload("res://scripts/human_pose.gd")
 const Tools = preload("res://scripts/tool_catalog.gd")
+const Simulation = preload("res://scripts/simulation.gd")
+const ArenaData = preload("res://scripts/arena.gd")
 const CharacterSkin = preload("res://assets/art/characters/shared/character_skin.gd")
 var checks := 0
 var failures: Array[String] = []
-var metrics := {"maximum_palm_contact_error":null,"maximum_digit_length_error":null,"minimum_neutral_curl":null}
+var metrics := {"maximum_palm_contact_error":null,"maximum_digit_length_error":null,"minimum_neutral_curl":null,"maximum_carry_reservation_radius":0.0}
 var report_path := ""
 var pose_only := false
 
@@ -69,12 +71,29 @@ func _poses() -> void:
 				check(toward_object.dot(palm)>0.0,"shaft on anatomical palm side "+tool+" "+state)
 				check(absf(toward_object.length()-(float(Tools.GRASPS[tool].radius)+.018))<.00001,"shaft clearance preserved "+tool)
 
+func _carry_envelope() -> void:
+	for tool: String in Tools.GRASPS:
+		for crouch: float in [0.0,.5,1.0]:
+			for running: bool in [false,true]:
+				for frame: int in range(25):
+					var actor := {"tool":tool,"crouch_amount":crouch,"motion_phase":TAU*float(frame)/24.0,"motion_speed":5.0 if running else 3.1,"sprinting":running}
+					var pose := Pose.sample(actor)
+					var capsules := Pose.collision_segments(actor,pose)
+					for zone_id: int in [4,5]:
+						var zone := Pose.zone_pose(actor,Simulation.BODY_ZONES[zone_id],pose,capsules)
+						var contact: Vector3 = zone.p+Vector3(zone.normal)*Simulation.ATTACH_OFFSET
+						var radius := Vector2(contact.x,contact.z).length()+ArenaData.MOSQUITO_RADIUS
+						metrics.maximum_carry_reservation_radius=maxf(metrics.maximum_carry_reservation_radius,radius)
+						check(radius<=ArenaData.HUMAN_RADIUS+.00001,"carried forearm reservation fits body "+tool+" crouch="+str(crouch)+" run="+str(running)+" frame="+str(frame)+" zone="+str(zone_id))
+
 func _bone_change(skin: Node3D, name: String) -> Transform3D:
 	var id: int = skin.bone_ids[name]
 	return skin.skeleton.get_bone_global_pose(id)*skin.skeleton.get_bone_global_rest(id).affine_inverse()
 
 func _skin_geometry() -> void:
-	metrics={"maximum_palm_contact_error":0.0,"maximum_digit_length_error":0.0,"minimum_neutral_curl":INF}
+	metrics.maximum_palm_contact_error=0.0
+	metrics.maximum_digit_length_error=0.0
+	metrics.minimum_neutral_curl=INF
 	var skin := CharacterSkin.new()
 	root.add_child(skin)
 	skin.setup("human")
@@ -134,6 +153,7 @@ func _skin_geometry() -> void:
 
 func _run() -> void:
 	_poses()
+	_carry_envelope()
 	if not pose_only: _skin_geometry()
 	var report := {"checks":checks,"failures":failures,"metrics":metrics,"pose_only":pose_only}
 	if not report_path.is_empty():

@@ -45,6 +45,8 @@ the dorsal side of its knuckle before the additional runtime bend.
   section infers palm from thumb handedness and checks actual hand transforms,
   connected falanges, authored lengths and neutral palmar curl in both POVs,
   including every held tool and two partial grasp transitions.
+  A subsequent regression addition samples both forearm reservations through
+  25 gait phases, walk/run, three crouch amounts and every held tool (750 poses).
 - `motion091-run.ps1`: adds bounded modes for these checks.
 
 Director explicitly authorized the additional emote and locomotion files.
