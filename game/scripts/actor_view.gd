@@ -197,11 +197,9 @@ func update_state(data: Dictionary, dt: float) -> void:
 		# Local yaw/pitch stay exact: delaying body yaw also moves its offset
 		# eye, adding parallax to the unfiltered aiming direction. Gait may blend.
 		presented=human_presentation.advance_motion(presented,dt,pose_critical,reset_human_pose,local_view)
-	# A bitten human and its attached insect must use the SAME snapshot frame.
-	# Independent position/normal filters pull the insect away from moving limbs.
-	# Threat/gestures keep the existing positional filter; changing it merely
-	# because an attack starts would add a new camera jerk to every attack.
-	var exact_root := bool(data.get("bitten",false)) if actor_role=="human" else str(data.get("state",""))=="biting"
+	# Human translation keeps its normal filter even on bite entry. Client's
+	# final attachment pass gives biting insects that SAME root translation.
+	var exact_root := actor_role=="mosquito" and str(data.get("state",""))=="biting"
 	var surface_data: Dictionary = surface_presentation.advance(data,dt,not initialized) if actor_role=="mosquito" else {}
 	if not surface_data.is_empty():
 		global_position=surface_data.p
@@ -273,6 +271,24 @@ func update_state(data: Dictionary, dt: float) -> void:
 func human_view_origin() -> Vector3:
 	if actor_role!="human" or body_pose.is_empty():return global_position
 	return global_position+global_basis*Vector3(body_pose.eye)
+
+## Run after ALL actor roots have advanced, independently of snapshot key order.
+## attached_to only identifies an already visible active bite, never a zone or
+## future assignment. Its host owns the common render translation, preserving
+## the relative skin contact, ray shapes and camera without a bite-entry snap.
+static func align_attachments(public_actors: Dictionary, views: Dictionary) -> void:
+	for key: Variant in public_actors:
+		var insect: Dictionary=public_actors[key]
+		if str(insect.get("role",""))!="mosquito" or str(insect.get("state",""))!="biting" or not bool(insect.get("alive",true)) or not views.has(key):continue
+		var host_id: Variant=insect.get("attached_to",0)
+		if not host_id is int or host_id==0 or not public_actors.has(host_id) or not views.has(host_id):continue
+		var human: Dictionary=public_actors[host_id]
+		if str(human.get("role",""))!="human" or not bool(human.get("alive",true)) or not bool(human.get("bitten",false)):continue
+		var host: ActorView=views[host_id]
+		var view: ActorView=views[key]
+		# Contact pose/yaw/normal are exact; only the shared translation differs.
+		view.global_position=Vector3(insect.p)+host.global_position-Vector3(human.p)
+		view.last_position=view.global_position
 
 func _hide_legacy_geometry() -> void:
 	# Retain the collider/socket scaffold while only the exported deformation

@@ -85,12 +85,9 @@ func _colliders(view: Node3D, data: Dictionary) -> void:
 		var to := view.global_position+basis*Vector3(piece.to)
 		var world_authority_center := Vector3(data.p)+basis*(Vector3(piece.from)+Vector3(piece.to))*.5
 		var world_error := collider.global_position.distance_to(world_authority_center)
-		if bool(data.get("bitten",false)):
-			check(world_error<.00001,"attached collider world position matches full authority "+key)
-		else:
-			var category := "gesture" if view.human_presentation.motion_exact else "noncritical"
-			metrics[category+"_max_collider_world_error_m"]=maxf(float(metrics.get(category+"_max_collider_world_error_m",0.0)),world_error)
-			check(is_equal_approx(world_error,view.global_position.distance_to(data.p)),"world collider error is exactly legacy root translation "+key)
+		var category := "gesture" if view.human_presentation.motion_exact else "noncritical"
+		metrics[category+"_max_collider_world_error_m"]=maxf(float(metrics.get(category+"_max_collider_world_error_m",0.0)),world_error)
+		check(is_equal_approx(world_error,view.global_position.distance_to(data.p)),"world collider error is exactly legacy root translation "+key)
 		check(collider.global_position.is_equal_approx((from+to)*.5),"world collider centre preserves public yaw "+key)
 		check(is_equal_approx(shape.radius,float(piece.radius)),"collider radius unchanged "+key)
 		if shape is CapsuleShape3D:
@@ -150,8 +147,8 @@ func _actors() -> void:
 			_:urgent[flag]=true
 		view.update_state(urgent,1.0/60)
 		metrics[flag+"_entry"]={"root_distance":before.origin.distance_to(view.global_position),"root_angle":before.basis.get_rotation_quaternion().angle_to(view.global_basis.get_rotation_quaternion()),"ordinary_filtered_distance":before.origin.distance_to(before.origin.lerp(urgent.p,1.0-exp(-18.0/60))),"extra_root_shift_vs_baseline_m":view.global_position.distance_to(before.origin.lerp(urgent.p,1.0-exp(-18.0/60))),"prior_limb_lag_m":max_prior_limb_lag}
-		var expected_root: Vector3=urgent.p if flag=="bitten" else before.origin.lerp(urgent.p,1.0-exp(-18.0/60))
-		check(view.global_position.is_equal_approx(expected_root),"only attachment changes root position policy "+flag)
+		var expected_root := before.origin.lerp(urgent.p,1.0-exp(-18.0/60))
+		check(view.global_position.is_equal_approx(expected_root),"all contact states keep baseline root policy "+flag)
 		check(absf(wrapf(view.rotation.y-Pose.body_yaw(urgent),-PI,PI))<.00001,"contact yaw is exact "+flag)
 		check(view.body_pose==Pose.sample(urgent),"contact skeleton is exact "+flag)
 		check(view.human_view_origin().is_equal_approx(view.global_position+Pose.view_origin(urgent)-Vector3(urgent.p)),"contact camera offset matches authority "+flag)
@@ -187,10 +184,12 @@ func _attached() -> void:
 		var public: Dictionary=sim.public_snapshot().actors
 		var original := public.duplicate(true)
 		world.sync_actors(public,1,1.0/60)
+		Actor.align_attachments(public,world.actors)
 		var human_view: Node3D=world.get_actor(1)
 		var insect_view: Node3D=world.get_actor(2)
-		check(human_view.global_position==human.p,"bitten human root is current authority frame")
-		check(insect_view.global_position.is_equal_approx(public[2].p),"attached mosquito has no independent positional delay")
+		var delta := human_view.global_position-Vector3(human.p)
+		check((insect_view.global_position-Vector3(public[2].p)).is_equal_approx(delta),"attached insect shares human translation exactly")
+		check((insect_view.global_position-human_view.human_view_origin()).is_equal_approx(Vector3(public[2].p)-Pose.view_origin(public[1])),"eye-to-insect ray remains equal to authority")
 		var expected := MosquitoPoseData.orientation(public[2])
 		check(insect_view.model.global_basis.orthonormalized().is_equal_approx(expected),"attached mosquito normal has no independent angular delay")
 		check(human_view.body_pose==Pose.sample(public[1]),"attached human uses exact limb phase")

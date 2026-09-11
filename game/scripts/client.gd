@@ -1,5 +1,6 @@
 extends Node
 const MosquitoPoseScript=preload("res://scripts/mosquito_pose.gd")
+const ActorViewScript=preload("res://scripts/actor_view.gd")
 const MosquitoCameraScript=preload("res://scripts/mosquito_camera.gd")
 const Emotes=preload("res://scripts/emote_catalog.gd")
 var _emote_pending_until: int=0
@@ -312,6 +313,7 @@ func _process(dt: float) -> void:
 	# exactly aligned with the existing authoritative diamond and contact rays.
 	var marked_human: int=int(Dictionary(personal.get("assignment",{})).get("human",0)) if role=="mosquito" else 0
 	world.sync_actors(actors, local_id, dt, marked_human)
+	ActorViewScript.align_attachments(actors,world.actors)
 	world.sync_doors(state.get("doors",{}),dt)
 	world.sync_pickups(state.get("pickups", {}),dt)
 	var actor: Dictionary = actors.get(local_id, {})
@@ -323,6 +325,7 @@ func _process(dt: float) -> void:
 	if alive:
 		var visual: Node3D = world.get_actor(local_id)
 		var position: Vector3 = visual.global_position if visual != null else actor.p
+		var attached_view := role=="mosquito" and str(actor.get("state",""))=="biting"
 		var mosquito_view: Dictionary=MosquitoCameraScript.target(actor,yaw,pitch) if role=="mosquito" else {}
 		var offset: Vector3 = HumanPose.view_origin(actor) - Vector3(actor.p) if role == "human" else mosquito_view.offset
 		var camera_origin := position + offset
@@ -342,12 +345,16 @@ func _process(dt: float) -> void:
 			# SpringArm updates in physics, before this frame's interpolated rig
 			# rotation. Sweep again from the final pose so a corner cannot render
 			# one stale arm length through a floor or wall.
-			var placement: Dictionary=MosquitoCameraScript.resolve(world.get_world_3d().direct_space_state,actor,camera_origin,rig.basis,arm.shape,.85)
+			var camera_actor: Dictionary=actor
+			if attached_view:
+				camera_actor=actor.duplicate()
+				camera_actor.p=position
+			var placement: Dictionary=MosquitoCameraScript.resolve(world.get_world_3d().direct_space_state,camera_actor,camera_origin,rig.basis,arm.shape,.85)
 			rig.global_position=placement.origin
 			camera.position=Vector3(0,0,placement.distance)
 		camera.fov = 78.0 if role == "human" else 70.0
 		if role == "mosquito":
-			world.show_assignment(personal.get("assignment", {}), camera, actor.p, personal.get("focus",{}))
+			world.show_assignment(personal.get("assignment", {}), camera, position if attached_view else actor.p, personal.get("focus",{}))
 		else:
 			world.show_assignment({}, camera, Vector3.ZERO)
 		camera_initialized = true

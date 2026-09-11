@@ -1,5 +1,10 @@
 # C01 — entrega de movimiento y cámara
 
+**Registro del primer tramo `f1796c2`.** El salto de raíz descrito aquí fue
+corregido posteriormente; el comportamiento y las pruebas actuales están
+en `motion091-attachment-results.md`. Se conserva esta medición anterior
+para comparar el cambio, no como descripción del estado final.
+
 Worktree: `C:/Users/brank/Documents/Codex/2026-09-06/lms091-motion`.
 Base: `59af8ad`. Sin cambios de simulación, reglas, zonas, red ni activos.
 

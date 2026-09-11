@@ -1,0 +1,11 @@
+{
+	"checks": 781,
+	"failures": [],
+	"metrics": {
+		"max_bite_entry_camera_extra_m": 0.000000504223237385304,
+		"max_marker_error_m": 0.0000000298023223876953,
+		"max_relative_contact_error_m": 0.000000238418579101563,
+		"max_shared_collider_error_m": 0.000000480548010273196
+	},
+	"scope": "shared active-bite render translation; no new input latency or root policy; public parent contract from Director"
+}

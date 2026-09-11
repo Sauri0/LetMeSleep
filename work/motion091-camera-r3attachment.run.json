@@ -1,0 +1,11 @@
+{
+  "mode": "camera",
+  "cwd": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion",
+  "started_utc": "2026-09-11T23:25:46.1452438Z",
+  "finished_utc": "2026-09-11T23:25:57.0501961Z",
+  "exit_code": 0,
+  "timed_out": false,
+  "stderr_bytes": 0,
+  "stdout_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-camera-r3attachment.stdout.log",
+  "stderr_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-camera-r3attachment.stderr.log"
+}

@@ -22,8 +22,9 @@ orientación), aunque la pose esquelética de su humano ya era exacta.
   afirma coincidencia absoluta con la posición de autoridad.
 - Amenaza/golpe/lanzamiento mantienen el filtro de raíz previo y restauran
   pose local exacta, sin añadir salto traslacional por comenzar un ataque.
-- Sólo bitten/biting restaura posición mundial exacta de humano e insecto;
-  al salir se retoma desde ese estado. El salto de entrada requiere medir.
+- La corrección posterior conserva también el filtro basal durante bitten.
+  Client alinea el insecto biting con el desplazamiento render de su humano
+  después de actualizar todos los actores; la pose/normal siguen exactas.
 
 ## Decisión local
 
@@ -35,9 +36,10 @@ La prueba nativa exige que el ojo local añada cero desplazamiento al
 comportamiento anterior. La medición nativa y los límites restantes están
 en `motion091-results.md`.
 
-Director no autorizó cambios de esquema público ni `attached_to`/segundo
-pase World en este tramo. No se modifica simulation.gd, hitboxes, reglas,
-activos, EOS ni datos privados.
+Director autorizó e implementó después el campo público `attached_to`, sólo
+durante contacto activo. El consumidor está en Client/ActorView, sin editar
+World. El contrato de simulation.gd pertenece al Director. No se modifican
+hitboxes, reglas, activos, EOS ni se publican asignaciones/zonas privadas.
 
 ## Validación
 

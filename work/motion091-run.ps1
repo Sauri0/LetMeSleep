@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('import', 'presentation', 'legacy', 'camera', 'manual', 'visual')]
+    [ValidateSet('import', 'presentation', 'legacy', 'camera', 'manual', 'visual', 'attachment', 'contact')]
     [string]$Mode = 'presentation',
     [ValidatePattern('^[a-zA-Z0-9_-]+$')]
     [string]$RunName = 'run1'
@@ -19,6 +19,8 @@ if ($Mode -eq 'import') {
         camera = 'camera_turn_checks.gd'
         manual = 'manual_defense_test.gd'
         visual = 'motion091_camera_visual.gd'
+        attachment = 'motion091_attachment_test.gd'
+        contact = 'contact_orientation06_test.gd'
     }
     foreach ($item in @('--path', (Join-Path $motionRepo 'game'), '--audio-driver', 'Dummy', '--script', ('res://tests/' + $motionScripts[$Mode]), '--', ('--report=' + $motionPrefix + '.json'))) { $motionArgs.Add($item) }
 }

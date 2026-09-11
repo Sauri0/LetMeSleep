@@ -1,0 +1,11 @@
+{
+  "mode": "attachment",
+  "cwd": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion",
+  "started_utc": "2026-09-11T23:24:38.1227630Z",
+  "finished_utc": "2026-09-11T23:24:43.1259312Z",
+  "exit_code": 0,
+  "timed_out": false,
+  "stderr_bytes": 0,
+  "stdout_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-attachment-r1.stdout.log",
+  "stderr_log": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-attachment-r1.stderr.log"
+}
