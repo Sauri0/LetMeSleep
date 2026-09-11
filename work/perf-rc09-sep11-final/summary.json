@@ -1,0 +1,120 @@
+{
+  "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+  "scope": "Local host plus bots, same generated map, 1080p, unlimited FPS. No WAN or minimum-hardware certification. Shadow-off is diagnostic only.",
+  "cases": [
+    {
+      "case": "two-players",
+      "frame_ms": {
+        "max": 51.671,
+        "over_16_67ms_percent": 0.0914076782449726,
+        "p50": 3.995,
+        "p90": 10.532,
+        "p99": 13.336
+      },
+      "render_cpu_ms": {
+        "max": 50.1450004577637,
+        "over_16_67ms_percent": 0.0914076782449726,
+        "p50": 1.95799994468689,
+        "p90": 7.07100009918213,
+        "p99": 8.80500030517578
+      },
+      "report": "two-players.json",
+      "render_gpu_ms": {
+        "max": 43.0849990844727,
+        "over_16_67ms_percent": 0.0914076782449726,
+        "p50": 1.15199995040894,
+        "p90": 3.09400010108948,
+        "p99": 4.46400022506714
+      },
+      "physics_ms": {
+        "max": 4.145,
+        "over_16_67ms_percent": 0.0,
+        "p50": 2.202,
+        "p90": 3.944,
+        "p99": 4.145
+      },
+      "samples": 2188,
+      "quality": {
+        "msaa_3d": 0,
+        "reflections": true,
+        "shadows": 2
+      }
+    },
+    {
+      "case": "sixteen-players",
+      "frame_ms": {
+        "max": 52.19,
+        "over_16_67ms_percent": 42.1686746987952,
+        "p50": 14.412,
+        "p90": 29.061,
+        "p99": 36.067
+      },
+      "render_cpu_ms": {
+        "max": 47.773998260498,
+        "over_16_67ms_percent": 2.14190093708166,
+        "p50": 4.16400003433228,
+        "p90": 14.0950002670288,
+        "p99": 19.0970001220703
+      },
+      "report": "sixteen-players.json",
+      "render_gpu_ms": {
+        "max": 46.1730003356934,
+        "over_16_67ms_percent": 2.00803212851406,
+        "p50": 2.47699999809265,
+        "p90": 12.8629999160767,
+        "p99": 18.2369995117188
+      },
+      "physics_ms": {
+        "max": 15.056,
+        "over_16_67ms_percent": 0.0,
+        "p50": 8.579,
+        "p90": 14.409,
+        "p99": 15.056
+      },
+      "samples": 747,
+      "quality": {
+        "msaa_3d": 0,
+        "reflections": true,
+        "shadows": 2
+      }
+    },
+    {
+      "case": "sixteen-without-shadows",
+      "frame_ms": {
+        "max": 45.835,
+        "over_16_67ms_percent": 2.22222222222222,
+        "p50": 7.912,
+        "p90": 13.596,
+        "p99": 18.447
+      },
+      "render_cpu_ms": {
+        "max": 38.867000579834,
+        "over_16_67ms_percent": 0.0716845878136201,
+        "p50": 1.00399994850159,
+        "p90": 1.97200000286102,
+        "p99": 2.73799991607666
+      },
+      "report": "sixteen-without-shadows.json",
+      "render_gpu_ms": {
+        "max": 28.6219997406006,
+        "over_16_67ms_percent": 0.0716845878136201,
+        "p50": 0.910000026226044,
+        "p90": 2.06800007820129,
+        "p99": 2.67700004577637
+      },
+      "physics_ms": {
+        "max": 15.572,
+        "over_16_67ms_percent": 0.0,
+        "p50": 8.096,
+        "p90": 15.07,
+        "p99": 15.572
+      },
+      "samples": 1395,
+      "quality": {
+        "msaa_3d": 0,
+        "reflections": true,
+        "shadows": 0
+      }
+    }
+  ]
+}

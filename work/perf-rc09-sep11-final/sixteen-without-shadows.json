@@ -1,0 +1,82 @@
+{
+	"actors": 16,
+	"adapter": "NVIDIA GeForce RTX 3060 Ti",
+	"authoritative_map_id": "house-v1-1",
+	"cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+	"door_commands": 0,
+	"door_policy": "ordinary_bot_and_player_interactions",
+	"draws": {
+		"max": 412.0,
+		"p50": 78.0,
+		"p90": 403.0,
+		"p99": 405.0
+	},
+	"end_position": "(-11.99305, 0.0, -9.544392)",
+	"fps_limit": 0,
+	"frame_ms": {
+		"max": 45.835,
+		"over_16_67ms_percent": 2.22222222222222,
+		"p50": 7.912,
+		"p90": 13.596,
+		"p99": 18.447
+	},
+	"frames_with_moving_doors": 0,
+	"host_and_bots": true,
+	"map_id": "house-v1-1",
+	"measurement_seconds": 12.0,
+	"memory_bytes": 0.0,
+	"occlusion_culling": true,
+	"physics_ms": {
+		"max": 15.572,
+		"over_16_67ms_percent": 0.0,
+		"p50": 8.096,
+		"p90": 15.07,
+		"p99": 15.572
+	},
+	"physics_ticks_per_rendered_frame": {
+		"0": 679,
+		"1": 713,
+		"2": 3
+	},
+	"physics_ticks_per_second": 60,
+	"primitives": {
+		"max": 111890.0,
+		"p50": 23536.0,
+		"p90": 110266.0,
+		"p99": 111758.0
+	},
+	"render_cpu_ms": {
+		"max": 38.867000579834,
+		"over_16_67ms_percent": 0.0716845878136201,
+		"p50": 1.00399994850159,
+		"p90": 1.97200000286102,
+		"p99": 2.73799991607666
+	},
+	"render_gpu_ms": {
+		"max": 28.6219997406006,
+		"over_16_67ms_percent": 0.0716845878136201,
+		"p50": 0.910000026226044,
+		"p90": 2.06800007820129,
+		"p99": 2.67700004577637
+	},
+	"render_texture_size": "(1920.0, 1080.0)",
+	"rendered_map_id": "house-v1-1",
+	"renderer": "gl_compatibility",
+	"rendering_driver": "opengl3",
+	"requested_population": 16,
+	"resolution": "(1920, 1080)",
+	"samples": 1395,
+	"scenario": "real Main/Client/Practice, generated valid spawn, forward/reverse input and live authoritative bots; no scripted global door toggles",
+	"scripted_door_commands": 0,
+	"start_position": "(-12.05, 0.0, -8.825001)",
+	"version": "0.9.0",
+	"video_memory_bytes": 99299495.0,
+	"video_quality": {
+		"msaa_3d": 0,
+		"reflections": true,
+		"shadows": 0
+	},
+	"vsync": "disabled",
+	"warmup_seconds": 2,
+	"window_size": "(1806, 1016)"
+}

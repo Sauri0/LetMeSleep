@@ -1,0 +1,83 @@
+{
+	"actors": 16,
+	"adapter": "NVIDIA GeForce RTX 3060 Ti",
+	"authoritative_map_id": "house-v1-1",
+	"cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+	"door_commands": 0,
+	"door_policy": "ordinary_bot_and_player_interactions",
+	"draws": {
+		"max": 8935.0,
+		"p50": 2012.0,
+		"p90": 6992.0,
+		"p99": 7740.0
+	},
+	"end_position": "(-12.05, 0.0, -4.846669)",
+	"fps_limit": 0,
+	"frame_ms": {
+		"max": 52.19,
+		"over_16_67ms_percent": 42.1686746987952,
+		"p50": 14.412,
+		"p90": 29.061,
+		"p99": 36.067
+	},
+	"frames_with_moving_doors": 0,
+	"host_and_bots": true,
+	"map_id": "house-v1-1",
+	"measurement_seconds": 12.0,
+	"memory_bytes": 0.0,
+	"occlusion_culling": true,
+	"physics_ms": {
+		"max": 15.056,
+		"over_16_67ms_percent": 0.0,
+		"p50": 8.579,
+		"p90": 14.409,
+		"p99": 15.056
+	},
+	"physics_ticks_per_rendered_frame": {
+		"0": 170,
+		"1": 437,
+		"2": 138,
+		"3": 2
+	},
+	"physics_ticks_per_second": 60,
+	"primitives": {
+		"max": 2277444.0,
+		"p50": 656522.0,
+		"p90": 1891940.0,
+		"p99": 2103464.0
+	},
+	"render_cpu_ms": {
+		"max": 47.773998260498,
+		"over_16_67ms_percent": 2.14190093708166,
+		"p50": 4.16400003433228,
+		"p90": 14.0950002670288,
+		"p99": 19.0970001220703
+	},
+	"render_gpu_ms": {
+		"max": 46.1730003356934,
+		"over_16_67ms_percent": 2.00803212851406,
+		"p50": 2.47699999809265,
+		"p90": 12.8629999160767,
+		"p99": 18.2369995117188
+	},
+	"render_texture_size": "(1920.0, 1080.0)",
+	"rendered_map_id": "house-v1-1",
+	"renderer": "gl_compatibility",
+	"rendering_driver": "opengl3",
+	"requested_population": 16,
+	"resolution": "(1920, 1080)",
+	"samples": 747,
+	"scenario": "real Main/Client/Practice, generated valid spawn, forward/reverse input and live authoritative bots; no scripted global door toggles",
+	"scripted_door_commands": 0,
+	"start_position": "(-12.05, 0.0, -8.825001)",
+	"version": "0.9.0",
+	"video_memory_bytes": 99299495.0,
+	"video_quality": {
+		"msaa_3d": 0,
+		"reflections": true,
+		"shadows": 2
+	},
+	"vsync": "disabled",
+	"warmup_seconds": 2,
+	"window_size": "(1806, 1016)"
+}
