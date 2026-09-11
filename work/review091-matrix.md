@@ -58,6 +58,7 @@ turno de motor sigue reservado para otro integrante.
 | Escala de 3 plantas | Máximo contractual 22 habitaciones, seis pasillos y cuatro tramos; luces ≤ 32 y todas las plantas iluminadas | Test del implementador + revisión World integrada | Metadatos acordados; gate visual/integración pendiente |
 | Cámara/cuerpo | Dos giros completos mirando abajo, con marcha; sin pasos congelados ni contrarrotación; recenter en 1 s | `review091_motion_combat_contract.gd` a 30/60/120 Hz | Preparado; sin ejecutar |
 | Movimiento | Caminar, correr y agacharse activos durante giro; cuerpo siempre dentro de colisión generada | `review091_motion_combat_contract.gd` | Preparado; sin ejecutar |
+| Entrada a adhesión | El salto total de raíz al entrar en `bitten` no supera un frame de sprint a 60 Hz + 5 mm (0,0883 m) | `review091_motion_combat_contract.gd` sobre `ActorView` real | Preparado; el implementador midió 0,1423 m y queda pendiente corrección/verificación QA |
 | Pose/contacto | Mosquito adherido sigue exactamente la zona de la pose autoritativa; pose pública e hitbox coinciden | `review091_motion_combat_contract.gd` | Preparado; sin ejecutar |
 | Defensa manual | Anticipación visible; un rayo manual produce exactamente una transición de impacto; secuencia duplicada no reinicia ataque | `review091_motion_combat_contract.gd` | Preparado; sin ejecutar |
 | Default humano | Pijama clásico 0, pantuflas clásicas 0 y gorro de noche 3 | `review091_preview_views.gd` | Preparado; sin ejecutar |

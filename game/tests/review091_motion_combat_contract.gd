@@ -7,6 +7,8 @@ const ArenaData=preload("res://scripts/arena.gd")
 const Pose=preload("res://scripts/human_pose.gd")
 const Sim=preload("res://scripts/simulation.gd")
 const Doors=preload("res://scripts/door_catalog.gd")
+const Actor=preload("res://scripts/actor_view.gd")
+const MAX_60HZ_ROOT_STEP:=ArenaData.HUMAN_RUN_SPEED/60.0+.005
 var checks:=0
 var failures: Array[String]=[]
 var traces: Dictionary={}
@@ -128,14 +130,32 @@ func _attachment_and_defense()->Dictionary:
 	check(int(sim.private_for(1).attack.id)==1 and bool(sim.private_for(1).attack.hit),"duplicate action sequence cannot restart or duplicate defense")
 	return {"attachment_motion_m":first.distance_to(insect.p),"max_attachment_error_m":max_error,"max_pose_error_m":max_hitbox_error,"alive_transitions":transitions,"attack":sim.private_for(1).attack}
 
+func _presentation_transition()->Dictionary:
+	var view:=Actor.new()
+	root.add_child(view)
+	view.build("human","Reviewer",0)
+	view.set_local(false)
+	var sample:=func(time:float)->Dictionary:return {"role":"human","state":"human","alive":true,"grounded":true,"tool":"hands","p":Vector3(time*ArenaData.HUMAN_SPEED,0,0),"pose_time":time,"yaw":.2,"body_yaw":0.0,"pitch":0.0,"crouch_amount":0.0,"motion_phase":time*8.0,"motion_blend":1.0,"motion_speed":ArenaData.HUMAN_SPEED,"motion_stride":1.15,"motion_direction":Vector3.RIGHT,"air_blend":0.0,"land_blend":0.0}
+	view.update_state(sample.call(0.0),1.0/60.0)
+	view.update_state(sample.call(.05),1.0/60.0)
+	var before:Vector3=view.global_position
+	var bitten:Dictionary=sample.call(.10);bitten.bitten=true
+	view.update_state(bitten,1.0/60.0)
+	var step:=before.distance_to(view.global_position)
+	check(step<=MAX_60HZ_ROOT_STEP,"bitten entry root step %.5fm stays within one 60Hz sprint frame %.5fm"%[step,MAX_60HZ_ROOT_STEP])
+	var result:={"root_step_m":step,"max_60hz_sprint_step_m":MAX_60HZ_ROOT_STEP}
+	view.queue_free();await process_frame
+	return result
+
 func _run()->void:
 	for rate:int in [30,60,120]:traces[str(rate)]=_motion_trace(rate)
 	var body_values:Array=[]
 	for rate:int in [30,60,120]:body_values.append(float(traces[str(rate)].body_turn))
 	check(absf(body_values.max()-body_values.min())<.16,"body turn integration is stable across 30/60/120Hz")
 	traces.defense=_attachment_and_defense()
+	traces.presentation_transition=await _presentation_transition()
 	var report:Dictionary={"checks":checks,"failures":failures,"traces":traces,"scope":"production authority/collision/pose; generated seed1; exact attachment and manual attack; no renderer, UI, network, FPS or WAN claim","source_sha256":{}}
-	for path:String in ["res://tests/review091_motion_combat_contract.gd","res://scripts/arena.gd","res://scripts/human_pose.gd","res://scripts/simulation.gd","res://scripts/door_catalog.gd"]:
+	for path:String in ["res://tests/review091_motion_combat_contract.gd","res://scripts/arena.gd","res://scripts/human_pose.gd","res://scripts/simulation.gd","res://scripts/door_catalog.gd","res://scripts/actor_view.gd","res://scripts/human_presentation.gd"]:
 		report.source_sha256[path]=FileAccess.get_sha256(path)
 	if not report_path.is_empty():
 		var file:=FileAccess.open(report_path,FileAccess.WRITE)
