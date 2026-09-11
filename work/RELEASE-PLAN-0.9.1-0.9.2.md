@@ -33,6 +33,9 @@ persona. Worker1 investiga la pose y ejes runtime; Modelador2 la anatomía, rig 
 pesos de los modelos. Revisar ambas manos de frente, palma, dorso y perfil en
 reposo, cierre, palmada y agarre. La corrección debe cerrar hacia la palma y
 mantener oposición del pulgar, sin esconder el defecto con la cámara. Se suma
-al cierre de calidad de modelos/animaciones de0.9.2; cualquier arreglo runtime
-pequeño y validado puede incorporarse antes de publicar0.9.1 sin mezclar las
-mallas faciales aún en desarrollo.
+al cierre de calidad de modelos/animaciones de0.9.2. El diagnóstico confirmó
+que el sentido de flexión involucra tanto la piel/esqueleto como las poses de
+mano y agarre: deben integrarse juntos. No incorporar sólo el cambio de signo
+de la pose en0.9.1. La primera comprobación detectó que invertir ese offset
+desplaza algunos agarres fuera del espacio reservado; se corrige conservando
+los límites físicos existentes antes de aprobar el conjunto.
