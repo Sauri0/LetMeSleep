@@ -49,3 +49,19 @@ Cambio antiguo work/voice09-acoustics-results.json se preserva, fuera de esta en
 3. Revisión funcional construye pruebas independientes. Director concede turnos de motor, integra y resuelve contratos.
 4. Validar recorridos, puertas, ambos POV, bots, defensa, personalización en todos los ángulos, superficies en movimiento y rendimiento comparable.
 5. Director exporta/prueba EXE, publica código y ZIP nuevo, informa exactamente lo comprobado y qué necesita prueba WAN.
+## Worktrees entregados y contratos cerrados
+
+Base común 59af8ad. Cada worktree parte de esa revisión, no de rc1.
+Raíz de las seis copias: C:/Users/brank/Documents/Codex/2026-09-06/
+- Modelador 1: lms091-house / codex/091-house.
+- Modelador 2: lms091-characters / codex/091-characters.
+- Worker 1: lms091-motion / codex/091-motion.
+- Worker 2: lms091-environment / codex/091-environment.
+- Revisión funcional: lms091-qa / codex/091-qa.
+- Revisar interfaz visual: lms091-ui / codex/091-ui.
+
+Director commit 7e2ce85: aplicación 0.9.1 y protocolo10; invitaciones antiguas se rechazan antes de conectar. Pruebas: invitación online217/0, sesión72/0, invitación LAN96/0 y conexión23/0. Solo pruebas locales/fixtures: no WAN.
+Generador nuevo SOLO v2; house-v1-seed rechazado, sin reinterpretar ni mantener doble generador. QA autorizado a migrar fixtures de mapas en tests existentes, conservando exigencias y negativos de versiones inválidas.
+Metadata de escaleras acordada: stair_light_anchors (p:Vector3,target:Vector3,range:float), layout_dimensions, stair_connections con extremos reales, circulation_routes. Modelador1 produce y Worker2 consume; propietario del contrato detallado Modelador1.
+Catálogo facial primer tramo conserva todos los IDs/nombres/conteos (acuerdo Modelador2/UI).
+QA mínimos de circulación: pasillo/descanso>=1.50m, puerta>=1.30m (plan conserva2m), escalera>=1.40m (plan2.8m), huella>=.28m, contrahuella<=.22m; verificarlos geométricamente, no confiar en metadata.
