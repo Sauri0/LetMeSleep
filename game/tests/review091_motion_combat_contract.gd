@@ -67,7 +67,7 @@ func _motion_trace(rate:int)->Dictionary:
 		var view_step:=wrapf(float(actor.yaw)-previous_yaw,-PI,PI)
 		var body_step:=wrapf(float(actor.body_yaw)-previous_body,-PI,PI)
 		total_view+=view_step;total_body+=body_step
-		if view_step<=0.000001:frozen_view+=1
+		if elapsed<=4.0 and view_step<=0.000001:frozen_view+=1
 		if body_step<-.000001:reverse_body+=1
 		var local_camera:=Pose.view_origin(actor)-Vector3(actor.p)
 		max_local_camera_step=maxf(max_local_camera_step,local_camera.distance_to(previous_local_camera))
