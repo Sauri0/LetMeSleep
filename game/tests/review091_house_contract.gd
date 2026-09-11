@@ -20,10 +20,12 @@ var checks:=0
 var failures: Array[String]=[]
 var cases: Array[Dictionary]=[]
 var report_path:="res://../work/review091-house-results.json"
+var only_seed:=0
 
 func _initialize()->void:
 	for argument:String in OS.get_cmdline_user_args():
 		if argument.begins_with("--report="):report_path=argument.trim_prefix("--report=")
+		if argument.begins_with("--seed="):only_seed=int(argument.trim_prefix("--seed="))
 	_run.call_deferred()
 
 func check(ok:bool,label:String)->bool:
@@ -213,11 +215,15 @@ func _case(seed_value:int,signatures:Dictionary)->void:
 
 func _run()->void:
 	var signatures:Dictionary={}
+	var corpus:Array[int]=CORPUS
+	if only_seed!=0:
+		check(only_seed in CORPUS,"selected seed belongs to the review corpus")
+		corpus=[only_seed]
 	check(Generator.VERSION==2,"0.9.1 generated-house contract uses version 2 only")
 	check(Generator.parse_seed("house-v1-1")==-1 and Generator.parse_seed("house-v3-1")==-1,"old and future generator IDs are rejected")
-	for seed_value:int in CORPUS:_case(seed_value,signatures)
-	check(signatures.size()==CORPUS.size(),"all %d corpus seeds have distinct structure independent of seed metadata"%CORPUS.size())
-	var report:Dictionary={"checks":checks,"failures":failures,"cases":cases,"thresholds":{"corridor_m":MIN_CORRIDOR_WIDTH,"landing_m":MIN_LANDING_WIDTH,"stair_m":MIN_STAIR_WIDTH,"door_m":MIN_DOOR_WIDTH,"tread_m":MIN_TREAD,"rise_m":MAX_RISE},"scope":"production geometry/navigation; deterministic source corpus; open-door circulation; no renderer, visual approval, FPS, EOS, relay or WAN claim","source_sha256":{}}
+	for seed_value:int in corpus:_case(seed_value,signatures)
+	check(signatures.size()==corpus.size(),"all %d selected corpus seeds have distinct structure independent of seed metadata"%corpus.size())
+	var report:Dictionary={"checks":checks,"failures":failures,"cases":cases,"corpus":corpus,"thresholds":{"corridor_m":MIN_CORRIDOR_WIDTH,"landing_m":MIN_LANDING_WIDTH,"stair_m":MIN_STAIR_WIDTH,"door_m":MIN_DOOR_WIDTH,"tread_m":MIN_TREAD,"rise_m":MAX_RISE},"scope":"production geometry/navigation; deterministic source corpus; open-door circulation; no renderer, visual approval, FPS, EOS, relay or WAN claim","source_sha256":{}}
 	for path:String in ["res://tests/review091_house_contract.gd","res://scripts/procedural_house.gd","res://scripts/house_validation.gd","res://scripts/map_catalog.gd","res://scripts/map_navigation.gd","res://scripts/arena.gd","res://scripts/door_catalog.gd"]:
 		report.source_sha256[path]=FileAccess.get_sha256(path)
 	if not report_path.is_empty():
