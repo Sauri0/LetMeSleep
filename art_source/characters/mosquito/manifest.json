@@ -444,7 +444,13 @@
       "BrowUpBrowDownBlinkR"
     ],
     "human_hair_options": {},
-    "rest_variation": {},
+    "rest_variation": {
+      "version": "LMS091.rest1",
+      "ids_unchanged": true,
+      "eyes": "Authored curved apertures; mosquito Alertas has a wider opening",
+      "brows": "Soft, narrow arched and wider firm rest silhouettes on the original support",
+      "mouth": "Distinct curved smile, compact rest and downturned serious opening and lip"
+    },
     "eyelid_arc_correctives": [
       "BlinkLArc1",
       "BlinkLArc2",

@@ -1,0 +1,23 @@
+{
+  "stage": "views-before-r2",
+  "pid": 10388,
+  "started_utc": "2026-09-11T23:28:24.4952302Z",
+  "finished_utc": "2026-09-11T23:28:31.1805199Z",
+  "exit_code": 0,
+  "timeout": false,
+  "stderr_bytes": 0,
+  "executable": "C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe",
+  "arguments": [
+    "--path",
+    "C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/game",
+    "--windowed",
+    "--resolution",
+    "480x520",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/character091_views.gd",
+    "--",
+    "--output=C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/work/character091-before-views-r2"
+  ]
+}

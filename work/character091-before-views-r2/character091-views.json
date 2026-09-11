@@ -1,0 +1,1945 @@
+{
+	"checks": 1549,
+	"cloth_source": "",
+	"failures": [],
+	"glb_sha256": {
+		"human": "af812dd2151badf6ee0f2d196b6d368edbce95d11c857684e7730db570f3d9e8",
+		"mosquito": "d249474f537b50594ff4f76ae5c97fc938d9e6d61cdc7fa91909db0bc860ac85"
+	},
+	"records": [
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 0.0,
+			"label": "human · eyes 0 · front\nAbiertos",
+			"occupied_samples": 528
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · eyes 0 · side\nAbiertos",
+			"occupied_samples": 418
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 0.0,
+			"label": "human · eyes 1 · front\nSomnolientos",
+			"occupied_samples": 528
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · eyes 1 · side\nSomnolientos",
+			"occupied_samples": 418
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 2,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 0.0,
+			"label": "human · eyes 2 · front\nEntornados",
+			"occupied_samples": 528
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 2,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · eyes 2 · side\nEntornados",
+			"occupied_samples": 418
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 0.0,
+			"label": "human · brows 0 · front\nSuaves",
+			"occupied_samples": 528
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · brows 0 · side\nSuaves",
+			"occupied_samples": 418
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 0.0,
+			"label": "human · brows 1 · front\nArqueadas",
+			"occupied_samples": 528
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · brows 1 · side\nArqueadas",
+			"occupied_samples": 418
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 2,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 0.0,
+			"label": "human · brows 2 · front\nFirmes",
+			"occupied_samples": 528
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 2,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · brows 2 · side\nFirmes",
+			"occupied_samples": 418
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 0.0,
+			"label": "human · mouth 0 · front\nSonrisa",
+			"occupied_samples": 528
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · mouth 0 · side\nSonrisa",
+			"occupied_samples": 418
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 0.0,
+			"label": "human · mouth 1 · front\nReposo",
+			"occupied_samples": 528
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · mouth 1 · side\nReposo",
+			"occupied_samples": 418
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 2,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 0.0,
+			"label": "human · mouth 2 · front\nSeria",
+			"occupied_samples": 528
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 2,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.35,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · mouth 2 · side\nSeria",
+			"occupied_samples": 418
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 0.0,
+			"label": "human · hair 0 · front\nCorto",
+			"occupied_samples": 449
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · hair 0 · side\nCorto",
+			"occupied_samples": 341
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · hair 0 · back\nCorto",
+			"occupied_samples": 453
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 1,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 0.0,
+			"label": "human · hair 1 · front\nMechón",
+			"occupied_samples": 457
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 1,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · hair 1 · side\nMechón",
+			"occupied_samples": 347
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 1,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · hair 1 · back\nMechón",
+			"occupied_samples": 456
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 2,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 0.0,
+			"label": "human · hair 2 · front\nRulos",
+			"occupied_samples": 462
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 2,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · hair 2 · side\nRulos",
+			"occupied_samples": 352
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 2,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · hair 2 · back\nRulos",
+			"occupied_samples": 460
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 0.0,
+			"label": "human · accessory 0 · front\nSin accesorio",
+			"occupied_samples": 449
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · accessory 0 · side\nSin accesorio",
+			"occupied_samples": 341
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · accessory 0 · back\nSin accesorio",
+			"occupied_samples": 453
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 1,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 0.0,
+			"label": "human · accessory 1 · front\nGorra",
+			"occupied_samples": 474
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 1,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · accessory 1 · side\nGorra",
+			"occupied_samples": 365
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 1,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · accessory 1 · back\nGorra",
+			"occupied_samples": 478
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 2,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 0.0,
+			"label": "human · accessory 2 · front\nAnteojos",
+			"occupied_samples": 449
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 2,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · accessory 2 · side\nAnteojos",
+			"occupied_samples": 342
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 2,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · accessory 2 · back\nAnteojos",
+			"occupied_samples": 453
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 0.0,
+			"label": "human · accessory 3 · front\nGorro de noche",
+			"occupied_samples": 465
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · accessory 3 · side\nGorro de noche",
+			"occupied_samples": 350
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 0,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · accessory 3 · back\nGorro de noche",
+			"occupied_samples": 467
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · eyes 0 · front\nRedondos",
+			"occupied_samples": 229
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · eyes 0 · side\nRedondos",
+			"occupied_samples": 367
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · eyes 1 · front\nAlertas",
+			"occupied_samples": 226
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · eyes 1 · side\nAlertas",
+			"occupied_samples": 289
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 2,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · eyes 2 · front\nSomnolientos",
+			"occupied_samples": 237
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 2,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · eyes 2 · side\nSomnolientos",
+			"occupied_samples": 400
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · brows 0 · front\nCurvas",
+			"occupied_samples": 220
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · brows 0 · side\nCurvas",
+			"occupied_samples": 318
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · brows 1 · front\nAltas",
+			"occupied_samples": 227
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · brows 1 · side\nAltas",
+			"occupied_samples": 406
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 2,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · brows 2 · front\nBajas",
+			"occupied_samples": 222
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 2,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · brows 2 · side\nBajas",
+			"occupied_samples": 339
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · mouth 0 · front\nSonrisa",
+			"occupied_samples": 234
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · mouth 0 · side\nSonrisa",
+			"occupied_samples": 404
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 1,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · mouth 1 · front\nReposo",
+			"occupied_samples": 220
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 1,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · mouth 1 · side\nReposo",
+			"occupied_samples": 342
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 2,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · mouth 2 · front\nSeria",
+			"occupied_samples": 231
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 2,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · mouth 2 · side\nSeria",
+			"occupied_samples": 398
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · hair 0 · front\nAntenas rectas",
+			"occupied_samples": 221
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · hair 0 · side\nAntenas rectas",
+			"occupied_samples": 302
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 3.14159265358979,
+			"label": "mosquito · hair 0 · back\nAntenas rectas",
+			"occupied_samples": 173
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 1,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · hair 1 · front\nAntenas curvas",
+			"occupied_samples": 237
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 1,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · hair 1 · side\nAntenas curvas",
+			"occupied_samples": 399
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 1,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 3.14159265358979,
+			"label": "mosquito · hair 1 · back\nAntenas curvas",
+			"occupied_samples": 181
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 2,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · hair 2 · front\nAntenas plumosas",
+			"occupied_samples": 230
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 2,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · hair 2 · side\nAntenas plumosas",
+			"occupied_samples": 289
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 2,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 3.14159265358979,
+			"label": "mosquito · hair 2 · back\nAntenas plumosas",
+			"occupied_samples": 185
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · accessory 0 · front\nSin accesorio",
+			"occupied_samples": 235
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · accessory 0 · side\nSin accesorio",
+			"occupied_samples": 342
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 0,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 3.14159265358979,
+			"label": "mosquito · accessory 0 · back\nSin accesorio",
+			"occupied_samples": 175
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 1,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · accessory 1 · front\nMoño",
+			"occupied_samples": 254
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 1,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · accessory 1 · side\nMoño",
+			"occupied_samples": 336
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 1,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 3.14159265358979,
+			"label": "mosquito · accessory 1 · back\nMoño",
+			"occupied_samples": 211
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 2,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 0.0,
+			"label": "mosquito · accessory 2 · front\nGafas",
+			"occupied_samples": 241
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 2,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 1.5707963267949,
+			"label": "mosquito · accessory 2 · side\nGafas",
+			"occupied_samples": 297
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 2,
+				"brows": 0,
+				"color": 1,
+				"eyes": 0,
+				"footwear": 0,
+				"hair": 0,
+				"mouth": 0,
+				"outfit": 0
+			},
+			"camera_distance": 2.4,
+			"camera_yaw": 3.14159265358979,
+			"label": "mosquito · accessory 2 · back\nGafas",
+			"occupied_samples": 181
+		},
+		{
+			"appearance": {
+				"accent": 0,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 0,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 0.0,
+			"label": "Pijama 0 · cuello y hombros\nfront",
+			"occupied_samples": 723
+		},
+		{
+			"appearance": {
+				"accent": 0,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 0,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "Pijama 0 · cuello y hombros\nside",
+			"occupied_samples": 525
+		},
+		{
+			"appearance": {
+				"accent": 0,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 0,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "Pijama 0 · cuello y hombros\nback",
+			"occupied_samples": 732
+		},
+		{
+			"appearance": {
+				"accent": 0,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 0,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 1
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 0.0,
+			"label": "Pijama 1 · cuello y hombros\nfront",
+			"occupied_samples": 723
+		},
+		{
+			"appearance": {
+				"accent": 0,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 0,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 1
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "Pijama 1 · cuello y hombros\nside",
+			"occupied_samples": 525
+		},
+		{
+			"appearance": {
+				"accent": 0,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 0,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 1
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "Pijama 1 · cuello y hombros\nback",
+			"occupied_samples": 732
+		},
+		{
+			"appearance": {
+				"accent": 0,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 0,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 2
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 0.0,
+			"label": "Pijama 2 · cuello y hombros\nfront",
+			"occupied_samples": 723
+		},
+		{
+			"appearance": {
+				"accent": 0,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 0,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 2
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "Pijama 2 · cuello y hombros\nside",
+			"occupied_samples": 530
+		},
+		{
+			"appearance": {
+				"accent": 0,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 0,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 2
+			},
+			"camera_distance": 1.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "Pijama 2 · cuello y hombros\nback",
+			"occupied_samples": 732
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · outfit 0 · rest\nprofile",
+			"occupied_samples": 305
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · outfit 0 · rest\nback",
+			"occupied_samples": 380
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · outfit 0 · crouch / look left\nprofile",
+			"occupied_samples": 268
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · outfit 0 · crouch / look left\nback",
+			"occupied_samples": 301
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · outfit 0 · stride / look right\nprofile",
+			"occupied_samples": 313
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 0,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 0
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · outfit 0 · stride / look right\nback",
+			"occupied_samples": 373
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 1,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 1
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · outfit 1 · rest\nprofile",
+			"occupied_samples": 305
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 1,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 1
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · outfit 1 · rest\nback",
+			"occupied_samples": 380
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 1,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 1
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · outfit 1 · crouch / look left\nprofile",
+			"occupied_samples": 268
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 1,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 1
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · outfit 1 · crouch / look left\nback",
+			"occupied_samples": 301
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 1,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 1
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · outfit 1 · stride / look right\nprofile",
+			"occupied_samples": 313
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 1,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 1
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · outfit 1 · stride / look right\nback",
+			"occupied_samples": 373
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 2,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 2
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · outfit 2 · rest\nprofile",
+			"occupied_samples": 305
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 2,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 2
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · outfit 2 · rest\nback",
+			"occupied_samples": 380
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 2,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 2
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · outfit 2 · crouch / look left\nprofile",
+			"occupied_samples": 268
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 2,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 2
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · outfit 2 · crouch / look left\nback",
+			"occupied_samples": 301
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 2,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 2
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 1.5707963267949,
+			"label": "human · outfit 2 · stride / look right\nprofile",
+			"occupied_samples": 313
+		},
+		{
+			"appearance": {
+				"accent": 4,
+				"accessory": 3,
+				"beard": 0,
+				"brows": 1,
+				"color": 1,
+				"eyes": 1,
+				"footwear": 2,
+				"hair": 0,
+				"hair_color": 0,
+				"mouth": 1,
+				"mustache": 0,
+				"outfit": 2
+			},
+			"camera_distance": 3.65,
+			"camera_yaw": 3.14159265358979,
+			"label": "human · outfit 2 · stride / look right\nback",
+			"occupied_samples": 373
+		}
+	],
+	"scope": "Neutral existing face IDs in front/profile, all hair/accessory IDs from three views, all outfits at three shared poses. Render success alone does not certify intersection-free geometry.",
+	"visual_review": "pending"
+}

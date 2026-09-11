@@ -308,6 +308,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1112,
       "triangles": 2212,
@@ -334,6 +335,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1570,
       "triangles": 3120,
@@ -360,6 +362,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 2170,
       "triangles": 4296,
@@ -387,6 +390,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1570,
       "triangles": 3120,
@@ -412,6 +416,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 208,
       "triangles": 408,
@@ -437,6 +442,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 208,
       "triangles": 408,
@@ -462,6 +468,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 384,
       "triangles": 728,
@@ -487,6 +494,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 972,
       "triangles": 1848,
@@ -512,6 +520,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 3036,
       "triangles": 5880,
@@ -538,6 +547,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1740,
       "triangles": 3360,
@@ -564,6 +574,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 557,
       "triangles": 1048,
@@ -590,6 +601,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 557,
       "triangles": 1048,
@@ -616,6 +628,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 590,
       "triangles": 1168,
@@ -642,6 +655,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 548,
       "triangles": 1092,
@@ -651,7 +665,7 @@
       "bounds_min_m": [
         -0.08463000506162643,
         -0.021959999576210976,
-        -0.1549999862909317
+        -0.1589999794960022
       ],
       "bounds_max_m": [
         0.0846145823597908,
@@ -5179,8 +5193,14 @@
         ],
         "angular_intervals": 8,
         "public_controls_unchanged": true,
-        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink"
+        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink",
+        "rest_aperture091": {
+          "upper_angle": 0.77,
+          "lower_angle": 2.52,
+          "variant": 0
+        }
       },
+      "rest_style091": {},
       "root_union": {},
       "vertices": 3423,
       "triangles": 6656,
@@ -5240,6 +5260,15 @@
       },
       "surface_attachment": "outer_eyelid_crown_barycentric_with_expression_correctives",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "brows",
+        "variant": 0,
+        "maximum_rest_offset_m": 0.0,
+        "width_scale": 1.0,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 220,
       "triangles": 432,
@@ -5304,6 +5333,15 @@
       },
       "surface_attachment": "head",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "mouth",
+        "variant": 0,
+        "maximum_rest_offset_m": 0.001799999956042544,
+        "width_scale": 0.98,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 522,
       "triangles": 1032,
@@ -5312,14 +5350,14 @@
         "insect_dark"
       ],
       "bounds_min_m": [
-        -0.02845066227018833,
-        -0.033812154084444046,
-        -0.1462824046611786
+        -0.027888193726539612,
+        -0.03560639172792435,
+        -0.14559006690979004
       ],
       "bounds_max_m": [
-        0.02841711789369583,
-        -0.01727987825870514,
-        -0.1390543133020401
+        0.027855459600687027,
+        -0.017985377460718155,
+        -0.13850261270999908
       ],
       "morphs": [
         "BlinkL",
@@ -9867,8 +9905,14 @@
         ],
         "angular_intervals": 8,
         "public_controls_unchanged": true,
-        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink"
+        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink",
+        "rest_aperture091": {
+          "upper_angle": 0.42,
+          "lower_angle": 2.7,
+          "variant": 1
+        }
       },
+      "rest_style091": {},
       "root_union": {},
       "vertices": 3423,
       "triangles": 6656,
@@ -9928,6 +9972,15 @@
       },
       "surface_attachment": "outer_eyelid_crown_barycentric_with_expression_correctives",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "brows",
+        "variant": 1,
+        "maximum_rest_offset_m": 0.014501261453799116,
+        "width_scale": 0.8,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 220,
       "triangles": 432,
@@ -9935,14 +9988,14 @@
         "insect_dark"
       ],
       "bounds_min_m": [
-        -0.06159643083810806,
-        0.07571477442979813,
-        -0.1467307060956955
+        -0.05411972105503082,
+        0.07554778456687927,
+        -0.14626754820346832
       ],
       "bounds_max_m": [
-        0.06149885058403015,
-        0.08712633699178696,
-        -0.13537302613258362
+        0.054124221205711365,
+        0.08729030936956406,
+        -0.1342928111553192
       ],
       "morphs": [
         "BlinkL",
@@ -9992,6 +10045,15 @@
       },
       "surface_attachment": "head",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "mouth",
+        "variant": 1,
+        "maximum_rest_offset_m": 0.006162704826386838,
+        "width_scale": 0.78,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 522,
       "triangles": 1032,
@@ -10000,14 +10062,14 @@
         "insect_dark"
       ],
       "bounds_min_m": [
-        -0.028413811698555946,
-        -0.03319764509797096,
-        -0.1463278979063034
+        -0.022075437009334564,
+        -0.03319912031292915,
+        -0.14637592434883118
       ],
       "bounds_max_m": [
-        0.02840552106499672,
-        -0.020266756415367126,
-        -0.1365913301706314
+        0.022069502621889114,
+        -0.020267808809876442,
+        -0.1389549821615219
       ],
       "morphs": [
         "BlinkL",
@@ -14555,8 +14617,14 @@
         ],
         "angular_intervals": 8,
         "public_controls_unchanged": true,
-        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink"
+        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink",
+        "rest_aperture091": {
+          "upper_angle": 1.12,
+          "lower_angle": 2.52,
+          "variant": 2
+        }
       },
+      "rest_style091": {},
       "root_union": {},
       "vertices": 3423,
       "triangles": 6656,
@@ -14616,6 +14684,15 @@
       },
       "surface_attachment": "outer_eyelid_crown_barycentric_with_expression_correctives",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "brows",
+        "variant": 2,
+        "maximum_rest_offset_m": 0.005729741325963014,
+        "width_scale": 1.08,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 220,
       "triangles": 432,
@@ -14623,14 +14700,14 @@
         "insect_dark"
       ],
       "bounds_min_m": [
-        -0.06023094430565834,
-        0.07531506568193436,
-        -0.1473512500524521
+        -0.061584509909152985,
+        0.07455798238515854,
+        -0.14783875644207
       ],
       "bounds_max_m": [
-        0.06012327969074249,
-        0.0861387848854065,
-        -0.13549822568893433
+        0.06157956272363663,
+        0.08589275181293488,
+        -0.13529297709465027
       ],
       "morphs": [
         "BlinkL",
@@ -14680,6 +14757,15 @@
       },
       "surface_attachment": "head",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "mouth",
+        "variant": 2,
+        "maximum_rest_offset_m": 0.0026654235988000196,
+        "width_scale": 0.95,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 522,
       "triangles": 1032,
@@ -14688,14 +14774,14 @@
         "insect_dark"
       ],
       "bounds_min_m": [
-        -0.028423896059393883,
-        -0.0327000729739666,
-        -0.14653752744197845
+        -0.027024362236261368,
+        -0.0335242934525013,
+        -0.14654625952243805
       ],
       "bounds_max_m": [
-        0.028423896059393883,
-        -0.019748372957110405,
-        -0.1338382512331009
+        0.027024362236261368,
+        -0.01975347101688385,
+        -0.13399015367031097
       ],
       "morphs": [
         "BlinkL",
@@ -14748,7 +14834,13 @@
       "BrowUpBrowDownBlinkR"
     ],
     "human_hair_options": {},
-    "rest_variation": {},
+    "rest_variation": {
+      "version": "LMS091.rest1",
+      "ids_unchanged": true,
+      "eyes": "Authored curved apertures; mosquito Alertas has a wider opening",
+      "brows": "Soft, narrow arched and wider firm rest silhouettes on the original support",
+      "mouth": "Distinct curved smile, compact rest and downturned serious opening and lip"
+    },
     "eyelid_arc_correctives": [
       "BlinkLArc1",
       "BlinkLArc2",

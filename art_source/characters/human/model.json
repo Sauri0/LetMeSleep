@@ -503,6 +503,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 4264,
       "triangles": 8524,
@@ -528,6 +529,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 5742,
       "triangles": 11476,
@@ -553,6 +555,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 7452,
       "triangles": 14900,
@@ -578,6 +581,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1772,
       "triangles": 3508,
@@ -604,6 +608,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 7452,
       "triangles": 14900,
@@ -629,6 +634,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1772,
       "triangles": 3508,
@@ -655,6 +661,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 7452,
       "triangles": 14900,
@@ -680,6 +687,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 2048,
       "triangles": 4044,
@@ -706,6 +714,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {
         "old_triangles": 2760,
         "new_triangles": 6000,
@@ -756,6 +765,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 564,
       "triangles": 1116,
@@ -781,6 +791,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {
         "old_triangles": 2760,
         "new_triangles": 6000,
@@ -818,6 +829,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 564,
       "triangles": 1116,
@@ -843,6 +855,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {
         "old_triangles": 4312,
         "new_triangles": 6000,
@@ -880,6 +893,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 564,
       "triangles": 1116,
@@ -905,6 +919,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1692,
       "triangles": 3344,
@@ -932,6 +947,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1844,
       "triangles": 3648,
@@ -959,6 +975,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1836,
       "triangles": 3624,
@@ -986,6 +1003,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 676,
       "triangles": 1344,
@@ -1012,6 +1030,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 2776,
       "triangles": 5540,
@@ -1037,6 +1056,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1848,
       "triangles": 3656,
@@ -5708,8 +5728,14 @@
         ],
         "angular_intervals": 8,
         "public_controls_unchanged": true,
-        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink"
+        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink",
+        "rest_aperture091": {
+          "upper_angle": 0.78,
+          "lower_angle": 2.52,
+          "variant": 0
+        }
       },
+      "rest_style091": {},
       "root_union": {},
       "vertices": 3424,
       "triangles": 6656,
@@ -5769,6 +5795,15 @@
       },
       "surface_attachment": "forehead",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "brows",
+        "variant": 0,
+        "maximum_rest_offset_m": 0.0,
+        "width_scale": 1.0,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 220,
       "triangles": 432,
@@ -5826,6 +5861,15 @@
       },
       "surface_attachment": "mouth_skin",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "mouth",
+        "variant": 0,
+        "maximum_rest_offset_m": 0.0033545853654226208,
+        "width_scale": 1.04,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 522,
       "triangles": 1032,
@@ -5834,14 +5878,14 @@
         "lip"
       ],
       "bounds_min_m": [
-        -0.06391508132219315,
-        1.4490020275115967,
-        -0.14469219744205475
+        -0.06641612946987152,
+        1.4490106105804443,
+        -0.1446847915649414
       ],
       "bounds_max_m": [
-        0.06390341371297836,
-        1.4660528898239136,
-        -0.12936338782310486
+        0.06640393286943436,
+        1.4677187204360962,
+        -0.12874054908752441
       ],
       "morphs": [
         "BlinkL",
@@ -10522,8 +10566,14 @@
         ],
         "angular_intervals": 8,
         "public_controls_unchanged": true,
-        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink"
+        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink",
+        "rest_aperture091": {
+          "upper_angle": 1.1,
+          "lower_angle": 2.52,
+          "variant": 1
+        }
       },
+      "rest_style091": {},
       "root_union": {},
       "vertices": 3424,
       "triangles": 6656,
@@ -10583,6 +10633,15 @@
       },
       "surface_attachment": "forehead",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "brows",
+        "variant": 1,
+        "maximum_rest_offset_m": 0.009851044113557517,
+        "width_scale": 0.92,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 220,
       "triangles": 432,
@@ -10590,14 +10649,14 @@
         "hair"
       ],
       "bounds_min_m": [
-        -0.10453178733587265,
-        1.631385087966919,
-        -0.13599994778633118
+        -0.09630811959505081,
+        1.631700038909912,
+        -0.1358930617570877
       ],
       "bounds_max_m": [
-        0.1045641377568245,
-        1.666722297668457,
-        -0.10787999629974365
+        0.09627785533666611,
+        1.6697564125061035,
+        -0.11247796565294266
       ],
       "morphs": [
         "BlinkL",
@@ -10640,6 +10699,15 @@
       },
       "surface_attachment": "mouth_skin",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "mouth",
+        "variant": 1,
+        "maximum_rest_offset_m": 0.01375979811266576,
+        "width_scale": 0.78,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 522,
       "triangles": 1032,
@@ -10648,14 +10716,14 @@
         "lip"
       ],
       "bounds_min_m": [
-        -0.06362359970808029,
-        1.4495859146118164,
-        -0.14485566318035126
+        -0.04939264431595802,
+        1.449589490890503,
+        -0.14491182565689087
       ],
       "bounds_max_m": [
-        0.06361252069473267,
-        1.463377833366394,
-        -0.12740494310855865
+        0.04941514506936073,
+        1.4633762836456299,
+        -0.1324651837348938
       ],
       "morphs": [
         "BlinkL",
@@ -15336,8 +15404,14 @@
         ],
         "angular_intervals": 8,
         "public_controls_unchanged": true,
-        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink"
+        "surface": "Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink",
+        "rest_aperture091": {
+          "upper_angle": 1.3,
+          "lower_angle": 2.36,
+          "variant": 2
+        }
       },
+      "rest_style091": {},
       "root_union": {},
       "vertices": 3424,
       "triangles": 6656,
@@ -15397,6 +15471,15 @@
       },
       "surface_attachment": "forehead",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "brows",
+        "variant": 2,
+        "maximum_rest_offset_m": 0.0,
+        "width_scale": 1.0,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 220,
       "triangles": 432,
@@ -15454,6 +15537,15 @@
       },
       "surface_attachment": "mouth_skin",
       "eyelid_replacement": {},
+      "rest_style091": {
+        "version": "LMS091.rest1",
+        "category": "mouth",
+        "variant": 2,
+        "maximum_rest_offset_m": 0.0034606410354047013,
+        "width_scale": 0.95,
+        "topology_and_weights_unchanged": true,
+        "attachment": "Applied before the existing per-endpoint support projection"
+      },
       "root_union": {},
       "vertices": 522,
       "triangles": 1032,
@@ -15462,14 +15554,14 @@
         "lip"
       ],
       "bounds_min_m": [
-        -0.06348039209842682,
-        1.4500136375427246,
-        -0.14498478174209595
+        -0.06036576256155968,
+        1.4486762285232544,
+        -0.1449948102235794
       ],
       "bounds_max_m": [
-        0.06347443908452988,
-        1.4638621807098389,
-        -0.12575440108776093
+        0.06035981699824333,
+        1.4638540744781494,
+        -0.1265403926372528
       ],
       "morphs": [
         "BlinkL",
@@ -15505,6 +15597,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 198,
       "triangles": 352,
@@ -15530,6 +15623,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 374,
       "triangles": 672,
@@ -15555,6 +15649,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 225,
       "triangles": 416,
@@ -15580,6 +15675,7 @@
       "partition_proof": {},
       "surface_attachment": "",
       "eyelid_replacement": {},
+      "rest_style091": {},
       "root_union": {},
       "vertices": 1445,
       "triangles": 2688,
@@ -15627,8 +15723,11 @@
       ]
     },
     "rest_variation": {
-      "eyes2": "authored curved lid aperture",
-      "brows1": "28% authored brow lift"
+      "version": "LMS091.rest1",
+      "ids_unchanged": true,
+      "eyes": "Authored curved apertures; mosquito Alertas has a wider opening",
+      "brows": "Soft, narrow arched and wider firm rest silhouettes on the original support",
+      "mouth": "Distinct curved smile, compact rest and downturned serious opening and lip"
     },
     "eyelid_arc_correctives": [
       "BlinkLArc1",
@@ -15647,18 +15746,6 @@
       "BlinkRArc7"
     ]
   },
-  "cheek_repair": {
-    "method": "Localized projection to authored A skull cross-section with twelve weighted relaxation passes",
-    "modified_vertices": 514,
-    "total_head_vertices": 4264,
-    "max_displacement_m": 0.03339569961747552,
-    "topology_unchanged": true,
-    "facial_morph_meshes_unchanged": true,
-    "rig_weights_unchanged": true,
-    "scope": "human_head cheeks only; excludes nose, ears, jaw and all body/hand meshes"
-  },
-  "selected_source_sha256": "7af7b61ff82806147970d84ae6d505359c71bef3eb619f7d3d57d4cc364a0cbb",
-  "authoring": "art_source/export_presets/characters_selected_pipeline.py",
   "garment_fit09": [
     {
       "mesh": "human_outfit_0",
@@ -85429,5 +85516,17 @@
     ],
     "construction_report": "work/glasses09-construction.json",
     "construction_sha256": "5a7f8fcfab2630d235084cee7684104517b599a5bdd801b29b1d6132f25b6a07"
-  }
+  },
+  "cheek_repair": {
+    "method": "Localized projection to authored A skull cross-section with twelve weighted relaxation passes",
+    "modified_vertices": 514,
+    "total_head_vertices": 4264,
+    "max_displacement_m": 0.03339569961747552,
+    "topology_unchanged": true,
+    "facial_morph_meshes_unchanged": true,
+    "rig_weights_unchanged": true,
+    "scope": "human_head cheeks only; excludes nose, ears, jaw and all body/hand meshes"
+  },
+  "selected_source_sha256": "7af7b61ff82806147970d84ae6d505359c71bef3eb619f7d3d57d4cc364a0cbb",
+  "authoring": "art_source/export_presets/characters_selected_pipeline.py"
 }

@@ -1,0 +1,1094 @@
+[
+  {
+    "role": "human",
+    "source_sha256": "87b00829d5afbe2a9c372b47add3b9f84efd9418d7d0110266ac0dca7d4cb26d",
+    "pairs": [
+      {
+        "a": "human_accessory_1",
+        "b": "human_brows_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_1",
+        "b": "human_brows_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_1",
+        "b": "human_brows_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_1",
+        "b": "human_mouth_0",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_1",
+        "b": "human_mouth_1",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_1",
+        "b": "human_mouth_2",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_2",
+        "b": "human_brows_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_2",
+        "b": "human_brows_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_2",
+        "b": "human_brows_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_2",
+        "b": "human_mouth_0",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_2",
+        "b": "human_mouth_1",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_2",
+        "b": "human_mouth_2",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_3",
+        "b": "human_brows_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_3",
+        "b": "human_brows_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_3",
+        "b": "human_brows_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_3",
+        "b": "human_mouth_0",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_3",
+        "b": "human_mouth_1",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_accessory_3",
+        "b": "human_mouth_2",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_beard_1",
+        "b": "human_mouth_0",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_beard_1",
+        "b": "human_mouth_1",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_beard_1",
+        "b": "human_mouth_2",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_beard_2",
+        "b": "human_mouth_0",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_beard_2",
+        "b": "human_mouth_1",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_beard_2",
+        "b": "human_mouth_2",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_0",
+        "b": "human_eyes_0",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_0",
+        "b": "human_eyes_1",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_0",
+        "b": "human_eyes_2",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_0",
+        "b": "human_hair_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_0",
+        "b": "human_hair_0_capped",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_0",
+        "b": "human_hair_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_0",
+        "b": "human_hair_1_capped",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_0",
+        "b": "human_hair_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_0",
+        "b": "human_hair_2_capped",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_1",
+        "b": "human_eyes_0",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_1",
+        "b": "human_eyes_1",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_1",
+        "b": "human_eyes_2",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_1",
+        "b": "human_hair_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_1",
+        "b": "human_hair_0_capped",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_1",
+        "b": "human_hair_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_1",
+        "b": "human_hair_1_capped",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_1",
+        "b": "human_hair_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_1",
+        "b": "human_hair_2_capped",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_2",
+        "b": "human_eyes_0",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_2",
+        "b": "human_eyes_1",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_2",
+        "b": "human_eyes_2",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_2",
+        "b": "human_hair_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_2",
+        "b": "human_hair_0_capped",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_2",
+        "b": "human_hair_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_2",
+        "b": "human_hair_1_capped",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_2",
+        "b": "human_hair_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_brows_2",
+        "b": "human_hair_2_capped",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_eyes_0",
+        "b": "human_mouth_0",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_eyes_0",
+        "b": "human_mouth_1",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_eyes_0",
+        "b": "human_mouth_2",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_eyes_1",
+        "b": "human_mouth_0",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_eyes_1",
+        "b": "human_mouth_1",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_eyes_1",
+        "b": "human_mouth_2",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_eyes_2",
+        "b": "human_mouth_0",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_eyes_2",
+        "b": "human_mouth_1",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_eyes_2",
+        "b": "human_mouth_2",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_mouth_0",
+        "b": "human_mustache_1",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_mouth_0",
+        "b": "human_mustache_2",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_mouth_1",
+        "b": "human_mustache_1",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_mouth_1",
+        "b": "human_mustache_2",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_mouth_2",
+        "b": "human_mustache_1",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "human_mouth_2",
+        "b": "human_mustache_2",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      }
+    ],
+    "sample_count": 702,
+    "failures": [],
+    "elapsed_seconds": 3.25,
+    "scope": "Changed brows/mouth and mosquito lids against compatible neighboring cosmetics, with shared neutral/extreme/midpoint controls; exact triangle intersections. Rigid head attachments only; garment/antenna motion requires separate native views."
+  },
+  {
+    "role": "mosquito",
+    "source_sha256": "14095ac9e524f8f7a4fcc5fe08b021838d6c1a238619a083e3b81634247e359f",
+    "pairs": [
+      {
+        "a": "mosquito_accessory_1",
+        "b": "mosquito_brows_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_1",
+        "b": "mosquito_brows_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_1",
+        "b": "mosquito_brows_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_1",
+        "b": "mosquito_eyes_0",
+        "samples": 3,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_1",
+        "b": "mosquito_eyes_1",
+        "samples": 3,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_1",
+        "b": "mosquito_eyes_2",
+        "samples": 3,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_1",
+        "b": "mosquito_mouth_0",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_1",
+        "b": "mosquito_mouth_1",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_1",
+        "b": "mosquito_mouth_2",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_brows_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_brows_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_brows_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_eyes_0",
+        "samples": 3,
+        "samples_with_contact": 3,
+        "exposed_samples": 3,
+        "classification": "unexpected_exposed_contact",
+        "witness": {
+          "controls": {},
+          "position": [
+            -0.006435861811041832,
+            0.1495220810174942,
+            0.04281485825777054
+          ],
+          "triangle_contacts": 9,
+          "exposed_triangle_contacts": 1
+        }
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_eyes_1",
+        "samples": 3,
+        "samples_with_contact": 3,
+        "exposed_samples": 3,
+        "classification": "unexpected_exposed_contact",
+        "witness": {
+          "controls": {},
+          "position": [
+            -0.006435861811041832,
+            0.1495220810174942,
+            0.04281485825777054
+          ],
+          "triangle_contacts": 9,
+          "exposed_triangle_contacts": 1
+        }
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_eyes_2",
+        "samples": 3,
+        "samples_with_contact": 3,
+        "exposed_samples": 3,
+        "classification": "unexpected_exposed_contact",
+        "witness": {
+          "controls": {},
+          "position": [
+            -0.006456798408180475,
+            0.14952418208122253,
+            0.04279327020049095
+          ],
+          "triangle_contacts": 30,
+          "exposed_triangle_contacts": 14
+        }
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_mouth_0",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_mouth_1",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_mouth_2",
+        "samples": 9,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_0",
+        "b": "mosquito_eyes_0",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_0",
+        "b": "mosquito_eyes_1",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_0",
+        "b": "mosquito_eyes_2",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_0",
+        "b": "mosquito_hair_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_0",
+        "b": "mosquito_hair_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_0",
+        "b": "mosquito_hair_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_1",
+        "b": "mosquito_eyes_0",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_1",
+        "b": "mosquito_eyes_1",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_1",
+        "b": "mosquito_eyes_2",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_1",
+        "b": "mosquito_hair_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_1",
+        "b": "mosquito_hair_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_1",
+        "b": "mosquito_hair_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_2",
+        "b": "mosquito_eyes_0",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_2",
+        "b": "mosquito_eyes_1",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_2",
+        "b": "mosquito_eyes_2",
+        "samples": 15,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_2",
+        "b": "mosquito_hair_0",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_2",
+        "b": "mosquito_hair_1",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_brows_2",
+        "b": "mosquito_hair_2",
+        "samples": 5,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_eyes_0",
+        "b": "mosquito_mouth_0",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_eyes_0",
+        "b": "mosquito_mouth_1",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_eyes_0",
+        "b": "mosquito_mouth_2",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_eyes_1",
+        "b": "mosquito_mouth_0",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_eyes_1",
+        "b": "mosquito_mouth_1",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_eyes_1",
+        "b": "mosquito_mouth_2",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_eyes_2",
+        "b": "mosquito_mouth_0",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_eyes_2",
+        "b": "mosquito_mouth_1",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      },
+      {
+        "a": "mosquito_eyes_2",
+        "b": "mosquito_mouth_2",
+        "samples": 27,
+        "samples_with_contact": 0,
+        "exposed_samples": 0,
+        "classification": "disjoint_at_all_samples",
+        "witness": null
+      }
+    ],
+    "sample_count": 525,
+    "failures": [
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_eyes_0",
+        "classification": "unexpected_exposed_contact",
+        "witness": {
+          "controls": {},
+          "position": [
+            -0.006435861811041832,
+            0.1495220810174942,
+            0.04281485825777054
+          ],
+          "triangle_contacts": 9,
+          "exposed_triangle_contacts": 1
+        }
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_eyes_1",
+        "classification": "unexpected_exposed_contact",
+        "witness": {
+          "controls": {},
+          "position": [
+            -0.006435861811041832,
+            0.1495220810174942,
+            0.04281485825777054
+          ],
+          "triangle_contacts": 9,
+          "exposed_triangle_contacts": 1
+        }
+      },
+      {
+        "a": "mosquito_accessory_2",
+        "b": "mosquito_eyes_2",
+        "classification": "unexpected_exposed_contact",
+        "witness": {
+          "controls": {},
+          "position": [
+            -0.006456798408180475,
+            0.14952418208122253,
+            0.04279327020049095
+          ],
+          "triangle_contacts": 30,
+          "exposed_triangle_contacts": 14
+        }
+      }
+    ],
+    "elapsed_seconds": 3.0470000000000255,
+    "scope": "Changed brows/mouth and mosquito lids against compatible neighboring cosmetics, with shared neutral/extreme/midpoint controls; exact triangle intersections. Rigid head attachments only; garment/antenna motion requires separate native views."
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "stage": "export-r2",
+  "pid": 26004,
+  "started_utc": "2026-09-11T23:34:23.5819289Z",
+  "finished_utc": "2026-09-11T23:34:50.5918765Z",
+  "exit_code": 0,
+  "timeout": false,
+  "stderr_bytes": 0,
+  "executable": "C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/tools/blender-4.5.3/blender-4.5.3-windows-x64/blender.exe",
+  "arguments": [
+    "--background",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/art_source/export_presets/characters_selected_pipeline.py",
+    "--",
+    "--species",
+    "both"
+  ]
+}

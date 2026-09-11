@@ -1,0 +1,45 @@
+{
+  "role": "mosquito",
+  "source_sha256": "98e213a88eda1916755d70237dd497be56773fb0f8b6add7a625afa1d4e32254",
+  "checks": 81663,
+  "failures": [],
+  "cases": [
+    {
+      "role": "mosquito",
+      "eyes": 0,
+      "ocular_vertices": 1339,
+      "closure_rays": 4457,
+      "ocular_blink_delta_m": 0,
+      "closure_misses": [],
+      "brow_max_displacement_runtime_m": {
+        "BrowUp": 0.001963565751622252,
+        "BrowDown": 0.002163696402817835
+      }
+    },
+    {
+      "role": "mosquito",
+      "eyes": 1,
+      "ocular_vertices": 1339,
+      "closure_rays": 4457,
+      "ocular_blink_delta_m": 0,
+      "closure_misses": [],
+      "brow_max_displacement_runtime_m": {
+        "BrowUp": 0.0020284138385693496,
+        "BrowDown": 0.0017591923724852195
+      }
+    },
+    {
+      "role": "mosquito",
+      "eyes": 2,
+      "ocular_vertices": 1339,
+      "closure_rays": 4457,
+      "ocular_blink_delta_m": 0,
+      "closure_misses": [],
+      "brow_max_displacement_runtime_m": {
+        "BrowUp": 0.001991160573369077,
+        "BrowDown": 0.002138899037899798
+      }
+    }
+  ],
+  "scope": "Actual vertices, 17 blink weights; full-closure occlusion against lid triangles from seven front/oblique/high/low directions, including pupil and highlights."
+}

@@ -1,0 +1,17 @@
+{
+  "stage": "blink-r2",
+  "pid": 16092,
+  "started_utc": "2026-09-11T23:36:57.2730709Z",
+  "finished_utc": "2026-09-11T23:37:00.4516605Z",
+  "exit_code": 0,
+  "timeout": false,
+  "stderr_bytes": 0,
+  "executable": "C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/tools/blender-4.5.3/blender-4.5.3-windows-x64/blender.exe",
+  "arguments": [
+    "--background",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/art_source/export_presets/characters_blink_audit.py"
+  ]
+}

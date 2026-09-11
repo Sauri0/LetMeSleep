@@ -1,0 +1,45 @@
+{
+  "role": "human",
+  "source_sha256": "1f3190f6ff26c7fa98908e5ecb45b871f3f14942b2c8cbbd4060dabc71a6712d",
+  "checks": 81525,
+  "failures": [],
+  "cases": [
+    {
+      "role": "human",
+      "eyes": 0,
+      "ocular_vertices": 1340,
+      "closure_rays": 4394,
+      "ocular_blink_delta_m": 0,
+      "closure_misses": [],
+      "brow_max_displacement_runtime_m": {
+        "BrowUp": 0.0084018035533306,
+        "BrowDown": 0.0065311775251827514
+      }
+    },
+    {
+      "role": "human",
+      "eyes": 1,
+      "ocular_vertices": 1340,
+      "closure_rays": 4394,
+      "ocular_blink_delta_m": 0,
+      "closure_misses": [],
+      "brow_max_displacement_runtime_m": {
+        "BrowUp": 0.006050165239286075,
+        "BrowDown": 0.0066312858574562724
+      }
+    },
+    {
+      "role": "human",
+      "eyes": 2,
+      "ocular_vertices": 1340,
+      "closure_rays": 4394,
+      "ocular_blink_delta_m": 0,
+      "closure_misses": [],
+      "brow_max_displacement_runtime_m": {
+        "BrowUp": 0.008482564865803463,
+        "BrowDown": 0.006265741331581336
+      }
+    }
+  ],
+  "scope": "Actual vertices, 17 blink weights; full-closure occlusion against lid triangles from seven front/oblique/high/low directions, including pupil and highlights."
+}

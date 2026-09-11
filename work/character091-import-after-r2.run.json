@@ -1,0 +1,21 @@
+{
+  "stage": "import-after-r2",
+  "pid": 13888,
+  "started_utc": "2026-09-11T23:37:26.2275624Z",
+  "finished_utc": "2026-09-11T23:37:35.7396699Z",
+  "exit_code": 0,
+  "timeout": false,
+  "stderr_bytes": 0,
+  "executable": "C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe",
+  "arguments": [
+    "--headless",
+    "--path",
+    "C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/game",
+    "--single-threaded-scene",
+    "--editor",
+    "--import",
+    "--quit",
+    "--frame-delay",
+    "800"
+  ]
+}

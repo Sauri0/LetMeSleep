@@ -9,6 +9,7 @@ import bpy
 from mathutils import Vector, geometry
 from mathutils.bvhtree import BVHTree
 from eyelid_geometry import rebuild_eyelids, globe_components
+from facial_style import shape_rest_feature
 
 ROOT=Path(__file__).resolve().parents[3]
 
@@ -251,6 +252,7 @@ def separate_faces(species):
             # shared brows. Independent selectors now need visible differences.
             if species=='human' and category=='brows' and variant==1:
                 _baseline_channel(part,'BrowUp',.28)
+            shape_rest_feature(part,species,category,variant)
             if species=='human' and category in ['brows','mouth']:
                 _attach_human_feature(part,category)
             if species=='mosquito' and category!='eyes':_attach_mosquito_feature(part,category)

@@ -82,8 +82,11 @@ def rebuild_eyelids(obj,species,variant):
         side_indices=[i for i in eye_indices if (base[i].x<0)==(center.x<0)]
         front=max(base[i].y for i in side_indices)
         pupil_depth=max(0,front-center.y-radii.y)
-        top_angle=([.78,1.10,1.30] if human else [.77,.77,1.06])[variant]
-        bottom_angle=2.52 if variant!=2 or not human else 2.36
+        # Existing mosquito IDs 0/1 used identical lids and differed only in
+        # pupil position. Alertas now has its own open silhouette; the closed
+        # envelope, eye volumes and all eight blink intervals remain identical.
+        top_angle=([.78,1.10,1.30] if human else [.77,.42,1.12])[variant]
+        bottom_angle=([2.52,2.52,2.36] if human else [2.52,2.70,2.52])[variant]
         def shell(theta,phi):
             direction=Vector((math.sin(phi)*math.cos(theta),math.sin(phi)*math.sin(theta),math.cos(phi)))
             depth=radii.y+pupil_depth+.001 if direction.y>0 else radii.y
@@ -149,5 +152,6 @@ def rebuild_eyelids(obj,species,variant):
         'retained_source_polygon_indices':[p.index for p in kept],
         'new_lid_vertices':len(points)-len(indices),'new_lid_polygons':len(faces)-len(kept),
         'ocular_components':ocular,'angular_intervals':ARC_STEPS,'public_controls_unchanged':True,
-        'surface':'Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink'})
+        'surface':'Upper/lower ocular-envelope shell; eyeball and pupil volume invariant under Blink',
+        'rest_aperture091':{'upper_angle':top_angle,'lower_angle':bottom_angle,'variant':variant}})
     return obj

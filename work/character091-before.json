@@ -1,0 +1,58 @@
+{
+  "checks": 47,
+  "failures": [
+    "human smile opening curves upward distinctly from rest",
+    "human serious opening curves downward distinctly from rest",
+    "human rest opening is recognizably shorter",
+    "human arched brows have a distinct narrower silhouette",
+    "human firm/low brows differ from arched/high brows",
+    "mosquito smile opening curves upward distinctly from rest",
+    "mosquito serious opening curves downward distinctly from rest",
+    "mosquito rest opening is recognizably shorter",
+    "mosquito arched brows have a distinct narrower silhouette",
+    "mosquito firm/low brows differ from arched/high brows",
+    "mosquito Alertas has a different actual lid surface from Redondos"
+  ],
+  "metrics": {
+    "human": {
+      "mouth_curvature_source_m": [
+        -0.00020082100577978323,
+        -0.00020082100577978323,
+        -0.00020082100577978323
+      ],
+      "mouth_width_source_m": [
+        0.0817682072520256,
+        0.0817682072520256,
+        0.0817682072520256
+      ],
+      "brow_width_source_m": [
+        0.20916716754436493,
+        0.20909592509269714,
+        0.20834754407405853
+      ]
+    },
+    "mosquito": {
+      "mouth_curvature_source_m": [
+        -0.0001906867359499423,
+        -0.0001906867359499423,
+        -0.0001906867359499423
+      ],
+      "mouth_width_source_m": [
+        0.04412471130490303,
+        0.04412471130490303,
+        0.04412471130490303
+      ],
+      "brow_width_source_m": [
+        0.12353663519024849,
+        0.12309528142213821,
+        0.12035422399640083
+      ],
+      "alert_lid_rms_difference_source_m": 0.0
+    }
+  },
+  "glb_sha256": {
+    "human": "af812dd2151badf6ee0f2d196b6d368edbce95d11c857684e7730db570f3d9e8",
+    "mosquito": "d249474f537b50594ff4f76ae5c97fc938d9e6d61cdc7fa91909db0bc860ac85"
+  },
+  "scope": "Exported neutral silhouette distinction and exact baseline geometry/rig invariance outside edited features. No continuous collision or visual approval implied."
+}

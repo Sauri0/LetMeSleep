@@ -16,6 +16,7 @@ from facial_parts import separate_faces, add_human_facial_hair, weld_human_hair_
 from garment_fit import repair_human_garments
 from garment_trim import conform_human_central_trim
 from glasses_fit import repair_human_glasses
+from facial_style import STYLE_VERSION, fit_mosquito_goggle_bridge
 
 def srgb_to_linear(value):
     return value/12.92 if value<=.04045 else ((value+.055)/1.055)**2.4
@@ -172,6 +173,7 @@ def export_selected(species):
     garment_fit=repair_human_garments() if species=='human' else []
     garment_trim=conform_human_central_trim() if species=='human' else []
     separate_faces(species)
+    if species=='mosquito':fit_mosquito_goggle_bridge(bpy.data.objects['mosquito_accessory_2'])
     if species=='human':
         add_human_facial_hair(rigs[0])
         weld_human_hair_roots(rigs[0])
@@ -216,7 +218,10 @@ def export_selected(species):
     manifest['facial_parts']={'categories':['eyes','brows','mouth'],'variants_each':3,'public_morph_channels_each':10,
         'mosquito_brow_correctives':['BrowUpBlinkL','BrowUpBlinkR','BrowDownBlinkL','BrowDownBlinkR','BrowUpBrowDown','BrowUpBrowDownBlinkL','BrowUpBrowDownBlinkR'] if species=='mosquito' else [],
         'human_hair_options':{'mustache':['none','short','drooping'],'beard':['none','goatee','short']} if species=='human' else {},
-        'rest_variation':{'eyes2':'authored curved lid aperture','brows1':'28% authored brow lift'} if species=='human' else {},
+        'rest_variation':{'version':STYLE_VERSION,'ids_unchanged':True,
+            'eyes':'Authored curved apertures; mosquito Alertas has a wider opening',
+            'brows':'Soft, narrow arched and wider firm rest silhouettes on the original support',
+            'mouth':'Distinct curved smile, compact rest and downturned serious opening and lip'},
         'eyelid_arc_correctives':[blink+'Arc'+str(k) for blink in ['BlinkL','BlinkR'] for k in range(1,8)]}
     if cheek_repair:manifest['cheek_repair']=cheek_repair
     if garment_fit:manifest['garment_fit09']=garment_fit
@@ -247,6 +252,7 @@ def export_selected(species):
             'partition_proof':json.loads(obj.get('partition_proof','{}')),
             'surface_attachment':obj.get('surface_attachment',''),
             'eyelid_replacement':json.loads(obj.get('eyelid_replacement','{}')) if category=='eyes' else {},
+            'rest_style091':json.loads(obj.get('rest_style091','{}')),
             'root_union':json.loads(obj.get('root_union','{}')),
             'vertices':len(points),'triangles':sum(len(p.vertices)-2 for p in obj.data.polygons),
             'materials':sorted({obj.data.materials[p.material_index].name for p in obj.data.polygons}),

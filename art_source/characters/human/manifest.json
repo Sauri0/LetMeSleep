@@ -497,8 +497,8 @@
     },
     {
       "name": "human_outfit_0_trim",
-      "vertices": 796,
-      "triangles": 1556
+      "vertices": 1772,
+      "triangles": 3508
     },
     {
       "name": "human_outfit_1",
@@ -507,8 +507,8 @@
     },
     {
       "name": "human_outfit_1_trim",
-      "vertices": 796,
-      "triangles": 1556
+      "vertices": 1772,
+      "triangles": 3508
     },
     {
       "name": "human_outfit_2",
@@ -517,8 +517,8 @@
     },
     {
       "name": "human_outfit_2_trim",
-      "vertices": 1072,
-      "triangles": 2092
+      "vertices": 2048,
+      "triangles": 4044
     },
     {
       "name": "human_hair_0",
@@ -726,8 +726,11 @@
       ]
     },
     "rest_variation": {
-      "eyes2": "authored curved lid aperture",
-      "brows1": "28% authored brow lift"
+      "version": "LMS091.rest1",
+      "ids_unchanged": true,
+      "eyes": "Authored curved apertures; mosquito Alertas has a wider opening",
+      "brows": "Soft, narrow arched and wider firm rest silhouettes on the original support",
+      "mouth": "Distinct curved smile, compact rest and downturned serious opening and lip"
     },
     "eyelid_arc_correctives": [
       "BlinkLArc1",

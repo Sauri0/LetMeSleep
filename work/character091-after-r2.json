@@ -1,0 +1,66 @@
+{
+  "checks": 241,
+  "failures": [],
+  "metrics": {
+    "human": {
+      "mouth_curvature_source_m": [
+        0.0020188209803209123,
+        -0.0002728911492193564,
+        -0.0020906559603968145
+      ],
+      "mouth_width_source_m": [
+        0.08498725295066833,
+        0.06379753351211548,
+        0.07770892977714539
+      ],
+      "brow_width_source_m": [
+        0.20916716754436493,
+        0.19258597493171692,
+        0.20834754407405853
+      ],
+      "allowed_changed_meshes": [
+        "human_brows_0",
+        "human_brows_1",
+        "human_brows_2",
+        "human_mouth_0",
+        "human_mouth_1",
+        "human_mouth_2"
+      ]
+    },
+    "mosquito": {
+      "mouth_curvature_source_m": [
+        0.0020202656880227224,
+        -0.00031838115737444286,
+        -0.0020420361364233315
+      ],
+      "mouth_width_source_m": [
+        0.0432383231818676,
+        0.03451511263847351,
+        0.041950419545173645
+      ],
+      "brow_width_source_m": [
+        0.12353663519024849,
+        0.10824394226074219,
+        0.12316407263278961
+      ],
+      "alert_lid_rms_difference_source_m": 0.0035481393489977505,
+      "allowed_changed_meshes": [
+        "mosquito_accessory_2",
+        "mosquito_brows_0",
+        "mosquito_brows_1",
+        "mosquito_brows_2",
+        "mosquito_eyes_0",
+        "mosquito_eyes_1",
+        "mosquito_eyes_2",
+        "mosquito_mouth_0",
+        "mosquito_mouth_1",
+        "mosquito_mouth_2"
+      ]
+    }
+  },
+  "glb_sha256": {
+    "human": "50c770f32d6023783eb78c597bf2debae8c877895a2565e21923734bf6faf806",
+    "mosquito": "7bbc00be14b82be142a6c0446c30c809e300c054e331cac22cc4571af12857be"
+  },
+  "scope": "Exported neutral silhouette distinction and exact baseline geometry/rig invariance outside edited features. No continuous collision or visual approval implied."
+}
