@@ -25,13 +25,16 @@ func reject(value: String, label: String) -> void:
 
 func _initialize() -> void:
 	var canonical := Invite.encode("Lobby_A-9", CAP)
-	var payload := {"transport":"eos", "v":1, "lobby_id":"Lobby_A-9", "protocol":9, "capability":CAP}
-	check(Invite.PREFIX == "LMS1-" and Invite.PROTOCOL == 9, "format identity")
+	var payload := {"transport":"eos", "v":1, "lobby_id":"Lobby_A-9", "protocol":Invite.PROTOCOL, "capability":CAP}
+	var legacy := payload.duplicate(true)
+	legacy.protocol = 9
+	reject(envelope(legacy), "rc1 protocol rejected before connecting")
+	check(Invite.PREFIX == "LMS1-" and Invite.PROTOCOL == 10, "format identity")
 	for lobby: String in ["a", "0123456789abcdef0123456789abcdef", "Lobby_A-9", "a".repeat(64)]:
 		var code := Invite.encode(lobby, CAP)
 		var decoded := Invite.decode(code)
 		check(not code.is_empty() and code.length() <= Invite.MAX_LENGTH and decoded.get("ok", false), "roundtrip bounded")
-		check(decoded.get("lobby_id") == lobby and decoded.get("capability") == CAP and decoded.get("transport") == "eos" and decoded.get("protocol") == 9 and decoded.get("v") == 1, "roundtrip fields")
+		check(decoded.get("lobby_id") == lobby and decoded.get("capability") == CAP and decoded.get("transport") == "eos" and decoded.get("protocol") == Invite.PROTOCOL and decoded.get("v") == 1, "roundtrip fields")
 		check(code == Invite.encode(lobby, CAP), "encoding deterministic")
 		var socket := Invite.socket_id(lobby)
 		check(socket.length() == 31 and socket.begins_with("LMS") and socket == Invite.socket_id(lobby), "socket stable bounded")
@@ -57,7 +60,7 @@ func _initialize() -> void:
 			changed[field] = malformed
 			reject(envelope(changed), "wrong field type")
 	for field: String in ["v", "protocol"]:
-		for malformed: Variant in ["1", "9", -1, 0, 1.5, 9.5, 10, 1.0e30]:
+		for malformed: Variant in ["1", str(Invite.PROTOCOL), -1, 0, 1.5, 9.5, 11, 1.0e30]:
 			var changed := payload.duplicate(true)
 			changed[field] = malformed
 			reject(envelope(changed), "wrong version or protocol")
@@ -72,7 +75,7 @@ func _initialize() -> void:
 		reject(value, "bad envelope")
 	for malformed: Variant in [null, true, [], "text", 123]:
 		reject(envelope(malformed), "non-object JSON")
-	for malformed: String in ["{", "{}garbage", JSON.stringify(payload) + " ", " " + JSON.stringify(payload), JSON.stringify(payload).replace("\"v\":1", "\"v\":1,\"v\":1"), JSON.stringify(payload).replace("\"protocol\":9", "\"protocol\":9.0"), JSON.stringify(payload).replace("Lobby_A-9", "\\u004cobby_A-9")]:
+	for malformed: String in ["{", "{}garbage", JSON.stringify(payload) + " ", " " + JSON.stringify(payload), JSON.stringify(payload).replace("\"v\":1", "\"v\":1,\"v\":1"), JSON.stringify(payload).replace("\"protocol\":%d" % Invite.PROTOCOL, "\"protocol\":%d.0" % Invite.PROTOCOL), JSON.stringify(payload).replace("Lobby_A-9", "\\u004cobby_A-9")]:
 		reject(wrap_text(malformed), "noncanonical or malformed JSON")
 	for raw: PackedByteArray in [PackedByteArray([255]), PackedByteArray([192, 128]), PackedByteArray([0]), PackedByteArray([239, 187, 191]), PackedByteArray([10])]:
 		reject(wrap_bytes(raw), "invalid bytes before JSON")

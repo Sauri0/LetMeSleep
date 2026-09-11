@@ -3,7 +3,7 @@ extends RefCounted
 ## Local invitation format only: decoding never authenticates a lobby or opens EOS.
 ## Treat capability as an invitation bearer token; do not put it in public attributes.
 const PREFIX := "LMS1-"
-const PROTOCOL := 9
+const PROTOCOL := 10
 const VERSION := 1
 const MAX_LENGTH := 512
 const MAX_RAW_BYTES := 384

@@ -24,7 +24,7 @@ class FakeLobby extends RefCounted:
 	signal lobby_updated
 	var lobby_id := "Lobby123"
 	var owner_product_user_id := "host"
-	var bucket_id := "LMS-P9"
+	var bucket_id := "LMS-P" + str(Invitation.PROTOCOL)
 	var members: Array = [FakeMember.new("host"), FakeMember.new("guest")]
 	func get_member_by_product_user_id(id: String) -> Variant:
 		for member: FakeMember in members:
@@ -85,18 +85,18 @@ func _run() -> void:
 	var p := fixture()
 	var s: Node = p[0]
 	var b: FakeBackend = p[1]
-	check(not s.start_host({},"Name",9,CAP) and b.operations.is_empty(), "Missing config makes zero backend requests")
+	check(not s.start_host({},"Name",Invitation.PROTOCOL,CAP) and b.operations.is_empty(), "Missing config makes zero backend requests")
 	var placeholders := Config.duplicate()
 	placeholders.product_id = "YOUR_PRODUCT_ID"
 	check(not Session.valid_configuration(placeholders), "Placeholder config rejected")
 	b.installed = false
-	check(not s.start_host(Config,"Name",9,CAP), "Missing addon reports unavailable")
+	check(not s.start_host(Config,"Name",Invitation.PROTOCOL,CAP), "Missing addon reports unavailable")
 	b.installed = true
-	check(not s.start_host(Config,"Name",9,"bad"), "Bad capability rejected")
+	check(not s.start_host(Config,"Name",Invitation.PROTOCOL,"bad"), "Bad capability rejected")
 	var ready: Array = []
 	s.transport_ready.connect(func(info): ready.append(info))
-	check(s.start_host(Config,"Name",9,CAP), "Host attempt starts")
-	check(not s.start_host(Config,"Other",9,CAP), "No overlapping SDK request")
+	check(s.start_host(Config,"Name",Invitation.PROTOCOL,CAP), "Host attempt starts")
+	check(not s.start_host(Config,"Other",Invitation.PROTOCOL,CAP), "No overlapping SDK request")
 	b.finish({"ok":true})
 	check(b.pending.operation == "device", "Persistent DeviceID requested")
 	b.finish({"ok":true})
@@ -130,13 +130,13 @@ func _run() -> void:
 	dispose(p)
 	# Cancellation cannot let a late create complete the next attempt.
 	p = fixture(); s = p[0]; b = p[1]
-	s.start_host(Config,"Name",9,CAP); login(b)
+	s.start_host(Config,"Name",Invitation.PROTOCOL,CAP); login(b)
 	s.cancel()
-	check(not s.start_host(Config,"Name",9,CAP), "Cancelled outstanding create blocks new attempt")
+	check(not s.start_host(Config,"Name",Invitation.PROTOCOL,CAP), "Cancelled outstanding create blocks new attempt")
 	b.finish({"ok":true,"lobby":FakeLobby.new()})
 	check(b.pending.operation == "cleanup" and b.pending.args.is_host, "Late created lobby destroyed")
 	b.finish({"ok":true})
-	check(s.start_host(Config,"Name",9,CAP), "Retry permitted after cleanup settles")
+	check(s.start_host(Config,"Name",Invitation.PROTOCOL,CAP), "Retry permitted after cleanup settles")
 	now += Session.STEP_TIMEOUT_MS
 	s.poll_timeout()
 	check(s.state == "error", "Step deadline reports timeout")
@@ -160,7 +160,7 @@ func _run() -> void:
 	# Protocol mismatch must never attempt join; changed owner after join fails.
 	p = fixture(); s = p[0]; b = p[1]
 	s.start_join(Config,"Guest",invite); login(b,"guest")
-	remote = FakeLobby.new(); remote.bucket_id = "LMS-P8"
+	remote = FakeLobby.new(); remote.bucket_id = "LMS-P9"
 	b.finish({"ok":true,"lobby":remote})
 	check(s.state == "error" and not "join" in b.operations, "Other protocol lobby rejected before join")
 	check(b.disposed == [remote], "Rejected search wrapper disposed locally")
@@ -176,12 +176,12 @@ func _run() -> void:
 	# Every pre-lobby phase can fail/cancel without continuing its chain.
 	for phase: String in ["initialize", "device", "login", "create"]:
 		p = fixture(); s = p[0]; b = p[1]
-		s.start_host(Config,"Name",9,CAP)
+		s.start_host(Config,"Name",Invitation.PROTOCOL,CAP)
 		while b.pending.operation != phase:
 			b.finish({"ok":true,"local_user_id":"host"})
 		b.finish({"ok":false,"error":"simulated_" + phase})
 		check(s.state == "error" and not b.busy, "Failure stops " + phase)
-		check(s.start_host(Config,"Name",9,CAP), "Retry after settled failure " + phase)
+		check(s.start_host(Config,"Name",Invitation.PROTOCOL,CAP), "Retry after settled failure " + phase)
 		s.cancel(); b.finish({"ok":true})
 		check(s.state == "cancelled" and not b.busy, "Cancelled result stays cancelled " + phase)
 		dispose(p)
@@ -196,7 +196,7 @@ func _run() -> void:
 	b.finish({"ok":true})
 	dispose(p)
 	p = fixture(); s = p[0]; b = p[1]
-	s.start_host(Config,"Name",9,CAP); login(b)
+	s.start_host(Config,"Name",Invitation.PROTOCOL,CAP); login(b)
 	b.finish({"ok":true,"lobby":FakeLobby.new()})
 	b.auth_expiring.emit()
 	b.finish({"ok":true,"local_user_id":"unexpected-identity"})
@@ -207,7 +207,7 @@ func _run() -> void:
 	s.state_changed.connect(func(value):
 		if value == "initialize": s.cancel()
 	)
-	s.start_host(Config,"Name",9,CAP)
+	s.start_host(Config,"Name",Invitation.PROTOCOL,CAP)
 	check(s.state == "cancelled" and b.operations.is_empty(), "Synchronous UI cancellation does not launch backend request")
 	dispose(p)
 	p = fixture(); s = p[0]; b = p[1]
@@ -216,7 +216,7 @@ func _run() -> void:
 	s.state_changed.connect(func(value):
 		if value == "transport_ready": s.cancel()
 	)
-	s.start_host(Config,"Name",9,CAP); login(b)
+	s.start_host(Config,"Name",Invitation.PROTOCOL,CAP); login(b)
 	b.finish({"ok":true,"lobby":FakeLobby.new()})
 	check(s.state == "cancelled" and cancelled_ready.is_empty() and b.peer.closed, "Synchronous cancellation at ready cannot expose closed peer")
 	b.finish({"ok":true})
@@ -224,7 +224,7 @@ func _run() -> void:
 	# Lobby membership consumes slots even without a P2P request. Admission is
 	# bounded from first observation; repeated lobby updates cannot renew it.
 	p = fixture(); s = p[0]; b = p[1]
-	s.start_host(Config,"Name",9,CAP); login(b)
+	s.start_host(Config,"Name",Invitation.PROTOCOL,CAP); login(b)
 	lobby = FakeLobby.new(); b.finish({"ok":true,"lobby":lobby})
 	check(s.mark_peer_admitted("host") and not s.reject_peer("host"), "Owner is admitted and cannot be kicked")
 	check(not s.mark_peer_admitted("outsider"), "Nonmember cannot become admitted")
@@ -243,7 +243,7 @@ func _run() -> void:
 	check(not b.busy and b.operations.count("kick") == 1, "Departed member does not receive duplicate kicks")
 	dispose(p)
 	p = fixture(); s = p[0]; b = p[1]
-	s.start_host(Config,"Name",9,CAP); login(b)
+	s.start_host(Config,"Name",Invitation.PROTOCOL,CAP); login(b)
 	lobby = FakeLobby.new(); b.finish({"ok":true,"lobby":lobby})
 	check(s.mark_peer_admitted("guest"), "Valid handshake admits guest inside deadline")
 	now += Session.ADMISSION_TIMEOUT_MS * 2; s.poll_admission()
@@ -263,7 +263,7 @@ func _run() -> void:
 	b.finish({"ok":true}); dispose(p)
 	# Multiple silent members are evicted serially without touching the owner.
 	p = fixture(); s = p[0]; b = p[1]
-	s.start_host(Config,"Name",9,CAP); login(b)
+	s.start_host(Config,"Name",Invitation.PROTOCOL,CAP); login(b)
 	lobby = FakeLobby.new()
 	for index: int in 14: lobby.members.append(FakeMember.new("silent" + str(index)))
 	b.finish({"ok":true,"lobby":lobby})
@@ -278,7 +278,7 @@ func _run() -> void:
 	dispose(p)
 	# Authentication and eviction share the one-callback-at-a-time backend.
 	p = fixture(); s = p[0]; b = p[1]
-	s.start_host(Config,"Name",9,CAP); login(b)
+	s.start_host(Config,"Name",Invitation.PROTOCOL,CAP); login(b)
 	lobby = FakeLobby.new(); b.finish({"ok":true,"lobby":lobby})
 	now += Session.ADMISSION_TIMEOUT_MS - 1000
 	b.auth_expiring.emit()
