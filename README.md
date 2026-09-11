@@ -1,9 +1,9 @@
-# Let me sleep — próxima versión en desarrollo
+# Let me sleep — 0.9.0 candidata
 
-Esta rama contiene cambios posteriores al ejecutable 0.7.0. El nuevo candidato
-todavía no está exportado ni publicado. El estado de implementación, pruebas y
-pendientes está en [el punto de control](work/CHECKPOINT-CONTINUACION-09.md).
-Las descargas anteriores no incluyen necesariamente las funciones descritas aquí.
+La versión 0.9.0 está disponible como candidata para Windows. Incluye online
+con Epic, pero la conexión real entre dos casas sigue pendiente de comprobar.
+Descargá el ZIP de [v0.9.0-rc.1](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.0-rc.1),
+descomprimilo completo y abrí Let-me-sleep.exe. Las versiones anteriores se conservan.
 
 **[Versiones publicadas y descargas](https://github.com/Sauri0/LetMeSleep/releases)**
 
@@ -63,6 +63,6 @@ Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y pro
 & ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/stun_help_test.gd
 ```
 
-La documentación de **distribution/** y **ENTREGA-0.7.md** identifica el paquete anterior. Para esta fuente, consultá [el punto de control actual](work/CHECKPOINT-CONTINUACION-09.md). Las pruebas entre procesos de una misma PC no certifican Internet entre casas, rendimiento mínimo ni balance humano.
+La documentación de **distribution/** corresponde a esta candidata; **ENTREGA-0.7.md** es histórica. Consultá [el cierre actual](work/CIERRE-0.9.0-rc.1.md). Las pruebas entre procesos de una misma PC no certifican Internet entre casas, rendimiento mínimo ni balance humano.
 
 Modelos originales con fuentes Blender y exportaciones GLB en `art_source/`. Composición musical y efectos originales; las notas instrumentales acústicas de VSCO 2 Community Edition son CC0 y tienen créditos y licencia incluidos. Los temas se funden entre menú, personalización y partida; Música, Efectos, Ambiente e Interfaz tienen volumen separado además del volumen general. Bangers y Atkinson Hyperlegible se distribuyen bajo SIL Open Font License; sus avisos acompañan al paquete. Las versiones históricas se conservan en las Releases.

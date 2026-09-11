@@ -1,0 +1,86 @@
+{
+  "version": "0.9.0",
+  "candidate": "v0.9.0-rc.1",
+  "runtime_commit": "3c3e8ba007c879f84d9652bc817f98c2fd969568",
+  "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+  "headless_source_commit": "22b1cb1ba10e7abeac8f4faa74b1e946d9d07355",
+  "headless_reuse": "Only held-emote selector and its native test changed; full native suite rerun on exported runtime.",
+  "zip_sha256": "DAC78AF14A4806DEE06596C575EF14AC4193029F312EEF6D07FD30C8CFD9BA81",
+  "checks": 468,
+  "processes": 9,
+  "wan_verified": false,
+  "results": [
+    {
+      "name": "sep11-rc09-online_main_lifecycle",
+      "finished_utc": "2026-09-11T21:46:49.4599703Z",
+      "exit_code": 0,
+      "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "sep11-rc09-online_pair_integration",
+      "finished_utc": "2026-09-11T21:46:53.6027996Z",
+      "exit_code": 0,
+      "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "sep11-rc09-online_network_checks",
+      "finished_utc": "2026-09-11T21:46:57.3628112Z",
+      "exit_code": 0,
+      "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "sep11-rc09-online_session_test",
+      "finished_utc": "2026-09-11T21:47:00.7113839Z",
+      "exit_code": 0,
+      "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "sep11-rc09-final-ui_navigation_test",
+      "finished_utc": "2026-09-11T21:48:34.1897883Z",
+      "exit_code": 0,
+      "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "sep11-rc09-final-doors07_client_checks",
+      "finished_utc": "2026-09-11T21:48:46.2422291Z",
+      "exit_code": 0,
+      "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "sep11-rc09-final-v07_character_client_checks",
+      "finished_utc": "2026-09-11T21:48:56.8647431Z",
+      "exit_code": 0,
+      "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "sep11-rc09-practice-final-human",
+      "finished_utc": "2026-09-11T21:49:30.082528Z",
+      "exit_code": 0,
+      "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "sep11-rc09-practice-final-mosquito",
+      "finished_utc": "2026-09-11T21:49:38.0506474Z",
+      "exit_code": 0,
+      "exe_sha256": "E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E",
+      "stderr_bytes": 0,
+      "passed": true
+    }
+  ]
+}

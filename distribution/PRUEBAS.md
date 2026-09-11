@@ -1,7 +1,8 @@
 # Let me sleep 0.9.0 — estado del candidato
 
-9 de septiembre de 2026. Fuente Godot 4.5.2, protocolo 9, invitaciones online LMS1- y modo directo avanzado DD5-.
-Este documento está en preparación: todavía no certifica un EXE 0.9.0.
+11 de septiembre de 2026. Candidata v0.9.0-rc.1, Godot 4.5.2, protocolo 9, invitaciones online LMS1- y modo directo avanzado DD5-.
+El EXE 0.9.0 se exportó desde el commit 3c3e8ba007c879f84d9652bc817f98c2fd969568.
+Su SHA256 es E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E.
 Los resultados anteriores de 0.6/0.7 permanecen con sus paquetes históricos y
 no se atribuyen a esta versión.
 
@@ -46,9 +47,19 @@ con doce gestos completos. Sigue pendiente terminar la galería de
 personalización y su revisión visual; esas comprobaciones no aprueban todas
 las combinaciones o todas las animaciones posibles.
 
-También están pendientes la exportación, pruebas del EXE, matriz final de red
-y vídeo. BUILD identificará
-el hash y los archivos exactos del paquete cuando exista.
+La exportación y la batería de escenas nativas finalizaron con exit0. Las
+pruebas de lógica completadas sobre 22b1cb1 se conservaron: el único cambio de
+producción posterior fue impedir selección involuntaria en el menú de gestos,
+verificado nuevamente junto a las escenas e interfaz completas. La prueba de
+ese menú pasó 45/45. BUILD identifica los archivos exactos del paquete.
+
+El EXE también creó la sala desde el menú y cerró Epic correctamente, 7/7,
+con configuración incluida y sin ejecutar un servidor externo. Las pruebas
+adicionales del paquete y sus resultados están en el documento de cierre.
+El EXE final pasó nueve recorridos y 468 comprobaciones: anfitrión Epic,
+dos clientes locales, red, sesión, interfaz, puertas, personaje y práctica
+con humano y mosquito. Todos los procesos finales terminaron con exit0 y
+stderr vacío; se conservaron por separado los intentos fallidos previos.
 
 ## Rendimiento y conexión
 
