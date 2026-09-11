@@ -1525,7 +1525,7 @@ func _feature_svg(role:String,category:String,index:int)->String:
 		var paths:Array[String]=['M25 51 Q40 40 53 49 M67 49 Q82 40 96 51','M25 45 Q40 39 53 45 M67 45 Q82 39 96 45','M25 43L53 54 M67 54L96 43']
 		part='<path d="%s" fill="none" stroke="%s" stroke-width="9" stroke-linecap="round"/>'%[paths[index],ink]
 	elif category=="mouth":
-		var paths:Array[String]=['M31 50 Q60 77 90 50','M39 61 Q60 55 81 61','M33 58 L87 58']
+		var paths:Array[String]=['M31 50 Q60 77 90 50','M39 61 Q60 55 81 61','M33 64 Q60 42 87 64']
 		part='<path d="%s" fill="none" stroke="%s" stroke-width="6" stroke-linecap="round"/>'%[paths[index],ink]
 	elif category=="mustache":
 		if index==1:part='<path d="M59 43 Q47 37 32 49 L25 64 Q45 66 60 54 Q76 66 97 64 L89 49 Q72 37 59 43Z" fill="%s"/>'%ink
