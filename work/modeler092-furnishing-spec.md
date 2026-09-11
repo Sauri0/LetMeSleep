@@ -1,6 +1,6 @@
 # 0.9.2: mobiliario funcional y contrato de interacción
 
-Diseño, no implementación. Runtime v2 congelado. Depende del plano v3 de
+Implementación aislada en curso; runtime v2 de0.9.1 congelado. Depende del plano v3 de
 `modeler092-implementation-plan.md`; no necesita nuevos assets ni decisiones
 estéticas del usuario.
 
@@ -84,9 +84,9 @@ sink/stove/fridge para que entre una segunda mesa decorativa.
 4. Contrastar huella y altura visual con límites, otros muebles, ventanas y
    todas las bandas reservadas. Colocar muebles relacionados a distancias
    definidas por sus bounds, no por centros aleatorios.
-5. Para el barrido, usar DoorGeometry sobre toda la apertura. Muestreo de
-   un grado con crecimiento .02 de la caja cubre el desplazamiento máximo
-   entre muestras de una hoja de 2 m; confirmar esta cota en el test unitario.
+5. Para el barrido de hojas cardinales a90°, usar su sector circular completo
+   en coordenadas de bisagra, con margen para grosor y redondeo. Contrastar
+   el sector con posiciones reales de DoorGeometry a ángulos intermedios.
    No usar sólo hoja cerrada/abierta para validar un mueble dentro del arco.
 6. Elegir la primera composición que satisfaga todos los esenciales y accesos;
    optimizar complemento/ocupación dentro de ese conjunto. Si ninguna cabe,
@@ -139,3 +139,10 @@ soportes antes del último pase de complementos.
 
 No generar nuevos task IDs, tool IDs o assets; no editar simulation/World/
 FurnitureBlueprint sin transferencia del Director.
+
+## Contrato acordado con Worker 2
+
+Cada estructura furniture conserva `room` y publica `room_id:String`,
+`functional_zone_id:String`, `essential:bool` y `placement_order:int` estable
+y consecutivo por mapa. Worker2 puede distinguir complementos de esenciales
+para medir costo; `functional_zones[].bounds` no crea focos ni colisiones.

@@ -2,6 +2,22 @@ class_name HouseValidation
 extends RefCounted
 const DoorGeometry=preload("res://scripts/door_geometry.gd")
 const Geometry = preload("res://scripts/navigation_geometry.gd")
+const Furniture=preload("res://scripts/furniture_blueprint.gd")
+
+static func door_sweep_intersects(definition: Dictionary, body: AABB) -> bool:
+	var hinge: Vector3=definition.hinge
+	if body.end.y<=hinge.y+DoorGeometry.GAP or body.position.y>=hinge.y+float(definition.height): return false
+	# Authored doors rotate by 90 degrees from a cardinal axis. Their complete
+	# horizontal sweep is a quarter disk; padding covers thickness and rounding.
+	var local: AABB=DoorGeometry.leaf_transform(definition,0).affine_inverse()*body
+	var positive_z: bool=float(definition.open_sign)<0
+	var near_z:=local.position.z if positive_z else -local.end.z
+	var far_z:=local.end.z if positive_z else -local.position.z
+	var padding:=float(definition.thickness)*.5+.01
+	if local.end.x< -padding or far_z< -padding: return false
+	var x:=maxf(0,local.position.x-padding)
+	var z:=maxf(0,near_z-padding)
+	return x*x+z*z<pow(float(definition.width)+padding,2)
 
 static func validate(data: Dictionary) -> Dictionary:
 	var errors: Array[String]=[]
@@ -72,6 +88,7 @@ static func validate(data: Dictionary) -> Dictionary:
 		errors.append_array(validate_circulation(data,human,extra))
 	if int(data.get("generator_version",0))>=3:
 		errors.append_array(validate_zoning(data))
+		errors.append_array(validate_furnishing(data,human))
 	return {"passed":errors.is_empty(),"errors":errors,"valid_edges":valid_edges,"rejected_edges":rejected,
 		"reachable_nodes":seen.size(),"node_count":nodes.size(),"rooms":data.rooms.size(),"floors":data.floor_levels.size()}
 
@@ -84,6 +101,59 @@ static func room_interior(data: Dictionary, bounds: AABB) -> AABB:
 		inside.position[axis]+=first;inside.size[axis]-=first+last
 	inside.size.y=3.0
 	return inside
+
+static func validate_furnishing(data: Dictionary, human: Dictionary) -> Array[String]:
+	var errors: Array[String]=[]
+	var orders: Dictionary={}
+	var total:=0
+	for room: Dictionary in data.rooms:
+		var objects: Array[Dictionary]=[]
+		var counts: Dictionary={}
+		var zone_ids: Dictionary={}
+		for zone: Dictionary in room.functional_zones: zone_ids[zone.id]=true
+		var inside:=room_interior(data,room.bounds)
+		var occupied:=0.0
+		for item: Dictionary in data.structures:
+			if str(item.kind)!="furniture" or str(item.get("room",""))!=str(room.id): continue
+			objects.append(item);total+=1
+			var box: AABB=item.box
+			occupied+=box.size.x*box.size.z
+			var asset: String=item.get("asset_id","")
+			counts[asset]=int(counts.get(asset,0))+1
+			if not inside.grow(.001).encloses(box): errors.append("Furniture outside useful room: "+str(item.id))
+			if str(item.get("room_id",""))!=str(room.id) or not zone_ids.has(item.get("functional_zone_id","")) or not item.has("essential"):
+				errors.append("Missing furnishing presentation metadata: "+str(item.id))
+			var order: int=item.get("placement_order",-1)
+			if order<0 or orders.has(order): errors.append("Invalid furnishing placement order")
+			orders[order]=true
+			if door_sweep_intersects(data.doors[room.id],box): errors.append("Furniture intrudes into opening sweep: "+str(item.id))
+			for lane: AABB in room.get("movement_clearance",[]):
+				if box.intersects(lane): errors.append("Furniture blocks functional route: "+str(item.id));break
+		for first: int in range(objects.size()):
+			for second: int in range(first+1,objects.size()):
+				if AABB(objects[first].box).intersects(objects[second].box): errors.append("Furniture overlap in "+str(room.id))
+		var expected: Dictionary={}
+		for index: int in range(room.uses.size()):
+			var use: String=room.uses[index]
+			for spec: Dictionary in Furniture.for_theme(use):
+				if bool(spec.pickup_surface) and (use=="bathroom" or index>0): continue
+				expected[spec.asset_id]=int(expected.get(spec.asset_id,0))+1
+		if int(room.bed_count)>1:
+			expected.bed=int(room.bed_count)
+			var storage: String="wardrobe" if room.theme_id=="bedroom_blue" else "dresser"
+			expected[storage]=int(expected.get(storage,0))+1
+		for asset: String in expected:
+			if int(counts.get(asset,0))<int(expected[asset]): errors.append("Missing essential %s in %s"%[asset,room.id])
+		if objects.size()!=int(room.get("furniture_count",-1)) or objects.size()>8: errors.append("Invalid furnishing count in "+str(room.id))
+		if occupied/(inside.size.x*inside.size.z)>.40: errors.append("Overcrowded room: "+str(room.id))
+		for approach: Dictionary in room.get("functional_approaches",[]):
+			if not Geometry._segment(approach.origin,approach.p,human) or _open_leaf_blocks(approach.p,true,data):
+				errors.append("Inaccessible furnishing: "+str(approach.structure_id))
+	if total>144: errors.append("House exceeds furnishing budget")
+	if total!=int(data.get("furniture_count",-1)): errors.append("Incorrect map furnishing count")
+	for index: int in range(total):
+		if not orders.has(index): errors.append("Non-contiguous furnishing placement order");break
+	return errors
 
 static func _portal_hall(data: Dictionary, room: Dictionary) -> Vector3:
 	var point: Vector3=room.portal
