@@ -326,6 +326,8 @@ func _process(dt: float) -> void:
 		var mosquito_view: Dictionary=MosquitoCameraScript.target(actor,yaw,pitch) if role=="mosquito" else {}
 		var offset: Vector3 = HumanPose.view_origin(actor) - Vector3(actor.p) if role == "human" else mosquito_view.offset
 		var camera_origin := position + offset
+		if role=="human" and visual!=null:
+			camera_origin=visual.human_view_origin()
 		if role == "mosquito":
 			var map: Dictionary = world.map_data
 			camera_origin.x = clampf(camera_origin.x, -float(map.half_x)+0.16, float(map.half_x)-0.16)

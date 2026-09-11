@@ -82,6 +82,8 @@ var pose_critical := false
 var collider_snapshot_hash := 0
 var collider_snapshot_values: Dictionary = {}
 var collider_snapshot_initialized := false
+var collider_authority_basis := Basis.IDENTITY
+var collider_segments: Array[Dictionary] = []
 
 func build(role: String, display_name: String, tint_index: int = 0) -> void:
 	clear_voice_level()
@@ -189,16 +191,27 @@ func update_state(data: Dictionary, dt: float) -> void:
 		_hide_legacy_geometry()
 	var target: Vector3 = data.get("p", Vector3.ZERO)
 	var reset_human_pose := not initialized or global_position.distance_to(target)>2.2
+	var presented: Dictionary = {}
+	if actor_role=="human":
+		presented=human_presentation.advance(data,dt,local_view or pose_critical,reset_human_pose)
+		# Local yaw/pitch stay exact: delaying body yaw also moves its offset
+		# eye, adding parallax to the unfiltered aiming direction. Gait may blend.
+		presented=human_presentation.advance_motion(presented,dt,pose_critical,reset_human_pose,local_view)
+	# A bitten human and its attached insect must use the SAME snapshot frame.
+	# Independent position/normal filters pull the insect away from moving limbs.
+	# Threat/gestures keep the existing positional filter; changing it merely
+	# because an attack starts would add a new camera jerk to every attack.
+	var exact_root := bool(data.get("bitten",false)) if actor_role=="human" else str(data.get("state",""))=="biting"
 	var surface_data: Dictionary = surface_presentation.advance(data,dt,not initialized) if actor_role=="mosquito" else {}
 	if not surface_data.is_empty():
 		global_position=surface_data.p
 		initialized=true
-	elif not initialized or global_position.distance_to(target) > 2.2:
+	elif exact_root or not initialized or global_position.distance_to(target) > 2.2:
 		global_position = target
 		initialized = true
 	else:
 		global_position = global_position.lerp(target, 1.0 - exp(-18.0 * dt))
-	rotation.y = float(data.get("body_yaw",data.get("yaw",0.0))) if actor_role=="human" else lerp_angle(rotation.y,float(data.get("yaw",0.0)),1.0-exp(-20.0*dt))
+	rotation.y = float(presented.get("body_yaw",presented.get("yaw",0.0))) if actor_role=="human" else lerp_angle(rotation.y,float(data.get("yaw",0.0)),1.0-exp(-20.0*dt))
 	visible = bool(data.get("alive", true))
 	if not visible: clear_voice_level()
 	movement_state = str(data.get("state",movement_state))
@@ -209,7 +222,6 @@ func update_state(data: Dictionary, dt: float) -> void:
 		var tool: String = str(data.get("tool", "hands"))
 		if tool != current_tool:
 			_equip_tool(tool)
-		var presented: Dictionary=human_presentation.advance(data,dt,local_view or pose_critical,reset_human_pose)
 		_apply_human_pose(presented, dt, data)
 	else:
 		var state: String = str(data.get("state", "flying"))
@@ -225,7 +237,7 @@ func update_state(data: Dictionary, dt: float) -> void:
 		# in that same displayed frame; no independent acceleration-only tilt.
 		var displayed: Dictionary = surface_data if not surface_data.is_empty() else data
 		var target_orientation: Basis = MosquitoPoseData.orientation(data)
-		if bool(displayed.get("presentation_reset",false)):
+		if exact_root or bool(displayed.get("presentation_reset",false)):
 			mosquito_orientation=target_orientation.get_rotation_quaternion()
 		mosquito_orientation = mosquito_orientation.slerp(target_orientation.get_rotation_quaternion(),1.0-exp(-14.0*dt))
 		var local_orientation: Basis = global_basis.orthonormalized().inverse()*Basis(mosquito_orientation)
@@ -255,6 +267,12 @@ func update_state(data: Dictionary, dt: float) -> void:
 				appendage_data.surface_normal=model.global_basis.y.normalized()
 				appendage_data.surface_forward=-model.global_basis.z.normalized()
 			imported_skin.apply_mosquito(appendage_data,clock_time,stun_blend)
+
+## Camera offset and mesh come from the same displayed posture and yaw.
+## Mouse orientation remains immediate in Client; this adds no input filter.
+func human_view_origin() -> Vector3:
+	if actor_role!="human" or body_pose.is_empty():return global_position
+	return global_position+global_basis*Vector3(body_pose.eye)
 
 func _hide_legacy_geometry() -> void:
 	# Retain the collider/socket scaffold while only the exported deformation
@@ -408,25 +426,34 @@ func _apply_human_pose(data: Dictionary, dt: float, authoritative_data: Dictiona
 
 func _apply_human_colliders(data: Dictionary) -> void:
 	var signature := hash(data)
-	if collider_snapshot_initialized and signature==collider_snapshot_hash and collider_snapshot_values==data:return
-	collider_snapshot_hash=signature
-	collider_snapshot_values=data.duplicate(true)
-	collider_snapshot_initialized=true
+	# The actor's render yaw is smoothed, but ray shapes retain the public yaw.
+	# Recompute their local frame even between packets when the parent turns.
+	var authority_basis := Basis(Vector3.UP,Pose.body_yaw(data))
+	var compensation := global_basis.orthonormalized().inverse()*authority_basis
+	var same_snapshot := collider_snapshot_initialized and signature==collider_snapshot_hash and collider_snapshot_values==data
+	if same_snapshot and compensation.is_equal_approx(collider_authority_basis):return
+	collider_authority_basis=compensation
+	if not same_snapshot:
+		collider_snapshot_hash=signature
+		collider_snapshot_values=data.duplicate(true)
+		collider_snapshot_initialized=true
+		collider_segments=Pose.collision_segments(data)
 	# These ray shapes always use the unmodified public authority pose. Cosmetic
 	# crouch interpolation must not alter LOS, picking or another actor's body.
-	for piece: Dictionary in Pose.collision_segments(data):
+	for piece: Dictionary in collider_segments:
 		var key: String = str(piece.get("key", "")).replace("upperarm_", "upper_arm_")
 		if not pose_colliders.has(key):continue
 		var collider: StaticBody3D = pose_colliders[key]
-		var from: Vector3 = piece.from
-		var to: Vector3 = piece.to
+		var from: Vector3 = compensation*Vector3(piece.from)
+		var to: Vector3 = compensation*Vector3(piece.to)
 		collider.position=(from+to)*.5
 		var shape: Shape3D=(collider.get_child(0) as CollisionShape3D).shape
 		if shape is CapsuleShape3D:
 			collider.quaternion=Quaternion(Vector3.UP,(to-from).normalized()) if from.distance_to(to)>.001 else Quaternion.IDENTITY
-			shape.radius=float(piece.radius)
-			shape.height=from.distance_to(to)+float(piece.radius)*2.0
-		elif shape is SphereShape3D:shape.radius=float(piece.radius)
+			if not is_equal_approx(shape.radius,float(piece.radius)):shape.radius=float(piece.radius)
+			var height := from.distance_to(to)+float(piece.radius)*2.0
+			if not is_equal_approx(shape.height,height):shape.height=height
+		elif shape is SphereShape3D and not is_equal_approx(shape.radius,float(piece.radius)):shape.radius=float(piece.radius)
 
 func _pose_segment(key: String, from: Vector3, to: Vector3) -> void:
 	var direction: Vector3 = to - from

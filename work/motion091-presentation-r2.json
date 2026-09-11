@@ -1,0 +1,85 @@
+{
+	"checks": 4013,
+	"failures": [],
+	"metrics": {
+		"20_to_120": {
+			"phase_step": 0.105625557637186,
+			"pitch_step": 0.0312503947784192,
+			"raw_phase_step": 0.450000000000003,
+			"raw_pitch_step": 0.134574529884315,
+			"raw_yaw_step": 0.100000000000001,
+			"yaw_step": 0.0234723461415971
+		},
+		"20_to_60": {
+			"phase_step": 0.196538317609857,
+			"pitch_step": 0.0581478588306367,
+			"raw_phase_step": 0.450000000000003,
+			"raw_pitch_step": 0.134574529884315,
+			"raw_yaw_step": 0.100000000000001,
+			"yaw_step": 0.0436751816910794
+		},
+		"30_to_120": {
+			"phase_step": 0.0926167658906891,
+			"pitch_step": 0.0274049020603518,
+			"raw_phase_step": 0.300000000000002,
+			"raw_pitch_step": 0.0899593252747831,
+			"raw_yaw_step": 0.0666666666666673,
+			"yaw_step": 0.0205815035312646
+		},
+		"30_to_60": {
+			"phase_step": 0.172332755043499,
+			"pitch_step": 0.0509925198568441,
+			"raw_phase_step": 0.300000000000002,
+			"raw_pitch_step": 0.0899593252747831,
+			"raw_yaw_step": 0.0666666666666673,
+			"yaw_step": 0.0382961677874443
+		},
+		"bitten_entry": {
+			"extra_root_shift_vs_baseline_m": 0.105390667915344,
+			"ordinary_filtered_distance": 0.0368718504905701,
+			"prior_limb_lag_m": 0.0725188329815865,
+			"root_angle": 0.17408075928688,
+			"root_distance": 0.142262518405914
+		},
+		"gesture_max_collider_world_error_m": 0.158927410840988,
+		"local_camera_2.0rad": {
+			"added_eye_offset_vs_baseline_m": 0.00000104095033748308,
+			"eye_vs_authority_m": 0.193497180938721
+		},
+		"local_camera_6.0rad": {
+			"added_eye_offset_vs_baseline_m": 0.00000156142550622462,
+			"eye_vs_authority_m": 0.193497657775879
+		},
+		"noncritical_max_collider_world_error_m": 0.0988329350948334,
+		"strike_entry": {
+			"extra_root_shift_vs_baseline_m": 0.0,
+			"ordinary_filtered_distance": 0.0261863619089127,
+			"prior_limb_lag_m": 0.0725188329815865,
+			"root_angle": 0.17408075928688,
+			"root_distance": 0.0261863619089127
+		},
+		"swing_entry": {
+			"extra_root_shift_vs_baseline_m": 0.0,
+			"ordinary_filtered_distance": 0.0201248824596405,
+			"prior_limb_lag_m": 0.0725188329815865,
+			"root_angle": 0.17408075928688,
+			"root_distance": 0.0201248824596405
+		},
+		"threatened_entry": {
+			"extra_root_shift_vs_baseline_m": 0.0,
+			"ordinary_filtered_distance": 0.0556019470095634,
+			"prior_limb_lag_m": 0.0725188553333282,
+			"root_angle": 0.17408075928688,
+			"root_distance": 0.0556019470095634
+		},
+		"throw_gesture_entry": {
+			"extra_root_shift_vs_baseline_m": 0.0,
+			"ordinary_filtered_distance": 0.0280120521783829,
+			"prior_limb_lag_m": 0.0725188329815865,
+			"root_angle": 0.17408075928688,
+			"root_distance": 0.0280120521783829
+		}
+	},
+	"visual_approval": false,
+	"wan": false
+}

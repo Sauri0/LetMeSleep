@@ -1,0 +1,26 @@
+{
+	"checks": 11,
+	"failures": [],
+	"metrics": {
+		"added_eye_offset_m": 0.00000213248063118954,
+		"camera_direction_error": 0.000000687717715663894,
+		"camera_eye_error_m": 0.0,
+		"captures": [
+			"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-visual-r1-look-down.png",
+			"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-visual-r1-walk-turn-down.png",
+			"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-visual-r1-walk-look-up.png",
+			"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-visual-r1-walk-turn-return.png",
+			"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-visual-r1-full-turn-down.png",
+			"C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms091-motion\\work\\motion091-visual-r1-settled.png"
+		],
+		"frames": 300,
+		"map_seed": 1306743498,
+		"max_body_step_rad": 0.0383856545224566,
+		"sim_hz": 60,
+		"snapshot_hz": 30,
+		"spawn": "(5.275, 0.0, -8.55)",
+		"travel_m": 6.39787675440311
+	},
+	"performance_claim": false,
+	"visual_approval": false
+}
