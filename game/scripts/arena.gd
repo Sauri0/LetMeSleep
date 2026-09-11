@@ -313,7 +313,7 @@ static func _human_tick(actor: Dictionary, intent: Dictionary, dt: float, map_id
 	var yaw: Variant = intent.get("yaw", actor.get("yaw", 0.0))
 	var pitch: Variant = intent.get("pitch", actor.get("pitch", 0.0))
 	if (yaw is float or yaw is int) and (pitch is float or pitch is int):
-		Pose.apply_view(actor, float(yaw), float(pitch), dt)
+		Pose.apply_view(actor, float(yaw), float(pitch), dt, local_move.length())
 	var wants_crouch: bool = intent.get("crouch", false) is bool and bool(intent.get("crouch", false))
 	var wants_sprint: bool = intent.get("sprint", false) is bool and bool(intent.get("sprint", false))
 	var jump: bool = intent.get("jump", false) is bool and bool(intent.get("jump", false))

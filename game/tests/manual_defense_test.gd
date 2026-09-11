@@ -64,7 +64,19 @@ func _test_view() -> void:
 	var start: Vector3 = movement.p
 	ArenaData.step_human(movement, {"yaw": 0.7, "pitch": -1.0, "move": Vector3.FORWARD}, 0.1)
 	var delta: Vector3 = Vector3(movement.p) - start
-	check(delta.normalized().dot(Vector3.FORWARD.rotated(Vector3.UP, 0.7)) > 0.999 and movement.body_yaw == 0.0, "WASD follows view while inspecting frozen torso")
+	check(delta.normalized().dot(Vector3.FORWARD.rotated(Vector3.UP, 0.7)) > 0.999 and movement.body_yaw > 0.0 and movement.body_yaw < .7, "WASD follows view and torso turns gradually while looking down")
+	for hz: int in [20, 60]:
+		var walker := {"yaw":0.0,"body_yaw":0.0,"pitch":-.8}
+		for frame: int in range(hz): Pose.apply_view(walker, PI/3.0, -.8, 1.0/hz, 1.0)
+		check(absf(walker.body_yaw-PI/3.0)<.001, "walking inspection follows a 60 degree turn at %d Hz"%hz)
+	# Crossing either former inspection threshold cannot change the target
+	# abruptly while stationary. Both samples start from an identical pose.
+	for threshold: float in [Pose.INSPECT_ENTER, Pose.INSPECT_EXIT]:
+		var below := {"yaw":1.1,"body_yaw":0.0,"pitch":0.0}
+		var above: Dictionary = below.duplicate()
+		Pose.apply_view(below,1.1,threshold-.0001,1.0/60)
+		Pose.apply_view(above,1.1,threshold+.0001,1.0/60)
+		check(absf(below.body_yaw-above.body_yaw)<.0001,"inspection threshold is continuous at %.2f"%threshold)
 	for hz: int in [20, 60]:
 		for direction: float in [-1.0, 1.0]:
 			var turning: Dictionary = {"yaw":0.0,"body_yaw":0.0,"pitch":-1.65}

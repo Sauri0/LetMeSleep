@@ -164,7 +164,7 @@ static func clamp_view_yaw(_actor: Dictionary, yaw: float, _pitch: float) -> flo
 	# Keep this shared entry point so input and manual attack use the same ray.
 	return wrapf(yaw, -PI, PI)
 
-static func apply_view(actor: Dictionary, yaw: float, pitch: float, dt: float = 0.0) -> void:
+static func apply_view(actor: Dictionary, yaw: float, pitch: float, dt: float = 0.0, movement_amount: float = 0.0) -> void:
 	if not is_finite(yaw) or not is_finite(pitch):
 		return
 	actor.body_yaw = body_yaw(actor)
@@ -173,9 +173,13 @@ static func apply_view(actor: Dictionary, yaw: float, pitch: float, dt: float = 
 	actor.inspecting = actor.pitch < INSPECT_ENTER or (bool(actor.get("inspecting", false)) and actor.pitch < INSPECT_EXIT)
 	if dt > 0.0:
 		var relative: float = wrapf(float(actor.yaw) - float(actor.body_yaw), -PI, PI)
-		var follow: float = relative
-		if bool(actor.inspecting):
-			follow = signf(relative) * maxf(0.0, absf(relative) - VIEW_YAW_LIMIT)
+		# Standing inspection leaves room to aim at one's own body. Walking
+		# must turn the torso even when looking down; otherwise it remains stuck
+		# until the view crosses a pitch threshold and suddenly catches up.
+		var inspection_weight := smoothstep(0.0, 1.0, (INSPECT_EXIT - float(actor.pitch)) / (INSPECT_EXIT - INSPECT_ENTER))
+		var movement_weight := clampf(movement_amount, 0.0, 1.0) if is_finite(movement_amount) else 0.0
+		var free_yaw := VIEW_YAW_LIMIT * inspection_weight * (1.0 - movement_weight)
+		var follow := signf(relative) * maxf(0.0, absf(relative) - free_yaw)
 		var turn: float = clampf(follow * (1.0 - exp(-12.0 * dt)), -dt * 6.0, dt * 6.0)
 		actor.body_yaw = wrapf(float(actor.body_yaw) + turn, -PI, PI)
 
