@@ -27,6 +27,7 @@ func run()->void:
 	for seed_value:int in [1,2,17,42,777,1988,2147483646]:
 		var id:String=Generator.map_id(seed_value)
 		world.load_map(id)
+		check(world.current_map==id,id+" loads exact map without fallback")
 		var anchors:Array=world.map_data.stair_light_anchors
 		var anchor_by_id:Dictionary={}
 		for anchor:Dictionary in anchors:anchor_by_id[str(anchor.id)]=anchor
