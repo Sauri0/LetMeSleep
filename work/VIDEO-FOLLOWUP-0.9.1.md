@@ -44,7 +44,7 @@ como evidencia de validación.
 
 ## Pendientes de esta revisión solicitada
 
-- Uniones verticales de paredes y bases de marcos: siguen visibles incluso
+- Diagnóstico histórico de uniones (resuelto en la base del equipo; ver actualización al final): seguían visibles incluso
   tras corregir el techo. El diagnóstico detecta caras de base de marco
   coplanares con el piso, pero eso solo no prueba un conflicto visible:
   las normales opuestas pueden ocultar una cara. No recortar suelo a ciegas.
@@ -74,3 +74,9 @@ Apunta a un coste importante de sombras, pero no es un replay idéntico: bots,
 colisiones y posición final divergen entre corridas. No presentar la diferencia
 como ahorro causal exacto ni quitar sombras como solución visual. Tampoco
 certifica GTX1660Ti, multijugador WAN, combate intenso o todas las semillas.
+
+## Base de superficies cerrada antes del equipo de siete puestos
+
+Eliminadas caras duplicadas/interiores de paredes mediante unión visual, sin cambiar colisión. Las losas poseen las caras que ocultaban dinteles: se corrigieron las franjas de umbrales. Revestimientos cubren retornos menores a 12 cm y apoyan al muro sin separación. Los suelos húmedos son regiones de la losa, sin segunda capa superpuesta. Las molduras siguen cada planta y el intradós real: una moldura fija a 6.4 m afloraba en el tercer piso.
+
+Capturas nativas locales de tres ángulos en work/user-video-sep11/storey-trim muestran resueltos los defectos investigados. No equivalen a auditar toda combinación de mapas o a medir rendimiento. Baseline: superficies 707/0, techo 3 mapas/0, marcos/uniones 992/0, juntas de casa 603/0, procesos exit 0. Prueba nueva de superficies incluida en build.ps1. Equipo activo y propiedad de archivos: TEAM-0.9.1.md. El paquete publicado rc.1 sigue intacto.

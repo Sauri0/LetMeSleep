@@ -637,7 +637,13 @@ func _build_catalog_house() -> void:
 		elif kind=="floor":
 			# Keep light selection local: one house-wide mesh exceeded the eight
 			# Compatibility spot lights per object even with bounded lamps.
-			visual_parts = HouseDetails.floor_pieces(bounds)
+			for finish:Dictionary in HouseDetails.floor_finishes(bounds,map_data.get("rooms",[])):
+				var floor_box:AABB=finish.box
+				var floor_material:Material=_surface_material(finish.tint,"tile") if bool(finish.tile) else material
+				var floor_piece:MeshInstance3D=_box(self,floor_box.get_center(),floor_box.size,floor_material)
+				floor_piece.set_meta("catalog_box",bounds)
+				floor_piece.set_meta("catalog_kind",kind)
+				floor_piece.set_meta("floor_finish","tile" if bool(finish.tile) else "wood")
 		else:
 			visual_parts.append(bounds)
 		for visual_box: AABB in visual_parts:
@@ -746,13 +752,15 @@ func _room_wall_finish(bounds: AABB, color: Color, kitchen: bool) -> void:
 			var other: int = 2 if axis==0 else 0
 			var low: float = maxf(solid.position[other],bounds.position[other])
 			var high: float = minf(solid.end[other],bounds.end[other])
-			if high-low<0.12:
+			# Short returns at corridor intersections still need paint. Rejecting
+			# spans under 12 cm left the raw wall visible as a striped corner.
+			if high-low<0.001:
 				continue
 			var surface: float = 0.0
 			if absf(solid.end[axis]-bounds.position[axis])<0.2:
-				surface = solid.end[axis]+0.005
+				surface = solid.end[axis]+0.0035
 			elif absf(solid.position[axis]-bounds.end[axis])<0.2:
-				surface = solid.position[axis]-0.005
+				surface = solid.position[axis]-0.0035
 			else:
 				continue
 			var at := Vector3.ZERO

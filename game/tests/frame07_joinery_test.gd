@@ -28,6 +28,7 @@ func run()->void:
 		var box:AABB=mesh.get_meta("frame_original_box")
 		area_before+=2.0*(box.size.x*box.size.y+box.size.x*box.size.z+box.size.y*box.size.z)
 		check(mesh.global_basis.is_equal_approx(Basis.IDENTITY),"wall stays on its catalog axes")
+		if mesh.mesh.get_surface_count()==0:continue
 		var arrays:Array=mesh.mesh.surface_get_arrays(0)
 		var vertices:PackedVector3Array=arrays[Mesh.ARRAY_VERTEX];var normals:PackedVector3Array=arrays[Mesh.ARRAY_NORMAL]
 		for i:int in range(0,vertices.size(),3):
@@ -46,7 +47,7 @@ func run()->void:
 	check(cuts>0 and cuts==int(report.wall_meshes),"corrected geometry is present in the actual World")
 	check(overlap<.0001,"remaining triangle overlap with frame faces is zero within geometry tolerance")
 	check(normal_errors==0,"all replacement faces preserve outward normal and front winding")
-	check(absf(area_before-area_after-float(report.removed_area_m2))<.01,"removed area belongs only to the verified coplanar coverage")
+	check(absf(area_before-area_after-float(report.removed_area_m2))<.01,"removed area matches frame coverage plus hidden/duplicate wall faces")
 	for angle:float in [0.0,PI/4,PI/2]:
 		var states:Dictionary={}
 		for id:String in Doors.get_doors():states[id]={"angle":angle,"target_angle":angle,"moving":angle==PI/4,"blocked":false,"revision":1}

@@ -1,7 +1,8 @@
 extends RefCounted
 ## Surface ownership at door reveals. A jamb and the structural wall used to
-## render the same plane. Keep the frame, subtract only its verified flat area
-## from the wall skin. No transform, collision, door gap or light is changed.
+## render the same plane. Keep the frame and the exposed wall union: remove
+## verified frame coverage, buried faces and duplicate wall faces. No transform,
+## collision, door gap or light is changed.
 const EPS:=0.00005
 
 static func plane_key(axis:int,coordinate:float)->String:
@@ -62,11 +63,30 @@ static func resolve(map_root:Node3D)->Dictionary:
 			if not masks.has(face.plane):masks[face.plane]=[]
 			masks[face.plane].append(face.rect)
 	var report:Dictionary={"frames":count,"wall_meshes":0,"removed_area_m2":0.0,"changed_faces":0,"triangles_before":0,"triangles_after":0}
+	var walls:Array[MeshInstance3D]=[]
+	var boxes:Array[AABB]=[]
+	var slabs:Array[AABB]=[]
 	for node:Node in map_root.find_children("*","MeshInstance3D",true,false):
 		var mesh:=node as MeshInstance3D
 		if not mesh.mesh is BoxMesh:continue
+		if str(mesh.get_meta("catalog_kind","")) in ["floor","ceiling"]:
+			slabs.append(AABB(mesh.global_position-mesh.mesh.size*.5,mesh.mesh.size))
 		if str(mesh.get_meta("catalog_kind",""))!="wall" and not mesh.get_meta("frame_join_wall",false):continue
-		var change:Dictionary=cut_wall(mesh,masks)
+		walls.append(mesh)
+		boxes.append(AABB(mesh.global_position-mesh.mesh.size*.5,mesh.mesh.size))
+	# Capture all original solids first. Later faces must not depend on the
+	# earlier mesh replacements; insertion order only breaks coplanar ties.
+	for index:int in range(walls.size()):
+		var mesh:MeshInstance3D=walls[index]
+		var neighbors:Array[Dictionary]=[]
+		for other:int in range(boxes.size()):
+			if other!=index and boxes[index].grow(EPS*2).intersects(boxes[other]):
+				neighbors.append({"box":boxes[other],"earlier":other<index})
+		# Lower-floor lintels reach the next storey's feet level. Their upper
+		# faces must not render through that floor as cream striped thresholds.
+		for slab:AABB in slabs:
+			if boxes[index].grow(EPS*2).intersects(slab):neighbors.append({"box":slab,"earlier":true})
+		var change:Dictionary=cut_wall(mesh,masks,neighbors)
 		if int(change.faces)>0:
 			report.wall_meshes+=1;report.changed_faces+=change.faces;report.removed_area_m2+=change.area
 			report.triangles_before+=12;report.triangles_after+=mesh.mesh.get_faces().size()/3
@@ -74,18 +94,34 @@ static func resolve(map_root:Node3D)->Dictionary:
 	map_root.set_meta("frame_joinery",report)
 	return report
 
-static func cut_wall(mesh:MeshInstance3D,masks:Dictionary)->Dictionary:
+static func wall_cover(bounds:AABB,axis:int,side:int,neighbors:Array[Dictionary])->Array[Rect2]:
+	var result:Array[Rect2]=[]
+	var coordinate:float=bounds.position[axis] if side<0 else bounds.end[axis]
+	var u:int=(axis+1)%3;var v:int=(axis+2)%3
+	for neighbor:Dictionary in neighbors:
+		var other:AABB=neighbor.box
+		var low:float=other.position[axis];var high:float=other.end[axis]
+		var buried:bool=coordinate>low+EPS and coordinate<high-EPS
+		var contact:bool=absf(coordinate-(high if side<0 else low))<=EPS
+		var duplicate:bool=bool(neighbor.earlier) and absf(coordinate-(low if side<0 else high))<=EPS
+		if buried or contact or duplicate:
+			result.append(Rect2(Vector2(other.position[u],other.position[v]),Vector2(other.size[u],other.size[v])))
+	return result
+
+static func cut_wall(mesh:MeshInstance3D,masks:Dictionary,neighbors:Array[Dictionary]=[])->Dictionary:
 	var box:BoxMesh=mesh.mesh
 	var bounds:=AABB(mesh.global_position-box.size*.5,box.size)
 	var tool:=SurfaceTool.new();tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var changed:=0;var removed:=0.0
+	var changed:=0;var removed:=0.0;var vertex_count:=0
 	for axis:int in range(3):
 		var u:int=(axis+1)%3;var v:int=(axis+2)%3
 		for side:int in [-1,1]:
 			var coordinate:float=bounds.position[axis] if side<0 else bounds.end[axis]
 			var original:=Rect2(Vector2(bounds.position[u],bounds.position[v]),Vector2(bounds.size[u],bounds.size[v]))
 			var rects:Array[Rect2]=[original]
-			for cut:Rect2 in masks.get(plane_key(axis,coordinate),[]):
+			var cuts:Array[Rect2]=wall_cover(bounds,axis,side,neighbors)
+			cuts.append_array(masks.get(plane_key(axis,coordinate),[]))
+			for cut:Rect2 in cuts:
 				var next:Array[Rect2]=[]
 				for rect:Rect2 in rects:next.append_array(subtract_rect(rect,cut))
 				rects=next
@@ -100,7 +136,8 @@ static func cut_wall(mesh:MeshInstance3D,masks:Dictionary)->Dictionary:
 				for index:int in order:
 					var p:=Vector3.ZERO;p[axis]=coordinate;p[u]=corners[index].x;p[v]=corners[index].y
 					tool.set_normal(normal);tool.set_uv(corners[index]);tool.add_vertex(mesh.to_local(p))
+					vertex_count+=1
 	if changed>0:
 		mesh.set_meta("frame_original_box",bounds);mesh.set_meta("frame_removed_area",removed)
-		mesh.mesh=tool.commit()
+		mesh.mesh=tool.commit() if vertex_count>0 else ArrayMesh.new()
 	return {"faces":changed,"area":removed}

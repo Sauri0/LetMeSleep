@@ -3,6 +3,7 @@ extends RefCounted
 const Library = preload("res://assets/art/house/house_library.gd")
 const Doors = preload("res://scripts/door_catalog.gd")
 const Barriers = preload("res://scripts/house_barriers.gd")
+const Joinery = preload("res://scripts/frame_joinery.gd")
 
 static func window_specs(data: Dictionary) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
@@ -71,6 +72,31 @@ static func floor_pieces(bounds:AABB) -> Array[AABB]:
 		x+=width
 	return result
 
+static func wet_room(room:Dictionary)->bool:
+	return str(room.get("theme_id","")) in ["kitchen","laundry","bathroom"] or str(room.get("name","")) in ["Cocina","Lavadero","Baño"]
+
+## Partition the actual slab instead of laying another almost-coplanar box on
+## top. All regions keep exactly the catalog's top height and total footprint.
+static func floor_finishes(bounds:AABB,rooms:Array)->Array[Dictionary]:
+	var result:Array[Dictionary]=[]
+	for cell:AABB in floor_pieces(bounds):result.append({"box":cell,"tile":false})
+	for room:Dictionary in rooms:
+		var room_box:AABB=room.bounds
+		if not wet_room(room) or absf(room_box.position.y-bounds.end.y)>.001:continue
+		var cut:=Rect2(Vector2(room_box.position.x,room_box.position.z),Vector2(room_box.size.x,room_box.size.z))
+		var next:Array[Dictionary]=[]
+		for piece:Dictionary in result:
+			var box:AABB=piece.box
+			var rect:=Rect2(Vector2(box.position.x,box.position.z),Vector2(box.size.x,box.size.z))
+			var hit:=rect.intersection(cut)
+			if not hit.has_area() or bool(piece.tile):next.append(piece);continue
+			for remainder:Rect2 in Joinery.subtract_rect(rect,cut):
+				next.append({"box":AABB(Vector3(remainder.position.x,box.position.y,remainder.position.y),Vector3(remainder.size.x,box.size.y,remainder.size.y)),"tile":false})
+			var bath:bool=str(room.get("theme_id",""))=="bathroom" or str(room.get("name",""))=="Baño"
+			next.append({"box":AABB(Vector3(hit.position.x,box.position.y,hit.position.y),Vector3(hit.size.x,box.size.y,hit.size.y)),"tile":true,"tint":Color("a5b4ad") if bath else Color("b5ac95")})
+		result=next
+	return result
+
 static func _warm_diffuser(node:Node3D) -> void:
 	var meshes:Array[Node]=node.find_children("*","MeshInstance3D",true,false)
 	if node is MeshInstance3D:meshes.append(node)
@@ -86,8 +112,12 @@ static func _warm_diffuser(node:Node3D) -> void:
 static func trim(world: Node3D, bounds: AABB) -> void:
 	var along := 0 if bounds.size.x>bounds.size.z else 2
 	var axis := 2 if along==0 else 0
-	for floor_y: float in [0.0,3.2]:
-		var ceiling:=2.989 if floor_y==0.0 else 6.4
+	var levels:Array=world.map_data.floor_levels
+	for floor_index:int in range(levels.size()):
+		var floor_y:float=levels[floor_index]
+		# The next slab is 20 cm thick with an 11 mm ceiling finish below it.
+		# A fixed 6.4 m crown on the middle storey pierced the upper floor.
+		var ceiling:float=float(levels[floor_index+1])-.211 if floor_index+1<levels.size() else float(world.map_data.ceiling)
 		var baseboard:=bounds.position.y<=floor_y+.001 and bounds.end.y>=floor_y+.13
 		var cornice:=bounds.position.y<ceiling and bounds.end.y>=ceiling-.001
 		if not baseboard and not cornice:continue
@@ -126,16 +156,14 @@ static func build_room(world: Node3D, room: Dictionary) -> void:
 	var bounds: AABB=room.bounds
 	var center:=bounds.get_center();var y:=bounds.position.y
 	var name:=str(room.name);var color:Color=world._room_color(room)
-	var wet:=name in ["Cocina","Lavadero","Baño"]
+	var wet:=wet_room(room)
 	world._room_wall_finish(bounds,color,wet)
 	var room_root:=Node3D.new();room_root.name="RoomDetails_"+name.validate_node_name()
 	room_root.set_meta("room_name",name);room_root.set_meta("floor",int(room.floor));world.map_root.add_child(room_root)
 	var ceiling_height:=2.99 if int(room.floor)<world.map_data.floor_levels.size()-1 else 3.19
 	_warm_diffuser(asset(room_root,"pendant",Vector3(center.x,y+ceiling_height,center.z)))
-	if wet:
-		var floor_material:Material=world._surface_material(Color("a5b4ad") if name=="Baño" else Color("b5ac95"),"tile")
-		world._box(room_root,Vector3(center.x,y+.003,center.z),Vector3(bounds.size.x,.005,bounds.size.z),floor_material).cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	else:
+	# Wet-room tiles are material regions of the slab built by World.
+	if not wet:
 		var rug_size:=Vector3(minf(bounds.size.x*.62,3.7),.012,minf(bounds.size.z*.44,2.6))
 		var rug_at:=Vector3(center.x,y+.011,center.z)
 		var rug:MeshInstance3D=world._box(room_root,rug_at,rug_size,world._surface_material(color.darkened(.30),"cloth"))
