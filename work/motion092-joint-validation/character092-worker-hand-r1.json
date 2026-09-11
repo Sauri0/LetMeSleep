@@ -1,0 +1,10 @@
+{
+	"checks": 63348,
+	"failures": [],
+	"metrics": {
+		"maximum_digit_length_error": 0.00000000558793544769287,
+		"maximum_palm_contact_error": 0.0000000372529029846191,
+		"minimum_neutral_curl": 0.000000000664798605054528
+	},
+	"pose_only": false
+}

@@ -1,0 +1,22 @@
+{
+  "stage": "hands092-envelope-r2",
+  "pid": 17808,
+  "started_utc": "2026-09-11T23:57:37.1304416Z",
+  "finished_utc": "2026-09-11T23:57:41.7154924Z",
+  "exit_code": 0,
+  "timeout": false,
+  "stderr_bytes": 0,
+  "executable": "C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe",
+  "arguments": [
+    "--path",
+    "C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/game",
+    "--windowed",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/motion092_hand_test.gd",
+    "--",
+    "--pose-only",
+    "--report=C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/work/character092-envelope-r2.json"
+  ]
+}

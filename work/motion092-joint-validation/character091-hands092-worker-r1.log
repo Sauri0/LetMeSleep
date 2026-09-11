@@ -1,0 +1,4 @@
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 595.97 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 3060 Ti
+
+HAND092_RESULT {"checks":63348,"failures":[],"metrics":{"maximum_digit_length_error":0.00000000558793544769287,"maximum_palm_contact_error":0.0000000372529029846191,"minimum_neutral_curl":0.000000000664798605054528},"pose_only":false}

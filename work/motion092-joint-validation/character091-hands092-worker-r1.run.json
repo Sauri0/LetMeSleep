@@ -1,0 +1,21 @@
+{
+  "stage": "hands092-worker-r1",
+  "pid": 15972,
+  "started_utc": "2026-09-11T23:56:39.5604545Z",
+  "finished_utc": "2026-09-11T23:56:43.8903310Z",
+  "exit_code": 0,
+  "timeout": false,
+  "stderr_bytes": 0,
+  "executable": "C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe",
+  "arguments": [
+    "--path",
+    "C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/game",
+    "--windowed",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/motion092_hand_test.gd",
+    "--",
+    "--report=C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/work/character092-worker-hand-r1.json"
+  ]
+}

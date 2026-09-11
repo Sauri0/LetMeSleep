@@ -1,0 +1,11 @@
+{
+	"checks": 64196,
+	"failures": [],
+	"metrics": {
+		"maximum_carry_reservation_radius": 0.582236506938934,
+		"maximum_digit_length_error": null,
+		"maximum_palm_contact_error": null,
+		"minimum_neutral_curl": null
+	},
+	"pose_only": true
+}

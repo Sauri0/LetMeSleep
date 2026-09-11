@@ -1,7 +1,8 @@
 # Hand orientation correction for 0.9.2
 
-Status: coordinated candidate; initial pose checks passed, carry-envelope
-correction and imported-skin validation await the next shared engine slot.
+Status: runtime pose and carry-envelope validation passed in the coordinated
+candidate. Imported bone geometry passed; Modelador 2's visible wrist/mesh
+review remains open. No final anatomical visual acceptance is claimed.
 This is separate from the completed 0.9.1 movement/attachment delivery at
 `fc199c97ce2280180205bc012b9b25931289da88` (Director integration `70bc08c`).
 
@@ -76,15 +77,37 @@ with zero Godot processes. Native Godot 4.5.2, Compatibility/OpenGL, RTX 3060 Ti
 The 18 locomotion failures are repeated states of the right forearm reservation
 with newspaper/slipper while standing: contact radial distances exceed the
 unchanged .56 m centre limit by approximately 11–19 mm. The carry elbow change
-described above is prepared in response. It still needs a rerun; the three
-initial PASS results are not evidence for that later posture adjustment.
+described above was prepared in response. The subsequent coordinated rerun
+below validates that correction; the initial results alone do not.
 
 Hand pose r1 failed to parse because constant `Skin` shadowed Godot's native
 class. Renamed to `CharacterSkin`; r2 completed. Both logs are retained. The r2
-pose-only report serialized an unused imported metric as `inf`; the test now
-reports unexecuted imported metrics as null, pending its next run.
+pose-only report serialized an unused imported metric as `inf`; the subsequent
+coordinated run verifies the correction to null for unexecuted imported metrics.
 
-Imported finger checks require the coordinated skin correction; no imported
-skin, anatomical mesh or visual PASS is claimed here. The existing body radius,
-attachment offset, strike reach and failing envelope assertion were preserved.
-No engine was launched while Modelador 2, QA or Director held the shared slot.
+## Coordinated validation after the elbow correction
+
+Modelador 2 integrated `b138a99` and `e761261` into his character worktree and
+ran the gates in his authorized block on 2026-09-11. Worker 1 inspected the
+result artifacts and did not repeat the engine runs. Copies of the original
+reports, stage metadata and logs are in `work/motion092-joint-validation/`.
+
+| Native check | Checks | Failures | Result details |
+| --- | ---: | ---: | --- |
+| Updated hand pose + 750 carry poses | 64,196 | 0 | Maximum occupied reservation radius .582236507 m, below unchanged .60 m body radius |
+| Locomotion | 7,867 | 0 | All 18 original carry-envelope failures resolved |
+| Worker imported-bone test, before gait addition | 63,348 | 0 | Maximum digit length error 5.59e-9 m; palm contact error 3.73e-8 m |
+| Modelador 2 ten-digit fixture | 36,018 | 0 | Both POVs, both palm strikes, five tools and animated transitions |
+
+All four stages exited 0 with zero stderr. The final envelope and locomotion
+stages ran 23:57:37–23:57:46 UTC. No radius, attachment offset, strike reach or
+failing envelope assertion was relaxed. Unexecuted skin metrics in pose-only
+output are now null, with valid JSON.
+
+The bone results apply to Modelador 2's tested candidate skin, which is not yet
+sealed as visually accepted. His captures still show shading/silhouette issues
+near the wrists in rest/grasp, including without shadows and at full mesh
+detail. That mesh/normal investigation remains with Modelador 2. The successful
+bone constraints must not be presented as a final mesh or visual PASS.
+
+Worker 1 has no pending engine run unless runtime code changes again.
