@@ -6,10 +6,16 @@ const Validation=preload("res://scripts/house_validation.gd")
 func _initialize() -> void:
 	var batch:=0
 	var repeat_run:=false
+	var output := ProjectSettings.globalize_path("res://../outputs/%s-generated-house/corpus" % str(ProjectSettings.get_setting("application/config/version")))
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--batch="): batch=int(argument.trim_prefix("--batch="))
 		if argument=="--repeat": repeat_run=true
+		if argument.begins_with("--output="): output=argument.trim_prefix("--output=")
 	if batch<0 or batch>9: quit(2);return
+	var path: String=output+"/batch-%02d%s.json"%[batch,"-repeat" if repeat_run else ""]
+	if FileAccess.file_exists(path):
+		printerr("Corpus evidence already exists; choose a new --output directory")
+		quit(2);return
 	var cases: Array=[]
 	var failures: Array=[]
 	var hashes: Dictionary={}
@@ -30,15 +36,13 @@ func _initialize() -> void:
 		# diversity. Cosmetic variety alone is not a new house distribution.
 		var layout_signature: String=JSON.stringify(Validation._canonical({"bounds":data.bounds,"floors":data.floor_levels,"shell":shell})).sha256_text()
 		var errors: Array=report.errors.duplicate()
-		if hashes.has(fingerprint): errors.append("Repeated geometry fingerprint")
-		hashes[fingerprint]=true
+		if hashes.has(layout_signature): errors.append("Repeated structural layout")
+		hashes[layout_signature]=true
 		if data.id!=Generator.map_id(seed_value): errors.append("Seed identity changed")
 		var entry: Dictionary={"seed":seed_value,"fingerprint":fingerprint,"layout_signature":layout_signature,"rooms":data.rooms.size(),"floors":data.floor_levels.size(),"errors":errors}
 		cases.append(entry)
 		if not errors.is_empty(): failures.append(entry)
-	var output: String=ProjectSettings.globalize_path("res://../outputs/0.9-generated-house/corpus")
 	DirAccess.make_dir_recursive_absolute(output)
-	var path: String=output+"/batch-%02d%s.json"%[batch,"-repeat" if repeat_run else ""]
 	var file:=FileAccess.open(path,FileAccess.WRITE)
 	file.store_string(JSON.stringify({"batch":batch,"count":cases.size(),"source_hashes":source_hashes,"elapsed_ms":Time.get_ticks_msec()-started,"failures":failures,"cases":cases},"\t"));file.close()
 	for failure: Dictionary in failures: print("FAIL seed=%d %s"%[failure.seed,failure.errors])
