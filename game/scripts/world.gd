@@ -614,11 +614,13 @@ void fragment(){
 
 func _build_catalog_house() -> void:
 	_house_windows = HouseDetails.window_specs(map_data)
+	var has_catalog_ceiling := false
 	# Every solid starts with the same AABB the server uses. Doorways and both
 	# stair wells are actual gaps in the catalog, not decorative painted doors.
 	for structure: Dictionary in map_data.get("structures", []):
 		var bounds: AABB = structure.box
 		var kind: String = str(structure.get("kind", "wall"))
+		if kind == "ceiling": has_catalog_ceiling = true
 		var tint: Color = structure.get("color", Color("d2d5c2"))
 		if kind == "floor":
 			tint = tint.darkened(0.16)
@@ -628,7 +630,7 @@ func _build_catalog_house() -> void:
 		if kind == "furniture":
 			_furniture_from_catalog(structure)
 			continue
-		var material: Material = _surface_material(tint, "wood" if kind == "floor" else "step" if kind == "step" else "wall")
+		var material: Material = ceiling_paint if kind == "ceiling" else _surface_material(tint, "wood" if kind == "floor" else "step" if kind == "step" else "wall")
 		var visual_parts: Array[AABB] = []
 		if kind=="wall":
 			visual_parts = HouseDetails.wall_pieces(bounds,_house_windows)
@@ -652,7 +654,10 @@ func _build_catalog_house() -> void:
 			_box(self, bounds.position + Vector3(bounds.size.x * 0.5, bounds.size.y - 0.016, front_z), nosing_size, gold)
 	# A quiet ceiling closes the top floor. The catalog ceiling is a physical
 	# limit, and the lower floor slabs already form the ground-floor ceilings.
-	_box(self, Vector3(0, float(map_data.ceiling) + 0.075, 0), Vector3(float(map_data.half_x) * 2.0, 0.15, float(map_data.half_z) * 2.0), ceiling_paint)
+	# Generated houses include this solid in their catalog. A fallback on the
+	# same plane fought that surface at every camera angle (brown/cream stripes).
+	if not has_catalog_ceiling:
+		_box(self, Vector3(0, float(map_data.ceiling) + 0.075, 0), Vector3(float(map_data.half_x) * 2.0, 0.15, float(map_data.half_z) * 2.0), ceiling_paint)
 	for room: Dictionary in map_data.get("rooms", []):
 		_build_room_details(room)
 	_finish_house_art()
