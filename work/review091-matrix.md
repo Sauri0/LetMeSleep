@@ -1,9 +1,9 @@
-# Matriz de revisión funcional 0.9.1
+# Matriz de revisión funcional 0.9.1 y alcance 0.9.2
 
-Base de esta preparación: `59af8ad`, rama `codex/091-qa`. Este documento
-separa tests preparados de resultados ejecutados. Al redactarlo no se ejecutó
-Godot, Blender, import, captura ni benchmark porque el turno de motor seguía
-reservado para otro integrante.
+Base de la preparación: `59af8ad`; candidato integrado leído: `7a40f9e`, rama
+`codex/091-qa`. Este documento separa tests preparados de resultados ejecutados.
+Todavía no se ejecutó Godot, Blender, import, captura ni benchmark porque el
+turno de motor sigue reservado para otro integrante.
 
 ## Dictamen estático inicial
 
@@ -26,15 +26,27 @@ reservado para otro integrante.
 - El ID generado cambia a `house-v2-<seed>` y v1 deja de ser válido. Los fixtures
   no asociados a versión/red obtienen ahora IDs válidos mediante
   `Generator.map_id(seed)`. Los casos negativos conservan v1, v3, cero, ceros a
-  la izquierda, prefijos incorrectos y límites fuera de rango. La rama base aún
-  usa generador v1, así que los asserts explícitos de v2 deben quedar rojos hasta
-  integrar el trabajo de Modelador 1; esto es una dependencia conocida.
+  la izquierda, prefijos incorrectos y límites fuera de rango. El candidato
+  integrado ya contiene v2; falta ejecutar los gates sobre esa geometría.
+
+## Corte entre entregas
+
+- Para 0.9.1 bloquean publicación las fallas de circulación física, puertas,
+  escaleras, rutas, movimiento/cámara, defensa, superficies o navegación de la
+  personalización que impidan completar una partida con ambos roles. Un test
+  indirecto o un resultado heredado no aprueba esos puntos.
+- Para 0.9.2 esta revisión debe volver a comprobar las rutas sobre la zonificación
+  y el amueblado final, las siluetas y expresiones de ambas especies, las
+  interpenetraciones, los materiales/luces finales y el rendimiento comparable.
+  Cualquier defecto injugable descubierto en ese trabajo bloquea primero 0.9.1.
+- WAN real entre casas continúa pendiente por decisión de Branko. ENet loopback
+  sólo acredita codec, autoridad y ciclo de partida local.
 
 ## Criterios y evidencia prevista
 
 | Área | Criterio de aceptación | Gate independiente | Estado |
 |---|---|---|---|
-| Identidad procedural | Sólo v2; v1 y v3 rechazados; fingerprint determinista | `review091_house_contract.gd`, `procedural09_test.gd`, `map_tasks09_test.gd` | Preparado; integración v2 pendiente |
+| Identidad procedural | Sólo v2; v1 y v3 rechazados; fingerprint determinista | `review091_house_contract.gd`, `procedural09_test.gd`, `map_tasks09_test.gd` | Preparado; v2 integrada; sin ejecutar |
 | Variedad | Las 11 semillas acordadas tienen firmas de estructura distintas, excluyendo seed/cosméticos/muebles | `review091_house_contract.gd` | Preparado; sin ejecutar |
 | Pasillos | Ancho libre físico ≥ 1,50 m en colisión real | `review091_house_contract.gd` | Preparado; sin ejecutar |
 | Descansos | Ancho libre físico ≥ 1,50 m en ambos extremos de cada tramo | `review091_house_contract.gd` | Preparado; sin ejecutar |
@@ -72,6 +84,7 @@ reservado para otro integrante.
 Fixtures anteriores migrados a `Generator.map_id()`: `door09_body_query_test`,
 `door09_equivalence_test`, `house09_ceiling_test`, `house09_surfaces_test`,
 `map_tasks09_test`, `navigation09_connections_test`, `performance09_profile`,
+`procedural09_test`,
 `render09_backend_probe`, `render09_batch_probe`, `render09_light_range_probe` y
 `voice09_acoustics_checks`. `network09_voice_checks.gd` y las pruebas explícitas
 de protocolo/versionado quedan con el Director.

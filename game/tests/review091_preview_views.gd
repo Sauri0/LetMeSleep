@@ -7,7 +7,7 @@ const Cosmetics=preload("res://scripts/cosmetics.gd")
 var checks:=0
 var failures: Array[String]=[]
 var output:=""
-var preview:Control
+var preview
 var records: Array[Dictionary]=[]
 
 func _initialize()->void:
@@ -27,7 +27,11 @@ func _shape_signature()->String:
 	var keys:Array=preview.avatar.pose_colliders.keys();keys.sort()
 	for key:Variant in keys:
 		var body:StaticBody3D=preview.avatar.pose_colliders[key]
-		var shape:Shape3D=body.get_child(0).shape
+		var collision:=body.get_child(0) as CollisionShape3D
+		if collision==null or collision.shape==null:
+			result.append([str(key),"missing_shape"])
+			continue
+		var shape:Shape3D=collision.shape
 		var row:Array=[str(key),body.position,str(shape.get_class())]
 		if shape is CapsuleShape3D:row.append_array([shape.radius,shape.height])
 		elif shape is SphereShape3D:row.append(shape.radius)
@@ -77,6 +81,7 @@ func _role(role:String,profile:Dictionary)->void:
 	preview.set_avatar(role,base)
 	preview.set_process(false)
 	var shape_baseline:=_shape_signature()
+	check(not preview.avatar.pose_colliders.is_empty() and shape_baseline.find("missing_shape")==-1,role+" preview exposes complete gameplay collider shapes")
 	var first_hashes:Dictionary={}
 	for category:String in Cosmetics.category_keys(role):
 		var hashes:Dictionary={}

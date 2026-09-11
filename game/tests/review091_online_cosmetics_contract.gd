@@ -144,16 +144,20 @@ func _run()->void:
 	for side:String in ["host","guest"]:
 		var roster:Dictionary=Dictionary(lobby_packets.get(side,{})).get("players",{})
 		check(roster.get(1,{}).get("cosmetics",{})==host_clean and roster.get(guest_id,{}).get("cosmetics",{})==guest_clean,side+" lobby sees both independent profiles")
-	var map_id:=Generator.map_id(1)
-	host.lobby_action("config",{"map_id":map_id,"mode":"blood","human_count":1,"round_seconds":180,"blood_goal":1000})
+	host.lobby_action("config",{"mode":"blood","human_count":1,"round_seconds":180,"blood_goal":1000})
 	await settle()
-	check(str(host.config.map_id)==map_id,"host selects current generated map ID")
+	check(str(host.config.map_id)=="house","host accepts the sanitized pre-round map config")
 	host.lobby_action("ready",true);guest.lobby_action("ready",true)
 	if not check(await until(func()->bool:return bool(host.players[1].ready) and bool(host.players[guest_id].ready)),"both ready actions cross transport"):await _finish();return
 	host.lobby_action("start",null)
 	if not check(await until(func()->bool:return host.sim!=null and guest.latest.get("phase","")=="playing",10.0),"round starts after generated-map ACK barrier"):await _finish();return
+	var map_id:=str(host.config.map_id)
+	var map_seed:=Generator.parse_seed(map_id)
+	check(map_seed>0,"authority selects a current v2 generated map for the round")
+	check(int(host.config.get("map_generator_version",-1))==Generator.VERSION and int(host.config.get("map_seed",-1))==map_seed,"authority stamps the generated version and canonical seed")
 	check(host._pending_map.is_empty() and host._prepared_map==guest._prepared_map,"host and guest acknowledge identical generated blueprint")
 	check(str(host._prepared_map.id)==map_id and str(guest.latest.get("config",{}).get("map_fingerprint",""))==str(host._prepared_map.fingerprint),"published map identity/fingerprint match acknowledged geometry")
+	var acknowledged_fingerprint:=str(host._prepared_map.fingerprint)
 	var chosen:Dictionary={}
 	for id:int in [1,guest_id]:
 		var profile:Dictionary=host_clean if id==1 else guest_clean
@@ -173,4 +177,4 @@ func _run()->void:
 	check(host.waiting_actors[1].appearance==host_clean.human and host.waiting_actors[guest_id].appearance==guest_clean.human,"rematch restores each saved human lobby appearance")
 	guest.close_client()
 	check(await until(func()->bool:return host.players.size()==1 and host.players.has(1)),"guest disconnect removes only remote player")
-	await _finish({"map_id":map_id,"fingerprint":host._prepared_map.get("fingerprint",""),"host_appearance":chosen.get(1,{}),"guest_appearance":chosen.get(guest_id,{})})
+	await _finish({"map_id":map_id,"fingerprint":acknowledged_fingerprint,"host_appearance":chosen.get(1,{}),"guest_appearance":chosen.get(guest_id,{})})
