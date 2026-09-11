@@ -66,8 +66,14 @@ if (-not $SkipTests) {
     foreach ($testName in @('audio09_redundancy_checks','hud09_coalescing_checks','skin09_visibility_checks','human09_presentation_test','surface09_test','surface_view09_test','emote09_authority_test','procedural09_test','geometry09_cache_checks','map_tasks09_test','voice09_acoustics_checks','voice09_pcm_test','audio09_listener_checks','network09_map_social_checks','network09_view_ack_checks','network09_voice_checks','door09_equivalence_test','door09_body_query_test','navigation09_connections_test')) {
         Invoke-CheckedHeadless -CheckName $testName -GameArguments @('--script',"res://tests/$testName.gd")
     }
-    foreach ($testName in @('modeler091_layout_test','environment091_stair_lighting_test','environment091_v2_finish_test','review091_house_contract','review091_online_cosmetics_contract')) {
+    foreach ($testName in @('modeler091_layout_test','environment091_stair_lighting_test','environment091_v2_finish_test','review091_online_cosmetics_contract')) {
         Invoke-CheckedHeadless -CheckName $testName -GameArguments @('--script',"res://tests/$testName.gd")
+    }
+    # Physical route following exceeds the per-process deadline as one corpus.
+    # Keep every seed and check, with one bounded process/report per house.
+    foreach ($houseSeed in @(1,2,7,31,97,257,997,2026,65537,1234567,2147483646)) {
+        $houseReport = Join-Path $buildWorkRoot ('build-review091-house-' + $houseSeed + '.json')
+        Invoke-CheckedHeadless -CheckName ('review091_house_contract-' + $houseSeed) -GameArguments @('--script','res://tests/review091_house_contract.gd','--',('--seed=' + $houseSeed),('--report=' + $houseReport))
     }
     Invoke-CheckedHeadless -CheckName 'voice09_session_checks' -GameArguments @('--audio-driver','Dummy','--frame-delay','2','--script','res://tests/voice09_session_checks.gd')
     foreach ($onlineTest in @('online_invitation_test','online_session_test','online_network_checks','online_network_mtu_checks','online_network_payload_checks','online_pair_integration')) {
