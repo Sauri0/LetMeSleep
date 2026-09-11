@@ -24,10 +24,12 @@ function Invoke-CheckedHeadless {
         if (-not $checked.Start()) { throw ('Cannot start check: ' + $CheckName) }
         $stdout = $checked.StandardOutput.ReadToEndAsync()
         $stderr = $checked.StandardError.ReadToEndAsync()
-        if (-not $checked.WaitForExit(55000)) { $checked.Kill($true); throw ('Check timed out: ' + $CheckName) }
+        $timedOut = -not $checked.WaitForExit(55000)
+        if ($timedOut) { $checked.Kill($true); $checked.WaitForExit() }
         $nativeExitCode = $checked.ExitCode
         [System.IO.File]::WriteAllText($outputLog,$stdout.Result)
         [System.IO.File]::WriteAllText($errorLog,$stderr.Result)
+        if ($timedOut) { throw ('Check timed out: ' + $CheckName + '; logs preserved') }
     } finally {
         $checked.Dispose()
     }
