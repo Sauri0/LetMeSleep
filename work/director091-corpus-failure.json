@@ -1,0 +1,34 @@
+{
+  "status": "failed_before_fix",
+  "source_hashes": {
+    "door_geometry": "264c406bd5d3a295f285f93aa2c18ce6510b24febffe1c8e957488642390da76",
+    "furniture_blueprint": "c25e2cef8d93788b90070bfb2ecbcf27d0bb3acc40b4af2480bc65a913ebb435",
+    "house_validation": "de7b65b1680c926f4460225989e382e5420a49659fd0a042912e1d5f3111f34e",
+    "navigation_geometry": "c259e185ded8304b58473207919fd02d7ddfca35e8118c37e47d6343eb5d6c7f",
+    "pickup_placement": "1f43b4c2943a9931985e337773348cede10f2bcfc1d72496c1b7520f9a11fd2f",
+    "pickup_support_geometry": "fa9abba4c839e91ed4a45617824d731dcae22eaf0965d5a668c148ca9c1d9557",
+    "procedural_house": "bb3f9296a7718bbcfd8aa03fdface39f44da5d2a09942c9fc54e36adab6d11ce"
+  },
+  "run": {
+    "batch": 6,
+    "repeat": false,
+    "started_utc": "2026-09-11T23:51:50.7015803Z",
+    "finished_utc": "2026-09-11T23:52:07.7490529Z",
+    "exit_code": 1,
+    "timeout": false,
+    "stderr_bytes": 0
+  },
+  "failures": [
+    {
+      "errors": [
+        "Room room-13 has fewer than three furnishings"
+      ],
+      "fingerprint": "17108f633b86cdf2eac8625033fa501ebc50f5f84963ed94c4a26ec7439f7787",
+      "floors": 2,
+      "layout_signature": "a678d63ff6440828c3689d02e88c29471207c37268dc1870157f61cb3a20879c",
+      "rooms": 17,
+      "seed": 221853394
+    }
+  ],
+  "scope": "Source corpus stopped at batch 6; no export produced. Earlier successful batches do not close the full 1000-seed gate."
+}
