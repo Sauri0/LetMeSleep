@@ -7,6 +7,7 @@ const Arena=preload("res://scripts/arena.gd")
 const Sim=preload("res://scripts/simulation.gd")
 const State=preload("res://scripts/door_state.gd")
 const Maps=preload("res://scripts/map_catalog.gd")
+const Generator=preload("res://scripts/procedural_house.gd")
 var checks:=0
 var failures: Array[String]=[]
 var destination:=""
@@ -58,14 +59,15 @@ func _sim_script() -> GDScript:
 	return script
 
 func _capture_movement(arena_script: GDScript) -> void:
+	var generated_id:=Generator.map_id(1)
 	var sim:=Sim.new();var roster: Dictionary={}
 	for id: int in range(1,17):roster[id]={"role":"human" if id<=4 else "mosquito"}
-	sim.start(roster,{"map_id":"house-v1-1","mode":"blood","human_count":4,"round_seconds":180,"blood_goal":1000})
+	sim.start(roster,{"map_id":generated_id,"mode":"blood","human_count":4,"round_seconds":180,"blood_goal":1000})
 	check(sim.phase=="playing","capture starts validated map")
 	var actors:=sim.actors.duplicate(true)
 	Trace.queries.clear();Trace.calls=0;Trace.total_us=0;Trace.use_reference=true;Trace.capture=false
 	# Warm both immutable Arena indexes before the captured interval.
-	Arena.obstacles("house-v1-1");arena_script.obstacles("house-v1-1")
+	Arena.obstacles(generated_id);arena_script.obstacles(generated_id)
 	var move_total:=0
 	for tick: int in range(360):
 		if tick%90==0:
@@ -77,9 +79,9 @@ func _capture_movement(arena_script: GDScript) -> void:
 			actor.yaw=float(id)*.53+float(tick)*.007
 			actor.pitch=sin(float(tick)/80.0)*.9
 			var expected:=actor.duplicate(true)
-			Arena.step_mosquito(expected,Vector3.FORWARD,1.0/60.0,"house-v1-1",null,sim.doors)
+			Arena.step_mosquito(expected,Vector3.FORWARD,1.0/60.0,generated_id,null,sim.doors)
 			var start:=Time.get_ticks_usec()
-			arena_script.step_mosquito(actor,Vector3.FORWARD,1.0/60.0,"house-v1-1",null,sim.doors)
+			arena_script.step_mosquito(actor,Vector3.FORWARD,1.0/60.0,generated_id,null,sim.doors)
 			move_total+=Time.get_ticks_usec()-start
 			check(actor==expected,"source-derived movement matches production tick%d actor%d"%[tick,id])
 	Trace.capture=false
@@ -102,7 +104,7 @@ func _replay(label: String) -> Dictionary:
 
 func _boundaries() -> void:
 	var blocked:=0;var clear:=0
-	for map_id: String in ["house","house-v1-1","house-v1-2"]:
+	for map_id: String in ["house",Generator.map_id(1),Generator.map_id(2)]:
 		var definitions:=Current.get_doors(map_id)
 		for id: String in definitions:
 			var definition: Dictionary=definitions[id]
@@ -126,7 +128,7 @@ func _boundaries() -> void:
 func _full_simulation(script: GDScript) -> void:
 	var roster: Dictionary={}
 	for id: int in range(1,17):roster[id]={"role":"human" if id<=4 else "mosquito"}
-	var settings: Dictionary={"map_id":"house-v1-1","mode":"blood","human_count":4,"round_seconds":180,"blood_goal":1000}
+	var settings: Dictionary={"map_id":Generator.map_id(1),"mode":"blood","human_count":4,"round_seconds":180,"blood_goal":1000}
 	var before: RefCounted=script.new();before.start(roster,settings)
 	var after:=Sim.new();after.start(roster,settings)
 	Trace.capture=false;Trace.use_reference=true

@@ -4,6 +4,7 @@ extends SceneTree
 const Maps = preload("res://scripts/map_catalog.gd")
 const Arena = preload("res://scripts/arena.gd")
 const ViewInstrumentation = preload("res://tests/performance09_view_instrumentation.gd")
+const Generator = preload("res://scripts/procedural_house.gd")
 
 class Collector:
 	extends RefCounted
@@ -281,7 +282,7 @@ func _run() -> void:
 		await _finish({"kind":"source-only instrumentation compilation check"});return
 	if not _require(DisplayServer.get_name()!="headless","requires native Main/Client rendering context"):
 		await _finish({});return
-	if not _require(map_id in ["house","house-v1-1"],"only authored house and generated seed 1 are defined scenarios"):
+	if not _require(map_id in ["house",Generator.map_id(1)],"only authored house and generated seed 1 are defined scenarios"):
 		await _finish({});return
 	create_timer(48).timeout.connect(func()->void:
 		if not completed:failures.append("48 second fixture watchdog");_finish.call_deferred({}))

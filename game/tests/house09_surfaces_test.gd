@@ -2,6 +2,7 @@ extends SceneTree
 const Joinery=preload("res://scripts/frame_joinery.gd")
 const Details=preload("res://scripts/house_details.gd")
 const Library=preload("res://assets/art/house/house_library.gd")
+const Generator=preload("res://scripts/procedural_house.gd")
 var failures:=0
 var checks:=0
 func _initialize()->void:run.call_deferred()
@@ -56,7 +57,7 @@ func run()->void:
 			overlap+=footprint.intersection(Rect2(Vector2(other.position.x,other.position.z),Vector2(other.size.x,other.size.z))).get_area()
 	check(absf(total-16.0)<.0001 and absf(tile-7.0)<.0001 and overlap<.0001,"floor materials cover slab once and ignore other storeys")
 	var world:Node3D=load("res://scripts/world.gd").new();root.add_child(world);world.build()
-	for map_id:String in ["house","house-v1-1","house-v1-2"]:
+	for map_id:String in ["house",Generator.map_id(1),Generator.map_id(2)]:
 		world.load_map(map_id)
 		var levels:Array=world.map_data.floor_levels;var crowns_per_floor:Array[int]=[];crowns_per_floor.resize(levels.size());crowns_per_floor.fill(0)
 		for node:Node in world.map_root.get_children():

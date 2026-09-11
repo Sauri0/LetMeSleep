@@ -6,6 +6,7 @@ const Catalog = preload("res://scripts/door_catalog.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const Sim = preload("res://scripts/simulation.gd")
 const Pose = preload("res://scripts/human_pose.gd")
+const Generator = preload("res://scripts/procedural_house.gd")
 var checks := 0
 var failures: Array[String] = []
 var destination := ""
@@ -153,7 +154,8 @@ func _safety_and_invalidation() -> void:
 func _same_simulation() -> void:
 	var roster: Dictionary={}
 	for id: int in range(1,17):roster[id]={"role":"human" if id<=4 else "mosquito"}
-	var settings: Dictionary={"map_id":"house-v1-1","mode":"blood","human_count":4,"round_seconds":180,"blood_goal":1000}
+	var generated_id:=Generator.map_id(1)
+	var settings: Dictionary={"map_id":generated_id,"mode":"blood","human_count":4,"round_seconds":180,"blood_goal":1000}
 	var before:=Sim.new();before.start(roster,settings)
 	var after:=Sim.new();after.start(roster,settings)
 	var legacy:=Reference.new();legacy.reset(str(before.config.map_id))
@@ -169,7 +171,7 @@ func _same_simulation() -> void:
 		check(before.public_snapshot()==after.public_snapshot(),"same full simulation public tick%d"%frame)
 		if frame%30==0:
 			for id: int in roster:check(before.private_for(id)==after.private_for(id),"same full simulation private tick%d actor%d"%[frame,id])
-	evidence.full_simulation={"map_id":"house-v1-1","ticks":120,"actors":16,"dt":1.0/60.0,"map_fingerprint":after.config.map_fingerprint}
+	evidence.full_simulation={"map_id":generated_id,"ticks":120,"actors":16,"dt":1.0/60.0,"map_fingerprint":after.config.map_fingerprint}
 
 func _timed_replay(script: Script, map_id: String, frames: Array, label: String) -> Dictionary:
 	var state: RefCounted=script.new();state.reset(map_id)
@@ -186,17 +188,18 @@ func _timed_replay(script: Script, map_id: String, frames: Array, label: String)
 
 func _run() -> void:
 	_predicate_cases()
-	for map_id: String in ["house","house-v1-1","house-v1-2"]:
+	for map_id: String in ["house",Generator.map_id(1),Generator.map_id(2)]:
 		var frames:=_frames(map_id,180)
 		_differential(map_id,frames)
 	_safety_and_invalidation()
 	_same_simulation()
-	var frames:=_frames("house-v1-1",360)
+	var generated_id:=Generator.map_id(1)
+	var frames:=_frames(generated_id,360)
 	# Both paths and geometry are warm before symmetrical A/B/B/A wall timing.
-	_timed_replay(Reference,"house-v1-1",frames.slice(0,60),"warmup_reference")
-	_timed_replay(Current,"house-v1-1",frames.slice(0,60),"warmup_current")
+	_timed_replay(Reference,generated_id,frames.slice(0,60),"warmup_reference")
+	_timed_replay(Current,generated_id,frames.slice(0,60),"warmup_current")
 	for label: String in ["reference","current","current","reference"]:
-		replay_report.append(_timed_replay(Reference if label=="reference" else Current,"house-v1-1",frames,label))
+		replay_report.append(_timed_replay(Reference if label=="reference" else Current,generated_id,frames,label))
 	var reference_final: Dictionary=replay_report[0].final_state
 	for row: Dictionary in replay_report:
 		check(row.final_state==reference_final,"ABBA identical final door state "+str(row.implementation))

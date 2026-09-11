@@ -19,7 +19,7 @@ func _run() -> void:
 	world=World.new()
 	root.add_child(world)
 	world.build()
-	world.load_map("house-v1-1")
+	world.load_map(Generator.map_id(1))
 	world.set_process(false)
 	world.audio_fx.set_process(false)
 	var data: Dictionary=world.map_data

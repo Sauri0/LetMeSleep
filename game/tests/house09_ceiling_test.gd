@@ -1,4 +1,5 @@
 extends SceneTree
+const Generator=preload("res://scripts/procedural_house.gd")
 ## The generated catalog already owns the roof; rendering a second box at the
 ## same height produced the moving brown/cream stripes in the user's recording.
 var failures := 0
@@ -7,7 +8,7 @@ func run() -> void:
 	var world: Node3D = load("res://scripts/world.gd").new()
 	root.add_child(world)
 	world.build()
-	for map_id: String in ["house", "house-v1-1", "house-v1-2"]:
+	for map_id: String in ["house", Generator.map_id(1), Generator.map_id(2)]:
 		world.load_map(map_id)
 		var area := 0.0
 		var paint_only := true

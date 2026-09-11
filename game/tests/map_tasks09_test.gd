@@ -5,6 +5,7 @@ const Routes = preload("res://scripts/map_navigation.gd")
 const ArenaData = preload("res://scripts/arena.gd")
 const Pose = preload("res://scripts/human_pose.gd")
 const DoorData = preload("res://scripts/door_catalog.gd")
+const Generator = preload("res://scripts/procedural_house.gd")
 const DT := .025
 var checks := 0
 var failures := 0
@@ -38,13 +39,13 @@ func _identity() -> void:
 	var sim=make_sim("house",{"map_fingerprint":"spoof","map_generator_version":999,"map_seed":999})
 	check(sim.phase=="playing" and sim.config.map_fingerprint==Maps.Validation.fingerprint(Maps.get_map("house")),"authored map fingerprint comes from real geometry")
 	check(sim.config.map_seed==0 and sim.config.map_generator_version==0,"authored map does not accept client generator metadata")
-	for invalid: Variant in ["lobby","unknown","house-v1-0","house-v1-01","house-v2-1","house-v1-2147483647",42,null]:
+	for invalid: Variant in ["lobby","unknown","house-v1-1","house-v2-0","house-v2-01","house-v3-1","house-v2-2147483647",42,null]:
 		sim.start({1:{"role":"human"},2:{"role":"mosquito"}},{"map_id":invalid})
 		check(sim.phase=="lobby" and not sim.reason.is_empty() and sim.winner.is_empty(),"invalid map fails explicitly: "+str(invalid))
 		check(sim.actors.is_empty() and sim.pickups.is_empty() and sim.doors.is_empty() and sim._map_data.is_empty(),"failed start retains no old actors/doors/map: "+str(invalid))
 	# Fault injection at the catalog boundary simulates a syntactically valid
 	# identity whose generated geometry failed validation; no fallback is legal.
-	var failed_id := "house-v1-2147483000"
+	var failed_id := Generator.map_id(2147483000)
 	var had_value: bool=Maps._generated.has(failed_id)
 	var previous: Variant=Maps._generated.get(failed_id)
 	Maps._generated[failed_id]={}
@@ -53,18 +54,18 @@ func _identity() -> void:
 	if had_value: Maps._generated[failed_id]=previous
 	else: Maps._generated.erase(failed_id)
 	for seed_value: int in [1,2]:
-		var id := "house-v1-%d"%seed_value
+		var id := Generator.map_id(seed_value)
 		var map: Dictionary=Maps.get_map(id)
 		var generated=make_sim(id,{"map_fingerprint":"spoof","map_generator_version":999,"map_seed":999})
 		check(generated.phase=="playing" and generated.config.map_id==id,"validated generated map starts "+id)
 		if generated.phase!="playing": continue
-		check(generated.config.map_fingerprint==map.fingerprint and generated.config.map_generator_version==1 and generated.config.map_seed==seed_value,"server stamps generated identity "+id)
+		check(generated.config.map_fingerprint==map.fingerprint and generated.config.map_generator_version==Generator.VERSION and generated.config.map_seed==seed_value,"server stamps generated identity "+id)
 		check(generated.public_snapshot().config==generated.config and generated.actors[1].p==map.human_spawns[0],"public config and spawn correspond to the same generated map "+id)
 		check(generated.pickups.size()==map.pickups.size() and generated.doors.size()==map.doors.size(),"round state uses selected map's pickups and doors "+id)
 
 func _generated_routes() -> void:
 	for seed_value: int in [1,2]:
-		var sim=make_sim("house-v1-%d"%seed_value,{"task_deadline":24,"task_floor":24})
+		var sim=make_sim(Generator.map_id(seed_value),{"task_deadline":24,"task_floor":24})
 		if sim.phase!="playing": check(false,"generated route fixture starts");continue
 		var map: Dictionary=sim._map_data
 		var goal: int=sim.task_goal
@@ -144,7 +145,7 @@ func _doors_and_extension() -> void:
 	# Isolate the extension branch with one far, genuine station on the same
 	# validated three-floor geometry. This is an explicit restricted-catalog
 	# fixture, not a claim that the generator emits a one-station map.
-	var extended=make_sim("house-v1-1",{"task_deadline":24,"task_floor":24})
+	var extended=make_sim(Generator.map_id(1),{"task_deadline":24,"task_floor":24})
 	var farthest: Dictionary={}
 	for source: Vector3 in extended._map_data.nav_nodes:
 		if source.y<float(extended._map_data.ceiling)-3.3: continue
@@ -166,7 +167,7 @@ func _doors_and_extension() -> void:
 			cases.append({"scope":"restricted-station extension witness","budget":task.budget,"seconds":result.seconds,"route_meters":task.route_meters,"completed":result.completed})
 
 func _pending_and_deadlines() -> void:
-	var sim=make_sim("house-v1-2")
+	var sim=make_sim(Generator.map_id(2))
 	var goal: int=sim.task_goal
 	sim.actors[1]._next_task=0
 	sim.actors[1].p.y+=.4
@@ -189,7 +190,7 @@ func _pending_and_deadlines() -> void:
 	no_route.elapsed=9.0
 	no_route._dispatch_task(1)
 	check(no_route.actors[1]._task_dispatch.is_empty() and no_route.task_goal==fixed_goal and no_route.actors[1]._failures==0,"expired impossible slot is not a penalty or goal-reduction exploit")
-	var late=make_sim("house-v1-2",{"round_seconds":120,"task_goal":0})
+	var late=make_sim(Generator.map_id(2),{"round_seconds":120,"task_goal":0})
 	late.elapsed=110.99
 	late.actors[1]._next_task=111.0
 	late.step(DT)

@@ -3,6 +3,7 @@ extends SceneTree
 ## bounded molding/railing MultiMesh probe. Does not measure gameplay FPS.
 const World = preload("res://scripts/world.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
+const Generator = preload("res://scripts/procedural_house.gd")
 var output := ""
 var world: Node3D
 var records: Array[Dictionary] = []
@@ -59,11 +60,12 @@ func _run() -> void:
 	world=World.new()
 	root.add_child(world)
 	world.build()
-	world.load_map("house-v1-1")
+	var generated_id:=Generator.map_id(1)
+	world.load_map(generated_id)
 	world.set_process(false)
 	world.audio_fx.set_process(false)
 	var data: Dictionary=world.map_data
-	if str(world.current_map)!="house-v1-1" or not data.has("fingerprint"):
+	if str(world.current_map)!=generated_id or not data.has("fingerprint"):
 		printerr("RENDER09_BATCH_FAIL generated map mismatch")
 		quit(1)
 		return

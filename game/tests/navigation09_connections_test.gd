@@ -3,6 +3,7 @@ extends SceneTree
 const Current = preload("res://scripts/map_navigation.gd")
 const Reference = preload("res://tests/navigation09_reference.gd")
 const Geometry = preload("res://scripts/navigation_geometry.gd")
+const Generator = preload("res://scripts/procedural_house.gd")
 var checks := 0
 var failures: Array[String] = []
 var report_path := ""
@@ -18,7 +19,7 @@ func _check(condition: bool, message: String) -> void:
 
 func _run() -> void:
 	var totals: Dictionary={}
-	for map_id: String in ["house","house-v1-1","house-v1-2","lobby"]:
+	for map_id: String in ["house",Generator.map_id(1),Generator.map_id(2),"lobby"]:
 		for human: bool in [false,true]:
 			var before: Dictionary=Reference._graph(human,map_id)
 			var after: Dictionary=Current._graph(human,map_id)

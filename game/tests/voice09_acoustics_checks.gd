@@ -4,6 +4,7 @@ const Acoustics=preload("res://scripts/voice_acoustics.gd")
 const Maps=preload("res://scripts/map_catalog.gd")
 const Doors=preload("res://scripts/door_catalog.gd")
 const ArenaData=preload("res://scripts/arena.gd")
+const Generator=preload("res://scripts/procedural_house.gd")
 const ROLE_PAIRS: Array[Vector2i]=[Vector2i(0,0),Vector2i(0,1),Vector2i(1,1),Vector2i(1,0)]
 const ROLES: Array[String]=["human","mosquito"]
 var checks:=0
@@ -34,7 +35,7 @@ func _initialize() -> void:
 	var began:=Time.get_ticks_usec()
 	var source_hash:=FileAccess.get_sha256("res://scripts/voice_acoustics.gd") if FileAccess.file_exists("res://scripts/voice_acoustics.gd") else "unavailable_in_pack"
 	_ranges_and_dead()
-	for id: String in ["house","house-v1-1","house-v1-2"]:
+	for id: String in ["house",Generator.map_id(1),Generator.map_id(2)]:
 		_map_geometry(id)
 	var report: Dictionary={"checks":checks,"failures":failures,"elapsed_ms":(Time.get_ticks_usec()-began)/1000.0,"source_sha256":source_hash,"maps":evidence,"scope":"Finite authored/generated geometry and directed role permissions; no codec, ENet, audible mix or live frame-time claim."}
 	var target: String="res://../work/voice09-acoustics-results.json"
