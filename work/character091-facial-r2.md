@@ -32,6 +32,8 @@ los parches retesselados; no exige identidad de todos sus índices.
 | Geometría ocular mosquito en Blender | 81663 / 0 fallos | `character091-blink-mosquito-r2.json` |
 | Fixture nativo de capturas finales | 1121 / 0 fallos | `character091-after-views-r2/character091-views.json` |
 | Fixture nativo de base, caras y prendas | 1549 / 0 fallos | `character091-before-views-r2/character091-views.json` |
+| Selección/expresiones faciales en Godot | 7946 / 0 fallos | `character091-facial-parts-r2.run.json` |
+| Parpadeo importado en Godot | 3392 / 0 fallos; delta ocular 0 | `character091-native-blink-r2.json` |
 
 Exportación, importación final, auditorías finales y capturas r2: exit 0,
 sin timeout ni stderr. Las fichas `character091-*.run.json` registran ejecutable,
@@ -47,6 +49,11 @@ del estudio recorta probóscide/cola del mosquito; no certifica su silueta
 completa. Las alas usan el reloj del actor y varían entre columnas, por lo que
 la comparación estática se limita a las piezas faciales. Los ojos humanos no
 cambian de geometría respecto a la base.
+
+UI revisó manualmente las diez láminas y dio PASS visual: variantes legibles,
+sin penetraciones ni piezas flotantes evidentes. Conservó la observación del
+encuadre lateral del mosquito. Esta revisión es distinta de las pruebas de
+geometría y no sustituye el muestreo de animación.
 
 ## Desarrollo y límites
 
@@ -64,9 +71,11 @@ geometría intermedia y no deben presentarse como resultado final.
 
 Los contactos son comprobaciones exactas de triángulos en estados finitos
 neutrales, intermedios y extremos descritos en el test. No prueban todas las
-combinaciones continuas de animación. Faltan las regresiones nativas
-`facial_parts08_checks.gd` y `facial_blink08_checks.gd` sobre r2: se cedió el
-motor a QA el 11/09 a las 23:40:23 UTC. Se registrarán en un complemento.
+combinaciones continuas de animación. Las regresiones nativas
+`facial_parts08_checks.gd` y `facial_blink08_checks.gd` sobre r2 terminaron
+el 11/09 a las 23:54:56 y 23:55:13 UTC: ambas exit 0, stderr 0 y sin timeout.
+Se ejecutaron después de integrar HumanPose b138a99 y con el candidato de
+manos local; las funciones faciales de CharacterSkin permanecen intactas.
 No se ha probado WAN ni se ha generado/publicado un EXE.
 
 Ropa y manos continúan por separado: el abanico del cuello procede de UV

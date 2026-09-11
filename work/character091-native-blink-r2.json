@@ -1,0 +1,416 @@
+{
+	"cases": [
+		{
+			"closure_coverage": {
+				"applied_weights": {
+					"BlinkL": 1.0,
+					"BlinkLArc1": 0.0,
+					"BlinkLArc2": 0.0,
+					"BlinkLArc3": 0.0,
+					"BlinkLArc4": 0.0,
+					"BlinkLArc5": 0.0,
+					"BlinkLArc6": 0.0,
+					"BlinkLArc7": 0.0,
+					"BlinkR": 1.0,
+					"BlinkRArc1": 0.0,
+					"BlinkRArc2": 0.0,
+					"BlinkRArc3": 0.0,
+					"BlinkRArc4": 0.0,
+					"BlinkRArc5": 0.0,
+					"BlinkRArc6": 0.0,
+					"BlinkRArc7": 0.0,
+					"BrowDown": 0.0,
+					"BrowUp": 0.0,
+					"CheekLift": 0.0,
+					"GazeX": 0.0,
+					"GazeY": 0.0,
+					"MouthOpen": 0.0,
+					"MouthPress": 0.0,
+					"MouthSmile": 0.0
+				},
+				"blend_shape_mode": 0,
+				"mesh_transform": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.0, 0.0)]",
+				"numeric_uniform_scale": 100.0,
+				"rays": 62776,
+				"sampling": "vertices, 3 edge midpoints and triangle centroid; 7 view directions",
+				"surfaces": [
+					{
+						"first": "(-0.05308, 1.555897, -0.137563)",
+						"indices": 5328,
+						"last": "(0.070731, 1.605971, -0.175473)",
+						"material": "eye_white",
+						"primitive": 3,
+						"verts": 896
+					},
+					{
+						"first": "(-0.065809, 1.577677, -0.160748)",
+						"indices": 2640,
+						"last": "(0.07344, 1.610209, -0.16144)",
+						"material": "pupil",
+						"primitive": 3,
+						"verts": 444
+					},
+					{
+						"first": "(-0.07344, 1.584701, -0.178911)",
+						"indices": 12000,
+						"last": "(0.068395, 1.552162, -0.143926)",
+						"material": "skin",
+						"primitive": 3,
+						"verts": 2084
+					}
+				],
+				"uncovered": 0,
+				"witnesses": []
+			},
+			"eyes": 0,
+			"maximum_lid_motion_authoring_m": 0.0393392220139503,
+			"reading_lod_bias": 1000.0,
+			"role": "human",
+			"samples": 17
+		},
+		{
+			"closure_coverage": {
+				"applied_weights": {
+					"BlinkL": 1.0,
+					"BlinkLArc1": 0.0,
+					"BlinkLArc2": 0.0,
+					"BlinkLArc3": 0.0,
+					"BlinkLArc4": 0.0,
+					"BlinkLArc5": 0.0,
+					"BlinkLArc6": 0.0,
+					"BlinkLArc7": 0.0,
+					"BlinkR": 1.0,
+					"BlinkRArc1": 0.0,
+					"BlinkRArc2": 0.0,
+					"BlinkRArc3": 0.0,
+					"BlinkRArc4": 0.0,
+					"BlinkRArc5": 0.0,
+					"BlinkRArc6": 0.0,
+					"BlinkRArc7": 0.0,
+					"BrowDown": 0.0,
+					"BrowUp": 0.0,
+					"CheekLift": 0.0,
+					"GazeX": 0.0,
+					"GazeY": 0.0,
+					"MouthOpen": 0.0,
+					"MouthPress": 0.0,
+					"MouthSmile": 0.0
+				},
+				"blend_shape_mode": 0,
+				"mesh_transform": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.0, 0.0)]",
+				"numeric_uniform_scale": 100.0,
+				"rays": 62776,
+				"sampling": "vertices, 3 edge midpoints and triangle centroid; 7 view directions",
+				"surfaces": [
+					{
+						"first": "(-0.07344, 1.570784, -0.117172)",
+						"indices": 5328,
+						"last": "(0.066411, 1.601271, -0.175473)",
+						"material": "eye_white",
+						"primitive": 3,
+						"verts": 896
+					},
+					{
+						"first": "(-0.060299, 1.5876, -0.169207)",
+						"indices": 2640,
+						"last": "(0.06912, 1.605509, -0.16144)",
+						"material": "pupil",
+						"primitive": 3,
+						"verts": 444
+					},
+					{
+						"first": "(-0.024212, 1.587082, -0.158279)",
+						"indices": 12000,
+						"last": "(0.072966, 1.551823, -0.140658)",
+						"material": "skin",
+						"primitive": 3,
+						"verts": 2084
+					}
+				],
+				"uncovered": 0,
+				"witnesses": []
+			},
+			"eyes": 1,
+			"maximum_lid_motion_authoring_m": 0.029419057071209,
+			"reading_lod_bias": 1000.0,
+			"role": "human",
+			"samples": 17
+		},
+		{
+			"closure_coverage": {
+				"applied_weights": {
+					"BlinkL": 1.0,
+					"BlinkLArc1": 0.0,
+					"BlinkLArc2": 0.0,
+					"BlinkLArc3": 0.0,
+					"BlinkLArc4": 0.0,
+					"BlinkLArc5": 0.0,
+					"BlinkLArc6": 0.0,
+					"BlinkLArc7": 0.0,
+					"BlinkR": 1.0,
+					"BlinkRArc1": 0.0,
+					"BlinkRArc2": 0.0,
+					"BlinkRArc3": 0.0,
+					"BlinkRArc4": 0.0,
+					"BlinkRArc5": 0.0,
+					"BlinkRArc6": 0.0,
+					"BlinkRArc7": 0.0,
+					"BrowDown": 0.0,
+					"BrowUp": 0.0,
+					"CheekLift": 0.0,
+					"GazeX": 0.0,
+					"GazeY": 0.0,
+					"MouthOpen": 0.0,
+					"MouthPress": 0.0,
+					"MouthSmile": 0.0
+				},
+				"blend_shape_mode": 0,
+				"mesh_transform": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.0, 0.0)]",
+				"numeric_uniform_scale": 100.0,
+				"rays": 62776,
+				"sampling": "vertices, 3 edge midpoints and triangle centroid; 7 view directions",
+				"surfaces": [
+					{
+						"first": "(-0.07344, 1.570784, -0.117172)",
+						"indices": 5328,
+						"last": "(0.070731, 1.605971, -0.175473)",
+						"material": "eye_white",
+						"primitive": 3,
+						"verts": 896
+					},
+					{
+						"first": "(-0.083943, 1.577677, -0.17023)",
+						"indices": 2640,
+						"last": "(0.07344, 1.610209, -0.16144)",
+						"material": "pupil",
+						"primitive": 3,
+						"verts": 444
+					},
+					{
+						"first": "(-0.07344, 1.584701, -0.178911)",
+						"indices": 12000,
+						"last": "(0.072966, 1.551823, -0.140658)",
+						"material": "skin",
+						"primitive": 3,
+						"verts": 2084
+					}
+				],
+				"uncovered": 0,
+				"witnesses": []
+			},
+			"eyes": 2,
+			"maximum_lid_motion_authoring_m": 0.0233169067651033,
+			"reading_lod_bias": 1000.0,
+			"role": "human",
+			"samples": 17
+		},
+		{
+			"closure_coverage": {
+				"applied_weights": {
+					"BlinkL": 1.0,
+					"BlinkLArc1": 0.0,
+					"BlinkLArc2": 0.0,
+					"BlinkLArc3": 0.0,
+					"BlinkLArc4": 0.0,
+					"BlinkLArc5": 0.0,
+					"BlinkLArc6": 0.0,
+					"BlinkLArc7": 0.0,
+					"BlinkR": 1.0,
+					"BlinkRArc1": 0.0,
+					"BlinkRArc2": 0.0,
+					"BlinkRArc3": 0.0,
+					"BlinkRArc4": 0.0,
+					"BlinkRArc5": 0.0,
+					"BlinkRArc6": 0.0,
+					"BlinkRArc7": 0.0,
+					"BrowDown": 0.0,
+					"BrowUp": 0.0,
+					"CheekLift": 0.0,
+					"GazeX": 0.0,
+					"GazeY": 0.0,
+					"MouthOpen": 0.0,
+					"MouthPress": 0.0,
+					"MouthSmile": 0.0
+				},
+				"blend_shape_mode": 0,
+				"mesh_transform": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.0, 0.0)]",
+				"numeric_uniform_scale": 100.0,
+				"rays": 62524,
+				"sampling": "vertices, 3 edge midpoints and triangle centroid; 7 view directions",
+				"surfaces": [
+					{
+						"first": "(0.0, 0.0342, -0.129)",
+						"indices": 5328,
+						"last": "(0.036274, 0.048827, -0.162337)",
+						"material": "eye_white",
+						"primitive": 3,
+						"verts": 896
+					},
+					{
+						"first": "(-0.027752, 0.02697, -0.148458)",
+						"indices": 2640,
+						"last": "(0.03913, 0.053697, -0.149)",
+						"material": "pupil",
+						"primitive": 3,
+						"verts": 444
+					},
+					{
+						"first": "(-0.03913, 0.023572, -0.165989)",
+						"indices": 12000,
+						"last": "(0.038789, -0.017356, -0.129327)",
+						"material": "insect_primary",
+						"primitive": 3,
+						"verts": 2084
+					}
+				],
+				"uncovered": 0,
+				"witnesses": []
+			},
+			"eyes": 0,
+			"maximum_lid_motion_authoring_m": 0.0485964491963387,
+			"reading_lod_bias": 1000.0,
+			"role": "mosquito",
+			"samples": 17
+		},
+		{
+			"closure_coverage": {
+				"applied_weights": {
+					"BlinkL": 1.0,
+					"BlinkLArc1": 0.0,
+					"BlinkLArc2": 0.0,
+					"BlinkLArc3": 0.0,
+					"BlinkLArc4": 0.0,
+					"BlinkLArc5": 0.0,
+					"BlinkLArc6": 0.0,
+					"BlinkLArc7": 0.0,
+					"BlinkR": 1.0,
+					"BlinkRArc1": 0.0,
+					"BlinkRArc2": 0.0,
+					"BlinkRArc3": 0.0,
+					"BlinkRArc4": 0.0,
+					"BlinkRArc5": 0.0,
+					"BlinkRArc6": 0.0,
+					"BlinkRArc7": 0.0,
+					"BrowDown": 0.0,
+					"BrowUp": 0.0,
+					"CheekLift": 0.0,
+					"GazeX": 0.0,
+					"GazeY": 0.0,
+					"MouthOpen": 0.0,
+					"MouthPress": 0.0,
+					"MouthSmile": 0.0
+				},
+				"blend_shape_mode": 0,
+				"mesh_transform": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.0, 0.0)]",
+				"numeric_uniform_scale": 100.0,
+				"rays": 62524,
+				"sampling": "vertices, 3 edge midpoints and triangle centroid; 7 view directions",
+				"surfaces": [
+					{
+						"first": "(0.055398, 0.005999, -0.110278)",
+						"indices": 5328,
+						"last": "(0.036274, 0.043427, -0.162337)",
+						"material": "eye_white",
+						"primitive": 3,
+						"verts": 896
+					},
+					{
+						"first": "(-0.027752, 0.02157, -0.148458)",
+						"indices": 2640,
+						"last": "(0.03913, 0.048297, -0.149)",
+						"material": "pupil",
+						"primitive": 3,
+						"verts": 444
+					},
+					{
+						"first": "(-0.078172, 0.027015, -0.134916)",
+						"indices": 12000,
+						"last": "(0.038789, -0.017356, -0.129327)",
+						"material": "insect_primary",
+						"primitive": 3,
+						"verts": 2084
+					}
+				],
+				"uncovered": 0,
+				"witnesses": []
+			},
+			"eyes": 1,
+			"maximum_lid_motion_authoring_m": 0.0614194758236408,
+			"reading_lod_bias": 1000.0,
+			"role": "mosquito",
+			"samples": 17
+		},
+		{
+			"closure_coverage": {
+				"applied_weights": {
+					"BlinkL": 1.0,
+					"BlinkLArc1": 0.0,
+					"BlinkLArc2": 0.0,
+					"BlinkLArc3": 0.0,
+					"BlinkLArc4": 0.0,
+					"BlinkLArc5": 0.0,
+					"BlinkLArc6": 0.0,
+					"BlinkLArc7": 0.0,
+					"BlinkR": 1.0,
+					"BlinkRArc1": 0.0,
+					"BlinkRArc2": 0.0,
+					"BlinkRArc3": 0.0,
+					"BlinkRArc4": 0.0,
+					"BlinkRArc5": 0.0,
+					"BlinkRArc6": 0.0,
+					"BlinkRArc7": 0.0,
+					"BrowDown": 0.0,
+					"BrowUp": 0.0,
+					"CheekLift": 0.0,
+					"GazeX": 0.0,
+					"GazeY": 0.0,
+					"MouthOpen": 0.0,
+					"MouthPress": 0.0,
+					"MouthSmile": 0.0
+				},
+				"blend_shape_mode": 0,
+				"mesh_transform": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.0, 0.0)]",
+				"numeric_uniform_scale": 100.0,
+				"rays": 62524,
+				"sampling": "vertices, 3 edge midpoints and triangle centroid; 7 view directions",
+				"surfaces": [
+					{
+						"first": "(-0.022862, 0.005999, -0.110278)",
+						"indices": 5328,
+						"last": "(0.036274, 0.048827, -0.162337)",
+						"material": "eye_white",
+						"primitive": 3,
+						"verts": 896
+					},
+					{
+						"first": "(-0.027752, 0.02697, -0.148458)",
+						"indices": 2640,
+						"last": "(0.03913, 0.053697, -0.149)",
+						"material": "pupil",
+						"primitive": 3,
+						"verts": 444
+					},
+					{
+						"first": "(-0.041015, 0.08329, -0.140411)",
+						"indices": 12000,
+						"last": "(0.038789, -0.017356, -0.129327)",
+						"material": "insect_primary",
+						"primitive": 3,
+						"verts": 2084
+					}
+				],
+				"uncovered": 0,
+				"witnesses": []
+			},
+			"eyes": 2,
+			"maximum_lid_motion_authoring_m": 0.0344405397772789,
+			"reading_lod_bias": 1000.0,
+			"role": "mosquito",
+			"samples": 17
+		}
+	],
+	"checks": 3392,
+	"failures": 0,
+	"maximum_ocular_blink_delta_m": 0.0,
+	"scope": "Imported ocular vertex invariance, closure ray coverage including triangle interiors, shared intervals and scale-aware facial LOD policy; visual review remains separate."
+}

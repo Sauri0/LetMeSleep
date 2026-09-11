@@ -1,0 +1,19 @@
+{
+  "stage": "facial-parts-r2",
+  "pid": 5644,
+  "started_utc": "2026-09-11T23:54:51.5295616Z",
+  "finished_utc": "2026-09-11T23:54:56.4511031Z",
+  "exit_code": 0,
+  "timeout": false,
+  "stderr_bytes": 0,
+  "executable": "C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe",
+  "arguments": [
+    "--path",
+    "C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/game",
+    "--windowed",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/facial_parts08_checks.gd"
+  ]
+}
