@@ -47,20 +47,20 @@ y registra abajo cada candidato efectivamente medido.
 | Área | Criterio de aceptación | Gate independiente | Estado |
 |---|---|---|---|
 | Identidad procedural | Sólo v2; v1 y v3 rechazados; fingerprint determinista | `review091_house_contract.gd`, `procedural09_test.gd`, `map_tasks09_test.gd` | Preparado; v2 integrada; sin ejecutar |
-| Variedad | Las 11 semillas acordadas tienen firmas de estructura distintas, excluyendo seed/cosméticos/muebles | `review091_house_contract.gd` | Preparado; sin ejecutar |
-| Pasillos | Ancho libre físico ≥ 1,50 m en colisión real | `review091_house_contract.gd` | Preparado; sin ejecutar |
-| Descansos | Ancho libre físico ≥ 1,50 m en ambos extremos de cada tramo | `review091_house_contract.gd` | Preparado; sin ejecutar |
-| Escaleras | Ancho libre físico ≥ 1,40 m; huella ≥ 0,28 m; contrahuella ≤ 0,22 m | `review091_house_contract.gd` | Preparado; sin ejecutar |
-| Puertas | Paso abierto real ≥ 1,30 m, superior al diámetro humano de 1,20 m | `review091_house_contract.gd` | Preparado; sin ejecutar |
-| Rutas humanas | Todos los spawns tienen rutas válidas a tareas/pickups; los destinos más lejanos de cada planta se completan con `Arena.step_human`, sin salto ni teleport | `review091_house_contract.gd` | Preparado; sin ejecutar |
-| Rutas mosquito | Todos los spawns tienen rutas válidas a todas las habitaciones y caben en la colisión con puertas abiertas | `review091_house_contract.gd` | Preparado; sin ejecutar |
-| Escaleras físicas | Cada tramo se sube y baja mediante autoridad real; desplazamiento vertical acotado a la contrahuella | `review091_house_contract.gd` | Preparado; sin ejecutar |
+| Variedad | Las 11 semillas acordadas tienen firmas de estructura distintas, excluyendo seed/cosméticos/muebles | `review091_house_contract.gd` | Aprobado: 11/11 firmas únicas |
+| Pasillos | Ancho libre físico ≥ 1,50 m en colisión real | `review091_house_contract.gd` | Aprobado: mínimo 3,30 m |
+| Descansos | Ancho libre físico ≥ 1,50 m en ambos extremos de cada tramo | `review091_house_contract.gd` | Aprobado: probe transversal 11,97 m; no confundir con profundidad libre contractual 2,13 m |
+| Escaleras | Ancho libre físico ≥ 1,40 m; huella ≥ 0,28 m; contrahuella ≤ 0,22 m | `review091_house_contract.gd` | Aprobado: probe lateral 2,85 m con paso 0,025 m; metadata exacta 2,80 m; huella/contrahuella dentro del contrato |
+| Puertas | Paso abierto real ≥ 1,30 m, superior al diámetro humano de 1,20 m | `review091_house_contract.gd` | Aprobado: probe con hoja abierta 1,93 m; portal nominal 2,00 m |
+| Rutas humanas | Todos los spawns tienen rutas válidas a tareas/pickups; los destinos más lejanos de cada planta se completan con `Arena.step_human`, sin salto ni teleport | `review091_house_contract.gd` | Aprobado: 413 seguimientos físicos, 0 fallos |
+| Rutas mosquito | Todos los spawns tienen rutas válidas a todas las habitaciones y caben en la colisión con puertas abiertas | `review091_house_contract.gd` | Aprobado en 11 semillas, 0 fallos |
+| Escaleras físicas | Cada tramo se sube y baja mediante autoridad real; desplazamiento vertical acotado a la contrahuella | `review091_house_contract.gd` | Aprobado en 11 semillas |
 | Escala de 3 plantas | Máximo contractual 22 habitaciones, seis pasillos y cuatro tramos; luces ≤ 32 y todas las plantas iluminadas | Test del implementador + revisión World integrada | Metadatos acordados; gate visual/integración pendiente |
-| Cámara/cuerpo | Dos giros completos mirando abajo, con marcha; sin pasos congelados ni contrarrotación; recenter en 1 s | `review091_motion_combat_contract.gd` a 30/60/120 Hz | Preparado; ejecución nativa pendiente porque el gate también instancia `ActorView` |
-| Movimiento | Caminar, correr y agacharse activos durante giro; cuerpo siempre dentro de colisión generada | `review091_motion_combat_contract.gd` | Preparado; ejecución nativa pendiente |
-| Entrada a adhesión | El salto total de raíz al entrar en `bitten` no supera un frame de sprint a 60 Hz + 5 mm (0,0883 m) | `review091_motion_combat_contract.gd` sobre `ActorView` real | Preparado para renderer nativo; el implementador midió 0,1423 m y Worker 1 prepara corrección |
-| Pose/contacto | Mosquito adherido sigue exactamente la zona de la pose autoritativa; pose pública e hitbox coinciden | `review091_motion_combat_contract.gd` | Preparado; sin ejecutar |
-| Defensa manual | Anticipación visible; un rayo manual produce exactamente una transición de impacto; secuencia duplicada no reinicia ataque | `review091_motion_combat_contract.gd` | Preparado; sin ejecutar |
+| Cámara/cuerpo | Dos giros completos mirando abajo, con marcha; sin pasos congelados ni contrarrotación; recenter en 1 s | `review091_motion_combat_contract.gd` a 30/60/120 Hz | Aprobado nativo: 150/150 gate total; error final ≤ 0,00000181 rad |
+| Movimiento | Caminar, correr y agacharse activos durante giro; cuerpo siempre dentro de colisión generada | `review091_motion_combat_contract.gd` | Aprobado a 30/60/120 Hz |
+| Entrada a adhesión | El salto total de raíz al entrar en `bitten` no supera un frame de sprint a 60 Hz + 5 mm (0,0883 m) | `review091_motion_combat_contract.gd` sobre `ActorView` real | Aprobado: 0,069934 m ≤ 0,088333 m |
+| Pose/contacto | Mosquito adherido sigue exactamente la zona de la pose autoritativa; pose pública e hitbox coinciden | `review091_motion_combat_contract.gd` | Aprobado: ambos errores 0 |
+| Defensa manual | Anticipación visible; un rayo manual produce exactamente una transición de impacto; secuencia duplicada no reinicia ataque | `review091_motion_combat_contract.gd` | Aprobado: una transición y secuencia idempotente |
 | Default humano | Pijama clásico 0, pantuflas clásicas 0 y gorro de noche 3 | `review091_preview_views.gd` | Preparado; sin ejecutar |
 | Catálogo | Cada opción de ambos roles llega a Preview, tiene mallas visibles finitas y conserva la firma de colliders | `review091_preview_views.gd` | Preparado; import/render pendiente |
 | Ángulos | Cada opción se captura en frente, perfil y espalda; hash frontal distinto dentro de cada categoría | `review091_preview_views.gd` | Preparado; aprobación visual humana pendiente |
@@ -122,12 +122,25 @@ código 0 en 18,2 s. Resultados válidos del candidato integrado:
 - `review091_online_cosmetics_contract.gd`: 27/27 en la repetición. El primer
   intento sólo encontró un tipo no inferible en el fixture; no llegó al runtime.
 
-`review091_house_contract.gd` ejecutó 5345 checks sobre las once semillas y
+La primera versión de `review091_house_contract.gd` ejecutó 5345 checks sobre las once semillas y
 produjo 205 fallos, todos añadidos por el barrido recto conservador contra hojas
 abiertas. No fallaron validación, firmas, capacidad, anchos, vuelos físicos ni
 rutas físicas lejanas. Un probe sobre semillas 1 y 2 confirmó que
 `Arena.step_human` rodea las hojas señaladas y llega sin estancarse (321 y 220
 ticks). El gate corregido exige ahora completion física cuando detecta ese
 cruce; el corpus final corregido sigue pendiente de un nuevo turno. En las once
-semillas no apareció ningún fallo equivalente para mosquito, pero el resultado
-final tampoco se declarará hasta repetir el gate completo.
+semillas no apareció ningún fallo equivalente para mosquito.
+
+## Cierre de casa y movimiento
+
+El intento monolítico corregido de casa alcanzó el timeout obligatorio de
+55,051 s y fue terminado sin huérfanos. Las once semillas se repitieron como
+shards acotados: 5591/5591, once firmas únicas y 413 rutas humanas físicamente
+seguidas; no hubo fallos mosquito. El informe combinado conserva el timeout y
+los tiempos/exit codes de cada shard.
+
+El gate nativo de movimiento terminó 150/150 sobre OpenGL 3.3 Compatibility y
+RTX 3060 Ti. La transición `bitten` midió 0,069934 m, adhesión y pose dieron
+error 0, y el torso quedó a menos de 0,00000181 rad del frente tras el segundo
+real de recentrado. Preview, corpus de 1000 semillas, benchmark y WAN no forman
+parte de este cierre.

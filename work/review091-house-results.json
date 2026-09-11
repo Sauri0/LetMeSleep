@@ -1,0 +1,261 @@
+{
+  "checks": 5591,
+  "failures": [],
+  "cases": [
+    {
+      "floors": 3,
+      "layout_signature": "1953471c1a7e95126844d6bfca355d76888bf6658d6ed46b0a6e67e8f9840762",
+      "map_id": "house-v2-1",
+      "min_corridor_width": 3.55,
+      "min_door_width": 1.925,
+      "min_landing_width": 11.975,
+      "min_stair_width": 2.85,
+      "physical_routes": 37,
+      "rooms": 22,
+      "seed": 1
+    },
+    {
+      "floors": 2,
+      "layout_signature": "4e2a72abaf2cf0673669753be05d3d8f9a3e34157e720070af553ddbf182f714",
+      "map_id": "house-v2-2",
+      "min_corridor_width": 14.175,
+      "min_door_width": 1.925,
+      "min_landing_width": 11.975,
+      "min_stair_width": 2.85,
+      "physical_routes": 33,
+      "rooms": 17,
+      "seed": 2
+    },
+    {
+      "floors": 3,
+      "layout_signature": "883e5eb5024e73564e6cc815a9e21ac4554e8b6cf2fd15f87858216c32161e39",
+      "map_id": "house-v2-7",
+      "min_corridor_width": 10.375,
+      "min_door_width": 1.925,
+      "min_landing_width": 11.975,
+      "min_stair_width": 2.85,
+      "physical_routes": 51,
+      "rooms": 18,
+      "seed": 7
+    },
+    {
+      "floors": 3,
+      "layout_signature": "053ec87a0bc1decf4574e26eb490237baa6503d11d4b7e74ee0a3408b1db5dcd",
+      "map_id": "house-v2-31",
+      "min_corridor_width": 9.95,
+      "min_door_width": 1.925,
+      "min_landing_width": 11.975,
+      "min_stair_width": 2.85,
+      "physical_routes": 46,
+      "rooms": 19,
+      "seed": 31
+    },
+    {
+      "floors": 3,
+      "layout_signature": "1e1ac2a54d127832c9478e7ae2029648c7863400b1ae2511ed09b23cc66b2855",
+      "map_id": "house-v2-97",
+      "min_corridor_width": 9.45,
+      "min_door_width": 1.925,
+      "min_landing_width": 12.0,
+      "min_stair_width": 2.85,
+      "physical_routes": 42,
+      "rooms": 22,
+      "seed": 97
+    },
+    {
+      "floors": 3,
+      "layout_signature": "9c0d38823b30990f46ff4b4ace1c5adc0a662a4864ef075ea64c1e59c80feb6b",
+      "map_id": "house-v2-257",
+      "min_corridor_width": 3.875,
+      "min_door_width": 1.925,
+      "min_landing_width": 11.975,
+      "min_stair_width": 2.85,
+      "physical_routes": 65,
+      "rooms": 22,
+      "seed": 257
+    },
+    {
+      "floors": 3,
+      "layout_signature": "a7d07b7904b30f986a2789337e8632fe31c2c3891b659344ff190f8fd9c84d33",
+      "map_id": "house-v2-997",
+      "min_corridor_width": 3.55,
+      "min_door_width": 1.925,
+      "min_landing_width": 11.975,
+      "min_stair_width": 2.85,
+      "physical_routes": 42,
+      "rooms": 21,
+      "seed": 997
+    },
+    {
+      "floors": 2,
+      "layout_signature": "dc501666bbf80ffcfb4fe7e5cc430268f741c76534d376932aa2b6247e74e883",
+      "map_id": "house-v2-2026",
+      "min_corridor_width": 3.85,
+      "min_door_width": 1.925,
+      "min_landing_width": 11.975,
+      "min_stair_width": 2.85,
+      "physical_routes": 23,
+      "rooms": 19,
+      "seed": 2026
+    },
+    {
+      "floors": 2,
+      "layout_signature": "0a93fb099c68f53ec58e42b06988d89c33ec4afb23504dca0ff09ee1564e6824",
+      "map_id": "house-v2-65537",
+      "min_corridor_width": 3.3,
+      "min_door_width": 1.925,
+      "min_landing_width": 11.975,
+      "min_stair_width": 2.85,
+      "physical_routes": 28,
+      "rooms": 18,
+      "seed": 65537
+    },
+    {
+      "floors": 2,
+      "layout_signature": "bb7e8b61ee7d49391a36db9123ac649edc6c7fcb8be8cb04d2f30a9d68189631",
+      "map_id": "house-v2-1234567",
+      "min_corridor_width": 3.675,
+      "min_door_width": 1.925,
+      "min_landing_width": 11.975,
+      "min_stair_width": 2.85,
+      "physical_routes": 32,
+      "rooms": 16,
+      "seed": 1234567
+    },
+    {
+      "floors": 2,
+      "layout_signature": "d003e81403a870e2fd759a5671dadefc3d66faa752172495ce4148d623f8bfea",
+      "map_id": "house-v2-2147483646",
+      "min_corridor_width": 3.775,
+      "min_door_width": 1.925,
+      "min_landing_width": 11.975,
+      "min_stair_width": 2.85,
+      "physical_routes": 14,
+      "rooms": 20,
+      "seed": 2147483646
+    }
+  ],
+  "corpus": [
+    1,
+    2,
+    7,
+    31,
+    97,
+    257,
+    997,
+    2026,
+    65537,
+    1234567,
+    2147483646
+  ],
+  "thresholds": {
+    "corridor_m": 1.5,
+    "door_m": 1.3,
+    "landing_m": 1.5,
+    "rise_m": 0.22,
+    "stair_m": 1.4,
+    "tread_m": 0.28
+  },
+  "scope": "production geometry/navigation; deterministic source corpus; open-door circulation; no renderer, visual approval, FPS, EOS, relay or WAN claim; complete 11-seed gate executed as bounded per-seed shards after the monolithic 55 s attempt timed out",
+  "source_sha256": {
+    "res://scripts/arena.gd": "209f4ac0c36b86754c61f47591dd2e99f8703ecb1d68bb1f41d86831f0171c7a",
+    "res://scripts/door_catalog.gd": "fd2da6e0ab07d4ea4ad0e8acf188514c96234a1bed43874cdbd01b9ab09022ef",
+    "res://scripts/house_validation.gd": "de7b65b1680c926f4460225989e382e5420a49659fd0a042912e1d5f3111f34e",
+    "res://scripts/map_catalog.gd": "d3ebdeb78158f70f6fa4565cd6b5daf8851fe75637034e7f5bfbca83a4aab0d5",
+    "res://scripts/map_navigation.gd": "846d031bda18feea0953b1c268439b3c778e632216a88e0bcb65b0a5cfde10b0",
+    "res://scripts/procedural_house.gd": "bb3f9296a7718bbcfd8aa03fdface39f44da5d2a09942c9fc54e36adab6d11ce",
+    "res://tests/review091_house_contract.gd": "d05a5f41b18d30b908a2b9924656d01099b8b20b91ac2883672a89dc7233d9a1"
+  },
+  "execution": {
+    "initial_monolithic_timeout_ms": 55000,
+    "initial_monolithic_exit_code": 124,
+    "shard_timeout_ms": 55000,
+    "shards": [
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 1,
+        "checks": 564,
+        "elapsed_ms": 11680
+      },
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 2,
+        "checks": 447,
+        "elapsed_ms": 6524
+      },
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 7,
+        "checks": 506,
+        "elapsed_ms": 11837
+      },
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 31,
+        "checks": 519,
+        "elapsed_ms": 11747
+      },
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 97,
+        "checks": 569,
+        "elapsed_ms": 10984
+      },
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 257,
+        "checks": 592,
+        "elapsed_ms": 14428
+      },
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 997,
+        "checks": 551,
+        "elapsed_ms": 11054
+      },
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 2026,
+        "checks": 473,
+        "elapsed_ms": 5915
+      },
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 65537,
+        "checks": 460,
+        "elapsed_ms": 6509
+      },
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 1234567,
+        "checks": 428,
+        "elapsed_ms": 6601
+      },
+      {
+        "exit_code": 0,
+        "failures": 0,
+        "seed": 2147483646,
+        "checks": 482,
+        "elapsed_ms": 5577
+      }
+    ],
+    "layout_signatures_unique": 11
+  },
+  "measurement_notes": {
+    "probe_step_m": 0.025,
+    "physical_width_method": "Lateral centre-travel sampled in 0.025 m increments, then the 1.20 m human diameter is added; two sampled sides can differ from an exact boundary by up to 0.05 m total.",
+    "stair": "Reported 2.85 m is the sampled transverse collision clearance; generated metadata owns an exact 2.80 m stair width.",
+    "landing": "Reported 11.97-12.00 m is the transverse open span at stair endpoints, not landing run depth. The separate v2 layout contract owns minimum 2.13 m free landing depth.",
+    "door": "Reported 1.93 m is sampled collision clearance with the leaf open; generated portal metadata owns an exact 2.00 m opening."
+  }
+}

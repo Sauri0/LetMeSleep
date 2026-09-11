@@ -1,0 +1,39 @@
+{
+	"cases": [
+		{
+			"floors": 2,
+			"layout_signature": "d003e81403a870e2fd759a5671dadefc3d66faa752172495ce4148d623f8bfea",
+			"map_id": "house-v2-2147483646",
+			"min_corridor_width": 3.775,
+			"min_door_width": 1.925,
+			"min_landing_width": 11.975,
+			"min_stair_width": 2.85,
+			"physical_routes": 14,
+			"rooms": 20,
+			"seed": 2147483646
+		}
+	],
+	"checks": 482,
+	"corpus": [
+		2147483646
+	],
+	"failures": [],
+	"scope": "production geometry/navigation; deterministic source corpus; open-door circulation; no renderer, visual approval, FPS, EOS, relay or WAN claim",
+	"source_sha256": {
+		"res://scripts/arena.gd": "209f4ac0c36b86754c61f47591dd2e99f8703ecb1d68bb1f41d86831f0171c7a",
+		"res://scripts/door_catalog.gd": "fd2da6e0ab07d4ea4ad0e8acf188514c96234a1bed43874cdbd01b9ab09022ef",
+		"res://scripts/house_validation.gd": "de7b65b1680c926f4460225989e382e5420a49659fd0a042912e1d5f3111f34e",
+		"res://scripts/map_catalog.gd": "d3ebdeb78158f70f6fa4565cd6b5daf8851fe75637034e7f5bfbca83a4aab0d5",
+		"res://scripts/map_navigation.gd": "846d031bda18feea0953b1c268439b3c778e632216a88e0bcb65b0a5cfde10b0",
+		"res://scripts/procedural_house.gd": "bb3f9296a7718bbcfd8aa03fdface39f44da5d2a09942c9fc54e36adab6d11ce",
+		"res://tests/review091_house_contract.gd": "d05a5f41b18d30b908a2b9924656d01099b8b20b91ac2883672a89dc7233d9a1"
+	},
+	"thresholds": {
+		"corridor_m": 1.5,
+		"door_m": 1.3,
+		"landing_m": 1.5,
+		"rise_m": 0.22,
+		"stair_m": 1.4,
+		"tread_m": 0.28
+	}
+}
