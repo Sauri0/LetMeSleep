@@ -70,8 +70,81 @@ static func validate(data: Dictionary) -> Dictionary:
 	if data.stations.size()<8: errors.append("Missing bedtime stations")
 	if int(data.get("generator_version",0))>=2:
 		errors.append_array(validate_circulation(data,human,extra))
+	if int(data.get("generator_version",0))>=3:
+		errors.append_array(validate_zoning(data))
 	return {"passed":errors.is_empty(),"errors":errors,"valid_edges":valid_edges,"rejected_edges":rejected,
 		"reachable_nodes":seen.size(),"node_count":nodes.size(),"rooms":data.rooms.size(),"floors":data.floor_levels.size()}
+
+static func room_interior(data: Dictionary, bounds: AABB) -> AABB:
+	var inside:=bounds
+	for axis: int in [0,2]:
+		var limit: float=float(data.half_x if axis==0 else data.half_z)-.25
+		var first:=0.0 if absf(absf(bounds.position[axis])-limit)<.001 else .1
+		var last:=0.0 if absf(absf(bounds.end[axis])-limit)<.001 else .1
+		inside.position[axis]+=first;inside.size[axis]-=first+last
+	inside.size.y=3.0
+	return inside
+
+static func _portal_hall(data: Dictionary, room: Dictionary) -> Vector3:
+	var point: Vector3=room.portal
+	if int(room.door_axis)==0: point.x=0
+	else:
+		var corridor: AABB=data.corridors[int(room.floor)*3+(1 if point.z<0 else 2)]
+		point.z=corridor.get_center().z
+	return point
+
+static func portal_distance(data: Dictionary, a: Dictionary, b: Dictionary) -> float:
+	if a.floor!=b.floor: return INF
+	var first:=_portal_hall(data,a);var last:=_portal_hall(data,b)
+	return Vector3(a.portal).distance_to(first)+absf(first.x-last.x)+absf(first.z-last.z)+last.distance_to(b.portal)
+
+static func validate_zoning(data: Dictionary) -> Array[String]:
+	var errors: Array[String]=[]
+	var floor_count: int=data.floor_levels.size()
+	var ground: Dictionary={}
+	for floor_index: int in range(floor_count):
+		var count:=0;var bathrooms:=0;var bedrooms:=0
+		var bath: Dictionary={}
+		var sleep_rooms: Array[Dictionary]=[]
+		for room: Dictionary in data.rooms:
+			if int(room.floor)!=floor_index: continue
+			count+=1
+			var uses: Array=room.get("uses",[])
+			if uses.is_empty() or uses.size()>2 or str(uses[0])!=str(room.get("theme_id","")):
+				errors.append("Invalid room use contract: "+str(room.id));continue
+			var inside:=room_interior(data,room.bounds)
+			var area:=inside.size.x*inside.size.z
+			if absf(area-float(room.get("area_m2",0)))>.005: errors.append("Incorrect useful room area: "+str(room.id))
+			if str(room.get("zone",""))=="service":
+				if inside.size.x<3.40-.005 or inside.size.z<4.0-.005 or area>20.0+.005:
+					errors.append("Disproportionate service room: "+str(room.id))
+			if "bathroom" in uses: bathrooms+=1;bath=room
+			if str(room.get("zone",""))=="sleep":
+				bedrooms+=1;sleep_rooms.append(room)
+				if floor_index==0: errors.append("Primary bedroom on ground floor: "+str(room.id))
+			if floor_index==0:
+				for use: String in uses: ground[use]=room
+			var regions: Array=room.get("functional_zones",[])
+			if regions.size()!=uses.size(): errors.append("Missing functional zone: "+str(room.id))
+			for region: Dictionary in regions:
+				var bounds: AABB=region.bounds
+				if not inside.grow(.001).encloses(bounds) or str(region.use) not in uses:
+					errors.append("Invalid functional zone: "+str(room.id))
+		if bathrooms!=1: errors.append("Expected one bathroom on floor %d"%floor_index)
+		if floor_index==0 and count!=8: errors.append("Ground floor must contain eight rooms")
+		if floor_index>0:
+			if count<(8 if floor_count==2 else 7) or count>(10 if floor_count==2 else 7): errors.append("Invalid upper-floor room count")
+			if bedrooms<2: errors.append("Missing upper-floor bedrooms")
+			for bedroom: Dictionary in sleep_rooms:
+				if bath.is_empty() or portal_distance(data,bath,bedroom)>30.0: errors.append("Bedroom has no nearby same-floor bathroom")
+	for use: String in ["bathroom","laundry","pantry","kitchen","dining","entry","living_room"]:
+		if not ground.has(use): errors.append("Missing ground-floor use: "+use)
+	for relation: Array in [["pantry","kitchen",11.0],["laundry","pantry",12.5],["kitchen","living_room",12.0]]:
+		if ground.has(relation[0]) and ground.has(relation[1]):
+			if portal_distance(data,ground[relation[0]],ground[relation[1]])>float(relation[2]): errors.append("Domestic adjacency too far: "+str(relation[0])+"/"+str(relation[1]))
+	if ground.has("kitchen") and ground.has("dining") and ground.kitchen.id!=ground.dining.id:
+		errors.append("Kitchen and dining must share their connected room")
+	return errors
 
 static func validate_circulation(data: Dictionary, human: Dictionary, extra: Array[AABB]) -> Array[String]:
 	var errors: Array[String]=[]

@@ -1,7 +1,8 @@
 # Casa 0.9.2: especificación implementable del generador v3
 
-Estado: diseño preparado, sin modificar runtime v2 ni ejecutar motor.
-Se implementará después del cierre/publicación de 0.9.1 por Director.
+Estado: implementación aislada autorizada por Director en `lms092-house`,
+rama `codex/092-house`, base `f037ab1`. El worktree/runtime0.9.1 se conserva.
+La integración y publicación0.9.2 siguen después de0.9.1. Godot requiere turno.
 Este documento sustituye las opciones abiertas de `modeler091-zoning-plan.md`
 para el siguiente tramo. Las dimensiones son decisiones de diseño; todavía
 no son resultados de pruebas del generador v3.
@@ -173,8 +174,9 @@ focos; revisar alcance/ángulo de la luz de cada ambiente compuesto con Worker 2
 
 ## 7. Secuencia de implementación y propiedad
 
-1. Después de liberar 0.9.1, Director autoriza baseline/versión. Capturar antes
-   de cambiar las semillas/cámaras de comparación. Modelador 1 adapta estructura
+1. Director autorizó implementación aislada antes de publicar0.9.1; la
+   integración/publicación conserva el orden. Capturar antes de cambiar las
+   semillas/cámaras de comparación cuando haya turno. Modelador 1 adapta estructura
    y asigna usos v3 en procedural_house; MapCatalog rechaza IDs incompatibles.
 2. Prueba nueva de estructura/zonificación y corpus de proporciones antes de
    cambiar colocación. Cualquier rechazo se registra por semilla; no usar

@@ -2,7 +2,7 @@ class_name ProceduralHouse
 extends RefCounted
 ## Deterministic spatial assembly. Runtime integration follows validation and
 ## furnishing; never substitute the authored house when generation fails.
-const VERSION := 2
+const VERSION := 3
 const FLOOR_HEIGHT := 3.2
 const WALL := .20
 const EXTERIOR_WALL := .25
@@ -18,7 +18,7 @@ const STAIR_APPROACH := .65
 const CENTRAL_ROOM_HALF_DEPTH := 3.8
 const RAIL_HALF_WIDTH := .0475
 const FINISH_ALLOWANCE := .06
-const LAYOUT := {"stair_offset":3.65,"room_inset":7.1,"hall_end_min":6.4,"hall_end_max":6.9}
+const LAYOUT := {"stair_offset":3.65,"room_inset":7.1,"hall_end_min":6.4,"hall_end_max":6.6}
 const DoorGeometry=preload("res://scripts/door_geometry.gd")
 const Furniture=preload("res://scripts/furniture_blueprint.gd")
 const Placement = preload("res://scripts/pickup_placement.gd")
@@ -39,6 +39,7 @@ const TASKS := [["Cerrar la ventana","VENTANA"],["Prender el ventilador","VENTIL
 var _random_state := 1
 var _solid_keys: Dictionary = {}
 var _data: Dictionary = {}
+var _name_counts: Dictionary = {}
 
 func _next() -> int:
 	_random_state = (_random_state*48271)%2147483647
@@ -69,10 +70,12 @@ static func parse_seed(id: String) -> int:
 func generate_structure(seed_value: int) -> Dictionary:
 	_random_state = clampi(seed_value,1,2147483646)
 	_solid_keys.clear()
+	_name_counts.clear()
 	var floor_count := _integer(2,3)
-	var half_x := _grid(14.0,16.0)
-	var half_z := _grid(11.0,12.5)
-	var hall_half := _grid(1.7,2.1)
+	var half_x := _grid(13.0,14.0)
+	var half_z := _grid(11.0,11.4)
+	var hall_half := _grid(1.7,1.8)
+	var service_quadrant := _integer(0,3)
 	_data={"id":map_id(seed_value),"label":"Casa de esta noche","playable":true,
 		"generator_version":VERSION,"seed":clampi(seed_value,1,2147483646),
 		"half_x":half_x,"half_z":half_z,"ceiling":floor_count*FLOOR_HEIGHT,
@@ -84,6 +87,7 @@ func generate_structure(seed_value: int) -> Dictionary:
 		"human_spawns":[],"mosquito_spawns":[],"respawn_points":[],"lobby_spawns":[],
 		"nav_nodes":[],"nav_edges":[],"generation_stage":"structure_unvalidated"}
 	_data.layout_dimensions=LAYOUT.duplicate()
+	_data.service_quadrant=service_quadrant
 	_data.layout_dimensions.merge({"floor_height":FLOOR_HEIGHT,"wall":WALL,"exterior_wall":EXTERIOR_WALL,
 		"stair_width":STAIR_WIDTH,"hole_width":STAIR_HOLE_WIDTH,"run_half":STAIR_RUN_HALF,
 		"rise":STAIR_RISE,"tread":STAIR_TREAD,"steps":STAIR_STEPS,"central_hall_width":hall_half*2-WALL,
@@ -155,16 +159,8 @@ func _floor_rooms(floor_index: int, total_floors: int, half_x: float, half_z: fl
 	var y := floor_index*FLOOR_HEIGHT
 	var north_end := -_grid(LAYOUT.hall_end_min,LAYOUT.hall_end_max)
 	var south_start := _grid(LAYOUT.hall_end_min,LAYOUT.hall_end_max)
-	var split_quadrants: Array[int]=[0,1,2,3]
-	for index: int in range(3,0,-1):
-		var swap := _integer(0,index)
-		var previous := split_quadrants[index]
-		split_quadrants[index]=split_quadrants[swap];split_quadrants[swap]=previous
-	var split_count := _integer(2,4) if total_floors==2 else _integer(0,2)
-	# 22 rooms + six cross-hall lights + four flight lights fit the 32-light budget.
-	if total_floors==3:
-		var used_splits: int=_data.rooms.size()-floor_index*6
-		split_count=mini(split_count,4-used_splits)
+	var service: int=_data.service_quadrant
+	var social:=service^1
 	_data.corridors.append(AABB(Vector3(-hall_half,y,-half_z+.25),Vector3(hall_half*2,FLOOR_HEIGHT,half_z*2-.5)))
 	_data.corridors.append(AABB(Vector3(-half_x+EXTERIOR_WALL,y,north_end),Vector3(half_x*2-EXTERIOR_WALL*2,FLOOR_HEIGHT,-CENTRAL_ROOM_HALF_DEPTH-north_end)))
 	_data.corridors.append(AABB(Vector3(-half_x+EXTERIOR_WALL,y,CENTRAL_ROOM_HALF_DEPTH),Vector3(half_x*2-EXTERIOR_WALL*2,FLOOR_HEIGHT,south_start-CENTRAL_ROOM_HALF_DEPTH)))
@@ -176,25 +172,111 @@ func _floor_rooms(floor_index: int, total_floors: int, half_x: float, half_z: fl
 		var low_z := south_start if rear else -half_z+.25
 		var high_z := half_z-.25 if rear else north_end
 		var cuts: Array[float]=[low_x,high_x]
-		if split_quadrants.find(quadrant)<split_count:
-			cuts.insert(1,snappedf(lerpf(low_x,high_x,_grid(.40,.60)),.05))
+		var specs: Array[Dictionary]=[]
+		if floor_index==0 and quadrant==service:
+			cuts=_room_cuts(low_x,high_x,3)
+			for use: String in (["pantry","bathroom","laundry"] if right else ["laundry","bathroom","pantry"]):
+				specs.append({"uses":[use],"zone":"service"})
+		elif floor_index==0 and quadrant==social:
+			specs.append({"uses":["kitchen","dining"],"zone":"social","near_spine":true})
+		elif floor_index==0:
+			specs.append({"uses":["game_room","library"] if quadrant%2==service%2 else ["study","music_room"],"zone":"work"})
+		elif quadrant==service:
+			var bath_width:=_grid(3.7,3.9)
+			cuts.insert(1,high_x-bath_width if right else low_x+bath_width)
+			var bath: Dictionary={"uses":["bathroom"],"zone":"service"}
+			var bedroom: Dictionary={"uses":["bedroom_blue" if floor_index==1 else "guest_room"],"zone":"sleep","beds":1}
+			specs.assign([bedroom,bath] if right else [bath,bedroom])
+		elif quadrant==social:
+			if total_floors==2:
+				cuts=_room_cuts(low_x,high_x,2)
+				for use: String in ["bedroom_rose","guest_room"]: specs.append({"uses":[use],"zone":"sleep","beds":1})
+			else:
+				specs.append({"uses":["bedroom_rose" if floor_index==1 else "bedroom_blue"],"zone":"sleep","beds":2})
+		else:
+			var uses: Array[String]=["music_room","library"] if quadrant%2==service%2 else ["sewing_room","study"]
+			if floor_index==2: uses.assign(["game_room","library"] if quadrant%2==service%2 else ["study","music_room"])
+			if total_floors==2 and _integer(0,1)==1:
+				cuts=_room_cuts(low_x,high_x,2)
+				for use: String in uses: specs.append({"uses":[use],"zone":"work"})
+			else: specs.append({"uses":uses,"zone":"work"})
 		for column: int in range(cuts.size()-1):
-			_room(AABB(Vector3(cuts[column],y,low_z),Vector3(cuts[column+1]-cuts[column],FLOOR_HEIGHT,high_z-low_z)),floor_index,2,low_z if rear else high_z,not rear)
+			var spec: Dictionary=specs[column]
+			spec.quadrant=quadrant;spec.band="south" if rear else "north"
+			_room(AABB(Vector3(cuts[column],y,low_z),Vector3(cuts[column+1]-cuts[column],FLOOR_HEIGHT,high_z-low_z)),floor_index,2,low_z if rear else high_z,spec)
 	for right: bool in [false,true]:
 		var low_x := hall_half if right else -half_x+float(LAYOUT.room_inset)
 		var high_x := half_x-float(LAYOUT.room_inset) if right else -hall_half
-		_room(AABB(Vector3(low_x,y,-CENTRAL_ROOM_HALF_DEPTH),Vector3(high_x-low_x,FLOOR_HEIGHT,CENTRAL_ROOM_HALF_DEPTH*2)),floor_index,0,low_x if right else high_x,not right)
+		var service_side: bool=right==(service%2==1)
+		var spec: Dictionary={"uses":["entry","study"] if service_side else ["living_room"],"zone":"social"}
+		if floor_index>0:
+			spec={"uses":["library","study"] if service_side else ["bedroom_green"],"zone":"work" if service_side else "sleep","beds":0 if service_side else 1}
+		elif not service_side: spec.portal_bias=1.8 if service>=2 else -1.8
+		else: spec.portal_bias=-1.8 if service>=2 else 1.8
+		spec.quadrant=-1;spec.band="central"
+		_room(AABB(Vector3(low_x,y,-CENTRAL_ROOM_HALF_DEPTH),Vector3(high_x-low_x,FLOOR_HEIGHT,CENTRAL_ROOM_HALF_DEPTH*2)),floor_index,0,low_x if right else high_x,spec)
 
-func _room(bounds: AABB, floor_index: int, door_axis: int, door_coordinate: float, _positive_side: bool) -> void:
+func _room_cuts(low: float, high: float, count: int) -> Array[float]:
+	var result: Array[float]=[low]
+	for index: int in range(1,count):
+		var nominal:=lerpf(low,high,float(index)/count)+_grid(-.10,.10)
+		result.append(clampf(snappedf(nominal,.05),result.back()+3.6,high-(count-index)*3.6))
+	result.append(high)
+	return result
+
+func _theme(id: String) -> Array:
+	for definition: Array in ROOM_THEMES:
+		if str(definition[3])==id: return definition
+	return []
+
+func _interior(bounds: AABB) -> AABB:
+	var result:=bounds
+	for axis: int in [0,2]:
+		var limit: float=float(_data.half_x if axis==0 else _data.half_z)-EXTERIOR_WALL
+		var low_inset:=0.0 if absf(absf(bounds.position[axis])-limit)<.001 else WALL*.5
+		var high_inset:=0.0 if absf(absf(bounds.end[axis])-limit)<.001 else WALL*.5
+		result.position[axis]+=low_inset;result.size[axis]-=low_inset+high_inset
+	result.size.y=FLOOR_HEIGHT-.2
+	return result
+
+func _room_usage(room: Dictionary, spec: Dictionary) -> void:
+	var uses: Array[String]=[];uses.assign(spec.uses)
+	var primary:=_theme(uses[0])
+	var name:=str(primary[0])
+	if uses.size()>1: name+=" y "+str(_theme(uses[1])[0]).to_lower()
+	if int(spec.get("beds",1))>1: name="Dormitorio familiar"
+	_name_counts[name]=int(_name_counts.get(name,0))+1
+	room.name=name+(" %d"%int(_name_counts[name]) if int(_name_counts[name])>1 else "")
+	room.label=str(room.name).to_upper();room.color=Color(str(primary[1]));room.theme=str(primary[2]);room.theme_id=uses[0]
+	room.uses=uses;room.zone=spec.zone;room.bed_count=int(spec.get("beds",0))
+	room.quadrant=spec.quadrant;room.band=spec.band
+	var inside:=_interior(room.bounds)
+	room.interior_bounds=inside;room.area_m2=inside.size.x*inside.size.z
+	room.functional_zones=[]
+	var axis:=0 if inside.size.x>=inside.size.z else 2
+	for index: int in range(uses.size()):
+		var region:=inside
+		region.size[axis]/=uses.size()
+		var order:=uses.size()-1-index if uses[0]=="kitchen" and inside.get_center().x<0 else index
+		region.position[axis]+=region.size[axis]*order
+		room.functional_zones.append({"id":str(room.id)+"/"+uses[index],"use":uses[index],"bounds":region,
+			"anchor":Vector3(region.get_center().x,inside.position.y,region.get_center().z)})
+
+func _room(bounds: AABB, floor_index: int, door_axis: int, door_coordinate: float, spec: Dictionary) -> void:
 	var id := "room-%02d"%_data.rooms.size()
 	var along := 2 if door_axis==0 else 0
 	var door_center: Vector3=bounds.get_center()
 	var half_span := bounds.size[along]*.5
 	var variation := minf(half_span-DOOR_WIDTH*.5-.65,.75)
 	door_center[along]+=_grid(-maxf(0,variation),maxf(0,variation))
+	if bool(spec.get("near_spine",false)):
+		door_center[along]=bounds.position[along]+1.35 if bounds.get_center()[along]>0 else bounds.end[along]-1.35
+	elif spec.has("portal_bias"): door_center[along]=float(spec.portal_bias)
+	elif str(spec.zone)=="service": door_center[along]=bounds.get_center()[along]+_grid(-.10,.10)
 	door_center[door_axis]=door_coordinate;door_center.y=bounds.position.y
 	_data.rooms.append({"id":id,"name":"Habitación %d"%(_data.rooms.size()+1),"label":"HABITACIÓN",
 		"bounds":bounds,"floor":floor_index,"color":Color("b8c5b4"),"portal":door_center,"door_axis":door_axis})
+	_room_usage(_data.rooms.back(),spec)
 	for axis: int in [0,2]:
 		var a := 2 if axis==0 else 0
 		for coordinate: float in [bounds.position[axis],bounds.end[axis]]:
@@ -278,17 +360,9 @@ func _layout_metadata() -> void:
 			"target":Vector3(stair.center_x,y+1.8,.5*direction),"range":7.5})
 
 func _furnish() -> void:
-	var themes: Array = ROOM_THEMES.duplicate(true)
-	for index: int in range(themes.size()-1,0,-1):
-		var other := _integer(0,index)
-		var previous: Array = themes[index]
-		themes[index]=themes[other];themes[other]=previous
 	var floor_rooms: Dictionary = {}
 	for index: int in range(_data.rooms.size()):
 		var room: Dictionary = _data.rooms[index]
-		var theme: Array = themes[index%themes.size()]
-		room.name = str(theme[0])+(" %d"%(index/themes.size()+1) if index>=themes.size() else "")
-		room.label = str(room.name).to_upper(); room.color=Color(str(theme[1]));room.theme=str(theme[2]);room.theme_id=str(theme[3])
 		_data.doors[room.id].label=room.name
 		var b: AABB = room.bounds
 		var center := Vector3(b.get_center().x,b.position.y,b.get_center().z)
