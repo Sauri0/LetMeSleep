@@ -68,7 +68,7 @@ static func parse_seed(id: String) -> int:
 	var value := int(digits)
 	return value if value>=1 and value<=2147483646 and str(value)==digits else -1
 
-func generate_structure(seed_value: int) -> Dictionary:
+func generate_structure(seed_value: int, dimension_fixture: Dictionary={}) -> Dictionary:
 	_random_state = clampi(seed_value,1,2147483646)
 	_solid_keys.clear()
 	_name_counts.clear()
@@ -77,6 +77,17 @@ func generate_structure(seed_value: int) -> Dictionary:
 	var half_z := _grid(11.0,11.4)
 	var hall_half := _grid(1.7,1.8)
 	var service_quadrant := _integer(0,3)
+	# Tests can force the geometric bounds without changing RNG consumption or
+	# exposing layout controls in the lobby. Normal runtime passes no fixture.
+	floor_count=int(dimension_fixture.get("floor_count",floor_count))
+	half_x=float(dimension_fixture.get("half_x",half_x));half_z=float(dimension_fixture.get("half_z",half_z))
+	hall_half=float(dimension_fixture.get("hall_half",hall_half))
+	service_quadrant=int(dimension_fixture.get("service_quadrant",service_quadrant))
+	if floor_count not in [2,3] or not is_finite(half_x) or not is_finite(half_z) or not is_finite(hall_half): return {}
+	if half_x<13 or half_x>14 or half_z<11 or half_z>11.4 or hall_half<1.7 or hall_half>1.8 or service_quadrant<0 or service_quadrant>3: return {}
+	if dimension_fixture.has("hall_end"):
+		var hall_end: float=dimension_fixture.hall_end
+		if not is_finite(hall_end) or hall_end<float(LAYOUT.hall_end_min) or hall_end>float(LAYOUT.hall_end_max): return {}
 	_data={"id":map_id(seed_value),"label":"Casa de esta noche","playable":true,
 		"generator_version":VERSION,"seed":clampi(seed_value,1,2147483646),
 		"half_x":half_x,"half_z":half_z,"ceiling":floor_count*FLOOR_HEIGHT,
@@ -89,6 +100,7 @@ func generate_structure(seed_value: int) -> Dictionary:
 		"nav_nodes":[],"nav_edges":[],"generation_stage":"structure_unvalidated"}
 	_data.layout_dimensions=LAYOUT.duplicate()
 	_data.service_quadrant=service_quadrant
+	_data.dimension_fixture=dimension_fixture.duplicate()
 	_data.layout_dimensions.merge({"floor_height":FLOOR_HEIGHT,"wall":WALL,"exterior_wall":EXTERIOR_WALL,
 		"stair_width":STAIR_WIDTH,"hole_width":STAIR_HOLE_WIDTH,"run_half":STAIR_RUN_HALF,
 		"rise":STAIR_RISE,"tread":STAIR_TREAD,"steps":STAIR_STEPS,"central_hall_width":hall_half*2-WALL,
@@ -160,6 +172,9 @@ func _floor_rooms(floor_index: int, total_floors: int, half_x: float, half_z: fl
 	var y := floor_index*FLOOR_HEIGHT
 	var north_end := -_grid(LAYOUT.hall_end_min,LAYOUT.hall_end_max)
 	var south_start := _grid(LAYOUT.hall_end_min,LAYOUT.hall_end_max)
+	if _data.dimension_fixture.has("hall_end"):
+		var end: float=_data.dimension_fixture.hall_end
+		north_end=-end;south_start=end
 	var service: int=_data.service_quadrant
 	var social:=service^1
 	_data.corridors.append(AABB(Vector3(-hall_half,y,-half_z+.25),Vector3(hall_half*2,FLOOR_HEIGHT,half_z*2-.5)))
@@ -258,7 +273,8 @@ func _room_usage(room: Dictionary, spec: Dictionary) -> void:
 	for index: int in range(uses.size()):
 		var region:=inside
 		region.size[axis]/=uses.size()
-		var order:=uses.size()-1-index if uses[0]=="kitchen" and inside.get_center().x<0 else index
+		var reverse: bool=(uses[0]=="kitchen" and inside.get_center().x<0) or (uses[0]=="entry" and float(spec.get("portal_bias",0))>0)
+		var order:=uses.size()-1-index if reverse else index
 		region.position[axis]+=region.size[axis]*order
 		room.functional_zones.append({"id":str(room.id)+"/"+uses[index],"use":uses[index],"bounds":region,
 			"anchor":Vector3(region.get_center().x,inside.position.y,region.get_center().z)})
@@ -468,7 +484,11 @@ func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
 				var items: Array=state.items.duplicate();items.append(candidate)
 				next.append({"items":items,"score":float(state.score)+float(candidate.score)})
 		if next.is_empty():
-			if bool(spec.essential): return []
+			if bool(spec.essential):
+				room.placement_failure={"asset":spec.asset_id,"zone":spec.functional_zone_id,
+					"stage":"static_candidates" if candidates.is_empty() else "mutual_clearance",
+					"candidates":candidates.size(),"states":states.size()}
+				return []
 			continue
 		next.sort_custom(func(a:Dictionary,b:Dictionary)->bool:return float(a.score)<float(b.score))
 		if next.size()>16: next.resize(16)
@@ -521,7 +541,8 @@ func _furnish_room(room: Dictionary) -> void:
 			room.pickup_surface.facing=Vector3(room.pickup_surface.facing).normalized()
 	room.furniture_count=placed.size()
 	room.furnishing_report={"essential_expected":essential_expected,"essential_placed":essential_placed,"objects":placed.size(),
-		"occupied_m2":occupied,"occupancy":occupied/float(room.area_m2),"under_target":occupied/float(room.area_m2)<.12}
+		"occupied_m2":occupied,"occupancy":occupied/float(room.area_m2),"under_target":occupied/float(room.area_m2)<.12,
+		"failure":room.get("placement_failure",{})}
 	if placed.is_empty(): _data.generation_errors.append("No complete furnishing layout: "+str(room.id))
 	_data.respawn_points.append(center+Vector3.UP*1.6)
 

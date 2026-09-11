@@ -28,8 +28,10 @@ func _initialize() -> void:
 		if seed_value==seeds[0]:
 			_door_sweeps(data)
 			var missing:=data.duplicate(true)
+			var changed_bed:=false
 			for item: Dictionary in missing.structures:
-				if str(item.get("asset_id",""))=="bed": item.asset_id="table";break
+				if str(item.get("asset_id",""))=="bed": item.asset_id="table";changed_bed=true;break
+			check(changed_bed,"missing-bed regression actually removes a generated bed")
 			var extra: Array[AABB]=[];extra.append_array(missing.barrier_boxes);extra.append_array(missing.pickup_support_boxes)
 			check(not Validation.validate_furnishing(missing,Geometry.create(missing,true,extra)).is_empty(),"reject bedroom missing real bed")
 	var file:=FileAccess.open("res://../work/modeler092-furnishing-results.json",FileAccess.WRITE)
@@ -41,8 +43,13 @@ func _door_sweeps(data: Dictionary) -> void:
 	for door: Dictionary in data.doors.values():
 		for angle_index: int in range(19):
 			var transform:=DoorGeometry.leaf_transform(door,float(angle_index)*PI/36)
-			var point:=transform*Vector3(1,1,0)
-			var box:=AABB(point-Vector3.ONE*.04,Vector3.ONE*.08)
-			check(Validation.door_sweep_intersects(door,box),"full sweep contains actual leaf at sampled angle")
+			for radius: float in [.02,1.0,1.99]:
+				var point:=transform*Vector3(radius,1,0)
+				var box:=AABB(point-Vector3.ONE*.04,Vector3.ONE*.08)
+				check(Validation.door_sweep_intersects(door,box),"full sweep contains hinge/middle/tip at sampled angle")
+		var middle:=DoorGeometry.leaf_transform(door,PI*.25)*Vector3(1.8,1,0)
+		var obstruction:=AABB(middle-Vector3.ONE*.05,Vector3.ONE*.1)
+		check(not DoorGeometry.intersects_body(door,0,obstruction) and not DoorGeometry.intersects_body(door,PI*.5,obstruction),"intermediate obstruction leaves endpoints clear")
+		check(DoorGeometry.intersects_body(door,PI*.25,obstruction) and Validation.door_sweep_intersects(door,obstruction),"detect obstruction during actual opening")
 		var far:=AABB(Vector3(door.hinge)+Vector3(6,0,6),Vector3.ONE)
 		check(not Validation.door_sweep_intersects(door,far),"full sweep excludes distant furniture")

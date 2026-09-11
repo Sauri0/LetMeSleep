@@ -31,6 +31,18 @@ func _initialize() -> void:
 				if room.zone=="service":
 					var bounds: AABB=room.bounds;bounds.size.x+=12;room.bounds=bounds;break
 			check(not Validation.validate_zoning(mutated).is_empty(),"reject oversized service even with unchanged metadata")
+	for floors: int in [2,3]:
+		for quadrant: int in range(4):
+			for minimum: bool in [true,false]:
+				var fixture: Dictionary={"floor_count":floors,"service_quadrant":quadrant,"half_x":13.0 if minimum else 14.0,
+					"half_z":11.0 if minimum else 11.4,"hall_half":1.8 if minimum else 1.7,"hall_end":6.6 if minimum else 6.4}
+				var data:=Generator.new().generate_structure(1,fixture)
+				check(not data.is_empty(),"extreme fixture generates")
+				check(Validation.validate_zoning(data).is_empty(),"extreme dimensions %s"%fixture)
+				for room: Dictionary in data.rooms:
+					if room.theme_id=="entry":
+						var point:=Vector3(room.portal);point.x=AABB(room.interior_bounds).get_center().x;point.y+=.1
+						check(AABB(room.functional_zones[0].bounds).has_point(point),"entry group is on entrance side of compound room")
 	var file:=FileAccess.open("res://../work/modeler092-structure-results.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"checks":checks,"failures":failures,"cases":cases},"\t"));file.close()
 	print("MODELER092_STRUCTURE checks=%d failures=%d"%[checks,failures.size()])
