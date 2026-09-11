@@ -15,6 +15,8 @@ const VideoSettings = preload("res://scripts/video_settings.gd")
 const HOUSE_ROOM_LIGHT_ENERGY := 0.55
 const HOUSE_SHADOW_BIAS := 0.20
 const HOUSE_SHADOW_NORMAL_BIAS := 2.0
+const HOUSE_STAIR_LIGHT_MIN_RANGE := 3.0
+const HOUSE_STAIR_LIGHT_MAX_RANGE := 7.5
 
 var menu_camera: Camera3D
 var actors: Dictionary = {}
@@ -1207,15 +1209,75 @@ func _generated_spot(at:Vector3, energy:float, reach:float, tint:Color, kind:Str
 	map_root.add_child(spot)
 	return spot
 
+func _aim_spot_at(spot:SpotLight3D,target:Vector3) -> void:
+	var direction:Vector3=(target-spot.position).normalized()
+	# Node3D.look_at cannot construct a basis when its up vector is parallel to
+	# the view direction. Legacy stair connections can produce a vertical aim.
+	var up:=Vector3.FORWARD if absf(direction.dot(Vector3.UP))>.999 else Vector3.UP
+	spot.look_at(target,up)
+
+func _stair_light_specs(data:Dictionary) -> Array[Dictionary]:
+	var result:Array[Dictionary]=[]
+	# Version 2 publishes authored anchors because a stair can turn or move
+	# between storeys. Their short cones avoid one shadow frustum spanning the
+	# entire house. An explicitly empty list means the layout has no stair lamp.
+	if data.has("stair_light_anchors"):
+		for index:int in range(Array(data.stair_light_anchors).size()):
+			var anchor:Variant=Array(data.stair_light_anchors)[index]
+			if not anchor is Dictionary:continue
+			var entry:=anchor as Dictionary
+			if not entry.get("p") is Vector3 or not entry.get("target") is Vector3:continue
+			var p:Vector3=entry.p;var target:Vector3=entry.target
+			var requested:float=float(entry.get("range",0.0))
+			if not p.is_finite() or not target.is_finite() or not is_finite(requested):continue
+			if p.distance_to(target)<.25 or requested<=0.0:continue
+			result.append({"id":str(entry.get("id","stair-anchor-%d"%index)),"p":p,"target":target,
+				"range":clampf(requested,HOUSE_STAIR_LIGHT_MIN_RANGE,HOUSE_STAIR_LIGHT_MAX_RANGE),"source":"anchor"})
+		return result
+	# Compatibility for generated version 1 metadata. One bounded lamp covers
+	# one connection; positions derive from its true endpoints, never half_x.
+	for index:int in range(Array(data.get("stair_connections",[])).size()):
+		var connection:Variant=Array(data.get("stair_connections",[]))[index]
+		if not connection is Dictionary:continue
+		var entry:=connection as Dictionary
+		if not entry.get("bottom") is Vector3 or not entry.get("top") is Vector3:continue
+		var bottom:Vector3=entry.bottom;var top:Vector3=entry.top
+		if not bottom.is_finite() or not top.is_finite() or bottom.distance_to(top)<.25:continue
+		var target:Vector3=(bottom+top)*.5
+		var p:=Vector3(target.x,maxf(bottom.y,top.y)+2.45,target.z)
+		var reach:=maxf(p.distance_to(bottom),p.distance_to(top))+.75
+		result.append({"id":str(entry.get("id","stair-connection-%d"%index)),"p":p,"target":target,
+			"range":clampf(reach,HOUSE_STAIR_LIGHT_MIN_RANGE,HOUSE_STAIR_LIGHT_MAX_RANGE),"source":"connection"})
+	return result
+
+func _generated_light_budget(data:Dictionary,stair_count:int) -> Dictionary:
+	var hall_count:=0
+	for corridor:AABB in data.get("corridors",[]):
+		if corridor.size.x>=corridor.size.z:hall_count+=1
+	var local_lights:=Array(data.get("rooms",[])).size()+hall_count+stair_count
+	var compatibility_cap:=int(ProjectSettings.get_setting("rendering/limits/opengl/max_renderable_lights",32))
+	return {"local_lights":local_lights,"compatibility_cap":compatibility_cap,
+		"over_budget":local_lights>compatibility_cap}
+
 func _build_generated_lighting() -> void:
-	# <=24 rooms + two hall lamps per floor + two stair stacks = <=32 lights.
 	for room: Dictionary in map_data.rooms:
 		var b:AABB=room.bounds
 		_generated_spot(Vector3(b.get_center().x,b.position.y+2.49,b.get_center().z),HOUSE_ROOM_LIGHT_ENERGY,clampf(Vector2(b.size.x,b.size.z).length()*.6+2,4.2,8),Color("f6d5ad"),"house_room")
 	for corridor:AABB in map_data.corridors:
 		if corridor.size.x<corridor.size.z: continue
 		_generated_spot(Vector3(0,corridor.position.y+2.45,corridor.get_center().z),.9,5.8,Color("ffd09a"),"house_hall")
-	for side:float in [-1.0,1.0]:
-		var top:=float(map_data.ceiling)-.5
-		var lamp:=_generated_spot(Vector3(side*(float(map_data.half_x)-3.0),top,0),1.2,top+1.0,Color("d1e6f0"),"house_stair")
-		lamp.spot_angle=52.0
+	var specs:=_stair_light_specs(map_data)
+	for index:int in range(specs.size()):
+		var spec:Dictionary=specs[index]
+		var lamp:=_generated_spot(spec.p,1.2,spec.range,Color("d1e6f0"),"house_stair")
+		lamp.spot_angle=56.0
+		_aim_spot_at(lamp,Vector3(spec.target))
+		lamp.set_meta("stair_light_id",spec.id)
+		lamp.set_meta("stair_light_source",spec.source)
+	var report:=_generated_light_budget(map_data,specs.size())
+	report.merge({"requested":specs.size(),"created":specs.size(),"dropped":0})
+	map_root.set_meta("generated_stair_lighting",report)
+	# Version1 remains diagnostic-only compatibility data. Version2 authors its
+	# anchors and must surface a contract violation during integration.
+	if bool(report.over_budget) and map_data.has("stair_light_anchors"):
+		push_warning("Generated lighting requests %d positional lights; Compatibility supports %d."%[report.local_lights,report.compatibility_cap])
