@@ -63,7 +63,7 @@ La sala de espera es un patio independiente. El anfitrión comparte la semilla y
 
 ## Proyecto y verificación
 
-Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y protocolo **9**; las versiones anteriores son incompatibles. El proyecto está en **game/**. **work/setup-tools.ps1** prepara herramientas con sumas oficiales; **work/build.ps1** importa, prueba y exporta, y **work/package.ps1** empaqueta sin sobrescribir versiones publicadas. La voz usa la extensión Opus incluida; sus fuentes, construcción reproducible y avisos están en **native/voice/** y **game/addons/lms_opus/licenses/**.
+Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y protocolo **10**; las versiones anteriores son incompatibles. El proyecto está en **game/**. **work/setup-tools.ps1** prepara herramientas con sumas oficiales; **work/build.ps1** importa, prueba y exporta, y **work/package.ps1** empaqueta sin sobrescribir versiones publicadas. La voz usa la extensión Opus incluida; sus fuentes, construcción reproducible y avisos están en **native/voice/** y **game/addons/lms_opus/licenses/**.
 
 ```powershell
 & ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/stun_help_test.gd
