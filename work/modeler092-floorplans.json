@@ -1,0 +1,374 @@
+{
+  "status": "design_only_not_generated_or_tested",
+  "generator_version_proposed": 3,
+  "units": "metres",
+  "nominal": {
+    "half_x": 13.5,
+    "half_z": 11.1,
+    "hall_half": 1.75,
+    "band_end": 6.5,
+    "central_room_outer": 6.4,
+    "stair_center_x": 9.85,
+    "stair_width": 2.8,
+    "stair_hole_width": 3.2,
+    "stair_run": 8,
+    "inner_clear_width": 1.5825,
+    "outer_clear_width": 1.6325
+  },
+  "plans": [
+    {
+      "id": "ground",
+      "label": "Planta baja · 8 habitaciones",
+      "rooms": [
+        [
+          "laundry",
+          "Lavadero",
+          "service",
+          [
+            -13.25,
+            -10.85,
+            -9.4,
+            -6.5
+          ]
+        ],
+        [
+          "bath",
+          "Baño",
+          "service",
+          [
+            -9.4,
+            -10.85,
+            -5.6,
+            -6.5
+          ]
+        ],
+        [
+          "pantry",
+          "Despensa",
+          "service",
+          [
+            -5.6,
+            -10.85,
+            -1.75,
+            -6.5
+          ]
+        ],
+        [
+          "kitchen",
+          "Cocina / comedor",
+          "social",
+          [
+            1.75,
+            -10.85,
+            13.25,
+            -6.5
+          ]
+        ],
+        [
+          "entry",
+          "Recibidor / trabajo",
+          "social",
+          [
+            -6.4,
+            -3.8,
+            -1.75,
+            3.8
+          ]
+        ],
+        [
+          "living",
+          "Sala de estar",
+          "social",
+          [
+            1.75,
+            -3.8,
+            6.4,
+            3.8
+          ]
+        ],
+        [
+          "games",
+          "Juegos / lectura",
+          "social",
+          [
+            -13.25,
+            6.5,
+            -1.75,
+            10.85
+          ]
+        ],
+        [
+          "study",
+          "Estudio / música",
+          "work",
+          [
+            1.75,
+            6.5,
+            13.25,
+            10.85
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "upper_two",
+      "label": "Planta alta · casa de 2 pisos · 8 habitaciones",
+      "rooms": [
+        [
+          "bath",
+          "Baño",
+          "service",
+          [
+            -13.25,
+            -10.85,
+            -9.5,
+            -6.5
+          ]
+        ],
+        [
+          "bed-blue",
+          "Dormitorio azul",
+          "sleep",
+          [
+            -9.5,
+            -10.85,
+            -1.75,
+            -6.5
+          ]
+        ],
+        [
+          "rose",
+          "Dormitorio rosa",
+          "sleep",
+          [
+            1.75,
+            -10.85,
+            7.5,
+            -6.5
+          ]
+        ],
+        [
+          "guest",
+          "Dormitorio visitas",
+          "sleep",
+          [
+            7.5,
+            -10.85,
+            13.25,
+            -6.5
+          ]
+        ],
+        [
+          "library",
+          "Biblioteca / estudio",
+          "work",
+          [
+            -6.4,
+            -3.8,
+            -1.75,
+            3.8
+          ]
+        ],
+        [
+          "bed-green",
+          "Dormitorio verde",
+          "sleep",
+          [
+            1.75,
+            -3.8,
+            6.4,
+            3.8
+          ]
+        ],
+        [
+          "music",
+          "Música / lectura",
+          "work",
+          [
+            -13.25,
+            6.5,
+            -1.75,
+            10.85
+          ]
+        ],
+        [
+          "sewing",
+          "Costura / estudio",
+          "work",
+          [
+            1.75,
+            6.5,
+            13.25,
+            10.85
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "upper_three",
+      "label": "Primera planta alta · casa de 3 pisos · 7 habitaciones",
+      "rooms": [
+        [
+          "bath",
+          "Baño",
+          "service",
+          [
+            -13.25,
+            -10.85,
+            -9.5,
+            -6.5
+          ]
+        ],
+        [
+          "bed-blue",
+          "Dormitorio azul",
+          "sleep",
+          [
+            -9.5,
+            -10.85,
+            -1.75,
+            -6.5
+          ]
+        ],
+        [
+          "family",
+          "Dormitorio familiar",
+          "sleep",
+          [
+            1.75,
+            -10.85,
+            13.25,
+            -6.5
+          ]
+        ],
+        [
+          "library",
+          "Biblioteca / estudio",
+          "work",
+          [
+            -6.4,
+            -3.8,
+            -1.75,
+            3.8
+          ]
+        ],
+        [
+          "bed-green",
+          "Dormitorio verde",
+          "sleep",
+          [
+            1.75,
+            -3.8,
+            6.4,
+            3.8
+          ]
+        ],
+        [
+          "music",
+          "Música / lectura",
+          "work",
+          [
+            -13.25,
+            6.5,
+            -1.75,
+            10.85
+          ]
+        ],
+        [
+          "sewing",
+          "Costura / estudio",
+          "work",
+          [
+            1.75,
+            6.5,
+            13.25,
+            10.85
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "third",
+      "label": "Segunda planta alta · casa de 3 pisos · 7 habitaciones",
+      "rooms": [
+        [
+          "bath",
+          "Baño",
+          "service",
+          [
+            -13.25,
+            -10.85,
+            -9.5,
+            -6.5
+          ]
+        ],
+        [
+          "bed-blue",
+          "Dormitorio visitas",
+          "sleep",
+          [
+            -9.5,
+            -10.85,
+            -1.75,
+            -6.5
+          ]
+        ],
+        [
+          "family",
+          "Dormitorio doble",
+          "sleep",
+          [
+            1.75,
+            -10.85,
+            13.25,
+            -6.5
+          ]
+        ],
+        [
+          "library",
+          "Biblioteca / estudio",
+          "work",
+          [
+            -6.4,
+            -3.8,
+            -1.75,
+            3.8
+          ]
+        ],
+        [
+          "bed-green",
+          "Dormitorio verde",
+          "sleep",
+          [
+            1.75,
+            -3.8,
+            6.4,
+            3.8
+          ]
+        ],
+        [
+          "music",
+          "Juegos / lectura",
+          "work",
+          [
+            -13.25,
+            6.5,
+            -1.75,
+            10.85
+          ]
+        ],
+        [
+          "sewing",
+          "Biblioteca / música",
+          "work",
+          [
+            1.75,
+            6.5,
+            13.25,
+            10.85
+          ]
+        ]
+      ]
+    }
+  ]
+}
