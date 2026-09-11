@@ -1,9 +1,8 @@
 # Matriz de revisión funcional 0.9.1 y alcance 0.9.2
 
-Base de la preparación: `59af8ad`; candidato integrado leído: `7a40f9e`, rama
-`codex/091-qa`. Este documento separa tests preparados de resultados ejecutados.
-Todavía no se ejecutó Godot, Blender, import, captura ni benchmark porque el
-turno de motor sigue reservado para otro integrante.
+Base inicial de la preparación: `59af8ad`; rama de integración QA:
+`codex/091-qa`. Este documento separa tests preparados de resultados ejecutados
+y registra abajo cada candidato efectivamente medido.
 
 ## Dictamen estático inicial
 
@@ -37,7 +36,8 @@ turno de motor sigue reservado para otro integrante.
   indirecto o un resultado heredado no aprueba esos puntos.
 - Para 0.9.2 esta revisión debe volver a comprobar las rutas sobre la zonificación
   y el amueblado final, las siluetas y expresiones de ambas especies, las
-  interpenetraciones, los materiales/luces finales y el rendimiento comparable.
+  interpenetraciones, los materiales/luces finales, la articulación observable
+  de ambas manos y el rendimiento comparable.
   Cualquier defecto injugable descubierto en ese trabajo bloquea primero 0.9.1.
 - WAN real entre casas continúa pendiente por decisión de Branko. ENet loopback
   sólo acredita codec, autoridad y ciclo de partida local.
@@ -64,6 +64,7 @@ turno de motor sigue reservado para otro integrante.
 | Default humano | Pijama clásico 0, pantuflas clásicas 0 y gorro de noche 3 | `review091_preview_views.gd` | Preparado; sin ejecutar |
 | Catálogo | Cada opción de ambos roles llega a Preview, tiene mallas visibles finitas y conserva la firma de colliders | `review091_preview_views.gd` | Preparado; import/render pendiente |
 | Ángulos | Cada opción se captura en frente, perfil y espalda; hash frontal distinto dentro de cada categoría | `review091_preview_views.gd` | Preparado; aprobación visual humana pendiente |
+| Manos/dedos 0.9.2 | Los dedos de ambas manos se flexionan hacia la palma en vez del dorso; cierre y agarre acercan puntas al objetivo observable; el pulgar hace oposición; palmada conserva manos coherentes | Gate geométrico sobre huesos/malla real + capturas palma/dorso/perfil en primera y tercera persona | Hallazgo nuevo de Branko; Worker 1 y Modelador 2 investigan; aceptación QA posterior al cierre 0.9.1 |
 | Online integrado | Host/guest cruzan `OnlineTransport`, ACK del mismo mapa/fingerprint, movimiento, resultados, rematch y desconexión | `review091_online_cosmetics_contract.gd` | Preparado; ENet loopback pendiente |
 | Cosméticos en red | Dos perfiles independientes sobreviven lobby → rol sorteado → resultados → rematch | `review091_online_cosmetics_contract.gd` | Preparado; sin ejecutar |
 | EOS/WAN | No presentar fixture local como EOS, relay, NAT o WAN | Manifiesto del gate fija `eos_sdk=false`, `relay=false`, `wan=false` | WAN real pendiente de Branko |
