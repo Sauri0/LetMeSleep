@@ -3,7 +3,7 @@ const Joinery=preload("res://scripts/frame_joinery.gd")
 func _initialize()->void:run.call_deferred()
 func run()->void:
 	var world:Node3D=load("res://scripts/world.gd").new()
-	root.add_child(world);world.build();world.load_map("house-v1-1")
+	root.add_child(world);world.build();world.load_map(load("res://scripts/procedural_house.gd").map_id(1))
 	var planes:Dictionary={}
 	for mesh:MeshInstance3D in world.map_root.find_children("*","MeshInstance3D",true,false):
 		if str(mesh.get_meta("catalog_kind",""))!="wall" and not mesh.get_meta("frame_join_wall",false):continue

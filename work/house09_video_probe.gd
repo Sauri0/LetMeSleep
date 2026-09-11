@@ -17,7 +17,7 @@ func run() -> void:
 	root.size = Vector2i(1280,720)
 	if no_lod: root.mesh_lod_threshold=0.0
 	var world: Node3D = load("res://scripts/world.gd").new()
-	root.add_child(world); world.build(); world.load_map("house-v1-1")
+	root.add_child(world); world.build(); world.load_map(load("res://scripts/procedural_house.gd").map_id(1))
 	if no_shadows:
 		for light:Light3D in world.find_children("*","Light3D",true,false): light.shadow_enabled=false
 	var masks: Dictionary = {}
