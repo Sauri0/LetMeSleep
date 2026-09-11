@@ -68,11 +68,13 @@ func _physical_width(point:Vector3,travel:Vector3,map_id:String,states:Dictionar
 		positive=distance
 	return negative+positive+ArenaData.HUMAN_RADIUS*2.0
 
-func _route_clear(origin:Vector3,route:PackedVector3Array,human:bool,map_id:String)->bool:
+func _route_clear(origin:Vector3,route:PackedVector3Array,human:bool,map_id:String,states:Dictionary)->bool:
 	if route.is_empty():return false
 	var previous:=origin
 	for point:Vector3 in route:
 		if not Nav.can_travel(previous,point,human,map_id):return false
+		var radius:=ArenaData.HUMAN_RADIUS if human else ArenaData.MOSQUITO_RADIUS
+		if not Doors.ray_doors(previous,point,states,map_id,radius).is_empty():return false
 		previous=point
 	return true
 
@@ -185,7 +187,7 @@ func _case(seed_value:int,signatures:Dictionary)->void:
 		check(_fits_human(origin,map_id,states),"seed %d human spawn fits open-door collision"%seed_value)
 		for target:Vector3 in targets:
 			var route:=Nav.path(origin,target,true,map_id)
-			check(_route_clear(origin,route,true,map_id),"seed %d human spawn reaches task/pickup"%seed_value)
+			check(_route_clear(origin,route,true,map_id,states),"seed %d human spawn reaches task/pickup without crossing an open leaf"%seed_value)
 		for target:Vector3 in _farthest_per_floor(origin,data,map_id):
 			var followed:=_follow_human(origin,target,map_id,states)
 			row.physical_routes+=1
@@ -194,7 +196,7 @@ func _case(seed_value:int,signatures:Dictionary)->void:
 		check(ArenaData.can_fit_mosquito(origin,map_id,states),"seed %d mosquito spawn fits open-door collision"%seed_value)
 		for room:Dictionary in data.rooms:
 			var target:=Vector3(room.center)+Vector3.UP*1.2
-			check(_route_clear(origin,Nav.path(origin,target,false,map_id),false,map_id),"seed %d mosquito spawn reaches room %s"%[seed_value,str(room.id)])
+			check(_route_clear(origin,Nav.path(origin,target,false,map_id),false,map_id,states),"seed %d mosquito spawn reaches room %s without crossing an open leaf"%[seed_value,str(room.id)])
 	cases.append(row)
 
 func _run()->void:
