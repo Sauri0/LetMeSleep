@@ -1,0 +1,51 @@
+{
+	"checks": 27,
+	"eos_sdk": false,
+	"extra": {
+		"fingerprint": "83562b5a5e08998422181a987f9c991307f2effcc62500e307e40009f570c5a7",
+		"guest_appearance": {
+			"accent": 4,
+			"accessory": 2,
+			"beard": 2,
+			"brows": 2,
+			"color": 2,
+			"eyes": 0,
+			"footwear": 1,
+			"hair": 1,
+			"hair_color": 3,
+			"mouth": 2,
+			"mustache": 1,
+			"outfit": 2
+		},
+		"host_appearance": {
+			"accent": 5,
+			"accessory": 1,
+			"brows": 0,
+			"color": 1,
+			"eyes": 2,
+			"footwear": 2,
+			"hair": 2,
+			"mouth": 1,
+			"outfit": 1
+		},
+		"map_id": "house-v2-1489419214"
+	},
+	"failures": [],
+	"nat": false,
+	"p2p": false,
+	"protocol": 10,
+	"relay": false,
+	"source_sha256": {
+		"res://scripts/cosmetics.gd": "f6d6bbd910e38fd092e5b9eaefbd4ce0519c46233509ffd942fab08c44beca94",
+		"res://scripts/network.gd": "4c297bdd3ac32799802f372196e0fe9517814968e8d27d46da9dd1d8d39baf67",
+		"res://scripts/online_invitation.gd": "96e4e26ff8b86ecbd3fbc8c83ceca98e0c31ec202d7fba9ab41816be1b7bcfa8",
+		"res://scripts/online_transport.gd": "3d136120750c8f1fcdc3ab1451d5d7b01876f3f488f109b5ff9c4327342f5bfc",
+		"res://scripts/procedural_house.gd": "bb3f9296a7718bbcfd8aa03fdface39f44da5d2a09942c9fc54e36adab6d11ce",
+		"res://scripts/simulation.gd": "e16ea8b0bd42395b5acb9053436520e574d211384169771002d545ee9cd226db",
+		"res://tests/review091_online_cosmetics_contract.gd": "e3c1c60a339d71ffde0ebad377407de9d1412b17695262aa92b1ee0999b985fd"
+	},
+	"transport": "real SceneMultiplayer and OnlineTransport over ENet loopback",
+	"two_machine": false,
+	"wan": false,
+	"wan_status": "pending user test after polish"
+}

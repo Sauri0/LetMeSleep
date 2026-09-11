@@ -68,15 +68,22 @@ func _physical_width(point:Vector3,travel:Vector3,map_id:String,states:Dictionar
 		positive=distance
 	return negative+positive+ArenaData.HUMAN_RADIUS*2.0
 
-func _route_clear(origin:Vector3,route:PackedVector3Array,human:bool,map_id:String,states:Dictionary)->bool:
+func _route_clear(origin:Vector3,route:PackedVector3Array,human:bool,map_id:String)->bool:
 	if route.is_empty():return false
 	var previous:=origin
 	for point:Vector3 in route:
 		if not Nav.can_travel(previous,point,human,map_id):return false
-		var radius:=ArenaData.HUMAN_RADIUS if human else ArenaData.MOSQUITO_RADIUS
-		if not Doors.ray_doors(previous,point,states,map_id,radius).is_empty():return false
 		previous=point
 	return true
+
+func _route_door_hit(origin:Vector3,route:PackedVector3Array,human:bool,map_id:String,states:Dictionary)->Dictionary:
+	var previous:=origin
+	for point:Vector3 in route:
+		var radius:=ArenaData.HUMAN_RADIUS if human else ArenaData.MOSQUITO_RADIUS
+		var hit:=Doors.ray_doors(previous,point,states,map_id,radius)
+		if not hit.is_empty():return hit
+		previous=point
+	return {}
 
 func _follow_human(origin:Vector3,destination:Vector3,map_id:String,states:Dictionary)->Dictionary:
 	var route:=Nav.path(origin,destination,true,map_id)
@@ -147,7 +154,7 @@ func _case(seed_value:int,signatures:Dictionary)->void:
 	check(data.get("fingerprint","")==Validation.fingerprint(generated),"seed %d catalog matches generated geometry"%seed_value)
 	check(not signatures.has(row.layout_signature),"seed %d has a distinct structural layout"%seed_value)
 	signatures[row.layout_signature]=seed_value
-	var floor_count:=data.floor_levels.size()
+	var floor_count:int=data.floor_levels.size()
 	check(floor_count in [2,3],"seed %d stays within the two/three-storey contract"%seed_value)
 	check(data.rooms.size()<=22,"seed %d stays within the 22-room cap"%seed_value)
 	check(data.stair_connections.size()==2*(floor_count-1) and data.stair_connections.size()<=4,"seed %d has opposite flights within the four-flight cap"%seed_value)
@@ -187,7 +194,11 @@ func _case(seed_value:int,signatures:Dictionary)->void:
 		check(_fits_human(origin,map_id,states),"seed %d human spawn fits open-door collision"%seed_value)
 		for target:Vector3 in targets:
 			var route:=Nav.path(origin,target,true,map_id)
-			check(_route_clear(origin,route,true,map_id,states),"seed %d human spawn reaches task/pickup without crossing an open leaf"%seed_value)
+			check(_route_clear(origin,route,true,map_id),"seed %d human spawn has a solid-supported route to task/pickup"%seed_value)
+			if not _route_door_hit(origin,route,true,map_id,states).is_empty():
+				var followed:=_follow_human(origin,target,map_id,states)
+				row.physical_routes+=1
+				check(bool(followed.reached) and bool(followed.collision_free),"seed %d human authority physically clears an open leaf en route to task/pickup"%seed_value)
 		for target:Vector3 in _farthest_per_floor(origin,data,map_id):
 			var followed:=_follow_human(origin,target,map_id,states)
 			row.physical_routes+=1
@@ -196,7 +207,8 @@ func _case(seed_value:int,signatures:Dictionary)->void:
 		check(ArenaData.can_fit_mosquito(origin,map_id,states),"seed %d mosquito spawn fits open-door collision"%seed_value)
 		for room:Dictionary in data.rooms:
 			var target:=Vector3(room.center)+Vector3.UP*1.2
-			check(_route_clear(origin,Nav.path(origin,target,false,map_id),false,map_id,states),"seed %d mosquito spawn reaches room %s without crossing an open leaf"%[seed_value,str(room.id)])
+			var route:=Nav.path(origin,target,false,map_id)
+			check(_route_clear(origin,route,false,map_id) and _route_door_hit(origin,route,false,map_id,states).is_empty(),"seed %d mosquito spawn reaches room %s without crossing an open leaf"%[seed_value,str(room.id)])
 	cases.append(row)
 
 func _run()->void:

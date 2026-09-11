@@ -56,9 +56,9 @@ turno de motor sigue reservado para otro integrante.
 | Rutas mosquito | Todos los spawns tienen rutas válidas a todas las habitaciones y caben en la colisión con puertas abiertas | `review091_house_contract.gd` | Preparado; sin ejecutar |
 | Escaleras físicas | Cada tramo se sube y baja mediante autoridad real; desplazamiento vertical acotado a la contrahuella | `review091_house_contract.gd` | Preparado; sin ejecutar |
 | Escala de 3 plantas | Máximo contractual 22 habitaciones, seis pasillos y cuatro tramos; luces ≤ 32 y todas las plantas iluminadas | Test del implementador + revisión World integrada | Metadatos acordados; gate visual/integración pendiente |
-| Cámara/cuerpo | Dos giros completos mirando abajo, con marcha; sin pasos congelados ni contrarrotación; recenter en 1 s | `review091_motion_combat_contract.gd` a 30/60/120 Hz | Preparado; sin ejecutar |
-| Movimiento | Caminar, correr y agacharse activos durante giro; cuerpo siempre dentro de colisión generada | `review091_motion_combat_contract.gd` | Preparado; sin ejecutar |
-| Entrada a adhesión | El salto total de raíz al entrar en `bitten` no supera un frame de sprint a 60 Hz + 5 mm (0,0883 m) | `review091_motion_combat_contract.gd` sobre `ActorView` real | Preparado; el implementador midió 0,1423 m y queda pendiente corrección/verificación QA |
+| Cámara/cuerpo | Dos giros completos mirando abajo, con marcha; sin pasos congelados ni contrarrotación; recenter en 1 s | `review091_motion_combat_contract.gd` a 30/60/120 Hz | Preparado; ejecución nativa pendiente porque el gate también instancia `ActorView` |
+| Movimiento | Caminar, correr y agacharse activos durante giro; cuerpo siempre dentro de colisión generada | `review091_motion_combat_contract.gd` | Preparado; ejecución nativa pendiente |
+| Entrada a adhesión | El salto total de raíz al entrar en `bitten` no supera un frame de sprint a 60 Hz + 5 mm (0,0883 m) | `review091_motion_combat_contract.gd` sobre `ActorView` real | Preparado para renderer nativo; el implementador midió 0,1423 m y Worker 1 prepara corrección |
 | Pose/contacto | Mosquito adherido sigue exactamente la zona de la pose autoritativa; pose pública e hitbox coinciden | `review091_motion_combat_contract.gd` | Preparado; sin ejecutar |
 | Defensa manual | Anticipación visible; un rayo manual produce exactamente una transición de impacto; secuencia duplicada no reinicia ataque | `review091_motion_combat_contract.gd` | Preparado; sin ejecutar |
 | Default humano | Pijama clásico 0, pantuflas clásicas 0 y gorro de noche 3 | `review091_preview_views.gd` | Preparado; sin ejecutar |
@@ -106,3 +106,27 @@ Cuando el Director conceda turno exclusivo de motor:
    candidato final.
 
 La prueba WAN con un amigo no fue ejecutada ni simulada como evidencia real.
+
+## Ejecución parcial del 11 de septiembre
+
+Turno secuencial de Godot 4.5.2, headless. La importación completa terminó con
+código 0 en 18,2 s. Resultados válidos del candidato integrado:
+
+- `procedural09_test.gd`: 53/53 después de integrar `a8dd799`. La primera
+  corrida había detectado cuatro semillas con metadata de descansos obstruida;
+  ese resultado rojo se conserva y la repetición confirmó la corrección.
+- `map_tasks09_test.gd`: 88/88.
+- `contact_orientation06_test.gd`: 469/469.
+- `network_privacy_audit_test.gd`: 48/48.
+- `review091_online_cosmetics_contract.gd`: 27/27 en la repetición. El primer
+  intento sólo encontró un tipo no inferible en el fixture; no llegó al runtime.
+
+`review091_house_contract.gd` ejecutó 5345 checks sobre las once semillas y
+produjo 205 fallos, todos añadidos por el barrido recto conservador contra hojas
+abiertas. No fallaron validación, firmas, capacidad, anchos, vuelos físicos ni
+rutas físicas lejanas. Un probe sobre semillas 1 y 2 confirmó que
+`Arena.step_human` rodea las hojas señaladas y llega sin estancarse (321 y 220
+ticks). El gate corregido exige ahora completion física cuando detecta ese
+cruce; el corpus final corregido sigue pendiente de un nuevo turno. En las once
+semillas no apareció ningún fallo equivalente para mosquito, pero el resultado
+final tampoco se declarará hasta repetir el gate completo.

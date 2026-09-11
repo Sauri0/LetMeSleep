@@ -1,0 +1,31 @@
+{
+	"cases": [
+		{
+			"budget": 24.0,
+			"completed": true,
+			"floors": 3,
+			"route_meters": 41.6223483085632,
+			"seed": 1,
+			"station": 0,
+			"travel_and_work": 15.9750000000002
+		},
+		{
+			"budget": 24.0,
+			"completed": true,
+			"floors": 2,
+			"route_meters": 45.915212392807,
+			"seed": 2,
+			"station": 2,
+			"travel_and_work": 17.3250000000001
+		},
+		{
+			"budget": 35.45,
+			"completed": true,
+			"route_meters": 84.1293142437935,
+			"scope": "restricted-station extension witness",
+			"seconds": 29.5749999999994
+		}
+	],
+	"checks": 88,
+	"failures": 0
+}

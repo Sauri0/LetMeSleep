@@ -167,7 +167,7 @@ func _run()->void:
 	host.send_input(1,Vector3.FORWARD,0.2,-.3,false)
 	guest.send_input(1,Vector3.LEFT,-.4,.2,false)
 	check(await until(func()->bool:return host.sim.actors[1]._input_seq==1 and host.sim.actors[guest_id]._input_seq==1),"both local and remote movement reach authority")
-	var tick_before:=guest.last_received_tick
+	var tick_before:int=guest.last_received_tick
 	check(await until(func()->bool:return guest.last_received_tick>tick_before),"guest continues receiving live public snapshots")
 	host.sim._finish("mosquito","Reviewer fixture completes results")
 	host.set_physics_process(false);host._publish(true);await settle()
