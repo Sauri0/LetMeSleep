@@ -1,84 +1,36 @@
-# Let me sleep 0.9.0 — estado del candidato
+# Let me sleep 0.9.1 — alcance de pruebas
 
-11 de septiembre de 2026. Candidata v0.9.0-rc.1, Godot 4.5.2, protocolo 9, invitaciones online LMS1- y modo directo avanzado DD5-.
-El EXE 0.9.0 se exportó desde el commit 3c3e8ba007c879f84d9652bc817f98c2fd969568.
-Su SHA256 es E5928D76F18F14B7573D135A88340B1C9F0237AE7EC468A1AAF29B41F6002D1E.
-Los resultados anteriores de 0.6/0.7 permanecen con sus paquetes históricos y
-no se atribuyen a esta versión.
+Godot 4.5.2, Windows, protocolo 10. Online integrado mediante invitación LMS1-;
+conexión directa avanzada DD5-. Todos los participantes deben usar esta versión.
+BUILD.json identifica el commit y las huellas del paquete exportado.
 
-## Verificaciones de fuente completadas
+## Estado de preparación
 
-- Aturdimiento de 35 segundos y ayuda continua 4× fuera de Supervivencia;
-  HUD compacto y controles contextuales.
-- Orientación de superficies: 213 comprobaciones de autoridad, 149 nativas y
-  53 de ENet; cámara 1680. Patas: tres estilos con 18776 comprobaciones por
-  estilo, sin penetraciones en los recorridos de esquina preparados.
-- Casas: 1000 semillas y 1000 repeticiones en procesos independientes,
-  16–24 habitaciones y dos o tres pisos. Tareas 86; mobiliario 2490.
-- Puertas: 2578 equivalencias de cierre, 17117 de consultas de colisión y
-  342 regresiones. Las mejoras de CPU se midieron en replays idénticos;
-  sus porcentajes no representan una mejora equivalente de FPS.
-- Navegación: 5896 equivalencias y 1374 replays mantienen las rutas tras
-  reutilizar las distancias de selección. Práctica: seis combinaciones de rol
-  y modo, 157 controles sobre las casas generadas y las revanchas.
-- Cierre: hosting nativo 13/13 sin fugas; música 49/49 con PCM del mezclador.
-- Postura: 1457 controles de transición remota, más 8 de caché y 537 del actor.
-  El cambio suaviza crouch remoto no crítico. La cámara en primera persona,
-  la marca de picadura y los contactos conservan la pose exacta recibida.
-- Voz: PCM 4758, transporte de producción 212, Session 77 con captura
-  sintética/Dummy. Contexto de UI 38 y selector 27. La sesión comprobó
-  conservación de duración, tono agudo del mosquito y fin de frase, con enlace
-  estabilizado previamente. No prueba arranque frío en cualquier red.
-- El micrófono real no se abrió durante estas automatizaciones. Las pruebas
-  de escena principal usan --no-microphone; los fixtures --script deshabilitan
-  el hardware desde VoiceSession, también dentro del ejecutable.
+El paquete final 0.9.1 todavía está pendiente de exportación y pruebas.
+No se atribuyen a esta versión los resultados del ejecutable 0.9.0-rc.1.
 
-## Cierre pendiente
+En fuente se integraron correcciones de techos y uniones, casa v2 con corredores
+junto a escaleras, luces por tramo, suavizado de movimiento y mejoras en el
+selector de personalización. Cada parte tiene pruebas propias; falta cerrar la
+verificación conjunta, las transiciones al recibir picaduras y el recorrido
+físico de las casas generadas. Los informes de cada parte permanecen en work/.
 
-La prenda humana se corrigió en su fuente editable y en el GLB; los últimos
-nueve casos de cuello quedaron corregidos. La exportación y consumidor finales
-de fit4 cubren 285 poses y 13176 pares con cero contactos inesperados, y las
-comprobaciones de contacto de herramientas pasan 972/972 también en trim2.
-El ribete central posterior pasó 2691 comprobaciones de invariancia y un
-recálculo de sus tres componentes en 243 poses humanas: 5832 pares sin
-contactos. Las 42 poses de mosquito se conservan por identidad; no son 285
-capturas nuevas. La secuencia continua de 21 segundos pasó 4484 controles,
-con doce gestos completos. Sigue pendiente terminar la galería de
-personalización y su revisión visual; esas comprobaciones no aprueban todas
-las combinaciones o todas las animaciones posibles.
+## Alcance del online
 
-La exportación y la batería de escenas nativas finalizaron con exit0. Las
-pruebas de lógica completadas sobre 22b1cb1 se conservaron: el único cambio de
-producción posterior fue impedir selección involuntaria en el menú de gestos,
-verificado nuevamente junto a las escenas e interfaz completas. La prueba de
-ese menú pasó 45/45. BUILD identifica los archivos exactos del paquete.
+El anfitrión crea la sala dentro del juego. Los invitados pegan el código LMS1-.
+Las pruebas de sesión, invitaciones y dos clientes locales comprueban partes
+del flujo, pero no prueban una conexión entre dos casas ni el relay de Epic.
+La prueba WAN con un amigo sigue pendiente después del pulido. No se requiere
+instalar otra aplicación ni arrancar un servidor externo.
 
-El EXE también creó la sala desde el menú y cerró Epic correctamente, 7/7,
-con configuración incluida y sin ejecutar un servidor externo. Las pruebas
-adicionales del paquete y sus resultados están en el documento de cierre.
-El EXE final pasó nueve recorridos y 468 comprobaciones: anfitrión Epic,
-dos clientes locales, red, sesión, interfaz, puertas, personaje y práctica
-con humano y mosquito. Todos los procesos finales terminaron con exit0 y
-stderr vacío; se conservaron por separado los intentos fallidos previos.
+## Rendimiento y calidad pendientes
 
-## Rendimiento y conexión
+Los FPS empiezan sin límite; el jugador puede elegir un tope y VSync en Ajustes.
+1080p a 60 FPS en GTX 1660 Ti sigue siendo un objetivo, no un requisito mínimo
+ya certificado. Debe medirse el conjunto nuevo; la medición de la candidata
+anterior no representa esta versión. El micrófono real y la escucha de voz
+espacial también requieren prueba del jugador.
 
-La casa generada de 16 actores todavía no cumple 60 FPS sostenidos en la
-medición a 1080p sobre RTX 3060 Ti / Ryzen 5600X, incluso sin órdenes globales
-de puertas. Se midió Forward+
-como alternativa, con menor coste de dibujo, pero cambia la iluminación y
-sigue siendo sólo un diagnóstico; el proyecto conserva Compatibility.
-No se certifican requisitos mínimos ni rendimiento en otros equipos.
-
-La integración EOS está en la fuente. Ambas bibliotecas nativas propias
-(debug/release) pasaron 291 controles ABI. El anfitrión completó dos ciclos
-reales de identidad, creación de lobby, peer servidor, invitación, entrada local
-y cierre: 15/15, exit0 y stderr vacío. El recorrido real desde el botón del
-menú hasta la sala 3D y el cierre de Main pasó 7/7, también limpio. Estas pruebas
-no incluyeron un segundo jugador. La prueba de empaquetado exige las DLL de EOS,
-sus dependencias y avisos; el protocolo del manifiesto usa LMS1-.
-
-La partida P2P entre identidades independientes, la expulsión de un segundo
-usuario real y el relay entre casas siguen pendientes. ENet local, una invitación
-válida o la creación de un lobby no prueban esos recorridos. La voz real requiere
-además validación por escucha y micrófono en el equipo del jugador.
+La mejora completa de rasgos/modelados y la distribución doméstica por uso
+continúan en 0.9.2. Los controles automáticos de geometría no sustituyen la
+revisión visual de todos los ángulos y combinaciones.

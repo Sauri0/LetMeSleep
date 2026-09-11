@@ -1,15 +1,21 @@
-# Let me sleep — 0.9.0 candidata
+# Let me sleep — 0.9.1 en preparación
 
-La versión 0.9.0 está disponible como candidata para Windows. Incluye online
+La última descarga publicada es 0.9.0-rc.1 para Windows. Incluye online
 con Epic, pero la conexión real entre dos casas sigue pendiente de comprobar.
 Descargá el ZIP de [v0.9.0-rc.1](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.0-rc.1),
 descomprimilo completo y abrí Let-me-sleep.exe. Las versiones anteriores se conservan.
+
+Esta rama prepara 0.9.1: superficies, circulación alrededor de escaleras,
+movimiento y controles de personalización. Usa protocolo 10 y casas v2;
+no es compatible con clientes de la candidata anterior. La nueva descarga
+se anunciará después de exportar y probar el paquete. El trabajo restante
+de personajes y distribución doméstica continúa en 0.9.2.
 
 **[Versiones publicadas y descargas](https://github.com/Sauri0/LetMeSleep/releases)**
 
 Descomprimí todo el ZIP y abrí **Let-me-sleep.exe**. Elegí **PRÁCTICA** para jugar contra bots. No necesitás Godot ni una cuenta de GitHub. La guía **LEEME.html** acompaña al juego.
 
-Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercera y tres modos. Cada ronda genera una casa de 16–24 ambientes y dos o tres pisos, con puertas interactivas, tareas y herramientas. El HUD es compacto; F1 abre una guía que permanece plegada durante el juego. La cámara permite seguir girando al mirar el cuerpo.
+Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercera y tres modos. Cada ronda genera una casa de dos o tres pisos, con puertas interactivas, tareas y herramientas. La casa v2 limita el total a 22 habitaciones y reserva pasillos a los lados de las escaleras. El HUD es compacto; F1 abre una guía que permanece plegada durante el juego. La cámara permite seguir girando al mirar el cuerpo.
 
 La fuente integra **Epic Online Services**: Crear sala ejecuta el servidor dentro del juego y produce una invitación **LMS1-**. Los amigos pegan ese código, sin indicar IP ni instalar otra aplicación. Se probaron creación, autenticación y cierre reales del anfitrión; **la partida entre dos identidades y redes independientes sigue pendiente de validar**. El modo avanzado ENet directo conserva las invitaciones DD5 y sus requisitos de conectividad.
 
@@ -63,6 +69,6 @@ Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y pro
 & ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/stun_help_test.gd
 ```
 
-La documentación de **distribution/** corresponde a esta candidata; **ENTREGA-0.7.md** es histórica. Consultá [el cierre actual](work/CIERRE-0.9.0-rc.1.md). Las pruebas entre procesos de una misma PC no certifican Internet entre casas, rendimiento mínimo ni balance humano.
+La documentación de **distribution/** acompaña al paquete que se está preparando; **ENTREGA-0.7.md** es histórica. Consultá [el cierre de la descarga publicada](work/CIERRE-0.9.0-rc.1.md) y [el plan de las próximas entregas](work/RELEASE-PLAN-0.9.1-0.9.2.md). Las pruebas entre procesos de una misma PC no certifican Internet entre casas, rendimiento mínimo ni balance humano.
 
 Modelos originales con fuentes Blender y exportaciones GLB en `art_source/`. Composición musical y efectos originales; las notas instrumentales acústicas de VSCO 2 Community Edition son CC0 y tienen créditos y licencia incluidos. Los temas se funden entre menú, personalización y partida; Música, Efectos, Ambiente e Interfaz tienen volumen separado además del volumen general. Bangers y Atkinson Hyperlegible se distribuyen bajo SIL Open Font License; sus avisos acompañan al paquete. Las versiones históricas se conservan en las Releases.

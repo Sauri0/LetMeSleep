@@ -1,6 +1,6 @@
-# Let me sleep · 0.9.0 · Windows 64 bits
+# Let me sleep · 0.9.1 · Windows 64 bits
 
-Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.9.0 / protocolo 9**.
+Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.9.1 / protocolo 10**.
 
 Esta versión mejora las proporciones y animaciones de los personajes, genera una casa nueva en cada ronda e incorpora puertas con bisagras, iluminación local y ajustes gráficos. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. El menú usa Epic Online Services para crear salas e invitar con un código **LMS1-**. **Esta candidata todavía requiere comprobar una partida entre dos casas; consultá PRUEBAS.md para ver el alcance validado.**
 
@@ -28,7 +28,7 @@ Son los valores iniciales; las teclas pueden reasignarse. Ajustes guarda sensibi
 
 ## Herramientas y lanzamientos
 
-Los humanos empiezan con las manos libres. Hay matamoscas, raqueta eléctrica, diario enrollado, escoba y pantufla de mano sobre muebles de ambas plantas. Cada objeto tiene alcance, preparación y recuperación propios. El clic izquierdo conserva el golpe. Sólo el diario y la pantufla se lanzan: mantener clic derecho aumenta la fuerza; soltar inicia el lanzamiento. La gravedad curva la trayectoria y paredes, puertas, muebles y personajes la interrumpen. Cuando el objeto se detiene, puede recogerse de nuevo con R.
+Los humanos empiezan con las manos libres. Hay matamoscas, raqueta eléctrica, diario enrollado, escoba y pantufla de mano sobre muebles de la casa. Cada objeto tiene alcance, preparación y recuperación propios. El clic izquierdo conserva el golpe. Sólo el diario y la pantufla se lanzan: mantener clic derecho aumenta la fuerza; soltar inicia el lanzamiento. La gravedad curva la trayectoria y paredes, puertas, muebles y personajes la interrumpen. Cuando el objeto se detiene, puede recogerse de nuevo con R.
 
 Esc, F1, abrir un menú, perder foco o cambiar de objeto cancelan la carga. Después hace falta una nueva pulsación para lanzar. La pantufla de mano es un objeto independiente del calzado del personaje. Los proyectiles no dañan humanos; a los mosquitos los aturden en Sangre/Tareas y eliminan en Supervivencia.
 

@@ -1,5 +1,5 @@
-Let me sleep 0.9.0 - candidata Windows x86_64
+Let me sleep 0.9.1 - candidata Windows x86_64
 Este archivo fuente es una plantilla. work/build.ps1 genera BUILD.txt y BUILD.json
 con el SHA256 y el commit exactos del ejecutable exportado.
-Online integrado EOS, invitacion LMS1-, protocolo 9.
+Online integrado EOS, invitacion LMS1-, protocolo 10.
 Alcance verificado y pendientes: PRUEBAS.md.
