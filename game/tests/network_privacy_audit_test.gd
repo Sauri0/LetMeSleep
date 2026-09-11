@@ -14,6 +14,25 @@ func public_packet(tick: int, role: String, phase: String = "playing") -> Dictio
 	return {"tick": tick, "phase": phase, "actors": {42: {"role": role, "alive": true, "threatened": false, "bitten": false}, 77: {"role": "human"}}}
 
 func _initialize() -> void:
+	var visible_contact := public_packet(1, "mosquito")
+	visible_contact.actors[42].state = "biting"
+	visible_contact.actors[42].attached_to = 77
+	visible_contact.actors[77].alive = true
+	var contact_audit = Audit.new()
+	contact_audit.record_public(visible_contact, 42)
+	check(contact_audit.ok(), "actual visible bite may identify its human without revealing zone")
+	for invalid_state: String in ["flying", "perched", "stunned", "dead"]:
+		var invalid_contact := visible_contact.duplicate(true)
+		invalid_contact.actors[42].state = invalid_state
+		var leak_audit = Audit.new()
+		leak_audit.record_public(invalid_contact, 42)
+		check(not leak_audit.ok(), "reserved human cannot leak while " + invalid_state)
+	for invalid_parent: Variant in [-1, 77.0, 999]:
+		var invalid_contact := visible_contact.duplicate(true)
+		invalid_contact.actors[42].attached_to = invalid_parent
+		var invalid_audit = Audit.new()
+		invalid_audit.record_public(invalid_contact, 42)
+		check(not invalid_audit.ok(), "invalid attachment parent rejected " + str(invalid_parent))
 	var first = Audit.new()
 	first.record_private({"tick": 12, "assignment": {"human": 77, "zone": 3}})
 	check(first.pending_count() == 1 and first.failures.is_empty() and not first.ok(), "private before first public is pending, not a human leak or a premature pass")

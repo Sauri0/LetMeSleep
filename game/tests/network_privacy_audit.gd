@@ -20,6 +20,18 @@ func record_public(data: Dictionary, local_id: int) -> void:
 	if not actors is Dictionary:
 		_fail("public actors must be a dictionary")
 		return
+	for id: Variant in actors:
+		var contact: Variant = actors[id]
+		if not contact is Dictionary or not contact.has("attached_to"): continue
+		var parent: Variant = contact.attached_to
+		if not parent is int or parent < 0:
+			_fail("visible attachment must be a nonnegative integer")
+		elif parent != 0:
+			var human: Variant = actors.get(parent, {})
+			if contact.get("role", "") != "mosquito" or contact.get("state", "") != "biting" or not contact.get("alive", false):
+				_fail("attachment ID leaked outside an active bite")
+			elif not human is Dictionary or human.get("role", "") != "human" or not human.get("alive", false):
+				_fail("visible attachment references no living human")
 	var actor: Variant = actors.get(local_id, {})
 	if not actor is Dictionary:
 		_fail("public local actor must be a dictionary")
