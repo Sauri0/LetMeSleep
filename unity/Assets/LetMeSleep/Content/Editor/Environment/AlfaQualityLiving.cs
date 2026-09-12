@@ -180,7 +180,7 @@ namespace LetMeSleep.Content.Editor
             foreach(string name in new[]{"Quality_LampShade","Quality_LampShadeInner","Quality_LampBulb"}){
                 bool inner=name!="Quality_LampShade",bulb=name=="Quality_LampBulb";
                 MakeQualityMaterial(name,inner?new Color(.88f,.72f,.50f):new Color(.72f,.58f,.42f),.88f);
-                var material=materials[name];material.SetColor("_EmissionColor",bulb?new Color(.70f,.34f,.09f):inner?new Color(.20f,.10f,.03f):new Color(.38f,.18f,.045f));material.EnableKeyword("_EMISSION");
+                var material=materials[name];material.SetColor("_EmissionColor",bulb?new Color(.70f,.34f,.09f):inner?new Color(.20f,.10f,.03f):new Color(.38f,.18f,.045f));PersistAuthoredEmission(material);
                 material.SetFloat("_SpecularHighlights",0);material.SetFloat("_EnvironmentReflections",0);material.SetFloat("_ReceiveShadows",0);
                 material.EnableKeyword("_SPECULARHIGHLIGHTS_OFF");material.EnableKeyword("_ENVIRONMENTREFLECTIONS_OFF");material.EnableKeyword("_RECEIVE_SHADOWS_OFF");material.SetShaderPassEnabled("ShadowCaster",false);EditorUtility.SetDirty(material);
             }

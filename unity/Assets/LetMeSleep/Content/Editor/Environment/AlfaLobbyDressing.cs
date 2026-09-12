@@ -92,7 +92,7 @@ namespace LetMeSleep.Content.Editor
             var material=AssetDatabase.LoadAssetAtPath<Material>(path);
             if(material==null){material=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=name,enableInstancing=true};AssetDatabase.CreateAsset(material,path);}
             material.SetColor("_BaseColor",new Color(.90f,.78f,.57f));material.SetColor("_EmissionColor",new Color(.55f,.25f,.05f));material.SetFloat("_Metallic",0);material.SetShaderPassEnabled("ShadowCaster",false);
-            material.EnableKeyword("_EMISSION");material.SetFloat("_Smoothness",.25f);EditorUtility.SetDirty(material);materials[name]=material;
+            PersistAuthoredEmission(material);material.SetFloat("_Smoothness",.25f);EditorUtility.SetDirty(material);materials[name]=material;
         }
 
         static void LobbyPiece(Transform parent,string name,Vector3 center,Vector3 size,string material,bool solid)

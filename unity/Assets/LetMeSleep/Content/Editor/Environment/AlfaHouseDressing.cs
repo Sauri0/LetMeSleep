@@ -164,6 +164,18 @@ namespace LetMeSleep.Content.Editor
             var collider=book.gameObject.AddComponent<BoxCollider>();collider.center=new Vector3(0,height*.5f,0);collider.size=new Vector3(width,height,depth+.002f);
         }
 
+        static void PersistAuthoredEmission(Material material)
+        {
+            // URP rebuilds _EMISSION from AnyEmissive on import. A keyword alone
+            // is discarded when a previously black material retains its GI flags.
+            material.globalIlluminationFlags=MaterialGlobalIlluminationFlags.BakedEmissive;
+            MaterialEditor.FixupEmissiveFlag(material);
+            material.EnableKeyword("_EMISSION");
+            Need((material.globalIlluminationFlags&MaterialGlobalIlluminationFlags.AnyEmissive)!=0,
+                "Authored lamp lost its emissive GI flags: "+material.name);
+            EditorUtility.SetDirty(material);
+        }
+
         static void EnsureHouseDiffuserMaterial()
         {
             const string name="House_Diffuser";string path=Output+"/Materials/"+name+".mat";
@@ -171,7 +183,7 @@ namespace LetMeSleep.Content.Editor
             if(material==null){material=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=name,enableInstancing=true};AssetDatabase.CreateAsset(material,path);}
             // Reapply authored values on every build. W2 adjustments belong in these inputs.
             material.SetColor("_BaseColor",new Color(.90f,.78f,.57f));material.SetColor("_EmissionColor",new Color(.18f,.10f,.035f));
-            material.EnableKeyword("_EMISSION");material.SetFloat("_Smoothness",.1f);EditorUtility.SetDirty(material);
+            PersistAuthoredEmission(material);material.SetFloat("_Smoothness",.1f);EditorUtility.SetDirty(material);
             materials[name]=material;
         }
 
