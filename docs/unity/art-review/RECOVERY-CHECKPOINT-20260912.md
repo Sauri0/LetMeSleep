@@ -1,5 +1,20 @@
 # Revisión visual alfa — checkpoint 19:10 UTC
 
+## Equipo de doce tareas reanudado — 20:05 UTC
+
+La pausa para crear tareas terminó con «listo todos» y la captura del equipo. Se despacharon las doce tareas existentes, sin cambiar sus modelos. Propiedad actual en `docs/unity/TEAM-RECOVERY-20260912.md`; sustituye asignaciones históricas de este archivo. Todo trabajo nuevo sigue en N:.
+
+- Central HEAD b7d9ca6: UI bf63666/b7a1186 y living b7d9ca6 integrados. Importación nativa de mapas PASS 19:53:20 UTC. Ocho PNG reales UI a 720/1080 en `N:/LetMeSleep/Validation/TeamRecovery/ui-native`; nuevo living `N:/LetMeSleep/Validation/Alfa-VisualRecovery/living-crafted1.png`. Son evidencia parcial y recibieron defectos, no aprobación artística.
+- Revisores visual/funcional identificaron texto Mostaza truncado, iconos genéricos, marcos desalineados, opciones comprimidas, sliders débiles y estados dependientes del color. Worker UI entregó corrección 43b2eb6 (con receta documental de1f645): pendiente integración y nuevas capturas/interacciones.
+- Living crafted1 mejora carpintería, pero cojines, textiles, iluminación y ventana no alcanzan referencia. Elementos entregó delta 4f850a5 y Presentación abfd63d para cojines/manta y lámpara localizada: pendientes integración conjunta y captura Light ON/OFF sobre la misma geometría. Mapas prepara exterior de ventana sin ampliar zona jugable.
+- Humanos entregó b110965: seis vistas Cycles CPU del candidato human-reference8 en su worktree. Generación y render cerrados, PIDs2008/33888 ausentes. Revisor visual mantiene cinco P1 de cara/ojos/cuerpo/mano/pantufla. Rig65/Jaw nuevo no tiene auditoría temporal ni roundtrip actual: no integrar como aprobado. Autor prepara correcciones. Mosquitos trabaja módulo propio, sin pisar orquestación humana.
+- Gameplay entregó 9426435: helper y snippets externos de contacto piso/pared/techo compilados offline, sin ejecución nativa. Paquete `N:/LetMeSleep/Validation/SurfaceVisual-20260912/probe-20260912-195958-387-6f7b3f20`. COMPLETE_UNREVIEWED no es aprobación temporal. Revisar receta antes de usarlo.
+- Online entregó aeccfe8: validación previa de lobby y descarte de snapshots de ronda incorrecta. Compilación/checks puros reportados; pendiente revisión/integración. Dos identidades y WAN siguen pendientes, sin red nativa nueva.
+- Estabilidad documentó STAB-AUD-01: destrucción de Bootstrap omite raíces independientes de gameplay/presentación/lobby. Director asignó delta acotado AlfaApplication.cs a Gameplay, después de su entrega probe. Estabilidad prepara verificación externa PID/hijos/CoreAudio. Audio residual de la versión publicada aún no queda explicado/probado sólo por lectura.
+- Unity Director PID31388 cerrado y Play detenido. Cachés generadas de las dos fuentes SDF restauradas selectivamente; restantes assets generados conservados. Slot Blender actual concedido a Elementos para editable del JSON antiguo crafted1, con versión explícita; Mapas siguiente en cola y necesita concesión posterior. No abrir Unity mientras esté ocupado. Ningún nuevo paquete publicado.
+
+Informes independientes en `N:/LetMeSleep/Validation/TeamRecovery/{visual,functional,animation,stability}`. Catálogo aún no incorpora los ocho PNG UI nuevos ni living-crafted1. Alfa sigue en recuperación y beta no comenzó.
+
 ## Actualización posterior: referencias obligatorias y prueba round5
 
 - Branko rechazó explícitamente el acabado de personajes y fijó el mismo nivel de referencia para UI, objetos y mapas. Contratos `CHARACTER-QUALITY-BAR.md` y `UI-ENVIRONMENT-QUALITY-BAR.md`; originales conservados bajo `N:/LetMeSleep/References/{CharacterQuality,UIQuality,EnvironmentQuality}-20260912`. El catálogo muestra rechazo artístico; una importación correcta no lo revierte.
