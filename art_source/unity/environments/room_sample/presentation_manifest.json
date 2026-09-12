@@ -1,0 +1,1941 @@
+{
+  "schema_version": 1,
+  "presentation_contract_commit": "190fad6",
+  "geometry_commit": "75356a094f1c626316dea4aaa33c86eb344fc524",
+  "asset": "LMS_RoomSample_01",
+  "units": "metres",
+  "coordinates": "Unity room-local; +Y up, +Z forward, +X right",
+  "root_scale": [
+    1,
+    1,
+    1
+  ],
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "source": "room_contract.json + validation.json",
+  "implementation_status": "integration_recipe_only; source FBX unchanged",
+  "renderers": [
+    {
+      "node": "Architecture_Shell",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": true,
+      "static_occludee": true,
+      "surface": null,
+      "material_slot_surfaces": [
+        "Wood",
+        "Stone",
+        "Stone"
+      ],
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Door_Jamb_L",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Door_Jamb_R",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Door_Frame_Header",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Door_01_Leaf",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Door_Panel",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Door_Panel.001",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Door_Handle_Base",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Metal",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Door_Handle_Lever",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Metal",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Door_Panel.002",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Door_Panel.003",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Door_Handle_Base.001",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Metal",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Door_Handle_Lever.001",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Metal",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Door_Hinge_Barrel",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Metal",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Door_Hinge_Barrel.001",
+      "mobility": "dynamic",
+      "contribute_gi": false,
+      "receive_gi": "LightProbes",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "BlendProbes",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": false,
+      "surface": "Metal",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "not_required_dynamic"
+    },
+    {
+      "node": "Bed_Base",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Leg",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Leg.001",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Leg.002",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Leg.003",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Mattress",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Carpet",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Quilt",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Carpet",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Fold",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Carpet",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Pillow",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Carpet",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Pillow.001",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Carpet",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Headboard",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Head_Post",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Bed_Head_Post.001",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Nightstand_Case",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Nightstand_Top",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Nightstand_Drawer",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Nightstand_Knob",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Metal",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Nightstand_Drawer.001",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Nightstand_Knob.001",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Metal",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Desk_Top",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Desk_Leg",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Desk_Leg.001",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Desk_Leg.002",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Desk_Leg.003",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Desk_Rear_Rail",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Chair_Seat",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Chair_Leg",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Chair_Leg.001",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Chair_Leg.002",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Chair_Leg.003",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Chair_Back_Post",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Chair_Back_Post.001",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Chair_Back",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Window_Jamb",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Window_Jamb.001",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Window_Rail",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Window_Rail.001",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Window_Pane",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": false,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Stone",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Window_Mullion",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    },
+    {
+      "node": "Window_Sill",
+      "mobility": "static",
+      "contribute_gi": true,
+      "receive_gi": "Lightmaps",
+      "cast_shadows": true,
+      "receive_shadows": true,
+      "light_probe_usage": "Off",
+      "reflection_probe_usage": "BlendProbes",
+      "static_occluder": false,
+      "static_occludee": true,
+      "surface": "Wood",
+      "material_slot_surfaces": null,
+      "lightmap_uv2_status": "pending_unity_import_generation_and_overlap_validation"
+    }
+  ],
+  "materials": {
+    "policy": "Shared URP material assets by source material name; never per-instance clones",
+    "source_shader_status": "Blender Principled placeholders; Unity URP remap required",
+    "glass": "Glass_Blue_Opaque stays opaque for sample, does not cast shadows",
+    "surface_enum": [
+      "Wood",
+      "Tile",
+      "Carpet",
+      "Grass",
+      "Stone",
+      "Metal"
+    ],
+    "fallback_notes": "Plaster/ceiling/glass use Stone acoustics provisionally; bed textiles use Carpet. Tile/Grass absent in room sample."
+  },
+  "lighting": {
+    "texels_per_metre": 16,
+    "static_uv2": "Missing in current source. Generate Secondary UV on Unity model import, then check overlap/padding at bake resolution.",
+    "uv2_padding_target_texels": 4,
+    "uv2_status": "pending; not certified by Blender geometry tests",
+    "probe_anchors": "Candidate 3D positions only. Worker 2 expands tetrahedral probe grid and validates against colliders."
+  },
+  "anchor_parent": "PresentationAnchors under room root",
+  "anchors": [
+    {
+      "role": "fixture_candidate",
+      "position": [
+        2.4,
+        2.62,
+        2.2
+      ],
+      "name": "LightAnchor_Room_Ceiling"
+    },
+    {
+      "role": "probe_candidate",
+      "position": [
+        1.12,
+        1.4,
+        0.35
+      ],
+      "name": "LightAnchor_Door_Inside"
+    },
+    {
+      "role": "probe_candidate",
+      "position": [
+        1.12,
+        1.4,
+        -0.35
+      ],
+      "name": "LightAnchor_Door_Outside"
+    },
+    {
+      "role": "probe_candidate",
+      "position": [
+        0.4,
+        0.25,
+        0.4
+      ],
+      "name": "LightAnchor_Room_Low_SW"
+    },
+    {
+      "role": "probe_candidate",
+      "position": [
+        4.4,
+        0.25,
+        0.4
+      ],
+      "name": "LightAnchor_Room_Low_SE"
+    },
+    {
+      "role": "probe_candidate",
+      "position": [
+        2.2,
+        0.25,
+        2.4
+      ],
+      "name": "LightAnchor_Room_Low_Center"
+    },
+    {
+      "role": "probe_candidate",
+      "position": [
+        0.4,
+        2.5,
+        0.4
+      ],
+      "name": "LightAnchor_Room_High_SW"
+    },
+    {
+      "role": "probe_candidate",
+      "position": [
+        4.4,
+        2.5,
+        0.4
+      ],
+      "name": "LightAnchor_Room_High_SE"
+    },
+    {
+      "role": "probe_candidate",
+      "position": [
+        0.4,
+        2.5,
+        4.0
+      ],
+      "name": "LightAnchor_Room_High_NW"
+    },
+    {
+      "role": "probe_candidate",
+      "position": [
+        4.4,
+        2.5,
+        4.0
+      ],
+      "name": "LightAnchor_Room_High_NE"
+    },
+    {
+      "role": "box_projection_bounds",
+      "size": [
+        4.8,
+        2.8,
+        4.4
+      ],
+      "position": [
+        2.4,
+        1.4,
+        2.2
+      ],
+      "name": "ReflectionVolume_Room"
+    },
+    {
+      "role": "room",
+      "size": [
+        4.8,
+        2.8,
+        4.4
+      ],
+      "position": [
+        2.4,
+        1.4,
+        2.2
+      ],
+      "name": "AudioZone_Room"
+    },
+    {
+      "role": "semantic_anchor_only_not_collider",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "name": "CameraCollision"
+    }
+  ],
+  "anchor_status": "Definitions only; Director creates Empty transforms through Unity API. Not present in FBX.",
+  "forbidden_source_components": [
+    "Light",
+    "ReflectionProbe",
+    "LightProbeGroup",
+    "AudioSource",
+    "Volume"
+  ],
+  "collider_children": [
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Floor",
+      "type": "BoxCollider",
+      "center": [
+        2.4000000000000004,
+        -0.09,
+        2.2
+      ],
+      "size": [
+        5.16,
+        0.18,
+        4.76
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Ceiling",
+      "type": "BoxCollider",
+      "center": [
+        2.4000000000000004,
+        2.9,
+        2.2
+      ],
+      "size": [
+        5.16,
+        0.20000000000000018,
+        4.76
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_West",
+      "type": "BoxCollider",
+      "center": [
+        -0.09,
+        1.4,
+        2.2
+      ],
+      "size": [
+        0.18,
+        2.8,
+        4.76
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_East",
+      "type": "BoxCollider",
+      "center": [
+        4.890000000000001,
+        1.4,
+        2.2
+      ],
+      "size": [
+        0.1800000000000006,
+        2.8,
+        4.76
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_SouthLeft",
+      "type": "BoxCollider",
+      "center": [
+        0.25,
+        1.4,
+        -0.09
+      ],
+      "size": [
+        0.5,
+        2.8,
+        0.18
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_SouthRight",
+      "type": "BoxCollider",
+      "center": [
+        3.27,
+        1.4,
+        -0.09
+      ],
+      "size": [
+        3.0599999999999996,
+        2.8,
+        0.18
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_DoorLintel",
+      "type": "BoxCollider",
+      "center": [
+        1.12,
+        2.53,
+        -0.09
+      ],
+      "size": [
+        1.24,
+        0.54,
+        0.18
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_NorthLeft",
+      "type": "BoxCollider",
+      "center": [
+        1.5,
+        1.4,
+        4.49
+      ],
+      "size": [
+        3.0,
+        2.8,
+        0.17999999999999972
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_NorthRight",
+      "type": "BoxCollider",
+      "center": [
+        4.5,
+        1.4,
+        4.49
+      ],
+      "size": [
+        0.5999999999999996,
+        2.8,
+        0.17999999999999972
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_WindowBelow",
+      "type": "BoxCollider",
+      "center": [
+        3.6,
+        0.575,
+        4.49
+      ],
+      "size": [
+        1.2000000000000002,
+        1.15,
+        0.17999999999999972
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_WindowAbove",
+      "type": "BoxCollider",
+      "center": [
+        3.6,
+        2.525,
+        4.49
+      ],
+      "size": [
+        1.2000000000000002,
+        0.5499999999999998,
+        0.17999999999999972
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Door_Jamb_L",
+      "type": "BoxCollider",
+      "center": [
+        0.535,
+        1.1,
+        -0.08
+      ],
+      "size": [
+        0.07,
+        2.2,
+        0.2
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Door_Jamb_R",
+      "type": "BoxCollider",
+      "center": [
+        1.705,
+        1.1,
+        -0.08
+      ],
+      "size": [
+        0.07,
+        2.2,
+        0.2
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Door_Frame_Header",
+      "type": "BoxCollider",
+      "center": [
+        1.12,
+        2.23,
+        -0.08
+      ],
+      "size": [
+        1.24,
+        0.06,
+        0.2
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Door_01_Hinge",
+      "child_name": "Collider_Door_01_Leaf",
+      "type": "BoxCollider",
+      "center": [
+        0.535,
+        1.1025,
+        0
+      ],
+      "size": [
+        1.07,
+        2.185,
+        0.04
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldDynamic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Bed",
+      "child_name": "Collider_Bed_Base",
+      "type": "BoxCollider",
+      "center": [
+        0,
+        0.3,
+        0
+      ],
+      "size": [
+        1.6,
+        0.19,
+        2.2
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Bed",
+      "child_name": "Collider_Bed_Leg",
+      "type": "BoxCollider",
+      "center": [
+        -0.7,
+        0.115,
+        -0.99
+      ],
+      "size": [
+        0.12,
+        0.23,
+        0.12
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Bed",
+      "child_name": "Collider_Bed_Leg",
+      "type": "BoxCollider",
+      "center": [
+        -0.7,
+        0.115,
+        0.99
+      ],
+      "size": [
+        0.12,
+        0.23,
+        0.12
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Bed",
+      "child_name": "Collider_Bed_Leg",
+      "type": "BoxCollider",
+      "center": [
+        0.7,
+        0.115,
+        -0.99
+      ],
+      "size": [
+        0.12,
+        0.23,
+        0.12
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Bed",
+      "child_name": "Collider_Bed_Leg",
+      "type": "BoxCollider",
+      "center": [
+        0.7,
+        0.115,
+        0.99
+      ],
+      "size": [
+        0.12,
+        0.23,
+        0.12
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Bed",
+      "child_name": "Collider_Bed_Mattress",
+      "type": "BoxCollider",
+      "center": [
+        0,
+        0.49,
+        0
+      ],
+      "size": [
+        1.5,
+        0.19,
+        2.1
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Bed",
+      "child_name": "Collider_Bed_Quilt",
+      "type": "BoxCollider",
+      "center": [
+        0,
+        0.615,
+        -0.28
+      ],
+      "size": [
+        1.52,
+        0.07,
+        1.55
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Bed",
+      "child_name": "Collider_Bed_Headboard",
+      "type": "BoxCollider",
+      "center": [
+        0,
+        0.74,
+        1.05
+      ],
+      "size": [
+        1.64,
+        0.72,
+        0.1
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Nightstand",
+      "child_name": "Collider_Nightstand_Case",
+      "type": "BoxCollider",
+      "center": [
+        0,
+        0.325,
+        0
+      ],
+      "size": [
+        0.55,
+        0.55,
+        0.5
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Nightstand",
+      "child_name": "Collider_Nightstand_Top",
+      "type": "BoxCollider",
+      "center": [
+        0,
+        0.625,
+        0
+      ],
+      "size": [
+        0.59,
+        0.05,
+        0.54
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Desk",
+      "child_name": "Collider_Desk_Top",
+      "type": "BoxCollider",
+      "center": [
+        0,
+        0.765,
+        0
+      ],
+      "size": [
+        1.32,
+        0.06,
+        0.64
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Desk",
+      "child_name": "Collider_Desk_Leg",
+      "type": "BoxCollider",
+      "center": [
+        -0.56,
+        0.3675,
+        -0.24
+      ],
+      "size": [
+        0.085,
+        0.735,
+        0.085
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Desk",
+      "child_name": "Collider_Desk_Leg",
+      "type": "BoxCollider",
+      "center": [
+        -0.56,
+        0.3675,
+        0.24
+      ],
+      "size": [
+        0.085,
+        0.735,
+        0.085
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Desk",
+      "child_name": "Collider_Desk_Leg",
+      "type": "BoxCollider",
+      "center": [
+        0.56,
+        0.3675,
+        -0.24
+      ],
+      "size": [
+        0.085,
+        0.735,
+        0.085
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Desk",
+      "child_name": "Collider_Desk_Leg",
+      "type": "BoxCollider",
+      "center": [
+        0.56,
+        0.3675,
+        0.24
+      ],
+      "size": [
+        0.085,
+        0.735,
+        0.085
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Desk",
+      "child_name": "Collider_Desk_Rear_Rail",
+      "type": "BoxCollider",
+      "center": [
+        0,
+        0.63,
+        0.245
+      ],
+      "size": [
+        1.05,
+        0.12,
+        0.055
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Chair",
+      "child_name": "Collider_Chair_Seat",
+      "type": "BoxCollider",
+      "center": [
+        0,
+        0.445,
+        0
+      ],
+      "size": [
+        0.49,
+        0.065,
+        0.49
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Chair",
+      "child_name": "Collider_Chair_Leg",
+      "type": "BoxCollider",
+      "center": [
+        -0.19,
+        0.205,
+        -0.19
+      ],
+      "size": [
+        0.065,
+        0.41,
+        0.065
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Chair",
+      "child_name": "Collider_Chair_Leg",
+      "type": "BoxCollider",
+      "center": [
+        -0.19,
+        0.205,
+        0.19
+      ],
+      "size": [
+        0.065,
+        0.41,
+        0.065
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Chair",
+      "child_name": "Collider_Chair_Leg",
+      "type": "BoxCollider",
+      "center": [
+        0.19,
+        0.205,
+        -0.19
+      ],
+      "size": [
+        0.065,
+        0.41,
+        0.065
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Chair",
+      "child_name": "Collider_Chair_Leg",
+      "type": "BoxCollider",
+      "center": [
+        0.19,
+        0.205,
+        0.19
+      ],
+      "size": [
+        0.065,
+        0.41,
+        0.065
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Chair",
+      "child_name": "Collider_Chair_Back_Post",
+      "type": "BoxCollider",
+      "center": [
+        -0.19,
+        0.7,
+        -0.215
+      ],
+      "size": [
+        0.065,
+        0.5,
+        0.065
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Chair",
+      "child_name": "Collider_Chair_Back_Post",
+      "type": "BoxCollider",
+      "center": [
+        0.19,
+        0.7,
+        -0.215
+      ],
+      "size": [
+        0.065,
+        0.5,
+        0.065
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "Furniture_Chair",
+      "child_name": "Collider_Chair_Back",
+      "type": "BoxCollider",
+      "center": [
+        0,
+        0.865,
+        -0.215
+      ],
+      "size": [
+        0.4,
+        0.16,
+        0.055
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Window_Jamb",
+      "type": "BoxCollider",
+      "center": [
+        3.025,
+        1.7,
+        4.485
+      ],
+      "size": [
+        0.05,
+        1.1,
+        0.17
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Window_Jamb",
+      "type": "BoxCollider",
+      "center": [
+        4.175,
+        1.7,
+        4.485
+      ],
+      "size": [
+        0.05,
+        1.1,
+        0.17
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Window_Rail",
+      "type": "BoxCollider",
+      "center": [
+        3.6,
+        1.175,
+        4.485
+      ],
+      "size": [
+        1.1,
+        0.05,
+        0.17
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Window_Rail",
+      "type": "BoxCollider",
+      "center": [
+        3.6,
+        2.225,
+        4.485
+      ],
+      "size": [
+        1.1,
+        0.05,
+        0.17
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Window_Pane",
+      "type": "BoxCollider",
+      "center": [
+        3.6,
+        1.7,
+        4.49
+      ],
+      "size": [
+        1.1,
+        1.0,
+        0.018
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    },
+    {
+      "parent_node": "LMS_RoomSample_01",
+      "child_name": "Collider_Window_Sill",
+      "type": "BoxCollider",
+      "center": [
+        3.6,
+        1.125,
+        4.38
+      ],
+      "size": [
+        1.32,
+        0.05,
+        0.32
+      ],
+      "attach_to_visual_mesh": false,
+      "collision_role": "WorldStatic",
+      "camera_query_included": true
+    }
+  ],
+  "camera_collision": {
+    "anchor": "CameraCollision",
+    "policy": "Camera query must include static room collision and moving leaf at its actual angle; never leave an invisible closed-door blocker.",
+    "layer_note": "One Unity layer per GameObject. Director combines WorldStatic/WorldDynamic in camera masks OR creates synchronized CameraCollision query proxies; do not assign two layers to one collider.",
+    "proxy_duplicate_physics_forbidden": true
+  },
+  "interior_volumes": [
+    {
+      "id": "SampleFloor_00",
+      "center": [
+        2.4,
+        1.4,
+        2.2
+      ],
+      "size": [
+        4.8,
+        2.8,
+        4.4
+      ],
+      "scope": "sample_only_not_full_house",
+      "kind": "floor"
+    },
+    {
+      "id": "SampleRoom_Bedroom",
+      "center": [
+        2.4,
+        1.4,
+        2.2
+      ],
+      "size": [
+        4.8,
+        2.8,
+        4.4
+      ],
+      "parent": "SampleFloor_00",
+      "kind": "room"
+    }
+  ],
+  "portals": [
+    {
+      "center": [
+        1.12,
+        1.1,
+        0
+      ],
+      "kind": "door",
+      "height": 2.2,
+      "traversable": "when physically open",
+      "width": 1.1,
+      "id": "Portal_Door_01",
+      "outward_normal": [
+        0,
+        0,
+        -1
+      ],
+      "state_node": "Door_01_Hinge"
+    },
+    {
+      "acoustic_state": "sealed",
+      "height": 1.0,
+      "note": "Aperture inside frame; no traversal or open acoustic portal through glass",
+      "kind": "window",
+      "center": [
+        3.6,
+        1.7,
+        4.49
+      ],
+      "traversable": false,
+      "id": "Portal_Window_01",
+      "outward_normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1.1
+    }
+  ],
+  "acoustic_zones": [
+    {
+      "id": "AudioZone_Room",
+      "bounds": "SampleRoom_Bedroom",
+      "kind": "room"
+    }
+  ],
+  "future_map_zone_kinds": [
+    "room",
+    "corridor",
+    "stair",
+    "patio",
+    "lobby"
+  ],
+  "lod": {
+    "architecture": "No culling or simplification that opens shell",
+    "large_props": [
+      {
+        "required_component": "LODGroup",
+        "levels": [
+          {
+            "index": 0,
+            "renderers": "all descendant MeshRenderers",
+            "screen_relative_transition_height": 0.0
+          }
+        ],
+        "status": "Unity integration pending; only LOD0 supplied, no optimized LOD claim",
+        "node": "Furniture_Bed",
+        "fade_mode": "None"
+      }
+    ],
+    "repeated_trees_fences": "Absent from sample. Supply real mesh LOD variants and shared material/mesh references in later assigned batch."
+  },
+  "missing_evidence": [
+    "Unity URP material remap",
+    "UV2 overlap and texel margin",
+    "Unity anchor instantiation",
+    "Collider and camera layers",
+    "Light/probe bake and leakage",
+    "Real LOD variants outside sample",
+    "Full house/floor/patio/lobby volumes"
+  ]
+}

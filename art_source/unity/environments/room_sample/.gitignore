@@ -1,2 +1,3 @@
 # Local execution transcripts; portable validation receipt is versioned.
 *.log
+.verification/
