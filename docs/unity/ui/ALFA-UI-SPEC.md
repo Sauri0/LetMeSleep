@@ -56,10 +56,10 @@ La referencia muestra buena jerarquía mediante paneles oscuros, contornos claro
 | `Night600` | `#244B78` | Superficie secundaria y hover oscuro. |
 | `Moon200` | `#BED4EA` | Texto secundario sobre noche. |
 | `Sheet100` | `#FFF1D6` | Texto principal y superficies claras. |
-| `Lamp400` | `#F6C453` | Acción primaria y foco. |
+| `Lamp400` | `#F6C453` | Foco, marca y acento cálido. |
 | `Pajama500` | `#EF6258` | Peligro de mosquito, error y énfasis cálido. |
 | `Mint400` | `#65D49B` | Listo, éxito y confirmación. |
-| `Sky400` | `#4FA9F5` | Acción online, selección neutral y enlaces de navegación. |
+| `Sky400` | `#4FA9F5` | Acción primaria, selección humana y enlaces de navegación. |
 | `Border` | `#4D83BD` | Contorno estructural de paneles y controles. |
 | `Disabled` | `#6E8299` | Texto deshabilitado; acompañar siempre con forma o etiqueta. |
 | `Scrim` | `#06111FD1` | Fondo de modal sobre escena 3D. |
@@ -70,7 +70,7 @@ Los estados nunca dependen sólo del color. `LISTO` y `NO LISTO` incluyen texto 
 
 | Estilo | Tamaño | Fuente | Uso |
 |---|---:|---|---|
-| Logo | 74 px | Bangers | `LET ME SLEEP`, máximo dos líneas. |
+| Logo | 72 px | Bangers con sombra y contorno | `LET ME SLEEP`, máximo dos líneas. |
 | H1 | 48 px | Atkinson Bold | Título de pantalla. |
 | H2 | 32 px | Atkinson Bold | Título de panel. |
 | Botón | 24 px | Atkinson Bold | Verbos breves. |
@@ -83,7 +83,8 @@ Texto normal: contraste mínimo 4.5:1. Texto grande: mínimo 3:1. No usar Banger
 ### Forma, espaciado y movimiento
 
 - Retícula de 8 px. Espacios habituales: 8, 16, 24, 32 y 48 px.
-- Paneles con esquinas recortadas o radio visual de 10 px, borde de 2 px y sombra corta de 6 px. No reproducir el marco ni el logotipo de la referencia.
+- Paneles azul noche por capas, borde de 2 px, brillo superior corto y sombra de 9 px. Los fondos de escena permanecen visibles bajo un scrim; la UI concentra contraste dentro de cada módulo.
+- Los botones con icono usan una placa de hasta 50 px, símbolo geométrico, título y, en acciones principales, una segunda línea descriptiva. Ninguna acción crítica depende sólo del símbolo.
 - Botón principal: alto 68 px a 1080p; secundario 56 px; área interactiva nunca menor de 44 px a 720p.
 - Foco: contorno `Lamp400` de 3 px, más un desplazamiento de 2 px. Hover sin foco no puede ocultar el foco de teclado.
 - Transición de panel: 140 ms de opacidad y desplazamiento máximo de 12 px. Modal: 180 ms. Ninguna información depende de la animación.
@@ -133,9 +134,9 @@ El diagrama complementario está en [ALFA-UI-FLOWS.svg](./ALFA-UI-FLOWS.svg).
 Composición a 16:9:
 
 - La escena 3D nocturna ocupa todo el fondo y conserva visible el arte actual bajo un tinte azul tinta suave.
-- Izquierda: riel compacto de 480 px a 1080p con logotipo, subtítulo, acciones y versión dinámica del build.
+- Izquierda: riel compacto de 500 px a 1080p con marca construida por capas, subtítulo, acciones con icono y versión dinámica del build.
 - Centro y derecha: ventana libre para personajes o acción ambiental no interactiva.
-- El riel conserva un margen de 52 px a 1080p y se escala con el `CanvasScaler`; no tapa por completo la escena.
+- El riel conserva un margen de 48 px a 1080p y se escala con el `CanvasScaler`; no tapa por completo la escena.
 
 Orden y copy exacto:
 
@@ -265,7 +266,8 @@ Alfa contiene únicamente:
 Composición:
 
 - Centro/izquierda: `RawImage` 3D cuadrado de hasta 712×712 a 1080p, con fondo `Night800` y suelo suave.
-- Derecha: pestañas `HUMANO` y `MOSQUITO`, categorías alfa y muestras de color con nombre accesible.
+- El escenario identifica `VISTA EN VIVO` y el rol mostrado; la miniatura central siempre procede del prefab real conectado por el juego.
+- Derecha: tarjetas `HUMANO` y `MOSQUITO`, categorías alfa y muestras construidas desde cada `NamedColorOption` real. Cada muestra combina color, nombre, contorno y marca de selección.
 - Pie: `GUARDAR`, `DESHACER CAMBIOS` y `← VOLVER`.
 
 Controles del visor:
@@ -283,7 +285,7 @@ El color seleccionado usa borde, prefijo ASCII `>` y nombre; no sólo tono. `GUA
 
 Mostrar sólo capacidades alfa realmente conectadas. Una fila sin implementación se oculta; no se publica deshabilitada como promesa.
 
-Categorías previstas:
+La pantalla distribuye las capacidades en tarjetas visibles `AUDIO`, `VIDEO` y `CONTROLES`; no mezcla sus filas en una lista genérica. Categorías previstas:
 
 - `AUDIO`: volumen general, música y efectos.
 - `VIDEO`: modo de pantalla, resolución, calidad, VSync y límite de FPS (`SIN LÍMITE`, 30, 60, 90, 120, 144, 165 o 240) si Presentation expone valores aplicables. El valor inicial es `SIN LÍMITE` y VSync apagado.

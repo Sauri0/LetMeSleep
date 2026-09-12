@@ -3,7 +3,7 @@
   "area": "UI",
   "owner": "Revisar interfaz visual",
   "sourceBranch": "codex/unity-ui",
-  "sourceCommit": "0cdcbd3d2477347f70b164e991bd5fbdef334d87",
+  "sourceCommit": "5f4a381b9ba81972266623f8d139358500e4ae45",
   "currentStatus": "Captura pendiente",
   "captureRules": {
     "resolutions": [
@@ -18,6 +18,32 @@
       "No marcar una ficha aprobada hasta la revisión de Branko."
     ]
   },
+  "qualityReferences": [
+    {
+      "path": "N:/LetMeSleep/References/UIQuality-20260912/01.png",
+      "sha256": "f7ed36027652e39a8667c2954bc21fbf21b9a923262a290c6a2a69d5d64bfbbe"
+    },
+    {
+      "path": "N:/LetMeSleep/References/UIQuality-20260912/02.png",
+      "sha256": "e42a5a7813647e6d58953a6c6aa57696e3fb6a82568fcebbbe37897e28718d64"
+    },
+    {
+      "path": "N:/LetMeSleep/References/UIQuality-20260912/03.png",
+      "sha256": "7c0a1b6fa1506dcee998b24c43c72d0c7c3a0a900461f456d9e460291d868765"
+    },
+    {
+      "path": "N:/LetMeSleep/References/UIQuality-20260912/04.png",
+      "sha256": "a15d2362a4b58a1606757049d0026433300e05375e05944911e189865aab3e20"
+    },
+    {
+      "path": "N:/LetMeSleep/References/UIQuality-20260912/05.png",
+      "sha256": "51366503588d8242e0e398364a01e6577d1290b5f74a1e300c218816849cec33"
+    },
+    {
+      "path": "N:/LetMeSleep/References/UIQuality-20260912/06.png",
+      "sha256": "cc07034b6981e31b1b738b8202da4c5b3ffd91ecc9260d7e43b2736d67831fca"
+    }
+  ],
   "sharedUnityPaths": [
     "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
     "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiFactory.cs",
@@ -51,12 +77,12 @@
       ],
       "acceptance": [
         "Los cinco botones muestran símbolo y texto completos.",
-        "El riel 480x880 no tapa al humano ni al mosquito.",
+        "El riel 500x920 no tapa al humano ni al mosquito.",
         "Logo, subtítulo, ayudas y versión no se solapan ni truncan.",
         "El foco se distingue por superficie, contorno y contraste."
       ],
       "pending": [
-        "La captura 1920x1080 pasó la revisión dirigida; falta la variante 1280x720 del menú."
+        "Recapturar 1920x1080 y 1280x720 después de 5f4a381; las rondas anteriores no acreditan el nuevo sistema visual."
       ],
       "variants": [
         "Foco en JUGAR ONLINE",
@@ -80,6 +106,14 @@
           "capturedUiCommit": "4d7d0c7",
           "capturedRepositoryHead": "697d57f",
           "note": "Ronda 2: los cinco botones muestran iconos, el encabezado cabe y la escena central queda libre a 1920x1080. PASS limitado al alcance UI de esta vista."
+        },
+        {
+          "path": "N:/LetMeSleep/Validation/Alfa-VisualRecovery/menu-round3-1080.png",
+          "type": "image",
+          "sha256": "28a3bb51c411e70dac50d030211d7a2b36bed225194268aefd387c7b137e733e",
+          "status": "Revisado con fallas",
+          "capturedUiCommit": "4d7d0c7",
+          "note": "Baseline anterior a 5f4a381: panel genérico, marca plana, iconos pequeños y ausencia de jerarquía título/subtítulo en acciones."
         }
       ]
     },
@@ -213,7 +247,7 @@
         "Nombres de colores, prenda predeterminada y estado Guardar son legibles."
       ],
       "pending": [
-        "La captura Human/Front 1280x720 pasó la revisión dirigida; faltan Human/Side 1920x1080 y Mosquito/Front 1280x720."
+        "Recapturar Human/Front, Human/Side y Mosquito/Front después de 5f4a381; la ronda 2 no acredita las nuevas tarjetas, paletas y marco de vista en vivo."
       ],
       "variants": ["Humano frente", "Humano perfil", "Mosquito frente", "Cambios sin guardar"],
       "animations": ["Arrastre orbital completo y extremos de zoom"],
@@ -230,10 +264,10 @@
           "path": "N:/LetMeSleep/Validation/Alfa-VisualRecovery/customization-round2-720.png",
           "type": "image",
           "sha256": "ec7d038b076150e90340a942516f5fb294f7b04b6b7b0102cb00d57513de277c",
-          "status": "Revisado sin hallazgos",
+          "status": "Histórico · criterio superado",
           "capturedUiCommit": "4d7d0c7",
           "capturedRepositoryHead": "697d57f",
-          "note": "Ronda 2: proporción del humano preservada, CENTRAR completo e iconos visibles a 1280x720. PASS limitado al alcance UI y a Human/Front."
+          "note": "Ronda 2: cerró proporción, copy e iconos bajo el criterio anterior; conserva valor histórico pero no acredita la calidad visual de 5f4a381."
         }
       ]
     },
@@ -250,12 +284,12 @@
           "resolution": "1280x720"
         },
         {
-          "state": "OpenSettings desde Pause; borrador con cambios; scroll en CONTROLES",
+          "state": "OpenSettings desde Pause; borrador con cambios; tarjetas AUDIO, VIDEO y CONTROLES visibles",
           "resolution": "1920x1080"
         }
       ],
       "acceptance": [
-        "Audio, Video y Controles conservan jerarquía durante scroll.",
+        "Audio, Video y Controles se distinguen como tarjetas y conservan jerarquía.",
         "Valores, flechas, dropdown y acciones no truncan.",
         "Aplicando bloquea controles sin perder el estado visible."
       ],
