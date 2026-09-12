@@ -45,6 +45,12 @@ direccional frío de intensidad 0.55 y un spot frontal suave de intensidad
 fills se desactivan en la casa. El volumen global usa bloom 0.025, threshold
 1.35 y scatter 0.35.
 
+La casa conserva los pools cálidos de cada luminaria sobre un ambiente
+`Trilight` nocturno legible: sky `(0.14, 0.17, 0.24)`, equator
+`(0.09, 0.095, 0.13)`, ground `(0.045, 0.042, 0.06)` e intensidad `1.0`.
+Este relleno frío evita techos negros y paredes sin lectura sin convertir la
+escena en iluminación diurna ni sumar luces por habitación.
+
 La captura de diagnóstico previa al ajuste es
 `N:/LetMeSleep/Validation/Alfa-VisualRecovery/menu-1080.png`, 1920×1080,
 465226 bytes, SHA-256
