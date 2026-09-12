@@ -215,7 +215,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 if (instance.activeSelf != available)
                     instance.SetActive(available);
                 if (available)
-                    instance.transform.SetPositionAndRotation(state.Position.ToUnity(), state.Rotation.ToUnity());
+                    ApplyWorldToolPose(instance, state.Position.ToUnity(), state.Rotation.ToUnity());
             }
 
             removedPickups.Clear();
@@ -236,6 +236,26 @@ namespace LetMeSleep.Presentation.Gameplay
             Collider[] colliders = instance.GetComponentsInChildren<Collider>(true);
             for (int i = 0; i < colliders.Length; i++)
                 colliders[i].enabled = false;
+        }
+
+        private static void ApplyWorldToolPose(
+            GameObject instance, Vector3 gripPosition, Quaternion gameplayRotation)
+        {
+            ToolView tool = instance.GetComponent<ToolView>();
+            if (tool == null || tool.Grip == null || tool.Impact == null)
+            {
+                instance.transform.SetPositionAndRotation(gripPosition, gameplayRotation);
+                return;
+            }
+
+            Vector3 localGrip = instance.transform.InverseTransformPoint(tool.Grip.position);
+            Vector3 localImpact = instance.transform.InverseTransformPoint(tool.Impact.position);
+            Vector3 sourceForward = localImpact - localGrip;
+            Quaternion sourceToGameplay = sourceForward.sqrMagnitude > 0.000001f
+                ? Quaternion.FromToRotation(sourceForward.normalized, Vector3.forward)
+                : Quaternion.identity;
+            instance.transform.rotation = gameplayRotation * sourceToGameplay;
+            instance.transform.position += gripPosition - tool.Grip.position;
         }
 
         private void DriveLocalCamera()
