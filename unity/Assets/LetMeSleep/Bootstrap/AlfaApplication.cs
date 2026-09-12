@@ -298,7 +298,8 @@ namespace LetMeSleep.Bootstrap
         {
             var anchor=map.PresentationAnchors.Find(anchorName); if(!anchor) return;
             var instance=Instantiate(prefab,anchor.position,anchor.rotation,menuCharacters.transform);
-            if(prefab==MosquitoPrefab) instance.transform.localScale*=2.5f;
+            // Presentation scale only; gameplay and customization retain the authored scale.
+            if(prefab==MosquitoPrefab) instance.transform.localScale*=4f;
             foreach(var collider in instance.GetComponentsInChildren<Collider>(true)) collider.enabled=false;
             var view=instance.GetComponent<CharacterView>(); ApplyAppearance(view,appearance); view.PlayMotion(motion);
         }
