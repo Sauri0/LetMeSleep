@@ -1,0 +1,767 @@
+{
+  "checks": 491,
+  "failures": [],
+  "assets": [
+    {
+      "id": "alfa_bench",
+      "visual_bounds": {
+        "position": [
+          -0.824999988079071,
+          0.0,
+          -0.30000001192092896
+        ],
+        "size": [
+          1.649999976158142,
+          0.9200000166893005,
+          0.6000000238418579
+        ]
+      },
+      "triangles": 484,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 3,
+      "sha256": "6827ccd032564d6952145e9ae2639c0bb3886b67f05f3fb572d241a7b66f6061"
+    },
+    {
+      "id": "alfa_patio_table",
+      "visual_bounds": {
+        "position": [
+          -0.7490000128746033,
+          0.0,
+          -0.42500001192092896
+        ],
+        "size": [
+          1.498000144958496,
+          0.7599999904632568,
+          0.8500000238418579
+        ]
+      },
+      "triangles": 484,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 3,
+      "sha256": "ff9c0553a951aa4edfd0a80f0e92d97390ee969088baf5affa443baad86ac350"
+    },
+    {
+      "id": "alfa_chair",
+      "visual_bounds": {
+        "position": [
+          -0.25,
+          0.0,
+          -0.25999999046325684
+        ],
+        "size": [
+          0.5,
+          0.9399999380111694,
+          0.5199999809265137
+        ]
+      },
+      "triangles": 396,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 3,
+      "sha256": "69f9e902bc290fe3312ddd2e02c2391c4c31bebd75ade68737e2d5e9470d4eb3"
+    },
+    {
+      "id": "alfa_stool",
+      "visual_bounds": {
+        "position": [
+          -0.1899999976158142,
+          0.0,
+          -0.1899999976158142
+        ],
+        "size": [
+          0.3799999803304672,
+          0.4599999785423279,
+          0.3799999803304672
+        ]
+      },
+      "triangles": 220,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 2,
+      "sha256": "509d19097fbe65752c549cfd1a0e79e5cb3af9faca07fc94daaf4e7b5c80a7d8"
+    },
+    {
+      "id": "alfa_fence_panel",
+      "visual_bounds": {
+        "position": [
+          -1.0,
+          0.0,
+          -0.07000000029802322
+        ],
+        "size": [
+          1.9999999403953552,
+          1.0,
+          0.14000000059604645
+        ]
+      },
+      "triangles": 528,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 3,
+      "sha256": "85a60be85b32cccc8036cc5e78c0a0068e0064983198fa580274d16ab6edb0d9"
+    },
+    {
+      "id": "alfa_fence_post",
+      "visual_bounds": {
+        "position": [
+          -0.07999999821186066,
+          0.0,
+          -0.07999999821186066
+        ],
+        "size": [
+          0.1599999964237213,
+          1.0799999237060547,
+          0.1599999964237213
+        ]
+      },
+      "triangles": 50,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 2,
+      "sha256": "267124552d638ae074717f90c549577c158c65b4b53c63d396737d710dcd8d1e"
+    },
+    {
+      "id": "alfa_path_stone",
+      "visual_bounds": {
+        "position": [
+          -0.2477664351463318,
+          0.0,
+          -0.20473486185073853
+        ],
+        "size": [
+          0.5227664411067963,
+          0.03500000014901161,
+          0.40946972370147705
+        ]
+      },
+      "triangles": 24,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 1,
+      "sha256": "9c76110353ef3cf0ba7982b1c2170b879cac94061667cb83147d081c5b922a45"
+    },
+    {
+      "id": "alfa_planter",
+      "visual_bounds": {
+        "position": [
+          -0.21874301135540009,
+          0.0,
+          -0.23000000417232513
+        ],
+        "size": [
+          0.43748602271080017,
+          0.8999999761581421,
+          0.46000000834465027
+        ]
+      },
+      "triangles": 150,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 4,
+      "sha256": "0c67e362b05af1c8b482b5ecfc3f50fc202b75d22d3768dc2cf7568775b2442e"
+    },
+    {
+      "id": "alfa_pine",
+      "visual_bounds": {
+        "position": [
+          -0.8999999761581421,
+          0.0,
+          -0.8999999761581421
+        ],
+        "size": [
+          1.7999999523162842,
+          3.4000000953674316,
+          1.7999999523162842
+        ]
+      },
+      "triangles": 108,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 4,
+      "sha256": "f8e9b272af3bba3f63e179404a22f4d2b3bfeeae0ad6d0e22b9200e72a7b754c"
+    },
+    {
+      "id": "alfa_bush",
+      "visual_bounds": {
+        "position": [
+          -0.5249999761581421,
+          0.0,
+          -0.42500001192092896
+        ],
+        "size": [
+          1.0499999523162842,
+          0.75,
+          0.8500000238418579
+        ]
+      },
+      "triangles": 20,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 2,
+      "sha256": "db007e29f3b69ae7a3dcccf6b2ed3a3733e2e5208636811c53f66306c95e2f20"
+    },
+    {
+      "id": "alfa_rock_small",
+      "visual_bounds": {
+        "position": [
+          -0.32499998807907104,
+          0.0,
+          -0.25
+        ],
+        "size": [
+          0.6499999761581421,
+          0.44999998807907104,
+          0.5
+        ]
+      },
+      "triangles": 20,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 2,
+      "sha256": "fcbf23679c51cd5774f4698cfa91b0f6e7b36453fd64afe144e422ecaf421436"
+    },
+    {
+      "id": "alfa_rock_large",
+      "visual_bounds": {
+        "position": [
+          -0.5249999761581421,
+          0.0,
+          -0.42500001192092896
+        ],
+        "size": [
+          1.0499999523162842,
+          0.8500000238418579,
+          0.8500000238418579
+        ]
+      },
+      "triangles": 20,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 2,
+      "sha256": "85438e5611568573d7d42bf5873b3a0f30ae9b858b0ebd66120087d1411bb7e9"
+    },
+    {
+      "id": "alfa_grass_patch",
+      "visual_bounds": {
+        "position": [
+          -0.27590563893318176,
+          0.0,
+          -0.28917282819747925
+        ],
+        "size": [
+          0.6338416039943695,
+          0.30000001192092896,
+          0.585135817527771
+        ]
+      },
+      "triangles": 36,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 2,
+      "sha256": "bbc2a171a51756cc400b8af0b5b739a54a46ded0c706445b0bc044f537f356ab"
+    },
+    {
+      "id": "alfa_mailbox",
+      "visual_bounds": {
+        "position": [
+          -0.20000000298023224,
+          0.0,
+          -0.2580000162124634
+        ],
+        "size": [
+          0.41849999129772186,
+          1.2000000476837158,
+          0.5080000162124634
+        ]
+      },
+      "triangles": 176,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 4,
+      "sha256": "c34a6da4b62a340922b71881ddeabda27eb0c7a4c8729e7dbc0d8714615e89d4"
+    },
+    {
+      "id": "alfa_crate",
+      "visual_bounds": {
+        "position": [
+          -0.2750000059604645,
+          0.0,
+          -0.2750000059604645
+        ],
+        "size": [
+          0.550000011920929,
+          0.550000011920929,
+          0.550000011920929
+        ]
+      },
+      "triangles": 440,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 3,
+      "sha256": "ebd8ff70e287f21d564709f2d25d5809e777f9d640e0e56dfd5a209881374019"
+    },
+    {
+      "id": "alfa_barrel",
+      "visual_bounds": {
+        "position": [
+          -0.28999999165534973,
+          0.0,
+          -0.28200000524520874
+        ],
+        "size": [
+          0.5799999833106995,
+          0.8199999928474426,
+          0.5640000104904175
+        ]
+      },
+      "triangles": 188,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 2,
+      "sha256": "09d11d32a56cebe85591f3e0e7713ab8275bab54b5b7a06034d7a062e9066e72"
+    },
+    {
+      "id": "alfa_log_stack",
+      "visual_bounds": {
+        "position": [
+          -0.44999998807907104,
+          0.0,
+          -0.3199999928474426
+        ],
+        "size": [
+          0.8999999761581421,
+          0.4663538932800293,
+          0.632763147354126
+        ]
+      },
+      "triangles": 96,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 1,
+      "sha256": "fd171a9ebd1c9e3ffd8654b0eb713015c6a473c425a4674bba676b6e651ab9f2"
+    },
+    {
+      "id": "alfa_porch_post",
+      "visual_bounds": {
+        "position": [
+          -0.09000000357627869,
+          0.0,
+          -0.09000000357627869
+        ],
+        "size": [
+          0.18000000715255737,
+          2.5999999046325684,
+          0.18000000715255737
+        ]
+      },
+      "triangles": 44,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 1,
+      "sha256": "b35b8c435aef3fca086d42663f82808463014b7b0a1315d2f928d8196d50c5bf"
+    },
+    {
+      "id": "alfa_shutter",
+      "visual_bounds": {
+        "position": [
+          -0.2199999988079071,
+          0.0,
+          -0.07899999618530273
+        ],
+        "size": [
+          0.4399999976158142,
+          1.2000000476837158,
+          0.07899999618530273
+        ]
+      },
+      "triangles": 440,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 3,
+      "sha256": "f9c9f726e460870343aa3043ce2bea935e77dd6ded989328678e37e0880ffb07"
+    },
+    {
+      "id": "alfa_canopy",
+      "visual_bounds": {
+        "position": [
+          -0.800000011920929,
+          0.0,
+          -0.6000000238418579
+        ],
+        "size": [
+          1.600000023841858,
+          0.2800000011920929,
+          0.6000000238418579
+        ]
+      },
+      "triangles": 12,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 1,
+      "sha256": "09d9d96bc1a42f978647cb4328ca440da0b661e1d5bd42871de748bc247d3ab4"
+    },
+    {
+      "id": "alfa_chimney",
+      "visual_bounds": {
+        "position": [
+          -0.32499998807907104,
+          0.0,
+          -0.30000001192092896
+        ],
+        "size": [
+          0.6499999761581421,
+          1.100000023841858,
+          0.6000000238418579
+        ]
+      },
+      "triangles": 232,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 3,
+      "sha256": "fadaf817cdfded229a68e59fd4fa839a326e4b75057cc79d08a739cd4beffcd6"
+    },
+    {
+      "id": "alfa_bed",
+      "visual_bounds": {
+        "position": [
+          -0.9926550388336182,
+          0.0,
+          -0.5899999737739563
+        ],
+        "size": [
+          1.9853094816207886,
+          0.75,
+          1.1799999475479126
+        ]
+      },
+      "triangles": 8968,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 5,
+      "sha256": "4f5daa05d825162aeab17c8141e0db51f760d4f9a8dc1cf0e91147c88ab1c453"
+    },
+    {
+      "id": "alfa_table",
+      "visual_bounds": {
+        "position": [
+          -0.7250000238418579,
+          0.0,
+          -0.42500001192092896
+        ],
+        "size": [
+          1.4500000476837158,
+          0.7200000286102295,
+          0.8500000238418579
+        ]
+      },
+      "triangles": 840,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 2,
+      "sha256": "dfc99785ecdbf6cc9f657aef785942c5fd5e62742c75b5dcb19e88d797bd3217"
+    },
+    {
+      "id": "alfa_desk",
+      "visual_bounds": {
+        "position": [
+          -0.7250000238418579,
+          0.0,
+          -0.42500001192092896
+        ],
+        "size": [
+          1.4500000476837158,
+          0.7200000286102295,
+          0.8500000238418579
+        ]
+      },
+      "triangles": 1148,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 4,
+      "sha256": "e987357ec2b255fd805a8cfa3fb89e1fe70e7fda57cea837a8b6c835700aa1d6"
+    },
+    {
+      "id": "alfa_nightstand",
+      "visual_bounds": {
+        "position": [
+          -0.30000001192092896,
+          0.0,
+          -0.25999999046325684
+        ],
+        "size": [
+          0.6000000238418579,
+          0.5900000333786011,
+          0.5199999809265137
+        ]
+      },
+      "triangles": 1028,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 2,
+      "sha256": "62866440091ee141e8fbb34d8713aa11ee459798010c62f41b1fe954393da989"
+    },
+    {
+      "id": "alfa_bookcase",
+      "visual_bounds": {
+        "position": [
+          -0.5600000023841858,
+          0.0,
+          -0.25999999046325684
+        ],
+        "size": [
+          1.1200000047683716,
+          1.3499999046325684,
+          0.5199999809265137
+        ]
+      },
+      "triangles": 4788,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 7,
+      "sha256": "b2e5f2e39551c02f922b245bfd71ce92efafa8a516e64bc0479c70dcc0fa9827"
+    },
+    {
+      "id": "alfa_wardrobe",
+      "visual_bounds": {
+        "position": [
+          -0.5600000023841858,
+          0.0,
+          -0.3403923213481903
+        ],
+        "size": [
+          1.1200000047683716,
+          1.3499999046325684,
+          0.6003923118114471
+        ]
+      },
+      "triangles": 3524,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 3,
+      "sha256": "6d6dc25e37cb176397cb4f591bc30ea3b0e286aa20c9e7762a095a838dece75c"
+    },
+    {
+      "id": "alfa_dresser",
+      "visual_bounds": {
+        "position": [
+          -0.5600000023841858,
+          0.0,
+          -0.3179999887943268
+        ],
+        "size": [
+          1.1200000047683716,
+          1.3499999046325684,
+          0.5779999792575836
+        ]
+      },
+      "triangles": 2976,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 3,
+      "sha256": "f42553fba25112e66cd310eea7edb488612447a08a055c74797106c27a14e546"
+    },
+    {
+      "id": "alfa_sofa",
+      "visual_bounds": {
+        "position": [
+          -1.2370094060897827,
+          0.0,
+          -0.49997639656066895
+        ],
+        "size": [
+          2.4740188121795654,
+          1.0149999856948853,
+          0.9999528527259827
+        ]
+      },
+      "triangles": 14416,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 5,
+      "sha256": "2d0d4d5aadfdb0557dbe66f57c01d3de25f841e4b56fb304a20d6c53637c6b93"
+    },
+    {
+      "id": "alfa_armchair",
+      "visual_bounds": {
+        "position": [
+          -0.6620093584060669,
+          0.0,
+          -0.49997639656066895
+        ],
+        "size": [
+          1.324018657207489,
+          1.0149999856948853,
+          0.9999528527259827
+        ]
+      },
+      "triangles": 8352,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 5,
+      "sha256": "292213b22e107dc8e805021be7e1a70b3d9c7da8b3f57dece7f486d113d7bcf0"
+    },
+    {
+      "id": "alfa_sink",
+      "visual_bounds": {
+        "position": [
+          -0.8600000143051147,
+          0.0,
+          -0.4253922998905182
+        ],
+        "size": [
+          1.7200000286102295,
+          1.1199852228164673,
+          0.7603923082351685
+        ]
+      },
+      "triangles": 4532,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 7,
+      "sha256": "01afa34a66621cdd33a6166eb19bbcf4cb7825aad6312ec41124a5b419bb9d91"
+    },
+    {
+      "id": "alfa_stove",
+      "visual_bounds": {
+        "position": [
+          -0.8600000143051147,
+          0.0,
+          -0.43799999356269836
+        ],
+        "size": [
+          1.7200000286102295,
+          1.1540000438690186,
+          0.7730000019073486
+        ]
+      },
+      "triangles": 4416,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 7,
+      "sha256": "82bc913fe310318c7243709546f08efc22918618845993f98df95cd3db443afb"
+    },
+    {
+      "id": "alfa_fridge",
+      "visual_bounds": {
+        "position": [
+          -0.36000001430511475,
+          0.0,
+          -0.4623205065727234
+        ],
+        "size": [
+          0.7200000286102295,
+          1.4600000381469727,
+          0.7873204946517944
+        ]
+      },
+      "triangles": 1160,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 4,
+      "sha256": "3d1904ae1489032fd8aebfc0a77a6974b04b2d377f28b33ee68a93d0f38fb472"
+    },
+    {
+      "id": "alfa_washer",
+      "visual_bounds": {
+        "position": [
+          -0.75,
+          0.0,
+          -0.37800002098083496
+        ],
+        "size": [
+          1.5,
+          1.0130000114440918,
+          0.7280000150203705
+        ]
+      },
+      "triangles": 7088,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 6,
+      "sha256": "be97a4279d0a60b6377c408883ff22c950292d0e82bb52c16174475204a6e0a3"
+    },
+    {
+      "id": "alfa_toilet",
+      "visual_bounds": {
+        "position": [
+          -0.3070000112056732,
+          0.0,
+          -0.3944000005722046
+        ],
+        "size": [
+          0.6140000224113464,
+          0.9800000190734863,
+          0.7518999874591827
+        ]
+      },
+      "triangles": 2488,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 3,
+      "sha256": "480c21e962ff20768b6113915547ec3cddab78f81046a29eb5f280d1f487ec10"
+    },
+    {
+      "id": "alfa_bath_vanity",
+      "visual_bounds": {
+        "position": [
+          -0.800000011920929,
+          0.0,
+          -0.399392306804657
+        ],
+        "size": [
+          1.600000023841858,
+          1.0884536504745483,
+          0.724392294883728
+        ]
+      },
+      "triangles": 3756,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 7,
+      "sha256": "fd5942f0de414d623ed16dc599162bf0fba9a5a01a0d4a16ea59f0b570f5e2c4"
+    },
+    {
+      "id": "alfa_wall_shelf",
+      "visual_bounds": {
+        "position": [
+          -0.4749999940395355,
+          -0.1899999976158142,
+          -0.1244039237499237
+        ],
+        "size": [
+          0.949999988079071,
+          0.6260265707969666,
+          0.2488078474998474
+        ]
+      },
+      "triangles": 4232,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 6,
+      "sha256": "2ed52f15aa66514f21c4498ce339270e412c49dd8c1d49dc0f73dcbb954578ed"
+    },
+    {
+      "id": "alfa_lamp",
+      "visual_bounds": {
+        "position": [
+          -0.26053833961486816,
+          0.0,
+          -0.26053833961486816
+        ],
+        "size": [
+          0.5210766792297363,
+          0.5450000166893005,
+          0.5210766792297363
+        ]
+      },
+      "triangles": 1844,
+      "degenerate_triangles": 0,
+      "invalid_normals": 0,
+      "materials": 4,
+      "sha256": "c3325af6952a2fd9682fbfc706de2bea85cb02501e032ef9cc5d002c90529397"
+    }
+  ],
+  "scope": "Static GLB bytes, world-space AABBs, geometry/material policy, physical metadata. Import/render and placement integration require separate checks."
+}

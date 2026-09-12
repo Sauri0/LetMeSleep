@@ -1,0 +1,3015 @@
+{
+  "schema": "lms.alfa.assets/1",
+  "units": "metre",
+  "authoring": "Original project meshes, deterministic local Blender construction; no external assets/providers",
+  "license": "Project-owned original art; repository terms apply",
+  "reference": "work/references094/environment.png",
+  "blender": "4.5.3 LTS",
+  "assets": [
+    {
+      "id": "alfa_bench",
+      "path": "res://assets/art/house/alfa/bench.glb",
+      "source": "art_source/environments/alfa/bench.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.825,
+          0.0,
+          -0.3
+        ],
+        "size": [
+          1.65,
+          0.92,
+          0.6
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.825,
+          0.0,
+          -0.3
+        ],
+        "size": [
+          1.65,
+          0.92,
+          0.6
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.7075,
+            0.0,
+            -0.2575
+          ],
+          "size": [
+            0.095,
+            0.46,
+            0.095
+          ]
+        },
+        {
+          "position": [
+            -0.7075,
+            0.0,
+            0.1625
+          ],
+          "size": [
+            0.095,
+            0.46,
+            0.095
+          ]
+        },
+        {
+          "position": [
+            0.6125,
+            0.0,
+            -0.2575
+          ],
+          "size": [
+            0.095,
+            0.46,
+            0.095
+          ]
+        },
+        {
+          "position": [
+            0.6125,
+            0.0,
+            0.1625
+          ],
+          "size": [
+            0.095,
+            0.46,
+            0.095
+          ]
+        },
+        {
+          "position": [
+            -0.825,
+            0.45,
+            -0.3
+          ],
+          "size": [
+            1.65,
+            0.05,
+            0.18
+          ]
+        },
+        {
+          "position": [
+            -0.825,
+            0.45,
+            -0.09
+          ],
+          "size": [
+            1.65,
+            0.05,
+            0.18
+          ]
+        },
+        {
+          "position": [
+            -0.825,
+            0.45,
+            0.12
+          ],
+          "size": [
+            1.65,
+            0.05,
+            0.18
+          ]
+        },
+        {
+          "position": [
+            -0.7,
+            0.42,
+            0.21
+          ],
+          "size": [
+            0.08,
+            0.5,
+            0.08
+          ]
+        },
+        {
+          "position": [
+            0.62,
+            0.42,
+            0.21
+          ],
+          "size": [
+            0.08,
+            0.5,
+            0.08
+          ]
+        },
+        {
+          "position": [
+            -0.825,
+            0.57,
+            0.22
+          ],
+          "size": [
+            1.65,
+            0.14,
+            0.06
+          ]
+        },
+        {
+          "position": [
+            -0.825,
+            0.76,
+            0.22
+          ],
+          "size": [
+            1.65,
+            0.14,
+            0.06
+          ]
+        }
+      ],
+      "support_surfaces": [
+        {
+          "center": [
+            0,
+            0.5,
+            0
+          ],
+          "size": [
+            1.45,
+            0.43
+          ],
+          "edge_margin_m": 0.06
+        }
+      ],
+      "triangles": 484,
+      "material_slots": 3,
+      "sha256": "6827ccd032564d6952145e9ae2639c0bb3886b67f05f3fb572d241a7b66f6061",
+      "source_sha256": "815874b142972af19ae3345be4af6a2dce76e890d405a12554568850c733613f",
+      "bytes": 30904
+    },
+    {
+      "id": "alfa_patio_table",
+      "path": "res://assets/art/house/alfa/patio_table.glb",
+      "source": "art_source/environments/alfa/patio_table.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.749,
+          0.0,
+          -0.425
+        ],
+        "size": [
+          1.498,
+          0.76,
+          0.85
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.749,
+          0.0,
+          -0.425
+        ],
+        "size": [
+          1.498,
+          0.76,
+          0.85
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.6325,
+            0.0,
+            -0.3425
+          ],
+          "size": [
+            0.085,
+            0.68,
+            0.085
+          ]
+        },
+        {
+          "position": [
+            -0.6325,
+            0.0,
+            0.2575
+          ],
+          "size": [
+            0.085,
+            0.68,
+            0.085
+          ]
+        },
+        {
+          "position": [
+            0.5475,
+            0.0,
+            -0.3425
+          ],
+          "size": [
+            0.085,
+            0.68,
+            0.085
+          ]
+        },
+        {
+          "position": [
+            0.5475,
+            0.0,
+            0.2575
+          ],
+          "size": [
+            0.085,
+            0.68,
+            0.085
+          ]
+        },
+        {
+          "position": [
+            -0.63,
+            0.59,
+            -0.325
+          ],
+          "size": [
+            1.26,
+            0.12,
+            0.05
+          ]
+        },
+        {
+          "position": [
+            -0.63,
+            0.59,
+            0.275
+          ],
+          "size": [
+            1.26,
+            0.12,
+            0.05
+          ]
+        },
+        {
+          "position": [
+            -0.749,
+            0.68,
+            -0.425
+          ],
+          "size": [
+            0.298,
+            0.08,
+            0.85
+          ]
+        },
+        {
+          "position": [
+            -0.449,
+            0.68,
+            -0.425
+          ],
+          "size": [
+            0.298,
+            0.08,
+            0.85
+          ]
+        },
+        {
+          "position": [
+            -0.149,
+            0.68,
+            -0.425
+          ],
+          "size": [
+            0.298,
+            0.08,
+            0.85
+          ]
+        },
+        {
+          "position": [
+            0.151,
+            0.68,
+            -0.425
+          ],
+          "size": [
+            0.298,
+            0.08,
+            0.85
+          ]
+        },
+        {
+          "position": [
+            0.451,
+            0.68,
+            -0.425
+          ],
+          "size": [
+            0.298,
+            0.08,
+            0.85
+          ]
+        }
+      ],
+      "support_surfaces": [
+        {
+          "center": [
+            0,
+            0.76,
+            0
+          ],
+          "size": [
+            1.38,
+            0.73
+          ],
+          "edge_margin_m": 0.06
+        }
+      ],
+      "triangles": 484,
+      "material_slots": 3,
+      "sha256": "ff9c0553a951aa4edfd0a80f0e92d97390ee969088baf5affa443baad86ac350",
+      "source_sha256": "970ee40b3289a19d386380d689ab6cfe843062b165316c8f0f785f3632b65cb8",
+      "bytes": 30944
+    },
+    {
+      "id": "alfa_chair",
+      "path": "res://assets/art/house/alfa/chair.glb",
+      "source": "art_source/environments/alfa/chair.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.25,
+          0.0,
+          -0.26
+        ],
+        "size": [
+          0.5,
+          0.94,
+          0.52
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.25,
+          0.0,
+          -0.26
+        ],
+        "size": [
+          0.5,
+          0.94,
+          0.52
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.2075,
+            0.0,
+            -0.2147
+          ],
+          "size": [
+            0.055,
+            0.43,
+            0.055
+          ]
+        },
+        {
+          "position": [
+            -0.2075,
+            0.0,
+            0.1597
+          ],
+          "size": [
+            0.055,
+            0.43,
+            0.055
+          ]
+        },
+        {
+          "position": [
+            0.1525,
+            0.0,
+            -0.2147
+          ],
+          "size": [
+            0.055,
+            0.43,
+            0.055
+          ]
+        },
+        {
+          "position": [
+            0.1525,
+            0.0,
+            0.1597
+          ],
+          "size": [
+            0.055,
+            0.43,
+            0.055
+          ]
+        },
+        {
+          "position": [
+            -0.25,
+            0.43,
+            -0.26
+          ],
+          "size": [
+            0.5,
+            0.03,
+            0.52
+          ]
+        },
+        {
+          "position": [
+            -0.22,
+            0.46,
+            0.1925
+          ],
+          "size": [
+            0.06,
+            0.48,
+            0.055
+          ]
+        },
+        {
+          "position": [
+            0.16,
+            0.46,
+            0.1925
+          ],
+          "size": [
+            0.06,
+            0.48,
+            0.055
+          ]
+        },
+        {
+          "position": [
+            -0.19,
+            0.605,
+            0.1975
+          ],
+          "size": [
+            0.38,
+            0.09,
+            0.045
+          ]
+        },
+        {
+          "position": [
+            -0.19,
+            0.815,
+            0.1975
+          ],
+          "size": [
+            0.38,
+            0.09,
+            0.045
+          ]
+        }
+      ],
+      "support_surfaces": [
+        {
+          "center": [
+            0,
+            0.46,
+            0
+          ],
+          "size": [
+            0.4,
+            0.42000000000000004
+          ],
+          "edge_margin_m": 0.06
+        }
+      ],
+      "triangles": 396,
+      "material_slots": 3,
+      "sha256": "69f9e902bc290fe3312ddd2e02c2391c4c31bebd75ade68737e2d5e9470d4eb3",
+      "source_sha256": "fef620176f1d23ded7d13743754ab54a56f7954f3064bd67dd28db21c8194afe",
+      "bytes": 25772
+    },
+    {
+      "id": "alfa_stool",
+      "path": "res://assets/art/house/alfa/stool.glb",
+      "source": "art_source/environments/alfa/stool.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.19,
+          0.0,
+          -0.19
+        ],
+        "size": [
+          0.38,
+          0.46,
+          0.38
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.19,
+          0.0,
+          -0.19
+        ],
+        "size": [
+          0.38,
+          0.46,
+          0.38
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.1643,
+            0.0,
+            -0.1643
+          ],
+          "size": [
+            0.055,
+            0.43,
+            0.055
+          ]
+        },
+        {
+          "position": [
+            -0.1643,
+            0.0,
+            0.1093
+          ],
+          "size": [
+            0.055,
+            0.43,
+            0.055
+          ]
+        },
+        {
+          "position": [
+            0.1093,
+            0.0,
+            -0.1643
+          ],
+          "size": [
+            0.055,
+            0.43,
+            0.055
+          ]
+        },
+        {
+          "position": [
+            0.1093,
+            0.0,
+            0.1093
+          ],
+          "size": [
+            0.055,
+            0.43,
+            0.055
+          ]
+        },
+        {
+          "position": [
+            -0.19,
+            0.43,
+            -0.19
+          ],
+          "size": [
+            0.38,
+            0.03,
+            0.38
+          ]
+        }
+      ],
+      "support_surfaces": [
+        {
+          "center": [
+            0,
+            0.46,
+            0
+          ],
+          "size": [
+            0.28,
+            0.28
+          ],
+          "edge_margin_m": 0.06
+        }
+      ],
+      "triangles": 220,
+      "material_slots": 2,
+      "sha256": "509d19097fbe65752c549cfd1a0e79e5cb3af9faca07fc94daaf4e7b5c80a7d8",
+      "source_sha256": "0ccb1fb1728b24c90d14d3e784a1c3c71e5c6935e20972a698a2197b942eb830",
+      "bytes": 14736
+    },
+    {
+      "id": "alfa_fence_panel",
+      "path": "res://assets/art/house/alfa/fence_panel.glb",
+      "source": "art_source/environments/alfa/fence_panel.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -1.0,
+          0.0,
+          -0.07
+        ],
+        "size": [
+          2.0,
+          1.0,
+          0.14
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -1.0,
+          0.0,
+          -0.07
+        ],
+        "size": [
+          2.0,
+          1.0,
+          0.14
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -1.0,
+            0.0,
+            -0.07
+          ],
+          "size": [
+            0.12,
+            1,
+            0.14
+          ]
+        },
+        {
+          "position": [
+            0.88,
+            0.0,
+            -0.07
+          ],
+          "size": [
+            0.12,
+            1,
+            0.14
+          ]
+        },
+        {
+          "position": [
+            -0.94,
+            0.24,
+            -0.0105
+          ],
+          "size": [
+            1.88,
+            0.12,
+            0.065
+          ]
+        },
+        {
+          "position": [
+            -0.94,
+            0.7,
+            -0.0105
+          ],
+          "size": [
+            1.88,
+            0.12,
+            0.065
+          ]
+        },
+        {
+          "position": [
+            -0.815,
+            0.1,
+            -0.06
+          ],
+          "size": [
+            0.09,
+            0.8,
+            0.05
+          ]
+        },
+        {
+          "position": [
+            -0.595,
+            0.1,
+            -0.06
+          ],
+          "size": [
+            0.09,
+            0.8,
+            0.05
+          ]
+        },
+        {
+          "position": [
+            -0.375,
+            0.1,
+            -0.06
+          ],
+          "size": [
+            0.09,
+            0.8,
+            0.05
+          ]
+        },
+        {
+          "position": [
+            -0.155,
+            0.1,
+            -0.06
+          ],
+          "size": [
+            0.09,
+            0.8,
+            0.05
+          ]
+        },
+        {
+          "position": [
+            0.065,
+            0.1,
+            -0.06
+          ],
+          "size": [
+            0.09,
+            0.8,
+            0.05
+          ]
+        },
+        {
+          "position": [
+            0.285,
+            0.1,
+            -0.06
+          ],
+          "size": [
+            0.09,
+            0.8,
+            0.05
+          ]
+        },
+        {
+          "position": [
+            0.505,
+            0.1,
+            -0.06
+          ],
+          "size": [
+            0.09,
+            0.8,
+            0.05
+          ]
+        },
+        {
+          "position": [
+            0.725,
+            0.1,
+            -0.06
+          ],
+          "size": [
+            0.09,
+            0.8,
+            0.05
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 528,
+      "material_slots": 3,
+      "sha256": "85a60be85b32cccc8036cc5e78c0a0068e0064983198fa580274d16ab6edb0d9",
+      "source_sha256": "0dc10f99c868287f06eda510ac5357b7bd88b827c34d7c3144fbb83c78300172",
+      "bytes": 32824
+    },
+    {
+      "id": "alfa_fence_post",
+      "path": "res://assets/art/house/alfa/fence_post.glb",
+      "source": "art_source/environments/alfa/fence_post.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.08,
+          0.0,
+          -0.08
+        ],
+        "size": [
+          0.16,
+          1.08,
+          0.16
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.08,
+          0.0,
+          -0.08
+        ],
+        "size": [
+          0.16,
+          1.08,
+          0.16
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.08,
+            0.0,
+            -0.08
+          ],
+          "size": [
+            0.16,
+            1,
+            0.16
+          ]
+        },
+        {
+          "position": [
+            -0.08,
+            1.0,
+            -0.08
+          ],
+          "size": [
+            0.16,
+            0.08,
+            0.16
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 50,
+      "material_slots": 2,
+      "sha256": "267124552d638ae074717f90c549577c158c65b4b53c63d396737d710dcd8d1e",
+      "source_sha256": "f6fc968c848d2297d2706cf5db291b59128ac95d93cf47e976e509956d56d924",
+      "bytes": 4840
+    },
+    {
+      "id": "alfa_path_stone",
+      "path": "res://assets/art/house/alfa/path_stone.glb",
+      "source": "art_source/environments/alfa/path_stone.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.247766,
+          0.0,
+          -0.204735
+        ],
+        "size": [
+          0.522766,
+          0.035,
+          0.40947
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.247766,
+          0.0,
+          -0.204735
+        ],
+        "size": [
+          0.522766,
+          0.035,
+          0.40947
+        ]
+      },
+      "collision_boxes": [],
+      "support_surfaces": [],
+      "triangles": 24,
+      "material_slots": 1,
+      "sha256": "9c76110353ef3cf0ba7982b1c2170b879cac94061667cb83147d081c5b922a45",
+      "source_sha256": "3f647c391ae04986fe8537fb9d19c9bb48931fa2d3e1a8f10611d1c1696e31f3",
+      "bytes": 2244
+    },
+    {
+      "id": "alfa_planter",
+      "path": "res://assets/art/house/alfa/planter.glb",
+      "source": "art_source/environments/alfa/planter.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.218743,
+          0.0,
+          -0.23
+        ],
+        "size": [
+          0.437486,
+          0.9,
+          0.46
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.23,
+          0.0,
+          -0.23
+        ],
+        "size": [
+          0.46,
+          0.9,
+          0.46
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.23,
+            0.0,
+            -0.23
+          ],
+          "size": [
+            0.46,
+            0.32,
+            0.46
+          ]
+        },
+        {
+          "position": [
+            -0.23,
+            0.3,
+            -0.23
+          ],
+          "size": [
+            0.46,
+            0.08,
+            0.46
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 150,
+      "material_slots": 4,
+      "sha256": "0c67e362b05af1c8b482b5ecfc3f50fc202b75d22d3768dc2cf7568775b2442e",
+      "source_sha256": "4b672194cf19ad325b3cca8d2a36e063e7a075eceba8457638327fceceb68b83",
+      "bytes": 11724
+    },
+    {
+      "id": "alfa_pine",
+      "path": "res://assets/art/house/alfa/pine.glb",
+      "source": "art_source/environments/alfa/pine.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.9,
+          0.0,
+          -0.9
+        ],
+        "size": [
+          1.8,
+          3.4,
+          1.8
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.9,
+          0.0,
+          -0.9
+        ],
+        "size": [
+          1.8,
+          3.4,
+          1.8
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.12,
+            0.0,
+            -0.12
+          ],
+          "size": [
+            0.24,
+            1.2,
+            0.24
+          ]
+        },
+        {
+          "position": [
+            -0.9,
+            0.85,
+            -0.9
+          ],
+          "size": [
+            1.8,
+            1.4,
+            1.8
+          ]
+        },
+        {
+          "position": [
+            -0.71,
+            1.55,
+            -0.71
+          ],
+          "size": [
+            1.42,
+            1.25,
+            1.42
+          ]
+        },
+        {
+          "position": [
+            -0.48,
+            2.25,
+            -0.48
+          ],
+          "size": [
+            0.96,
+            1.15,
+            0.96
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 108,
+      "material_slots": 4,
+      "sha256": "f8e9b272af3bba3f63e179404a22f4d2b3bfeeae0ad6d0e22b9200e72a7b754c",
+      "source_sha256": "4db3bd49f922c019edaaac86a13d7731b91807345d28dd1da89f98bb9f3f03b9",
+      "bytes": 7928
+    },
+    {
+      "id": "alfa_bush",
+      "path": "res://assets/art/house/alfa/bush.glb",
+      "source": "art_source/environments/alfa/bush.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.525,
+          0.0,
+          -0.425
+        ],
+        "size": [
+          1.05,
+          0.75,
+          0.85
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.525,
+          0.0,
+          -0.425
+        ],
+        "size": [
+          1.05,
+          0.75,
+          0.85
+        ]
+      },
+      "collision_boxes": [],
+      "support_surfaces": [],
+      "triangles": 20,
+      "material_slots": 2,
+      "sha256": "db007e29f3b69ae7a3dcccf6b2ed3a3733e2e5208636811c53f66306c95e2f20",
+      "source_sha256": "a164f6757ae106644cd22088732711b949c26750a867dba5ea65f0919876e8a9",
+      "bytes": 3388
+    },
+    {
+      "id": "alfa_rock_small",
+      "path": "res://assets/art/house/alfa/rock_small.glb",
+      "source": "art_source/environments/alfa/rock_small.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.325,
+          0.0,
+          -0.25
+        ],
+        "size": [
+          0.65,
+          0.45,
+          0.5
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.325,
+          0.0,
+          -0.25
+        ],
+        "size": [
+          0.65,
+          0.45,
+          0.5
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.325,
+            0.0,
+            -0.25
+          ],
+          "size": [
+            0.65,
+            0.45,
+            0.5
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 20,
+      "material_slots": 2,
+      "sha256": "fcbf23679c51cd5774f4698cfa91b0f6e7b36453fd64afe144e422ecaf421436",
+      "source_sha256": "ea01396c1f60d05cbd7e7d7b5d8d04b673a6f5f5843c554aa71db1096f5ffa37",
+      "bytes": 3388
+    },
+    {
+      "id": "alfa_rock_large",
+      "path": "res://assets/art/house/alfa/rock_large.glb",
+      "source": "art_source/environments/alfa/rock_large.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.525,
+          0.0,
+          -0.425
+        ],
+        "size": [
+          1.05,
+          0.85,
+          0.85
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.525,
+          0.0,
+          -0.425
+        ],
+        "size": [
+          1.05,
+          0.85,
+          0.85
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.525,
+            0.0,
+            -0.425
+          ],
+          "size": [
+            1.05,
+            0.85,
+            0.85
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 20,
+      "material_slots": 2,
+      "sha256": "85438e5611568573d7d42bf5873b3a0f30ae9b858b0ebd66120087d1411bb7e9",
+      "source_sha256": "9b22de6c5e1fbd4769943f2be00fecf4962574ed042ab77cf9f907e640d22319",
+      "bytes": 3428
+    },
+    {
+      "id": "alfa_grass_patch",
+      "path": "res://assets/art/house/alfa/grass_patch.glb",
+      "source": "art_source/environments/alfa/grass_patch.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.275906,
+          0.0,
+          -0.289173
+        ],
+        "size": [
+          0.633842,
+          0.3,
+          0.585136
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.275906,
+          0.0,
+          -0.289173
+        ],
+        "size": [
+          0.633842,
+          0.3,
+          0.585136
+        ]
+      },
+      "collision_boxes": [],
+      "support_surfaces": [],
+      "triangles": 36,
+      "material_slots": 2,
+      "sha256": "bbc2a171a51756cc400b8af0b5b739a54a46ded0c706445b0bc044f537f356ab",
+      "source_sha256": "2e652c652d6358322e76b930ca32c67bfd6c86dabe9803f0eca1622020dba342",
+      "bytes": 4676
+    },
+    {
+      "id": "alfa_mailbox",
+      "path": "res://assets/art/house/alfa/mailbox.glb",
+      "source": "art_source/environments/alfa/mailbox.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.2,
+          0.0,
+          -0.258
+        ],
+        "size": [
+          0.4185,
+          1.2,
+          0.508
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.2,
+          0.0,
+          -0.258
+        ],
+        "size": [
+          0.4185,
+          1.2,
+          0.508
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.045,
+            0.0,
+            0.035
+          ],
+          "size": [
+            0.09,
+            0.82,
+            0.09
+          ]
+        },
+        {
+          "position": [
+            -0.2,
+            0.84,
+            -0.25
+          ],
+          "size": [
+            0.4,
+            0.32,
+            0.5
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 176,
+      "material_slots": 4,
+      "sha256": "c34a6da4b62a340922b71881ddeabda27eb0c7a4c8729e7dbc0d8714615e89d4",
+      "source_sha256": "e5ac8f63baa67349ddeb4934886242fd51f8eab6feb793b7e2b16216b0d5c4b5",
+      "bytes": 12540
+    },
+    {
+      "id": "alfa_crate",
+      "path": "res://assets/art/house/alfa/crate.glb",
+      "source": "art_source/environments/alfa/crate.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.275,
+          0.0,
+          -0.275
+        ],
+        "size": [
+          0.55,
+          0.55,
+          0.55
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.275,
+          0.0,
+          -0.275
+        ],
+        "size": [
+          0.55,
+          0.55,
+          0.55
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.25,
+            0.0,
+            -0.25
+          ],
+          "size": [
+            0.5,
+            0.55,
+            0.5
+          ]
+        },
+        {
+          "position": [
+            -0.259,
+            0.02,
+            -0.275
+          ],
+          "size": [
+            0.168,
+            0.51,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            -0.259,
+            0.02,
+            0.235
+          ],
+          "size": [
+            0.168,
+            0.51,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            -0.084,
+            0.02,
+            -0.275
+          ],
+          "size": [
+            0.168,
+            0.51,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            -0.084,
+            0.02,
+            0.235
+          ],
+          "size": [
+            0.168,
+            0.51,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            0.091,
+            0.02,
+            -0.275
+          ],
+          "size": [
+            0.168,
+            0.51,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            0.091,
+            0.02,
+            0.235
+          ],
+          "size": [
+            0.168,
+            0.51,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            -0.275,
+            0.02,
+            -0.25
+          ],
+          "size": [
+            0.04,
+            0.51,
+            0.5
+          ]
+        },
+        {
+          "position": [
+            0.235,
+            0.02,
+            -0.25
+          ],
+          "size": [
+            0.04,
+            0.51,
+            0.5
+          ]
+        },
+        {
+          "position": [
+            -0.275,
+            0.52,
+            -0.275
+          ],
+          "size": [
+            0.55,
+            0.03,
+            0.55
+          ]
+        }
+      ],
+      "support_surfaces": [
+        {
+          "center": [
+            0,
+            0.55,
+            0
+          ],
+          "size": [
+            0.43,
+            0.43
+          ],
+          "edge_margin_m": 0.06
+        }
+      ],
+      "triangles": 440,
+      "material_slots": 3,
+      "sha256": "ebd8ff70e287f21d564709f2d25d5809e777f9d640e0e56dfd5a209881374019",
+      "source_sha256": "594483eaa9aba93bcd68b3de626ada382f6f53e4b2a1457b4ac1f4dd67d50170",
+      "bytes": 28276
+    },
+    {
+      "id": "alfa_barrel",
+      "path": "res://assets/art/house/alfa/barrel.glb",
+      "source": "art_source/environments/alfa/barrel.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.29,
+          0.0,
+          -0.282
+        ],
+        "size": [
+          0.58,
+          0.82,
+          0.564
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.29,
+          0.0,
+          -0.29
+        ],
+        "size": [
+          0.58,
+          0.82,
+          0.58
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.29,
+            0.0,
+            -0.29
+          ],
+          "size": [
+            0.58,
+            0.82,
+            0.58
+          ]
+        }
+      ],
+      "support_surfaces": [
+        {
+          "center": [
+            0,
+            0.82,
+            0
+          ],
+          "size": [
+            0.28,
+            0.28
+          ],
+          "edge_margin_m": 0.06
+        }
+      ],
+      "triangles": 188,
+      "material_slots": 2,
+      "sha256": "09d11d32a56cebe85591f3e0e7713ab8275bab54b5b7a06034d7a062e9066e72",
+      "source_sha256": "8c02751a104dbee07f3a179d5bd9b3386385a8ef027ba738a3d3fecba41213ac",
+      "bytes": 11176
+    },
+    {
+      "id": "alfa_log_stack",
+      "path": "res://assets/art/house/alfa/log_stack.glb",
+      "source": "art_source/environments/alfa/log_stack.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.45,
+          -0.0,
+          -0.32
+        ],
+        "size": [
+          0.9,
+          0.466354,
+          0.632763
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.45,
+          0.0,
+          -0.32
+        ],
+        "size": [
+          0.9,
+          0.48,
+          0.64
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.45,
+            0.0,
+            -0.32
+          ],
+          "size": [
+            0.9,
+            0.48,
+            0.64
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 96,
+      "material_slots": 1,
+      "sha256": "fd171a9ebd1c9e3ffd8654b0eb713015c6a473c425a4674bba676b6e651ab9f2",
+      "source_sha256": "175d41f5ddc63903e8659472dd687c5a681fbc52890d5487b85de6e71f7f8f10",
+      "bytes": 5556
+    },
+    {
+      "id": "alfa_porch_post",
+      "path": "res://assets/art/house/alfa/porch_post.glb",
+      "source": "art_source/environments/alfa/porch_post.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.09,
+          0.0,
+          -0.09
+        ],
+        "size": [
+          0.18,
+          2.6,
+          0.18
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.09,
+          0.0,
+          -0.09
+        ],
+        "size": [
+          0.18,
+          2.6,
+          0.18
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.09,
+            0.0,
+            -0.09
+          ],
+          "size": [
+            0.18,
+            2.6,
+            0.18
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 44,
+      "material_slots": 1,
+      "sha256": "b35b8c435aef3fca086d42663f82808463014b7b0a1315d2f928d8196d50c5bf",
+      "source_sha256": "de7a9e381d04b27289b480bada6116765d6442c2dfeee6890312860569869436",
+      "bytes": 3668
+    },
+    {
+      "id": "alfa_shutter",
+      "path": "res://assets/art/house/alfa/shutter.glb",
+      "source": "art_source/environments/alfa/shutter.blend",
+      "source_kind": "original_alfa",
+      "pivot": "back_base_center",
+      "placement_kind": "wall",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.22,
+          0.0,
+          -0.079
+        ],
+        "size": [
+          0.44,
+          1.2,
+          0.079
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.22,
+          0.0,
+          -0.079
+        ],
+        "size": [
+          0.44,
+          1.2,
+          0.079
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.22,
+            0.0,
+            -0.07
+          ],
+          "size": [
+            0.06,
+            1.2,
+            0.07
+          ]
+        },
+        {
+          "position": [
+            0.16,
+            0.0,
+            -0.07
+          ],
+          "size": [
+            0.06,
+            1.2,
+            0.07
+          ]
+        },
+        {
+          "position": [
+            -0.155,
+            0.05,
+            -0.05
+          ],
+          "size": [
+            0.05,
+            1.1,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            -0.103,
+            0.05,
+            -0.05
+          ],
+          "size": [
+            0.05,
+            1.1,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            -0.051,
+            0.05,
+            -0.05
+          ],
+          "size": [
+            0.05,
+            1.1,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            0.001,
+            0.05,
+            -0.05
+          ],
+          "size": [
+            0.05,
+            1.1,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            0.053,
+            0.05,
+            -0.05
+          ],
+          "size": [
+            0.05,
+            1.1,
+            0.04
+          ]
+        },
+        {
+          "position": [
+            0.105,
+            0.05,
+            -0.05
+          ],
+          "size": [
+            0.05,
+            1.1,
+            0.04
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 440,
+      "material_slots": 3,
+      "sha256": "f9c9f726e460870343aa3043ce2bea935e77dd6ded989328678e37e0880ffb07",
+      "source_sha256": "a84c5ea5885b12e703dac23b845e8f86c7d1e21cb0852aa03e13bafad57a77e8",
+      "bytes": 27700
+    },
+    {
+      "id": "alfa_canopy",
+      "path": "res://assets/art/house/alfa/canopy.glb",
+      "source": "art_source/environments/alfa/canopy.blend",
+      "source_kind": "original_alfa",
+      "pivot": "back_base_center",
+      "placement_kind": "wall",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.8,
+          0.0,
+          -0.6
+        ],
+        "size": [
+          1.6,
+          0.28,
+          0.6
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.8,
+          0.0,
+          -0.6
+        ],
+        "size": [
+          1.6,
+          0.28,
+          0.6
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.8,
+            0.0,
+            -0.6
+          ],
+          "size": [
+            1.6,
+            0.28,
+            0.6
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 12,
+      "material_slots": 1,
+      "sha256": "09d9d96bc1a42f978647cb4328ca440da0b661e1d5bd42871de748bc247d3ab4",
+      "source_sha256": "9dbb55176f757d4afd9651dd9e78fe0b5e7a6a9e87316e78f65a7bf2c82f3f5e",
+      "bytes": 1716
+    },
+    {
+      "id": "alfa_chimney",
+      "path": "res://assets/art/house/alfa/chimney.glb",
+      "source": "art_source/environments/alfa/chimney.blend",
+      "source_kind": "original_alfa",
+      "pivot": "base_center",
+      "placement_kind": "ground",
+      "front": "-Z",
+      "visual_bounds": {
+        "position": [
+          -0.325,
+          0.0,
+          -0.3
+        ],
+        "size": [
+          0.65,
+          1.1,
+          0.6
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.325,
+          0.0,
+          -0.3
+        ],
+        "size": [
+          0.65,
+          1.1,
+          0.6
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.235,
+            0.0,
+            -0.22
+          ],
+          "size": [
+            0.47,
+            0.98,
+            0.44
+          ]
+        },
+        {
+          "position": [
+            -0.29,
+            0.93,
+            -0.265
+          ],
+          "size": [
+            0.58,
+            0.08,
+            0.53
+          ]
+        },
+        {
+          "position": [
+            -0.275,
+            0.97,
+            -0.22
+          ],
+          "size": [
+            0.06,
+            0.13,
+            0.44
+          ]
+        },
+        {
+          "position": [
+            0.215,
+            0.97,
+            -0.22
+          ],
+          "size": [
+            0.06,
+            0.13,
+            0.44
+          ]
+        },
+        {
+          "position": [
+            -0.325,
+            1.05,
+            -0.3
+          ],
+          "size": [
+            0.65,
+            0.05,
+            0.6
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 232,
+      "material_slots": 3,
+      "sha256": "fadaf817cdfded229a68e59fd4fa839a326e4b75057cc79d08a739cd4beffcd6",
+      "source_sha256": "185f7c21c4f7f34500ca31c571b345e55b25654ea81e425b7b6a40988618d57e",
+      "bytes": 16172
+    },
+    {
+      "id": "alfa_bed",
+      "path": "res://assets/art/house/bed.glb",
+      "source": "art_source/environments/house/bed.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "head at -X",
+      "placement_kind": "ground",
+      "import_offset": [
+        2.980232238769531e-07,
+        -0.0,
+        -0.0
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.9926547408103943,
+          -0.0,
+          -0.5899999737739563
+        ],
+        "size": [
+          1.9853094816207886,
+          0.75,
+          1.1799999475479126
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.9926547408103943,
+          -0.0,
+          -0.5899999737739563
+        ],
+        "size": [
+          1.9853094816207886,
+          0.75,
+          1.1799999475479126
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.9926547408103943,
+            -0.0,
+            -0.5899999737739563
+          ],
+          "size": [
+            1.9853094816207886,
+            0.75,
+            1.1799999475479126
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 8968,
+      "material_slots": 5,
+      "sha256": "4f5daa05d825162aeab17c8141e0db51f760d4f9a8dc1cf0e91147c88ab1c453",
+      "source_sha256": "a24646532550292e98a06175db68f3dc1ab0b1474907d0c21b4980441eff2f1c",
+      "bytes": 292692
+    },
+    {
+      "id": "alfa_table",
+      "path": "res://assets/art/house/table.glb",
+      "source": "art_source/environments/house/table.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.7250000238418579,
+          -0.0,
+          -0.42500001192092896
+        ],
+        "size": [
+          1.4500000476837158,
+          0.7200000286102295,
+          0.8500000238418579
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.7250000238418579,
+          -0.0,
+          -0.42500001192092896
+        ],
+        "size": [
+          1.4500000476837158,
+          0.7200000286102295,
+          0.8500000238418579
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.7250000238418579,
+            -0.0,
+            -0.42500001192092896
+          ],
+          "size": [
+            1.4500000476837158,
+            0.7200000286102295,
+            0.8500000238418579
+          ]
+        }
+      ],
+      "support_surfaces": [
+        {
+          "center": [
+            0,
+            0.72,
+            0
+          ],
+          "size": [
+            1.290000047683716,
+            0.6900000238418579
+          ],
+          "edge_margin_m": 0.06
+        }
+      ],
+      "triangles": 840,
+      "material_slots": 2,
+      "sha256": "dfc99785ecdbf6cc9f657aef785942c5fd5e62742c75b5dcb19e88d797bd3217",
+      "source_sha256": "59a0f4dbde047eea3b21b6ccaeb1f0fda5fb698fd36c8464d522bbf0809c0add",
+      "bytes": 30328
+    },
+    {
+      "id": "alfa_desk",
+      "path": "res://assets/art/house/desk.glb",
+      "source": "art_source/environments/house/desk.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.7250000238418579,
+          -0.0,
+          -0.42500001192092896
+        ],
+        "size": [
+          1.4500000476837158,
+          0.7200000286102295,
+          0.8500000238418579
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.7250000238418579,
+          -0.0,
+          -0.42500001192092896
+        ],
+        "size": [
+          1.4500000476837158,
+          0.7200000286102295,
+          0.8500000238418579
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.7250000238418579,
+            -0.0,
+            -0.42500001192092896
+          ],
+          "size": [
+            1.4500000476837158,
+            0.7200000286102295,
+            0.8500000238418579
+          ]
+        }
+      ],
+      "support_surfaces": [
+        {
+          "center": [
+            0,
+            0.72,
+            0
+          ],
+          "size": [
+            1.290000047683716,
+            0.6900000238418579
+          ],
+          "edge_margin_m": 0.06
+        }
+      ],
+      "triangles": 1148,
+      "material_slots": 4,
+      "sha256": "e987357ec2b255fd805a8cfa3fb89e1fe70e7fda57cea837a8b6c835700aa1d6",
+      "source_sha256": "8a08c6d2298816c708f3b62e6259c5634f6286c249ff7fbcee9663283cc3bc6b",
+      "bytes": 41264
+    },
+    {
+      "id": "alfa_nightstand",
+      "path": "res://assets/art/house/nightstand.glb",
+      "source": "art_source/environments/house/nightstand.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.30000001192092896,
+          -0.0,
+          -0.25999999046325684
+        ],
+        "size": [
+          0.6000000238418579,
+          0.5900000333786011,
+          0.5199999809265137
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.30000001192092896,
+          -0.0,
+          -0.25999999046325684
+        ],
+        "size": [
+          0.6000000238418579,
+          0.5900000333786011,
+          0.5199999809265137
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.30000001192092896,
+            -0.0,
+            -0.25999999046325684
+          ],
+          "size": [
+            0.6000000238418579,
+            0.5900000333786011,
+            0.5199999809265137
+          ]
+        }
+      ],
+      "support_surfaces": [
+        {
+          "center": [
+            0,
+            0.59,
+            0
+          ],
+          "size": [
+            0.4400000238418579,
+            0.35999998092651364
+          ],
+          "edge_margin_m": 0.06
+        }
+      ],
+      "triangles": 1028,
+      "material_slots": 2,
+      "sha256": "62866440091ee141e8fbb34d8713aa11ee459798010c62f41b1fe954393da989",
+      "source_sha256": "31327c69018e0b476933b68cffcb6a68207e8486b96f2e169f988d9d5ad65e42",
+      "bytes": 36212
+    },
+    {
+      "id": "alfa_bookcase",
+      "path": "res://assets/art/house/bookcase.glb",
+      "source": "art_source/environments/house/bookcase.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.5600000023841858,
+          -0.0,
+          -0.25999999046325684
+        ],
+        "size": [
+          1.1200000047683716,
+          1.3499999046325684,
+          0.5199999809265137
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.5600000023841858,
+          -0.0,
+          -0.25999999046325684
+        ],
+        "size": [
+          1.1200000047683716,
+          1.3499999046325684,
+          0.5199999809265137
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.5600000023841858,
+            -0.0,
+            -0.25999999046325684
+          ],
+          "size": [
+            1.1200000047683716,
+            1.3499999046325684,
+            0.5199999809265137
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 4788,
+      "material_slots": 7,
+      "sha256": "b2e5f2e39551c02f922b245bfd71ce92efafa8a516e64bc0479c70dcc0fa9827",
+      "source_sha256": "7ffa6331a1936dbc3c18db828ac046b5114273ebddf6d9df8e1b4628078c7596",
+      "bytes": 159304
+    },
+    {
+      "id": "alfa_wardrobe",
+      "path": "res://assets/art/house/wardrobe.glb",
+      "source": "art_source/environments/house/wardrobe.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        0.040196165442466736
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.5600000023841858,
+          -0.0,
+          -0.30019615590572357
+        ],
+        "size": [
+          1.1200000047683716,
+          1.3499999046325684,
+          0.6003923118114471
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.5600000023841858,
+          -0.0,
+          -0.30019615590572357
+        ],
+        "size": [
+          1.1200000047683716,
+          1.3499999046325684,
+          0.6003923118114471
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.5600000023841858,
+            -0.0,
+            -0.30019615590572357
+          ],
+          "size": [
+            1.1200000047683716,
+            1.3499999046325684,
+            0.6003923118114471
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 3524,
+      "material_slots": 3,
+      "sha256": "6d6dc25e37cb176397cb4f591bc30ea3b0e286aa20c9e7762a095a838dece75c",
+      "source_sha256": "232bee7e10722887ba90566f9a51fa96b8f56c498db0d2b85a989966c782936b",
+      "bytes": 117736
+    },
+    {
+      "id": "alfa_dresser",
+      "path": "res://assets/art/house/dresser.glb",
+      "source": "art_source/environments/house/dresser.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        0.028999999165534973
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.5600000023841858,
+          -0.0,
+          -0.2889999896287918
+        ],
+        "size": [
+          1.1200000047683716,
+          1.3499999046325684,
+          0.5779999792575836
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.5600000023841858,
+          -0.0,
+          -0.2889999896287918
+        ],
+        "size": [
+          1.1200000047683716,
+          1.3499999046325684,
+          0.5779999792575836
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.5600000023841858,
+            -0.0,
+            -0.2889999896287918
+          ],
+          "size": [
+            1.1200000047683716,
+            1.3499999046325684,
+            0.5779999792575836
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 2976,
+      "material_slots": 3,
+      "sha256": "f42553fba25112e66cd310eea7edb488612447a08a055c74797106c27a14e546",
+      "source_sha256": "34304e0f9b1ee0d5a536bea1742c0b48b85b71c2f81359b254d43e4f121d168e",
+      "bytes": 98188
+    },
+    {
+      "id": "alfa_sofa",
+      "path": "res://assets/art/house/sofa.glb",
+      "source": "art_source/environments/house/sofa.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        -2.9802322387695312e-08
+      ],
+      "visual_bounds": {
+        "position": [
+          -1.2370094060897827,
+          -0.0,
+          -0.49997642636299133
+        ],
+        "size": [
+          2.4740188121795654,
+          1.0149999856948853,
+          0.9999528527259827
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -1.2370094060897827,
+          -0.0,
+          -0.49997642636299133
+        ],
+        "size": [
+          2.4740188121795654,
+          1.0149999856948853,
+          0.9999528527259827
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -1.2370094060897827,
+            -0.0,
+            -0.49997642636299133
+          ],
+          "size": [
+            2.4740188121795654,
+            1.0149999856948853,
+            0.9999528527259827
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 14416,
+      "material_slots": 5,
+      "sha256": "2d0d4d5aadfdb0557dbe66f57c01d3de25f841e4b56fb304a20d6c53637c6b93",
+      "source_sha256": "a0ca4bef94807bfe7f7e4c7aa049416446f7cbb606f5f6d9b9cf8874f45e98bb",
+      "bytes": 461768
+    },
+    {
+      "id": "alfa_armchair",
+      "path": "res://assets/art/house/armchair.glb",
+      "source": "art_source/environments/house/armchair.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        2.9802322387695312e-08,
+        -0.0,
+        -2.9802322387695312e-08
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.6620093286037445,
+          -0.0,
+          -0.49997642636299133
+        ],
+        "size": [
+          1.324018657207489,
+          1.0149999856948853,
+          0.9999528527259827
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.6620093286037445,
+          -0.0,
+          -0.49997642636299133
+        ],
+        "size": [
+          1.324018657207489,
+          1.0149999856948853,
+          0.9999528527259827
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.6620093286037445,
+            -0.0,
+            -0.49997642636299133
+          ],
+          "size": [
+            1.324018657207489,
+            1.0149999856948853,
+            0.9999528527259827
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 8352,
+      "material_slots": 5,
+      "sha256": "292213b22e107dc8e805021be7e1a70b3d9c7da8b3f57dece7f486d113d7bcf0",
+      "source_sha256": "c48941a2888340377469990d9b96f1b38d3ab976878258549f011ec7475569ad",
+      "bytes": 270724
+    },
+    {
+      "id": "alfa_sink",
+      "path": "res://assets/art/house/sink.glb",
+      "source": "art_source/environments/house/sink.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        0.04519614577293396
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.8600000143051147,
+          -0.0,
+          -0.38019615411758423
+        ],
+        "size": [
+          1.7200000286102295,
+          1.1199852228164673,
+          0.7603923082351685
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.8600000143051147,
+          -0.0,
+          -0.38019615411758423
+        ],
+        "size": [
+          1.7200000286102295,
+          1.1199852228164673,
+          0.7603923082351685
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.8600000143051147,
+            -0.0,
+            -0.38019615411758423
+          ],
+          "size": [
+            1.7200000286102295,
+            1.1199852228164673,
+            0.7603923082351685
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 4532,
+      "material_slots": 7,
+      "sha256": "01afa34a66621cdd33a6166eb19bbcf4cb7825aad6312ec41124a5b419bb9d91",
+      "source_sha256": "8ff37f622f97889c895617312b765b31025d2be4f4917bb411f04d86fd706413",
+      "bytes": 156276
+    },
+    {
+      "id": "alfa_stove",
+      "path": "res://assets/art/house/stove.glb",
+      "source": "art_source/environments/house/stove.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        0.05149999260902405
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.8600000143051147,
+          -0.0,
+          -0.3865000009536743
+        ],
+        "size": [
+          1.7200000286102295,
+          1.1540000438690186,
+          0.7730000019073486
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.8600000143051147,
+          -0.0,
+          -0.3865000009536743
+        ],
+        "size": [
+          1.7200000286102295,
+          1.1540000438690186,
+          0.7730000019073486
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.8600000143051147,
+            -0.0,
+            -0.3865000009536743
+          ],
+          "size": [
+            1.7200000286102295,
+            1.1540000438690186,
+            0.7730000019073486
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 4416,
+      "material_slots": 7,
+      "sha256": "82bc913fe310318c7243709546f08efc22918618845993f98df95cd3db443afb",
+      "source_sha256": "5735592c5bf9a2bce5c642153106bc418d0aa6e635686232cf93c3e2ecc719cc",
+      "bytes": 154756
+    },
+    {
+      "id": "alfa_fridge",
+      "path": "res://assets/art/house/fridge.glb",
+      "source": "art_source/environments/house/fridge.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        0.06866025924682617
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.36000001430511475,
+          -0.0,
+          -0.3936602473258972
+        ],
+        "size": [
+          0.7200000286102295,
+          1.4600000381469727,
+          0.7873204946517944
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.36000001430511475,
+          -0.0,
+          -0.3936602473258972
+        ],
+        "size": [
+          0.7200000286102295,
+          1.4600000381469727,
+          0.7873204946517944
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.36000001430511475,
+            -0.0,
+            -0.3936602473258972
+          ],
+          "size": [
+            0.7200000286102295,
+            1.4600000381469727,
+            0.7873204946517944
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 1160,
+      "material_slots": 4,
+      "sha256": "3d1904ae1489032fd8aebfc0a77a6974b04b2d377f28b33ee68a93d0f38fb472",
+      "source_sha256": "3f25c49aa4f3d865342454259a09e8d89ca984fd5b24c0cc09c0886e6e1ef8d0",
+      "bytes": 42220
+    },
+    {
+      "id": "alfa_washer",
+      "path": "res://assets/art/house/washer.glb",
+      "source": "art_source/environments/house/v07/washer.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        0.01400001347064972
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.75,
+          -0.0,
+          -0.36400000751018524
+        ],
+        "size": [
+          1.5,
+          1.0130000114440918,
+          0.7280000150203705
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.75,
+          -0.0,
+          -0.36400000751018524
+        ],
+        "size": [
+          1.5,
+          1.0130000114440918,
+          0.7280000150203705
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.75,
+            -0.0,
+            -0.36400000751018524
+          ],
+          "size": [
+            1.5,
+            1.0130000114440918,
+            0.7280000150203705
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 7088,
+      "material_slots": 6,
+      "sha256": "be97a4279d0a60b6377c408883ff22c950292d0e82bb52c16174475204a6e0a3",
+      "source_sha256": "57afc8c2de5e3c984eb8b6b52970a0aa7ef419b40e47d095f2564089c7442a40",
+      "bytes": 217100
+    },
+    {
+      "id": "alfa_toilet",
+      "path": "res://assets/art/house/toilet.glb",
+      "source": "art_source/environments/house/v07/toilet.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        0.01845000684261322
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.3070000112056732,
+          -0.0,
+          -0.37594999372959137
+        ],
+        "size": [
+          0.6140000224113464,
+          0.9800000190734863,
+          0.7518999874591827
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.3070000112056732,
+          -0.0,
+          -0.37594999372959137
+        ],
+        "size": [
+          0.6140000224113464,
+          0.9800000190734863,
+          0.7518999874591827
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.3070000112056732,
+            -0.0,
+            -0.37594999372959137
+          ],
+          "size": [
+            0.6140000224113464,
+            0.9800000190734863,
+            0.7518999874591827
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 2488,
+      "material_slots": 3,
+      "sha256": "480c21e962ff20768b6113915547ec3cddab78f81046a29eb5f280d1f487ec10",
+      "source_sha256": "57c484a2173165e5d5663a6c7e737f5b100a6d467ed6859dceffb8770abc3c36",
+      "bytes": 78664
+    },
+    {
+      "id": "alfa_bath_vanity",
+      "path": "res://assets/art/house/bath_vanity.glb",
+      "source": "art_source/environments/house/v07/bath_vanity.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        0.03719615936279297
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.800000011920929,
+          -0.0,
+          -0.362196147441864
+        ],
+        "size": [
+          1.600000023841858,
+          1.0884536504745483,
+          0.724392294883728
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.800000011920929,
+          -0.0,
+          -0.362196147441864
+        ],
+        "size": [
+          1.600000023841858,
+          1.0884536504745483,
+          0.724392294883728
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.800000011920929,
+            -0.0,
+            -0.362196147441864
+          ],
+          "size": [
+            1.600000023841858,
+            1.0884536504745483,
+            0.724392294883728
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 3756,
+      "material_slots": 7,
+      "sha256": "fd5942f0de414d623ed16dc599162bf0fba9a5a01a0d4a16ea59f0b570f5e2c4",
+      "source_sha256": "4c22fc4cd584c9767bfdf294a91eec069311501ebb6afdb9ca74ed85ed4a1ad2",
+      "bytes": 129068
+    },
+    {
+      "id": "alfa_wall_shelf",
+      "path": "res://assets/art/house/wall_shelf.glb",
+      "source": "art_source/environments/house/v07/wall_shelf.blend",
+      "source_kind": "reused_project",
+      "pivot": "back_base_center",
+      "front": "-Z",
+      "placement_kind": "wall",
+      "import_offset": [
+        -0.0,
+        0.1899999976158142,
+        -0.1244039237499237
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.4749999940395355,
+          -0.0,
+          -0.2488078474998474
+        ],
+        "size": [
+          0.949999988079071,
+          0.6260265707969666,
+          0.2488078474998474
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.4749999940395355,
+          -0.0,
+          -0.2488078474998474
+        ],
+        "size": [
+          0.949999988079071,
+          0.6260265707969666,
+          0.2488078474998474
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.4749999940395355,
+            -0.0,
+            -0.2488078474998474
+          ],
+          "size": [
+            0.949999988079071,
+            0.6260265707969666,
+            0.2488078474998474
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 4232,
+      "material_slots": 6,
+      "sha256": "2ed52f15aa66514f21c4498ce339270e412c49dd8c1d49dc0f73dcbb954578ed",
+      "source_sha256": "af7507f9daf1cae33bef7ed998c38a9e62455f1340e4e2aab0b4aaf9fa70c66a",
+      "bytes": 146584
+    },
+    {
+      "id": "alfa_lamp",
+      "path": "res://assets/art/house/lamp.glb",
+      "source": "art_source/environments/house/lamp.blend",
+      "source_kind": "reused_project",
+      "pivot": "base_center",
+      "front": "-Z",
+      "placement_kind": "ground",
+      "import_offset": [
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "visual_bounds": {
+        "position": [
+          -0.26053833961486816,
+          -0.0,
+          -0.26053833961486816
+        ],
+        "size": [
+          0.5210766792297363,
+          0.5450000166893005,
+          0.5210766792297363
+        ]
+      },
+      "placement_bounds": {
+        "position": [
+          -0.26053833961486816,
+          -0.0,
+          -0.26053833961486816
+        ],
+        "size": [
+          0.5210766792297363,
+          0.5450000166893005,
+          0.5210766792297363
+        ]
+      },
+      "collision_boxes": [
+        {
+          "position": [
+            -0.26053833961486816,
+            -0.0,
+            -0.26053833961486816
+          ],
+          "size": [
+            0.5210766792297363,
+            0.5450000166893005,
+            0.5210766792297363
+          ]
+        }
+      ],
+      "support_surfaces": [],
+      "triangles": 1844,
+      "material_slots": 4,
+      "sha256": "c3325af6952a2fd9682fbfc706de2bea85cb02501e032ef9cc5d002c90529397",
+      "source_sha256": "900e780189773f444bd9b724ae25571fdcfb5b30eaac9f047360f434a7a79521",
+      "bytes": 69412
+    }
+  ]
+}

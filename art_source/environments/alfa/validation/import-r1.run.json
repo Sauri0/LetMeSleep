@@ -1,0 +1,18 @@
+{
+  "stderr_bytes": 0,
+  "exit_code": 0,
+  "started_utc": "2026-09-12T07:09:10.6527882Z",
+  "stage": "import-r1",
+  "pid": 25876,
+  "arguments": [
+    "--headless",
+    "--path",
+    "C:/Users/brank/Documents/Codex/2026-09-06/lms094-assets/game",
+    "--editor",
+    "--import",
+    "--quit",
+    "--single-threaded-scene"
+  ],
+  "finished_utc": "2026-09-12T07:09:29.0066446Z",
+  "timeout": false
+}

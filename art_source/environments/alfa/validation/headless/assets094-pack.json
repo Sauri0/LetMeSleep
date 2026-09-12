@@ -1,0 +1,7 @@
+{
+	"assets": 38,
+	"capture": false,
+	"checks": 379,
+	"failures": [],
+	"scope": "Imported GLB bounds, floor pivots, ownership of physics, real triangle support surfaces; optional native visual sheets."
+}

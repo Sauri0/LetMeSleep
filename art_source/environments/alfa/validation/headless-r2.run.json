@@ -1,0 +1,18 @@
+{
+  "exit_code": 0,
+  "arguments": [
+    "--headless",
+    "--path",
+    "C:/Users/brank/Documents/Codex/2026-09-06/lms094-assets/game",
+    "--script",
+    "res://tests/assets094_pack_test.gd",
+    "--",
+    "--output=C:/Users/brank/Documents/Codex/2026-09-06/lms094-assets/art_source/environments/alfa/validation/headless"
+  ],
+  "pid": 9792,
+  "stage": "headless-r2",
+  "timeout": false,
+  "started_utc": "2026-09-12T07:10:40.9027740Z",
+  "finished_utc": "2026-09-12T07:10:41.8095938Z",
+  "stderr_bytes": 0
+}
