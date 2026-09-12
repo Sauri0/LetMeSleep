@@ -52,7 +52,7 @@ def steps():
         result.append((clip.lower(), 'render_mosquito_witness.py',
             ['--output-name', 'mosquito-r4-' + clip.lower(), '--clip', clip,
              '--samples', '4', '--resolution', '384', '--views', 'three_quarter',
-             '--sequence', '--cycles', '2', '--playback', '1'], 180))
+             '--sequence', '--loop-count', '2', '--playback', '1'], 180))
     return result
 
 
@@ -72,7 +72,7 @@ def main():
     if not batch.is_relative_to((WORKTREE / 'work/mosquito-candidate').resolve()):
         raise ValueError('Output escaped assigned work directory')
     plan = {'mode': 'execute' if args.execute else 'plan_only', 'output': str(batch),
-            'native_processes_started': False, 'threads': 2, 'parallel_processes': 1,
+            'native_processes_started': False, 'threads': 2, 'parallel_processes': 1, 'priority': 'BelowNormal',
             'total_timeout_seconds': args.total_timeout_seconds, 'canonical_writes': False,
             'expected_stills': 11, 'expected_sequence_frames': 48,
             'steps': [{'name': n, 'script': s, 'arguments': a, 'timeout_seconds': t} for n, s, a, t in steps()]}
@@ -115,7 +115,7 @@ def main():
             receipt['processes'].append(row)
             with (batch / (label + '.log')).open('wb') as log:
                 process = subprocess.Popen(command, cwd=snapshot, stdout=log, stderr=subprocess.STDOUT,
-                    creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
+                    creationflags=(subprocess.CREATE_NO_WINDOW | subprocess.BELOW_NORMAL_PRIORITY_CLASS) if os.name == 'nt' else 0)
                 row['pid'] = process.pid
                 receipt['native_processes_started'] = True
                 save()

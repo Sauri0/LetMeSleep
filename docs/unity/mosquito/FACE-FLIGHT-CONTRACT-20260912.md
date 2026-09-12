@@ -1,6 +1,6 @@
 # Mosquito R4 — fuente de rostro y vuelo
 
-**SOURCE_ONLY, sin Blender ni Unity ejecutados.** Los `.blend`, `.fbx` y recibos nativos siguen siendo el candidato R3 de `2f6ef3e`, no acreditan estos cambios. Director debe conceder el siguiente turno de generación/validación. No se editaron humanos, helpers compartidos, runtime, prefabs ni manifiesto.
+**R4 generado en turno autorizado; Unity pendiente.** Ver `R4-NATIVE-CANDIDATE-20260912.md` y `R4-NATIVE-VALIDATION-20260912.json` para resultados, hashes, dos reparaciones acotadas y entrega. Director pidió luego promover los seis outputs del mosquito al worktree del especialista; integración central pendiente. No se editaron humanos, helpers compartidos, runtime, prefabs ni manifiesto. Este documento conserva la receta de autoría y sus límites.
 
 ## Qué explica la fuente actual R3
 
@@ -28,6 +28,8 @@ Se conserva frecuencia, duración, los15 IDs, Root y contratos físicos. La ampl
 
 Closure=0 abierto,1 cerrado; escala siempre1. Los párpados son dos cuartos de caparazón por ojo, con espesor.6mm fuente, que giran desde atrás hasta cubrir el frente. No se aplasta ni desplaza el blanco. Los límites son candidatos a inspección de cerca/frente/perfil, con especial atención a intersecciones entre caparazones, ceja y cabeza.
 
+Reparación durante la validación: se añadió una cubierta posterior fija en Head, retraída.8mm respecto al obturador. Cubre el blanco que quedaba visible de perfil al rotar los párpados hacia delante; no añade huesos, estados ni materiales. La vista de perfil final confirma el cierre lateral. Las pruebas de rayos ahora incluyen ambos perfiles además del frente.
+
 En el bind **Blender fuente**, local+Y de esos huesos es source+X y local−X es source+Z. Son datos de autoría, **no ejes certificados de Unity**. El exportador/importador puede reconstruir bases: el builder debe convertir cada eje al marco bind-local importado y serializarlo. `apply_facial_pose()` implementa el overlay QA en espacio del rig; la próxima auditoría registrará también bases reimportadas por Blender, sin llamarlas prueba Unity.
 
 Presentación acordó `BlinkBone[]` con Transform, LocalAxis, ClosedAngleDegrees por ojo, aplicando `baseLocalRotation * AngleAxis(angle*closure,axis)`. Eye/PupilForward+Up y límites configurables admiten ambas especies. Humanos mantiene sus Eye.L/R y morphs; este módulo no requiere alterar esa solución. Un único VisualAttentionRig post-Animator aplica pupilas/parpadeo en menú y gameplay. El menú sólo entrega objetivo de atención. Los15 clips corporales conservan tracks faciales neutrales: no se añaden IDs y no debe haber un segundo writer que los restituya después del overlay. Base capturada en bind y restaurada/compuesta sin acumulación; rebind después de sustituir un rig.
@@ -51,6 +53,8 @@ Preparado para el turno que conceda Director:
 P1 previo de patas cruzadas y otros pendientes visuales R3 siguen abiertos; esta entrega no los declara resueltos.
 
 ## Runner preparado, todavía sin ejecutar
+
+**Actualización:** ejecutado y cerrado; PASS final en snapshot `r4-cpu2-02`, ningún proceso vivo al devolver el slot. Se renombró el argumento de secuencias a `--loop-count` porque `--cycles` colisionaba con opciones de Blender Cycles. El runner mantiene BelowNormal explícito. El primer intento y sus fallos se conservan. La receta operativa original sigue debajo como referencia.
 
 `art_source/unity/characters/run_mosquito_candidate.py` muestra el plan por defecto y no inicia procesos. Sólo después de concesión explícita del Director se invoca con `--execute --slot-note "referencia de la concesión" --run-name r4-cpu2-01`. Usa una copia nueva de nueve módulos en `work/mosquito-candidate/<run>/art_source/unity/characters`; toda generación, auditoría y render queda allí. No reemplaza los activos canónicos del worktree ni los centrales y comprueba sus hashes al terminar. No promueve automáticamente.
 

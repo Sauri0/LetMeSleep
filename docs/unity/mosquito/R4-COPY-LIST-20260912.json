@@ -1,0 +1,89 @@
+{
+  "source_worktree": "N:\\LetMeSleep\\Worktrees\\mosquito",
+  "target_root": "art_source/unity/characters (Director controls canonical promotion)",
+  "files": [
+    {
+      "path": "art_source/unity/characters/author_mosquito_geometry.py",
+      "sha256": "1133681acd0b0ec4c5fa52a162740580e2ad62830657ead7ff5315bceafb4f5d"
+    },
+    {
+      "path": "art_source/unity/characters/author_mosquito_motion.py",
+      "sha256": "3e549810b2670041580c98f2e7b3884c2e9d1375dc8527e679483304642e7acc"
+    },
+    {
+      "path": "art_source/unity/characters/author_mosquito_face.py",
+      "sha256": "f1afe1882dff8d71a52ab0a384902cbb33bb48999196f496bdf920710ea96215"
+    },
+    {
+      "path": "art_source/unity/characters/build_mosquito_candidate.py",
+      "sha256": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273"
+    },
+    {
+      "path": "art_source/unity/characters/audit_mosquito_candidate.py",
+      "sha256": "cbc2a9890071cb548fd8344793fc69a21f1bbd9863acd957a58c381d8e9cb6b5"
+    },
+    {
+      "path": "art_source/unity/characters/check_mosquito_source.py",
+      "sha256": "a8996960c376dde3bc84fbadf40dc664861f1ef4d3ae21f5c842b365bdf8e0ab"
+    },
+    {
+      "path": "art_source/unity/characters/check_mosquito_face.py",
+      "sha256": "a5a704f183a4e71d778bbbf657c32db94678128333fe2c1a89c4f91a84cce68c"
+    },
+    {
+      "path": "art_source/unity/characters/render_mosquito_witness.py",
+      "sha256": "12d2c81e3ee116e8277879f61ffed02763e018a8aa30ab95b23617094a368267"
+    },
+    {
+      "path": "art_source/unity/characters/run_mosquito_candidate.py",
+      "sha256": "a8504db71c4bb0c7e9899d1add0802d4efbb113896afceb31a22791176dbb5c6"
+    },
+    {
+      "path": "art_source/unity/characters/mosquito/LMS_Mosquito_alpha.blend",
+      "sha256": "5c26bfd6a7625e127272cdc33b0252bdbc3b3613cb8af7bfaa96941175a5562c"
+    },
+    {
+      "path": "art_source/unity/characters/mosquito/LMS_Mosquito_alpha.fbx",
+      "sha256": "2f73f7f08c3fba4191cc08b46fcf4547d5b3acc1a7e6ecf36c98974649ed8d06"
+    },
+    {
+      "path": "art_source/unity/characters/mosquito/audit.json",
+      "sha256": "4569500a1bd98df89168c9eb69a1e922d316a48e5ccf970832d98619fc925039"
+    },
+    {
+      "path": "art_source/unity/characters/mosquito/candidate.json",
+      "sha256": "b59cdd9037de5dbc99f4183b8b79afa6a52ac8189ab2933bd632aeaf928baedf"
+    },
+    {
+      "path": "art_source/unity/characters/mosquito/candidate_motion_audit.json",
+      "sha256": "7f880e5ba9c37b0bcc97c9869eb3ef12810d3cc42656a53ebdaa2b754483fed5"
+    },
+    {
+      "path": "art_source/unity/characters/mosquito/candidate_surface_support_audit.json",
+      "sha256": "dc5bd20486cce9face31ea69b844a0953d40ad0b5e664645c6b7179a9b75ea98"
+    },
+    {
+      "path": "art_source/unity/characters/review/mosquito-facial-flight-r4/body_three_quarter.png",
+      "sha256": "1b007f0d9ab8ad55e4c41784322e006e13c3faabe4a070c929a1e033a6a9a244"
+    },
+    {
+      "path": "art_source/unity/characters/review/mosquito-facial-flight-r4/face_closed.png",
+      "sha256": "4631b0bef80960c31979c899e8fc84cd261170cd546d7724a0f2f39f56b5977f"
+    },
+    {
+      "path": "art_source/unity/characters/review/mosquito-facial-flight-r4/face_open.png",
+      "sha256": "dc45f6eb8b26ff559593d02c18443c7884af2090b80397a3e2e5c316198d4285"
+    },
+    {
+      "path": "art_source/unity/characters/review/mosquito-facial-flight-r4/witness.json",
+      "sha256": "1ddc9ef5b548a463701aad469aa70382c68892e45819b3caa1d7570f0f45eadf"
+    }
+  ],
+  "shared_files_excluded": [
+    "build_characters.py",
+    "author_motion.py",
+    "manifest.json",
+    "surface_support_audit.json",
+    "Human/Flyswatter"
+  ]
+}

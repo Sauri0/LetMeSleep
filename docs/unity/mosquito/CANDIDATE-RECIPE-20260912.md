@@ -1,6 +1,6 @@
 # Mosquito: fuente modular y receta de candidato
 
-**Nueva fuente R4 pendiente de generación:** ver `FACE-FLIGHT-CONTRACT-20260912.md`. Añade seis controles faciales y amplía excursión de vuelo manteniendo frecuencia/IDs/contratos. Los activos y resultados nativos descritos a continuación siguen identificando R3; no acreditan la fuente R4 ni la animación facial en Unity.
+**R4 generado y promovido sólo al worktree mosquito por pedido del Director:** ver `R4-NATIVE-CANDIDATE-20260912.md`, `R4-NATIVE-VALIDATION-20260912.json` y `FACE-FLIGHT-CONTRACT-20260912.md`. Añade seis controles faciales y amplía excursión de vuelo manteniendo frecuencia/IDs/contratos. Los resultados R3 descritos a continuación son históricos; no acreditan animación facial ni vuelo integrado en Unity.
 
 Estado actual: **NATIVE_CANDIDATE_R3**, generado y auditado en el turno CPU2 concedido por Director. El turno terminó y fue devuelto. Ver `NATIVE-CANDIDATE-20260912.md` y `NATIVE-VALIDATION-20260912.json` para archivos, hashes, resultados, procesos y pendientes. Unity, reproducción de gameplay y aprobación artística siguen pendientes. La receta siguiente conserva el diseño/contrato de fuentes; los recibos SOURCE-CHECK/SURFACE-STUDY son comprobaciones analíticas, separadas de la validación nativa posterior.
 

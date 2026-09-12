@@ -1,0 +1,27 @@
+{
+  "source_blend_sha256": "5c26bfd6a7625e127272cdc33b0252bdbc3b3613cb8af7bfaa96941175a5562c",
+  "selected_images": [
+    {
+      "file": "face_open.png",
+      "sha256": "dc45f6eb8b26ff559593d02c18443c7884af2090b80397a3e2e5c316198d4285",
+      "original": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\review\\mosquito-r4-open\\face_front.png"
+    },
+    {
+      "file": "face_closed.png",
+      "sha256": "4631b0bef80960c31979c899e8fc84cd261170cd546d7724a0f2f39f56b5977f",
+      "original": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\review\\mosquito-r4-closed\\face_front.png"
+    },
+    {
+      "file": "body_three_quarter.png",
+      "sha256": "1b007f0d9ab8ad55e4c41784322e006e13c3faabe4a070c929a1e033a6a9a244",
+      "original": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\review\\mosquito-r4-open\\three_quarter.png"
+    }
+  ],
+  "complete_witness_root": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\review",
+  "sequence_videos": [
+    "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\Fly-normal-speed-5-repetitions.mp4",
+    "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\Hover-normal-speed-5-repetitions.mp4"
+  ],
+  "runtime_verified": false,
+  "art_accepted": false
+}

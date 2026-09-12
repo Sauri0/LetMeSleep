@@ -5,8 +5,8 @@
   "runtime_orientation_verified": false,
   "blender": "5.2.1 LTS",
   "source_sha256": {
-    "blend": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
-    "fbx": "0b32d7623a70259d2f9c7bed2262bd37a0296296d1cd6f175babd3df1de33abb"
+    "blend": "5c26bfd6a7625e127272cdc33b0252bdbc3b3613cb8af7bfaa96941175a5562c",
+    "fbx": "2f73f7f08c3fba4191cc08b46fcf4547d5b3acc1a7e6ecf36c98974649ed8d06"
   },
   "contract": {
     "gameplay_tip_rest_unity_m": [
@@ -22,7 +22,85 @@
       0
     ],
     "surface_rotation_contract": "local +Y outward normal, forward projected tangent; runtime validation belongs to Gameplay/Presentation",
-    "geometry_revision": "mosquito-planar-stance-r3",
+    "geometry_revision": "mosquito-facial-flight-r4-source",
+    "face": {
+      "revision": "mosquito-facial-controls-v1",
+      "bind_is_open": true,
+      "parent": "Head",
+      "bones": [
+        "Pupil.L",
+        "LidUpper.L",
+        "LidLower.L",
+        "Pupil.R",
+        "LidUpper.R",
+        "LidLower.R"
+      ],
+      "total_rig_bones": 39,
+      "source_coordinates": "metres, Z up, -Y forward; actor scale .5 once",
+      "eye_centers_source_m": {
+        "L": [
+          0.027,
+          -0.094,
+          0.113
+        ],
+        "R": [
+          -0.027,
+          -0.094,
+          0.113
+        ]
+      },
+      "bone_tail_direction_source": [
+        1,
+        0,
+        0
+      ],
+      "gaze": {
+        "controls": [
+          "Pupil.L",
+          "Pupil.R"
+        ],
+        "yaw_axis_source": [
+          0,
+          0,
+          1
+        ],
+        "pitch_axis_source": [
+          1,
+          0,
+          0
+        ],
+        "yaw_limit_degrees": 12,
+        "pitch_limit_degrees": 10,
+        "order": "Rz(yaw) @ Rx(pitch) applied to bind around each eye center",
+        "white_eye_moves": false
+      },
+      "blink": {
+        "closure_range": [
+          0,
+          1
+        ],
+        "upper_angle_source_x_degrees": [
+          0,
+          90
+        ],
+        "lower_angle_source_x_degrees": [
+          0,
+          -90
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "material": "Mosquito_Shell"
+      },
+      "eye_housing": "fixed rear shell weighted to Head, recessed .8 mm behind movable lids; covers posterior white during closure",
+      "runtime_writer": "one shared facial driver after Animator/Playable evaluation; menu supplies target only",
+      "runtime_binding": "serialize axes transformed into each imported bone bind-local frame; do not assume FBX local XYZ",
+      "body_clips": "15 existing IDs unchanged; all facial tracks neutral, runtime overwrites six facial controls only",
+      "customization": "MosquitoSkin renderer; existing Mosquito_Shell color binding. EyeWhite/Expression remain unchanged.",
+      "native_status": "source candidate only; geometry, FBX axes, closure and runtime visibility await Director slot"
+    },
     "proboscis_descent_degrees": 44.38394009160077,
     "art_acceptance": "pending real render, complete clips, Unity and independent review",
     "minimum_surface_leg_reach_margin_m": 0.00686739145002313,
@@ -139,6 +217,36 @@
       ],
       "runtime_phase_sync_verified": false
     },
+    "flight": {
+      "clips": [
+        "Mosquito_Fly",
+        "Mosquito_Hover"
+      ],
+      "frames": 13,
+      "fps": 30,
+      "duration_seconds": 0.4,
+      "wingbeats_per_loop": 3,
+      "wingbeat_frequency_hz_at_speed_one": 7.5,
+      "air_endpoint_flap_radians": 0.58,
+      "fly_peak_flap_envelope_radians": 0.7,
+      "wing_source_axes": "mirror around each bind origin: Rz(sign*fold) @ Ry(-sign*flap)",
+      "secondary_channels": [
+        "Thorax",
+        "Abdomen01",
+        "Abdomen02",
+        "six leg IK chains"
+      ],
+      "root_motion": false,
+      "air_endpoint_dependents": [
+        "Fly",
+        "Hover",
+        "PerchEnter",
+        "Land",
+        "Brake",
+        "Detach"
+      ],
+      "acceptance": "candidate source only; normal-speed final-scale wings/body/legs and blends pending"
+    },
     "bite_tip_policy": "Head/Thorax/Proboscis bind transforms retained throughout BiteStart/BiteLoop/Bite",
     "fall_contact_policy": "evaluated mesh minimum at authored support plane; native landing/transition review pending"
   },
@@ -167,9 +275,9 @@
         -0.0
       ],
       "Socket.Mouth": [
-        6.4402710188470394e-15,
-        2.665333731499686e-08,
-        0.0950000137090683
+        6.884358958147681e-15,
+        2.66533390913537e-08,
+        0.0950000211596489
       ],
       "Socket.GroundContact": [
         -0.0,

@@ -58,7 +58,7 @@ def main():
     parser.add_argument('--clip', default='Idle')
     parser.add_argument('--phase', type=float, default=0)
     parser.add_argument('--sequence', action='store_true')
-    parser.add_argument('--cycles', type=int, default=1)
+    parser.add_argument('--loop-count', dest='cycles', type=int, default=1)
     parser.add_argument('--playback', type=float, default=1)
     parser.add_argument('--gaze-yaw', type=float, default=0)
     parser.add_argument('--gaze-pitch', type=float, default=0)

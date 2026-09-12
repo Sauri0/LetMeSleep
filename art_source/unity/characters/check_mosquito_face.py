@@ -3,7 +3,7 @@ import json
 import math
 from pathlib import Path
 
-from author_mosquito_face import (EYE_SECTIONS, FACE_BONES, eye_center,
+from author_mosquito_face import (EYE_SECTIONS, HOUSING_RECESS, eye_center,
                                  facial_contract, lid_mesh, rotate_x)
 from author_mosquito_geometry import section_mesh
 from author_mosquito_motion import flight_channels, flight_contract
@@ -59,6 +59,17 @@ def main():
                 coverage.append({'side_sign': sign, 'points': len(eye_points) + len(pupils), 'uncovered_front_points': uncovered})
                 if uncovered:
                     errors.append(f'{sign}: closed lids leave eye/pupil points exposed')
+                housing = [lid_mesh(sign, upper, recess=HOUSING_RECESS) for upper in (True, False)]
+                for side_camera in (-1, 1):
+                    # Remap a side ray to the same first-hit routine. Both
+                    # shutters and fixed rear housing must hide the white.
+                    side_shells = [([(y, side_camera * x, z) for x, y, z in v], f) for v, f in lids + housing]
+                    uncovered_side = sum(min(front_intersection(v, f, y, z) for v, f in side_shells) > side_camera * x - 1e-5
+                                         for x, y, z in eye_points + pupils)
+                    coverage.append({'side_sign': sign, 'camera_source_x_sign': side_camera,
+                                     'points': len(eye_points) + len(pupils), 'uncovered_side_points': uncovered_side})
+                    if uncovered_side:
+                        errors.append(f'{sign}/{side_camera}: closed eye exposed from side')
             if closure == 0:
                 occluded = sum(min(front_intersection(v, f, x, z) for v, f in lids) < y - 1e-5
                                for x, y, z in pupils)
@@ -77,11 +88,11 @@ def main():
     if any(abs(flight_channels(0)[k] - flight_channels(0, True)[k]) > 1e-10 for k in flight_channels(0)):
         errors.append('Fly/Hover common endpoint mismatch')
     report = {'schema': 'lms-mosquito-face-flight-source-v1', 'passed': not errors, 'errors': errors,
-              'scope': 'pure thick-lid topology at five closures, front-ray coverage of white/pupil samples, open pupil exposure, flight channels/seams',
+              'scope': 'pure thick-lid topology at five closures, front/side-ray coverage of white/pupil samples with rear housing, open pupil exposure, flight channels/seams',
               'facial_contract': facial_contract(), 'flight_contract': flight_contract(),
               'closed_front_coverage': coverage, 'lid_topology': topology, 'flight_ranges': channels,
               'blender_executed': False, 'runtime_verified': False, 'art_accepted': False,
-              'limitations': 'front rays only; no skin evaluation, oblique closure, side intersections, imported axes or normal-speed perception'}
+              'limitations': 'orthographic front/side rays only; no skin evaluation, oblique closure, head intersections, imported axes or normal-speed perception'}
     output = ROOT.parents[2] / 'docs/unity/mosquito/FACE-FLIGHT-SOURCE-CHECK-20260912.json'
     output.write_text(json.dumps(report, indent=2), encoding='utf8', newline='\n')
     print(json.dumps({'passed': not errors, 'errors': errors, 'coverage': coverage, 'flight_ranges': channels}, indent=2))

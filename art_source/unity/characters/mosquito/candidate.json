@@ -1,18 +1,19 @@
 {
-  "revision": "mosquito-planar-stance-r3",
+  "revision": "mosquito-facial-flight-r4-source",
   "source_sha256": {
-    "build_mosquito_candidate.py": "c8f25c46c684762d9e8787ec2757e94a3c13007d56987dbb839211e9ea96f33a",
-    "author_mosquito_geometry.py": "5fa539d58e25131634182d228da9cb35acda8351c9e9e6a4f628d435c60ae3f5",
-    "author_mosquito_motion.py": "1887e18dbb560747eeb96955b00f10a7c508316d26466d7fbdbd4cf97bb9494e",
+    "build_mosquito_candidate.py": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
+    "author_mosquito_geometry.py": "1133681acd0b0ec4c5fa52a162740580e2ad62830657ead7ff5315bceafb4f5d",
+    "author_mosquito_motion.py": "3e549810b2670041580c98f2e7b3884c2e9d1375dc8527e679483304642e7acc",
+    "author_mosquito_face.py": "f1afe1882dff8d71a52ab0a384902cbb33bb48999196f496bdf920710ea96215",
     "build_characters.py": "1876935e524dfa5541bb6124335dcf56c731d7be40223ddd1b329ee89116d4f9",
     "author_motion.py": "0d9b89d2eb893513d0d70f63f6a1113f8454b3e84d91a60b490c1b0a38f5eec4"
   },
   "audit": {
     "species": "Mosquito",
     "mesh_count": 3,
-    "bones": 33,
-    "triangles": 2116,
-    "vertices": 1158,
+    "bones": 39,
+    "triangles": 3588,
+    "vertices": 1910,
     "unweighted_vertices": 0,
     "bad_weight_sums": 0,
     "degenerate_triangles": 0,
@@ -169,7 +170,85 @@
         0
       ],
       "surface_rotation_contract": "local +Y outward normal, forward projected tangent; runtime validation belongs to Gameplay/Presentation",
-      "geometry_revision": "mosquito-planar-stance-r3",
+      "geometry_revision": "mosquito-facial-flight-r4-source",
+      "face": {
+        "revision": "mosquito-facial-controls-v1",
+        "bind_is_open": true,
+        "parent": "Head",
+        "bones": [
+          "Pupil.L",
+          "LidUpper.L",
+          "LidLower.L",
+          "Pupil.R",
+          "LidUpper.R",
+          "LidLower.R"
+        ],
+        "total_rig_bones": 39,
+        "source_coordinates": "metres, Z up, -Y forward; actor scale .5 once",
+        "eye_centers_source_m": {
+          "L": [
+            0.027,
+            -0.094,
+            0.113
+          ],
+          "R": [
+            -0.027,
+            -0.094,
+            0.113
+          ]
+        },
+        "bone_tail_direction_source": [
+          1,
+          0,
+          0
+        ],
+        "gaze": {
+          "controls": [
+            "Pupil.L",
+            "Pupil.R"
+          ],
+          "yaw_axis_source": [
+            0,
+            0,
+            1
+          ],
+          "pitch_axis_source": [
+            1,
+            0,
+            0
+          ],
+          "yaw_limit_degrees": 12,
+          "pitch_limit_degrees": 10,
+          "order": "Rz(yaw) @ Rx(pitch) applied to bind around each eye center",
+          "white_eye_moves": false
+        },
+        "blink": {
+          "closure_range": [
+            0,
+            1
+          ],
+          "upper_angle_source_x_degrees": [
+            0,
+            90
+          ],
+          "lower_angle_source_x_degrees": [
+            0,
+            -90
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "material": "Mosquito_Shell"
+        },
+        "eye_housing": "fixed rear shell weighted to Head, recessed .8 mm behind movable lids; covers posterior white during closure",
+        "runtime_writer": "one shared facial driver after Animator/Playable evaluation; menu supplies target only",
+        "runtime_binding": "serialize axes transformed into each imported bone bind-local frame; do not assume FBX local XYZ",
+        "body_clips": "15 existing IDs unchanged; all facial tracks neutral, runtime overwrites six facial controls only",
+        "customization": "MosquitoSkin renderer; existing Mosquito_Shell color binding. EyeWhite/Expression remain unchanged.",
+        "native_status": "source candidate only; geometry, FBX axes, closure and runtime visibility await Director slot"
+      },
       "proboscis_descent_degrees": 44.38394009160077,
       "art_acceptance": "pending real render, complete clips, Unity and independent review",
       "minimum_surface_leg_reach_margin_m": 0.00686739145002313,
@@ -286,6 +365,36 @@
         ],
         "runtime_phase_sync_verified": false
       },
+      "flight": {
+        "clips": [
+          "Mosquito_Fly",
+          "Mosquito_Hover"
+        ],
+        "frames": 13,
+        "fps": 30,
+        "duration_seconds": 0.4,
+        "wingbeats_per_loop": 3,
+        "wingbeat_frequency_hz_at_speed_one": 7.5,
+        "air_endpoint_flap_radians": 0.58,
+        "fly_peak_flap_envelope_radians": 0.7,
+        "wing_source_axes": "mirror around each bind origin: Rz(sign*fold) @ Ry(-sign*flap)",
+        "secondary_channels": [
+          "Thorax",
+          "Abdomen01",
+          "Abdomen02",
+          "six leg IK chains"
+        ],
+        "root_motion": false,
+        "air_endpoint_dependents": [
+          "Fly",
+          "Hover",
+          "PerchEnter",
+          "Land",
+          "Brake",
+          "Detach"
+        ],
+        "acceptance": "candidate source only; normal-speed final-scale wings/body/legs and blends pending"
+      },
       "bite_tip_policy": "Head/Thorax/Proboscis bind transforms retained throughout BiteStart/BiteLoop/Bite",
       "fall_contact_policy": "evaluated mesh minimum at authored support plane; native landing/transition review pending"
     },
@@ -344,6 +453,12 @@
       "Proboscis",
       "Socket.Mouth",
       "Socket.AimForward",
+      "Pupil.L",
+      "LidUpper.L",
+      "LidLower.L",
+      "Pupil.R",
+      "LidUpper.R",
+      "LidLower.R",
       "Abdomen01",
       "Abdomen02",
       "Socket.Back",
@@ -455,6 +570,90 @@
           0.0,
           -0.11999999731779099,
           0.0
+        ]
+      },
+      {
+        "name": "Pupil.L",
+        "parent": "Head",
+        "head_blender_m": [
+          0.027000000700354576,
+          -0.09399999678134918,
+          0.11299999803304672
+        ],
+        "tail_blender_m": [
+          0.039000000804662704,
+          -0.09399999678134918,
+          0.11299999803304672
+        ]
+      },
+      {
+        "name": "LidUpper.L",
+        "parent": "Head",
+        "head_blender_m": [
+          0.027000000700354576,
+          -0.09399999678134918,
+          0.11299999803304672
+        ],
+        "tail_blender_m": [
+          0.039000000804662704,
+          -0.09399999678134918,
+          0.11299999803304672
+        ]
+      },
+      {
+        "name": "LidLower.L",
+        "parent": "Head",
+        "head_blender_m": [
+          0.027000000700354576,
+          -0.09399999678134918,
+          0.11299999803304672
+        ],
+        "tail_blender_m": [
+          0.039000000804662704,
+          -0.09399999678134918,
+          0.11299999803304672
+        ]
+      },
+      {
+        "name": "Pupil.R",
+        "parent": "Head",
+        "head_blender_m": [
+          -0.027000000700354576,
+          -0.09399999678134918,
+          0.11299999803304672
+        ],
+        "tail_blender_m": [
+          -0.014999999664723873,
+          -0.09399999678134918,
+          0.11299999803304672
+        ]
+      },
+      {
+        "name": "LidUpper.R",
+        "parent": "Head",
+        "head_blender_m": [
+          -0.027000000700354576,
+          -0.09399999678134918,
+          0.11299999803304672
+        ],
+        "tail_blender_m": [
+          -0.014999999664723873,
+          -0.09399999678134918,
+          0.11299999803304672
+        ]
+      },
+      {
+        "name": "LidLower.R",
+        "parent": "Head",
+        "head_blender_m": [
+          -0.027000000700354576,
+          -0.09399999678134918,
+          0.11299999803304672
+        ],
+        "tail_blender_m": [
+          -0.014999999664723873,
+          -0.09399999678134918,
+          0.11299999803304672
         ]
       },
       {
@@ -925,8 +1124,8 @@
   "unity_import_verified": false,
   "art_accepted": false,
   "outputs_sha256": {
-    "LMS_Mosquito_alpha.blend": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
-    "LMS_Mosquito_alpha.fbx": "0b32d7623a70259d2f9c7bed2262bd37a0296296d1cd6f175babd3df1de33abb",
-    "audit.json": "f8b2c7f8b55e02daca1f04d15f6090da9a2338e13c24068f7efaf63f6a37f752"
+    "LMS_Mosquito_alpha.blend": "5c26bfd6a7625e127272cdc33b0252bdbc3b3613cb8af7bfaa96941175a5562c",
+    "LMS_Mosquito_alpha.fbx": "2f73f7f08c3fba4191cc08b46fcf4547d5b3acc1a7e6ecf36c98974649ed8d06",
+    "audit.json": "4569500a1bd98df89168c9eb69a1e922d316a48e5ccf970832d98619fc925039"
   }
 }

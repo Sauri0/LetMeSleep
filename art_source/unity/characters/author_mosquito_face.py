@@ -11,6 +11,7 @@ EYE_SECTIONS = ((-.080, .112, .017, .020), (-.094, .113, .025, .026),
 LID_RADIUS_X = .029
 LID_RADIUS_YZ = .035
 LID_THICKNESS = .0006
+HOUSING_RECESS = .0008
 GAZE_YAW_LIMIT_DEGREES = 12
 GAZE_PITCH_LIMIT_DEGREES = 10
 FACE_BONES = tuple(role + '.' + side for side in ('L', 'R')
@@ -27,7 +28,7 @@ def rotate_x(point, angle):
     return (x, c * y - s * z, s * y + c * z)
 
 
-def lid_mesh(sign, upper, closure=0):
+def lid_mesh(sign, upper, closure=0, recess=0):
     """Closed thick quarter-ellipsoid, rotated back in the open bind pose.
 
     Upper/lower quarter shells meet at the equator at closure=1. Equal Y/Z
@@ -40,7 +41,7 @@ def lid_mesh(sign, upper, closure=0):
     latitude_steps, arc_steps = 10, 4
     vertices = []
     for inset in (0, LID_THICKNESS):
-        rx, radius = LID_RADIUS_X - inset, LID_RADIUS_YZ - inset
+        rx, radius = LID_RADIUS_X - recess - inset, LID_RADIUS_YZ - recess - inset
         layer = [(-rx, 0, 0)]
         for row in range(1, latitude_steps):
             latitude = -math.pi * .5 + math.pi * row / latitude_steps
@@ -91,6 +92,7 @@ def facial_contract():
         'blink': {'closure_range': [0, 1], 'upper_angle_source_x_degrees': [0, 90],
                   'lower_angle_source_x_degrees': [0, -90],
                   'scale': [1, 1, 1], 'material': 'Mosquito_Shell'},
+        'eye_housing': 'fixed rear shell weighted to Head, recessed .8 mm behind movable lids; covers posterior white during closure',
         'runtime_writer': 'one shared facial driver after Animator/Playable evaluation; menu supplies target only',
         'runtime_binding': 'serialize axes transformed into each imported bone bind-local frame; do not assume FBX local XYZ',
         'body_clips': '15 existing IDs unchanged; all facial tracks neutral, runtime overwrites six facial controls only',
@@ -112,6 +114,10 @@ def create_face(c, *, mesh, ellipsoid, section_mesh, shell, eye, pupil):
             name = ('LidUpper.' if upper else 'LidLower.') + side
             vertices, faces = lid_mesh(sign, upper)
             mesh(name, vertices, faces, shell, name)
+            # A fixed rear housing prevents the white back of the eye becoming
+            # exposed in profile when the articulated shutters rotate forward.
+            vertices, faces = lid_mesh(sign, upper, recess=HOUSING_RECESS)
+            mesh('EyeHousing.' + name, vertices, faces, shell, 'Head')
 
 
 def apply_facial_pose(rig, yaw_degrees=0, pitch_degrees=0, blink_left=0, blink_right=0):

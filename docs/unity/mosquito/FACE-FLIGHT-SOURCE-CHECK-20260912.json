@@ -2,7 +2,7 @@
   "schema": "lms-mosquito-face-flight-source-v1",
   "passed": true,
   "errors": [],
-  "scope": "pure thick-lid topology at five closures, front-ray coverage of white/pupil samples, open pupil exposure, flight channels/seams",
+  "scope": "pure thick-lid topology at five closures, front/side-ray coverage of white/pupil samples with rear housing, open pupil exposure, flight channels/seams",
   "facial_contract": {
     "revision": "mosquito-facial-controls-v1",
     "bind_is_open": true,
@@ -74,6 +74,7 @@
       ],
       "material": "Mosquito_Shell"
     },
+    "eye_housing": "fixed rear shell weighted to Head, recessed .8 mm behind movable lids; covers posterior white during closure",
     "runtime_writer": "one shared facial driver after Animator/Playable evaluation; menu supplies target only",
     "runtime_binding": "serialize axes transformed into each imported bone bind-local frame; do not assume FBX local XYZ",
     "body_clips": "15 existing IDs unchanged; all facial tracks neutral, runtime overwrites six facial controls only",
@@ -117,9 +118,33 @@
       "uncovered_front_points": 0
     },
     {
+      "side_sign": 1,
+      "camera_source_x_sign": -1,
+      "points": 670,
+      "uncovered_side_points": 0
+    },
+    {
+      "side_sign": 1,
+      "camera_source_x_sign": 1,
+      "points": 670,
+      "uncovered_side_points": 0
+    },
+    {
       "side_sign": -1,
       "points": 670,
       "uncovered_front_points": 0
+    },
+    {
+      "side_sign": -1,
+      "camera_source_x_sign": -1,
+      "points": 670,
+      "uncovered_side_points": 0
+    },
+    {
+      "side_sign": -1,
+      "camera_source_x_sign": 1,
+      "points": 670,
+      "uncovered_side_points": 0
     }
   ],
   "lid_topology": [
@@ -309,5 +334,5 @@
   "blender_executed": false,
   "runtime_verified": false,
   "art_accepted": false,
-  "limitations": "front rays only; no skin evaluation, oblique closure, side intersections, imported axes or normal-speed perception"
+  "limitations": "orthographic front/side rays only; no skin evaluation, oblique closure, head intersections, imported axes or normal-speed perception"
 }

@@ -15,11 +15,11 @@
     "audit_mosquito_candidate.py": "cbc2a9890071cb548fd8344793fc69a21f1bbd9863acd957a58c381d8e9cb6b5",
     "check_mosquito_audit_math.py": "0f6e44e8774a0fcf1b0aaa2e1c9592b64120e71461dbf69d3c3d89db7390b45c",
     "study_mosquito_surface.py": "f07d93d8905b611c6e6ff694551c9ffb9bc893330bf1ef9503a1ea213869599c",
-    "render_mosquito_witness.py": "9aa858ccbc1e3bb7c2b6aaaecd39a81cd2cf88581de84b08a5dcc9f526db0539",
-    "author_mosquito_face.py": "c700f810f72b6eecdcbdf116ffd4559c5ae62f5f2a077a05fe14cd3e6315627b",
-    "check_mosquito_face.py": "7cd0f62bc2f8e97342b147f46d913df70b25b56a36bc1b7f714ba59206da2e3e"
+    "render_mosquito_witness.py": "12d2c81e3ee116e8277879f61ffed02763e018a8aa30ab95b23617094a368267",
+    "author_mosquito_face.py": "f1afe1882dff8d71a52ab0a384902cbb33bb48999196f496bdf920710ea96215",
+    "check_mosquito_face.py": "a5a704f183a4e71d778bbbf657c32db94678128333fe2c1a89c4f91a84cce68c"
   },
-  "comparison_asset_sha256": "f8b2c7f8b55e02daca1f04d15f6090da9a2338e13c24068f7efaf63f6a37f752",
+  "comparison_asset_sha256": "4569500a1bd98df89168c9eb69a1e922d316a48e5ccf970832d98619fc925039",
   "custom_meshes": [
     {
       "name": "Thorax",

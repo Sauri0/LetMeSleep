@@ -1,0 +1,1738 @@
+{
+  "schema": "lms-mosquito-r4-native-v1",
+  "status": "native_candidate_promoted_to_worker_source_only",
+  "candidate_directory": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\mosquito",
+  "runner_receipt": {
+    "mode": "execute",
+    "output": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02",
+    "native_processes_started": true,
+    "threads": 2,
+    "parallel_processes": 1,
+    "priority": "BelowNormal",
+    "total_timeout_seconds": 510,
+    "canonical_writes": false,
+    "expected_stills": 11,
+    "expected_sequence_frames": 48,
+    "steps": [
+      {
+        "name": "generate",
+        "script": "build_mosquito_candidate.py",
+        "arguments": [],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "audit",
+        "script": "audit_mosquito_candidate.py",
+        "arguments": [],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "support",
+        "script": "audit_surface_support.py",
+        "arguments": [],
+        "timeout_seconds": 60
+      },
+      {
+        "name": "open",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-open",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "front",
+          "three_quarter",
+          "face_front",
+          "face_profile"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "half",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-half",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-left",
+          ".5",
+          "--blink-right",
+          ".5"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "closed",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-closed",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "face_profile",
+          "--blink-left",
+          "1",
+          "--blink-right",
+          "1"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "gaze_left",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-gaze_left",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--gaze-yaw",
+          "12",
+          "--gaze-pitch",
+          "10"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "gaze_right",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-gaze_right",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--gaze-yaw",
+          "-12",
+          "--gaze-pitch",
+          "-10"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "wink_left",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-wink_left",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-left",
+          "1"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "wink_right",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-wink_right",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-right",
+          "1"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "fly",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-fly",
+          "--clip",
+          "Fly",
+          "--samples",
+          "4",
+          "--resolution",
+          "384",
+          "--views",
+          "three_quarter",
+          "--sequence",
+          "--loop-count",
+          "2",
+          "--playback",
+          "1"
+        ],
+        "timeout_seconds": 180
+      },
+      {
+        "name": "hover",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-hover",
+          "--clip",
+          "Hover",
+          "--samples",
+          "4",
+          "--resolution",
+          "384",
+          "--views",
+          "three_quarter",
+          "--sequence",
+          "--loop-count",
+          "2",
+          "--playback",
+          "1"
+        ],
+        "timeout_seconds": 180
+      }
+    ],
+    "start": "2026-09-12T23:27:26.874089+00:00",
+    "slot_note": "Mismo slot Director23:24:09UTC deadline23:36:09UTC; reintento tras2reparaciones menores autorizadas flag loop-count y housing posterior; CIM0 confirmado",
+    "source_sha256": {
+      "build_characters.py": "1876935e524dfa5541bb6124335dcf56c731d7be40223ddd1b329ee89116d4f9",
+      "author_motion.py": "0d9b89d2eb893513d0d70f63f6a1113f8454b3e84d91a60b490c1b0a38f5eec4",
+      "author_mosquito_geometry.py": "1133681acd0b0ec4c5fa52a162740580e2ad62830657ead7ff5315bceafb4f5d",
+      "author_mosquito_motion.py": "3e549810b2670041580c98f2e7b3884c2e9d1375dc8527e679483304642e7acc",
+      "author_mosquito_face.py": "f1afe1882dff8d71a52ab0a384902cbb33bb48999196f496bdf920710ea96215",
+      "build_mosquito_candidate.py": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
+      "audit_mosquito_candidate.py": "cbc2a9890071cb548fd8344793fc69a21f1bbd9863acd957a58c381d8e9cb6b5",
+      "audit_surface_support.py": "d0e3cf766db767588e4f16a60738423efd6763d476ec1b984d4a48ddaec82538",
+      "render_mosquito_witness.py": "12d2c81e3ee116e8277879f61ffed02763e018a8aa30ab95b23617094a368267"
+    },
+    "protected_before_sha256": {
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\audit.json": "f8b2c7f8b55e02daca1f04d15f6090da9a2338e13c24068f7efaf63f6a37f752",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\candidate.json": "ee07cebf6727599c65394c7ed62f7b67a05de9da5dc3701efbafb817d1ea3543",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\candidate_motion_audit.json": "1f3c83526b4c1579e6244a67997434f1c3aae85e422b3a109a48076a0dafb781",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\candidate_surface_support_audit.json": "e31a7de0da92b104a2af3d473c8d74e659a14a100a3b75aa821e0bf2d19a0686",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\LMS_Mosquito_alpha.blend": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\LMS_Mosquito_alpha.fbx": "0b32d7623a70259d2f9c7bed2262bd37a0296296d1cd6f175babd3df1de33abb",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\human\\audit.json": "32ae4faa9b56288c7d29ce08ad829aab379bbd27553b35bab7e5528076918bdc",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\human\\LMS_Human_alpha.blend": "671bcb318eed163c038873d8e3cff6b7a8db3d21f90cd3eb4dab1ace66a8ee54",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\human\\LMS_Human_alpha.fbx": "bfdf08992401c7bdc174a7cc001cffcce1c1c48ee71bfd9bd20e7c8d7dfa9095",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\flyswatter\\audit.json": "8746b773998015b57cb4438ab873b46408cc50cda6b9a489c2f7e14f81e271f3",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\flyswatter\\LMS_Flyswatter_alpha.blend": "3181959bcc441ba25f86e768bd0e311e754cf898d58d331b09298d0f901a110c",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\flyswatter\\LMS_Flyswatter_alpha.fbx": "e2c01038ae45fd5a22cb52a14c4b34edd4ffb3fc54dd3494dcc8743bac17cc16",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\manifest.json": "de8773a532d26fea372ffdc8ebe917f7d6a82354219d337ac7e030eb7233346b",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\surface_support_audit.json": "20e00078dc52648c85b0aeeb1e1c540b595b68ffd633687decc1dbcdf13a1250"
+    },
+    "processes": [
+      {
+        "step": "generate",
+        "start": "2026-09-12T23:27:26.931156+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\build_mosquito_candidate.py"
+        ],
+        "timeout": 90,
+        "pid": 7596,
+        "exit_code": 0,
+        "end": "2026-09-12T23:27:34.244540+00:00"
+      },
+      {
+        "step": "audit",
+        "start": "2026-09-12T23:27:34.245276+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\audit_mosquito_candidate.py"
+        ],
+        "timeout": 90,
+        "pid": 34148,
+        "exit_code": 0,
+        "end": "2026-09-12T23:27:40.519290+00:00"
+      },
+      {
+        "step": "support",
+        "start": "2026-09-12T23:27:40.520112+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\audit_surface_support.py"
+        ],
+        "timeout": 60,
+        "pid": 4628,
+        "exit_code": 0,
+        "end": "2026-09-12T23:27:43.101051+00:00"
+      },
+      {
+        "step": "open",
+        "start": "2026-09-12T23:27:43.101860+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-open",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "front",
+          "three_quarter",
+          "face_front",
+          "face_profile"
+        ],
+        "timeout": 90,
+        "pid": 29292,
+        "exit_code": 0,
+        "end": "2026-09-12T23:28:12.323427+00:00"
+      },
+      {
+        "step": "half",
+        "start": "2026-09-12T23:28:12.324137+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-half",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-left",
+          ".5",
+          "--blink-right",
+          ".5"
+        ],
+        "timeout": 90,
+        "pid": 18724,
+        "exit_code": 0,
+        "end": "2026-09-12T23:28:21.273248+00:00"
+      },
+      {
+        "step": "closed",
+        "start": "2026-09-12T23:28:21.273964+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-closed",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "face_profile",
+          "--blink-left",
+          "1",
+          "--blink-right",
+          "1"
+        ],
+        "timeout": 90,
+        "pid": 15388,
+        "exit_code": 0,
+        "end": "2026-09-12T23:28:36.038988+00:00"
+      },
+      {
+        "step": "gaze_left",
+        "start": "2026-09-12T23:28:36.039793+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-gaze_left",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--gaze-yaw",
+          "12",
+          "--gaze-pitch",
+          "10"
+        ],
+        "timeout": 90,
+        "pid": 38132,
+        "exit_code": 0,
+        "end": "2026-09-12T23:28:44.661001+00:00"
+      },
+      {
+        "step": "gaze_right",
+        "start": "2026-09-12T23:28:44.661991+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-gaze_right",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--gaze-yaw",
+          "-12",
+          "--gaze-pitch",
+          "-10"
+        ],
+        "timeout": 90,
+        "pid": 27848,
+        "exit_code": 0,
+        "end": "2026-09-12T23:28:53.264667+00:00"
+      },
+      {
+        "step": "wink_left",
+        "start": "2026-09-12T23:28:53.265355+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-wink_left",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-left",
+          "1"
+        ],
+        "timeout": 90,
+        "pid": 35716,
+        "exit_code": 0,
+        "end": "2026-09-12T23:29:01.750386+00:00"
+      },
+      {
+        "step": "wink_right",
+        "start": "2026-09-12T23:29:01.751263+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-wink_right",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-right",
+          "1"
+        ],
+        "timeout": 90,
+        "pid": 34560,
+        "exit_code": 0,
+        "end": "2026-09-12T23:29:10.270192+00:00"
+      },
+      {
+        "step": "fly",
+        "start": "2026-09-12T23:29:10.271011+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-fly",
+          "--clip",
+          "Fly",
+          "--samples",
+          "4",
+          "--resolution",
+          "384",
+          "--views",
+          "three_quarter",
+          "--sequence",
+          "--loop-count",
+          "2",
+          "--playback",
+          "1"
+        ],
+        "timeout": 180,
+        "pid": 28256,
+        "exit_code": 0,
+        "end": "2026-09-12T23:29:54.467893+00:00"
+      },
+      {
+        "step": "hover",
+        "start": "2026-09-12T23:29:54.468914+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-hover",
+          "--clip",
+          "Hover",
+          "--samples",
+          "4",
+          "--resolution",
+          "384",
+          "--views",
+          "three_quarter",
+          "--sequence",
+          "--loop-count",
+          "2",
+          "--playback",
+          "1"
+        ],
+        "timeout": 180,
+        "pid": 3532,
+        "exit_code": 0,
+        "end": "2026-09-12T23:30:38.641393+00:00"
+      }
+    ],
+    "passed": true,
+    "runtime_verified": false,
+    "art_accepted": false,
+    "candidate_outputs_sha256": {
+      "audit.json": "4569500a1bd98df89168c9eb69a1e922d316a48e5ccf970832d98619fc925039",
+      "candidate.json": "b59cdd9037de5dbc99f4183b8b79afa6a52ac8189ab2933bd632aeaf928baedf",
+      "candidate_motion_audit.json": "7f880e5ba9c37b0bcc97c9869eb3ef12810d3cc42656a53ebdaa2b754483fed5",
+      "candidate_surface_support_audit.json": "dc5bd20486cce9face31ea69b844a0953d40ad0b5e664645c6b7179a9b75ea98",
+      "LMS_Mosquito_alpha.blend": "5c26bfd6a7625e127272cdc33b0252bdbc3b3613cb8af7bfaa96941175a5562c",
+      "LMS_Mosquito_alpha.fbx": "2f73f7f08c3fba4191cc08b46fcf4547d5b3acc1a7e6ecf36c98974649ed8d06"
+    },
+    "witness_png_count": 59,
+    "end": "2026-09-12T23:30:38.668819+00:00",
+    "protected_unchanged": true
+  },
+  "first_attempt_receipt": {
+    "mode": "execute",
+    "output": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01",
+    "native_processes_started": true,
+    "threads": 2,
+    "parallel_processes": 1,
+    "priority": "BelowNormal",
+    "total_timeout_seconds": 720,
+    "canonical_writes": false,
+    "expected_stills": 11,
+    "expected_sequence_frames": 48,
+    "steps": [
+      {
+        "name": "generate",
+        "script": "build_mosquito_candidate.py",
+        "arguments": [],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "audit",
+        "script": "audit_mosquito_candidate.py",
+        "arguments": [],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "support",
+        "script": "audit_surface_support.py",
+        "arguments": [],
+        "timeout_seconds": 60
+      },
+      {
+        "name": "open",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-open",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "front",
+          "three_quarter",
+          "face_front",
+          "face_profile"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "half",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-half",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-left",
+          ".5",
+          "--blink-right",
+          ".5"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "closed",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-closed",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "face_profile",
+          "--blink-left",
+          "1",
+          "--blink-right",
+          "1"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "gaze_left",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-gaze_left",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--gaze-yaw",
+          "12",
+          "--gaze-pitch",
+          "10"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "gaze_right",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-gaze_right",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--gaze-yaw",
+          "-12",
+          "--gaze-pitch",
+          "-10"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "wink_left",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-wink_left",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-left",
+          "1"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "wink_right",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-wink_right",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-right",
+          "1"
+        ],
+        "timeout_seconds": 90
+      },
+      {
+        "name": "fly",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-fly",
+          "--clip",
+          "Fly",
+          "--samples",
+          "4",
+          "--resolution",
+          "384",
+          "--views",
+          "three_quarter",
+          "--sequence",
+          "--cycles",
+          "2",
+          "--playback",
+          "1"
+        ],
+        "timeout_seconds": 180
+      },
+      {
+        "name": "hover",
+        "script": "render_mosquito_witness.py",
+        "arguments": [
+          "--output-name",
+          "mosquito-r4-hover",
+          "--clip",
+          "Hover",
+          "--samples",
+          "4",
+          "--resolution",
+          "384",
+          "--views",
+          "three_quarter",
+          "--sequence",
+          "--cycles",
+          "2",
+          "--playback",
+          "1"
+        ],
+        "timeout_seconds": 180
+      }
+    ],
+    "start": "2026-09-12T23:24:10.409811+00:00",
+    "slot_note": "Director concede AHORA tras CIM0 y PID359880 finalizado; CPU2 BelowNormal secuencial; max12min con hasta2reparaciones menores; sin can\u00f3nicos ni Unity",
+    "source_sha256": {
+      "build_characters.py": "1876935e524dfa5541bb6124335dcf56c731d7be40223ddd1b329ee89116d4f9",
+      "author_motion.py": "0d9b89d2eb893513d0d70f63f6a1113f8454b3e84d91a60b490c1b0a38f5eec4",
+      "author_mosquito_geometry.py": "1133681acd0b0ec4c5fa52a162740580e2ad62830657ead7ff5315bceafb4f5d",
+      "author_mosquito_motion.py": "3e549810b2670041580c98f2e7b3884c2e9d1375dc8527e679483304642e7acc",
+      "author_mosquito_face.py": "c700f810f72b6eecdcbdf116ffd4559c5ae62f5f2a077a05fe14cd3e6315627b",
+      "build_mosquito_candidate.py": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
+      "audit_mosquito_candidate.py": "cbc2a9890071cb548fd8344793fc69a21f1bbd9863acd957a58c381d8e9cb6b5",
+      "audit_surface_support.py": "d0e3cf766db767588e4f16a60738423efd6763d476ec1b984d4a48ddaec82538",
+      "render_mosquito_witness.py": "9aa858ccbc1e3bb7c2b6aaaecd39a81cd2cf88581de84b08a5dcc9f526db0539"
+    },
+    "protected_before_sha256": {
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\audit.json": "f8b2c7f8b55e02daca1f04d15f6090da9a2338e13c24068f7efaf63f6a37f752",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\candidate.json": "ee07cebf6727599c65394c7ed62f7b67a05de9da5dc3701efbafb817d1ea3543",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\candidate_motion_audit.json": "1f3c83526b4c1579e6244a67997434f1c3aae85e422b3a109a48076a0dafb781",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\candidate_surface_support_audit.json": "e31a7de0da92b104a2af3d473c8d74e659a14a100a3b75aa821e0bf2d19a0686",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\LMS_Mosquito_alpha.blend": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\mosquito\\LMS_Mosquito_alpha.fbx": "0b32d7623a70259d2f9c7bed2262bd37a0296296d1cd6f175babd3df1de33abb",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\human\\audit.json": "32ae4faa9b56288c7d29ce08ad829aab379bbd27553b35bab7e5528076918bdc",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\human\\LMS_Human_alpha.blend": "671bcb318eed163c038873d8e3cff6b7a8db3d21f90cd3eb4dab1ace66a8ee54",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\human\\LMS_Human_alpha.fbx": "bfdf08992401c7bdc174a7cc001cffcce1c1c48ee71bfd9bd20e7c8d7dfa9095",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\flyswatter\\audit.json": "8746b773998015b57cb4438ab873b46408cc50cda6b9a489c2f7e14f81e271f3",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\flyswatter\\LMS_Flyswatter_alpha.blend": "3181959bcc441ba25f86e768bd0e311e754cf898d58d331b09298d0f901a110c",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\flyswatter\\LMS_Flyswatter_alpha.fbx": "e2c01038ae45fd5a22cb52a14c4b34edd4ffb3fc54dd3494dcc8743bac17cc16",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\manifest.json": "de8773a532d26fea372ffdc8ebe917f7d6a82354219d337ac7e030eb7233346b",
+      "N:\\LetMeSleep\\Worktrees\\mosquito\\art_source\\unity\\characters\\surface_support_audit.json": "20e00078dc52648c85b0aeeb1e1c540b595b68ffd633687decc1dbcdf13a1250"
+    },
+    "processes": [
+      {
+        "step": "generate",
+        "start": "2026-09-12T23:24:10.471857+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\build_mosquito_candidate.py"
+        ],
+        "timeout": 90,
+        "pid": 26880,
+        "exit_code": 0,
+        "end": "2026-09-12T23:24:16.988168+00:00"
+      },
+      {
+        "step": "audit",
+        "start": "2026-09-12T23:24:16.988981+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\audit_mosquito_candidate.py"
+        ],
+        "timeout": 90,
+        "pid": 33616,
+        "exit_code": 0,
+        "end": "2026-09-12T23:24:21.994693+00:00"
+      },
+      {
+        "step": "support",
+        "start": "2026-09-12T23:24:21.995406+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\audit_surface_support.py"
+        ],
+        "timeout": 60,
+        "pid": 8724,
+        "exit_code": 0,
+        "end": "2026-09-12T23:24:24.551129+00:00"
+      },
+      {
+        "step": "open",
+        "start": "2026-09-12T23:24:24.552011+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-open",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "front",
+          "three_quarter",
+          "face_front",
+          "face_profile"
+        ],
+        "timeout": 90,
+        "pid": 24316,
+        "exit_code": 0,
+        "end": "2026-09-12T23:24:51.964729+00:00"
+      },
+      {
+        "step": "half",
+        "start": "2026-09-12T23:24:51.965424+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-half",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-left",
+          ".5",
+          "--blink-right",
+          ".5"
+        ],
+        "timeout": 90,
+        "pid": 6268,
+        "exit_code": 0,
+        "end": "2026-09-12T23:25:00.515835+00:00"
+      },
+      {
+        "step": "closed",
+        "start": "2026-09-12T23:25:00.516733+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-closed",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "face_profile",
+          "--blink-left",
+          "1",
+          "--blink-right",
+          "1"
+        ],
+        "timeout": 90,
+        "pid": 36816,
+        "exit_code": 0,
+        "end": "2026-09-12T23:25:15.452790+00:00"
+      },
+      {
+        "step": "gaze_left",
+        "start": "2026-09-12T23:25:15.453547+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-gaze_left",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--gaze-yaw",
+          "12",
+          "--gaze-pitch",
+          "10"
+        ],
+        "timeout": 90,
+        "pid": 13456,
+        "exit_code": 0,
+        "end": "2026-09-12T23:25:24.095165+00:00"
+      },
+      {
+        "step": "gaze_right",
+        "start": "2026-09-12T23:25:24.096026+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-gaze_right",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--gaze-yaw",
+          "-12",
+          "--gaze-pitch",
+          "-10"
+        ],
+        "timeout": 90,
+        "pid": 26392,
+        "exit_code": 0,
+        "end": "2026-09-12T23:25:32.483274+00:00"
+      },
+      {
+        "step": "wink_left",
+        "start": "2026-09-12T23:25:32.483957+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-wink_left",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-left",
+          "1"
+        ],
+        "timeout": 90,
+        "pid": 18996,
+        "exit_code": 0,
+        "end": "2026-09-12T23:25:41.359948+00:00"
+      },
+      {
+        "step": "wink_right",
+        "start": "2026-09-12T23:25:41.360818+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-wink_right",
+          "--samples",
+          "8",
+          "--resolution",
+          "640",
+          "--views",
+          "face_front",
+          "--blink-right",
+          "1"
+        ],
+        "timeout": 90,
+        "pid": 8500,
+        "exit_code": 0,
+        "end": "2026-09-12T23:25:49.892969+00:00"
+      },
+      {
+        "step": "fly",
+        "start": "2026-09-12T23:25:49.894175+00:00",
+        "command": [
+          "N:\\Blender\\blender.exe",
+          "--background",
+          "--factory-startup",
+          "--threads",
+          "2",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-01\\art_source\\unity\\characters\\render_mosquito_witness.py",
+          "--",
+          "--output-name",
+          "mosquito-r4-fly",
+          "--clip",
+          "Fly",
+          "--samples",
+          "4",
+          "--resolution",
+          "384",
+          "--views",
+          "three_quarter",
+          "--sequence",
+          "--cycles",
+          "2",
+          "--playback",
+          "1"
+        ],
+        "timeout": 180,
+        "pid": 36724,
+        "exit_code": 2,
+        "end": "2026-09-12T23:25:51.081195+00:00"
+      }
+    ],
+    "passed": false,
+    "runtime_verified": false,
+    "art_accepted": false,
+    "error": "Native step failed: fly; see its log before any retry",
+    "end": "2026-09-12T23:25:51.081843+00:00",
+    "protected_unchanged": true
+  },
+  "repairs": [
+    "Fixed rear shell weighted to Head hides posterior eye white when lids close in profile",
+    "Renderer flag --cycles conflicted with Blender Cycles parser; renamed --loop-count"
+  ],
+  "source_in_worktree_matches_snapshot": {
+    "build_characters.py": true,
+    "author_motion.py": true,
+    "author_mosquito_geometry.py": true,
+    "author_mosquito_motion.py": true,
+    "author_mosquito_face.py": true,
+    "build_mosquito_candidate.py": true,
+    "audit_mosquito_candidate.py": true,
+    "audit_surface_support.py": true,
+    "render_mosquito_witness.py": true
+  },
+  "geometry": {
+    "passed": true,
+    "errors": [],
+    "mesh_count": 3,
+    "bones": 39,
+    "triangles": 3588,
+    "vertices": 1910,
+    "unweighted_vertices": 0,
+    "bad_weight_sums": 0,
+    "degenerate_triangles": 0,
+    "nonfinite_vertices": 0
+  },
+  "motion": {
+    "passed": true,
+    "integer_body_samples": 894,
+    "marker_count": 48,
+    "endpoint_rows": 20,
+    "facial_probes_per_format": 12,
+    "maximum_body_marker_error_source_m": 4.935412157082318e-07,
+    "maximum_face_marker_error_source_m": 8.024520884654677e-08,
+    "maximum_endpoint_marker_error_source_m": 1.1833295355937325e-07,
+    "airborne_markers": [
+      {
+        "format": "blend",
+        "clip": "Mosquito_Fly",
+        "wing_marker_motion_source_m": {
+          "Wing.L": 0.3031846641777773,
+          "Wing.R": 0.3031846062291355
+        },
+        "foot_marker_motion_source_m": {
+          "Leg103.L": 0.04682593566910863,
+          "Leg203.L": 0.051033790439525065,
+          "Leg303.L": 0.05630995541755108,
+          "Leg103.R": 0.04682593494288612,
+          "Leg203.R": 0.05103379904756564,
+          "Leg303.R": 0.0564061666249933
+        }
+      },
+      {
+        "format": "blend",
+        "clip": "Mosquito_Hover",
+        "wing_marker_motion_source_m": {
+          "Wing.L": 0.2856367700679482,
+          "Wing.R": 0.2856367947986875
+        },
+        "foot_marker_motion_source_m": {
+          "Leg103.L": 0.002679320763340646,
+          "Leg203.L": 0.002447450558262256,
+          "Leg303.L": 0.0027210122115196396,
+          "Leg103.R": 0.002679313008444607,
+          "Leg203.R": 0.002447452856847048,
+          "Leg303.R": 0.0027352907308332082
+        }
+      },
+      {
+        "format": "fbx",
+        "clip": "Mosquito_Fly",
+        "wing_marker_motion_source_m": {
+          "Wing.L": 0.3031846285281809,
+          "Wing.R": 0.30318460283700915
+        },
+        "foot_marker_motion_source_m": {
+          "Leg103.L": 0.046825857093033545,
+          "Leg203.L": 0.051033832032238054,
+          "Leg303.L": 0.056310042494394634,
+          "Leg103.R": 0.04682594284890035,
+          "Leg203.R": 0.05103379694811067,
+          "Leg303.R": 0.05640619112899448
+        }
+      },
+      {
+        "format": "fbx",
+        "clip": "Mosquito_Hover",
+        "wing_marker_motion_source_m": {
+          "Wing.L": 0.28563670442149014,
+          "Wing.R": 0.2856366976533745
+        },
+        "foot_marker_motion_source_m": {
+          "Leg103.L": 0.002679352134141921,
+          "Leg203.L": 0.0024474716973124267,
+          "Leg303.L": 0.002721056096430438,
+          "Leg103.R": 0.002679390458990114,
+          "Leg203.R": 0.0024474683466411203,
+          "Leg303.R": 0.002735312756161678
+        }
+      }
+    ]
+  },
+  "support": {
+    "passed": true,
+    "transformed_samples": 636,
+    "worst_clearance_unity_m": -0.0008647702634334564,
+    "scope": "Source geometry under expected outward-normal orientation, not runtime/visual approval"
+  },
+  "facial_axes_blender_only": {
+    "blend": {
+      "Pupil.L": {
+        "source_x_in_bone_local": [
+          -2.1893697521591093e-08,
+          1.0,
+          -2.5457671526396553e-09
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -2.189420911236084e-08,
+          3.725290298461914e-08
+        ]
+      },
+      "LidUpper.L": {
+        "source_x_in_bone_local": [
+          -2.1893697521591093e-08,
+          1.0,
+          -2.5457671526396553e-09
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -2.189420911236084e-08,
+          3.725290298461914e-08
+        ]
+      },
+      "LidLower.L": {
+        "source_x_in_bone_local": [
+          -2.1893697521591093e-08,
+          1.0,
+          -2.5457671526396553e-09
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -2.189420911236084e-08,
+          3.725290298461914e-08
+        ]
+      },
+      "Pupil.R": {
+        "source_x_in_bone_local": [
+          -2.1893811208428815e-08,
+          1.0,
+          -2.5457813634943705e-09
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -2.1894322799198562e-08,
+          3.725290298461914e-08
+        ]
+      },
+      "LidUpper.R": {
+        "source_x_in_bone_local": [
+          -2.1893811208428815e-08,
+          1.0,
+          -2.5457813634943705e-09
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -2.1894322799198562e-08,
+          3.725290298461914e-08
+        ]
+      },
+      "LidLower.R": {
+        "source_x_in_bone_local": [
+          -2.1893811208428815e-08,
+          1.0,
+          -2.5457813634943705e-09
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -2.1894322799198562e-08,
+          3.725290298461914e-08
+        ]
+      }
+    },
+    "fbx": {
+      "Pupil.L": {
+        "source_x_in_bone_local": [
+          -4.067998826684516e-09,
+          1.0,
+          -4.730001945674189e-10
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -4.068454018124612e-09,
+          2.1606679467822687e-07
+        ]
+      },
+      "LidUpper.L": {
+        "source_x_in_bone_local": [
+          -4.067998826684516e-09,
+          1.0,
+          -4.730001945674189e-10
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -4.068454018124612e-09,
+          2.1606679467822687e-07
+        ]
+      },
+      "LidLower.L": {
+        "source_x_in_bone_local": [
+          -4.067998826684516e-09,
+          1.0,
+          -4.730001945674189e-10
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -4.068454018124612e-09,
+          2.1606679467822687e-07
+        ]
+      },
+      "Pupil.R": {
+        "source_x_in_bone_local": [
+          -4.068169356941098e-09,
+          1.0,
+          -4.730215108494917e-10
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -4.0686245483811945e-09,
+          2.1606679467822687e-07
+        ]
+      },
+      "LidUpper.R": {
+        "source_x_in_bone_local": [
+          -4.068169356941098e-09,
+          1.0,
+          -4.730215108494917e-10
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -4.0686245483811945e-09,
+          2.1606679467822687e-07
+        ]
+      },
+      "LidLower.R": {
+        "source_x_in_bone_local": [
+          -4.068169356941098e-09,
+          1.0,
+          -4.730215108494917e-10
+        ],
+        "source_z_in_bone_local": [
+          -1.0,
+          -4.0686245483811945e-09,
+          2.1606679467822687e-07
+        ]
+      }
+    }
+  },
+  "png_sha256": {
+    "review\\mosquito-r4-closed\\face_front.png": "4631b0bef80960c31979c899e8fc84cd261170cd546d7724a0f2f39f56b5977f",
+    "review\\mosquito-r4-closed\\face_profile.png": "c4a88fc001638da5ba06762ff154eaea64bb3cb31730f2d26da5b04427dc9398",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0000.png": "f119d30ff3393b6a384493b53295badc8fc529a349d7fedffa093cf5b5ca7fd3",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0001.png": "c914fbdc47c1832e88ce1578c81b16009f8db7463a20aa1244488025d2782979",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0002.png": "e5a4326931155b7dfe29af3591669e6542fc4e13848ba48dbf8f174f6c574b57",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0003.png": "118cc01288aabf65bdc8f60b3f32b0633fef31360968034df32771b6e2518dbe",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0004.png": "bcdb953ddf4d2327916b5d889404aab3e39cf078a2c5b05dc2a4d0490a82879b",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0005.png": "fecab198c335d2679992cf26474fee229a572457d797a16d06a38a62c310c998",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0006.png": "e873f4ee12edd02be4187d4f3eedefe11a465c0e6ce0e82d1ae75486e2f50b92",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0007.png": "40df5fe83ceb2144e65e95088e4382444037cd32a9092f14e46951ba33d30f71",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0008.png": "01c6b633eb3d1e9715d41dd6b2251d9c11eb4dbd3cd2e7ad88b68eda3ed55be3",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0009.png": "f1954586a3482fbfa54c868544a4d103b4be1bc765935f7d9505a32f2eae95a1",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0010.png": "4ae419b252619673541ad802e3d671279f58cb3eeeadad2b3da5ceb85fb03386",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0011.png": "87c08b985b39c9785e8ecbc538ea87d2c13ece705beba33e8e19790ed939bdda",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0012.png": "fe4c9792798b2914fd3fe43568b4defb1c4afa1cdac5acfe6acf294f3cf25b5e",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0013.png": "8375611c985b0e958b0d3b8b9f93a7c13af77fa6f166bea5d7de247e004ff756",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0014.png": "ad404c21c2ac723959a0511447abc20ace776b9b2fb99dc4fdc2edcf35e4ec4b",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0015.png": "a4c23bc5ea84434d1397a5dcbbcfda5b4e129703ed0566be657f5323efbf31d8",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0016.png": "7a8bb9f43bb4a71c94a7a5090dc18b834f4733087702866cff4c192f61ce6b96",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0017.png": "3407e112bb2664eee440bd21c2932d2cc8175e2419b9837f25578e1345ae1792",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0018.png": "33f33a30fc2e198e5353e5606241f43699c1bceaa4a4b7cb6a8b23428d5040b2",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0019.png": "56f64ed5dcdae18bcb0f6c9acb2304ec69d0cac8d77432cc2a5bbb6805306621",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0020.png": "24fc7892b3f7e1752ade6f21473811678a85c763e44260f612d9ff04c023820e",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0021.png": "07bef9955c20ff9b57b8eae37db2170f4913252cc7e57f68aa6122ef3748740c",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0022.png": "bfbf532951ea1559be06de66693aa853803a5fb4c69ba07168c23b7c435a4df5",
+    "review\\mosquito-r4-fly\\Fly_three_quarter_0023.png": "7b36367a4cffe08774350e31341e1bdbba1404ec2916f3b496cc026d1df59d00",
+    "review\\mosquito-r4-gaze_left\\face_front.png": "fdac9976f7a50a140c852370bdb152ae12b3b6d1d8904e8f42f1c6812303377c",
+    "review\\mosquito-r4-gaze_right\\face_front.png": "843b111df14527a564e2c928cdcb9091cf5a57b06861d5bb75d56b07ddb42266",
+    "review\\mosquito-r4-half\\face_front.png": "67ab78ee338cf9f942e5d07f64bec5316f1857de8959c21e74487c778ef24019",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0000.png": "2f63dd52d7e9c65442fe29ecfa816ad764dd157cd657ee9cf0e57f15bf99a19a",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0001.png": "1825e0f29da6b12289108da03916cd0bbe74ec08fa7899b28537602db22700a0",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0002.png": "77f407c3227a25691dc5226d7a21c6bd517a5671050692be5cdd4a498ec8bf3d",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0003.png": "c3d72ebc41b1da5f0c9bd5ab2fb35076b0f4d13c75fa14cb102064b66af5ee6c",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0004.png": "a8e9b3f3289fdfa26627b4b6b838610dfbe73926a46b86f6c55d48b5c20b2958",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0005.png": "4e1b2e60fc4ac4b27be9014e082195338e86b154c0ae125b48449a777ea1eef9",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0006.png": "e5a515cb002cf4916d041577e7190f7bbbe2b2d1888a76fc16ebf2cddf05b5aa",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0007.png": "1b504cbda25d7b59c6d7aa10e119e2bf3e835b90997cc37c40534dee3d568f8a",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0008.png": "8268420e336352d98eb8e4623ed011c45fc708616e3bb63e507a6d84265b2172",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0009.png": "bef7921e43331a9ed25bf159d0c937e34c0747ecc58a5e9f5b11592a29de1b53",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0010.png": "856b8794b601b8315b33bc65661515f7d91165da951fe8dea2bfc822a4e6c2bd",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0011.png": "8a28db43c9d109e7e890957a6183dabbf6860ae248653a3988f3381440ef6dd3",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0012.png": "0a608675c3888aadf9e172d89db4785c5fbbb0cc04a4c9a60f6bdff728865511",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0013.png": "b4ed5bad8d468d63192230df1f349317b0e38452a3c306c76aa38f4b5483b917",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0014.png": "37c0d9439a5f00d01177a8b4fc1db4d8988dc78711967492bd3a4ab3fa8f4dac",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0015.png": "f6c1b16c3ac60bd01505142b1b14e4714311c8e925d0d6799240cad6187d075e",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0016.png": "a42c652916dc6bf89713dcb7436270f715c58d6aee2381a6e4f20fc1a737d711",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0017.png": "d60fcdb29f28f542a85b00b59ca7476e82d139c0e17a17de2697277cf9b44e0d",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0018.png": "f4666480e970adaa27332bc0218bd0f8151aaf3d426ef357633a70fdffd47d4f",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0019.png": "634c9b249a0f04a6272c4aaf56851bf46ee59cf1c241027772ce416e2ecd7cb1",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0020.png": "117e7fb0b13ee08bf5c9dea3ca780b58a158d58ee1dd5007cc5c2a7fe4b4ac50",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0021.png": "df287916360dad54dedfa37f701b6d1ab705944f6fbd5d5e9133b94fae7bb7a6",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0022.png": "4afd027c4f3fbbab473e5733b7bc4ec4335463e1a3d64c776432bb33fec763fa",
+    "review\\mosquito-r4-hover\\Hover_three_quarter_0023.png": "ed51c1c1fc5004c6046565487cff5597faccc1b540da58b62244f520915472f5",
+    "review\\mosquito-r4-open\\face_front.png": "dc45f6eb8b26ff559593d02c18443c7884af2090b80397a3e2e5c316198d4285",
+    "review\\mosquito-r4-open\\face_profile.png": "c15b418a303620d122e20f3edd1ff640ce4da77e9cf12d3eb47b2c0c4ee0643c",
+    "review\\mosquito-r4-open\\front.png": "caa9184c2d7b447d9c1ca6f2cf0b4cc5c59e7bdda9b28c8bf49fe15b8b3735da",
+    "review\\mosquito-r4-open\\three_quarter.png": "1b007f0d9ab8ad55e4c41784322e006e13c3faabe4a070c929a1e033a6a9a244",
+    "review\\mosquito-r4-wink_left\\face_front.png": "0a27e5425245eeff802e769a8ef0a1f894570a6cde620a98ad63826ffa22e98b",
+    "review\\mosquito-r4-wink_right\\face_front.png": "af42a867de9c4e4359326ed1023ae40d09e1ae2ab83ed11d7008bb3cecd7216e"
+  },
+  "videos": [
+    {
+      "path": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\Fly-normal-speed-5-repetitions.mp4",
+      "sha256": "e28f721e0f7e994151dc9f93bd28a02c14764a952d8049b3c3a29c7dea0acc23",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 384,
+            "height": 384,
+            "r_frame_rate": "30/1",
+            "nb_frames": "120"
+          }
+        ],
+        "format": {
+          "duration": "4.000000"
+        }
+      },
+      "provenance": "24 rendered frames spanning .8 seconds/two authored cycles, repeated five times without interpolation or speed changes"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\Hover-normal-speed-5-repetitions.mp4",
+      "sha256": "3bfa35cb8acad99acc00390e04fd1b3d48b11a65fd44284a5e2b7670a6297547",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 384,
+            "height": 384,
+            "r_frame_rate": "30/1",
+            "nb_frames": "120"
+          }
+        ],
+        "format": {
+          "duration": "4.000000"
+        }
+      },
+      "provenance": "24 rendered frames spanning .8 seconds/two authored cycles, repeated five times without interpolation or speed changes"
+    }
+  ],
+  "slot_released": true,
+  "cleanup": "Final batch PID3532 exited0 at23:30:38UTC; subsequent CIM found no Unity, Blender or ffmpeg processes before Director notification.",
+  "views_inspected": [
+    "open face front/profile and three-quarter",
+    "half front",
+    "closed front/profile",
+    "both gaze extremes",
+    "left/right wink",
+    "Fly frames0/2/6",
+    "Hover frame2"
+  ],
+  "limits": [
+    "Stills and rendered samples reviewed; normal-speed perception in final menu camera remains open",
+    "Facial probes are explicit source overlays, not continuous Unity facial driver playback",
+    "No Unity import, axis certification, gameplay animation/blends, saved customization or network validation",
+    "Prior crossed-leg and artistic review items remain open; no art acceptance or new variants"
+  ],
+  "canonical_assets_promoted": true,
+  "runtime_verified": false,
+  "art_accepted": false,
+  "promotion_scope": "Director explicitly requested source+generated R4 commit after PASS/cleanup; only six mosquito outputs and three witness PNGs copied within specialist worktree; central not modified",
+  "central_integration_verified": false,
+  "promoted_outputs_sha256": {
+    "art_source\\unity\\characters\\mosquito\\LMS_Mosquito_alpha.blend": "5c26bfd6a7625e127272cdc33b0252bdbc3b3613cb8af7bfaa96941175a5562c",
+    "art_source\\unity\\characters\\mosquito\\LMS_Mosquito_alpha.fbx": "2f73f7f08c3fba4191cc08b46fcf4547d5b3acc1a7e6ecf36c98974649ed8d06",
+    "art_source\\unity\\characters\\mosquito\\audit.json": "4569500a1bd98df89168c9eb69a1e922d316a48e5ccf970832d98619fc925039",
+    "art_source\\unity\\characters\\mosquito\\candidate.json": "b59cdd9037de5dbc99f4183b8b79afa6a52ac8189ab2933bd632aeaf928baedf",
+    "art_source\\unity\\characters\\mosquito\\candidate_motion_audit.json": "7f880e5ba9c37b0bcc97c9869eb3ef12810d3cc42656a53ebdaa2b754483fed5",
+    "art_source\\unity\\characters\\mosquito\\candidate_surface_support_audit.json": "dc5bd20486cce9face31ea69b844a0953d40ad0b5e664645c6b7179a9b75ea98"
+  },
+  "selected_images": [
+    {
+      "file": "face_open.png",
+      "sha256": "dc45f6eb8b26ff559593d02c18443c7884af2090b80397a3e2e5c316198d4285",
+      "original": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\review\\mosquito-r4-open\\face_front.png"
+    },
+    {
+      "file": "face_closed.png",
+      "sha256": "4631b0bef80960c31979c899e8fc84cd261170cd546d7724a0f2f39f56b5977f",
+      "original": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\review\\mosquito-r4-closed\\face_front.png"
+    },
+    {
+      "file": "body_three_quarter.png",
+      "sha256": "1b007f0d9ab8ad55e4c41784322e006e13c3faabe4a070c929a1e033a6a9a244",
+      "original": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r4-cpu2-02\\art_source\\unity\\characters\\review\\mosquito-r4-open\\three_quarter.png"
+    }
+  ],
+  "retained_r3_bind_bones": {
+    "baseline_commit": "2f6ef3e",
+    "passed": true,
+    "checks": [
+      {
+        "bone": "Root",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Thorax",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Head",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Proboscis",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Socket.Mouth",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Socket.AimForward",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Abdomen01",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Abdomen02",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Socket.Back",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Socket.CameraTarget",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Socket.WingRoot.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Socket.WingRoot.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Wing.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg101.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg102.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg103.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg201.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg202.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg203.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg301.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg302.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg303.L",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Wing.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg101.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg102.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg103.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg201.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg202.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg203.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg301.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg302.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Leg303.R",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      },
+      {
+        "bone": "Socket.GroundContact",
+        "max_bind_difference_source_m": 0.0,
+        "parent_unchanged": true
+      }
+    ]
+  }
+}
