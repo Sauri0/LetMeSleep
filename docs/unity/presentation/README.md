@@ -15,6 +15,8 @@ Documentos:
   presets de importación.
 - [PERFORMANCE-BUDGET.md](PERFORMANCE-BUDGET.md): presupuesto y protocolo de
   medición para el hardware objetivo.
+- [IMPLEMENTATION.md](IMPLEMENTATION.md): contenido del primer lote ejecutable,
+  comando del builder y punto de integración del AudioMixer.
 - [alfa-presentation-presets.json](alfa-presentation-presets.json): copia
   legible por herramientas de los valores de partida. No sustituye assets
   `.asset`, `.renderer`, `.mixer` o `.prefab` serializados por Unity.

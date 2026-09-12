@@ -116,13 +116,14 @@ El entorno usa paleta compartida y pocos shaders:
 | Metal | URP Lit | 0.75 | 0.52 | herrajes; área pequeña |
 | Tela/pijama | URP Simple Lit | 0.00 | 0.10 | sin clear coat |
 | Vidrio | URP Lit Transparent | 0.00 | 0.72 | sólo ventanas necesarias |
-| Alas | shader URP simple transparente | 0.00 | 0.28 | Premultiply, doble cara, sin shadow casting |
+| Alas | shader URP simple transparente | 0.00 | 0.28 | Premultiply, culling posterior, sin shadow casting |
 
 Alfa usa Opaque siempre que la silueta lo permita y Alpha Clipping para hojas,
 césped y detalles recortados. Transparencia queda reservada a vidrio y alas.
 Las alas combinan una membrana `alpha=0.42` con venas opacas/alpha-clipped para
-seguir visibles sobre pared clara y cielo oscuro. `ZWrite=Off`, `Cull=Off`,
-Receive Shadows desactivado y ningún shadow caster.
+seguir visibles sobre pared clara y cielo oscuro. El FBX de M1 entrega caras
+físicas opuestas, por lo que se usa `ZWrite=Off`, `Cull=Back`, Receive Shadows
+desactivado y ningún shadow caster; no se duplica el render de ambas caras.
 
 El ambiente comparte materiales; colores de variantes ambientales se hornean
 en vertex color o atlas. Personajes pueden usar un material instanciable con

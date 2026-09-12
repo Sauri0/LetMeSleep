@@ -1,0 +1,165 @@
+{
+  "schema": "lms.original-audio/1",
+  "sample_rate_hz": 48000,
+  "sample_width_bits": 24,
+  "generator": "generate_alfa_audio.py",
+  "score": {
+    "title": "Night Mischief",
+    "author": "Let me sleep project contributors",
+    "tempo_bpm": 96,
+    "meter": "4/4",
+    "bars": 8,
+    "chords": [
+      [
+        "D3",
+        "F3",
+        "A3",
+        "C4"
+      ],
+      [
+        "G2",
+        "B3",
+        "D4",
+        "F4"
+      ],
+      [
+        "C3",
+        "E3",
+        "G3",
+        "B3"
+      ],
+      [
+        "A2",
+        "C3",
+        "E3",
+        "G3"
+      ],
+      [
+        "D3",
+        "F3",
+        "A3",
+        "C4"
+      ],
+      [
+        "G2",
+        "B3",
+        "D4",
+        "F4"
+      ],
+      [
+        "C3",
+        "E3",
+        "G3",
+        "B3"
+      ],
+      [
+        "A2",
+        "C3",
+        "E3",
+        "G3"
+      ]
+    ],
+    "bass": [
+      "D2",
+      "G2",
+      "C2",
+      "A2",
+      "D2",
+      "G2",
+      "C2",
+      "A2"
+    ],
+    "melody": [
+      "A4",
+      "F4",
+      "D4",
+      "E4",
+      "F4",
+      "A4",
+      "G4",
+      "F4",
+      "D4",
+      "F4",
+      "G4",
+      "B3",
+      "E4",
+      "D4",
+      "C4",
+      "A3",
+      "G4",
+      "E4",
+      "D4",
+      "C4",
+      "E4",
+      "G4",
+      "A4",
+      "G4",
+      "E4",
+      "C4",
+      "A3",
+      "C4",
+      "D4",
+      "E4",
+      "G4",
+      "A4"
+    ]
+  },
+  "assets": [
+    {
+      "name": "MUS_NightMischief_Menu.wav",
+      "group": "music",
+      "loop": true,
+      "channels": 2,
+      "duration_seconds": 20.0,
+      "sha256": "a0164713c818b1b18f2c7fe45aa4b9d868fcc7ae8d657d32524f914b4a612277"
+    },
+    {
+      "name": "AMB_NightHouse.wav",
+      "group": "ambience",
+      "loop": true,
+      "channels": 2,
+      "duration_seconds": 12.0,
+      "sha256": "1294d81d65f713a0101b562157fb01a56ca9a3f9cb3cdca126e14a1d8a7ae200"
+    },
+    {
+      "name": "SFX_MosquitoWingLoop.wav",
+      "group": "character",
+      "loop": true,
+      "channels": 1,
+      "duration_seconds": 1.25,
+      "sha256": "cbeeeb47a1301c4655002fe0ac83f14472363944b5e92231b63848b7c075aba5"
+    },
+    {
+      "name": "SFX_StrikeSwing.wav",
+      "group": "character",
+      "loop": false,
+      "channels": 1,
+      "duration_seconds": 0.42,
+      "sha256": "213a04f8eb35855d322b31334cca7ca022e3902e84ef9a0d63554dace22279e1"
+    },
+    {
+      "name": "SFX_StrikeImpact.wav",
+      "group": "critical",
+      "loop": false,
+      "channels": 1,
+      "duration_seconds": 0.3,
+      "sha256": "96d1e711a746dbbfc70fc04dcc7a2ae273f5b153649346db0872f04e40a79a2e"
+    },
+    {
+      "name": "SFX_BiteStart.wav",
+      "group": "critical",
+      "loop": false,
+      "channels": 1,
+      "duration_seconds": 0.36,
+      "sha256": "98a275b014daff8e265d5c7a1a1033fa43e283ee1631dfeb6f30da13a5d27ae4"
+    },
+    {
+      "name": "UI_Ready.wav",
+      "group": "ui",
+      "loop": false,
+      "channels": 1,
+      "duration_seconds": 0.42,
+      "sha256": "2966002b59e2879d5d1a7a016091c20d3b65c1575d135b539230ff15b45ca4e3"
+    }
+  ]
+}
