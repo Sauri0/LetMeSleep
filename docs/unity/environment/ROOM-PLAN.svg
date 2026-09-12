@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="740" viewBox="0 0 1120 740">
+<rect width="1120" height="740" fill="#f5f1e9"/>
+<g font-family="Segoe UI,Arial,sans-serif" fill="#273541">
+<text x="60" y="40" font-size="23" font-weight="700">LET ME SLEEP / MUESTRA DE HABITACIÓN</text>
+<text x="60" y="66" font-size="13">Unity 0.9.4 alfa · Plano dimensional de diseño · Metros · No es una captura del motor</text>
+<g stroke="#53616a" stroke-width="1" fill="none">
+<path d="M100 104 V87 M580 104 V87 M100 92 H580 M100 88 L106 96 M574 88 L580 96"/>
+<path d="M72 120 H60 M72 560 H60 M65 120 V560 M61 120 L69 126 M61 554 L69 560"/>
+</g>
+<text x="313" y="87" font-size="15">4.80 m</text>
+<text x="48" y="355" transform="rotate(-90 48 355)" font-size="15">4.40 m</text>
+<rect x="82" y="102" width="516" height="476" fill="#89918f"/>
+<rect x="100" y="120" width="480" height="440" fill="#e7d8bb"/>
+<path d="M400 102 H520 V120 H400 Z" fill="#78a0af"/>
+<path d="M150 560 H274 V578 H150 Z" fill="#f5f1e9"/>
+<rect x="150" y="558" width="7" height="20" fill="#77513b"/>
+<rect x="267" y="558" width="7" height="20" fill="#77513b"/>
+<rect x="276" y="370" width="180" height="180" fill="#d9e7d1" stroke="#67845c" stroke-width="1.5" stroke-dasharray="7 4"/>
+<text x="296" y="450" font-size="16" font-weight="600">1.80 × 1.80 m</text>
+<text x="307" y="473" font-size="13">Área principal libre</text>
+<rect x="368" y="138.5" width="164" height="221.5" rx="4" fill="#704d36"/>
+<rect x="374" y="150" width="152" height="202" rx="9" fill="#e8e0c8"/>
+<rect x="374" y="197" width="152" height="155" rx="5" fill="#344f6b"/>
+<rect x="374" y="197" width="152" height="19" fill="#6b91a8"/>
+<rect x="381" y="158" width="62" height="28" rx="6" fill="#fbf3dc"/>
+<rect x="454" y="158" width="62" height="28" rx="6" fill="#fbf3dc"/>
+<text x="417" y="291" font-size="18" fill="#ffffff">Cama</text>
+<rect x="293" y="148" width="59" height="56" rx="3" fill="#a2784d" stroke="#704d36"/>
+<text x="298" y="180" font-size="12">Mesita</text>
+<rect x="118" y="133" width="132" height="64" rx="3" fill="#a2784d" stroke="#704d36"/>
+<text x="143" y="170" font-size="14">Escritorio</text>
+<rect x="160.5" y="237.5" width="49" height="49.25" rx="3" fill="#a2784d" stroke="#704d36"/>
+<path d="M160.5 282 H209.5" stroke="#704d36" stroke-width="7"/>
+<text x="169" y="269" font-size="11">Silla</text>
+<path d="M158.5 555.5 L265.5 555.5 A107 107 0 0 0 139.9 450.1 Z" fill="#d1a45d" fill-opacity=".18" stroke="#a37b3e" stroke-dasharray="5 4"/>
+<path d="M158.5 555.5 L139.9 450.1" stroke="#755236" stroke-width="4"/>
+<circle cx="158.5" cy="555.5" r="4" fill="#273541"/>
+<text x="112" y="428" font-size="13">Barrido −100°</text>
+<text x="176" y="600" font-size="14" font-weight="600">Vano libre 1.10 m</text>
+<path d="M212 634 V589" stroke="#53616a" stroke-width="2"/>
+<path d="M207 596 L212 589 L217 596" fill="none" stroke="#53616a" stroke-width="2"/>
+<text x="161" y="659" font-size="13">Entrada sin escalón</text>
+<g fill="#d29035" stroke="#fff" stroke-width="2">
+<circle cx="184" cy="165" r="6"/><circle cx="322.5" cy="175" r="6"/>
+</g>
+<path d="M369 305 L362 312 L369 319 L376 312 Z" fill="#83709a" stroke="#fff" stroke-width="2"/>
+<g fill="none" stroke="#889982" stroke-dasharray="4 3">
+<circle cx="265" cy="240" r="40"/><circle cx="322.5" cy="250" r="40"/><circle cx="320" cy="305" r="40"/>
+</g>
+<text x="650" y="135" font-size="19" font-weight="700">Geometría y uso</text>
+<text x="650" y="169" font-size="15">Altura interior: 2.80 m</text>
+<text x="650" y="196" font-size="15">Muros: 0.18 m / techo: 0.20 m</text>
+<text x="650" y="223" font-size="15">Puerta libre: 1.10 × 2.20 m</text>
+<text x="650" y="250" font-size="15">Hoja: 1.07 × 2.185 × 0.04 m</text>
+<text x="650" y="277" font-size="15">Ventana fija sobre cabecera</text>
+<text x="650" y="320" font-size="19" font-weight="700">Actores confirmados</text>
+<text x="650" y="354" font-size="15">Humano: 1.72 m / cápsula r=0.25 m</text>
+<text x="650" y="381" font-size="15">Ojos: 1.53 m / agachado: 1.00 m</text>
+<text x="650" y="408" font-size="15">Mosquito: esfera r=0.055 m</text>
+<text x="650" y="451" font-size="19" font-weight="700">Puntos de interacción</text>
+<circle cx="657" cy="481" r="6" fill="#d29035"/>
+<text x="676" y="486" font-size="15">Superficie reservada para pickup</text>
+<path d="M657 504 L650 511 L657 518 L664 511 Z" fill="#83709a"/>
+<text x="676" y="516" font-size="15">Socket futuro de tarea: inactivo en alfa</text>
+<circle cx="657" cy="541" r="8" fill="none" stroke="#889982" stroke-dasharray="3 2"/>
+<text x="676" y="546" font-size="15">Reserva de pie r=0.40 m</text>
+<text x="650" y="592" font-size="14">Los pasos junto a muebles son secundarios.</text>
+<text x="650" y="616" font-size="14">Colisiones, cámara y alcance se prueban en Unity.</text>
+<text x="60" y="708" font-size="12">Contrato: room_contract.json · Fuente editable: room_sample.blend · Puerta exportada por separado · Diseño original basado en referencias de Branko</text>
+</g></svg>

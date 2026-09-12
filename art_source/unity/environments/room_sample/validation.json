@@ -1,0 +1,424 @@
+{
+  "blender": "5.2.1 LTS",
+  "scope": "CPU source geometry and Blender FBX roundtrip only; Unity not tested",
+  "meshes": 55,
+  "triangles": 2178,
+  "passed": 74,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "shell manifold boundary",
+      "passed": true,
+      "detail": 74
+    },
+    {
+      "name": "shell positive volume",
+      "passed": true,
+      "detail": 18.227853051031083
+    },
+    {
+      "name": "shell no zero area faces",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all object scales unit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Architecture_Shell",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Jamb_L",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Jamb_R",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Frame_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_01_Leaf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Panel.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Handle_Base",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Handle_Lever",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Panel.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Panel.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Handle_Base.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Handle_Lever.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Hinge_Barrel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Door_Hinge_Barrel.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Base",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Leg.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Leg.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Mattress",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Quilt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Fold",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Pillow",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Pillow.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Headboard",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Head_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Bed_Head_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Nightstand_Case",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Nightstand_Top",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Nightstand_Drawer",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Nightstand_Knob",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Nightstand_Drawer.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Nightstand_Knob.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Desk_Top",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Desk_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Desk_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Desk_Leg.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Desk_Leg.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Desk_Rear_Rail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Chair_Seat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Chair_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Chair_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Chair_Leg.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Chair_Leg.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Chair_Back_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Chair_Back_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Chair_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Window_Jamb",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Window_Jamb.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Window_Rail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Window_Rail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Window_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Window_Mullion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "positive finite bounds Window_Sill",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "door 101 angle samples no static penetration",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "hinge position preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "socket standing clearance Socket_Pickup_Desk",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "socket standing clearance Socket_Pickup_Nightstand",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "socket standing clearance Socket_Task_Bed",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "main 1.8m square free of furniture",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "room_sample.fbx object set",
+      "passed": true,
+      "detail": {
+        "missing": [],
+        "extra": []
+      }
+    },
+    {
+      "name": "room_sample.fbx hierarchy",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "room_sample.fbx bounds and origins within 0.1mm",
+      "passed": true,
+      "detail": 9.5367431640625e-07
+    },
+    {
+      "name": "door_01.fbx object set",
+      "passed": true,
+      "detail": {
+        "missing": [],
+        "extra": []
+      }
+    },
+    {
+      "name": "door_01.fbx hierarchy",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "door_01.fbx bounds and origins within 0.1mm",
+      "passed": true,
+      "detail": 3.5762786865234375e-07
+    },
+    {
+      "name": "room_furnished_without_door.fbx object set",
+      "passed": true,
+      "detail": {
+        "missing": [],
+        "extra": []
+      }
+    },
+    {
+      "name": "room_furnished_without_door.fbx hierarchy",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "room_furnished_without_door.fbx bounds and origins within 0.1mm",
+      "passed": true,
+      "detail": 9.5367431640625e-07
+    }
+  ],
+  "roundtrips": [
+    {
+      "file": "room_sample.fbx",
+      "objects": 66,
+      "max_error_metres": 9.5367431640625e-07
+    },
+    {
+      "file": "door_01.fbx",
+      "objects": 14,
+      "max_error_metres": 3.5762786865234375e-07
+    },
+    {
+      "file": "room_furnished_without_door.fbx",
+      "objects": 52,
+      "max_error_metres": 9.5367431640625e-07
+    }
+  ],
+  "files": {
+    "door_01.fbx": {
+      "bytes": 57756,
+      "sha256": "1cabd198f9cc3556995e1221aa35bfea233abcab5d2af256cf067b19e45ea247"
+    },
+    "room_furnished_without_door.fbx": {
+      "bytes": 177276,
+      "sha256": "dbb12a5752dacfd9866f4f3dd7dcdaf28dded3d7283e14d395a9a8db81d504c2"
+    },
+    "room_sample.blend": {
+      "bytes": 142172,
+      "sha256": "b4fb64b7817781cb1615597cb15d9ecabc131e83a5e5b9f068613c8f1756cfdb"
+    },
+    "room_sample.fbx": {
+      "bytes": 219772,
+      "sha256": "51bfa491f5cb788b655776bf6a1db14b4a9fe8b4c1eceee548a218ae9bc9e5b0"
+    }
+  }
+}
