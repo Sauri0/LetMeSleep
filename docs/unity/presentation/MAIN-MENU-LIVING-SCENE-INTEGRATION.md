@@ -26,3 +26,9 @@ OnDisable/SetSceneActive(false)/OnDestroy destruyen graph, apagan y eliminan luc
 ## Evidencia y pendientes
 
 Compilación offline contra Unity6000.3.24f1 y referencias centrales. No lanzamiento Unity/Blender ni capturas. Falta export humano real, anchors finales, integración Director, agarre del prop y revisión temporal a720/1080. Evaluar ciclo completo, apoyo pelvis/pantuflas, continuidad de cuatro clips, vuelo/alas sin atraviesos, contraste/luces y zonaUI; cambiar personalización/guardar/regresar, reducido, salir/entrar personalizador/lobby/práctica, comprobar sin duplicados/graphs/luces residuales. Clips compilados o curva calculada no acreditan calidad visual ni requisito terminado.
+
+## Revisión de integración Director
+
+Revisado readonly AlfaApplication.MenuScene.cs y hooks actuales: creación root inactivo, Configure/ReducedMotion/activar, colliders deshabilitados, grip alineado, escala original, ocultación por personalizador/lobby y ApplyLiveAppearance tras retorno compatibles con API. Sin defecto concreto encontrado en ese orden; no ejecutado nativo. Coordenadas cámara asumen PresentationAnchors local identidad, como montaje actual; si se transforma ese contenedor, utilizar su espacio y revisar composición.
+
+Corrección propia: salir del modo reducido mientras el reloj retenía Look/Swat/Return omite el resto de ese gesto, sostiene Idle0 y retoma sólo una secuencia completa posterior. Conserva fase/posición de vuelo y su siguiente sincronización, sin teletransportar para reiniciar reloj. La entrada a reducido sostiene la pose exacta solicitada; no acredita transición visual suave sin revisión nativa. Además, una excepción durante construcción/evaluación inicial del graph ejecuta limpieza/restauración y marca IsConfigured=false, evitando recursos parciales retenidos. Bootstrap puede comprobar IsConfigured/IsRunning tras activar para señalar fallo; el contenido compatible aún requiere importación/ejecución real.

@@ -30,6 +30,7 @@ namespace LetMeSleep.Presentation
         private AnimationClipPlayable idle, look, swat, returning, flight;
         private bool configured, requestedActive = true, reducedMotion, running;
         private double elapsed;
+        private bool skipInterruptedSequence;
         private Light warm, cool;
         private Vector3 humanPosition, mosquitoPosition;
         private Quaternion humanRotation, mosquitoRotation;
@@ -89,7 +90,7 @@ namespace LetMeSleep.Presentation
             elapsed=bindings.CycleSeconds*.60f+bindings.MenuSwat.length+bindings.MenuReturn.length;
             configured = true;
             if (isActiveAndEnabled && requestedActive) Begin();
-            return true;
+            return configured;
         }
 
         private bool Owned(Transform actor) => actor && actor != transform && actor.IsChildOf(transform);
@@ -102,7 +103,13 @@ namespace LetMeSleep.Presentation
             gameObject.SetActive(active);
             if (active && configured && isActiveAndEnabled) Begin(); else End();
         }
-        public void SetReducedMotion(bool enabled) => reducedMotion = enabled;
+        public void SetReducedMotion(bool enabled)
+        {
+            if (reducedMotion == enabled) return;
+            // Returning from a held seated pose must not resume halfway through a swat.
+            if (!enabled) skipInterruptedSequence = true;
+            reducedMotion = enabled;
+        }
         private void OnEnable() { if (configured && requestedActive) Begin(); }
         private void OnDisable() => End();
         private void OnDestroy() => Release();
@@ -114,19 +121,28 @@ namespace LetMeSleep.Presentation
             mosquitoPosition=bindings.MosquitoRoot.localPosition; mosquitoRotation=bindings.MosquitoRoot.localRotation;
             humanState=AnimatorState.Capture(bindings.HumanAnimator);
             mosquitoState=AnimatorState.Capture(bindings.MosquitoAnimator);
-            Prepare(bindings.HumanAnimator); Prepare(bindings.MosquitoAnimator);
-            graph=PlayableGraph.Create("MainMenuLivingScene");
-            graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
-            humanMixer=AnimationMixerPlayable.Create(graph,4);
-            idle=Clip(bindings.MenuSeatedIdle); swat=Clip(bindings.MenuSwat); returning=Clip(bindings.MenuReturn);
-            graph.Connect(idle,0,humanMixer,0); graph.Connect(swat,0,humanMixer,2); graph.Connect(returning,0,humanMixer,3);
-            if (bindings.MenuLook) { look=Clip(bindings.MenuLook); graph.Connect(look,0,humanMixer,1); }
-            AnimationPlayableOutput.Create(graph,"Seated human",bindings.HumanAnimator).SetSourcePlayable(humanMixer);
-            flight=Clip(bindings.Flight);
-            AnimationPlayableOutput.Create(graph,"Flying mosquito",bindings.MosquitoAnimator).SetSourcePlayable(flight);
-            warm=CreateLight("Menu warm seat light",bindings.WarmLightAnchor,new Color(1f,.72f,.48f),.7f,3.4f);
-            cool=CreateLight("Menu cool fill",bindings.CoolLightAnchor,new Color(.55f,.68f,1f),.25f,4.5f);
-            running=true; graph.Play(); Sample();
+            running=true;
+            try
+            {
+                Prepare(bindings.HumanAnimator); Prepare(bindings.MosquitoAnimator);
+                graph=PlayableGraph.Create("MainMenuLivingScene");
+                graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
+                humanMixer=AnimationMixerPlayable.Create(graph,4);
+                idle=Clip(bindings.MenuSeatedIdle); swat=Clip(bindings.MenuSwat); returning=Clip(bindings.MenuReturn);
+                graph.Connect(idle,0,humanMixer,0); graph.Connect(swat,0,humanMixer,2); graph.Connect(returning,0,humanMixer,3);
+                if (bindings.MenuLook) { look=Clip(bindings.MenuLook); graph.Connect(look,0,humanMixer,1); }
+                AnimationPlayableOutput.Create(graph,"Seated human",bindings.HumanAnimator).SetSourcePlayable(humanMixer);
+                flight=Clip(bindings.Flight);
+                AnimationPlayableOutput.Create(graph,"Flying mosquito",bindings.MosquitoAnimator).SetSourcePlayable(flight);
+                warm=CreateLight("Menu warm seat light",bindings.WarmLightAnchor,new Color(1f,.72f,.48f),.7f,3.4f);
+                cool=CreateLight("Menu cool fill",bindings.CoolLightAnchor,new Color(.55f,.68f,1f),.25f,4.5f);
+                graph.Play(); Sample();
+                }
+            catch (Exception exception)
+            {
+                End(); configured=false;
+                Debug.LogException(exception,this);
+            }
         }
         private static void Prepare(Animator animator)
         {
@@ -172,7 +188,8 @@ namespace LetMeSleep.Presentation
             float lookStart=reactionStart-(bindings.MenuLook ? bindings.MenuLook.length : 0);
             float lookTime=time-lookStart;
             float sequenceDuration=bindings.MenuLook.length+bindings.MenuSwat.length+bindings.MenuReturn.length;
-            float sequenceWeight=reducedMotion ? 0 : Envelope(lookTime,sequenceDuration);
+            if (!reducedMotion && (lookTime <= 0 || lookTime >= sequenceDuration)) skipInterruptedSequence=false;
+            float sequenceWeight=reducedMotion || skipInterruptedSequence ? 0 : Envelope(lookTime,sequenceDuration);
             float lookWeight=reactionTime < 0 ? sequenceWeight : 0;
             float swatWeight=reactionTime >= 0 && reactionTime < bindings.MenuSwat.length ? sequenceWeight : 0;
             float returnWeight=reactionTime >= bindings.MenuSwat.length ? sequenceWeight : 0;
@@ -183,7 +200,7 @@ namespace LetMeSleep.Presentation
             float restDuration=cycle-sequenceDuration;
             float restTime=Mathf.Repeat(time-(reactionStart+bindings.MenuSwat.length+bindings.MenuReturn.length),cycle);
             float idleLoops=Mathf.Max(1,Mathf.Round(restDuration/bindings.MenuSeatedIdle.length));
-            idle.SetTime(reducedMotion || sequenceWeight>0 ? 0 : Mathf.Repeat(restTime/restDuration*idleLoops,1)*bindings.MenuSeatedIdle.length);
+            idle.SetTime(reducedMotion || skipInterruptedSequence || sequenceWeight>0 ? 0 : Mathf.Repeat(restTime/restDuration*idleLoops,1)*bindings.MenuSeatedIdle.length);
             swat.SetTime(Mathf.Clamp(reactionTime,0,bindings.MenuSwat.length));
             returning.SetTime(Mathf.Clamp(reactionTime-bindings.MenuSwat.length,0,bindings.MenuReturn.length));
             look.SetTime(Mathf.Clamp(lookTime,0,bindings.MenuLook.length));
@@ -196,7 +213,7 @@ namespace LetMeSleep.Presentation
             Path(phase,out position,out tangent);
             bindings.MosquitoRoot.position=position;
             if (tangent.sqrMagnitude>.000001f)
-                            {
+            {
                 Vector3 ahead,aheadTangent;
                 Path(Mathf.Repeat(phase+.002f,1),out ahead,out aheadTangent);
                 float bank=reducedMotion ? 0 : Mathf.Clamp(-Vector3.SignedAngle(tangent,aheadTangent,Vector3.up)*2,-12,12);
@@ -232,6 +249,6 @@ namespace LetMeSleep.Presentation
             if(cool) { cool.enabled=false; Destroy(cool.gameObject); }
             warm=null; cool=null;
         }
-        private void Release() { End(); configured=false; bindings=null; elapsed=0; }
+        private void Release() { End(); configured=false; bindings=null; elapsed=0; skipInterruptedSequence=false; }
     }
 }
