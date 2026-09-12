@@ -189,6 +189,13 @@ namespace LetMeSleep.Presentation.Editor
             cues["StrikeImpact"] = CreateCue("StrikeImpact", "SFX_StrikeImpact.wav", 24, 4, 0.97f, 1.03f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
             cues["BiteStarted"] = CreateCue("BiteStarted", "SFX_BiteStart.wav", 24, 8, 0.98f, 1.02f, 1f, 0.35f, 12f, FindGroup(mixer, "Critical"));
             cues["MosquitoWingLoop"] = CreateCue("MosquitoWingLoop", "SFX_MosquitoWingLoop.wav", 56, 12, 0.92f, 1.12f, 1f, 0.35f, 12f, FindGroup(mixer, "Mosquito"));
+            cues["DoorOpen"] = CreateCue("DoorOpen", "SFX_DoorOpen.wav", 96, 10, 0.98f, 1.02f, 1f, 0.8f, 20f, FindGroup(mixer, "World"));
+            cues["DoorClose"] = CreateCue("DoorClose", "SFX_DoorClose.wav", 96, 10, 0.98f, 1.02f, 1f, 0.8f, 20f, FindGroup(mixer, "World"));
+            cues["HumanFainted"] = CreateCue("HumanFainted", "SFX_HumanFainted.wav", 24, 4, 0.98f, 1.02f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
+            cues["Recovered"] = CreateCue("Recovered", "SFX_Recovered.wav", 24, 4, 0.98f, 1.02f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
+            cues["RoundStart"] = CreateCue("RoundStart", "STG_RoundStart.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
+            cues["HumansWin"] = CreateCue("HumansWin", "STG_HumansWin.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
+            cues["MosquitoesWin"] = CreateCue("MosquitoesWin", "STG_MosquitoesWin.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
             cues["UiReady"] = CreateCue("UiReady", "UI_Ready.wav", 48, 4, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "UI"));
             return cues;
         }
@@ -229,6 +236,7 @@ namespace LetMeSleep.Presentation.Editor
             {
                 root.AddComponent<AudioEmitterPool>();
                 CreateBed(root.transform, "Music_Menu", "MUS_NightMischief_Menu.wav", 0.45f, true, false, FindGroup(mixer, "Music"));
+                CreateBed(root.transform, "Music_Round", "MUS_NightMischief_Round.wav", 0.42f, false, false, FindGroup(mixer, "Music"));
                 CreateBed(root.transform, "Ambience_NightHouse", "AMB_NightHouse.wav", 0.40f, true, false, FindGroup(mixer, "Ambience"));
 
                 var catalog = root.AddComponent<AlfaAudioCatalog>();
@@ -236,6 +244,13 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(catalog, "strikeImpact", cues["StrikeImpact"]);
                 Assign(catalog, "biteStarted", cues["BiteStarted"]);
                 Assign(catalog, "mosquitoWingLoop", cues["MosquitoWingLoop"]);
+                Assign(catalog, "doorOpen", cues["DoorOpen"]);
+                Assign(catalog, "doorClose", cues["DoorClose"]);
+                Assign(catalog, "humanFainted", cues["HumanFainted"]);
+                Assign(catalog, "recovered", cues["Recovered"]);
+                Assign(catalog, "roundStart", cues["RoundStart"]);
+                Assign(catalog, "humansWin", cues["HumansWin"]);
+                Assign(catalog, "mosquitoesWin", cues["MosquitoesWin"]);
                 Assign(catalog, "uiReady", cues["UiReady"]);
 
                 PrefabUtility.SaveAsPrefabAsset(root, AudioRoot + "/Prefabs/LMS_AlfaAudioRoot.prefab");
@@ -289,7 +304,10 @@ namespace LetMeSleep.Presentation.Editor
                 bool music = file.StartsWith("MUS_", StringComparison.Ordinal);
                 bool ambience = file.StartsWith("AMB_", StringComparison.Ordinal);
                 bool loop = music || ambience || file.Contains("Loop");
-                bool shortCritical = file.Contains("Impact") || file.Contains("Bite") || file.StartsWith("UI_", StringComparison.Ordinal);
+                bool shortCritical = file.Contains("Impact") || file.Contains("Bite") ||
+                    file.Contains("Fainted") || file.Contains("Recovered") ||
+                    file.StartsWith("STG_", StringComparison.Ordinal) ||
+                    file.StartsWith("UI_", StringComparison.Ordinal);
 
                 AudioImporterSampleSettings settings = importer.defaultSampleSettings;
                 settings.loadType = music ? AudioClipLoadType.Streaming :

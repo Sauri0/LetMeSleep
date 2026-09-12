@@ -17,7 +17,8 @@ idénticos a `unity/Assets/LetMeSleep/Audio/Clips/` y actualiza
 comprimen mediante import settings de Unity; los WAV fuente permanecen aquí.
 
 `MUS_NightMischief_Menu` es un loop original de ocho compases a 96 BPM con
-pizzicato, bajo, voz tipo clarinete y escobillas sintéticas. El resto cubre
-ambiente nocturno, alas, defensa, contacto, picadura y ready de UI. Son
+pizzicato, bajo, voz tipo clarinete y escobillas sintéticas; su variante de
+ronda reduce melodía y densidad. El resto cubre ambiente nocturno, alas,
+defensa, contacto, picadura, puertas, estados de vida, stings y ready de UI. Son
 prototipos alfa editables: cualquier reemplazo conserva ID, licencia, puntos
 de loop, 48 kHz y el gate de mezcla definido en `docs/unity/presentation/`.

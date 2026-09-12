@@ -114,6 +114,14 @@
       "sha256": "a0164713c818b1b18f2c7fe45aa4b9d868fcc7ae8d657d32524f914b4a612277"
     },
     {
+      "name": "MUS_NightMischief_Round.wav",
+      "group": "music",
+      "loop": true,
+      "channels": 2,
+      "duration_seconds": 20.0,
+      "sha256": "30501a511222ecd2bfb573522cd0d44c48c8424ef6ac661a17806e0be8cabf22"
+    },
+    {
       "name": "AMB_NightHouse.wav",
       "group": "ambience",
       "loop": true,
@@ -152,6 +160,62 @@
       "channels": 1,
       "duration_seconds": 0.36,
       "sha256": "98a275b014daff8e265d5c7a1a1033fa43e283ee1631dfeb6f30da13a5d27ae4"
+    },
+    {
+      "name": "SFX_DoorOpen.wav",
+      "group": "world",
+      "loop": false,
+      "channels": 1,
+      "duration_seconds": 0.72,
+      "sha256": "5333da544ee1e931a36048dc72f64ce33e32a45d8a3372f0a65f8745ac92fe1e"
+    },
+    {
+      "name": "SFX_DoorClose.wav",
+      "group": "world",
+      "loop": false,
+      "channels": 1,
+      "duration_seconds": 0.48,
+      "sha256": "08fff5eda28027cf57c17543611d416fef68c27fe5433964b9ac2f5bc35f97f4"
+    },
+    {
+      "name": "SFX_HumanFainted.wav",
+      "group": "critical",
+      "loop": false,
+      "channels": 1,
+      "duration_seconds": 0.9,
+      "sha256": "609bac7022d2cf3a22c1e19c6ecb22f99637816c8f3951bd545e1964a665f7b9"
+    },
+    {
+      "name": "SFX_Recovered.wav",
+      "group": "critical",
+      "loop": false,
+      "channels": 1,
+      "duration_seconds": 0.9,
+      "sha256": "696c5ff10a35ef5cb1c3f0ce9f943a22306dfa3022512a8bad7c6b2b82e03b93"
+    },
+    {
+      "name": "STG_RoundStart.wav",
+      "group": "critical",
+      "loop": false,
+      "channels": 2,
+      "duration_seconds": 1.8,
+      "sha256": "7c4bc7e595ab8fe1adb960e5be3d42dbd46939eb2fe4701c231688d45dcf16f9"
+    },
+    {
+      "name": "STG_HumansWin.wav",
+      "group": "critical",
+      "loop": false,
+      "channels": 2,
+      "duration_seconds": 1.8,
+      "sha256": "df011442f906ebbd5dd317705c0af707aae5573d8a79fd7ec25c925a21b7821e"
+    },
+    {
+      "name": "STG_MosquitoesWin.wav",
+      "group": "critical",
+      "loop": false,
+      "channels": 2,
+      "duration_seconds": 1.8,
+      "sha256": "b446d77090c7ddcc1fecae5d424857271d54db7ac5ac540b4133093924c6ce97"
     },
     {
       "name": "UI_Ready.wav",

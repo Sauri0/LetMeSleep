@@ -162,6 +162,27 @@ def menu_music() -> list[array]:
     return channels
 
 
+def round_music() -> list[array]:
+    channels = buffer(SCORE["bars"] * BAR, 2)
+    for bar_index, chord in enumerate(SCORE["chords"]):
+        bar_start = bar_index * BAR
+        for note_index, note in enumerate(chord):
+            if note_index == 1 and bar_index % 2:
+                continue
+            add_voice(channels, bar_start + note_index * 0.030, 0.82,
+                      NOTE[note], 0.060, -0.36 + note_index * 0.25, "pluck", True)
+        for beat_index in range(4):
+            frequency = NOTE[SCORE["bass"][bar_index]]
+            if beat_index in (1, 3):
+                frequency *= 1.5
+            add_voice(channels, bar_start + beat_index * BEAT, 0.40,
+                      frequency, 0.092, -0.20, "bass", True)
+            add_brush(channels, bar_start + beat_index * BEAT, 0.014,
+                      2200 + bar_index * 4 + beat_index)
+    make_loop_seamless(channels)
+    return channels
+
+
 def night_ambience() -> list[array]:
     duration = 12.0
     channels = buffer(duration, 2)
@@ -248,6 +269,53 @@ def ui_ready() -> list[array]:
     return channels
 
 
+def chord_sting(notes: tuple[str, ...], descending: bool = False) -> list[array]:
+    duration = 1.80
+    channels = buffer(duration, 2)
+    ordered = tuple(reversed(notes)) if descending else notes
+    for index, note in enumerate(ordered):
+        start = index * 0.085
+        add_voice(channels, start, 0.78, NOTE[note], 0.17,
+                  -0.45 + index * 0.30, "pluck")
+        add_voice(channels, start + 0.02, 1.12, NOTE[note] * 0.5, 0.08,
+                  -0.10, "bass")
+    return channels
+
+
+def door_sound(opening: bool) -> list[array]:
+    duration = 0.72 if opening else 0.48
+    channels = buffer(duration)
+    rng = random.Random(711 if opening else 712)
+    low = 0.0
+    for n in range(len(channels[0])):
+        t = n / RATE
+        x = t / duration
+        white = rng.uniform(-1.0, 1.0)
+        low = 0.985 * low + 0.015 * white
+        creak_hz = (92.0 + 74.0 * x) if opening else (168.0 - 60.0 * x)
+        creak = math.sin(TAU * creak_hz * t + 0.7 * math.sin(TAU * 7.0 * t))
+        env = math.sin(math.pi * x) ** 1.4
+        latch = math.exp(-70.0 * abs(t - (0.60 if opening else 0.08)))
+        channels[0][n] = 0.20 * env * (creak + 0.5 * low) + 0.18 * latch * white
+    return channels
+
+
+def faint_sound(recovering: bool) -> list[array]:
+    duration = 0.90
+    channels = buffer(duration)
+    start_frequency = 180.0 if recovering else 310.0
+    end_frequency = 420.0 if recovering else 105.0
+    phase = 0.0
+    for n in range(len(channels[0])):
+        t = n / RATE
+        x = t / duration
+        frequency = start_frequency + (end_frequency - start_frequency) * x
+        phase += TAU * frequency / RATE
+        env = math.sin(math.pi * x) * math.exp(-0.8 * x)
+        channels[0][n] = 0.23 * env * (math.sin(phase) + 0.22 * math.sin(phase * 2.01))
+    return channels
+
+
 def normalize(channels: list[array], peak: float = 0.68) -> None:
     largest = max(max(abs(value) for value in channel) for channel in channels)
     if largest <= 0.0:
@@ -290,11 +358,19 @@ def sha256(path: Path) -> str:
 def build(source_directory: Path, runtime_directory: Path) -> None:
     assets = {
         "MUS_NightMischief_Menu.wav": (menu_music, "music", True),
+        "MUS_NightMischief_Round.wav": (round_music, "music", True),
         "AMB_NightHouse.wav": (night_ambience, "ambience", True),
         "SFX_MosquitoWingLoop.wav": (wing_loop, "character", True),
         "SFX_StrikeSwing.wav": (strike_swing, "character", False),
         "SFX_StrikeImpact.wav": (strike_impact, "critical", False),
         "SFX_BiteStart.wav": (bite_start, "critical", False),
+        "SFX_DoorOpen.wav": (lambda: door_sound(True), "world", False),
+        "SFX_DoorClose.wav": (lambda: door_sound(False), "world", False),
+        "SFX_HumanFainted.wav": (lambda: faint_sound(False), "critical", False),
+        "SFX_Recovered.wav": (lambda: faint_sound(True), "critical", False),
+        "STG_RoundStart.wav": (lambda: chord_sting(("D3", "F3", "A3", "D4")), "critical", False),
+        "STG_HumansWin.wav": (lambda: chord_sting(("C3", "E3", "G3", "C4")), "critical", False),
+        "STG_MosquitoesWin.wav": (lambda: chord_sting(("A2", "G3", "E3", "C3"), True), "critical", False),
         "UI_Ready.wav": (ui_ready, "ui", False),
     }
     source_directory.mkdir(parents=True, exist_ok=True)

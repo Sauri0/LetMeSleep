@@ -7,8 +7,8 @@ El código fuente vive bajo `unity/Assets/LetMeSleep/Presentation/**` y
 
 - `AlfaPresentationPreset`, `AlfaFramePolicy` y `AlfaLightingRig`.
 - `AudioCue`, pool acotado de 48 emisores, reproductor de loops y catálogo alfa.
-- siete WAV audibles originales: música de menú, ambiente nocturno, alas,
-  defensa, impacto, inicio de picadura y ready de UI.
+- quince WAV audibles originales: música de menú/ronda, ambiente nocturno,
+  alas, defensa, impacto, picadura, puertas, vida, stings y ready de UI.
 - fuente editable determinista en `art_source/unity/audio/`, manifest con
   SHA-256 y copia byte a byte a Assets.
 - `AlfaPresentationBuilder`, que crea materiales URP, Volume Profile, prefab de
@@ -56,7 +56,7 @@ La verificación sin editor comprueba:
 
 - sintaxis C# contra assemblies de Unity 6000.3.24f1 y URP 17.3.0;
 - todos los `.meta` de código, carpetas y clips;
-- WAV PCM 48 kHz/24 bit y hashes fuente/runtime idénticos;
+- 15 WAV PCM 48 kHz/24 bit y hashes fuente/runtime idénticos;
 - JSON/asmdef parseables y alcance limitado a alfa.
 
 Director aún debe importar y ejecutar el builder en Unity residente. Capturas,
