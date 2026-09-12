@@ -54,7 +54,7 @@ namespace LetMeSleep.Presentation
             {
                 lobbyFill.type = LightType.Directional;
                 lobbyFill.color = new Color(0.76f, 0.84f, 1f);
-                lobbyFill.intensity = 0.90f;
+                lobbyFill.intensity = 0.55f;
                 lobbyFill.shadows = LightShadows.None;
                 lobbyFill.bounceIntensity = 0f;
                 lobbyFill.cullingMask &= ~(1 << PreviewLayer);
@@ -108,6 +108,9 @@ namespace LetMeSleep.Presentation
                     shadowCounts[zone] = zoneShadowCount + 1;
                 }
             }
+
+            if (!house)
+                AddLobbyCameraFill(presentationAnchors);
 
             if (anchorCount == 0)
             {
@@ -174,6 +177,27 @@ namespace LetMeSleep.Presentation
             return localLight;
         }
 
+        private void AddLobbyCameraFill(Transform presentationAnchors)
+        {
+            Transform cameraAnchor = presentationAnchors.Find("MainMenuCamera");
+            if (cameraAnchor == null)
+                return;
+
+            // The character models use broad, low-poly planes. A weak light placed on the
+            // menu camera axis preserves their graphic shading without leaving half of a
+            // face unlit when the cool directional key hits from the side.
+            LocalLightProfile profile = new LocalLightProfile(
+                new Color(0.90f, 0.86f, 0.80f),
+                0.72f,
+                8.5f,
+                false,
+                LocalShadowTier.Low,
+                LightType.Spot);
+            Light cameraFill = CreateMapLight(cameraAnchor, profile, false);
+            cameraFill.gameObject.name = "LMS_LobbyCameraFill";
+            mapLights.Add(cameraFill);
+        }
+
         private static void ApplyAmbientProfile(bool house)
         {
             RenderSettings.ambientMode = AmbientMode.Trilight;
@@ -196,7 +220,7 @@ namespace LetMeSleep.Presentation
             if (Contains(anchorName, "Patio"))
                 return new LocalLightProfile(new Color(0.42f, 0.58f, 0.92f), 0.42f, 5.5f, false, LocalShadowTier.Low, LightType.Point);
             if (Contains(anchorName, "Lobby"))
-                return new LocalLightProfile(new Color(1f, 0.62f, 0.30f), 0.65f, 4.0f, true, LocalShadowTier.Medium);
+                return new LocalLightProfile(new Color(1f, 0.62f, 0.30f), 0.48f, 3.6f, false, LocalShadowTier.Low);
             if (Contains(anchorName, "Bedroom"))
                 return new LocalLightProfile(new Color(1f, 0.58f, 0.32f), 0.90f, 3.7f, true, LocalShadowTier.Low);
             if (Contains(anchorName, "Living"))

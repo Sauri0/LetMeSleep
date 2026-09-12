@@ -39,10 +39,11 @@ procedencia CC0 y el origen binario se detallan en
 
 Las luces interiores se proyectan hacia abajo desde los anchors de luminaria
 como spots de 125 grados, inner cone de 80 grados. Patio conserva una point
-light. El lobby usa una luz cálida local de intensidad 0.65/rango 4 y un fill
-direccional frío de intensidad 0.90, sin sombras, orientado desde la cámara
-hacia los personajes. El fill se desactiva en la casa. El volumen global usa
-bloom 0.025, threshold 1.35 y scatter 0.35.
+light. El lobby usa luces cálidas locales de intensidad 0.48/rango 3.6, un fill
+direccional frío de intensidad 0.55 y un spot frontal suave de intensidad
+0.72/rango 8.5 alineado con `MainMenuCamera`; ninguno proyecta sombras. Ambos
+fills se desactivan en la casa. El volumen global usa bloom 0.025, threshold
+1.35 y scatter 0.35.
 
 La captura de diagnóstico previa al ajuste es
 `N:/LetMeSleep/Validation/Alfa-VisualRecovery/menu-1080.png`, 1920×1080,
@@ -62,7 +63,8 @@ resultado posterior.
    `LMS_ALFA_PRESENTATION_LIBRARY_BUILT`, sin cues sin mixer y sin clips nulos.
 4. Confirmar en `LMS_AlfaAudioRoot.prefab` los nueve beds, los cues restaurados
    y las referencias del catálogo. Confirmar en `LMS_AlfaLightingRoot.prefab`
-   `Lobby_CharacterFill` y las dos plantillas de luces locales.
+   `Lobby_CharacterFill` y las dos plantillas de luces locales. El
+   `LMS_LobbyCameraFill` se crea en runtime al enlazar `PrivateLobby`.
 5. Ejecutar tests EditMode con audio deshabilitado. Recorrer después menú,
    entrenamiento humano y mosquito en un build candidato, con escucha humana
    coordinada. Verificar retorno de ronda a menú, cambios de zumbido, dos pasos
