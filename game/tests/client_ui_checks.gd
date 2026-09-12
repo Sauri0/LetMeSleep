@@ -2,6 +2,28 @@ extends SceneTree
 ## Integration fixture: real Client + UI + world, with only transport replaced.
 ## Run with the native renderer and -- --screens to capture the 3D lobby.
 
+class VoiceDouble:
+	extends Node
+	signal permission_changed(id: int, permission: Dictionary)
+	signal packet_received(id: int, epoch: int, permit: int, sequence: int, packet: PackedByteArray)
+	signal stream_finished(id: int, epoch: int, permit: int, last_sequence: int)
+	var permissions: Dictionary = {}
+	var muted_peers: Dictionary = {}
+	func available() -> bool:
+		return false
+	func set_peer_muted(_id: int, _muted: bool) -> void:
+		pass
+	func begin(_epoch: int) -> void:
+		pass
+	func send_frame(_epoch: int, _sequence: int, _packet: PackedByteArray) -> void:
+		pass
+	func hard_stop(_epoch: int) -> void:
+		pass
+	func finish(_epoch: int, _sequence: int) -> void:
+		pass
+	func request_resume(_id: int, _epoch: int, _permit: int) -> void:
+		pass
+
 class NetworkDouble:
 	extends Node
 	signal lobby_updated(data: Dictionary)
@@ -11,12 +33,18 @@ class NetworkDouble:
 	signal accepted(peer_id: int)
 	signal disconnected
 	signal waiting_updated(data: Dictionary)
+	signal connection_state_changed(data: Dictionary)
 	var local_cosmetics: Dictionary = {}
 	var last_input: Dictionary = {}
 	var input_count: int = 0
 	var actions: Array[Dictionary] = []
 	var connects: Array[Dictionary] = []
 	var lobby_actions: Array[Dictionary] = []
+	var voice: VoiceDouble
+	func _init() -> void:
+		voice = VoiceDouble.new()
+		voice.name = "Voice"
+		add_child(voice)
 	func connect_room(address: String, port: int, player_name: String, code: String, create: bool) -> void:
 		connects.append({"address":address,"port":port,"name":player_name,"code":code,"create":create})
 	func lobby_action(verb: String, value: Variant = null) -> void:
@@ -24,8 +52,8 @@ class NetworkDouble:
 	func send_input(sequence: int, movement: Vector3, yaw: float, pitch: float, interact: bool, sprint: bool = false, crouch: bool = false, jump: bool = false) -> void:
 		input_count += 1
 		last_input = {"sequence":sequence,"move":movement,"yaw":yaw,"pitch":pitch,"interact":interact,"sprint":sprint,"crouch":crouch,"jump":jump}
-	func send_action(sequence: int, verb: String) -> void:
-		actions.append({"sequence":sequence,"verb":verb})
+	func send_action(sequence: int, verb: String, yaw: float, pitch: float) -> void:
+		actions.append({"sequence":sequence,"verb":verb,"yaw":yaw,"pitch":pitch})
 	func close_client() -> void:
 		pass
 
@@ -147,7 +175,7 @@ func _run() -> void:
 	await _settle()
 	check(client.ui._screen == "home" and _mouse_matches(Input.MOUSE_MODE_VISIBLE), "home starts with pointer and menu")
 	for control: Node in client.ui._home_menu.get_children():
-		if control is Button and control.text == "CREAR SALA":
+		if control is Button and control.text == "CREAR SALA ONLINE":
 			control.pressed.emit()
 			break
 	await _settle()
@@ -259,6 +287,17 @@ func _run() -> void:
 	transport.snapshot_updated.emit(_round_data("mosquito"))
 	await _settle()
 	check(client.role == "mosquito" and client.world.get_actor(1).actor_role == "mosquito", "next round can switch local role to mosquito")
+	actions_before = transport.actions.size()
+	_action("bite",true)
+	await _settle()
+	check(bool(transport.last_input.interact) and transport.actions.size() == actions_before, "mosquito concentration hold reaches continuous transport input")
+	_action("bite",false)
+	await _settle()
+	check(not bool(transport.last_input.interact), "releasing mosquito concentration clears continuous transport input")
+	var biting_snapshot: Dictionary = _round_data("mosquito")
+	biting_snapshot.actors[1].state = "biting"
+	transport.snapshot_updated.emit(biting_snapshot)
+	await _settle()
 	actions_before = transport.actions.size()
 	_action("bite",true)
 	_action("bite",false)
