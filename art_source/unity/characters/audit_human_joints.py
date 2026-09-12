@@ -85,6 +85,12 @@ def inspect(root,label):
             for phase in phases:
                 frame=float(start+(end-start)*phase);activate(rig,action,frame)
                 positions=evaluated(meshes);row={'asset':label,'format':kind,'clip':name,'phase':phase,'frame':frame,'joints':{},'regions':{}}
+                body=next(o for o in meshes if o.name=='HumanBody')
+                row['seat_interior_vertices']=[{
+                    'index':i,'bind_source_m':list(body.data.vertices[i].co),'posed_source_m':list(v),
+                    'weights':{body.vertex_groups[g.group].name:g.weight for g in body.data.vertices[i].groups}}
+                    for i,v in enumerate(positions['HumanBody'])
+                    if abs(v.x)<.865 and -.275<-v.y<.355 and .45<v.z<.572]
                 matrices={b.name:b.matrix.copy() for b in rig.pose.bones}
                 for side in ['L','R']:
                     hand=rig.pose.bones['Hand.'+side];lower=rig.pose.bones['LowerArm.'+side]

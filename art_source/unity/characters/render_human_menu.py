@@ -14,6 +14,7 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--menu-root',type=Path,required=True)
     parser.add_argument('--sequence',action='store_true')
     parser.add_argument('--joint-details',action='store_true')
+    parser.add_argument('--joint-review-pair',action='store_true')
     parser.add_argument('--face-details',action='store_true')
     parser.add_argument('--face-cases',nargs='*',choices=['eyes_open','eyes_half','eyes_closed','eyes_left','eyes_right','eyes_down','eyes_light_half','eyes_dark_half'])
     parser.add_argument('--review-name',default='review-full-frame')
@@ -81,7 +82,7 @@ def main():
                 'resolution':[scene.render.resolution_x,scene.render.resolution_y],'samples':scene.cycles.samples,'detail':detail,'facial':facial}
 
     receipts=[]
-    assert sum([args.sequence,args.joint_details,args.face_details])<=1
+    assert sum([args.sequence,args.joint_details,args.face_details,args.joint_review_pair])<=1
     if args.face_details:
         for label,facial in [
             ('eyes_open',{'closure':0}),('eyes_half',{'closure':.5}),('eyes_closed',{'closure':1}),
@@ -91,6 +92,10 @@ def main():
             ('eyes_dark_half',{'closure':.5,'skin_color':[.22,.095,.045,1]})]:
             if args.face_cases and label not in args.face_cases:continue
             row=render(label,'MenuSeatedIdle',0,0,'face',facial);receipts.append(row)
+            (output/(label+'.json')).write_text(json.dumps({**provenance,**row},indent=2)+'\n',encoding='utf8',newline='\n')
+    elif args.joint_review_pair:
+        for label,yaw,detail in [('wrist_idle',35,'wrist'),('seated_three_quarter',35,None)]:
+            row=render(label,'MenuSeatedIdle',0,yaw,detail);receipts.append(row)
             (output/(label+'.json')).write_text(json.dumps({**provenance,**row},indent=2)+'\n',encoding='utf8',newline='\n')
     elif args.joint_details:
         for label,clip,phase,yaw,detail in [

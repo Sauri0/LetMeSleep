@@ -1,0 +1,115 @@
+{
+  "status": "Source bind markers only; UnityAxesVerified=false",
+  "source_menu_sha256": "716eeba06f87597f6722d971782d83b29edb0f060483cdb1e6d8cac5962c3301",
+  "source_facial_audit_sha256": "d0e3353eae1c4183a9e0e426f90b3114af9b187d1fcca6a19baf5a37e0dce7b7",
+  "native_eye_bind": {
+    "L": {
+      "center_source_m": [
+        0.08100000023841858,
+        -0.1080000028014183,
+        1.5579999685287476
+      ],
+      "forward_source": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "up_source": [
+        8.742277657347586e-08,
+        0.0,
+        1.0
+      ]
+    },
+    "R": {
+      "center_source_m": [
+        -0.08100000023841858,
+        -0.1080000028014183,
+        1.5579999685287476
+      ],
+      "forward_source": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "up_source": [
+        8.742277657347586e-08,
+        0.0,
+        1.0
+      ]
+    }
+  },
+  "head_source_head_m": [
+    0,
+    0,
+    1.34
+  ],
+  "head_source_up_from_head_tail": [
+    0,
+    0,
+    1
+  ],
+  "head_source_forward_from_authored_roll": [
+    0,
+    -1,
+    0
+  ],
+  "head_forward_local": [
+    0,
+    0,
+    1
+  ],
+  "head_up_local": [
+    0,
+    1,
+    0
+  ],
+  "eye_forward_local": [
+    0,
+    1,
+    0
+  ],
+  "eye_up_local": [
+    0,
+    0,
+    1
+  ],
+  "unity_verification": "Compare new imported eye centers and axis tips against sclera/pupil positions under the actual wrapper. Do not assume importer axis conversion or old bind.",
+  "markers": {
+    "L": {
+      "center_source_m": [
+        0.08100000023841858,
+        -0.1080000028014183,
+        1.5579999685287476
+      ],
+      "forward_6cm_source_m": [
+        0.08100000023841858,
+        -0.1680000028014183,
+        1.5579999685287476
+      ],
+      "up_4cm_source_m": [
+        0.08100000373532965,
+        -0.1080000028014183,
+        1.5979999685287476
+      ],
+      "up_marker_note": "Virtual comparison marker; no additional bone added"
+    },
+    "R": {
+      "center_source_m": [
+        -0.08100000023841858,
+        -0.1080000028014183,
+        1.5579999685287476
+      ],
+      "forward_6cm_source_m": [
+        -0.08100000023841858,
+        -0.1680000028014183,
+        1.5579999685287476
+      ],
+      "up_4cm_source_m": [
+        -0.08099999674150751,
+        -0.1080000028014183,
+        1.5979999685287476
+      ],
+      "up_marker_note": "Virtual comparison marker; no additional bone added"
+    }
+  }
+}
