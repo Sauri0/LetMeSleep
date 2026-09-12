@@ -2,7 +2,7 @@
 
 Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.9.1 / protocolo 10**.
 
-Esta versión mejora las proporciones y animaciones de los personajes, genera una casa nueva en cada ronda e incorpora puertas con bisagras, iluminación local y ajustes gráficos. La interfaz ocupa menos espacio y la cámara sigue girando al mirar hacia abajo. El menú usa Epic Online Services para crear salas e invitar con un código **LMS1-**. **Esta candidata todavía requiere comprobar una partida entre dos casas; consultá PRUEBAS.md para ver el alcance validado.**
+Esta versión corrige techos y uniones, amplía los pasos junto a las escaleras y mejora la continuidad del movimiento y de los mosquitos adheridos. La personalización permite reconocer mejor la selección; la cámara sigue girando al mirar hacia abajo. El menú usa Epic Online Services para crear salas e invitar con un código **LMS1-**. **Esta candidata todavía requiere comprobar una partida entre dos casas; consultá PRUEBAS.md para ver el alcance validado.**
 
 ## Empezar a jugar
 

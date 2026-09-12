@@ -1,0 +1,169 @@
+{
+  "version": "0.9.1",
+  "source_commit": "eaf2df7dfceab47e2770eefd5aa9b3c4772bcef5",
+  "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+  "scenarios": [
+    {
+      "name": "director091-exe-final-doors07_client_checks",
+      "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+      "source": false,
+      "arguments": [
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "res://tests/doors07_client_checks.gd"
+      ],
+      "started_utc": "2026-09-12T00:52:19.4442808Z",
+      "finished_utc": "2026-09-12T00:52:31.3347233Z",
+      "exit_code": 0,
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "director091-exe-final-online_main_lifecycle",
+      "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+      "source": false,
+      "arguments": [
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "res://tests/online_main_lifecycle.gd"
+      ],
+      "started_utc": "2026-09-12T00:51:49.7225266Z",
+      "finished_utc": "2026-09-12T00:52:01.7808508Z",
+      "exit_code": 0,
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "director091-exe-final-online_network_checks",
+      "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+      "source": false,
+      "arguments": [
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "res://tests/online_network_checks.gd"
+      ],
+      "started_utc": "2026-09-12T00:52:06.1157584Z",
+      "finished_utc": "2026-09-12T00:52:09.4008211Z",
+      "exit_code": 0,
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "director091-exe-final-online_pair_integration",
+      "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+      "source": false,
+      "arguments": [
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "res://tests/online_pair_integration.gd"
+      ],
+      "started_utc": "2026-09-12T00:52:02.1897661Z",
+      "finished_utc": "2026-09-12T00:52:05.8945215Z",
+      "exit_code": 0,
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "director091-exe-final-online_session_test",
+      "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+      "source": false,
+      "arguments": [
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "res://tests/online_session_test.gd"
+      ],
+      "started_utc": "2026-09-12T00:52:09.618742Z",
+      "finished_utc": "2026-09-12T00:52:12.5099547Z",
+      "exit_code": 0,
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "director091-exe-final-practice-human",
+      "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+      "source": false,
+      "arguments": [
+        "--audio-driver",
+        "Dummy",
+        "--",
+        "--no-microphone",
+        "--practice-checks",
+        "--check-role=human",
+        "--check-mode=blood",
+        "--check-report=C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work/director091-exe-final-practice-human.json"
+      ],
+      "started_utc": "2026-09-12T00:52:41.2594984Z",
+      "finished_utc": "2026-09-12T00:52:50.0314306Z",
+      "exit_code": 0,
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "director091-exe-final-practice-mosquito",
+      "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+      "source": false,
+      "arguments": [
+        "--audio-driver",
+        "Dummy",
+        "--",
+        "--no-microphone",
+        "--practice-checks",
+        "--check-role=mosquito",
+        "--check-mode=blood",
+        "--check-report=C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\dejame-dormir\\work/director091-exe-final-practice-mosquito.json"
+      ],
+      "started_utc": "2026-09-12T00:52:50.2509001Z",
+      "finished_utc": "2026-09-12T00:52:57.8723526Z",
+      "exit_code": 0,
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "director091-exe-final-ui_navigation_test",
+      "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+      "source": false,
+      "arguments": [
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "res://tests/ui_navigation_test.gd"
+      ],
+      "started_utc": "2026-09-12T00:52:12.7166545Z",
+      "finished_utc": "2026-09-12T00:52:19.2021401Z",
+      "exit_code": 0,
+      "stderr_bytes": 0,
+      "passed": true
+    },
+    {
+      "name": "director091-exe-final-v07_character_client_checks",
+      "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+      "source": false,
+      "arguments": [
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "res://tests/v07_character_client_checks.gd"
+      ],
+      "started_utc": "2026-09-12T00:52:31.5712166Z",
+      "finished_utc": "2026-09-12T00:52:41.0577738Z",
+      "exit_code": 0,
+      "stderr_bytes": 0,
+      "passed": true
+    }
+  ],
+  "capture_manifest": "director091-exe-environment/manifest.json",
+  "reviewed_views": [
+    "stair-0--1-up.png",
+    "stair-1-1-down.png",
+    "route-015-central.png",
+    "route-042-stair_side.png"
+  ],
+  "visual_scope": "Four static EXE views reviewed: no broad intersecting planes or obstructed passages observed; hard shadows and simple finish remain. Other angles and temporal shimmer not certified.",
+  "performance": "director091-exe-performance/summary.json",
+  "wan_verified": false
+}

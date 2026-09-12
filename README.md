@@ -1,14 +1,14 @@
-# Let me sleep — 0.9.1 en preparación
+# Let me sleep — 0.9.1 para Windows
 
-La última descarga publicada es 0.9.0-rc.1 para Windows. Incluye online
-con Epic, pero la conexión real entre dos casas sigue pendiente de comprobar.
-Descargá el ZIP de [v0.9.0-rc.1](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.0-rc.1),
+Versión de prueba con online integrado mediante Epic; la conexión real entre
+dos casas sigue pendiente de comprobar.
+Descargá el ZIP de [v0.9.1](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.1),
 descomprimilo completo y abrí Let-me-sleep.exe. Las versiones anteriores se conservan.
 
-Esta rama prepara 0.9.1: superficies, circulación alrededor de escaleras,
+Esta entrega mejora superficies, circulación alrededor de escaleras,
 movimiento y controles de personalización. Usa protocolo 10 y casas v2;
-no es compatible con clientes de la candidata anterior. La nueva descarga
-se anunciará después de exportar y probar el paquete. El trabajo restante
+no es compatible con clientes de la candidata anterior. Pasaron las suites
+de compilación y nueve escenarios sobre el EXE exportado. El trabajo restante
 de personajes y distribución doméstica continúa en 0.9.2.
 
 **[Versiones publicadas y descargas](https://github.com/Sauri0/LetMeSleep/releases)**

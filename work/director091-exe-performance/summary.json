@@ -1,0 +1,121 @@
+{
+  "map_id": "house-v2-1",
+  "exe_sha256": "617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744",
+  "scope": "Local host plus bots, same generated map, 1080p, unlimited FPS. No WAN or minimum-hardware certification. Shadow-off is diagnostic only.",
+  "cases": [
+    {
+      "physics_ms": {
+        "max": 4.378,
+        "over_16_67ms_percent": 0.0,
+        "p50": 2.561,
+        "p90": 4.378,
+        "p99": 4.378
+      },
+      "render_gpu_ms": {
+        "max": 53.9109992980957,
+        "over_16_67ms_percent": 0.149476831091181,
+        "p50": 0.936999976634979,
+        "p90": 7.30000019073486,
+        "p99": 12.6669998168945
+      },
+      "render_cpu_ms": {
+        "max": 64.7220001220703,
+        "over_16_67ms_percent": 1.14598903836572,
+        "p50": 1.17799997329712,
+        "p90": 11.9589996337891,
+        "p99": 16.8250007629395
+      },
+      "case": "two-players",
+      "frame_ms": {
+        "max": 162.336,
+        "over_16_67ms_percent": 8.57000498256104,
+        "p50": 3.132,
+        "p90": 16.131,
+        "p99": 21.999
+      },
+      "quality": {
+        "msaa_3d": 0,
+        "reflections": true,
+        "shadows": 2
+      },
+      "report": "two-players.json",
+      "samples": 2007
+    },
+    {
+      "physics_ms": {
+        "max": 17.208,
+        "over_16_67ms_percent": 3.52941176470588,
+        "p50": 9.178,
+        "p90": 15.332,
+        "p99": 17.208
+      },
+      "render_gpu_ms": {
+        "max": 71.1709976196289,
+        "over_16_67ms_percent": 18.6764705882353,
+        "p50": 1.42200005054474,
+        "p90": 23.5830001831055,
+        "p99": 32.7050018310547
+      },
+      "render_cpu_ms": {
+        "max": 72.1989974975586,
+        "over_16_67ms_percent": 18.6764705882353,
+        "p50": 1.46000003814697,
+        "p90": 24.4720001220703,
+        "p99": 33.5979995727539
+      },
+      "case": "sixteen-players",
+      "frame_ms": {
+        "max": 150.294,
+        "over_16_67ms_percent": 23.9705882352941,
+        "p50": 11.666,
+        "p90": 44.041,
+        "p99": 60.968
+      },
+      "quality": {
+        "msaa_3d": 0,
+        "reflections": true,
+        "shadows": 2
+      },
+      "report": "sixteen-players.json",
+      "samples": 680
+    },
+    {
+      "physics_ms": {
+        "max": 17.476,
+        "over_16_67ms_percent": 7.33333333333333,
+        "p50": 9.915,
+        "p90": 15.759,
+        "p99": 17.476
+      },
+      "render_gpu_ms": {
+        "max": 127.351997375488,
+        "over_16_67ms_percent": 0.0952380952380952,
+        "p50": 0.862999975681305,
+        "p90": 4.68699979782104,
+        "p99": 6.70100021362305
+      },
+      "render_cpu_ms": {
+        "max": 128.524993896484,
+        "over_16_67ms_percent": 0.19047619047619,
+        "p50": 0.959999978542328,
+        "p90": 4.12799978256226,
+        "p99": 5.32299995422363
+      },
+      "case": "sixteen-without-shadows",
+      "frame_ms": {
+        "max": 247.686,
+        "over_16_67ms_percent": 8.19047619047619,
+        "p50": 11.059,
+        "p90": 16.052,
+        "p99": 24.273
+      },
+      "quality": {
+        "msaa_3d": 0,
+        "reflections": true,
+        "shadows": 0
+      },
+      "report": "sixteen-without-shadows.json",
+      "samples": 1050
+    }
+  ]
+}

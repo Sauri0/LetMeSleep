@@ -1,0 +1,7 @@
+{
+  "headless_source_commit": "79d8b10ee78c287d9c851c868c1355ef49e544d0",
+  "headless_transcript_sha256": "719029C72C8804EE52589358F6024A417AABDFBFAA22E285BC0687828F90B177",
+  "native_source_commit": "eaf2df7dfceab47e2770eefd5aa9b3c4772bcef5",
+  "only_source_difference": "game/tests/actor09_legacy_geometry_test.gd",
+  "reason": "Full headless phase passed before a native comparison fixture failed. Runtime, assets and every headless fixture are unchanged; every native gate was rerun."
+}

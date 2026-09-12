@@ -1,0 +1,117 @@
+**********************
+PowerShell transcript start
+Start time: 20260911213416
+Username: SAURIO\brank
+RunAs User: SAURIO\brank
+Configuration Name: 
+Machine: SAURIO (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Users\brank\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.dll -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+git add game/tests/actor09_legacy_geometry_test.gd work/director091-legacy-r3.json work/director091-legacy-r4.json work/release07-director091-capsule-delta.log work/release07-director091-legacy-r4.run.json; git commit -m "test: bound cached capsule precision in legacy geometry comparison"; Start-Transcript -Path work/director091-native-final-transcript.txt | Out-Null; try { & ./work/resume-native091.ps1 } finally { Stop-Transcript | Out-Null; $dst=Join-Path $PWD 'work/director091-native-final'; New-Item -ItemType Directory -Path $dst -Force | Out-Null; Get-ChildItem -LiteralPath (Join-Path $PWD 'work') -File | Where-Object { ($_.Name -like 'build-*' -or $_.Name -like 'release07-build-corner*') -and $_.Extension -in @('.log','.err','.json') } | Copy-Item -Destination $dst }
+Process ID: 13988
+PSVersion: 7.6.5
+PSEdition: Core
+GitCommitId: 7.6.5
+OS: Microsoft Windows 10.0.26200
+Platform: Win32NT
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1, 6.0, 7.0
+PSRemotingProtocolVersion: 2.4
+SerializationVersion: 1.1.0.1
+WSManStackVersion: 3.0
+**********************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+XR: Removed interface "OpenXR"
+MOTION091_ATTACHMENT_RESULT checks=781 failures=0
+REVIEW091_MOTION_RESULT checks=150 failures=0
+UI091_CUSTOMIZATION_CHECKS 20/20 PASS
+MOTION091_RESULT checks=4013 failures=0
+ONLINE_MAIN_RESULT checks=7 failures=0
+GLASSES09_NATIVE checks=110 failures=0 poses=18 max_error=0.00000049
+ACTOR09_LEGACY checks=49778 failures=0
+RIG07_RESULT checks=198 failures=0
+CHARACTER_CLIENT07_RESULT checks=86 failures=0
+SELECTED07_MESH_DONE records=540 selected=false checks=972 failures=0
+SELECTED07_ACTOR_RESULT checks=537 failures=0
+SELECTED07_FACIAL_ENVELOPE checks=99990 failures=0 max_gap=0.000000
+FACIAL_PARTS08_RESULT checks=7946 failures=0
+FACIAL_BLINK08_RESULT checks=3392 failures=0 ocular_delta=0.00000000 lid_motion=0.023317
+PREFERENCES_BACKUP C:/Users/brank/AppData/Roaming/Godot/app_userdata/Let me sleep/customization08-backup-3021113.cfg
+HOUSE07_RESULT checks=259 failures=0 furniture=52 barriers=336
+HOUSE_LIGHT_AB checks=39 failures=0
+HOUSE_LISO checks=49 failures=0 phase=after
+UI_NAVIGATION_PASS checks=163: real InputEvents, focus scopes, Escape levels, HUD states, bindings and persistence; original preferences restored.
+VIDEO07_RESULT checks=23 failures=0
+DOOR_CLIENT07_RESULT checks=16 failures=0
+THROW_CLIENT07_RESULT checks=12 failures=0
+TOOL07_VISUAL_RESULT checks=532 failures=0
+OCCLUSION07_RESULT checks=36 failures=0
+APPENDAGE09 2547/2547 PASS
+EMOTE09 31152/31152 PASS
+FURNITURE09 2490/2490 PASS
+VOICE09VISUAL 552/552 PASS
+MENU09_UI_CHECKS 45/45 PASS
+SOCIAL09_CLIENT_CHECKS 64/64 PASS
+SURFACE09_CLIENT_CHECKS 1565/1565 PASS
+SURFACE_VIEW09_CLIENT_CHECKS 149/149 PASS
+VOICE_INPUT09_UI_CHECKS 27/27 PASS
+VOICE_CONTEXT09_UI_CHECKS 38/38 PASS
+
+ACTORCORNER09 18776/18776 PASS
+CASE (0.0, 1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02911001443863 foot_step=0.03378916531801
+CASE (0.0, -1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (-1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (0.0, 0.0, -1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+CASE (0.0, 0.0, 1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+
+ACTORCORNER09 18776/18776 PASS
+CASE (0.0, 1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02911001443863 foot_step=0.03378916531801
+CASE (0.0, -1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (-1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (0.0, 0.0, -1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+CASE (0.0, 0.0, 1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+
+ACTORCORNER09 18776/18776 PASS
+CASE (0.0, 1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02911001443863 foot_step=0.03378916531801
+CASE (0.0, -1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (-1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (0.0, 0.0, -1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+CASE (0.0, 0.0, 1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+
+
+
+Algorithm       Hash                                                                   Path
+---------       ----                                                                   ----
+SHA256          617111494D7F364252EC0BBEA4DAB650A234AC391532A82267BAA4938BB82744       C:\Users\brank\Documents\Codex\…
+
+
+**********************
+PowerShell transcript end
+End time: 20260911214003
+**********************
