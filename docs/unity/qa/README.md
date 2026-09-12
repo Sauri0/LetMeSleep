@@ -9,6 +9,8 @@ Estado: **evidencia parcial**. Hay resultados Unity EditMode y un build/arranque
 - [Supuestos registrados](ASSUMPTIONS-0.9.4-ALFA.md): decisiones aplicadas mientras Branko no está disponible.
 - [Revisión Gameplay 68353fe](DELIVERY-REVIEW-GAMEPLAY-68353fe.md): un bloqueo de interfaz de puertas y dos precisiones antes del runtime.
 - [Revisión funcional UI dde06ff](DELIVERY-REVIEW-UI-DDE06FF.md): cancelación async, deduplicación de intenciones y pausa de lobby.
+- [Revisión funcional de pickups ff5f290](DELIVERY-REVIEW-TOOL-PICKUPS-FF5F290.md): autoridad/equipo replicado, composición, eje físico y gates nativos.
+- [Revisión funcional de Bootstrap](BOOTSTRAP-FUNCTIONAL-REVIEW-2026-09-12.md): ciclo sala/ronda/resultados, errores online, entrenamiento y persistencia.
 - [Suite Core RoomSession](CORE-ROOMSESSION-TESTS.md): cobertura EditMode y límite de la comprobación externa previa.
 - [Suite Gameplay Authority](GAMEPLAY-AUTHORITY-TESTS.md): puertas autoritativas y vigencia física de la unión de picadura.
 - [Suite MessageFraming](MESSAGE-FRAMING-TESTS.md): límites, fragmentación y presupuesto acotado de reensamblado Online.
