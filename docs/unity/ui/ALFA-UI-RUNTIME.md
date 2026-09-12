@@ -66,7 +66,9 @@ ui.PresentHud(hudState);
 ui.PresentResults(resultsState);
 ```
 
-La entrada al menú y formularios se controla con `ShowMainMenu`, `ShowOnlineChoice`, `ShowCreateRoom` y `ShowJoinRoom`. `PresentLobby` y `PresentResults` cambian al contexto correspondiente. `ShowGameplay` desbloquea el input y muestra el HUD sin volver a invocar `IMenuActions.ResumeGame`; el botón de Pausa llama una vez a ese callback y después usa la transición. `PresentHud` actualiza datos, pero conserva Pausa o Ajustes si están abiertos. `OpenSettings` recibe la pantalla a la que debe volver.
+La entrada al menú y formularios se controla con `ShowMainMenu`, `ShowOnlineChoice`, `ShowCreateRoom` y `ShowJoinRoom`. El Director llama `SetRememberedPlayerName` después de cargar preferencias; invocar Crear o Unirse sin argumento usa ese valor normalizado a 24 caracteres. `PresentLobby` y `PresentResults` cambian al contexto correspondiente. `ShowGameplay` desbloquea el input y muestra el HUD sin volver a invocar `IMenuActions.ResumeGame`; `ShowGameplay(true)` declara que la partida actual es entrenamiento. El botón de Pausa llama una vez a `ResumeGame` y después usa la transición. `PresentHud` actualiza datos, pero conserva Pausa o Ajustes si están abiertos. `OpenSettings` recibe la pantalla a la que debe volver.
+
+En resultados o Pausa de entrenamiento, `VOLVER AL MENÚ` llama primero a `CancelTraining`; el adaptador ejecuta sincrónicamente `StopGame`, reemplaza el mapa y restaura el audio/estado de menú. Recién al retornar del callback la UI muestra el menú. En una sala online conserva el copy `SALIR DE LA SALA` y usa `LeaveRoom`.
 
 ## Código de sala
 

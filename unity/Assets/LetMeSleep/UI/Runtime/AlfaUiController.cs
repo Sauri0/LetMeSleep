@@ -42,6 +42,8 @@ namespace LetMeSleep.UI
         private bool customizationSaveLatched;
         private bool settingsApplyLatched;
         private bool resultsActionLatched;
+        private string rememberedPlayerName = string.Empty;
+        private bool gameplayIsTraining;
 
         private TMP_InputField playerNameInput;
         private TMP_InputField roomCodeInput;
@@ -108,6 +110,9 @@ namespace LetMeSleep.UI
         private TextMeshProUGUI hudNetwork;
         private UnityEngine.UI.Image hudProgress;
 
+        private UnityEngine.UI.Button pauseLeaveButton;
+        private TextMeshProUGUI pauseLeaveLabel;
+
         private TextMeshProUGUI resultsTitle;
         private TextMeshProUGUI resultsStats;
         private TextMeshProUGUI resultsPrimaryLabel;
@@ -148,22 +153,28 @@ namespace LetMeSleep.UI
         public void ShowMainMenu()
         {
             lobbyExploring = false;
+            gameplayIsTraining = false;
             SetScreen(AlfaUiScreen.MainMenu, "MainPlayButton");
         }
 
         public void ShowOnlineChoice() => SetScreen(AlfaUiScreen.OnlineChoice, "CreateChoiceButton");
 
-        public void ShowCreateRoom(string rememberedName = "")
+        public void SetRememberedPlayerName(string playerName)
+        {
+            rememberedPlayerName = NormalizePlayerName(playerName);
+        }
+
+        public void ShowCreateRoom(string rememberedName = null)
         {
             createMode = true;
-            ConfigureOnlineForm(rememberedName);
+            ConfigureOnlineForm(rememberedName == null ? rememberedPlayerName : NormalizePlayerName(rememberedName));
             SetScreen(AlfaUiScreen.CreateRoom, "PlayerNameInput");
         }
 
-        public void ShowJoinRoom(string rememberedName = "")
+        public void ShowJoinRoom(string rememberedName = null)
         {
             createMode = false;
-            ConfigureOnlineForm(rememberedName);
+            ConfigureOnlineForm(rememberedName == null ? rememberedPlayerName : NormalizePlayerName(rememberedName));
             SetScreen(AlfaUiScreen.JoinRoom, "PlayerNameInput");
         }
 
@@ -190,6 +201,7 @@ namespace LetMeSleep.UI
         public void PresentLobby(LobbyUiState state)
         {
             lobbyState = state ?? throw new ArgumentNullException(nameof(state));
+            gameplayIsTraining = false;
             lobbyReadyLatched = state.ReadyPending;
             lobbyStartLatched = state.StartPending;
             lobbyCode.text = string.IsNullOrWhiteSpace(state.RoomCode) ? "PREPARANDO EL CÓDIGO…" : state.RoomCode;
@@ -339,9 +351,16 @@ namespace LetMeSleep.UI
             SetScreen(AlfaUiScreen.Gameplay, null);
         }
 
+        public void ShowGameplay(bool isTraining)
+        {
+            gameplayIsTraining = isTraining;
+            ShowGameplay();
+        }
+
         public void PresentResults(ResultsUiState state)
         {
             resultsState = state ?? throw new ArgumentNullException(nameof(state));
+            gameplayIsTraining = state.IsTraining;
             resultsActionLatched = false;
             trainingStartLatched = false;
             trainingCancelLatched = false;
@@ -363,6 +382,7 @@ namespace LetMeSleep.UI
         public void ShowPause()
         {
             actions.SetGameplayInputBlocked(true);
+            pauseLeaveLabel.text = gameplayIsTraining ? "VOLVER AL MENÚ" : "SALIR DE LA SALA";
             SetScreen(AlfaUiScreen.Pause, "PauseContinueButton");
         }
 
@@ -683,7 +703,8 @@ namespace LetMeSleep.UI
             factory.Button(content, "PauseContinueButton", "CONTINUAR", ResumeFromPause, true, false, 68f);
             factory.Button(content, "PauseSettingsButton", "AJUSTES", () => OpenSettings(AlfaUiScreen.Pause));
             factory.Button(content, "PauseControlsButton", "CONTROLES", () => OpenSettings(AlfaUiScreen.Pause));
-            factory.Button(content, "PauseLeaveButton", "SALIR DE LA SALA", ConfirmLeave, false, true);
+            pauseLeaveButton = factory.Button(content, "PauseLeaveButton", "SALIR DE LA SALA", LeaveGameplayContext, false, true);
+            pauseLeaveLabel = pauseLeaveButton.GetComponentInChildren<TextMeshProUGUI>();
         }
 
         private void BuildResults()
@@ -760,7 +781,7 @@ namespace LetMeSleep.UI
 
         private void ConfigureOnlineForm(string rememberedName)
         {
-            playerNameInput.SetTextWithoutNotify(string.IsNullOrWhiteSpace(rememberedName) ? playerNameInput.text : rememberedName.Trim());
+            playerNameInput.SetTextWithoutNotify(rememberedName ?? string.Empty);
             onlineFormTitle.text = createMode ? "CREAR SALA" : "UNIRME CON CÓDIGO";
             onlinePrimaryLabel.text = createMode ? "CREAR SALA" : "UNIRME";
             roomCodeRow.SetActive(!createMode);
@@ -778,6 +799,7 @@ namespace LetMeSleep.UI
             }
             if (createMode)
             {
+                rememberedPlayerName = playerName;
                 LatchOnlineSubmission("Creando sala…");
                 actions.CreateRoom(playerName);
                 return;
@@ -789,6 +811,7 @@ namespace LetMeSleep.UI
                 return;
             }
             roomCodeInput.SetTextWithoutNotify(AlfaRoomCode.FormatForDisplay(normalized));
+            rememberedPlayerName = playerName;
             LatchOnlineSubmission("Buscando sala…");
             actions.JoinRoom(playerName, normalized);
         }
@@ -855,6 +878,7 @@ namespace LetMeSleep.UI
         private void StartTrainingIntent(AlfaRole role, bool fromResults)
         {
             if (TrainingBusy || (fromResults && resultsActionLatched)) return;
+            gameplayIsTraining = true;
             trainingStartLatched = true;
             trainingCancelLatched = false;
             if (fromResults)
@@ -1054,6 +1078,7 @@ namespace LetMeSleep.UI
             if (lobbyState == null || lobbyStartLatched || lobbyState.StartPending ||
                 !lobbyState.IsOwner || !lobbyState.CanStart) return;
             lobbyStartLatched = true;
+            gameplayIsTraining = false;
             lobbyStartButton.interactable = false;
             lobbyReadyButton.interactable = false;
             lobbyExploreButton.interactable = false;
@@ -1072,8 +1097,28 @@ namespace LetMeSleep.UI
                 RequestTrainingCancel();
                 return;
             }
-            if (resultsState != null && resultsState.IsTraining) ShowMainMenu();
+            if (resultsState != null && resultsState.IsTraining)
+            {
+                resultsActionLatched = true;
+                resultsPrimary.interactable = false;
+                resultsLeave.interactable = false;
+                resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = "SALIENDO…";
+                LeaveActiveTraining();
+            }
             else ConfirmLeave();
+        }
+
+        private void LeaveGameplayContext()
+        {
+            if (gameplayIsTraining)
+                ShowConfirm("¿SALIR DEL ENTRENAMIENTO?", "Volverás al menú principal.", "VOLVER", "SALIR", LeaveActiveTraining);
+            else ConfirmLeave();
+        }
+
+        private void LeaveActiveTraining()
+        {
+            actions.CancelTraining();
+            ShowMainMenu();
         }
 
         private void ResumeFromPause()
@@ -1295,6 +1340,12 @@ namespace LetMeSleep.UI
         private static string ItemAt(IReadOnlyList<string> items, int index) => items != null && index >= 0 && index < items.Count ? items[index] : "—";
 
         private static float RelativeLuminance(Color color) => 0.2126f * color.linear.r + 0.7152f * color.linear.g + 0.0722f * color.linear.b;
+
+        private static string NormalizePlayerName(string value)
+        {
+            var normalized = (value ?? string.Empty).Trim();
+            return normalized.Length <= 24 ? normalized : normalized.Substring(0, 24);
+        }
 
         private static CustomizationUiState DefaultCustomization()
         {
