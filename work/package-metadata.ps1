@@ -66,11 +66,22 @@ function Write-PackageMetadata {
 }
 
 function Test-PackageMetadata {
-    param([string]$ProjectRoot, [string]$OutputDirectory, [string]$Version)
+    param([string]$ProjectRoot, [string]$OutputDirectory, [string]$Version, [switch]$AllowTargetedHeadless)
     $metadata = Get-Content -LiteralPath (Join-Path $OutputDirectory 'BUILD.json') -Raw | ConvertFrom-Json
     $protocol = Get-PackageProtocol -ProjectRoot $ProjectRoot
     if ($Version -ne $protocol.version -or $metadata.schema -ne 1 -or $metadata.version -ne $Version -or $metadata.protocol -ne $protocol.protocol -or $metadata.invitation -ne $protocol.invitation) { throw 'Package version/protocol metadata differs from requested source.' }
-    if ($metadata.source_dirty -ne $false -or $metadata.checks.headless -ne $true -or $metadata.checks.native -ne $true) { throw 'Package requires committed source and both completed build suites.' }
+    if ($metadata.source_dirty -ne $false) { throw 'Package requires committed source.' }
+    if ($metadata.checks.headless -ne $true -or $metadata.checks.native -ne $true) {
+        if (-not $AllowTargetedHeadless -or $metadata.verification.mode -ne 'targeted_headless' -or $metadata.verification.report -ne 'VERIFICATION.json') { throw 'Package requires both full suites or explicit targeted-headless verification.' }
+        $proof=Get-Content (Join-Path $OutputDirectory 'VERIFICATION.json') -Raw | ConvertFrom-Json
+        if ($proof.source_commit -ne $metadata.source_commit -or $proof.native_run -ne $false -or $proof.tests.Count -lt 8) { throw 'Targeted verification identity or coverage missing.' }
+        if (@($proof.tests | Where-Object { -not $_.passed -or $_.exit_code -ne 0 -or $_.stderr_bytes -ne 0 -or $_.arguments -notcontains '--headless' }).Count) { throw 'Targeted verification has a failed or non-headless test.' }
+        $exportProof=@($proof.tests | Where-Object { -not $_.source -and $_.exe_sha256 -eq $metadata.files.'Let-me-sleep.exe' })
+        foreach ($requiredCheck in @('online093-export-ui','online093-export-live-host')) {
+            if (-not @($exportProof | Where-Object name -eq $requiredCheck).Count) { throw ('Missing exported check: '+$requiredCheck) }
+        }
+        if (-not $metadata.files.'VERIFICATION.json') { throw 'Verification report must have a package checksum.' }
+    }
     if ($metadata.source_commit -notmatch '^[a-f0-9]{40}$' -or $metadata.executable -ne 'Let-me-sleep.exe') { throw 'Invalid source or executable identity.' }
     $root = [System.IO.Path]::GetFullPath($OutputDirectory).TrimEnd('\','/')+[System.IO.Path]::DirectorySeparatorChar
     $names = @($metadata.files.PSObject.Properties.Name)

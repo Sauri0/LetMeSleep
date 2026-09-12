@@ -35,10 +35,8 @@ signal voice_devices_refresh_requested
 const Prefs = preload("res://scripts/preferences.gd")
 const Simulation = preload("res://scripts/simulation.gd")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
-const InvitationCodec = preload("res://scripts/invitation.gd")
 const OnlineInvitationCodec = preload("res://scripts/online_invitation.gd")
 var _online_invitation := ""
-var _direct_connection: CheckButton
 const AvatarPreview = preload("res://scripts/avatar_preview.gd")
 const MenuMascot = preload("res://scripts/menu_mascot.gd")
 const EmoteSelector = preload("res://scripts/emote_selector.gd")
@@ -155,22 +153,12 @@ var _home_menu: VBoxContainer
 var _connection_form: VBoxContainer
 var _connection_open: bool = false
 var _connection_mode_create: bool = true
-var _advanced_open: bool = false
-var _address_box: VBoxContainer
-var _port_row: HBoxContainer
-var _code_box: VBoxContainer
-var _advanced_help: Label
-var _local_server_button: Button
-var _host_port_edit: SpinBox
-var _host_port_row: HBoxContainer
-var _existing_server: CheckButton
 var _connection_busy := false
 var _connection_cancel: Button
 var _connection_retry: Button
 var _connection_feedback: Label
 var _connect_submit: Button
 var _connection_title: Label
-var _advanced_button: Button
 var _home_default_focus: Button
 var _settings_default_focus: Button
 var _last_settings_focus: Control
@@ -189,15 +177,13 @@ var _invitation_box: VBoxContainer
 var _invitation_edit: LineEdit
 var _invite_settings: Control
 var _invite_settings_open: bool = false
-var _invite_address_edit: LineEdit
-var _invite_port_edit: SpinBox
-var _invite_lan: OptionButton
 var _invite_status: Label
-var _invite_scope: OptionButton
-var _invite_help: Label
-var _room_join_scope := ""
-var _room_join_address: String = ""
-var _room_join_port: int = 27840
+var _invite_code_edit: LineEdit
+var _invite_copy_button: Button
+var _lobby_copy_button: Button
+var _invite_button: Button
+var _invite_return_focus: Control
+var _invitation_paste: Button
 var _comic_feedback: Label
 var _comic_feedback_tween: Tween
 var _previous_bitten: bool = false
@@ -219,9 +205,6 @@ var _field_rows: Dictionary = {}
 var _fields: Dictionary = {}
 var _status_labels: Array[Label] = []
 var _name_edit: LineEdit
-var _address_edit: LineEdit
-var _port_edit: SpinBox
-var _code_edit: LineEdit
 var _code_label: Label
 var _players_label: Label
 var _roster: VBoxContainer
@@ -572,12 +555,13 @@ func _build_home() -> void:
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_home_menu = _vbox(content, 14)
 	_home_menu.add_child(_label("¿QUIÉN TE DEJA DORMIR?", 32))
-	_home_default_focus = _button("PRÁCTICA", _open_practice, true)
+	_home_default_focus = _button("CREAR SALA ONLINE", _open_connection.bind(true), true)
 	_home_menu.add_child(_home_default_focus)
-	_home_menu.add_child(_label("Entrá a probar con rivales automáticos.", 14, MUTED, true))
+	_home_menu.add_child(_button("UNIRME CON CÓDIGO", _open_connection.bind(false)))
+	_home_menu.add_child(_label("Jugá con tus amigos desde cualquier casa. Compartí el código de la sala para invitarlos.", 14, MUTED, true))
 	_home_menu.add_child(HSeparator.new())
-	_home_menu.add_child(_button("CREAR SALA", _open_connection.bind(true)))
-	_home_menu.add_child(_button("UNIRME CON INVITACIÓN", _open_connection.bind(false)))
+	_home_menu.add_child(_small_button("Entrenamiento", _open_practice))
+	_home_menu.add_child(_label("Probá los roles con rivales automáticos.", 14, MUTED, true))
 	_home_menu.add_child(_button("TU PINTA", _open_customization))
 	_home_menu.add_child(_small_button("Ajustes y controles", _open_settings))
 	_home_menu.add_child(_small_button("Salir del juego", func() -> void:
@@ -594,71 +578,27 @@ func _build_home() -> void:
 	_name_edit.placeholder_text = "Cómo te dicen tus amigos"
 	_name_edit.text = Prefs.player_name
 	_connection_form.add_child(_name_edit)
-	_invitation_box = _vbox(_connection_form, 5)
-	_invitation_box.add_child(_label("INVITACIÓN", 13, INK))
-	_invitation_edit = LineEdit.new()
-	_invitation_edit.max_length = 1024
-	_invitation_edit.placeholder_text = "Pegá el código de invitación LMS1-…"
-	_invitation_edit.text = Prefs.invitation
-	_invitation_box.add_child(_invitation_edit)
-	_address_box = _vbox(_connection_form, 5)
-	_address_box.add_child(_label("DIRECCIÓN DEL ANFITRIÓN", 13, CORAL))
-	_address_edit = LineEdit.new()
-	_address_edit.text = Prefs.server_address
-	_address_edit.placeholder_text = "IP o nombre del servidor"
-	_address_edit.tooltip_text = "En esta PC: 127.0.0.1. En otra casa: dirección del anfitrión."
-	_address_box.add_child(_address_edit)
-	_code_box = _vbox(_connection_form, 5)
-	_code_box.add_child(_label("CÓDIGO DE SALA", 13, CORAL))
-	_code_edit = LineEdit.new()
-	_code_edit.max_length = 12
-	_code_edit.placeholder_text = "Ej.: ABC123"
-	_code_edit.text = Prefs.room_code
-	_code_box.add_child(_code_edit)
-	_local_server_button = _button("1 · Encender servidor en esta PC", func() -> void:
-		_address_edit.text = "127.0.0.1"
-		_port_edit.value = 27840
-		local_server_requested.emit()
+	_name_edit.text_submitted.connect(func(_text: String) -> void:
+		if _connection_mode_create: _request_connection(true)
+		else: _queue_focus(_invitation_edit)
 	)
-	_local_server_button.tooltip_text = "El servidor aloja la sala. Queda en esta PC mientras jugás."
-	_connection_form.add_child(_local_server_button)
-	_local_server_button.hide()
-	_connect_submit = _button("Crear sala", func() -> void: _request_connection(_connection_mode_create), true)
+	_invitation_box = _vbox(_connection_form, 5)
+	_invitation_box.add_child(_label("CÓDIGO DE SALA ONLINE", 13, INK))
+	var invitation_row := HBoxContainer.new()
+	_invitation_box.add_child(invitation_row)
+	_invitation_edit = LineEdit.new()
+	# Keep extra characters visible so validation rejects a damaged pasted token.
+	_invitation_edit.max_length = 1024
+	_invitation_edit.placeholder_text = "Pegá el código completo LMS1-…"
+	_invitation_edit.text = Prefs.invitation if OnlineInvitationCodec.decode(Prefs.invitation).ok else ""
+	_invitation_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_invitation_edit.text_submitted.connect(func(_text: String) -> void: _request_connection(false))
+	invitation_row.add_child(_invitation_edit)
+	_invitation_paste = _small_button("Pegar", _paste_invitation)
+	invitation_row.add_child(_invitation_paste)
+	_invitation_box.add_child(_label("Pedile al anfitrión que copie el código desde su sala. Pegalo acá y presioná Enter.", 14, MUTED, true))
+	_connect_submit = _button("CREAR SALA ONLINE", func() -> void: _request_connection(_connection_mode_create), true)
 	_connection_form.add_child(_connect_submit)
-	_advanced_button = _small_button("Opciones de conexión  ▾", _toggle_connection_options)
-	_connection_form.add_child(_advanced_button)
-	_direct_connection = CheckButton.new()
-	_direct_connection.text = "Conexión directa / LAN"
-	_direct_connection.toggled.connect(func(_value: bool) -> void: _update_connection_options())
-	_connection_form.add_child(_direct_connection)
-	_existing_server = CheckButton.new()
-	_existing_server.text = "Usar un servidor ya abierto"
-	_existing_server.toggled.connect(func(_value: bool) -> void: _update_connection_options())
-	_connection_form.add_child(_existing_server)
-	_host_port_row = HBoxContainer.new()
-	_connection_form.add_child(_host_port_row)
-	var host_port_label := _label("Puerto de esta PC", 15, MUTED)
-	host_port_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_host_port_row.add_child(host_port_label)
-	_host_port_edit = SpinBox.new()
-	_host_port_edit.min_value = 1024
-	_host_port_edit.max_value = 65535
-	_host_port_edit.value = Prefs.local_host_port
-	_host_port_row.add_child(_host_port_edit)
-	_port_row = HBoxContainer.new()
-	_connection_form.add_child(_port_row)
-	var port_label := _label("Puerto UDP", 15, MUTED)
-	port_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	port_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	_port_row.add_child(port_label)
-	_port_edit = SpinBox.new()
-	_port_edit.min_value = 1024
-	_port_edit.max_value = 65535
-	_port_edit.value = Prefs.server_port
-	_port_edit.custom_minimum_size.x = 124
-	_port_row.add_child(_port_edit)
-	_advanced_help = _label("Sin invitación: dejá ese campo vacío y usá dirección, puerto y código. Compartir una dirección no configura tu router.", 14, MUTED, true)
-	_connection_form.add_child(_advanced_help)
 	_connection_feedback = _label("", 15, INK, true)
 	_connection_feedback.custom_minimum_size.x = 330
 	_connection_form.add_child(_connection_feedback)
@@ -666,7 +606,7 @@ func _build_home() -> void:
 	_connection_form.add_child(connection_actions)
 	_connection_cancel = _small_button("Cancelar", func() -> void: cancel_connection_requested.emit())
 	connection_actions.add_child(_connection_cancel)
-	_connection_retry = _small_button("Reintentar", func() -> void: retry_connection_requested.emit())
+	_connection_retry = _small_button("Reintentar", func() -> void: _request_connection(_connection_mode_create))
 	connection_actions.add_child(_connection_retry)
 	_connection_cancel.hide()
 	_connection_retry.hide()
@@ -677,13 +617,12 @@ func _build_home() -> void:
 func _open_connection(create: bool) -> void:
 	_connection_open = true
 	_connection_mode_create = create
-	_advanced_open = false
-	_direct_connection.set_pressed_no_signal(false)
 	_home_menu.hide()
 	_connection_form.show()
-	_connection_title.text = "Prepará la noche" if create else "Encontrá a tu grupo"
-	_connect_submit.text = "CREAR SALA" if create else "UNIRME"
-	_update_connection_options()
+	_connection_title.text = "CREAR SALA ONLINE" if create else "UNIRME CON CÓDIGO"
+	_connect_submit.text = "CREAR SALA ONLINE" if create else "UNIRME"
+	_invitation_box.visible = not create
+	show_connection_state({"phase":"idle"})
 	_queue_focus(_name_edit)
 
 
@@ -692,32 +631,27 @@ func _close_connection() -> void:
 		cancel_connection_requested.emit()
 		show_connection_state({"phase":"cancelled"})
 	_connection_open = false
-	_advanced_open = false
 	_connection_form.hide()
 	_home_menu.show()
 	_queue_focus(_home_default_focus)
 
 
-func _toggle_connection_options() -> void:
-	_advanced_open = not _advanced_open
-	_update_connection_options()
+func _paste_invitation() -> void:
+	_apply_pasted_invitation(DisplayServer.clipboard_get())
 
 
-func _update_connection_options() -> void:
-	var direct := _direct_connection.button_pressed
-	var advanced_direct := _advanced_open and direct
-	var existing: bool = _connection_mode_create and _existing_server.button_pressed
-	_direct_connection.visible = _advanced_open
-	_address_box.visible = advanced_direct and (not _connection_mode_create or existing)
-	_code_box.visible = not _connection_mode_create and advanced_direct
-	_invitation_box.visible = not _connection_mode_create
-	_port_row.visible = advanced_direct and (not _connection_mode_create or existing)
-	_host_port_row.visible = advanced_direct and _connection_mode_create and not existing
-	_existing_server.visible = advanced_direct and _connection_mode_create
-	_advanced_help.visible = _advanced_open
-	_advanced_help.text = "La partida se aloja en tu PC. Tus amigos entran con el código que copiás desde la sala." if not direct else "Conexión directa avanzada: necesita una dirección y puerto accesibles. Para entrar por Internet con código, desactivá esta opción."
-	_local_server_button.hide()
-	_advanced_button.text = "Ocultar opciones  ▴" if _advanced_open else "Opciones de conexión  ▾"
+func _apply_pasted_invitation(clipboard_text: String) -> void:
+	if _connection_busy:
+		return
+	var value := clipboard_text.strip_edges()
+	# Never truncate an oversized clipboard into a different, valid invitation.
+	if value.length() > OnlineInvitationCodec.MAX_LENGTH:
+		show_error("Ese código es demasiado largo. Pedile al anfitrión que lo copie otra vez desde la sala.")
+		_queue_focus(_invitation_edit)
+		return
+	_invitation_edit.text = value
+	_invitation_edit.caret_column = value.length()
+	_queue_focus(_invitation_edit)
 
 
 func _request_connection(create: bool) -> void:
@@ -726,77 +660,30 @@ func _request_connection(create: bool) -> void:
 	var username := _name_edit.text.strip_edges()
 	if username.is_empty():
 		show_error("Escribí tu nombre para entrar.")
-		_name_edit.grab_focus()
-		return
-	if create and not _direct_connection.button_pressed:
-		Prefs.player_name = username
-		Prefs.save_settings()
-		set_online_invitation("")
-		show_connection_state({"phase":"connecting_transport","message":"Preparando tu sala online…","can_cancel":true})
-		online_host_requested.emit(username)
+		_queue_focus(_name_edit)
 		return
 	var invite := _invitation_edit.text.strip_edges()
-	if not create and invite.begins_with(OnlineInvitationCodec.PREFIX):
-		var online := OnlineInvitationCodec.decode(invite)
-		if not online.ok:
-			show_error(online.error)
-			_invitation_edit.grab_focus()
-			return
-		Prefs.player_name = username
-		Prefs.invitation = invite
-		Prefs.save_settings()
-		set_online_invitation("")
-		show_connection_state({"phase":"connecting_transport","message":"Buscando la sala de tus amigos…","can_cancel":true})
-		online_join_requested.emit(username, invite)
-		return
-	set_online_invitation("")
-	if create and not _existing_server.button_pressed:
-		Prefs.player_name = username
-		Prefs.local_host_port = int(_host_port_edit.value)
-		Prefs.save_settings()
-		show_connection_state({"phase":"starting_server","message":"Abriendo el servidor de esta PC…","can_cancel":true})
-		host_requested.emit(username, Prefs.local_host_port)
-		return
-	var address := _address_edit.text.strip_edges()
-	var port: int = int(_port_edit.value)
-	var code := _code_edit.text.strip_edges().to_upper()
-	if not create and not _invitation_edit.text.strip_edges().is_empty():
-		var decoded: Dictionary = InvitationCodec.decode(_invitation_edit.text)
-		if not bool(decoded.get("ok", false)):
-			show_error(str(decoded.get("error", "Revisá la invitación.")))
-			_invitation_edit.grab_focus()
-			return
-		address = str(decoded.host)
-		port = int(decoded.port)
-		code = str(decoded.room)
-		_room_join_scope = str(decoded.get("scope", ""))
-	elif not create and (not _advanced_open or not _direct_connection.button_pressed):
-		show_error("Pegá la invitación que te pasó el anfitrión.")
-		_invitation_edit.grab_focus()
-		return
-	if address.is_empty():
-		show_error("Falta la dirección del servidor.")
-		if not _address_box.visible:
-			_advanced_open = true
-			_update_connection_options()
-		_address_edit.grab_focus()
-		return
-	if not create and code.is_empty():
-		show_error("Falta el código de sala en la conexión avanzada.")
-		_code_edit.grab_focus()
-		return
-	Prefs.player_name = username
-	Prefs.server_address = address
-	Prefs.server_port = port
-	Prefs.room_code = code
-	_room_join_address = "" if create else address
-	_room_join_port = port
 	if not create:
-		Prefs.invitation = _invitation_edit.text.strip_edges()
+		var decoded := OnlineInvitationCodec.decode(invite)
+		if not decoded.ok:
+			show_error(str(decoded.error))
+			_queue_focus(_invitation_edit)
+			return
+	_remember_online_connection(username, invite, create)
+	set_online_invitation("")
+	show_connection_state({"phase":"connecting_transport","message":"Preparando tu sala online…" if create else "Buscando la sala de tus amigos…","can_cancel":true})
+	if create:
+		online_host_requested.emit(username)
+	else:
+		online_join_requested.emit(username, invite)
+
+
+func _remember_online_connection(username: String, invite: String, create: bool) -> void:
+	Prefs.player_name = username
+	if not create:
+		Prefs.invitation = invite
 	Prefs.save_settings()
-	show_status("Conectando…")
-	show_connection_state({"phase":"connecting_transport","message":"Conectando con el anfitrión…","can_cancel":true})
-	connect_requested.emit(address, port, username, code, create)
+
 
 func show_connection_state(data: Dictionary) -> void:
 	_build()
@@ -805,14 +692,25 @@ func show_connection_state(data: Dictionary) -> void:
 		_ui_error_serial += 1
 		ui_sound_requested.emit("error")
 	_connection_phase = phase
+	var was_busy := _connection_busy
 	_connection_busy = phase in ["starting_server","resolving","connecting_transport","joining_room"] or phase.begins_with("online_")
 	_connect_submit.disabled = _connection_busy
+	_name_edit.editable = not _connection_busy
+	_invitation_edit.editable = not _connection_busy
+	_invitation_paste.disabled = _connection_busy
 	_connection_cancel.visible = bool(data.get("can_cancel", _connection_busy))
 	_connection_retry.visible = bool(data.get("can_retry", phase == "failed"))
+	_connection_retry.disabled = _connection_busy
 	_connection_feedback.text = str(data.get("message", ""))
+	if phase in ["failed", "cancelled"]:
+		set_online_invitation("")
 	_connection_feedback.add_theme_color_override("font_color", _text_ink(CORAL) if phase == "failed" else INK)
 	if phase == "failed":
 		_queue_focus(_connection_retry if _connection_retry.visible else _connect_submit)
+	elif _connection_busy and not was_busy and _connection_cancel.visible:
+		_queue_focus(_connection_cancel)
+	elif was_busy and not _connection_busy and _connection_open:
+		_queue_focus(_connect_submit)
 
 
 func _build_lobby() -> void:
@@ -831,9 +729,13 @@ func _build_lobby() -> void:
 	var title := _vbox(header, 1)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title.add_child(_label("LA PREVIA", 34))
-	_code_label = _label("SALA  —", 16, CORAL)
+	_code_label = _label("SALA ONLINE", 16, CORAL)
 	title.add_child(_code_label)
-	header.add_child(_small_button("Invitar", _copy_invitation, true))
+	_lobby_copy_button = _small_button("Copiar código", _copy_invitation, true)
+	_lobby_copy_button.disabled = true
+	header.add_child(_lobby_copy_button)
+	_invite_button = _small_button("Invitá a tus amigos", _open_invite_settings)
+	frame.add_child(_invite_button)
 	_players_label = _label("Esperando amigos…", 15, MINT, true)
 	frame.add_child(_players_label)
 	var navigation := HBoxContainer.new()
@@ -860,7 +762,6 @@ func _build_lobby() -> void:
 	var config_box := _vbox(rules_scroll, 8)
 	config_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	config_box.add_child(_label("El anfitrión fija la cantidad de humanos. Los roles se sortean de nuevo en cada ronda.", 14, MUTED, true))
-	config_box.add_child(_small_button("Dirección para amigos", _open_invite_settings))
 	_mode = OptionButton.new()
 	_mode.add_theme_font_size_override("font_size", 16)
 	for mode: String in MODES:
@@ -1085,7 +986,7 @@ func _build_hud() -> void:
 	_door_hint.offset_top=32
 	_door_hint.offset_bottom=56
 	_hud.add_child(_door_hint)
-	_practice_banner = _hud_label("PRÁCTICA",11)
+	_practice_banner = _hud_label("ENTRENAMIENTO",11)
 	_practice_banner.position = Vector2(12,46)
 	_hud.add_child(_practice_banner)
 	_practice_banner.hide()
@@ -1560,7 +1461,7 @@ func _build_practice() -> void:
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(heading)
 	header.add_child(_small_button("← Volver", _close_practice_setup))
-	frame.add_child(_label("PRÁCTICA LOCAL · Vos elegís tu rol. Los rivales son automáticos.", 16, INK, true))
+	frame.add_child(_label("ENTRENAMIENTO · Vos elegís tu rol. Los rivales son automáticos.", 16, INK, true))
 	var columns := HBoxContainer.new()
 	columns.add_theme_constant_override("separation", 28)
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -1587,7 +1488,7 @@ func _build_practice() -> void:
 		_practice_mode_buttons[mode] = button
 	_practice_detail = _label("", 17, INK, true)
 	modes.add_child(_practice_detail)
-	_practice_start_button = _button("¡A PRACTICAR!", func() -> void:
+	_practice_start_button = _button("¡A ENTRENAR!", func() -> void:
 		set_practice(true)
 		practice_requested.emit(_practice_role, _practice_mode)
 	, true)
@@ -1645,118 +1546,76 @@ func _build_invite_settings() -> void:
 	var panel := _panel(center)
 	panel.custom_minimum_size.x = 600
 	var body := _vbox(panel, 14)
-	body.add_child(_label("INVITÁ A LA CASA", 46))
-	_invite_scope = OptionButton.new()
-	for choice: String in ["Misma red", "Otra casa · Internet", "Red virtual compartida"]:
-		_invite_scope.add_item(choice)
-	_invite_scope.item_selected.connect(func(_index: int) -> void: _update_invite_scope())
-	body.add_child(_invite_scope)
-	body.add_child(_label("DIRECCIÓN PARA TUS AMIGOS", 14, INK))
-	_invite_address_edit = LineEdit.new()
-	_invite_address_edit.placeholder_text = "IP de red, IP pública o nombre de servidor"
-	_invite_address_edit.max_length = 253
-	body.add_child(_invite_address_edit)
-	_invite_lan = OptionButton.new()
-	_invite_lan.item_selected.connect(func(index: int) -> void:
-		if index > 0:
-			_invite_address_edit.text = str(_invite_lan.get_item_metadata(index))
-	)
-	body.add_child(_invite_lan)
-	var port_row := HBoxContainer.new()
-	body.add_child(port_row)
-	var label := _label("Puerto para amigos", 16, INK)
-	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	port_row.add_child(label)
-	_invite_port_edit = SpinBox.new()
-	_invite_port_edit.min_value = 1024
-	_invite_port_edit.max_value = 65535
-	_invite_port_edit.custom_minimum_size.x = 126
-	port_row.add_child(_invite_port_edit)
-	_invite_help = _label("", 15, MUTED, true)
-	_invite_help.custom_minimum_size.x = 550
-	body.add_child(_invite_help)
-	_invite_status = _status(body)
-	body.add_child(_button("GUARDAR Y COPIAR INVITACIÓN", _save_invite_settings, true))
+	body.add_child(_label("INVITÁ A TUS AMIGOS", 42))
+	body.add_child(_label("SALA ONLINE", 14, INK))
+	_invite_code_edit = LineEdit.new()
+	_invite_code_edit.editable = false
+	_invite_code_edit.selecting_enabled = true
+	_invite_code_edit.focus_mode = Control.FOCUS_ALL
+	_invite_code_edit.placeholder_text = "Preparando el código de sala…"
+	_invite_code_edit.custom_minimum_size.x = 550
+	body.add_child(_invite_code_edit)
+	body.add_child(_label("1. Copiá este código y mandáselo a tus amigos.\n2. Ellos abren Let me sleep y eligen Unirme con código.\n3. Pegan el código completo y eligen Unirme.\n\nMantené la sala abierta mientras entran.", 16, MUTED, true))
+	_invite_status = _label("", 15, INK, true)
+	body.add_child(_invite_status)
+	_invite_copy_button = _button("COPIAR CÓDIGO", _copy_invitation, true)
+	body.add_child(_invite_copy_button)
 	body.add_child(_small_button("← Volver", _close_invite_settings))
+	_sync_online_invitation()
 
 
 func _open_invite_settings() -> void:
+	if _screen != "lobby":
+		return
+	_invite_return_focus = get_viewport().gui_get_focus_owner()
 	_invite_settings_open = true
-	_invite_address_edit.text = Prefs.shared_address if _owner else _room_join_address
-	_invite_port_edit.value = Prefs.shared_port if _owner else _room_join_port
-	var scope: String = Prefs.sharing_scope if _owner else _room_join_scope
-	_invite_scope.select(maxi(0, ["lan","internet","virtual"].find(scope)))
-	_invite_lan.clear()
-	_invite_lan.add_item("Elegir dirección de esta red…")
-	for address: String in InvitationCodec.local_addresses():
-		_invite_lan.add_item(address + " · misma red")
-		_invite_lan.set_item_metadata(_invite_lan.item_count - 1, address)
-	_update_invite_scope()
+	_sync_online_invitation()
 	_invite_settings.show()
 	_set_focus_scope(_invite_settings)
-	_queue_focus(_invite_address_edit)
+	_queue_focus(_invite_code_edit)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_sync_voice_controls()
 
 
 func _close_invite_settings() -> void:
 	_invite_settings_open = false
 	_invite_settings.hide()
 	_set_focus_scope(_base_focus_scope())
-	_queue_focus(_ready_button)
-
-
-func _save_invite_settings() -> void:
-	var address := _invite_address_edit.text.strip_edges()
-	var scope: String = ["lan","internet","virtual"][_invite_scope.selected]
-	var invalid: String = InvitationCodec.validate_sharing_address(address, scope)
-	if not invalid.is_empty():
-		_invite_status.text = invalid
-		_ui_error_serial += 1
-		ui_sound_requested.emit("error")
-		_invite_address_edit.grab_focus()
-		return
-	if _owner:
-		Prefs.shared_address = address
-		Prefs.shared_port = int(_invite_port_edit.value)
-		Prefs.sharing_scope = scope
-		Prefs.save_settings()
-	else:
-		_room_join_address = address
-		_room_join_port = int(_invite_port_edit.value)
-		_room_join_scope = scope
-	_close_invite_settings()
-	_copy_invitation()
+	_queue_focus(_invite_return_focus if is_instance_valid(_invite_return_focus) else _invite_button)
+	_sync_voice_controls()
 
 
 func _copy_invitation() -> void:
-	if not _online_invitation.is_empty():
-		DisplayServer.clipboard_set(_online_invitation)
-		show_status("Código copiado. Tu amigo puede pegarlo en Unirme con invitación.")
+	# Revalidate at the point of use; a closed room must never copy an old code.
+	if _screen != "lobby" or not OnlineInvitationCodec.decode(_online_invitation).ok:
+		set_online_invitation("")
 		return
-	var code: String = str(_code_label.get_meta("code", ""))
-	var address: String = Prefs.shared_address if _owner else _room_join_address
-	var port: int = Prefs.shared_port if _owner else _room_join_port
-	var scope: String = Prefs.sharing_scope if _owner else _room_join_scope
-	var encoded: String = InvitationCodec.encode(address, port, code, scope)
-	if encoded.is_empty():
-		_open_invite_settings()
-		_invite_status.text = "Revisá la dirección y el alcance para tus amigos. Copiar una invitación no comprueba Internet."
-		return
-	DisplayServer.clipboard_set(encoded)
-	show_status("Invitación copiada · " + ("solo esta red" if scope == "lan" else ("red virtual compartida" if scope == "virtual" else "alcance externo aún sin comprobar")))
+	_write_invitation_clipboard(_online_invitation)
+	var message := "Código copiado. Mandáselo a tus amigos para que lo peguen en Unirme con código."
+	_invite_status.text = message
+	show_status(message)
+
+
+func _write_invitation_clipboard(value: String) -> void:
+	DisplayServer.clipboard_set(value)
+
 
 func set_online_invitation(value: String) -> void:
-	_online_invitation = value if value.is_empty() or OnlineInvitationCodec.decode(value).ok else ""
+	_online_invitation = value if OnlineInvitationCodec.decode(value).ok else ""
+	_sync_online_invitation()
 
-func _update_invite_scope() -> void:
-	var scope: String = ["lan","internet","virtual"][_invite_scope.selected]
-	_invite_lan.visible = scope != "internet"
-	_invite_address_edit.placeholder_text = "IP pública o nombre de servidor" if scope == "internet" else ("Dirección de la red virtual compartida" if scope == "virtual" else "Dirección de esta red")
-	match scope:
-		"internet": _invite_help.text = "Tu servidor escucha en UDP %d. Indicá la dirección y el puerto públicos que lleguen a esa PC. La invitación no abre puertos ni resuelve CGNAT; una conexión desde fuera es la comprobación real." % Prefs.local_host_port
-		"virtual": _invite_help.text = "Todos deben estar conectados a la misma red virtual. Usá su dirección; el juego no instala ni configura esa red."
-		_: _invite_help.text = "Para equipos de la misma red. Esta dirección local no permite entrar desde otra casa."
+
+func _sync_online_invitation() -> void:
+	var available := not _online_invitation.is_empty()
+	if is_instance_valid(_lobby_copy_button):
+		_lobby_copy_button.disabled = not available
+		_lobby_copy_button.tooltip_text = "Compartí este código para que tus amigos entren." if available else "Preparando el código de sala…"
+	if is_instance_valid(_invite_copy_button):
+		_invite_copy_button.disabled = not available
+	if is_instance_valid(_invite_code_edit):
+		_invite_code_edit.text = _online_invitation
+	if is_instance_valid(_invite_status):
+		_invite_status.text = "El código está listo para compartir." if available else "Preparando el código de sala… Esperá un momento."
 
 
 func _build_settings() -> void:
@@ -1963,12 +1822,7 @@ func _input(event: InputEvent) -> void:
 		elif _screen == "customization":
 			_close_customization()
 		elif _screen == "home" and _connection_open:
-			if _advanced_open:
-				_advanced_open = false
-				_update_connection_options()
-				_queue_focus(_advanced_button)
-			else:
-				_close_connection()
+			_close_connection()
 		else:
 			escape_requested.emit()
 
@@ -2022,8 +1876,7 @@ func show_home() -> void:
 	_roster_signature = ""
 	_owner = false
 	_local_id = 0
-	_room_join_address = ""
-	_room_join_port = 27840
+	set_online_invitation("")
 	_input_release()
 
 
@@ -2035,6 +1888,9 @@ func show_status(message: String) -> void:
 
 func show_error(message: String) -> void:
 	show_status(message)
+	if _screen == "home" and _connection_open:
+		_connection_feedback.text = message
+		_connection_feedback.add_theme_color_override("font_color", _text_ink(CORAL))
 	_ui_error_serial += 1
 	ui_sound_requested.emit("error")
 
@@ -2045,9 +1901,7 @@ func show_lobby(data: Dictionary, local_id: int) -> void:
 	_set_screen("lobby")
 	_local_id = local_id
 	_owner = int(data.get("owner", 0)) == local_id
-	var code: String = str(data.get("code", "—"))
-	_code_label.text = "SALA  " + code
-	_code_label.set_meta("code", code)
+	_code_label.text = "SALA ONLINE"
 	var players: Dictionary = data.get("players", {})
 	_lobby_player_count = players.size()
 	var local_player: Dictionary = players.get(local_id, players.get(str(local_id), {}))
@@ -2087,7 +1941,7 @@ func show_lobby(data: Dictionary, local_id: int) -> void:
 		_start_reason.text = "Todos listos. ¡A jugar!" if data.get("can_start", false) else "Hace falta al menos un jugador por bando y todos listos."
 	var humans: int = int(_config.get("human_count", 1))
 	_players_label.text = "%d en la casa · %d %s por sorteo\nEl resto juega como mosquito" % [_lobby_player_count, humans, "humano" if humans == 1 else "humanos"]
-	_lobby_walking_label.text = "SALA " + code + "  ·  " + str(_lobby_player_count) + " amigos\n" + Prefs.binding_text("pause") + " menú de sala · " + Prefs.binding_text("move_forward") + "/" + Prefs.binding_text("move_left") + "/" + Prefs.binding_text("move_back") + "/" + Prefs.binding_text("move_right") + " caminar"
+	_lobby_walking_label.text = "SALA ONLINE  ·  " + str(_lobby_player_count) + " amigos\n" + Prefs.binding_text("pause") + " menú de sala · " + Prefs.binding_text("move_forward") + "/" + Prefs.binding_text("move_left") + "/" + Prefs.binding_text("move_back") + "/" + Prefs.binding_text("move_right") + " caminar"
 	if changed_screen:
 		set_lobby_walking(false)
 
@@ -2336,7 +2190,7 @@ func show_results(snapshot: Dictionary) -> void:
 		_: _result_title.text = "Ronda interrumpida"
 	_result_subtitle.text = "Ganaron los humanos" if winner in ["human", "humans"] else ("Ganaron los mosquitos" if winner in ["mosquito", "mosquitoes"] else "Sin ganador")
 	if _practice:
-		_result_subtitle.text = "PRÁCTICA / " + _result_subtitle.text
+		_result_subtitle.text = "ENTRENAMIENTO / " + _result_subtitle.text
 	var reason: String = str(snapshot.get("reason", ""))
 	var config: Dictionary = snapshot.get("config", FALLBACK_CONFIG)
 	var mode: String = str(config.get("mode", "blood"))
@@ -2349,7 +2203,7 @@ func show_results(snapshot: Dictionary) -> void:
 		_: stats += "Tiempo jugado: " + _clock(float(snapshot.get("elapsed", 0.0)))
 	_result_stats.text = stats
 	_rematch_button.disabled = not _practice and not _owner
-	_rematch_button.text = "REPETIR PRÁCTICA" if _practice else ("VOLVER A LA SALA" if _owner else "Esperando la revancha del anfitrión")
+	_rematch_button.text = "REPETIR ENTRENAMIENTO" if _practice else ("VOLVER A LA SALA" if _owner else "Esperando la revancha del anfitrión")
 	_result_leave.text = "VOLVER AL MENÚ" if _practice else "Salir de la sala"
 	_input_release()
 

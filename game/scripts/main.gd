@@ -22,27 +22,9 @@ func _ready() -> void:
 	network = NetworkScript.new()
 	network.name = "Network"
 	add_child(network)
-	var port := int(options.get("port", str(NetworkScript.DEFAULT_PORT)))
 	if options.has("server"):
-		if options.has("config"):
-			var server_config := ConfigFile.new()
-			var config_error := server_config.load(str(options.config))
-			if config_error != OK:
-				_write_server_reply(port, config_error)
-				printerr("SERVER_ERROR No se pudo leer servidor.cfg: " + error_string(config_error))
-				get_tree().quit(2)
-				return
-			port = int(server_config.get_value("server", "port", NetworkScript.DEFAULT_PORT))
-		if port < 1024 or port > 65535:
-			_write_server_reply(port, ERR_INVALID_PARAMETER)
-			printerr("SERVER_ERROR Puerto fuera del rango 1024..65535.")
-			get_tree().quit(2)
-			return
-		var error: Error = network.host(port)
-		_write_server_reply(port, error)
-		if error != OK:
-			printerr("SERVER_ERROR No se pudo abrir UDP %d: %s" % [port, error_string(error)])
-			get_tree().quit(2)
+		printerr("Las salas se crean dentro del juego: Crear sala online.")
+		get_tree().quit(2)
 		return
 	if options.has("bot"):
 		var bot: Node = load("res://tests/network_bot.gd").new()

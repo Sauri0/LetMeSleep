@@ -32,7 +32,7 @@ const Cosmetics = preload("res://scripts/cosmetics.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const Map = preload("res://scripts/arena.gd")
 const InvitationCodec = preload("res://scripts/invitation.gd")
-const VERSION := "0.9.2"
+const VERSION := "0.9.3"
 const PROTOCOL := InvitationCodec.PROTOCOL
 const DEFAULT_PORT := 27840
 const MAX_PLAYERS := 16
@@ -155,23 +155,39 @@ func shutdown_online_backend() -> bool:
 
 func _online_state(state: String) -> void:
 	if not _online or state in ["idle","cancelled","error","transport_ready","renewing"]: return
-	var message: String="Preparando conexión online…"
-	if state in ["device","login","create_user"]: message="Conectando con el servicio online…"
-	elif state=="create": message="Creando tu sala privada…"
-	elif state in ["find","search"]: message="Buscando la sala de tu amigo…"
-	elif state=="join": message="Entrando a la sala…"
+	var message := "1/3 · Conectando con el servicio online…"
+	if state=="create": message="2/3 · Creando tu sala. Enseguida podrás copiar el código."
+	elif state in ["find","search"]: message="2/3 · Buscando la sala de tu amigo…"
+	elif state=="join": message="3/3 · Entrando a la sala de tu amigo…"
 	_set_connection_state("online_"+state,"",message)
+
+static func online_error_message(code: String) -> String:
+	if code in ["room_not_found","lobby_not_found","online_timeout_search"]:
+		return "No encontramos esa sala. Pedile al anfitrión que mantenga el juego abierto y copie un código nuevo."
+	if code in ["room_closed","room_owner_changed"]:
+		return "El anfitrión salió de la sala. Para volver a jugar, creá otra sala y compartí su código."
+	if code=="own_room":
+		return "Ese código corresponde a tu propia sala. Compartilo con tu amigo para que entre desde su PC."
+	if code in ["room_protocol_or_owner_mismatch","room_socket_mismatch"]:
+		return "No pudimos entrar a esa sala. Ambos deben usar la misma versión del juego y un código recién copiado."
+	if code in ["configuration_required","sdk_unavailable"]:
+		return "Faltan archivos del online. Descargá el ZIP completo de GitHub y descomprimí toda la carpeta antes de abrir el juego."
+	if code in ["room_cleanup_failed_restart_required","cleanup_timeout"]:
+		return "La conexión anterior no terminó de cerrar. Cerrá y abrí el juego; después volvé a crear la sala o pegá el código."
+	if code in ["attempt_still_draining","backend_busy"]:
+		return "Estamos cerrando la conexión anterior. Esperá unos segundos y tocá Reintentar."
+	if code in ["join_failed","online_timeout_join"]:
+		return "La sala no aceptó la entrada. Puede estar llena o haberse cerrado. Pedile al anfitrión que confirme que seguís teniendo lugar y copie el código otra vez."
+	if code in ["create_failed","online_timeout_create"]:
+		return "El servicio online no pudo crear la sala. Revisá tu conexión a Internet y tocá Reintentar."
+	if code in ["relay_configuration_failed","peer_creation_failed","transport_failed","transport_timeout"]:
+		return "Encontramos la sala, pero no pudimos conectar con el anfitrión por Internet. Confirmá que siga dentro y tocá Reintentar."
+	return "No pudimos conectar con el servicio online. Revisá tu conexión a Internet y tocá Reintentar."
 
 func _online_failed(code: String) -> void:
 	if not _online: return
 	var joined:=_had_session
-	var message: String="No se pudo completar la conexión online. Revisá tu conexión a Internet y reintentá."
-	if code in ["room_not_found","lobby_not_found"]: message="Esta sala ya no está disponible. Pedile una invitación nueva al anfitrión."
-	elif code in ["room_closed","room_owner_changed"]: message="El anfitrión cerró o dejó la sala."
-	elif code=="room_protocol_or_owner_mismatch": message="La sala no corresponde a esta versión. Todos deben descargar la misma actualización."
-	elif code in ["configuration_required","sdk_unavailable"]: message="A esta instalación le falta la configuración online. Descargá nuevamente la versión completa."
-	elif code=="room_cleanup_failed_restart_required": message="No se pudo cerrar la conexión anterior. Reiniciá el juego antes de volver a conectar."
-	_fail_connection(code,message)
+	_fail_connection(code,online_error_message(code))
 	if joined: disconnected.emit()
 
 func _online_packet_failed(_reason: String) -> void:
@@ -364,13 +380,13 @@ func close_client() -> void:
 func _connected() -> void:
 	if not connecting or _connection_phase != "connecting_transport":
 		return
-	_set_connection_state("joining_room", "", "El servidor respondió. Verificando versión y sala…")
+	_set_connection_state("joining_room", "", "3/3 · Conectado. Verificando tu entrada a la sala…")
 	_send_to(1, "_request_join", [VERSION, PROTOCOL, str(pending_join.get("name", "Amigo")), _online_capability if _online else str(pending_join.get("code", "")), bool(pending_join.get("create", false)), token])
 
 func _failed() -> void:
 	if connecting:
 		if _online:
-			_fail_connection("transport_failed","No se pudo conectar con el anfitrión. Confirmá que la sala siga abierta y reintentá.")
+			_fail_connection("transport_failed",online_error_message("transport_failed"))
 			return
 		_fail_connection("transport_failed", "No llegó respuesta UDP de %s:%d. Revisá el servidor y la ruta de conexión." % [_last_request.get("address",""),_last_request.get("port",DEFAULT_PORT)])
 
@@ -864,7 +880,7 @@ func _physics_process(dt: float) -> void:
 				_fail_connection("dns_timeout", "El nombre del servidor no se resolvió a tiempo.")
 			else:
 				if _online:
-					_fail_connection("transport_timeout","El anfitrión no respondió a tiempo. Pedile que confirme que su sala sigue abierta y volvé a intentar.")
+					_fail_connection("transport_timeout",online_error_message("transport_timeout"))
 				else:
 					_fail_connection("transport_timeout", "Sin respuesta UDP de %s:%d. No se pudo comprobar la ruta hasta el anfitrión." % [_last_request.address,_last_request.port])
 	if not is_server:

@@ -1,27 +1,21 @@
-# Let me sleep 0.9.2 — pruebas de esta descarga
+# Let me sleep 0.9.3 — alcance de esta corrección
 
-Windows x86_64, Godot4.5.2, protocolo11, casasv3.
-Fuente: 642b8831aa0cb3714fa9be97690fffed141f131f
-SHA256 EXE: 348372B149FA7FCB4FB488A34A1941ABE55574F3F0249DAB785C859206F0715F
+Corrección del flujo online sobre 0.9.2: menú de crear/unirse, copiar/pegar,
+reintentos, mensajes de error y eliminación de la modalidad LAN de la interfaz,
+la guía y los lanzadores. Se mantiene entrenamiento con bots.
 
-Las verificaciones director092-full-final-r5 y su continuación r6 pasaron las suites
-headless y nativas. R6 reutilizó evidencia R5 con hash inmutable y código del juego sin cambios, tras actualizar sólo la prueba de cámara. Incluye física,
-combate, cosméticos, movimiento, voz, sincronización, herramientas y menús.
-Once semillas pasaron mobiliario y recorridos físicos hacia tareas/objetos:
-1,2,7,31,97,257,997,2026,65537,1234567,2147483646. La caché pasó40rondas.
-El estrés adicional de1000semillas no se ejecutó en esta entrega.
-Manos:64848comprobaciones de movimiento y36058de malla sin fallos.
-Marcas:972comprobaciones,540registros con herramientas y atuendos.
-No es una revisión visual exhaustiva de todas las combinaciones.
+Verificación dirigida SIN abrir ventanas del juego ni usar el renderizador,
+a pedido del usuario. Se ejecutan contratos de interfaz con controles aislados,
+invitaciones, conexión, sesión, red, tamaño de paquetes y el ciclo real de
+creación/cierre de sala en Epic. El EXE final también ejecuta el contrato UI
+y el ciclo real de anfitrión EOS con --headless. VERIFICATION.json contiene los
+resultados, argumentos, hashes y origen exacto del ejecutable.
 
-El EXE pasó9escenarios: anfitrión EOS, pareja local, red, sesión, menús,
-puertas, cámara/cuerpo y práctica de humano/mosquito. Crear un anfitrión EOS
-real también pasó en build. La pareja local usa ENet: no certifica relay WAN.
-Se generaron capturas con el EXE y tres mediciones a1080p, FPS sin límite,
-RTX3060Ti/Ryzen5600X. Datos: work/director092-perf-final/summary.json.
-No se certifican60FPS sostenidos ni GTX1660Ti/1440p/4K.
+No se repitió la suite gráfica completa de 0.9.2 ni se certificó visualmente
+el diseño de este menú. La prueba de dos jugadores desde casas distintas y
+el relay de tráfico real entre ellos todavía requiere verificación. Crear una
+sala en Epic no demuestra por sí solo una conexión entre dos redes.
 
-La prueba entre dos casas y el micrófono físico siguen pendientes.
-Posarse sobre algunos muebles todavía usa cajas envolventes. Inventario de
-3slots, estamina y nuevo balance quedan pendientes. LEEME explica cómo crear
-una sala dentro del juego y compartir la invitación LMS1-.
+Mapas, personajes, combate, voz y rendimiento mantienen el alcance de 0.9.2.
+No se agregaron inventario de tres slots, estamina ni colisiones detalladas
+para posarse en todos los muebles.

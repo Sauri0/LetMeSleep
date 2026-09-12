@@ -176,6 +176,10 @@ func _completed(ticket: int, operation: String, result: Dictionary) -> void:
 				_request("search", {"lobby_id": _invitation.lobby_id})
 		"search":
 			var found: Variant = result.get("lobby")
+			if found != null and str(found.lobby_id) == str(_invitation.lobby_id) and str(found.owner_product_user_id) == _local_id:
+				backend.dispose_search(found)
+				_fail("own_room")
+				return
 			if not _valid_lobby(found, false):
 				backend.dispose_search(found)
 				_fail("room_protocol_or_owner_mismatch")

@@ -69,7 +69,7 @@ func _perform(operation: String, args: Dictionary) -> Dictionary:
 		for field: String in ["product_id", "sandbox_id", "deployment_id", "client_id", "client_secret"]:
 			credentials.set(field, args.config[field])
 		credentials.product_name = "Let me sleep"
-		credentials.product_version = str(args.get("version", "0.9.2"))
+		credentials.product_version = str(ProjectSettings.get_setting("application/config/version", "0.9.3"))
 		initialized = await _platform.setup_eos_async(credentials)
 		return {"ok": initialized, "error": "platform_failed"}
 	if not initialized:

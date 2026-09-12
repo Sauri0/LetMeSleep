@@ -1,13 +1,20 @@
-# Let me sleep — 0.9.2 para Windows
+# Let me sleep — 0.9.3 para Windows
 
-[Descargar 0.9.2](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.2).
-Descomprimí el ZIP completo y abrí Let-me-sleep.exe.
+[Descargar 0.9.3](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.3).
+Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**.
 
-Casa reorganizada, manos/agarres corregidos, personalización facial revisada
-y cámara del mosquito con zoom y giro independiente al quedarse quieto.
-Online integrado por invitación LMS1-. Todos deben usar0.9.2/protocolo11.
-La compilación completa y9escenarios del EXE pasaron. La prueba entre dos
-casas sigue pendiente. Alcance: [PRUEBAS](distribution/PRUEBAS.md).
+1. **Crear sala online**: escribí tu nombre y confirmá.
+2. **Copiar código**: mandáselo a tus amigos sin cerrar la sala.
+3. Tus amigos eligen **Unirme con código → Pegar → Unirme**.
+
+Todos marcan **Estoy listo** y el anfitrión pulsa **Empezar**. Se conserva
+**Entrenamiento con bots** para probar solo. Las opciones y lanzadores LAN
+fueron retirados. Todos necesitan 0.9.3; la invitación comienza por LMS1-.
+
+Esta corrección se verifica sin abrir ventanas del juego: contratos dirigidos
+más creación/cierre real de sala EOS desde el ejecutable. No se repitió la
+validación gráfica ni se comprobó una partida entre dos casas. Detalle en
+[PRUEBAS.md](distribution/PRUEBAS.md).
 
 **[Versiones publicadas y descargas](https://github.com/Sauri0/LetMeSleep/releases)**
 

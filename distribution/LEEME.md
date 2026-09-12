@@ -1,12 +1,12 @@
-# Let me sleep · 0.9.2 · Windows 64 bits
+# Let me sleep · 0.9.3 · Windows 64 bits
 
-Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.9.2 / protocolo 11**.
+Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.9.3 / protocolo 11**.
 
 Esta versión corrige techos y uniones, amplía los pasos junto a las escaleras y mejora la continuidad del movimiento y de los mosquitos adheridos. La personalización permite reconocer mejor la selección; la cámara sigue girando al mirar hacia abajo. El menú usa Epic Online Services para crear salas e invitar con un código **LMS1-**. **Esta candidata todavía requiere comprobar una partida entre dos casas; consultá PRUEBAS.md para ver el alcance validado.**
 
 ## Empezar a jugar
 
-Elegí **PRÁCTICA**, tu personaje y un modo. El humano juega contra dos mosquitos automáticos; el mosquito, contra un humano automático. La práctica funciona sin conexión ni servidor externo. En partidas con amigos, los roles se sortean cada ronda.
+Elegí **ENTRENAMIENTO CON BOTS**, tu personaje y un modo. El humano juega contra dos mosquitos automáticos; el mosquito, contra un humano automático. La práctica funciona sin conexión ni servidor externo. En partidas con amigos, los roles se sortean cada ronda.
 
 ## Controles esenciales
 
@@ -60,24 +60,27 @@ Otro mosquito puede acercarse, apuntarte y **mantener E** para ayudarte. La recu
 
 Si todos los mosquitos caen, la ronda continúa: los humanos aprovechan ese tiempo para defender la sangre o hacer tareas. En **Supervivencia**, los golpes siguen eliminando al mosquito por el resto de la ronda.
 
-## Crear una sala dentro del juego
+## Jugar online con amigos
 
-1. Elegí **CREAR SALA**, escribí tu nombre y pulsá **CREAR SALA**. El juego conecta con Epic y abre la sala 3D; tu misma aplicación ejecuta el servidor.
-2. Copiá la invitación **LMS1-** de la sala y pasásela a tus amigos. Conservá todo el texto; no hace falta indicar una IP ni un puerto.
-3. Tus amigos eligen **UNIRME CON INVITACIÓN**, escriben su nombre y pegan el texto completo.
-4. El anfitrión elige modo y cantidad de humanos. Todos se preparan y el anfitrión inicia.
+**Quien crea:** elegí **CREAR SALA ONLINE**, escribí tu nombre y confirmá.
+Cuando estés en la sala, pulsá **COPIAR CÓDIGO** y mandáselo a tus amigos.
+**Invitá a tus amigos** muestra el código completo y estos pasos.
 
-No hace falta abrir una consola, otro ejecutable ni Iniciar-servidor.cmd. Salir de la sala o cerrar el juego termina la sala propia. Si se cierra el anfitrión, la sala termina; no se transfiere a otra PC. El juego usa una identidad local de Epic: no te pide crear una cuenta ni instalar otra aplicación. La primera conexión necesita Internet.
+**Quien entra:** elegí **UNIRME CON CÓDIGO**, escribí tu nombre, pulsá
+**PEGAR** y después **UNIRME** (o Enter). El código empieza por **LMS1-**.
 
-Epic permite intentar una conexión directa y usar su relay cuando haga falta. El código identifica la sala y autoriza el ingreso; no contiene la contraseña del cliente Epic. Compartilo sólo con quienes quieras invitar. Copiarlo no demuestra que la conexión se haya completado: esperá a que ambos aparezcan en la sala 3D.
+Cuando estén todos en la sala, marquen **Estoy listo**. Quien creó la sala
+elige las reglas y pulsa **Empezar**. Todos deben usar **0.9.3**.
+Mantené el juego y la sala abiertos mientras entran tus amigos. Si salís,
+la sala se cierra y necesitás crear otra con un código nuevo.
 
-**Conexión directa / LAN**, dentro de Opciones, conserva el método avanzado anterior. Sus invitaciones **DD5-** sí contienen dirección y puerto y requieren una ruta de red alcanzable. Los scripts de servidor del paquete pertenecen a este modo avanzado; no son el procedimiento habitual de online.
+## Si no podés entrar
 
-## Si no conecta
-
-El estado muestra el paso de conexión y permite cancelar o reintentar. Revisá que todos usen esta misma versión, que el anfitrión siga dentro de su sala y que la invitación esté completa. Una sala cerrada necesita una invitación nueva. Si vuelve a fallar, conservá el mensaje exacto y el archivo de registro para informar el problema.
-
-El mensaje «No llegó respuesta UDP» corresponde al modo directo avanzado. En ese modo, 127.0.0.1 sólo apunta a la propia PC y una dirección local de otra casa no sirve como dirección de Internet. Para el online integrado usá la invitación **LMS1-** y dejá desmarcada Conexión directa / LAN.
+Esperá a que termine el paso indicado. Podés cancelar o reintentar.
+Comprobá que ambos tengan esta versión y que el anfitrión siga en la sala.
+Si te mandan otro código, pegalo antes de reintentar. Si el error continúa,
+compartí el mensaje exacto. El juego hace la conexión online; no te pide
+configurar direcciones, puertos ni instalar otra aplicación.
 
 ## Voz cercana
 
