@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace LetMeSleep.Presentation
@@ -20,6 +21,7 @@ namespace LetMeSleep.Presentation
 
         private readonly RaycastHit[] hits = new RaycastHit[HitCapacity];
         private readonly Collider[] overlaps = new Collider[OverlapCapacity];
+        private Func<Collider, bool> collisionFilter;
         private Quaternion desiredRotation = Quaternion.identity;
         private Quaternion smoothedRotation = Quaternion.identity;
         private float desiredDistance = 0.85f;
@@ -108,6 +110,8 @@ namespace LetMeSleep.Presentation
             Initialize();
         }
 
+        public void SetCollisionFilter(Func<Collider, bool> filter) => collisionFilter = filter;
+
         private void Initialize()
         {
             if (cameraTransform == null && controlledCamera != null)
@@ -137,7 +141,9 @@ namespace LetMeSleep.Presentation
             for (int i = 0; i < count; i++)
             {
                 Collider collider = hits[i].collider;
-                if (collider == null || collider.transform.IsChildOf(safeAnchor))
+                if (collider == null ||
+                    (collisionFilter != null && !collisionFilter(collider)) ||
+                    collider.transform.IsChildOf(safeAnchor))
                     continue;
                 nearest = Mathf.Min(nearest, Mathf.Max(0f, hits[i].distance - collisionPadding));
             }
@@ -151,7 +157,9 @@ namespace LetMeSleep.Presentation
             for (int i = 0; i < count; i++)
             {
                 Collider collider = overlaps[i];
-                if (collider != null && !collider.transform.IsChildOf(safeAnchor))
+                if (collider != null &&
+                    (collisionFilter == null || collisionFilter(collider)) &&
+                    !collider.transform.IsChildOf(safeAnchor))
                     return true;
             }
             return false;

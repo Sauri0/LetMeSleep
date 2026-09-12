@@ -158,7 +158,10 @@ namespace LetMeSleep.Presentation.Gameplay
             if (proxy.Role == PlayerRole.Human && humanCamera != null)
                 humanCamera.BindEye(view.GetAnchor("CameraEye"));
             else if (proxy.Role == PlayerRole.Mosquito && mosquitoCamera != null)
+            {
+                mosquitoCamera.SetCollisionFilter(gameplay.World.IsWorldCollider);
                 mosquitoCamera.BindAnchors(proxy.transform, view.GetAnchor("CameraTarget"));
+            }
         }
 
         private GameObject AttachFlyswatter(CharacterView view)
