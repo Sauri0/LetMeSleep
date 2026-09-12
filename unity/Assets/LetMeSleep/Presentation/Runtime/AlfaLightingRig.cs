@@ -173,6 +173,13 @@ namespace LetMeSleep.Presentation
             localLight.shadowBias = 0.075f;
             localLight.shadowNormalBias = 0.35f;
             localLight.shadowNearPlane = 0.1f;
+            if (IsLivingStandingLamp(anchor.name))
+            {
+                // A low, nearby bulb needs tighter contact than the ceiling fixtures.
+                localLight.shadowBias = 0.025f;
+                localLight.shadowNormalBias = 0.08f;
+                localLight.shadowNearPlane = 0.05f;
+            }
             localLight.enabled = true;
             lightObject.SetActive(true);
             return localLight;
@@ -242,6 +249,8 @@ namespace LetMeSleep.Presentation
 
         private static LocalLightProfile ResolveProfile(string anchorName, bool house)
         {
+            if (house && IsLivingStandingLamp(anchorName))
+                return new LocalLightProfile(new Color(1f, 0.66f, 0.36f), 0.65f, 2.4f, true, LocalShadowTier.Low, LightType.Point);
             if (Contains(anchorName, "Patio"))
                 return new LocalLightProfile(new Color(0.42f, 0.58f, 0.92f), 0.42f, 5.5f, false, LocalShadowTier.Low, LightType.Point);
             if (Contains(anchorName, "Lobby"))
@@ -260,6 +269,11 @@ namespace LetMeSleep.Presentation
             return house
                 ? new LocalLightProfile(new Color(1f, 0.68f, 0.40f), 0.85f, 3.8f, false, LocalShadowTier.Low)
                 : new LocalLightProfile(new Color(1f, 0.64f, 0.34f), 1.45f, 4.8f, false, LocalShadowTier.Low);
+        }
+
+        private static bool IsLivingStandingLamp(string anchorName)
+        {
+            return string.Equals(anchorName, "LightAnchor_Living_StandingLamp", StringComparison.OrdinalIgnoreCase);
         }
 
         private static string ResolveZone(string anchorName)
