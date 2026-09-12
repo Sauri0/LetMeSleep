@@ -55,7 +55,11 @@ Respetar dimensiones y `visual_scale` medidos del blueprint.
 - Cocina/comedor: zona de cocina en el tercio/mitad próximo a la despensa;
   pileta y horno sobre el perímetro, heladera en un extremo, mesa auxiliar
   separada del paso. Comedor en el otro extremo con su acceso propio.
-- Dormitorio: cabecera en pared y mesa de luz a <=.35 del costado de la cama;
+- Dormitorio: cabecera hacia una pared real, con separación de montaje <=.20 m,
+  y al menos una mesa de luz por dormitorio/grupo a <=.35 del costado de una cama;
+  no se exige una mesita por cada cama del familiar (decisión de Director).
+  El asset existente tiene cabecera local -X y costados ±Z, según
+  `build_house.py:171-176`; no usar el frente genérico del blueprint como cabecera.
   frente del guardado hacia pasillo interior. Escritorio separado del pie de
   cama. En familiar, dos camas con pasillo >=1.30 entre grupos, no pegadas
   entre sí para incrementar ocupación.
@@ -117,6 +121,10 @@ mientras se migran consumidores. Pickups, tareas, props y nav links leen esta
 metadata; no vuelven a inferir un costado por signo de Z. World ya recibe
 `station.display_p/display_yaw`: ese contrato no cambia y Worker 2 no necesita
 interpretar nuevas rotaciones para las tareas.
+
+Validar presencia y finitud de `station.display_p/display_yaw`, igualdad con
+la pose publicada por `pickup_surface`, posición sobre huella/top del apoyo y
+referencia a una estructura de mueble real con el mismo AABB y habitación.
 
 Primera implementación: superficies principales con las orientaciones actuales
 0/180; liberar 90/270 sólo cuando soporte visual, posición de pickup, prop de

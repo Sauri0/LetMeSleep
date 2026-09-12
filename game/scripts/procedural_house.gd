@@ -393,6 +393,17 @@ func _furnishing_specs(room: Dictionary) -> Array[Dictionary]:
 			for original: Dictionary in result.duplicate():
 				if str(original.asset_id)==asset:
 					result.append(original.duplicate(true));break
+	if int(room.bed_count)>0:
+		var stands:=0
+		for spec: Dictionary in result:
+			if str(spec.asset_id)=="nightstand": stands+=1
+		for original: Dictionary in Furniture.for_theme("bedroom_green"):
+			if str(original.asset_id)!="nightstand": continue
+			while stands<1:
+				var stand:=original.duplicate(true)
+				stand.essential=true;stand.pickup_surface=false;stand.theme_id=room.theme_id
+				stand.functional_zone_id=str(room.id)+"/"+str(room.theme_id)
+				result.append(stand);stands+=1
 	# A second reading seat fills a social group, never an extra invisible box.
 	if room.zone!="service" and result.size()<6 and float(room.area_m2)>30:
 		for original: Dictionary in result.duplicate():
@@ -432,7 +443,7 @@ func _furniture_candidates(room: Dictionary, spec: Dictionary, near_beds: Array[
 		if str(spec.asset_id)=="nightstand":
 			for bed: Dictionary in near_beds:
 				var bed_box: AABB=bed.box
-				var side_axis:=0 if absf(cos(float(bed.rotation_y)))>.5 else 2
+				var side_axis:=2 if absf(cos(float(bed.rotation_y)))>.5 else 0
 				var along_axis:=2 if side_axis==0 else 0
 				for side: float in [-1.0,1.0]:
 					for fraction: float in [0.0,.5,1.0]:
@@ -459,6 +470,9 @@ func _furniture_candidates(room: Dictionary, spec: Dictionary, near_beds: Array[
 				if box.intersects(lane): blocked=true;break
 			if blocked: continue
 			var yaw: float=(PI if box.get_center().z<anchor.z else 0.0) if quarter==0 else (-PI*.5 if box.get_center().x<anchor.x else PI*.5)
+			if str(spec.asset_id)=="bed":
+				yaw=(0.0 if box.get_center().x<anchor.x else PI) if quarter==0 else (-PI*.5 if box.get_center().z<anchor.z else PI*.5)
+			if str(spec.asset_id)=="bed" and not HouseChecks.bed_headboard_on_wall(box,yaw,room.interior_bounds): continue
 			var approach:=Vector3(box.get_center().x,bounds.position.y,box.get_center().z)
 			if quarter==0:
 				approach.x=clampf(anchor.x,box.position.x+minf(.25,box.size.x*.25),box.end.x-minf(.25,box.size.x*.25))
@@ -486,8 +500,8 @@ func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
 	jobs.sort_custom(func(a:Dictionary,b:Dictionary)->bool:
 		if bool(a.spec.essential)!=bool(b.spec.essential): return bool(a.spec.essential)
 		if int(room.bed_count)>0:
-			var ap:=0 if str(a.spec.asset_id)=="bed" else (2 if str(a.spec.asset_id)=="nightstand" else 1)
-			var bp:=0 if str(b.spec.asset_id)=="bed" else (2 if str(b.spec.asset_id)=="nightstand" else 1)
+			var ap:=0 if str(a.spec.asset_id)=="bed" else (1 if str(a.spec.asset_id)=="nightstand" else 2)
+			var bp:=0 if str(b.spec.asset_id)=="bed" else (1 if str(b.spec.asset_id)=="nightstand" else 2)
 			if ap!=bp: return ap<bp
 		return a.candidates.size()<b.candidates.size() if a.candidates.size()!=b.candidates.size() else int(a.order)<int(b.order))
 	for job: Dictionary in jobs:
@@ -512,7 +526,7 @@ func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
 					var group: Array[Dictionary]=[]
 					for item: Dictionary in items:
 						group.append({"asset_id":item.spec.asset_id,"box":item.box,"rotation_y":item.rotation_y})
-					if not HouseChecks.bed_group_valid(group): continue
+					if not HouseChecks.bed_group_valid(group,false): continue
 				next.append({"items":items,"score":float(state.score)+float(candidate.score)})
 		if next.is_empty():
 			if bool(spec.essential):
@@ -524,7 +538,15 @@ func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
 		next.sort_custom(func(a:Dictionary,b:Dictionary)->bool:return float(a.score)<float(b.score))
 		if next.size()>16: next.resize(16)
 		states=next
-	return states[0].items
+	for state: Dictionary in states:
+		if int(room.bed_count)>0:
+			var group: Array[Dictionary]=[]
+			for item: Dictionary in state.items:
+				group.append({"asset_id":item.spec.asset_id,"box":item.box,"rotation_y":item.rotation_y})
+			if not HouseChecks.bed_group_valid(group): continue
+		return state.items
+	room.placement_failure={"stage":"bedside_assignment","states":states.size()}
+	return []
 
 func _furnish_room(room: Dictionary) -> void:
 	var b: AABB=room.bounds

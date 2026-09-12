@@ -14,10 +14,22 @@ Separado de la corrección validada de 0.9.1 (`9eb6f64` en `lms091-house`).
   El filtro acepta una distancia lateral entre 10 y 35 cm y solapamiento con
   el costado; considera la rotación de la cama. Conserva las comprobaciones
   generales de colisión, ventana, barrido y acceso.
+- Ampliación tras revisión independiente: cabecera local -X del asset real hacia
+  pared, separación máxima 20 cm; laterales de cama locales ±Z. Se contrastó
+  `build_house.py:171-176` y la ausencia de giro adicional en `house_library.gd`.
+  Director exige al menos una mesita por dormitorio/grupo, no una por cama.
+  Se añade la pieza existente cuando el blueprint del dormitorio no la incluye;
+  el grupo completo no puede aprobarse sin ella. Camas y mesita se colocan antes
+  del resto de esenciales. Los estados parciales pueden esperar esa pieza;
+  el resultado final debe satisfacer la relación completa.
 - Tareas: el validador v3 comprueba ocho habitaciones distintas, al menos dos
   plantas y exterior para ventana/mosquitero. Revalida los ocho identificadores,
   camas reales y aproximación de la superficie asignada. Las cuatro tareas
   sobre mesa sólo consideran habitaciones con una superficie publicada.
+- Pose de tareas: presencia, finitud e igualdad de `display_p/display_yaw` con
+  la fuente única; posición sobre huella/top y referencia a mueble de apoyo real.
+  Los fixtures positivos incluyen esos datos. Negativos cambian posición, yaw,
+  finitud, soporte referenciado y una pose coincidente pero fuera del apoyo.
 
 `modeler092_contract_test.gd` prepara fixtures positivos/negativos independientes
 del éxito del solver: camas a 20 cm, separación diagonal, mueble en pasillo,

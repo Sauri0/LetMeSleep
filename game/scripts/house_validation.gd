@@ -128,6 +128,8 @@ static func validate_furnishing(data: Dictionary, human: Dictionary) -> Array[St
 			if order<0 or orders.has(order): errors.append("Invalid furnishing placement order")
 			orders[order]=true
 			if door_sweep_intersects(data.doors[room.id],box): errors.append("Furniture intrudes into opening sweep: "+str(item.id))
+			if asset=="bed" and not bed_headboard_on_wall(box,float(item.get("rotation_y",NAN)),inside):
+				errors.append("Bed headboard is not against a wall: "+str(item.id))
 			for lane: AABB in room.get("movement_clearance",[]):
 				if box.intersects(lane): errors.append("Furniture blocks functional route: "+str(item.id));break
 		for first: int in range(objects.size()):
@@ -143,6 +145,7 @@ static func validate_furnishing(data: Dictionary, human: Dictionary) -> Array[St
 			expected.bed=int(room.bed_count)
 			var storage: String="wardrobe" if room.theme_id=="bedroom_blue" else "dresser"
 			expected[storage]=int(expected.get(storage,0))+1
+		if int(room.bed_count)>0: expected.nightstand=maxi(int(expected.get("nightstand",0)),1)
 		for asset: String in expected:
 			if int(counts.get(asset,0))<int(expected[asset]): errors.append("Missing essential %s in %s"%[asset,room.id])
 		if int(room.bed_count)>0 and not bed_group_valid(objects): errors.append("Invalid bed group spacing in "+str(room.id))
@@ -177,14 +180,27 @@ static func nightstand_beside_bed(stand: AABB, bed: AABB, yaw: float) -> bool:
 	var frame:=Transform3D(Basis(Vector3.UP,yaw),bed.get_center()).affine_inverse()
 	var local_bed: AABB=frame*bed
 	var local_stand: AABB=frame*stand
-	var side_gap:=maxf(local_stand.position.x-local_bed.end.x,local_bed.position.x-local_stand.end.x)
-	var overlap:=minf(local_stand.end.z,local_bed.end.z)-maxf(local_stand.position.z,local_bed.position.z)
-	return side_gap>=.10-.001 and side_gap<=.35+.001 and overlap>=minf(.25,local_stand.size.z*.5)
+	# This bed asset runs along local X; its long sides are local +/-Z.
+	var side_gap:=maxf(local_stand.position.z-local_bed.end.z,local_bed.position.z-local_stand.end.z)
+	var overlap:=minf(local_stand.end.x,local_bed.end.x)-maxf(local_stand.position.x,local_bed.position.x)
+	return side_gap>=.10-.001 and side_gap<=.35+.001 and overlap>=minf(.25,local_stand.size.x*.5)
 
-static func bed_group_valid(objects: Array[Dictionary]) -> bool:
+static func bed_headboard_on_wall(bed: AABB, yaw: float, inside: AABB) -> bool:
+	if not is_finite(yaw) or not inside.grow(.001).encloses(bed): return false
+	# build_house.py models the bed headboard at local -X (left short end).
+	# Unlike cabinet fronts, its head direction is not derived from local -Z.
+	var rear:=Basis(Vector3.UP,yaw)*Vector3.LEFT
+	var axis:=0 if absf(rear.x)>.999 else 2
+	if absf(rear[axis])<.999: return false
+	var gap: float=inside.end[axis]-bed.end[axis] if rear[axis]>0 else bed.position[axis]-inside.position[axis]
+	return gap>=-.001 and gap<=.20+.001
+
+static func bed_group_valid(objects: Array[Dictionary], require_complete: bool=true) -> bool:
 	var beds: Array[Dictionary]=[]
+	var stands: Array[Dictionary]=[]
 	for item: Dictionary in objects:
 		if str(item.asset_id)=="bed": beds.append(item)
+		if str(item.asset_id)=="nightstand": stands.append(item)
 	for first: int in range(beds.size()):
 		for second: int in range(first+1,beds.size()):
 			var aisle:=bed_aisle(beds[first].box,beds[second].box)
@@ -197,7 +213,7 @@ static func bed_group_valid(objects: Array[Dictionary]) -> bool:
 		for bed: Dictionary in beds:
 			if nightstand_beside_bed(item.box,bed.box,float(bed.rotation_y)): beside=true;break
 		if not beside: return false
-	return true
+	return not require_complete or (not beds.is_empty() and not stands.is_empty())
 
 static func validate_tasks(data: Dictionary) -> Array[String]:
 	var errors: Array[String]=[]
@@ -224,12 +240,36 @@ static func validate_tasks(data: Dictionary) -> Array[String]:
 			if not bed: errors.append("Bedtime task has no real bed: "+label)
 		if label in ["VENTILADOR","REPELENTE","EQUIPO","VAJILLA"]:
 			var surface: Dictionary=room.get("pickup_surface",{})
-			if surface.is_empty() or not Vector3(task.p).is_equal_approx(surface.approach): errors.append("Task lacks assigned support approach: "+label)
+			if surface.is_empty() or not surface.has("approach") or not Vector3(task.p).is_equal_approx(surface.approach):
+				errors.append("Task lacks assigned support approach: "+label)
+			if not task_surface_pose_valid(task,surface): errors.append("Invalid task display pose: "+label)
+			var real_support:=false
+			for item: Dictionary in data.structures:
+				if str(item.get("id",""))!=str(surface.get("structure_id","")) or str(item.get("room",""))!=id: continue
+				if str(item.get("kind",""))=="furniture" and bool(item.get("pickup_surface",false)) and surface.has("box"):
+					real_support=AABB(item.box).is_equal_approx(surface.box)
+				break
+			if not real_support: errors.append("Task lacks real support structure: "+label)
 	if data.stations.size()!=8 or used.size()!=8: errors.append("Expected eight distinct task rooms")
 	if floors.size()<2: errors.append("Bedtime tasks need at least two floors")
 	for label: String in ["VENTANA","VENTILADOR","REPELENTE","EQUIPO","MANTAS","MOSQUITERO","SÁBANAS","VAJILLA"]:
 		if not labels.has(label): errors.append("Missing bedtime task: "+label)
 	return errors
+
+static func task_surface_pose_valid(task: Dictionary, surface: Dictionary) -> bool:
+	for key: String in ["display_p","display_yaw"]:
+		if not task.has(key): return false
+	for key: String in ["box","task_display_p","task_display_yaw"]:
+		if not surface.has(key): return false
+	var point: Vector3=task.display_p
+	var expected: Vector3=surface.task_display_p
+	var yaw: float=task.display_yaw
+	var expected_yaw: float=surface.task_display_yaw
+	var box: AABB=surface.box
+	if not point.is_finite() or not expected.is_finite() or not is_finite(yaw) or not is_finite(expected_yaw): return false
+	if not box.position.is_finite() or not box.size.is_finite() or not box.has_volume(): return false
+	if not point.is_equal_approx(expected) or absf(wrapf(yaw-expected_yaw,-PI,PI))>.0001: return false
+	return absf(point.y-box.end.y)<=.001 and point.x>=box.position.x and point.x<=box.end.x and point.z>=box.position.z and point.z<=box.end.z
 
 static func _portal_hall(data: Dictionary, room: Dictionary) -> Vector3:
 	var point: Vector3=room.portal
