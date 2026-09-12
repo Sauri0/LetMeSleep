@@ -39,6 +39,11 @@ namespace LetMeSleep.Updater {
                 try {
                     Check(Updater.ParseVersion("v0.9.10") > Updater.ParseVersion("0.9.3"), "numeric ordering (10 after 3)");
                     Check(Updater.ParseVersion("v0.9.3-preview") == null, "unsupported tag ignored");
+                    string[] stages = { "0.9.3", "0.9.4-alfa", "0.9.4-beta", "0.9.4-omega", "0.9.4-delta", "0.9.4-gamma", "0.9.4", "0.9.5-alfa" };
+                    for (int i = 1; i < stages.Length; i++) Check(Updater.ParseVersion(stages[i]) > Updater.ParseVersion(stages[i-1]), "release order " + stages[i-1] + " -> " + stages[i]);
+                    foreach (string badVersion in new[] { "0.9.4/delta", "0.9.4-rc", "0.9.4-GAMMA", "0.09.4-alfa", "launcher-v1.0.1" })
+                        Check(Updater.ParseVersion(badVersion) == null, "reject noncanonical version " + badVersion);
+                    Check(Updater.SelectRelease(new[] { Release("v0.9.4-omega"), Release("v0.9.4-delta"), Release("v0.9.4-beta"), Release("v0.9.4-gamma",true) }).tag_name == "v0.9.4-delta", "delta follows omega; draft gamma excluded");
                     Check(Updater.SelectRelease(new[] { Release("v0.9.3"), Release("v0.9.10"), Release("v99.0.0", true), Release("v99.1.0", false, false) }).tag_name == "v0.9.10", "newest complete public numbered playtest");
                     Check(Updater.SelectRelease(new[] { Release("v1.0.0", false, false) }) == null, "incomplete release never installed");
                     Updater.CheckAssetUrl("https://github.com/Sauri0/LetMeSleep/releases/download/v0.9.3/test.zip", "v0.9.3", "test.zip"); checks++;
@@ -69,16 +74,21 @@ namespace LetMeSleep.Updater {
                     Fixture(oldDir,"0.9.2"); Fixture(newDir,"0.9.3");
                     Updater.Activate(root,slot1);
                     var local = new Updater(root,(s,p) => {}, CancellationToken.None);
-                    Check(local.Current().Version == new Version("0.9.2"), "first install activation");
+                    Check(local.Current().Version == Updater.ParseVersion("0.9.2"), "first install activation");
                     File.WriteAllText(Path.Combine(root,"interrupted-download.tmp"),"partial");
-                    Check(local.Current().Version == new Version("0.9.2"), "interrupted download leaves installed version active");
-                    Updater.ValidateInstallation(newDir,new Version("0.9.3")); Updater.Activate(root,slot2);
-                    Check(local.Current().Version == new Version("0.9.3") && File.Exists(Path.Combine(oldDir,"Let-me-sleep.exe")), "atomic switch retains previous version");
+                    Check(local.Current().Version == Updater.ParseVersion("0.9.2"), "interrupted download leaves installed version active");
+                    Updater.ValidateInstallation(newDir,Updater.ParseVersion("0.9.3")); Updater.Activate(root,slot2);
+                    Check(local.Current().Version == Updater.ParseVersion("0.9.3") && File.Exists(Path.Combine(oldDir,"Let-me-sleep.exe")), "atomic switch retains previous version");
                     File.AppendAllText(Path.Combine(newDir,"Let-me-sleep.exe"),"corrupt");
                     Check(local.Current() == null, "corrupt installation not launched");
-                    Reject(() => Updater.ValidateInstallation(oldDir,new Version("0.9.3")), "release manifest version mismatch rejected");
+                    Reject(() => Updater.ValidateInstallation(oldDir,Updater.ParseVersion("0.9.3")), "release manifest version mismatch rejected");
                     File.WriteAllText(Path.Combine(root,"current.txt"),"../../outside");
                     Check(local.Current() == null, "unsafe installed pointer rejected");
+                    string alfaSlot = "0.9.4-alfa-" + Guid.NewGuid().ToString("N");
+                    string alfaDir = Path.Combine(root,"versions",alfaSlot); Fixture(alfaDir,"0.9.4-alfa");
+                    Updater.Activate(root,alfaSlot);
+                    Check(local.Current().Version == Updater.ParseVersion("0.9.4-alfa"), "stage install survives restart and validates manifest");
+                    Reject(() => Updater.ValidateInstallation(alfaDir,Updater.ParseVersion("0.9.4-beta")), "wrong stage package rejected");
                     string settings = Path.Combine(root,"launcher settings");
                     string defaultInstall = Path.Combine(root,"default install");
                     var location = new InstallLocation(settings, defaultInstall);

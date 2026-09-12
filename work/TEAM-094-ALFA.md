@@ -27,6 +27,7 @@ Referencias locales: work/references094/characters.png y environment.png.
 Low-poly con facetas controladas, volúmenes simples, colores definidos, estética cómica. Entorno según segunda lámina. Personajes actuales, solo arreglos indispensables; NO rediseño beta. No inventario, estamina, nuevas picaduras ni mapas delta en alfa.
 Mapas fijos significa autoría real, NO fijar una semilla del generador existente y declararlo terminado.
 No abrir juego, editor Blender visible ni benchmarks gráficos hasta que Director confirme la respuesta de Branko. Se permiten lecturas, código y pruebas headless sin ventanas. No usar proveedores remotos de pago.
+Actualización de autorización: Branko respondió «Podés abrir el juego para las pruebas». Director coordina turnos únicos. WAN con amigos: «cuando pueda en otro momento con amigos», por lo tanto queda sin evidencia hasta esa prueba real.
 No exponer LAN/IP/puertos. Usar EOS integrado y conservar entrenamiento.
 
 ## Contrato de mapa

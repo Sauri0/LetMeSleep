@@ -28,7 +28,7 @@ namespace LetMeSleep.Updater {
     }
     public sealed class Installation {
         public string DirectoryPath;
-        public Version Version;
+        public GameVersion Version;
         public string Executable { get { return Path.Combine(DirectoryPath, "Let-me-sleep.exe"); } }
     }
     public sealed class Updater {
@@ -43,10 +43,7 @@ namespace LetMeSleep.Updater {
             Root = Path.GetFullPath(root); progress = status; cancel = cancellation;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
-        public static Version ParseVersion(string value) {
-            if (value == null || !Regex.IsMatch(value, @"^v?\d+\.\d+\.\d+$")) return null;
-            Version result; return Version.TryParse(value.TrimStart('v'), out result) ? result : null;
-        }
+        public static GameVersion ParseVersion(string value) { return GameVersion.Parse(value); }
         public static Release SelectRelease(IEnumerable<Release> releases) {
             // Public numbered playtest releases are included, even when GitHub marks them prerelease.
             return releases.Where(r => !r.draft && ParseVersion(r.tag_name) != null && HasAssets(r))
@@ -137,7 +134,7 @@ namespace LetMeSleep.Updater {
                 }
             }
         }
-        public static Installation ValidateInstallation(string directory, Version expected) {
+        public static Installation ValidateInstallation(string directory, GameVersion expected) {
             var buildPath = Path.Combine(directory, "BUILD.json");
             if (new FileInfo(buildPath).Length > 1048576) throw new InvalidDataException("Manifiesto demasiado grande.");
             var build = Json.Deserialize<Build>(File.ReadAllText(buildPath));
@@ -154,17 +151,21 @@ namespace LetMeSleep.Updater {
         public Installation Current() {
             try {
                 string slot = File.ReadAllText(Path.Combine(Root, "current.txt")).Trim();
-                if (!Regex.IsMatch(slot, @"^\d+\.\d+\.\d+-[a-f0-9]{32}$")) return null;
+                if (!ValidSlot(slot)) return null;
                 return ValidateInstallation(SafePath(Root, "versions/" + slot), null);
             } catch { return null; }
         }
         public static void Activate(string root, string slot) {
-            if (!Regex.IsMatch(slot, @"^\d+\.\d+\.\d+-[a-f0-9]{32}$")) throw new InvalidDataException("Instalación inválida.");
+            if (!ValidSlot(slot)) throw new InvalidDataException("Instalación inválida.");
             string current = Path.Combine(root, "current.txt"), next = Path.Combine(root, "pointer-" + Guid.NewGuid().ToString("N") + ".tmp");
             using (var file = new FileStream(next, FileMode.CreateNew, FileAccess.Write, FileShare.None)) {
                 byte[] bytes = Encoding.UTF8.GetBytes(slot); file.Write(bytes, 0, bytes.Length); file.Flush(true);
             }
             if (File.Exists(current)) File.Replace(next, current, null); else File.Move(next, current);
+        }
+        static bool ValidSlot(string slot) {
+            var match = Regex.Match(slot ?? "", @"^(.+)-[a-f0-9]{32}$");
+            return match.Success && ParseVersion(match.Groups[1].Value) != null;
         }
         public Installation EnsureLatest() {
             Directory.CreateDirectory(Root);
