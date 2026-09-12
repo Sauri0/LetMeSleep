@@ -20,8 +20,12 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private readonly Dictionary<uint, ActorVisualBinding> visuals =
             new Dictionary<uint, ActorVisualBinding>();
+        private readonly Dictionary<uint, GameObject> pickupVisuals =
+            new Dictionary<uint, GameObject>();
         private readonly HashSet<uint> aliveActors = new HashSet<uint>();
+        private readonly HashSet<uint> livePickups = new HashSet<uint>();
         private readonly List<uint> removedActors = new List<uint>();
+        private readonly List<uint> removedPickups = new List<uint>();
         private UnityGameplayWorld subscribedWorld;
         private bool subscribed;
 
@@ -90,6 +94,8 @@ namespace LetMeSleep.Presentation.Gameplay
                     Destroy(visuals[actorId].gameObject);
                 visuals.Remove(actorId);
             }
+
+            ApplyToolPickups(snapshot.ToolPickups);
         }
 
         public void ApplyEvent(in GameplayModel.GameplayEvent item)
@@ -125,7 +131,7 @@ namespace LetMeSleep.Presentation.Gameplay
             binding.Initialize(proxy, gameplay.World, view, local);
             visuals.Add(proxy.ActorId, binding);
             if (proxy.Role == PlayerRole.Human)
-                AttachFlyswatter(view);
+                binding.BindFlyswatter(AttachFlyswatter(view));
             BindLocalCamera(proxy, view, local);
             if (proxy.State != null)
                 binding.ApplySnapshot(proxy.State, gameplay.LatestSnapshot != null ? gameplay.LatestSnapshot.HostTick : 0);
@@ -155,31 +161,78 @@ namespace LetMeSleep.Presentation.Gameplay
                 mosquitoCamera.BindAnchors(proxy.transform, view.GetAnchor("CameraTarget"));
         }
 
-        private void AttachFlyswatter(CharacterView view)
+        private GameObject AttachFlyswatter(CharacterView view)
         {
             if (flyswatterPrefab == null)
             {
                 Debug.LogError("LMS_FLYSWATTER_PREFAB_MISSING", this);
-                return;
+                return null;
             }
             Transform socket = view.GetAnchor("ToolSocket_R");
             if (socket == null)
             {
                 Debug.LogError($"LMS_TOOL_SOCKET_MISSING actor={view.name}", view);
-                return;
+                return null;
             }
             GameObject instance = Instantiate(flyswatterPrefab, socket);
             instance.name = "Tool_Flyswatter";
+            DisableColliders(instance);
             ToolView tool = instance.GetComponent<ToolView>();
             if (tool == null || tool.Grip == null)
             {
                 Debug.LogError("LMS_FLYSWATTER_BINDING_MISSING", instance);
                 Destroy(instance);
-                return;
+                return null;
             }
             Quaternion rotationDelta = socket.rotation * Quaternion.Inverse(tool.Grip.rotation);
             instance.transform.rotation = rotationDelta * instance.transform.rotation;
             instance.transform.position += socket.position - tool.Grip.position;
+            return instance;
+        }
+
+        private void ApplyToolPickups(IReadOnlyList<GameplayModel.ToolPickupSnapshot> pickups)
+        {
+            livePickups.Clear();
+            for (int i = 0; i < pickups.Count; i++)
+            {
+                GameplayModel.ToolPickupSnapshot state = pickups[i];
+                livePickups.Add(state.PickupId);
+                if (!GameplayModel.GameplayTools.IsFlyswatter(state.ToolId))
+                    continue;
+                if (!pickupVisuals.TryGetValue(state.PickupId, out GameObject instance) || instance == null)
+                {
+                    if (flyswatterPrefab == null)
+                        continue;
+                    instance = Instantiate(flyswatterPrefab, transform);
+                    instance.name = $"Pickup_{state.PickupId}_Flyswatter";
+                    DisableColliders(instance);
+                    pickupVisuals[state.PickupId] = instance;
+                }
+                bool available = state.OwnerActorId == 0;
+                if (instance.activeSelf != available)
+                    instance.SetActive(available);
+                if (available)
+                    instance.transform.SetPositionAndRotation(state.Position.ToUnity(), state.Rotation.ToUnity());
+            }
+
+            removedPickups.Clear();
+            foreach (KeyValuePair<uint, GameObject> pair in pickupVisuals)
+                if (!livePickups.Contains(pair.Key) || pair.Value == null)
+                    removedPickups.Add(pair.Key);
+            for (int i = 0; i < removedPickups.Count; i++)
+            {
+                uint pickupId = removedPickups[i];
+                if (pickupVisuals[pickupId] != null)
+                    Destroy(pickupVisuals[pickupId]);
+                pickupVisuals.Remove(pickupId);
+            }
+        }
+
+        private static void DisableColliders(GameObject instance)
+        {
+            Collider[] colliders = instance.GetComponentsInChildren<Collider>(true);
+            for (int i = 0; i < colliders.Length; i++)
+                colliders[i].enabled = false;
         }
 
         private void DriveLocalCamera()
@@ -251,6 +304,9 @@ namespace LetMeSleep.Presentation.Gameplay
             foreach (ActorVisualBinding visual in visuals.Values)
                 if (visual != null) Destroy(visual.gameObject);
             visuals.Clear();
+            foreach (GameObject pickup in pickupVisuals.Values)
+                if (pickup != null) Destroy(pickup);
+            pickupVisuals.Clear();
         }
     }
 }

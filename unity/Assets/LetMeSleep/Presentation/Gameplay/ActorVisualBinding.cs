@@ -28,9 +28,17 @@ namespace LetMeSleep.Presentation.Gameplay
         private bool warnedBiteOffset;
         private Transform leftHand;
         private Transform rightHand;
+        private GameObject flyswatter;
 
         public uint ActorId => proxy != null ? proxy.ActorId : 0;
         public CharacterView View => view;
+
+        public void BindFlyswatter(GameObject instance)
+        {
+            flyswatter = instance;
+            if (flyswatter != null)
+                flyswatter.SetActive(false);
+        }
 
         public void Initialize(
             GameplayActorProxy actorProxy, UnityGameplayWorld gameplayWorld,
@@ -61,6 +69,13 @@ namespace LetMeSleep.Presentation.Gameplay
             uint tickDelta = unchecked(currentHostTick - previousHostTick);
             snapshotInterval = tickDelta == 0 ? 0.05f : Mathf.Clamp(tickDelta / 30f, 1f / 60f, 0.10f);
             snapshotArrivalTime = Time.unscaledTime;
+
+            if (flyswatter != null)
+            {
+                bool equipped = GameplayModel.GameplayTools.IsFlyswatter(state.EquippedToolId);
+                if (flyswatter.activeSelf != equipped)
+                    flyswatter.SetActive(equipped);
+            }
 
             if (cut)
                 SetWorldPose(state.Position.ToUnity(), state.BodyRotation.ToUnity());
