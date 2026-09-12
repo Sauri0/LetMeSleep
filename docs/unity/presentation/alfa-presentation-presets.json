@@ -1,0 +1,126 @@
+{
+  "schema": "lms.unity.presentation-presets/1",
+  "unity": "6000.3.24f1",
+  "evidence": "Blueprint only. Director must create and serialize Unity assets before use.",
+  "defaultPreset": "AlfaReference1080p",
+  "frameRate": {
+    "defaultTargetFrameRate": -1,
+    "defaultVSyncCount": 0,
+    "referenceResolution": [1920, 1080],
+    "referenceGpu": "NVIDIA GeForce GTX 1660 Ti"
+  },
+  "profiles": {
+    "AlfaReference1080p": {
+      "renderer": "Forward",
+      "renderScale": 1.0,
+      "hdr": true,
+      "msaa": 1,
+      "cameraAntiAliasing": "SMAAHigh",
+      "srpBatcher": true,
+      "dynamicBatching": false,
+      "depthTexture": true,
+      "opaqueTexture": false,
+      "depthPriming": "Auto",
+      "mainLight": "PerPixel",
+      "additionalLights": "PerPixel",
+      "additionalLightsPerObject": 4,
+      "mainShadowAtlas": 2048,
+      "mainShadowDistanceMeters": 28.0,
+      "shadowCascades": 2,
+      "cascadeSplit": 0.35,
+      "additionalLightShadows": false,
+      "softShadows": "Medium",
+      "ssao": {
+        "enabled": true,
+        "method": "InterleavedGradientNoise",
+        "source": "Depth",
+        "downsample": true,
+        "intensity": 0.35,
+        "radiusMeters": 0.22,
+        "directLightingStrength": 0.15,
+        "normalQuality": "Medium"
+      },
+      "reflectionProbeResolution": 128,
+      "lodBias": 1.0
+    },
+    "AlfaPerformance1080p": {
+      "renderer": "Forward",
+      "renderScale": 0.85,
+      "hdr": true,
+      "msaa": 1,
+      "cameraAntiAliasing": "SMAAMedium",
+      "srpBatcher": true,
+      "dynamicBatching": false,
+      "depthTexture": false,
+      "opaqueTexture": false,
+      "depthPriming": "Auto",
+      "mainLight": "PerPixel",
+      "additionalLights": "PerPixel",
+      "additionalLightsPerObject": 4,
+      "mainShadowAtlas": 1024,
+      "mainShadowDistanceMeters": 22.0,
+      "shadowCascades": 1,
+      "additionalLightShadows": false,
+      "softShadows": "Low",
+      "ssao": { "enabled": false },
+      "reflectionProbeResolution": 64,
+      "lodBias": 0.75
+    }
+  },
+  "globalVolume": {
+    "toneMapping": "ACES",
+    "postExposureEv": 0.0,
+    "contrast": 4.0,
+    "saturation": -3.0,
+    "whiteBalanceTemperature": -5.0,
+    "bloom": { "intensity": 0.08, "threshold": 1.15, "scatter": 0.55 },
+    "vignette": { "intensity": 0.10, "smoothness": 0.30 },
+    "motionBlur": false,
+    "depthOfField": false,
+    "chromaticAberration": false,
+    "filmGrain": false
+  },
+  "lighting": {
+    "bakedGlobalIllumination": true,
+    "mixedLightingMode": "Shadowmask",
+    "mainDirectional": {
+      "color": "#A9BFE6",
+      "intensityLux": 1.0,
+      "mode": "Mixed",
+      "shadows": "Soft"
+    },
+    "bakedPracticalColorTemperatureKelvin": [2700, 3200],
+    "bakedPracticalLumens": [350, 650],
+    "maxVisibleRealtimeLocalLights": 2,
+    "realtimeLocalLightsCastShadows": false,
+    "lightmapTexelsPerMeter": 16,
+    "lightmapMaxAtlas": 2048,
+    "lightmapBounces": 2
+  },
+  "cameras": {
+    "humanRound": { "verticalFov": 75.0, "near": 0.03, "far": 100.0 },
+    "mosquitoRound": { "verticalFov": 68.0, "near": 0.02, "far": 100.0, "collisionRadius": 0.08, "zoomRange": [0.0, 2.5], "defaultDistance": 0.85, "collisionSweeps": 2 },
+    "lobby": { "verticalFov": 58.0, "near": 0.05, "far": 80.0 },
+    "customizer": { "verticalFov": 35.0, "near": 0.05, "far": 20.0 }
+  },
+  "audio": {
+    "sampleRateHz": 48000,
+    "masterTruePeakDbfs": -1.0,
+    "musicIntegratedLufs": -20.0,
+    "maxAudioVoices": 48,
+    "maxPlayingSources": 64,
+    "maxAudioMemoryMb": 96,
+    "maxAudioDspMedianPercent": 8.0,
+    "maxAudioDspP95Percent": 15.0
+  },
+  "performance": {
+    "gpuMedianMs": 10.5,
+    "gpuP95Ms": 13.5,
+    "frameMedianMs": 13.5,
+    "frameP95Ms": 16.0,
+    "mainThreadMedianMs": 7.0,
+    "mainThreadP95Ms": 10.0,
+    "renderThreadMedianMs": 3.0,
+    "renderThreadP95Ms": 5.0
+  }
+}
