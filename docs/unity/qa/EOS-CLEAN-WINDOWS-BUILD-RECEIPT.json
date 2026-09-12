@@ -1,0 +1,16 @@
+{
+  "unity": "6000.3.24f1",
+  "sourceBase": "5ae08d3",
+  "build": "N:/LetMeSleep/Artifacts/eos-probe-clean",
+  "buildResult": "Succeeded",
+  "buildErrors": 0,
+  "overlayHelperExcluded": true,
+  "freshOutput": true,
+  "hostAuthenticated": true,
+  "hostCreatedLobby": true,
+  "probeResult": "ProbeTimedOut",
+  "transportPackets": 0,
+  "twoIdentitiesVerified": false,
+  "wanVerified": false,
+  "scope": "Fresh Windows Mono development build starts without unused native overlay helper. Host-only online lifecycle; no transport success claim."
+}

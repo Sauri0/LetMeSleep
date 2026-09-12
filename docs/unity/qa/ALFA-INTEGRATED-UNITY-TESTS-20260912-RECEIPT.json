@@ -1,0 +1,13 @@
+{
+  "unity": "6000.3.24f1",
+  "utc": "2026-09-12T10:16:23.4094614Z",
+  "branch": "codex/unity-094-alfa",
+  "head": "5ae08d32ad88deae7a38ad5285836a88bb388534",
+  "total": 51,
+  "passed": 51,
+  "failed": 0,
+  "scope": "Core RoomSession, RoomWireCodec, Gameplay bite/door, Online MessageFraming; EditMode only",
+  "uncommittedRuntime": "RoomWireCodec catches InvalidDataException; OnlineRoomCoordinator cleanup and parser catch",
+  "wanVerified": false,
+  "graphicsVerified": false
+}

@@ -78,11 +78,9 @@ namespace LetMeSleep.Online
             if (disposed) return;
             if (lobby.State != LobbyState.Connected)
             {
-                if (Current != null || hostRoom != null)
-                {
-                    Current = null; hostRoom = null; Error = ""; frames.Clear(); lastHello = -10;
-                    RoomChanged?.Invoke(null);
-                }
+                bool hadView = Current != null;
+                Current = null; hostRoom = null; Error = ""; frames.Clear(); lastHello = -10;
+                if (hadView) RoomChanged?.Invoke(null);
                 return;
             }
             if (lobby.IsOwner && hostRoom == null)
@@ -133,6 +131,7 @@ namespace LetMeSleep.Online
                 Publish();
             }
             catch (IOException) { }
+            catch (InvalidDataException) { }
             catch (DecoderFallbackException) { }
         }
         private void Publish()

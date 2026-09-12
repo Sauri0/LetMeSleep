@@ -50,6 +50,7 @@ namespace LetMeSleep.Core
                 view = new RoomView(revision, round, owner, phase, rules, members); return true;
             }
             catch (IOException) { return false; }
+            catch (InvalidDataException) { return false; }
             catch (DecoderFallbackException) { return false; }
         }
         public static void WriteText(BinaryWriter writer, string text, int maximumBytes)

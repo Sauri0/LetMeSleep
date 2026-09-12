@@ -1,0 +1,370 @@
+{
+  "status": "completed",
+  "duration": 0.15,
+  "summary": {
+    "total": 51,
+    "passed": 51,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.GameplayBiteAuthorityTests.BiteAttachmentExistsOnlyWhileWorldContinuouslyResolvesContact",
+      "Status": "Passed",
+      "Duration": 0.0394148,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.GameplayBiteAuthorityTests.DetachedBiteCannotBecomeFutureTargetWithoutReleaseAndFreshWorldQuery",
+      "Status": "Passed",
+      "Duration": 0.0049709,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.GameplayDoorAuthorityTests.BlockedDoorStopsAtSafeAngleThenResumesWithoutMovingActors",
+      "Status": "Passed",
+      "Duration": 0.0123929,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.GameplayDoorAuthorityTests.HeldUseInputNeverOperatesDoor",
+      "Status": "Passed",
+      "Duration": 0.0008286,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.GameplayDoorAuthorityTests.HumanUsePublishesDoorStateAndDuplicateSequenceDoesNotRetoggle",
+      "Status": "Passed",
+      "Duration": 0.0018127,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.GameplayDoorAuthorityTests.DoorUseRejectsMissingCandidate",
+      "Status": "Passed",
+      "Duration": 0.0005588,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.GameplayDoorAuthorityTests.DoorUseRejectsOutOfReachCandidate",
+      "Status": "Passed",
+      "Duration": 0.0001014,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.GameplayDoorAuthorityTests.DoorUseRejectsStaleCandidate",
+      "Status": "Passed",
+      "Duration": 8.84E-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.GameplayDoorAuthorityTests.MosquitoUseIsRejectedBeforeWorldQuery",
+      "Status": "Passed",
+      "Duration": 0.0002524,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.GameplayDoorAuthorityTests.SameTickUsesAcceptFirstAndCooldownSecond",
+      "Status": "Passed",
+      "Duration": 0.0005631,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.BoundaryPayloadsRoundTripWithinPacketLimit(1)",
+      "Status": "Passed",
+      "Duration": 0.0043181,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.BoundaryPayloadsRoundTripWithinPacketLimit(1160)",
+      "Status": "Passed",
+      "Duration": 0.0005395,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.BoundaryPayloadsRoundTripWithinPacketLimit(1161)",
+      "Status": "Passed",
+      "Duration": 0.0009196,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.BoundaryPayloadsRoundTripWithinPacketLimit(16384)",
+      "Status": "Passed",
+      "Duration": 0.0075298,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.CompletedAssembliesDoNotConsumePendingMemberBudget",
+      "Status": "Passed",
+      "Duration": 0.0006994,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.ConflictingFragmentMetadataIsRejectedWithoutPoisoningAssembly",
+      "Status": "Passed",
+      "Duration": 0.0009106,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.DuplicateFragmentIsRejectedWithoutPreventingCompletion",
+      "Status": "Passed",
+      "Duration": 0.0008028,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.EncodeRejectsNullEmptyAndOversizedPayloads",
+      "Status": "Passed",
+      "Duration": 0.0011588,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.ExpiredAssembliesReleaseGlobalMemberBudget",
+      "Status": "Passed",
+      "Duration": 0.0004545,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.MalformedHeadersAndLengthsAreRejectedBeforeDelivery",
+      "Status": "Passed",
+      "Duration": 0.0013853,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.NonZeroArraySegmentOffsetRoundTrips",
+      "Status": "Passed",
+      "Duration": 0.0004062,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.MessageFramingTests.SameMessageIdFromDifferentMembersRemainsIsolated",
+      "Status": "Passed",
+      "Duration": 0.0013117,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionRulesAndRosterTests.AutomaticRosterStaysWithinOneToFiveHumansAndKeepsBothTeams",
+      "Status": "Passed",
+      "Duration": 0.0046104,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionRulesAndRosterTests.CapacityIsSixteenAndRejectedJoinsDoNotConsumePlaces",
+      "Status": "Passed",
+      "Duration": 0.0009703,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionRulesAndRosterTests.FixedHumanCountRequiresBothTeamsAndDoesNotClampToRoster",
+      "Status": "Passed",
+      "Duration": 0.0012005,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionRulesAndRosterTests.InvalidRuleChangePreservesAcknowledgedState",
+      "Status": "Passed",
+      "Duration": 0.0009648,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionRulesAndRosterTests.NewRoundDrawDoesNotPreservePreviousRoles",
+      "Status": "Passed",
+      "Duration": 0.0012772,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionRulesAndRosterTests.NewRoundMayRepeatRolesWhenFreshDrawRepeats",
+      "Status": "Passed",
+      "Duration": 0.0002829,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionRulesAndRosterTests.RulesAcceptOnlyFiniteBoundedAlfaValues",
+      "Status": "Passed",
+      "Duration": 0.0005833,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionRulesAndRosterTests.SuccessfulRuleChangeIsOwnerOnlyAndInvalidatesEveryReadyVote",
+      "Status": "Passed",
+      "Duration": 0.0004503,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionRulesAndRosterTests.TwoPlayerLotteryCanAssignEitherParticipantAsHuman",
+      "Status": "Passed",
+      "Duration": 0.0003944,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionSecurityAndStateTests.ConstructorRejectsInvalidIdentityAndMissingRandomSource",
+      "Status": "Passed",
+      "Duration": 0.0006772,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionSecurityAndStateTests.GuestDepartureDuringRoundRemovesOnlyThatMember",
+      "Status": "Passed",
+      "Duration": 0.0015148,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionSecurityAndStateTests.JoinRequiresExactProtocolAndValidUniqueIdentity",
+      "Status": "Passed",
+      "Duration": 0.0004743,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionSecurityAndStateTests.LifecycleRejectsTransitionsFromWrongPhaseOrCaller",
+      "Status": "Passed",
+      "Duration": 0.0005482,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionSecurityAndStateTests.NoOpAndRejectedCommandsDoNotAdvanceRevision",
+      "Status": "Passed",
+      "Duration": 0.0005604,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionSecurityAndStateTests.OwnerDepartureClosesRoomAndNoOperationCanReopenIt",
+      "Status": "Passed",
+      "Duration": 0.0007268,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionSecurityAndStateTests.StartRequiresTwoReadyMembersAndOwnerAuthority",
+      "Status": "Passed",
+      "Duration": 0.0003111,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionSnapshotTests.EverySuccessfulLifecycleMutationProducesAFreshView",
+      "Status": "Passed",
+      "Duration": 0.0011905,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionSnapshotTests.InitialViewContainsOnlyTrimmedOwnerAndAlfaDefaults",
+      "Status": "Passed",
+      "Duration": 0.0006646,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomSessionSnapshotTests.PublishedRosterIsReadOnlyAndPastViewsRemainUnchanged",
+      "Status": "Passed",
+      "Duration": 0.0013288,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomWireCodecTests.BoundedArbitraryPacketsNeverEscapeParserExceptions",
+      "Status": "Passed",
+      "Duration": 0.0061613,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomWireCodecTests.ClosedSnapshotRoundTripsAfterOwnerIsRemoved(False)",
+      "Status": "Passed",
+      "Duration": 0.0035584,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomWireCodecTests.ClosedSnapshotRoundTripsAfterOwnerIsRemoved(True)",
+      "Status": "Passed",
+      "Duration": 0.0013316,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomWireCodecTests.InvalidScalarRosterAndRuleFieldsAreRejected",
+      "Status": "Passed",
+      "Duration": 0.0017428,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomWireCodecTests.InvalidUtf8IsRejectedWithoutReplacementCharacters",
+      "Status": "Passed",
+      "Duration": 0.0010593,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomWireCodecTests.MaximumRosterRemainsBelowWireLimitAndRoundTrips",
+      "Status": "Passed",
+      "Duration": 0.0005105,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomWireCodecTests.PlayingSnapshotRoundTripsFreshRolesAndRound",
+      "Status": "Passed",
+      "Duration": 0.0004426,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomWireCodecTests.TextHelpersEnforceUtf8ByteLimitBeforeAllocation",
+      "Status": "Passed",
+      "Duration": 0.0004152,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomWireCodecTests.WaitingSnapshotRoundTripsRulesMembersAndUnicodeName",
+      "Status": "Passed",
+      "Duration": 0.0008017,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.EditMode.RoomWireCodecTests.WrongOwnerVersionTrailingDataAndEveryTruncationAreRejected",
+      "Status": "Passed",
+      "Duration": 0.0010722,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}
