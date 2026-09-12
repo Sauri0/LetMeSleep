@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 $outputsDir = Join-Path $projectRoot 'outputs'
-$versionLine = Select-String -LiteralPath (Join-Path $projectRoot 'game/project.godot') -Pattern '^config/version="([0-9]+\.[0-9]+\.[0-9]+)"$'
+$versionLine = Select-String -LiteralPath (Join-Path $projectRoot 'game/project.godot') -Pattern '^config/version="([0-9]+\.[0-9]+\.[0-9]+(?:-(?:alfa|beta|omega|delta|gamma))?)"$'
 if (-not $versionLine) { throw 'Project version missing or invalid' }
 $packageVersion = $versionLine.Matches[0].Groups[1].Value
 $packageName = 'Let-me-sleep-' + $packageVersion + '-Windows'

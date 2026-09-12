@@ -7,7 +7,7 @@ if ($Source) {
 } elseif ($Executable) {
     $candidate = $Executable
 } else {
-    $version = Select-String -LiteralPath (Join-Path $projectRoot 'game/project.godot') -Pattern '^config/version="([0-9]+\.[0-9]+\.[0-9]+)"$'
+    $version = Select-String -LiteralPath (Join-Path $projectRoot 'game/project.godot') -Pattern '^config/version="([0-9]+\.[0-9]+\.[0-9]+(?:-(?:alfa|beta|omega|delta|gamma))?)"$'
     if (@($version).Count -ne 1) { throw 'Project version missing or ambiguous.' }
     $candidate = Join-Path $projectRoot ('outputs/Let-me-sleep-' + $version.Matches[0].Groups[1].Value + '-Windows/Let-me-sleep.exe')
 }

@@ -42,13 +42,13 @@ const TASK_ROUTE_SPEED_FACTOR := .85
 const TASK_ROUTE_MARGIN := .5
 const TASK_ROUTE_RETRY := .5
 const DEFAULT_CONFIG := {
-	"mode": "blood", "map_id": "house", "human_count": 1, "round_seconds": 120.0, "blood_goal": 12.0,
+	"mode": "blood", "map_id": "house-patio-v1", "human_count": 1, "round_seconds": 120.0, "blood_goal": 12.0,
 	"rotation_seconds": 14.0, "respawn_seconds": 4.0, "mosquito_lives": 3,
 	"task_interval": 36.0, "task_deadline": 30.0, "task_work": 3.0,
 	"task_penalty": 2.0, "task_floor": 24.0, "task_goal": 0,
 }
 const TOOL_STATS = ToolData.MELEE_STATS
-const PICKUP_SPAWNS = Maps.HOUSE.pickups
+# Pickup positions belong to the selected authored map.
 # Eight readable front surfaces; a solo human can aim at every one. Additional
 # insects wait privately instead of receiving marks hidden from the owner.
 const FRONT_ZONE_COUNT := 8
@@ -86,7 +86,7 @@ var _pending_actions: Array[Dictionary] = []
 var _frame := 0
 var _assignment_serial := 0
 var _assignment_waiters: Array[int] = []
-var _map_data: Dictionary = Maps.get_map("house")
+var _map_data: Dictionary = Maps.get_map()
 var _human_pose_cache: Dictionary = {}
 var _neutral_pose: Dictionary = {}
 var surface_motion = SurfaceMotion.new()
@@ -111,8 +111,8 @@ static func last_task_start(settings: Dictionary) -> float:
 
 static func sanitize_config(requested: Dictionary) -> Dictionary:
 	var result: Dictionary = DEFAULT_CONFIG.duplicate(true)
-	var requested_map: String = str(requested.get("map_id", "house"))
-	result.map_id = requested_map if Maps.is_playable(requested_map) else "house"
+	var requested_map: String = str(requested.get("map_id", Maps.default_map_id()))
+	result.map_id = requested_map if Maps.is_playable(requested_map) else Maps.default_map_id()
 	if str(requested.get("mode", "blood")) in ["blood", "survival", "sleep"]:
 		result.mode = str(requested.get("mode", "blood"))
 	for key: String in ["human_count", "round_seconds", "blood_goal", "rotation_seconds", "respawn_seconds", "mosquito_lives", "task_interval", "task_deadline", "task_work", "task_penalty", "task_floor", "task_goal"]:
@@ -184,9 +184,8 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 	doors = door_state.states
 	if not reason.is_empty():
 		return
-	# Validate the original identity before sanitization can substitute the UI
-	# default. Failed generation never starts a different house or reuses a room.
-	var requested_map: Variant = requested_config.get("map_id","house")
+	# Validate the original identity before sanitization can substitute the UI default.
+	var requested_map: Variant = requested_config.get("map_id",Maps.default_map_id())
 	if not requested_map is String or not Maps.is_playable(requested_map):
 		reason = "No se pudo iniciar: el mapa solicitado no es jugable."
 		return
@@ -201,9 +200,10 @@ func start(players: Dictionary, requested_config: Dictionary) -> void:
 			return
 	config.map_id = requested_map
 	config.map_fingerprint = str(_map_data.get("fingerprint",""))
-	if config.map_fingerprint.is_empty(): config.map_fingerprint = Maps.Validation.fingerprint(_map_data)
-	config.map_generator_version = int(_map_data.get("generator_version",0))
-	config.map_seed = int(_map_data.get("seed",0))
+	config.map_authored_version = int(_map_data.get("authored_version",0))
+	if config.map_fingerprint.is_empty() or config.map_authored_version <= 0:
+		reason = "No se pudo iniciar: falta la identidad del mapa instalado."
+		return
 	config.task_route_policy = "walkable-route-v1"
 	config.task_route_speed = ArenaData.HUMAN_SPEED * TASK_ROUTE_SPEED_FACTOR
 	config.task_route_margin = TASK_ROUTE_MARGIN

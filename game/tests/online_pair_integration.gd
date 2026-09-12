@@ -133,6 +133,16 @@ func run() -> void:
 	if not await until(func(): return observed.guest_lobby.get("players", {}).size() == 2 and guest_network.latest.get("actors", {}).size() == 2, "guest receives lobby and two waiting actors"):
 		await finish();return
 	check(observed.host_lobby.get("players", {}).size() == 2, "host local delivery contains both players")
+	var original_config: Dictionary = host_network.config.duplicate(true)
+	guest_network.lobby_action("config", {"mode":"sleep", "map_id":"house-patio-v1"})
+	await create_timer(.08).timeout
+	check(host_network.config == original_config, "guest cannot change owner settings")
+	for invalid_map: Variant in ["lobby", "house", "house-v3-123", "island", 12]:
+		host_network.lobby_action("config", {"map_id":invalid_map})
+		check(host_network.config == original_config, "unavailable map rejected without mutating settings: " + str(invalid_map))
+	host_network.lobby_action("config", {"map_id":"house-patio-v1", "mode":"survival"})
+	if not await until(func(): return observed.guest_lobby.get("config", {}).get("mode") == "survival", "owner map and mode synchronized to guest"):
+		await finish();return
 	guest_network.send_input(1, Vector3.RIGHT, 0.25, 0.1, false)
 	host_network.send_input(1, Vector3.FORWARD, 0.0, 0.0, false)
 	if not await until(func(): return host_network.waiting_inputs.get(guest_id, {}).get("seq") == 1 and host_network.waiting_inputs.get(1, {}).get("seq") == 1, "local and remote waiting inputs reach authority"):
@@ -145,7 +155,7 @@ func run() -> void:
 	if not await until(func(): return host_network.sim != null and observed.guest_public > 0 and observed.host_public > 0, "start crosses real map ACK barrier and publishes round", 8.0):
 		await finish();return
 	check(host_network.sim.phase == "playing" and host_network.sim.actors.size() == 2, "authoritative two-player simulation started")
-	check(host_network._pending_map.is_empty() and not host_network._prepared_map.is_empty() and host_network._prepared_map == guest_network._prepared_map, "both recipients generated and acknowledged identical map")
+	check(host_network._pending_map.is_empty() and not host_network._prepared_map.is_empty() and host_network._prepared_map == guest_network._prepared_map, "both recipients loaded and acknowledged identical authored map")
 	check(host_network._prepared_map.id == host_network.config.map_id and guest_network.latest.get("config", {}).get("map_fingerprint") == host_network._prepared_map.fingerprint, "round snapshot matches acknowledged map fingerprint")
 	if not await until(func(): return observed.guest_private > 0 and observed.host_private > 0, "private snapshots delivered to each recipient"):
 		await finish();return
@@ -157,6 +167,23 @@ func run() -> void:
 	if not await until(func(): return guest_network.last_received_tick > previous_tick, "live simulation sends subsequent public snapshots"):
 		await finish();return
 	check(host_network.online_transport._rates.has(guest_id) and guest_network.online_transport._rates.has(1), "both real transport receivers ingested authenticated frames")
+	var first_fingerprint: String = host_network._prepared_map.fingerprint
+	# Accelerate the authoritative timer, then let the real simulation finish.
+	host_network.sim.elapsed = float(host_network.sim.config.round_seconds) - .02
+	if not await until(func(): return guest_network.latest.get("phase") == "results", "survival result reaches guest"):
+		await finish();return
+	host_network.lobby_action("rematch")
+	if not await until(func(): return host_network.sim == null and guest_network.latest.get("phase") == "waiting", "results return both players to independent lobby"):
+		await finish();return
+	check(not host_network.players[1].ready and not host_network.players[guest_id].ready, "rematch clears ready states")
+	guest_network.lobby_action("ready", true)
+	host_network.lobby_action("ready", true)
+	if not await until(func(): return host_network.players[guest_id].ready, "guest ready for second round"):
+		await finish();return
+	host_network.lobby_action("start")
+	if not await until(func(): return host_network.sim != null and guest_network.latest.get("phase") == "playing", "second round crosses map loading barrier"):
+		await finish();return
+	check(host_network._prepared_map.fingerprint == first_fingerprint, "second round preserves authored geometry")
 	guest_network.close_client()
 	if not await until(func(): return host_network.players.size() == 1 and not host_network.players.has(guest_id), "ENet disconnect removes remote game actor"):
 		await finish();return

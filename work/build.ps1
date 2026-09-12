@@ -63,7 +63,7 @@ function Invoke-CheckedHeadless {
     }
     Get-Content -LiteralPath $outputLog -Tail 1
 }
-$versionLine = Select-String -LiteralPath (Join-Path $gamePath 'project.godot') -Pattern '^config/version="([0-9]+\.[0-9]+\.[0-9]+)"$'
+$versionLine = Select-String -LiteralPath (Join-Path $gamePath 'project.godot') -Pattern '^config/version="([0-9]+\.[0-9]+\.[0-9]+(?:-(?:alfa|beta|omega|delta|gamma))?)"$'
 if (-not $versionLine) { throw 'Project version missing or invalid' }
 $buildVersion = $versionLine.Matches[0].Groups[1].Value
 $outDir = Join-Path $projectRoot ('outputs/Let-me-sleep-' + $buildVersion + '-Windows')

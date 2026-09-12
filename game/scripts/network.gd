@@ -32,7 +32,7 @@ const Cosmetics = preload("res://scripts/cosmetics.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const Map = preload("res://scripts/arena.gd")
 const InvitationCodec = preload("res://scripts/invitation.gd")
-const VERSION := "0.9.3"
+const VERSION := "0.9.4-alfa"
 const PROTOCOL := InvitationCodec.PROTOCOL
 const DEFAULT_PORT := 27840
 const MAX_PLAYERS := 16
@@ -651,11 +651,17 @@ func _handle_request_lobby(sender: int, verb: String, value: Variant) -> void:
 				players[sender].ready = value
 		"config":
 			if sender == room_owner and value is Dictionary:
+				var selected_map: Variant = value.get("map_id", config.get("map_id", Maps.default_map_id()))
+				if not selected_map is String or not Maps.is_playable(selected_map):
+					_send_to(sender, "_server_notice", ["Ese mapa no está disponible en esta versión."])
+					return
 				var chosen: Variant = value.get("human_count", config.get("human_count", 1))
 				if not (chosen is int or chosen is float) or not is_finite(float(chosen)) or float(chosen) != floorf(float(chosen)) or int(chosen) < 1 or int(chosen) > 5:
 					_send_to(sender, "_server_notice", ["La cantidad de humanos debe ser un entero entre 1 y 5."])
 					return
-				config = sanitize_config(value)
+				var requested_settings: Dictionary = value.duplicate(true)
+				requested_settings.map_id = selected_map
+				config = sanitize_config(requested_settings)
 				_set_unready()
 		"start":
 			if sender == room_owner:
@@ -695,14 +701,15 @@ func _start_reason() -> String:
 	return LobbyRules.validate(players, config, true)
 
 func _prepare_round() -> void:
-	var generated: Dictionary=Maps.new_house()
-	if generated.is_empty():
-		_notify_all("No se pudo generar una casa transitable. Intentá empezar otra vez.")
+	var selected_id: String = str(config.get("map_id", Maps.default_map_id()))
+	if not Maps.is_playable(selected_id):
+		_notify_all("Elegí un mapa disponible antes de empezar.")
 		return
-	if str(generated.id)==str(config.get("map_id","")):
-		generated=Maps.new_house(1+int(generated.seed)%2147483646)
-		if generated.is_empty(): return
-	_pending_map={"id":generated.id,"fingerprint":generated.fingerprint,"version":generated.generator_version,"seed":generated.seed,"age":0.0,"ready":{}}
+	var authored: Dictionary = Maps.get_map(selected_id)
+	if authored.is_empty() or str(authored.get("fingerprint", "")).is_empty() or int(authored.get("authored_version", 0)) <= 0:
+		_notify_all("No se pudo verificar el mapa. Revisá la instalación del juego.")
+		return
+	_pending_map={"id":authored.id,"fingerprint":authored.fingerprint,"version":authored.authored_version,"age":0.0,"ready":{}}
 	_broadcast_lobby()
 
 func _receive_map_ack(sender: int, verb: String, value: Variant) -> void:
@@ -739,7 +746,7 @@ func _broadcast_lobby() -> void:
 	var reason := _start_reason()
 	var data := {"code": room_code, "owner": room_owner, "players": players.duplicate(true), "config": config.duplicate(true), "can_start": reason.is_empty(), "start_reason": reason, "barrier_tick": server_tick, "actors": waiting_actors.duplicate(true)}
 	if not _pending_map.is_empty():
-		data.map_prepare={"id":_pending_map.id,"fingerprint":_pending_map.fingerprint,"version":_pending_map.version,"seed":_pending_map.seed}
+		data.map_prepare={"id":_pending_map.id,"fingerprint":_pending_map.fingerprint,"version":_pending_map.version}
 	for id: int in players:
 		if _peer_can_receive(id):
 			_send_to(id, "_receive_lobby", [data])
@@ -773,8 +780,8 @@ func _receive_lobby(data: Dictionary) -> void:
 	if data.get("map_prepare") is Dictionary:
 		var prepare: Dictionary=data.map_prepare
 		var id: String=str(prepare.get("id",""))
-		var generated: Dictionary=Maps.get_map(id)
-		var matched: bool=not generated.is_empty() and generated.get("fingerprint")==prepare.get("fingerprint") and generated.get("generator_version")==prepare.get("version") and generated.get("seed")==prepare.get("seed")
+		var generated: Dictionary=Maps.get_map(id) if Maps.is_playable(id) else {}
+		var matched: bool=not generated.is_empty() and not str(generated.get("fingerprint", "")).is_empty() and generated.get("fingerprint")==prepare.get("fingerprint") and int(generated.get("authored_version", 0))>0 and generated.get("authored_version")==prepare.get("version")
 		if matched:
 			_prepared_map={"id":id,"fingerprint":generated.fingerprint}
 			_send_to(1, "_request_lobby", ["map_ready",_prepared_map])
@@ -978,8 +985,11 @@ func _receive_snapshot_reliable(packet: PackedByteArray) -> void:
 	_receive_snapshot(packet)
 
 func _accept_snapshot(data: Dictionary) -> void:
-	var map_id: String=str(data.get("config",{}).get("map_id","house"))
-	if Maps.Generator.parse_seed(map_id)>0:
+	var map_id: String=str(data.get("config",{}).get("map_id",Maps.default_map_id()))
+	if str(data.get("phase", "")) in ["playing", "results"]:
+		if not Maps.is_playable(map_id):
+			notice.emit("Se rechazó una partida con un mapa no disponible.")
+			return
 		if _prepared_map.get("id")!=map_id or _prepared_map.get("fingerprint")!=data.get("config",{}).get("map_fingerprint"):
 			notice.emit("Se rechazó una partida cuya casa no estaba verificada.")
 			return

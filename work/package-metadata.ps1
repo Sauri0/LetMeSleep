@@ -8,8 +8,8 @@ function Get-PackageProtocol {
     if (-not $protocol.Success -or -not $prefix.Success) { throw 'Invitation protocol metadata unavailable.' }
     $project = [System.IO.File]::ReadAllText((Join-Path $ProjectRoot 'game/project.godot'))
     $network = [System.IO.File]::ReadAllText((Join-Path $ProjectRoot 'game/scripts/network.gd'))
-    $projectVersion = [regex]::Match($project,'(?m)^config/version="([0-9]+\.[0-9]+\.[0-9]+)"')
-    $networkVersion = [regex]::Match($network,'(?m)^const VERSION := "([0-9]+\.[0-9]+\.[0-9]+)"')
+    $projectVersion = [regex]::Match($project,'(?m)^config/version="([0-9]+\.[0-9]+\.[0-9]+(?:-(?:alfa|beta|omega|delta|gamma))?)"')
+    $networkVersion = [regex]::Match($network,'(?m)^const VERSION := "([0-9]+\.[0-9]+\.[0-9]+(?:-(?:alfa|beta|omega|delta|gamma))?)"')
     if (-not $projectVersion.Success -or -not $networkVersion.Success -or $projectVersion.Groups[1].Value -ne $networkVersion.Groups[1].Value) { throw 'Project and network versions differ.' }
     @{protocol=[int]$protocol.Groups[1].Value; invitation=$prefix.Groups[1].Value; version=$projectVersion.Groups[1].Value}
 }
