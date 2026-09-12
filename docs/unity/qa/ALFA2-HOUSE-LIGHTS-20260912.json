@@ -1,0 +1,115 @@
+{
+  "success": true,
+  "command": "command eval_file",
+  "data": {
+    "command": "eval_file",
+    "parameters": {
+      "file": "N:/LetMeSleep/Validation/Alfa2-Lighting/InspectRuntime.cs"
+    },
+    "result": {
+      "output": null,
+      "diagnostics": [],
+      "success": true,
+      "result": {
+        "utc": "2026-09-12T13:14:39.602729Z",
+        "shadowed": 3,
+        "texels": 2359296,
+        "atlasTexels": 4194304,
+        "lights": [
+          {
+            "name": "LMS_LocalLight_BedroomA",
+            "casts": true,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_Patio",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_GroundEastLanding",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_Bathroom",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_GroundWestLanding",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_Living",
+            "casts": true,
+            "resolution": 512,
+            "tier": 1
+          },
+          {
+            "name": "LMS_LocalLight_UpperWestLanding",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_Kitchen",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_Dining",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_UpperEastLanding",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_BedroomB",
+            "casts": true,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_UpperHall",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_Utility",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          },
+          {
+            "name": "LMS_LocalLight_GroundHall",
+            "casts": false,
+            "resolution": 256,
+            "tier": 0
+          }
+        ]
+      }
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "N:\\LetMeSleep\\Repository\\unity"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

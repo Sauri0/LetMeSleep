@@ -28,3 +28,5 @@ Estado: **candidata pública alfa.1 distribuible para diagnóstico; alfa todaví
 
 La fuente normativa es `docs/unity/PLAN-UNITY-0.9.4.md`, autorizada para alfa por `AGENTS.md`. Los tests Godot citados son antecedentes para portar intención y diseñar negativos. Sus resultados no cuentan como evidencia Unity.
 
+
+- [Candidata alfa.2](FINAL-REVIEW-0.9.4-ALFA2-CANDIDATE.md): posado, recuperación de cámara, sombras por nivel y descarga pública verificada; no equivale a aprobación WAN.

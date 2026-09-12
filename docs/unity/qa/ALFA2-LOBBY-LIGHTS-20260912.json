@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "command": "command eval_file",
+  "data": {
+    "command": "eval_file",
+    "parameters": {
+      "file": "N:/LetMeSleep/Validation/Alfa2-Lighting/InspectRuntime.cs"
+    },
+    "result": {
+      "output": null,
+      "diagnostics": [],
+      "success": true,
+      "result": {
+        "utc": "2026-09-12T13:14:22.3617668Z",
+        "shadowed": 2,
+        "texels": 3145728,
+        "atlasTexels": 4194304,
+        "lights": [
+          {
+            "name": "LMS_LocalLight_Lobby",
+            "casts": true,
+            "resolution": 512,
+            "tier": 1
+          },
+          {
+            "name": "LMS_LocalLight_Lobby",
+            "casts": false,
+            "resolution": 512,
+            "tier": 1
+          },
+          {
+            "name": "LMS_LocalLight_Lobby",
+            "casts": true,
+            "resolution": 512,
+            "tier": 1
+          },
+          {
+            "name": "LMS_LocalLight_Lobby",
+            "casts": false,
+            "resolution": 512,
+            "tier": 1
+          }
+        ]
+      }
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "N:\\LetMeSleep\\Repository\\unity"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

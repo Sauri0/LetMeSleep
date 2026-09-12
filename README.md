@@ -1,6 +1,6 @@
-# Let me sleep — candidata Unity 0.9.4-alfa.1
+# Let me sleep — candidata Unity 0.9.4-alfa.2
 
-[Descargar launcher 1.1.1](https://github.com/Sauri0/LetMeSleep/releases/download/v0.9.4-alfa.1/Let-me-sleep-Launcher.exe) · [ZIP y notas de la candidata](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.4-alfa.1)
+[Descargar launcher 1.1.1](https://github.com/Sauri0/LetMeSleep/releases/download/v0.9.4-alfa.2/Let-me-sleep-Launcher.exe) · [ZIP y notas de la candidata](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.4-alfa.2)
 
 Juego cómico de humanos contra mosquitos para Windows. Esta es la primera candidata de la migración a Unity: Sangre, entrenamiento con bots para ambos roles, casa fija de dos pisos con patio y sala de espera 3D independiente.
 
@@ -14,7 +14,7 @@ Hace falta el launcher **1.1.1** para reconocer revisiones como alfa.1 además d
 
 ## Jugar con amigos
 
-1. Todos instalan **0.9.4-alfa.1**.
+1. Todos instalan **0.9.4-alfa.2**.
 2. Una persona elige **Jugar online → Crear sala**, escribe su nombre y comparte el código.
 3. Los amigos eligen **Unirme con código**, escriben su nombre y pegan el código.
 4. Todos marcan **Listo**. El anfitrión configura los ajustes y pulsa **Iniciar ronda**.
@@ -34,12 +34,11 @@ Elegí **Entrenamiento**, humano o mosquito, y **Empezar entrenamiento**. Alfa o
 
 ## Estado y código
 
-Compilación Unity **6000.3.24f1**, Windows x64, commit fuente `f0e6b80fd067ea7f25768c21d1e2cf898a8c65d1`. El ZIP incluye `BUILD.json` con hashes individuales y un SHA-256 externo. Es un **Development Build**: conserva símbolos de diagnóstico managed/Burst.
+Compilación Unity **6000.3.24f1**, Windows x64, commit fuente `0a82314da866f94ae71e3807cdaea875b3d111a9`. El ZIP incluye `BUILD.json` con hashes individuales y un SHA-256 externo. Es un **Development Build**: conserva símbolos de diagnóstico managed/Burst.
 
-Alfa.1 corrige la recuperación de ajustes dañados y protege perfiles de versiones futuras. Pasaron ocho pruebas de almacenamiento dentro de Unity, cinco casos de su clasificador JSON, 63 pruebas del launcher y las comprobaciones Windows de recuperación y protección de perfiles. Se probaron entrenamiento de ambos roles, retorno al menú y creación/cierre de sala EOS. El equipo completó rondas automáticas con resultados y reinicio para ambos roles; no equivalen a aceptación manual. Las 61 pruebas EditMode y dos PlayMode previas corresponden a la base alfa, conservada en su informe histórico.
+Alfa.2 corrige la cancelación del posado al acercarse a una superficie, la cámara demasiado retraída al posarse y la distribución de sombras puntuales dentro del atlas PC. Pasaron 76 comprobaciones de lógica Gameplay, dos PlayMode de cámara y una ruta física por escalera/patio. El ejecutable Windows pasó entrenamiento de ambos roles, retorno al menú y creación/cierre de sala EOS. Conserva la recuperación de ajustes y protección de perfiles futuros de alfa.1.
 
-El launcher actualizó una instalación alfa desde GitHub a alfa.1 y conservó la versión anterior. Su segundo inicio reutilizó la instalación. El ejecutable descargado también pasó sus seis comprobaciones de entrenamiento, retorno y creación/cierre de sala EOS. [Informe alfa.1](docs/unity/qa/FINAL-REVIEW-0.9.4-ALFA1-CANDIDATE.md).
-
+El launcher 1.1.1 reconoce esta revisión. [Informe de alcance y comprobaciones alfa.2](docs/unity/qa/FINAL-REVIEW-0.9.4-ALFA2-CANDIDATE.md). Las pruebas e informes anteriores conservan su versión de origen: no se presentan como una repetición integral sobre alfa.2.
 Pendientes: conexión entre jugadores/redes independientes, recorrido manual completo, aprobación artística y balance por Branko, medición en GTX 1660 Ti. La revisión de interfaz del equipo pasó; eso no sustituye la aprobación artística del usuario. Los datos cortos obtenidos en RTX 3060 Ti no certifican otros equipos ni una partida completa.
 
 - Proyecto activo: [unity](unity/).

@@ -72,3 +72,14 @@ Spatial contract: Unity metres, Y-up/Z-forward. Human capsule radius .25, height
 - Native floor perch exposed a camera defect: actor/anchor/camera at y.056, camera radius.08 intersects floor, ResolvedDistance0. Live frozen witness in editor PID5800 handed from W1 to W2; W2 owns camera correction and sole GPU/editor slot. Director must not restart it merely after a polling timeout.
 - W2 also delivered9f75d96 (not yet integrated): authored Custom-tier light template with per-room resolutions, retaining Living/bedroom shadows within 2048 atlas. Director will regenerate the presentation library after camera verification and source integration. No FPS claim.
 - Current candidate alfa.1 release notes now disclose perch limitation. Prepare next numbered alfa revision only after fixes/tests/build/public install are verified; preserve old package hashes.
+
+## Public revision alfa.2 — 2026-09-12
+
+- Source 0a82314da866f94ae71e3807cdaea875b3d111a9, tag/release v0.9.4-alfa.2. W1 perch correction, W2 camera collision recovery and supported URP Low/Medium shadow templates integrated. Earlier Custom enum attempt was rejected by native Unity and replaced before this candidate.
+- Native house/lobby budget verified, independent QA reviewed: 56.25% /75% of PC 2048 atlas. Final Windows build clean, zero errors. First dirty-cache build retained only as rejected evidence; it was not packaged.
+- Windows build probe six checks PASS; no atlas downscale warning in this observed PC run. Native floor perch/release and targeted camera tests passed. House front-entry route and full surface/door matrix remain partial.
+- Public launcher1.1.1 downloaded alfa.2, checked checksum/manifest, activated and reused on second start (3/3). Previous alfa/alfa.1 installation slots remain. Original release artifacts immutable.
+- Publication and exact package identity in qa/FINAL-REVIEW-0.9.4-ALFA2-CANDIDATE.md. Same source remains on main and codex/unity-094-alfa.
+- Director owns final integration/editor slot; W1/W2/UI/environment frozen. No team overlaps and no later stage started. External gates and artistic approval remain as recorded in PENDING-EXTERNAL.md.
+- Final public-installed Windows probe: six checks PASS, no atlas downscale warning in this run. Receipt ALFA2-PUBLIC-PLAYER-20260912.json; updater receipt committed. Director editor PID5800 and public test process23740 exited; GPU/editor slot released.
+- Previous goal turn: progress (published and verified alfa.2). Remaining locally actionable alfa work includes front-entry/full surface traversal and visual defects identified by an owner review. External gates are unchanged; goal is not complete or genuinely blocked while those investigations can progress.
