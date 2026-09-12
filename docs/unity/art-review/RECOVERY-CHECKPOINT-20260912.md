@@ -1,3 +1,35 @@
+# Checkpoint vigente — equipo de 12 — 2026-09-12 20:46 UTC
+
+Este bloque sustituye los estados de proceso, cola y captura históricos de abajo. Alfa continúa en recuperación; no publicar ni avanzar a beta. Fuentes integradas HEAD cc2947b; cambios generados de arte/audio/mapas permanecen deliberadamente sin commit global.
+
+## Integrado y comprobado en esta tanda
+
+- UI corrección1 43b2eb6→2c5c820, composición1e795ed→7fe86a2, Bootstrap ScreenChanged6c021be→ca3632e y corrección textoSalirca0109c→cc2947b. Capturas nativas UI2/UI3 ocho cada una, UI4 menú720/1080. UI4 cierra sólo Salir visible. Paneles de personalizador alineados y MenuCharacterDisplay se oculta/restaura; comprobación por callbacks/reflexión, sin inputs físicos ni guardado/persistencia. Arte/global, visor mosquito y foco funcional pendientes.
+- Living4f850a5→eb32883, luzabfd63d→4ba5e27, exterior2f1631a/e665832→1a44b2c/307e466 +hook/hash424cf4f. Corrección indices de manta d1d5af8→61956fa resuelve IndexOutOfRange de build anterior. BuildMaps PASS20:16:38UTC y20:36:01UTC.
+- Emisiónfa41fd5→6759939 persiste ahora keyword_EMISSION+BakedEmissive tras recarga; pantalla cálida en living-crafted3. Normales textiles2b43c85→2ee6e54: CPU de runtime/asset/export coincide y es suave, pero crafted3 aún parece facetado. NO modificar perfil a ciegas; próxima Unity capturar sofá-side en instancia fresca junto a dump, luego UploadMeshData(false) sólo como diagnóstico si persiste. Hipótesis de GPU cache no confirmada.
+- UI3menu1080 mostró faroles magenta;720 y UI4ambas resoluciones cálidos. URP/Lit soportado/sin errores en dump posterior; incidencia no reproducida, causa no confirmada. No revertir emisión ni subir ambiente para ocultarla.
+- Probe de superficie9426435→f204a4b integrado sólo fuente, sin prueba temporal nativa actual. Quiesce248c074→45bc248 integrado: menú doble cierre, humano doubleQuiesce, mosquito Destroy(component) primer disparador y Quit vía callbacks UI dan cleanup nativo de objetos. CoreAudio helper corrigió IID; rerun PID20212 sin sesión activa/pico0. Todo Editor-noaudio, NO acredita escucha/player publicado/online/WAN.
+
+## Evidencia recuperable en N:/LetMeSleep/Validation
+
+- TeamRecovery/ui-native2, ui-native3 y ui-native4; 720/1080 independientes, no reescalados.
+- Alfa-VisualRecovery/living-crafted2-* y living-crafted3-*; cinco por tanda. ON/OFF sólo alterna PointLight, material emisivo constante. opposite está ocluida, no sirve como vista general. Exterior1 cinco vistas cámara, no recorrido físico.
+- Alfa-VisualRecovery/standing-lamp-materials3.json, emissive-status-house.json, emissive-status-lobby.json, textile-meshes3.json; scripts de captura conservados.
+- TeamRecovery/stability-director: menu immediate/deferred, human-double-quiesce/after-two-frames, mosquito-destroy-component/observed, quit-ui-before/invoked/observed, editor-noaudio-after-quit.json. Revisión independiente stability/native-lifecycle-review-2-20260912.md. Helper ya sin error de interop. No cierre del defecto auditivo publicado todavía.
+- ArtCatalog/index.html regenerado:32fichas/76PNG con hashes, historia separada de actuales, ninguna aprobación artística nueva. Servidor8764 y ZIP continúan desactualizado/detenido respectivamente: índice local disponible; no presentar ZIP previo como actualizado.
+- Revisiones independientes visual/UI-NATIVE{2,3,4}-*, LIVING-CRAFTED{2,3}-*, EXTERIOR1-* y functional recibieron cada delta. Referencias obligatorias en N:/LetMeSleep/References, no calcar contenido inventado.
+
+## Procesos y siguiente cola
+
+Unity Director20212 cerrado normalmente después de detener Play. CLI devolvió conexión inválida porque servidor terminó; CIM posterior confirma ausencia de Unity/Blender y log shutdown.34888/18884 eran AssetImportWorker hijos, no juegos. Restauradas sólo dos fuentes SDF de caché; otros cambios ajenos preservados.
+
+Slot concedido AHORA exclusivamente a Modelador Humanos para reference9 fuente27e7195: BlenderCPU2, generar/6vistas/auditoría temporal y roundtrip, informar PID/terminación. No Unity mientras ocupe turno. Mosquitos cc4c871 siguiente, requiere concesión explícita; luego MapasEX2 y Elementos nuevoeditable. Ninguno inicia generación por posición en cola solamente.
+
+Pendientes selectivos: Humans b110965+27e7195 no integrados; Mosquito cc4c871 fuente sin FBX nuevo y Presentation27710c8 adaptador depende de él. Online aeccfe8 fuente/checks puros no integrada ni EOS nativo; dos identidades y WAN pendientes. BancoElementos4a62d6b no integrado; MapasEX2 9ea74ab fuenteJSON no integrada, .blend aún EX1. Elementos ef628a4 diagnóstico, sin cambio de formas por ahora. No confundir archivos históricos con candidatos nuevos.
+
+Siguiente sesión Director: comprobar estado Humanos y recoger evidencia; dar turnos explícitos; importar fuente/exports consistentes por especie antes de pruebas de caminar superficies. Próxima Unity resolver discrepancia render/CPU textiles con la misma instancia y cámara. Verificar interacción/persistencia, player audible/cierre, online y calidad real antes de nueva candidata. Mantener aprobación de Branko y WAN reales como pendientes externos, no inventarlos.
+
+---
 # Revisión visual alfa — checkpoint 19:10 UTC
 
 ## Equipo de doce tareas reanudado — 20:05 UTC
