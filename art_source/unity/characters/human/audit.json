@@ -2,8 +2,8 @@
   "species": "Human",
   "mesh_count": 5,
   "bones": 65,
-  "triangles": 7980,
-  "vertices": 4118,
+  "triangles": 9652,
+  "vertices": 5056,
   "unweighted_vertices": 0,
   "bad_weight_sums": 0,
   "degenerate_triangles": 0,
@@ -163,18 +163,18 @@
     "minimum_leg_reach_margin_m": 0.0015927914013900146
   },
   "bounds_min": [
-    -0.9200505018234253,
+    -0.920045018196106,
     -0.21799999475479126,
     0.0
   ],
   "bounds_max": [
-    0.9202574491500854,
-    0.1289999932050705,
+    0.9201462864875793,
+    0.13199999928474426,
     1.8625340461730957
   ],
   "dimensions": [
-    1.8403079509735107,
-    0.34699998795986176,
+    1.8401913046836853,
+    0.3499999940395355,
     1.8625340461730957
   ],
   "sockets": [
@@ -227,6 +227,100 @@
       ]
     }
   ],
+  "blend_shapes": {
+    "HumanHead": [
+      "Blink25.L",
+      "Blink50.L",
+      "Blink75.L",
+      "Blink.L",
+      "Blink25.R",
+      "Blink50.R",
+      "Blink75.R",
+      "Blink.R"
+    ]
+  },
+  "facial_contract": {
+    "renderer": "HumanHead",
+    "head_bone": "Head",
+    "neck_bone": "Neck",
+    "head_forward_local": [
+      0,
+      0,
+      1
+    ],
+    "head_up_local": [
+      0,
+      1,
+      0
+    ],
+    "eye_bones": [
+      "Eye.L",
+      "Eye.R"
+    ],
+    "eye_forward_local": [
+      0,
+      1,
+      0
+    ],
+    "eye_up_local": [
+      0,
+      0,
+      1
+    ],
+    "eye_bind_centers_source_m": {
+      "L": [
+        0.081,
+        -0.108,
+        1.558
+      ],
+      "R": [
+        -0.081,
+        -0.108,
+        1.558
+      ]
+    },
+    "blink_shapes": {
+      "L": "Blink.L",
+      "R": "Blink.R"
+    },
+    "unity_blink_range": [
+      0,
+      100
+    ],
+    "blink_samples": {
+      "L": [
+        "Basis",
+        "Blink25.L",
+        "Blink50.L",
+        "Blink75.L",
+        "Blink.L"
+      ],
+      "R": [
+        "Basis",
+        "Blink25.R",
+        "Blink50.R",
+        "Blink75.R",
+        "Blink.R"
+      ]
+    },
+    "blink_interpolation": "Piecewise adjacent samples at closure0/.25/.50/.75/1; two neighboring morph weights sum to100. Basis needs no weight. This keeps lid paths outside the globe.",
+    "writer": "One Presentation facial controller after animation, shared with gameplay",
+    "tracking": "Live target, smoothed/clamped offset from this frame animated base; never accumulate last frame offset",
+    "suggested_limits_degrees": {
+      "head_yaw": 55,
+      "head_pitch": 25,
+      "neck_yaw": 20,
+      "eye_yaw": 22,
+      "eye_pitch": 15
+    },
+    "legacy_blink_clip": "Eye local scale Z is a legacy signal only; read before resetting scale to1, map (1-z)/.93 to lid closure",
+    "eye_scale_runtime": [
+      1,
+      1,
+      1
+    ],
+    "scope": "Same rig names/hierarchy; eye bind centers corrected; head/cap/skin material customization retained"
+  },
   "bone_names": [
     "Root",
     "Hips",
@@ -425,14 +519,14 @@
       "name": "Eye.L",
       "parent": "Head",
       "head_blender_m": [
-        0.08799999952316284,
-        -0.17000000178813934,
-        1.5499999523162842
+        0.08100000023841858,
+        -0.1080000028014183,
+        1.5579999685287476
       ],
       "tail_blender_m": [
-        0.08799999952316284,
-        -0.20999999344348907,
-        1.5499999523162842
+        0.08100000023841858,
+        -0.1679999977350235,
+        1.5579999685287476
       ]
     },
     {
@@ -453,14 +547,14 @@
       "name": "Eye.R",
       "parent": "Head",
       "head_blender_m": [
-        -0.08799999952316284,
-        -0.17000000178813934,
-        1.5499999523162842
+        -0.08100000023841858,
+        -0.1080000028014183,
+        1.5579999685287476
       ],
       "tail_blender_m": [
-        -0.08799999952316284,
-        -0.20999999344348907,
-        1.5499999523162842
+        -0.08100000023841858,
+        -0.1679999977350235,
+        1.5579999685287476
       ]
     },
     {

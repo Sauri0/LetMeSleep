@@ -1,6 +1,6 @@
 {
   "contract": {
-    "version": "human-menu-seated-source-1",
+    "version": "human-menu-seated-source-2-joints",
     "root_world_unity_m": [
       3.3,
       0,
@@ -45,12 +45,14 @@
     "hips_height_note": "Raised7mm after first native menu showed cloth5.6mm below seat; remeasurement/visual review required",
     "left_wrist_actor_m": [
       -0.245,
-      0.615,
+      0.599,
       0.28
     ],
+    "left_palm_note": "Fingers point toward the back of the seat; avoid forced forearm pronation and measure palm support",
     "tool_socket_bone": "Socket.Grip.R",
     "tool_runtime_anchor": "ToolSocket_R",
     "tool_mount": "Align ToolView.Grip to ToolSocket_R with production position/rotation correction",
+    "grip_pose_note": "Palm follows the forearm with authored wrist tilt; skin and cuff share lower-arm/hand weights",
     "tool_grip_to_impact_m": 0.365,
     "tool_grip_section_m": [
       0.034,
@@ -69,6 +71,7 @@
     "combat_ids_modified": false,
     "artistic_approval": false
   },
+  "fixed_gaze_baked": false,
   "clips": [
     {
       "name": "MenuSeatedIdle",
@@ -111,13 +114,13 @@
       "presentation_only": true
     }
   ],
-  "minimum_chain_reach_margin_m": 0.02978493317869879,
+  "minimum_chain_reach_margin_m": 0.005545376313822736,
   "tool_grip_validated": false,
   "seat_skin_contact_validated": false,
   "visual_approval": false,
-  "base_blend_sha256": "8ddb3f288843f7c5d6dae7d972acd47417694d9ea10f9fd04183a28f1b9b79b2",
-  "base_fbx_sha256": "087f813ffb6555890d73726b7516c521056ecc3423ad075ba6d5635c7fc7d1bb",
-  "base_audit_sha256": "ce2a7f7f2d2d324e090bb6d3ef34fea039e83f401ff819940a747f96f5a11ff9",
+  "base_blend_sha256": "ffdb5bb58b45de48d849b0f9691628acca0244ac67ae8dc80610bb56230e7e8c",
+  "base_fbx_sha256": "9e85748b5ec38f57791bb7377dbe43bc6328792986837c7fdb260371f6a8d20b",
+  "base_audit_sha256": "03d3142e8a6060ad29ce67b3577c227ebf47bd9cf9e34a863f88830896fdc762",
   "bind_bones": [
     {
       "name": "Root",
@@ -249,14 +252,14 @@
       "name": "Eye.L",
       "parent": "Head",
       "head_blender_m": [
-        0.08799999952316284,
-        -0.17000000178813934,
-        1.5499999523162842
+        0.08100000023841858,
+        -0.1080000028014183,
+        1.5579999685287476
       ],
       "tail_blender_m": [
-        0.08799999952316284,
-        -0.20999999344348907,
-        1.5499999523162842
+        0.08100000023841858,
+        -0.1679999977350235,
+        1.5579999685287476
       ]
     },
     {
@@ -277,14 +280,14 @@
       "name": "Eye.R",
       "parent": "Head",
       "head_blender_m": [
-        -0.08799999952316284,
-        -0.17000000178813934,
-        1.5499999523162842
+        -0.08100000023841858,
+        -0.1080000028014183,
+        1.5579999685287476
       ],
       "tail_blender_m": [
-        -0.08799999952316284,
-        -0.20999999344348907,
-        1.5499999523162842
+        -0.08100000023841858,
+        -0.1679999977350235,
+        1.5579999685287476
       ]
     },
     {
@@ -1202,13 +1205,107 @@
       ]
     }
   ],
-  "triangles": 7848,
-  "vertices": 4046,
+  "triangles": 9652,
+  "vertices": 5056,
+  "blend_shapes": {
+    "HumanHead": [
+      "Blink25.L",
+      "Blink50.L",
+      "Blink75.L",
+      "Blink.L",
+      "Blink25.R",
+      "Blink50.R",
+      "Blink75.R",
+      "Blink.R"
+    ]
+  },
+  "facial_contract": {
+    "renderer": "HumanHead",
+    "head_bone": "Head",
+    "neck_bone": "Neck",
+    "head_forward_local": [
+      0,
+      0,
+      1
+    ],
+    "head_up_local": [
+      0,
+      1,
+      0
+    ],
+    "eye_bones": [
+      "Eye.L",
+      "Eye.R"
+    ],
+    "eye_forward_local": [
+      0,
+      1,
+      0
+    ],
+    "eye_up_local": [
+      0,
+      0,
+      1
+    ],
+    "eye_bind_centers_source_m": {
+      "L": [
+        0.081,
+        -0.108,
+        1.558
+      ],
+      "R": [
+        -0.081,
+        -0.108,
+        1.558
+      ]
+    },
+    "blink_shapes": {
+      "L": "Blink.L",
+      "R": "Blink.R"
+    },
+    "unity_blink_range": [
+      0,
+      100
+    ],
+    "blink_samples": {
+      "L": [
+        "Basis",
+        "Blink25.L",
+        "Blink50.L",
+        "Blink75.L",
+        "Blink.L"
+      ],
+      "R": [
+        "Basis",
+        "Blink25.R",
+        "Blink50.R",
+        "Blink75.R",
+        "Blink.R"
+      ]
+    },
+    "blink_interpolation": "Piecewise adjacent samples at closure0/.25/.50/.75/1; two neighboring morph weights sum to100. Basis needs no weight. This keeps lid paths outside the globe.",
+    "writer": "One Presentation facial controller after animation, shared with gameplay",
+    "tracking": "Live target, smoothed/clamped offset from this frame animated base; never accumulate last frame offset",
+    "suggested_limits_degrees": {
+      "head_yaw": 55,
+      "head_pitch": 25,
+      "neck_yaw": 20,
+      "eye_yaw": 22,
+      "eye_pitch": 15
+    },
+    "legacy_blink_clip": "Eye local scale Z is a legacy signal only; read before resetting scale to1, map (1-z)/.93 to lid closure",
+    "eye_scale_runtime": [
+      1,
+      1,
+      1
+    ],
+    "scope": "Same rig names/hierarchy; eye bind centers corrected; head/cap/skin material customization retained"
+  },
   "actor_mapping": "(-source_x,source_z,-source_y)",
   "combat_clips_modified": false,
   "geometry_source_note": "Coherent generated crown-fixed base; geometry unchanged by menu authoring",
   "files_sha256": {
-    "LMS_HumanMenu.blend": "383101ee88808fba0a052d3552dafa977b316850df556057f7c00da6e3b6b734",
-    "LMS_HumanMenu.fbx": "905b942ce4ea5192d0bd2442179edbcfba5b1f848695e3cd61917f6a111be7f9"
+    "LMS_HumanMenu.blend": "e609a8be0d8ab2854c1e551042722740e77ba8551fafac408e46e92273181de8",
+    "LMS_HumanMenu.fbx": "3412a9caaec030c3fe89d646fd063c8431ac3db38a9b76a8c49d8bc0d98470ff"
   }
 }

@@ -1,16 +1,31 @@
 [
   {
     "species": "Human",
-    "fbx_sha256": "348c0f48f5247102a8c873ff5f9d131a06e6e260421262185e24bf3a9db5a46d",
-    "source_audit_sha256": "78dc9a344db7ab015c44b191b784d78c361dd9917c4065309965b313ec524169",
+    "fbx_sha256": "9e85748b5ec38f57791bb7377dbe43bc6328792986837c7fdb260371f6a8d20b",
+    "source_audit_sha256": "03d3142e8a6060ad29ce67b3577c227ebf47bd9cf9e34a863f88830896fdc762",
     "dimensions": [
-      1.8403079509735107,
-      0.34700024127960205,
+      1.8401913046836853,
+      0.35000017285346985,
       1.862534056586986
     ],
-    "triangles": 7980,
+    "triangles": 9652,
     "bones": 65,
     "actions": [
+      "Key|LMS_HumanRig|Human_Blink",
+      "Key|LMS_HumanRig|Human_Clap",
+      "Key|LMS_HumanRig|Human_Crouch",
+      "Key|LMS_HumanRig|Human_Faint",
+      "Key|LMS_HumanRig|Human_Fall",
+      "Key|LMS_HumanRig|Human_FingerCurl",
+      "Key|LMS_HumanRig|Human_Hit",
+      "Key|LMS_HumanRig|Human_Idle",
+      "Key|LMS_HumanRig|Human_Jump",
+      "Key|LMS_HumanRig|Human_Land",
+      "Key|LMS_HumanRig|Human_Recover",
+      "Key|LMS_HumanRig|Human_Run",
+      "Key|LMS_HumanRig|Human_Swat",
+      "Key|LMS_HumanRig|Human_Turn",
+      "Key|LMS_HumanRig|Human_Walk",
       "LMS_HumanRig|LMS_HumanRig|Human_Blink",
       "LMS_HumanRig|LMS_HumanRig|Human_Clap",
       "LMS_HumanRig|LMS_HumanRig|Human_Crouch",
@@ -37,6 +52,18 @@
       "Socket.Foot.L",
       "Socket.Foot.R"
     ],
+    "blend_shapes": {
+      "HumanHead": [
+        "Blink25.L",
+        "Blink50.L",
+        "Blink75.L",
+        "Blink.L",
+        "Blink25.R",
+        "Blink50.R",
+        "Blink75.R",
+        "Blink.R"
+      ]
+    },
     "errors": [],
     "passed": true
   }
