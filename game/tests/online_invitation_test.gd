@@ -29,7 +29,7 @@ func _initialize() -> void:
 	var legacy := payload.duplicate(true)
 	legacy.protocol = 9
 	reject(envelope(legacy), "rc1 protocol rejected before connecting")
-	check(Invite.PREFIX == "LMS1-" and Invite.PROTOCOL == 10, "format identity")
+	check(Invite.PREFIX == "LMS1-" and Invite.PROTOCOL == 11, "format identity")
 	for lobby: String in ["a", "0123456789abcdef0123456789abcdef", "Lobby_A-9", "a".repeat(64)]:
 		var code := Invite.encode(lobby, CAP)
 		var decoded := Invite.decode(code)
@@ -60,7 +60,7 @@ func _initialize() -> void:
 			changed[field] = malformed
 			reject(envelope(changed), "wrong field type")
 	for field: String in ["v", "protocol"]:
-		for malformed: Variant in ["1", str(Invite.PROTOCOL), -1, 0, 1.5, 9.5, 11, 1.0e30]:
+		for malformed: Variant in ["1", str(Invite.PROTOCOL), -1, 0, 1.5, 9.5, 10, 12, 1.0e30]:
 			var changed := payload.duplicate(true)
 			changed[field] = malformed
 			reject(envelope(changed), "wrong version or protocol")
