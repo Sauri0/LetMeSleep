@@ -1,6 +1,6 @@
 # Let me sleep — Unity migration
 
-Active stage: 0.9.4/alfa only. Master plan: docs/unity/PLAN-UNITY-0.9.4.md. User authorized implementation via active goal on 2026-09-12. Beta and later require subsequent user approval.
+Active stage: 0.9.4/alfa. Master plan: docs/unity/PLAN-UNITY-0.9.4.md. Latest user steering authorizes autonomous completion of the plan while asleep, without questions; see docs/unity/EXECUTION.md. Execute stages in order under Director coordination. Keep external evidence and user review pending explicitly; no worker starts a later stage independently.
 
 - All new projects, tools, build output and worktrees on N:. Godot directories are historical reference, not runtime to continue editing.
 - Integrator: Director at N:/LetMeSleep/Repository, branch codex/unity-094-alfa. Work in your assigned worktree and paths only.

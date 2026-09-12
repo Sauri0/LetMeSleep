@@ -1,0 +1,6 @@
+{
+  "name": "LetMeSleep.Core",
+  "rootNamespace": "LetMeSleep.Core",
+  "references": [],
+  "noEngineReferences": true
+}
