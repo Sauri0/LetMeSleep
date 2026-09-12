@@ -49,3 +49,11 @@ Preparado para el turno que conceda Director:
 5. Director/Presentación importan, verifican curvas Wing por ruta real del Animator y bases de los seis controles, conectan VisualAttentionRig y registran ejes/quaterniones importados. Validar transición de estados y personalización guardada de ambas especies; cerrar la matriz de contextos de `LIVING-MENU-AND-GAME-EYES-ACCEPTANCE.md` con evidencia integrada.
 
 P1 previo de patas cruzadas y otros pendientes visuales R3 siguen abiertos; esta entrega no los declara resueltos.
+
+## Runner preparado, todavía sin ejecutar
+
+`art_source/unity/characters/run_mosquito_candidate.py` muestra el plan por defecto y no inicia procesos. Sólo después de concesión explícita del Director se invoca con `--execute --slot-note "referencia de la concesión" --run-name r4-cpu2-01`. Usa una copia nueva de nueve módulos en `work/mosquito-candidate/<run>/art_source/unity/characters`; toda generación, auditoría y render queda allí. No reemplaza los activos canónicos del worktree ni los centrales y comprueba sus hashes al terminar. No promueve automáticamente.
+
+Un Blender oculto por vez, dos hilos, timeout por paso y límite total12min, abortando ante el primer error. Lote: generación, auditoría temporal/facial, soporte,11 stills de frente/35/cara/perfil y posiciones de párpados/mirada, más24frames Fly y24Hover (dos ciclos cada uno,30FPS, velocidad1, Root fijo). Stills640px/8samples; secuencias384px/4samples. Guarda PID, tiempos, salida y hashes en runner-receipt.json. Estimación **4–7min** si no falla ningún gate, apoyada en R3 (generación6s, auditoría5s, soporte3s, tres vistas640px/8samples25s); no es un benchmark actual. Corregir un error o repetir exige informar al Director y respetar el tiempo de su turno.
+
+Preparación verificada con el modo plan y análisis de sintaxis; aún no ejecutada contra Blender. Las secuencias son diagnóstico de autoría, no evidencia del menú a escala final ni del rendimiento del juego.
