@@ -33,7 +33,7 @@ Es un Development Build de diagnóstico. El Director aceptó conservar 123 PDB a
 - Unity EditMode integrado: 61/61, 0 fallos. Cubre dominio de sala, protocolo alfa-2, framing, autoridad de puertas/picadura, réplica y propiedad de herramienta; no acredita física/render/red real.
 - Unity PlayMode final: 2/2 en 1.45 s. Arranca y limpia entrenamiento de ambos roles, actores, cámara y pickups; no es una ronda completa ni certifica navegación de bots.
 - Ejecutable candidato local: entrenamiento humano y mosquito, humano estacionario, regreso al menú y ciclo host EOS crear/salir. `human.png` y `mosquito.png` pertenecen a esos roles. `menu.png` fue capturada después de una transición asíncrona y ya muestra entrenamiento; no acredita el menú.
-- UI: revisión humana final a 720p PASS, sin glifos faltantes, truncamiento, clipping ni solapamientos en el personalizador.
+- UI: revisión visual por la tarea de interfaz a 720p PASS, sin glifos faltantes, truncamiento, clipping ni solapamientos en el personalizador.
 - [Descarga pública](ALFA-PUBLIC-DISTRIBUTION-20260912.json): `EnsureLatest` pasó checksum, extracción, manifiesto, activación persistida y segundo inicio sin reinstalar en una ruta con espacios. El Launcher EXE público coincide con el hash aprobado `38410f29b7436d14c986dcafdd49fae7629282eaf3d8e43134862f40d94ad90a`.
 - [Ejecutable público visible](ALFA-PUBLIC-VISIBLE-PLAYER-20260912.json): repitió todos los booleanos funcionales del probe a 1920×1080, produjo una captura humana visible y terminó el proceso.
 - Launcher: 54 comprobaciones offline, 0 fallos; instalación pública mediante updater, 3 comprobaciones, 0 fallos.
