@@ -90,7 +90,7 @@ func _run() -> void:
 	insect.hide()
 	# The selected A rig adds two independent thumb bones per hand for gripping.
 	var human_contract: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/characters/human/rig_contract.json"))
-	check(human_contract.get("selected_base","")=="A" and human_contract.get("rig_version","")=="LMS07.grip1" and human.imported_skin.skeleton.get_bone_count()==36 and human_contract.bones.size()==36,"selected A deformation rig has 36 bones including articulated thumbs")
+	check(human_contract.get("selected_base","")=="A" and human_contract.get("rig_version","")=="LMS092.palm1" and human.imported_skin.skeleton.get_bone_count()==36 and human_contract.bones.size()==36,"selected A palmar deformation rig has 36 bones including articulated thumbs")
 	for side: String in ["l","r"]:
 		var thumb_a: int = human.imported_skin.skeleton.find_bone("thumb_a_"+side)
 		var thumb_b: int = human.imported_skin.skeleton.find_bone("thumb_b_"+side)
