@@ -421,7 +421,7 @@ namespace LetMeSleep.UI
             factory.Text(brand, "Eyebrow", "LA NOCHE RECIÉN EMPIEZA", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
             factory.Text(brand, "Logo", "LET ME\nSLEEP", AlfaUiTheme.LogoSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
             factory.Text(brand, "Subtitle", "HUMANOS CONTRA MOSQUITOS", 26f, AlfaUiTheme.Moon200);
-            factory.Text(brand, "Version", "0.9.4 / ALFA  ·  WINDOWS", AlfaUiTheme.NoteSize, AlfaUiTheme.Disabled);
+            factory.Text(brand, "Version", "0.9.4 / ALFA  ·  WINDOWS", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
 
             var artWindow = AlfaUiFactory.Node("SceneWindow", columns, typeof(UnityEngine.UI.LayoutElement));
             var artLayout = artWindow.GetComponent<UnityEngine.UI.LayoutElement>();
@@ -438,7 +438,7 @@ namespace LetMeSleep.UI
             factory.Button(menu, "MainCustomizeButton", "PERSONALIZAR", ShowCustomization);
             factory.Button(menu, "MainSettingsButton", "AJUSTES", () => OpenSettings(AlfaUiScreen.MainMenu));
             factory.Button(menu, "MainQuitButton", "SALIR DEL JUEGO", ConfirmQuit, false, true);
-            factory.Text(menu, "NavigationHint", "Tab y flechas · Enter para elegir · Escape para volver", AlfaUiTheme.NoteSize, AlfaUiTheme.Disabled);
+            factory.Text(menu, "NavigationHint", "Tab y flechas · Enter para elegir · Escape para volver", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
         }
 
         private void BuildOnlineChoice()
