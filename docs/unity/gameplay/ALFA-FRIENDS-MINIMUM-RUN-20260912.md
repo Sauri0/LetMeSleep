@@ -1,0 +1,36 @@
+# Alfa Sangre para amigos — evidencia y corrida mínima
+
+Entrega offline de Gameplay, 2026-09-12. Prioridad: candidato testeable con dos jugadores; sin ampliar modos/contenido. No se abrió Unity, player, Blender ni conexión EOS. No se modificó runtime: no apareció un bloqueo reproducible de Gameplay/Gameplay.Unity en los casos ejecutados.
+
+## Evidencia vigente y sus límites
+
+| Evidencia | Resultado | Qué queda pendiente |
+|---|---|---|
+| Fuentes centrales Gameplay/Core + compilación Gameplay.Unity refrescadas esta entrega | **92 casos CPU, 0 fallos; compilación 0 errores/0 advertencias** | No incluye PhysX/render, Bootstrap real, SDK EOS o build ejecutado. |
+| Nueva `validation/TwoRoundFlowChecks.cs` | **2 casos CPU, 0 fallos**: cuota → retorno → nueva ronda → tiempo; sorteo repetido/cambiado; reset y comandos viejos rechazados | Mundo de contacto falso y conexión RoomSession/Authority hecha por el test. No demuestra callbacks/retorno de UI ni transporte. Configuración corta legal de fixture (30 s, cuota 1), no cambio del balance del juego. |
+| U09414, candidato35c2af4: entrenamiento Editor con bots | Humano local: BloodGoal1216/20; mosquito local: TimeExpired5400/7.999994. Reintentos/limpieza verificados entonces | Local sin controles; no partida manual ni online. Candidato anterior al actual. |
+| U09409/06 + Alfa2 restante, candidatos anteriores | Humano: corredor/escalera/subida/bajada/PatioDoor; después Entry/frente/regreso. Mosquito: aproximación piso corregida, pared/techo y despegue; últimas12 muestras de cámara sin solapamiento/bloqueador | Living/modelos/cámaras han cambiado. No heredar aprobación del mapa actual, todas sus habitaciones/uniones ni animación/contacto visual. El bloqueo de cámara del primer informe fue seguido por corrección/muestras posteriores; no presentarlo como fallo actual reproducido. |
+| Online | Consultar el recibo vigente del Director/Worker Online sobre dos identidades, join y cierre | Esta entrega no produjo prueba EOS/WAN. El informe EOS histórico no basta para certificar el par del candidato actual. |
+
+Evidencia actual: `N:/LetMeSleep/Validation/Gameplay-AlfaFriends-20260912-current/`: `compile.log`, `checks.log`, `receipt.json`, `two-rounds/checks.log`, `friends-review-receipt.json`. Los hashes de fuente del recibo se contrastaron nuevamente contra central al terminar; sin diferencias. Gameplay/Gameplay.Unity no tenían delta respecto a central52a7895 en el momento revisado. La nueva prueba se integra automáticamente al futuro Run-Validation.ps1; en esta entrega se ejecutó aparte contra el Domain.dll central recién compilado, sin repetir innecesariamente los92 casos.
+
+## Corrida real mínima sobre build — Director/Online
+
+**Preparación.** Un mismo paquete/manifest, SHA256 del EXE y versión para ambos equipos; registrar ruta y PID/StartTime de cada proceso. Dos identidades EOS realmente diferentes, no sólo dos cachés/procesos de la misma identidad. Usar dos equipos/redes si se quiere acreditar WAN; una red local no lo acredita. Mantener `-noaudio` salvo turno explícito de escucha. Usar el mapa y reglas normales visibles de Sangre (registrarlas); no cambiar cuota/reloj/vida/posición mediante scripts para acelerar la prueba. Las herramientas de observación no inyectan comandos.
+
+| Paso | Operación real | Evidencia mínima / resultado esperado |
+|---|---|---|
+| 1. Sala | A crea, B introduce código; ambos marcan Listo; A inicia | Mismo roster de dos jugadores y mismo contenido; ambos equipos presentes, cada cliente controla sólo su actor. Guardar captura de cada cliente y ruta de transporte si el diagnóstico existente la ofrece. |
+| 2. Ronda1: ambos roles y recorrido | Humano: spawn → Entry/frente → regreso; corredor/escalera/planta alta y descenso; PatioDoor/patio y regreso. Mosquito: vuelo W según mirada, freno, interior/exterior; en zona alcanzable libre, F piso/pared/techo, caminar/girar y F despegar | Control real en ambos clientes, sin salto de posición/inyección. Anotar punto exacto de atasco/clipping/pérdida de apoyo. Mantener secuencia breve: no se exige recorrer cada habitación para este smoke, pero no ocultar un acceso esencial bloqueado. |
+| 3. Sangre y defensa | Mosquito mantiene E junto a superficie corporal accesible; suelta para cancelar y vuelve a adquirir. Humano prueba defensa manual y, si derriba al insecto, esperar recuperación natural. Continuar hasta resultado natural, buscando BloodGoal | Ambos HUD concuerdan en sangre/ganador/tiempo; cancelar no sigue extrayendo; sin daño o preparación desde lejos. No sustituir por animación de menú ni por el bot de un entrenamiento. Registrar si el resultado obtenido fue otro; no inventar cobertura de BloodGoal. |
+| 4. Retorno | Dueño pulsa retorno a lobby; ambos vuelven y marcan Listo de nuevo | Roster conservado, controles/lobby utilizables, ningún doble avatar o audio/escena de partida residual observable. Preparación anterior descartada. Registrar estado interno adicional sólo si un observador existente lo expone; no afirmar conteos internos desde una captura de UI. |
+| 5. Ronda2 | Iniciar por UI con nuevo sorteo. Repetir control/picadura/defensa esencial y dejar terminar normalmente, buscando TimeExpired con humanos sobreviviendo | Sangre comienza0, reloj completo y estado visual/controles limpios; no reaparece picadura, caída, arma recogida o resultado anterior. Misma comparación de resultado en ambos clientes. No forzar EndRound. |
+| 6. Retorno y cierre | Volver al lobby tras ronda2; dueño sale/cierra; invitado debe recibir cierre de sala y recuperar menú. Salir de ambos procesos | Sin migración inventada ni cliente congelado. Observador externo de Estabilidad confirma PID terminado, ventana y sesión audio según su gate; no matar antes de guardar una falla. |
+
+Dos rondas son el mínimo, no una garantía de alternancia. Cada ronda con dos jugadores ya contiene humano y mosquito. Registrar matriz **equipo × rol**: si el sorteo repite roles y se exige probar ambos roles en cada equipo, continuar con otra ronda natural o declarar esas celdas pendientes; no cambiar RNG, asignar roles manualmente ni llamar fallo a un sorteo válido. Tampoco garantizan dos rondas observar ambos tipos de final: registrar el real y repetir sólo la rama faltante si se requiere esa cobertura.
+
+Guardar un único resumen con candidate/hash, equipo/identidad de prueba sin credenciales, transporte, rol por ronda, resultado real, sangre/tiempo de ambos HUD, ruta recorrida, retorno/cierre y vínculos a videos/logs. Las fotos o un receipt de proceso interno no reemplazan la observación externa de salida. No usar SurfaceVisualProbe como prueba de entrada manual: sus comandos Authority son un diagnóstico distinto.
+
+## Bloqueos de aceptación
+
+No hay corrección de runtime propuesta por los94 casos CPU; eso no descarta defectos nativos o de red. Antes de entregar la alfa como probada con amigos, faltan el join con identidades distintas sobre el mismo build, dos rondas/retornos reales sin bloqueo, traversal esencial del mapa actual y cierre observado. Si algo falla, conservar build/hash, rol, último paso, logs de ambos y devolver el defecto a su dueño. El contrato facial y refinamientos de arte no sustituyen este recorrido ni justifican ampliar el alcance.
