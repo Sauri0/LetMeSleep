@@ -1,7 +1,8 @@
 class_name MapCatalog
 extends RefCounted
 const PickupPlacementScript = preload("res://scripts/pickup_placement.gd")
-const Generator = preload("res://scripts/procedural_house.gd")
+const Generator = preload("res://scripts/procedural_house.gd") # Transitional network parser; never used to load maps.
+const Fixed = preload("res://scripts/fixed_house.gd")
 const Validation = preload("res://scripts/house_validation.gd")
 static var _generated: Dictionary = {}
 static var last_generation_error: Dictionary = {}
@@ -949,47 +950,24 @@ const LOBBY := {
 	],
 }
 
-static func get_map(id: String = "house") -> Dictionary:
-	if id == "house":
-		var data := HOUSE.duplicate(true)
-		for index: int in range(data.pickups.size()):
-			data.pickups[index] = PickupPlacementScript.resolve(data.pickups[index])
-		return data
-	if id == "lobby":
-		return LOBBY.duplicate(true)
-	var seed_value: int=Generator.parse_seed(id)
-	if seed_value<0 and id.begins_with("house-v"):
-		last_generation_error={"id":id,"reason":"Unsupported generator version or noncanonical seed; expected house-v%d-<seed>"%Generator.VERSION}
-		return {}
-	if seed_value>0:
-		if not _generated.has(id):
-			var data: Dictionary=Generator.new().generate(seed_value)
-			var report: Dictionary=Validation.validate(data)
-			if not report.passed:
-				last_generation_error={"id":id,"report":report}
-				return {}
-			data.nav_edges=report.valid_edges
-			data.generation_stage="validated"
-			data.fingerprint=Validation.fingerprint(data)
-			# Geometry is immutable. Bounded catalog storage; active consumers own
-			# their own references and are not invalidated when this cache evicts.
-			if _generated.size()>=24: _generated.erase(_generated.keys()[0])
-			_generated[id]=data
-		return _generated[id].duplicate(true)
-	return {}
+static func default_map_id() -> String:
+	return Fixed.ID
 
-static func new_house(seed_value: int=0) -> Dictionary:
-	if seed_value<=0:
-		var random:=RandomNumberGenerator.new();random.randomize()
-		seed_value=random.randi_range(1,2147483646)
-	for attempt: int in range(8):
-		var data:=get_map(Generator.map_id(seed_value))
-		if not data.is_empty(): return data
-		seed_value=1+(seed_value*48271)%2147483646
-	return {}
+static func playable_maps() -> Array[Dictionary]:
+	return [{"id":Fixed.ID,"label":Fixed.LABEL}]
+
+static func get_map(id: String = Fixed.ID) -> Dictionary:
+	if id=="lobby": return LOBBY.duplicate(true)
+	if not is_playable(id): return {}
+	if not _generated.has(id): _generated[id]=Fixed.new().build()
+	return _generated[id].duplicate(true)
+
+static func new_house(_seed_value: int=0) -> Dictionary:
+	# Legacy call signature only. All rounds and training use the authored map.
+	return get_map(default_map_id())
 
 static func is_playable(id: String) -> bool:
-	return id == "house" or Generator.parse_seed(id)>0
+	return id==Fixed.ID
 
 static func human_spawn(id: String, index: int) -> Vector3:
 	var data: Dictionary = get_map(id)

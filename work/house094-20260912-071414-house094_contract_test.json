@@ -1,0 +1,8 @@
+{
+  "stderr": 0,
+  "passed": true,
+  "timeout": false,
+  "import": false,
+  "script": "house094_contract_test",
+  "exit": 0
+}
