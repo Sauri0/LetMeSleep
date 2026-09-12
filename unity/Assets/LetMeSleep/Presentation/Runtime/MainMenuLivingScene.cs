@@ -164,7 +164,9 @@ namespace LetMeSleep.Presentation
                 {
                     // A single local cone models the sitter and seat rather than washing the whole wall.
                     warm.type=LightType.Spot; warm.spotAngle=100f; warm.innerSpotAngle=70f;
-                    warm.transform.LookAt(bindings.HumanSeatRoot.TransformPoint(new Vector3(0,.95f,.35f)));
+                    // The authored anchor is almost lateral to the face; bring the presentation key toward its front.
+                    warm.transform.position+=bindings.HumanSeatRoot.forward*.85f;
+                    warm.transform.LookAt(bindings.HumanSeatRoot.TransformPoint(new Vector3(0,1.15f,.35f)));
                     warm.shadows=LightShadows.Soft;
                     warm.shadowResolution=UnityEngine.Rendering.LightShadowResolution.Low;
                     warm.shadowStrength=.8f; warm.shadowBias=.025f; warm.shadowNormalBias=.08f;
