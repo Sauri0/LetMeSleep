@@ -61,3 +61,14 @@ Nadie está solo. No revertir cambios ajenos, no git add ., no reset/clean, no p
 2. Con contratos concretos: Worker 1 integra funcionamiento, Worker 2 acabados y UI selector/sala. Director avanza versionado y red en paralelo.
 3. Integración, pruebas focalizadas y correcciones; GPU por turnos autorizados. WAN requiere participante y segunda red reales.
 4. Publicación de alfa únicamente con evidencia de todos los requisitos. Si falta prueba, mantener objetivo activo y explicar el límite. Branko prueba y decide si habilita beta.
+
+## Integración del 12 de septiembre
+
+- Casa a637f07, assets d7d3d1e, movimiento a470200, UI adc9e3a y entorno 15b4e83 incorporados por Director mediante commits selectivos.
+- QA tiene autorización temporal sobre fixed_house.gd para validar/corregir la geometría tras el checkpoint M1; su ajuste 3d34628 agrega cercas y alinea colisiones con los modelos. M1 congeló sus cambios para evitar trabajo simultáneo.
+- Worker 1 amplió propiedad a practice_session.gd y bot_brain.gd. Entrega funcional integrada; no modifica red ni simulación.
+- Interfaz tiene autorización adicional sobre ui_navigation_test.gd para conservar su cobertura con el inicio online actual.
+- Revisión visual de assets: 383 comprobaciones, sin errores, tres láminas nativas en work/assets094-native. Es revisión de modelos aislados, no aprobación del mapa integrado.
+- Red Director: par local con transporte ENet de prueba, 39 comprobaciones incluyendo dos rondas, ajustes de dueño, rechazo de mapa/huella y desconexión. Host EOS real: 15 comprobaciones. Ninguno acredita conexión WAN.
+- Rama remota de integración: codex/094-alfa. No es la release ni actualiza el juego de los jugadores.
+- Pendiente: cerrar mapa renderizado, navegación UI nativa, partidas largas/rendimiento, paquete/launcher y prueba con amigo desde otra red. Sin aprobación para beta.

@@ -86,12 +86,12 @@ func run() -> void:
 	n.lobby_action("ready",true)
 	await process_frame
 	check(n.players[1].ready,"host ready uses shared handler")
-	n._pending_map={"id":"house","fingerprint":"test","ready":{}}
+	n._pending_map={"id":"house-patio-v1","fingerprint":"test","ready":{}}
 	n._receive_map_ack(1,"map_ready",{"id":"other","fingerprint":"test"})
 	check(n._pending_map.ready.is_empty(),"wrong map ACK ignored")
-	n._receive_map_ack(1,"map_ready",{"id":"house","fingerprint":"test"})
+	n._receive_map_ack(1,"map_ready",{"id":"house-patio-v1","fingerprint":"test"})
 	check(n._pending_map.ready.has(1) and n.sim==null,"host ACK waits for friend ACK")
-	n._receive_map_ack(2,"map_ready",{"id":"house","fingerprint":"wrong"})
+	n._receive_map_ack(2,"map_ready",{"id":"house-patio-v1","fingerprint":"wrong"})
 	check(n._pending_map.is_empty() and n.sim==null,"map mismatch cancels round for everyone")
 	var secret: Dictionary={"tick":50,"assignment":{"revision":1,"zone":"host_only"}}
 	n._send_to(1,"_receive_private_reliable",[secret])

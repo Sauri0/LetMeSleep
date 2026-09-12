@@ -1,5 +1,5 @@
 extends SceneTree
-## Production 16-player procedural round, encoded using the actual EOS envelope.
+## Production 16-player authored round, encoded using the actual EOS envelope.
 const Sim=preload("res://scripts/simulation.gd")
 const Maps=preload("res://scripts/map_catalog.gd")
 const Codec=preload("res://scripts/online_packet_codec.gd")
@@ -17,8 +17,8 @@ func encode(method: String,args: Array,kind: int) -> void:
 	for frame: PackedByteArray in packet.frames:
 		if frame.size()>1032: failures+=1;push_error("Oversized frame: "+method)
 func run() -> void:
-	var generated: Dictionary=Maps.new_house(123456789)
-	if generated.is_empty(): push_error("Map generation failed");quit(1);return
+	var generated: Dictionary=Maps.get_map(Maps.default_map_id())
+	if generated.is_empty(): push_error("Authored map unavailable");quit(1);return
 	var config: Dictionary=Sim.DEFAULT_CONFIG.duplicate(true)
 	config.map_id=generated.id;config.human_count=5
 	var roster: Dictionary={}
