@@ -87,3 +87,13 @@ Revisado exterior1-patio-reverse.png real: respaldo continuo y dos apoyos macizo
 El gate compara las mismas instancias/bounds de collider antes/después y exige que todos los vértices nuevos queden dentro de su envolvente (tolerancia0.1mm por lado). No crea colliders ni altera su orden/IDs. Se añade el banco al JSON del kit editable; el .blend archivado sigue siendo crafted1 y no contiene esta pieza. El método permanece temporalmente en AlfaQualityLiving.cs bajo la propiedad de integración acordada, separado de colocación/arquitectura Mapas.
 
 Offline C# PASS, hash21 actualizado, diff-check sin errores. Pendientes build nativo/gate y captura patio-reverse comparable, más banco aislado frontal y tres cuartos con asiento y apoyo al suelo visibles. Esta fuente todavía no tiene evidencia artística nueva.
+
+## Crafted3 — seguimiento del sombreado real
+
+Director integró fa41fd5 como6759939 y2b43c85 como2ee6e54; BuildMaps PASS20:36:01UTC. standing-lamp-materials3.json confirma keyword_EMISSION y BakedEmissive persistentes. Capturas ON y sofá lateral revisadas: pantalla cálida ahora visible, pero los textiles siguen mostrando caras duras. Banco4a62d6b todavía no integrado en estas capturas.
+
+La lectura numérica del JSON recién exportado descarta pérdida del suavizado antes de exportar: por submesh de cuerpo, BackPad299 vértices/280 triángulos, Cushion325/280, Seat269/200 y Throw345/216; ninguno de esos triángulos tiene las tres normales iguales (tolerancia angular0.1°). Diferencia máxima entre normales de un mismo triángulo63.10°/45.97°/58.35°/24.73°, respectivamente. Los vértices coincidentes mantienen continuidad dentro de0.023° de precisión float. No se encontró recálculo posterior en Presentation/Gameplay.Unity. Esto no demuestra qué mesh usa la instancia capturada.
+
+`diagnostics/DumpQualityTextileMeshes.cs` preparado para eval_file de Director, sólo lectura: identifica escena/jerarquía, instancia activa, static batching, sharedMesh/asset candidato con IDs y huella de vértices/normales/índices, estadísticas de normales y shaders/keywords. Compila envuelto como método contra API Unity6000.3.24f1; todavía falta ejecución nativa. No modificar perfiles hasta comparar instancia capturada con asset/export.
+
+Presentación informó faroles magenta en UI3, pero UI4 fresco muestra faroles cálidos y los dumps house/lobby indican shader soportado/sin errores, compilación inactiva y emisión correcta. El incidente no se reprodujo; causa transitoria exacta desconocida. No se revirtieron flags ni materiales, y IsPassCompiledfalse aislado no se trató como prueba de fallo.
