@@ -58,17 +58,38 @@ func _approach_errors(room:Dictionary,approach:Dictionary,structures:Dictionary)
 		if str(candidate.get("id",""))==str(approach.zone_id):zone=candidate;break
 	if zone.is_empty():
 		errors.append("zone_id does not resolve")
-	elif not zone.has("anchor") or not (zone.anchor is Vector3) or Vector3(zone.anchor).distance_to(approach.origin)>.001:
+	elif not zone.has("anchor") or not (zone.anchor is Vector3) or not Vector3(zone.anchor).is_finite():
+		errors.append("zone anchor is not a finite Vector3")
+	elif Vector3(zone.anchor).distance_to(approach.origin)>.001:
 		errors.append("origin does not match zone anchor")
 	var structure_id:=str(approach.structure_id)
 	if not structures.has(structure_id):
 		errors.append("structure_id does not resolve")
 	else:
 		var structure:Dictionary=structures[structure_id]
+		if str(structure.get("kind",""))!="furniture":errors.append("structure is not furniture")
 		if str(structure.get("room_id",structure.get("room","")))!=str(room.id):errors.append("structure belongs to another room")
 		if str(structure.get("functional_zone_id",""))!=str(approach.zone_id):errors.append("structure belongs to another functional zone")
 		if not structure.has("approach") or not (structure.approach is Vector3) or Vector3(structure.approach).distance_to(approach.p)>.001:
 			errors.append("p does not match structure approach")
+	return errors
+
+func _approach_coverage_errors(room:Dictionary,structures:Dictionary)->Array[String]:
+	var errors:Array[String]=[]
+	var expected:Dictionary={}
+	for id:String in structures:
+		var structure:Dictionary=structures[id]
+		if str(structure.get("kind",""))=="furniture" and str(structure.get("room_id",structure.get("room","")))==str(room.id):expected[id]=true
+	var seen:Dictionary={}
+	for approach:Dictionary in room.get("functional_approaches",[]):
+		var id:=str(approach.get("structure_id",""))
+		if id.is_empty():continue
+		if seen.has(id):errors.append("duplicate approach for furniture "+id)
+		seen[id]=true
+	for id:String in expected:
+		if not seen.has(id):errors.append("missing approach for furniture "+id)
+	for id:String in seen:
+		if not expected.has(id):errors.append("approach references non-room furniture "+id)
 	return errors
 
 func _route_length(points:Array[Vector3])->float:
@@ -170,6 +191,24 @@ func _negative_cases(data:Dictionary,map_id:String,states:Dictionary,structures:
 	var origin_errors:=_approach_errors(selected_room,shifted_origin,structures)
 	check(not origin_errors.is_empty(),"approach origin detached from zone anchor is rejected")
 	results.append({"case":"detached_origin","errors":origin_errors})
+	var missing_approach_room:=selected_room.duplicate(true)
+	var reduced:Array=Array(missing_approach_room.functional_approaches).duplicate(true);reduced.pop_back()
+	missing_approach_room.functional_approaches=reduced
+	var coverage_errors:=_approach_coverage_errors(missing_approach_room,structures)
+	check(not coverage_errors.is_empty(),"a furniture structure without its approach is rejected")
+	results.append({"case":"missing_furniture_approach","errors":coverage_errors})
+	var duplicate_approach_room:=selected_room.duplicate(true)
+	var duplicated:Array=Array(duplicate_approach_room.functional_approaches).duplicate(true);duplicated.append(selected_approach.duplicate(true))
+	duplicate_approach_room.functional_approaches=duplicated
+	var duplicate_errors:=_approach_coverage_errors(duplicate_approach_room,structures)
+	check(not duplicate_errors.is_empty(),"duplicate furniture approach metadata is rejected")
+	results.append({"case":"duplicate_furniture_approach","errors":duplicate_errors})
+	var nonfinite_room:=selected_room.duplicate(true)
+	for zone:Dictionary in nonfinite_room.functional_zones:
+		if str(zone.get("id",""))==str(selected_approach.zone_id):zone.anchor=Vector3(NAN,zone.anchor.y,zone.anchor.z);break
+	var nonfinite_errors:=_approach_errors(nonfinite_room,selected_approach,structures)
+	check(not nonfinite_errors.is_empty(),"nonfinite functional zone anchor is rejected")
+	results.append({"case":"nonfinite_zone_anchor","errors":nonfinite_errors})
 	var forward:Array[Vector3]=[start,Vector3(selected_approach.origin),real_end]
 	var incomplete:=_walk(forward,map_id,states,0)
 	check(not bool(incomplete.reached) and str(incomplete.reason)=="incomplete" and int(incomplete.waypoint_index)<forward.size(),"exhausted budget never accepts proximity alone")
@@ -192,6 +231,8 @@ func _case(seed_value:int,run_negatives:bool)->Dictionary:
 	for room:Dictionary in data.rooms:
 		var approaches:Array=room.get("functional_approaches",[])
 		check(not approaches.is_empty(),"seed %d room %s exposes functional approaches"%[seed_value,str(room.id)])
+		var coverage_errors:=_approach_coverage_errors(room,structures)
+		check(coverage_errors.is_empty(),"seed %d room %s has exactly one approach per furniture structure: %s"%[seed_value,str(room.id),coverage_errors])
 		for approach:Dictionary in approaches:
 			row.approaches=int(row.approaches)+1
 			var metadata_errors:=_approach_errors(room,approach,structures)

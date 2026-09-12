@@ -4,7 +4,7 @@ Estado: preparado estáticamente. No ejecutado hasta que la casa v3 y sus correc
 
 ## Contrato
 
-`game/tests/review092_functional_approach_test.gd` exige `Generator.VERSION == 3` y la identidad exacta `house-v3-<seed>`. Para cada mueble generado resuelve `structure_id`, `zone_id`, el ancla de zona y el punto de acceso. Después conduce un humano mediante `Arena.step_human` a 30 Hz por:
+`game/tests/review092_functional_approach_test.gd` exige `Generator.VERSION == 3` y la identidad exacta `house-v3-<seed>`. Para cada habitación compara todos los `structures.kind == furniture` contra las aproximaciones: cada mueble debe aparecer exactamente una vez. Después resuelve `structure_id`, `zone_id`, el ancla finita de zona y el punto de acceso, y conduce un humano mediante `Arena.step_human` a 30 Hz por:
 
 1. `room.center -> functional_zone.anchor -> furniture.approach`
 2. `furniture.approach -> functional_zone.anchor -> room.center`
@@ -18,6 +18,8 @@ El corpus es `[1, 2, 7, 31, 97, 257, 997, 2026, 65537, 1234567, 2147483646]`. `-
 - Un destino dentro del AABB de un mueble debe fallar como `end_blocked`.
 - Un punto intermedio dentro del mueble debe fallar como `waypoint_blocked`.
 - Un `zone_id` inexistente y un `origin` separado del ancla deben fallar antes de caminar.
+- Quitar o duplicar la aproximación de un mueble debe fallar la cobertura uno a uno.
+- Un ancla de zona no finita y un `structure_id` que no sea `furniture` deben rechazarse.
 - Un presupuesto agotado debe terminar como `incomplete`; reducir la distancia no constituye éxito.
 - La ejecución normal comprueba ambos sentidos y exige consumir los tres puntos.
 
