@@ -35,6 +35,13 @@ namespace LetMeSleep.UI
         RoomClosed
     }
 
+    public enum UiFeedbackKind
+    {
+        Select,
+        Confirm,
+        Error
+    }
+
     public enum AlfaRole { Human, Mosquito }
     public enum MatchOutcome { Interrupted, Humans, Mosquitoes }
     public enum PreviewAngle { Front, Side, Back }

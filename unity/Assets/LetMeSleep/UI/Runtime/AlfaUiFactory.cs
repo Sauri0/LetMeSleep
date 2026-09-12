@@ -8,10 +8,12 @@ namespace LetMeSleep.UI
     internal sealed class AlfaUiFactory
     {
         private readonly AlfaUiDependencies dependencies;
+        private readonly Action<UiFeedbackKind> feedback;
 
-        internal AlfaUiFactory(AlfaUiDependencies dependencies)
+        internal AlfaUiFactory(AlfaUiDependencies dependencies, Action<UiFeedbackKind> feedback = null)
         {
             this.dependencies = dependencies ?? new AlfaUiDependencies();
+            this.feedback = feedback;
         }
 
         internal GameObject View(string name, Transform parent, bool opaque = true)
@@ -116,7 +118,8 @@ namespace LetMeSleep.UI
         }
 
         internal UnityEngine.UI.Button Button(Transform parent, string name, string label, UnityAction callback,
-            bool primary = false, bool destructive = false, float height = 58f, AlfaUiIconKind icon = AlfaUiIconKind.None)
+            bool primary = false, bool destructive = false, float height = 58f, AlfaUiIconKind icon = AlfaUiIconKind.None,
+            bool emitConfirm = true)
         {
             var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button), typeof(UnityEngine.UI.LayoutElement), typeof(UnityEngine.UI.Shadow), typeof(UnityEngine.UI.Outline));
             var image = node.GetComponent<UnityEngine.UI.Image>();
@@ -127,7 +130,14 @@ namespace LetMeSleep.UI
             button.colors = AlfaUiTheme.ButtonColors(primary, destructive);
             button.transition = UnityEngine.UI.Selectable.Transition.ColorTint;
             button.navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.Automatic, wrapAround = false };
-            if (callback != null) button.onClick.AddListener(callback);
+            if (callback != null)
+            {
+                button.onClick.AddListener(() =>
+                {
+                    if (emitConfirm) feedback?.Invoke(UiFeedbackKind.Confirm);
+                    callback();
+                });
+            }
             var outline = node.GetComponent<UnityEngine.UI.Outline>();
             outline.effectColor = primary ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Border;
             outline.effectDistance = new Vector2(1.5f, -1.5f);

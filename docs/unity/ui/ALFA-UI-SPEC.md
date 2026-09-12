@@ -399,6 +399,8 @@ Los nombres son semánticos; el Director puede adaptarlos al namespace final sin
 - `SaveBasicCustomization(draft)`
 - `ApplySettings(draft)`
 
+La capa de integración puede suscribirse a `AlfaUiController.FeedbackRequested`. El evento entrega `UiFeedbackKind.Select`, `Confirm` o `Error` sin referenciar el ensamblado de Audio. `Select` ocurre una sola vez por cambio real de foco navegable; los focos programáticos y el puntero no lo duplican. `Confirm` se emite únicamente desde controles interactuables o un envío online válido. `Error` se emite por validación local y una sola vez por transición a cada error online.
+
 La UI puede bloquear una intención por vacío básico o estado busy. Toda validación de autoridad, compatibilidad, cupo, equipos, mapa y transporte permanece fuera de la vista.
 
 ## 9. Accesibilidad y localización

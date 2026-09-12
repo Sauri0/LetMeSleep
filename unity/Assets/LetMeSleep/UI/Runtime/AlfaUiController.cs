@@ -45,6 +45,8 @@ namespace LetMeSleep.UI
         private bool resultsActionLatched;
         private string rememberedPlayerName = string.Empty;
         private bool gameplayIsTraining;
+        private GameObject feedbackSelection;
+        private string onlineErrorFeedbackKey = string.Empty;
 
         private TMP_InputField playerNameInput;
         private TMP_InputField roomCodeInput;
@@ -85,6 +87,7 @@ namespace LetMeSleep.UI
         private GameObject mosquitoCustomizationFields;
         private UnityEngine.UI.Button customizationHumanButton;
         private UnityEngine.UI.Button customizationMosquitoButton;
+        private CanvasGroup customizationControlsGroup;
         private UnityEngine.UI.Button customizationSaveButton;
         private TextMeshProUGUI customizationSaveLabel;
 
@@ -104,6 +107,7 @@ namespace LetMeSleep.UI
         private GameObject rebindNote;
         private UnityEngine.UI.Button settingsApplyButton;
         private TextMeshProUGUI settingsApplyLabel;
+        private CanvasGroup settingsControlsGroup;
 
         private TextMeshProUGUI hudClock;
         private TextMeshProUGUI hudBlood;
@@ -140,12 +144,13 @@ namespace LetMeSleep.UI
 
         public AlfaUiScreen CurrentScreen => screen;
         public bool IsModalOpen => confirmModal != null && confirmModal.activeSelf;
+        public event Action<UiFeedbackKind> FeedbackRequested;
 
         public void Initialize(IMenuActions menuActions, AlfaUiDependencies dependencies)
         {
             if (initialized) throw new InvalidOperationException("Alfa UI is already initialized.");
             actions = menuActions ?? throw new ArgumentNullException(nameof(menuActions));
-            factory = new AlfaUiFactory(dependencies);
+            factory = new AlfaUiFactory(dependencies, RequestFeedback);
             BuildViews(dependencies ?? new AlfaUiDependencies());
             initialized = true;
             ShowMainMenu();
@@ -157,6 +162,7 @@ namespace LetMeSleep.UI
             var escape = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
             var gamepadBack = Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame;
             if (escape || gamepadBack) HandleEscape();
+            UpdateSelectionFeedback();
         }
 
         public void ShowMainMenu()
@@ -190,6 +196,9 @@ namespace LetMeSleep.UI
         public void PresentOnline(OnlineUiState state)
         {
             onlineState = state ?? new OnlineUiState();
+            var errorKey = IsOnlineError(onlineState.Phase) ? $"{onlineState.Phase}:{onlineState.VisibleMessage}" : string.Empty;
+            if (errorKey.Length > 0 && errorKey != onlineErrorFeedbackKey) RequestFeedback(UiFeedbackKind.Error);
+            onlineErrorFeedbackKey = errorKey;
             onlineSubmissionLatched = onlineState.IsBusy;
             if (!onlineState.IsBusy) onlineCancelLatched = false;
             var busy = onlineState.IsBusy;
@@ -289,6 +298,8 @@ namespace LetMeSleep.UI
             customizationState = state ?? throw new ArgumentNullException(nameof(state));
             customizationSaveLatched = state.IsSaving;
             customizationDraft = state.Draft.Copy();
+            customizationControlsGroup.interactable = !customizationSaveLatched;
+            customizationControlsGroup.blocksRaycasts = !customizationSaveLatched;
             BuildPalette(humanPaletteRoot, state.SkinColors, customizationDraft.SkinColorId, option => SetCustomizationColor("skin", option));
             BuildPalette(pajamaPaletteRoot, state.PajamaColors, customizationDraft.PajamaColorId, option => SetCustomizationColor("pajama", option));
             BuildPalette(mosquitoPaletteRoot, state.MosquitoColors, customizationDraft.MosquitoColorId, option => SetCustomizationColor("mosquito", option));
@@ -307,6 +318,8 @@ namespace LetMeSleep.UI
             settingsState = state ?? throw new ArgumentNullException(nameof(state));
             settingsApplyLatched = state.IsApplying;
             settingsDraft = state.Draft.Copy();
+            settingsControlsGroup.interactable = !settingsApplyLatched;
+            settingsControlsGroup.blocksRaycasts = !settingsApplyLatched;
             masterVolume.SetValueWithoutNotify(settingsDraft.MasterVolume);
             musicVolume.SetValueWithoutNotify(settingsDraft.MusicVolume);
             effectsVolume.SetValueWithoutNotify(settingsDraft.EffectsVolume);
@@ -500,11 +513,11 @@ namespace LetMeSleep.UI
             onlinePasteButton = factory.Button(codeActions, "PasteRoomCodeButton", "PEGAR", PasteRoomCode, false, false, 58f, AlfaUiIconKind.Copy);
             onlinePasteButton.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 150f;
             onlineStatus = factory.Text(content, "OnlineStatus", string.Empty, AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            onlinePrimaryButton = factory.Button(content, "OnlinePrimaryButton", "CREAR SALA", SubmitOnline, true, false, 70f, AlfaUiIconKind.Play);
+            onlinePrimaryButton = factory.Button(content, "OnlinePrimaryButton", "CREAR SALA", SubmitOnline, true, false, 70f, AlfaUiIconKind.Play, false);
             onlinePrimaryLabel = onlinePrimaryButton.GetComponentInChildren<TextMeshProUGUI>();
             var actionsRow = factory.Horizontal(content, "Actions", 12f, TextAnchor.MiddleCenter);
             onlineCancelButton = factory.Button(actionsRow, "OnlineCancelButton", "CANCELAR", RequestOnlineCancel, false, true, 56f, AlfaUiIconKind.Exit);
-            onlineRetryButton = factory.Button(actionsRow, "OnlineRetryButton", "REINTENTAR", SubmitOnline, false, false, 56f, AlfaUiIconKind.Play);
+            onlineRetryButton = factory.Button(actionsRow, "OnlineRetryButton", "REINTENTAR", SubmitOnline, false, false, 56f, AlfaUiIconKind.Play, false);
             onlineBackButton = factory.Button(actionsRow, "OnlineBackButton", "VOLVER", ShowOnlineChoice, false, false, 56f, AlfaUiIconKind.Back);
             onlineCancelButton.gameObject.SetActive(false);
             onlineRetryButton.gameObject.SetActive(false);
@@ -621,6 +634,7 @@ namespace LetMeSleep.UI
             screens[AlfaUiScreen.Customization] = view;
             var safe = factory.SafeArea(view.transform, 48f, 48f, 40f, 40f);
             var columns = factory.Horizontal(safe, "Columns", 36f, TextAnchor.MiddleCenter);
+            customizationControlsGroup = columns.gameObject.AddComponent<CanvasGroup>();
             AlfaUiFactory.Fill(columns);
             var previewPanel = factory.Panel(columns, "PreviewPanel", AlfaUiTheme.Night700, 900f, 900f);
             previewPanel.gameObject.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1f;
@@ -670,6 +684,7 @@ namespace LetMeSleep.UI
             screens[AlfaUiScreen.Settings] = view;
             var panel = CenteredPanel(view.transform, "SettingsCard", 980f, 940f);
             var content = factory.Vertical(panel, "Content", 10f);
+            settingsControlsGroup = content.gameObject.AddComponent<CanvasGroup>();
             AlfaUiFactory.Fill(content, 34f, 34f, 28f, 28f);
             factory.SectionHeader(content, "Header", "AJUSTES", AlfaUiIconKind.Settings, AlfaUiTheme.Sky400);
             factory.ScrollView(content, "SettingsScrollView", out var fields, 690f);
@@ -878,6 +893,7 @@ namespace LetMeSleep.UI
             }
             if (createMode)
             {
+                RequestFeedback(UiFeedbackKind.Confirm);
                 rememberedPlayerName = playerName;
                 LatchOnlineSubmission("Creando sala…");
                 actions.CreateRoom(playerName);
@@ -890,6 +906,7 @@ namespace LetMeSleep.UI
                 return;
             }
             roomCodeInput.SetTextWithoutNotify(AlfaRoomCode.FormatForDisplay(normalized));
+            RequestFeedback(UiFeedbackKind.Confirm);
             rememberedPlayerName = playerName;
             LatchOnlineSubmission("Buscando sala…");
             actions.JoinRoom(playerName, normalized);
@@ -931,6 +948,7 @@ namespace LetMeSleep.UI
 
         private void SetOnlineLocalError(string message, GameObject focus)
         {
+            RequestFeedback(UiFeedbackKind.Error);
             onlineStatus.text = message;
             onlineStatus.color = AlfaUiTheme.Pajama500;
             Focus(focus);
@@ -1277,31 +1295,45 @@ namespace LetMeSleep.UI
         {
             if (IsModalOpen)
             {
+                RequestFeedback(UiFeedbackKind.Confirm);
                 CloseConfirm();
                 return;
             }
+            var handled = true;
             switch (screen)
             {
                 case AlfaUiScreen.MainMenu: ConfirmQuit(); break;
                 case AlfaUiScreen.OnlineChoice: ShowMainMenu(); break;
                 case AlfaUiScreen.CreateRoom:
                 case AlfaUiScreen.JoinRoom:
-                    if (OnlineBusy) RequestOnlineCancel(); else ShowOnlineChoice();
+                    if (OnlineBusy && !onlineCancelLatched) RequestOnlineCancel();
+                    else if (!OnlineBusy) ShowOnlineChoice();
+                    else handled = false;
                     break;
                 case AlfaUiScreen.Lobby:
                     if (lobbyExploring) EndLobbyExploration(); else ShowLobbyPause();
                     break;
                 case AlfaUiScreen.Training:
-                    if (TrainingBusy) RequestTrainingCancel(); else ShowMainMenu();
+                    if (TrainingBusy && !trainingCancelLatched) RequestTrainingCancel();
+                    else if (!TrainingBusy) ShowMainMenu();
+                    else handled = false;
                     break;
-                case AlfaUiScreen.Customization: CloseCustomization(); break;
-                case AlfaUiScreen.Settings: CloseSettings(); break;
+                case AlfaUiScreen.Customization:
+                    if (!customizationSaveLatched) CloseCustomization(); else handled = false;
+                    break;
+                case AlfaUiScreen.Settings:
+                    if (!settingsApplyLatched) CloseSettings(); else handled = false;
+                    break;
                 case AlfaUiScreen.Gameplay: ShowPause(); break;
                 case AlfaUiScreen.Pause: ResumeFromPause(); break;
                 case AlfaUiScreen.Results:
-                    if (resultsState != null && resultsState.IsTraining && TrainingBusy) RequestTrainingCancel();
+                    if (resultsState != null && resultsState.IsTraining && TrainingBusy && !trainingCancelLatched)
+                        RequestTrainingCancel();
+                    else handled = false;
                     break;
+                default: handled = false; break;
             }
+            if (handled) RequestFeedback(UiFeedbackKind.Confirm);
         }
 
         private void SetScreen(AlfaUiScreen next, string focusName)
@@ -1326,6 +1358,7 @@ namespace LetMeSleep.UI
             if (focusName == null)
             {
                 if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+                feedbackSelection = null;
             }
             else Focus(focusName);
         }
@@ -1351,11 +1384,42 @@ namespace LetMeSleep.UI
             if (target != null) Focus(target.gameObject);
         }
 
-        private static void Focus(GameObject target)
+        private void Focus(GameObject target)
         {
             if (target == null || EventSystem.current == null) return;
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(target);
+            feedbackSelection = target;
+        }
+
+        private void UpdateSelectionFeedback()
+        {
+            var selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+            if (selected == feedbackSelection) return;
+            feedbackSelection = selected;
+            if (selected == null || !selected.activeInHierarchy || PointerChangedSelectionThisFrame()) return;
+            var selectable = selected.GetComponent<UnityEngine.UI.Selectable>();
+            if (selectable != null && selectable.IsInteractable()) RequestFeedback(UiFeedbackKind.Select);
+        }
+
+        private static bool PointerChangedSelectionThisFrame()
+        {
+            if (Mouse.current != null && (Mouse.current.leftButton.wasPressedThisFrame || Mouse.current.leftButton.wasReleasedThisFrame))
+                return true;
+            return Touchscreen.current != null && (Touchscreen.current.primaryTouch.press.wasPressedThisFrame ||
+                Touchscreen.current.primaryTouch.press.wasReleasedThisFrame);
+        }
+
+        private void RequestFeedback(UiFeedbackKind kind)
+        {
+            try
+            {
+                FeedbackRequested?.Invoke(kind);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception, this);
+            }
         }
 
         private static Transform FindActive(Transform root, string objectName)
