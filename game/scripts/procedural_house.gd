@@ -210,7 +210,8 @@ func _floor_rooms(floor_index: int, total_floors: int, half_x: float, half_z: fl
 			else:
 				specs.append({"uses":["bedroom_rose" if floor_index==1 else "bedroom_blue"],"zone":"sleep","beds":2})
 		else:
-			var uses: Array[String]=["music_room","library"] if quadrant%2==service%2 else ["sewing_room","study"]
+			var uses: Array[String]=[]
+			uses.assign(["music_room","library"] if quadrant%2==service%2 else ["sewing_room","study"])
 			if floor_index==2: uses.assign(["game_room","library"] if quadrant%2==service%2 else ["study","music_room"])
 			if total_floors==2 and _integer(0,1)==1:
 				cuts=_room_cuts(low_x,high_x,2)

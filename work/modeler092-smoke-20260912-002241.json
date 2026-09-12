@@ -1,0 +1,27 @@
+{
+  "elapsed_ms": 17156,
+  "budget_seconds": 120,
+  "passed": false,
+  "steps": [
+    {
+      "step": "import",
+      "stderr": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-002241-import.stderr.log",
+      "elapsed_total_ms": 15472,
+      "stderr_chars": 0,
+      "stdout": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-002241-import.stdout.log",
+      "timeout": false,
+      "error_text": false,
+      "exit": 0
+    },
+    {
+      "step": "contracts",
+      "stderr": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-002241-contracts.stderr.log",
+      "elapsed_total_ms": 17151,
+      "stderr_chars": 1002,
+      "stdout": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-002241-contracts.stdout.log",
+      "timeout": false,
+      "error_text": true,
+      "exit": 0
+    }
+  ]
+}
