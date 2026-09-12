@@ -851,6 +851,20 @@
         "materials": [
           "Wood_Honey"
         ]
+      },
+      {
+        "node": "Gable_Front",
+        "parent": "HouseAlfaSource",
+        "materials": [
+          "Plaster_Warm"
+        ]
+      },
+      {
+        "node": "Gable_Back",
+        "parent": "HouseAlfaSource",
+        "materials": [
+          "Plaster_Warm"
+        ]
       }
     ],
     "box_colliders": [
@@ -3963,9 +3977,17 @@
       {
         "node": "Stair_Upper_Guard_Post.001",
         "surface": "Wood"
+      },
+      {
+        "node": "Gable_Front",
+        "surface": "Stone"
+      },
+      {
+        "node": "Gable_Back",
+        "surface": "Stone"
       }
     ],
-    "triangles": 4612,
+    "triangles": 4628,
     "materials": [
       {
         "name": "Plaster_Warm",

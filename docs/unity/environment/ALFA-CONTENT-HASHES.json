@@ -1,14 +1,4 @@
 {
-  "maps": [
-    {
-      "content_hash": "sha256-70afef1a6b88c373ff8176e75197ffc85d05da8aee91895ae35a56c149cf3dbf",
-      "map_id": "house-patio-v1"
-    },
-    {
-      "content_hash": "sha256-3af7c2acfad830b98e8211cafaf82c806b4b0eff84a59b07fb4acb8d71e5568d",
-      "map_id": "private-lobby-v1"
-    }
-  ],
   "files": [
     "art_source/unity/environments/alfa_maps/house_alfa_static.fbx",
     "art_source/unity/environments/alfa_maps/lobby_alfa_static.fbx",
@@ -28,5 +18,15 @@
     "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs",
     "unity/Assets/LetMeSleep/Gameplay/Contracts.cs"
   ],
-  "algorithm": "SHA256 map ID and ordered file/hash records; UTF8 text newlines normalized toLF, FBX raw"
+  "algorithm": "SHA256 map ID and ordered file/hash records; UTF8 text newlines normalized toLF, FBX raw",
+  "maps": [
+    {
+      "content_hash": "sha256-0a40b411409f1be9df1b3c0c5c9875d92f86a3bde8522ed118f7eddee30e258b",
+      "map_id": "house-patio-v1"
+    },
+    {
+      "content_hash": "sha256-0879e1f016549e103acc80112f7193f37da7e9a6caa59b6c0c2f7cda1aabe1bc",
+      "map_id": "private-lobby-v1"
+    }
+  ]
 }

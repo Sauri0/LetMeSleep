@@ -155,6 +155,13 @@ section=[(-.25,6),(6.4,8.2),(13.05,6),(13.05,5.84),(6.4,8.04),(-.25,5.84)]
 verts=[(x,y,z) for z in (-.25,11.65) for x,y in section]
 faces=[tuple(range(5,-1,-1)),tuple(range(6,12))]+[(i,(i+1)%6,(i+1)%6+6,i+6) for i in range(6)]
 mesh('Roof_Continuous',verts,faces,'Roof_Terracotta',surface='Stone')
+# Seal the attic ends below the inner roof slope; the folded roof slab itself
+# does not fill the triangular opening above the level ceiling slab at y=6.
+gable_left=6.4-(8.04-6)*6.65/2.2
+gable_section=[(gable_left,6),(12.8-gable_left,6),(6.4,8.04)]
+for label,z0,z1 in (('Front',0,.18),('Back',11.22,11.4)):
+ gable_vertices=[(x,y,z) for z in (z0,z1) for x,y in gable_section]
+ mesh('Gable_'+label,gable_vertices,[(2,1,0),(3,4,5),(0,1,4,3),(1,2,5,4),(2,0,3,5)],'Plaster_Warm',surface='Stone')
 for i in range(8):
  height=(i+1)/6;cube(f'Stair_Lower_{i}',(4.18,height/2,7.38+.28*(i+.5)),(1.6,height,.28),'Wood_Honey')
  height=(i+1)/6;cube(f'Stair_Upper_{i}',(2.28,1.5+height/2,9.62-.28*(i+.5)),(1.6,height,.28),'Wood_Honey')

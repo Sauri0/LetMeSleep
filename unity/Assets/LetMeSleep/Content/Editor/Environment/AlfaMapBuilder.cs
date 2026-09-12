@@ -160,6 +160,12 @@ namespace LetMeSleep.Content.Editor
             }
             foreach(var box in spec.box_colliders){Transform owner=box.node==spec.root?instance.transform:F(instance,box.node);var child=Child(owner,"Collider_"+box.source);child.gameObject.layer=EnvironmentSampleBuilder.Layer("WorldStatic");var c=child.gameObject.AddComponent<BoxCollider>();c.center=V(box.center);c.size=V(box.size);}
             foreach(var mesh in spec.mesh_colliders){var visual=F(instance,mesh.node);var child=Child(visual,"Collider_"+mesh.node);child.gameObject.layer=EnvironmentSampleBuilder.Layer("WorldStatic");var c=child.gameObject.AddComponent<MeshCollider>();c.sharedMesh=visual.GetComponent<MeshFilter>().sharedMesh;c.convex=false;}
+            if(file=="house_alfa_static")foreach(string name in new[]{"Gable_Front","Gable_Back"}){
+                var gable=F(instance,name);var boundsGable=gable.GetComponent<Renderer>().bounds;
+                float z=name=="Gable_Front"?0:11.22f;float left=6.4f-(8.04f-6)*6.65f/2.2f;
+                Need(Vector3.Distance(boundsGable.min,new Vector3(left,6,z))<.002f&&Vector3.Distance(boundsGable.max,new Vector3(12.8f-left,8.04f,z+.18f))<.002f,"Gable must close the exact attic section: "+name);
+                Need(gable.GetComponentInChildren<MeshCollider>()!=null,"Gable needs physical closure: "+name);
+            }
             Bounds final=RendererBounds(instance);Need(Vector3.Distance(final.min,lo)<.003f&&Vector3.Distance(final.max,hi)<.003f,"Corrected bounds mismatch "+file);
             return instance;
         }

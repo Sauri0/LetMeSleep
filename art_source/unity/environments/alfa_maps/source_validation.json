@@ -1,7 +1,7 @@
 {
   "scope": "Blender source geometry and FBX roundtrip only; no Unity maps or renders validated",
   "blender": "5.2.1 LTS",
-  "passed": 811,
+  "passed": 819,
   "failed": 0,
   "checks": [
     {
@@ -1795,6 +1795,36 @@
       "detail": null
     },
     {
+      "name": "house_alfa_static unit scale Gable_Front",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Gable_Front",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Gable_Front",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Gable_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Gable_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Gable_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
       "name": "house_alfa_static collider Entry_Jamb_-1",
       "passed": true,
       "detail": null
@@ -2871,6 +2901,16 @@
     },
     {
       "name": "house_alfa_static mesh collider Stair_Upper_Guard_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Gable_Front",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Gable_Back",
       "passed": true,
       "detail": null
     },
@@ -4062,12 +4102,12 @@
   ],
   "files": {
     "house_alfa_static.blend": {
-      "bytes": 181150,
-      "sha256": "97f60a971457a802c46805c7518672fea0aaed85363f34f278e7ad081e06407d"
+      "bytes": 178356,
+      "sha256": "59bcd8d420ab24e06a78d0cd87d8ec18c16992c5db51f68b948dada152a22872"
     },
     "house_alfa_static.fbx": {
-      "bytes": 342908,
-      "sha256": "fd16b221d0e7247797af1d9a43a791f31b42d4243eee233f6e1f1d06adc87b84"
+      "bytes": 346732,
+      "sha256": "e1e78265521cbe0fbd4169dda1d50edc2ab0ad49c05d7e5332063dce4b0c749a"
     },
     "lobby_alfa_static.blend": {
       "bytes": 100927,

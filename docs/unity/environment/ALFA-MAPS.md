@@ -36,7 +36,7 @@ Director instancia el prefab, obtiene este componente y selecciona anchors segú
 
 ## Planta fija
 
-Envolvente de casa 12.80 × 11.40 m; la propuesta inicial 12 × 10 m se amplió para conservar dormitorio muestra de 4.80 × 4.40 m, pasillos de 1.80 m y escalera de 1.60 m sin estrecharlos. Piso terminado en y=0/3 m, altura interior 2.80 m. Techo exterior a dos aguas, cumbrera y=8.20 m. Patio de 12.80 × 8.00 m detrás de la casa.
+Envolvente de casa 12.80 × 11.40 m; la propuesta inicial 12 × 10 m se amplió para conservar dormitorio muestra de 4.80 × 4.40 m, pasillos de 1.80 m y escalera de 1.60 m sin estrecharlos. Piso terminado en y=0/3 m, altura interior 2.80 m. Techo exterior a dos aguas, cumbrera y=8.20 m; hastiales sólidos de 0.18 m cierran ambos extremos bajo la cubierta, según FIVE-CAMERA-REVIEW.md. Patio de 12.80 × 8.00 m detrás de la casa.
 
 | Planta | Función y conexiones |
 |---|---|
@@ -79,7 +79,7 @@ Después de instanciar el mapa y ejecutar World.RegisterGeometry(), Director deb
 
 Fuentes editables y exportaciones en `art_source/unity/environments/alfa_maps/`: `house_alfa_static.blend/.fbx`, `lobby_alfa_static.blend/.fbx`, `furniture_kit_alfa.blend/.fbx`, `build_sources.py`, `source_manifest.json` y `source_validation.json`. Plano en `room_sample/house_layout_plan.json`, reproducible con `build_house_plan.ps1`.
 
-Blender 5.2.1 CPU, sin render: **811 checks / 0 fallos**, incluyendo manifold/volumen, colliders positivos y reimportación de los tres FBX (jerarquía/límites a tolerancia0.1mm). Casa119 meshes/4612tri; lobby4/60tri; kit50/2140tri antes de instancias. No son conteos finales de escena ni mediciones de rendimiento. El lobby fuente de cuatro meshes ahora se amplía y amuebla al generar la instancia Unity; detalle en LOBBY-DRESSING.md.
+Blender 5.2.1 CPU, sin render: **819 checks / 0 fallos**, incluyendo manifold/volumen, colliders positivos y reimportación de los tres FBX (jerarquía/límites a tolerancia0.1mm). Casa121 meshes/4628tri; lobby4/60tri; kit50/2140tri antes de instancias. No son conteos finales de escena ni mediciones de rendimiento. El lobby fuente de cuatro meshes ahora se amplía y amuebla al generar la instancia Unity; detalle en LOBBY-DRESSING.md.
 
 El builder y los tipos exactos del puente compilan offline contra APIs de Unity6000.3.24f1. `verify_unity_builder.ps1` compila también los tipos entregados GameplayDoor/GameplaySurface/GameplayToolPickup y el descriptor del mapa; no sustituye pruebas de todo Gameplay. Los `.meta` de scripts/asmdefs están incluidos; Unity creará los de FBX, meshes, prefabs y escenas generados.
 
