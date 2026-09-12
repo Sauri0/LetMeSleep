@@ -5,6 +5,15 @@ using LetMeSleep.Core;
 
 namespace LetMeSleep.Gameplay
 {
+    public static class GameplayTools
+    {
+        public const string Hands = "hands";
+        public const string Flyswatter = "flyswatter";
+        public const float FlyswatterGripToImpact = .365f;
+        public const float FlyswatterHeadRadius = .085f;
+        public const float FlyswatterShoulderReach = 1.05f;
+        public static bool IsFlyswatter(string id) => id == Flyswatter || id == "swatter";
+    }
     public readonly struct Float2
     {
         public readonly float X, Y;

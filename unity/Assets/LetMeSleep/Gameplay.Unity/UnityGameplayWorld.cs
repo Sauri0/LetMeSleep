@@ -232,15 +232,15 @@ namespace LetMeSleep.Gameplay.Unity
         {
             plan = default; if (!actors.TryGetValue(actorId, out var actor) || actor.Role != PlayerRole.Human || actor.State == null) return false;
             var state = actor.State; var eye = actor.transform.position + Vector3.up * (1.53f - .64f * state.CrouchFraction);
-            bool tool = toolId == "swatter"; float reach = tool ? 1.05f : .72f;
+            bool tool = GameplayTools.IsFlyswatter(toolId); float reach = tool ? GameplayTools.FlyswatterShoulderReach : .72f;
             // The ray is manual. No nearest-mosquito query changes this target.
             var hit = FirstRay(eye, aim.ToUnity(), reach + .3f, actorId, true, true);
             var target = hit.HasValue ? hit.Value.point : eye + aim.ToUnity() * .62f;
-            int hand = actor.transform.InverseTransformPoint(target).x < 0 ? 1 : -1;
+            int hand = tool ? 1 : actor.transform.InverseTransformPoint(target).x < 0 ? 1 : -1;
             var shoulder = actor.transform.TransformPoint(new Vector3(.21f * hand, 1.39f - .57f * state.CrouchFraction, 0));
             if (Vector3.Distance(shoulder, target) > reach) target = shoulder + (target - shoulder).normalized * reach;
             var origin = shoulder + actor.transform.forward * .08f;
-            plan = new StrikePlan(origin.ToFloat(), target.ToFloat(), hit.HasValue ? hit.Value.normal.ToFloat() : -aim, tool ? .13f : .075f, hand, tool ? "swatter" : "hands"); return true;
+            plan = new StrikePlan(origin.ToFloat(), target.ToFloat(), hit.HasValue ? hit.Value.normal.ToFloat() : -aim, tool ? GameplayTools.FlyswatterHeadRadius : .075f, hand, tool ? GameplayTools.Flyswatter : GameplayTools.Hands); return true;
         }
         public StrikeHit SweepStrike(in StrikeSweep query)
         {

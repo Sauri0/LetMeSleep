@@ -71,6 +71,8 @@ namespace LetMeSleep.Gameplay.Unity
                 if (state.StrikeState.Phase != StrikePhase.None && state.StrikeState.Hand == side)
                 {
                     var target = transform.InverseTransformPoint(state.StrikeState.Target.ToUnity());
+                    if (GameplayTools.IsFlyswatter(state.StrikeState.ToolId))
+                        target -= transform.InverseTransformDirection((state.StrikeState.Target - state.StrikeState.Origin).Normalized.ToUnity()) * GameplayTools.FlyswatterGripToImpact;
                     float p = state.StrikeState.Progress;
                     float extension = p < .42f ? Mathf.SmoothStep(0, 1, p / .42f) : 1 - Mathf.SmoothStep(0, 1, (p - .42f) / .58f);
                     wrist = Vector3.Lerp(wrist, target, extension);
