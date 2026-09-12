@@ -274,12 +274,12 @@ func _room_usage(room: Dictionary, spec: Dictionary) -> void:
 	for index: int in range(uses.size()):
 		var region:=inside
 		region.size[axis]/=uses.size()
-		var reverse: bool=(uses[0]=="kitchen" and inside.get_center().x<0) or (uses[0]=="entry" and float(spec.get("portal_bias",0))>0) or (uses==["library","study"] and int(room.door_axis)==0)
+		var reverse: bool=(uses[0]=="kitchen" and inside.get_center().x>0) or (uses[0]=="entry" and float(spec.get("portal_bias",0))>0) or (uses==["library","study"] and int(room.door_axis)==0)
 		var order:=uses.size()-1-index if reverse else index
 		region.position[axis]+=region.size[axis]*order
 		if uses==["kitchen","dining"]:
 			# Four kitchen fixtures require more wall length than the dining group.
-			region.size[axis]=inside.size[axis]*(.65 if index==0 else .35)
+			region.size[axis]=inside.size[axis]*(.60 if index==0 else .40)
 			region.position[axis]=inside.position[axis]+(inside.size[axis]-region.size[axis] if order>0 else 0.0)
 		room.functional_zones.append({"id":str(room.id)+"/"+uses[index],"use":uses[index],"bounds":region,
 			"anchor":Vector3(region.get_center().x,inside.position.y,region.get_center().z)})
@@ -593,7 +593,7 @@ func _furnish_room(room: Dictionary) -> void:
 		var depth_axis: int=room.door_axis
 		var inside: AABB=room.interior_bounds
 		var direction:=signf(center[depth_axis]-Vector3(room.portal)[depth_axis])
-		center[depth_axis]=clampf(Vector3(room.portal)[depth_axis]+direction*maxf(2.8,absf(center[depth_axis]-Vector3(room.portal)[depth_axis])),inside.position[depth_axis]+.78,inside.end[depth_axis]-.78)
+		center[depth_axis]=clampf(Vector3(room.portal)[depth_axis]+direction*maxf(2.7,absf(center[depth_axis]-Vector3(room.portal)[depth_axis])),inside.position[depth_axis]+.78,inside.end[depth_axis]-.78)
 	room.center=center
 	for zone: Dictionary in room.functional_zones:
 		if room.functional_zones.size()>1:
@@ -783,8 +783,8 @@ func _place_support(room: Dictionary, tool: String) -> bool:
 	var size:=Vector3(.48,1.09,.24) if tool=="broom" else Vector3(.9,.34,.4)
 	var obstacles: Array=_data.obstacles.duplicate()
 	obstacles.append_array(_data.pickup_support_boxes)
-	for z_fraction: float in [.9,.7,.5,.3]:
-		for x_fraction: float in [.1,.9,.3,.7,.5]:
+	for z_fraction: float in [.9,.7,.5,.3,0.0,1.0,.1,.2,.4,.6,.8]:
+		for x_fraction: float in [.1,.9,.3,.7,.5,0.0,1.0,.2,.4,.6,.8]:
 			var origin:=Vector3(lerpf(b.position.x+.3,b.end.x-.3-size.x,x_fraction),b.position.y,lerpf(b.position.z+1.4,b.end.z-.3-size.z,z_fraction))
 			var box:=AABB(origin,size)
 			var approach:=Vector3(origin.x+size.x*.5,b.position.y,origin.z-.76)
