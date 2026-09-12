@@ -72,7 +72,9 @@ namespace LetMeSleep.Presentation
         private bool scaleWritten;
         private bool blinkWritten;
         private double clock,nextBlink;
-        private System.Random random;
+        private System.Random random,microRandom;
+        private double nextMicro;
+        private float microYaw,microPitch;
         public bool IsConfigured=>configured;
         public bool IsManualEvaluation=>configured && binding.ManualEvaluation;
         public Transform LookOrigin=>configured ? binding.Head : transform;
@@ -95,6 +97,8 @@ namespace LetMeSleep.Presentation
             leftLids=Lids(value.LeftLids); rightLids=Lids(value.RightLids);
             if(leftLids==null || rightLids==null) { leftLids=rightLids=Array.Empty<LidState>(); return false; }
             random=new System.Random(GetInstanceID()); clock=0; nextBlink=2.2+random.NextDouble()*1.8;
+            microRandom=new System.Random(GetInstanceID() ^ 0x31A7); nextMicro=.7+microRandom.NextDouble()*.7;
+            microYaw=microPitch=0;
             configured=true; return true;
         }
         private static bool Axes(Vector3 forward,Vector3 up)=>forward.sqrMagnitude>.5f && up.sqrMagnitude>.5f && Vector3.Cross(forward,up).sqrMagnitude>.1f;
@@ -108,7 +112,7 @@ namespace LetMeSleep.Presentation
             reduced=value;
             if(value)
             {
-                Restore();
+                Restore(); microYaw=microPitch=0; nextMicro=clock+.8;
                 foreach(var joint in new[]{neck,head,left,right}) if(joint!=null) { joint.yaw=0; joint.pitch=0; }
             }
         }
@@ -129,7 +133,15 @@ namespace LetMeSleep.Presentation
             Quaternion headBaseFrame=Quaternion.LookRotation(head.bone.TransformDirection(head.forward),head.bone.TransformDirection(head.up));
             Apply(neck,destination,looking,dt); Apply(head,destination,looking,dt);
             ClampHeadCorrection(head,headBaseFrame,headBaseRotation);
-            Apply(left,destination,looking,dt); Apply(right,destination,looking,dt);
+            if(!reduced && clock>=nextMicro)
+            {
+                // Shared tiny target offset avoids divergent eyes; Apply supplies the existing smooth response.
+                microYaw=(float)(microRandom.NextDouble()*2-1)*1.1f;
+                microPitch=(float)(microRandom.NextDouble()*2-1)*.65f;
+                nextMicro=clock+1.1+microRandom.NextDouble()*1.3;
+            }
+            float eyeYaw=reduced ? 0 : microYaw, eyePitch=reduced ? 0 : microPitch;
+            Apply(left,destination,looking,dt,eyeYaw,eyePitch); Apply(right,destination,looking,dt,eyeYaw,eyePitch);
             clock+=dt;
             if(clock>nextBlink+.25) nextBlink=clock+3.2+random.NextDouble()*2.6;
             float closureLeft=Blink((float)(clock-nextBlink))*.01f;
@@ -173,7 +185,7 @@ namespace LetMeSleep.Presentation
             }
             return result;
         }
-        private static void Apply(Joint joint,Vector3 destination,bool looking,float dt)
+        private static void Apply(Joint joint,Vector3 destination,bool looking,float dt,float eyeYawOffset=0,float eyePitchOffset=0)
         {
             if(joint==null || !joint.bone) return;
             var bone=joint.bone;
@@ -185,6 +197,8 @@ namespace LetMeSleep.Presentation
                 yaw=Mathf.Clamp(Mathf.Atan2(local.x,local.z)*Mathf.Rad2Deg,-joint.yawLimit,joint.yawLimit);
                 pitch=Mathf.Clamp(-Mathf.Atan2(local.y,Mathf.Sqrt(local.x*local.x+local.z*local.z))*Mathf.Rad2Deg,-joint.pitchLimit,joint.pitchLimit);
             }
+            yaw=Mathf.Clamp(yaw+eyeYawOffset,-joint.yawLimit,joint.yawLimit);
+            pitch=Mathf.Clamp(pitch+eyePitchOffset,-joint.pitchLimit,joint.pitchLimit);
             float blend=1-Mathf.Exp(-10*dt);
             joint.yaw=Mathf.LerpAngle(joint.yaw,yaw,blend); joint.pitch=Mathf.LerpAngle(joint.pitch,pitch,blend);
             joint.before=bone.localRotation;
