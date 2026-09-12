@@ -16,6 +16,8 @@ namespace LetMeSleep.Gameplay.Unity
         public bool CaptureLocalInput = true;
         public bool UseBuiltInCamera;
         public Camera LocalCamera;
+        [Tooltip("Active map's schema-1 SpatialData; assign before BeginRound. Host bot patrol only.")]
+        public TextAsset NavigationData;
         public uint LocalActorId;
         public string LocalPrincipal;
         public float MouseSensitivity = .002f;
@@ -46,6 +48,7 @@ namespace LetMeSleep.Gameplay.Unity
         private PlayerInputCommand held;
         private GameplayRoundConfig roundConfig;
         private float cameraDistance;
+        private GameplayBotNavigation botNavigation;
 
         private void Awake() { World = GetComponent<UnityGameplayWorld>(); Authority = new GameplayAuthority(World); }
         public void BeginRound(GameplayRoundConfig config, IReadOnlyList<SpawnActor> roster)
@@ -55,9 +58,11 @@ namespace LetMeSleep.Gameplay.Unity
             LatestSnapshot = null; LocalPrivate = null; held = default;
             replicaGate.Reset(config);
             queuedActions.Clear(); bots.Clear(); biteNeedsRelease = true; wasAttached = false;
+            botNavigation = null; World.ResetBotSteering();
             if (IsHost)
             {
                 Authority.BeginRound(config, roster);
+                if (NavigationData) botNavigation = new GameplayBotNavigation(NavigationData, config.MapId, World);
                 foreach (var spawn in roster.Where(a => a.IsBot)) bots.Add(spawn.ActorId, new BotController());
                 ApplySnapshot(Authority.CaptureSnapshot());
             }
@@ -68,6 +73,7 @@ namespace LetMeSleep.Gameplay.Unity
         {
             if (IsHost) Authority?.EndRound(RoundEndReason.Aborted);
             roundConfig = null; LatestSnapshot = null; LocalPrivate = null; queuedActions.Clear(); bots.Clear(); SetInputBlocked(true);
+            botNavigation = null; World?.ResetBotSteering();
             replicaGate.Reset(null);
         }
         public void SetInputBlocked(bool blocked)
@@ -178,9 +184,14 @@ namespace LetMeSleep.Gameplay.Unity
             }
             float angle = (state.HostTick / 120 + self.ActorId * 2.399963f);
             var free = new Float3((float)Math.Sin(angle), 0, (float)Math.Cos(angle));
+            if (botNavigation != null && self.Role == PlayerRole.Mosquito)
+            {
+                var explore = botNavigation.Explore(self, state.HostTick);
+                if (explore.LengthSquared > .01f) free = explore;
+            }
             var doorQuery = new DoorInteractionQuery(self.ActorId, state.HostTick, origin, self.ViewForward, 1.6f);
-            bool doorAhead = World.TryDoorInteraction(doorQuery, out _);
-            return new BotObservation(self, visible, free, doorAhead);
+            bool doorAhead = World.TryDoorInteraction(doorQuery, out var door) && World.Doors.TryGetValue(door.DoorId, out var physicalDoor) && Mathf.Abs(physicalDoor.AngleRadians) < .1f;
+            return new BotObservation(self, visible, free, doorAhead, direction => World.SteerBot(self, direction));
         }
         public void ApplySnapshot(GameSessionState snapshot)
         {

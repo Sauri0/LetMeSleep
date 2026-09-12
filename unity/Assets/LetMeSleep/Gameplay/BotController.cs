@@ -16,8 +16,9 @@ namespace LetMeSleep.Gameplay
         public IReadOnlyList<BotTarget> Visible { get; }
         public Float3 FreeDirection { get; }
         public bool DoorAhead { get; }
-        public BotObservation(ActorSnapshot self, IReadOnlyList<BotTarget> visible, Float3 freeDirection, bool doorAhead)
-        { Self = self; Visible = Array.AsReadOnly(GameplayRoundConfig.Copy(visible)); FreeDirection = freeDirection; DoorAhead = doorAhead; }
+        public Func<Float3, Float3> Steer { get; }
+        public BotObservation(ActorSnapshot self, IReadOnlyList<BotTarget> visible, Float3 freeDirection, bool doorAhead, Func<Float3, Float3> steer = null)
+        { Self = self; Visible = Array.AsReadOnly(GameplayRoundConfig.Copy(visible)); FreeDirection = freeDirection; DoorAhead = doorAhead; Steer = steer; }
     }
     public readonly struct BotTick
     {
@@ -77,6 +78,18 @@ namespace LetMeSleep.Gameplay
             }
             if (observation.DoorAhead && self.Role == PlayerRole.Human && !action.HasValue) action = ActionKind.Use;
             if (self.LifeState == LifeState.Falling || self.LifeState == LifeState.Stunned || self.LifeState == LifeState.Fainted || self.LifeState == LifeState.Recovering) { forward = 0; bite = false; helpHeld = false; action = null; }
+            if (forward > 0 && observation.Steer != null && !action.HasValue)
+            {
+                var travel = observation.Steer(direction);
+                if (travel.LengthSquared < .01f) forward = 0;
+                else
+                {
+                    travel = travel.Normalized;
+                    yaw = (float)Math.Atan2(travel.X, travel.Z);
+                    pitch = MathEx.Clamp((float)Math.Asin(MathEx.Clamp(travel.Y, -1, 1)), -1.919862f, self.Role == PlayerRole.Human ? 1.308996f : 1.553343f);
+                    direction = MathEx.Aim(yaw, pitch);
+                }
+            }
             var h = new CommandHeader(tick.Epoch, tick.Round, self.ActorId, ++inputSequence, tick.Tick, self.ViewRevision);
             var input = new PlayerInputCommand(h, new Float2(0, forward), 0, yaw, pitch, direction, false, false, bite, helpHeld);
             PlayerActionCommand? command = action.HasValue ? new PlayerActionCommand(new CommandHeader(tick.Epoch, tick.Round, self.ActorId, ++actionSequence, tick.Tick, self.ViewRevision), action.Value, direction) : (PlayerActionCommand?)null;
