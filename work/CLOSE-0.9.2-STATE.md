@@ -6,6 +6,12 @@ mostró32% semanal disponible. Los trabajos opcionales están pausados.
 
 ## Integración 0.9.1
 
+ACTUALIZACIÓN 12/09 01:00 UTC: 0.9.1 YA PUBLICADA, descargada desde GitHub y
+verificada. Ver CIERRE-0.9.1.md. main está en fce95e2 y tag v0.9.1 en f9904c1.
+La página pública devuelve HTTP200 sin autenticación. Repositorio PUBLIC.
+ZIP SHA256 2CE6A2E343DD811D7705432D08F1BF5029C7E3E92B9F8668D24FE3F939BD96E0.
+No reconstruir ni sobrescribir esta entrega. Lo siguiente describe antecedentes.
+
 Rama codex/0.9.1-video-polish, repositorio dejame-dormir. EXE 0.9.1 exportado
 desde eaf2df7; todavía no publicado. Última descarga pública: 0.9.0-rc.1.
 Tras el segundo reinicio se verificó su SHA256 intacto:
@@ -33,6 +39,18 @@ los cambios locales y no se repiten pruebas finalizadas por el mero reinicio.
 
 ## Commits preparados para0.9.2, todavía separados
 
+ACTUALIZACIÓN: Director trabaja ahora en codex/0.9.2-quality-close, publicada
+en origin (HEAD1801167 al guardar esta nota). Integrados rostros cb92795+fb0c689,
+UI f49586e, QA approach29e21c2+c28e044 y cadena casa0c21502..0e8e7c5 (hasta16a13f8).
+Conflicto de _furnish resuelto a favor de reemplazo completo v3; diff de
+procedural_house/house_validation contra16a13f8 es vacío.
+Versión0.9.2/protocolo11 en proyecto,network,online/direct invitations y EOS;
+rechazo de protocolo10/12 en test online. NO exportar todavía: falta casa/manos.
+Build1801167 preparado para furnishing y ambos gates físicos por semilla;
+QA debe entregar review092_house_contract.gd y fixtures de versión migrados.
+M1 agrega --report opcional para conservar cada informe furnishing por separado.
+Documentación de distribución aún refleja091: actualizar al cerrar092.
+
 - Modelador1, lms092-house: dbef5bb,bd9dcf7,66aa8eb,74671ae,ad4dcd1,16a13f8.
   Import pasó. 16a13f8 corrige tipado: contracts44/0 y structure139/0 pasaron.
   Último smoke004030: furnishing1324/1; quedan 7/22 cuartos sin distribución.
@@ -58,3 +76,13 @@ M1 y M2. M2 tiene primer turno de hasta120s para export/import/auditor/contactos
 r3 ya preparado; r2 aún fallaba en malla. M1 retoma la edición de los siete
 cuartos y avisa para su smoke. Director cierra pruebas del EXE 0.9.1 después de
 la liberación. Los demás permanecen sin nuevas tareas opcionales.
+
+ACTUALIZACIÓN: Director liberó motor al terminar 9/9 EXE, captura23/0 y tres
+escenarios de rendimiento091. M1/M2 tienen autorización para alternar turnos
+directamente, notificando inicio/liberación y manteniendo procesos<=55s.
+M1 último smoke005528 furnishing1324/1 (7/22 cuartos); prepara barrido real de
+acceso en lugar del AABB diagonal conservador. M2 r3 export/import válidos;
+auditor r3b36098/35 fallos, pliegues reales de pulgar en agarres; corrige límite
+total de oposición sin nueva reexportación. Reposo ya tiene0 inversiones.
+Revisión funcional reactivada sólo para fixtures v3; sin motor. W1/W2/UI sin
+nuevas tareas. No iniciar motores en Director hasta coordinar devolución.
