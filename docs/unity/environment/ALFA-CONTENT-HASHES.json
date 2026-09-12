@@ -2,7 +2,6 @@
   "algorithm": "SHA256 map ID and ordered file/hash records; UTF8 text newlines normalized toLF, FBX raw",
   "maps": [
     {
-      "map_id": "house-patio-v1",
       "files": [
         "art_source/unity/environments/alfa_maps/house_alfa_static.fbx",
         "art_source/unity/environments/alfa_maps/lobby_alfa_static.fbx",
@@ -28,10 +27,10 @@
         "art_source/unity/environments/quality_exterior/generated_exterior.json",
         "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityExterior.cs"
       ],
-      "content_hash": "sha256-d6e626214ae53c5651a33da787fe8fa26b683cb17907955d7081b653839c3173"
+      "content_hash": "sha256-da088edd26a5e30de62e622ac427e93a14c43a6738865ab19f6851ed6a09c311",
+      "map_id": "house-patio-v1"
     },
     {
-      "map_id": "private-lobby-v1",
       "files": [
         "art_source/unity/environments/alfa_maps/house_alfa_static.fbx",
         "art_source/unity/environments/alfa_maps/lobby_alfa_static.fbx",
@@ -55,7 +54,8 @@
         "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs",
         "unity/Assets/LetMeSleep/Gameplay/Contracts.cs"
       ],
-      "content_hash": "sha256-6880ab7b44ef83ebcfeb88b439fca30954563674bd7736f1d3a1276248dbd8bf"
+      "content_hash": "sha256-4e4372e35ee3959b997a1a4efb5745f217750cfc848d9980b29954f67f448543",
+      "map_id": "private-lobby-v1"
     }
   ],
   "files": [

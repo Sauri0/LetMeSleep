@@ -54,10 +54,33 @@ namespace LetMeSleep.Content.Editor
                 if(softNormals)mesh.normals=TextileNormals();else mesh.RecalculateNormals();
                 mesh.RecalculateBounds();Unwrapping.GenerateSecondaryUVSet(mesh);
                 Need(mesh.normals.Length==mesh.vertexCount,"Quality mesh lost normals during UV unwrap: "+name);
-                string path=Output+"/Meshes/Quality_"+name+".asset";var saved=AssetDatabase.LoadAssetAtPath<Mesh>(path);
-                if(saved==null){AssetDatabase.CreateAsset(mesh,path);saved=mesh;}else{EditorUtility.CopySerialized(mesh,saved);UnityEngine.Object.DestroyImmediate(mesh);EditorUtility.SetDirty(saved);}
-                return saved;
+                return PersistQualityMesh(mesh,Output+"/Meshes/Quality_"+name+".asset");
             }
+        }
+
+        static Mesh PersistQualityMesh(Mesh generated,string path)
+        {
+            var saved=AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if(saved==null){AssetDatabase.CreateAsset(generated,path);generated.UploadMeshData(false);return generated;}
+            string guid=AssetDatabase.AssetPathToGUID(path);int identity=saved.GetInstanceID();
+            // Keep the persistent object/GUID, but replace its data through Mesh
+            // setters so an already resident renderer receives topology changes.
+            // CopySerialized left a resident/fresh discrepancy in native review.
+            try {
+                saved.Clear(false);saved.indexFormat=generated.indexFormat;saved.name=generated.name;
+                saved.SetVertices(generated.vertices);saved.SetNormals(generated.normals);
+                saved.SetUVs(0,generated.uv);saved.SetUVs(1,generated.uv2);
+                if(generated.tangents.Length>0)saved.SetTangents(generated.tangents);
+                if(generated.colors.Length>0)saved.SetColors(generated.colors);
+                saved.subMeshCount=generated.subMeshCount;
+                for(int submesh=0;submesh<generated.subMeshCount;submesh++)
+                    saved.SetIndices(generated.GetIndices(submesh),generated.GetTopology(submesh),submesh,false);
+                saved.bounds=generated.bounds;saved.MarkModified();saved.UploadMeshData(false);EditorUtility.SetDirty(saved);
+                Need(saved.GetInstanceID()==identity&&AssetDatabase.AssetPathToGUID(path)==guid,"Mesh refresh changed persistent identity: "+path);
+                Need(saved.vertexCount==generated.vertexCount&&saved.normals.Length==generated.normals.Length&&saved.uv2.Length==generated.uv2.Length,
+                    "Mesh refresh lost generated vertex channels: "+path);
+                return saved;
+            } finally {UnityEngine.Object.DestroyImmediate(generated);}
         }
 
         static Transform QualityPart(Transform parent,string name,Vector3 position,QualityMesh shape,params string[] palette)
@@ -203,8 +226,29 @@ namespace LetMeSleep.Content.Editor
                 mesh.Quad(p(i,j,-1),p(i,j+1,-1),p(i+1,j+1,-1),p(i+1,j,-1),-normal,slot);
             }
             foreach(int i in new[]{0,8})for(int j=0;j<path.Length-1;j++)mesh.Quad(p(i,j,1),p(i,j,-1),p(i,j+1,-1),p(i,j+1,1),i==0?Vector3.left:Vector3.right,1);
-            foreach(int j in new[]{0,path.Length-1})for(int i=0;i<8;i++)mesh.Quad(p(i,j,1),p(i+1,j,1),p(i+1,j,-1),p(i,j,-1),j==0?Vector3.forward:Vector3.back,1);
+            foreach(int j in new[]{0,path.Length-1})for(int i=0;i<8;i++){
+                int neighbour=j==0?1:j-1;
+                var outward=(middle[i,j]+middle[i+1,j]-middle[i,neighbour]-middle[i+1,neighbour]).normalized;
+                mesh.Quad(p(i,j,1),p(i+1,j,1),p(i+1,j,-1),p(i,j,-1),outward,1);
+            }
+            CheckQualityClosedWinding(mesh);
             return mesh;
+        }
+
+        static void CheckQualityClosedWinding(QualityMesh mesh)
+        {
+            var welded=new Dictionary<Vector3Int,int>();var ids=new int[mesh.vertices.Count];
+            for(int i=0;i<ids.Length;i++){
+                var p=mesh.vertices[i];var key=new Vector3Int(Mathf.RoundToInt(p.x*1000000),Mathf.RoundToInt(p.y*1000000),Mathf.RoundToInt(p.z*1000000));
+                if(!welded.TryGetValue(key,out int id)){id=welded.Count;welded.Add(key,id);}ids[i]=id;
+            }
+            var edges=new Dictionary<(int,int),(int count,int balance)>();var indices=mesh.TriangleIndices();
+            for(int i=0;i<indices.Length;i+=3)for(int corner=0;corner<3;corner++){
+                int a=ids[indices[i+corner]],b=ids[indices[i+(corner+1)%3]];Need(a!=b,"Collapsed edge in closed throw");
+                var key=(Math.Min(a,b),Math.Max(a,b));edges.TryGetValue(key,out var edge);
+                edges[key]=(edge.count+1,edge.balance+(a<b?1:-1));
+            }
+            Need(edges.Values.All(edge=>edge.count==2&&edge.balance==0),"Throw must be closed with opposite winding across every shared edge");
         }
 
         static float QualitySurfaceHeight(Vector3[] vertices,int[] indices,float x,float z)

@@ -129,8 +129,7 @@ namespace LetMeSleep.Content.Editor
                 if(q.x>0){triangles.Add(start);triangles.Add(start+3);triangles.Add(start+2);}
             }
             var mesh=new Mesh{name="House_Plate"};mesh.SetVertices(vertices);mesh.SetTriangles(triangles,0);mesh.RecalculateNormals();mesh.RecalculateBounds();CheckPlateFacing(mesh);Unwrapping.GenerateSecondaryUVSet(mesh);
-            string path=Output+"/Meshes/House_Plate.asset";var saved=AssetDatabase.LoadAssetAtPath<Mesh>(path);
-            if(saved==null){AssetDatabase.CreateAsset(mesh,path);saved=mesh;}else{EditorUtility.CopySerialized(mesh,saved);UnityEngine.Object.DestroyImmediate(mesh);EditorUtility.SetDirty(saved);}
+            var saved=PersistQualityMesh(mesh,Output+"/Meshes/House_Plate.asset");
             var t=Child(parent,name);t.localPosition=position;t.gameObject.AddComponent<MeshFilter>().sharedMesh=saved;
             var renderer=t.gameObject.AddComponent<MeshRenderer>();renderer.sharedMaterial=materials["Porcelain"];
             renderer.receiveGI=ReceiveGI.Lightmaps;
