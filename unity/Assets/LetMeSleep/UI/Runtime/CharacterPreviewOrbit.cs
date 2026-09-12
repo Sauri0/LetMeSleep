@@ -87,6 +87,11 @@ namespace LetMeSleep.UI
             if (output != null) output.enabled = render;
             if (setup?.Camera != null) setup.Camera.enabled = render;
             if (instance != null) instance.SetActive(render);
+            if (render && instance != null)
+            {
+                RecalculateFraming();
+                ApplyOrbit();
+            }
         }
 
         public void SetAngle(PreviewAngle angle)
@@ -99,6 +104,7 @@ namespace LetMeSleep.UI
         {
             yaw = DefaultYaw;
             zoomFactor = 1f;
+            if (IsBound && instance != null) RecalculateFraming();
             ApplyOrbit();
         }
 
@@ -148,8 +154,25 @@ namespace LetMeSleep.UI
             foreach (var renderer in renderers)
             {
                 if (!renderer.enabled) continue;
-                // Per-renderer local boxes avoid expanding one world AABB twice on rotation.
+                // Imported skin culling bounds are not necessarily in renderer-transform space.
+                // Bake the posed geometry explicitly; BakeMesh(false) returns vertices in that
+                // space without baking the Transform scale, which TransformPoint applies once.
                 var bounds = renderer.localBounds;
+                if (renderer is SkinnedMeshRenderer skin && skin.sharedMesh != null)
+                {
+                    var snapshot = new Mesh();
+                    try
+                    {
+                        skin.BakeMesh(snapshot, false);
+                        if (snapshot.vertexCount == 0) continue;
+                        snapshot.RecalculateBounds();
+                        bounds = snapshot.bounds;
+                    }
+                    finally
+                    {
+                        Destroy(snapshot);
+                    }
+                }
                 for (var corner = 0; corner < 8; corner++)
                 {
                     var offset = Vector3.Scale(bounds.extents, new Vector3(

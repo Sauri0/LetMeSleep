@@ -1,5 +1,17 @@
 # Visor: encuadre por bounds y especie
 
+## Corrección tras regresión native5
+
+La captura `N:/LetMeSleep/Validation/TeamRecovery/ui-native5/HumanUiPreview-default-1080.png` rechazó fbd1292: solo piernas, cabeza fuera. El receipt registra centro vertical de cámara 0.05434 y desplazamiento lateral de ~0.873 al girar a perfil. El cálculo genérico `renderer.localBounds` → `renderer.transform` interpretó incorrectamente los bounds de los SkinnedMeshRenderer importados. El ajuste previo no está aprobado.
+
+Corrección: para skins usar `BakeMesh(snapshot, false)`, recalcular bounds de esa geometría y transformar sus esquinas desde el Transform del renderer al stage. Los meshes temporales se destruyen en finally; no se alteran meshes compartidos, rigs, bounds del renderer ni escala. Para renderers estáticos se mantiene el tratamiento anterior. Refrescar geometría al mostrar y Centrar, además de instanciar, para no conservar una muestra anterior a activación. No se hornea en cada frame ni al arrastrar.
+
+Contrato API: [Unity SkinnedMeshRenderer.BakeMesh](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/SkinnedMeshRenderer.BakeMesh.html): los vértices resultantes son relativos al Transform del renderer; permite snapshot fuera de cámara. Es cálculo CPU puntual.
+
+Compilación externa corregida: 0 errores/advertencias; `N:/LetMeSleep/Validation/UI-PreviewBounds-20260912/compile-skinned-fix.log`. Nueva captura nativa de Director pendiente, sin disminuir margen ni criterio de personaje completo. En default/reset/frente/perfil/espalda verificar también que los vértices de snapshots independientes proyecten dentro de viewport [0,1] y por delante del near plane. Los extremos de zoom cercano permiten recorte deliberado, pero nunca justifican un recorte en Centrar.
+
+## Delta inicial (rechazado por native5; corregido arriba)
+
 Delta solicitado por Director tras UI3. Solo cambia `CharacterPreviewOrbit.cs`; no modifica modelos, escala, Bootstrap, luces ni Presentation global.
 
 - Mosquito abre a 35 grados (tres cuartos); humano conserva frente. Centrar restaura el ángulo inicial de la especie y zoom 1. Frente/Perfil/Espalda siguen siendo 0/90/180 grados.
