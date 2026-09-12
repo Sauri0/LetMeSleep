@@ -39,12 +39,12 @@ namespace LetMeSleep.UI
 
         internal static UnityEngine.UI.ColorBlock ButtonColors(bool primary, bool destructive = false)
         {
-            var normal = destructive ? Pajama500 : primary ? Lamp400 : Night600;
+            var normal = destructive ? Pajama500 : primary ? Sky400 : Night600;
             return new UnityEngine.UI.ColorBlock
             {
                 normalColor = normal,
-                highlightedColor = primary ? Hex("FFD879") : Hex("35699D"),
-                pressedColor = primary ? Hex("D69B2F") : Sky400,
+                highlightedColor = primary ? Hex("72C2FF") : Hex("35699D"),
+                pressedColor = primary ? Hex("2E82C9") : Sky400,
                 selectedColor = Sky400,
                 disabledColor = new Color(Disabled.r, Disabled.g, Disabled.b, 0.48f),
                 colorMultiplier = 1f,
