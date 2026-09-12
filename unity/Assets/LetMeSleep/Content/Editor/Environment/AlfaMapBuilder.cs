@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LetMeSleep.Content.Environment;
+using LetMeSleep.Gameplay;
 using LetMeSleep.Gameplay.Unity;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -30,7 +31,7 @@ namespace LetMeSleep.Content.Editor
         [Serializable] public class Portal { public string id,from,to; public float[] center,normal; public float width,height; public bool door; }
         [Serializable] public class Lobby { public Spawn[] spawns; }
         [Serializable] public class Spawn { public string id; public float[] position,forward; }
-        [Serializable] public class Receipt { public string unityVersion,utc,houseScene,lobbyScene,houseContentHash,lobbyContentHash; public int houseMeshes,houseColliders,doors,lobbyMeshes,lobbyColliders; public string[] verified,pending; }
+        [Serializable] public class Receipt { public string unityVersion,utc,houseScene,lobbyScene,houseContentHash,lobbyContentHash; public int houseMeshes,houseColliders,doors,toolPickups,lobbyMeshes,lobbyColliders; public string[] verified,pending; }
         static readonly Dictionary<string,GameObject> Kit=new Dictionary<string,GameObject>();
         static Dictionary<string,Material> materials;
         static Transform F(GameObject root,string name)=>EnvironmentSampleBuilder.Find(root,name);
@@ -73,6 +74,7 @@ namespace LetMeSleep.Content.Editor
                 data.PlayBounds=new Bounds(new Vector3(6.4f,5,8.7f),new Vector3(13.8f,10,21.4f));
                 AddWorldBoundary(house,data.PlayBounds);
                 AddHouseAnchors(house,data,plan);
+                AddToolPickups(data);
                 BindGameplay(house,10000,1);
                 CheckSpawns(house,data.HumanSpawnPoints,.25f,1.72f);
                 CheckSpawns(house,data.MosquitoSpawnPoints,.055f,.11f,true);
@@ -108,8 +110,8 @@ namespace LetMeSleep.Content.Editor
                 Need(EditorSceneManager.SaveScene(scene,LobbyScene),"Lobby scene save failed.");
                 AssetDatabase.SaveAssets();
                 var receipt=new Receipt{unityVersion=Application.unityVersion,utc=DateTime.UtcNow.ToString("o"),houseScene=HouseScene,lobbyScene=LobbyScene,houseContentHash=houseHash,lobbyContentHash=lobbyHash,
-                    houseMeshes=houseMeshes,houseColliders=houseColliders,doors=doors,lobbyMeshes=lobbyMeshes,lobbyColliders=lobbyColliders,
-                    verified=new[]{"Source bounds and explicit FBX Z conversion","Unique nonzero GameplaySurface IDs","Hinge/leaf/handle and nine GameplayDoor definitions","5 human / 16 mosquito / 16 lobby spawn clearances against geometry","Separate house/patio and lobby scenes; no duplicated sample shell"},
+                    houseMeshes=houseMeshes,houseColliders=houseColliders,doors=doors,toolPickups=7,lobbyMeshes=lobbyMeshes,lobbyColliders=lobbyColliders,
+                    verified=new[]{"Source bounds and explicit FBX Z conversion","Unique nonzero GameplaySurface IDs","Hinge/leaf/handle and nine GameplayDoor definitions","Seven unique flyswatter pickups with non-perchable interaction triggers","5 human / 16 mosquito / 16 lobby spawn clearances against geometry","Separate house/patio and lobby scenes; no duplicated sample shell"},
                     pending=new[]{"Visual lighting and UV2 bake validation","Controller stair/door traversal and camera playtest","Runtime bots/pickups and online round integration","Performance measurement"}};
                 File.WriteAllText(Path.Combine(repository,"docs/unity/environment/ALFA-MAPS-IMPORT-RECEIPT.json"),JsonUtility.ToJson(receipt,true)+"\n");
                 Debug.Log("LMS_ALFA_MAPS_BUILT "+JsonUtility.ToJson(receipt));
@@ -212,10 +214,10 @@ namespace LetMeSleep.Content.Editor
             Anchor(data.PresentationAnchors,"CameraCollision",Vector3.zero);
             var sockets=Child(house.transform,"InteractionSockets");
             data.ToolPickupPoints=new[]{
-                Anchor(sockets,"Pickup_KitchenCounter_A",new Vector3(10.05f,.885f,10.7f)),Anchor(sockets,"Pickup_KitchenCounter_B",new Vector3(10.75f,.885f,10.7f)),
-                Anchor(sockets,"Pickup_DiningTable_A",new Vector3(10.4f,.815f,2.5f)),Anchor(sockets,"Pickup_DiningTable_B",new Vector3(11.2f,.815f,2.5f)),
-                Anchor(sockets,"Pickup_LivingTable",new Vector3(2.4f,.815f,2.35f)),Anchor(sockets,"Pickup_BedroomANightstand",new Vector3(2.755f,3.655f,.73f)),
-                Anchor(sockets,"Pickup_UtilityCounter",new Vector3(10.55f,3.885f,10.7f))};
+                Anchor(sockets,"Pickup_KitchenCounter_A",new Vector3(10.05f,.885f,10.66f)),Anchor(sockets,"Pickup_KitchenCounter_B",new Vector3(10.75f,.885f,10.66f)),
+                Anchor(sockets,"Pickup_DiningTable_A",new Vector3(10.4f,.815f,2.45f)),Anchor(sockets,"Pickup_DiningTable_B",new Vector3(11.2f,.815f,2.45f)),
+                Anchor(sockets,"Pickup_LivingTable",new Vector3(2.4f,.815f,2.35f)),Anchor(sockets,"Pickup_BedroomANightstand",new Vector3(2.755f,3.655f,.55f)),
+                Anchor(sockets,"Pickup_UtilityCounter",new Vector3(10.55f,3.885f,10.66f))};
             Anchor(sockets,"TaskFuture_Utility",new Vector3(11.1f,3.9f,10.4f));
         }
         static void AddWorldBoundary(GameObject house,Bounds bounds)
@@ -223,6 +225,28 @@ namespace LetMeSleep.Content.Editor
             var root=Child(house.transform,"WorldBoundary_NoPerch");Vector3 min=bounds.min,max=bounds.max,size=bounds.size;
             var definitions=new[]{new Box{center=new[]{min.x-.1f,bounds.center.y,bounds.center.z},size=new[]{.2f,size.y,size.z}},new Box{center=new[]{max.x+.1f,bounds.center.y,bounds.center.z},size=new[]{.2f,size.y,size.z}},new Box{center=new[]{bounds.center.x,bounds.center.y,min.z-.1f},size=new[]{size.x,size.y,.2f}},new Box{center=new[]{bounds.center.x,bounds.center.y,max.z+.1f},size=new[]{size.x,size.y,.2f}},new Box{center=new[]{bounds.center.x,max.y+.1f,bounds.center.z},size=new[]{size.x,.2f,size.z}}};
             for(int i=0;i<definitions.Length;i++){var t=Child(root,"Boundary_"+i);t.gameObject.layer=EnvironmentSampleBuilder.Layer("WorldStatic");var c=t.gameObject.AddComponent<BoxCollider>();c.center=V(definitions[i].center);c.size=V(definitions[i].size);}
+        }
+        static void AddToolPickups(EnvironmentMapDefinition map)
+        {
+            Need(map.ToolPickupPoints.Length==7,"Expected seven tool markers");
+            for(int i=0;i<map.ToolPickupPoints.Length;i++){
+                var marker=map.ToolPickupPoints[i];var pickup=marker.gameObject.AddComponent<GameplayToolPickup>();
+                pickup.PickupId=(uint)(1001+i);pickup.ToolId=GameplayTools.Flyswatter;pickup.VisualRoot=null;
+                marker.gameObject.layer=EnvironmentSampleBuilder.Layer("WorldDynamic");pickup.Initialize();
+                Need(pickup.InteractionCollider!=null&&pickup.InteractionCollider.isTrigger,"Pickup interaction must be a trigger");
+                Need(pickup.InteractionCollider.GetComponent<GameplaySurface>()==null,"Pickups must not be perch surfaces");
+            }
+            var pickups=map.GetComponentsInChildren<GameplayToolPickup>();
+            Need(pickups.Length==7&&pickups.Select(p=>p.PickupId).Distinct().Count()==7,"Pickup identities must be unique");
+            foreach(var pickup in pickups)CheckPickupDefinition(pickup);
+        }
+        static void CheckPickupDefinition(GameplayToolPickup pickup)
+        {
+            var definition=pickup.Definition;
+            Need(definition.PickupId==pickup.PickupId&&definition.ToolId==GameplayTools.Flyswatter,"Pickup definition identity changed");
+            Need(Vector3.Distance(definition.Position.ToUnity(),pickup.transform.position)<.0001f&&Quaternion.Angle(definition.Rotation.ToUnity(),pickup.transform.rotation)<.01f,"Pickup definition pose differs from grip marker");
+            Need(Vector3.Distance(pickup.transform.up,Vector3.up)<.0001f&&Vector3.Distance(pickup.transform.forward,Vector3.forward)<.0001f,"Pickup grip axes must be +Y up and +Z along tool");
+            Need(pickup.InteractionCollider.GetComponent<GameplaySurface>()==null,"Pickup trigger became a perch surface");
         }
         static string Hierarchy(Transform t){string p=t.name;while(t.parent!=null){t=t.parent;p=t.name+"/"+p;}return p;}
         static void BindGameplay(GameObject map,uint start,uint doorStart)
@@ -282,6 +306,7 @@ namespace LetMeSleep.Content.Editor
             var before=root.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger).ToDictionary(c=>Hierarchy(c.transform),ColliderBounds);
             var ids=root.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger).ToDictionary(c=>Hierarchy(c.transform),c=>c.GetComponent<GameplaySurface>().SurfaceId);
             var triggers=root.GetComponentsInChildren<Collider>().Where(c=>c.isTrigger).ToDictionary(c=>Hierarchy(c.transform),ColliderBounds);
+            var pickupIds=root.GetComponentsInChildren<GameplayToolPickup>().Select(p=>p.PickupId).OrderBy(id=>id).ToArray();
             Need(PrefabUtility.SaveAsPrefabAsset(root,path)!=null,"Map prefab save failed");Object.DestroyImmediate(root);
             root=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path),scene);
             var colliders=root.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger).ToArray();Need(colliders.Length==before.Count,"Prefab lost colliders");
@@ -291,6 +316,9 @@ namespace LetMeSleep.Content.Editor
             var savedTriggers=root.GetComponentsInChildren<Collider>().Where(c=>c.isTrigger).ToArray();Need(savedTriggers.Length==triggers.Count,"Prefab lost interaction triggers");
             foreach(var trigger in savedTriggers){string key=Hierarchy(trigger.transform);Need(triggers.ContainsKey(key),"Prefab changed trigger hierarchy");Bounds b=ColliderBounds(trigger);
                 Need(Vector3.Distance(b.min,triggers[key].min)<.002f&&Vector3.Distance(b.max,triggers[key].max)<.002f,"Prefab moved interaction trigger: "+key);}
+            var savedPickups=root.GetComponentsInChildren<GameplayToolPickup>();Need(pickupIds.SequenceEqual(savedPickups.Select(p=>p.PickupId).OrderBy(id=>id)),"Prefab lost pickup identities");
+            foreach(var pickup in savedPickups)Need(pickup.ToolId==GameplayTools.Flyswatter&&pickup.InteractionCollider!=null&&pickup.InteractionCollider.isTrigger&&pickup.VisualRoot==null,"Prefab pickup contract changed");
+            foreach(var pickup in savedPickups)CheckPickupDefinition(pickup);
         }
         static void AddReviewLights(Plan plan,bool lobby)
         {
@@ -306,7 +334,8 @@ namespace LetMeSleep.Content.Editor
             string[] files={
                 "art_source/unity/environments/alfa_maps/house_alfa_static.fbx","art_source/unity/environments/alfa_maps/lobby_alfa_static.fbx","art_source/unity/environments/alfa_maps/furniture_kit_alfa.fbx","art_source/unity/environments/alfa_maps/source_manifest.json",
                 "art_source/unity/environments/room_sample/house_layout_plan.json","art_source/unity/environments/room_sample/room_furnished_without_door.fbx","art_source/unity/environments/room_sample/door_01.fbx","art_source/unity/environments/room_sample/room_contract.json","art_source/unity/environments/room_sample/presentation_manifest.json",
-                "unity/Assets/LetMeSleep/Content/Editor/Environment/EnvironmentSampleBuilder.cs","unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaMapBuilder.cs","unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs"};
+                "unity/Assets/LetMeSleep/Content/Editor/Environment/EnvironmentSampleBuilder.cs","unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaMapBuilder.cs","unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs",
+                "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs","unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs"};
             var payload=new System.Text.StringBuilder(mapId+"\n");
             using(var sha=System.Security.Cryptography.SHA256.Create()){
                 foreach(string file in files){string path=Path.Combine(repository,file);byte[] bytes=file.EndsWith(".fbx",StringComparison.Ordinal)?File.ReadAllBytes(path):System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(path).Replace("\r\n","\n").Replace("\r","\n"));

@@ -27,7 +27,7 @@ Raíz de cada prefab contiene `LetMeSleep.Content.Environment.EnvironmentMapDefi
 | HumanSpawnPoints | 5 Transform en casa; origen a nivel de pies con 0.02 m de margen |
 | MosquitoSpawnPoints | 16 Transform en casa; **centro de esfera** radio 0.055 m, sin sumar altura |
 | LobbySpawnPoints | 16 Transform solo en lobby; origen de pies con 0.02 m de margen |
-| ToolPickupPoints | 7 Transform sobre mesas/mesitas de casa; lista estable, todavía sin componente de recogida no entregado por W1 |
+| ToolPickupPoints | 7 Transform sobre mesas/mesitas de casa con GameplayToolPickup; IDs estables 1001–1007 |
 | PresentationAnchors | Nodos de zonas AudioZone, ReflectionVolume, LightAnchor y CameraCollision |
 | PlayBounds | Envolvente de juego local a la raíz; no sustituye las colisiones de muebles/arquitectura |
 | GeometryContract | `lms-environment-alfa-1` |
@@ -55,11 +55,25 @@ La envolvente física exterior incluye límites laterales y superior de vuelo, e
 
 ## Gameplay y puntos de herramienta
 
-Dependencias entregadas por W1: `1ebb459` + `3dced63`, incorporadas a este worktree como `1883cac` y `70a67d8` solo para compilar el puente. No se alteró Gameplay. Cada collider no trigger lleva GameplaySurface con ID único/no cero/revisión1. IDs ordenados por ruta estable dentro de la versión: casa desde10000, lobby desde20000. El ContentHash cambia cuando cambia el plano o builder. No se asignan IDs por instanceID de Unity.
+Dependencias entregadas por W1: `1ebb459` + `3dced63` y la integración de recogida `ff5f290` con sus ancestros. Se incorporan solo para compilar contra el puente entregado. No se alteró Gameplay. Cada collider no trigger lleva GameplaySurface con ID único/no cero/revisión1. IDs ordenados por ruta estable dentro de la versión: casa desde10000, lobby desde20000. El ContentHash cambia cuando cambia el plano o builder. No se asignan IDs por instanceID de Unity.
 
 Cada GameplayDoor tiene DoorId único, SurfaceId de su Leaf, Hinge/Leaf/Handle explícitos, OpenSign=-1, OpenDegrees=100, InitialDegrees=0. El centro se comprueba con `DoorDefinition.LeafCenterLocal` derivado del collider real. La puerta permanece cerrada en prefab; el runtime aplica el estado autoritativo.
 
-ToolPickupPoints, en orden estable: `Pickup_KitchenCounter_A`, `Pickup_KitchenCounter_B`, `Pickup_DiningTable_A`, `Pickup_DiningTable_B`, `Pickup_LivingTable`, `Pickup_BedroomANightstand`, `Pickup_UtilityCounter`. Los markers están 5 mm por encima de superficies y tienen up=+Y. W1 añadirá GameplayToolPickup/ToolId/validación/estado al entregar su componente; aquí no se inventa inventario ni se declara recogida funcionando. `TaskFuture_Utility` es marcador futuro, inactivo para alfa.
+ToolPickupPoints tienen GameplayToolPickup con ToolId=`flyswatter`, VisualRoot=null y BoxCollider de interacción trigger, layer WorldDynamic. El origen representa el agarre: +Y arriba, +Z a lo largo de la herramienta. Los siete agarres están 5 mm sobre superficies, con espacio para la longitud de 0.45 m. W2 crea el visual desde snapshots; el mapa no duplica la herramienta visual.
+
+| PickupId | Marker | Posición local (m) |
+|---|---|---|
+| 1001 | Pickup_KitchenCounter_A | (10.05, 0.885, 10.66) |
+| 1002 | Pickup_KitchenCounter_B | (10.75, 0.885, 10.66) |
+| 1003 | Pickup_DiningTable_A | (10.40, 0.815, 2.45) |
+| 1004 | Pickup_DiningTable_B | (11.20, 0.815, 2.45) |
+| 1005 | Pickup_LivingTable | (2.40, 0.815, 2.35) |
+| 1006 | Pickup_BedroomANightstand | (2.755, 3.655, 0.55) |
+| 1007 | Pickup_UtilityCounter | (10.55, 3.885, 10.66) |
+
+El trigger entregado por W1 tiene centro local (0, 0.025, 0.18) y tamaño (0.19, 0.05, 0.40). No lleva GameplaySurface, no es posable ni bloquea la comprobación de spawn. El builder comprueba IDs, definición y pose del agarre antes y después de guardar/reabrir el prefab. Lobby no contiene pickups. `TaskFuture_Utility` es marcador futuro, inactivo para alfa.
+
+Después de instanciar el mapa y ejecutar World.RegisterGeometry(), Director debe pasar `doors: World.GetDoorDefinitions(), tools: World.GetToolDefinitions()` a GameplayRoundConfig. W1 controla recogida/drop autoritativos; esta entrega comprueba construcción y serialización, y deja pendiente probar F/Use, G/Drop y sincronización en partida real.
 
 ## Fuentes, reproducción y evidencia
 
@@ -67,9 +81,9 @@ Fuentes editables y exportaciones en `art_source/unity/environments/alfa_maps/`:
 
 Blender 5.2.1 CPU, sin render: **811 checks / 0 fallos**, incluyendo manifold/volumen, colliders positivos y reimportación de los tres FBX (jerarquía/límites a tolerancia0.1mm). Casa119 meshes/4612tri; lobby4/60tri; kit50/2140tri antes de instancias. No son conteos finales de escena ni mediciones de rendimiento.
 
-El builder y los tipos exactos del puente compilan offline contra APIs de Unity6000.3.24f1. `verify_unity_builder.ps1` compila también los tipos entregados GameplayDoor/GameplaySurface y el nuevo descriptor; no sustituye pruebas de todo Gameplay. Los `.meta` de scripts/asmdefs están incluidos; Unity creará los de FBX, meshes, prefabs y escenas generados.
+El builder y los tipos exactos del puente compilan offline contra APIs de Unity6000.3.24f1. `verify_unity_builder.ps1` compila también los tipos entregados GameplayDoor/GameplaySurface/GameplayToolPickup y el descriptor del mapa; no sustituye pruebas de todo Gameplay. Los `.meta` de scripts/asmdefs están incluidos; Unity creará los de FBX, meshes, prefabs y escenas generados.
 
-`compute_content_hash.ps1` reproduce exactamente ContentHash: ID de mapa + lista ordenada de rutas y SHA256; texto UTF8 con saltos LF, FBX sin modificar. Incluye fuentes FBX, manifests, layout y C# de generación/descriptor; no incluye timestamps del recibo. Mantener esos inputs y assets generados vinculados al mismo commit.
+`compute_content_hash.ps1` reproduce exactamente ContentHash: ID de mapa + lista ordenada de rutas y SHA256; texto UTF8 con saltos LF, FBX sin modificar. Incluye 14 archivos: fuentes FBX, manifests, layout, C# de generación/descriptor y GameplayToolPickup.cs/ToolContracts.cs; no incluye timestamps del recibo. Mantener esos inputs y assets generados vinculados al mismo commit.
 
 Al ejecutar, el builder verifica bounds/ejes y hornea la conversión FBX probada en copias Mesh, conservando UV2 y corrigiendo normales/tangentes/winding. Comprueba IDs, referencias de puerta, posiciones de spawn contra AABB conservadoras de geometría y conservación de colliders/IDs tras guardar y reabrir el prefab. Escribe `ALFA-MAPS-IMPORT-RECEIPT.json` únicamente tras completar ambos mapas. Ese recibo no existe como evidencia hasta ejecución por Director.
 
@@ -81,4 +95,4 @@ Director reprodujo el 12 septiembre a las10:28:20Z un fallo de clave repetida al
 
 El builder ahora renombra los hijos duplicados en las instancias del mapa con sufijos `__part_00`, `__part_01`, etc., ordenados por la geometría local exacta del BoxCollider antes de asignar SurfaceId. Comprueba unicidad final de todas las rutas y rechaza geometría duplicada o ancestros ambiguos, en vez de descartar entradas de la comprobación. No cambia tamaño, centro, transform o colisión. El hash se actualiza porque cambia la identidad canónica del mapa. Se conserva la validación de colliders/IDs al reabrir el prefab.
 
-La preparación para pickups distingue triggers de interacción de colliders sólidos: no asigna superficies posables a triggers, no los considera bloqueos de spawn y comprueba por separado que sobrevivan al guardado. Todavía no incorpora GameplayToolPickup hasta recibir el commit de W1. Parche compilado offline, pendiente reejecución nativa completa.
+La preparación para pickups distingue triggers de interacción de colliders sólidos: no asigna superficies posables a triggers, no los considera bloqueos de spawn y comprueba por separado que sobrevivan al guardado. La integración posterior incorpora GameplayToolPickup entregado en ff5f290. Ambos cambios compilan offline; queda pendiente reejecución nativa completa por Director.

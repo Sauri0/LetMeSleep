@@ -6,18 +6,18 @@
   "source_sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2",
   "builder_sources": [
     {
-      "sha256": "21d7406163dffa5123c5966e8e7664ef29211c653bdf2eba2a1f9cac61228c2f",
-      "name": "AlfaMapBuilder.cs"
+      "name": "AlfaMapBuilder.cs",
+      "sha256": "5ba0336533e1b1f3e0df8d3ddca535b9a59c047a8967ae160f79e6c2b863eb8f"
     },
     {
-      "sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2",
-      "name": "EnvironmentSampleBuilder.cs"
+      "name": "EnvironmentSampleBuilder.cs",
+      "sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2"
     }
   ],
   "checks": [
     "C# compilation",
     "Unity API names and signatures",
-    "Delivered GameplayDoor/GameplaySurface bridge and map data types"
+    "Delivered GameplayDoor/GameplaySurface/GameplayToolPickup bridge and map data types"
   ],
   "pending": [
     "Native Editor import and builder execution",

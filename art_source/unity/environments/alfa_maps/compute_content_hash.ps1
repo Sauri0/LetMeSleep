@@ -3,7 +3,7 @@ $repository=(Resolve-Path (Join-Path $PSScriptRoot '../../../..')).Path
 $builder=Get-Content -LiteralPath (Join-Path $repository 'unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaMapBuilder.cs') -Raw
 $method=$builder.Substring($builder.IndexOf('internal static string ContentHash('))
 $files=@([regex]::Matches($method,'"((?:art_source|unity)/[^"\r\n]+\.(?:fbx|json|cs))"')|ForEach-Object{$_.Groups[1].Value})
-if($files.Count -ne 12){throw 'Content hash file list must match builder'}
+if($files.Count -ne 14){throw 'Content hash file list must match builder'}
 $sha=[System.Security.Cryptography.SHA256]::Create()
 $hashes=@()
 try{

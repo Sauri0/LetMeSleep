@@ -17,7 +17,7 @@ function Compile-Subset($name,$files,$dependencies) {
 Compile-Subset 'LetMeSleep.Core' @((Join-Path $repository 'unity/Assets/LetMeSleep/Core/RoomSession.cs')) @()
 Compile-Subset 'LetMeSleep.Gameplay' @(Get-ChildItem (Join-Path $repository 'unity/Assets/LetMeSleep/Gameplay') -Filter '*.cs' | ForEach-Object FullName) @('LetMeSleep.Core')
 # Exact delivered bridge types only; this does not retest the whole Gameplay runtime.
-Compile-Subset 'LetMeSleep.Gameplay.Unity' @((Join-Path $repository 'unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs'),(Join-Path $repository 'unity/Assets/LetMeSleep/Gameplay.Unity/GameplaySurface.cs')) @('LetMeSleep.Gameplay')
+Compile-Subset 'LetMeSleep.Gameplay.Unity' @((Join-Path $repository 'unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs'),(Join-Path $repository 'unity/Assets/LetMeSleep/Gameplay.Unity/GameplaySurface.cs'),(Join-Path $repository 'unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs')) @('LetMeSleep.Gameplay')
 Compile-Subset 'LetMeSleep.Content.Environment' @((Join-Path $repository 'unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs')) @()
 $builderFiles=@(Get-ChildItem (Join-Path $repository 'unity/Assets/LetMeSleep/Content/Editor/Environment') -Filter '*.cs' | ForEach-Object FullName)
 Compile-Subset 'EnvironmentBuilder' $builderFiles @('LetMeSleep.Core','LetMeSleep.Gameplay','LetMeSleep.Gameplay.Unity','LetMeSleep.Content.Environment')
@@ -28,7 +28,7 @@ $receipt = [ordered]@{
     exit_code = 0
     source_sha256 = (Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant()
     builder_sources = @($builderFiles | ForEach-Object { @{name=[System.IO.Path]::GetFileName($_);sha256=(Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash.ToLowerInvariant()} })
-    checks = @('C# compilation','Unity API names and signatures','Delivered GameplayDoor/GameplaySurface bridge and map data types')
+    checks = @('C# compilation','Unity API names and signatures','Delivered GameplayDoor/GameplaySurface/GameplayToolPickup bridge and map data types')
     pending = @('Native Editor import and builder execution','Prefab and scene audit','Visual and gameplay review')
 }
 $receipt | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $repository 'docs/unity/environment/UNITY-BUILDER-OFFLINE-CHECK.json') -Encoding utf8
