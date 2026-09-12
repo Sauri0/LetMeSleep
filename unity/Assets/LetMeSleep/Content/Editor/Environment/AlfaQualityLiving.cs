@@ -24,7 +24,67 @@ namespace LetMeSleep.Content.Editor
             var anchors=F(house,"PresentationAnchors");var lampAnchor=Anchor(anchors,"LightAnchor_Living_StandingLamp",new Vector3(.65f,1.37f,3.85f));
             lampAnchor.SetSiblingIndex(anchors.Find("LightAnchor_Living").GetSiblingIndex()+1);
             BuildQualityCeilingFixture(F(house,"CeilingFixture_Living"));
+            BuildQualityPatioBench(F(house,"Patio_Bench"));
             ExportQualityLiving(house);
+        }
+
+        static void BuildQualityPatioBench(Transform bench)
+        {
+            // Placement and gameplay proxies remain owned by the existing map.
+            // All replacement timber stays inside those four authored boxes.
+            var colliders=bench.GetComponentsInChildren<Collider>();
+            var before=colliders.ToDictionary(c=>c,c=>ColliderBounds(c));
+            RemoveQualityReplacedVisuals(bench);var frame=Child(bench,"Crafted_TrestleAndSlats");
+            foreach(float x in new[]{-.71f,.71f}){
+                QualityTimber(frame,"Trestle_Foot_"+Token(x),new Vector3(x,.0275f,0),new Vector3(.10f,.055f,.40f),"Quality_WoodEnd",.006f);
+                foreach(float z in new[]{-.155f,.155f})
+                    QualityTimber(frame,"Trestle_Post_"+Token(x)+"_"+Token(z),new Vector3(x,.2075f,z),new Vector3(.085f,.315f,.075f),"Quality_Wood",.005f);
+                QualityTimber(frame,"Seat_Bearer_"+Token(x),new Vector3(x,.4025f,0),new Vector3(.10f,.075f,.40f),"Quality_WoodEnd",.005f);
+                QualityTimber(frame,"Back_Stile_"+Token(x),new Vector3(x,.82f,.233f),new Vector3(.08f,.60f,.039f),"Quality_WoodEnd",.004f);
+                // Recessed wooden joint plugs on the visible end grain of each
+                // bearer; thickness remains inside the original support proxy.
+                foreach(float z in new[]{-.155f,.155f}){
+                    var plug=QualityPart(frame,"Bearer_Plug_"+Token(x)+"_"+Token(z),new Vector3(x+(x<0?-.047f:.047f),.403f,z),
+                        QualityLathe(new Vector2(0,0),new Vector2(.008f,0),new Vector2(.008f,.003f),new Vector2(0,.003f)),"Quality_WoodLight");
+                    plug.localRotation=Quaternion.Euler(0,0,x<0?90:-90);
+                }
+            }
+            // Four longitudinal boards, 12 mm drainage gaps, 54 cm seat top.
+            // A shallow saddle softens the section without moving its support.
+            for(int i=0;i<4;i++){
+                float z=-.1845f+i*.123f,height=i==1||i==2?.096f:.10f;
+                QualityTimber(frame,"Seat_Slat_"+i,new Vector3(0,.44f+height*.5f,z),new Vector3(1.8f,height,.111f),i%2==0?"Quality_Wood":"Quality_WoodLight",.008f);
+            }
+            for(int i=0;i<3;i++){
+                float y=.61f+i*.205f;
+                QualityPart(frame,"Back_Slat_"+i,new Vector3(0,y,.22f),QualityBenchBackSlat(y),i==1?"Quality_WoodLight":"Quality_Wood");
+            }
+            Need(colliders.Length==bench.GetComponentsInChildren<Collider>().Length,"Patio bench collider count changed");
+            foreach(var pair in before){var after=ColliderBounds(pair.Key);Need((after.center-pair.Value.center).sqrMagnitude<1e-12f&&(after.size-pair.Value.size).sqrMagnitude<1e-12f,"Patio bench collision proxy moved");}
+            foreach(var filter in frame.GetComponentsInChildren<MeshFilter>())foreach(var vertex in filter.sharedMesh.vertices){
+                var point=filter.transform.TransformPoint(vertex);
+                Need(before.Values.Any(bounds=>{bounds.Expand(.0002f);return bounds.Contains(point);}),"Patio bench timber exceeds original collision envelope: "+filter.name);
+            }
+        }
+
+        static QualityMesh QualityBenchBackSlat(float height)
+        {
+            var mesh=new QualityMesh();
+            var stations=new[]{-.90f,-.894f,-.60f,-.30f,0,.30f,.60f,.894f,.90f};
+            var profile=new[]{new Vector2(-.079f,-.0225f),new Vector2(.079f,-.0225f),new Vector2(.085f,-.0165f),new Vector2(.085f,.0165f),
+                new Vector2(.079f,.0225f),new Vector2(-.079f,.0225f),new Vector2(-.085f,.0165f),new Vector2(-.085f,-.0165f)};
+            Func<int,int,Vector3> point=(i,j)=>{
+                var section=profile[j];if(i==0||i==stations.Length-1){section.x*=.94f;section.y*=.73f;}
+                float x=stations[i],y=section.x+.015f*(1-Mathf.Pow(x/.90f,2));
+                return new Vector3(x,y,section.y+.007f*((height+y-.82f)/.30f));
+            };
+            for(int i=0;i<stations.Length-1;i++)for(int j=0;j<profile.Length;j++){
+                int next=(j+1)%profile.Length;var direction=profile[j]+profile[next];
+                mesh.Quad(point(i,j),point(i+1,j),point(i+1,next),point(i,next),new Vector3(0,direction.x,direction.y));
+            }
+            foreach(int i in new[]{0,stations.Length-1})for(int j=0;j<profile.Length;j++)
+                mesh.Triangle(new Vector3(stations[i],0,.007f*((height-.82f)/.30f)),point(i,j),point(i,(j+1)%profile.Length),i==0?Vector3.left:Vector3.right);
+            return mesh;
         }
 
         static void BuildQualityLivingRug(Transform rug)
@@ -235,7 +295,7 @@ namespace LetMeSleep.Content.Editor
         [Serializable] class QualityExportSubmesh {public string material;public float[] color,emission;public float smoothness,metallic;public bool weave;public int[] triangles;}
         static void ExportQualityLiving(GameObject house)
         {
-            var roots=new[]{F(house,"Living_Rug"),F(house,"Living_Sofa"),F(house,"Living_Table"),F(house,"Living_Shelf"),F(house,"Living_Shelf_Books"),F(house,"Living_Sofa_Textiles"),F(house,"QualityLiving"),F(house,"LivingDoor"),F(house,"CeilingFixture_Living"),F(house,"RoomCarpentry")};
+            var roots=new[]{F(house,"Living_Rug"),F(house,"Living_Sofa"),F(house,"Living_Table"),F(house,"Living_Shelf"),F(house,"Living_Shelf_Books"),F(house,"Living_Sofa_Textiles"),F(house,"QualityLiving"),F(house,"LivingDoor"),F(house,"CeilingFixture_Living"),F(house,"RoomCarpentry"),F(house,"Patio_Bench")};
             var parts=new List<QualityExportPart>();
             foreach(var filter in roots.SelectMany(r=>r.GetComponentsInChildren<MeshFilter>()).Distinct()){
                 if(Hierarchy(filter.transform).Contains("RoomCarpentry")&&!filter.name.StartsWith("Living",StringComparison.Ordinal))continue;
