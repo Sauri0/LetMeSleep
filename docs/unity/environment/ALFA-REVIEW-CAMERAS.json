@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "map_id": "house-patio-v1",
+  "status": "source-derived capture recipe; native framing and visual gates pending",
+  "source_commit": "88d8ba2aaef37511ffa45c3db3f4b80c56efd1e1",
+  "scene": "Assets/LetMeSleep/Content/Environment/AlfaMaps/Scenes/HousePatio.unity",
+  "coordinate_space": "HousePatio root local metres, +Y up; transform position and look_at through map root",
+  "projection": "perspective",
+  "resolution": [1920, 1080],
+  "near_clip": 0.05,
+  "far_clip": 100.0,
+  "up": [0, 1, 0],
+  "door_state_degrees": 0,
+  "cameras": [
+    {
+      "id": "01_front_exterior",
+      "position": [18.5, 8.0, -14.0],
+      "look_at": [6.4, 3.5, 4.5],
+      "vertical_fov_degrees": 55,
+      "review_camera_outside_play_bounds": true,
+      "gates": [
+        "Front and east walls meet without open seams, doubled faces or z-fighting; foundation meets ground.",
+        "Roof ridge y=8.2 and eaves form a continuous silhouette; front windows are seated and sealed.",
+        "Entry at (6.06,1.1,0.09) reads as a full-size door; two storeys and the front approach remain legible."
+      ]
+    },
+    {
+      "id": "02_patio",
+      "position": [6.4, 8.5, 22.0],
+      "look_at": [6.4, 1.2, 14.3],
+      "vertical_fov_degrees": 65,
+      "review_camera_outside_play_bounds": true,
+      "gates": [
+        "The 1.8 m path between x=5.16 and x=6.96 connects the back door to the patio without furniture or trunks in it.",
+        "Bench at (10,0,15.8), pines at (2,0,16.5)/(10.8,0,18.3) and fence meet the ground without floating or intersections.",
+        "Rear door, ground and wall junction has no visible crack or light leak; fence bounds the 12.8 by 8 m patio."
+      ]
+    },
+    {
+      "id": "03_stairs",
+      "position": [4.45, 4.75, 6.7],
+      "look_at": [3.23, 1.75, 9.45],
+      "vertical_fov_degrees": 75,
+      "review_camera_outside_play_bounds": false,
+      "gates": [
+        "Through the real slab opening, both U-stair flights and the mid-landing read as one continuous route without gaps between steps.",
+        "The centre rails stay between the 1.6 m flights; the guard across x=3.38..4.98 protects the upper void without extending across the upper exit x=1.48..3.08.",
+        "Tread edges, slab thickness and guard posts remain readable under scene lighting; no floating posts, black faces or overlapping surfaces."
+      ]
+    },
+    {
+      "id": "04_door_junction",
+      "position": [6.06, 1.53, 5.66],
+      "look_at": [8.6, 1.1, 5.66],
+      "vertical_fov_degrees": 75,
+      "review_camera_outside_play_bounds": false,
+      "gates": [
+        "Look through HallEast0 at x=7.05: its 1.8 m opening joins the landing cleanly at floor and header, without a second room shell.",
+        "DiningDoor at z=4.67 and KitchenDoor at z=6.65 have seated leaves, jambs and headers; no duplicate frames, suspended leaves or obvious floor gaps.",
+        "With both doors closed the landing reads as clear circulation; a second capture from this same camera at authored 100 degree open state checks visible leaf/wall/handle intersections."
+      ]
+    },
+    {
+      "id": "05_bedroom_a",
+      "position": [4.2, 4.53, 3.75],
+      "look_at": [2.2, 3.7, 1.6],
+      "vertical_fov_degrees": 75,
+      "review_camera_outside_play_bounds": false,
+      "gates": [
+        "Bed footprint x=0.66..2.30/z=0.365..2.58 and desk x=3.48..4.80/z=0.31..0.95 sit inside the 4.8 by 4.4 m room without wall penetration.",
+        "Entry-side floor and the route around the bed to chair/desk remain visible; furniture legs and nightstand touch the floor y=3.",
+        "Pickup 1006 grip at (2.755,3.655,0.55) rests above the nightstand; when W2 visual is loaded, the tool extends along +Z. Check wall/floor light leaks and material readability."
+      ]
+    }
+  ]
+}
