@@ -103,6 +103,7 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.Toggle fullScreen;
         private UnityEngine.UI.Toggle vSync;
         private UnityEngine.UI.Toggle invertY;
+        private UnityEngine.UI.Toggle reduceMenuMotion;
         private TextMeshProUGUI resolutionValue;
         private TextMeshProUGUI qualityValue;
         private TMP_Dropdown frameLimitDropdown;
@@ -346,6 +347,8 @@ namespace LetMeSleep.UI
             frameLimitDropdown.SetValueWithoutNotify(Mathf.Max(0, frameLimitIndex));
             frameLimitDropdown.RefreshShownValue();
             invertY.SetIsOnWithoutNotify(settingsDraft.InvertY);
+            reduceMenuMotion.SetIsOnWithoutNotify(settingsDraft.ReduceMenuMotion);
+            reduceMenuMotion.transform.parent.gameObject.SetActive(state.SupportsReducedMenuMotion);
             videoSettings.SetActive(state.SupportsVideo);
             rebindNote.SetActive(state.SupportsRebinding);
             settingsStatus.text = state.IsApplying ? "Aplicando ajustes…" : state.Message;
@@ -456,7 +459,8 @@ namespace LetMeSleep.UI
         {
             var view = factory.View("MainMenuView", transform, false);
             var backdrop = view.GetComponent<UnityEngine.UI.Image>();
-            backdrop.color = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.18f);
+            // Keep the living room's lighting intact; contrast is provided by the left rail.
+            backdrop.color = Color.clear;
             backdrop.raycastTarget = false;
             screens[AlfaUiScreen.MainMenu] = view;
 
@@ -480,9 +484,6 @@ namespace LetMeSleep.UI
             var version = string.IsNullOrWhiteSpace(Application.version) ? "ALFA" : Application.version.Replace("-", " / ").ToUpperInvariant();
             factory.Text(menu, "Version", version + "  ·  WINDOWS", 16f, AlfaUiTheme.Disabled);
 
-            var sceneLabel = factory.Text(view.transform, "SceneLabel", "CASA CON PATIO  ·  NOCHE", 14f,
-                new Color(AlfaUiTheme.Moon200.r, AlfaUiTheme.Moon200.g, AlfaUiTheme.Moon200.b, 0.82f), TextAlignmentOptions.Right, true);
-            Anchor(sceneLabel.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-42f, 28f), new Vector2(420f, 34f));
         }
 
         private void BuildOnlineChoice()
@@ -790,6 +791,10 @@ namespace LetMeSleep.UI
             frameLimitDropdown = factory.Dropdown(video, "FrameLimitDropdown",
                 FrameLimitOptions.Select(FrameLimitLabel).ToArray(), index =>
                     ChangeSetting(draft => draft.FrameLimit = FrameLimitOptions[Mathf.Clamp(index, 0, FrameLimitOptions.Length - 1)]));
+            reduceMenuMotion = factory.Toggle(video, "ReduceMenuMotionToggle", "REDUCIR MOVIMIENTO DEL MENÚ",
+                value => ChangeSetting(draft => draft.ReduceMenuMotion = value));
+            // The backend opts in only after persistence and the real scene effect are wired.
+            reduceMenuMotion.transform.parent.gameObject.SetActive(false);
             settingsStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
             var buttons = factory.Horizontal(content, "Actions", 12f, TextAnchor.MiddleCenter);
             settingsApplyButton = factory.Button(buttons, "SettingsApplyButton", "APLICAR", ApplySettings, true, false, 66f, AlfaUiIconKind.Ready);
@@ -1285,7 +1290,8 @@ namespace LetMeSleep.UI
             if (settingsState == null || settingsApplyLatched) return;
             settingsDraft = settingsState.Saved.Copy();
             PresentSettings(new SettingsUiState(settingsState.Saved, settingsDraft, settingsState.Resolutions,
-                settingsState.Qualities, settingsState.SupportsVideo, settingsState.SupportsRebinding));
+                settingsState.Qualities, settingsState.SupportsVideo, settingsState.SupportsRebinding,
+                supportsReducedMenuMotion: settingsState.SupportsReducedMenuMotion));
         }
 
         private void CloseSettings()

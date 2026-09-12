@@ -319,6 +319,7 @@ namespace LetMeSleep.UI
         public float HumanSensitivity;
         public float MosquitoSensitivity;
         public bool InvertY;
+        public bool ReduceMenuMotion;
 
         public AlfaSettingsDraft Copy() => (AlfaSettingsDraft)MemberwiseClone();
 
@@ -329,7 +330,8 @@ namespace LetMeSleep.UI
                    FullScreen == other.FullScreen && ResolutionIndex == other.ResolutionIndex && QualityIndex == other.QualityIndex &&
                    VSync == other.VSync && FrameLimit == other.FrameLimit &&
                    Mathf.Approximately(HumanSensitivity, other.HumanSensitivity) &&
-                   Mathf.Approximately(MosquitoSensitivity, other.MosquitoSensitivity) && InvertY == other.InvertY;
+                   Mathf.Approximately(MosquitoSensitivity, other.MosquitoSensitivity) && InvertY == other.InvertY &&
+                   ReduceMenuMotion == other.ReduceMenuMotion;
         }
     }
 
@@ -341,11 +343,13 @@ namespace LetMeSleep.UI
         public IReadOnlyList<string> Qualities { get; }
         public bool SupportsVideo { get; }
         public bool SupportsRebinding { get; }
+        public bool SupportsReducedMenuMotion { get; }
         public bool IsApplying { get; }
         public string Message { get; }
 
         public SettingsUiState(AlfaSettingsDraft saved, AlfaSettingsDraft draft, IEnumerable<string> resolutions,
-            IEnumerable<string> qualities, bool supportsVideo, bool supportsRebinding, bool isApplying = false, string message = "")
+            IEnumerable<string> qualities, bool supportsVideo, bool supportsRebinding, bool isApplying = false, string message = "",
+            bool supportsReducedMenuMotion = false)
         {
             Saved = saved?.Copy() ?? throw new ArgumentNullException(nameof(saved));
             Draft = draft?.Copy() ?? Saved.Copy();
@@ -353,6 +357,7 @@ namespace LetMeSleep.UI
             Qualities = Array.AsReadOnly((qualities ?? Enumerable.Empty<string>()).ToArray());
             SupportsVideo = supportsVideo;
             SupportsRebinding = supportsRebinding;
+            SupportsReducedMenuMotion = supportsReducedMenuMotion;
             IsApplying = isApplying;
             Message = message ?? string.Empty;
         }
