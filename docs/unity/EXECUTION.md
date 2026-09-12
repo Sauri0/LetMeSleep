@@ -63,3 +63,12 @@ Spatial contract: Unity metres, Y-up/Z-forward. Human capsule radius .25, height
 - Launcher1.1.1: 63 tests, published ZIP download/checksum/manifest, update of original alfa installation, second-start reuse, old slot retained. Public launcher hash verified. See qa/FINAL-REVIEW-0.9.4-ALFA1-CANDIDATE.md.
 - Team: W1 full-round/retry evidence integrated; QA storage test suite integrated and final notes reviewed. Other owners remain frozen; no conflicting root edits requested.
 - Beta still waits for independent players/networks and Branko approval. Art/balance/manual traversal/target GPU verification remain explicitly unaccepted. No questions sent while user sleeps.
+
+## Alfa follow-up: traversal and camera — 2026-09-12
+
+- Previous goal turn made concrete progress: alfa.1 published and public update/Windows profile recovery verified. Full cycle remains unchanged; alfa acceptance gates still apply.
+- Current root b3cf37f integrates W1 perch acquisition correction (original W1a8015a9). Native old behavior reproduced twice: valid .25 acquisition canceled by .12 follow query before reaching surface. New approach preserves acquisition range only during approach and rejects a changed support. QA reviewed and ran Gameplay CPU 76/76; physical floor acquisition passed. This is not published yet.
+- W1 passed a physical human route through stairs, upper hall, rear patio and return using normal inputs, without teleporting. Other routes/surfaces remain partial.
+- Native floor perch exposed a camera defect: actor/anchor/camera at y.056, camera radius.08 intersects floor, ResolvedDistance0. Live frozen witness in editor PID5800 handed from W1 to W2; W2 owns camera correction and sole GPU/editor slot. Director must not restart it merely after a polling timeout.
+- W2 also delivered9f75d96 (not yet integrated): authored Custom-tier light template with per-room resolutions, retaining Living/bedroom shadows within 2048 atlas. Director will regenerate the presentation library after camera verification and source integration. No FPS claim.
+- Current candidate alfa.1 release notes now disclose perch limitation. Prepare next numbered alfa revision only after fixes/tests/build/public install are verified; preserve old package hashes.
