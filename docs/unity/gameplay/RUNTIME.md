@@ -32,6 +32,8 @@ WASD/mouse; humano Shift correr, Ctrl agacharse, Space saltar, clic golpear y F 
 
 ## Evidencia y límites
 
+U094-09/06 tiene [evidencia nativa parcial](U09409-06-TRAVERSAL.md): humano subió/bajó ambos tramos y cruzó PatioDoor en ambos sentidos. Se corrigió la cancelación prematura de ApproachingSurface y pasó su caso nativo de piso más nueve regresiones CPU dirigidas. El volumen de cámara quedó solapado con el piso al posarse; W2 recibió el testigo y el gate completo sigue bloqueado.
+
 U09414 pasó el recorrido nativo automatizado de ronda completa, resultado y reinicio en ambos roles sobre la fuente candidata35c2af4: BloodGoal a40.533 s y TimeExpired a180 s, respectivamente. Ver [recibo y límites del entrenamiento](U09414-NATIVE-TRAINING.md); la prueba usa bots reales y deja al participante local sin controles, por lo que no acredita aceptación manual.
 
 Regresión nativa local del motor humano: se confirmó y corrigió el desplazamiento causado por esferas de mosquitos dentro de la cápsula de locomoción. Director observó 33.4 s sin controles con x/z del humano intactos durante picadura; ver [contraste y alcance](HUMAN-MOTOR-REGRESSION.md). No acredita WAN ni sustituye otros gates pendientes.

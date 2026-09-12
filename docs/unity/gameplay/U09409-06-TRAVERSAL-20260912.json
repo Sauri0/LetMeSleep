@@ -1,0 +1,113 @@
+{
+  "gates": {
+    "U09409": "PARTIAL; sampled human stair/upper hall/rear patio route passed",
+    "U09406": "BLOCK; perch approach fixed, camera collision-volume overlap remains"
+  },
+  "unity": "6000.3.24f1",
+  "beforeRoot": "ec95269d08dde5c8515047ac7cab94ca0312f124",
+  "runtimeCandidate": "f0e6b80",
+  "workerPatch": "a8015a9",
+  "rootWithPatch": "b3cf37f9639722d0951626521defac621074d6a4",
+  "editorPid": 5800,
+  "editorStateAtHandoff": "PlayMode; AutomaticTick=false; actor1 Surface; tick80",
+  "sourceChanges": "GameplayAuthority.cs and targeted regression tests only; no Content/Presentation edits",
+  "humanRoute": {
+    "upperFloorY": 3.00015926,
+    "status": "PASS sampled route",
+    "patioFarthestZ": 14.91172,
+    "movement": "Authenticated normal WASD/yaw commands, no jump or teleport",
+    "waypoints": 18,
+    "groundFloorY": 0.00015908471,
+    "finalTick": 517
+  },
+  "floorFailureBefore": {
+    "normal": [
+      0,
+      1,
+      0
+    ],
+    "positionAfterFirstTick": [
+      3.58729649,
+      0.208984673,
+      1.29853415
+    ],
+    "maintenanceReach": 0.12,
+    "surfaceAfter15Ticks": false,
+    "acquisitionReach": 0.25,
+    "surfaceId": 10190,
+    "reproductions": 2,
+    "initialPosition": [
+      3.58729649,
+      0.230651334,
+      1.29853415
+    ],
+    "beforeActionReachable": true,
+    "stateAfter15Ticks": "Flying",
+    "actionReject": "None",
+    "rayRadiusAllowance": 0.055,
+    "approachSpeed": 0.65
+  },
+  "cpuRegression": {
+    "originalValidInputFailures": 9,
+    "patchedFailures": 0,
+    "scope": "Six analytical plane normals from0.23m, support loss during approach/perch, intervening surface cancellation; not native PhysX",
+    "cases": 9
+  },
+  "nativeAfter": {
+    "hasAttachment": true,
+    "position": [
+      3.61504769,
+      0.056,
+      1.30173588
+    ],
+    "tick": 80,
+    "floorPerch": "PASS",
+    "life": "Surface"
+  },
+  "cameraWitness": {
+    "desiredDistance": 0.85,
+    "position": [
+      3.615048,
+      0.056,
+      1.301736
+    ],
+    "status": "FAIL collision volume overlap",
+    "overlapCollider": "HousePatio(Clone)/house_alfa_static/Collider_HouseShell_Solid_0_0",
+    "note": "Camera center is above floor but collision sphere extends0.024m into it; no rendered clipping or LOS claim",
+    "forward": [
+      0,
+      0,
+      1
+    ],
+    "resolvedDistance": 0,
+    "centerFinite": true,
+    "anchorEqualsPivotEqualsCamera": true,
+    "radius": 0.08
+  },
+  "pending": [
+    "Second exterior access mapping/traversal",
+    "Human routes through every room",
+    "Mosquito interior/exterior route",
+    "Native wall/ceiling perch",
+    "Detach first frame",
+    "Camera behind/parallel/front for each normal",
+    "Independent QA and package validation"
+  ],
+  "evidenceDirectory": "N:/LetMeSleep/Validation/U09409-06-Traversal-20260912",
+  "evidenceSha256": {
+    "human-attempt1.json": "7e36da4f5132923ff4470b80f78c2e9ca71324c1a8b804975fc71523a0b6c28d",
+    "floor-attempt1.json": "8c185ab4154e9e8c3468007f5629e1c33cad34a075f9c4fe99818081f3491be4",
+    "floor-attempt2.json": "0d4691e688e7b28800f614d329b7109fcafea65e42fbc320d51d0c45af4033ec",
+    "reach-contrast.json": "91be9014be62768c44c9472b600e4a3d945fcbc9779394a5e216f902ce1be9a0",
+    "floor-patched.json": "50d66010a1df80f355d0ce4a05c8b01c831024e24d0edbb894bf780e57b40794",
+    "floor-camera.json": "14fda04d6907817805290c4603b0f5008a1072fab6dfbbbb0176724dac1fd221",
+    "NativeTraversal.cs": "a99e57a7c71a67985ef1acd02e9a5063984ce58cdd0372660f0ad4fbfa6b577c",
+    "NativeFloorPerch.cs": "c66f7107a890a8ba246f9b7a96c6c019ffa69db40db5c9bed4e72e368cb0db6c",
+    "NativeFloorPerchPatched.cs": "002fa574d45b57e549a3f4ce007e4aed0acc54656f19d478f879316714962392",
+    "floor-camera.cs": "30ffb6d790995aab88edd78924012c20daa7669239132aa947d5cc6b022c061e",
+    "targeted-cpu/original-valid-input.log": "4faf1a38ee95164711da6ff2c3d7aecea9aaf1c13321789fda9617f03ff583d2",
+    "targeted-cpu/patched.log": "7f9b223c0fea31ce43a4ec7ca4b7eff271476d09c4c4f6d862a6e53326018ec2",
+    "editor-through-camera.log": "6b4930bb692b5ea09e79f793aa7a3b37a4dcd895cb4ffc79da1c78e741a3d73d"
+  },
+  "scope": "Native Editor scripted normal gameplay commands, no teleports/pose mutations; no WAN/manual-play/FPS/visual-acceptance claim"
+}
