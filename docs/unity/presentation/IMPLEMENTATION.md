@@ -13,6 +13,12 @@ El código fuente vive bajo `unity/Assets/LetMeSleep/Presentation/**` y
 - `GameplayAudioPresenter`, que se conecta al `GameplayRuntime` de W1, deduplica
   `(SessionEpoch, RoundId, EventId)`, traduce eventos confirmados y mantiene un
   único loop de alas por actor vivo.
+- `GameplayVisualPresenter` y `ActorVisualBinding`: instancian los
+  `CharacterView` de M1 sobre cada `GameplayActorProxy`, interpolan remotos con
+  hasta 100 ms de extrapolación, seleccionan los 15 estados publicados, alinean
+  manos con `BodySurfaces` y mantienen `ProboscisTip` en el ancla autoritativa.
+- `GameplayPresentationRoot`, fachada de binding que desactiva la cámara
+  auxiliar de W1 y conecta visuales, cámaras propias y eventos de audio.
 - quince WAV audibles originales: música de menú/ronda, ambiente nocturno,
   alas, defensa, impacto, picadura, puertas, vida, stings y ready de UI.
 - fuente editable determinista en `art_source/unity/audio/`, manifest con
@@ -43,6 +49,21 @@ El builder es idempotente y sólo escribe dentro de los `Generated/` que le
 pertenecen a Presentation y Audio. Director inserta sus prefabs aditivos en las
 escenas; el builder no abre ni guarda escenas de M2, no toca ProjectSettings y
 no modifica paquetes.
+
+Ejecutar primero el builder de personajes de M1. Con sus cuatro prefabs
+presentes, este builder también crea
+`Assets/LetMeSleep/Presentation/Generated/Prefabs/LMS_GameplayPresentation.prefab`
+con una cámara compartida, AudioListener, audio root y los dos presenters. La
+escena instancia ese prefab y llama una vez:
+
+```csharp
+presentationRoot.Bind(gameplayRuntime);
+```
+
+El binding incluye actores que ya existían antes de la llamada y también los
+futuros `ActorCreated`. `GameplayRuntime.UseBuiltInCamera` queda en `false`; la
+vista local lee `LocalViewYaw/LocalViewPitch` cada frame, por lo que no depende
+de que `ViewRevision` cambie con cada movimiento del mouse.
 
 ## AudioMixer
 

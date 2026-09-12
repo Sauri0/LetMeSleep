@@ -3,6 +3,7 @@
   "rootNamespace": "LetMeSleep.Presentation.Editor",
   "references": [
     "LetMeSleep.Presentation",
+    "LetMeSleep.Presentation.Gameplay",
     "LetMeSleep.Audio",
     "Unity.RenderPipelines.Core.Runtime",
     "Unity.RenderPipelines.Universal.Runtime"

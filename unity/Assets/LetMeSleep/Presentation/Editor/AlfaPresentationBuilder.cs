@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using LetMeSleep.Audio;
+using LetMeSleep.Presentation.Gameplay;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -42,7 +43,8 @@ namespace LetMeSleep.Presentation.Editor
             if (mixer == null)
                 Debug.LogWarning($"LMS_AUDIO_MIXER_REQUIRED path={MixerPath}; clips remain audible through Master until the mixer is created and the builder is rerun.");
             Dictionary<string, AudioCue> cues = BuildAudioCues(mixer);
-            BuildAudioRoot(cues, mixer);
+            GameObject audioRoot = BuildAudioRoot(cues, mixer);
+            BuildGameplayPresentationPrefab(preset, audioRoot);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -231,7 +233,7 @@ namespace LetMeSleep.Presentation.Editor
             return cue;
         }
 
-        private static void BuildAudioRoot(Dictionary<string, AudioCue> cues, AudioMixer mixer)
+        private static GameObject BuildAudioRoot(Dictionary<string, AudioCue> cues, AudioMixer mixer)
         {
             var root = new GameObject("LMS_AlfaAudioRoot");
             try
@@ -262,7 +264,63 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(director, "roundMusic", round);
                 Assign(director, "ambience", ambience);
 
-                PrefabUtility.SaveAsPrefabAsset(root, AudioRoot + "/Prefabs/LMS_AlfaAudioRoot.prefab");
+                return PrefabUtility.SaveAsPrefabAsset(root, AudioRoot + "/Prefabs/LMS_AlfaAudioRoot.prefab");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(root);
+            }
+        }
+
+        private static void BuildGameplayPresentationPrefab(
+            AlfaPresentationPreset preset, GameObject audioRootPrefab)
+        {
+            const string characterRoot = "Assets/LetMeSleep/Content/Characters/Prefabs";
+            GameObject human = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_Human.prefab");
+            GameObject humanFirstPerson = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_Human_FirstPerson.prefab");
+            GameObject mosquito = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_Mosquito.prefab");
+            GameObject flyswatter = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_Flyswatter.prefab");
+            if (human == null || humanFirstPerson == null || mosquito == null || flyswatter == null || audioRootPrefab == null)
+            {
+                Debug.LogWarning("LMS_GAMEPLAY_PRESENTATION_DEFERRED; run the Character builder first, then rerun this builder.");
+                return;
+            }
+
+            var root = new GameObject("LMS_GameplayPresentation");
+            try
+            {
+                GameplayVisualPresenter visuals = root.AddComponent<GameplayVisualPresenter>();
+                GameplayAudioPresenter audioEvents = root.AddComponent<GameplayAudioPresenter>();
+                GameplayPresentationRoot facade = root.AddComponent<GameplayPresentationRoot>();
+                visuals.SetPrefabs(human, humanFirstPerson, mosquito, flyswatter);
+
+                var cameraObject = new GameObject("PlayerCamera");
+                cameraObject.transform.SetParent(root.transform, false);
+                Camera camera = cameraObject.AddComponent<Camera>();
+                camera.enabled = false;
+                AudioListener listener = cameraObject.AddComponent<AudioListener>();
+                listener.enabled = false;
+                HumanViewCamera humanCamera = cameraObject.AddComponent<HumanViewCamera>();
+                MosquitoFollowCamera mosquitoCamera = cameraObject.AddComponent<MosquitoFollowCamera>();
+                Assign(humanCamera, "preset", preset);
+                Assign(humanCamera, "controlledCamera", camera);
+                Assign(humanCamera, "pitchPivot", cameraObject.transform);
+                Assign(mosquitoCamera, "preset", preset);
+                Assign(mosquitoCamera, "controlledCamera", camera);
+                Assign(mosquitoCamera, "cameraTransform", cameraObject.transform);
+                humanCamera.enabled = false;
+                mosquitoCamera.enabled = false;
+                visuals.SetCameras(humanCamera, mosquitoCamera);
+
+                GameObject audioInstance = (GameObject)PrefabUtility.InstantiatePrefab(audioRootPrefab);
+                audioInstance.transform.SetParent(root.transform, false);
+                AlfaAudioDirector audioDirector = audioInstance.GetComponent<AlfaAudioDirector>();
+                Assign(facade, "visuals", visuals);
+                Assign(facade, "audioEvents", audioEvents);
+                Assign(facade, "audioDirector", audioDirector);
+
+                PrefabUtility.SaveAsPrefabAsset(
+                    root, PresentationRoot + "/Prefabs/LMS_GameplayPresentation.prefab");
             }
             finally
             {

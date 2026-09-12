@@ -100,6 +100,14 @@ namespace LetMeSleep.Presentation
             controlledCamera.farClipPlane = preset.FarPlane;
         }
 
+        public void BindAnchors(Transform anchor, Transform cameraPivot)
+        {
+            safeAnchor = anchor;
+            pivot = cameraPivot;
+            initialized = false;
+            Initialize();
+        }
+
         private void Initialize()
         {
             if (cameraTransform == null && controlledCamera != null)

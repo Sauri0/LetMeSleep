@@ -5,6 +5,7 @@
     "LetMeSleep.Core",
     "LetMeSleep.Gameplay",
     "LetMeSleep.Gameplay.Unity",
+    "LetMeSleep.Content.Characters",
     "LetMeSleep.Audio",
     "LetMeSleep.Presentation"
   ],

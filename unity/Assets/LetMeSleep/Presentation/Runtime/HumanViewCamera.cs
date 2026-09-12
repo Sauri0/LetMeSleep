@@ -14,7 +14,7 @@ namespace LetMeSleep.Presentation
         [SerializeField] private Transform pitchPivot = null;
         [SerializeField] private bool followEyePosition = true;
 
-        private Quaternion neutralPivotRotation;
+        private float yawRadians;
         private float pitchRadians;
         private uint viewRevision;
         private bool initialized;
@@ -38,17 +38,25 @@ namespace LetMeSleep.Presentation
 
             if (followEyePosition && eyeAnchor != null)
                 pitchPivot.position = eyeAnchor.position;
-            pitchPivot.localRotation = neutralPivotRotation *
-                Quaternion.Euler(-pitchRadians * Mathf.Rad2Deg, 0f, 0f);
+            pitchPivot.rotation = Quaternion.Euler(
+                -pitchRadians * Mathf.Rad2Deg, yawRadians * Mathf.Rad2Deg, 0f);
         }
 
         public void SetPitch(float authoritativePitchRadians, uint authoritativeViewRevision, bool force = false)
         {
-            if (!IsFinite(authoritativePitchRadians))
+            SetView(yawRadians, authoritativePitchRadians, authoritativeViewRevision, force);
+        }
+
+        public void SetView(
+            float authoritativeYawRadians, float authoritativePitchRadians,
+            uint authoritativeViewRevision, bool force = false)
+        {
+            if (!IsFinite(authoritativeYawRadians) || !IsFinite(authoritativePitchRadians))
                 return;
             if (!force && hasView && !IsNewer(authoritativeViewRevision, viewRevision))
                 return;
 
+            yawRadians = authoritativeYawRadians;
             pitchRadians = Mathf.Clamp(authoritativePitchRadians, MinimumPitchRadians, MaximumPitchRadians);
             viewRevision = authoritativeViewRevision;
             hasView = true;
@@ -63,13 +71,19 @@ namespace LetMeSleep.Presentation
             controlledCamera.farClipPlane = preset.FarPlane;
         }
 
+        public void BindEye(Transform anchor)
+        {
+            eyeAnchor = anchor;
+            initialized = false;
+            Initialize();
+        }
+
         private void Initialize()
         {
             if (pitchPivot == null && controlledCamera != null)
                 pitchPivot = controlledCamera.transform;
             if (pitchPivot == null)
                 return;
-            neutralPivotRotation = pitchPivot.localRotation;
             initialized = true;
         }
 
