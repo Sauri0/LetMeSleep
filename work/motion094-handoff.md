@@ -2,6 +2,8 @@
 
 Base: 2094817; contrato M1 a637f07 integrado localmente como 7a84987.
 
+Revalidación: assets M2 d7d3d1e y ajuste QA 3d34628 integrados como 195a9bc/b044203. House 140/0 y practice 120/0, stderr vacío, con las colisiones definitivas del mobiliario y las cercas. El runner incluye el manifest JSON real para consultar geometría sin cargar mallas ni renderer.
+
 - Arena resuelve el mapa predeterminado con MapCatalog.default_map_id. Los límites de movimiento y cámara usan el solar; el techo del edificio sigue siendo un obstáculo físico.
 - La navegación reconoce las hojas abiertas de mapas authored y mantiene las rutas interiores, exteriores y entre plantas. No modifica la geometría authored.
 - Los barridos verticales humanos y los apoyos de mosquitos aturdidos reconocen las puertas del mapa activo; sus definiciones inmutables usan caché limitada, no sus ángulos.

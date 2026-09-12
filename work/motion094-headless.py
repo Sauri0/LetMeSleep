@@ -30,6 +30,12 @@ with tempfile.TemporaryDirectory(prefix='lms-motion094-') as temporary:
         target.write_text(text, encoding='utf-8')
         for child in re.findall(r'(?:preload|load)\("res://([^"\n]+\.gd)"\)', text):
             copy_dependency(child)
+        # CPU geometry reads the authored asset manifest, never the GLB meshes.
+        for resource in re.findall(r'"res://([^"\n]+\.json)"', text):
+            resource_target = isolated / resource
+            resource_target.parent.mkdir(parents=True, exist_ok=True)
+            resource_target.write_bytes((game / resource).read_bytes())
+            dependencies.add(resource)
 
     copy_dependency(test)
     run = subprocess.run([str(engine), '--headless', '--audio-driver', 'Dummy', '--path', str(isolated), '--script', 'res://' + test], capture_output=True, text=True, timeout=55, creationflags=subprocess.CREATE_NO_WINDOW)

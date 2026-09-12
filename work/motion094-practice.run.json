@@ -4,7 +4,12 @@
   "stderr_bytes": 0,
   "headless": true,
   "autoloads": false,
+  "results": [
+    "MOTION094_PRACTICE checks=120 failures=0"
+  ],
   "dependencies": [
+    "assets/art/house/alfa/manifest.json",
+    "assets/art/house/alfa_library.gd",
     "scripts/arena.gd",
     "scripts/bot_brain.gd",
     "scripts/cosmetics.gd",
@@ -33,8 +38,5 @@
     "scripts/surface_locomotion.gd",
     "scripts/tool_catalog.gd",
     "tests/motion094_practice_test.gd"
-  ],
-  "results": [
-    "MOTION094_PRACTICE checks=120 failures=0"
   ]
 }
