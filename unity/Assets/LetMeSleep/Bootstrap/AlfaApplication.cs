@@ -67,6 +67,7 @@ namespace LetMeSleep.Bootstrap
             ui = AlfaUiRuntime.Create(this, new AlfaUiDependencies(HeadingFont, BodyFont, preview:
                 new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab)));
             menuAudio = Instantiate(MenuAudioPrefab).GetComponent<AlfaAudioDirector>();
+            ui.FeedbackRequested += OnUiFeedback;
             ui.SetRememberedPlayerName(playerName); LoadMap(false); menuAudio.EnterMenu(); PresentPreferences(); ApplySettingsValues();
             StartBuildProbeIfRequested();
         }
@@ -84,7 +85,7 @@ namespace LetMeSleep.Bootstrap
             if (game != null && !training && gameNetwork != null) game.AutomaticTick = gameNetwork.Ready && game.IsHost;
             if (game?.LatestSnapshot != null && now >= hudAt && !showingResults)
             { hudAt = now + .1; PresentGame(game.LatestSnapshot); }
-            ApplyPreviewColors(); TickAppearance(now);
+            ApplyPreviewColors(); TickAppearance(now); SyncMenuAudioContext();
         }
         public void CreateRoom(string name) => BeginOnline(name, null);
         public void JoinRoom(string name, string code) => BeginOnline(name, code);
@@ -304,7 +305,7 @@ namespace LetMeSleep.Bootstrap
         private static ulong NewEpoch() { ulong value = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray(), 0); return value == 0 ? 1ul : value; }
         private void ShowOnlineError(string text) => ui.PresentOnline(new OnlineUiState(text.Contains("IncompatibleVersion") ? OnlineOperationPhase.IncompatibleVersion : OnlineOperationPhase.RecoverableError, text, canRetry: true));
         public void QuitGame() { Application.Quit(); }
-        private void OnDestroy() { gameNetwork?.Dispose(); room?.Dispose(); transport?.Dispose(); lobby?.Dispose(); connection?.Dispose(); if (ui) Destroy(ui.gameObject); }
+        private void OnDestroy() { gameNetwork?.Dispose(); room?.Dispose(); transport?.Dispose(); lobby?.Dispose(); connection?.Dispose(); if (menuAudio) { menuAudio.StopAll(); Destroy(menuAudio.gameObject); } if (ui) Destroy(ui.gameObject); }
     }
 }
 
