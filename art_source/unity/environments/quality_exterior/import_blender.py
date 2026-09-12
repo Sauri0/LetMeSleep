@@ -2,7 +2,9 @@
 import bpy
 import json
 import math
+import sys
 from pathlib import Path
+from mathutils import Vector
 
 HERE = Path(__file__).resolve().parent
 data = json.loads((HERE/'generated_exterior.json').read_text(encoding='utf-8'))
@@ -54,5 +56,51 @@ for spec in data['instances']:
 
 bpy.context.scene['source'] = 'build_exterior.py -> generated_exterior.json; exact Unity mesh triangles'
 bpy.context.scene['art_approval'] = 'PENDING native Unity view review'
+bpy.context.view_layer.update()
+source_meshes={m['name']:m for m in data['meshes']}
+max_error=0
+for spec in data['instances']:
+    obj=bpy.data.objects[spec['name']]
+    vertices=source_meshes[spec['mesh']]['vertices']
+    for index in (0,len(vertices)//2,len(vertices)-1):
+        v=vertices[index];p=spec['position'];s=spec['scale'];angle=math.radians(spec['yaw'])
+        x,y,z=(v[k]*s[k] for k in ('x','y','z'))
+        expected=Vector((p['x']+x*math.cos(angle)+z*math.sin(angle),
+                         -(p['z']-x*math.sin(angle)+z*math.cos(angle)),p['y']+y))
+        actual=obj.matrix_world@obj.data.vertices[index].co
+        max_error=max(max_error,(actual-expected).length)
+assert max_error<.00002, ('Blender/Unity transform mismatch',max_error)
 bpy.ops.wm.save_as_mainfile(filepath=str(HERE/'ExteriorWitnessKit.blend'))
-print('LMS_EXTERIOR_BLEND_SAVED', len(meshes), len(data['instances']), flush=True)
+print('LMS_EXTERIOR_BLEND_SAVED', len(meshes), len(data['instances']), 'max_world_vertex_error',max_error,flush=True)
+
+# Optional shape-only inspection, only with an explicitly authorized CPU render slot.
+# Helpers are created after saving, so the editable kit stays free of preview props.
+if '--preview-tree' in sys.argv:
+    for obj in bpy.context.scene.objects:
+        obj.hide_render=obj.name!='Patio_Pine_W_Replacement'
+    bpy.ops.mesh.primitive_plane_add(size=200,location=(2,-16.5,-.003))
+    floor=bpy.context.object
+    floor.data.materials.append(materials['Lawn'])
+    camera_data=bpy.data.cameras.new('ShapeReviewCamera')
+    camera=bpy.data.objects.new('ShapeReviewCamera',camera_data)
+    bpy.context.scene.collection.objects.link(camera)
+    camera.location=(6,-21,3.15)
+    camera.rotation_euler=(Vector((2,-16.5,1.68))-camera.location).to_track_quat('-Z','Y').to_euler()
+    camera_data.type='ORTHO';camera_data.ortho_scale=4.05
+    bpy.context.scene.camera=camera
+    for name,position,power,size,color in (
+        ('Key',(0,-20,6),750,4,(1,.89,.72)),('Fill',(6,-15,4),420,5,(.60,.73,1))):
+        light_data=bpy.data.lights.new(name,'AREA');light_data.energy=power;light_data.shape='DISK';light_data.size=size;light_data.color=color
+        light=bpy.data.objects.new(name,light_data);bpy.context.scene.collection.objects.link(light);light.location=position
+        light.rotation_euler=(Vector((2,-16.5,1.6))-light.location).to_track_quat('-Z','Y').to_euler()
+    world=bpy.data.worlds.new('ShapeReviewWorld');world.use_nodes=True
+    world.node_tree.nodes['Background'].inputs[0].default_value=(.12,.16,.20,1)
+    world.node_tree.nodes['Background'].inputs[1].default_value=.35
+    bpy.context.scene.world=world
+    scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=16
+    scene.cycles.use_denoising=True;scene.render.threads_mode='FIXED';scene.render.threads=2
+    scene.render.resolution_x=640;scene.render.resolution_y=640;scene.render.resolution_percentage=100
+    scene.render.image_settings.file_format='PNG'
+    scene.render.filepath=str(HERE/'.verification/tree-volume-exterior2.png')
+    bpy.ops.render.render(write_still=True)
+    print('LMS_EXTERIOR_TREE_SHAPE_PREVIEW_SAVED',scene.render.filepath,flush=True)

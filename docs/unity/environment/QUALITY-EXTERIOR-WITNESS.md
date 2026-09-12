@@ -1,5 +1,22 @@
 # Exterior testigo alfa — primera entrega Mapas
 
+## Iteración exterior2 — corrección tras vistas dedicadas
+
+Fuente revisada tras abrir las cinco `exterior1-{window-front,window-side,patio-forward,patio-reverse,patio-mosquito-eye}.png`, central61956fa. Son cámaras estáticas, no recorrido. Los defectos observados justifican esta revisión: EX1 copas separadas como diamantes; EX2 patio plano, parches aislados y vacío detrás de la cerca; EX3 fachada sin espesor aparente. En mosquito-eye el follaje casi ocupa toda la imagen aunque la prueba anterior de distancia al spawn pasaba.
+
+- Copas: una superficie cerrada y conectada por árbol, faldones de ramas lobulados y ramas que entran en el volumen. Tres variantes del mismo árbol; versión de patio podada con faldón sobre la línea de visión inicial y versión silvestre de falda más baja para el fondo. Se conserva tronco/pose/collider de los dos árboles del patio.
+- Patio: suelo continuo con transición de color tenue, bancales de tierra continuos de borde irregular que reúnen los grupos existentes, follaje más ancho y menos tupido, camino con losas facetadas y juntas sobre el recorrido fijo. Losas hasta14mm sobre el soporte, bordes de tierra hasta20mm; nada cambia los colliders ni el corredor central.
+- Perímetro: terreno real también al oeste, este y detrás de la cerca, con grupos de árboles/rocas/sotobosque a varias distancias. No existe nueva área jugable. Las piezas de terreno contiguas no se superponen en planta; los elementos toman su altura del terreno bajo cada raíz.
+- Fachada: jambas y dinteles exteriores de ocho ventanas, alféizares posteriores/laterales, esquineros, bandas entre pisos y fascias que siguen la pendiente del gablete. Bevel absoluto en las piezas largas, para evitar que el bisel se escale con la longitud del tablero. Huecos/vidrios/carpintería interior permanecen intactos.
+
+Banco EX4: Elementos confirmó su propiedad y entrega independiente `4a62d6b`; Mapas no edita el banco. Vidrio/exposición EX5 queda en Presentación; la presente revisión no altera luces ni materiales comunes.
+
+Estado de exterior2: receta y JSON regenerados, **nueva inspección Blender/Unity aún pendiente**. Son40mallas,328instancias y5,262triángulos únicos; estos números no son una aprobación artística. Distancias mínimas al spawn oeste/este:247.366mm y653.886mm. Los dos rayos centrales desde los ojos hacia `(6,1.4,14)` no chocan con la geometría cercana analizada; esto no prueba la apertura de todo el campo visual ni navegación. El `.blend` y el receipt nativo descritos debajo corresponden a exterior1 hasta su actualización explícita.
+
+Se solicitó turno BlenderCPU2 de≤60s para reconstrucción más una imagen aislada de volumen del árbol (CyclesCPU16muestras640px), sin Unity. El importador ahora comprueba vértices transformados contra la transformación Unity antes de guardar; la imagen aislada sólo evalúa forma y no sustituye la captura nocturna nativa.
+
+## Registro de exterior1
+
 Responsable: Modelador Terreno y Mapas. Base `c888d96`, worktree `N:/LetMeSleep/Worktrees/maps`, rama `codex/unity-maps-specialist`. La reasignación de TEAM-RECOVERY-20260912 prevalece sobre el AGENTS histórico.
 
 Estado: fuentes geométricas, importador compilado offline y `ExteriorWitnessKit.blend` reconstruido. **Aún no aprobado visualmente ni probado en recorrido nativo.** Director concedió turno Blender CPU de dos hilos sin render: PID32600 terminó ExitCode0 en aproximadamente dos segundos y el turno se liberó explícitamente. Blender 5.2.1 LTS, hash9e2066aef7ef; único aviso de futura deprecación de Material.use_nodes. No se inició Unity.

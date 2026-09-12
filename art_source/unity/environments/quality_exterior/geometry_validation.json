@@ -1,11 +1,15 @@
 {
   "status": "PASS_OFFLINE_GEOMETRY_ONLY",
-  "uniqueMeshes": 20,
-  "instances": 209,
-  "uniqueMeshTriangles": 5934,
+  "uniqueMeshes": 40,
+  "instances": 328,
+  "uniqueMeshTriangles": 5262,
   "patioMosquitoSpawnMinimumDistance": [
-    0.110652,
-    0.878128
+    0.247366,
+    0.653886
+  ],
+  "patioMosquitoCentralEyeRayFirstHit": [
+    null,
+    null
   ],
   "checks": [
     "finite coordinates",
@@ -21,6 +25,6 @@
     "Blender editable source reconstruction",
     "visual approval"
   ],
-  "sourceSha256": "b5edc553bd8eb9b09178cb7bf5c0f378eb7970fc015f54ff6216b8e2e7166e5f",
-  "geometrySha256": "45ef23ee76812cde8e9db1fa24845b800f07f6a6bdab39b60504751568865a55"
+  "sourceSha256": "9e6ae771773c3f07c3cf53c2b65a117d8aed6f9b3409cea62a98dd3cb559dbbe",
+  "geometrySha256": "b90b3d406aa02518cd219e8404e97072a5ddf5494dc3cdde669b49a76c190bcd"
 }
