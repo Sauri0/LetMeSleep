@@ -38,6 +38,9 @@ namespace LetMeSleep.Presentation.Gameplay
         [SerializeField, Range(1, 16)] private int poolCapacity = 8;
         private readonly List<ParticleSystem> pool = new List<ParticleSystem>(8);
         private readonly HashSet<EventKey> playedEvents = new HashSet<EventKey>();
+        private ulong playedEpoch;
+        private ulong playedRound;
+        private bool hasPlayedScope;
         private bool subscribed;
         private int cursor;
 
@@ -64,6 +67,13 @@ namespace LetMeSleep.Presentation.Gameplay
             if (item.Kind != GameplayModel.GameplayEventKind.StrikeImpact &&
                 item.Kind != GameplayModel.GameplayEventKind.MosquitoKnockedDown)
                 return;
+            if (!hasPlayedScope || item.SessionEpoch != playedEpoch || item.RoundId != playedRound)
+            {
+                playedEvents.Clear();
+                playedEpoch = item.SessionEpoch;
+                playedRound = item.RoundId;
+                hasPlayedScope = true;
+            }
             if (!playedEvents.Add(new EventKey(item.SessionEpoch, item.RoundId, item.EventId)))
                 return;
             Vector3 normal = item.Normal.ToUnity();
