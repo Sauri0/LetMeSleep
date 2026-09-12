@@ -1,4 +1,4 @@
-param([string]$EvidenceName = ('director092-build-' + (Get-Date -Format 'yyyyMMdd-HHmmss')))
+param([switch]$ResumeVerifiedR2, [string]$EvidenceName = ('director092-build-' + (Get-Date -Format 'yyyyMMdd-HHmmss')))
 $ErrorActionPreference = 'Stop'
 if ($EvidenceName -notmatch '^[A-Za-z0-9_-]+$') { throw 'Invalid evidence name' }
 $projectRoot = Split-Path $PSScriptRoot -Parent
@@ -12,7 +12,7 @@ $voicePath = Join-Path $PSScriptRoot 'voice09-acoustics-results.json'
 $voiceBytes = [IO.File]::ReadAllBytes($voicePath)
 Start-Transcript -LiteralPath $transcript | Out-Null
 try {
-    & (Join-Path $PSScriptRoot 'build.ps1')
+    & (Join-Path $PSScriptRoot 'build.ps1') -ResumeVerifiedR2:$ResumeVerifiedR2
 } finally {
     # This tracked report had unrelated local edits before release work.
     # Preserve the new test evidence separately and restore those exact bytes.

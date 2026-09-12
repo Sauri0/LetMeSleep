@@ -1,4 +1,4 @@
-param([switch]$SkipTests, [switch]$SkipHeadlessTests)
+param([switch]$SkipTests, [switch]$SkipHeadlessTests, [switch]$ResumeVerifiedR2)
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 $godotExe = Join-Path $PSScriptRoot 'tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe'
@@ -6,8 +6,21 @@ $gamePath = Join-Path $projectRoot 'game'
 $buildWorkRoot = $PSScriptRoot
 . (Join-Path $PSScriptRoot 'online-package.ps1')
 Initialize-OnlineBuildConfiguration -ProjectRoot $projectRoot
+$script:resumeR2Prefix = $false
+if ($ResumeVerifiedR2) {
+    $transcriptPath = Join-Path $PSScriptRoot 'director092-full-final-r2.txt'
+    if ((Get-FileHash $transcriptPath).Hash -ne 'D7CA87F7680156F4339C6AFD19F61209AEDE434BB4D1BAC1B418623A579F9137') { throw 'R2 evidence changed' }
+    $changed = @(& git -C $projectRoot diff --name-only 26da815 -- game native art_source)
+    if (@($changed | Where-Object { $_ -ne 'game/tests/map_tasks09_test.gd' }).Count) { throw 'Runtime or another fixture changed since the verified prefix' }
+    if (@(& git -C $projectRoot ls-files --others --exclude-standard -- game native art_source).Count) { throw 'Untracked source invalidates resume' }
+    if (-not (Select-String $transcriptPath -Pattern 'geometry09_cache checks=164 failures=0' -Quiet)) { throw 'R2 did not finish the required prefix' }
+}
 function Invoke-CheckedHeadless {
     param([string]$CheckName, [string[]]$GameArguments)
+    if ($script:resumeR2Prefix) {
+        if ($CheckName -ne 'map_tasks09_test') { Write-Output ('VERIFIED_R2_PREFIX ' + $CheckName); return }
+        $script:resumeR2Prefix = $false
+    }
     $errorLog = Join-Path $buildWorkRoot ('build-' + $CheckName + '.err')
     $outputLog = Join-Path $buildWorkRoot ('build-' + $CheckName + '.log')
     $start = [System.Diagnostics.ProcessStartInfo]::new()
@@ -60,6 +73,7 @@ foreach ($entryPoint in @('scripts/main','scripts/client','tests/network_bot','t
 }
 if (-not $SkipTests) {
     if (-not $SkipHeadlessTests) {
+    $script:resumeR2Prefix = [bool]$ResumeVerifiedR2
     foreach ($initialTest in @('rules_test','lobby_rules_test','cosmetics_test','cosmetics_catalog08_test','network08_cosmetics_checks','visual_checks','audio_checks','house07_lighting_test')) {
         Invoke-CheckedHeadless -CheckName $initialTest -GameArguments @('--script',"res://tests/$initialTest.gd")
     }
