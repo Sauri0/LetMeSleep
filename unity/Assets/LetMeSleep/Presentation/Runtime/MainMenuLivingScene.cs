@@ -1,4 +1,5 @@
 using System;
+using HumanBeat = LetMeSleep.Presentation.MenuReactionPolicy.Beat;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
@@ -14,12 +15,18 @@ namespace LetMeSleep.Presentation
         {
             public Transform HumanRoot, MosquitoRoot, HumanSeatRoot;
             public Animator HumanAnimator, MosquitoAnimator;
+            public VisualAttentionRig HumanAttention, MosquitoAttention;
             public AnimationClip MenuSeatedIdle, MenuLook, MenuSwat, MenuReturn, Flight;
             // Ordered control points. The curve stays inside successive control-point triangles.
             // Passage occurs halfway between the midpoints adjoining point zero.
             public Transform[] FlightPoints;
             public Transform WarmLightAnchor, CoolLightAnchor;
-            public float CycleSeconds = 24f;
+            public float CycleSeconds = 12f;
+            public float FirstLookAfterSeconds = 1.2f;
+            public Transform HumanReactionAnchor;
+            public Vector3 HumanReactionOffset = new Vector3(.4f,1.25f,.78f);
+            public float NoticeRadius = 1.8f, SwatRadius = .7f;
+            public float LookSeconds = 2f, SwatSeconds = 1.2f, ReturnSeconds = 1.6f;
             [Range(0, 1)] public float SwatContactNormalized = .5f;
             public Vector3 MosquitoRotationOffset;
         }
@@ -30,12 +37,16 @@ namespace LetMeSleep.Presentation
         private AnimationClipPlayable idle, look, swat, returning, flight;
         private bool configured, requestedActive = true, reducedMotion, running;
         private double elapsed;
-        private bool skipInterruptedSequence;
+        private HumanBeat beat;
+        private float beatTime,settleLookTime;
+        public string CurrentBeat => beat.ToString();
+        public double FlightClipTime => flight.IsValid() ? flight.GetTime() : 0;
         private Light warm, cool;
         private Vector3 humanPosition, mosquitoPosition;
         private Quaternion humanRotation, mosquitoRotation;
         private AnimatorState humanState, mosquitoState;
         public bool IsConfigured => configured;
+        public bool ReducedMotion => reducedMotion;
         public bool IsRunning => running;
 
         private struct AnimatorState
@@ -64,10 +75,13 @@ namespace LetMeSleep.Presentation
                 value.HumanSeatRoot.IsChildOf(value.HumanRoot) ||
                 !ValidAnimator(value.HumanAnimator, value.HumanRoot) ||
                 !ValidAnimator(value.MosquitoAnimator, value.MosquitoRoot) ||
+                !ValidAttention(value.HumanAttention,value.HumanRoot) || !ValidAttention(value.MosquitoAttention,value.MosquitoRoot) ||
                 !ValidClip(value.MenuSeatedIdle) || !ValidClip(value.MenuSwat) || !ValidClip(value.MenuReturn) || !ValidClip(value.MenuLook) || !ValidClip(value.Flight) ||
                 (value.MenuLook && !ValidClip(value.MenuLook)) ||
                 value.FlightPoints == null || value.FlightPoints.Length < 4 ||
-                float.IsNaN(value.CycleSeconds) || float.IsInfinity(value.CycleSeconds) ||
+                !FinitePositive(value.CycleSeconds) || !FinitePositive(value.FirstLookAfterSeconds) ||
+                !FinitePositive(value.LookSeconds) || !FinitePositive(value.SwatSeconds) || !FinitePositive(value.ReturnSeconds) ||
+                !FinitePositive(value.NoticeRadius) || !FinitePositive(value.SwatRadius) ||
                 float.IsNaN(value.SwatContactNormalized) || float.IsInfinity(value.SwatContactNormalized))
             {
                 Debug.LogError("MainMenuLivingScene requires decorative children, seated clips and at least four flight anchors.", this);
@@ -80,14 +94,19 @@ namespace LetMeSleep.Presentation
             {
                 HumanRoot=value.HumanRoot, MosquitoRoot=value.MosquitoRoot, HumanSeatRoot=value.HumanSeatRoot,
                 HumanAnimator=value.HumanAnimator, MosquitoAnimator=value.MosquitoAnimator,
+                HumanAttention=value.HumanAttention, MosquitoAttention=value.MosquitoAttention,
                 MenuSeatedIdle=value.MenuSeatedIdle, MenuLook=value.MenuLook, MenuSwat=value.MenuSwat, MenuReturn=value.MenuReturn,
                 Flight=value.Flight, FlightPoints=(Transform[])value.FlightPoints.Clone(),
                 WarmLightAnchor=value.WarmLightAnchor, CoolLightAnchor=value.CoolLightAnchor,
-                CycleSeconds=Mathf.Max(24f,value.CycleSeconds, (value.MenuSwat.length+value.MenuReturn.length+1f)/.4f, (value.MenuLook.length+1f)/.6f),
+                CycleSeconds=Mathf.Max(value.CycleSeconds,value.FirstLookAfterSeconds+value.LookSeconds+value.SwatSeconds+value.ReturnSeconds+2f),
+                FirstLookAfterSeconds=value.FirstLookAfterSeconds, LookSeconds=value.LookSeconds,
+                SwatSeconds=value.SwatSeconds, ReturnSeconds=value.ReturnSeconds,
+                HumanReactionAnchor=value.HumanReactionAnchor, HumanReactionOffset=value.HumanReactionOffset,
+                NoticeRadius=value.NoticeRadius, SwatRadius=value.SwatRadius,
                 SwatContactNormalized=Mathf.Clamp01(value.SwatContactNormalized),
                 MosquitoRotationOffset=value.MosquitoRotationOffset
             };
-            elapsed=bindings.CycleSeconds*.60f+bindings.MenuSwat.length+bindings.MenuReturn.length;
+            elapsed=0;
             configured = true;
             if (isActiveAndEnabled && requestedActive) Begin();
             return configured;
@@ -96,6 +115,9 @@ namespace LetMeSleep.Presentation
         private bool Owned(Transform actor) => actor && actor != transform && actor.IsChildOf(transform);
         private static bool ValidAnimator(Animator animator, Transform root) => animator &&
             (animator.transform == root || animator.transform.IsChildOf(root));
+        private static bool ValidAttention(VisualAttentionRig attention,Transform root) => !attention ||
+            (attention.IsConfigured && attention.IsManualEvaluation && (attention.transform==root || attention.transform.IsChildOf(root)));
+        private static bool FinitePositive(float value) => value > 0 && !float.IsInfinity(value) && !float.IsNaN(value);
         private static bool ValidClip(AnimationClip clip) => clip && !clip.legacy && clip.length > 0;
         public void SetSceneActive(bool active)
         {
@@ -107,8 +129,10 @@ namespace LetMeSleep.Presentation
         {
             if (reducedMotion == enabled) return;
             // Returning from a held seated pose must not resume halfway through a swat.
-            if (!enabled) skipInterruptedSequence = true;
+            beat=HumanBeat.Idle; beatTime=0;
             reducedMotion = enabled;
+            if (bindings?.HumanAttention) bindings.HumanAttention.SetReducedMotion(enabled);
+            if (bindings?.MosquitoAttention) bindings.MosquitoAttention.SetReducedMotion(enabled);
         }
         private void OnEnable() { if (configured && requestedActive) Begin(); }
         private void OnDisable() => End();
@@ -146,6 +170,8 @@ namespace LetMeSleep.Presentation
                     warm.shadowStrength=.8f; warm.shadowBias=.025f; warm.shadowNormalBias=.08f;
                     warm.shadowNearPlane=.05f;
                 }
+                if(bindings.HumanAttention) bindings.HumanAttention.SetReducedMotion(reducedMotion);
+                if(bindings.MosquitoAttention) bindings.MosquitoAttention.SetReducedMotion(reducedMotion);
                 graph.Play(); Sample();
                 }
             catch (Exception exception)
@@ -187,39 +213,40 @@ namespace LetMeSleep.Presentation
             if (!running) return;
             if (!ReferencesAlive()) { End(); return; }
             // Menu clock deliberately follows unscaled time, without writing any game clock.
-            if (!reducedMotion) elapsed += Time.unscaledDeltaTime;
-            Sample();
+            if (!reducedMotion) { elapsed += Time.unscaledDeltaTime; beatTime += Time.unscaledDeltaTime; }
+            Sample(Time.unscaledDeltaTime);
         }
-        private void Sample()
+        private void Sample(float deltaSeconds=0)
         {
-            float cycle=bindings.CycleSeconds;
-            float time=(float)(elapsed % cycle);
-            float reactionStart=cycle*.60f;
-            float reactionTime=time-reactionStart;
-            float lookStart=reactionStart-(bindings.MenuLook ? bindings.MenuLook.length : 0);
-            float lookTime=time-lookStart;
-            float sequenceDuration=bindings.MenuLook.length+bindings.MenuSwat.length+bindings.MenuReturn.length;
-            if (!reducedMotion && (lookTime <= 0 || lookTime >= sequenceDuration)) skipInterruptedSequence=false;
-            float sequenceWeight=reducedMotion || skipInterruptedSequence ? 0 : Envelope(lookTime,sequenceDuration);
-            float lookWeight=reactionTime < 0 ? sequenceWeight : 0;
-            float swatWeight=reactionTime >= 0 && reactionTime < bindings.MenuSwat.length ? sequenceWeight : 0;
-            float returnWeight=reactionTime >= bindings.MenuSwat.length ? sequenceWeight : 0;
-            humanMixer.SetInputWeight(0,1-sequenceWeight);
-            humanMixer.SetInputWeight(1,lookWeight); humanMixer.SetInputWeight(2,swatWeight);
-            humanMixer.SetInputWeight(3,returnWeight);
-            // Fill the rest interval with complete idle loops, so both sequence boundaries meet idle phase zero.
-            float restDuration=cycle-sequenceDuration;
-            float restTime=Mathf.Repeat(time-(reactionStart+bindings.MenuSwat.length+bindings.MenuReturn.length),cycle);
-            float idleLoops=Mathf.Max(1,Mathf.Round(restDuration/bindings.MenuSeatedIdle.length));
-            idle.SetTime(reducedMotion || skipInterruptedSequence || sequenceWeight>0 ? 0 : Mathf.Repeat(restTime/restDuration*idleLoops,1)*bindings.MenuSeatedIdle.length);
-            swat.SetTime(Mathf.Clamp(reactionTime,0,bindings.MenuSwat.length));
-            returning.SetTime(Mathf.Clamp(reactionTime-bindings.MenuSwat.length,0,bindings.MenuReturn.length));
-            look.SetTime(Mathf.Clamp(lookTime,0,bindings.MenuLook.length));
-            // Reduced motion holds an authored seated pose and the authored flight pose, no orbit or flapping.
+            float phase=FlightPhase(elapsed);
+            Vector3 currentPosition,currentTangent;
+            Path(phase,out currentPosition,out currentTangent);
+            Vector3 reactionPoint=bindings.HumanReactionAnchor ? bindings.HumanReactionAnchor.position :
+                bindings.HumanSeatRoot.TransformPoint(bindings.HumanReactionOffset);
+            float distance=Vector3.Distance(currentPosition,reactionPoint);
+            Vector3 predicted,predictedTangent;
+            Path(FlightPhase(elapsed+bindings.SwatSeconds*bindings.SwatContactNormalized),out predicted,out predictedTangent);
+            HumanBeat next=MenuReactionPolicy.Next(beat,beatTime,bindings.FirstLookAfterSeconds,bindings.LookSeconds,
+                bindings.SwatSeconds,bindings.ReturnSeconds,bindings.LookSeconds+bindings.CycleSeconds,
+                distance,Vector3.Distance(predicted,reactionPoint),bindings.NoticeRadius,bindings.SwatRadius,reducedMotion);
+            if (next!=beat) ChangeBeat(next);
+            float lookWeight=0,swatWeight=0,returnWeight=0;
+            if (!reducedMotion)
+            {
+                if (beat==HumanBeat.Look) lookWeight=Mathf.SmoothStep(0,1,beatTime/.18f);
+                else if (beat==HumanBeat.Swat) swatWeight=1;
+                else if (beat==HumanBeat.Return) returnWeight=Mathf.SmoothStep(0,1,(bindings.ReturnSeconds-beatTime)/.18f);
+                else if (beat==HumanBeat.Settle) lookWeight=1-Mathf.SmoothStep(0,1,beatTime/.4f);
+            }
+            humanMixer.SetInputWeight(0,1-lookWeight-swatWeight-returnWeight);
+            humanMixer.SetInputWeight(1,lookWeight); humanMixer.SetInputWeight(2,swatWeight); humanMixer.SetInputWeight(3,returnWeight);
+            idle.SetTime(reducedMotion || beat!=HumanBeat.Idle ? 0 : beatTime % bindings.MenuSeatedIdle.length);
+            look.SetTime(beat==HumanBeat.Look ? Mathf.Clamp01(beatTime/bindings.LookSeconds)*bindings.MenuLook.length :
+                beat==HumanBeat.Settle ? settleLookTime : bindings.MenuLook.length);
+            swat.SetTime(beat==HumanBeat.Swat ? Mathf.Clamp01(beatTime/bindings.SwatSeconds)*bindings.MenuSwat.length : 0);
+            returning.SetTime(beat==HumanBeat.Return ? Mathf.Clamp01(beatTime/bindings.ReturnSeconds)*bindings.MenuReturn.length : 0);
             flight.SetTime(reducedMotion ? 0 : elapsed % bindings.Flight.length);
             bindings.HumanRoot.SetPositionAndRotation(bindings.HumanSeatRoot.position,bindings.HumanSeatRoot.rotation);
-            float contact=reactionStart+bindings.MenuSwat.length*bindings.SwatContactNormalized;
-            float phase=Mathf.Repeat((time-contact)/cycle+.5f/bindings.FlightPoints.Length,1);
             Vector3 position,tangent;
             Path(phase,out position,out tangent);
             bindings.MosquitoRoot.position=position;
@@ -230,13 +257,32 @@ namespace LetMeSleep.Presentation
                 float bank=reducedMotion ? 0 : Mathf.Clamp(-Vector3.SignedAngle(tangent,aheadTangent,Vector3.up)*2,-12,12);
                 bindings.MosquitoRoot.rotation=Quaternion.LookRotation(tangent,Vector3.up)*Quaternion.Euler(0,0,bank)*Quaternion.Euler(bindings.MosquitoRotationOffset);
             }
+            if (bindings.HumanAttention) bindings.HumanAttention.PrepareForAnimation();
+            if (bindings.MosquitoAttention) bindings.MosquitoAttention.PrepareForAnimation();
             graph.Evaluate(0);
+            if (bindings.HumanAttention)
+            {
+                bindings.HumanAttention.SetLookTarget(bindings.MosquitoRoot);
+                bindings.HumanAttention.EvaluateAfterAnimation(deltaSeconds);
+            }
+            if (bindings.MosquitoAttention)
+            {
+                bindings.MosquitoAttention.SetLookTarget(bindings.HumanAttention ? bindings.HumanAttention.LookOrigin : bindings.HumanRoot);
+                bindings.MosquitoAttention.EvaluateAfterAnimation(deltaSeconds);
+            }
         }
-        private static float Envelope(float time,float duration)
+        private void ChangeBeat(HumanBeat next)
         {
-            if(time<=0 || time>=duration) return 0;
-            float fade=Mathf.Min(.18f,duration*.2f);
-            return Mathf.SmoothStep(0,1,Mathf.Min(time/fade,(duration-time)/fade));
+            if(next==HumanBeat.Settle) settleLookTime=Mathf.Clamp01(beatTime/bindings.LookSeconds)*bindings.MenuLook.length;
+            beat=next; beatTime=0;
+        }
+        private float FlightPhase(double seconds)
+        {
+            // Initial encounter is brought forward; gestures are still gated by live spatial proximity above.
+            float referencePass=bindings.FirstLookAfterSeconds+bindings.LookSeconds+bindings.SwatSeconds*bindings.SwatContactNormalized;
+            float relativePhase=((float)(seconds % bindings.CycleSeconds)-referencePass)/bindings.CycleSeconds;
+            float warped=relativePhase+.4f/(2*Mathf.PI)*(1-Mathf.Cos(2*Mathf.PI*relativePhase));
+            return Mathf.Repeat(warped+.5f/bindings.FlightPoints.Length,1);
         }
         private void Path(float phase,out Vector3 position,out Vector3 tangent)
         {
@@ -252,6 +298,8 @@ namespace LetMeSleep.Presentation
         {
             if (!running) return;
             running=false;
+            if(bindings.HumanAttention) { bindings.HumanAttention.PrepareForAnimation(); bindings.HumanAttention.ClearLookTarget(); }
+            if(bindings.MosquitoAttention) { bindings.MosquitoAttention.PrepareForAnimation(); bindings.MosquitoAttention.ClearLookTarget(); }
             if(graph.IsValid()) graph.Destroy();
             humanState.Restore(bindings.HumanAnimator); mosquitoState.Restore(bindings.MosquitoAnimator);
             if(bindings.HumanRoot) { bindings.HumanRoot.localPosition=humanPosition; bindings.HumanRoot.localRotation=humanRotation; }
@@ -260,6 +308,6 @@ namespace LetMeSleep.Presentation
             if(cool) { cool.enabled=false; Destroy(cool.gameObject); }
             warm=null; cool=null;
         }
-        private void Release() { End(); configured=false; bindings=null; elapsed=0; skipInterruptedSequence=false; }
+        private void Release() { End(); configured=false; bindings=null; elapsed=0; beat=HumanBeat.Idle; beatTime=0; }
     }
 }
