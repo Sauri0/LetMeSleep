@@ -1,0 +1,11 @@
+{
+	"authored_version": 1,
+	"checks": 59,
+	"failures": [],
+	"map_id": "house-patio-v1",
+	"scope": "fixed playable catalog, authored identity and metadata envelope, procedural-id rejection, deterministic deep-copy isolation; no geometry, render, simulation, network, performance or release claim",
+	"source_sha256": {
+		"res://scripts/map_catalog.gd": "d024062ebe65b91e8517fc53599099c08ec4ed080c531e3fb5806b3ff0579ec5",
+		"res://tests/review094_fixed_catalog_contract.gd": "83f53194107348a23d1d476f9fe16235488ea935059ce592c900cffff4c94bb2"
+	}
+}

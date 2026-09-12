@@ -4,6 +4,7 @@ const Maps=preload("res://scripts/map_catalog.gd")
 const Geometry=preload("res://scripts/navigation_geometry.gd")
 const DoorGeometry=preload("res://scripts/door_geometry.gd")
 const Checks=preload("res://scripts/house_validation.gd")
+const AlfaLibrary=preload("res://assets/art/house/alfa_library.gd")
 var checks:=0
 var failures: Array[String]=[]
 func check(ok: bool,label: String) -> void:
@@ -23,6 +24,31 @@ func _initialize() -> void:
 	var mosquito:=Geometry.create(data,false,extra)
 	check(data.floor_levels==[0.0,3.2] and data.stair_connections.size()==2,"two floors two stairs")
 	check(data.stations.size()==8,"eight authored tasks")
+	var obstacle_strings: Dictionary={}
+	for box: AABB in data.obstacles:obstacle_strings[str(box)]=true
+	var prop_ids: Dictionary={}
+	var fence_panels:=0;var fence_posts:=0
+	for prop: Dictionary in data.exterior.props:
+		check(not prop_ids.has(str(prop.id)),"unique exterior prop id "+str(prop.id));prop_ids[prop.id]=true
+		check(AlfaLibrary.has_asset(str(prop.asset_id)),"known exterior asset "+str(prop.asset_id))
+		var transform:=Transform3D(Basis(Vector3.UP,float(prop.yaw)),Vector3(prop.p))
+		var expected: Array[AABB]=[]
+		for local_box: AABB in AlfaLibrary.collision_boxes(str(prop.asset_id)):expected.append(transform*local_box)
+		check(prop.collision_boxes==expected,"measured collision boxes "+str(prop.id))
+		for box: AABB in prop.collision_boxes:check(obstacle_strings.has(str(box)),"prop collision belongs to authority "+str(prop.id))
+		if str(prop.asset_id)=="alfa_fence_panel":fence_panels+=1
+		elif str(prop.asset_id)=="alfa_fence_post":fence_posts+=1
+	check(fence_panels==80 and fence_posts==4,"complete authored fence panels and corner posts")
+	for item: Dictionary in data.structures:check(str(item.kind) not in ["fence","tree_trunk","outdoor_furniture"],"no rendered exterior collider proxy "+str(item.id))
+	for station: Dictionary in data.stations:
+		if not station.has("window_id"):continue
+		var found: Dictionary={}
+		for window: Dictionary in data.windows:
+			if str(window.id)==str(station.window_id):found=window;break
+		check(not found.is_empty(),"window task resolves "+str(station.id))
+		if not found.is_empty():
+			check(absf(Vector3(found.p).x-Vector3(station.p).x)<.001,"window task aligns horizontally "+str(station.id))
+			check(Vector2(Vector3(found.p).x,Vector3(found.p).z).distance_to(Vector2(Vector3(station.p).x,Vector3(station.p).z))<=1.3,"window task stays interactable "+str(station.id))
 	for p: Vector3 in data.human_spawns:check(Geometry._fits(p,human),"human spawn "+str(p))
 	for p: Vector3 in data.mosquito_spawns:
 		check(Geometry._fits(p,mosquito),"mosquito spawn "+str(p))

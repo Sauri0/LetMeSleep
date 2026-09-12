@@ -10,6 +10,7 @@ const Support=preload("res://scripts/pickup_support_geometry.gd")
 const Geometry=preload("res://scripts/navigation_geometry.gd")
 const DoorGeometry=preload("res://scripts/door_geometry.gd")
 const Canonical=preload("res://scripts/house_validation.gd")
+const AlfaLibrary=preload("res://assets/art/house/alfa_library.gd")
 var d: Dictionary
 var solid_keys: Dictionary={}
 var room_index: Dictionary={}
@@ -149,6 +150,15 @@ func _route(kind: String,a: Vector3,b: Vector3,width: float) -> void:
 func _barrier(kind: String,box: AABB) -> void:
 	d.barrier_boxes.append(box);d.barrier_parts.append({"kind":kind,"box":box})
 
+func _prop(id: String,asset_id: String,p: Vector3,yaw: float=0.0) -> void:
+	var transform:=Transform3D(Basis(Vector3.UP,yaw),p)
+	var collision_boxes: Array[AABB]=[]
+	for local_box: AABB in AlfaLibrary.collision_boxes(asset_id):
+		var world_box: AABB=transform*local_box
+		collision_boxes.append(world_box)
+		d.obstacles.append(world_box)
+	d.exterior.props.append({"id":id,"asset_id":asset_id,"p":p,"yaw":yaw,"scale":Vector3.ONE,"collision_boxes":collision_boxes})
+
 func _stairs() -> void:
 	for x: float in [-10.0,10.0]:
 		var direction:=1.0 if x<0 else -1.0
@@ -223,22 +233,24 @@ func _outside() -> void:
 	for points: Array in [[Vector3(0,0,-17),Vector3(0,0,-9.875)],[Vector3(0,0,9.875),Vector3(0,0,16)],[Vector3(-16,0,-16),Vector3(16,0,-16)],[Vector3(-16,0,16),Vector3(16,0,16)],[Vector3(-16,0,-16),Vector3(-16,0,16)],[Vector3(16,0,-16),Vector3(16,0,16)]]:
 		d.exterior.paths.append({"id":"path-%02d"%d.exterior.paths.size(),"kind":"stone","points":[points[0],points[1]],"from":points[0],"to":points[1],"width":2.6,"surface":"stone"})
 		_route("exterior_path",points[0],points[1],2.6)
-	for axis: int in [0,2]:
-		for side: float in [-19.7,19.7]:
-			var p:=Vector3(-19.7,0,-19.7);p[axis]=side
-			var size:=Vector3(39.4,1.3,39.4);size[axis]=.15
-			_solid("fence",AABB(p,size),0,"Cerca del jardín",Color("866548"))
+	# Twenty unscaled 2 m panels overlap by 3 cm per side. Their measured
+	# collision parts, rather than a rendered solid proxy, own the boundary.
+	var edge:=19.7
+	var panel_spacing:=edge*2.0/20.0
+	for index: int in range(20):
+		var along:=-edge+panel_spacing*(float(index)+.5)
+		_prop("fence-north-%02d"%index,"alfa_fence_panel",Vector3(along,0,-edge))
+		_prop("fence-south-%02d"%index,"alfa_fence_panel",Vector3(along,0,edge))
+		_prop("fence-west-%02d"%index,"alfa_fence_panel",Vector3(-edge,0,along),PI*.5)
+		_prop("fence-east-%02d"%index,"alfa_fence_panel",Vector3(edge,0,along),PI*.5)
+	for corner: Vector3 in [Vector3(-edge,0,-edge),Vector3(edge,0,-edge),Vector3(-edge,0,edge),Vector3(edge,0,edge)]:
+		_prop("fence-corner-%d"%d.exterior.props.size(),"alfa_fence_post",corner)
 	for x: float in [-17.8,17.8]:
 		for z: float in [-12.5,12.5]:
-			var box:=AABB(Vector3(x-.3,0,z-.3),Vector3(.6,3.2,.6))
-			var item:=_solid("tree_trunk",box,0,"Pino",Color("795a3e"));item.exterior=true
-			d.exterior.props.append({"id":"pine-%d"%d.exterior.props.size(),"asset_id":"alfa_pine","p":Vector3(x,0,z),"yaw":0.0,"scale":Vector3.ONE,"collision_boxes":[box]})
+			_prop("pine-%d"%d.exterior.props.size(),"alfa_pine",Vector3(x,0,z))
 	for x: float in [-7.0,7.0]:
-		var box:=AABB(Vector3(x-.9,0,13.7),Vector3(1.8,.9,.65))
-		var item:=_solid("outdoor_furniture",box,0,"Banco del patio",Color("9b7553"));item.exterior=true
-		d.exterior.props.append({"id":"patio-bench-"+str(x),"asset_id":"alfa_bench","p":Vector3(x,0,14.025),"yaw":0.0,"scale":Vector3.ONE,"collision_boxes":[box]})
-	_solid("outdoor_furniture",AABB(Vector3(10,0,12),Vector3(1.6,.75,.9)),0,"Mesa del patio",Color("9b7553"))
-	d.exterior.props.append({"id":"patio-table","asset_id":"alfa_patio_table","p":Vector3(10.8,0,12.45),"yaw":0.0,"scale":Vector3.ONE,"collision_boxes":[AABB(Vector3(10,0,12),Vector3(1.6,.75,.9))]})
+		_prop("patio-bench-"+str(x),"alfa_bench",Vector3(x,0,14.025))
+	_prop("patio-table","alfa_patio_table",Vector3(10.8,0,12.45))
 
 func _support(room_id: String,tool: String,origin: Vector3) -> void:
 	var spec: Dictionary={"id":room_id+"-"+tool,"kind":"broom_rack" if tool=="broom" else "shoe_bench","origin":origin}
@@ -249,6 +261,11 @@ func _support(room_id: String,tool: String,origin: Vector3) -> void:
 	d.pickups.append(Placement.resolve({"tool":tool,"support_point":contact,"support_origin":origin,"support":room_id,"room":room_id,"approach":origin+Vector3(.24 if tool=="broom" else .45,0,-.8),"rotation":Vector3(0,0,PI) if tool=="broom" else Vector3(-PI/2,-PI/2,0)}))
 
 func _tasks_and_pickups() -> void:
+	# Standing points and their named visual windows share the same horizontal
+	# coordinate; the marker remains inside at an interactable distance.
+	for window: Dictionary in d.windows:
+		if str(window.id)=="living-window":window.p=Vector3(-8.05,1.55,-9.875)
+		elif str(window.id)=="library-window":window.p=Vector3(8.8,4.75,9.875)
 	var table_tasks: Array=[["living","Prender el ventilador","VENTILADOR"],["kitchen","Guardar la vajilla","VAJILLA"],["study","Apagar el equipo","EQUIPO"],["dining","Preparar repelente","REPELENTE"]]
 	var assigned: Dictionary={}
 	for row: Array in table_tasks:
