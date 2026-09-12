@@ -2,7 +2,7 @@ class_name Invitation
 extends RefCounted
 ## Versioned address envelope, not encryption or authentication.
 const PREFIX := "DD5-"
-const PROTOCOL := 10
+const PROTOCOL := 11
 const MAX_LENGTH := 512
 
 static func validate_host(value: String) -> String:
