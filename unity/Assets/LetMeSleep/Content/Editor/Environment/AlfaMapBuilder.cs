@@ -116,7 +116,7 @@ namespace LetMeSleep.Content.Editor
                 AssetDatabase.SaveAssets();
                 var receipt=new Receipt{unityVersion=Application.unityVersion,utc=DateTime.UtcNow.ToString("o"),houseScene=HouseScene,lobbyScene=LobbyScene,houseContentHash=houseHash,lobbyContentHash=lobbyHash,
                     houseMeshes=houseMeshes,houseColliders=houseColliders,doors=doors,toolPickups=7,lobbyMeshes=lobbyMeshes,lobbyColliders=lobbyColliders,
-                    verified=new[]{"Source bounds and explicit FBX Z conversion","Unique nonzero GameplaySurface IDs","Nine doors start open at100deg; closed reference and collider pose survive prefab reload","Seven unique flyswatter pickups with non-perchable interaction triggers","5 human / 16 mosquito / 16 lobby spawn clearances against geometry","Lobby dressing preserves central reserve and 1.8m circulation; menu camera/stages serialized","Separate house/patio and lobby scenes; no duplicated sample shell"},
+                    verified=new[]{"Source bounds and explicit FBX Z conversion","Unique nonzero GameplaySurface IDs","Nine doors start open at100deg; closed reference and collider pose survive prefab reload","Seven unique flyswatter pickups with non-perchable interaction triggers","5 human / 16 mosquito / 16 lobby spawn clearances against geometry","Lobby six interior planes face inward; dressing preserves circulation and menu anchors","Separate house/patio and lobby scenes; no duplicated sample shell"},
                     pending=new[]{"Visual lighting and UV2 bake validation","Controller stair/door traversal and camera playtest","Runtime bots/pickups and online round integration","Performance measurement"}};
                 File.WriteAllText(Path.Combine(repository,"docs/unity/environment/ALFA-MAPS-IMPORT-RECEIPT.json"),JsonUtility.ToJson(receipt,true)+"\n");
                 Debug.Log("LMS_ALFA_MAPS_BUILT "+JsonUtility.ToJson(receipt));
@@ -150,6 +150,7 @@ namespace LetMeSleep.Content.Editor
             Bounds bounds=RendererBounds(instance);Vector3 lo=V(spec.min),hi=V(spec.max);
             Need(Vector3.Distance(bounds.min,new Vector3(lo.x,lo.y,-hi.z))<.003f&&Vector3.Distance(bounds.max,new Vector3(hi.x,hi.y,-lo.z))<.003f,"Unexpected raw FBX axes: "+file);
             EnvironmentSampleBuilder.BakeModelFrame(instance,file,Output+"/Meshes");
+            if(file=="lobby_alfa_static")CheckLobbyShellFacing(instance);
             foreach(var r in instance.GetComponentsInChildren<MeshRenderer>()){
                 r.sharedMaterials=r.sharedMaterials.Select(m=>materials[m.name]).ToArray();r.receiveGI=ReceiveGI.Lightmaps;r.lightProbeUsage=LightProbeUsage.Off;r.reflectionProbeUsage=ReflectionProbeUsage.BlendProbes;
                 r.shadowCastingMode=r.sharedMaterials.Any(m=>m.name=="Glass_Blue_Opaque")?ShadowCastingMode.Off:ShadowCastingMode.On;r.receiveShadows=true;

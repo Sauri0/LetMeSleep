@@ -1,0 +1,43 @@
+{
+  "scope": "Source lobby cavity normals only; no native import/render tested",
+  "blender": "5.2.1 LTS",
+  "passed": false,
+  "planes": [
+    {
+      "plane": "floor",
+      "faces": 1,
+      "wrong": 1,
+      "minimum_dot": -1.0
+    },
+    {
+      "plane": "ceiling",
+      "faces": 1,
+      "wrong": 1,
+      "minimum_dot": -1.0
+    },
+    {
+      "plane": "west",
+      "faces": 1,
+      "wrong": 1,
+      "minimum_dot": -1.0
+    },
+    {
+      "plane": "east",
+      "faces": 1,
+      "wrong": 1,
+      "minimum_dot": -1.0
+    },
+    {
+      "plane": "south",
+      "faces": 1,
+      "wrong": 1,
+      "minimum_dot": -1.0
+    },
+    {
+      "plane": "north",
+      "faces": 1,
+      "wrong": 1,
+      "minimum_dot": -1.0
+    }
+  ]
+}

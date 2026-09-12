@@ -81,7 +81,7 @@ namespace LetMeSleep.Content.Editor
             Anchor(data.PresentationAnchors,"MainMenuLookAt",MenuLookAtPosition);
             var human=Anchor(data.PresentationAnchors,"HumanMenuStage",new Vector3(1.65f,.02f,4.7f));
             human.localRotation=Quaternion.LookRotation(new Vector3(MenuCameraPosition.x-human.localPosition.x,0,MenuCameraPosition.z-human.localPosition.z));
-            var mosquito=Anchor(data.PresentationAnchors,"MosquitoMenuStage",new Vector3(3.1f,1.55f,4.5f));
+            var mosquito=Anchor(data.PresentationAnchors,"MosquitoMenuStage",new Vector3(.8f,1.85f,4.5f));
             mosquito.localRotation=Quaternion.LookRotation(MenuCameraPosition-mosquito.localPosition);
             foreach(float x in new[]{-4.8f,0,4.8f})Anchor(data.PresentationAnchors,"LightAnchor_Lobby_Lantern_"+Token(x),new Vector3(x,2.45f,5.55f));
         }
@@ -106,6 +106,28 @@ namespace LetMeSleep.Content.Editor
             CheckSpawns(lobby,new[]{human},.25f,1.72f);CheckSpawns(lobby,new[]{mosquito},.055f,.11f,true);
             foreach(var spawn in data.LobbySpawnPoints)
                 Need(Vector2.Distance(new Vector2(spawn.localPosition.x,spawn.localPosition.z),new Vector2(human.localPosition.x,human.localPosition.z))>.8f,"Menu stage overlaps a lobby spawn");
+        }
+
+        static void CheckLobbyShellFacing(GameObject source)
+        {
+            var filter=F(source,"LobbyShell").GetComponent<MeshFilter>();var mesh=filter.sharedMesh;
+            var vertices=mesh.vertices;var normals=mesh.normals;var triangles=mesh.triangles;
+            var axes=new[]{1,1,0,0,2,2};var planes=new[]{0f,3.2f,-5f,5f,-4f,4f};
+            var expected=new[]{Vector3.up,Vector3.down,Vector3.right,Vector3.left,Vector3.forward,Vector3.back};
+            var normalMatrix=filter.transform.localToWorldMatrix.inverse.transpose;
+            for(int plane=0;plane<planes.Length;plane++){
+                int found=0;
+                for(int i=0;i<triangles.Length;i+=3){
+                    var a=filter.transform.TransformPoint(vertices[triangles[i]]);var b=filter.transform.TransformPoint(vertices[triangles[i+1]]);var c=filter.transform.TransformPoint(vertices[triangles[i+2]]);
+                    if(Mathf.Abs(a[axes[plane]]-planes[plane])>.002f||Mathf.Abs(b[axes[plane]]-planes[plane])>.002f||Mathf.Abs(c[axes[plane]]-planes[plane])>.002f)continue;
+                    var center=(a+b+c)/3;
+                    if(center.x < -5.001f||center.x > 5.001f||center.y < -.001f||center.y > 3.201f||center.z < -4.001f||center.z > 4.001f)continue;
+                    found++;
+                    Need(Vector3.Dot(Vector3.Cross(b-a,c-a).normalized,expected[plane])>.999f,"Lobby cavity triangle faces away from interior plane "+plane);
+                    for(int corner=0;corner<3;corner++)Need(Vector3.Dot(normalMatrix.MultiplyVector(normals[triangles[i+corner]]).normalized,expected[plane])>.999f,"Lobby cavity shading normal faces away from interior plane "+plane);
+                }
+                Need(found>=2,"Lobby interior plane is missing: "+plane);
+            }
         }
     }
 }

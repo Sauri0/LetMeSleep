@@ -35,9 +35,10 @@ def cube(name,c,s,mat='Wood_Honey',parent=None,bevel=0,collision=True,surface='W
   mod=o.modifiers.new('Manufactured edge','BEVEL');mod.width=bevel;mod.segments=1;bpy.ops.object.modifier_apply(modifier=mod.name)
  if collision:colliders.append(dict(node=o.parent.name,source=o.name,center=c,size=s,surface=surface))
  return o
-def mesh(name,vertices,faces,mat='Wood_Honey',parent=None,collision=True,surface='Wood'):
+def mesh(name,vertices,faces,mat='Wood_Honey',parent=None,collision=True,surface='Wood',recalculate_normals=True):
  m=bpy.data.meshes.new(name+'_Mesh');m.from_pydata([v(p) for p in vertices],[],faces);m.materials.append(mats[mat]);m.update()
- bm=bmesh.new();bm.from_mesh(m);bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces));bm.to_mesh(m);bm.free()
+ if recalculate_normals:
+  bm=bmesh.new();bm.from_mesh(m);bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces));bm.to_mesh(m);bm.free()
  o=bpy.data.objects.new(name,m);bpy.context.collection.objects.link(o);o.parent=parent or root
  if collision:mesh_colliders.append(dict(node=o.name,surface=surface))
  return o
@@ -77,7 +78,11 @@ def shell(name,solids,cuts,floor_mats=True):
      p=tuple(grid[d][ix[d]] for d in range(3));points.append(p)
      if key not in lookup:lookup[key]=len(verts);verts.append(p)
      face.append(lookup[key])
-    faces.append(face);center=[sum(p[d] for p in points)/4 for d in range(3)];mat=0
+    # Face normals point from occupied solid into empty space, including an enclosed
+    # cavity. Global recalc treats the disconnected inner skin as a positive volume
+    # and reverses it; authored winding must survive for closed rooms such as lobby.
+    base_sign=-1 if a==1 else 1
+    faces.append(face if sign==base_sign else list(reversed(face)));center=[sum(p[d] for p in points)/4 for d in range(3)];mat=0
     if a==1:
      if sign<0:mat=2
      elif abs(center[1])<.001 or abs(center[1]-3)<.001:
@@ -85,7 +90,7 @@ def shell(name,solids,cuts,floor_mats=True):
       if floor_mats and (x<0 or x>12.8 or z<0 or z>11.4):mat=4 if 5.16<=x<=6.96 else 3
       if floor_mats and 7.14<=x<=12.62 and 6.74<=z<=11.22:mat=5
     indices.append(mat)
- o=mesh(name,verts,faces,collision=False)
+ o=mesh(name,verts,faces,collision=False,recalculate_normals=False)
  o.data.materials.clear()
  for n in material_names:o.data.materials.append(mats[n])
  for p,m in zip(o.data.polygons,indices):p.material_index=m

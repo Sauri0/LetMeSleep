@@ -30,7 +30,7 @@ Los siguientes Transform cuelgan de `EnvironmentMapDefinition.PresentationAnchor
 | MainMenuCamera | (0,1.6,0.4) | Cámara ya orientada al LookAt; FOV vertical inicial sugerido 55°, near 0.05/far 100, 16:9 |
 | MainMenuLookAt | (0.8,1.1,4.85) | Objetivo del encuadre, hacia el fondo amueblado |
 | HumanMenuStage | (1.65,0.02,4.7) | Origen de pies; yaw hacia cámara |
-| MosquitoMenuStage | (3.1,1.55,4.5) | Centro del mosquito; orientación hacia cámara |
+| MosquitoMenuStage | (0.8,1.85,4.5) | Centro del mosquito; orientación hacia cámara |
 | LightAnchor_Lobby_Lantern_m4p8 | (−4.8,2.45,5.55) | Luz delante del farol izquierdo |
 | LightAnchor_Lobby_Lantern_0 | (0,2.45,5.55) | Luz delante del farol central |
 | LightAnchor_Lobby_Lantern_4p8 | (4.8,2.45,5.55) | Luz delante del farol derecho |
@@ -42,3 +42,15 @@ Director/Presentation colocan clones cosméticos en los stages para el fondo del
 El método nativo sigue siendo `LetMeSleep.Content.Editor.AlfaMapBuilder.BuildAlfaMaps()`, con las escenas generadas cerradas. Además de sus comprobaciones existentes, aborta si el mobiliario invade la reserva central/anillo o si se pierden las anclas. El `.meta` del nuevo script se entrega; Unity crea los assets derivados por sus APIs.
 
 Para revisión, usar primero la cámara de menú con fondo transparente de UI, verificar que cabeza/pies y mosquito no se corten, que ningún pino o farol tape las siluetas y que la luz permita leer el pijama. Después observar desde (0,2.5,−5.3) hacia (0,1,1), FOV vertical 75°, para revisar ambos laterales y la continuidad del suelo. Los 16 actores, colisiones, encuadre y luz reales requieren ejecución nativa. No se afirma rendimiento ni calidad visual aprobada a partir de la compilación offline.
+
+## Corrección de caras interiores tras captura nativa
+
+La captura `N:/LetMeSleep/Artifacts/review/alfa-ui-main-dressed.png`, tomada con MainMenuCamera, mostraba cielo en lugar de techo/paredes. Las franjas azules eran paneles decorativos; el shell no tenía muros bajos ni huecos geométricos. La inspección CPU del blend entregado en c98783b encontró **las seis caras de la cavidad invertidas**, cada una con dot −1 respecto a la normal esperada hacia el interior.
+
+Causa: el recálculo global de normales orientaba la cavidad cerrada, desconectada de la piel exterior, como otro volumen positivo. Así todas sus caras resultaban ocultas desde dentro por el descarte de caras posteriores. Manifold y volumen total positivo no detectaban este error.
+
+`build_sources.py` ahora orienta cada cara de shell desde el sólido ocupado hacia el espacio vacío y conserva ese winding, incluida la cavidad. `repair_lobby_normals.py` aplica esa misma corrección únicamente al blend/FBX de lobby existente: invierte seis caras y comprueba que ningún vértice cambie de posición. Los FBX de casa y kit permanecen intactos. No se habilita material de doble cara ni se añade un segundo techo.
+
+`check_lobby_normals.py` documenta antes/después en `lobby_normals_before.json` y `lobby_normals_after.json`: seis planos pasan de dot −1 a +1. La validación de fuentes/reimportación sigue en 811 checks / 0 fallos. El builder añade una comprobación nativa después de la conversión FBX: cada uno de los seis planos interiores debe tener triángulos y normales de sombreado orientados hacia el cuarto. Quedan pendientes su ejecución y una nueva captura del Director.
+
+El ancla del mosquito se mueve a (0.8,1.85,4.5) para situarlo en la franja central visible entre los paneles de UI de esa captura. La posición del humano y la cámara se conservan.

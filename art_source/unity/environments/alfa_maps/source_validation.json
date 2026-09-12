@@ -4070,12 +4070,12 @@
       "sha256": "fd16b221d0e7247797af1d9a43a791f31b42d4243eee233f6e1f1d06adc87b84"
     },
     "lobby_alfa_static.blend": {
-      "bytes": 108811,
-      "sha256": "5824f453aeb834df744fa118e9d272e0ae6a43bb19253215582f2703d964af67"
+      "bytes": 100927,
+      "sha256": "a00c3d71d800f8d31270ab689ef99562e8341f229cace6bc68d9d0f0ff3d4d32"
     },
     "lobby_alfa_static.fbx": {
       "bytes": 29708,
-      "sha256": "bee047c6af7842e08d22ec60dfc4ca5c09f24f96acd0b6e52f24752a410e0550"
+      "sha256": "249c1fae9290fcc93e6ec57a3b44f3dfc71b1cf3637ea2333814c73eab903a79"
     },
     "furniture_kit_alfa.blend": {
       "bytes": 144458,
