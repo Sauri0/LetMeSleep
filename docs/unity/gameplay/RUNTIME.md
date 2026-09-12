@@ -1,0 +1,37 @@
+# Runtime Gameplay alfa
+
+Implementado en `unity/Assets/LetMeSleep/Gameplay` (C# puro, referencia Core) y `Gameplay.Unity` (Unity/Input System). El contrato documental inicial se concretó simplificando las consultas bajo `IGameplayWorld` y `MotorQuery`. Core sigue siendo propietario de la sala, roster, roles, identidad EOS y transporte.
+
+## Integración
+
+1. El mapa registra colliders de ambiente con `GameplaySurface.SurfaceId` estable y puertas con `GameplayDoor` (`DoorId`, `SurfaceId`, `Hinge`, `Leaf` BoxCollider, `OpenSign`, `OpenDegrees`, `InitialDegrees`). IDs duplicados/cero o puertas ausentes abortan BeginRound. La raíz física debe tener escala uniforme en metros.
+2. Añadir `UnityGameplayWorld` y `GameplayRuntime` a un objeto de sesión. `GetDoorDefinitions()` obtiene geometría validada. Configurar `IsHost`, `LocalActorId`, `LocalPrincipal`; `CaptureLocalInput` y `AutomaticTick` pueden desactivarse si Online inyecta/controla esas responsabilidades. Nunca usar dos relojes.
+3. `BeginRound(GameplayRoundConfig,IReadOnlyList<SpawnActor>)` recibe posiciones/roles autorizados. Config constructor: `(epoch,round,mapId,contentHash,roundSeconds,bloodGoal,balance,doors)`. Roster usa `SpawnActor(actorId,ownerPuid,role,position,spawnId,cosmeticProfileId,isBot)`. No se sortean roles otra vez.
+4. Transporte recibe `InputReady(PlayerInputCommand)` y `ActionReady(PlayerActionCommand)`. En host invoca `Authority.SubmitInput(authenticatedPuid,command)`/`SubmitAction`. Jamás exponer SubmitBotInput/SubmitBotAction a red: son capacidad local exclusiva del host.
+5. Host publica `SnapshotReady(GameSessionState)` a promedio 20 Hz (intervalos 1/2 ticks sobre simulación 30 Hz), `PrivateReady` para actor local y `EventReady` por evento. Online debe llamar `CapturePrivate(peerActorId)` para cada destinatario privado; el runtime no recorre conexiones. `RoundFinished(reason,winner)` notifica a Core para FinishRound; StopRound aborta sin crear victoria.
+6. Cliente llama `ApplySnapshot` y `ApplyPrivate`; sólo acepta época/ronda actual y tick no decreciente. Codec/validación de payload remoto son del transporte. Snapshots y listas se copian/inmovilizan, sin UnityObject ni arrays compartidos mutables.
+7. `UnityGameplayWorld.ActorCreated(GameplayActorProxy)` permite adjuntar visual M1. `BodySurfaces` da transforms de cápsulas cinemáticas con IDs anatómicos por actor. Presentation consume LifeState/MotionPhase/CrouchFraction/StrikeState y el ancla de picadura para representar al mosquito unido. Nunca dibujar marcas/targets a partir del ancla.
+8. `SetInputBlocked(bool)` libera cursor, limpia acciones y envía neutral al abrir menú; pérdida de foco neutraliza sin pausar host. Cámara final pertenece W2. Runtime expone LocalViewForward/Yaw/Pitch y tiene cámara auxiliar opcional (`UseBuiltInCamera=false`) para fixtures; no activar ambas cámaras a la vez.
+
+## Comportamiento implementado
+
+- Reloj fijo 30 Hz, inputs newest-wins con timeout, ownership/ronda/revisión/finitez, secuencias modulares independientes y dedupe de acciones. Presupuesto 60 inputs/20 acciones por segundo/actor, cola global 32. Tiempo de cliente no cambia simulación.
+- Humano: cápsula 1.72/.25 m, caminar/correr/agachar, gravedad, salto, step .22 m, bloqueo al ponerse de pie bajo techo. Mosquito: esfera .055 m, W sobre aim completo, aceleración/freno, posado en piso/pared/techo y soporte local móvil registrado.
+- Cuerpo físico independiente de Animator/culling: torso/cabeza y extremidades articuladas, rodillas/codos con construcción de dos segmentos. Esto es un perfil cinemático inicial; requiere acoplamiento visual al rig M1 y certificación geométrica G10 antes de afirmar cobertura completa.
+- Rayo de defensa manual y barrido de mano/swatter. Un obstáculo cancela el resto del recorrido del golpe incluso entre ticks. El host nunca dirige la vista hacia un mosquito. `Authority.ToolId` se configura por host (`hands` inicial; `swatter` muestra), no por mensaje cliente.
+- Punta mosquito +Z=.095 m; contacto a .025 m desde punta, normal de piel, preparación/extracción continuas, desprendimiento/cancelación, desmayo y exclusión de nuevas picaduras durante recuperación. M1 confirmó adaptar asset a esa punta.
+- Sangre: caída recuperable; cuenta desde aterrizaje, ayuda 3× sin acumular ayudantes, protección, espacio libre para recuperar; todos los mosquitos caídos no termina la ronda. Perfil por defecto 12 s iniciales; también se ensayó configuración 35 s. Firma BalanceHash incluye valores reales del perfil. Cuota/tiempo vienen de RoomRules.
+- Puerta: Use manual humano, revisión/cooldown, inversión, arco barrido con OBBs conservadores ampliados entre subpasos, ocupación detiene/reintenta sin empujar, SyncTransforms antes de consultas del mismo tick y estado publicado en snapshot/evento.
+- Bots a 10 Hz escalonados, misma autoridad/cooldowns, percepción por distancia+LOS, aproximación a superficie visible y rescate. No hay asignación corporal ni lectura de privados ajenos. Navegación inicial reactiva: recorrido completo del mapa y desbloqueo en escaleras/puertas requieren playtest; no declarar rutas certificadas.
+
+## Controles actuales
+
+WASD/mouse; humano Shift correr, Ctrl agacharse, Space saltar, clic golpear y F puerta. Mosquito Space/Ctrl subir/bajar, F posarse/despegar, E mantener contacto/picadura, R mantener ayuda. Soltar E cancela; pulsación contextual de desprendimiento limpia held y exige liberación antes de readquirir. Rueda regula cámara auxiliar. UI entrega la ayuda contextual y pausa; Gameplay no crea HUD.
+
+## Evidencia y límites
+
+Compilación externa C#9/netstandard2.1 contra bibliotecas instaladas Unity **6000.3.24f1** e Input System: **0 errores / 0 advertencias**. No se abrió editor, no se alteraron paquetes/settings/escenas. Validación CPU: **38 casos / 0 fallos**, suma 29 casos QA/Core+Gameplay y 9 verificaciones propias de dominio. Repetir mediante `validation/Run-Validation.ps1`; NUnit procede del PackageCache ya instalado. No usa Unity Test Runner.
+
+Cubierto por los 9 casos propios: W con pitch y frenado al expirar input, snapshots inmutables, principal/ronda/números inválidos/secuencias/bot, golpe detenido por pared entre ticks, contador35 s desde apoyo sin victoria prematura, extracción/desmayo único y ancla limpia, ayuda3×, resultado único al agotar tiempo y cambio de identidad de balance.
+
+Pendiente de integración coordinada por Director: ejecutar Unity Test Runner, validar colliders/step/puertas con mapa M2 real, acoplar visual/rig/cámara M1/W2, ejecutar G10 con manifiesto/cotas/mutantes y restantes gates visuales/físicos, comprobar entrenamiento completo, y red EOS/WAN. Compilación y fakes no acreditan estas propiedades. No se declara FPS ni calidad artística a partir de estos tests.

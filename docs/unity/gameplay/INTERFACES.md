@@ -1,6 +1,6 @@
 # Interfaces y mensajes iniciales para Core/Gameplay
 
-Especificación de integración, no archivos C# compilados. Director implementa Core/Online, `RoomState`, `RoomRules`, membresía, sorteo y versión; Gameplay no duplica esas reglas. Identidad autenticada: string opaca EOS PUID. `ActorId` uint es índice de sesión, nunca identidad ni prueba de autorización. Online entrega el principal autenticado fuera del payload y Core lo vincula con actor/ronda.
+Contrato de integración. La implementación C# compilada y sus firmas finales se describen en [RUNTIME.md](RUNTIME.md); los bocetos históricos siguientes conservan la semántica y no sustituyen las firmas de los fuentes. Director implementa Core/Online, `RoomState`, `RoomRules`, membresía, sorteo y versión; Gameplay no duplica esas reglas. Identidad autenticada: string opaca EOS PUID. `ActorId` uint es índice de sesión, nunca identidad ni prueba de autorización. Online entrega el principal autenticado fuera del payload y Core lo vincula con actor/ronda.
 
 Unity 6000.3.24f1, coordenadas del [contrato](ALFA-GAMEPLAY.md). Core leído exige C# puro sin UnityEngine: usar valores inmutables `Float2(X,Y)`, `Float3(X,Y,Z)` y `Rotation(X,Y,Z,W)` normalizada, con campos float y constructores explícitos, en los DTO de gameplay. Conversión a UnityEngine.Vector3/Quaternion exclusivamente en adaptadores físicos/presentación. Ningún DTO lleva GameObject, Transform, Animator, Unity instance ID, collider reference ni ScriptableObject. Los bocetos siguientes fijan campos y semántica; serializador y ensamblados los fija Director.
 
@@ -79,6 +79,12 @@ public interface IGameplayWorldQuery {
     bool TryBiteContact(in BiteQuery query, out BiteContact contact);
     StrikeHit SweepStrike(in StrikeSweep query);
     bool TryFreeRecoveryPoint(in RecoveryQuery query, out Float3 point);
+    bool TryDoorInteraction(in DoorInteractionQuery query,
+        out DoorInteractionCandidate candidate);
+    DoorSweepResult SweepDoor(in DoorMotionQuery query);
+}
+public interface IGameplayWorldWriter {
+    void ApplyDoorPose(in DoorPose pose); // sólo host; antes de consultas del tick
 }
 public interface IBotController {
     BotCommands Decide(in BotObservation observation, in BotTick tick);
@@ -90,11 +96,57 @@ public interface IGameplayPresentationSink {
 }
 ```
 
-`GameplayRoundConfig`: SessionEpoch, RoundId, MapId, ContentHash, BalanceId/hash, Mode=Blood, HostTickRate=30, RoundDurationTicks, BloodGoal. `SpawnActor`: ActorId, owner PUID nullable sólo para bot, rol ya sorteado, SpawnId validado, CosmeticProfileId. UI nunca construye roster autorizado. `HostTick`: uint index monotónico dentro de RoundId, delta fijo; acumulación de tiempo y carga máxima por frame son Core. MotorQuery: actor, pose inicial/velocidad, input validado, dt, dimensiones y revisión de mundo; no permite mutar mundo desde Presentation. MotorResult: posición, velocidad, grounded, normal/apoyo, contactos ordenados y bloqueo de techo.
+`GameplayRoundConfig`: SessionEpoch, RoundId, MapId, ContentHash, BalanceId/hash, Mode=Blood, HostTickRate=30, RoundDurationTicks, BloodGoal y DoorDefinitions inmutables obtenidas del mapa validado por host. `SpawnActor`: ActorId, owner PUID nullable sólo para bot, rol ya sorteado, SpawnId validado, CosmeticProfileId. UI nunca construye roster autorizado. `HostTick`: uint index monotónico dentro de RoundId, delta fijo; acumulación de tiempo y carga máxima por frame son Core. MotorQuery: actor, pose inicial/velocidad, input validado, dt, dimensiones y revisión de mundo; no permite mutar mundo desde Presentation. MotorResult: posición, velocidad, grounded, normal/apoyo, contactos ordenados y bloqueo de techo.
 
 `SurfaceQuery`: posición, dirección, adquisición máxima, radio, máscaras, actor excluido. `SurfaceContact`: SurfaceId estable, revisión, punto y normal locales, transform host actual, flags CanPerch/Moving. `BiteQuery`: actor mosquito, punta actual, dirección, distancia, población humana elegible. `BiteContact`: VictimId, AnatomicalSurfaceId, LocalPoint/Normal, PoseRevision, distancia y razón de rechazo. `StrikeSweep`: StrikeId, dueño, herramienta, mano, tiempo normalizado anterior/actual, geometría continua y filtro de actores ya golpeados; `StrikeHit`: ActorId objetivo opcional, fracción, punto/normal mundiales, material y bloqueante. Orden por menor fracción, desempate estable por IDs; no hits detrás de primer obstáculo. `RecoveryQuery`: actor, soporte actual, radio/cápsula y búsqueda local limitada.
 
 Bots de host usan un principal reservado interno con permiso sólo sobre su ActorId; nunca aceptarlo desde red. `BotObservation`: propio snapshot/privado, aliados visibles/permitidos, enemigos percibidos con última observación y antigüedad, geometría de mapa/puertas percibidas, modo/tiempo; sin anclas ajenas privadas ni diccionario mutable de autoridad. `BotCommands`: Input y cero o una Action, mismos validadores. Decisión inicial 10 Hz escalonada, held se aplica a 30 Hz; no saltar cooldowns ni generar conocimiento oculto para recuperar una ruta.
+
+## Puertas: autoridad, geometría y publicación
+
+`ActionKind.Use` es el único comando cliente de puerta en alfa: no contiene DoorId ni ángulo deseado. Input.UseHeld no alterna puerta repetidamente. El host procesa el borde de Use sólo para humano Active, reconstruye origen de ojos/aim válidos y consulta TryDoorInteraction; la primera superficie bloqueante debe pertenecer a una puerta interactuable, con distancia al punto de interacción dentro de DoorReach. No permite activar a través de paredes, desde una planta distinta sin línea libre o por conocer un ID.
+
+```csharp
+public readonly struct DoorInteractionQuery {
+    public readonly uint ActorId, HostTick;
+    public readonly Float3 EyeOrigin, AimForward;
+    public readonly float Reach;
+}
+public readonly struct DoorInteractionCandidate {
+    public readonly uint DoorId, DoorRevision;
+    public readonly Float3 HitPoint;
+    public readonly float Distance;
+}
+public enum DoorUseResult : byte {
+    Accepted, WrongRole, InvalidState, NoDoor, OutOfReach,
+    Occluded, StaleRevision, Cooldown, Blocked
+}
+public readonly struct DoorMotionQuery {
+    public readonly uint DoorId, DoorRevision, HostTick;
+    public readonly float FromAngleRadians, ToAngleRadians;
+}
+public readonly struct DoorSweepResult {
+    public readonly float SafeAngleRadians;
+    public readonly bool Blocked;
+    public readonly uint BlockingActorId; // 0 si arquitectura
+}
+public readonly struct DoorPose {
+    public readonly uint DoorId, Revision, HostTick;
+    public readonly float AngleRadians;
+}
+```
+
+`DoorDefinition`: DoorId uint estable en MapId/ContentHash; SurfaceId de hoja; hinge position/rotation; closed rotation; open sign; leaf geometry/collider profile; handle point local; open angle y initial angle authored. Datos numéricos/IDs inmutables, no referencias Unity. Contenido registra correspondencia DoorId↔collider y GeometryWorld valida que no haya duplicados ni hoja ausente antes de BeginRound. `DoorSnapshot`: DoorId, SurfaceId, Revision, AngleRadians, TargetAngleRadians, AngularVelocity, Moving, Blocked, LastChangedTick. Ángulos son cantidad de apertura [0,OpenAngle] respecto del pivote cerrado; open sign pertenece a definición, no se cambia desde cliente.
+
+Supuestos iniciales de perfil: DoorReach=2.0 m, turn speed=2.5 rad/s, cooldown=.35 s; no representan balance probado. Tras consulta y comparación de revisión, host alterna target cerrado/abierto, incrementa Revision, guarda resultado privado con DoorId/revisión/target y emite DoorChanged. Repetir el mismo Action.Sequence no vuelve a alternar. Si dos humanos usan la misma puerta en un tick, ordenar por secuencia de llegada host con desempate ActorId; cooldown hace aceptar sólo la primera. Una nueva acción tras cooldown puede invertir el target durante el giro.
+
+En cada tick, después de validar inputs y antes de motores/contactos: resolver Use desde la pose host al final del tick anterior y aim aceptado actual → proponer ángulo siguiente acotado por velocidad×dt → SweepDoor sobre TODO el arco de la hoja, arquitectura y actores actuales → mantener ángulo anterior o avanzar sólo hasta SafeAngle → ApplyDoorPose → confirmar geometría física actualizada → locomoción/golpe/LOS/picadura. SweepDoor no usa sólo AABB final ni deja pasar entre subpasos. La preparación de colisión del adaptador debe hacer visibles esos cambios a las consultas del mismo tick, sin depender del siguiente Update/render. No mover collider desde Presentation.
+
+Política de ocupación alfa: la hoja no empuja ni atraviesa humanos/mosquitos. Un mosquito posado en esa hoja también bloquea su giro mientras su volumen no pueda mantenerse seguro; el host marca Blocked y reintenta con velocidad acotada en el siguiente tick. Se puede cancelar/invertir target; no saltar de ángulo ni aplastar actor para destrabarla. La revisión aumenta al cambiar target/blocked/estado discreto, no por cada incremento angular; snapshot lleva ángulo/velocidad en cada publicación. Cambiar ronda/ContentHash invalida candidatos y anclas previas.
+
+Presentation dibuja la hoja con la MISMA definición de pivote/signo y ángulo interpolado del snapshot que utiliza para actores remotos. No anima apertura a partir de un trigger propio ni altera collider host. Comparar visual/collider al mismo HostTick/PoseTime: error angular ≤.5° y posición de borde ≤.005 m como tolerancias iniciales. No exigir coincidencia entre visual interpolado de tick anterior y collider host de tick actual; registrar ambos tiempos para distinguir retraso de desalineación.
+
+DoorChanged payload: DoorId, Revision, AngleRadians, TargetAngleRadians, Moving, Blocked y HostTick. Evento fiable/deduplicado dispara sonido/feedback una vez; snapshot restaura estado si falta evento. Resultado Use es privado y devuelve DoorUseResult más identidad/revisión del candidato si corresponde. Prueba obligatoria G20 cubre el ciclo completo y el efecto sobre LOS, golpes y picaduras. Esta interfaz evita que Gameplay deba acceder por fuera a Unity/Map para accionar puertas.
 
 ## GameSessionState y eventos
 
@@ -105,9 +157,10 @@ Snapshot inmutable: construcción copia los valores y congela colecciones; `IRea
 | GameSessionState | SessionEpoch, RoundId, HostTick, HostTime, MapId, ContentHash, BalanceHash, simulationPhase Running/Ended, timeRemainingTicks, BloodCollected, BloodGoal, resultado opcional, Actors, Doors |
 | ActorSnapshot | ActorId, Role, LifeState, StateRevision, Position, Velocity, BodyRotation, ViewForward, ViewRevision, PoseRevision, Grounded, CrouchFraction, MotionPhase, SurfaceAttachment opcional, BiteAttachment opcional, StrikeState, RecoveryEndTick |
 | SurfaceAttachment | SurfaceId/revisión, localPoint, localNormal, tangentForward |
-| BiteAttachment público | VictimId, SurfaceId anatómico, localPoint/normal, poseRevision; suficiente para representar mosquito anclado |
+| BiteAttachment público | VictimId, SurfaceId anatómico, localPoint/normal, poseRevision; exclusivamente representación del mosquito ya anclado, nunca marcador/UI ni selección futura |
 | ActorPrivateState | ActorId, última secuencia aceptada de ambos streams, motivo de rechazo, InteractionHint, propia preparación/extracción, ayuda propia, countdown, acciones habilitadas |
 | StrikeState | StrikeId, toolId, hand, phase, startTick, duración por fase, origin/target/normal validados; ningún autoseleccionado del renderer |
+| DoorSnapshot | DoorId, SurfaceId, Revision, AngleRadians, TargetAngleRadians, AngularVelocity, Moving, Blocked, LastChangedTick |
 | GameplayEvent | SessionEpoch, RoundId, EventId monotónico, HostTick, Kind, SourceActorId, TargetActorId opcional, StateRevision, payload acotado |
 
 Eventos: `StrikeStarted`, `StrikeImpact`, `BiteStarted`, `BiteEnded(reason)`, `MosquitoKnockedDown`, `RecoveryStarted`, `HelpStarted/Ended`, `Recovered`, `HumanFainted`, `DoorChanged`, `RoundEnded`. Los deltas de sangre/progreso continuo van en snapshot, no un evento por tick. Core implementa transporte fiable/ACK de acciones y eventos discretos; estado nuevo siempre permite reconstruir presentación aunque se pierda un evento cosmético. Impacto repetido no duplica audio ni daño. No transportar `AssignedZone`, `MarkerPosition`, `RotationSeconds` ni `NextTarget`.

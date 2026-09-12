@@ -44,8 +44,21 @@ Los IDs siguientes describen pruebas futuras Unity, no comprobaciones ejecutadas
 | G17 Reinicio | Varias rondas/menú/rol alternado/desconexión host | MapId fijo, RoundId cambia, contadores/anclas/eventos viejos limpios; Core da resultado/cierre coherente |
 | G18 Snapshot | Captura A, Advance varias veces, captura B, reordenar/redelivery | A permanece idéntico, B refleja host, eventos deduplicados, remotos no interpolan entre rondas |
 | G19 Latencia | Dos clientes con delay/pérdida/reordenación y diferentes FPS | Daño host, vista local fluida, reconciliación no atraviesa pared; registrar distribución de errores/ticks |
+| G20 Puertas | Use desde ambas caras, fuera de alcance/detrás de pared/rol mosquito; hoja cerrada/45°/abierta, giro ocupado y réplicas | Sólo humano válido alterna una vez por comando; target/Revision/ángulo replicados; barrido no atraviesa ocupantes; visual y collider mismo tiempo/pivote dentro de tolerancia; LOS, golpe y picadura bloqueados/libres según la hoja real |
 
-G10 requiere pruebas geométricas y visuales de cuerpo real. G16 exige observaciones de acciones y resultados, no sólo «hay bots en roster». G19 sintético no sustituye dos redes independientes. Cada fallo se asigna al propietario del área; no subir umbrales para ocultar falta de contacto/alcance.
+G10 requiere pruebas geométricas y visuales de cuerpo real. G16 exige observaciones de acciones y resultados, no sólo «hay bots en roster». G19 sintético no sustituye dos redes independientes. G20 añade inversión durante movimiento, dos Use simultáneos, cooldown, eliminación de soporte y pérdida/reordenamiento de DoorChanged; exige que una puerta bloqueada reanude sólo cuando haya volumen libre, sin mover actores. Cada fallo se asigna al propietario del área; no subir umbrales para ocultar falta de contacto/alcance.
+
+## G10: cobertura finita auditable de superficie defendible
+
+Al entregar M1 las superficies, fijar un manifiesto por SurfaceId: primitiva paramétrica o parche de malla de colisión estable, transform/anatomical parent, límites de dominio, normales y versión/hash. Los triángulos visuales no son IDs de red. Cada celda de dominio conserva procedencia y coordenadas; no basta contar muestras globales.
+
+1. Discretización inicial por borde geodésico máximo .01 m sobre superficie, incluyendo todos los bordes, costuras, extremos de cápsula y transiciones de normal; refinar a .005 m en celdas próximas a límite de alcance, oclusión o cambio de mano. Guardar puntos/normal/pose/resultado por celda, no sólo porcentaje aprobado.
+2. Estados de pose: neutral, crouch completo y transición, ciclo de caminar/correr, extremos de yaw/pitch de inspección, ambas manos y herramienta muestra. Muestrear cada ciclo en pasos de tiempo ≤1 tick; incluir claves/extremos cinemáticos aunque no coincidan con el paso. Para miembros móviles, restringir celdas usando la envolvente de movimiento entre muestras o subdividir intervalo, nunca certificar un intermedio no acotado.
+3. Para cada celda y tramo de pose, calcular margen mínimo a límites de alcance y obstáculos de una trayectoria manual válida. Certificar el interior sólo cuando una cota conservadora de variación geométrica/pose prueba que el margen cubre el radio máximo de la celda y la tolerancia de .003 m. Si no existe cota verificable para la primitiva/solución IK, marcar `Unproven` y refinar o excluir del dominio elegible; aprobar puntos aislados no prueba continuidad.
+4. El recibo incluye número de celdas por SurfaceId, separación máxima real, poses/intervalos, método de cota, mínimos de alcance/clearance, mano usada, celdas Excluded/Unproven y archivo de contraejemplos. La regla runtime de elegibilidad usa el mismo manifiesto/dominio certificado; si cambia rig, collider, alcance o pose hash, invalida la certificación.
+5. Mutantes obligatorios: habilitar deliberadamente un parche posterior fuera de alcance, acortar brazo/alcance .05 m e introducir un obstáculo fino entre mano y parche. G10 debe fallar con celda y pose concretas. Revisar en motor un contraejemplo y muestras de cada superficie/mano: la certificación física no acredita ausencia de clipping visual.
+
+La cuadrícula tiene una resolución inicial concreta y es reproducible, pero no se presenta como prueba matemática de continuidad por sí sola. `Unproven` nunca equivale a aprobado. M1 y W1 deben cerrar las cotas/intervalos sobre el rig final antes de declarar defendible todo el dominio habilitado.
 
 ## Handoff de integración
 

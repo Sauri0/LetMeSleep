@@ -1,6 +1,6 @@
 # Contrato de gameplay Unity 0.9.4/alfa
 
-Estado: contrato inicial de Worker 1 para integrar con Core, 2026-09-12. Autoriza este documento el lote del Director y AGENTS.md; el rótulo antiguo «propuesta» del plan maestro no congela el trabajo. Branko autorizó resolver supuestos sin nuevas preguntas mientras duerme. No hay implementación Unity ni prueba en motor acreditada por esta entrega. Base auditada: `0ea6cca`. Propiedad actual: solamente `docs/unity/gameplay/**`.
+Estado: contrato de Worker 1 para integrar con Core, 2026-09-12. Autoriza este documento el lote del Director y AGENTS.md; el rótulo antiguo «propuesta» del plan maestro no congela el trabajo. Branko autorizó resolver supuestos sin nuevas preguntas mientras duerme. Director amplió ownership a `unity/Assets/LetMeSleep/Gameplay/**`, `Gameplay.Unity/**` y estos documentos. Implementación y evidencia CPU disponibles en [RUNTIME.md](RUNTIME.md); validación física/visual dentro del motor pendiente. Base histórica auditada: `0ea6cca`.
 
 Documentos asociados: [auditoría de referencia](GODOT-AUDIT.md), [interfaces propuestas](INTERFACES.md), [riesgos y aceptación](ACCEPTANCE.md). Fuente normativa: [plan maestro](../PLAN-UNITY-0.9.4.md), secciones 1 y 5, más instrucciones posteriores del Director.
 
@@ -82,6 +82,8 @@ Posado: el host busca un collider marcado `CanPerch` dentro de alcance. Identifi
 El host busca piel/cuerpo del humano elegible delante de la probóscide, dentro de distancia de contacto. No usa asignación ni teletransporte de concentración a 1.6 m. El primer contacto real bloqueante gana; no seleccionar una espalda atravesando pecho, ropa sólida, otro actor, mueble o puerta. Preparación pierde progreso al soltar, perder línea, alejarse o cambiar ancla; pequeña histéresis geométrica sólo evita parpadeo, no amplía alcance a través de paredes.
 
 Ancla: `(VictimId, AnatomicalSurfaceId, LocalPoint, LocalNormal, PoseRevision)`. Superficies anatómicas continuas y estables en el rig/collision profile, independientes de mallas cosméticas; no enumeración de «ocho zonas», triángulos importados o SkinMesh mutable. El host transforma ancla cada tick y verifica volumen libre del mosquito antes de moverlo. Presentation aplica la misma ancla a la pose interpolada del humano. Tolerancias y errores se registran, no se corrigen aumentando offsets hasta ocultar el fallo.
+
+El ancla pública existe sólo mientras el mosquito está unido y únicamente permite representar esa unión. UI no la convierte en marca, flecha, zona objetivo o selección futura; al soltarse se elimina, no se recicla como próximo objetivo del bot.
 
 Un humano solo debe defender cualquier contacto habilitado. Propuesta de aceptación: dominio continuo de piel elegible certificado contra alcance manual de una mano y rayo de vista; impedir el inicio fuera de ese dominio y dar razón contextual breve sin marcador. Con varios humanos, espalda se habilita sólo si la pose/ruta permite defensa cooperativa. Al quedar un solo humano, reevaluar contactos traseros: soltarlos de forma segura si no puede defenderlos. Confirmar con M1/W2 que la postura realmente cumple antes de ampliar superficie elegible; no certificar con sólo ocho puntos de prueba.
 
