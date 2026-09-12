@@ -1,0 +1,42 @@
+# Auditoría de riesgos de migración — Unity 0.9.4 alfa
+
+Estado: análisis estático y diseño de checks. Los controles propuestos no están ejecutados todavía.
+
+| Riesgo | Severidad | Cómo falla | Check concreto antes de cerrar alfa | Propietario sugerido |
+|---|---:|---|---|---|
+| Sobrescritura de guardado existente | Alta | El primer arranque Unity reemplaza preferencias Godot o un perfil Unity más nuevo. | Fixture con fuente válida y destino ausente, destino existente, copia interrumpida y fuente malformada. Exigir backup, importación única y escritura atómica. | Director/Core + QA |
+| IDs cosméticos sin equivalencia | Alta | IDs Godot apuntan a otra pieza Unity, desaparecen o alteran hitbox. | Tabla versionada de equivalencias; enumerar cada ID alfa; desconocidos se saneen a default sin modificar la fuente. Comparar hitboxes para todas las variantes alfa. | Director + M1 + QA |
+| Ruta de datos distinta | Media | `user://` histórico y `Application.persistentDataPath` no coinciden, o el launcher instala sobre datos de usuario. | Test Windows con perfil limpio/migrado; registrar rutas sanitizadas, permisos y que instalar/actualizar no toca datos. | Director + QA |
+| DeviceID mezclado con perfil | Alta | Copiar preferencias clona identidad EOS o borrar settings regenera usuario. | Guardado de juego y cache/credencial EOS separados; migración nunca lee/escribe DeviceID/PUID. Reinicios conservan identidad por equipo. | Director/Online |
+| Versión divergente | Crítica | UI, `Application.version`, protocolo, manifiesto, tag y ZIP dicen versiones distintas. | Un test lee las cinco fuentes y exige `0.9.4-alfa`; negativo altera una sola. Handshake rechaza protocolo distinto antes de entrar al lobby. | Director/Build + QA |
+| Orden de etapas incorrecto | Alta | SemVer o alfabético instala delta/beta equivocada. | Tests `alfa < beta < omega < delta < gamma < final`, versiones numéricas y tags no canónicos. Probar selección con draft/incompleta. | Director/Launcher + QA |
+| Launcher antiguo no reconoce alfa | Alta | 1.0.x ignora la release o el usuario queda sin actualización. | Distribuir/verificar launcher 1.1.0; instalación previa conserva carpeta; descarga real de `v0.9.4-alfa`. | Director/Launcher |
+| Paquete Unity incompleto | Crítica | Faltan DLL/plugins, datos, licencias o arquitectura x64; funciona sólo desde Editor. | Instalar ZIP en ruta limpia sin Unity/Hub, comprobar manifiesto y dependencias, arrancar/crear práctica/EOS smoke. Alterar y quitar cada dependencia en fixture. | Director/Build + QA |
+| Activación parcial | Alta | Corte deja `current` apuntando a descarga incompleta o elimina versión anterior. | Inyectar cancelación tras descarga/extracción/validación; activación atómica, versión anterior todavía ejecutable, ZIP traversal y colisiones rechazados. | Director/Launcher + QA |
+| Proyecto sin `.meta` o GUID estable | Alta | Prefab/escena pierde referencias al integrar ramas. | CI rechaza asset Unity versionado sin `.meta`, meta huérfano y GUID duplicado. Reimportación limpia + build desde checkout nuevo. | Director/Core |
+| Física y tiempo diferentes | Crítica | `Update`, `FixedUpdate`, root motion y delta producen alcance, sangre o puertas dependientes de FPS. | Simular 30/60/120 Hz con misma secuencia; comparar resultado, cuota, alcance y estados. Autoridad usa ticks acotados; presentación no decide hits. | W1 + Director + QA |
+| Layers/triggers mal configurados | Crítica | Cámara, mordida, mano o puerta atraviesan sólidos o chocan con cosméticos. | Matriz de capas automatizada y escenas negativas: pared, hoja, cuerpo, herramienta, trigger de contacto y cosméticos. Repetir en build. | W1 + M1/M2 + QA |
+| Máscara de primera persona incorrecta | Alta | Desaparece el cuerpo o cabeza/gorro bloquea la vista. | Capturas con cada opción alfa, extremos de pitch/yaw, agachado/salto y arma; remoto conserva malla completa. | M1 + W2 + QA |
+| Root motion contradice autoridad | Alta | Animación mueve collider o la mano visual alcanza más que el hit. | Comparar transform de collider/palma/contacto cada tick; desactivar root motion no cambia resultado autoritativo. | W1 + W2 + QA |
+| Marca de picadura sobrevive a migración | Crítica | UI o red expone zona/reserva aunque el diseño alfa la eliminó. | Búsqueda de assets/textos/componentes y captura HUD; inspección de mensajes por destinatario; mutante que añade `zone`/`marker` debe fallar. | W1 + UI + Director + QA |
+| Host local omitido | Crítica | Listen server simula invitados pero no publica/acepta input del jugador host. | Misma secuencia host local e invitado atraviesa handlers autoritativos; privados por destinatario; dos rondas con ambos roles sorteados. | Director/Online + QA |
+| Identidad de peer forjable | Crítica | Payload declara sender/owner y gana autoridad sin coincidir con PUID autenticado. | Adaptador deriva identidad del callback EOS; fuzz de sender/owner/epoch; invitado no publica lobby/snapshot/resultado. | Director/Online |
+| Código contiene endpoint o secreto | Crítica | Se filtra IP/PUID/capability en UI/log o queda reusable. | Parser estructural y escaneo de recibos/clipboard; código opaco, acotado, alteración detectada y sin fallback directo. | Director/Online + UI + QA |
+| DeviceID/caches compartidos en prueba | Alta | Dos procesos parecen dos peers pero usan la misma identidad. | Comparar hashes de identidad antes de aceptar par; perfiles/caches aislados; igualdad invalida evidencia. | Director + QA |
+| Callback tardío y reintento | Alta | Cancelar A y crear B permite que A recupere UI/lobby o filtre recursos. | Backend falso con completions reordenadas + integración real de cancel/create/join; generación/epoch invalida callback anterior y libera lobby/P2P. | Director/Online + QA |
+| Membership no equivale a autoridad | Crítica | Un miembro envía estado de host o un PUID ajeno. | Handshake liga peer↔PUID↔membership; mensajes por tipo/lado; removido del lobby deja de ser aceptado de inmediato. | Director/Online |
+| Host migration involuntaria | Crítica | EOS transfiere dueño al salir, contrario al alcance. | Configurar migración desactivada; cerrar dueño en lobby y ronda; todos vuelven a menú, sin nuevo owner. | Director/Online + QA |
+| Ruta EOS no comprobada | Alta | UI dice conectado pero usa fixture, LAN o conexión no confirmada. | Recibo exige callback y `network_type`; clasificar por dos identidades/máquinas/redes. Nunca inferir WAN. | Director + QA |
+| Teardown/crash | Alta | Cerrar sala/proceso deja callbacks, thread o plugin y termina con crash. | Ciclos crear/cancelar/unir/cerrar desde build, 20 repeticiones locales y al menos una WAN; exit 0, stderr limpio, dump si falla. | Director/Online + QA |
+| Estado entre rondas | Crítica | Sangre, contacto, herramienta, puerta, rol o winner reaparece. | Dos rondas por sesión, snapshot inicial exacto y sorteo independiente; negativo precarga cada estado. | W1 + Director + QA |
+| Tests portan mecánicas retiradas | Media | Suite verde exige marcas, seeds, Tareas o balance `35 s` y oculta el alcance alfa real. | Cada test declara U094, alcance y motor; CI rechaza referencias jugables a modos/mapas fuera de alfa. Valores de balance provienen de config candidata. | QA + Director |
+| Resultado visual inferido desde unit tests | Alta | Geometría o lógica pasa, pero hay clipping, z-fighting o material faltante. | Gates nativos con cámaras/testigos, revisión humana y hashes; reportes EditMode declaran exclusiones. | W2 + UI + QA |
+| Rendimiento medido en escena vacía | Alta | Se afirma 60 FPS sin casa, bots, red o efectos reales. | Perfil del build con escena, resolución, calidad, actores/bots, recorrido y percentiles fijados; repetir tras cambios de arte/render. | W2 + Director + QA |
+
+## Orden recomendado de reducción
+
+1. Cerrar identidad de build/protocolo, guardado y equivalencias antes de generar perfiles reales.
+2. Probar adaptador EOS con dos identidades, cancelación y autoridad antes de expandir escenas.
+3. Fijar matriz de layers, escalas, sockets y ticks antes de animación/combate completos.
+4. Ejecutar PlayMode de Sangre/lobby/práctica; después revisión visual y rendimiento del build.
+5. Sólo con el build sellado ejecutar WAN y launcher. Cualquier rebuild invalida sus hashes y requiere repetir las partes afectadas.
