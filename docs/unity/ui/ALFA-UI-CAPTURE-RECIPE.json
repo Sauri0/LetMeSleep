@@ -56,7 +56,7 @@
         "El foco se distingue por superficie, contorno y contraste."
       ],
       "pending": [
-        "Recapturar después de 0cdcbd3 para verificar iconos uGUI y encabezado reducido."
+        "La captura 1920x1080 pasó la revisión dirigida; falta la variante 1280x720 del menú."
       ],
       "variants": [
         "Foco en JUGAR ONLINE",
@@ -71,6 +71,15 @@
           "status": "Revisado con fallas",
           "capturedUiCommit": "c6a5ba2",
           "note": "Histórica: iconos ausentes y encabezado demasiado alto; anterior a 0cdcbd3."
+        },
+        {
+          "path": "N:/LetMeSleep/Validation/Alfa-VisualRecovery/menu-round2-1080.png",
+          "type": "image",
+          "sha256": "d1f2b15e111e23dde309e5b42536cffc7a108806f6434066f83b255f05102fc3",
+          "status": "Revisado sin hallazgos",
+          "capturedUiCommit": "4d7d0c7",
+          "capturedRepositoryHead": "697d57f",
+          "note": "Ronda 2: los cinco botones muestran iconos, el encabezado cabe y la escena central queda libre a 1920x1080. PASS limitado al alcance UI de esta vista."
         }
       ]
     },
@@ -204,7 +213,7 @@
         "Nombres de colores, prenda predeterminada y estado Guardar son legibles."
       ],
       "pending": [
-        "Recapturar después de 0cdcbd3 para verificar ratio, copy CENTRAR e iconos uGUI."
+        "La captura Human/Front 1280x720 pasó la revisión dirigida; faltan Human/Side 1920x1080 y Mosquito/Front 1280x720."
       ],
       "variants": ["Humano frente", "Humano perfil", "Mosquito frente", "Cambios sin guardar"],
       "animations": ["Arrastre orbital completo y extremos de zoom"],
@@ -216,6 +225,15 @@
           "status": "Revisado con fallas",
           "capturedUiCommit": "c6a5ba2",
           "note": "Histórica: visor ensanchado, CENTRAR VISTA truncado e icono de cabecera ausente; anterior a 0cdcbd3."
+        },
+        {
+          "path": "N:/LetMeSleep/Validation/Alfa-VisualRecovery/customization-round2-720.png",
+          "type": "image",
+          "sha256": "ec7d038b076150e90340a942516f5fb294f7b04b6b7b0102cb00d57513de277c",
+          "status": "Revisado sin hallazgos",
+          "capturedUiCommit": "4d7d0c7",
+          "capturedRepositoryHead": "697d57f",
+          "note": "Ronda 2: proporción del humano preservada, CENTRAR completo e iconos visibles a 1280x720. PASS limitado al alcance UI y a Human/Front."
         }
       ]
     },
