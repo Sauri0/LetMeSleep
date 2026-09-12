@@ -13,7 +13,6 @@ import bpy
 from mathutils import Vector
 
 ROOT=Path(__file__).resolve().parent
-OUTPUT=ROOT/'review'/'human-reference8'
 VIEWS={
     'front':('Idle',0,0,(0,0,.92),2.05),
     'profile_left':('Idle',0,-90,(0,0,.92),2.05),
@@ -22,12 +21,17 @@ VIEWS={
     'three_quarter':('Idle',0,35,(0,0,.92),2.05),
     'face_front':('Idle',0,0,(0,-.02,1.56),.58),
     'face_profile':('Idle',0,90,(0,-.02,1.56),.58),
+    'face_profile_left':('Idle',0,-90,(0,-.02,1.56),.58),
+    'face_three_quarter':('Idle',0,35,(0,-.02,1.56),.58),
     'face_hit':('Hit',.5,35,(0,-.02,1.53),.58),
     'face_blink':('Blink',.45,0,(0,-.02,1.56),.58),
     'hand_open':('FingerCurl',0,35,(.83,-.01,1.17),.26),
     'hand_curl':('FingerCurl',.5,35,(.83,-.04,1.17),.26),
+    'hand_back':('FingerCurl',0,180,(.83,0,1.17),.28),
+    'hand_profile':('FingerCurl',0,0,(.83,0,1.17),.28),
     'collar':('Idle',0,35,(0,-.03,1.14),.65),
-    'slipper':('Idle',0,90,(.125,-.06,.10),.39),
+    'slipper':('Idle',0,90,(.125,-.085,.10),.47),
+    'slipper_opening':('Idle',0,35,(.125,-.075,.085),.47),
     'clap':('Clap',14/30,35,(0,-.12,1.1),1.0),
     'crouch':('Crouch',.75,90,(0,0,.65),1.6),
 }
@@ -55,10 +59,13 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--views',nargs='+',choices=list(VIEWS),default=list(VIEWS)[:5])
     parser.add_argument('--samples',type=int,default=16)
+    parser.add_argument('--output-name',default='human-reference9')
     args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
     source=ROOT/'human'/'LMS_Human_alpha.blend'
     bpy.ops.wm.open_mainfile(filepath=str(source))
-    OUTPUT.mkdir(parents=True,exist_ok=True)
+    output=(ROOT/'review'/args.output_name).resolve()
+    if not output.is_relative_to((ROOT/'review').resolve()):raise ValueError('Output must remain in the character review folder')
+    output.mkdir(parents=True,exist_ok=True)
     scene=bpy.context.scene
     scene.render.engine='CYCLES'
     scene.cycles.device='CPU'
@@ -98,14 +105,15 @@ def main():
         clip,phase,yaw,focus,framing=VIEWS[label]
         frame=activate(rig,clip,phase)
         a=math.radians(yaw)
-        camera.location=Vector(focus)+Vector((math.sin(a)*5,-math.cos(a)*5,.025))
+        pitch=math.radians({'hand_profile':80,'slipper_opening':50}.get(label,.286))
+        camera.location=Vector(focus)+Vector((math.sin(a)*math.cos(pitch)*5,-math.cos(a)*math.cos(pitch)*5,math.sin(pitch)*5))
         aim(camera,focus);data.ortho_scale=framing
-        png=OUTPUT/(label+'.png');scene.render.filepath=str(png)
+        png=output/(label+'.png');scene.render.filepath=str(png)
         bpy.ops.render.render(write_still=True)
         receipt={'image':png.as_posix(),'source':source.as_posix(),'source_sha256':sha,
                  'engine':'Blender '+bpy.app.version_string,'renderer':'Cycles CPU','threads':2,
                  'samples':args.samples,'resolution':[576,720],'clip':'Human_'+clip,
-                 'phase':phase,'frame':frame,'yaw_degrees':yaw,'focus':focus,'orthographic_scale':framing,
+                 'phase':phase,'frame':frame,'yaw_degrees':yaw,'pitch_degrees':math.degrees(pitch),'focus':focus,'orthographic_scale':framing,
                  'actual_action_evaluated':True,'visual_approval':False,'unity_evidence':False}
         png.with_suffix('.json').write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf8')
         receipts.append(receipt)

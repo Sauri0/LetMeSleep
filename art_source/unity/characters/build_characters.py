@@ -244,8 +244,13 @@ def human():
             c.bone(eye+'.'+side,(s*.088,-.17,z),(s*.088,-.21,z),'Head')
         # Tailored sleeves use a shared elbow loop and two bone blend weights.
         sleeve=tube('Sleeve.'+side,[(s*x,0,z) for x,z in [(.185,1.17),(.275,1.17),(.43,1.16),(.49,1.16),(.53,1.16),(.565,1.155),(.68,1.15),(.735,1.15)]],
-                    [.060,.092,.077,.072,.076,.068,.049,.049],
-                    [.066,.092,.078,.073,.078,.069,.050,.050],blue, sides=10)
+                    [.064,.087,.073,.067,.063,.060,.049,.049],
+                    [.068,.089,.075,.070,.066,.062,.052,.050],blue, sides=12)
+        # A small underside fold changes only selected elbow facets; never a
+        # concentric ridge around the entire sleeve.
+        for v in sleeve.data.vertices:
+            if .48<abs(v.co.x)<.57 and v.co.z<1.13:
+                v.co.y-=.003*max(0,1-abs(abs(v.co.x)-.52)/.05)
         gu=sleeve.vertex_groups.new(name='UpperArm.'+side); gl=sleeve.vertex_groups.new(name='LowerArm.'+side)
         gc=sleeve.vertex_groups.new(name='Chest')
         for v in sleeve.data.vertices:
@@ -258,8 +263,8 @@ def human():
              [.053,.053,.050],[.054,.054,.051],blue,'LowerArm.'+side,10)
         tube('CuffPiping.'+side,[(s*.737,0,1.15),(s*.743,0,1.15)],[.054]*2,[.055]*2,trim,'LowerArm.'+side,10)
         leg=tube('PajamaLeg.'+side,[(s*.125,0,z) for z in [.13,.18,.34,.40,.45,.49,.64,.78]],
-                 [.068,.070,.074,.077,.083,.079,.095,.100],
-                 [.077,.078,.083,.086,.089,.088,.102,.108],blue,sides=10)
+                 [.068,.070,.074,.077,.078,.081,.092,.093],
+                 [.077,.078,.083,.085,.087,.090,.101,.104],blue,sides=12)
         gu=leg.vertex_groups.new(name='UpperLeg.'+side); gl=leg.vertex_groups.new(name='LowerLeg.'+side)
         gh=leg.vertex_groups.new(name='Hips')
         for v in leg.data.vertices:
@@ -275,17 +280,19 @@ def human():
         parts=[tube('Palm.'+side,[(s*x,0,1.15) for x in [.745,.775,.806,.835]],
                     [.033,.044,.049,.047],[.017,.022,.024,.021],skin,'Hand.'+side,8)]
         paths=[]
-        for digit,zoff,length in [('Index',.032,.104),('Middle',.009,.116),('Ring',-.015,.106),('Little',-.038,.082),('Thumb',.055,.070)]:
+        for digit,zoff,length in [('Index',.034,.104),('Middle',.009,.116),('Ring',-.017,.106),('Little',-.043,.082),('Thumb',.040,.070)]:
             length*=.85
             start=Vector((s*(.822 if digit!='Thumb' else .782),0,1.15+zoff))
-            direction=Vector((s,0,.52 if digit=='Thumb' else 0)).normalized()
+            direction=Vector((s,0,.72 if digit=='Thumb' else 0)).normalized()
             lengths=[length*.43,length*.32,length*.25]; points=[start]
             parent='Hand.'+side
             for i,ln in enumerate(lengths):
                 name=f'{digit}{i+1:02d}.{side}'; end=points[-1]+direction*ln
                 c.bone(name,points[-1],end,parent); paths.append((name,points[-1].copy(),end.copy(),digit))
                 points.append(end); parent=name
-            radii=[.012,.0115,.010,.006]
+            radii=([.018,.014,.0105,.007] if digit=='Thumb' else
+                   [.0095,.009,.0075,.005] if digit=='Little' else
+                   [.011,.0095,.0085,.006])
             parts.append(tube(digit+'.'+side,points,radii,radii,skin,'Hand.'+side,8))
         bpy.ops.object.select_all(action='DESELECT')
         for p in parts: p.select_set(True)
@@ -295,7 +302,7 @@ def human():
         bpy.ops.object.modifier_apply(modifier=rem.name)
         sm=hand.modifiers.new('Soften webbing','SMOOTH'); sm.factor=.55; sm.iterations=3
         bpy.ops.object.modifier_apply(modifier=sm.name)
-        dec=hand.modifiers.new('Controlled low poly hand','DECIMATE'); dec.ratio=.28
+        dec=hand.modifiers.new('Controlled low poly hand','DECIMATE'); dec.ratio=.16
         bpy.ops.object.modifier_apply(modifier=dec.name)
         hand.vertex_groups.clear()
         groups={name:hand.vertex_groups.new(name=name) for name in ['Hand.'+side]+[p[0] for p in paths]}
@@ -341,10 +348,13 @@ def human():
         for group in hand.vertex_groups: group.remove(list(range(len(hand.data.vertices))))
         for i,weight in enumerate(weights):
             for group,w in weight.items(): hand.vertex_groups[group].add([i],w,'REPLACE')
-        for poly in hand.data.polygons: poly.use_smooth=True
+        for poly in hand.data.polygons: poly.use_smooth=False
         c.finger_paths[side]=paths
-    torso=tube('PajamaJacket',[(0,0,z) for z in [.74,.78,.82,.96,1.07,1.17,1.23,1.267]],
-               [.212,.219,.214,.185,.210,.240,.200,.075],
+    # Continuous trouser seat behind the jacket joins the legs above the crotch.
+    tube('TrouserSeat',[(0,0,z) for z in [.685,.72,.77,.805]],
+         [.170,.211,.216,.208],[.087,.112,.119,.113],blue,'Hips',12)
+    torso=tube('PajamaJacket',[(0,0,z) for z in [.735,.78,.82,.96,1.07,1.17,1.235,1.285]],
+               [.224,.224,.214,.185,.210,.232,.191,.070],
                [.116,.126,.124,.115,.129,.128,.120,.070],blue)
     groups={n:torso.vertex_groups.new(name=n) for n in ['Hips','Spine','Chest']}
     for v in torso.data.vertices:

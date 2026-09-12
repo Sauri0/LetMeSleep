@@ -6,6 +6,7 @@ import bpy
 import json
 import math
 import hashlib
+import sys
 from pathlib import Path
 from mathutils import Vector
 
@@ -15,6 +16,9 @@ POSES={}
 HANDS=[]
 FACIAL=[]
 EXPRESSIONS=[]
+JAW_SEQUENCES=[]
+HAND_SPACE_CASES=[]
+ALL_FRAMES='--all-frames' in sys.argv
 
 def activate(rig,action):
     rig.animation_data_create()
@@ -69,6 +73,10 @@ for species in ['Human','Mosquito']:
             times=sorted(set([0,.125,.25,.375,.5,.625,.75,.875,1]+[(float(k.co.x)-start)/(end-start)
                        for f in curves for k in f.keyframe_points if end>start and len(f.keyframe_points)<10]))
             times=[t for t in times if 0<=t<=1]
+            if ALL_FRAMES and end>start:
+                times=sorted(set(times+[(f-start)/(end-start) for f in range(math.ceil(start),math.floor(end)+1)]))
+            if name=='Human_Clap' and start<=23.5<=end:
+                times=sorted(set(times+[(23.5-start)/(end-start)]))
             base_heads,base_mesh=sample(rig,meshes,start)
             sampled=[]; max_bone=0; max_mesh=0; min_z=999; max_stretch=1; nonfinite=0
             worst_edge=None
@@ -139,6 +147,30 @@ for species in ['Human','Mosquito']:
                     heights.append(sum(p.y for p in points)/len(points))
                 EXPRESSIONS.append({'format':kind,'clip':'Human_Hit',
                     'jaw_mesh_downward_motion_in_head_space_m':heights[0]-heights[1]})
+                jaw_indices={}
+                for obj in meshes:
+                    group=obj.vertex_groups.get('Jaw')
+                    if group:
+                        jaw_indices[obj.name]=[v.index for v in obj.data.vertices
+                                               if any(g.group==group.index and g.weight>.001 for g in v.groups)]
+                for clip_name in ['Idle','Hit','Fall','Faint','Recover']:
+                    action=next(a for a in bpy.data.actions if a.name.endswith('Human_'+clip_name))
+                    activate(rig,action);start,end=map(float,action.frame_range)
+                    frames=list(range(math.ceil(start),math.floor(end)+1)) if ALL_FRAMES else [start+(end-start)*t/8 for t in range(9)]
+                    records=[]
+                    for frame in frames:
+                        _,vertices=sample(rig,meshes,frame)
+                        head_world=rig.matrix_world@rig.pose.bones['Head'].matrix
+                        head_inverse=head_world.inverted()
+                        points=[head_inverse@Vector(vertices[name][i]) for name,indices in jaw_indices.items() for i in indices]
+                        relative=head_inverse@rig.matrix_world@rig.pose.bones['Jaw'].matrix
+                        records.append({'frame':frame,'phase':(frame-start)/(end-start),
+                                        'jaw_relative_to_head':[list(row) for row in relative],
+                                        'mixed_jaw_bounds_in_head_space':[[min(p[i] for p in points) for i in range(3)],
+                                                                          [max(p[i] for p in points) for i in range(3)]]})
+                    JAW_SEQUENCES.append({'format':kind,'clip':'Human_'+clip_name,'source_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
+                                          'included_vertices':jaw_indices,'selection':'Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining',
+                                          'samples':records,'visual_seam_review_passed':False})
             action=next(a for a in bpy.data.actions if a.name.endswith('Human_FingerCurl'))
             activate(rig,action)
             start,end=map(float,action.frame_range)
@@ -147,13 +179,29 @@ for species in ['Human','Mosquito']:
             # Compare distal joint heads, since FBX bone tails may have reconstructed lengths.
             open_joints={n:list(rig.matrix_world@rig.pose.bones[n].head) for s in ['L','R']
                          for d in ['Thumb','Index','Middle','Ring','Little'] for n in [d+'03.'+s]}
+            open_hand_space={n:palm_frames[s].inverted()@Vector(open_joints[n]) for s in ['L','R']
+                             for d in ['Thumb','Index','Middle','Ring','Little'] for n in [d+'03.'+s]}
             sample(rig,meshes,start+(end-start)*.5)
             for s in ['L','R']:
                 # The source rest palm normal is world -Y; FBX is reimported into Blender axes.
                 for d in ['Thumb','Index','Middle','Ring','Little']:
                     n=d+'03.'+s; delta=(rig.matrix_world@rig.pose.bones[n].head)-Vector(open_joints[n])
+                    local=(rig.matrix_world@rig.pose.bones['Hand.'+s].matrix).inverted()@rig.matrix_world@rig.pose.bones[n].head
                     HANDS.append({'format':kind,'digit':n,'inward_distal_joint_displacement_m':-delta.y,
-                                  'total_displacement_m':delta.length})
+                                  'total_displacement_m':delta.length,
+                                  'open_in_hand_space_m':list(open_hand_space[n]),'closed_in_hand_space_m':list(local),
+                                  'hand_space_delta_m':list(local-open_hand_space[n])})
+            # Swat rotates the arm while closing the right hand. Read in Hand
+            # space to isolate actual finger flexion from that arm rotation.
+            action=next(a for a in bpy.data.actions if a.name.endswith('Human_Swat'))
+            activate(rig,action);start,end=map(float,action.frame_range)
+            for phase in [0,.30,.48,1]:
+                sample(rig,meshes,start+(end-start)*phase)
+                hand_inverse=(rig.matrix_world@rig.pose.bones['Hand.R'].matrix).inverted()
+                HAND_SPACE_CASES.append({'format':kind,'clip':'Human_Swat','phase':phase,
+                    'side':'R','tool_geometry_included':False,
+                    'distal_heads_in_hand_space_m':{d:list(hand_inverse@rig.matrix_world@rig.pose.bones[d+'03.R'].head)
+                                                   for d in ['Thumb','Index','Middle','Ring','Little']}})
 
 comparisons=[]
 for species in ['Human','Mosquito']:
@@ -164,7 +212,9 @@ for species in ['Human','Mosquito']:
         worst=max(errors)
         comparisons.append({'clip':name,'max_source_fbx_head_difference_m':worst[0],'time':worst[1],'bone':worst[2]})
 report={'scope':'Read-only Blender source and reimported FBX. Measures motion, not artistic approval or Unity playback.',
+        'sampling':'Every integer source frame plus fixed checkpoints and Clap23.5' if ALL_FRAMES else 'Nine fixed checkpoints plus Clap23.5',
         'blender':bpy.app.version_string,'actions':RESULTS,'source_fbx_comparison':comparisons,'hands':HANDS,'facial':FACIAL,'expressions':EXPRESSIONS,
+        'jaw_sequences':JAW_SEQUENCES,'rotated_arm_hand_space_cases':HAND_SPACE_CASES,
         'fbx_evaluation_note':'FBX-imported connected bones are restored to the source unconnected contract before evaluation.'}
 (ROOT/'motion_audit.json').write_text(json.dumps(report,indent=2),encoding='utf8',newline='\n')
 print(json.dumps({'actions':[{k:r[k] for k in ['clip','format','max_mesh_vertex_motion_m','minimum_mesh_z_m','max_edge_stretch_ratio']} for r in RESULTS],
