@@ -126,7 +126,11 @@ namespace LetMeSleep.Online
             }
             if (peer != lobby.OwnerId) return;
             if (kind == Snapshot && GameplayWireCodec.TryDecode(packet, out GameSessionState snapshot))
-            { if (snapshot.SessionEpoch == config.SessionEpoch && snapshot.RoundId == config.RoundId) { lastOwnerPacket = now; receivedSnapshot = true; } replica.ApplySnapshot(snapshot, snapshot.HostTime); }
+            {
+                if (snapshot.SessionEpoch != config.SessionEpoch || snapshot.RoundId != config.RoundId) return;
+                lastOwnerPacket = now; receivedSnapshot = true;
+                replica.ApplySnapshot(snapshot, snapshot.HostTime);
+            }
             else if (kind == Private && GameplayWireCodec.TryDecode(packet, out ActorPrivateState state)) replica.ApplyPrivate(state);
             else if (kind == Event && GameplayWireCodec.TryDecode(packet, out GameplayEvent item)) replica.ApplyEvent(item);
         }

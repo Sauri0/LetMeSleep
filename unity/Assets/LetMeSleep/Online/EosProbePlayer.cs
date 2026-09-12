@@ -16,11 +16,12 @@ namespace LetMeSleep.Online
         private bool startedRoom, finished;
         private double startTime, lastSend;
         private string networkType = "NotEstablished";
+        private string closeReason = "";
         private int received;
         [Serializable] private sealed class Invitation { public string code, owner; }
         [Serializable] private sealed class Receipt
         {
-            public string schema = "lms-eos-unity-probe-1", role, result, networkType, unityVersion;
+            public string schema = "lms-eos-unity-probe-1", role, result, networkType, closeReason, unityVersion;
             public int received;
             public bool wanVerified = false;
         }
@@ -65,7 +66,11 @@ namespace LetMeSleep.Online
                 startedRoom = true;
                 lobby = new EosLobbySession(connection);
                 transport = new EosPeerTransport(connection, lobby, true);
-                transport.PeerStateChanged += (_, state) => networkType = state;
+                transport.PeerStateChanged += (_, state) =>
+                {
+                    if (state.StartsWith("Closed:", StringComparison.Ordinal)) closeReason = state.Substring("Closed:".Length);
+                    else networkType = state;
+                };
                 transport.PacketReceived += Receive;
                 if (role == "host") lobby.Create();
                 else
@@ -114,7 +119,7 @@ namespace LetMeSleep.Online
             if (finished) return;
             finished = true;
             if (!string.IsNullOrWhiteSpace(receiptPath))
-                File.WriteAllText(receiptPath, JsonUtility.ToJson(new Receipt { role = role, result = result, networkType = networkType, received = received, unityVersion = Application.unityVersion }, true));
+                File.WriteAllText(receiptPath, JsonUtility.ToJson(new Receipt { role = role, result = result, networkType = networkType, closeReason = closeReason, received = received, unityVersion = Application.unityVersion }, true));
             Debug.Log("LMS_EOS_PROBE " + role + " " + result);
             transport?.Dispose(); lobby?.Dispose(); connection?.Dispose();
             Application.Quit(result == "Success" ? 0 : 2);

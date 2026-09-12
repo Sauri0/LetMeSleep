@@ -78,15 +78,58 @@ namespace LetMeSleep.Online
             Code = code; LobbyId = Prefix + code;
             StartOperation(LobbyState.Joining);
             uint operation = generation;
-            var options = new JoinLobbyByIdOptions { LocalUserId = connection.LocalUserId, LobbyId = LobbyId, PresenceEnabled = false };
-            lobby.JoinLobbyById(ref options, null, (ref JoinLobbyByIdCallbackInfo info) =>
+            var create = new CreateLobbySearchOptions { MaxResults = 1 };
+            Result result = lobby.CreateLobbySearch(ref create, out var search);
+            if (result != Result.Success || search == null) { Fail("Search_" + result); return; }
+            var target = new LobbySearchSetLobbyIdOptions { LobbyId = LobbyId };
+            result = search.SetLobbyId(ref target);
+            if (result != Result.Success) { search.Release(); Fail("Search_" + result); return; }
+            var find = new LobbySearchFindOptions { LocalUserId = connection.LocalUserId };
+            search.Find(ref find, null, (ref LobbySearchFindCallbackInfo info) =>
             {
-                if (!IsCurrent(operation)) { if (info.ResultCode == Result.Success) CleanupLateLobby(info.LobbyId, false); return; }
-                if (info.ResultCode != Result.Success) { Fail("Join_" + info.ResultCode); return; }
-                LobbyId = info.LobbyId;
-                membershipAcquired = true;
-                if (!RefreshMembers()) { CleanupLateLobby(LobbyId, false); Fail("IncompatibleOrUnavailableLobby"); return; }
-                SetState(LobbyState.Connected);
+                try
+                {
+                    if (!IsCurrent(operation)) return;
+                    if (info.ResultCode != Result.Success) { Fail("Search_" + info.ResultCode); return; }
+                    var count = new LobbySearchGetSearchResultCountOptions();
+                    if (search.GetSearchResultCount(ref count) != 1) { Fail("LobbyNotFound"); return; }
+                    var index = new LobbySearchCopySearchResultByIndexOptions { LobbyIndex = 0 };
+                    result = search.CopySearchResultByIndex(ref index, out var details);
+                    if (result != Result.Success || details == null) { Fail("LobbyNotFound"); return; }
+                    ValidateAndJoin(details, operation);
+                }
+                finally { search.Release(); }
+            });
+        }
+
+        private void ValidateAndJoin(LobbyDetails details, uint operation)
+        {
+            var copy = new LobbyDetailsCopyInfoOptions();
+            Result result = details.CopyInfo(ref copy, out var candidate);
+            if (result != Result.Success || !candidate.HasValue)
+            { details.Release(); Fail("InvalidLobbyDetails"); return; }
+            var info = candidate.Value;
+            var rejection = LobbyJoinPolicy.Validate(connection.LocalUserId.ToString(),
+                info.LobbyOwnerUserId?.ToString(), info.BucketId?.ToString(), info.MaxMembers, info.AvailableSlots,
+                info.AllowHostMigration, info.RTCRoomEnabled, info.AllowJoinById);
+            if (rejection != LobbyCandidateRejection.None)
+            { details.Release(); Fail(rejection.ToString()); return; }
+            if (!string.Equals(info.LobbyId?.ToString(), LobbyId, StringComparison.Ordinal))
+            { details.Release(); Fail("InvalidLobbyDetails"); return; }
+
+            var options = new JoinLobbyOptions { LocalUserId = connection.LocalUserId, LobbyDetailsHandle = details, PresenceEnabled = false };
+            lobby.JoinLobby(ref options, null, (ref JoinLobbyCallbackInfo joined) =>
+            {
+                try
+                {
+                    if (!IsCurrent(operation)) { if (joined.ResultCode == Result.Success) CleanupLateLobby(joined.LobbyId, false); return; }
+                    if (joined.ResultCode != Result.Success) { Fail("Join_" + joined.ResultCode); return; }
+                    LobbyId = joined.LobbyId;
+                    membershipAcquired = true;
+                    if (!RefreshMembers()) { CleanupLateLobby(LobbyId, false); Clear(); Fail("IncompatibleOrUnavailableLobby"); return; }
+                    SetState(LobbyState.Connected);
+                }
+                finally { details.Release(); }
             });
         }
 
