@@ -192,6 +192,25 @@ namespace LetMeSleep.Presentation.Editor
                 moonObject.transform.localRotation = Quaternion.Euler(42f, -28f, 0f);
                 Light moon = moonObject.AddComponent<Light>();
 
+                var mapLightTemplateObject = new GameObject("MapPointLight_Template");
+                mapLightTemplateObject.transform.SetParent(root.transform, false);
+                Light mapLightTemplate = mapLightTemplateObject.AddComponent<Light>();
+                mapLightTemplate.type = LightType.Point;
+                mapLightTemplate.shadows = LightShadows.Soft;
+                mapLightTemplate.shadowResolution = (LightShadowResolution)512;
+                UniversalAdditionalLightData additionalLightData =
+                    mapLightTemplateObject.AddComponent<UniversalAdditionalLightData>();
+                var serializedLightData = new SerializedObject(additionalLightData);
+                SerializedProperty resolutionTier = serializedLightData.FindProperty(
+                    "m_AdditionalLightsShadowResolutionTier");
+                if (resolutionTier == null)
+                    throw new InvalidOperationException(
+                        "URP additional-light custom shadow tier is unavailable.");
+                resolutionTier.intValue = UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierCustom;
+                serializedLightData.ApplyModifiedPropertiesWithoutUndo();
+                mapLightTemplate.enabled = false;
+                mapLightTemplateObject.SetActive(false);
+
                 var volumeObject = new GameObject("Volume_Global");
                 volumeObject.transform.SetParent(root.transform, false);
                 Volume volume = volumeObject.AddComponent<Volume>();
@@ -206,6 +225,7 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(rig, "moon", moon);
                 Assign(rig, "globalVolume", volume);
                 Assign(rig, "nightSkybox", nightSkybox);
+                Assign(rig, "mapLightTemplate", mapLightTemplate);
                 rig.ApplyPreset();
                 moon.lightmapBakeType = LightmapBakeType.Mixed;
 
