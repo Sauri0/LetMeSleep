@@ -1,0 +1,52 @@
+{
+  "pid": 36772,
+  "finished": true,
+  "exitCode": 0,
+  "threads": 2,
+  "render": "One isolated tree; Cycles CPU 640x640 16 samples",
+  "utc": "2026-09-12T21:10:21.6224651Z",
+  "stdout": "N:\\LetMeSleep\\Worktrees\\maps\\art_source\\unity\\environments\\quality_exterior\\.verification\\blender-ex2-stdout.log",
+  "stderr": "N:\\LetMeSleep\\Worktrees\\maps\\art_source\\unity\\environments\\quality_exterior\\.verification\\blender-ex2-stderr.log",
+  "sourceCommit": "9ea74ab7cf93936cf4337a8068f77a6c38fcc36b",
+  "blenderVersion": "5.2.1 LTS 9e2066aef7ef",
+  "processClosed": true,
+  "uniqueMeshes": 40,
+  "instances": 328,
+  "maxWorldVertexErrorMetres": 3.844384073399806E-06,
+  "files": [
+    {
+      "name": "ExteriorWitnessKit.blend",
+      "bytes": 204779,
+      "sha256": "76734143e2b2873db2718d506f28cec23c5469080a490cecb3697d88d4978582"
+    },
+    {
+      "name": "generated_exterior.json",
+      "bytes": 518360,
+      "sha256": "b90b3d406aa02518cd219e8404e97072a5ddf5494dc3cdde669b49a76c190bcd"
+    },
+    {
+      "name": "import_blender.py",
+      "bytes": 5539,
+      "sha256": "97d3bf56906d1ce0f81dedafc5f833b7e27a561a868c80df0c5bea57c5e482dc"
+    },
+    {
+      "name": "tree-volume-exterior2.png",
+      "bytes": 418476,
+      "sha256": "74a83302cf48ea3146b681533e2258de4d1e0d1173d70202267f6bf41a575f31"
+    }
+  ],
+  "visualScope": "Isolated tree shape in Blender studio lighting; not native Unity/nighttime evidence.",
+  "observed": [
+    "Crown appears connected rather than separate diamonds.",
+    "Three regular foliage tiers and a long bare trunk remain conspicuous.",
+    "Patio pruning and full composition require native views."
+  ],
+  "warnings": [
+    "Material.use_nodes and World.use_nodes deprecated for Blender 6.0; generation completed on 5.2.1 LTS."
+  ],
+  "pending": [
+    "Native EX2 Unity views",
+    "Visual approval",
+    "Human and mosquito traversal"
+  ]
+}

@@ -11,9 +11,11 @@ Fuente revisada tras abrir las cinco `exterior1-{window-front,window-side,patio-
 
 Banco EX4: Elementos confirmó su propiedad y entrega independiente `4a62d6b`; Mapas no edita el banco. Vidrio/exposición EX5 queda en Presentación; la presente revisión no altera luces ni materiales comunes.
 
-Estado de exterior2: receta y JSON regenerados, **nueva inspección Blender/Unity aún pendiente**. Son40mallas,328instancias y5,262triángulos únicos; estos números no son una aprobación artística. Distancias mínimas al spawn oeste/este:247.366mm y653.886mm. Los dos rayos centrales desde los ojos hacia `(6,1.4,14)` no chocan con la geometría cercana analizada; esto no prueba la apertura de todo el campo visual ni navegación. El `.blend` y el receipt nativo descritos debajo corresponden a exterior1 hasta su actualización explícita.
+Estado de exterior2: receta, JSON y editable regenerados; **inspección nativa Unity aún pendiente**. Son40mallas,328instancias y5,262triángulos únicos; estos números no son una aprobación artística. Distancias mínimas al spawn oeste/este:247.366mm y653.886mm. Los dos rayos centrales desde los ojos hacia `(6,1.4,14)` no chocan con la geometría cercana analizada; esto no prueba la apertura de todo el campo visual ni navegación. El receipt nativo de la sección histórica corresponde a exterior1.
 
-Se solicitó turno BlenderCPU2 de≤60s para reconstrucción más una imagen aislada de volumen del árbol (CyclesCPU16muestras640px), sin Unity. El importador ahora comprueba vértices transformados contra la transformación Unity antes de guardar; la imagen aislada sólo evalúa forma y no sustituye la captura nocturna nativa.
+Director concedió el turno BlenderCPU2 de≤60s. PID36772 terminó ExitCode0 en aproximadamente12s: `ExteriorWitnessKit.blend` actualizado y `tree-volume-exterior2.png` generado con CyclesCPU16muestras640px, sin Unity. CIM posterior no encontró el proceso y el turno fue liberado explícitamente. El importador comprobó vértices transformados contra Unity antes de guardar; error máximo3.8444e−6m. `blender_ex2_receipt.json` registra hashes, tamaños, versión, PID y logs. No se cambió geometría ni contratos de `9ea74ab` durante el turno.
+
+La imagen aislada se abrió y revisó: la copa es continua y desaparecen los diamantes separados; todavía se leen tres estratos regulares y un tramo largo de tronco desnudo. No permite aprobar la poda desde la cámara mosquito ni la composición del patio. Esta limitación se entrega expresamente para comparación nativa; la iluminación de estudio no representa materiales ni exposición nocturna de Unity. Los avisos de Blender se limitan a futura deprecación de Material.use_nodes/World.use_nodes en6.0; ejecución actual5.2.1LTS completada.
 
 ## Registro de exterior1
 
