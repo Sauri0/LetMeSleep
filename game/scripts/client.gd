@@ -39,6 +39,10 @@ var rig: Node3D
 var arm: SpringArm3D
 var camera: Camera3D
 var camera_initialized := false
+var mosquito_zoom_target := MosquitoCameraScript.DEFAULT_REACH
+var mosquito_zoom := MosquitoCameraScript.DEFAULT_REACH
+var _mosquito_input_view := Vector2.ZERO
+var _mosquito_input_initialized := false
 var was_alive := true
 var screenshot_done := false
 var screenshot_age := 0.0
@@ -189,6 +193,8 @@ func _apply_surface_view_transition() -> void:
 	var delta_pitch:=pitch-float(transition.source_pitch)
 	yaw=wrapf(float(transition.yaw)+delta_yaw,-PI,PI)
 	pitch=clampf(float(transition.pitch)+delta_pitch,-MosquitoPoseScript.VIEW_PITCH_LIMIT,MosquitoPoseScript.VIEW_PITCH_LIMIT)
+	_mosquito_input_view=Vector2(yaw,pitch)
+	_mosquito_input_initialized=true
 	_view_revision=revision
 	sequence=maxi(sequence,int(transition.input_seq))
 	action_sequence+=1
@@ -259,6 +265,7 @@ func _snapshot(data: Dictionary) -> void:
 	waiting = false
 	walking = false
 	var actor: Dictionary = data.get("actors", {}).get(local_id, {})
+	if role!=str(actor.get("role","human")): _mosquito_input_initialized=false
 	role = str(actor.get("role", "human"))
 	if starting:
 		if is_instance_valid(voice): voice.clear()
@@ -266,6 +273,10 @@ func _snapshot(data: Dictionary) -> void:
 		world.load_map(str(data.get("config", {}).get("map_id", "house")))
 		yaw = float(actor.get("yaw", 0.0))
 		pitch = 0.0
+		mosquito_zoom_target=MosquitoCameraScript.DEFAULT_REACH
+		mosquito_zoom=mosquito_zoom_target
+		_mosquito_input_view=Vector2(yaw,float(actor.get("pitch",0.0)))
+		_mosquito_input_initialized=true
 		sequence = 0
 		action_sequence = 0
 		_view_revision=0
@@ -326,21 +337,23 @@ func _process(dt: float) -> void:
 		var visual: Node3D = world.get_actor(local_id)
 		var position: Vector3 = visual.global_position if visual != null else actor.p
 		var attached_view := role=="mosquito" and str(actor.get("state",""))=="biting"
-		var mosquito_view: Dictionary=MosquitoCameraScript.target(actor,yaw,pitch) if role=="mosquito" else {}
+		if role=="mosquito": mosquito_zoom=MosquitoCameraScript.smooth_reach(mosquito_zoom,mosquito_zoom_target,dt)
+		var mosquito_view: Dictionary=MosquitoCameraScript.target(actor,yaw,pitch,mosquito_zoom) if role=="mosquito" else {}
 		var offset: Vector3 = HumanPose.view_origin(actor) - Vector3(actor.p) if role == "human" else mosquito_view.offset
 		var camera_origin := position + offset
 		if role=="human" and visual!=null:
 			camera_origin=visual.human_view_origin()
 		if role == "mosquito":
 			var map: Dictionary = world.map_data
-			camera_origin.x = clampf(camera_origin.x, -float(map.half_x)+0.16, float(map.half_x)-0.16)
-			camera_origin.z = clampf(camera_origin.z, -float(map.half_z)+0.16, float(map.half_z)-0.16)
-			camera_origin.y = clampf(camera_origin.y, 0.16, float(map.ceiling)-0.16)
+			var margin := lerpf(.055,.16,clampf(mosquito_zoom/.35,0.0,1.0))
+			camera_origin.x = clampf(camera_origin.x, -float(map.half_x)+margin, float(map.half_x)-margin)
+			camera_origin.z = clampf(camera_origin.z, -float(map.half_z)+margin, float(map.half_z)-margin)
+			camera_origin.y = clampf(camera_origin.y, margin, float(map.ceiling)-margin)
 		rig.global_position = camera_origin
 		if role=="mosquito":
 			rig.basis=MosquitoCameraScript.smooth_basis(rig.basis,mosquito_view.basis,dt) if camera_initialized else Basis(mosquito_view.basis)
 		else: rig.rotation = Vector3(pitch, yaw, 0)
-		arm.spring_length = 0.0 if role == "human" else 0.85
+		arm.spring_length = 0.0 if role == "human" else mosquito_zoom
 		if role=="mosquito":
 			# SpringArm updates in physics, before this frame's interpolated rig
 			# rotation. Sweep again from the final pose so a corner cannot render
@@ -349,9 +362,12 @@ func _process(dt: float) -> void:
 			if attached_view:
 				camera_actor=actor.duplicate()
 				camera_actor.p=position
-			var placement: Dictionary=MosquitoCameraScript.resolve(world.get_world_3d().direct_space_state,camera_actor,camera_origin,rig.basis,arm.shape,.85)
+			var placement: Dictionary=MosquitoCameraScript.resolve(world.get_world_3d().direct_space_state,camera_actor,camera_origin,rig.basis,arm.shape,mosquito_zoom)
 			rig.global_position=placement.origin
 			camera.position=Vector3(0,0,placement.distance)
+			if visual!=null: visual.model.visible=mosquito_zoom>.055
+		else:
+			camera.position=Vector3.ZERO
 		camera.fov = 78.0 if role == "human" else 70.0
 		if role == "mosquito":
 			world.show_assignment(personal.get("assignment", {}), camera, position if attached_view else actor.p, personal.get("focus",{}))
@@ -390,7 +406,19 @@ func _physics_process(dt: float) -> void:
 			jump = Input.is_action_pressed("jump")
 	sequence += 1
 	var transport: Node = practice if practice_active else network
-	transport.send_input(sequence, move, yaw, pitch, interact, sprint, crouch, jump)
+	var input_view := _movement_view(move,interact)
+	transport.send_input(sequence, move, input_view.x, input_view.y, interact, sprint, crouch, jump)
+
+func _movement_view(move: Vector3, interact: bool) -> Vector2:
+	if role!="mosquito" or waiting or not playing: return Vector2(yaw,pitch)
+	var actor: Dictionary=state.get("actors",{}).get(local_id,{})
+	if not _mosquito_input_initialized or str(actor.get("state",""))=="stunned":
+		_mosquito_input_view=Vector2(float(actor.get("yaw",yaw)),float(actor.get("pitch",pitch)))
+		_mosquito_input_initialized=true
+	# Free look stays local while resting. Movement and focus still use the
+	# camera's direction, including the existing surface-relative yaw contract.
+	if move.length_squared()>.0001 or interact: _mosquito_input_view=Vector2(yaw,pitch)
+	return _mosquito_input_view
 
 func _on_escape() -> void:
 	_cancel_throw()
@@ -462,6 +490,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not playing and not waiting:
 		return
 	if ui.is_menu_open():
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP,MOUSE_BUTTON_WHEEL_DOWN]:
+		if playing and not waiting and role=="mosquito" and bool(state.get("actors",{}).get(local_id,{}).get("alive",false)):
+			var steps := maxf(event.factor,.01)*(-1.0 if event.button_index==MOUSE_BUTTON_WHEEL_UP else 1.0)
+			mosquito_zoom_target=MosquitoCameraScript.zoom_reach(mosquito_zoom_target,steps)
 		return
 	if event is InputEventMouseMotion:
 		var sensitivity: float = PreferencesScript.human_sensitivity if waiting or role == "human" else PreferencesScript.mosquito_sensitivity
