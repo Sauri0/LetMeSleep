@@ -74,3 +74,11 @@ El builder y los tipos exactos del puente compilan offline contra APIs de Unity6
 Al ejecutar, el builder verifica bounds/ejes y hornea la conversión FBX probada en copias Mesh, conservando UV2 y corrigiendo normales/tangentes/winding. Comprueba IDs, referencias de puerta, posiciones de spawn contra AABB conservadoras de geometría y conservación de colliders/IDs tras guardar y reabrir el prefab. Escribe `ALFA-MAPS-IMPORT-RECEIPT.json` únicamente tras completar ambos mapas. Ese recibo no existe como evidencia hasta ejecución por Director.
 
 Pendientes nativos: generar ambos mapas, revisar luces/UV2 y pérdida de luz, recorrer escalera/puertas con ambos roles, cámara, spawns, recogida real de herramienta y partida. Sin editor/render/playtest propio ni afirmación de WAN/FPS en este lote.
+
+## Corrección del primer intento de importación de mapas
+
+Director reprodujo el 12 septiembre a las10:28:20Z un fallo de clave repetida al guardar/comprobar la casa: `HousePatio/Furnishings/Dining_Chair_S/Collider_Chair_Leg`. La muestra heredada tenía colliders de patas distintos en geometría pero con el mismo nombre de hijo. Esto impedía identificar cada collider por su ruta completa.
+
+El builder ahora renombra los hijos duplicados en las instancias del mapa con sufijos `__part_00`, `__part_01`, etc., ordenados por la geometría local exacta del BoxCollider antes de asignar SurfaceId. Comprueba unicidad final de todas las rutas y rechaza geometría duplicada o ancestros ambiguos, en vez de descartar entradas de la comprobación. No cambia tamaño, centro, transform o colisión. El hash se actualiza porque cambia la identidad canónica del mapa. Se conserva la validación de colliders/IDs al reabrir el prefab.
+
+La preparación para pickups distingue triggers de interacción de colliders sólidos: no asigna superficies posables a triggers, no los considera bloqueos de spawn y comprueba por separado que sobrevivan al guardado. Todavía no incorpora GameplayToolPickup hasta recibir el commit de W1. Parche compilado offline, pendiente reejecución nativa completa.

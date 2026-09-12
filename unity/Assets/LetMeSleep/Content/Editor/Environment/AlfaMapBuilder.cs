@@ -227,12 +227,42 @@ namespace LetMeSleep.Content.Editor
         static string Hierarchy(Transform t){string p=t.name;while(t.parent!=null){t=t.parent;p=t.name+"/"+p;}return p;}
         static void BindGameplay(GameObject map,uint start,uint doorStart)
         {
-            uint id=start;foreach(var collider in map.GetComponentsInChildren<Collider>(true).OrderBy(c=>Hierarchy(c.transform),StringComparer.Ordinal)){
-                Need(!collider.isTrigger,"Map physics must not become triggers");var surface=collider.GetComponent<GameplaySurface>()??collider.gameObject.AddComponent<GameplaySurface>();surface.SurfaceId=id++;surface.Revision=1;surface.CanPerch=!Hierarchy(collider.transform).Contains("WorldBoundary_NoPerch");}
+            CanonicalizeColliderPaths(map);
+            uint id=start;foreach(var collider in map.GetComponentsInChildren<Collider>(true).Where(c=>!c.isTrigger).OrderBy(c=>Hierarchy(c.transform),StringComparer.Ordinal)){
+                var surface=collider.GetComponent<GameplaySurface>()??collider.gameObject.AddComponent<GameplaySurface>();surface.SurfaceId=id++;surface.Revision=1;surface.CanPerch=!Hierarchy(collider.transform).Contains("WorldBoundary_NoPerch");}
             foreach(var door in map.GetComponentsInChildren<GameplayDoor>().OrderBy(d=>d.name,StringComparer.Ordinal)){
                 door.DoorId=doorStart++;Need(door.Hinge!=null&&door.Leaf!=null,"Door contract incomplete");door.SurfaceId=door.Leaf.GetComponent<GameplaySurface>().SurfaceId;
                 var definition=door.Definition;Need(Mathf.Abs(definition.LeafCenterLocal.X-.535f)<.001f,"Gameplay door centre differs from real leaf");}
             var surfaces=map.GetComponentsInChildren<GameplaySurface>();Need(surfaces.All(s=>s.SurfaceId!=0)&&surfaces.Select(s=>s.SurfaceId).Distinct().Count()==surfaces.Length,"Duplicate/zero SurfaceId");
+        }
+        static void CanonicalizeColliderPaths(GameObject map)
+        {
+            // Legacy sample furniture named each leg collider identically. Give those
+            // actual child objects deterministic names BEFORE assigning SurfaceIds.
+            // Sorting by local box geometry makes the result independent of enumeration.
+            var colliders=map.GetComponentsInChildren<Collider>(true);
+            foreach(var c in colliders)Need(c.GetComponents<Collider>().Length==1,"Each collider needs its own child GameObject: "+Hierarchy(c.transform));
+            foreach(var group in colliders.GroupBy(c=>Hierarchy(c.transform),StringComparer.Ordinal).Where(g=>g.Count()>1).ToArray())
+            {
+                var items=group.ToArray();Transform parent=items[0].transform.parent;
+                Need(items.All(c=>c.transform.parent==parent),"Ambiguous duplicate ancestor names: "+group.Key);
+                Need(items.All(c=>c is BoxCollider),"Duplicate non-box collider names require explicit source fix: "+group.Key);
+                var ordered=items.OrderBy(BoxSignature,StringComparer.Ordinal).ToArray();
+                Need(ordered.Select(BoxSignature).Distinct(StringComparer.Ordinal).Count()==ordered.Length,"Duplicate collider geometry: "+group.Key);
+                string prefix=items[0].name+"__part_";
+                for(int i=0;i<ordered.Length;i++){
+                    string name=prefix+i.ToString("00",System.Globalization.CultureInfo.InvariantCulture);
+                    Need(parent==null||parent.Find(name)==null,"Canonical collider name already exists: "+name);
+                    ordered[i].gameObject.name=name;
+                }
+            }
+            Need(colliders.Select(c=>Hierarchy(c.transform)).Distinct(StringComparer.Ordinal).Count()==colliders.Length,"Collider paths remain ambiguous after canonical naming");
+        }
+        static string BoxSignature(Collider collider)
+        {
+            var box=(BoxCollider)collider;Transform t=box.transform;
+            float[] values={t.localPosition.x,t.localPosition.y,t.localPosition.z,t.localRotation.x,t.localRotation.y,t.localRotation.z,t.localRotation.w,t.localScale.x,t.localScale.y,t.localScale.z,box.center.x,box.center.y,box.center.z,box.size.x,box.size.y,box.size.z};
+            return string.Join("|",values.Select(v=>v.ToString("R",System.Globalization.CultureInfo.InvariantCulture)));
         }
         static Bounds ColliderBounds(Collider c)
         {
@@ -242,21 +272,25 @@ namespace LetMeSleep.Content.Editor
         static void CheckSpawns(GameObject map,Transform[] points,float radius,float height,bool sphereCenter=false)
         {
             // Conservative world AABB proof avoids querying unrelated open editor scenes.
-            foreach(var point in points)foreach(var c in map.GetComponentsInChildren<Collider>()){
+            foreach(var point in points)foreach(var c in map.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger)){
                 Bounds b=ColliderBounds(c);Vector3 p=point.position-(sphereCenter?Vector3.up*radius:Vector3.zero);float low=p.y+radius,high=p.y+height-radius;
                 float dx=Mathf.Max(b.min.x-p.x,0,p.x-b.max.x),dz=Mathf.Max(b.min.z-p.z,0,p.z-b.max.z),dy=Mathf.Max(b.min.y-high,0,low-b.max.y);
                 Need(dx*dx+dy*dy+dz*dz>=radius*radius-.000001f,"Spawn intersects geometry: "+point.name+" / "+Hierarchy(c.transform));}
         }
         static void SavePrefabAndInstantiate(ref GameObject root,string path,Scene scene)
         {
-            var before=root.GetComponentsInChildren<Collider>().ToDictionary(c=>Hierarchy(c.transform),ColliderBounds);
-            var ids=root.GetComponentsInChildren<Collider>().ToDictionary(c=>Hierarchy(c.transform),c=>c.GetComponent<GameplaySurface>().SurfaceId);
+            var before=root.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger).ToDictionary(c=>Hierarchy(c.transform),ColliderBounds);
+            var ids=root.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger).ToDictionary(c=>Hierarchy(c.transform),c=>c.GetComponent<GameplaySurface>().SurfaceId);
+            var triggers=root.GetComponentsInChildren<Collider>().Where(c=>c.isTrigger).ToDictionary(c=>Hierarchy(c.transform),ColliderBounds);
             Need(PrefabUtility.SaveAsPrefabAsset(root,path)!=null,"Map prefab save failed");Object.DestroyImmediate(root);
             root=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path),scene);
-            var colliders=root.GetComponentsInChildren<Collider>();Need(colliders.Length==before.Count,"Prefab lost colliders");
+            var colliders=root.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger).ToArray();Need(colliders.Length==before.Count,"Prefab lost colliders");
             foreach(var collider in colliders){string key=Hierarchy(collider.transform);Need(before.ContainsKey(key),"Prefab changed hierarchy");Bounds b=ColliderBounds(collider);
                 Need(Vector3.Distance(b.min,before[key].min)<.002f&&Vector3.Distance(b.max,before[key].max)<.002f,"Prefab lost collider placement: "+key);
                 Need(collider.GetComponent<GameplaySurface>().SurfaceId==ids[key],"Prefab lost stable surface identity");}
+            var savedTriggers=root.GetComponentsInChildren<Collider>().Where(c=>c.isTrigger).ToArray();Need(savedTriggers.Length==triggers.Count,"Prefab lost interaction triggers");
+            foreach(var trigger in savedTriggers){string key=Hierarchy(trigger.transform);Need(triggers.ContainsKey(key),"Prefab changed trigger hierarchy");Bounds b=ColliderBounds(trigger);
+                Need(Vector3.Distance(b.min,triggers[key].min)<.002f&&Vector3.Distance(b.max,triggers[key].max)<.002f,"Prefab moved interaction trigger: "+key);}
         }
         static void AddReviewLights(Plan plan,bool lobby)
         {
