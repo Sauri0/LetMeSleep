@@ -1,0 +1,3473 @@
+{
+	"cases": [
+		{
+			"approaches": 119,
+			"map_id": "house-v3-1",
+			"negative_cases": [
+				{
+					"case": "blocked_destination",
+					"result": {
+						"end_distance": 2.12728118896484,
+						"final": "(-3.1, 0.0, -8.8)",
+						"max_motion": 0.0,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "end_blocked",
+						"stalled_ticks": 0,
+						"ticks": 0,
+						"waypoint_index": 1
+					}
+				},
+				{
+					"case": "blocked_waypoint",
+					"result": {
+						"end_distance": 1.86148715019226,
+						"final": "(-3.1, 0.0, -8.8)",
+						"max_motion": 0.0,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "waypoint_blocked",
+						"stalled_ticks": 0,
+						"ticks": 0,
+						"waypoint_index": 1
+					}
+				},
+				{
+					"case": "missing_zone",
+					"errors": [
+						"zone_id does not resolve",
+						"structure belongs to another functional zone"
+					]
+				},
+				{
+					"case": "detached_origin",
+					"errors": [
+						"origin does not match zone anchor"
+					]
+				},
+				{
+					"case": "missing_furniture_approach",
+					"errors": [
+						"missing approach for furniture solid-0198"
+					]
+				},
+				{
+					"case": "duplicate_furniture_approach",
+					"errors": [
+						"duplicate approach for furniture solid-0192"
+					]
+				},
+				{
+					"case": "nonfinite_zone_anchor",
+					"errors": [
+						"zone anchor is not a finite Vector3"
+					]
+				},
+				{
+					"case": "zero_budget",
+					"result": {
+						"end_distance": 1.86148715019226,
+						"final": "(-3.1, 0.0, -8.8)",
+						"max_motion": 0.0,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "incomplete",
+						"stalled_ticks": 0,
+						"ticks": 0,
+						"waypoint_index": 1
+					}
+				}
+			],
+			"physical_routes": 238,
+			"rooms": 22,
+			"routes": [
+				{
+					"forward": {
+						"end_distance": 1.51082909107208,
+						"final": "(-3.461515, 0.0, -8.849973)",
+						"max_motion": 0.103333242237568,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64742946624756,
+						"final": "(-4.747429, 0.0, -8.800241)",
+						"max_motion": 0.103333599865437,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 97,
+						"waypoint_index": 2
+					},
+					"room": "room-00",
+					"structure_id": "solid-0192",
+					"zone_id": "room-00/kitchen"
+				},
+				{
+					"forward": {
+						"end_distance": 2.37848138809204,
+						"final": "(-3.461515, 0.0, -8.849973)",
+						"max_motion": 0.103333242237568,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65491580963135,
+						"final": "(-4.754916, 0.0, -8.800098)",
+						"max_motion": 0.103333219885826,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 101,
+						"waypoint_index": 2
+					},
+					"room": "room-00",
+					"structure_id": "solid-0193",
+					"zone_id": "room-00/kitchen"
+				},
+				{
+					"forward": {
+						"end_distance": 2.41325092315674,
+						"final": "(-3.461515, 0.0, -8.849973)",
+						"max_motion": 0.103333242237568,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64605808258057,
+						"final": "(-4.746058, 0.0, -8.800185)",
+						"max_motion": 0.103333435952663,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 102,
+						"waypoint_index": 2
+					},
+					"room": "room-00",
+					"structure_id": "solid-0194",
+					"zone_id": "room-00/kitchen"
+				},
+				{
+					"forward": {
+						"end_distance": 1.46090626716614,
+						"final": "(-3.461515, 0.0, -8.849973)",
+						"max_motion": 0.103333242237568,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64754915237427,
+						"final": "(-4.747549, 0.0, -8.799831)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 2
+					},
+					"room": "room-00",
+					"structure_id": "solid-0195",
+					"zone_id": "room-00/kitchen"
+				},
+				{
+					"forward": {
+						"end_distance": 6.5129771232605,
+						"final": "(-3.461657, 0.0, -8.83891)",
+						"max_motion": 0.103333309292793,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65644407272339,
+						"final": "(-4.756444, 0.0, -8.800032)",
+						"max_motion": 0.103333346545696,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 142,
+						"waypoint_index": 2
+					},
+					"room": "room-00",
+					"structure_id": "solid-0196",
+					"zone_id": "room-00/dining"
+				},
+				{
+					"forward": {
+						"end_distance": 6.5140175819397,
+						"final": "(-3.461657, 0.0, -8.83891)",
+						"max_motion": 0.103333309292793,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65268564224243,
+						"final": "(-4.752686, 0.0, -8.800024)",
+						"max_motion": 0.10333389788866,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 146,
+						"waypoint_index": 2
+					},
+					"room": "room-00",
+					"structure_id": "solid-0197",
+					"zone_id": "room-00/dining"
+				},
+				{
+					"forward": {
+						"end_distance": 6.41701459884644,
+						"final": "(-3.461657, 0.0, -8.83891)",
+						"max_motion": 0.103333309292793,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64172506332397,
+						"final": "(-4.741725, 0.0, -8.800076)",
+						"max_motion": 0.103333458304405,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 150,
+						"waypoint_index": 2
+					},
+					"room": "room-00",
+					"structure_id": "solid-0198",
+					"zone_id": "room-00/dining"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0399980545043945,
+						"final": "(3.55, 0.0, -9.420001)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 6,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0399980545043945,
+						"final": "(3.55, 0.0, -8.839998)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 6,
+						"waypoint_index": 3
+					},
+					"room": "room-01",
+					"structure_id": "solid-0199",
+					"zone_id": "room-01/pantry"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0812807828187943,
+						"final": "(3.892624, 0.0, -9.444535)",
+						"max_motion": 0.103333495557308,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.104059830307961,
+						"final": "(3.557035, 0.0, -8.903822)",
+						"max_motion": 0.103333719074726,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"room": "room-01",
+					"structure_id": "solid-0200",
+					"zone_id": "room-01/pantry"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0741454735398293,
+						"final": "(3.502839, 0.0, -9.305277)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 5,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0602962225675583,
+						"final": "(3.541535, 0.0, -8.859699)",
+						"max_motion": 0.103333577513695,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 5,
+						"waypoint_index": 3
+					},
+					"room": "room-01",
+					"structure_id": "solid-0201",
+					"zone_id": "room-01/pantry"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0499206334352493,
+						"final": "(3.982756, 0.0, -8.769349)",
+						"max_motion": 0.103333495557308,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 10,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.108115799725056,
+						"final": "(3.568846, 0.0, -8.906461)",
+						"max_motion": 0.103334218263626,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 9,
+						"waypoint_index": 3
+					},
+					"room": "room-01",
+					"structure_id": "solid-0202",
+					"zone_id": "room-01/pantry"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0581557750701904,
+						"final": "(7.104713, 0.0, -9.280969)",
+						"max_motion": 0.103333622217178,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 6,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0885607376694679,
+						"final": "(7.292311, 0.0, -8.888227)",
+						"max_motion": 0.103333629667759,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 6,
+						"waypoint_index": 3
+					},
+					"room": "room-02",
+					"structure_id": "solid-0203",
+					"zone_id": "room-02/bathroom"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0769722685217857,
+						"final": "(7.119674, 0.0, -9.46549)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 7,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0698090642690659,
+						"final": "(7.290485, 0.0, -8.869158)",
+						"max_motion": 0.103333860635757,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 7,
+						"waypoint_index": 3
+					},
+					"room": "room-02",
+					"structure_id": "solid-0204",
+					"zone_id": "room-02/bathroom"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0747817382216454,
+						"final": "(7.390276, 0.0, -9.263613)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 5,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0893938019871712,
+						"final": "(7.309296, 0.0, -8.888909)",
+						"max_motion": 0.103332996368408,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 5,
+						"waypoint_index": 3
+					},
+					"room": "room-02",
+					"structure_id": "solid-0205",
+					"zone_id": "room-02/bathroom"
+				},
+				{
+					"forward": {
+						"end_distance": 0.115991920232773,
+						"final": "(10.86677, 0.0, -9.371325)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 6,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0191501621156931,
+						"final": "(10.99842, 0.0, -8.819085)",
+						"max_motion": 0.103333652019501,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 7,
+						"waypoint_index": 3
+					},
+					"room": "room-03",
+					"structure_id": "solid-0206",
+					"zone_id": "room-03/laundry"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0930354967713356,
+						"final": "(11.26026, 0.0, -8.428704)",
+						"max_motion": 0.103333503007889,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 12,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0179224442690611,
+						"final": "(11.00087, 0.0, -8.817902)",
+						"max_motion": 0.103333100676537,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 13,
+						"waypoint_index": 3
+					},
+					"room": "room-03",
+					"structure_id": "solid-0207",
+					"zone_id": "room-03/laundry"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0525119118392468,
+						"final": "(10.69899, 0.0, -9.287446)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 7,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0884298756718636,
+						"final": "(10.9926, 0.0, -8.88812)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 7,
+						"waypoint_index": 3
+					},
+					"room": "room-03",
+					"structure_id": "solid-0208",
+					"zone_id": "room-03/laundry"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0535079836845398,
+						"final": "(12.08138, 0.0, -9.563515)",
+						"max_motion": 0.103333577513695,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 15,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.094627670943737,
+						"final": "(11.00538, 0.0, -8.894475)",
+						"max_motion": 0.103333838284016,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 15,
+						"waypoint_index": 3
+					},
+					"room": "room-03",
+					"structure_id": "solid-0209",
+					"zone_id": "room-03/laundry"
+				},
+				{
+					"forward": {
+						"end_distance": 3.48160028457642,
+						"final": "(-8.11158, 0.0, 8.799737)",
+						"max_motion": 0.103333629667759,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.6376485824585,
+						"final": "(-9.387649, 0.0, 8.750174)",
+						"max_motion": 0.103334121406078,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 112,
+						"waypoint_index": 2
+					},
+					"room": "room-04",
+					"structure_id": "solid-0210",
+					"zone_id": "room-04/study"
+				},
+				{
+					"forward": {
+						"end_distance": 3.15247631072998,
+						"final": "(-8.11158, 0.0, 8.799737)",
+						"max_motion": 0.103333629667759,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65017604827881,
+						"final": "(-9.400176, 0.0, 8.749925)",
+						"max_motion": 0.103333808481693,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 111,
+						"waypoint_index": 2
+					},
+					"room": "room-04",
+					"structure_id": "solid-0211",
+					"zone_id": "room-04/study"
+				},
+				{
+					"forward": {
+						"end_distance": 2.09627294540405,
+						"final": "(-8.11158, 0.0, 8.799737)",
+						"max_motion": 0.103333629667759,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65537643432617,
+						"final": "(-9.405376, 0.0, 8.750176)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 104,
+						"waypoint_index": 2
+					},
+					"room": "room-04",
+					"structure_id": "solid-0212",
+					"zone_id": "room-04/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0731650143861771,
+						"final": "(-3.42294, 0.0, 9.74532)",
+						"max_motion": 0.103333964943886,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 45,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0643721222877502,
+						"final": "(-7.685674, 0.0, 8.752441)",
+						"max_motion": 0.103333458304405,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 45,
+						"waypoint_index": 3
+					},
+					"room": "room-04",
+					"structure_id": "solid-0213",
+					"zone_id": "room-04/music_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0686975941061974,
+						"final": "(-3.666324, 0.0, 9.713235)",
+						"max_motion": 0.103333428502083,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 43,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0569987706840038,
+						"final": "(-7.693048, 0.0, 8.75232)",
+						"max_motion": 0.103333823382854,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 43,
+						"waypoint_index": 3
+					},
+					"room": "room-04",
+					"structure_id": "solid-0214",
+					"zone_id": "room-04/music_room"
+				},
+				{
+					"forward": {
+						"end_distance": 3.37881660461426,
+						"final": "(-8.11158, 0.0, 8.799737)",
+						"max_motion": 0.103333629667759,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65020942687988,
+						"final": "(-9.400209, 0.0, 8.750104)",
+						"max_motion": 0.103332787752151,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 111,
+						"waypoint_index": 2
+					},
+					"room": "room-04",
+					"structure_id": "solid-0215",
+					"zone_id": "room-04/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0814454928040504,
+						"final": "(-3.642195, 0.0, 8.273868)",
+						"max_motion": 0.103333458304405,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 41,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0754826068878174,
+						"final": "(-7.674518, 0.0, 8.749811)",
+						"max_motion": 0.103333719074726,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 41,
+						"waypoint_index": 3
+					},
+					"room": "room-04",
+					"structure_id": "solid-0216",
+					"zone_id": "room-04/music_room"
+				},
+				{
+					"forward": {
+						"end_distance": 4.12173414230347,
+						"final": "(7.138384, 0.0, 8.798985)",
+						"max_motion": 0.103333793580532,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64190721511841,
+						"final": "(5.858093, 0.0, 8.750133)",
+						"max_motion": 0.103333704173565,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 119,
+						"waypoint_index": 2
+					},
+					"room": "room-05",
+					"structure_id": "solid-0217",
+					"zone_id": "room-05/game_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0804270207881927,
+						"final": "(11.25371, 0.0, 9.224528)",
+						"max_motion": 0.103333733975887,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 37,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.080812856554985,
+						"final": "(7.580789, 0.0, 8.75196)",
+						"max_motion": 0.103333801031113,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 37,
+						"waypoint_index": 3
+					},
+					"room": "room-05",
+					"structure_id": "solid-0218",
+					"zone_id": "room-05/library"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0390427373349667,
+						"final": "(10.78689, 0.0, 9.260669)",
+						"max_motion": 0.103333845734596,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 33,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0316288210451603,
+						"final": "(7.531604, 0.0, 8.751245)",
+						"max_motion": 0.103333741426468,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 33,
+						"waypoint_index": 3
+					},
+					"room": "room-05",
+					"structure_id": "solid-0219",
+					"zone_id": "room-05/library"
+				},
+				{
+					"forward": {
+						"end_distance": 4.02472829818726,
+						"final": "(7.138384, 0.0, 8.798985)",
+						"max_motion": 0.103333793580532,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64872026443481,
+						"final": "(5.85128, 0.0, 8.750081)",
+						"max_motion": 0.10333363711834,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 118,
+						"waypoint_index": 2
+					},
+					"room": "room-05",
+					"structure_id": "solid-0220",
+					"zone_id": "room-05/game_room"
+				},
+				{
+					"forward": {
+						"end_distance": 2.63990902900696,
+						"final": "(7.138384, 0.0, 8.798985)",
+						"max_motion": 0.103333793580532,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.63534259796143,
+						"final": "(5.864657, 0.0, 8.750235)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 109,
+						"waypoint_index": 2
+					},
+					"room": "room-05",
+					"structure_id": "solid-0221",
+					"zone_id": "room-05/game_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0238197110593319,
+						"final": "(11.44019, 0.0, 7.823232)",
+						"max_motion": 0.103333972394466,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 41,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.119099631905556,
+						"final": "(7.6191, 0.0, 8.749949)",
+						"max_motion": 0.103334315121174,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 40,
+						"waypoint_index": 3
+					},
+					"room": "room-05",
+					"structure_id": "solid-0222",
+					"zone_id": "room-05/library"
+				},
+				{
+					"forward": {
+						"end_distance": 3.76198935508728,
+						"final": "(7.138384, 0.0, 8.798985)",
+						"max_motion": 0.103333793580532,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65436363220215,
+						"final": "(5.845636, 0.0, 8.749938)",
+						"max_motion": 0.103334113955498,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 117,
+						"waypoint_index": 2
+					},
+					"room": "room-05",
+					"structure_id": "solid-0223",
+					"zone_id": "room-05/game_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0281200893223286,
+						"final": "(-4.568772, 0.0, -2.084219)",
+						"max_motion": 0.103333525359631,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 9,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0918918922543526,
+						"final": "(-3.915791, 0.0, -1.814185)",
+						"max_motion": 0.103333346545696,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"room": "room-06",
+					"structure_id": "solid-0224",
+					"zone_id": "room-06/living_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0604444332420826,
+						"final": "(-4.499121, 0.0, 1.919607)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 42,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.057665903121233,
+						"final": "(-3.882439, 0.0, -1.79489)",
+						"max_motion": 0.10333339869976,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 42,
+						"waypoint_index": 3
+					},
+					"room": "room-06",
+					"structure_id": "solid-0225",
+					"zone_id": "room-06/living_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0829500257968903,
+						"final": "(-3.00445, 0.0, 1.852881)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 44,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0229989476501942,
+						"final": "(-3.847743, 0.0, -1.796575)",
+						"max_motion": 0.103333480656147,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 44,
+						"waypoint_index": 3
+					},
+					"room": "room-06",
+					"structure_id": "solid-0226",
+					"zone_id": "room-06/living_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0593475215137005,
+						"final": "(-4.585554, 0.0, 1.607103)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 39,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0588988400995731,
+						"final": "(-3.883687, 0.0, -1.795012)",
+						"max_motion": 0.10333351790905,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 39,
+						"waypoint_index": 3
+					},
+					"room": "room-06",
+					"structure_id": "solid-0227",
+					"zone_id": "room-06/living_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.09653290361166,
+						"final": "(3.62445, 0.0, 2.036389)",
+						"max_motion": 0.103333376348019,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 3,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.101412944495678,
+						"final": "(3.782457, 0.0, 1.892058)",
+						"max_motion": 0.103333383798599,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 3,
+						"waypoint_index": 3
+					},
+					"room": "room-07",
+					"structure_id": "solid-0228",
+					"zone_id": "room-07/entry"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0315772518515587,
+						"final": "(4.843462, 0.0, 1.625299)",
+						"max_motion": 0.103333733975887,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 10,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0575605556368828,
+						"final": "(3.86521, 0.0, 1.841187)",
+						"max_motion": 0.10333351790905,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 10,
+						"waypoint_index": 3
+					},
+					"room": "room-07",
+					"structure_id": "solid-0229",
+					"zone_id": "room-07/entry"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0997648537158966,
+						"final": "(4.566512, 0.0, 2.165428)",
+						"max_motion": 0.10333351790905,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.108781710267067,
+						"final": "(3.897298, 0.0, 1.88128)",
+						"max_motion": 0.103333495557308,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"room": "room-07",
+					"structure_id": "solid-0230",
+					"zone_id": "room-07/entry"
+				},
+				{
+					"forward": {
+						"end_distance": 3.53928375244141,
+						"final": "(3.825, 0.0, 1.438333)",
+						"max_motion": 0.103333353996277,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64972472190857,
+						"final": "(3.824881, 0.0, 0.150275)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 119,
+						"waypoint_index": 2
+					},
+					"room": "room-07",
+					"structure_id": "solid-0231",
+					"zone_id": "room-07/study"
+				},
+				{
+					"forward": {
+						"end_distance": 3.75882959365845,
+						"final": "(3.825, 0.0, 1.438333)",
+						"max_motion": 0.103333353996277,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64657366275787,
+						"final": "(3.825035, 0.0, 0.153426)",
+						"max_motion": 0.103333421051502,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 115,
+						"waypoint_index": 2
+					},
+					"room": "room-07",
+					"structure_id": "solid-0232",
+					"zone_id": "room-07/study"
+				},
+				{
+					"forward": {
+						"end_distance": 3.39108777046204,
+						"final": "(3.825, 0.0, 1.438333)",
+						"max_motion": 0.103333353996277,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.63920271396637,
+						"final": "(3.82511, 0.0, 0.160797)",
+						"max_motion": 0.103333532810211,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 117,
+						"waypoint_index": 2
+					},
+					"room": "room-07",
+					"structure_id": "solid-0233",
+					"zone_id": "room-07/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0983413383364677,
+						"final": "(-11.43184, 3.2, -9.453979)",
+						"max_motion": 0.103333622217178,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 46,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0754580646753311,
+						"final": "(-7.114645, 3.2, -8.849023)",
+						"max_motion": 0.103334002196789,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 46,
+						"waypoint_index": 3
+					},
+					"room": "room-08",
+					"structure_id": "solid-0234",
+					"zone_id": "room-08/bedroom_rose"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0229734349995852,
+						"final": "(-11.74704, 3.2, -9.354489)",
+						"max_motion": 0.103333666920662,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 49,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0626183673739433,
+						"final": "(-7.102788, 3.2, -8.837556)",
+						"max_motion": 0.10333351790905,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 49,
+						"waypoint_index": 3
+					},
+					"room": "room-08",
+					"structure_id": "solid-0235",
+					"zone_id": "room-08/bedroom_rose"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0748620107769966,
+						"final": "(-4.66823, 3.2, -7.620564)",
+						"max_motion": 0.103333689272404,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 32,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.114249527454376,
+						"final": "(-7.075668, 3.2, -8.886628)",
+						"max_motion": 0.103333711624146,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 31,
+						"waypoint_index": 3
+					},
+					"room": "room-08",
+					"structure_id": "solid-0236",
+					"zone_id": "room-08/bedroom_rose"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0767991691827774,
+						"final": "(-3.215966, 3.2, -8.611286)",
+						"max_motion": 0.103333488106728,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 42,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0554891638457775,
+						"final": "(-7.089917, 3.2, -8.829565)",
+						"max_motion": 0.103333383798599,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 42,
+						"waypoint_index": 3
+					},
+					"room": "room-08",
+					"structure_id": "solid-0237",
+					"zone_id": "room-08/bedroom_rose"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0169709306210279,
+						"final": "(-10.0306, 3.2, -9.814055)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 33,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0933285728096962,
+						"final": "(-7.119541, 3.2, -8.86626)",
+						"max_motion": 0.103333659470081,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 32,
+						"waypoint_index": 3
+					},
+					"room": "room-08",
+					"structure_id": "solid-0238",
+					"zone_id": "room-08/bedroom_rose"
+				},
+				{
+					"forward": {
+						"end_distance": 0.042783185839653,
+						"final": "(-3.123559, 3.2, -10.31632)",
+						"max_motion": 0.103333689272404,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 44,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0691758468747139,
+						"final": "(-7.096348, 3.2, -8.844079)",
+						"max_motion": 0.103333689272404,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 44,
+						"waypoint_index": 3
+					},
+					"room": "room-08",
+					"structure_id": "solid-0239",
+					"zone_id": "room-08/bedroom_rose"
+				},
+				{
+					"forward": {
+						"end_distance": 0.102482751011848,
+						"final": "(3.171088, 3.2, -9.443151)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 19,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0823581144213676,
+						"final": "(4.684597, 3.2, -8.855905)",
+						"max_motion": 0.10333339869976,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 19,
+						"waypoint_index": 3
+					},
+					"room": "room-09",
+					"structure_id": "solid-0240",
+					"zone_id": "room-09/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0621587857604027,
+						"final": "(6.053968, 3.2, -7.626961)",
+						"max_motion": 0.103333808481693,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 24,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0874465852975845,
+						"final": "(4.715391, 3.2, -8.861081)",
+						"max_motion": 0.103333346545696,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 23,
+						"waypoint_index": 3
+					},
+					"room": "room-09",
+					"structure_id": "solid-0241",
+					"zone_id": "room-09/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0265557058155537,
+						"final": "(7.53399, 3.2, -8.605351)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 32,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0544863268733025,
+						"final": "(4.704498, 3.2, -8.8293)",
+						"max_motion": 0.103333346545696,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 32,
+						"waypoint_index": 3
+					},
+					"room": "room-09",
+					"structure_id": "solid-0242",
+					"zone_id": "room-09/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0248078797012568,
+						"final": "(7.305452, 3.2, -9.843946)",
+						"max_motion": 0.103333629667759,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 30,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0991244614124298,
+						"final": "(4.721453, 3.2, -8.871775)",
+						"max_motion": 0.103333555161953,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 29,
+						"waypoint_index": 3
+					},
+					"room": "room-09",
+					"structure_id": "solid-0243",
+					"zone_id": "room-09/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0861708223819733,
+						"final": "(6.881472, 3.2, -9.828032)",
+						"max_motion": 0.103333584964275,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 26,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0841132402420044,
+						"final": "(4.711367, 3.2, -8.858341)",
+						"max_motion": 0.103333592414856,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 26,
+						"waypoint_index": 3
+					},
+					"room": "room-09",
+					"structure_id": "solid-0244",
+					"zone_id": "room-09/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0949642509222031,
+						"final": "(11.05638, 3.2, -9.235539)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 7,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0701624974608421,
+						"final": "(10.76309, 3.2, -8.843929)",
+						"max_motion": 0.103333592414856,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 7,
+						"waypoint_index": 3
+					},
+					"room": "room-10",
+					"structure_id": "solid-0245",
+					"zone_id": "room-10/bathroom"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0366955734789371,
+						"final": "(11.02104, 3.2, -9.500395)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0282756835222244,
+						"final": "(10.75361, 3.2, -8.803044)",
+						"max_motion": 0.103333525359631,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"room": "room-10",
+					"structure_id": "solid-0246",
+					"zone_id": "room-10/bathroom"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0608927942812443,
+						"final": "(10.48852, 3.2, -9.508448)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0488178879022598,
+						"final": "(10.74285, 3.2, -8.823291)",
+						"max_motion": 0.103333674371243,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"room": "room-10",
+					"structure_id": "solid-0247",
+					"zone_id": "room-10/bathroom"
+				},
+				{
+					"forward": {
+						"end_distance": 3.83025646209717,
+						"final": "(-7.761602, 3.2, 8.774401)",
+						"max_motion": 0.103333622217178,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.66070127487183,
+						"final": "(-9.060701, 3.2, 8.725166)",
+						"max_motion": 0.103334255516529,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 116,
+						"waypoint_index": 2
+					},
+					"room": "room-11",
+					"structure_id": "solid-0248",
+					"zone_id": "room-11/sewing_room"
+				},
+				{
+					"forward": {
+						"end_distance": 3.52072334289551,
+						"final": "(-7.761602, 3.2, 8.774401)",
+						"max_motion": 0.103333622217178,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.63604879379272,
+						"final": "(-9.036049, 3.2, 8.725019)",
+						"max_motion": 0.103333927690983,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 114,
+						"waypoint_index": 2
+					},
+					"room": "room-11",
+					"structure_id": "solid-0249",
+					"zone_id": "room-11/sewing_room"
+				},
+				{
+					"forward": {
+						"end_distance": 2.41719079017639,
+						"final": "(-7.761602, 3.2, 8.774401)",
+						"max_motion": 0.103333622217178,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64611768722534,
+						"final": "(-9.046118, 3.2, 8.725237)",
+						"max_motion": 0.103333622217178,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 108,
+						"waypoint_index": 2
+					},
+					"room": "room-11",
+					"structure_id": "solid-0250",
+					"zone_id": "room-11/sewing_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.115321859717369,
+						"final": "(-3.352031, 3.2, 9.244447)",
+						"max_motion": 0.103333733975887,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 40,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.11261710524559,
+						"final": "(-7.287425, 3.2, 8.728078)",
+						"max_motion": 0.103333510458469,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 40,
+						"waypoint_index": 3
+					},
+					"room": "room-11",
+					"structure_id": "solid-0251",
+					"zone_id": "room-11/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.114291787147522,
+						"final": "(-3.823023, 3.2, 9.26923)",
+						"max_motion": 0.103333465754986,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 36,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.106990523636341,
+						"final": "(-7.293068, 3.2, 8.728548)",
+						"max_motion": 0.103333860635757,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 36,
+						"waypoint_index": 3
+					},
+					"room": "room-11",
+					"structure_id": "solid-0252",
+					"zone_id": "room-11/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0509989857673645,
+						"final": "(-3.156159, 3.2, 7.987861)",
+						"max_motion": 0.103333622217178,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 43,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0529718846082687,
+						"final": "(-7.347034, 3.2, 8.725749)",
+						"max_motion": 0.103333711624146,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 43,
+						"waypoint_index": 3
+					},
+					"room": "room-11",
+					"structure_id": "solid-0253",
+					"zone_id": "room-11/study"
+				},
+				{
+					"forward": {
+						"end_distance": 3.7583155632019,
+						"final": "(-7.761602, 3.2, 8.774401)",
+						"max_motion": 0.103333622217178,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64337301254272,
+						"final": "(-9.043373, 3.2, 8.725097)",
+						"max_motion": 0.103333972394466,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 114,
+						"waypoint_index": 2
+					},
+					"room": "room-11",
+					"structure_id": "solid-0254",
+					"zone_id": "room-11/sewing_room"
+				},
+				{
+					"forward": {
+						"end_distance": 4.02722358703613,
+						"final": "(7.03839, 3.2, 8.774134)",
+						"max_motion": 0.103333435952663,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65406179428101,
+						"final": "(5.745938, 3.2, 8.725152)",
+						"max_motion": 0.103333599865437,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 118,
+						"waypoint_index": 2
+					},
+					"room": "room-12",
+					"structure_id": "solid-0255",
+					"zone_id": "room-12/music_room"
+				},
+				{
+					"forward": {
+						"end_distance": 2.57821774482727,
+						"final": "(7.03839, 3.2, 8.774134)",
+						"max_motion": 0.103333435952663,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.63722372055054,
+						"final": "(5.762776, 3.2, 8.72513)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 110,
+						"waypoint_index": 2
+					},
+					"room": "room-12",
+					"structure_id": "solid-0256",
+					"zone_id": "room-12/music_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0820621475577354,
+						"final": "(11.25244, 3.2, 9.213182)",
+						"max_motion": 0.103333622217178,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 38,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0820440351963043,
+						"final": "(7.48202, 3.2, 8.726974)",
+						"max_motion": 0.103333488106728,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 38,
+						"waypoint_index": 3
+					},
+					"room": "room-12",
+					"structure_id": "solid-0257",
+					"zone_id": "room-12/library"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0487740449607372,
+						"final": "(10.77903, 3.2, 9.254841)",
+						"max_motion": 0.103333994746208,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 34,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.038457527756691,
+						"final": "(7.438425, 3.2, 8.726583)",
+						"max_motion": 0.103333666920662,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 34,
+						"waypoint_index": 3
+					},
+					"room": "room-12",
+					"structure_id": "solid-0258",
+					"zone_id": "room-12/library"
+				},
+				{
+					"forward": {
+						"end_distance": 3.89846253395081,
+						"final": "(7.03839, 3.2, 8.774134)",
+						"max_motion": 0.103333435952663,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65120410919189,
+						"final": "(5.748796, 3.2, 8.725083)",
+						"max_motion": 0.10333339869976,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 116,
+						"waypoint_index": 2
+					},
+					"room": "room-12",
+					"structure_id": "solid-0259",
+					"zone_id": "room-12/music_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0294891763478518,
+						"final": "(11.43561, 3.2, 7.786579)",
+						"max_motion": 0.103333666920662,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 42,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0191073957830668,
+						"final": "(7.419107, 3.2, 8.724955)",
+						"max_motion": 0.103333912789822,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 42,
+						"waypoint_index": 3
+					},
+					"room": "room-12",
+					"structure_id": "solid-0260",
+					"zone_id": "room-12/library"
+				},
+				{
+					"forward": {
+						"end_distance": 3.67552161216736,
+						"final": "(7.03839, 3.2, 8.774134)",
+						"max_motion": 0.103333435952663,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65486764907837,
+						"final": "(5.745132, 3.2, 8.725045)",
+						"max_motion": 0.10333376377821,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 118,
+						"waypoint_index": 2
+					},
+					"room": "room-12",
+					"structure_id": "solid-0261",
+					"zone_id": "room-12/music_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0303394719958305,
+						"final": "(-3.57225, 3.2, 2.081444)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 31,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0390098877251148,
+						"final": "(-3.863914, 3.2, -0.347266)",
+						"max_motion": 0.103333450853825,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 31,
+						"waypoint_index": 3
+					},
+					"room": "room-13",
+					"structure_id": "solid-0262",
+					"zone_id": "room-13/bedroom_green"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0781654193997383,
+						"final": "(-4.433708, 3.2, -0.866543)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 11,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0506504587829113,
+						"final": "(-3.875276, 3.2, -0.356145)",
+						"max_motion": 0.103333435952663,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 11,
+						"waypoint_index": 3
+					},
+					"room": "room-13",
+					"structure_id": "solid-0263",
+					"zone_id": "room-13/bedroom_green"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0983398258686066,
+						"final": "(-4.94414, 3.2, -0.873516)",
+						"max_motion": 0.103333577513695,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 13,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.096570186316967,
+						"final": "(-3.921366, 3.2, -0.35627)",
+						"max_motion": 0.103333607316017,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 13,
+						"waypoint_index": 3
+					},
+					"room": "room-13",
+					"structure_id": "solid-0264",
+					"zone_id": "room-13/bedroom_green"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0882124528288841,
+						"final": "(-4.648753, 3.2, 2.121615)",
+						"max_motion": 0.103333562612534,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 30,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0653096735477448,
+						"final": "(-3.889816, 3.2, -0.341983)",
+						"max_motion": 0.103333435952663,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 30,
+						"waypoint_index": 3
+					},
+					"room": "room-13",
+					"structure_id": "solid-0265",
+					"zone_id": "room-13/bedroom_green"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0299997329711914,
+						"final": "(3.825, 3.2, 2.08)",
+						"max_motion": 0.103333413600922,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 24,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0299997329711914,
+						"final": "(3.825, 3.2, -0.37)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 24,
+						"waypoint_index": 3
+					},
+					"room": "room-14",
+					"structure_id": "solid-0266",
+					"zone_id": "room-14/library"
+				},
+				{
+					"forward": {
+						"end_distance": 1.36241853237152,
+						"final": "(3.825, 3.2, -0.761667)",
+						"max_motion": 0.103333324193954,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64835321903229,
+						"final": "(3.825126, 3.2, -2.048353)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 94,
+						"waypoint_index": 2
+					},
+					"room": "room-14",
+					"structure_id": "solid-0267",
+					"zone_id": "room-14/study"
+				},
+				{
+					"forward": {
+						"end_distance": 1.54433345794678,
+						"final": "(3.825, 3.2, -0.761667)",
+						"max_motion": 0.103333324193954,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.6476663351059,
+						"final": "(3.825, 3.2, -2.047666)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 94,
+						"waypoint_index": 2
+					},
+					"room": "room-14",
+					"structure_id": "solid-0268",
+					"zone_id": "room-14/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.10953164100647,
+						"final": "(4.282923, 3.2, 2.009274)",
+						"max_motion": 0.103333711624146,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 26,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.108287654817104,
+						"final": "(3.828412, 3.2, -0.291766)",
+						"max_motion": 0.103333540260792,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 26,
+						"waypoint_index": 3
+					},
+					"room": "room-14",
+					"structure_id": "solid-0269",
+					"zone_id": "room-14/library"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0963176190853119,
+						"final": "(3.668559, 3.2, 2.037631)",
+						"max_motion": 0.103333413600922,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 24,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.103715948760509,
+						"final": "(3.824183, 3.2, -0.296287)",
+						"max_motion": 0.103333428502083,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 24,
+						"waypoint_index": 3
+					},
+					"room": "room-14",
+					"structure_id": "solid-0270",
+					"zone_id": "room-14/library"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0996227562427521,
+						"final": "(4.462708, 3.2, 0.587682)",
+						"max_motion": 0.103333570063114,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 34,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0203022547066212,
+						"final": "(3.825282, 3.2, -0.3797)",
+						"max_motion": 0.103333413600922,
+						"max_vertical_step": 0.0,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 35,
+						"waypoint_index": 3
+					},
+					"room": "room-14",
+					"structure_id": "solid-0271",
+					"zone_id": "room-14/library"
+				},
+				{
+					"forward": {
+						"end_distance": 1.51674127578735,
+						"final": "(3.825, 3.2, -0.761667)",
+						"max_motion": 0.103333324193954,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64840805530548,
+						"final": "(3.824756, 3.2, -2.048408)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.0,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 98,
+						"waypoint_index": 2
+					},
+					"room": "room-14",
+					"structure_id": "solid-0272",
+					"zone_id": "room-14/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0697203651070595,
+						"final": "(-11.46046, 6.4, -9.455001)",
+						"max_motion": 0.103334248065948,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 40,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0698011592030525,
+						"final": "(-7.759491, 6.4, -8.844152)",
+						"max_motion": 0.103334292769432,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 40,
+						"waypoint_index": 3
+					},
+					"room": "room-15",
+					"structure_id": "solid-0273",
+					"zone_id": "room-15/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0967821553349495,
+						"final": "(-11.6733, 6.4, -9.351294)",
+						"max_motion": 0.103333815932274,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 42,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0734409764409065,
+						"final": "(-7.764283, 6.4, -8.847038)",
+						"max_motion": 0.103333666920662,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 42,
+						"waypoint_index": 3
+					},
+					"room": "room-15",
+					"structure_id": "solid-0274",
+					"zone_id": "room-15/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0187817495316267,
+						"final": "(-4.622032, 6.4, -7.588552)",
+						"max_motion": 0.10333364456892,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 38,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0414156913757324,
+						"final": "(-7.746197, 6.4, -8.81624)",
+						"max_motion": 0.103333577513695,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 38,
+						"waypoint_index": 3
+					},
+					"room": "room-15",
+					"structure_id": "solid-0275",
+					"zone_id": "room-15/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.100710541009903,
+						"final": "(-3.239901, 6.4, -8.61275)",
+						"max_motion": 0.103333719074726,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 48,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.058941476047039,
+						"final": "(-7.736538, 6.4, -8.832383)",
+						"max_motion": 0.103333726525307,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 48,
+						"waypoint_index": 3
+					},
+					"room": "room-15",
+					"structure_id": "solid-0276",
+					"zone_id": "room-15/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0900878757238388,
+						"final": "(-9.581302, 6.4, -9.513748)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 22,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0796598345041275,
+						"final": "(-7.762829, 6.4, -8.85362)",
+						"max_motion": 0.103333927690983,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 22,
+						"waypoint_index": 3
+					},
+					"room": "room-15",
+					"structure_id": "solid-0277",
+					"zone_id": "room-15/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0891940891742706,
+						"final": "(-3.458683, 6.4, -9.836676)",
+						"max_motion": 0.103333868086338,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 46,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0790717080235481,
+						"final": "(-7.737205, 6.4, -8.853029)",
+						"max_motion": 0.103333503007889,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 46,
+						"waypoint_index": 3
+					},
+					"room": "room-15",
+					"structure_id": "solid-0278",
+					"zone_id": "room-15/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0982697531580925,
+						"final": "(-4.612102, 6.4, -9.832517)",
+						"max_motion": 0.10333377122879,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 35,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0847902745008469,
+						"final": "(-7.735537, 6.4, -8.858547)",
+						"max_motion": 0.103333458304405,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 35,
+						"waypoint_index": 3
+					},
+					"room": "room-15",
+					"structure_id": "solid-0279",
+					"zone_id": "room-15/bedroom_blue"
+				},
+				{
+					"forward": {
+						"end_distance": 0.023814482614398,
+						"final": "(7.6565, 6.4, -9.456141)",
+						"max_motion": 0.103333532810211,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 20,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0904138088226318,
+						"final": "(6.04606, 6.4, -8.862926)",
+						"max_motion": 0.103332966566086,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 19,
+						"waypoint_index": 3
+					},
+					"room": "room-16",
+					"structure_id": "solid-0280",
+					"zone_id": "room-16/guest_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0844864323735237,
+						"final": "(4.068205, 6.4, -9.348422)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 23,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0724886953830719,
+						"final": "(6.013022, 6.4, -8.846492)",
+						"max_motion": 0.103333190083504,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 23,
+						"waypoint_index": 3
+					},
+					"room": "room-16",
+					"structure_id": "solid-0281",
+					"zone_id": "room-16/guest_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.10188952088356,
+						"final": "(2.825759, 6.4, -9.350163)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 35,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0750372335314751,
+						"final": "(6.009745, 6.4, -8.84847)",
+						"max_motion": 0.103333562612534,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 35,
+						"waypoint_index": 3
+					},
+					"room": "room-16",
+					"structure_id": "solid-0282",
+					"zone_id": "room-16/guest_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.116291768848896,
+						"final": "(3.053322, 6.4, -9.574559)",
+						"max_motion": 0.103333666920662,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 33,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0854777470231056,
+						"final": "(6.006442, 6.4, -8.858438)",
+						"max_motion": 0.103333577513695,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 33,
+						"waypoint_index": 3
+					},
+					"room": "room-16",
+					"structure_id": "solid-0283",
+					"zone_id": "room-16/guest_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0210353005677462,
+						"final": "(11.12957, 6.4, -9.246081)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 7,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0762427300214767,
+						"final": "(10.84347, 6.4, -8.848972)",
+						"max_motion": 0.103333510458469,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 6,
+						"waypoint_index": 3
+					},
+					"room": "room-17",
+					"structure_id": "solid-0284",
+					"zone_id": "room-17/bathroom"
+				},
+				{
+					"forward": {
+						"end_distance": 0.106041125953197,
+						"final": "(11.0039, 6.4, -9.4415)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 7,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.106473132967949,
+						"final": "(10.83268, 6.4, -8.881195)",
+						"max_motion": 0.103334002196789,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 7,
+						"waypoint_index": 3
+					},
+					"room": "room-17",
+					"structure_id": "solid-0285",
+					"zone_id": "room-17/bathroom"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0770920142531395,
+						"final": "(10.55109, 6.4, -9.497874)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0846988037228584,
+						"final": "(10.82094, 6.4, -8.859601)",
+						"max_motion": 0.103334203362465,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 8,
+						"waypoint_index": 3
+					},
+					"room": "room-17",
+					"structure_id": "solid-0286",
+					"zone_id": "room-17/bathroom"
+				},
+				{
+					"forward": {
+						"end_distance": 4.26609563827515,
+						"final": "(-7.311619, 6.4, 8.823733)",
+						"max_motion": 0.103333286941051,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65408134460449,
+						"final": "(-8.604081, 6.4, 8.775118)",
+						"max_motion": 0.103334367275238,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 121,
+						"waypoint_index": 2
+					},
+					"room": "room-18",
+					"structure_id": "solid-0287",
+					"zone_id": "room-18/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0800887271761894,
+						"final": "(-3.42947, 6.4, 9.742482)",
+						"max_motion": 0.103333815932274,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 37,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0799118727445602,
+						"final": "(-6.870173, 6.4, 8.778675)",
+						"max_motion": 0.103333927690983,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 37,
+						"waypoint_index": 3
+					},
+					"room": "room-18",
+					"structure_id": "solid-0288",
+					"zone_id": "room-18/music_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.07241540402174,
+						"final": "(-3.67028, 6.4, 9.712066)",
+						"max_motion": 0.10333364456892,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 35,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0723941549658775,
+						"final": "(-6.877692, 6.4, 8.778529)",
+						"max_motion": 0.103333346545696,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 35,
+						"waypoint_index": 3
+					},
+					"room": "room-18",
+					"structure_id": "solid-0289",
+					"zone_id": "room-18/music_room"
+				},
+				{
+					"forward": {
+						"end_distance": 2.83815145492554,
+						"final": "(-7.311619, 6.4, 8.823733)",
+						"max_motion": 0.103333286941051,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65602684020996,
+						"final": "(-8.606027, 6.4, 8.775254)",
+						"max_motion": 0.103333599865437,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 111,
+						"waypoint_index": 2
+					},
+					"room": "room-18",
+					"structure_id": "solid-0290",
+					"zone_id": "room-18/study"
+				},
+				{
+					"forward": {
+						"end_distance": 3.89692807197571,
+						"final": "(-7.311619, 6.4, 8.823733)",
+						"max_motion": 0.103333286941051,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.63777256011963,
+						"final": "(-8.587772, 6.4, 8.774972)",
+						"max_motion": 0.103333920240402,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 120,
+						"waypoint_index": 2
+					},
+					"room": "room-18",
+					"structure_id": "solid-0291",
+					"zone_id": "room-18/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0981231033802032,
+						"final": "(-3.657942, 6.4, 8.31969)",
+						"max_motion": 0.103333666920662,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 33,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0964342206716537,
+						"final": "(-6.853566, 6.4, 8.774861)",
+						"max_motion": 0.103333197534084,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 33,
+						"waypoint_index": 3
+					},
+					"room": "room-18",
+					"structure_id": "solid-0292",
+					"zone_id": "room-18/music_room"
+				},
+				{
+					"forward": {
+						"end_distance": 4.17835235595703,
+						"final": "(-7.311619, 6.4, 8.823733)",
+						"max_motion": 0.103333286941051,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64906120300293,
+						"final": "(-8.599061, 6.4, 8.775081)",
+						"max_motion": 0.103333666920662,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 118,
+						"waypoint_index": 2
+					},
+					"room": "room-18",
+					"structure_id": "solid-0293",
+					"zone_id": "room-18/study"
+				},
+				{
+					"forward": {
+						"end_distance": 3.52611923217773,
+						"final": "(6.538416, 6.4, 8.824698)",
+						"max_motion": 0.103333503007889,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65318441390991,
+						"final": "(5.246816, 6.4, 8.775163)",
+						"max_motion": 0.103333733975887,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 113,
+						"waypoint_index": 2
+					},
+					"room": "room-19",
+					"structure_id": "solid-0294",
+					"zone_id": "room-19/game_room"
+				},
+				{
+					"forward": {
+						"end_distance": 2.05460286140442,
+						"final": "(6.538416, 6.4, 8.824698)",
+						"max_motion": 0.103333503007889,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65451574325562,
+						"final": "(5.245484, 6.4, 8.77527)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 103,
+						"waypoint_index": 2
+					},
+					"room": "room-19",
+					"structure_id": "solid-0295",
+					"zone_id": "room-19/game_room"
+				},
+				{
+					"forward": {
+						"end_distance": 3.42473697662354,
+						"final": "(6.538416, 6.4, 8.824698)",
+						"max_motion": 0.103333503007889,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64271020889282,
+						"final": "(5.25729, 6.4, 8.775102)",
+						"max_motion": 0.103333562612534,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 111,
+						"waypoint_index": 2
+					},
+					"room": "room-19",
+					"structure_id": "solid-0296",
+					"zone_id": "room-19/game_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0564930960536003,
+						"final": "(11.27631, 6.4, 9.242429)",
+						"max_motion": 0.103334330022335,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 43,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0561816431581974,
+						"final": "(6.956172, 6.4, 8.776072)",
+						"max_motion": 0.103333674371243,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 43,
+						"waypoint_index": 3
+					},
+					"room": "room-19",
+					"structure_id": "solid-0297",
+					"zone_id": "room-19/library"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0272856671363115,
+						"final": "(10.9619, 6.4, 7.744392)",
+						"max_motion": 0.103334061801434,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 44,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.100026339292526,
+						"final": "(7.00002, 6.4, 8.773868)",
+						"max_motion": 0.103333599865437,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 43,
+						"waypoint_index": 3
+					},
+					"room": "room-19",
+					"structure_id": "solid-0298",
+					"zone_id": "room-19/library"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0518846586346626,
+						"final": "(11.25788, 6.4, 9.729703)",
+						"max_motion": 0.103333406150341,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 45,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.05081657320261,
+						"final": "(6.950805, 6.4, 8.776102)",
+						"max_motion": 0.103333979845047,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 45,
+						"waypoint_index": 3
+					},
+					"room": "room-19",
+					"structure_id": "solid-0299",
+					"zone_id": "room-19/library"
+				},
+				{
+					"forward": {
+						"end_distance": 3.18957185745239,
+						"final": "(6.538416, 6.4, 8.824698)",
+						"max_motion": 0.103333503007889,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.63693857192993,
+						"final": "(5.263062, 6.4, 8.774961)",
+						"max_motion": 0.103333860635757,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 112,
+						"waypoint_index": 2
+					},
+					"room": "room-19",
+					"structure_id": "solid-0300",
+					"zone_id": "room-19/game_room"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0303394719958305,
+						"final": "(-3.57225, 6.4, 2.081444)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 31,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0390098877251148,
+						"final": "(-3.863914, 6.4, -0.347266)",
+						"max_motion": 0.103333450853825,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 31,
+						"waypoint_index": 3
+					},
+					"room": "room-20",
+					"structure_id": "solid-0301",
+					"zone_id": "room-20/bedroom_green"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0781654193997383,
+						"final": "(-4.433708, 6.4, -0.866543)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 11,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0506504587829113,
+						"final": "(-3.875276, 6.4, -0.356145)",
+						"max_motion": 0.103333435952663,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 11,
+						"waypoint_index": 3
+					},
+					"room": "room-20",
+					"structure_id": "solid-0302",
+					"zone_id": "room-20/bedroom_green"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0983398258686066,
+						"final": "(-4.94414, 6.4, -0.873516)",
+						"max_motion": 0.103333577513695,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 13,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.096570186316967,
+						"final": "(-3.921366, 6.4, -0.35627)",
+						"max_motion": 0.103333607316017,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 13,
+						"waypoint_index": 3
+					},
+					"room": "room-20",
+					"structure_id": "solid-0303",
+					"zone_id": "room-20/bedroom_green"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0882124528288841,
+						"final": "(-4.648753, 6.4, 2.121615)",
+						"max_motion": 0.103333562612534,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 30,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0653096735477448,
+						"final": "(-3.889816, 6.4, -0.341983)",
+						"max_motion": 0.103333435952663,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 30,
+						"waypoint_index": 3
+					},
+					"room": "room-20",
+					"structure_id": "solid-0304",
+					"zone_id": "room-20/bedroom_green"
+				},
+				{
+					"forward": {
+						"end_distance": 1.55162024497986,
+						"final": "(3.825, 6.4, -1.111667)",
+						"max_motion": 0.103333353996277,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.65187048912048,
+						"final": "(3.824864, 6.4, -2.40187)",
+						"max_motion": 0.103333503007889,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 94,
+						"waypoint_index": 2
+					},
+					"room": "room-21",
+					"structure_id": "solid-0305",
+					"zone_id": "room-21/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0699996948242188,
+						"final": "(3.825, 6.4, 2.04)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 27,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0699997544288635,
+						"final": "(3.825, 6.4, -0.68)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 27,
+						"waypoint_index": 3
+					},
+					"room": "room-21",
+					"structure_id": "solid-0306",
+					"zone_id": "room-21/library"
+				},
+				{
+					"forward": {
+						"end_distance": 1.59771633148193,
+						"final": "(3.825, 6.4, -1.111667)",
+						"max_motion": 0.103333353996277,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 95,
+						"waypoint_index": 1
+					},
+					"reverse": {
+						"end_distance": 1.64345836639404,
+						"final": "(3.825166, 6.4, -2.393458)",
+						"max_motion": 0.103333473205566,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": false,
+						"reason": "stalled",
+						"stalled_ticks": 90,
+						"ticks": 97,
+						"waypoint_index": 2
+					},
+					"room": "room-21",
+					"structure_id": "solid-0307",
+					"zone_id": "room-21/study"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0828359425067902,
+						"final": "(4.303314, 6.4, 2.02868)",
+						"max_motion": 0.103333599865437,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 30,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0448025614023209,
+						"final": "(3.826223, 6.4, -0.705214)",
+						"max_motion": 0.103333540260792,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 30,
+						"waypoint_index": 3
+					},
+					"room": "room-21",
+					"structure_id": "solid-0308",
+					"zone_id": "room-21/library"
+				},
+				{
+					"forward": {
+						"end_distance": 0.0430900007486343,
+						"final": "(3.644976, 6.4, 2.085705)",
+						"max_motion": 0.103333480656147,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 28,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0403730757534504,
+						"final": "(3.824724, 6.4, -0.709628)",
+						"max_motion": 0.103333428502083,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 28,
+						"waypoint_index": 3
+					},
+					"room": "room-21",
+					"structure_id": "solid-0309",
+					"zone_id": "room-21/library"
+				},
+				{
+					"forward": {
+						"end_distance": 0.052334688603878,
+						"final": "(4.486084, 6.4, 0.546551)",
+						"max_motion": 0.10333339869976,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 39,
+						"waypoint_index": 3
+					},
+					"reverse": {
+						"end_distance": 0.0602740868926048,
+						"final": "(3.825721, 6.4, -0.68973)",
+						"max_motion": 0.10333339124918,
+						"max_vertical_step": 0.000000476837158203125,
+						"reached": true,
+						"reason": "reached",
+						"stalled_ticks": 0,
+						"ticks": 38,
+						"waypoint_index": 3
+					},
+					"room": "room-21",
+					"structure_id": "solid-0310",
+					"zone_id": "room-21/library"
+				}
+			],
+			"seed": 1
+		}
+	],
+	"checks": 1131,
+	"corpus": [
+		1
+	],
+	"expected_generator_version": 3,
+	"failures": [
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0192 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-3.461515, 0.0, -8.849973), \"end_distance\": 1.51082909107208, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333324223757, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0192 forward ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0192 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 97, \"waypoint_index\": 2, \"final\": (-4.747429, 0.0, -8.800241), \"end_distance\": 1.64742946624756, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333359986544, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0192 reverse ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0193 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-3.461515, 0.0, -8.849973), \"end_distance\": 2.37848138809204, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333324223757, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0193 forward ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0193 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 101, \"waypoint_index\": 2, \"final\": (-4.754916, 0.0, -8.800098), \"end_distance\": 1.65491580963135, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333321988583, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0193 reverse ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0194 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-3.461515, 0.0, -8.849973), \"end_distance\": 2.41325092315674, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333324223757, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0194 forward ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0194 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 102, \"waypoint_index\": 2, \"final\": (-4.746058, 0.0, -8.800185), \"end_distance\": 1.64605808258057, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333343595266, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0194 reverse ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0195 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-3.461515, 0.0, -8.849973), \"end_distance\": 1.46090626716614, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333324223757, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0195 forward ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0195 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 2, \"final\": (-4.747549, 0.0, -8.799831), \"end_distance\": 1.64754915237427, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333347320557, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/kitchen structure solid-0195 reverse ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/dining structure solid-0196 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-3.461657, 0.0, -8.83891), \"end_distance\": 6.5129771232605, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333330929279, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/dining structure solid-0196 forward ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/dining structure solid-0196 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 142, \"waypoint_index\": 2, \"final\": (-4.756444, 0.0, -8.800032), \"end_distance\": 1.65644407272339, \"max_vertical_step\": 0.0, \"max_motion\": 0.1033333465457, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/dining structure solid-0196 reverse ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/dining structure solid-0197 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-3.461657, 0.0, -8.83891), \"end_distance\": 6.5140175819397, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333330929279, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/dining structure solid-0197 forward ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/dining structure solid-0197 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 146, \"waypoint_index\": 2, \"final\": (-4.752686, 0.0, -8.800024), \"end_distance\": 1.65268564224243, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333389788866, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/dining structure solid-0197 reverse ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/dining structure solid-0198 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-3.461657, 0.0, -8.83891), \"end_distance\": 6.41701459884644, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333330929279, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/dining structure solid-0198 forward ends inside the arrival radius",
+		"seed 1 room room-00 zone room-00/dining structure solid-0198 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 150, \"waypoint_index\": 2, \"final\": (-4.741725, 0.0, -8.800076), \"end_distance\": 1.64172506332397, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333345830441, \"stalled_ticks\": 90 }",
+		"seed 1 room room-00 zone room-00/dining structure solid-0198 reverse ends inside the arrival radius",
+		"seed 1 room room-04 zone room-04/study structure solid-0210 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-8.11158, 0.0, 8.799737), \"end_distance\": 3.48160028457642, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333362966776, \"stalled_ticks\": 90 }",
+		"seed 1 room room-04 zone room-04/study structure solid-0210 forward ends inside the arrival radius",
+		"seed 1 room room-04 zone room-04/study structure solid-0210 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 112, \"waypoint_index\": 2, \"final\": (-9.387649, 0.0, 8.750174), \"end_distance\": 1.6376485824585, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333412140608, \"stalled_ticks\": 90 }",
+		"seed 1 room room-04 zone room-04/study structure solid-0210 reverse ends inside the arrival radius",
+		"seed 1 room room-04 zone room-04/study structure solid-0211 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-8.11158, 0.0, 8.799737), \"end_distance\": 3.15247631072998, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333362966776, \"stalled_ticks\": 90 }",
+		"seed 1 room room-04 zone room-04/study structure solid-0211 forward ends inside the arrival radius",
+		"seed 1 room room-04 zone room-04/study structure solid-0211 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 111, \"waypoint_index\": 2, \"final\": (-9.400176, 0.0, 8.749925), \"end_distance\": 1.65017604827881, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333380848169, \"stalled_ticks\": 90 }",
+		"seed 1 room room-04 zone room-04/study structure solid-0211 reverse ends inside the arrival radius",
+		"seed 1 room room-04 zone room-04/study structure solid-0212 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-8.11158, 0.0, 8.799737), \"end_distance\": 2.09627294540405, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333362966776, \"stalled_ticks\": 90 }",
+		"seed 1 room room-04 zone room-04/study structure solid-0212 forward ends inside the arrival radius",
+		"seed 1 room room-04 zone room-04/study structure solid-0212 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 104, \"waypoint_index\": 2, \"final\": (-9.405376, 0.0, 8.750176), \"end_distance\": 1.65537643432617, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333347320557, \"stalled_ticks\": 90 }",
+		"seed 1 room room-04 zone room-04/study structure solid-0212 reverse ends inside the arrival radius",
+		"seed 1 room room-04 zone room-04/study structure solid-0215 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-8.11158, 0.0, 8.799737), \"end_distance\": 3.37881660461426, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333362966776, \"stalled_ticks\": 90 }",
+		"seed 1 room room-04 zone room-04/study structure solid-0215 forward ends inside the arrival radius",
+		"seed 1 room room-04 zone room-04/study structure solid-0215 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 111, \"waypoint_index\": 2, \"final\": (-9.400209, 0.0, 8.750104), \"end_distance\": 1.65020942687988, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333278775215, \"stalled_ticks\": 90 }",
+		"seed 1 room room-04 zone room-04/study structure solid-0215 reverse ends inside the arrival radius",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0217 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (7.138384, 0.0, 8.798985), \"end_distance\": 4.12173414230347, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333379358053, \"stalled_ticks\": 90 }",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0217 forward ends inside the arrival radius",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0217 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 119, \"waypoint_index\": 2, \"final\": (5.858093, 0.0, 8.750133), \"end_distance\": 1.64190721511841, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333370417356, \"stalled_ticks\": 90 }",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0217 reverse ends inside the arrival radius",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0220 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (7.138384, 0.0, 8.798985), \"end_distance\": 4.02472829818726, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333379358053, \"stalled_ticks\": 90 }",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0220 forward ends inside the arrival radius",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0220 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 118, \"waypoint_index\": 2, \"final\": (5.85128, 0.0, 8.750081), \"end_distance\": 1.64872026443481, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333363711834, \"stalled_ticks\": 90 }",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0220 reverse ends inside the arrival radius",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0221 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (7.138384, 0.0, 8.798985), \"end_distance\": 2.63990902900696, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333379358053, \"stalled_ticks\": 90 }",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0221 forward ends inside the arrival radius",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0221 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 109, \"waypoint_index\": 2, \"final\": (5.864657, 0.0, 8.750235), \"end_distance\": 1.63534259796143, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333347320557, \"stalled_ticks\": 90 }",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0221 reverse ends inside the arrival radius",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0223 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (7.138384, 0.0, 8.798985), \"end_distance\": 3.76198935508728, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333379358053, \"stalled_ticks\": 90 }",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0223 forward ends inside the arrival radius",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0223 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 117, \"waypoint_index\": 2, \"final\": (5.845636, 0.0, 8.749938), \"end_distance\": 1.65436363220215, \"max_vertical_step\": 0.0, \"max_motion\": 0.1033341139555, \"stalled_ticks\": 90 }",
+		"seed 1 room room-05 zone room-05/game_room structure solid-0223 reverse ends inside the arrival radius",
+		"seed 1 room room-07 zone room-07/study structure solid-0231 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (3.825, 0.0, 1.438333), \"end_distance\": 3.53928375244141, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333335399628, \"stalled_ticks\": 90 }",
+		"seed 1 room room-07 zone room-07/study structure solid-0231 forward ends inside the arrival radius",
+		"seed 1 room room-07 zone room-07/study structure solid-0231 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 119, \"waypoint_index\": 2, \"final\": (3.824881, 0.0, 0.150275), \"end_distance\": 1.64972472190857, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333347320557, \"stalled_ticks\": 90 }",
+		"seed 1 room room-07 zone room-07/study structure solid-0231 reverse ends inside the arrival radius",
+		"seed 1 room room-07 zone room-07/study structure solid-0232 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (3.825, 0.0, 1.438333), \"end_distance\": 3.75882959365845, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333335399628, \"stalled_ticks\": 90 }",
+		"seed 1 room room-07 zone room-07/study structure solid-0232 forward ends inside the arrival radius",
+		"seed 1 room room-07 zone room-07/study structure solid-0232 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 115, \"waypoint_index\": 2, \"final\": (3.825035, 0.0, 0.153426), \"end_distance\": 1.64657366275787, \"max_vertical_step\": 0.0, \"max_motion\": 0.1033334210515, \"stalled_ticks\": 90 }",
+		"seed 1 room room-07 zone room-07/study structure solid-0232 reverse ends inside the arrival radius",
+		"seed 1 room room-07 zone room-07/study structure solid-0233 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (3.825, 0.0, 1.438333), \"end_distance\": 3.39108777046204, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333335399628, \"stalled_ticks\": 90 }",
+		"seed 1 room room-07 zone room-07/study structure solid-0233 forward ends inside the arrival radius",
+		"seed 1 room room-07 zone room-07/study structure solid-0233 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 117, \"waypoint_index\": 2, \"final\": (3.82511, 0.0, 0.160797), \"end_distance\": 1.63920271396637, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333353281021, \"stalled_ticks\": 90 }",
+		"seed 1 room room-07 zone room-07/study structure solid-0233 reverse ends inside the arrival radius",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0248 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-7.761602, 3.2, 8.774401), \"end_distance\": 3.83025646209717, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333362221718, \"stalled_ticks\": 90 }",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0248 forward ends inside the arrival radius",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0248 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 116, \"waypoint_index\": 2, \"final\": (-9.060701, 3.2, 8.725166), \"end_distance\": 1.66070127487183, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333425551653, \"stalled_ticks\": 90 }",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0248 reverse ends inside the arrival radius",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0249 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-7.761602, 3.2, 8.774401), \"end_distance\": 3.52072334289551, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333362221718, \"stalled_ticks\": 90 }",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0249 forward ends inside the arrival radius",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0249 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 114, \"waypoint_index\": 2, \"final\": (-9.036049, 3.2, 8.725019), \"end_distance\": 1.63604879379272, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333392769098, \"stalled_ticks\": 90 }",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0249 reverse ends inside the arrival radius",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0250 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-7.761602, 3.2, 8.774401), \"end_distance\": 2.41719079017639, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333362221718, \"stalled_ticks\": 90 }",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0250 forward ends inside the arrival radius",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0250 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 108, \"waypoint_index\": 2, \"final\": (-9.046118, 3.2, 8.725237), \"end_distance\": 1.64611768722534, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333362221718, \"stalled_ticks\": 90 }",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0250 reverse ends inside the arrival radius",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0254 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-7.761602, 3.2, 8.774401), \"end_distance\": 3.7583155632019, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333362221718, \"stalled_ticks\": 90 }",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0254 forward ends inside the arrival radius",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0254 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 114, \"waypoint_index\": 2, \"final\": (-9.043373, 3.2, 8.725097), \"end_distance\": 1.64337301254272, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333397239447, \"stalled_ticks\": 90 }",
+		"seed 1 room room-11 zone room-11/sewing_room structure solid-0254 reverse ends inside the arrival radius",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0255 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (7.03839, 3.2, 8.774134), \"end_distance\": 4.02722358703613, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333343595266, \"stalled_ticks\": 90 }",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0255 forward ends inside the arrival radius",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0255 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 118, \"waypoint_index\": 2, \"final\": (5.745938, 3.2, 8.725152), \"end_distance\": 1.65406179428101, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333359986544, \"stalled_ticks\": 90 }",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0255 reverse ends inside the arrival radius",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0256 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (7.03839, 3.2, 8.774134), \"end_distance\": 2.57821774482727, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333343595266, \"stalled_ticks\": 90 }",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0256 forward ends inside the arrival radius",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0256 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 110, \"waypoint_index\": 2, \"final\": (5.762776, 3.2, 8.72513), \"end_distance\": 1.63722372055054, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333347320557, \"stalled_ticks\": 90 }",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0256 reverse ends inside the arrival radius",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0259 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (7.03839, 3.2, 8.774134), \"end_distance\": 3.89846253395081, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333343595266, \"stalled_ticks\": 90 }",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0259 forward ends inside the arrival radius",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0259 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 116, \"waypoint_index\": 2, \"final\": (5.748796, 3.2, 8.725083), \"end_distance\": 1.65120410919189, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333339869976, \"stalled_ticks\": 90 }",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0259 reverse ends inside the arrival radius",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0261 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (7.03839, 3.2, 8.774134), \"end_distance\": 3.67552161216736, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333343595266, \"stalled_ticks\": 90 }",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0261 forward ends inside the arrival radius",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0261 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 118, \"waypoint_index\": 2, \"final\": (5.745132, 3.2, 8.725045), \"end_distance\": 1.65486764907837, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333376377821, \"stalled_ticks\": 90 }",
+		"seed 1 room room-12 zone room-12/music_room structure solid-0261 reverse ends inside the arrival radius",
+		"seed 1 room room-14 zone room-14/study structure solid-0267 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (3.825, 3.2, -0.761667), \"end_distance\": 1.36241853237152, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333332419395, \"stalled_ticks\": 90 }",
+		"seed 1 room room-14 zone room-14/study structure solid-0267 forward ends inside the arrival radius",
+		"seed 1 room room-14 zone room-14/study structure solid-0267 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 94, \"waypoint_index\": 2, \"final\": (3.825126, 3.2, -2.048353), \"end_distance\": 1.64835321903229, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333347320557, \"stalled_ticks\": 90 }",
+		"seed 1 room room-14 zone room-14/study structure solid-0267 reverse ends inside the arrival radius",
+		"seed 1 room room-14 zone room-14/study structure solid-0268 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (3.825, 3.2, -0.761667), \"end_distance\": 1.54433345794678, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333332419395, \"stalled_ticks\": 90 }",
+		"seed 1 room room-14 zone room-14/study structure solid-0268 forward ends inside the arrival radius",
+		"seed 1 room room-14 zone room-14/study structure solid-0268 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 94, \"waypoint_index\": 2, \"final\": (3.825, 3.2, -2.047666), \"end_distance\": 1.6476663351059, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333347320557, \"stalled_ticks\": 90 }",
+		"seed 1 room room-14 zone room-14/study structure solid-0268 reverse ends inside the arrival radius",
+		"seed 1 room room-14 zone room-14/study structure solid-0272 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (3.825, 3.2, -0.761667), \"end_distance\": 1.51674127578735, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333332419395, \"stalled_ticks\": 90 }",
+		"seed 1 room room-14 zone room-14/study structure solid-0272 forward ends inside the arrival radius",
+		"seed 1 room room-14 zone room-14/study structure solid-0272 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 98, \"waypoint_index\": 2, \"final\": (3.824756, 3.2, -2.048408), \"end_distance\": 1.64840805530548, \"max_vertical_step\": 0.0, \"max_motion\": 0.10333347320557, \"stalled_ticks\": 90 }",
+		"seed 1 room room-14 zone room-14/study structure solid-0272 reverse ends inside the arrival radius",
+		"seed 1 room room-18 zone room-18/study structure solid-0287 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-7.311619, 6.4, 8.823733), \"end_distance\": 4.26609563827515, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333328694105, \"stalled_ticks\": 90 }",
+		"seed 1 room room-18 zone room-18/study structure solid-0287 forward ends inside the arrival radius",
+		"seed 1 room room-18 zone room-18/study structure solid-0287 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 121, \"waypoint_index\": 2, \"final\": (-8.604081, 6.4, 8.775118), \"end_distance\": 1.65408134460449, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333436727524, \"stalled_ticks\": 90 }",
+		"seed 1 room room-18 zone room-18/study structure solid-0287 reverse ends inside the arrival radius",
+		"seed 1 room room-18 zone room-18/study structure solid-0290 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-7.311619, 6.4, 8.823733), \"end_distance\": 2.83815145492554, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333328694105, \"stalled_ticks\": 90 }",
+		"seed 1 room room-18 zone room-18/study structure solid-0290 forward ends inside the arrival radius",
+		"seed 1 room room-18 zone room-18/study structure solid-0290 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 111, \"waypoint_index\": 2, \"final\": (-8.606027, 6.4, 8.775254), \"end_distance\": 1.65602684020996, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333359986544, \"stalled_ticks\": 90 }",
+		"seed 1 room room-18 zone room-18/study structure solid-0290 reverse ends inside the arrival radius",
+		"seed 1 room room-18 zone room-18/study structure solid-0291 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-7.311619, 6.4, 8.823733), \"end_distance\": 3.89692807197571, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333328694105, \"stalled_ticks\": 90 }",
+		"seed 1 room room-18 zone room-18/study structure solid-0291 forward ends inside the arrival radius",
+		"seed 1 room room-18 zone room-18/study structure solid-0291 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 120, \"waypoint_index\": 2, \"final\": (-8.587772, 6.4, 8.774972), \"end_distance\": 1.63777256011963, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.1033339202404, \"stalled_ticks\": 90 }",
+		"seed 1 room room-18 zone room-18/study structure solid-0291 reverse ends inside the arrival radius",
+		"seed 1 room room-18 zone room-18/study structure solid-0293 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (-7.311619, 6.4, 8.823733), \"end_distance\": 4.17835235595703, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333328694105, \"stalled_ticks\": 90 }",
+		"seed 1 room room-18 zone room-18/study structure solid-0293 forward ends inside the arrival radius",
+		"seed 1 room room-18 zone room-18/study structure solid-0293 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 118, \"waypoint_index\": 2, \"final\": (-8.599061, 6.4, 8.775081), \"end_distance\": 1.64906120300293, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333366692066, \"stalled_ticks\": 90 }",
+		"seed 1 room room-18 zone room-18/study structure solid-0293 reverse ends inside the arrival radius",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0294 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (6.538416, 6.4, 8.824698), \"end_distance\": 3.52611923217773, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333350300789, \"stalled_ticks\": 90 }",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0294 forward ends inside the arrival radius",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0294 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 113, \"waypoint_index\": 2, \"final\": (5.246816, 6.4, 8.775163), \"end_distance\": 1.65318441390991, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333373397589, \"stalled_ticks\": 90 }",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0294 reverse ends inside the arrival radius",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0295 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (6.538416, 6.4, 8.824698), \"end_distance\": 2.05460286140442, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333350300789, \"stalled_ticks\": 90 }",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0295 forward ends inside the arrival radius",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0295 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 103, \"waypoint_index\": 2, \"final\": (5.245484, 6.4, 8.77527), \"end_distance\": 1.65451574325562, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333347320557, \"stalled_ticks\": 90 }",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0295 reverse ends inside the arrival radius",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0296 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (6.538416, 6.4, 8.824698), \"end_distance\": 3.42473697662354, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333350300789, \"stalled_ticks\": 90 }",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0296 forward ends inside the arrival radius",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0296 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 111, \"waypoint_index\": 2, \"final\": (5.25729, 6.4, 8.775102), \"end_distance\": 1.64271020889282, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333356261253, \"stalled_ticks\": 90 }",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0296 reverse ends inside the arrival radius",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0300 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (6.538416, 6.4, 8.824698), \"end_distance\": 3.18957185745239, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333350300789, \"stalled_ticks\": 90 }",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0300 forward ends inside the arrival radius",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0300 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 112, \"waypoint_index\": 2, \"final\": (5.263062, 6.4, 8.774961), \"end_distance\": 1.63693857192993, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333386063576, \"stalled_ticks\": 90 }",
+		"seed 1 room room-19 zone room-19/game_room structure solid-0300 reverse ends inside the arrival radius",
+		"seed 1 room room-21 zone room-21/study structure solid-0305 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (3.825, 6.4, -1.111667), \"end_distance\": 1.55162024497986, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333335399628, \"stalled_ticks\": 90 }",
+		"seed 1 room room-21 zone room-21/study structure solid-0305 forward ends inside the arrival radius",
+		"seed 1 room room-21 zone room-21/study structure solid-0305 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 94, \"waypoint_index\": 2, \"final\": (3.824864, 6.4, -2.40187), \"end_distance\": 1.65187048912048, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333350300789, \"stalled_ticks\": 90 }",
+		"seed 1 room room-21 zone room-21/study structure solid-0305 reverse ends inside the arrival radius",
+		"seed 1 room room-21 zone room-21/study structure solid-0307 forward consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 95, \"waypoint_index\": 1, \"final\": (3.825, 6.4, -1.111667), \"end_distance\": 1.59771633148193, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333335399628, \"stalled_ticks\": 90 }",
+		"seed 1 room room-21 zone room-21/study structure solid-0307 forward ends inside the arrival radius",
+		"seed 1 room room-21 zone room-21/study structure solid-0307 reverse consumes every waypoint: { \"reached\": false, \"reason\": \"stalled\", \"ticks\": 97, \"waypoint_index\": 2, \"final\": (3.825166, 6.4, -2.393458), \"end_distance\": 1.64345836639404, \"max_vertical_step\": 0.00000047683716, \"max_motion\": 0.10333347320557, \"stalled_ticks\": 90 }",
+		"seed 1 room room-21 zone room-21/study structure solid-0307 reverse ends inside the arrival radius"
+	],
+	"scope": "production Arena.step_human authority over room center -> functional zone anchor -> furniture approach in both directions, with every generated door fully open; no renderer, visual approval, door transition, network, prediction, controller or WAN claim",
+	"source_sha256": {
+		"res://scripts/arena.gd": "ed33d7a5afbf181e2390553bd7183281196f6ef65207ebe9011896675b82dc63",
+		"res://scripts/door_catalog.gd": "fc6da39cb7d11a7f6c43f271e68212bae0f90238a685d3c719fd4a3ebcf3aafc",
+		"res://scripts/house_validation.gd": "f1357347fbc45ce9f3744248e05fedd678acbb84c69a2c26ba98303e528c7c4e",
+		"res://scripts/map_catalog.gd": "d3ebdeb78158f70f6fa4565cd6b5daf8851fe75637034e7f5bfbca83a4aab0d5",
+		"res://scripts/procedural_house.gd": "bb03f28f504b9264a300fc5e3246089fe5406fceae23249b2226b184b8699088",
+		"res://tests/review092_functional_approach_test.gd": "3abc75b1f4592488b2c7981b1b42c9008ab102c64b7385954ed14e336ab7cf0d"
+	}
+}
