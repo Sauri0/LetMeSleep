@@ -1,0 +1,14 @@
+{
+  "scope": "documentation consistency only; no Unity compilation, gameplay, rendering or WAN test",
+  "base_commit": "0ea6cca",
+  "core_source_read_sha256": "0d183bce645a86bc34cbf0d62b282ca09390392be1ac03ae7cd60960c97b0af4",
+  "documents": {
+    "ACCEPTANCE.md": "af5229ead6486afcd27ccc2d0c7e1a3040c2b9a40525577a93a89f6c4822e427",
+    "ALFA-GAMEPLAY.md": "50ed6609afddd8e21893542229b84e4dde69bc77a73cd5c1ac4d950cd15730bf",
+    "GODOT-AUDIT.md": "5fa6e95e9c358137d234c33d202135fae0c1f84c2cee879929b2d61c46223f44",
+    "INTERFACES.md": "5df775956b4a0af011c71dca8033c955979d0e493454228984a02f4c336065e9"
+  },
+  "checks": 40,
+  "failures": [],
+  "validation_note": "Gate IDs occur before their scenario label in table cells; matched anchored row prefix."
+}
