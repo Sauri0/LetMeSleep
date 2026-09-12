@@ -83,3 +83,19 @@ Spatial contract: Unity metres, Y-up/Z-forward. Human capsule radius .25, height
 - Director owns final integration/editor slot; W1/W2/UI/environment frozen. No team overlaps and no later stage started. External gates and artistic approval remain as recorded in PENDING-EXTERNAL.md.
 - Final public-installed Windows probe: six checks PASS, no atlas downscale warning in this run. Receipt ALFA2-PUBLIC-PLAYER-20260912.json; updater receipt committed. Director editor PID5800 and public test process23740 exited; GPU/editor slot released.
 - Previous goal turn: progress (published and verified alfa.2). Remaining locally actionable alfa work includes front-entry/full surface traversal and visual defects identified by an owner review. External gates are unchanged; goal is not complete or genuinely blocked while those investigations can progress.
+
+## Rechazo visual de Branko y lote de recuperación — 2026-09-12
+
+Branko probó la candidata publicada y reportó una caída importante frente a Godot: faltan animaciones, mejora de UI y acabado. Las bases de los modelos no le disgustan, pero exige acercar diseños y gráficos a los bocetos aportados. La publicación alfa.2 permanece como candidata técnica; su distribución y probes no acreditan aceptación artística.
+
+Trabajo reactivado por propietarios, sin comenzar beta:
+- M1: revisar todos los clips/rig/manos y corregir fuentes/exportaciones de personajes alfa. Sin ampliar catálogo de cosméticos.
+- W2: investigar reproducción/mezcla de animaciones en runtime, estados y velocidad; coordinar clips con M1. Luces motivadas por luminarias M2, sin manchas quemadas; conserva tiers/sombras.
+- M2: estar/dormitorio/cocina como conjuntos habitados; carpintería, zócalos/vanos/transiciones limpios; luminarias visibles y materiales diferenciados. Conserva planta, rutas y pickups. Estar como muestra integrada antes de extender acabado. Floor_Oak: tablones .32m, largo alternado1.28m, juntas3mm, variación tonal≤8%; smoothness madera.16, revoque.08, textil.10 como base ajustable tras render. UV2 preservadas.
+- UI: menú/lobby/HUD/personalizador/ajustes con paneles azul noche, jerarquía, títulos gruesos legibles, iconos propios, poco texto y modelos3D reales. Conserva contratos/callbacks. Sin funciones inventadas de los bocetos.
+- W1: termina test físico entrada frontal y pared/techo; único editor/GPU PID33400. Sólo fixtures temporales; ningún cambio root de runtime ajeno.
+- Director: contratos, integración y revisión conjunta contra referencias y en movimiento; QA independiente verifica errores reales. No publicar otro parche técnico como si fuera renovación visual completa.
+
+Verificación del lote: mismas vistas comparables de estar/pasillo, dormitorio y lobby; movimiento continuo humano/mosquito con estados reales (no sólo poses forzadas); navegación UI y composición a720/1080. Comparar siluetas, proporciones, lectura doméstica, materiales, fuentes de luz y acciones con referencias, sin copiar textos/mecánicas. Documentar diferencias pendientes honestamente.
+
+Audio fantasma reportado: procesos inspeccionados, no había Let-me-sleep.exe ni Godot activo. Era UnityPID33400 en Play de W1. Director y W1 confirmaron AudioListener.volume=0. Las pruebas físicas/visuales siguientes deben ser silenciosas; abrir editores batch con -noaudio cuando no se pruebe audio. No modificar ajustes reales ni silenciar otros programas. El usuario fue informado.
