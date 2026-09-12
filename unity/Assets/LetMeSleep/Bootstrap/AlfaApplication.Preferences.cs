@@ -65,7 +65,8 @@ namespace LetMeSleep.Bootstrap
             if (preferenceStore.WriteBlocked) { saveError = "Los ajustes son de otra versión. Se conservaron sin modificar."; return false; }
             preferenceStore.Save(JsonUtility.ToJson(new Preferences { schema = 1, playerName = playerName, settings = settings, appearance = appearance }, true));
             saveError = ""; return true;
-            } catch (Exception e) when (e is IOException || e is UnauthorizedAccessException) { saveError = "No se pudo guardar. Revisá el acceso a la carpeta y volvé a intentar."; return false; }
+            } catch (InvalidDataException) { saveError = "No se guardaron ajustes: el archivo pertenece a otra versión o no es válido."; return false; }
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException) { saveError = "No se pudo guardar. Revisá el acceso a la carpeta y volvé a intentar."; return false; }
         }
         private void PresentPreferences()
         {

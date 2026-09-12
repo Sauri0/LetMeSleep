@@ -46,7 +46,8 @@ namespace LetMeSleep.Bootstrap
                 Read(path + ".backup", out var backupKind);
                 if (backupKind == PreferenceDocumentKind.UnsupportedVersion) WriteBlocked = true;
             }
-            if (WriteBlocked || kind == PreferenceDocumentKind.UnsupportedVersion)
+            if (kind == PreferenceDocumentKind.UnsupportedVersion) WriteBlocked = true;
+            if (WriteBlocked)
                 throw new InvalidDataException("Preferences belong to an unsupported version.");
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             string temp = path + ".tmp-" + Guid.NewGuid().ToString("N");
