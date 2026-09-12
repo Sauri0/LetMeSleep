@@ -19,7 +19,7 @@ namespace LetMeSleep.Content.Characters.Editor
     {
         public const string OutputRoot = "Assets/LetMeSleep/Content/Characters";
         public const string ReceiptPath = OutputRoot + "/BuildReceipt.json";
-        private const string BuilderVersion = "alpha-characters-2";
+        private const string BuilderVersion = "alpha-characters-3-orientation";
         private static string SourceRoot => Path.GetFullPath(Path.Combine(Application.dataPath,
             "../../art_source/unity/characters"));
         private static readonly string[] HumanStates = {
@@ -69,6 +69,14 @@ namespace LetMeSleep.Content.Characters.Editor
 #pragma warning restore CS0649
         [Serializable] public sealed class AssetRecord { public string path; public string guid; }
         [Serializable] public sealed class AnchorRecord { public string name; public string bonePath; public string anchorPath; }
+        [Serializable] public sealed class OrientationRecord
+        {
+            public Vector3 frontPointActorLocal;
+            public Vector3 leftPointActorLocal;
+            public Vector3 rightPointActorLocal;
+            public Vector3 sourceCorrectionEuler;
+            public float nearestTipVertexDistance;
+        }
         [Serializable] public sealed class ValidationRecord
         {
             public string prefab;
@@ -84,6 +92,7 @@ namespace LetMeSleep.Content.Characters.Editor
             public CharacterView.MotionBinding[] motions;
             public AnchorRecord[] anchors;
             public string[] bonePaths;
+            public OrientationRecord orientation;
         }
         [Serializable] public sealed class BuildReceipt
         {
@@ -304,9 +313,7 @@ namespace LetMeSleep.Content.Characters.Editor
                 SceneManager.MoveGameObjectToScene(root, scene);
                 var visual = Child(root.transform, "VisualRoot");
                 visual.localScale = Vector3.one * (human ? 1 : .5f);
-                var model = AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath(audit.species));
-                var instance = (GameObject)PrefabUtility.InstantiatePrefab(model, scene);
-                instance.name = "Model"; instance.transform.SetParent(visual, false);
+                var instance = InstantiateOrientedModel(visual, audit.species, scene);
                 var animator = instance.GetComponent<Animator>();
                 Require(animator != null && animator.avatar != null && animator.avatar.isValid, "Invalid Generic avatar: " + audit.species);
                 animator.runtimeAnimatorController = controller;
@@ -377,8 +384,7 @@ namespace LetMeSleep.Content.Characters.Editor
             try
             {
                 var root = new GameObject("LMS_Flyswatter"); SceneManager.MoveGameObjectToScene(root, scene);
-                var model = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath(audit.species)), scene);
-                model.name = "Model"; model.transform.SetParent(root.transform, false);
+                var model = InstantiateOrientedModel(root.transform, audit.species, scene);
                 var tool = root.AddComponent<ToolView>();
                 tool.Grip = Child(root.transform, "Grip"); tool.Grip.position = Unique(model.transform, "Socket.Grip").position;
                 tool.Impact = Child(root.transform, "Impact"); tool.Impact.position = Unique(model.transform, "Socket.Impact").position;
@@ -401,6 +407,7 @@ namespace LetMeSleep.Content.Characters.Editor
                 Require(!view.Animator.avatar.isHuman && !view.Animator.applyRootMotion, "Expected in-place Generic rig on " + name);
                 Require(instance.transform.localScale == Vector3.one, "Actor root has non-unit scale");
                 Require(view.VisualRoot.localScale == Vector3.one * (audit.species == "Human" ? 1 : .5f), "Visual scale changed");
+                var orientation = ValidateOrientation(instance.transform, view.Animator.transform, audit.species);
                 Require(view.IsFirstPerson == firstPerson, "FP visibility flag mismatch");
                 Require(view.HitVolume != null && view.HitVolume.isTrigger && !view.HitVolume.enabled, "Missing disabled reference hit volume; Gameplay owns live colliders");
                 if (audit.species == "Human")
@@ -460,6 +467,7 @@ namespace LetMeSleep.Content.Characters.Editor
                 return new ValidationRecord { prefab = PrefabPath(name), triangles = triangles, renderers = renderers.Length,
                     bones = audit.bones, clips = clips.Length, genericAvatarValid = true, animationBindingsValid = true,
                     sampledMeshesFinite = true, rootStationary = true, maximumLoopFootDelta = maxLoopDelta, motions = view.Motions,
+                    orientation = orientation,
                     anchors = view.Anchors.Select(a => new AnchorRecord { name = a.Name,
                         bonePath = AnimationUtility.CalculateTransformPath(a.SourceBone, view.Animator.transform),
                         anchorPath = AnimationUtility.CalculateTransformPath(a.Anchor, instance.transform) }).ToArray(),
@@ -475,6 +483,7 @@ namespace LetMeSleep.Content.Characters.Editor
             var tool = prefab.GetComponent<ToolView>();
             Require(tool != null && tool.Grip != null && tool.Impact != null && tool.GripToImpact > .35f && tool.GripToImpact < .38f, "Invalid tool grip/impact anchors");
             var triangles = CountTriangles(prefab); Require(triangles == audit.triangles, "Tool triangle count changed");
+            Require(prefab.transform.InverseTransformPoint(tool.Impact.position).z > .003f, "Flyswatter striking face is not +Z");
             return new ValidationRecord { prefab = PrefabPath("LMS_Flyswatter"), triangles = triangles,
                 renderers = prefab.GetComponentsInChildren<Renderer>(true).Length, bones = audit.bones, clips = 0 };
         }
@@ -490,6 +499,64 @@ namespace LetMeSleep.Content.Characters.Editor
                 for (int i = 0; i < mesh.subMeshCount; i++) total += (int)mesh.GetIndexCount(i) / 3;
             }
             return total;
+        }
+
+        private static GameObject InstantiateOrientedModel(Transform parent, string species, Scene scene)
+        {
+            // Correct the whole imported asset outside its Animator. Bone local transforms,
+            // curves, bindposes and mesh handedness remain untouched; no socket-only offset.
+            var orientation = Child(parent, "SourceOrientation");
+            var model = (GameObject)PrefabUtility.InstantiatePrefab(
+                AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath(species)), scene);
+            model.name = "Model"; model.transform.SetParent(orientation, false);
+            string originName = species == "Human" ? "Head" : species == "Mosquito" ? "Thorax" : "Root";
+            string frontName = species == "Human" ? "Socket.Eye" : species == "Mosquito" ? "Socket.Mouth" : "Socket.Impact";
+            Vector3 forward = parent.InverseTransformDirection(Unique(model.transform, frontName).position - Unique(model.transform, originName).position);
+            forward = Vector3.ProjectOnPlane(forward, Vector3.up);
+            Require(forward.sqrMagnitude > 1e-8f, "Cannot infer imported forward from source landmarks: " + species);
+            // FromToRotation is ambiguous for opposite vectors and can choose a pitch/roll
+            // half-turn. Use an explicit yaw so +Y stays up for the measured -Z import.
+            float sourceYaw = Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg;
+            orientation.localRotation = Quaternion.AngleAxis(-sourceYaw, Vector3.up);
+            Require(Vector3.Dot(orientation.up, parent.up) > .9999f, "Source orientation changed the up axis");
+            return model;
+        }
+
+        private static OrientationRecord ValidateOrientation(Transform actor, Transform model, string species)
+        {
+            bool human = species == "Human";
+            var front = actor.InverseTransformPoint(Unique(model, human ? "Socket.Eye" : "Socket.Mouth").position);
+            var left = actor.InverseTransformPoint(Unique(model, human ? "UpperArm.L" : "Wing.L").position);
+            var right = actor.InverseTransformPoint(Unique(model, human ? "UpperArm.R" : "Wing.R").position);
+            Require(front.z > (human ? .10f : .09f), species + " geometry faces -Z; front landmark=" + front);
+            Require(left.x < -.001f && right.x > .001f, species + " left/right anatomy is reversed: L=" + left + " R=" + right);
+            if (human)
+            {
+                Require(actor.InverseTransformPoint(Unique(model, "Foot.L").position).x < -.08f
+                    && actor.InverseTransformPoint(Unique(model, "Foot.R").position).x > .08f, "Human left/right feet are reversed");
+            }
+            float nearest = 0;
+            if (!human)
+            {
+                nearest = float.PositiveInfinity;
+                foreach (var renderer in model.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+                {
+                    var baked = new Mesh();
+                    try
+                    {
+                        renderer.BakeMesh(baked);
+                        foreach (var vertex in baked.vertices)
+                            nearest = Mathf.Min(nearest, Vector3.Distance(front, actor.InverseTransformPoint(renderer.transform.TransformPoint(vertex))));
+                    }
+                    finally { Object.DestroyImmediate(baked); }
+                }
+                Require(nearest < .002f, "Mosquito forward anchor is detached from the proboscis mesh: " + nearest);
+            }
+            Require(model.parent.name == "SourceOrientation" && model.parent.localScale == Vector3.one,
+                "Source orientation must be a unit-scale parent outside the Animator");
+            return new OrientationRecord { frontPointActorLocal = front, leftPointActorLocal = left,
+                rightPointActorLocal = right, sourceCorrectionEuler = model.parent.localEulerAngles,
+                nearestTipVertexDistance = nearest };
         }
 
         private static Transform Unique(Transform root, string name)

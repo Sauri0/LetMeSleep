@@ -1,6 +1,6 @@
 # Lote de integración de personajes alfa
 
-Builder compilado contra las bibliotecas instaladas de Unity 6000.3.24f1, sin abrir otro editor. La ejecución Unity y la idempotencia todavía deben acreditarse con el recibo real del editor residente del Director. No confundir `unity_compile.json` con ese recibo.
+Builder compilado contra las bibliotecas instaladas de Unity 6000.3.24f1, sin abrir otro editor. El Director ejecutó la revisión inicial y detectó la inversión de frente descrita abajo. El delta de orientación y la idempotencia todavía deben acreditarse con el nuevo recibo real del editor residente. No confundir `unity_compile.json` con ese recibo.
 
 ## Método para el Director
 
@@ -30,6 +30,8 @@ Los colliders de referencia de los personajes están **deshabilitados**: almacen
 Punta mosquito de reposo: `(0,0,+0,095)` m Unity desde la raíz, conforme al contrato W1. Se acortó y enderezó la probóscide fuente para coincidir sin desplazar el tórax ni cambiar el radio. Los clips de picadura mueven Head/Proboscis; Presentation debe alinear continuamente el ancla ProboscisTip con el contacto autoritativo de W1.
 
 ## API de Presentation
+
+La jerarquía visual incluye `VisualRoot/SourceOrientation/Model`. `SourceOrientation` corrige el frente real importado mediante yaw, por fuera del Animator; conserva curvas, bindposes y transformaciones locales del rig. Presentation puede mover VisualRoot y no debe reiniciar el giro del hijo SourceOrientation. Los paths de huesos relativos al Animator se conservan.
 
 - `Animator`, `VisualRoot`, `Anchors`, `Motions`, `HitVolume` son referencias serializadas.
 - `GetAnchor(name)` devuelve el Transform; los nombres exactos y huesos fuente están en `integration.json`.
@@ -75,3 +77,9 @@ Fuentes Blender y FBX de humano, mosquito y matamoscas pasan auditoría y reimpo
 Las capturas de `review/` pertenecen a la muestra anterior `48767e7`; no acreditan visualmente esta revisión de clips, pesos y probóscide. El manifest se sella con `--source-only` y mantiene esa distinción. No hay LOD1/LOD2: Director priorizó rig/manos funcionales y sólo permite decidir LOD tras medir.
 
 Pendientes de cierre con Director/W2/QA: ejecución del builder y su repetición real, recibo validado, contacto de animaciones en motor, BodySurfaces/pose autoritativa, agarre y alcance de matamoscas, FP sin clipping y alas. No hay afirmación de FPS ni de prueba de partida.
+
+## Corrección de orientación tras importación nativa
+
+En Unity 6000.3.24f1 el Director midió antes del delta: mosquito ProboscisTip `(0,0,-0,095)`; humano Socket.Eye `(0,1,53,-0,17)`, UpperArm.L `(+0,25,1,17,0)`, UpperArm.R `(-0,25,1,17,0)`, Foot.L `(+0,125,0,12,0)` y Foot.R `(-0,125,0,12,0)`. Por eso el recibo inicial falló el gate de punta +Z. La ida y vuelta Blender/FBX no detectaba esta conversión específica del importador Unity.
+
+El builder `alpha-characters-3-orientation` mide el frente a partir de puntos del rig importado y aplica sólo yaw en SourceOrientation: 180° para los valores observados. No mueve el socket respecto a la probóscide ni refleja la escala. Aplica el mismo tratamiento al humano completo, FP, mosquito y herramienta. Los nuevos gates exigen frente +Z, izquierda anatómica -X, derecha +X, pies humanos consistentes y distancia de la punta a un vértice real de la probóscide < 2 mm. El recibo incorpora los puntos medidos, el giro aplicado y esa distancia; la reejecución con Director debe verificar estos valores junto con las curvas y mallas de todos los clips.
