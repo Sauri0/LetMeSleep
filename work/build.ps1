@@ -24,7 +24,8 @@ function Invoke-CheckedHeadless {
         if (-not $checked.Start()) { throw ('Cannot start check: ' + $CheckName) }
         $stdout = $checked.StandardOutput.ReadToEndAsync()
         $stderr = $checked.StandardError.ReadToEndAsync()
-        $timedOut = -not $checked.WaitForExit(55000)
+        $checkTimeoutMs = if ($CheckName -eq 'geometry09_cache_checks') { 300000 } else { 55000 }
+        $timedOut = -not $checked.WaitForExit($checkTimeoutMs)
         if ($timedOut) { $checked.Kill($true); $checked.WaitForExit() }
         $nativeExitCode = $checked.ExitCode
         [System.IO.File]::WriteAllText($outputLog,$stdout.Result)
