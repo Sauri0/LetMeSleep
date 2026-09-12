@@ -21,7 +21,6 @@ namespace LetMeSleep.Presentation
             moon.type = LightType.Directional;
             moon.color = preset.MoonColor;
             moon.intensity = preset.MoonIntensityLux;
-            moon.lightmapBakeType = LightmapBakeType.Mixed;
             moon.shadows = LightShadows.Soft;
         }
     }

@@ -171,6 +171,7 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(rig, "moon", moon);
                 Assign(rig, "globalVolume", volume);
                 rig.ApplyPreset();
+                moon.lightmapBakeType = LightmapBakeType.Mixed;
 
                 PrefabUtility.SaveAsPrefabAsset(
                     root, PresentationRoot + "/Prefabs/LMS_AlfaLightingRoot.prefab");
