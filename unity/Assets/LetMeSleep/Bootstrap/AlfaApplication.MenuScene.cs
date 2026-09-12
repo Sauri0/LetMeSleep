@@ -40,6 +40,7 @@ namespace LetMeSleep.Bootstrap
             {
                 HumanRoot = human.transform, MosquitoRoot = mosquito.transform, HumanSeatRoot = seat,
                 HumanAnimator = human.Animator, MosquitoAnimator = mosquito.Animator,
+                HumanAttention = CreateMenuAttention(human), MosquitoAttention = CreateMenuAttention(mosquito),
                 MenuSeatedIdle = MenuSeatedIdle, MenuLook = MenuLook, MenuSwat = MenuSwat,
                 MenuReturn = MenuReturn, Flight = MenuMosquitoFlight,
                 FlightPoints = points, WarmLightAnchor = anchors.Find("MenuWarmLight"),
@@ -65,6 +66,19 @@ namespace LetMeSleep.Bootstrap
             if (!view || !view.Animator) { Destroy(instance); return null; }
             ApplyAppearance(view, appearance);
             return view;
+        }
+
+        private static VisualAttentionRig CreateMenuAttention(CharacterView character)
+        {
+            if (VisualAttentionFactory.TryInstall(character.gameObject, true, out var rig, out var reason)) return rig;
+            Debug.LogWarning("LMS_MENU_FACIAL_PENDING: " + character.name + ": " + reason, character);
+            return null;
+        }
+
+        private static void ConfigurePreviewAttention(GameObject visual, Camera camera)
+        {
+            if (!VisualAttentionFactory.TryInstallPreview(visual, camera, out var reason))
+                Debug.LogWarning("LMS_PREVIEW_FACIAL_PENDING: " + reason, visual);
         }
 
         private bool AttachMenuFlyswatter(CharacterView human)

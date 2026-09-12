@@ -1,4 +1,13 @@
-# Checkpoint — revisión del video y requisito facial, 2026-09-12
+# Checkpoint — integración para alfa testeable, 2026-09-12
+
+Estado vigente: objetivo activo terminar y lanzar la alfa completa. Candidata descargable puede prepararse con WAN pendiente; Branko tiene un amigo para probar otro día. No declarar cierre alfa/aceptación visual ni iniciar beta.
+
+- Integrados hasta57033d8: Presentation52a7895/1e0440a, UI9eed9aa, registro de partidas64f6306, Mosquito R4 6aadcd5 y humano base+menú joints3 4b61121/57033d8. Alas en posiciones distintas y cierre de párpados revisados en renders; humano corrige muñeca y6vértices dentro del asiento. Falta ver todo en Unity en movimiento.
+- Ambos modeladores liberaron nativos. Director inició Unity PID7716, proyecto N:/LetMeSleep/Repository/unity, D3D11/noaudio, log N:/LetMeSleep/Validation/AlfaIntegration-20260912.log. Verificar PID real antes de asumir estado. No otro render/editor en paralelo.
+- En integración: enlace facial Bootstrap y builder de contratos; Presentación corrige invalidación de certificados y bind pose en archivo propio. Compilación/importación nativa de esta combinación pendiente. Preservar cambios generados sin stage global.
+- Restan reconstrucción de personajes/mapas/menú, prueba de animación/personalización/ambos roles/rondas, paquete alfa.3 con instalación y salida/audio verificados. El amigo probará WAN posteriormente con la misma versión.
+
+## Estado histórico anterior
 
 Sustituye el estado operativo de los bloques históricos siguientes. Alfa sigue rechazada artísticamente; sin publicación ni paso a beta.
 

@@ -70,7 +70,7 @@ namespace LetMeSleep.Bootstrap
             LoadPreferences();
             StartPlaytestJournal();
             ui = AlfaUiRuntime.Create(this, new AlfaUiDependencies(HeadingFont, BodyFont, preview:
-                new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab)));
+                new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab, ConfigurePreviewAttention)));
             menuAudio = Instantiate(MenuAudioPrefab).GetComponent<AlfaAudioDirector>();
             ui.FeedbackRequested += OnUiFeedback;
             ui.ScreenChanged += OnUiScreenChanged;

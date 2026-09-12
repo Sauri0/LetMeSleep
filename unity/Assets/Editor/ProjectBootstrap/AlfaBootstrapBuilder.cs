@@ -23,6 +23,7 @@ namespace LetMeSleep.Editor
             app.HumanPrefab = Required<GameObject>("Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human.prefab");
             app.MosquitoPrefab = Required<GameObject>("Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Mosquito.prefab");
             LivingMenuContentBuilder.BuildAndBind(app);
+            FacialContentBuilder.BuildAll(app);
             app.GameplayPresentationPrefab = Required<GameObject>("Assets/LetMeSleep/Presentation/Generated/Prefabs/LMS_GameplayPresentation.prefab");
             app.MenuAudioPrefab = Required<GameObject>("Assets/LetMeSleep/Audio/Generated/Prefabs/LMS_AlfaAudioRoot.prefab");
             app.Mixer = Required<AudioMixer>("Assets/LetMeSleep/Audio/Generated/LMS_AlfaMixer.mixer");
