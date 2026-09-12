@@ -68,9 +68,9 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(authority.CaptureSnapshot().Doors.Single().Revision, Is.EqualTo(1));
         }
 
-        [TestCase(0, 1f, DoorUseResult.NoDoor, TestName = "DoorUseRejectsMissingCandidate")]
-        [TestCase(1, 2.01f, DoorUseResult.OutOfReach, TestName = "DoorUseRejectsOutOfReachCandidate")]
-        [TestCase(99, 1f, DoorUseResult.StaleRevision, TestName = "DoorUseRejectsStaleCandidate")]
+        [TestCase(0u, 1f, DoorUseResult.NoDoor, TestName = "DoorUseRejectsMissingCandidate")]
+        [TestCase(1u, 2.01f, DoorUseResult.OutOfReach, TestName = "DoorUseRejectsOutOfReachCandidate")]
+        [TestCase(99u, 1f, DoorUseResult.StaleRevision, TestName = "DoorUseRejectsStaleCandidate")]
         public void InvalidDoorCandidateDoesNotMutateDoor(uint revision, float distance, DoorUseResult expected)
         {
             var world = new FakeWorld();

@@ -45,3 +45,17 @@ El `BiteAttachment` público con `AnatomicalSurfaceId` y punto local es necesari
 ## Condición de reverificación
 
 Revisar el commit sucesor de W1 y confirmar F1 cerrado. F2 puede quedar como dependencia explícita PREPARADA hasta el contrato real de superficies; F3 requiere una aclaración breve. Ningún PASS documental sustituirá EditMode/PlayMode de U094-02…09 y U094-14.
+
+## Reverificación de runtime
+
+Revisados `1ebb459` y su corrección `a8a9534` sobre la cadena que incluye `3dced63` y `15e0deb`.
+
+Dictamen actualizado: **PASS para integrar el contrato y runtime puro; gates de escena permanecen pendientes**.
+
+- F1 cerrado: `IGameplayWorld` contiene consulta, barrido y aplicación de puerta; snapshot/evento publican identidad, revisión, ángulo, target, velocidad y bloqueo. Las pruebas QA cubren Use, alcance, revisión, cooldown, ocupación, reanudación e idempotencia.
+- F2 convertido en dependencia explícita: el documento define cobertura finita, cotas, `Unproven` y mutantes. El runtime valida geometría numérica, pero G10 no pasa hasta ejecutar el manifiesto sobre rig/colliders finales.
+- F3 cerrado: `BiteAttachment` sólo representa contacto vigente; al perder resolución se elimina, exige liberación y la siguiente adquisición consulta de nuevo al mundo.
+- La corrección posterior añade `ReplicaStateGate`, correlación de privados por época/ronda/tick, dedupe/reordenamiento acotado de eventos, rechazo de MapId/ContentHash/BalanceHash distintos y desbloqueo de input al iniciar otra ronda.
+- Compilación externa reportada contra Unity `6000.3.24f1`: 0 errores, 0 advertencias. Validación CPU W1: 42 casos, 0 fallos. QA repitió sus 29 casos: 29/29 PASS fuera de Unity.
+
+La primera corrida combinada del Unity Test Runner llegó a 41 casos: 38 pasaron y tres no pudieron enlazar parámetros porque los atributos QA usaban literales `int` para una firma `uint`. El test se corrigió a literales `uint`; se requiere repetir el Runner antes de registrar PASS Unity. Física de escena, acoplamiento visual, G10 geométrico, rutas de bots, entrenamiento completo y EOS/WAN continúan sin acreditar.

@@ -1,6 +1,6 @@
 # Suite EditMode — RoomWireCodec
 
-Estado: **8/10 en arnés externo contra `26228a2`; corrección del parser y Unity Test Runner pendientes**.
+Estado: **10/10 PASS en arnés externo; Unity Test Runner pendiente**.
 
 La suite valida el codec binario puro de `RoomView`:
 
@@ -15,4 +15,4 @@ La suite valida el codec binario puro de `RoomView`:
 
 La ejecución externa debe compilar `RoomSession.cs`, `RoomWireCodec.cs`, el soporte Core y esta suite contra el mismo NUnit instalado. Esa evidencia no sustituye Unity Test Runner ni transporte EOS.
 
-La primera ejecución detectó que una longitud de texto inválida propaga `InvalidDataException` fuera de `TryDecode`; fallan el barrido de todas las truncaciones y el fuzz sin excepciones. El gate exige que ambos pasen después de corregir el parser.
+La primera ejecución detectó que una longitud de texto inválida propagaba `InvalidDataException` fuera de `TryDecode`. Después de añadir el rechazo acotado en Core, el barrido de truncaciones y los mil paquetes de fuzz pasan sin excepciones.
