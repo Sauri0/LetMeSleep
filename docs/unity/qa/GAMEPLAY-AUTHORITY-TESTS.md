@@ -4,6 +4,14 @@ Estado: **29/29 PASS en arnés C# externo; ejecución Unity pendiente tras integ
 
 La ampliación agrega diez casos NUnit sobre `GameplayAuthority` y un `IGameplayWorld` falso controlable. El arnés externo compiló el runtime Gameplay actual de W1 junto con las 19 pruebas Core existentes y ejecutó los 29 casos. Esta comprobación detecta errores de C# y de estado puro, pero no acredita Test Runner, física, render ni red de Unity.
 
+Repetición desde la raíz del worktree, sin abrir Unity:
+
+```powershell
+pwsh -File docs/unity/qa/Run-GameplayExternalHarness.ps1
+```
+
+El script usa por defecto el `nunit.framework.dll` del PackageCache de la instalación residente en `N:/LetMeSleep/Repository/unity`; se puede indicar otra ruta con `-NUnitFrameworkPath`. `-GameplaySourceRoot` permite contrastar temporalmente las pruebas con otro worktree antes de integrar el runtime.
+
 ## Puertas
 
 - `ActionKind.Use` humano alterna el target, publica `DoorSnapshot`/`DoorChanged` y conserva snapshots previos.
