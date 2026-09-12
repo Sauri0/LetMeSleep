@@ -68,6 +68,7 @@ namespace LetMeSleep.Bootstrap
             if (quiescing) return;
             try { Directory.CreateDirectory(DataPath); } catch (Exception e) when (e is IOException || e is UnauthorizedAccessException) { saveError="No se puede guardar en la carpeta de usuario."; }
             LoadPreferences();
+            StartPlaytestJournal();
             ui = AlfaUiRuntime.Create(this, new AlfaUiDependencies(HeadingFont, BodyFont, preview:
                 new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab)));
             menuAudio = Instantiate(MenuAudioPrefab).GetComponent<AlfaAudioDirector>();
@@ -125,6 +126,7 @@ namespace LetMeSleep.Bootstrap
             pendingOnline = false;
             room?.Dispose(); transport?.Dispose(); lobby?.Dispose();
             lobby = new EosLobbySession(connection); transport = new EosPeerTransport(connection, lobby);
+            transport.PeerStateChanged += ObservePlaytestPeer;
             peerAppearances.Clear(); peerAppearanceTimes.Clear(); appliedAppearance.Clear(); appearanceAt = 0;
             transport.PacketReceived += ReceiveAppearance;
             room = new OnlineRoomCoordinator(connection, lobby, transport, playerName);
@@ -136,11 +138,13 @@ namespace LetMeSleep.Bootstrap
         private void OnLobbyChanged()
         {
             if (quiescing) return;
+            RecordPlaytest("Lobby",lobby.State.ToString());
             if (lobby.State == LobbyState.Closed && !intentionalLeave)
             { StopGame(); StopLobbyMovement(); LoadMap(false); ui.ShowJoinRoom(); if(closingError.Length>0) ShowOnlineError(closingError); else ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.RoomClosed)); }
         }
         public void CancelOnline()
         {
+            RecordPlaytest("CancelOnlineRequested");
             pendingOnline = false; intentionalLeave = true;
             if (lobby != null) lobby.Leave();
             ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.Cancelled));
@@ -160,6 +164,7 @@ namespace LetMeSleep.Bootstrap
         private void OnRoomChanged(RoomView view)
         {
             if (quiescing || view == null) return;
+            ObservePlaytestRoom(view);
             training = false;
             if (view.Phase == RoomPhase.Waiting)
             {
@@ -207,6 +212,7 @@ namespace LetMeSleep.Bootstrap
         public void LeaveRoom()
         {
             if (quiescing) return;
+            RecordPlaytest("LeaveRequested",lobby?.IsOwner==true ? "Owner" : "Guest");
             pendingOnline = false; intentionalLeave = true; StopGame(); StopLobbyMovement(); lobby?.Leave(); room?.Dispose(); room = null;
             transport?.Dispose(); transport = null; lastPhase = RoomPhase.Closed; activeRound = -1;
             LoadMap(false); menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu(); ui.ShowMainMenu();
@@ -244,6 +250,7 @@ namespace LetMeSleep.Bootstrap
             game.LocalActorId = local.ActorId; game.LocalPrincipal = local.OwnerPuid;
             game.MouseSensitivity = .002f * (local.Role == PlayerRole.Human ? settings.HumanSensitivity : settings.MosquitoSensitivity);
             game.InvertY = settings.InvertY; game.BeginRound(config, roster);
+            if (!training) RecordPlaytest("RoundStarted",state:game.LatestSnapshot,role:local.Role.ToString());
             MenuCamera.enabled = false; MenuCamera.GetComponent<AudioListener>().enabled = false;
             presentation.GetComponentInChildren<AlfaAudioDirector>().EnterRound();
             PresentGame(game.LatestSnapshot ?? new GameSessionState(config, 0, SimulationPhase.Running, 0, RoundEndReason.None, PlayerRole.Unassigned, Array.Empty<ActorSnapshot>(), Array.Empty<DoorSnapshot>()));
@@ -258,6 +265,7 @@ namespace LetMeSleep.Bootstrap
         { var points = human ? map.HumanSpawnPoints : map.MosquitoSpawnPoints; return points[index % points.Length].position.ToFloat(); }
         private void PresentGame(GameSessionState state)
         {
+            ObservePlaytestResult(state);
             if (state.SimulationPhase == SimulationPhase.Ended)
             {
                 showingResults = true;
@@ -354,6 +362,8 @@ namespace LetMeSleep.Bootstrap
         private void Quiesce()
         {
             if (quiescing) return;
+            RecordPlaytest("ShutdownRequested",lobby?.IsOwner==true ? "Owner" : "Guest");
+            StopPlaytestJournal("ShutdownRequested");
             quiescing = true; pendingOnline = false; intentionalLeave = true; enabled = false;
             StopAllCoroutines();
             if (ui)
