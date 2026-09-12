@@ -39,6 +39,7 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void Update()
         {
+            if (subscribed && gameplay && gameplay.World!=subscribedWorld) { Unsubscribe(); ClearVisuals(); }
             Subscribe();
             DriveLocalCamera();
         }
@@ -46,6 +47,7 @@ namespace LetMeSleep.Presentation.Gameplay
         public void Bind(GameplayRuntime runtime)
         {
             Unsubscribe();
+            ClearVisuals();
             gameplay = runtime;
             Subscribe();
         }
@@ -106,8 +108,13 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void EnsureVisual(GameplayActorProxy proxy)
         {
-            if (proxy == null || visuals.ContainsKey(proxy.ActorId))
-                return;
+            if (proxy == null) return;
+            if (visuals.TryGetValue(proxy.ActorId,out var existing))
+            {
+                if(existing && existing.transform.parent==proxy.transform) return;
+                if(existing) Destroy(existing.gameObject);
+                visuals.Remove(proxy.ActorId);
+            }
             bool local = gameplay != null && proxy.ActorId == gameplay.LocalActorId;
             GameObject source = SelectPrefab(proxy.Role, local);
             if (source == null)
@@ -130,6 +137,13 @@ namespace LetMeSleep.Presentation.Gameplay
             ActorVisualBinding binding = instance.AddComponent<ActorVisualBinding>();
             binding.Initialize(proxy, gameplay.World, view, local);
             visuals.Add(proxy.ActorId, binding);
+            if(VisualAttentionFactory.TryInstall(instance,false,out var attention,out var reason))
+            {
+                var target=instance.GetComponent<GameplayAttentionTarget>();
+                if(!target) target=instance.AddComponent<GameplayAttentionTarget>();
+                target.Bind(gameplay,proxy,attention);
+            }
+            else Debug.LogWarning($"LMS_FACIAL_SKIPPED actor={proxy.ActorId}: {reason}",instance);
             if (proxy.Role == PlayerRole.Human)
                 binding.BindFlyswatter(AttachFlyswatter(view));
             BindLocalCamera(proxy, view, local);

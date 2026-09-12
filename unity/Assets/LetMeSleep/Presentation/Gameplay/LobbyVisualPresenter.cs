@@ -14,6 +14,7 @@ namespace LetMeSleep.Presentation.Gameplay
         private sealed class VisualState
         {
             internal CharacterView View;
+            internal GameplayAttentionTarget AttentionTarget;
             internal int Motion = -1;
             internal float WalkClipDuration = 1f;
         }
@@ -44,12 +45,27 @@ namespace LetMeSleep.Presentation.Gameplay
                 Debug.LogError($"LMS_LOBBY_CHARACTER_VIEW_MISSING player={playerId}", instance);
                 return;
             }
+            if(visuals.TryGetValue(playerId,out var previous) && previous.View==view)
+            {
+                if(previous.AttentionTarget) previous.AttentionTarget.enabled=true;
+                ApplyLatest(playerId); return;
+            }
+            if(previous?.AttentionTarget) previous.AttentionTarget.enabled=false;
+            GameplayAttentionTarget attentionTarget=null;
+            if(VisualAttentionFactory.TryInstall(view.gameObject,false,out var attention,out var reason))
+            {
+                attentionTarget=view.GetComponent<GameplayAttentionTarget>();
+                if(!attentionTarget) attentionTarget=view.gameObject.AddComponent<GameplayAttentionTarget>();
+                attentionTarget.Bind(lobby,playerId,attention); attentionTarget.enabled=true;
+            }
+            else Debug.LogWarning($"LMS_FACIAL_SKIPPED lobby={playerId}: {reason}",view);
             view.SetFirstPersonVisibility(false);
             if (view.Animator != null)
                 view.Animator.applyRootMotion = false;
             visuals[playerId] = new VisualState
             {
                 View = view,
+                AttentionTarget = attentionTarget,
                 WalkClipDuration = FindClipDuration(view, "Human_Walk")
             };
             ApplyLatest(playerId);
@@ -62,6 +78,11 @@ namespace LetMeSleep.Presentation.Gameplay
             for (int i = 0; i < snapshot.Poses.Count; i++)
             {
                 LobbyPose pose = snapshot.Poses[i];
+                // Client Bind can create visuals before this presenter subscribes. Recover from the live roster.
+                if(lobby && lobby.TryGetVisual(pose.PlayerId,out var instance) && instance &&
+                    (!visuals.TryGetValue(pose.PlayerId,out var known) || !known.View ||
+                    (known.View.transform!=instance.transform && !known.View.transform.IsChildOf(instance.transform))))
+                    HandleVisualCreated(pose.PlayerId,instance);
                 if (visuals.TryGetValue(pose.PlayerId, out VisualState visual))
                     ApplyPose(visual, in pose);
             }
@@ -175,6 +196,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 lobby.VisualCreated -= HandleVisualCreated;
                 lobby.SnapshotApplied -= HandleSnapshot;
             }
+            foreach(var visual in visuals.Values) if(visual.AttentionTarget) visual.AttentionTarget.enabled=false;
             visuals.Clear();
             subscribed = false;
         }
