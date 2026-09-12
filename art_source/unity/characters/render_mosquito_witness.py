@@ -14,6 +14,7 @@ import bpy
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
 VIEWS = {
     'front': (0, 8, (0, 0, .055), .66),
     'three_quarter': (35, 8, (0, 0, .055), .66),
@@ -59,6 +60,10 @@ def main():
     parser.add_argument('--sequence', action='store_true')
     parser.add_argument('--cycles', type=int, default=1)
     parser.add_argument('--playback', type=float, default=1)
+    parser.add_argument('--gaze-yaw', type=float, default=0)
+    parser.add_argument('--gaze-pitch', type=float, default=0)
+    parser.add_argument('--blink-left', type=float, default=0)
+    parser.add_argument('--blink-right', type=float, default=0)
     args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else [])
     source = ROOT / 'mosquito/LMS_Mosquito_alpha.blend'
     output = (ROOT / 'review' / args.output_name).resolve()
@@ -139,6 +144,12 @@ def main():
             phases = [args.phase]
         for index, phase in enumerate(phases):
             frame = activate(rig, args.clip, phase)
+            if any((args.gaze_yaw, args.gaze_pitch, args.blink_left, args.blink_right)):
+                from author_mosquito_face import apply_facial_pose
+                # Preserve the evaluated body pose; rendering must not reapply
+                # neutral facial curves over this explicit diagnostic overlay.
+                rig.animation_data.action = None
+                apply_facial_pose(rig, args.gaze_yaw, args.gaze_pitch, args.blink_left, args.blink_right)
             filename = f'{args.clip}_{label}_{index:04d}.png' if args.sequence else label + '.png'
             png = output / filename
             scene.render.filepath = str(png)
@@ -153,6 +164,9 @@ def main():
               'playback_multiplier': args.playback, 'comparison_limit': 'same named angles, neutral source renderer; not the old Unity camera/light instance',
               'wing_material_policy': 'saved source material, including both physical faces; Unity culling/shader comparison remains pending',
               'runtime_evidence': False, 'art_accepted': False, 'images': receipts}
+    report['facial_overlay'] = {'yaw_degrees': args.gaze_yaw, 'pitch_degrees': args.gaze_pitch,
+                               'blink_left': args.blink_left, 'blink_right': args.blink_right,
+                               'driver': 'source QA overlay, not the Unity facial component'}
     (output / 'witness.json').write_text(json.dumps(report, indent=2), encoding='utf8', newline='\n')
     print('LMS_MOSQUITO_WITNESS_DONE', json.dumps({'images': len(receipts), 'source_sha256': source_sha}), flush=True)
 

@@ -55,7 +55,8 @@ def main():
     errors = []
     files = ('author_mosquito_geometry.py', 'author_mosquito_motion.py', 'build_mosquito_candidate.py',
              'check_mosquito_source.py', 'audit_mosquito_candidate.py', 'check_mosquito_audit_math.py',
-             'study_mosquito_surface.py', 'render_mosquito_witness.py')
+             'study_mosquito_surface.py', 'render_mosquito_witness.py',
+             'author_mosquito_face.py', 'check_mosquito_face.py')
     hashes = {}
     for name in files:
         data = (ROOT / name).read_bytes()

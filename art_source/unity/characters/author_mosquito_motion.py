@@ -14,6 +14,45 @@ SURFACE_DISTANCE_PER_CYCLE_M = round(STRIDE_SOURCE_M / STANCE_DUTY * UNITY_SCALE
 SURFACE_SWING_LIFT_SOURCE_M = .020
 SURFACE_NOMINAL_SPEED_MPS = .65
 SURFACE_REVIEW_MAX_SPEED_MPS = .80
+FLIGHT_FRAMES = 13
+FLIGHT_WINGBEATS_PER_LOOP = 3
+AIR_FLAP_RADIANS = .58
+
+
+def flight_channels(t, hover=False):
+    """Authored R4 channels; clock/wingbeat frequency and Root stay unchanged.
+
+    Broader wing excursion and secondary motion are a candidate for native
+    legibility review. They do not establish the cause of the menu complaint.
+    """
+    wave = math.sin(math.tau * t)
+    drive = 0 if hover else math.sin(math.pi * t) ** 2
+    return {
+        'thorax_x': -.110 * drive + .012 * wave,
+        'abdomen01_x': .016 + .060 * drive + .021 * wave,
+        'abdomen02_x': -.030 * wave,
+        'leg_amount': .48 + .52 * drive,
+        'leg_trail_source_m': .007 + .020 * drive,
+        'flap': (AIR_FLAP_RADIANS + .12 * drive) * math.cos(math.tau * FLIGHT_WINGBEATS_PER_LOOP * t),
+        'fold': .04,
+    }
+
+
+def flight_contract():
+    duration = (FLIGHT_FRAMES - 1) / 30
+    return {
+        'clips': ['Mosquito_Fly', 'Mosquito_Hover'], 'frames': FLIGHT_FRAMES,
+        'fps': 30, 'duration_seconds': duration,
+        'wingbeats_per_loop': FLIGHT_WINGBEATS_PER_LOOP,
+        'wingbeat_frequency_hz_at_speed_one': FLIGHT_WINGBEATS_PER_LOOP / duration,
+        'air_endpoint_flap_radians': AIR_FLAP_RADIANS,
+        'fly_peak_flap_envelope_radians': AIR_FLAP_RADIANS + .12,
+        'wing_source_axes': 'mirror around each bind origin: Rz(sign*fold) @ Ry(-sign*flap)',
+        'secondary_channels': ['Thorax', 'Abdomen01', 'Abdomen02', 'six leg IK chains'],
+        'root_motion': False,
+        'air_endpoint_dependents': ['Fly', 'Hover', 'PerchEnter', 'Land', 'Brake', 'Detach'],
+        'acceptance': 'candidate source only; normal-speed final-scale wings/body/legs and blends pending',
+    }
 
 
 def surface_step(time, leg, side, *, distance_per_cycle_unity_m=SURFACE_DISTANCE_PER_CYCLE_M,
@@ -133,21 +172,20 @@ def mosquito(c):
 
     def flight(t, hover=False):
         stance()
-        wave = math.sin(TAU * t)
         # Both air loops meet the same departure/approach pose at phase zero.
         # A smooth envelope preserves Fly's tuck/lean inside the loop without a
         # 48 mm marker jump at Detach->Fly or Fly->PerchEnter.
-        drive = 0 if hover else math.sin(math.pi * t) ** 2
-        p.rotate('Thorax', (-.085 * drive + .008 * wave, 0, 0))
-        p.rotate('Abdomen01', (.016 + .049 * drive + .014 * wave, 0, 0))
-        p.rotate('Abdomen02', (-.022 * wave, 0, 0))
+        channels = flight_channels(t, hover)
+        p.rotate('Thorax', (channels['thorax_x'], 0, 0))
+        p.rotate('Abdomen01', (channels['abdomen01_x'], 0, 0))
+        p.rotate('Abdomen02', (channels['abdomen02_x'], 0, 0))
         p.update()
-        legs_air(.48 + .52 * drive, trail=.007 + .017 * drive)
-        wings((.43 + .10 * drive) * math.cos(TAU * 3 * t), .04)
+        legs_air(channels['leg_amount'], trail=channels['leg_trail_source_m'])
+        wings(channels['flap'], channels['fold'])
         return p.snapshot()
 
-    sampled(c, 'Fly', 13, lambda t: flight(t, False))
-    sampled(c, 'Hover', 13, lambda t: flight(t, True))
+    sampled(c, 'Fly', FLIGHT_FRAMES, lambda t: flight(t, False))
+    sampled(c, 'Hover', FLIGHT_FRAMES, lambda t: flight(t, True))
 
     def idle(t):
         stance()
@@ -164,7 +202,7 @@ def mosquito(c):
         p.rotate('Abdomen01', (.016 * (1 - u), 0, 0))
         # Extend all six legs before the wings settle; exact bind support at end.
         legs_air(.48 * (1 - smooth(min(1, t / .72))), trail=.007)
-        wings(.43 * (1 - u) * math.cos(TAU * 3 * t) + .12 * u,
+        wings(AIR_FLAP_RADIANS * (1 - u) * math.cos(TAU * 3 * t) + .12 * u,
               .04 + .20 * u)
         return p.snapshot()
 
@@ -178,7 +216,7 @@ def mosquito(c):
         p.rotate('Thorax', (.065 * effort, 0, 0))
         p.rotate('Abdomen01', (.016 + .030 * effort, 0, 0))
         legs_air(.48 + .25 * effort, trail=.007)
-        wings((.43 + .06 * effort) * math.cos(TAU * 3 * t), .04)
+        wings((AIR_FLAP_RADIANS + .06 * effort) * math.cos(TAU * 3 * t), .04)
         return p.snapshot()
 
     sampled(c, 'Brake', 25, brake)
@@ -221,7 +259,7 @@ def mosquito(c):
         # Start wingbeats before the tarsi leave; Root displacement belongs to game.
         lift = .48 * smooth(max(0, (t - .22) / .78))
         legs_air(lift, trail=.007)
-        wings(.43 * u * math.cos(TAU * 3 * t) + .095 * (1 - u), .28 - .24 * u)
+        wings(AIR_FLAP_RADIANS * u * math.cos(TAU * 3 * t) + .095 * (1 - u), .28 - .24 * u)
         return p.snapshot()
 
     sampled(c, 'Detach', 19, detach)
@@ -278,5 +316,6 @@ def mosquito(c):
     c.contact['minimum_surface_leg_reach_margin_m'] = surface_reach_margin
     c.contact['minimum_any_pose_leg_reach_margin_m'] = p.minimum_reach_margin
     c.contact['surface_walk'] = surface_contract()
+    c.contact['flight'] = flight_contract()
     c.contact['bite_tip_policy'] = 'Head/Thorax/Proboscis bind transforms retained throughout BiteStart/BiteLoop/Bite'
     c.contact['fall_contact_policy'] = 'evaluated mesh minimum at authored support plane; native landing/transition review pending'

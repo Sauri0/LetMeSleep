@@ -8,14 +8,16 @@
   "skin_or_fbx_verified": false,
   "art_accepted": false,
   "source_sha256": {
-    "author_mosquito_geometry.py": "5fa539d58e25131634182d228da9cb35acda8351c9e9e6a4f628d435c60ae3f5",
-    "author_mosquito_motion.py": "1887e18dbb560747eeb96955b00f10a7c508316d26466d7fbdbd4cf97bb9494e",
-    "build_mosquito_candidate.py": "c8f25c46c684762d9e8787ec2757e94a3c13007d56987dbb839211e9ea96f33a",
-    "check_mosquito_source.py": "76df08bb896e31b075ac0b4f567ec8d6b31d0e0af2ef387f8c3326b43dbabd86",
-    "audit_mosquito_candidate.py": "a7bba2b80146266645ac92be5b6ce810bd2d656d964f2e46b30a9140a3c4ea1f",
+    "author_mosquito_geometry.py": "1133681acd0b0ec4c5fa52a162740580e2ad62830657ead7ff5315bceafb4f5d",
+    "author_mosquito_motion.py": "3e549810b2670041580c98f2e7b3884c2e9d1375dc8527e679483304642e7acc",
+    "build_mosquito_candidate.py": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
+    "check_mosquito_source.py": "a8996960c376dde3bc84fbadf40dc664861f1ef4d3ae21f5c842b365bdf8e0ab",
+    "audit_mosquito_candidate.py": "cbc2a9890071cb548fd8344793fc69a21f1bbd9863acd957a58c381d8e9cb6b5",
     "check_mosquito_audit_math.py": "0f6e44e8774a0fcf1b0aaa2e1c9592b64120e71461dbf69d3c3d89db7390b45c",
     "study_mosquito_surface.py": "f07d93d8905b611c6e6ff694551c9ffb9bc893330bf1ef9503a1ea213869599c",
-    "render_mosquito_witness.py": "4c082bca1fe43f4f0e1a4f8efb8922112e57bd28a67cc869c8281342c26d4ff1"
+    "render_mosquito_witness.py": "9aa858ccbc1e3bb7c2b6aaaecd39a81cd2cf88581de84b08a5dcc9f526db0539",
+    "author_mosquito_face.py": "c700f810f72b6eecdcbdf116ffd4559c5ae62f5f2a077a05fe14cd3e6315627b",
+    "check_mosquito_face.py": "7cd0f62bc2f8e97342b147f46d913df70b25b56a36bc1b7f714ba59206da2e3e"
   },
   "comparison_asset_sha256": "f8b2c7f8b55e02daca1f04d15f6090da9a2338e13c24068f7efaf63f6a37f752",
   "custom_meshes": [

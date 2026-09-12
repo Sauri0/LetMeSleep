@@ -1,0 +1,313 @@
+{
+  "schema": "lms-mosquito-face-flight-source-v1",
+  "passed": true,
+  "errors": [],
+  "scope": "pure thick-lid topology at five closures, front-ray coverage of white/pupil samples, open pupil exposure, flight channels/seams",
+  "facial_contract": {
+    "revision": "mosquito-facial-controls-v1",
+    "bind_is_open": true,
+    "parent": "Head",
+    "bones": [
+      "Pupil.L",
+      "LidUpper.L",
+      "LidLower.L",
+      "Pupil.R",
+      "LidUpper.R",
+      "LidLower.R"
+    ],
+    "total_rig_bones": 39,
+    "source_coordinates": "metres, Z up, -Y forward; actor scale .5 once",
+    "eye_centers_source_m": {
+      "L": [
+        0.027,
+        -0.094,
+        0.113
+      ],
+      "R": [
+        -0.027,
+        -0.094,
+        0.113
+      ]
+    },
+    "bone_tail_direction_source": [
+      1,
+      0,
+      0
+    ],
+    "gaze": {
+      "controls": [
+        "Pupil.L",
+        "Pupil.R"
+      ],
+      "yaw_axis_source": [
+        0,
+        0,
+        1
+      ],
+      "pitch_axis_source": [
+        1,
+        0,
+        0
+      ],
+      "yaw_limit_degrees": 12,
+      "pitch_limit_degrees": 10,
+      "order": "Rz(yaw) @ Rx(pitch) applied to bind around each eye center",
+      "white_eye_moves": false
+    },
+    "blink": {
+      "closure_range": [
+        0,
+        1
+      ],
+      "upper_angle_source_x_degrees": [
+        0,
+        90
+      ],
+      "lower_angle_source_x_degrees": [
+        0,
+        -90
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "material": "Mosquito_Shell"
+    },
+    "runtime_writer": "one shared facial driver after Animator/Playable evaluation; menu supplies target only",
+    "runtime_binding": "serialize axes transformed into each imported bone bind-local frame; do not assume FBX local XYZ",
+    "body_clips": "15 existing IDs unchanged; all facial tracks neutral, runtime overwrites six facial controls only",
+    "customization": "MosquitoSkin renderer; existing Mosquito_Shell color binding. EyeWhite/Expression remain unchanged.",
+    "native_status": "source candidate only; geometry, FBX axes, closure and runtime visibility await Director slot"
+  },
+  "flight_contract": {
+    "clips": [
+      "Mosquito_Fly",
+      "Mosquito_Hover"
+    ],
+    "frames": 13,
+    "fps": 30,
+    "duration_seconds": 0.4,
+    "wingbeats_per_loop": 3,
+    "wingbeat_frequency_hz_at_speed_one": 7.5,
+    "air_endpoint_flap_radians": 0.58,
+    "fly_peak_flap_envelope_radians": 0.7,
+    "wing_source_axes": "mirror around each bind origin: Rz(sign*fold) @ Ry(-sign*flap)",
+    "secondary_channels": [
+      "Thorax",
+      "Abdomen01",
+      "Abdomen02",
+      "six leg IK chains"
+    ],
+    "root_motion": false,
+    "air_endpoint_dependents": [
+      "Fly",
+      "Hover",
+      "PerchEnter",
+      "Land",
+      "Brake",
+      "Detach"
+    ],
+    "acceptance": "candidate source only; normal-speed final-scale wings/body/legs and blends pending"
+  },
+  "closed_front_coverage": [
+    {
+      "side_sign": 1,
+      "points": 670,
+      "uncovered_front_points": 0
+    },
+    {
+      "side_sign": -1,
+      "points": 670,
+      "uncovered_front_points": 0
+    }
+  ],
+  "lid_topology": [
+    {
+      "name": "Lid/1/True/0",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/1/False/0",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/1/True/0.25",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/1/False/0.25",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/1/True/0.5",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/1/False/0.5",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/1/True/0.75",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/1/False/0.75",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/1/True/1",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/1/False/1",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/-1/True/0",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/-1/False/0",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/-1/True/0.25",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/-1/False/0.25",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/-1/True/0.5",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/-1/False/0.5",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/-1/True/0.75",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/-1/False/0.75",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/-1/True/1",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    },
+    {
+      "name": "Lid/-1/False/1",
+      "vertices": 94,
+      "faces": 100,
+      "errors": []
+    }
+  ],
+  "flight_ranges": {
+    "Fly": {
+      "thorax_x": [
+        -0.11129305833017243,
+        0.001293058330172422
+      ],
+      "abdomen01_x": [
+        0.009385999870609637,
+        0.08261400012939035
+      ],
+      "abdomen02_x": [
+        -0.03,
+        0.03
+      ],
+      "leg_amount": [
+        0.48,
+        1.0
+      ],
+      "leg_trail_source_m": [
+        0.007,
+        0.027
+      ],
+      "flap": [
+        -0.7,
+        0.6699999999999999
+      ],
+      "fold": [
+        0.04,
+        0.04
+      ]
+    },
+    "Hover": {
+      "thorax_x": [
+        -0.012,
+        0.012
+      ],
+      "abdomen01_x": [
+        -0.005000000000000001,
+        0.037000000000000005
+      ],
+      "abdomen02_x": [
+        -0.03,
+        0.03
+      ],
+      "leg_amount": [
+        0.48,
+        0.48
+      ],
+      "leg_trail_source_m": [
+        0.007,
+        0.007
+      ],
+      "flap": [
+        -0.58,
+        0.58
+      ],
+      "fold": [
+        0.04,
+        0.04
+      ]
+    }
+  },
+  "blender_executed": false,
+  "runtime_verified": false,
+  "art_accepted": false,
+  "limitations": "front rays only; no skin evaluation, oblique closure, side intersections, imported axes or normal-speed perception"
+}

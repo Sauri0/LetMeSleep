@@ -49,6 +49,7 @@ def main():
     from mathutils import Vector
     from author_mosquito_geometry import MOUTH, SUPPORT_Z, SOCKETS
     from author_mosquito_motion import surface_step
+    from author_mosquito_face import FACE_BONES, apply_facial_pose
 
     source = json.loads((ROOT / 'mosquito/audit.json').read_text())
     errors = []
@@ -58,10 +59,15 @@ def main():
     transitions = {}
     marker_definitions = {}
     marker_matches = {}
+    facial_poses = {}
+    facial_axes = {}
     feet = [f'Leg{i}03.{side}' for side in ('L', 'R') for i in range(1, 4)]
     names = {clip['name'] for clip in source['clips']}
-    if len(names) != 15 or source['bones'] != 33:
-        errors.append('expected existing 15 clips and 33 bones')
+    expected_bones = {'Root', 'Thorax', 'Head', 'Abdomen01', 'Abdomen02', 'Proboscis',
+                      'Wing.L', 'Wing.R'} | {s[0] for s in SOCKETS} | set(FACE_BONES)
+    expected_bones |= {f'Leg{i}{j:02d}.{s}' for s in ('L', 'R') for i in range(1, 4) for j in range(1, 4)}
+    if len(names) != 15 or source['bones'] != len(expected_bones):
+        errors.append('expected existing 15 clips and 39 bones including six facial controls')
     for kind in ('blend', 'fbx'):
         path = ROOT / 'mosquito' / ('LMS_Mosquito_alpha.' + kind)
         hashes[kind] = hashlib.sha256(path.read_bytes()).hexdigest()
@@ -89,8 +95,16 @@ def main():
                 errors.append(kind + '/' + name + ': bind contract drift')
         if bind_heads['Root'].length > 1e-6:
             errors.append(kind + ': Root bind changed')
-        if len(rig.pose.bones) != 33:
-            errors.append(kind + ': rig bone count changed')
+        if set(rig.pose.bones.keys()) != expected_bones:
+            raise AssertionError(kind + ': rig names differ from 33 retained plus six facial controls')
+        facial_axes[kind] = {}
+        for name in FACE_BONES:
+            bone = rig.data.bones[name]
+            if bone.parent.name != 'Head':
+                errors.append(kind + '/' + name + ': face control must be child of Head')
+            inverse = bone.matrix_local.to_3x3().inverted()
+            facial_axes[kind][name] = {'source_x_in_bone_local': list((inverse @ Vector((1, 0, 0))).normalized()),
+                                      'source_z_in_bone_local': list((inverse @ Vector((0, 0, 1))).normalized())}
         indices = {}
         for obj in meshes:
             group_names = {g.index: g.name for g in obj.vertex_groups}
@@ -100,7 +114,7 @@ def main():
         # Three noncollinear actual mesh vertices per rigid bone: farthest point,
         # opposite point and widest transverse point. FBX may duplicate/reorder
         # vertices, so match their bind positions/weights rather than vertex IDs.
-        marker_bones = ['Wing.L', 'Wing.R', 'Head', 'Proboscis'] + feet
+        marker_bones = ['Wing.L', 'Wing.R', 'Head', 'Proboscis'] + feet + list(FACE_BONES)
         marker_indices = {}
         marker_matches[kind] = []
         for bone_name in marker_bones:
@@ -168,6 +182,8 @@ def main():
             max_root = 0
             max_mouth = 0
             max_target_error = 0
+            wing_motion = {name: 0 for name in ('Wing.L', 'Wing.R')}
+            foot_motion = {name: 0 for name in feet}
             min_z = math.inf
             min_supports = 6
             for frame in range(start, end + 1):
@@ -181,6 +197,10 @@ def main():
                 min_z = min(min_z, lowest)
                 max_motion = max(max_motion, max(math.dist(a, b) for obj in meshes
                     for a, b in zip(vertices[obj.name], first_vertices[obj.name])))
+                for motion_group in (wing_motion, foot_motion):
+                    for bone_name in motion_group:
+                        motion_group[bone_name] = max(motion_group[bone_name], max(math.dist(
+                            pose['markers'][bone_name + '/' + str(i)], first_pose['markers'][bone_name + '/' + str(i)]) for i in range(3)))
                 max_root = max(max_root, math.dist(heads['Root'], (0, 0, 0)))
                 max_mouth = max(max_mouth, math.dist(heads['Socket.Mouth'], MOUTH))
                 clearances = {}
@@ -219,12 +239,46 @@ def main():
                 errors.append(kind + '/' + name + ': Mouth moved in feed clip')
             if max_target_error > .001:
                 errors.append(kind + '/' + name + ': foot missed authored target')
+            if name in ('Mosquito_Fly', 'Mosquito_Hover'):
+                if min(wing_motion.values()) < .04:
+                    errors.append(kind + '/' + name + ': each wing must deform real mesh markers by at least 40 mm source')
+                if min(foot_motion.values()) < .001:
+                    errors.append(kind + '/' + name + ': secondary motion absent from an airborne foot')
             transitions[kind, name] = (first_pose, final_pose)
             rows.append({'format': kind, 'clip': name, 'sample_count': len(frames),
                          'max_mesh_motion_source_m': max_motion, 'loop_seam_source_m': seam,
+                         'wing_marker_motion_source_m': wing_motion, 'foot_marker_motion_source_m': foot_motion,
                          'max_root_motion_source_m': max_root, 'max_mouth_bind_displacement_source_m': max_mouth,
                          'max_gait_target_error_source_m': max_target_error, 'minimum_mesh_z_source_m': min_z,
                          'minimum_supporting_feet': min_supports, 'frames': frames})
+        # Independent facial overlays exercise real rigid weights and imported
+        # pivots without adding body clip IDs or mistaking neutral tracks for QA.
+        rig.animation_data.action = None
+        for bone in rig.pose.bones:
+            bone.matrix_basis.identity()
+        neutral, _ = sample(0)
+        probes = ((0, 0, 0, 0), (12, 10, 0, 0), (-12, -10, 0, 0),
+                  (12, -10, 0, 0), (-12, 10, 0, 0),
+                  (0, 0, .25, .25), (0, 0, .5, .5), (0, 0, .75, .75),
+                  (0, 0, 1, 1), (0, 0, 1, 0), (0, 0, 0, 1), (12, 10, 1, 1))
+        facial_poses[kind] = []
+        for yaw, pitch, left, right in probes:
+            apply_facial_pose(rig, yaw, pitch, left, right)
+            pose, _ = sample(0)
+            facial_poses[kind].append(pose)
+            if math.dist(pose['heads']['Root'], neutral['heads']['Root']) > 1e-7 or math.dist(pose['heads']['Socket.Mouth'], neutral['heads']['Socket.Mouth']) > 1e-7:
+                errors.append(kind + ': facial probe moved Root/Mouth')
+            for name in pose['markers']:
+                if name.split('/')[0] not in FACE_BONES and math.dist(pose['markers'][name], neutral['markers'][name]) > 1e-7:
+                    errors.append(kind + ': facial probe moved body mesh marker ' + name)
+            for name in FACE_BONES:
+                if max(abs(float(s) - 1) for s in rig.pose.bones[name].scale) > 1e-5:
+                    errors.append(kind + '/' + name + ': facial probe changed scale')
+        for name in FACE_BONES:
+            maximum = max(math.dist(pose['markers'][name + '/' + str(i)], neutral['markers'][name + '/' + str(i)])
+                          for pose in facial_poses[kind] for i in range(3))
+            if maximum < .001:
+                errors.append(kind + '/' + name + ': no measurable facial skin motion')
     comparisons = []
     for name in sorted(names):
         a, b = poses['blend', name], poses['fbx', name]
@@ -245,12 +299,21 @@ def main():
             transition_rows.append({'format': kind, 'from': left, 'to': right, **delta})
             for field in threshold_errors(delta):
                 errors.append(kind + '/' + left + '->' + right + ': endpoint mismatch/' + field)
-    report = {'schema': 'lms-mosquito-full-frame-audit-v2', 'passed': not errors, 'errors': errors,
+    facial_comparisons = []
+    for index, (a, b) in enumerate(zip(facial_poses['blend'], facial_poses['fbx'])):
+        delta = compare_poses(a, b)
+        facial_comparisons.append({'probe': index, **delta})
+        for field in threshold_errors(delta):
+            errors.append('facial probe ' + str(index) + ': source/FBX mismatch/' + field)
+    report = {'schema': 'lms-mosquito-full-frame-audit-v3', 'passed': not errors, 'errors': errors,
               'scope': 'Every integer authored frame in source/FBX; rig/deformation orientation, rigid mesh markers, full-mesh loop seams, bind sockets, feed tip, support and ten endpoint pairs in both formats',
               'sampling': {'integer_frames_only': True, 'subframes_sampled': False, 'runtime_blends_sampled': False,
                            'endpoint_phase_policy': 'last frame of outgoing -> first frame of incoming; arbitrary runtime loop exit phase unverified'},
               'source_sha256': hashes, 'actions': rows, 'source_fbx_comparison': comparisons,
               'mesh_markers_bind_source_m': marker_definitions, 'mesh_marker_matches': marker_matches,
+              'facial_probe_source_fbx_comparison': facial_comparisons,
+              'facial_probe_inputs_yaw_pitch_blink_l_r': probes,
+              'facial_axes_blender_import_only_not_unity': facial_axes,
               'transition_endpoints': transition_rows, 'runtime_verified': False, 'art_accepted': False}
     (ROOT / 'mosquito/candidate_motion_audit.json').write_text(json.dumps(report, indent=2), encoding='utf8', newline='\n')
     print(json.dumps({'passed': not errors, 'errors': errors[:25], 'error_count': len(errors),

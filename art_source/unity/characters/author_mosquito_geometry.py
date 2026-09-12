@@ -4,8 +4,9 @@ Source coordinates are metres, +Z up, -Y forward; Unity applies scale .5.
 create_mosquito returns a bound Character without animation, export or rendering.
 """
 import math
+from author_mosquito_face import create_face, facial_contract
 
-REVISION = 'mosquito-planar-stance-r3'
+REVISION = 'mosquito-facial-flight-r4-source'
 UNITY_SCALE = .5
 COLLISION_RADIUS = .055
 SURFACE_ROOT_OFFSET = .057
@@ -149,14 +150,9 @@ def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
             poly.material_index = 1
     tube('Proboscis', [PROBOSCIS_BASE, (0, -.112, .077), (0, -.153, .035), MOUTH],
          [.008, .006, .003, .0007], [.0065, .005, .0025, .0007], shell, 'Proboscis', 6)
+    create_face(c, mesh=mesh, ellipsoid=ellipsoid, section_mesh=section_mesh,
+                shell=shell, eye=eye, pupil=pupil)
     for side, sign in (('L', 1), ('R', -1)):
-        eye_sections = ((-.080, .112, .017, .020), (-.094, .113, .025, .026),
-                        (-.110, .114, .022, .024), (-.119, .114, .012, .015))
-        vertices, faces = section_mesh(eye_sections)
-        vertices = [(x + sign * .027, y, z) for x, y, z in vertices]
-        mesh('Eye.' + side, vertices, faces, eye, 'Head')
-        ellipsoid('Pupil.' + side, (sign * .029, -.120, .113),
-                  (.006, .0035, .009), pupil, 'Head', 10, 6)
         vertices, faces = _brow_mesh(sign)
         mesh('Brow.' + side, vertices, faces, shell, 'Head')
         strip('Antenna.' + side,
@@ -195,6 +191,7 @@ def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
         'ground_contact_rest_unity_m': [0, -SURFACE_ROOT_OFFSET, 0],
         'surface_rotation_contract': 'local +Y outward normal, forward projected tangent; runtime validation belongs to Gameplay/Presentation',
         'geometry_revision': REVISION,
+        'face': facial_contract(),
         'proboscis_descent_degrees': math.degrees(math.atan2(PROBOSCIS_BASE[2], abs(MOUTH[1] - PROBOSCIS_BASE[1]))),
         'art_acceptance': 'pending real render, complete clips, Unity and independent review',
     }

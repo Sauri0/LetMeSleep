@@ -1,5 +1,7 @@
 # Mosquito: fuente modular y receta de candidato
 
+**Nueva fuente R4 pendiente de generación:** ver `FACE-FLIGHT-CONTRACT-20260912.md`. Añade seis controles faciales y amplía excursión de vuelo manteniendo frecuencia/IDs/contratos. Los activos y resultados nativos descritos a continuación siguen identificando R3; no acreditan la fuente R4 ni la animación facial en Unity.
+
 Estado actual: **NATIVE_CANDIDATE_R3**, generado y auditado en el turno CPU2 concedido por Director. El turno terminó y fue devuelto. Ver `NATIVE-CANDIDATE-20260912.md` y `NATIVE-VALIDATION-20260912.json` para archivos, hashes, resultados, procesos y pendientes. Unity, reproducción de gameplay y aprobación artística siguen pendientes. La receta siguiente conserva el diseño/contrato de fuentes; los recibos SOURCE-CHECK/SURFACE-STUDY son comprobaciones analíticas, separadas de la validación nativa posterior.
 
 Se leyeron TEAM-RECOVERY-20260912, CHARACTER-QUALITY-BAR y UI-ENVIRONMENT-QUALITY-BAR. Se abrieron con view_image las ocho referencias originales de `N:/LetMeSleep/References/CharacterQuality-20260912`, más silhouette7 Mosquito_Idle_35/90. Se incorporaron M1–M5 del informe independiente `N:/LetMeSleep/Validation/TeamRecovery/visual/FIRST-FOUR-SAMPLES-20260912.md`. Referencias 03/04/05/07 fijan silueta, planos y alas; 01/06/08 fijan coherencia de acabado del elenco. Sus etiquetas no amplían contenido.

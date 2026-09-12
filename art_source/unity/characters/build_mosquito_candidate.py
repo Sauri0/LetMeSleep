@@ -20,7 +20,7 @@ def main():
     from author_mosquito_motion import mosquito
 
     files = ('build_mosquito_candidate.py', 'author_mosquito_geometry.py',
-             'author_mosquito_motion.py', 'build_characters.py', 'author_motion.py')
+             'author_mosquito_motion.py', 'author_mosquito_face.py', 'build_characters.py', 'author_motion.py')
     hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in files}
     c = create_mosquito(**{name: getattr(common, name) for name in
                           ('Character', 'material', 'tube', 'ellipsoid', 'strip', 'mesh')})
