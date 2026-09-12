@@ -62,7 +62,7 @@ ui.PresentHud(hudState);
 ui.PresentResults(resultsState);
 ```
 
-La entrada al menú y formularios se controla con `ShowMainMenu`, `ShowOnlineChoice`, `ShowCreateRoom` y `ShowJoinRoom`. `PresentLobby`, `PresentHud` y `PresentResults` cambian al contexto correspondiente. `OpenSettings` recibe la pantalla a la que debe volver.
+La entrada al menú y formularios se controla con `ShowMainMenu`, `ShowOnlineChoice`, `ShowCreateRoom` y `ShowJoinRoom`. `PresentLobby` y `PresentResults` cambian al contexto correspondiente. `ShowGameplay` desbloquea el input y muestra el HUD sin volver a invocar `IMenuActions.ResumeGame`; el botón de Pausa llama una vez a ese callback y después usa la transición. `PresentHud` actualiza datos, pero conserva Pausa o Ajustes si están abiertos. `OpenSettings` recibe la pantalla a la que debe volver.
 
 ## Código de sala
 

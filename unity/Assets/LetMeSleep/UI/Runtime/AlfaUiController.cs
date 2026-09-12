@@ -279,10 +279,13 @@ namespace LetMeSleep.UI
             rect.anchorMax = new Vector2(state.StateProgress01, 1f);
             hudNetwork.text = state.NetworkMessage;
             if (screen != AlfaUiScreen.Gameplay && screen != AlfaUiScreen.Pause && screen != AlfaUiScreen.Settings)
-            {
-                actions.SetGameplayInputBlocked(false);
-                SetScreen(AlfaUiScreen.Gameplay, null);
-            }
+                ShowGameplay();
+        }
+
+        public void ShowGameplay()
+        {
+            actions.SetGameplayInputBlocked(false);
+            SetScreen(AlfaUiScreen.Gameplay, null);
         }
 
         public void PresentResults(ResultsUiState state)
@@ -887,9 +890,8 @@ namespace LetMeSleep.UI
 
         private void ResumeFromPause()
         {
-            actions.SetGameplayInputBlocked(false);
             actions.ResumeGame();
-            SetScreen(AlfaUiScreen.Gameplay, null);
+            ShowGameplay();
         }
 
         private void BeginLobbyExploration()
