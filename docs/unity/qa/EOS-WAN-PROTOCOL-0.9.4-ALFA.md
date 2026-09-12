@@ -101,3 +101,7 @@ La corrida puede marcar `wan=true` sólo si:
 - ambos procesos terminan sin error.
 
 Si falta cualquiera, se conserva el resultado útil (`host_lifecycle`, `local_eos_pair` o `same_lan_pair`) y U094-13 permanece BLOCK.
+
+## Última evidencia parcial
+
+El estado del probe Windows del 12 de septiembre de 2026 se registra en `EOS-WINDOWS-PROBE-2026-09-12.md`. Acredita sólo parte del ciclo de host. El guest reutilizó la misma identidad del sistema aun con cache separado, fue rechazado como `SameDeviceIdentity` y no estableció transporte. U094-12 y U094-13 permanecen BLOCK.
