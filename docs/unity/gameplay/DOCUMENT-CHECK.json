@@ -7,9 +7,10 @@
     "ALFA-GAMEPLAY.md": "d2eb8aecaf03ad08958869222cf393d9af6310e425ebf7aa2f769082ab77a9c7",
     "GODOT-AUDIT.md": "5fa6e95e9c358137d234c33d202135fae0c1f84c2cee879929b2d61c46223f44",
     "INTERFACES.md": "4132fe89fbf8cb871925216e2d115ef82de0b5f6cc444840630e304bea0260c8",
+    "LOBBY-MOVEMENT.md": "5d7eee7842584cd59ab55b0dac8314303f3d976d4f7193c6dade8aa8324ef382",
     "RUNTIME.md": "f6c62fc3859db816220340ee8e3261be4ffc1cf66c95f9765bfd0a742e6cab7c",
     "WIRE-CODEC.md": "9c1f11ac0f4038d0cc42b5603f664be27f2df735571c9c5a004a946e3119bb50"
   },
-  "checks": 41,
+  "checks": 42,
   "failures": []
 }
