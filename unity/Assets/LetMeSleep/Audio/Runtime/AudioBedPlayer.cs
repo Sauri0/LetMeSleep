@@ -33,6 +33,16 @@ namespace LetMeSleep.Audio
                 Play();
         }
 
+        private void OnDisable()
+        {
+            if (fade != null)
+                StopCoroutine(fade);
+            fade = null;
+            if (source != null)
+                source.Stop();
+            playbackRequested = false;
+        }
+
         public void Play()
         {
             PlayScheduled(AudioSettings.dspTime);

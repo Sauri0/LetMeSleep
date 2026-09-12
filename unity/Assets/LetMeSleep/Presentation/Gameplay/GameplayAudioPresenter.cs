@@ -20,6 +20,25 @@ namespace LetMeSleep.Presentation.Gameplay
             internal Transform Follow;
         }
 
+        private sealed class ToolAudioState
+        {
+            internal uint OwnerActorId;
+            internal uint Revision;
+            internal Vector3 Position;
+        }
+
+        private readonly struct AudioZone
+        {
+            internal AudioZone(Vector3 position, GroundMaterial material)
+            {
+                Position = position;
+                Material = material;
+            }
+
+            internal Vector3 Position { get; }
+            internal GroundMaterial Material { get; }
+        }
+
         private readonly struct EventKey : IEquatable<EventKey>
         {
             private readonly ulong epoch;
@@ -53,6 +72,9 @@ namespace LetMeSleep.Presentation.Gameplay
             new Dictionary<uint, ActorAudioState>();
         private readonly HashSet<uint> liveActors = new HashSet<uint>();
         private readonly List<uint> removedActors = new List<uint>();
+        private readonly Dictionary<uint, ToolAudioState> toolStates =
+            new Dictionary<uint, ToolAudioState>();
+        private readonly List<AudioZone> audioZones = new List<AudioZone>();
         private ulong currentEpoch;
         private ulong currentRound;
         private bool subscribed;
@@ -86,6 +108,8 @@ namespace LetMeSleep.Presentation.Gameplay
                 currentRound = snapshot.RoundId;
                 playedEvents.Clear();
                 actorStates.Clear();
+                toolStates.Clear();
+                audioZones.Clear();
                 audioDirector.EnterRound();
             }
 
@@ -93,6 +117,8 @@ namespace LetMeSleep.Presentation.Gameplay
             AudioEmitterPool emitters = audioDirector.Emitters;
             if (catalog == null || emitters == null || gameplay == null || gameplay.World == null)
                 return;
+
+            EnsureAudioZones(gameplay.World.MapRoot);
 
             liveActors.Clear();
             bool localActivity = false;
@@ -125,18 +151,21 @@ namespace LetMeSleep.Presentation.Gameplay
                 }
                 else
                 {
+                    GroundMaterial ground = ResolveGroundMaterial(proxy.transform.position);
+                    if (!first && !actor.Grounded && previous.Grounded && actor.Velocity.Y > 0.5f)
+                        emitters.Play(catalog.HumanJump, proxy.transform.position);
                     if (!first && actor.Grounded && !previous.Grounded)
-                        emitters.Play(catalog.HumanLand, proxy.transform.position);
+                        emitters.Play(SelectLandCue(catalog, ground), proxy.transform.position);
                     if (!first && actor.Grounded && actor.LifeState == GameplayModel.LifeState.Active &&
                         actor.Velocity.LengthSquared > 0.04f && CrossedFootstep(previous.MotionPhase, actor.MotionPhase))
-                        emitters.Play(catalog.HumanFootstep, proxy.transform.position);
+                        emitters.Play(SelectFootstepCue(catalog, ground), proxy.transform.position);
                 }
 
                 previous.MotionPhase = actor.MotionPhase;
                 previous.Grounded = actor.Grounded;
 
                 if (actor.ActorId == gameplay.LocalActorId)
-                    localActivity = actor.StrikeState.Phase != GameplayModel.StrikePhase.None ||
+                    localActivity |= actor.StrikeState.Phase != GameplayModel.StrikePhase.None ||
                         actor.LifeState == GameplayModel.LifeState.PreparingBite ||
                         actor.LifeState == GameplayModel.LifeState.Biting ||
                         actor.LifeState == GameplayModel.LifeState.Stunned ||
@@ -146,6 +175,7 @@ namespace LetMeSleep.Presentation.Gameplay
             bool urgent = snapshot.TimeRemainingTicks <= 20u * 30u ||
                 (snapshot.BloodGoal > 0f && snapshot.BloodCollected / snapshot.BloodGoal >= 0.85f);
             audioDirector.SetRoundIntensity(localActivity, urgent);
+            ApplyToolAudio(snapshot.ToolPickups, catalog, emitters);
 
             removedActors.Clear();
             foreach (uint actorId in actorStates.Keys)
@@ -246,6 +276,101 @@ namespace LetMeSleep.Presentation.Gameplay
                 audioDirector.Emitters.Stop(audioDirector.Catalog.MosquitoWingBiteLoop);
             }
             actorStates.Clear();
+            toolStates.Clear();
+            audioZones.Clear();
+        }
+
+        private void ApplyToolAudio(
+            IReadOnlyList<GameplayModel.ToolPickupSnapshot> pickups,
+            AlfaAudioCatalog catalog, AudioEmitterPool emitters)
+        {
+            for (int i = 0; i < pickups.Count; i++)
+            {
+                GameplayModel.ToolPickupSnapshot pickup = pickups[i];
+                Vector3 position = pickup.Position.ToUnity();
+                if (!toolStates.TryGetValue(pickup.PickupId, out ToolAudioState previous))
+                {
+                    toolStates[pickup.PickupId] = new ToolAudioState
+                    {
+                        OwnerActorId = pickup.OwnerActorId,
+                        Revision = pickup.Revision,
+                        Position = position
+                    };
+                    continue;
+                }
+                if (pickup.Revision > previous.Revision)
+                {
+                    if (previous.OwnerActorId == 0 && pickup.OwnerActorId != 0)
+                    {
+                        Vector3 pickupPosition = previous.Position;
+                        if (gameplay != null && gameplay.World != null &&
+                            gameplay.World.Actors.TryGetValue(pickup.OwnerActorId, out GameplayActorProxy owner))
+                            pickupPosition = owner.transform.position;
+                        emitters.Play(catalog.ToolPickup, pickupPosition);
+                    }
+                    else if (previous.OwnerActorId != 0 && pickup.OwnerActorId == 0)
+                        emitters.Play(catalog.ToolDrop, position);
+                }
+                previous.OwnerActorId = pickup.OwnerActorId;
+                previous.Revision = pickup.Revision;
+                previous.Position = position;
+            }
+        }
+
+        private void EnsureAudioZones(Transform root)
+        {
+            if (audioZones.Count > 0 || root == null)
+                return;
+            Transform[] transforms = root.GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                Transform candidate = transforms[i];
+                if (!candidate.name.StartsWith("AudioZone_", StringComparison.OrdinalIgnoreCase))
+                    continue;
+                audioZones.Add(new AudioZone(candidate.position, MaterialForZone(candidate.name)));
+            }
+        }
+
+        private GroundMaterial ResolveGroundMaterial(Vector3 position)
+        {
+            float bestDistance = float.PositiveInfinity;
+            GroundMaterial result = GroundMaterial.Wood;
+            for (int i = 0; i < audioZones.Count; i++)
+            {
+                Vector3 delta = audioZones[i].Position - position;
+                float distance = delta.x * delta.x + delta.z * delta.z + delta.y * delta.y * 4f;
+                if (distance >= bestDistance)
+                    continue;
+                bestDistance = distance;
+                result = audioZones[i].Material;
+            }
+            return result;
+        }
+
+        private static GroundMaterial MaterialForZone(string zone)
+        {
+            if (Contains(zone, "Bedroom"))
+                return GroundMaterial.Cloth;
+            if (Contains(zone, "Kitchen") || Contains(zone, "Bathroom") || Contains(zone, "Utility"))
+                return GroundMaterial.Tile;
+            return GroundMaterial.Wood;
+        }
+
+        private static AudioCue SelectFootstepCue(AlfaAudioCatalog catalog, GroundMaterial material)
+        {
+            return material == GroundMaterial.Tile ? catalog.HumanFootstepTile :
+                material == GroundMaterial.Cloth ? catalog.HumanFootstepCloth : catalog.HumanFootstep;
+        }
+
+        private static AudioCue SelectLandCue(AlfaAudioCatalog catalog, GroundMaterial material)
+        {
+            return material == GroundMaterial.Tile ? catalog.HumanLandTile :
+                material == GroundMaterial.Cloth ? catalog.HumanLandCloth : catalog.HumanLand;
+        }
+
+        private static bool Contains(string source, string value)
+        {
+            return source.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private static void UpdateWingLoop(
@@ -294,6 +419,13 @@ namespace LetMeSleep.Presentation.Gameplay
                 state != GameplayModel.LifeState.Stunned &&
                 state != GameplayModel.LifeState.Fainted &&
                 state != GameplayModel.LifeState.Recovering;
+        }
+
+        private enum GroundMaterial
+        {
+            Wood,
+            Tile,
+            Cloth
         }
     }
 }

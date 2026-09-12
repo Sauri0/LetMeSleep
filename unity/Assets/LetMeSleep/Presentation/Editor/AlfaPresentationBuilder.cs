@@ -85,9 +85,9 @@ namespace LetMeSleep.Presentation.Editor
             whiteBalance.tint.Override(0f);
 
             Bloom bloom = GetOrAdd<Bloom>(profile);
-            bloom.intensity.Override(0.08f);
-            bloom.threshold.Override(1.15f);
-            bloom.scatter.Override(0.55f);
+            bloom.intensity.Override(0.025f);
+            bloom.threshold.Override(1.35f);
+            bloom.scatter.Override(0.35f);
 
             Vignette vignette = GetOrAdd<Vignette>(profile);
             vignette.intensity.Override(0.10f);
@@ -192,6 +192,15 @@ namespace LetMeSleep.Presentation.Editor
                 moonObject.transform.localRotation = Quaternion.Euler(42f, -28f, 0f);
                 Light moon = moonObject.AddComponent<Light>();
 
+                var lobbyFillObject = new GameObject("Lobby_CharacterFill");
+                lobbyFillObject.transform.SetParent(root.transform, false);
+                lobbyFillObject.transform.localRotation = Quaternion.LookRotation(
+                    new Vector3(-0.55f, -0.50f, 0.67f).normalized, Vector3.up);
+                Light lobbyFill = lobbyFillObject.AddComponent<Light>();
+                lobbyFill.type = LightType.Directional;
+                lobbyFill.shadows = LightShadows.None;
+                lobbyFill.enabled = false;
+
                 Light mapLightLowTemplate = CreateMapLightTemplate(
                     root.transform,
                     "MapPointLight_LowTemplate",
@@ -213,6 +222,7 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(framePolicy, "preset", preset);
                 Assign(rig, "preset", preset);
                 Assign(rig, "moon", moon);
+                Assign(rig, "lobbyFill", lobbyFill);
                 Assign(rig, "globalVolume", volume);
                 Assign(rig, "nightSkybox", nightSkybox);
                 Assign(rig, "mapLightLowTemplate", mapLightLowTemplate);
@@ -311,11 +321,20 @@ namespace LetMeSleep.Presentation.Editor
             cues["MosquitoWingBiteLoop"] = CreateCue("MosquitoWingBiteLoop", "SFX_Legacy_Buzz_Bite.ogg", 48, 12, 0.90f, 1.04f, 1f, 0.35f, 12f, FindGroup(mixer, "Mosquito"), true);
             cues["MosquitoPerch"] = CreateCue("MosquitoPerch", "SFX_Legacy_Perch.ogg", 56, 6, 0.96f, 1.04f, 1f, 0.35f, 10f, FindGroup(mixer, "Mosquito"));
             cues["MosquitoDetach"] = CreateCue("MosquitoDetach", "SFX_Legacy_Detach.ogg", 56, 6, 0.96f, 1.04f, 1f, 0.35f, 10f, FindGroup(mixer, "Mosquito"));
-            cues["HumanFootstep"] = CreateCue("HumanFootstep", "SFX_Legacy_Step_Wood.ogg", 80, 12, 0.94f, 1.06f, 1f, 0.7f, 15f, FindGroup(mixer, "Foley"));
-            cues["HumanLand"] = CreateCue("HumanLand", "SFX_Legacy_Land.ogg", 64, 8, 0.96f, 1.03f, 1f, 0.7f, 16f, FindGroup(mixer, "Foley"));
+            AudioMixerGroup characterGroup = FindGroup(mixer, "Character");
+            AudioMixerGroup worldGroup = FindGroup(mixer, "World");
+            cues["HumanFootstep"] = CreateCue("HumanFootstep", "SFX_Legacy_Step_Wood.ogg", 80, 12, 0.94f, 1.06f, 1f, 0.7f, 15f, characterGroup);
+            cues["HumanFootstepTile"] = CreateCue("HumanFootstepTile", "SFX_Legacy_Step_Tile.ogg", 80, 12, 0.94f, 1.06f, 1f, 0.7f, 15f, characterGroup);
+            cues["HumanFootstepCloth"] = CreateCue("HumanFootstepCloth", "SFX_Legacy_Step_Cloth.ogg", 80, 12, 0.94f, 1.06f, 1f, 0.7f, 15f, characterGroup);
+            cues["HumanJump"] = CreateCue("HumanJump", "SFX_Legacy_Cloth.ogg", 72, 8, 0.96f, 1.04f, 1f, 0.7f, 14f, characterGroup);
+            cues["HumanLand"] = CreateCue("HumanLand", "SFX_Legacy_Land_Wood.ogg", 64, 8, 0.96f, 1.03f, 1f, 0.7f, 16f, characterGroup);
+            cues["HumanLandTile"] = CreateCue("HumanLandTile", "SFX_Legacy_Land_Tile.ogg", 64, 8, 0.96f, 1.03f, 1f, 0.7f, 16f, characterGroup);
+            cues["HumanLandCloth"] = CreateCue("HumanLandCloth", "SFX_Legacy_Land_Cloth.ogg", 64, 8, 0.96f, 1.03f, 1f, 0.7f, 16f, characterGroup);
+            cues["ToolPickup"] = CreateCue("ToolPickup", "SFX_Legacy_Pickup.ogg", 72, 6, 0.97f, 1.03f, 1f, 0.7f, 14f, worldGroup);
+            cues["ToolDrop"] = CreateCue("ToolDrop", "SFX_Legacy_Drop.ogg", 72, 6, 0.96f, 1.04f, 1f, 0.7f, 14f, worldGroup);
             cues["MosquitoKnockedDown"] = CreateCue("MosquitoKnockedDown", new[] { "SFX_Legacy_Stun.ogg", "SFX_Legacy_Fall.ogg" }, 24, 4, 0.97f, 1.03f, 1f, 0.35f, 18f, FindGroup(mixer, "Critical"));
-            cues["DoorOpen"] = CreateCue("DoorOpen", "SFX_DoorOpen.wav", 96, 10, 0.98f, 1.02f, 1f, 0.8f, 20f, FindGroup(mixer, "World"));
-            cues["DoorClose"] = CreateCue("DoorClose", "SFX_DoorClose.wav", 96, 10, 0.98f, 1.02f, 1f, 0.8f, 20f, FindGroup(mixer, "World"));
+            cues["DoorOpen"] = CreateCue("DoorOpen", new[] { "SFX_DoorOpen.wav", "SFX_Legacy_Door_Move.ogg" }, 96, 10, 0.98f, 1.02f, 1f, 0.8f, 20f, FindGroup(mixer, "World"));
+            cues["DoorClose"] = CreateCue("DoorClose", new[] { "SFX_DoorClose.wav", "SFX_Legacy_Door_Latch.ogg" }, 96, 10, 0.98f, 1.02f, 1f, 0.8f, 20f, FindGroup(mixer, "World"));
             cues["HumanFainted"] = CreateCue("HumanFainted", "SFX_HumanFainted.wav", 24, 4, 0.98f, 1.02f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
             cues["Recovered"] = CreateCue("Recovered", new[] { "SFX_Recovered.wav", "SFX_Legacy_Recover.ogg" }, 24, 4, 0.98f, 1.02f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
             cues["RoundStart"] = CreateCue("RoundStart", "STG_RoundStart.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
@@ -401,7 +420,14 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(catalog, "mosquitoPerch", cues["MosquitoPerch"]);
                 Assign(catalog, "mosquitoDetach", cues["MosquitoDetach"]);
                 Assign(catalog, "humanFootstep", cues["HumanFootstep"]);
+                Assign(catalog, "humanFootstepTile", cues["HumanFootstepTile"]);
+                Assign(catalog, "humanFootstepCloth", cues["HumanFootstepCloth"]);
+                Assign(catalog, "humanJump", cues["HumanJump"]);
                 Assign(catalog, "humanLand", cues["HumanLand"]);
+                Assign(catalog, "humanLandTile", cues["HumanLandTile"]);
+                Assign(catalog, "humanLandCloth", cues["HumanLandCloth"]);
+                Assign(catalog, "toolPickup", cues["ToolPickup"]);
+                Assign(catalog, "toolDrop", cues["ToolDrop"]);
                 Assign(catalog, "mosquitoKnockedDown", cues["MosquitoKnockedDown"]);
                 Assign(catalog, "doorOpen", cues["DoorOpen"]);
                 Assign(catalog, "doorClose", cues["DoorClose"]);
