@@ -1,8 +1,11 @@
 extends SceneTree
 ## Exact production reference differs only by removing its global class_name.
 ## This fixture times CPU submission and the following native draw separately.
+## Both writers receive one shared presentation in the same actor-local frame;
+## historical update_state smoothing is not part of legacy mesh equivalence.
 const Current = preload("res://scripts/actor_view.gd")
 const Reference = preload("res://tests/actor09_legacy_reference.gd")
+const Presentation = preload("res://scripts/human_presentation.gd")
 const Tools = preload("res://scripts/tool_catalog.gd")
 const Emotes = preload("res://scripts/emote_catalog.gd")
 const Facial = preload("res://assets/art/characters/shared/facial_expression.gd")
@@ -15,6 +18,8 @@ var reference_view: Node3D
 var current_view: Node3D
 var change_counts := {"reference":0,"current":0}
 var report: Dictionary={}
+var shared_presentation := Presentation.new()
+var presentation_local := false
 
 func _initialize() -> void:
 	for argument: String in OS.get_cmdline_user_args():
@@ -29,7 +34,7 @@ func check(ok: bool, label: String) -> void:
 
 func _pose(index: int, tool: String) -> Dictionary:
 	var phase:=float(index)*.137
-	var data: Dictionary={"id":1,"role":"human","state":"human","alive":true,"p":Vector3.ZERO,"tool":tool,"yaw":sin(phase)*1.3,"body_yaw":.2,"pitch":sin(phase*.7)*1.5,"pose_time":float(index)/20.0,"crouch_amount":(.5+.5*sin(phase*.9)),"motion_phase":phase,"motion_speed":3.0,"motion_blend":.8,"motion_stride":1.15,"motion_direction":Vector3.FORWARD,"sprinting":true,"grounded":true}
+	var data: Dictionary={"id":1,"role":"human","state":"human","alive":true,"p":Vector3.ZERO,"tool":tool,"yaw":sin(phase)*1.3,"body_yaw":0.0,"pitch":sin(phase*.7)*1.5,"pose_time":float(index)/20.0,"crouch_amount":(.5+.5*sin(phase*.9)),"motion_phase":phase,"motion_speed":3.0,"motion_blend":.8,"motion_stride":1.15,"motion_direction":Vector3.FORWARD,"sprinting":true,"grounded":true}
 	if posmod(index,5)==1:
 		data.strike={"active":true,"progress":fposmod(phase,1.0),"point":Vector3(.4,1.1,-.7),"normal":Vector3.FORWARD,"hand":"right","tool":tool}
 	elif posmod(index,5)==2 and Tools.throwable(tool):
@@ -38,6 +43,19 @@ func _pose(index: int, tool: String) -> Dictionary:
 		data.emote_id=Emotes.IDS[posmod(index,4)]
 		data.emote_time=fposmod(phase,1.8)
 	return data
+
+func _apply_pair(data: Dictionary, reset: bool=false) -> Dictionary:
+	# Resolve presentation once. The frozen reference predates motion smoothing;
+	# invoking its update_state would feed different inputs into the geometry.
+	if presentation_local!=current_view.local_view: shared_presentation.clear()
+	presentation_local=current_view.local_view
+	var shown := shared_presentation.advance(data,DT,presentation_local or current_view.pose_critical,reset)
+	shown=shared_presentation.advance_motion(shown,DT,current_view.pose_critical,reset,presentation_local)
+	for view: Node3D in [reference_view,current_view]:
+		if view.legacy_geometry_dirty: view._hide_legacy_geometry()
+		if view.current_tool!=str(data.tool): view._equip_tool(str(data.tool))
+		view._apply_human_pose(shown,DT,data)
+	return shown
 
 func _legacy_meshes(view: Node3D) -> Array[MeshInstance3D]:
 	var result: Array[MeshInstance3D]=[view.torso_node.get_child(0)]
@@ -122,7 +140,7 @@ func _run() -> void:
 			var local_value:=step%4==0
 			reference_view.set_local(local_value);current_view.set_local(local_value)
 			reference_view.set_pose_critical(step%3==0);current_view.set_pose_critical(step%3==0)
-			reference_view.update_state(data,DT);current_view.update_state(data,DT)
+			_apply_pair(data,cases==0)
 			_compare(tool+"/"+str(step))
 			check(data==original,"public input unchanged")
 			cases+=1
@@ -130,14 +148,14 @@ func _run() -> void:
 	# fallback under an invisible ancestor. Both must match the old geometry.
 	var cached:=_pose(cases,"hands")
 	reference_view.set_local(true);current_view.set_local(true)
-	reference_view.update_state(cached,DT);current_view.update_state(cached,DT)
+	var cached_presentation := _apply_pair(cached)
 	_set_legacy_visible(reference_view,true);_set_legacy_visible(current_view,true)
-	reference_view._apply_human_pose(cached,DT,cached);current_view._apply_human_pose(cached,DT,cached)
+	reference_view._apply_human_pose(cached_presentation,DT,cached);current_view._apply_human_pose(cached_presentation,DT,cached)
 	_compare("fallback revealed on cache hit")
 	reference_view.visible=false;current_view.visible=false
 	for step: int in range(8):
 		var data:=_pose(cases+step+1,"hands")
-		reference_view.update_state(data,DT);current_view.update_state(data,DT)
+		_apply_pair(data)
 		_compare("fallback hidden ancestor "+str(step))
 	reference_view.visible=true;current_view.visible=true
 	_set_legacy_visible(reference_view,false);_set_legacy_visible(current_view,false)
@@ -157,7 +175,7 @@ func _run() -> void:
 	for path: String in sources:
 		var final_hash:=FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "unavailable_in_pack"
 		if sources[path]!="unavailable_in_pack":check(sources[path]==final_hash,"frozen source "+path)
-	report={"checks":checks,"failures":failures,"public_pose_cases":cases,"facial_seed":.375,"baseline_sha256":BASELINE_SHA,"reference_source_hash_verified":reference_source_available,"source_sha256":sources,"runs":runs,"procedural_mesh_changed_events":{"reference":change_counts.reference-before.reference,"current":change_counts.current-before.current},"scope":"same public pose, transforms, GLB bones, visible geometry bounds and all ray shapes; only hidden legacy mesh dimensions differ; CPU diagnostic, not global FPS; pack can run compiled reference but cannot verify omitted original source hashes"}
+	report={"checks":checks,"failures":failures,"public_pose_cases":cases,"facial_seed":.375,"baseline_sha256":BASELINE_SHA,"reference_source_hash_verified":reference_source_available,"source_sha256":sources,"runs":runs,"procedural_mesh_changed_events":{"reference":change_counts.reference-before.reference,"current":change_counts.current-before.current},"scope":"one shared production presentation in an identical actor-local frame; exact pose, GLB bones, visible geometry bounds and all ray shapes; only hidden legacy mesh dimensions differ; update_state smoothing and world-yaw compensation are outside this optimization fixture; CPU diagnostic, not global FPS; pack can run compiled reference but cannot verify omitted original source hashes"}
 	if not report_path.is_empty():
 		var file:=FileAccess.open(report_path,FileAccess.WRITE)
 		if file!=null:file.store_string(JSON.stringify(report,"\t"));file.close()
