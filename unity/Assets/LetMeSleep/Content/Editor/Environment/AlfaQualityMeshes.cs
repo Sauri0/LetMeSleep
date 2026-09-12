@@ -143,12 +143,30 @@ namespace LetMeSleep.Content.Editor
             return mesh;
         }
 
-        static QualityMesh QualityRestingCushion(Vector3 size,float lean,float twist)
+        static QualityMesh QualityRestingCushion(Vector3 size,float lean,float twist,float compression=.020f)
         {
             var mesh=QualityPillow(size);var rotation=Quaternion.Euler(lean,0,twist);
             for(int i=0;i<mesh.vertices.Count;i++)mesh.vertices[i]=rotation*mesh.vertices[i];
             float correction=-size.y*.5f-mesh.vertices.Min(v=>v.y);
-            for(int i=0;i<mesh.vertices.Count;i++)mesh.vertices[i]+=Vector3.up*correction;
+            for(int i=0;i<mesh.vertices.Count;i++){
+                var point=mesh.vertices[i]+Vector3.up*correction;
+                point.y=Mathf.Max(point.y,-size.y*.5f+compression)-compression;
+                mesh.vertices[i]=point;
+            }
+            return mesh;
+        }
+
+        static QualityMesh QualityBackCushion()
+        {
+            var mesh=QualityRestingCushion(new Vector3(.92f,.58f,.18f),0,0,.025f);
+            var seat=QualityPillow(new Vector3(.90f,.18f,.72f),true);var vertices=seat.vertices.ToArray();var indices=seat.TriangleIndices();
+            for(int i=0;i<mesh.vertices.Count;i++){
+                var point=mesh.vertices[i];float weight=Mathf.Clamp01((-point.y-.21f)/.08f);
+                if(weight==0)continue;
+                float height=QualitySurfaceHeight(vertices,indices,point.x,point.z+.245f);
+                if(!float.IsNegativeInfinity(height))point.y+=(height+.485f-.575f)*weight;
+                mesh.vertices[i]=point;
+            }
             return mesh;
         }
 
@@ -156,12 +174,27 @@ namespace LetMeSleep.Content.Editor
         {
             var mesh=new QualityMesh{softNormals=true};var supportShape=QualityPillow(new Vector3(.90f,.18f,.72f),true);
             var support=supportShape.vertices.ToArray();var supportIndices=supportShape.TriangleIndices();
-            var path=new[]{new Vector2(.04f,0),new Vector2(-.08f,0),new Vector2(-.16f,0),new Vector2(-.23f,0),new Vector2(-.28f,0),new Vector2(-.33f,0),new Vector2(-.37f,0),new Vector2(-.39f,0),new Vector2(-.411f,.45f),new Vector2(-.425f,.38f),new Vector2(-.419f,.29f)};
-            Func<int,int,float,Vector3> p=(i,j,side)=>{
-                float x=-.19f+i*.0475f,z=path[j].x;float supportY=QualitySurfaceHeight(support,supportIndices,x,z+.04f);
+            // Every row has a real height even when an outer column leaves the
+            // curved seat silhouette. The old zero fallback tore those columns
+            // down through the frame. The hanging section clears its front z=-.42.
+            var path=new[]{new Vector2(.04f,.575f),new Vector2(-.08f,.575f),new Vector2(-.16f,.575f),new Vector2(-.23f,.575f),
+                new Vector2(-.28f,.572f),new Vector2(-.32f,.56f),new Vector2(-.35f,.545f),new Vector2(-.375f,.523f),
+                new Vector2(-.399f,.495f),new Vector2(-.418f,.475f),new Vector2(-.432f,.448f),new Vector2(-.438f,.410f),
+                new Vector2(-.440f,.355f),new Vector2(-.440f,.307f),new Vector2(-.440f,.293f)};
+            var columns=new[]{-.19f,-.176f,-.12f,-.06f,0,.06f,.12f,.176f,.19f};
+            var middle=new Vector3[columns.Length,path.Length];
+            for(int i=0;i<columns.Length;i++)for(int j=0;j<path.Length;j++){
+                float x=columns[i],z=path[j].x,supportY=QualitySurfaceHeight(support,supportIndices,x,z+.04f);
                 float y=float.IsNegativeInfinity(supportY)?path[j].y:supportY+.485f;
-                float hanging=j>=8?(j-7)/3f:0;z+=.009f*Mathf.Sin(i*1.4f)*hanging;y+=.018f*Mathf.Sin(i*.83f)*hanging;
-                return new Vector3(x,y+.003f+.002f*(1-Mathf.Cos(i*Mathf.PI*.5f))+side*.003f,z);
+                float hanging=Mathf.Clamp01((j-10)/4f);z+=.002f*Mathf.Sin(i*1.4f)*hanging;y+=.006f*Mathf.Sin(i*.83f)*hanging;
+                middle[i,j]=new Vector3(x,y+.001f*(1-Mathf.Cos(i*Mathf.PI*.5f)),z);
+            }
+            Func<int,int,float,Vector3> p=(i,j,side)=>{
+                var across=middle[Mathf.Min(i+1,columns.Length-1),j]-middle[Mathf.Max(i-1,0),j];
+                var along=middle[i,Mathf.Min(j+1,path.Length-1)]-middle[i,Mathf.Max(j-1,0)];
+                // Keep the inner face on its sampled support; build all thickness
+                // outward along the normal, including along the vertical drape.
+                return middle[i,j]+Vector3.Cross(across,along).normalized*((side+1)*.002f);
             };
             for(int i=0;i<8;i++)for(int j=0;j<path.Length-1;j++){
                 int slot=i==0||i==7||j==path.Length-2?1:0;
@@ -199,6 +232,37 @@ namespace LetMeSleep.Content.Editor
                 if(Mathf.Abs(p.y-support)<.001f)contacts++;
             }
             Need(contacts>=8,"Draped throw must have real contact vertices on upholstery");
+            var apron=sofa.Find("Crafted_FrameAndUpholstery/Front_Apron");
+            var apronBounds=apron.GetComponent<MeshFilter>().sharedMesh.bounds;
+            var clothPoints=cloth.sharedMesh.vertices.Select(v=>apron.InverseTransformPoint(cloth.transform.TransformPoint(v))).ToArray();
+            Action<Vector3> clearFront=p=>{
+                if(p.y>=apronBounds.min.y&&p.y<=apronBounds.max.y&&p.x>=apronBounds.min.x&&p.x<=apronBounds.max.x)
+                    Need(p.z<apronBounds.min.z-.001f,"Throw intersects the wooden front apron");
+            };
+            foreach(var point in clothPoints)clearFront(point);
+            var indices=cloth.sharedMesh.triangles;
+            for(int i=0;i<indices.Length;i+=3)clearFront((clothPoints[indices[i]]+clothPoints[indices[i+1]]+clothPoints[indices[i+2]])/3);
+        }
+
+        static void CheckQualitySofaConstruction(Transform sofa,Transform textiles)
+        {
+            var frame=sofa.Find("Crafted_FrameAndUpholstery");
+            var deck=frame.Find("Seat_Support_Deck").GetComponent<MeshRenderer>().bounds;
+            var seats=frame.GetComponentsInChildren<MeshFilter>().Where(f=>f.name.StartsWith("Seat_Pad_",StringComparison.Ordinal)).ToArray();
+            foreach(var seat in seats)Need(Mathf.Abs(seat.GetComponent<MeshRenderer>().bounds.min.y-deck.max.y)<.001f,"Seat pad has lost its supporting deck");
+            var surfaces=seats.Select(f=>new {vertices=f.sharedMesh.vertices.Select(v=>f.transform.TransformPoint(v)).ToArray(),indices=f.sharedMesh.triangles}).ToArray();
+            var cushions=textiles.GetComponentsInChildren<MeshFilter>().Where(f=>f.name.StartsWith("Cushion_",StringComparison.Ordinal))
+                .Concat(frame.GetComponentsInChildren<MeshFilter>().Where(f=>f.name.StartsWith("Back_Pad_",StringComparison.Ordinal)));
+            foreach(var cushion in cushions){
+                var contacts=new System.Collections.Generic.HashSet<Vector3Int>();
+                foreach(var vertex in cushion.sharedMesh.vertices){
+                    var p=cushion.transform.TransformPoint(vertex);float height=surfaces.Max(s=>QualitySurfaceHeight(s.vertices,s.indices,p.x,p.z));
+                    if(float.IsNegativeInfinity(height))continue;
+                    Need(p.y>=height-.001f,"Cushion penetrates the actual seat surface: "+cushion.name);
+                    if(Mathf.Abs(p.y-height)<.002f)contacts.Add(new Vector3Int(Mathf.RoundToInt(p.x*100000),Mathf.RoundToInt(p.y*100000),Mathf.RoundToInt(p.z*100000)));
+                }
+                Need(contacts.Count>=3,"Compressed cushion needs several distinct seat contacts: "+cushion.name);
+            }
         }
 
         static QualityMesh QualityCurtain(float width,float height)

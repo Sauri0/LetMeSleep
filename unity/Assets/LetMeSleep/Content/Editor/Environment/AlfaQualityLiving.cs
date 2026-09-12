@@ -17,7 +17,7 @@ namespace LetMeSleep.Content.Editor
             BuildQualityLivingRug(F(house,"Living_Rug"));
             BuildQualitySofa(F(house,"Living_Sofa"));BuildQualityCoffeeTable(F(house,"Living_Table"));BuildQualityShelf(F(house,"Living_Shelf"));
             var textiles=F(house,"Living_Sofa_Textiles");foreach(Transform child in textiles.Cast<Transform>().ToArray())UnityEngine.Object.DestroyImmediate(child.gameObject);
-            foreach(float x in new[]{-.57f,.57f})QualityPart(textiles,"Cushion_"+Token(x),new Vector3(x,.735f,.13f),QualityRestingCushion(new Vector3(.38f,.32f,.16f),12,x<0?-5:5),x<0?"Quality_Blue":"Quality_Linen","Quality_Thread");
+            foreach(float x in new[]{-.57f,.57f})QualityPart(textiles,"Cushion_"+Token(x),new Vector3(x,.735f,.035f),QualityRestingCushion(new Vector3(.38f,.32f,.16f),12,x<0?-5:5),x<0?"Quality_Blue":"Quality_Linen","Quality_Thread");
             QualityPart(textiles,"Seat_Throw",new Vector3(.46f,0,0),QualityThrow(),"Quality_Linen","Quality_Blue");
             BuildQualityBooks(F(house,"Living_Shelf_Books"));BuildQualityWindow(house,quality);BuildQualityLivingDoor(house);
             BuildQualityFloorLamp(quality,new Vector3(.65f,0,3.85f));BuildQualityWallDetails(quality);
@@ -118,6 +118,9 @@ namespace LetMeSleep.Content.Editor
             }
             QualityTimber(parts,"Front_Apron",new Vector3(0,.315f,-.37f),new Vector3(1.96f,.20f,.10f),"Quality_Wood",.014f);
             QualityTimber(parts,"Rear_Rail",new Vector3(0,.38f,.35f),new Vector3(1.94f,.16f,.09f),"Quality_WoodEnd",.012f);
+            // A continuous load-bearing deck joins the existing rails/arms. Its
+            // top is the actual seat-pad underside, inside the old base collider.
+            QualityTimber(parts,"Seat_Support_Deck",new Vector3(0,.3775f,-.04f),new Vector3(1.94f,.035f,.76f),"Quality_WoodEnd",.004f);
             foreach(float x in new[]{-.97f,.97f}){
                 QualityTimber(parts,"Arm_Frame_"+Token(x),new Vector3(x,.51f,-.015f),new Vector3(.18f,.45f,.80f),"Quality_Wood",.022f);
                 QualityPart(parts,"Arm_Pad_"+Token(x),new Vector3(x,.70f,-.015f),QualityPillow(new Vector3(.20f,.15f,.78f),true),"Quality_Rust","Quality_Thread");
@@ -128,7 +131,7 @@ namespace LetMeSleep.Content.Editor
             QualityTimber(parts,"Back_Frame",new Vector3(0,.86f,.355f),new Vector3(2.04f,.62f,.13f),"Quality_Wood",.025f);
             foreach(float x in new[]{-.46f,.46f}){
                 QualityPart(parts,"Seat_Pad_"+Token(x),new Vector3(x,.485f,-.04f),QualityPillow(new Vector3(.90f,.18f,.72f),true),"Quality_Rust","Quality_Thread");
-                QualityPart(parts,"Back_Pad_"+Token(x),new Vector3(x,.91f,.34f),QualityPillow(new Vector3(.92f,.49f,.15f)),"Quality_Rust","Quality_Thread");
+                QualityPart(parts,"Back_Pad_"+Token(x),new Vector3(x,.865f,.205f),QualityBackCushion(),"Quality_Rust","Quality_Thread");
             }
         }
 

@@ -251,6 +251,7 @@ namespace LetMeSleep.Content.Editor
             var seat=ColliderBounds(sofa.GetComponentsInChildren<Collider>().Single(c=>c.name.Contains("Sofa_Seat")));
             foreach(var renderer in textiles.GetComponentsInChildren<Renderer>().Where(r=>r.name.StartsWith("Cushion_",StringComparison.Ordinal)))Need(SupportedBy(renderer.bounds,seat),"Living cushion has lost seat support");
             CheckQualityThrowSupport(sofa,textiles.Find("Seat_Throw").GetComponent<MeshFilter>());
+            CheckQualitySofaConstruction(sofa,textiles);
             var top=ColliderBounds(table.Find("Coffee_Top").GetComponent<Collider>());
             Need(Mathf.Abs(top.max.y-.48f)<.0001f,"Coffee tabletop must be .48 m high");
             Need(Mathf.Abs(pickup.position.y-top.max.y-.005f)<.0001f&&pickup.position.x>top.min.x&&pickup.position.x<top.max.x&&pickup.position.z>top.min.z&&pickup.position.z<top.max.z,"Living pickup lost tabletop support");
