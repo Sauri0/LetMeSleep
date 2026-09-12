@@ -1,0 +1,26 @@
+{
+  "status": "PASS_OFFLINE_COMPILE_ONLY",
+  "scope": "New importer plus actual source of map data, surface and shared folder helper against installed Unity API; no editor/import/render.",
+  "unityApiVersion": "6000.3.24f1",
+  "sourceSha256": "a9b6bea95c6fe647cc0ecef8a053e2fa3aa713706bf7e9b1e774ea534c8da13b",
+  "dependencies": [
+    {
+      "name": "unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs",
+      "sha256": "e5defdb7d06f361d13923eccd898f8a6b1979a58a9f192cd275dbd5448c82ea9"
+    },
+    {
+      "name": "unity/Assets/LetMeSleep/Gameplay.Unity/GameplaySurface.cs",
+      "sha256": "1baa0671d41c6e44307ec83269089350831e60b82e894b27ab6a6ef340edf82d"
+    },
+    {
+      "name": "unity/Assets/LetMeSleep/Content/Editor/Environment/EnvironmentSampleBuilder.cs",
+      "sha256": "53e28ac722d783a4ea584440b41dbb68e32395346300b13b97156296be88bcf9"
+    }
+  ],
+  "pending": [
+    "Native import",
+    "Generated assets",
+    "Visual review",
+    "Gameplay traversal"
+  ]
+}

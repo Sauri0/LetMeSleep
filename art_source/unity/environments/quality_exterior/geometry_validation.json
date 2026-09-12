@@ -1,0 +1,26 @@
+{
+  "status": "PASS_OFFLINE_GEOMETRY_ONLY",
+  "uniqueMeshes": 20,
+  "instances": 209,
+  "uniqueMeshTriangles": 5934,
+  "patioMosquitoSpawnMinimumDistance": [
+    0.110652,
+    0.878128
+  ],
+  "checks": [
+    "finite coordinates",
+    "unique identifiers",
+    "nondegenerate indexed triangles",
+    "instance mesh references"
+  ],
+  "pending": [
+    "Unity compile/import",
+    "native living and patio views",
+    "collider/ID invariance in Unity",
+    "human/mosquito traversal",
+    "Blender editable source reconstruction",
+    "visual approval"
+  ],
+  "sourceSha256": "b5edc553bd8eb9b09178cb7bf5c0f378eb7970fc015f54ff6216b8e2e7166e5f",
+  "geometrySha256": "45ef23ee76812cde8e9db1fa24845b800f07f6a6bdab39b60504751568865a55"
+}
