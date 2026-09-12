@@ -12,11 +12,16 @@
       "LMS_HumanRig|LMS_HumanRig|Human_Blink",
       "LMS_HumanRig|LMS_HumanRig|Human_Clap",
       "LMS_HumanRig|LMS_HumanRig|Human_Crouch",
+      "LMS_HumanRig|LMS_HumanRig|Human_Faint",
       "LMS_HumanRig|LMS_HumanRig|Human_Fall",
       "LMS_HumanRig|LMS_HumanRig|Human_FingerCurl",
+      "LMS_HumanRig|LMS_HumanRig|Human_Hit",
       "LMS_HumanRig|LMS_HumanRig|Human_Idle",
       "LMS_HumanRig|LMS_HumanRig|Human_Jump",
+      "LMS_HumanRig|LMS_HumanRig|Human_Land",
+      "LMS_HumanRig|LMS_HumanRig|Human_Recover",
       "LMS_HumanRig|LMS_HumanRig|Human_Run",
+      "LMS_HumanRig|LMS_HumanRig|Human_Swat",
       "LMS_HumanRig|LMS_HumanRig|Human_Turn",
       "LMS_HumanRig|LMS_HumanRig|Human_Walk"
     ],
@@ -37,17 +42,27 @@
     "species": "Mosquito",
     "dimensions": [
       0.48068106174468994,
-      0.42183448374271393,
+      0.38154347240924835,
       0.17189303040504456
     ],
     "triangles": 1736,
     "bones": 33,
     "actions": [
       "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Bite",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_BiteLoop",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_BiteStart",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Brake",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Detach",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Fall",
       "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Fly",
       "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Hit",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Hover",
       "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Idle",
-      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Land"
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Land",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_PerchEnter",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_PerchIdle",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Recover",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_SurfaceWalk"
     ],
     "sockets": [
       "Socket.Mouth",
@@ -57,6 +72,23 @@
       "Socket.WingRoot.L",
       "Socket.WingRoot.R",
       "Socket.GroundContact"
+    ],
+    "errors": [],
+    "passed": true
+  },
+  {
+    "species": "Flyswatter",
+    "dimensions": [
+      0.17000000178813934,
+      0.02282535657286644,
+      0.5349999964237213
+    ],
+    "triangles": 844,
+    "bones": 3,
+    "actions": [],
+    "sockets": [
+      "Socket.Grip",
+      "Socket.Impact"
     ],
     "errors": [],
     "passed": true

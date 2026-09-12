@@ -1,0 +1,20 @@
+{
+  "scope": "C# compiler against Unity 6000.3.24f1 installed reference assemblies; editor import and runtime not executed",
+  "source_sha256": {
+    "unity/Assets/LetMeSleep/Content/Characters/Runtime/CharacterView.cs": "5e1c6d9e504eab4453b1243248b76471901eb2812b01fabb9a62d3d77117d117",
+    "unity/Assets/LetMeSleep/Content/Characters/Runtime/ToolView.cs": "49549056b59d6285d4307db813f90abddd6e85b6f8100e36c614656f415ae779",
+    "unity/Assets/LetMeSleep/Content/Editor/Characters/CharacterContentBuilder.cs": "68b9138c05fb6fbab1504cda7ff3fc65b16ce60ced32f05f1641cc429594c12d"
+  },
+  "results": [
+    {
+      "assembly": "LetMeSleep.Content.Characters",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "assembly": "LetMeSleep.Content.Characters.Editor",
+      "exit_code": 0,
+      "output": ""
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Personajes Unity 0.9.4 alfa — contrato de fuente
 
-Propietario: Modelador 1. Integración Unity: Director / Presentation. Primera pareja base, sin variantes. La autorización del Director del 12 de septiembre de 2026 permite terminar alfa sin esperar aprobación artística de Branko mientras duerme. No autoriza ampliar este lote a beta.
+Propietario: Modelador 1. Integración Unity: Director / Presentation. Pareja base, sin variantes. La autorización del Director del 12 de septiembre de 2026 permite terminar alfa sin esperar aprobación artística de Branko mientras duerme. No autoriza ampliar este lote a beta. La segunda entrega agrega builder Unity, todos los estados fuente alfa y matamoscas; ver UNITY-INTEGRATION.md para API y estado de ejecución.
 
 ## Escala y ejes
 
@@ -10,7 +10,7 @@ Fuentes Blender en metros, Z arriba, frente -Y, derecha +X. Objetos y rig con es
 |---|---|---|
 | Raíz de fuente | Suelo entre los pies | Centro del tórax |
 | Escala visual Unity | 1 | 0,5 aprobada por Director |
-| Dimensiones previstas | Cuerpo 1,72 m; gorro hasta ~1,93 m | Fuente cuerpo ~0,22 m, largo total ~0,43 m y alas ~0,48 m; Unity mitad |
+| Dimensiones previstas | Cuerpo 1,72 m; gorro hasta ~1,93 m | Fuente cuerpo ~0,22 m, largo total ~0,38 m y alas ~0,48 m; Unity mitad |
 | Cámara | Socket.Eye a 1,53 m | Cámara externa a cargo de Presentation |
 | Colisión de juego | Cápsula radio 0,25 m, altura 1,72 m, agachado 1,0 m | Radio 0,055 m, independiente de alas |
 | Sombras/colisión de accesorios | Gorro fuera de cápsula | Alas y antenas sin colisión |
@@ -23,19 +23,19 @@ Las medidas reales de exportación están en cada `audit.json`. La anchura del h
 
 Sufijos `.L` y `.R` indican lados anatómicos. Cada mano tiene `Thumb`, `Index`, `Middle`, `Ring`, `Little`, con segmentos `01`, `02`, `03`. Las palmas apuntan hacia -Y en reposo. En ambos lados la flexión positiva del eje X local lleva los dedos hacia la palma. `FingerCurl` permite revisar apertura/cierre sin mover los brazos; la auditoría comprueba desplazamiento real del extremo del índice en ambos lados. Las manos se sueldan por voxel y se simplifican durante generación: no son cinco piezas superpuestas con la palma.
 
-Sockets humano: `Socket.Eye`, `Socket.Head`, `Socket.Back`, `Socket.Grip.L`, `Socket.Grip.R`. Mosquito: `Socket.Mouth` en extremo de probóscide y `Socket.Back`. Se exportan como huesos no deformantes; no activar una opción de exportación que elimine huesos no deformantes. El eje longitudinal del socket es Y local. Presentation debe colocar herramientas según su eje de agarre y verificar ambas manos; no hay herramienta incluida en este lote.
+Sockets humano: `Socket.Eye`, `Socket.Head`, `Socket.Back`, `Socket.Grip.L`, `Socket.Grip.R`. Mosquito: `Socket.Mouth` en extremo de probóscide y `Socket.Back`. Se exportan como huesos no deformantes; no activar una opción de exportación que elimine huesos no deformantes. El eje longitudinal del socket es Y local. Presentation debe colocar herramientas según su eje de agarre y verificar ambas manos; la segunda entrega incluye el matamoscas con Socket.Grip y Socket.Impact.
 
 ## Materiales
 
 Materiales originales, colores constantes, sin texturas externas. Humano: piel cálida, pijama azul, ribetes azul claro, suela oscura, ojos crema y expresión oscura. Mosquito: caparazón rojo oscuro, abdomen cálido, patas oscuras y alas frías. Materiales identificados por nombre estable permiten recolor base sin variantes geométricas.
 
-URP Lit opaco para todas las superficies salvo `Mosquito_Wing`: alpha 0,72, roughness 0,4, doble cara por espesor de geometría. Configurar material transparente en Unity explícitamente; FBX no garantiza conversión de nodos Blender a URP. Sin emisión, texturas normales, mapas externos ni efectos de picadura.
+URP Lit opaco para todas las superficies salvo `Mosquito_Wing`: fuente alpha 0,72, roughness 0,4 y doble cara por espesor geométrico; builder Unity usa alpha 0,42 Premultiply y Cull Back según W2, sin sombras en alas. FBX no garantiza conversión automática de nodos Blender a URP. Sin emisión, texturas normales, mapas externos ni efectos de picadura.
 
 ## Animación fuente
 
-30 FPS, acciones independientes con prefijos `Human_` y `Mosquito_`. Todas en el sitio: locomoción y altura efectiva dependen de Gameplay. Listas y rangos reales en `audit.json`. Humano incluye Idle, FingerCurl, Blink, Walk, Run, Crouch, Jump, Turn, Clap, Fall. Mosquito incluye Idle, Fly, Land, Bite, Hit. Son clips iniciales para integrar y revisar, no evidencia de retargeting o contacto correcto en Unity. Mezclar Blink como capa facial; FingerCurl es herramienta de revisión. Crouch/Jump/Fall animan Hips, sin trasladar Root.
+30 FPS, acciones independientes con prefijos `Human_` y `Mosquito_`. Todas en el sitio: locomoción y altura efectiva dependen de Gameplay. Listas y rangos reales en `audit.json`. La primera muestra incluyó 10 acciones humanas y 5 de mosquito. La segunda entrega completa 15 por personaje, incluidos Land/Hit/Faint/Recover/Swat y los estados de posado, superficie, picadura, desprendimiento y recuperación del mosquito. El catálogo e IDs exactos están en UNITY-INTEGRATION.md. Son clips iniciales para integrar y revisar, no evidencia de retargeting o contacto correcto en Unity. Mezclar Blink como capa facial; FingerCurl es herramienta de revisión. Crouch/Jump/Fall animan Hips, sin trasladar Root.
 
-Loops candidatos: Idle, Walk, Run, Fly. Las acciones restantes terminan una vez o se mantienen según estado del controlador. `Mosquito_Hit` sirve como inicio de caída; física y recuperación son responsabilidad del juego. El aleteo no es una simulación física.
+Loops declarados: Idle, Walk, Run, Fly, Hover, PerchIdle, SurfaceWalk y BiteLoop según especie. Las acciones restantes terminan una vez o se mantienen según estado del controlador. `Mosquito_Hit` sirve como inicio de caída; física y recuperación son responsabilidad del juego. El aleteo no es una simulación física.
 
 ## Reproducción y verificación
 

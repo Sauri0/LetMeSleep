@@ -1,0 +1,119 @@
+{
+  "species": "Flyswatter",
+  "mesh_count": 1,
+  "bones": 3,
+  "triangles": 844,
+  "vertices": 478,
+  "unweighted_vertices": 0,
+  "bad_weight_sums": 0,
+  "degenerate_triangles": 0,
+  "nonfinite_vertices": 0,
+  "clips": [],
+  "curl": {},
+  "contact": {},
+  "bounds_min": [
+    -0.08500000089406967,
+    -0.01141267828643322,
+    -0.06499999761581421
+  ],
+  "bounds_max": [
+    0.08500000089406967,
+    0.01141267828643322,
+    0.4699999988079071
+  ],
+  "dimensions": [
+    0.17000000178813934,
+    0.02282535657286644,
+    0.5349999964237213
+  ],
+  "sockets": [
+    "Socket.Grip",
+    "Socket.Impact"
+  ],
+  "renderers": [
+    {
+      "name": "FlyswatterMesh",
+      "materials": [
+        "Tool_Teal",
+        "Tool_Grip"
+      ]
+    }
+  ],
+  "bone_names": [
+    "Root",
+    "Socket.Grip",
+    "Socket.Impact"
+  ],
+  "bind_bones": [
+    {
+      "name": "Root",
+      "parent": "",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.0,
+        0.10000000149011612
+      ]
+    },
+    {
+      "name": "Socket.Grip",
+      "parent": "Root",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.029999999329447746,
+        0.0
+      ]
+    },
+    {
+      "name": "Socket.Impact",
+      "parent": "Root",
+      "head_blender_m": [
+        0.0,
+        -0.004999999888241291,
+        0.36500000953674316
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.03500000014901161,
+        0.36500000953674316
+      ]
+    }
+  ],
+  "materials": [
+    "Tool_Grip",
+    "Tool_Teal"
+  ],
+  "material_palette": [
+    {
+      "name": "Tool_Grip",
+      "color": {
+        "r": 0.054999999701976776,
+        "g": 0.09000000357627869,
+        "b": 0.11999999731779099,
+        "a": 1.0
+      },
+      "roughness": 0.7200000286102295
+    },
+    {
+      "name": "Tool_Teal",
+      "color": {
+        "r": 0.10000000149011612,
+        "g": 0.4300000071525574,
+        "b": 0.41999998688697815,
+        "a": 1.0
+      },
+      "roughness": 0.7200000286102295
+    }
+  ],
+  "passed": true,
+  "errors": []
+}

@@ -1,6 +1,7 @@
 """Seal measured sources and current review renders after both Blender checks pass."""
 import json
 import hashlib
+import sys
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
@@ -11,12 +12,13 @@ assert all(a['passed'] for a in roundtrip)
 assert all(a['passed'] for a in manifest['audits'])
 expected=[f'{s}_{view}.png' for s in ['human','mosquito'] for view in ['front','side','back','threequarter']]
 expected+=['human_hand_open.png','human_hand_curl.png','human_clap_contact.png']
-for name in expected:
+for name in ([] if '--source-only' in sys.argv else expected):
     png=ROOT/'review'/name
     species='Human' if name.startswith('human') else 'Mosquito'
     source=ROOT/species.lower()/f'LMS_{species}_alpha.blend'
     assert png.exists() and png.stat().st_mtime>=source.stat().st_mtime, f'Stale or missing render: {name}'
-manifest['rendered']=True
+manifest['rendered']='--source-only' not in sys.argv
+manifest['review_status']='Previous sample captures retained; integration revision needs Unity review' if '--source-only' in sys.argv else 'Current source revision rendered'
 manifest['review_renderer']={'engine':'Cycles','device':'CPU','threads':2,'samples':24,'resolution':[720,900]}
 manifest['fbx_roundtrip_verified']=True
 manifest['unity_import_verified']=False

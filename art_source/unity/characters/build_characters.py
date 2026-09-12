@@ -120,7 +120,7 @@ class Character:
         action=self.rig.animation_data.action
         action.name=self.species+'_'+name; action.use_fake_user=True
         self.clips.append({'name':action.name,'start':1,'end':end,'fps':FPS,'duration_seconds':(end-1)/FPS,
-                           'loop':name in ['Idle','Walk','Run','Fly'],'root_motion':False})
+                           'loop':name in ['Idle','Walk','Run','Fly','Hover','PerchIdle','SurfaceWalk','BiteLoop'],'root_motion':False})
         self.rig.animation_data.action=None
         for b in self.rig.pose.bones:
             b.rotation_euler=(0,0,0); b.location=(0,0,0); b.scale=(1,1,1)
@@ -128,6 +128,7 @@ class Character:
 
     def export(self):
         scene=bpy.context.scene; scene.frame_start=1; scene.frame_end=61; scene.frame_set(1)
+        self.rig.animation_data_create()
         self.rig.animation_data.action=None
         meshes=[o for o in scene.objects if o.type=='MESH']
         # Four human renderers permit hiding the head in first person and independent hands.
@@ -137,6 +138,7 @@ class Character:
             if obj.name.startswith('WingMembrane.'): key='MosquitoMembranes'
             elif obj.name.startswith(('WingLeadingEdge.','WingVein.')): key='MosquitoVeins'
             elif self.species=='Mosquito': key='MosquitoSkin'
+            elif self.species=='Flyswatter': key='FlyswatterMesh'
             elif obj.name.startswith('HandSkin.'): key=obj.name
             elif obj.name.startswith('Nightcap'): key='HumanNightcap'
             elif obj.name.startswith(head_prefixes): key='HumanHead'
@@ -176,7 +178,12 @@ class Character:
         audit['sockets']=[b.name for b in self.rig.data.bones if b.name.startswith('Socket.')]
         audit['renderers']=[{'name':o.name,'materials':[m.name for m in o.data.materials]} for o in meshes]
         audit['bone_names']=[b.name for b in self.rig.data.bones]
+        audit['bind_bones']=[{'name':b.name,'parent':b.parent.name if b.parent else '',
+                              'head_blender_m':list(b.head_local),'tail_blender_m':list(b.tail_local)} for b in self.rig.data.bones]
         audit['materials']=sorted({m.name for o in meshes for m in o.data.materials})
+        audit['material_palette']=[{'name':m.name,'color':dict(zip(('r','g','b','a'),m.diffuse_color)),
+                                    'roughness':m.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value}
+                                   for m in sorted({m for o in meshes for m in o.data.materials},key=lambda m:m.name)]
         errors=[k for k in ('unweighted_vertices','bad_weight_sums','degenerate_triangles','nonfinite_vertices') if audit[k]]
         if self.species=='Human' and not all(v['inward_displacement_m']>.01 for v in self.curl.values()): errors.append('finger_curl')
         if self.species=='Human' and abs(self.contact['clap_palm_center_distance_m']-.05)>.001: errors.append('clap_contact')
@@ -228,17 +235,23 @@ def human():
         sleeve=tube('Sleeve.'+side,[(s*x,0,z) for x,z in [(.20,1.17),(.29,1.17),(.49,1.16),(.54,1.16),(.69,1.15),(.735,1.15)]],
                     [.06,.105,.088,.087,.061,.061],[.06,.105,.088,.087,.061,.061],blue)
         gu=sleeve.vertex_groups.new(name='UpperArm.'+side); gl=sleeve.vertex_groups.new(name='LowerArm.'+side)
+        gc=sleeve.vertex_groups.new(name='Chest')
         for v in sleeve.data.vertices:
             w=max(0,min(1,(abs(v.co.x)-.48)/.08))
-            if w<1: gu.add([v.index],1-w,'REPLACE')
+            chest=1-max(0,min(1,(abs(v.co.x)-.21)/.08))
+            if chest>0: gc.add([v.index],chest,'REPLACE')
+            if w<1 and chest<1: gu.add([v.index],(1-w)*(1-chest),'REPLACE')
             if w>0: gl.add([v.index],w,'REPLACE')
         tube('Cuff.'+side,[(s*.706,0,1.15),(s*.744,0,1.15)],[.065]*2,[.065]*2,trim,'LowerArm.'+side)
         leg=tube('PajamaLeg.'+side,[(s*.125,0,z) for z in [.13,.18,.40,.47,.68,.78]],
                  [.086,.088,.093,.099,.119,.12],[.095,.095,.102,.11,.126,.125],blue)
         gu=leg.vertex_groups.new(name='UpperLeg.'+side); gl=leg.vertex_groups.new(name='LowerLeg.'+side)
+        gh=leg.vertex_groups.new(name='Hips')
         for v in leg.data.vertices:
             w=max(0,min(1,(v.co.z-.38)/.12))
-            if w>0: gu.add([v.index],w,'REPLACE')
+            hips=max(0,min(1,(v.co.z-.67)/.11))
+            if hips>0: gh.add([v.index],hips,'REPLACE')
+            if w>0 and hips<1: gu.add([v.index],w*(1-hips),'REPLACE')
             if w<1: gl.add([v.index],1-w,'REPLACE')
         tube('TrouserCuff.'+side,[(s*.125,0,.13),(s*.125,0,.17)],[.09]*2,[.10]*2,trim,'LowerLeg.'+side)
         shoe=tube('Slipper.'+side,[(s*.125,-.07,z) for z in [0,.015,.035,.055,.10,.14,.15]],
@@ -394,6 +407,13 @@ def human():
     clap_open=solve_clap(.15); clap_contact=solve_clap(.025)
     c.clip('Clap',25,[(1,idle),(8,clap_open),(12,clap_contact),(16,clap_open),(25,idle)])
     c.clip('Fall',31,[(1,idle),(16,{**idle,'Hips':{'rotation_euler':(1.2,0,.15),'location':(0,-.4,0)}}),(31,{**idle,'Hips':{'rotation_euler':(1.57,0,.15),'location':(0,-.60,0)}})])
+    prone={**idle,'Hips':{'rotation_euler':(1.57,0,.15),'location':(0,-.60,0)},'Head':(.18,0,.10)}
+    c.clip('Land',19,[(1,crouch),(8,{**idle,'Chest':(-.12,0,0)}),(19,idle)])
+    c.clip('Hit',19,[(1,idle),(5,{**idle,'Chest':(.16,0,-.10),'Head':(-.15,0,.15)}),(19,idle)])
+    c.clip('Faint',46,[(1,idle),(12,{**idle,'Head':(.38,0,.10),'Chest':(-.18,0,0)}),(25,crouch),(46,prone)])
+    c.clip('Recover',61,[(1,prone),(20,{**crouch,'Chest':(-.40,0,.12)}),(42,crouch),(61,idle)])
+    c.clip('Swat',25,[(1,idle),(8,{**idle,'UpperArm.R':(-.75,.2,1.3),'LowerArm.R':(.6,0,0)}),
+                      (13,{**idle,'UpperArm.R':(.70,-.2,.65),'LowerArm.R':(.15,0,0)}),(25,idle)])
     return c.export()
 
 
@@ -408,8 +428,8 @@ def mosquito():
     c.bone('Head',p(0,-.045,.105),p(0,-.085,.105),'Thorax')
     c.bone('Abdomen01',p(0,.035,.103),p(0,.105,.083),'Thorax')
     c.bone('Abdomen02',p(0,.105,.083),p(0,.185,.046),'Abdomen01')
-    c.bone('Proboscis',p(0,-.10,.09),p(0,-.23,.065),'Head')
-    c.bone('Socket.Mouth',p(0,-.23,.065),p(0,-.24,.063),'Proboscis',False)
+    c.bone('Proboscis',p(0,-.10,.105),p(0,-.19,.105),'Head')
+    c.bone('Socket.Mouth',p(0,-.19,.105),p(0,-.20,.105),'Proboscis',False)
     c.bone('Socket.Back',p(0,.015,.145),p(0,.015,.16),'Thorax',False)
     c.bone('Socket.CameraTarget',(0,0,0),(0,-.02,0),'Thorax',False)
     c.bone('Socket.AimForward',(0,-.08,0),(0,-.12,0),'Head',False)
@@ -423,7 +443,7 @@ def mosquito():
         w=max(0,min(1,(v.co.y-.088)/.035))
         if w<1: a.add([v.index],1-w,'REPLACE')
         if w>0: b.add([v.index],w,'REPLACE')
-    tube('Proboscis',[p(0,-.096,.092),p(0,-.15,.082),p(0,-.23,.065)],[.006,.004,.0014],[.005,.004,.0014],dark,'Proboscis',8)
+    tube('Proboscis',[p(0,-.096,.105),p(0,-.14,.105),p(0,-.19,.105)],[.006,.004,.0014],[.005,.004,.0014],dark,'Proboscis',8)
     for side,s in [('L',1),('R',-1)]:
         ellipsoid('Eye.'+side,p(s*.022,-.097,.119),(.023,.016,.027),eye,'Head',12,6)
         ellipsoid('Pupil.'+side,p(s*.018,-.112,.118),(.008,.004,.012),pupil,'Head',12,6)
@@ -447,6 +467,10 @@ def mosquito():
                 tube('Limb_'+name,[pts[j],pts[j+1]],[.0035-j*.0007,.0030-j*.0007],[.0035-j*.0007,.0030-j*.0007],dark,name,6)
     c.bind()
     c.clip('Idle',31,[(1,{}),(16,{'Abdomen01':(.05,0,0)}),(31,{})])
+    mouth=c.rig.data.bones['Socket.Mouth'].head_local
+    c.contact={'gameplay_tip_rest_unity_m':[mouth.x*.5,mouth.z*.5,-mouth.y*.5],
+               'gameplay_collision_radius_m':.055}
+    assert (Vector(c.contact['gameplay_tip_rest_unity_m'])-Vector((0,0,.095))).length<1e-6
     flight=[]
     for frame,sign in [(1,1),(3,-1),(5,1),(7,-1),(9,1),(11,-1),(13,1)]:
         pose={'Wing.L':(sign*.62,0,0),'Wing.R':(sign*.62,0,0),'Abdomen01':(-.08,0,0)}
@@ -457,12 +481,62 @@ def mosquito():
     c.clip('Land',25,[(1,flight[0][1]),(13,{'Wing.L':(.15,.15,0),'Wing.R':(.15,-.15,0)}),(25,{})])
     c.clip('Bite',31,[(1,{}),(9,{'Head':(.22,0,0),'Proboscis':(.16,0,0)}),(23,{'Head':(.25,0,0),'Proboscis':(.16,0,0),'Abdomen01':(-.08,0,0)}),(31,{})])
     c.clip('Hit',25,[(1,{}),(9,{'Thorax':(.7,0,1.4),'Wing.L':(.8,0,0),'Wing.R':(-.3,0,0)}),(25,{'Thorax':(1.5,0,2.6)})])
+    folded={'Wing.L':(.12,.30,0),'Wing.R':(.12,-.30,0),'Abdomen01':(.06,0,0)}
+    bite={'Head':(.22,0,0),'Proboscis':(.16,0,0),**folded}
+    fallen={'Thorax':(1.5,0,2.6),'Wing.L':(.9,.2,0),'Wing.R':(.9,-.2,0)}
+    c.clip('Hover',13,[(f,{**pose,'Abdomen01':(.025*math.sin(2*math.pi*(f-1)/12),0,0)}) for f,pose in flight])
+    c.clip('Brake',19,[(1,flight[0][1]),(7,{'Thorax':(-.24,0,0),'Wing.L':(.85,0,0),'Wing.R':(.85,0,0)}),(19,folded)])
+    c.clip('PerchEnter',25,[(1,flight[0][1]),(12,{'Thorax':(-.12,0,0),**folded}),(25,folded)])
+    c.clip('PerchIdle',61,[(1,folded),(31,{**folded,'Abdomen01':(.08,0,0)}),(61,folded)])
+    walk=[]
+    for frame,sign in [(1,1),(10,-1),(19,1)]:
+        pose=dict(folded)
+        for side,s in [('L',1),('R',-1)]:
+            for i in range(1,4):
+                phase=sign*s*(-1 if i==2 else 1)
+                pose[f'Leg{i}01.{side}']=(phase*.15,0,phase*.18)
+                pose[f'Leg{i}02.{side}']=(max(0,phase)*.25,0,0)
+        walk.append((frame,pose))
+    c.clip('SurfaceWalk',19,walk)
+    c.clip('BiteStart',13,[(1,folded),(13,bite)])
+    c.clip('BiteLoop',31,[(1,bite),(16,{**bite,'Abdomen01':(.035,0,0),'Abdomen02':(-.04,0,0)}),(31,bite)])
+    c.clip('Detach',19,[(1,bite),(7,{'Head':(-.15,0,0),'Wing.L':(.7,0,0),'Wing.R':(.7,0,0)}),(19,flight[0][1])])
+    c.clip('Fall',31,[(1,{}),(11,{'Thorax':(.6,.3,1.0)}),(31,fallen)])
+    c.clip('Recover',31,[(1,fallen),(16,folded),(31,flight[0][1])])
+    return c.export()
+
+
+def flyswatter():
+    c=Character('Flyswatter')
+    plastic=material('Tool_Teal',(.10,.43,.42)); grip=material('Tool_Grip',(.055,.09,.12))
+    c.bone('Root',(0,0,0),(0,0,.1))
+    c.bone('Socket.Grip',(0,0,0),(0,-.03,0),'Root',False)
+    c.bone('Socket.Impact',(0,-.005,.365),(0,-.035,.365),'Root',False)
+    tube('Handle',[(0,0,z) for z in [-.065,-.025,.19,.265,.28]],
+         [.014,.016,.009,.013,.024],[.009,.011,.006,.007,.006],plastic,'Root',10)
+    tube('GripSleeve',[(0,0,z) for z in [-.045,.055]],[.017,.015],[.012,.011],grip,'Root',10)
+    count=24; verts=[]
+    for y,rx,rz in [(-.005,.085,.105),(-.005,.074,.094),(.005,.085,.105),(.005,.074,.094)]:
+        verts += [(rx*math.cos(i*2*math.pi/count),y,.365+rz*math.sin(i*2*math.pi/count)) for i in range(count)]
+    faces=[]
+    for i in range(count):
+        j=(i+1)%count
+        faces += [(i,j,count+j,count+i),(2*count+j,2*count+i,3*count+i,3*count+j),
+                  (j,i,2*count+i,2*count+j),(count+i,count+j,3*count+j,3*count+i)]
+    mesh('OpenFrame',verts,faces,plastic,'Root')
+    for i in range(-5,6):
+        x=i*.012; z=.094*math.sqrt(1-(x/.074)**2)
+        strip('VerticalGrid',[(x,0,.365-z),(x,0,.365+z)],.0017,plastic,'Root')
+    for i in range(-7,8):
+        z=i*.012; x=.074*math.sqrt(1-(z/.094)**2)
+        strip('HorizontalGrid',[(-x,0,.365+z),(x,0,.365+z)],.0017,plastic,'Root')
+    c.bind()
     return c.export()
 
 
 if __name__=='__main__':
-    results=[human(),mosquito()]
-    manifest={'version':'0.9.4-alpha-character-sample-1','generator':Path(__file__).name,
+    results=[human(),mosquito(),flyswatter()]
+    manifest={'version':'0.9.4-alpha-character-integration-2','generator':Path(__file__).name,
               'blender':bpy.app.version_string,'source_units':'meters','source_up':'+Z','source_forward':'-Y',
               'fbx_axis_forward':'-Z','fbx_axis_up':'Y','unity_human_scale':1,'unity_mosquito_scale':.5,
               'mosquito_collision_radius_m':.055,'human_capsule':{'radius':.25,'height':1.72,'crouched_height':1.0},

@@ -1,0 +1,7 @@
+{
+  "name": "LetMeSleep.Content.Characters.Editor",
+  "rootNamespace": "LetMeSleep.Content.Characters.Editor",
+  "references": ["LetMeSleep.Content.Characters"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

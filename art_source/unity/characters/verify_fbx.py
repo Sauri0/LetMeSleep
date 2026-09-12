@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
 results=[]
-for species in ['Human','Mosquito']:
+for species in ['Human','Mosquito','Flyswatter']:
     bpy.ops.object.select_all(action='SELECT'); bpy.ops.object.delete(use_global=False)
     for action in list(bpy.data.actions): bpy.data.actions.remove(action)
     folder=ROOT/species.lower()
@@ -14,7 +14,8 @@ for species in ['Human','Mosquito']:
     meshes=[o for o in bpy.context.scene.objects if o.type=='MESH']
     rigs=[o for o in bpy.context.scene.objects if o.type=='ARMATURE']
     assert len(rigs)==1, (species,len(rigs))
-    rig=rigs[0]; rig.animation_data.action=None
+    rig=rigs[0]
+    if rig.animation_data: rig.animation_data.action=None
     for b in rig.pose.bones:
         b.rotation_euler=(0,0,0); b.rotation_quaternion=(1,0,0,0); b.location=(0,0,0); b.scale=(1,1,1)
     bpy.context.view_layer.update()

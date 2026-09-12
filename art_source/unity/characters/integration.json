@@ -1,11 +1,11 @@
 {
-  "version": "0.9.4-alpha-character-sample-1",
-  "status": "source_sample_ready_for_unity_import",
+  "version": "0.9.4-alpha-character-integration-2",
+  "status": "builder_compiles_pending_resident_unity_execution",
   "human": {
     "source_rig": "LMS_HumanRig",
     "unity_visual_scale": 1,
     "avatar_verified": false,
-    "recommended_initial_import": "Generic until explicit Humanoid mapping is validated",
+    "recommended_initial_import": "Generic; custom rig retains all source bones",
     "anchors_to_unique_source_bones": {
       "CameraEye": "Socket.Eye",
       "AimChest": "Socket.AimChest",
@@ -15,11 +15,37 @@
       "Foot_L": "Socket.Foot.L",
       "Foot_R": "Socket.Foot.R"
     },
-    "first_person_hidden_renderers": ["HumanHead", "HumanNightcap"],
-    "first_person_visible_renderers": ["HumanBody", "HandSkin.L", "HandSkin.R"],
-    "missing_presentation_clips": ["Land", "Hit", "Faint", "Recover"],
-    "lods_available": [0],
-    "tool_mesh_included": false
+    "first_person_hidden_renderers": [
+      "HumanHead",
+      "HumanNightcap"
+    ],
+    "first_person_visible_renderers": [
+      "HumanBody",
+      "HandSkin.L",
+      "HandSkin.R"
+    ],
+    "missing_presentation_clips": [],
+    "lods_available": [
+      0
+    ],
+    "tool_mesh_included": true,
+    "motion_states": [
+      "Idle",
+      "Walk",
+      "Run",
+      "Crouch",
+      "Jump",
+      "Land",
+      "Turn",
+      "Clap",
+      "Hit",
+      "Fall",
+      "Faint",
+      "Recover",
+      "Swat",
+      "Blink",
+      "FingerCurl"
+    ]
   },
   "mosquito": {
     "source_rig": "LMS_MosquitoRig",
@@ -34,16 +60,44 @@
       "WingRoot_R": "Socket.WingRoot.R",
       "GroundContact": "Socket.GroundContact"
     },
-    "renderers": ["MosquitoSkin", "MosquitoMembranes", "MosquitoVeins"],
+    "renderers": [
+      "MosquitoSkin",
+      "MosquitoMembranes",
+      "MosquitoVeins"
+    ],
     "source_root_to_ground_m": 0.1024,
     "unity_root_to_ground_m": 0.0512,
-    "missing_presentation_clips": ["Hover", "Brake", "PerchEnter", "PerchIdle", "SurfaceWalk", "BiteStart", "BiteLoop", "Detach", "Fall", "Recover"],
-    "clip_mapping_notes": "Idle, Land and Bite are initial authored actions, not silent aliases for the missing Presentation states.",
-    "lods_available": [0]
+    "missing_presentation_clips": [],
+    "clip_mapping_notes": "All requested source states are authored. Land and Bite retain initial sample actions as explicit optional states.",
+    "lods_available": [
+      0
+    ],
+    "motion_states": [
+      "Idle",
+      "Hover",
+      "Fly",
+      "Brake",
+      "PerchEnter",
+      "PerchIdle",
+      "SurfaceWalk",
+      "BiteStart",
+      "BiteLoop",
+      "Detach",
+      "Hit",
+      "Fall",
+      "Recover",
+      "Land",
+      "Bite"
+    ],
+    "gameplay_tip_rest_unity_m": [
+      0,
+      0,
+      0.095
+    ]
   },
   "unity_material_setup": {
     "opaque": "URP Lit; use stable source material names and base colors",
-    "Mosquito_Wing": "URP Lit Transparent; alpha 0.72; roughness 0.4; membrane already has two physical sides"
+    "Mosquito_Wing": "URP Lit Transparent/Premultiply; alpha 0.42; Cull Back; no receiving/casting shadows (W2 contract)."
   },
   "integration_gate": [
     "Check Y-up, Z-forward and meter dimensions in Unity",
@@ -51,5 +105,18 @@
     "Create PresentationAnchors using source-bone mappings and Unity-facing rotations",
     "Configure importer animation names, ranges and loops from audit.json",
     "Check body/head hiding, feet, palm contact, wing sorting and wall/ceiling perching in game"
-  ]
+  ],
+  "tool": {
+    "source_rig": "LMS_FlyswatterRig",
+    "prefab": "LMS_Flyswatter",
+    "grip": "Socket.Grip",
+    "impact": "Socket.Impact",
+    "gameplay_id": "flyswatter"
+  },
+  "builder": {
+    "method": "LetMeSleep.Content.Characters.Editor.CharacterContentBuilder.BuildAndVerifyIdempotence",
+    "receipt": "Assets/LetMeSleep/Content/Characters/BuildReceipt.json",
+    "motion_id_rule": "Zero-based index in each motion_states list; Animator state name Base Layer.<state>; no automatic transitions",
+    "reference_colliders_enabled": false
+  }
 }
