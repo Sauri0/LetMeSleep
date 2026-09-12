@@ -100,7 +100,7 @@
   },
   "unity_material_setup": {
     "opaque": "URP Lit; use stable source material names and base colors",
-    "Mosquito_Wing": "URP Lit Transparent/Premultiply; alpha 0.42; Cull Back; no receiving/casting shadows (W2 contract)."
+    "Mosquito_Wing": "URP Lit Transparent/Alpha; alpha 0.42; SrcAlpha/OneMinusSrcAlpha; preserve-specular off; specular highlights and environment reflections off; smoothness 0.15; Cull Back; no receiving/casting shadows. Native visual comparison required."
   },
   "integration_gate": [
     "Check Y-up, Z-forward and meter dimensions in Unity",

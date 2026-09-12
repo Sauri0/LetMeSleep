@@ -19,7 +19,7 @@ namespace LetMeSleep.Content.Characters.Editor
     {
         public const string OutputRoot = "Assets/LetMeSleep/Content/Characters";
         public const string ReceiptPath = OutputRoot + "/BuildReceipt.json";
-        private const string BuilderVersion = "alpha-characters-5-bind-pose";
+        private const string BuilderVersion = "alpha-characters-6-wing-transmission";
         private static string SourceRoot => Path.GetFullPath(Path.Combine(Application.dataPath,
             "../../art_source/unity/characters"));
         private static readonly string[] HumanStates = {
@@ -246,22 +246,29 @@ namespace LetMeSleep.Content.Characters.Editor
             material.shader = shader;
             var color = source.color;
             bool wing = source.name == "Mosquito_Wing";
-            if (wing) color.a = .42f; // Presentation contract: two physical faces, cull back, premultiply.
+            if (wing) color.a = .42f; // Two physical faces; cull back to avoid doubling opacity.
             material.SetColor("_BaseColor", color);
-            material.SetFloat("_Smoothness", 1 - source.roughness);
+            material.SetFloat("_Smoothness", wing ? .15f : 1 - source.roughness);
             material.SetFloat("_Metallic", 0);
             material.SetFloat("_Surface", wing ? 1 : 0);
-            material.SetFloat("_Blend", wing ? 1 : 0);
+            // URP's preserve-specular path leaves highlights unattenuated by alpha.
+            // Thin membranes use ordinary alpha transmission with no mirror reflection.
+            material.SetFloat("_Blend", 0);
+            material.SetFloat("_BlendModePreserveSpecular", 0);
+            material.SetFloat("_SpecularHighlights", wing ? 0 : 1);
+            material.SetFloat("_EnvironmentReflections", wing ? 0 : 1);
             material.SetFloat("_Cull", (float)CullMode.Back);
             material.SetFloat("_ZWrite", wing ? 0 : 1);
-            material.SetFloat("_SrcBlend", (float)BlendMode.One);
+            material.SetFloat("_SrcBlend", (float)(wing ? BlendMode.SrcAlpha : BlendMode.One));
             material.SetFloat("_DstBlend", (float)(wing ? BlendMode.OneMinusSrcAlpha : BlendMode.Zero));
             material.SetFloat("_SrcBlendAlpha", (float)BlendMode.One);
             material.SetFloat("_DstBlendAlpha", (float)(wing ? BlendMode.OneMinusSrcAlpha : BlendMode.Zero));
             material.SetFloat("_ReceiveShadows", wing ? 0 : 1);
             material.SetOverrideTag("RenderType", wing ? "Transparent" : "Opaque");
             SetKeyword(material, "_SURFACE_TYPE_TRANSPARENT", wing);
-            SetKeyword(material, "_ALPHAPREMULTIPLY_ON", wing);
+            SetKeyword(material, "_ALPHAPREMULTIPLY_ON", false);
+            SetKeyword(material, "_SPECULARHIGHLIGHTS_OFF", wing);
+            SetKeyword(material, "_ENVIRONMENTREFLECTIONS_OFF", wing);
             SetKeyword(material, "_RECEIVE_SHADOWS_OFF", wing);
             material.SetShaderPassEnabled("ShadowCaster", !wing);
             material.renderQueue = wing ? (int)RenderQueue.Transparent : -1;
