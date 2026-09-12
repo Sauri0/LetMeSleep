@@ -11,6 +11,13 @@ namespace LetMeSleep.Content.Editor
     {
         static readonly Vector3 MenuCameraPosition=new Vector3(0,1.6f,.4f);
         static readonly Vector3 MenuLookAtPosition=new Vector3(.8f,1.1f,4.85f);
+        // Seated clip space: floor origin, +Y up, +Z toward the front of the sofa.
+        static readonly Vector3 MenuSeatedRootPosition=new Vector3(3.3f,0,5.35f);
+        static readonly Vector3[] MenuMosquitoPathPositions={
+            new Vector3(2.63f,1.40f,4.72f),new Vector3(2.15f,1.65f,4.45f),
+            new Vector3(2.35f,1.90f,4.15f),new Vector3(3.20f,2.00f,4.20f),
+            new Vector3(4.05f,1.85f,4.40f),new Vector3(4.50f,1.60f,4.90f),
+            new Vector3(4.10f,1.85f,5.20f),new Vector3(2.90f,1.95f,5.00f)};
 
         static void FurnishLobby(GameObject lobby)
         {
@@ -72,8 +79,9 @@ namespace LetMeSleep.Content.Editor
                 LobbyPiece(box,"Pull",new Vector3(0,.18f,-.143f),new Vector3(.10f,.025f,.016f),"Iron",true);
             }
             foreach(float x in new[]{-3.3f,3.3f}){
-                LobbyPiece(domestic,"Sofa_Throw_"+Token(x),new Vector3(x-.30f,.581f,5.31f),new Vector3(.40f,.012f,.60f),"Linen",false);
-                LobbyPiece(domestic,"Throw_Edge_"+Token(x),new Vector3(x-.30f,.588f,5.06f),new Vector3(.37f,.002f,.025f),"Textile_Navy",false);
+                float throwX=x-(x>0?.62f:.30f);
+                LobbyPiece(domestic,"Sofa_Throw_"+Token(x),new Vector3(throwX,.581f,5.31f),new Vector3(.40f,.012f,.60f),"Linen",false);
+                LobbyPiece(domestic,"Throw_Edge_"+Token(x),new Vector3(throwX,.588f,5.06f),new Vector3(.37f,.002f,.025f),"Textile_Navy",false);
                 LobbyPiece(domestic,"Sofa_Cushion_"+Token(x),new Vector3(x+.55f,.725f,5.52f),new Vector3(.36f,.30f,.14f),"Textile_Blue",false);
             }
             var rack=Child(domestic,"Entry_CoatRack");rack.localPosition=new Vector3(-2,1.7f,5.92f);
@@ -121,6 +129,32 @@ namespace LetMeSleep.Content.Editor
             var mosquito=Anchor(data.PresentationAnchors,"MosquitoMenuStage",new Vector3(.8f,1.85f,4.5f));
             mosquito.localRotation=Quaternion.LookRotation(MenuCameraPosition-mosquito.localPosition);
             foreach(float x in new[]{-4.8f,0,4.8f})Anchor(data.PresentationAnchors,"LightAnchor_Lobby_Lantern_"+Token(x),new Vector3(x,2.45f,5.55f));
+            AddLobbyLivingMenuAnchors(data);
+        }
+
+        static void AddLobbyLivingMenuAnchors(EnvironmentMapDefinition data)
+        {
+            var root=Anchor(data.PresentationAnchors,"HumanMenuSeatedRoot",MenuSeatedRootPosition);
+            root.localRotation=Quaternion.Euler(0,180,0);
+            // Flat siblings permit explicit reference binding through PresentationAnchors.Find.
+            // These are surface targets, not skeleton pivots or actor spawn points.
+            MenuSeatAnchor(data,root,"MenuSeatSurface",new Vector3(0,.575f,.345f));
+            MenuSeatAnchor(data,root,"MenuSeatFrontEdge",new Vector3(0,.575f,.40f));
+            MenuSeatAnchor(data,root,"MenuSeatBackSupport",new Vector3(0,.93f,-.265f));
+            MenuSeatAnchor(data,root,"MenuSeatLeftFoot",new Vector3(-.16f,0,.70f));
+            MenuSeatAnchor(data,root,"MenuSeatRightFoot",new Vector3(.16f,0,.70f));
+            for(int i=0;i<MenuMosquitoPathPositions.Length;i++){
+                var point=Anchor(data.PresentationAnchors,"MenuMosquitoPath_"+i.ToString("00"),MenuMosquitoPathPositions[i]);
+                point.localRotation=Quaternion.LookRotation(MenuMosquitoPathPositions[(i+1)%MenuMosquitoPathPositions.Length]-MenuMosquitoPathPositions[i]);
+            }
+            Anchor(data.PresentationAnchors,"MenuWarmLight",new Vector3(4.60f,1.75f,4.90f));
+            Anchor(data.PresentationAnchors,"MenuFillLight",new Vector3(2.10f,2.15f,4.20f));
+        }
+
+        static void MenuSeatAnchor(EnvironmentMapDefinition data,Transform root,string name,Vector3 actorLocal)
+        {
+            var point=Anchor(data.PresentationAnchors,name,data.PresentationAnchors.InverseTransformPoint(root.TransformPoint(actorLocal)));
+            point.rotation=root.rotation;
         }
 
         static void CheckLobbyDressing(GameObject lobby,EnvironmentMapDefinition data)
@@ -134,6 +168,7 @@ namespace LetMeSleep.Content.Editor
             foreach(var renderer in F(lobby,"Furnishings").GetComponentsInChildren<Renderer>())
                 Need(!renderer.bounds.Intersects(protectedRoute),"Lobby furnishing visually intrudes into circulation: "+Hierarchy(renderer.transform));
             CheckLobbyDomesticSupport(lobby);
+            CheckLobbyLivingMenuAnchors(lobby,data);
             foreach(string name in new[]{"MainMenuCamera","MainMenuLookAt","HumanMenuStage","MosquitoMenuStage"})
                 Need(data.PresentationAnchors.Find(name)!=null,"Missing menu presentation anchor: "+name);
             var camera=data.PresentationAnchors.Find("MainMenuCamera");var target=data.PresentationAnchors.Find("MainMenuLookAt");
@@ -144,6 +179,57 @@ namespace LetMeSleep.Content.Editor
             CheckSpawns(lobby,new[]{human},.25f,1.72f);CheckSpawns(lobby,new[]{mosquito},.055f,.11f,true);
             foreach(var spawn in data.LobbySpawnPoints)
                 Need(Vector2.Distance(new Vector2(spawn.localPosition.x,spawn.localPosition.z),new Vector2(human.localPosition.x,human.localPosition.z))>.8f,"Menu stage overlaps a lobby spawn");
+        }
+
+        static void CheckLobbyLivingMenuAnchors(GameObject lobby,EnvironmentMapDefinition data)
+        {
+            var anchors=data.PresentationAnchors;
+            foreach(string name in new[]{"HumanMenuSeatedRoot","MenuSeatSurface","MenuSeatFrontEdge","MenuSeatBackSupport","MenuSeatLeftFoot","MenuSeatRightFoot","MenuWarmLight","MenuFillLight"})
+                Need(anchors.Find(name)!=null,"Missing living menu anchor: "+name);
+            var root=anchors.Find("HumanMenuSeatedRoot");var contact=anchors.Find("MenuSeatSurface");
+            Need(Vector3.Distance(root.localPosition,MenuSeatedRootPosition)<.0001f&&Quaternion.Angle(root.localRotation,Quaternion.Euler(0,180,0))<.01f,"Seated menu clip frame changed");
+            var sofa=F(lobby,"Lobby_BackSofa_3p3");
+            var seat=sofa.GetComponentsInChildren<MeshFilter>().Single(f=>f.name.Contains("Sofa_Seat"));
+            var vertices=seat.sharedMesh.vertices.Select(seat.transform.TransformPoint).ToArray();var indices=seat.sharedMesh.triangles;
+            // Sample the render mesh, not only the broad collision proxy. Stay inside bevels.
+            foreach(float x in new[]{-.12f,0,.12f})foreach(float z in new[]{-.10f,-.05f,0}){
+                var p=contact.TransformPoint(new Vector3(x,0,z));
+                Need(Mathf.Abs(QualitySurfaceHeight(vertices,indices,p.x,p.z)-p.y)<.001f,"Menu pelvis contact is not on the actual seat surface");
+            }
+            var back=ColliderBounds(sofa.GetComponentsInChildren<Collider>().Single(c=>c.name.Contains("Sofa_Back")));
+            Need(Mathf.Abs(anchors.Find("MenuSeatBackSupport").position.z-back.min.z)<.001f,"Menu back support differs from sofa front");
+            var seatingArea=new Bounds(contact.position+Vector3.up*.13f,new Vector3(.60f,.25f,.40f));
+            var domestic=F(lobby,"Lobby_Domestic");
+            foreach(string prefix in new[]{"Sofa_Throw_","Sofa_Cushion_"})
+                Need(!F(domestic.gameObject,prefix+"3p3").GetComponent<Renderer>().bounds.Intersects(seatingArea),"Menu seating contact obstructed by decorative textile");
+            foreach(string name in new[]{"MenuSeatLeftFoot","MenuSeatRightFoot"}){
+                var foot=anchors.Find(name);
+                Need(Mathf.Abs(foot.localPosition.y)<.0001f&&foot.localPosition.z-.18f>3.8f,"Menu slipper support moved off floor or into circulation");
+                var footprint=new Bounds(foot.position+Vector3.up*.045f,new Vector3(.24f,.08f,.36f));
+                foreach(var c in lobby.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger))
+                    Need(!ColliderBounds(c).Intersects(footprint),"Menu slipper footprint obstructed: "+Hierarchy(c.transform));
+            }
+            foreach(var spawn in data.LobbySpawnPoints)
+                Need(Vector2.Distance(new Vector2(root.localPosition.x,root.localPosition.z),new Vector2(spawn.localPosition.x,spawn.localPosition.z))>.8f,"Seated menu anchor overlaps lobby spawn");
+            for(int i=0;i<MenuMosquitoPathPositions.Length;i++){
+                var point=anchors.Find("MenuMosquitoPath_"+i.ToString("00"));
+                Need(point!=null&&Vector3.Distance(point.localPosition,MenuMosquitoPathPositions[i])<.0001f,"Menu mosquito waypoint missing or moved");
+                // Presentation uses midpoint -> control point -> midpoint quadratic arcs.
+                // The expanded triangle AABB conservatively contains each entire arc.
+                var previous=anchors.Find("MenuMosquitoPath_"+((i+MenuMosquitoPathPositions.Length-1)%MenuMosquitoPathPositions.Length).ToString("00"));
+                var next=anchors.Find("MenuMosquitoPath_"+((i+1)%MenuMosquitoPathPositions.Length).ToString("00"));
+                Need(previous!=null&&next!=null,"Menu mosquito route is incomplete");
+                var envelope=new Bounds(point.position,Vector3.zero);
+                envelope.Encapsulate((previous.position+point.position)*.5f);
+                envelope.Encapsulate((point.position+next.position)*.5f);
+                envelope.Expand(.36f);
+                foreach(var c in lobby.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger))
+                    Need(!ColliderBounds(c).Intersects(envelope),"Menu mosquito waypoint intersects solid environment: "+Hierarchy(c.transform));
+                foreach(var r in F(lobby,"Furnishings").GetComponentsInChildren<Renderer>())
+                    Need(!r.bounds.Intersects(envelope),"Menu mosquito waypoint intersects visible environment: "+Hierarchy(r.transform));
+            }
+            // Static room clearance assumes mosquito envelope radius <= .18m and the
+            // agreed quadratic curve. Actors, swatter sweep and framing need native review.
         }
 
         static void CheckLobbyDomesticSupport(GameObject lobby)
