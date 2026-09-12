@@ -1,85 +1,46 @@
-# Let me sleep — 0.9.3 para Windows
+# Let me sleep — candidata Unity 0.9.4-alfa
 
-[Descargar inicio con actualización automática](https://github.com/Sauri0/LetMeSleep/releases/download/launcher-v1.0.1/Let-me-sleep-Launcher.exe).
-Guardá **Let-me-sleep-Launcher.exe** y usalo siempre para abrir el juego. Busca la versión publicada más reciente, la descarga si hace falta y abre el juego. No requiere cuenta de GitHub, instalación de Godot ni permisos de administrador. La primera vez descarga el juego completo.
+[Descargar launcher 1.1.0](https://github.com/Sauri0/LetMeSleep/releases/download/v0.9.4-alfa/Let-me-sleep-Launcher.exe) · [ZIP y notas de la candidata](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.4-alfa)
 
-Si todavía no está instalado, primero elegís la carpeta con **Elegir carpeta…** y confirmás **Instalar y jugar**. Guarda esa ubicación para las próximas actualizaciones. No necesitás descargar el ZIP principal.
+Juego cómico de humanos contra mosquitos para Windows. Esta es la primera candidata de la migración a Unity: Sangre, entrenamiento con bots para ambos roles, casa fija de dos pisos con patio y sala de espera 3D independiente.
 
-Conserva preferencias y personalización. Si falla la descarga, permite reintentar o abrir la instalación anterior; para jugar online todos necesitan la misma versión. Incluye las versiones de prueba públicas numeradas. El acceso antiguo directo a **Let-me-sleep.exe** no busca actualizaciones: reemplazalo por un acceso al launcher. [Detalles y verificación](launcher/README.md).
+## Instalar
 
-[ZIP manual 0.9.3](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.3) para quien prefiera administrar las descargas.
+1. Descargá **Let-me-sleep-Launcher.exe** del enlace anterior.
+2. Elegí dónde instalar y pulsá **Instalar y jugar**. No necesitás Unity ni una cuenta de GitHub.
+3. Usá ese launcher para abrir el juego y recibir las próximas etapas.
 
-1. **Crear sala online**: escribí tu nombre y confirmá.
-2. **Copiar código**: mandáselo a tus amigos sin cerrar la sala.
-3. Tus amigos eligen **Unirme con código → Pegar → Unirme**.
+Hace falta el launcher **1.1.0** de esta entrega para reconocer alfa/beta/omega/delta/gamma. Los launchers 1.0.x siguen disponibles para la versión anterior. El cambio de motor conserva la versión Godot publicada como descarga histórica; no se promete importar todavía todo su catálogo de ajustes y cosméticos.
 
-Todos marcan **Estoy listo** y el anfitrión pulsa **Empezar**. Se conserva
-**Entrenamiento con bots** para probar solo. Las opciones y lanzadores LAN
-fueron retirados. Todos necesitan 0.9.3; la invitación comienza por LMS1-.
+## Jugar con amigos
 
-Esta corrección se verifica sin abrir ventanas del juego: contratos dirigidos
-más creación/cierre real de sala EOS desde el ejecutable. No se repitió la
-validación gráfica ni se comprobó una partida entre dos casas. Detalle en
-[PRUEBAS.md](distribution/PRUEBAS.md).
+1. Todos instalan **0.9.4-alfa**.
+2. Una persona elige **Jugar online → Crear sala**, escribe su nombre y comparte el código.
+3. Los amigos eligen **Unirme con código**, escriben su nombre y pegan el código.
+4. Todos marcan **Listo**. El anfitrión configura los ajustes y pulsa **Iniciar ronda**.
 
-**[Versiones publicadas y descargas](https://github.com/Sauri0/LetMeSleep/releases)**
+El anfitrión ejecuta la partida dentro del juego y debe permanecer conectado. No hay consola de servidor, IP, puertos ni opciones LAN en este flujo. Al salir el anfitrión se cierra la sala.
 
-Abrí **Let-me-sleep-Launcher.exe**. Elegí **Entrenamiento** para jugar contra bots. La guía **LEEME.html** acompaña al juego.
+**Online pendiente de aprobación:** crear/cerrar una sala EOS fue probado en Windows. Todavía falta verificar unión/transporte de dos identidades independientes, varias rondas y conexión entre dos casas. Publicar esta candidata permite esas pruebas; no certifica que el online completo ya esté aprobado.
 
-Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercera y tres modos. Cada ronda genera una casa de dos o tres pisos, con puertas interactivas, tareas y herramientas. La casa v2 limita el total a 22 habitaciones y reserva pasillos a los lados de las escaleras. El HUD es compacto; F1 abre una guía que permanece plegada durante el juego. La cámara permite seguir girando al mirar el cuerpo.
+## Probar solo y controles
 
-La fuente integra **Epic Online Services**: Crear sala ejecuta el servidor dentro del juego y produce una invitación **LMS1-**. Los amigos pegan ese código, sin indicar IP ni instalar otra aplicación. Se probaron creación, autenticación y cierre reales del anfitrión; **la partida entre dos identidades y redes independientes sigue pendiente de validar**.
+Elegí **Entrenamiento**, humano o mosquito, y **Empezar entrenamiento**. Alfa ofrece únicamente Sangre; otros modos no aparecen como terminados.
 
-## Jugar
+- Humano: WASD y ratón; Espacio para saltar, Ctrl para agacharse, Shift para correr, clic izquierdo para golpear, F para interactuar/recoger y G para soltar herramienta.
+- Mosquito: W avanza hacia donde mirás y al soltar frena; F alterna posado; mantené E cerca del cuerpo para picar y volvé a pulsar E para desprenderte. Rueda ajusta distancia de cámara.
+- Escape abre o cierra el menú contextual. Ajustes permite sensibilidad, calidad, límite de FPS y sincronización; FPS sin límite por defecto.
+- Personalizar está en el menú principal: colores base de humano/mosquito, giro, zoom y vistas. El humano inicial lleva pijama, pantuflas y gorro nocturno.
 
-- **Práctica:** elegí humano o mosquito y uno de los tres modos. Los bots se mueven, atacan, pican, completan tareas y ayudan a sus compañeros aturdidos.
-- **Crear sala:** un botón conecta con Epic e inicia la sala dentro del juego. No hace falta abrir otra consola ni configurar un puerto.
-- **Invitar:** copiá la invitación LMS1- desde la sala; tus amigos la pegan en **UNIRME CON INVITACIÓN**. Todos deben usar la misma versión. La sala termina si sale el anfitrión.
-- **Equipos:** el anfitrión elige entre 1 y 5 humanos exactos; el resto son mosquitos, con un máximo de 12 y 16 jugadores totales. 1v1 es válido. Los roles se sortean en cada ronda.
+## Estado y código
 
-## Controles y modos
+Compilación Unity **6000.3.24f1**, Windows x64, commit fuente `35c2af4b168f5b95943f09fbb2c556924dd7b2cf`. El ZIP incluye `BUILD.json` con hashes individuales y un SHA-256 externo. Es un **Development Build**: conserva símbolos de diagnóstico managed/Burst.
 
-| Personaje | Controles iniciales |
-|---|---|
-| Humano | WASD y ratón; Shift correr, Espacio saltar, Ctrl agacharse; mirar hacia abajo para inspeccionar el cuerpo y clic para golpear donde apuntás. Q es otra tecla para la misma palmada manual. R recoge, G suelta; mantener clic derecho carga el diario o la pantufla y soltar lanza. E abre/cierra una puerta cercana y E mantenida hace tareas. |
-| Mosquito | W avanza hacia la mira en 3D; soltar frena. A/S/D relativo, Espacio/Ctrl altura auxiliar. F permite posarse o despegar; WASD recorre pisos, paredes y techos al posarse. E mantenida concentra antes de picar; una nueva pulsación desprende. E mantenida cerca de un compañero caído ayuda a recuperarlo. |
+Comprobado: 61 tests EditMode, dos PlayMode, entrenamiento Windows de ambos roles, retorno al menú y creación/cierre de sala EOS. El launcher descargó e instaló la candidata pública y no reinstaló en su segunda ejecución.
 
-**B** abre los gestos humanos y **V** mantenida transmite voz a jugadores cercanos.
-Las teclas se pueden cambiar en ajustes. Elegí allí la entrada de micrófono,
-el silencio propio y los controles por interlocutor. Los mosquitos tienen un
-tono más agudo sin hablar más rápido; los humanos los oyen a menor volumen y
-distancia. Las puertas y el recorrido entre habitaciones afectan la escucha.
+Pendientes: conexión entre jugadores/redes independientes, recorrido manual completo, aprobación visual y balance, medición en GTX 1660 Ti. Los datos cortos obtenidos en RTX 3060 Ti no certifican otros equipos ni una partida completa.
 
-La defensa no selecciona automáticamente zonas. La cámara permite inspeccionar pecho, abdomen, antebrazos y muslos; las marcas y golpes siguen la misma pose física. Con varios humanos pueden aparecer zonas traseras que requieren ayuda de un compañero. Cada mosquito ve únicamente su propia marca. Al desprenderse recibe otra y conserva su calendario individual de rotación.
-
-| Modo | Regla |
-|---|---|
-| Recolección de sangre | Mosquitos ganan al alcanzar la cuota compartida; humanos al agotar el tiempo. Los golpes aturden durante 35 segundos. La sangre acumulada se conserva. |
-| Supervivencia | Un mosquito vivo al final gana para su equipo. Los humanos ganan si eliminan a todos antes. Una vida, eliminación definitiva. |
-| Tareas | Los humanos cumplen la meta colectiva al final de la ronda. Fallar reduce solamente el plazo de futuras tareas del humano que falló. Los mosquitos quedan aturdidos 35 segundos al recibir un golpe. |
-
-En Sangre y Tareas, el mosquito cae al piso y recupera el control en ese lugar. Otro mosquito puede mantener **E** cerca, mirando al caído y sin obstáculos, para acelerar el tiempo a **4×**: ayudar durante todo el período lo reduce a unos **8,75 segundos**. Varios ayudantes no suman velocidad. Los golpes posteriores no reinician el contador y que todos estén aturdidos no termina la ronda.
-
-Valores iniciales de prototipo: ronda 120 s, cuota 12, rotación 14 s. Extracción 0,8 unidades/s por mosquito, tope agregado de 1 unidad/s y 1 s de preparación. Tareas cada 36 s, plazo 30 s, trabajo 3 s y piso 24 s; se reservan 21 s de traslado. No se asignan encargos que no puedan caber en el tiempo restante. La meta automática usa dos tercios de las oportunidades, redondeados hacia arriba. El balance requiere partidas humanas.
-
-## Interfaz y aspecto
-
-Se eligieron el humano A compacto, el mosquito B alargado y el acabado liso de paredes y suelo. Se conservan paletas por habitación, juntas, muebles y materiales propios de cada objeto. Seis caras con diez controles faciales acompañan los estados del personaje. La piel conserva su color original y las superficies visibles comparten postura con picaduras e impactos.
-
-El HUD deja libre el centro y muestra indicaciones según la acción. **F1** abre y cierra la guía; **Esc** abre la pausa y los ajustes; la ronda sigue mientras el menú está abierto. **TU PINTA** tiene una vista previa 3D con color, accesorio, cara, pelo o antenas, ropa o abdomen, calzado y acento separados para cada rol. Las opciones se eligen con tarjetas y muestras de color. Los perfiles nuevos usan pijama, pantuflas y gorro de noche; se conservan las elecciones guardadas en versiones anteriores. Los cosméticos no cambian estadísticas ni colisiones.
-
-Las puertas tienen bisagras, bloqueo seguro y sonido espacial; los bots las usan y los mosquitos caben bajo ellas. La mira muestra una oportunidad discreta basada en el mismo recorrido manual y línea de visión del golpe. Ajustes permite resolución real hasta 4K, VSync, FPS, sombras y reflejos. La prueba actual de 16 participantes a 1080p todavía no alcanza una fluidez sostenida de 60 FPS; la optimización sigue pendiente.
-
-La sala de espera es un patio independiente. El anfitrión comparte la semilla y la huella de la casa antes de empezar, para que todos jueguen en la misma distribución. Hay tareas y herramientas en todos los pisos. Una desconexión interrumpe la ronda sin ganador. Al salir el anfitrión se cierra su sala; no existe migración de anfitrión.
-
-## Proyecto y verificación
-
-Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y protocolo **11**; las versiones anteriores son incompatibles. El proyecto está en **game/**. **work/setup-tools.ps1** prepara herramientas con sumas oficiales; **work/build.ps1** importa, prueba y exporta, y **work/package.ps1** empaqueta sin sobrescribir versiones publicadas. La voz usa la extensión Opus incluida; sus fuentes, construcción reproducible y avisos están en **native/voice/** y **game/addons/lms_opus/licenses/**.
-
-```powershell
-& ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/stun_help_test.gd
-```
-
-La documentación de **distribution/** acompaña al paquete que se está preparando; **ENTREGA-0.7.md** es histórica. Consultá [el cierre de la descarga publicada](work/CIERRE-0.9.0-rc.1.md) y [el plan de las próximas entregas](work/RELEASE-PLAN-0.9.1-0.9.2.md). Las pruebas entre procesos de una misma PC no certifican Internet entre casas, rendimiento mínimo ni balance humano.
-
-Modelos originales con fuentes Blender y exportaciones GLB en `art_source/`. Composición musical y efectos originales; las notas instrumentales acústicas de VSCO 2 Community Edition son CC0 y tienen créditos y licencia incluidos. Los temas se funden entre menú, personalización y partida; Música, Efectos, Ambiente e Interfaz tienen volumen separado además del volumen general. Bangers y Atkinson Hyperlegible se distribuyen bajo SIL Open Font License; sus avisos acompañan al paquete. Las versiones históricas se conservan en las Releases.
+- Proyecto activo: [unity](unity/).
+- [Plan por entregas](docs/unity/PLAN-UNITY-0.9.4.md): alfa → beta → omega → delta → gamma. Beta espera prueba y aprobación de alfa.
+- [Validaciones pendientes](docs/unity/PENDING-EXTERNAL.md) y [evidencia QA](docs/unity/qa/README.md).
+- [Versión Godot 0.9.3 anterior](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.3), conservada junto a su historial y fuentes en `game/`.

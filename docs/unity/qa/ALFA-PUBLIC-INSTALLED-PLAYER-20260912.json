@@ -1,0 +1,18 @@
+{
+    "version": "0.9.4-alfa",
+    "unity": "6000.3.24f1",
+    "gpu": "NVIDIA GeForce RTX 3060 Ti",
+    "utc": "2026-09-12T11:58:15.8282966Z",
+    "humanRuntime": true,
+    "mosquitoRuntime": true,
+    "humanStationary": true,
+    "returnedToMenu": true,
+    "onlineRoomCreated": true,
+    "onlineRoomLeft": true,
+    "width": 1920,
+    "height": 1080,
+    "frames": 71384,
+    "medianFrameMs": 0.2525014281272888,
+    "p95FrameMs": 0.44699546694755556,
+    "failure": ""
+}

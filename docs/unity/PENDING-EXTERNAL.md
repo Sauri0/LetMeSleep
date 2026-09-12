@@ -10,4 +10,4 @@ Branko pidió completar el ciclo mientras duerme y apartar dudas no resolubles y
 | DEC01 | Tareas tres vidas + caídas | Tres vidas y desmayo reconfirmados. Balance de duración y regla exacta del rescate se fijarán como decisión de implementación explícita y configurable, luego se pulirán online. |
 | DEC02 | Mapas adicionales | Resuelto por delegación: mínimo cinco; casa/patio, isla, pantano, cabaña montaña, granja/granero. No pendiente de nombres anteriores. |
 
-Mantener estados con evidencia, fecha y versión. Ningún cierre de release puede afirmar cobertura de EXT01/EXT02/EXT03 sin la correspondiente prueba. Continuar etapas en orden técnico conforme a la autorización más reciente, apartando estas validaciones.
+Mantener estados con evidencia, fecha y versión. Ningún cierre de release puede afirmar cobertura de EXT01/EXT02/EXT03 sin la correspondiente prueba. La candidata alfa puede publicarse con estas validaciones pendientes. El cierre de alfa exige dos equipos/redes y aprobación de Branko; no iniciar beta automáticamente sin cumplir esos gates.

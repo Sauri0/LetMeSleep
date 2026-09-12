@@ -43,3 +43,15 @@ Spatial contract: Unity metres, Y-up/Z-forward. Human capsule radius .25, height
 - Candidate source now includes bounded pre-Begin timeout, live menu models, PC quality default, isolated opt-in development-player probe, and clean-commit build/ZIP provenance. Preparing first complete Windows candidate; no Unity release is published at this checkpoint.
 - Resident graphics editor PID18620 is Director-owned. Team source freeze for packaging; M1 routing remains unavailable.
 - Alfa can be published as a candidate. The plan explicitly requires friends/WAN and Branko visual/play acceptance before beta; these are unresolved external gates, not automatic approvals from elapsed time. No later stage started.
+
+## Public candidate 2026-09-12
+
+- Build source: 35c2af4b168f5b95943f09fbb2c556924dd7b2cf. Unity Windows build Succeeded, zero errors, clean source before and after build; 230,513,038 output bytes.
+- GitHub pre-release: https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.4-alfa . Main and migration branch contain this source. The release tag is tied to the build commit; subsequent documentation commits do not change the package.
+- ZIP: 94,118,628 bytes; SHA256 e94038057ef08b23b91ed7246983c4a96f0dfaf8b651906f3fb7d970f8ab4e35. Launcher1.1.0: 38410f29b7436d14c986dcafdd49fae7629282eaf3d8e43134862f40d94ad90a, downloaded from GitHub and matched.
+- Public updater installation passed checksum/extraction/manifest, repeated-start reuse and persisted activation in a new path containing spaces. Source/player and public-installed-player runtime probes passed both roles, stationary human, return to menu and EOS create/leave. No two-peer or WAN claim.
+- Development package intentionally retains 123 managed/Burst PDB files (13,145,640 uncompressed bytes). These are diagnostic symbols; QA found no user credentials outside the reviewed redistributable EOS client config. Package hash remains immutable.
+- Initial package probe launched hidden produced black captures and extremely short application-loop deltas. Those captures/timing numbers are invalid render/performance evidence. Visible execution is checked separately. None of these short probes certifies sustained rendering FPS or GTX1660Ti performance.
+- Scope and external gates remain unchanged: candidate only; WAN/two identities, complete manual rounds, visual/fun approval and target-hardware profile pending. No beta/omega/delta/gamma execution or completion claim.
+- Public installed executable also ran with a visible window after the hidden-render limitation was identified. All six runtime/online-host booleans passed; human render at1920x1080 inspected. Visible probe receipt ALFA-PUBLIC-VISIBLE-PLAYER-20260912.json. Timings remain short application-loop samples, not a sustained frame-rate benchmark. Player processes exited cleanly.
+- After publishing and verifying the visible installed player, Director closed its resident Unity editor (PID18620). No game playtest process remains. Resume with one editor only after coordinating the slot; pending work is in the acceptance report and external gates.
