@@ -43,7 +43,9 @@ namespace LetMeSleep.Presentation
             moon.shadowStrength = 0.72f;
             moon.bounceIntensity = 0f;
             moon.cullingMask &= ~(1 << PreviewLayer);
+#if UNITY_EDITOR
             moon.lightmapBakeType = LightmapBakeType.Realtime;
+#endif
             RenderSettings.sun = moon;
             if (nightSkybox != null)
                 RenderSettings.skybox = nightSkybox;
@@ -133,7 +135,9 @@ namespace LetMeSleep.Presentation
             localLight.range = profile.Range;
             localLight.bounceIntensity = 0f;
             localLight.renderMode = LightRenderMode.Auto;
+#if UNITY_EDITOR
             localLight.lightmapBakeType = LightmapBakeType.Realtime;
+#endif
             localLight.shadows = castsShadows ? LightShadows.Soft : LightShadows.None;
             localLight.shadowStrength = 0.68f;
             localLight.shadowBias = 0.075f;
