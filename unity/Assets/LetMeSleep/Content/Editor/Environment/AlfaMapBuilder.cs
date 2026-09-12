@@ -79,6 +79,7 @@ namespace LetMeSleep.Content.Editor
                 AddHouseAnchors(house,data,plan);
                 AddToolPickups(data);
                 AddHouseDressing(house,data,plan);
+                AlfaQualityExterior.Build(house);
                 BindGameplay(house,10000,1);
                 CheckSpawns(house,data.HumanSpawnPoints,.25f,1.72f);
                 CheckSpawns(house,data.MosquitoSpawnPoints,.055f,.11f,true);
@@ -383,6 +384,9 @@ namespace LetMeSleep.Content.Editor
                 "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityLiving.cs",
                 "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs","unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs",
                 "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs","unity/Assets/LetMeSleep/Gameplay/Contracts.cs"};
+            if(mapId=="house-patio-v1") files=files.Concat(new[]{
+                "art_source/unity/environments/quality_exterior/generated_exterior.json",
+                "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityExterior.cs"}).ToArray();
             var payload=new System.Text.StringBuilder(mapId+"\n");
             using(var sha=System.Security.Cryptography.SHA256.Create()){
                 foreach(string file in files){string path=Path.Combine(repository,file);byte[] bytes=file.EndsWith(".fbx",StringComparison.Ordinal)?File.ReadAllBytes(path):System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(path).Replace("\r\n","\n").Replace("\r","\n"));
