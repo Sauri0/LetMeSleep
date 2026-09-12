@@ -41,6 +41,9 @@ namespace LetMeSleep.UI
             if (output != null)
             {
                 output.texture = setup?.Texture;
+                var aspect = output.GetComponent<UnityEngine.UI.AspectRatioFitter>();
+                if (aspect != null && setup?.Texture != null && setup.Texture.height > 0)
+                    aspect.aspectRatio = (float)setup.Texture.width / setup.Texture.height;
             }
             if (setup == null || !setup.IsUsable)
             {

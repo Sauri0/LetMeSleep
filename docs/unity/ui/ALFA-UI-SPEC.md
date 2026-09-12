@@ -70,7 +70,7 @@ Los estados nunca dependen sólo del color. `LISTO` y `NO LISTO` incluyen texto 
 
 | Estilo | Tamaño | Fuente | Uso |
 |---|---:|---|---|
-| Logo | 88 px | Bangers | `LET ME SLEEP`, máximo dos líneas. |
+| Logo | 74 px | Bangers | `LET ME SLEEP`, máximo dos líneas. |
 | H1 | 48 px | Atkinson Bold | Título de pantalla. |
 | H2 | 32 px | Atkinson Bold | Título de panel. |
 | Botón | 24 px | Atkinson Bold | Verbos breves. |
@@ -133,9 +133,9 @@ El diagrama complementario está en [ALFA-UI-FLOWS.svg](./ALFA-UI-FLOWS.svg).
 Composición a 16:9:
 
 - La escena 3D nocturna ocupa todo el fondo y conserva visible el arte actual bajo un tinte azul tinta suave.
-- Izquierda: riel compacto de 500 px a 1080p con logotipo, subtítulo, acciones y versión dinámica del build.
+- Izquierda: riel compacto de 480 px a 1080p con logotipo, subtítulo, acciones y versión dinámica del build.
 - Centro y derecha: ventana libre para personajes o acción ambiental no interactiva.
-- El riel conserva un margen de 54 px a 1080p y se escala con el `CanvasScaler`; no tapa por completo la escena.
+- El riel conserva un margen de 52 px a 1080p y se escala con el `CanvasScaler`; no tapa por completo la escena.
 
 Orden y copy exacto:
 
@@ -264,7 +264,7 @@ Alfa contiene únicamente:
 
 Composición:
 
-- Centro/izquierda: `RawImage` 3D de al menos 720×720 a 1080p, con fondo `Night800` y suelo suave.
+- Centro/izquierda: `RawImage` 3D cuadrado de hasta 712×712 a 1080p, con fondo `Night800` y suelo suave.
 - Derecha: pestañas `HUMANO` y `MOSQUITO`, categorías alfa y muestras de color con nombre accesible.
 - Pie: `GUARDAR`, `DESHACER CAMBIOS` y `← VOLVER`.
 
@@ -272,10 +272,10 @@ Controles del visor:
 
 - Arrastre horizontal: giro orbital del modelo.
 - Rueda: zoom limitado; nunca atraviesa el modelo.
-- Botones `FRENTE`, `PERFIL`, `ESPALDA` y `CENTRAR VISTA` para teclado/mando.
+- Botones `FRENTE`, `PERFIL`, `ESPALDA` y `CENTRAR` para teclado/mando.
 - Teclas de navegación recorren primero pestañas, luego colores, vistas y acciones.
 
-El frente del prefab mira a `+Z`; el visor coloca la cámara sobre ese eje y calcula centro, distancia y zoom desde los bounds del modelo. Cambiar entre humano y mosquito no altera la escala ni los colliders del prefab.
+El frente del prefab mira a `+Z`; el visor coloca la cámara sobre ese eje y calcula centro, distancia y zoom desde los bounds del modelo. El `RawImage` conserva la relación de aspecto de la `RenderTexture` para no deformar el personaje. Cambiar entre humano y mosquito no altera la escala ni los colliders del prefab.
 
 El color seleccionado usa borde, prefijo ASCII `>` y nombre; no sólo tono. `GUARDAR` confirma `Personalización guardada.` y sólo se habilita si existe un cambio. `Escape` con cambios abre `¿Salir sin guardar?`, con `SEGUIR EDITANDO` enfocado. No hay aleatorio, presets, pelo, rostro, accesorios, ropa adicional ni emotes en alfa.
 

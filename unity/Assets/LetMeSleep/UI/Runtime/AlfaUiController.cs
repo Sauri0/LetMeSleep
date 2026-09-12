@@ -443,13 +443,13 @@ namespace LetMeSleep.UI
             screens[AlfaUiScreen.MainMenu] = view;
 
             var panel = factory.Panel(view.transform, "MenuRail",
-                new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.91f), 500f, 920f);
-            Anchor(panel, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(54f, 0f), new Vector2(500f, 920f));
+                new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.91f), 480f, 880f);
+            Anchor(panel, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(52f, 0f), new Vector2(480f, 880f));
             panel.GetComponent<UnityEngine.UI.Outline>().effectColor = new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.72f);
-            var menu = factory.Vertical(panel, "Content", 13f, TextAnchor.MiddleLeft);
-            AlfaUiFactory.Fill(menu, 38f, 38f, 34f, 30f);
+            var menu = factory.Vertical(panel, "Content", 12f, TextAnchor.MiddleLeft);
+            AlfaUiFactory.Fill(menu, 36f, 36f, 30f, 28f);
             factory.Text(menu, "Eyebrow", "LA NOCHE RECIÉN EMPIEZA", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
-            factory.LogoText(menu, "Logo", "LET ME\nSLEEP", 82f, AlfaUiTheme.Sheet100);
+            factory.LogoText(menu, "Logo", "LET ME\nSLEEP", 74f, AlfaUiTheme.Sheet100);
             factory.Text(menu, "Subtitle", "HUMANOS CONTRA MOSQUITOS", 22f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
             factory.Divider(menu, "BrandDivider", new Color(AlfaUiTheme.Lamp400.r, AlfaUiTheme.Lamp400.g, AlfaUiTheme.Lamp400.b, 0.9f), 3f);
             factory.Text(menu, "Question", "ELEGÍ CÓMO JUGAR", 20f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
@@ -638,10 +638,17 @@ namespace LetMeSleep.UI
             AlfaUiFactory.Fill(columns);
             var previewPanel = factory.Panel(columns, "PreviewPanel", AlfaUiTheme.Night700, 900f, 900f);
             previewPanel.gameObject.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1f;
-            var rawNode = AlfaUiFactory.Node("CharacterPreview", previewPanel, typeof(UnityEngine.UI.RawImage), typeof(CharacterPreviewOrbit));
-            AlfaUiFactory.Fill(rawNode.GetComponent<RectTransform>(), 18f, 18f, 92f, 96f);
+            var previewViewport = AlfaUiFactory.Node("PreviewViewport", previewPanel);
+            AlfaUiFactory.Fill(previewViewport.GetComponent<RectTransform>(), 18f, 18f, 92f, 96f);
+            var rawNode = AlfaUiFactory.Node("CharacterPreview", previewViewport.transform, typeof(UnityEngine.UI.RawImage),
+                typeof(UnityEngine.UI.AspectRatioFitter), typeof(CharacterPreviewOrbit));
+            AlfaUiFactory.Fill(rawNode.GetComponent<RectTransform>());
             var raw = rawNode.GetComponent<UnityEngine.UI.RawImage>();
             raw.color = Color.white;
+            var previewAspect = rawNode.GetComponent<UnityEngine.UI.AspectRatioFitter>();
+            previewAspect.aspectMode = UnityEngine.UI.AspectRatioFitter.AspectMode.FitInParent;
+            previewAspect.aspectRatio = dependencies.Preview?.Texture != null && dependencies.Preview.Texture.height > 0 ?
+                (float)dependencies.Preview.Texture.width / dependencies.Preview.Texture.height : 1f;
             previewOrbit = rawNode.GetComponent<CharacterPreviewOrbit>();
             previewOrbit.Initialize(raw, dependencies.Preview);
             var unavailable = factory.Text(previewPanel, "PreviewUnavailable", "El visor 3D se conecta al personaje del juego.", AlfaUiTheme.BodySize,
@@ -653,7 +660,7 @@ namespace LetMeSleep.UI
             factory.Button(angles, "PreviewFrontButton", "FRENTE", () => previewOrbit.SetAngle(PreviewAngle.Front), false, false, 48f);
             factory.Button(angles, "PreviewSideButton", "PERFIL", () => previewOrbit.SetAngle(PreviewAngle.Side), false, false, 48f);
             factory.Button(angles, "PreviewBackButton", "ESPALDA", () => previewOrbit.SetAngle(PreviewAngle.Back), false, false, 48f);
-            factory.Button(angles, "PreviewResetButton", "CENTRAR VISTA", () => previewOrbit.ResetView(), false, false, 48f);
+            factory.Button(angles, "PreviewResetButton", "CENTRAR", () => previewOrbit.ResetView(), false, false, 48f);
 
             var optionsPanel = factory.Panel(columns, "OptionsPanel", AlfaUiTheme.Night700, 640f, 900f);
             var content = factory.Vertical(optionsPanel, "Content", 12f);
