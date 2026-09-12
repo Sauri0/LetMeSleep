@@ -21,7 +21,10 @@ namespace LetMeSleep.UI
         Copy,
         Explore,
         Back,
-        Crosshair
+        Crosshair,
+        Audio,
+        Video,
+        Controls
     }
 
     [DisallowMultipleComponent]
@@ -30,6 +33,7 @@ namespace LetMeSleep.UI
         [SerializeField] private AlfaUiIconKind kind;
         [SerializeField] private Color tint = Color.white;
         private readonly List<Image> strokes = new List<Image>();
+        private static readonly Dictionary<AlfaUiIconKind, Sprite> sprites = new Dictionary<AlfaUiIconKind, Sprite>();
         private bool receivesRaycasts;
 
         public RectTransform rectTransform => (RectTransform)transform;
@@ -65,6 +69,18 @@ namespace LetMeSleep.UI
             }
         }
 
+        internal static Sprite GetSprite(AlfaUiIconKind kind)
+        {
+            if (!sprites.TryGetValue(kind, out var sprite))
+            {
+                var texture = Resources.Load<Texture2D>("AlfaUiIcons/" + kind);
+                sprite = texture == null ? null : Sprite.Create(texture,
+                    new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 128f);
+                sprites[kind] = sprite;
+            }
+            return sprite;
+        }
+
         private void Rebuild()
         {
             for (var i = transform.childCount - 1; i >= 0; i--)
@@ -74,6 +90,26 @@ namespace LetMeSleep.UI
                 Destroy(child);
             }
             strokes.Clear();
+
+            // Authored alpha silhouettes remain ordinary Images: preserve the
+            // rendering path verified in native captures instead of custom meshes.
+            var sprite = GetSprite(kind);
+            if (sprite != null)
+            {
+                var node = new GameObject("Pictogram", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                node.transform.SetParent(transform, false);
+                var graphic = node.GetComponent<Image>();
+                graphic.sprite = sprite;
+                graphic.color = tint;
+                graphic.raycastTarget = receivesRaycasts;
+                graphic.preserveAspect = true;
+                graphic.rectTransform.anchorMin = Vector2.zero;
+                graphic.rectTransform.anchorMax = Vector2.one;
+                graphic.rectTransform.offsetMin = Vector2.zero;
+                graphic.rectTransform.offsetMax = Vector2.zero;
+                strokes.Add(graphic);
+                return;
+            }
 
             switch (kind)
             {

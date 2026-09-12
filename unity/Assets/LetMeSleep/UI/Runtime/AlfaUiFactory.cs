@@ -63,9 +63,16 @@ namespace LetMeSleep.UI
             return node.GetComponent<RectTransform>();
         }
 
+        internal static UnityEngine.UI.Shadow PlainShadow(GameObject node)
+        {
+            foreach (var effect in node.GetComponents<UnityEngine.UI.Shadow>())
+                if (effect.GetType() == typeof(UnityEngine.UI.Shadow)) return effect;
+            return null;
+        }
+
         internal RectTransform Panel(Transform parent, string name, Color? color = null, float preferredWidth = -1f, float preferredHeight = -1f)
         {
-            var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Shadow), typeof(UnityEngine.UI.Outline), typeof(UnityEngine.UI.LayoutElement));
+            var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Outline), typeof(UnityEngine.UI.Shadow), typeof(UnityEngine.UI.LayoutElement));
             var image = node.GetComponent<UnityEngine.UI.Image>();
             image.color = color ?? AlfaUiTheme.Night700;
             image.raycastTarget = false;
@@ -74,9 +81,9 @@ namespace LetMeSleep.UI
             var outline = node.GetComponent<UnityEngine.UI.Outline>();
             outline.effectColor = new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.82f);
             outline.effectDistance = new Vector2(1.5f, -1.5f);
-            var shadow = node.GetComponent<UnityEngine.UI.Shadow>();
-            shadow.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.78f);
-            shadow.effectDistance = new Vector2(9f, -10f);
+            var shadow = PlainShadow(node);
+            shadow.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.3f);
+            shadow.effectDistance = new Vector2(0f, -3f);
             var topEdge = Node("TopEdge", node.transform, typeof(UnityEngine.UI.Image));
             var topEdgeImage = topEdge.GetComponent<UnityEngine.UI.Image>();
             topEdgeImage.color = new Color(AlfaUiTheme.Sky400.r, AlfaUiTheme.Sky400.g, AlfaUiTheme.Sky400.b, 0.34f);
@@ -166,7 +173,7 @@ namespace LetMeSleep.UI
             bool primary = false, bool destructive = false, float height = 58f, AlfaUiIconKind icon = AlfaUiIconKind.None,
             bool emitConfirm = true)
         {
-            var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button), typeof(UnityEngine.UI.LayoutElement), typeof(UnityEngine.UI.Shadow), typeof(UnityEngine.UI.Outline));
+            var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button), typeof(UnityEngine.UI.LayoutElement), typeof(UnityEngine.UI.Outline), typeof(UnityEngine.UI.Shadow));
             var image = node.GetComponent<UnityEngine.UI.Image>();
             image.sprite = dependencies.ButtonSprite;
             image.type = dependencies.ButtonSprite != null ? UnityEngine.UI.Image.Type.Sliced : UnityEngine.UI.Image.Type.Simple;
@@ -186,9 +193,9 @@ namespace LetMeSleep.UI
             var outline = node.GetComponent<UnityEngine.UI.Outline>();
             outline.effectColor = primary ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Border;
             outline.effectDistance = new Vector2(2f, -2f);
-            var shadow = node.GetComponent<UnityEngine.UI.Shadow>();
-            shadow.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.92f);
-            shadow.effectDistance = new Vector2(5f, -6f);
+            var shadow = PlainShadow(node);
+            shadow.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.35f);
+            shadow.effectDistance = new Vector2(0f, -2f);
             var layout = node.GetComponent<UnityEngine.UI.LayoutElement>();
             layout.minHeight = Mathf.Max(44f, height);
             layout.preferredHeight = height;
@@ -204,13 +211,13 @@ namespace LetMeSleep.UI
             {
                 var plate = Node("IconPlate", node.transform, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Outline));
                 var plateImage = plate.GetComponent<UnityEngine.UI.Image>();
-                plateImage.color = primary ? new Color(AlfaUiTheme.Sheet100.r, AlfaUiTheme.Sheet100.g, AlfaUiTheme.Sheet100.b, 0.28f) :
-                    new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.36f);
+                plateImage.color = primary ? new Color(AlfaUiTheme.Sheet100.r, AlfaUiTheme.Sheet100.g, AlfaUiTheme.Sheet100.b, 0.08f) :
+                    new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.12f);
                 plateImage.raycastTarget = false;
                 var plateOutline = plate.GetComponent<UnityEngine.UI.Outline>();
                 plateOutline.effectColor = primary ? new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.38f) :
                     new Color(AlfaUiTheme.Moon200.r, AlfaUiTheme.Moon200.g, AlfaUiTheme.Moon200.b, 0.22f);
-                plateOutline.effectDistance = new Vector2(1f, -1f);
+                plateOutline.enabled = false;
                 var plateRect = plate.GetComponent<RectTransform>();
                 plateRect.anchorMin = new Vector2(0f, 0.5f);
                 plateRect.anchorMax = new Vector2(0f, 0.5f);
@@ -220,7 +227,7 @@ namespace LetMeSleep.UI
 
                 var iconGraphic = Icon(plate.transform, "Icon", icon,
                     destructive ? AlfaUiTheme.Sheet100 : primary ? AlfaUiTheme.Ink900 : AlfaUiTheme.Sheet100);
-                Fill(iconGraphic.rectTransform, 8f, 8f, 8f, 8f);
+                Fill(iconGraphic.rectTransform, 3f, 3f, 3f, 3f);
             }
             var shine = Node("Shine", node.transform, typeof(UnityEngine.UI.Image));
             var shineImage = shine.GetComponent<UnityEngine.UI.Image>();
@@ -243,7 +250,7 @@ namespace LetMeSleep.UI
             titleText.fontSize = 22f;
             titleText.alignment = TextAlignmentOptions.Left;
             Fill(titleText.rectTransform, 82f, 16f, 7f, 32f);
-            var subtitleText = Text(button.transform, "Subtitle", subtitle, 13f,
+            var subtitleText = Text(button.transform, "Subtitle", subtitle, 16f,
                 destructive ? AlfaUiTheme.Sheet100 : primary ? AlfaUiTheme.Ink900 : AlfaUiTheme.Moon200,
                 TextAlignmentOptions.Left, true);
             subtitleText.characterSpacing = 0.6f;
@@ -266,7 +273,7 @@ namespace LetMeSleep.UI
             var row = Horizontal(parent, name, 12f, TextAnchor.MiddleLeft);
             row.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 48f;
             var badge = Panel(row, "Badge", new Color(color.r, color.g, color.b, 0.22f), 44f, 44f);
-            badge.GetComponent<UnityEngine.UI.Shadow>().enabled = false;
+            PlainShadow(badge.gameObject).enabled = false;
             var symbol = Icon(badge, "Symbol", icon, color);
             Fill(symbol.rectTransform, 7f, 7f, 7f, 7f);
             Text(row, "Label", label, AlfaUiTheme.H2Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
@@ -342,10 +349,15 @@ namespace LetMeSleep.UI
             Fill(fill.GetComponent<RectTransform>());
             fill.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Sky400;
             var handleArea = Node("Handle Slide Area", root.transform);
-            Stretch(handleArea.GetComponent<RectTransform>(), 8f, 8f, 6f, 6f);
+            var handleAreaRect = handleArea.GetComponent<RectTransform>();
+            handleAreaRect.anchorMin = new Vector2(0f, 0.5f);
+            handleAreaRect.anchorMax = new Vector2(1f, 0.5f);
+            handleAreaRect.sizeDelta = new Vector2(-18f, 28f);
             var handle = Node("Handle", handleArea.transform, typeof(UnityEngine.UI.Image));
             var handleRect = handle.GetComponent<RectTransform>();
-            handleRect.sizeDelta = new Vector2(28f, 32f);
+            handleRect.anchorMin = new Vector2(0.5f, 0.5f);
+            handleRect.anchorMax = new Vector2(0.5f, 0.5f);
+            handleRect.sizeDelta = new Vector2(18f, 0f);
             handle.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Sheet100;
             var slider = root.GetComponent<UnityEngine.UI.Slider>();
             slider.fillRect = fill.GetComponent<RectTransform>();
@@ -368,6 +380,9 @@ namespace LetMeSleep.UI
             var check = Node("Check", box.transform, typeof(UnityEngine.UI.Image));
             Fill(check.GetComponent<RectTransform>(), 8f, 8f, 8f, 8f);
             check.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Mint400;
+            check.GetComponent<UnityEngine.UI.Image>().sprite = AlfaUiIcon.GetSprite(AlfaUiIconKind.Ready);
+            check.GetComponent<UnityEngine.UI.Image>().preserveAspect = true;
+            check.GetComponent<UnityEngine.UI.Image>().raycastTarget = false;
             var toggle = box.GetComponent<UnityEngine.UI.Toggle>();
             toggle.targetGraphic = box.GetComponent<UnityEngine.UI.Image>();
             toggle.graphic = check.GetComponent<UnityEngine.UI.Image>();

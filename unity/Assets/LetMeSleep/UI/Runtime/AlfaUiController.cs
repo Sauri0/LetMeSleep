@@ -333,6 +333,11 @@ namespace LetMeSleep.UI
             effectsVolume.SetValueWithoutNotify(settingsDraft.EffectsVolume);
             humanSensitivity.SetValueWithoutNotify(settingsDraft.HumanSensitivity);
             mosquitoSensitivity.SetValueWithoutNotify(settingsDraft.MosquitoSensitivity);
+            UpdateSliderValue(masterVolume);
+            UpdateSliderValue(musicVolume);
+            UpdateSliderValue(effectsVolume);
+            UpdateSliderValue(humanSensitivity);
+            UpdateSliderValue(mosquitoSensitivity);
             fullScreen.SetIsOnWithoutNotify(settingsDraft.FullScreen);
             vSync.SetIsOnWithoutNotify(settingsDraft.VSync);
             var frameLimitIndex = Array.IndexOf(FrameLimitOptions, settingsDraft.FrameLimit);
@@ -469,9 +474,9 @@ namespace LetMeSleep.UI
             factory.FeatureButton(menu, "MainCustomizeButton", "PERSONALIZAR", "HUMANO Y MOSQUITO", ShowCustomization, AlfaUiIconKind.Customize, false, false, 72f);
             factory.FeatureButton(menu, "MainSettingsButton", "AJUSTES", "AUDIO · VIDEO · CONTROLES", () => OpenSettings(AlfaUiScreen.MainMenu), AlfaUiIconKind.Settings, false, false, 72f);
             factory.FeatureButton(menu, "MainQuitButton", "SALIR", "CERRAR EL JUEGO", ConfirmQuit, AlfaUiIconKind.Exit, false, true, 68f);
-            factory.Text(menu, "NavigationHint", "FLECHAS / TAB  ·  ENTER  ·  ESC", 14f, AlfaUiTheme.Moon200);
+            factory.Text(menu, "NavigationHint", "FLECHAS / TAB  ·  ENTER  ·  ESC", 16f, AlfaUiTheme.Moon200);
             var version = string.IsNullOrWhiteSpace(Application.version) ? "ALFA" : Application.version.Replace("-", " / ").ToUpperInvariant();
-            factory.Text(menu, "Version", version + "  ·  WINDOWS", 13f, AlfaUiTheme.Disabled);
+            factory.Text(menu, "Version", version + "  ·  WINDOWS", 16f, AlfaUiTheme.Disabled);
 
             var sceneLabel = factory.Text(view.transform, "SceneLabel", "CASA CON PATIO  ·  NOCHE", 14f,
                 new Color(AlfaUiTheme.Moon200.r, AlfaUiTheme.Moon200.g, AlfaUiTheme.Moon200.b, 0.82f), TextAlignmentOptions.Right, true);
@@ -568,7 +573,7 @@ namespace LetMeSleep.UI
             for (var i = 0; i < LetMeSleep.Core.RoomRules.Capacity; i++)
             {
                 var rowPanel = factory.Panel(memberContent, $"MemberPanel{i + 1}", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.46f), -1f, 64f);
-                rowPanel.GetComponent<UnityEngine.UI.Shadow>().effectDistance = new Vector2(2f, -2f);
+                AlfaUiFactory.PlainShadow(rowPanel.gameObject).effectDistance = new Vector2(2f, -2f);
                 var stateIcon = factory.Icon(rowPanel, "StatusIcon", AlfaUiIconKind.Human, AlfaUiTheme.Moon200);
                 Anchor(stateIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(30f, 30f));
                 var row = factory.Text(rowPanel, $"Member{i + 1}", string.Empty, AlfaUiTheme.LabelSize, AlfaUiTheme.Sheet100);
@@ -654,11 +659,11 @@ namespace LetMeSleep.UI
             SetSceneScrim(view, 0.72f);
             screens[AlfaUiScreen.Customization] = view;
             var safe = factory.SafeArea(view.transform, 48f, 48f, 40f, 40f);
-            var columns = factory.Horizontal(safe, "Columns", 36f, TextAnchor.MiddleCenter);
+            var columns = factory.Horizontal(safe, "Columns", 28f, TextAnchor.MiddleCenter);
             customizationControlsGroup = columns.gameObject.AddComponent<CanvasGroup>();
             AlfaUiFactory.Fill(columns);
             var previewPanel = factory.Panel(columns, "PreviewPanel", AlfaUiTheme.Night700, 900f, 900f);
-            previewPanel.gameObject.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1f;
+            previewPanel.gameObject.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 0f;
             var previewViewport = AlfaUiFactory.Node("PreviewViewport", previewPanel);
             AlfaUiFactory.Fill(previewViewport.GetComponent<RectTransform>(), 18f, 18f, 92f, 96f);
             var rawNode = AlfaUiFactory.Node("CharacterPreview", previewViewport.transform, typeof(UnityEngine.UI.RawImage),
@@ -679,24 +684,25 @@ namespace LetMeSleep.UI
             Anchor(customizationPreviewIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(18f, 0f), new Vector2(40f, 40f));
             customizationPreviewTitle = factory.Text(stageHeader, "Title", "VISTA EN VIVO · HUMANO", 21f,
                 AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
-            AlfaUiFactory.Fill(customizationPreviewTitle.rectTransform, 72f, 18f, 8f, 8f);
+            AlfaUiFactory.Fill(customizationPreviewTitle.rectTransform, 72f, 18f, 8f, 30f);
+            var orbitHint = factory.Text(stageHeader, "OrbitHint", "ARRASTRÁ PARA GIRAR · RUEDA PARA ZOOM", 16f,
+                AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
+            AlfaUiFactory.Fill(orbitHint.rectTransform, 72f, 18f, 40f, 6f);
             var unavailable = factory.Text(previewPanel, "PreviewUnavailable", "El visor 3D se conecta al personaje del juego.", AlfaUiTheme.BodySize,
                 AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
             Anchor(unavailable.rectTransform, new Vector2(0.2f, 0.45f), new Vector2(0.8f, 0.55f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
             unavailable.gameObject.SetActive(!previewOrbit.IsBound);
             var angles = factory.Horizontal(previewPanel, "PreviewAngles", 8f, TextAnchor.MiddleCenter);
-            Anchor(angles, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 18f), new Vector2(-36f, 64f));
-            factory.Button(angles, "PreviewFrontButton", "FRENTE", () => previewOrbit.SetAngle(PreviewAngle.Front), false, false, 48f);
-            factory.Button(angles, "PreviewSideButton", "PERFIL", () => previewOrbit.SetAngle(PreviewAngle.Side), false, false, 48f);
-            factory.Button(angles, "PreviewBackButton", "ESPALDA", () => previewOrbit.SetAngle(PreviewAngle.Back), false, false, 48f);
-            factory.Button(angles, "PreviewResetButton", "CENTRAR", () => previewOrbit.ResetView(), false, false, 48f);
+            Anchor(angles, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 18f), new Vector2(-36f, 66f));
+            factory.Button(angles, "PreviewFrontButton", "FRENTE", () => previewOrbit.SetAngle(PreviewAngle.Front), false, false, 66f);
+            factory.Button(angles, "PreviewSideButton", "PERFIL", () => previewOrbit.SetAngle(PreviewAngle.Side), false, false, 66f);
+            factory.Button(angles, "PreviewBackButton", "ESPALDA", () => previewOrbit.SetAngle(PreviewAngle.Back), false, false, 66f);
+            factory.Button(angles, "PreviewResetButton", "CENTRAR", () => previewOrbit.ResetView(), false, false, 66f);
 
-            var optionsPanel = factory.Panel(columns, "OptionsPanel", AlfaUiTheme.Night700, 640f, 900f);
-            var content = factory.Vertical(optionsPanel, "Content", 12f);
-            AlfaUiFactory.Fill(content, 28f, 28f, 28f, 28f);
+            var optionsPanel = factory.Panel(columns, "OptionsPanel", AlfaUiTheme.Night700, 720f, 960f);
+            var content = factory.Vertical(optionsPanel, "Content", 8f);
+            AlfaUiFactory.Fill(content, 20f, 20f, 20f, 20f);
             factory.SectionHeader(content, "Header", "PERSONALIZAR", AlfaUiIconKind.Customize, AlfaUiTheme.Lamp400);
-            factory.Text(content, "RoleHelp", "ELEGÍ EL MODELO QUE QUERÉS VER", AlfaUiTheme.NoteSize,
-                AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
             var roleRow = factory.Horizontal(content, "RoleTabs", 10f, TextAnchor.MiddleCenter);
             customizationHumanButton = factory.FeatureButton(roleRow, "CustomizationHumanButton", "HUMANO", "PIJAMA Y GORRO",
                 () => SetCustomizationRole(AlfaRole.Human), AlfaUiIconKind.Human, true, false, 76f);
@@ -705,21 +711,21 @@ namespace LetMeSleep.UI
             customizationCategoryTitle = factory.Text(content, "CategoryTitle", "PALETA DEL HUMANO", AlfaUiTheme.LabelSize,
                 AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
             factory.Divider(content, "CategoryDivider", new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.52f));
-            humanCustomizationFields = factory.Vertical(content, "HumanFields", 10f).gameObject;
+            humanCustomizationFields = factory.Vertical(content, "HumanFields", 8f).gameObject;
             factory.Text(humanCustomizationFields.transform, "SkinLabel", "TONO DE PIEL", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
-            humanPaletteRoot = factory.Horizontal(humanCustomizationFields.transform, "SkinPalette", 8f);
+            humanPaletteRoot = CreatePaletteLayout(humanCustomizationFields.transform, "SkinPalette");
             factory.Text(humanCustomizationFields.transform, "PajamaLabel", "COLOR DE PIJAMA", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
-            pajamaPaletteRoot = factory.Horizontal(humanCustomizationFields.transform, "PajamaPalette", 8f);
+            pajamaPaletteRoot = CreatePaletteLayout(humanCustomizationFields.transform, "PajamaPalette");
             factory.Text(humanCustomizationFields.transform, "DefaultClothes", "Predeterminado: pijama, pantuflas y gorro de noche.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
             mosquitoCustomizationFields = factory.Vertical(content, "MosquitoFields", 10f).gameObject;
             factory.Text(mosquitoCustomizationFields.transform, "MosquitoColorLabel", "COLOR", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
-            mosquitoPaletteRoot = factory.Horizontal(mosquitoCustomizationFields.transform, "MosquitoPalette", 8f);
+            mosquitoPaletteRoot = CreatePaletteLayout(mosquitoCustomizationFields.transform, "MosquitoPalette");
             customizationStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
             customizationSaveButton = factory.Button(content, "CustomizationSaveButton", "GUARDAR", SaveCustomization, true, false, 66f, AlfaUiIconKind.Ready);
             ApplyPositiveStyle(customizationSaveButton);
             customizationSaveLabel = customizationSaveButton.GetComponentInChildren<TextMeshProUGUI>();
-            factory.Button(content, "CustomizationResetButton", "DESHACER CAMBIOS", ResetCustomization);
-            factory.Button(content, "CustomizationBackButton", "VOLVER", CloseCustomization, false, false, 58f, AlfaUiIconKind.Back);
+            factory.Button(content, "CustomizationResetButton", "DESHACER CAMBIOS", ResetCustomization, false, false, 66f);
+            factory.Button(content, "CustomizationBackButton", "VOLVER", CloseCustomization, false, false, 66f, AlfaUiIconKind.Back);
         }
 
         private void BuildSettings()
@@ -748,7 +754,7 @@ namespace LetMeSleep.UI
             var audioPanel = factory.Panel(leftColumn, "AudioPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f), -1f, 280f);
             var audio = factory.Vertical(audioPanel, "AudioContent", 10f);
             AlfaUiFactory.Fill(audio, 22f, 22f, 20f, 20f);
-            factory.SectionHeader(audio, "AudioHeader", "AUDIO", AlfaUiIconKind.Settings, AlfaUiTheme.Lamp400);
+            factory.SectionHeader(audio, "AudioHeader", "AUDIO", AlfaUiIconKind.Audio, AlfaUiTheme.Lamp400);
             masterVolume = AddSliderField(audio, "VOLUMEN GENERAL", "MasterVolumeSlider", value => ChangeSetting(draft => draft.MasterVolume = value));
             musicVolume = AddSliderField(audio, "MÚSICA", "MusicVolumeSlider", value => ChangeSetting(draft => draft.MusicVolume = value));
             effectsVolume = AddSliderField(audio, "EFECTOS", "EffectsVolumeSlider", value => ChangeSetting(draft => draft.EffectsVolume = value));
@@ -756,7 +762,7 @@ namespace LetMeSleep.UI
             var controlsPanel = factory.Panel(leftColumn, "ControlsPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f), -1f, 350f);
             var controls = factory.Vertical(controlsPanel, "ControlsContent", 10f);
             AlfaUiFactory.Fill(controls, 22f, 22f, 20f, 20f);
-            factory.SectionHeader(controls, "ControlsHeader", "CONTROLES", AlfaUiIconKind.Training, AlfaUiTheme.Mint400);
+            factory.SectionHeader(controls, "ControlsHeader", "CONTROLES", AlfaUiIconKind.Controls, AlfaUiTheme.Mint400);
             humanSensitivity = AddSliderField(controls, "SENSIBILIDAD HUMANO", "HumanSensitivitySlider", value => ChangeSetting(draft => draft.HumanSensitivity = value), 0.1f, 2f);
             mosquitoSensitivity = AddSliderField(controls, "SENSIBILIDAD MOSQUITO", "MosquitoSensitivitySlider", value => ChangeSetting(draft => draft.MosquitoSensitivity = value), 0.1f, 2f);
             invertY = factory.Toggle(controls, "InvertYToggle", "INVERTIR EJE VERTICAL", value => ChangeSetting(draft => draft.InvertY = value));
@@ -767,7 +773,7 @@ namespace LetMeSleep.UI
             videoSettings = videoPanel.gameObject;
             var video = factory.Vertical(videoPanel, "VideoContent", 10f);
             AlfaUiFactory.Fill(video, 22f, 22f, 20f, 20f);
-            factory.SectionHeader(video, "VideoHeader", "VIDEO", AlfaUiIconKind.Explore, AlfaUiTheme.Sky400);
+            factory.SectionHeader(video, "VideoHeader", "VIDEO", AlfaUiIconKind.Video, AlfaUiTheme.Sky400);
             fullScreen = factory.Toggle(video, "FullScreenToggle", "PANTALLA COMPLETA", value => ChangeSetting(draft => draft.FullScreen = value));
             resolutionValue = AddCycleField(video, "RESOLUCIÓN", "Resolution", -1, 1, delta =>
                 ChangeSetting(draft => draft.ResolutionIndex = Cycle(draft.ResolutionIndex, delta, settingsState?.Resolutions.Count ?? 0)));
@@ -926,10 +932,28 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.Slider AddSliderField(Transform parent, string label, string name, UnityEngine.Events.UnityAction<float> callback, float min = 0f, float max = 1f)
         {
             var row = factory.Horizontal(parent, name + "Row", 18f, TextAnchor.MiddleCenter);
-            factory.Text(row, "Label", label, AlfaUiTheme.LabelSize, AlfaUiTheme.Sheet100);
+            var labelText = factory.Text(row, "Label", label, AlfaUiTheme.LabelSize, AlfaUiTheme.Sheet100);
+            var labelLayout = labelText.GetComponent<UnityEngine.UI.LayoutElement>();
+            labelLayout.minWidth = 190f;
+            labelLayout.preferredWidth = 190f;
+            labelLayout.flexibleWidth = 0f;
             var slider = factory.Slider(row, name, min, max, callback);
-            slider.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 420f;
+            slider.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 230f;
+            var valueText = factory.Text(row, "Value", string.Empty, 16f, AlfaUiTheme.Moon200, TextAlignmentOptions.Right);
+            var valueLayout = valueText.GetComponent<UnityEngine.UI.LayoutElement>();
+            valueLayout.minWidth = 56f;
+            valueLayout.preferredWidth = 56f;
+            valueLayout.flexibleWidth = 0f;
+            slider.onValueChanged.AddListener(_ => UpdateSliderValue(slider));
+            UpdateSliderValue(slider);
             return slider;
+        }
+
+        private static void UpdateSliderValue(UnityEngine.UI.Slider slider)
+        {
+            var valueText = slider.transform.parent.Find("Value").GetComponent<TextMeshProUGUI>();
+            valueText.text = Mathf.Approximately(slider.maxValue, 1f) ?
+                Mathf.RoundToInt(slider.value * 100f) + "%" : slider.value.ToString("0.00") + "×";
         }
 
         private TextMeshProUGUI AddCycleField(Transform parent, string label, string name, int previous, int next, Action<int> changed)
@@ -1103,6 +1127,18 @@ namespace LetMeSleep.UI
             actions.PreviewCustomization(customizationDraft.Copy());
         }
 
+        private static RectTransform CreatePaletteLayout(Transform parent, string name)
+        {
+            var node = AlfaUiFactory.Node(name, parent, typeof(UnityEngine.UI.GridLayoutGroup));
+            var grid = node.GetComponent<UnityEngine.UI.GridLayoutGroup>();
+            grid.constraint = UnityEngine.UI.GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 3;
+            grid.cellSize = new Vector2(216f, 66f);
+            grid.spacing = new Vector2(8f, 8f);
+            grid.startAxis = UnityEngine.UI.GridLayoutGroup.Axis.Horizontal;
+            return node.GetComponent<RectTransform>();
+        }
+
         private void BuildPalette(RectTransform parent, IReadOnlyList<NamedColorOption> options, string selectedId, Action<NamedColorOption> selected)
         {
             AlfaUiFactory.Clear(parent);
@@ -1110,7 +1146,7 @@ namespace LetMeSleep.UI
             {
                 var captured = option;
                 var label = (option.Id == selectedId ? "> " : string.Empty) + option.Label;
-                var button = factory.Button(parent, "Color_" + option.Id, label, () => selected(captured), false, false, 52f);
+                var button = factory.Button(parent, "Color_" + option.Id, label, () => selected(captured), false, false, 66f);
                 var colors = button.colors;
                 colors.normalColor = AlfaUiTheme.Night600;
                 colors.highlightedColor = Color.Lerp(AlfaUiTheme.Night600, AlfaUiTheme.Sky400, 0.3f);
@@ -1123,9 +1159,9 @@ namespace LetMeSleep.UI
                 buttonLabel.color = AlfaUiTheme.Sheet100;
                 buttonLabel.alignment = TextAlignmentOptions.Left;
                 AlfaUiFactory.Fill(buttonLabel.rectTransform, 48f, 8f, 8f, 8f);
-                buttonLabel.enableAutoSizing = true;
-                buttonLabel.fontSizeMin = 15f;
-                buttonLabel.fontSizeMax = 18f;
+                buttonLabel.enableAutoSizing = false;
+                buttonLabel.fontSize = 20f;
+                buttonLabel.textWrappingMode = TextWrappingModes.NoWrap;
                 button.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 112f;
                 var swatch = AlfaUiFactory.Node("Swatch", button.transform, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Outline));
                 swatch.GetComponent<UnityEngine.UI.Image>().color = option.Color;
@@ -1556,8 +1592,11 @@ namespace LetMeSleep.UI
             var colors = button.colors;
             colors.normalColor = selected ? roleColor : AlfaUiTheme.Night600;
             colors.highlightedColor = selected ? Color.Lerp(roleColor, Color.white, 0.16f) : Color.Lerp(AlfaUiTheme.Night600, Color.white, 0.12f);
-            colors.selectedColor = selected ? roleColor : AlfaUiTheme.Sky400;
+            colors.selectedColor = selected ? roleColor : AlfaUiTheme.Night600;
             button.colors = colors;
+            var title = button.GetComponentInChildren<TextMeshProUGUI>();
+            var plainTitle = title.text.StartsWith("> ", StringComparison.Ordinal) ? title.text.Substring(2) : title.text;
+            title.text = selected ? "> " + plainTitle : plainTitle;
             var labels = button.GetComponentsInChildren<TextMeshProUGUI>(true);
             for (var i = 0; i < labels.Length; i++)
                 labels[i].color = selected ? selectedContent : labels[i].name == "Subtitle" ? AlfaUiTheme.Moon200 : AlfaUiTheme.Sheet100;

@@ -1,0 +1,50 @@
+[
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native\\custom-human-1080.png",
+    "sha256": "4b7f04b40d25bd75df3741bc88e7a31414e912ab5e025d9e89bad5844875d26d",
+    "capturedIntegration": "bf63666+b7a1186 (informado por Director)",
+    "status": "Revisado con fallas; anterior al delta"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native\\custom-human-720.png",
+    "sha256": "db63e45fd250e2ec0f61746b47fbbe345a9f3405cc4df552634e9f3689ac02c5",
+    "capturedIntegration": "bf63666+b7a1186 (informado por Director)",
+    "status": "Revisado con fallas; anterior al delta"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native\\custom-mosquito-1080.png",
+    "sha256": "d57d7a97c4617ac8dbb12d06dfc93bc40fc87bb5b64f4a7eeb813a1c7d803053",
+    "capturedIntegration": "bf63666+b7a1186 (informado por Director)",
+    "status": "Revisado con fallas; anterior al delta"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native\\custom-mosquito-720.png",
+    "sha256": "218195547c28cd46df0fe36eb2df01dd3c04218f8922b6be5e88c41e123da338",
+    "capturedIntegration": "bf63666+b7a1186 (informado por Director)",
+    "status": "Revisado con fallas; anterior al delta"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native\\menu-1080.png",
+    "sha256": "49e9b191f98a7c0ffc03fa82e3a2dfcb15cce56e32e9c0b52dfb3ee7b3e8f56c",
+    "capturedIntegration": "bf63666+b7a1186 (informado por Director)",
+    "status": "Revisado con fallas; anterior al delta"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native\\menu-720.png",
+    "sha256": "fbd58bbfa3de8251d762d0129d8715fbe6e179b8c4d3c23bc38c20cf1e0358a5",
+    "capturedIntegration": "bf63666+b7a1186 (informado por Director)",
+    "status": "Revisado con fallas; anterior al delta"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native\\settings-1080.png",
+    "sha256": "c20a364a2b8f135f80aca6626a418acd849638139ac5cdaa25676b8186141b6d",
+    "capturedIntegration": "bf63666+b7a1186 (informado por Director)",
+    "status": "Revisado con fallas; anterior al delta"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native\\settings-720.png",
+    "sha256": "918937ca926638855823ee099e6865db56e136af7f6f2b70b036f6712fac1aad",
+    "capturedIntegration": "bf63666+b7a1186 (informado por Director)",
+    "status": "Revisado con fallas; anterior al delta"
+  }
+]
