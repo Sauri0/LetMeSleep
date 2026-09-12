@@ -131,8 +131,10 @@ El diagrama complementario está en [ALFA-UI-FLOWS.svg](./ALFA-UI-FLOWS.svg).
 
 Composición a 16:9:
 
-- Mitad izquierda: logotipo, subtítulo `HUMANOS CONTRA MOSQUITOS`, personaje o escena nocturna no interactiva y versión alfa discreta.
-- Derecha: panel de acciones de 520–600 px de ancho. En 1280×720 puede ocupar 46 % del ancho; no superponer el logotipo.
+- La escena 3D nocturna ocupa todo el fondo y conserva visible el arte actual bajo un tinte azul tinta suave.
+- Izquierda: tarjeta localizada para logotipo, subtítulo `HUMANOS CONTRA MOSQUITOS` y versión alfa discreta.
+- Centro: ventana libre para personajes o acción ambiental no interactiva.
+- Derecha: panel de acciones de 520–600 px de ancho. En 1280×720 puede ocupar 46 % del ancho; no superponer el logotipo ni tapar por completo la escena.
 
 Orden y copy exacto:
 

@@ -403,21 +403,36 @@ namespace LetMeSleep.UI
 
         private void BuildMain()
         {
-            var view = factory.View("MainMenuView", transform);
+            var view = factory.View("MainMenuView", transform, false);
+            var backdrop = view.GetComponent<UnityEngine.UI.Image>();
+            backdrop.color = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.24f);
+            backdrop.raycastTarget = false;
             screens[AlfaUiScreen.MainMenu] = view;
-            var safe = factory.SafeArea(view.transform, 72f, 72f, 64f, 64f);
-            var columns = factory.Horizontal(safe, "Columns", 64f, TextAnchor.MiddleCenter);
+            var safe = factory.SafeArea(view.transform, 64f, 64f, 54f, 54f);
+            var columns = factory.Horizontal(safe, "Columns", 36f, TextAnchor.MiddleCenter);
             AlfaUiFactory.Fill(columns);
-            var brand = factory.Vertical(columns, "Brand", 16f, TextAnchor.MiddleLeft);
-            brand.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1.3f;
+
+            var brandPanel = factory.Panel(columns, "BrandCard",
+                new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.74f), 600f, 570f);
+            brandPanel.GetComponent<UnityEngine.UI.Outline>().effectColor =
+                new Color(AlfaUiTheme.Lamp400.r, AlfaUiTheme.Lamp400.g, AlfaUiTheme.Lamp400.b, 0.34f);
+            var brand = factory.Vertical(brandPanel, "Brand", 16f, TextAnchor.MiddleLeft);
+            AlfaUiFactory.Fill(brand, 42f, 42f, 42f, 42f);
             factory.Text(brand, "Eyebrow", "LA NOCHE RECIÉN EMPIEZA", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
             factory.Text(brand, "Logo", "LET ME\nSLEEP", AlfaUiTheme.LogoSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
             factory.Text(brand, "Subtitle", "HUMANOS CONTRA MOSQUITOS", 26f, AlfaUiTheme.Moon200);
             factory.Text(brand, "Version", "0.9.4 / ALFA  ·  WINDOWS", AlfaUiTheme.NoteSize, AlfaUiTheme.Disabled);
-            var panel = factory.Panel(columns, "MenuCard", AlfaUiTheme.Night700, 560f);
-            var menu = factory.Vertical(panel, "Actions", 14f);
-            AlfaUiFactory.Fill(menu, 32f, 32f, 32f, 32f);
-            factory.Text(menu, "Question", "¿QUIÉN TE DEJA DORMIR?", AlfaUiTheme.H2Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
+
+            var artWindow = AlfaUiFactory.Node("SceneWindow", columns, typeof(UnityEngine.UI.LayoutElement));
+            var artLayout = artWindow.GetComponent<UnityEngine.UI.LayoutElement>();
+            artLayout.minWidth = 160f;
+            artLayout.flexibleWidth = 1f;
+
+            var panel = factory.Panel(columns, "MenuCard",
+                new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.88f), 540f, 660f);
+            var menu = factory.Vertical(panel, "Actions", 14f, TextAnchor.MiddleCenter);
+            AlfaUiFactory.Fill(menu, 34f, 34f, 36f, 34f);
+            factory.Text(menu, "Question", "¿QUIÉN TE DEJA DORMIR?", AlfaUiTheme.H2Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
             factory.Button(menu, "MainPlayButton", "JUGAR ONLINE", ShowOnlineChoice, true, false, 68f);
             factory.Button(menu, "MainTrainingButton", "ENTRENAMIENTO", ShowTraining);
             factory.Button(menu, "MainCustomizeButton", "PERSONALIZAR", ShowCustomization);
