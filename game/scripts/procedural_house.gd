@@ -277,6 +277,10 @@ func _room_usage(room: Dictionary, spec: Dictionary) -> void:
 		var reverse: bool=(uses[0]=="kitchen" and inside.get_center().x<0) or (uses[0]=="entry" and float(spec.get("portal_bias",0))>0) or (uses==["library","study"] and int(room.door_axis)==0)
 		var order:=uses.size()-1-index if reverse else index
 		region.position[axis]+=region.size[axis]*order
+		if uses==["kitchen","dining"]:
+			# Four kitchen fixtures require more wall length than the dining group.
+			region.size[axis]=inside.size[axis]*(.65 if index==0 else .35)
+			region.position[axis]=inside.position[axis]+(inside.size[axis]-region.size[axis] if order>0 else 0.0)
 		room.functional_zones.append({"id":str(room.id)+"/"+uses[index],"use":uses[index],"bounds":region,
 			"anchor":Vector3(region.get_center().x,inside.position.y,region.get_center().z)})
 
