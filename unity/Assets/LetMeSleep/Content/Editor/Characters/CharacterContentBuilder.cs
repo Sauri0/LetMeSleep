@@ -19,7 +19,7 @@ namespace LetMeSleep.Content.Characters.Editor
     {
         public const string OutputRoot = "Assets/LetMeSleep/Content/Characters";
         public const string ReceiptPath = OutputRoot + "/BuildReceipt.json";
-        private const string BuilderVersion = "alpha-characters-3-orientation";
+        private const string BuilderVersion = "alpha-characters-4-bake-scale";
         private static string SourceRoot => Path.GetFullPath(Path.Combine(Application.dataPath,
             "../../art_source/unity/characters"));
         private static readonly string[] HumanStates = {
@@ -76,6 +76,7 @@ namespace LetMeSleep.Content.Characters.Editor
             public Vector3 rightPointActorLocal;
             public Vector3 sourceCorrectionEuler;
             public float nearestTipVertexDistance;
+            public bool bakeMeshScaleCompensated;
         }
         [Serializable] public sealed class ValidationRecord
         {
@@ -456,7 +457,7 @@ namespace LetMeSleep.Content.Characters.Editor
                         foreach (var renderer in renderers)
                         {
                             var baked = new Mesh();
-                            try { renderer.BakeMesh(baked); Require(baked.vertices.All(Finite), "Non-finite sampled skin in " + clip.name); }
+                            try { renderer.BakeMesh(baked, true); Require(baked.vertices.All(Finite), "Non-finite sampled skin in " + clip.name); }
                             finally { Object.DestroyImmediate(baked); }
                         }
                     }
@@ -544,7 +545,10 @@ namespace LetMeSleep.Content.Characters.Editor
                     var baked = new Mesh();
                     try
                     {
-                        renderer.BakeMesh(baked);
+                        // Unity 6000.3: useScale=true compensates the renderer's Transform
+                        // scale. TransformPoint then applies VisualRoot's .5 exactly once.
+                        // The default false already includes it in the baked vertex data.
+                        renderer.BakeMesh(baked, true);
                         foreach (var vertex in baked.vertices)
                             nearest = Mathf.Min(nearest, Vector3.Distance(front, actor.InverseTransformPoint(renderer.transform.TransformPoint(vertex))));
                     }
@@ -556,7 +560,7 @@ namespace LetMeSleep.Content.Characters.Editor
                 "Source orientation must be a unit-scale parent outside the Animator");
             return new OrientationRecord { frontPointActorLocal = front, leftPointActorLocal = left,
                 rightPointActorLocal = right, sourceCorrectionEuler = model.parent.localEulerAngles,
-                nearestTipVertexDistance = nearest };
+                nearestTipVertexDistance = nearest, bakeMeshScaleCompensated = true };
         }
 
         private static Transform Unique(Transform root, string name)
