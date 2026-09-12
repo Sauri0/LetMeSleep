@@ -2,7 +2,8 @@
   "name": "LetMeSleep.Tests.EditMode",
   "rootNamespace": "LetMeSleep.Tests.EditMode",
   "references": [
-    "LetMeSleep.Core"
+    "LetMeSleep.Core",
+    "LetMeSleep.Gameplay"
   ],
   "includePlatforms": [
     "Editor"
