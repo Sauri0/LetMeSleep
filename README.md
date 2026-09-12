@@ -1,15 +1,13 @@
-# Let me sleep — 0.9.1 para Windows
+# Let me sleep — 0.9.2 para Windows
 
-Versión de prueba con online integrado mediante Epic; la conexión real entre
-dos casas sigue pendiente de comprobar.
-Descargá el ZIP de [v0.9.1](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.1),
-descomprimilo completo y abrí Let-me-sleep.exe. Las versiones anteriores se conservan.
+[Descargar 0.9.2](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.2).
+Descomprimí el ZIP completo y abrí Let-me-sleep.exe.
 
-Esta entrega mejora superficies, circulación alrededor de escaleras,
-movimiento y controles de personalización. Usa protocolo 10 y casas v2;
-no es compatible con clientes de la candidata anterior. Pasaron las suites
-de compilación y nueve escenarios sobre el EXE exportado. El trabajo restante
-de personajes y distribución doméstica continúa en 0.9.2.
+Casa reorganizada, manos/agarres corregidos, personalización facial revisada
+y cámara del mosquito con zoom y giro independiente al quedarse quieto.
+Online integrado por invitación LMS1-. Todos deben usar0.9.2/protocolo11.
+La compilación completa y9escenarios del EXE pasaron. La prueba entre dos
+casas sigue pendiente. Alcance: [PRUEBAS](distribution/PRUEBAS.md).
 
 **[Versiones publicadas y descargas](https://github.com/Sauri0/LetMeSleep/releases)**
 
@@ -63,7 +61,7 @@ La sala de espera es un patio independiente. El anfitrión comparte la semilla y
 
 ## Proyecto y verificación
 
-Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y protocolo **10**; las versiones anteriores son incompatibles. El proyecto está en **game/**. **work/setup-tools.ps1** prepara herramientas con sumas oficiales; **work/build.ps1** importa, prueba y exporta, y **work/package.ps1** empaqueta sin sobrescribir versiones publicadas. La voz usa la extensión Opus incluida; sus fuentes, construcción reproducible y avisos están en **native/voice/** y **game/addons/lms_opus/licenses/**.
+Godot **4.5.2 stable**, GDScript, Windows x86_64, OpenGL de compatibilidad y protocolo **11**; las versiones anteriores son incompatibles. El proyecto está en **game/**. **work/setup-tools.ps1** prepara herramientas con sumas oficiales; **work/build.ps1** importa, prueba y exporta, y **work/package.ps1** empaqueta sin sobrescribir versiones publicadas. La voz usa la extensión Opus incluida; sus fuentes, construcción reproducible y avisos están en **native/voice/** y **game/addons/lms_opus/licenses/**.
 
 ```powershell
 & ./work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe --headless --path game --script res://tests/stun_help_test.gd

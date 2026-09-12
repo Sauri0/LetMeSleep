@@ -1,0 +1,9 @@
+{
+  "verified_utc": "2026-09-12T02:29:40.4945899Z",
+  "wan_verified": false,
+  "source_commit": "642b8831aa0cb3714fa9be97690fffed141f131f",
+  "exe_sha256": "348372B149FA7FCB4FB488A34A1941ABE55574F3F0249DAB785C859206F0715F",
+  "corpus_1000_verified": false,
+  "exe_checks": 9,
+  "version": "0.9.2"
+}

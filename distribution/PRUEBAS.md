@@ -1,20 +1,27 @@
-# Let me sleep 0.9.2 — preparación de pruebas
+# Let me sleep 0.9.2 — pruebas de esta descarga
 
-Godot 4.5.2, Windows, protocolo 11, generador house-v3. Todos los participantes
-necesitan la misma versión. Anfitrión dentro del juego e invitación LMS1-.
+Windows x86_64, Godot4.5.2, protocolo11, casasv3.
+Fuente: 642b8831aa0cb3714fa9be97690fffed141f131f
+SHA256 EXE: 348372B149FA7FCB4FB488A34A1941ABE55574F3F0249DAB785C859206F0715F
 
-Esta versión todavía no tiene paquete final exportado ni aprobado. Las pruebas
-completas y del EXE 0.9.1 no acreditan este conjunto. La última descarga
-publicada sigue siendo v0.9.1.
+Las verificaciones director092-full-final-r5 y su continuación r6 pasaron las suites
+headless y nativas. R6 reutilizó evidencia R5 con hash inmutable y código del juego sin cambios, tras actualizar sólo la prueba de cámara. Incluye física,
+combate, cosméticos, movimiento, voz, sincronización, herramientas y menús.
+Once semillas pasaron mobiliario y recorridos físicos hacia tareas/objetos:
+1,2,7,31,97,257,997,2026,65537,1234567,2147483646. La caché pasó40rondas.
+El estrés adicional de1000semillas no se ejecutó en esta entrega.
+Manos:64848comprobaciones de movimiento y36058de malla sin fallos.
+Marcas:972comprobaciones,540registros con herramientas y atuendos.
+No es una revisión visual exhaustiva de todas las combinaciones.
 
-En la integración se añadieron rasgos, distribución doméstica v3 y cámara del
-mosquito. Las manos y las rutas físicas continúan en corrección. El informe
-final debe sustituir esta nota antes de publicar e identificar el EXE probado.
+El EXE pasó9escenarios: anfitrión EOS, pareja local, red, sesión, menús,
+puertas, cámara/cuerpo y práctica de humano/mosquito. Crear un anfitrión EOS
+real también pasó en build. La pareja local usa ENet: no certifica relay WAN.
+Se generaron capturas con el EXE y tres mediciones a1080p, FPS sin límite,
+RTX3060Ti/Ryzen5600X. Datos: work/director092-perf-final/summary.json.
+No se certifican60FPS sostenidos ni GTX1660Ti/1440p/4K.
 
-El F sobre muebles todavía usa cajas envolventes y puede apoyar en superficies
-invisibles. Inventario de tres slots, estamina y rebalanceo de picadura quedan
-para la siguiente entrega. No describirlos como funciones implementadas.
-
-Online entre dos casas, micrófono real y 1080p60 en GTX1660Ti siguen pendientes
-de validación. Las pruebas de anfitrión EOS y clientes locales no certifican
-el relay entre redes. FPS iniciales sin límite; ajustes permiten elegir un tope.
+La prueba entre dos casas y el micrófono físico siguen pendientes.
+Posarse sobre algunos muebles todavía usa cajas envolventes. Inventario de
+3slots, estamina y nuevo balance quedan pendientes. LEEME explica cómo crear
+una sala dentro del juego y compartir la invitación LMS1-.

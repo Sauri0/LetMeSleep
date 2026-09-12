@@ -1,0 +1,240 @@
+**********************
+PowerShell transcript start
+Start time: 20260911232602
+Username: SAURIO\brank
+RunAs User: SAURIO\brank
+Configuration Name: 
+Machine: SAURIO (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Users\brank\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.dll -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$ErrorActionPreference='Stop'; git add -- game/tests/surface_view09_client_checks.gd; git commit -m "Validate perch departure against the independent idle camera aim"; $p=Join-Path (Get-Location) 'work/build.ps1'; $t=[IO.File]::ReadAllText($p); $t=$t.Replace('[switch]$ResumeVerifiedR2)', '[switch]$ResumeVerifiedR2, [switch]$ResumeVerifiedR5)'); $hash=(Get-FileHash work/director092-full-final-r5.txt).Hash; $guard=@'
+if ($ResumeVerifiedR5) {
+    $proof=Join-Path $PSScriptRoot 'director092-full-final-r5.txt'
+    if ((Get-FileHash $proof).Hash -ne '__HASH__') { throw 'R5 evidence changed' }
+    $changed=@(& git -C $projectRoot diff --name-only 81ec9cb -- game native art_source)
+    if (@($changed|Where-Object { $_ -ne 'game/tests/surface_view09_client_checks.gd' }).Count) { throw 'R5 runtime/fixtures changed' }
+    if (@(& git -C $projectRoot ls-files --others --exclude-standard -- game native art_source).Count) { throw 'Untracked source invalidates R5' }
+    if (-not (Select-String $proof -Pattern 'SURFACE09_CLIENT_CHECKS 1814/1814 PASS' -Quiet)) { throw 'R5 prefix incomplete' }
+}
+'@; $guard=$guard.Replace('__HASH__',$hash); $t=$t.Replace('function Invoke-CheckedHeadless {',$guard+"`n"+'function Invoke-CheckedHeadless {'); $t=$t.Replace('    if ($script:resumeR2Prefix) {','    if ($ResumeVerifiedR5 -and $CheckName -notin @(''import'',''export'')) { Write-Output (''VERIFIED_R5_HEADLESS ''+$CheckName); return }'+"`n"+'    if ($script:resumeR2Prefix) {'); $t=$t.Replace('    foreach ($nativeTest in','    $nativeResumeWaiting=[bool]$ResumeVerifiedR5'+"`n"+'    foreach ($nativeTest in'); $t=$t.Replace('    $rigLog = Join-Path', '    if ($nativeResumeWaiting) {'+"`n"+'        if ($nativeTest -ne ''surface_view09_client_checks'') { Write-Output (''VERIFIED_R5_NATIVE ''+$nativeTest); continue }'+"`n"+'        $nativeResumeWaiting=$false'+"`n"+'    }'+"`n"+'    $rigLog = Join-Path'); [IO.File]::WriteAllText($p,$t); $p=Join-Path (Get-Location) 'work/build092-verified.ps1'; $t=[IO.File]::ReadAllText($p); $t=$t.Replace('[switch]$ResumeVerifiedR2,','[switch]$ResumeVerifiedR2, [switch]$ResumeVerifiedR5,'); $t=$t.Replace('-ResumeVerifiedR2:$ResumeVerifiedR2','-ResumeVerifiedR2:$ResumeVerifiedR2 -ResumeVerifiedR5:$ResumeVerifiedR5'); [IO.File]::WriteAllText($p,$t); $p=Join-Path (Get-Location) 'work/finalize092-after-build.ps1'; $t=[IO.File]::ReadAllText($p); $t=$t.Replace('La compilación final completa director092-full-final-r5 pasó las suites','Las verificaciones director092-full-final-r5 y su continuación r6 pasaron las suites'); $t=$t.Replace('headless y nativas, sin reutilizar prefijos anteriores. Incluye física,','headless y nativas. R6 reutilizó evidencia R5 con hash inmutable y código del juego sin cambios, tras actualizar sólo la prueba de cámara. Incluye física,'); $t=$t.Replace('work/director092-full-final-r5.txt work/CLOSE','work/director092-full-final-r5.txt work/director092-full-final-r6.txt work/CLOSE'); [IO.File]::WriteAllText($p,$t); git add -- work/build.ps1 work/build092-verified.ps1; git commit -m "Reuse immutable R5 evidence and finish only the remaining native checks"; & ./work/build092-verified.ps1 -EvidenceName director092-full-final-r6 -ResumeVerifiedR5
+Process ID: 21948
+PSVersion: 7.6.5
+PSEdition: Core
+GitCommitId: 7.6.5
+OS: Microsoft Windows 10.0.26200
+Platform: Win32NT
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1, 6.0, 7.0
+PSRemotingProtocolVersion: 2.4
+SerializationVersion: 1.1.0.1
+WSManStackVersion: 3.0
+**********************
+
+
+VERIFIED_R5_HEADLESS parse-scripts-main
+VERIFIED_R5_HEADLESS parse-scripts-client
+VERIFIED_R5_HEADLESS parse-tests-network_bot
+VERIFIED_R5_HEADLESS parse-tests-practice_ui_checks
+VERIFIED_R5_HEADLESS parse-tests-gameplay_demo
+VERIFIED_R5_HEADLESS parse-tests-gameplay06_demo
+VERIFIED_R5_HEADLESS parse-tests-camera_turn_checks
+VERIFIED_R5_HEADLESS parse-tests-hud_input06_checks
+VERIFIED_R5_HEADLESS parse-tests-hosting_checks
+VERIFIED_R5_HEADLESS parse-tests-gameplay07_demo
+VERIFIED_R5_HEADLESS parse-tests-performance07_live
+VERIFIED_R5_HEADLESS parse-tests-network07_combat_checks
+VERIFIED_R5_HEADLESS parse-tests-video07_checks
+VERIFIED_R5_HEADLESS parse-tests-doors07_client_checks
+VERIFIED_R5_HEADLESS parse-tests-throw_client07_checks
+VERIFIED_R5_HEADLESS parse-tests-tool07_visual_checks
+VERIFIED_R5_HEADLESS parse-tests-house07_occlusion_checks
+VERIFIED_R5_HEADLESS parse-tests-network07_throw_checks
+VERIFIED_R5_HEADLESS parse-tests-tools07_demo
+VERIFIED_R5_HEADLESS parse-tests-customization07_demo
+VERIFIED_R5_HEADLESS parse-tests-facial_catalog08_gallery
+VERIFIED_R5_HEADLESS parse-tests-facial_parts08_motion_export
+VERIFIED_R5_HEADLESS parse-tests-network08_cosmetics_checks
+VERIFIED_R5_HEADLESS rules_test
+VERIFIED_R5_HEADLESS lobby_rules_test
+VERIFIED_R5_HEADLESS cosmetics_test
+VERIFIED_R5_HEADLESS cosmetics_catalog08_test
+VERIFIED_R5_HEADLESS network08_cosmetics_checks
+VERIFIED_R5_HEADLESS visual_checks
+VERIFIED_R5_HEADLESS audio_checks
+VERIFIED_R5_HEADLESS house07_lighting_test
+VERIFIED_R5_HEADLESS maps_test
+VERIFIED_R5_HEADLESS route_tests
+VERIFIED_R5_HEADLESS locomotion_test
+VERIFIED_R5_HEADLESS focus_combat_test
+VERIFIED_R5_HEADLESS manual_defense_test
+VERIFIED_R5_HEADLESS stun_help_test
+VERIFIED_R5_HEADLESS online_packet_codec_test
+VERIFIED_R5_HEADLESS task_deadline_test
+VERIFIED_R5_HEADLESS practice_test
+VERIFIED_R5_HEADLESS invitation_test
+VERIFIED_R5_HEADLESS network_order_test
+VERIFIED_R5_HEADLESS network_connection_test
+VERIFIED_R5_HEADLESS network_privacy_audit_test
+VERIFIED_R5_HEADLESS contact_orientation06_test
+VERIFIED_R5_HEADLESS house06_checks
+VERIFIED_R5_HEADLESS music06_test
+VERIFIED_R5_HEADLESS preferences_migration_test
+VERIFIED_R5_HEADLESS doors07_test
+VERIFIED_R5_HEADLESS door_navigation07_test
+VERIFIED_R5_HEADLESS attack07_test
+VERIFIED_R5_HEADLESS arena_spatial07_test
+VERIFIED_R5_HEADLESS pose_cache07_test
+VERIFIED_R5_HEADLESS barriers07_test
+VERIFIED_R5_HEADLESS v07_character_motion_checks
+VERIFIED_R5_HEADLESS v07_character_cache_checks
+VERIFIED_R5_HEADLESS video_preferences07_test
+VERIFIED_R5_HEADLESS bot_scheduler07_test
+VERIFIED_R5_HEADLESS network07_combat_checks
+VERIFIED_R5_HEADLESS house07_joints_test
+VERIFIED_R5_HEADLESS house09_ceiling_test
+VERIFIED_R5_HEADLESS house09_surfaces_test
+VERIFIED_R5_HEADLESS v07_facial_state_checks
+VERIFIED_R5_HEADLESS mosquito_impact07_test
+VERIFIED_R5_HEADLESS throw_authority07_test
+VERIFIED_R5_HEADLESS throw_input07_checks
+VERIFIED_R5_HEADLESS audio07_tools_checks
+VERIFIED_R5_HEADLESS frame07_joinery_test
+VERIFIED_R5_HEADLESS pickup07_support_checks
+VERIFIED_R5_HEADLESS tool_reach07_test
+VERIFIED_R5_HEADLESS network07_throw_checks
+VERIFIED_R5_HEADLESS audio09_redundancy_checks
+VERIFIED_R5_HEADLESS hud09_coalescing_checks
+VERIFIED_R5_HEADLESS skin09_visibility_checks
+VERIFIED_R5_HEADLESS human09_presentation_test
+VERIFIED_R5_HEADLESS surface09_test
+VERIFIED_R5_HEADLESS surface_view09_test
+VERIFIED_R5_HEADLESS emote09_authority_test
+VERIFIED_R5_HEADLESS procedural09_test
+VERIFIED_R5_HEADLESS geometry09_cache_checks
+VERIFIED_R5_HEADLESS map_tasks09_test
+VERIFIED_R5_HEADLESS voice09_acoustics_checks
+VERIFIED_R5_HEADLESS voice09_pcm_test
+VERIFIED_R5_HEADLESS audio09_listener_checks
+VERIFIED_R5_HEADLESS network09_map_social_checks
+VERIFIED_R5_HEADLESS network09_view_ack_checks
+VERIFIED_R5_HEADLESS network09_voice_checks
+VERIFIED_R5_HEADLESS door09_equivalence_test
+VERIFIED_R5_HEADLESS door09_body_query_test
+VERIFIED_R5_HEADLESS navigation09_connections_test
+VERIFIED_R5_HEADLESS modeler092_contract_test
+VERIFIED_R5_HEADLESS modeler092_structure_test
+VERIFIED_R5_HEADLESS modeler091_layout_test
+VERIFIED_R5_HEADLESS environment091_stair_lighting_test
+VERIFIED_R5_HEADLESS environment091_v2_finish_test
+VERIFIED_R5_HEADLESS review091_online_cosmetics_contract
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-1
+VERIFIED_R5_HEADLESS review092_house_contract-1
+VERIFIED_R5_HEADLESS review092_functional_approach_test-1
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-2
+VERIFIED_R5_HEADLESS review092_house_contract-2
+VERIFIED_R5_HEADLESS review092_functional_approach_test-2
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-7
+VERIFIED_R5_HEADLESS review092_house_contract-7
+VERIFIED_R5_HEADLESS review092_functional_approach_test-7
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-31
+VERIFIED_R5_HEADLESS review092_house_contract-31
+VERIFIED_R5_HEADLESS review092_functional_approach_test-31
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-97
+VERIFIED_R5_HEADLESS review092_house_contract-97
+VERIFIED_R5_HEADLESS review092_functional_approach_test-97
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-257
+VERIFIED_R5_HEADLESS review092_house_contract-257
+VERIFIED_R5_HEADLESS review092_functional_approach_test-257
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-997
+VERIFIED_R5_HEADLESS review092_house_contract-997
+VERIFIED_R5_HEADLESS review092_functional_approach_test-997
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-2026
+VERIFIED_R5_HEADLESS review092_house_contract-2026
+VERIFIED_R5_HEADLESS review092_functional_approach_test-2026
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-65537
+VERIFIED_R5_HEADLESS review092_house_contract-65537
+VERIFIED_R5_HEADLESS review092_functional_approach_test-65537
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-1234567
+VERIFIED_R5_HEADLESS review092_house_contract-1234567
+VERIFIED_R5_HEADLESS review092_functional_approach_test-1234567
+VERIFIED_R5_HEADLESS modeler092_furnishing_test-2147483646
+VERIFIED_R5_HEADLESS review092_house_contract-2147483646
+VERIFIED_R5_HEADLESS review092_functional_approach_test-2147483646
+VERIFIED_R5_HEADLESS voice09_session_checks
+VERIFIED_R5_HEADLESS online_invitation_test
+VERIFIED_R5_HEADLESS online_session_test
+VERIFIED_R5_HEADLESS online_network_checks
+VERIFIED_R5_HEADLESS online_network_mtu_checks
+VERIFIED_R5_HEADLESS online_network_payload_checks
+VERIFIED_R5_HEADLESS online_pair_integration
+VERIFIED_R5_HEADLESS online_network_live_host
+VERIFIED_R5_NATIVE camera_turn_checks
+VERIFIED_R5_NATIVE mosquito092_camera_checks
+VERIFIED_R5_NATIVE motion092_hand_test
+VERIFIED_R5_NATIVE character092_hands
+VERIFIED_R5_NATIVE motion091_attachment_test
+VERIFIED_R5_NATIVE review091_motion_combat_contract
+VERIFIED_R5_NATIVE ui091_customization_checks
+VERIFIED_R5_NATIVE motion091_presentation_test
+VERIFIED_R5_NATIVE online_main_lifecycle
+VERIFIED_R5_NATIVE glasses09_fit_checks
+VERIFIED_R5_NATIVE actor09_legacy_geometry_test
+VERIFIED_R5_NATIVE v07_character_rig_checks
+VERIFIED_R5_NATIVE v07_character_client_checks
+VERIFIED_R5_NATIVE selected07_mesh_checks
+VERIFIED_R5_NATIVE selected07_actor_checks
+VERIFIED_R5_NATIVE selected07_facial_envelope_checks
+VERIFIED_R5_NATIVE facial_parts08_checks
+VERIFIED_R5_NATIVE facial_blink08_checks
+VERIFIED_R5_NATIVE customization08_checks
+VERIFIED_R5_NATIVE house07_checks
+VERIFIED_R5_NATIVE house07_lighting_probe
+VERIFIED_R5_NATIVE house07_liso_checks
+VERIFIED_R5_NATIVE ui_navigation_test
+VERIFIED_R5_NATIVE video07_checks
+VERIFIED_R5_NATIVE doors07_client_checks
+VERIFIED_R5_NATIVE throw_client07_checks
+VERIFIED_R5_NATIVE tool07_visual_checks
+VERIFIED_R5_NATIVE house07_occlusion_checks
+VERIFIED_R5_NATIVE appendage09_visual_checks
+VERIFIED_R5_NATIVE emote09_pose_checks
+VERIFIED_R5_NATIVE furniture09_blueprint_checks
+VERIFIED_R5_NATIVE voice09_visual_checks
+VERIFIED_R5_NATIVE menu09_ui_checks
+VERIFIED_R5_NATIVE social09_client_checks
+VERIFIED_R5_NATIVE surface09_client_checks
+SURFACE_VIEW09_CLIENT_CHECKS 149/149 PASS
+VOICE_INPUT09_UI_CHECKS 27/27 PASS
+VOICE_CONTEXT09_UI_CHECKS 38/38 PASS
+
+ACTORCORNER09 18776/18776 PASS
+CASE (0.0, 1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02911001443863 foot_step=0.03378916531801
+CASE (0.0, -1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (-1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (0.0, 0.0, -1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+CASE (0.0, 0.0, 1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+
+ACTORCORNER09 18776/18776 PASS
+CASE (0.0, 1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02911001443863 foot_step=0.03378916531801
+CASE (0.0, -1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (-1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (0.0, 0.0, -1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+CASE (0.0, 0.0, 1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+
+ACTORCORNER09 18776/18776 PASS
+CASE (0.0, 1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02911001443863 foot_step=0.03378916531801
+CASE (0.0, -1.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419448852539 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (-1.0, 0.0, 0.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910989522934 foot_step=0.03378916531801
+CASE (0.0, 0.0, -1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+CASE (0.0, 0.0, 1.0) center=0 mesh=0 depth=0.0 feet=0 footdepth=0.0 step=0.01419444382191 body_step=0.02910978905857 foot_step=0.03623992577195
+
+
+
+Algorithm       Hash                                                                   Path
+---------       ----                                                                   ----
+SHA256          348372B149FA7FCB4FB488A34A1941ABE55574F3F0249DAB785C859206F0715F       C:\Users\brank\Documents\Codex\…
+**********************
+PowerShell transcript end
+End time: 20260911232708
+**********************

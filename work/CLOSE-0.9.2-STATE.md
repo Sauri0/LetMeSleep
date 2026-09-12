@@ -100,3 +100,11 @@ corpus1000, EXE9casos, captura, rendimiento, actualizar PRUEBAS, empaquetar,
 subir borrador GitHub, descargar/verificar SHA, publicar0.9.2 y actualizar main.
 Preservar work/voice09-acoustics-results.json (cambio previo ajeno).
 Cuota consultada:95%usado/5%restante. No agregar funcionalidades ni variantes.
+
+Último cierre: 81ec9cb enviado a origin. Casa final bb50de1 integrada.
+Fullbuild r4 pasó11semillas físicas, EOS real y parte nativa; detectó42marcas
+hundidas en antebrazo con herramientas. Corregido offsetvisual4mm en zone_pose,
+972/0malla. Fullbuild COMPLETO r5 en curso, sin reutilizar prefijo. Reanudar
+con su transcript si se corta. No publicar si falla. No hay EXE092 aún.
+Con presupuesto2% priorizar build+9casosEXE+ZIPverificado+GitHub; corpus1000
+adicional no ejecutado para esta entrega y no debe afirmarse aprobado.

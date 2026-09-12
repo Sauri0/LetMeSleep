@@ -1,0 +1,199 @@
+**********************
+PowerShell transcript start
+Start time: 20260911230318
+Username: SAURIO\brank
+RunAs User: SAURIO\brank
+Configuration Name: 
+Machine: SAURIO (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Users\brank\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.dll -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$ErrorActionPreference='Stop'; git add -- game/scripts/human_pose.gd; git commit -m "Align carried forearm bite marks with the verified deformed surface"; git push origin codex/0.9.2-quality-close; & ./work/build092-verified.ps1 -EvidenceName director092-full-final-r5
+Process ID: 11200
+PSVersion: 7.6.5
+PSEdition: Core
+GitCommitId: 7.6.5
+OS: Microsoft Windows 10.0.26200
+Platform: Win32NT
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1, 6.0, 7.0
+PSRemotingProtocolVersion: 2.4
+SerializationVersion: 1.1.0.1
+WSManStackVersion: 3.0
+**********************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RULES_TEST_RESULT checks=1624 failures=0
+LOBBY_RULES_TEST_RESULT checks=321 failures=0
+COSMETICS_TEST_RESULT checks=433 failures=0
+COSMETICS_CATALOG08_RESULT checks=85377 failures=0 human_classes=26244 mosquito_classes=2187 human_profiles=5668704 mosquito_profiles=78732 output=C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/game/../work/cosmetics-catalog08.json
+NETWORK08_COSMETICS_RESULT checks=28 failures=0
+VISUAL_CHECK_RESULT failures=0
+AUDIO06_RESULT checks=145 failures=0 catalog_seconds=54.260
+HOUSE_LIGHT_TEST checks=187 failures=0
+MAPS_TEST_RESULT checks=431 failures=0
+ROUTE_TEST_RESULT checks=307 failures=0 elapsed_ms=1291
+LOCOMOTION_TEST_RESULT checks=7867 failures=0
+FOCUS_COMBAT_TEST_RESULT checks=145 failures=0
+MANUAL_DEFENSE_TEST_RESULT checks=6897 failures=0
+STUN_HELP_TEST_RESULT checks=297 failures=0
+ONLINE_PACKET_CODEC_RESULT checks=116 failures=0
+TASK_DEADLINE_TEST_RESULT checks=59 failures=0
+PRACTICE_RESULT checks=79 failures=0
+INVITATION_RESULT checks=96 failures=0
+NETWORK_ORDER_RESULT checks=11 failures=0
+NETWORK_CONNECTION_RESULT checks=23 failures=0
+NETWORK_PRIVACY_AUDIT_RESULT checks=48 failures=0
+CONTACT_ORIENTATION06_TEST_RESULT checks=469 failures=0
+HOUSE06_RESULT checks=210 failures=0 furnished=52
+MUSIC06_RESULT checks=49 failures=0 recorded_peak=5175
+PREFERENCES_MIGRATION_RESULT checks=31 failures=0
+DOORS07_TEST_RESULT checks=342 failures=0
+DOOR_NAVIGATION07_RESULT checks=22 failures=0
+ATTACK07_TEST_RESULT checks=304 failures=0
+ARENA_SPATIAL07_TEST_RESULT checks=7200 failures=0
+POSE_CACHE07_TEST_RESULT checks=4922 failures=0
+BARRIERS07_TEST_RESULT checks=17 failures=0
+MOTION07_RESULT checks=11396 failures=0 max_support_slide=0.0000010m samples=713 max_jump_delta=0.005417
+CHARACTER_CACHE07_RESULT checks=8 failures=0
+VIDEO_PREFS07_RESULT checks=13 failures=0
+BOT_SCHEDULER07_RESULT checks=242 failures=0
+NET_COMBAT07_RESULT checks=39 failures=0
+HOUSE_JOINT_RESULT checks=603 failures=0
+CEILING_RESULT maps=3 failures=0
+HOUSE09_SURFACES checks=702 failures=0
+FACIAL_STATE07_RESULT checks=249 failures=0
+MOSQUITO_IMPACT07_RESULT checks=1492 failures=0
+THROW07_RESULT checks=288 failures=0
+THROW_INPUT07_RESULT checks=15 failures=0
+TOOL_AUDIO07_RESULT checks=36 failures=0
+FRAME_JOINERY checks=992 failures=0 overlap_m2=0.0 normal_errors=0 {"changed_faces":4116,"elapsed_ms":284.57,"frames":52,"removed_area_m2":2678.1034387366,"triangles_after":7846,"triangles_before":9504,"wall_meshes":792}
+PICKUP_SUPPORT_RESULT checks=203 failures=0
+TOOL_REACH07_RESULT checks=60 failures=0
+NET_THROW07_RESULT checks=36 failures=0
+AUDIO09_REDUNDANCY checks=18 failures=0
+HUD09_COALESCING checks=29 failures=0
+SKIN09_VISIBILITY {"checks":1422,"failures":[],"records":[{"current_passes":37,"meshes":33,"reference_passes":446,"role":"human"},{"current_passes":37,"meshes":23,"reference_passes":446,"role":"mosquito"}],"scope":"Imported mesh selection equivalence and redundant setter work; no gameplay FPS or skin deformation claim","skin_sha256":"a59fd6ccb36599ffb6e3bb7051789c4f6372c2ae79094c9b3fc0ea3edc5fa2a3"}
+HUMAN09_PRESENTATION checks=1457 failures=0
+SURFACE09_TEST_RESULT checks=6722 failures=0
+SURFACE_VIEW09_RESULT checks=213 failures=0
+EMOTE09_AUTHORITY_RESULT checks=1643 failures=0
+procedural09 checks=54 failures=0
+geometry09_cache checks=164 failures=0
+MAP_TASKS09_RESULT checks=90 failures=0
+VOICE09_ACOUSTICS_RESULT checks=1459 failures=0 elapsed_ms=3250.878
+voice09_pcm checks=4758 failures=0
+audio09_listener checks=9 failures=0
+NET_MAP_SOCIAL09_RESULT checks=55 failures=0 protocol=11
+NET_MAP_SOCIAL09_RESULT checks=53 failures=0 protocol=11
+NET_VOICE09_RESULT checks=214 failures=0
+DOOR09_CPU {"implementation":"reference","max_ms":5.32,"mean_ms":2.60826111111111,"p50_ms":2.666,"p90_ms":3.737,"p99_ms":4.739,"steps":360,"total_ms":938.974}
+DOOR09_BODY_CPU {"implementation":"reference","max_per_tick_ms":4.487,"mean_per_tick_ms":1.86340833333333,"mismatches":0,"p90_per_tick_ms":3.019,"p99_per_tick_ms":3.919,"queries":15072,"ticks":360,"total_ms":670.827}
+NAVIGATION09_CONNECTIONS checks=9466 failures=0
+MODELER092_CONTRACT checks=48 failures=0
+MODELER092_STRUCTURE checks=139 failures=0
+MODELER091_LAYOUT checks=205 failures=0
+ENVIRONMENT091_STAIR_LIGHT checks=15 failures=0
+ENVIRONMENT091_V2_FINISH checks=115 failures=0
+REVIEW091_ONLINE_RESULT checks=27 failures=0 eos_sdk=false relay=false wan=false
+MODELER092_FURNISHING checks=1324 failures=0
+REVIEW092_HOUSE_RESULT checks=537 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=1158 failures=0 routes=244
+MODELER092_FURNISHING checks=1024 failures=0
+REVIEW092_HOUSE_RESULT checks=420 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=824 failures=0 routes=172
+MODELER092_FURNISHING checks=1324 failures=0
+REVIEW092_HOUSE_RESULT checks=537 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=1149 failures=0 routes=242
+MODELER092_FURNISHING checks=1324 failures=0
+REVIEW092_HOUSE_RESULT checks=537 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=1158 failures=0 routes=244
+MODELER092_FURNISHING checks=1324 failures=0
+REVIEW092_HOUSE_RESULT checks=537 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=1140 failures=0 routes=240
+MODELER092_FURNISHING checks=1324 failures=0
+REVIEW092_HOUSE_RESULT checks=537 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=1158 failures=0 routes=244
+MODELER092_FURNISHING checks=1324 failures=0
+REVIEW092_HOUSE_RESULT checks=537 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=1131 failures=0 routes=238
+MODELER092_FURNISHING checks=964 failures=0
+REVIEW092_HOUSE_RESULT checks=402 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=813 failures=0 routes=170
+MODELER092_FURNISHING checks=964 failures=0
+REVIEW092_HOUSE_RESULT checks=402 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=795 failures=0 routes=166
+MODELER092_FURNISHING checks=1084 failures=0
+REVIEW092_HOUSE_RESULT checks=438 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=835 failures=0 routes=174
+MODELER092_FURNISHING checks=1084 failures=0
+REVIEW092_HOUSE_RESULT checks=438 failures=0 layouts=1 partial=false
+REVIEW092_FUNCTIONAL_APPROACH_RESULT checks=835 failures=0 routes=174
+VOICE09_SESSION_CHECKS 77/77 PASS
+ONLINE_INVITATION_RESULT checks=219 failures=0
+ONLINE_SESSION_RESULT checks=72 failures=0
+ONLINE_NETWORK_CHECKS checks=43 failures=0
+ONLINE_NETWORK_MTU_CHECKS checks=4 failures=0 largest_actual_rpc_bytes=1062
+ONLINE_NETWORK_PAYLOAD_CHECKS checks=18 failures=0 actors=16 largest_raw=36136 largest_fragments=3
+ONLINE_PAIR_RESULT checks=24 failures=0 transport=enet_loopback eos_sdk=false relay=false wan=false
+ONLINE_LIVE_HOST_RESULT checks=15 failures=0
+XR: Removed interface "OpenXR"
+MOSQUITO092_CAMERA {"checks":142,"failures":[],"scope":"real client input callbacks, held body angles, surface ACK and native camera collision; no visual acceptance or network protocol changes"}
+HAND092_RESULT {"checks":64848,"failures":[],"metrics":{"maximum_carry_reservation_radius":0.581423320770264,"maximum_digit_length_error":0.00000000745058059692383,"maximum_palm_contact_error":0.0000000372529029846191,"minimum_neutral_curl":0.000000000567558555708558},"pose_only":false}
+CHARACTER092_HANDS checks=36058 failures=0 max_length_error=0.000000 max_joint_gap=0.000000
+MOTION091_ATTACHMENT_RESULT checks=781 failures=0
+REVIEW091_MOTION_RESULT checks=150 failures=0
+UI091_CUSTOMIZATION_CHECKS 20/20 PASS
+MOTION091_RESULT checks=4013 failures=0
+ONLINE_MAIN_RESULT checks=7 failures=0
+GLASSES09_NATIVE checks=110 failures=0 poses=18 max_error=0.00000049
+ACTOR09_LEGACY checks=49778 failures=0
+RIG07_RESULT checks=198 failures=0
+CHARACTER_CLIENT07_RESULT checks=86 failures=0
+SELECTED07_MESH_DONE records=540 selected=false checks=972 failures=0
+SELECTED07_ACTOR_RESULT checks=537 failures=0
+SELECTED07_FACIAL_ENVELOPE checks=99990 failures=0 max_gap=0.000000
+FACIAL_PARTS08_RESULT checks=7946 failures=0
+FACIAL_BLINK08_RESULT checks=3392 failures=0 ocular_delta=0.00000000 lid_motion=0.023317
+PREFERENCES_BACKUP C:/Users/brank/AppData/Roaming/Godot/app_userdata/Let me sleep/customization08-backup-2469439.cfg
+HOUSE07_RESULT checks=259 failures=0 furniture=52 barriers=336
+HOUSE_LIGHT_AB checks=39 failures=0
+HOUSE_LISO checks=49 failures=0 phase=after
+UI_NAVIGATION_PASS checks=163: real InputEvents, focus scopes, Escape levels, HUD states, bindings and persistence; original preferences restored.
+VIDEO07_RESULT checks=23 failures=0
+DOOR_CLIENT07_RESULT checks=16 failures=0
+THROW_CLIENT07_RESULT checks=12 failures=0
+TOOL07_VISUAL_RESULT checks=532 failures=0
+OCCLUSION07_RESULT checks=36 failures=0
+APPENDAGE09 2547/2547 PASS
+EMOTE09 31230/31230 PASS
+FURNITURE09 2490/2490 PASS
+VOICE09VISUAL 552/552 PASS
+MENU09_UI_CHECKS 45/45 PASS
+SOCIAL09_CLIENT_CHECKS 64/64 PASS
+SURFACE09_CLIENT_CHECKS 1814/1814 PASS
+PS>TerminatingError(): "Native check failed: surface_view09_client_checks; inspect work/build logs"
+**********************
+PowerShell transcript end
+End time: 20260911232044
+**********************
