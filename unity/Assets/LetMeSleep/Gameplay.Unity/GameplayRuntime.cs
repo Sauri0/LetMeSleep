@@ -230,6 +230,7 @@ namespace LetMeSleep.Gameplay.Unity
             var delta = to - from;
             foreach (var hit in Physics.SphereCastAll(from, .025f, delta.normalized, delta.magnitude, World.GeometryMask, QueryTriggerInteraction.Ignore).OrderBy(h => h.distance))
             {
+                if (!World.IsWorldCollider(hit.collider)) continue;
                 var own = hit.collider.GetComponentInParent<GameplayActorProxy>(); if (own && own.ActorId == actorId) continue;
                 return from + delta.normalized * Mathf.Max(0, hit.distance - .002f);
             }

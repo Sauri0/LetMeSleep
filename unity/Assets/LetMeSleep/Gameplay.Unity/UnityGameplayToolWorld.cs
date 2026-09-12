@@ -11,10 +11,10 @@ namespace LetMeSleep.Gameplay.Unity
         private void RegisterTools()
         {
             toolPickups.Clear();
-            foreach (var pickup in FindObjectsByType<GameplayToolPickup>(FindObjectsSortMode.None))
+            foreach (var pickup in MapComponents<GameplayToolPickup>())
             {
                 pickup.Initialize();
-                if (pickup.PickupId == 0 || pickup.ToolId != GameplayTools.Flyswatter || toolPickups.ContainsKey(pickup.PickupId)) throw new InvalidOperationException("Invalid or duplicate map pickup.");
+                if (pickup.PickupId == 0 || pickup.ToolId != GameplayTools.Flyswatter || toolPickups.ContainsKey(pickup.PickupId) || !pickup.InteractionCollider || !pickup.InteractionCollider.transform.IsChildOf(MapRoot)) throw new InvalidOperationException("Invalid, duplicate or foreign map pickup.");
                 toolPickups.Add(pickup.PickupId, pickup);
             }
             if (toolPickups.Count > 32) throw new InvalidOperationException("Too many map pickups.");
@@ -23,12 +23,15 @@ namespace LetMeSleep.Gameplay.Unity
         public void BeginTools(IReadOnlyList<ToolPickupDefinition> definitions)
         {
             RegisterTools();
-            if (definitions.Count != toolPickups.Count) throw new InvalidOperationException("Round must include all map pickups.");
+            if (definitions == null || definitions.Count != toolPickups.Count) throw new InvalidOperationException("Round must include all map pickups.");
+            var seen = new HashSet<uint>();
             foreach (var definition in definitions)
             {
-                if (!toolPickups.TryGetValue(definition.PickupId, out var pickup) || pickup.ToolId != definition.ToolId) throw new InvalidOperationException("Pickup definition does not match map.");
-                pickup.Apply(new ToolPickupSnapshot(definition.PickupId, definition.ToolId, definition.Position, definition.Rotation));
+                if (!seen.Add(definition.PickupId) || !toolPickups.TryGetValue(definition.PickupId, out var pickup) || !ToolDefinitionValidation.Matches(pickup.Definition, definition)) throw new InvalidOperationException("Pickup definition does not match authored map pose (1 mm / 0.1 degree).");
             }
+            // Validate the entire batch before applying any remote configuration.
+            foreach (var definition in definitions)
+                toolPickups[definition.PickupId].Apply(new ToolPickupSnapshot(definition.PickupId, definition.ToolId, definition.Position, definition.Rotation));
             Physics.SyncTransforms();
         }
         public bool TryToolInteraction(in ToolInteractionQuery query, out ToolInteractionCandidate candidate)
@@ -36,6 +39,7 @@ namespace LetMeSleep.Gameplay.Unity
             candidate = default;
             foreach (var hit in Physics.RaycastAll(query.EyeOrigin.ToUnity(), query.AimForward.ToUnity(), query.Reach, GeometryMask, QueryTriggerInteraction.Collide).OrderBy(h => h.distance))
             {
+                if (!IsWorldCollider(hit.collider)) continue;
                 var actor = Actor(hit.collider); if (actor && actor.ActorId == query.ActorId) continue;
                 var pickup = hit.collider.GetComponentInParent<GameplayToolPickup>();
                 if (hit.collider.isTrigger && !pickup) continue;
@@ -60,6 +64,7 @@ namespace LetMeSleep.Gameplay.Unity
             var center = p + q * new Vector3(0, .006f, .18f);
             foreach (var collision in Physics.OverlapBox(center, new Vector3(.09f, .012f, .20f), q, GeometryMask, QueryTriggerInteraction.Ignore))
             {
+                if (!IsWorldCollider(collision)) continue;
                 var own = Actor(collision); if (own && own.ActorId == actorId) continue;
                 return false;
             }

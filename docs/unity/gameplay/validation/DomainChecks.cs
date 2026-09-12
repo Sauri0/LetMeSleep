@@ -221,4 +221,23 @@ public sealed class DomainChecks
         Assert.That(a.CaptureSnapshot().ToolPickups.Single().OwnerActorId, Is.Zero); Assert.That(w.Tools[101].Position.Z, Is.EqualTo(1));
         a = StartTools(w); Assert.That(a.CaptureSnapshot().Actors.All(p => p.EquippedToolId == GameplayTools.Hands), Is.True);
     }
+    [Test] public void PickupDefinitionPoseToleranceRejectsDisplacedRemoteGeometry()
+    {
+        var local = new ToolPickupDefinition(101, GameplayTools.Flyswatter, default, Rotation.Identity);
+        Assert.That(ToolDefinitionValidation.Matches(local, new ToolPickupDefinition(101, GameplayTools.Flyswatter, new Float3(.0009f, 0, 0), Rotation.Identity)), Is.True);
+        Assert.That(ToolDefinitionValidation.Matches(local, new ToolPickupDefinition(101, GameplayTools.Flyswatter, new Float3(.0011f, 0, 0), Rotation.Identity)), Is.False);
+        Assert.That(ToolDefinitionValidation.Matches(local, new ToolPickupDefinition(101, GameplayTools.Flyswatter, default, Rotation.Yaw(.09f * (float)Math.PI / 180))), Is.True);
+        Assert.That(ToolDefinitionValidation.Matches(local, new ToolPickupDefinition(101, GameplayTools.Flyswatter, default, Rotation.Yaw(.11f * (float)Math.PI / 180))), Is.False);
+    }
+    [Test] public void PickupDefinitionAcceptsQuaternionSignButRejectsInvalidIdentityAndNumbers()
+    {
+        var local = new ToolPickupDefinition(101, GameplayTools.Flyswatter, Float3.Up, Rotation.Identity);
+        Assert.That(ToolDefinitionValidation.Matches(local, new ToolPickupDefinition(101, GameplayTools.Flyswatter, Float3.Up, new Rotation(0, 0, 0, -1))), Is.True);
+        foreach (var invalid in new[] {
+            new ToolPickupDefinition(102, GameplayTools.Flyswatter, Float3.Up, Rotation.Identity),
+            new ToolPickupDefinition(101, GameplayTools.Hands, Float3.Up, Rotation.Identity),
+            new ToolPickupDefinition(101, GameplayTools.Flyswatter, new Float3(float.NaN, 1, 0), Rotation.Identity),
+            new ToolPickupDefinition(101, GameplayTools.Flyswatter, Float3.Up, new Rotation(0, 0, 0, 0)) })
+            Assert.That(ToolDefinitionValidation.Matches(local, invalid), Is.False);
+    }
 }

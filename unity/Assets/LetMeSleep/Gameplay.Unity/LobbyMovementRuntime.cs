@@ -285,6 +285,7 @@ namespace LetMeSleep.Gameplay.Unity
             float safe = CameraDistance;
             foreach (var hit in Physics.SphereCastAll(pivot, .12f, direction, CameraDistance, world.GeometryMask, QueryTriggerInteraction.Ignore).OrderBy(h => h.distance))
             {
+                if (!world.IsWorldCollider(hit.collider)) continue;
                 var actor = hit.collider.GetComponentInParent<GameplayActorProxy>(); if (actor && actor.ActorId == local.ActorId) continue;
                 safe = Mathf.Max(0, hit.distance - .01f); break;
             }

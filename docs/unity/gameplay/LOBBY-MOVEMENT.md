@@ -25,7 +25,7 @@ void Unbind();
 
 ## Escena y presentación
 
-Añadir LobbyMovementRuntime y UnityGameplayWorld en un objeto propio del lobby. Asignar `HumanPrefab` visual y `LocalCamera`; un host dedicado puede omitir visuales. El componente deshabilita colliders del prefab y root motion de Animator para conservar una sola autoridad física. `VisualCreated(string playerId,GameObject instance)` permite que W2 agregue animación sin dependencia inversa. SnapshotApplied expone velocidad/MotionPhase para animaciones opcionales.
+Añadir LobbyMovementRuntime y UnityGameplayWorld en un objeto propio del lobby. Antes de Bind, asignar `UnityGameplayWorld.MapRoot` al Transform activo del lobby; no usar el root de casa ni un contenedor de ambos mapas. Asignar `HumanPrefab` visual y `LocalCamera`; un host dedicado puede omitir visuales. El componente deshabilita colliders del prefab y root motion de Animator para conservar una sola autoridad física. `VisualCreated(string playerId,GameObject instance)` y `TryGetVisual(string,out GameObject)` permiten que W2 agregue animación al iniciar o al enlazar tarde. SnapshotApplied expone velocidad/MotionPhase para animaciones opcionales.
 
 Director proporciona LobbySpawnPoints de M2 y prefab humano. Activar este objeto sólo en fase Waiting; Unbind antes de comenzar Gameplay para quitar proxies y liberar cursor. La sala/protocolo determina cuándo entrar/salir; no se cambia de fase desde locomoción.
 

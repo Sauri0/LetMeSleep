@@ -1,7 +1,23 @@
 using System.Collections.Generic;
+using System;
 
 namespace LetMeSleep.Gameplay
 {
+    public static class ToolDefinitionValidation
+    {
+        public const float PositionToleranceMetres = .001f;
+        public const double RotationToleranceDegrees = .1;
+        public static bool Matches(in ToolPickupDefinition local, in ToolPickupDefinition received)
+        {
+            if (local.PickupId == 0 || local.PickupId != received.PickupId || local.ToolId != GameplayTools.Flyswatter || local.ToolId != received.ToolId || !local.Position.IsFinite || !received.Position.IsFinite || (local.Position - received.Position).LengthSquared > PositionToleranceMetres * PositionToleranceMetres) return false;
+            var a = local.Rotation; var b = received.Rotation;
+            if (!Valid(a) || !Valid(b)) return false;
+            double dot = Math.Abs((double)a.X * b.X + (double)a.Y * b.Y + (double)a.Z * b.Z + (double)a.W * b.W) / Math.Sqrt(Norm(a) * Norm(b));
+            return dot >= Math.Cos(RotationToleranceDegrees * Math.PI / 360);
+        }
+        private static double Norm(Rotation q) => (double)q.X * q.X + (double)q.Y * q.Y + (double)q.Z * q.Z + (double)q.W * q.W;
+        private static bool Valid(Rotation q) => MathEx.Finite(q.X) && MathEx.Finite(q.Y) && MathEx.Finite(q.Z) && MathEx.Finite(q.W) && Math.Abs(Norm(q) - 1) < .002;
+    }
     public readonly struct ToolPickupDefinition
     {
         public readonly uint PickupId;

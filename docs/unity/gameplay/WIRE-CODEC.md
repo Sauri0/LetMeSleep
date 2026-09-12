@@ -34,7 +34,7 @@ También hay cinco overloads `TryDecode(byte[], out Tipo)` si el caller ya conoc
 
 ## Validación
 
-`validation/Run-Validation.ps1` compila codec + dominio en C#9/netstandard2.1 y adaptador contra Unity6000.3.24f1/InputSystem. Suite externa total: **56 casos/0 fallos** (29 QA,18 dominio/réplica/herramientas,9 codec). No se ejecutó Unity Test Runner ni una conexión de red.
+`validation/Run-Validation.ps1` compila codec + dominio en C#9/netstandard2.1 y adaptador contra Unity6000.3.24f1/InputSystem. Suite externa total: **58 casos/0 fallos** (29 QA,20 dominio/réplica/herramientas,9 codec). No se ejecutó Unity Test Runner ni una conexión de red.
 
 Los 9 casos de codec comprueban ida/vuelta de los cinco tipos y campos concretos, contenido UTF8, uint.MaxValue en secuencia, anclas/strike/puertas, privado correlacionado, máximo16/128/32 bajo16384 bytes, rechazo de excesos, todas las posiciones de truncamiento de los cinco tipos, bytes sobrantes, versión/tipo/enum/bool inválidos, NaN, UTF8 inválido, largo corrupto, counts inválidos, privado sin época, 1000 tramas aleatorias y 300 mutaciones de snapshot sin excepciones inesperadas. La comparación de bytes al recodificar complementa las aserciones de campos; no sustituye pruebas de transporte. La versión2 agrega EquippedToolId/ToolPickups, valida que cada equipo tenga un único dueño humano y rechaza herramientas huérfanas.
 

@@ -9,6 +9,7 @@ namespace LetMeSleep.Gameplay.Unity
     public sealed partial class UnityGameplayWorld : MonoBehaviour, IGameplayWorld, IGameplayToolWorld
     {
         public LayerMask GeometryMask = ~0;
+        public Transform MapRoot;
         public event Action<GameplayActorProxy> ActorCreated;
         public IReadOnlyDictionary<uint, GameplayActorProxy> Actors => actors;
         public IReadOnlyDictionary<uint, GameplayDoor> Doors => doors;
@@ -16,17 +17,29 @@ namespace LetMeSleep.Gameplay.Unity
         private readonly Dictionary<uint, GameplayDoor> doors = new Dictionary<uint, GameplayDoor>();
         private readonly Dictionary<uint, GameplaySurface> surfaces = new Dictionary<uint, GameplaySurface>();
         private const float Skin = .001f;
+        private T[] MapComponents<T>() where T : Component
+        {
+            if (!MapRoot || !MapRoot.gameObject.activeInHierarchy) throw new InvalidOperationException("Assign an active MapRoot before registering gameplay geometry.");
+            return MapRoot.GetComponentsInChildren<T>(false);
+        }
+        public bool IsWorldCollider(Collider collider)
+        {
+            if (!collider) return false;
+            var actor = Actor(collider);
+            if (actor) return actors.TryGetValue(actor.ActorId, out var owned) && owned == actor;
+            return MapRoot && collider.transform.IsChildOf(MapRoot);
+        }
 
         public void RegisterGeometry()
         {
             surfaces.Clear(); doors.Clear();
-            foreach (var door in FindObjectsByType<GameplayDoor>(FindObjectsSortMode.None))
+            foreach (var door in MapComponents<GameplayDoor>())
             {
                 door.Initialize();
-                if (door.DoorId == 0 || !door.Leaf || doors.ContainsKey(door.DoorId)) throw new InvalidOperationException("Missing/duplicate door geometry.");
+                if (door.DoorId == 0 || !door.Leaf || doors.ContainsKey(door.DoorId) || !door.Hinge.IsChildOf(MapRoot) || !door.Leaf.transform.IsChildOf(MapRoot)) throw new InvalidOperationException("Missing, duplicate or foreign door geometry.");
                 doors.Add(door.DoorId, door);
             }
-            foreach (var surface in FindObjectsByType<GameplaySurface>(FindObjectsSortMode.None))
+            foreach (var surface in MapComponents<GameplaySurface>())
             {
                 if (surface.SurfaceId == 0 || surfaces.ContainsKey(surface.SurfaceId)) throw new InvalidOperationException("Duplicate/zero stable surface ID.");
                 surfaces.Add(surface.SurfaceId, surface);
@@ -57,7 +70,7 @@ namespace LetMeSleep.Gameplay.Unity
         private static GameplayActorProxy Actor(Collider collider) => collider.GetComponentInParent<GameplayActorProxy>();
         private bool BlocksMotor(Collider collider, uint own)
         {
-            if (!collider) return false;
+            if (!IsWorldCollider(collider)) return false;
             var actor = Actor(collider); if (actor && actor.ActorId == own) return false;
             bool mosquito = actors.TryGetValue(own, out var self) && self.Role == PlayerRole.Mosquito;
             var anatomy = collider.GetComponent<GameplayBodySurface>();
@@ -137,6 +150,7 @@ namespace LetMeSleep.Gameplay.Unity
         {
             foreach (var hit in Physics.RaycastAll(origin, direction, reach, GeometryMask, QueryTriggerInteraction.Collide).OrderBy(h => h.distance).ThenBy(h => Actor(h.collider)?.ActorId ?? 0))
             {
+                if (!IsWorldCollider(hit.collider)) continue;
                 var actor = Actor(hit.collider); if (actor && actor.ActorId == own) continue;
                 var body = hit.collider.GetComponent<GameplayBodySurface>();
                 if (hit.collider.isTrigger && (!body || !includeAnatomy)) continue;
@@ -248,11 +262,13 @@ namespace LetMeSleep.Gameplay.Unity
             // Resolve overlap at the start as casts do not report initial overlaps.
             foreach (var c in Physics.OverlapSphere(from, query.Radius, GeometryMask, QueryTriggerInteraction.Ignore).OrderBy(c => Vector3.Distance(c.ClosestPoint(from), from)))
             {
+                if (!IsWorldCollider(c)) continue;
                 var actor = Actor(c); if (actor && actor.ActorId == query.ActorId) continue;
                 return new StrikeHit(true, actor ? actor.ActorId : 0, c.ClosestPoint(from).ToFloat(), (-delta.normalized).ToFloat());
             }
             foreach (var hit in Physics.SphereCastAll(from, query.Radius, delta.sqrMagnitude > 0 ? delta.normalized : Vector3.forward, delta.magnitude, GeometryMask, QueryTriggerInteraction.Ignore).OrderBy(h => h.distance).ThenBy(h => Actor(h.collider)?.ActorId ?? 0))
             {
+                if (!IsWorldCollider(hit.collider)) continue;
                 var actor = Actor(hit.collider); if (actor && actor.ActorId == query.ActorId) continue;
                 return new StrikeHit(true, actor ? actor.ActorId : 0, hit.point.ToFloat(), hit.normal.ToFloat());
             }
@@ -298,6 +314,7 @@ namespace LetMeSleep.Gameplay.Unity
                 var center = leaf.transform.TransformPoint(leaf.center); var half = Vector3.Scale(leaf.size * .5f, leaf.transform.lossyScale) + Vector3.one * padding;
                 foreach (var other in Physics.OverlapBox(center, half, leaf.transform.rotation, GeometryMask, QueryTriggerInteraction.Ignore))
                 {
+                    if (!IsWorldCollider(other)) continue;
                     if (other == leaf || other.transform.IsChildOf(door.Hinge)) continue;
                     var actor = Actor(other);
                     door.ApplyAngle(original); Physics.SyncTransforms(); return new DoorSweepResult(safe, true, actor ? actor.ActorId : 0);
