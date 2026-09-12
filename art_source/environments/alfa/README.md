@@ -113,8 +113,11 @@ its GPU turn must be coordinated with Director. `run_tool.ps1` bounds process
 execution and records exit code, timestamps, timeout and stderr length.
 
 Current validation: static 491/0; Godot import exit 0; headless imported geometry
-379/0. Native visual review is pending the coordinated render turn. These
-results do not claim integrated placement, gameplay paths, WAN or frame rate.
+379/0. Director then integrated this pack and ran the native capture fixture:
+383/0 with three sheets, visually reviewed as legible by Director. The original
+receipt and PNGs are in the Director checkout under work/assets094-native.
+No second GPU run was performed by this task. These results do not claim
+integrated placement, gameplay paths, WAN or frame rate.
 Integration and performance belong to the corresponding map/runtime owners.
 
 The new assets use project-original geometry/materials under repository terms;
