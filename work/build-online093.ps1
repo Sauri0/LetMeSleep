@@ -14,7 +14,9 @@ $tests=@('online093_ui_checks','online093_connection_checks','online_invitation_
 $records=@()
 foreach($test in $tests){
     $name='online093-source-'+$test
-    & ./work/run-native07.ps1 -Source -Name $name -GameArguments @('--headless','--script',('res://tests/'+$test+'.gd'))
+    $argsList=@('--headless','--script',('res://tests/'+$test+'.gd'))
+    if($test -eq 'online093_ui_checks'){$argsList+=@('--','--source-contracts')}
+    & ./work/run-native07.ps1 -Source -Name $name -GameArguments $argsList
     $records+=Get-Content (Join-Path $PSScriptRoot ('release07-'+$name+'.run.json')) -Raw|ConvertFrom-Json
 }
 foreach($entry in @('main','client')){
