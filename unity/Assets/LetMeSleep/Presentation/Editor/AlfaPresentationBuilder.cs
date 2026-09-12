@@ -39,12 +39,13 @@ namespace LetMeSleep.Presentation.Editor
             VolumeProfile volume = BuildVolumeProfile();
             BuildMaterials();
             BuildLightingPrefab(preset, volume);
+            ParticleSystem impactVfx = BuildImpactVfx();
             AudioMixer mixer = AssetDatabase.LoadAssetAtPath<AudioMixer>(MixerPath);
             if (mixer == null)
                 Debug.LogWarning($"LMS_AUDIO_MIXER_REQUIRED path={MixerPath}; clips remain audible through Master until the mixer is created and the builder is rerun.");
             Dictionary<string, AudioCue> cues = BuildAudioCues(mixer);
             GameObject audioRoot = BuildAudioRoot(cues, mixer);
-            BuildGameplayPresentationPrefab(preset, audioRoot);
+            BuildGameplayPresentationPrefab(preset, audioRoot, impactVfx);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -114,6 +115,8 @@ namespace LetMeSleep.Presentation.Editor
             SetFloat(wing, "_Cull", 2f);
             SetFloat(wing, "_ReceiveShadows", 0f);
             EditorUtility.SetDirty(wing);
+            CreateMaterial("ImpactParticle", "Universal Render Pipeline/Particles/Unlit",
+                new Color(0.90f, 0.76f, 0.26f, 0.86f), 0f, 0f, true);
         }
 
         private static Material CreateMaterial(
@@ -177,6 +180,53 @@ namespace LetMeSleep.Presentation.Editor
 
                 PrefabUtility.SaveAsPrefabAsset(
                     root, PresentationRoot + "/Prefabs/LMS_AlfaLightingRoot.prefab");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(root);
+            }
+        }
+
+        private static ParticleSystem BuildImpactVfx()
+        {
+            var root = new GameObject("LMS_ImpactBurst");
+            try
+            {
+                ParticleSystem particles = root.AddComponent<ParticleSystem>();
+                ParticleSystem.MainModule main = particles.main;
+                main.duration = 0.24f;
+                main.loop = false;
+                main.playOnAwake = false;
+                main.startLifetime = new ParticleSystem.MinMaxCurve(0.12f, 0.22f);
+                main.startSpeed = new ParticleSystem.MinMaxCurve(0.25f, 0.65f);
+                main.startSize = new ParticleSystem.MinMaxCurve(0.015f, 0.035f);
+                main.startColor = new ParticleSystem.MinMaxGradient(
+                    new Color(0.98f, 0.83f, 0.30f, 0.90f),
+                    new Color(0.72f, 0.88f, 0.96f, 0.68f));
+                main.maxParticles = 16;
+                main.simulationSpace = ParticleSystemSimulationSpace.World;
+
+                ParticleSystem.EmissionModule emission = particles.emission;
+                emission.rateOverTime = 0f;
+                emission.SetBursts(new[]
+                {
+                    new ParticleSystem.Burst(
+                        0f, new ParticleSystem.MinMaxCurve(6f, 12f), 1, 0f)
+                });
+                ParticleSystem.ShapeModule shape = particles.shape;
+                shape.shapeType = ParticleSystemShapeType.Sphere;
+                shape.radius = 0.03f;
+
+                ParticleSystemRenderer renderer = root.GetComponent<ParticleSystemRenderer>();
+                renderer.sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>(
+                    PresentationRoot + "/Materials/ImpactParticle.mat");
+                renderer.renderMode = ParticleSystemRenderMode.Billboard;
+                renderer.shadowCastingMode = ShadowCastingMode.Off;
+                renderer.receiveShadows = false;
+
+                GameObject prefab = PrefabUtility.SaveAsPrefabAsset(
+                    root, PresentationRoot + "/Prefabs/LMS_ImpactBurst.prefab");
+                return prefab.GetComponent<ParticleSystem>();
             }
             finally
             {
@@ -273,7 +323,8 @@ namespace LetMeSleep.Presentation.Editor
         }
 
         private static void BuildGameplayPresentationPrefab(
-            AlfaPresentationPreset preset, GameObject audioRootPrefab)
+            AlfaPresentationPreset preset, GameObject audioRootPrefab,
+            ParticleSystem impactVfx)
         {
             const string characterRoot = "Assets/LetMeSleep/Content/Characters/Prefabs";
             GameObject human = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_Human.prefab");
@@ -291,6 +342,7 @@ namespace LetMeSleep.Presentation.Editor
             {
                 GameplayVisualPresenter visuals = root.AddComponent<GameplayVisualPresenter>();
                 GameplayAudioPresenter audioEvents = root.AddComponent<GameplayAudioPresenter>();
+                GameplayVfxPresenter vfxEvents = root.AddComponent<GameplayVfxPresenter>();
                 GameplayPresentationRoot facade = root.AddComponent<GameplayPresentationRoot>();
                 visuals.SetPrefabs(human, humanFirstPerson, mosquito, flyswatter);
 
@@ -317,7 +369,9 @@ namespace LetMeSleep.Presentation.Editor
                 AlfaAudioDirector audioDirector = audioInstance.GetComponent<AlfaAudioDirector>();
                 Assign(facade, "visuals", visuals);
                 Assign(facade, "audioEvents", audioEvents);
+                Assign(facade, "vfxEvents", vfxEvents);
                 Assign(facade, "audioDirector", audioDirector);
+                Assign(vfxEvents, "impactPrefab", impactVfx);
 
                 PrefabUtility.SaveAsPrefabAsset(
                     root, PresentationRoot + "/Prefabs/LMS_GameplayPresentation.prefab");

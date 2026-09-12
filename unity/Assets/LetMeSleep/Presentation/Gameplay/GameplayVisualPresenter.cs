@@ -222,7 +222,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 return;
             subscribedWorld = gameplay.World;
             subscribedWorld.ActorCreated += HandleActorCreated;
-            gameplay.SnapshotReady += HandleSnapshot;
+            gameplay.SnapshotApplied += HandleSnapshot;
             gameplay.EventReady += HandleEvent;
             subscribed = true;
             foreach (GameplayActorProxy proxy in subscribedWorld.Actors.Values)
@@ -239,7 +239,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 subscribedWorld.ActorCreated -= HandleActorCreated;
             if (gameplay != null)
             {
-                gameplay.SnapshotReady -= HandleSnapshot;
+                gameplay.SnapshotApplied -= HandleSnapshot;
                 gameplay.EventReady -= HandleEvent;
             }
             subscribedWorld = null;

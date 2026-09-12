@@ -19,6 +19,8 @@ El código fuente vive bajo `unity/Assets/LetMeSleep/Presentation/**` y
   manos con `BodySurfaces` y mantienen `ProboscisTip` en el ancla autoritativa.
 - `GameplayPresentationRoot`, fachada de binding que desactiva la cámara
   auxiliar de W1 y conecta visuales, cámaras propias y eventos de audio.
+- `GameplayVfxPresenter`, pool de ocho bursts URP para `StrikeImpact` y
+  `MosquitoKnockedDown`; deduplica eventos y no crea decals de picadura.
 - quince WAV audibles originales: música de menú/ronda, ambiente nocturno,
   alas, defensa, impacto, picadura, puertas, vida, stings y ready de UI.
 - fuente editable determinista en `art_source/unity/audio/`, manifest con
@@ -61,7 +63,9 @@ presentationRoot.Bind(gameplayRuntime);
 ```
 
 El binding incluye actores que ya existían antes de la llamada y también los
-futuros `ActorCreated`. `GameplayRuntime.UseBuiltInCamera` queda en `false`; la
+futuros `ActorCreated`. Visuales y loops consumen `SnapshotApplied`, que W1
+emite tanto para host como para réplicas; `SnapshotReady` queda reservado a la
+salida de red. `GameplayRuntime.UseBuiltInCamera` queda en `false`; la
 vista local lee `LocalViewYaw/LocalViewPitch` cada frame, por lo que no depende
 de que `ViewRevision` cambie con cada movimiento del mouse.
 

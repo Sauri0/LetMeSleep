@@ -10,6 +10,7 @@ namespace LetMeSleep.Presentation.Gameplay
         [SerializeField] private GameplayRuntime gameplay = null;
         [SerializeField] private GameplayVisualPresenter visuals = null;
         [SerializeField] private GameplayAudioPresenter audioEvents = null;
+        [SerializeField] private GameplayVfxPresenter vfxEvents = null;
         [SerializeField] private AlfaAudioDirector audioDirector = null;
 
         private void Start()
@@ -23,6 +24,7 @@ namespace LetMeSleep.Presentation.Gameplay
             gameplay = runtime;
             visuals?.Bind(runtime);
             audioEvents?.Bind(runtime, audioDirector);
+            vfxEvents?.Bind(runtime);
             if (runtime != null)
                 runtime.UseBuiltInCamera = false;
         }

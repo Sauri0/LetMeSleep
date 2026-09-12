@@ -151,7 +151,7 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if (subscribed || gameplay == null)
                 return;
-            gameplay.SnapshotReady += HandleSnapshot;
+            gameplay.SnapshotApplied += HandleSnapshot;
             gameplay.EventReady += HandleEvent;
             gameplay.RoundFinished += HandleRoundFinished;
             subscribed = true;
@@ -163,7 +163,7 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if (!subscribed || gameplay == null)
                 return;
-            gameplay.SnapshotReady -= HandleSnapshot;
+            gameplay.SnapshotApplied -= HandleSnapshot;
             gameplay.EventReady -= HandleEvent;
             gameplay.RoundFinished -= HandleRoundFinished;
             subscribed = false;
