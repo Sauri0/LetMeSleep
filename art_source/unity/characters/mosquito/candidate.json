@@ -1,0 +1,932 @@
+{
+  "revision": "mosquito-planar-stance-r3",
+  "source_sha256": {
+    "build_mosquito_candidate.py": "c8f25c46c684762d9e8787ec2757e94a3c13007d56987dbb839211e9ea96f33a",
+    "author_mosquito_geometry.py": "5fa539d58e25131634182d228da9cb35acda8351c9e9e6a4f628d435c60ae3f5",
+    "author_mosquito_motion.py": "1887e18dbb560747eeb96955b00f10a7c508316d26466d7fbdbd4cf97bb9494e",
+    "build_characters.py": "1876935e524dfa5541bb6124335dcf56c731d7be40223ddd1b329ee89116d4f9",
+    "author_motion.py": "0d9b89d2eb893513d0d70f63f6a1113f8454b3e84d91a60b490c1b0a38f5eec4"
+  },
+  "audit": {
+    "species": "Mosquito",
+    "mesh_count": 3,
+    "bones": 33,
+    "triangles": 2116,
+    "vertices": 1158,
+    "unweighted_vertices": 0,
+    "bad_weight_sums": 0,
+    "degenerate_triangles": 0,
+    "nonfinite_vertices": 0,
+    "clips": [
+      {
+        "name": "Mosquito_Fly",
+        "start": 1,
+        "end": 13,
+        "fps": 30,
+        "duration_seconds": 0.4,
+        "loop": true,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_Hover",
+        "start": 1,
+        "end": 13,
+        "fps": 30,
+        "duration_seconds": 0.4,
+        "loop": true,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_Idle",
+        "start": 1,
+        "end": 61,
+        "fps": 30,
+        "duration_seconds": 2.0,
+        "loop": true,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_PerchIdle",
+        "start": 1,
+        "end": 61,
+        "fps": 30,
+        "duration_seconds": 2.0,
+        "loop": true,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_PerchEnter",
+        "start": 1,
+        "end": 25,
+        "fps": 30,
+        "duration_seconds": 0.8,
+        "loop": false,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_Land",
+        "start": 1,
+        "end": 25,
+        "fps": 30,
+        "duration_seconds": 0.8,
+        "loop": false,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_Brake",
+        "start": 1,
+        "end": 25,
+        "fps": 30,
+        "duration_seconds": 0.8,
+        "loop": false,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_SurfaceWalk",
+        "start": 1,
+        "end": 31,
+        "fps": 30,
+        "duration_seconds": 1.0,
+        "loop": true,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_BiteStart",
+        "start": 1,
+        "end": 19,
+        "fps": 30,
+        "duration_seconds": 0.6,
+        "loop": false,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_BiteLoop",
+        "start": 1,
+        "end": 31,
+        "fps": 30,
+        "duration_seconds": 1.0,
+        "loop": true,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_Bite",
+        "start": 1,
+        "end": 37,
+        "fps": 30,
+        "duration_seconds": 1.2,
+        "loop": false,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_Detach",
+        "start": 1,
+        "end": 19,
+        "fps": 30,
+        "duration_seconds": 0.6,
+        "loop": false,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_Hit",
+        "start": 1,
+        "end": 19,
+        "fps": 30,
+        "duration_seconds": 0.6,
+        "loop": false,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_Fall",
+        "start": 1,
+        "end": 31,
+        "fps": 30,
+        "duration_seconds": 1.0,
+        "loop": false,
+        "root_motion": false
+      },
+      {
+        "name": "Mosquito_Recover",
+        "start": 1,
+        "end": 37,
+        "fps": 30,
+        "duration_seconds": 1.2,
+        "loop": false,
+        "root_motion": false
+      }
+    ],
+    "curl": {},
+    "contact": {
+      "gameplay_tip_rest_unity_m": [
+        0.0,
+        0.0,
+        0.0949999988079071
+      ],
+      "gameplay_collision_radius_m": 0.055,
+      "gameplay_surface_root_offset_m": 0.057,
+      "ground_contact_rest_unity_m": [
+        0,
+        -0.057,
+        0
+      ],
+      "surface_rotation_contract": "local +Y outward normal, forward projected tangent; runtime validation belongs to Gameplay/Presentation",
+      "geometry_revision": "mosquito-planar-stance-r3",
+      "proboscis_descent_degrees": 44.38394009160077,
+      "art_acceptance": "pending real render, complete clips, Unity and independent review",
+      "minimum_surface_leg_reach_margin_m": 0.00686739145002313,
+      "minimum_any_pose_leg_reach_margin_m": 0.00686739145002313,
+      "surface_walk": {
+        "clip": "Mosquito_SurfaceWalk",
+        "source_units": "metres, Blender",
+        "stride_source_m": 0.116,
+        "stance_duty": 0.58,
+        "unity_scale_applied_once": 0.5,
+        "distance_per_cycle_unity_m": 0.1,
+        "frames": 31,
+        "start_frame": 1,
+        "end_frame": 31,
+        "fps": 30,
+        "duration_seconds": 1.0,
+        "support_center": "each coxa Y; tarsal bind X/Z retained",
+        "phase_zero": "L1/L3/R2 begin support; L2/R1/R3 phase +0.5",
+        "phase_direction": "positive phase moves supported feet along source +Y; actor forward is source -Y",
+        "authority_phase_distance_m": 0.3,
+        "authority_unwrapped_phase_multiplier": 3.0,
+        "phase_formula": "frac(authorityMotionPhase * (0.3 / distance_per_cycle_unity_m)); convert before modulo, once",
+        "animator_speed_formula": "duration_seconds * actual_tangential_speed_mps / distance_per_cycle_unity_m",
+        "nominal_game_speed_mps_unchanged": 0.65,
+        "nominal_cadence_hz": 6.5,
+        "review_speed_range_mps": [
+          0.08,
+          0.8
+        ],
+        "review_cadence_range_hz": [
+          0.7999999999999999,
+          8.0
+        ],
+        "proposed_animator_speed_limits": [
+          0,
+          8.0
+        ],
+        "nominal_60fps_samples_per_cycle": 9.23076923076923,
+        "swing_lift_source_m": 0.02,
+        "range_status": "analytic source contract; readable cadence/contact requires native review",
+        "analytic_leg_ranges": [
+          {
+            "leg": 1,
+            "side": "L",
+            "upper_length_source_m": 0.11824398504786618,
+            "lower_length_source_m": 0.11823028376858444,
+            "reach_min_source_m": 1.3701279281741474e-05,
+            "reach_max_source_m": 0.23647426881645062,
+            "target_min_source_m": 0.20302600818614347,
+            "target_max_source_m": 0.22961471510562403,
+            "extension_margin_source_m": 0.0068595537108265825,
+            "fold_margin_source_m": 0.20301230690686173
+          },
+          {
+            "leg": 2,
+            "side": "L",
+            "upper_length_source_m": 0.12981540740605485,
+            "lower_length_source_m": 0.10638138934982942,
+            "reach_min_source_m": 0.023434018056225428,
+            "reach_max_source_m": 0.2361967967558843,
+            "target_min_source_m": 0.1945038817093376,
+            "target_max_source_m": 0.22176475537517726,
+            "extension_margin_source_m": 0.014432041380707028,
+            "fold_margin_source_m": 0.17106986365311216
+          },
+          {
+            "leg": 3,
+            "side": "L",
+            "upper_length_source_m": 0.11172842073528114,
+            "lower_length_source_m": 0.1170136744145743,
+            "reach_min_source_m": 0.005285253679293167,
+            "reach_max_source_m": 0.22874209514985544,
+            "target_min_source_m": 0.1865849940375699,
+            "target_max_source_m": 0.21449129129764566,
+            "extension_margin_source_m": 0.014250803852209781,
+            "fold_margin_source_m": 0.18129974035827673
+          },
+          {
+            "leg": 1,
+            "side": "R",
+            "upper_length_source_m": 0.11824398504786618,
+            "lower_length_source_m": 0.11823028376858444,
+            "reach_min_source_m": 1.3701279281741474e-05,
+            "reach_max_source_m": 0.23647426881645062,
+            "target_min_source_m": 0.20302600818614347,
+            "target_max_source_m": 0.22961471510562403,
+            "extension_margin_source_m": 0.0068595537108265825,
+            "fold_margin_source_m": 0.20301230690686173
+          },
+          {
+            "leg": 2,
+            "side": "R",
+            "upper_length_source_m": 0.12981540740605485,
+            "lower_length_source_m": 0.10638138934982942,
+            "reach_min_source_m": 0.023434018056225428,
+            "reach_max_source_m": 0.2361967967558843,
+            "target_min_source_m": 0.1945038817093376,
+            "target_max_source_m": 0.22176475537517726,
+            "extension_margin_source_m": 0.014432041380707028,
+            "fold_margin_source_m": 0.17106986365311216
+          },
+          {
+            "leg": 3,
+            "side": "R",
+            "upper_length_source_m": 0.11172842073528114,
+            "lower_length_source_m": 0.1170136744145743,
+            "reach_min_source_m": 0.005285253679293167,
+            "reach_max_source_m": 0.22874209514985544,
+            "target_min_source_m": 0.1865849940375699,
+            "target_max_source_m": 0.21449129129764566,
+            "extension_margin_source_m": 0.014250803852209781,
+            "fold_margin_source_m": 0.18129974035827673
+          }
+        ],
+        "runtime_phase_sync_verified": false
+      },
+      "bite_tip_policy": "Head/Thorax/Proboscis bind transforms retained throughout BiteStart/BiteLoop/Bite",
+      "fall_contact_policy": "evaluated mesh minimum at authored support plane; native landing/transition review pending"
+    },
+    "bounds_min": [
+      -0.2243417650461197,
+      -0.1904165893793106,
+      -0.1136966124176979
+    ],
+    "bounds_max": [
+      0.2243417650461197,
+      0.20399999618530273,
+      0.23977826535701752
+    ],
+    "dimensions": [
+      0.4486835300922394,
+      0.39441658556461334,
+      0.3534748777747154
+    ],
+    "sockets": [
+      "Socket.Mouth",
+      "Socket.AimForward",
+      "Socket.Back",
+      "Socket.CameraTarget",
+      "Socket.WingRoot.L",
+      "Socket.WingRoot.R",
+      "Socket.GroundContact"
+    ],
+    "renderers": [
+      {
+        "name": "MosquitoSkin",
+        "materials": [
+          "Mosquito_Shell",
+          "Mosquito_Abdomen",
+          "Mosquito_EyeWhite",
+          "Mosquito_Expression",
+          "Mosquito_Legs"
+        ]
+      },
+      {
+        "name": "MosquitoMembranes",
+        "materials": [
+          "Mosquito_Wing"
+        ]
+      },
+      {
+        "name": "MosquitoVeins",
+        "materials": [
+          "Mosquito_WingVein"
+        ]
+      }
+    ],
+    "bone_names": [
+      "Root",
+      "Thorax",
+      "Head",
+      "Proboscis",
+      "Socket.Mouth",
+      "Socket.AimForward",
+      "Abdomen01",
+      "Abdomen02",
+      "Socket.Back",
+      "Socket.CameraTarget",
+      "Socket.WingRoot.L",
+      "Socket.WingRoot.R",
+      "Wing.L",
+      "Leg101.L",
+      "Leg102.L",
+      "Leg103.L",
+      "Leg201.L",
+      "Leg202.L",
+      "Leg203.L",
+      "Leg301.L",
+      "Leg302.L",
+      "Leg303.L",
+      "Wing.R",
+      "Leg101.R",
+      "Leg102.R",
+      "Leg103.R",
+      "Leg201.R",
+      "Leg202.R",
+      "Leg203.R",
+      "Leg301.R",
+      "Leg302.R",
+      "Leg303.R",
+      "Socket.GroundContact"
+    ],
+    "bind_bones": [
+      {
+        "name": "Root",
+        "parent": "",
+        "head_blender_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "tail_blender_m": [
+          0.0,
+          0.0,
+          0.029999999329447746
+        ]
+      },
+      {
+        "name": "Thorax",
+        "parent": "Root",
+        "head_blender_m": [
+          0.0,
+          0.014999999664723873,
+          0.10999999940395355
+        ],
+        "tail_blender_m": [
+          0.0,
+          -0.03500000014901161,
+          0.10400000214576721
+        ]
+      },
+      {
+        "name": "Head",
+        "parent": "Thorax",
+        "head_blender_m": [
+          0.0,
+          -0.04100000113248825,
+          0.10000000149011612
+        ],
+        "tail_blender_m": [
+          0.0,
+          -0.08399999886751175,
+          0.10499999672174454
+        ]
+      },
+      {
+        "name": "Proboscis",
+        "parent": "Head",
+        "head_blender_m": [
+          0.0,
+          -0.09600000083446503,
+          0.09200000017881393
+        ],
+        "tail_blender_m": [
+          0.0,
+          -0.1899999976158142,
+          0.0
+        ]
+      },
+      {
+        "name": "Socket.Mouth",
+        "parent": "Proboscis",
+        "head_blender_m": [
+          0.0,
+          -0.1899999976158142,
+          0.0
+        ],
+        "tail_blender_m": [
+          0.0,
+          -0.20000000298023224,
+          0.0
+        ]
+      },
+      {
+        "name": "Socket.AimForward",
+        "parent": "Head",
+        "head_blender_m": [
+          0.0,
+          -0.07999999821186066,
+          0.0
+        ],
+        "tail_blender_m": [
+          0.0,
+          -0.11999999731779099,
+          0.0
+        ]
+      },
+      {
+        "name": "Abdomen01",
+        "parent": "Thorax",
+        "head_blender_m": [
+          0.0,
+          0.039000000804662704,
+          0.10499999672174454
+        ],
+        "tail_blender_m": [
+          0.0,
+          0.10999999940395355,
+          0.06199999898672104
+        ]
+      },
+      {
+        "name": "Abdomen02",
+        "parent": "Abdomen01",
+        "head_blender_m": [
+          0.0,
+          0.10999999940395355,
+          0.06199999898672104
+        ],
+        "tail_blender_m": [
+          0.0,
+          0.20399999618530273,
+          -0.029999999329447746
+        ]
+      },
+      {
+        "name": "Socket.Back",
+        "parent": "Thorax",
+        "head_blender_m": [
+          0.0,
+          0.014999999664723873,
+          0.08500000089406967
+        ],
+        "tail_blender_m": [
+          0.0,
+          0.014999999664723873,
+          0.10000000149011612
+        ]
+      },
+      {
+        "name": "Socket.CameraTarget",
+        "parent": "Thorax",
+        "head_blender_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "tail_blender_m": [
+          0.0,
+          -0.019999999552965164,
+          0.0
+        ]
+      },
+      {
+        "name": "Socket.WingRoot.L",
+        "parent": "Thorax",
+        "head_blender_m": [
+          0.017000000923871994,
+          0.0,
+          0.0820000022649765
+        ],
+        "tail_blender_m": [
+          0.017000000923871994,
+          -0.019999999552965164,
+          0.0820000022649765
+        ]
+      },
+      {
+        "name": "Socket.WingRoot.R",
+        "parent": "Thorax",
+        "head_blender_m": [
+          -0.017000000923871994,
+          0.0,
+          0.0820000022649765
+        ],
+        "tail_blender_m": [
+          -0.017000000923871994,
+          -0.019999999552965164,
+          0.0820000022649765
+        ]
+      },
+      {
+        "name": "Wing.L",
+        "parent": "Thorax",
+        "head_blender_m": [
+          0.017000000923871994,
+          0.0,
+          0.0820000022649765
+        ],
+        "tail_blender_m": [
+          0.2199999988079071,
+          0.06499999761581421,
+          0.1809999942779541
+        ]
+      },
+      {
+        "name": "Leg101.L",
+        "parent": "Thorax",
+        "head_blender_m": [
+          0.027000000700354576,
+          -0.032999999821186066,
+          0.0989999994635582
+        ],
+        "tail_blender_m": [
+          0.09700000286102295,
+          -0.05380000174045563,
+          0.006000000052154064
+        ]
+      },
+      {
+        "name": "Leg102.L",
+        "parent": "Leg101.L",
+        "head_blender_m": [
+          0.09700000286102295,
+          -0.05380000174045563,
+          0.006000000052154064
+        ],
+        "tail_blender_m": [
+          0.10700000077486038,
+          -0.08500000089406967,
+          -0.10760000348091125
+        ]
+      },
+      {
+        "name": "Leg103.L",
+        "parent": "Leg102.L",
+        "head_blender_m": [
+          0.10700000077486038,
+          -0.08500000089406967,
+          -0.10760000348091125
+        ],
+        "tail_blender_m": [
+          0.11900000274181366,
+          -0.07900000363588333,
+          -0.11259999871253967
+        ]
+      },
+      {
+        "name": "Leg201.L",
+        "parent": "Thorax",
+        "head_blender_m": [
+          0.027000000700354576,
+          0.006000000052154064,
+          0.0949999988079071
+        ],
+        "tail_blender_m": [
+          0.1120000034570694,
+          0.01080000028014183,
+          -0.003000000026077032
+        ]
+      },
+      {
+        "name": "Leg202.L",
+        "parent": "Leg201.L",
+        "head_blender_m": [
+          0.1120000034570694,
+          0.01080000028014183,
+          -0.003000000026077032
+        ],
+        "tail_blender_m": [
+          0.09399999678134918,
+          0.017999999225139618,
+          -0.10760000348091125
+        ]
+      },
+      {
+        "name": "Leg203.L",
+        "parent": "Leg202.L",
+        "head_blender_m": [
+          0.09399999678134918,
+          0.017999999225139618,
+          -0.10760000348091125
+        ],
+        "tail_blender_m": [
+          0.10599999874830246,
+          0.024000000208616257,
+          -0.11259999871253967
+        ]
+      },
+      {
+        "name": "Leg301.L",
+        "parent": "Thorax",
+        "head_blender_m": [
+          0.027000000700354576,
+          0.041999999433755875,
+          0.09099999815225601
+        ],
+        "tail_blender_m": [
+          0.08900000154972076,
+          0.06880000233650208,
+          0.0020000000949949026
+        ]
+      },
+      {
+        "name": "Leg302.L",
+        "parent": "Leg301.L",
+        "head_blender_m": [
+          0.08900000154972076,
+          0.06880000233650208,
+          0.0020000000949949026
+        ],
+        "tail_blender_m": [
+          0.08100000023841858,
+          0.10899999737739563,
+          -0.10760000348091125
+        ]
+      },
+      {
+        "name": "Leg303.L",
+        "parent": "Leg302.L",
+        "head_blender_m": [
+          0.08100000023841858,
+          0.10899999737739563,
+          -0.10760000348091125
+        ],
+        "tail_blender_m": [
+          0.09300000220537186,
+          0.11500000208616257,
+          -0.11259999871253967
+        ]
+      },
+      {
+        "name": "Wing.R",
+        "parent": "Thorax",
+        "head_blender_m": [
+          -0.017000000923871994,
+          0.0,
+          0.0820000022649765
+        ],
+        "tail_blender_m": [
+          -0.2199999988079071,
+          0.06499999761581421,
+          0.1809999942779541
+        ]
+      },
+      {
+        "name": "Leg101.R",
+        "parent": "Thorax",
+        "head_blender_m": [
+          -0.027000000700354576,
+          -0.032999999821186066,
+          0.0989999994635582
+        ],
+        "tail_blender_m": [
+          -0.09700000286102295,
+          -0.05380000174045563,
+          0.006000000052154064
+        ]
+      },
+      {
+        "name": "Leg102.R",
+        "parent": "Leg101.R",
+        "head_blender_m": [
+          -0.09700000286102295,
+          -0.05380000174045563,
+          0.006000000052154064
+        ],
+        "tail_blender_m": [
+          -0.10700000077486038,
+          -0.08500000089406967,
+          -0.10760000348091125
+        ]
+      },
+      {
+        "name": "Leg103.R",
+        "parent": "Leg102.R",
+        "head_blender_m": [
+          -0.10700000077486038,
+          -0.08500000089406967,
+          -0.10760000348091125
+        ],
+        "tail_blender_m": [
+          -0.11900000274181366,
+          -0.07900000363588333,
+          -0.11259999871253967
+        ]
+      },
+      {
+        "name": "Leg201.R",
+        "parent": "Thorax",
+        "head_blender_m": [
+          -0.027000000700354576,
+          0.006000000052154064,
+          0.0949999988079071
+        ],
+        "tail_blender_m": [
+          -0.1120000034570694,
+          0.01080000028014183,
+          -0.003000000026077032
+        ]
+      },
+      {
+        "name": "Leg202.R",
+        "parent": "Leg201.R",
+        "head_blender_m": [
+          -0.1120000034570694,
+          0.01080000028014183,
+          -0.003000000026077032
+        ],
+        "tail_blender_m": [
+          -0.09399999678134918,
+          0.017999999225139618,
+          -0.10760000348091125
+        ]
+      },
+      {
+        "name": "Leg203.R",
+        "parent": "Leg202.R",
+        "head_blender_m": [
+          -0.09399999678134918,
+          0.017999999225139618,
+          -0.10760000348091125
+        ],
+        "tail_blender_m": [
+          -0.10599999874830246,
+          0.024000000208616257,
+          -0.11259999871253967
+        ]
+      },
+      {
+        "name": "Leg301.R",
+        "parent": "Thorax",
+        "head_blender_m": [
+          -0.027000000700354576,
+          0.041999999433755875,
+          0.09099999815225601
+        ],
+        "tail_blender_m": [
+          -0.08900000154972076,
+          0.06880000233650208,
+          0.0020000000949949026
+        ]
+      },
+      {
+        "name": "Leg302.R",
+        "parent": "Leg301.R",
+        "head_blender_m": [
+          -0.08900000154972076,
+          0.06880000233650208,
+          0.0020000000949949026
+        ],
+        "tail_blender_m": [
+          -0.08100000023841858,
+          0.10899999737739563,
+          -0.10760000348091125
+        ]
+      },
+      {
+        "name": "Leg303.R",
+        "parent": "Leg302.R",
+        "head_blender_m": [
+          -0.08100000023841858,
+          0.10899999737739563,
+          -0.10760000348091125
+        ],
+        "tail_blender_m": [
+          -0.09300000220537186,
+          0.11500000208616257,
+          -0.11259999871253967
+        ]
+      },
+      {
+        "name": "Socket.GroundContact",
+        "parent": "Root",
+        "head_blender_m": [
+          0.0,
+          0.0,
+          -0.11400000005960464
+        ],
+        "tail_blender_m": [
+          0.0,
+          -0.019999999552965164,
+          -0.11400000005960464
+        ]
+      }
+    ],
+    "materials": [
+      "Mosquito_Abdomen",
+      "Mosquito_Expression",
+      "Mosquito_EyeWhite",
+      "Mosquito_Legs",
+      "Mosquito_Shell",
+      "Mosquito_Wing",
+      "Mosquito_WingVein"
+    ],
+    "material_palette": [
+      {
+        "name": "Mosquito_Abdomen",
+        "color": {
+          "r": 0.49000000953674316,
+          "g": 0.08500000089406967,
+          "b": 0.03999999910593033,
+          "a": 1.0
+        },
+        "roughness": 0.800000011920929
+      },
+      {
+        "name": "Mosquito_Expression",
+        "color": {
+          "r": 0.024000000208616257,
+          "g": 0.02199999988079071,
+          "b": 0.03500000014901161,
+          "a": 1.0
+        },
+        "roughness": 0.6399999856948853
+      },
+      {
+        "name": "Mosquito_EyeWhite",
+        "color": {
+          "r": 0.9399999976158142,
+          "g": 0.9100000262260437,
+          "b": 0.8199999928474426,
+          "a": 1.0
+        },
+        "roughness": 0.5799999833106995
+      },
+      {
+        "name": "Mosquito_Legs",
+        "color": {
+          "r": 0.10999999940395355,
+          "g": 0.05999999865889549,
+          "b": 0.06700000166893005,
+          "a": 1.0
+        },
+        "roughness": 0.8199999928474426
+      },
+      {
+        "name": "Mosquito_Shell",
+        "color": {
+          "r": 0.36000001430511475,
+          "g": 0.04500000178813934,
+          "b": 0.027000000700354576,
+          "a": 1.0
+        },
+        "roughness": 0.7599999904632568
+      },
+      {
+        "name": "Mosquito_Wing",
+        "color": {
+          "r": 0.6200000047683716,
+          "g": 0.6700000166893005,
+          "b": 0.8299999833106995,
+          "a": 0.41999998688697815
+        },
+        "roughness": 0.8500000238418579
+      },
+      {
+        "name": "Mosquito_WingVein",
+        "color": {
+          "r": 0.38999998569488525,
+          "g": 0.4000000059604645,
+          "b": 0.5299999713897705,
+          "a": 1.0
+        },
+        "roughness": 0.8600000143051147
+      }
+    ],
+    "passed": true,
+    "errors": []
+  },
+  "blender": "5.2.1 LTS",
+  "rendered": false,
+  "unity_import_verified": false,
+  "art_accepted": false,
+  "outputs_sha256": {
+    "LMS_Mosquito_alpha.blend": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
+    "LMS_Mosquito_alpha.fbx": "0b32d7623a70259d2f9c7bed2262bd37a0296296d1cd6f175babd3df1de33abb",
+    "audit.json": "f8b2c7f8b55e02daca1f04d15f6090da9a2338e13c24068f7efaf63f6a37f752"
+  }
+}

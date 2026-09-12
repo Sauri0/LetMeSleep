@@ -1,0 +1,353 @@
+{
+  "schema": "lms-mosquito-native-delivery-v1",
+  "status": "NATIVE_CANDIDATE_R3_NOT_ART_APPROVED",
+  "source_base_commit": "cc4c871ac066cdbc47db29db9efda556fd7163ac",
+  "blender": "5.2.1 LTS",
+  "threads": 2,
+  "unity_opened": false,
+  "gpu_render_used": false,
+  "slot_released": true,
+  "source_and_outputs_sha256": {
+    "author_mosquito_geometry.py": "5fa539d58e25131634182d228da9cb35acda8351c9e9e6a4f628d435c60ae3f5",
+    "author_mosquito_motion.py": "1887e18dbb560747eeb96955b00f10a7c508316d26466d7fbdbd4cf97bb9494e",
+    "build_mosquito_candidate.py": "c8f25c46c684762d9e8787ec2757e94a3c13007d56987dbb839211e9ea96f33a",
+    "audit_mosquito_candidate.py": "a7bba2b80146266645ac92be5b6ce810bd2d656d964f2e46b30a9140a3c4ea1f",
+    "check_mosquito_source.py": "76df08bb896e31b075ac0b4f567ec8d6b31d0e0af2ef387f8c3326b43dbabd86",
+    "check_mosquito_audit_math.py": "0f6e44e8774a0fcf1b0aaa2e1c9592b64120e71461dbf69d3c3d89db7390b45c",
+    "study_mosquito_surface.py": "f07d93d8905b611c6e6ff694551c9ffb9bc893330bf1ef9503a1ea213869599c",
+    "render_mosquito_witness.py": "4c082bca1fe43f4f0e1a4f8efb8922112e57bd28a67cc869c8281342c26d4ff1",
+    "mosquito/LMS_Mosquito_alpha.blend": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
+    "mosquito/LMS_Mosquito_alpha.fbx": "0b32d7623a70259d2f9c7bed2262bd37a0296296d1cd6f175babd3df1de33abb",
+    "mosquito/audit.json": "f8b2c7f8b55e02daca1f04d15f6090da9a2338e13c24068f7efaf63f6a37f752",
+    "mosquito/candidate.json": "ee07cebf6727599c65394c7ed62f7b67a05de9da5dc3701efbafb817d1ea3543",
+    "mosquito/candidate_motion_audit.json": "1f3c83526b4c1579e6244a67997434f1c3aae85e422b3a109a48076a0dafb781",
+    "mosquito/candidate_surface_support_audit.json": "e31a7de0da92b104a2af3d473c8d74e659a14a100a3b75aa821e0bf2d19a0686"
+  },
+  "foreign_files_unchanged": {
+    "human/LMS_Human_alpha.blend": {
+      "before": "671bcb318eed163c038873d8e3cff6b7a8db3d21f90cd3eb4dab1ace66a8ee54",
+      "after": "671bcb318eed163c038873d8e3cff6b7a8db3d21f90cd3eb4dab1ace66a8ee54"
+    },
+    "flyswatter/LMS_Flyswatter_alpha.fbx": {
+      "before": "e2c01038ae45fd5a22cb52a14c4b34edd4ffb3fc54dd3494dcc8743bac17cc16",
+      "after": "e2c01038ae45fd5a22cb52a14c4b34edd4ffb3fc54dd3494dcc8743bac17cc16"
+    },
+    "flyswatter/LMS_Flyswatter_alpha.blend": {
+      "before": "3181959bcc441ba25f86e768bd0e311e754cf898d58d331b09298d0f901a110c",
+      "after": "3181959bcc441ba25f86e768bd0e311e754cf898d58d331b09298d0f901a110c"
+    },
+    "human/LMS_Human_alpha.fbx": {
+      "before": "bfdf08992401c7bdc174a7cc001cffcce1c1c48ee71bfd9bd20e7c8d7dfa9095",
+      "after": "bfdf08992401c7bdc174a7cc001cffcce1c1c48ee71bfd9bd20e7c8d7dfa9095"
+    },
+    "human/audit.json": {
+      "before": "32ae4faa9b56288c7d29ce08ad829aab379bbd27553b35bab7e5528076918bdc",
+      "after": "32ae4faa9b56288c7d29ce08ad829aab379bbd27553b35bab7e5528076918bdc"
+    },
+    "flyswatter/audit.json": {
+      "before": "8746b773998015b57cb4438ab873b46408cc50cda6b9a489c2f7e14f81e271f3",
+      "after": "8746b773998015b57cb4438ab873b46408cc50cda6b9a489c2f7e14f81e271f3"
+    }
+  },
+  "legacy_root_sockets": [
+    {
+      "bone": "Root",
+      "maximum_bind_change_source_m": 0.0,
+      "parent_equal": true
+    },
+    {
+      "bone": "Socket.Mouth",
+      "maximum_bind_change_source_m": 0.0,
+      "parent_equal": true
+    },
+    {
+      "bone": "Socket.AimForward",
+      "maximum_bind_change_source_m": 0.0,
+      "parent_equal": true
+    },
+    {
+      "bone": "Socket.Back",
+      "maximum_bind_change_source_m": 0.0,
+      "parent_equal": true
+    },
+    {
+      "bone": "Socket.CameraTarget",
+      "maximum_bind_change_source_m": 0.0,
+      "parent_equal": true
+    },
+    {
+      "bone": "Socket.WingRoot.L",
+      "maximum_bind_change_source_m": 0.0,
+      "parent_equal": true
+    },
+    {
+      "bone": "Socket.WingRoot.R",
+      "maximum_bind_change_source_m": 0.0,
+      "parent_equal": true
+    },
+    {
+      "bone": "Socket.GroundContact",
+      "maximum_bind_change_source_m": 0.0,
+      "parent_equal": true
+    }
+  ],
+  "rig_unchanged_r2_to_r3": true,
+  "common_helpers_ast_equal_to_director": {
+    "Character": true,
+    "material": true,
+    "mesh": true,
+    "tube": true,
+    "ellipsoid": true,
+    "strip": true
+  },
+  "director_builder_sha256_at_check": "77c241507b03e71973c36ef13fefe63cd09af35df54e7c2bd3a32af0e366612b",
+  "views": {
+    "r2": {
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "files": {
+        "back.png": "f8427fcf02b790106bf68ad21502f20e7b19c07dc92524810a9656d71aaa8074",
+        "face_front.png": "8d7c1038e10eb74d7a827af52225399394d6955c09eea615cb413d2ceb002ac8",
+        "face_profile.png": "fb565613c488b3fd1ff8da277817d2973ad53e868e2da69664ca0a110433b55f",
+        "front.png": "a846f9127d2ce3f147f71ea1872d12b795d9da8b630617cb53683f3063a064e3",
+        "legs_front.png": "6551991ddb96ca7fcd02c57c13afed07c1203130731301b22e23c026b4cfc2db",
+        "profile_left.png": "6e3a1cd716f9a0c64ce18e2cd80277d734e3175702235917cb7de7918d012357",
+        "profile_right.png": "00ea26b243a43de694ccbea17924326fe7cf6c94eb7d41ca63e251d1c66498f0",
+        "three_quarter.png": "89fa80df957b3bed57ebada07282966ce71e25372c4f59811b57383f1f6e6a31",
+        "three_quarter_reverse.png": "dc02443dece35fe7714ccdec0420891fad125a8cec6ec1d065e1b673ba30b1f4",
+        "wing_transmission.png": "3b163e41032a4cfbf6d19c144cdaf75246d30a5eaabbddef813c5bc3e599108f",
+        "witness.json": "1a55ea66badb1f7d72bca00433a88b19c711909938f62964249c4ad350199949"
+      }
+    },
+    "r3": {
+      "source_sha256": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
+      "files": {
+        "front.png": "8e324eae9ef7bb1a71eec4cfcd92d6b74df0442ec9ebcde3fd2384a900fc390b",
+        "three_quarter.png": "d0c8c6a6d73dde3f7e4cbb10aaa6dcceb5e155c3a813b9fe7aba47ae059a900f",
+        "wing_transmission.png": "b08c5526385e4dadc27594446be9a04f91131acb2ab8bbd68a26fb510ada2cc5",
+        "witness.json": "619fda18783057434a8dbabfc95e631679f75fd2b4e454a563ac7b788430c86d"
+      }
+    }
+  },
+  "processes": [
+    {
+      "start": "2026-09-12T17:54:00.6457964-03:00",
+      "step": "generate",
+      "exitCode": 0,
+      "pid": 36144,
+      "end": "2026-09-12T17:54:07.7720346-03:00"
+    },
+    {
+      "start": "2026-09-12T17:54:34.9231969-03:00",
+      "step": "audit",
+      "end": "2026-09-12T17:54:36.4329399-03:00",
+      "pid": 16916,
+      "exitCode": 1
+    },
+    {
+      "start": "2026-09-12T17:55:13.3098745-03:00",
+      "step": "audit2",
+      "exitCode": 1,
+      "pid": 9980,
+      "end": "2026-09-12T17:55:19.1819567-03:00"
+    },
+    {
+      "exitCode": 0,
+      "end": "2026-09-12T17:57:05.9129151-03:00",
+      "start": "2026-09-12T17:56:57.6551355-03:00",
+      "step": "generate",
+      "pid": 36100
+    },
+    {
+      "exitCode": 0,
+      "end": "2026-09-12T17:57:11.8015951-03:00",
+      "start": "2026-09-12T17:57:05.9506442-03:00",
+      "step": "audit",
+      "pid": 20076
+    },
+    {
+      "exitCode": 0,
+      "end": "2026-09-12T17:57:15.0530292-03:00",
+      "start": "2026-09-12T17:57:11.8116825-03:00",
+      "step": "surface",
+      "pid": 33640
+    },
+    {
+      "end": "2026-09-12T18:01:29.2582846-03:00",
+      "exitCode": 0,
+      "start": "2026-09-12T17:59:12.5789042-03:00",
+      "step": "render",
+      "pid": 15028
+    },
+    {
+      "exitCode": 0,
+      "pid": 9848,
+      "step": "generate",
+      "start": "2026-09-12T18:02:47.5884339-03:00",
+      "end": "2026-09-12T18:02:53.9116349-03:00"
+    },
+    {
+      "exitCode": 0,
+      "pid": 31084,
+      "step": "audit",
+      "start": "2026-09-12T18:02:53.9453822-03:00",
+      "end": "2026-09-12T18:02:58.6981908-03:00"
+    },
+    {
+      "exitCode": 0,
+      "pid": 37984,
+      "step": "surface",
+      "start": "2026-09-12T18:02:58.7081409-03:00",
+      "end": "2026-09-12T18:03:01.1406673-03:00"
+    },
+    {
+      "start": "2026-09-12T18:04:10.1269130-03:00",
+      "end": "2026-09-12T18:04:35.5369665-03:00",
+      "step": "render",
+      "pid": 25824,
+      "exitCode": 0
+    }
+  ],
+  "native_motion": {
+    "passed": true,
+    "samples": 894,
+    "actions": 30,
+    "mesh_markers": 30,
+    "endpoint_rows": 20,
+    "maximum_source_fbx_mesh_marker_difference_source_m": 7.032416699252654e-07,
+    "maximum_source_fbx_orientation_difference_degrees": 0.00014494049273048316,
+    "maximum_endpoint_mesh_marker_difference_source_m": 1.1833295355937325e-07,
+    "sampling": {
+      "integer_frames_only": true,
+      "subframes_sampled": false,
+      "runtime_blends_sampled": false,
+      "endpoint_phase_policy": "last frame of outgoing -> first frame of incoming; arbitrary runtime loop exit phase unverified"
+    }
+  },
+  "surface_support": {
+    "passed": true,
+    "samples": 636,
+    "minimum_supporting_feet": 3,
+    "worst_clearance_unity_m": -0.0008647702634334564,
+    "scope": "mesh under agreed floor/wall/ceiling frames at .056/.057 root offsets; no gameplay execution"
+  },
+  "surface_contract": {
+    "clip": "Mosquito_SurfaceWalk",
+    "source_units": "metres, Blender",
+    "stride_source_m": 0.116,
+    "stance_duty": 0.58,
+    "unity_scale_applied_once": 0.5,
+    "distance_per_cycle_unity_m": 0.1,
+    "frames": 31,
+    "start_frame": 1,
+    "end_frame": 31,
+    "fps": 30,
+    "duration_seconds": 1.0,
+    "support_center": "each coxa Y; tarsal bind X/Z retained",
+    "phase_zero": "L1/L3/R2 begin support; L2/R1/R3 phase +0.5",
+    "phase_direction": "positive phase moves supported feet along source +Y; actor forward is source -Y",
+    "authority_phase_distance_m": 0.3,
+    "authority_unwrapped_phase_multiplier": 3.0,
+    "phase_formula": "frac(authorityMotionPhase * (0.3 / distance_per_cycle_unity_m)); convert before modulo, once",
+    "animator_speed_formula": "duration_seconds * actual_tangential_speed_mps / distance_per_cycle_unity_m",
+    "nominal_game_speed_mps_unchanged": 0.65,
+    "nominal_cadence_hz": 6.5,
+    "review_speed_range_mps": [
+      0.08,
+      0.8
+    ],
+    "review_cadence_range_hz": [
+      0.7999999999999999,
+      8.0
+    ],
+    "proposed_animator_speed_limits": [
+      0,
+      8.0
+    ],
+    "nominal_60fps_samples_per_cycle": 9.23076923076923,
+    "swing_lift_source_m": 0.02,
+    "range_status": "analytic source contract; readable cadence/contact requires native review",
+    "analytic_leg_ranges": [
+      {
+        "leg": 1,
+        "side": "L",
+        "upper_length_source_m": 0.11824398504786618,
+        "lower_length_source_m": 0.11823028376858444,
+        "reach_min_source_m": 1.3701279281741474e-05,
+        "reach_max_source_m": 0.23647426881645062,
+        "target_min_source_m": 0.20302600818614347,
+        "target_max_source_m": 0.22961471510562403,
+        "extension_margin_source_m": 0.0068595537108265825,
+        "fold_margin_source_m": 0.20301230690686173
+      },
+      {
+        "leg": 2,
+        "side": "L",
+        "upper_length_source_m": 0.12981540740605485,
+        "lower_length_source_m": 0.10638138934982942,
+        "reach_min_source_m": 0.023434018056225428,
+        "reach_max_source_m": 0.2361967967558843,
+        "target_min_source_m": 0.1945038817093376,
+        "target_max_source_m": 0.22176475537517726,
+        "extension_margin_source_m": 0.014432041380707028,
+        "fold_margin_source_m": 0.17106986365311216
+      },
+      {
+        "leg": 3,
+        "side": "L",
+        "upper_length_source_m": 0.11172842073528114,
+        "lower_length_source_m": 0.1170136744145743,
+        "reach_min_source_m": 0.005285253679293167,
+        "reach_max_source_m": 0.22874209514985544,
+        "target_min_source_m": 0.1865849940375699,
+        "target_max_source_m": 0.21449129129764566,
+        "extension_margin_source_m": 0.014250803852209781,
+        "fold_margin_source_m": 0.18129974035827673
+      },
+      {
+        "leg": 1,
+        "side": "R",
+        "upper_length_source_m": 0.11824398504786618,
+        "lower_length_source_m": 0.11823028376858444,
+        "reach_min_source_m": 1.3701279281741474e-05,
+        "reach_max_source_m": 0.23647426881645062,
+        "target_min_source_m": 0.20302600818614347,
+        "target_max_source_m": 0.22961471510562403,
+        "extension_margin_source_m": 0.0068595537108265825,
+        "fold_margin_source_m": 0.20301230690686173
+      },
+      {
+        "leg": 2,
+        "side": "R",
+        "upper_length_source_m": 0.12981540740605485,
+        "lower_length_source_m": 0.10638138934982942,
+        "reach_min_source_m": 0.023434018056225428,
+        "reach_max_source_m": 0.2361967967558843,
+        "target_min_source_m": 0.1945038817093376,
+        "target_max_source_m": 0.22176475537517726,
+        "extension_margin_source_m": 0.014432041380707028,
+        "fold_margin_source_m": 0.17106986365311216
+      },
+      {
+        "leg": 3,
+        "side": "R",
+        "upper_length_source_m": 0.11172842073528114,
+        "lower_length_source_m": 0.1170136744145743,
+        "reach_min_source_m": 0.005285253679293167,
+        "reach_max_source_m": 0.22874209514985544,
+        "target_min_source_m": 0.1865849940375699,
+        "target_max_source_m": 0.21449129129764566,
+        "extension_margin_source_m": 0.014250803852209781,
+        "fold_margin_source_m": 0.18129974035827673
+      }
+    ],
+    "runtime_phase_sync_verified": false
+  },
+  "preserved_r2_archive": "N:\\LetMeSleep\\Worktrees\\mosquito\\work\\mosquito-candidate\\r2",
+  "known_open_defects": [
+    "P1 crossed leg projection in front, inspect Unity scale/movement before next geometry change",
+    "P2 brow/head and abdomen hierarchy per independent R2 visual review",
+    "R3 has front/35/transmission only; remaining final angles not captured",
+    "Unity import, local/remote SurfaceVisualProbe, real playback, skin bite and runtime blends unverified",
+    "No art or Branko approval; no publication or stage change"
+  ]
+}

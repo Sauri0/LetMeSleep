@@ -1,0 +1,74 @@
+{
+  "source": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/mosquito/LMS_Mosquito_alpha.blend",
+  "source_sha256": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
+  "renderer": "Cycles CPU",
+  "blender": "5.2.1 LTS",
+  "threads": 2,
+  "samples": 8,
+  "resolution": [
+    640,
+    640
+  ],
+  "actual_action_evaluated": true,
+  "image_count": 3,
+  "sequence": false,
+  "output_fps": null,
+  "playback_multiplier": 1,
+  "comparison_limit": "same named angles, neutral source renderer; not the old Unity camera/light instance",
+  "wing_material_policy": "saved source material, including both physical faces; Unity culling/shader comparison remains pending",
+  "runtime_evidence": false,
+  "art_accepted": false,
+  "images": [
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r3/front.png",
+      "source_sha256": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "front",
+      "yaw_unity_degrees": 0,
+      "source_camera_yaw_degrees": 0,
+      "pitch_degrees": 8,
+      "focus": [
+        0,
+        0,
+        0.055
+      ],
+      "framing": 0.66
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r3/three_quarter.png",
+      "source_sha256": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "three_quarter",
+      "yaw_unity_degrees": 35,
+      "source_camera_yaw_degrees": -35,
+      "pitch_degrees": 8,
+      "focus": [
+        0,
+        0,
+        0.055
+      ],
+      "framing": 0.66
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r3/wing_transmission.png",
+      "source_sha256": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "wing_transmission",
+      "yaw_unity_degrees": 180,
+      "source_camera_yaw_degrees": -180,
+      "pitch_degrees": 52,
+      "focus": [
+        0,
+        0.045,
+        0.075
+      ],
+      "framing": 0.58
+    }
+  ]
+}

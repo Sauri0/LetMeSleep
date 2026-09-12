@@ -134,12 +134,16 @@ def mosquito(c):
     def flight(t, hover=False):
         stance()
         wave = math.sin(TAU * t)
-        p.rotate('Thorax', ((.008 * wave if hover else -.085 + .008 * wave), 0, 0))
-        p.rotate('Abdomen01', ((.016 if hover else .065) + .014 * wave, 0, 0))
+        # Both air loops meet the same departure/approach pose at phase zero.
+        # A smooth envelope preserves Fly's tuck/lean inside the loop without a
+        # 48 mm marker jump at Detach->Fly or Fly->PerchEnter.
+        drive = 0 if hover else math.sin(math.pi * t) ** 2
+        p.rotate('Thorax', (-.085 * drive + .008 * wave, 0, 0))
+        p.rotate('Abdomen01', (.016 + .049 * drive + .014 * wave, 0, 0))
         p.rotate('Abdomen02', (-.022 * wave, 0, 0))
         p.update()
-        legs_air(.48 if hover else 1, trail=.007 if hover else .024)
-        wings((.43 if hover else .53) * math.cos(TAU * 3 * t), .04)
+        legs_air(.48 + .52 * drive, trail=.007 + .017 * drive)
+        wings((.43 + .10 * drive) * math.cos(TAU * 3 * t), .04)
         return p.snapshot()
 
     sampled(c, 'Fly', 13, lambda t: flight(t, False))
@@ -157,6 +161,7 @@ def mosquito(c):
     def perch(t):
         stance()
         u = smooth(t)
+        p.rotate('Abdomen01', (.016 * (1 - u), 0, 0))
         # Extend all six legs before the wings settle; exact bind support at end.
         legs_air(.48 * (1 - smooth(min(1, t / .72))), trail=.007)
         wings(.43 * (1 - u) * math.cos(TAU * 3 * t) + .12 * u,
@@ -169,10 +174,11 @@ def mosquito(c):
     def brake(t):
         stance()
         u = smooth(t)
-        p.rotate('Thorax', (-.085 * (1 - u), 0, 0))
-        p.rotate('Abdomen01', (.065 * (1 - u), 0, 0))
-        legs_air(1 - .52 * u, trail=.024 - .017 * u)
-        wings((.53 - .10 * u) * math.cos(TAU * 3 * t), .04)
+        effort = math.sin(math.pi * u) ** 2
+        p.rotate('Thorax', (.065 * effort, 0, 0))
+        p.rotate('Abdomen01', (.016 + .030 * effort, 0, 0))
+        legs_air(.48 + .25 * effort, trail=.007)
+        wings((.43 + .06 * effort) * math.cos(TAU * 3 * t), .04)
         return p.snapshot()
 
     sampled(c, 'Brake', 25, brake)
@@ -211,6 +217,7 @@ def mosquito(c):
     def detach(t):
         u = smooth(t)
         bite(0, 1 - u)
+        p.rotate('Abdomen01', (.040 * (1 - u) + .016 * u, 0, 0))
         # Start wingbeats before the tarsi leave; Root displacement belongs to game.
         lift = .48 * smooth(max(0, (t - .22) / .78))
         legs_air(lift, trail=.007)

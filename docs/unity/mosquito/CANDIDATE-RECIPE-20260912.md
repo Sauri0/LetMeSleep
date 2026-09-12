@@ -1,6 +1,6 @@
 # Mosquito: fuente modular y receta de candidato
 
-Estado: SOURCE_ONLY, con SurfaceWalk reautorizado por Director para resolver distancia/cadencia antes de generar. Rama `codex/unity-mosquito-specialist`, base `c888d96`. No se ejecutaron Blender, Unity, render ni auditoría de assets durante esta entrega. Los `.blend`/FBX/audit existentes siguen siendo el candidato anterior. No hay aprobación artística ni de movimiento nuevo.
+Estado actual: **NATIVE_CANDIDATE_R3**, generado y auditado en el turno CPU2 concedido por Director. El turno terminó y fue devuelto. Ver `NATIVE-CANDIDATE-20260912.md` y `NATIVE-VALIDATION-20260912.json` para archivos, hashes, resultados, procesos y pendientes. Unity, reproducción de gameplay y aprobación artística siguen pendientes. La receta siguiente conserva el diseño/contrato de fuentes; los recibos SOURCE-CHECK/SURFACE-STUDY son comprobaciones analíticas, separadas de la validación nativa posterior.
 
 Se leyeron TEAM-RECOVERY-20260912, CHARACTER-QUALITY-BAR y UI-ENVIRONMENT-QUALITY-BAR. Se abrieron con view_image las ocho referencias originales de `N:/LetMeSleep/References/CharacterQuality-20260912`, más silhouette7 Mosquito_Idle_35/90. Se incorporaron M1–M5 del informe independiente `N:/LetMeSleep/Validation/TeamRecovery/visual/FIRST-FOUR-SAMPLES-20260912.md`. Referencias 03/04/05/07 fijan silueta, planos y alas; 01/06/08 fijan coherencia de acabado del elenco. Sus etiquetas no amplían contenido.
 
@@ -22,7 +22,7 @@ Humanos transfirió la extracción inicial y conserva los compartidos. Este espe
 - `art_source/unity/characters/author_mosquito_geometry.py`: `create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh) -> Character` ligado, con `c.contact`, sin exportar ni animar.
 - `art_source/unity/characters/author_mosquito_motion.py`: `mosquito(c) -> None`. Importa dentro de la función `Pose`, `sampled`, `smooth`, `TAU` desde `author_motion`; así el wrapper puede delegar sin importación circular durante carga.
 - `build_mosquito_candidate.py`: entry point exclusivo de especie. Importa helpers de `build_characters` sin ejecutar su main, llama geometría/movimiento y exporta sólo `mosquito/`. No modifica manifiesto común ni exports humanos/herramienta.
-- `check_mosquito_source.py`: checks livianos sin bpy. `audit_mosquito_candidate.py`: auditoría Blender pendiente de ejecución.
+- `check_mosquito_source.py`: checks livianos sin bpy. `audit_mosquito_candidate.py`: auditoría Blender ejecutada para R3; salida exclusiva `mosquito/candidate_motion_audit.json`.
 
 Conexión a cargo de Humanos/Director: wrapper compartido invoca `create_mosquito(...)`, `author_mosquito_motion.mosquito(c)`, `c.export()`. No copiar la función vieja de author_motion encima de este módulo. No regenerar ambas especies accidentalmente. Esta entrega no toca build_characters.py, author_motion.py, auditores compartidos, manifest, runtime ni Unity assets.
 
@@ -30,7 +30,7 @@ Se conservan 33 nombres de hueso previstos, 15 nombres/duraciones de clips y los
 
 ## Movimiento y coordinación con Presentación
 
-Fly/Hover tienen flexión y pose diferentes. Las alas se reflejan en coordenadas del rig, sin asumir que sus ejes locales son iguales. Perch/Detach extienden/recogen patas y cambian batido; SurfaceWalk mantiene dos trípodes. BiteStart/BiteLoop/Bite retienen Head/Thorax/Proboscis en bind y concentran alimentación en abdomen para no desplazar Mouth. Fall/Recover proponen contacto desde mínimo de malla evaluada y trasladan Thorax, nunca Root. Todo esto describe código: faltan evaluación Blender y clips nativos completos.
+Fly/Hover conservan flexión diferente dentro del ciclo y se unen a una pose aérea común con envolvente suave. La primera ejecución detectó saltos de unos48mm en marcadores al pasar Detach→Fly y Fly→PerchEnter; se corrigieron y se repitió la auditoría sin relajar umbrales. Las alas se reflejan en coordenadas del rig. Perch/Detach extienden/recogen patas y cambian batido; SurfaceWalk mantiene dos trípodes. BiteStart/BiteLoop/Bite retienen Head/Thorax/Proboscis en bind y concentran alimentación en abdomen para no desplazar Mouth. Fall/Recover contactan el soporte desde mínimo de malla evaluada y trasladan Thorax, nunca Root. Evaluación Blender/FBX aprobada en el alcance documentado; clips visuales completos y mezclas/runtime siguen pendientes.
 
 Contrato fuente actual de `c.contact.surface_walk` (función pura `surface_contract()`):
 
@@ -46,7 +46,7 @@ Contrato fuente actual de `c.contact.surface_walk` (función pura `surface_contr
 | Velocidad Animator propuesta id6 | `T * velocidadTangencialReal / D`, nominal **6.5x**. Límites propuestos **0–8x**, sin el clamp genérico2.5. No aplicar al vuelo id2 |
 | Rango para revisión | .08–.80 m/s equivale a .8–8 ciclos/s; .80 es margen de estudio de representación, **no una nueva velocidad/regla**. Legibilidad/contacto nativos pendientes |
 
-La primera fuente `.020 m/ciclo` habría exigido32.5Hz a .65m/s. Director pidió resolverla antes del lote pesado. `SURFACE-STUDY-20260912.json` compara nueve pares de D=.08/.10/.12 y duty=.55/.58/.60, 1201 fases por pata. Se eligió .10/.58 por margen de alcance y cadencia intermedios: .08 exigiría8.125Hz nominales y .12 tiene menos margen de extensión. La geometría conserva exactamente su SHA de11a2cc9: no se estiró ninguna pata ni se cambió colisión/socket. El centro anterior de apoyos desplazado respecto de la coxa consumía alcance; recentrar la trayectoria permite una zancada mayor dentro de las mismas longitudes.
+La primera fuente `.020 m/ciclo` habría exigido32.5Hz a .65m/s. Director pidió resolverla antes del lote pesado. `SURFACE-STUDY-20260912.json` compara nueve pares de D=.08/.10/.12 y duty=.55/.58/.60, 1201 fases por pata. Se eligió .10/.58 por margen de alcance y cadencia intermedios. Al elegir la zancada se conservó el SHA de geometría de11a2cc9. R3 cambia luego únicamente plano de membranas y paleta, por lo que el campo histórico `geometry_unchanged_from_11a2cc9` pasa a false; **ninguna longitud de pata, hueso ni contrato cambió**. La igualdad del rig R2/R3 y de Root/sockets contra la base queda registrada en NATIVE-VALIDATION. El centro anterior de apoyos desplazado respecto de la coxa consumía alcance; recentrar la trayectoria permite una zancada mayor dentro de las mismas longitudes.
 
 Rangos analíticos del contrato elegido, metros fuente (ambos lados simétricos):
 
@@ -62,11 +62,11 @@ Presentación coordina la conversión/fase/límites con Gameplay; este worktree 
 
 ## Comprobación realizada
 
-`python -B art_source/unity/characters/check_mosquito_source.py`: PASS. Recibo `SOURCE-CHECK-20260912.json`, hashes de las siete fuentes. Comprueba sintaxis, siete mallas custom cerradas/con orientación coherente/sin triángulos de área cero, constantes de sockets, 601 fases analíticas por pata, al menos tres objetivos apoyados y velocidad compatible con .100 m/ciclo. Margen mínimo de alcance actual: unos .006860 m fuente. Durante preparación detectó y corrigió alcance insuficiente en patas 1/3 y orientación de caras laterales en las cejas. El barrido separado de1201fases del estudio entrega los extremos con más resolución.
+`python -B art_source/unity/characters/check_mosquito_source.py`: PASS. Recibo `SOURCE-CHECK-20260912.json`, hashes de ocho fuentes incluyendo renderer. Comprueba sintaxis, siete mallas custom cerradas/con orientación coherente/sin triángulos de área cero, constantes de sockets, 601 fases analíticas por pata, al menos tres objetivos apoyados y velocidad compatible con .100 m/ciclo. Margen mínimo de alcance actual: unos .006860 m fuente. Durante preparación detectó y corrigió alcance insuficiente en patas1/3 y orientación de caras laterales en las cejas. El barrido separado de1201fases del estudio entrega los extremos con más resolución.
 
 Revisión independiente de animación detectó que la versión inicial del auditor sólo comparaba cabezas de hueso en FBX y cinco empalmes source. Se amplió a matrices de deformación `pose × bind inversa` en espacio global (sin usar tails reconstruidos), treinta marcadores sobre vértices reales con peso >.99 para alas, Head, Proboscis y seis tarsos, y diez empalmes en ambos formatos. Los marcadores se localizan en FBX por hueso/posición de bind para tolerar duplicación/reordenamiento de vértices; error de emparejamiento >1µm es fallo. Los gates registran posiciones >2mm fuente u orientación >2°; los loops propios conservan comparación de toda la malla. `check_mosquito_audit_math.py`: cuatro regresiones sin bpy para giro con raíz fija, marcador desplazado con hueso fijo, signo equivalente de quaternion y quaternion inválido. Esto prueba las métricas, no la importación real.
 
-No se simularon armature modifiers, pesos reales exportados, transparencia, deformaciones, poses intermedias ni importación. Este PASS no es PASS artístico ni de animación.
+Estos checks de Python no simulan armature modifiers ni importación. Sus resultados no sustituyen la auditoría Blender/FBX posterior ni la revisión artística.
 
 ## Receta para el turno del Director
 
@@ -86,4 +86,4 @@ Render es otro turno explícito. Solicitar seis vistas 0/35/90/180/270/325, rost
 
 ## Pendientes reales
 
-Blender/FBX, transparencia, colisión visual tras elevar silueta, apoyo del modelo real y ausencia de saltos en IK/cabeza/alas, trayectoria de caída en runtime, fase de locomoción y picadura sobre piel no verificados. La altura visual cambió sin tocar radio/escalado; Gameplay/Presentation deben medir contacto con la malla nueva. Aceptación de arte/animación por revisores y Branko pendiente. No publicar ni avanzar a beta.
+R3 ya tiene Blender/FBX y comprobación de soportes bajo transformaciones prescritas. Persisten P1 cruces frontales de patas, refinamientos visuales P2, contacto físico en Unity, clips completos a velocidad real, fase local/remota y picadura sobre piel. La altura visual cambió sin tocar radio/escalado; Gameplay/Presentation deben medir contacto con la malla nueva. Aceptación de arte/animación por revisores y Branko pendiente. No publicar ni avanzar a beta.

@@ -6,6 +6,7 @@ Restores unconnected FBX bones because the Blender importer infers use_connect.
 import hashlib
 import json
 import math
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -43,6 +44,7 @@ def threshold_errors(delta):
 
 
 def main():
+    sys.path.insert(0, str(ROOT))
     import bpy
     from mathutils import Vector
     from author_mosquito_geometry import MOUTH, SUPPORT_Z, SOCKETS

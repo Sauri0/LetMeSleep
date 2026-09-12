@@ -1,0 +1,193 @@
+{
+  "source": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/mosquito/LMS_Mosquito_alpha.blend",
+  "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+  "renderer": "Cycles CPU",
+  "blender": "5.2.1 LTS",
+  "threads": 2,
+  "samples": 12,
+  "resolution": [
+    768,
+    768
+  ],
+  "actual_action_evaluated": true,
+  "image_count": 10,
+  "sequence": false,
+  "output_fps": null,
+  "playback_multiplier": 1,
+  "comparison_limit": "same named angles, neutral source renderer; not the old Unity camera/light instance",
+  "wing_material_policy": "saved source material, including both physical faces; Unity culling/shader comparison remains pending",
+  "runtime_evidence": false,
+  "art_accepted": false,
+  "images": [
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r2/front.png",
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "front",
+      "yaw_unity_degrees": 0,
+      "source_camera_yaw_degrees": 0,
+      "pitch_degrees": 8,
+      "focus": [
+        0,
+        0,
+        0.055
+      ],
+      "framing": 0.66
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r2/three_quarter.png",
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "three_quarter",
+      "yaw_unity_degrees": 35,
+      "source_camera_yaw_degrees": -35,
+      "pitch_degrees": 8,
+      "focus": [
+        0,
+        0,
+        0.055
+      ],
+      "framing": 0.66
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r2/profile_right.png",
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "profile_right",
+      "yaw_unity_degrees": 90,
+      "source_camera_yaw_degrees": -90,
+      "pitch_degrees": 8,
+      "focus": [
+        0,
+        0,
+        0.055
+      ],
+      "framing": 0.66
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r2/back.png",
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "back",
+      "yaw_unity_degrees": 180,
+      "source_camera_yaw_degrees": -180,
+      "pitch_degrees": 8,
+      "focus": [
+        0,
+        0,
+        0.055
+      ],
+      "framing": 0.66
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r2/profile_left.png",
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "profile_left",
+      "yaw_unity_degrees": 270,
+      "source_camera_yaw_degrees": -270,
+      "pitch_degrees": 8,
+      "focus": [
+        0,
+        0,
+        0.055
+      ],
+      "framing": 0.66
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r2/three_quarter_reverse.png",
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "three_quarter_reverse",
+      "yaw_unity_degrees": 325,
+      "source_camera_yaw_degrees": -325,
+      "pitch_degrees": 8,
+      "focus": [
+        0,
+        0,
+        0.055
+      ],
+      "framing": 0.66
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r2/face_front.png",
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "face_front",
+      "yaw_unity_degrees": 0,
+      "source_camera_yaw_degrees": 0,
+      "pitch_degrees": 5,
+      "focus": [
+        0,
+        -0.075,
+        0.108
+      ],
+      "framing": 0.19
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r2/face_profile.png",
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "face_profile",
+      "yaw_unity_degrees": 90,
+      "source_camera_yaw_degrees": -90,
+      "pitch_degrees": 5,
+      "focus": [
+        0,
+        -0.06,
+        0.108
+      ],
+      "framing": 0.24
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r2/legs_front.png",
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "legs_front",
+      "yaw_unity_degrees": 0,
+      "source_camera_yaw_degrees": 0,
+      "pitch_degrees": 8,
+      "focus": [
+        0,
+        0.025,
+        -0.02
+      ],
+      "framing": 0.34
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/mosquito/art_source/unity/characters/review/mosquito-planar-r2/wing_transmission.png",
+      "source_sha256": "8f4a249f84e56c6b7b097aef8a16d6087c2c0b40d84c939d97bd16b441324759",
+      "clip": "Mosquito_Idle",
+      "phase": 0,
+      "source_frame": 1.0,
+      "view": "wing_transmission",
+      "yaw_unity_degrees": 180,
+      "source_camera_yaw_degrees": -180,
+      "pitch_degrees": 52,
+      "focus": [
+        0,
+        0.045,
+        0.075
+      ],
+      "framing": 0.58
+    }
+  ]
+}

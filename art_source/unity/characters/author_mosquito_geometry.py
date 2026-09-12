@@ -5,7 +5,7 @@ create_mosquito returns a bound Character without animation, export or rendering
 """
 import math
 
-REVISION = 'mosquito-planar-stance-r1'
+REVISION = 'mosquito-planar-stance-r3'
 UNITY_SCALE = .5
 COLLISION_RADIUS = .055
 SURFACE_ROOT_OFFSET = .057
@@ -71,15 +71,17 @@ def leg_points(side, index):
 
 def wing_mesh(side):
     """Lanceolate membrane with a raised spar and real thickness."""
-    outline = ((.017, 0, .082), (.052, -.004, .122), (.129, .030, .191),
-               (.224, .085, .239), (.176, .110, .194), (.104, .078, .143),
-               (.041, .029, .104))
-    ridge = ((.056, .022, .128), (.112, .048, .174), (.171, .076, .212))
+    # The membrane's transverse axis lies mainly in X/Z, facing front/back.
+    # R2's span/y-width alignment collapsed to a needle in the neutral front view.
+    outline = ((.017, 0, .082), (.04882, .01530, .11743), (.11394, .04675, .19067),
+               (.224, .085, .239), (.18346, .06120, .17193), (.10955, .03230, .12333),
+               (.04667, .01020, .09446))
+    ridge = ((.05914, .01415, .11396), (.12174, .03775, .16144), (.18334, .06515, .20816))
     top = [(side * x, y, z) for x, y, z in outline + ridge]
     triangles = [(0, 1, 7), (0, 7, 6), (1, 2, 8), (1, 8, 7),
                  (2, 3, 9), (2, 9, 8), (3, 4, 9), (4, 5, 8),
                  (4, 8, 9), (5, 6, 7), (5, 7, 8)]
-    vertices = top + [(x, y, z - .00045) for x, y, z in top]
+    vertices = top + [(x - side * .247 * .00045, y + .95 * .00045, z - .187 * .00045) for x, y, z in top]
     faces = triangles + [tuple(i + 10 for i in reversed(f)) for f in triangles]
     faces += [(i, i + 10, (i + 1) % 7 + 10, (i + 1) % 7) for i in range(7)]
     if side < 0:
@@ -116,8 +118,8 @@ def _brow_mesh(side):
 
 def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
     c = Character('Mosquito')
-    shell = material('Mosquito_Shell', (.49, .105, .085), .76)
-    belly = material('Mosquito_Abdomen', (.64, .155, .100), .80)
+    shell = material('Mosquito_Shell', (.36, .045, .027), .76)
+    belly = material('Mosquito_Abdomen', (.49, .085, .040), .80)
     dark = material('Mosquito_Legs', (.11, .060, .067), .82)
     eye = material('Mosquito_EyeWhite', (.94, .91, .82), .58)
     pupil = material('Mosquito_Expression', (.024, .022, .035), .64)
