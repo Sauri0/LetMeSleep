@@ -94,8 +94,21 @@ func run() -> void:
 	await key(KEY_UP)
 	check(root.gui_get_focus_owner() == ui._home_default_focus, "Arrow up returns to primary action")
 	await key(KEY_ENTER)
-	check(ui._screen == "practice" and ui._practice_screen.visible, "Enter opens local practice setup")
-	check(sound_events == ["confirm"] and screen_events[-1] == "practice", "Primary keyboard action emits one confirmation and the new screen")
+	check(ui._connection_open and ui._connection_form.visible and not ui._home_menu.visible, "Enter opens online room creation from the primary action")
+	check(sound_events == ["confirm"], "Primary keyboard action emits one confirmation")
+	await key(KEY_ESCAPE)
+	check(ui._screen == "home" and not ui._connection_open and ui._home_menu.visible, "Escape returns from online room creation")
+	var training_button: Button
+	for candidate: Node in ui._home_menu.find_children("*", "Button", true, false):
+		if candidate is Button and candidate.text == "Entrenamiento":
+			training_button = candidate
+			break
+	check(training_button != null, "Home keeps an explicit Training action")
+	training_button.grab_focus()
+	await process_frame
+	await key(KEY_ENTER)
+	check(ui._screen == "practice" and ui._practice_screen.visible, "Enter opens local practice setup from Training")
+	check(sound_events == ["confirm", "select"] and screen_events[-1] == "practice", "Training keyboard action emits one selection and the new screen")
 	await key(KEY_ESCAPE)
 	check(ui._screen == "home" and not ui._practice_screen.visible, "Escape returns from practice setup")
 	ui._open_connection(true)
@@ -108,29 +121,11 @@ func run() -> void:
 	ui.show_connection_state({"phase":"online_login","message":"Conectando…","can_cancel":true})
 	check(ui._connection_busy and ui._connection_cancel.visible, "SDK login retains the busy and cancel controls")
 	ui.show_connection_state({"phase":"cancelled"})
-	ui._toggle_connection_options()
-	check(not ui._host_port_edit.is_visible_in_tree(), "Online advanced options do not ask for a UDP port")
-	ui._direct_connection.button_pressed = true
-	await _capture("ui06-host-advanced")
-	check(ui._connect_submit.get_global_rect().end.y < root.size.y and ui._host_port_edit.is_visible_in_tree(), "Advanced host action remains visible inside a 720p window")
-	ui._host_port_edit.get_line_edit().grab_focus()
-	await key(KEY_ESCAPE)
-	check(ui._connection_open and not ui._advanced_open, "Escape in SpinBox closes advanced options one level")
 	ui._name_edit.grab_focus()
 	await key(KEY_ESCAPE)
 	check(not ui._connection_open and ui._home_menu.visible, "Escape in LineEdit returns to home")
-	ui._open_connection(true)
-	ui._name_edit.text = "UI navigation check"
-	ui._direct_connection.button_pressed = true
-	ui._address_edit.text = ""
-	ui._request_connection(true)
-	check(host_args == ["UI navigation check",Prefs.local_host_port], "One Create action starts your own server without reading a saved remote address")
-	check(ui._connection_busy and ui._connect_submit.disabled and not ui._local_server_button.visible, "Host startup prevents duplicate clicks and has no separate server button")
-	ui.show_connection_state({"phase":"failed","message":"No se pudo abrir UDP","can_retry":true})
-	check(not ui._connection_busy and ui._connection_retry.visible and ui._connection_feedback.text == "No se pudo abrir UDP", "Failed host keeps the form and exposes an explicit retry")
-	ui._address_edit.text = "127.0.0.1"
-	ui._close_connection()
 	ui._open_connection(false)
+	ui._name_edit.text = "UI navigation check"
 	var online_code := OnlineInvitation.encode("test-lobby", "0123456789abcdef0123456789abcdef")
 	ui._invitation_edit.text = "  " + online_code + "  "
 	ui._request_connection(false)
@@ -139,17 +134,11 @@ func run() -> void:
 	ui._invitation_edit.text = "LMS1-invalid"
 	ui._request_connection(false)
 	check(not ui._connection_busy and online_join_args.size() == 2, "Malformed online code does not begin a connection")
-	check(ui._invitation_box.visible and not ui._address_box.visible and not ui._code_box.visible, "Join offers one invitation field and hides manual address/code")
-	ui._invitation_edit.text = Invitation.PREFIX + "not-valid"
+	check(ui._invitation_box.visible, "Join keeps one visible online invitation field")
 	var sounds_before_error: int = sound_events.size()
 	ui._connect_submit.pressed.emit()
-	check(connection_args.is_empty(), "Malformed invitation cannot request a connection")
+	check(online_join_args == ["UI navigation check",online_code] and connection_args.is_empty(), "Malformed invitation cannot request a connection")
 	check(sound_events.size() == sounds_before_error+1 and sound_events[-1] == "error", "An invalid button action produces one error cue without a second selection sound")
-	ui._invitation_edit.text = Invitation.encode("192.168.1.25", 27840, "SIESTA")
-	Prefs.shared_address = "192.168.1.99"
-	ui._request_connection(false)
-	check(connection_args == ["192.168.1.25", 27840, "UI navigation check", "SIESTA", false], "Valid invitation emits decoded address, port and room together")
-	check(Prefs.shared_address == "192.168.1.99" and ui._room_join_address == "192.168.1.25", "Joining preserves your own hosting address and keeps the room endpoint separately")
 	ui._close_connection()
 	ui._open_customization()
 	await process_frame
@@ -253,32 +242,27 @@ func run() -> void:
 	ui._open_settings()
 	await key(KEY_ESCAPE)
 	check(not ui._settings_open and not ui._lobby_walking and escape_count == previous_escapes, "Closing lobby settings does not also enter walking")
-	Prefs.shared_address = ""
-	var original_clipboard := DisplayServer.clipboard_get()
 	ui.set_online_invitation(online_code)
-	ui._copy_invitation()
-	check(DisplayServer.clipboard_get() == online_code and not ui._invite_settings_open, "Online room copies its code without opening IP configuration")
-	DisplayServer.clipboard_set(original_clipboard)
-	ui.set_online_invitation("")
-	ui._copy_invitation()
+	check(not ui._lobby_copy_button.disabled and ui._invite_code_edit.text == online_code, "Online room exposes its validated code without IP configuration")
+	if DisplayServer.get_name() != "headless":
+		var original_clipboard := DisplayServer.clipboard_get()
+		ui._copy_invitation()
+		check(DisplayServer.clipboard_get() == online_code, "Native online room copies its exact code")
+		DisplayServer.clipboard_set(original_clipboard)
+	ui._open_invite_settings()
 	await process_frame
-	check(ui._invite_settings_open and root.gui_get_focus_owner() == ui._invite_address_edit, "Copy without shared endpoint opens and focuses explicit invitation setup")
+	check(ui._invite_settings_open and root.gui_get_focus_owner() == ui._invite_code_edit, "Invitation panel focuses the readonly online code")
 	var invite_focus_ok := true
 	for index: int in range(12):
 		await key(KEY_TAB)
 		var owner: Control = root.gui_get_focus_owner()
 		invite_focus_ok = invite_focus_ok and owner != null and ui._invite_settings.is_ancestor_of(owner)
 	check(invite_focus_ok, "Tab cannot escape invitation modal")
-	ui._invite_address_edit.text = "127.0.0.1"
-	ui._save_invite_settings()
-	check(ui._invite_settings_open and Prefs.shared_address.is_empty(), "Loopback cannot be saved as a friend endpoint")
-	ui._invite_scope.select(1)
-	ui._update_invite_scope()
-	ui._invite_address_edit.text = "192.168.1.25"
-	ui._save_invite_settings()
-	check(ui._invite_settings_open and Prefs.shared_address.is_empty(), "Other-house sharing refuses a private LAN address instead of issuing a misleading invitation")
+	check(not ui._invite_code_edit.editable and ui._invite_code_edit.selecting_enabled and ui._invite_code_edit.text == online_code, "Invitation modal keeps the complete online code readonly and selectable")
 	await key(KEY_ESCAPE)
 	check(not ui._invite_settings_open and not ui._lobby_walking and escape_count == previous_escapes, "Escape closes invitation modal without entering lobby walking")
+	ui.set_online_invitation("")
+	check(ui._lobby_copy_button.disabled and ui._invite_copy_button.disabled and ui._invite_code_edit.text.is_empty(), "Closing a room clears stale invitation actions")
 	config.mode = "sleep"
 	ui.show_lobby(lobby, 2)
 	check(ui._mode.disabled and ui._config_apply.disabled and not ui._fields.human_count.editable, "Guest cannot edit mode or human count")
@@ -297,7 +281,7 @@ func run() -> void:
 	ui.show_game(snapshot, {"stun":{"active":true,"remaining":35.0,"total":35.0,"helped":false}}, 1)
 	check(ui._practice and ui._practice_banner.visible and "Aturdido" in ui._hud_state.text and "35" in ui._hud_state.text, "Practice state and authoritative stun time survive game transition")
 	ui.show_results(snapshot)
-	check(not ui._rematch_button.disabled and ui._rematch_button.text == "REPETIR PRÁCTICA" and ui._result_leave.text == "VOLVER AL MENÚ", "Practice results offer restart and return home without social ready state")
+	check(not ui._rematch_button.disabled and ui._rematch_button.text == "REPETIR ENTRENAMIENTO" and ui._result_leave.text == "VOLVER AL MENÚ", "Practice results offer restart and return home without social ready state")
 	ui._rematch_button.pressed.emit()
 	check(practice_restarts == 1, "Practice repeat emits separate restart signal")
 	ui.show_home()
@@ -391,7 +375,10 @@ func _hud_semantics() -> void:
 	check(help_focus_ok, "Tab stays within the folded-help modal")
 	await _capture("ui06-help-human")
 	await key(KEY_F1)
-	check(not ui._help_open and not ui.is_menu_open() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED, "The same shortcut closes help and resumes capture")
+	var help_closed: bool = not ui._help_open and not ui.is_menu_open()
+	if DisplayServer.get_name() != "headless":
+		help_closed = help_closed and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	check(help_closed, "The same shortcut closes help and resumes capture")
 	await key(KEY_ESCAPE)
 	ui._open_help()
 	await key(KEY_ESCAPE)
