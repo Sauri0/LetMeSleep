@@ -408,6 +408,10 @@ static func zone_pose(actor: Dictionary, zone: Dictionary, posed: Dictionary = {
 				local_normal = hit.normal
 				changed = true
 		if not changed: break
+	# Carrying twists the visible distal forearm slightly beyond its conservative collision capsule.
+	# Calibrated against the baked mesh for all five tools and three outfits.
+	if bone == "forearm_r" and str(actor.get("tool","hands")) != "hands":
+		local_point += local_normal * .004
 	var yaw: float = body_yaw(actor)
 	return {"p": Vector3(actor.get("p", Vector3.ZERO)) + local_point.rotated(Vector3.UP, yaw), "normal": local_normal.rotated(Vector3.UP, yaw).normalized(), "label": str(zone.get("label", "Zona"))}
 
