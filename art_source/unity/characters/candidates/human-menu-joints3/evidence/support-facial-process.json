@@ -1,0 +1,24 @@
+{
+  "stage": "support-facial",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\audit_human_facial.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/support-fixed/menu"
+  ],
+  "slot_note": "Director3min one confirmed support fix IDs344-346/904-906 then verify2views release",
+  "started_utc": "2026-09-12T23:35:19.104220+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 37252,
+  "exit_code": 0,
+  "seconds": 2.077992799997446,
+  "finished_utc": "2026-09-12T23:35:21.182418+00:00"
+}

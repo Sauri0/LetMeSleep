@@ -1,0 +1,26 @@
+{
+  "stage": "final54-joint-check",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\audit_human_joints.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/menu54",
+    "--baseline-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/menu"
+  ],
+  "slot_note": "Director slot3min37poses and locate seatIDs",
+  "started_utc": "2026-09-12T23:33:29.694205+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 35340,
+  "exit_code": 0,
+  "seconds": 6.704937199989217,
+  "finished_utc": "2026-09-12T23:33:36.399761+00:00"
+}

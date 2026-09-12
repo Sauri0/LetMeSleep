@@ -1,0 +1,99 @@
+{
+  "status": "Coherent base+menu candidate; wrist/support native checks passed; Unity and complete moving visual review pending",
+  "supersedes_candidate": "human-menu-joints2 from486616c",
+  "source_base_commits": [
+    "486616c",
+    "2f320f5"
+  ],
+  "menu_samples": 920,
+  "max_seat_interior_vertices": 0,
+  "max_foot_error_m": 5.969069167437188e-07,
+  "min_pelvis_cloth_height_m": 0.5764546990394592,
+  "joint_summary": [
+    {
+      "asset": "menu-seated1",
+      "side": "L",
+      "max_wrist_bend_degrees": 99.91865978319811,
+      "min_wrist_section_m2": 0.0021466378417356
+    },
+    {
+      "asset": "menu-seated1",
+      "side": "R",
+      "max_wrist_bend_degrees": 146.2809046993558,
+      "min_wrist_section_m2": 0.002335451810764
+    },
+    {
+      "asset": "menu-joints2",
+      "side": "L",
+      "max_wrist_bend_degrees": 67.51228085093902,
+      "min_wrist_section_m2": 0.001660541921375
+    },
+    {
+      "asset": "menu-joints2",
+      "side": "R",
+      "max_wrist_bend_degrees": 27.99774795510974,
+      "min_wrist_section_m2": 0.0018105994163628
+    }
+  ],
+  "facial_numeric_passed": true,
+  "views": [
+    "menu/joint-review/wrist_idle.png",
+    "menu/joint-review/seated_three_quarter.png"
+  ],
+  "visual_findings": "Idle wrist/forearm continuity and cuff improved; thumb grip through full movement, rigid knees/lapels and eyelid crease remain open",
+  "actual_sofa_note": "Original production seat exact. New decorative sofa arms/back/base by Elementos are not in Blender witness.",
+  "unity_verified": false,
+  "artistic_approval": false,
+  "protected_assets_unchanged": true,
+  "file_sha256": {
+    ".gitattributes": "db1de51f190fb15d83c2475156b33ac17934be2488eba0a0159be87411173fa9",
+    "evidence/before-support-joint-audit.json": "c197fd694dbbf81eccf6fea67e3a623f8ec65bc1642d4e17f5679f9c19c74a42",
+    "evidence/before-support-menu-audit.json": "9fbbce832699a4de16687353bdad50cf6cb640e49a8217d647c7a6eea221436d",
+    "evidence/final54-joint-check-process.json": "367872326a7acf6b37d8f19c17bd6156d4edf6fced07ece96d374087192be0cf",
+    "evidence/final54-joint-check.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/final54-joint-check.log": "8fbeef1144f90ef698b2dc365c00f84618ca910c313b693f6227ecfd4962fa01",
+    "evidence/final54-menu-check-process.json": "7c990605ff9459a765465606398579f18fb203bda286b3a1e2a6783822328dc3",
+    "evidence/final54-menu-check.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/final54-menu-check.log": "db969c2e33a3f9be71098e88c34cc5ec56395f7c2db9b89285f4e9c15808c358",
+    "evidence/process-summary.json": "0ba5d044388950e1ace0998bdfeaf321685e559f6af3e2edb427ce9367079d99",
+    "evidence/support-facial-process.json": "207e3a1008ee8b0d36e89990b6b59401e90972f397ecc11c9f01ba9077ea5025",
+    "evidence/support-facial.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/support-facial.log": "c9a27c098af0c659f27a2a82353b4f3d24cc783206bc2f9726a0f103cd71ee35",
+    "evidence/support-generate-process.json": "3758fec9608f3788a1a78552e866a58307ab53697d8593208fe62aceba503c3f",
+    "evidence/support-generate.err.log": "86ab97beed9a275aedef53f57fb00fd43bbeed772e9c1673e8448721e19ee3de",
+    "evidence/support-generate.log": "fad335e1e93769cf5608c283999fcb0a85b3fee81ae61367d5360b55c79ccd6c",
+    "evidence/support-joints-process.json": "2858e0e2ac147e13daf0e70bbb9111c732a6f3dcb984abf2f0d133431282982b",
+    "evidence/support-joints.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/support-joints.log": "e95002cd5bd6b9808024dce99afa23a69768750b4f9549bb4e38d8bf6a8586e3",
+    "evidence/support-menu-check-process.json": "e9038bf766cff3a2bc61bfaa3caf3535977367d972fbc7e51f82bbeda3e5e04e",
+    "evidence/support-menu-check.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/support-menu-check.log": "41b0798ece2780addffb2cfd8402884b33a2151563b1d7a2c4413a8071fc1256",
+    "evidence/support-menu-export-process.json": "ba04422059179818604bbfdf18645de533f9e768443b02e251e7ff54e11d3a81",
+    "evidence/support-menu-export.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/support-menu-export.log": "589618f7f210772941f2d592f07339e55c9b2e363641ffbbbca3df66773cd8bb",
+    "evidence/support-roundtrip-process.json": "4eb88c29b9d7f80c39a3577f7126da1754c7eea634b71b801bad0ef9d8ebbf7e",
+    "evidence/support-roundtrip.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/support-roundtrip.log": "d92a157ae99d17175d4770f28729827cbe18ea152f79d54a1d0ed2024c82101d",
+    "evidence/support-two-views-process.json": "a4dd8c4157dec7d7a2c2efc199fc934d6cba823019a6bc00296d9cf0de9fadb8",
+    "evidence/support-two-views.err.log": "da3a5d258c1ecb6d976803c08e430920bb989a57b3b8e77a55ca2ed29f842ccf",
+    "evidence/support-two-views.log": "8270ad146b77436019ba8bc4b96b73cf9b06679ee6ec0ab7f8cb4e1a5e328947",
+    "human/audit.json": "03d3142e8a6060ad29ce67b3577c227ebf47bd9cf9e34a863f88830896fdc762",
+    "human/fbx_roundtrip.json": "ccd1818b6f013d59e4767223a7818401f13c9845197be4611344c48ab13fdae8",
+    "human/LMS_Human_alpha.blend": "ffdb5bb58b45de48d849b0f9691628acca0244ac67ae8dc80610bb56230e7e8c",
+    "human/LMS_Human_alpha.fbx": "9e85748b5ec38f57791bb7377dbe43bc6328792986837c7fdb260371f6a8d20b",
+    "menu/facial_audit.json": "c7f3908136deeb8e4e6b57f74749fe14fa8101d446f6b343a484e5ed2069a973",
+    "menu/joint-review/seated_three_quarter.json": "595406f9ff859906bc1299e9dcb6bdfe565e05971318b6686fa0ff2e9da81e56",
+    "menu/joint-review/seated_three_quarter.png": "36daa5dcaa5ec7613ef056f48c5aea87bfa9538df50427342b9e354203d90b27",
+    "menu/joint-review/wrist_idle.json": "b1c487b9af4ee385330bb7f2ae52be47c850a43367092bdbcd6212f3e0047381",
+    "menu/joint-review/wrist_idle.png": "0153d62f217e0f934a652e058ecb7ecd680a96dfea546bb2a724c1a1af36178f",
+    "menu/joint_audit.json": "1c21529c94e2cb397489fe073f7a288844ba3b928a3f6d94c8e6cc5fe3482b7d",
+    "menu/LMS_HumanMenu.blend": "e609a8be0d8ab2854c1e551042722740e77ba8551fafac408e46e92273181de8",
+    "menu/LMS_HumanMenu.fbx": "3412a9caaec030c3fe89d646fd063c8431ac3db38a9b76a8c49d8bc0d98470ff",
+    "menu/menu_audit.json": "00617eb731bf14aa8e30e393f389f6b57decb9be7997103857da198812a26684",
+    "menu/menu_motion_audit.json": "8afcdc7bd89dc703adaacb00890b82f18e9ed089ae7b369fce267a4b3ef28645",
+    "source-snapshot/audit_human_joints.py": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+    "source-snapshot/audit_motion.py": "a3c6b589627d3eb83187ba4159a915b61602bda58c1536f26b078afb69360a2c",
+    "source-snapshot/author_human_joints.py": "be4dbb4c2c9aaae9fe04126212883f40f412a043d368473302a740e01374868c",
+    "source-snapshot/render_human_menu.py": "fac00d3351593f9b90e6ddecc84dcc49003312dc72e934fee87fe5f974df823e"
+  }
+}

@@ -1,0 +1,8 @@
+00:00.719  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\menu\LMS_HumanMenu.blend"
+00:03.250  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\menu-joints2\menu54\LMS_HumanMenu.blend"
+FBX version: 7400
+FBX version: 7400
+{"summary": [{"asset": "menu-seated1", "side": "L", "max_wrist_bend_degrees": 99.91865978319811, "min_wrist_section_m2": 0.0021466378417356}, {"asset": "menu-seated1", "side": "R", "max_wrist_bend_degrees": 146.2809046993558, "min_wrist_section_m2": 0.002335451810764}, {"asset": "menu-joints2", "side": "L", "max_wrist_bend_degrees": 67.51228085093902, "min_wrist_section_m2": 0.001660541921375}, {"asset": "menu-joints2", "side": "R", "max_wrist_bend_degrees": 27.99774795510974, "min_wrist_section_m2": 0.0018105994163628}], "errors": []}
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

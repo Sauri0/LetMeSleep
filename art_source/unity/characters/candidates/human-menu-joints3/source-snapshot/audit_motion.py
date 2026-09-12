@@ -18,7 +18,10 @@ from verify_human_menu import action_for_rig
 parser=argparse.ArgumentParser()
 parser.add_argument('--species',choices=['Human','Mosquito'])
 parser.add_argument('--all-frames',action='store_true')
+parser.add_argument('--asset-root',type=Path,default=ROOT)
+parser.add_argument('--hand-reference',type=Path)
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
+ROOT=args.asset_root.resolve()
 SPECIES=[args.species] if args.species else ['Human','Mosquito']
 REPORT_PATH=ROOT/args.species.lower()/'motion_audit.json' if args.species else ROOT/'motion_audit.json'
 RESULTS=[]
@@ -28,6 +31,8 @@ FACIAL=[]
 EXPRESSIONS=[]
 JAW_SEQUENCES=[]
 HAND_SPACE_CASES=[]
+HAND_DEFORMATION=[]
+HAND_LAYOUTS={}
 ALL_FRAMES=args.all_frames
 
 def activate(rig,action):
@@ -87,13 +92,22 @@ for species in SPECIES:
                 times=sorted(set(times+[(f-start)/(end-start) for f in range(math.ceil(start),math.floor(end)+1)]))
             if name=='Human_Clap' and start<=23.5<=end:
                 times=sorted(set(times+[(23.5-start)/(end-start)]))
+            if args.hand_reference and species=='Human':
+                # Exact original defects, adjacent/subframes, sustained closure and reopening.
+                critical={'Human_FingerCurl':[16,16.5,17,17.5,18],
+                          'Human_Swat':[2,2.5,3,3.5,4]}.get(name,[])
+                times=sorted(set(times+[(f-start)/(end-start) for f in critical if start<=f<=end]+[.45]))
             base_heads,base_mesh=sample(rig,meshes,start)
             sampled=[]; max_bone=0; max_mesh=0; min_z=999; max_stretch=1; nonfinite=0
             worst_edge=None
             rest_edges={o.name:[(e.vertices[0],e.vertices[1],(o.data.vertices[e.vertices[0]].co-o.data.vertices[e.vertices[1]].co).length)
                                   for e in o.data.edges] for o in meshes}
+            hand_trackers=[HandDeformation(obj,args.hand_reference,kind,name) for obj in meshes
+                           if args.hand_reference and species=='Human' and obj.name in ['HandSkin.L','HandSkin.R']]
             for normalized in times:
                 heads,verts=sample(rig,meshes,start+(end-start)*normalized)
+                for tracker in hand_trackers:
+                    tracker.add(verts[tracker.name],start+(end-start)*normalized,normalized)
                 max_bone=max(max_bone,max(distance(heads[n],p) for n,p in base_heads.items()))
                 for obj in meshes:
                     current=verts[obj.name]
@@ -125,6 +139,8 @@ for species in SPECIES:
                  'max_root_head_motion_m':max(distance(s['heads']['Root'],base_heads['Root']) for s in sampled),
                  'samples':[{'time':s['time'],'feet_z':s['feet_z'],'hips_z':s['hips_z']} for s in sampled]}
             RESULTS.append(row); POSES[(kind,name)]={round(s['time'],6):s['heads'] for s in sampled}
+            HAND_DEFORMATION.extend(tracker.report() for tracker in hand_trackers)
+            for tracker in hand_trackers:HAND_LAYOUTS[(kind,tracker.name)]=tracker.layout
             print('LMS_MOTION_CLIP_DONE '+json.dumps({'species':species,'format':kind,'clip':name,
                   'samples':len(sampled),'minimum_z_m':min_z,'max_edge_stretch_ratio':max_stretch}),flush=True)
         if species=='Human':
@@ -229,6 +245,9 @@ report={'scope':'Read-only Blender source and reimported FBX. Measures motion, n
         'sampling':'Every integer source frame plus fixed checkpoints and Clap23.5' if ALL_FRAMES else 'Nine fixed checkpoints plus Clap23.5',
         'blender':bpy.app.version_string,'actions':RESULTS,'source_fbx_comparison':comparisons,'hands':HANDS,'facial':FACIAL,'expressions':EXPRESSIONS,
         'jaw_sequences':JAW_SEQUENCES,'rotated_arm_hand_space_cases':HAND_SPACE_CASES,
+        'hand_deformation':HAND_DEFORMATION,
+        'hand_bind_layouts':list(HAND_LAYOUTS.values()),
+        'hand_sampling':'All requested frames plus original defects, adjacent half frames and phase .45' if args.hand_reference else None,
         'fbx_evaluation_note':'FBX-imported connected bones are restored to the source unconnected contract before evaluation.'}
 REPORT_PATH.write_text(json.dumps(report,indent=2),encoding='utf8',newline='\n')
 print(json.dumps({'actions':[{k:r[k] for k in ['clip','format','max_mesh_vertex_motion_m','minimum_mesh_z_m','max_edge_stretch_ratio']} for r in RESULTS],

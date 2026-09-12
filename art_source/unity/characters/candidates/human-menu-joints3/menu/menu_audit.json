@@ -1,0 +1,1311 @@
+{
+  "contract": {
+    "version": "human-menu-seated-source-2-joints",
+    "root_world_unity_m": [
+      3.3,
+      0,
+      5.35
+    ],
+    "root_yaw_degrees": 180,
+    "scale": 1,
+    "root_motion": false,
+    "seat_surface_actor_m": [
+      0,
+      0.575,
+      0.345
+    ],
+    "seat_front_actor_z_m": 0.4,
+    "seat_flat_front_actor_z_m": 0.355,
+    "seat_back_actor_z_m": -0.32,
+    "seat_half_width_m": 0.91,
+    "back_support_actor_m": [
+      0,
+      0.93,
+      -0.265
+    ],
+    "back_support_required": false,
+    "posture": "Seated near the front edge; back support is informational",
+    "sole_actor_m": {
+      "L": [
+        -0.16,
+        0,
+        0.7
+      ],
+      "R": [
+        0.16,
+        0,
+        0.7
+      ]
+    },
+    "hips_actor_m": [
+      0,
+      0.651,
+      0.345
+    ],
+    "hips_height_note": "Raised7mm after first native menu showed cloth5.6mm below seat; remeasurement/visual review required",
+    "left_wrist_actor_m": [
+      -0.245,
+      0.599,
+      0.28
+    ],
+    "left_palm_note": "Fingers point toward the back of the seat; avoid forced forearm pronation and measure palm support",
+    "tool_socket_bone": "Socket.Grip.R",
+    "tool_runtime_anchor": "ToolSocket_R",
+    "tool_mount": "Align ToolView.Grip to ToolSocket_R with production position/rotation correction",
+    "grip_pose_note": "Palm follows the forearm with authored wrist tilt; skin and cuff share lower-arm/hand weights",
+    "tool_grip_to_impact_m": 0.365,
+    "tool_grip_section_m": [
+      0.034,
+      0.024
+    ],
+    "swat_contact_normalized": 0.5,
+    "swat_contact_seconds": 0.7,
+    "mosquito_pass_actor_m": [
+      0.69625,
+      1.5,
+      0.62875
+    ],
+    "mosquito_pass_note": "Elementos/Presentation agreed flight pass; measure separation from the real tool, no actual hit",
+    "reduced_motion": "Hold MenuSeatedIdle at time0; no gesture",
+    "transitions": "Idle full cycles -> Look -> Swat -> Return -> Idle0; .18s fade only at sequence entry/exit",
+    "combat_ids_modified": false,
+    "artistic_approval": false
+  },
+  "fixed_gaze_baked": false,
+  "clips": [
+    {
+      "name": "MenuSeatedIdle",
+      "start": 1,
+      "end": 241,
+      "fps": 30,
+      "duration_seconds": 8.0,
+      "loop": true,
+      "root_motion": false,
+      "presentation_only": true
+    },
+    {
+      "name": "MenuLook",
+      "start": 1,
+      "end": 121,
+      "fps": 30,
+      "duration_seconds": 4.0,
+      "loop": false,
+      "root_motion": false,
+      "presentation_only": true
+    },
+    {
+      "name": "MenuSwat",
+      "start": 1,
+      "end": 43,
+      "fps": 30,
+      "duration_seconds": 1.4,
+      "loop": false,
+      "root_motion": false,
+      "presentation_only": true
+    },
+    {
+      "name": "MenuReturn",
+      "start": 1,
+      "end": 55,
+      "fps": 30,
+      "duration_seconds": 1.8,
+      "loop": false,
+      "root_motion": false,
+      "presentation_only": true
+    }
+  ],
+  "minimum_chain_reach_margin_m": 0.005545376313822736,
+  "tool_grip_validated": false,
+  "seat_skin_contact_validated": false,
+  "visual_approval": false,
+  "base_blend_sha256": "ffdb5bb58b45de48d849b0f9691628acca0244ac67ae8dc80610bb56230e7e8c",
+  "base_fbx_sha256": "9e85748b5ec38f57791bb7377dbe43bc6328792986837c7fdb260371f6a8d20b",
+  "base_audit_sha256": "03d3142e8a6060ad29ce67b3577c227ebf47bd9cf9e34a863f88830896fdc762",
+  "bind_bones": [
+    {
+      "name": "Root",
+      "parent": "",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.0,
+        0.10000000149011612
+      ]
+    },
+    {
+      "name": "Hips",
+      "parent": "Root",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        0.75
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.0,
+        0.8799999952316284
+      ]
+    },
+    {
+      "name": "Spine",
+      "parent": "Hips",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        0.8799999952316284
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.0,
+        1.0499999523162842
+      ]
+    },
+    {
+      "name": "Chest",
+      "parent": "Spine",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        1.0499999523162842
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.0,
+        1.2300000190734863
+      ]
+    },
+    {
+      "name": "Neck",
+      "parent": "Chest",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        1.2300000190734863
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.0,
+        1.340000033378601
+      ]
+    },
+    {
+      "name": "Head",
+      "parent": "Neck",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        1.340000033378601
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.0,
+        1.7000000476837158
+      ]
+    },
+    {
+      "name": "Jaw",
+      "parent": "Head",
+      "head_blender_m": [
+        0.0,
+        -0.014999999664723873,
+        1.4600000381469727
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.03500000014901161,
+        1.3930000066757202
+      ]
+    },
+    {
+      "name": "Socket.Eye",
+      "parent": "Head",
+      "head_blender_m": [
+        0.0,
+        -0.17000000178813934,
+        1.5299999713897705
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.2199999988079071,
+        1.5299999713897705
+      ]
+    },
+    {
+      "name": "Socket.Head",
+      "parent": "Head",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        1.7200000286102295
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.0,
+        1.7699999809265137
+      ]
+    },
+    {
+      "name": "Eye.L",
+      "parent": "Head",
+      "head_blender_m": [
+        0.08100000023841858,
+        -0.1080000028014183,
+        1.5579999685287476
+      ],
+      "tail_blender_m": [
+        0.08100000023841858,
+        -0.1679999977350235,
+        1.5579999685287476
+      ]
+    },
+    {
+      "name": "Brow.L",
+      "parent": "Head",
+      "head_blender_m": [
+        0.08799999952316284,
+        -0.17000000178813934,
+        1.6399999856948853
+      ],
+      "tail_blender_m": [
+        0.08799999952316284,
+        -0.20999999344348907,
+        1.6399999856948853
+      ]
+    },
+    {
+      "name": "Eye.R",
+      "parent": "Head",
+      "head_blender_m": [
+        -0.08100000023841858,
+        -0.1080000028014183,
+        1.5579999685287476
+      ],
+      "tail_blender_m": [
+        -0.08100000023841858,
+        -0.1679999977350235,
+        1.5579999685287476
+      ]
+    },
+    {
+      "name": "Brow.R",
+      "parent": "Head",
+      "head_blender_m": [
+        -0.08799999952316284,
+        -0.17000000178813934,
+        1.6399999856948853
+      ],
+      "tail_blender_m": [
+        -0.08799999952316284,
+        -0.20999999344348907,
+        1.6399999856948853
+      ]
+    },
+    {
+      "name": "Socket.Back",
+      "parent": "Chest",
+      "head_blender_m": [
+        0.0,
+        0.15000000596046448,
+        1.090000033378601
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.20000000298023224,
+        1.090000033378601
+      ]
+    },
+    {
+      "name": "Socket.AimChest",
+      "parent": "Chest",
+      "head_blender_m": [
+        0.0,
+        -0.15000000596046448,
+        1.090000033378601
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.20000000298023224,
+        1.090000033378601
+      ]
+    },
+    {
+      "name": "Shoulder.L",
+      "parent": "Chest",
+      "head_blender_m": [
+        0.05000000074505806,
+        0.0,
+        1.2000000476837158
+      ],
+      "tail_blender_m": [
+        0.25,
+        0.0,
+        1.1699999570846558
+      ]
+    },
+    {
+      "name": "UpperArm.L",
+      "parent": "Shoulder.L",
+      "head_blender_m": [
+        0.25,
+        0.0,
+        1.1699999570846558
+      ],
+      "tail_blender_m": [
+        0.5199999809265137,
+        0.0,
+        1.159999966621399
+      ]
+    },
+    {
+      "name": "LowerArm.L",
+      "parent": "UpperArm.L",
+      "head_blender_m": [
+        0.5199999809265137,
+        0.0,
+        1.159999966621399
+      ],
+      "tail_blender_m": [
+        0.75,
+        0.0,
+        1.149999976158142
+      ]
+    },
+    {
+      "name": "Hand.L",
+      "parent": "LowerArm.L",
+      "head_blender_m": [
+        0.75,
+        0.0,
+        1.149999976158142
+      ],
+      "tail_blender_m": [
+        0.8370000123977661,
+        0.0,
+        1.149999976158142
+      ]
+    },
+    {
+      "name": "Socket.Grip.L",
+      "parent": "Hand.L",
+      "head_blender_m": [
+        0.8500000238418579,
+        -0.03999999910593033,
+        1.149999976158142
+      ],
+      "tail_blender_m": [
+        0.8500000238418579,
+        -0.09000000357627869,
+        1.149999976158142
+      ]
+    },
+    {
+      "name": "Index01.L",
+      "parent": "Hand.L",
+      "head_blender_m": [
+        0.8220000267028809,
+        0.0,
+        1.184000015258789
+      ],
+      "tail_blender_m": [
+        0.8600120544433594,
+        0.0,
+        1.184000015258789
+      ]
+    },
+    {
+      "name": "Index02.L",
+      "parent": "Index01.L",
+      "head_blender_m": [
+        0.8600120544433594,
+        0.0,
+        1.184000015258789
+      ],
+      "tail_blender_m": [
+        0.8883000612258911,
+        0.0,
+        1.184000015258789
+      ]
+    },
+    {
+      "name": "Index03.L",
+      "parent": "Index02.L",
+      "head_blender_m": [
+        0.8883000612258911,
+        0.0,
+        1.184000015258789
+      ],
+      "tail_blender_m": [
+        0.9104000329971313,
+        0.0,
+        1.184000015258789
+      ]
+    },
+    {
+      "name": "Middle01.L",
+      "parent": "Hand.L",
+      "head_blender_m": [
+        0.8220000267028809,
+        0.0,
+        1.159000039100647
+      ],
+      "tail_blender_m": [
+        0.8643980026245117,
+        0.0,
+        1.159000039100647
+      ]
+    },
+    {
+      "name": "Middle02.L",
+      "parent": "Middle01.L",
+      "head_blender_m": [
+        0.8643980026245117,
+        0.0,
+        1.159000039100647
+      ],
+      "tail_blender_m": [
+        0.8959500193595886,
+        0.0,
+        1.159000039100647
+      ]
+    },
+    {
+      "name": "Middle03.L",
+      "parent": "Middle02.L",
+      "head_blender_m": [
+        0.8959500193595886,
+        0.0,
+        1.159000039100647
+      ],
+      "tail_blender_m": [
+        0.9205999970436096,
+        0.0,
+        1.159000039100647
+      ]
+    },
+    {
+      "name": "Ring01.L",
+      "parent": "Hand.L",
+      "head_blender_m": [
+        0.8220000267028809,
+        0.0,
+        1.1330000162124634
+      ],
+      "tail_blender_m": [
+        0.8607430458068848,
+        0.0,
+        1.1330000162124634
+      ]
+    },
+    {
+      "name": "Ring02.L",
+      "parent": "Ring01.L",
+      "head_blender_m": [
+        0.8607430458068848,
+        0.0,
+        1.1330000162124634
+      ],
+      "tail_blender_m": [
+        0.8895750641822815,
+        0.0,
+        1.1330000162124634
+      ]
+    },
+    {
+      "name": "Ring03.L",
+      "parent": "Ring02.L",
+      "head_blender_m": [
+        0.8895750641822815,
+        0.0,
+        1.1330000162124634
+      ],
+      "tail_blender_m": [
+        0.912100076675415,
+        0.0,
+        1.1330000162124634
+      ]
+    },
+    {
+      "name": "Little01.L",
+      "parent": "Hand.L",
+      "head_blender_m": [
+        0.8220000267028809,
+        0.0,
+        1.1069999933242798
+      ],
+      "tail_blender_m": [
+        0.8519710302352905,
+        0.0,
+        1.1069999933242798
+      ]
+    },
+    {
+      "name": "Little02.L",
+      "parent": "Little01.L",
+      "head_blender_m": [
+        0.8519710302352905,
+        0.0,
+        1.1069999933242798
+      ],
+      "tail_blender_m": [
+        0.8742750287055969,
+        0.0,
+        1.1069999933242798
+      ]
+    },
+    {
+      "name": "Little03.L",
+      "parent": "Little02.L",
+      "head_blender_m": [
+        0.8742750287055969,
+        0.0,
+        1.1069999933242798
+      ],
+      "tail_blender_m": [
+        0.891700029373169,
+        0.0,
+        1.1069999933242798
+      ]
+    },
+    {
+      "name": "Thumb01.L",
+      "parent": "Hand.L",
+      "head_blender_m": [
+        0.7820000052452087,
+        0.0,
+        1.190000057220459
+      ],
+      "tail_blender_m": [
+        0.8027631044387817,
+        0.0,
+        1.2049494981765747
+      ]
+    },
+    {
+      "name": "Thumb02.L",
+      "parent": "Thumb01.L",
+      "head_blender_m": [
+        0.8027631044387817,
+        0.0,
+        1.2049494981765747
+      ],
+      "tail_blender_m": [
+        0.8182147145271301,
+        0.0,
+        1.2160747051239014
+      ]
+    },
+    {
+      "name": "Thumb03.L",
+      "parent": "Thumb02.L",
+      "head_blender_m": [
+        0.8182147145271301,
+        0.0,
+        1.2160747051239014
+      ],
+      "tail_blender_m": [
+        0.8302862644195557,
+        0.0,
+        1.2247662544250488
+      ]
+    },
+    {
+      "name": "Shoulder.R",
+      "parent": "Chest",
+      "head_blender_m": [
+        -0.05000000074505806,
+        0.0,
+        1.2000000476837158
+      ],
+      "tail_blender_m": [
+        -0.25,
+        0.0,
+        1.1699999570846558
+      ]
+    },
+    {
+      "name": "UpperArm.R",
+      "parent": "Shoulder.R",
+      "head_blender_m": [
+        -0.25,
+        0.0,
+        1.1699999570846558
+      ],
+      "tail_blender_m": [
+        -0.5199999809265137,
+        0.0,
+        1.159999966621399
+      ]
+    },
+    {
+      "name": "LowerArm.R",
+      "parent": "UpperArm.R",
+      "head_blender_m": [
+        -0.5199999809265137,
+        0.0,
+        1.159999966621399
+      ],
+      "tail_blender_m": [
+        -0.75,
+        0.0,
+        1.149999976158142
+      ]
+    },
+    {
+      "name": "Hand.R",
+      "parent": "LowerArm.R",
+      "head_blender_m": [
+        -0.75,
+        0.0,
+        1.149999976158142
+      ],
+      "tail_blender_m": [
+        -0.8370000123977661,
+        0.0,
+        1.149999976158142
+      ]
+    },
+    {
+      "name": "Socket.Grip.R",
+      "parent": "Hand.R",
+      "head_blender_m": [
+        -0.8500000238418579,
+        -0.03999999910593033,
+        1.149999976158142
+      ],
+      "tail_blender_m": [
+        -0.8500000238418579,
+        -0.09000000357627869,
+        1.149999976158142
+      ]
+    },
+    {
+      "name": "Index01.R",
+      "parent": "Hand.R",
+      "head_blender_m": [
+        -0.8220000267028809,
+        0.0,
+        1.184000015258789
+      ],
+      "tail_blender_m": [
+        -0.8600120544433594,
+        0.0,
+        1.184000015258789
+      ]
+    },
+    {
+      "name": "Index02.R",
+      "parent": "Index01.R",
+      "head_blender_m": [
+        -0.8600120544433594,
+        0.0,
+        1.184000015258789
+      ],
+      "tail_blender_m": [
+        -0.8883000612258911,
+        0.0,
+        1.184000015258789
+      ]
+    },
+    {
+      "name": "Index03.R",
+      "parent": "Index02.R",
+      "head_blender_m": [
+        -0.8883000612258911,
+        0.0,
+        1.184000015258789
+      ],
+      "tail_blender_m": [
+        -0.9104000329971313,
+        0.0,
+        1.184000015258789
+      ]
+    },
+    {
+      "name": "Middle01.R",
+      "parent": "Hand.R",
+      "head_blender_m": [
+        -0.8220000267028809,
+        0.0,
+        1.159000039100647
+      ],
+      "tail_blender_m": [
+        -0.8643980026245117,
+        0.0,
+        1.159000039100647
+      ]
+    },
+    {
+      "name": "Middle02.R",
+      "parent": "Middle01.R",
+      "head_blender_m": [
+        -0.8643980026245117,
+        0.0,
+        1.159000039100647
+      ],
+      "tail_blender_m": [
+        -0.8959500193595886,
+        0.0,
+        1.159000039100647
+      ]
+    },
+    {
+      "name": "Middle03.R",
+      "parent": "Middle02.R",
+      "head_blender_m": [
+        -0.8959500193595886,
+        0.0,
+        1.159000039100647
+      ],
+      "tail_blender_m": [
+        -0.9205999970436096,
+        0.0,
+        1.159000039100647
+      ]
+    },
+    {
+      "name": "Ring01.R",
+      "parent": "Hand.R",
+      "head_blender_m": [
+        -0.8220000267028809,
+        0.0,
+        1.1330000162124634
+      ],
+      "tail_blender_m": [
+        -0.8607430458068848,
+        0.0,
+        1.1330000162124634
+      ]
+    },
+    {
+      "name": "Ring02.R",
+      "parent": "Ring01.R",
+      "head_blender_m": [
+        -0.8607430458068848,
+        0.0,
+        1.1330000162124634
+      ],
+      "tail_blender_m": [
+        -0.8895750641822815,
+        0.0,
+        1.1330000162124634
+      ]
+    },
+    {
+      "name": "Ring03.R",
+      "parent": "Ring02.R",
+      "head_blender_m": [
+        -0.8895750641822815,
+        0.0,
+        1.1330000162124634
+      ],
+      "tail_blender_m": [
+        -0.912100076675415,
+        0.0,
+        1.1330000162124634
+      ]
+    },
+    {
+      "name": "Little01.R",
+      "parent": "Hand.R",
+      "head_blender_m": [
+        -0.8220000267028809,
+        0.0,
+        1.1069999933242798
+      ],
+      "tail_blender_m": [
+        -0.8519710302352905,
+        0.0,
+        1.1069999933242798
+      ]
+    },
+    {
+      "name": "Little02.R",
+      "parent": "Little01.R",
+      "head_blender_m": [
+        -0.8519710302352905,
+        0.0,
+        1.1069999933242798
+      ],
+      "tail_blender_m": [
+        -0.8742750287055969,
+        0.0,
+        1.1069999933242798
+      ]
+    },
+    {
+      "name": "Little03.R",
+      "parent": "Little02.R",
+      "head_blender_m": [
+        -0.8742750287055969,
+        0.0,
+        1.1069999933242798
+      ],
+      "tail_blender_m": [
+        -0.891700029373169,
+        0.0,
+        1.1069999933242798
+      ]
+    },
+    {
+      "name": "Thumb01.R",
+      "parent": "Hand.R",
+      "head_blender_m": [
+        -0.7820000052452087,
+        0.0,
+        1.190000057220459
+      ],
+      "tail_blender_m": [
+        -0.8027631044387817,
+        0.0,
+        1.2049494981765747
+      ]
+    },
+    {
+      "name": "Thumb02.R",
+      "parent": "Thumb01.R",
+      "head_blender_m": [
+        -0.8027631044387817,
+        0.0,
+        1.2049494981765747
+      ],
+      "tail_blender_m": [
+        -0.8182147145271301,
+        0.0,
+        1.2160747051239014
+      ]
+    },
+    {
+      "name": "Thumb03.R",
+      "parent": "Thumb02.R",
+      "head_blender_m": [
+        -0.8182147145271301,
+        0.0,
+        1.2160747051239014
+      ],
+      "tail_blender_m": [
+        -0.8302862644195557,
+        0.0,
+        1.2247662544250488
+      ]
+    },
+    {
+      "name": "UpperLeg.L",
+      "parent": "Hips",
+      "head_blender_m": [
+        0.125,
+        0.0,
+        0.7799999713897705
+      ],
+      "tail_blender_m": [
+        0.125,
+        0.0,
+        0.4399999976158142
+      ]
+    },
+    {
+      "name": "LowerLeg.L",
+      "parent": "UpperLeg.L",
+      "head_blender_m": [
+        0.125,
+        0.0,
+        0.4399999976158142
+      ],
+      "tail_blender_m": [
+        0.125,
+        0.0,
+        0.11999999731779099
+      ]
+    },
+    {
+      "name": "Foot.L",
+      "parent": "LowerLeg.L",
+      "head_blender_m": [
+        0.125,
+        0.0,
+        0.11999999731779099
+      ],
+      "tail_blender_m": [
+        0.125,
+        -0.11999999731779099,
+        0.07000000029802322
+      ]
+    },
+    {
+      "name": "Toe.L",
+      "parent": "Foot.L",
+      "head_blender_m": [
+        0.125,
+        -0.11999999731779099,
+        0.07000000029802322
+      ],
+      "tail_blender_m": [
+        0.125,
+        -0.20000000298023224,
+        0.07000000029802322
+      ]
+    },
+    {
+      "name": "Socket.Foot.L",
+      "parent": "Foot.L",
+      "head_blender_m": [
+        0.125,
+        -0.07000000029802322,
+        0.0
+      ],
+      "tail_blender_m": [
+        0.125,
+        -0.11999999731779099,
+        0.0
+      ]
+    },
+    {
+      "name": "UpperLeg.R",
+      "parent": "Hips",
+      "head_blender_m": [
+        -0.125,
+        0.0,
+        0.7799999713897705
+      ],
+      "tail_blender_m": [
+        -0.125,
+        0.0,
+        0.4399999976158142
+      ]
+    },
+    {
+      "name": "LowerLeg.R",
+      "parent": "UpperLeg.R",
+      "head_blender_m": [
+        -0.125,
+        0.0,
+        0.4399999976158142
+      ],
+      "tail_blender_m": [
+        -0.125,
+        0.0,
+        0.11999999731779099
+      ]
+    },
+    {
+      "name": "Foot.R",
+      "parent": "LowerLeg.R",
+      "head_blender_m": [
+        -0.125,
+        0.0,
+        0.11999999731779099
+      ],
+      "tail_blender_m": [
+        -0.125,
+        -0.11999999731779099,
+        0.07000000029802322
+      ]
+    },
+    {
+      "name": "Toe.R",
+      "parent": "Foot.R",
+      "head_blender_m": [
+        -0.125,
+        -0.11999999731779099,
+        0.07000000029802322
+      ],
+      "tail_blender_m": [
+        -0.125,
+        -0.20000000298023224,
+        0.07000000029802322
+      ]
+    },
+    {
+      "name": "Socket.Foot.R",
+      "parent": "Foot.R",
+      "head_blender_m": [
+        -0.125,
+        -0.07000000029802322,
+        0.0
+      ],
+      "tail_blender_m": [
+        -0.125,
+        -0.11999999731779099,
+        0.0
+      ]
+    }
+  ],
+  "bone_names": [
+    "Root",
+    "Hips",
+    "Spine",
+    "Chest",
+    "Neck",
+    "Head",
+    "Jaw",
+    "Socket.Eye",
+    "Socket.Head",
+    "Eye.L",
+    "Brow.L",
+    "Eye.R",
+    "Brow.R",
+    "Socket.Back",
+    "Socket.AimChest",
+    "Shoulder.L",
+    "UpperArm.L",
+    "LowerArm.L",
+    "Hand.L",
+    "Socket.Grip.L",
+    "Index01.L",
+    "Index02.L",
+    "Index03.L",
+    "Middle01.L",
+    "Middle02.L",
+    "Middle03.L",
+    "Ring01.L",
+    "Ring02.L",
+    "Ring03.L",
+    "Little01.L",
+    "Little02.L",
+    "Little03.L",
+    "Thumb01.L",
+    "Thumb02.L",
+    "Thumb03.L",
+    "Shoulder.R",
+    "UpperArm.R",
+    "LowerArm.R",
+    "Hand.R",
+    "Socket.Grip.R",
+    "Index01.R",
+    "Index02.R",
+    "Index03.R",
+    "Middle01.R",
+    "Middle02.R",
+    "Middle03.R",
+    "Ring01.R",
+    "Ring02.R",
+    "Ring03.R",
+    "Little01.R",
+    "Little02.R",
+    "Little03.R",
+    "Thumb01.R",
+    "Thumb02.R",
+    "Thumb03.R",
+    "UpperLeg.L",
+    "LowerLeg.L",
+    "Foot.L",
+    "Toe.L",
+    "Socket.Foot.L",
+    "UpperLeg.R",
+    "LowerLeg.R",
+    "Foot.R",
+    "Toe.R",
+    "Socket.Foot.R"
+  ],
+  "bones": 65,
+  "source_up": "+Z",
+  "source_forward": "-Y",
+  "material_palette": [
+    {
+      "name": "Character_Expression",
+      "color": {
+        "r": 0.04500000178813934,
+        "g": 0.03200000151991844,
+        "b": 0.04500000178813934,
+        "a": 1.0
+      },
+      "roughness": 0.8199999928474426
+    },
+    {
+      "name": "Character_EyeWhite",
+      "color": {
+        "r": 0.8399999737739563,
+        "g": 0.8299999833106995,
+        "b": 0.7599999904632568,
+        "a": 1.0
+      },
+      "roughness": 0.7799999713897705
+    },
+    {
+      "name": "Human_Pajamas",
+      "color": {
+        "r": 0.11999999731779099,
+        "g": 0.30000001192092896,
+        "b": 0.4699999988079071,
+        "a": 1.0
+      },
+      "roughness": 0.8700000047683716
+    },
+    {
+      "name": "Human_Piping",
+      "color": {
+        "r": 0.5299999713897705,
+        "g": 0.6700000166893005,
+        "b": 0.7099999785423279,
+        "a": 1.0
+      },
+      "roughness": 0.8700000047683716
+    },
+    {
+      "name": "Human_Skin",
+      "color": {
+        "r": 0.6700000166893005,
+        "g": 0.4300000071525574,
+        "b": 0.27000001072883606,
+        "a": 1.0
+      },
+      "roughness": 0.8199999928474426
+    },
+    {
+      "name": "Human_SlipperSole",
+      "color": {
+        "r": 0.06499999761581421,
+        "g": 0.10000000149011612,
+        "b": 0.15000000596046448,
+        "a": 1.0
+      },
+      "roughness": 0.8999999761581421
+    }
+  ],
+  "renderers": [
+    {
+      "name": "HumanBody",
+      "materials": [
+        "Human_Pajamas",
+        "Human_Piping",
+        "Human_SlipperSole",
+        "Human_Skin",
+        "Character_EyeWhite"
+      ]
+    },
+    {
+      "name": "HandSkin.L",
+      "materials": [
+        "Human_Skin"
+      ]
+    },
+    {
+      "name": "HandSkin.R",
+      "materials": [
+        "Human_Skin"
+      ]
+    },
+    {
+      "name": "HumanHead",
+      "materials": [
+        "Human_Skin",
+        "Character_EyeWhite",
+        "Character_Expression"
+      ]
+    },
+    {
+      "name": "HumanNightcap",
+      "materials": [
+        "Human_Pajamas",
+        "Human_Piping",
+        "Character_EyeWhite"
+      ]
+    }
+  ],
+  "triangles": 9652,
+  "vertices": 5056,
+  "blend_shapes": {
+    "HumanHead": [
+      "Blink25.L",
+      "Blink50.L",
+      "Blink75.L",
+      "Blink.L",
+      "Blink25.R",
+      "Blink50.R",
+      "Blink75.R",
+      "Blink.R"
+    ]
+  },
+  "facial_contract": {
+    "renderer": "HumanHead",
+    "head_bone": "Head",
+    "neck_bone": "Neck",
+    "head_forward_local": [
+      0,
+      0,
+      1
+    ],
+    "head_up_local": [
+      0,
+      1,
+      0
+    ],
+    "eye_bones": [
+      "Eye.L",
+      "Eye.R"
+    ],
+    "eye_forward_local": [
+      0,
+      1,
+      0
+    ],
+    "eye_up_local": [
+      0,
+      0,
+      1
+    ],
+    "eye_bind_centers_source_m": {
+      "L": [
+        0.081,
+        -0.108,
+        1.558
+      ],
+      "R": [
+        -0.081,
+        -0.108,
+        1.558
+      ]
+    },
+    "blink_shapes": {
+      "L": "Blink.L",
+      "R": "Blink.R"
+    },
+    "unity_blink_range": [
+      0,
+      100
+    ],
+    "blink_samples": {
+      "L": [
+        "Basis",
+        "Blink25.L",
+        "Blink50.L",
+        "Blink75.L",
+        "Blink.L"
+      ],
+      "R": [
+        "Basis",
+        "Blink25.R",
+        "Blink50.R",
+        "Blink75.R",
+        "Blink.R"
+      ]
+    },
+    "blink_interpolation": "Piecewise adjacent samples at closure0/.25/.50/.75/1; two neighboring morph weights sum to100. Basis needs no weight. This keeps lid paths outside the globe.",
+    "writer": "One Presentation facial controller after animation, shared with gameplay",
+    "tracking": "Live target, smoothed/clamped offset from this frame animated base; never accumulate last frame offset",
+    "suggested_limits_degrees": {
+      "head_yaw": 55,
+      "head_pitch": 25,
+      "neck_yaw": 20,
+      "eye_yaw": 22,
+      "eye_pitch": 15
+    },
+    "legacy_blink_clip": "Eye local scale Z is a legacy signal only; read before resetting scale to1, map (1-z)/.93 to lid closure",
+    "eye_scale_runtime": [
+      1,
+      1,
+      1
+    ],
+    "scope": "Same rig names/hierarchy; eye bind centers corrected; head/cap/skin material customization retained"
+  },
+  "actor_mapping": "(-source_x,source_z,-source_y)",
+  "combat_clips_modified": false,
+  "geometry_source_note": "Coherent generated crown-fixed base; geometry unchanged by menu authoring",
+  "files_sha256": {
+    "LMS_HumanMenu.blend": "e609a8be0d8ab2854c1e551042722740e77ba8551fafac408e46e92273181de8",
+    "LMS_HumanMenu.fbx": "3412a9caaec030c3fe89d646fd063c8431ac3db38a9b76a8c49d8bc0d98470ff"
+  }
+}

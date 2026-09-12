@@ -1,0 +1,26 @@
+{
+  "stage": "support-roundtrip",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\verify_fbx.py",
+    "--",
+    "--species",
+    "Human",
+    "--asset-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/support-fixed/base"
+  ],
+  "slot_note": "Director3min one confirmed support fix IDs344-346/904-906 then verify2views release",
+  "started_utc": "2026-09-12T23:34:54.160174+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 7512,
+  "exit_code": 0,
+  "seconds": 2.9388128999999026,
+  "finished_utc": "2026-09-12T23:34:57.099269+00:00"
+}

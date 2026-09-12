@@ -1,0 +1,26 @@
+{
+  "stage": "support-menu-export",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\export_human_menu.py",
+    "--",
+    "--base-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/support-fixed/base",
+    "--output-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/support-fixed/menu"
+  ],
+  "slot_note": "Director3min one confirmed support fix IDs344-346/904-906 then verify2views release",
+  "started_utc": "2026-09-12T23:34:57.254239+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 33188,
+  "exit_code": 0,
+  "seconds": 6.735789900005329,
+  "finished_utc": "2026-09-12T23:35:03.990648+00:00"
+}

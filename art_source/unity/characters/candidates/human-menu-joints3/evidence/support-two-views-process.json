@@ -1,0 +1,27 @@
+{
+  "stage": "support-two-views",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\render_human_menu.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/support-fixed/menu",
+    "--joint-review-pair",
+    "--review-name",
+    "joint-review"
+  ],
+  "slot_note": "Director3min one confirmed support fix IDs344-346/904-906 then verify2views release",
+  "started_utc": "2026-09-12T23:35:21.374866+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 380,
+  "exit_code": 0,
+  "seconds": 38.69385159999365,
+  "finished_utc": "2026-09-12T23:36:00.072191+00:00"
+}
