@@ -89,6 +89,7 @@ static func validate(data: Dictionary) -> Dictionary:
 	if int(data.get("generator_version",0))>=3:
 		errors.append_array(validate_zoning(data))
 		errors.append_array(validate_furnishing(data,human))
+		errors.append_array(validate_tasks(data))
 	return {"passed":errors.is_empty(),"errors":errors,"valid_edges":valid_edges,"rejected_edges":rejected,
 		"reachable_nodes":seen.size(),"node_count":nodes.size(),"rooms":data.rooms.size(),"floors":data.floor_levels.size()}
 
@@ -144,6 +145,7 @@ static func validate_furnishing(data: Dictionary, human: Dictionary) -> Array[St
 			expected[storage]=int(expected.get(storage,0))+1
 		for asset: String in expected:
 			if int(counts.get(asset,0))<int(expected[asset]): errors.append("Missing essential %s in %s"%[asset,room.id])
+		if int(room.bed_count)>0 and not bed_group_valid(objects): errors.append("Invalid bed group spacing in "+str(room.id))
 		if objects.size()!=int(room.get("furniture_count",-1)) or objects.size()>8: errors.append("Invalid furnishing count in "+str(room.id))
 		if occupied/(inside.size.x*inside.size.z)>.40: errors.append("Overcrowded room: "+str(room.id))
 		for approach: Dictionary in room.get("functional_approaches",[]):
@@ -153,6 +155,80 @@ static func validate_furnishing(data: Dictionary, human: Dictionary) -> Array[St
 	if total!=int(data.get("furniture_count",-1)): errors.append("Incorrect map furnishing count")
 	for index: int in range(total):
 		if not orders.has(index): errors.append("Non-contiguous furnishing placement order");break
+	return errors
+
+static func bed_aisle(first: AABB, second: AABB) -> AABB:
+	# Require a straight, overlapping passage between bed faces, not just a
+	# diagonal distance between corners. The passage remains clear of furniture.
+	for axis: int in [0,2]:
+		var along:=2 if axis==0 else 0
+		var left:=first if first.get_center()[axis]<second.get_center()[axis] else second
+		var right:=second if first.get_center()[axis]<second.get_center()[axis] else first
+		var gap: float=right.position[axis]-left.end[axis]
+		var low: float=maxf(first.position[along],second.position[along])
+		var high: float=minf(first.end[along],second.end[along])
+		if gap<1.30-.001 or high-low<minf(first.size[along],second.size[along])*.5: continue
+		var origin:=Vector3(0,first.position.y,0);origin[axis]=left.end[axis];origin[along]=low
+		var size:=Vector3(0,2.05,0);size[axis]=gap;size[along]=high-low
+		return AABB(origin,size)
+	return AABB()
+
+static func nightstand_beside_bed(stand: AABB, bed: AABB, yaw: float) -> bool:
+	var frame:=Transform3D(Basis(Vector3.UP,yaw),bed.get_center()).affine_inverse()
+	var local_bed: AABB=frame*bed
+	var local_stand: AABB=frame*stand
+	var side_gap:=maxf(local_stand.position.x-local_bed.end.x,local_bed.position.x-local_stand.end.x)
+	var overlap:=minf(local_stand.end.z,local_bed.end.z)-maxf(local_stand.position.z,local_bed.position.z)
+	return side_gap>=.10-.001 and side_gap<=.35+.001 and overlap>=minf(.25,local_stand.size.z*.5)
+
+static func bed_group_valid(objects: Array[Dictionary]) -> bool:
+	var beds: Array[Dictionary]=[]
+	for item: Dictionary in objects:
+		if str(item.asset_id)=="bed": beds.append(item)
+	for first: int in range(beds.size()):
+		for second: int in range(first+1,beds.size()):
+			var aisle:=bed_aisle(beds[first].box,beds[second].box)
+			if not aisle.has_volume(): return false
+			for item: Dictionary in objects:
+				if str(item.asset_id)!="bed" and aisle.intersects(item.box): return false
+	for item: Dictionary in objects:
+		if str(item.asset_id)!="nightstand": continue
+		var beside:=false
+		for bed: Dictionary in beds:
+			if nightstand_beside_bed(item.box,bed.box,float(bed.rotation_y)): beside=true;break
+		if not beside: return false
+	return true
+
+static func validate_tasks(data: Dictionary) -> Array[String]:
+	var errors: Array[String]=[]
+	var rooms: Dictionary={};var used: Dictionary={};var floors: Dictionary={};var labels: Dictionary={}
+	for room: Dictionary in data.rooms: rooms[room.id]=room
+	for task: Dictionary in data.stations:
+		var id: String=task.get("room","")
+		if not rooms.has(id): errors.append("Task references unknown room: "+id);continue
+		if used.has(id): errors.append("Tasks share room: "+id)
+		used[id]=true
+		var room: Dictionary=rooms[id]
+		floors[room.floor]=true
+		var label: String=task.get("label","")
+		if labels.has(label): errors.append("Duplicate bedtime task: "+label)
+		labels[label]=true
+		var bounds: AABB=room.bounds
+		if not bounds.has_point(Vector3(task.p)+Vector3.UP*.1): errors.append("Task outside assigned room: "+label)
+		if label in ["VENTANA","MOSQUITERO"] and absf(bounds.position.z+float(data.half_z)-.25)>.01 and absf(bounds.end.z-float(data.half_z)+.25)>.01:
+			errors.append("Window task has no exterior window: "+label)
+		if label in ["MANTAS","SÁBANAS"]:
+			var bed:=false
+			for item: Dictionary in data.structures:
+				if str(item.get("room",""))==id and str(item.get("asset_id",""))=="bed": bed=true;break
+			if not bed: errors.append("Bedtime task has no real bed: "+label)
+		if label in ["VENTILADOR","REPELENTE","EQUIPO","VAJILLA"]:
+			var surface: Dictionary=room.get("pickup_surface",{})
+			if surface.is_empty() or not Vector3(task.p).is_equal_approx(surface.approach): errors.append("Task lacks assigned support approach: "+label)
+	if data.stations.size()!=8 or used.size()!=8: errors.append("Expected eight distinct task rooms")
+	if floors.size()<2: errors.append("Bedtime tasks need at least two floors")
+	for label: String in ["VENTANA","VENTILADOR","REPELENTE","EQUIPO","MANTAS","MOSQUITERO","SÁBANAS","VAJILLA"]:
+		if not labels.has(label): errors.append("Missing bedtime task: "+label)
 	return errors
 
 static func _portal_hall(data: Dictionary, room: Dictionary) -> Vector3:

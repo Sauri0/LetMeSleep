@@ -405,7 +405,7 @@ func _access_band(a: Vector3, b: Vector3, width: float=1.3) -> AABB:
 	var margin:=Vector3(width*.5,0,width*.5)
 	return AABB(a.min(b)-margin,(b-a).abs()+margin*2+Vector3.UP*2.05)
 
-func _furniture_candidates(room: Dictionary, spec: Dictionary) -> Array[Dictionary]:
+func _furniture_candidates(room: Dictionary, spec: Dictionary, near_beds: Array[Dictionary]=[]) -> Array[Dictionary]:
 	var result: Array[Dictionary]=[]
 	var region: AABB=room.interior_bounds
 	var anchor: Vector3=room.center
@@ -429,8 +429,25 @@ func _furniture_candidates(room: Dictionary, spec: Dictionary) -> Array[Dictiona
 			for xf: float in [.25,.5,.75]:
 				for zf: float in [.25,.5,.75]:
 					positions.append(Vector2(lerpf(region.position.x+.2,region.end.x-.2-size.x,xf),lerpf(region.position.z+.2,region.end.z-.2-size.z,zf)))
+		if str(spec.asset_id)=="nightstand":
+			for bed: Dictionary in near_beds:
+				var bed_box: AABB=bed.box
+				var side_axis:=0 if absf(cos(float(bed.rotation_y)))>.5 else 2
+				var along_axis:=2 if side_axis==0 else 0
+				for side: float in [-1.0,1.0]:
+					for fraction: float in [0.0,.5,1.0]:
+						var p:=bed_box.position
+						p[side_axis]=bed_box.position[side_axis]-.18-size[side_axis] if side<0 else bed_box.end[side_axis]+.18
+						p[along_axis]=lerpf(bed_box.position[along_axis],bed_box.end[along_axis]-size[along_axis],fraction)
+						positions.append(Vector2(p.x,p.z))
 		for position: Vector2 in positions:
 			var box:=AABB(Vector3(position.x,bounds.position.y,position.y),size)
+			if not region.grow(.001).encloses(box): continue
+			if str(spec.asset_id)=="nightstand" and not near_beds.is_empty():
+				var beside:=false
+				for bed: Dictionary in near_beds:
+					if HouseChecks.nightstand_beside_bed(box,bed.box,float(bed.rotation_y)): beside=true;break
+				if not beside: continue
 			var key:=str(box)+"/"+str(quarter)
 			if unique.has(key): continue
 			unique[key]=true
@@ -468,12 +485,21 @@ func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
 		jobs.append({"spec":specs[index],"candidates":_furniture_candidates(room,specs[index]),"order":index})
 	jobs.sort_custom(func(a:Dictionary,b:Dictionary)->bool:
 		if bool(a.spec.essential)!=bool(b.spec.essential): return bool(a.spec.essential)
+		if int(room.bed_count)>0:
+			var ap:=0 if str(a.spec.asset_id)=="bed" else (2 if str(a.spec.asset_id)=="nightstand" else 1)
+			var bp:=0 if str(b.spec.asset_id)=="bed" else (2 if str(b.spec.asset_id)=="nightstand" else 1)
+			if ap!=bp: return ap<bp
 		return a.candidates.size()<b.candidates.size() if a.candidates.size()!=b.candidates.size() else int(a.order)<int(b.order))
 	for job: Dictionary in jobs:
 		var spec: Dictionary=job.spec
 		var candidates: Array=job.candidates
 		var next: Array[Dictionary]=[]
 		for state: Dictionary in states:
+			if int(room.bed_count)>0 and str(spec.asset_id)=="nightstand":
+				var beds: Array[Dictionary]=[]
+				for item: Dictionary in state.items:
+					if str(item.spec.asset_id)=="bed": beds.append({"box":item.box,"rotation_y":item.rotation_y})
+				candidates=_furniture_candidates(room,spec,beds)
 			for candidate: Dictionary in candidates:
 				var free:=true
 				var box: AABB=candidate.box
@@ -482,6 +508,11 @@ func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
 						free=false;break
 				if not free: continue
 				var items: Array=state.items.duplicate();items.append(candidate)
+				if int(room.bed_count)>0:
+					var group: Array[Dictionary]=[]
+					for item: Dictionary in items:
+						group.append({"asset_id":item.spec.asset_id,"box":item.box,"rotation_y":item.rotation_y})
+					if not HouseChecks.bed_group_valid(group): continue
 				next.append({"items":items,"score":float(state.score)+float(candidate.score)})
 		if next.is_empty():
 			if bool(spec.essential):
@@ -539,6 +570,13 @@ func _furnish_room(room: Dictionary) -> void:
 				"support_point":support,"rotation":Vector3(PI/2,PI/2,0),
 				"task_display_p":support-Vector3(box.size.x*.34,0,0),"task_display_yaw":candidate.rotation_y}
 			room.pickup_surface.facing=Vector3(room.pickup_surface.facing).normalized()
+	# Reserve the passage between beds before placing broom/slipper supports.
+	for first: int in range(placed.size()):
+		if str(placed[first].spec.asset_id)!="bed": continue
+		for second: int in range(first+1,placed.size()):
+			if str(placed[second].spec.asset_id)!="bed": continue
+			var aisle:=HouseChecks.bed_aisle(placed[first].box,placed[second].box)
+			if aisle.has_volume(): room.clearance.append(aisle)
 	room.furniture_count=placed.size()
 	room.furnishing_report={"essential_expected":essential_expected,"essential_placed":essential_placed,"objects":placed.size(),
 		"occupied_m2":occupied,"occupancy":occupied/float(room.area_m2),"under_target":occupied/float(room.area_m2)<.12,
@@ -606,6 +644,7 @@ func _assign_tasks() -> void:
 		var candidates: Array[Dictionary]=[]
 		for room: Dictionary in _data.rooms:
 			if used.has(room.id): continue
+			if label in ["VENTILADOR","REPELENTE","EQUIPO","VAJILLA"] and not room.has("pickup_surface"): continue
 			var b: AABB=room.bounds
 			if label in ["VENTANA","MOSQUITERO"] and absf(b.position.z+float(_data.half_z)-.25)>.01 and absf(b.end.z-float(_data.half_z)+.25)>.01: continue
 			if label in ["MANTAS","SÁBANAS"]:
