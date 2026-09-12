@@ -91,8 +91,8 @@ namespace LetMeSleep.Content.Editor
             LobbyPiece(bedroom,"Desk_ClosedBook",new Vector3(4.42f,3.8125f,.55f),new Vector3(.24f,.035f,.18f),"Textile_Rust",false);
             var kitchen=Child(root,"Kitchen_Domestic");
             LobbyPiece(kitchen,"CuttingBoard",new Vector3(12.20f,.885f,9.18f),new Vector3(.34f,.01f,.48f),"Wood_Honey",false);
-            LobbyPiece(kitchen,"FoldedTeaCloth",new Vector3(12.24f,.902f,9.72f),new Vector3(.34f,.025f,.23f),"Linen",false);
-            LobbyPiece(kitchen,"ClothBand",new Vector3(12.24f,.916f,9.72f),new Vector3(.05f,.002f,.21f),"Textile_Blue",false);
+            LobbyPiece(kitchen,"FoldedTeaCloth",new Vector3(12.24f,.8925f,9.72f),new Vector3(.34f,.025f,.23f),"Linen",false);
+            LobbyPiece(kitchen,"ClothBand",new Vector3(12.24f,.906f,9.72f),new Vector3(.05f,.002f,.21f),"Textile_Blue",false);
             // Plates are low-poly turned ceramics; real sidewalls and rim, no flat decal.
             AddPlate(kitchen,"Plate_Lower",new Vector3(12.20f,.88f,8.70f));
             AddPlate(kitchen,"Plate_Upper",new Vector3(12.20f,.896f,8.70f));
