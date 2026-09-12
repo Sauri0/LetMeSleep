@@ -2,6 +2,7 @@ extends RefCounted
 ## Small authored graph shared by offline bots. No engine navigation bake or 3D grid.
 ## Human points are feet; mosquito points are centers. Reuse routes between repaths.
 
+const DoorGeometry = preload("res://scripts/door_geometry.gd")
 const Geometry = preload("res://scripts/navigation_geometry.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const HouseBarriers = preload("res://scripts/house_barriers.gd")
@@ -29,6 +30,10 @@ static func _geometry(human: bool, map_id: String) -> Dictionary:
 	var data: Dictionary = _data(map_id)
 	var extra: Array[AABB] = HouseBarriers.get_boxes(map_id)
 	extra.append_array(PickupSupports.get_boxes(map_id))
+	# Share v3 collision inputs; retain the independent pre-optimization search.
+	if human and int(data.get("generator_version",0))>=3:
+		for door: Dictionary in data.doors.values():
+			extra.append(DoorGeometry.leaf_transform(door,PI*.5)*DoorGeometry.leaf_box(door))
 	var result := Geometry.create(data, human, extra)
 	_cache[key] = result
 	return result

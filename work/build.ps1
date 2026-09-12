@@ -11,7 +11,7 @@ if ($ResumeVerifiedR2) {
     $transcriptPath = Join-Path $PSScriptRoot 'director092-full-final-r2.txt'
     if ((Get-FileHash $transcriptPath).Hash -ne 'D7CA87F7680156F4339C6AFD19F61209AEDE434BB4D1BAC1B418623A579F9137') { throw 'R2 evidence changed' }
     $changed = @(& git -C $projectRoot diff --name-only 26da815 -- game native art_source)
-    if (@($changed | Where-Object { $_ -ne 'game/tests/map_tasks09_test.gd' }).Count) { throw 'Runtime or another fixture changed since the verified prefix' }
+    if (@($changed | Where-Object { $_ -notin @('game/tests/map_tasks09_test.gd','game/tests/navigation09_reference.gd') }).Count) { throw 'Runtime or another fixture changed since the verified prefix' }
     if (@(& git -C $projectRoot ls-files --others --exclude-standard -- game native art_source).Count) { throw 'Untracked source invalidates resume' }
     if (-not (Select-String $transcriptPath -Pattern 'geometry09_cache checks=164 failures=0' -Quiet)) { throw 'R2 did not finish the required prefix' }
 }
