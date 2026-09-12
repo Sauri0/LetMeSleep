@@ -236,10 +236,10 @@ namespace LetMeSleep.Presentation.Editor
             var root = new GameObject("LMS_AlfaAudioRoot");
             try
             {
-                root.AddComponent<AudioEmitterPool>();
-                CreateBed(root.transform, "Music_Menu", "MUS_NightMischief_Menu.wav", 0.45f, true, false, FindGroup(mixer, "Music"));
-                CreateBed(root.transform, "Music_Round", "MUS_NightMischief_Round.wav", 0.42f, false, false, FindGroup(mixer, "Music"));
-                CreateBed(root.transform, "Ambience_NightHouse", "AMB_NightHouse.wav", 0.40f, true, false, FindGroup(mixer, "Ambience"));
+                AudioEmitterPool emitters = root.AddComponent<AudioEmitterPool>();
+                AudioBedPlayer menu = CreateBed(root.transform, "Music_Menu", "MUS_NightMischief_Menu.wav", 0.45f, true, false, FindGroup(mixer, "Music"));
+                AudioBedPlayer round = CreateBed(root.transform, "Music_Round", "MUS_NightMischief_Round.wav", 0.42f, false, false, FindGroup(mixer, "Music"));
+                AudioBedPlayer ambience = CreateBed(root.transform, "Ambience_NightHouse", "AMB_NightHouse.wav", 0.40f, true, false, FindGroup(mixer, "Ambience"));
 
                 var catalog = root.AddComponent<AlfaAudioCatalog>();
                 Assign(catalog, "strikeSwing", cues["StrikeSwing"]);
@@ -255,6 +255,13 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(catalog, "mosquitoesWin", cues["MosquitoesWin"]);
                 Assign(catalog, "uiReady", cues["UiReady"]);
 
+                AlfaAudioDirector director = root.AddComponent<AlfaAudioDirector>();
+                Assign(director, "emitters", emitters);
+                Assign(director, "catalog", catalog);
+                Assign(director, "menuMusic", menu);
+                Assign(director, "roundMusic", round);
+                Assign(director, "ambience", ambience);
+
                 PrefabUtility.SaveAsPrefabAsset(root, AudioRoot + "/Prefabs/LMS_AlfaAudioRoot.prefab");
             }
             finally
@@ -263,7 +270,7 @@ namespace LetMeSleep.Presentation.Editor
             }
         }
 
-        private static void CreateBed(
+        private static AudioBedPlayer CreateBed(
             Transform parent, string name, string clipName, float volume,
             bool playOnStart, bool spatial, AudioMixerGroup output)
         {
@@ -280,6 +287,7 @@ namespace LetMeSleep.Presentation.Editor
             serialized.FindProperty("playOnStart").boolValue = playOnStart;
             serialized.FindProperty("spatial").boolValue = spatial;
             serialized.ApplyModifiedPropertiesWithoutUndo();
+            return player;
         }
 
         private static AudioMixerGroup FindGroup(AudioMixer mixer, string exactName)
