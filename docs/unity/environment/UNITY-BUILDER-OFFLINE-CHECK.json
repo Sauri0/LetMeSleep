@@ -6,11 +6,19 @@
   "source_sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2",
   "builder_sources": [
     {
+      "sha256": "ec5a0dcfd6cb37dc418c23d463e166b236f140a1113777259185d1da9c90dc1e",
+      "name": "AlfaFloorFinish.cs"
+    },
+    {
+      "sha256": "b4d5a74c8046566f052f949a151392db7f028396e626a5480cdab8ec3ccb1e36",
+      "name": "AlfaHouseDressing.cs"
+    },
+    {
       "sha256": "ecbcd8556c0c4650ac6ae884533e01cdaf7871daa8d045bf2544df53832999e6",
       "name": "AlfaLobbyDressing.cs"
     },
     {
-      "sha256": "9954c39d65a908c7fa038039004017ee3892a151e8eb4d38ed441863e436a2f3",
+      "sha256": "365e4c51ffc934f64b1363d1a60326311c3f3c7a78c141c442065ceae948daad",
       "name": "AlfaMapBuilder.cs"
     },
     {

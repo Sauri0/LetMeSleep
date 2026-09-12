@@ -55,6 +55,7 @@ namespace LetMeSleep.Content.Editor
             Copy(planFile,Output+"/Data/house_layout_plan.json");
             Copy(Path.Combine(sources,"source_manifest.json"),Output+"/Data/source_manifest.json");
             materials=MakeMaterials(manifest.house_alfa_static.materials);
+            BuildFloorFinish();
             Import(sources,"house_alfa_static",manifest.house_alfa_static);
             Import(sources,"lobby_alfa_static",manifest.lobby_alfa_static);
             Import(sources,"furniture_kit_alfa",manifest.furniture_kit_alfa);
@@ -65,7 +66,8 @@ namespace LetMeSleep.Content.Editor
             {
                 BuildKit(manifest.furniture_kit_alfa);
                 var house=new GameObject("HousePatio");
-                InstantiateStatic("house_alfa_static",manifest.house_alfa_static,house.transform);
+                var houseShell=InstantiateStatic("house_alfa_static",manifest.house_alfa_static,house.transform);
+                ApplyFloorCoordinates(houseShell,Vector3.one);
                 FurnishHouse(house);
                 AddDoors(house,plan);
                 var data=house.AddComponent<EnvironmentMapDefinition>();data.MapId="house-patio-v1";data.ContentHash=ContentHash(repository,data.MapId);
@@ -75,6 +77,7 @@ namespace LetMeSleep.Content.Editor
                 AddWorldBoundary(house,data.PlayBounds);
                 AddHouseAnchors(house,data,plan);
                 AddToolPickups(data);
+                AddHouseDressing(house,data,plan);
                 BindGameplay(house,10000,1);
                 CheckSpawns(house,data.HumanSpawnPoints,.25f,1.72f);
                 CheckSpawns(house,data.MosquitoSpawnPoints,.055f,.11f,true);
@@ -83,6 +86,7 @@ namespace LetMeSleep.Content.Editor
                 int doors=house.GetComponentsInChildren<GameplayDoor>().Length;
                 Need(doors==9,"Expected nine real alpha doors.");
                 SavePrefabAndInstantiate(ref house,Output+"/Prefabs/HousePatio.prefab",scene);
+                CheckHouseDressing(house,house.GetComponent<EnvironmentMapDefinition>());
                 AddReviewLights(plan,false);
                 AddCamera(new Vector3(6.06f,1.53f,2),new Vector3(6.06f,1.53f,8),"Review_House_Human");
                 Need(EditorSceneManager.SaveScene(scene,HouseScene),"House scene save failed.");
@@ -90,6 +94,7 @@ namespace LetMeSleep.Content.Editor
                 scene=EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Additive);SceneManager.SetActiveScene(scene);
                 var lobby=new GameObject("PrivateLobby");
                 var lobbyShell=InstantiateStatic("lobby_alfa_static",manifest.lobby_alfa_static,lobby.transform);
+                ApplyFloorCoordinates(lobbyShell,V(plan.lobby.source_shell_scale));
                 lobbyShell.transform.localScale=V(plan.lobby.source_shell_scale);
                 FurnishLobby(lobby);
                 var lobbyData=lobby.AddComponent<EnvironmentMapDefinition>();lobbyData.MapId="private-lobby-v1";lobbyData.ContentHash=ContentHash(repository,lobbyData.MapId);lobbyData.SpatialData=AssetDatabase.LoadAssetAtPath<TextAsset>(Output+"/Data/house_layout_plan.json");
@@ -367,6 +372,8 @@ namespace LetMeSleep.Content.Editor
                 "art_source/unity/environments/room_sample/house_layout_plan.json","art_source/unity/environments/room_sample/room_furnished_without_door.fbx","art_source/unity/environments/room_sample/door_01.fbx","art_source/unity/environments/room_sample/room_contract.json","art_source/unity/environments/room_sample/presentation_manifest.json",
                 "unity/Assets/LetMeSleep/Content/Editor/Environment/EnvironmentSampleBuilder.cs","unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaMapBuilder.cs","unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs",
                 "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaLobbyDressing.cs",
+                "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaHouseDressing.cs",
+                "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaFloorFinish.cs",
                 "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs","unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs",
                 "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs","unity/Assets/LetMeSleep/Gameplay/Contracts.cs"};
             var payload=new System.Text.StringBuilder(mapId+"\n");
