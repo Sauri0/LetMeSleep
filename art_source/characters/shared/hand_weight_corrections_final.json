@@ -1,0 +1,38 @@
+{
+  "description": "Three local source weights preserving positive face orientation across all 40 native acquisition/palmada states.",
+  "vertices": [
+    {
+      "position": [
+        0.250983059406281,
+        0.747160732746124,
+        -0.022724149748683
+      ],
+      "weights": {
+        "forearm_r": 0.14202845847957854,
+        "hand_r": 0.8579715415204214
+      }
+    },
+    {
+      "position": [
+        0.254318237304688,
+        0.748603820800781,
+        -0.0255389083176851
+      ],
+      "weights": {
+        "forearm_r": 0.09561593090236287,
+        "hand_r": 0.9043840690976371
+      }
+    },
+    {
+      "position": [
+        0.250628054141998,
+        0.746990621089935,
+        -0.0155414883047342
+      ],
+      "weights": {
+        "forearm_r": 0.11312385293360191,
+        "hand_r": 0.8868761470663981
+      }
+    }
+  ]
+}

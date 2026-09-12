@@ -204,43 +204,120 @@ func apply_human(pose: Dictionary, data: Dictionary, dt: float) -> void:
 		hand_grip[side] = lerpf(previous_grip,target_grip,1.0-exp(-16.0*dt))
 		var grip: float = hand_grip[side]
 		if not changed and absf(grip-previous_grip)<.0001: continue
-		_pose_fingers(side,grip,pose,str(data.get("tool","hands")))
+		var opening := 0.0
+		if bool(strike.get("active",false)) and str(strike.get("tool","hands"))=="hands" and str(strike.get("hand","right"))==("left" if side=="l" else "right"):
+			var progress := float(strike.get("progress",0.0))
+			opening=smoothstep(0.0,.18,progress)*(1.0-smoothstep(.70,1.0,progress))
+		_pose_fingers(side,grip,pose,str(data.get("tool","hands")),opening)
 
-func _pose_fingers(side: String, grip: float, pose: Dictionary, tool: String) -> void:
+func _pose_fingers(side: String, grip: float, pose: Dictionary, tool: String, opening: float = 0.0) -> void:
 	var hand_id: int = bone_ids["hand_"+side]
 	var hand_change := skeleton.get_bone_global_pose(hand_id)*skeleton.get_bone_global_rest(hand_id).affine_inverse()
+	hand_change.basis=hand_change.basis.orthonormalized()
 	var original_axis := (_point(contract["hand_"+side].to)-_point(contract["hand_"+side].from)).normalized()
 	var width := (hand_change.basis*(Vector3.RIGHT-original_axis*Vector3.RIGHT.dot(original_axis))).normalized()
 	var longitudinal := (hand_change.basis*original_axis).normalized()
-	var normal := width.cross(longitudinal).normalized()
-	var radius := float(Tools.GRASPS.get(tool,{"radius":.015}).radius)+.014
-	var depth := float(Tools.GRASPS.get(tool,{}).get("depth",radius-.014))+.014
+	# The thumb is medial in the selected rig. Its anatomical palm is -frame Z;
+	# the rotation frame itself remains right-handed. Never reflect the mesh.
+	var palm := -width.cross(longitudinal).normalized()
+	var radius := float(Tools.GRASPS.get(tool,{"radius":.015}).radius)
+	var depth := float(Tools.GRASPS.get(tool,{}).get("depth",radius))
 	var centre: Vector3 = pose.get("tool_grip",Vector3.ZERO)
-	var bend := Basis(width,.10*(1.0-grip))
+	grip=clampf(grip,0.0,1.0)
 	for finger: int in range(4):
 		var a := "finger%d_a_%s"%[finger,side]
 		var b := "finger%d_b_%s"%[finger,side]
 		if not contract.has(a) or not contract.has(b): continue
 		var base: Vector3 = hand_change*_point(contract[a].from)
-		var joint := base+bend*(hand_change.basis*(_point(contract[a].to)-_point(contract[a].from)))
-		var tip := joint+bend*(hand_change.basis*(_point(contract[b].to)-_point(contract[b].from)))
-		var along := (_point(contract[a].from)-_point(contract["hand_"+side].from)).dot(Vector3.RIGHT)
-		joint=joint.lerp(centre+width*along+longitudinal*depth*.82-normal*radius*.55,grip)
-		tip=tip.lerp(centre+width*along+longitudinal*depth*.50+normal*radius*.84,grip)
+		var va := hand_change.basis*(_point(contract[a].to)-_point(contract[a].from))
+		var vb := hand_change.basis*(_point(contract[b].to)-_point(contract[b].from))
+		var len_a := va.length()
+		var len_b := vb.length()
+		var rest_a := atan2(absf(va.dot(palm)),va.dot(longitudinal))*(1.0-opening)
+		var rest_b := atan2(absf(vb.dot(palm)),vb.dot(longitudinal))*(1.0-opening)
+		var angles := Vector2(rest_a,maxf(0.0,rest_b-rest_a))
+		if grip>.00001:
+			var offset := base-centre
+			var root_2d := Vector2(offset.dot(longitudinal),offset.dot(palm))
+			var closed := _grasp_finger_angles(root_2d,len_a,len_b,depth,radius,angles)
+			angles=angles.lerp(closed,grip)
+		# Interpolate angles, never endpoints: both falanges retain their exact
+		# authored lengths throughout acquisition, release and partial grips.
+		var joint := base+(longitudinal*cos(angles.x)+palm*sin(angles.x))*len_a
+		var tip := joint+(longitudinal*cos(angles.x+angles.y)+palm*sin(angles.x+angles.y))*len_b
 		_set_digit_bone(a,base,joint,hand_change)
 		_set_digit_bone(b,joint,tip,hand_change)
 	var ta := "thumb_a_"+side
 	var tb := "thumb_b_"+side
 	if contract.has(ta) and contract.has(tb):
 		var base: Vector3 = hand_change*_point(contract[ta].from)
-		var joint: Vector3 = hand_change*_point(contract[ta].to)
-		var tip: Vector3 = hand_change*_point(contract[tb].to)
-		var target_tip := centre-width*.038-normal*radius*.25-longitudinal*depth*.90
-		var target_joint := base.lerp(target_tip,.52)-width*.012
-		joint=joint.lerp(target_joint,grip)
-		tip=tip.lerp(target_tip,grip)
+		var va := hand_change.basis*(_point(contract[ta].to)-_point(contract[ta].from))
+		var vb := hand_change.basis*(_point(contract[tb].to)-_point(contract[tb].from))
+		var rest_a := _palmar_digit_vector(va,palm,opening)
+		var rest_b := _palmar_digit_vector(vb,palm,opening)
+		var closed_a := rest_a
+		var closed_b := rest_b
+		if grip>.00001:
+			var sign := -1.0 if side=="l" else 1.0
+			# Oppose the fingers from the near, lower surface of the shaft. The
+			# pole is mirrored by hand; the tool centre/axis is never moved.
+			var target := centre-longitudinal*(depth+.019)*sin(.35)-palm*(radius+.019)*cos(.35)
+			var pole := -width*sign+longitudinal*.35-palm*.15
+			var chain := _fixed_digit_chain(base,target,pole,va.length(),vb.length(),1.20)
+			closed_a=Vector3(chain.joint)-base
+			closed_b=Vector3(chain.tip)-Vector3(chain.joint)
+		# The thumb web shares a continuous surface with the palm. Keep its
+		# opposition near the authored palmar rest instead of folding that web.
+		var opposition := grip*.05
+		var joint := base+rest_a.normalized().slerp(closed_a.normalized(),opposition).normalized()*va.length()
+		var tip := joint+rest_b.normalized().slerp(closed_b.normalized(),opposition).normalized()*vb.length()
 		_set_digit_bone(ta,base,joint,hand_change)
 		_set_digit_bone(tb,joint,tip,hand_change)
+
+func _palmar_digit_vector(original: Vector3, palm: Vector3, opening: float) -> Vector3:
+	# This chooses a target direction. _set_digit_bone reaches it by rotation;
+	# no vertex, skin bind, normal or handedness is reflected.
+	var direction := original-palm*2.0*minf(0.0,original.dot(palm))
+	var flat := direction-palm*direction.dot(palm)
+	return direction.normalized().slerp(flat.normalized(),opening).normalized()*original.length()
+
+func _grasp_finger_angles(base: Vector2, len_a: float, len_b: float, depth: float, radius: float, fallback: Vector2) -> Vector2:
+	var result := fallback
+	# Reach the near circumference. Old targets crossed the entire shaft and
+	# stretched short fingers. Select a reachable surface point and keep the
+	# centreline outside a 14 mm finger envelope, including between joints.
+	for step: int in range(1,61):
+		var arc := float(step)*.025
+		var target := Vector2((depth+.016)*sin(arc),-(radius+.016)*cos(arc))
+		var delta := target-base
+		var distance := delta.length()
+		if distance>=len_a+len_b-.00001 or distance<=absf(len_a-len_b)+.00001: continue
+		var proximal := atan2(delta.y,delta.x)-acos(clampf((len_a*len_a+distance*distance-len_b*len_b)/(2.0*len_a*distance),-1.0,1.0))
+		var flexion := acos(clampf((distance*distance-len_a*len_a-len_b*len_b)/(2.0*len_a*len_b),-1.0,1.0))
+		if proximal<0.0 or proximal>1.35 or flexion<.60 or flexion>1.85: continue
+		var joint := base+Vector2(cos(proximal),sin(proximal))*len_a
+		if not _digit_segment_clear(base,joint,depth+.014,radius+.014): continue
+		if not _digit_segment_clear(joint,target,depth+.014,radius+.014): continue
+		result=Vector2(proximal,flexion)
+	return result
+
+func _digit_segment_clear(a: Vector2, b: Vector2, depth: float, radius: float) -> bool:
+	# Exact closest point after mapping the ellipse to the unit circle.
+	var start := Vector2(a.x/depth,a.y/radius)
+	var finish := Vector2(b.x/depth,b.y/radius)
+	var delta := finish-start
+	var t := clampf(-start.dot(delta)/maxf(delta.length_squared(),.0000001),0.0,1.0)
+	return (start+delta*t).length_squared()>=1.0
+
+func _fixed_digit_chain(base: Vector3, target: Vector3, pole: Vector3, len_a: float, len_b: float, maximum_flexion: float) -> Dictionary:
+	var delta := target-base
+	var axis := delta.normalized()
+	var minimum := sqrt(len_a*len_a+len_b*len_b+2.0*len_a*len_b*cos(maximum_flexion))
+	var distance := clampf(delta.length(),minimum,len_a+len_b-.00001)
+	var along := (len_a*len_a+distance*distance-len_b*len_b)/(2.0*distance)
+	var height := sqrt(maxf(0.0,len_a*len_a-along*along))
+	var outward := (pole-axis*pole.dot(axis)).normalized()
+	return {"joint":base+axis*along+outward*height,"tip":base+axis*distance}
 
 func _set_digit_bone(name: String, from: Vector3, to: Vector3, palm_change: Transform3D) -> void:
 	var id: int = bone_ids[name]
@@ -250,7 +327,6 @@ func _set_digit_bone(name: String, from: Vector3, to: Vector3, palm_change: Tran
 	# from the unposed rest alone twists the finger relative to its own knuckle.
 	var change := Basis(Quaternion((palm_change.basis*original).normalized(),direction.normalized()))*palm_change.basis
 	var target := Transform3D(change*skeleton.get_bone_global_rest(id).basis,from)
-	target.basis.y *= direction.length()/maxf(original.length(),.001)
 	skeleton.set_bone_global_pose(id,target)
 
 func apply_mosquito(data: Dictionary, clock_time: float, stun: float) -> void:

@@ -1,0 +1,11 @@
+{
+  "checks": 147,
+  "failures": [],
+  "changed_export_vertices": 2629,
+  "maximum_source_shift_m": 0.040000008617615684,
+  "outside_scope_edits": 0,
+  "maximum_old_to_new_bone_length_error_m": 1.2680233443113087e-08,
+  "before_glb_sha256": "50c770f32d6023783eb78c597bf2debae8c877895a2565e21923734bf6faf806",
+  "after_glb_sha256": "0c26be1c356e4b03c259d371095e419dba9478b3228b2e889980abe5a68ff8d1",
+  "scope": "Source rest/length/scope invariants. Native deformed triangles and tool contacts require separate checks."
+}

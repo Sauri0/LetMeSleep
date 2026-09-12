@@ -1,0 +1,40 @@
+{
+  "records": [
+    {
+      "name": "grasp-broom-third-tool",
+      "core_triangles": 11476,
+      "tool_triangles": 6320,
+      "triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "name": "grasp-newspaper-third-tool",
+      "core_triangles": 11476,
+      "tool_triangles": 3132,
+      "triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "name": "grasp-racket-third-tool",
+      "core_triangles": 11476,
+      "tool_triangles": 3164,
+      "triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "name": "grasp-slipper-third-tool",
+      "core_triangles": 11476,
+      "tool_triangles": 3676,
+      "triangle_contacts": 0,
+      "witnesses": []
+    },
+    {
+      "name": "grasp-swatter-third-tool",
+      "core_triangles": 11476,
+      "tool_triangles": 1208,
+      "triangle_contacts": 0,
+      "witnesses": []
+    }
+  ],
+  "scope": "Native rendered triangle surfaces at the captured poses. Exact crossing/touch witnesses; no continuous-time or containment certification."
+}

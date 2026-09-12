@@ -1,0 +1,24 @@
+{
+  "stage": "hand-rest-mesh-r7",
+  "pid": 22488,
+  "started_utc": "2026-09-12T01:19:52.5204327Z",
+  "finished_utc": "2026-09-12T01:19:59.4988528Z",
+  "exit_code": 0,
+  "timeout": false,
+  "stderr_bytes": 0,
+  "executable": "C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/work/tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe",
+  "arguments": [
+    "--path",
+    "C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/game",
+    "--windowed",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/character092_hands.gd",
+    "--",
+    "--capture",
+    "--full-mesh",
+    "--audit-mesh",
+    "--output=C:/Users/brank/Documents/Codex/2026-09-06/lms091-characters/work/character092-rest-mesh-r7"
+  ]
+}

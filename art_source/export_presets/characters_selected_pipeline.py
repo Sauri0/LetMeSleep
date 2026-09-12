@@ -17,6 +17,7 @@ from garment_fit import repair_human_garments
 from garment_trim import conform_human_central_trim
 from glasses_fit import repair_human_glasses
 from facial_style import STYLE_VERSION, fit_mosquito_goggle_bridge
+from hand_rest import RIG_VERSION as HAND_RIG_VERSION, repair_human_hand_rest
 
 def srgb_to_linear(value):
     return value/12.92 if value<=.04045 else ((value+.055)/1.055)**2.4
@@ -170,6 +171,10 @@ def export_selected(species):
     frozen_manifest=json.loads((frozen/'manifest.json').read_text())
     cheek_repair=refine_human_cheeks() if species=='human' else {}
     thumb_bones=add_thumb_controls(rigs[0],frozen_manifest['bones']) if species=='human' else {}
+    hand_rest={}
+    if species=='human':
+        hand_bones,hand_rest=repair_human_hand_rest(rigs[0],dict(frozen_manifest['bones'],**thumb_bones))
+        thumb_bones.update(hand_bones)
     garment_fit=repair_human_garments() if species=='human' else []
     garment_trim=conform_human_central_trim() if species=='human' else []
     separate_faces(species)
@@ -208,7 +213,7 @@ def export_selected(species):
         export_skins=True,export_all_influences=False,export_def_bones=True,export_extras=True)
     manifest=frozen_manifest
     manifest['bones'].update(thumb_bones)
-    if thumb_bones:manifest['rig_version']='LMS07.grip1'
+    if thumb_bones:manifest['rig_version']=HAND_RIG_VERSION
     manifest.update({'id':'lms07_selected_'+species,'selected_base':variant,'selected_source':str(source_file.relative_to(ROOT)),
         'selected_source_sha256':before,'authoring':'art_source/export_presets/characters_selected_pipeline.py',
         'source':str((source/(species+'_lms06.blend')).relative_to(ROOT)),
@@ -227,6 +232,7 @@ def export_selected(species):
     if garment_fit:manifest['garment_fit09']=garment_fit
     if garment_trim:manifest['garment_trim09']=garment_trim
     if glasses_fit:manifest['glasses_fit09']=glasses_fit
+    if hand_rest:manifest['hand_rest092']=hand_rest
     (source/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf8')
     (output/'rig_contract.json').write_text(json.dumps({'id':manifest['id'],'rig_version':manifest['rig_version'],'selected_base':variant,'bones':manifest['bones']},indent=2),encoding='utf8')
     model=json.loads((frozen/'model.json').read_text())
@@ -235,6 +241,7 @@ def export_selected(species):
     if garment_fit:model['garment_fit09']=garment_fit
     if garment_trim:model['garment_trim09']=garment_trim
     if glasses_fit:model['glasses_fit09']=glasses_fit
+    if hand_rest:model['hand_rest092']=hand_rest
     if cheek_repair:
         model['cheek_repair']=cheek_repair
         for part in model['parts']:
