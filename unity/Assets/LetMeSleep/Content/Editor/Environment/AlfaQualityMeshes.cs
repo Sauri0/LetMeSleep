@@ -16,7 +16,26 @@ namespace LetMeSleep.Content.Editor
             public readonly List<Vector3> vertices=new List<Vector3>();
             readonly List<Vector2> uv=new List<Vector2>();
             readonly List<int>[] triangles={new List<int>(),new List<int>(),new List<int>()};
+            public bool softNormals;
             public int[] TriangleIndices()=>triangles.SelectMany(indices=>indices).ToArray();
+            Vector3[] TextileNormals()
+            {
+                var result=new Vector3[vertices.Count];
+                // UV projection duplicates triangle corners. Average by geometric
+                // position within each cloth/seam material, without welding UVs.
+                // Corner angles avoid a diagonal or pole fan biasing the lighting.
+                foreach(var indices in triangles){
+                    var sums=new Dictionary<Vector3Int,Vector3>();
+                    Func<int,Vector3Int> key=i=>new Vector3Int(Mathf.RoundToInt(vertices[i].x*1000000),Mathf.RoundToInt(vertices[i].y*1000000),Mathf.RoundToInt(vertices[i].z*1000000));
+                    for(int i=0;i<indices.Count;i+=3)for(int corner=0;corner<3;corner++){
+                        int index=indices[i+corner];var a=vertices[indices[i+(corner+1)%3]]-vertices[index];var b=vertices[indices[i+(corner+2)%3]]-vertices[index];
+                        var weighted=Vector3.Cross(a,b).normalized*Vector3.Angle(a,b);var position=key(index);
+                        sums.TryGetValue(position,out var accumulated);sums[position]=accumulated+weighted;
+                    }
+                    foreach(int index in indices){var normal=sums[key(index)].normalized;Need(normal.sqrMagnitude>.99f,"Degenerate textile normal");result[index]=normal;}
+                }
+                return result;
+            }
             public void Triangle(Vector3 a,Vector3 b,Vector3 c,Vector3 outward,int material=0)
             {
                 var normal=Vector3.Cross(b-a,c-a);if(normal.sqrMagnitude<1e-20f)return;
@@ -32,7 +51,9 @@ namespace LetMeSleep.Content.Editor
                 Need(vertices.Count>0,"Empty quality mesh: "+name);
                 var mesh=new Mesh{name="Quality_"+name};mesh.SetVertices(vertices);mesh.SetUVs(0,uv);mesh.subMeshCount=materialCount;
                 for(int i=0;i<materialCount;i++)mesh.SetTriangles(triangles[i],i);
-                mesh.RecalculateNormals();mesh.RecalculateBounds();Unwrapping.GenerateSecondaryUVSet(mesh);
+                if(softNormals)mesh.normals=TextileNormals();else mesh.RecalculateNormals();
+                mesh.RecalculateBounds();Unwrapping.GenerateSecondaryUVSet(mesh);
+                Need(mesh.normals.Length==mesh.vertexCount,"Quality mesh lost normals during UV unwrap: "+name);
                 string path=Output+"/Meshes/Quality_"+name+".asset";var saved=AssetDatabase.LoadAssetAtPath<Mesh>(path);
                 if(saved==null){AssetDatabase.CreateAsset(mesh,path);saved=mesh;}else{EditorUtility.CopySerialized(mesh,saved);UnityEngine.Object.DestroyImmediate(mesh);EditorUtility.SetDirty(saved);}
                 return saved;
@@ -97,7 +118,7 @@ namespace LetMeSleep.Content.Editor
         {
             // Face is XY for a standing cushion and XZ for a seat pad. Nine rings
             // converge on convex front/back centres; there is no broad flat cap.
-            var mesh=new QualityMesh();Vector3 dims=seat?new Vector3(size.x,size.z,size.y):size;
+            var mesh=new QualityMesh{softNormals=true};Vector3 dims=seat?new Vector3(size.x,size.z,size.y):size;
             var outline=QualitySoftOutline(new Vector2(dims.x,dims.y)*.5f);
             var depths=seat?new[]{-.5f,-.32f,0,.32f,.5f}:new[]{-.5f,-.47f,-.37f,-.20f,0,.20f,.37f,.47f,.5f};
             var scales=seat?new[]{.60f,.91f,1f,.91f,.60f}:new[]{0f,.35f,.70f,.93f,1f,.93f,.70f,.35f,0f};
@@ -133,7 +154,7 @@ namespace LetMeSleep.Content.Editor
 
         static QualityMesh QualityThrow()
         {
-            var mesh=new QualityMesh();var supportShape=QualityPillow(new Vector3(.90f,.18f,.72f),true);
+            var mesh=new QualityMesh{softNormals=true};var supportShape=QualityPillow(new Vector3(.90f,.18f,.72f),true);
             var support=supportShape.vertices.ToArray();var supportIndices=supportShape.TriangleIndices();
             var path=new[]{new Vector2(.04f,0),new Vector2(-.08f,0),new Vector2(-.16f,0),new Vector2(-.23f,0),new Vector2(-.28f,0),new Vector2(-.33f,0),new Vector2(-.37f,0),new Vector2(-.39f,0),new Vector2(-.411f,.45f),new Vector2(-.425f,.38f),new Vector2(-.419f,.29f)};
             Func<int,int,float,Vector3> p=(i,j,side)=>{
@@ -182,7 +203,7 @@ namespace LetMeSleep.Content.Editor
 
         static QualityMesh QualityCurtain(float width,float height)
         {
-            var mesh=new QualityMesh();const int across=12,down=5;
+            var mesh=new QualityMesh{softNormals=true};const int across=12,down=5;
             Func<int,int,float,Vector3> p=(i,j,side)=>{
                 float u=i/(float)across,t=j/(float)down;float depth=.035f*Mathf.Cos(u*6*Mathf.PI);
                 return new Vector3((u-.5f)*width*(.85f+.15f*t),-t*height+.009f*Mathf.Sin(u*4*Mathf.PI)*t,depth+side*.0025f);

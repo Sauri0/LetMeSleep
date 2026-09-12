@@ -90,8 +90,8 @@ triangles = 0
 for part in data['parts']:
     coordinates = part['vertices']
     original_vertices = [unity_point(coordinates[i:i + 3]) for i in range(0, len(coordinates), 3)]
-    # Unity has separate face vertices for crisp normals. Weld coincident points
-    # into editable topology while preserving the original UV at each face corner.
+    # Weld coincident points into editable topology while preserving each
+    # original face corner's UV and explicit hard/soft normal.
     vertices = []
     lookup = {}
     remap = []
@@ -120,7 +120,11 @@ for part in data['parts']:
         mesh.materials.append(material(submesh))
     for polygon, slot in zip(mesh.polygons, slots):
         polygon.material_index = slot
-        polygon.use_smooth = False
+        polygon.use_smooth = bool(part.get('normals'))
+    if part.get('normals'):
+        assert len(part['normals']) == len(coordinates), 'Incomplete exported normals'
+        original_normals = [unity_point(part['normals'][i:i + 3]) for i in range(0, len(coordinates), 3)]
+        mesh.normals_split_custom_set([original_normals[index] for index in face_uv_indices])
     if len(part['uv']) == len(original_vertices) * 2:
         uv = mesh.uv_layers.new(name='AuthoredMetreUV')
         for loop in mesh.loops:

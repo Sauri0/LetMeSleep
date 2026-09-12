@@ -231,7 +231,7 @@ namespace LetMeSleep.Content.Editor
         {var bounds=part.GetComponent<MeshFilter>().sharedMesh.bounds;var collider=part.gameObject.AddComponent<BoxCollider>();collider.center=bounds.center;collider.size=bounds.size;part.gameObject.layer=EnvironmentSampleBuilder.Layer("WorldStatic");}
 
         [Serializable] class QualityExport {public string schema="lms-quality-meshes-v1",units="metres",axes="Unity +Y/+Z";public QualityExportPart[] parts;}
-        [Serializable] class QualityExportPart {public string path;public float[] origin;public float[] vertices,uv;public QualityExportSubmesh[] submeshes;}
+        [Serializable] class QualityExportPart {public string path;public float[] origin;public float[] vertices,normals,uv;public QualityExportSubmesh[] submeshes;}
         [Serializable] class QualityExportSubmesh {public string material;public float[] color,emission;public float smoothness,metallic;public bool weave;public int[] triangles;}
         static void ExportQualityLiving(GameObject house)
         {
@@ -242,8 +242,10 @@ namespace LetMeSleep.Content.Editor
                 var renderer=filter.GetComponent<MeshRenderer>();var mesh=filter.sharedMesh;if(renderer==null)continue;
                 Vector3 origin=house.transform.InverseTransformPoint(filter.transform.position);
                 var points=mesh.vertices.Select(v=>house.transform.InverseTransformPoint(filter.transform.TransformPoint(v))-origin).SelectMany(v=>new[]{v.x,v.y,v.z}).ToArray();
+                var normalMatrix=(house.transform.worldToLocalMatrix*filter.transform.localToWorldMatrix).inverse.transpose;
+                var normals=mesh.normals.Select(n=>normalMatrix.MultiplyVector(n).normalized).SelectMany(n=>new[]{n.x,n.y,n.z}).ToArray();
                 var submeshes=new List<QualityExportSubmesh>();for(int i=0;i<mesh.subMeshCount;i++){var material=renderer.sharedMaterials[i];var color=material.GetColor("_BaseColor");var emission=material.GetColor("_EmissionColor");submeshes.Add(new QualityExportSubmesh{material=material.name,color=new[]{color.r,color.g,color.b,color.a},emission=new[]{emission.r,emission.g,emission.b},smoothness=material.GetFloat("_Smoothness"),metallic=material.GetFloat("_Metallic"),weave=material.GetTexture("_BaseMap")!=null&&material.GetTexture("_BaseMap").name=="Quality_LinenWeave",triangles=mesh.GetTriangles(i)});}
-                parts.Add(new QualityExportPart{path=Hierarchy(filter.transform),origin=new[]{origin.x,origin.y,origin.z},vertices=points,uv=mesh.uv.SelectMany(v=>new[]{v.x,v.y}).ToArray(),submeshes=submeshes.ToArray()});
+                parts.Add(new QualityExportPart{path=Hierarchy(filter.transform),origin=new[]{origin.x,origin.y,origin.z},vertices=points,normals=normals,uv=mesh.uv.SelectMany(v=>new[]{v.x,v.y}).ToArray(),submeshes=submeshes.ToArray()});
             }
             string repository=Path.GetFullPath(Path.Combine(Application.dataPath,"../.."));string directory=Path.Combine(repository,"art_source/unity/environments/quality_living");Directory.CreateDirectory(directory);
             File.WriteAllText(Path.Combine(directory,"generated_meshes.json"),JsonUtility.ToJson(new QualityExport{parts=parts.ToArray()}));
