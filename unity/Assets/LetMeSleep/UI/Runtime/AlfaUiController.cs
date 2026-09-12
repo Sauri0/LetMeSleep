@@ -33,6 +33,10 @@ namespace LetMeSleep.UI
         private bool initialized;
         private bool createMode;
         private bool lobbyExploring;
+        private bool onlineSubmissionLatched;
+        private bool onlineCancelLatched;
+        private bool lobbyReadyLatched;
+        private bool lobbyStartLatched;
 
         private TMP_InputField playerNameInput;
         private TMP_InputField roomCodeInput;
@@ -43,6 +47,8 @@ namespace LetMeSleep.UI
         private TextMeshProUGUI onlinePrimaryLabel;
         private UnityEngine.UI.Button onlineCancelButton;
         private UnityEngine.UI.Button onlineRetryButton;
+        private UnityEngine.UI.Button onlineBackButton;
+        private UnityEngine.UI.Button onlinePasteButton;
 
         private TextMeshProUGUI lobbyCode;
         private TextMeshProUGUI lobbyStatus;
@@ -51,6 +57,7 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.Button lobbyReadyButton;
         private TextMeshProUGUI lobbyReadyLabel;
         private UnityEngine.UI.Button lobbyStartButton;
+        private TextMeshProUGUI lobbyStartLabel;
         private UnityEngine.UI.Button lobbyExploreButton;
 
         private UnityEngine.UI.Button trainingHumanButton;
@@ -153,11 +160,16 @@ namespace LetMeSleep.UI
         public void PresentOnline(OnlineUiState state)
         {
             onlineState = state ?? new OnlineUiState();
+            onlineSubmissionLatched = onlineState.IsBusy;
+            if (!onlineState.IsBusy) onlineCancelLatched = false;
             var busy = onlineState.IsBusy;
             playerNameInput.interactable = !busy;
             roomCodeInput.interactable = !busy;
             onlinePrimaryButton.interactable = !busy;
+            onlinePasteButton.interactable = !busy;
+            onlineBackButton.interactable = !busy;
             onlineCancelButton.gameObject.SetActive(onlineState.CanCancel || busy);
+            onlineCancelButton.interactable = (onlineState.CanCancel || busy) && !onlineCancelLatched;
             onlineRetryButton.gameObject.SetActive(onlineState.CanRetry);
             onlineStatus.text = onlineState.VisibleMessage;
             onlineStatus.color = IsOnlineError(onlineState.Phase) ? AlfaUiTheme.Pajama500 : AlfaUiTheme.Moon200;
@@ -168,15 +180,19 @@ namespace LetMeSleep.UI
         public void PresentLobby(LobbyUiState state)
         {
             lobbyState = state ?? throw new ArgumentNullException(nameof(state));
+            lobbyReadyLatched = state.ReadyPending;
+            lobbyStartLatched = state.StartPending;
             lobbyCode.text = string.IsNullOrWhiteSpace(state.RoomCode) ? "PREPARANDO EL CÓDIGO…" : state.RoomCode;
             lobbyCopyButton.interactable = !string.IsNullOrWhiteSpace(state.RoomCode);
             lobbyStatus.text = string.IsNullOrWhiteSpace(state.RoomCode) ? "Preparando el código…" : "Compartí este código para invitar a tus amigos.";
-            lobbyReadyButton.interactable = !state.ReadyPending;
-            lobbyReadyLabel.text = state.ReadyPending ? "GUARDANDO…" : state.LocalReady ? "CANCELAR LISTO" : "LISTO";
+            lobbyReadyButton.interactable = !lobbyReadyLatched && !lobbyStartLatched;
+            lobbyReadyLabel.text = lobbyReadyLatched ? "GUARDANDO…" : state.LocalReady ? "CANCELAR LISTO" : "LISTO";
             lobbyStartButton.gameObject.SetActive(state.IsOwner);
-            lobbyStartButton.interactable = state.IsOwner && state.CanStart;
+            lobbyStartButton.interactable = state.IsOwner && state.CanStart && !lobbyReadyLatched && !lobbyStartLatched;
+            lobbyStartLabel.text = lobbyStartLatched ? "INICIANDO…" : "INICIAR RONDA";
             lobbyStartReason.text = state.IsOwner && !state.CanStart ? state.StartBlockReason : string.Empty;
             lobbyExploreButton.gameObject.SetActive(state.CanExplore);
+            lobbyExploreButton.interactable = !lobbyStartLatched;
 
             for (var i = 0; i < memberRows.Count; i++)
             {
@@ -193,8 +209,11 @@ namespace LetMeSleep.UI
             {
                 var selected = (entry.Key == 0 && !state.HumanCount.HasValue) || (state.HumanCount.HasValue && entry.Key == state.HumanCount.Value);
                 entry.Value.text = (selected ? "✓ " : string.Empty) + (entry.Key == 0 ? "AUTO" : entry.Key.ToString());
-                entry.Value.transform.parent.GetComponent<UnityEngine.UI.Button>().interactable = state.IsOwner;
+                entry.Value.transform.parent.GetComponent<UnityEngine.UI.Button>().interactable = state.IsOwner && !lobbyStartLatched;
             }
+
+            if (lobbyStartLatched) lobbyStatus.text = "Iniciando ronda…";
+            else if (lobbyReadyLatched) lobbyStatus.text = "Guardando estado…";
 
             if (screen != AlfaUiScreen.Lobby)
                 SetScreen(AlfaUiScreen.Lobby, "LobbyReadyButton");
@@ -389,15 +408,15 @@ namespace LetMeSleep.UI
                 roomCodeInput.caretPosition = Mathf.Min(caret, roomCodeInput.text.Length);
             });
             roomCodeInput.onSubmit.AddListener(_ => SubmitOnline());
-            var paste = factory.Button(codeActions, "PasteRoomCodeButton", "PEGAR", PasteRoomCode, false, false, 58f);
-            paste.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 150f;
+            onlinePasteButton = factory.Button(codeActions, "PasteRoomCodeButton", "PEGAR", PasteRoomCode, false, false, 58f);
+            onlinePasteButton.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 150f;
             onlineStatus = factory.Text(content, "OnlineStatus", string.Empty, AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
             onlinePrimaryButton = factory.Button(content, "OnlinePrimaryButton", "CREAR SALA", SubmitOnline, true, false, 68f);
             onlinePrimaryLabel = onlinePrimaryButton.GetComponentInChildren<TextMeshProUGUI>();
             var actionsRow = factory.Horizontal(content, "Actions", 12f, TextAnchor.MiddleCenter);
-            onlineCancelButton = factory.Button(actionsRow, "OnlineCancelButton", "CANCELAR", () => actions.CancelOnline());
+            onlineCancelButton = factory.Button(actionsRow, "OnlineCancelButton", "CANCELAR", RequestOnlineCancel);
             onlineRetryButton = factory.Button(actionsRow, "OnlineRetryButton", "INTENTAR OTRA VEZ", SubmitOnline);
-            factory.Button(actionsRow, "OnlineBackButton", "← VOLVER", ShowOnlineChoice);
+            onlineBackButton = factory.Button(actionsRow, "OnlineBackButton", "← VOLVER", ShowOnlineChoice);
             onlineCancelButton.gameObject.SetActive(false);
             onlineRetryButton.gameObject.SetActive(false);
         }
@@ -459,10 +478,18 @@ namespace LetMeSleep.UI
             factory.Text(rules, "RoleNote", "Los roles se sortean al empezar cada ronda.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
             lobbyReadyButton = factory.Button(rules, "LobbyReadyButton", "LISTO", () =>
             {
-                if (lobbyState != null && !lobbyState.ReadyPending) actions.SetReady(!lobbyState.LocalReady);
+                if (lobbyState == null || lobbyReadyLatched || lobbyState.ReadyPending) return;
+                lobbyReadyLatched = true;
+                lobbyReadyButton.interactable = false;
+                lobbyStartButton.interactable = false;
+                lobbyReadyLabel.text = "GUARDANDO…";
+                lobbyStatus.text = "Guardando estado…";
+                Focus(lobbyCopyButton.gameObject);
+                actions.SetReady(!lobbyState.LocalReady);
             }, true, false, 66f);
             lobbyReadyLabel = lobbyReadyButton.GetComponentInChildren<TextMeshProUGUI>();
-            lobbyStartButton = factory.Button(rules, "LobbyStartButton", "INICIAR RONDA", () => actions.StartRound(), false, false, 66f);
+            lobbyStartButton = factory.Button(rules, "LobbyStartButton", "INICIAR RONDA", BeginRound, false, false, 66f);
+            lobbyStartLabel = lobbyStartButton.GetComponentInChildren<TextMeshProUGUI>();
             lobbyStartReason = factory.Text(rules, "StartReason", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Pajama500, TextAlignmentOptions.Center);
             lobbyExploreButton = factory.Button(rules, "LobbyExploreButton", "RECORRER SALA", BeginLobbyExploration);
             lobbyStatus = factory.Text(rules, "LobbyStatus", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
@@ -701,7 +728,7 @@ namespace LetMeSleep.UI
 
         private void SubmitOnline()
         {
-            if (onlineState.IsBusy) return;
+            if (OnlineBusy) return;
             var playerName = (playerNameInput.text ?? string.Empty).Trim();
             if (playerName.Length < 1 || playerName.Length > 24)
             {
@@ -710,6 +737,7 @@ namespace LetMeSleep.UI
             }
             if (createMode)
             {
+                LatchOnlineSubmission("Creando sala…");
                 actions.CreateRoom(playerName);
                 return;
             }
@@ -720,14 +748,42 @@ namespace LetMeSleep.UI
                 return;
             }
             roomCodeInput.SetTextWithoutNotify(AlfaRoomCode.FormatForDisplay(normalized));
+            LatchOnlineSubmission("Buscando sala…");
             actions.JoinRoom(playerName, normalized);
         }
 
         private void PasteRoomCode()
         {
-            if (onlineState.IsBusy) return;
+            if (OnlineBusy) return;
             roomCodeInput.SetTextWithoutNotify(AlfaRoomCode.FormatForDisplay(GUIUtility.systemCopyBuffer));
             Focus(roomCodeInput.gameObject);
+        }
+
+        private void LatchOnlineSubmission(string message)
+        {
+            onlineSubmissionLatched = true;
+            onlineCancelLatched = false;
+            playerNameInput.interactable = false;
+            roomCodeInput.interactable = false;
+            onlinePrimaryButton.interactable = false;
+            onlinePasteButton.interactable = false;
+            onlineBackButton.interactable = false;
+            onlineCancelButton.gameObject.SetActive(true);
+            onlineCancelButton.interactable = true;
+            onlineRetryButton.gameObject.SetActive(false);
+            onlineStatus.text = message;
+            onlineStatus.color = AlfaUiTheme.Moon200;
+            Focus(onlineCancelButton.gameObject);
+        }
+
+        private void RequestOnlineCancel()
+        {
+            if (!OnlineBusy || onlineCancelLatched) return;
+            onlineCancelLatched = true;
+            onlineCancelButton.interactable = false;
+            onlineStatus.text = "Cancelando…";
+            onlineStatus.color = AlfaUiTheme.Moon200;
+            actions.CancelOnline();
         }
 
         private void SetOnlineLocalError(string message, GameObject focus)
@@ -882,6 +938,22 @@ namespace LetMeSleep.UI
             else actions.ReturnToLobby();
         }
 
+        private void BeginRound()
+        {
+            if (lobbyState == null || lobbyStartLatched || lobbyState.StartPending ||
+                !lobbyState.IsOwner || !lobbyState.CanStart) return;
+            lobbyStartLatched = true;
+            lobbyStartButton.interactable = false;
+            lobbyReadyButton.interactable = false;
+            lobbyExploreButton.interactable = false;
+            foreach (var entry in humanCountLabels)
+                entry.Value.transform.parent.GetComponent<UnityEngine.UI.Button>().interactable = false;
+            lobbyStartLabel.text = "INICIANDO…";
+            lobbyStatus.text = "Iniciando ronda…";
+            Focus(lobbyReadyButton.interactable ? lobbyReadyButton.gameObject : lobbyCopyButton.gameObject);
+            actions.StartRound();
+        }
+
         private void ResultsLeaveAction()
         {
             if (resultsState != null && resultsState.IsTraining) ShowMainMenu();
@@ -913,6 +985,7 @@ namespace LetMeSleep.UI
 
         private void ConfirmQuit() => ShowConfirm("¿SALIR DEL JUEGO?", "Vas a cerrar Let me sleep.", "VOLVER", "SALIR", () => actions.QuitGame());
         private void ConfirmLeave() => ShowConfirm("¿SALIR DE LA SALA?", "Volverás al menú principal.", "VOLVER", "SALIR", () => actions.LeaveRoom());
+        private void ShowLobbyPause() => ShowConfirm("PAUSA", "La sala sigue abierta.", "VOLVER A SALA", "SALIR", () => actions.LeaveRoom());
 
         private void ShowConfirm(string title, string body, string safeLabel, string dangerLabel, Action dangerAction)
         {
@@ -957,10 +1030,10 @@ namespace LetMeSleep.UI
                 case AlfaUiScreen.OnlineChoice: ShowMainMenu(); break;
                 case AlfaUiScreen.CreateRoom:
                 case AlfaUiScreen.JoinRoom:
-                    if (onlineState.IsBusy) actions.CancelOnline(); else ShowOnlineChoice();
+                    if (OnlineBusy) RequestOnlineCancel(); else ShowOnlineChoice();
                     break;
                 case AlfaUiScreen.Lobby:
-                    if (lobbyExploring) EndLobbyExploration(); else ConfirmLeave();
+                    if (lobbyExploring) EndLobbyExploration(); else ShowLobbyPause();
                     break;
                 case AlfaUiScreen.Training:
                     if (trainingState.IsLoading) actions.CancelTraining(); else ShowMainMenu();
@@ -1045,7 +1118,7 @@ namespace LetMeSleep.UI
                 case AlfaUiScreen.OnlineChoice: return "CreateChoiceButton";
                 case AlfaUiScreen.CreateRoom:
                 case AlfaUiScreen.JoinRoom: return "PlayerNameInput";
-                case AlfaUiScreen.Lobby: return "LobbyReadyButton";
+                case AlfaUiScreen.Lobby: return lobbyReadyButton != null && lobbyReadyButton.interactable ? "LobbyReadyButton" : "LobbyCopyButton";
                 case AlfaUiScreen.Training: return trainingState.SelectedRole == AlfaRole.Human ? "TrainingHumanButton" : "TrainingMosquitoButton";
                 case AlfaUiScreen.Customization: return customizationDraft != null && customizationDraft.Role == AlfaRole.Mosquito ? "CustomizationMosquitoButton" : "CustomizationHumanButton";
                 case AlfaUiScreen.Settings: return "MasterVolumeSlider";
@@ -1057,6 +1130,7 @@ namespace LetMeSleep.UI
 
         private bool CustomizationDirty() => customizationState != null && customizationDraft != null && !customizationDraft.SameValues(customizationState.Saved);
         private bool SettingsDirty() => settingsState != null && settingsDraft != null && !settingsDraft.SameValues(settingsState.Saved);
+        private bool OnlineBusy => onlineSubmissionLatched || onlineState.IsBusy;
         private static bool IsOnlineError(OnlineOperationPhase phase) => phase == OnlineOperationPhase.RecoverableError ||
             phase == OnlineOperationPhase.IncompatibleVersion || phase == OnlineOperationPhase.RoomClosed;
 

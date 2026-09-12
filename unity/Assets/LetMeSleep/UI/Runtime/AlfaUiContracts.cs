@@ -177,6 +177,7 @@ namespace LetMeSleep.UI
         public string MapId { get; }
         public string MapLabel { get; }
         public bool CanExplore { get; }
+        public bool StartPending { get; }
 
         public LobbyUiState(
             bool isOwner,
@@ -189,7 +190,8 @@ namespace LetMeSleep.UI
             string startBlockReason,
             string mapId = RoomRules.AlfaMap,
             string mapLabel = "CASA CON PATIO",
-            bool canExplore = false)
+            bool canExplore = false,
+            bool startPending = false)
         {
             IsOwner = isOwner;
             RoomCode = AlfaRoomCode.FormatForDisplay(roomCode);
@@ -202,15 +204,17 @@ namespace LetMeSleep.UI
             MapId = mapId ?? RoomRules.AlfaMap;
             MapLabel = string.IsNullOrWhiteSpace(mapLabel) ? "CASA CON PATIO" : mapLabel;
             CanExplore = canExplore;
+            StartPending = startPending;
         }
 
-        public static LobbyUiState FromRoomView(RoomView room, string localMemberId, string roomCode, bool canStart, string startBlockReason, bool readyPending = false)
+        public static LobbyUiState FromRoomView(RoomView room, string localMemberId, string roomCode, bool canStart,
+            string startBlockReason, bool readyPending = false, bool startPending = false)
         {
             if (room == null) throw new ArgumentNullException(nameof(room));
             var members = room.Members.Select(member => new LobbyMemberUiState(member.Id, member.Name, member.Ready));
             var local = room.Members.FirstOrDefault(member => member.Id == localMemberId);
             return new LobbyUiState(room.OwnerId == localMemberId, roomCode, members, local != null && local.Ready,
-                readyPending, room.Rules.HumanCount, canStart, startBlockReason, room.Rules.MapId);
+                readyPending, room.Rules.HumanCount, canStart, startBlockReason, room.Rules.MapId, startPending: startPending);
         }
     }
 

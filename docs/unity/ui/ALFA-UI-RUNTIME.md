@@ -50,6 +50,8 @@ QuitGame()
 
 Crear/Unirse no completan localmente: el adaptador presenta `OnlineUiState` para busy, cancelación, error y éxito. `CancelOnline` se usa únicamente durante una operación pendiente; `LeaveRoom` cierra una sala conectada.
 
+La UI bloquea nombre, código, pegar, volver y envío desde el mismo frame de `CreateRoom`/`JoinRoom`; el adaptador debe responder con un `OnlineUiState` busy y después con cancelación, error o `PresentLobby`. En lobby, `ReadyPending` y `StartPending` mantienen los latches visibles hasta la respuesta autoritativa. Escape abre una pausa de lobby con `VOLVER A SALA` y `SALIR`, sin invocar `ResumeGame`.
+
 ## Estados presentados
 
 ```csharp
