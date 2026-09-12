@@ -1,0 +1,68 @@
+{
+  "schema": "lms-training-human-defense-receipt-1",
+  "observedDate": "2026-09-12",
+  "observedBy": "Director",
+  "source": {
+    "baseCommit": "72a84f1",
+    "dirty": true,
+    "candidateBuild": false,
+    "context": "Root changes plus generated content; nine doors open, navigation and human motor fixes present"
+  },
+  "execution": {
+    "kind": "manual native Unity session",
+    "mode": "training",
+    "localRole": "Human",
+    "captureLocalInput": false,
+    "automaticTick": false
+  },
+  "steps": [
+    {
+      "action": "TickHost",
+      "ticks": 240,
+      "actors": [
+        { "actor": "Human", "state": "Active", "position": [6.06, 0.001, 1.2] },
+        { "actor": "Mosquito2", "state": "PreparingBite", "position": [6.013, 1.3, 1.472] },
+        { "actor": "Mosquito3", "state": "Biting", "position": [6.023, 1.1, 1.474] }
+      ]
+    },
+    {
+      "action": "SubmitInput",
+      "sequence": 1000,
+      "direction": "human eye at y=1.53 toward Mosquito3",
+      "rejectReason": "None"
+    },
+    {
+      "action": "TickHost",
+      "ticks": 1
+    },
+    {
+      "action": "Primary",
+      "sequence": 1001,
+      "rejectReason": "None"
+    },
+    {
+      "action": "TickHost",
+      "ticks": 20,
+      "actors": [
+        { "actor": "Human", "state": "Active" },
+        { "actor": "Mosquito2", "state": "Stunned" },
+        { "actor": "Mosquito3", "state": "Flying" }
+      ]
+    }
+  ],
+  "verdict": {
+    "status": "PASS_PARTIAL",
+    "covers": [
+      "Human training accepts explicit aim and Primary input",
+      "Defense resolves authoritatively against nearby active mosquitoes",
+      "Human remains Active while one mosquito becomes Stunned and the other exits Biting"
+    ],
+    "doesNotCover": [
+      "Exact attribution of the strike to Mosquito3",
+      "Clean candidate build",
+      "EOS or WAN",
+      "Performance or visual quality",
+      "Complete training round"
+    ]
+  }
+}

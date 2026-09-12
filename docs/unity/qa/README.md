@@ -12,6 +12,7 @@ Estado: **evidencia parcial**. Hay resultados Unity EditMode, PlayMode de entren
 - [Revisión funcional de pickups ff5f290](DELIVERY-REVIEW-TOOL-PICKUPS-FF5F290.md): autoridad/equipo replicado, composición, eje físico y gates nativos.
 - [Revisión funcional de Bootstrap](BOOTSTRAP-FUNCTIONAL-REVIEW-2026-09-12.md): ciclo sala/ronda/resultados, errores online, entrenamiento y persistencia.
 - [Evidencia PlayMode de entrenamiento](TRAINING-BOOTSTRAP-PLAYMODE-2026-09-12.md): escena de arranque, ambos roles, actores, cámara, pickups, estabilidad numérica y limpieza.
+- [Recibo nativo de defensa humana](ALFA-TRAINING-HUMAN-DEFENSE-RECEIPT.json): apuntado y acción primaria manual contra mosquitos cercanos, con atribución exacta del golpe y candidata limpia fuera de alcance.
 - [Suite Core RoomSession](CORE-ROOMSESSION-TESTS.md): cobertura EditMode y límite de la comprobación externa previa.
 - [Suite Gameplay Authority](GAMEPLAY-AUTHORITY-TESTS.md): puertas autoritativas y vigencia física de la unión de picadura.
 - [Suite MessageFraming](MESSAGE-FRAMING-TESTS.md): límites, fragmentación y presupuesto acotado de reensamblado Online.
