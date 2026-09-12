@@ -1,0 +1,102 @@
+{
+  "status": "PASS bounded remaining cases",
+  "candidate": "0a82314",
+  "root": "bae7869d784587c612a3ec46893233d101cc0e6c",
+  "unity": "6000.3.24f1",
+  "editorPid": 33400,
+  "scope": "Native Editor PlayMode with normal authenticated inputs/actions and unmodified actor transforms/LifeState; no manual gameplay or WAN/FPS/package certification",
+  "humanFront": {
+    "status": "PASS",
+    "waypoints": 6,
+    "route": "spawn -> Entry -> exterior z-1, x8 to x4 -> Entry -> interior",
+    "finalPosition": [
+      6.05331326,
+      0.000159083487,
+      1.064174
+    ]
+  },
+  "mosquito": [
+    {
+      "surface": "wall",
+      "status": "PASS",
+      "surfaceId": 10276,
+      "perchedPosition": [
+        4.923,
+        1.90260017,
+        1.99479949
+      ],
+      "crawlDistance": 0.3683349,
+      "firstDetachTick": 119,
+      "firstDetachLife": "Flying",
+      "firstDetachHasAttachment": false,
+      "departureDistance": 0.52,
+      "cameraSamples": 6,
+      "cameraAllFinite": true,
+      "cameraOverlaps": 0,
+      "cameraLosBlockers": 0,
+      "sampledViews": [
+        "toward_surface",
+        "parallel",
+        "away_from_surface",
+        "after_crawl",
+        "first_detach_tick",
+        "flight_after_detach"
+      ]
+    },
+    {
+      "surface": "ceiling",
+      "status": "PASS",
+      "surfaceId": 10230,
+      "perchedPosition": [
+        3.5798142,
+        2.74200821,
+        1.29716921
+      ],
+      "crawlDistance": 0.368335,
+      "firstDetachTick": 107,
+      "firstDetachLife": "Flying",
+      "firstDetachHasAttachment": false,
+      "departureDistance": 0.52,
+      "cameraSamples": 6,
+      "cameraAllFinite": true,
+      "cameraOverlaps": 0,
+      "cameraLosBlockers": 0,
+      "sampledViews": [
+        "toward_surface",
+        "parallel",
+        "away_from_surface",
+        "after_crawl",
+        "first_detach_tick",
+        "flight_after_detach"
+      ]
+    }
+  ],
+  "notCovered": [
+    "All four wall normals",
+    "All map rooms and joins",
+    "Mosquito full interior-exterior loop",
+    "Continuous every-render-frame camera clearance",
+    "Visual/fun/manual-control acceptance",
+    "WAN and target-device FPS"
+  ],
+  "audio": "Play was initially audible; urgently muted via AudioListener.volume=0, confirmed by two receipts, ceiling run muted. No saved user settings changed. Future physical editors must start -noaudio.",
+  "sourceChanges": "None",
+  "evidenceDirectory": "N:/LetMeSleep/Validation/Alfa2-RemainingTraversal-20260912",
+  "evidenceSha256": {
+    "front-human.json": "72a6b83b8bda167cfcfd159a332c2ec85c546192a68e5dd5c604279f9613b97a",
+    "wall-attempt1.json": "6e001a59d96f1db3a59f79c2119431407c05c85ace5bf63cb0f7108e462bb558",
+    "ceiling-attempt1.json": "30bd86b457e19a7ce22f278ffa707496604809da972d0aa4faeee0016cfbda11",
+    "FrontTraversal.cs": "5a51e6366b6d46d25ddf3f1f6070cb5b87786543cbcc8b532fb3a99bba44dc2b",
+    "WallCeilingProbe.cs": "4a7babfd583ca4c8e582c0f5906940f0e9739e99f2d2c1f6fdd4676aebb4230f",
+    "audio-muted.json": "aea39dc49d5e737013a04bb6d45908229a44cce2a360243f2362bf6676d0972c",
+    "mute-rechecked.json": "61862795f740d098567788f055bc1d33e705d42476894d5c89628d8e35767927",
+    "cleanup-stop.json": "545b043d65c411c44c83db814823e62eb8652f216468087bb9d6ec75261ef743",
+    "editor-exit.json": "bdee909200b18b9e3671b30542cc34a3938be2ddb4b6f1dd7f6a7f34e4976425",
+    "editor.log": "1004f65107f8efa807dc2679a9624d16a2f9ed326dffd7943fdb0c04db7be648"
+  },
+  "editorClosed": true,
+  "editorGeneratedChangesAtExit": [
+    "unity/Assets/LetMeSleep/UI/Fonts/AtkinsonHyperlegible-Regular SDF.asset",
+    "unity/Assets/LetMeSleep/UI/Fonts/Bangers-Regular SDF.asset"
+  ]
+}
