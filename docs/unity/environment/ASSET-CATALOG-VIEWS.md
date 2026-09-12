@@ -37,7 +37,9 @@ Metros, ejes X×Y×Z. Las cifras siguientes proceden de generadores C#/Python; c
 | Estante | Laterales 0.08×1.70×0.35 en x±0.56; baldas 1.04×0.06×0.35 en y0.08/0.58/1.08/1.65. Superficies y0.11/0.61/1.11/1.68; fotografiar bases de libros y cajas sobre ellas |
 | Cajas lobby | Cuerpo 0.42×0.32×0.27, base y0.11; tapa 0.44×0.02×0.29 con base y0.43. Mostrar tirador, tapa y apoyo en balda |
 | Encimera y paño | Encimera superior y0.880; paño altura0.025, base0.880; banda altura0.002, base0.905. Primer plano rasante que permita detectar flotación |
-| Alféizar y estante del estar | Alféizar z0.155…0.255 y estante mínimo z0.275: separación0.020. Vista lateral y planta con ambos objetos visibles |
+| Estante y ventana del estar | Estante actual(1.9,0,4.24),yaw180. Ventana delantera despejada: reservar x0.605…2.155,z0.18…1.08. La antigua separación20mm impedía intersección pero bloqueaba la ventana; conservar esa captura sólo como antes |
+| Mesa de café del estar | Variante generada Living_Table: tapa1.35×0.06×0.70, top0.480; patas apoyadas en rugTop0.008 y unidas bajo tapa0.420. Pickup1005Y0.485; mesa comedor original top0.810. Capturar ambas con escala común |
+| Vidrio de ventanas | Ocho panes fijos con Window_Glass transparente; vista interior/exterior y detalle del marco. Captura de collider separada para probar bloqueo físico. Horno/lavadora siguen con Glass_Blue_Opaque |
 | Plafón | Vista inferior del difusor y despiece de soporte/marco/difusor; comparar luz de escena encendida con vista neutra. Registrar emisión actual(0.18,0.10,0.035) de House_Diffuser y Lobby_LanternGlow |
 | Suelo de roble | Tabla0.32×1.28, repetición1.28×2.56, junta nominal/ráster0.005. Planta cercana sin perspectiva y vista humana para valorar escala y repetición |
 

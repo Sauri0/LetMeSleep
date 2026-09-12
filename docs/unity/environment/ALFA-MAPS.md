@@ -49,7 +49,7 @@ Escalera en U: 18 contrahuellas de 1/6 m, dos tramos de 9 con 8 huellas de 0.28 
 
 Nueve puertas usan hoja probada de 1.10 m de paso libre × 2.20 m. Portales de distribución sin hoja mantienen 1.80 m. Los huecos estructurales dejan lugar para jambas reales. Los muebles no se instancian como habitaciones completas: solo se reutilizan cama, mesita, escritorio, silla y puerta de la muestra. Un único shell controla encuentros de paredes/pisos/techo, con huecos reales y sin superposición de módulos cerrados.
 
-Los once muebles nuevos son mesa, sofá, módulo de cocina, cocina/horno, heladera, lavabo, inodoro, lavadora, estantería, banco y pino. Son geometría funcional y superficies de apoyo; cocinar/lavar/tareas no se habilitan como mecánicas nuevas por modelarlos. Follaje visual no bloquea vuelo; el tronco sí tiene colisión. Vidrios opacos provisionales sellan ventanas y no proyectan sombra.
+Los once muebles nuevos son mesa, sofá, módulo de cocina, cocina/horno, heladera, lavabo, inodoro, lavadora, estantería, banco y pino. El estar recibe una variante de mesa de café exclusiva a0.480m; el comedor conserva la mesa original a0.810m. Son geometría funcional y superficies de apoyo; cocinar/lavar/tareas no se habilitan como mecánicas nuevas por modelarlos. Follaje visual no bloquea vuelo; el tronco sí tiene colisión. Ocho ventanas fijas conservan sus colliders y reciben Window_Glass transparente exclusivo sin proyectar sombra; vidrio de electrodomésticos permanece opaco. Ver ALFA-DOMESTIC-FINISH.md para contrato W2 y evidencia nativa pendiente.
 
 La envolvente física exterior incluye límites laterales y superior de vuelo, explícitos bajo `WorldBoundary_NoPerch`; no son superficies posables ni una continuación invisible del suelo. Se debe revisar su lectura exterior/cámara en movimiento. El suelo y el techo físico de la casa siguen sus colisiones reales.
 
@@ -67,7 +67,7 @@ ToolPickupPoints tienen GameplayToolPickup con ToolId=`flyswatter`, VisualRoot=n
 | 1002 | Pickup_KitchenCounter_B | (10.75, 0.885, 10.66) |
 | 1003 | Pickup_DiningTable_A | (10.40, 0.815, 2.45) |
 | 1004 | Pickup_DiningTable_B | (11.20, 0.815, 2.45) |
-| 1005 | Pickup_LivingTable | (2.40, 0.815, 2.35) |
+| 1005 | Pickup_LivingTable | (2.40, 0.485, 2.35); mesa de café, tapa a0.480 |
 | 1006 | Pickup_BedroomANightstand | (2.755, 3.655, 0.55) |
 | 1007 | Pickup_UtilityCounter | (10.55, 3.885, 10.66) |
 

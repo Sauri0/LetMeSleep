@@ -20,11 +20,17 @@ namespace LetMeSleep.Content.Editor
             foreach(float z in new[]{1.51f,3.19f})LobbyPiece(rug,"Woven_Band_"+Token(z),new Vector3(1.90f,.0085f,z),new Vector3(1.94f,.001f,.045f),"Textile_Navy",false);
 
             var books=Child(root,"Living_Shelf_Books");
-            // Shelf top surfaces are y=.11/.61/1.11; spine faces the room (+Z).
-            for(int i=0;i<5;i++)AddBook(books,"Standing_"+i,new Vector3(1.53f+i*.068f,.61f,.47f),.05f,.24f+(i%3)*.035f,.23f,
+            var shelf=F(house,"Living_Shelf");books.localPosition=shelf.localPosition;books.localRotation=shelf.localRotation;
+            // Local coordinates follow the shelf; the new back-wall spines face -Z.
+            for(int i=0;i<5;i++)AddBook(books,"Standing_"+i,new Vector3(-.37f+i*.068f,.61f,.02f),.05f,.24f+(i%3)*.035f,.23f,
                 i%3==0?"Textile_Navy":i%3==1?"Textile_Rust":"Textile_Blue");
-            AddBook(books,"Upper_0",new Vector3(2.15f,1.11f,.47f),.075f,.27f,.22f,"Textile_Rust");
-            AddBook(books,"Upper_1",new Vector3(2.24f,1.11f,.47f),.055f,.30f,.22f,"Textile_Navy");
+            AddBook(books,"Upper_0",new Vector3(.25f,1.11f,.02f),.075f,.27f,.22f,"Textile_Rust");
+            AddBook(books,"Upper_1",new Vector3(.34f,1.11f,.02f),.055f,.30f,.22f,"Textile_Navy");
+            var textiles=Child(root,"Living_Sofa_Textiles");var sofa=F(house,"Living_Sofa");
+            textiles.localPosition=sofa.localPosition;textiles.localRotation=sofa.localRotation;
+            foreach(float x in new[]{-.57f,.57f})LobbyPiece(textiles,"Cushion_"+Token(x),new Vector3(x,.735f,.17f),new Vector3(.38f,.32f,.16f),x<0?"Textile_Blue":"Linen",false);
+            LobbyPiece(textiles,"Seat_Throw",new Vector3(0,.581f,-.05f),new Vector3(.38f,.012f,.60f),"Linen",false);
+            LobbyPiece(textiles,"Throw_Band",new Vector3(0,.588f,-.29f),new Vector3(.35f,.002f,.035f),"Textile_Navy",false);
             AddRoomCarpentry(root,plan);
             AddDomesticSets(root);
 
@@ -43,6 +49,16 @@ namespace LetMeSleep.Content.Editor
                 lightAnchor.localRotation=Quaternion.LookRotation(Vector3.down,Vector3.forward);
             }
             CheckHouseDressing(house,data);
+        }
+
+        static void AddLivingCoffeeTable(Transform furnishings)
+        {
+            // A separate low table; the shared dining kit and dining pickups retain their dimensions.
+            var table=Child(furnishings,"Living_Table");table.localPosition=new Vector3(2.4f,0,2.35f);table.localRotation=Quaternion.Euler(0,90,0);
+            LobbyPiece(table,"Coffee_Top",new Vector3(0,.45f,0),new Vector3(1.35f,.06f,.70f),"Wood_Honey",true);
+            foreach(float x in new[]{-.56f,.56f})foreach(float z in new[]{-.23f,.23f})
+                // Feet rest on the .008 m rug field, below the underside at .420 m.
+                LobbyPiece(table,"Coffee_Leg_"+Token(x)+"_"+Token(z),new Vector3(x,.214f,z),new Vector3(.07f,.412f,.07f),"Wood_Edge",true);
         }
 
         static void AddRoomCarpentry(Transform root,Plan plan)
@@ -158,6 +174,22 @@ namespace LetMeSleep.Content.Editor
             materials[name]=material;
         }
 
+        static void EnsureWindowGlassMaterial()
+        {
+            const string name="Window_Glass";string path=Output+"/Materials/"+name+".mat";
+            var material=AssetDatabase.LoadAssetAtPath<Material>(path);
+            if(material==null){material=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=name,enableInstancing=true};AssetDatabase.CreateAsset(material,path);}
+            // W2's dedicated transparent recipe; appliance Glass_Blue_Opaque is never mutated.
+            material.SetColor("_BaseColor",new Color(.22f,.42f,.55f,.32f));material.SetFloat("_Surface",1);material.SetFloat("_Blend",0);
+            material.SetFloat("_SrcBlend",(float)UnityEngine.Rendering.BlendMode.SrcAlpha);material.SetFloat("_DstBlend",(float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            material.SetFloat("_SrcBlendAlpha",(float)UnityEngine.Rendering.BlendMode.One);material.SetFloat("_DstBlendAlpha",(float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            material.SetFloat("_ZWrite",0);material.SetFloat("_AlphaClip",0);material.SetFloat("_Metallic",0);material.SetFloat("_Smoothness",.55f);material.SetFloat("_ReceiveShadows",0);
+            material.SetFloat("_Cull",(float)UnityEngine.Rendering.CullMode.Back);material.SetOverrideTag("RenderType","Transparent");material.renderQueue=3000;
+            material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");material.EnableKeyword("_RECEIVE_SHADOWS_OFF");
+            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");material.DisableKeyword("_ALPHAMODULATE_ON");material.DisableKeyword("_ALPHATEST_ON");
+            material.SetShaderPassEnabled("ShadowCaster",false);EditorUtility.SetDirty(material);materials[name]=material;
+        }
+
         static void CheckHouseDressing(GameObject house,EnvironmentMapDefinition data)
         {
             var root=house.transform.Find("HouseDressing");Need(root!=null,"House dressing missing");
@@ -172,7 +204,9 @@ namespace LetMeSleep.Content.Editor
                 }
             foreach(var plate in root.Find("Kitchen_Domestic").GetComponentsInChildren<MeshFilter>().Where(f=>f.name.StartsWith("Plate_",StringComparison.Ordinal)))CheckPlateFacing(plate.sharedMesh);
             var pickup=data.ToolPickupPoints.Single(p=>p.name=="Pickup_LivingTable");
-            Need(Vector3.Distance(pickup.localPosition,new Vector3(2.4f,.815f,2.35f))<.0001f,"Living pickup anchor changed");
+            Need(Vector3.Distance(pickup.localPosition,new Vector3(2.4f,.485f,2.35f))<.0001f,"Living pickup must follow the coffee table, keeping its XZ");
+            CheckLivingComposition(house,pickup);
+            CheckWindowGlass(house);
             foreach(var tool in data.ToolPickupPoints){var toolReserve=new Bounds(tool.position+new Vector3(0,.025f,.18f),new Vector3(.23f,.10f,.48f));
                 foreach(var renderer in root.GetComponentsInChildren<Renderer>())Need(!renderer.bounds.Intersects(toolReserve),"House dressing obscures pickup "+tool.name+": "+renderer.name);}
             foreach(Transform fixture in root.Find("CeilingFixtures")){
@@ -181,6 +215,58 @@ namespace LetMeSleep.Content.Editor
                 Need(Vector3.Dot(anchor.forward,Vector3.down)>.9999f,"Fixture light direction must face down");
             }
             Need(root.GetComponentsInChildren<Light>().Length==0,"Environment source must not duplicate W2 runtime lights");
+        }
+
+        static bool SupportedBy(Bounds item,Bounds support,float gap=0)
+        {
+            return Mathf.Abs(item.min.y-support.max.y-gap)<.0001f&&item.min.x>=support.min.x-.0001f&&item.max.x<=support.max.x+.0001f&&item.min.z>=support.min.z-.0001f&&item.max.z<=support.max.z+.0001f;
+        }
+
+        static void CheckLivingComposition(GameObject house,Transform pickup)
+        {
+            var shelf=F(house,"Living_Shelf");var sofa=F(house,"Living_Sofa");var table=F(house,"Living_Table");
+            var books=F(house,"Living_Shelf_Books");var textiles=F(house,"Living_Sofa_Textiles");
+            var windowAccess=new Bounds(new Vector3(1.38f,1.2f,.63f),new Vector3(1.55f,2.4f,.9f));
+            var doorApproach=new Bounds(new Vector3(3.84f,1.1f,3.99f),new Vector3(2.28f,2.2f,1.18f));
+            foreach(var group in new[]{shelf,sofa,table,books,textiles})foreach(var renderer in group.GetComponentsInChildren<Renderer>()){
+                Need(!renderer.bounds.Intersects(windowAccess),"Living furnishing blocks window or its access: "+Hierarchy(renderer.transform));
+                Need(!renderer.bounds.Intersects(doorApproach),"Living furnishing blocks door approach: "+Hierarchy(renderer.transform));
+            }
+            Need(Vector3.Distance(shelf.localPosition,new Vector3(1.9f,0,4.24f))<.0001f&&Vector3.Dot(shelf.forward,Vector3.back)>.9999f,"Living shelf must face inward from the free back wall");
+            var boards=shelf.GetComponentsInChildren<Collider>().Where(c=>c.name.Contains("Shelf_Board")).Select(ColliderBounds).ToArray();
+            foreach(var book in books.GetComponentsInChildren<BoxCollider>())Need(boards.Any(board=>SupportedBy(ColliderBounds(book),board)),"Living book has lost shelf support");
+            var seat=ColliderBounds(sofa.GetComponentsInChildren<Collider>().Single(c=>c.name.Contains("Sofa_Seat")));
+            foreach(var renderer in textiles.GetComponentsInChildren<Renderer>().Where(r=>r.name!="Throw_Band"))Need(SupportedBy(renderer.bounds,seat),"Living textile has lost seat support");
+            Need(SupportedBy(textiles.Find("Throw_Band").GetComponent<Renderer>().bounds,textiles.Find("Seat_Throw").GetComponent<Renderer>().bounds),"Living throw band must rest on the cloth");
+            var top=ColliderBounds(table.Find("Coffee_Top").GetComponent<Collider>());
+            Need(Mathf.Abs(top.max.y-.48f)<.0001f,"Coffee tabletop must be .48 m high");
+            Need(Mathf.Abs(pickup.position.y-top.max.y-.005f)<.0001f&&pickup.position.x>top.min.x&&pickup.position.x<top.max.x&&pickup.position.z>top.min.z&&pickup.position.z<top.max.z,"Living pickup lost tabletop support");
+            foreach(var leg in table.GetComponentsInChildren<Collider>().Where(c=>c.name.StartsWith("Coffee_Leg_",StringComparison.Ordinal))){var bounds=ColliderBounds(leg);
+                Need(Mathf.Abs(bounds.min.y-.008f)<.0001f&&Mathf.Abs(bounds.max.y-top.min.y)<.0001f,"Coffee legs must join tabletop and rug");}
+            var diningTop=F(house,"Dining_Table").GetComponentsInChildren<Collider>().Single(c=>c.name.Contains("Table_Top"));
+            Need(Mathf.Abs(ColliderBounds(diningTop).max.y-.81f)<.0001f,"Living change must preserve dining table height");
+        }
+
+        static void CheckWindowGlass(GameObject house)
+        {
+            var panes=house.GetComponentsInChildren<MeshRenderer>().Where(r=>r.name.StartsWith("Window_",StringComparison.Ordinal)&&r.name.EndsWith("_Pane",StringComparison.Ordinal)).ToArray();
+            Need(panes.Length==8,"Expected eight fixed window panes");
+            var manifest=JsonUtility.FromJson<Sources>(AssetDatabase.LoadAssetAtPath<TextAsset>(Output+"/Data/source_manifest.json").text);
+            foreach(var pane in panes){
+                var material=pane.sharedMaterial;
+                Need(material.name=="Window_Glass"&&material.GetFloat("_Surface")==1&&material.GetFloat("_ZWrite")==0&&material.renderQueue==3000&&material.IsKeywordEnabled("_SURFACE_TYPE_TRANSPARENT"),"Window glass lost transparent recipe");
+                Need(Mathf.Abs(material.GetColor("_BaseColor").a-.32f)<.0001f&&!material.GetShaderPassEnabled("ShadowCaster")&&pane.shadowCastingMode==UnityEngine.Rendering.ShadowCastingMode.Off&&!pane.receiveShadows&&pane.reflectionProbeUsage==UnityEngine.Rendering.ReflectionProbeUsage.Off,"Window glass shadow/opacity contract changed");
+                var collider=F(house,"Collider_"+pane.name).GetComponent<BoxCollider>();
+                Need(collider!=null&&collider.enabled&&!collider.isTrigger,"Fixed transparent pane must retain a blocking collider");
+                var spec=manifest.house_alfa_static.box_colliders.Single(b=>b.source==pane.name);
+                Need(collider.gameObject.layer==EnvironmentSampleBuilder.Layer("WorldStatic")&&Vector3.Distance(collider.center,V(spec.center))<.0001f&&Vector3.Distance(collider.size,V(spec.size))<.0001f,"Window collider must retain source layer and dimensions");
+                Need(Vector3.Distance(collider.transform.position,house.transform.position)<.0001f&&Quaternion.Angle(collider.transform.rotation,house.transform.rotation)<.001f&&Vector3.Distance(collider.transform.lossyScale,Vector3.one)<.0001f,"Window collider transform changed");
+                var bounds=ColliderBounds(collider);Need(Vector3.Distance(bounds.min,pane.bounds.min)<.002f&&Vector3.Distance(bounds.max,pane.bounds.max)<.002f,"Transparent pane collider differs from visible geometry");
+            }
+            foreach(string name in new[]{"Kit_Stove_Oven","Kit_Washer_Door"}){
+                var material=F(house,name).GetComponent<MeshRenderer>().sharedMaterial;
+                Need(material.name=="Glass_Blue_Opaque"&&material.GetFloat("_Surface")==0,"Appliance glass must remain opaque");
+            }
         }
     }
 }

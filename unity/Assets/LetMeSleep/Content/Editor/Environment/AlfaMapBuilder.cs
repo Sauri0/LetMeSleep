@@ -56,6 +56,7 @@ namespace LetMeSleep.Content.Editor
             Copy(Path.Combine(sources,"source_manifest.json"),Output+"/Data/source_manifest.json");
             materials=MakeMaterials(manifest.house_alfa_static.materials);
             BuildFloorFinish();
+            EnsureWindowGlassMaterial();
             Import(sources,"house_alfa_static",manifest.house_alfa_static);
             Import(sources,"lobby_alfa_static",manifest.lobby_alfa_static);
             Import(sources,"furniture_kit_alfa",manifest.furniture_kit_alfa);
@@ -159,6 +160,9 @@ namespace LetMeSleep.Content.Editor
             foreach(var r in instance.GetComponentsInChildren<MeshRenderer>()){
                 r.sharedMaterials=r.sharedMaterials.Select(m=>materials[m.name]).ToArray();r.receiveGI=ReceiveGI.Lightmaps;r.lightProbeUsage=LightProbeUsage.Off;r.reflectionProbeUsage=ReflectionProbeUsage.BlendProbes;
                 r.shadowCastingMode=r.sharedMaterials.Any(m=>m.name=="Glass_Blue_Opaque")?ShadowCastingMode.Off:ShadowCastingMode.On;r.receiveShadows=true;
+                if(file=="house_alfa_static"&&r.name.StartsWith("Window_",StringComparison.Ordinal)&&r.name.EndsWith("_Pane",StringComparison.Ordinal)){
+                    r.sharedMaterial=materials["Window_Glass"];r.shadowCastingMode=ShadowCastingMode.Off;r.receiveShadows=false;r.reflectionProbeUsage=ReflectionProbeUsage.Off;
+                }
                 GameObjectUtility.SetStaticEditorFlags(r.gameObject,StaticEditorFlags.ContributeGI|StaticEditorFlags.OccludeeStatic);
                 if(r.name=="HouseShell"||r.name=="LobbyShell")GameObjectUtility.SetStaticEditorFlags(r.gameObject,GameObjectUtility.GetStaticEditorFlags(r.gameObject)|StaticEditorFlags.OccluderStatic);
                 var mesh=r.GetComponent<MeshFilter>().sharedMesh;Need(mesh.uv2.Length==mesh.vertexCount,"Missing UV2 "+r.name);
@@ -194,7 +198,8 @@ namespace LetMeSleep.Content.Editor
         static void FurnishHouse(GameObject house)
         {
             var p=Child(house.transform,"Furnishings");
-            Place("Sofa","Living_Sofa",new Vector3(.85f,0,2.35f),-90,p);Place("Table","Living_Table",new Vector3(2.4f,0,2.35f),90,p);Place("Shelf","Living_Shelf",new Vector3(1.9f,0,.45f),0,p);
+            Place("Sofa","Living_Sofa",new Vector3(.85f,0,2.35f),-90,p);AddLivingCoffeeTable(p);
+            Place("Shelf","Living_Shelf",new Vector3(1.9f,0,4.24f),180,p);
             Place("Table","Dining_Table",new Vector3(10.8f,0,2.5f),0,p);
             Place("Furniture_Chair","Dining_Chair_S",new Vector3(10.8f,0,1.6f),0,p,true);Place("Furniture_Chair","Dining_Chair_N",new Vector3(10.8f,0,3.4f),180,p,true);Place("Furniture_Chair","Dining_Chair_W",new Vector3(9.6f,0,2.5f),90,p,true);
             Place("Counter","Kitchen_Counter_N",new Vector3(10.4f,0,10.79f),0,p);Place("Counter","Kitchen_Counter_E",new Vector3(12.25f,0,9.25f),90,p);Place("Stove","Kitchen_Stove",new Vector3(8.95f,0,10.81f),0,p);Place("Fridge","Kitchen_Fridge",new Vector3(7.55f,0,10.6f),0,p);
@@ -235,7 +240,7 @@ namespace LetMeSleep.Content.Editor
             data.ToolPickupPoints=new[]{
                 Anchor(sockets,"Pickup_KitchenCounter_A",new Vector3(10.05f,.885f,10.66f)),Anchor(sockets,"Pickup_KitchenCounter_B",new Vector3(10.75f,.885f,10.66f)),
                 Anchor(sockets,"Pickup_DiningTable_A",new Vector3(10.4f,.815f,2.45f)),Anchor(sockets,"Pickup_DiningTable_B",new Vector3(11.2f,.815f,2.45f)),
-                Anchor(sockets,"Pickup_LivingTable",new Vector3(2.4f,.815f,2.35f)),Anchor(sockets,"Pickup_BedroomANightstand",new Vector3(2.755f,3.655f,.55f)),
+                Anchor(sockets,"Pickup_LivingTable",new Vector3(2.4f,.485f,2.35f)),Anchor(sockets,"Pickup_BedroomANightstand",new Vector3(2.755f,3.655f,.55f)),
                 Anchor(sockets,"Pickup_UtilityCounter",new Vector3(10.55f,3.885f,10.66f))};
             Anchor(sockets,"TaskFuture_Utility",new Vector3(11.1f,3.9f,10.4f));
         }

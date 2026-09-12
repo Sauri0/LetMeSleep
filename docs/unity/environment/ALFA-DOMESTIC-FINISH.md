@@ -6,10 +6,10 @@ Este commit contiene código fuente y compilación offline, **sin abrir Unity/Bl
 
 ## Conjuntos y límites
 
-- **Estar testigo:** alfombra roja con borde lino y bandas azul oscuro (2.45×2.4 m, centro x1.90/z2.35), agrupando sofá y mesa existentes. Siete libros de alturas y lomos diferenciados sobre dos baldas de Living_Shelf; páginas, tapas y lomo tienen volumen. Matamoscas1005 conserva pose y superficie libres.
+- **Estar testigo:** alfombra roja con borde lino y bandas azul oscuro (2.45×2.4 m, centro x1.90/z2.35), sofá con dos cojines y paño, mesa de café exclusiva a0.480m. Siete libros solidarios con Living_Shelf, ahora contra la pared posterior libre. Matamoscas1005 conserva ID/XZ y baja a y0.485 para apoyar sobre la tapa nueva.
 - **Dormitorio A:** alfombra azul al costado/pie de cama, libro sobre escritorio a cota exacta del tablero. La mesita mantiene libre el pickup1006. No se cambia cama, escala ni distribución.
 - **Cocina:** tabla de cortar y paño plegado sobre encimera este, junto a dos platos con borde e interior reales. No se añade interacción ni se ocupan los dos pickups de la encimera norte.
-- **Carpintería:** zócalos de 11 cm en habitaciones, recortados alrededor de vanos; el pasillo y descansos no reciben piezas que estrechen su paso. Alféizar, barra y cortinas de pocos pliegues en ventanas de estar/dormitorio A. Se conservan los vidrios sellados.
+- **Carpintería:** zócalos de 11 cm en habitaciones, recortados alrededor de vanos; el pasillo y descansos no reciben piezas que estrechen su paso. Alféizar, barra y cortinas de pocos pliegues en ventanas de estar/dormitorio A. Ventanas fijas con collider, ahora con material transparente exclusivo conforme a W2.
 - **Luminarias:** 13 plafones compactos de madera y difusor cálido, uno por zona interior ya iluminada. Dimensiones0.58×0.58m, descenso máximo0.16m desde el techo. Anclas de luz debajo del cuerpo, sin añadir componentes Light runtime.
 
 Alfombras y zócalos son detalles visuales de pocos milímetros/centímetros; el suelo y la arquitectura existentes conservan su colisión. Libros tienen cajas ajustadas, ventanas/cortinas y plafones tienen colisión. El builder comprueba los dos pasillos principales de1.8m, conserva los spawns y verifica que ninguna pieza nueva tape las siete reservas de pickup. Estas comprobaciones no sustituyen mirar y recorrer el resultado.
@@ -50,3 +50,23 @@ Criterios de revisión: sofá/mesa agrupados y estante ocupado sin abarrotar; ob
 
 Compilación offline contra Unity6000.3.24f1 correcta. No se abrió editor ni se generaron assets en esta corrección. QA debe revisar el delta; la regeneración y comprobación visual corresponden al Director.
 Actualización coordinada con W2 tras menu-1080.png: House_Diffuser y Lobby_LanternGlow reducen emisión a(0.18,0.10,0.035), persistida en fuente; ver LOBBY-DRESSING.md. No cambian las anclas de luz.
+
+## Corrección compositiva posterior a living-round2.png
+
+Captura real revisada: `N:/LetMeSleep/Validation/Alfa-VisualRecovery/living-round2.png`. Confirmó que el estante bloqueaba visualmente la ventana pese a los20mm de separación de la corrección anterior, y que la mesa de0.81m correspondía a comedor. La ausencia de intersección no había resuelto el uso del estar.
+
+- Living_Shelf pasa de(1.9,0,0.45),yaw0 a(1.9,0,4.24),yaw180, contra la pared posterior. Los siete libros se expresan en coordenadas locales de ese mueble y comparten su posición/rotación; lomos hacia−Z. Envolvente aproximada x1.30…2.50,z4.065…4.415, lejos de la puerta cuyo centro x3.86/z4.67. Reserva de acceso a ventana x0.605…2.155,z0.18…1.08,y0…2.4, libre de muebles y libros.
+- Living_Table se construye como variante propia desde el mesh biselado del kit: tapa1.35×0.06×0.70, top0.480, root(2.4,0,2.35),yaw90. Patas0.07×0.412×0.07, base0.008 sobre campo de alfombra y unión superior0.420 bajo la tapa. Huella de tapa en mundo x2.05…2.75,z1.675…3.025. Se conserva mesa Dining_Table y pickups comedor a0.815; no se modifica el prefab Kit_Table ni FBX.
+- Pickup1005 conserva identidad, tipo, orientación y XZ; Y0.815→0.485,5mm sobre la nueva tapa. La reducción de altura es necesaria para evitar que quede flotando. QA aceptó estas cotas, incluida la diferencia de95mm entre tapa y asiento de sofá0.575.
+- Living_Sofa conserva pose y collider. Dos cojines azul/lino de0.38×0.32×0.16 y paño0.38×0.012×0.60 descansan en y0.575; banda apoyada sobre paño. Son visuales sin collider y quedan dentro de la superficie del asiento.
+- Nuevos gates antes/después de serializar: acceso a ventana libre; aproximación a puerta x2.70…4.98,z3.40…4.58 libre; posición/orientación del estante; apoyo y huella de todos los libros/textiles; unión patas/tapa/alfombra; pickup a tapa+5mm; comedor permanece a0.810. Continúan gates de pasillos, spawns, carpintería y siete pickups. Alfombra no cambia ni recibe collider.
+
+### Ventana: investigación y cambio autorizado
+
+La fuente build_sources.py ya sustrae ocho huecos reales de HouseShell y coloca panes finos separados; el problema visual es Glass_Blue_Opaque. No se modifica el FBX, el hueco, el marco ni la colisión. Ese material opaco también pertenece a horno/lavadora: se conserva.
+
+Por autorización del Director y contrato W2, EnsureWindowGlassMaterial crea/reaplica Window_Glass URP/Lit: BaseColor(0.22,0.42,0.55,0.32), Surface1, AlphaBlend0, SrcAlpha/OneMinusSrcAlpha, ZWrite0, renderQueue3000, RenderTypeTransparent, keyword _SURFACE_TYPE_TRANSPARENT, sin premultiply, Metallic0, Smoothness0.55, ReceiveShadows0 y _RECEIVE_SHADOWS_OFF, ShadowCaster desactivado. Sólo los renderers Window_*_Pane del shell de casa reciben el material; no reciben/proyectan sombras ni usan reflection probes. No se añade shader, SSR ni luz.
+
+Gate: ocho panes, asignación determinista, alpha/cola/estados del material, collider habilitado no trigger, layerWorldStatic, transform y dimensiones iguales al manifest de fuente, bounds físico/visual coincidentes; horno/lavadora siguen opacos. El gate genérico de SavePrefabAndInstantiate conserva GameplaySurface/SurfaceId y bounds de todos los colliders durante serialización. Transparencia visual no significa ventana transitable.
+
+Pendiente nativo: regenerar con Unity6000.3.24f1; comprobar vidrio contra cielo/exterior desde ambos lados, profundidad/ordenamiento/bloom y conservación física del pane. La ventana del estar mira hacia el frente de la casa, no al patio posterior; el exterior visible depende del contenido que realmente exista fuera. Capturar estar desde ambas esquinas para incluir nueva estantería y sofá/mesa, además del primer plano de vidrio. Fuente y compilación offline no acreditan apariencia final ni jugabilidad.

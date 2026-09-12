@@ -2,14 +2,13 @@
   "maps": [
     {
       "map_id": "house-patio-v1",
-      "content_hash": "sha256-19657b7db340856b879c902075e8a2b13c51862e9b7d7587893b36fde1a089bf"
+      "content_hash": "sha256-00f7ddb67b1aa5f15f26b20dd8ee7440928500ad9602e4aa0b50837b317509ef"
     },
     {
       "map_id": "private-lobby-v1",
-      "content_hash": "sha256-5507ef661f247c052c929f3c9a54b945d5ff501df4e1195a36c601b942f5b1b3"
+      "content_hash": "sha256-0eb3b5cb27633817beffe6e2cf28935010146dc40128b937e19731357c03cce2"
     }
   ],
-  "algorithm": "SHA256 map ID and ordered file/hash records; UTF8 text newlines normalized toLF, FBX raw",
   "files": [
     "art_source/unity/environments/alfa_maps/house_alfa_static.fbx",
     "art_source/unity/environments/alfa_maps/lobby_alfa_static.fbx",
@@ -30,5 +29,6 @@
     "unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs",
     "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs",
     "unity/Assets/LetMeSleep/Gameplay/Contracts.cs"
-  ]
+  ],
+  "algorithm": "SHA256 map ID and ordered file/hash records; UTF8 text newlines normalized toLF, FBX raw"
 }
