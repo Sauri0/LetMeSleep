@@ -34,6 +34,8 @@ function Write-PackageMetadata {
     }
     $files = [ordered]@{}
     $required = @($exe) + @($dlls.FullName)
+    $launcher = Join-Path $OutputDirectory 'Let-me-sleep-Launcher.exe'
+    if (Test-Path -LiteralPath $launcher) { $required += $launcher }
     $required += @(Get-OnlinePackageFiles -ProjectRoot $ProjectRoot -OutputDirectory $OutputDirectory)
     foreach ($name in @('LEEME.md','LEEME.html','PRUEBAS.md')) { $required += Join-Path $OutputDirectory $name }
     $notices = @(Get-ChildItem -LiteralPath (Join-Path $OutputDirectory 'Licencias-voz') -File)

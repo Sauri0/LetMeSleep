@@ -24,6 +24,7 @@ foreach($entry in @('main','client')){
 }
 [IO.Directory]::CreateDirectory($out)|Out-Null
 Get-ChildItem ./distribution -File|Copy-Item -Destination $out
+& ./work/build-launcher.ps1 -OutputDirectory $out
 & ./work/run-native07.ps1 -Source -Name online093-export -GameArguments @('--headless','--export-release','"Windows Desktop"',$exe)
 foreach($notice in @(@{source='game/addons/lms_opus/licenses';dest='Licencias-voz'},@{source='game/addons/epic-online-services-godot/licenses';dest='Licencias-online'})){
     $dest=Join-Path $out $notice.dest;[IO.Directory]::CreateDirectory($dest)|Out-Null

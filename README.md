@@ -1,7 +1,11 @@
 # Let me sleep — 0.9.3 para Windows
 
-[Descargar 0.9.3](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.3).
-Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**.
+[Descargar inicio con actualización automática](https://github.com/Sauri0/LetMeSleep/releases/download/launcher-v1.0.0/Let-me-sleep-Launcher.exe).
+Guardá **Let-me-sleep-Launcher.exe** y usalo siempre para abrir el juego. Busca la versión publicada más reciente, la descarga si hace falta y abre el juego. No requiere cuenta de GitHub, instalación de Godot ni permisos de administrador. La primera vez descarga el juego completo.
+
+Conserva preferencias y personalización. Si falla la descarga, permite reintentar o abrir la instalación anterior; para jugar online todos necesitan la misma versión. Incluye las versiones de prueba públicas numeradas. El acceso antiguo directo a **Let-me-sleep.exe** no busca actualizaciones: reemplazalo por un acceso al launcher. [Detalles y verificación](launcher/README.md).
+
+[ZIP manual 0.9.3](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.9.3) para quien prefiera administrar las descargas.
 
 1. **Crear sala online**: escribí tu nombre y confirmá.
 2. **Copiar código**: mandáselo a tus amigos sin cerrar la sala.
@@ -18,11 +22,11 @@ validación gráfica ni se comprobó una partida entre dos casas. Detalle en
 
 **[Versiones publicadas y descargas](https://github.com/Sauri0/LetMeSleep/releases)**
 
-Descomprimí todo el ZIP y abrí **Let-me-sleep.exe**. Elegí **PRÁCTICA** para jugar contra bots. No necesitás Godot ni una cuenta de GitHub. La guía **LEEME.html** acompaña al juego.
+Abrí **Let-me-sleep-Launcher.exe**. Elegí **Entrenamiento** para jugar contra bots. La guía **LEEME.html** acompaña al juego.
 
 Juego de humanos contra mosquitos: humano en primera persona, mosquito en tercera y tres modos. Cada ronda genera una casa de dos o tres pisos, con puertas interactivas, tareas y herramientas. La casa v2 limita el total a 22 habitaciones y reserva pasillos a los lados de las escaleras. El HUD es compacto; F1 abre una guía que permanece plegada durante el juego. La cámara permite seguir girando al mirar el cuerpo.
 
-La fuente integra **Epic Online Services**: Crear sala ejecuta el servidor dentro del juego y produce una invitación **LMS1-**. Los amigos pegan ese código, sin indicar IP ni instalar otra aplicación. Se probaron creación, autenticación y cierre reales del anfitrión; **la partida entre dos identidades y redes independientes sigue pendiente de validar**. El modo avanzado ENet directo conserva las invitaciones DD5 y sus requisitos de conectividad.
+La fuente integra **Epic Online Services**: Crear sala ejecuta el servidor dentro del juego y produce una invitación **LMS1-**. Los amigos pegan ese código, sin indicar IP ni instalar otra aplicación. Se probaron creación, autenticación y cierre reales del anfitrión; **la partida entre dos identidades y redes independientes sigue pendiente de validar**.
 
 ## Jugar
 

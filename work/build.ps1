@@ -75,6 +75,7 @@ if (Test-Path -LiteralPath (Join-Path $projectRoot 'distribution')) {
     Get-ChildItem -LiteralPath (Join-Path $projectRoot 'distribution') -File | Copy-Item -Destination $outDir
 }
 # Godot 4.5.2 can race GDExtension teardown on a fresh editor import.
+& (Join-Path $PSScriptRoot 'build-launcher.ps1') -OutputDirectory $outDir
 # Delay applies only to this import process, never the game or measurements.
 Invoke-CheckedHeadless -CheckName 'import' -GameArguments @('--editor','--import','--quit','--frame-delay','800')
 foreach ($entryPoint in @('scripts/main','scripts/client','tests/network_bot','tests/practice_ui_checks','tests/gameplay_demo','tests/gameplay06_demo','tests/camera_turn_checks','tests/hud_input06_checks','tests/hosting_checks','tests/gameplay07_demo','tests/performance07_live','tests/network07_combat_checks','tests/video07_checks','tests/doors07_client_checks','tests/throw_client07_checks','tests/tool07_visual_checks','tests/house07_occlusion_checks','tests/network07_throw_checks','tests/tools07_demo','tests/customization07_demo','tests/facial_catalog08_gallery','tests/facial_parts08_motion_export','tests/network08_cosmetics_checks')) {

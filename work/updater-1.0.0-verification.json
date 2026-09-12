@@ -1,0 +1,11 @@
+{
+  "launcher_version": "1.0.0",
+  "installed_game_version": "0.9.3",
+  "graphical_launcher_tested": false,
+  "game_launched": false,
+  "wan_verified": false,
+  "unit_checks": 31,
+  "bytes": 27136,
+  "live_install_checks": 3,
+  "sha256": "A33471673363496D751B9D7CB3BBC162FD5862E7A792F43FAFC33E52F304D649"
+}
