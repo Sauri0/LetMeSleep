@@ -20,7 +20,7 @@ signal config_requested(config: Dictionary)
 signal start_requested
 signal rematch_requested
 signal leave_requested
-signal practice_requested(role: String, mode: String)
+signal practice_requested(role: String, mode: String, map_id: String)
 signal practice_restart_requested
 signal emote_requested(id: String)
 signal emote_favorite_requested(slot: int, id: String)
@@ -34,6 +34,7 @@ signal voice_devices_refresh_requested
 
 const Prefs = preload("res://scripts/preferences.gd")
 const Simulation = preload("res://scripts/simulation.gd")
+const MapCatalog = preload("res://scripts/map_catalog.gd")
 const CosmeticsData = preload("res://scripts/cosmetics.gd")
 const OnlineInvitationCodec = preload("res://scripts/online_invitation.gd")
 var _online_invitation := ""
@@ -170,6 +171,9 @@ var _practice_role_buttons: Dictionary = {}
 var _practice_mode_buttons: Dictionary = {}
 var _practice_detail: Label
 var _practice_start_button: Button
+var _practice_map_select: OptionButton
+var _practice_map_note: Label
+var _practice_map_id: String = ""
 var _practice_banner: Label
 var _result_leave: Button
 var _pause_leave: Button
@@ -210,6 +214,9 @@ var _players_label: Label
 var _roster: VBoxContainer
 var _mode: OptionButton
 var _mode_description: Label
+var _lobby_map_select: OptionButton
+var _lobby_map_note: Label
+var _playable_maps: Array[Dictionary] = []
 var _config_apply: Button
 var _ready_button: Button
 var _start_button: Button
@@ -296,6 +303,7 @@ func _build() -> void:
 	if _built:
 		return
 	_built = true
+	_load_playable_maps()
 	_root = Control.new()
 	_root.name = "Interface"
 	_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -713,6 +721,55 @@ func show_connection_state(data: Dictionary) -> void:
 		_queue_focus(_connect_submit)
 
 
+func _load_playable_maps() -> void:
+	_playable_maps = MapCatalog.playable_maps()
+	_practice_map_id = _valid_playable_map_id(MapCatalog.default_map_id())
+
+
+func _valid_playable_map_id(requested: String) -> String:
+	for entry: Dictionary in _playable_maps:
+		if str(entry.get("id", "")) == requested:
+			return requested
+	return str(_playable_maps[0].get("id", "")) if not _playable_maps.is_empty() else ""
+
+
+func _populate_map_selector(selector: OptionButton, requested: String) -> String:
+	selector.clear()
+	var selected_id := _valid_playable_map_id(requested)
+	var selected_index := 0
+	for entry: Dictionary in _playable_maps:
+		var index := selector.item_count
+		selector.add_item(str(entry.get("label", entry.get("id", ""))))
+		selector.set_item_metadata(index, str(entry.get("id", "")))
+		if str(entry.get("id", "")) == selected_id:
+			selected_index = index
+	if selector.item_count > 0:
+		selector.select(selected_index)
+	return selected_id
+
+
+func _selected_map_id(selector: OptionButton) -> String:
+	if selector.item_count == 0 or selector.selected < 0:
+		return _valid_playable_map_id("")
+	return _valid_playable_map_id(str(selector.get_item_metadata(selector.selected)))
+
+
+func _selected_map_label(selector: OptionButton) -> String:
+	return selector.get_item_text(selector.selected) if selector.item_count > 0 and selector.selected >= 0 else "Mapa no disponible"
+
+
+func _lobby_map_selected(_index: int) -> void:
+	if _updating_config or not _owner:
+		return
+	_lobby_map_note.text = "Próxima ronda · " + _selected_map_label(_lobby_map_select)
+	_config_apply.text = "Aplicar cambios"
+
+
+func _practice_map_selected(_index: int) -> void:
+	_practice_map_id = _selected_map_id(_practice_map_select)
+	_practice_map_note.text = "Entrenamiento en " + _selected_map_label(_practice_map_select) + "."
+
+
 func _build_lobby() -> void:
 	# The shared 3D room remains visible. Only this sidebar intercepts clicks.
 	_lobby = _full_control(_root)
@@ -762,6 +819,15 @@ func _build_lobby() -> void:
 	var config_box := _vbox(rules_scroll, 8)
 	config_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	config_box.add_child(_label("El anfitrión fija la cantidad de humanos. Los roles se sortean de nuevo en cada ronda.", 14, MUTED, true))
+	config_box.add_child(_label("MAPA DE LA RONDA", 13, CORAL))
+	_lobby_map_select = OptionButton.new()
+	_lobby_map_select.add_theme_font_size_override("font_size", 16)
+	_lobby_map_select.tooltip_text = "El mapa que se cargará al empezar la próxima ronda."
+	_lobby_map_select.item_selected.connect(_lobby_map_selected)
+	config_box.add_child(_lobby_map_select)
+	_lobby_map_note = _label("", 13, MUTED, true)
+	config_box.add_child(_lobby_map_note)
+	_populate_map_selector(_lobby_map_select, MapCatalog.default_map_id())
 	_mode = OptionButton.new()
 	_mode.add_theme_font_size_override("font_size", 16)
 	for mode: String in MODES:
@@ -873,6 +939,7 @@ func _apply_config() -> void:
 	config.erase("mosquito_lives")
 	config.erase("respawn_seconds")
 	config["mode"] = MODES[clampi(_mode.selected, 0, 2)]
+	config["map_id"] = _selected_map_id(_lobby_map_select)
 	for key: String in _fields:
 		config[key] = _fields[key].value
 	config_requested.emit(config)
@@ -1488,9 +1555,26 @@ func _build_practice() -> void:
 		_practice_mode_buttons[mode] = button
 	_practice_detail = _label("", 17, INK, true)
 	modes.add_child(_practice_detail)
+	var map_panel := _panel(frame)
+	var map_box := _vbox(map_panel, 5)
+	var map_row := HBoxContainer.new()
+	map_row.add_theme_constant_override("separation", 18)
+	map_box.add_child(map_row)
+	var map_title := _label("3. ¿DÓNDE?", 30)
+	map_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	map_row.add_child(map_title)
+	_practice_map_select = OptionButton.new()
+	_practice_map_select.custom_minimum_size.x = 310
+	_practice_map_select.add_theme_font_size_override("font_size", 17)
+	_practice_map_select.tooltip_text = "Mapa usado por este entrenamiento."
+	_practice_map_select.item_selected.connect(_practice_map_selected)
+	map_row.add_child(_practice_map_select)
+	_practice_map_id = _populate_map_selector(_practice_map_select, _practice_map_id)
+	_practice_map_note = _label("", 14, MUTED, true)
+	map_box.add_child(_practice_map_note)
 	_practice_start_button = _button("¡A ENTRENAR!", func() -> void:
 		set_practice(true)
-		practice_requested.emit(_practice_role, _practice_mode)
+		practice_requested.emit(_practice_role, _practice_mode, _practice_map_id)
 	, true)
 	_practice_start_button.custom_minimum_size.y = 58
 	frame.add_child(_practice_start_button)
@@ -1527,6 +1611,8 @@ func _refresh_practice() -> void:
 		"blood": _practice_detail.text = "Cuota compartida de sangre. Los golpes aturden; los compañeros ayudan."
 		"survival": _practice_detail.text = "Al menos un mosquito debe llegar vivo al final."
 		"sleep": _practice_detail.text = "Tareas, interrupciones y rescates entre mosquitos."
+	_practice_map_id = _selected_map_id(_practice_map_select)
+	_practice_map_note.text = "Entrenamiento en " + _selected_map_label(_practice_map_select) + "."
 
 
 func set_practice(value: bool) -> void:
@@ -1923,6 +2009,7 @@ func show_lobby(data: Dictionary, local_id: int) -> void:
 		_config = FALLBACK_CONFIG.duplicate(true)
 		_config.merge(config, true)
 		_updating_config = true
+		_config.map_id = _populate_map_selector(_lobby_map_select, str(_config.get("map_id", MapCatalog.default_map_id())))
 		_mode.select(maxi(0, MODES.find(str(_config.get("mode", "blood")))))
 		for key: String in _fields:
 			_fields[key].value = _config.get(key, FALLBACK_CONFIG.get(key, 1 if key == "human_count" else 0))
@@ -1930,6 +2017,9 @@ func show_lobby(data: Dictionary, local_id: int) -> void:
 		_update_dependent_ranges(_config)
 		_update_mode_fields()
 		_config_apply.text = "Aplicar reglas" if _owner else "Las reglas las cambia el anfitrión"
+	_lobby_map_select.disabled = not _owner
+	_lobby_map_select.tooltip_text = "Elegí el mapa de la próxima ronda." if _owner else "Mapa elegido por el anfitrión."
+	_lobby_map_note.text = ("Próxima ronda · " if _owner else "Elegido por el anfitrión · ") + _selected_map_label(_lobby_map_select)
 	_mode.disabled = not _owner
 	for key: String in _fields:
 		_fields[key].editable = _owner
