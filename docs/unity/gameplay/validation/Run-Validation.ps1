@@ -20,7 +20,7 @@ $inputXml = Escape-Xml $InputSystemAssembly
 $nunitXml = Escape-Xml $NUnitAssembly
 Set-Content -LiteralPath (Join-Path $output 'Directory.Build.props') -Value '<Project><PropertyGroup><BaseIntermediateOutputPath>obj/$(MSBuildProjectName)/</BaseIntermediateOutputPath></PropertyGroup></Project>'
 $domain = @"
-<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>netstandard2.1</TargetFramework><LangVersion>9</LangVersion><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup><Compile Include="$rootXml/unity/Assets/LetMeSleep/Core/*.cs"/><Compile Include="$rootXml/unity/Assets/LetMeSleep/Gameplay/*.cs"/></ItemGroup></Project>
+<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>netstandard2.1</TargetFramework><LangVersion>9</LangVersion><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup><Compile Include="$rootXml/unity/Assets/LetMeSleep/Core/*.cs"/><Compile Include="$rootXml/unity/Assets/LetMeSleep/Gameplay/*.cs"/><Compile Include="$rootXml/unity/Assets/LetMeSleep/Online/GameplayWireCodec.cs"/></ItemGroup></Project>
 "@
 $adapter = @"
 <Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>netstandard2.1</TargetFramework><LangVersion>9</LangVersion><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup><ProjectReference Include="Domain.csproj"/><Compile Include="$rootXml/unity/Assets/LetMeSleep/Gameplay.Unity/*.cs"/><Reference Include="$engineXml/Managed/UnityEngine/*.dll"/><Reference Include="$inputXml"/></ItemGroup></Project>
@@ -36,6 +36,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Adapter compilation failed.' }
 & dotnet run --project (Join-Path $output 'Checks.csproj') --nologo 2>&1 | Tee-Object -FilePath (Join-Path $output 'checks.log')
 if ($LASTEXITCODE -ne 0) { throw 'CPU checks failed.' }
 $hashes = [ordered]@{}
+$codecRelative = 'unity/Assets/LetMeSleep/Online/GameplayWireCodec.cs'
+$hashes[$codecRelative] = (Get-FileHash -LiteralPath (Join-Path $workspace $codecRelative) -Algorithm SHA256).Hash.ToLowerInvariant()
 foreach ($sourceDirectory in @('unity/Assets/LetMeSleep/Core', 'unity/Assets/LetMeSleep/Gameplay', 'unity/Assets/LetMeSleep/Gameplay.Unity', 'docs/unity/gameplay/validation')) {
     Get-ChildItem -LiteralPath (Join-Path $workspace $sourceDirectory) -File | Sort-Object Name | ForEach-Object {
         $hashes["$sourceDirectory/$($_.Name)"] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()

@@ -30,7 +30,7 @@ WASD/mouse; humano Shift correr, Ctrl agacharse, Space saltar, clic golpear y F 
 
 ## Evidencia y límites
 
-Compilación externa C#9/netstandard2.1 contra bibliotecas instaladas Unity **6000.3.24f1** e Input System: **0 errores / 0 advertencias**. No se abrió editor, no se alteraron paquetes/settings/escenas. Validación CPU: **42 casos / 0 fallos**, suma 29 casos QA/Core+Gameplay y 13 verificaciones propias de dominio/réplica. Repetir mediante `validation/Run-Validation.ps1`; NUnit procede del PackageCache ya instalado. No usa Unity Test Runner.
+Compilación externa C#9/netstandard2.1 contra bibliotecas instaladas Unity **6000.3.24f1** e Input System: **0 errores / 0 advertencias**. No se abrió editor, no se alteraron paquetes/settings/escenas. Validación CPU: **50 casos / 0 fallos**, suma 29 casos QA/Core+Gameplay, 13 verificaciones propias de dominio/réplica y 8 del [codec binario](WIRE-CODEC.md). Repetir mediante `validation/Run-Validation.ps1`; NUnit procede del PackageCache ya instalado. No usa Unity Test Runner.
 
 Cubierto por los 13 casos propios: W con pitch y frenado al expirar input, snapshots inmutables, principal/ronda/números inválidos/secuencias/bot, golpe detenido por pared entre ticks, contador35 s desde apoyo sin victoria prematura, extracción/desmayo único y ancla limpia, ayuda3×, resultado único al agotar tiempo, identidad de balance, contenido/balance/tick de réplica, privados tardíos entre rondas, eventos duplicados/reordenados y geometría de puerta inválida. El ciclo de cursor/MonoBehaviour Begin→Stop→Begin todavía necesita Unity Runner; la corrección explícita de desbloqueo compila pero no se acredita como prueba CPU de interfaz.
 
