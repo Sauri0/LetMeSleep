@@ -14,6 +14,7 @@ namespace LetMeSleep.Audio
             public double StartedAt;
             public float FadeRemaining;
             public float FadeStartVolume;
+            public bool StopIfFollowMissing;
         }
 
         private static readonly AnimationCurve Rolloff = new AnimationCurve(
@@ -58,6 +59,13 @@ namespace LetMeSleep.Audio
                     continue;
                 }
 
+                if (voice.Cue != null && voice.Cue.Loop && voice.StopIfFollowMissing &&
+                    voice.Follow == null && voice.FadeRemaining <= 0f)
+                {
+                    voice.FadeStartVolume = voice.Source.volume;
+                    voice.FadeRemaining = 0.04f;
+                }
+
                 if (voice.FadeRemaining > 0f)
                 {
                     voice.FadeRemaining -= Time.unscaledDeltaTime;
@@ -80,6 +88,9 @@ namespace LetMeSleep.Audio
         {
             if (cue == null || !cue.TrySelectClip(out AudioClip clip))
                 return false;
+
+            if (cue.Loop && follow != null && IsPlaying(cue, follow))
+                return true;
 
             if (Count(cue) >= cue.MaximumSimultaneous)
                 return false;
@@ -114,6 +125,7 @@ namespace LetMeSleep.Audio
             voice.StartedAt = AudioSettings.dspTime;
             voice.FadeRemaining = 0f;
             voice.FadeStartVolume = cue.Volume;
+            voice.StopIfFollowMissing = follow != null;
             source.Play();
             return true;
         }
@@ -136,7 +148,20 @@ namespace LetMeSleep.Audio
         public void StopAllVoices()
         {
             for (int i = 0; i < voices.Count; i++)
+            {
                 voices[i].Source.Stop();
+                voices[i].Cue = null;
+                voices[i].Follow = null;
+                voices[i].FadeRemaining = 0f;
+            }
+        }
+
+        private bool IsPlaying(AudioCue cue, Transform follow)
+        {
+            for (int i = 0; i < voices.Count; i++)
+                if (voices[i].Cue == cue && voices[i].Follow == follow && voices[i].Source.isPlaying)
+                    return true;
+            return false;
         }
 
         private int Count(AudioCue cue)
