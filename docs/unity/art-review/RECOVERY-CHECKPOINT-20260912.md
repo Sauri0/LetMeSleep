@@ -1,3 +1,42 @@
+# Checkpoint vigente — 2026-09-12 21:42 UTC — equipo de doce
+
+Este bloque sustituye los estados anteriores de integración, capturas y turnos. Alfa sigue en recuperación, sin aprobación artística global ni avance a beta. HEAD fuente/runtime 3dce610; cierre documental UI e7e56ff. Archivos generados de Unity permanecen deliberadamente sin stage global. Objetivo completo del ciclo sigue activo.
+
+## Integraciones y resultados nuevos
+
+- Humano referencia9: b110965/27e7195/57d0697 integrados dfdd4a7/55074a0/ba1a133. FBX348c0f48…, blendd0a1a304…, 65bones/7980tris. 1278 muestras numéricas; estiramientos 3.334443× FingerCurl y2.997197× Swat siguen defectos reales. Fuente10 340bf9b+runner06f9f8e está sólo en worktree characters, sin promover a principal.
+- Mosquito R3: cadena11a2cc9/651df67/cc4c871/2f6ef3e integrada efd13a5/16d7235/8dc1651/0ef8dfc. Resolución add/add conserva módulo del dueño, no extracción vieja. Blend0d3fe443…, FBX0b32d762…. 894 muestras temporal/FBX,636 soporte; revisores cierran sólo endpoints numéricos. P1 cruces frontales de patas, blends y contacto real abiertos. Wrapper y manifiesto reconciliados6e712a4 sin sobrescribir evidencia humana. Adapter27710c8→41c3637 conserva SetWorldPose; D=.100m/T1/fase×3 exclusivos SurfaceWalk.
+- Online aeccfe8+9b36955→6c31178+b8fed0c: JoinById preservado, validación posterior a unión y callbacks tardíos corregidos. Validación central OnlineAudit-20260912-central-b8fed0c: compile0/0,10políticas sin fallos, native_sdk_loaded=false. No EOS nativo/WAN. Worker Online y Worker Código / Gameplay aparecieron notLoaded; dos envíos Online dieron thread not found. No se crearon duplicados ni se afirmó entrega del seguimiento no enviado.
+- Banco4a62d6b→ed18ab2; EX2 9ea74ab→3ee30e9/hashd16f44b; editable785f71e→94c08df. Sofá constructivoee572af→60754dc: soporte/asentamiento/manta. Conflictos de hash se recalcularon, documentación conservó historial. Hashes actuales casa d6e626214ae53c5651a33da787fe8fa26b683cb17907955d7081b653839c3173; lobby6880ab7b44ef83ebcfeb88b439fca30954563674bd7736f1d3a1276248dbd8bf.
+- UI fbd1292→0dbdf55 introdujo regresión humano en native5. BakeMesh(false)9359f1f→69e8394 corrigió humano pero recortó mosquito en native6; el chequeo de proyección repetía el mismo supuesto incorrecto de escala y no era independiente de él. Dump nativo confirma bakeTrue2×false con VisualRoot=.5. 43944c1→34d5dc0 usa BakeMesh(true), compensación común ya usada por builder, sin cambiar escala real. Native7: ambos modelos completos;24casos full-body con0vértices fuera, contrastados con PNG. UI cerró sólo framing estático en e7e56ff, no inputs físicos/guardado/arte global.
+
+## Evidencia nativa de esta tanda
+
+Unity6000.3.24f1 D3D11 -batchmode -noaudio, PID37448 y luego32520. Logs editor-team12-c.log/editor-team12-d.log en Validation/Alfa-VisualRecovery.
+
+- Characters BuildAndVerifyIdempotence falló primera vez pese dos BuildAll exitosos. Fallo guardado characters-reference9-r3-first-failure.txt. Diagnóstico character-idempotence-20260912-211700 conserva62archivos×3estados iguales; revisor recalculó186hashes. Rerun PASS21:18:09, digestecacba66…. Causa inicial indeterminada, no ocultada ni atribuida a caché sin el par fallido.
+- ArtCatalog/characters-reference9-mosquito-r3:17PNG reales, fases .45, no video. Helper no generaba receipt propio: evidence-manifest.json ensamblado después enlaza hashes/config observada y copia import-build-receipt.json. No confundirla con metadata emitida por capturador. NH1/2 boca/nuca/cintura y NH3 hombros/solapas/rodillas/codos siguen abiertos.
+- TeamRecovery/ui-native5,6,7:28PNG por tanda,720/1080. Native5/6 históricos rechazados; native7 framing corregido. CapturePreviewBounds7.cs proyección con escala compensada + inspección visual. Native6/MosquitoUiPreview-scale-diagnostic.json registra ambos BakeMesh y transforms.
+- BuildMaps PASS21:19:12 y21:26:31. exterior2 cinco cámaras y living-crafted4 cinco cámaras. sofa-low totalmente ocluida: no acredita apoyos. Nombre patio-mosquito-eye usaY1.8, no actor/altura real mosquito. No recorrido ni nuevo check físico del banco por estos PNG.
+- ProbeTextileGpuUpload: textile-gpu-probe-20260912-211224-230,7mallas, mismo frame61603, controles/restauración/bindings true,0píxeles diferentes; instancia nueva ya suave. Upload no confirmó causa histórica.
+- ProbeExteriorUpload55c6d02→3dce610: exterior-upload-20260912-213435-760,38mallas, CPU/disco iguales yPNGidénticos. Upload solo NO corrigió imagen rota.
+- Tras reinicio37448→32520 SIN nuevo rebuild: exterior2-fresh-*.png y living-crafted4-fresh-*.png (5cadauna) muestran copas completas sin diamantes marrones y manta continua. Acredita discrepancia de representación en sesión residente; no prueba causa específica CopySerialized/GPU ni valida Upload como fix. Hierbas aún alambre, copas regulares/fondo plano y contacto cojines pendientes. Mapas/Elementos autorizados a preparar actualización mesh por API preservando GUID/contratos, con prueba en misma sesión siguiente. Elementos identificó13aristas winding en cap terminal inferior de manta y tiene autorización de corrección puntual, sin remodelar paño otra vez.
+- Probe continuo mosquito floor native-floor-20260912-213148-541 bajo Worktrees/presentation/work/surface-r3-native: INCONCLUSIVE, fase2,0frames porque batchmode no rindió cámara propia en10s. Status activo=false/holding=false/pending=false. No se intentaron pared/techo con misma limitación. Presentation preparó recetas GameView que rechazan batchmode, sin tolerancias nuevas; requiere próximo editor interactivo y alcance explícito. No llamar PASS a navegación, animación temporal, cadencia, apoyo o remoto.
+
+## Turno y siguiente trabajo
+
+Ambos editores37448/32520 cerrados normalmente con EditorApplication.Exit después de Play=false. CIM confirma0Unity/Blender antes de nueva concesión; recibo TeamRecovery/stability-director/editor-team12-c-d-cleanup.json. Restauradas sólo dos cachés SDF generadas por editor (FontFeatureTable), preservando todos los demás cambios.
+
+**TURNO AHORA concedido a Modelador Humanos:** fuente340bf9b+runner06f9f8e, BlenderCPU2 BelowNormal, cinco procesos secuenciales (generar candidato aislado, roundtrip, reauditar9 con misma cobertura, auditar10, seis vistas), sin promoción automática a canónicos. No Unity durante este turno. Verificar liberación explícita antes de siguiente proceso pesado.
+
+Mapas y Elementos preparan fixes API de actualización de malla y diagnósticos propios, sin nativos. UI sólo documentación de cierre puntual. Presentation receta/observer externo: no nativos propios, futuras pruebas con GameView real; no carga de DLL como asset. Humano10 no cierra NH3 de ropa si delta no lo toca. Revisores continúan por propiedad. Siguiente Director: recoger10, revisar deformaciones/imágenes, integrar candidato coherente si válido; probar fixes mesh en sesión residente antes/después y mantener capturas del reinicio como control; preparar prueba temporal real y flujos UI/persistencia.
+
+ArtCatalog/index.html regenerado:32fichas/175PNG, fuente3dce610; native7 y fresh actuales, versiones rechazadas históricas. Script incremental actual Validation/ArtCatalog/update_team_native_2139.py. NO correr viejo UpdateTeamEvidence.ps1 que sobrescribe esta ampliación. Servidor8764 detenido; ZIP viejo desactualizado. Catálogo es evidencia de revisión, no aprobación ni nueva build publicada.
+
+Pendientes externos y de producto: revisión de Branko, WAN entre redes reales, escucha y cierre en player audible, rendimiento hardware objetivo, UI/input/persistencia y mejoras gráficas/audio del alcance. No publicar ni pasar de etapa por tests locales. Goal sigue activo: hubo progreso concreto, no bloqueo.
+
+---
+
 # Checkpoint vigente — equipo de 12 — 2026-09-12 20:46 UTC
 
 Este bloque sustituye los estados de proceso, cola y captura históricos de abajo. Alfa continúa en recuperación; no publicar ni avanzar a beta. Fuentes integradas HEAD cc2947b; cambios generados de arte/audio/mapas permanecen deliberadamente sin commit global.
