@@ -17,6 +17,7 @@ Estado: **evidencia parcial**. Hay resultados Unity EditMode, PlayMode de entren
 - [Suite MessageFraming](MESSAGE-FRAMING-TESTS.md): límites, fragmentación y presupuesto acotado de reensamblado Online.
 - [Suite protocolo/herramientas](PROTOCOL-TOOL-OWNERSHIP-TESTS.md): alfa-2, roundtrip de equipo y rechazo de propiedad inconsistente.
 - [Estado del probe EOS Windows](EOS-WINDOWS-PROBE-2026-09-12.md): evidencia parcial de arranque, identidad y lobby; transporte/WAN pendientes.
+- [Revisión de política del cliente EOS](EOS-CLIENT-POLICY-REVIEW-2026-09-12.md): criterio de distribución de la configuración P2P y permisos observados en el portal sin exponer credenciales.
 - [Auditoría de trazabilidad](BUILD-TRACEABILITY-REVIEW-2026-09-12.md): corrige la base temporal del build EOS y separa fuente dirty de candidata reproducible.
 - [Suite RoomWireCodec](ROOM-WIRE-CODEC-TESTS.md): roundtrip, límites y rechazo estricto del snapshot binario de sala.
 

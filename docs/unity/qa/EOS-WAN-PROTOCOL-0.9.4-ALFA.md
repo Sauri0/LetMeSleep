@@ -6,6 +6,8 @@ Demostrar una sesión real de `Let me sleep 0.9.4-alfa` entre dos personas/equip
 
 El dueño crea la sala dentro del juego y el invitado pega un código. El flujo no muestra IP, puerto, PUID ni herramientas externas al jugador. EOS debe informar la ruta establecida; el texto de la UI no basta.
 
+La configuración EOS distribuida con el juego se rige por `EOS-CLIENT-POLICY-REVIEW-2026-09-12.md`: sólo credenciales del cliente `Peer2Peer`/`User required` con mínimo privilegio. Credenciales administrativas o `TrustedServer`, tokens personales y claves privadas siguen prohibidos.
+
 ## Preparación, todavía sin acreditar WAN
 
 1. Director entrega un único ZIP candidato, SHA-256, commit, versión, protocolo y manifiesto. Ambos participantes comparan esos valores antes de abrirlo.
@@ -88,7 +90,7 @@ Los eventos detallados pueden ir en un sidecar con secuencia y UTC. Dirección c
 
 ## Redacción y cruce
 
-Nunca guardar en evidencia: código/capability reutilizable, PUID o DeviceID completo, IP, puerto, nombre de red, token, credencial, secreto de cliente, ruta de perfil o variables EOS. Para correlacionar se usa un salt exclusivo del `run_id`; ambos extremos deben producir hashes cruzados compatibles sin publicar el dato base.
+Nunca guardar en evidencia: código/capability reutilizable, PUID o DeviceID completo, IP, puerto, nombre de red, token, valor literal de `ClientId`/`ClientSecret`, ruta de perfil o variables EOS. Para correlacionar se usa un salt exclusivo del `run_id`; ambos extremos deben producir hashes cruzados compatibles sin publicar el dato base.
 
 La corrida puede marcar `wan=true` sólo si:
 

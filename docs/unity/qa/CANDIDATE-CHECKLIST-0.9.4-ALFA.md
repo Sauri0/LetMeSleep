@@ -5,7 +5,7 @@ Marcar `PASS`, `BLOCK` o `N/A` con motivo y vínculo al recibo. `N/A` no se perm
 ## Preparar
 
 - [ ] Commit exacto limpio; Unity `6000.3.24f1`; `Packages/packages-lock.json` fijado; escenas, prefabs, scripts y `.meta` versionados.
-- [ ] Sin credenciales, códigos de sala, PUID, DeviceID, IP, tokens, caches Unity ni secretos EOS en Git, logs o ZIP.
+- [ ] Sin códigos de sala, PUID, DeviceID, IP, tokens, caches Unity ni credenciales administrativas, personales o `TrustedServer` en Git, logs o ZIP. La configuración EOS incluida en el build pertenece sólo al cliente de juego `Peer2Peer`/`User required`, con política revisada y sin permisos Connect.
 - [ ] Build informa `0.9.4-alfa`; un único protocolo online coincide con manifiesto/handshake; UI sólo ofrece Sangre y Casa con patio.
 - [ ] Los tests Unity trazan su gate U094 y contienen al menos un negativo que falla al inyectar la regresión.
 
