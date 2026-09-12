@@ -10,7 +10,7 @@ Unity 6000.3.24f1, URP template com.unity.template.urp-blank. First CLI project-
 
 Packages installed and imported: Input System 1.20.0, URP 17.3.0, navigation 2.0.14, test framework 1.6.0, uGUI 2.0.0, pinned EOS Plugin 6.1.2 (0b8f679193c5b6c74df5bddbe3248c9d7aadaee8), official com.unity.pipeline 0.7.0-exp.1. Unused template packages removed through PackageManager. No paid Unity AI enrollment.
 
-All six existing team tasks are contributing. M1 source models/15 clips per species and import builder integrated; M2 sample-room native geometry import passed and full house/patio plus lobby is in production; W1 authoritative Sangre/physics/input/bots integrated, QA follow-ups underway; W2 cameras/audio/presentation bridge underway; UI actual screens underway; QA independent Core/gameplay/packet tests integrated. See AGENTS.md for ownership. Director holds the resident Unity editor; M2 has the CPU Blender generation slot.
+The existing team tasks own separate worktrees. M1 source models/15 clips per species and builder are integrated, but its task is currently unavailable through app routing. M2 owns maps; W1 gameplay and physics; W2 presentation/audio; UI screens; QA independent tests/review. See AGENTS.md. Director holds the resident Unity editor and integrates their deltas.
 
 Spatial contract: Unity metres, Y-up/Z-forward. Human capsule radius .25, height 1.72, eye 1.53, crouch height 1.0. Mosquito collision radius .055, initial model length .19/span .24 (wings not collision). Main circulation >=1.8 and stairs >=1.6, door sample clear opening1.10x2.20. Values remain tunable using actual visual/physical tests.
 
@@ -33,3 +33,13 @@ Spatial contract: Unity metres, Y-up/Z-forward. Human capsule radius .25, height
 - M1 is unavailable through app routing (notLoaded / thread not found). Existing sources retained. W2 has temporary exclusive CLI slot on resident graphics editor PID18620 to diagnose identical pose renders and tool-axis presentation. Director is doing file work until slot released. No second editor.
 - Full map source and seven tool markers delivered; rebuild required after latest delta. Presentation prefab regenerated once; new source requires another build after W2 diagnostic. Boot scene builder source exists, pending execution.
 - Active D3D11 editor log N:/Unity/Setup/unity-render-resident.log; old nographics PID30500 exited. No playable Unity release published yet. WAN/friends, GTX1660Ti measurements and user art review remain external pending.
+
+## Candidate checkpoint 2026-09-12 11:49 UTC
+
+- Director integrated team changes through 2418efe. Native EditMode 61/61 and final PlayMode 2/2 passed. Final PlayMode receipt: ALFA-TRAINING-PLAYMODE-FINAL-20260912.json (1.45 seconds; two training roles and cleanup).
+- Real rendered review corrected lobby inward normals, nighttime lighting, missing attic gables, UI selection glyph and narrow labels. House has 383 meshes /378 colliders, nine working door anchors and seven tool pickups. Final native captures remain at N:/LetMeSleep/Artifacts/review; these are game renders, not concept images.
+- Human capsule no longer receives displacement from insect colliders. No-input native hold and authority-command defense validated; see QA receipts for exact partial scope. Body-down camera composition reviewed separately from input validation.
+- EOS production portal read-only review confirmed redistributable Peer2Peer client policy. Native UI create/ready/leave succeeds. Two independent identities/relay/WAN remain unverified; never label online accepted from this result.
+- Candidate source now includes bounded pre-Begin timeout, live menu models, PC quality default, isolated opt-in development-player probe, and clean-commit build/ZIP provenance. Preparing first complete Windows candidate; no Unity release is published at this checkpoint.
+- Resident graphics editor PID18620 is Director-owned. Team source freeze for packaging; M1 routing remains unavailable.
+- Alfa can be published as a candidate. The plan explicitly requires friends/WAN and Branko visual/play acceptance before beta; these are unresolved external gates, not automatic approvals from elapsed time. No later stage started.

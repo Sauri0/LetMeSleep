@@ -46,6 +46,8 @@ namespace LetMeSleep.Bootstrap
         }
         private void ApplyLiveAppearance()
         {
+            if(menuCharacters && menuCharacters.activeInHierarchy)
+                foreach(var view in menuCharacters.GetComponentsInChildren<CharacterView>()) ApplyAppearance(view,appearance);
             if(lobbyMovement && room?.Current!=null)
                 foreach(var member in room.Current.Members)
                     if(lobbyMovement.TryGetVisual(member.Id,out var visual)) ApplyLive(visual.GetComponent<CharacterView>(),member.Id);

@@ -60,8 +60,14 @@ namespace LetMeSleep.Online
         {
             now = time;
             if (!clockStarted) { clockStarted = true; barrierStart = now; retryAt = now + 1; lastOwnerPacket = now; }
-            if (disposed || failed || config == null) return;
+            if (disposed || failed) return;
             if (lobby.State != LobbyState.Connected) { Fail("RoomClosed"); return; }
+            if (config == null)
+            {
+                if (!lobby.IsOwner && room.Current?.Phase == RoomPhase.Playing && now - barrierStart > 35)
+                    Fail("HostBeginTimedOut");
+                return;
+            }
             if (room.Current?.Phase != RoomPhase.Playing || config.RoundId != (ulong)room.Current.Round) return;
             if (lobby.IsOwner && waiting.Count > 0)
             {

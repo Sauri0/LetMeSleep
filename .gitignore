@@ -16,6 +16,8 @@ game/.godot/
 /private/
 /unity/Assets/StreamingAssets/*.local.json
 /unity/Assets/StreamingAssets/EOS/
+/unity/Assets/StreamingAssets/EOS.meta
+/work/updater-tests.exe
 /unity/Assets/Resources/PerformanceTestRun*.json*
 /unity/etc/
 work/tools/

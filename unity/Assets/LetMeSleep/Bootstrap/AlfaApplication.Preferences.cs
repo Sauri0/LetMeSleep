@@ -29,6 +29,7 @@ namespace LetMeSleep.Bootstrap
             new NamedColorOption("green", "Oliva", new Color(.31f,.36f,.18f)), new NamedColorOption("purple", "Violeta", new Color(.37f,.2f,.43f)) };
         private void LoadPreferences()
         {
+            settings.QualityIndex = Math.Max(0,Array.IndexOf(QualitySettings.names,"PC"));
             resolutions = Screen.resolutions.GroupBy(r => new { r.width, r.height }).Select(g => g.Last()).ToArray();
             settings.ResolutionIndex = Math.Max(0, Array.FindIndex(resolutions, r => r.width == Screen.currentResolution.width && r.height == Screen.currentResolution.height));
             try

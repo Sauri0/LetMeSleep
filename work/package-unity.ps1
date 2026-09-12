@@ -7,6 +7,9 @@ $ErrorActionPreference='Stop'
 if ($Version -notmatch '^\d+\.\d+\.\d+-(alfa|beta|omega|delta|gamma)$') { throw 'Invalid playtest version.' }
 $buildPath=[IO.Path]::GetFullPath($BuildDirectory)
 $outputPath=[IO.Path]::GetFullPath($OutputDirectory)
+$receiptPath=Join-Path $buildPath 'build-receipt.json'
+$receipt=Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
+if($receipt.result -ne 'Succeeded' -or $receipt.errors -ne 0 -or $receipt.sourceDirty -ne $false -or $receipt.sourceCommit -notmatch '^[a-f0-9]{40}$' -or $receipt.version -ne $Version) { throw 'Build provenance is missing, dirty, or does not match the requested version.' }
 $required=@('Let-me-sleep.exe','UnityPlayer.dll','Let-me-sleep_Data/globalgamemanagers','Let-me-sleep_Data/StreamingAssets/online.local.json')
 foreach($relative in $required) { if(!(Test-Path -LiteralPath (Join-Path $buildPath $relative) -PathType Leaf)) { throw "Incomplete Unity build: $relative" } }
 if(Get-ChildItem -LiteralPath $buildPath -Recurse -File -Filter 'GfxPluginNativeRender-x64.dll') { throw 'Unused native overlay helper must be excluded by build policy.' }
@@ -23,7 +26,7 @@ foreach($file in Get-ChildItem -LiteralPath $package -Recurse -File | Sort-Objec
     $relative=$file.FullName.Substring($package.Length+1).Replace('\','/')
     $files[$relative]=(Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
 }
-$manifest=[ordered]@{version=$Version;executable='Let-me-sleep.exe';engine='Unity';files=$files}
+$manifest=[ordered]@{version=$Version;executable='Let-me-sleep.exe';engine='Unity';sourceCommit=$receipt.sourceCommit;sourceDirty=$receipt.sourceDirty;unity=$receipt.unity;builtUtc=$receipt.utc;files=$files}
 $manifest|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $package 'BUILD.json') -Encoding utf8
 $zip=Join-Path $outputPath ($packageName+'.zip')
 if(Test-Path -LiteralPath $zip) { throw 'Package already exists; choose a fresh output directory to retain previous evidence.' }

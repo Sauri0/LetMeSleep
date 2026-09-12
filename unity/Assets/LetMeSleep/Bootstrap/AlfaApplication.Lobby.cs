@@ -18,6 +18,7 @@ namespace LetMeSleep.Bootstrap
         private string lobbyRosterKey;
         private void SyncLobbyMovement(RoomView view)
         {
+            if(menuCharacters) menuCharacters.SetActive(false);
             string key = string.Join("|",view.Members.Select(m=>m.Id));
             if (lobbyMovement && key == lobbyRosterKey) return;
             var occupied = new System.Collections.Generic.List<Vector3>();

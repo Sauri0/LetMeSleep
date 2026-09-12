@@ -1,0 +1,27 @@
+{
+  "status": "completed",
+  "duration": 1.45,
+  "summary": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LetMeSleep.Tests.PlayMode.TrainingBootstrapPlayModeTests.HumanTrainingBuildsAndCleansACompleteRuntime",
+      "Status": "Passed",
+      "Duration": 1.0594382,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.PlayMode.TrainingBootstrapPlayModeTests.MosquitoTrainingBuildsAndCleansACompleteRuntime",
+      "Status": "Passed",
+      "Duration": 0.3670689,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

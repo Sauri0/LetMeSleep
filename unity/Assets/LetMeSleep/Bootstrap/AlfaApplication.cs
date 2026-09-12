@@ -36,6 +36,7 @@ namespace LetMeSleep.Bootstrap
         private GameplayRuntime game;
         private GameObject presentation;
         private EnvironmentMapDefinition map;
+        private GameObject menuCharacters;
         private string playerName = "Jugador", joinCode, lastError = "";
         private bool pendingOnline, createOnline, training, showingResults;
         private string closingError = "";
@@ -53,6 +54,8 @@ namespace LetMeSleep.Bootstrap
 #if UNITY_EDITOR
                 return "N:/LetMeSleep/UserData/Unity";
 #else
+                string probe=RequestedProbeOutput();
+                if(probe!=null) return Path.Combine(probe,"userdata");
                 return Application.persistentDataPath;
 #endif
             }
@@ -65,6 +68,7 @@ namespace LetMeSleep.Bootstrap
                 new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab)));
             menuAudio = Instantiate(MenuAudioPrefab).GetComponent<AlfaAudioDirector>();
             ui.SetRememberedPlayerName(playerName); LoadMap(false); menuAudio.EnterMenu(); PresentPreferences(); ApplySettingsValues();
+            StartBuildProbeIfRequested();
         }
         private void Update()
         {
@@ -126,7 +130,7 @@ namespace LetMeSleep.Bootstrap
         }
         public void CancelOnline()
         {
-            pendingOnline = false;
+            pendingOnline = false; intentionalLeave = true;
             if (lobby != null) lobby.Leave();
             ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.Cancelled));
         }
@@ -214,6 +218,7 @@ namespace LetMeSleep.Bootstrap
             StopGame(); training = practice; showingResults = false; LoadMap(true); menuAudio.gameObject.SetActive(false);
             var root = new GameObject("Gameplay"); game = root.AddComponent<GameplayRuntime>();
             game.World.MapRoot = map.transform;
+            game.NavigationData = map.SpatialData;
             game.IsHost = practice || lobby.IsOwner; game.AutomaticTick = false;
             presentation = Instantiate(GameplayPresentationPrefab); presentation.GetComponent<GameplayPresentationRoot>().Bind(game);
             game.RoundFinished += (_, __) => { if (!training) room?.FinishRound(); };
@@ -278,6 +283,23 @@ namespace LetMeSleep.Bootstrap
             MenuCamera.enabled = true; MenuCamera.GetComponent<AudioListener>().enabled = true;
             MenuCamera.transform.position = map.PlayBounds.center + new Vector3(5, 4, -6);
             MenuCamera.transform.LookAt(map.PlayBounds.center + Vector3.up);
+            menuCharacters = null;
+            if (!house)
+            {
+                var cameraAnchor = map.PresentationAnchors.Find("MainMenuCamera");
+                if (cameraAnchor) { MenuCamera.transform.SetPositionAndRotation(cameraAnchor.position,cameraAnchor.rotation); MenuCamera.fieldOfView=55; }
+                menuCharacters = new GameObject("MenuCharacterDisplay"); menuCharacters.transform.SetParent(map.transform,false);
+                CreateMenuCharacter(HumanPrefab,"HumanMenuStage",0);
+                CreateMenuCharacter(MosquitoPrefab,"MosquitoMenuStage",1);
+            }
+        }
+        private void CreateMenuCharacter(GameObject prefab,string anchorName,int motion)
+        {
+            var anchor=map.PresentationAnchors.Find(anchorName); if(!anchor) return;
+            var instance=Instantiate(prefab,anchor.position,anchor.rotation,menuCharacters.transform);
+            if(prefab==MosquitoPrefab) instance.transform.localScale*=2.5f;
+            foreach(var collider in instance.GetComponentsInChildren<Collider>(true)) collider.enabled=false;
+            var view=instance.GetComponent<CharacterView>(); ApplyAppearance(view,appearance); view.PlayMotion(motion);
         }
         private static ulong NewEpoch() { ulong value = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray(), 0); return value == 0 ? 1ul : value; }
         private void ShowOnlineError(string text) => ui.PresentOnline(new OnlineUiState(text.Contains("IncompatibleVersion") ? OnlineOperationPhase.IncompatibleVersion : OnlineOperationPhase.RecoverableError, text, canRetry: true));
