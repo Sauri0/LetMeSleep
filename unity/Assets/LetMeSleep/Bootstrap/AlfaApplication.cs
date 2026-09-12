@@ -41,6 +41,7 @@ namespace LetMeSleep.Bootstrap
         private bool pendingOnline, createOnline, training, showingResults;
         private string closingError = "";
         private bool intentionalLeave;
+        private bool quiescing;
         private int activeRound = -1;
         private RoomPhase lastPhase = RoomPhase.Closed;
         private SpawnActor[] activeRoster;
@@ -62,6 +63,7 @@ namespace LetMeSleep.Bootstrap
         }
         private void Start()
         {
+            if (quiescing) return;
             try { Directory.CreateDirectory(DataPath); } catch (Exception e) when (e is IOException || e is UnauthorizedAccessException) { saveError="No se puede guardar en la carpeta de usuario."; }
             LoadPreferences();
             ui = AlfaUiRuntime.Create(this, new AlfaUiDependencies(HeadingFont, BodyFont, preview:
@@ -73,6 +75,7 @@ namespace LetMeSleep.Bootstrap
         }
         private void Update()
         {
+            if (quiescing) return;
             double now = Time.realtimeSinceStartupAsDouble;
             connection?.Tick(now); lobby?.Tick(now); room?.Tick(now); transport?.Poll(); gameNetwork?.Tick(now);
             if (pendingOnline && connection?.State == ConnectionState.Ready) OpenPendingRoom();
@@ -91,6 +94,7 @@ namespace LetMeSleep.Bootstrap
         public void JoinRoom(string name, string code) => BeginOnline(name, code);
         private void BeginOnline(string name, string code)
         {
+            if (quiescing) return;
             if (pendingOnline || lobby?.State == LobbyState.Connected || lobby?.State == LobbyState.Leaving) return;
             playerName = (name ?? "").Trim(); if (playerName.Length == 0 || playerName.Length > 24) { ShowOnlineError("Escribí un nombre de hasta 24 caracteres."); return; }
             intentionalLeave = false; closingError = ""; createOnline = code == null; joinCode = code; pendingOnline = true; lastError = "";
@@ -113,6 +117,7 @@ namespace LetMeSleep.Bootstrap
         }
         private void OpenPendingRoom()
         {
+            if (quiescing) return;
             pendingOnline = false;
             room?.Dispose(); transport?.Dispose(); lobby?.Dispose();
             lobby = new EosLobbySession(connection); transport = new EosPeerTransport(connection, lobby);
@@ -126,6 +131,7 @@ namespace LetMeSleep.Bootstrap
         }
         private void OnLobbyChanged()
         {
+            if (quiescing) return;
             if (lobby.State == LobbyState.Closed && !intentionalLeave)
             { StopGame(); StopLobbyMovement(); LoadMap(false); ui.ShowJoinRoom(); if(closingError.Length>0) ShowOnlineError(closingError); else ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.RoomClosed)); }
         }
@@ -149,7 +155,7 @@ namespace LetMeSleep.Bootstrap
         }
         private void OnRoomChanged(RoomView view)
         {
-            if (view == null) return;
+            if (quiescing || view == null) return;
             training = false;
             if (view.Phase == RoomPhase.Waiting)
             {
@@ -162,7 +168,7 @@ namespace LetMeSleep.Bootstrap
                 gameNetwork = new OnlineGameplaySession(lobby, room, transport, LocalId, map.ContentHash,
                     game.Authority, game, () => game.World.GetDoorDefinitions(), () => game.World.GetToolDefinitions());
                 gameNetwork.BeginReceived += BeginGame;
-                gameNetwork.Failed += reason => InterruptGame("Se perdió la conexión con la partida. " + reason);
+                gameNetwork.Failed += OnGameNetworkFailed;
                 game.InputReady += gameNetwork.SendInput; game.ActionReady += gameNetwork.SendAction;
                 game.SnapshotReady += state => {
                     gameNetwork?.SendSnapshot(state);
@@ -196,12 +202,14 @@ namespace LetMeSleep.Bootstrap
         }
         public void LeaveRoom()
         {
+            if (quiescing) return;
             pendingOnline = false; intentionalLeave = true; StopGame(); StopLobbyMovement(); lobby?.Leave(); room?.Dispose(); room = null;
             transport?.Dispose(); transport = null; lastPhase = RoomPhase.Closed; activeRound = -1;
             LoadMap(false); menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu(); ui.ShowMainMenu();
         }
         public void StartTraining(AlfaRole role, string modeId, string mapId)
         {
+            if (quiescing) return;
             if (modeId != AlfaUiController.BloodModeId || mapId != RoomRules.AlfaMap) return;
             trainingRole = role; training = true; StopLobbyMovement(); PrepareGame(true);
             var human = role == AlfaRole.Human;
@@ -216,16 +224,18 @@ namespace LetMeSleep.Bootstrap
         public void CancelTraining() { if (training) LeaveRoom(); }
         private void PrepareGame(bool practice)
         {
+            if (quiescing) return;
             StopGame(); training = practice; showingResults = false; LoadMap(true); menuAudio.gameObject.SetActive(false);
             var root = new GameObject("Gameplay"); game = root.AddComponent<GameplayRuntime>();
             game.World.MapRoot = map.transform;
             game.NavigationData = map.SpatialData;
             game.IsHost = practice || lobby.IsOwner; game.AutomaticTick = false;
             presentation = Instantiate(GameplayPresentationPrefab); presentation.GetComponent<GameplayPresentationRoot>().Bind(game);
-            game.RoundFinished += (_, __) => { if (!training) room?.FinishRound(); };
+            game.RoundFinished += (_, __) => { if (!quiescing && !training) room?.FinishRound(); };
         }
         private void BeginGame(GameplayRoundConfig config, IReadOnlyList<SpawnActor> roster)
         {
+            if (quiescing) return;
             activeRoster = roster.ToArray(); var local = roster.First(a => a.OwnerPuid == (training ? "practice" : LocalId));
             game.LocalActorId = local.ActorId; game.LocalPrincipal = local.OwnerPuid;
             game.MouseSensitivity = .002f * (local.Role == PlayerRole.Human ? settings.HumanSensitivity : settings.MosquitoSensitivity);
@@ -262,8 +272,10 @@ namespace LetMeSleep.Bootstrap
         public void SetGameplayInputBlocked(bool blocked) { game?.SetInputBlocked(blocked); }
         public void ResumeGame() { if (game?.LatestSnapshot != null) { game.SetInputBlocked(false); ui.ShowGameplay(); } }
         public void ReturnToLobby() { if (training) LeaveRoom(); else room?.ReturnToLobby(); }
+        private void OnGameNetworkFailed(string reason) => InterruptGame("Se perdió la conexión con la partida. " + reason);
         private void InterruptGame(string reason)
         {
+            if (quiescing) return;
             if (lobby?.IsOwner == true && room?.Current?.Phase == RoomPhase.Playing) room.FinishRound();
             showingResults = true; game?.SetInputBlocked(true);
             ui.PresentResults(new ResultsUiState(MatchOutcome.Interrupted, training, training || lobby.IsOwner, 0, 20, 0, reason));
@@ -278,6 +290,7 @@ namespace LetMeSleep.Bootstrap
         }
         private void LoadMap(bool house)
         {
+            if (quiescing) return;
             if (map) { map.gameObject.SetActive(false); Destroy(map.gameObject); }
             map = Instantiate(house ? HousePrefab : LobbyPrefab).GetComponent<EnvironmentMapDefinition>();
             LightingRig.BindMap(map.PresentationAnchors,house);
@@ -305,8 +318,97 @@ namespace LetMeSleep.Bootstrap
         }
         private static ulong NewEpoch() { ulong value = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray(), 0); return value == 0 ? 1ul : value; }
         private void ShowOnlineError(string text) => ui.PresentOnline(new OnlineUiState(text.Contains("IncompatibleVersion") ? OnlineOperationPhase.IncompatibleVersion : OnlineOperationPhase.RecoverableError, text, canRetry: true));
-        public void QuitGame() { Application.Quit(); }
-        private void OnDestroy() { gameNetwork?.Dispose(); room?.Dispose(); transport?.Dispose(); lobby?.Dispose(); connection?.Dispose(); if (menuAudio) { menuAudio.StopAll(); Destroy(menuAudio.gameObject); } if (ui) Destroy(ui.gameObject); }
+        public void QuitGame()
+        {
+            Quiesce();
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+
+        // Also called when only this component is destroyed and the host remains alive.
+        // Mark closed before invoking lifecycle hooks: disposal must never rebuild menu/game roots.
+        private void Quiesce()
+        {
+            if (quiescing) return;
+            quiescing = true; pendingOnline = false; intentionalLeave = true; enabled = false;
+            StopAllCoroutines();
+            if (ui) ui.FeedbackRequested -= OnUiFeedback;
+            if (room != null) room.RoomChanged -= OnRoomChanged;
+            if (lobby != null) lobby.Changed -= OnLobbyChanged;
+            if (transport != null)
+            {
+                transport.PacketReceived -= ReceiveAppearance;
+                transport.PacketReceived -= ReceiveLobbyPacket;
+            }
+            if (lobbyFrames != null) lobbyFrames.MessageReceived -= ReceiveLobbyMessage;
+            if (lobbyMovement)
+            {
+                lobbyMovement.InputReady -= SendLobbyInput;
+                lobbyMovement.SnapshotReady -= SendLobbySnapshot;
+            }
+            if (gameNetwork != null)
+            {
+                gameNetwork.BeginReceived -= BeginGame;
+                gameNetwork.Failed -= OnGameNetworkFailed;
+                if (game)
+                {
+                    game.InputReady -= gameNetwork.SendInput;
+                    game.ActionReady -= gameNetwork.SendAction;
+                }
+            }
+
+            // Silence is synchronous; Destroy itself is deferred until the end of the frame.
+            ShutdownStep(() => DeactivateOwnedRoot(presentation));
+            ShutdownStep(() => DeactivateOwnedRoot(menuAudio ? menuAudio.gameObject : null));
+            ShutdownStep(() => DeactivateOwnedRoot(game ? game.gameObject : null));
+            ShutdownStep(() => DeactivateOwnedRoot(lobbyMovement ? lobbyMovement.gameObject : null));
+            DisposeForShutdown(ref gameNetwork);
+            ShutdownStep(StopGame);
+            ShutdownStep(StopLobbyMovement);
+            // A failed StopRound/Unbind must not strand a separate owned root.
+            ShutdownStep(() => { if (game) Destroy(game.gameObject); }); game = null;
+            ShutdownStep(() => { if (presentation) Destroy(presentation); }); presentation = null;
+            ShutdownStep(() => { if (lobbyMovement) Destroy(lobbyMovement.gameObject); }); lobbyMovement = null;
+            activeRoster = null; showingResults = false;
+            DisposeForShutdown(ref room);
+            DisposeForShutdown(ref transport);
+            DisposeForShutdown(ref lobby);
+            DisposeForShutdown(ref connection);
+
+            // Release only roots instantiated by this bootstrap, never prefab assets or shared cameras.
+            ShutdownStep(() => { if (menuAudio) Destroy(menuAudio.gameObject); }); menuAudio = null;
+            ShutdownStep(() => { if (ui) { ui.gameObject.SetActive(false); Destroy(ui.gameObject); } }); ui = null;
+            ShutdownStep(() => { if (map) { DeactivateOwnedRoot(map.gameObject); Destroy(map.gameObject); } }); map = null;
+            menuCharacters = null;
+        }
+
+        private static void DeactivateOwnedRoot(GameObject root)
+        {
+            if (!root) return;
+            try
+            {
+                foreach (var director in root.GetComponentsInChildren<AlfaAudioDirector>(true))
+                    if (director) ShutdownStep(director.StopAll);
+            }
+            finally { root.SetActive(false); }
+        }
+
+        private static void DisposeForShutdown<T>(ref T resource) where T : class, IDisposable
+        {
+            var owned = resource; resource = null;
+            if (owned != null) ShutdownStep(owned.Dispose);
+        }
+
+        private static void ShutdownStep(Action stop)
+        {
+            try { stop(); }
+            catch (Exception exception) { Debug.LogException(exception); }
+        }
+
+        private void OnDestroy() { Quiesce(); }
     }
 }
 
