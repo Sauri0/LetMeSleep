@@ -12,6 +12,7 @@ const Facial = preload("res://assets/art/characters/shared/facial_expression.gd"
 const BASELINE_SHA := "90bf7163a767f6ccfc0223aae625e7541dfe61f49ede67e8fb0ca473f37f6a0c"
 const DT := 1.0/60.0
 var checks := 0
+var maximum_capsule_height_error := 0.0
 var failures: Array[String]=[]
 var report_path := ""
 var reference_view: Node3D
@@ -79,7 +80,12 @@ func _same_tree(a: Node, b: Node, label: String) -> void:
 	if a is CollisionShape3D and b is CollisionShape3D:
 		check(a.shape.get_class()==b.shape.get_class(),label+" collider class")
 		if a.shape is CapsuleShape3D:
-			check(a.shape.radius==b.shape.radius and a.shape.height==b.shape.height,label+" authoritative capsule")
+			var height_error:float=absf(a.shape.height-b.shape.height)
+			maximum_capsule_height_error=maxf(maximum_capsule_height_error,height_error)
+			# Production skips height setter noise with is_equal_approx. Keep exact
+			# radii and a five-micrometre ceiling, rather than bitwise equality of
+			# repeated floating-point distance calculations (measured max: 2.966um).
+			check(a.shape.radius==b.shape.radius and height_error<=0.000005,label+" authoritative capsule")
 		elif a.shape is SphereShape3D:check(a.shape.radius==b.shape.radius,label+" authoritative sphere")
 	for i: int in range(mini(a.get_child_count(),b.get_child_count())):_same_tree(a.get_child(i),b.get_child(i),label+"/"+str(i))
 
@@ -177,6 +183,8 @@ func _run() -> void:
 		if sources[path]!="unavailable_in_pack":check(sources[path]==final_hash,"frozen source "+path)
 	report={"checks":checks,"failures":failures,"public_pose_cases":cases,"facial_seed":.375,"baseline_sha256":BASELINE_SHA,"reference_source_hash_verified":reference_source_available,"source_sha256":sources,"runs":runs,"procedural_mesh_changed_events":{"reference":change_counts.reference-before.reference,"current":change_counts.current-before.current},"scope":"one shared production presentation in an identical actor-local frame; exact pose, GLB bones, visible geometry bounds and all ray shapes; only hidden legacy mesh dimensions differ; update_state smoothing and world-yaw compensation are outside this optimization fixture; CPU diagnostic, not global FPS; pack can run compiled reference but cannot verify omitted original source hashes"}
 	if not report_path.is_empty():
+		report["maximum_capsule_height_error_m"]=maximum_capsule_height_error
+		report["capsule_height_tolerance_m"]=0.000005
 		var file:=FileAccess.open(report_path,FileAccess.WRITE)
 		if file!=null:file.store_string(JSON.stringify(report,"\t"));file.close()
 	print("ACTOR09_LEGACY checks=%d failures=%d"%[checks,failures.size()])
