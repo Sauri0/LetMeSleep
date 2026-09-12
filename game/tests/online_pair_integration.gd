@@ -157,6 +157,17 @@ func run() -> void:
 	check(host_network.sim.phase == "playing" and host_network.sim.actors.size() == 2, "authoritative two-player simulation started")
 	check(host_network._pending_map.is_empty() and not host_network._prepared_map.is_empty() and host_network._prepared_map == guest_network._prepared_map, "both recipients loaded and acknowledged identical authored map")
 	check(host_network._prepared_map.id == host_network.config.map_id and guest_network.latest.get("config", {}).get("map_fingerprint") == host_network._prepared_map.fingerprint, "round snapshot matches acknowledged map fingerprint")
+	var accepted_state: Dictionary = guest_network.latest.duplicate(true)
+	var wrong_map: Dictionary = accepted_state.duplicate(true)
+	wrong_map.config.map_id = "lobby"
+	wrong_map.tick = int(accepted_state.tick) + 1000
+	guest_network._accept_snapshot(wrong_map)
+	check(guest_network.latest == accepted_state, "unavailable map snapshot rejected before advancing tick")
+	var wrong_fingerprint: Dictionary = accepted_state.duplicate(true)
+	wrong_fingerprint.config.map_fingerprint = "other-build"
+	wrong_fingerprint.tick = int(accepted_state.tick) + 1000
+	guest_network._accept_snapshot(wrong_fingerprint)
+	check(guest_network.latest == accepted_state, "unacknowledged geometry snapshot rejected before advancing tick")
 	if not await until(func(): return observed.guest_private > 0 and observed.host_private > 0, "private snapshots delivered to each recipient"):
 		await finish();return
 	guest_network.send_input(2, Vector3.LEFT, 0.5, 0.1, false)
