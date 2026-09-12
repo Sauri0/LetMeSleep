@@ -13,7 +13,7 @@ const $=id=>document.getElementById(id), text=(tag,value,cls)=>{const e=document
 const visuals=a=>(a.evidence||[]).filter(e=>['image','video'].includes(e.type));
 const areas={character:'Personajes',tool:'Herramientas',environment_map:'Mapas',environment_dressing:'Decoración',environment_sample:'Muestras de entorno',prop_door:'Puertas',environment_prop:'Mobiliario y vegetación',generated_visual_asset:'Materiales y piezas',ui:'Interfaz'};
 const area=a=>areas[a.category]||a.category||'Sin clasificar';
-const label=a=>visuals(a).some(e=>e.current===true)?'Capturado · revisión parcial':visuals(a).length?'Sólo evidencia histórica':'Captura pendiente';
+const label=a=>a.visualReview==='rejected_by_user'?'Rechazado por Branko · rehacer':visuals(a).some(e=>e.current===true)?'Capturado · revisión parcial':visuals(a).length?'Sólo evidencia histórica':'Captura pendiente';
 const stringify=v=>typeof v==='string'?v:JSON.stringify(v);
 const describe=v=>typeof v==='string'?v:[v.name||v.id||v.type||v.description,v.values?.join(', '),v.note||v.reason||v.detail].filter(Boolean).join(' · ')||stringify(v);
 for(const [key,getter] of [['category',area],['status',label]])for(const v of [...new Set(assets.map(getter))].sort())$(key).append(new Option(v,v));
@@ -41,7 +41,8 @@ function render(){
  const filtered=assets.filter(a=>(!$('category').value||area(a)===$('category').value)&&(!$('status').value||label(a)===$('status').value)&&(area(a)+' '+JSON.stringify(a)).toLocaleLowerCase().includes(query));
  $('cards').replaceChildren();$('count').textContent=`${filtered.length} de ${assets.length} fichas`;$('empty').hidden=filtered.length>0;
  for(const a of filtered){
-  const c=document.createElement('article');c.append(text('small',area(a)+' · '+(a.owner||'Responsable pendiente')),text('h2',a.name||a.id),text('span',label(a),'tag'),text('p',a.id,'path'));
+  const c=document.createElement('article');c.append(text('small',area(a)+' · '+(a.owner||'Responsable pendiente')),text('h2',a.name||a.id),text('span',label(a),'tag'+(a.visualReview==='rejected_by_user'?' issues':'')),text('p',a.id,'path'));
+  if(a.visualReviewNote)c.append(text('p',a.visualReviewNote,'evidence-note'));
   const current=visuals(a).filter(e=>e.current===true),history=visuals(a).filter(e=>e.current!==true);
   if(current.length){gallery(c,current,a);c.append(text('p',`${current.length} vistas capturadas. Abrí una imagen para verla completa. Aprobación artística pendiente.`,'evidence-note muted'));}
   else c.append(text('p','Faltan láminas y clips de esta revisión.','muted'));
