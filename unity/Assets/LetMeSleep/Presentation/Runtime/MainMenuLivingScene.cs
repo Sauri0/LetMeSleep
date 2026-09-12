@@ -134,8 +134,18 @@ namespace LetMeSleep.Presentation
                 AnimationPlayableOutput.Create(graph,"Seated human",bindings.HumanAnimator).SetSourcePlayable(humanMixer);
                 flight=Clip(bindings.Flight);
                 AnimationPlayableOutput.Create(graph,"Flying mosquito",bindings.MosquitoAnimator).SetSourcePlayable(flight);
-                warm=CreateLight("Menu warm seat light",bindings.WarmLightAnchor,new Color(1f,.72f,.48f),.7f,3.4f);
-                cool=CreateLight("Menu cool fill",bindings.CoolLightAnchor,new Color(.55f,.68f,1f),.25f,4.5f);
+                warm=CreateLight("Menu warm seat light",bindings.WarmLightAnchor,new Color(1f,.76f,.53f),2.2f,4.3f);
+                cool=CreateLight("Menu cool fill",bindings.CoolLightAnchor,new Color(.58f,.72f,1f),.45f,3.8f);
+                if (warm)
+                {
+                    // A single local cone models the sitter and seat rather than washing the whole wall.
+                    warm.type=LightType.Spot; warm.spotAngle=100f; warm.innerSpotAngle=70f;
+                    warm.transform.LookAt(bindings.HumanSeatRoot.TransformPoint(new Vector3(0,.95f,.35f)));
+                    warm.shadows=LightShadows.Soft;
+                    warm.shadowResolution=UnityEngine.Rendering.LightShadowResolution.Low;
+                    warm.shadowStrength=.8f; warm.shadowBias=.025f; warm.shadowNormalBias=.08f;
+                    warm.shadowNearPlane=.05f;
+                }
                 graph.Play(); Sample();
                 }
             catch (Exception exception)
@@ -162,6 +172,7 @@ namespace LetMeSleep.Presentation
             item.transform.SetPositionAndRotation(anchor.position,anchor.rotation);
             var light=item.AddComponent<Light>(); light.type=LightType.Point; light.color=color;
             light.intensity=intensity; light.range=range; light.shadows=LightShadows.None;
+            light.renderMode=LightRenderMode.ForcePixel;
             return light;
         }
         private bool ReferencesAlive()
