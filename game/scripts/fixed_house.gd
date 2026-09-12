@@ -11,6 +11,7 @@ const Geometry=preload("res://scripts/navigation_geometry.gd")
 const DoorGeometry=preload("res://scripts/door_geometry.gd")
 const Canonical=preload("res://scripts/house_validation.gd")
 const AlfaLibrary=preload("res://assets/art/house/alfa_library.gd")
+const Architecture=preload("res://scripts/house_architecture.gd")
 var d: Dictionary
 var solid_keys: Dictionary={}
 var room_index: Dictionary={}
@@ -33,6 +34,8 @@ func build() -> Dictionary:
 	_stairs()
 	_furniture()
 	_outside()
+	d.exterior.architecture=Architecture.plan(d.building_bounds,d.bounds)
+	d.obstacles.append_array(d.exterior.architecture.collision_boxes)
 	_tasks_and_pickups()
 	_spawns()
 	_navigation()
@@ -227,7 +230,7 @@ func _furniture() -> void:
 		for p: Array in plans[id]:_piece(id,p[0],p[1],p[2],p[3],p[4],p[5])
 
 func _outside() -> void:
-	for spec: Array in [["front","Frente",Rect2(-19.5,-19.5,39,9.5)],["patio","Patio",Rect2(-19.5,10,39,9.5)],["west-garden","Jardín oeste",Rect2(-19.5,-10,7.5,20)],["east-garden","Jardín este",Rect2(12,-10,7.5,20)]]:
+	for spec: Array in [["front","Frente",Rect2(-20,-20,40,10)],["patio","Patio",Rect2(-20,10,40,10)],["west-garden","Jardín oeste",Rect2(-20,-10,8,20)],["east-garden","Jardín este",Rect2(12,-10,8,20)]]:
 		var rect: Rect2=spec[2]
 		d.exterior.areas.append({"id":spec[0],"label":spec[1],"kind":"garden","bounds":AABB(Vector3(rect.position.x,0,rect.position.y),Vector3(rect.size.x,8.8,rect.size.y))})
 	for points: Array in [[Vector3(0,0,-17),Vector3(0,0,-9.875)],[Vector3(0,0,9.875),Vector3(0,0,16)],[Vector3(-16,0,-16),Vector3(16,0,-16)],[Vector3(-16,0,16),Vector3(16,0,16)],[Vector3(-16,0,-16),Vector3(-16,0,16)],[Vector3(16,0,-16),Vector3(16,0,16)]]:

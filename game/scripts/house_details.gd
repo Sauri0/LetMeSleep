@@ -5,6 +5,8 @@ const Doors = preload("res://scripts/door_catalog.gd")
 const Barriers = preload("res://scripts/house_barriers.gd")
 const Joinery = preload("res://scripts/frame_joinery.gd")
 const ALFA_LIBRARY_PATH := "res://assets/art/house/alfa_library.gd"
+const Architecture = preload("res://scripts/house_architecture.gd")
+const ExteriorBatch = preload("res://scripts/exterior_batch.gd")
 
 static func window_specs(data: Dictionary) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
@@ -303,7 +305,7 @@ static func build_windows(world: Node3D, specs: Array[Dictionary]) -> void:
 			# Alfa shutters use a back/base pivot and face -Z, matching the
 			# exterior side of this window-local frame without mesh scaling.
 			for side: float in [-1.0, 1.0]:
-				var shutter := alfa_asset(root, "alfa_shutter", Vector3(side * .99, -.60, -.035))
+				var shutter := alfa_asset(root, "alfa_shutter", Vector3(side * .99, -.60, -.14))
 				if is_instance_valid(shutter):
 					shutter.set_meta("window_id", str(spec.get("id", "")))
 		for side:float in [-1.0,1.0]:
@@ -391,7 +393,7 @@ static func _build_authored_area(world: Node3D, root: Node3D, area: Dictionary) 
 	var tint := Color(area.get("color", Color("42634f") if kind == "garden" else Color("786f61")))
 	# Area bounds describe the outdoor volume used by layout/navigation. Render
 	# only its ground face; otherwise an 8.8 m semantic height becomes a solid.
-	var surface_box := AABB(Vector3(bounds.position.x, bounds.position.y + .002, bounds.position.z),
+	var surface_box := AABB(Vector3(bounds.position.x, bounds.position.y - .036, bounds.position.z),
 		Vector3(bounds.size.x, .036, bounds.size.z))
 	var mesh: MeshInstance3D = world._box(root, surface_box.get_center(), surface_box.size, world._surface_material(tint, kind))
 	mesh.name = "ExteriorArea_" + str(area.get("id", kind)).validate_node_name()
@@ -473,10 +475,11 @@ static func build_authored_architecture(world: Node3D, exterior_root: Node3D) ->
 	exterior_root.add_child(root)
 	var building: AABB = world._house_building_bounds()
 	var lot: AABB = world.map_data.get("bounds", building)
-	var eave_y := building.end.y + .04
-	var rise := minf(2.25, maxf(.8, lot.end.y - eave_y - .15))
+	var plan := Architecture.plan(building,lot)
+	var eave_y: float = plan.eave
+	var rise: float = plan.rise
 	var ridge_y := eave_y + rise
-	var half_run := building.size.x * .5 + .55
+	var half_run: float = plan.run
 	var roof_depth := building.size.z + 1.1
 	var slope_length := sqrt(half_run * half_run + rise * rise)
 	var roof_angle := atan2(rise, half_run)
@@ -494,28 +497,37 @@ static func build_authored_architecture(world: Node3D, exterior_root: Node3D) ->
 	var ridge_x := building.get_center().x
 	var front_z := building.position.z - .006
 	var rear_z := building.end.z + .006
-	_gable(world, root, PackedVector3Array([
-		Vector3(x0, eave_y, front_z), Vector3(ridge_x, ridge_y, front_z), Vector3(x1, eave_y, front_z)]),
-		wall_material, "Front")
-	_gable(world, root, PackedVector3Array([
-		Vector3(x0, eave_y, rear_z), Vector3(x1, eave_y, rear_z), Vector3(ridge_x, ridge_y, rear_z)]),
-		wall_material, "Patio")
+	var edge_y := eave_y+rise*(1.0-building.size.x*.5/half_run)-.075
+	for z: float in [front_z,rear_z]:
+		var a := Vector3(x0,building.end.y,z)
+		var b := Vector3(x0,edge_y,z)
+		var c := Vector3(ridge_x,ridge_y-.075,z)
+		var e := Vector3(x1,building.end.y,z)
+		var f := Vector3(x1,edge_y,z)
+		var vertices := PackedVector3Array([a,b,c,a,c,f,a,f,e])
+		if z==rear_z:
+			vertices.reverse()
+		_gable(world,root,vertices,wall_material,"Front" if z==front_z else "Patio")
+	var foundation_material: Material = world._surface_material(Color("687078"), "stone")
+	var foundation_height := .52
+	var foundation_depth := .055
+	var entrance_half_width := 1.32
+	for z: float in [building.position.z - foundation_depth * .5, building.end.z + foundation_depth * .5]:
+		for span: Vector2 in [Vector2(x0, ridge_x - entrance_half_width), Vector2(ridge_x + entrance_half_width, x1)]:
+			var plinth: MeshInstance3D = world._box(root,
+				Vector3((span.x + span.y) * .5, foundation_height * .5, z),
+				Vector3(span.y - span.x, foundation_height, foundation_depth), foundation_material)
+			plinth.set_meta("catalog_kind", "authored_foundation")
+	for x: float in [building.position.x - foundation_depth * .5, building.end.x + foundation_depth * .5]:
+		var plinth: MeshInstance3D = world._box(root,
+			Vector3(x, foundation_height * .5, building.get_center().z),
+			Vector3(foundation_depth, foundation_height, building.size.z), foundation_material)
+		plinth.set_meta("catalog_kind", "authored_foundation")
 
-	# A tiled porch spans the centered front entrance. Six unscaled alfa canopy
-	# modules make a 4.8 x 1.2 m cover; two measured posts hold its outer edge.
-	var facade_x := building.get_center().x
-	for z_offset: float in [.02, .62]:
-		for x_offset: float in [-1.6, 0.0, 1.6]:
-			alfa_asset(root, "alfa_canopy", Vector3(facade_x + x_offset, 2.62, building.position.z - z_offset))
-	for x_offset: float in [-2.28, 2.28]:
-		alfa_asset(root, "alfa_porch_post", Vector3(facade_x + x_offset, 0.0, building.position.z - 1.14))
-
-	var chimney_x := building.position.x + building.size.x * .72
-	var normalized_x := absf(chimney_x - ridge_x) / (building.size.x * .5)
-	var chimney_y := eave_y + rise * (1.0 - normalized_x) - .10
-	alfa_asset(root, "alfa_chimney", Vector3(chimney_x, chimney_y, building.get_center().z + 1.2))
-	var report := {"roof_panels": 2, "gables": 2, "canopies": 6, "porch_posts": 2,
-		"chimneys": 1, "visual_only": true, "ridge_y": ridge_y}
+	for prop: Dictionary in plan.props:
+		alfa_asset(root, prop.asset_id, prop.p)
+	var report := {"roof_panels":2,"gables":2,"foundation_segments":6,"canopies":6,"porch_posts":2,
+		"chimneys":1,"visual_only":true,"collision_source":"map obstacles","collision_boxes":plan.collision_boxes.size(),"ridge_y":ridge_y}
 	root.set_meta("build_report", report)
 	return report
 
@@ -557,6 +569,7 @@ static func build_authored_exterior(world: Node3D) -> Dictionary:
 		"visual_only": true, "collision_source": "map obstacles"}
 	root.set_meta("build_report", report)
 	build_authored_architecture(world, root)
+	report["batching"] = ExteriorBatch.build(root)
 	return report
 
 static func finish(world: Node3D) -> void:

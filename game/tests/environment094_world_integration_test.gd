@@ -52,6 +52,14 @@ func _run() -> void:
 		and report.get("requested_props", -1) == expected.exterior.props.size(),
 		"all alfa props instantiate")
 	_check(Array(report.get("errors", [])).is_empty(), "authored exterior reports no invalid assets")
+	var batching: Dictionary = report.get("batching",{})
+	_check(int(batching.get("source_meshes",0))>0 and int(batching.get("batches",9999))<int(batching.get("source_meshes",0))/2,
+		"repeated fence geometry submits fewer spatial batches")
+	var batched_count := 0
+	for batch: MultiMeshInstance3D in exterior.find_children("FenceBatch_*","MultiMeshInstance3D",true,false):
+		batched_count += batch.multimesh.instance_count
+		_check(batch.cast_shadow==GeometryInstance3D.SHADOW_CASTING_SETTING_ON,"fence batch keeps shadow casting")
+	_check(batched_count==int(batching.get("source_meshes",0)),"all source fence meshes appear in exactly one batch")
 	_check(bool(report.get("visual_only", false)) and report.get("collision_source", "") == "map obstacles",
 		"authored exterior leaves collision authority with map obstacles")
 	var architecture: Node = exterior.get_node_or_null("AuthoredArchitecture") if is_instance_valid(exterior) else null

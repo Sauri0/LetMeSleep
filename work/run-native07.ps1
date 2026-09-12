@@ -19,7 +19,7 @@ if ($Source) {
         if ($LASTEXITCODE -ne 0) { throw ('Cannot identify source tree: ' + $sourceFolder) }
         $sourceIdentity.trees[$sourceFolder] = $treeId
     }
-    & git -C $projectRoot diff --quiet HEAD -- game native art_source
+    & git -c core.safecrlf=false -C $projectRoot diff --quiet HEAD -- game native art_source
     if ($LASTEXITCODE -gt 1) { throw 'Cannot inspect source changes' }
     $sourceIdentity.dirty = ($LASTEXITCODE -eq 1)
     $untrackedInputs = @(& git -C $projectRoot ls-files --others --exclude-standard -- game native art_source)
@@ -46,5 +46,15 @@ try {
     if ((Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash -ne $runHash) { throw ('Executable changed: ' + $Name) }
     [ordered]@{name=$Name; exe_sha256=$runHash; source=[bool]$Source; source_identity=$sourceIdentity; arguments=$GameArguments; started_utc=$runStarted; finished_utc=[DateTime]::UtcNow.ToString('o'); exit_code=$owned.ExitCode; stderr_bytes=(Get-Item -LiteralPath $stderr).Length; passed=$true} | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $runRecord -Encoding utf8
 } finally {
+    # The Godot console executable may own a separate renderer process. Kill
+    # only this run's direct child, before the parent, on timeout/error.
+    if (-not $owned.HasExited) {
+        $ownedChildren = @(Get-CimInstance Win32_Process -Filter ("ParentProcessId=" + $owned.Id) -ErrorAction SilentlyContinue)
+        foreach ($ownedChild in $ownedChildren) {
+            if ($ownedChild.CreationDate -ge [DateTime]::Parse($runStarted).ToLocalTime().AddSeconds(-1) -and $ownedChild.Name -like 'Godot*') {
+                Stop-Process -Id $ownedChild.ProcessId -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
     if (-not $owned.HasExited) { Stop-Process -Id $owned.Id -Force }
 }

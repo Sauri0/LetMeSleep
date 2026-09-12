@@ -494,9 +494,14 @@ func _build_lighting() -> void:
 	moon.light_color = Color("c9dfed")
 	# An outdoor directional lamp with a 20m shadow range illuminated interior
 	# walls beyond the cascade. House moonlight now comes from actual windows.
-	moon.light_energy = 0.0 if Maps.is_playable(current_map) else 0.35
-	moon.shadow_enabled = not Maps.is_playable(current_map)
-	moon.directional_shadow_max_distance = 20.0
+	var authored_exterior := map_data.has("authored_version")
+	moon.light_energy = 0.32 if authored_exterior else 0.0 if Maps.is_playable(current_map) else 0.35
+	moon.shadow_enabled = authored_exterior or not Maps.is_playable(current_map)
+	moon.directional_shadow_max_distance = 36.0 if authored_exterior else 20.0
+	if authored_exterior:
+		# One map-sized cascade keeps foliage/fence shadows readable without
+		# redrawing the 91-piece exterior four times in Compatibility.
+		moon.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 	map_root.add_child(moon)
 	if map_data.has("generator_version") or map_data.has("authored_version"):
 		_build_generated_lighting()
@@ -654,11 +659,17 @@ func _build_catalog_house() -> void:
 	for structure: Dictionary in map_data.get("structures", []):
 		var bounds: AABB = structure.box
 		var kind: String = str(structure.get("kind", "wall"))
+		# The authored outdoor ground replaces the physical slab's surface.
+		# Drawing both at y=0 caused moving stripes throughout the lawn.
+		if kind=="floor" and bool(structure.get("exterior",false)) and map_data.has("authored_version"):
+			continue
 		if _is_authored_exterior_proxy(structure):
 			continue
 		if kind == "ceiling": has_catalog_ceiling = true
 		var tint: Color = structure.get("color", Color("d2d5c2"))
-		if kind == "floor":
+		if kind == "wall" and _is_authored_perimeter_wall(bounds):
+			tint = Color("d8cdbb")
+		elif kind == "floor":
 			tint = tint.darkened(0.16)
 		elif kind == "step":
 			tint = Color("967150")
@@ -727,6 +738,16 @@ func _is_authored_exterior_proxy(structure: Dictionary) -> bool:
 				var candidate: AABB = collision
 				if candidate.is_equal_approx(box):
 					return true
+	return false
+
+func _is_authored_perimeter_wall(box: AABB) -> bool:
+	if not map_data.has("authored_version"):
+		return false
+	var building := _house_building_bounds()
+	if box.size.x < .5:
+		return absf(box.get_center().x - building.position.x) < .3 or absf(box.get_center().x - building.end.x) < .3
+	if box.size.z < .5:
+		return absf(box.get_center().z - building.position.z) < .3 or absf(box.get_center().z - building.end.z) < .3
 	return false
 
 func _furniture_from_catalog(data: Dictionary) -> void:
