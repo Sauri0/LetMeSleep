@@ -1,4 +1,4 @@
-param([switch]$SkipTests, [switch]$SkipHeadlessTests, [switch]$ResumeVerifiedR2)
+param([switch]$SkipTests, [switch]$SkipHeadlessTests, [switch]$ResumeVerifiedR2, [switch]$ResumeVerifiedR5)
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 $godotExe = Join-Path $PSScriptRoot 'tools/godot-4.5.2/Godot_v4.5.2-stable_win64_console.exe'
@@ -15,8 +15,17 @@ if ($ResumeVerifiedR2) {
     if (@(& git -C $projectRoot ls-files --others --exclude-standard -- game native art_source).Count) { throw 'Untracked source invalidates resume' }
     if (-not (Select-String $transcriptPath -Pattern 'geometry09_cache checks=164 failures=0' -Quiet)) { throw 'R2 did not finish the required prefix' }
 }
+if ($ResumeVerifiedR5) {
+    $proof=Join-Path $PSScriptRoot 'director092-full-final-r5.txt'
+    if ((Get-FileHash $proof).Hash -ne 'BC900FF7C73045F2854D87BE4E7AA03981085C4452DC21AD4F64750AB5CCD8CE') { throw 'R5 evidence changed' }
+    $changed=@(& git -C $projectRoot diff --name-only 81ec9cb -- game native art_source)
+    if (@($changed|Where-Object { $_ -ne 'game/tests/surface_view09_client_checks.gd' }).Count) { throw 'R5 runtime/fixtures changed' }
+    if (@(& git -C $projectRoot ls-files --others --exclude-standard -- game native art_source).Count) { throw 'Untracked source invalidates R5' }
+    if (-not (Select-String $proof -Pattern 'SURFACE09_CLIENT_CHECKS 1814/1814 PASS' -Quiet)) { throw 'R5 prefix incomplete' }
+}
 function Invoke-CheckedHeadless {
     param([string]$CheckName, [string[]]$GameArguments)
+    if ($ResumeVerifiedR5 -and $CheckName -notin @('import','export')) { Write-Output ('VERIFIED_R5_HEADLESS '+$CheckName); return }
     if ($script:resumeR2Prefix) {
         if ($CheckName -ne 'map_tasks09_test') { Write-Output ('VERIFIED_R2_PREFIX ' + $CheckName); return }
         $script:resumeR2Prefix = $false
@@ -105,7 +114,12 @@ if (-not $SkipTests) {
     # Skin baking requires a rendering backend; Godot's headless dummy backend
     # cannot register the skeleton used by this actual-deformed-mesh test.
     # UI checks also need real mouse capture, unavailable in the dummy backend.
+    $nativeResumeWaiting=[bool]$ResumeVerifiedR5
     foreach ($nativeTest in @('camera_turn_checks','mosquito092_camera_checks','motion092_hand_test','character092_hands','motion091_attachment_test','review091_motion_combat_contract','ui091_customization_checks','motion091_presentation_test','online_main_lifecycle','glasses09_fit_checks','actor09_legacy_geometry_test','v07_character_rig_checks','v07_character_client_checks','selected07_mesh_checks','selected07_actor_checks','selected07_facial_envelope_checks','facial_parts08_checks','facial_blink08_checks','customization08_checks','house07_checks','house07_lighting_probe','house07_liso_checks','ui_navigation_test','video07_checks','doors07_client_checks','throw_client07_checks','tool07_visual_checks','house07_occlusion_checks','appendage09_visual_checks','emote09_pose_checks','furniture09_blueprint_checks','voice09_visual_checks','menu09_ui_checks','social09_client_checks','surface09_client_checks','surface_view09_client_checks','voice_input09_ui_checks','voice_context09_ui_checks')) {
+    if ($nativeResumeWaiting) {
+        if ($nativeTest -ne 'surface_view09_client_checks') { Write-Output ('VERIFIED_R5_NATIVE '+$nativeTest); continue }
+        $nativeResumeWaiting=$false
+    }
     $rigLog = Join-Path $PSScriptRoot ('build-' + $nativeTest + '.log')
     $rigError = Join-Path $PSScriptRoot ('build-' + $nativeTest + '.err')
     $nativeArguments = @('--path', ('"' + $gamePath + '"'), '--script', ('res://tests/' + $nativeTest + '.gd'))
