@@ -86,3 +86,17 @@ auditor r3b36098/35 fallos, pliegues reales de pulgar en agarres; corrige límit
 total de oposición sin nueva reexportación. Reposo ya tiene0 inversiones.
 Revisión funcional reactivada sólo para fixtures v3; sin motor. W1/W2/UI sin
 nuevas tareas. No iniciar motores en Director hasta coordinar devolución.
+
+## Cierre actual: 2026-09-11 22:35 ART
+
+Director en codex/0.9.2-quality-close, 0bbd286, enviado a origin.
+0.9.1 ya publicada y verificada. 0.9.2 todavía NO exportada/publicada.
+Manos finales M2 18db44e integradas en 8ecf17f, poses W1 integradas.
+Import Director PASS; cámara142/0; manos64848/0; malla36058/0.
+M1 único activo, tiene motor para terminar cocina seed7/corpus; fuente actual
+root cd2194c (09ddf87) pasa semillas1/2, no aceptar todavía generador completo.
+Al liberar M1: integrar fuente final, fullbuild con work/build092-verified.ps1,
+corpus1000, EXE9casos, captura, rendimiento, actualizar PRUEBAS, empaquetar,
+subir borrador GitHub, descargar/verificar SHA, publicar0.9.2 y actualizar main.
+Preservar work/voice09-acoustics-results.json (cambio previo ajeno).
+Cuota consultada:95%usado/5%restante. No agregar funcionalidades ni variantes.
