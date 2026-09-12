@@ -341,6 +341,7 @@ namespace LetMeSleep.Presentation.Editor
             try
             {
                 GameplayVisualPresenter visuals = root.AddComponent<GameplayVisualPresenter>();
+                LobbyVisualPresenter lobbyVisuals = root.AddComponent<LobbyVisualPresenter>();
                 GameplayAudioPresenter audioEvents = root.AddComponent<GameplayAudioPresenter>();
                 GameplayVfxPresenter vfxEvents = root.AddComponent<GameplayVfxPresenter>();
                 GameplayPresentationRoot facade = root.AddComponent<GameplayPresentationRoot>();
@@ -368,6 +369,7 @@ namespace LetMeSleep.Presentation.Editor
                 audioInstance.transform.SetParent(root.transform, false);
                 AlfaAudioDirector audioDirector = audioInstance.GetComponent<AlfaAudioDirector>();
                 Assign(facade, "visuals", visuals);
+                Assign(facade, "lobbyVisuals", lobbyVisuals);
                 Assign(facade, "audioEvents", audioEvents);
                 Assign(facade, "vfxEvents", vfxEvents);
                 Assign(facade, "audioDirector", audioDirector);

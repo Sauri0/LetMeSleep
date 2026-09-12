@@ -8,7 +8,9 @@ namespace LetMeSleep.Presentation.Gameplay
     public sealed class GameplayPresentationRoot : MonoBehaviour
     {
         [SerializeField] private GameplayRuntime gameplay = null;
+        [SerializeField] private LobbyMovementRuntime lobby = null;
         [SerializeField] private GameplayVisualPresenter visuals = null;
+        [SerializeField] private LobbyVisualPresenter lobbyVisuals = null;
         [SerializeField] private GameplayAudioPresenter audioEvents = null;
         [SerializeField] private GameplayVfxPresenter vfxEvents = null;
         [SerializeField] private AlfaAudioDirector audioDirector = null;
@@ -17,6 +19,8 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if (gameplay != null)
                 Bind(gameplay);
+            if (lobby != null)
+                Bind(lobby);
         }
 
         public void Bind(GameplayRuntime runtime)
@@ -27,6 +31,12 @@ namespace LetMeSleep.Presentation.Gameplay
             vfxEvents?.Bind(runtime);
             if (runtime != null)
                 runtime.UseBuiltInCamera = false;
+        }
+
+        public void Bind(LobbyMovementRuntime runtime)
+        {
+            lobby = runtime;
+            lobbyVisuals?.Bind(runtime);
         }
     }
 }
