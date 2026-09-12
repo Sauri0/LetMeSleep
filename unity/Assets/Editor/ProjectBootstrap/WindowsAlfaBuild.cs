@@ -13,7 +13,7 @@ namespace LetMeSleep.Editor
         public static void Build()
         {
             string sourceCommit = Git("rev-parse HEAD");
-            if (Git("status --porcelain").Length != 0)
+            if (SourceDirty())
                 throw new InvalidOperationException("Commit all candidate inputs before building Windows.");
             var source = EosConfiguration.Load("N:/LetMeSleep/Private/eos.local.json");
             Directory.CreateDirectory(Application.streamingAssetsPath);
@@ -30,9 +30,14 @@ namespace LetMeSleep.Editor
                 locationPathName=LastOutput+"/Let-me-sleep.exe",target=BuildTarget.StandaloneWindows64,options=BuildOptions.Development });
             File.WriteAllText(LastOutput+"/build-receipt.json",JsonUtility.ToJson(new Receipt { result=report.summary.result.ToString(),errors=report.summary.totalErrors,
                 unity=Application.unityVersion,outputBytes=report.summary.totalSize,utc=DateTime.UtcNow.ToString("O"),
-                sourceCommit=sourceCommit,sourceDirty=Git("status --porcelain").Length!=0,version=PlayerSettings.bundleVersion },true));
+                sourceCommit=sourceCommit,sourceDirty=SourceDirty(),version=PlayerSettings.bundleVersion },true));
             Debug.Log("LMS_ALFA_BUILD "+report.summary.result+" "+LastOutput);
         }
+        // Compare normalized contents: Unity can rewrite line endings on dynamic font
+        // assets during a build, leaving only a stale Git stat-cache modification.
+        private static bool SourceDirty() => Git("diff --name-only").Length != 0
+            || Git("diff --cached --name-only").Length != 0
+            || Git("ls-files --others --exclude-standard").Length != 0;
         private static string Git(string arguments)
         {
             using var process=System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("git",arguments) {
