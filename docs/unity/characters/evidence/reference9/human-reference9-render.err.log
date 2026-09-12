@@ -1,0 +1,4 @@
+N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\render_human_witness.py:82: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.world.use_nodes=True
+N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\render_human_witness.py:94: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat.use_nodes=True

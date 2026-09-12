@@ -1,0 +1,436 @@
+{
+  "status": "NUMERIC_GATES_PASSED_VISUAL_REVIEW_REQUIRED",
+  "geometry_source_commit": "27e7195ced1433337118c935aa07a656cfe8adc6",
+  "blender_version": "5.2.1 LTS",
+  "source_sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
+  "fbx_sha256": "348c0f48f5247102a8c873ff5f9d131a06e6e260421262185e24bf3a9db5a46d",
+  "geometry_audit_sha256": "78dc9a344db7ab015c44b191b784d78c361dd9917c4065309965b313ec524169",
+  "motion_audit_sha256": "88f21eb4f548ac72a2537d3dbe268d29ce004f83b1bcf955091a85ffa14c2944",
+  "motion_gate_sha256": "5b02d94807d1d1082065a24ab164f729479188ac83d8db5f3b7d4574b657b0df",
+  "roundtrip_sha256": "467ed4d6472eb1a371f280e43dcedf3dbc9a180c9ecf9076ac62080f2c2dc7b7",
+  "source_geometry_passed": true,
+  "triangles": 7980,
+  "bones": 65,
+  "source_fbx_clip_evaluations": 30,
+  "pose_samples": 1278,
+  "sampling": "Every integer source frame plus fixed checkpoints and Clap23.5",
+  "maximum_source_fbx_bone_difference_m": 9.453726962543667e-07,
+  "jaw_hit": [
+    {
+      "format": "blend",
+      "clip": "Human_Hit",
+      "jaw_mesh_downward_motion_in_head_space_m": 0.010876800562255085
+    },
+    {
+      "format": "fbx",
+      "clip": "Human_Hit",
+      "jaw_mesh_downward_motion_in_head_space_m": 0.010877027967944743
+    }
+  ],
+  "blink": [
+    {
+      "format": "blend",
+      "blink_eye_height_samples": [
+        [
+          0,
+          0.11400008201599121
+        ],
+        [
+          0.45,
+          0.009202718734741211
+        ]
+      ],
+      "closed_open_height_ratio": 0.08072554485925994
+    },
+    {
+      "format": "fbx",
+      "blink_eye_height_samples": [
+        [
+          0,
+          0.11400008201599121
+        ],
+        [
+          0.45,
+          0.009202718734741211
+        ]
+      ],
+      "closed_open_height_ratio": 0.08072554485925994
+    }
+  ],
+  "open_edge_stretch_signals": [
+    {
+      "clip": "Human_FingerCurl",
+      "format": "blend",
+      "max_edge_stretch_ratio": 3.334443224930519,
+      "worst_stretched_edge": {
+        "mesh": "HandSkin.L",
+        "vertices": [
+          150,
+          189
+        ],
+        "phase": 0.26666666666666666,
+        "rest_length_m": 0.00441667478245311,
+        "deformed_length_m": 0.014727151305072246,
+        "world_endpoints_m": [
+          [
+            0.8337488174438477,
+            -0.012957131490111351,
+            1.1411157846450806
+          ],
+          [
+            0.8482416272163391,
+            -0.010453259572386742,
+            1.1403554677963257
+          ]
+        ],
+        "weights": [
+          {
+            "Ring01.L": 0.9117698073387146,
+            "Hand.L": 0.03746418654918671,
+            "Middle01.L": 0.029679542407393456,
+            "Ring02.L": 0.021086454391479492
+          },
+          {
+            "Ring01.L": 0.6510101556777954,
+            "Ring02.L": 0.2044791579246521,
+            "Ring03.L": 0.14090900123119354,
+            "Hand.L": 0.0036016972735524178
+          }
+        ]
+      }
+    },
+    {
+      "clip": "Human_Crouch",
+      "format": "blend",
+      "max_edge_stretch_ratio": 1.9897667451075143,
+      "worst_stretched_edge": {
+        "mesh": "HumanBody",
+        "vertices": [
+          197,
+          209
+        ],
+        "phase": 0.43333333333333335,
+        "rest_length_m": 0.040112363960611366,
+        "deformed_length_m": 0.07981424787647363,
+        "world_endpoints_m": [
+          [
+            0.1250000149011612,
+            -0.2698086202144623,
+            0.36002516746520996
+          ],
+          [
+            0.1250000149011612,
+            -0.2174883335828781,
+            0.4202987253665924
+          ]
+        ],
+        "weights": [
+          {
+            "UpperLeg.L": 0.5833332538604736,
+            "LowerLeg.L": 0.41666677594184875
+          },
+          {
+            "UpperLeg.L": 0.9166667461395264,
+            "LowerLeg.L": 0.08333325386047363
+          }
+        ]
+      }
+    },
+    {
+      "clip": "Human_Clap",
+      "format": "blend",
+      "max_edge_stretch_ratio": 1.9330788908349343,
+      "worst_stretched_edge": {
+        "mesh": "HumanBody",
+        "vertices": [
+          37,
+          49
+        ],
+        "phase": 0.6666666666666666,
+        "rest_length_m": 0.04382193166473722,
+        "deformed_length_m": 0.08471125105671451,
+        "world_endpoints_m": [
+          [
+            0.3504893183708191,
+            -0.22420640289783478,
+            1.0895028114318848
+          ],
+          [
+            0.3422638773918152,
+            -0.262530654668808,
+            1.014405608177185
+          ]
+        ],
+        "weights": [
+          {
+            "UpperArm.L": 0.8749998807907104,
+            "LowerArm.L": 0.12500011920928955
+          },
+          {
+            "UpperArm.L": 0.32963451743125916,
+            "LowerArm.L": 0.6703655123710632
+          }
+        ]
+      }
+    },
+    {
+      "clip": "Human_Swat",
+      "format": "blend",
+      "max_edge_stretch_ratio": 2.9971970936331824,
+      "worst_stretched_edge": {
+        "mesh": "HandSkin.R",
+        "vertices": [
+          790,
+          751
+        ],
+        "phase": 0.06666666666666667,
+        "rest_length_m": 0.0031538908296487316,
+        "deformed_length_m": 0.009452832428259525,
+        "world_endpoints_m": [
+          [
+            -0.4561690390110016,
+            -0.08224520832300186,
+            0.6151601076126099
+          ],
+          [
+            -0.45948898792266846,
+            -0.0865044966340065,
+            0.6074017286300659
+          ]
+        ],
+        "weights": [
+          {
+            "Middle01.R": 0.9353638291358948,
+            "Middle02.R": 0.05483778566122055,
+            "Hand.R": 0.005755580496042967,
+            "Index01.R": 0.004042823798954487
+          },
+          {
+            "Middle01.R": 0.6845765709877014,
+            "Middle02.R": 0.2732442617416382,
+            "Middle03.R": 0.04167255386710167,
+            "Index01.R": 0.0005066153826192021
+          }
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference9/face_front.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_Idle",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 0,
+      "pitch_degrees": 0.286,
+      "focus": [
+        0,
+        -0.02,
+        1.56
+      ],
+      "orthographic_scale": 0.58,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference9/face_profile.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_Idle",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 90,
+      "pitch_degrees": 0.286,
+      "focus": [
+        0,
+        -0.02,
+        1.56
+      ],
+      "orthographic_scale": 0.58,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference9/front.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_Idle",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 0,
+      "pitch_degrees": 0.286,
+      "focus": [
+        0,
+        0,
+        0.92
+      ],
+      "orthographic_scale": 2.05,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference9/hand_open.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_FingerCurl",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 35,
+      "pitch_degrees": 0.286,
+      "focus": [
+        0.83,
+        -0.01,
+        1.17
+      ],
+      "orthographic_scale": 0.26,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference9/slipper.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_Idle",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 90,
+      "pitch_degrees": 0.286,
+      "focus": [
+        0.125,
+        -0.085,
+        0.1
+      ],
+      "orthographic_scale": 0.47,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference9/three_quarter.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_Idle",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 35,
+      "pitch_degrees": 0.286,
+      "focus": [
+        0,
+        0,
+        0.92
+      ],
+      "orthographic_scale": 2.05,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    }
+  ],
+  "processes": [
+    {
+      "pid": 36224,
+      "exit_code": 0,
+      "elapsed_seconds": 14.786857,
+      "finished_utc": "2026-09-12T20:46:54.0713939Z",
+      "started_utc": "2026-09-12T20:46:39.2845369Z",
+      "stage": "generation"
+    },
+    {
+      "elapsed_seconds": 54.5392805,
+      "started_utc": "2026-09-12T20:48:18.1032559Z",
+      "exit_code": 0,
+      "pid": 35940,
+      "finished_utc": "2026-09-12T20:49:12.6425364Z",
+      "stage": "render"
+    },
+    {
+      "pid": 28156,
+      "finished_utc": "2026-09-12T20:50:20.9704606Z",
+      "started_utc": "2026-09-12T20:50:17.5039354Z",
+      "exit_code": 0,
+      "elapsed_seconds": 3.4665252,
+      "stage": "roundtrip"
+    },
+    {
+      "started_utc": "2026-09-12T20:50:48.7441257Z",
+      "pid": 37184,
+      "elapsed_seconds": 37.0673937,
+      "finished_utc": "2026-09-12T20:51:25.8115194Z",
+      "exit_code": 0,
+      "stage": "motion"
+    }
+  ],
+  "native_elapsed_seconds": 109.86005639999999,
+  "slot_released": true,
+  "other_species_unchanged": {
+    "mosquito/audit.json": "68225dee236e327e24ab7a501e2fe8c7f457708d2824b7b928c7d93b0adfd0c3",
+    "mosquito/LMS_Mosquito_alpha.blend": "114780e673ddbd90670901399f30bdd99e13e83bd4208ebd01b0952b8a3d11ce",
+    "mosquito/LMS_Mosquito_alpha.fbx": "08ecaf1858abe00921377de197c1ffb3479ce8540009adf263cbd057168863b9",
+    "flyswatter/audit.json": "8746b773998015b57cb4438ab873b46408cc50cda6b9a489c2f7e14f81e271f3",
+    "flyswatter/LMS_Flyswatter_alpha.blend": "3181959bcc441ba25f86e768bd0e311e754cf898d58d331b09298d0f901a110c",
+    "flyswatter/LMS_Flyswatter_alpha.fbx": "e2c01038ae45fd5a22cb52a14c4b34edd4ffb3fc54dd3494dcc8743bac17cc16"
+  },
+  "visual_approved": false,
+  "unity_import_verified": false,
+  "full_motion_video_reviewed": false,
+  "real_tool_grip_verified": false,
+  "limitations": [
+    "Six static source views only; other directions/details remain missing",
+    "Face/lips/occiput, clothes/hip transitions and slippers need visual review",
+    "Numeric motion gate has no max-edge-stretch acceptance threshold",
+    "No rendered closure, grip with actual tool, temporal seam review or Unity evidence"
+  ]
+}

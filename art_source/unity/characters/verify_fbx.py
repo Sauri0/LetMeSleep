@@ -2,11 +2,18 @@
 import bpy
 import json
 import hashlib
+import argparse
+import sys
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
+parser=argparse.ArgumentParser()
+parser.add_argument('--species',choices=['Human','Mosquito','Flyswatter'])
+args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
+species_list=[args.species] if args.species else ['Human','Mosquito','Flyswatter']
+report_path=ROOT/args.species.lower()/'fbx_roundtrip.json' if args.species else ROOT/'fbx_roundtrip.json'
 results=[]
-for species in ['Human','Mosquito','Flyswatter']:
+for species in species_list:
     bpy.ops.object.select_all(action='SELECT'); bpy.ops.object.delete(use_global=False)
     for action in list(bpy.data.actions): bpy.data.actions.remove(action)
     folder=ROOT/species.lower()
@@ -37,6 +44,6 @@ for species in ['Human','Mosquito','Flyswatter']:
                     'source_audit_sha256':hashlib.sha256((folder/'audit.json').read_bytes()).hexdigest(),
                     'dimensions':dimensions,'triangles':triangles,'bones':len(rig.data.bones),
                     'actions':actions,'sockets':sockets,'errors':errors,'passed':not errors})
-(ROOT/'fbx_roundtrip.json').write_text(json.dumps(results,indent=2),encoding='utf8',newline='\n')
+report_path.write_text(json.dumps(results,indent=2),encoding='utf8',newline='\n')
 assert all(r['passed'] for r in results), results
 print('LMS_FBX_ROUNDTRIP_PASSED',flush=True)

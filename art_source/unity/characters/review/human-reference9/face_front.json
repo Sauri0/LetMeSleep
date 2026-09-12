@@ -1,0 +1,27 @@
+{
+  "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference9/face_front.png",
+  "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+  "source_sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
+  "engine": "Blender 5.2.1 LTS",
+  "renderer": "Cycles CPU",
+  "threads": 2,
+  "samples": 16,
+  "resolution": [
+    576,
+    720
+  ],
+  "clip": "Human_Idle",
+  "phase": 0,
+  "frame": 1.0,
+  "yaw_degrees": 0,
+  "pitch_degrees": 0.286,
+  "focus": [
+    0,
+    -0.02,
+    1.56
+  ],
+  "orthographic_scale": 0.58,
+  "actual_action_evaluated": true,
+  "visual_approval": false,
+  "unity_evidence": false
+}

@@ -1,4 +1,6 @@
-# Human reference9 — SOURCE_ONLY
+# Human reference9 — preparación histórica de 27e7195
+
+**Actualización:** esta geometría ya fue generada, renderizada y auditada en el turno siguiente. Resultado y límites actuales en `HUMAN-REFERENCE9-DELIVERY.md`; este documento conserva el plan previo, no el estado presente.
 
 Revisión de la muestra real `b110965` y de `Validation/TeamRecovery/visual/HUMAN-REFERENCE8-REVIEW-20260912.md`. **No generada ni renderizada.** Los .blend/FBX actuales y los seis PNG reference8 siguen siendo el candidato anterior; sus hashes no acreditan esta fuente modificada.
 

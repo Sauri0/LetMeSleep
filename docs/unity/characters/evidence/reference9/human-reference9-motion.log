@@ -1,0 +1,341 @@
+00:00.766  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\human\LMS_Human_alpha.blend"
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Idle", "samples": 65, "minimum_z_m": 3.6214590437566585e-08, "max_edge_stretch_ratio": 1.6070831254187965}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_FingerCurl", "samples": 65, "minimum_z_m": 0.0, "max_edge_stretch_ratio": 3.334443224930519}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Blink", "samples": 37, "minimum_z_m": 3.6214590437566585e-08, "max_edge_stretch_ratio": 1.6070822885163765}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Walk", "samples": 41, "minimum_z_m": -7.844507621257435e-08, "max_edge_stretch_ratio": 1.6012844978386789}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Run", "samples": 25, "minimum_z_m": -8.589565680949818e-08, "max_edge_stretch_ratio": 1.6878511682049526}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Crouch", "samples": 37, "minimum_z_m": -0.0005685095093213022, "max_edge_stretch_ratio": 1.9897667451075143}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Jump", "samples": 41, "minimum_z_m": -0.0005069716717116535, "max_edge_stretch_ratio": 1.9145377852266483}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Land", "samples": 25, "minimum_z_m": -0.00016591750318184495, "max_edge_stretch_ratio": 1.875651183011454}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Turn", "samples": 37, "minimum_z_m": 3.6214590437566585e-08, "max_edge_stretch_ratio": 1.6070838223281452}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Clap", "samples": 37, "minimum_z_m": 3.6214590437566585e-08, "max_edge_stretch_ratio": 1.9330788908349343}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Swat", "samples": 37, "minimum_z_m": 3.6214590437566585e-08, "max_edge_stretch_ratio": 2.9971970936331824}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Hit", "samples": 25, "minimum_z_m": 3.6214590437566585e-08, "max_edge_stretch_ratio": 1.6070843999745041}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Fall", "samples": 41, "minimum_z_m": 0.0017594769597053528, "max_edge_stretch_ratio": 1.6070845563275804}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Faint", "samples": 61, "minimum_z_m": 0.0017224997282028198, "max_edge_stretch_ratio": 1.6070848959974184}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "blend", "clip": "Human_Recover", "samples": 65, "minimum_z_m": 0.0016326457262039185, "max_edge_stretch_ratio": 1.6070843435458637}
+FBX version: 7400
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Idle", "samples": 65, "minimum_z_m": -1.5406424580532985e-08, "max_edge_stretch_ratio": 1.607089325195858}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_FingerCurl", "samples": 65, "minimum_z_m": -1.1999263804796101e-08, "max_edge_stretch_ratio": 3.334484200505876}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Blink", "samples": 37, "minimum_z_m": -1.5406424580532985e-08, "max_edge_stretch_ratio": 1.6070884732439843}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Walk", "samples": 41, "minimum_z_m": -2.1062864163923223e-07, "max_edge_stretch_ratio": 1.601287953589827}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Run", "samples": 25, "minimum_z_m": -1.1950984912800777e-07, "max_edge_stretch_ratio": 1.687852529220348}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Crouch", "samples": 37, "minimum_z_m": -0.0005684025236405432, "max_edge_stretch_ratio": 1.9897673269043832}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Jump", "samples": 41, "minimum_z_m": -0.0005069754552096128, "max_edge_stretch_ratio": 1.914537955286651}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Land", "samples": 25, "minimum_z_m": -0.00016589334700256586, "max_edge_stretch_ratio": 1.8756518773543207}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Turn", "samples": 37, "minimum_z_m": -1.5406424580532985e-08, "max_edge_stretch_ratio": 1.6070892355660997}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Clap", "samples": 37, "minimum_z_m": -1.5406424580532985e-08, "max_edge_stretch_ratio": 1.933083282224872}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Swat", "samples": 37, "minimum_z_m": -1.5406424580532985e-08, "max_edge_stretch_ratio": 2.9971838690614137}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Hit", "samples": 25, "minimum_z_m": -1.5406424580532985e-08, "max_edge_stretch_ratio": 1.6070888505942582}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Fall", "samples": 41, "minimum_z_m": 0.0017595855752006173, "max_edge_stretch_ratio": 1.6070894185773417}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Faint", "samples": 61, "minimum_z_m": 0.001722645596601069, "max_edge_stretch_ratio": 1.6070901855162276}
+LMS_MOTION_CLIP_DONE {"species": "Human", "format": "fbx", "clip": "Human_Recover", "samples": 65, "minimum_z_m": 0.0016326139448210597, "max_edge_stretch_ratio": 1.6070890598752874}
+{
+  "actions": [
+    {
+      "clip": "Human_Idle",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.01138034638650864,
+      "minimum_mesh_z_m": 3.6214590437566585e-08,
+      "max_edge_stretch_ratio": 1.6070831254187965
+    },
+    {
+      "clip": "Human_FingerCurl",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.09570288171542639,
+      "minimum_mesh_z_m": 0.0,
+      "max_edge_stretch_ratio": 3.334443224930519
+    },
+    {
+      "clip": "Human_Blink",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.05975294064261976,
+      "minimum_mesh_z_m": 3.6214590437566585e-08,
+      "max_edge_stretch_ratio": 1.6070822885163765
+    },
+    {
+      "clip": "Human_Walk",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.2036515634154939,
+      "minimum_mesh_z_m": -7.844507621257435e-08,
+      "max_edge_stretch_ratio": 1.6012844978386789
+    },
+    {
+      "clip": "Human_Run",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.2824002969892432,
+      "minimum_mesh_z_m": -8.589565680949818e-08,
+      "max_edge_stretch_ratio": 1.6878511682049526
+    },
+    {
+      "clip": "Human_Crouch",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.732238614361419,
+      "minimum_mesh_z_m": -0.0005685095093213022,
+      "max_edge_stretch_ratio": 1.9897667451075143
+    },
+    {
+      "clip": "Human_Jump",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.24300067651987092,
+      "minimum_mesh_z_m": -0.0005069716717116535,
+      "max_edge_stretch_ratio": 1.9145377852266483
+    },
+    {
+      "clip": "Human_Land",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.23805587303349907,
+      "minimum_mesh_z_m": -0.00016591750318184495,
+      "max_edge_stretch_ratio": 1.875651183011454
+    },
+    {
+      "clip": "Human_Turn",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.1644223480296198,
+      "minimum_mesh_z_m": 3.6214590437566585e-08,
+      "max_edge_stretch_ratio": 1.6070838223281452
+    },
+    {
+      "clip": "Human_Clap",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.8790984897182675,
+      "minimum_mesh_z_m": 3.6214590437566585e-08,
+      "max_edge_stretch_ratio": 1.9330788908349343
+    },
+    {
+      "clip": "Human_Swat",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.3504241042531657,
+      "minimum_mesh_z_m": 3.6214590437566585e-08,
+      "max_edge_stretch_ratio": 2.9971970936331824
+    },
+    {
+      "clip": "Human_Hit",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 0.09315394495561556,
+      "minimum_mesh_z_m": 3.6214590437566585e-08,
+      "max_edge_stretch_ratio": 1.6070843999745041
+    },
+    {
+      "clip": "Human_Fall",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 1.9063698677675096,
+      "minimum_mesh_z_m": 0.0017594769597053528,
+      "max_edge_stretch_ratio": 1.6070845563275804
+    },
+    {
+      "clip": "Human_Faint",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 1.9063698677675096,
+      "minimum_mesh_z_m": 0.0017224997282028198,
+      "max_edge_stretch_ratio": 1.6070848959974184
+    },
+    {
+      "clip": "Human_Recover",
+      "format": "blend",
+      "max_mesh_vertex_motion_m": 1.9063700542645696,
+      "minimum_mesh_z_m": 0.0016326457262039185,
+      "max_edge_stretch_ratio": 1.6070843435458637
+    },
+    {
+      "clip": "Human_Idle",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.01138034637464581,
+      "minimum_mesh_z_m": -1.5406424580532985e-08,
+      "max_edge_stretch_ratio": 1.607089325195858
+    },
+    {
+      "clip": "Human_FingerCurl",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.09570227106849655,
+      "minimum_mesh_z_m": -1.1999263804796101e-08,
+      "max_edge_stretch_ratio": 3.334484200505876
+    },
+    {
+      "clip": "Human_Blink",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.05975294064262766,
+      "minimum_mesh_z_m": -1.5406424580532985e-08,
+      "max_edge_stretch_ratio": 1.6070884732439843
+    },
+    {
+      "clip": "Human_Walk",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.20365156727406317,
+      "minimum_mesh_z_m": -2.1062864163923223e-07,
+      "max_edge_stretch_ratio": 1.601287953589827
+    },
+    {
+      "clip": "Human_Run",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.28240029616477336,
+      "minimum_mesh_z_m": -1.1950984912800777e-07,
+      "max_edge_stretch_ratio": 1.687852529220348
+    },
+    {
+      "clip": "Human_Crouch",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.7322385329608387,
+      "minimum_mesh_z_m": -0.0005684025236405432,
+      "max_edge_stretch_ratio": 1.9897673269043832
+    },
+    {
+      "clip": "Human_Jump",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.2430004274012296,
+      "minimum_mesh_z_m": -0.0005069754552096128,
+      "max_edge_stretch_ratio": 1.914537955286651
+    },
+    {
+      "clip": "Human_Land",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.2380558065260695,
+      "minimum_mesh_z_m": -0.00016589334700256586,
+      "max_edge_stretch_ratio": 1.8756518773543207
+    },
+    {
+      "clip": "Human_Turn",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.1644222163367034,
+      "minimum_mesh_z_m": -1.5406424580532985e-08,
+      "max_edge_stretch_ratio": 1.6070892355660997
+    },
+    {
+      "clip": "Human_Clap",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.8790977608463556,
+      "minimum_mesh_z_m": -1.5406424580532985e-08,
+      "max_edge_stretch_ratio": 1.933083282224872
+    },
+    {
+      "clip": "Human_Swat",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.35042398664986635,
+      "minimum_mesh_z_m": -1.5406424580532985e-08,
+      "max_edge_stretch_ratio": 2.9971838690614137
+    },
+    {
+      "clip": "Human_Hit",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 0.09315388247014544,
+      "minimum_mesh_z_m": -1.5406424580532985e-08,
+      "max_edge_stretch_ratio": 1.6070888505942582
+    },
+    {
+      "clip": "Human_Fall",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 1.9063699292004004,
+      "minimum_mesh_z_m": 0.0017595855752006173,
+      "max_edge_stretch_ratio": 1.6070894185773417
+    },
+    {
+      "clip": "Human_Faint",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 1.9063698682560415,
+      "minimum_mesh_z_m": 0.001722645596601069,
+      "max_edge_stretch_ratio": 1.6070901855162276
+    },
+    {
+      "clip": "Human_Recover",
+      "format": "fbx",
+      "max_mesh_vertex_motion_m": 1.9063698041362231,
+      "minimum_mesh_z_m": 0.0016326139448210597,
+      "max_edge_stretch_ratio": 1.6070890598752874
+    }
+  ],
+  "source_fbx_comparison": [
+    {
+      "clip": "Human_Idle",
+      "max_source_fbx_head_difference_m": 7.504402902570668e-07,
+      "time": 0.95,
+      "bone": "Little03.R"
+    },
+    {
+      "clip": "Human_FingerCurl",
+      "max_source_fbx_head_difference_m": 5.040580712432518e-07,
+      "time": 0.85,
+      "bone": "Index03.R"
+    },
+    {
+      "clip": "Human_Blink",
+      "max_source_fbx_head_difference_m": 2.633124149899526e-07,
+      "time": 1,
+      "bone": "Ring02.R"
+    },
+    {
+      "clip": "Human_Walk",
+      "max_source_fbx_head_difference_m": 6.085806446272772e-07,
+      "time": 0.875,
+      "bone": "Middle03.R"
+    },
+    {
+      "clip": "Human_Run",
+      "max_source_fbx_head_difference_m": 6.094921033447254e-07,
+      "time": 0.5,
+      "bone": "Thumb03.L"
+    },
+    {
+      "clip": "Human_Crouch",
+      "max_source_fbx_head_difference_m": 5.763494850937639e-07,
+      "time": 0.133333,
+      "bone": "Middle03.R"
+    },
+    {
+      "clip": "Human_Jump",
+      "max_source_fbx_head_difference_m": 6.987501700189275e-07,
+      "time": 0.361111,
+      "bone": "Index03.R"
+    },
+    {
+      "clip": "Human_Land",
+      "max_source_fbx_head_difference_m": 6.986237006768129e-07,
+      "time": 0.444444,
+      "bone": "Index03.R"
+    },
+    {
+      "clip": "Human_Turn",
+      "max_source_fbx_head_difference_m": 7.638934622988878e-07,
+      "time": 0.7,
+      "bone": "Index02.R"
+    },
+    {
+      "clip": "Human_Clap",
+      "max_source_fbx_head_difference_m": 7.18082922639965e-07,
+      "time": 0.566667,
+      "bone": "Little03.R"
+    },
+    {
+      "clip": "Human_Swat",
+      "max_source_fbx_head_difference_m": 8.066264337235503e-07,
+      "time": 0.866667,
+      "bone": "Index02.L"
+    },
+    {
+      "clip": "Human_Hit",
+      "max_source_fbx_head_difference_m": 7.133906604996815e-07,
+      "time": 0.875,
+      "bone": "Middle03.L"
+    },
+    {
+      "clip": "Human_Fall",
+      "max_source_fbx_head_difference_m": 9.453726962543667e-07,
+      "time": 0.027778,
+      "bone": "Index03.L"
+    },
+    {
+      "clip": "Human_Faint",
+      "max_source_fbx_head_difference_m": 7.58387129312637e-07,
+      "time": 0.375,
+      "bone": "Middle03.L"
+    },
+    {
+      "clip": "Human_Recover",
+      "max_source_fbx_head_difference_m": 7.392237636335172e-07,
+      "time": 0.883333,
+      "bone": "Little03.L"
+    }
+  ]
+}
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

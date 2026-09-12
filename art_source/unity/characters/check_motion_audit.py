@@ -1,12 +1,19 @@
 """Enforce measurable source-motion gates; never substitutes for Unity/art review."""
 import json
 import hashlib
+import argparse
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
-report=json.loads((ROOT/'motion_audit.json').read_text())
+parser=argparse.ArgumentParser()
+parser.add_argument('--species',choices=['Human','Mosquito'])
+args=parser.parse_args()
+species_list=[args.species] if args.species else ['Human','Mosquito']
+report_path=ROOT/args.species.lower()/'motion_audit.json' if args.species else ROOT/'motion_audit.json'
+gate_path=ROOT/args.species.lower()/'motion_gate.json' if args.species else ROOT/'motion_gate.json'
+report=json.loads(report_path.read_text())
 errors=[]
-for species in ['Human','Mosquito']:
+for species in species_list:
     for kind in ['blend','fbx']:
         actions=[a for a in report['actions'] if a['species']==species and a['format']==kind]
         if len(actions)!=15:errors.append(f'{species}/{kind}: expected15clips, found{len(actions)}')
@@ -30,11 +37,11 @@ for hand in report['hands']:
     if hand['inward_distal_joint_displacement_m']<.015:errors.append(str(hand)+': finger does not curl inward')
 for eye in report['facial']:
     if eye['closed_open_height_ratio'] is None or eye['closed_open_height_ratio']>.20:errors.append(str(eye)+': blink does not close vertically')
-if len(report.get('expressions',[]))!=2:errors.append('Expected source/FBX jaw expression measurements')
+if 'Human' in species_list and len(report.get('expressions',[]))!=2:errors.append('Expected source/FBX jaw expression measurements')
 for expression in report.get('expressions',[]):
     if expression['jaw_mesh_downward_motion_in_head_space_m']<.003:errors.append(str(expression)+': jaw does not open downward')
-summary={'passed':not errors,'errors':errors,'scope':'60source/FBX clip evaluations, floor/support, loop, root, 10digits and blink; Unity/runtime/visual review separate',
-         'motion_audit_sha256':hashlib.sha256((ROOT/'motion_audit.json').read_bytes()).hexdigest()}
-(ROOT/'motion_gate.json').write_text(json.dumps(summary,indent=2),encoding='utf8',newline='\n')
+summary={'passed':not errors,'errors':errors,'species':species_list,'scope':str(len(report['actions']))+' source/FBX clip evaluations, floor/support, loop, root, digits and facial checks as applicable; Unity/runtime/visual review separate',
+         'sampling':report.get('sampling'),'motion_audit_sha256':hashlib.sha256(report_path.read_bytes()).hexdigest()}
+gate_path.write_text(json.dumps(summary,indent=2),encoding='utf8',newline='\n')
 print(json.dumps(summary,indent=2))
 assert not errors, 'Motion audit failed'

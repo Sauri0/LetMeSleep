@@ -1,5 +1,5 @@
 {
-  "version": "0.9.4-alpha-human-reference-quality-revision-5",
+  "version": "0.9.4-alpha-human-reference9-candidate",
   "generator": "build_characters.py",
   "blender": "5.2.1 LTS",
   "source_units": "meters",
@@ -23,8 +23,8 @@
       "species": "Human",
       "mesh_count": 5,
       "bones": 65,
-      "triangles": 10476,
-      "vertices": 5342,
+      "triangles": 7980,
+      "vertices": 4118,
       "unweighted_vertices": 0,
       "bad_weight_sums": 0,
       "degenerate_triangles": 0,
@@ -184,18 +184,18 @@
         "minimum_leg_reach_margin_m": 0.0015927914013900146
       },
       "bounds_min": [
-        -0.9201488494873047,
-        -0.22499999403953552,
+        -0.9200505018234253,
+        -0.21799999475479126,
         0.0
       ],
       "bounds_max": [
-        0.9201488494873047,
+        0.9202574491500854,
         0.1289999932050705,
         1.8625340461730957
       ],
       "dimensions": [
-        1.8402976989746094,
-        0.353999987244606,
+        1.8403079509735107,
+        0.34699998795986176,
         1.8625340461730957
       ],
       "sockets": [
@@ -602,12 +602,12 @@
           "head_blender_m": [
             0.8220000267028809,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ],
           "tail_blender_m": [
             0.8600120544433594,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ]
         },
         {
@@ -616,12 +616,12 @@
           "head_blender_m": [
             0.8600120544433594,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ],
           "tail_blender_m": [
             0.8883000612258911,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ]
         },
         {
@@ -630,12 +630,12 @@
           "head_blender_m": [
             0.8883000612258911,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ],
           "tail_blender_m": [
             0.9104000329971313,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ]
         },
         {
@@ -686,12 +686,12 @@
           "head_blender_m": [
             0.8220000267028809,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ],
           "tail_blender_m": [
             0.8607430458068848,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ]
         },
         {
@@ -700,12 +700,12 @@
           "head_blender_m": [
             0.8607430458068848,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ],
           "tail_blender_m": [
             0.8895750641822815,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ]
         },
         {
@@ -714,12 +714,12 @@
           "head_blender_m": [
             0.8895750641822815,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ],
           "tail_blender_m": [
             0.912100076675415,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ]
         },
         {
@@ -728,12 +728,12 @@
           "head_blender_m": [
             0.8220000267028809,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ],
           "tail_blender_m": [
             0.8519710302352905,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ]
         },
         {
@@ -742,12 +742,12 @@
           "head_blender_m": [
             0.8519710302352905,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ],
           "tail_blender_m": [
             0.8742750287055969,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ]
         },
         {
@@ -756,12 +756,12 @@
           "head_blender_m": [
             0.8742750287055969,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ],
           "tail_blender_m": [
             0.891700029373169,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ]
         },
         {
@@ -770,40 +770,40 @@
           "head_blender_m": [
             0.7820000052452087,
             0.0,
-            1.2050000429153442
+            1.190000057220459
           ],
           "tail_blender_m": [
-            0.8046994209289551,
+            0.8027631044387817,
             0.0,
-            1.216803789138794
+            1.2049494981765747
           ]
         },
         {
           "name": "Thumb02.L",
           "parent": "Thumb01.L",
           "head_blender_m": [
-            0.8046994209289551,
+            0.8027631044387817,
             0.0,
-            1.216803789138794
+            1.2049494981765747
           ],
           "tail_blender_m": [
-            0.8215920329093933,
+            0.8182147145271301,
             0.0,
-            1.2255879640579224
+            1.2160747051239014
           ]
         },
         {
           "name": "Thumb03.L",
           "parent": "Thumb02.L",
           "head_blender_m": [
-            0.8215920329093933,
+            0.8182147145271301,
             0.0,
-            1.2255879640579224
+            1.2160747051239014
           ],
           "tail_blender_m": [
-            0.8347893953323364,
+            0.8302862644195557,
             0.0,
-            1.2324506044387817
+            1.2247662544250488
           ]
         },
         {
@@ -882,12 +882,12 @@
           "head_blender_m": [
             -0.8220000267028809,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ],
           "tail_blender_m": [
             -0.8600120544433594,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ]
         },
         {
@@ -896,12 +896,12 @@
           "head_blender_m": [
             -0.8600120544433594,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ],
           "tail_blender_m": [
             -0.8883000612258911,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ]
         },
         {
@@ -910,12 +910,12 @@
           "head_blender_m": [
             -0.8883000612258911,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ],
           "tail_blender_m": [
             -0.9104000329971313,
             0.0,
-            1.1820000410079956
+            1.184000015258789
           ]
         },
         {
@@ -966,12 +966,12 @@
           "head_blender_m": [
             -0.8220000267028809,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ],
           "tail_blender_m": [
             -0.8607430458068848,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ]
         },
         {
@@ -980,12 +980,12 @@
           "head_blender_m": [
             -0.8607430458068848,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ],
           "tail_blender_m": [
             -0.8895750641822815,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ]
         },
         {
@@ -994,12 +994,12 @@
           "head_blender_m": [
             -0.8895750641822815,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ],
           "tail_blender_m": [
             -0.912100076675415,
             0.0,
-            1.1349999904632568
+            1.1330000162124634
           ]
         },
         {
@@ -1008,12 +1008,12 @@
           "head_blender_m": [
             -0.8220000267028809,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ],
           "tail_blender_m": [
             -0.8519710302352905,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ]
         },
         {
@@ -1022,12 +1022,12 @@
           "head_blender_m": [
             -0.8519710302352905,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ],
           "tail_blender_m": [
             -0.8742750287055969,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ]
         },
         {
@@ -1036,12 +1036,12 @@
           "head_blender_m": [
             -0.8742750287055969,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ],
           "tail_blender_m": [
             -0.891700029373169,
             0.0,
-            1.1119999885559082
+            1.1069999933242798
           ]
         },
         {
@@ -1050,40 +1050,40 @@
           "head_blender_m": [
             -0.7820000052452087,
             0.0,
-            1.2050000429153442
+            1.190000057220459
           ],
           "tail_blender_m": [
-            -0.8046994209289551,
+            -0.8027631044387817,
             0.0,
-            1.216803789138794
+            1.2049494981765747
           ]
         },
         {
           "name": "Thumb02.R",
           "parent": "Thumb01.R",
           "head_blender_m": [
-            -0.8046994209289551,
+            -0.8027631044387817,
             0.0,
-            1.216803789138794
+            1.2049494981765747
           ],
           "tail_blender_m": [
-            -0.8215920329093933,
+            -0.8182147145271301,
             0.0,
-            1.2255879640579224
+            1.2160747051239014
           ]
         },
         {
           "name": "Thumb03.R",
           "parent": "Thumb02.R",
           "head_blender_m": [
-            -0.8215920329093933,
+            -0.8182147145271301,
             0.0,
-            1.2255879640579224
+            1.2160747051239014
           ],
           "tail_blender_m": [
-            -0.8347893953323364,
+            -0.8302862644195557,
             0.0,
-            1.2324506044387817
+            1.2247662544250488
           ]
         },
         {
@@ -2217,16 +2217,16 @@
   ],
   "files": {
     "audit_motion.py": {
-      "sha256": "c4ee5e579b0c0ef9cb1f600edac7df59538146056884ec111ef206ad1ebde7dd",
-      "bytes": 11093
+      "sha256": "a3fa2d78ca67084729892a0236908e4c5c48750c009161868c2a9bca2cbb400b",
+      "bytes": 15791
     },
     "audit_surface_support.py": {
       "sha256": "d0e3cf766db767588e4f16a60738423efd6763d476ec1b984d4a48ddaec82538",
       "bytes": 5715
     },
     "author_human_geometry.py": {
-      "sha256": "fa8423bf59a59fbf91924d251fb948e4e6fb198161a3a48020b16464ba2ce38e",
-      "bytes": 8264
+      "sha256": "3d4f8cc06bcf58bd77594f5a75c349d0739421dfc672d78a01c87292b9192805",
+      "bytes": 10158
     },
     "author_mosquito_geometry.py": {
       "sha256": "709475d8310a16abbcd94191cfd9f24028306aa1f5c256ddecd91f8346e6a76a",
@@ -2237,12 +2237,12 @@
       "bytes": 13399
     },
     "build_characters.py": {
-      "sha256": "f7f38867adfb376884a86ea5c9ee9d1b9bc74f957834525a0e7756b9e52133d5",
-      "bytes": 26612
+      "sha256": "77c241507b03e71973c36ef13fefe63cd09af35df54e7c2bd3a32af0e366612b",
+      "bytes": 27247
     },
     "check_motion_audit.py": {
-      "sha256": "e9a96c7a124aab08e4feab3e70934b6a5884727fcdd65ab78d8aabdfd209dcaf",
-      "bytes": 2908
+      "sha256": "b5b0e0375157d0a6e0cc080aae7a92890b97fc69bea43ec6c38c7c2bf9878774",
+      "bytes": 3396
     },
     "compile_unity.py": {
       "sha256": "9896720ccb80995441c52b482524f7c1d3ff2f0d14f83b4cd490a003da1a0ae9",
@@ -2253,8 +2253,8 @@
       "bytes": 6815
     },
     "render_human_witness.py": {
-      "sha256": "89227d7b996b211328834abafddf326430af367783baec357e1c5f250dd76b04",
-      "bytes": 5111
+      "sha256": "52e8537fec37ef2924d02e3f41d882a57d95ef3b1cc31cb5846ace44f25373d1",
+      "bytes": 5776
     },
     "render_review.py": {
       "sha256": "b7fcc64b091bb2daff37a3d22ab960f6c76868e66db280417b8b32e5f78cd59c",
@@ -2265,8 +2265,8 @@
       "bytes": 4197
     },
     "verify_fbx.py": {
-      "sha256": "f0b8a5dfea0e1fff3fc4ba6e8138bb9f6961ca1fc1a68ff17bf53325a2bbf473",
-      "bytes": 2505
+      "sha256": "5a99642958b6a7ebed42a395f5307b39249b2d585e9e1db212b4a0b413a5294c",
+      "bytes": 2878
     },
     ".validation/probe_animation.py": {
       "sha256": "78dcfd3960e987834b7a04584eed3433184e39b372694c45567c30156af2b207",
@@ -2293,12 +2293,12 @@
       "bytes": 31964
     },
     "human/LMS_Human_alpha.blend": {
-      "sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
-      "bytes": 996962
+      "sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
+      "bytes": 928056
     },
     "human/LMS_Human_alpha.fbx": {
-      "sha256": "dd214f9b9f89f8c9703e877036238474d1768b5a1dfd4b842af43cd4279a1340",
-      "bytes": 8222060
+      "sha256": "348c0f48f5247102a8c873ff5f9d131a06e6e260421262185e24bf3a9db5a46d",
+      "bytes": 8176748
     },
     "mosquito/LMS_Mosquito_alpha.blend": {
       "sha256": "114780e673ddbd90670901399f30bdd99e13e83bd4208ebd01b0952b8a3d11ce",
@@ -2307,26 +2307,104 @@
     "mosquito/LMS_Mosquito_alpha.fbx": {
       "sha256": "08ecaf1858abe00921377de197c1ffb3479ce8540009adf263cbd057168863b9",
       "bytes": 3778604
+    },
+    "human/audit.json": {
+      "sha256": "78dc9a344db7ab015c44b191b784d78c361dd9917c4065309965b313ec524169",
+      "bytes": 24558
+    },
+    "human/fbx_roundtrip.json": {
+      "sha256": "467ed4d6472eb1a371f280e43dcedf3dbc9a180c9ecf9076ac62080f2c2dc7b7",
+      "bytes": 1323
+    },
+    "human/motion_audit.json": {
+      "sha256": "88f21eb4f548ac72a2537d3dbe268d29ce004f83b1bcf955091a85ffa14c2944",
+      "bytes": 872003
+    },
+    "human/motion_gate.json": {
+      "sha256": "5b02d94807d1d1082065a24ab164f729479188ac83d8db5f3b7d4574b657b0df",
+      "bytes": 391
+    },
+    "review/human-reference9/face_front.json": {
+      "sha256": "595e0a83e4dfd38768f8e8c37b67c19dd07d2251d67ec0983616e2ad46c2552f",
+      "bytes": 738
+    },
+    "review/human-reference9/face_front.png": {
+      "sha256": "12e1215c529105f7a29e879976d7e4d482bed8a5d7ff844aa1e6cd31c1f29a65",
+      "bytes": 466946
+    },
+    "review/human-reference9/face_profile.json": {
+      "sha256": "1137a1eb8bcc98ab97aa7903f7a1d96b596c4f92b656af98905657850661c213",
+      "bytes": 741
+    },
+    "review/human-reference9/face_profile.png": {
+      "sha256": "abacce4e642b1fb21e9e9e1d01785e41d68a6fd099598b26fa61b7faf25207ab",
+      "bytes": 432496
+    },
+    "review/human-reference9/front.json": {
+      "sha256": "e8797cb48ea107143747bc67993836ea7bb42adc670a3b83eed36e2c1d2fd57c",
+      "bytes": 729
+    },
+    "review/human-reference9/front.png": {
+      "sha256": "4156d7e135b922050fab0d2ab1ab4ed79f557e7e3bbf93d2cf0fc4643d2ee69c",
+      "bytes": 444740
+    },
+    "review/human-reference9/hand_open.json": {
+      "sha256": "6c533aef41781f3687ecd045211cb640923ee580d01cab4c2dd8cb0e5eb4d9b1",
+      "bytes": 747
+    },
+    "review/human-reference9/hand_open.png": {
+      "sha256": "9806dc6f69a4440fd1020722b065feb61f5ba2dcfa1a57f44075e48491d078c1",
+      "bytes": 436212
+    },
+    "review/human-reference9/slipper.json": {
+      "sha256": "15a4d80883e4c9f865538c31222391822b2353184048068750afd553cf900893",
+      "bytes": 740
+    },
+    "review/human-reference9/slipper.png": {
+      "sha256": "07c2f2bf93527ab70a66e69c731b5ddd162189257c00521b4979d2ed6a0af51f",
+      "bytes": 400546
+    },
+    "review/human-reference9/three_quarter.json": {
+      "sha256": "1704b9705d8afebfe7378a5492c0b72b3da4c59fb75fae09ed787eb834b675f9",
+      "bytes": 738
+    },
+    "review/human-reference9/three_quarter.png": {
+      "sha256": "8e69495a6d6269ae7dae4a4940c513282c909ce689bfcc80c236aa07c18c4859",
+      "bytes": 439904
     }
   },
   "generated_species": [
     "Human"
   ],
-  "review_status": "Human reference8: six source views rendered; visual defects and motion/FBX/Unity checks pending",
+  "review_status": "Human reference9 source + six views + numeric Human-only motion/FBX checks; visual defects and Unity review pending",
   "human_candidate_evidence": {
-    "status": "CANDIDATE_RENDERED_NOT_APPROVED",
-    "source_sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
-    "fbx_sha256": "dd214f9b9f89f8c9703e877036238474d1768b5a1dfd4b842af43cd4279a1340",
-    "views": [
-      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/face_front.png",
-      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/face_profile.png",
-      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/front.png",
-      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/hand_open.png",
-      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/slipper.png",
-      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/three_quarter.png"
+    "status": "NUMERIC_GATES_PASSED_VISUAL_REVIEW_REQUIRED",
+    "geometry_source_commit": "27e7195ced1433337118c935aa07a656cfe8adc6",
+    "source_sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
+    "fbx_sha256": "348c0f48f5247102a8c873ff5f9d131a06e6e260421262185e24bf3a9db5a46d",
+    "motion_audit_sha256": "88f21eb4f548ac72a2537d3dbe268d29ce004f83b1bcf955091a85ffa14c2944",
+    "motion_gate_sha256": "5b02d94807d1d1082065a24ab164f729479188ac83d8db5f3b7d4574b657b0df",
+    "roundtrip_sha256": "467ed4d6472eb1a371f280e43dcedf3dbc9a180c9ecf9076ac62080f2c2dc7b7",
+    "visual_approved": false,
+    "unity_import_verified": false,
+    "full_motion_video_reviewed": false,
+    "real_tool_grip_verified": false,
+    "reports": [
+      "human/audit.json",
+      "human/fbx_roundtrip.json",
+      "human/motion_audit.json",
+      "human/motion_gate.json"
     ],
-    "motion_verified": false,
-    "fbx_roundtrip_verified": false,
-    "unity_import_verified": false
-  }
+    "views": [
+      "review/human-reference9/face_front.png",
+      "review/human-reference9/face_profile.png",
+      "review/human-reference9/front.png",
+      "review/human-reference9/hand_open.png",
+      "review/human-reference9/slipper.png",
+      "review/human-reference9/three_quarter.png"
+    ],
+    "numeric_motion_passed": true,
+    "numeric_roundtrip_passed": true
+  },
+  "global_reports_note": "Root motion_audit/motion_gate/fbx_roundtrip remain historical combined reports. Use Human-only reports for this revision; do not propagate human PASS to another species."
 }

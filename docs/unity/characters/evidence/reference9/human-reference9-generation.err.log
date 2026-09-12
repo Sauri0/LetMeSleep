@@ -1,0 +1,2 @@
+N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\build_characters.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m.use_nodes = True

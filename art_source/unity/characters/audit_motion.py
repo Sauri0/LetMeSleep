@@ -7,10 +7,17 @@ import json
 import math
 import hashlib
 import sys
+import argparse
 from pathlib import Path
 from mathutils import Vector
 
 ROOT=Path(__file__).resolve().parent
+parser=argparse.ArgumentParser()
+parser.add_argument('--species',choices=['Human','Mosquito'])
+parser.add_argument('--all-frames',action='store_true')
+args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
+SPECIES=[args.species] if args.species else ['Human','Mosquito']
+REPORT_PATH=ROOT/args.species.lower()/'motion_audit.json' if args.species else ROOT/'motion_audit.json'
 RESULTS=[]
 POSES={}
 HANDS=[]
@@ -18,7 +25,7 @@ FACIAL=[]
 EXPRESSIONS=[]
 JAW_SEQUENCES=[]
 HAND_SPACE_CASES=[]
-ALL_FRAMES='--all-frames' in sys.argv
+ALL_FRAMES=args.all_frames
 
 def activate(rig,action):
     rig.animation_data_create()
@@ -42,7 +49,7 @@ def sample(rig,meshes,frame):
 
 def distance(a,b): return (Vector(a)-Vector(b)).length
 
-for species in ['Human','Mosquito']:
+for species in SPECIES:
     source=json.loads((ROOT/species.lower()/'audit.json').read_text())
     for kind in ['blend','fbx']:
         path=ROOT/species.lower()/f'LMS_{species}_alpha.{kind}'
@@ -115,6 +122,8 @@ for species in ['Human','Mosquito']:
                  'max_root_head_motion_m':max(distance(s['heads']['Root'],base_heads['Root']) for s in sampled),
                  'samples':[{'time':s['time'],'feet_z':s['feet_z'],'hips_z':s['hips_z']} for s in sampled]}
             RESULTS.append(row); POSES[(kind,name)]={round(s['time'],6):s['heads'] for s in sampled}
+            print('LMS_MOTION_CLIP_DONE '+json.dumps({'species':species,'format':kind,'clip':name,
+                  'samples':len(sampled),'minimum_z_m':min_z,'max_edge_stretch_ratio':max_stretch}),flush=True)
         if species=='Human':
             # Bone axis names are insufficient: measure the eye surface's vertical extent.
             blink=next(a for a in bpy.data.actions if a.name.endswith('Human_Blink'))
@@ -204,7 +213,7 @@ for species in ['Human','Mosquito']:
                                                    for d in ['Thumb','Index','Middle','Ring','Little']}})
 
 comparisons=[]
-for species in ['Human','Mosquito']:
+for species in SPECIES:
     names=[r['clip'] for r in RESULTS if r['species']==species and r['format']=='blend']
     for name in names:
         src=POSES[('blend',name)]; fbx=POSES[('fbx',name)]
@@ -212,10 +221,11 @@ for species in ['Human','Mosquito']:
         worst=max(errors)
         comparisons.append({'clip':name,'max_source_fbx_head_difference_m':worst[0],'time':worst[1],'bone':worst[2]})
 report={'scope':'Read-only Blender source and reimported FBX. Measures motion, not artistic approval or Unity playback.',
+        'species':SPECIES,
         'sampling':'Every integer source frame plus fixed checkpoints and Clap23.5' if ALL_FRAMES else 'Nine fixed checkpoints plus Clap23.5',
         'blender':bpy.app.version_string,'actions':RESULTS,'source_fbx_comparison':comparisons,'hands':HANDS,'facial':FACIAL,'expressions':EXPRESSIONS,
         'jaw_sequences':JAW_SEQUENCES,'rotated_arm_hand_space_cases':HAND_SPACE_CASES,
         'fbx_evaluation_note':'FBX-imported connected bones are restored to the source unconnected contract before evaluation.'}
-(ROOT/'motion_audit.json').write_text(json.dumps(report,indent=2),encoding='utf8',newline='\n')
+REPORT_PATH.write_text(json.dumps(report,indent=2),encoding='utf8',newline='\n')
 print(json.dumps({'actions':[{k:r[k] for k in ['clip','format','max_mesh_vertex_motion_m','minimum_mesh_z_m','max_edge_stretch_ratio']} for r in RESULTS],
                   'source_fbx_comparison':comparisons},indent=2))
