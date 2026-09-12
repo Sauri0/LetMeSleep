@@ -14,7 +14,7 @@ using Object = UnityEngine.Object;
 
 namespace LetMeSleep.Content.Editor
 {
-    public static class AlfaMapBuilder
+    public static partial class AlfaMapBuilder
     {
         const string Output="Assets/LetMeSleep/Content/Environment/AlfaMaps";
         const string Sample=EnvironmentSampleBuilder.Output;
@@ -29,7 +29,7 @@ namespace LetMeSleep.Content.Editor
         [Serializable] public class Plan { public Zone[] zones; public Portal[] portals; public Lobby lobby; }
         [Serializable] public class Zone { public string id,kind,floor; public float[] min,max; }
         [Serializable] public class Portal { public string id,from,to; public float[] center,normal; public float width,height; public bool door; }
-        [Serializable] public class Lobby { public Spawn[] spawns; }
+        [Serializable] public class Lobby { public Spawn[] spawns; public Zone bounds; public float[] source_shell_scale; }
         [Serializable] public class Spawn { public string id; public float[] position,forward; }
         [Serializable] public class Receipt { public string unityVersion,utc,houseScene,lobbyScene,houseContentHash,lobbyContentHash; public int houseMeshes,houseColliders,doors,toolPickups,lobbyMeshes,lobbyColliders; public string[] verified,pending; }
         static readonly Dictionary<string,GameObject> Kit=new Dictionary<string,GameObject>();
@@ -89,10 +89,12 @@ namespace LetMeSleep.Content.Editor
                 EditorSceneManager.CloseScene(scene,true);
                 scene=EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Additive);SceneManager.SetActiveScene(scene);
                 var lobby=new GameObject("PrivateLobby");
-                InstantiateStatic("lobby_alfa_static",manifest.lobby_alfa_static,lobby.transform);
+                var lobbyShell=InstantiateStatic("lobby_alfa_static",manifest.lobby_alfa_static,lobby.transform);
+                lobbyShell.transform.localScale=V(plan.lobby.source_shell_scale);
+                FurnishLobby(lobby);
                 var lobbyData=lobby.AddComponent<EnvironmentMapDefinition>();lobbyData.MapId="private-lobby-v1";lobbyData.ContentHash=ContentHash(repository,lobbyData.MapId);lobbyData.SpatialData=AssetDatabase.LoadAssetAtPath<TextAsset>(Output+"/Data/house_layout_plan.json");
                 string lobbyHash=lobbyData.ContentHash;
-                lobbyData.PlayBounds=new Bounds(new Vector3(0,1.6f,0),new Vector3(10,3.2f,8));
+                lobbyData.PlayBounds=new Bounds((V(plan.lobby.bounds.min)+V(plan.lobby.bounds.max))*.5f,V(plan.lobby.bounds.max)-V(plan.lobby.bounds.min));
                 var spawnRoot=Child(lobby.transform,"Spawns");
                 lobbyData.LobbySpawnPoints=plan.lobby.spawns.Select(p=>{
                     var t=Child(spawnRoot,p.id);t.localPosition=V(p.position)+Vector3.up*.02f;t.rotation=Quaternion.LookRotation(V(p.forward));return t;}).ToArray();
@@ -102,16 +104,19 @@ namespace LetMeSleep.Content.Editor
                 Anchor(lobbyData.PresentationAnchors,"AudioZone_Lobby",new Vector3(0,1.6f,0));
                 Anchor(lobbyData.PresentationAnchors,"ReflectionVolume_Lobby",new Vector3(0,1.6f,0));
                 Anchor(lobbyData.PresentationAnchors,"LightAnchor_Lobby",new Vector3(0,2.9f,0));
+                AddLobbyPresentationAnchors(lobbyData);
                 BindGameplay(lobby,20000,100);
                 CheckSpawns(lobby,lobbyData.LobbySpawnPoints,.25f,1.72f);
+                CheckLobbyDressing(lobby,lobbyData);
                 int lobbyMeshes=lobby.GetComponentsInChildren<MeshRenderer>().Length,lobbyColliders=lobby.GetComponentsInChildren<Collider>().Length;
                 SavePrefabAndInstantiate(ref lobby,Output+"/Prefabs/PrivateLobby.prefab",scene);
+                CheckLobbyDressing(lobby,lobby.GetComponent<EnvironmentMapDefinition>());
                 AddReviewLights(plan,true);AddCamera(new Vector3(0,1.8f,-3.3f),new Vector3(0,1.2f,1),"Review_Lobby");
                 Need(EditorSceneManager.SaveScene(scene,LobbyScene),"Lobby scene save failed.");
                 AssetDatabase.SaveAssets();
                 var receipt=new Receipt{unityVersion=Application.unityVersion,utc=DateTime.UtcNow.ToString("o"),houseScene=HouseScene,lobbyScene=LobbyScene,houseContentHash=houseHash,lobbyContentHash=lobbyHash,
                     houseMeshes=houseMeshes,houseColliders=houseColliders,doors=doors,toolPickups=7,lobbyMeshes=lobbyMeshes,lobbyColliders=lobbyColliders,
-                    verified=new[]{"Source bounds and explicit FBX Z conversion","Unique nonzero GameplaySurface IDs","Hinge/leaf/handle and nine GameplayDoor definitions","Seven unique flyswatter pickups with non-perchable interaction triggers","5 human / 16 mosquito / 16 lobby spawn clearances against geometry","Separate house/patio and lobby scenes; no duplicated sample shell"},
+                    verified=new[]{"Source bounds and explicit FBX Z conversion","Unique nonzero GameplaySurface IDs","Hinge/leaf/handle and nine GameplayDoor definitions","Seven unique flyswatter pickups with non-perchable interaction triggers","5 human / 16 mosquito / 16 lobby spawn clearances against geometry","Lobby dressing preserves central reserve and 1.8m circulation; menu camera/stages serialized","Separate house/patio and lobby scenes; no duplicated sample shell"},
                     pending=new[]{"Visual lighting and UV2 bake validation","Controller stair/door traversal and camera playtest","Runtime bots/pickups and online round integration","Performance measurement"}};
                 File.WriteAllText(Path.Combine(repository,"docs/unity/environment/ALFA-MAPS-IMPORT-RECEIPT.json"),JsonUtility.ToJson(receipt,true)+"\n");
                 Debug.Log("LMS_ALFA_MAPS_BUILT "+JsonUtility.ToJson(receipt));
@@ -323,7 +328,7 @@ namespace LetMeSleep.Content.Editor
         static void AddReviewLights(Plan plan,bool lobby)
         {
             var root=new GameObject("ReviewOnly_LightingRoot");RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientLight=new Color(.17f,.20f,.27f);
-            if(lobby){Point(root.transform,"Lobby",new Vector3(0,2.9f,0),7,10);return;}
+            if(lobby){Point(root.transform,"Lobby",new Vector3(0,2.9f,0),4,12);foreach(float x in new[]{-4.8f,0,4.8f})Point(root.transform,"Lobby_Lantern_"+x,new Vector3(x,2.45f,5.55f),1.5f,5);return;}
             foreach(var zone in plan.zones.Where(z=>z.kind!="patio")){Vector3 center=(V(zone.min)+V(zone.max))*.5f;Point(root.transform,zone.id,new Vector3(center.x,V(zone.max).y-.25f,center.z),3,7);}
             var moon=Child(root.transform,"Moon_Review");moon.localRotation=Quaternion.Euler(50,-35,0);var light=moon.gameObject.AddComponent<Light>();light.type=LightType.Directional;light.color=new Color(.60f,.72f,1);light.intensity=.45f;light.shadows=LightShadows.Soft;
         }
@@ -335,6 +340,7 @@ namespace LetMeSleep.Content.Editor
                 "art_source/unity/environments/alfa_maps/house_alfa_static.fbx","art_source/unity/environments/alfa_maps/lobby_alfa_static.fbx","art_source/unity/environments/alfa_maps/furniture_kit_alfa.fbx","art_source/unity/environments/alfa_maps/source_manifest.json",
                 "art_source/unity/environments/room_sample/house_layout_plan.json","art_source/unity/environments/room_sample/room_furnished_without_door.fbx","art_source/unity/environments/room_sample/door_01.fbx","art_source/unity/environments/room_sample/room_contract.json","art_source/unity/environments/room_sample/presentation_manifest.json",
                 "unity/Assets/LetMeSleep/Content/Editor/Environment/EnvironmentSampleBuilder.cs","unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaMapBuilder.cs","unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs",
+                "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaLobbyDressing.cs",
                 "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs","unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs"};
             var payload=new System.Text.StringBuilder(mapId+"\n");
             using(var sha=System.Security.Cryptography.SHA256.Create()){

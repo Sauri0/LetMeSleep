@@ -43,7 +43,7 @@ Envolvente de casa 12.80 × 11.40 m; la propuesta inicial 12 × 10 m se amplió 
 | Baja | Vestíbulo/pasillo longitudinal, estar, comedor, cocina, descansos laterales y escalera. Entrada frontal y salida al patio |
 | Alta | Pasillo y descansos, dos dormitorios, baño y lavado; acceso desde escalera sin atravesar dormitorios |
 | Patio | Sendero 1.80 m desde salida, banco y dos pinos fuera de circulación; cerca visible |
-| Lobby independiente | Interior 10 × 8 × 3.20 m, centro libre 6 × 4 m y circulación perimetral 1.80 m; decoración en paredes sin bancos que estrechen esquinas |
+| Lobby independiente | Interior final 14 × 12 × 3.20 m, centro libre 6 × 4 m y circulación perimetral 1.80 m; bancos/pinos en franja exterior. Ver LOBBY-DRESSING.md |
 
 Escalera en U: 18 contrahuellas de 1/6 m, dos tramos de 9 con 8 huellas de 0.28 m por tramo. Ancho útil 1.60 m, rellano intermedio 1.60 m, aproximación/salida 1.80 m. Hueco de forjado real sobre toda la caja, barandas en el separador de 0.30 m y protección del borde superior; no se pone baranda atravesando la salida de escalera. El volumen bajo escalera no se presenta como ruta humana.
 
@@ -79,11 +79,11 @@ Después de instanciar el mapa y ejecutar World.RegisterGeometry(), Director deb
 
 Fuentes editables y exportaciones en `art_source/unity/environments/alfa_maps/`: `house_alfa_static.blend/.fbx`, `lobby_alfa_static.blend/.fbx`, `furniture_kit_alfa.blend/.fbx`, `build_sources.py`, `source_manifest.json` y `source_validation.json`. Plano en `room_sample/house_layout_plan.json`, reproducible con `build_house_plan.ps1`.
 
-Blender 5.2.1 CPU, sin render: **811 checks / 0 fallos**, incluyendo manifold/volumen, colliders positivos y reimportación de los tres FBX (jerarquía/límites a tolerancia0.1mm). Casa119 meshes/4612tri; lobby4/60tri; kit50/2140tri antes de instancias. No son conteos finales de escena ni mediciones de rendimiento.
+Blender 5.2.1 CPU, sin render: **811 checks / 0 fallos**, incluyendo manifold/volumen, colliders positivos y reimportación de los tres FBX (jerarquía/límites a tolerancia0.1mm). Casa119 meshes/4612tri; lobby4/60tri; kit50/2140tri antes de instancias. No son conteos finales de escena ni mediciones de rendimiento. El lobby fuente de cuatro meshes ahora se amplía y amuebla al generar la instancia Unity; detalle en LOBBY-DRESSING.md.
 
 El builder y los tipos exactos del puente compilan offline contra APIs de Unity6000.3.24f1. `verify_unity_builder.ps1` compila también los tipos entregados GameplayDoor/GameplaySurface/GameplayToolPickup y el descriptor del mapa; no sustituye pruebas de todo Gameplay. Los `.meta` de scripts/asmdefs están incluidos; Unity creará los de FBX, meshes, prefabs y escenas generados.
 
-`compute_content_hash.ps1` reproduce exactamente ContentHash: ID de mapa + lista ordenada de rutas y SHA256; texto UTF8 con saltos LF, FBX sin modificar. Incluye 14 archivos: fuentes FBX, manifests, layout, C# de generación/descriptor y GameplayToolPickup.cs/ToolContracts.cs; no incluye timestamps del recibo. Mantener esos inputs y assets generados vinculados al mismo commit.
+`compute_content_hash.ps1` reproduce exactamente ContentHash: ID de mapa + lista ordenada de rutas y SHA256; texto UTF8 con saltos LF, FBX sin modificar. Incluye 15 archivos (también AlfaLobbyDressing.cs): fuentes FBX, manifests, layout, C# de generación/descriptor y GameplayToolPickup.cs/ToolContracts.cs; no incluye timestamps del recibo. Mantener esos inputs y assets generados vinculados al mismo commit.
 
 Al ejecutar, el builder verifica bounds/ejes y hornea la conversión FBX probada en copias Mesh, conservando UV2 y corrigiendo normales/tangentes/winding. Comprueba IDs, referencias de puerta, posiciones de spawn contra AABB conservadoras de geometría y conservación de colliders/IDs tras guardar y reabrir el prefab. Escribe `ALFA-MAPS-IMPORT-RECEIPT.json` únicamente tras completar ambos mapas. Ese recibo no existe como evidencia hasta ejecución por Director.
 

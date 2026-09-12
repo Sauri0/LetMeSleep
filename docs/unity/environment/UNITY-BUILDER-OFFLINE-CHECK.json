@@ -6,12 +6,16 @@
   "source_sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2",
   "builder_sources": [
     {
-      "name": "AlfaMapBuilder.cs",
-      "sha256": "5ba0336533e1b1f3e0df8d3ddca535b9a59c047a8967ae160f79e6c2b863eb8f"
+      "sha256": "2f6e050aadd0d11e6301bf68aa74c5692425ba068f6ea8313cbac04ace15646b",
+      "name": "AlfaLobbyDressing.cs"
     },
     {
-      "name": "EnvironmentSampleBuilder.cs",
-      "sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2"
+      "sha256": "16685643fcdc2cd982445e1787e6c4e83988b0a0b18bd62cba4beb6853cc858b",
+      "name": "AlfaMapBuilder.cs"
+    },
+    {
+      "sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2",
+      "name": "EnvironmentSampleBuilder.cs"
     }
   ],
   "checks": [

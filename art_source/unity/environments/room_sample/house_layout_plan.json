@@ -900,16 +900,22 @@
     "perimeter_min_width": 1.8,
     "bounds": {
       "min": [
-        -5,
+        -7,
         0,
-        -4
+        -6
       ],
       "max": [
-        5,
+        7,
         3.2,
-        4
+        6
       ]
-    }
+    },
+    "source_shell_scale": [
+      1.4,
+      1,
+      1.5
+    ],
+    "dressing_note": "Existing lobby shell expands to14x12; existing kit fills outer apron; center6x4 plus1.8m circulation ring stays clear;16 spawns unchanged."
   },
   "boundary_ownership": "One shell owner per wall/slab junction. Portals cut real openings; no overlapping complete room shells. No physics through closed window.",
   "validation_scope": "Numeric extents, non-overlapping same-floor zones, graph connectivity and lobby spawn clearances only; no Unity traversal or art evidence."
