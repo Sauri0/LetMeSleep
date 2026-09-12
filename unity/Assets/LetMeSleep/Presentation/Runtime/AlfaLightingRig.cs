@@ -154,6 +154,7 @@ namespace LetMeSleep.Presentation
             GameObject lightObject = localLight.gameObject;
             lightObject.name = "LMS_LocalLight_" + ResolveZone(anchor.name);
             localLight.type = profile.Type;
+            OrientLocalLight(anchor.name, localLight.transform, profile.Type);
             if (profile.Type == LightType.Spot)
             {
                 localLight.spotAngle = 125f;
@@ -195,7 +196,27 @@ namespace LetMeSleep.Presentation
                 LightType.Spot);
             Light cameraFill = CreateMapLight(cameraAnchor, profile, false);
             cameraFill.gameObject.name = "LMS_LobbyCameraFill";
+            cameraFill.transform.localPosition = Vector3.forward * 2.75f;
             mapLights.Add(cameraFill);
+        }
+
+        private static void OrientLocalLight(
+            string anchorName, Transform lightTransform, LightType type)
+        {
+            if (type != LightType.Spot || !Contains(anchorName, "Lobby"))
+                return;
+
+            if (Contains(anchorName, "Lantern"))
+            {
+                // Lobby lantern anchors sit just in front of the back wall. Aim their
+                // pools into the room instead of projecting directly onto that wall.
+                lightTransform.localRotation = Quaternion.LookRotation(
+                    new Vector3(0f, -0.6f, -0.8f), Vector3.up);
+                return;
+            }
+
+            lightTransform.localRotation = Quaternion.LookRotation(
+                Vector3.down, Vector3.forward);
         }
 
         private static void ApplyAmbientProfile(bool house)
@@ -213,6 +234,10 @@ namespace LetMeSleep.Presentation
             RenderSettings.ambientIntensity = house ? 1f : 1.08f;
             RenderSettings.reflectionIntensity = house ? 0.42f : 0.52f;
             RenderSettings.subtractiveShadowColor = new Color(0.018f, 0.025f, 0.045f);
+
+            // URP uploads RenderSettings.ambientProbe to Lit shaders. Runtime changes to
+            // Trilight colors do not rebuild that probe until the environment is updated.
+            DynamicGI.UpdateEnvironment();
         }
 
         private static LocalLightProfile ResolveProfile(string anchorName, bool house)

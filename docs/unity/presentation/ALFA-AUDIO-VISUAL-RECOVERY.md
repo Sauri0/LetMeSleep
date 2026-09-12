@@ -41,15 +41,18 @@ Las luces interiores se proyectan hacia abajo desde los anchors de luminaria
 como spots de 125 grados, inner cone de 80 grados. Patio conserva una point
 light. El lobby usa luces cálidas locales de intensidad 0.48/rango 3.6, un fill
 direccional frío de intensidad 0.55 y un spot frontal suave de intensidad
-0.72/rango 8.5 alineado con `MainMenuCamera`; ninguno proyecta sombras. Ambos
-fills se desactivan en la casa. El volumen global usa bloom 0.025, threshold
-1.35 y scatter 0.35.
+0.72/rango 8.5 alineado con `MainMenuCamera` y adelantado 2.75 m sobre su eje;
+ninguno proyecta sombras. Los spots de los faroles apuntan hacia el interior y
+el piso, en vez de la pared inmediatamente posterior. Ambos fills se desactivan
+en la casa. El volumen global usa bloom 0.025, threshold 1.35 y scatter 0.35.
 
 La casa conserva los pools cálidos de cada luminaria sobre un ambiente
 `Trilight` nocturno legible: sky `(0.14, 0.17, 0.24)`, equator
 `(0.09, 0.095, 0.13)`, ground `(0.045, 0.042, 0.06)` e intensidad `1.0`.
 Este relleno frío evita techos negros y paredes sin lectura sin convertir la
-escena en iluminación diurna ni sumar luces por habitación.
+escena en iluminación diurna ni sumar luces por habitación. Al enlazar el mapa,
+`DynamicGI.UpdateEnvironment()` reconstruye el ambient probe que URP entrega a
+los materiales Lit con los colores recién seleccionados.
 
 La captura de diagnóstico previa al ajuste es
 `N:/LetMeSleep/Validation/Alfa-VisualRecovery/menu-1080.png`, 1920×1080,
