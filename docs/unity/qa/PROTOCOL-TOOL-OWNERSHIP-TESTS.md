@@ -1,6 +1,6 @@
 # Suite de protocolo y propiedad de herramientas
 
-Estado inicial: **6/6 PASS en arnés C# externo** contra la fuente principal `fffa035` el 2026-09-12. La próxima corrida Unity EditMode debe incorporar estos casos al recibo integrado.
+Estado: **6/6 PASS** tanto en el arnés C# externo contra `fffa035` como en la corrida Unity EditMode integrada de **61/61** sobre `768ffa8` más cambios Root aún sin commit. El resultado Unity quedó en [`ALFA-INTEGRATED-EDITMODE-20260912.json`](ALFA-INTEGRATED-EDITMODE-20260912.json).
 
 La suite `AlphaProtocolToolOwnershipTests` comprueba:
 

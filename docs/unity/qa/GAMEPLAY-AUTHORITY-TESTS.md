@@ -1,6 +1,6 @@
 # Suite EditMode — Gameplay Authority
 
-Estado: **33/33 PASS en arnés C# externo**. Los 29 casos anteriores están incluidos en una corrida oficial Unity EditMode de **51/51 PASS**; los cuatro casos nuevos de réplica requieren la próxima corrida Unity integrada.
+Estado: **33/33 PASS en arnés C# externo**. Los casos Core, autoridad y réplica también están incluidos en la corrida Unity EditMode integrada de **61/61 PASS**.
 
 La suite contiene diez casos NUnit sobre `GameplayAuthority`, cuatro sobre `ReplicaStateGate` y un `IGameplayWorld` falso controlable. El arnés externo compiló el runtime Gameplay integrado junto con las 19 pruebas Core y ejecutó los 33 casos. Esta comprobación detecta errores de C# y de estado puro, pero no acredita Test Runner, física, render ni red de Unity.
 
@@ -35,8 +35,8 @@ El script usa por defecto el `nunit.framework.dll` del PackageCache de la instal
 - La ventana de eventos acepta reordenamiento hasta 1023 IDs, rechaza duplicados y excluye exactamente el ID ubicado 1024 posiciones atrás.
 - `Reset(null)` cierra los tres canales hasta configurar otra ronda.
 
-El arnés externo pasó los 33 casos contra el Gameplay integrado en `N:/LetMeSleep/Repository` el 12 de septiembre de 2026. La corrida oficial anterior, `ALFA-INTEGRATED-UNITY-TESTS-20260912.json`, pasó 51/51 y cubrió los 29 casos previos; no se usa como evidencia de los cuatro agregados después.
+El arnés externo pasó los 33 casos contra el Gameplay integrado en `N:/LetMeSleep/Repository` el 12 de septiembre de 2026. La corrida Unity más reciente, [`ALFA-INTEGRATED-EDITMODE-20260912.json`](ALFA-INTEGRATED-EDITMODE-20260912.json), pasó 61/61 e incluye los cuatro casos de réplica agregados después del recibo anterior de 51/51.
 
 ## Evidencia pendiente
 
-Ejecutar otra vez `LetMeSleep.Tests.EditMode` en el Unity Test Runner para incorporar los cuatro casos nuevos y conservar JSON/XML/log con fuente identificada. G10 todavía exige el manifiesto geométrico finito, mutantes y revisión física/visual definidos en Gameplay; estos tests sólo prueban que Authority consulta al mundo cada tick y no conserva una marca tras perder contacto.
+G10 todavía exige el manifiesto geométrico finito, mutantes y revisión física/visual definidos en Gameplay; estos tests sólo prueban que Authority consulta al mundo cada tick y no conserva una marca tras perder contacto.
