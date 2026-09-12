@@ -146,6 +146,13 @@ namespace LetMeSleep.UI
             Fill(first.rectTransform, 0f, 0f, 0f, 112f);
             var second = LogoText(root.transform, "LogoSecondLine", "SLEEP", 112f, AlfaUiTheme.Sheet100);
             Fill(second.rectTransform, 0f, 98f, 86f, 0f);
+            // Vertex colours keep the editable wordmark crisp at both target resolutions.
+            first.color = second.color = Color.white;
+            first.enableVertexGradient = second.enableVertexGradient = true;
+            first.colorGradient = new VertexGradient(AlfaUiTheme.Sheet100, AlfaUiTheme.Sheet100,
+                AlfaUiTheme.Lamp400, AlfaUiTheme.Lamp400);
+            second.colorGradient = new VertexGradient(AlfaUiTheme.Sheet100, AlfaUiTheme.Sheet100,
+                AlfaUiTheme.Sky400, AlfaUiTheme.Sky400);
             first.outlineColor = second.outlineColor = AlfaUiTheme.Ink900;
             first.outlineWidth = second.outlineWidth = 0.14f;
 
@@ -157,6 +164,22 @@ namespace LetMeSleep.UI
             rect.sizeDelta = new Vector2(76f, 76f);
             rect.localRotation = Quaternion.Euler(0f, 0f, -14f);
             return root.GetComponent<RectTransform>();
+        }
+
+        internal static void NightPrimaryButton(UnityEngine.UI.Button button)
+        {
+            // Local menu treatment: readable light labels on saturated blue, including focus.
+            var colors = button.colors;
+            colors.normalColor = new Color32(17, 79, 139, 255);
+            colors.highlightedColor = new Color32(22, 96, 163, 255);
+            colors.selectedColor = colors.highlightedColor;
+            colors.pressedColor = new Color32(12, 57, 104, 255);
+            button.colors = colors;
+            foreach (var label in button.GetComponentsInChildren<TextMeshProUGUI>())
+                label.color = AlfaUiTheme.Sheet100;
+            foreach (var symbol in button.GetComponentsInChildren<AlfaUiIcon>())
+                symbol.color = AlfaUiTheme.Sheet100;
+            button.GetComponent<UnityEngine.UI.Outline>().effectColor = AlfaUiTheme.Sky400;
         }
 
         internal static void QuietButton(UnityEngine.UI.Button button, float labelSize = 22f)

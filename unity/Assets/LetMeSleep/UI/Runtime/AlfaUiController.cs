@@ -474,7 +474,8 @@ namespace LetMeSleep.UI
             factory.Text(menu, "Subtitle", "HUMANOS CONTRA MOSQUITOS", 22f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
             factory.Divider(menu, "BrandDivider", new Color(AlfaUiTheme.Lamp400.r, AlfaUiTheme.Lamp400.g, AlfaUiTheme.Lamp400.b, 0.9f), 3f);
             factory.Text(menu, "Question", "ELEGÍ CÓMO JUGAR", 20f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
-            factory.FeatureButton(menu, "MainPlayButton", "JUGAR ONLINE", "CREÁ O UNITE A UNA SALA", ShowOnlineChoice, AlfaUiIconKind.Online, true, false, 88f);
+            var play = factory.FeatureButton(menu, "MainPlayButton", "JUGAR ONLINE", "CREÁ O UNITE A UNA SALA", ShowOnlineChoice, AlfaUiIconKind.Online, true, false, 88f);
+            AlfaUiFactory.NightPrimaryButton(play);
             factory.FeatureButton(menu, "MainTrainingButton", "ENTRENAMIENTO", "PRACTICÁ CON BOTS", ShowTraining, AlfaUiIconKind.Training, false, false, 72f);
             factory.FeatureButton(menu, "MainCustomizeButton", "PERSONALIZAR", "HUMANO Y MOSQUITO", ShowCustomization, AlfaUiIconKind.Customize, false, false, 72f);
             factory.FeatureButton(menu, "MainSettingsButton", "AJUSTES", "AUDIO · VIDEO · CONTROLES", () => OpenSettings(AlfaUiScreen.MainMenu), AlfaUiIconKind.Settings, false, false, 72f);
