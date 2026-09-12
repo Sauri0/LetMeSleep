@@ -265,7 +265,12 @@ namespace LetMeSleep.Gameplay
             }
             else if (a.Surface.HasValue && world.ResolveSurface(a.Surface.Value, out var support))
             {
-                if (world.TrySurface(new SurfaceQuery(a.Spawn.ActorId, a.Position, -support.WorldNormal, .12f), out var updated))
+                // Keep the acquisition reach while travelling toward the selected support.
+                // A newly interposed surface cancels approach; an attached insect retains the tight follow probe.
+                bool approaching = a.State == LifeState.ApproachingSurface;
+                float reach = approaching ? .25f : .12f;
+                if (world.TrySurface(new SurfaceQuery(a.Spawn.ActorId, a.Position, -support.WorldNormal, reach), out var updated)
+                    && (!approaching || updated.Attachment.SurfaceId == a.Surface.Value.SurfaceId))
                 { a.Surface = updated.Attachment; if ((a.Position - updated.WorldPoint).Length < .065f) SetState(a, LifeState.Surface); }
                 else Detach(a);
             }
