@@ -1,0 +1,7 @@
+{
+  "check": "AST identity for every geometry, bone, bind and contact statement",
+  "passed": true,
+  "scope": "extraction only; no Blender execution or visual approval",
+  "original_function_sha256": "32e4c65caf344c35a51da2e66341f816545415645831a860716233fbf89c5ce2",
+  "module_sha256": "709475d8310a16abbcd94191cfd9f24028306aa1f5c256ddecd91f8346e6a76a"
+}

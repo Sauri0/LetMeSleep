@@ -1,0 +1,26 @@
+{
+  "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/hand_open.png",
+  "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+  "source_sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
+  "engine": "Blender 5.2.1 LTS",
+  "renderer": "Cycles CPU",
+  "threads": 2,
+  "samples": 16,
+  "resolution": [
+    576,
+    720
+  ],
+  "clip": "Human_FingerCurl",
+  "phase": 0,
+  "frame": 1.0,
+  "yaw_degrees": 35,
+  "focus": [
+    0.83,
+    -0.01,
+    1.17
+  ],
+  "orthographic_scale": 0.26,
+  "actual_action_evaluated": true,
+  "visual_approval": false,
+  "unity_evidence": false
+}

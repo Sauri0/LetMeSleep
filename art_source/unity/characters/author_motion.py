@@ -85,12 +85,14 @@ def human(c):
         p.reset(); p.translate('Hips',(0,.11*squat,-.42*squat-.018))
         p.rotate('Chest',(lean+breathe,0,0));p.rotate('Neck',(-lean*.35,0,0));p.update()
         for side,s in [('L',1),('R',-1)]:
-            p.rotate('UpperArm.'+side,(.04,0,-s*1.20));p.rotate('LowerArm.'+side,(.16,0,0));p.fingers(side,.10)
+            p.rotate('UpperArm.'+side,(.04,0,-s*1.20));p.rotate('LowerArm.'+side,(.16,0,0));p.fingers(side,.24)
             offset=feet[side] if feet else (0,0)
             p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*.125,offset[0],.12+offset[1]),
                     (s*.125,-.6,.42),'Foot.'+side)
         return p
-    def idle(t): base(breathe=.014*math.sin(TAU*t));return p.snapshot()
+    def idle(t):
+        base(breathe=.014*math.sin(TAU*t));p.rotate('Jaw',(-.012*math.sin(math.pi*t)**2,0,0))
+        return p.snapshot()
     sampled(c,'Idle',61,idle)
     def finger(t):
         p.reset(); amount=smooth(t/.25) if t<.25 else 1 if t<.75 else 1-smooth((t-.75)/.25)
@@ -159,16 +161,25 @@ def human(c):
         a=pulse(t,0,.30,.78); strike=pulse(t,.3,.48,1)
         p.rotate('UpperArm.R',(-.8*a+.85*strike,.15*a-.25*strike,1.20-.45*strike))
         p.rotate('LowerArm.R',(.35+.5*a-.25*strike,0,0));p.rotate('Chest',(.10*strike,-.10*a+.15*strike,0))
+        p.rotate('Brow.L',(0,.14*strike,0));p.rotate('Brow.R',(0,-.14*strike,0))
         return p.snapshot()
     sampled(c,'Swat',31,swat)
-    def hit(t):base();a=math.sin(math.pi*t)**2;p.rotate('Chest',(-.13*a,0,-.08*a));p.rotate('Head',(.12*a,0,.10*a));return p.snapshot()
+    def hit(t):
+        base();a=math.sin(math.pi*t)**2;p.rotate('Chest',(-.13*a,0,-.08*a));p.rotate('Head',(.12*a,0,.10*a))
+        p.rotate('Jaw',(-.18*a,0,0))
+        for side in ['L','R']:p.translate('Brow.'+side,(0,0,.012*a))
+        return p.snapshot()
     sampled(c,'Hit',19,hit)
     def fallen(t,with_faint=False):
         u=smooth(t);base(squat=.7*math.sin(math.pi*u),lean=.2*math.sin(math.pi*u))
         p.rotate('Hips',(-1.48*u,0,.08*u));p.translate('Hips',(0,0,-.58*u-.018))
         p.rotate('UpperLeg.L',(.1*u,0,0));p.rotate('UpperLeg.R',(.14*u,0,0))
         p.rotate('LowerLeg.L',(-.12*u,0,0));p.rotate('LowerLeg.R',(-.16*u,0,0))
-        p.rotate('Head',(.16*u,0,.12*u));p.update();p.grounded(.002)
+        p.rotate('Head',(.16*u,0,.12*u));p.rotate('Jaw',(-.13*u,0,0))
+        for side in ['L','R']:
+            p.rig.pose.bones['Eye.'+side].scale=(1,1,1-.8*u)
+            p.translate('Brow.'+side,(0,0,-.008*u))
+        p.update();p.grounded(.002)
         return p.snapshot()
     sampled(c,'Fall',37,lambda t:fallen(t))
     def faint(t):return fallen(smooth(max(0,(t-.12)/.88)),True)

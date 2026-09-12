@@ -14,6 +14,7 @@ RESULTS=[]
 POSES={}
 HANDS=[]
 FACIAL=[]
+EXPRESSIONS=[]
 
 def activate(rig,action):
     rig.animation_data_create()
@@ -70,6 +71,7 @@ for species in ['Human','Mosquito']:
             times=[t for t in times if 0<=t<=1]
             base_heads,base_mesh=sample(rig,meshes,start)
             sampled=[]; max_bone=0; max_mesh=0; min_z=999; max_stretch=1; nonfinite=0
+            worst_edge=None
             rest_edges={o.name:[(e.vertices[0],e.vertices[1],(o.data.vertices[e.vertices[0]].co-o.data.vertices[e.vertices[1]].co).length)
                                   for e in o.data.edges] for o in meshes}
             for normalized in times:
@@ -81,7 +83,16 @@ for species in ['Human','Mosquito']:
                     min_z=min(min_z,min(v[2] for v in current))
                     nonfinite+=sum(not all(math.isfinite(c) for c in v) for v in current)
                     for a,b,length in rest_edges[obj.name]:
-                        if length>.003: max_stretch=max(max_stretch,distance(current[a],current[b])/length)
+                        if length>.003:
+                            deformed_length=distance(current[a],current[b])
+                            ratio=deformed_length/length
+                            if ratio>max_stretch:
+                                max_stretch=ratio
+                                worst_edge={'mesh':obj.name,'vertices':[a,b],'phase':normalized,
+                                            'rest_length_m':length,'deformed_length_m':deformed_length,
+                                            'world_endpoints_m':[current[a],current[b]],
+                                            'weights':[{obj.vertex_groups[g.group].name:g.weight for g in obj.data.vertices[i].groups}
+                                                       for i in (a,b)]}
                 foot_names=['Socket.Foot.L','Socket.Foot.R'] if species=='Human' else ['Leg103.L','Leg203.L','Leg303.L','Leg103.R','Leg203.R','Leg303.R']
                 sampled.append({'time':normalized,'heads':heads,
                                 'feet_z':{n:heads[n][2] for n in foot_names},
@@ -92,7 +103,7 @@ for species in ['Human','Mosquito']:
             row={'species':species,'format':kind,'clip':name,'source_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
                  'variable_curve_count':len(variable),'max_bone_head_motion_m':max_bone,'max_mesh_vertex_motion_m':max_mesh,
                  'loop_expected':clip['loop'],'first_last_bone_difference_m':loop_bone,'first_last_mesh_difference_m':loop_mesh,
-                 'minimum_mesh_z_m':min_z,'max_edge_stretch_ratio':max_stretch,'nonfinite_vertices':nonfinite,
+                 'minimum_mesh_z_m':min_z,'max_edge_stretch_ratio':max_stretch,'worst_stretched_edge':worst_edge,'nonfinite_vertices':nonfinite,
                  'max_root_head_motion_m':max(distance(s['heads']['Root'],base_heads['Root']) for s in sampled),
                  'samples':[{'time':s['time'],'feet_z':s['feet_z'],'hips_z':s['hips_z']} for s in sampled]}
             RESULTS.append(row); POSES[(kind,name)]={round(s['time'],6):s['heads'] for s in sampled}
@@ -111,6 +122,23 @@ for species in ['Human','Mosquito']:
                     if eye: extents.append((normalized,max(v[2] for v in eye)-min(v[2] for v in eye)))
             FACIAL.append({'format':kind,'blink_eye_height_samples':extents,
                            'closed_open_height_ratio':extents[-1][1]/extents[0][1] if len(extents)==2 else None})
+            if rig.pose.bones.get('Jaw'):
+                hit=next(a for a in bpy.data.actions if a.name.endswith('Human_Hit'))
+                activate(rig,hit);start,end=map(float,hit.frame_range);heights=[]
+                for normalized in [0,.5]:
+                    _,vertices=sample(rig,meshes,start+(end-start)*normalized)
+                    head_inverse=(rig.matrix_world@rig.pose.bones['Head'].matrix).inverted()
+                    points=[]
+                    for obj in meshes:
+                        group=obj.vertex_groups.get('Jaw')
+                        if group:
+                            points.extend(head_inverse@Vector(vertices[obj.name][v.index]) for v in obj.data.vertices
+                                if any(g.group==group.index and g.weight>.8 for g in v.groups))
+                    assert points,'Missing jaw-weighted facial mesh'
+                    # Head's local Y is vertical, independent of the animated head rotation.
+                    heights.append(sum(p.y for p in points)/len(points))
+                EXPRESSIONS.append({'format':kind,'clip':'Human_Hit',
+                    'jaw_mesh_downward_motion_in_head_space_m':heights[0]-heights[1]})
             action=next(a for a in bpy.data.actions if a.name.endswith('Human_FingerCurl'))
             activate(rig,action)
             start,end=map(float,action.frame_range)
@@ -136,7 +164,7 @@ for species in ['Human','Mosquito']:
         worst=max(errors)
         comparisons.append({'clip':name,'max_source_fbx_head_difference_m':worst[0],'time':worst[1],'bone':worst[2]})
 report={'scope':'Read-only Blender source and reimported FBX. Measures motion, not artistic approval or Unity playback.',
-        'blender':bpy.app.version_string,'actions':RESULTS,'source_fbx_comparison':comparisons,'hands':HANDS,'facial':FACIAL,
+        'blender':bpy.app.version_string,'actions':RESULTS,'source_fbx_comparison':comparisons,'hands':HANDS,'facial':FACIAL,'expressions':EXPRESSIONS,
         'fbx_evaluation_note':'FBX-imported connected bones are restored to the source unconnected contract before evaluation.'}
 (ROOT/'motion_audit.json').write_text(json.dumps(report,indent=2),encoding='utf8',newline='\n')
 print(json.dumps({'actions':[{k:r[k] for k in ['clip','format','max_mesh_vertex_motion_m','minimum_mesh_z_m','max_edge_stretch_ratio']} for r in RESULTS],

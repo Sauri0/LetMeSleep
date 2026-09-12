@@ -1,5 +1,5 @@
 """Let me sleep: original, reproducible Unity alpha character sources.
-Run: N:/Blender/blender.exe --background --factory-startup --python build_characters.py
+Run after a Director slot: Blender --background --python build_characters.py -- --species Human
 No rendering occurs. All output stays beside this script. Blender 5.2 LTS.
 """
 import bpy
@@ -7,6 +7,7 @@ import math
 import json
 import hashlib
 import sys
+import argparse
 from pathlib import Path
 from mathutils import Vector, Matrix, Euler
 
@@ -213,14 +214,16 @@ class Character:
 
 
 def human():
+    from author_human_geometry import head_and_cap,collar_and_pocket,slipper
     c=Character('Human')
-    skin=material('Human_Skin',(.72,.40,.25)); blue=material('Human_Pajamas',(.12,.32,.51))
-    trim=material('Human_Piping',(.55,.78,.80)); sole=material('Human_SlipperSole',(.065,.10,.15))
-    white=material('Character_EyeWhite',(.94,.92,.83)); dark=material('Character_Expression',(.045,.032,.045))
+    skin=material('Human_Skin',(.67,.43,.27),.82); blue=material('Human_Pajamas',(.12,.30,.47),.87)
+    trim=material('Human_Piping',(.53,.67,.71),.87); sole=material('Human_SlipperSole',(.065,.10,.15),.90)
+    white=material('Character_EyeWhite',(.84,.83,.76),.78); dark=material('Character_Expression',(.045,.032,.045),.82)
     c.bone('Root',(0,0,0),(0,0,.10),deform=False)
     c.bone('Hips',(0,0,.75),(0,0,.88),'Root')
     c.bone('Spine',(0,0,.88),(0,0,1.05),'Hips'); c.bone('Chest',(0,0,1.05),(0,0,1.23),'Spine')
     c.bone('Neck',(0,0,1.23),(0,0,1.34),'Chest'); c.bone('Head',(0,0,1.34),(0,0,1.70),'Neck')
+    c.bone('Jaw',(0,-.015,1.46),(0,-.035,1.393),'Head')
     c.bone('Socket.Eye',(0,-.17,1.53),(0,-.22,1.53),'Head',False)
     c.bone('Socket.Head',(0,0,1.72),(0,0,1.77),'Head',False)
     c.bone('Socket.Back',(0,.15,1.09),(0,.20,1.09),'Chest',False)
@@ -240,8 +243,9 @@ def human():
             z=1.55 if eye=='Eye' else 1.64
             c.bone(eye+'.'+side,(s*.088,-.17,z),(s*.088,-.21,z),'Head')
         # Tailored sleeves use a shared elbow loop and two bone blend weights.
-        sleeve=tube('Sleeve.'+side,[(s*x,0,z) for x,z in [(.20,1.17),(.29,1.17),(.49,1.16),(.54,1.16),(.69,1.15),(.735,1.15)]],
-                    [.06,.105,.088,.087,.061,.061],[.06,.105,.088,.087,.061,.061],blue)
+        sleeve=tube('Sleeve.'+side,[(s*x,0,z) for x,z in [(.185,1.17),(.275,1.17),(.43,1.16),(.49,1.16),(.53,1.16),(.565,1.155),(.68,1.15),(.735,1.15)]],
+                    [.060,.092,.077,.072,.076,.068,.049,.049],
+                    [.066,.092,.078,.073,.078,.069,.050,.050],blue, sides=10)
         gu=sleeve.vertex_groups.new(name='UpperArm.'+side); gl=sleeve.vertex_groups.new(name='LowerArm.'+side)
         gc=sleeve.vertex_groups.new(name='Chest')
         for v in sleeve.data.vertices:
@@ -250,9 +254,12 @@ def human():
             if chest>0: gc.add([v.index],chest,'REPLACE')
             if w<1 and chest<1: gu.add([v.index],(1-w)*(1-chest),'REPLACE')
             if w>0: gl.add([v.index],w,'REPLACE')
-        tube('Cuff.'+side,[(s*.706,0,1.15),(s*.744,0,1.15)],[.065]*2,[.065]*2,trim,'LowerArm.'+side)
-        leg=tube('PajamaLeg.'+side,[(s*.125,0,z) for z in [.13,.18,.40,.47,.68,.78]],
-                 [.086,.088,.093,.099,.119,.12],[.095,.095,.102,.11,.126,.125],blue)
+        tube('Cuff.'+side,[(s*.703,0,1.15),(s*.736,0,1.15),(s*.745,0,1.15)],
+             [.053,.053,.050],[.054,.054,.051],blue,'LowerArm.'+side,10)
+        tube('CuffPiping.'+side,[(s*.737,0,1.15),(s*.743,0,1.15)],[.054]*2,[.055]*2,trim,'LowerArm.'+side,10)
+        leg=tube('PajamaLeg.'+side,[(s*.125,0,z) for z in [.13,.18,.34,.40,.45,.49,.64,.78]],
+                 [.068,.070,.074,.077,.083,.079,.095,.100],
+                 [.077,.078,.083,.086,.089,.088,.102,.108],blue,sides=10)
         gu=leg.vertex_groups.new(name='UpperLeg.'+side); gl=leg.vertex_groups.new(name='LowerLeg.'+side)
         gh=leg.vertex_groups.new(name='Hips')
         for v in leg.data.vertices:
@@ -261,16 +268,15 @@ def human():
             if hips>0: gh.add([v.index],hips,'REPLACE')
             if w>0 and hips<1: gu.add([v.index],w*(1-hips),'REPLACE')
             if w<1: gl.add([v.index],1-w,'REPLACE')
-        tube('TrouserCuff.'+side,[(s*.125,0,.13),(s*.125,0,.17)],[.09]*2,[.10]*2,trim,'LowerLeg.'+side)
-        shoe=tube('Slipper.'+side,[(s*.125,-.07,z) for z in [0,.015,.035,.055,.10,.14,.15]],
-                  [.097,.107,.107,.106,.095,.067,.04],[.169,.18,.18,.18,.155,.11,.07],blue,'Foot.'+side,16)
-        shoe.data.materials.append(sole)
-        for poly in shoe.data.polygons:
-            if poly.center.z<.035: poly.material_index=1
+        tube('TrouserCuff.'+side,[(s*.125,0,.127),(s*.125,0,.164)],[.073]*2,[.082]*2,blue,'LowerLeg.'+side,10)
+        tube('TrouserHem.'+side,[(s*.125,0,.128),(s*.125,0,.133)],[.074]*2,[.083]*2,trim,'LowerLeg.'+side,10)
+        slipper(side,s,mesh,tube,strip,skin,blue,trim,sole)
         # Hands are a single welded surface per side; final weights follow the finger chains.
-        parts=[ellipsoid('Palm.'+side,(s*.792,0,1.15),(.056,.024,.053),skin,'Hand.'+side,16,8)]
+        parts=[tube('Palm.'+side,[(s*x,0,1.15) for x in [.745,.775,.806,.835]],
+                    [.033,.044,.049,.047],[.017,.022,.024,.021],skin,'Hand.'+side,8)]
         paths=[]
         for digit,zoff,length in [('Index',.032,.104),('Middle',.009,.116),('Ring',-.015,.106),('Little',-.038,.082),('Thumb',.055,.070)]:
+            length*=.85
             start=Vector((s*(.822 if digit!='Thumb' else .782),0,1.15+zoff))
             direction=Vector((s,0,.52 if digit=='Thumb' else 0)).normalized()
             lengths=[length*.43,length*.32,length*.25]; points=[start]
@@ -279,7 +285,7 @@ def human():
                 name=f'{digit}{i+1:02d}.{side}'; end=points[-1]+direction*ln
                 c.bone(name,points[-1],end,parent); paths.append((name,points[-1].copy(),end.copy(),digit))
                 points.append(end); parent=name
-            radii=[.011,.0105,.009,.005]
+            radii=[.012,.0115,.010,.006]
             parts.append(tube(digit+'.'+side,points,radii,radii,skin,'Hand.'+side,8))
         bpy.ops.object.select_all(action='DESELECT')
         for p in parts: p.select_set(True)
@@ -337,44 +343,29 @@ def human():
             for group,w in weight.items(): hand.vertex_groups[group].add([i],w,'REPLACE')
         for poly in hand.data.polygons: poly.use_smooth=True
         c.finger_paths[side]=paths
-    torso=tube('PajamaJacket',[(0,0,z) for z in [.73,.81,.94,1.09,1.18,1.23,1.28]],
-               [.21,.22,.21,.225,.255,.22,.095],[.128,.14,.138,.145,.14,.135,.105],blue)
+    torso=tube('PajamaJacket',[(0,0,z) for z in [.74,.78,.82,.96,1.07,1.17,1.23,1.267]],
+               [.212,.219,.214,.185,.210,.240,.200,.075],
+               [.116,.126,.124,.115,.129,.128,.120,.070],blue)
     groups={n:torso.vertex_groups.new(name=n) for n in ['Hips','Spine','Chest']}
     for v in torso.data.vertices:
         weights=(('Hips',1-max(0,min(1,(v.co.z-.79)/.15))),('Chest',max(0,min(1,(v.co.z-1.02)/.13))))
         wh,wc=[p[1] for p in weights]; ws=1-wh-wc
         for n,w in [('Hips',wh),('Spine',ws),('Chest',wc)]:
             if w>0: groups[n].add([v.index],w,'REPLACE')
-    strip('JacketPlacket',[(0,-.146,z) for z in [.83,.9,1.0,1.1,1.18]],.006,trim,'Chest')
-    for z in [.91,1.015,1.12]: ellipsoid('JacketButton',(0,-.164,z),(.009,.004,.009),white,'Chest',8,4)
-    strip('Collar.L',[(-.09,-.08,1.275),(-.075,-.144,1.205),(0,-.151,1.175)],.018,trim,'Chest')
-    strip('Collar.R',[(.09,-.08,1.275),(.075,-.144,1.205),(0,-.151,1.175)],.018,trim,'Chest')
-    strip('PocketPiping',[(.07,-.145,1.065),(.14,-.129,1.065)],.008,trim,'Chest')
+    strip('JacketPlacket',[(0,y,z) for y,z in [(-.127,.815),(-.125,.86),(-.119,.96),(-.132,1.07),(-.133,1.16)]],.003,trim,'Chest')
+    for y,z in [(-.132,.865),(-.125,.966),(-.138,1.072)]:
+        ellipsoid('JacketButton',(0,y,z),(.006,.0025,.006),white,'Chest',8,4)
+    collar_and_pocket(mesh,strip,blue,trim)
     # Jacket details deform with the same body weights instead of rotating rigidly
     # through the lower torso when crouching or leaning.
-    for detail in [o for o in bpy.context.scene.objects if o.name.startswith(('JacketPlacket','JacketButton','PocketPiping'))]:
+    for detail in [o for o in bpy.context.scene.objects if o.name.startswith(('JacketPlacket','JacketButton','PocketPiping','PocketPatch'))]:
         detail.vertex_groups.clear()
         detail_groups={n:detail.vertex_groups.new(name=n) for n in ['Hips','Spine','Chest']}
         for vertex in detail.data.vertices:
             wh=1-max(0,min(1,(vertex.co.z-.79)/.15));wc=max(0,min(1,(vertex.co.z-1.02)/.13))
             for name,weight in [('Hips',wh),('Spine',1-wh-wc),('Chest',wc)]:
                 if weight>0:detail_groups[name].add([vertex.index],weight,'REPLACE')
-    tube('Neck',[(0,0,1.22),(0,0,1.37)],[.071,.083],[.067,.075],skin,'Neck')
-    head=tube('Head',[(0,0,z) for z in [1.30,1.35,1.47,1.58,1.67,1.72]],
-              [.10,.15,.195,.205,.16,.075],[.10,.135,.18,.17,.14,.07],skin,'Head',16)
-    # A small integral nose, never attached cheek spheres.
-    for v in head.data.vertices:
-        if abs(v.co.x)<.01 and v.co.y<-.17 and abs(v.co.z-1.47)<.005: v.co.y-=.032
-    for side,s in [('L',1),('R',-1)]:
-        ellipsoid('Ear.'+side,(s*.195,0,1.50),(.027,.022,.043),skin,'Head',10,5)
-        ellipsoid('EyeWhite.'+side,(s*.084,-.161,1.552),(.063,.031,.069),white,'Eye.'+side,12,6)
-        ellipsoid('Pupil.'+side,(s*.077,-.191,1.552),(.022,.006,.030),dark,'Eye.'+side,12,6)
-        strip('Brow.'+side,[(s*.028,-.174,1.642),(s*.083,-.19,1.658),(s*.148,-.154,1.641)],.012,dark,'Brow.'+side)
-    strip('Mouth',[(-.048,-.158,1.403),(0,-.177,1.393),(.048,-.158,1.403)],.006,dark,'Head')
-    tube('Nightcap',[(0,0,1.666),(0,.015,1.75),(.045,.024,1.85),(.13,.025,1.88),(.20,.02,1.81)],
-         [.174,.145,.09,.05,.009],[.145,.13,.081,.05,.009],blue,'Head',16)
-    tube('NightcapBand',[(0,0,1.654),(0,.002,1.69)],[.177,.174],[.15,.151],trim,'Head',20)
-    ellipsoid('NightcapPom',(.20,.02,1.80),(.037,.035,.045),white,'Head',12,6)
+    head_and_cap(c,mesh,tube,ellipsoid,strip,skin,blue,trim,white,dark)
     c.bind()
     # Evaluate positive local X curl against the palm direction on both actual rigs.
     for side in ['L','R']:
@@ -390,70 +381,10 @@ def human():
 
 
 def mosquito():
-    c=Character('Mosquito')
-    shell=material('Mosquito_Shell',(.46,.12,.10)); belly=material('Mosquito_Abdomen',(.70,.24,.14))
-    dark=material('Mosquito_Legs',(.095,.055,.075)); eye=material('Mosquito_EyeWhite',(.94,.91,.79))
-    pupil=material('Mosquito_Expression',(.035,.027,.05)); wing=material('Mosquito_Wing',(.60,.76,.84,.72),.4)
-    vein=material('Mosquito_WingVein',(.30,.43,.54),.85)
-    def p(x,y,z): return (x,y,z-.105)
-    c.bone('Root',(0,0,0),(0,0,.03),deform=False)
-    # Raise the same character's body over articulated legs without moving actor Root
-    # or the gameplay mouth point. The proboscis now descends from head to that point.
-    c.bone('Thorax',p(0,.015,.160),p(0,-.035,.160),'Root')
-    c.bone('Head',p(0,-.045,.160),p(0,-.085,.160),'Thorax')
-    c.bone('Abdomen01',p(0,.035,.158),p(0,.130,.135),'Thorax')
-    c.bone('Abdomen02',p(0,.130,.135),p(0,.230,.079),'Abdomen01')
-    c.bone('Proboscis',p(0,-.092,.151),p(0,-.19,.105),'Head')
-    c.bone('Socket.Mouth',p(0,-.19,.105),p(0,-.20,.105),'Proboscis',False)
-    c.bone('Socket.Back',p(0,.015,.190),p(0,.015,.205),'Thorax',False)
-    c.bone('Socket.CameraTarget',(0,0,0),(0,-.02,0),'Thorax',False)
-    c.bone('Socket.AimForward',(0,-.08,0),(0,-.12,0),'Head',False)
-    # Gameplay holds Root 57 mm off the support. With Unity scale .5 this is
-    # source Z=-.114; preserve the 55 mm collision sphere and 95 mm mouth reach.
-    c.bone('Socket.GroundContact',p(0,0,-.009),p(0,-.02,-.009),'Root',False)
-    ellipsoid('Thorax',p(0,0,.160),(.032,.047,.030),shell,'Thorax')
-    ellipsoid('Head',p(0,-.068,.160),(.036,.034,.035),shell,'Head')
-    abdomen=tube('Abdomen',[p(0,y,z) for y,z in [(.03,.158),(.073,.153),(.124,.138),(.168,.115),(.205,.091),(.235,.074)]],
-                   [.022,.029,.025,.019,.010,.0025],[.022,.027,.024,.017,.009,.0025],belly)
-    a=abdomen.vertex_groups.new(name='Abdomen01'); b=abdomen.vertex_groups.new(name='Abdomen02')
-    for v in abdomen.data.vertices:
-        w=max(0,min(1,(v.co.y-.108)/.047))
-        if w<1: a.add([v.index],1-w,'REPLACE')
-        if w>0: b.add([v.index],w,'REPLACE')
-    tube('Proboscis',[p(0,-.092,.151),p(0,-.139,.128),p(0,-.19,.105)],[.006,.0035,.0014],[.005,.0035,.0014],shell,'Proboscis',8)
-    for side,s in [('L',1),('R',-1)]:
-        ellipsoid('Eye.'+side,p(s*.022,-.097,.174),(.023,.016,.027),eye,'Head',12,6)
-        ellipsoid('Pupil.'+side,p(s*.018,-.112,.173),(.008,.004,.012),pupil,'Head',12,6)
-        strip('Brow.'+side,[p(s*.004,-.107,.200),p(s*.023,-.108,.204),p(s*.040,-.093,.196)],.0035,dark,'Head')
-        strip('Antenna.'+side,[p(s*.013,-.076,.195),p(s*.026,-.08,.221),p(s*.043,-.086,.226)],.002,dark,'Head')
-        c.bone('Wing.'+side,p(s*.017,.0,.187),p(s*.22,.065,.218),'Thorax')
-        c.bone('Socket.WingRoot.'+side,p(s*.017,0,.187),p(s*.017,-.02,.187),'Thorax',False)
-        verts=[p(s*x,y,z) for x,y,z in [(.017,0,.187),(.118,.018,.224),(.24,.100,.245),(.150,.110,.231),(.055,.044,.200)]]
-        # A shallow central ridge creates actual low-poly facets instead of a flat n-gon.
-        verts.append(p(s*.113,.060,.225))
-        # Thin solid double-sided geometry keeps FBX silhouette independent of culling settings.
-        verts += [(x,y,z-.0006) for x,y,z in verts]
-        faces=[(i,(i+1)%5,5) for i in range(5)]
-        faces += [(i+6,11,(i+1)%5+6) for i in range(5)]
-        faces += [(i,i+6,(i+1)%5+6,(i+1)%5) for i in range(5)]
-        mesh('WingMembrane.'+side,verts,faces,wing,'Wing.'+side)
-        strip('WingLeadingEdge.'+side,[verts[i] for i in [0,1,2]],.0012,vein,'Wing.'+side)
-        strip('WingVein.'+side,[verts[i] for i in [0,5,2]],.0008,vein,'Wing.'+side)
-        for i,(y,dy) in enumerate([(-.033,-.052),(.006,.012),(.042,.067)],1):
-            pts=[p(s*.024,y,.155),p(s*.085,y+dy*.4,.094),p(s*.095,y+dy,-.0026),p(s*.107,y+dy+.006,-.0076)]
-            parent='Thorax'
-            for j in range(3):
-                name=f'Leg{i}{j+1:02d}.{side}'
-                c.bone(name,pts[j],pts[j+1],parent); parent=name
-                tube('Limb_'+name,[pts[j],pts[j+1]],[.0032-j*.00065,.0028-j*.00065],[.0032-j*.00065,.0028-j*.00065],shell if j==0 else dark,name,6)
-                if j<2:ellipsoid('LegJoint_'+name,pts[j+1],(.0036,.0036,.0036),dark,name,8,4)
-    c.bind()
-    mouth=c.rig.data.bones['Socket.Mouth'].head_local
-    c.contact={'gameplay_tip_rest_unity_m':[mouth.x*.5,mouth.z*.5,-mouth.y*.5],
-               'gameplay_collision_radius_m':.055,'gameplay_surface_root_offset_m':.057,
-               'ground_contact_rest_unity_m':[0,-.057,0],
-               'surface_rotation_contract':'local +Y outward normal, forward projected tangent; runtime validation belongs to W1/W2'}
+    from author_mosquito_geometry import create_mosquito
     from author_motion import mosquito as animate_mosquito
+    c=create_mosquito(Character=Character, material=material, tube=tube,
+                      ellipsoid=ellipsoid, strip=strip, mesh=mesh)
     animate_mosquito(c)
     return c.export()
 
@@ -487,13 +418,24 @@ def flyswatter():
 
 
 if __name__=='__main__':
-    results=[human(),mosquito(),flyswatter()]
-    manifest={'version':'0.9.4-alpha-mosquito-proportions-revision-4','generator':Path(__file__).name,
+    parser=argparse.ArgumentParser(description='Generate explicitly selected character assets only.')
+    parser.add_argument('--species',nargs='+',choices=['Human','Mosquito','Flyswatter'],required=True)
+    args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
+    selected=list(dict.fromkeys(args.species))
+    builders={'Human':human,'Mosquito':mosquito,'Flyswatter':flyswatter}
+    results=[builders[species]() for species in selected]
+    for species in builders:
+        if species not in selected:
+            audit_path=OUT/species.lower()/'audit.json'
+            if audit_path.exists():results.append(json.loads(audit_path.read_text(encoding='utf8')))
+    manifest={'version':'0.9.4-alpha-human-reference-quality-revision-5','generator':Path(__file__).name,
               'blender':bpy.app.version_string,'source_units':'meters','source_up':'+Z','source_forward':'-Y',
               'fbx_axis_forward':'-Z','fbx_axis_up':'Y','unity_human_scale':1,'unity_mosquito_scale':.5,
               'mosquito_collision_radius_m':.055,'human_capsule':{'radius':.25,'height':1.72,'crouched_height':1.0},
               'provenance':'Original authored geometry and materials for Let me sleep. User reference images guide shapes only; no external textures.',
               'rendered':False,'unity_import_verified':False,'audits':results,'files':{}}
+    manifest['generated_species']=selected
+    manifest['review_status']='New selected-species source; motion, renders and Unity import pending'
     for p in OUT.rglob('*'):
         if p.is_file() and p.suffix in ['.blend','.fbx','.py']:
             manifest['files'][p.relative_to(OUT).as_posix()]={'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size}

@@ -1,5 +1,5 @@
 {
-  "version": "0.9.4-alpha-mosquito-proportions-revision-4",
+  "version": "0.9.4-alpha-human-reference-quality-revision-5",
   "generator": "build_characters.py",
   "blender": "5.2.1 LTS",
   "source_units": "meters",
@@ -22,9 +22,9 @@
     {
       "species": "Human",
       "mesh_count": 5,
-      "bones": 64,
-      "triangles": 10924,
-      "vertices": 5530,
+      "bones": 65,
+      "triangles": 10476,
+      "vertices": 5342,
       "unweighted_vertices": 0,
       "bad_weight_sums": 0,
       "degenerate_triangles": 0,
@@ -168,11 +168,11 @@
       ],
       "curl": {
         "L": {
-          "inward_displacement_m": 0.07895249873399734,
+          "inward_displacement_m": 0.0671095922589302,
           "angle_radians_per_joint": 0.55
         },
         "R": {
-          "inward_displacement_m": 0.07895249873399734,
+          "inward_displacement_m": 0.0671095922589302,
           "angle_radians_per_joint": 0.55
         }
       },
@@ -184,19 +184,19 @@
         "minimum_leg_reach_margin_m": 0.0015927914013900146
       },
       "bounds_min": [
-        -0.9374077320098877,
-        -0.25,
+        -0.9201488494873047,
+        -0.22499999403953552,
         0.0
       ],
       "bounds_max": [
-        0.9374076128005981,
-        0.18000000715255737,
-        1.9284138679504395
+        0.9201488494873047,
+        0.1289999932050705,
+        1.8625340461730957
       ],
       "dimensions": [
-        1.8748153448104858,
-        0.4300000071525574,
-        1.9284138679504395
+        1.8402976989746094,
+        0.353999987244606,
+        1.8625340461730957
       ],
       "sockets": [
         "Socket.Eye",
@@ -215,6 +215,7 @@
             "Human_Pajamas",
             "Human_Piping",
             "Human_SlipperSole",
+            "Human_Skin",
             "Character_EyeWhite"
           ]
         },
@@ -254,6 +255,7 @@
         "Chest",
         "Neck",
         "Head",
+        "Jaw",
         "Socket.Eye",
         "Socket.Head",
         "Eye.L",
@@ -396,6 +398,20 @@
             0.0,
             0.0,
             1.7000000476837158
+          ]
+        },
+        {
+          "name": "Jaw",
+          "parent": "Head",
+          "head_blender_m": [
+            0.0,
+            -0.014999999664723873,
+            1.4600000381469727
+          ],
+          "tail_blender_m": [
+            0.0,
+            -0.03500000014901161,
+            1.3930000066757202
           ]
         },
         {
@@ -589,7 +605,7 @@
             1.1820000410079956
           ],
           "tail_blender_m": [
-            0.8667200207710266,
+            0.8600120544433594,
             0.0,
             1.1820000410079956
           ]
@@ -598,12 +614,12 @@
           "name": "Index02.L",
           "parent": "Index01.L",
           "head_blender_m": [
-            0.8667200207710266,
+            0.8600120544433594,
             0.0,
             1.1820000410079956
           ],
           "tail_blender_m": [
-            0.9000000357627869,
+            0.8883000612258911,
             0.0,
             1.1820000410079956
           ]
@@ -612,12 +628,12 @@
           "name": "Index03.L",
           "parent": "Index02.L",
           "head_blender_m": [
-            0.9000000357627869,
+            0.8883000612258911,
             0.0,
             1.1820000410079956
           ],
           "tail_blender_m": [
-            0.9260000586509705,
+            0.9104000329971313,
             0.0,
             1.1820000410079956
           ]
@@ -631,7 +647,7 @@
             1.159000039100647
           ],
           "tail_blender_m": [
-            0.871880054473877,
+            0.8643980026245117,
             0.0,
             1.159000039100647
           ]
@@ -640,12 +656,12 @@
           "name": "Middle02.L",
           "parent": "Middle01.L",
           "head_blender_m": [
-            0.871880054473877,
+            0.8643980026245117,
             0.0,
             1.159000039100647
           ],
           "tail_blender_m": [
-            0.909000039100647,
+            0.8959500193595886,
             0.0,
             1.159000039100647
           ]
@@ -654,12 +670,12 @@
           "name": "Middle03.L",
           "parent": "Middle02.L",
           "head_blender_m": [
-            0.909000039100647,
+            0.8959500193595886,
             0.0,
             1.159000039100647
           ],
           "tail_blender_m": [
-            0.9380000233650208,
+            0.9205999970436096,
             0.0,
             1.159000039100647
           ]
@@ -673,7 +689,7 @@
             1.1349999904632568
           ],
           "tail_blender_m": [
-            0.8675800561904907,
+            0.8607430458068848,
             0.0,
             1.1349999904632568
           ]
@@ -682,12 +698,12 @@
           "name": "Ring02.L",
           "parent": "Ring01.L",
           "head_blender_m": [
-            0.8675800561904907,
+            0.8607430458068848,
             0.0,
             1.1349999904632568
           ],
           "tail_blender_m": [
-            0.9015000462532043,
+            0.8895750641822815,
             0.0,
             1.1349999904632568
           ]
@@ -696,12 +712,12 @@
           "name": "Ring03.L",
           "parent": "Ring02.L",
           "head_blender_m": [
-            0.9015000462532043,
+            0.8895750641822815,
             0.0,
             1.1349999904632568
           ],
           "tail_blender_m": [
-            0.9280000329017639,
+            0.912100076675415,
             0.0,
             1.1349999904632568
           ]
@@ -715,7 +731,7 @@
             1.1119999885559082
           ],
           "tail_blender_m": [
-            0.8572600483894348,
+            0.8519710302352905,
             0.0,
             1.1119999885559082
           ]
@@ -724,12 +740,12 @@
           "name": "Little02.L",
           "parent": "Little01.L",
           "head_blender_m": [
-            0.8572600483894348,
+            0.8519710302352905,
             0.0,
             1.1119999885559082
           ],
           "tail_blender_m": [
-            0.8835000395774841,
+            0.8742750287055969,
             0.0,
             1.1119999885559082
           ]
@@ -738,12 +754,12 @@
           "name": "Little03.L",
           "parent": "Little02.L",
           "head_blender_m": [
-            0.8835000395774841,
+            0.8742750287055969,
             0.0,
             1.1119999885559082
           ],
           "tail_blender_m": [
-            0.9040000438690186,
+            0.891700029373169,
             0.0,
             1.1119999885559082
           ]
@@ -757,37 +773,37 @@
             1.2050000429153442
           ],
           "tail_blender_m": [
-            0.80870521068573,
+            0.8046994209289551,
             0.0,
-            1.2188867330551147
+            1.216803789138794
           ]
         },
         {
           "name": "Thumb02.L",
           "parent": "Thumb01.L",
           "head_blender_m": [
-            0.80870521068573,
+            0.8046994209289551,
             0.0,
-            1.2188867330551147
+            1.216803789138794
           ],
           "tail_blender_m": [
-            0.8285788893699646,
+            0.8215920329093933,
             0.0,
-            1.229220986366272
+            1.2255879640579224
           ]
         },
         {
           "name": "Thumb03.L",
           "parent": "Thumb02.L",
           "head_blender_m": [
-            0.8285788893699646,
+            0.8215920329093933,
             0.0,
-            1.229220986366272
+            1.2255879640579224
           ],
           "tail_blender_m": [
-            0.8441051840782166,
+            0.8347893953323364,
             0.0,
-            1.2372946739196777
+            1.2324506044387817
           ]
         },
         {
@@ -869,7 +885,7 @@
             1.1820000410079956
           ],
           "tail_blender_m": [
-            -0.8667200207710266,
+            -0.8600120544433594,
             0.0,
             1.1820000410079956
           ]
@@ -878,12 +894,12 @@
           "name": "Index02.R",
           "parent": "Index01.R",
           "head_blender_m": [
-            -0.8667200207710266,
+            -0.8600120544433594,
             0.0,
             1.1820000410079956
           ],
           "tail_blender_m": [
-            -0.9000000357627869,
+            -0.8883000612258911,
             0.0,
             1.1820000410079956
           ]
@@ -892,12 +908,12 @@
           "name": "Index03.R",
           "parent": "Index02.R",
           "head_blender_m": [
-            -0.9000000357627869,
+            -0.8883000612258911,
             0.0,
             1.1820000410079956
           ],
           "tail_blender_m": [
-            -0.9260000586509705,
+            -0.9104000329971313,
             0.0,
             1.1820000410079956
           ]
@@ -911,7 +927,7 @@
             1.159000039100647
           ],
           "tail_blender_m": [
-            -0.871880054473877,
+            -0.8643980026245117,
             0.0,
             1.159000039100647
           ]
@@ -920,12 +936,12 @@
           "name": "Middle02.R",
           "parent": "Middle01.R",
           "head_blender_m": [
-            -0.871880054473877,
+            -0.8643980026245117,
             0.0,
             1.159000039100647
           ],
           "tail_blender_m": [
-            -0.909000039100647,
+            -0.8959500193595886,
             0.0,
             1.159000039100647
           ]
@@ -934,12 +950,12 @@
           "name": "Middle03.R",
           "parent": "Middle02.R",
           "head_blender_m": [
-            -0.909000039100647,
+            -0.8959500193595886,
             0.0,
             1.159000039100647
           ],
           "tail_blender_m": [
-            -0.9380000233650208,
+            -0.9205999970436096,
             0.0,
             1.159000039100647
           ]
@@ -953,7 +969,7 @@
             1.1349999904632568
           ],
           "tail_blender_m": [
-            -0.8675800561904907,
+            -0.8607430458068848,
             0.0,
             1.1349999904632568
           ]
@@ -962,12 +978,12 @@
           "name": "Ring02.R",
           "parent": "Ring01.R",
           "head_blender_m": [
-            -0.8675800561904907,
+            -0.8607430458068848,
             0.0,
             1.1349999904632568
           ],
           "tail_blender_m": [
-            -0.9015000462532043,
+            -0.8895750641822815,
             0.0,
             1.1349999904632568
           ]
@@ -976,12 +992,12 @@
           "name": "Ring03.R",
           "parent": "Ring02.R",
           "head_blender_m": [
-            -0.9015000462532043,
+            -0.8895750641822815,
             0.0,
             1.1349999904632568
           ],
           "tail_blender_m": [
-            -0.9280000329017639,
+            -0.912100076675415,
             0.0,
             1.1349999904632568
           ]
@@ -995,7 +1011,7 @@
             1.1119999885559082
           ],
           "tail_blender_m": [
-            -0.8572600483894348,
+            -0.8519710302352905,
             0.0,
             1.1119999885559082
           ]
@@ -1004,12 +1020,12 @@
           "name": "Little02.R",
           "parent": "Little01.R",
           "head_blender_m": [
-            -0.8572600483894348,
+            -0.8519710302352905,
             0.0,
             1.1119999885559082
           ],
           "tail_blender_m": [
-            -0.8835000395774841,
+            -0.8742750287055969,
             0.0,
             1.1119999885559082
           ]
@@ -1018,12 +1034,12 @@
           "name": "Little03.R",
           "parent": "Little02.R",
           "head_blender_m": [
-            -0.8835000395774841,
+            -0.8742750287055969,
             0.0,
             1.1119999885559082
           ],
           "tail_blender_m": [
-            -0.9040000438690186,
+            -0.891700029373169,
             0.0,
             1.1119999885559082
           ]
@@ -1037,37 +1053,37 @@
             1.2050000429153442
           ],
           "tail_blender_m": [
-            -0.80870521068573,
+            -0.8046994209289551,
             0.0,
-            1.2188867330551147
+            1.216803789138794
           ]
         },
         {
           "name": "Thumb02.R",
           "parent": "Thumb01.R",
           "head_blender_m": [
-            -0.80870521068573,
+            -0.8046994209289551,
             0.0,
-            1.2188867330551147
+            1.216803789138794
           ],
           "tail_blender_m": [
-            -0.8285788893699646,
+            -0.8215920329093933,
             0.0,
-            1.229220986366272
+            1.2255879640579224
           ]
         },
         {
           "name": "Thumb03.R",
           "parent": "Thumb02.R",
           "head_blender_m": [
-            -0.8285788893699646,
+            -0.8215920329093933,
             0.0,
-            1.229220986366272
+            1.2255879640579224
           ],
           "tail_blender_m": [
-            -0.8441051840782166,
+            -0.8347893953323364,
             0.0,
-            1.2372946739196777
+            1.2324506044387817
           ]
         },
         {
@@ -1228,47 +1244,47 @@
             "b": 0.04500000178813934,
             "a": 1.0
           },
-          "roughness": 0.7200000286102295
+          "roughness": 0.8199999928474426
         },
         {
           "name": "Character_EyeWhite",
           "color": {
-            "r": 0.9399999976158142,
-            "g": 0.9200000166893005,
-            "b": 0.8299999833106995,
+            "r": 0.8399999737739563,
+            "g": 0.8299999833106995,
+            "b": 0.7599999904632568,
             "a": 1.0
           },
-          "roughness": 0.7200000286102295
+          "roughness": 0.7799999713897705
         },
         {
           "name": "Human_Pajamas",
           "color": {
             "r": 0.11999999731779099,
-            "g": 0.3199999928474426,
-            "b": 0.5099999904632568,
+            "g": 0.30000001192092896,
+            "b": 0.4699999988079071,
             "a": 1.0
           },
-          "roughness": 0.7200000286102295
+          "roughness": 0.8700000047683716
         },
         {
           "name": "Human_Piping",
           "color": {
-            "r": 0.550000011920929,
-            "g": 0.7799999713897705,
-            "b": 0.800000011920929,
+            "r": 0.5299999713897705,
+            "g": 0.6700000166893005,
+            "b": 0.7099999785423279,
             "a": 1.0
           },
-          "roughness": 0.7200000286102295
+          "roughness": 0.8700000047683716
         },
         {
           "name": "Human_Skin",
           "color": {
-            "r": 0.7200000286102295,
-            "g": 0.4000000059604645,
-            "b": 0.25,
+            "r": 0.6700000166893005,
+            "g": 0.4300000071525574,
+            "b": 0.27000001072883606,
             "a": 1.0
           },
-          "roughness": 0.7200000286102295
+          "roughness": 0.8199999928474426
         },
         {
           "name": "Human_SlipperSole",
@@ -1278,7 +1294,7 @@
             "b": 0.15000000596046448,
             "a": 1.0
           },
-          "roughness": 0.7200000286102295
+          "roughness": 0.8999999761581421
         }
       ],
       "passed": true,
@@ -2201,36 +2217,72 @@
   ],
   "files": {
     "audit_motion.py": {
-      "sha256": "647847032e72bf3ef2c34b4289a19f9e00c80490869442832bea89fe3ac08474",
-      "bytes": 9136
+      "sha256": "c4ee5e579b0c0ef9cb1f600edac7df59538146056884ec111ef206ad1ebde7dd",
+      "bytes": 11093
     },
     "audit_surface_support.py": {
       "sha256": "d0e3cf766db767588e4f16a60738423efd6763d476ec1b984d4a48ddaec82538",
       "bytes": 5715
     },
+    "author_human_geometry.py": {
+      "sha256": "fa8423bf59a59fbf91924d251fb948e4e6fb198161a3a48020b16464ba2ce38e",
+      "bytes": 8264
+    },
+    "author_mosquito_geometry.py": {
+      "sha256": "709475d8310a16abbcd94191cfd9f24028306aa1f5c256ddecd91f8346e6a76a",
+      "bytes": 4979
+    },
     "author_motion.py": {
-      "sha256": "0d9b89d2eb893513d0d70f63f6a1113f8454b3e84d91a60b490c1b0a38f5eec4",
-      "bytes": 12947
+      "sha256": "1f85fb7bdd1449c9f59c3ad2a326d983ef1c94fd0e7d6fc925335022718621c1",
+      "bytes": 13399
     },
     "build_characters.py": {
-      "sha256": "1876935e524dfa5541bb6124335dcf56c731d7be40223ddd1b329ee89116d4f9",
-      "bytes": 31184
+      "sha256": "f7f38867adfb376884a86ea5c9ee9d1b9bc74f957834525a0e7756b9e52133d5",
+      "bytes": 26612
     },
     "check_motion_audit.py": {
-      "sha256": "b9934bd678828e1ff6bfa7fec4321a433a4376155993ed7c1d5ee964f744f204",
-      "bytes": 2626
+      "sha256": "e9a96c7a124aab08e4feab3e70934b6a5884727fcdd65ab78d8aabdfd209dcaf",
+      "bytes": 2908
     },
     "compile_unity.py": {
       "sha256": "9896720ccb80995441c52b482524f7c1d3ff2f0d14f83b4cd490a003da1a0ae9",
       "bytes": 2187
     },
-    "fbx_roundtrip.json": {
-      "sha256": "4747339d4ce516e9ac3c9bb13b505bd83998b72c813edf2e966d5c110d87d0ff",
-      "bytes": 3296
+    "plan_visual_evidence.py": {
+      "sha256": "68da0b552694d812993f724a5512882e83320ffc8f8af433030c60da50e04571",
+      "bytes": 6815
     },
-    "flyswatter/audit.json": {
-      "sha256": "8746b773998015b57cb4438ab873b46408cc50cda6b9a489c2f7e14f81e271f3",
-      "bytes": 2126
+    "render_human_witness.py": {
+      "sha256": "89227d7b996b211328834abafddf326430af367783baec357e1c5f250dd76b04",
+      "bytes": 5111
+    },
+    "render_review.py": {
+      "sha256": "b7fcc64b091bb2daff37a3d22ab960f6c76868e66db280417b8b32e5f78cd59c",
+      "bytes": 3233
+    },
+    "seal_manifest.py": {
+      "sha256": "c0aa24282dfcf0f317dc96eea22bafaea678c078832844bad89da177b4ff5666",
+      "bytes": 4197
+    },
+    "verify_fbx.py": {
+      "sha256": "f0b8a5dfea0e1fff3fc4ba6e8138bb9f6961ca1fc1a68ff17bf53325a2bbf473",
+      "bytes": 2505
+    },
+    ".validation/probe_animation.py": {
+      "sha256": "78dcfd3960e987834b7a04584eed3433184e39b372694c45567c30156af2b207",
+      "bytes": 2142
+    },
+    ".validation/probe_clap.py": {
+      "sha256": "492d7b9cc7468e6b45b9b6f415a2b62f0f5337b30058fc7327a7eb9037e74d66",
+      "bytes": 1694
+    },
+    ".validation/probe_hips.py": {
+      "sha256": "670474f1617780d9abcec8cb6971e15f8ce05e88aae7a68d190bb91ff00c15c9",
+      "bytes": 1189
+    },
+    ".validation/run_bounded.py": {
+      "sha256": "2edf2a64450ed8d9d84c30bc95f964087cb1cd96a66457e271db6bed56f7bce2",
+      "bytes": 659
     },
     "flyswatter/LMS_Flyswatter_alpha.blend": {
       "sha256": "3181959bcc441ba25f86e768bd0e311e754cf898d58d331b09298d0f901a110c",
@@ -2240,25 +2292,13 @@
       "sha256": "e2c01038ae45fd5a22cb52a14c4b34edd4ffb3fc54dd3494dcc8743bac17cc16",
       "bytes": 31964
     },
-    "human/audit.json": {
-      "sha256": "32ae4faa9b56288c7d29ce08ad829aab379bbd27553b35bab7e5528076918bdc",
-      "bytes": 24225
-    },
     "human/LMS_Human_alpha.blend": {
-      "sha256": "671bcb318eed163c038873d8e3cff6b7a8db3d21f90cd3eb4dab1ace66a8ee54",
-      "bytes": 1004852
+      "sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
+      "bytes": 996962
     },
     "human/LMS_Human_alpha.fbx": {
-      "sha256": "bfdf08992401c7bdc174a7cc001cffcce1c1c48ee71bfd9bd20e7c8d7dfa9095",
-      "bytes": 8112332
-    },
-    "integration.json": {
-      "sha256": "315954254d296f329764916e32aed05be892173be093cfb8a6a749c1a3200b55",
-      "bytes": 4476
-    },
-    "mosquito/audit.json": {
-      "sha256": "68225dee236e327e24ab7a501e2fe8c7f457708d2824b7b928c7d93b0adfd0c3",
-      "bytes": 16402
+      "sha256": "dd214f9b9f89f8c9703e877036238474d1768b5a1dfd4b842af43cd4279a1340",
+      "bytes": 8222060
     },
     "mosquito/LMS_Mosquito_alpha.blend": {
       "sha256": "114780e673ddbd90670901399f30bdd99e13e83bd4208ebd01b0952b8a3d11ce",
@@ -2267,110 +2307,26 @@
     "mosquito/LMS_Mosquito_alpha.fbx": {
       "sha256": "08ecaf1858abe00921377de197c1ffb3479ce8540009adf263cbd057168863b9",
       "bytes": 3778604
-    },
-    "motion_audit.json": {
-      "sha256": "49525d410bbb29bd3c927cb701f0e671158706be7adfe4cb27a811b850668fad",
-      "bytes": 211017
-    },
-    "motion_audit_before.json": {
-      "sha256": "bf00b63c92f54a79a5fa9c8be640d2471e39e1375ea685ac485b22dbd505c4da",
-      "bytes": 213381
-    },
-    "motion_gate.json": {
-      "sha256": "0be887afd98c8ae0d755ac6468397f128d451859bf57f9f4f1b94150c26fac4f",
-      "bytes": 258
-    },
-    "plan_visual_evidence.py": {
-      "sha256": "d260e0a89a1315ccdc9a29e8be2a6c82b8df79301a51f78212faa617f623c7bc",
-      "bytes": 6547
-    },
-    "render_review.py": {
-      "sha256": "b7fcc64b091bb2daff37a3d22ab960f6c76868e66db280417b8b32e5f78cd59c",
-      "bytes": 3233
-    },
-    "review/human_back.png": {
-      "sha256": "693becbf37d4cc58ce460ce0b2ef50bed84f4eb1525cb6d51a66cc8c4beb5792",
-      "bytes": 702675
-    },
-    "review/human_clap_contact.png": {
-      "sha256": "422d5b3b9743bde0e0458f73e68afdff77840d5f2d0709723227ada7dbc45fef",
-      "bytes": 738273
-    },
-    "review/human_front.png": {
-      "sha256": "b37b03a462afee3512acfec6930585fc5491eae1ca28de1458d370f2cd361106",
-      "bytes": 715516
-    },
-    "review/human_hand_curl.png": {
-      "sha256": "b2dc02c5a18691c13e9db67e8e26b5dc0f1f84bcdac27f601320d7459a42675b",
-      "bytes": 699478
-    },
-    "review/human_hand_open.png": {
-      "sha256": "9208d22f47bca65df0cd816f55e3e77c7af2f2d84886cde273bbfc1fad469ed3",
-      "bytes": 702922
-    },
-    "review/human_side.png": {
-      "sha256": "4049d64c52bfef69b9fe832c09fdcc774eb9eaa8fd891661a3090348abb8b634",
-      "bytes": 677708
-    },
-    "review/human_threequarter.png": {
-      "sha256": "ba96949f188bd001edf3d6a6bf343bd9cd944ad2f7069f9d82e5b54690d735c4",
-      "bytes": 718441
-    },
-    "review/mosquito_back.png": {
-      "sha256": "fbbe9be0004af1837d8b3c539681688f09b6dbd6ab0c4afcb42c9bf6b2e88d2f",
-      "bytes": 671950
-    },
-    "review/mosquito_front.png": {
-      "sha256": "8229adf0662315201b3632e8ee5ef2c57e4b4179141430ca004d95c0410f570c",
-      "bytes": 670217
-    },
-    "review/mosquito_side.png": {
-      "sha256": "ed738b402972652e8cb1f3b38bc408f5206e0ef99010e2529734dc6450c413be",
-      "bytes": 676958
-    },
-    "review/mosquito_threequarter.png": {
-      "sha256": "63647ef63d0ab762843ac121265470ecf29c13576f4b41c1453970e08b25d0e8",
-      "bytes": 682488
-    },
-    "seal_manifest.py": {
-      "sha256": "33854ced5a56c716c997351c4c85c033b54f21325da4fd4a10e41d73b6a8b518",
-      "bytes": 3604
-    },
-    "surface_support_audit.json": {
-      "sha256": "20e00078dc52648c85b0aeeb1e1c540b595b68ffd633687decc1dbcdf13a1250",
-      "bytes": 348546
-    },
-    "unity_compile.json": {
-      "sha256": "014f2df26956c38ce95748b108e8bfb79ecded43a9abb947633fa69ff683732e",
-      "bytes": 819
-    },
-    "verify_fbx.py": {
-      "sha256": "f0b8a5dfea0e1fff3fc4ba6e8138bb9f6961ca1fc1a68ff17bf53325a2bbf473",
-      "bytes": 2505
-    },
-    "visual_evidence_jobs.json": {
-      "sha256": "2cfa20c3edfdf1fa8b7a0a9a85d5fb89bdce34c8f3feae1b26f68a0e94058fa5",
-      "bytes": 72136
     }
   },
-  "surface_support_geometry_verified": true,
-  "surface_orientation_runtime_verified": false,
-  "review_status": "Previous sample captures retained; integration revision needs Unity review",
-  "review_renderer": {
-    "engine": "Cycles",
-    "device": "CPU",
-    "threads": 2,
-    "samples": 24,
-    "resolution": [
-      720,
-      900
-    ]
-  },
-  "fbx_roundtrip_verified": true,
-  "source_motion_verified": true,
-  "reference_images": {
-    "work/references094/expanded/human-turnarounds.png": "23c18de0216b50d2a23c7c924e6453104f996c629ffd1db33f67c44a098e4e01",
-    "work/references094/expanded/mosquito-turnarounds.png": "7babf3d0efca4d1eabd99add8eca896e8ad1eb4b54994725e939249a27e75d51",
-    "work/references094/characters.png": "559c22c57a211f7ad90646e2041588f4e293a9bc79ce5f9a46b73347c1d02437"
+  "generated_species": [
+    "Human"
+  ],
+  "review_status": "Human reference8: six source views rendered; visual defects and motion/FBX/Unity checks pending",
+  "human_candidate_evidence": {
+    "status": "CANDIDATE_RENDERED_NOT_APPROVED",
+    "source_sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
+    "fbx_sha256": "dd214f9b9f89f8c9703e877036238474d1768b5a1dfd4b842af43cd4279a1340",
+    "views": [
+      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/face_front.png",
+      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/face_profile.png",
+      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/front.png",
+      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/hand_open.png",
+      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/slipper.png",
+      "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/three_quarter.png"
+    ],
+    "motion_verified": false,
+    "fbx_roundtrip_verified": false,
+    "unity_import_verified": false
   }
 }

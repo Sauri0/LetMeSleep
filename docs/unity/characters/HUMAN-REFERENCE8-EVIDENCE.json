@@ -1,0 +1,191 @@
+{
+  "state": "CANDIDATE_RENDERED_NOT_APPROVED",
+  "source_sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
+  "fbx_sha256": "dd214f9b9f89f8c9703e877036238474d1768b5a1dfd4b842af43cd4279a1340",
+  "blender_version": "5.2.1 LTS",
+  "generation_pid": 2008,
+  "render_pid": 33888,
+  "processes_finished": true,
+  "exit_code": null,
+  "completion_evidence": [
+    "LMS_CHARACTER_GENERATION_PASSED",
+    "LMS_HUMAN_WITNESS_DONE",
+    "Blender quit"
+  ],
+  "source_geometry_passed": true,
+  "other_species_hashes_unchanged": {
+    "mosquito/audit.json": "68225dee236e327e24ab7a501e2fe8c7f457708d2824b7b928c7d93b0adfd0c3",
+    "mosquito/LMS_Mosquito_alpha.blend": "114780e673ddbd90670901399f30bdd99e13e83bd4208ebd01b0952b8a3d11ce",
+    "mosquito/LMS_Mosquito_alpha.fbx": "08ecaf1858abe00921377de197c1ffb3479ce8540009adf263cbd057168863b9",
+    "flyswatter/audit.json": "8746b773998015b57cb4438ab873b46408cc50cda6b9a489c2f7e14f81e271f3",
+    "flyswatter/LMS_Flyswatter_alpha.blend": "3181959bcc441ba25f86e768bd0e311e754cf898d58d331b09298d0f901a110c",
+    "flyswatter/LMS_Flyswatter_alpha.fbx": "e2c01038ae45fd5a22cb52a14c4b34edd4ffb3fc54dd3494dcc8743bac17cc16"
+  },
+  "motion_audit_current": false,
+  "fbx_roundtrip_current": false,
+  "unity_import_verified": false,
+  "views": [
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/face_front.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_Idle",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 0,
+      "focus": [
+        0,
+        -0.02,
+        1.56
+      ],
+      "orthographic_scale": 0.58,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/face_profile.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_Idle",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 90,
+      "focus": [
+        0,
+        -0.02,
+        1.56
+      ],
+      "orthographic_scale": 0.58,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/front.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_Idle",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 0,
+      "focus": [
+        0,
+        0,
+        0.92
+      ],
+      "orthographic_scale": 2.05,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/hand_open.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_FingerCurl",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 35,
+      "focus": [
+        0.83,
+        -0.01,
+        1.17
+      ],
+      "orthographic_scale": 0.26,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/slipper.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_Idle",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 90,
+      "focus": [
+        0.125,
+        -0.06,
+        0.1
+      ],
+      "orthographic_scale": 0.39,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    },
+    {
+      "image": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/review/human-reference8/three_quarter.png",
+      "source": "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/human/LMS_Human_alpha.blend",
+      "source_sha256": "12a9fc7f9f9e11554e8ea50cf643d2394affae64cb2d214859d1420da6e02903",
+      "engine": "Blender 5.2.1 LTS",
+      "renderer": "Cycles CPU",
+      "threads": 2,
+      "samples": 16,
+      "resolution": [
+        576,
+        720
+      ],
+      "clip": "Human_Idle",
+      "phase": 0,
+      "frame": 1.0,
+      "yaw_degrees": 35,
+      "focus": [
+        0,
+        0,
+        0.92
+      ],
+      "orthographic_scale": 2.05,
+      "actual_action_evaluated": true,
+      "visual_approval": false,
+      "unity_evidence": false
+    }
+  ],
+  "open_visual_defects": [
+    "Horizontal facial bands continue around cheeks/temple",
+    "Eye whites still read as attached discs from profile",
+    "Slipper is too rectangular; toe cut off in close-up framing",
+    "Other profiles/back and full animation clips missing"
+  ]
+}

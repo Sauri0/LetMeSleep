@@ -20,7 +20,7 @@ motion=json.loads((ROOT/'motion_audit.json').read_text())
 for row in motion['actions']:
     source=ROOT/row['species'].lower()/('LMS_'+row['species']+'_alpha.'+row['format'])
     assert row['source_sha256']==hashlib.sha256(source.read_bytes()).hexdigest(), 'Stale motion source'
-if 'mosquito-proportions' in manifest['version']:
+if any(a.get('contact',{}).get('gameplay_surface_root_offset_m') for a in manifest['audits']):
     support=json.loads((ROOT/'surface_support_audit.json').read_text())
     assert support['passed'], 'Surface support geometry must pass'
     for kind,sha in support['source_sha256'].items():
@@ -50,5 +50,14 @@ for relative in ['work/references094/expanded/human-turnarounds.png','work/refer
     reference=ROOT.parents[2]/relative
     assert reference.is_file(), relative
     manifest['reference_images'][relative]=hashlib.sha256(reference.read_bytes()).hexdigest()
+quality_catalog=Path('N:/LetMeSleep/References/CharacterQuality-20260912/manifest.json')
+quality=json.loads(quality_catalog.read_text(encoding='utf8'))
+assert len(quality)==8,'Expected the eight explicit character-quality references'
+manifest['quality_references']={}
+for entry in quality:
+    reference=Path(entry['path'])
+    sha=hashlib.sha256(reference.read_bytes()).hexdigest()
+    assert sha==entry['sha256'],'Quality reference changed: '+entry['id']
+    manifest['quality_references'][entry['id']]={'path':reference.as_posix(),'sha256':sha}
 path.write_text(json.dumps(manifest,indent=2),encoding='utf8',newline='\n')
 print('LMS_CHARACTER_MANIFEST_SEALED')

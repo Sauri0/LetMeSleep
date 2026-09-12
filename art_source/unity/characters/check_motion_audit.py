@@ -30,6 +30,9 @@ for hand in report['hands']:
     if hand['inward_distal_joint_displacement_m']<.015:errors.append(str(hand)+': finger does not curl inward')
 for eye in report['facial']:
     if eye['closed_open_height_ratio'] is None or eye['closed_open_height_ratio']>.20:errors.append(str(eye)+': blink does not close vertically')
+if len(report.get('expressions',[]))!=2:errors.append('Expected source/FBX jaw expression measurements')
+for expression in report.get('expressions',[]):
+    if expression['jaw_mesh_downward_motion_in_head_space_m']<.003:errors.append(str(expression)+': jaw does not open downward')
 summary={'passed':not errors,'errors':errors,'scope':'60source/FBX clip evaluations, floor/support, loop, root, 10digits and blink; Unity/runtime/visual review separate',
          'motion_audit_sha256':hashlib.sha256((ROOT/'motion_audit.json').read_bytes()).hexdigest()}
 (ROOT/'motion_gate.json').write_text(json.dumps(summary,indent=2),encoding='utf8',newline='\n')

@@ -50,6 +50,10 @@ def plan():
     details={
         'Human':[
             ('face_front','Human_Idle',0,'Head',0),('face_profile','Human_Idle',0,'Head',90),
+            ('face_hit','Human_Hit',.5,'Head',35),('face_swat','Human_Swat',.48,'Head',35),
+            ('face_faint','Human_Faint',1,'Head',35),
+            ('slipper_profile','Human_Idle',0,'Foot.L',90),
+            ('collar_shoulders','Human_Clap',.35,'Chest',35),
             ('hand_left_open','Human_FingerCurl',0,'Hand.L',35),('hand_left_closed','Human_FingerCurl',.5,'Hand.L',35),
             ('hand_right_open','Human_FingerCurl',0,'Hand.R',-35),('hand_right_closed','Human_FingerCurl',.5,'Hand.R',-35),
             ('clap_shoulders_palms','Human_Clap',14/30,'Chest',35),
