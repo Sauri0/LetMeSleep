@@ -155,15 +155,15 @@ namespace LetMeSleep.UI
             {
                 if (!renderer.enabled) continue;
                 // Imported skin culling bounds are not necessarily in renderer-transform space.
-                // Bake the posed geometry explicitly; BakeMesh(false) returns vertices in that
-                // space without baking the Transform scale, which TransformPoint applies once.
+                // BakeMesh(true) compensates renderer scale before TransformPoint applies it.
+                // False would count a scaled visual root twice (see CharacterContentBuilder).
                 var bounds = renderer.localBounds;
                 if (renderer is SkinnedMeshRenderer skin && skin.sharedMesh != null)
                 {
                     var snapshot = new Mesh();
                     try
                     {
-                        skin.BakeMesh(snapshot, false);
+                        skin.BakeMesh(snapshot, true);
                         if (snapshot.vertexCount == 0) continue;
                         snapshot.RecalculateBounds();
                         bounds = snapshot.bounds;

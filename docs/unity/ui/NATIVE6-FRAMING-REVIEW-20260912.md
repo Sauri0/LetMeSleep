@@ -23,3 +23,7 @@ No cerrar framing del mosquito por el resultado numérico. El chequeo de Capture
 Pista pendiente de probe nativo: el prefab mosquito tiene VisualRoot.localScale=(0.5,0.5,0.5); el tamaño aparente difiere aproximadamente por factor dos. Comparar BakeMesh(false), BakeMesh(true), lossyScale/rootBone y bounds renderizados antes de decidir corrección. Esto es hipótesis, no causa probada. No alterar escala de modelos ni multiplicar distancia por dos como parche.
 
 Director notificado de la discrepancia con nombres exactos. Arte, iluminación final, input físico, persistencia, giro continuo y otras poses quedan fuera de esta revisión.
+
+## Diagnóstico posterior
+
+Director señaló el antecedente en CharacterContentBuilder/CharacterRenderReview. Confirmado en `docs/unity/characters/UNITY-INTEGRATION.md:87`: BakeMesh(false) seguido de TransformPoint cuenta dos veces la escala 0.5; BakeMesh(true) la compensa. El visor adopta ese contrato general, sin ajustes numéricos por especie. La aceptación del mosquito continúa pendiente de capturas posteriores; no se reclasifican estos PNG rechazados.

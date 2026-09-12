@@ -1,5 +1,13 @@
 # Visor: encuadre por bounds y especie
 
+## Corrección de escala tras native6
+
+Native6 corrigió el humano, pero sus PNG rechazaron el mosquito pese a fuera=0 en la proyección. Tanto el visor como el chequeo compartían `BakeMesh(false)` seguido de `TransformPoint`, contando dos veces la escala 0.5 de VisualRoot. El resultado numérico no era independiente de ese supuesto.
+
+La solución común es `BakeMesh(snapshot, true)` antes de TransformPoint, igual que `CharacterContentBuilder.ValidateCharacter` y `CharacterRenderReview.ValidateSkinnedPose`. El diagnóstico y la corrección previa ya estaban documentados en `docs/unity/characters/UNITY-INTEGRATION.md`, sección «Corrección de orientación tras importación nativa». No hay multiplicador por especie ni cambios de escala, modelos o margen. Con escala unitaria humano conserva el mismo tratamiento efectivo. El chequeo nativo también debe compensar escala y contrastarse con PNG; su fuera=0 anterior no aprueba native6 mosquito.
+
+Compilación externa: `N:/LetMeSleep/Validation/UI-PreviewBounds-20260912/compile-scale-fix.log`. Pendiente captura nueva de Director. Las secciones inferiores conservan el historial de los deltas rechazados.
+
 ## Corrección tras regresión native5
 
 La captura `N:/LetMeSleep/Validation/TeamRecovery/ui-native5/HumanUiPreview-default-1080.png` rechazó fbd1292: solo piernas, cabeza fuera. El receipt registra centro vertical de cámara 0.05434 y desplazamiento lateral de ~0.873 al girar a perfil. El cálculo genérico `renderer.localBounds` → `renderer.transform` interpretó incorrectamente los bounds de los SkinnedMeshRenderer importados. El ajuste previo no está aprobado.
