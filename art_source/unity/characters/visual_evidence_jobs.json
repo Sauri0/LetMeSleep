@@ -1,7 +1,7 @@
 {
   "schema": "lms-character-review-jobs-v1",
   "status": "planned_not_rendered",
-  "motion_gate_sha256": "3fee6bcf85d8d892eb3e05fe02fd05e2c0fa11077255457fd8246e406d81bb64",
+  "motion_gate_sha256": "0be887afd98c8ae0d755ac6468397f128d451859bf57f9f4f1b94150c26fac4f",
   "assets": [
     {
       "id": "Human",
@@ -117,8 +117,8 @@
         "Socket.Foot.R"
       ],
       "source_files": {
-        "human/LMS_Human_alpha.fbx": "25eed8e425dfab509760e8713950bd4e550a88daf1e1c0e5f3c7e1e1f78dfe95",
-        "human/LMS_Human_alpha.blend": "4e81d0b6a4672155d5f2b7a03fe378d555e75d3f8eec51c5104fd129a5029965"
+        "human/LMS_Human_alpha.fbx": "bfdf08992401c7bdc174a7cc001cffcce1c1c48ee71bfd9bd20e7c8d7dfa9095",
+        "human/LMS_Human_alpha.blend": "671bcb318eed163c038873d8e3cff6b7a8db3d21f90cd3eb4dab1ace66a8ee54"
       },
       "triangles": 10924,
       "material_palette": [
@@ -197,9 +197,9 @@
           "materials": [
             "Mosquito_Shell",
             "Mosquito_Abdomen",
-            "Mosquito_Legs",
             "Mosquito_EyeWhite",
-            "Mosquito_Expression"
+            "Mosquito_Expression",
+            "Mosquito_Legs"
           ]
         },
         {
@@ -211,7 +211,7 @@
         {
           "name": "MosquitoVeins",
           "materials": [
-            "Mosquito_Shell"
+            "Mosquito_WingVein"
           ]
         }
       ],
@@ -251,10 +251,10 @@
         "Socket.GroundContact"
       ],
       "source_files": {
-        "mosquito/LMS_Mosquito_alpha.fbx": "49e2f87ed548b113ba915ee46e7d989df59dbf7cad6e08876b8e3594b3aac088",
-        "mosquito/LMS_Mosquito_alpha.blend": "6ad0b09ff1c48a0b2b727b7e5e780d507da459b35de05c9586c9419e5a46a458"
+        "mosquito/LMS_Mosquito_alpha.fbx": "08ecaf1858abe00921377de197c1ffb3479ce8540009adf263cbd057168863b9",
+        "mosquito/LMS_Mosquito_alpha.blend": "114780e673ddbd90670901399f30bdd99e13e83bd4208ebd01b0952b8a3d11ce"
       },
-      "triangles": 1736,
+      "triangles": 2344,
       "material_palette": [
         {
           "name": "Mosquito_Abdomen",
@@ -315,6 +315,16 @@
             "a": 0.7200000286102295
           },
           "roughness": 0.4000000059604645
+        },
+        {
+          "name": "Mosquito_WingVein",
+          "color": {
+            "r": 0.30000001192092896,
+            "g": 0.4300000071525574,
+            "b": 0.5400000214576721,
+            "a": 1.0
+          },
+          "roughness": 0.8500000238418579
         }
       ]
     },
@@ -340,8 +350,8 @@
         "Socket.Impact"
       ],
       "source_files": {
-        "flyswatter/LMS_Flyswatter_alpha.fbx": "62f9f31d046b6a2c7bc1a6a8b12c4f37cc24c0ef3090a04e0840928425e7bf5e",
-        "flyswatter/LMS_Flyswatter_alpha.blend": "c1d19a8f62f38e29f38f00cc564d8f20ee634febdbd6d0c27eda12c2494759eb"
+        "flyswatter/LMS_Flyswatter_alpha.fbx": "e2c01038ae45fd5a22cb52a14c4b34edd4ffb3fc54dd3494dcc8743bac17cc16",
+        "flyswatter/LMS_Flyswatter_alpha.blend": "3181959bcc441ba25f86e768bd0e311e754cf898d58d331b09298d0f901a110c"
       },
       "triangles": 844,
       "material_palette": [

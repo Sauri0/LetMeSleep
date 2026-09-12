@@ -20,6 +20,13 @@ motion=json.loads((ROOT/'motion_audit.json').read_text())
 for row in motion['actions']:
     source=ROOT/row['species'].lower()/('LMS_'+row['species']+'_alpha.'+row['format'])
     assert row['source_sha256']==hashlib.sha256(source.read_bytes()).hexdigest(), 'Stale motion source'
+if 'mosquito-proportions' in manifest['version']:
+    support=json.loads((ROOT/'surface_support_audit.json').read_text())
+    assert support['passed'], 'Surface support geometry must pass'
+    for kind,sha in support['source_sha256'].items():
+        assert sha==hashlib.sha256((ROOT/'mosquito'/('LMS_Mosquito_alpha.'+kind)).read_bytes()).hexdigest(), 'Stale support geometry'
+    manifest['surface_support_geometry_verified']=True
+    manifest['surface_orientation_runtime_verified']=False
 expected=[f'{s}_{view}.png' for s in ['human','mosquito'] for view in ['front','side','back','threequarter']]
 expected+=['human_hand_open.png','human_hand_curl.png','human_clap_contact.png']
 for name in ([] if '--source-only' in sys.argv else expected):

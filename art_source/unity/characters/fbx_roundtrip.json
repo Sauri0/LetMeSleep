@@ -1,7 +1,7 @@
 [
   {
     "species": "Human",
-    "fbx_sha256": "25eed8e425dfab509760e8713950bd4e550a88daf1e1c0e5f3c7e1e1f78dfe95",
+    "fbx_sha256": "bfdf08992401c7bdc174a7cc001cffcce1c1c48ee71bfd9bd20e7c8d7dfa9095",
     "source_audit_sha256": "32ae4faa9b56288c7d29ce08ad829aab379bbd27553b35bab7e5528076918bdc",
     "dimensions": [
       1.8748153448104858,
@@ -42,14 +42,14 @@
   },
   {
     "species": "Mosquito",
-    "fbx_sha256": "49e2f87ed548b113ba915ee46e7d989df59dbf7cad6e08876b8e3594b3aac088",
-    "source_audit_sha256": "bf7fbc9fc476faa1b26bc00af0f854365f2fab62a5a368ada887bbc63b73912f",
+    "fbx_sha256": "08ecaf1858abe00921377de197c1ffb3479ce8540009adf263cbd057168863b9",
+    "source_audit_sha256": "68225dee236e327e24ab7a501e2fe8c7f457708d2824b7b928c7d93b0adfd0c3",
     "dimensions": [
-      0.4808907210826874,
-      0.38154347240924835,
-      0.18893486261367798
+      0.48071256279945374,
+      0.42680808901786804,
+      0.2551672235131264
     ],
-    "triangles": 1736,
+    "triangles": 2344,
     "bones": 33,
     "actions": [
       "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Bite",
@@ -82,7 +82,7 @@
   },
   {
     "species": "Flyswatter",
-    "fbx_sha256": "62f9f31d046b6a2c7bc1a6a8b12c4f37cc24c0ef3090a04e0840928425e7bf5e",
+    "fbx_sha256": "e2c01038ae45fd5a22cb52a14c4b34edd4ffb3fc54dd3494dcc8743bac17cc16",
     "source_audit_sha256": "8746b773998015b57cb4438ab873b46408cc50cda6b9a489c2f7e14f81e271f3",
     "dimensions": [
       0.17000000178813934,

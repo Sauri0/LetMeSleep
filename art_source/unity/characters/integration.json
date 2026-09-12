@@ -1,6 +1,6 @@
 {
-  "version": "0.9.4-alpha-character-motion-revision-3",
-  "status": "source_motion_and_fbx_verified_awaiting_unity_visual_review",
+  "version": "0.9.4-alpha-mosquito-proportions-revision-4",
+  "status": "source_motion_fbx_surface_support_verified_awaiting_unity_visual_review",
   "human": {
     "source_rig": "LMS_HumanRig",
     "unity_visual_scale": 1,
@@ -96,7 +96,14 @@
       0,
       0.095
     ],
-    "motion_notes": "Tripod SurfaceWalk support targets; separate leg directions and leaf wings; smooth flight-to-perch folding. Runtime attachment remains Presentation."
+    "motion_notes": "Elevated thin body, longer articulated legs, tapered abdomen, downward red proboscis to unchanged gameplay tip. Tripod gait and support evaluated for floor/wall/ceiling at root offsets .056/.057 under expected normal alignment. Runtime integration and visual comparison still required.",
+    "ground_contact_rest_unity_m": [
+      0,
+      -0.057,
+      0
+    ],
+    "surface_root_offset_m": 0.057,
+    "surface_orientation": "Local +Y outward support normal; forward tangent. W1 owns runtime integration, not verified by source audit."
   },
   "unity_material_setup": {
     "opaque": "URP Lit; use stable source material names and base colors",

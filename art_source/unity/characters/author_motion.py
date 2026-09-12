@@ -234,3 +234,4 @@ def mosquito(c):
     def fall(t):
         stance();u=smooth(t);p.rotate('Thorax',(1.48*u,.15*math.sin(math.pi*t),1.1*u));p.rotate('Wing.L',(.12+.55*u,.3,0));p.rotate('Wing.R',(.12+.55*u,-.3,0));return p.snapshot()
     sampled(c,'Fall',31,fall);sampled(c,'Recover',37,lambda t:fall(1-smooth(t)))
+    c.contact['minimum_surface_leg_reach_margin_m']=p.minimum_reach_margin

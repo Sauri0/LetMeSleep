@@ -20,7 +20,10 @@ for species in ['Human','Mosquito']:
             if action['max_root_head_motion_m']>.0001:errors.append(name+': Root translated')
             if action['loop_expected'] and action['first_last_mesh_difference_m']>.002:errors.append(name+': loop seam >2mm')
             if species=='Human' and action['minimum_mesh_z_m']<-.003:errors.append(name+': below floor '+str(action['minimum_mesh_z_m']))
-            if action['clip']=='Mosquito_SurfaceWalk' and action['minimum_mesh_z_m']<-.1054:errors.append(name+': surface support penetration')
+            if action['clip']=='Mosquito_SurfaceWalk':
+                contact=json.loads((ROOT/'mosquito/audit.json').read_text())['contact']
+                plane=contact['ground_contact_rest_unity_m'][1]/.5
+                if action['minimum_mesh_z_m']<plane-.003:errors.append(name+': surface support penetration')
 for comparison in report['source_fbx_comparison']:
     if comparison['max_source_fbx_head_difference_m']>.002:errors.append(comparison['clip']+': source/FBX pose mismatch >2mm')
 for hand in report['hands']:
