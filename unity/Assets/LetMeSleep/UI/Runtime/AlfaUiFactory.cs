@@ -63,14 +63,18 @@ namespace LetMeSleep.UI
 
         internal RectTransform Panel(Transform parent, string name, Color? color = null, float preferredWidth = -1f, float preferredHeight = -1f)
         {
-            var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Outline), typeof(UnityEngine.UI.LayoutElement));
+            var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Shadow), typeof(UnityEngine.UI.Outline), typeof(UnityEngine.UI.LayoutElement));
             var image = node.GetComponent<UnityEngine.UI.Image>();
             image.color = color ?? AlfaUiTheme.Night700;
+            image.raycastTarget = false;
             image.sprite = dependencies.PanelSprite;
             image.type = dependencies.PanelSprite != null ? UnityEngine.UI.Image.Type.Sliced : UnityEngine.UI.Image.Type.Simple;
             var outline = node.GetComponent<UnityEngine.UI.Outline>();
-            outline.effectColor = new Color(AlfaUiTheme.Sky400.r, AlfaUiTheme.Sky400.g, AlfaUiTheme.Sky400.b, 0.58f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.effectColor = new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.82f);
+            outline.effectDistance = new Vector2(1.5f, -1.5f);
+            var shadow = node.GetComponent<UnityEngine.UI.Shadow>();
+            shadow.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.78f);
+            shadow.effectDistance = new Vector2(7f, -8f);
             var layout = node.GetComponent<UnityEngine.UI.LayoutElement>();
             if (preferredWidth > 0f) layout.preferredWidth = preferredWidth;
             if (preferredHeight > 0f) layout.preferredHeight = preferredHeight;
@@ -83,23 +87,38 @@ namespace LetMeSleep.UI
             var node = Node(name, parent, typeof(TextMeshProUGUI), typeof(UnityEngine.UI.LayoutElement));
             var text = node.GetComponent<TextMeshProUGUI>();
             text.text = value ?? string.Empty;
-            text.font = heading ? AlfaUiTheme.Heading(dependencies) : AlfaUiTheme.Body(dependencies);
+            text.font = heading ? AlfaUiTheme.Display(dependencies) : AlfaUiTheme.Body(dependencies);
             text.fontSize = size;
             text.color = color;
             text.alignment = alignment;
             text.textWrappingMode = TextWrappingModes.Normal;
             text.raycastTarget = false;
             text.overflowMode = TextOverflowModes.Ellipsis;
+            if (heading)
+            {
+                text.fontStyle = FontStyles.Bold;
+                text.characterSpacing = 1.5f;
+            }
             var layout = node.GetComponent<UnityEngine.UI.LayoutElement>();
             layout.minHeight = Mathf.Max(size * 1.25f, 24f);
             layout.flexibleWidth = 1f;
             return text;
         }
 
-        internal UnityEngine.UI.Button Button(Transform parent, string name, string label, UnityAction callback,
-            bool primary = false, bool destructive = false, float height = 58f)
+        internal TextMeshProUGUI LogoText(Transform parent, string name, string value, float size, Color color,
+            TextAlignmentOptions alignment = TextAlignmentOptions.Left)
         {
-            var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button), typeof(UnityEngine.UI.LayoutElement), typeof(UnityEngine.UI.Outline));
+            var text = Text(parent, name, value, size, color, alignment, true);
+            text.font = AlfaUiTheme.Logo(dependencies);
+            text.fontStyle = FontStyles.Normal;
+            text.characterSpacing = 0f;
+            return text;
+        }
+
+        internal UnityEngine.UI.Button Button(Transform parent, string name, string label, UnityAction callback,
+            bool primary = false, bool destructive = false, float height = 58f, AlfaUiIconKind icon = AlfaUiIconKind.None)
+        {
+            var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button), typeof(UnityEngine.UI.LayoutElement), typeof(UnityEngine.UI.Shadow), typeof(UnityEngine.UI.Outline));
             var image = node.GetComponent<UnityEngine.UI.Image>();
             image.sprite = dependencies.ButtonSprite;
             image.type = dependencies.ButtonSprite != null ? UnityEngine.UI.Image.Type.Sliced : UnityEngine.UI.Image.Type.Simple;
@@ -110,8 +129,11 @@ namespace LetMeSleep.UI
             button.navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.Automatic, wrapAround = false };
             if (callback != null) button.onClick.AddListener(callback);
             var outline = node.GetComponent<UnityEngine.UI.Outline>();
-            outline.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.9f);
-            outline.effectDistance = new Vector2(3f, -4f);
+            outline.effectColor = primary ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Border;
+            outline.effectDistance = new Vector2(1.5f, -1.5f);
+            var shadow = node.GetComponent<UnityEngine.UI.Shadow>();
+            shadow.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.92f);
+            shadow.effectDistance = new Vector2(4f, -5f);
             var layout = node.GetComponent<UnityEngine.UI.LayoutElement>();
             layout.minHeight = Mathf.Max(44f, height);
             layout.preferredHeight = height;
@@ -119,8 +141,55 @@ namespace LetMeSleep.UI
             var text = Text(node.transform, "Label", label, AlfaUiTheme.ButtonSize,
                 destructive ? AlfaUiTheme.Sheet100 : primary ? AlfaUiTheme.Ink900 : AlfaUiTheme.Sheet100,
                 TextAlignmentOptions.Center);
-            Fill(text.rectTransform, 12f, 12f, 8f, 8f);
+            text.fontStyle = FontStyles.Bold;
+            text.characterSpacing = 0.8f;
+            Fill(text.rectTransform, icon == AlfaUiIconKind.None ? 12f : 60f, 16f, 8f, 8f);
+            if (icon != AlfaUiIconKind.None)
+            {
+                var iconGraphic = Icon(node.transform, "Icon", icon,
+                    destructive ? AlfaUiTheme.Sheet100 : primary ? AlfaUiTheme.Ink900 : AlfaUiTheme.Sheet100);
+                var iconRect = iconGraphic.rectTransform;
+                iconRect.anchorMin = new Vector2(0f, 0.5f);
+                iconRect.anchorMax = new Vector2(0f, 0.5f);
+                iconRect.pivot = new Vector2(0f, 0.5f);
+                iconRect.anchoredPosition = new Vector2(18f, 0f);
+                iconRect.sizeDelta = new Vector2(30f, 30f);
+            }
             return button;
+        }
+
+        internal AlfaUiIcon Icon(Transform parent, string name, AlfaUiIconKind kind, Color color)
+        {
+            var node = Node(name, parent, typeof(AlfaUiIcon));
+            var icon = node.GetComponent<AlfaUiIcon>();
+            icon.Kind = kind;
+            icon.color = color;
+            icon.raycastTarget = false;
+            return icon;
+        }
+
+        internal RectTransform SectionHeader(Transform parent, string name, string label, AlfaUiIconKind icon, Color color)
+        {
+            var row = Horizontal(parent, name, 12f, TextAnchor.MiddleLeft);
+            row.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 42f;
+            var badge = Panel(row, "Badge", new Color(color.r, color.g, color.b, 0.16f), 38f, 38f);
+            badge.GetComponent<UnityEngine.UI.Shadow>().enabled = false;
+            var symbol = Icon(badge, "Symbol", icon, color);
+            Fill(symbol.rectTransform, 7f, 7f, 7f, 7f);
+            Text(row, "Label", label, AlfaUiTheme.H2Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
+            return row;
+        }
+
+        internal RectTransform Divider(Transform parent, string name, Color color, float height = 2f)
+        {
+            var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.LayoutElement));
+            node.GetComponent<UnityEngine.UI.Image>().color = color;
+            node.GetComponent<UnityEngine.UI.Image>().raycastTarget = false;
+            var layout = node.GetComponent<UnityEngine.UI.LayoutElement>();
+            layout.minHeight = height;
+            layout.preferredHeight = height;
+            layout.flexibleWidth = 1f;
+            return node.GetComponent<RectTransform>();
         }
 
         internal TMP_InputField Input(Transform parent, string name, string placeholder, int maxLength, bool code = false)

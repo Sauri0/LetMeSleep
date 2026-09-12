@@ -1,6 +1,6 @@
 # Let me sleep 0.9.4/alfa — contrato de interfaz Unity
 
-Estado: especificación implementable del lote alfa autorizado el 12 de septiembre de 2026. No acredita una implementación ni una captura del juego.
+Estado: especificación de la implementación runtime del lote alfa, actualizada el 12 de septiembre de 2026. Las capturas nativas siguen siendo evidencia separada.
 
 ## 1. Objetivo y límites
 
@@ -38,7 +38,7 @@ No usar IMGUI para runtime. UI Toolkit puede reservarse para herramientas de edi
 | CanvasScaler | `Scale With Screen Size`, referencia `1920 × 1080`, `Match Width Or Height = 0.5`. |
 | Resolución mínima | `1280 × 720`. Nada interactivo puede quedar fuera del viewport o depender de scroll horizontal. |
 | EventSystem | Exactamente uno. Su módulo de entrada lo decide el Director según los paquetes del proyecto. |
-| Texto | TextMeshPro. Bangers sólo para logotipo/títulos breves; Atkinson Hyperlegible para cuerpo, controles y estados. Migrar las fuentes históricas únicamente después de validar licencia y recurso en Unity. |
+| Texto | TextMeshPro. Bangers sólo para el logotipo; Atkinson Hyperlegible Bold para títulos y controles, Regular para cuerpo y estados. |
 | Layout | Anclas y `VerticalLayoutGroup`/`HorizontalLayoutGroup`. Evitar offsets absolutos salvo HUD anclado y adornos. |
 | Raycasts | Activos sólo en controles. Fondos, marcos, iconos y texto decorativo no interceptan puntero. |
 
@@ -50,18 +50,19 @@ La referencia muestra buena jerarquía mediante paneles oscuros, contornos claro
 
 | Token | Valor | Uso |
 |---|---:|---|
-| `Ink900` | `#101727` | Fondo profundo, sombra y texto sobre crema. |
-| `Night800` | `#17243A` | Fondo principal. |
-| `Night700` | `#223552` | Panel sólido. |
-| `Night600` | `#2E4668` | Borde secundario y hover oscuro. |
-| `Moon200` | `#CBD9EA` | Texto secundario sobre noche. |
-| `Sheet100` | `#F5E9D6` | Texto principal y superficies claras. |
-| `Lamp400` | `#F2B84B` | Acción primaria y foco. |
-| `Pajama500` | `#E66050` | Peligro de mosquito, error y énfasis cálido. |
-| `Mint400` | `#67D19A` | Listo, éxito y confirmación. |
-| `Sky400` | `#66A9F5` | Acción online, selección neutral y enlaces de navegación. |
-| `Disabled` | `#718198` | Texto deshabilitado; acompañar siempre con forma o etiqueta. |
-| `Scrim` | `#08101FCC` | Fondo de modal sobre escena 3D. |
+| `Ink900` | `#081526` | Fondo profundo, sombra y texto sobre crema. |
+| `Night800` | `#10233D` | Fondo principal. |
+| `Night700` | `#18365A` | Panel sólido. |
+| `Night600` | `#244B78` | Superficie secundaria y hover oscuro. |
+| `Moon200` | `#BED4EA` | Texto secundario sobre noche. |
+| `Sheet100` | `#FFF1D6` | Texto principal y superficies claras. |
+| `Lamp400` | `#F6C453` | Acción primaria y foco. |
+| `Pajama500` | `#EF6258` | Peligro de mosquito, error y énfasis cálido. |
+| `Mint400` | `#65D49B` | Listo, éxito y confirmación. |
+| `Sky400` | `#4FA9F5` | Acción online, selección neutral y enlaces de navegación. |
+| `Border` | `#4D83BD` | Contorno estructural de paneles y controles. |
+| `Disabled` | `#6E8299` | Texto deshabilitado; acompañar siempre con forma o etiqueta. |
+| `Scrim` | `#06111FD1` | Fondo de modal sobre escena 3D. |
 
 Los estados nunca dependen sólo del color. `LISTO` y `NO LISTO` incluyen texto e icono; los errores incluyen frase y símbolo; el foco tiene contorno y desplazamiento visual.
 
@@ -70,7 +71,7 @@ Los estados nunca dependen sólo del color. `LISTO` y `NO LISTO` incluyen texto 
 | Estilo | Tamaño | Fuente | Uso |
 |---|---:|---|---|
 | Logo | 88 px | Bangers | `LET ME SLEEP`, máximo dos líneas. |
-| H1 | 48 px | Bangers | Título de pantalla. |
+| H1 | 48 px | Atkinson Bold | Título de pantalla. |
 | H2 | 32 px | Atkinson Bold | Título de panel. |
 | Botón | 24 px | Atkinson Bold | Verbos breves. |
 | Cuerpo | 21 px | Atkinson Regular | Explicación y estado. |
@@ -132,9 +133,9 @@ El diagrama complementario está en [ALFA-UI-FLOWS.svg](./ALFA-UI-FLOWS.svg).
 Composición a 16:9:
 
 - La escena 3D nocturna ocupa todo el fondo y conserva visible el arte actual bajo un tinte azul tinta suave.
-- Izquierda: tarjeta localizada para logotipo, subtítulo `HUMANOS CONTRA MOSQUITOS` y versión alfa discreta.
-- Centro: ventana libre para personajes o acción ambiental no interactiva.
-- Derecha: panel de acciones de 520–600 px de ancho. En 1280×720 puede ocupar 46 % del ancho; no superponer el logotipo ni tapar por completo la escena.
+- Izquierda: riel compacto de 500 px a 1080p con logotipo, subtítulo, acciones y versión dinámica del build.
+- Centro y derecha: ventana libre para personajes o acción ambiental no interactiva.
+- El riel conserva un margen de 54 px a 1080p y se escala con el `CanvasScaler`; no tapa por completo la escena.
 
 Orden y copy exacto:
 
@@ -142,7 +143,7 @@ Orden y copy exacto:
 2. `ENTRENAMIENTO`
 3. `PERSONALIZAR`
 4. `AJUSTES`
-5. `SALIR DEL JUEGO`
+5. `SALIR`
 
 Foco inicial: `JUGAR ONLINE`. `Tab`, `Shift+Tab` y flechas recorren las acciones en el mismo orden. `Enter` activa una sola vez. `Escape` no sale inmediatamente: abre `¿Salir del juego?` con `VOLVER` enfocado y `SALIR` como acción destructiva secundaria.
 
@@ -241,7 +242,7 @@ Si la escena habilita el movimiento de tercera persona:
 
 ### 5.4 Entrenamiento
 
-Composición: personaje/escena a la izquierda, configuración breve a la derecha.
+Composición: configuración breve a la izquierda y personaje/escena visible en el centro y la derecha.
 
 - Título `ENTRENAMIENTO`.
 - Paso `1. ELEGÍ TU ROL`: tarjetas `HUMANO` y `MOSQUITO`.
@@ -317,7 +318,8 @@ El mundo permanece dominante. El HUD no dibuja partes del cuerpo, zonas candidat
 
 ### Elementos comunes
 
-- Superior centro: reloj y cuota compartida `SANGRE 18 / 40` con icono propio de gota. Ancho máximo 420 px.
+- Superior izquierda: cápsula de rol con icono y etiqueta `HUMANO` o `MOSQUITO`.
+- Superior centro: cápsulas separadas para reloj y cuota compartida `SANGRE 18 / 40`, con iconos propios. Ancho combinado máximo 446 px.
 - Centro: retícula neutral pequeña, sin cambio de forma por parte corporal.
 - Centro inferior: una sola acción contextual, por ejemplo `[E] ABRIR` o `[E] RECOGER` cuando el runtime confirme disponibilidad.
 - Inferior izquierda: ayuda contextual de una o dos líneas; desaparece al aprenderse o al perder contexto.

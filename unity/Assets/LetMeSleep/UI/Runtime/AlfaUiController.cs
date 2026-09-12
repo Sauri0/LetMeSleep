@@ -19,6 +19,7 @@ namespace LetMeSleep.UI
         private readonly Dictionary<int, TextMeshProUGUI> humanCountLabels = new Dictionary<int, TextMeshProUGUI>();
         private readonly List<TextMeshProUGUI> memberRows = new List<TextMeshProUGUI>();
         private readonly List<GameObject> memberRowRoots = new List<GameObject>();
+        private readonly List<AlfaUiIcon> memberStatusIcons = new List<AlfaUiIcon>();
         private IMenuActions actions;
         private AlfaUiFactory factory;
         private AlfaUiScreen screen;
@@ -82,6 +83,8 @@ namespace LetMeSleep.UI
         private RectTransform mosquitoPaletteRoot;
         private GameObject humanCustomizationFields;
         private GameObject mosquitoCustomizationFields;
+        private UnityEngine.UI.Button customizationHumanButton;
+        private UnityEngine.UI.Button customizationMosquitoButton;
         private UnityEngine.UI.Button customizationSaveButton;
         private TextMeshProUGUI customizationSaveLabel;
 
@@ -108,6 +111,12 @@ namespace LetMeSleep.UI
         private TextMeshProUGUI hudHint;
         private TextMeshProUGUI hudActorState;
         private TextMeshProUGUI hudNetwork;
+        private TextMeshProUGUI hudRoleLabel;
+        private AlfaUiIcon hudRoleIcon;
+        private UnityEngine.UI.Image hudBloodFill;
+        private GameObject hudPromptPanel;
+        private GameObject hudHintPanel;
+        private GameObject hudStatePanel;
         private UnityEngine.UI.Image hudProgress;
 
         private UnityEngine.UI.Button pauseLeaveButton;
@@ -225,6 +234,8 @@ namespace LetMeSleep.UI
                 var readiness = member.Connected ? member.Ready ? "LISTO" : "NO LISTO" : "SIN CONEXIÓN";
                 memberRows[i].text = $"{member.Name}\n<size=70%>{readiness}  ·  {member.RoleLabel}</size>";
                 memberRows[i].color = member.Ready ? AlfaUiTheme.Mint400 : member.Connected ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Disabled;
+                memberStatusIcons[i].Kind = member.Ready ? AlfaUiIconKind.Ready : member.Connected ? AlfaUiIconKind.Human : AlfaUiIconKind.Exit;
+                memberStatusIcons[i].color = member.Ready ? AlfaUiTheme.Mint400 : member.Connected ? AlfaUiTheme.Moon200 : AlfaUiTheme.Pajama500;
             }
 
             foreach (var entry in humanCountLabels)
@@ -252,7 +263,7 @@ namespace LetMeSleep.UI
             trainingStartButton.interactable = !busy;
             trainingBackButton.interactable = !trainingCancelLatched;
             trainingStartLabel.text = busy ? "PREPARANDO…" : "EMPEZAR ENTRENAMIENTO";
-            trainingBackLabel.text = busy ? trainingCancelLatched ? "CANCELANDO…" : "CANCELAR" : "← VOLVER";
+            trainingBackLabel.text = busy ? trainingCancelLatched ? "CANCELANDO…" : "CANCELAR" : "VOLVER";
             SetButtonSelection(trainingHumanButton, trainingState.SelectedRole == AlfaRole.Human);
             SetButtonSelection(trainingMosquitoButton, trainingState.SelectedRole == AlfaRole.Mosquito);
             trainingStatus.text = trainingState.IsLoading ? "Preparando entrenamiento…" : trainingState.Message;
@@ -329,6 +340,11 @@ namespace LetMeSleep.UI
             if (state == null) throw new ArgumentNullException(nameof(state));
             hudClock.text = FormatClock(state.SecondsRemaining);
             hudBlood.text = $"SANGRE  {state.BloodCurrent:0.#} / {state.BloodTarget:0.#}";
+            var bloodRatio = state.BloodTarget > 0f ? Mathf.Clamp01(state.BloodCurrent / state.BloodTarget) : 0f;
+            hudBloodFill.rectTransform.anchorMax = new Vector2(bloodRatio, 1f);
+            hudRoleLabel.text = state.Role == AlfaRole.Human ? "HUMANO" : "MOSQUITO";
+            hudRoleIcon.Kind = state.Role == AlfaRole.Human ? AlfaUiIconKind.Human : AlfaUiIconKind.Mosquito;
+            hudRoleIcon.color = state.Role == AlfaRole.Human ? AlfaUiTheme.Sky400 : AlfaUiTheme.Pajama500;
             hudInteraction.text = state.Interaction;
             hudHint.text = string.IsNullOrWhiteSpace(state.ContextHint) ? DefaultRoleHint(state.Role) : state.ContextHint;
             hudActorState.text = ActorStateText(state.Role, state.ActorState);
@@ -337,6 +353,10 @@ namespace LetMeSleep.UI
             var rect = hudProgress.rectTransform;
             rect.anchorMax = new Vector2(state.StateProgress01, 1f);
             hudNetwork.text = state.NetworkMessage;
+            hudPromptPanel.SetActive(!string.IsNullOrWhiteSpace(hudInteraction.text));
+            hudHintPanel.SetActive(!string.IsNullOrWhiteSpace(hudHint.text));
+            hudStatePanel.SetActive(!string.IsNullOrWhiteSpace(hudActorState.text) ||
+                state.ActorState == HudActorState.Extracting || state.ActorState == HudActorState.Recovering);
             if (screen != AlfaUiScreen.Gameplay && screen != AlfaUiScreen.Pause && screen != AlfaUiScreen.Settings)
                 ShowGameplay();
         }
@@ -405,55 +425,50 @@ namespace LetMeSleep.UI
         {
             var view = factory.View("MainMenuView", transform, false);
             var backdrop = view.GetComponent<UnityEngine.UI.Image>();
-            backdrop.color = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.24f);
+            backdrop.color = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.18f);
             backdrop.raycastTarget = false;
             screens[AlfaUiScreen.MainMenu] = view;
-            var safe = factory.SafeArea(view.transform, 64f, 64f, 54f, 54f);
-            var columns = factory.Horizontal(safe, "Columns", 36f, TextAnchor.MiddleCenter);
-            AlfaUiFactory.Fill(columns);
 
-            var brandPanel = factory.Panel(columns, "BrandCard",
-                new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.74f), 600f, 570f);
-            brandPanel.GetComponent<UnityEngine.UI.Outline>().effectColor =
-                new Color(AlfaUiTheme.Lamp400.r, AlfaUiTheme.Lamp400.g, AlfaUiTheme.Lamp400.b, 0.34f);
-            var brand = factory.Vertical(brandPanel, "Brand", 16f, TextAnchor.MiddleLeft);
-            AlfaUiFactory.Fill(brand, 42f, 42f, 42f, 42f);
-            factory.Text(brand, "Eyebrow", "LA NOCHE RECIÉN EMPIEZA", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
-            factory.Text(brand, "Logo", "LET ME\nSLEEP", AlfaUiTheme.LogoSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
-            factory.Text(brand, "Subtitle", "HUMANOS CONTRA MOSQUITOS", 26f, AlfaUiTheme.Moon200);
-            factory.Text(brand, "Version", Application.version.Replace("-", " / ").ToUpperInvariant() + "  ·  WINDOWS", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
+            var panel = factory.Panel(view.transform, "MenuRail",
+                new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.91f), 500f, 920f);
+            Anchor(panel, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(54f, 0f), new Vector2(500f, 920f));
+            panel.GetComponent<UnityEngine.UI.Outline>().effectColor = new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.72f);
+            var menu = factory.Vertical(panel, "Content", 13f, TextAnchor.MiddleLeft);
+            AlfaUiFactory.Fill(menu, 38f, 38f, 34f, 30f);
+            factory.Text(menu, "Eyebrow", "LA NOCHE RECIÉN EMPIEZA", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
+            factory.LogoText(menu, "Logo", "LET ME\nSLEEP", 82f, AlfaUiTheme.Sheet100);
+            factory.Text(menu, "Subtitle", "HUMANOS CONTRA MOSQUITOS", 22f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
+            factory.Divider(menu, "BrandDivider", new Color(AlfaUiTheme.Lamp400.r, AlfaUiTheme.Lamp400.g, AlfaUiTheme.Lamp400.b, 0.9f), 3f);
+            factory.Text(menu, "Question", "ELEGÍ CÓMO JUGAR", 20f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
+            factory.Button(menu, "MainPlayButton", "JUGAR ONLINE", ShowOnlineChoice, true, false, 70f, AlfaUiIconKind.Online);
+            factory.Button(menu, "MainTrainingButton", "ENTRENAMIENTO", ShowTraining, false, false, 62f, AlfaUiIconKind.Training);
+            factory.Button(menu, "MainCustomizeButton", "PERSONALIZAR", ShowCustomization, false, false, 62f, AlfaUiIconKind.Customize);
+            factory.Button(menu, "MainSettingsButton", "AJUSTES", () => OpenSettings(AlfaUiScreen.MainMenu), false, false, 62f, AlfaUiIconKind.Settings);
+            factory.Button(menu, "MainQuitButton", "SALIR", ConfirmQuit, false, true, 58f, AlfaUiIconKind.Exit);
+            factory.Text(menu, "NavigationHint", "FLECHAS / TAB  ·  ENTER  ·  ESC", 14f, AlfaUiTheme.Moon200);
+            var version = string.IsNullOrWhiteSpace(Application.version) ? "ALFA" : Application.version.Replace("-", " / ").ToUpperInvariant();
+            factory.Text(menu, "Version", version + "  ·  WINDOWS", 13f, AlfaUiTheme.Disabled);
 
-            var artWindow = AlfaUiFactory.Node("SceneWindow", columns, typeof(UnityEngine.UI.LayoutElement));
-            var artLayout = artWindow.GetComponent<UnityEngine.UI.LayoutElement>();
-            artLayout.minWidth = 160f;
-            artLayout.flexibleWidth = 1f;
-
-            var panel = factory.Panel(columns, "MenuCard",
-                new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.88f), 540f, 660f);
-            var menu = factory.Vertical(panel, "Actions", 14f, TextAnchor.MiddleCenter);
-            AlfaUiFactory.Fill(menu, 34f, 34f, 36f, 34f);
-            factory.Text(menu, "Question", "¿QUIÉN TE DEJA DORMIR?", AlfaUiTheme.H2Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
-            factory.Button(menu, "MainPlayButton", "JUGAR ONLINE", ShowOnlineChoice, true, false, 68f);
-            factory.Button(menu, "MainTrainingButton", "ENTRENAMIENTO", ShowTraining);
-            factory.Button(menu, "MainCustomizeButton", "PERSONALIZAR", ShowCustomization);
-            factory.Button(menu, "MainSettingsButton", "AJUSTES", () => OpenSettings(AlfaUiScreen.MainMenu));
-            factory.Button(menu, "MainQuitButton", "SALIR DEL JUEGO", ConfirmQuit, false, true);
-            factory.Text(menu, "NavigationHint", "Tab y flechas · Enter para elegir · Escape para volver", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
+            var sceneLabel = factory.Text(view.transform, "SceneLabel", "CASA CON PATIO  ·  NOCHE", 14f,
+                new Color(AlfaUiTheme.Moon200.r, AlfaUiTheme.Moon200.g, AlfaUiTheme.Moon200.b, 0.82f), TextAlignmentOptions.Right, true);
+            Anchor(sceneLabel.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-42f, 28f), new Vector2(420f, 34f));
         }
 
         private void BuildOnlineChoice()
         {
             var view = factory.View("OnlineChoiceView", transform);
             screens[AlfaUiScreen.OnlineChoice] = view;
-            var panel = CenteredPanel(view.transform, "OnlineChoiceCard", 720f, 570f);
-            var content = factory.Vertical(panel, "Content", 18f);
-            AlfaUiFactory.Fill(content, 36f, 36f, 34f, 34f);
-            factory.Text(content, "Title", "JUGAR ONLINE", AlfaUiTheme.H1Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
-            factory.Button(content, "CreateChoiceButton", "CREAR SALA", () => ShowCreateRoom(), true, false, 72f);
-            factory.Text(content, "CreateHelp", "Abrí una sala y compartí el código con tus amigos.", AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            factory.Button(content, "JoinChoiceButton", "UNIRME CON CÓDIGO", () => ShowJoinRoom(), false, false, 72f);
-            factory.Text(content, "JoinHelp", "Pegá el código que te mandó el anfitrión.", AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            factory.Button(content, "OnlineChoiceBackButton", "← VOLVER", ShowMainMenu);
+            var panel = CenteredPanel(view.transform, "OnlineChoiceCard", 760f, 600f);
+            var content = factory.Vertical(panel, "Content", 16f);
+            AlfaUiFactory.Fill(content, 42f, 42f, 38f, 34f);
+            factory.SectionHeader(content, "Header", "JUGAR ONLINE", AlfaUiIconKind.Online, AlfaUiTheme.Sky400);
+            factory.Text(content, "Intro", "CREÁ UNA SALA O ENTRÁ CON EL CÓDIGO DE TUS AMIGOS.", 17f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
+            factory.Divider(content, "Divider", new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.55f));
+            factory.Button(content, "CreateChoiceButton", "CREAR SALA", () => ShowCreateRoom(), true, false, 78f, AlfaUiIconKind.Online);
+            factory.Text(content, "CreateHelp", "Generá un código para invitar.", 16f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
+            factory.Button(content, "JoinChoiceButton", "UNIRME CON CÓDIGO", () => ShowJoinRoom(), false, false, 78f, AlfaUiIconKind.Play);
+            factory.Text(content, "JoinHelp", "Usá el código de diez caracteres.", 16f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
+            factory.Button(content, "OnlineChoiceBackButton", "VOLVER", ShowMainMenu, false, false, 56f, AlfaUiIconKind.Back);
         }
 
         private void BuildOnlineForm()
@@ -461,10 +476,11 @@ namespace LetMeSleep.UI
             var view = factory.View("OnlineFormView", transform);
             screens[AlfaUiScreen.CreateRoom] = view;
             screens[AlfaUiScreen.JoinRoom] = view;
-            var panel = CenteredPanel(view.transform, "OnlineFormCard", 780f, 680f);
+            var panel = CenteredPanel(view.transform, "OnlineFormCard", 800f, 690f);
             var content = factory.Vertical(panel, "Content", 14f);
             AlfaUiFactory.Fill(content, 38f, 38f, 34f, 34f);
-            onlineFormTitle = factory.Text(content, "Title", "CREAR SALA", AlfaUiTheme.H1Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            var header = factory.SectionHeader(content, "Header", "SALA ONLINE", AlfaUiIconKind.Online, AlfaUiTheme.Sky400);
+            onlineFormTitle = header.GetComponentInChildren<TextMeshProUGUI>();
             factory.Text(content, "PlayerNameLabel", "TU NOMBRE", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
             playerNameInput = factory.Input(content, "PlayerNameInput", "Cómo te dicen tus amigos", 24);
             playerNameInput.onSubmit.AddListener(_ => SubmitOnline());
@@ -481,15 +497,15 @@ namespace LetMeSleep.UI
                 roomCodeInput.caretPosition = Mathf.Min(caret, roomCodeInput.text.Length);
             });
             roomCodeInput.onSubmit.AddListener(_ => SubmitOnline());
-            onlinePasteButton = factory.Button(codeActions, "PasteRoomCodeButton", "PEGAR", PasteRoomCode, false, false, 58f);
+            onlinePasteButton = factory.Button(codeActions, "PasteRoomCodeButton", "PEGAR", PasteRoomCode, false, false, 58f, AlfaUiIconKind.Copy);
             onlinePasteButton.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 150f;
             onlineStatus = factory.Text(content, "OnlineStatus", string.Empty, AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            onlinePrimaryButton = factory.Button(content, "OnlinePrimaryButton", "CREAR SALA", SubmitOnline, true, false, 68f);
+            onlinePrimaryButton = factory.Button(content, "OnlinePrimaryButton", "CREAR SALA", SubmitOnline, true, false, 70f, AlfaUiIconKind.Play);
             onlinePrimaryLabel = onlinePrimaryButton.GetComponentInChildren<TextMeshProUGUI>();
             var actionsRow = factory.Horizontal(content, "Actions", 12f, TextAnchor.MiddleCenter);
-            onlineCancelButton = factory.Button(actionsRow, "OnlineCancelButton", "CANCELAR", RequestOnlineCancel);
-            onlineRetryButton = factory.Button(actionsRow, "OnlineRetryButton", "INTENTAR OTRA VEZ", SubmitOnline);
-            onlineBackButton = factory.Button(actionsRow, "OnlineBackButton", "← VOLVER", ShowOnlineChoice);
+            onlineCancelButton = factory.Button(actionsRow, "OnlineCancelButton", "CANCELAR", RequestOnlineCancel, false, true, 56f, AlfaUiIconKind.Exit);
+            onlineRetryButton = factory.Button(actionsRow, "OnlineRetryButton", "REINTENTAR", SubmitOnline, false, false, 56f, AlfaUiIconKind.Play);
+            onlineBackButton = factory.Button(actionsRow, "OnlineBackButton", "VOLVER", ShowOnlineChoice, false, false, 56f, AlfaUiIconKind.Back);
             onlineCancelButton.gameObject.SetActive(false);
             onlineRetryButton.gameObject.SetActive(false);
         }
@@ -503,7 +519,9 @@ namespace LetMeSleep.UI
             Anchor(header, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(0f, 92f));
             var headerRow = factory.Horizontal(header, "HeaderRow", 18f, TextAnchor.MiddleCenter);
             AlfaUiFactory.Fill(headerRow, 24f, 24f, 12f, 12f);
-            factory.Text(headerRow, "RoomLabel", "SALA ONLINE", AlfaUiTheme.H2Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
+            var roomMark = factory.Icon(headerRow, "RoomIcon", AlfaUiIconKind.Online, AlfaUiTheme.Sky400);
+            roomMark.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 42f;
+            factory.Text(headerRow, "RoomLabel", "SALA ONLINE", 26f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
             lobbyCode = factory.Text(headerRow, "RoomCode", "PREPARANDO EL CÓDIGO…", 28f, AlfaUiTheme.Lamp400, TextAlignmentOptions.Center);
             lobbyCopyButton = factory.Button(headerRow, "LobbyCopyButton", "COPIAR CÓDIGO", () =>
             {
@@ -512,31 +530,35 @@ namespace LetMeSleep.UI
                     actions.CopyRoomCode(lobbyState.RoomCode);
                     lobbyStatus.text = "Código copiado.";
                 }
-            }, true);
+            }, true, false, 58f, AlfaUiIconKind.Copy);
             lobbyCopyButton.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 230f;
 
             var rosterPanel = factory.Panel(safe, "RosterPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.94f));
             Anchor(rosterPanel, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(430f, -116f));
             var roster = factory.Vertical(rosterPanel, "Roster", 12f);
             AlfaUiFactory.Fill(roster, 24f, 24f, 22f, 22f);
-            factory.Text(roster, "Title", "JUGADORES", AlfaUiTheme.H2Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
+            factory.SectionHeader(roster, "RosterHeader", "JUGADORES", AlfaUiIconKind.Human, AlfaUiTheme.Sky400);
             factory.ScrollView(roster, "MemberScrollView", out var memberContent, 520f);
             for (var i = 0; i < LetMeSleep.Core.RoomRules.Capacity; i++)
             {
                 var rowPanel = factory.Panel(memberContent, $"MemberPanel{i + 1}", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.46f), -1f, 64f);
+                rowPanel.GetComponent<UnityEngine.UI.Shadow>().effectDistance = new Vector2(2f, -2f);
+                var stateIcon = factory.Icon(rowPanel, "StatusIcon", AlfaUiIconKind.Human, AlfaUiTheme.Moon200);
+                Anchor(stateIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(30f, 30f));
                 var row = factory.Text(rowPanel, $"Member{i + 1}", string.Empty, AlfaUiTheme.LabelSize, AlfaUiTheme.Sheet100);
-                AlfaUiFactory.Fill(row.rectTransform, 14f, 14f, 8f, 8f);
-                row.margin = new Vector4(14f, 10f, 14f, 10f);
+                AlfaUiFactory.Fill(row.rectTransform, 52f, 14f, 8f, 8f);
+                row.margin = new Vector4(4f, 10f, 14f, 10f);
                 rowPanel.gameObject.SetActive(false);
                 memberRows.Add(row);
                 memberRowRoots.Add(rowPanel.gameObject);
+                memberStatusIcons.Add(stateIcon);
             }
 
             var rulesPanel = factory.Panel(safe, "RulesPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f));
             Anchor(rulesPanel, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), Vector2.zero, new Vector2(520f, 700f));
             var rules = factory.Vertical(rulesPanel, "Rules", 12f);
             AlfaUiFactory.Fill(rules, 26f, 26f, 24f, 24f);
-            factory.Text(rules, "Title", "PRÓXIMA RONDA", AlfaUiTheme.H2Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
+            factory.SectionHeader(rules, "RulesHeader", "PRÓXIMA RONDA", AlfaUiIconKind.Play, AlfaUiTheme.Lamp400);
             AddReadOnlyField(rules, "MODO", "SANGRE");
             AddReadOnlyField(rules, "MAPA", "CASA CON PATIO");
             factory.Text(rules, "HumanCountLabel", "CANTIDAD DE HUMANOS", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
@@ -559,34 +581,37 @@ namespace LetMeSleep.UI
                 lobbyStatus.text = "Guardando estado…";
                 Focus(lobbyCopyButton.gameObject);
                 actions.SetReady(!lobbyState.LocalReady);
-            }, true, false, 66f);
+            }, true, false, 68f, AlfaUiIconKind.Ready);
             lobbyReadyLabel = lobbyReadyButton.GetComponentInChildren<TextMeshProUGUI>();
-            lobbyStartButton = factory.Button(rules, "LobbyStartButton", "INICIAR RONDA", BeginRound, false, false, 66f);
+            lobbyStartButton = factory.Button(rules, "LobbyStartButton", "INICIAR RONDA", BeginRound, false, false, 66f, AlfaUiIconKind.Play);
             lobbyStartLabel = lobbyStartButton.GetComponentInChildren<TextMeshProUGUI>();
             lobbyStartReason = factory.Text(rules, "StartReason", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Pajama500, TextAlignmentOptions.Center);
-            lobbyExploreButton = factory.Button(rules, "LobbyExploreButton", "RECORRER SALA", BeginLobbyExploration);
+            lobbyExploreButton = factory.Button(rules, "LobbyExploreButton", "RECORRER SALA", BeginLobbyExploration, false, false, 58f, AlfaUiIconKind.Explore);
             lobbyStatus = factory.Text(rules, "LobbyStatus", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
         }
 
         private void BuildTraining()
         {
-            var view = factory.View("TrainingView", transform);
+            var view = factory.View("TrainingView", transform, false);
+            view.GetComponent<UnityEngine.UI.Image>().color = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.24f);
+            view.GetComponent<UnityEngine.UI.Image>().raycastTarget = false;
             screens[AlfaUiScreen.Training] = view;
-            var panel = CenteredPanel(view.transform, "TrainingCard", 900f, 760f);
+            var panel = factory.Panel(view.transform, "TrainingCard", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.94f), 760f, 800f);
+            Anchor(panel, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(64f, 0f), new Vector2(760f, 800f));
             var content = factory.Vertical(panel, "Content", 16f);
             AlfaUiFactory.Fill(content, 40f, 40f, 34f, 34f);
-            factory.Text(content, "Title", "ENTRENAMIENTO", AlfaUiTheme.H1Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
-            factory.Text(content, "Intro", "Practicá con bots antes de entrar a una sala.", AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            factory.Text(content, "RoleLabel", "1. ELEGÍ TU ROL", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
+            factory.SectionHeader(content, "Header", "ENTRENAMIENTO", AlfaUiIconKind.Training, AlfaUiTheme.Lamp400);
+            factory.Text(content, "Intro", "PRACTICÁ ANTES DE ENTRAR A UNA SALA.", 17f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
+            factory.Text(content, "RoleLabel", "ELEGÍ TU ROL", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
             var roles = factory.Horizontal(content, "Roles", 16f, TextAnchor.MiddleCenter);
-            trainingHumanButton = factory.Button(roles, "TrainingHumanButton", "HUMANO", () => SelectTrainingRole(AlfaRole.Human), true, false, 74f);
-            trainingMosquitoButton = factory.Button(roles, "TrainingMosquitoButton", "MOSQUITO", () => SelectTrainingRole(AlfaRole.Mosquito), false, false, 74f);
+            trainingHumanButton = factory.Button(roles, "TrainingHumanButton", "HUMANO", () => SelectTrainingRole(AlfaRole.Human), true, false, 78f, AlfaUiIconKind.Human);
+            trainingMosquitoButton = factory.Button(roles, "TrainingMosquitoButton", "MOSQUITO", () => SelectTrainingRole(AlfaRole.Mosquito), false, false, 78f, AlfaUiIconKind.Mosquito);
             AddReadOnlyField(content, "MODO", "SANGRE");
             AddReadOnlyField(content, "MAPA", "CASA CON PATIO");
             trainingStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            trainingStartButton = factory.Button(content, "TrainingStartButton", "EMPEZAR ENTRENAMIENTO", BeginTraining, true, false, 72f);
+            trainingStartButton = factory.Button(content, "TrainingStartButton", "EMPEZAR", BeginTraining, true, false, 74f, AlfaUiIconKind.Play);
             trainingStartLabel = trainingStartButton.GetComponentInChildren<TextMeshProUGUI>();
-            trainingBackButton = factory.Button(content, "TrainingBackButton", "← VOLVER", BackFromTraining);
+            trainingBackButton = factory.Button(content, "TrainingBackButton", "VOLVER", BackFromTraining, false, false, 58f, AlfaUiIconKind.Back);
             trainingBackLabel = trainingBackButton.GetComponentInChildren<TextMeshProUGUI>();
         }
 
@@ -619,10 +644,10 @@ namespace LetMeSleep.UI
             var optionsPanel = factory.Panel(columns, "OptionsPanel", AlfaUiTheme.Night700, 640f, 900f);
             var content = factory.Vertical(optionsPanel, "Content", 12f);
             AlfaUiFactory.Fill(content, 28f, 28f, 28f, 28f);
-            factory.Text(content, "Title", "PERSONALIZAR", AlfaUiTheme.H1Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            factory.SectionHeader(content, "Header", "PERSONALIZAR", AlfaUiIconKind.Customize, AlfaUiTheme.Lamp400);
             var roleRow = factory.Horizontal(content, "RoleTabs", 10f, TextAnchor.MiddleCenter);
-            factory.Button(roleRow, "CustomizationHumanButton", "HUMANO", () => SetCustomizationRole(AlfaRole.Human), true);
-            factory.Button(roleRow, "CustomizationMosquitoButton", "MOSQUITO", () => SetCustomizationRole(AlfaRole.Mosquito));
+            customizationHumanButton = factory.Button(roleRow, "CustomizationHumanButton", "HUMANO", () => SetCustomizationRole(AlfaRole.Human), true, false, 62f, AlfaUiIconKind.Human);
+            customizationMosquitoButton = factory.Button(roleRow, "CustomizationMosquitoButton", "MOSQUITO", () => SetCustomizationRole(AlfaRole.Mosquito), false, false, 62f, AlfaUiIconKind.Mosquito);
             humanCustomizationFields = factory.Vertical(content, "HumanFields", 10f).gameObject;
             factory.Text(humanCustomizationFields.transform, "SkinLabel", "TONO DE PIEL", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
             humanPaletteRoot = factory.Horizontal(humanCustomizationFields.transform, "SkinPalette", 8f);
@@ -633,10 +658,10 @@ namespace LetMeSleep.UI
             factory.Text(mosquitoCustomizationFields.transform, "MosquitoColorLabel", "COLOR", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
             mosquitoPaletteRoot = factory.Horizontal(mosquitoCustomizationFields.transform, "MosquitoPalette", 8f);
             customizationStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            customizationSaveButton = factory.Button(content, "CustomizationSaveButton", "GUARDAR", SaveCustomization, true, false, 66f);
+            customizationSaveButton = factory.Button(content, "CustomizationSaveButton", "GUARDAR", SaveCustomization, true, false, 66f, AlfaUiIconKind.Ready);
             customizationSaveLabel = customizationSaveButton.GetComponentInChildren<TextMeshProUGUI>();
             factory.Button(content, "CustomizationResetButton", "DESHACER CAMBIOS", ResetCustomization);
-            factory.Button(content, "CustomizationBackButton", "← VOLVER", CloseCustomization);
+            factory.Button(content, "CustomizationBackButton", "VOLVER", CloseCustomization, false, false, 58f, AlfaUiIconKind.Back);
         }
 
         private void BuildSettings()
@@ -646,14 +671,14 @@ namespace LetMeSleep.UI
             var panel = CenteredPanel(view.transform, "SettingsCard", 980f, 940f);
             var content = factory.Vertical(panel, "Content", 10f);
             AlfaUiFactory.Fill(content, 34f, 34f, 28f, 28f);
-            factory.Text(content, "Title", "AJUSTES", AlfaUiTheme.H1Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            factory.SectionHeader(content, "Header", "AJUSTES", AlfaUiIconKind.Settings, AlfaUiTheme.Sky400);
             factory.ScrollView(content, "SettingsScrollView", out var fields, 690f);
-            factory.Text(fields, "AudioTitle", "AUDIO", AlfaUiTheme.H2Size, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
+            factory.SectionHeader(fields, "AudioHeader", "AUDIO", AlfaUiIconKind.Settings, AlfaUiTheme.Lamp400);
             masterVolume = AddSliderField(fields, "VOLUMEN GENERAL", "MasterVolumeSlider", value => ChangeSetting(draft => draft.MasterVolume = value));
             musicVolume = AddSliderField(fields, "MÚSICA", "MusicVolumeSlider", value => ChangeSetting(draft => draft.MusicVolume = value));
             effectsVolume = AddSliderField(fields, "EFECTOS", "EffectsVolumeSlider", value => ChangeSetting(draft => draft.EffectsVolume = value));
             videoSettings = factory.Vertical(fields, "VideoFields", 10f).gameObject;
-            factory.Text(videoSettings.transform, "VideoTitle", "VIDEO", AlfaUiTheme.H2Size, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
+            factory.SectionHeader(videoSettings.transform, "VideoHeader", "VIDEO", AlfaUiIconKind.Explore, AlfaUiTheme.Sky400);
             fullScreen = factory.Toggle(videoSettings.transform, "FullScreenToggle", "PANTALLA COMPLETA", value => ChangeSetting(draft => draft.FullScreen = value));
             resolutionValue = AddCycleField(videoSettings.transform, "RESOLUCIÓN", "Resolution", -1, 1, delta =>
                 ChangeSetting(draft => draft.ResolutionIndex = Cycle(draft.ResolutionIndex, delta, settingsState?.Resolutions.Count ?? 0)));
@@ -664,45 +689,84 @@ namespace LetMeSleep.UI
             frameLimitDropdown = factory.Dropdown(videoSettings.transform, "FrameLimitDropdown",
                 FrameLimitOptions.Select(FrameLimitLabel).ToArray(), index =>
                     ChangeSetting(draft => draft.FrameLimit = FrameLimitOptions[Mathf.Clamp(index, 0, FrameLimitOptions.Length - 1)]));
-            factory.Text(fields, "ControlsTitle", "CONTROLES", AlfaUiTheme.H2Size, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
+            factory.SectionHeader(fields, "ControlsHeader", "CONTROLES", AlfaUiIconKind.Training, AlfaUiTheme.Mint400);
             humanSensitivity = AddSliderField(fields, "SENSIBILIDAD HUMANO", "HumanSensitivitySlider", value => ChangeSetting(draft => draft.HumanSensitivity = value), 0.1f, 2f);
             mosquitoSensitivity = AddSliderField(fields, "SENSIBILIDAD MOSQUITO", "MosquitoSensitivitySlider", value => ChangeSetting(draft => draft.MosquitoSensitivity = value), 0.1f, 2f);
             invertY = factory.Toggle(fields, "InvertYToggle", "INVERTIR EJE VERTICAL", value => ChangeSetting(draft => draft.InvertY = value));
             rebindNote = factory.Text(fields, "RebindNote", "La reasignación usa el contrato de entrada del juego.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200).gameObject;
             settingsStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
             var buttons = factory.Horizontal(content, "Actions", 12f, TextAnchor.MiddleCenter);
-            settingsApplyButton = factory.Button(buttons, "SettingsApplyButton", "APLICAR", ApplySettings, true);
+            settingsApplyButton = factory.Button(buttons, "SettingsApplyButton", "APLICAR", ApplySettings, true, false, 60f, AlfaUiIconKind.Ready);
             settingsApplyLabel = settingsApplyButton.GetComponentInChildren<TextMeshProUGUI>();
             factory.Button(buttons, "SettingsResetButton", "DESHACER CAMBIOS", ResetSettings);
-            factory.Button(buttons, "SettingsBackButton", "← VOLVER", CloseSettings);
+            factory.Button(buttons, "SettingsBackButton", "VOLVER", CloseSettings, false, false, 58f, AlfaUiIconKind.Back);
         }
 
         private void BuildHud()
         {
             var view = factory.View("GameplayHudView", transform, false);
             screens[AlfaUiScreen.Gameplay] = view;
-            var top = factory.Panel(view.transform, "RoundState", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.9f));
-            Anchor(top, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -24f), new Vector2(460f, 88f));
-            var topRow = factory.Horizontal(top, "Content", 22f, TextAnchor.MiddleCenter);
-            AlfaUiFactory.Fill(topRow, 20f, 20f, 12f, 12f);
-            hudClock = factory.Text(topRow, "Clock", "03:00", 26f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
-            hudBlood = factory.Text(topRow, "Blood", "SANGRE  0 / 20", 24f, AlfaUiTheme.Pajama500, TextAlignmentOptions.Center);
+            var role = factory.Panel(view.transform, "RoleBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.86f));
+            Anchor(role, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(26f, -24f), new Vector2(210f, 62f));
+            hudRoleIcon = factory.Icon(role, "RoleIcon", AlfaUiIconKind.Human, AlfaUiTheme.Sky400);
+            Anchor(hudRoleIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 0f), new Vector2(36f, 36f));
+            hudRoleLabel = factory.Text(role, "RoleLabel", "HUMANO", 18f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            AlfaUiFactory.Fill(hudRoleLabel.rectTransform, 54f, 12f, 8f, 8f);
+
+            var clock = factory.Panel(view.transform, "ClockBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f));
+            Anchor(clock, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(1f, 1f), new Vector2(-8f, -24f), new Vector2(170f, 66f));
+            var clockIcon = factory.Icon(clock, "ClockIcon", AlfaUiIconKind.Clock, AlfaUiTheme.Lamp400);
+            Anchor(clockIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 0f), new Vector2(32f, 32f));
+            hudClock = factory.Text(clock, "Clock", "03:00", 28f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            AlfaUiFactory.Fill(hudClock.rectTransform, 52f, 12f, 8f, 8f);
+
+            var blood = factory.Panel(view.transform, "BloodBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f));
+            Anchor(blood, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 1f), new Vector2(8f, -24f), new Vector2(260f, 66f));
+            var bloodIcon = factory.Icon(blood, "BloodIcon", AlfaUiIconKind.Blood, AlfaUiTheme.Pajama500);
+            Anchor(bloodIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 3f), new Vector2(30f, 30f));
+            hudBlood = factory.Text(blood, "Blood", "SANGRE  0 / 20", 20f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            AlfaUiFactory.Fill(hudBlood.rectTransform, 50f, 14f, 5f, 17f);
+            var bloodTrack = AlfaUiFactory.Node("BloodTrack", blood, typeof(UnityEngine.UI.Image));
+            var bloodTrackImage = bloodTrack.GetComponent<UnityEngine.UI.Image>();
+            bloodTrackImage.color = AlfaUiTheme.Night600;
+            bloodTrackImage.raycastTarget = false;
+            Anchor(bloodTrack.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(14f, 9f), new Vector2(-28f, 7f));
+            var bloodFill = AlfaUiFactory.Node("Fill", bloodTrack.transform, typeof(UnityEngine.UI.Image));
+            hudBloodFill = bloodFill.GetComponent<UnityEngine.UI.Image>();
+            hudBloodFill.color = AlfaUiTheme.Pajama500;
+            hudBloodFill.raycastTarget = false;
+            AlfaUiFactory.Fill(hudBloodFill.rectTransform);
+            hudBloodFill.rectTransform.anchorMax = new Vector2(0f, 1f);
+
             hudNetwork = factory.Text(view.transform, "NetworkState", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Pajama500, TextAlignmentOptions.Right);
             Anchor(hudNetwork.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -28f), new Vector2(420f, 56f));
-            hudInteraction = factory.Text(view.transform, "Interaction", string.Empty, 24f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
-            Anchor(hudInteraction.rectTransform, new Vector2(0.5f, 0.28f), new Vector2(0.5f, 0.28f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(680f, 54f));
-            hudActorState = factory.Text(view.transform, "ActorState", string.Empty, 30f, AlfaUiTheme.Pajama500, TextAlignmentOptions.Center, true);
-            Anchor(hudActorState.rectTransform, new Vector2(0.5f, 0.38f), new Vector2(0.5f, 0.38f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(620f, 66f));
-            var progressRoot = factory.Panel(view.transform, "StateProgress", AlfaUiTheme.Night600);
-            Anchor(progressRoot, new Vector2(0.5f, 0.33f), new Vector2(0.5f, 0.33f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(420f, 20f));
-            var fill = AlfaUiFactory.Node("Fill", progressRoot, typeof(UnityEngine.UI.Image));
+
+            hudPromptPanel = factory.Panel(view.transform, "InteractionPrompt", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f)).gameObject;
+            Anchor(hudPromptPanel.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 80f), new Vector2(560f, 58f));
+            hudInteraction = factory.Text(hudPromptPanel.transform, "Interaction", string.Empty, 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            AlfaUiFactory.Fill(hudInteraction.rectTransform, 18f, 18f, 8f, 8f);
+
+            hudStatePanel = factory.Panel(view.transform, "ActorStatePanel", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.9f)).gameObject;
+            Anchor(hudStatePanel.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 152f), new Vector2(500f, 76f));
+            hudActorState = factory.Text(hudStatePanel.transform, "ActorState", string.Empty, 24f, AlfaUiTheme.Pajama500, TextAlignmentOptions.Center, true);
+            AlfaUiFactory.Fill(hudActorState.rectTransform, 18f, 18f, 6f, 20f);
+            var progressRoot = AlfaUiFactory.Node("StateProgress", hudStatePanel.transform, typeof(UnityEngine.UI.Image));
+            var progressTrack = progressRoot.GetComponent<UnityEngine.UI.Image>();
+            progressTrack.color = AlfaUiTheme.Night600;
+            progressTrack.raycastTarget = false;
+            Anchor(progressRoot.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(14f, 10f), new Vector2(-28f, 8f));
+            var fill = AlfaUiFactory.Node("Fill", progressRoot.transform, typeof(UnityEngine.UI.Image));
             hudProgress = fill.GetComponent<UnityEngine.UI.Image>();
             hudProgress.color = AlfaUiTheme.Lamp400;
+            hudProgress.raycastTarget = false;
             AlfaUiFactory.Fill(hudProgress.rectTransform);
-            hudHint = factory.Text(view.transform, "ContextHint", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
-            Anchor(hudHint.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(28f, 28f), new Vector2(620f, 70f));
-            var reticle = factory.Text(view.transform, "Reticle", "+", 24f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
-            Anchor(reticle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(34f, 34f));
+
+            hudHintPanel = factory.Panel(view.transform, "ContextHintPanel", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.72f)).gameObject;
+            Anchor(hudHintPanel.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(26f, 26f), new Vector2(490f, 48f));
+            hudHint = factory.Text(hudHintPanel.transform, "ContextHint", string.Empty, 15f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
+            AlfaUiFactory.Fill(hudHint.rectTransform, 16f, 16f, 7f, 7f);
+            var reticle = factory.Icon(view.transform, "Reticle", AlfaUiIconKind.Crosshair, AlfaUiTheme.Sheet100);
+            Anchor(reticle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(18f, 18f));
         }
 
         private void BuildPause()
@@ -715,10 +779,10 @@ namespace LetMeSleep.UI
             var content = factory.Vertical(panel, "Content", 14f);
             AlfaUiFactory.Fill(content, 34f, 34f, 30f, 30f);
             factory.Text(content, "Title", "PAUSA", AlfaUiTheme.H1Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
-            factory.Button(content, "PauseContinueButton", "CONTINUAR", ResumeFromPause, true, false, 68f);
-            factory.Button(content, "PauseSettingsButton", "AJUSTES", () => OpenSettings(AlfaUiScreen.Pause));
-            factory.Button(content, "PauseControlsButton", "CONTROLES", () => OpenSettings(AlfaUiScreen.Pause));
-            pauseLeaveButton = factory.Button(content, "PauseLeaveButton", "SALIR DE LA SALA", LeaveGameplayContext, false, true);
+            factory.Button(content, "PauseContinueButton", "CONTINUAR", ResumeFromPause, true, false, 68f, AlfaUiIconKind.Play);
+            factory.Button(content, "PauseSettingsButton", "AJUSTES", () => OpenSettings(AlfaUiScreen.Pause), false, false, 58f, AlfaUiIconKind.Settings);
+            factory.Button(content, "PauseControlsButton", "CONTROLES", () => OpenSettings(AlfaUiScreen.Pause), false, false, 58f, AlfaUiIconKind.Training);
+            pauseLeaveButton = factory.Button(content, "PauseLeaveButton", "SALIR DE LA SALA", LeaveGameplayContext, false, true, 58f, AlfaUiIconKind.Exit);
             pauseLeaveLabel = pauseLeaveButton.GetComponentInChildren<TextMeshProUGUI>();
         }
 
@@ -733,9 +797,9 @@ namespace LetMeSleep.UI
             AlfaUiFactory.Fill(content, 40f, 40f, 34f, 34f);
             resultsTitle = factory.Text(content, "Title", "RONDA INTERRUMPIDA", AlfaUiTheme.H1Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
             resultsStats = factory.Text(content, "Stats", string.Empty, AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            resultsPrimary = factory.Button(content, "ResultsPrimaryButton", "VOLVER AL LOBBY", ResultsPrimaryAction, true, false, 68f);
+            resultsPrimary = factory.Button(content, "ResultsPrimaryButton", "VOLVER AL LOBBY", ResultsPrimaryAction, true, false, 68f, AlfaUiIconKind.Play);
             resultsPrimaryLabel = resultsPrimary.GetComponentInChildren<TextMeshProUGUI>();
-            resultsLeave = factory.Button(content, "ResultsLeaveButton", "SALIR DE LA SALA", ResultsLeaveAction, false, true);
+            resultsLeave = factory.Button(content, "ResultsLeaveButton", "SALIR DE LA SALA", ResultsLeaveAction, false, true, 58f, AlfaUiIconKind.Exit);
         }
 
         private void BuildConfirm()
@@ -962,6 +1026,9 @@ namespace LetMeSleep.UI
                 colors.highlightedColor = Color.Lerp(option.Color, Color.white, 0.18f);
                 colors.selectedColor = AlfaUiTheme.Lamp400;
                 button.colors = colors;
+                var outline = button.GetComponent<UnityEngine.UI.Outline>();
+                outline.effectColor = option.Id == selectedId ? AlfaUiTheme.Lamp400 : AlfaUiTheme.Ink900;
+                outline.effectDistance = option.Id == selectedId ? new Vector2(3f, -3f) : new Vector2(1f, -1f);
                 var buttonLabel = button.GetComponentInChildren<TextMeshProUGUI>();
                 buttonLabel.color = RelativeLuminance(option.Color) > 0.5f ? AlfaUiTheme.Ink900 : AlfaUiTheme.Sheet100;
                 buttonLabel.enableAutoSizing = true;
@@ -977,6 +1044,8 @@ namespace LetMeSleep.UI
             var human = customizationDraft.Role == AlfaRole.Human;
             humanCustomizationFields.SetActive(human);
             mosquitoCustomizationFields.SetActive(!human);
+            SetButtonSelection(customizationHumanButton, human);
+            SetButtonSelection(customizationMosquitoButton, !human);
             previewOrbit?.Show(customizationDraft.Role);
             customizationStatus.text = customizationSaveLatched ? "Guardando…" : customizationState.Message;
             customizationSaveButton.interactable = !customizationSaveLatched && !customizationDraft.SameValues(customizationState.Saved);
@@ -993,7 +1062,14 @@ namespace LetMeSleep.UI
                 var label = child.GetComponentInChildren<TextMeshProUGUI>();
                 if (label == null) continue;
                 var plain = label.text.StartsWith("> ", StringComparison.Ordinal) ? label.text.Substring(2) : label.text;
-                label.text = child.name == "Color_" + selectedId ? "> " + plain : plain;
+                var selected = child.name == "Color_" + selectedId;
+                label.text = selected ? "> " + plain : plain;
+                var outline = child.GetComponent<UnityEngine.UI.Outline>();
+                if (outline != null)
+                {
+                    outline.effectColor = selected ? AlfaUiTheme.Lamp400 : AlfaUiTheme.Ink900;
+                    outline.effectDistance = selected ? new Vector2(3f, -3f) : new Vector2(1f, -1f);
+                }
             }
         }
 
@@ -1322,7 +1398,19 @@ namespace LetMeSleep.UI
         {
             var colors = button.colors;
             colors.normalColor = selected ? AlfaUiTheme.Lamp400 : AlfaUiTheme.Night600;
+            colors.highlightedColor = selected ? Color.Lerp(AlfaUiTheme.Lamp400, Color.white, 0.16f) : Color.Lerp(AlfaUiTheme.Night600, Color.white, 0.12f);
+            colors.selectedColor = selected ? AlfaUiTheme.Lamp400 : AlfaUiTheme.Sky400;
             button.colors = colors;
+            var label = button.GetComponentInChildren<TextMeshProUGUI>();
+            if (label != null) label.color = selected ? AlfaUiTheme.Ink900 : AlfaUiTheme.Sheet100;
+            var icon = button.GetComponentInChildren<AlfaUiIcon>();
+            if (icon != null) icon.color = selected ? AlfaUiTheme.Ink900 : AlfaUiTheme.Sheet100;
+            var outline = button.GetComponent<UnityEngine.UI.Outline>();
+            if (outline != null)
+            {
+                outline.effectColor = selected ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Border;
+                outline.effectDistance = selected ? new Vector2(2.5f, -2.5f) : new Vector2(1.5f, -1.5f);
+            }
         }
 
         private static string ActorStateText(AlfaRole role, HudActorState state)
