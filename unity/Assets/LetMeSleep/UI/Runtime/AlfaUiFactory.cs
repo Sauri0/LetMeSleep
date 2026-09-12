@@ -134,7 +134,7 @@ namespace LetMeSleep.UI
             return text;
         }
 
-        internal RectTransform BrandLockup(Transform parent, string name, float height = 184f)
+        internal RectTransform BrandLockup(Transform parent, string name, float height = 210f)
         {
             var root = Node(name, parent, typeof(UnityEngine.UI.LayoutElement));
             var layout = root.GetComponent<UnityEngine.UI.LayoutElement>();
@@ -142,31 +142,39 @@ namespace LetMeSleep.UI
             layout.preferredHeight = height;
             layout.flexibleWidth = 1f;
 
-            var shadow = LogoText(root.transform, "LogoShadow", "LET ME\nSLEEP", 72f, AlfaUiTheme.Ink900);
-            Fill(shadow.rectTransform, 6f, 0f, -6f, 0f);
-            var logo = LogoText(root.transform, "Logo", "LET ME\nSLEEP", 72f, AlfaUiTheme.Sheet100);
-            Fill(logo.rectTransform, 0f, 6f, 0f, 6f);
-            logo.outlineColor = AlfaUiTheme.Ink900;
-            logo.outlineWidth = 0.16f;
-
-            var accent = Node("Accent", root.transform, typeof(UnityEngine.UI.Image));
-            accent.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Lamp400;
-            accent.GetComponent<UnityEngine.UI.Image>().raycastTarget = false;
-            var accentRect = accent.GetComponent<RectTransform>();
-            accentRect.anchorMin = new Vector2(0f, 0f);
-            accentRect.anchorMax = new Vector2(0.7f, 0f);
-            accentRect.pivot = new Vector2(0f, 0f);
-            accentRect.offsetMin = Vector2.zero;
-            accentRect.offsetMax = new Vector2(0f, 4f);
+            var first = LogoText(root.transform, "LogoFirstLine", "LET ME", 84f, AlfaUiTheme.Sheet100);
+            Fill(first.rectTransform, 0f, 0f, 0f, 112f);
+            var second = LogoText(root.transform, "LogoSecondLine", "SLEEP", 112f, AlfaUiTheme.Sheet100);
+            Fill(second.rectTransform, 0f, 98f, 86f, 0f);
+            first.outlineColor = second.outlineColor = AlfaUiTheme.Ink900;
+            first.outlineWidth = second.outlineWidth = 0.14f;
 
             var mosquito = Icon(root.transform, "MosquitoMark", AlfaUiIconKind.Mosquito, AlfaUiTheme.Pajama500);
-            var mosquitoRect = mosquito.rectTransform;
-            mosquitoRect.anchorMin = new Vector2(1f, 0f);
-            mosquitoRect.anchorMax = new Vector2(1f, 0f);
-            mosquitoRect.pivot = new Vector2(1f, 0f);
-            mosquitoRect.anchoredPosition = new Vector2(-2f, 9f);
-            mosquitoRect.sizeDelta = new Vector2(54f, 54f);
+            var rect = mosquito.rectTransform;
+            rect.anchorMin = rect.anchorMax = new Vector2(0f, 0f);
+            rect.pivot = Vector2.zero;
+            rect.anchoredPosition = new Vector2(244f, 17f);
+            rect.sizeDelta = new Vector2(76f, 76f);
+            rect.localRotation = Quaternion.Euler(0f, 0f, -14f);
             return root.GetComponent<RectTransform>();
+        }
+
+        internal static void QuietButton(UnityEngine.UI.Button button, float labelSize = 22f)
+        {
+            var colors = button.colors;
+            colors.normalColor = AlfaUiTheme.Night800;
+            colors.highlightedColor = AlfaUiTheme.Night600;
+            colors.selectedColor = Color.Lerp(AlfaUiTheme.Night600, AlfaUiTheme.Sky400, 0.22f);
+            button.colors = colors;
+            var label = button.GetComponentInChildren<TextMeshProUGUI>();
+            label.fontSize = labelSize;
+            label.color = AlfaUiTheme.Moon200;
+            var outline = button.GetComponent<UnityEngine.UI.Outline>();
+            outline.effectColor = new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.4f);
+            outline.effectDistance = new Vector2(1f, -1f);
+            var symbol = button.GetComponentInChildren<AlfaUiIcon>();
+            if (symbol != null) symbol.color = AlfaUiTheme.Moon200;
+            PlainShadow(button.gameObject).enabled = false;
         }
 
         internal UnityEngine.UI.Button Button(Transform parent, string name, string label, UnityAction callback,

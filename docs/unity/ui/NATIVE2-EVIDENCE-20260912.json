@@ -1,0 +1,58 @@
+[
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native2\\custom-human-1080.png",
+    "sha256": "c8cfb36f492cf151513bb8f6bb762c8058d614f85c38373b49205ff49380117c",
+    "sourceUi": "43b2eb6",
+    "capturedIntegration": "UI 2c5c820; HEAD 45bc248; Editor 20212 -noaudio (informado por Director)",
+    "status": "Componentes mejorados; composición y función pendientes"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native2\\custom-human-720.png",
+    "sha256": "a0455d5f81edc5195e06bcb2cbae0ff64b95ed16a2b2a70c371d60648640f4b0",
+    "sourceUi": "43b2eb6",
+    "capturedIntegration": "UI 2c5c820; HEAD 45bc248; Editor 20212 -noaudio (informado por Director)",
+    "status": "Componentes mejorados; composición y función pendientes"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native2\\custom-mosquito-1080.png",
+    "sha256": "4c45f07072641ea84cf9e3596cbd651413afa440c95ce92c162fc1dda6daa792",
+    "sourceUi": "43b2eb6",
+    "capturedIntegration": "UI 2c5c820; HEAD 45bc248; Editor 20212 -noaudio (informado por Director)",
+    "status": "Componentes mejorados; composición y función pendientes"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native2\\custom-mosquito-720.png",
+    "sha256": "9d38db21be5de4fa74b57694eacb80f663c96556bc65fa7ee5e9d7a15826f17b",
+    "sourceUi": "43b2eb6",
+    "capturedIntegration": "UI 2c5c820; HEAD 45bc248; Editor 20212 -noaudio (informado por Director)",
+    "status": "Componentes mejorados; composición y función pendientes"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native2\\menu-1080.png",
+    "sha256": "ea6725069f427f2fed5d33329482bc5160cb3ef61f662a64f59bddb96f2e4678",
+    "sourceUi": "43b2eb6",
+    "capturedIntegration": "UI 2c5c820; HEAD 45bc248; Editor 20212 -noaudio (informado por Director)",
+    "status": "Componentes mejorados; composición y función pendientes"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native2\\menu-720.png",
+    "sha256": "480876f5083df1c0e9bb78bd2a411bd6caca59557347d8ae55118eda3d4e306b",
+    "sourceUi": "43b2eb6",
+    "capturedIntegration": "UI 2c5c820; HEAD 45bc248; Editor 20212 -noaudio (informado por Director)",
+    "status": "Componentes mejorados; composición y función pendientes"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native2\\settings-1080.png",
+    "sha256": "9cb8c2f9e6633febbb7ff4b7b4a8aa8c91ece4f8b15a9a0573e78176b11ccc85",
+    "sourceUi": "43b2eb6",
+    "capturedIntegration": "UI 2c5c820; HEAD 45bc248; Editor 20212 -noaudio (informado por Director)",
+    "status": "Componentes mejorados; composición y función pendientes"
+  },
+  {
+    "path": "N:\\LetMeSleep\\Validation\\TeamRecovery\\ui-native2\\settings-720.png",
+    "sha256": "6b10b1dafe8b53d32dac676bb3fa430d9799acf5c383d869e6392579b70e4eb3",
+    "sourceUi": "43b2eb6",
+    "capturedIntegration": "UI 2c5c820; HEAD 45bc248; Editor 20212 -noaudio (informado por Director)",
+    "status": "Componentes mejorados; composición y función pendientes"
+  }
+]
