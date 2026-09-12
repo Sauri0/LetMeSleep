@@ -1,0 +1,14 @@
+00:00.766  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\menu-seated1\menu\LMS_HumanMenu.blend"
+LMS_MENU_AUDITED {"format": "blend", "clip": "MenuSeatedIdle", "samples": 241, "feet_m": 2.7767785122371053e-07, "seat_interior_vertices": 2}
+LMS_MENU_AUDITED {"format": "blend", "clip": "MenuLook", "samples": 121, "feet_m": 2.7767785122371053e-07, "seat_interior_vertices": 2}
+LMS_MENU_AUDITED {"format": "blend", "clip": "MenuSwat", "samples": 43, "feet_m": 2.7767785122371053e-07, "seat_interior_vertices": 2}
+LMS_MENU_AUDITED {"format": "blend", "clip": "MenuReturn", "samples": 55, "feet_m": 2.7767785122371053e-07, "seat_interior_vertices": 2}
+FBX version: 7400
+LMS_MENU_AUDITED {"format": "fbx", "clip": "MenuSeatedIdle", "samples": 241, "feet_m": 3.494858344882641e-07, "seat_interior_vertices": 2}
+LMS_MENU_AUDITED {"format": "fbx", "clip": "MenuLook", "samples": 121, "feet_m": 3.494858344882641e-07, "seat_interior_vertices": 2}
+LMS_MENU_AUDITED {"format": "fbx", "clip": "MenuSwat", "samples": 43, "feet_m": 3.494858344882641e-07, "seat_interior_vertices": 2}
+LMS_MENU_AUDITED {"format": "fbx", "clip": "MenuReturn", "samples": 55, "feet_m": 3.494858344882641e-07, "seat_interior_vertices": 2}
+{"passed": true, "errors": [], "max_bone_difference_m": 8.539288510021211e-07}
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

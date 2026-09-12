@@ -1,0 +1,43 @@
+[
+  {
+    "species": "Human",
+    "fbx_sha256": "087f813ffb6555890d73726b7516c521056ecc3423ad075ba6d5635c7fc7d1bb",
+    "source_audit_sha256": "ce2a7f7f2d2d324e090bb6d3ef34fea039e83f401ff819940a747f96f5a11ff9",
+    "dimensions": [
+      1.8403079509735107,
+      0.35000017285346985,
+      1.862534056586986
+    ],
+    "triangles": 7848,
+    "bones": 65,
+    "actions": [
+      "LMS_HumanRig|LMS_HumanRig|Human_Blink",
+      "LMS_HumanRig|LMS_HumanRig|Human_Clap",
+      "LMS_HumanRig|LMS_HumanRig|Human_Crouch",
+      "LMS_HumanRig|LMS_HumanRig|Human_Faint",
+      "LMS_HumanRig|LMS_HumanRig|Human_Fall",
+      "LMS_HumanRig|LMS_HumanRig|Human_FingerCurl",
+      "LMS_HumanRig|LMS_HumanRig|Human_Hit",
+      "LMS_HumanRig|LMS_HumanRig|Human_Idle",
+      "LMS_HumanRig|LMS_HumanRig|Human_Jump",
+      "LMS_HumanRig|LMS_HumanRig|Human_Land",
+      "LMS_HumanRig|LMS_HumanRig|Human_Recover",
+      "LMS_HumanRig|LMS_HumanRig|Human_Run",
+      "LMS_HumanRig|LMS_HumanRig|Human_Swat",
+      "LMS_HumanRig|LMS_HumanRig|Human_Turn",
+      "LMS_HumanRig|LMS_HumanRig|Human_Walk"
+    ],
+    "sockets": [
+      "Socket.Eye",
+      "Socket.Head",
+      "Socket.Back",
+      "Socket.AimChest",
+      "Socket.Grip.L",
+      "Socket.Grip.R",
+      "Socket.Foot.L",
+      "Socket.Foot.R"
+    ],
+    "errors": [],
+    "passed": true
+  }
+]

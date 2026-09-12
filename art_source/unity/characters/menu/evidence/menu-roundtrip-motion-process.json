@@ -1,0 +1,24 @@
+{
+  "stage": "menu-roundtrip-motion",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\verify_human_menu.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-seated1/menu"
+  ],
+  "slot_note": "Director menu seated batch, same exclusive slot.",
+  "started_utc": "2026-09-12T22:25:36.493682+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 23380,
+  "exit_code": 0,
+  "seconds": 7.66117619999568,
+  "finished_utc": "2026-09-12T22:25:44.155000+00:00"
+}

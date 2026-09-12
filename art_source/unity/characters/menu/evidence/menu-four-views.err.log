@@ -1,0 +1,2 @@
+N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\render_human_menu.py:34: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.view_settings.view_transform='AgX';scene.world.use_nodes=True

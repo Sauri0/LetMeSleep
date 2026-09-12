@@ -1,0 +1,26 @@
+{
+  "stage": "menu-export",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\export_human_menu.py",
+    "--",
+    "--base-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-seated1/base",
+    "--output-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-seated1/menu"
+  ],
+  "slot_note": "Director conceded menu seated batch after Unity32832 cleanup; seat contract69dd119.",
+  "started_utc": "2026-09-12T22:22:35.312934+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 36648,
+  "exit_code": 0,
+  "seconds": 6.823205199994845,
+  "finished_utc": "2026-09-12T22:22:42.136271+00:00"
+}

@@ -1,0 +1,24 @@
+{
+  "stage": "menu-four-views",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\render_human_menu.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-seated1/menu-adjusted"
+  ],
+  "slot_note": "Same Director seated batch; exact kit sofa and production tool, four requested views.",
+  "started_utc": "2026-09-12T22:30:28.359745+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 26600,
+  "exit_code": 0,
+  "seconds": 86.68861510000715,
+  "finished_utc": "2026-09-12T22:31:55.049742+00:00"
+}

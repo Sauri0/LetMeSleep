@@ -1,0 +1,26 @@
+{
+  "stage": "menu-export-adjusted",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\export_human_menu.py",
+    "--",
+    "--base-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-seated1/base",
+    "--output-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-seated1/menu-adjusted"
+  ],
+  "slot_note": "Same Director seated batch; correct measured seat cloth penetration and gaze before first witness.",
+  "started_utc": "2026-09-12T22:28:35.682648+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 16220,
+  "exit_code": 0,
+  "seconds": 7.167779800001881,
+  "finished_utc": "2026-09-12T22:28:42.850572+00:00"
+}

@@ -1,0 +1,15 @@
+{
+  "checked_utc": "2026-09-12T22:34:41.8924154Z",
+  "scope": "Own menu batch only",
+  "expected_closed_pids": [
+    38176,
+    30100,
+    36648,
+    23380,
+    16220,
+    15628,
+    26600,
+    28648
+  ],
+  "remaining": []
+}

@@ -1,0 +1,10 @@
+00:00.938  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\menu-seated1\menu-adjusted\LMS_HumanMenu.blend"
+00:20.016  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\menu-seated1\menu-adjusted\review-full-frame\seated_front.png'
+00:37.516  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\menu-seated1\menu-adjusted\review-full-frame\seated_side.png'
+00:55.610  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\menu-seated1\menu-adjusted\review-full-frame\seated_three_quarter.png'
+01:14.016  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\menu-seated1\menu-adjusted\review-full-frame\reaction.png'
+FBX version: 7400
+LMS_MENU_WITNESS_DONE {"images": 4, "sequence": false}
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

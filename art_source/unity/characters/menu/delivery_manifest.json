@@ -1,0 +1,172 @@
+{
+  "status": "Native candidate ready for Unity integration; artistic approval pending",
+  "selected_raw_directory": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\.validation\\menu-seated1\\menu-adjusted",
+  "clips": {
+    "MenuSeatedIdle": 8.0,
+    "MenuLook": 4.0,
+    "MenuSwat": 1.4,
+    "MenuReturn": 1.8
+  },
+  "numeric_gates_passed": true,
+  "samples_both_formats": 920,
+  "max_source_fbx_bone_difference_m": 1.0794860289260646e-06,
+  "max_boundary_mesh_difference_m": 5.092623081992585e-07,
+  "max_foot_error_m": 1.3532835522199042e-07,
+  "min_pelvis_cloth_height_m": 0.5764555931091309,
+  "seat_top_height_m": 0.575,
+  "max_seat_flat_interior_vertex_count": 0,
+  "swat_midpoint": {
+    "frame": 22,
+    "phase": 0.5,
+    "feet_error_m": {
+      "L": 6.188917057900187e-08,
+      "R": 6.322027276634104e-08
+    },
+    "hips_source_m": [
+      0.0,
+      -0.3449999988079071,
+      0.6510000228881836
+    ],
+    "pelvis_cloth_min_height_m": 0.5764555931091309,
+    "seat_interior_vertex_count": 0,
+    "grip_source_m": [
+      -0.4999999403953552,
+      -0.529392421245575,
+      1.0930542945861816
+    ],
+    "grip_delta_rotation_rows": [
+      [
+        1.0000003576278687,
+        -1.1920930376163597e-07,
+        -1.3783576946480025e-07
+      ],
+      [
+        6.025155130373605e-08,
+        0.9848077893257141,
+        -0.17364820837974548
+      ],
+      [
+        1.1232468288824293e-08,
+        0.1736481934785843,
+        0.9848081469535828
+      ]
+    ],
+    "impact_source_m": [
+      -0.5,
+      -0.5976980328559875,
+      1.4516410827636719
+    ],
+    "impact_to_pass_distance_m": 0.2044917639137734,
+    "gaze_error_degrees": 1.0218245810859397
+  },
+  "native_processes": [
+    {
+      "stage": "base-generate",
+      "pid": 38176,
+      "started_utc": "2026-09-12T22:21:25.3793913Z",
+      "exit_code": 0,
+      "seconds": 10.4784833
+    },
+    {
+      "stage": "base-roundtrip",
+      "pid": 30100,
+      "started_utc": "2026-09-12T22:21:35.8446476Z",
+      "exit_code": 0,
+      "seconds": 3.0249349
+    },
+    {
+      "stage": "menu-adjusted-check",
+      "pid": 15628,
+      "started_utc": "2026-09-12T22:29:00.036031+00:00",
+      "exit_code": 0,
+      "seconds": 8.26553670001158
+    },
+    {
+      "stage": "menu-export-adjusted",
+      "pid": 16220,
+      "started_utc": "2026-09-12T22:28:35.682648+00:00",
+      "exit_code": 0,
+      "seconds": 7.167779800001881
+    },
+    {
+      "stage": "menu-export",
+      "pid": 36648,
+      "started_utc": "2026-09-12T22:22:35.312934+00:00",
+      "exit_code": 0,
+      "seconds": 6.823205199994845
+    },
+    {
+      "stage": "menu-four-views",
+      "pid": 26600,
+      "started_utc": "2026-09-12T22:30:28.359745+00:00",
+      "exit_code": 0,
+      "seconds": 86.68861510000715
+    },
+    {
+      "stage": "menu-full-frame-views",
+      "pid": 28648,
+      "started_utc": "2026-09-12T22:32:43.054660+00:00",
+      "exit_code": 0,
+      "seconds": 74.6369493999955
+    },
+    {
+      "stage": "menu-roundtrip-motion",
+      "pid": 23380,
+      "started_utc": "2026-09-12T22:25:36.493682+00:00",
+      "exit_code": 0,
+      "seconds": 7.66117619999568
+    }
+  ],
+  "native_process_seconds_total": 204.74668060000664,
+  "closed_pid_receipt": "evidence/cleanup.json",
+  "sequence_rendered": false,
+  "next_capture": "Director Unity with production mosquito, UI and lighting",
+  "review_images": "review/*.png: exact sofa and production flyswatter, Blender control lighting",
+  "known_visual_issues": [
+    "Right sleeve cuff ring and grip volume require review",
+    "Shoulders, lapels and bent legs remain rigid",
+    "Reaction face partly hidden in three-quarter witness",
+    "No full moving sequence or Unity approval yet"
+  ],
+  "file_sha256": {
+    ".gitattributes": "eabc4994d9f65153b3268fc9e977ce2ab49647f55632a4bc0df8f7b3157b12ce",
+    "evidence/base-audit.json": "ce2a7f7f2d2d324e090bb6d3ef34fea039e83f401ff819940a747f96f5a11ff9",
+    "evidence/base-fbx_roundtrip.json": "f197ca3699e61c293ad65b36d110e3f30b639784e7ddf4b12218980e35a561a8",
+    "evidence/base-generate.err.log": "86ab97beed9a275aedef53f57fb00fd43bbeed772e9c1673e8448721e19ee3de",
+    "evidence/base-generate.log": "8319eba9e5042b00b766da7420a0c6b07347af1a0c9007e50ca37bca86c74e22",
+    "evidence/base-processes.json": "36486bd37ae540972501323633612c778bff87fa9797f5f36693d75e82581fb9",
+    "evidence/base-roundtrip.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/base-roundtrip.log": "d92a157ae99d17175d4770f28729827cbe18ea152f79d54a1d0ed2024c82101d",
+    "evidence/cleanup.json": "f45556603dbade4a33ef1a985d1c4c86f7c6f370e8728eb62258a45ea2d0a2ba",
+    "evidence/menu-adjusted-check-process.json": "0acf330aa90e13ffc4fc3b595945cc3b161b8b0fb4ae9679172f0bbe75fd8561",
+    "evidence/menu-adjusted-check.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/menu-adjusted-check.log": "93031064973d622b6676e08cbcc731454b3246035d2e119061b86ec96e062d44",
+    "evidence/menu-export-adjusted-process.json": "822a05c3c2a5d8ad0327c810b9287642f4324f6d48caf9adf3c26994e6066b9c",
+    "evidence/menu-export-adjusted.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/menu-export-adjusted.log": "77ec294cd7a4ddc8534af18c3dc0767ffe5ac2ec6e92ac1045e5627d17c0a7ec",
+    "evidence/menu-export-process.json": "66276d1bfefdcd16a9998825abd387efe88a1af7c85965ece03387f47b90294a",
+    "evidence/menu-export.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/menu-export.log": "67b9a2d69bdba7a27b186f2c8a4ae2ddf21690287ae5ca4065f91c79512d170d",
+    "evidence/menu-four-views-process.json": "d44705704824db002049a98ffd68df76ddf53ea65cd647537a36c45a5a642d5b",
+    "evidence/menu-four-views.err.log": "fb72e9725f5ad48942e9ca693770e78eb3dee572ae73411e31970c2e62cf7191",
+    "evidence/menu-four-views.log": "5393fc9c9463d251798f3295f7060d4bf87ba2935bd7d5e9fc6e5c7caae9de10",
+    "evidence/menu-full-frame-views-process.json": "29314c5a27ab08fb9b2a4957cae33f79ffbf2ecc5e08f9a2e7c04c6a3de28cc9",
+    "evidence/menu-full-frame-views.err.log": "2bc8869158e3be28f7a590b5b6fb7eefa9c77972ae22f04cb109b51df3a3b872",
+    "evidence/menu-full-frame-views.log": "b2f16457a4d47c0d67029bbadf04e954a3873fc1abbeb8c81bd82b024b87ecab",
+    "evidence/menu-roundtrip-motion-process.json": "c315281cfd0e07cbc60bbb504a7001ad8ef7134bb45a2d9013c6bc1ee33cbf37",
+    "evidence/menu-roundtrip-motion.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/menu-roundtrip-motion.log": "30a2b4d1101a2665363b72c32d535d7150126c61b1da3c0165a374ca0863485a",
+    "LMS_HumanMenu.blend": "383101ee88808fba0a052d3552dafa977b316850df556057f7c00da6e3b6b734",
+    "LMS_HumanMenu.fbx": "905b942ce4ea5192d0bd2442179edbcfba5b1f848695e3cd61917f6a111be7f9",
+    "menu_audit.json": "e1528e2d1cc6492f01e578bebccafb184231419c6a7080e67070079fcf763170",
+    "menu_motion_audit.json": "28704cd586459793c0577573f9bc19de71cf67bc46375a4a7809726b327fc69b",
+    "review/reaction.json": "678cd4d3fc43b5cffffd371b1f7336b7739d98546122191ed459eba2a3b0a2ce",
+    "review/reaction.png": "7f0318ca4f141fcfd1a0d3785c34024727d3063d5a43a73605778b8a00072c05",
+    "review/seated_front.json": "a08acad9c7d01b5c91ce8b0eb0bf5fdebb220b6349f9c98c5bf07a80d81833ec",
+    "review/seated_front.png": "5ec3b162524f8c5add2a33541f43d32ca0c040fdf5d420b98315f2b0b5049d6e",
+    "review/seated_side.json": "7b825fe8ea73c24f996017101345611f51741e754786a1034a0b4eb54a53d4f6",
+    "review/seated_side.png": "ef62d27b63fe72feb5a8a694bc8db187c626a55713343068507887c970d99d4b",
+    "review/seated_three_quarter.json": "f95069f1c18892d0602b903005c309491b2e9f5b65a1066e99345ddaef2ed107",
+    "review/seated_three_quarter.png": "d22d42a898475a374c50be73093ca927539584ddb420abf2d92d191eef740abd"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "stage": "menu-full-frame-views",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\render_human_menu.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-seated1/menu-adjusted"
+  ],
+  "slot_note": "Same Director seated batch; correct witness framing that cropped slippers in front view.",
+  "started_utc": "2026-09-12T22:32:43.054660+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 28648,
+  "exit_code": 0,
+  "seconds": 74.6369493999955,
+  "finished_utc": "2026-09-12T22:33:57.692804+00:00"
+}

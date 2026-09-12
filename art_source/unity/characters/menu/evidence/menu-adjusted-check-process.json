@@ -1,0 +1,24 @@
+{
+  "stage": "menu-adjusted-check",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\verify_human_menu.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-seated1/menu-adjusted"
+  ],
+  "slot_note": "Same Director seated batch; verify corrected support and gaze.",
+  "started_utc": "2026-09-12T22:29:00.036031+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 15628,
+  "exit_code": 0,
+  "seconds": 8.26553670001158,
+  "finished_utc": "2026-09-12T22:29:08.301721+00:00"
+}

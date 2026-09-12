@@ -1,0 +1,35 @@
+{
+  "source_sha256": "383101ee88808fba0a052d3552dafa977b316850df556057f7c00da6e3b6b734",
+  "sofa_source": "N:\\LetMeSleep\\Repository\\art_source\\unity\\environments\\alfa_maps\\furniture_kit_alfa.blend",
+  "sofa_sha256": "559b5b05e1aed686fc5501fd6a2b29ee1f1121c24a6e4e1cfa3ab561b8552378",
+  "sofa_objects": [
+    "Kit_Sofa_Seat",
+    "Kit_Sofa_Base",
+    "Kit_Sofa_Back",
+    "Kit_Sofa_Arm.001",
+    "Kit_Sofa_Arm",
+    "Kit_Sofa"
+  ],
+  "tool_source": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\flyswatter\\LMS_Flyswatter_alpha.fbx",
+  "tool_sha256": "e2c01038ae45fd5a22cb52a14c4b34edd4ffb3fc54dd3494dcc8743bac17cc16",
+  "sofa_note": "Exact Kit_Sofa geometry recentered and yaw180 into human source axes; lobby throw/cushion absent",
+  "light_note": "Blender control lighting; not final menu/runtime approval",
+  "actual_actions_evaluated": true,
+  "unity_evidence": false,
+  "visual_approval": false,
+  "image": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\.validation\\menu-seated1\\menu-adjusted\\review-full-frame\\seated_side.png",
+  "clip": "MenuSeatedIdle",
+  "phase": 0,
+  "frame": 1.0,
+  "yaw_degrees": 90,
+  "focus": [
+    0.0,
+    -0.18000000715255737,
+    0.8700000047683716
+  ],
+  "resolution": [
+    960,
+    720
+  ],
+  "samples": 16
+}
