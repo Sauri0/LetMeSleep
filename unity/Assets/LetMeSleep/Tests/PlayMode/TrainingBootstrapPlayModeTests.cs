@@ -120,8 +120,8 @@ namespace LetMeSleep.Tests.PlayMode
             GameplayToolPickup[] pickups = Object.FindObjectsByType<GameplayToolPickup>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             Assert.That(pickups, Has.Length.EqualTo(7), "The alfa house must expose seven physical flyswatter pickups.");
-            Assert.That(runtime.World.GetToolDefinitions(), Has.Count.EqualTo(7));
-            Assert.That(runtime.LatestSnapshot.ToolPickups, Has.Count.EqualTo(7));
+            Assert.That(runtime.World.GetToolDefinitions().Count, Is.EqualTo(7));
+            Assert.That(runtime.LatestSnapshot.ToolPickups.Count, Is.EqualTo(7));
             CollectionAssert.AreEquivalent(
                 pickups.Select(pickup => pickup.PickupId),
                 runtime.LatestSnapshot.ToolPickups.Select(pickup => pickup.PickupId));
