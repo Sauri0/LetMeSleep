@@ -32,7 +32,7 @@ namespace LetMeSleep.Editor
             importer.preserveHierarchy = true; importer.optimizeGameObjects = false; importer.isReadable = true;
             importer.meshCompression = ModelImporterMeshCompression.Off;
             importer.importNormals = ModelImporterNormals.Import; importer.importTangents = ModelImporterTangents.None;
-            importer.importBlendShapes = false; importer.importCameras = false; importer.importLights = false; importer.addCollider = false;
+            importer.importBlendShapes = true; // Preserve authored eyelids; facial animation is shared by menu and gameplay. importer.importCameras = false; importer.importLights = false; importer.addCollider = false;
             importer.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
             importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
             importer.animationType = ModelImporterAnimationType.Generic;

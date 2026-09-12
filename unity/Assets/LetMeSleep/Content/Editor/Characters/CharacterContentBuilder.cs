@@ -201,7 +201,7 @@ namespace LetMeSleep.Content.Characters.Editor
             importer.meshCompression = ModelImporterMeshCompression.Off;
             importer.importNormals = ModelImporterNormals.Import;
             importer.importTangents = ModelImporterTangents.None;
-            importer.importBlendShapes = false;
+            importer.importBlendShapes = true; // Preserve authored eyelids; facial animation is shared by menu and gameplay.
             importer.importCameras = false;
             importer.importLights = false;
             importer.addCollider = false;
