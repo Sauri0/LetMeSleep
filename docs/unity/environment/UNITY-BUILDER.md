@@ -14,7 +14,7 @@ También expuesto en menú `Let Me Sleep > Environment > Build Room Sample`. El 
 
 ## Resultado esperado al ejecutar
 
-En `unity/Assets/LetMeSleep/Content/Environment/RoomSample/` crea/importa Models, Materials, Prefabs, Data y Scenes a través de Unity. Copia las dos exportaciones de integración y los manifests desde `art_source/unity/environments/room_sample/` de esa misma copia del repo. Unity genera los .meta de esos assets. No importar `.blend` directamente ni instanciar además el FBX completo de revisión.
+En `unity/Assets/LetMeSleep/Content/Environment/RoomSample/` crea/importa Models, Meshes, Materials, Prefabs, Data y Scenes a través de Unity. Copia las dos exportaciones de integración y los manifests desde `art_source/unity/environments/room_sample/` de esa misma copia del repo. Unity genera los .meta de esos assets. No importar `.blend` directamente ni instanciar además el FBX completo de revisión.
 
 - `Prefabs/Door_01.prefab`: puerta independiente, 11 meshes, pivote real y único Rigidbody cinemático sin gravedad, collider hijo del pivote.
 - `Prefabs/RoomSample.prefab`: 55 meshes en total con prefab de puerta anidado, 45 colliders hijos separados del mesh, 13 anchors vacíos de Presentation. Prefab guardado con puerta cerrada, sin luces/audio/volumes.
@@ -33,5 +33,15 @@ La cama lleva LODGroup con solo LOD0, transición None y sin desaparición a dis
 `presentation_manifest.json`, reproducible con `build_presentation_manifest.ps1`, amplía el contrato original según Worker 2 `190fad6`: flags para 55 renderers, 45 cajas, anchors de luz/reflexión/audio/cámara, bounds de planta/habitación de muestra y dos portales. Ventana es cerrada, con paso humano y acústico deshabilitados. Mapeo acústico por material del shell: piso Wood, pared/techo Stone provisional. Tile/Grass y zonas pasillo/escalera/patio/lobby corresponden al lote de casa futuro, no se inventan volúmenes presentes.
 
 Los anchors están descritos en el manifest y se instancian al ejecutar este builder; los FBX originales permanecen sin cambios. Límite del lote: muestra revisable y datos del contrato, no casa completa ni funcionalidad online.
+
+## Corrección de bases FBX tras primer intento nativo
+
+Director reprodujo el fallo `Collider parent axes differ from Unity-local manifest: Door_01_Hinge`. Dump nativo `N:/Unity/Setup/door-axis-check.json`: root FBX identidad; `Door_01` conserva una rotación aproximada de 90° en X, con right=(1,0,0), up=(0,0,1), forward=(0,-1,0). El pivote hereda esa base y tiene posición local (0.585,-0.045,0); la hoja tiene local (0.535,0,-1.1025). `bakeAxisConversion` no entregó por sí solo el espacio local requerido por el JSON.
+
+La base medida también sugiere Z reflejado respecto del contrato: esta es una inferencia de sus vectores y posiciones locales, todavía pendiente de la segunda consulta de posiciones mundiales/límites que ejecutará Director tras compilar. El builder comprueba primero la convención prevista —pivote en z=-0.045 y shell en z=-4.58…0.18— y falla explícitamente si no coincide. No se elimina ni relaja el gate para aceptar coordenadas desconocidas.
+
+Con esa precondición, crea copias Mesh bajo `Meshes/`, hornea la conversión Z y la base de cada mesh, transforma normales con inversa transpuesta, tangentes con cambio de handedness y revierte el winding por submesh. Conserva UV/UV2 y materiales. Todos los nodos quedan con escala positiva unitaria y base Unity; sus orígenes siguen la misma conversión. Los FBX y sus meshes importados permanecen intactos. El gate comprueba cada vértice contra la transformación explícita y comprueba que collider y hoja coincidan tanto cerrados como a −100°. Sockets usan las normales del contrato. Esto corrige conjuntamente representación y física en vez de compensar un collider sobre una bisagra que gira en otro eje.
+
+Compilación offline del parche aprobada. La corrección completa requiere ejecución nativa por Director y recibo nuevo; aún no se afirma que la escena se haya generado ni que los bounds inferidos estén medidos.
 
 Referencias de API: [margen mínimo por texel del importador](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/ModelImporter-secondaryUVMinLightmapResolution.html) y [conversión de ejes](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/ModelImporter-bakeAxisConversion.html). Firmas verificadas además compilando contra ensamblados instalados; la interpretación real del FBX se comprueba al ejecutar en Unity.

@@ -32,6 +32,8 @@ namespace LetMeSleep.Content.Editor
         }
         [Serializable] public class ColliderRule { public string parent_node, child_name, collision_role; public float[] center, size; }
         [Serializable] public class Anchor { public string name, role; public float[] position, size; }
+        [Serializable] public class RoomContract { public SocketRule[] sockets; }
+        [Serializable] public class SocketRule { public string id; public float[] position, outward_normal; }
         [Serializable] public class Receipt {
             public string unityVersion, generatedUtc, scene, sourceGeometrySha256, sourceManifestSha256;
             public int meshes, colliders, sharedMaterials, anchors;
@@ -55,10 +57,11 @@ namespace LetMeSleep.Content.Editor
             Shader shader = Shader.Find("Universal Render Pipeline/Lit");
             if (shader == null) throw new InvalidOperationException("URP/Lit is required. Director must finish package setup.");
             Manifest manifest = JsonUtility.FromJson<Manifest>(File.ReadAllText(Path.Combine(source, "presentation_manifest.json")));
+            RoomContract roomContract = JsonUtility.FromJson<RoomContract>(File.ReadAllText(Path.Combine(source, "room_contract.json")));
             Require(manifest != null && manifest.renderers != null && manifest.renderers.Length == 55, "Manifest must describe 55 renderers.");
             Require(manifest.collider_children != null && manifest.collider_children.Length == 45, "Manifest must describe 45 collider children.");
             Warnings.Clear();
-            foreach (string dir in new[] { "Models", "Materials", "Prefabs", "Scenes", "Data" }) EnsureFolder(Output + "/" + dir);
+            foreach (string dir in new[] { "Models", "Meshes", "Materials", "Prefabs", "Scenes", "Data" }) EnsureFolder(Output + "/" + dir);
             var materials = EnsureMaterials(shader);
             CopySource(source, "presentation_manifest.json", "Data");
             CopySource(source, "room_contract.json", "Data");
@@ -74,6 +77,7 @@ namespace LetMeSleep.Content.Editor
                 try
                 {
                     InstantiateModel("door_01.fbx", "DoorVisual", door.transform);
+                    Find(door, "Socket_Door_Use").rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
                     ApplyRenderers(door, manifest, materials);
                     AddColliders(door, manifest, true);
                     Transform hinge = Find(door, "Door_01_Hinge");
@@ -90,6 +94,7 @@ namespace LetMeSleep.Content.Editor
 
                 GameObject room = new GameObject("LMS_RoomSample_01_Prefab");
                 InstantiateModel("room_furnished_without_door.fbx", "EnvironmentVisual", room.transform);
+                OrientSockets(room, roomContract);
                 ApplyRenderers(room, manifest, materials);
                 AddColliders(room, manifest, false);
                 var doorInstance = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(DoorPrefab), review);
@@ -118,7 +123,7 @@ namespace LetMeSleep.Content.Editor
                     meshes = room.GetComponentsInChildren<MeshRenderer>(true).Length,
                     colliders = room.GetComponentsInChildren<BoxCollider>(true).Length,
                     sharedMaterials = materials.Count, anchors = manifest.anchors.Length,
-                    checks = new[] { "Imported room bounds and hinge origin", "55 renderers; shared URP materials", "45 independent collider children", "Static meshes have UV2", "Root scale and forward", "Separate nested door prefab with moving collider", "Prefab and sample scene serialized through Unity API" },
+                    checks = new[] { "FBX handedness corrected in mesh copies; every vertex follows explicit Z reflection", "Imported room bounds and hinge origin", "55 renderers; shared URP materials", "45 independent collider children", "Static meshes have UV2", "Root scale and forward", "Door visual and collider bounds agree at 0 and -100 degrees", "Separate nested door prefab with moving collider", "Prefab and sample scene serialized through Unity API" },
                     pending = new[] { "UV2 overlap and actual bake padding", "Visual review and light leakage", "Gameplay obstruction/camera traversal", "Performance and WAN outside this check" },
                     warnings = Warnings.ToArray()
                 };
@@ -206,6 +211,97 @@ namespace LetMeSleep.Content.Editor
             PrefabUtility.UnpackPrefabInstance(instance, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
             instance.name = instanceName;
             instance.transform.SetParent(parent, false);
+            ConvertImportedCoordinateFrame(instance, name);
+        }
+        static void ConvertImportedCoordinateFrame(GameObject model, string fileName)
+        {
+            // Native Unity import preserves Blender's Empty basis and reflects authored
+            // Z. Correct BOTH geometry and frames, never just the collider. Gate this
+            // exact import convention so a future exporter change cannot double-flip it.
+            if (fileName == "door_01.fbx")
+                Require(Vector3.Distance(Find(model,"Door_01_Hinge").position, new Vector3(.585f,0,-.045f)) < .001f,
+                    "FBX door import convention changed; reassess coordinate conversion.");
+            else
+            {
+                var importedShell = Find(model,"Architecture_Shell").GetComponent<Renderer>();
+                Require(Vector3.Distance(importedShell.bounds.min, new Vector3(-.18f,-.18f,-4.58f)) < .002f &&
+                    Vector3.Distance(importedShell.bounds.max, new Vector3(4.98f,3,.18f)) < .002f,
+                    "FBX room import convention changed; reassess coordinate conversion.");
+            }
+            Matrix4x4 correction = Matrix4x4.Scale(new Vector3(1,1,-1));
+            var transforms = model.GetComponentsInChildren<Transform>(true);
+            foreach (var t in transforms)
+                Require(Vector3.Distance(t.localScale, Vector3.one) < .001f,
+                    "Cannot convert scaled FBX hierarchy safely: " + t.name);
+            var meshes = model.GetComponentsInChildren<MeshFilter>(true);
+            var before = meshes.ToDictionary(m => m, m => m.transform.localToWorldMatrix);
+            var origins = transforms.ToDictionary(t => t, t => t.position);
+            foreach (var t in transforms.OrderBy(Depth))
+            {
+                t.SetPositionAndRotation(correction.MultiplyPoint3x4(origins[t]), Quaternion.identity);
+                t.localScale = Vector3.one;
+            }
+            foreach (var filter in meshes)
+            {
+                Mesh original = filter.sharedMesh;
+                Require(original != null, "Missing imported mesh: " + filter.name);
+                Matrix4x4 bake = filter.transform.worldToLocalMatrix * correction * before[filter];
+                Require(bake.determinant < 0, "Expected handedness reversal for " + filter.name);
+                Matrix4x4 normalMatrix = bake.inverse.transpose;
+                Mesh converted = Object.Instantiate(original);
+                converted.name = filter.name + "_UnitySpace";
+                Vector3[] originalVertices = original.vertices;
+                Vector3[] vertices = originalVertices.Select(v => bake.MultiplyPoint3x4(v)).ToArray();
+                converted.vertices = vertices;
+                Vector3[] normals = original.normals;
+                Require(normals.Length == original.vertexCount, "Imported normals missing: " + filter.name);
+                converted.normals = normals.Select(n => normalMatrix.MultiplyVector(n).normalized).ToArray();
+                Vector4[] tangents = original.tangents;
+                for (int i = 0; i < tangents.Length; i++)
+                {
+                    Vector3 tangent = bake.MultiplyVector(new Vector3(tangents[i].x,tangents[i].y,tangents[i].z)).normalized;
+                    tangents[i] = new Vector4(tangent.x,tangent.y,tangent.z,-tangents[i].w);
+                }
+                converted.tangents = tangents;
+                for (int sub = 0; sub < original.subMeshCount; sub++)
+                {
+                    Require(original.GetTopology(sub) == MeshTopology.Triangles, "Expected imported triangles: " + filter.name);
+                    int[] indices = original.GetIndices(sub);
+                    for (int i = 0; i < indices.Length; i += 3)
+                    { int swap = indices[i + 1]; indices[i + 1] = indices[i + 2]; indices[i + 2] = swap; }
+                    converted.SetIndices(indices, MeshTopology.Triangles, sub, false);
+                }
+                converted.RecalculateBounds();
+                for (int i = 0; i < vertices.Length; i++)
+                    Require(Vector3.Distance(filter.transform.TransformPoint(vertices[i]),
+                        correction.MultiplyPoint3x4(before[filter].MultiplyPoint3x4(originalVertices[i]))) < .00001f,
+                        "Coordinate correction changed vertex beyond explicit reflection: " + filter.name);
+                string assetPath = Output + "/Meshes/" + Path.GetFileNameWithoutExtension(fileName) + "_" + filter.name + ".asset";
+                Mesh saved = AssetDatabase.LoadAssetAtPath<Mesh>(assetPath);
+                if (saved == null) { AssetDatabase.CreateAsset(converted, assetPath); saved = converted; }
+                else { EditorUtility.CopySerialized(converted, saved); Object.DestroyImmediate(converted); EditorUtility.SetDirty(saved); }
+                filter.sharedMesh = saved; // UVs/UV2/material slots remain intact in the cloned Mesh.
+            }
+            foreach (var t in transforms)
+                Require(Vector3.Distance(correction.MultiplyPoint3x4(origins[t]), t.position) < .00001f,
+                    "Coordinate correction displaced node origin: " + t.name);
+        }
+        static int Depth(Transform t)
+        {
+            int depth = 0;
+            while (t.parent != null) { depth++; t = t.parent; }
+            return depth;
+        }
+        static void OrientSockets(GameObject room, RoomContract contract)
+        {
+            Require(contract != null && contract.sockets != null, "Missing socket coordinate contract.");
+            foreach (var rule in contract.sockets)
+            {
+                Transform socket = Find(room, rule.id);
+                Require(Vector3.Distance(socket.position, V(rule.position)) < .001f,
+                    "Imported socket position differs from Unity contract: " + rule.id);
+                socket.rotation = Quaternion.LookRotation(V(rule.outward_normal), Vector3.up);
+            }
         }
         static Transform Find(GameObject root, string name)
         {
@@ -292,6 +388,9 @@ namespace LetMeSleep.Content.Editor
             var leaf = Find(room, "Door_01_Leaf").GetComponent<MeshRenderer>();
             Require(Vector3.Distance(leaf.bounds.center, new Vector3(1.12f,1.1025f,.045f)) < .002f,
                 "Closed leaf center differs from pivot contract.");
+            var doorCollider = hinge.GetComponentInChildren<BoxCollider>();
+            Require(doorCollider != null, "Door collider missing.");
+            ValidateLeafCollider(leaf, doorCollider);
             Quaternion rest = hinge.localRotation;
             try
             {
@@ -299,6 +398,7 @@ namespace LetMeSleep.Content.Editor
                 float angle = -100 * Mathf.Deg2Rad;
                 Vector3 expected = new Vector3(.585f + .535f * Mathf.Cos(angle), 1.1025f, .045f - .535f * Mathf.Sin(angle));
                 Require(Vector3.Distance(leaf.bounds.center, expected) < .002f, "Leaf does not rotate around the documented hinge.");
+                ValidateLeafCollider(leaf, doorCollider);
             }
             finally { hinge.localRotation = rest; }
             var shell = Find(room, "Architecture_Shell").GetComponent<MeshRenderer>();
@@ -311,6 +411,18 @@ namespace LetMeSleep.Content.Editor
                 if (rule.mobility == "static") Require(mesh.sharedMesh.uv2.Length == mesh.sharedMesh.vertexCount, "UV2 generation failed: " + mesh.name);
             }
             Require(room.GetComponentsInChildren<Light>(true).Length == 0, "Source prefab must not own presentation lights.");
+        }
+        static void ValidateLeafCollider(Renderer leaf, BoxCollider collider)
+        {
+            Bounds actual = new Bounds(collider.transform.TransformPoint(collider.center), Vector3.zero);
+            for (int x = -1; x <= 1; x += 2)
+                for (int y = -1; y <= 1; y += 2)
+                    for (int z = -1; z <= 1; z += 2)
+                        actual.Encapsulate(collider.transform.TransformPoint(collider.center +
+                            Vector3.Scale(collider.size * .5f, new Vector3(x,y,z))));
+            Require(Vector3.Distance(actual.min, leaf.bounds.min) < .002f &&
+                Vector3.Distance(actual.max, leaf.bounds.max) < .002f,
+                "Door collider and visual occupy different spaces.");
         }
         static void AddReviewSetup(Scene scene)
         {

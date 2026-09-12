@@ -3,7 +3,7 @@
   "unity_api_version": "6000.3.24f1",
   "compiler": "Unity bundled DotNetSdkRoslyn/csc.dll",
   "exit_code": 0,
-  "source_sha256": "e0f152771603ca73e9eb7920954ddb7625566910a8c6b8d153e5145641988455",
+  "source_sha256": "47c2130b225b2abb8508d6cfb38d1d0b3e40a29787624b99a0561d9e4792dcae",
   "checks": [
     "C# compilation",
     "Unity API names and signatures"
