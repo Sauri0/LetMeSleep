@@ -263,7 +263,7 @@ Composición:
 
 - Centro/izquierda: `RawImage` 3D de al menos 720×720 a 1080p, con fondo `Night800` y suelo suave.
 - Derecha: pestañas `HUMANO` y `MOSQUITO`, categorías alfa y muestras de color con nombre accesible.
-- Pie: `GUARDAR`, `RESTABLECER` y `← VOLVER`.
+- Pie: `GUARDAR`, `DESHACER CAMBIOS` y `← VOLVER`.
 
 Controles del visor:
 
@@ -281,12 +281,12 @@ Mostrar sólo capacidades alfa realmente conectadas. Una fila sin implementació
 Categorías previstas:
 
 - `AUDIO`: volumen general, música y efectos.
-- `VIDEO`: modo de pantalla, resolución y calidad si Presentation expone valores aplicables.
+- `VIDEO`: modo de pantalla, resolución, calidad, VSync y límite de FPS (`SIN LÍMITE`, 30, 60, 90, 120, 144, 165 o 240) si Presentation expone valores aplicables. El valor inicial es `SIN LÍMITE` y VSync apagado.
 - `CONTROLES`: sensibilidad humana, sensibilidad mosquito, invertir eje vertical y lista de controles. Reasignación sólo si el contrato de entrada del Director la incluye en alfa.
 
-No incluir voz, mezcla por jugador, perfiles 1440p/4K, límite de FPS avanzado ni opciones de etapas futuras.
+No incluir voz, mezcla por jugador, perfiles 1440p/4K, límites de FPS fuera del selector alfa ni opciones de etapas futuras.
 
-Foco inicial: primera pestaña. `APLICAR` sólo se habilita con cambios; `RESTABLECER` pide confirmación. `Escape` descarta cambios no aplicados mediante diálogo y vuelve exactamente a la pantalla que abrió Ajustes. Abrir Ajustes durante la ronda mantiene la pausa y no reinicia música/escena.
+Foco inicial: primera pestaña. `APLICAR` sólo se habilita con cambios; `DESHACER CAMBIOS` recupera el último estado recibido del juego. `Escape` descarta cambios no aplicados mediante diálogo y vuelve exactamente a la pantalla que abrió Ajustes. Abrir Ajustes durante la ronda mantiene la pausa y no reinicia música/escena.
 
 ### 5.7 Pausa y resultados
 
@@ -398,7 +398,7 @@ La UI puede bloquear una intención por vacío básico o estado busy. Toda valid
 ## 9. Accesibilidad y localización
 
 - Copy alfa en español rioplatense consistente: `Elegí`, `Pegá`, `Copiá`, `Volver`. No mezclar inglés en botones visibles.
-- Código de sala y nombres usan Atkinson, selección de texto y caret visible.
+- Código de sala y nombres usan Atkinson, selección de texto y caret visible. El código EOS tiene diez caracteres legibles: se muestra `XXXXX-XXXXX`; al pegar se ignoran guiones/espacios y se normaliza a mayúsculas.
 - Cada icono tiene etiqueta de texto o descripción accesible; no usar iconos solos en acciones críticas.
 - El foco se reconoce sin color y conserva contraste sobre todos los estados.
 - Soportar teclado y mando desde el primer prefab. El puntero no es requisito para completar Crear, Unirse, Listo, Entrenamiento, Personalizar o Ajustes.
@@ -439,6 +439,7 @@ La UI puede bloquear una intención por vacío básico o estado busy. Toda valid
 ## 11. Dependencias y supuestos registrados
 
 - Core/Online entrega estados y mensajes autoritativos; la UI no interpreta tokens EOS ni direcciones.
+- Crear/Unirse es asincrónico mediante estados presentados. `CancelOnline` sólo cancela la operación pendiente; una sala ya conectada se abandona con `LeaveRoom`.
 - Gameplay entrega cuota, reloj, rol, contacto válido, extracción, golpe, desmayo e interacciones confirmadas.
 - Presentation entrega cámaras para lobby y visor de personaje. UI consume el resultado y no modifica rigs ni escenas ajenas.
 - Content entrega nombres visibles `Sangre` y `Casa con patio`, además de los colores alfa disponibles.

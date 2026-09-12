@@ -1,0 +1,11 @@
+{
+  "name": "LetMeSleep.UI",
+  "rootNamespace": "LetMeSleep.UI",
+  "references": [
+    "LetMeSleep.Core",
+    "Unity.ugui",
+    "Unity.TextMeshPro",
+    "Unity.InputSystem"
+  ],
+  "autoReferenced": true
+}
