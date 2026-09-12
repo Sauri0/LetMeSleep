@@ -1,0 +1,200 @@
+{
+  "source_commit": "13a58a434416f10d64fdb4f31088d7dd26110ceb",
+  "source_sha256": {
+    "game/tests/procedural09_corpus_checks.gd": "1C559DAF2520525F2D372BA5CC39EBFCEA449C003117F1CE0911DFCBF4E6CAAE",
+    "game/scripts/procedural_house.gd": "7C8B38AE2D2836500BDA2EDB201D9DB421B458A9165166A78D6A109D92FC85AD",
+    "game/scripts/house_validation.gd": "DE7B65B1680C926F4460225989E382E5420A49659FD0A042912E1D5F3111F34E",
+    "game/scripts/furniture_blueprint.gd": "C25E2CEF8D93788B90070BFB2ECBCF27D0BB3ACC40B4AF2480BC65A913EBB435",
+    "game/scripts/navigation_geometry.gd": "C259E185DED8304B58473207919FD02D7DDFCA35E8118C37E47D6343EB5D6C7F",
+    "game/scripts/door_geometry.gd": "264C406BD5D3A295F285F93AA2C18CE6510B24FEBFFE1C8E957488642390DA76",
+    "game/scripts/pickup_placement.gd": "1F43B4C2943A9931985E337773348CEDE10F2BCFC1D72496C1B7520F9A11FD2F",
+    "game/scripts/pickup_support_geometry.gd": "FA9ABBA4C839E91ED4A45617824D731DCAE22EAF0965D5A668C148CA9C1D9557"
+  },
+  "seeds": 1000,
+  "distinct_structural_layouts": 1000,
+  "independent_repeats": 1000,
+  "failures": 0,
+  "runs": [
+    {
+      "batch": 0,
+      "repeat": false,
+      "started_utc": "2026-09-11T23:59:38.7022498Z",
+      "finished_utc": "2026-09-11T23:59:58.4324435Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 1,
+      "repeat": false,
+      "started_utc": "2026-09-11T23:59:58.4536897Z",
+      "finished_utc": "2026-09-12T00:00:18.0793061Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 2,
+      "repeat": false,
+      "started_utc": "2026-09-12T00:00:18.0808903Z",
+      "finished_utc": "2026-09-12T00:00:37.2704503Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 3,
+      "repeat": false,
+      "started_utc": "2026-09-12T00:00:37.2723888Z",
+      "finished_utc": "2026-09-12T00:00:56.6669911Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 4,
+      "repeat": false,
+      "started_utc": "2026-09-12T00:00:56.6680848Z",
+      "finished_utc": "2026-09-12T00:01:16.2905579Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 5,
+      "repeat": false,
+      "started_utc": "2026-09-12T00:01:16.2917441Z",
+      "finished_utc": "2026-09-12T00:01:34.7140951Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 6,
+      "repeat": false,
+      "started_utc": "2026-09-12T00:01:34.7152092Z",
+      "finished_utc": "2026-09-12T00:01:53.5716658Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 7,
+      "repeat": false,
+      "started_utc": "2026-09-12T00:01:53.5726435Z",
+      "finished_utc": "2026-09-12T00:02:12.1764955Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 8,
+      "repeat": false,
+      "started_utc": "2026-09-12T00:02:12.1774872Z",
+      "finished_utc": "2026-09-12T00:02:30.8520263Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 9,
+      "repeat": false,
+      "started_utc": "2026-09-12T00:02:30.8532675Z",
+      "finished_utc": "2026-09-12T00:02:49.8658271Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 0,
+      "repeat": true,
+      "started_utc": "2026-09-12T00:02:49.8683687Z",
+      "finished_utc": "2026-09-12T00:03:09.1408706Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 1,
+      "repeat": true,
+      "started_utc": "2026-09-12T00:03:09.1418865Z",
+      "finished_utc": "2026-09-12T00:03:28.2496729Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 2,
+      "repeat": true,
+      "started_utc": "2026-09-12T00:03:28.2508538Z",
+      "finished_utc": "2026-09-12T00:03:47.5346460Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 3,
+      "repeat": true,
+      "started_utc": "2026-09-12T00:03:47.5358898Z",
+      "finished_utc": "2026-09-12T00:04:06.7373201Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 4,
+      "repeat": true,
+      "started_utc": "2026-09-12T00:04:06.7387706Z",
+      "finished_utc": "2026-09-12T00:04:25.7630966Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 5,
+      "repeat": true,
+      "started_utc": "2026-09-12T00:04:25.7640860Z",
+      "finished_utc": "2026-09-12T00:04:44.3611868Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 6,
+      "repeat": true,
+      "started_utc": "2026-09-12T00:04:44.3623506Z",
+      "finished_utc": "2026-09-12T00:05:03.2072178Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 7,
+      "repeat": true,
+      "started_utc": "2026-09-12T00:05:03.2085653Z",
+      "finished_utc": "2026-09-12T00:05:22.3170529Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 8,
+      "repeat": true,
+      "started_utc": "2026-09-12T00:05:22.3179146Z",
+      "finished_utc": "2026-09-12T00:05:41.2453859Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    },
+    {
+      "batch": 9,
+      "repeat": true,
+      "started_utc": "2026-09-12T00:05:41.2464332Z",
+      "finished_utc": "2026-09-12T00:06:00.2179449Z",
+      "exit_code": 0,
+      "timeout": false,
+      "stderr_bytes": 0
+    }
+  ],
+  "scope": "Source geometry, layout diversity and validation only; no rendering, performance or WAN certification."
+}
