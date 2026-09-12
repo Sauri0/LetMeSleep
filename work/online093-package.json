@@ -1,0 +1,9 @@
+{
+  "tests": 10,
+  "native_run": false,
+  "zip_sha256": "E2B79CA07AD055D2C808468BEE4353F0A66BCEADFF7BED0B2C387D14228ABB73",
+  "source_commit": "ad71a6ea295f29b5a3f741f72867b788e9adf72c",
+  "version": "0.9.3",
+  "wan_verified": false,
+  "zip_bytes": 86888272
+}
