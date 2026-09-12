@@ -1,8 +1,9 @@
 {
   "schemaVersion": 1,
   "area": "UI",
-  "owner": "Revisar interfaz visual",
+  "owner": "Worker UI",
   "sourceBranch": "codex/unity-ui",
+  "openingRecipe": "ALFA-UI-OPENING-RECIPE.md",
   "sourceCommit": "5f4a381b9ba81972266623f8d139358500e4ae45",
   "currentStatus": "Captura pendiente",
   "captureRules": {
@@ -58,7 +59,7 @@
       "id": "ui-main-menu-alpha",
       "name": "Menú principal alfa",
       "category": "UI",
-      "owner": "Revisar interfaz visual",
+      "owner": "Worker UI",
       "status": "Captura pendiente",
       "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildMain",
       "externalVisualDependencies": [
@@ -121,7 +122,7 @@
       "id": "ui-online-alpha",
       "name": "Crear y unirse a sala",
       "category": "UI",
-      "owner": "Revisar interfaz visual",
+      "owner": "Worker UI",
       "status": "Captura pendiente",
       "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildOnlineChoice/BuildOnlineForm",
       "requiredCaptures": [
@@ -154,7 +155,7 @@
       "id": "ui-lobby-alpha",
       "name": "Lobby online alfa",
       "category": "UI",
-      "owner": "Revisar interfaz visual",
+      "owner": "Worker UI",
       "status": "Captura pendiente",
       "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildLobby",
       "externalVisualDependencies": [
@@ -187,16 +188,16 @@
       "id": "ui-training-alpha",
       "name": "Selección de entrenamiento",
       "category": "UI",
-      "owner": "Revisar interfaz visual",
+      "owner": "Worker UI",
       "status": "Captura pendiente",
       "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildTraining",
       "requiredCaptures": [
         {
-          "state": "PresentTraining con rol Human, IsLoading=false",
+          "state": "PresentTraining con rol Human, IsLoading=false; luego ShowTraining",
           "resolution": "1280x720"
         },
         {
-          "state": "PresentTraining con rol Mosquito, IsLoading=true",
+          "state": "PresentTraining con rol Mosquito, IsLoading=true; luego ShowTraining",
           "resolution": "1920x1080"
         }
       ],
@@ -216,7 +217,7 @@
       "id": "ui-customization-alpha",
       "name": "Personalizador alfa",
       "category": "UI",
-      "owner": "Revisar interfaz visual",
+      "owner": "Worker UI",
       "status": "Captura pendiente",
       "unityPath": [
         "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildCustomization",
@@ -275,7 +276,7 @@
       "id": "ui-settings-alpha",
       "name": "Ajustes alfa",
       "category": "UI",
-      "owner": "Revisar interfaz visual",
+      "owner": "Worker UI",
       "status": "Captura pendiente",
       "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildSettings",
       "requiredCaptures": [
@@ -304,7 +305,7 @@
       "id": "ui-hud-human-alpha",
       "name": "HUD Sangre · humano",
       "category": "UI",
-      "owner": "Revisar interfaz visual",
+      "owner": "Worker UI",
       "status": "Captura pendiente",
       "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildHud",
       "externalVisualDependencies": ["Estado autoritativo BloodHudUiState: Worker 1"],
@@ -332,7 +333,7 @@
       "id": "ui-hud-mosquito-alpha",
       "name": "HUD Sangre · mosquito",
       "category": "UI",
-      "owner": "Revisar interfaz visual",
+      "owner": "Worker UI",
       "status": "Captura pendiente",
       "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildHud",
       "externalVisualDependencies": ["Estado autoritativo BloodHudUiState: Worker 1"],
@@ -360,7 +361,7 @@
       "id": "ui-modal-results-alpha",
       "name": "Pausa, confirmaciones y resultados",
       "category": "UI",
-      "owner": "Revisar interfaz visual",
+      "owner": "Worker UI",
       "status": "Captura pendiente",
       "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildPause/BuildResults/BuildConfirm",
       "requiredCaptures": [
