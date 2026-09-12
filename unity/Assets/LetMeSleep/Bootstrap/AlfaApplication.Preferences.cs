@@ -71,7 +71,8 @@ namespace LetMeSleep.Bootstrap
         private void PresentPreferences()
         {
             ui.PresentSettings(new SettingsUiState(settings, settings, resolutions.Select(r => r.width + " × " + r.height),
-                QualitySettings.names, true, false, message: saveError));
+                QualitySettings.names, true, false, message: saveError,
+                supportsReducedMenuMotion: livingMenu && livingMenu.IsConfigured));
             ui.PresentCustomization(new CustomizationUiState(Skins, Pajamas, MosquitoColors, appearance, message: saveError));
         }
         public void ApplySettings(AlfaSettingsDraft draft)
@@ -91,6 +92,7 @@ namespace LetMeSleep.Bootstrap
         }
         private void ApplySettingsValues()
         {
+            if (livingMenu) livingMenu.SetReducedMotion(settings.ReduceMenuMotion);
             QualitySettings.SetQualityLevel(settings.QualityIndex, true);
             QualitySettings.vSyncCount = settings.VSync ? 1 : 0; Application.targetFrameRate = settings.FrameLimit == 0 ? -1 : settings.FrameLimit;
             if (resolutions.Length > 0)

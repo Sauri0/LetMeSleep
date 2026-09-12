@@ -302,14 +302,13 @@ namespace LetMeSleep.Bootstrap
             MenuCamera.transform.position = map.PlayBounds.center + new Vector3(5, 4, -6);
             MenuCamera.transform.LookAt(map.PlayBounds.center + Vector3.up);
             menuCharacters = null;
+            livingMenu = null;
             customizationBackdrop = null;
             if (!house)
             {
                 var cameraAnchor = map.PresentationAnchors.Find("MainMenuCamera");
                 if (cameraAnchor) { MenuCamera.transform.SetPositionAndRotation(cameraAnchor.position,cameraAnchor.rotation); MenuCamera.fieldOfView=55; }
-                menuCharacters = new GameObject("MenuCharacterDisplay"); menuCharacters.transform.SetParent(map.transform,false);
-                CreateMenuCharacter(HumanPrefab,"HumanMenuStage",0);
-                CreateMenuCharacter(MosquitoPrefab,"MosquitoMenuStage",1);
+                CreateLivingMenu();
             }
             if (ui) OnUiScreenChanged(ui.CurrentScreen);
         }
@@ -333,16 +332,10 @@ namespace LetMeSleep.Bootstrap
             // Restore only this map's decorative root and its prior visibility. Lobby exploration
             // may have hidden it while customization was open; never override that owner.
             if (backdrop && backdrop == menuCharacters)
+            {
                 backdrop.SetActive(customizationBackdropWasActive && !lobbyMovement);
-        }
-        private void CreateMenuCharacter(GameObject prefab,string anchorName,int motion)
-        {
-            var anchor=map.PresentationAnchors.Find(anchorName); if(!anchor) return;
-            var instance=Instantiate(prefab,anchor.position,anchor.rotation,menuCharacters.transform);
-            // Presentation scale only; gameplay and customization retain the authored scale.
-            if(prefab==MosquitoPrefab) instance.transform.localScale*=4f;
-            foreach(var collider in instance.GetComponentsInChildren<Collider>(true)) collider.enabled=false;
-            var view=instance.GetComponent<CharacterView>(); ApplyAppearance(view,appearance); view.PlayMotion(motion);
+                ApplyLiveAppearance();
+            }
         }
         private static ulong NewEpoch() { ulong value = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray(), 0); return value == 0 ? 1ul : value; }
         private void ShowOnlineError(string text) => ui.PresentOnline(new OnlineUiState(text.Contains("IncompatibleVersion") ? OnlineOperationPhase.IncompatibleVersion : OnlineOperationPhase.RecoverableError, text, canRetry: true));
