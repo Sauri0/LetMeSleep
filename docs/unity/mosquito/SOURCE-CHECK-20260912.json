@@ -1,0 +1,98 @@
+{
+  "schema": "lms-mosquito-source-check-v1",
+  "passed": true,
+  "errors": [],
+  "scope": "Python syntax, custom shell/membrane topology, bind socket constants, analytic gait reach/target phase only",
+  "bpy_executed": false,
+  "rendered": false,
+  "skin_or_fbx_verified": false,
+  "art_accepted": false,
+  "source_sha256": {
+    "author_mosquito_geometry.py": "f10c538113b5b380ffcfa3ebfceaf231268e2fc2b89c1c80319e289f0ebf6203",
+    "author_mosquito_motion.py": "4694608b235bf625a23b58a26bd0d160394ade3887df550866f7f0474497e5c4",
+    "build_mosquito_candidate.py": "c8f25c46c684762d9e8787ec2757e94a3c13007d56987dbb839211e9ea96f33a",
+    "check_mosquito_source.py": "8961004dcbdc6fd2fc06688f37d9280cb8b69fd92e73b8cf9c66b39dbc66140e",
+    "audit_mosquito_candidate.py": "25a0409fb6206340a89516abf37e9c94e328625001f62daa394fd9a0443d9f71"
+  },
+  "comparison_asset_sha256": "68225dee236e327e24ab7a501e2fe8c7f457708d2824b7b928c7d93b0adfd0c3",
+  "custom_meshes": [
+    {
+      "name": "Thorax",
+      "vertices": 50,
+      "faces": 42,
+      "errors": []
+    },
+    {
+      "name": "Head",
+      "vertices": 50,
+      "faces": 42,
+      "errors": []
+    },
+    {
+      "name": "Abdomen",
+      "vertices": 90,
+      "faces": 82,
+      "errors": []
+    },
+    {
+      "name": "Wing.1",
+      "vertices": 20,
+      "faces": 29,
+      "errors": []
+    },
+    {
+      "name": "Brow.1",
+      "vertices": 12,
+      "faces": 14,
+      "errors": []
+    },
+    {
+      "name": "Wing.-1",
+      "vertices": 20,
+      "faces": 29,
+      "errors": []
+    },
+    {
+      "name": "Brow.-1",
+      "vertices": 12,
+      "faces": 14,
+      "errors": []
+    }
+  ],
+  "leg_reach": [
+    {
+      "leg": 1,
+      "side": "L",
+      "minimum_reach_margin_source_m": 0.0055878032105169395
+    },
+    {
+      "leg": 2,
+      "side": "L",
+      "minimum_reach_margin_source_m": 0.021346244045401364
+    },
+    {
+      "leg": 3,
+      "side": "L",
+      "minimum_reach_margin_source_m": 0.007930048377040061
+    },
+    {
+      "leg": 1,
+      "side": "R",
+      "minimum_reach_margin_source_m": 0.0055878032105169395
+    },
+    {
+      "leg": 2,
+      "side": "R",
+      "minimum_reach_margin_source_m": 0.021346244045401364
+    },
+    {
+      "leg": 3,
+      "side": "R",
+      "minimum_reach_margin_source_m": 0.007930048377040061
+    }
+  ],
+  "minimum_support_targets": 3,
+  "stance_velocity_metadata_error_m_per_cycle": 4.5221583422350164e-11,
+  "surface_distance_per_cycle_unity_m": 0.019999999999999997,
+  "proboscis_descent_degrees": 44.38394009160077
+}
