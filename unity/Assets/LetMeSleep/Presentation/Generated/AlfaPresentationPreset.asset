@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24ca404b4c7545d9717ffd90b720f26, type: 3}
+  m_Name: AlfaPresentationPreset
+  m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.AlfaPresentationPreset
+  defaultTargetFrameRate: -1
+  defaultVSyncCount: 0
+  humanVerticalFov: 75
+  mosquitoVerticalFov: 68
+  humanNearPlane: 0.03
+  mosquitoNearPlane: 0.02
+  farPlane: 100
+  mosquitoDefaultDistance: 0.85
+  mosquitoMaximumDistance: 2.5
+  cameraCollisionRadius: 0.08
+  moonColor: {r: 0.663, g: 0.749, b: 0.902, a: 1}
+  moonIntensityLux: 1
+  shadowDistanceMeters: 28

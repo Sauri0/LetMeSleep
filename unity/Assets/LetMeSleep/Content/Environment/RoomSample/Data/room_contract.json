@@ -1,0 +1,898 @@
+{
+  "schema_version": 1,
+  "asset": "LMS_RoomSample_01",
+  "units": "metres",
+  "axes": "Unity +Y up, +Z forward",
+  "interior_size": [
+    4.8,
+    2.8,
+    4.4
+  ],
+  "exterior_min": [
+    -0.18,
+    -0.18,
+    -0.18
+  ],
+  "exterior_max": [
+    4.98,
+    3.0,
+    4.58
+  ],
+  "architecture": "single welded boundary of union; no internal contact faces",
+  "door": {
+    "root": "Door_01",
+    "pivot": "Door_01_Hinge",
+    "pivot_position": [
+      0.585,
+      0,
+      0.045
+    ],
+    "closed_yaw": 0,
+    "open_yaw": -100,
+    "axis": [
+      0,
+      1,
+      0
+    ],
+    "leaf_size": [
+      1.07,
+      2.185,
+      0.04
+    ],
+    "leaf_center_local": [
+      0.535,
+      1.1025,
+      0
+    ],
+    "clear_opening": {
+      "x": [
+        0.57,
+        1.67
+      ],
+      "y": [
+        0,
+        2.2
+      ],
+      "z": 0
+    },
+    "use_socket": "Socket_Door_Use",
+    "sweep_radius": 1.09,
+    "sweep_clearance_reserve": {
+      "min": [
+        0.36,
+        0,
+        0.02
+      ],
+      "max": [
+        1.69,
+        2.2,
+        1.15
+      ]
+    },
+    "collision_rule": "host checks sweep/occupancy; never close through actor; physics belongs to integration"
+  },
+  "furniture_footprints": [
+    {
+      "id": "Furniture_Bed",
+      "min": [
+        2.68,
+        2.0
+      ],
+      "max": [
+        4.32,
+        4.215
+      ]
+    },
+    {
+      "id": "Furniture_Nightstand",
+      "min": [
+        1.93,
+        3.56
+      ],
+      "max": [
+        2.52,
+        4.12
+      ]
+    },
+    {
+      "id": "Furniture_Desk",
+      "min": [
+        0.18,
+        3.63
+      ],
+      "max": [
+        1.5,
+        4.27
+      ]
+    },
+    {
+      "id": "Furniture_Chair",
+      "min": [
+        0.605,
+        2.7325
+      ],
+      "max": [
+        1.095,
+        3.225
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "entry_to_center",
+      "points": [
+        [
+          1.12,
+          0,
+          -0.4
+        ],
+        [
+          1.12,
+          0,
+          0.48
+        ],
+        [
+          1.96,
+          0,
+          1.5
+        ]
+      ]
+    },
+    {
+      "id": "bed_left",
+      "points": [
+        [
+          2.12,
+          0,
+          1.5
+        ],
+        [
+          2.12,
+          0,
+          2.55
+        ],
+        [
+          2.12,
+          0,
+          3.08
+        ]
+      ]
+    }
+  ],
+  "actor_contract": {
+    "human_radius": 0.25,
+    "human_height": 1.72,
+    "human_eye_height": 1.53,
+    "crouched_height": 1.0,
+    "mosquito_radius": 0.055,
+    "main_circulation_width": 1.8,
+    "stair_width": 1.6
+  },
+  "main_clear_area": {
+    "min": [
+      1.76,
+      0,
+      0.1
+    ],
+    "max": [
+      3.56,
+      2.8,
+      1.9
+    ]
+  },
+  "sockets": [
+    {
+      "id": "Socket_Pickup_Desk",
+      "node": "Socket_Pickup_Desk",
+      "kind": "pickup_surface",
+      "position": [
+        0.84,
+        0.795,
+        3.95
+      ],
+      "outward_normal": [
+        0,
+        0,
+        -1
+      ],
+      "standing_position": [
+        1.65,
+        0,
+        3.2
+      ],
+      "clearance_radius": 0.4,
+      "enabled_in_alpha": true
+    },
+    {
+      "id": "Socket_Pickup_Nightstand",
+      "node": "Socket_Pickup_Nightstand",
+      "kind": "pickup_surface",
+      "position": [
+        2.225,
+        0.65,
+        3.85
+      ],
+      "outward_normal": [
+        0,
+        0,
+        -1
+      ],
+      "standing_position": [
+        2.225,
+        0,
+        3.1
+      ],
+      "clearance_radius": 0.4,
+      "enabled_in_alpha": true
+    },
+    {
+      "id": "Socket_Task_Bed",
+      "node": "Socket_Task_Bed",
+      "kind": "future_task",
+      "position": [
+        2.69,
+        0.6,
+        2.55
+      ],
+      "outward_normal": [
+        -1,
+        0,
+        0
+      ],
+      "standing_position": [
+        2.2,
+        0,
+        2.55
+      ],
+      "clearance_radius": 0.4,
+      "enabled_in_alpha": false
+    }
+  ],
+  "box_colliders": [
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "Floor",
+      "center": [
+        2.4000000000000004,
+        -0.09,
+        2.2
+      ],
+      "size": [
+        5.16,
+        0.18,
+        4.76
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "Ceiling",
+      "center": [
+        2.4000000000000004,
+        2.9,
+        2.2
+      ],
+      "size": [
+        5.16,
+        0.20000000000000018,
+        4.76
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "West",
+      "center": [
+        -0.09,
+        1.4,
+        2.2
+      ],
+      "size": [
+        0.18,
+        2.8,
+        4.76
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "East",
+      "center": [
+        4.890000000000001,
+        1.4,
+        2.2
+      ],
+      "size": [
+        0.1800000000000006,
+        2.8,
+        4.76
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "SouthLeft",
+      "center": [
+        0.25,
+        1.4,
+        -0.09
+      ],
+      "size": [
+        0.5,
+        2.8,
+        0.18
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "SouthRight",
+      "center": [
+        3.27,
+        1.4,
+        -0.09
+      ],
+      "size": [
+        3.0599999999999996,
+        2.8,
+        0.18
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "DoorLintel",
+      "center": [
+        1.12,
+        2.53,
+        -0.09
+      ],
+      "size": [
+        1.24,
+        0.54,
+        0.18
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "NorthLeft",
+      "center": [
+        1.5,
+        1.4,
+        4.49
+      ],
+      "size": [
+        3.0,
+        2.8,
+        0.17999999999999972
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "NorthRight",
+      "center": [
+        4.5,
+        1.4,
+        4.49
+      ],
+      "size": [
+        0.5999999999999996,
+        2.8,
+        0.17999999999999972
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "WindowBelow",
+      "center": [
+        3.6,
+        0.575,
+        4.49
+      ],
+      "size": [
+        1.2000000000000002,
+        1.15,
+        0.17999999999999972
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "source": "WindowAbove",
+      "center": [
+        3.6,
+        2.525,
+        4.49
+      ],
+      "size": [
+        1.2000000000000002,
+        0.5499999999999998,
+        0.17999999999999972
+      ]
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "center": [
+        0.535,
+        1.1,
+        -0.08
+      ],
+      "size": [
+        0.07,
+        2.2,
+        0.2
+      ],
+      "source": "Door_Jamb_L"
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "center": [
+        1.705,
+        1.1,
+        -0.08
+      ],
+      "size": [
+        0.07,
+        2.2,
+        0.2
+      ],
+      "source": "Door_Jamb_R"
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "center": [
+        1.12,
+        2.23,
+        -0.08
+      ],
+      "size": [
+        1.24,
+        0.06,
+        0.2
+      ],
+      "source": "Door_Frame_Header"
+    },
+    {
+      "node": "Door_01_Hinge",
+      "center": [
+        0.535,
+        1.1025,
+        0
+      ],
+      "size": [
+        1.07,
+        2.185,
+        0.04
+      ],
+      "source": "Door_01_Leaf"
+    },
+    {
+      "node": "Furniture_Bed",
+      "center": [
+        0,
+        0.3,
+        0
+      ],
+      "size": [
+        1.6,
+        0.19,
+        2.2
+      ],
+      "source": "Bed_Base"
+    },
+    {
+      "node": "Furniture_Bed",
+      "center": [
+        -0.7,
+        0.115,
+        -0.99
+      ],
+      "size": [
+        0.12,
+        0.23,
+        0.12
+      ],
+      "source": "Bed_Leg"
+    },
+    {
+      "node": "Furniture_Bed",
+      "center": [
+        -0.7,
+        0.115,
+        0.99
+      ],
+      "size": [
+        0.12,
+        0.23,
+        0.12
+      ],
+      "source": "Bed_Leg"
+    },
+    {
+      "node": "Furniture_Bed",
+      "center": [
+        0.7,
+        0.115,
+        -0.99
+      ],
+      "size": [
+        0.12,
+        0.23,
+        0.12
+      ],
+      "source": "Bed_Leg"
+    },
+    {
+      "node": "Furniture_Bed",
+      "center": [
+        0.7,
+        0.115,
+        0.99
+      ],
+      "size": [
+        0.12,
+        0.23,
+        0.12
+      ],
+      "source": "Bed_Leg"
+    },
+    {
+      "node": "Furniture_Bed",
+      "center": [
+        0,
+        0.49,
+        0
+      ],
+      "size": [
+        1.5,
+        0.19,
+        2.1
+      ],
+      "source": "Bed_Mattress"
+    },
+    {
+      "node": "Furniture_Bed",
+      "center": [
+        0,
+        0.615,
+        -0.28
+      ],
+      "size": [
+        1.52,
+        0.07,
+        1.55
+      ],
+      "source": "Bed_Quilt"
+    },
+    {
+      "node": "Furniture_Bed",
+      "center": [
+        0,
+        0.74,
+        1.05
+      ],
+      "size": [
+        1.64,
+        0.72,
+        0.1
+      ],
+      "source": "Bed_Headboard"
+    },
+    {
+      "node": "Furniture_Nightstand",
+      "center": [
+        0,
+        0.325,
+        0
+      ],
+      "size": [
+        0.55,
+        0.55,
+        0.5
+      ],
+      "source": "Nightstand_Case"
+    },
+    {
+      "node": "Furniture_Nightstand",
+      "center": [
+        0,
+        0.625,
+        0
+      ],
+      "size": [
+        0.59,
+        0.05,
+        0.54
+      ],
+      "source": "Nightstand_Top"
+    },
+    {
+      "node": "Furniture_Desk",
+      "center": [
+        0,
+        0.765,
+        0
+      ],
+      "size": [
+        1.32,
+        0.06,
+        0.64
+      ],
+      "source": "Desk_Top"
+    },
+    {
+      "node": "Furniture_Desk",
+      "center": [
+        -0.56,
+        0.3675,
+        -0.24
+      ],
+      "size": [
+        0.085,
+        0.735,
+        0.085
+      ],
+      "source": "Desk_Leg"
+    },
+    {
+      "node": "Furniture_Desk",
+      "center": [
+        -0.56,
+        0.3675,
+        0.24
+      ],
+      "size": [
+        0.085,
+        0.735,
+        0.085
+      ],
+      "source": "Desk_Leg"
+    },
+    {
+      "node": "Furniture_Desk",
+      "center": [
+        0.56,
+        0.3675,
+        -0.24
+      ],
+      "size": [
+        0.085,
+        0.735,
+        0.085
+      ],
+      "source": "Desk_Leg"
+    },
+    {
+      "node": "Furniture_Desk",
+      "center": [
+        0.56,
+        0.3675,
+        0.24
+      ],
+      "size": [
+        0.085,
+        0.735,
+        0.085
+      ],
+      "source": "Desk_Leg"
+    },
+    {
+      "node": "Furniture_Desk",
+      "center": [
+        0,
+        0.63,
+        0.245
+      ],
+      "size": [
+        1.05,
+        0.12,
+        0.055
+      ],
+      "source": "Desk_Rear_Rail"
+    },
+    {
+      "node": "Furniture_Chair",
+      "center": [
+        0,
+        0.445,
+        0
+      ],
+      "size": [
+        0.49,
+        0.065,
+        0.49
+      ],
+      "source": "Chair_Seat"
+    },
+    {
+      "node": "Furniture_Chair",
+      "center": [
+        -0.19,
+        0.205,
+        -0.19
+      ],
+      "size": [
+        0.065,
+        0.41,
+        0.065
+      ],
+      "source": "Chair_Leg"
+    },
+    {
+      "node": "Furniture_Chair",
+      "center": [
+        -0.19,
+        0.205,
+        0.19
+      ],
+      "size": [
+        0.065,
+        0.41,
+        0.065
+      ],
+      "source": "Chair_Leg"
+    },
+    {
+      "node": "Furniture_Chair",
+      "center": [
+        0.19,
+        0.205,
+        -0.19
+      ],
+      "size": [
+        0.065,
+        0.41,
+        0.065
+      ],
+      "source": "Chair_Leg"
+    },
+    {
+      "node": "Furniture_Chair",
+      "center": [
+        0.19,
+        0.205,
+        0.19
+      ],
+      "size": [
+        0.065,
+        0.41,
+        0.065
+      ],
+      "source": "Chair_Leg"
+    },
+    {
+      "node": "Furniture_Chair",
+      "center": [
+        -0.19,
+        0.7,
+        -0.215
+      ],
+      "size": [
+        0.065,
+        0.5,
+        0.065
+      ],
+      "source": "Chair_Back_Post"
+    },
+    {
+      "node": "Furniture_Chair",
+      "center": [
+        0.19,
+        0.7,
+        -0.215
+      ],
+      "size": [
+        0.065,
+        0.5,
+        0.065
+      ],
+      "source": "Chair_Back_Post"
+    },
+    {
+      "node": "Furniture_Chair",
+      "center": [
+        0,
+        0.865,
+        -0.215
+      ],
+      "size": [
+        0.4,
+        0.16,
+        0.055
+      ],
+      "source": "Chair_Back"
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "center": [
+        3.025,
+        1.7,
+        4.485
+      ],
+      "size": [
+        0.05,
+        1.1,
+        0.17
+      ],
+      "source": "Window_Jamb"
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "center": [
+        4.175,
+        1.7,
+        4.485
+      ],
+      "size": [
+        0.05,
+        1.1,
+        0.17
+      ],
+      "source": "Window_Jamb"
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "center": [
+        3.6,
+        1.175,
+        4.485
+      ],
+      "size": [
+        1.1,
+        0.05,
+        0.17
+      ],
+      "source": "Window_Rail"
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "center": [
+        3.6,
+        2.225,
+        4.485
+      ],
+      "size": [
+        1.1,
+        0.05,
+        0.17
+      ],
+      "source": "Window_Rail"
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "center": [
+        3.6,
+        1.7,
+        4.49
+      ],
+      "size": [
+        1.1,
+        1.0,
+        0.018
+      ],
+      "source": "Window_Pane"
+    },
+    {
+      "node": "LMS_RoomSample_01",
+      "center": [
+        3.6,
+        1.125,
+        4.38
+      ],
+      "size": [
+        1.32,
+        0.05,
+        0.32
+      ],
+      "source": "Window_Sill"
+    }
+  ],
+  "export": {
+    "forward": "-Z",
+    "up": "Y",
+    "global_scale": 1,
+    "apply_unit_scale": true,
+    "apply_scale_options": "FBX_SCALE_UNITS",
+    "animation": false,
+    "add_leaf_bones": false
+  },
+  "limitations": [
+    "Not Unity-import validated",
+    "No engine lighting/render/playtest or WAN evidence",
+    "Controller traversal and physical door interaction require Unity integration",
+    "Pickup sockets reserve geometry only; no extra alpha inventory or Tasks gameplay"
+  ]
+}

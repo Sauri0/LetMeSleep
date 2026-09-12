@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c99f5ed2565517a94a3388834a01f67, type: 3}
+  m_Name: HumansWin
+  m_EditorClassIdentifier: LetMeSleep.Audio::LetMeSleep.Audio.AudioCue
+  cueId: HumansWin
+  clips:
+  - {fileID: 8300000, guid: 01702f4cac805b9da661e2a590422968, type: 3}
+  output: {fileID: -6938030865840934976, guid: 515402da301a4f544aa209da70d9751a, type: 2}
+  volume: 1
+  minimumPitch: 1
+  maximumPitch: 1
+  spatialBlend: 0
+  minimumDistance: 1
+  maximumDistance: 1
+  priority: 24
+  maximumSimultaneous: 1
+  loop: 0

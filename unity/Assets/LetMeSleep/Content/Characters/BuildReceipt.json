@@ -1,0 +1,801 @@
+{
+    "builder": "alpha-characters-4-bake-scale",
+    "unityVersion": "6000.3.24f1",
+    "sourceDigest": "9ade06da4ddc6fb4ba1163718298da2951ddf3222fc25f40c1fa214ec9b66452",
+    "builderDigest": "941b9c83dd53c3a70bfe2c20ff2f6dc0fff9af21611f96a2ff2a05170f53a36a",
+    "success": true,
+    "scope": "Imported assets and sampled animation structure; no playtest, visual approval or performance claim",
+    "errors": [],
+    "assets": [
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Controllers/LMS_Human.controller",
+            "guid": "e61d3cdb04dd1994cb9947643bf151c0"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Controllers/LMS_Mosquito.controller",
+            "guid": "3b269a3fe040c2547a5f982cecf763d8"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Character_Expression.mat",
+            "guid": "67ada2d5a9e9d694fae75bacf09eb5ba"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Character_EyeWhite.mat",
+            "guid": "0e789b08cb8c148479f44e7b29db1a90"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Pajamas.mat",
+            "guid": "89c74522fdbb2ad4581335d5b48ad6b1"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Piping.mat",
+            "guid": "173b87cf85b82ea4886a77373b87e9af"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Skin.mat",
+            "guid": "5b9924e791cb4014ba7287df8a4cee71"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_SlipperSole.mat",
+            "guid": "47c4034d4bc49e4468c73e8a9fee390a"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Abdomen.mat",
+            "guid": "89f1c62e682ae944aa3246bb476c5ff9"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Expression.mat",
+            "guid": "c4d3abd3272b42d4d8ebbe7fb5bcf36a"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_EyeWhite.mat",
+            "guid": "510dc11afdff26348a1acbe875d253f6"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Legs.mat",
+            "guid": "f8d6edd430080f54dada4071220e87f9"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Shell.mat",
+            "guid": "c6a938220aabe7b4586bcf9703a2bae9"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Wing.mat",
+            "guid": "967f42a7b6d7b114a801ff8a847c0b03"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Tool_Grip.mat",
+            "guid": "668a9298ab6e67a4a9cfc333be03c512"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Tool_Teal.mat",
+            "guid": "c5e7517280f82c645902d354c888ef88"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Models/LMS_Flyswatter_alpha.fbx",
+            "guid": "ad686c9c0b59f0e429e46a59d3193970"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Models/LMS_Human_alpha.fbx",
+            "guid": "2704e64a55e4cda43a3a641dfe0e917f"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Models/LMS_Mosquito_alpha.fbx",
+            "guid": "483916dd41effed479826b9930069204"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Flyswatter.prefab",
+            "guid": "87ae5d6a8c41fa2419024efcfb661d86"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human.prefab",
+            "guid": "6c4acc1f866d9014ab97e5cf102f1036"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human_FirstPerson.prefab",
+            "guid": "f6dcd4206beb90b48b3e8fc07805185a"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Mosquito.prefab",
+            "guid": "986d87b2a29f08c4d87f6d6901664a21"
+        }
+    ],
+    "validations": [
+        {
+            "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human.prefab",
+            "triangles": 11224,
+            "renderers": 5,
+            "bones": 64,
+            "clips": 15,
+            "genericAvatarValid": true,
+            "animationBindingsValid": true,
+            "sampledMeshesFinite": true,
+            "rootStationary": true,
+            "maximumLoopFootDelta": 0.00006786402082070708,
+            "motions": [
+                {
+                    "Id": 0,
+                    "StateName": "Base Layer.Idle",
+                    "ClipName": "Human_Idle",
+                    "Loop": true
+                },
+                {
+                    "Id": 1,
+                    "StateName": "Base Layer.Walk",
+                    "ClipName": "Human_Walk",
+                    "Loop": true
+                },
+                {
+                    "Id": 2,
+                    "StateName": "Base Layer.Run",
+                    "ClipName": "Human_Run",
+                    "Loop": true
+                },
+                {
+                    "Id": 3,
+                    "StateName": "Base Layer.Crouch",
+                    "ClipName": "Human_Crouch",
+                    "Loop": false
+                },
+                {
+                    "Id": 4,
+                    "StateName": "Base Layer.Jump",
+                    "ClipName": "Human_Jump",
+                    "Loop": false
+                },
+                {
+                    "Id": 5,
+                    "StateName": "Base Layer.Land",
+                    "ClipName": "Human_Land",
+                    "Loop": false
+                },
+                {
+                    "Id": 6,
+                    "StateName": "Base Layer.Turn",
+                    "ClipName": "Human_Turn",
+                    "Loop": false
+                },
+                {
+                    "Id": 7,
+                    "StateName": "Base Layer.Clap",
+                    "ClipName": "Human_Clap",
+                    "Loop": false
+                },
+                {
+                    "Id": 8,
+                    "StateName": "Base Layer.Hit",
+                    "ClipName": "Human_Hit",
+                    "Loop": false
+                },
+                {
+                    "Id": 9,
+                    "StateName": "Base Layer.Fall",
+                    "ClipName": "Human_Fall",
+                    "Loop": false
+                },
+                {
+                    "Id": 10,
+                    "StateName": "Base Layer.Faint",
+                    "ClipName": "Human_Faint",
+                    "Loop": false
+                },
+                {
+                    "Id": 11,
+                    "StateName": "Base Layer.Recover",
+                    "ClipName": "Human_Recover",
+                    "Loop": false
+                },
+                {
+                    "Id": 12,
+                    "StateName": "Base Layer.Swat",
+                    "ClipName": "Human_Swat",
+                    "Loop": false
+                },
+                {
+                    "Id": 13,
+                    "StateName": "Base Layer.Blink",
+                    "ClipName": "Human_Blink",
+                    "Loop": false
+                },
+                {
+                    "Id": 14,
+                    "StateName": "Base Layer.FingerCurl",
+                    "ClipName": "Human_FingerCurl",
+                    "Loop": false
+                }
+            ],
+            "anchors": [
+                {
+                    "name": "CameraEye",
+                    "bonePath": "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Eye",
+                    "anchorPath": "PresentationAnchors/CameraEye"
+                },
+                {
+                    "name": "AimChest",
+                    "bonePath": "LMS_HumanRig/Root/Hips/Spine/Chest/Socket.AimChest",
+                    "anchorPath": "PresentationAnchors/AimChest"
+                },
+                {
+                    "name": "HandGrip_L",
+                    "bonePath": "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Socket.Grip.L",
+                    "anchorPath": "PresentationAnchors/HandGrip_L"
+                },
+                {
+                    "name": "HandGrip_R",
+                    "bonePath": "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Socket.Grip.R",
+                    "anchorPath": "PresentationAnchors/HandGrip_R"
+                },
+                {
+                    "name": "ToolSocket_R",
+                    "bonePath": "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Socket.Grip.R",
+                    "anchorPath": "PresentationAnchors/ToolSocket_R"
+                },
+                {
+                    "name": "Foot_L",
+                    "bonePath": "LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Socket.Foot.L",
+                    "anchorPath": "PresentationAnchors/Foot_L"
+                },
+                {
+                    "name": "Foot_R",
+                    "bonePath": "LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Socket.Foot.R",
+                    "anchorPath": "PresentationAnchors/Foot_R"
+                }
+            ],
+            "bonePaths": [
+                "LMS_HumanRig/Root",
+                "LMS_HumanRig/Root/Hips",
+                "LMS_HumanRig/Root/Hips/Spine",
+                "LMS_HumanRig/Root/Hips/Spine/Chest",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Eye",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Head",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Eye.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Brow.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Eye.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Brow.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Socket.Back",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Socket.AimChest",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Socket.Grip.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Index01.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Index01.L/Index02.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Index01.L/Index02.L/Index03.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Middle01.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Middle01.L/Middle02.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Middle01.L/Middle02.L/Middle03.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Ring01.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Ring01.L/Ring02.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Ring01.L/Ring02.L/Ring03.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Little01.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Little01.L/Little02.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Little01.L/Little02.L/Little03.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Thumb01.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Thumb01.L/Thumb02.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Thumb01.L/Thumb02.L/Thumb03.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Socket.Grip.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Index01.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Index01.R/Index02.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Index01.R/Index02.R/Index03.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Middle01.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Middle01.R/Middle02.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Middle01.R/Middle02.R/Middle03.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Ring01.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Ring01.R/Ring02.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Ring01.R/Ring02.R/Ring03.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Little01.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Little01.R/Little02.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Little01.R/Little02.R/Little03.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Thumb01.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Thumb01.R/Thumb02.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Thumb01.R/Thumb02.R/Thumb03.R",
+                "LMS_HumanRig/Root/Hips/UpperLeg.L",
+                "LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L",
+                "LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L",
+                "LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Toe.L",
+                "LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Socket.Foot.L",
+                "LMS_HumanRig/Root/Hips/UpperLeg.R",
+                "LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R",
+                "LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R",
+                "LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Toe.R",
+                "LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Socket.Foot.R"
+            ],
+            "orientation": {
+                "frontPointActorLocal": {
+                    "x": -1.4861868180560123e-8,
+                    "y": 1.5299997329711915,
+                    "z": 0.16999995708465577
+                },
+                "leftPointActorLocal": {
+                    "x": -0.2499999701976776,
+                    "y": 1.1699994802474976,
+                    "z": -2.1855692367012126e-8
+                },
+                "rightPointActorLocal": {
+                    "x": 0.2499999701976776,
+                    "y": 1.1699994802474976,
+                    "z": 2.1855692367012126e-8
+                },
+                "sourceCorrectionEuler": {
+                    "x": 0.0,
+                    "y": 180.0,
+                    "z": 0.0
+                },
+                "nearestTipVertexDistance": 0.0,
+                "bakeMeshScaleCompensated": true
+            }
+        },
+        {
+            "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human_FirstPerson.prefab",
+            "triangles": 11224,
+            "renderers": 5,
+            "bones": 64,
+            "clips": 15,
+            "genericAvatarValid": true,
+            "animationBindingsValid": true,
+            "sampledMeshesFinite": true,
+            "rootStationary": true,
+            "maximumLoopFootDelta": 0.00006786402082070708,
+            "motions": [
+                {
+                    "Id": 0,
+                    "StateName": "Base Layer.Idle",
+                    "ClipName": "Human_Idle",
+                    "Loop": true
+                },
+                {
+                    "Id": 1,
+                    "StateName": "Base Layer.Walk",
+                    "ClipName": "Human_Walk",
+                    "Loop": true
+                },
+                {
+                    "Id": 2,
+                    "StateName": "Base Layer.Run",
+                    "ClipName": "Human_Run",
+                    "Loop": true
+                },
+                {
+                    "Id": 3,
+                    "StateName": "Base Layer.Crouch",
+                    "ClipName": "Human_Crouch",
+                    "Loop": false
+                },
+                {
+                    "Id": 4,
+                    "StateName": "Base Layer.Jump",
+                    "ClipName": "Human_Jump",
+                    "Loop": false
+                },
+                {
+                    "Id": 5,
+                    "StateName": "Base Layer.Land",
+                    "ClipName": "Human_Land",
+                    "Loop": false
+                },
+                {
+                    "Id": 6,
+                    "StateName": "Base Layer.Turn",
+                    "ClipName": "Human_Turn",
+                    "Loop": false
+                },
+                {
+                    "Id": 7,
+                    "StateName": "Base Layer.Clap",
+                    "ClipName": "Human_Clap",
+                    "Loop": false
+                },
+                {
+                    "Id": 8,
+                    "StateName": "Base Layer.Hit",
+                    "ClipName": "Human_Hit",
+                    "Loop": false
+                },
+                {
+                    "Id": 9,
+                    "StateName": "Base Layer.Fall",
+                    "ClipName": "Human_Fall",
+                    "Loop": false
+                },
+                {
+                    "Id": 10,
+                    "StateName": "Base Layer.Faint",
+                    "ClipName": "Human_Faint",
+                    "Loop": false
+                },
+                {
+                    "Id": 11,
+                    "StateName": "Base Layer.Recover",
+                    "ClipName": "Human_Recover",
+                    "Loop": false
+                },
+                {
+                    "Id": 12,
+                    "StateName": "Base Layer.Swat",
+                    "ClipName": "Human_Swat",
+                    "Loop": false
+                },
+                {
+                    "Id": 13,
+                    "StateName": "Base Layer.Blink",
+                    "ClipName": "Human_Blink",
+                    "Loop": false
+                },
+                {
+                    "Id": 14,
+                    "StateName": "Base Layer.FingerCurl",
+                    "ClipName": "Human_FingerCurl",
+                    "Loop": false
+                }
+            ],
+            "anchors": [
+                {
+                    "name": "CameraEye",
+                    "bonePath": "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Eye",
+                    "anchorPath": "PresentationAnchors/CameraEye"
+                },
+                {
+                    "name": "AimChest",
+                    "bonePath": "LMS_HumanRig/Root/Hips/Spine/Chest/Socket.AimChest",
+                    "anchorPath": "PresentationAnchors/AimChest"
+                },
+                {
+                    "name": "HandGrip_L",
+                    "bonePath": "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Socket.Grip.L",
+                    "anchorPath": "PresentationAnchors/HandGrip_L"
+                },
+                {
+                    "name": "HandGrip_R",
+                    "bonePath": "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Socket.Grip.R",
+                    "anchorPath": "PresentationAnchors/HandGrip_R"
+                },
+                {
+                    "name": "ToolSocket_R",
+                    "bonePath": "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Socket.Grip.R",
+                    "anchorPath": "PresentationAnchors/ToolSocket_R"
+                },
+                {
+                    "name": "Foot_L",
+                    "bonePath": "LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Socket.Foot.L",
+                    "anchorPath": "PresentationAnchors/Foot_L"
+                },
+                {
+                    "name": "Foot_R",
+                    "bonePath": "LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Socket.Foot.R",
+                    "anchorPath": "PresentationAnchors/Foot_R"
+                }
+            ],
+            "bonePaths": [
+                "LMS_HumanRig/Root",
+                "LMS_HumanRig/Root/Hips",
+                "LMS_HumanRig/Root/Hips/Spine",
+                "LMS_HumanRig/Root/Hips/Spine/Chest",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Eye",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Head",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Eye.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Brow.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Eye.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Brow.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Socket.Back",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Socket.AimChest",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Socket.Grip.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Index01.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Index01.L/Index02.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Index01.L/Index02.L/Index03.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Middle01.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Middle01.L/Middle02.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Middle01.L/Middle02.L/Middle03.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Ring01.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Ring01.L/Ring02.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Ring01.L/Ring02.L/Ring03.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Little01.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Little01.L/Little02.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Little01.L/Little02.L/Little03.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Thumb01.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Thumb01.L/Thumb02.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Thumb01.L/Thumb02.L/Thumb03.L",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Socket.Grip.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Index01.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Index01.R/Index02.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Index01.R/Index02.R/Index03.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Middle01.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Middle01.R/Middle02.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Middle01.R/Middle02.R/Middle03.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Ring01.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Ring01.R/Ring02.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Ring01.R/Ring02.R/Ring03.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Little01.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Little01.R/Little02.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Little01.R/Little02.R/Little03.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Thumb01.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Thumb01.R/Thumb02.R",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Thumb01.R/Thumb02.R/Thumb03.R",
+                "LMS_HumanRig/Root/Hips/UpperLeg.L",
+                "LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L",
+                "LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L",
+                "LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Toe.L",
+                "LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Socket.Foot.L",
+                "LMS_HumanRig/Root/Hips/UpperLeg.R",
+                "LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R",
+                "LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R",
+                "LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Toe.R",
+                "LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Socket.Foot.R"
+            ],
+            "orientation": {
+                "frontPointActorLocal": {
+                    "x": -1.4861868180560123e-8,
+                    "y": 1.5299997329711915,
+                    "z": 0.16999995708465577
+                },
+                "leftPointActorLocal": {
+                    "x": -0.2499999701976776,
+                    "y": 1.1699994802474976,
+                    "z": -2.1855692367012126e-8
+                },
+                "rightPointActorLocal": {
+                    "x": 0.2499999701976776,
+                    "y": 1.1699994802474976,
+                    "z": 2.1855692367012126e-8
+                },
+                "sourceCorrectionEuler": {
+                    "x": 0.0,
+                    "y": 180.0,
+                    "z": 0.0
+                },
+                "nearestTipVertexDistance": 0.0,
+                "bakeMeshScaleCompensated": true
+            }
+        },
+        {
+            "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Mosquito.prefab",
+            "triangles": 1736,
+            "renderers": 3,
+            "bones": 33,
+            "clips": 15,
+            "genericAvatarValid": true,
+            "animationBindingsValid": true,
+            "sampledMeshesFinite": true,
+            "rootStationary": true,
+            "maximumLoopFootDelta": 0.0,
+            "motions": [
+                {
+                    "Id": 0,
+                    "StateName": "Base Layer.Idle",
+                    "ClipName": "Mosquito_Idle",
+                    "Loop": true
+                },
+                {
+                    "Id": 1,
+                    "StateName": "Base Layer.Hover",
+                    "ClipName": "Mosquito_Hover",
+                    "Loop": true
+                },
+                {
+                    "Id": 2,
+                    "StateName": "Base Layer.Fly",
+                    "ClipName": "Mosquito_Fly",
+                    "Loop": true
+                },
+                {
+                    "Id": 3,
+                    "StateName": "Base Layer.Brake",
+                    "ClipName": "Mosquito_Brake",
+                    "Loop": false
+                },
+                {
+                    "Id": 4,
+                    "StateName": "Base Layer.PerchEnter",
+                    "ClipName": "Mosquito_PerchEnter",
+                    "Loop": false
+                },
+                {
+                    "Id": 5,
+                    "StateName": "Base Layer.PerchIdle",
+                    "ClipName": "Mosquito_PerchIdle",
+                    "Loop": true
+                },
+                {
+                    "Id": 6,
+                    "StateName": "Base Layer.SurfaceWalk",
+                    "ClipName": "Mosquito_SurfaceWalk",
+                    "Loop": true
+                },
+                {
+                    "Id": 7,
+                    "StateName": "Base Layer.BiteStart",
+                    "ClipName": "Mosquito_BiteStart",
+                    "Loop": false
+                },
+                {
+                    "Id": 8,
+                    "StateName": "Base Layer.BiteLoop",
+                    "ClipName": "Mosquito_BiteLoop",
+                    "Loop": true
+                },
+                {
+                    "Id": 9,
+                    "StateName": "Base Layer.Detach",
+                    "ClipName": "Mosquito_Detach",
+                    "Loop": false
+                },
+                {
+                    "Id": 10,
+                    "StateName": "Base Layer.Hit",
+                    "ClipName": "Mosquito_Hit",
+                    "Loop": false
+                },
+                {
+                    "Id": 11,
+                    "StateName": "Base Layer.Fall",
+                    "ClipName": "Mosquito_Fall",
+                    "Loop": false
+                },
+                {
+                    "Id": 12,
+                    "StateName": "Base Layer.Recover",
+                    "ClipName": "Mosquito_Recover",
+                    "Loop": false
+                },
+                {
+                    "Id": 13,
+                    "StateName": "Base Layer.Land",
+                    "ClipName": "Mosquito_Land",
+                    "Loop": false
+                },
+                {
+                    "Id": 14,
+                    "StateName": "Base Layer.Bite",
+                    "ClipName": "Mosquito_Bite",
+                    "Loop": false
+                }
+            ],
+            "anchors": [
+                {
+                    "name": "CameraTarget",
+                    "bonePath": "LMS_MosquitoRig/Root/Thorax/Socket.CameraTarget",
+                    "anchorPath": "PresentationAnchors/CameraTarget"
+                },
+                {
+                    "name": "AimForward",
+                    "bonePath": "LMS_MosquitoRig/Root/Thorax/Head/Socket.AimForward",
+                    "anchorPath": "PresentationAnchors/AimForward"
+                },
+                {
+                    "name": "ProboscisTip",
+                    "bonePath": "LMS_MosquitoRig/Root/Thorax/Head/Proboscis/Socket.Mouth",
+                    "anchorPath": "PresentationAnchors/ProboscisTip"
+                },
+                {
+                    "name": "WingRoot_L",
+                    "bonePath": "LMS_MosquitoRig/Root/Thorax/Socket.WingRoot.L",
+                    "anchorPath": "PresentationAnchors/WingRoot_L"
+                },
+                {
+                    "name": "WingRoot_R",
+                    "bonePath": "LMS_MosquitoRig/Root/Thorax/Socket.WingRoot.R",
+                    "anchorPath": "PresentationAnchors/WingRoot_R"
+                },
+                {
+                    "name": "GroundContact",
+                    "bonePath": "LMS_MosquitoRig/Root/Socket.GroundContact",
+                    "anchorPath": "PresentationAnchors/GroundContact"
+                }
+            ],
+            "bonePaths": [
+                "LMS_MosquitoRig/Root",
+                "LMS_MosquitoRig/Root/Thorax",
+                "LMS_MosquitoRig/Root/Thorax/Head",
+                "LMS_MosquitoRig/Root/Thorax/Head/Proboscis",
+                "LMS_MosquitoRig/Root/Thorax/Head/Proboscis/Socket.Mouth",
+                "LMS_MosquitoRig/Root/Thorax/Head/Socket.AimForward",
+                "LMS_MosquitoRig/Root/Thorax/Abdomen01",
+                "LMS_MosquitoRig/Root/Thorax/Abdomen01/Abdomen02",
+                "LMS_MosquitoRig/Root/Thorax/Socket.Back",
+                "LMS_MosquitoRig/Root/Thorax/Socket.CameraTarget",
+                "LMS_MosquitoRig/Root/Thorax/Wing.L",
+                "LMS_MosquitoRig/Root/Thorax/Socket.WingRoot.L",
+                "LMS_MosquitoRig/Root/Thorax/Leg101.L",
+                "LMS_MosquitoRig/Root/Thorax/Leg101.L/Leg102.L",
+                "LMS_MosquitoRig/Root/Thorax/Leg101.L/Leg102.L/Leg103.L",
+                "LMS_MosquitoRig/Root/Thorax/Leg201.L",
+                "LMS_MosquitoRig/Root/Thorax/Leg201.L/Leg202.L",
+                "LMS_MosquitoRig/Root/Thorax/Leg201.L/Leg202.L/Leg203.L",
+                "LMS_MosquitoRig/Root/Thorax/Leg301.L",
+                "LMS_MosquitoRig/Root/Thorax/Leg301.L/Leg302.L",
+                "LMS_MosquitoRig/Root/Thorax/Leg301.L/Leg302.L/Leg303.L",
+                "LMS_MosquitoRig/Root/Thorax/Wing.R",
+                "LMS_MosquitoRig/Root/Thorax/Socket.WingRoot.R",
+                "LMS_MosquitoRig/Root/Thorax/Leg101.R",
+                "LMS_MosquitoRig/Root/Thorax/Leg101.R/Leg102.R",
+                "LMS_MosquitoRig/Root/Thorax/Leg101.R/Leg102.R/Leg103.R",
+                "LMS_MosquitoRig/Root/Thorax/Leg201.R",
+                "LMS_MosquitoRig/Root/Thorax/Leg201.R/Leg202.R",
+                "LMS_MosquitoRig/Root/Thorax/Leg201.R/Leg202.R/Leg203.R",
+                "LMS_MosquitoRig/Root/Thorax/Leg301.R",
+                "LMS_MosquitoRig/Root/Thorax/Leg301.R/Leg302.R",
+                "LMS_MosquitoRig/Root/Thorax/Leg301.R/Leg302.R/Leg303.R",
+                "LMS_MosquitoRig/Root/Socket.GroundContact"
+            ],
+            "orientation": {
+                "frontPointActorLocal": {
+                    "x": -8.305164556077216e-9,
+                    "y": 1.4901161193847657e-8,
+                    "z": 0.09499997645616532
+                },
+                "leftPointActorLocal": {
+                    "x": -0.00850000325590372,
+                    "y": 0.013499997556209565,
+                    "z": -2.605738957939252e-9
+                },
+                "rightPointActorLocal": {
+                    "x": 0.008499997667968274,
+                    "y": 0.013500000350177288,
+                    "z": -1.1195517846118719e-9
+                },
+                "sourceCorrectionEuler": {
+                    "x": 0.0,
+                    "y": 180.0,
+                    "z": 0.0
+                },
+                "nearestTipVertexDistance": 0.0006999894976615906,
+                "bakeMeshScaleCompensated": true
+            }
+        },
+        {
+            "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Flyswatter.prefab",
+            "triangles": 844,
+            "renderers": 1,
+            "bones": 3,
+            "clips": 0,
+            "genericAvatarValid": false,
+            "animationBindingsValid": false,
+            "sampledMeshesFinite": false,
+            "rootStationary": false,
+            "maximumLoopFootDelta": 0.0,
+            "motions": [],
+            "anchors": [],
+            "bonePaths": [],
+            "orientation": {
+                "frontPointActorLocal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "leftPointActorLocal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rightPointActorLocal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "sourceCorrectionEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "nearestTipVertexDistance": 0.0,
+                "bakeMeshScaleCompensated": false
+            }
+        }
+    ]
+}

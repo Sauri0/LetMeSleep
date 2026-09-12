@@ -1,0 +1,28 @@
+{
+    "unityVersion": "6000.3.24f1",
+    "utc": "2026-09-12T10:54:38.4838815Z",
+    "houseScene": "Assets/LetMeSleep/Content/Environment/AlfaMaps/Scenes/HousePatio.unity",
+    "lobbyScene": "Assets/LetMeSleep/Content/Environment/AlfaMaps/Scenes/PrivateLobby.unity",
+    "houseContentHash": "sha256-d7bc0979bcc5ab9339c85acfc40f19c333be94101dce3485e913363ec1cfd87e",
+    "lobbyContentHash": "sha256-dd33687317664bd7119826f986c13143d73aa800562e0270a642f2b06f1d96f7",
+    "houseMeshes": 381,
+    "houseColliders": 376,
+    "doors": 9,
+    "toolPickups": 7,
+    "lobbyMeshes": 4,
+    "lobbyColliders": 6,
+    "verified": [
+        "Source bounds and explicit FBX Z conversion",
+        "Unique nonzero GameplaySurface IDs",
+        "Hinge/leaf/handle and nine GameplayDoor definitions",
+        "Seven unique flyswatter pickups with non-perchable interaction triggers",
+        "5 human / 16 mosquito / 16 lobby spawn clearances against geometry",
+        "Separate house/patio and lobby scenes; no duplicated sample shell"
+    ],
+    "pending": [
+        "Visual lighting and UV2 bake validation",
+        "Controller stair/door traversal and camera playtest",
+        "Runtime bots/pickups and online round integration",
+        "Performance measurement"
+    ]
+}

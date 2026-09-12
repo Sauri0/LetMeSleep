@@ -1,0 +1,327 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100801776169152374
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 232499778065967459}
+  - component: {fileID: 5212999706201275454}
+  - component: {fileID: 3686687793352012474}
+  - component: {fileID: 2680788730136561489}
+  - component: {fileID: 1157407171907825926}
+  - component: {fileID: 263382872719250261}
+  m_Layer: 0
+  m_Name: LMS_GameplayPresentation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &232499778065967459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100801776169152374}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3635412905172252966}
+  - {fileID: 1794006569890091037}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5212999706201275454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100801776169152374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3b052821852548385506d833653fdcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Presentation.Gameplay::LetMeSleep.Presentation.Gameplay.GameplayVisualPresenter
+  gameplay: {fileID: 0}
+  humanPrefab: {fileID: 8410320189168980418, guid: 6c4acc1f866d9014ab97e5cf102f1036, type: 3}
+  humanFirstPersonPrefab: {fileID: 697310420551830672, guid: f6dcd4206beb90b48b3e8fc07805185a, type: 3}
+  mosquitoPrefab: {fileID: 3732549400642992898, guid: 986d87b2a29f08c4d87f6d6901664a21, type: 3}
+  flyswatterPrefab: {fileID: 7216415279091773726, guid: 87ae5d6a8c41fa2419024efcfb661d86, type: 3}
+  humanCamera: {fileID: 5978716316301778491}
+  mosquitoCamera: {fileID: 2847615943199830727}
+--- !u!114 &3686687793352012474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100801776169152374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f75f243fa6d84b3ea5db01aa7c89e163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Presentation.Gameplay::LetMeSleep.Presentation.Gameplay.LobbyVisualPresenter
+  lobby: {fileID: 0}
+--- !u!114 &2680788730136561489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100801776169152374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 619a2f900cbd55aaa14752f6a40383aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Presentation.Gameplay::LetMeSleep.Presentation.Gameplay.GameplayAudioPresenter
+  gameplay: {fileID: 0}
+  audioDirector: {fileID: 0}
+--- !u!114 &1157407171907825926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100801776169152374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44e56e1bdbf2586aa6dc2ff36e05dcb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Presentation.Gameplay::LetMeSleep.Presentation.Gameplay.GameplayVfxPresenter
+  gameplay: {fileID: 0}
+  impactPrefab: {fileID: 394395082268012854, guid: c4843de431255b649a425e5c1b019aaf, type: 3}
+  poolCapacity: 8
+--- !u!114 &263382872719250261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100801776169152374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ca6e395148159cd9978ee1f9c86bdf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Presentation.Gameplay::LetMeSleep.Presentation.Gameplay.GameplayPresentationRoot
+  gameplay: {fileID: 0}
+  lobby: {fileID: 0}
+  visuals: {fileID: 5212999706201275454}
+  lobbyVisuals: {fileID: 3686687793352012474}
+  audioEvents: {fileID: 2680788730136561489}
+  vfxEvents: {fileID: 1157407171907825926}
+  audioDirector: {fileID: 3621607318760052039}
+--- !u!1 &5616793852932315424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3635412905172252966}
+  - component: {fileID: 8350342968019897898}
+  - component: {fileID: 6303527066570543928}
+  - component: {fileID: 5978716316301778491}
+  - component: {fileID: 2847615943199830727}
+  m_Layer: 0
+  m_Name: PlayerCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3635412905172252966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5616793852932315424}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 232499778065967459}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &8350342968019897898
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5616793852932315424}
+  m_Enabled: 0
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!81 &6303527066570543928
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5616793852932315424}
+  m_Enabled: 0
+--- !u!114 &5978716316301778491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5616793852932315424}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec9f7455690b5870a934518c44435a09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.HumanViewCamera
+  preset: {fileID: 11400000, guid: 905ce5e0b624f9f4b9b5b4fadc3b926d, type: 2}
+  controlledCamera: {fileID: 8350342968019897898}
+  eyeAnchor: {fileID: 0}
+  pitchPivot: {fileID: 3635412905172252966}
+  followEyePosition: 1
+--- !u!114 &2847615943199830727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5616793852932315424}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3dd89d0ad4b5bfabd017e6367104d9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.MosquitoFollowCamera
+  preset: {fileID: 11400000, guid: 905ce5e0b624f9f4b9b5b4fadc3b926d, type: 2}
+  controlledCamera: {fileID: 8350342968019897898}
+  safeAnchor: {fileID: 0}
+  pivot: {fileID: 0}
+  cameraTransform: {fileID: 3635412905172252966}
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  collisionPadding: 0.015
+  outwardDampingSeconds: 0.08
+  rotationDampingSeconds: 0.05
+--- !u!1001 &6821804921084540647
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 232499778065967459}
+    m_Modifications:
+    - target: {fileID: 1953117987558082829, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_Name
+      value: LMS_AlfaAudioRoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+--- !u!4 &1794006569890091037 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5066123068179834618, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+  m_PrefabInstance: {fileID: 6821804921084540647}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3621607318760052039 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7847913526632162208, guid: 21df21b7c50251d4fa420d1f68b165fd, type: 3}
+  m_PrefabInstance: {fileID: 6821804921084540647}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a431ee303e051bcb9e9cc8d4cce1cfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Audio::LetMeSleep.Audio.AlfaAudioDirector
