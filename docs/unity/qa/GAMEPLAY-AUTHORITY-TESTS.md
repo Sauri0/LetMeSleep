@@ -1,8 +1,8 @@
 # Suite EditMode — Gameplay Authority
 
-Estado: **29/29 PASS en arnés C# externo; ejecución Unity pendiente tras integrar Gameplay**.
+Estado: **33/33 PASS en arnés C# externo**. Los 29 casos anteriores están incluidos en una corrida oficial Unity EditMode de **51/51 PASS**; los cuatro casos nuevos de réplica requieren la próxima corrida Unity integrada.
 
-La ampliación agrega diez casos NUnit sobre `GameplayAuthority` y un `IGameplayWorld` falso controlable. El arnés externo compiló el runtime Gameplay actual de W1 junto con las 19 pruebas Core existentes y ejecutó los 29 casos. Esta comprobación detecta errores de C# y de estado puro, pero no acredita Test Runner, física, render ni red de Unity.
+La suite contiene diez casos NUnit sobre `GameplayAuthority`, cuatro sobre `ReplicaStateGate` y un `IGameplayWorld` falso controlable. El arnés externo compiló el runtime Gameplay integrado junto con las 19 pruebas Core y ejecutó los 33 casos. Esta comprobación detecta errores de C# y de estado puro, pero no acredita Test Runner, física, render ni red de Unity.
 
 Repetición desde la raíz del worktree, sin abrir Unity:
 
@@ -28,6 +28,15 @@ El script usa por defecto el `nunit.framework.dll` del PackageCache de la instal
 - Al fallar la resolución se emite `BiteEnded`, se elimina el ancla y se exige soltar antes de volver a armar.
 - La adquisición posterior ejecuta un `TryBiteContact` nuevo y recibe el conteo humano activo actualizado; el ancla anterior no se usa como objetivo futuro.
 
+## Réplica entre rondas
+
+- Tras `Reset` a ronda 2, snapshots, privados y eventos demorados de ronda 1 se rechazan aunque lleven ticks o IDs máximos.
+- Un paquete rechazado por mapa o actor incorrecto no adelanta el watermark y no bloquea el siguiente estado válido.
+- La ventana de eventos acepta reordenamiento hasta 1023 IDs, rechaza duplicados y excluye exactamente el ID ubicado 1024 posiciones atrás.
+- `Reset(null)` cierra los tres canales hasta configurar otra ronda.
+
+El arnés externo pasó los 33 casos contra el Gameplay integrado en `N:/LetMeSleep/Repository` el 12 de septiembre de 2026. La corrida oficial anterior, `ALFA-INTEGRATED-UNITY-TESTS-20260912.json`, pasó 51/51 y cubrió los 29 casos previos; no se usa como evidencia de los cuatro agregados después.
+
 ## Evidencia pendiente
 
-Después de integrar `LetMeSleep.Gameplay`, ejecutar `LetMeSleep.Tests.EditMode` en el Unity Test Runner y conservar XML/log. G10 todavía exige el manifiesto geométrico finito, mutantes y revisión física/visual definidos en Gameplay; estos tests sólo prueban que Authority consulta al mundo cada tick y no conserva una marca tras perder contacto.
+Ejecutar otra vez `LetMeSleep.Tests.EditMode` en el Unity Test Runner para incorporar los cuatro casos nuevos y conservar JSON/XML/log con fuente identificada. G10 todavía exige el manifiesto geométrico finito, mutantes y revisión física/visual definidos en Gameplay; estos tests sólo prueban que Authority consulta al mundo cada tick y no conserva una marca tras perder contacto.
