@@ -1,0 +1,30 @@
+00:00.797  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\human\LMS_Human_alpha.blend"
+N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\render_review.py:20: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.world.use_nodes=True
+00:10.438  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\human_front.png'
+00:18.469  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\human_side.png'
+00:27.594  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\human_back.png'
+00:36.891  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\human_threequarter.png'
+00:50.391  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\human_clap_contact.png'
+01:01.813  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\human_hand_open.png'
+01:13.282  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\human_hand_curl.png'
+01:13.282  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\mosquito\LMS_Mosquito_alpha.blend"
+01:20.204  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\mosquito_front.png'
+01:27.985  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\mosquito_side.png'
+01:35.266  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\mosquito_back.png'
+01:42.829  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\mosquito_threequarter.png'
+LMS_CHARACTER_REVIEW_RENDERED
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit
+00:00.719  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\mosquito\LMS_Mosquito_alpha.blend"
+N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\render_review.py:20: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.world.use_nodes=True
+00:07.672  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\mosquito_front.png'
+00:14.969  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\mosquito_side.png'
+00:21.766  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\mosquito_back.png'
+00:28.860  render           | Saved: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\review\mosquito_threequarter.png'
+LMS_CHARACTER_REVIEW_RENDERED
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

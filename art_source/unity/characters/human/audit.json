@@ -1,0 +1,258 @@
+{
+  "species": "Human",
+  "mesh_count": 5,
+  "bones": 64,
+  "triangles": 11224,
+  "vertices": 5680,
+  "unweighted_vertices": 0,
+  "bad_weight_sums": 0,
+  "degenerate_triangles": 0,
+  "nonfinite_vertices": 0,
+  "clips": [
+    {
+      "name": "Human_Idle",
+      "start": 1,
+      "end": 61,
+      "fps": 30,
+      "duration_seconds": 2.0,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "name": "Human_FingerCurl",
+      "start": 1,
+      "end": 61,
+      "fps": 30,
+      "duration_seconds": 2.0,
+      "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Blink",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Walk",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Run",
+      "start": 1,
+      "end": 21,
+      "fps": 30,
+      "duration_seconds": 0.6666666666666666,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Crouch",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Jump",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Turn",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Clap",
+      "start": 1,
+      "end": 25,
+      "fps": 30,
+      "duration_seconds": 0.8,
+      "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Fall",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": false,
+      "root_motion": false
+    }
+  ],
+  "curl": {
+    "L": {
+      "inward_displacement_m": 0.07895249873399734,
+      "angle_radians_per_joint": 0.55
+    },
+    "R": {
+      "inward_displacement_m": 0.07895249873399734,
+      "angle_radians_per_joint": 0.55
+    }
+  },
+  "contact": {
+    "clap_palm_center_distance_m": 0.05000004833561826,
+    "approximate_palm_thickness_m": 0.048,
+    "target_surface_gap_m": 0.002
+  },
+  "bounds_min": [
+    -0.9374077320098877,
+    -0.25,
+    0.0
+  ],
+  "bounds_max": [
+    0.9374076128005981,
+    0.1850000023841858,
+    1.9284138679504395
+  ],
+  "dimensions": [
+    1.8748153448104858,
+    0.4350000023841858,
+    1.9284138679504395
+  ],
+  "sockets": [
+    "Socket.Eye",
+    "Socket.Head",
+    "Socket.Back",
+    "Socket.AimChest",
+    "Socket.Grip.L",
+    "Socket.Grip.R",
+    "Socket.Foot.L",
+    "Socket.Foot.R"
+  ],
+  "renderers": [
+    {
+      "name": "HumanBody",
+      "materials": [
+        "Human_Pajamas",
+        "Human_Piping",
+        "Human_SlipperSole",
+        "Character_EyeWhite"
+      ]
+    },
+    {
+      "name": "HandSkin.L",
+      "materials": [
+        "Human_Skin"
+      ]
+    },
+    {
+      "name": "HandSkin.R",
+      "materials": [
+        "Human_Skin"
+      ]
+    },
+    {
+      "name": "HumanHead",
+      "materials": [
+        "Human_Skin",
+        "Character_EyeWhite",
+        "Character_Expression"
+      ]
+    },
+    {
+      "name": "HumanNightcap",
+      "materials": [
+        "Human_Pajamas",
+        "Human_Piping",
+        "Character_EyeWhite"
+      ]
+    }
+  ],
+  "bone_names": [
+    "Root",
+    "Hips",
+    "Spine",
+    "Chest",
+    "Neck",
+    "Head",
+    "Socket.Eye",
+    "Socket.Head",
+    "Eye.L",
+    "Brow.L",
+    "Eye.R",
+    "Brow.R",
+    "Socket.Back",
+    "Socket.AimChest",
+    "Shoulder.L",
+    "UpperArm.L",
+    "LowerArm.L",
+    "Hand.L",
+    "Socket.Grip.L",
+    "Index01.L",
+    "Index02.L",
+    "Index03.L",
+    "Middle01.L",
+    "Middle02.L",
+    "Middle03.L",
+    "Ring01.L",
+    "Ring02.L",
+    "Ring03.L",
+    "Little01.L",
+    "Little02.L",
+    "Little03.L",
+    "Thumb01.L",
+    "Thumb02.L",
+    "Thumb03.L",
+    "Shoulder.R",
+    "UpperArm.R",
+    "LowerArm.R",
+    "Hand.R",
+    "Socket.Grip.R",
+    "Index01.R",
+    "Index02.R",
+    "Index03.R",
+    "Middle01.R",
+    "Middle02.R",
+    "Middle03.R",
+    "Ring01.R",
+    "Ring02.R",
+    "Ring03.R",
+    "Little01.R",
+    "Little02.R",
+    "Little03.R",
+    "Thumb01.R",
+    "Thumb02.R",
+    "Thumb03.R",
+    "UpperLeg.L",
+    "LowerLeg.L",
+    "Foot.L",
+    "Toe.L",
+    "Socket.Foot.L",
+    "UpperLeg.R",
+    "LowerLeg.R",
+    "Foot.R",
+    "Toe.R",
+    "Socket.Foot.R"
+  ],
+  "materials": [
+    "Character_Expression",
+    "Character_EyeWhite",
+    "Human_Pajamas",
+    "Human_Piping",
+    "Human_Skin",
+    "Human_SlipperSole"
+  ],
+  "passed": true,
+  "errors": []
+}

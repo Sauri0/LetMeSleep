@@ -1,0 +1,153 @@
+{
+  "species": "Mosquito",
+  "mesh_count": 3,
+  "bones": 33,
+  "triangles": 1736,
+  "vertices": 940,
+  "unweighted_vertices": 0,
+  "bad_weight_sums": 0,
+  "degenerate_triangles": 0,
+  "nonfinite_vertices": 0,
+  "clips": [
+    {
+      "name": "Mosquito_Idle",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "name": "Mosquito_Fly",
+      "start": 1,
+      "end": 13,
+      "fps": 30,
+      "duration_seconds": 0.4,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "name": "Mosquito_Land",
+      "start": 1,
+      "end": 25,
+      "fps": 30,
+      "duration_seconds": 0.8,
+      "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Mosquito_Bite",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Mosquito_Hit",
+      "start": 1,
+      "end": 25,
+      "fps": 30,
+      "duration_seconds": 0.8,
+      "loop": false,
+      "root_motion": false
+    }
+  ],
+  "curl": {},
+  "contact": {},
+  "bounds_min": [
+    -0.24034053087234497,
+    -0.23029100894927979,
+    -0.10239865630865097
+  ],
+  "bounds_max": [
+    0.24034053087234497,
+    0.19154348969459534,
+    0.06949436664581299
+  ],
+  "dimensions": [
+    0.48068106174468994,
+    0.4218344986438751,
+    0.17189302295446396
+  ],
+  "sockets": [
+    "Socket.Mouth",
+    "Socket.AimForward",
+    "Socket.Back",
+    "Socket.CameraTarget",
+    "Socket.WingRoot.L",
+    "Socket.WingRoot.R",
+    "Socket.GroundContact"
+  ],
+  "renderers": [
+    {
+      "name": "MosquitoSkin",
+      "materials": [
+        "Mosquito_Shell",
+        "Mosquito_Abdomen",
+        "Mosquito_Legs",
+        "Mosquito_EyeWhite",
+        "Mosquito_Expression"
+      ]
+    },
+    {
+      "name": "MosquitoMembranes",
+      "materials": [
+        "Mosquito_Wing"
+      ]
+    },
+    {
+      "name": "MosquitoVeins",
+      "materials": [
+        "Mosquito_Shell"
+      ]
+    }
+  ],
+  "bone_names": [
+    "Root",
+    "Thorax",
+    "Head",
+    "Proboscis",
+    "Socket.Mouth",
+    "Socket.AimForward",
+    "Abdomen01",
+    "Abdomen02",
+    "Socket.Back",
+    "Socket.CameraTarget",
+    "Wing.L",
+    "Socket.WingRoot.L",
+    "Leg101.L",
+    "Leg102.L",
+    "Leg103.L",
+    "Leg201.L",
+    "Leg202.L",
+    "Leg203.L",
+    "Leg301.L",
+    "Leg302.L",
+    "Leg303.L",
+    "Wing.R",
+    "Socket.WingRoot.R",
+    "Leg101.R",
+    "Leg102.R",
+    "Leg103.R",
+    "Leg201.R",
+    "Leg202.R",
+    "Leg203.R",
+    "Leg301.R",
+    "Leg302.R",
+    "Leg303.R",
+    "Socket.GroundContact"
+  ],
+  "materials": [
+    "Mosquito_Abdomen",
+    "Mosquito_Expression",
+    "Mosquito_EyeWhite",
+    "Mosquito_Legs",
+    "Mosquito_Shell",
+    "Mosquito_Wing"
+  ],
+  "passed": true,
+  "errors": []
+}

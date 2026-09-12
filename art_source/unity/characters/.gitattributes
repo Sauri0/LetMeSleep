@@ -1,0 +1,3 @@
+# Preserve exact source/audit bytes recorded in manifest across Windows checkouts.
+*.py text eol=lf
+*.json text eol=lf

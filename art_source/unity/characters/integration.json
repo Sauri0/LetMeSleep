@@ -1,0 +1,55 @@
+{
+  "version": "0.9.4-alpha-character-sample-1",
+  "status": "source_sample_ready_for_unity_import",
+  "human": {
+    "source_rig": "LMS_HumanRig",
+    "unity_visual_scale": 1,
+    "avatar_verified": false,
+    "recommended_initial_import": "Generic until explicit Humanoid mapping is validated",
+    "anchors_to_unique_source_bones": {
+      "CameraEye": "Socket.Eye",
+      "AimChest": "Socket.AimChest",
+      "HandGrip_L": "Socket.Grip.L",
+      "HandGrip_R": "Socket.Grip.R",
+      "ToolSocket_R": "Socket.Grip.R",
+      "Foot_L": "Socket.Foot.L",
+      "Foot_R": "Socket.Foot.R"
+    },
+    "first_person_hidden_renderers": ["HumanHead", "HumanNightcap"],
+    "first_person_visible_renderers": ["HumanBody", "HandSkin.L", "HandSkin.R"],
+    "missing_presentation_clips": ["Land", "Hit", "Faint", "Recover"],
+    "lods_available": [0],
+    "tool_mesh_included": false
+  },
+  "mosquito": {
+    "source_rig": "LMS_MosquitoRig",
+    "unity_visual_scale": 0.5,
+    "collision_radius_m": 0.055,
+    "recommended_initial_import": "Generic",
+    "anchors_to_unique_source_bones": {
+      "CameraTarget": "Socket.CameraTarget",
+      "AimForward": "Socket.AimForward",
+      "ProboscisTip": "Socket.Mouth",
+      "WingRoot_L": "Socket.WingRoot.L",
+      "WingRoot_R": "Socket.WingRoot.R",
+      "GroundContact": "Socket.GroundContact"
+    },
+    "renderers": ["MosquitoSkin", "MosquitoMembranes", "MosquitoVeins"],
+    "source_root_to_ground_m": 0.1024,
+    "unity_root_to_ground_m": 0.0512,
+    "missing_presentation_clips": ["Hover", "Brake", "PerchEnter", "PerchIdle", "SurfaceWalk", "BiteStart", "BiteLoop", "Detach", "Fall", "Recover"],
+    "clip_mapping_notes": "Idle, Land and Bite are initial authored actions, not silent aliases for the missing Presentation states.",
+    "lods_available": [0]
+  },
+  "unity_material_setup": {
+    "opaque": "URP Lit; use stable source material names and base colors",
+    "Mosquito_Wing": "URP Lit Transparent; alpha 0.72; roughness 0.4; membrane already has two physical sides"
+  },
+  "integration_gate": [
+    "Check Y-up, Z-forward and meter dimensions in Unity",
+    "Validate Humanoid mapping or retain Generic explicitly",
+    "Create PresentationAnchors using source-bone mappings and Unity-facing rotations",
+    "Configure importer animation names, ranges and loops from audit.json",
+    "Check body/head hiding, feet, palm contact, wing sorting and wall/ceiling perching in game"
+  ]
+}

@@ -1,0 +1,64 @@
+[
+  {
+    "species": "Human",
+    "dimensions": [
+      1.8748153448104858,
+      0.4350002408027649,
+      1.9284138840795872
+    ],
+    "triangles": 11224,
+    "bones": 64,
+    "actions": [
+      "LMS_HumanRig|LMS_HumanRig|Human_Blink",
+      "LMS_HumanRig|LMS_HumanRig|Human_Clap",
+      "LMS_HumanRig|LMS_HumanRig|Human_Crouch",
+      "LMS_HumanRig|LMS_HumanRig|Human_Fall",
+      "LMS_HumanRig|LMS_HumanRig|Human_FingerCurl",
+      "LMS_HumanRig|LMS_HumanRig|Human_Idle",
+      "LMS_HumanRig|LMS_HumanRig|Human_Jump",
+      "LMS_HumanRig|LMS_HumanRig|Human_Run",
+      "LMS_HumanRig|LMS_HumanRig|Human_Turn",
+      "LMS_HumanRig|LMS_HumanRig|Human_Walk"
+    ],
+    "sockets": [
+      "Socket.Eye",
+      "Socket.Head",
+      "Socket.Back",
+      "Socket.AimChest",
+      "Socket.Grip.L",
+      "Socket.Grip.R",
+      "Socket.Foot.L",
+      "Socket.Foot.R"
+    ],
+    "errors": [],
+    "passed": true
+  },
+  {
+    "species": "Mosquito",
+    "dimensions": [
+      0.48068106174468994,
+      0.42183448374271393,
+      0.17189303040504456
+    ],
+    "triangles": 1736,
+    "bones": 33,
+    "actions": [
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Bite",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Fly",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Hit",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Idle",
+      "LMS_MosquitoRig|LMS_MosquitoRig|Mosquito_Land"
+    ],
+    "sockets": [
+      "Socket.Mouth",
+      "Socket.AimForward",
+      "Socket.Back",
+      "Socket.CameraTarget",
+      "Socket.WingRoot.L",
+      "Socket.WingRoot.R",
+      "Socket.GroundContact"
+    ],
+    "errors": [],
+    "passed": true
+  }
+]

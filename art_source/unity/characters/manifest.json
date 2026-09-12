@@ -1,0 +1,544 @@
+{
+  "version": "0.9.4-alpha-character-sample-1",
+  "generator": "build_characters.py",
+  "blender": "5.2.1 LTS",
+  "source_units": "meters",
+  "source_up": "+Z",
+  "source_forward": "-Y",
+  "fbx_axis_forward": "-Z",
+  "fbx_axis_up": "Y",
+  "unity_human_scale": 1,
+  "unity_mosquito_scale": 0.5,
+  "mosquito_collision_radius_m": 0.055,
+  "human_capsule": {
+    "radius": 0.25,
+    "height": 1.72,
+    "crouched_height": 1.0
+  },
+  "provenance": "Original authored geometry and materials for Let me sleep. User reference images guide shapes only; no external textures.",
+  "rendered": true,
+  "unity_import_verified": false,
+  "audits": [
+    {
+      "species": "Human",
+      "mesh_count": 5,
+      "bones": 64,
+      "triangles": 11224,
+      "vertices": 5680,
+      "unweighted_vertices": 0,
+      "bad_weight_sums": 0,
+      "degenerate_triangles": 0,
+      "nonfinite_vertices": 0,
+      "clips": [
+        {
+          "name": "Human_Idle",
+          "start": 1,
+          "end": 61,
+          "fps": 30,
+          "duration_seconds": 2.0,
+          "loop": true,
+          "root_motion": false
+        },
+        {
+          "name": "Human_FingerCurl",
+          "start": 1,
+          "end": 61,
+          "fps": 30,
+          "duration_seconds": 2.0,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Blink",
+          "start": 1,
+          "end": 31,
+          "fps": 30,
+          "duration_seconds": 1.0,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Walk",
+          "start": 1,
+          "end": 31,
+          "fps": 30,
+          "duration_seconds": 1.0,
+          "loop": true,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Run",
+          "start": 1,
+          "end": 21,
+          "fps": 30,
+          "duration_seconds": 0.6666666666666666,
+          "loop": true,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Crouch",
+          "start": 1,
+          "end": 31,
+          "fps": 30,
+          "duration_seconds": 1.0,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Jump",
+          "start": 1,
+          "end": 31,
+          "fps": 30,
+          "duration_seconds": 1.0,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Turn",
+          "start": 1,
+          "end": 31,
+          "fps": 30,
+          "duration_seconds": 1.0,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Clap",
+          "start": 1,
+          "end": 25,
+          "fps": 30,
+          "duration_seconds": 0.8,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Fall",
+          "start": 1,
+          "end": 31,
+          "fps": 30,
+          "duration_seconds": 1.0,
+          "loop": false,
+          "root_motion": false
+        }
+      ],
+      "curl": {
+        "L": {
+          "inward_displacement_m": 0.07895249873399734,
+          "angle_radians_per_joint": 0.55
+        },
+        "R": {
+          "inward_displacement_m": 0.07895249873399734,
+          "angle_radians_per_joint": 0.55
+        }
+      },
+      "contact": {
+        "clap_palm_center_distance_m": 0.05000004833561826,
+        "approximate_palm_thickness_m": 0.048,
+        "target_surface_gap_m": 0.002
+      },
+      "bounds_min": [
+        -0.9374077320098877,
+        -0.25,
+        0.0
+      ],
+      "bounds_max": [
+        0.9374076128005981,
+        0.1850000023841858,
+        1.9284138679504395
+      ],
+      "dimensions": [
+        1.8748153448104858,
+        0.4350000023841858,
+        1.9284138679504395
+      ],
+      "sockets": [
+        "Socket.Eye",
+        "Socket.Head",
+        "Socket.Back",
+        "Socket.AimChest",
+        "Socket.Grip.L",
+        "Socket.Grip.R",
+        "Socket.Foot.L",
+        "Socket.Foot.R"
+      ],
+      "renderers": [
+        {
+          "name": "HumanBody",
+          "materials": [
+            "Human_Pajamas",
+            "Human_Piping",
+            "Human_SlipperSole",
+            "Character_EyeWhite"
+          ]
+        },
+        {
+          "name": "HandSkin.L",
+          "materials": [
+            "Human_Skin"
+          ]
+        },
+        {
+          "name": "HandSkin.R",
+          "materials": [
+            "Human_Skin"
+          ]
+        },
+        {
+          "name": "HumanHead",
+          "materials": [
+            "Human_Skin",
+            "Character_EyeWhite",
+            "Character_Expression"
+          ]
+        },
+        {
+          "name": "HumanNightcap",
+          "materials": [
+            "Human_Pajamas",
+            "Human_Piping",
+            "Character_EyeWhite"
+          ]
+        }
+      ],
+      "bone_names": [
+        "Root",
+        "Hips",
+        "Spine",
+        "Chest",
+        "Neck",
+        "Head",
+        "Socket.Eye",
+        "Socket.Head",
+        "Eye.L",
+        "Brow.L",
+        "Eye.R",
+        "Brow.R",
+        "Socket.Back",
+        "Socket.AimChest",
+        "Shoulder.L",
+        "UpperArm.L",
+        "LowerArm.L",
+        "Hand.L",
+        "Socket.Grip.L",
+        "Index01.L",
+        "Index02.L",
+        "Index03.L",
+        "Middle01.L",
+        "Middle02.L",
+        "Middle03.L",
+        "Ring01.L",
+        "Ring02.L",
+        "Ring03.L",
+        "Little01.L",
+        "Little02.L",
+        "Little03.L",
+        "Thumb01.L",
+        "Thumb02.L",
+        "Thumb03.L",
+        "Shoulder.R",
+        "UpperArm.R",
+        "LowerArm.R",
+        "Hand.R",
+        "Socket.Grip.R",
+        "Index01.R",
+        "Index02.R",
+        "Index03.R",
+        "Middle01.R",
+        "Middle02.R",
+        "Middle03.R",
+        "Ring01.R",
+        "Ring02.R",
+        "Ring03.R",
+        "Little01.R",
+        "Little02.R",
+        "Little03.R",
+        "Thumb01.R",
+        "Thumb02.R",
+        "Thumb03.R",
+        "UpperLeg.L",
+        "LowerLeg.L",
+        "Foot.L",
+        "Toe.L",
+        "Socket.Foot.L",
+        "UpperLeg.R",
+        "LowerLeg.R",
+        "Foot.R",
+        "Toe.R",
+        "Socket.Foot.R"
+      ],
+      "materials": [
+        "Character_Expression",
+        "Character_EyeWhite",
+        "Human_Pajamas",
+        "Human_Piping",
+        "Human_Skin",
+        "Human_SlipperSole"
+      ],
+      "passed": true,
+      "errors": []
+    },
+    {
+      "species": "Mosquito",
+      "mesh_count": 3,
+      "bones": 33,
+      "triangles": 1736,
+      "vertices": 940,
+      "unweighted_vertices": 0,
+      "bad_weight_sums": 0,
+      "degenerate_triangles": 0,
+      "nonfinite_vertices": 0,
+      "clips": [
+        {
+          "name": "Mosquito_Idle",
+          "start": 1,
+          "end": 31,
+          "fps": 30,
+          "duration_seconds": 1.0,
+          "loop": true,
+          "root_motion": false
+        },
+        {
+          "name": "Mosquito_Fly",
+          "start": 1,
+          "end": 13,
+          "fps": 30,
+          "duration_seconds": 0.4,
+          "loop": true,
+          "root_motion": false
+        },
+        {
+          "name": "Mosquito_Land",
+          "start": 1,
+          "end": 25,
+          "fps": 30,
+          "duration_seconds": 0.8,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Mosquito_Bite",
+          "start": 1,
+          "end": 31,
+          "fps": 30,
+          "duration_seconds": 1.0,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Mosquito_Hit",
+          "start": 1,
+          "end": 25,
+          "fps": 30,
+          "duration_seconds": 0.8,
+          "loop": false,
+          "root_motion": false
+        }
+      ],
+      "curl": {},
+      "contact": {},
+      "bounds_min": [
+        -0.24034053087234497,
+        -0.23029100894927979,
+        -0.10239865630865097
+      ],
+      "bounds_max": [
+        0.24034053087234497,
+        0.19154348969459534,
+        0.06949436664581299
+      ],
+      "dimensions": [
+        0.48068106174468994,
+        0.4218344986438751,
+        0.17189302295446396
+      ],
+      "sockets": [
+        "Socket.Mouth",
+        "Socket.AimForward",
+        "Socket.Back",
+        "Socket.CameraTarget",
+        "Socket.WingRoot.L",
+        "Socket.WingRoot.R",
+        "Socket.GroundContact"
+      ],
+      "renderers": [
+        {
+          "name": "MosquitoSkin",
+          "materials": [
+            "Mosquito_Shell",
+            "Mosquito_Abdomen",
+            "Mosquito_Legs",
+            "Mosquito_EyeWhite",
+            "Mosquito_Expression"
+          ]
+        },
+        {
+          "name": "MosquitoMembranes",
+          "materials": [
+            "Mosquito_Wing"
+          ]
+        },
+        {
+          "name": "MosquitoVeins",
+          "materials": [
+            "Mosquito_Shell"
+          ]
+        }
+      ],
+      "bone_names": [
+        "Root",
+        "Thorax",
+        "Head",
+        "Proboscis",
+        "Socket.Mouth",
+        "Socket.AimForward",
+        "Abdomen01",
+        "Abdomen02",
+        "Socket.Back",
+        "Socket.CameraTarget",
+        "Wing.L",
+        "Socket.WingRoot.L",
+        "Leg101.L",
+        "Leg102.L",
+        "Leg103.L",
+        "Leg201.L",
+        "Leg202.L",
+        "Leg203.L",
+        "Leg301.L",
+        "Leg302.L",
+        "Leg303.L",
+        "Wing.R",
+        "Socket.WingRoot.R",
+        "Leg101.R",
+        "Leg102.R",
+        "Leg103.R",
+        "Leg201.R",
+        "Leg202.R",
+        "Leg203.R",
+        "Leg301.R",
+        "Leg302.R",
+        "Leg303.R",
+        "Socket.GroundContact"
+      ],
+      "materials": [
+        "Mosquito_Abdomen",
+        "Mosquito_Expression",
+        "Mosquito_EyeWhite",
+        "Mosquito_Legs",
+        "Mosquito_Shell",
+        "Mosquito_Wing"
+      ],
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "files": {
+    "build_characters.py": {
+      "sha256": "7c9ae76f5b997f2e857e6bd80a637e436faa46575fbed0b6fd0a3a4483d1e338",
+      "bytes": 29884
+    },
+    "fbx_roundtrip.json": {
+      "sha256": "f15d0748d0dbdbb993e1dbf1fc2ee1b280be345b5a803c0a6fed8e8c8933b73a",
+      "bytes": 1632
+    },
+    "human/audit.json": {
+      "sha256": "c84f11d3d0fd83f07bd8a9a2572a06026bb1c0ec8e1b64998ab89f030f489a2d",
+      "bytes": 4753
+    },
+    "human/LMS_Human_alpha.blend": {
+      "sha256": "84b5fcd6bd6387b478551c31ff89eebb865d196ef475889a98c25c37bfa2bb97",
+      "bytes": 551568
+    },
+    "human/LMS_Human_alpha.fbx": {
+      "sha256": "6a239bd85fb67856d9a68f96d133425e42b674c070aeac0ee9074ceab6b116d6",
+      "bytes": 5633884
+    },
+    "integration.json": {
+      "sha256": "5b3376d7bab5dce1159ed46d8b14ca1d410e9727681e9db3e80416b623177609",
+      "bytes": 2435
+    },
+    "mosquito/audit.json": {
+      "sha256": "7059a2c7d85af6b04262bc67b8bdd6c1b7b0e9b9b749c5ee6094d614925cd2d7",
+      "bytes": 2830
+    },
+    "mosquito/LMS_Mosquito_alpha.blend": {
+      "sha256": "e7593da0fc8154b54fd841c525ee1b7679c66149d3c09e1d64559e9e78afb0af",
+      "bytes": 182749
+    },
+    "mosquito/LMS_Mosquito_alpha.fbx": {
+      "sha256": "0a96b41fe8e7c382a1e1eebb574f87887cba43b188965a4e7fa4c39bffb86e28",
+      "bytes": 1380316
+    },
+    "render_review.py": {
+      "sha256": "b7fcc64b091bb2daff37a3d22ab960f6c76868e66db280417b8b32e5f78cd59c",
+      "bytes": 3233
+    },
+    "review/human_back.png": {
+      "sha256": "693becbf37d4cc58ce460ce0b2ef50bed84f4eb1525cb6d51a66cc8c4beb5792",
+      "bytes": 702675
+    },
+    "review/human_clap_contact.png": {
+      "sha256": "422d5b3b9743bde0e0458f73e68afdff77840d5f2d0709723227ada7dbc45fef",
+      "bytes": 738273
+    },
+    "review/human_front.png": {
+      "sha256": "b37b03a462afee3512acfec6930585fc5491eae1ca28de1458d370f2cd361106",
+      "bytes": 715516
+    },
+    "review/human_hand_curl.png": {
+      "sha256": "b2dc02c5a18691c13e9db67e8e26b5dc0f1f84bcdac27f601320d7459a42675b",
+      "bytes": 699478
+    },
+    "review/human_hand_open.png": {
+      "sha256": "9208d22f47bca65df0cd816f55e3e77c7af2f2d84886cde273bbfc1fad469ed3",
+      "bytes": 702922
+    },
+    "review/human_side.png": {
+      "sha256": "4049d64c52bfef69b9fe832c09fdcc774eb9eaa8fd891661a3090348abb8b634",
+      "bytes": 677708
+    },
+    "review/human_threequarter.png": {
+      "sha256": "ba96949f188bd001edf3d6a6bf343bd9cd944ad2f7069f9d82e5b54690d735c4",
+      "bytes": 718441
+    },
+    "review/mosquito_back.png": {
+      "sha256": "fbbe9be0004af1837d8b3c539681688f09b6dbd6ab0c4afcb42c9bf6b2e88d2f",
+      "bytes": 671950
+    },
+    "review/mosquito_front.png": {
+      "sha256": "8229adf0662315201b3632e8ee5ef2c57e4b4179141430ca004d95c0410f570c",
+      "bytes": 670217
+    },
+    "review/mosquito_side.png": {
+      "sha256": "ed738b402972652e8cb1f3b38bc408f5206e0ef99010e2529734dc6450c413be",
+      "bytes": 676958
+    },
+    "review/mosquito_threequarter.png": {
+      "sha256": "63647ef63d0ab762843ac121265470ecf29c13576f4b41c1453970e08b25d0e8",
+      "bytes": 682488
+    },
+    "seal_manifest.py": {
+      "sha256": "89801c584136094910aa9666ee591a48c5b09f0f8017f3888d531c671a0ef59c",
+      "bytes": 1887
+    },
+    "verify_fbx.py": {
+      "sha256": "bd4bb09eb0d0923d8273b4c08e43c27423f40685943fdd02a08125bd8c8535dd",
+      "bytes": 2234
+    }
+  },
+  "review_renderer": {
+    "engine": "Cycles",
+    "device": "CPU",
+    "threads": 2,
+    "samples": 24,
+    "resolution": [
+      720,
+      900
+    ]
+  },
+  "fbx_roundtrip_verified": true,
+  "reference_images": {
+    "work/references094/expanded/human-turnarounds.png": "23c18de0216b50d2a23c7c924e6453104f996c629ffd1db33f67c44a098e4e01",
+    "work/references094/expanded/mosquito-turnarounds.png": "7babf3d0efca4d1eabd99add8eca896e8ad1eb4b54994725e939249a27e75d51",
+    "work/references094/characters.png": "559c22c57a211f7ad90646e2041588f4e293a9bc79ce5f9a46b73347c1d02437"
+  }
+}
