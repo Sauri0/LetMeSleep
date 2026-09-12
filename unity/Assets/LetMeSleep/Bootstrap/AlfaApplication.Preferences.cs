@@ -10,13 +10,14 @@ namespace LetMeSleep.Bootstrap
     public sealed partial class AlfaApplication
     {
         [Serializable] private sealed class Preferences
-        { public int schema = 1; public string playerName; public AlfaSettingsDraft settings; public BasicCustomizationDraft appearance; }
+        { public int schema; public string playerName; public AlfaSettingsDraft settings; public BasicCustomizationDraft appearance; }
         private AlfaSettingsDraft settings = new AlfaSettingsDraft { MasterVolume = .8f, MusicVolume = .5f, EffectsVolume = .85f,
             HumanSensitivity = 1f, MosquitoSensitivity = 1f, FullScreen = true, VSync = false, FrameLimit = 0 };
         private BasicCustomizationDraft appearance = new BasicCustomizationDraft(AlfaRole.Human, "warm", "blue", "red");
         private BasicCustomizationDraft previewAppearance;
         private GameObject previousPreview;
         private Resolution[] resolutions;
+        private PreferenceFileStore preferenceStore;
         private static readonly NamedColorOption[] Skins = {
             new NamedColorOption("light", "Claro", new Color(.91f,.7f,.5f)), new NamedColorOption("warm", "Cálido", new Color(.72f,.4f,.25f)),
             new NamedColorOption("tan", "Bronce", new Color(.54f,.29f,.16f)), new NamedColorOption("dark", "Oscuro", new Color(.27f,.12f,.07f)) };
@@ -34,10 +35,12 @@ namespace LetMeSleep.Bootstrap
             settings.ResolutionIndex = Math.Max(0, Array.FindIndex(resolutions, r => r.width == Screen.currentResolution.width && r.height == Screen.currentResolution.height));
             try
             {
-                string path = Path.Combine(DataPath, "preferences.json");
-                if (!File.Exists(path) || new FileInfo(path).Length > 16384) return;
-                var data = JsonUtility.FromJson<Preferences>(File.ReadAllText(path));
-                if (data?.schema != 1) return;
+                preferenceStore = new PreferenceFileStore(Path.Combine(DataPath, "preferences.json"), ClassifyPreferences);
+                string json = preferenceStore.Load();
+                if (preferenceStore.WriteBlocked) saveError = "Los ajustes son de otra versión. Se conservaron sin modificar.";
+                else if (preferenceStore.RecoveredFromBackup) saveError = "Se recuperaron los ajustes de la copia de respaldo.";
+                if (json == null) return;
+                var data = JsonUtility.FromJson<Preferences>(json);
                 if (data.settings != null) settings = Sanitize(data.settings);
                 if (ValidAppearance(data.appearance)) appearance = data.appearance;
                 if (!string.IsNullOrWhiteSpace(data.playerName) && data.playerName.Length <= 24) playerName = data.playerName;
@@ -45,12 +48,22 @@ namespace LetMeSleep.Bootstrap
             catch (Exception e) when (e is IOException || e is ArgumentException || e is UnauthorizedAccessException) { Debug.LogWarning("Preferences could not be loaded; using defaults."); }
         }
         private string saveError = "";
+        private static PreferenceDocumentKind ClassifyPreferences(string json)
+        {
+            try
+            {
+                var data = JsonUtility.FromJson<Preferences>(json);
+                if (data == null || data.schema < 1) return PreferenceDocumentKind.Invalid;
+                return data.schema == 1 ? PreferenceDocumentKind.Current : PreferenceDocumentKind.UnsupportedVersion;
+            }
+            catch (ArgumentException) { return PreferenceDocumentKind.Invalid; }
+        }
         private bool SavePreferences()
         {
             try {
-            string path = Path.Combine(DataPath, "preferences.json"), temp = path + ".tmp";
-            File.WriteAllText(temp, JsonUtility.ToJson(new Preferences { playerName = playerName, settings = settings, appearance = appearance }, true));
-            if (File.Exists(path)) File.Replace(temp, path, path + ".backup"); else File.Move(temp, path);
+            if (preferenceStore == null) preferenceStore = new PreferenceFileStore(Path.Combine(DataPath, "preferences.json"), ClassifyPreferences);
+            if (preferenceStore.WriteBlocked) { saveError = "Los ajustes son de otra versión. Se conservaron sin modificar."; return false; }
+            preferenceStore.Save(JsonUtility.ToJson(new Preferences { schema = 1, playerName = playerName, settings = settings, appearance = appearance }, true));
             saveError = ""; return true;
             } catch (Exception e) when (e is IOException || e is UnauthorizedAccessException) { saveError = "No se pudo guardar. Revisá el acceso a la carpeta y volvé a intentar."; return false; }
         }
