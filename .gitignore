@@ -39,3 +39,4 @@ native/voice/b/
 native/voice/logs/
 native/voice/extension/smoke/.godot/
 native/voice/extension/smoke/bin/
+/unity/Assets/StreamingAssets/online.local.json.meta
