@@ -12,6 +12,7 @@ def main():
     parser.add_argument('--repository', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--inventory', type=Path, required=True)
+    parser.add_argument('--evidence', type=Path, action='append', default=[])
     args = parser.parse_args()
     inventory = json.loads(args.inventory.read_text(encoding='utf-8-sig'))
     assets = inventory['assets']
@@ -22,23 +23,40 @@ def main():
     args.output.mkdir(parents=True, exist_ok=True)
     media = args.output / 'media'
     media.mkdir(exist_ok=True)
-    # These are deliberately historical, failed reviews, not approved asset sheets.
-    review_dir = args.output.parent / 'Alfa-VisualRecovery'
-    evidence = [
-        ('ui-menu-review', 'Menú principal · captura real 1080p', 'menu-1080.png',
-         ['Personaje y mosquito demasiado oscuros.', 'Faroles sobreexpuestos.', 'Fondo del lobby vacío; corrección en curso.']),
-        ('ui-customization-review', 'Personalizador · captura real 720p', 'customization-720.png',
-         ['Proporción del visor por corregir.', 'Etiqueta Centrar truncada.', 'Icono de cabecera sin forma legible.']),
-    ]
-    for asset_id, name, filename, issues in evidence:
-        source = review_dir / filename
-        if source.is_file():
+    by_id = {a['id']: a for a in assets}
+    for manifest in args.evidence:
+        for item in json.loads(manifest.read_text(encoding='utf-8-sig')):
+            if item['assetId'] not in by_id:
+                raise ValueError('Unknown evidence asset: ' + item['assetId'])
+            source = Path(item['path'])
+            digest = hashlib.sha256(source.read_bytes()).hexdigest()
+            if item.get('sha256', digest) != digest:
+                raise ValueError('Evidence hash mismatch: ' + str(source))
+            filename = digest[:12] + '-' + source.name
             shutil.copy2(source, media / filename)
-            assets.append(dict(id=asset_id, name=name, category='UI', owner='Revisar interfaz visual',
-                status='Revisado con fallas', pending=issues, variants=[], animations=[],
-                evidence=[dict(path='media/' + filename, type='image',
-                    sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
-                    note='Captura de integración 2026-09-12; anterior a correcciones siguientes. Personajes anteriores al nuevo lote M1.')]))
+            record = dict(item, path='media/' + filename, sha256=digest)
+            asset = by_id[item['assetId']]
+            existing = next((e for e in asset.get('evidence', [])
+                             if e.get('sha256') == digest), None)
+            if existing is None:
+                asset.setdefault('evidence', []).append(record)
+            else:
+                existing.update(record)
+            if item.get('current', False):
+                asset['status'] = item.get('status', 'Capturado · revisión pendiente')
+    # Embed native inventory images in their existing cards, preserving history.
+    for asset in assets:
+        for record in asset.get('evidence', []):
+            if record.get('kind') != 'native_png' or record.get('path', '').startswith('media/'):
+                continue
+            source = Path(record['path'])
+            digest = hashlib.sha256(source.read_bytes()).hexdigest()
+            if record.get('sha256', digest) != digest:
+                raise ValueError('Inventory evidence hash mismatch: ' + str(source))
+            filename = digest[:12] + '-' + source.name
+            shutil.copy2(source, media / filename)
+            record.update(originalPath=str(source), path='media/' + filename,
+                          type='image', sha256=digest)
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=args.repository, text=True).strip()
     bundle = dict(inventory=inventory, indexGeneratedFromCommit=commit,
                   note='El commit del índice no acredita el contenido de cada captura. Consultar la evidencia individual.')
@@ -47,7 +65,8 @@ def main():
     template = Path(__file__).with_name('template.html').read_text(encoding='utf-8')
     (args.output / 'index.html').write_text(template.replace('@@CATALOG@@', payload), encoding='utf-8')
     print(json.dumps({'index': str(args.output / 'index.html'), 'entries': len(assets),
-                      'sourceCommit': commit, 'images': len(list(media.glob('*.png')))}))
+                      'sourceCommit': commit, 'images': sum(
+                          e.get('type') == 'image' for a in assets for e in a.get('evidence', []))}))
 
 
 if __name__ == '__main__':

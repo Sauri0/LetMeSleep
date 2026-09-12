@@ -15,9 +15,11 @@ namespace LetMeSleep.Editor
     public static class CharacterRenderReview
     {
         public static void Capture()
+            => Capture("N:/LetMeSleep/Artifacts/review/alfa-characters");
+
+        public static void Capture(string output)
         {
             if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) throw new InvalidOperationException("Graphics device required.");
-            const string output = "N:/LetMeSleep/Artifacts/review/alfa-characters";
             Directory.CreateDirectory(output);
             var original = SceneManager.GetActiveScene();
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
@@ -60,7 +62,7 @@ namespace LetMeSleep.Editor
                         // the controller gate above still proves the runtime state is wired.
                         clip.SampleAnimation(view.Animator.gameObject, clip.length * .45f); view.RefreshAnchors();
                         ValidateSkinnedPose(actor, species, pose);
-                        foreach (var angle in pose == "Idle" ? new[] { 0f, 90f, 180f } : new[] { 35f })
+                        foreach (var angle in pose == "Idle" ? new[] { 0f, 35f, 90f, 180f, 270f, 325f } : new[] { 35f })
                         {
                             bool human = species == "Human"; var target = new Vector3(0, human ? .96f : .015f, 0);
                             camera.fieldOfView = 36;

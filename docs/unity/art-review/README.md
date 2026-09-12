@@ -45,3 +45,15 @@ Las variantes de beta se añaden cuando existen. No producir cientos de láminas
 Código del catálogo: `tools/art_review/build_catalog.py`. Inventario independiente: `N:/LetMeSleep/Validation/ArtCatalog/qa-inventory.json`. Índice navegable y medios: `N:/LetMeSleep/Validation/ArtCatalog/`.
 
 Cada ejecución produce un índice local con búsqueda, filtros y estados. Las capturas parciales muestran explícitamente lo que falta. Las láminas comparativas y vídeos se adjuntan como evidencia real; no se generan ilustraciones para simular progreso del motor.
+
+### Primer catálogo navegable — 2026-09-12
+
+32 fichas inventariadas. Cinco tienen vistas para revisar (humano, mosquito, menú, personalizador y decoración de casa); las otras 27 necesitan capturas. Se adjuntan 33 imágenes entre revisiones actuales e históricas. Todavía faltan despieces, variantes y clips completos: este lote no representa cobertura gráfica completa.
+
+El índice agrupa vistas en galerías, conserva comparaciones anteriores, permite buscar y filtrar por área/estado, y registra SHA-256 de cada imagen. Los archivos locales se copian al directorio `media` para poder distribuir el catálogo junto con sus capturas. Evidencia duplicada se fusiona por asset y hash.
+
+```powershell
+python tools/art_review/build_catalog.py --repository N:/LetMeSleep/Repository --output N:/LetMeSleep/Validation/ArtCatalog --inventory N:/LetMeSleep/Validation/ArtCatalog/qa-inventory.json --evidence N:/LetMeSleep/Validation/ArtCatalog/native-character-evidence.json --evidence N:/LetMeSleep/Validation/ArtCatalog/native-review-round3.json
+```
+
+Validación del índice: búsqueda de personajes, filtro por categoría y carga de galerías en navegador. Cada imagen debe coincidir con su hash. No se infiere una aprobación artística a partir de esas comprobaciones.
