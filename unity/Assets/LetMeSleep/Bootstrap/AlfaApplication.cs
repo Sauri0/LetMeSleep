@@ -37,6 +37,8 @@ namespace LetMeSleep.Bootstrap
         private GameObject presentation;
         private EnvironmentMapDefinition map;
         private GameObject menuCharacters;
+        private GameObject customizationBackdrop;
+        private bool customizationBackdropWasActive;
         private string playerName = "Jugador", joinCode, lastError = "";
         private bool pendingOnline, createOnline, training, showingResults;
         private string closingError = "";
@@ -70,6 +72,8 @@ namespace LetMeSleep.Bootstrap
                 new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab)));
             menuAudio = Instantiate(MenuAudioPrefab).GetComponent<AlfaAudioDirector>();
             ui.FeedbackRequested += OnUiFeedback;
+            ui.ScreenChanged += OnUiScreenChanged;
+            OnUiScreenChanged(ui.CurrentScreen);
             ui.SetRememberedPlayerName(playerName); LoadMap(false); menuAudio.EnterMenu(); PresentPreferences(); ApplySettingsValues();
             StartBuildProbeIfRequested();
         }
@@ -298,6 +302,7 @@ namespace LetMeSleep.Bootstrap
             MenuCamera.transform.position = map.PlayBounds.center + new Vector3(5, 4, -6);
             MenuCamera.transform.LookAt(map.PlayBounds.center + Vector3.up);
             menuCharacters = null;
+            customizationBackdrop = null;
             if (!house)
             {
                 var cameraAnchor = map.PresentationAnchors.Find("MainMenuCamera");
@@ -306,6 +311,29 @@ namespace LetMeSleep.Bootstrap
                 CreateMenuCharacter(HumanPrefab,"HumanMenuStage",0);
                 CreateMenuCharacter(MosquitoPrefab,"MosquitoMenuStage",1);
             }
+            if (ui) OnUiScreenChanged(ui.CurrentScreen);
+        }
+        private void OnUiScreenChanged(AlfaUiScreen screen)
+        {
+            if (quiescing) return;
+            if (screen == AlfaUiScreen.Customization)
+            {
+                if (!menuCharacters) return;
+                if (customizationBackdrop != menuCharacters)
+                {
+                    customizationBackdrop = menuCharacters;
+                    customizationBackdropWasActive = menuCharacters.activeSelf;
+                }
+                menuCharacters.SetActive(false);
+                return;
+            }
+
+            var backdrop = customizationBackdrop;
+            customizationBackdrop = null;
+            // Restore only this map's decorative root and its prior visibility. Lobby exploration
+            // may have hidden it while customization was open; never override that owner.
+            if (backdrop && backdrop == menuCharacters)
+                backdrop.SetActive(customizationBackdropWasActive && !lobbyMovement);
         }
         private void CreateMenuCharacter(GameObject prefab,string anchorName,int motion)
         {
@@ -335,7 +363,11 @@ namespace LetMeSleep.Bootstrap
             if (quiescing) return;
             quiescing = true; pendingOnline = false; intentionalLeave = true; enabled = false;
             StopAllCoroutines();
-            if (ui) ui.FeedbackRequested -= OnUiFeedback;
+            if (ui)
+            {
+                ui.FeedbackRequested -= OnUiFeedback;
+                ui.ScreenChanged -= OnUiScreenChanged;
+            }
             if (room != null) room.RoomChanged -= OnRoomChanged;
             if (lobby != null) lobby.Changed -= OnLobbyChanged;
             if (transport != null)
@@ -383,6 +415,7 @@ namespace LetMeSleep.Bootstrap
             ShutdownStep(() => { if (ui) { ui.gameObject.SetActive(false); Destroy(ui.gameObject); } }); ui = null;
             ShutdownStep(() => { if (map) { DeactivateOwnedRoot(map.gameObject); Destroy(map.gameObject); } }); map = null;
             menuCharacters = null;
+            customizationBackdrop = null;
         }
 
         private static void DeactivateOwnedRoot(GameObject root)

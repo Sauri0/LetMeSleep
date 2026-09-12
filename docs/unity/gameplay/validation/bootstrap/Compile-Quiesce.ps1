@@ -1,9 +1,11 @@
 param(
     [string]$Central = 'N:/LetMeSleep/Repository',
     [string]$UnityEditorData = 'N:/Unity/Editors/6000.3.24f1/Editor/Data',
+    [string]$UiAssembly = '',
     [string]$OutputRoot = 'N:/LetMeSleep/Validation/BootstrapQuiesce-20260912'
 )
 $ErrorActionPreference = 'Stop'
+if (!$UiAssembly) { $UiAssembly = Join-Path $Central 'unity/Library/ScriptAssemblies/LetMeSleep.UI.dll' }
 $workspace = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../../../..'))
 $output = Join-Path $OutputRoot ([DateTime]::UtcNow.ToString('yyyyMMdd-HHmmss-fff'))
 $sources = Join-Path $output 'sources'
@@ -16,7 +18,8 @@ Copy-Item -LiteralPath $main -Destination $sources
 $references = @(
     Get-ChildItem -LiteralPath (Join-Path $UnityEditorData 'Managed/UnityEngine') -Filter '*.dll'
     Get-ChildItem -LiteralPath (Join-Path $Central 'unity/Library/ScriptAssemblies') -Filter 'LetMeSleep*.dll' |
-        Where-Object { $_.Name -notmatch 'Bootstrap|\.Tests\.|\.Editor\.' }
+        Where-Object { $_.Name -notmatch 'Bootstrap|\.Tests\.|\.Editor\.' -and $_.Name -ne 'LetMeSleep.UI.dll' }
+    Get-Item -LiteralPath $UiAssembly
     foreach ($name in @('Unity.InputSystem.dll', 'Unity.TextMeshPro.dll', 'UnityEngine.UI.dll', 'com.Epic.OnlineServices.dll')) {
         Get-Item -LiteralPath (Join-Path $Central "unity/Library/ScriptAssemblies/$name")
     }
