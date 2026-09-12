@@ -1,0 +1,30 @@
+{
+  "stage": "face-diagnostic",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\render_human_menu.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/menu",
+    "--face-details",
+    "--face-cases",
+    "eyes_open",
+    "eyes_closed",
+    "--review-name",
+    "face-diagnostic"
+  ],
+  "slot_note": "Director only2 facial diagnostics open/closed640 CPU2 <=90s then release Mosquito, no new generation",
+  "started_utc": "2026-09-12T23:18:56.442219+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 11324,
+  "exit_code": 0,
+  "seconds": 29.69798310000624,
+  "finished_utc": "2026-09-12T23:19:26.140694+00:00"
+}

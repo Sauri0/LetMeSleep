@@ -1,0 +1,6 @@
+00:00.687  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\menu-joints2\menu\LMS_HumanMenu.blend"
+FBX version: 7400
+{"passed": false, "errors": ["blend/L: closed lid exposes eyeball or gap", "blend/R: closed lid exposes eyeball or gap", "fbx/L: closed lid exposes eyeball or gap", "fbx/R: closed lid exposes eyeball or gap"]}
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

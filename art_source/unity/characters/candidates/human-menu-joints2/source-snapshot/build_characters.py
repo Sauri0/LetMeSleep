@@ -1,6 +1,6 @@
 """Let me sleep: original, reproducible Unity alpha character sources.
 Run after a Director slot: Blender --background --python build_characters.py -- --species Human
-No rendering occurs. All output stays beside this script. Blender 5.2 LTS.
+No rendering occurs. Output stays beside this script unless --asset-root is supplied. Blender 5.2 LTS.
 """
 import bpy
 import math
@@ -203,7 +203,7 @@ class Character:
         if self.species=='Human' and not all(v['inward_displacement_m']>.01 for v in self.curl.values()): errors.append('finger_curl')
         if self.species=='Human' and abs(self.contact['clap_palm_center_distance_m']-.05)>.001: errors.append('clap_contact')
         audit['passed']=not errors; audit['errors']=errors
-        folder=OUT/self.species.lower(); folder.mkdir(exist_ok=True)
+        folder=OUT/self.species.lower(); folder.mkdir(parents=True,exist_ok=True)
         (folder/'audit.json').write_text(json.dumps(audit,indent=2),encoding='utf8',newline='\n')
         if errors: raise RuntimeError(audit)
         bpy.ops.object.select_all(action='DESELECT'); self.rig.select_set(True)
@@ -294,17 +294,23 @@ def human():
     # Continuous trouser seat behind the jacket joins the legs above the crotch.
     tube('TrouserSeat',[(0,0,z) for z in [.685,.72,.77,.805]],
          [.170,.211,.216,.208],[.087,.112,.119,.113],blue,'Hips',12)
-    torso=tube('PajamaJacket',[(0,0,z) for z in [.735,.78,.82,.96,1.07,1.17,1.235,1.285]],
-               [.224,.224,.214,.185,.210,.232,.191,.070],
-               [.116,.126,.124,.115,.129,.128,.120,.070],blue)
-    groups={n:torso.vertex_groups.new(name=n) for n in ['Hips','Spine','Chest']}
+    torso=tube('PajamaJacket',[(0,0,z) for z in [.681,.716,.79,.92,1.06,1.165,1.235,1.285]],
+               [.225,.227,.218,.198,.212,.235,.191,.070],
+               [.129,.130,.128,.120,.132,.131,.120,.070],blue)
+    # The pajama shirt falls over the trouser seat. A shallow curved hem and
+    # thigh following at its sides keep the lower edge part of the garment.
+    for vertex in torso.data.vertices:
+        if vertex.co.z<.70:vertex.co.z+=.012*(abs(vertex.co.x)/.225)**2
+    groups={n:torso.vertex_groups.new(name=n) for n in ['Hips','Spine','Chest','UpperLeg.L','UpperLeg.R']}
     for v in torso.data.vertices:
         weights=(('Hips',1-max(0,min(1,(v.co.z-.79)/.15))),('Chest',max(0,min(1,(v.co.z-1.02)/.13))))
         wh,wc=[p[1] for p in weights]; ws=1-wh-wc
-        for n,w in [('Hips',wh),('Spine',ws),('Chest',wc)]:
+        thigh=.30*max(0,min(1,(.77-v.co.z)/.09))*max(0,min(1,(abs(v.co.x)-.025)/.15))
+        leg_name='UpperLeg.L' if v.co.x>0 else 'UpperLeg.R'
+        for n,w in [('Hips',wh-thigh),('Spine',ws),('Chest',wc),(leg_name,thigh)]:
             if w>0: groups[n].add([v.index],w,'REPLACE')
-    strip('JacketPlacket',[(0,y,z) for y,z in [(-.127,.815),(-.125,.86),(-.119,.96),(-.132,1.07),(-.133,1.16)]],.003,trim,'Chest')
-    for y,z in [(-.132,.865),(-.125,.966),(-.138,1.072)]:
+    strip('JacketPlacket',[(0,y,z) for y,z in [(-.133,.735),(-.131,.805),(-.124,.92),(-.135,1.06),(-.134,1.165)]],.003,trim,'Chest')
+    for y,z in [(-.130,.815),(-.127,.930),(-.136,1.067)]:
         ellipsoid('JacketButton',(0,y,z),(.006,.0025,.006),white,'Chest',8,4)
     collar_and_pocket(mesh,strip,blue,trim)
     # Jacket details deform with the same body weights instead of rotating rigidly
@@ -335,7 +341,7 @@ def human():
 
 def mosquito():
     from author_mosquito_geometry import create_mosquito
-    from author_mosquito_motion import mosquito as animate_mosquito
+    from author_motion import mosquito as animate_mosquito
     c=create_mosquito(Character=Character, material=material, tube=tube,
                       ellipsoid=ellipsoid, strip=strip, mesh=mesh)
     animate_mosquito(c)
@@ -373,7 +379,9 @@ def flyswatter():
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description='Generate explicitly selected character assets only.')
     parser.add_argument('--species',nargs='+',choices=['Human','Mosquito','Flyswatter'],required=True)
+    parser.add_argument('--asset-root',type=Path,default=OUT)
     args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
+    OUT=args.asset_root.resolve()
     selected=list(dict.fromkeys(args.species))
     builders={'Human':human,'Mosquito':mosquito,'Flyswatter':flyswatter}
     results=[builders[species]() for species in selected]

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\verify_human_menu.py", line 122, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\verify_human_menu.py", line 52, in main
+    assert len(bpy.data.actions)==4
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+Error: script failed, file: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\verify_human_menu.py', exiting.

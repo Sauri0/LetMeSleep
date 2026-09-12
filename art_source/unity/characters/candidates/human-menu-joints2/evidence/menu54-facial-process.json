@@ -1,0 +1,24 @@
+{
+  "stage": "menu54-facial",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\audit_human_facial.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/menu54"
+  ],
+  "slot_note": "Director3min includes minor local54mm faceted clearance repair then2faces release",
+  "started_utc": "2026-09-12T23:22:14.905562+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 36512,
+  "exit_code": 0,
+  "seconds": 2.175263499986613,
+  "finished_utc": "2026-09-12T23:22:17.080882+00:00"
+}

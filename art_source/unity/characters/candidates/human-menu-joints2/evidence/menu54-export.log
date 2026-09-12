@@ -1,0 +1,14 @@
+00:00.828  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\menu-joints2\base54\human\LMS_Human_alpha.blend"
+Info: Saved as "LMS_HumanMenu.blend"
+
+FBX export starting... 'N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\.validation\\menu-joints2\\menu54\\LMS_HumanMenu.fbx'
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+export finished in 0.9527 sec.
+LMS_HUMAN_MENU_EXPORTED {"LMS_HumanMenu.blend": "716eeba06f87597f6722d971782d83b29edb0f060483cdb1e6d8cac5962c3301", "LMS_HumanMenu.fbx": "96aa49594a9bc26622509623e0fd8eb00ab2ba789f88e6a197b406faa458776d"}
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

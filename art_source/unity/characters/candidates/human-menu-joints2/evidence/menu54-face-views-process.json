@@ -1,0 +1,30 @@
+{
+  "stage": "menu54-face-views",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\render_human_menu.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/menu54",
+    "--face-details",
+    "--face-cases",
+    "eyes_open",
+    "eyes_closed",
+    "--review-name",
+    "face-diagnostic"
+  ],
+  "slot_note": "Director3min includes minor local54mm faceted clearance repair then2faces release",
+  "started_utc": "2026-09-12T23:22:17.269849+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 35988,
+  "exit_code": 0,
+  "seconds": 23.5492646000057,
+  "finished_utc": "2026-09-12T23:22:40.819505+00:00"
+}

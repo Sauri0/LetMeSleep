@@ -1,0 +1,26 @@
+{
+  "stage": "base52-roundtrip",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\verify_fbx.py",
+    "--",
+    "--species",
+    "Human",
+    "--asset-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/base52"
+  ],
+  "slot_note": "Director authorized52mm fix regenerate validate2faces within3min then release",
+  "started_utc": "2026-09-12T23:19:59.997623+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 27156,
+  "exit_code": 0,
+  "seconds": 2.7072965999977896,
+  "finished_utc": "2026-09-12T23:20:02.704981+00:00"
+}

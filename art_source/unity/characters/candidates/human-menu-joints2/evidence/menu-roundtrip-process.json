@@ -1,0 +1,24 @@
+{
+  "stage": "menu-roundtrip",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\verify_human_menu.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/menu"
+  ],
+  "slot_note": "Director resumed CPU2 slot <=10min total",
+  "started_utc": "2026-09-12T23:14:58.175866+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 4028,
+  "exit_code": 1,
+  "seconds": 5.230402500004857,
+  "finished_utc": "2026-09-12T23:15:03.406372+00:00"
+}

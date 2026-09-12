@@ -1,0 +1,26 @@
+{
+  "stage": "base-generate-r2",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\build_characters.py",
+    "--",
+    "--species",
+    "Human",
+    "--asset-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/base"
+  ],
+  "slot_note": "Director resumed same slot, up to2 local failures within10min total, previousPID closed; float32 mapping correction",
+  "started_utc": "2026-09-12T23:13:57.217914+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 10572,
+  "exit_code": 0,
+  "seconds": 14.021175400004722,
+  "finished_utc": "2026-09-12T23:14:11.239328+00:00"
+}

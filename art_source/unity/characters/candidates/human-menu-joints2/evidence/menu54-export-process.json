@@ -1,0 +1,26 @@
+{
+  "stage": "menu54-export",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\export_human_menu.py",
+    "--",
+    "--base-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/base54",
+    "--output-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/menu54"
+  ],
+  "slot_note": "Director3min includes minor local54mm faceted clearance repair then2faces release",
+  "started_utc": "2026-09-12T23:22:07.702052+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 8272,
+  "exit_code": 0,
+  "seconds": 7.047685800003819,
+  "finished_utc": "2026-09-12T23:22:14.749868+00:00"
+}

@@ -9,7 +9,9 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 parser=argparse.ArgumentParser()
 parser.add_argument('--species',choices=['Human','Mosquito','Flyswatter'])
+parser.add_argument('--asset-root',type=Path,default=ROOT)
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
+ROOT=args.asset_root.resolve()
 species_list=[args.species] if args.species else ['Human','Mosquito','Flyswatter']
 report_path=ROOT/args.species.lower()/'fbx_roundtrip.json' if args.species else ROOT/'fbx_roundtrip.json'
 results=[]

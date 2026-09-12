@@ -1,0 +1,26 @@
+{
+  "stage": "base52-generate",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\build_characters.py",
+    "--",
+    "--species",
+    "Human",
+    "--asset-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/base52"
+  ],
+  "slot_note": "Director authorized52mm fix regenerate validate2faces within3min then release",
+  "started_utc": "2026-09-12T23:19:46.736025+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 34060,
+  "exit_code": 0,
+  "seconds": 13.09521249998943,
+  "finished_utc": "2026-09-12T23:19:59.831466+00:00"
+}

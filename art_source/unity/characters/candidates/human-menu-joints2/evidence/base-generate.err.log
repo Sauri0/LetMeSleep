@@ -1,0 +1,18 @@
+N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\build_characters.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m.use_nodes = True
+Traceback (most recent call last):
+  File "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\build_characters.py", line 387, in <module>
+    results=[builders[species]() for species in selected]
+             ~~~~~~~~~~~~~~~~~^^
+  File "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\build_characters.py", line 339, in human
+    return c.export()
+           ~~~~~~~~^^
+  File "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\build_characters.py", line 165, in export
+    for obj in meshes:finish_shapes(self,obj)
+                      ~~~~~~~~~~~~~^^^^^^^^^^
+  File "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\author_human_facial.py", line 59, in finish_shapes
+    assert found==len(targets),(name,found,len(targets),'Eyelid target mapping changed during join')
+           ^^^^^^^^^^^^^^^^^^^
+AssertionError: ('Blink25.L', 141, 156, 'Eyelid target mapping changed during join')
+
+Error: script failed, file: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\build_characters.py', exiting.

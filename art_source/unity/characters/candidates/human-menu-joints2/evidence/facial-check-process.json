@@ -1,0 +1,24 @@
+{
+  "stage": "facial-check",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\audit_human_facial.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/menu"
+  ],
+  "slot_note": "Director CPU2 <=10min; actual pupil/lid/morph audit",
+  "started_utc": "2026-09-12T23:16:57.267034+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 31500,
+  "exit_code": 1,
+  "seconds": 2.0366284999909112,
+  "finished_utc": "2026-09-12T23:16:59.303720+00:00"
+}

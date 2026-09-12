@@ -1,0 +1,26 @@
+{
+  "stage": "base-roundtrip",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\verify_fbx.py",
+    "--",
+    "--species",
+    "Human",
+    "--asset-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/base"
+  ],
+  "slot_note": "Director resumed CPU2 slot <=10min total",
+  "started_utc": "2026-09-12T23:14:24.916018+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 23164,
+  "exit_code": 0,
+  "seconds": 2.715005200006999,
+  "finished_utc": "2026-09-12T23:14:27.631086+00:00"
+}

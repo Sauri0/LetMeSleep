@@ -1,0 +1,26 @@
+{
+  "stage": "menu-export",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\export_human_menu.py",
+    "--",
+    "--base-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/base",
+    "--output-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/menu"
+  ],
+  "slot_note": "Director resumed CPU2 slot <=10min total",
+  "started_utc": "2026-09-12T23:14:39.822408+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 37380,
+  "exit_code": 0,
+  "seconds": 7.464903499989305,
+  "finished_utc": "2026-09-12T23:14:47.287449+00:00"
+}

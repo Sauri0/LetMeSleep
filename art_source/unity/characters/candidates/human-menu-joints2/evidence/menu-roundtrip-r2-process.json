@@ -1,0 +1,24 @@
+{
+  "stage": "menu-roundtrip-r2",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\verify_human_menu.py",
+    "--",
+    "--menu-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/menu"
+  ],
+  "slot_note": "Director up to2 local retries <=10min; correct FBX take channels, previousPID closed",
+  "started_utc": "2026-09-12T23:16:31.953198+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 37416,
+  "exit_code": 0,
+  "seconds": 11.918783200002508,
+  "finished_utc": "2026-09-12T23:16:43.872187+00:00"
+}

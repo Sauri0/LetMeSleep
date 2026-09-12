@@ -1,0 +1,9 @@
+00:00.734  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\menu-joints2\menu\LMS_HumanMenu.blend"
+LMS_MENU_AUDITED {"format": "blend", "clip": "MenuSeatedIdle", "samples": 241, "feet_m": 4.261999115632046e-07, "seat_interior_vertices": 6}
+LMS_MENU_AUDITED {"format": "blend", "clip": "MenuLook", "samples": 121, "feet_m": 6.322027276634104e-08, "seat_interior_vertices": 6}
+LMS_MENU_AUDITED {"format": "blend", "clip": "MenuSwat", "samples": 43, "feet_m": 6.322027276634104e-08, "seat_interior_vertices": 6}
+LMS_MENU_AUDITED {"format": "blend", "clip": "MenuReturn", "samples": 55, "feet_m": 6.322027276634104e-08, "seat_interior_vertices": 6}
+FBX version: 7400
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

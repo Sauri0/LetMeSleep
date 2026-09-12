@@ -1,0 +1,26 @@
+{
+  "stage": "menu52-export",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\export_human_menu.py",
+    "--",
+    "--base-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/base52",
+    "--output-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/menu52"
+  ],
+  "slot_note": "Director authorized52mm fix regenerate validate2faces within3min then release",
+  "started_utc": "2026-09-12T23:20:02.862419+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 15320,
+  "exit_code": 0,
+  "seconds": 7.965513000002829,
+  "finished_utc": "2026-09-12T23:20:10.828077+00:00"
+}

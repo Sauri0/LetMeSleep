@@ -1,0 +1,478 @@
+{
+  "contract": {
+    "renderer": "HumanHead",
+    "head_bone": "Head",
+    "neck_bone": "Neck",
+    "head_forward_local": [
+      0,
+      0,
+      1
+    ],
+    "head_up_local": [
+      0,
+      1,
+      0
+    ],
+    "eye_bones": [
+      "Eye.L",
+      "Eye.R"
+    ],
+    "eye_forward_local": [
+      0,
+      1,
+      0
+    ],
+    "eye_up_local": [
+      0,
+      0,
+      1
+    ],
+    "eye_bind_centers_source_m": {
+      "L": [
+        0.081,
+        -0.108,
+        1.558
+      ],
+      "R": [
+        -0.081,
+        -0.108,
+        1.558
+      ]
+    },
+    "blink_shapes": {
+      "L": "Blink.L",
+      "R": "Blink.R"
+    },
+    "unity_blink_range": [
+      0,
+      100
+    ],
+    "blink_samples": {
+      "L": [
+        "Basis",
+        "Blink25.L",
+        "Blink50.L",
+        "Blink75.L",
+        "Blink.L"
+      ],
+      "R": [
+        "Basis",
+        "Blink25.R",
+        "Blink50.R",
+        "Blink75.R",
+        "Blink.R"
+      ]
+    },
+    "blink_interpolation": "Piecewise adjacent samples at closure0/.25/.50/.75/1; two neighboring morph weights sum to100. Basis needs no weight. This keeps lid paths outside the globe.",
+    "writer": "One Presentation facial controller after animation, shared with gameplay",
+    "tracking": "Live target, smoothed/clamped offset from this frame animated base; never accumulate last frame offset",
+    "suggested_limits_degrees": {
+      "head_yaw": 55,
+      "head_pitch": 25,
+      "neck_yaw": 20,
+      "eye_yaw": 22,
+      "eye_pitch": 15
+    },
+    "legacy_blink_clip": "Eye local scale Z is a legacy signal only; read before resetting scale to1, map (1-z)/.93 to lid closure",
+    "eye_scale_runtime": [
+      1,
+      1,
+      1
+    ],
+    "scope": "Same rig names/hierarchy; eye bind centers corrected; head/cap/skin material customization retained"
+  },
+  "scope": "Native bind/morph fidelity; nine partial lid closures and frontal25ray samples per eye; not Unity/procedural tracking approval",
+  "reports": [
+    {
+      "format": "blend",
+      "sha256": "716eeba06f87597f6722d971782d83b29edb0f060483cdb1e6d8cac5962c3301",
+      "eye_bind": {
+        "L": {
+          "center_source_m": [
+            0.08100000023841858,
+            -0.1080000028014183,
+            1.5579999685287476
+          ],
+          "forward_source": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "up_source": [
+            8.742277657347586e-08,
+            0.0,
+            1.0
+          ]
+        },
+        "R": {
+          "center_source_m": [
+            -0.08100000023841858,
+            -0.1080000028014183,
+            1.5579999685287476
+          ],
+          "forward_source": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "up_source": [
+            8.742277657347586e-08,
+            0.0,
+            1.0
+          ]
+        }
+      },
+      "shape_names": [
+        "Basis",
+        "Blink.L",
+        "Blink.R",
+        "Blink25.L",
+        "Blink25.R",
+        "Blink50.L",
+        "Blink50.R",
+        "Blink75.L",
+        "Blink75.R"
+      ],
+      "max_source_fbx_morph_difference_m": 0,
+      "samples": [
+        {
+          "closure": 0,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.125,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.25,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.375,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.5,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 7,
+              "Character_EyeWhite": 14,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 7,
+              "Character_EyeWhite": 14,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.625,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 10,
+              "Character_EyeWhite": 11,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 10,
+              "Character_EyeWhite": 11,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.75,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 15,
+              "Character_EyeWhite": 7,
+              "Character_Expression": 3
+            },
+            "R": {
+              "Human_Skin": 15,
+              "Character_EyeWhite": 7,
+              "Character_Expression": 3
+            }
+          }
+        },
+        {
+          "closure": 0.875,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 20,
+              "Character_EyeWhite": 3,
+              "Character_Expression": 2
+            },
+            "R": {
+              "Human_Skin": 20,
+              "Character_EyeWhite": 3,
+              "Character_Expression": 2
+            }
+          }
+        },
+        {
+          "closure": 1,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 25
+            },
+            "R": {
+              "Human_Skin": 25
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "fbx",
+      "sha256": "96aa49594a9bc26622509623e0fd8eb00ab2ba789f88e6a197b406faa458776d",
+      "eye_bind": {
+        "L": {
+          "center_source_m": [
+            0.08100000023841858,
+            -0.1080000028014183,
+            1.5579999685287476
+          ],
+          "forward_source": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "up_source": [
+            1.5099580252808664e-07,
+            0.0,
+            1.0
+          ]
+        },
+        "R": {
+          "center_source_m": [
+            -0.08100000023841858,
+            -0.1080000028014183,
+            1.5579999685287476
+          ],
+          "forward_source": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "up_source": [
+            1.5099580252808664e-07,
+            0.0,
+            1.0
+          ]
+        }
+      },
+      "shape_names": [
+        "Basis",
+        "Blink.L",
+        "Blink.R",
+        "Blink25.L",
+        "Blink25.R",
+        "Blink50.L",
+        "Blink50.R",
+        "Blink75.L",
+        "Blink75.R"
+      ],
+      "max_source_fbx_morph_difference_m": 0.0,
+      "samples": [
+        {
+          "closure": 0,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.125,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.25,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.375,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 4,
+              "Character_EyeWhite": 17,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.5,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 7,
+              "Character_EyeWhite": 14,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 7,
+              "Character_EyeWhite": 14,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.625,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 10,
+              "Character_EyeWhite": 11,
+              "Character_Expression": 4
+            },
+            "R": {
+              "Human_Skin": 10,
+              "Character_EyeWhite": 11,
+              "Character_Expression": 4
+            }
+          }
+        },
+        {
+          "closure": 0.75,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 15,
+              "Character_EyeWhite": 7,
+              "Character_Expression": 3
+            },
+            "R": {
+              "Human_Skin": 15,
+              "Character_EyeWhite": 7,
+              "Character_Expression": 3
+            }
+          }
+        },
+        {
+          "closure": 0.875,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 20,
+              "Character_EyeWhite": 3,
+              "Character_Expression": 2
+            },
+            "R": {
+              "Human_Skin": 20,
+              "Character_EyeWhite": 3,
+              "Character_Expression": 2
+            }
+          }
+        },
+        {
+          "closure": 1,
+          "white_max_vertex_displacement_m": 0.0,
+          "front_eye_ray_material_counts": {
+            "L": {
+              "Human_Skin": 25
+            },
+            "R": {
+              "Human_Skin": 25
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "passed_numeric_gates": true,
+  "visual_approval": false
+}

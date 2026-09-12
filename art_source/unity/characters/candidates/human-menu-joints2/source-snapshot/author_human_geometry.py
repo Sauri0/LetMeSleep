@@ -41,25 +41,43 @@ def head_and_cap(c,mesh,tube,ellipsoid,strip,skin,cloth,piping,white,dark):
             (-rx,back*.34),(-rx,-front*.62),(-.96*rx,-front*.83)]
         for j,(x,y) in enumerate(ring):
             local_z=z
-            if z==1.432 and j in (1,4):local_z=1.438
+            if z in (1.432,1.446) and j in (1,4):x=(-1 if j==1 else 1)*.043
+            if z==1.432 and j in (1,4):local_z=1.443
+            if z==1.432 and j in (2,3):local_z=1.438
             if z==1.446 and j in (1,4):local_z=1.445
-            if z==1.446 and j in (2,3):local_z=1.448
             verts.append((x,y,local_z))
     faces=[tuple(reversed(range(sides)))]
     for ring in range(len(sections)-1):
-        for j in range(sides):
+        for j in (0,1,2,3,4,5,6,12,13):
             # Open the lip interval in the skin; an overlay on solid skin cannot
             # form a mouth when the lower face articulates.
             if sections[ring][0]==1.432 and j in (1,2,3):continue
             a=ring*sides+j;b=ring*sides+(j+1)%sides
             faces.append((a,b,b+sides,a+sides))
+    # Mouth support loops stop at the temples. Broad posterior patches retain
+    # the shared boundary vertices, so there are no T-junctions at the seam.
+    # Keep the crown support sections beneath the unchanged nightcap. Removing
+    # them changed its contact silhouette in reference10 (HR10-R1). Dense mouth
+    # support still stops at the temples; the lower occiput remains simplified.
+    posterior=[i for i,section in enumerate(sections) if section[0] in (1.356,1.425,1.490,1.555,1.625,1.652,1.680,1.699)]
+    for low,high in zip(posterior,posterior[1:]):
+        for j in range(7,12):
+            face=[low*sides+j,low*sides+j+1]
+            face.extend(r*sides+j+1 for r in (range(low+1,high+1) if j==11 else [high]))
+            face.append(high*sides+j)
+            if j==7:face.extend(r*sides+j for r in range(high-1,low,-1))
+            faces.append(tuple(face))
     faces.append(tuple((len(sections)-1)*sides+j for j in range(sides)))
+    used=sorted({index for face in faces for index in face})
+    remap={old:new for new,old in enumerate(used)}
+    verts=[verts[index] for index in used]
+    faces=[tuple(remap[index] for index in face) for face in faces]
     head=mesh('HeadAuthoredPlanes',verts,faces,skin)
     upper=head.vertex_groups.new(name='Head');jaw=head.vertex_groups.new(name='Jaw')
     for vertex in head.data.vertices:
         amount=max(0,min(1,(1.457-vertex.co.z)/.055))
         # Jaw motion belongs to the front/lower face; the back of skull stays rigid.
-        amount*=max(0,min(1,(.045-vertex.co.y)/.10))
+        amount*=max(0,min(1,(-.025-vertex.co.y)/.075))
         if amount<1:upper.add([vertex.index],1-amount,'REPLACE')
         if amount>0:jaw.add([vertex.index],amount,'REPLACE')
     tube('Neck',[(0,.012,1.225),(0,.009,1.285),(0,.008,1.322),(0,.006,1.373)],
@@ -96,10 +114,10 @@ def head_and_cap(c,mesh,tube,ellipsoid,strip,skin,cloth,piping,white,dark):
     # weights match the lip rings exactly to prevent seams in Hit/Faint.
     upper_front=.117+.008*(1.446-1.425)/.065
     lower_front=.117+.008*(1.432-1.425)/.065
-    opening=[(-.034,-upper_front,1.445),(-.009,-upper_front,1.448),
-             (.009,-upper_front,1.448),(.034,-upper_front,1.445),
-             (.034,-lower_front,1.438),(.009,-lower_front,1.432),
-             (-.009,-lower_front,1.432),(-.034,-lower_front,1.438)]
+    opening=[(-.043,-upper_front,1.445),(-.009,-upper_front,1.446),
+             (.009,-upper_front,1.446),(.043,-upper_front,1.445),
+             (.043,-lower_front,1.443),(.009,-lower_front,1.438),
+             (-.009,-lower_front,1.438),(-.043,-lower_front,1.443)]
     mouthverts=opening+[(x,-.090,z) for x,y,z in opening]
     mouth=mesh('MouthCavity',mouthverts,[(i,(i+1)%8,(i+1)%8+8,i+8) for i in range(8)]+[tuple(range(8,16))],dark)
     oral_groups={name:mouth.vertex_groups.new(name=name) for name in ('Head','Jaw')}
@@ -107,17 +125,8 @@ def head_and_cap(c,mesh,tube,ellipsoid,strip,skin,cloth,piping,white,dark):
         amount=max(0,min(1,(1.457-vertex.co.z)/.055))
         oral_groups['Head'].add([vertex.index],1-amount,'REPLACE')
         oral_groups['Jaw'].add([vertex.index],amount,'REPLACE')
-    upper=strip('MouthUpperLip',[(-.035,-.121,1.445),(0,-.123,1.448),(.035,-.121,1.445)],.0025,skin,'Head')
-    lower=strip('MouthLowerLip',[(-.033,-.120,1.438),(0,-.122,1.430),(.033,-.120,1.438)],.003,skin,'Jaw')
-    for lip in (upper,lower):
-        lip.vertex_groups.clear()
-        groups={name:lip.vertex_groups.new(name=name) for name in ('Head','Jaw')}
-        for vertex in lip.data.vertices:
-            amount=max(0,min(1,(1.457-vertex.co.z)/.055))
-            groups['Head'].add([vertex.index],1-amount,'REPLACE')
-            groups['Jaw'].add([vertex.index],amount,'REPLACE')
-    panel(mesh,'MouthTeeth',[(-.024,-.116,1.444),(.024,-.116,1.444),
-                           (.024,-.116,1.440),(-.024,-.116,1.440)],.002,white,'Head')
+    # The skin boundary itself is the lip. Separate tubes/teeth bars made the
+    # neutral expression read as an assembly of pale pieces in reference9.
     tube('Nightcap',[(0,.007,1.665),(0,.020,1.735),(.037,.024,1.805),(.105,.019,1.817),(.166,.012,1.754)],
          [.149,.129,.073,.037,.009],[.105,.104,.065,.034,.008],cloth,'Head',12)
     tube('NightcapBand',[(0,.006,1.653),(0,.009,1.680)],[.153,.147],[.108,.104],piping,'Head',12)

@@ -1,0 +1,70 @@
+[
+  {
+    "species": "Human",
+    "fbx_sha256": "ce1a8fe8b3375e33633e219e68acdc3eb15030f28504986768e397a0d3e23f54",
+    "source_audit_sha256": "03d3142e8a6060ad29ce67b3577c227ebf47bd9cf9e34a863f88830896fdc762",
+    "dimensions": [
+      1.8401913046836853,
+      0.35000017285346985,
+      1.862534056586986
+    ],
+    "triangles": 9652,
+    "bones": 65,
+    "actions": [
+      "Key|LMS_HumanRig|Human_Blink",
+      "Key|LMS_HumanRig|Human_Clap",
+      "Key|LMS_HumanRig|Human_Crouch",
+      "Key|LMS_HumanRig|Human_Faint",
+      "Key|LMS_HumanRig|Human_Fall",
+      "Key|LMS_HumanRig|Human_FingerCurl",
+      "Key|LMS_HumanRig|Human_Hit",
+      "Key|LMS_HumanRig|Human_Idle",
+      "Key|LMS_HumanRig|Human_Jump",
+      "Key|LMS_HumanRig|Human_Land",
+      "Key|LMS_HumanRig|Human_Recover",
+      "Key|LMS_HumanRig|Human_Run",
+      "Key|LMS_HumanRig|Human_Swat",
+      "Key|LMS_HumanRig|Human_Turn",
+      "Key|LMS_HumanRig|Human_Walk",
+      "LMS_HumanRig|LMS_HumanRig|Human_Blink",
+      "LMS_HumanRig|LMS_HumanRig|Human_Clap",
+      "LMS_HumanRig|LMS_HumanRig|Human_Crouch",
+      "LMS_HumanRig|LMS_HumanRig|Human_Faint",
+      "LMS_HumanRig|LMS_HumanRig|Human_Fall",
+      "LMS_HumanRig|LMS_HumanRig|Human_FingerCurl",
+      "LMS_HumanRig|LMS_HumanRig|Human_Hit",
+      "LMS_HumanRig|LMS_HumanRig|Human_Idle",
+      "LMS_HumanRig|LMS_HumanRig|Human_Jump",
+      "LMS_HumanRig|LMS_HumanRig|Human_Land",
+      "LMS_HumanRig|LMS_HumanRig|Human_Recover",
+      "LMS_HumanRig|LMS_HumanRig|Human_Run",
+      "LMS_HumanRig|LMS_HumanRig|Human_Swat",
+      "LMS_HumanRig|LMS_HumanRig|Human_Turn",
+      "LMS_HumanRig|LMS_HumanRig|Human_Walk"
+    ],
+    "sockets": [
+      "Socket.Eye",
+      "Socket.Head",
+      "Socket.Back",
+      "Socket.AimChest",
+      "Socket.Grip.L",
+      "Socket.Grip.R",
+      "Socket.Foot.L",
+      "Socket.Foot.R"
+    ],
+    "blend_shapes": {
+      "HumanHead": [
+        "Blink25.L",
+        "Blink50.L",
+        "Blink75.L",
+        "Blink.L",
+        "Blink25.R",
+        "Blink50.R",
+        "Blink75.R",
+        "Blink.R"
+      ]
+    },
+    "errors": [],
+    "passed": true
+  }
+]

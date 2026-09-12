@@ -1,0 +1,26 @@
+{
+  "stage": "base-generate",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\build_characters.py",
+    "--",
+    "--species",
+    "Human",
+    "--asset-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/base"
+  ],
+  "slot_note": "Director explicit slot CPU2 BelowNormal 6-7min after Unity29668 closed; stop on first error",
+  "started_utc": "2026-09-12T23:12:03.505417+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 36276,
+  "exit_code": 1,
+  "seconds": 10.451950500006205,
+  "finished_utc": "2026-09-12T23:12:13.957552+00:00"
+}

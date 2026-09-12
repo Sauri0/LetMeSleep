@@ -1,0 +1,26 @@
+{
+  "stage": "base54-generate",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\build_characters.py",
+    "--",
+    "--species",
+    "Human",
+    "--asset-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/menu-joints2/base54"
+  ],
+  "slot_note": "Director3min includes minor local54mm faceted clearance repair then2faces release",
+  "started_utc": "2026-09-12T23:21:52.512062+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 22128,
+  "exit_code": 0,
+  "seconds": 12.16613949999737,
+  "finished_utc": "2026-09-12T23:22:04.678418+00:00"
+}

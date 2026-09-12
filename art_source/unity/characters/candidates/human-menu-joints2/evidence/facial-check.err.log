@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\audit_human_facial.py", line 76, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\audit_human_facial.py", line 73, in main
+    assert not errors
+           ^^^^^^^^^^
+AssertionError
+
+Error: script failed, file: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\audit_human_facial.py', exiting.
