@@ -6,6 +6,9 @@ El código fuente vive bajo `unity/Assets/LetMeSleep/Presentation/**` y
 `unity/Assets/LetMeSleep/Audio/**`, en assemblies separados. Incluye:
 
 - `AlfaPresentationPreset`, `AlfaFramePolicy` y `AlfaLightingRig`.
+- `HumanViewCamera`, que aplica el pitch autoritativo sin reconstruirlo desde
+  un vector, y `MosquitoFollowCamera`, con overlap y dos barridos sin asignar
+  dirección de vuelo.
 - `AudioCue`, pool acotado de 48 emisores, reproductor de loops y catálogo alfa.
 - quince WAV audibles originales: música de menú/ronda, ambiente nocturno,
   alas, defensa, impacto, picadura, puertas, vida, stings y ready de UI.
