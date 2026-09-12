@@ -119,10 +119,16 @@ namespace LetMeSleep.Presentation
         public void EvaluateAfterAnimation(float deltaSeconds)
         {
             if(!configured || !isActiveAndEnabled) return;
+            if(head==null || !head.bone) { Restore(); configured=false; return; }
             float dt=Mathf.Max(0,deltaSeconds);
             bool looking=!reduced && (target || hasPoint);
             Vector3 destination=target ? target.position : point;
+            // Head limits are a TOTAL correction budget over this frame's authored pose,
+            // not another allowance on top of the neck's correction.
+            Quaternion headBaseRotation=head.bone.rotation;
+            Quaternion headBaseFrame=Quaternion.LookRotation(head.bone.TransformDirection(head.forward),head.bone.TransformDirection(head.up));
             Apply(neck,destination,looking,dt); Apply(head,destination,looking,dt);
+            ClampHeadCorrection(head,headBaseFrame,headBaseRotation);
             Apply(left,destination,looking,dt); Apply(right,destination,looking,dt);
             clock+=dt;
             if(clock>nextBlink+.25) nextBlink=clock+3.2+random.NextDouble()*2.6;
@@ -166,7 +172,8 @@ namespace LetMeSleep.Presentation
                 result[i]=new LidState{binding=value};
             }
             return result;
-        }        private static void Apply(Joint joint,Vector3 destination,bool looking,float dt)
+        }
+        private static void Apply(Joint joint,Vector3 destination,bool looking,float dt)
         {
             if(joint==null || !joint.bone) return;
             var bone=joint.bone;
@@ -183,6 +190,18 @@ namespace LetMeSleep.Presentation
             joint.before=bone.localRotation;
             bone.rotation=basis*Quaternion.Euler(joint.pitch,joint.yaw,0)*Quaternion.Inverse(basis)*bone.rotation;
             joint.after=bone.localRotation; joint.written=true;
+        }
+        private static void ClampHeadCorrection(Joint joint,Quaternion baseFrame,Quaternion baseRotation)
+        {
+            Vector3 direction=Quaternion.Inverse(baseFrame)*joint.bone.TransformDirection(joint.forward);
+            float yaw=Mathf.Atan2(direction.x,direction.z)*Mathf.Rad2Deg;
+            float pitch=-Mathf.Atan2(direction.y,Mathf.Sqrt(direction.x*direction.x+direction.z*direction.z))*Mathf.Rad2Deg;
+            float boundedYaw=Mathf.Clamp(yaw,-joint.yawLimit,joint.yawLimit);
+            float boundedPitch=Mathf.Clamp(pitch,-joint.pitchLimit,joint.pitchLimit);
+            if(Mathf.Abs(yaw-boundedYaw)>.0001f || Mathf.Abs(pitch-boundedPitch)>.0001f)
+                joint.bone.rotation=baseFrame*Quaternion.Euler(boundedPitch,boundedYaw,0)*Quaternion.Inverse(baseFrame)*baseRotation;
+            // Restore must recognize the final written local rotation, including this combined clamp.
+            joint.after=joint.bone.localRotation;
         }
         private static float Blink(float seconds)
         {
