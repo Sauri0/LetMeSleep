@@ -66,6 +66,8 @@ func _transition_case(test: Dictionary) -> void:
 		actor._surface_view_yaw=actor.yaw
 		actor.pitch=0.0
 		client.pitch=0.0
+		client.yaw=float(actor.yaw)
+		client._mosquito_input_view=Vector2(client.yaw,0.0)
 		client.practice._publish()
 	await _settle_frames(12)
 	client.set_physics_process(false)
@@ -84,7 +86,10 @@ func _transition_case(test: Dictionary) -> void:
 	sim.step(1.0/60.0)
 	client.practice._publish()
 	await _settle_frames(2)
-	var departure_direction: Vector3=sim._insect_view_direction(actor)
+	var aimed_actor: Dictionary=actor.duplicate(true)
+	aimed_actor.yaw=client.yaw; aimed_actor.pitch=client.pitch
+	# Idle orbit is independent; F departs toward the current camera aim.
+	var departure_direction: Vector3=sim._insect_view_direction(aimed_actor)
 	await _tap("perch")
 	sim.step(1.0/60.0)
 	var pending: Dictionary=sim.private_for(1)
