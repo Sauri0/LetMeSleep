@@ -1,0 +1,23 @@
+{
+  "schema": "lms-preference-file-store-external-1",
+  "utc": "2026-09-12T12:17:46.4398787Z",
+  "runtimeSource": "N:/LetMeSleep/Worktrees/director-persistence/unity/Assets/LetMeSleep/Bootstrap/PreferenceFileStore.cs",
+  "runtimeSourceCommitted": false,
+  "runtimeSourceSha256": "5b35436df36169aec1b4bd9429d068414251c447daf066b76a6388855a48bd3a",
+  "testSha256": "694d35ed5e42cd1dd2f011f79e92e4e3e2319c263eb84e66dedf4dc447c77bd7",
+  "harnessSha256": "26bba0e58b2d7a15a50ba09cc357740312ad97dbfd63f515ad05dcf11b5cb395",
+  "baseline": {
+    "tests": 8,
+    "passed": 8,
+    "failed": 0
+  },
+  "mutants": [
+    { "name": "no-backup-recovery", "rejected": true, "failingTests": 3 },
+    { "name": "overwrite-good-backup", "rejected": true, "failingTests": 1 },
+    { "name": "allow-future-version-overwrite", "rejected": true, "failingTests": 1 },
+    { "name": "allow-future-backup-overwrite", "rejected": true, "failingTests": 1 }
+  ],
+  "mutantsRejected": 4,
+  "unityRunner": false,
+  "scope": "Pure Windows filesystem storage, recovery, downgrade blocking, UTF-8 size boundary and failed activation cleanup; no UnityEngine, UI, Godot migration, executable smoke or physical disk failure"
+}
