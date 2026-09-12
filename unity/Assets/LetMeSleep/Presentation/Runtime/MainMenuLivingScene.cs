@@ -7,6 +7,7 @@ using UnityEngine.Playables;
 namespace LetMeSleep.Presentation
 {
     /// <summary>Owns only explicitly supplied decorative children. Never bind a gameplay actor.</summary>
+    [DefaultExecutionOrder(900)]
     [DisallowMultipleComponent]
     public sealed class MainMenuLivingScene : MonoBehaviour
     {
@@ -37,6 +38,7 @@ namespace LetMeSleep.Presentation
         private AnimationClipPlayable idle, look, swat, returning, flight;
         private bool configured, requestedActive = true, reducedMotion, running;
         private double elapsed;
+        private int lastSampleFrame=-1;
         private HumanBeat beat;
         private float beatTime,settleLookTime;
         public string CurrentBeat => beat.ToString();
@@ -174,7 +176,8 @@ namespace LetMeSleep.Presentation
                 }
                 if(bindings.HumanAttention) bindings.HumanAttention.SetReducedMotion(reducedMotion);
                 if(bindings.MosquitoAttention) bindings.MosquitoAttention.SetReducedMotion(reducedMotion);
-                graph.Play(); Sample();
+                lastSampleFrame=-1;
+                graph.Play(); // The first pose is sampled in LateUpdate, after Unity animation and before CharacterView anchors.
                 }
             catch (Exception exception)
             {
@@ -216,6 +219,12 @@ namespace LetMeSleep.Presentation
             if (!ReferencesAlive()) { End(); return; }
             // Menu clock deliberately follows unscaled time, without writing any game clock.
             if (!reducedMotion) { elapsed += Time.unscaledDeltaTime; beatTime += Time.unscaledDeltaTime; }
+        }
+        private void LateUpdate()
+        {
+            if(!running || lastSampleFrame==Time.frameCount) return;
+            if(!ReferencesAlive()) { End(); return; }
+            lastSampleFrame=Time.frameCount;
             Sample(Time.unscaledDeltaTime);
         }
         private void Sample(float deltaSeconds=0)

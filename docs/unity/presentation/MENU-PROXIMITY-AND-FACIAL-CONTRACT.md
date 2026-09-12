@@ -53,3 +53,11 @@ Corrección: capturar frame de cabeza ANTES de aplicar cuello, aplicar ambos y l
 ## Micromovimiento ocular acotado
 
 VisualAttentionRig no tenía microsacadas; se añaden únicamente a LeftEye/RightEye sobre el objetivo visual existente: offset compartido≤1.1° yaw/≤.65° pitch, destino nuevo cada1.1–2.4s, suavizado exponencial existente y clamp final a límites certificados del ojo. RNG separado por instancia no cambia secuencia de blink. Cuello/cabeza reciben offsetscero; no cambia targetselector/ViewForward/input/red ni MainMenuLivingScene. ReduceMotion limpia offsets y los desactiva. Compilaciónoffline0/0; amplitud perceptible/natural pendiente de Play. Gameplay conserva ownership de radio2m/selecciónestable2s/fallback.
+
+## Fix confirmado de orden de evaluación: alas
+
+Native Director:234muestras Editorupdate/16s con Wing.L/Pupil.L/LidUpper.L constantes pese a FlightClipTime variable y morph humano hasta98.1. Llamar Sample(.016f) directamente cambió Wing.L de(.42967,-.43422,.75833,.22754) a(.34909,-.48002,.75367,.28230): clip y binding pueden escribir pose, pero el tick automático posterior restaura la anterior. No es una prueba de frecuencia insuficiente.
+
+Cambio acotado: MainMenuLivingScene DefaultExecutionOrder900, reloj/beatTime sólo en Update y Sample únicamente en LateUpdate, una vez por Time.frameCount. Se elimina Sample inicial de Begin; la primera pose sale en LateUpdate antes del refresh de anchors CharacterView1000 y render. El flujo PrepareForAnimation→graphEvaluate→facial permanece unido al único Sample. Sin cambio de frecuencia, cliptime, alas procedurales o perfiles de Animator. Por pedido de aislar el defecto no se desmonta runtimeAnimatorController en esta entrega; si la observación postrender demuestra otro writer posterior, evaluar exclusividad como siguiente fix separado.
+
+Compilaciónoffline0/0 y23checks lógica/morph siguenPASS; no equivalen a reproducción Unity. Director debe repetir freshPlay compilingfalse con quaterniones después del render real, comparar aleteo visible y pupil/lids, y salida/retorno sin duplicar samples. Instante Editorupdate puede anteceder LateUpdate: no usar sólo ese callback para afirmar que el fix falla.
