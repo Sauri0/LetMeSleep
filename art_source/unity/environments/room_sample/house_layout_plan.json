@@ -1,0 +1,916 @@
+{
+  "schema_version": 1,
+  "status": "fixed layout proposal in authoring data; geometry, traversal and native rendering pending",
+  "map_id": "house-patio-v1",
+  "axes": "Unity +Y up/+Z forward; all house coordinates metres",
+  "house_exterior": {
+    "min": [
+      0,
+      0,
+      0
+    ],
+    "max": [
+      12.8,
+      6.0,
+      11.4
+    ],
+    "floor_finished_y": [
+      0,
+      3
+    ],
+    "wall_thickness": 0.18,
+    "clear_height": 2.8
+  },
+  "plan_revision_note": "Expands earlier 12x10 proposal to12.8x11.4 to fit exact4.8x4.4 sample,1.8m halls and1.6m U-stair without shrinking clearances.",
+  "floor_volumes": [
+    {
+      "min": [
+        0.18,
+        0,
+        0.18
+      ],
+      "id": "HouseFloor0",
+      "max": [
+        12.62,
+        2.8,
+        11.22
+      ]
+    },
+    {
+      "min": [
+        0.18,
+        3,
+        0.18
+      ],
+      "id": "HouseFloor1",
+      "max": [
+        12.62,
+        5.8,
+        11.22
+      ]
+    }
+  ],
+  "zones": [
+    {
+      "id": "GroundHall",
+      "floor": "ground",
+      "kind": "corridor",
+      "min": [
+        5.16,
+        0.0,
+        0.18
+      ],
+      "max": [
+        6.96,
+        2.8,
+        11.22
+      ]
+    },
+    {
+      "id": "GroundWestLanding",
+      "floor": "ground",
+      "kind": "landing",
+      "min": [
+        0.18,
+        0.0,
+        4.76
+      ],
+      "max": [
+        4.98,
+        2.8,
+        7.38
+      ]
+    },
+    {
+      "id": "GroundEastLanding",
+      "floor": "ground",
+      "kind": "landing",
+      "min": [
+        7.14,
+        0.0,
+        4.76
+      ],
+      "max": [
+        12.62,
+        2.8,
+        6.56
+      ]
+    },
+    {
+      "id": "Living",
+      "floor": "ground",
+      "kind": "room",
+      "min": [
+        0.18,
+        0.0,
+        0.18
+      ],
+      "max": [
+        4.98,
+        2.8,
+        4.58
+      ]
+    },
+    {
+      "id": "Dining",
+      "floor": "ground",
+      "kind": "room",
+      "min": [
+        7.14,
+        0.0,
+        0.18
+      ],
+      "max": [
+        12.62,
+        2.8,
+        4.58
+      ]
+    },
+    {
+      "id": "Kitchen",
+      "floor": "ground",
+      "kind": "room",
+      "min": [
+        7.14,
+        0.0,
+        6.74
+      ],
+      "max": [
+        12.62,
+        2.8,
+        11.22
+      ]
+    },
+    {
+      "id": "UpperHall",
+      "floor": "upper",
+      "kind": "corridor",
+      "min": [
+        5.16,
+        3.0,
+        0.18
+      ],
+      "max": [
+        6.96,
+        5.8,
+        11.22
+      ]
+    },
+    {
+      "id": "UpperWestLanding",
+      "floor": "upper",
+      "kind": "landing",
+      "min": [
+        0.18,
+        3.0,
+        4.76
+      ],
+      "max": [
+        4.98,
+        5.8,
+        7.38
+      ]
+    },
+    {
+      "id": "UpperEastLanding",
+      "floor": "upper",
+      "kind": "landing",
+      "min": [
+        7.14,
+        3.0,
+        4.76
+      ],
+      "max": [
+        12.62,
+        5.8,
+        6.56
+      ]
+    },
+    {
+      "id": "BedroomA",
+      "floor": "upper",
+      "kind": "room",
+      "min": [
+        0.18,
+        3.0,
+        0.18
+      ],
+      "max": [
+        4.98,
+        5.8,
+        4.58
+      ]
+    },
+    {
+      "id": "BedroomB",
+      "floor": "upper",
+      "kind": "room",
+      "min": [
+        7.14,
+        3.0,
+        0.18
+      ],
+      "max": [
+        12.62,
+        5.8,
+        4.58
+      ]
+    },
+    {
+      "id": "Bathroom",
+      "floor": "upper",
+      "kind": "room",
+      "min": [
+        7.14,
+        3.0,
+        6.74
+      ],
+      "max": [
+        9.5,
+        5.8,
+        11.22
+      ]
+    },
+    {
+      "id": "Utility",
+      "floor": "upper",
+      "kind": "room",
+      "min": [
+        9.68,
+        3.0,
+        6.74
+      ],
+      "max": [
+        12.62,
+        5.8,
+        11.22
+      ]
+    },
+    {
+      "id": "Patio",
+      "floor": "ground",
+      "kind": "patio",
+      "min": [
+        0.18,
+        0.0,
+        11.4
+      ],
+      "max": [
+        12.62,
+        2.8,
+        19.22
+      ]
+    }
+  ],
+  "portals": [
+    {
+      "id": "Entry",
+      "from": "Outside",
+      "to": "GroundHall",
+      "center": [
+        6.06,
+        1.1,
+        0.09
+      ],
+      "width": 1.1,
+      "height": 2.2,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "door": true
+    },
+    {
+      "id": "HallWest0",
+      "from": "GroundHall",
+      "to": "GroundWestLanding",
+      "center": [
+        5.07,
+        1.1,
+        6.05
+      ],
+      "width": 1.8,
+      "height": 2.2,
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "door": false
+    },
+    {
+      "id": "HallEast0",
+      "from": "GroundHall",
+      "to": "GroundEastLanding",
+      "center": [
+        7.05,
+        1.1,
+        5.66
+      ],
+      "width": 1.8,
+      "height": 2.2,
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "door": false
+    },
+    {
+      "id": "LivingDoor",
+      "from": "GroundWestLanding",
+      "to": "Living",
+      "center": [
+        3.86,
+        1.1,
+        4.67
+      ],
+      "width": 1.1,
+      "height": 2.2,
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "door": true
+    },
+    {
+      "id": "DiningDoor",
+      "from": "GroundEastLanding",
+      "to": "Dining",
+      "center": [
+        8.6,
+        1.1,
+        4.67
+      ],
+      "width": 1.1,
+      "height": 2.2,
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "door": true
+    },
+    {
+      "id": "KitchenDoor",
+      "from": "GroundEastLanding",
+      "to": "Kitchen",
+      "center": [
+        8.6,
+        1.1,
+        6.65
+      ],
+      "width": 1.1,
+      "height": 2.2,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "door": true
+    },
+    {
+      "id": "HallWest1",
+      "from": "UpperHall",
+      "to": "UpperWestLanding",
+      "center": [
+        5.07,
+        4.1,
+        6.05
+      ],
+      "width": 1.8,
+      "height": 2.2,
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "door": false
+    },
+    {
+      "id": "HallEast1",
+      "from": "UpperHall",
+      "to": "UpperEastLanding",
+      "center": [
+        7.05,
+        4.1,
+        5.66
+      ],
+      "width": 1.8,
+      "height": 2.2,
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "door": false
+    },
+    {
+      "id": "BedroomADoor",
+      "from": "UpperWestLanding",
+      "to": "BedroomA",
+      "center": [
+        3.86,
+        4.1,
+        4.67
+      ],
+      "width": 1.1,
+      "height": 2.2,
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "door": true
+    },
+    {
+      "id": "BedroomBDoor",
+      "from": "UpperEastLanding",
+      "to": "BedroomB",
+      "center": [
+        8.6,
+        4.1,
+        4.67
+      ],
+      "width": 1.1,
+      "height": 2.2,
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "door": true
+    },
+    {
+      "id": "BathroomDoor",
+      "from": "UpperEastLanding",
+      "to": "Bathroom",
+      "center": [
+        8.25,
+        4.1,
+        6.65
+      ],
+      "width": 1.1,
+      "height": 2.2,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "door": true
+    },
+    {
+      "id": "UtilityDoor",
+      "from": "UpperEastLanding",
+      "to": "Utility",
+      "center": [
+        11.1,
+        4.1,
+        6.65
+      ],
+      "width": 1.1,
+      "height": 2.2,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "door": true
+    },
+    {
+      "id": "PatioDoor",
+      "from": "GroundHall",
+      "to": "Patio",
+      "center": [
+        6.06,
+        1.1,
+        11.31
+      ],
+      "width": 1.1,
+      "height": 2.2,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "door": true
+    }
+  ],
+  "stair": {
+    "id": "MainStair",
+    "from": "GroundWestLanding",
+    "to": "UpperWestLanding",
+    "interior_box": {
+      "min": [
+        1.48,
+        0,
+        7.38
+      ],
+      "max": [
+        4.98,
+        5.8,
+        11.22
+      ]
+    },
+    "lower_flight": {
+      "end_y": 1.5,
+      "clear_x": [
+        3.38,
+        4.98
+      ],
+      "start_y": 0,
+      "end_z": 9.62,
+      "start_z": 7.38,
+      "direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "upper_flight": {
+      "end_y": 3,
+      "clear_x": [
+        1.48,
+        3.08
+      ],
+      "start_y": 1.5,
+      "end_z": 7.38,
+      "start_z": 9.62,
+      "direction": [
+        0,
+        0,
+        -1
+      ]
+    },
+    "risers_per_flight": 9,
+    "total_risers": 18,
+    "riser_height": 0.16666666666666666,
+    "treads_per_flight": 8,
+    "tread_depth": 0.28,
+    "clear_width": 1.6,
+    "mid_landing": {
+      "min": [
+        1.48,
+        1.5,
+        9.62
+      ],
+      "max": [
+        4.98,
+        1.5,
+        11.22
+      ],
+      "clear_depth": 1.6
+    },
+    "lower_approach": {
+      "min": [
+        3.38,
+        0,
+        5.58
+      ],
+      "max": [
+        4.98,
+        0,
+        7.38
+      ],
+      "clear_depth": 1.8
+    },
+    "upper_exit": {
+      "min": [
+        1.48,
+        3,
+        5.58
+      ],
+      "max": [
+        3.08,
+        3,
+        7.38
+      ],
+      "clear_depth": 1.8
+    },
+    "slab_opening": {
+      "min": [
+        1.48,
+        2.8,
+        7.38
+      ],
+      "max": [
+        4.98,
+        3.0,
+        11.22
+      ]
+    },
+    "minimum_headroom": 2.2,
+    "guardrails": "Outside clear flight widths; divider in0.30m gap. Guard upper floor front edge above lower flight, keep upper exit free. Understair is not a human route."
+  },
+  "sample_reuse": {
+    "note": "Exact interior fit; door faces north landing. Reuse furniture/door after sample native receipt. Full-house shell owns boundaries; never duplicate sample floor/walls/ceiling over house shell.",
+    "yaw_degrees": 180,
+    "asset": "room_sample",
+    "zone": "BedroomA",
+    "position": [
+      4.98,
+      3,
+      4.58
+    ]
+  },
+  "patio": {
+    "note": "Candidate props only; no new assets generated.",
+    "bench_reserve": {
+      "min": [
+        9,
+        0,
+        15.5
+      ],
+      "max": [
+        11,
+        1.2,
+        16.1
+      ]
+    },
+    "main_path": {
+      "z": [
+        11.4,
+        18.2
+      ],
+      "width": 1.8,
+      "center_x": 6.06
+    },
+    "tree_candidates": [
+      [
+        2,
+        0,
+        16.5
+      ],
+      [
+        10.8,
+        0,
+        18.3
+      ]
+    ],
+    "door_turn_clearance": 1.8,
+    "bounds_xz": [
+      0,
+      11.4,
+      12.8,
+      19.4
+    ]
+  },
+  "sealed_service_void": {
+    "min": [
+      0.18,
+      0,
+      7.56
+    ],
+    "max": [
+      1.3,
+      5.8,
+      11.22
+    ],
+    "note": "Not a room or required route; final shell must close it, no accidental mosquito escape."
+  },
+  "lobby": {
+    "central_clear": {
+      "min": [
+        -3,
+        0,
+        -2
+      ],
+      "max": [
+        3,
+        3.2,
+        2
+      ]
+    },
+    "spawn_clearance_radius": 0.4,
+    "separate_scene": true,
+    "spawns": [
+      {
+        "id": "LobbySpawn_00",
+        "forward": [
+          0.8479983040050879,
+          0,
+          0.5299989400031799
+        ],
+        "position": [
+          -2.4,
+          0,
+          -1.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_01",
+        "forward": [
+          0.4705882352941177,
+          0,
+          0.8823529411764706
+        ],
+        "position": [
+          -0.8,
+          0,
+          -1.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_02",
+        "forward": [
+          -0.4705882352941177,
+          0,
+          0.8823529411764706
+        ],
+        "position": [
+          0.8,
+          0,
+          -1.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_03",
+        "forward": [
+          -0.8479983040050879,
+          0,
+          0.5299989400031799
+        ],
+        "position": [
+          2.4,
+          0,
+          -1.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_04",
+        "forward": [
+          0.9789804197376051,
+          0,
+          0.20395425411200108
+        ],
+        "position": [
+          -2.4,
+          0,
+          -0.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_05",
+        "forward": [
+          0.8479983040050879,
+          0,
+          0.5299989400031799
+        ],
+        "position": [
+          -0.8,
+          0,
+          -0.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_06",
+        "forward": [
+          -0.8479983040050879,
+          0,
+          0.5299989400031799
+        ],
+        "position": [
+          0.8,
+          0,
+          -0.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_07",
+        "forward": [
+          -0.9789804197376051,
+          0,
+          0.20395425411200108
+        ],
+        "position": [
+          2.4,
+          0,
+          -0.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_08",
+        "forward": [
+          0.9789804197376051,
+          0,
+          -0.20395425411200108
+        ],
+        "position": [
+          -2.4,
+          0,
+          0.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_09",
+        "forward": [
+          0.8479983040050879,
+          0,
+          -0.5299989400031799
+        ],
+        "position": [
+          -0.8,
+          0,
+          0.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_10",
+        "forward": [
+          -0.8479983040050879,
+          0,
+          -0.5299989400031799
+        ],
+        "position": [
+          0.8,
+          0,
+          0.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_11",
+        "forward": [
+          -0.9789804197376051,
+          0,
+          -0.20395425411200108
+        ],
+        "position": [
+          2.4,
+          0,
+          0.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_12",
+        "forward": [
+          0.8479983040050879,
+          0,
+          -0.5299989400031799
+        ],
+        "position": [
+          -2.4,
+          0,
+          1.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_13",
+        "forward": [
+          0.4705882352941177,
+          0,
+          -0.8823529411764706
+        ],
+        "position": [
+          -0.8,
+          0,
+          1.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_14",
+        "forward": [
+          -0.4705882352941177,
+          0,
+          -0.8823529411764706
+        ],
+        "position": [
+          0.8,
+          0,
+          1.5
+        ]
+      },
+      {
+        "id": "LobbySpawn_15",
+        "forward": [
+          -0.8479983040050879,
+          0,
+          -0.5299989400031799
+        ],
+        "position": [
+          2.4,
+          0,
+          1.5
+        ]
+      }
+    ],
+    "scene_id": "private-lobby-v1",
+    "capacity_status": "16 geometric candidates only; capacity/performance/network not certified",
+    "perimeter_min_width": 1.8,
+    "bounds": {
+      "min": [
+        -5,
+        0,
+        -4
+      ],
+      "max": [
+        5,
+        3.2,
+        4
+      ]
+    }
+  },
+  "boundary_ownership": "One shell owner per wall/slab junction. Portals cut real openings; no overlapping complete room shells. No physics through closed window.",
+  "validation_scope": "Numeric extents, non-overlapping same-floor zones, graph connectivity and lobby spawn clearances only; no Unity traversal or art evidence."
+}

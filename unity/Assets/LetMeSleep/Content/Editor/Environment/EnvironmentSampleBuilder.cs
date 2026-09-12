@@ -142,7 +142,7 @@ namespace LetMeSleep.Content.Editor
             using (var sha = System.Security.Cryptography.SHA256.Create())
                 return BitConverter.ToString(sha.ComputeHash(File.ReadAllBytes(file))).Replace("-", "").ToLowerInvariant();
         }
-        static void EnsureFolder(string path)
+        internal static void EnsureFolder(string path)
         {
             if (AssetDatabase.IsValidFolder(path)) return;
             int split = path.LastIndexOf('/');
@@ -228,6 +228,10 @@ namespace LetMeSleep.Content.Editor
                     Vector3.Distance(importedShell.bounds.max, new Vector3(4.98f,3,.18f)) < .002f,
                     "FBX room import convention changed; reassess coordinate conversion.");
             }
+            BakeModelFrame(model, fileName, Output + "/Meshes");
+        }
+        internal static void BakeModelFrame(GameObject model, string fileName, string meshOutput)
+        {
             Matrix4x4 correction = Matrix4x4.Scale(new Vector3(1,1,-1));
             var transforms = model.GetComponentsInChildren<Transform>(true);
             foreach (var t in transforms)
@@ -276,7 +280,7 @@ namespace LetMeSleep.Content.Editor
                     Require(Vector3.Distance(filter.transform.TransformPoint(vertices[i]),
                         correction.MultiplyPoint3x4(before[filter].MultiplyPoint3x4(originalVertices[i]))) < .00001f,
                         "Coordinate correction changed vertex beyond explicit reflection: " + filter.name);
-                string assetPath = Output + "/Meshes/" + Path.GetFileNameWithoutExtension(fileName) + "_" + filter.name + ".asset";
+                string assetPath = meshOutput + "/" + Path.GetFileNameWithoutExtension(fileName) + "_" + filter.name + ".asset";
                 Mesh saved = AssetDatabase.LoadAssetAtPath<Mesh>(assetPath);
                 if (saved == null) { AssetDatabase.CreateAsset(converted, assetPath); saved = converted; }
                 else { EditorUtility.CopySerialized(converted, saved); Object.DestroyImmediate(converted); EditorUtility.SetDirty(saved); }
@@ -303,7 +307,7 @@ namespace LetMeSleep.Content.Editor
                 socket.rotation = Quaternion.LookRotation(V(rule.outward_normal), Vector3.up);
             }
         }
-        static Transform Find(GameObject root, string name)
+        internal static Transform Find(GameObject root, string name)
         {
             var matches = root.GetComponentsInChildren<Transform>(true).Where(t => t.name == name).ToArray();
             Require(matches.Length == 1, "Expected one node " + name + ", found " + matches.Length);
@@ -341,7 +345,7 @@ namespace LetMeSleep.Content.Editor
             Require(values != null && values.Length == 3, "Expected XYZ vector");
             return new Vector3(values[0], values[1], values[2]);
         }
-        static int Layer(string name)
+        internal static int Layer(string name)
         {
             int layer = LayerMask.NameToLayer(name);
             if (layer >= 0) return layer;

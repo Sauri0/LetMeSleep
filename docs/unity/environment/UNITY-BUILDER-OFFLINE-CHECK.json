@@ -3,10 +3,21 @@
   "unity_api_version": "6000.3.24f1",
   "compiler": "Unity bundled DotNetSdkRoslyn/csc.dll",
   "exit_code": 0,
-  "source_sha256": "47c2130b225b2abb8508d6cfb38d1d0b3e40a29787624b99a0561d9e4792dcae",
+  "source_sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2",
+  "builder_sources": [
+    {
+      "name": "AlfaMapBuilder.cs",
+      "sha256": "a451ddbec328ccb1afd9e3d20fe85cfa24230bce6c3eff33a0c5d88a5c9f76f8"
+    },
+    {
+      "name": "EnvironmentSampleBuilder.cs",
+      "sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2"
+    }
+  ],
   "checks": [
     "C# compilation",
-    "Unity API names and signatures"
+    "Unity API names and signatures",
+    "Delivered GameplayDoor/GameplaySurface bridge and map data types"
   ],
   "pending": [
     "Native Editor import and builder execution",

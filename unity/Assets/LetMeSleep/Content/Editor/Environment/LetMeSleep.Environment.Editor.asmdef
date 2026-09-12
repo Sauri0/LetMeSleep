@@ -1,7 +1,7 @@
 {
   "name": "LetMeSleep.Environment.Editor",
   "rootNamespace": "LetMeSleep.Content.Editor",
-  "references": [],
+  "references": ["LetMeSleep.Content.Environment", "LetMeSleep.Gameplay", "LetMeSleep.Gameplay.Unity"],
   "includePlatforms": ["Editor"],
   "autoReferenced": true
 }

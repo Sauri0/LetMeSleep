@@ -1,0 +1,4089 @@
+{
+  "scope": "Blender source geometry and FBX roundtrip only; no Unity maps or renders validated",
+  "blender": "5.2.1 LTS",
+  "passed": 811,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "house_alfa_static unit scale HouseAlfaSource",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Entry_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Entry_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Entry_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Entry_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Entry_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Entry_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Entry_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Entry_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Entry_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale LivingDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold LivingDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume LivingDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale LivingDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold LivingDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume LivingDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale LivingDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold LivingDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume LivingDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale DiningDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold DiningDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume DiningDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale DiningDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold DiningDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume DiningDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale DiningDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold DiningDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume DiningDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale KitchenDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold KitchenDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume KitchenDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale KitchenDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold KitchenDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume KitchenDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale KitchenDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold KitchenDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume KitchenDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale BedroomADoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold BedroomADoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume BedroomADoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale BedroomADoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold BedroomADoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume BedroomADoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale BedroomADoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold BedroomADoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume BedroomADoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale BedroomBDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold BedroomBDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume BedroomBDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale BedroomBDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold BedroomBDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume BedroomBDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale BedroomBDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold BedroomBDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume BedroomBDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale BathroomDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold BathroomDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume BathroomDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale BathroomDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold BathroomDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume BathroomDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale BathroomDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold BathroomDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume BathroomDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale UtilityDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold UtilityDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume UtilityDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale UtilityDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold UtilityDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume UtilityDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale UtilityDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold UtilityDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume UtilityDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale PatioDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold PatioDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume PatioDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale PatioDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold PatioDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume PatioDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale PatioDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold PatioDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume PatioDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_0_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_0_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_0_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_0_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_0_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_0_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_0_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_0_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_0_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_0_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_0_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_0_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_0_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_0_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_0_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_1_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_1_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_1_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_1_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_1_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_1_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_1_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_1_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_1_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_1_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_1_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_1_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_1_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_1_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_1_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_2_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_2_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_2_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_2_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_2_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_2_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_2_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_2_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_2_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_2_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_2_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_2_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_2_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_2_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_2_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_3_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_3_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_3_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_3_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_3_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_3_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_3_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_3_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_3_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_3_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_3_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_3_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_3_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_3_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_3_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_4_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_4_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_4_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_4_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_4_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_4_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_4_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_4_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_4_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_4_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_4_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_4_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_4_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_4_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_4_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_5_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_5_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_5_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_5_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_5_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_5_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_5_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_5_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_5_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_5_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_5_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_5_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_5_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_5_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_5_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_6_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_6_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_6_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_6_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_6_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_6_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_6_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_6_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_6_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_6_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_6_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_6_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_6_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_6_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_6_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_7_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_7_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_7_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_7_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_7_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_7_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_7_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_7_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_7_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_7_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_7_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_7_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Window_7_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Window_7_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Window_7_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale HouseShell",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold HouseShell",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume HouseShell",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Roof_Continuous",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Roof_Continuous",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Roof_Continuous",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Lower_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Lower_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Lower_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Lower_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Lower_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Lower_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Lower_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Lower_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Lower_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Lower_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Lower_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Lower_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Lower_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Lower_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Lower_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Lower_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Lower_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Lower_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Lower_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Lower_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Lower_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Lower_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Lower_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Lower_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_MidLanding",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_MidLanding",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_MidLanding",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Handrail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Handrail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Handrail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Baluster",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Baluster",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Baluster",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Baluster.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Baluster.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Baluster.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Baluster.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Baluster.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Baluster.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Handrail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Handrail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Handrail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Baluster.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Baluster.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Baluster.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Baluster.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Baluster.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Baluster.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Baluster.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Baluster.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Baluster.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_Guard",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_Guard",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_Guard",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_Guard_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_Guard_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_Guard_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Stair_Upper_Guard_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Stair_Upper_Guard_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Stair_Upper_Guard_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Post.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Post.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Post.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Post.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Post.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Post.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Post.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Post.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Post.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Rail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Rail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Rail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Rail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Rail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Rail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Post.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Post.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Post.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Post.006",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Post.006",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Post.006",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Post.007",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Post.007",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Post.007",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Post.008",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Post.008",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Post.008",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Post.009",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Post.009",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Post.009",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Rail.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Rail.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Rail.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Rail.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Rail.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Rail.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Back_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Back_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Back_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Back_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Back_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Back_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Back_Post.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Back_Post.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Back_Post.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Back_Post.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Back_Post.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Back_Post.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Back_Post.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Back_Post.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Back_Post.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Back_Post.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Back_Post.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Back_Post.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Back_Rail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Back_Rail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Back_Rail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static unit scale Fence_Back_Rail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static manifold Fence_Back_Rail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static positive volume Fence_Back_Rail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Entry_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Entry_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Entry_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider LivingDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider LivingDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider LivingDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider DiningDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider DiningDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider DiningDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider KitchenDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider KitchenDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider KitchenDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider BedroomADoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider BedroomADoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider BedroomADoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider BedroomBDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider BedroomBDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider BedroomBDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider BathroomDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider BathroomDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider BathroomDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider UtilityDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider UtilityDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider UtilityDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider PatioDoor_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider PatioDoor_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider PatioDoor_Header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_0_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_0_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_0_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_0_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_0_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_1_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_1_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_1_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_1_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_1_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_2_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_2_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_2_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_2_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_2_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_3_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_3_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_3_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_3_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_3_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_4_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_4_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_4_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_4_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_4_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_5_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_5_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_5_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_5_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_5_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_6_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_6_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_6_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_6_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_6_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_7_Pane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_7_Jamb_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_7_Rail_-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_7_Jamb_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Window_7_Rail_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_0_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_1_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_2_30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_3_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_4_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_4_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_4_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_4_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_4_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_4_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_4_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_5_10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_6_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_6_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_6_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_6_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_6_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_6_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_6_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_6_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_6_8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_7_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_7_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_7_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_7_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_7_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_7_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_8_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_8_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_8_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_8_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_8_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_8_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_9_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_9_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_9_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_9_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_10_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_10_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_10_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_10_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_11_13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_12_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_13_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider HouseShell_Solid_14_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Lower_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Upper_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Lower_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Upper_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Lower_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Upper_2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Lower_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Upper_3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Lower_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Upper_4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Lower_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Upper_5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Lower_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Upper_6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Lower_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_Upper_7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Stair_MidLanding",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Post.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Post.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Post.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Rail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Rail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Post.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Post.006",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Post.007",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Post.008",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Post.009",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Rail.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Rail.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Back_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Back_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Back_Post.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Back_Post.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Back_Post.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Back_Post.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Back_Rail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static collider Fence_Back_Rail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Roof_Continuous",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Handrail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Baluster",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Baluster.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Baluster.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Handrail.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Baluster.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Baluster.004",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Baluster.005",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Upper_Guard",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Upper_Guard_Post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static mesh collider Stair_Upper_Guard_Post.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static roundtrip object set",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house_alfa_static roundtrip hierarchy",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "house_alfa_static roundtrip bounds within 0.1mm",
+      "passed": true,
+      "detail": 3.337860107421875e-06
+    },
+    {
+      "name": "lobby_alfa_static unit scale LobbyAlfaSource",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static unit scale LobbyShell",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static manifold LobbyShell",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static positive volume LobbyShell",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static unit scale Lobby_Wall_Panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static manifold Lobby_Wall_Panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static positive volume Lobby_Wall_Panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static unit scale Lobby_Wall_Panel.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static manifold Lobby_Wall_Panel.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static positive volume Lobby_Wall_Panel.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static unit scale Lobby_Wall_Panel.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static manifold Lobby_Wall_Panel.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static positive volume Lobby_Wall_Panel.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static collider LobbyShell_Solid_0_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static collider LobbyShell_Solid_1_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static collider LobbyShell_Solid_2_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static collider LobbyShell_Solid_3_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static collider LobbyShell_Solid_4_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static collider LobbyShell_Solid_5_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static roundtrip object set",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "lobby_alfa_static roundtrip hierarchy",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "lobby_alfa_static roundtrip bounds within 0.1mm",
+      "passed": true,
+      "detail": 7.152557373046875e-07
+    },
+    {
+      "name": "furniture_kit_alfa unit scale FurnitureKitAlfa",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Table",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Table_Top",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Table_Top",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Table_Top",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Table_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Table_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Table_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Table_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Table_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Table_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Table_Leg.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Table_Leg.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Table_Leg.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Table_Leg.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Table_Leg.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Table_Leg.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Sofa",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Sofa_Base",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Sofa_Base",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Sofa_Base",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Sofa_Seat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Sofa_Seat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Sofa_Seat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Sofa_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Sofa_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Sofa_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Sofa_Arm",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Sofa_Arm",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Sofa_Arm",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Sofa_Arm.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Sofa_Arm.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Sofa_Arm.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Counter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Counter_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Counter_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Counter_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Counter_Top",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Counter_Top",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Counter_Top",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Counter_Front",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Counter_Front",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Counter_Front",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Counter_Front.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Counter_Front.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Counter_Front.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Stove",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Stove_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Stove_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Stove_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Stove_Oven",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Stove_Oven",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Stove_Oven",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Stove_Burner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Stove_Burner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Stove_Burner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Stove_Burner.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Stove_Burner.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Stove_Burner.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Stove_Burner.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Stove_Burner.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Stove_Burner.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Stove_Burner.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Stove_Burner.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Stove_Burner.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Fridge",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Fridge_Case",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Fridge_Case",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Fridge_Case",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Fridge_Door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Fridge_Door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Fridge_Door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Fridge_Handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Fridge_Handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Fridge_Handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Fridge_Door.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Fridge_Door.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Fridge_Door.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Fridge_Handle.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Fridge_Handle.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Fridge_Handle.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Vanity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Vanity_Cabinet",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Vanity_Cabinet",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Vanity_Cabinet",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Vanity_Basin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Vanity_Basin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Vanity_Basin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Vanity_Basin_Depression",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Vanity_Basin_Depression",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Vanity_Basin_Depression",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Vanity_Tap",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Vanity_Tap",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Vanity_Tap",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Toilet",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Toilet_Base",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Toilet_Base",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Toilet_Base",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Toilet_Bowl",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Toilet_Bowl",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Toilet_Bowl",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Toilet_SeatInset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Toilet_SeatInset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Toilet_SeatInset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Toilet_Tank",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Toilet_Tank",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Toilet_Tank",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Washer",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Washer_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Washer_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Washer_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Washer_Door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Washer_Door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Washer_Door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Washer_Panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Washer_Panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Washer_Panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Shelf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Shelf_Side",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Shelf_Side",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Shelf_Side",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Shelf_Side.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Shelf_Side.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Shelf_Side.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Shelf_Board",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Shelf_Board",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Shelf_Board",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Shelf_Board.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Shelf_Board.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Shelf_Board.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Shelf_Board.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Shelf_Board.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Shelf_Board.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Shelf_Board.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Shelf_Board.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Shelf_Board.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_PatioBench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_PatioBench_Seat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_PatioBench_Seat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_PatioBench_Seat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_PatioBench_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_PatioBench_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_PatioBench_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_PatioBench_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_PatioBench_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_PatioBench_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_PatioBench_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_PatioBench_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_PatioBench_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Pine",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Pine_Trunk",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Pine_Trunk",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Pine_Trunk",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Pine_Foliage",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Pine_Foliage",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Pine_Foliage",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Pine_Foliage.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Pine_Foliage.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Pine_Foliage.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa unit scale Kit_Pine_Foliage.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa manifold Kit_Pine_Foliage.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa positive volume Kit_Pine_Foliage.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Table_Top",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Table_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Table_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Table_Leg.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Table_Leg.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Sofa_Base",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Sofa_Seat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Sofa_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Sofa_Arm",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Sofa_Arm.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Counter_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Counter_Top",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Counter_Front",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Counter_Front.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Stove_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Stove_Oven",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Stove_Burner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Stove_Burner.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Stove_Burner.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Stove_Burner.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Fridge_Case",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Fridge_Door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Fridge_Handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Fridge_Door.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Fridge_Handle.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Vanity_Cabinet",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Vanity_Basin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Vanity_Basin_Depression",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Vanity_Tap",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Toilet_Base",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Toilet_Bowl",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Toilet_SeatInset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Toilet_Tank",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Washer_Body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Washer_Door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Washer_Panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Shelf_Side",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Shelf_Side.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Shelf_Board",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Shelf_Board.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Shelf_Board.002",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Shelf_Board.003",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_PatioBench_Seat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_PatioBench_Back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_PatioBench_Leg",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_PatioBench_Leg.001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa collider Kit_Pine_Trunk",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa roundtrip object set",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "furniture_kit_alfa roundtrip hierarchy",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "furniture_kit_alfa roundtrip bounds within 0.1mm",
+      "passed": true,
+      "detail": 5.066394805908203e-07
+    }
+  ],
+  "files": {
+    "house_alfa_static.blend": {
+      "bytes": 181150,
+      "sha256": "97f60a971457a802c46805c7518672fea0aaed85363f34f278e7ad081e06407d"
+    },
+    "house_alfa_static.fbx": {
+      "bytes": 342908,
+      "sha256": "fd16b221d0e7247797af1d9a43a791f31b42d4243eee233f6e1f1d06adc87b84"
+    },
+    "lobby_alfa_static.blend": {
+      "bytes": 108811,
+      "sha256": "5824f453aeb834df744fa118e9d272e0ae6a43bb19253215582f2703d964af67"
+    },
+    "lobby_alfa_static.fbx": {
+      "bytes": 29708,
+      "sha256": "bee047c6af7842e08d22ec60dfc4ca5c09f24f96acd0b6e52f24752a410e0550"
+    },
+    "furniture_kit_alfa.blend": {
+      "bytes": 144458,
+      "sha256": "559b5b05e1aed686fc5501fd6a2b29ee1f1121c24a6e4e1cfa3ab561b8552378"
+    },
+    "furniture_kit_alfa.fbx": {
+      "bytes": 181868,
+      "sha256": "5bb6e570a1eb0101892688a354a7e2ae05c0a343824bfb2dfbd77c1cb6ac4461"
+    }
+  }
+}
