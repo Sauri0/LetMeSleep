@@ -47,12 +47,15 @@ el piso, en vez de la pared inmediatamente posterior. Ambos fills se desactivan
 en la casa. El volumen global usa bloom 0.025, threshold 1.35 y scatter 0.35.
 
 La casa conserva los pools cálidos de cada luminaria sobre un ambiente
-`Trilight` nocturno legible: sky `(0.14, 0.17, 0.24)`, equator
-`(0.09, 0.095, 0.13)`, ground `(0.045, 0.042, 0.06)` e intensidad `1.0`.
+`Trilight` nocturno legible: sky `(0.30, 0.36, 0.48)`, equator
+`(0.22, 0.23, 0.30)`, ground `(0.15, 0.14, 0.19)` e intensidad `1.0`.
 Este relleno frío evita techos negros y paredes sin lectura sin convertir la
 escena en iluminación diurna ni sumar luces por habitación. Al enlazar el mapa,
 `DynamicGI.UpdateEnvironment()` reconstruye el ambient probe que URP entrega a
-los materiales Lit con los colores recién seleccionados.
+los materiales Lit con los colores recién seleccionados. En color space lineal,
+la conversión de estos colores gamma produce un coeficiente L0 aproximado de
+`(0.043, 0.052, 0.093)`; el perfil anterior sólo producía
+`(0.009, 0.011, 0.019)` y dejaba techo y paredes sin energía útil.
 
 La captura de diagnóstico previa al ajuste es
 `N:/LetMeSleep/Validation/Alfa-VisualRecovery/menu-1080.png`, 1920×1080,

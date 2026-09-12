@@ -223,13 +223,13 @@ namespace LetMeSleep.Presentation
         {
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = house
-                ? new Color(0.14f, 0.17f, 0.24f)
+                ? new Color(0.30f, 0.36f, 0.48f)
                 : new Color(0.23f, 0.26f, 0.34f);
             RenderSettings.ambientEquatorColor = house
-                ? new Color(0.09f, 0.095f, 0.13f)
+                ? new Color(0.22f, 0.23f, 0.30f)
                 : new Color(0.15f, 0.15f, 0.18f);
             RenderSettings.ambientGroundColor = house
-                ? new Color(0.045f, 0.042f, 0.06f)
+                ? new Color(0.15f, 0.14f, 0.19f)
                 : new Color(0.075f, 0.07f, 0.085f);
             RenderSettings.ambientIntensity = house ? 1f : 1.08f;
             RenderSettings.reflectionIntensity = house ? 0.42f : 0.52f;
