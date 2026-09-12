@@ -9,15 +9,14 @@ namespace LetMeSleep.Online
         InvalidDetails,
         SameDeviceIdentity,
         IncompatibleVersion,
-        LobbyFull,
         UnsafeLobbyConfiguration
     }
 
-    /// <summary>Pure pre-join validation for EOS search results.</summary>
+    /// <summary>Pure validation of details copied immediately after a join-by-ID succeeds.</summary>
     public static class LobbyJoinPolicy
     {
-        public static LobbyCandidateRejection Validate(string localUserId, string ownerUserId, string bucketId,
-            uint maxMembers, uint availableSlots, bool allowHostMigration, bool rtcRoomEnabled, bool allowJoinById)
+        public static LobbyCandidateRejection ValidateJoined(string localUserId, string ownerUserId, string bucketId,
+            uint maxMembers, bool allowHostMigration, bool rtcRoomEnabled, bool allowJoinById)
         {
             if (string.IsNullOrWhiteSpace(localUserId) || string.IsNullOrWhiteSpace(ownerUserId))
                 return LobbyCandidateRejection.InvalidDetails;
@@ -27,8 +26,6 @@ namespace LetMeSleep.Online
                 return LobbyCandidateRejection.IncompatibleVersion;
             if (maxMembers < 2 || maxMembers > RoomRules.Capacity)
                 return LobbyCandidateRejection.UnsafeLobbyConfiguration;
-            if (availableSlots == 0)
-                return LobbyCandidateRejection.LobbyFull;
             if (allowHostMigration || rtcRoomEnabled || !allowJoinById)
                 return LobbyCandidateRejection.UnsafeLobbyConfiguration;
             return LobbyCandidateRejection.None;

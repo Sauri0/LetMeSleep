@@ -8,34 +8,34 @@ public static class LobbyJoinPolicyChecks
     public static int Main()
     {
         Expect(LobbyCandidateRejection.None,
-            LobbyJoinPolicy.Validate("guest", "host", "lms-unity-094-alfa-2", 16, 15, false, false, true),
-            "valid candidate");
+            LobbyJoinPolicy.ValidateJoined("guest", "host", "lms-unity-094-alfa-2", 16, false, false, true),
+            "valid joined lobby");
         Expect(LobbyCandidateRejection.InvalidDetails,
-            LobbyJoinPolicy.Validate("", "host", "lms-unity-094-alfa-2", 8, 7, false, false, true),
+            LobbyJoinPolicy.ValidateJoined("", "host", "lms-unity-094-alfa-2", 8, false, false, true),
             "missing local identity");
         Expect(LobbyCandidateRejection.InvalidDetails,
-            LobbyJoinPolicy.Validate("guest", "", "lms-unity-094-alfa-2", 8, 7, false, false, true),
+            LobbyJoinPolicy.ValidateJoined("guest", "", "lms-unity-094-alfa-2", 8, false, false, true),
             "missing owner identity");
         Expect(LobbyCandidateRejection.SameDeviceIdentity,
-            LobbyJoinPolicy.Validate("same", "same", "lms-unity-094-alfa-2", 8, 7, false, false, true),
+            LobbyJoinPolicy.ValidateJoined("same", "same", "lms-unity-094-alfa-2", 8, false, false, true),
             "own lobby");
         Expect(LobbyCandidateRejection.IncompatibleVersion,
-            LobbyJoinPolicy.Validate("guest", "host", "lms-unity-older", 8, 7, false, false, true),
+            LobbyJoinPolicy.ValidateJoined("guest", "host", "lms-unity-older", 8, false, false, true),
             "protocol mismatch");
-        Expect(LobbyCandidateRejection.LobbyFull,
-            LobbyJoinPolicy.Validate("guest", "host", "lms-unity-094-alfa-2", 8, 0, false, false, true),
-            "full lobby");
         Expect(LobbyCandidateRejection.UnsafeLobbyConfiguration,
-            LobbyJoinPolicy.Validate("guest", "host", "lms-unity-094-alfa-2", 17, 16, false, false, true),
+            LobbyJoinPolicy.ValidateJoined("guest", "host", "lms-unity-094-alfa-2", 17, false, false, true),
             "oversized lobby");
         Expect(LobbyCandidateRejection.UnsafeLobbyConfiguration,
-            LobbyJoinPolicy.Validate("guest", "host", "lms-unity-094-alfa-2", 8, 7, true, false, true),
+            LobbyJoinPolicy.ValidateJoined("guest", "host", "lms-unity-094-alfa-2", 1, false, false, true),
+            "undersized lobby");
+        Expect(LobbyCandidateRejection.UnsafeLobbyConfiguration,
+            LobbyJoinPolicy.ValidateJoined("guest", "host", "lms-unity-094-alfa-2", 8, true, false, true),
             "host migration enabled");
         Expect(LobbyCandidateRejection.UnsafeLobbyConfiguration,
-            LobbyJoinPolicy.Validate("guest", "host", "lms-unity-094-alfa-2", 8, 7, false, true, true),
+            LobbyJoinPolicy.ValidateJoined("guest", "host", "lms-unity-094-alfa-2", 8, false, true, true),
             "RTC enabled");
         Expect(LobbyCandidateRejection.UnsafeLobbyConfiguration,
-            LobbyJoinPolicy.Validate("guest", "host", "lms-unity-094-alfa-2", 8, 7, false, false, false),
+            LobbyJoinPolicy.ValidateJoined("guest", "host", "lms-unity-094-alfa-2", 8, false, false, false),
             "join by ID disabled");
 
         Console.WriteLine($"ONLINE_POLICY_CHECKS checks={checks} failures=0 native_sdk_loaded=false");

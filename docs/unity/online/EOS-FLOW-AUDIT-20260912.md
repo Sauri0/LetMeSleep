@@ -14,9 +14,9 @@ U094-12 continúa **BLOCK** hasta ejecutar el mismo candidato con dos identidade
 |---|---|---|
 | Crear | El host fija protocolo, capacidad 16, join por ID, RTC apagado y migración deshabilitada. Un callback tardío exitoso destruye el lobby creado. | Sin cambio. Revisión estática. |
 | Código | Normaliza espacios/guiones, exige diez caracteres del alfabeto acotado y nunca contiene IP, puerto, PUID ni credenciales. | Sin cambio. Revisión estática. |
-| Unir | Se llamaba `JoinLobbyById` antes de validar protocolo, capacidad, dueño y configuración. Un candidato incompatible podía adquirir membresía antes del rechazo posterior. | Corregido: `CreateLobbySearch` + `SetLobbyId` + `Find` + `CopySearchResultByIndex`; se valida el `LobbyDetails` antes de `JoinLobby`. |
-| Errores de código | Código malformado/sobredimensionado, inexistente o vencido, sala propia, protocolo distinto, sala llena y configuración insegura necesitaban salidas distinguibles y reintentables. | Quedan como `InvalidCode`, `LobbyNotFound`/`Search_*`, `SameDeviceIdentity`, `IncompatibleVersion`, `LobbyFull` y `UnsafeLobbyConfiguration`. No existe fallback LAN. |
-| Cancelación | Create/search/join usa una generación. Los callbacks viejos no cambian el intento actual; un join tardío exitoso abandona la membresía. | Conservado y extendido al nuevo search/join; cada handle se libera. Falta ejecución con EOS real. |
+| Unir | Una búsqueda exacta previa parecía permitir validar detalles antes de entrar, pero el SDK sólo garantiza visibilidad de `JoinViaPresence` a usuarios con acceso de presencia. Este juego usa DeviceID y `PresenceEnabled=false`. | Se conserva la vía documentada `JoinLobbyById`, habilitada explícitamente por `EnableJoinById=true`. Tras éxito se copia y valida el detalle antes de exponer estado conectado. |
+| Errores de código | Código malformado/sobredimensionado, inexistente o vencido, sala propia, protocolo distinto, sala llena y configuración insegura necesitan salidas distinguibles y reintentables. | Quedan como `InvalidCode`, `Join_*`, `SameDeviceIdentity`, `IncompatibleVersion` y `UnsafeLobbyConfiguration`. Un protocolo/configuración incompatible se abandona inmediatamente. No existe fallback LAN. |
+| Cancelación | Create/join usa una generación. Un join tardío del mismo código podía abandonar la membresía que un reintento nuevo estaba intentando usar. | Un éxito viejo del mismo código se adopta e invalida la solicitud duplicada; uno de otro código se abandona. No hay handles `LobbySearch`/`LobbyDetails` persistentes. Falta ejecución con EOS real. |
 | Estado de ronda | El cliente llegaba a enviar a presentación un snapshot bien decodificado pero perteneciente a otro epoch/round. | Corregido: se descarta antes de tocar timeout o réplica. |
 | Recibo del probe | Un callback de cierre reemplazaba `networkType`, por lo que podía borrar la ruta que EOS había informado. | Corregido: conserva la ruta establecida y registra el motivo de cierre aparte. El recibo actual aún no satisface por sí solo el esquema WAN completo. |
 | Cierre | Invitado usa leave; dueño usa destroy; salir el dueño se interpreta como sala cerrada y no hay migración. | Revisión estática coherente. Falta confirmación cruzada con dos identidades. |
@@ -29,7 +29,7 @@ Ejecutar desde la raíz del worktree:
 & 'docs/unity/online/validation/Run-Validation.ps1'
 ```
 
-El script crea un directorio de evidencia nuevo en `N:/LetMeSleep/Validation`, compila todos los `.cs` de Online con `DEVELOPMENT_BUILD`, ejecuta diez casos de la política pre-join y guarda hashes de fuente. El resultado esperado es:
+El script crea un directorio de evidencia nuevo en `N:/LetMeSleep/Validation`, compila todos los `.cs` de Online con `DEVELOPMENT_BUILD`, ejecuta diez casos de la política de detalle recién unido y guarda hashes de fuente. El resultado esperado es:
 
 ```text
 Compilación correcta.
@@ -39,6 +39,19 @@ ONLINE_POLICY_CHECKS checks=10 failures=0 native_sdk_loaded=false
 ```
 
 Esto acredita compilación y decisiones puras de política. No acredita Unity Test Runner, callbacks reales, transporte, dos identidades ni WAN.
+
+## Confirmación contra el SDK fijado
+
+Se revisaron los headers oficiales incluidos en `com.playeveryware.eos@0b8f679193c5` y las clases C# generadas de ese mismo SDK:
+
+- `eos_lobby_types.h` define `EOS_LPL_JOINVIAPRESENCE` como visible para jugadores con acceso a presencia; no declara una excepción para búsqueda exacta por ID.
+- `eos_lobby.h` describe `EOS_Lobby_JoinLobbyById` como el caso especial de join permitido cuando el lobby tiene Join-by-ID habilitado.
+- `EOS_LobbySearch_SetLobbyId` sólo promete configurar el ID a buscar y devolver como máximo un resultado; no promete saltar la política de visibilidad.
+- `CreateLobbyOptions` separa `PresenceEnabled` de `EnableJoinById`: el primero asocia la sala a presencia/social overlay y el segundo habilita la operación especial por ID.
+
+Por eso `SetLobbyId + Find` no puede considerarse equivalente a `JoinLobbyById` para esta configuración. Cambiar a búsqueda previa sin una corrida EOS positiva introduce riesgo de que el código válido devuelva cero resultados. La implementación conserva `JoinLobbyById`; la validación de protocolo/configuración ocurre inmediatamente después de adquirir la membresía porque el SDK no ofrece un detalle previo documentado para este caso.
+
+En ciclo de vida, `JoinLobbyById` no entrega al juego un handle manual mientras está pendiente. Cancelación, timeout o pérdida de autenticación invalidan la generación. Un éxito tardío de otro código solicita `LeaveLobby`; si corresponde a un reintento activo del mismo código, se adopta esa membresía y se invalida la solicitud duplicada, evitando que el callback viejo expulse al intento nuevo. El único `LobbyDetails` manual se obtiene después del callback exitoso y siempre se libera con `finally`. No queda un `LobbySearch` pendiente que pueda sobrevivir a `Dispose` o al cierre de `PlatformInterface`.
 
 ## Plan ejecutable con dos identidades
 
@@ -52,8 +65,8 @@ Con un único equipo/DeviceID disponible no existe una corrida positiva válida.
 
 1. Preparar un `run_id` aleatorio y un salt exclusivo fuera del repositorio. Confirmar que EXE/ZIP, commit, versión `0.9.4-alfa` y protocolo coinciden en ambos extremos.
 2. Arrancar host y guest desde proceso cerrado, con perfiles/cachés persistentes separados. Registrar únicamente hashes salados; los `local_hash` deben ser distintos y cruzar con el remoto del otro extremo.
-3. Host crea sala. Guest pega el código con espacios exteriores, encuentra el lobby, valida detalles, entra y obtiene callback P2P con ruta EOS literal.
-4. Ejecutar los negativos: código vacío, alterado, sobredimensionado, vencido, propio y de protocolo diferente; cancelar durante search/join. Cada intento debe liberar recursos y permitir reintento.
+3. Host crea sala. Guest pega el código con espacios exteriores, resuelve y entra mediante Join-by-ID, valida detalles y obtiene callback P2P con ruta EOS literal.
+4. Ejecutar los negativos: código vacío, alterado, sobredimensionado, vencido, propio y de protocolo diferente; cancelar durante join. Cada intento debe liberar recursos y permitir reintento.
 5. Verificar remitente autenticado: el guest intenta cambiar reglas y enviar estado de host; el host rechaza ambos.
 6. Jugar dos rondas, volver al mismo lobby sin estado heredado, hacer salir al guest y comprobar que el host conserva la sala.
 7. Reconectar guest; cerrar desde host en lobby y durante una ronda. Guest vuelve al menú, no se convierte en host y ambos procesos terminan con código 0.
@@ -68,6 +81,6 @@ Nunca guardar en recibos o repositorio el código reutilizable, PUID/DeviceID, I
 ## Pendientes reales
 
 - Integrar en el probe el recibo completo de build, hashes salados, dos rondas, cierres y attestations; el JSON actual es sólo diagnóstico de conectividad.
-- Ejecutar create/find/join/P2P/leave/destroy con dos identidades y capturar ambos extremos.
+- Ejecutar create/Join-by-ID/P2P/leave/destroy con dos identidades y capturar ambos extremos.
 - Ejecutar la corrida WAN entre casas una vez que exista un candidato limpio y estable.
 - Mantener publicación, pagos y configuración comercial de Epic/Steam fuera de este frente hasta que el juego esté terminado y el usuario decida plataforma.

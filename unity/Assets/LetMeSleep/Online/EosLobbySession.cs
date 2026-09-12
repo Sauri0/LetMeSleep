@@ -78,59 +78,59 @@ namespace LetMeSleep.Online
             Code = code; LobbyId = Prefix + code;
             StartOperation(LobbyState.Joining);
             uint operation = generation;
-            var create = new CreateLobbySearchOptions { MaxResults = 1 };
-            Result result = lobby.CreateLobbySearch(ref create, out var search);
-            if (result != Result.Success || search == null) { Fail("Search_" + result); return; }
-            var target = new LobbySearchSetLobbyIdOptions { LobbyId = LobbyId };
-            result = search.SetLobbyId(ref target);
-            if (result != Result.Success) { search.Release(); Fail("Search_" + result); return; }
-            var find = new LobbySearchFindOptions { LocalUserId = connection.LocalUserId };
-            search.Find(ref find, null, (ref LobbySearchFindCallbackInfo info) =>
+            var options = new JoinLobbyByIdOptions { LocalUserId = connection.LocalUserId, LobbyId = LobbyId, PresenceEnabled = false };
+            lobby.JoinLobbyById(ref options, null, (ref JoinLobbyByIdCallbackInfo info) =>
             {
-                try
+                if (info.ResultCode != Result.Success)
                 {
-                    if (!IsCurrent(operation)) return;
-                    if (info.ResultCode != Result.Success) { Fail("Search_" + info.ResultCode); return; }
-                    var count = new LobbySearchGetSearchResultCountOptions();
-                    if (search.GetSearchResultCount(ref count) != 1) { Fail("LobbyNotFound"); return; }
-                    var index = new LobbySearchCopySearchResultByIndexOptions { LobbyIndex = 0 };
-                    result = search.CopySearchResultByIndex(ref index, out var details);
-                    if (result != Result.Success || details == null) { Fail("LobbyNotFound"); return; }
-                    ValidateAndJoin(details, operation);
+                    if (IsCurrent(operation)) Fail("Join_" + info.ResultCode);
+                    return;
                 }
-                finally { search.Release(); }
+                if (IsCurrent(operation)) { CompleteJoinedLobby(info.LobbyId); return; }
+
+                // A timed-out attempt may finish after the player retries the same code. Adopt that membership
+                // and invalidate the newer duplicate request instead of leaving the lobby it is trying to join.
+                if (!disposed && State == LobbyState.Joining && !membershipAcquired &&
+                    string.Equals(LobbyId, info.LobbyId, StringComparison.Ordinal))
+                { ++generation; CompleteJoinedLobby(info.LobbyId); return; }
+                if (!disposed && State == LobbyState.Connected && membershipAcquired &&
+                    string.Equals(LobbyId, info.LobbyId, StringComparison.Ordinal)) return;
+                CleanupLateLobby(info.LobbyId, false);
             });
         }
 
-        private void ValidateAndJoin(LobbyDetails details, uint operation)
+        private void CompleteJoinedLobby(string joinedLobbyId)
         {
-            var copy = new LobbyDetailsCopyInfoOptions();
-            Result result = details.CopyInfo(ref copy, out var candidate);
-            if (result != Result.Success || !candidate.HasValue)
-            { details.Release(); Fail("InvalidLobbyDetails"); return; }
-            var info = candidate.Value;
-            var rejection = LobbyJoinPolicy.Validate(connection.LocalUserId.ToString(),
-                info.LobbyOwnerUserId?.ToString(), info.BucketId?.ToString(), info.MaxMembers, info.AvailableSlots,
-                info.AllowHostMigration, info.RTCRoomEnabled, info.AllowJoinById);
+            LobbyId = joinedLobbyId;
+            membershipAcquired = true;
+            var rejection = ValidateJoinedLobby();
             if (rejection != LobbyCandidateRejection.None)
-            { details.Release(); Fail(rejection.ToString()); return; }
-            if (!string.Equals(info.LobbyId?.ToString(), LobbyId, StringComparison.Ordinal))
-            { details.Release(); Fail("InvalidLobbyDetails"); return; }
-
-            var options = new JoinLobbyOptions { LocalUserId = connection.LocalUserId, LobbyDetailsHandle = details, PresenceEnabled = false };
-            lobby.JoinLobby(ref options, null, (ref JoinLobbyCallbackInfo joined) =>
             {
-                try
-                {
-                    if (!IsCurrent(operation)) { if (joined.ResultCode == Result.Success) CleanupLateLobby(joined.LobbyId, false); return; }
-                    if (joined.ResultCode != Result.Success) { Fail("Join_" + joined.ResultCode); return; }
-                    LobbyId = joined.LobbyId;
-                    membershipAcquired = true;
-                    if (!RefreshMembers()) { CleanupLateLobby(LobbyId, false); Clear(); Fail("IncompatibleOrUnavailableLobby"); return; }
-                    SetState(LobbyState.Connected);
-                }
-                finally { details.Release(); }
-            });
+                // A duplicate process using the owner's PUID must not leave/destroy the real owner's lobby.
+                if (rejection != LobbyCandidateRejection.SameDeviceIdentity) CleanupLateLobby(LobbyId, false);
+                Clear(); Fail(rejection.ToString()); return;
+            }
+            if (!RefreshMembers()) { CleanupLateLobby(LobbyId, false); Clear(); Fail("IncompatibleOrUnavailableLobby"); return; }
+            SetState(LobbyState.Connected);
+        }
+
+        private LobbyCandidateRejection ValidateJoinedLobby()
+        {
+            var options = new CopyLobbyDetailsHandleOptions { LocalUserId = connection.LocalUserId, LobbyId = LobbyId };
+            if (lobby.CopyLobbyDetailsHandle(ref options, out var details) != Result.Success || details == null)
+                return LobbyCandidateRejection.InvalidDetails;
+            try
+            {
+                var copy = new LobbyDetailsCopyInfoOptions();
+                if (details.CopyInfo(ref copy, out var candidate) != Result.Success || !candidate.HasValue)
+                    return LobbyCandidateRejection.InvalidDetails;
+                var info = candidate.Value;
+                if (!string.Equals(info.LobbyId?.ToString(), LobbyId, StringComparison.Ordinal))
+                    return LobbyCandidateRejection.InvalidDetails;
+                return LobbyJoinPolicy.ValidateJoined(connection.LocalUserId.ToString(), info.LobbyOwnerUserId?.ToString(),
+                    info.BucketId?.ToString(), info.MaxMembers, info.AllowHostMigration, info.RTCRoomEnabled, info.AllowJoinById);
+            }
+            finally { details.Release(); }
         }
 
         public void Tick(double monotonicSeconds)
