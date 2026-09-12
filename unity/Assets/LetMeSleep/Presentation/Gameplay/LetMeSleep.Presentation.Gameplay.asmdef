@@ -1,0 +1,12 @@
+{
+  "name": "LetMeSleep.Presentation.Gameplay",
+  "rootNamespace": "LetMeSleep.Presentation.Gameplay",
+  "references": [
+    "LetMeSleep.Core",
+    "LetMeSleep.Gameplay",
+    "LetMeSleep.Gameplay.Unity",
+    "LetMeSleep.Audio",
+    "LetMeSleep.Presentation"
+  ],
+  "autoReferenced": true
+}

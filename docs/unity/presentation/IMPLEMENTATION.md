@@ -10,6 +10,9 @@ El código fuente vive bajo `unity/Assets/LetMeSleep/Presentation/**` y
   un vector, y `MosquitoFollowCamera`, con overlap y dos barridos sin asignar
   dirección de vuelo.
 - `AudioCue`, pool acotado de 48 emisores, reproductor de loops y catálogo alfa.
+- `GameplayAudioPresenter`, que se conecta al `GameplayRuntime` de W1, deduplica
+  `(SessionEpoch, RoundId, EventId)`, traduce eventos confirmados y mantiene un
+  único loop de alas por actor vivo.
 - quince WAV audibles originales: música de menú/ronda, ambiente nocturno,
   alas, defensa, impacto, picadura, puertas, vida, stings y ready de UI.
 - fuente editable determinista en `art_source/unity/audio/`, manifest con
@@ -17,9 +20,9 @@ El código fuente vive bajo `unity/Assets/LetMeSleep/Presentation/**` y
 - `AlfaPresentationBuilder`, que crea materiales URP, Volume Profile, prefab de
   luz, AudioCue assets y prefab de audio mediante APIs de Unity.
 
-No se incluye un adapter ficticio de gameplay. Se agrega cuando los assemblies
-`LetMeSleep.Gameplay` y `LetMeSleep.Content.Characters` estén integrados, usando
-sus contratos concretos.
+El adapter de audio usa los assemblies reales `LetMeSleep.Gameplay` y
+`LetMeSleep.Gameplay.Unity`. El binding visual se agrega al integrar
+`LetMeSleep.Content.Characters`; no se incluye un substituto de `CharacterView`.
 
 ## Ejecución en Unity
 
