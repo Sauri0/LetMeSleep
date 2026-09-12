@@ -153,7 +153,7 @@ namespace LetMeSleep.Content.Editor
             var material=AssetDatabase.LoadAssetAtPath<Material>(path);
             if(material==null){material=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=name,enableInstancing=true};AssetDatabase.CreateAsset(material,path);}
             // Reapply authored values on every build. W2 adjustments belong in these inputs.
-            material.SetColor("_BaseColor",new Color(.90f,.78f,.57f));material.SetColor("_EmissionColor",new Color(.50f,.32f,.14f));
+            material.SetColor("_BaseColor",new Color(.90f,.78f,.57f));material.SetColor("_EmissionColor",new Color(.18f,.10f,.035f));
             material.EnableKeyword("_EMISSION");material.SetFloat("_Smoothness",.1f);EditorUtility.SetDirty(material);
             materials[name]=material;
         }

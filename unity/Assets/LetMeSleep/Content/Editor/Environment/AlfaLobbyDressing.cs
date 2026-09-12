@@ -14,16 +14,21 @@ namespace LetMeSleep.Content.Editor
 
         static void FurnishLobby(GameObject lobby)
         {
+            // These three floating blue panels were placeholder decoration, not architecture.
+            // Remove their unpacked instances; retain the closed, validated LobbyShell.
+            foreach(var renderer in lobby.GetComponentsInChildren<MeshRenderer>().Where(r=>r.name.StartsWith("Lobby_Wall_Panel",StringComparison.Ordinal)).ToArray())
+                UnityEngine.Object.DestroyImmediate(renderer.gameObject);
             var furnishings=Child(lobby.transform,"Furnishings");
             // Existing kit assets keep their authored dimensions. Only the architectural shell
             // expands, leaving the old 10x8 floor as circulation inside a decorative apron.
             foreach(float x in new[]{-6.25f,6.25f})foreach(float z in new[]{-2.3f,2.3f})
                 Place("PatioBench","Lobby_Bench_"+Token(x)+"_"+Token(z),new Vector3(x,0,z),x<0?-90:90,furnishings);
             foreach(float x in new[]{-3.3f,3.3f})
-                Place("PatioBench","Lobby_BackBench_"+Token(x),new Vector3(x,0,5.35f),0,furnishings);
+                Place("Sofa","Lobby_BackSofa_"+Token(x),new Vector3(x,0,5.35f),0,furnishings);
             foreach(float x in new[]{-5.85f,5.85f})foreach(float z in new[]{-4.75f,4.75f})
                 Place("Pine","Lobby_Pine_"+Token(x)+"_"+Token(z),new Vector3(x,0,z),0,furnishings);
             Place("Shelf","Lobby_BackShelf",new Vector3(0,0,5.7f),0,furnishings);
+            AddLobbyDomesticSet(furnishings);
 
             var trim=Child(lobby.transform,"ArchitecturalTrim");
             LobbyPiece(trim,"Central_Textile_Inlay",new Vector3(0,.005f,0),new Vector3(6,.01f,4),"Textile_Blue",false);
@@ -33,6 +38,11 @@ namespace LetMeSleep.Content.Editor
                 foreach(float z in new[]{-5.2f,0,5.2f})LobbyPiece(trim,"Rail_Post_"+Token(x)+"_"+Token(z),new Vector3(x,.525f,z),new Vector3(.12f,1.05f,.12f),"Wood_Edge",true);
             }
             foreach(float z in new[]{-5.95f,5.95f})LobbyPiece(trim,"End_Skirting_"+Token(z),new Vector3(0,.1f,z),new Vector3(13.9f,.2f,.1f),"Wood_Edge",true);
+            // Low wood lining makes the seating wall one domestic composition, rather
+            // than three unrelated billboards. It stays behind all furniture and stages.
+            LobbyPiece(trim,"Back_Wainscot",new Vector3(0,.57f,5.96f),new Vector3(13.7f,.82f,.06f),"Wood_Honey",true);
+            LobbyPiece(trim,"Back_ChairRail",new Vector3(0,1.005f,5.93f),new Vector3(13.7f,.05f,.10f),"Wood_Edge",true);
+            for(int i=-6;i<=6;i++)LobbyPiece(trim,"Back_Stile_"+i,new Vector3(i,.57f,5.915f),new Vector3(.045f,.82f,.03f),"Wood_Edge",true);
             foreach(float x in new[]{-4.7f,4.7f})LobbyPiece(trim,"Ceiling_Beam_"+Token(x),new Vector3(x,3.10f,0),new Vector3(.20f,.20f,11.8f),"Wood_Edge",true);
             LobbyPiece(trim,"Ceiling_Crossbeam",new Vector3(0,3.10f,4),new Vector3(13.8f,.20f,.20f),"Wood_Edge",true);
 
@@ -47,6 +57,33 @@ namespace LetMeSleep.Content.Editor
             }
         }
 
+        static void AddLobbyDomesticSet(Transform furnishings)
+        {
+            var domestic=Child(furnishings,"Lobby_Domestic");
+            var books=Child(domestic,"Shelf_Books");books.localPosition=new Vector3(0,0,5.7f);books.localRotation=Quaternion.Euler(0,180,0);
+            for(int i=0;i<5;i++)AddBook(books,"Middle_"+i,new Vector3(-.35f+i*.072f,.61f,0),.055f,.24f+(i%3)*.035f,.23f,
+                i%3==0?"Textile_Rust":i%3==1?"Textile_Blue":"Textile_Navy");
+            AddBook(books,"Upper_0",new Vector3(.20f,1.11f,0),.07f,.31f,.23f,"Textile_Blue");
+            AddBook(books,"Upper_1",new Vector3(.285f,1.11f,0),.06f,.27f,.23f,"Textile_Rust");
+            foreach(float x in new[]{-.26f,.26f}){
+                var box=Child(domestic,"Storage_Box_"+Token(x));box.localPosition=new Vector3(x,.11f,5.7f);
+                LobbyPiece(box,"Linen_Box",new Vector3(0,.16f,0),new Vector3(.42f,.32f,.27f),"Linen",true);
+                LobbyPiece(box,"Lid",new Vector3(0,.33f,0),new Vector3(.44f,.02f,.29f),"Wood_Honey",true);
+                LobbyPiece(box,"Pull",new Vector3(0,.18f,-.143f),new Vector3(.10f,.025f,.016f),"Iron",true);
+            }
+            foreach(float x in new[]{-3.3f,3.3f}){
+                LobbyPiece(domestic,"Sofa_Throw_"+Token(x),new Vector3(x-.30f,.581f,5.31f),new Vector3(.40f,.012f,.60f),"Linen",false);
+                LobbyPiece(domestic,"Throw_Edge_"+Token(x),new Vector3(x-.30f,.588f,5.06f),new Vector3(.37f,.002f,.025f),"Textile_Navy",false);
+                LobbyPiece(domestic,"Sofa_Cushion_"+Token(x),new Vector3(x+.55f,.725f,5.52f),new Vector3(.36f,.30f,.14f),"Textile_Blue",false);
+            }
+            var rack=Child(domestic,"Entry_CoatRack");rack.localPosition=new Vector3(-2,1.7f,5.92f);
+            LobbyPiece(rack,"MountingBoard",Vector3.zero,new Vector3(.85f,.16f,.08f),"Wood_Honey",true);
+            foreach(float x in new[]{-.26f,0,.26f}){
+                LobbyPiece(rack,"Hook_Stem_"+Token(x),new Vector3(x,-.045f,-.09f),new Vector3(.025f,.025f,.10f),"Iron",true);
+                LobbyPiece(rack,"Hook_Tip_"+Token(x),new Vector3(x,-.015f,-.13f),new Vector3(.025f,.075f,.025f),"Iron",true);
+            }
+        }
+
         static string Token(float value)=>value.ToString("0.##",System.Globalization.CultureInfo.InvariantCulture).Replace('-','m').Replace('.','p');
 
         static void EnsureLanternMaterial()
@@ -54,7 +91,7 @@ namespace LetMeSleep.Content.Editor
             const string name="Lobby_LanternGlow";string path=Output+"/Materials/"+name+".mat";
             var material=AssetDatabase.LoadAssetAtPath<Material>(path);
             if(material==null){material=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=name,enableInstancing=true};AssetDatabase.CreateAsset(material,path);}
-            material.SetColor("_BaseColor",new Color(1,.70f,.30f));material.SetColor("_EmissionColor",new Color(1,.46f,.12f)*2);
+            material.SetColor("_BaseColor",new Color(.90f,.78f,.57f));material.SetColor("_EmissionColor",new Color(.18f,.10f,.035f));
             material.EnableKeyword("_EMISSION");material.SetFloat("_Smoothness",.25f);EditorUtility.SetDirty(material);materials[name]=material;
         }
 
@@ -96,6 +133,7 @@ namespace LetMeSleep.Content.Editor
                 Need(!ColliderBounds(collider).Intersects(protectedRoute),"Lobby circulation obstructed: "+Hierarchy(collider.transform));
             foreach(var renderer in F(lobby,"Furnishings").GetComponentsInChildren<Renderer>())
                 Need(!renderer.bounds.Intersects(protectedRoute),"Lobby furnishing visually intrudes into circulation: "+Hierarchy(renderer.transform));
+            CheckLobbyDomesticSupport(lobby);
             foreach(string name in new[]{"MainMenuCamera","MainMenuLookAt","HumanMenuStage","MosquitoMenuStage"})
                 Need(data.PresentationAnchors.Find(name)!=null,"Missing menu presentation anchor: "+name);
             var camera=data.PresentationAnchors.Find("MainMenuCamera");var target=data.PresentationAnchors.Find("MainMenuLookAt");
@@ -106,6 +144,24 @@ namespace LetMeSleep.Content.Editor
             CheckSpawns(lobby,new[]{human},.25f,1.72f);CheckSpawns(lobby,new[]{mosquito},.055f,.11f,true);
             foreach(var spawn in data.LobbySpawnPoints)
                 Need(Vector2.Distance(new Vector2(spawn.localPosition.x,spawn.localPosition.z),new Vector2(human.localPosition.x,human.localPosition.z))>.8f,"Menu stage overlaps a lobby spawn");
+        }
+
+        static void CheckLobbyDomesticSupport(GameObject lobby)
+        {
+            Need(!lobby.GetComponentsInChildren<MeshRenderer>().Any(r=>r.name.StartsWith("Lobby_Wall_Panel",StringComparison.Ordinal)),"Lobby placeholder wall panels remain");
+            var domestic=F(lobby,"Lobby_Domestic");var shelf=F(lobby,"Lobby_BackShelf");
+            var boards=shelf.GetComponentsInChildren<Collider>().Where(c=>c.name.Contains("Shelf_Board")).Select(ColliderBounds).ToArray();
+            foreach(var book in F(domestic.gameObject,"Shelf_Books").GetComponentsInChildren<BoxCollider>())
+                Need(boards.Any(board=>Mathf.Abs(ColliderBounds(book).min.y-board.max.y)<.0001f&&board.min.x<=ColliderBounds(book).min.x&&board.max.x>=ColliderBounds(book).max.x&&board.min.z<=ColliderBounds(book).min.z&&board.max.z>=ColliderBounds(book).max.z),"Lobby book not supported on a shelf");
+            foreach(Transform box in domestic)if(box.name.StartsWith("Storage_Box_",StringComparison.Ordinal)){
+                var body=box.Find("Linen_Box").GetComponent<Renderer>().bounds;var lid=box.Find("Lid").GetComponent<Renderer>().bounds;
+                Need(boards.Any(board=>Mathf.Abs(body.min.y-board.max.y)<.0001f&&board.min.x<=body.min.x&&board.max.x>=body.max.x&&board.min.z<=body.min.z&&board.max.z>=body.max.z),"Lobby storage box not supported on a shelf");
+                Need(Mathf.Abs(lid.min.y-body.max.y)<.0001f,"Lobby storage lid floats above its box");
+            }
+            foreach(float x in new[]{-3.3f,3.3f}){
+                var sofa=F(lobby,"Lobby_BackSofa_"+Token(x));var seat=sofa.GetComponentsInChildren<Collider>().Single(c=>c.name.Contains("Sofa_Seat"));float top=ColliderBounds(seat).max.y;
+                foreach(string prefix in new[]{"Sofa_Throw_","Sofa_Cushion_"})Need(Mathf.Abs(F(domestic.gameObject,prefix+Token(x)).GetComponent<Renderer>().bounds.min.y-top)<.0001f,"Lobby textile floats above sofa seat");
+            }
         }
 
         static void CheckLobbyShellFacing(GameObject source)

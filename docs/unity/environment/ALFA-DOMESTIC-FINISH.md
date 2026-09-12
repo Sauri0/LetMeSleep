@@ -29,7 +29,7 @@ Se conservan nombres `PresentationAnchors/LightAnchor_<ZoneId>`. Posición XZ: c
 | Bathroom | 8.32 | 8.98 |
 | Utility | 11.15 | 8.98 |
 
-Patio y lobby mantienen sus anclas. M2 no cambia `AlfaLightingRig.cs`: W2 controla distribución, intensidad, sombras/exposición y lectura de personajes. Añadir un cuerpo visible por sí solo no elimina el hotspot de una luz puntual. `House_Diffuser` reaplica en cada build BaseColor(0.90,0.78,0.57), EmissionColor(0.50,0.32,0.14), keyword _EMISSION y Smoothness0.10. W2 debe trasladar sus ajustes a esta fuente para que sean reproducibles.
+Patio y lobby mantienen sus anclas. M2 no cambia `AlfaLightingRig.cs`: W2 controla distribución, intensidad, sombras/exposición y lectura de personajes. Añadir un cuerpo visible por sí solo no elimina el hotspot de una luz puntual. `House_Diffuser` reaplica en cada build BaseColor(0.90,0.78,0.57), EmissionColor(0.18,0.10,0.035), keyword _EMISSION y Smoothness0.10. W2 debe trasladar sus ajustes a esta fuente para que sean reproducibles.
 
 Parámetros materiales confirmados por Director (junta corregida posteriormente a5mm para corresponder al raster de2.5mm por texel): Floor_Oak tablones de **0.32×1.28m**, juntas5mm, variación tonal máxima7% (dentro del8% autorizado), alternancia de media tabla y solo dos fibras longitudinales de contraste bajo. Patrón512×1024, repetición física1.28×2.56m, mipmaps y filtrado trilineal; generado por CPU usando Texture2D al ejecutar builder. Se activa automáticamente en el Floor_Oak compartido de casa/lobby. UV0 proyectadas por metros después de corregir ejes, compensando el escalado final del lobby; UV2 se preservan.
 
@@ -49,3 +49,4 @@ Criterios de revisión: sofá/mesa agrupados y estante ocupado sin abarrotar; ob
 - **Difusor:** los cuatro valores autorados se reaplican también a materiales existentes. Se marca el asset como modificado; cualquier ajuste futuro de W2 requiere cambio de fuente.
 
 Compilación offline contra Unity6000.3.24f1 correcta. No se abrió editor ni se generaron assets en esta corrección. QA debe revisar el delta; la regeneración y comprobación visual corresponden al Director.
+Actualización coordinada con W2 tras menu-1080.png: House_Diffuser y Lobby_LanternGlow reducen emisión a(0.18,0.10,0.035), persistida en fuente; ver LOBBY-DRESSING.md. No cambian las anclas de luz.

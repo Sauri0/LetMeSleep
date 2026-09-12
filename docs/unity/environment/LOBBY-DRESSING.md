@@ -11,7 +11,7 @@ El centro 6×4 y los 16 spawns se conservan exactamente. Una reserva de circulac
 | Elemento existente | Colocación local (m) |
 |---|---|
 | Cuatro bancos laterales | x=±6.25, z=±2.3, mirando al centro |
-| Dos bancos del fondo | x=±3.3, z=5.35, mirando hacia −Z |
+| Dos sofás del fondo | x=±3.3, z=5.35, mirando hacia −Z; sustituyen bancos en el lote doméstico |
 | Cuatro pinos | x=±5.85, z=±4.75; altura original aprox. 3.05 m |
 | Estantería | (0,0,5.7), bajo el panel central |
 | Inserto textil azul | 6×4 m en el suelo central; 1 cm de espesor visual, sin collider |
@@ -54,3 +54,17 @@ Causa: el recálculo global de normales orientaba la cavidad cerrada, desconecta
 `check_lobby_normals.py` documenta antes/después en `lobby_normals_before.json` y `lobby_normals_after.json`: seis planos pasan de dot −1 a +1. La validación de fuentes/reimportación sigue en 811 checks / 0 fallos. El builder añade una comprobación nativa después de la conversión FBX: cada uno de los seis planos interiores debe tener triángulos y normales de sombreado orientados hacia el cuarto. Quedan pendientes su ejecución y una nueva captura del Director.
 
 El ancla del mosquito se mueve a (0.8,1.85,4.5) para situarlo en la franja central visible entre los paneles de UI de esa captura. La posición del humano y la cámara se conservan.
+## Lote doméstico posterior a menu-1080.png
+
+Captura revisada: `N:/LetMeSleep/Validation/Alfa-VisualRecovery/menu-1080.png`. Tres paneles azules sin contenido, estantería vacía y banco de una sola pieza dominaban el fondo. Este delta separado del fix del paño transforma el fondo en una zona de descanso y guardado coherente con los conjuntos del estar, sin nueva función de juego.
+
+- El builder retira únicamente las tres instancias `Lobby_Wall_Panel*`, decorativas y sin collider. Conserva el shell cerrado y su comprobación de seis caras.
+- Dos sofás del kit sustituyen los dos bancos traseros, en la misma posición. Cada uno recibe cojín azul apoyado en y0.575 y paño claro sobre el asiento; la banda apoya sobre el paño. Los cuatro bancos laterales permanecen.
+- Estantería central con siete libros orientados con el lomo hacia la sala (−Z) y dos cajas de guardado en la balda inferior. Base de cajas y libros coincide con la cara superior de su balda; las tapas apoyan en las cajas. No son pickups ni inventario.
+- Panelado bajo de madera en la pared posterior, dividido por montantes y rematado con moldura, conecta visualmente ambos sofás y la estantería. Permanece detrás del mobiliario. Perchero de entrada de tres ganchos a x−2/y1.7/z5.92, sin cartel ni mecánica inventada.
+
+Todo el conjunto se mantiene fuera de la reserva9.6×7.6m y del centro con16spawns. Cámaras, stages y anclas de luz conservados. Las comprobaciones existentes de circulación visual/física y espacio de humano/mosquito se ejecutan antes/después de guardar; se añaden comprobaciones de apoyo de libros/cajas/tapas y textiles sobre asiento, y ausencia de los paneles provisionales.
+
+Coordinación W2 a partir de la misma captura: `Lobby_LanternGlow` tenía emisión(2,0.92,0.24) y es distinto de `House_Diffuser`. Ambos pasan a emisión(0.18,0.10,0.035), base(0.90,0.78,0.57), aplicada en cada build; conservan Smoothness0.25 lobby/0.10 casa. Worker2 ajusta luces, bloom y relleno; M2 no añade ni modifica componentes Light runtime. Afinación futura debe persistirse en fuente.
+
+Fuente C# y compilación offline solamente: sin Unity, Blender, GPU ni audio. Generación y evaluación del nuevo menú con luces W2 quedan pendientes; la aprobación visual no se deriva de los controles de apoyo.
