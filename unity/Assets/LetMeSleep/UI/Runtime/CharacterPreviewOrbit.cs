@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 namespace LetMeSleep.UI
 {
@@ -16,6 +17,8 @@ namespace LetMeSleep.UI
         private float fitDistance = 2.4f;
         private float minDistance = 1.15f;
         private float maxDistance = 4.2f;
+        private float zoomFactor = 1f;
+        private readonly List<Vector3> framingPoints = new List<Vector3>();
         private Vector3 focusLocal = new Vector3(0f, 0.9f, 0f);
         private Vector2 dragStart;
         private float yawStart;
@@ -70,7 +73,8 @@ namespace LetMeSleep.UI
             setup.Stage.localRotation = Quaternion.identity;
             instance = Instantiate(prefab, setup.Stage, false);
             instance.name = role + "UiPreview";
-            yaw = 0f;
+            yaw = DefaultYaw;
+            zoomFactor = 1f;
             RecalculateFraming();
             ApplyOrbit();
             instance.SetActive(previewVisible);
@@ -93,14 +97,15 @@ namespace LetMeSleep.UI
 
         public void ResetView()
         {
-            yaw = 0f;
-            distance = Mathf.Clamp(fitDistance, minDistance, maxDistance);
+            yaw = DefaultYaw;
+            zoomFactor = 1f;
             ApplyOrbit();
         }
 
         public void Zoom(float delta)
         {
-            distance = Mathf.Clamp(distance + delta, minDistance, maxDistance);
+            zoomFactor = Mathf.Clamp((distance + delta) / Mathf.Max(0.0001f, fitDistance),
+                minDistance / Mathf.Max(0.0001f, fitDistance), 2.2f);
             ApplyOrbit();
         }
 
@@ -118,8 +123,10 @@ namespace LetMeSleep.UI
 
         public void OnScroll(PointerEventData eventData)
         {
-            Zoom(-eventData.scrollDelta.y * Mathf.Max(0.04f, fitDistance * 0.08f));
+            Zoom(-eventData.scrollDelta.y * fitDistance * 0.08f);
         }
+
+        private float DefaultYaw => visibleRole == AlfaRole.Mosquito ? 35f : 0f;
 
         private void ApplyOrbit()
         {
@@ -127,38 +134,75 @@ namespace LetMeSleep.UI
             setup.Stage.localRotation = Quaternion.Euler(0f, yaw, 0f);
             var focusWorld = setup.Stage.TransformPoint(focusLocal);
             var cameraTransform = setup.Camera.transform;
+            // Fit the current angle, preserving relative zoom when turning a long mosquito.
+            // The camera stays level so Frente/Perfil/Espalda remain exact views.
+            RecalculateDistance();
             cameraTransform.position = focusWorld + Vector3.forward * distance;
             cameraTransform.LookAt(focusWorld, Vector3.up);
         }
 
         private void RecalculateFraming()
         {
+            framingPoints.Clear();
             var renderers = instance.GetComponentsInChildren<Renderer>(true);
-            if (renderers.Length == 0)
+            foreach (var renderer in renderers)
             {
-                focusLocal = new Vector3(0f, visibleRole == AlfaRole.Human ? 0.9f : 0.1f, 0f);
-                fitDistance = visibleRole == AlfaRole.Human ? 2.4f : 0.35f;
-                minDistance = fitDistance * 0.55f;
-                maxDistance = fitDistance * 2.2f;
-                distance = fitDistance;
-                return;
+                if (!renderer.enabled) continue;
+                // Per-renderer local boxes avoid expanding one world AABB twice on rotation.
+                var bounds = renderer.localBounds;
+                for (var corner = 0; corner < 8; corner++)
+                {
+                    var offset = Vector3.Scale(bounds.extents, new Vector3(
+                        (corner & 1) == 0 ? -1f : 1f,
+                        (corner & 2) == 0 ? -1f : 1f,
+                        (corner & 4) == 0 ? -1f : 1f));
+                    framingPoints.Add(setup.Stage.InverseTransformPoint(
+                        renderer.transform.TransformPoint(bounds.center + offset)));
+                }
             }
 
-            var bounds = renderers[0].bounds;
-            for (var i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
-            focusLocal = setup.Stage.InverseTransformPoint(bounds.center);
+            if (framingPoints.Count == 0)
+            {
+                var height = visibleRole == AlfaRole.Human ? 1.8f : 0.12f;
+                for (var corner = 0; corner < 8; corner++)
+                    framingPoints.Add(new Vector3(
+                        (corner & 1) == 0 ? -height * 0.3f : height * 0.3f,
+                        (corner & 2) == 0 ? 0f : height,
+                        (corner & 4) == 0 ? -height * 0.3f : height * 0.3f));
+            }
 
+            var combined = new Bounds(framingPoints[0], Vector3.zero);
+            foreach (var point in framingPoints) combined.Encapsulate(point);
+            focusLocal = combined.center;
+            var radius = setup.Stage.TransformVector(combined.extents).magnitude;
+            // Only the isolated preview camera changes: never enlarge the prefab or game actor.
+            setup.Camera.nearClipPlane = Mathf.Clamp(radius * 0.02f, 0.0001f, 0.01f);
+        }
+
+        private void RecalculateDistance()
+        {
+            if (framingPoints.Count == 0) return;
             var camera = setup.Camera;
             var aspect = setup.Texture.height > 0 ? (float)setup.Texture.width / setup.Texture.height : Mathf.Max(0.1f, camera.aspect);
+            camera.aspect = aspect;
             var verticalHalfFov = Mathf.Max(1f, camera.fieldOfView * 0.5f) * Mathf.Deg2Rad;
-            var horizontalHalfFov = Mathf.Atan(Mathf.Tan(verticalHalfFov) * Mathf.Max(0.1f, aspect));
-            var verticalDistance = bounds.extents.y / Mathf.Max(0.01f, Mathf.Tan(verticalHalfFov));
-            var horizontalDistance = bounds.extents.x / Mathf.Max(0.01f, Mathf.Tan(horizontalHalfFov));
-            fitDistance = Mathf.Max(0.08f, (Mathf.Max(verticalDistance, horizontalDistance) + bounds.extents.z) * 1.18f);
-            var radius = Mathf.Max(0.04f, bounds.extents.magnitude);
-            minDistance = Mathf.Max(fitDistance * 0.55f, radius + camera.nearClipPlane + 0.02f);
-            maxDistance = Mathf.Max(minDistance + 0.1f, fitDistance * 2.2f);
-            distance = Mathf.Clamp(fitDistance, minDistance, maxDistance);
+            var tanVertical = Mathf.Max(0.01f, Mathf.Tan(verticalHalfFov));
+            var tanHorizontal = tanVertical * Mathf.Max(0.1f, aspect);
+            var closestDepth = 0f;
+            fitDistance = 0.0001f;
+            foreach (var point in framingPoints)
+            {
+                var offset = setup.Stage.TransformVector(point - focusLocal);
+                var projectedDistance = Mathf.Max(Mathf.Abs(offset.x) / tanHorizontal,
+                    Mathf.Abs(offset.y) / tanVertical);
+                // Positive Z points toward the camera; include depth per corner, not globally.
+                fitDistance = Mathf.Max(fitDistance, offset.z + projectedDistance * 1.1f);
+                closestDepth = Mathf.Max(closestDepth, offset.z);
+            }
+            minDistance = Mathf.Max(fitDistance * 0.55f, closestDepth + camera.nearClipPlane * 2f);
+            fitDistance = Mathf.Max(fitDistance, minDistance);
+            maxDistance = fitDistance * 2.2f;
+            distance = Mathf.Clamp(fitDistance * zoomFactor, minDistance, maxDistance);
         }
 
         private void OnDestroy()
