@@ -1,3 +1,15 @@
+# Checkpoint — revisión del video y requisito facial, 2026-09-12
+
+Sustituye el estado operativo de los bloques históricos siguientes. Alfa sigue rechazada artísticamente; sin publicación ni paso a beta.
+
+- Base integrada 6775dab: escena viva/Bootstrap d6b277e, humano menú ad9b214, UI nocturna6775dab, Presentation9659bed, anchors574733c. BuildMaps y BuildBootstrap nativos terminaron; no acreditan calidad. Luces bd3d4ca siguen candidatas, sin integración/A-B. Corrección humana de muñeca/pose aún en trabajo del autor.
+- Director conserva editor Unity29668, proyecto N:/LetMeSleep/Repository/unity, D3D11 interactivo/noaudio. No cerrar procesos ajenos ni dar slot Blender sin comprobar/liberar este editor. Humanos espera siguiente slot. No asumir libre por checkpoints anteriores.
+- Usuario grabó24.98s del rincón del menú y lo rechazó: rigidez, lentitud, estética insuficiente. Evidencia/análisis en N:/LetMeSleep/Validation/LivingMenu-20260912/UserVideo. No se inspeccionaron botones porque el video sólo contiene actores/fondo.
+- Captura V1 run-20260912-224724-848d70f0 detenida; recibo failed/timeout85frames. Se superpuso al video y hacía PNG en main-thread, por lo que NO mide fluidez limpia ni acredita2ciclos. No ejecutar V2 pesada para medir rendimiento.
+- Nueva instrucción: alas perceptiblemente animadas, humano sigue al mosquito con ojos/cabeza y trata de golpear al acercarse; ambos personajes personalizados. Pupilas móviles y parpadeos en ambas especies en TODO juego. Actualizado MAIN-MENU-LIVING-SCENE.md y enviado a Presentación, Humanos, Mosquitos, Gameplay, Animaciones; Elementos atiende composición y UI captura ligera. Sin duplicar tareas ni controladores.
+- Próximo: resolver animación real y rig facial con autores, integrar candidatos, comparación limpia en movimiento y personalización persistida. Rendimiento, audio, WAN y aceptación artística siguen pendientes.
+
+---
 # Checkpoint vigente — 2026-09-12 22:06 UTC
 
 Este bloque sustituye turnos e integraciones anteriores. Alfa sigue en recuperación, sin build nueva publicada ni aprobación artística. Usuario preguntó cuánto falta: se informó que no existe ETA fiable y que la prioridad debe ser una candidata jugable integral, evitando prolongar diagnósticos sin mejora visible.
@@ -127,3 +139,4 @@ Alfa sigue en recuperación; no publicar esta integración como arte aprobado ni
 Pendiente: integrar siguiente M1 sólo con auditorías coherentes; resolver iluminación observada, validar contacto visual y uso de objetos afectados, completar animaciones/evidencia y escucha real. WAN con dos casas continúa pendiente de Branko/amigos. El próximo paquete exige esos gates y mantener pruebas técnicas apropiadas sin repetir por rutina toda la batería antigua.
 
 W2 entregó c3a3a11 al cierre de esta tanda: orientación de spots hacia interior/piso, fill adelantado y DynamicGI.UpdateEnvironment tras Trilight. Integrado para la próxima captura; no probado nativamente todavía porque M1 ocupa CPU. Script de diagnóstico preparado en Validation/Alfa-VisualRecovery/DumpPresentationLighting.cs.
+

@@ -1,6 +1,6 @@
 # Menú principal vivo — requisito de Branko
 
-Fecha: 2026-09-12. Parte de la recuperación de alfa. Pendiente de implementación y validación; no es una entrega aprobada.
+Fecha: 2026-09-12. Parte de la recuperación de alfa. Primera implementación integrada y rechazada visualmente por el usuario; corrección y validación pendientes.
 
 Branko pide que el humano y el mosquito del menú reflejen la personalización guardada y habiten la habitación: humano sentado con una raqueta u objeto equivalente, animación y mosquito volando. También rechaza la iluminación y estética actuales. Este pedido sustituye la exposición de ambos personajes quietos en el centro.
 
@@ -32,3 +32,15 @@ AlfaApplication.LoadMap(false) crea MenuCharacterDisplay, usa HumanMenuStage/Mos
 Una secuencia completa real en Unity/build, a 720p y 1080p, con inicio/reposo/reacción/regreso; apoyos y agarre visibles, mosquito sin atravesamientos ni recortes y botones utilizables. Cambiar personalización, guardar, volver y verificar ambos personajes; entrar/salir de lobby, entrenamiento y personalizador sin duplicación ni restauración incorrecta. Revisar luz y movimiento contra los bocetos. Fotos sueltas, scripts compilados o trayectoria calculada no cierran la mejora.
 
 Primer lote: una escena de menú completa con los personajes base y cosméticos alfa existentes; no ampliar el catálogo. Un único turno Unity/Blender concedido por Director; los autores preparan archivos propios sin procesos nativos hasta recibirlo.
+
+## Corrección obligatoria tras el video del usuario
+
+El usuario señala que el mosquito sólo se desplaza y no mueve las alas perceptiblemente. Traslación de Root no acredita vuelo animado. Deben verse aleteo y movimiento secundario coherentes a velocidad normal, tanto en menú como en partida. Investigar clip, bindings y muestreo antes de atribuir una causa.
+
+El humano sigue continuamente al mosquito con pupilas y/o cabeza, dentro de límites anatómicos. Cuando el mosquito se aproxima a la zona de alcance, el humano anticipa e intenta golpearlo y vuelve naturalmente al reposo. La reacción depende del acercamiento real; un gesto periódico desconectado del recorrido no cumple. Conservar agarre, apoyo de pelvis y pies, y evitar atravesamientos. Ambos actores usan los personajes y personalizaciones guardadas del usuario.
+
+Movimiento de pupilas y parpadeo se incorporan a humanos y mosquitos en TODO el juego, no sólo a estos clones del menú. Autores de cada especie definen geometría/controles y compatibilidad de variantes; Presentación coordina controlador facial reutilizable; Gameplay integra estados y avatares remotos; Director integra contratos. Evitar controladores que escriban simultáneamente los mismos huesos y evitar torcer o aplastar el ojo completo como sustituto de una pupila y párpado legibles.
+
+Aceptación adicional: secuencia en tiempo real muestra alas en movimiento, seguimiento ocular/cervical y aproximación→anticipación→golpe→retorno completos; comprobar varias aproximaciones y variantes guardadas, parpadeo con mirada y acciones, regreso desde personalización/lobby y estados de partida. Verificar también movimiento reducido. La fluidez se evalúa sin lectura GPU y escritura continua de PNG en el hilo principal.
+
+Evidencia rechazada: N:/LetMeSleep/Validation/LivingMenu-20260912/UserVideo/REVIEW.md. La grabación coincide con captura diagnóstica pesada ya detenida; causa de tirones pendiente de comparación limpia. Este límite no invalida los defectos artísticos observados.
