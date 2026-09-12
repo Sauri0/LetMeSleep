@@ -19,6 +19,7 @@ namespace LetMeSleep.Gameplay.Unity
         public uint LocalActorId;
         public string LocalPrincipal;
         public float MouseSensitivity = .002f;
+        public bool InvertY;
         public float MosquitoCameraDistance = .85f;
         public GameplayAuthority Authority { get; private set; }
         public UnityGameplayWorld World { get; private set; }
@@ -31,6 +32,8 @@ namespace LetMeSleep.Gameplay.Unity
         public event Action<PlayerInputCommand> InputReady;
         public event Action<PlayerActionCommand> ActionReady;
         public event Action<GameSessionState> SnapshotReady;
+        // Applied local/remote state for UI/presentation; SnapshotReady remains host transport output.
+        public event Action<GameSessionState> SnapshotApplied;
         public event Action<ActorPrivateState> PrivateReady;
         public event Action<GameplayEvent> EventReady;
         public event Action<RoundEndReason, PlayerRole> RoundFinished;
@@ -100,7 +103,7 @@ namespace LetMeSleep.Gameplay.Unity
             if (InputBlocked || !focus || keyboard == null || mouse == null)
             { held = new PlayerInputCommand(default, default, 0, yaw, pitch, LocalViewForward); queuedActions.Clear(); return; }
             var delta = mouse.delta.ReadValue(); yaw = Mathf.Repeat(yaw + delta.x * MouseSensitivity + Mathf.PI, Mathf.PI * 2) - Mathf.PI;
-            pitch = Mathf.Clamp(pitch + delta.y * MouseSensitivity, -110 * Mathf.Deg2Rad, (self.Role == PlayerRole.Human ? 75 : 89) * Mathf.Deg2Rad);
+            pitch = Mathf.Clamp(pitch + delta.y * MouseSensitivity * (InvertY ? -1 : 1), -110 * Mathf.Deg2Rad, (self.Role == PlayerRole.Human ? 75 : 89) * Mathf.Deg2Rad);
             bool e = keyboard.eKey.isPressed;
             if (!e) biteNeedsRelease = false;
             bool attached = self.BiteAttachment.HasValue;
@@ -193,6 +196,8 @@ namespace LetMeSleep.Gameplay.Unity
                 knownViewRevision = self.ViewRevision; queuedActions.Clear(); biteNeedsRelease = true;
                 // Preserve local world look; only discard movement/action prediction from the old frame.
             }
+            SnapshotApplied?.Invoke(snapshot);
+            if (!IsHost) SnapshotReady?.Invoke(snapshot);
         }
         public void ApplySnapshot(GameSessionState snapshot, double renderHostTime) => ApplySnapshot(snapshot);
         public void ApplyPrivate(ActorPrivateState state)
