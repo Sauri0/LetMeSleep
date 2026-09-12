@@ -1,0 +1,17 @@
+{
+  "budget_seconds": 120,
+  "passed": false,
+  "steps": [
+    {
+      "stdout": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-005937-furnishing.stdout.log",
+      "stderr": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-005937-furnishing.stderr.log",
+      "elapsed_total_ms": 3273,
+      "timeout": false,
+      "stderr_chars": 1547,
+      "exit": 1,
+      "step": "furnishing",
+      "error_text": false
+    }
+  ],
+  "elapsed_ms": 3331
+}

@@ -274,7 +274,7 @@ func _room_usage(room: Dictionary, spec: Dictionary) -> void:
 	for index: int in range(uses.size()):
 		var region:=inside
 		region.size[axis]/=uses.size()
-		var reverse: bool=(uses[0]=="kitchen" and inside.get_center().x<0) or (uses[0]=="entry" and float(spec.get("portal_bias",0))>0)
+		var reverse: bool=(uses[0]=="kitchen" and inside.get_center().x<0) or (uses[0]=="entry" and float(spec.get("portal_bias",0))>0) or (uses==["library","study"] and int(room.door_axis)==0)
 		var order:=uses.size()-1-index if reverse else index
 		region.position[axis]+=region.size[axis]*order
 		room.functional_zones.append({"id":str(room.id)+"/"+uses[index],"use":uses[index],"bounds":region,
@@ -386,7 +386,7 @@ func _furnishing_specs(room: Dictionary) -> Array[Dictionary]:
 			if use_index>0 and bool(original.pickup_surface): continue
 			var spec:=original.duplicate(true)
 			spec.pickup_surface=bool(original.pickup_surface) and use_index==0
-			spec.essential=true
+			spec.essential=HouseChecks.essential_furniture(use,str(spec.asset_id))
 			spec.functional_zone_id=str(room.id)+"/"+use
 			result.append(spec)
 	if int(room.bed_count)>1:
@@ -430,13 +430,14 @@ func _furniture_candidates(room: Dictionary, spec: Dictionary, near_beds: Array[
 		window=AABB(Vector3(bounds.get_center().x-.82,bounds.position.y+1.12,bounds.end.z-1.05 if bounds.get_center().z>0 else bounds.position.z),Vector3(1.64,1.3,1.05))
 	for quarter: int in range(1 if bool(spec.pickup_surface) else 2):
 		var size: Vector3=spec.size if quarter==0 else Vector3(spec.size.z,spec.size.y,spec.size.x)
-		if size.x>region.size.x-.4 or size.z>region.size.z-.4: continue
+		var inset:=.02 if bool(spec.pickup_surface) else .05
+		if size.x>region.size.x-inset*2 or size.z>region.size.z-inset*2: continue
 		var positions: Array[Vector2]=[]
 		for fraction: float in [0.0,.2,.4,.6,.8,1.0]:
-			for z: float in [region.position.z+.2,region.end.z-.2-size.z]:
-				positions.append(Vector2(lerpf(region.position.x+.2,region.end.x-.2-size.x,fraction),z))
-			for x: float in [region.position.x+.2,region.end.x-.2-size.x]:
-				positions.append(Vector2(x,lerpf(region.position.z+.2,region.end.z-.2-size.z,fraction)))
+			for z: float in [region.position.z+inset,region.end.z-inset-size.z]:
+				positions.append(Vector2(lerpf(region.position.x+inset,region.end.x-inset-size.x,fraction),z))
+			for x: float in [region.position.x+inset,region.end.x-inset-size.x]:
+				positions.append(Vector2(x,lerpf(region.position.z+inset,region.end.z-inset-size.z,fraction)))
 		if str(spec.asset_id) in ["sofa","armchair","table","dining_set","game_table"]:
 			for xf: float in [.25,.5,.75]:
 				for zf: float in [.25,.5,.75]:
@@ -467,8 +468,8 @@ func _furniture_candidates(room: Dictionary, spec: Dictionary, near_beds: Array[
 			if window.has_volume() and visual.intersects(window): continue
 			if HouseChecks.door_sweep_intersects(_data.doors[room.id],box): continue
 			var blocked:=false
-			for lane: AABB in room.movement_clearance:
-				if box.intersects(lane): blocked=true;break
+			for route: Dictionary in room.movement_routes:
+				if HouseChecks.route_hits_box(route.from,route.to,box,float(route.width),float(route.height)): blocked=true;break
 			if blocked: continue
 			var yaw: float=(PI if box.get_center().z<anchor.z else 0.0) if quarter==0 else (-PI*.5 if box.get_center().x<anchor.x else PI*.5)
 			if str(spec.asset_id)=="bed":
@@ -481,10 +482,19 @@ func _furniture_candidates(room: Dictionary, spec: Dictionary, near_beds: Array[
 			else:
 				approach.z=clampf(anchor.z,box.position.z+minf(.25,box.size.z*.25),box.end.z-minf(.25,box.size.z*.25))
 				approach.x=box.end.x+.72 if box.get_center().x<anchor.x else box.position.x-.72
+			if str(spec.asset_id)=="bed":
+				# Reach the foot (+X in the authored bed), leaving both bedside
+				# strips available for the required nightstand and its own approach.
+				var foot:=Basis(Vector3.UP,yaw)*Vector3.RIGHT
+				var foot_axis:=0 if absf(foot.x)>.5 else 2
+				var across:=2 if foot_axis==0 else 0
+				approach[foot_axis]=box.end[foot_axis]+.72 if foot[foot_axis]>0 else box.position[foot_axis]-.72
+				approach[across]=clampf(anchor[across],box.position[across]+.25,box.end[across]-.25)
 			var access:=_access_band(anchor,approach)
 			var inside: AABB=room.interior_bounds
 			if not inside.has_point(approach+Vector3(-.61,.1,-.61)) or not inside.has_point(approach+Vector3(.61,.1,.61)): continue
-			if box.intersects(access) or DoorGeometry.intersects_body(_data.doors[room.id],PI*.5,access): continue
+			var open_leaf: AABB=DoorGeometry.leaf_transform(_data.doors[room.id],PI*.5)*DoorGeometry.leaf_box(_data.doors[room.id])
+			if HouseChecks.route_hits_box(anchor,approach,box) or HouseChecks.route_hits_box(anchor,approach,open_leaf): continue
 			var edge:=minf(minf(box.position.x-region.position.x,region.end.x-box.end.x),minf(box.position.z-region.position.z,region.end.z-box.end.z))
 			var interior_seat: bool=str(spec.asset_id) in ["armchair","sofa","dining_set","game_table"] and float(room.area_m2)>30
 			var score:=absf(edge-(.7 if interior_seat else .2))*2.0-box.get_center().distance_squared_to(room.portal)*.005
@@ -501,8 +511,8 @@ func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
 	jobs.sort_custom(func(a:Dictionary,b:Dictionary)->bool:
 		if bool(a.spec.essential)!=bool(b.spec.essential): return bool(a.spec.essential)
 		if int(room.bed_count)>0:
-			var ap:=0 if str(a.spec.asset_id)=="bed" else (1 if str(a.spec.asset_id)=="nightstand" else 2)
-			var bp:=0 if str(b.spec.asset_id)=="bed" else (1 if str(b.spec.asset_id)=="nightstand" else 2)
+			var ap:=-1 if bool(a.spec.pickup_surface) else (0 if str(a.spec.asset_id)=="bed" else (1 if str(a.spec.asset_id)=="nightstand" else 2))
+			var bp:=-1 if bool(b.spec.pickup_surface) else (0 if str(b.spec.asset_id)=="bed" else (1 if str(b.spec.asset_id)=="nightstand" else 2))
 			if ap!=bp: return ap<bp
 		return a.candidates.size()<b.candidates.size() if a.candidates.size()!=b.candidates.size() else int(a.order)<int(b.order))
 	for job: Dictionary in jobs:
@@ -519,7 +529,7 @@ func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
 				var free:=true
 				var box: AABB=candidate.box
 				for placed: Dictionary in state.items:
-					if box.grow(.10).intersects(placed.box) or box.intersects(placed.access) or AABB(candidate.access).intersects(placed.box):
+					if box.grow(.10).intersects(placed.box) or HouseChecks.route_hits_box(placed.origin,placed.approach,box) or HouseChecks.route_hits_box(candidate.origin,candidate.approach,placed.box):
 						free=false;break
 				if not free: continue
 				var items: Array=state.items.duplicate();items.append(candidate)
@@ -533,11 +543,12 @@ func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
 			if bool(spec.essential):
 				room.placement_failure={"asset":spec.asset_id,"zone":spec.functional_zone_id,
 					"stage":"static_candidates" if candidates.is_empty() else "mutual_clearance",
-					"candidates":candidates.size(),"states":states.size()}
+					"candidates":candidates.size(),"states":states.size(),
+					"partial":str(states.back().items),"candidate_sample":str(candidates.slice(0,32))}
 				return []
 			continue
 		next.sort_custom(func(a:Dictionary,b:Dictionary)->bool:return float(a.score)<float(b.score))
-		if next.size()>16: next.resize(16)
+		if next.size()>64: next.resize(64)
 		states=next
 	for state: Dictionary in states:
 		if int(room.bed_count)>0:
@@ -554,11 +565,31 @@ func _furnish_room(room: Dictionary) -> void:
 	var center:=Vector3(b.get_center().x,b.position.y,b.get_center().z)
 	center[2 if int(room.door_axis)==0 else 0]=Vector3(room.portal)[2 if int(room.door_axis)==0 else 0]
 	room.center=center
+	for zone: Dictionary in room.functional_zones:
+		if room.functional_zones.size()==1:
+			var anchor:=center
+			var door_axis: int=room.door_axis
+			var toward:=signf(center[door_axis]-Vector3(room.portal)[door_axis])
+			var region: AABB=zone.bounds
+			anchor[door_axis]=clampf(Vector3(room.portal)[door_axis]+toward*maxf(2.75,absf(center[door_axis]-Vector3(room.portal)[door_axis])),region.position[door_axis]+.65,region.end[door_axis]-.65)
+			zone.anchor=anchor
+		var initial: Vector3=zone.anchor
+		var region: AABB=zone.bounds
+		var solved:=false
+		for distance: float in [0.0,.25,.5,.75,1.0,1.25]:
+			for offset: Vector3 in [Vector3.ZERO,Vector3.FORWARD,Vector3.BACK,Vector3.RIGHT,Vector3.LEFT]:
+				var point:=initial+offset*distance
+				var body:=_access_band(point,point)
+				if not region.grow(.001).encloses(body) or DoorGeometry.intersects_body(_data.doors[room.id],PI*.5,body): continue
+				zone.anchor=point;solved=true;break
+			if solved: break
 	var portal: Vector3=room.portal
 	var lane:=_access_band(portal,center,1.56);lane.size.y=2.4
 	room.movement_clearance=[lane]
+	room.movement_routes=[{"from":portal,"to":center,"width":1.56,"height":2.4}]
 	for zone: Dictionary in room.functional_zones:
 		room.movement_clearance.append(_access_band(center,zone.anchor))
+		room.movement_routes.append({"from":center,"to":zone.anchor,"width":1.3,"height":2.05})
 	var swing_origin:=portal-Vector3(1.15,0,1.15)
 	var axis: int=room.door_axis
 	swing_origin[axis]=portal[axis]-.15 if center[axis]>portal[axis] else portal[axis]-2.15

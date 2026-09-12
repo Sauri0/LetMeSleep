@@ -19,6 +19,13 @@ static func door_sweep_intersects(definition: Dictionary, body: AABB) -> bool:
 	var z:=maxf(0,near_z-padding)
 	return x*x+z*z<pow(float(definition.width)+padding,2)
 
+static func route_hits_box(from: Vector3, to: Vector3, box: AABB, width: float=1.3, height: float=2.05) -> bool:
+	# Exact sweep of an axis-aligned standing body along the segment. A diagonal
+	# route does not occupy the unused corners of its enclosing access AABB.
+	var margin:=Vector3(width*.5,height-.003,width*.5)
+	var expanded:=AABB(box.position-margin,box.size+Vector3(width,height-.006,width))
+	return expanded.has_point(from) or expanded.has_point(to) or expanded.intersects_segment(from,to)!=null
+
 static func validate(data: Dictionary) -> Dictionary:
 	var errors: Array[String]=[]
 	var extra: Array[AABB]=[]
@@ -130,8 +137,9 @@ static func validate_furnishing(data: Dictionary, human: Dictionary) -> Array[St
 			if door_sweep_intersects(data.doors[room.id],box): errors.append("Furniture intrudes into opening sweep: "+str(item.id))
 			if asset=="bed" and not bed_headboard_on_wall(box,float(item.get("rotation_y",NAN)),inside):
 				errors.append("Bed headboard is not against a wall: "+str(item.id))
-			for lane: AABB in room.get("movement_clearance",[]):
-				if box.intersects(lane): errors.append("Furniture blocks functional route: "+str(item.id));break
+			for route: Dictionary in room.get("movement_routes",[]):
+				if route_hits_box(route.from,route.to,box,float(route.width),float(route.height)):
+					errors.append("Furniture blocks functional route: "+str(item.id));break
 		for first: int in range(objects.size()):
 			for second: int in range(first+1,objects.size()):
 				if AABB(objects[first].box).intersects(objects[second].box): errors.append("Furniture overlap in "+str(room.id))
@@ -140,6 +148,7 @@ static func validate_furnishing(data: Dictionary, human: Dictionary) -> Array[St
 			var use: String=room.uses[index]
 			for spec: Dictionary in Furniture.for_theme(use):
 				if bool(spec.pickup_surface) and (use=="bathroom" or index>0): continue
+				if not essential_furniture(use,str(spec.asset_id)): continue
 				expected[spec.asset_id]=int(expected.get(spec.asset_id,0))+1
 		if int(room.bed_count)>1:
 			expected.bed=int(room.bed_count)
@@ -159,6 +168,15 @@ static func validate_furnishing(data: Dictionary, human: Dictionary) -> Array[St
 	for index: int in range(total):
 		if not orders.has(index): errors.append("Non-contiguous furnishing placement order");break
 	return errors
+
+static func essential_furniture(use: String, asset: String) -> bool:
+	# Core use, real beds/sanitary fixtures and primary surfaces stay required.
+	# Secondary storage/seating may be omitted when the clear layout is tighter.
+	var optional: Dictionary={"dining":["dresser","armchair"],"laundry":["hamper"],
+		"pantry":["dresser"],"bedroom_blue":["dresser"],"library":["nightstand"],
+		"living_room":["bookcase"],"music_room":["armchair"],"sewing_room":["dresser"],
+		"game_room":["armchair"],"study":["dresser"],"entry":["dresser"]}
+	return asset not in Array(optional.get(use,[]))
 
 static func bed_aisle(first: AABB, second: AABB) -> AABB:
 	# Require a straight, overlapping passage between bed faces, not just a

@@ -1,0 +1,83 @@
+{
+	"cases": [
+		{
+			"errors": [],
+			"floors": 3,
+			"rooms": 22,
+			"seed": 1,
+			"service_quadrant": 1
+		},
+		{
+			"errors": [],
+			"floors": 2,
+			"rooms": 17,
+			"seed": 2,
+			"service_quadrant": 3
+		},
+		{
+			"errors": [],
+			"floors": 3,
+			"rooms": 22,
+			"seed": 7,
+			"service_quadrant": 1
+		},
+		{
+			"errors": [],
+			"floors": 3,
+			"rooms": 22,
+			"seed": 31,
+			"service_quadrant": 1
+		},
+		{
+			"errors": [],
+			"floors": 3,
+			"rooms": 22,
+			"seed": 97,
+			"service_quadrant": 2
+		},
+		{
+			"errors": [],
+			"floors": 3,
+			"rooms": 22,
+			"seed": 257,
+			"service_quadrant": 1
+		},
+		{
+			"errors": [],
+			"floors": 3,
+			"rooms": 22,
+			"seed": 997,
+			"service_quadrant": 2
+		},
+		{
+			"errors": [],
+			"floors": 2,
+			"rooms": 16,
+			"seed": 2026,
+			"service_quadrant": 3
+		},
+		{
+			"errors": [],
+			"floors": 2,
+			"rooms": 16,
+			"seed": 65537,
+			"service_quadrant": 1
+		},
+		{
+			"errors": [],
+			"floors": 2,
+			"rooms": 18,
+			"seed": 1234567,
+			"service_quadrant": 1
+		},
+		{
+			"errors": [],
+			"floors": 2,
+			"rooms": 18,
+			"seed": 2147483646,
+			"service_quadrant": 2
+		}
+	],
+	"checks": 139,
+	"failures": []
+}

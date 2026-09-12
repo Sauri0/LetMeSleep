@@ -1,0 +1,599 @@
+{
+	"cases": [
+		{
+			"elapsed_ms": 518,
+			"errors": [
+				"Room room-00 has fewer than three furnishings",
+				"Room room-08 has fewer than three furnishings",
+				"Room room-13 has fewer than three furnishings",
+				"Room room-14 has fewer than three furnishings",
+				"Room room-15 has fewer than three furnishings",
+				"Room room-20 has fewer than three furnishings",
+				"Room room-21 has fewer than three furnishings",
+				"Missing essential table in room-00",
+				"Missing essential sink in room-00",
+				"Missing essential stove in room-00",
+				"Missing essential fridge in room-00",
+				"Missing essential dining_set in room-00",
+				"Missing essential table in room-08",
+				"Missing essential bed in room-08",
+				"Missing essential dresser in room-08",
+				"Missing essential nightstand in room-08",
+				"Invalid bed group spacing in room-08",
+				"Missing essential desk in room-13",
+				"Missing essential bed in room-13",
+				"Missing essential wardrobe in room-13",
+				"Missing essential nightstand in room-13",
+				"Invalid bed group spacing in room-13",
+				"Missing essential desk in room-14",
+				"Missing essential bookcase in room-14",
+				"Missing essential armchair in room-14",
+				"Missing essential desk in room-15",
+				"Missing essential bed in room-15",
+				"Missing essential wardrobe in room-15",
+				"Missing essential nightstand in room-15",
+				"Invalid bed group spacing in room-15",
+				"Missing essential desk in room-20",
+				"Missing essential bed in room-20",
+				"Missing essential wardrobe in room-20",
+				"Missing essential nightstand in room-20",
+				"Invalid bed group spacing in room-20",
+				"Missing essential desk in room-21",
+				"Missing essential bookcase in room-21",
+				"Missing essential armchair in room-21"
+			],
+			"furniture": 77,
+			"rooms": [
+				{
+					"area": 47.9599993610382,
+					"bounds": "[P: (-12.75, 0.0, -11.05), S: (11.0, 3.2, 4.5)]",
+					"center": "(-3.1, 0.0, -8.8)",
+					"id": "room-00",
+					"lanes": "[[P: (-3.88, 0.0, -9.58), S: (1.56, 2.4, 3.81)], [P: (-5.475, 0.0, -9.5), S: (3.025, 2.05, 1.35)], [P: (-10.675, 0.0, -9.5), S: (8.224999, 2.05, 1.35)]]",
+					"portal": "(-3.1, 0.0, -6.55)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "sink",
+							"candidates": 7,
+							"stage": "mutual_clearance",
+							"states": 6,
+							"zone": "room-00/kitchen"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"kitchen",
+						"dining"
+					],
+					"zones": "[{ \"id\": \"room-00/kitchen\", \"use\": \"kitchen\", \"bounds\": [P: (-7.3, 0.0, -11.05), S: (5.45, 3.0, 4.4)], \"anchor\": (-4.825, 0.0, -8.85) }, { \"id\": \"room-00/dining\", \"use\": \"dining\", \"bounds\": [P: (-12.75, 0.0, -11.05), S: (5.45, 3.0, 4.4)], \"anchor\": (-10.025, 0.0, -8.85) }]"
+				},
+				{
+					"area": 14.9599996948242,
+					"bounds": "[P: (1.75, 0.0, -11.05), S: (3.6, 3.2, 4.5)]",
+					"center": "(3.55, 0.0, -8.8)",
+					"id": "room-01",
+					"lanes": "[[P: (2.77, 0.0, -9.58), S: (1.56, 2.4, 3.81)], [P: (2.9, 0.0, -9.45), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(3.55, 0.0, -6.55)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 4,
+						"occupancy": 0.255806774167311,
+						"occupied_m2": 3.82686926347694,
+						"under_target": false
+					},
+					"uses": [
+						"pantry"
+					],
+					"zones": "[{ \"id\": \"room-01/pantry\", \"use\": \"pantry\", \"bounds\": [P: (1.85, 0.0, -11.05), S: (3.4, 3.0, 4.4)], \"anchor\": (3.55, 0.0, -8.8) }]"
+				},
+				{
+					"area": 15.400000333786,
+					"bounds": "[P: (5.35, 0.0, -11.05), S: (3.7, 3.2, 4.5)]",
+					"center": "(7.3, 0.0, -8.8)",
+					"id": "room-02",
+					"lanes": "[[P: (6.52, 0.0, -9.58), S: (1.56, 2.4, 3.81)], [P: (6.65, 0.0, -9.45), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(7.3, 0.0, -6.55)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 3,
+						"occupancy": 0.191448689584076,
+						"occupied_m2": 2.94830988349767,
+						"under_target": false
+					},
+					"uses": [
+						"bathroom"
+					],
+					"zones": "[{ \"id\": \"room-02/bathroom\", \"use\": \"bathroom\", \"bounds\": [P: (5.45, 0.0, -11.05), S: (3.5, 3.0, 4.4)], \"anchor\": (7.3, 0.0, -8.8) }]"
+				},
+				{
+					"area": 15.8400009727478,
+					"bounds": "[P: (9.05, 0.0, -11.05), S: (3.7, 3.2, 4.5)]",
+					"center": "(11.0, 0.0, -8.8)",
+					"id": "room-03",
+					"lanes": "[[P: (10.22, 0.0, -9.58), S: (1.56, 2.4, 3.81)], [P: (10.35, 0.0, -9.45), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(11.0, 0.0, -6.55)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 3,
+						"occupancy": 0.202891443267908,
+						"occupied_m2": 3.21380065872587,
+						"under_target": false
+					},
+					"uses": [
+						"laundry"
+					],
+					"zones": "[{ \"id\": \"room-03/laundry\", \"use\": \"laundry\", \"bounds\": [P: (9.150001, 0.0, -11.05), S: (3.6, 3.0, 4.4)], \"anchor\": (11.0, 0.0, -8.8) }]"
+				},
+				{
+					"area": 49.0499982833862,
+					"bounds": "[P: (-12.75, 0.0, 6.45), S: (11.0, 3.2, 4.6)]",
+					"center": "(-7.75, 0.0, 8.75)",
+					"id": "room-04",
+					"lanes": "[[P: (-8.53, 0.0, 5.67), S: (1.56, 2.4, 3.86)], [P: (-10.675, 0.0, 8.1), S: (3.575, 2.05, 1.349999)], [P: (-8.4, 0.0, 8.1), S: (4.474999, 2.05, 1.349999)]]",
+					"portal": "(-7.75, 0.0, 6.45)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.134530391563712,
+						"occupied_m2": 6.59871547526334,
+						"under_target": false
+					},
+					"uses": [
+						"study",
+						"music_room"
+					],
+					"zones": "[{ \"id\": \"room-04/study\", \"use\": \"study\", \"bounds\": [P: (-12.75, 0.0, 6.55), S: (5.45, 3.0, 4.5)], \"anchor\": (-10.025, 0.0, 8.799999) }, { \"id\": \"room-04/music_room\", \"use\": \"music_room\", \"bounds\": [P: (-7.3, 0.0, 6.55), S: (5.45, 3.0, 4.5)], \"anchor\": (-4.575, 0.0, 8.799999) }]"
+				},
+				{
+					"area": 49.0499982833862,
+					"bounds": "[P: (1.75, 0.0, 6.45), S: (11.0, 3.2, 4.6)]",
+					"center": "(7.5, 0.0, 8.75)",
+					"id": "room-05",
+					"lanes": "[[P: (6.72, 0.0, 5.67), S: (1.56, 2.4, 3.86)], [P: (3.925, 0.0, 8.1), S: (4.225, 2.05, 1.349999)], [P: (6.85, 0.0, 8.1), S: (3.825, 2.05, 1.349999)]]",
+					"portal": "(7.5, 0.0, 6.45)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.13723636972207,
+						"occupied_m2": 6.73144369928569,
+						"under_target": false
+					},
+					"uses": [
+						"game_room",
+						"library"
+					],
+					"zones": "[{ \"id\": \"room-05/game_room\", \"use\": \"game_room\", \"bounds\": [P: (1.85, 0.0, 6.55), S: (5.45, 3.0, 4.5)], \"anchor\": (4.575, 0.0, 8.799999) }, { \"id\": \"room-05/library\", \"use\": \"library\", \"bounds\": [P: (7.3, 0.0, 6.55), S: (5.45, 3.0, 4.5)], \"anchor\": (10.025, 0.0, 8.799999) }]"
+				},
+				{
+					"area": 29.2300007295609,
+					"bounds": "[P: (-5.9, 0.0, -3.8), S: (4.15, 3.2, 7.6)]",
+					"center": "(-3.825, 0.0, -1.8)",
+					"id": "room-06",
+					"lanes": "[[P: (-4.605, 0.0, -2.58), S: (3.635, 2.4, 1.56)], [P: (-4.475, 0.0, -2.45), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(-1.75, 0.0, -1.8)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 4,
+						"occupancy": 0.178239409701814,
+						"occupied_m2": 5.20993807562052,
+						"under_target": false
+					},
+					"uses": [
+						"living_room"
+					],
+					"zones": "[{ \"id\": \"room-06/living_room\", \"use\": \"living_room\", \"bounds\": [P: (-5.8, 0.0, -3.7), S: (3.95, 3.0, 7.4)], \"anchor\": (-3.825, 0.0, -1.8) }]"
+				},
+				{
+					"area": 29.2300007295609,
+					"bounds": "[P: (1.75, 0.0, -3.8), S: (4.15, 3.2, 7.6)]",
+					"center": "(3.825, 0.0, 1.8)",
+					"id": "room-07",
+					"lanes": "[[P: (0.97, 0.0, 1.02), S: (3.635, 2.4, 1.56)], [P: (3.175, 0.0, 1.15), S: (1.3, 2.05, 1.35)], [P: (3.175, 0.0, -2.5), S: (1.3, 2.05, 4.95)]]",
+					"portal": "(1.75, 0.0, 1.8)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 6,
+						"occupancy": 0.193589302650177,
+						"occupied_m2": 5.65861545769986,
+						"under_target": false
+					},
+					"uses": [
+						"entry",
+						"study"
+					],
+					"zones": "[{ \"id\": \"room-07/entry\", \"use\": \"entry\", \"bounds\": [P: (1.85, 0.0, 0.0), S: (3.95, 3.0, 3.7)], \"anchor\": (3.825, 0.0, 1.85) }, { \"id\": \"room-07/study\", \"use\": \"study\", \"bounds\": [P: (1.85, 0.0, -3.7), S: (3.95, 3.0, 3.7)], \"anchor\": (3.825, 0.0, -1.85) }]"
+				},
+				{
+					"area": 48.5050014209746,
+					"bounds": "[P: (-12.75, 3.2, -11.05), S: (11.0, 3.2, 4.55)]",
+					"center": "(-7.1, 3.2, -8.775)",
+					"id": "room-08",
+					"lanes": "[[P: (-7.88, 3.2, -9.554999), S: (1.56, 2.4, 3.835)], [P: (-7.75, 3.2, -9.424999), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(-7.1, 3.2, -6.5)",
+					"report": {
+						"essential_expected": 6,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "nightstand",
+							"candidates": 8,
+							"stage": "mutual_clearance",
+							"states": 2,
+							"zone": "room-08/bedroom_rose"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bedroom_rose"
+					],
+					"zones": "[{ \"id\": \"room-08/bedroom_rose\", \"use\": \"bedroom_rose\", \"bounds\": [P: (-12.75, 3.2, -11.05), S: (10.9, 3.0, 4.45)], \"anchor\": (-7.1, 3.2, -8.775) }]"
+				},
+				{
+					"area": 31.1500020027161,
+					"bounds": "[P: (1.75, 3.2, -11.05), S: (7.2, 3.2, 4.55)]",
+					"center": "(4.7, 3.2, -8.775)",
+					"id": "room-09",
+					"lanes": "[[P: (3.92, 3.2, -9.554999), S: (1.56, 2.4, 3.835)], [P: (4.05, 3.2, -9.424999), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(4.7, 3.2, -6.5)",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 4,
+						"failure": {
+
+						},
+						"objects": 5,
+						"occupancy": 0.169898736731629,
+						"occupied_m2": 5.29234598944918,
+						"under_target": false
+					},
+					"uses": [
+						"bedroom_blue"
+					],
+					"zones": "[{ \"id\": \"room-09/bedroom_blue\", \"use\": \"bedroom_blue\", \"bounds\": [P: (1.85, 3.2, -11.05), S: (7.0, 3.0, 4.45)], \"anchor\": (4.7, 3.2, -8.775) }]"
+				},
+				{
+					"area": 16.465001270771,
+					"bounds": "[P: (8.95, 3.2, -11.05), S: (3.8, 3.2, 4.55)]",
+					"center": "(10.75, 3.2, -8.775)",
+					"id": "room-10",
+					"lanes": "[[P: (9.969999, 3.2, -9.554999), S: (1.56, 2.4, 3.835)], [P: (10.1, 3.2, -9.424999), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(10.75, 3.2, -6.5)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 3,
+						"occupancy": 0.179065269113071,
+						"occupied_m2": 2.94830988349767,
+						"under_target": false
+					},
+					"uses": [
+						"bathroom"
+					],
+					"zones": "[{ \"id\": \"room-10/bathroom\", \"use\": \"bathroom\", \"bounds\": [P: (9.05, 3.2, -11.05), S: (3.7, 3.0, 4.45)], \"anchor\": (10.75, 3.2, -8.775) }]"
+				},
+				{
+					"area": 49.5950003433227,
+					"bounds": "[P: (-12.75, 3.2, 6.4), S: (11.0, 3.2, 4.65)]",
+					"center": "(-7.4, 3.2, 8.725)",
+					"id": "room-11",
+					"lanes": "[[P: (-8.18, 3.2, 5.62), S: (1.56, 2.4, 3.885)], [P: (-10.675, 3.2, 8.075001), S: (3.924999, 2.05, 1.349999)], [P: (-8.05, 3.2, 8.075001), S: (4.125, 2.05, 1.349999)]]",
+					"portal": "(-7.4, 3.2, 6.4)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.126421123311749,
+						"occupied_m2": 6.26985565404945,
+						"under_target": false
+					},
+					"uses": [
+						"sewing_room",
+						"study"
+					],
+					"zones": "[{ \"id\": \"room-11/sewing_room\", \"use\": \"sewing_room\", \"bounds\": [P: (-12.75, 3.2, 6.5), S: (5.45, 3.0, 4.55)], \"anchor\": (-10.025, 3.2, 8.775) }, { \"id\": \"room-11/study\", \"use\": \"study\", \"bounds\": [P: (-7.3, 3.2, 6.5), S: (5.45, 3.0, 4.55)], \"anchor\": (-4.575, 3.2, 8.775) }]"
+				},
+				{
+					"area": 49.5950003433227,
+					"bounds": "[P: (1.75, 3.2, 6.4), S: (11.0, 3.2, 4.65)]",
+					"center": "(7.4, 3.2, 8.725)",
+					"id": "room-12",
+					"lanes": "[[P: (6.62, 3.2, 5.62), S: (1.56, 2.4, 3.885)], [P: (3.925, 3.2, 8.075001), S: (4.125, 2.05, 1.349999)], [P: (6.75, 3.2, 8.075001), S: (3.924999, 2.05, 1.349999)]]",
+					"portal": "(7.4, 3.2, 6.4)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.133953576014687,
+						"occupied_m2": 6.64342764843768,
+						"under_target": false
+					},
+					"uses": [
+						"music_room",
+						"library"
+					],
+					"zones": "[{ \"id\": \"room-12/music_room\", \"use\": \"music_room\", \"bounds\": [P: (1.85, 3.2, 6.5), S: (5.45, 3.0, 4.55)], \"anchor\": (4.575, 3.2, 8.775) }, { \"id\": \"room-12/library\", \"use\": \"library\", \"bounds\": [P: (7.3, 3.2, 6.5), S: (5.45, 3.0, 4.55)], \"anchor\": (10.025, 3.2, 8.775) }]"
+				},
+				{
+					"area": 29.2300007295609,
+					"bounds": "[P: (-5.9, 3.2, -3.8), S: (4.15, 3.2, 7.6)]",
+					"center": "(-3.825, 3.2, -0.35)",
+					"id": "room-13",
+					"lanes": "[[P: (-4.605, 3.2, -1.13), S: (3.635, 2.4, 1.56)], [P: (-4.475, 3.2, -1.0), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(-1.75, 3.2, -0.35)",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "desk",
+							"candidates": 8,
+							"stage": "mutual_clearance",
+							"states": 1,
+							"zone": "room-13/bedroom_green"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bedroom_green"
+					],
+					"zones": "[{ \"id\": \"room-13/bedroom_green\", \"use\": \"bedroom_green\", \"bounds\": [P: (-5.8, 3.2, -3.7), S: (3.95, 3.0, 7.4)], \"anchor\": (-3.825, 3.2, -0.35) }]"
+				},
+				{
+					"area": 29.2300007295609,
+					"bounds": "[P: (1.75, 3.2, -3.8), S: (4.15, 3.2, 7.6)]",
+					"center": "(3.825, 3.2, -0.4)",
+					"id": "room-14",
+					"lanes": "[[P: (0.97, 3.2, -1.18), S: (3.635, 2.4, 1.56)], [P: (3.175, 3.2, -2.75), S: (1.3, 2.05, 3.0)], [P: (3.175, 3.2, -1.05), S: (1.3, 2.05, 3.55)]]",
+					"portal": "(1.75, 3.2, -0.4)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "desk",
+							"candidates": 0,
+							"stage": "static_candidates",
+							"states": 1,
+							"zone": "room-14/library"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"library",
+						"study"
+					],
+					"zones": "[{ \"id\": \"room-14/library\", \"use\": \"library\", \"bounds\": [P: (1.85, 3.2, -3.7), S: (3.95, 3.0, 3.7)], \"anchor\": (3.825, 3.2, -2.1) }, { \"id\": \"room-14/study\", \"use\": \"study\", \"bounds\": [P: (1.85, 3.2, 0.0), S: (3.95, 3.0, 3.7)], \"anchor\": (3.825, 3.2, 1.85) }]"
+				},
+				{
+					"area": 48.5050014209746,
+					"bounds": "[P: (-12.75, 6.4, -11.05), S: (11.0, 3.2, 4.55)]",
+					"center": "(-7.75, 6.4, -8.775)",
+					"id": "room-15",
+					"lanes": "[[P: (-8.53, 6.4, -9.554999), S: (1.56, 2.4, 3.835)], [P: (-8.4, 6.4, -9.424999), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(-7.75, 6.4, -6.5)",
+					"report": {
+						"essential_expected": 6,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "nightstand",
+							"candidates": 8,
+							"stage": "mutual_clearance",
+							"states": 2,
+							"zone": "room-15/bedroom_blue"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bedroom_blue"
+					],
+					"zones": "[{ \"id\": \"room-15/bedroom_blue\", \"use\": \"bedroom_blue\", \"bounds\": [P: (-12.75, 6.4, -11.05), S: (10.9, 3.0, 4.45)], \"anchor\": (-7.75, 6.4, -8.775) }]"
+				},
+				{
+					"area": 31.3725028657914,
+					"bounds": "[P: (1.75, 6.4, -11.05), S: (7.25, 3.2, 4.55)]",
+					"center": "(6.025, 6.4, -8.775)",
+					"id": "room-16",
+					"lanes": "[[P: (5.245, 6.4, -9.554999), S: (1.56, 2.4, 3.835)], [P: (5.375, 6.4, -9.424999), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(6.025, 6.4, -6.5)",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 4,
+						"failure": {
+
+						},
+						"objects": 4,
+						"occupancy": 0.152250088210446,
+						"occupied_m2": 4.7764663286992,
+						"under_target": false
+					},
+					"uses": [
+						"guest_room"
+					],
+					"zones": "[{ \"id\": \"room-16/guest_room\", \"use\": \"guest_room\", \"bounds\": [P: (1.85, 6.4, -11.05), S: (7.05, 3.0, 4.45)], \"anchor\": (6.025, 6.4, -8.775) }]"
+				},
+				{
+					"area": 16.2425014686585,
+					"bounds": "[P: (9.0, 6.4, -11.05), S: (3.75, 3.2, 4.55)]",
+					"center": "(10.825, 6.4, -8.775)",
+					"id": "room-17",
+					"lanes": "[[P: (10.045, 6.4, -9.554999), S: (1.56, 2.4, 3.835)], [P: (10.175, 6.4, -9.424999), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(10.825, 6.4, -6.5)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 3,
+						"occupancy": 0.181518215601626,
+						"occupied_m2": 2.94830988349767,
+						"under_target": false
+					},
+					"uses": [
+						"bathroom"
+					],
+					"zones": "[{ \"id\": \"room-17/bathroom\", \"use\": \"bathroom\", \"bounds\": [P: (9.1, 6.4, -11.05), S: (3.65, 3.0, 4.45)], \"anchor\": (10.825, 6.4, -8.775) }]"
+				},
+				{
+					"area": 48.5050014209746,
+					"bounds": "[P: (-12.75, 6.4, 6.5), S: (11.0, 3.2, 4.55)]",
+					"center": "(-6.95, 6.4, 8.775)",
+					"id": "room-18",
+					"lanes": "[[P: (-7.73, 6.4, 5.72), S: (1.56, 2.4, 3.835)], [P: (-10.675, 6.4, 8.125), S: (4.375, 2.05, 1.35)], [P: (-7.6, 6.4, 8.125), S: (3.674999, 2.05, 1.35)]]",
+					"portal": "(-6.95, 6.4, 6.5)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.136041960250514,
+						"occupied_m2": 6.59871547526334,
+						"under_target": false
+					},
+					"uses": [
+						"study",
+						"music_room"
+					],
+					"zones": "[{ \"id\": \"room-18/study\", \"use\": \"study\", \"bounds\": [P: (-12.75, 6.4, 6.6), S: (5.45, 3.0, 4.45)], \"anchor\": (-10.025, 6.4, 8.825) }, { \"id\": \"room-18/music_room\", \"use\": \"music_room\", \"bounds\": [P: (-7.3, 6.4, 6.6), S: (5.45, 3.0, 4.45)], \"anchor\": (-4.575, 6.4, 8.825) }]"
+				},
+				{
+					"area": 48.5050014209746,
+					"bounds": "[P: (1.75, 6.4, 6.5), S: (11.0, 3.2, 4.55)]",
+					"center": "(6.9, 6.4, 8.775)",
+					"id": "room-19",
+					"lanes": "[[P: (6.12, 6.4, 5.72), S: (1.56, 2.4, 3.835)], [P: (3.925, 6.4, 8.125), S: (3.625, 2.05, 1.35)], [P: (6.25, 6.4, 8.125), S: (4.424999, 2.05, 1.35)]]",
+					"portal": "(6.9, 6.4, 6.5)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.138778342481913,
+						"occupied_m2": 6.73144369928569,
+						"under_target": false
+					},
+					"uses": [
+						"game_room",
+						"library"
+					],
+					"zones": "[{ \"id\": \"room-19/game_room\", \"use\": \"game_room\", \"bounds\": [P: (1.85, 6.4, 6.6), S: (5.45, 3.0, 4.45)], \"anchor\": (4.575, 6.4, 8.825) }, { \"id\": \"room-19/library\", \"use\": \"library\", \"bounds\": [P: (7.3, 6.4, 6.6), S: (5.45, 3.0, 4.45)], \"anchor\": (10.025, 6.4, 8.825) }]"
+				},
+				{
+					"area": 29.2300007295609,
+					"bounds": "[P: (-5.9, 6.4, -3.8), S: (4.15, 3.2, 7.6)]",
+					"center": "(-3.825, 6.4, -0.35)",
+					"id": "room-20",
+					"lanes": "[[P: (-4.605, 6.4, -1.13), S: (3.635, 2.4, 1.56)], [P: (-4.475, 6.4, -1.0), S: (1.3, 2.05, 1.3)]]",
+					"portal": "(-1.75, 6.4, -0.35)",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "desk",
+							"candidates": 8,
+							"stage": "mutual_clearance",
+							"states": 1,
+							"zone": "room-20/bedroom_green"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bedroom_green"
+					],
+					"zones": "[{ \"id\": \"room-20/bedroom_green\", \"use\": \"bedroom_green\", \"bounds\": [P: (-5.8, 6.4, -3.7), S: (3.95, 3.0, 7.4)], \"anchor\": (-3.825, 6.4, -0.35) }]"
+				},
+				{
+					"area": 29.2300007295609,
+					"bounds": "[P: (1.75, 6.4, -3.8), S: (4.15, 3.2, 7.6)]",
+					"center": "(3.825, 6.4, -0.75)",
+					"id": "room-21",
+					"lanes": "[[P: (0.97, 6.4, -1.53), S: (3.635, 2.4, 1.56)], [P: (3.175, 6.4, -2.5), S: (2.05, 2.05, 2.4)], [P: (3.175, 6.4, -1.4), S: (1.3, 2.05, 3.9)]]",
+					"portal": "(1.75, 6.4, -0.75)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "bookcase",
+							"candidates": 3,
+							"stage": "mutual_clearance",
+							"states": 3,
+							"zone": "room-21/library"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"library",
+						"study"
+					],
+					"zones": "[{ \"id\": \"room-21/library\", \"use\": \"library\", \"bounds\": [P: (1.85, 6.4, -3.7), S: (3.95, 3.0, 3.7)], \"anchor\": (4.575, 6.4, -1.85) }, { \"id\": \"room-21/study\", \"use\": \"study\", \"bounds\": [P: (1.85, 6.4, 0.0), S: (3.95, 3.0, 3.7)], \"anchor\": (3.825, 6.4, 1.85) }]"
+				}
+			],
+			"seed": 1
+		}
+	],
+	"checks": 1324,
+	"failures": [
+		"seed 1: [\"Room room-00 has fewer than three furnishings\", \"Room room-08 has fewer than three furnishings\", \"Room room-13 has fewer than three furnishings\", \"Room room-14 has fewer than three furnishings\", \"Room room-15 has fewer than three furnishings\", \"Room room-20 has fewer than three furnishings\", \"Room room-21 has fewer than three furnishings\", \"Missing essential table in room-00\", \"Missing essential sink in room-00\", \"Missing essential stove in room-00\", \"Missing essential fridge in room-00\", \"Missing essential dining_set in room-00\", \"Missing essential table in room-08\", \"Missing essential bed in room-08\", \"Missing essential dresser in room-08\", \"Missing essential nightstand in room-08\", \"Invalid bed group spacing in room-08\", \"Missing essential desk in room-13\", \"Missing essential bed in room-13\", \"Missing essential wardrobe in room-13\", \"Missing essential nightstand in room-13\", \"Invalid bed group spacing in room-13\", \"Missing essential desk in room-14\", \"Missing essential bookcase in room-14\", \"Missing essential armchair in room-14\", \"Missing essential desk in room-15\", \"Missing essential bed in room-15\", \"Missing essential wardrobe in room-15\", \"Missing essential nightstand in room-15\", \"Invalid bed group spacing in room-15\", \"Missing essential desk in room-20\", \"Missing essential bed in room-20\", \"Missing essential wardrobe in room-20\", \"Missing essential nightstand in room-20\", \"Invalid bed group spacing in room-20\", \"Missing essential desk in room-21\", \"Missing essential bookcase in room-21\", \"Missing essential armchair in room-21\"]"
+	]
+}

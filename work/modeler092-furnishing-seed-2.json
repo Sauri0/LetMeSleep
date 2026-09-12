@@ -1,0 +1,449 @@
+{
+	"cases": [
+		{
+			"elapsed_ms": 669,
+			"errors": [
+				"Room room-06 has fewer than three furnishings",
+				"Room room-07 has fewer than three furnishings",
+				"Room room-12 has fewer than three furnishings",
+				"Missing slipper on floor 0.0",
+				"Missing slipper on floor 3.2",
+				"Missing essential table in room-06",
+				"Missing essential sofa in room-06",
+				"Missing essential armchair in room-06",
+				"Missing essential table in room-07",
+				"Missing essential wardrobe in room-07",
+				"Missing essential armchair in room-07",
+				"Missing essential bookcase in room-07",
+				"Missing essential table in room-12",
+				"Missing essential bed in room-12",
+				"Missing essential wardrobe in room-12",
+				"Missing essential nightstand in room-12",
+				"Invalid bed group spacing in room-12"
+			],
+			"furniture": 68,
+			"rooms": [
+				{
+					"area": 46.8700004386901,
+					"bounds": "[P: (-12.75, 0.0, -10.85), S: (11.0, 3.2, 4.4)]",
+					"center": "(-7.5, 0.0, -8.650001)",
+					"id": "room-00",
+					"lanes": "[[P: (-8.28, 0.0, -9.43), S: (1.56, 2.4, 3.760001)], [P: (-10.675, 0.0, -9.35), S: (3.825, 2.05, 1.35)], [P: (-8.15, 0.0, -9.35), S: (4.224999, 2.05, 1.35)]]",
+					"portal": "(-7.5, 0.0, -6.45)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.140787612833395,
+						"occupied_m2": 6.59871547526334,
+						"under_target": false
+					},
+					"uses": [
+						"study",
+						"music_room"
+					],
+					"zones": "[{ \"id\": \"room-00/study\", \"use\": \"study\", \"bounds\": [P: (-12.75, 0.0, -10.85), S: (5.45, 3.0, 4.3)], \"anchor\": (-10.025, 0.0, -8.700001) }, { \"id\": \"room-00/music_room\", \"use\": \"music_room\", \"bounds\": [P: (-7.3, 0.0, -10.85), S: (5.45, 3.0, 4.3)], \"anchor\": (-4.575, 0.0, -8.700001) }]"
+				},
+				{
+					"area": 46.8700004386901,
+					"bounds": "[P: (1.75, 0.0, -10.85), S: (11.0, 3.2, 4.4)]",
+					"center": "(7.75, 0.0, -8.650001)",
+					"id": "room-01",
+					"lanes": "[[P: (6.97, 0.0, -9.43), S: (1.56, 2.4, 3.760001)], [P: (3.925, 0.0, -9.35), S: (4.475, 2.05, 1.35)], [P: (7.1, 0.0, -9.35), S: (3.575, 2.05, 1.35)]]",
+					"portal": "(7.75, 0.0, -6.45)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.143619450315367,
+						"occupied_m2": 6.73144369928569,
+						"under_target": false
+					},
+					"uses": [
+						"game_room",
+						"library"
+					],
+					"zones": "[{ \"id\": \"room-01/game_room\", \"use\": \"game_room\", \"bounds\": [P: (1.85, 0.0, -10.85), S: (5.45, 3.0, 4.3)], \"anchor\": (4.575, 0.0, -8.700001) }, { \"id\": \"room-01/library\", \"use\": \"library\", \"bounds\": [P: (7.3, 0.0, -10.85), S: (5.45, 3.0, 4.3)], \"anchor\": (10.025, 0.0, -8.700001) }]"
+				},
+				{
+					"area": 47.4149973011017,
+					"bounds": "[P: (-12.75, 0.0, 6.4), S: (11.0, 3.2, 4.45)]",
+					"center": "(-3.1, 0.0, 8.625)",
+					"id": "room-02",
+					"lanes": "[[P: (-3.88, 0.0, 5.62), S: (1.56, 2.4, 3.785)], [P: (-5.475, 0.0, 7.975), S: (3.025, 2.05, 1.35)], [P: (-10.675, 0.0, 7.975), S: (8.224999, 2.05, 1.35)]]",
+					"portal": "(-3.1, 0.0, 6.4)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.182389897918987,
+						"occupied_m2": 8.64801651757698,
+						"under_target": false
+					},
+					"uses": [
+						"kitchen",
+						"dining"
+					],
+					"zones": "[{ \"id\": \"room-02/kitchen\", \"use\": \"kitchen\", \"bounds\": [P: (-7.3, 0.0, 6.5), S: (5.45, 3.0, 4.35)], \"anchor\": (-4.825, 0.0, 8.675) }, { \"id\": \"room-02/dining\", \"use\": \"dining\", \"bounds\": [P: (-12.75, 0.0, 6.5), S: (5.45, 3.0, 4.35)], \"anchor\": (-10.025, 0.0, 8.675) }]"
+				},
+				{
+					"area": 15.0074998784065,
+					"bounds": "[P: (1.75, 0.0, 6.4), S: (3.65, 3.2, 4.45)]",
+					"center": "(3.525, 0.0, 8.625)",
+					"id": "room-03",
+					"lanes": "[[P: (2.745, 0.0, 5.62), S: (1.56, 2.4, 3.785)], [P: (2.875, 0.0, 7.975), S: (1.3, 2.05, 1.825)]]",
+					"portal": "(3.525, 0.0, 6.4)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 3,
+						"occupancy": 0.227390228963014,
+						"occupied_m2": 3.41255883351326,
+						"under_target": false
+					},
+					"uses": [
+						"pantry"
+					],
+					"zones": "[{ \"id\": \"room-03/pantry\", \"use\": \"pantry\", \"bounds\": [P: (1.85, 0.0, 6.5), S: (3.45, 3.0, 4.35)], \"anchor\": (3.525, 0.0, 9.15) }]"
+				},
+				{
+					"area": 15.224999666214,
+					"bounds": "[P: (5.4, 0.0, 6.4), S: (3.7, 3.2, 4.45)]",
+					"center": "(7.2, 0.0, 8.625)",
+					"id": "room-04",
+					"lanes": "[[P: (6.42, 0.0, 5.62), S: (1.56, 2.4, 3.785)], [P: (6.55, 0.0, 7.975), S: (1.3, 2.05, 1.825)]]",
+					"portal": "(7.2, 0.0, 6.4)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 3,
+						"occupancy": 0.193649257677181,
+						"occupied_m2": 2.94830988349767,
+						"under_target": false
+					},
+					"uses": [
+						"bathroom"
+					],
+					"zones": "[{ \"id\": \"room-04/bathroom\", \"use\": \"bathroom\", \"bounds\": [P: (5.5, 0.0, 6.5), S: (3.5, 3.0, 4.35)], \"anchor\": (7.2, 0.0, 9.15) }]"
+				},
+				{
+					"area": 15.4425004911423,
+					"bounds": "[P: (9.1, 0.0, 6.4), S: (3.65, 3.2, 4.45)]",
+					"center": "(10.875, 0.0, 8.625)",
+					"id": "room-05",
+					"lanes": "[[P: (10.095, 0.0, 5.62), S: (1.56, 2.4, 3.785)], [P: (10.225, 0.0, 7.975), S: (1.3, 2.05, 1.825)]]",
+					"portal": "(10.875, 0.0, 6.4)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 4,
+						"occupancy": 0.242426040252498,
+						"occupied_m2": 3.74366424566487,
+						"under_target": false
+					},
+					"uses": [
+						"laundry"
+					],
+					"zones": "[{ \"id\": \"room-05/laundry\", \"use\": \"laundry\", \"bounds\": [P: (9.200001, 0.0, 6.5), S: (3.55, 3.0, 4.35)], \"anchor\": (10.875, 0.0, 9.15) }]"
+				},
+				{
+					"area": 29.2300007295609,
+					"bounds": "[P: (-5.9, 0.0, -3.8), S: (4.15, 3.2, 7.6)]",
+					"center": "(-3.825, 0.0, 1.8)",
+					"id": "room-06",
+					"lanes": "[[P: (-4.605, 0.0, 1.02), S: (3.635, 2.4, 1.56)], [P: (-5.15, 0.0, 1.15), S: (1.975, 2.05, 1.3)]]",
+					"portal": "(-1.75, 0.0, 1.8)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "sofa",
+							"candidate_sample": "[{ \"box\": [P: (-5.75, 0.0, -3.65), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, -1.980045), \"access\": [P: (-5.15, 0.0, -2.630044), S: (1.3, 2.05, 5.080045)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.1351849937439, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.450064, 0.0, -3.65), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, -1.980045), \"access\": [P: (-5.15, 0.0, -2.630044), S: (1.3, 2.05, 5.080045)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.14320791244507, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.150127, 0.0, -3.65), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, -1.980045), \"access\": [P: (-5.15, 0.0, -2.630044), S: (1.3, 2.05, 5.080045)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.15033121109009, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-4.850191, 0.0, -3.65), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, -1.980045), \"access\": [P: (-5.15, 0.0, -2.630044), S: (1.3, 2.05, 5.080045)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.15655488967896, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-4.550255, 0.0, -3.65), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.300255, 0.0, -1.980045), \"access\": [P: (-5.15, 0.0, -2.630044), S: (1.499745, 2.05, 5.080045)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.16187895774841, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.75, 0.0, -2.379991), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, -0.710036), \"access\": [P: (-5.15, 0.0, -1.360036), S: (1.3, 2.05, 3.810035)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.19030314445496, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-4.009974, 0.0, -3.65), S: (0.949955, 0.96425, 2.350318)], \"rotation_y\": 1.5707963267949, \"approach\": (-4.729973, 0.0, -1.549682), \"access\": [P: (-5.379973, 0.0, -2.199682), S: (1.529973, 2.05, 4.649682)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.19153547286987, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.75, 0.0, -1.109982), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, 0.559973), \"access\": [P: (-5.15, 0.0, -0.090027), S: (1.3, 2.05, 2.540027)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.22929252624512, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.75, 0.0, 2.700045), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 0.0, \"approach\": (-4.5, 0.0, 1.980045), \"access\": [P: (-5.15, 0.0, 1.15), S: (1.3, 2.05, 1.480045)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.24948580265045, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.450064, 0.0, 2.700045), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 0.0, \"approach\": (-4.5, 0.0, 1.980045), \"access\": [P: (-5.15, 0.0, 1.15), S: (1.3, 2.05, 1.480045)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.25750871658325, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.150127, 0.0, 2.700045), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 0.0, \"approach\": (-4.5, 0.0, 1.980045), \"access\": [P: (-5.15, 0.0, 1.15), S: (1.3, 2.05, 1.480045)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.26463201761246, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.30008, 0.0, -1.987489), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, -0.317534), \"access\": [P: (-5.15, 0.0, -0.967533), S: (1.3, 2.05, 3.417533)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.51561361312866, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-4.700239, 0.0, -1.987489), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.450239, 0.0, -0.317534), \"access\": [P: (-5.15, 0.0, -0.967533), S: (1.349761, 2.05, 3.417533)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.52806032180786, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.30008, 0.0, -0.474978), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, 1.194978), \"access\": [P: (-5.15, 0.0, 0.544978), S: (1.3, 2.05, 1.905022)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.55427726745605, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-4.700239, 0.0, -0.474978), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.450239, 0.0, 1.194978), \"access\": [P: (-5.15, 0.0, 0.544978), S: (1.349761, 2.05, 1.905022)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.56672397613525, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.000159, 0.0, -1.987489), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, -0.317534), \"access\": [P: (-5.15, 0.0, -0.967533), S: (1.3, 2.05, 3.417533)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 1.12212784767151, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.000159, 0.0, -0.474978), S: (2.350318, 0.96425, 0.949955)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, 1.194978), \"access\": [P: (-5.15, 0.0, 0.544978), S: (1.3, 2.05, 1.905022)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 1.1607915019989, \"spec\": { \"asset_id\": \"sofa\", \"label\": \"Sofá\", \"style\": \"sofa\", \"size\": (2.350318, 0.96425, 0.949955), \"visual_size\": (2.350318, 0.96425, 0.949955), \"visual_scale\": 0.95, \"surface_height\": 0.96425, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }]",
+							"candidates": 17,
+							"partial": "[{ \"box\": [P: (-3.812, 0.0, 2.83), S: (1.45, 0.72, 0.85)], \"rotation_y\": 0.0, \"approach\": (-3.562, 0.0, 2.11), \"access\": [P: (-5.15, 0.0, 1.15), S: (2.238, 2.05, 1.61)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 0.33982858657837, \"spec\": { \"asset_id\": \"table\", \"label\": \"Mesa auxiliar\", \"style\": \"table\", \"size\": (1.45, 0.72, 0.85), \"visual_size\": (1.45, 0.72, 0.85), \"visual_scale\": 1.0, \"surface_height\": 0.72, \"pickup_surface\": true, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }, { \"box\": [P: (-5.043505, 0.0, -1.999988), S: (1.324019, 1.015, 0.999953)], \"rotation_y\": 3.14159265358979, \"approach\": (-4.5, 0.0, -0.280035), \"access\": [P: (-5.15, 0.0, -0.930035), S: (1.3, 2.05, 3.380035)], \"origin\": (-4.5, 0.0, 1.8), \"score\": 1.02262894630432, \"spec\": { \"asset_id\": \"armchair\", \"label\": \"Sillón\", \"style\": \"sofa\", \"size\": (1.324019, 1.015, 0.999953), \"visual_size\": (1.324019, 1.015, 0.999953), \"visual_scale\": 1.0, \"surface_height\": 1.015, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"living_room\", &\"essential\": true, &\"functional_zone_id\": \"room-06/living_room\" } }]",
+							"stage": "mutual_clearance",
+							"states": 64,
+							"zone": "room-06/living_room"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"living_room"
+					],
+					"zones": "[{ \"id\": \"room-06/living_room\", \"use\": \"living_room\", \"bounds\": [P: (-5.8, 0.0, -3.7), S: (3.95, 3.0, 7.4)], \"anchor\": (-4.5, 0.0, 1.8) }]"
+				},
+				{
+					"area": 29.2300007295609,
+					"bounds": "[P: (1.75, 0.0, -3.8), S: (4.15, 3.2, 7.6)]",
+					"center": "(3.825, 0.0, -1.8)",
+					"id": "room-07",
+					"lanes": "[[P: (0.97, 0.0, -2.58), S: (3.635, 2.4, 1.56)], [P: (3.175, 0.0, -2.5), S: (1.3, 2.05, 1.35)], [P: (3.175, 0.0, -2.45), S: (1.3, 2.05, 4.95)]]",
+					"portal": "(1.75, 0.0, -1.8)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "wardrobe",
+							"candidate_sample": "[{ \"box\": [P: (5.02953, 0.0, -1.394), S: (0.72047, 1.62, 1.344)], \"rotation_y\": 1.5707963267949, \"approach\": (4.30953, 0.0, -1.144), \"access\": [P: (3.175, 0.0, -2.5), S: (1.78453, 2.05, 2.006)], \"origin\": (3.825, 0.0, -1.85), \"score\": 0.22467019081116, \"spec\": { \"asset_id\": \"wardrobe\", \"label\": \"Guardarropa\", \"style\": \"cabinet\", \"size\": (1.344, 1.62, 0.72047), \"visual_size\": (1.344, 1.62, 0.72047), \"visual_scale\": 1.2, \"surface_height\": 1.62, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"entry\", &\"essential\": true, &\"functional_zone_id\": \"room-07/entry\" } }, { \"box\": [P: (5.02953, 0.0, -3.1988), S: (0.72047, 1.62, 1.344)], \"rotation_y\": 1.5707963267949, \"approach\": (4.30953, 0.0, -2.1048), \"access\": [P: (3.175, 0.0, -2.7548), S: (1.78453, 2.05, 1.5548)], \"origin\": (3.825, 0.0, -1.85), \"score\": 0.22783942222595, \"spec\": { \"asset_id\": \"wardrobe\", \"label\": \"Guardarropa\", \"style\": \"cabinet\", \"size\": (1.344, 1.62, 0.72047), \"visual_size\": (1.344, 1.62, 0.72047), \"visual_scale\": 1.2, \"surface_height\": 1.62, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"entry\", &\"essential\": true, &\"functional_zone_id\": \"room-07/entry\" } }, { \"box\": [P: (5.02953, 0.0, -1.8452), S: (0.72047, 1.62, 1.344)], \"rotation_y\": 1.5707963267949, \"approach\": (4.30953, 0.0, -1.5952), \"access\": [P: (3.175, 0.0, -2.5), S: (1.78453, 2.05, 1.5548)], \"origin\": (3.825, 0.0, -1.85), \"score\": 0.22851622104645, \"spec\": { \"asset_id\": \"wardrobe\", \"label\": \"Guardarropa\", \"style\": \"cabinet\", \"size\": (1.344, 1.62, 0.72047), \"visual_size\": (1.344, 1.62, 0.72047), \"visual_scale\": 1.2, \"surface_height\": 1.62, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"entry\", &\"essential\": true, &\"functional_zone_id\": \"room-07/entry\" } }, { \"box\": [P: (5.02953, 0.0, -2.7476), S: (0.72047, 1.62, 1.344)], \"rotation_y\": 1.5707963267949, \"approach\": (4.30953, 0.0, -1.85), \"access\": [P: (3.175, 0.0, -2.5), S: (1.78453, 2.05, 1.3)], \"origin\": (3.825, 0.0, -1.85), \"score\": 0.23010083675385, \"spec\": { \"asset_id\": \"wardrobe\", \"label\": \"Guardarropa\", \"style\": \"cabinet\", \"size\": (1.344, 1.62, 0.72047), \"visual_size\": (1.344, 1.62, 0.72047), \"visual_scale\": 1.2, \"surface_height\": 1.62, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"entry\", &\"essential\": true, &\"functional_zone_id\": \"room-07/entry\" } }, { \"box\": [P: (4.406, 0.0, -3.65), S: (1.344, 1.62, 0.72047)], \"rotation_y\": 3.14159265358979, \"approach\": (4.656, 0.0, -2.20953), \"access\": [P: (3.175, 0.0, -2.859529), S: (2.131, 2.05, 1.65953)], \"origin\": (3.825, 0.0, -1.85), \"score\": 0.23024467468262, \"spec\": { \"asset_id\": \"wardrobe\", \"label\": \"Guardarropa\", \"style\": \"cabinet\", \"size\": (1.344, 1.62, 0.72047), \"visual_size\": (1.344, 1.62, 0.72047), \"visual_scale\": 1.2, \"surface_height\": 1.62, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"entry\", &\"essential\": true, &\"functional_zone_id\": \"room-07/entry\" } }, { \"box\": [P: (5.02953, 0.0, -2.2964), S: (0.72047, 1.62, 1.344)], \"rotation_y\": 1.5707963267949, \"approach\": (4.30953, 0.0, -1.85), \"access\": [P: (3.175, 0.0, -2.5), S: (1.78453, 2.05, 1.3)], \"origin\": (3.825, 0.0, -1.85), \"score\": 0.23032643795013, \"spec\": { \"asset_id\": \"wardrobe\", \"label\": \"Guardarropa\", \"style\": \"cabinet\", \"size\": (1.344, 1.62, 0.72047), \"visual_size\": (1.344, 1.62, 0.72047), \"visual_scale\": 1.2, \"surface_height\": 1.62, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"entry\", &\"essential\": true, &\"functional_zone_id\": \"room-07/entry\" } }]",
+							"candidates": 6,
+							"partial": "[{ \"box\": [P: (4.33, 0.0, -3.68), S: (1.45, 0.72, 0.85)], \"rotation_y\": 3.14159265358979, \"approach\": (4.58, 0.0, -2.11), \"access\": [P: (3.175, 0.0, -2.76), S: (2.055, 2.05, 1.56)], \"origin\": (3.825, 0.0, -1.85), \"score\": 0.29415179252625, \"spec\": { \"asset_id\": \"table\", \"label\": \"Mesa de entrada\", \"style\": \"table\", \"size\": (1.45, 0.72, 0.85), \"visual_size\": (1.45, 0.72, 0.85), \"visual_scale\": 1.0, \"surface_height\": 0.72, \"pickup_surface\": true, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"entry\", &\"essential\": true, &\"functional_zone_id\": \"room-07/entry\" } }]",
+							"stage": "mutual_clearance",
+							"states": 1,
+							"zone": "room-07/entry"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"entry",
+						"study"
+					],
+					"zones": "[{ \"id\": \"room-07/entry\", \"use\": \"entry\", \"bounds\": [P: (1.85, 0.0, -3.7), S: (3.95, 3.0, 3.7)], \"anchor\": (3.825, 0.0, -1.85) }, { \"id\": \"room-07/study\", \"use\": \"study\", \"bounds\": [P: (1.85, 0.0, 0.0), S: (3.95, 3.0, 3.7)], \"anchor\": (3.825, 0.0, 1.85) }]"
+				},
+				{
+					"area": 22.410000910759,
+					"bounds": "[P: (-12.75, 3.2, -10.85), S: (5.5, 3.2, 4.25)]",
+					"center": "(-10.6, 3.2, -8.725)",
+					"id": "room-08",
+					"lanes": "[[P: (-11.38, 3.2, -9.505), S: (1.56, 2.4, 3.685)], [P: (-11.25, 3.2, -10.0), S: (1.3, 2.05, 1.925)]]",
+					"portal": "(-10.6, 3.2, -6.6)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 4,
+						"occupancy": 0.168166489638786,
+						"occupied_m2": 3.76861118596434,
+						"under_target": false
+					},
+					"uses": [
+						"sewing_room"
+					],
+					"zones": "[{ \"id\": \"room-08/sewing_room\", \"use\": \"sewing_room\", \"bounds\": [P: (-12.75, 3.2, -10.85), S: (5.4, 3.0, 4.15)], \"anchor\": (-10.6, 3.2, -9.35) }]"
+				},
+				{
+					"area": 21.9950012969971,
+					"bounds": "[P: (-7.25, 3.2, -10.85), S: (5.5, 3.2, 4.25)]",
+					"center": "(-3.8, 3.2, -8.725)",
+					"id": "room-09",
+					"lanes": "[[P: (-4.58, 3.2, -9.505), S: (1.56, 2.4, 3.685)], [P: (-4.45, 3.2, -10.0), S: (1.3, 2.05, 1.925)]]",
+					"portal": "(-3.8, 3.2, -6.6)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 3,
+						"occupancy": 0.148489507796193,
+						"occupied_m2": 3.26602691656772,
+						"under_target": false
+					},
+					"uses": [
+						"study"
+					],
+					"zones": "[{ \"id\": \"room-09/study\", \"use\": \"study\", \"bounds\": [P: (-7.15, 3.2, -10.85), S: (5.3, 3.0, 4.15)], \"anchor\": (-3.8, 3.2, -9.35) }]"
+				},
+				{
+					"area": 45.2349994564056,
+					"bounds": "[P: (1.75, 3.2, -10.85), S: (11.0, 3.2, 4.25)]",
+					"center": "(7.65, 3.2, -8.725)",
+					"id": "room-10",
+					"lanes": "[[P: (6.87, 3.2, -9.505), S: (1.56, 2.4, 3.685)], [P: (3.925, 3.2, -9.425), S: (4.375, 2.05, 1.35)], [P: (7.0, 3.2, -9.425), S: (3.674999, 2.05, 1.35)]]",
+					"portal": "(7.65, 3.2, -6.6)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.146864766845861,
+						"occupied_m2": 6.64342764843768,
+						"under_target": false
+					},
+					"uses": [
+						"music_room",
+						"library"
+					],
+					"zones": "[{ \"id\": \"room-10/music_room\", \"use\": \"music_room\", \"bounds\": [P: (1.85, 3.2, -10.85), S: (5.45, 3.0, 4.15)], \"anchor\": (4.575, 3.2, -8.775001) }, { \"id\": \"room-10/library\", \"use\": \"library\", \"bounds\": [P: (7.3, 3.2, -10.85), S: (5.45, 3.0, 4.15)], \"anchor\": (10.025, 3.2, -8.775001) }]"
+				},
+				{
+					"area": 23.7075007247925,
+					"bounds": "[P: (-12.75, 3.2, 6.4), S: (5.55, 3.2, 4.45)]",
+					"center": "(-9.925, 3.2, 8.625)",
+					"id": "room-11",
+					"lanes": "[[P: (-10.705, 3.2, 5.62), S: (1.56, 2.4, 3.785)], [P: (-10.575, 3.2, 7.975), S: (1.3, 2.05, 1.825)]]",
+					"portal": "(-9.925, 3.2, 6.4)",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 4,
+						"failure": {
+
+						},
+						"objects": 4,
+						"occupancy": 0.181439460987451,
+						"occupied_m2": 4.30147615286594,
+						"under_target": false
+					},
+					"uses": [
+						"bedroom_rose"
+					],
+					"zones": "[{ \"id\": \"room-11/bedroom_rose\", \"use\": \"bedroom_rose\", \"bounds\": [P: (-12.75, 3.2, 6.5), S: (5.45, 3.0, 4.35)], \"anchor\": (-9.925, 3.2, 9.15) }]"
+				},
+				{
+					"area": 22.837499499321,
+					"bounds": "[P: (-7.2, 3.2, 6.4), S: (5.45, 3.2, 4.45)]",
+					"center": "(-4.575, 3.2, 8.625)",
+					"id": "room-12",
+					"lanes": "[[P: (-5.355, 3.2, 5.62), S: (1.56, 2.4, 3.785)], [P: (-5.225, 3.2, 7.975), S: (1.3, 2.05, 1.825)]]",
+					"portal": "(-4.575, 3.2, 6.4)",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "nightstand",
+							"candidate_sample": "[]",
+							"candidates": 0,
+							"partial": "[{ \"box\": [P: (-3.32, 3.2, 6.52), S: (1.45, 0.72, 0.85)], \"rotation_y\": 3.14159265358979, \"approach\": (-3.07, 3.2, 8.09), \"access\": [P: (-5.225, 3.2, 7.44), S: (2.805, 2.05, 2.359999)], \"origin\": (-4.575, 3.2, 9.15), \"score\": 0.33826491117477, \"spec\": { \"asset_id\": \"table\", \"label\": \"Mesa de visitas\", \"style\": \"table\", \"size\": (1.45, 0.72, 0.85), \"visual_size\": (1.45, 0.72, 0.85), \"visual_scale\": 1.0, \"surface_height\": 0.72, \"pickup_surface\": true, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"guest_room\", &\"essential\": true, &\"functional_zone_id\": \"room-12/guest_room\" } }, { \"box\": [P: (-7.05, 3.2, 6.55), S: (1.18, 0.75, 1.98531)], \"rotation_y\": -1.5707963267949, \"approach\": (-6.12, 3.2, 9.25531), \"access\": [P: (-6.77, 3.2, 8.5), S: (2.845, 2.05, 1.40531)], \"origin\": (-4.575, 3.2, 9.15), \"score\": 0.27500207185745, \"spec\": { \"asset_id\": \"bed\", \"label\": \"Cama de visitas\", \"style\": \"bed\", \"size\": (1.98531, 0.75, 1.18), \"visual_size\": (1.98531, 0.75, 1.18), \"visual_scale\": 1.0, \"surface_height\": 0.75, \"pickup_surface\": false, \"pickup_point\": (0.0, 0.0, 0.0), \"front\": (0.0, 0.0, -1.0), \"theme_id\": \"guest_room\", &\"essential\": true, &\"functional_zone_id\": \"room-12/guest_room\" } }]",
+							"stage": "static_candidates",
+							"states": 15,
+							"zone": "room-12/guest_room"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"guest_room"
+					],
+					"zones": "[{ \"id\": \"room-12/guest_room\", \"use\": \"guest_room\", \"bounds\": [P: (-7.1, 3.2, 6.5), S: (5.25, 3.0, 4.35)], \"anchor\": (-4.575, 3.2, 9.15) }]"
+				},
+				{
+					"area": 30.014999756813,
+					"bounds": "[P: (1.75, 3.2, 6.4), S: (7.1, 3.2, 4.45)]",
+					"center": "(4.9, 3.2, 8.625)",
+					"id": "room-13",
+					"lanes": "[[P: (4.12, 3.2, 5.62), S: (1.56, 2.4, 3.785)], [P: (4.25, 3.2, 7.975), S: (1.3, 2.05, 1.825)]]",
+					"portal": "(4.9, 3.2, 6.4)",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 4,
+						"failure": {
+
+						},
+						"objects": 5,
+						"occupancy": 0.176323372724595,
+						"occupied_m2": 5.29234598944918,
+						"under_target": false
+					},
+					"uses": [
+						"bedroom_blue"
+					],
+					"zones": "[{ \"id\": \"room-13/bedroom_blue\", \"use\": \"bedroom_blue\", \"bounds\": [P: (1.85, 3.2, 6.5), S: (6.9, 3.0, 4.35)], \"anchor\": (4.9, 3.2, 9.15) }]"
+				},
+				{
+					"area": 16.5300004673004,
+					"bounds": "[P: (8.85, 3.2, 6.4), S: (3.9, 3.2, 4.45)]",
+					"center": "(10.8, 3.2, 8.625)",
+					"id": "room-14",
+					"lanes": "[[P: (10.02, 3.2, 5.62), S: (1.56, 2.4, 3.785)], [P: (10.15, 3.2, 7.975), S: (1.3, 2.05, 1.825)]]",
+					"portal": "(10.8, 3.2, 6.4)",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 3,
+						"occupancy": 0.178361149434327,
+						"occupied_m2": 2.94830988349767,
+						"under_target": false
+					},
+					"uses": [
+						"bathroom"
+					],
+					"zones": "[{ \"id\": \"room-14/bathroom\", \"use\": \"bathroom\", \"bounds\": [P: (8.950001, 3.2, 6.5), S: (3.8, 3.0, 4.35)], \"anchor\": (10.8, 3.2, 9.15) }]"
+				},
+				{
+					"area": 29.2300007295609,
+					"bounds": "[P: (-5.9, 3.2, -3.8), S: (4.15, 3.2, 7.6)]",
+					"center": "(-3.825, 3.2, 0.45)",
+					"id": "room-15",
+					"lanes": "[[P: (-4.605, 3.2, -0.33), S: (3.635, 2.4, 1.56)], [P: (-5.15, 3.2, -0.2), S: (1.975, 2.05, 1.3)]]",
+					"portal": "(-1.75, 3.2, 0.45)",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 4,
+						"failure": {
+
+						},
+						"objects": 4,
+						"occupancy": 0.16611282122507,
+						"occupied_m2": 4.8554778855982,
+						"under_target": false
+					},
+					"uses": [
+						"bedroom_green"
+					],
+					"zones": "[{ \"id\": \"room-15/bedroom_green\", \"use\": \"bedroom_green\", \"bounds\": [P: (-5.8, 3.2, -3.7), S: (3.95, 3.0, 7.4)], \"anchor\": (-4.5, 3.2, 0.45) }]"
+				},
+				{
+					"area": 29.2300007295609,
+					"bounds": "[P: (1.75, 3.2, -3.8), S: (4.15, 3.2, 7.6)]",
+					"center": "(3.825, 3.2, 0.25)",
+					"id": "room-16",
+					"lanes": "[[P: (0.97, 3.2, -0.53), S: (3.635, 2.4, 1.56)], [P: (3.175, 3.2, -0.4), S: (1.3, 2.05, 2.9)], [P: (3.175, 3.2, -2.5), S: (1.3, 2.05, 3.4)]]",
+					"portal": "(1.75, 3.2, 0.25)",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 5,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.214837530882975,
+						"occupied_m2": 6.27970118444642,
+						"under_target": false
+					},
+					"uses": [
+						"library",
+						"study"
+					],
+					"zones": "[{ \"id\": \"room-16/library\", \"use\": \"library\", \"bounds\": [P: (1.85, 3.2, 0.0), S: (3.95, 3.0, 3.7)], \"anchor\": (3.825, 3.2, 1.85) }, { \"id\": \"room-16/study\", \"use\": \"study\", \"bounds\": [P: (1.85, 3.2, -3.7), S: (3.95, 3.0, 3.7)], \"anchor\": (3.825, 3.2, -1.85) }]"
+				}
+			],
+			"seed": 2
+		}
+	],
+	"checks": 1024,
+	"failures": [
+		"seed 2: [\"Room room-06 has fewer than three furnishings\", \"Room room-07 has fewer than three furnishings\", \"Room room-12 has fewer than three furnishings\", \"Missing slipper on floor 0.0\", \"Missing slipper on floor 3.2\", \"Missing essential table in room-06\", \"Missing essential sofa in room-06\", \"Missing essential armchair in room-06\", \"Missing essential table in room-07\", \"Missing essential wardrobe in room-07\", \"Missing essential armchair in room-07\", \"Missing essential bookcase in room-07\", \"Missing essential table in room-12\", \"Missing essential bed in room-12\", \"Missing essential wardrobe in room-12\", \"Missing essential nightstand in room-12\", \"Invalid bed group spacing in room-12\"]"
+	]
+}

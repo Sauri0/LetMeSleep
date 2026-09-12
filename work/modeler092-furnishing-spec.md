@@ -83,7 +83,7 @@ sink/stove/fridge para que entre una segunda mesa decorativa.
    composición. Usar 6 variantes de anclaje por grupo (esquinas, pared larga,
    grupo interior), con orden determinista por subsemilla e ID.
 3. Colocar esenciales completos antes de complementos. Hacer retroceso local
-   acotado a 16 estados candidatos por cuarto, en lugar de aceptar los tres
+   acotado a 64 estados candidatos por cuarto, en lugar de aceptar los tres
    primeros objetos y omitir el sanitario que no entró.
 4. Contrastar huella y altura visual con límites, otros muebles, ventanas y
    todas las bandas reservadas. Colocar muebles relacionados a distancias
@@ -147,6 +147,17 @@ soportes antes del último pase de complementos.
 
 No generar nuevos task IDs, tool IDs o assets; no editar simulation/World/
 FurnitureBlueprint sin transferencia del Director.
+
+### Ajuste de cierre autorizado por Director
+
+La aceptación exige los objetos esenciales y circulación; los complementos se
+omiten si no caben. Son complementarios: vajillero/asiento extra de comedor,
+canasto de lavadero, alacena adicional de despensa, cómoda secundaria del dormitorio
+azul, mesita auxiliar de biblioteca, biblioteca de estar, asiento extra de música
+o juegos y cajoneras secundarias de costura/estudio/recibidor. Se mantienen los tres
+sanitarios, superficies principales, aparatos de cocina, comedor, cama/mesita y
+guardado de dormitorio, muebles de función específica y mínimo de tres muebles
+reales por habitación. No se autoriza omitir esenciales para aprobar el mapa.
 
 ## Contrato acordado con Worker 2
 

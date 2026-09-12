@@ -1,0 +1,572 @@
+{
+	"cases": [
+		{
+			"elapsed_ms": 442,
+			"errors": [
+				"Open door blocks route node 5",
+				"Open door blocks route node 109",
+				"Open door blocks route node 125",
+				"Open door blocks route node 165",
+				"Room room-00 has fewer than three furnishings",
+				"Room room-01 has fewer than three furnishings",
+				"Room room-02 has fewer than three furnishings",
+				"Room room-03 has fewer than three furnishings",
+				"Room room-07 has fewer than three furnishings",
+				"Room room-08 has fewer than three furnishings",
+				"Room room-09 has fewer than three furnishings",
+				"Room room-10 has fewer than three furnishings",
+				"Room room-13 has fewer than three furnishings",
+				"Room room-14 has fewer than three furnishings",
+				"Room room-15 has fewer than three furnishings",
+				"Room room-16 has fewer than three furnishings",
+				"Room room-20 has fewer than three furnishings",
+				"Room room-21 has fewer than three furnishings",
+				"Missing newspaper on floor 3.2",
+				"Missing newspaper on floor 6.4",
+				"Missing bedtime stations",
+				"Missing essential table in room-00",
+				"Missing essential sink in room-00",
+				"Missing essential stove in room-00",
+				"Missing essential fridge in room-00",
+				"Missing essential dining_set in room-00",
+				"Missing essential dresser in room-00",
+				"Missing essential armchair in room-00",
+				"Missing essential table in room-01",
+				"Missing essential pantry_shelf in room-01",
+				"Missing essential pantry_crates in room-01",
+				"Missing essential dresser in room-01",
+				"Missing essential bath_vanity in room-02",
+				"Missing essential toilet in room-02",
+				"Missing essential bath_shower in room-02",
+				"Missing essential table in room-03",
+				"Missing essential washer in room-03",
+				"Missing essential hamper in room-03",
+				"Missing essential wardrobe in room-03",
+				"Missing essential table in room-07",
+				"Missing essential wardrobe in room-07",
+				"Missing essential armchair in room-07",
+				"Missing essential dresser in room-07",
+				"Missing essential bookcase in room-07",
+				"Missing essential table in room-08",
+				"Missing essential bed in room-08",
+				"Missing essential dresser in room-08",
+				"Missing essential nightstand in room-08",
+				"Invalid bed group spacing in room-08",
+				"Missing essential desk in room-09",
+				"Missing essential bed in room-09",
+				"Missing essential wardrobe in room-09",
+				"Missing essential dresser in room-09",
+				"Missing essential nightstand in room-09",
+				"Invalid bed group spacing in room-09",
+				"Missing essential bath_vanity in room-10",
+				"Missing essential toilet in room-10",
+				"Missing essential bath_shower in room-10",
+				"Missing essential desk in room-13",
+				"Missing essential bed in room-13",
+				"Missing essential wardrobe in room-13",
+				"Missing essential nightstand in room-13",
+				"Invalid bed group spacing in room-13",
+				"Missing essential desk in room-14",
+				"Missing essential bookcase in room-14",
+				"Missing essential armchair in room-14",
+				"Missing essential nightstand in room-14",
+				"Missing essential dresser in room-14",
+				"Missing essential desk in room-15",
+				"Missing essential bed in room-15",
+				"Missing essential wardrobe in room-15",
+				"Missing essential dresser in room-15",
+				"Missing essential nightstand in room-15",
+				"Invalid bed group spacing in room-15",
+				"Missing essential table in room-16",
+				"Missing essential bed in room-16",
+				"Missing essential wardrobe in room-16",
+				"Missing essential nightstand in room-16",
+				"Invalid bed group spacing in room-16",
+				"Missing essential desk in room-20",
+				"Missing essential bed in room-20",
+				"Missing essential wardrobe in room-20",
+				"Missing essential nightstand in room-20",
+				"Invalid bed group spacing in room-20",
+				"Missing essential desk in room-21",
+				"Missing essential bookcase in room-21",
+				"Missing essential armchair in room-21",
+				"Missing essential nightstand in room-21",
+				"Missing essential dresser in room-21",
+				"Expected eight distinct task rooms",
+				"Missing bedtime task: MANTAS",
+				"Missing bedtime task: SÁBANAS"
+			],
+			"furniture": 49,
+			"rooms": [
+				{
+					"area": 47.9599993610382,
+					"id": "room-00",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "table",
+							"candidates": 0,
+							"stage": "static_candidates",
+							"states": 1,
+							"zone": "room-00/kitchen"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"kitchen",
+						"dining"
+					]
+				},
+				{
+					"area": 14.9599996948242,
+					"id": "room-01",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "pantry_crates",
+							"candidates": 6,
+							"stage": "mutual_clearance",
+							"states": 6,
+							"zone": "room-01/pantry"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"pantry"
+					]
+				},
+				{
+					"area": 15.400000333786,
+					"id": "room-02",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "bath_shower",
+							"candidates": 0,
+							"stage": "static_candidates",
+							"states": 1,
+							"zone": "room-02/bathroom"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bathroom"
+					]
+				},
+				{
+					"area": 15.8400009727478,
+					"id": "room-03",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "hamper",
+							"candidates": 11,
+							"stage": "mutual_clearance",
+							"states": 8,
+							"zone": "room-03/laundry"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"laundry"
+					]
+				},
+				{
+					"area": 49.0499982833862,
+					"id": "room-04",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 7,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.134530391563712,
+						"occupied_m2": 6.59871547526334,
+						"under_target": false
+					},
+					"uses": [
+						"study",
+						"music_room"
+					]
+				},
+				{
+					"area": 49.0499982833862,
+					"id": "room-05",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 7,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.13723636972207,
+						"occupied_m2": 6.73144369928569,
+						"under_target": false
+					},
+					"uses": [
+						"game_room",
+						"library"
+					]
+				},
+				{
+					"area": 29.2300007295609,
+					"id": "room-06",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 4,
+						"failure": {
+
+						},
+						"objects": 4,
+						"occupancy": 0.178239409701814,
+						"occupied_m2": 5.20993807562052,
+						"under_target": false
+					},
+					"uses": [
+						"living_room"
+					]
+				},
+				{
+					"area": 29.2300007295609,
+					"id": "room-07",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "wardrobe",
+							"candidates": 10,
+							"stage": "mutual_clearance",
+							"states": 8,
+							"zone": "room-07/entry"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"entry",
+						"study"
+					]
+				},
+				{
+					"area": 48.5050014209746,
+					"id": "room-08",
+					"report": {
+						"essential_expected": 6,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "nightstand",
+							"candidates": 8,
+							"stage": "mutual_clearance",
+							"states": 2,
+							"zone": "room-08/bedroom_rose"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bedroom_rose"
+					]
+				},
+				{
+					"area": 31.1500020027161,
+					"id": "room-09",
+					"report": {
+						"essential_expected": 5,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "dresser",
+							"candidates": 17,
+							"stage": "mutual_clearance",
+							"states": 1,
+							"zone": "room-09/bedroom_blue"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bedroom_blue"
+					]
+				},
+				{
+					"area": 16.465001270771,
+					"id": "room-10",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "bath_vanity",
+							"candidates": 12,
+							"stage": "mutual_clearance",
+							"states": 13,
+							"zone": "room-10/bathroom"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bathroom"
+					]
+				},
+				{
+					"area": 49.5950003433227,
+					"id": "room-11",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 7,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.126421123311749,
+						"occupied_m2": 6.26985565404945,
+						"under_target": false
+					},
+					"uses": [
+						"sewing_room",
+						"study"
+					]
+				},
+				{
+					"area": 49.5950003433227,
+					"id": "room-12",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 7,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.133953576014687,
+						"occupied_m2": 6.64342764843768,
+						"under_target": false
+					},
+					"uses": [
+						"music_room",
+						"library"
+					]
+				},
+				{
+					"area": 29.2300007295609,
+					"id": "room-13",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "desk",
+							"candidates": 8,
+							"stage": "mutual_clearance",
+							"states": 5,
+							"zone": "room-13/bedroom_green"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bedroom_green"
+					]
+				},
+				{
+					"area": 29.2300007295609,
+					"id": "room-14",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "desk",
+							"candidates": 0,
+							"stage": "static_candidates",
+							"states": 1,
+							"zone": "room-14/library"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"library",
+						"study"
+					]
+				},
+				{
+					"area": 48.5050014209746,
+					"id": "room-15",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "nightstand",
+							"candidates": 8,
+							"stage": "mutual_clearance",
+							"states": 2,
+							"zone": "room-15/bedroom_blue"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bedroom_blue"
+					]
+				},
+				{
+					"area": 31.3725028657914,
+					"id": "room-16",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "bed",
+							"candidates": 0,
+							"stage": "static_candidates",
+							"states": 1,
+							"zone": "room-16/guest_room"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"guest_room"
+					]
+				},
+				{
+					"area": 16.2425014686585,
+					"id": "room-17",
+					"report": {
+						"essential_expected": 3,
+						"essential_placed": 3,
+						"failure": {
+
+						},
+						"objects": 3,
+						"occupancy": 0.181518215601626,
+						"occupied_m2": 2.94830988349767,
+						"under_target": false
+					},
+					"uses": [
+						"bathroom"
+					]
+				},
+				{
+					"area": 48.5050014209746,
+					"id": "room-18",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 7,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.136041960250514,
+						"occupied_m2": 6.59871547526334,
+						"under_target": false
+					},
+					"uses": [
+						"study",
+						"music_room"
+					]
+				},
+				{
+					"area": 48.5050014209746,
+					"id": "room-19",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 7,
+						"failure": {
+
+						},
+						"objects": 7,
+						"occupancy": 0.138778342481913,
+						"occupied_m2": 6.73144369928569,
+						"under_target": false
+					},
+					"uses": [
+						"game_room",
+						"library"
+					]
+				},
+				{
+					"area": 29.2300007295609,
+					"id": "room-20",
+					"report": {
+						"essential_expected": 4,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "desk",
+							"candidates": 8,
+							"stage": "mutual_clearance",
+							"states": 5,
+							"zone": "room-20/bedroom_green"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"bedroom_green"
+					]
+				},
+				{
+					"area": 29.2300007295609,
+					"id": "room-21",
+					"report": {
+						"essential_expected": 7,
+						"essential_placed": 0,
+						"failure": {
+							"asset": "desk",
+							"candidates": 0,
+							"stage": "static_candidates",
+							"states": 1,
+							"zone": "room-21/library"
+						},
+						"objects": 0,
+						"occupancy": 0.0,
+						"occupied_m2": 0.0,
+						"under_target": true
+					},
+					"uses": [
+						"library",
+						"study"
+					]
+				}
+			],
+			"seed": 1
+		}
+	],
+	"checks": 1324,
+	"failures": [
+		"seed 1: [\"Open door blocks route node 5\", \"Open door blocks route node 109\", \"Open door blocks route node 125\", \"Open door blocks route node 165\", \"Room room-00 has fewer than three furnishings\", \"Room room-01 has fewer than three furnishings\", \"Room room-02 has fewer than three furnishings\", \"Room room-03 has fewer than three furnishings\", \"Room room-07 has fewer than three furnishings\", \"Room room-08 has fewer than three furnishings\", \"Room room-09 has fewer than three furnishings\", \"Room room-10 has fewer than three furnishings\", \"Room room-13 has fewer than three furnishings\", \"Room room-14 has fewer than three furnishings\", \"Room room-15 has fewer than three furnishings\", \"Room room-16 has fewer than three furnishings\", \"Room room-20 has fewer than three furnishings\", \"Room room-21 has fewer than three furnishings\", \"Missing newspaper on floor 3.2\", \"Missing newspaper on floor 6.4\", \"Missing bedtime stations\", \"Missing essential table in room-00\", \"Missing essential sink in room-00\", \"Missing essential stove in room-00\", \"Missing essential fridge in room-00\", \"Missing essential dining_set in room-00\", \"Missing essential dresser in room-00\", \"Missing essential armchair in room-00\", \"Missing essential table in room-01\", \"Missing essential pantry_shelf in room-01\", \"Missing essential pantry_crates in room-01\", \"Missing essential dresser in room-01\", \"Missing essential bath_vanity in room-02\", \"Missing essential toilet in room-02\", \"Missing essential bath_shower in room-02\", \"Missing essential table in room-03\", \"Missing essential washer in room-03\", \"Missing essential hamper in room-03\", \"Missing essential wardrobe in room-03\", \"Missing essential table in room-07\", \"Missing essential wardrobe in room-07\", \"Missing essential armchair in room-07\", \"Missing essential dresser in room-07\", \"Missing essential bookcase in room-07\", \"Missing essential table in room-08\", \"Missing essential bed in room-08\", \"Missing essential dresser in room-08\", \"Missing essential nightstand in room-08\", \"Invalid bed group spacing in room-08\", \"Missing essential desk in room-09\", \"Missing essential bed in room-09\", \"Missing essential wardrobe in room-09\", \"Missing essential dresser in room-09\", \"Missing essential nightstand in room-09\", \"Invalid bed group spacing in room-09\", \"Missing essential bath_vanity in room-10\", \"Missing essential toilet in room-10\", \"Missing essential bath_shower in room-10\", \"Missing essential desk in room-13\", \"Missing essential bed in room-13\", \"Missing essential wardrobe in room-13\", \"Missing essential nightstand in room-13\", \"Invalid bed group spacing in room-13\", \"Missing essential desk in room-14\", \"Missing essential bookcase in room-14\", \"Missing essential armchair in room-14\", \"Missing essential nightstand in room-14\", \"Missing essential dresser in room-14\", \"Missing essential desk in room-15\", \"Missing essential bed in room-15\", \"Missing essential wardrobe in room-15\", \"Missing essential dresser in room-15\", \"Missing essential nightstand in room-15\", \"Invalid bed group spacing in room-15\", \"Missing essential table in room-16\", \"Missing essential bed in room-16\", \"Missing essential wardrobe in room-16\", \"Missing essential nightstand in room-16\", \"Invalid bed group spacing in room-16\", \"Missing essential desk in room-20\", \"Missing essential bed in room-20\", \"Missing essential wardrobe in room-20\", \"Missing essential nightstand in room-20\", \"Invalid bed group spacing in room-20\", \"Missing essential desk in room-21\", \"Missing essential bookcase in room-21\", \"Missing essential armchair in room-21\", \"Missing essential nightstand in room-21\", \"Missing essential dresser in room-21\", \"Expected eight distinct task rooms\", \"Missing bedtime task: MANTAS\", \"Missing bedtime task: SÁBANAS\"]",
+		"missing-bed regression actually removes a generated bed"
+	]
+}

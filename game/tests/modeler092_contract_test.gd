@@ -12,6 +12,7 @@ func _initialize() -> void:
 	_composite_specs()
 	_bed_groups()
 	_headboards()
+	_route_clearance()
 	_task_contract()
 	var file:=FileAccess.open("res://../work/modeler092-contract-results.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"checks":checks,"failures":failures},"\t"));file.close()
@@ -126,6 +127,13 @@ func _task_contract() -> void:
 	changed=data.duplicate(true)
 	changed.rooms[1].pickup_surface.structure_id="missing-support"
 	check(_contains(Validation.validate_tasks(changed),"real support"),"metadata must refer to a real furniture support")
+
+func _route_clearance() -> void:
+	var start:=Vector3.ZERO;var end:=Vector3(4,0,4)
+	check(not Validation.route_hits_box(start,end,AABB(Vector3(0,0,3.5),Vector3(.3,1,.3))),"unused diagonal enclosing-box corner is not body space")
+	check(Validation.route_hits_box(start,end,AABB(Vector3(1.9,0,2.4),Vector3(.2,1,.2))),"full 1.30m swept body still rejects a side intrusion")
+	check(Validation.route_hits_box(start,start,AABB(Vector3(.5,0,-.1),Vector3(.2,1,.2))),"stationary body keeps full clearance")
+	check(not Validation.route_hits_box(start,end,AABB(Vector3(1.9,2.2,1.9),Vector3(.2,.2,.2))),"obstacle above body height is not a route collision")
 
 func _contains(errors: Array[String], fragment: String) -> bool:
 	for error: String in errors:

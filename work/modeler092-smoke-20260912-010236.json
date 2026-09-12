@@ -1,0 +1,37 @@
+{
+  "steps": [
+    {
+      "stderr_chars": 0,
+      "stdout": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-010236-furnishing.stdout.log",
+      "elapsed_total_ms": 3573,
+      "timeout": false,
+      "step": "furnishing",
+      "stderr": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-010236-furnishing.stderr.log",
+      "error_text": false,
+      "exit": 0
+    },
+    {
+      "stderr_chars": 0,
+      "stdout": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-010236-contracts.stdout.log",
+      "elapsed_total_ms": 4985,
+      "timeout": false,
+      "step": "contracts",
+      "stderr": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-010236-contracts.stderr.log",
+      "error_text": false,
+      "exit": 0
+    },
+    {
+      "stderr_chars": 0,
+      "stdout": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-010236-structure.stdout.log",
+      "elapsed_total_ms": 6540,
+      "timeout": false,
+      "step": "structure",
+      "stderr": "C:\\Users\\brank\\Documents\\Codex\\2026-09-06\\lms092-house\\work\\modeler092-smoke-20260912-010236-structure.stderr.log",
+      "error_text": false,
+      "exit": 0
+    }
+  ],
+  "passed": true,
+  "elapsed_ms": 6545,
+  "budget_seconds": 120
+}

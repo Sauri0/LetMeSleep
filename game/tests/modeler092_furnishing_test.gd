@@ -5,6 +5,7 @@ const Geometry=preload("res://scripts/navigation_geometry.gd")
 const DoorGeometry=preload("res://scripts/door_geometry.gd")
 var checks:=0
 var failures: Array[String]=[]
+var report_path:="res://../work/modeler092-furnishing-results.json"
 
 func check(ok: bool, label: String) -> void:
 	checks+=1
@@ -14,6 +15,7 @@ func _initialize() -> void:
 	var seeds: Array[int]=[1,2,7,31,97,257,997,2026,65537,1234567,2147483646]
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--seed="): seeds=[int(arg.trim_prefix("--seed="))]
+		if arg.begins_with("--report="): report_path=arg.trim_prefix("--report=")
 	var cases: Array=[]
 	for seed_value: int in seeds:
 		var start:=Time.get_ticks_msec()
@@ -23,7 +25,9 @@ func _initialize() -> void:
 		check(Validation.fingerprint(data)==Validation.fingerprint(Generator.new().generate(seed_value)),"determinism %d"%seed_value)
 		var rooms: Array=[]
 		for room: Dictionary in data.rooms:
-			rooms.append({"id":room.id,"uses":room.uses,"area":room.area_m2,"report":room.furnishing_report})
+			rooms.append({"id":room.id,"uses":room.uses,"area":room.area_m2,"report":room.furnishing_report,
+				"bounds":str(room.bounds),"center":str(room.center),"portal":str(room.portal),
+				"zones":str(room.functional_zones),"lanes":str(room.movement_clearance)})
 		cases.append({"seed":seed_value,"elapsed_ms":Time.get_ticks_msec()-start,"errors":report.errors,"rooms":rooms,"furniture":data.furniture_count})
 		if seed_value==seeds[0]:
 			_door_sweeps(data)
@@ -34,7 +38,7 @@ func _initialize() -> void:
 			check(changed_bed,"missing-bed regression actually removes a generated bed")
 			var extra: Array[AABB]=[];extra.append_array(missing.barrier_boxes);extra.append_array(missing.pickup_support_boxes)
 			check(not Validation.validate_furnishing(missing,Geometry.create(missing,true,extra)).is_empty(),"reject bedroom missing real bed")
-	var file:=FileAccess.open("res://../work/modeler092-furnishing-results.json",FileAccess.WRITE)
+	var file:=FileAccess.open(report_path,FileAccess.WRITE)
 	file.store_string(JSON.stringify({"checks":checks,"failures":failures,"cases":cases},"\t"));file.close()
 	print("MODELER092_FURNISHING checks=%d failures=%d"%[checks,failures.size()])
 	quit(0 if failures.is_empty() else 1)

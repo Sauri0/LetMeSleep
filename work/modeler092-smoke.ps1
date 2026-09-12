@@ -1,4 +1,4 @@
-param([int]$BudgetSeconds = 120)
+param([int]$BudgetSeconds = 120, [switch]$SkipImport, [switch]$FurnishingFirst, [switch]$FurnishingOnly, [int]$Seed = 1)
 $ErrorActionPreference = 'Stop'
 if ($BudgetSeconds -lt 1 -or $BudgetSeconds -gt 180) { throw 'Budget must be 1..180 seconds.' }
 $repoPath = Split-Path -Parent $PSScriptRoot
@@ -11,8 +11,11 @@ $steps = @(
     @{ name='import'; args='--headless --path game --editor --import --quit --single-threaded-scene' },
     @{ name='contracts'; args='--headless --path game --script res://tests/modeler092_contract_test.gd --single-threaded-scene' },
     @{ name='structure'; args='--headless --path game --script res://tests/modeler092_structure_test.gd --single-threaded-scene' },
-    @{ name='furnishing'; args='--headless --path game --script res://tests/modeler092_furnishing_test.gd --single-threaded-scene -- --seed=1' }
+    @{ name='furnishing'; args="--headless --path game --script res://tests/modeler092_furnishing_test.gd --single-threaded-scene -- --seed=$Seed --report=res://../work/modeler092-furnishing-seed-$Seed.json" }
 )
+if ($SkipImport) { $steps=@($steps | Where-Object { $_.name -ne 'import' }) }
+if ($FurnishingFirst) { $steps=@($steps | Where-Object { $_.name -eq 'furnishing' }) + @($steps | Where-Object { $_.name -ne 'furnishing' }) }
+if ($FurnishingOnly) { $steps=@($steps | Where-Object { $_.name -eq 'furnishing' }) }
 $records = [Collections.Generic.List[object]]::new()
 $passed = $true
 foreach ($step in $steps) {
@@ -50,3 +53,4 @@ $report=Join-Path $PSScriptRoot ('modeler092-smoke-'+$runStamp+'.json')
 [IO.File]::WriteAllText($report,($result | ConvertTo-Json -Depth 8))
 Write-Output ('REPORT '+$report)
 if (-not $result.passed) { exit 1 }
+exit 0
