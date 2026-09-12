@@ -37,6 +37,7 @@ namespace LetMeSleep.Online
         private string displayName;
         private ulong expiryNotification;
         private double clock;
+        private int authGeneration;
         public ConnectionState State { get; private set; }
         public string FailureCode { get; private set; } = "";
         public ProductUserId LocalUserId { get; private set; }
@@ -71,9 +72,9 @@ namespace LetMeSleep.Online
                 platform = PlatformInterface.Create(ref options);
                 if (platform == null) { Fail("PlatformCreateFailed"); return; }
                 deadline = clock + 30;
-                SetState(ConnectionState.SigningIn);
+                authGeneration++; SetState(ConnectionState.SigningIn);
                 var device = new CreateDeviceIdOptions { DeviceModel = "Windows PC" };
-                platform.GetConnectInterface().CreateDeviceId(ref device, null, OnDeviceCreated);
+                platform.GetConnectInterface().CreateDeviceId(ref device, authGeneration, OnDeviceCreated);
             }
             catch (DllNotFoundException) { Fail("NativeSdkMissing"); }
             catch (EntryPointNotFoundException) { Fail("NativeSdkIncompatible"); }
@@ -91,9 +92,18 @@ namespace LetMeSleep.Online
 
         private void OnDeviceCreated(ref CreateDeviceIdCallbackInfo info)
         {
-            if (State != ConnectionState.SigningIn) return;
+            if (State != ConnectionState.SigningIn || !(info.ClientData is int generation) || generation != authGeneration) return;
             if (info.ResultCode == Result.Success || info.ResultCode == Result.DuplicateNotAllowed) Login();
             else Fail("Device_" + info.ResultCode);
+        }
+
+        public bool RetryAuthentication()
+        {
+            if (State != ConnectionState.Failed || platform == null) return false;
+            FailureCode = ""; deadline = clock + 30; authGeneration++; SetState(ConnectionState.SigningIn);
+            var device = new CreateDeviceIdOptions { DeviceModel = "Windows PC" };
+            platform.GetConnectInterface().CreateDeviceId(ref device, authGeneration, OnDeviceCreated);
+            return true;
         }
 
         private void Login()
@@ -103,21 +113,21 @@ namespace LetMeSleep.Online
                 Credentials = new Credentials { Type = ExternalCredentialType.DeviceidAccessToken },
                 UserLoginInfo = new UserLoginInfo { DisplayName = displayName }
             };
-            platform.GetConnectInterface().Login(ref options, null, OnLogin);
+            platform.GetConnectInterface().Login(ref options, authGeneration, OnLogin);
         }
 
         private void OnLogin(ref LoginCallbackInfo info)
         {
-            if (State != ConnectionState.SigningIn) return;
+            if (State != ConnectionState.SigningIn || !(info.ClientData is int generation) || generation != authGeneration) return;
             if (info.ResultCode == Result.Success) { LoggedIn(info.LocalUserId); return; }
             if (info.ResultCode != Result.InvalidUser) { Fail("Login_" + info.ResultCode); return; }
             var create = new CreateUserOptions { ContinuanceToken = info.ContinuanceToken };
-            platform.GetConnectInterface().CreateUser(ref create, null, OnUserCreated);
+            platform.GetConnectInterface().CreateUser(ref create, authGeneration, OnUserCreated);
         }
 
         private void OnUserCreated(ref CreateUserCallbackInfo info)
         {
-            if (State != ConnectionState.SigningIn) return;
+            if (State != ConnectionState.SigningIn || !(info.ClientData is int generation) || generation != authGeneration) return;
             if (info.ResultCode == Result.Success) LoggedIn(info.LocalUserId);
             else Fail("User_" + info.ResultCode);
         }
@@ -137,7 +147,7 @@ namespace LetMeSleep.Online
         {
             if (State != ConnectionState.Ready) return;
             deadline = clock + 30;
-            SetState(ConnectionState.SigningIn);
+            authGeneration++; SetState(ConnectionState.SigningIn);
             Login();
         }
 
@@ -162,3 +172,4 @@ namespace LetMeSleep.Online
         }
     }
 }
+

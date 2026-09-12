@@ -16,7 +16,7 @@ namespace LetMeSleep.Online
         private readonly MessageFraming frames = new MessageFraming();
         private readonly string playerName;
         private RoomSession hostRoom;
-        private double clock, lastHello = -10;
+        private double clock, lastHello = -10, awaitingSince = -1;
         private bool disposed;
         public RoomView Current { get; private set; }
         public RoomSession HostAuthority => hostRoom;
@@ -35,6 +35,8 @@ namespace LetMeSleep.Online
         {
             clock = monotonicSeconds;
             if (disposed || lobby.State != LobbyState.Connected || lobby.IsOwner || Current != null) return;
+            if (awaitingSince < 0) awaitingSince = clock;
+            if (clock - awaitingSince > 25) { Error = "RoomHandshakeTimedOut"; return; }
             if (clock - lastHello < 1) return;
             lastHello = clock;
             using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
@@ -79,7 +81,7 @@ namespace LetMeSleep.Online
             if (lobby.State != LobbyState.Connected)
             {
                 bool hadView = Current != null;
-                Current = null; hostRoom = null; Error = ""; frames.Clear(); lastHello = -10;
+                Current = null; hostRoom = null; Error = ""; frames.Clear(); lastHello = -10; awaitingSince = -1;
                 if (hadView) RoomChanged?.Invoke(null);
                 return;
             }
@@ -155,3 +157,5 @@ namespace LetMeSleep.Online
         }
     }
 }
+
+

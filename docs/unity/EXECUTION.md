@@ -23,3 +23,13 @@ Spatial contract: Unity metres, Y-up/Z-forward. Human capsule radius .25, height
 - Two players under this Windows account receive the same EOS DeviceID; guest correctly returned SameDeviceIdentity, zero transport packets. Host timed out. This does not validate relay, two-player networking, or WAN. Preserve device identity; external evidence is separately tracked.
 - Actual playable boot/UI/map/characters/network composition remains in progress. No Unity release has been published or claimed ready for friends.
 - Resident editor PID 30500, N:/Unity/Setup/unity-resident-2.log, nographics. Only Director opens/restarts it. A headless connectivity probe may run independently; check processes before changing GPU use.
+
+## Checkpoint 2026-09-12 10:50 UTC
+
+- Integrated 51 native EditMode tests passed previously. Further replica/tool QA and W1 pure tests passed (58); rerun native combined after current composition, do not conflate pure tests with PlayMode.
+- Actual Bootstrap/AlfaApplication now wires menu, settings, preview, training, EOS lobby, lobby movement, round barrier, authoritative gameplay, presentation and results. Pending first complete PlayMode run and Windows candidate build.
+- Per-actor flyswatter pickup/drop and replicated ownership integrated; seven authored pickups connected to map. World geometry now scoped to active map root. Begin protocol bumped alfa-2 with bounded tool definitions checked against map; final state reliable; no WAN evidence added.
+- UI async action latches, contextual pause, remembered name and training cleanup integrated. Saved palette now applied in live lobby/round and transmitted to authenticated members. Pending runtime checks.
+- M1 is unavailable through app routing (notLoaded / thread not found). Existing sources retained. W2 has temporary exclusive CLI slot on resident graphics editor PID18620 to diagnose identical pose renders and tool-axis presentation. Director is doing file work until slot released. No second editor.
+- Full map source and seven tool markers delivered; rebuild required after latest delta. Presentation prefab regenerated once; new source requires another build after W2 diagnostic. Boot scene builder source exists, pending execution.
+- Active D3D11 editor log N:/Unity/Setup/unity-render-resident.log; old nographics PID30500 exited. No playable Unity release published yet. WAN/friends, GTX1660Ti measurements and user art review remain external pending.

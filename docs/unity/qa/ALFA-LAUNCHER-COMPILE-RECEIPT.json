@@ -1,0 +1,1 @@
+{"schema":"lms-launcher-receipt-1","utc":"2026-09-12T11:04:30Z","checks":54,"failures":0,"gameLaunched":false,"sha256":"38410f29b7436d14c986dcafdd49fae7629282eaf3d8e43134862f40d94ad90a","scope":"compile updater plus extraction/checksum/install/version-stage tests; actual Unity ZIP installation remains pending"}

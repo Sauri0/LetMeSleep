@@ -1,0 +1,5 @@
+{
+  "name": "LetMeSleep.Bootstrap",
+  "rootNamespace": "LetMeSleep.Bootstrap",
+  "references": ["LetMeSleep.Core", "LetMeSleep.Gameplay", "LetMeSleep.Gameplay.Unity", "LetMeSleep.Online", "LetMeSleep.Audio", "LetMeSleep.Presentation", "LetMeSleep.Presentation.Gameplay", "LetMeSleep.Content.Characters", "LetMeSleep.Content.Environment", "LetMeSleep.UI", "Unity.TextMeshPro", "com.Epic.OnlineServices"]
+}

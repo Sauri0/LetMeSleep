@@ -1,6 +1,10 @@
 {
   "unity": "6000.3.24f1",
-  "sourceBase": "5ae08d3",
+  "sourceBase": "814265cac3b6d6f06bc91b791645d01b66cd9e81",
+  "sourceBaseEvidence": "Main worktree reflog held this HEAD from 2026-09-12T10:03:26Z through 2026-09-12T10:08:02Z; clean build files were created 2026-09-12T10:05:12Z through 2026-09-12T10:05:32Z.",
+  "sourceDirty": true,
+  "sourceCommit": null,
+  "sourceDirtySummary": "The build contains LetMeSleep.Online.dll from local Online sources not tracked by sourceBase; the exact source tree was not sealed.",
   "build": "N:/LetMeSleep/Artifacts/eos-probe-clean",
   "buildResult": "Succeeded",
   "buildErrors": 0,
