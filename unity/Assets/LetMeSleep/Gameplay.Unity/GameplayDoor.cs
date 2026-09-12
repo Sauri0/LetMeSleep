@@ -14,14 +14,23 @@ namespace LetMeSleep.Gameplay.Unity
         public float InitialDegrees;
         public uint Revision { get; internal set; } = 1;
         public float AngleRadians { get; internal set; }
-        private Quaternion closedRotation;
+        [SerializeField] private Quaternion closedRotation = Quaternion.identity;
+        [SerializeField] private bool hasAuthoredClosedRotation;
         private bool initialized;
+        // Authoring may save an already-open leaf. Preserve its closed basis across reloads.
+        public void SetAuthoredClosedRotation(Quaternion rotation)
+        {
+            float magnitude = rotation.x * rotation.x + rotation.y * rotation.y + rotation.z * rotation.z + rotation.w * rotation.w;
+            if (!MathEx.Finite(magnitude) || magnitude < .000001f) throw new System.ArgumentException("Closed door rotation must be finite and nonzero.");
+            closedRotation = rotation.normalized; hasAuthoredClosedRotation = true;
+        }
         public void Initialize()
         {
             if (initialized) return;
             if (!Hinge) Hinge = transform;
             if (!Leaf) Leaf = GetComponentInChildren<BoxCollider>();
-            closedRotation = Hinge.localRotation; initialized = true;
+            if (!hasAuthoredClosedRotation) closedRotation = Hinge.localRotation;
+            initialized = true;
             if (Leaf)
             {
                 var surface = Leaf.GetComponent<GameplaySurface>(); if (!surface) surface = Leaf.gameObject.AddComponent<GameplaySurface>();
