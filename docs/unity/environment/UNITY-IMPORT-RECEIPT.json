@@ -1,0 +1,32 @@
+{
+    "unityVersion": "6000.3.24f1",
+    "generatedUtc": "2026-09-12T09:54:43.1035937Z",
+    "scene": "Assets/LetMeSleep/Content/Environment/RoomSample/Scenes/RoomSample.unity",
+    "sourceGeometrySha256": "dbb12a5752dacfd9866f4f3dd7dcdaf28dded3d7283e14d395a9a8db81d504c2",
+    "sourceManifestSha256": "a085a982d8787aa45b2cb0ba42a100aa588c1d16585ce173c648bfc72485b4ff",
+    "meshes": 55,
+    "colliders": 45,
+    "sharedMaterials": 10,
+    "anchors": 13,
+    "checks": [
+        "FBX handedness corrected in mesh copies; every vertex follows explicit Z reflection",
+        "Imported room bounds and hinge origin",
+        "55 renderers; shared URP materials",
+        "45 independent collider children",
+        "Static meshes have UV2",
+        "Root scale and forward",
+        "Door visual and collider bounds agree at 0 and -100 degrees",
+        "Separate nested door prefab with moving collider",
+        "Prefab and sample scene serialized through Unity API"
+    ],
+    "pending": [
+        "UV2 overlap and actual bake padding",
+        "Visual review and light leakage",
+        "Gameplay obstruction/camera traversal",
+        "Performance and WAN outside this check"
+    ],
+    "warnings": [
+        "Missing layer WorldDynamic; sample colliders use Default. Director must finalize camera/physics masks.",
+        "Missing layer WorldStatic; sample colliders use Default. Director must finalize camera/physics masks."
+    ]
+}

@@ -15,6 +15,9 @@ game/.godot/
 /artifacts/
 /private/
 /unity/Assets/StreamingAssets/*.local.json
+/unity/Assets/StreamingAssets/EOS/
+/unity/Assets/Resources/PerformanceTestRun*.json*
+/unity/etc/
 work/tools/
 work/*.log
 outputs/

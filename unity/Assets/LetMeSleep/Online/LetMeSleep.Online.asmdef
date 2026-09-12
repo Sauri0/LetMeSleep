@@ -1,0 +1,5 @@
+{
+  "name": "LetMeSleep.Online",
+  "rootNamespace": "LetMeSleep.Online",
+  "references": ["LetMeSleep.Core", "LetMeSleep.Gameplay", "com.Epic.OnlineServices", "com.playeveryware.eos.core"]
+}
