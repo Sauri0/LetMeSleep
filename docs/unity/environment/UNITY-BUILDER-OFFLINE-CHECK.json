@@ -10,7 +10,7 @@
       "name": "AlfaFloorFinish.cs"
     },
     {
-      "sha256": "e05b63b6e275d5b3d63447956de3dd3b8d1720d722caf750b3648cd730e2900c",
+      "sha256": "848a35d15e0974414eefed24f76894d193a966aa2962ae322d24bbbee1b0b62a",
       "name": "AlfaHouseDressing.cs"
     },
     {
@@ -22,11 +22,11 @@
       "name": "AlfaMapBuilder.cs"
     },
     {
-      "sha256": "2451d5b460f33bcd13294df395744ed92f1851359b207476c8882013790fb123",
+      "sha256": "441bcfe0820e93872dc8fd584e1f88ab0d2f782d0f3405f307f22d3ceeb1c3cd",
       "name": "AlfaQualityLiving.cs"
     },
     {
-      "sha256": "669ec39114b7e3c7162d516c150e94157091e968122c7291ee38718238acf46c",
+      "sha256": "cc6c2f9feb37db3bdc7d0c60fefb79e2921d05deafec61a25c116964e174b3a7",
       "name": "AlfaQualityMeshes.cs"
     },
     {

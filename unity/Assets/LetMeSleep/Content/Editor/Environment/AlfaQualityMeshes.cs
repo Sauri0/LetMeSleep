@@ -84,27 +84,32 @@ namespace LetMeSleep.Content.Editor
 
         static Vector2[] QualitySoftOutline(Vector2 half)
         {
-            // Twelve-point sewing outline: broad sides, clipped soft corners, no cube silhouette.
-            return new[]{new Vector2(-half.x*.65f,-half.y),new Vector2(half.x*.65f,-half.y),new Vector2(half.x,-half.y*.65f),
-                new Vector2(half.x,0),new Vector2(half.x,half.y*.65f),new Vector2(half.x*.65f,half.y),new Vector2(-half.x*.65f,half.y),
-                new Vector2(-half.x,half.y*.65f),new Vector2(-half.x,0),new Vector2(-half.x,-half.y*.65f)};
+            // A continuous superellipse gives bowed sides and rounded cloth corners,
+            // instead of a rectangle with straight chamfer cuts.
+            var points=new Vector2[20];for(int i=0;i<points.Length;i++){
+                float angle=i*Mathf.PI*2/points.Length,c=Mathf.Cos(angle),s=Mathf.Sin(angle);
+                points[i]=new Vector2(half.x*Mathf.Sign(c)*Mathf.Pow(Mathf.Abs(c),.55f),half.y*Mathf.Sign(s)*Mathf.Pow(Mathf.Abs(s),.55f));
+            }return points;
         }
 
         static QualityMesh QualityPillow(Vector3 size,bool seat=false)
         {
-            // Face is XY for a standing cushion and XZ for a seat pad; the bulge is
-            // a five-ring sewn loft with a recessed contrasting welt inside its bounds.
+            // Face is XY for a standing cushion and XZ for a seat pad. Nine rings
+            // converge on convex front/back centres; there is no broad flat cap.
             var mesh=new QualityMesh();Vector3 dims=seat?new Vector3(size.x,size.z,size.y):size;
             var outline=QualitySoftOutline(new Vector2(dims.x,dims.y)*.5f);
-            var depths=new[]{-.5f,-.32f,0,.32f,.5f};var scales=new[]{.60f,.91f,1f,.91f,.60f};
+            var depths=seat?new[]{-.5f,-.32f,0,.32f,.5f}:new[]{-.5f,-.47f,-.37f,-.20f,0,.20f,.37f,.47f,.5f};
+            var scales=seat?new[]{.60f,.91f,1f,.91f,.60f}:new[]{0f,.35f,.70f,.93f,1f,.93f,.70f,.35f,0f};
             Func<Vector3,Vector3> orient=p=>seat?new Vector3(p.x,p.z,p.y):p;
-            for(int ring=0;ring<4;ring++)for(int i=0;i<outline.Length;i++){
+            for(int ring=0;ring<depths.Length-1;ring++)for(int i=0;i<outline.Length;i++){
                 int next=(i+1)%outline.Length;var p=outline[i];var q=outline[next];
                 var a=new Vector3(p.x*scales[ring],p.y*scales[ring],depths[ring]*dims.z);var b=new Vector3(q.x*scales[ring],q.y*scales[ring],depths[ring]*dims.z);
                 var c=new Vector3(q.x*scales[ring+1],q.y*scales[ring+1],depths[ring+1]*dims.z);var d=new Vector3(p.x*scales[ring+1],p.y*scales[ring+1],depths[ring+1]*dims.z);
                 mesh.Quad(orient(a),orient(b),orient(c),orient(d),orient((a+b+c+d)*.25f).normalized);
             }
-            foreach(int end in new[]{0,4})for(int i=0;i<outline.Length;i++){
+            // The weight-bearing seat retains a broad contact area; decorative and
+            // back cushions use the fully convex profile above.
+            if(seat)foreach(int end in new[]{0,depths.Length-1})for(int i=0;i<outline.Length;i++){
                 var p=outline[i]*scales[end];var q=outline[(i+1)%outline.Length]*scales[end];
                 mesh.Triangle(orient(new Vector3(0,0,depths[end]*dims.z)),orient(new Vector3(p.x,p.y,depths[end]*dims.z)),orient(new Vector3(q.x,q.y,depths[end]*dims.z)),orient(Vector3.forward*(end==0?-1:1)));
             }
@@ -116,11 +121,25 @@ namespace LetMeSleep.Content.Editor
             return mesh;
         }
 
+        static QualityMesh QualityRestingCushion(Vector3 size,float lean,float twist)
+        {
+            var mesh=QualityPillow(size);var rotation=Quaternion.Euler(lean,0,twist);
+            for(int i=0;i<mesh.vertices.Count;i++)mesh.vertices[i]=rotation*mesh.vertices[i];
+            float correction=-size.y*.5f-mesh.vertices.Min(v=>v.y);
+            for(int i=0;i<mesh.vertices.Count;i++)mesh.vertices[i]+=Vector3.up*correction;
+            return mesh;
+        }
+
         static QualityMesh QualityThrow()
         {
-            var mesh=new QualityMesh();
-            var path=new[]{new Vector2(.24f,.578f),new Vector2(-.12f,.578f),new Vector2(-.35f,.578f),new Vector2(-.397f,.578f),new Vector2(-.424f,.49f),new Vector2(-.431f,.37f),new Vector2(-.421f,.30f)};
-            Func<int,int,float,Vector3> p=(i,j,side)=>new Vector3(-.19f+i*.0475f,path[j].y+.004f*(1-Mathf.Cos(i*Mathf.PI*.5f))+side*.003f,path[j].x);
+            var mesh=new QualityMesh();var support=QualityPillow(new Vector3(.90f,.18f,.72f),true).vertices.ToArray();
+            var path=new[]{new Vector2(.04f,0),new Vector2(-.08f,0),new Vector2(-.16f,0),new Vector2(-.23f,0),new Vector2(-.28f,0),new Vector2(-.33f,0),new Vector2(-.37f,0),new Vector2(-.39f,0),new Vector2(-.411f,.45f),new Vector2(-.425f,.38f),new Vector2(-.419f,.29f)};
+            Func<int,int,float,Vector3> p=(i,j,side)=>{
+                float x=-.19f+i*.0475f,z=path[j].x;float supportY=QualitySurfaceHeight(support,x,z+.04f);
+                float y=float.IsNegativeInfinity(supportY)?path[j].y:supportY+.485f;
+                float hanging=j>=8?(j-7)/3f:0;z+=.009f*Mathf.Sin(i*1.4f)*hanging;y+=.018f*Mathf.Sin(i*.83f)*hanging;
+                return new Vector3(x,y+.003f+.002f*(1-Mathf.Cos(i*Mathf.PI*.5f))+side*.003f,z);
+            };
             for(int i=0;i<8;i++)for(int j=0;j<path.Length-1;j++){
                 int slot=i==0||i==7||j==path.Length-2?1:0;
                 var normal=Vector3.Cross(p(i+1,j,1)-p(i,j,1),p(i,j+1,1)-p(i,j,1));
@@ -130,6 +149,30 @@ namespace LetMeSleep.Content.Editor
             foreach(int i in new[]{0,8})for(int j=0;j<path.Length-1;j++)mesh.Quad(p(i,j,1),p(i,j,-1),p(i,j+1,-1),p(i,j+1,1),i==0?Vector3.left:Vector3.right,1);
             foreach(int j in new[]{0,path.Length-1})for(int i=0;i<8;i++)mesh.Quad(p(i,j,1),p(i+1,j,1),p(i+1,j,-1),p(i,j,-1),j==0?Vector3.forward:Vector3.back,1);
             return mesh;
+        }
+
+        static float QualitySurfaceHeight(Vector3[] vertices,float x,float z)
+        {
+            float height=float.NegativeInfinity;
+            for(int i=0;i<vertices.Length;i+=3){var a=vertices[i];var b=vertices[i+1];var c=vertices[i+2];
+                float denominator=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);if(Mathf.Abs(denominator)<1e-10f)continue;
+                float u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/denominator;
+                float v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/denominator,w=1-u-v;
+                if(u>=-.00001f&&v>=-.00001f&&w>=-.00001f)height=Mathf.Max(height,u*a.y+v*b.y+w*c.y);
+            }return height;
+        }
+
+        static void CheckQualityThrowSupport(Transform sofa,MeshFilter cloth)
+        {
+            var surfaces=sofa.GetComponentsInChildren<MeshFilter>().Where(f=>f.name.StartsWith("Seat_Pad_",StringComparison.Ordinal))
+                .Select(f=>f.sharedMesh.vertices.Select(v=>f.transform.TransformPoint(v)).ToArray()).ToArray();
+            Need(surfaces.Length==2,"Expected two actual sofa seat meshes");int contacts=0;
+            foreach(var vertex in cloth.sharedMesh.vertices){var p=cloth.transform.TransformPoint(vertex);float support=surfaces.Max(s=>QualitySurfaceHeight(s,p.x,p.z));
+                if(float.IsNegativeInfinity(support))continue;
+                Need(p.y>=support-.001f&&p.y<=support+.012f,"Throw must follow the actual upholstered surface");
+                if(Mathf.Abs(p.y-support)<.001f)contacts++;
+            }
+            Need(contacts>=8,"Draped throw must have real contact vertices on upholstery");
         }
 
         static QualityMesh QualityCurtain(float width,float height)

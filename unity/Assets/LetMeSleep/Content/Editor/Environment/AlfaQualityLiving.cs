@@ -17,10 +17,12 @@ namespace LetMeSleep.Content.Editor
             BuildQualityLivingRug(F(house,"Living_Rug"));
             BuildQualitySofa(F(house,"Living_Sofa"));BuildQualityCoffeeTable(F(house,"Living_Table"));BuildQualityShelf(F(house,"Living_Shelf"));
             var textiles=F(house,"Living_Sofa_Textiles");foreach(Transform child in textiles.Cast<Transform>().ToArray())UnityEngine.Object.DestroyImmediate(child.gameObject);
-            foreach(float x in new[]{-.57f,.57f})QualityPart(textiles,"Cushion_"+Token(x),new Vector3(x,.735f,.17f),QualityPillow(new Vector3(.38f,.32f,.16f)),x<0?"Quality_Blue":"Quality_Linen","Quality_Thread");
-            QualityPart(textiles,"Seat_Throw",Vector3.zero,QualityThrow(),"Quality_Linen","Quality_Blue");
+            foreach(float x in new[]{-.57f,.57f})QualityPart(textiles,"Cushion_"+Token(x),new Vector3(x,.735f,.13f),QualityRestingCushion(new Vector3(.38f,.32f,.16f),12,x<0?-5:5),x<0?"Quality_Blue":"Quality_Linen","Quality_Thread");
+            QualityPart(textiles,"Seat_Throw",new Vector3(.46f,0,0),QualityThrow(),"Quality_Linen","Quality_Blue");
             BuildQualityBooks(F(house,"Living_Shelf_Books"));BuildQualityWindow(house,quality);BuildQualityLivingDoor(house);
             BuildQualityFloorLamp(quality,new Vector3(.65f,0,3.85f));BuildQualityWallDetails(quality);
+            var anchors=F(house,"PresentationAnchors");var lampAnchor=Anchor(anchors,"LightAnchor_Living_StandingLamp",new Vector3(.65f,1.37f,3.85f));
+            lampAnchor.SetSiblingIndex(anchors.Find("LightAnchor_Living").GetSiblingIndex()+1);
             BuildQualityCeilingFixture(F(house,"CeilingFixture_Living"));
             ExportQualityLiving(house);
         }
@@ -175,10 +177,10 @@ namespace LetMeSleep.Content.Editor
 
         static void QualityLampMaterials()
         {
-            foreach(bool inner in new[]{false,true}){
-                string name=inner?"Quality_LampShadeInner":"Quality_LampShade";
+            foreach(string name in new[]{"Quality_LampShade","Quality_LampShadeInner","Quality_LampBulb"}){
+                bool inner=name!="Quality_LampShade",bulb=name=="Quality_LampBulb";
                 MakeQualityMaterial(name,inner?new Color(.88f,.72f,.50f):new Color(.72f,.58f,.42f),.88f);
-                var material=materials[name];material.SetColor("_EmissionColor",inner?new Color(.20f,.10f,.03f):new Color(.14f,.07f,.02f));material.EnableKeyword("_EMISSION");
+                var material=materials[name];material.SetColor("_EmissionColor",bulb?new Color(.70f,.34f,.09f):inner?new Color(.20f,.10f,.03f):new Color(.38f,.18f,.045f));material.EnableKeyword("_EMISSION");
                 material.SetFloat("_SpecularHighlights",0);material.SetFloat("_EnvironmentReflections",0);material.SetFloat("_ReceiveShadows",0);
                 material.EnableKeyword("_SPECULARHIGHLIGHTS_OFF");material.EnableKeyword("_ENVIRONMENTREFLECTIONS_OFF");material.EnableKeyword("_RECEIVE_SHADOWS_OFF");material.SetShaderPassEnabled("ShadowCaster",false);EditorUtility.SetDirty(material);
             }
@@ -192,8 +194,8 @@ namespace LetMeSleep.Content.Editor
             QualityPart(lamp,"Shade_Fabric",Vector3.zero,QualityLathe(new Vector2(.27f,1.28f),new Vector2(.16f,1.67f),new Vector2(.151f,1.67f),new Vector2(.261f,1.28f),new Vector2(.27f,1.28f)),"Quality_LampShade");
             foreach(float y in new[]{1.28f,1.67f}){float radius=y<1.5f?.27f:.16f;
                 QualityPart(lamp,"Shade_Hem_"+Token(y),Vector3.zero,QualityLathe(new Vector2(radius-.012f,y-.008f),new Vector2(radius+.003f,y-.008f),new Vector2(radius+.003f,y+.008f),new Vector2(radius-.012f,y+.008f),new Vector2(radius-.012f,y-.008f)),"Quality_Linen");}
-            QualityPart(lamp,"Frosted_Bulb",new Vector3(0,1.37f,0),QualityPillow(new Vector3(.09f,.14f,.09f)),"Quality_LampShadeInner","Quality_LampShadeInner");
-            // No Light or new runtime light anchor: W2 retains the zone lighting contract.
+            QualityPart(lamp,"Frosted_Bulb",new Vector3(0,1.37f,0),QualityPillow(new Vector3(.09f,.14f,.09f)),"Quality_LampBulb","Quality_LampBulb");
+            // The separate bulb anchor is consumed by Presentation; Content adds no Light.
             foreach(var renderer in lamp.GetComponentsInChildren<Renderer>().Where(r=>r.name.Contains("Shade")||r.name.Contains("Bulb"))){renderer.shadowCastingMode=ShadowCastingMode.Off;renderer.receiveShadows=false;renderer.reflectionProbeUsage=ReflectionProbeUsage.Off;}
             foreach(string name in new[]{"Weighted_Base","Turned_Stem","Shade_Fabric"}){
                 var part=lamp.Find(name);var collider=part.gameObject.AddComponent<MeshCollider>();collider.sharedMesh=part.GetComponent<MeshFilter>().sharedMesh;part.gameObject.layer=EnvironmentSampleBuilder.Layer("WorldStatic");}

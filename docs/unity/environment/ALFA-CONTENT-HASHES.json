@@ -3,11 +3,11 @@
   "maps": [
     {
       "map_id": "house-patio-v1",
-      "content_hash": "sha256-374a77303c61244a83bdd110ced9708045dd6ef9d3ac3b93ae6cfec920be3e2d"
+      "content_hash": "sha256-f615b5cb2fe9545c2676109ff3c2ba36ab60179a8bf0bf8e4aa5888d7f16d61d"
     },
     {
       "map_id": "private-lobby-v1",
-      "content_hash": "sha256-c10806ba22dbbccc9cc15407ce03aa98eb9f5ba544e0929965342916a0b9ec07"
+      "content_hash": "sha256-66fdd6fb1c5dd5f21e78c05be26d4256643aef4e51ad79e8c8ddd9ca2a53154a"
     }
   ],
   "files": [

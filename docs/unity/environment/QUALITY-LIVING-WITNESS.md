@@ -52,3 +52,18 @@ Reanudado con TEAM-RECOVERY-20260912: responsable **Modelador Elementos**. Conse
 3. Conservar receipt nativo y archivos generados; capturar con Presentation actual el encuadre de living-round5 y los detalles arriba indicados. Revisar apoyos y errores; no aprobar por compilación.
 4. Entregar a Elementos generated_meshes.json y Quality_LinenWeave.png, y conceder turno Blender CPU para import_generated_meshes.py. El script crea LivingWitnessKit.blend y receipt, con puntos coincidentes soldados para edición y UV conservadas por esquina. Su sintaxis está revisada, pero su ejecución todavía no se acredita.
 5. Revisar el .blend y vistas neutras contra los assets Unity antes de cerrar exportación. La incorporación del exterior y propagación se coordina con Mapas después de revisar el testigo.
+
+## Evidencia crafted1 y corrección siguiente
+
+ec36a946 integrado como b7d9ca6: BuildAlfaMaps nativo PASS el12/09/2026 a19:53:20UTC, Unity6000.3.24f1. Captura real `N:/LetMeSleep/Validation/Alfa-VisualRecovery/living-crafted1.png`, comparada con round5 y referencias. Se ven ensambles de mesa/bastidor, manta colgante y presillas/montantes; **no aprobado**: cojines y respaldo tienen frente plano y borde duro, manta gira de forma abrupta, pantalla apagada, pared dominante y cuadro demasiado elemental. Informe independiente: `N:/LetMeSleep/Validation/TeamRecovery/visual/LIVING-CRAFTED1-REVIEW-20260912.md`.
+
+Export crafted1 recibido de Director: generated_meshes.json SHA256 `3d9b7e9d5492752d52dd87ce5105e8f7e1ddc89acdf86d914fe416ef722d4c05` y Quality_LinenWeave.png. Se verificaron estructura JSON, datos finitos, UV e índices válidos (172 partes/17422 triángulos); no se ejecutó Blender y esos números no valoran calidad. Este export corresponde a ec36a946, no a la corrección siguiente; regenerar/copy antes de construir el .blend actualizado.
+
+Corrección LC1/LC2 en fuente:
+
+- Cojines decorativos y de respaldo: superelipse de contorno continuo y nueve anillos que convergen en el centro convexo, sin tapa frontal plana. Los de asiento conservan zona amplia de apoyo y borde blando; no se les aplica la forma de almohada decorativa. Cojines pequeños inclinados12° y girados±5°, base exacta0.575 tras compensación de bounds.
+- Manta desplazada al asiento derecho localx0.46, fuera de la unión de almohadones. Su perfil se calcula sobre los triángulos reales de tapicería, pasa gradualmente por el canto y tiene dobladillo colgante ondulado. El gate compara vértices con esa superficie, no con el plano superior de un BoxCollider: mínimo8 contactos, tolerancia1mm y espesor/ondulación hasta12mm. Se conserva collider funcional del sofá y pickup1005.
+
+Corrección LC3 coordinada con Presentación (perfil abfd63d): nuevo `PresentationAnchors/LightAnchor_Living_StandingLamp` en(0.65,1.37,3.85), inmediatamente después de LightAnchor_Living. Content sólo crea el Transform. Quality_LampShade emisión(0.38,0.18,0.045); nuevo Quality_LampBulb exclusivo emisión(0.70,0.34,0.09). Quality_LampShadeInner y plafón conservan emisión(0.20,0.10,0.03). Pantalla/bulbo no proyectan sombras; base/asta conservan sombras. No se eleva ambiente global.
+
+Próxima evidencia: regenerar, capturar luz de pie ON/OFF sobre **la misma geometría nueva**, vista equivalente a crafted1 y detalle lateral/bajo de sofá–manta–mesa. Comparar contra crafted1 sólo muestra el efecto combinado de geometría/material/luz. Cuadro/composiciónLC4 y exteriorLC5 siguen abiertos; Mapas prepara módulo exterior separado. .blend sigue pendiente de turno autorizado posterior a Humanos y de export actualizado.
