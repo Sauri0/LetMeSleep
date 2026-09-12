@@ -9,10 +9,12 @@
   "art_accepted": false,
   "source_sha256": {
     "author_mosquito_geometry.py": "f10c538113b5b380ffcfa3ebfceaf231268e2fc2b89c1c80319e289f0ebf6203",
-    "author_mosquito_motion.py": "4694608b235bf625a23b58a26bd0d160394ade3887df550866f7f0474497e5c4",
+    "author_mosquito_motion.py": "ac326b8fa313df201dc1ea69b99a4e2e8bbf1e5bad4138b68c8f8a8d3a148841",
     "build_mosquito_candidate.py": "c8f25c46c684762d9e8787ec2757e94a3c13007d56987dbb839211e9ea96f33a",
-    "check_mosquito_source.py": "8961004dcbdc6fd2fc06688f37d9280cb8b69fd92e73b8cf9c66b39dbc66140e",
-    "audit_mosquito_candidate.py": "25a0409fb6206340a89516abf37e9c94e328625001f62daa394fd9a0443d9f71"
+    "check_mosquito_source.py": "08c17407d8106f57dfa55f1c49166cc31ce9b2f1b62ab923784c5b87d4db8953",
+    "audit_mosquito_candidate.py": "d76a3c1da08a8b5809455eefa00aa7b8b5aae8d37e858dec2308fdd47e1d5942",
+    "check_mosquito_audit_math.py": "0f6e44e8774a0fcf1b0aaa2e1c9592b64120e71461dbf69d3c3d89db7390b45c",
+    "study_mosquito_surface.py": "f07d93d8905b611c6e6ff694551c9ffb9bc893330bf1ef9503a1ea213869599c"
   },
   "comparison_asset_sha256": "68225dee236e327e24ab7a501e2fe8c7f457708d2824b7b928c7d93b0adfd0c3",
   "custom_meshes": [
@@ -63,36 +65,36 @@
     {
       "leg": 1,
       "side": "L",
-      "minimum_reach_margin_source_m": 0.0055878032105169395
+      "minimum_reach_margin_source_m": 0.006860376057219536
     },
     {
       "leg": 2,
       "side": "L",
-      "minimum_reach_margin_source_m": 0.021346244045401364
+      "minimum_reach_margin_source_m": 0.014432305792623085
     },
     {
       "leg": 3,
       "side": "L",
-      "minimum_reach_margin_source_m": 0.007930048377040061
+      "minimum_reach_margin_source_m": 0.014250803852209781
     },
     {
       "leg": 1,
       "side": "R",
-      "minimum_reach_margin_source_m": 0.0055878032105169395
+      "minimum_reach_margin_source_m": 0.006860376057219508
     },
     {
       "leg": 2,
       "side": "R",
-      "minimum_reach_margin_source_m": 0.021346244045401364
+      "minimum_reach_margin_source_m": 0.014432305792623085
     },
     {
       "leg": 3,
       "side": "R",
-      "minimum_reach_margin_source_m": 0.007930048377040061
+      "minimum_reach_margin_source_m": 0.014250803852209781
     }
   ],
   "minimum_support_targets": 3,
-  "stance_velocity_metadata_error_m_per_cycle": 4.5221583422350164e-11,
-  "surface_distance_per_cycle_unity_m": 0.019999999999999997,
+  "stance_velocity_metadata_error_m_per_cycle": 2.608024074479687e-10,
+  "surface_distance_per_cycle_unity_m": 0.1,
   "proboscis_descent_degrees": 44.38394009160077
 }

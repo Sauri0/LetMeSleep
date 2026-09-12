@@ -54,7 +54,8 @@ def inspect_mesh(name, vertices, faces):
 def main():
     errors = []
     files = ('author_mosquito_geometry.py', 'author_mosquito_motion.py', 'build_mosquito_candidate.py',
-             'check_mosquito_source.py', 'audit_mosquito_candidate.py')
+             'check_mosquito_source.py', 'audit_mosquito_candidate.py', 'check_mosquito_audit_math.py',
+             'study_mosquito_surface.py')
     hashes = {}
     for name in files:
         data = (ROOT / name).read_bytes()

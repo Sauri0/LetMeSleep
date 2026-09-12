@@ -4,23 +4,90 @@ Root never moves. Surface support and Mouth remain separate explicit contracts.
 Requires Blender; importing this module alone performs no work.
 """
 import math
+from author_mosquito_geometry import leg_points
 
-STRIDE_SOURCE_M = .026
-STANCE_DUTY = .65
+STRIDE_SOURCE_M = .116
+STANCE_DUTY = .58
 SURFACE_CYCLE_FRAMES = 31
 UNITY_SCALE = .5
-SURFACE_DISTANCE_PER_CYCLE_M = STRIDE_SOURCE_M / STANCE_DUTY * UNITY_SCALE
+SURFACE_DISTANCE_PER_CYCLE_M = round(STRIDE_SOURCE_M / STANCE_DUTY * UNITY_SCALE, 12)
+SURFACE_SWING_LIFT_SOURCE_M = .020
+SURFACE_NOMINAL_SPEED_MPS = .65
+SURFACE_REVIEW_MAX_SPEED_MPS = .80
 
 
-def surface_step(time, leg, side):
-    """Two alternating tripods. Return source-space offset and support state."""
+def surface_step(time, leg, side, *, distance_per_cycle_unity_m=SURFACE_DISTANCE_PER_CYCLE_M,
+                 stance_duty=STANCE_DUTY):
+    """Offset from bind tarsus, centered under the coxa; phase convention unchanged.
+
+    Study-only keyword overrides let the same trajectory evaluate candidate D/duty.
+    Positive source Y during support cancels actor movement toward source -Y.
+    """
+    stride = distance_per_cycle_unity_m * stance_duty / UNITY_SCALE
+    points = leg_points(1 if side == 'L' else -1, leg)
+    center_offset = points[0][1] - points[2][1]
     phase = (time + (.5 if (leg == 2) == (side == 'L') else 0)) % 1
-    if phase < STANCE_DUTY:
-        return (-STRIDE_SOURCE_M * .5 + STRIDE_SOURCE_M * phase / STANCE_DUTY, 0, True)
-    u = (phase - STANCE_DUTY) / (1 - STANCE_DUTY)
-    # Zero velocity/acceleration at liftoff and touchdown in the vertical axis.
+    if phase < stance_duty:
+        return (center_offset - stride * .5 + stride * phase / stance_duty, 0, True)
+    u = (phase - stance_duty) / (1 - stance_duty)
     eased = u * u * u * (u * (u * 6 - 15) + 10)
-    return (STRIDE_SOURCE_M * (.5 - eased), .014 * math.sin(math.pi * u) ** 2, False)
+    # Quintic Hermite swing keeps the support velocity at both boundaries. A
+    # zero-velocity ease would produce a horizontal jerk at every footfall.
+    tangent = stride / stance_duty * (1 - stance_duty)
+    y = center_offset + stride * (.5 - eased) + tangent * (u - eased)
+    return (y, SURFACE_SWING_LIFT_SOURCE_M * math.sin(math.pi * u) ** 2, False)
+
+
+def surface_leg_ranges(*, distance_per_cycle_unity_m=SURFACE_DISTANCE_PER_CYCLE_M,
+                       stance_duty=STANCE_DUTY, samples=1201):
+    """Analytic target reach in source metres; skin/contact still needs Blender."""
+    rows = []
+    for side, sign in (('L', 1), ('R', -1)):
+        for leg in range(1, 4):
+            hip, knee, ankle, _ = leg_points(sign, leg)
+            upper, lower = math.dist(hip, knee), math.dist(knee, ankle)
+            distances = []
+            for frame in range(samples):
+                dy, dz, _ = surface_step(frame / (samples - 1), leg, side,
+                    distance_per_cycle_unity_m=distance_per_cycle_unity_m, stance_duty=stance_duty)
+                distances.append(math.dist(hip, (ankle[0], ankle[1] + dy, ankle[2] + dz)))
+            minimum, maximum = min(distances), max(distances)
+            rows.append({'leg': leg, 'side': side, 'upper_length_source_m': upper,
+                         'lower_length_source_m': lower, 'reach_min_source_m': abs(upper - lower),
+                         'reach_max_source_m': upper + lower, 'target_min_source_m': minimum,
+                         'target_max_source_m': maximum, 'extension_margin_source_m': upper + lower - maximum,
+                         'fold_margin_source_m': minimum - abs(upper - lower)})
+    return rows
+
+
+def surface_contract():
+    """Single source of truth consumed by generation and the light study report."""
+    duration = (SURFACE_CYCLE_FRAMES - 1) / 30
+    return {
+        'clip': 'Mosquito_SurfaceWalk', 'source_units': 'metres, Blender',
+        'stride_source_m': STRIDE_SOURCE_M, 'stance_duty': STANCE_DUTY,
+        'unity_scale_applied_once': UNITY_SCALE,
+        'distance_per_cycle_unity_m': SURFACE_DISTANCE_PER_CYCLE_M,
+        'frames': SURFACE_CYCLE_FRAMES, 'start_frame': 1, 'end_frame': SURFACE_CYCLE_FRAMES,
+        'fps': 30, 'duration_seconds': duration,
+        'support_center': 'each coxa Y; tarsal bind X/Z retained',
+        'phase_zero': 'L1/L3/R2 begin support; L2/R1/R3 phase +0.5',
+        'phase_direction': 'positive phase moves supported feet along source +Y; actor forward is source -Y',
+        'authority_phase_distance_m': .3,
+        'authority_unwrapped_phase_multiplier': round(.3 / SURFACE_DISTANCE_PER_CYCLE_M, 12),
+        'phase_formula': 'frac(authorityMotionPhase * (0.3 / distance_per_cycle_unity_m)); convert before modulo, once',
+        'animator_speed_formula': 'duration_seconds * actual_tangential_speed_mps / distance_per_cycle_unity_m',
+        'nominal_game_speed_mps_unchanged': SURFACE_NOMINAL_SPEED_MPS,
+        'nominal_cadence_hz': SURFACE_NOMINAL_SPEED_MPS / SURFACE_DISTANCE_PER_CYCLE_M,
+        'review_speed_range_mps': [.08, SURFACE_REVIEW_MAX_SPEED_MPS],
+        'review_cadence_range_hz': [.08 / SURFACE_DISTANCE_PER_CYCLE_M, SURFACE_REVIEW_MAX_SPEED_MPS / SURFACE_DISTANCE_PER_CYCLE_M],
+        'proposed_animator_speed_limits': [0, duration * SURFACE_REVIEW_MAX_SPEED_MPS / SURFACE_DISTANCE_PER_CYCLE_M],
+        'nominal_60fps_samples_per_cycle': 60 * SURFACE_DISTANCE_PER_CYCLE_M / SURFACE_NOMINAL_SPEED_MPS,
+        'swing_lift_source_m': SURFACE_SWING_LIFT_SOURCE_M,
+        'range_status': 'analytic source contract; readable cadence/contact requires native review',
+        'analytic_leg_ranges': surface_leg_ranges(),
+        'runtime_phase_sync_verified': False,
+    }
 
 
 def mosquito(c):
@@ -121,7 +188,11 @@ def mosquito(c):
         p.rotate('Abdomen01', (.012 * math.sin(TAU * 2 * t), 0, 0))
         return p.snapshot()
 
+    previous_reach_margin = p.minimum_reach_margin
+    p.minimum_reach_margin = math.inf
     sampled(c, 'SurfaceWalk', SURFACE_CYCLE_FRAMES, surface)
+    surface_reach_margin = p.minimum_reach_margin
+    p.minimum_reach_margin = min(previous_reach_margin, surface_reach_margin)
 
     def bite(t, amount=1):
         stance()
@@ -197,14 +268,8 @@ def mosquito(c):
         return p.snapshot()
 
     sampled(c, 'Recover', 37, recover)
-    c.contact['minimum_surface_leg_reach_margin_m'] = p.minimum_reach_margin
-    c.contact['surface_walk'] = {
-        'clip': 'Mosquito_SurfaceWalk', 'source_units': 'metres, Blender',
-        'stride_source_m': STRIDE_SOURCE_M, 'stance_duty': STANCE_DUTY,
-        'unity_scale_applied_once': UNITY_SCALE,
-        'distance_per_cycle_unity_m': SURFACE_DISTANCE_PER_CYCLE_M,
-        'frames': SURFACE_CYCLE_FRAMES, 'fps': 30, 'duration_seconds': 1.0,
-        'runtime_phase_sync_verified': False,
-    }
+    c.contact['minimum_surface_leg_reach_margin_m'] = surface_reach_margin
+    c.contact['minimum_any_pose_leg_reach_margin_m'] = p.minimum_reach_margin
+    c.contact['surface_walk'] = surface_contract()
     c.contact['bite_tip_policy'] = 'Head/Thorax/Proboscis bind transforms retained throughout BiteStart/BiteLoop/Bite'
     c.contact['fall_contact_policy'] = 'evaluated mesh minimum at authored support plane; native landing/transition review pending'

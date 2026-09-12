@@ -1,0 +1,1008 @@
+{
+  "schema": "lms-mosquito-surface-study-v1",
+  "passed": true,
+  "errors": [],
+  "scope": "1201 analytic phases per leg per trial; unchanged rigid lengths, target reach, support count and target velocity only",
+  "blender_executed": false,
+  "skin_contact_verified": false,
+  "runtime_verified": false,
+  "source_sha256": {
+    "author_mosquito_geometry.py": "f10c538113b5b380ffcfa3ebfceaf231268e2fc2b89c1c80319e289f0ebf6203",
+    "author_mosquito_motion.py": "ac326b8fa313df201dc1ea69b99a4e2e8bbf1e5bad4138b68c8f8a8d3a148841",
+    "study_mosquito_surface.py": "f07d93d8905b611c6e6ff694551c9ffb9bc893330bf1ef9503a1ea213869599c"
+  },
+  "geometry_unchanged_from_11a2cc9": true,
+  "selected_contract": {
+    "clip": "Mosquito_SurfaceWalk",
+    "source_units": "metres, Blender",
+    "stride_source_m": 0.116,
+    "stance_duty": 0.58,
+    "unity_scale_applied_once": 0.5,
+    "distance_per_cycle_unity_m": 0.1,
+    "frames": 31,
+    "start_frame": 1,
+    "end_frame": 31,
+    "fps": 30,
+    "duration_seconds": 1.0,
+    "support_center": "each coxa Y; tarsal bind X/Z retained",
+    "phase_zero": "L1/L3/R2 begin support; L2/R1/R3 phase +0.5",
+    "phase_direction": "positive phase moves supported feet along source +Y; actor forward is source -Y",
+    "authority_phase_distance_m": 0.3,
+    "authority_unwrapped_phase_multiplier": 3.0,
+    "phase_formula": "frac(authorityMotionPhase * (0.3 / distance_per_cycle_unity_m)); convert before modulo, once",
+    "animator_speed_formula": "duration_seconds * actual_tangential_speed_mps / distance_per_cycle_unity_m",
+    "nominal_game_speed_mps_unchanged": 0.65,
+    "nominal_cadence_hz": 6.5,
+    "review_speed_range_mps": [
+      0.08,
+      0.8
+    ],
+    "review_cadence_range_hz": [
+      0.7999999999999999,
+      8.0
+    ],
+    "proposed_animator_speed_limits": [
+      0,
+      8.0
+    ],
+    "nominal_60fps_samples_per_cycle": 9.23076923076923,
+    "swing_lift_source_m": 0.02,
+    "range_status": "analytic source contract; readable cadence/contact requires native review",
+    "analytic_leg_ranges": [
+      {
+        "leg": 1,
+        "side": "L",
+        "upper_length_source_m": 0.11824398504786618,
+        "lower_length_source_m": 0.11823028376858444,
+        "reach_min_source_m": 1.3701279281741474e-05,
+        "reach_max_source_m": 0.23647426881645062,
+        "target_min_source_m": 0.20302600818614347,
+        "target_max_source_m": 0.22961471510562403,
+        "extension_margin_source_m": 0.0068595537108265825,
+        "fold_margin_source_m": 0.20301230690686173
+      },
+      {
+        "leg": 2,
+        "side": "L",
+        "upper_length_source_m": 0.12981540740605485,
+        "lower_length_source_m": 0.10638138934982942,
+        "reach_min_source_m": 0.023434018056225428,
+        "reach_max_source_m": 0.2361967967558843,
+        "target_min_source_m": 0.1945038817093376,
+        "target_max_source_m": 0.22176475537517726,
+        "extension_margin_source_m": 0.014432041380707028,
+        "fold_margin_source_m": 0.17106986365311216
+      },
+      {
+        "leg": 3,
+        "side": "L",
+        "upper_length_source_m": 0.11172842073528114,
+        "lower_length_source_m": 0.1170136744145743,
+        "reach_min_source_m": 0.005285253679293167,
+        "reach_max_source_m": 0.22874209514985544,
+        "target_min_source_m": 0.1865849940375699,
+        "target_max_source_m": 0.21449129129764566,
+        "extension_margin_source_m": 0.014250803852209781,
+        "fold_margin_source_m": 0.18129974035827673
+      },
+      {
+        "leg": 1,
+        "side": "R",
+        "upper_length_source_m": 0.11824398504786618,
+        "lower_length_source_m": 0.11823028376858444,
+        "reach_min_source_m": 1.3701279281741474e-05,
+        "reach_max_source_m": 0.23647426881645062,
+        "target_min_source_m": 0.20302600818614347,
+        "target_max_source_m": 0.22961471510562403,
+        "extension_margin_source_m": 0.0068595537108265825,
+        "fold_margin_source_m": 0.20301230690686173
+      },
+      {
+        "leg": 2,
+        "side": "R",
+        "upper_length_source_m": 0.12981540740605485,
+        "lower_length_source_m": 0.10638138934982942,
+        "reach_min_source_m": 0.023434018056225428,
+        "reach_max_source_m": 0.2361967967558843,
+        "target_min_source_m": 0.1945038817093376,
+        "target_max_source_m": 0.22176475537517726,
+        "extension_margin_source_m": 0.014432041380707028,
+        "fold_margin_source_m": 0.17106986365311216
+      },
+      {
+        "leg": 3,
+        "side": "R",
+        "upper_length_source_m": 0.11172842073528114,
+        "lower_length_source_m": 0.1170136744145743,
+        "reach_min_source_m": 0.005285253679293167,
+        "reach_max_source_m": 0.22874209514985544,
+        "target_min_source_m": 0.1865849940375699,
+        "target_max_source_m": 0.21449129129764566,
+        "extension_margin_source_m": 0.014250803852209781,
+        "fold_margin_source_m": 0.18129974035827673
+      }
+    ],
+    "runtime_phase_sync_verified": false
+  },
+  "trials": [
+    {
+      "distance_per_cycle_unity_m": 0.08,
+      "duty": 0.55,
+      "stride_source_m": 0.08800000000000001,
+      "cadence_at_065_mps_hz": 8.125,
+      "minimum_extension_margin_source_m": 0.010326383402956801,
+      "leg_ranges": [
+        {
+          "leg": 1,
+          "side": "L",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.22614788541349382,
+          "extension_margin_source_m": 0.010326383402956801,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "L",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.21816835766256112,
+          "extension_margin_source_m": 0.018028439093323162,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "L",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21076529274782677,
+          "extension_margin_source_m": 0.017976802402028674,
+          "fold_margin_source_m": 0.18129974035827673
+        },
+        {
+          "leg": 1,
+          "side": "R",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.22614788541349382,
+          "extension_margin_source_m": 0.010326383402956801,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "R",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.21816835766256112,
+          "extension_margin_source_m": 0.018028439093323162,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "R",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21076529274782677,
+          "extension_margin_source_m": 0.017976802402028674,
+          "fold_margin_source_m": 0.18129974035827673
+        }
+      ]
+    },
+    {
+      "distance_per_cycle_unity_m": 0.08,
+      "duty": 0.58,
+      "stride_source_m": 0.0928,
+      "cadence_at_065_mps_hz": 8.125,
+      "minimum_extension_margin_source_m": 0.009858248945946863,
+      "leg_ranges": [
+        {
+          "leg": 1,
+          "side": "L",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.22661601987050375,
+          "extension_margin_source_m": 0.009858248945946863,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "L",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.21865327395442696,
+          "extension_margin_source_m": 0.017543522801457323,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "L",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.2112668643210071,
+          "extension_margin_source_m": 0.01747523082884833,
+          "fold_margin_source_m": 0.18129974035827673
+        },
+        {
+          "leg": 1,
+          "side": "R",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.22661601987050375,
+          "extension_margin_source_m": 0.009858248945946863,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "R",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.21865327395442696,
+          "extension_margin_source_m": 0.017543522801457323,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "R",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.2112668643210071,
+          "extension_margin_source_m": 0.01747523082884833,
+          "fold_margin_source_m": 0.18129974035827673
+        }
+      ]
+    },
+    {
+      "distance_per_cycle_unity_m": 0.08,
+      "duty": 0.6,
+      "stride_source_m": 0.096,
+      "cadence_at_065_mps_hz": 8.125,
+      "minimum_extension_margin_source_m": 0.009534395743028279,
+      "leg_ranges": [
+        {
+          "leg": 1,
+          "side": "L",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.22693987307342234,
+          "extension_margin_source_m": 0.009534395743028279,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "L",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.21898861121492846,
+          "extension_margin_source_m": 0.017208185540955823,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "L",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21161385173993522,
+          "extension_margin_source_m": 0.017128243409920224,
+          "fold_margin_source_m": 0.18129974035827673
+        },
+        {
+          "leg": 1,
+          "side": "R",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.22693987307342234,
+          "extension_margin_source_m": 0.009534395743028279,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "R",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.21898861121492846,
+          "extension_margin_source_m": 0.017208185540955823,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "R",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21161385173993522,
+          "extension_margin_source_m": 0.017128243409920224,
+          "fold_margin_source_m": 0.18129974035827673
+        }
+      ]
+    },
+    {
+      "distance_per_cycle_unity_m": 0.1,
+      "duty": 0.55,
+      "stride_source_m": 0.11000000000000001,
+      "cadence_at_065_mps_hz": 6.5,
+      "minimum_extension_margin_source_m": 0.007570285208788774,
+      "leg_ranges": [
+        {
+          "leg": 1,
+          "side": "L",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.22890398360766184,
+          "extension_margin_source_m": 0.007570285208788774,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "L",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22102954169475592,
+          "extension_margin_source_m": 0.01516725506112837,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "L",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21373165497407615,
+          "extension_margin_source_m": 0.015010440175779294,
+          "fold_margin_source_m": 0.18129974035827673
+        },
+        {
+          "leg": 1,
+          "side": "R",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.22890398360766184,
+          "extension_margin_source_m": 0.007570285208788774,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "R",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22102954169475592,
+          "extension_margin_source_m": 0.01516725506112837,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "R",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21373165497407615,
+          "extension_margin_source_m": 0.015010440175779294,
+          "fold_margin_source_m": 0.18129974035827673
+        }
+      ]
+    },
+    {
+      "distance_per_cycle_unity_m": 0.1,
+      "duty": 0.58,
+      "stride_source_m": 0.11599999999999999,
+      "cadence_at_065_mps_hz": 6.5,
+      "minimum_extension_margin_source_m": 0.0068595537108265825,
+      "leg_ranges": [
+        {
+          "leg": 1,
+          "side": "L",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.22961471510562403,
+          "extension_margin_source_m": 0.0068595537108265825,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "L",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22176475537517726,
+          "extension_margin_source_m": 0.014432041380707028,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "L",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21449129129764566,
+          "extension_margin_source_m": 0.014250803852209781,
+          "fold_margin_source_m": 0.18129974035827673
+        },
+        {
+          "leg": 1,
+          "side": "R",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.22961471510562403,
+          "extension_margin_source_m": 0.0068595537108265825,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "R",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22176475537517726,
+          "extension_margin_source_m": 0.014432041380707028,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "R",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21449129129764566,
+          "extension_margin_source_m": 0.014250803852209781,
+          "fold_margin_source_m": 0.18129974035827673
+        }
+      ]
+    },
+    {
+      "distance_per_cycle_unity_m": 0.1,
+      "duty": 0.6,
+      "stride_source_m": 0.12,
+      "cadence_at_065_mps_hz": 6.5,
+      "minimum_extension_margin_source_m": 0.006368864683714948,
+      "leg_ranges": [
+        {
+          "leg": 1,
+          "side": "L",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.23010540413273567,
+          "extension_margin_source_m": 0.006368864683714948,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "L",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.2222722263368277,
+          "extension_margin_source_m": 0.013924570419056592,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "L",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21501553011965308,
+          "extension_margin_source_m": 0.013726565030202365,
+          "fold_margin_source_m": 0.18129974035827673
+        },
+        {
+          "leg": 1,
+          "side": "R",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.23010540413273559,
+          "extension_margin_source_m": 0.006368864683715031,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "R",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22227222633682778,
+          "extension_margin_source_m": 0.013924570419056509,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "R",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21501553011965305,
+          "extension_margin_source_m": 0.013726565030202392,
+          "fold_margin_source_m": 0.18129974035827673
+        }
+      ]
+    },
+    {
+      "distance_per_cycle_unity_m": 0.12,
+      "duty": 0.55,
+      "stride_source_m": 0.132,
+      "cadence_at_065_mps_hz": 5.416666666666667,
+      "minimum_extension_margin_source_m": 0.004107813368229435,
+      "leg_ranges": [
+        {
+          "leg": 1,
+          "side": "L",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.23236645544822118,
+          "extension_margin_source_m": 0.004107813368229435,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "L",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22462053328563467,
+          "extension_margin_source_m": 0.01157626347024962,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "L",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.2174504091737217,
+          "extension_margin_source_m": 0.011291685976133753,
+          "fold_margin_source_m": 0.18129974035827673
+        },
+        {
+          "leg": 1,
+          "side": "R",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.23236645544822115,
+          "extension_margin_source_m": 0.004107813368229463,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "R",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22462053328563467,
+          "extension_margin_source_m": 0.01157626347024962,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "R",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.2174504091737217,
+          "extension_margin_source_m": 0.011291685976133753,
+          "fold_margin_source_m": 0.18129974035827673
+        }
+      ]
+    },
+    {
+      "distance_per_cycle_unity_m": 0.12,
+      "duty": 0.58,
+      "stride_source_m": 0.1392,
+      "cadence_at_065_mps_hz": 5.416666666666667,
+      "minimum_extension_margin_source_m": 0.003118920885478549,
+      "leg_ranges": [
+        {
+          "leg": 1,
+          "side": "L",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.23335534793097207,
+          "extension_margin_source_m": 0.003118920885478549,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "L",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22564222518186194,
+          "extension_margin_source_m": 0.010554571574022342,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "L",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21850425433400414,
+          "extension_margin_source_m": 0.010237840815851301,
+          "fold_margin_source_m": 0.18129974035827673
+        },
+        {
+          "leg": 1,
+          "side": "R",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.23335534793097207,
+          "extension_margin_source_m": 0.003118920885478549,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "R",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22564222518186194,
+          "extension_margin_source_m": 0.010554571574022342,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "R",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21850425433400414,
+          "extension_margin_source_m": 0.010237840815851301,
+          "fold_margin_source_m": 0.18129974035827673
+        }
+      ]
+    },
+    {
+      "distance_per_cycle_unity_m": 0.12,
+      "duty": 0.6,
+      "stride_source_m": 0.144,
+      "cadence_at_065_mps_hz": 5.416666666666667,
+      "minimum_extension_margin_source_m": 0.002437092365006055,
+      "leg_ranges": [
+        {
+          "leg": 1,
+          "side": "L",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.23403717645144456,
+          "extension_margin_source_m": 0.002437092365006055,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "L",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22634608427264974,
+          "extension_margin_source_m": 0.009850712483234547,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "L",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.21923069678230614,
+          "extension_margin_source_m": 0.0095113983675493,
+          "fold_margin_source_m": 0.18129974035827673
+        },
+        {
+          "leg": 1,
+          "side": "R",
+          "upper_length_source_m": 0.11824398504786618,
+          "lower_length_source_m": 0.11823028376858444,
+          "reach_min_source_m": 1.3701279281741474e-05,
+          "reach_max_source_m": 0.23647426881645062,
+          "target_min_source_m": 0.20302600818614347,
+          "target_max_source_m": 0.23403717645144456,
+          "extension_margin_source_m": 0.002437092365006055,
+          "fold_margin_source_m": 0.20301230690686173
+        },
+        {
+          "leg": 2,
+          "side": "R",
+          "upper_length_source_m": 0.12981540740605485,
+          "lower_length_source_m": 0.10638138934982942,
+          "reach_min_source_m": 0.023434018056225428,
+          "reach_max_source_m": 0.2361967967558843,
+          "target_min_source_m": 0.1945038817093376,
+          "target_max_source_m": 0.22634608427264977,
+          "extension_margin_source_m": 0.00985071248323452,
+          "fold_margin_source_m": 0.17106986365311216
+        },
+        {
+          "leg": 3,
+          "side": "R",
+          "upper_length_source_m": 0.11172842073528114,
+          "lower_length_source_m": 0.1170136744145743,
+          "reach_min_source_m": 0.005285253679293167,
+          "reach_max_source_m": 0.22874209514985544,
+          "target_min_source_m": 0.1865849940375699,
+          "target_max_source_m": 0.2192306967823061,
+          "extension_margin_source_m": 0.009511398367549329,
+          "fold_margin_source_m": 0.18129974035827673
+        }
+      ]
+    }
+  ],
+  "selection_reason": ".10 m/cycle gives 6.5 Hz at unchanged .65 m/s, more reach margin than .12, lower cadence than .08; .58 duty retains overlap and swing time",
+  "minimum_support_targets": 3,
+  "support_samples": [
+    {
+      "phase": 0.0,
+      "supporting_targets": [
+        "Leg103.L",
+        "Leg203.L",
+        "Leg303.L",
+        "Leg103.R",
+        "Leg203.R",
+        "Leg303.R"
+      ]
+    },
+    {
+      "phase": 0.08333333333333333,
+      "supporting_targets": [
+        "Leg103.L",
+        "Leg303.L",
+        "Leg203.R"
+      ]
+    },
+    {
+      "phase": 0.16666666666666666,
+      "supporting_targets": [
+        "Leg103.L",
+        "Leg303.L",
+        "Leg203.R"
+      ]
+    },
+    {
+      "phase": 0.25,
+      "supporting_targets": [
+        "Leg103.L",
+        "Leg303.L",
+        "Leg203.R"
+      ]
+    },
+    {
+      "phase": 0.3333333333333333,
+      "supporting_targets": [
+        "Leg103.L",
+        "Leg303.L",
+        "Leg203.R"
+      ]
+    },
+    {
+      "phase": 0.4166666666666667,
+      "supporting_targets": [
+        "Leg103.L",
+        "Leg303.L",
+        "Leg203.R"
+      ]
+    },
+    {
+      "phase": 0.5,
+      "supporting_targets": [
+        "Leg103.L",
+        "Leg203.L",
+        "Leg303.L",
+        "Leg103.R",
+        "Leg203.R",
+        "Leg303.R"
+      ]
+    },
+    {
+      "phase": 0.5833333333333334,
+      "supporting_targets": [
+        "Leg203.L",
+        "Leg103.R",
+        "Leg303.R"
+      ]
+    },
+    {
+      "phase": 0.6666666666666666,
+      "supporting_targets": [
+        "Leg203.L",
+        "Leg103.R",
+        "Leg303.R"
+      ]
+    },
+    {
+      "phase": 0.75,
+      "supporting_targets": [
+        "Leg203.L",
+        "Leg103.R",
+        "Leg303.R"
+      ]
+    },
+    {
+      "phase": 0.8333333333333334,
+      "supporting_targets": [
+        "Leg203.L",
+        "Leg103.R",
+        "Leg303.R"
+      ]
+    },
+    {
+      "phase": 0.9166666666666666,
+      "supporting_targets": [
+        "Leg203.L",
+        "Leg103.R",
+        "Leg303.R"
+      ]
+    },
+    {
+      "phase": 1.0,
+      "supporting_targets": [
+        "Leg103.L",
+        "Leg203.L",
+        "Leg303.L",
+        "Leg103.R",
+        "Leg203.R",
+        "Leg303.R"
+      ]
+    }
+  ],
+  "maximum_analytic_world_stance_velocity_mps": 1.6952156484117964e-09,
+  "swing_boundary_velocity": [
+    {
+      "phase": 0.58,
+      "before_velocity_source_m_per_cycle": [
+        0.2000000000335067,
+        0.0
+      ],
+      "after_velocity_source_m_per_cycle": [
+        0.19999999989472883,
+        1.1190027653852232e-07
+      ],
+      "velocity_difference_source_m_per_cycle": 1.1190036259412751e-07
+    },
+    {
+      "phase": 1,
+      "before_velocity_source_m_per_cycle": [
+        0.20000000036310417,
+        -1.1190027657184588e-07
+      ],
+      "after_velocity_source_m_per_cycle": [
+        0.20000000012024288,
+        0.0
+      ],
+      "velocity_difference_source_m_per_cycle": 1.119005401169277e-07
+    }
+  ],
+  "pending": [
+    "evaluated mesh contact/IK and self-intersection",
+    "FBX roundtrip",
+    "local/remote phase binding",
+    "60fps clip legibility and real transition blends"
+  ]
+}
