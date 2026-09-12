@@ -6,32 +6,32 @@
   "source_sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2",
   "builder_sources": [
     {
-      "name": "AlfaFloorFinish.cs",
-      "sha256": "87e70c1bcd8caf63602af2ceee1d6c30a1079e26ba9ca2cc5833376c306e2f3d"
+      "sha256": "87e70c1bcd8caf63602af2ceee1d6c30a1079e26ba9ca2cc5833376c306e2f3d",
+      "name": "AlfaFloorFinish.cs"
     },
     {
-      "name": "AlfaHouseDressing.cs",
-      "sha256": "4e11e725d7129ed931b8d8f5db127a3921a17ee08de9f34a0510c80fda5a5b53"
+      "sha256": "4e11e725d7129ed931b8d8f5db127a3921a17ee08de9f34a0510c80fda5a5b53",
+      "name": "AlfaHouseDressing.cs"
     },
     {
-      "name": "AlfaLobbyDressing.cs",
-      "sha256": "84264aba3561c7f29aa241266a45640681f9927bc75e816a7ff1d50209115e94"
+      "sha256": "527f16c6f2905a1b6ae341172448d60177e35ce665700b324303d598014cbfe5",
+      "name": "AlfaLobbyDressing.cs"
     },
     {
-      "name": "AlfaMapBuilder.cs",
-      "sha256": "975f26be8c542a4cd34a8ac349e00599e4be8fb5c791ce888cb5c1c4020dd1ba"
+      "sha256": "975f26be8c542a4cd34a8ac349e00599e4be8fb5c791ce888cb5c1c4020dd1ba",
+      "name": "AlfaMapBuilder.cs"
     },
     {
-      "name": "AlfaQualityLiving.cs",
-      "sha256": "1069c8fabb12c7ccb4fd0c950a4fb5fa8b750f2dd4223c691bd234a245ef0475"
+      "sha256": "1069c8fabb12c7ccb4fd0c950a4fb5fa8b750f2dd4223c691bd234a245ef0475",
+      "name": "AlfaQualityLiving.cs"
     },
     {
-      "name": "AlfaQualityMeshes.cs",
-      "sha256": "2b58ea3c2591c2627b774be09418ef6ead4e0ff647d926ace9e4a270551f83b6"
+      "sha256": "2b58ea3c2591c2627b774be09418ef6ead4e0ff647d926ace9e4a270551f83b6",
+      "name": "AlfaQualityMeshes.cs"
     },
     {
-      "name": "EnvironmentSampleBuilder.cs",
-      "sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2"
+      "sha256": "89eabe63e24c531a1decc54c842ff4b5d9116c9fd7986ebd029f79411b5d93a2",
+      "name": "EnvironmentSampleBuilder.cs"
     }
   ],
   "checks": [

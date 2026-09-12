@@ -1,8 +1,29 @@
 {
-  "algorithm": "SHA256 map ID and ordered file/hash records; UTF8 text newlines normalized toLF, FBX raw",
+  "files": [
+    "art_source/unity/environments/alfa_maps/house_alfa_static.fbx",
+    "art_source/unity/environments/alfa_maps/lobby_alfa_static.fbx",
+    "art_source/unity/environments/alfa_maps/furniture_kit_alfa.fbx",
+    "art_source/unity/environments/alfa_maps/source_manifest.json",
+    "art_source/unity/environments/room_sample/house_layout_plan.json",
+    "art_source/unity/environments/room_sample/room_furnished_without_door.fbx",
+    "art_source/unity/environments/room_sample/door_01.fbx",
+    "art_source/unity/environments/room_sample/room_contract.json",
+    "art_source/unity/environments/room_sample/presentation_manifest.json",
+    "unity/Assets/LetMeSleep/Content/Editor/Environment/EnvironmentSampleBuilder.cs",
+    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaMapBuilder.cs",
+    "unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs",
+    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaLobbyDressing.cs",
+    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaHouseDressing.cs",
+    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaFloorFinish.cs",
+    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityMeshes.cs",
+    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityLiving.cs",
+    "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs",
+    "unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs",
+    "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs",
+    "unity/Assets/LetMeSleep/Gameplay/Contracts.cs"
+  ],
   "maps": [
     {
-      "content_hash": "sha256-63a4a8518177357aed30de31e5ef6c547496fb2372035b8357f4528306792a7d",
       "map_id": "house-patio-v1",
       "files": [
         "art_source/unity/environments/alfa_maps/house_alfa_static.fbx",
@@ -28,10 +49,10 @@
         "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
         "art_source/unity/environments/quality_exterior/generated_exterior.json",
         "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityExterior.cs"
-      ]
+      ],
+      "content_hash": "sha256-32c9a3a88cb48f5f0c44fbcbe7f338cbf7e6f217702d3e366ba7a2c1116ee3b4"
     },
     {
-      "content_hash": "sha256-20734ff18d1bdd446824c824f554c3d92508b38ef685fe37278b7c6070ed011d",
       "map_id": "private-lobby-v1",
       "files": [
         "art_source/unity/environments/alfa_maps/house_alfa_static.fbx",
@@ -55,30 +76,9 @@
         "unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs",
         "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs",
         "unity/Assets/LetMeSleep/Gameplay/Contracts.cs"
-      ]
+      ],
+      "content_hash": "sha256-1e2ffa52a31b6b943ee9e253b3a13904ea228e771da9cc0019aa3dbf5e698976"
     }
   ],
-  "files": [
-    "art_source/unity/environments/alfa_maps/house_alfa_static.fbx",
-    "art_source/unity/environments/alfa_maps/lobby_alfa_static.fbx",
-    "art_source/unity/environments/alfa_maps/furniture_kit_alfa.fbx",
-    "art_source/unity/environments/alfa_maps/source_manifest.json",
-    "art_source/unity/environments/room_sample/house_layout_plan.json",
-    "art_source/unity/environments/room_sample/room_furnished_without_door.fbx",
-    "art_source/unity/environments/room_sample/door_01.fbx",
-    "art_source/unity/environments/room_sample/room_contract.json",
-    "art_source/unity/environments/room_sample/presentation_manifest.json",
-    "unity/Assets/LetMeSleep/Content/Editor/Environment/EnvironmentSampleBuilder.cs",
-    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaMapBuilder.cs",
-    "unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs",
-    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaLobbyDressing.cs",
-    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaHouseDressing.cs",
-    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaFloorFinish.cs",
-    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityMeshes.cs",
-    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityLiving.cs",
-    "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs",
-    "unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs",
-    "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs",
-    "unity/Assets/LetMeSleep/Gameplay/Contracts.cs"
-  ]
+  "algorithm": "SHA256 map ID and ordered file/hash records; UTF8 text newlines normalized toLF, FBX raw"
 }

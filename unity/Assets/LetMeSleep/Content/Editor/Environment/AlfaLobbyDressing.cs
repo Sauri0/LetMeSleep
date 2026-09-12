@@ -62,6 +62,103 @@ namespace LetMeSleep.Content.Editor
                 foreach(float y in new[]{-.20f,.20f})LobbyPiece(lantern,"Cap_"+Token(y),new Vector3(0,y,0),new Vector3(.32f,.06f,.28f),"Iron",true);
                 foreach(float side in new[]{-.13f,.13f})LobbyPiece(lantern,"Frame_"+Token(side),new Vector3(side,0,-.10f),new Vector3(.035f,.40f,.035f),"Iron",true);
             }
+            BuildLobbyMenuCorner(lobby);
+        }
+
+        static void BuildLobbyMenuCorner(GameObject lobby)
+        {
+            // Only the right seating group changes. Keep gameplay proxies and the
+            // exact seat mesh used to author the human's contact and seated clips.
+            var colliders=lobby.GetComponentsInChildren<Collider>().ToDictionary(c=>c,c=>ColliderBounds(c));
+            MakeQualityMaterial("Menu_Upholstery",new Color(.40f,.18f,.13f),.92f);
+            MakeQualityMaterial("Menu_Seam",new Color(.28f,.105f,.07f),.94f);
+            MakeQualityMaterial("Menu_Linen",new Color(.66f,.56f,.40f),.94f);
+            MakeQualityMaterial("Menu_Accent",new Color(.14f,.24f,.29f),.91f);
+            MakeQualityMaterial("Menu_Paper",new Color(.72f,.67f,.52f),.96f);
+            MakeQualityMaterial("Menu_Sky",new Color(.12f,.20f,.28f),.96f);
+            MakeQualityMaterial("Menu_DistantHills",new Color(.24f,.34f,.38f),.96f);
+            MakeQualityMaterial("Menu_Shade",new Color(.74f,.64f,.48f),.95f);
+            var shade=materials["Menu_Shade"];shade.SetColor("_EmissionColor",new Color(.08f,.04f,.012f));PersistAuthoredEmission(shade);
+            var sofa=F(lobby,"Lobby_BackSofa_3p3");
+            var seat=sofa.GetComponentsInChildren<MeshFilter>().Single(f=>f.name.Contains("Sofa_Seat"));
+            var originalSeat=seat.sharedMesh;var originalSeatMatrix=seat.transform.localToWorldMatrix;
+            foreach(var filter in sofa.GetComponentsInChildren<MeshFilter>().Where(f=>f!=seat).ToArray()){
+                UnityEngine.Object.DestroyImmediate(filter.GetComponent<MeshRenderer>());
+                UnityEngine.Object.DestroyImmediate(filter);
+            }
+            foreach(var lod in sofa.GetComponentsInChildren<LODGroup>())UnityEngine.Object.DestroyImmediate(lod);
+            seat.GetComponent<MeshRenderer>().sharedMaterial=materials["Menu_Upholstery"];
+            var frame=Child(sofa,"Menu_CraftedFrame");
+            foreach(float x in new[]{-.94f,.94f})foreach(float z in new[]{-.30f,.30f})
+                QualityTimber(frame,"Foot_"+Token(x)+"_"+Token(z),new Vector3(x,.10f,z),new Vector3(.12f,.20f,.12f),"Quality_WoodEnd",.012f,.78f);
+            foreach(float z in new[]{-.37f,.35f})
+                QualityTimber(frame,"Apron_"+Token(z),new Vector3(0,.30f,z),new Vector3(2.02f,.20f,.10f),"Quality_Wood",.012f);
+            QualityTimber(frame,"Seat_Deck",new Vector3(0,.3975f,-.04f),new Vector3(1.82f,.015f,.72f),"Quality_WoodEnd",.004f);
+            foreach(float x in new[]{-.97f,.97f}){
+                foreach(float z in new[]{-.30f,.30f})
+                    QualityTimber(frame,"Arm_Post_"+Token(x)+"_"+Token(z),new Vector3(x,.44f,z),new Vector3(.10f,.48f,.10f),"Quality_Wood",.010f);
+                QualityTimber(frame,"Arm_Rail_"+Token(x),new Vector3(x,.67f,-.015f),new Vector3(.18f,.10f,.81f),"Quality_Wood",.012f);
+                QualityPart(frame,"Arm_Pad_"+Token(x),new Vector3(x,.73f,-.015f),QualityPillow(new Vector3(.20f,.16f,.85f),true),"Menu_Upholstery","Menu_Seam");
+                QualityTimber(frame,"Back_Stile_"+Token(x),new Vector3(x,.83f,.405f),new Vector3(.08f,.63f,.06f),"Quality_WoodEnd",.008f);
+            }
+            QualityTimber(frame,"Back_TopRail",new Vector3(0,1.145f,.405f),new Vector3(2.02f,.06f,.06f),"Quality_Wood",.009f);
+            foreach(float x in new[]{-.465f,.465f})
+                QualityPart(frame,"Back_Pad_"+Token(x),new Vector3(x,.86f,.35f),QualityRestingCushion(new Vector3(.91f,.57f,.16f),0,0,.015f),"Menu_Upholstery","Menu_Seam");
+            Need(seat.sharedMesh==originalSeat&&seat.transform.localToWorldMatrix==originalSeatMatrix,"Menu corner changed the seated human's original support mesh");
+
+            var domestic=F(lobby,"Lobby_Domestic");
+            foreach(string name in new[]{"Sofa_Throw_3p3","Throw_Edge_3p3","Sofa_Cushion_3p3"})
+                UnityEngine.Object.DestroyImmediate(F(domestic.gameObject,name).gameObject);
+            var folded=QualityPart(domestic,"Sofa_Throw_3p3",new Vector3(2.68f,.585f,5.31f),QualityPillow(new Vector3(.40f,.020f,.60f),true),"Menu_Linen","Menu_Accent");
+            QualityPart(folded,"Folded_Leaf",new Vector3(0,.012f,.115f),QualityPillow(new Vector3(.40f,.008f,.30f),true),"Menu_Linen","Menu_Accent");
+            QualityPart(domestic,"Sofa_Cushion_3p3",new Vector3(3.85f,.725f,5.52f),QualityRestingCushion(new Vector3(.36f,.30f,.14f),8,-8,.015f),"Menu_Accent","Menu_Linen");
+            BuildLobbyMenuPicture(domestic);
+            BuildLobbyMenuSconce(F(lobby,"Lantern_4p8"));
+            Need(lobby.GetComponentsInChildren<Collider>().Length==colliders.Count,"Menu corner changed collider count");
+            foreach(var pair in colliders){Need(pair.Key!=null,"Menu corner removed a collider");var after=ColliderBounds(pair.Key);
+                Need((after.center-pair.Value.center).sqrMagnitude<1e-12f&&(after.size-pair.Value.size).sqrMagnitude<1e-12f,"Menu corner changed collision bounds");}
+        }
+
+        static void BuildLobbyMenuPicture(Transform domestic)
+        {
+            var picture=Child(domestic,"Menu_FramedNightLake");picture.localPosition=new Vector3(3.10f,2.10f,5.97f);
+            QualityTimber(picture,"Canvas",Vector3.zero,new Vector3(1.17f,.75f,.016f),"Menu_Sky",.002f);
+            foreach(float x in new[]{-.605f,.605f})
+                QualityTimber(picture,"Frame_Side_"+Token(x),new Vector3(x,0,0),new Vector3(.05f,.85f,.06f),"Quality_Wood",.007f);
+            foreach(float y in new[]{-.40f,.40f})
+                QualityTimber(picture,"Frame_Rail_"+Token(y),new Vector3(0,y,0),new Vector3(1.17f,.05f,.06f),"Quality_WoodLight",.007f);
+            // One quiet original print: moon, distant slopes, near shore and a river.
+            // Separate depth planes avoid coplanar flicker; no writing or game symbols.
+            var art=new QualityMesh();
+            var xs=new[]{-.575f,-.38f,-.16f,.08f,.32f,.575f};
+            var far=new[]{.03f,.16f,.10f,.22f,.08f,.14f};
+            var near=new[]{-.12f,-.04f,-.10f,-.02f,-.14f,-.07f};
+            for(int i=0;i<xs.Length-1;i++){
+                art.Quad(new Vector3(xs[i],-.365f,-.011f),new Vector3(xs[i+1],-.365f,-.011f),new Vector3(xs[i+1],far[i+1],-.011f),new Vector3(xs[i],far[i],-.011f),Vector3.back);
+                art.Quad(new Vector3(xs[i],-.365f,-.015f),new Vector3(xs[i+1],-.365f,-.015f),new Vector3(xs[i+1],near[i+1],-.015f),new Vector3(xs[i],near[i],-.015f),Vector3.back,1);
+            }
+            var moon=new Vector3(-.29f,.265f,-.019f);
+            for(int i=0;i<16;i++){
+                float a=i*Mathf.PI*2/16,b=(i+1)*Mathf.PI*2/16;
+                art.Triangle(moon,moon+new Vector3(Mathf.Cos(a),Mathf.Sin(a),0)*.060f,moon+new Vector3(Mathf.Cos(b),Mathf.Sin(b),0)*.060f,Vector3.back,2);
+            }
+            art.Quad(new Vector3(-.15f,-.365f,-.019f),new Vector3(.15f,-.365f,-.019f),new Vector3(.06f,-.18f,-.019f),new Vector3(-.035f,-.18f,-.019f),Vector3.back,0);
+            art.Quad(new Vector3(-.035f,-.18f,-.019f),new Vector3(.06f,-.18f,-.019f),new Vector3(.015f,-.10f,-.019f),new Vector3(-.015f,-.10f,-.019f),Vector3.back,0);
+            QualityPart(picture,"NightLake_Print",Vector3.zero,art,"Menu_DistantHills","Menu_Accent","Menu_Paper");
+        }
+
+        static void BuildLobbyMenuSconce(Transform lantern)
+        {
+            RemoveQualityReplacedVisuals(lantern);var parts=Child(lantern,"Menu_FabricSconce");
+            QualityTimber(parts,"Wall_Rose",new Vector3(0,0,.21f),new Vector3(.26f,.44f,.10f),"Quality_WoodEnd",.035f);
+            QualityTimber(parts,"Support_Arm",new Vector3(0,-.17f,.075f),new Vector3(.035f,.035f,.18f),"Quality_Wood",.006f);
+            QualityPart(parts,"Turned_Holder",Vector3.zero,QualityLathe(new Vector2(0,-.19f),new Vector2(.035f,-.19f),new Vector2(.025f,-.10f),new Vector2(.038f,-.04f),new Vector2(0,-.04f)),"Quality_Wood");
+            QualityPart(parts,"Fabric_Shade",Vector3.zero,QualityLathe(new Vector2(.22f,-.11f),new Vector2(.14f,.18f),new Vector2(.132f,.18f),new Vector2(.212f,-.11f),new Vector2(.22f,-.11f)),"Menu_Shade");
+            foreach(float y in new[]{-.11f,.18f}){float r=y<0?.22f:.14f;
+                QualityPart(parts,"Shade_Hem_"+Token(y),Vector3.zero,QualityLathe(new Vector2(r-.010f,y-.006f),new Vector2(r+.002f,y-.006f),new Vector2(r+.002f,y+.006f),new Vector2(r-.010f,y+.006f),new Vector2(r-.010f,y-.006f)),"Menu_Linen");}
+            QualityPart(parts,"Frosted_Bulb",new Vector3(0,.015f,0),QualityPillow(new Vector3(.08f,.10f,.08f)),"Lobby_LanternGlow","Lobby_LanternGlow");
+            foreach(var renderer in parts.GetComponentsInChildren<Renderer>().Where(r=>r.name.Contains("Shade")||r.name.Contains("Bulb"))){
+                renderer.shadowCastingMode=ShadowCastingMode.Off;renderer.receiveShadows=false;renderer.reflectionProbeUsage=ReflectionProbeUsage.Off;}
         }
 
         static void AddLobbyDomesticSet(Transform furnishings)
@@ -169,6 +266,7 @@ namespace LetMeSleep.Content.Editor
                 Need(!renderer.bounds.Intersects(protectedRoute),"Lobby furnishing visually intrudes into circulation: "+Hierarchy(renderer.transform));
             CheckLobbyDomesticSupport(lobby);
             CheckLobbyLivingMenuAnchors(lobby,data);
+            CheckLobbyMenuCornerVisuals(lobby);
             foreach(string name in new[]{"MainMenuCamera","MainMenuLookAt","HumanMenuStage","MosquitoMenuStage"})
                 Need(data.PresentationAnchors.Find(name)!=null,"Missing menu presentation anchor: "+name);
             var camera=data.PresentationAnchors.Find("MainMenuCamera");var target=data.PresentationAnchors.Find("MainMenuLookAt");
@@ -179,6 +277,24 @@ namespace LetMeSleep.Content.Editor
             CheckSpawns(lobby,new[]{human},.25f,1.72f);CheckSpawns(lobby,new[]{mosquito},.055f,.11f,true);
             foreach(var spawn in data.LobbySpawnPoints)
                 Need(Vector2.Distance(new Vector2(spawn.localPosition.x,spawn.localPosition.z),new Vector2(human.localPosition.x,human.localPosition.z))>.8f,"Menu stage overlaps a lobby spawn");
+        }
+
+        static void CheckLobbyMenuCornerVisuals(GameObject lobby)
+        {
+            var sofa=F(lobby,"Lobby_BackSofa_3p3");
+            var seat=sofa.GetComponentsInChildren<MeshFilter>().Single(f=>f.name.Contains("Sofa_Seat"));
+            var sourceSeat=Kit["Kit_Sofa"].GetComponentsInChildren<MeshFilter>().Single(f=>f.name.Contains("Sofa_Seat"));
+            Need(seat.sharedMesh==sourceSeat.sharedMesh,"Menu corner replaced the original support mesh after serialization");
+            var frame=F(sofa.gameObject,"Menu_CraftedFrame");
+            foreach(var foot in frame.GetComponentsInChildren<Renderer>().Where(r=>r.name.StartsWith("Foot_",StringComparison.Ordinal)))
+                Need(Mathf.Abs(foot.bounds.min.y-lobby.transform.position.y)<.001f,"Menu sofa foot is not on floor");
+            foreach(var pad in frame.GetComponentsInChildren<Renderer>().Where(r=>r.name.StartsWith("Back_Pad_",StringComparison.Ordinal)))
+                Need(Mathf.Abs(pad.bounds.min.y-seat.GetComponent<Renderer>().bounds.max.y)<.001f,"Menu back pad is not resting at seat height");
+            var picture=F(lobby,"Menu_FramedNightLake");
+            foreach(var rail in picture.GetComponentsInChildren<Renderer>().Where(r=>r.name.StartsWith("Frame_",StringComparison.Ordinal)))
+                Need(Mathf.Abs(rail.bounds.max.z-lobby.transform.TransformPoint(new Vector3(0,0,6)).z)<.001f,"Menu picture frame is not against the rear wall");
+            var shade=F(lobby,"Fabric_Shade").GetComponent<Renderer>();
+            Need(shade.sharedMaterial.IsKeywordEnabled("_EMISSION")&&(shade.sharedMaterial.globalIlluminationFlags&MaterialGlobalIlluminationFlags.AnyEmissive)!=0,"Menu sconce lost authored emission");
         }
 
         static void CheckLobbyLivingMenuAnchors(GameObject lobby,EnvironmentMapDefinition data)
