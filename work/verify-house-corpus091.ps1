@@ -1,6 +1,7 @@
 param(
     [string]$EvidencePrefix = ('house-corpus-'+(Get-Date -Format 'yyyyMMdd-HHmmss')),
-    [switch]$RepeatCorpus
+    [switch]$RepeatCorpus,
+    [ValidateSet(1,2,4,5,10,20,25,50,100)][int]$BatchSize = 100
 )
 $ErrorActionPreference = 'Stop'
 if ($EvidencePrefix -notmatch '^[A-Za-z0-9_-]+$') { throw 'Use a plain evidence prefix.' }
@@ -23,10 +24,11 @@ $sourceHashes = [ordered]@{}
 foreach ($file in $files) { $sourceHashes[$file] = (Get-FileHash -LiteralPath (Join-Path $root $file)).Hash }
 $runs = @()
 $passes = if ($RepeatCorpus) { 2 } else { 1 }
+$batchCount = 1000 / $BatchSize
 for ($pass = 0; $pass -lt $passes; $pass++) {
-    foreach ($batch in 0..9) {
+    foreach ($batch in 0..($batchCount-1)) {
         $name = 'batch-{0:D2}{1}' -f $batch, $(if ($pass) { '-repeat' } else { '' })
-        $arguments = @('--headless','--path',$game,'--script','res://tests/procedural09_corpus_checks.gd','--',('--batch='+$batch),('--output='+$output))
+        $arguments = @('--headless','--path',$game,'--script','res://tests/procedural09_corpus_checks.gd','--',('--batch='+$batch),('--batch-size='+$BatchSize),('--output='+$output))
         if ($pass) { $arguments += '--repeat' }
         $start = [Diagnostics.ProcessStartInfo]::new()
         $start.FileName = $engine
@@ -69,10 +71,10 @@ for ($pass = 0; $pass -lt $passes; $pass++) {
 $layouts = [Collections.Generic.HashSet[string]]::new()
 $seeds = [Collections.Generic.HashSet[int]]::new()
 $allCases = @()
-foreach ($batch in 0..9) {
+foreach ($batch in 0..($batchCount-1)) {
     $name = 'batch-{0:D2}' -f $batch
     $data = Get-Content -LiteralPath (Join-Path $output ($name+'.json')) -Raw | ConvertFrom-Json
-    if ($data.count -ne 100 -or $data.cases.Count -ne 100 -or $data.failures.Count -ne 0) { throw ('Incomplete corpus batch '+$name) }
+    if ($data.batch_size -ne $BatchSize -or $data.count -ne $BatchSize -or $data.cases.Count -ne $BatchSize -or $data.failures.Count -ne 0) { throw ('Incomplete corpus batch '+$name) }
     foreach ($property in $data.source_hashes.PSObject.Properties) {
         if ($sourceHashes['game/scripts/'+$property.Name+'.gd'] -ne $property.Value) { throw 'Corpus source hash differs from the measured source.' }
     }
@@ -82,8 +84,8 @@ foreach ($batch in 0..9) {
     }
     if ($RepeatCorpus) {
         $repeat = Get-Content -LiteralPath (Join-Path $output ($name+'-repeat.json')) -Raw | ConvertFrom-Json
-        if ($repeat.count -ne 100 -or $repeat.cases.Count -ne 100 -or $repeat.failures.Count -ne 0) { throw 'Incomplete repeat batch.' }
-        foreach ($index in 0..99) {
+        if ($repeat.batch_size -ne $BatchSize -or $repeat.count -ne $BatchSize -or $repeat.cases.Count -ne $BatchSize -or $repeat.failures.Count -ne 0) { throw 'Incomplete repeat batch.' }
+        foreach ($index in 0..($BatchSize-1)) {
             if ($repeat.cases[$index].seed -ne $data.cases[$index].seed -or $repeat.cases[$index].fingerprint -ne $data.cases[$index].fingerprint -or $repeat.cases[$index].layout_signature -ne $data.cases[$index].layout_signature) { throw 'Independent processes generated different geometry for the same seed.' }
         }
     }
