@@ -1,0 +1,75 @@
+{
+  "gate": "U09414",
+  "status": "PASS",
+  "sourceCommit": "35c2af4b168f5b95943f09fbb2c556924dd7b2cf",
+  "rootAtStart": "79f9031b9db177283a8ed58e72f4d5d4d109ca70",
+  "unity": "6000.3.24f1",
+  "editorPid": 16368,
+  "editorClosed": true,
+  "scope": "Native Editor PlayMode, natural 30 Hz host clock, UI Button.onClick, local human/mosquito input disabled, real bots; no WAN/render/FPS/manual-play claim",
+  "wallSeconds": 224.384494,
+  "failures": [],
+  "cases": [
+    {
+      "localRole": "Human",
+      "result": "BloodGoal",
+      "winner": "Mosquito",
+      "tick": 1216,
+      "hostSeconds": 40.53333333333333,
+      "blood": 20.0,
+      "goal": 20.0,
+      "roundFinishedNotifications": 1,
+      "resultsUi": "Results",
+      "resultInputBlocked": true,
+      "resultEpoch": 4811002753336254856,
+      "retryEpoch": 5015556896821606233,
+      "retryTick": 0,
+      "retryBlood": 0.0,
+      "retryInputBlocked": false,
+      "retryPrivatePresent": false,
+      "retryClockAfterOneSecond": 30,
+      "cleanupPassed": true
+    },
+    {
+      "localRole": "Mosquito",
+      "result": "TimeExpired",
+      "winner": "Human",
+      "tick": 5400,
+      "hostSeconds": 180.0,
+      "blood": 7.999994,
+      "goal": 20.0,
+      "roundFinishedNotifications": 1,
+      "resultsUi": "Results",
+      "resultInputBlocked": true,
+      "resultEpoch": 4734601653859444501,
+      "retryEpoch": 5595871370126996612,
+      "retryTick": 0,
+      "retryBlood": 0.0,
+      "retryInputBlocked": false,
+      "retryPrivatePresent": false,
+      "retryClockAfterOneSecond": 30,
+      "cleanupPassed": true
+    }
+  ],
+  "evidenceDirectory": "N:/LetMeSleep/Validation/U09414-20260912",
+  "evidenceSha256": {
+    "FullRounds.cs": "7d6b7559f971c6746788ecc319f9ccb3f2faf47848084bdd66926449c302807d",
+    "full-rounds.json": "0c460494ddb36e4d43a9afccb2ef8beb05e949f8ba56c58b95c2c87072a93a40",
+    "launch.json": "6ba27c585128eaa08a06c64a395821dc6f53339f168e236ff17f2cec0348e312",
+    "final-cleanup.json": "a912986233c0dc4fe26ec35ddfc5c5046e63ae748b1dd08aecbb5e99319e797d",
+    "editor-batch.log": "9db165a5c94b0568c8451d44816e90effbc6afdb89f429524d6a2fece0cb31c1"
+  },
+  "notes": [
+    "Initial interactive launch stopped at terms modal; no terms accepted. Scored run used established batchmode D3D11 launch.",
+    "No actor input, timer alteration, forced EndRound, added bots or scripted damage.",
+    "Both local roles exercised start and retry through actual UI Button.onClick listeners.",
+    "Native Editor source validation; not an independent packaged-player, WAN, FPS or manual-play test.",
+    "Unity persisted dynamic TMP font data on editor exit; reported to Director, not reverted or committed by W1."
+  ],
+  "committedUnityDiffAgainstCandidateAtStart": [],
+  "checkoutCleanAtStart": true,
+  "generatedFontChangesOnEditorExit": [
+    "unity/Assets/LetMeSleep/UI/Fonts/AtkinsonHyperlegible-Regular SDF.asset",
+    "unity/Assets/LetMeSleep/UI/Fonts/Bangers-Regular SDF.asset"
+  ]
+}

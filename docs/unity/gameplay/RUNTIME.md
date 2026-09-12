@@ -32,6 +32,8 @@ WASD/mouse; humano Shift correr, Ctrl agacharse, Space saltar, clic golpear y F 
 
 ## Evidencia y límites
 
+U09414 pasó el recorrido nativo automatizado de ronda completa, resultado y reinicio en ambos roles sobre la fuente candidata35c2af4: BloodGoal a40.533 s y TimeExpired a180 s, respectivamente. Ver [recibo y límites del entrenamiento](U09414-NATIVE-TRAINING.md); la prueba usa bots reales y deja al participante local sin controles, por lo que no acredita aceptación manual.
+
 Regresión nativa local del motor humano: se confirmó y corrigió el desplazamiento causado por esferas de mosquitos dentro de la cápsula de locomoción. Director observó 33.4 s sin controles con x/z del humano intactos durante picadura; ver [contraste y alcance](HUMAN-MOTOR-REGRESSION.md). No acredita WAN ni sustituye otros gates pendientes.
 
 Compilación externa C#9/netstandard2.1 contra bibliotecas instaladas Unity **6000.3.24f1** e Input System: **0 errores / 0 advertencias**. No se abrió editor, no se alteraron paquetes/settings/escenas. Validación CPU: **63 casos / 0 fallos**, suma 29 casos QA/Core+Gameplay, 20 verificaciones propias de dominio/réplica/herramientas, 5 de navegación y 9 del [codec binario](WIRE-CODEC.md). Repetir mediante `validation/Run-Validation.ps1`; NUnit procede del PackageCache ya instalado. No usa Unity Test Runner.
