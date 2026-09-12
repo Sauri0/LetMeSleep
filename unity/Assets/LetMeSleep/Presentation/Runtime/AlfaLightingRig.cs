@@ -16,6 +16,7 @@ namespace LetMeSleep.Presentation
         [SerializeField] private AlfaPresentationPreset preset = null;
         [SerializeField] private Light moon = null;
         [SerializeField] private Volume globalVolume = null;
+        [SerializeField] private Material nightSkybox = null;
 
         private readonly List<Light> mapLights = new List<Light>();
         private Transform boundAnchors;
@@ -44,6 +45,8 @@ namespace LetMeSleep.Presentation
             moon.cullingMask &= ~(1 << PreviewLayer);
             moon.lightmapBakeType = LightmapBakeType.Realtime;
             RenderSettings.sun = moon;
+            if (nightSkybox != null)
+                RenderSettings.skybox = nightSkybox;
         }
 
         public void BindMap(Transform presentationAnchors, bool house)
@@ -55,6 +58,7 @@ namespace LetMeSleep.Presentation
             boundAnchors = presentationAnchors;
             ApplyPreset();
             ApplyAmbientProfile(house);
+            moon.shadowStrength = house ? 0.72f : 0.48f;
 
             Transform[] anchors = presentationAnchors.GetComponentsInChildren<Transform>(true);
             var shadowCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -143,14 +147,14 @@ namespace LetMeSleep.Presentation
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = house
                 ? new Color(0.055f, 0.075f, 0.12f)
-                : new Color(0.075f, 0.11f, 0.18f);
+                : new Color(0.16f, 0.19f, 0.27f);
             RenderSettings.ambientEquatorColor = house
                 ? new Color(0.032f, 0.043f, 0.068f)
-                : new Color(0.045f, 0.066f, 0.105f);
+                : new Color(0.105f, 0.105f, 0.125f);
             RenderSettings.ambientGroundColor = house
                 ? new Color(0.014f, 0.017f, 0.027f)
-                : new Color(0.018f, 0.024f, 0.038f);
-            RenderSettings.ambientIntensity = house ? 0.82f : 0.92f;
+                : new Color(0.05f, 0.045f, 0.055f);
+            RenderSettings.ambientIntensity = house ? 0.82f : 1.08f;
             RenderSettings.reflectionIntensity = house ? 0.42f : 0.52f;
             RenderSettings.subtractiveShadowColor = new Color(0.018f, 0.025f, 0.045f);
         }
@@ -160,7 +164,7 @@ namespace LetMeSleep.Presentation
             if (Contains(anchorName, "Patio"))
                 return new LocalLightProfile(new Color(0.42f, 0.58f, 0.92f), 0.55f, 6.5f, false);
             if (Contains(anchorName, "Lobby"))
-                return new LocalLightProfile(new Color(1f, 0.62f, 0.30f), 1.75f, 5.2f, true);
+                return new LocalLightProfile(new Color(1f, 0.62f, 0.30f), 2.25f, 6.4f, true);
             if (Contains(anchorName, "Bedroom"))
                 return new LocalLightProfile(new Color(1f, 0.58f, 0.32f), 1.30f, 4.0f, true);
             if (Contains(anchorName, "Living"))

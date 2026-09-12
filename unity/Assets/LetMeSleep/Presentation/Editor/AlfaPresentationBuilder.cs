@@ -37,8 +37,9 @@ namespace LetMeSleep.Presentation.Editor
             EditorUtility.SetDirty(preset);
 
             VolumeProfile volume = BuildVolumeProfile();
+            Material nightSkybox = BuildNightSkybox();
             BuildMaterials();
-            BuildLightingPrefab(preset, volume);
+            BuildLightingPrefab(preset, volume, nightSkybox);
             ParticleSystem impactVfx = BuildImpactVfx();
             AudioMixer mixer = AssetDatabase.LoadAssetAtPath<AudioMixer>(MixerPath);
             if (mixer == null)
@@ -119,6 +120,34 @@ namespace LetMeSleep.Presentation.Editor
                 new Color(0.90f, 0.76f, 0.26f, 0.86f), 0f, 0f, true);
         }
 
+        private static Material BuildNightSkybox()
+        {
+            const string path = PresentationRoot + "/Materials/NightSkybox.mat";
+            Shader shader = Shader.Find("Skybox/Procedural");
+            if (shader == null)
+                throw new InvalidOperationException("Required shader unavailable: Skybox/Procedural");
+
+            Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                material = new Material(shader) { name = "NightSkybox" };
+                AssetDatabase.CreateAsset(material, path);
+            }
+            else
+            {
+                material.shader = shader;
+            }
+
+            SetFloat(material, "_SunDisk", 0f);
+            SetFloat(material, "_SunSize", 0.01f);
+            SetFloat(material, "_AtmosphereThickness", 0.28f);
+            SetColor(material, "_SkyTint", new Color(0.065f, 0.095f, 0.17f));
+            SetColor(material, "_GroundColor", new Color(0.018f, 0.026f, 0.052f));
+            SetFloat(material, "_Exposure", 0.26f);
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
         private static Material CreateMaterial(
             string name, string shaderName, Color color, float metallic,
             float smoothness, bool transparent)
@@ -152,7 +181,8 @@ namespace LetMeSleep.Presentation.Editor
             return material;
         }
 
-        private static void BuildLightingPrefab(AlfaPresentationPreset preset, VolumeProfile profile)
+        private static void BuildLightingPrefab(
+            AlfaPresentationPreset preset, VolumeProfile profile, Material nightSkybox)
         {
             var root = new GameObject("LMS_AlfaLightingRoot");
             try
@@ -175,6 +205,7 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(rig, "preset", preset);
                 Assign(rig, "moon", moon);
                 Assign(rig, "globalVolume", volume);
+                Assign(rig, "nightSkybox", nightSkybox);
                 rig.ApplyPreset();
                 moon.lightmapBakeType = LightmapBakeType.Mixed;
 
