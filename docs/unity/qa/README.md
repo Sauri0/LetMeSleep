@@ -7,5 +7,6 @@ Estado: **preparación de gates**. Ningún documento de esta carpeta acredita qu
 - [Protocolo EOS/WAN](EOS-WAN-PROTOCOL-0.9.4-ALFA.md): ejecución entre dos equipos y dos redes físicas.
 - [Auditoría de riesgos](MIGRATION-RISKS-0.9.4-ALFA.md): guardados, versión/launcher, EOS y diferencias de motor.
 - [Supuestos registrados](ASSUMPTIONS-0.9.4-ALFA.md): decisiones aplicadas mientras Branko no está disponible.
+- [Suite Core RoomSession](CORE-ROOMSESSION-TESTS.md): cobertura EditMode y límite de la comprobación externa previa.
 
 La fuente normativa es `docs/unity/PLAN-UNITY-0.9.4.md`, autorizada para alfa por `AGENTS.md`. Los tests Godot citados son antecedentes para portar intención y diseñar negativos. Sus resultados no cuentan como evidencia Unity.

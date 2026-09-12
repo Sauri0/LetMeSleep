@@ -1,0 +1,21 @@
+{
+  "name": "LetMeSleep.Tests.EditMode",
+  "rootNamespace": "LetMeSleep.Tests.EditMode",
+  "references": [
+    "LetMeSleep.Core"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": true,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}
