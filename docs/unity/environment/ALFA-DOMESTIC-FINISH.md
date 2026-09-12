@@ -29,9 +29,9 @@ Se conservan nombres `PresentationAnchors/LightAnchor_<ZoneId>`. Posición XZ: c
 | Bathroom | 8.32 | 8.98 |
 | Utility | 11.15 | 8.98 |
 
-Patio y lobby mantienen sus anclas. M2 no cambia `AlfaLightingRig.cs`: W2 controla distribución, intensidad, sombras/exposición y lectura de personajes. Añadir un cuerpo visible por sí solo no elimina el hotspot de una luz puntual. `House_Diffuser` se crea una sola vez con emisión moderada y el builder conserva ajustes posteriores de W2.
+Patio y lobby mantienen sus anclas. M2 no cambia `AlfaLightingRig.cs`: W2 controla distribución, intensidad, sombras/exposición y lectura de personajes. Añadir un cuerpo visible por sí solo no elimina el hotspot de una luz puntual. `House_Diffuser` reaplica en cada build BaseColor(0.90,0.78,0.57), EmissionColor(0.50,0.32,0.14), keyword _EMISSION y Smoothness0.10. W2 debe trasladar sus ajustes a esta fuente para que sean reproducibles.
 
-Parámetros materiales confirmados por Director: Floor_Oak tablones de **0.32×1.28m**, juntas3mm, variación tonal máxima7% (dentro del8% autorizado), alternancia de media tabla y solo dos fibras longitudinales de contraste bajo. Patrón512×1024, repetición física1.28×2.56m, mipmaps y filtrado trilineal; generado por CPU usando Texture2D al ejecutar builder. Se activa automáticamente en el Floor_Oak compartido de casa/lobby. UV0 proyectadas por metros después de corregir ejes, compensando el escalado final del lobby; UV2 se preservan.
+Parámetros materiales confirmados por Director (junta corregida posteriormente a5mm para corresponder al raster de2.5mm por texel): Floor_Oak tablones de **0.32×1.28m**, juntas5mm, variación tonal máxima7% (dentro del8% autorizado), alternancia de media tabla y solo dos fibras longitudinales de contraste bajo. Patrón512×1024, repetición física1.28×2.56m, mipmaps y filtrado trilineal; generado por CPU usando Texture2D al ejecutar builder. Se activa automáticamente en el Floor_Oak compartido de casa/lobby. UV0 proyectadas por metros después de corregir ejes, compensando el escalado final del lobby; UV2 se preservan.
 
 Bases acordadas: Smoothness madera0.16, revoque0.08, textiles/lino0.10. El builder aplica esas bases; cualquier afinación de W2 debe trasladarse a este contrato fuente para persistir al regenerar. Textura ligada a BaseMap con color blanco multiplicador. No se añaden mapas de ruido a las paredes ni se simula desgaste fotorrealista.
 
@@ -40,3 +40,12 @@ Bases acordadas: Smoothness madera0.16, revoque0.08, textiles/lino0.10. El build
 Primero capturar estar desde **Position(4.05,1.53,3.85), LookAt(1.65,1.1,1.70), FOV vertical70°**, y segunda toma desde **Position(3.9,2.2,3.6), LookAt(1.7,1.3,1.4), FOV70°**. Metros locales de HousePatio; comprobar plano contra geometría nativa antes de aceptar encuadre. Mantener además las cámaras originales human.png/mosquito.png para comparar luz/materiales, la cámara dormitorioA de ALFA-REVIEW-CAMERAS y una vista del lobby para el suelo compartido.
 
 Criterios de revisión: sofá/mesa agrupados y estante ocupado sin abarrotar; objetos apoyados, pickup claramente diferenciable, marcos/cortinas sin penetrar muebles, suelo con escala de tabla legible, plafón presente y sin mancha quemada dominante. Evaluar después con W2 luces y animación/UI integradas. No se declara semejanza lograda con los bocetos, calidad gráfica aprobada ni FPS a partir de esta entrega de fuente.
+
+## Correcciones de QA posteriores a la primera generación
+
+- **Platos:** inversión del winding de ambos triángulos de cada sector. Se comprueban triángulos no degenerados, 16 triángulos de base hacia−Y, 16 de cuenco hacia+Y y volumen firmado positivo. Verificación numérica CPU:128 triángulos, volumen0.0009077762m³. El mismo gate se ejecuta al crear mesh y después de guardar/reabrir prefab.
+- **Alféizar/estantería:** alféizar reduce fondo de0.18 a0.10m, centroz0.205; límitesz0.155..0.255. Panel de estantería empiezaz0.275:20mm libres, sin mover el mueble ni sus libros. Se añade comprobación de intersección positiva entre todos los colliders de RoomCarpentry y los colliders de Furnishings, antes/después de serializar.
+- **Juntas de suelo:** contrato explícito5mm, dos texeles de2.5mm a512×1024, sin aumentar resolución. Sustituye el objetivo inicial3mm que el raster binario representaba como5mm. Mipmaps/filtrado pueden suavizar el límite en pantalla;5mm es el ancho autorado al nivel base.
+- **Difusor:** los cuatro valores autorados se reaplican también a materiales existentes. Se marca el asset como modificado; cualquier ajuste futuro de W2 requiere cambio de fuente.
+
+Compilación offline contra Unity6000.3.24f1 correcta. No se abrió editor ni se generaron assets en esta corrección. QA debe revisar el delta; la regeneración y comprobación visual corresponden al Director.

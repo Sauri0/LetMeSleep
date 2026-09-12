@@ -71,7 +71,7 @@ namespace LetMeSleep.Content.Editor
             // Only the witness living room and BedroomA windows; no change to sealed panes.
             foreach(float floor in new[]{0f,3f}){
                 string label=floor==0?"Living":"BedroomA";
-                LobbyPiece(trim,label+"_WindowSill",new Vector3(1.38f,floor+1.16f,.245f),new Vector3(1.35f,.07f,.18f),"Wood_Honey",true);
+                LobbyPiece(trim,label+"_WindowSill",new Vector3(1.38f,floor+1.16f,.205f),new Vector3(1.35f,.07f,.10f),"Wood_Honey",true);
                 LobbyPiece(trim,label+"_CurtainRail",new Vector3(1.38f,floor+2.33f,.24f),new Vector3(1.65f,.045f,.045f),"Iron",true);
                 foreach(float x in new[]{.65f,2.11f}){
                     for(int fold=0;fold<3;fold++)LobbyPiece(trim,label+"_Curtain_"+Token(x)+"_"+fold,
@@ -108,16 +108,31 @@ namespace LetMeSleep.Content.Editor
                 var p=profile[ring];var q=profile[ring+1];
                 vertices.Add(new Vector3(Mathf.Cos(a)*p.x,p.y,Mathf.Sin(a)*p.x));vertices.Add(new Vector3(Mathf.Cos(b)*p.x,p.y,Mathf.Sin(b)*p.x));
                 vertices.Add(new Vector3(Mathf.Cos(b)*q.x,q.y,Mathf.Sin(b)*q.x));vertices.Add(new Vector3(Mathf.Cos(a)*q.x,q.y,Mathf.Sin(a)*q.x));
-                if(p.x>0){triangles.Add(start);triangles.Add(start+1);triangles.Add(start+2);}
-                if(q.x>0){triangles.Add(start);triangles.Add(start+2);triangles.Add(start+3);}
+                if(p.x>0){triangles.Add(start);triangles.Add(start+2);triangles.Add(start+1);}
+                if(q.x>0){triangles.Add(start);triangles.Add(start+3);triangles.Add(start+2);}
             }
-            var mesh=new Mesh{name="House_Plate"};mesh.SetVertices(vertices);mesh.SetTriangles(triangles,0);mesh.RecalculateNormals();mesh.RecalculateBounds();Unwrapping.GenerateSecondaryUVSet(mesh);
+            var mesh=new Mesh{name="House_Plate"};mesh.SetVertices(vertices);mesh.SetTriangles(triangles,0);mesh.RecalculateNormals();mesh.RecalculateBounds();CheckPlateFacing(mesh);Unwrapping.GenerateSecondaryUVSet(mesh);
             string path=Output+"/Meshes/House_Plate.asset";var saved=AssetDatabase.LoadAssetAtPath<Mesh>(path);
             if(saved==null){AssetDatabase.CreateAsset(mesh,path);saved=mesh;}else{EditorUtility.CopySerialized(mesh,saved);UnityEngine.Object.DestroyImmediate(mesh);EditorUtility.SetDirty(saved);}
             var t=Child(parent,name);t.localPosition=position;t.gameObject.AddComponent<MeshFilter>().sharedMesh=saved;
             var renderer=t.gameObject.AddComponent<MeshRenderer>();renderer.sharedMaterial=materials["Porcelain"];
             renderer.receiveGI=ReceiveGI.Lightmaps;
             GameObjectUtility.SetStaticEditorFlags(t.gameObject,StaticEditorFlags.ContributeGI|StaticEditorFlags.OccludeeStatic);
+        }
+
+        static void CheckPlateFacing(Mesh mesh)
+        {
+            var vertices=mesh.vertices;var triangles=mesh.triangles;int underside=0,well=0;double volume=0;
+            for(int i=0;i<triangles.Length;i+=3){
+                var a=vertices[triangles[i]];var b=vertices[triangles[i+1]];var c=vertices[triangles[i+2]];
+                var cross=Vector3.Cross(b-a,c-a);Need(cross.sqrMagnitude>1e-12f,"Plate has a degenerate triangle");
+                volume+=Vector3.Dot(a,Vector3.Cross(b,c))/6.0;
+                if(Mathf.Abs(a.y)<1e-6f&&Mathf.Abs(b.y)<1e-6f&&Mathf.Abs(c.y)<1e-6f){
+                    underside++;Need(Vector3.Dot(cross.normalized,Vector3.down)>.999f,"Plate underside must face down");}
+                if(Mathf.Abs(a.y-.016f)<1e-6f&&Mathf.Abs(b.y-.016f)<1e-6f&&Mathf.Abs(c.y-.016f)<1e-6f){
+                    well++;Need(Vector3.Dot(cross.normalized,Vector3.up)>.999f,"Plate well must face up");}
+            }
+            Need(underside==16&&well==16&&volume>0,"Plate must preserve both disks and positive enclosed volume");
         }
 
         static void AddBook(Transform parent,string name,Vector3 bottom,float width,float height,float depth,string cover)
@@ -136,10 +151,10 @@ namespace LetMeSleep.Content.Editor
         {
             const string name="House_Diffuser";string path=Output+"/Materials/"+name+".mat";
             var material=AssetDatabase.LoadAssetAtPath<Material>(path);
-            if(material==null){material=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=name,enableInstancing=true};
-                material.SetColor("_BaseColor",new Color(.90f,.78f,.57f));material.SetColor("_EmissionColor",new Color(.50f,.32f,.14f));
-                material.EnableKeyword("_EMISSION");material.SetFloat("_Smoothness",.1f);AssetDatabase.CreateAsset(material,path);}
-            // Preserve existing material so W2 can tune it without builder resetting exposure.
+            if(material==null){material=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=name,enableInstancing=true};AssetDatabase.CreateAsset(material,path);}
+            // Reapply authored values on every build. W2 adjustments belong in these inputs.
+            material.SetColor("_BaseColor",new Color(.90f,.78f,.57f));material.SetColor("_EmissionColor",new Color(.50f,.32f,.14f));
+            material.EnableKeyword("_EMISSION");material.SetFloat("_Smoothness",.1f);EditorUtility.SetDirty(material);
             materials[name]=material;
         }
 
@@ -149,6 +164,13 @@ namespace LetMeSleep.Content.Editor
             var halls=new[]{new Bounds(new Vector3(6.06f,1.1f,5.7f),new Vector3(1.8f,2.2f,11.04f)),new Bounds(new Vector3(6.06f,4.1f,5.7f),new Vector3(1.8f,2.2f,11.04f))};
             foreach(var collider in root.GetComponentsInChildren<Collider>())foreach(var hall in halls)
                 Need(!ColliderBounds(collider).Intersects(hall),"House dressing blocks a protected hall: "+Hierarchy(collider.transform));
+            foreach(var trim in root.Find("RoomCarpentry").GetComponentsInChildren<Collider>())
+                foreach(var furniture in house.transform.Find("Furnishings").GetComponentsInChildren<Collider>()){
+                    Bounds a=ColliderBounds(trim),b=ColliderBounds(furniture);
+                    Vector3 overlap=Vector3.Min(a.max,b.max)-Vector3.Max(a.min,b.min);
+                    Need(overlap.x<=.0001f||overlap.y<=.0001f||overlap.z<=.0001f,"Carpentry intersects furniture: "+trim.name+" / "+Hierarchy(furniture.transform));
+                }
+            foreach(var plate in root.Find("Kitchen_Domestic").GetComponentsInChildren<MeshFilter>().Where(f=>f.name.StartsWith("Plate_",StringComparison.Ordinal)))CheckPlateFacing(plate.sharedMesh);
             var pickup=data.ToolPickupPoints.Single(p=>p.name=="Pickup_LivingTable");
             Need(Vector3.Distance(pickup.localPosition,new Vector3(2.4f,.815f,2.35f))<.0001f,"Living pickup anchor changed");
             foreach(var tool in data.ToolPickupPoints){var toolReserve=new Bounds(tool.position+new Vector3(0,.025f,.18f),new Vector3(.23f,.10f,.48f));

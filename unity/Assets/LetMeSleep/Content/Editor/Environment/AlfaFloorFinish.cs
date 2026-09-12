@@ -8,6 +8,7 @@ namespace LetMeSleep.Content.Editor
     public static partial class AlfaMapBuilder
     {
         const float FloorRepeatWidth=1.28f,FloorRepeatLength=2.56f;
+        const float FloorJointWidth=.005f; // two 2.5mm texels across each periodic seam
 
         static void BuildFloorFinish()
         {
@@ -19,7 +20,8 @@ namespace LetMeSleep.Content.Editor
                 int board=(int)((pz+(row%2)*.64f)/1.28f)%2;
                 float variation=1f+(((row*7+board*3)%5)-2)*.035f;
                 Color color=oak*variation;color.a=1;
-                if(across<.0015f||across>.3185f||along<.0015f||along>1.2785f)color=new Color(.20f,.12f,.065f,1);
+                float halfJoint=FloorJointWidth*.5f;
+                if(across<halfJoint||across>.32f-halfJoint||along<halfJoint||along>1.28f-halfJoint)color=new Color(.20f,.12f,.065f,1);
                 else if(across<.006f||along<.006f){color*=1.04f;color.a=1;}
                 // Two broad, low-contrast longitudinal fibers per board; no stochastic speckle.
                 else if(Mathf.Abs(across-.105f)<.0018f||Mathf.Abs(across-.235f)<.0012f){color*=.975f;color.a=1;}
