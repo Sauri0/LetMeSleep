@@ -52,6 +52,8 @@ Crear/Unirse no completan localmente: el adaptador presenta `OnlineUiState` para
 
 La UI bloquea nombre, código, pegar, volver y envío desde el mismo frame de `CreateRoom`/`JoinRoom`; el adaptador debe responder con un `OnlineUiState` busy y después con cancelación, error o `PresentLobby`. En lobby, `ReadyPending` y `StartPending` mantienen los latches visibles hasta la respuesta autoritativa. Escape abre una pausa de lobby con `VOLVER A SALA` y `SALIR`, sin invocar `ResumeGame`.
 
+`StartTraining`, `SaveCustomization`, `ApplySettings` y Repetir entrenamiento también activan un latch antes del callback. El próximo `PresentTraining`, `PresentCustomization`, `PresentSettings` o `PresentResults` libera o conserva el bloqueo según `IsLoading`, `IsSaving` o `IsApplying`; así dos clics dentro del mismo frame no duplican solicitudes.
+
 ## Estados presentados
 
 ```csharp

@@ -37,6 +37,11 @@ namespace LetMeSleep.UI
         private bool onlineCancelLatched;
         private bool lobbyReadyLatched;
         private bool lobbyStartLatched;
+        private bool trainingStartLatched;
+        private bool trainingCancelLatched;
+        private bool customizationSaveLatched;
+        private bool settingsApplyLatched;
+        private bool resultsActionLatched;
 
         private TMP_InputField playerNameInput;
         private TMP_InputField roomCodeInput;
@@ -63,6 +68,9 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.Button trainingHumanButton;
         private UnityEngine.UI.Button trainingMosquitoButton;
         private UnityEngine.UI.Button trainingStartButton;
+        private TextMeshProUGUI trainingStartLabel;
+        private UnityEngine.UI.Button trainingBackButton;
+        private TextMeshProUGUI trainingBackLabel;
         private TextMeshProUGUI trainingStatus;
 
         private CharacterPreviewOrbit previewOrbit;
@@ -73,6 +81,7 @@ namespace LetMeSleep.UI
         private GameObject humanCustomizationFields;
         private GameObject mosquitoCustomizationFields;
         private UnityEngine.UI.Button customizationSaveButton;
+        private TextMeshProUGUI customizationSaveLabel;
 
         private UnityEngine.UI.Slider masterVolume;
         private UnityEngine.UI.Slider musicVolume;
@@ -89,6 +98,7 @@ namespace LetMeSleep.UI
         private GameObject videoSettings;
         private GameObject rebindNote;
         private UnityEngine.UI.Button settingsApplyButton;
+        private TextMeshProUGUI settingsApplyLabel;
 
         private TextMeshProUGUI hudClock;
         private TextMeshProUGUI hudBlood;
@@ -222,12 +232,27 @@ namespace LetMeSleep.UI
         public void PresentTraining(TrainingUiState state)
         {
             trainingState = state ?? new TrainingUiState();
-            trainingHumanButton.interactable = !state.IsLoading;
-            trainingMosquitoButton.interactable = !state.IsLoading;
-            trainingStartButton.interactable = !state.IsLoading;
-            SetButtonSelection(trainingHumanButton, state.SelectedRole == AlfaRole.Human);
-            SetButtonSelection(trainingMosquitoButton, state.SelectedRole == AlfaRole.Mosquito);
-            trainingStatus.text = state.IsLoading ? "Preparando entrenamiento…" : state.Message;
+            trainingStartLatched = trainingState.IsLoading;
+            if (!trainingState.IsLoading) trainingCancelLatched = false;
+            var busy = TrainingBusy;
+            trainingHumanButton.interactable = !busy;
+            trainingMosquitoButton.interactable = !busy;
+            trainingStartButton.interactable = !busy;
+            trainingBackButton.interactable = !trainingCancelLatched;
+            trainingStartLabel.text = busy ? "PREPARANDO…" : "EMPEZAR ENTRENAMIENTO";
+            trainingBackLabel.text = busy ? trainingCancelLatched ? "CANCELANDO…" : "CANCELAR" : "← VOLVER";
+            SetButtonSelection(trainingHumanButton, trainingState.SelectedRole == AlfaRole.Human);
+            SetButtonSelection(trainingMosquitoButton, trainingState.SelectedRole == AlfaRole.Mosquito);
+            trainingStatus.text = trainingState.IsLoading ? "Preparando entrenamiento…" : trainingState.Message;
+            if (screen == AlfaUiScreen.Results && resultsState != null && resultsState.IsTraining)
+            {
+                resultsActionLatched = busy;
+                resultsPrimary.interactable = !busy;
+                resultsLeave.interactable = !trainingCancelLatched;
+                resultsPrimaryLabel.text = busy ? "PREPARANDO…" : "REPETIR ENTRENAMIENTO";
+                resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = busy ?
+                    trainingCancelLatched ? "CANCELANDO…" : "CANCELAR" : "VOLVER AL MENÚ";
+            }
         }
 
         public void ShowTraining()
@@ -239,6 +264,7 @@ namespace LetMeSleep.UI
         public void PresentCustomization(CustomizationUiState state)
         {
             customizationState = state ?? throw new ArgumentNullException(nameof(state));
+            customizationSaveLatched = state.IsSaving;
             customizationDraft = state.Draft.Copy();
             BuildPalette(humanPaletteRoot, state.SkinColors, customizationDraft.SkinColorId, option => SetCustomizationColor("skin", option));
             BuildPalette(pajamaPaletteRoot, state.PajamaColors, customizationDraft.PajamaColorId, option => SetCustomizationColor("pajama", option));
@@ -256,6 +282,7 @@ namespace LetMeSleep.UI
         public void PresentSettings(SettingsUiState state)
         {
             settingsState = state ?? throw new ArgumentNullException(nameof(state));
+            settingsApplyLatched = state.IsApplying;
             settingsDraft = state.Draft.Copy();
             masterVolume.SetValueWithoutNotify(settingsDraft.MasterVolume);
             musicVolume.SetValueWithoutNotify(settingsDraft.MusicVolume);
@@ -271,7 +298,8 @@ namespace LetMeSleep.UI
             videoSettings.SetActive(state.SupportsVideo);
             rebindNote.SetActive(state.SupportsRebinding);
             settingsStatus.text = state.IsApplying ? "Aplicando ajustes…" : state.Message;
-            settingsApplyButton.interactable = !state.IsApplying && !settingsDraft.SameValues(state.Saved);
+            settingsApplyButton.interactable = !settingsApplyLatched && !settingsDraft.SameValues(state.Saved);
+            settingsApplyLabel.text = settingsApplyLatched ? "APLICANDO…" : "APLICAR";
             UpdateSettingsCycles();
         }
 
@@ -303,6 +331,10 @@ namespace LetMeSleep.UI
 
         public void ShowGameplay()
         {
+            trainingStartLatched = false;
+            trainingCancelLatched = false;
+            if (trainingState.IsLoading)
+                trainingState = new TrainingUiState(trainingState.SelectedRole, false, trainingState.Message);
             actions.SetGameplayInputBlocked(false);
             SetScreen(AlfaUiScreen.Gameplay, null);
         }
@@ -310,12 +342,18 @@ namespace LetMeSleep.UI
         public void PresentResults(ResultsUiState state)
         {
             resultsState = state ?? throw new ArgumentNullException(nameof(state));
+            resultsActionLatched = false;
+            trainingStartLatched = false;
+            trainingCancelLatched = false;
+            trainingState = new TrainingUiState(state.TrainingRole, false);
             actions.SetGameplayInputBlocked(true);
             resultsTitle.text = state.Outcome == MatchOutcome.Humans ? "GANARON LOS HUMANOS" :
                 state.Outcome == MatchOutcome.Mosquitoes ? "GANARON LOS MOSQUITOS" : "RONDA INTERRUMPIDA";
             var reason = string.IsNullOrWhiteSpace(state.Reason) ? string.Empty : "\n" + state.Reason;
             resultsStats.text = $"Sangre compartida: {state.BloodCurrent:0.#} / {state.BloodTarget:0.#}\nTiempo: {FormatClock(state.ElapsedSeconds)}{reason}";
             resultsPrimary.gameObject.SetActive(state.IsTraining || state.IsOwner);
+            resultsPrimary.interactable = true;
+            resultsLeave.interactable = true;
             resultsPrimaryLabel.text = state.IsTraining ? "REPETIR ENTRENAMIENTO" : "VOLVER AL LOBBY";
             resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = state.IsTraining ? "VOLVER AL MENÚ" : "SALIR DE LA SALA";
             if (!state.IsTraining && !state.IsOwner) resultsStats.text += "\n\nESPERANDO AL ANFITRIÓN…";
@@ -511,9 +549,10 @@ namespace LetMeSleep.UI
             AddReadOnlyField(content, "MODO", "SANGRE");
             AddReadOnlyField(content, "MAPA", "CASA CON PATIO");
             trainingStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            trainingStartButton = factory.Button(content, "TrainingStartButton", "EMPEZAR ENTRENAMIENTO", () =>
-                actions.StartTraining(trainingState.SelectedRole, BloodModeId, HousePatioMapId), true, false, 72f);
-            factory.Button(content, "TrainingBackButton", "← VOLVER", ShowMainMenu);
+            trainingStartButton = factory.Button(content, "TrainingStartButton", "EMPEZAR ENTRENAMIENTO", BeginTraining, true, false, 72f);
+            trainingStartLabel = trainingStartButton.GetComponentInChildren<TextMeshProUGUI>();
+            trainingBackButton = factory.Button(content, "TrainingBackButton", "← VOLVER", BackFromTraining);
+            trainingBackLabel = trainingBackButton.GetComponentInChildren<TextMeshProUGUI>();
         }
 
         private void BuildCustomization(AlfaUiDependencies dependencies)
@@ -560,6 +599,7 @@ namespace LetMeSleep.UI
             mosquitoPaletteRoot = factory.Horizontal(mosquitoCustomizationFields.transform, "MosquitoPalette", 8f);
             customizationStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
             customizationSaveButton = factory.Button(content, "CustomizationSaveButton", "GUARDAR", SaveCustomization, true, false, 66f);
+            customizationSaveLabel = customizationSaveButton.GetComponentInChildren<TextMeshProUGUI>();
             factory.Button(content, "CustomizationResetButton", "DESHACER CAMBIOS", ResetCustomization);
             factory.Button(content, "CustomizationBackButton", "← VOLVER", CloseCustomization);
         }
@@ -597,6 +637,7 @@ namespace LetMeSleep.UI
             settingsStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
             var buttons = factory.Horizontal(content, "Actions", 12f, TextAnchor.MiddleCenter);
             settingsApplyButton = factory.Button(buttons, "SettingsApplyButton", "APLICAR", ApplySettings, true);
+            settingsApplyLabel = settingsApplyButton.GetComponentInChildren<TextMeshProUGUI>();
             factory.Button(buttons, "SettingsResetButton", "DESHACER CAMBIOS", ResetSettings);
             factory.Button(buttons, "SettingsBackButton", "← VOLVER", CloseSettings);
         }
@@ -795,14 +836,65 @@ namespace LetMeSleep.UI
 
         private void SelectTrainingRole(AlfaRole role)
         {
-            if (trainingState.IsLoading) return;
+            if (TrainingBusy) return;
             PresentTraining(new TrainingUiState(role, false, role == AlfaRole.Human ?
                 "Defendé tu descanso con mirada y alcance manual." : "Volá hacia la mira y picá por contacto válido."));
         }
 
+        private void BeginTraining()
+        {
+            StartTrainingIntent(trainingState.SelectedRole, false);
+        }
+
+        private void BackFromTraining()
+        {
+            if (TrainingBusy) RequestTrainingCancel();
+            else ShowMainMenu();
+        }
+
+        private void StartTrainingIntent(AlfaRole role, bool fromResults)
+        {
+            if (TrainingBusy || (fromResults && resultsActionLatched)) return;
+            trainingStartLatched = true;
+            trainingCancelLatched = false;
+            if (fromResults)
+            {
+                resultsActionLatched = true;
+                resultsPrimary.interactable = false;
+                resultsPrimaryLabel.text = "PREPARANDO…";
+                resultsLeave.interactable = true;
+                resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = "CANCELAR";
+            }
+            else
+            {
+                trainingHumanButton.interactable = false;
+                trainingMosquitoButton.interactable = false;
+                trainingStartButton.interactable = false;
+                trainingStartLabel.text = "PREPARANDO…";
+                trainingBackLabel.text = "CANCELAR";
+            }
+            trainingStatus.text = "Preparando entrenamiento…";
+            actions.StartTraining(role, BloodModeId, HousePatioMapId);
+        }
+
+        private void RequestTrainingCancel()
+        {
+            if (!TrainingBusy || trainingCancelLatched) return;
+            trainingCancelLatched = true;
+            trainingBackButton.interactable = false;
+            trainingBackLabel.text = "CANCELANDO…";
+            trainingStatus.text = "Cancelando entrenamiento…";
+            if (screen == AlfaUiScreen.Results)
+            {
+                resultsLeave.interactable = false;
+                resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = "CANCELANDO…";
+            }
+            actions.CancelTraining();
+        }
+
         private void SetCustomizationRole(AlfaRole role)
         {
-            if (customizationDraft == null) return;
+            if (customizationDraft == null || customizationSaveLatched) return;
             customizationDraft.Role = role;
             UpdateCustomizationView();
             actions.PreviewCustomization(customizationDraft.Copy());
@@ -810,7 +902,7 @@ namespace LetMeSleep.UI
 
         private void SetCustomizationColor(string category, NamedColorOption option)
         {
-            if (customizationDraft == null || option == null) return;
+            if (customizationDraft == null || option == null || customizationSaveLatched) return;
             if (category == "skin") customizationDraft.SkinColorId = option.Id;
             else if (category == "pajama") customizationDraft.PajamaColorId = option.Id;
             else customizationDraft.MosquitoColorId = option.Id;
@@ -843,8 +935,9 @@ namespace LetMeSleep.UI
             humanCustomizationFields.SetActive(human);
             mosquitoCustomizationFields.SetActive(!human);
             previewOrbit?.Show(customizationDraft.Role);
-            customizationStatus.text = customizationState.IsSaving ? "Guardando…" : customizationState.Message;
-            customizationSaveButton.interactable = !customizationState.IsSaving && !customizationDraft.SameValues(customizationState.Saved);
+            customizationStatus.text = customizationSaveLatched ? "Guardando…" : customizationState.Message;
+            customizationSaveButton.interactable = !customizationSaveLatched && !customizationDraft.SameValues(customizationState.Saved);
+            customizationSaveLabel.text = customizationSaveLatched ? "GUARDANDO…" : "GUARDAR";
             MarkPalette(humanPaletteRoot, customizationDraft.SkinColorId);
             MarkPalette(pajamaPaletteRoot, customizationDraft.PajamaColorId);
             MarkPalette(mosquitoPaletteRoot, customizationDraft.MosquitoColorId);
@@ -863,13 +956,17 @@ namespace LetMeSleep.UI
 
         private void SaveCustomization()
         {
-            if (customizationDraft == null || customizationState == null || customizationState.IsSaving) return;
+            if (customizationDraft == null || customizationState == null || customizationSaveLatched || customizationState.IsSaving) return;
+            customizationSaveLatched = true;
+            customizationSaveButton.interactable = false;
+            customizationSaveLabel.text = "GUARDANDO…";
+            customizationStatus.text = "Guardando…";
             actions.SaveCustomization(customizationDraft.Copy());
         }
 
         private void ResetCustomization()
         {
-            if (customizationState == null) return;
+            if (customizationState == null || customizationSaveLatched) return;
             customizationDraft = customizationState.Saved.Copy();
             UpdateCustomizationView();
             actions.PreviewCustomization(customizationDraft.Copy());
@@ -877,6 +974,7 @@ namespace LetMeSleep.UI
 
         private void CloseCustomization()
         {
+            if (customizationSaveLatched) return;
             if (CustomizationDirty())
             {
                 ShowConfirm("¿SALIR SIN GUARDAR?", "Los cambios de personalización se perderán.", "SEGUIR EDITANDO", "SALIR", ShowMainMenu);
@@ -887,7 +985,7 @@ namespace LetMeSleep.UI
 
         private void ChangeSetting(Action<AlfaSettingsDraft> mutation)
         {
-            if (settingsDraft == null || settingsState == null || settingsState.IsApplying) return;
+            if (settingsDraft == null || settingsState == null || settingsApplyLatched || settingsState.IsApplying) return;
             mutation(settingsDraft);
             settingsApplyButton.interactable = !settingsDraft.SameValues(settingsState.Saved);
             UpdateSettingsCycles();
@@ -902,13 +1000,17 @@ namespace LetMeSleep.UI
 
         private void ApplySettings()
         {
-            if (settingsDraft == null || settingsState == null || settingsState.IsApplying) return;
+            if (settingsDraft == null || settingsState == null || settingsApplyLatched || settingsState.IsApplying) return;
+            settingsApplyLatched = true;
+            settingsApplyButton.interactable = false;
+            settingsApplyLabel.text = "APLICANDO…";
+            settingsStatus.text = "Aplicando ajustes…";
             actions.ApplySettings(settingsDraft.Copy());
         }
 
         private void ResetSettings()
         {
-            if (settingsState == null) return;
+            if (settingsState == null || settingsApplyLatched) return;
             settingsDraft = settingsState.Saved.Copy();
             PresentSettings(new SettingsUiState(settingsState.Saved, settingsDraft, settingsState.Resolutions,
                 settingsState.Qualities, settingsState.SupportsVideo, settingsState.SupportsRebinding));
@@ -916,6 +1018,7 @@ namespace LetMeSleep.UI
 
         private void CloseSettings()
         {
+            if (settingsApplyLatched) return;
             if (SettingsDirty())
             {
                 ShowConfirm("¿DESCARTAR CAMBIOS?", "Los ajustes no aplicados se perderán.", "SEGUIR EDITANDO", "DESCARTAR", ReturnFromSettings);
@@ -933,9 +1036,17 @@ namespace LetMeSleep.UI
 
         private void ResultsPrimaryAction()
         {
-            if (resultsState == null) return;
-            if (resultsState.IsTraining) actions.StartTraining(resultsState.TrainingRole, BloodModeId, HousePatioMapId);
-            else actions.ReturnToLobby();
+            if (resultsState == null || resultsActionLatched) return;
+            if (resultsState.IsTraining)
+            {
+                StartTrainingIntent(resultsState.TrainingRole, true);
+                return;
+            }
+            resultsActionLatched = true;
+            resultsPrimary.interactable = false;
+            resultsPrimaryLabel.text = "VOLVIENDO…";
+            resultsLeave.interactable = false;
+            actions.ReturnToLobby();
         }
 
         private void BeginRound()
@@ -956,6 +1067,11 @@ namespace LetMeSleep.UI
 
         private void ResultsLeaveAction()
         {
+            if (resultsState != null && resultsState.IsTraining && TrainingBusy)
+            {
+                RequestTrainingCancel();
+                return;
+            }
             if (resultsState != null && resultsState.IsTraining) ShowMainMenu();
             else ConfirmLeave();
         }
@@ -1036,12 +1152,15 @@ namespace LetMeSleep.UI
                     if (lobbyExploring) EndLobbyExploration(); else ShowLobbyPause();
                     break;
                 case AlfaUiScreen.Training:
-                    if (trainingState.IsLoading) actions.CancelTraining(); else ShowMainMenu();
+                    if (TrainingBusy) RequestTrainingCancel(); else ShowMainMenu();
                     break;
                 case AlfaUiScreen.Customization: CloseCustomization(); break;
                 case AlfaUiScreen.Settings: CloseSettings(); break;
                 case AlfaUiScreen.Gameplay: ShowPause(); break;
                 case AlfaUiScreen.Pause: ResumeFromPause(); break;
+                case AlfaUiScreen.Results:
+                    if (resultsState != null && resultsState.IsTraining && TrainingBusy) RequestTrainingCancel();
+                    break;
             }
         }
 
@@ -1131,6 +1250,7 @@ namespace LetMeSleep.UI
         private bool CustomizationDirty() => customizationState != null && customizationDraft != null && !customizationDraft.SameValues(customizationState.Saved);
         private bool SettingsDirty() => settingsState != null && settingsDraft != null && !settingsDraft.SameValues(settingsState.Saved);
         private bool OnlineBusy => onlineSubmissionLatched || onlineState.IsBusy;
+        private bool TrainingBusy => trainingStartLatched || trainingState.IsLoading;
         private static bool IsOnlineError(OnlineOperationPhase phase) => phase == OnlineOperationPhase.RecoverableError ||
             phase == OnlineOperationPhase.IncompatibleVersion || phase == OnlineOperationPhase.RoomClosed;
 
