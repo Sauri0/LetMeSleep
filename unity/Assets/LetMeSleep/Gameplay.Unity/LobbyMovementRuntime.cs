@@ -232,6 +232,12 @@ namespace LetMeSleep.Gameplay.Unity
             if (!IsBound) return null;
             return new LobbySnapshot(SessionEpoch, RosterRevision, tick, members.Values.OrderBy(m => m.ActorId).Select(m => new LobbyPose(m.Id, m.Position, m.Velocity, m.Yaw, m.Grounded, m.Sequence, m.Motion)).ToArray());
         }
+        public bool TryGetVisual(string playerId, out GameObject visual)
+        {
+            visual = null;
+            if (playerId == null || !members.TryGetValue(playerId, out var member) || !member.Visual) return false;
+            visual = member.Visual.gameObject; return true;
+        }
         private void Publish() { LatestSnapshot = CaptureSnapshot(); SnapshotReady?.Invoke(LatestSnapshot); SnapshotApplied?.Invoke(LatestSnapshot); }
         public bool ApplySnapshot(LobbySnapshot snapshot)
         {
