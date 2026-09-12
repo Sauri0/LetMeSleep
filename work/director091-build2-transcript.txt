@@ -1,0 +1,148 @@
+**********************
+PowerShell transcript start
+Start time: 20260911211326
+Username: SAURIO\brank
+RunAs User: SAURIO\brank
+Configuration Name: 
+Machine: SAURIO (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Users\brank\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.dll -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$prebuildVoice=Join-Path $PWD 'work/director091-voice-results-prebuild.json'; $voiceResult=Join-Path $PWD 'work/voice09-acoustics-results.json'; if ((Get-FileHash $prebuildVoice).Hash -ne (Get-FileHash $voiceResult).Hash) { throw 'Voice evidence changed' }; Start-Transcript -Path work/director091-build2-transcript.txt | Out-Null; try { & ./work/build.ps1 } finally { Copy-Item -LiteralPath $voiceResult -Destination (Join-Path $PWD 'work/director091-voice-results-build2.json'); Copy-Item -LiteralPath $prebuildVoice -Destination $voiceResult; $attemptArchive=Join-Path $PWD 'work/director091-build2'; New-Item -ItemType Directory -Path $attemptArchive -Force | Out-Null; Get-ChildItem -LiteralPath (Join-Path $PWD 'work') -File | Where-Object { ($_.Name -like 'build-*' -or $_.Name -like 'release07-build-corner*') -and $_.Extension -in @('.log','.err','.json') } | Copy-Item -Destination $attemptArchive; Stop-Transcript | Out-Null }
+Process ID: 2920
+PSVersion: 7.6.5
+PSEdition: Core
+GitCommitId: 7.6.5
+OS: Microsoft Windows 10.0.26200
+Platform: Win32NT
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1, 6.0, 7.0
+PSRemotingProtocolVersion: 2.4
+SerializationVersion: 1.1.0.1
+WSManStackVersion: 3.0
+**********************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RULES_TEST_RESULT checks=1624 failures=0
+LOBBY_RULES_TEST_RESULT checks=321 failures=0
+COSMETICS_TEST_RESULT checks=433 failures=0
+COSMETICS_CATALOG08_RESULT checks=85377 failures=0 human_classes=26244 mosquito_classes=2187 human_profiles=5668704 mosquito_profiles=78732 output=C:/Users/brank/Documents/Codex/2026-09-06/dejame-dormir/game/../work/cosmetics-catalog08.json
+NETWORK08_COSMETICS_RESULT checks=28 failures=0
+VISUAL_CHECK_RESULT failures=0
+AUDIO06_RESULT checks=145 failures=0 catalog_seconds=54.260
+HOUSE_LIGHT_TEST checks=187 failures=0
+MAPS_TEST_RESULT checks=431 failures=0
+ROUTE_TEST_RESULT checks=307 failures=0 elapsed_ms=1345
+LOCOMOTION_TEST_RESULT checks=7867 failures=0
+FOCUS_COMBAT_TEST_RESULT checks=145 failures=0
+MANUAL_DEFENSE_TEST_RESULT checks=6897 failures=0
+STUN_HELP_TEST_RESULT checks=297 failures=0
+ONLINE_PACKET_CODEC_RESULT checks=116 failures=0
+TASK_DEADLINE_TEST_RESULT checks=59 failures=0
+PRACTICE_RESULT checks=79 failures=0
+INVITATION_RESULT checks=96 failures=0
+NETWORK_ORDER_RESULT checks=11 failures=0
+NETWORK_CONNECTION_RESULT checks=23 failures=0
+NETWORK_PRIVACY_AUDIT_RESULT checks=48 failures=0
+CONTACT_ORIENTATION06_TEST_RESULT checks=469 failures=0
+HOUSE06_RESULT checks=210 failures=0 furnished=52
+MUSIC06_RESULT checks=49 failures=0 recorded_peak=5168
+PREFERENCES_MIGRATION_RESULT checks=31 failures=0
+DOORS07_TEST_RESULT checks=342 failures=0
+DOOR_NAVIGATION07_RESULT checks=22 failures=0
+ATTACK07_TEST_RESULT checks=304 failures=0
+ARENA_SPATIAL07_TEST_RESULT checks=7200 failures=0
+POSE_CACHE07_TEST_RESULT checks=4922 failures=0
+BARRIERS07_TEST_RESULT checks=17 failures=0
+MOTION07_RESULT checks=11396 failures=0 max_support_slide=0.0000010m samples=713 max_jump_delta=0.005417
+CHARACTER_CACHE07_RESULT checks=8 failures=0
+VIDEO_PREFS07_RESULT checks=13 failures=0
+BOT_SCHEDULER07_RESULT checks=242 failures=0
+NET_COMBAT07_RESULT checks=39 failures=0
+HOUSE_JOINT_RESULT checks=603 failures=0
+CEILING_RESULT maps=3 failures=0
+HOUSE09_SURFACES checks=702 failures=0
+FACIAL_STATE07_RESULT checks=249 failures=0
+MOSQUITO_IMPACT07_RESULT checks=1492 failures=0
+THROW07_RESULT checks=288 failures=0
+THROW_INPUT07_RESULT checks=15 failures=0
+TOOL_AUDIO07_RESULT checks=36 failures=0
+FRAME_JOINERY checks=992 failures=0 overlap_m2=0.0 normal_errors=0 {"changed_faces":4116,"elapsed_ms":266.862,"frames":52,"removed_area_m2":2678.1034387366,"triangles_after":7846,"triangles_before":9504,"wall_meshes":792}
+PICKUP_SUPPORT_RESULT checks=203 failures=0
+TOOL_REACH07_RESULT checks=60 failures=0
+NET_THROW07_RESULT checks=36 failures=0
+AUDIO09_REDUNDANCY checks=18 failures=0
+HUD09_COALESCING checks=29 failures=0
+SKIN09_VISIBILITY {"checks":1422,"failures":[],"records":[{"current_passes":37,"meshes":33,"reference_passes":446,"role":"human"},{"current_passes":37,"meshes":23,"reference_passes":446,"role":"mosquito"}],"scope":"Imported mesh selection equivalence and redundant setter work; no gameplay FPS or skin deformation claim","skin_sha256":"4b725c739410e813670ec5ca0c80c74d8ef65f06dedf316d56e77b6410d570b8"}
+HUMAN09_PRESENTATION checks=1457 failures=0
+SURFACE09_TEST_RESULT checks=6722 failures=0
+SURFACE_VIEW09_RESULT checks=213 failures=0
+EMOTE09_AUTHORITY_RESULT checks=1643 failures=0
+procedural09 checks=53 failures=0
+geometry09_cache checks=164 failures=0
+MAP_TASKS09_RESULT checks=88 failures=0
+VOICE09_ACOUSTICS_RESULT checks=1239 failures=0 elapsed_ms=434.412
+voice09_pcm checks=4758 failures=0
+audio09_listener checks=9 failures=0
+NET_MAP_SOCIAL09_RESULT checks=55 failures=0 protocol=10
+NET_MAP_SOCIAL09_RESULT checks=53 failures=0 protocol=10
+NET_VOICE09_RESULT checks=216 failures=0
+DOOR09_CPU {"implementation":"reference","max_ms":6.44,"mean_ms":2.45244166666667,"p50_ms":2.464,"p90_ms":3.385,"p99_ms":4.737,"steps":360,"total_ms":882.879}
+DOOR09_BODY_CPU {"implementation":"reference","max_per_tick_ms":3.378,"mean_per_tick_ms":1.69140277777778,"mismatches":0,"p90_per_tick_ms":2.962,"p99_per_tick_ms":3.138,"queries":15555,"ticks":360,"total_ms":608.905}
+NAVIGATION09_CONNECTIONS checks=6386 failures=0
+MODELER091_LAYOUT checks=204 failures=0
+MODELER091_FURNISH checks=3028 failures=0
+ENVIRONMENT091_STAIR_LIGHT checks=15 failures=0
+ENVIRONMENT091_V2_FINISH checks=115 failures=0
+REVIEW091_ONLINE_RESULT checks=27 failures=0 eos_sdk=false relay=false wan=false
+REVIEW091_HOUSE_RESULT checks=564 failures=0 layouts=1
+REVIEW091_HOUSE_RESULT checks=447 failures=0 layouts=1
+REVIEW091_HOUSE_RESULT checks=506 failures=0 layouts=1
+REVIEW091_HOUSE_RESULT checks=519 failures=0 layouts=1
+REVIEW091_HOUSE_RESULT checks=569 failures=0 layouts=1
+REVIEW091_HOUSE_RESULT checks=592 failures=0 layouts=1
+REVIEW091_HOUSE_RESULT checks=551 failures=0 layouts=1
+REVIEW091_HOUSE_RESULT checks=473 failures=0 layouts=1
+REVIEW091_HOUSE_RESULT checks=460 failures=0 layouts=1
+REVIEW091_HOUSE_RESULT checks=428 failures=0 layouts=1
+REVIEW091_HOUSE_RESULT checks=482 failures=0 layouts=1
+VOICE09_SESSION_CHECKS 77/77 PASS
+ONLINE_INVITATION_RESULT checks=217 failures=0
+ONLINE_SESSION_RESULT checks=72 failures=0
+ONLINE_NETWORK_CHECKS checks=43 failures=0
+ONLINE_NETWORK_MTU_CHECKS checks=4 failures=0 largest_actual_rpc_bytes=1062
+ONLINE_NETWORK_PAYLOAD_CHECKS checks=18 failures=0 actors=16 largest_raw=37880 largest_fragments=3
+ONLINE_PAIR_RESULT checks=24 failures=0 transport=enet_loopback eos_sdk=false relay=false wan=false
+ONLINE_LIVE_HOST_RESULT checks=15 failures=0
+XR: Removed interface "OpenXR"
+MOTION091_ATTACHMENT_RESULT checks=781 failures=0
+REVIEW091_MOTION_RESULT checks=150 failures=0
+UI091_CUSTOMIZATION_CHECKS 20/20 PASS
+MOTION091_RESULT checks=4013 failures=0
+ONLINE_MAIN_RESULT checks=7 failures=0
+GLASSES09_NATIVE checks=110 failures=0 poses=18 max_error=0.00000049
+PS>TerminatingError(): "Native check failed: actor09_legacy_geometry_test; inspect work/build logs"
+**********************
+PowerShell transcript end
+End time: 20260911212119
+**********************

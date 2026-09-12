@@ -1,15 +1,15 @@
 {
 	"checks": 150,
 	"failures": [],
-	"scope": "production authority/collision/pose; generated seed1; exact attachment and manual attack; native ActorView presentation; no image-based visual approval, UI navigation, network, FPS or WAN claim",
+	"scope": "production authority/collision/pose; generated seed1; exact attachment and manual attack; no renderer, UI, network, FPS or WAN claim",
 	"source_sha256": {
 		"res://scripts/actor_view.gd": "2b3e339eb6948c27becf0be97df01d7db54f00bbe2701cd12272ecaf3a3cb4fe",
-		"res://scripts/arena.gd": "209f4ac0c36b86754c61f47591dd2e99f8703ecb1d68bb1f41d86831f0171c7a",
-		"res://scripts/door_catalog.gd": "fd2da6e0ab07d4ea4ad0e8acf188514c96234a1bed43874cdbd01b9ab09022ef",
-		"res://scripts/human_pose.gd": "082005dc59813fb713b68ab6cba52dbc6b2c607a7ca3d40135a5257d6f6a7e5e",
+		"res://scripts/arena.gd": "ed33d7a5afbf181e2390553bd7183281196f6ef65207ebe9011896675b82dc63",
+		"res://scripts/door_catalog.gd": "fc6da39cb7d11a7f6c43f271e68212bae0f90238a685d3c719fd4a3ebcf3aafc",
+		"res://scripts/human_pose.gd": "adfb041e53d5785f49cbddb9176d03f76a2a5677b09152c33a5a9437c7e930e0",
 		"res://scripts/human_presentation.gd": "87b597dd83330a840ff0d50b073eddc260b7b57f1e6f92f965217017a2be9b07",
-		"res://scripts/simulation.gd": "e16ea8b0bd42395b5acb9053436520e574d211384169771002d545ee9cd226db",
-		"res://tests/review091_motion_combat_contract.gd": "b6fd0a1bd5ec87e4b344d12e1803c9f35a68f9b8bb0f6b8ff656121114072656"
+		"res://scripts/simulation.gd": "10c0c3f3aac4e7dde06e72da4eace57203c34f85a7f2f47db6e0b36648614d11",
+		"res://tests/review091_motion_combat_contract.gd": "8df9c8e96ee8a093155ff46e23f03d1b5a143768c200791cd9fbe19880ee8c25"
 	},
 	"traces": {
 		"120": {
