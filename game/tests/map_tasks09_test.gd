@@ -39,7 +39,7 @@ func _identity() -> void:
 	var sim=make_sim("house",{"map_fingerprint":"spoof","map_generator_version":999,"map_seed":999})
 	check(sim.phase=="playing" and sim.config.map_fingerprint==Maps.Validation.fingerprint(Maps.get_map("house")),"authored map fingerprint comes from real geometry")
 	check(sim.config.map_seed==0 and sim.config.map_generator_version==0,"authored map does not accept client generator metadata")
-	for invalid: Variant in ["lobby","unknown","house-v1-1","house-v2-0","house-v2-01","house-v3-1","house-v2-2147483647",42,null]:
+	for invalid: Variant in ["lobby","unknown","house-v1-1","house-v2-1","house-v3-0","house-v3-01","house-v4-1","house-v3-2147483647",42,null]:
 		sim.start({1:{"role":"human"},2:{"role":"mosquito"}},{"map_id":invalid})
 		check(sim.phase=="lobby" and not sim.reason.is_empty() and sim.winner.is_empty(),"invalid map fails explicitly: "+str(invalid))
 		check(sim.actors.is_empty() and sim.pickups.is_empty() and sim.doors.is_empty() and sim._map_data.is_empty(),"failed start retains no old actors/doors/map: "+str(invalid))

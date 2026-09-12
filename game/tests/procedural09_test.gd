@@ -24,8 +24,8 @@ func _initialize() -> void:
 			if structure.kind=="furniture": count+=1
 		check(count>=48,"Furniture richness %d: %d"%[seed_value,count])
 		cases.append({"seed":seed_value,"fingerprint":Validation.fingerprint(generated),"furniture":count,"report":report})
-	check(Generator.VERSION==2,"0.9.1 accepts only generator version 2")
-	for invalid: String in ["house-v1-1","house-v2-0","house-v2-01","house-v3-1","house-v2--5","house-v2-2147483647","house-2-1","house-v2-"]:
+	check(Generator.VERSION==3,"0.9.2 accepts only generator version 3")
+	for invalid: String in ["house-v1-1","house-v2-1","house-v3-0","house-v3-01","house-v3--5","house-v3-2147483647","house-v4-1","house-3-1","house-v3-"]:
 		check(Generator.parse_seed(invalid)==-1,"Reject malformed seed "+invalid)
 	var file:=FileAccess.open("res://../work/procedural09-results.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"checks":checks,"failures":failures,"cases":cases},"\t"));file.close()

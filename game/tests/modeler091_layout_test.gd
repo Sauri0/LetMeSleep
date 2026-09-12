@@ -14,10 +14,10 @@ func _initialize() -> void:
 	var seeds: Array[int]=[1,2,7,31,97,257,997,2026,65537,1234567,2147483646]
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--seed="): seeds=[int(arg.trim_prefix("--seed="))]
-	check(Generator.map_id(1)=="house-v2-1","new map uses v2 identity")
-	for id: String in ["house-v1-1","house-v1-2147483646","house-v2-0","house-v2-01","house-v2--5","house-v2-2147483647","house-v3-1"]:
+	check(Generator.map_id(1)=="house-v3-1","new map uses v3 identity")
+	for id: String in ["house-v1-1","house-v2-1","house-v2-2147483646","house-v3-0","house-v3-01","house-v3--5","house-v3-2147483647","house-v4-1"]:
 		check(Generator.parse_seed(id)==-1,"reject unsupported or noncanonical "+id)
-	check(Maps.get_map("house-v1-1").is_empty(),"old ID has no geometry or fallback")
+	check(Maps.get_map("house-v2-1").is_empty(),"old v2 ID has no geometry or fallback")
 	var cases: Array=[]
 	for seed_value: int in seeds:
 		var data: Dictionary=Generator.new().generate(seed_value)
