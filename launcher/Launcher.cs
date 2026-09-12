@@ -19,22 +19,66 @@ namespace LetMeSleep.Updater {
     }
     sealed class LauncherForm : Form {
         readonly Label status = new Label();
-        readonly ProgressBar bar = new ProgressBar();
-        readonly Button retry = new Button(), previous = new Button();
+        readonly ProgressTrack bar = new ProgressTrack();
+        readonly NightButton retry = new NightButton(), previous = new NightButton { Secondary = true };
+        readonly NightButton browse = new NightButton { Secondary = true }, installButton = new NightButton(), changeFolder = new NightButton { Secondary = true };
+        readonly Label heading = new Label(), folderCaption = new Label(), hint = new Label();
+        readonly TextBox folder = new TextBox();
         readonly CancellationTokenSource cancellation = new CancellationTokenSource();
-        readonly string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LetMeSleep");
+        readonly InstallLocation location = new InstallLocation(
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LetMeSleepLauncher"),
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LetMeSleep"));
+        string root;
         bool running;
         public LauncherForm() {
-            Text = "Let me sleep"; ClientSize = new Size(520, 255); FormBorderStyle = FormBorderStyle.FixedDialog;
+            root = location.Load();
+            Text = "Let me sleep · Inicio"; ClientSize = new Size(800, 444); FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false; StartPosition = FormStartPosition.CenterScreen;
-            BackColor = Color.FromArgb(24, 28, 49); ForeColor = Color.White; Font = new Font("Segoe UI", 10);
-            var title = new Label { Text = "Let me sleep", Font = new Font("Segoe UI", 25, FontStyle.Bold), AutoSize = true, Location = new Point(24, 20) };
-            status.SetBounds(26, 84, 465, 66); status.Text = "Preparando tu próxima noche…";
-            bar.SetBounds(26, 155, 466, 12);
-            retry.Text = "Reintentar"; retry.SetBounds(26, 191, 130, 35); retry.Visible = false;
-            previous.Text = "Abrir versión instalada"; previous.SetBounds(169, 191, 220, 35); previous.Visible = false;
-            foreach (var b in new[] { retry, previous }) { b.ForeColor = Color.Black; b.BackColor = Color.FromArgb(246, 206, 89); b.FlatStyle = FlatStyle.Flat; }
-            Controls.AddRange(new Control[] { title, status, bar, retry, previous });
+            AutoScaleMode = AutoScaleMode.Dpi; AutoScaleDimensions = new SizeF(96,96);
+            BackColor = Theme.Background; ForeColor = Theme.Cream; Font = new Font("Segoe UI", 10);
+            var side = new Panel { BackColor = Theme.Sidebar, Bounds = new Rectangle(0,0,244,444) };
+            var art = new PictureBox { Bounds = new Rectangle(26,24,192,192), SizeMode = PictureBoxSizeMode.Zoom };
+            using (var stream = typeof(LauncherForm).Assembly.GetManifestResourceStream("LauncherLogo"))
+            using (var image = Image.FromStream(stream)) art.Image = new Bitmap(image);
+            using (var stream = typeof(LauncherForm).Assembly.GetManifestResourceStream("LauncherIcon"))
+            using (var icon = new Icon(stream)) Icon = (Icon)icon.Clone();
+            var title = new Label { Text = "Let me\nsleep", Font = new Font("Segoe UI", 29, FontStyle.Bold), Bounds = new Rectangle(30,221,210,106), ForeColor = Theme.Cream };
+            var tagline = new Label { Text = "BUENAS NOCHES.\nMALA COMPAÑÍA.", Font = new Font("Segoe UI", 9, FontStyle.Bold), ForeColor = Theme.Teal, Bounds = new Rectangle(34,353,190,46) };
+            side.Controls.AddRange(new Control[] { art, title, tagline });
+            heading.Text = "Preparando tu noche"; heading.Font = new Font("Segoe UI", 22, FontStyle.Bold); heading.SetBounds(274,32,496,50);
+            status.SetBounds(277,94,487,66); status.Text = "Buscando tu instalación…"; status.ForeColor = Theme.Muted;
+            bar.SetBounds(278,198,488,12);
+            retry.Text = "Reintentar"; retry.SetBounds(276,250,142,42); retry.Visible = false;
+            previous.Text = "Abrir versión instalada"; previous.SetBounds(430,250,336,42); previous.Visible = false;
+            folderCaption.Text = "CARPETA DEL JUEGO"; folderCaption.Font = new Font("Segoe UI",9,FontStyle.Bold); folderCaption.ForeColor = Theme.Teal;
+            folderCaption.SetBounds(278,171,440,22); folderCaption.Visible = false;
+            folder.SetBounds(278,199,488,28); folder.ReadOnly = true; folder.Visible = false;
+            folder.BackColor = Color.FromArgb(35,52,68); folder.ForeColor = Theme.Cream; folder.BorderStyle = BorderStyle.FixedSingle; folder.AccessibleName = "Carpeta del juego";
+            browse.Text = "Elegir carpeta…"; browse.SetBounds(276,239,165,38); browse.Visible = false;
+            installButton.Text = "Instalar y jugar"; installButton.SetBounds(276,344,260,48); installButton.Visible = false;
+            changeFolder.Text = "Cambiar carpeta"; changeFolder.SetBounds(276,306,180,38); changeFolder.Visible = false;
+            hint.Text = "Actualizaciones automáticas.\nTus ajustes y personalización se conservan."; hint.ForeColor = Theme.Muted;
+            hint.Font = new Font("Segoe UI",9); hint.SetBounds(279,290,485,42);
+            var footer = new Label { Text = "WINDOWS 64 BITS   ·   INICIO 1.0.1", ForeColor = Theme.Muted, Font = new Font("Segoe UI",8), Bounds = new Rectangle(279,414,460,20) };
+            Controls.AddRange(new Control[] { side, heading, status, bar, retry, previous, folderCaption, folder, browse, installButton, changeFolder, hint, footer });
+            FormClosed += (s,e) => { art.Image.Dispose(); Icon.Dispose(); };
+            browse.Click += (s,e) => {
+                using (var dialog = new FolderBrowserDialog { Description = "Elegí dónde guardar el juego. Crearemos la carpeta LetMeSleep dentro.", ShowNewFolderButton = true }) {
+                    if (Directory.Exists(folder.Text)) dialog.SelectedPath = folder.Text;
+                    if (dialog.ShowDialog(this) == DialogResult.OK) {
+                        string selected = dialog.SelectedPath;
+                        folder.Text = String.Equals(Path.GetFileName(selected), "LetMeSleep", StringComparison.OrdinalIgnoreCase)
+                            ? selected : Path.Combine(selected, "LetMeSleep");
+                    }
+                }
+            };
+            installButton.Click += async (s,e) => {
+                if (running) return;
+                try { location.Save(folder.Text); root = location.Load(); }
+                catch { status.Text = "No podemos escribir en esa carpeta. Elegí otra ubicación con permiso de escritura."; browse.Focus(); return; }
+                await Prepare();
+            };
+            changeFolder.Click += (s,e) => { if (!running) ShowInstall(); };
             retry.Click += async (s,e) => await Prepare();
             previous.Click += async (s,e) => {
                 if (running) return;
@@ -43,8 +87,20 @@ namespace LetMeSleep.Updater {
                 if (install != null) await Launch(install); else { previous.Visible = false; status.Text = "La instalación necesita repararse. Elegí Reintentar."; }
                 running = false; previous.Enabled = true;
             };
-            Shown += async (s,e) => await Prepare();
+            Shown += async (s,e) => {
+                var existing = await Task.Run(() => new Updater(root, Report, cancellation.Token).Current());
+                if (cancellation.IsCancellationRequested) return;
+                if (existing == null) ShowInstall(); else await Prepare();
+            };
             FormClosing += (s,e) => cancellation.Cancel();
+        }
+        internal void ShowInstall() {
+            retry.Visible = previous.Visible = changeFolder.Visible = bar.Visible = false;
+            heading.Text = "Instalá el juego";
+            hint.Visible = folderCaption.Visible = true;
+            status.Text = "¿Dónde querés instalar el juego? Descargaremos la última versión completa y la mantendremos actualizada.";
+            folder.Text = root; folder.Visible = browse.Visible = installButton.Visible = true;
+            AcceptButton = installButton; installButton.Focus();
         }
         void Report(string text, int percent) {
             if (IsDisposed || cancellation.IsCancellationRequested) return;
@@ -53,6 +109,9 @@ namespace LetMeSleep.Updater {
         }
         async Task Prepare() {
             if (running) return; running = true; retry.Visible = previous.Visible = false;
+            folder.Visible = browse.Visible = installButton.Visible = changeFolder.Visible = false;
+            folderCaption.Visible = hint.Visible = false; heading.Text = "Preparando tu noche";
+            bar.Visible = true; AcceptButton = retry;
             var updater = new Updater(root, Report, cancellation.Token);
             Exception failure = null;
             try {
@@ -69,6 +128,7 @@ namespace LetMeSleep.Updater {
                 status.Text = fallback == null ? "No pudimos preparar el juego. Revisá tu conexión y reintentá."
                     : "No pudimos actualizar. Podés reintentar o abrir " + fallback.Version + ". Para jugar online, todos necesitan la misma versión.";
                 bar.Value = 0; retry.Visible = true; previous.Visible = fallback != null; retry.Focus();
+                changeFolder.Visible = fallback == null;
             }
             running = false;
         }

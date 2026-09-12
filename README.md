@@ -1,7 +1,9 @@
 # Let me sleep — 0.9.3 para Windows
 
-[Descargar inicio con actualización automática](https://github.com/Sauri0/LetMeSleep/releases/download/launcher-v1.0.0/Let-me-sleep-Launcher.exe).
+[Descargar inicio con actualización automática](https://github.com/Sauri0/LetMeSleep/releases/download/launcher-v1.0.1/Let-me-sleep-Launcher.exe).
 Guardá **Let-me-sleep-Launcher.exe** y usalo siempre para abrir el juego. Busca la versión publicada más reciente, la descarga si hace falta y abre el juego. No requiere cuenta de GitHub, instalación de Godot ni permisos de administrador. La primera vez descarga el juego completo.
+
+Si todavía no está instalado, primero elegís la carpeta con **Elegir carpeta…** y confirmás **Instalar y jugar**. Guarda esa ubicación para las próximas actualizaciones. No necesitás descargar el ZIP principal.
 
 Conserva preferencias y personalización. Si falla la descarga, permite reintentar o abrir la instalación anterior; para jugar online todos necesitan la misma versión. Incluye las versiones de prueba públicas numeradas. El acceso antiguo directo a **Let-me-sleep.exe** no busca actualizaciones: reemplazalo por un acceso al launcher. [Detalles y verificación](launcher/README.md).
 

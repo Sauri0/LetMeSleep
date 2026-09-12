@@ -1,0 +1,11 @@
+{
+  "bytes": 1652224,
+  "game_launched": false,
+  "launcher_version": "1.0.1",
+  "interactive_folder_picker_tested": false,
+  "icon_sizes": 7,
+  "unit_checks": 39,
+  "download_engine_unchanged": true,
+  "sha256": "264FF93F023FE244669D84CF03783D0C044AED883EA48F0AF36A3D0A0318DC9B",
+  "offscreen_preview_reviewed": true
+}

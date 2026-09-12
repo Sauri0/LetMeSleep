@@ -79,6 +79,21 @@ namespace LetMeSleep.Updater {
                     Reject(() => Updater.ValidateInstallation(oldDir,new Version("0.9.3")), "release manifest version mismatch rejected");
                     File.WriteAllText(Path.Combine(root,"current.txt"),"../../outside");
                     Check(local.Current() == null, "unsafe installed pointer rejected");
+                    string settings = Path.Combine(root,"launcher settings");
+                    string defaultInstall = Path.Combine(root,"default install");
+                    var location = new InstallLocation(settings, defaultInstall);
+                    Check(location.Load() == defaultInstall && !Directory.Exists(settings), "first launch does not save or install before user chooses");
+                    string chosen = Path.Combine(root,"My games with spaces","LetMeSleep");
+                    location.Save(chosen);
+                    Check(new InstallLocation(settings,defaultInstall).Load() == chosen, "custom folder with spaces remembered across restarts");
+                    Check(!Directory.EnumerateFiles(chosen).Any(), "write probe removed without touching game files");
+                    location.Save(defaultInstall);
+                    Check(location.Load() == defaultInstall, "folder choice replaced atomically");
+                    Reject(() => location.Save("relative/path"), "relative installation rejected");
+                    Reject(() => location.Save("C:\\"), "drive root rejected");
+                    string blocked = Path.Combine(root,"file-instead-of-folder"); File.WriteAllText(blocked,"keep");
+                    Reject(() => location.Save(blocked), "unwritable location rejected before remembering");
+                    Check(location.Load() == defaultInstall && File.ReadAllText(blocked) == "keep", "failed choice preserves settings and existing file");
                     Console.WriteLine("UPDATER_TESTS checks=" + checks + " failures=0 game_launched=false");
                 } finally {
                     string full = Path.GetFullPath(root), temp = Path.GetFullPath(Path.GetTempPath()).TrimEnd('\\')+"\\";
