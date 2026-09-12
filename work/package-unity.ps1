@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory=$true)][string]$BuildDirectory,
-    [string]$Version='0.9.4-alfa.1',
+    [string]$Version='0.9.4-alfa.2',
     [string]$OutputDirectory='N:/LetMeSleep/Artifacts/packages'
 )
 $ErrorActionPreference='Stop'
