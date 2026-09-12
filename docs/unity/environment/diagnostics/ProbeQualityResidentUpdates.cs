@@ -1,8 +1,15 @@
 // Manual Director eval_file in Play: original -> 55% -> 80% -> original.
 // Calls the production PersistQualityMesh helper. Never saves/reimports assets.
 if (!UnityEngine.Application.isPlaying) throw new System.InvalidOperationException("Requires the Director's active Humantraining session.");
-var camera = UnityEngine.Camera.main;
-if (!camera) throw new System.InvalidOperationException("Requires one tagged main game camera.");
+System.Func<UnityEngine.Camera> selectCamera = () => {
+    var candidates = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Where(UnityEngine.Camera.allCameras,
+        c => c && c.isActiveAndEnabled && c.gameObject.activeInHierarchy && c.cameraType == UnityEngine.CameraType.Game
+            && c.targetTexture == null && c.gameObject.scene.IsValid() && c.gameObject.scene.isLoaded
+            && !UnityEditor.SceneManagement.EditorSceneManager.IsPreviewScene(c.gameObject.scene)));
+    if (candidates.Length != 1) throw new System.InvalidOperationException("Require exactly one active game camera without a render target, excluding preview scenes.");
+    return candidates[0];
+};
+var camera = selectCamera();
 var filters = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Where(
     UnityEngine.Object.FindObjectsByType<UnityEngine.MeshFilter>(UnityEngine.FindObjectsSortMode.None),
     f => f.name == "Cushion_m0p57" && f.gameObject.activeInHierarchy));
@@ -65,7 +72,7 @@ System.Func<string> controls = () => {
     var lights = new System.Collections.Generic.List<string>();
     foreach (var light in System.Linq.Enumerable.OrderBy(UnityEngine.Object.FindObjectsByType<UnityEngine.Light>(UnityEngine.FindObjectsSortMode.None), l => l.GetInstanceID()))
         lights.Add(light.GetInstanceID() + ":" + light.transform.localToWorldMatrix.ToString("F6") + ":" + UnityEditor.EditorJsonUtility.ToJson(light));
-    return json(new { cameraId = camera.GetInstanceID(), mainCameraId = UnityEngine.Camera.main ? UnityEngine.Camera.main.GetInstanceID() : 0,
+    return json(new { cameraId = camera.GetInstanceID(), selectedCameraId = selectCamera().GetInstanceID(),
         position = camera.transform.position.ToString("F6"), rotation = camera.transform.rotation.ToString("F6"), fov = camera.fieldOfView,
         view = camera.worldToCameraMatrix.ToString("F6"), projection = camera.projectionMatrix.ToString("F6"),
         filterId = filter.GetInstanceID(), meshId = filter.sharedMesh.GetInstanceID(), transform = filter.transform.localToWorldMatrix.ToString("F6"),
@@ -75,6 +82,12 @@ string lockedControls = null;
 System.Action<string, float> captureStage = (label, scale) => {
     if (filter.sharedMesh != mesh || mesh.GetInstanceID() != meshId || UnityEditor.AssetDatabase.AssetPathToGUID(assetPath) != guid)
         throw new System.InvalidOperationException("Mesh binding/identity/GUID changed.");
+    if (selectCamera() != camera) throw new System.InvalidOperationException("Selected game camera changed.");
+    // The existing capture helper selects Camera.main, otherwise the first camera
+    // without a target. Verify its choice matches our strict preflight selection.
+    var captureCamera = UnityEngine.Camera.main;
+    if (!captureCamera) captureCamera = System.Linq.Enumerable.FirstOrDefault(UnityEngine.Camera.allCameras, c => c.targetTexture == null);
+    if (captureCamera != camera) throw new System.InvalidOperationException("Capture helper would use a different camera; nothing captured.");
     string path = output + "/" + label + ".png";
     capture.Invoke(null, new object[] { path, 1920, 1080, false });
     string current = controls(); controlsStable &= current == lockedControls;

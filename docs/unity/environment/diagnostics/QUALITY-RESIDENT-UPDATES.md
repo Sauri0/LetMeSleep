@@ -1,6 +1,6 @@
 # Dos actualizaciones visibles del mismo asset
 
-Ejecutar manualmente por Director, después de integrar11dd53b, en Humantraining Play con una sola casa y Camera.main:
+Ejecutar manualmente por Director, después de integrar11dd53b, en Humantraining Play con una sola casa y una única cámara de juego activa sin RenderTexture, excluyendo cámaras/escenas de preview. No requiere etiqueta MainCamera ni cambia tags:
 
 `N:/LetMeSleep/Worktrees/environment/docs/unity/environment/diagnostics/ProbeQualityResidentUpdates.cs`
 
@@ -9,6 +9,8 @@ El script está fuera de Assets, no tiene autorun y no fue ejecutado por Element
 Prueba acotada sobre Cushion_m0p57 (cojín azul): original → escala uniforme55% → escala uniforme80% → original. Las dos actualizaciones cambian posiciones de vértices dentro del mismo asset; escala alrededor de la base para conservar el apoyo. Las normales, topología, materiales, transformación del objeto y escena permanecen iguales. No vuelve a probar el cap de la manta.
 
 Cuatro capturas1920×1080, misma cámara lateral(2.05,1,1.25) hacia(.85,.7,2.35), FOV60, dentro de una sola llamada síncrona y frame. Guarda cada PNG y dump; exige huellas de datos diferentes en ambas actualizaciones, píxeles diferentes, identidad/binding/GUID iguales y huella de datos/PNG original al restaurar. También compara controles de cámara, luces y materiales para no atribuir al mesh un cambio ajeno.
+
+Antes de cada captura vuelve a exigir la misma cámara elegida y comprueba que la selección del helper AlfaReviewCapture (MainCamera o fallback sin RT) coincide con ella; si hay ambigüedad, aborta y restaura en lugar de cambiar tags o capturar otra cámara.
 
 En finally restaura la malla original usando el mismo helper si una etapa falla, limpia el snapshot temporal y devuelve CameraPose, target y RenderTexture.active. Restaura el dirty flag previo sólo si los datos originales están íntegros. No invoca SaveAssets, SaveScene, reimport ni rebuild; exige hashes del asset y su .meta en disco iguales antes/después. Si hay fallo de restauración/control, deja el error en receipt.json y la llamada falla; no presentar el resultado como prueba válida.
 
