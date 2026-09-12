@@ -7,12 +7,15 @@ using NUnit.Framework;
 
 public sealed class DomainChecks
 {
-    private sealed class World : IGameplayWorld
+    private sealed class World : IGameplayWorld, IGameplayToolWorld
     {
         public bool BiteEnabled, Ground, Free = true;
         public uint HitActor;
         public bool WallHit;
         public int Sweeps;
+        public bool CanDrop = true;
+        public float ToolDistance = .5f;
+        public readonly Dictionary<uint, ToolPickupSnapshot> Tools = new Dictionary<uint, ToolPickupSnapshot>();
         public void BeginRound(IReadOnlyList<SpawnActor> a, IReadOnlyList<DoorDefinition> d) { }
         public void SynchronizeActors(IReadOnlyList<ActorSnapshot> a) { }
         public MotorResult MoveHuman(in MotorQuery q) => new MotorResult(q.Position + q.Velocity * q.DeltaSeconds, q.Velocity, Ground, Float3.Up, q.CrouchFraction);
@@ -29,6 +32,14 @@ public sealed class DomainChecks
         public bool TryDoorInteraction(in DoorInteractionQuery q, out DoorInteractionCandidate c) { c = default; return false; }
         public DoorSweepResult SweepDoor(in DoorMotionQuery q) => new DoorSweepResult(q.ToAngleRadians, false);
         public void ApplyDoorPose(in DoorPose p) { }
+        public void BeginTools(IReadOnlyList<ToolPickupDefinition> definitions)
+        { Tools.Clear(); foreach (var p in definitions) Tools[p.PickupId] = new ToolPickupSnapshot(p.PickupId, p.ToolId, p.Position, p.Rotation); }
+        public bool TryToolInteraction(in ToolInteractionQuery q, out ToolInteractionCandidate c)
+        {
+            var available = Tools.Values.FirstOrDefault(t => t.OwnerActorId == 0); c = new ToolInteractionCandidate(available.PickupId, available.Revision, ToolDistance); return available.PickupId != 0;
+        }
+        public bool TryDropTool(uint actorId, out Float3 p, out Rotation r) { p = new Float3(2, 0, 2); r = Rotation.Identity; return CanDrop; }
+        public void ApplyToolState(in ToolPickupSnapshot state) { Tools[state.PickupId] = state; }
     }
     private static GameplayAuthority Start(World w, float recovery = 35, bool extraMosquito = false, float quota = 20, float extraction = 8)
     {
@@ -159,5 +170,55 @@ public sealed class DomainChecks
             new DoorDefinition(1, 1, default, Rotation.Identity, new Float3(1, 2, .04f), default, openSign: 0),
             new DoorDefinition(1, 1, default, new Rotation(0, 0, 0, 0), new Float3(1, 2, .04f), default) })
             Assert.Throws<ArgumentException>(() => a.BeginRound(new GameplayRoundConfig(1, 2, "house-patio-v1", "test", doors: new[] { door }), roster));
+    }
+    private static GameplayAuthority StartTools(World world)
+    {
+        var a = new GameplayAuthority(world);
+        a.BeginRound(new GameplayRoundConfig(1, 1, "house-patio-v1", "test", tools: new[] { new ToolPickupDefinition(101, GameplayTools.Flyswatter, new Float3(0, 1, 1), Rotation.Identity) }),
+            new[] { new SpawnActor(1, "h", PlayerRole.Human, default), new SpawnActor(2, "m", PlayerRole.Mosquito, Float3.Up), new SpawnActor(3, "h2", PlayerRole.Human, new Float3(1, 0, 0)) });
+        return a;
+    }
+    private static void ToolAction(GameplayAuthority a, uint id, uint sequence, ActionKind kind)
+    { Assert.That(a.SubmitAction(id == 1 ? "h" : id == 2 ? "m" : "h2", new PlayerActionCommand(new CommandHeader(1, 1, id, sequence, a.CurrentTick, Actor(a, id).ViewRevision), kind, Float3.Forward)), Is.EqualTo(CommandReject.None)); }
+    [Test] public void PickupChangesOnlyOwnersEquipmentAndConsumesWorldUnitOnce()
+    {
+        var w = new World(); var a = StartTools(w); var before = a.CaptureSnapshot();
+        ToolAction(a, 1, 1, ActionKind.Use); ToolAction(a, 3, 1, ActionKind.Use); Tick(a);
+        Assert.That(Actor(a, 1).EquippedToolId, Is.EqualTo(GameplayTools.Flyswatter)); Assert.That(Actor(a, 3).EquippedToolId, Is.EqualTo(GameplayTools.Hands));
+        Assert.That(a.CaptureSnapshot().ToolPickups.Single().OwnerActorId, Is.EqualTo(1)); Assert.That(w.Tools[101].OwnerActorId, Is.EqualTo(1));
+        ToolAction(a, 1, 1, ActionKind.Use); Tick(a);
+        Assert.That(a.CaptureSnapshot().ToolPickups.Single().Revision, Is.EqualTo(2));
+        Assert.That(before.ToolPickups.Single().OwnerActorId, Is.Zero); Assert.That(before.Actors[0].EquippedToolId, Is.EqualTo(GameplayTools.Hands));
+    }
+    [Test] public void MosquitoAndOutOfReachCannotPickUp()
+    {
+        var w = new World(); var a = StartTools(w); ToolAction(a, 2, 1, ActionKind.Use); Tick(a);
+        Assert.That(Actor(a, 2).EquippedToolId, Is.EqualTo(GameplayTools.Hands)); Assert.That(w.Tools[101].OwnerActorId, Is.Zero);
+        w.ToolDistance = 1.51f; ToolAction(a, 1, 1, ActionKind.Use); Tick(a);
+        Assert.That(a.CapturePrivate(1).Rejection, Is.EqualTo(CommandReject.OutOfReach)); Assert.That(w.Tools[101].OwnerActorId, Is.Zero);
+    }
+    [Test] public void DropRequiresFreePlacementAndCanBePickedByAnotherHuman()
+    {
+        var w = new World(); var a = StartTools(w); ToolAction(a, 1, 1, ActionKind.Use); Tick(a);
+        w.CanDrop = false; ToolAction(a, 1, 2, ActionKind.DropTool); Tick(a);
+        Assert.That(Actor(a, 1).EquippedToolId, Is.EqualTo(GameplayTools.Flyswatter)); Assert.That(a.CapturePrivate(1).Rejection, Is.EqualTo(CommandReject.Obstructed));
+        w.CanDrop = true; ToolAction(a, 1, 3, ActionKind.DropTool); Tick(a);
+        Assert.That(Actor(a, 1).EquippedToolId, Is.EqualTo(GameplayTools.Hands)); Assert.That(w.Tools[101].Position.X, Is.EqualTo(2)); Assert.That(w.Tools[101].OwnerActorId, Is.Zero);
+        ToolAction(a, 3, 1, ActionKind.Use); Tick(a);
+        Assert.That(Actor(a, 3).EquippedToolId, Is.EqualTo(GameplayTools.Flyswatter)); Assert.That(w.Tools[101].OwnerActorId, Is.EqualTo(3));
+    }
+    [Test] public void StrikeUsesEquippedToolAndCannotDropMidStroke()
+    {
+        var w = new World(); var a = StartTools(w); ToolAction(a, 1, 1, ActionKind.Use); Tick(a);
+        ToolAction(a, 1, 2, ActionKind.Primary); Tick(a); Assert.That(Actor(a, 1).StrikeState.ToolId, Is.EqualTo(GameplayTools.Flyswatter));
+        ToolAction(a, 1, 3, ActionKind.DropTool); Tick(a);
+        Assert.That(a.CapturePrivate(1).Rejection, Is.EqualTo(CommandReject.Cooldown)); Assert.That(Actor(a, 1).EquippedToolId, Is.EqualTo(GameplayTools.Flyswatter));
+    }
+    [Test] public void DepartureReturnsOwnedToolAndNewRoundResetsEquipment()
+    {
+        var w = new World(); var a = StartTools(w); ToolAction(a, 1, 1, ActionKind.Use); Tick(a);
+        w.CanDrop = false; a.RemoveActor(1, ActorRemovalReason.Disconnected);
+        Assert.That(a.CaptureSnapshot().ToolPickups.Single().OwnerActorId, Is.Zero); Assert.That(w.Tools[101].Position.Z, Is.EqualTo(1));
+        a = StartTools(w); Assert.That(a.CaptureSnapshot().Actors.All(p => p.EquippedToolId == GameplayTools.Hands), Is.True);
     }
 }

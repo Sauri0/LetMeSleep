@@ -59,12 +59,12 @@ namespace LetMeSleep.Gameplay
     public enum LifeState : byte { Active, Flying, ApproachingSurface, Surface, PreparingBite, Biting, Falling, Fainted, Stunned, Recovering }
     public enum SimulationPhase : byte { Running, Ended }
     public enum StrikePhase : byte { None, Windup, Active, Recovery }
-    public enum ActionKind : byte { Jump, Primary, PerchToggle, Detach, Use }
+    public enum ActionKind : byte { Jump, Primary, PerchToggle, Detach, Use, DropTool }
     public enum CommandReject : byte { None, UnknownActor, WrongOwner, WrongRound, StaleSequence, InvalidNumber, InvalidDirection, WrongRole, InvalidState, Cooldown, OutOfReach, Obstructed, OldViewRevision, RateLimited }
     public enum RoundEndReason : byte { None, BloodGoal, TimeExpired, OpponentLeft, Aborted }
     public enum ActorRemovalReason : byte { Left, Disconnected }
     public enum GameplayEventKind : byte { StrikeStarted, StrikeImpact, BiteStarted, BiteEnded, MosquitoKnockedDown, RecoveryStarted, HelpStarted, HelpEnded, Recovered, HumanFainted, DoorChanged, RoundEnded }
-    public enum InteractionHint : byte { None, ContactRequired, Preparing, Biting, Helping, Stunned, Recovering, Door, Blocked }
+    public enum InteractionHint : byte { None, ContactRequired, Preparing, Biting, Helping, Stunned, Recovering, Door, Blocked, Tool }
     public enum DoorUseResult : byte { Accepted, WrongRole, InvalidState, NoDoor, OutOfReach, Occluded, StaleRevision, Cooldown, Blocked }
     public readonly struct CommandHeader
     {
@@ -123,11 +123,13 @@ namespace LetMeSleep.Gameplay
         public float BloodGoal { get; }
         public BalanceProfile Balance { get; }
         public IReadOnlyList<DoorDefinition> DoorDefinitions { get; }
-        public GameplayRoundConfig(ulong epoch, ulong round, string mapId, string contentHash, int roundSeconds = 180, float bloodGoal = 20, BalanceProfile balance = null, IReadOnlyList<DoorDefinition> doors = null)
+        public IReadOnlyList<ToolPickupDefinition> ToolDefinitions { get; }
+        public GameplayRoundConfig(ulong epoch, ulong round, string mapId, string contentHash, int roundSeconds = 180, float bloodGoal = 20, BalanceProfile balance = null, IReadOnlyList<DoorDefinition> doors = null, IReadOnlyList<ToolPickupDefinition> tools = null)
         {
             if (epoch == 0 || round == 0 || string.IsNullOrWhiteSpace(mapId) || string.IsNullOrWhiteSpace(contentHash) || roundSeconds < 30 || roundSeconds > 1800 || !MathEx.Finite(bloodGoal) || bloodGoal <= 0 || bloodGoal > 1000) throw new ArgumentException("Invalid gameplay round.");
             SessionEpoch = epoch; RoundId = round; MapId = mapId; ContentHash = contentHash; RoundDurationTicks = (uint)(roundSeconds * 30); BloodGoal = bloodGoal; Balance = balance ?? new BalanceProfile();
             DoorDefinitions = Array.AsReadOnly(Copy(doors));
+            ToolDefinitions = Array.AsReadOnly(Copy(tools));
         }
         internal static T[] Copy<T>(IReadOnlyList<T> list) { var copy = new T[list?.Count ?? 0]; for (int i = 0; i < copy.Length; i++) copy[i] = list[i]; return copy; }
     }
@@ -186,8 +188,9 @@ namespace LetMeSleep.Gameplay
         public BiteAttachment? BiteAttachment { get; }
         public StrikeState StrikeState { get; }
         public uint RecoveryEndTick { get; }
-        public ActorSnapshot(uint id, PlayerRole role, LifeState state, uint revision, Float3 position, Float3 velocity, Rotation body, Float3 forward, float yaw, float pitch, uint viewRevision, uint poseRevision, bool grounded, float crouch, float motion, SurfaceAttachment? surface, BiteAttachment? bite, StrikeState strike, uint recoveryEnd)
-        { ActorId = id; Role = role; LifeState = state; StateRevision = revision; Position = position; Velocity = velocity; BodyRotation = body; ViewForward = forward; ViewYawRadians = yaw; ViewPitchRadians = pitch; ViewRevision = viewRevision; PoseRevision = poseRevision; Grounded = grounded; CrouchFraction = crouch; MotionPhase = motion; SurfaceAttachment = surface; BiteAttachment = bite; StrikeState = strike; RecoveryEndTick = recoveryEnd; }
+        public string EquippedToolId { get; }
+        public ActorSnapshot(uint id, PlayerRole role, LifeState state, uint revision, Float3 position, Float3 velocity, Rotation body, Float3 forward, float yaw, float pitch, uint viewRevision, uint poseRevision, bool grounded, float crouch, float motion, SurfaceAttachment? surface, BiteAttachment? bite, StrikeState strike, uint recoveryEnd, string equippedToolId = GameplayTools.Hands)
+        { ActorId = id; Role = role; LifeState = state; StateRevision = revision; Position = position; Velocity = velocity; BodyRotation = body; ViewForward = forward; ViewYawRadians = yaw; ViewPitchRadians = pitch; ViewRevision = viewRevision; PoseRevision = poseRevision; Grounded = grounded; CrouchFraction = crouch; MotionPhase = motion; SurfaceAttachment = surface; BiteAttachment = bite; StrikeState = strike; RecoveryEndTick = recoveryEnd; EquippedToolId = equippedToolId; }
     }
     public sealed class ActorPrivateState
     {
@@ -253,8 +256,9 @@ namespace LetMeSleep.Gameplay
         public PlayerRole Winner { get; }
         public IReadOnlyList<ActorSnapshot> Actors { get; }
         public IReadOnlyList<DoorSnapshot> Doors { get; }
-        public GameSessionState(GameplayRoundConfig config, uint tick, SimulationPhase phase, float blood, RoundEndReason result, PlayerRole winner, IReadOnlyList<ActorSnapshot> actors, IReadOnlyList<DoorSnapshot> doors)
-        { SessionEpoch = config.SessionEpoch; RoundId = config.RoundId; HostTick = tick; MapId = config.MapId; ContentHash = config.ContentHash; BalanceHash = config.BalanceHash; SimulationPhase = phase; TimeRemainingTicks = tick >= config.RoundDurationTicks ? 0 : config.RoundDurationTicks - tick; BloodCollected = blood; BloodGoal = config.BloodGoal; Result = result; Winner = winner; Actors = Array.AsReadOnly(GameplayRoundConfig.Copy(actors)); Doors = Array.AsReadOnly(GameplayRoundConfig.Copy(doors)); }
+        public IReadOnlyList<ToolPickupSnapshot> ToolPickups { get; }
+        public GameSessionState(GameplayRoundConfig config, uint tick, SimulationPhase phase, float blood, RoundEndReason result, PlayerRole winner, IReadOnlyList<ActorSnapshot> actors, IReadOnlyList<DoorSnapshot> doors, IReadOnlyList<ToolPickupSnapshot> toolPickups = null)
+        { SessionEpoch = config.SessionEpoch; RoundId = config.RoundId; HostTick = tick; MapId = config.MapId; ContentHash = config.ContentHash; BalanceHash = config.BalanceHash; SimulationPhase = phase; TimeRemainingTicks = tick >= config.RoundDurationTicks ? 0 : config.RoundDurationTicks - tick; BloodCollected = blood; BloodGoal = config.BloodGoal; Result = result; Winner = winner; Actors = Array.AsReadOnly(GameplayRoundConfig.Copy(actors)); Doors = Array.AsReadOnly(GameplayRoundConfig.Copy(doors)); ToolPickups = Array.AsReadOnly(GameplayRoundConfig.Copy(toolPickups)); }
     }
     public interface IGameplayCommandSink
     {

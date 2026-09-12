@@ -20,6 +20,8 @@ namespace LetMeSleep.Gameplay
             internal CommandReject Rejection;
             internal InteractionHint Hint;
             internal DoorUseResult DoorResult;
+            internal uint EquippedPickup;
+            internal string EquippedTool = GameplayTools.Hands;
             internal SurfaceAttachment? Surface;
             internal BiteAttachment? Bite;
             internal StrikePlan Plan;
@@ -39,6 +41,7 @@ namespace LetMeSleep.Gameplay
         private readonly IGameplayWorld world;
         private readonly Dictionary<uint, Actor> actors = new Dictionary<uint, Actor>();
         private readonly Dictionary<uint, Door> doors = new Dictionary<uint, Door>();
+        private readonly Dictionary<uint, ToolPickupSnapshot> pickups = new Dictionary<uint, ToolPickupSnapshot>();
         private readonly Queue<PlayerActionCommand> pending = new Queue<PlayerActionCommand>();
         private readonly List<GameplayEvent> events = new List<GameplayEvent>();
         private GameplayRoundConfig config;
@@ -68,14 +71,24 @@ namespace LetMeSleep.Gameplay
             var surfaceIds = new HashSet<uint>();
             foreach (var door in next.DoorDefinitions)
                 if (door.DoorId == 0 || door.SurfaceId == 0 || !ids.Add(door.DoorId) || !surfaceIds.Add(door.SurfaceId) || !MathEx.Finite(door.OpenAngleRadians) || door.OpenAngleRadians <= 0 || door.OpenAngleRadians > (float)Math.PI || !MathEx.Finite(door.InitialAngleRadians) || door.InitialAngleRadians < 0 || door.InitialAngleRadians > door.OpenAngleRadians || !door.HingePosition.IsFinite || door.HingePosition.Length > 10000 || !door.LeafSize.IsFinite || door.LeafSize.X <= 0 || door.LeafSize.Y <= 0 || door.LeafSize.Z <= 0 || door.LeafSize.Length > 100 || !door.HandleLocalPoint.IsFinite || !door.LeafCenterLocal.IsFinite || !ValidRotation(door.ClosedRotation) || !ValidRotation(door.LeafRotationLocal) || (door.OpenSign != -1 && door.OpenSign != 1)) throw new ArgumentException("Invalid door definition.");
+            ids.Clear();
+            if (next.ToolDefinitions.Count > 32 || (next.ToolDefinitions.Count > 0 && !(world is IGameplayToolWorld))) throw new ArgumentException("Tool world unavailable or pickup limit exceeded.");
+            foreach (var tool in next.ToolDefinitions)
+                if (tool.PickupId == 0 || !ids.Add(tool.PickupId) || tool.ToolId != GameplayTools.Flyswatter || !tool.Position.IsFinite || tool.Position.Length > 10000 || !ValidRotation(tool.Rotation)) throw new ArgumentException("Invalid tool definition.");
             world.BeginRound(roster, next.DoorDefinitions);
+            if (world is IGameplayToolWorld toolWorld) toolWorld.BeginTools(next.ToolDefinitions);
             config = next; tick = 0; blood = 0; eventId = 0; strikeId = 0; result = RoundEndReason.None; winner = PlayerRole.Unassigned; phase = SimulationPhase.Running;
-            actors.Clear(); doors.Clear(); pending.Clear(); events.Clear();
+            actors.Clear(); doors.Clear(); pickups.Clear(); pending.Clear(); events.Clear();
             foreach (var spawn in roster) actors.Add(spawn.ActorId, new Actor { Spawn = spawn, Position = spawn.Position, State = spawn.Role == PlayerRole.Human ? LifeState.Active : LifeState.Flying });
             foreach (var definition in next.DoorDefinitions)
             {
                 var door = new Door { Definition = definition, Angle = definition.InitialAngleRadians, Target = definition.InitialAngleRadians }; doors.Add(definition.DoorId, door);
                 world.ApplyDoorPose(new DoorPose(definition.DoorId, 1, 0, door.Angle));
+            }
+            foreach (var definition in next.ToolDefinitions)
+            {
+                var state = new ToolPickupSnapshot(definition.PickupId, definition.ToolId, definition.Position, definition.Rotation);
+                pickups.Add(state.PickupId, state); ((IGameplayToolWorld)world).ApplyToolState(state);
             }
             Synchronize();
         }
@@ -113,7 +126,7 @@ namespace LetMeSleep.Gameplay
         private CommandReject Action(string principal, in PlayerActionCommand c, bool bot)
         {
             var reject = Validate(principal, c.Header, bot, out var a); if (reject != CommandReject.None) return reject;
-            if (!ValidAim(c.AimForward) || (byte)c.Kind > (byte)ActionKind.Use) return a.Rejection = CommandReject.InvalidDirection;
+            if (!ValidAim(c.AimForward) || (byte)c.Kind > (byte)ActionKind.DropTool) return a.Rejection = CommandReject.InvalidDirection;
             if (a.ActionHistory.TryGetValue(c.Header.Sequence, out var prior))
                 return prior.Kind == c.Kind && (prior.AimForward - c.AimForward).LengthSquared < .0000001f ? CommandReject.None : CommandReject.StaleSequence;
             if (a.HasAction && !MathEx.Newer(c.Header.Sequence, a.ActionSequence)) return CommandReject.StaleSequence;
@@ -169,18 +182,46 @@ namespace LetMeSleep.Gameplay
                     case ActionKind.Primary:
                         if (a.Spawn.Role != PlayerRole.Human) { a.Rejection = CommandReject.WrongRole; break; }
                         if (a.Strike.Phase != StrikePhase.None) { a.Rejection = CommandReject.Cooldown; break; }
-                        if (world.TryPlanStrike(a.Spawn.ActorId, c.AimForward, ToolId, out a.Plan))
+                        if (world.TryPlanStrike(a.Spawn.ActorId, c.AimForward, a.EquippedTool, out a.Plan))
                         {
                             a.HitActors.Clear(); a.StrikeBlocked = false; a.Strike = new StrikeState(++strikeId, a.Plan.ToolId, a.Plan.Hand, StrikePhase.Windup, tick, a.Plan.Origin, a.Plan.Target, a.Plan.Normal, 0);
                             Emit(GameplayEventKind.StrikeStarted, a, 0, a.Plan.Target, a.Plan.Normal);
                         }
                         else a.Rejection = CommandReject.OutOfReach;
                         break;
-                    case ActionKind.Use: UseDoor(a, c.AimForward); break;
+                    case ActionKind.Use: if (!TryPickTool(a, c.AimForward)) UseDoor(a, c.AimForward); break;
+                    case ActionKind.DropTool:
+                        if (a.Spawn.Role != PlayerRole.Human) a.Rejection = CommandReject.WrongRole;
+                        else if (a.Strike.Phase != StrikePhase.None) a.Rejection = CommandReject.Cooldown;
+                        else DropTool(a, false);
+                        break;
                 }
             }
         }
-        public string ToolId { get; set; } = "hands";
+        private bool TryPickTool(Actor a, Float3 aim)
+        {
+            if (a.Spawn.Role != PlayerRole.Human || !(world is IGameplayToolWorld toolWorld)) return false;
+            var eye = a.Position + Float3.Up * (1.53f - .64f * a.Crouch);
+            if (!toolWorld.TryToolInteraction(new ToolInteractionQuery(a.Spawn.ActorId, eye, aim, 1.5f), out var candidate)) return false;
+            if (!pickups.TryGetValue(candidate.PickupId, out var pickup) || pickup.Revision != candidate.Revision || pickup.OwnerActorId != 0) { a.Rejection = CommandReject.InvalidState; return true; }
+            if (candidate.Distance > 1.5f || candidate.Distance < 0 || !MathEx.Finite(candidate.Distance)) { a.Rejection = CommandReject.OutOfReach; return true; }
+            if (a.EquippedPickup != 0 || a.Strike.Phase != StrikePhase.None) { a.Rejection = CommandReject.InvalidState; return true; }
+            var equipped = new ToolPickupSnapshot(pickup.PickupId, pickup.ToolId, pickup.Position, pickup.Rotation, a.Spawn.ActorId, pickup.Revision + 1);
+            pickups[pickup.PickupId] = equipped; a.EquippedPickup = pickup.PickupId; a.EquippedTool = pickup.ToolId; a.Revision++; a.Hint = InteractionHint.Tool;
+            toolWorld.ApplyToolState(equipped); return true;
+        }
+        private void DropTool(Actor a, bool departing)
+        {
+            if (a.EquippedPickup == 0 || !(world is IGameplayToolWorld toolWorld) || !pickups.TryGetValue(a.EquippedPickup, out var pickup)) return;
+            if (!toolWorld.TryDropTool(a.Spawn.ActorId, out var position, out var rotation))
+            {
+                if (!departing) { a.Rejection = CommandReject.Obstructed; return; }
+                var original = config.ToolDefinitions.First(t => t.PickupId == pickup.PickupId); position = original.Position; rotation = original.Rotation;
+            }
+            var dropped = new ToolPickupSnapshot(pickup.PickupId, pickup.ToolId, position, rotation, 0, pickup.Revision + 1);
+            pickups[pickup.PickupId] = dropped; a.EquippedPickup = 0; a.EquippedTool = GameplayTools.Hands; a.Revision++; a.Hint = InteractionHint.Tool;
+            toolWorld.ApplyToolState(dropped);
+        }
         private void Move(Actor a, float dt)
         {
             if (a.State == LifeState.Stunned || a.State == LifeState.Fainted || a.State == LifeState.Recovering) { a.Velocity = default; return; }
@@ -355,11 +396,11 @@ namespace LetMeSleep.Gameplay
         }
         private void KnockDown(Actor a, Float3 impulse) { Detach(a); a.Velocity = impulse + new Float3(0, -.6f, 0); a.Grounded = false; SetState(a, LifeState.Falling); Emit(GameplayEventKind.MosquitoKnockedDown, a); }
         private void Emit(GameplayEventKind kind, Actor a, uint target = 0, Float3 position = default, Float3 normal = default) => events.Add(new GameplayEvent(config.SessionEpoch, config.RoundId, ++eventId, tick, kind, a.Spawn.ActorId, target, a.Revision, position.LengthSquared == 0 ? a.Position : position, normal));
-        private ActorSnapshot Snapshot(Actor a) => new ActorSnapshot(a.Spawn.ActorId, a.Spawn.Role, a.State, a.Revision, a.Position, a.Velocity, Rotation.Yaw(a.Yaw), a.Aim, a.Yaw, a.Pitch, a.ViewRevision, a.PoseRevision, a.Grounded, a.Crouch, a.Motion, a.Surface, a.Bite, a.Strike, tick + (uint)Math.Ceiling(a.Recovery * 30));
+        private ActorSnapshot Snapshot(Actor a) => new ActorSnapshot(a.Spawn.ActorId, a.Spawn.Role, a.State, a.Revision, a.Position, a.Velocity, Rotation.Yaw(a.Yaw), a.Aim, a.Yaw, a.Pitch, a.ViewRevision, a.PoseRevision, a.Grounded, a.Crouch, a.Motion, a.Surface, a.Bite, a.Strike, tick + (uint)Math.Ceiling(a.Recovery * 30), a.EquippedTool);
         private ActorSnapshot[] ActorSnapshots() => actors.Values.OrderBy(a => a.Spawn.ActorId).Select(Snapshot).ToArray();
         private void Synchronize() => world.SynchronizeActors(ActorSnapshots());
         public GameSessionState CaptureSnapshot()
-        { if (config == null) throw new InvalidOperationException("BeginRound first."); return new GameSessionState(config, tick, phase, blood, result, winner, ActorSnapshots(), doors.Values.OrderBy(d => d.Definition.DoorId).Select(d => d.Snapshot).ToArray()); }
+        { if (config == null) throw new InvalidOperationException("BeginRound first."); return new GameSessionState(config, tick, phase, blood, result, winner, ActorSnapshots(), doors.Values.OrderBy(d => d.Definition.DoorId).Select(d => d.Snapshot).ToArray(), pickups.Values.OrderBy(p => p.PickupId).ToArray()); }
         public ActorPrivateState CapturePrivate(uint actorId)
         {
             if (!actors.TryGetValue(actorId, out var a)) return null;
@@ -368,7 +409,8 @@ namespace LetMeSleep.Gameplay
         public IReadOnlyList<GameplayEvent> DrainEvents() { var copy = Array.AsReadOnly(events.ToArray()); events.Clear(); return copy; }
         public void RemoveActor(uint actorId, ActorRemovalReason reason)
         {
-            if (!actors.Remove(actorId)) return;
+            if (!actors.TryGetValue(actorId, out var leaving)) return;
+            DropTool(leaving, true); actors.Remove(actorId);
             foreach (var a in actors.Values.Where(a => a.Bite.HasValue && a.Bite.Value.VictimId == actorId)) Detach(a);
             Synchronize();
             if (!IsRunning) return;

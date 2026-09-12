@@ -14,10 +14,10 @@ public sealed class WireChecks
     {
         var bite = attached ? new BiteAttachment(1, 101, new Float3(.01f, .02f, .03f), Float3.Forward, 93) : (BiteAttachment?)null;
         var strike = human ? new StrikeState(12, "flyswatter", 1, StrikePhase.Active, 90, new Float3(0, 1, 0), new Float3(0, 1, .7f), -Float3.Forward, .35f) : default;
-        return new ActorSnapshot(id, human ? PlayerRole.Human : PlayerRole.Mosquito, human ? LifeState.Active : attached ? LifeState.Biting : LifeState.Flying, 4, new Float3(id, 1, 2), new Float3(.1f, -.2f, .3f), Rotation.Yaw(.4f), MathEx.Aim(.4f, -.2f), .4f, -.2f, 2, 93, human, .3f, 12.5f, null, bite, strike, 120);
+        return new ActorSnapshot(id, human ? PlayerRole.Human : PlayerRole.Mosquito, human ? LifeState.Active : attached ? LifeState.Biting : LifeState.Flying, 4, new Float3(id, 1, 2), new Float3(.1f, -.2f, .3f), Rotation.Yaw(.4f), MathEx.Aim(.4f, -.2f), .4f, -.2f, 2, 93, human, .3f, 12.5f, null, bite, strike, 120, human ? GameplayTools.Flyswatter : GameplayTools.Hands);
     }
     private static DoorSnapshot Door(uint id) => new DoorSnapshot(id, id + 1000, 5, .7f, 1.5f, 2.5f, true, false, 110);
-    private static GameSessionState Snapshot(int count = 2, int doors = 1) => new GameSessionState(new GameplayRoundConfig(71, 82, "house-patio-v1", "content-α", 180, 20, new BalanceProfile(35)), 120, SimulationPhase.Running, 2.5f, RoundEndReason.None, PlayerRole.Unassigned, Enumerable.Range(1, count).Select(i => Actor((uint)i, i == 1, i == 2)).ToArray(), Enumerable.Range(1, doors).Select(i => Door((uint)i)).ToArray());
+    private static GameSessionState Snapshot(int count = 2, int doors = 1, int pickups = 1) => new GameSessionState(new GameplayRoundConfig(71, 82, "house-patio-v1", "content-α", 180, 20, new BalanceProfile(35)), 120, SimulationPhase.Running, 2.5f, RoundEndReason.None, PlayerRole.Unassigned, Enumerable.Range(1, count).Select(i => Actor((uint)i, i == 1, i == 2)).ToArray(), Enumerable.Range(1, doors).Select(i => Door((uint)i)).ToArray(), Enumerable.Range(1, pickups).Select(i => new ToolPickupSnapshot((uint)i, GameplayTools.Flyswatter, new Float3(i, 1, 1), Rotation.Identity, i == 1 ? 1u : 0u)).ToArray());
     [Test] public void InputAndActionRoundTripPreserveFieldsAndSequences()
     {
         var bytes = GameplayWireCodec.Encode(Input); Assert.That(GameplayWireCodec.TryDecodeInput(bytes, out var decoded), Is.True);
@@ -33,6 +33,7 @@ public sealed class WireChecks
         Assert.That(decoded.BalanceHash, Is.EqualTo(s.BalanceHash)); Assert.That(decoded.TimeRemainingTicks, Is.EqualTo(5280)); Assert.That(decoded.ContentHash, Is.EqualTo("content-α"));
         Assert.That(decoded.Actors[0].StrikeState.ToolId, Is.EqualTo("flyswatter")); Assert.That(decoded.Actors[0].StrikeState.Target.Z, Is.EqualTo(.7f));
         Assert.That(decoded.Actors[1].BiteAttachment.Value.VictimId, Is.EqualTo(1)); Assert.That(decoded.Actors[1].BiteAttachment.Value.LocalPoint.Y, Is.EqualTo(.02f)); Assert.That(decoded.Doors[0].AngleRadians, Is.EqualTo(.7f));
+        Assert.That(decoded.Actors[0].EquippedToolId, Is.EqualTo(GameplayTools.Flyswatter)); Assert.That(decoded.ToolPickups[0].OwnerActorId, Is.EqualTo(1));
         Assert.That(GameplayWireCodec.Encode(decoded), Is.EqualTo(bytes));
     }
     [Test] public void PrivateAndEventsCarryRoundIdentity()
@@ -51,9 +52,10 @@ public sealed class WireChecks
     }
     [Test] public void MaximumPopulationAndDoorCountStayWithinMessageCap()
     {
-        var bytes = GameplayWireCodec.Encode(Snapshot(16, 128)); Assert.That(bytes.Length, Is.LessThanOrEqualTo(16384)); Assert.That(GameplayWireCodec.TryDecodeSnapshot(bytes, out var decoded), Is.True); Assert.That(decoded.Actors.Count, Is.EqualTo(16)); Assert.That(decoded.Doors.Count, Is.EqualTo(128));
+        var bytes = GameplayWireCodec.Encode(Snapshot(16, 128, 32)); Assert.That(bytes.Length, Is.LessThanOrEqualTo(16384)); Assert.That(GameplayWireCodec.TryDecodeSnapshot(bytes, out var decoded), Is.True); Assert.That(decoded.Actors.Count, Is.EqualTo(16)); Assert.That(decoded.Doors.Count, Is.EqualTo(128)); Assert.That(decoded.ToolPickups.Count, Is.EqualTo(32));
         Assert.Throws<InvalidDataException>(() => GameplayWireCodec.Encode(Snapshot(17, 128)));
         Assert.Throws<InvalidDataException>(() => GameplayWireCodec.Encode(Snapshot(16, 129)));
+        Assert.Throws<InvalidDataException>(() => GameplayWireCodec.Encode(Snapshot(16, 128, 33)));
     }
     [Test] public void TruncationAndTrailingBytesNeverDecode()
     {
@@ -74,7 +76,7 @@ public sealed class WireChecks
     [Test] public void InvalidVersionsEnumsBooleansNumbersAndUtf8AreRejected()
     {
         var input = GameplayWireCodec.Encode(Input);
-        var version = (byte[])input.Clone(); version[4] = 2; Assert.That(Any(version), Is.False);
+        var version = (byte[])input.Clone(); version[4] = 1; Assert.That(Any(version), Is.False);
         var nan = (byte[])input.Clone(); Array.Copy(BitConverter.GetBytes(float.NaN), 0, nan, 39, 4); Assert.That(Any(nan), Is.False);
         var boolean = (byte[])input.Clone(); boolean[71] = 2; Assert.That(Any(boolean), Is.False);
         var action = GameplayWireCodec.Encode(new PlayerActionCommand(Header, ActionKind.Use, Float3.Forward)); action[39] = 255; Assert.That(Any(action), Is.False);
@@ -104,6 +106,14 @@ public sealed class WireChecks
             var mutated = (byte[])valid.Clone(); for (int j = 0; j < 4; j++) mutated[random.Next(mutated.Length)] = (byte)random.Next(256);
             Assert.DoesNotThrow(() => Any(mutated));
         }
+    }
+    [Test] public void EquipmentWithoutMatchingOwnedPickupCannotBeEncoded()
+    {
+        var snapshot = Snapshot(); var config = new GameplayRoundConfig(71, 82, "house-patio-v1", "content-α", 180, 20, new BalanceProfile(35));
+        var missing = new GameSessionState(config, 120, SimulationPhase.Running, 0, RoundEndReason.None, PlayerRole.Unassigned, snapshot.Actors, snapshot.Doors);
+        Assert.Throws<InvalidDataException>(() => GameplayWireCodec.Encode(missing));
+        var wrongOwner = new GameSessionState(config, 120, SimulationPhase.Running, 0, RoundEndReason.None, PlayerRole.Unassigned, snapshot.Actors, snapshot.Doors, new[] { new ToolPickupSnapshot(1, GameplayTools.Flyswatter, Float3.Up, Rotation.Identity, 2) });
+        Assert.Throws<InvalidDataException>(() => GameplayWireCodec.Encode(wrongOwner));
     }
     private static bool Any(byte[] data) => GameplayWireCodec.TryDecodeInput(data, out _) || GameplayWireCodec.TryDecodeAction(data, out _) || GameplayWireCodec.TryDecodeSnapshot(data, out _) || GameplayWireCodec.TryDecodePrivate(data, out _) || GameplayWireCodec.TryDecodeEvent(data, out _);
 }

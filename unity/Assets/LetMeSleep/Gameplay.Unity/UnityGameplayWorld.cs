@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace LetMeSleep.Gameplay.Unity
 {
-    public sealed class UnityGameplayWorld : MonoBehaviour, IGameplayWorld
+    public sealed partial class UnityGameplayWorld : MonoBehaviour, IGameplayWorld, IGameplayToolWorld
     {
         public LayerMask GeometryMask = ~0;
         public event Action<GameplayActorProxy> ActorCreated;

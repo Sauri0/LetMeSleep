@@ -61,7 +61,7 @@ namespace LetMeSleep.Gameplay.Unity
                 foreach (var spawn in roster.Where(a => a.IsBot)) bots.Add(spawn.ActorId, new BotController());
                 ApplySnapshot(Authority.CaptureSnapshot());
             }
-            else World.BeginRound(roster, config.DoorDefinitions);
+            else { World.BeginRound(roster, config.DoorDefinitions); World.BeginTools(config.ToolDefinitions); }
             SetInputBlocked(false);
         }
         public void StopRound()
@@ -111,6 +111,7 @@ namespace LetMeSleep.Gameplay.Unity
             wasAttached = attached;
             if (keyboard.spaceKey.wasPressedThisFrame && self.Role == PlayerRole.Human) Enqueue(ActionKind.Jump);
             if (keyboard.fKey.wasPressedThisFrame) Enqueue(self.Role == PlayerRole.Human ? ActionKind.Use : ActionKind.PerchToggle);
+            if (keyboard.gKey.wasPressedThisFrame && self.Role == PlayerRole.Human) Enqueue(ActionKind.DropTool);
             if (mouse.leftButton.wasPressedThisFrame && self.Role == PlayerRole.Human) Enqueue(ActionKind.Primary);
             if (self.Role == PlayerRole.Mosquito) MosquitoCameraDistance = Mathf.Clamp(MosquitoCameraDistance - mouse.scroll.ReadValue().y * .0015f, 0, 2.5f);
             float x = (keyboard.dKey.isPressed ? 1 : 0) - (keyboard.aKey.isPressed ? 1 : 0);
@@ -189,6 +190,7 @@ namespace LetMeSleep.Gameplay.Unity
             {
                 World.SynchronizeActors(snapshot.Actors);
                 foreach (var door in snapshot.Doors) World.ApplyDoorPose(new DoorPose(door.DoorId, door.Revision, snapshot.HostTick, door.AngleRadians));
+                foreach (var pickup in snapshot.ToolPickups) World.ApplyToolState(pickup);
             }
             var self = LocalActor();
             if (self != null && self.ViewRevision != knownViewRevision)

@@ -24,8 +24,8 @@ También hay cinco overloads `TryDecode(byte[], out Tipo)` si el caller ya conoc
 
 ## Formato y límites
 
-- Cabecera: magic uint32 `0x314D534C`, versión uint16 `1`, tipo uint8 (`1 Input`, `2 Action`, `3 Snapshot`, `4 Private`, `5 Event`). Números little endian de BinaryReader/Writer; sin JSON, UnityObject o reflection de serialización.
-- Máximo **16384 bytes incluyendo cabecera**, **16 actores**, **128 puertas**. Counts se comprueban antes de reservar arrays. Duplicados de ActorId/DoorId/SurfaceId de puerta se rechazan. No hay PUID ni identidad de propietario en mensajes de cliente.
+- Cabecera: magic uint32 `0x314D534C`, versión uint16 `2`, tipo uint8 (`1 Input`, `2 Action`, `3 Snapshot`, `4 Private`, `5 Event`). Números little endian de BinaryReader/Writer; sin JSON, UnityObject o reflection de serialización.
+- Máximo **16384 bytes incluyendo cabecera**, **16 actores**, **128 puertas**, **32 pickups**. Counts se comprueban antes de reservar arrays. Duplicados de ActorId/DoorId/SurfaceId de puerta se rechazan. No hay PUID ni identidad de propietario en mensajes de cliente.
 - Strings: UTF8 estricto con largo uint16 en bytes; MapId/ContentHash≤128, BalanceHash≤256, ToolId≤24. Se rechazan largos inválidos, truncamiento, secuencias UTF8 inválidas, controles y strings vacíos. No hay lectura sin límite ni BinaryReader.ReadString.
 - Floats finitos/acotados, bool únicamente byte0/1, enums en dominio, direcciones/quaterniones válidos. Vistas conservan yaw/pitch y su consistencia con AimForward. Input diagonal se permite por componentes y lo normaliza Authority. Actor/época/ronda no pueden ser cero.
 - Cliente tick dentro de ronda≤54000; privado incluye SessionEpoch/RoundId/HostTick. Snapshot conserva vida, locomoción, pose, revisiones, anclas, strike, puertas y resultado. Recuperación limitada al horizonte del perfil. Snapshot posee copia inmutable de actores/puertas.
@@ -34,8 +34,8 @@ También hay cinco overloads `TryDecode(byte[], out Tipo)` si el caller ya conoc
 
 ## Validación
 
-`validation/Run-Validation.ps1` compila codec + dominio en C#9/netstandard2.1 y adaptador contra Unity6000.3.24f1/InputSystem. Suite externa total: **50 casos/0 fallos** (29 QA,13 dominio/réplica,8 codec). No se ejecutó Unity Test Runner ni una conexión de red.
+`validation/Run-Validation.ps1` compila codec + dominio en C#9/netstandard2.1 y adaptador contra Unity6000.3.24f1/InputSystem. Suite externa total: **56 casos/0 fallos** (29 QA,18 dominio/réplica/herramientas,9 codec). No se ejecutó Unity Test Runner ni una conexión de red.
 
-Los 8 casos de codec comprueban ida/vuelta de los cinco tipos y campos concretos, contenido UTF8, uint.MaxValue en secuencia, anclas/strike/puertas, privado correlacionado, máximo16/128 bajo16384 bytes, rechazo de excesos, todas las posiciones de truncamiento de los cinco tipos, bytes sobrantes, versión/tipo/enum/bool inválidos, NaN, UTF8 inválido, largo corrupto, counts inválidos, privado sin época, 1000 tramas aleatorias y 300 mutaciones de snapshot sin excepciones inesperadas. La comparación de bytes al recodificar complementa las aserciones de campos; no sustituye pruebas de transporte.
+Los 9 casos de codec comprueban ida/vuelta de los cinco tipos y campos concretos, contenido UTF8, uint.MaxValue en secuencia, anclas/strike/puertas, privado correlacionado, máximo16/128/32 bajo16384 bytes, rechazo de excesos, todas las posiciones de truncamiento de los cinco tipos, bytes sobrantes, versión/tipo/enum/bool inválidos, NaN, UTF8 inválido, largo corrupto, counts inválidos, privado sin época, 1000 tramas aleatorias y 300 mutaciones de snapshot sin excepciones inesperadas. La comparación de bytes al recodificar complementa las aserciones de campos; no sustituye pruebas de transporte. La versión2 agrega EquippedToolId/ToolPickups, valida que cada equipo tenga un único dueño humano y rechaza herramientas huérfanas.
 
 La entrega no acredita fragmentación EOS, entrega fiable, pérdida/latencia, WAN ni corrección de una escena física. Estas pruebas son responsabilidad de integración con Director/QA.
