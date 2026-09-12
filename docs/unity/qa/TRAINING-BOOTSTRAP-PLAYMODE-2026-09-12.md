@@ -1,6 +1,6 @@
 # Evidencia PlayMode de entrenamiento — 2026-09-12
 
-Alcance: arranque de la escena `LetMeSleepBoot`, creación y limpieza del entrenamiento local para ambos roles. La ejecución se hizo con Unity `6000.3.24f1` sobre la integración principal cuyo `HEAD` era `f7e9606`.
+Alcance: arranque de la escena `LetMeSleepBoot`, creación y limpieza del entrenamiento local para ambos roles. La ejecución se hizo con Unity `6000.3.24f1` en el editor D3D11. El recibo declara base `7ca1e54` y fuente dirty, por lo que acredita el estado ensayado pero todavía no una candidata reproducible.
 
 Resultado final: **PASS — 2/2**, 0 fallos, 0 omitidos y 0 inconclusos; duración total `1.33 s`.
 
@@ -25,9 +25,10 @@ Después llama a `CancelTraining` y verifica que desaparezcan runtime, actores y
 
 ## Trazabilidad
 
-- Implementación inicial de la suite QA: `6c4e031`.
+- Implementación inicial de la suite QA: `6c4e031`, integrada en principal como `5d02083`.
 - Corrección portable del conteo NUnit: `27be705`, integrada en principal como `f7e9606`.
-- Recibo efímero de la ejecución: `unity/Temp/pipeline_test_status.json`, actualizado a las `08:05:01` hora local.
+- Resultado detallado: [`ALFA-TRAINING-PLAYMODE-20260912.json`](ALFA-TRAINING-PLAYMODE-20260912.json).
+- Recibo de procedencia y límites: [`ALFA-TRAINING-PLAYMODE-RECEIPT.json`](ALFA-TRAINING-PLAYMODE-RECEIPT.json).
 
 La primera ejecución alcanzó la creación real de 3 actores, 7 pickups, cámara y limpieza, pero los dos casos quedaron rojos por usar `Has.Count` sobre un array de definiciones. El error pertenecía al matcher del test. Tras cambiar ambos conteos a la propiedad tipada `.Count`, la repetición completa quedó verde.
 

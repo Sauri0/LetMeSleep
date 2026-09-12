@@ -29,11 +29,12 @@ El estado final viajaba como datagrama no fiable mientras `RoomView.Results` via
 ## Hallazgos restantes
 
 - El nombre guardado ya se coloca en el formulario mediante la corrección UI integrada.
-- La escritura de preferencias ahora revierte el estado y muestra feedback si falla. Aún debe envolver `Directory.CreateDirectory(DataPath)` y capturar `UnauthorizedAccessException` también durante carga, para que una carpeta inaccesible no aborte `Start`.
+- La escritura de preferencias ahora revierte el estado y muestra feedback si falla. La integración `bf4f89b` también protege la creación de la carpeta y captura acceso denegado durante carga.
 - La ruta de usuario ya queda limitada a `N:` en editor y usa `Application.persistentDataPath` en build.
 - La corrección activa muestra el estado `RoomClosed` sobre el formulario visible de unión.
 - La corrección activa selecciona el spawn más alejado de los miembros persistentes para evitar solapamientos al reconstruir el lobby.
 - La corrección activa alinea `docs/unity/CORE-CONTRACT.md` con el protocolo alfa-2 del código.
+- La integración `bf4f89b` limpia la caché de apariencia al destruir gameplay o lobby, evitando conservar IDs de instancias destruidas.
 
 ## Matriz mínima de reverificación
 
