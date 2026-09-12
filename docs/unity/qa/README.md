@@ -1,7 +1,8 @@
 # QA funcional — Unity 0.9.4 alfa
 
-Estado: **evidencia parcial**. Hay resultados Unity EditMode, PlayMode de entrenamiento y un build/arranque EOS host; una partida WAN, revisión visual y paquete candidato permanecen sin acreditar.
+Estado: **candidata pública distribuible para diagnóstico; alfa todavía BLOCK**. Pasaron build limpio, paquete, instalación pública, UI, Unity EditMode y PlayMode acotado. Siguen pendientes el par EOS/WAN, rondas y recorrido integral, rendimiento objetivo y aprobación de Branko.
 
+- [Informe QA final de la candidata](FINAL-REVIEW-0.9.4-ALFA-CANDIDATE.md): identidad pública, evidencia, dictamen U094-01…17 y condiciones para aprobar alfa.
 - [Matriz de aceptación](ACCEPTANCE-MATRIX-0.9.4-ALFA.md): requisitos, negativos y evidencia mínima.
 - [Checklist de candidata](CANDIDATE-CHECKLIST-0.9.4-ALFA.md): secuencia corta de decisión para un commit candidato.
 - [Protocolo EOS/WAN](EOS-WAN-PROTOCOL-0.9.4-ALFA.md): ejecución entre dos equipos y dos redes físicas.
