@@ -21,6 +21,8 @@ var ui = AlfaUiRuntime.Create(menuActions, new AlfaUiDependencies(
 
 No se necesita escena o prefab UI escrito manualmente. Los sprites y fuentes son dependencias opcionales; si faltan, usa formas planas y la fuente TMP predeterminada. El modelo del personalizador nunca se simula con UI: `CharacterPreviewSetup` recibe cámara, stage, `RenderTexture` y prefabs externos humano/mosquito.
 
+El visor supone que el frente de los prefabs mira hacia `+Z`: coloca la cámara en `+Z`, calcula centro y distancia desde los `Renderer.bounds`, y vuelve a encuadrar cada rol sin modificar la escala ni los colliders. Cámara y modelo sólo permanecen activos mientras Personalizar está visible.
+
 ## Acciones que implementa el adaptador
 
 `IMenuActions` expone:

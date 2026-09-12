@@ -986,6 +986,7 @@ namespace LetMeSleep.UI
                 }
             }
             confirmModal?.SetActive(false);
+            previewOrbit?.SetVisible(next == AlfaUiScreen.Customization);
             var gameplay = next == AlfaUiScreen.Gameplay;
             SetCursor(!gameplay);
             if (focusName == null)
