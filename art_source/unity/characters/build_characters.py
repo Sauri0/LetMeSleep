@@ -392,7 +392,7 @@ def human():
 
 def mosquito():
     from author_mosquito_geometry import create_mosquito
-    from author_motion import mosquito as animate_mosquito
+    from author_mosquito_motion import mosquito as animate_mosquito
     c=create_mosquito(Character=Character, material=material, tube=tube,
                       ellipsoid=ellipsoid, strip=strip, mesh=mesh)
     animate_mosquito(c)
