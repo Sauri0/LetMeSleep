@@ -1,0 +1,24 @@
+{
+  "name": "LetMeSleep.Tests.PlayMode",
+  "rootNamespace": "LetMeSleep.Tests.PlayMode",
+  "references": [
+    "LetMeSleep.Bootstrap",
+    "LetMeSleep.Core",
+    "LetMeSleep.Gameplay",
+    "LetMeSleep.Gameplay.Unity",
+    "LetMeSleep.Presentation",
+    "LetMeSleep.UI"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}
