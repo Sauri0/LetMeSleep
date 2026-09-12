@@ -199,11 +199,11 @@ namespace LetMeSleep.Gameplay
     public readonly struct DoorDefinition
     {
         public readonly uint DoorId, SurfaceId;
-        public readonly Float3 HingePosition, LeafSize, HandleLocalPoint;
-        public readonly Rotation ClosedRotation;
+        public readonly Float3 HingePosition, LeafSize, LeafCenterLocal, HandleLocalPoint;
+        public readonly Rotation ClosedRotation, LeafRotationLocal;
         public readonly float OpenSign, OpenAngleRadians, InitialAngleRadians;
-        public DoorDefinition(uint id, uint surface, Float3 hinge, Rotation closed, Float3 size, Float3 handle, float openSign = 1, float openAngleRadians = 1.5707963f, float initialAngleRadians = 0)
-        { DoorId = id; SurfaceId = surface; HingePosition = hinge; ClosedRotation = closed; LeafSize = size; HandleLocalPoint = handle; OpenSign = openSign; OpenAngleRadians = openAngleRadians; InitialAngleRadians = initialAngleRadians; }
+        public DoorDefinition(uint id, uint surface, Float3 hinge, Rotation closed, Float3 size, Float3 handle, float openSign = 1, float openAngleRadians = 1.5707963f, float initialAngleRadians = 0, Float3 leafCenterLocal = default, Rotation leafRotationLocal = default)
+        { DoorId = id; SurfaceId = surface; HingePosition = hinge; ClosedRotation = closed; LeafSize = size; HandleLocalPoint = handle; OpenSign = openSign; OpenAngleRadians = openAngleRadians; InitialAngleRadians = initialAngleRadians; LeafCenterLocal = leafCenterLocal; LeafRotationLocal = leafRotationLocal.X == 0 && leafRotationLocal.Y == 0 && leafRotationLocal.Z == 0 && leafRotationLocal.W == 0 ? Rotation.Identity : leafRotationLocal; }
     }
     public readonly struct DoorSnapshot
     {

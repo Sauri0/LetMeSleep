@@ -8,6 +8,7 @@ namespace LetMeSleep.Gameplay.Unity
         public uint SurfaceId = 100;
         public Transform Hinge;
         public BoxCollider Leaf;
+        public Transform Handle;
         public float OpenSign = 1;
         public float OpenDegrees = 90;
         public float InitialDegrees;
@@ -33,7 +34,13 @@ namespace LetMeSleep.Gameplay.Unity
             {
                 Initialize();
                 var worldClosed = Hinge.parent ? Hinge.parent.rotation * closedRotation : closedRotation;
-                return new DoorDefinition(DoorId, SurfaceId, Hinge.position.ToFloat(), worldClosed.ToRotation(), Leaf ? Vector3.Scale(Leaf.size, Leaf.transform.lossyScale).ToFloat() : new Float3(1.1f, 2.2f, .06f), new Float3(.9f, 1.1f, 0), OpenSign, OpenDegrees * Mathf.Deg2Rad, InitialDegrees * Mathf.Deg2Rad);
+                if (!Leaf) throw new System.InvalidOperationException("Door leaf collider is required.");
+                var center = Hinge.InverseTransformPoint(Leaf.transform.TransformPoint(Leaf.center));
+                var size = Vector3.Scale(Leaf.size, Leaf.transform.lossyScale);
+                var localRotation = Quaternion.Inverse(Hinge.rotation) * Leaf.transform.rotation;
+                var leafRight = Hinge.InverseTransformDirection(Leaf.transform.right);
+                var handle = Handle ? Hinge.InverseTransformPoint(Handle.position) : center + leafRight * Mathf.Max(0, size.x * .5f - .09f);
+                return new DoorDefinition(DoorId, SurfaceId, Hinge.position.ToFloat(), worldClosed.ToRotation(), size.ToFloat(), handle.ToFloat(), OpenSign, OpenDegrees * Mathf.Deg2Rad, InitialDegrees * Mathf.Deg2Rad, center.ToFloat(), localRotation.ToRotation());
             }
         }
         public void ApplyAngle(float radians)

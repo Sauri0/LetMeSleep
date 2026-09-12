@@ -154,7 +154,10 @@ namespace LetMeSleep.Gameplay.Unity
             if (!surface || !surface.CanPerch || !surfaces.ContainsKey(surface.SurfaceId)) return false;
             var point = hit.Value.point; var normal = hit.Value.normal.normalized;
             var localPoint = surface.transform.InverseTransformPoint(point).ToFloat(); var localNormal = surface.transform.InverseTransformDirection(normal).ToFloat();
-            var attachment = new SurfaceAttachment(surface.SurfaceId, surface.Revision, localPoint, localNormal, Float3.ProjectPlane(query.Direction, normal.ToFloat()).Normalized);
+            var tangent = Vector3.ProjectOnPlane(query.Direction.ToUnity(), normal);
+            if (tangent.sqrMagnitude < .0001f) tangent = Vector3.ProjectOnPlane(Vector3.forward, normal);
+            if (tangent.sqrMagnitude < .0001f) tangent = Vector3.ProjectOnPlane(Vector3.up, normal);
+            var attachment = new SurfaceAttachment(surface.SurfaceId, surface.Revision, localPoint, localNormal, surface.transform.InverseTransformDirection(tangent.normalized).ToFloat());
             contact = new SurfaceContact(attachment, point.ToFloat(), normal.ToFloat()); return true;
         }
         public bool ResolveSurface(in SurfaceAttachment attachment, out SurfaceContact contact)
