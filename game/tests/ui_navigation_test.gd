@@ -6,6 +6,7 @@ const Simulation = preload("res://scripts/simulation.gd")
 const Invitation = preload("res://scripts/invitation.gd")
 const OnlineInvitation = preload("res://scripts/online_invitation.gd")
 const Cosmetics = preload("res://scripts/cosmetics.gd")
+const Maps = preload("res://scripts/map_catalog.gd")
 var ui: CanvasLayer
 var failures: Array[String] = []
 var escape_count: int = 0
@@ -71,7 +72,7 @@ func run() -> void:
 	)
 	ui.preview_requested.connect(func(_role: String, _appearance: Dictionary) -> void: preview_count += 1)
 	ui.preview_closed.connect(func() -> void: preview_close_count += 1)
-	ui.practice_requested.connect(func(role: String, mode: String) -> void: practice_args = [role, mode])
+	ui.practice_requested.connect(func(role: String, mode: String, map_id: String) -> void: practice_args = [role, mode, map_id])
 	ui.practice_restart_requested.connect(func() -> void: practice_restarts += 1)
 	ui.config_requested.connect(func(value: Dictionary) -> void: applied_config = value)
 	ui.host_requested.connect(func(player: String, port: int) -> void: host_args = [player,port])
@@ -291,7 +292,7 @@ func run() -> void:
 	ui._select_practice_role("mosquito")
 	ui._select_practice_mode("sleep")
 	ui._practice_start_button.pressed.emit()
-	check(practice_args == ["mosquito", "sleep"] and ui._practice, "Practice starts immediately with selected role and mode")
+	check(practice_args == ["mosquito", "sleep", Maps.default_map_id()] and ui._practice, "Practice starts immediately with selected role, mode and authored map")
 	var snapshot := {"config": {"mode": "sleep"}, "actors": {1: {"role": "mosquito", "alive": true, "state":"stunned"}}, "winner": "human"}
 	ui.show_game(snapshot, {"stun":{"active":true,"remaining":35.0,"total":35.0,"helped":false}}, 1)
 	check(ui._practice and ui._practice_banner.visible and "Aturdido" in ui._hud_state.text and "35" in ui._hud_state.text, "Practice state and authoritative stun time survive game transition")

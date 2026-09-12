@@ -61,7 +61,7 @@ func decide(snapshot: Dictionary, own_private: Dictionary, dt: float) -> Diction
 		return result
 	result.yaw = float(me.get("yaw",0.0))
 	result.pitch = float(me.get("pitch",0.0))
-	var map_id := str(snapshot.get("config",{}).get("map_id","house"))
+	var map_id := str(snapshot.get("config",{}).get("map_id",Catalog.default_map_id()))
 	if last_position != Vector3.INF and Vector3(me.p).distance_to(last_position) < 0.012:
 		stuck_age += dt
 	else:
@@ -203,7 +203,7 @@ func _human_door(me: Dictionary, out: Dictionary, direction: Vector3, map_id: St
 		# walking into the sweep and keeping our own doorway blocked.
 		var away: Vector3 = Vector3(me.p)-Vector3(definition.hinge)
 		away.y = 0
-		var room_direction := Vector3(signf(float(definition.hinge.x)),0,0)
+		var room_direction: Vector3 = Doors.leaf_transform(definition,Doors.OPEN_ANGLE).basis.x
 		if away.dot(room_direction)>0:
 			away = room_direction
 		out.move = away.normalized().rotated(Vector3.UP,-float(out.yaw))*0.75

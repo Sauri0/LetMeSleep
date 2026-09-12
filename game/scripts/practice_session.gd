@@ -27,13 +27,15 @@ func start(role: String, mode: String, cosmetics: Dictionary, display_name: Stri
 	selected_role = role if role in ["human","mosquito"] else "human"
 	selected_mode = mode if mode in ["blood","survival","sleep"] else "blood"
 	local_cosmetics = cosmetics.duplicate(true)
-	selected_config=config_override.duplicate(true)
 	player_name = display_name if not display_name.is_empty() else "Vos"
 	var config: Dictionary = Simulation.DEFAULT_CONFIG.duplicate(true)
 	config.merge(config_override,true)
 	config.mode = selected_mode
 	config.human_count = 1
-	config.map_id = str(config_override.get("map_id","house"))
+	config.map_id = str(config_override.get("map_id",Maps.default_map_id()))
+	if not Maps.is_playable(str(config.map_id)):
+		config.map_id = Maps.default_map_id()
+	selected_config=config.duplicate(true)
 	Brain.prepare_navigation(str(config.map_id))
 	# Two insects provide targets for the human. One human provides the enemy
 	# for the insect POV. Social rooms never pass through this roster builder.
@@ -57,12 +59,7 @@ func start(role: String, mode: String, cosmetics: Dictionary, display_name: Stri
 	_publish()
 
 func restart() -> void:
-	var next_config:=selected_config.duplicate(true)
-	if str(next_config.get("map_id","house"))!="house":
-		var generated: Dictionary=Maps.new_house()
-		if generated.is_empty(): return
-		next_config.map_id=generated.id
-	start(selected_role,selected_mode,local_cosmetics,player_name,next_config)
+	start(selected_role,selected_mode,local_cosmetics,player_name,selected_config.duplicate(true))
 
 func stop() -> void:
 	active = false

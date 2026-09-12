@@ -6,12 +6,18 @@ const Maps = preload("res://scripts/map_catalog.gd")
 const Doors = preload("res://scripts/door_catalog.gd")
 const HouseBarriers = preload("res://scripts/house_barriers.gd")
 const PickupSupports = preload("res://scripts/pickup_supports.gd")
-# House aliases preserve existing consumers. New code selects data by map_id.
-const HALF_X = Maps.HOUSE.half_x
-const HALF_Z = Maps.HOUSE.half_z
-const CEILING = Maps.HOUSE.ceiling
-const OBSTACLES = Maps.HOUSE.obstacles
-const STATIONS = Maps.HOUSE.stations
+const NavigationGeometry = preload("res://scripts/navigation_geometry.gd")
+# Compatibility accessors for old diagnostics; gameplay supplies a map ID.
+static var HALF_X: float:
+	get: return float(Maps.get_map().half_x)
+static var HALF_Z: float:
+	get: return float(Maps.get_map().half_z)
+static var CEILING: float:
+	get: return float(Maps.get_map().ceiling)
+static var OBSTACLES: Array:
+	get: return Maps.get_map().obstacles
+static var STATIONS: Array:
+	get: return Maps.get_map().stations
 const HUMAN_SPEED := 3.1
 const HUMAN_RUN_SPEED := 5.0
 const HUMAN_CROUCH_SPEED := 1.55
@@ -33,9 +39,22 @@ const GeometryCache=preload("res://scripts/geometry_cache.gd")
 static var _cache_order: Array[String]=[]
 const MAP_CACHE_LIMIT:=24
 static var _map_cache: Dictionary = {}
+static var _door_definitions_cache: Dictionary = {}
 
 static func _touch_map(map_id: String) -> void:
-	GeometryCache.touch(_cache_order,map_id,MAP_CACHE_LIMIT,[_map_cache,_obstacle_cache,_spatial_cache])
+	GeometryCache.touch(_cache_order,map_id,MAP_CACHE_LIMIT,[_map_cache,_obstacle_cache,_spatial_cache,_door_definitions_cache])
+
+static func _resolve_map_id(map_id: String) -> String:
+	return Maps.default_map_id() if map_id.is_empty() else map_id
+
+static func world_bounds(map_id: String = "") -> AABB:
+	return NavigationGeometry.world_bounds(_map(_resolve_map_id(map_id)))
+
+static func _door_definitions(map_id: String) -> Dictionary:
+	_touch_map(map_id)
+	if not _door_definitions_cache.has(map_id):
+		_door_definitions_cache[map_id] = Doors.get_doors(map_id)
+	return _door_definitions_cache[map_id]
 
 static func _map(map_id: String) -> Dictionary:
 	_touch_map(map_id)
@@ -47,7 +66,8 @@ static var _obstacle_cache: Dictionary = {}
 static var _spatial_cache: Dictionary = {}
 const STATIC_CELL := 2.0
 
-static func obstacles(map_id: String = "house") -> Array[AABB]:
+static func obstacles(map_id: String = "") -> Array[AABB]:
+	map_id = _resolve_map_id(map_id)
 	_touch_map(map_id)
 	if not _obstacle_cache.has(map_id):
 		var boxes: Array[AABB] = []
@@ -97,16 +117,19 @@ static func _nearby(bounds: AABB, map_id: String) -> Array[AABB]:
 static func _segment_bounds(from: Vector3, to: Vector3, padding: float = 0.0) -> AABB:
 	return AABB(from.min(to),(to-from).abs()).grow(maxf(padding,0.0)+.00001)
 
-static func human_spawn(index: int, map_id: String = "house") -> Vector3:
+static func human_spawn(index: int, map_id: String = "") -> Vector3:
+	map_id = _resolve_map_id(map_id)
 	var data: Dictionary = _map(map_id)
 	var points: Array = data.lobby_spawns if map_id == "lobby" else data.human_spawns
 	return points[posmod(index, points.size())]
 
-static func mosquito_spawn(index: int, map_id: String = "house") -> Vector3:
+static func mosquito_spawn(index: int, map_id: String = "") -> Vector3:
+	map_id = _resolve_map_id(map_id)
 	var points: Array = _map(map_id).mosquito_spawns
 	return points[posmod(index, points.size())] if not points.is_empty() else human_spawn(index, map_id) + Vector3.UP * 1.2
 
-static func move_body(pos: Vector3, displacement: Vector3, human: bool, map_id: String = "house", height: float = HUMAN_HEIGHT, doors: Dictionary = {}) -> Vector3:
+static func move_body(pos: Vector3, displacement: Vector3, human: bool, map_id: String = "", height: float = HUMAN_HEIGHT, doors: Dictionary = {}) -> Vector3:
+	map_id = _resolve_map_id(map_id)
 	if not pos.is_finite() or not displacement.is_finite():
 		return pos if pos.is_finite() else Vector3.ZERO
 	if human:
@@ -118,14 +141,14 @@ static func move_body(pos: Vector3, displacement: Vector3, human: bool, map_id: 
 	return result
 
 static func _move_insect_part(pos: Vector3, displacement: Vector3, map_id: String, doors: Dictionary = {}) -> Vector3:
-	var data: Dictionary = _map(map_id)
+	var bounds: AABB = world_bounds(map_id)
 	var next: Vector3 = pos
 	for axis: int in [0, 2, 1]:
 		var trial: Vector3 = next
 		trial[axis] += displacement[axis]
-		trial.x = clampf(trial.x, -float(data.half_x) + MOSQUITO_RADIUS, float(data.half_x) - MOSQUITO_RADIUS)
-		trial.z = clampf(trial.z, -float(data.half_z) + MOSQUITO_RADIUS, float(data.half_z) - MOSQUITO_RADIUS)
-		trial.y = clampf(trial.y, MOSQUITO_RADIUS, float(data.ceiling) - MOSQUITO_RADIUS)
+		trial.x = clampf(trial.x, bounds.position.x + MOSQUITO_RADIUS, bounds.end.x - MOSQUITO_RADIUS)
+		trial.z = clampf(trial.z, bounds.position.z + MOSQUITO_RADIUS, bounds.end.z - MOSQUITO_RADIUS)
+		trial.y = clampf(trial.y, bounds.position.y + MOSQUITO_RADIUS, bounds.end.y - MOSQUITO_RADIUS)
 		var body := AABB(trial - Vector3.ONE * MOSQUITO_RADIUS, Vector3.ONE * MOSQUITO_RADIUS * 2)
 		var blocked: bool = Doors.body_blocked(body, doors, map_id)
 		for obstacle: AABB in _nearby(body,map_id):
@@ -136,10 +159,11 @@ static func _move_insect_part(pos: Vector3, displacement: Vector3, map_id: Strin
 			next = trial
 	return next
 
-static func can_fit_mosquito(pos: Vector3, map_id: String = "house", doors: Dictionary = {}) -> bool:
+static func can_fit_mosquito(pos: Vector3, map_id: String = "", doors: Dictionary = {}) -> bool:
+	map_id = _resolve_map_id(map_id)
 	if not pos.is_finite(): return false
-	var data: Dictionary = _map(map_id)
-	if pos.x < -float(data.half_x)+MOSQUITO_RADIUS-.000001 or pos.x > float(data.half_x)-MOSQUITO_RADIUS+.000001 or pos.z < -float(data.half_z)+MOSQUITO_RADIUS-.000001 or pos.z > float(data.half_z)-MOSQUITO_RADIUS+.000001 or pos.y < MOSQUITO_RADIUS-.000001 or pos.y > float(data.ceiling)-MOSQUITO_RADIUS+.000001:
+	var bounds: AABB = world_bounds(map_id)
+	if pos.x < bounds.position.x+MOSQUITO_RADIUS-.000001 or pos.x > bounds.end.x-MOSQUITO_RADIUS+.000001 or pos.z < bounds.position.z+MOSQUITO_RADIUS-.000001 or pos.z > bounds.end.z-MOSQUITO_RADIUS+.000001 or pos.y < bounds.position.y+MOSQUITO_RADIUS-.000001 or pos.y > bounds.end.y-MOSQUITO_RADIUS+.000001:
 		return false
 	var body := AABB(pos-Vector3.ONE*MOSQUITO_RADIUS,Vector3.ONE*MOSQUITO_RADIUS*2.0)
 	if Doors.body_blocked(body,doors,map_id): return false
@@ -156,7 +180,8 @@ static func flight_direction(local_move: Vector3, yaw: float, pitch: float) -> V
 	var right: Vector3 = Vector3.RIGHT.rotated(Vector3.UP, yaw)
 	return (right * local_move.x - forward * local_move.z + Vector3.UP * local_move.y).limit_length(1.0)
 
-static func step_mosquito(actor: Dictionary, local_move: Vector3, dt: float, map_id: String = "house", assisted_velocity: Variant = null, doors: Dictionary = {}) -> void:
+static func step_mosquito(actor: Dictionary, local_move: Vector3, dt: float, map_id: String = "", assisted_velocity: Variant = null, doors: Dictionary = {}) -> void:
+	map_id = _resolve_map_id(map_id)
 	if not is_finite(dt) or dt <= 0.0:
 		return
 	var target: Vector3 = flight_direction(local_move, float(actor.yaw), float(actor.pitch)) * MOSQUITO_SPEED
@@ -169,7 +194,8 @@ static func step_mosquito(actor: Dictionary, local_move: Vector3, dt: float, map
 	actor.p = move_body(previous, velocity * minf(dt, 0.1), false, map_id, HUMAN_HEIGHT, doors)
 	actor.velocity = (Vector3(actor.p) - previous) / minf(dt, 0.1)
 
-static func step_stunned(actor: Dictionary, dt: float, map_id: String = "house", doors: Dictionary = {}) -> void:
+static func step_stunned(actor: Dictionary, dt: float, map_id: String = "", doors: Dictionary = {}) -> void:
+	map_id = _resolve_map_id(map_id)
 	if not is_finite(dt) or dt <= 0.0:
 		return
 	var part: float = minf(dt, 0.05)
@@ -195,11 +221,12 @@ static func human_envelope(actor: Dictionary) -> AABB:
 static func _body_box(pos: Vector3, height: float) -> AABB:
 	return AABB(pos + Vector3(-HUMAN_RADIUS, 0.003, -HUMAN_RADIUS), Vector3(HUMAN_RADIUS * 2, maxf(0.01, height - 0.006), HUMAN_RADIUS * 2))
 
-static func can_fit_human(pos: Vector3, height: float = HUMAN_HEIGHT, map_id: String = "house", doors: Dictionary = {}) -> bool:
-	var data: Dictionary = _map(map_id)
+static func can_fit_human(pos: Vector3, height: float = HUMAN_HEIGHT, map_id: String = "", doors: Dictionary = {}) -> bool:
+	map_id = _resolve_map_id(map_id)
+	var bounds: AABB = world_bounds(map_id)
 	if not pos.is_finite() or height < HUMAN_CROUCH_HEIGHT or height > HUMAN_HEIGHT:
 		return false
-	if absf(pos.x) + HUMAN_RADIUS > float(data.half_x) + 0.00001 or absf(pos.z) + HUMAN_RADIUS > float(data.half_z) + 0.00001 or pos.y < -0.00001 or pos.y + height > float(data.ceiling) + 0.00001:
+	if pos.x - HUMAN_RADIUS < bounds.position.x - 0.00001 or pos.x + HUMAN_RADIUS > bounds.end.x + 0.00001 or pos.z - HUMAN_RADIUS < bounds.position.z - 0.00001 or pos.z + HUMAN_RADIUS > bounds.end.z + 0.00001 or pos.y < bounds.position.y - 0.00001 or pos.y + height > bounds.end.y + 0.00001:
 		return false
 	var body: AABB = _body_box(pos, height)
 	for obstacle: AABB in _nearby(body,map_id):
@@ -207,15 +234,17 @@ static func can_fit_human(pos: Vector3, height: float = HUMAN_HEIGHT, map_id: St
 			return false
 	return not Doors.body_blocked(body, doors, map_id)
 
-static func is_grounded(pos: Vector3, map_id: String = "house", doors: Dictionary = {}) -> bool:
-	if pos.y <= 0.004:
+static func is_grounded(pos: Vector3, map_id: String = "", doors: Dictionary = {}) -> bool:
+	map_id = _resolve_map_id(map_id)
+	if pos.y <= world_bounds(map_id).position.y + 0.004:
 		return true
 	for obstacle: AABB in _nearby(AABB(pos+Vector3(-HUMAN_RADIUS,-.006,-HUMAN_RADIUS),Vector3(HUMAN_RADIUS*2,.012,HUMAN_RADIUS*2)),map_id):
 		if absf(pos.y - obstacle.end.y) <= 0.005 and pos.x + HUMAN_RADIUS > obstacle.position.x and pos.x - HUMAN_RADIUS < obstacle.end.x and pos.z + HUMAN_RADIUS > obstacle.position.z and pos.z - HUMAN_RADIUS < obstacle.end.z:
 			return true
 	return Doors.body_blocked(AABB(pos+Vector3(-HUMAN_RADIUS,-0.005,-HUMAN_RADIUS),Vector3(HUMAN_RADIUS*2,0.006,HUMAN_RADIUS*2)),doors,map_id)
 
-static func move_human(pos: Vector3, displacement: Vector3, map_id: String = "house", height: float = HUMAN_HEIGHT, doors: Dictionary = {}) -> Dictionary:
+static func move_human(pos: Vector3, displacement: Vector3, map_id: String = "", height: float = HUMAN_HEIGHT, doors: Dictionary = {}) -> Dictionary:
+	map_id = _resolve_map_id(map_id)
 	if not pos.is_finite() or not displacement.is_finite():
 		return {"p":pos,"grounded":false,"hit_ceiling":false}
 	if displacement.length()>0.10:
@@ -224,15 +253,15 @@ static func move_human(pos: Vector3, displacement: Vector3, map_id: String = "ho
 		for index: int in range(count):
 			result = move_human(result.p,displacement/float(count),map_id,height,doors)
 		return result
-	var data: Dictionary = _map(map_id)
+	var bounds: AABB = world_bounds(map_id)
 	var next: Vector3 = pos
 	var grounded := false
 	var hit_ceiling := false
 	# Sweep the vertical feet/top planes, allowing an exact landing on furniture.
 	var desired_y: float = pos.y + displacement.y
-	var ceiling_y: float = float(data.ceiling) - height
-	if desired_y <= 0.0:
-		desired_y = 0.0
+	var ceiling_y: float = bounds.end.y - height
+	if desired_y <= bounds.position.y:
+		desired_y = bounds.position.y
 		grounded = true
 	if desired_y >= ceiling_y:
 		desired_y = ceiling_y
@@ -248,10 +277,11 @@ static func move_human(pos: Vector3, displacement: Vector3, map_id: String = "ho
 		elif displacement.y > 0.0 and pos.y + height <= obstacle.position.y + 0.004 and desired_y + height >= obstacle.position.y:
 			desired_y = minf(desired_y, obstacle.position.y - height)
 			hit_ceiling = true
+	var definitions: Dictionary = _door_definitions(map_id) if not doors.is_empty() else {}
 	for id: String in doors:
-		if not Doors.DEFINITIONS.has(id) or map_id != "house":
+		if not definitions.has(id):
 			continue
-		var definition: Dictionary = Doors.DEFINITIONS[id]
+		var definition: Dictionary = definitions[id]
 		var footprint := AABB(Vector3(pos.x-HUMAN_RADIUS,-100,pos.z-HUMAN_RADIUS),Vector3(HUMAN_RADIUS*2,200,HUMAN_RADIUS*2))
 		if not Doors.intersects_body(definition,float(doors[id].angle),footprint):
 			continue
@@ -267,8 +297,8 @@ static func move_human(pos: Vector3, displacement: Vector3, map_id: String = "ho
 	for axis: int in [0, 2]:
 		var trial: Vector3 = next
 		trial[axis] += displacement[axis]
-		trial.x = clampf(trial.x, -float(data.half_x) + HUMAN_RADIUS, float(data.half_x) - HUMAN_RADIUS)
-		trial.z = clampf(trial.z, -float(data.half_z) + HUMAN_RADIUS, float(data.half_z) - HUMAN_RADIUS)
+		trial.x = clampf(trial.x, bounds.position.x + HUMAN_RADIUS, bounds.end.x - HUMAN_RADIUS)
+		trial.z = clampf(trial.z, bounds.position.z + HUMAN_RADIUS, bounds.end.z - HUMAN_RADIUS)
 		var body: AABB = _body_box(trial, height)
 		var blocked: bool = Doors.body_blocked(body, doors, map_id)
 		for obstacle: AABB in _nearby(body,map_id):
@@ -292,7 +322,8 @@ static func move_human(pos: Vector3, displacement: Vector3, map_id: String = "ho
 		grounded = is_grounded(next, map_id, doors)
 	return {"p": next, "grounded": grounded, "hit_ceiling": hit_ceiling}
 
-static func step_human(actor: Dictionary, intent: Dictionary, dt: float, map_id: String = "house", doors: Dictionary = {}) -> void:
+static func step_human(actor: Dictionary, intent: Dictionary, dt: float, map_id: String = "", doors: Dictionary = {}) -> void:
+	map_id = _resolve_map_id(map_id)
 	if not is_finite(dt) or dt <= 0.0:
 		return
 	var remaining: float = minf(dt, 1.0)
@@ -353,13 +384,15 @@ static func _human_tick(actor: Dictionary, intent: Dictionary, dt: float, map_id
 	actor.sprinting = sprinting
 	Pose.advance_motion(actor,delta,dt,was_grounded)
 
-static func clear_segment(from: Vector3, to: Vector3, map_id: String = "house", doors: Dictionary = {}) -> bool:
+static func clear_segment(from: Vector3, to: Vector3, map_id: String = "", doors: Dictionary = {}) -> bool:
+	map_id = _resolve_map_id(map_id)
 	for obstacle: AABB in _nearby(_segment_bounds(from,to),map_id):
 		if obstacle.intersects_segment(from, to) != null:
 			return false
 	return Doors.ray_doors(from,to,doors,map_id).is_empty()
 
-static func ray_map(from: Vector3, to: Vector3, map_id: String = "house", padding: float = 0.0, doors: Dictionary = {}) -> Dictionary:
+static func ray_map(from: Vector3, to: Vector3, map_id: String = "", padding: float = 0.0, doors: Dictionary = {}) -> Dictionary:
+	map_id = _resolve_map_id(map_id)
 	var first: Dictionary = {}
 	for obstacle: AABB in _nearby(_segment_bounds(from,to,padding),map_id):
 		var intersection: Variant = obstacle.grow(maxf(0.0, padding)).intersects_segment(from, to)
@@ -384,15 +417,17 @@ static func ray_map(from: Vector3, to: Vector3, map_id: String = "house", paddin
 		return door_hit
 	return first
 
-static func floor_below(position: Vector3, map_id: String = "house", doors: Dictionary = {}) -> float:
-	var floor_y := 0.0
-	for obstacle: AABB in _nearby(_segment_bounds(Vector3(position.x,0,position.z),position),map_id):
+static func floor_below(position: Vector3, map_id: String = "", doors: Dictionary = {}) -> float:
+	map_id = _resolve_map_id(map_id)
+	var floor_y: float = world_bounds(map_id).position.y
+	for obstacle: AABB in _nearby(_segment_bounds(Vector3(position.x,floor_y,position.z),position),map_id):
 		if position.x >= obstacle.position.x and position.x <= obstacle.end.x and position.z >= obstacle.position.z and position.z <= obstacle.end.z and obstacle.end.y <= position.y:
 			floor_y = maxf(floor_y, obstacle.end.y)
+	var definitions: Dictionary = _door_definitions(map_id) if not doors.is_empty() else {}
 	for id: String in doors:
-		if not Doors.DEFINITIONS.has(id) or map_id != "house":
+		if not definitions.has(id):
 			continue
-		var definition: Dictionary = Doors.DEFINITIONS[id]
+		var definition: Dictionary = definitions[id]
 		var top: float = float(definition.hinge.y)+float(definition.height)
 		if top<=position.y and Doors.intersects_body(definition,float(doors[id].angle),AABB(Vector3(position.x-.001,top-.005,position.z-.001),Vector3(.002,.006,.002))):
 			floor_y = maxf(floor_y,top)

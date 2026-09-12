@@ -31,7 +31,7 @@ static func _geometry(human: bool, map_id: String) -> Dictionary:
 	var data: Dictionary = _data(map_id)
 	var extra: Array[AABB] = HouseBarriers.get_boxes(map_id)
 	extra.append_array(PickupSupports.get_boxes(map_id))
-	if human and int(data.get("generator_version",0))>=3:
+	if human and (int(data.get("authored_version",0))>=1 or int(data.get("generator_version",0))>=3):
 		# Plan through the doorway with its leaf open, as authority movement does.
 		# Direct shortcuts and graph connections must not cut through that leaf.
 		for door: Dictionary in data.doors.values():
@@ -52,7 +52,8 @@ static func _project_human(point: Vector3, geometry: Dictionary) -> Vector3:
 static func _segment(from: Vector3, to: Vector3, geometry: Dictionary) -> bool:
 	return Geometry._segment(from, to, geometry)
 
-static func can_travel(from: Vector3, to: Vector3, human: bool, map_id: String = "house") -> bool:
+static func can_travel(from: Vector3, to: Vector3, human: bool, map_id: String = "") -> bool:
+	map_id = Maps.default_map_id() if map_id.is_empty() else map_id
 	if not from.is_finite() or not to.is_finite() or (map_id!="lobby" and not Maps.is_playable(map_id)):
 		return false
 	return _segment(from, to, _geometry(human, map_id))
@@ -68,7 +69,7 @@ static func _graph(human: bool, map_id: String) -> Dictionary:
 	for feet: Vector3 in authored:
 		nodes.append(feet if human else feet + Vector3.UP * 1.2)
 		adjacency.append([])
-	var links: Array = data.get("nav_edges", [])
+	var links: Array = data.get("nav_edges", []).duplicate()
 	if map_id == "lobby":
 		for first: int in range(nodes.size()):
 			for second: int in range(first + 1, nodes.size()):
@@ -83,7 +84,8 @@ static func _graph(human: bool, map_id: String) -> Dictionary:
 	graph.edges = adjacency
 	return graph
 
-static func graph_info(human: bool, map_id: String = "house") -> Dictionary:
+static func graph_info(human: bool, map_id: String = "") -> Dictionary:
+	map_id = Maps.default_map_id() if map_id.is_empty() else map_id
 	var graph: Dictionary = _graph(human, map_id)
 	return {"nodes": graph.nodes.duplicate(), "edges": graph.edges.duplicate(true), "invalid_edges": graph.invalid_edges.duplicate()}
 
@@ -107,7 +109,8 @@ static func _connections(point: Vector3, graph: Dictionary) -> Array[int]:
 				break
 	return result
 
-static func path(from: Vector3, to: Vector3, human: bool, map_id: String = "house") -> PackedVector3Array:
+static func path(from: Vector3, to: Vector3, human: bool, map_id: String = "") -> PackedVector3Array:
+	map_id = Maps.default_map_id() if map_id.is_empty() else map_id
 	var empty := PackedVector3Array()
 	if not from.is_finite() or not to.is_finite() or (map_id!="lobby" and not Maps.is_playable(map_id)):
 		return empty

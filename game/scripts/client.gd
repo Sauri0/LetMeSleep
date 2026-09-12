@@ -16,6 +16,7 @@ const WorldScript = preload("res://scripts/world.gd")
 const UIScript = preload("res://scripts/ui.gd")
 const PracticeScript = preload("res://scripts/practice_session.gd")
 const MapCatalog = preload("res://scripts/map_catalog.gd")
+const NavigationGeometry = preload("res://scripts/navigation_geometry.gd")
 const HumanPose = preload("res://scripts/human_pose.gd")
 const MusicScript = preload("res://scripts/music_director.gd")
 const VideoSettings = preload("res://scripts/video_settings.gd")
@@ -157,7 +158,7 @@ func _ready() -> void:
 	if options.has("visual-preview"):
 		_preview()
 	elif options.has("practice-role"):
-		_start_practice(str(options["practice-role"]), str(options.get("practice-mode", "blood")))
+		_start_practice(str(options["practice-role"]), str(options.get("practice-mode", "blood")), MapCatalog.default_map_id())
 
 func _music_screen(screen: String) -> void:
 	# Opening help/settings during a round keeps the same musical clock.
@@ -201,7 +202,11 @@ func _apply_surface_view_transition() -> void:
 	var transport: Node=practice if practice_active else network
 	transport.send_view_ack(action_sequence,revision,sequence+1,yaw,pitch)
 
-func _start_practice(selected_role: String, mode: String) -> void:
+func _start_practice(selected_role: String, mode: String, map_id: String = "") -> void:
+	map_id = MapCatalog.default_map_id() if map_id.is_empty() else map_id
+	if not MapCatalog.is_playable(map_id) or MapCatalog.get_map(map_id).is_empty():
+		ui.show_status("Ese mapa no está disponible para entrenar.")
+		return
 	network.close_client()
 	practice_active = true
 	playing = false
@@ -210,12 +215,7 @@ func _start_practice(selected_role: String, mode: String) -> void:
 	local_id = 1
 	ui.set_practice(true)
 	world.clear_actors()
-	var generated: Dictionary=MapCatalog.new_house(int(options.get("map-seed",0)))
-	if generated.is_empty():
-		practice_active=false
-		ui.show_status("No se pudo preparar una casa transitable. Volvé a intentar.")
-		return
-	practice.start(selected_role, mode, PreferencesScript.cosmetics, PreferencesScript.player_name,{"map_id":generated.id})
+	practice.start(selected_role, mode, PreferencesScript.cosmetics, PreferencesScript.player_name,{"map_id":map_id})
 
 func _lobby(data: Dictionary) -> void:
 	_hud_refresh_pending = false
@@ -270,7 +270,7 @@ func _snapshot(data: Dictionary) -> void:
 	if starting:
 		if is_instance_valid(voice): voice.clear()
 		world.clear_actors()
-		world.load_map(str(data.get("config", {}).get("map_id", "house")))
+		world.load_map(str(data.get("config", {}).get("map_id", MapCatalog.default_map_id())))
 		yaw = float(actor.get("yaw", 0.0))
 		pitch = 0.0
 		mosquito_zoom_target=MosquitoCameraScript.DEFAULT_REACH
@@ -345,10 +345,11 @@ func _process(dt: float) -> void:
 			camera_origin=visual.human_view_origin()
 		if role == "mosquito":
 			var map: Dictionary = world.map_data
+			var bounds: AABB = NavigationGeometry.world_bounds(map)
 			var margin := lerpf(.055,.16,clampf(mosquito_zoom/.35,0.0,1.0))
-			camera_origin.x = clampf(camera_origin.x, -float(map.half_x)+margin, float(map.half_x)-margin)
-			camera_origin.z = clampf(camera_origin.z, -float(map.half_z)+margin, float(map.half_z)-margin)
-			camera_origin.y = clampf(camera_origin.y, margin, float(map.ceiling)-margin)
+			camera_origin.x = clampf(camera_origin.x, bounds.position.x+margin, bounds.end.x-margin)
+			camera_origin.z = clampf(camera_origin.z, bounds.position.z+margin, bounds.end.z-margin)
+			camera_origin.y = clampf(camera_origin.y, bounds.position.y+margin, bounds.end.y-margin)
 		rig.global_position = camera_origin
 		if role=="mosquito":
 			rig.basis=MosquitoCameraScript.smooth_basis(rig.basis,mosquito_view.basis,dt) if camera_initialized else Basis(mosquito_view.basis)

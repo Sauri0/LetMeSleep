@@ -1,0 +1,21 @@
+# Movimiento y entrenamiento alfa
+
+Base: 2094817; contrato M1 a637f07 integrado localmente como 7a84987.
+
+- Arena resuelve el mapa predeterminado con MapCatalog.default_map_id. Los límites de movimiento y cámara usan el solar; el techo del edificio sigue siendo un obstáculo físico.
+- La navegación reconoce las hojas abiertas de mapas authored y mantiene las rutas interiores, exteriores y entre plantas. No modifica la geometría authored.
+- Los barridos verticales humanos y los apoyos de mosquitos aturdidos reconocen las puertas del mapa activo; sus definiciones inmutables usan caché limitada, no sus ángulos.
+- Cliente recibe role/mode/map_id, valida el mapa antes de abandonar el menú y prepara entrenamiento sin generador. Reiniciar conserva mapa, rol y modo. BotBrain usa el mapa canónico por omisión y se aparta de una hoja bloqueada según su orientación real.
+- ui_navigation_test recibe y comprueba el tercer argumento del selector. Su ejecución visual corresponde a integración con la UI nueva.
+
+## Evidencia CPU
+
+`python work/motion094-headless.py bounds`: 14 comprobaciones, 0 fallos.
+
+`python work/motion094-headless.py house`: 140 comprobaciones, 0 fallos. Incluye subida/bajada física de ambas escaleras, 16 puertas abiertas/cerradas, paso inferior del mosquito, apoyo sobre hojas, acceso exterior bidireccional y rutas a tareas/patio.
+
+`python work/motion094-headless.py practice`: 120 comprobaciones, 0 fallos. Incluye seis combinaciones rol/modo, arranque/movimiento de bots, tres reinicios por combinación, preferencia obsoleta y retirada correcta ante 16 hojas bloqueadas.
+
+Todos usan Godot 4.5.2 headless, audio Dummy, sin autoload EOS ni renderer; stderr vacío. El runner copia únicamente dependencias de scripts a un proyecto temporal. Los recibos motion094-*.run.json registran dependencias y resultados.
+
+Las pruebas no sustituyen la validación visual, UI completa, partidas largas ni WAN. QA cubre las partidas largas. Director conserva simulation/network/versionado; esos archivos no se modificaron aquí. No se abrió ninguna ventana del juego, no se exportó ni publicó.

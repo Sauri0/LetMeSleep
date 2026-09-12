@@ -7,6 +7,13 @@ const HUMAN_HEIGHT := 1.95
 const MOSQUITO_RADIUS := 0.04
 const STEP_HEIGHT := 0.221
 
+## The playable lot can extend above and beyond the building. Roofs and walls
+## belong to obstacles; only the outer lot bounds constrain all movement.
+static func world_bounds(data: Dictionary) -> AABB:
+	if data.has("bounds"):
+		return data.bounds
+	return AABB(Vector3(-float(data.half_x), 0, -float(data.half_z)), Vector3(float(data.half_x) * 2, float(data.ceiling), float(data.half_z) * 2))
+
 static func create(data: Dictionary, human: bool, extra: Array[AABB] = []) -> Dictionary:
 	var expanded: Array[AABB] = []
 	var obstacles: Array[AABB] = []
@@ -19,14 +26,14 @@ static func create(data: Dictionary, human: bool, extra: Array[AABB] = []) -> Di
 	var supports: Array[AABB] = []
 	for key: String in ["floors", "steps"]:
 		for box: AABB in data.get(key, []): supports.append(box)
-	return {"data":data,"expanded":expanded,"supports":supports,"human":human,"nodes":[],"edges":[],"invalid_edges":[]}
+	return {"data":data,"bounds":world_bounds(data),"expanded":expanded,"supports":supports,"human":human,"nodes":[],"edges":[],"invalid_edges":[]}
 
 static func _fits(point: Vector3, geometry: Dictionary) -> bool:
-	var data: Dictionary = geometry.data
+	var bounds: AABB = geometry.bounds
 	var radius: float = HUMAN_RADIUS if geometry.human else MOSQUITO_RADIUS
 	var top: float = HUMAN_HEIGHT if geometry.human else MOSQUITO_RADIUS
 	var bottom: float = 0.0 if geometry.human else MOSQUITO_RADIUS
-	if absf(point.x) + radius > float(data.half_x) or absf(point.z) + radius > float(data.half_z) or point.y < bottom - 0.001 or point.y + top > float(data.ceiling) + 0.001:
+	if point.x - radius < bounds.position.x or point.x + radius > bounds.end.x or point.z - radius < bounds.position.z or point.z + radius > bounds.end.z or point.y < bounds.position.y + bottom - 0.001 or point.y + top > bounds.end.y + 0.001:
 		return false
 	for obstacle: AABB in geometry.expanded:
 		if obstacle.has_point(point):
@@ -34,7 +41,8 @@ static func _fits(point: Vector3, geometry: Dictionary) -> bool:
 	return true
 
 static func _support_height(point: Vector3, geometry: Dictionary, tolerance: float) -> float:
-	var result: float = 0.0 if point.y <= tolerance else -INF
+	var ground: float = geometry.bounds.position.y
+	var result: float = ground if absf(point.y - ground) <= tolerance else -INF
 	for obstacle: AABB in geometry.supports:
 		if obstacle.end.y > point.y + tolerance or obstacle.end.y < point.y - tolerance:
 			continue
@@ -43,7 +51,7 @@ static func _support_height(point: Vector3, geometry: Dictionary, tolerance: flo
 	return result
 
 static func _project_human(point: Vector3, geometry: Dictionary) -> Vector3:
-	var candidates: Array[float] = [0.0]
+	var candidates: Array[float] = [float(geometry.bounds.position.y)]
 	for obstacle: AABB in geometry.supports:
 		if obstacle.end.y <= point.y + STEP_HEIGHT and point.x + HUMAN_RADIUS > obstacle.position.x and point.x - HUMAN_RADIUS < obstacle.end.x and point.z + HUMAN_RADIUS > obstacle.position.z and point.z - HUMAN_RADIUS < obstacle.end.z:
 			if not candidates.has(obstacle.end.y):

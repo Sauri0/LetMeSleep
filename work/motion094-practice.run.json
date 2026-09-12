@@ -1,0 +1,40 @@
+{
+  "test": "tests/motion094_practice_test.gd",
+  "exit_code": 0,
+  "stderr_bytes": 0,
+  "headless": true,
+  "autoloads": false,
+  "dependencies": [
+    "scripts/arena.gd",
+    "scripts/bot_brain.gd",
+    "scripts/cosmetics.gd",
+    "scripts/door_catalog.gd",
+    "scripts/door_geometry.gd",
+    "scripts/door_state.gd",
+    "scripts/emote_catalog.gd",
+    "scripts/emote_pose.gd",
+    "scripts/fixed_house.gd",
+    "scripts/furniture_blueprint.gd",
+    "scripts/geometry_cache.gd",
+    "scripts/house_barriers.gd",
+    "scripts/house_validation.gd",
+    "scripts/human_pose.gd",
+    "scripts/map_catalog.gd",
+    "scripts/map_navigation.gd",
+    "scripts/mosquito_pose.gd",
+    "scripts/navigation_geometry.gd",
+    "scripts/pickup_placement.gd",
+    "scripts/pickup_support_geometry.gd",
+    "scripts/pickup_supports.gd",
+    "scripts/practice_session.gd",
+    "scripts/procedural_house.gd",
+    "scripts/projectile_collision.gd",
+    "scripts/simulation.gd",
+    "scripts/surface_locomotion.gd",
+    "scripts/tool_catalog.gd",
+    "tests/motion094_practice_test.gd"
+  ],
+  "results": [
+    "MOTION094_PRACTICE checks=120 failures=0"
+  ]
+}
