@@ -47,7 +47,9 @@ func _run() -> void:
 	var world: Node3D = WorldScript.new()
 	root.add_child(world)
 	world.map_data = data
-	world.current_map = "house-patio-v1"
+	# Keep PickupSupports out of this synthetic unit contract. The canonical
+	# integration test exercises the real map ID and its legitimate supports.
+	world.current_map = "environment094-synthetic-authored"
 	world.map_root = Node3D.new()
 	world.add_child(world.map_root)
 	_check(world._house_building_bounds() == building, "building_bounds wins over 40 m lot")
@@ -74,6 +76,10 @@ func _run() -> void:
 		"exterior adapter declares map obstacles as sole collision source")
 	var exterior_meshes: Array[Node] = world.map_root.get_node("AuthoredExterior").find_children("*", "MeshInstance3D", true, false)
 	_check(exterior_meshes.size() == 2, "one garden area and one straight path segment are visible")
+	var area_mesh := exterior_meshes.filter(func(node: Node) -> bool: return node.get_meta("catalog_kind", "") == "exterior_area")[0] as MeshInstance3D
+	var source_bounds: AABB = area_mesh.get_meta("source_bounds")
+	_check(is_equal_approx((area_mesh.mesh as BoxMesh).size.y, .036) and is_equal_approx(source_bounds.size.y, .08),
+		"semantic area bounds render only as a thin ground surface")
 	_check(world.map_root.find_children("*", "StaticBody3D", true, false).size() == obstacles.size(),
 		"visual exterior adds no duplicate collision")
 	world._build_generated_lighting()

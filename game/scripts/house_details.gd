@@ -369,12 +369,17 @@ static func _build_authored_area(world: Node3D, root: Node3D, area: Dictionary) 
 		return false
 	var kind := str(area.get("kind", "garden"))
 	var tint := Color(area.get("color", Color("42634f") if kind == "garden" else Color("786f61")))
-	var mesh: MeshInstance3D = world._box(root, bounds.get_center(), bounds.size, world._surface_material(tint, kind))
+	# Area bounds describe the outdoor volume used by layout/navigation. Render
+	# only its ground face; otherwise an 8.8 m semantic height becomes a solid.
+	var surface_box := AABB(Vector3(bounds.position.x, bounds.position.y + .002, bounds.position.z),
+		Vector3(bounds.size.x, .036, bounds.size.z))
+	var mesh: MeshInstance3D = world._box(root, surface_box.get_center(), surface_box.size, world._surface_material(tint, kind))
 	mesh.name = "ExteriorArea_" + str(area.get("id", kind)).validate_node_name()
 	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mesh.set_meta("catalog_kind", "exterior_area")
 	mesh.set_meta("exterior_id", str(area.get("id", "")))
 	mesh.set_meta("exterior_surface", kind)
+	mesh.set_meta("source_bounds", bounds)
 	return true
 
 static func _build_authored_path(world: Node3D, root: Node3D, path: Dictionary) -> int:

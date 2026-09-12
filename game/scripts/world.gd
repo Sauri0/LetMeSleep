@@ -654,6 +654,8 @@ func _build_catalog_house() -> void:
 	for structure: Dictionary in map_data.get("structures", []):
 		var bounds: AABB = structure.box
 		var kind: String = str(structure.get("kind", "wall"))
+		if _is_authored_exterior_proxy(structure):
+			continue
 		if kind == "ceiling": has_catalog_ceiling = true
 		var tint: Color = structure.get("color", Color("d2d5c2"))
 		if kind == "floor":
@@ -712,6 +714,20 @@ func _build_catalog_house() -> void:
 			var label_z := building.get_center().z + (4.0 if side < 0.0 else -4.0)
 			var label: Label3D = _label(self, "%02d / %s"%[floor_index+1,"PLANTA BAJA" if floor_index==0 else "PISO %d"%floor_index], Vector3(label_x, y+2.35, label_z), .0032, Color("264c56"))
 			label.rotation.y = PI if side < 0 else 0.0
+
+func _is_authored_exterior_proxy(structure: Dictionary) -> bool:
+	if not map_data.has("authored_version") or not structure.get("box") is AABB:
+		return false
+	var box: AABB = structure.box
+	for prop: Variant in Dictionary(map_data.get("exterior", {})).get("props", []):
+		if not prop is Dictionary:
+			continue
+		for collision: Variant in prop.get("collision_boxes", []):
+			if collision is AABB:
+				var candidate: AABB = collision
+				if candidate.is_equal_approx(box):
+					return true
+	return false
 
 func _furniture_from_catalog(data: Dictionary) -> void:
 	var bounds: AABB = data.box
