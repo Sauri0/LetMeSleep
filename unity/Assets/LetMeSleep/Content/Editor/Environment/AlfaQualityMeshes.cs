@@ -16,6 +16,7 @@ namespace LetMeSleep.Content.Editor
             public readonly List<Vector3> vertices=new List<Vector3>();
             readonly List<Vector2> uv=new List<Vector2>();
             readonly List<int>[] triangles={new List<int>(),new List<int>(),new List<int>()};
+            public int[] TriangleIndices()=>triangles.SelectMany(indices=>indices).ToArray();
             public void Triangle(Vector3 a,Vector3 b,Vector3 c,Vector3 outward,int material=0)
             {
                 var normal=Vector3.Cross(b-a,c-a);if(normal.sqrMagnitude<1e-20f)return;
@@ -132,10 +133,11 @@ namespace LetMeSleep.Content.Editor
 
         static QualityMesh QualityThrow()
         {
-            var mesh=new QualityMesh();var support=QualityPillow(new Vector3(.90f,.18f,.72f),true).vertices.ToArray();
+            var mesh=new QualityMesh();var supportShape=QualityPillow(new Vector3(.90f,.18f,.72f),true);
+            var support=supportShape.vertices.ToArray();var supportIndices=supportShape.TriangleIndices();
             var path=new[]{new Vector2(.04f,0),new Vector2(-.08f,0),new Vector2(-.16f,0),new Vector2(-.23f,0),new Vector2(-.28f,0),new Vector2(-.33f,0),new Vector2(-.37f,0),new Vector2(-.39f,0),new Vector2(-.411f,.45f),new Vector2(-.425f,.38f),new Vector2(-.419f,.29f)};
             Func<int,int,float,Vector3> p=(i,j,side)=>{
-                float x=-.19f+i*.0475f,z=path[j].x;float supportY=QualitySurfaceHeight(support,x,z+.04f);
+                float x=-.19f+i*.0475f,z=path[j].x;float supportY=QualitySurfaceHeight(support,supportIndices,x,z+.04f);
                 float y=float.IsNegativeInfinity(supportY)?path[j].y:supportY+.485f;
                 float hanging=j>=8?(j-7)/3f:0;z+=.009f*Mathf.Sin(i*1.4f)*hanging;y+=.018f*Mathf.Sin(i*.83f)*hanging;
                 return new Vector3(x,y+.003f+.002f*(1-Mathf.Cos(i*Mathf.PI*.5f))+side*.003f,z);
@@ -151,10 +153,13 @@ namespace LetMeSleep.Content.Editor
             return mesh;
         }
 
-        static float QualitySurfaceHeight(Vector3[] vertices,float x,float z)
+        static float QualitySurfaceHeight(Vector3[] vertices,int[] indices,float x,float z)
         {
+            Need(indices.Length%3==0,"Surface sampling requires triangle indices");
             float height=float.NegativeInfinity;
-            for(int i=0;i<vertices.Length;i+=3){var a=vertices[i];var b=vertices[i+1];var c=vertices[i+2];
+            // UV unwrapping/import may split, share or reorder vertices. Only the
+            // index buffer defines triangle membership, in authored and saved meshes.
+            for(int i=0;i<indices.Length;i+=3){var a=vertices[indices[i]];var b=vertices[indices[i+1]];var c=vertices[indices[i+2]];
                 float denominator=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);if(Mathf.Abs(denominator)<1e-10f)continue;
                 float u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/denominator;
                 float v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/denominator,w=1-u-v;
@@ -165,9 +170,9 @@ namespace LetMeSleep.Content.Editor
         static void CheckQualityThrowSupport(Transform sofa,MeshFilter cloth)
         {
             var surfaces=sofa.GetComponentsInChildren<MeshFilter>().Where(f=>f.name.StartsWith("Seat_Pad_",StringComparison.Ordinal))
-                .Select(f=>f.sharedMesh.vertices.Select(v=>f.transform.TransformPoint(v)).ToArray()).ToArray();
+                .Select(f=>new {vertices=f.sharedMesh.vertices.Select(v=>f.transform.TransformPoint(v)).ToArray(),indices=f.sharedMesh.triangles}).ToArray();
             Need(surfaces.Length==2,"Expected two actual sofa seat meshes");int contacts=0;
-            foreach(var vertex in cloth.sharedMesh.vertices){var p=cloth.transform.TransformPoint(vertex);float support=surfaces.Max(s=>QualitySurfaceHeight(s,p.x,p.z));
+            foreach(var vertex in cloth.sharedMesh.vertices){var p=cloth.transform.TransformPoint(vertex);float support=surfaces.Max(s=>QualitySurfaceHeight(s.vertices,s.indices,p.x,p.z));
                 if(float.IsNegativeInfinity(support))continue;
                 Need(p.y>=support-.001f&&p.y<=support+.012f,"Throw must follow the actual upholstered surface");
                 if(Mathf.Abs(p.y-support)<.001f)contacts++;
