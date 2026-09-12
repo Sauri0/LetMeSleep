@@ -28,7 +28,7 @@ namespace LetMeSleep.Content.Editor
         [Serializable] public class Root { public string name; public float[] position; }
         [Serializable] public class Plan { public Zone[] zones; public Portal[] portals; public Lobby lobby; }
         [Serializable] public class Zone { public string id,kind,floor; public float[] min,max; }
-        [Serializable] public class Portal { public string id,from,to; public float[] center,normal; public float width,height; public bool door; }
+        [Serializable] public class Portal { public string id,from,to; public float[] center,normal; public float width,height,initial_degrees; public bool door; }
         [Serializable] public class Lobby { public Spawn[] spawns; public Zone bounds; public float[] source_shell_scale; }
         [Serializable] public class Spawn { public string id; public float[] position,forward; }
         [Serializable] public class Receipt { public string unityVersion,utc,houseScene,lobbyScene,houseContentHash,lobbyContentHash; public int houseMeshes,houseColliders,doors,toolPickups,lobbyMeshes,lobbyColliders; public string[] verified,pending; }
@@ -116,7 +116,7 @@ namespace LetMeSleep.Content.Editor
                 AssetDatabase.SaveAssets();
                 var receipt=new Receipt{unityVersion=Application.unityVersion,utc=DateTime.UtcNow.ToString("o"),houseScene=HouseScene,lobbyScene=LobbyScene,houseContentHash=houseHash,lobbyContentHash=lobbyHash,
                     houseMeshes=houseMeshes,houseColliders=houseColliders,doors=doors,toolPickups=7,lobbyMeshes=lobbyMeshes,lobbyColliders=lobbyColliders,
-                    verified=new[]{"Source bounds and explicit FBX Z conversion","Unique nonzero GameplaySurface IDs","Hinge/leaf/handle and nine GameplayDoor definitions","Seven unique flyswatter pickups with non-perchable interaction triggers","5 human / 16 mosquito / 16 lobby spawn clearances against geometry","Lobby dressing preserves central reserve and 1.8m circulation; menu camera/stages serialized","Separate house/patio and lobby scenes; no duplicated sample shell"},
+                    verified=new[]{"Source bounds and explicit FBX Z conversion","Unique nonzero GameplaySurface IDs","Nine doors start open at100deg; closed reference and collider pose survive prefab reload","Seven unique flyswatter pickups with non-perchable interaction triggers","5 human / 16 mosquito / 16 lobby spawn clearances against geometry","Lobby dressing preserves central reserve and 1.8m circulation; menu camera/stages serialized","Separate house/patio and lobby scenes; no duplicated sample shell"},
                     pending=new[]{"Visual lighting and UV2 bake validation","Controller stair/door traversal and camera playtest","Runtime bots/pickups and online round integration","Performance measurement"}};
                 File.WriteAllText(Path.Combine(repository,"docs/unity/environment/ALFA-MAPS-IMPORT-RECEIPT.json"),JsonUtility.ToJson(receipt,true)+"\n");
                 Debug.Log("LMS_ALFA_MAPS_BUILT "+JsonUtility.ToJson(receipt));
@@ -201,7 +201,9 @@ namespace LetMeSleep.Content.Editor
                 var door=(GameObject)PrefabUtility.InstantiatePrefab(source,parent.gameObject.scene);door.name=portal.id;door.transform.SetParent(parent,false);
                 Vector3 normal=V(portal.normal),center=V(portal.center)-Vector3.up*1.1f;
                 door.transform.rotation=Quaternion.LookRotation(normal);door.transform.position=center+normal*.09f-door.transform.rotation*new Vector3(1.12f,0,0);
-                var component=door.AddComponent<GameplayDoor>();component.Hinge=F(door,"Door_01_Hinge");component.Leaf=component.Hinge.GetComponentInChildren<BoxCollider>();component.Handle=F(door,"Socket_Door_Use");component.OpenSign=-1;component.OpenDegrees=100;component.InitialDegrees=0;
+                var component=door.AddComponent<GameplayDoor>();component.Hinge=F(door,"Door_01_Hinge");component.Leaf=component.Hinge.GetComponentInChildren<BoxCollider>();component.Handle=F(door,"Socket_Door_Use");component.OpenSign=-1;component.OpenDegrees=100;component.InitialDegrees=portal.initial_degrees;
+                Need(Mathf.Abs(component.InitialDegrees-100)<.001f,"Alpha map doors must start open");
+                component.SetAuthoredClosedRotation(component.Hinge.localRotation);
                 PrefabUtility.RecordPrefabInstancePropertyModifications(door.transform);PrefabUtility.RecordPrefabInstancePropertyModifications(door);
             }
         }
@@ -261,7 +263,11 @@ namespace LetMeSleep.Content.Editor
                 var surface=collider.GetComponent<GameplaySurface>()??collider.gameObject.AddComponent<GameplaySurface>();surface.SurfaceId=id++;surface.Revision=1;surface.CanPerch=!Hierarchy(collider.transform).Contains("WorldBoundary_NoPerch");}
             foreach(var door in map.GetComponentsInChildren<GameplayDoor>().OrderBy(d=>d.name,StringComparer.Ordinal)){
                 door.DoorId=doorStart++;Need(door.Hinge!=null&&door.Leaf!=null,"Door contract incomplete");door.SurfaceId=door.Leaf.GetComponent<GameplaySurface>().SurfaceId;
-                var definition=door.Definition;Need(Mathf.Abs(definition.LeafCenterLocal.X-.535f)<.001f,"Gameplay door centre differs from real leaf");}
+                var definition=door.Definition;Need(Mathf.Abs(definition.LeafCenterLocal.X-.535f)<.001f,"Gameplay door centre differs from real leaf");
+                door.ApplyAngle(definition.InitialAngleRadians);
+                PrefabUtility.RecordPrefabInstancePropertyModifications(door.Hinge);
+                PrefabUtility.RecordPrefabInstancePropertyModifications(door);
+                CheckDoorInitialPose(door);}
             var surfaces=map.GetComponentsInChildren<GameplaySurface>();Need(surfaces.All(s=>s.SurfaceId!=0)&&surfaces.Select(s=>s.SurfaceId).Distinct().Count()==surfaces.Length,"Duplicate/zero SurfaceId");
         }
         static void CanonicalizeColliderPaths(GameObject map)
@@ -306,12 +312,21 @@ namespace LetMeSleep.Content.Editor
                 float dx=Mathf.Max(b.min.x-p.x,0,p.x-b.max.x),dz=Mathf.Max(b.min.z-p.z,0,p.z-b.max.z),dy=Mathf.Max(b.min.y-high,0,low-b.max.y);
                 Need(dx*dx+dy*dy+dz*dz>=radius*radius-.000001f,"Spawn intersects geometry: "+point.name+" / "+Hierarchy(c.transform));}
         }
+        static void CheckDoorInitialPose(GameplayDoor door)
+        {
+            var definition=door.Definition;
+            Need(Mathf.Abs(definition.InitialAngleRadians-100*Mathf.Deg2Rad)<.0001f,"Door initial state is not fully open");
+            var expected=definition.ClosedRotation.ToUnity()*Quaternion.AngleAxis(definition.InitialAngleRadians*Mathf.Rad2Deg*definition.OpenSign,Vector3.up);
+            Need(Quaternion.Angle(door.Hinge.rotation,expected)<.01f,"Door geometry and initial state disagree: "+door.name);
+            Need(Vector3.Distance(door.Leaf.transform.TransformPoint(door.Leaf.center),door.Hinge.TransformPoint(definition.LeafCenterLocal.ToUnity()))<.001f,"Open door collider differs from definition");
+        }
         static void SavePrefabAndInstantiate(ref GameObject root,string path,Scene scene)
         {
             var before=root.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger).ToDictionary(c=>Hierarchy(c.transform),ColliderBounds);
             var ids=root.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger).ToDictionary(c=>Hierarchy(c.transform),c=>c.GetComponent<GameplaySurface>().SurfaceId);
             var triggers=root.GetComponentsInChildren<Collider>().Where(c=>c.isTrigger).ToDictionary(c=>Hierarchy(c.transform),ColliderBounds);
             var pickupIds=root.GetComponentsInChildren<GameplayToolPickup>().Select(p=>p.PickupId).OrderBy(id=>id).ToArray();
+            var doorDefinitions=root.GetComponentsInChildren<GameplayDoor>().ToDictionary(d=>d.DoorId,d=>d.Definition);
             Need(PrefabUtility.SaveAsPrefabAsset(root,path)!=null,"Map prefab save failed");Object.DestroyImmediate(root);
             root=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path),scene);
             var colliders=root.GetComponentsInChildren<Collider>().Where(c=>!c.isTrigger).ToArray();Need(colliders.Length==before.Count,"Prefab lost colliders");
@@ -324,6 +339,10 @@ namespace LetMeSleep.Content.Editor
             var savedPickups=root.GetComponentsInChildren<GameplayToolPickup>();Need(pickupIds.SequenceEqual(savedPickups.Select(p=>p.PickupId).OrderBy(id=>id)),"Prefab lost pickup identities");
             foreach(var pickup in savedPickups)Need(pickup.ToolId==GameplayTools.Flyswatter&&pickup.InteractionCollider!=null&&pickup.InteractionCollider.isTrigger&&pickup.VisualRoot==null,"Prefab pickup contract changed");
             foreach(var pickup in savedPickups)CheckPickupDefinition(pickup);
+            var savedDoors=root.GetComponentsInChildren<GameplayDoor>();Need(savedDoors.Length==doorDefinitions.Count,"Prefab lost doors");
+            foreach(var door in savedDoors){Need(doorDefinitions.ContainsKey(door.DoorId),"Prefab changed DoorId");var beforeDoor=doorDefinitions[door.DoorId];var afterDoor=door.Definition;
+                Need(Quaternion.Angle(beforeDoor.ClosedRotation.ToUnity(),afterDoor.ClosedRotation.ToUnity())<.01f&&Mathf.Abs(beforeDoor.InitialAngleRadians-afterDoor.InitialAngleRadians)<.0001f,"Prefab lost authored closed reference/initial door angle");
+                CheckDoorInitialPose(door);}
         }
         static void AddReviewLights(Plan plan,bool lobby)
         {
@@ -341,7 +360,8 @@ namespace LetMeSleep.Content.Editor
                 "art_source/unity/environments/room_sample/house_layout_plan.json","art_source/unity/environments/room_sample/room_furnished_without_door.fbx","art_source/unity/environments/room_sample/door_01.fbx","art_source/unity/environments/room_sample/room_contract.json","art_source/unity/environments/room_sample/presentation_manifest.json",
                 "unity/Assets/LetMeSleep/Content/Editor/Environment/EnvironmentSampleBuilder.cs","unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaMapBuilder.cs","unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs",
                 "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaLobbyDressing.cs",
-                "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs","unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs"};
+                "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs","unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs",
+                "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs","unity/Assets/LetMeSleep/Gameplay/Contracts.cs"};
             var payload=new System.Text.StringBuilder(mapId+"\n");
             using(var sha=System.Security.Cryptography.SHA256.Create()){
                 foreach(string file in files){string path=Path.Combine(repository,file);byte[] bytes=file.EndsWith(".fbx",StringComparison.Ordinal)?File.ReadAllBytes(path):System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(path).Replace("\r\n","\n").Replace("\r","\n"));

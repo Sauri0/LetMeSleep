@@ -279,7 +279,8 @@
         0,
         1
       ],
-      "door": true
+      "door": true,
+      "initial_degrees": 100
     },
     {
       "id": "HallWest0",
@@ -297,7 +298,8 @@
         0,
         0
       ],
-      "door": false
+      "door": false,
+      "initial_degrees": 0
     },
     {
       "id": "HallEast0",
@@ -315,7 +317,8 @@
         0,
         0
       ],
-      "door": false
+      "door": false,
+      "initial_degrees": 0
     },
     {
       "id": "LivingDoor",
@@ -333,7 +336,8 @@
         0,
         -1
       ],
-      "door": true
+      "door": true,
+      "initial_degrees": 100
     },
     {
       "id": "DiningDoor",
@@ -351,7 +355,8 @@
         0,
         -1
       ],
-      "door": true
+      "door": true,
+      "initial_degrees": 100
     },
     {
       "id": "KitchenDoor",
@@ -369,7 +374,8 @@
         0,
         1
       ],
-      "door": true
+      "door": true,
+      "initial_degrees": 100
     },
     {
       "id": "HallWest1",
@@ -387,7 +393,8 @@
         0,
         0
       ],
-      "door": false
+      "door": false,
+      "initial_degrees": 0
     },
     {
       "id": "HallEast1",
@@ -405,7 +412,8 @@
         0,
         0
       ],
-      "door": false
+      "door": false,
+      "initial_degrees": 0
     },
     {
       "id": "BedroomADoor",
@@ -423,7 +431,8 @@
         0,
         -1
       ],
-      "door": true
+      "door": true,
+      "initial_degrees": 100
     },
     {
       "id": "BedroomBDoor",
@@ -441,7 +450,8 @@
         0,
         -1
       ],
-      "door": true
+      "door": true,
+      "initial_degrees": 100
     },
     {
       "id": "BathroomDoor",
@@ -459,7 +469,8 @@
         0,
         1
       ],
-      "door": true
+      "door": true,
+      "initial_degrees": 100
     },
     {
       "id": "UtilityDoor",
@@ -477,7 +488,8 @@
         0,
         1
       ],
-      "door": true
+      "door": true,
+      "initial_degrees": 100
     },
     {
       "id": "PatioDoor",
@@ -495,7 +507,8 @@
         0,
         1
       ],
-      "door": true
+      "door": true,
+      "initial_degrees": 100
     }
   ],
   "stair": {

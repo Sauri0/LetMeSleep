@@ -10,7 +10,7 @@
   "near_clip": 0.05,
   "far_clip": 100.0,
   "up": [0, 1, 0],
-  "door_state_degrees": 0,
+  "door_state_degrees": 100,
   "cameras": [
     {
       "id": "01_front_exterior",
@@ -57,7 +57,7 @@
       "gates": [
         "Look through HallEast0 at x=7.05: its 1.8 m opening joins the landing cleanly at floor and header, without a second room shell.",
         "DiningDoor at z=4.67 and KitchenDoor at z=6.65 have seated leaves, jambs and headers; no duplicate frames, suspended leaves or obvious floor gaps.",
-        "With both doors closed the landing reads as clear circulation; a second capture from this same camera at authored 100 degree open state checks visible leaf/wall/handle intersections."
+        "With both doors initially open at100 degrees, the landing and doorway routes remain clear; a second capture from this same camera at0 degrees checks closed leaf/frame/floor junctions."
       ]
     },
     {

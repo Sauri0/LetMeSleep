@@ -5,7 +5,8 @@ function Zone($id,$floor,$kind,$minX,$minZ,$maxX,$maxZ) {
     [ordered]@{id=$id;floor=$floor;kind=$kind;min=@($minX,$y,$minZ);max=@($maxX,($y+2.8),$maxZ)}
 }
 function Portal($id,$from,$to,$x,$y,$z,$width,$normal,$door=$false) {
-    [ordered]@{id=$id;from=$from;to=$to;center=@($x,($y+1.1),$z);width=$width;height=2.2;normal=$normal;door=$door}
+    $initial=if($door){100}else{0}
+    [ordered]@{id=$id;from=$from;to=$to;center=@($x,($y+1.1),$z);width=$width;height=2.2;normal=$normal;door=$door;initial_degrees=$initial}
 }
 $zones=@(
     (Zone 'GroundHall' 'ground' 'corridor' 5.16 .18 6.96 11.22),
