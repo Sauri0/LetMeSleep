@@ -21,11 +21,14 @@ var failures: Array[String]=[]
 var cases: Array[Dictionary]=[]
 var report_path:="res://../work/review092-house-results.json"
 var only_seed:=0
+var first_route_failure:=false
+var stopped_early:=false
 
 func _initialize()->void:
 	for argument:String in OS.get_cmdline_user_args():
 		if argument.begins_with("--report="):report_path=argument.trim_prefix("--report=")
 		if argument.begins_with("--seed="):only_seed=int(argument.trim_prefix("--seed="))
+		if argument=="--first-route-failure":first_route_failure=true
 	_run.call_deferred()
 
 func check(ok:bool,label:String)->bool:
@@ -87,9 +90,25 @@ func _route_door_hit(origin:Vector3,route:PackedVector3Array,human:bool,map_id:S
 		previous=point
 	return {}
 
+func _json_point(point:Vector3)->Array[float]:
+	if not point.is_finite():return [0.0,0.0,0.0]
+	return [point.x,point.y,point.z]
+
+func _json_route(route:PackedVector3Array)->Array:
+	var result:Array=[]
+	for point:Vector3 in route:result.append(_json_point(point))
+	return result
+
+func _follow_result(origin:Vector3,destination:Vector3,route:PackedVector3Array,last_position:Vector3,target_index:int,reached:bool,collision_free:bool,max_step:float,max_motion:float,ticks:int)->Dictionary:
+	return {"origin":_json_point(origin),"destination":_json_point(destination),"route":_json_route(route),
+		"last_position":_json_point(last_position),"target_index":target_index,"reached":reached,
+		"collision_free":collision_free,"max_step":max_step if is_finite(max_step) else 0.0,
+		"max_motion":max_motion if is_finite(max_motion) else 0.0,"ticks":ticks,
+		"origin_finite":origin.is_finite(),"destination_finite":destination.is_finite(),"last_position_finite":last_position.is_finite()}
+
 func _follow_human(origin:Vector3,destination:Vector3,map_id:String,states:Dictionary)->Dictionary:
-	var route:=Nav.path(origin,destination,true,map_id)
-	if route.is_empty():return {"reached":false,"collision_free":false,"max_step":INF,"max_motion":INF,"ticks":0}
+	var route:PackedVector3Array=Nav.path(origin,destination,true,map_id)
+	if route.is_empty():return _follow_result(origin,destination,route,origin,0,false,false,0.0,0.0,0)
 	var actor:Dictionary={"p":origin,"yaw":0.0,"body_yaw":0.0,"pitch":0.0,"velocity":Vector3.ZERO,"grounded":true}
 	var current:=0
 	var collision_free:=true
@@ -101,7 +120,7 @@ func _follow_human(origin:Vector3,destination:Vector3,map_id:String,states:Dicti
 		if Vector2(delta.x,delta.z).length()<.12 and absf(delta.y)<.23:
 			current+=1
 			if current==route.size():
-				return {"reached":Vector3(actor.p).distance_to(destination)<.30,"collision_free":collision_free,"max_step":max_step,"max_motion":max_motion,"ticks":tick}
+				return _follow_result(origin,destination,route,Vector3(actor.p),current,Vector3(actor.p).distance_to(destination)<.30,collision_free,max_step,max_motion,tick)
 			point=route[current]
 			delta=point-Vector3(actor.p)
 		delta.y=0.0
@@ -112,7 +131,17 @@ func _follow_human(origin:Vector3,destination:Vector3,map_id:String,states:Dicti
 		max_step=maxf(max_step,absf(motion.y))
 		max_motion=maxf(max_motion,motion.length())
 		collision_free=collision_free and _fits_human(actor.p,map_id,states)
-	return {"reached":false,"collision_free":collision_free,"max_step":max_step,"max_motion":max_motion,"ticks":3600}
+	return _follow_result(origin,destination,route,Vector3(actor.p),current,false,collision_free,max_step,max_motion,3600)
+
+func _record_route_failure(row:Dictionary,followed:Dictionary,context:Dictionary)->bool:
+	var witness:Dictionary=followed.duplicate(true)
+	for key:Variant in context:witness[key]=context[key]
+	row.route_failures.append(witness)
+	if first_route_failure:
+		row.partial=true
+		row.partial_reason="stopped after first physical route failure by --first-route-failure"
+		stopped_early=true
+	return stopped_early
 
 func _closest_stair_point(stair:Dictionary,map_id:String)->Dictionary:
 	var route:=Nav.path(stair.bottom,stair.top,true,map_id)
@@ -150,7 +179,7 @@ func _case(seed_value:int,signatures:Dictionary)->void:
 	var data:=Maps.get_map(map_id)
 	var validation:=Validation.validate(generated)
 	var states:=_open_doors(map_id)
-	var row:Dictionary={"seed":seed_value,"map_id":map_id,"floors":data.get("floor_levels",[]).size(),"rooms":data.get("rooms",[]).size(),"layout_signature":_layout_signature(generated),"min_corridor_width":INF,"min_landing_width":INF,"min_stair_width":INF,"min_door_width":INF,"physical_routes":0}
+	var row:Dictionary={"seed":seed_value,"map_id":map_id,"floors":data.get("floor_levels",[]).size(),"rooms":data.get("rooms",[]).size(),"layout_signature":_layout_signature(generated),"min_corridor_width":INF,"min_landing_width":INF,"min_stair_width":INF,"min_door_width":INF,"physical_routes":0,"route_failures":[],"partial":false}
 	check(not data.is_empty() and validation.passed,"seed %d validates and loads: %s"%[seed_value,validation.errors])
 	check(Validation.fingerprint(generated)==Validation.fingerprint(Generator.new().generate(seed_value)),"seed %d deterministic fingerprint"%seed_value)
 	check(data.get("fingerprint","")==Validation.fingerprint(generated),"seed %d catalog matches generated geometry"%seed_value)
@@ -182,9 +211,14 @@ func _case(seed_value:int,signatures:Dictionary)->void:
 		for ends:Array in [[stair.bottom,stair.top],[stair.top,stair.bottom]]:
 			var followed:=_follow_human(ends[0],ends[1],map_id,states)
 			row.physical_routes+=1
-			check(bool(followed.reached) and bool(followed.collision_free),"seed %d %s stair direction physically completes"%[seed_value,str(stair.id)])
+			var route_ok:=bool(followed.reached) and bool(followed.collision_free)
+			check(route_ok,"seed %d %s stair direction physically completes from %s to %s"%[seed_value,str(stair.id),str(ends[0]),str(ends[1])])
 			var bounded_motion:=Vector2(ArenaData.HUMAN_SPEED*DT+.012,MAX_RISE+.011).length()
-			check(float(followed.max_step)<=MAX_RISE+.011 and float(followed.max_motion)<=bounded_motion,"seed %d %s stair motion has no jump or teleport"%[seed_value,str(stair.id)])
+			var motion_ok:=float(followed.max_step)<=MAX_RISE+.011 and float(followed.max_motion)<=bounded_motion
+			check(motion_ok,"seed %d %s stair motion has no jump or teleport from %s to %s"%[seed_value,str(stair.id),str(ends[0]),str(ends[1])])
+			if not route_ok or not motion_ok:
+				if _record_route_failure(row,followed,{"scope":"stair","stair_id":str(stair.id),"route_check_passed":route_ok,"motion_check_passed":motion_ok}):
+					cases.append(row);return
 	for portal:Dictionary in data.portals:
 		var axis:=int(portal.axis)
 		var direction:=Vector3.RIGHT if axis==0 else Vector3.FORWARD
@@ -200,11 +234,19 @@ func _case(seed_value:int,signatures:Dictionary)->void:
 			if not _route_door_hit(origin,route,true,map_id,states).is_empty():
 				var followed:=_follow_human(origin,target,map_id,states)
 				row.physical_routes+=1
-				check(bool(followed.reached) and bool(followed.collision_free),"seed %d human authority physically clears an open leaf en route to task/pickup"%seed_value)
+				var route_ok:=bool(followed.reached) and bool(followed.collision_free)
+				check(route_ok,"seed %d human authority physically clears an open leaf from %s to task/pickup %s"%[seed_value,str(origin),str(target)])
+				if not route_ok:
+					if _record_route_failure(row,followed,{"scope":"open_leaf_task_or_pickup"}):
+						cases.append(row);return
 		for target:Vector3 in _farthest_per_floor(origin,data,map_id):
 			var followed:=_follow_human(origin,target,map_id,states)
 			row.physical_routes+=1
-			check(bool(followed.reached) and bool(followed.collision_free),"seed %d human spawn physically reaches far target on floor %.1f"%[seed_value,target.y])
+			var route_ok:=bool(followed.reached) and bool(followed.collision_free)
+			check(route_ok,"seed %d human spawn physically reaches far target %s on floor %.1f from %s"%[seed_value,str(target),target.y,str(origin)])
+			if not route_ok:
+				if _record_route_failure(row,followed,{"scope":"far_target","floor_y":target.y}):
+					cases.append(row);return
 	for origin:Vector3 in data.mosquito_spawns:
 		check(ArenaData.can_fit_mosquito(origin,map_id,states),"seed %d mosquito spawn fits open-door collision"%seed_value)
 		for room:Dictionary in data.rooms:
@@ -222,9 +264,17 @@ func _run()->void:
 	check(Generator.VERSION==3,"0.9.2 generated-house contract uses version 3 only")
 	for id:String in ["house-v1-1","house-v2-1","house-v4-1"]:
 		check(Generator.parse_seed(id)==-1,"old and future generator ID is rejected: "+id)
-	for seed_value:int in corpus:_case(seed_value,signatures)
-	check(signatures.size()==corpus.size(),"all %d selected corpus seeds have distinct structure independent of seed metadata"%corpus.size())
-	var report:Dictionary={"checks":checks,"failures":failures,"cases":cases,"corpus":corpus,"thresholds":{"corridor_m":MIN_CORRIDOR_WIDTH,"landing_m":MIN_LANDING_WIDTH,"stair_m":MIN_STAIR_WIDTH,"door_m":MIN_DOOR_WIDTH,"tread_m":MIN_TREAD,"rise_m":MAX_RISE},"scope":"production geometry/navigation; deterministic source corpus; open-door circulation; no renderer, visual approval, FPS, EOS, relay or WAN claim","source_sha256":{}}
+	for seed_value:int in corpus:
+		_case(seed_value,signatures)
+		if stopped_early:break
+	if not stopped_early:check(signatures.size()==corpus.size(),"all %d selected corpus seeds have distinct structure independent of seed metadata"%corpus.size())
+	var route_failure_count:=0
+	var executed_corpus:Array[int]=[]
+	for row:Dictionary in cases:
+		route_failure_count+=Array(row.get("route_failures",[])).size();executed_corpus.append(int(row.seed))
+	var report:Dictionary={"checks":checks,"failures":failures,"cases":cases,"corpus":corpus,"executed_corpus":executed_corpus,
+		"route_failure_count":route_failure_count,"partial":stopped_early,"partial_reason":"stopped after first physical route failure by --first-route-failure" if stopped_early else "",
+		"first_route_failure_mode":first_route_failure,"thresholds":{"corridor_m":MIN_CORRIDOR_WIDTH,"landing_m":MIN_LANDING_WIDTH,"stair_m":MIN_STAIR_WIDTH,"door_m":MIN_DOOR_WIDTH,"tread_m":MIN_TREAD,"rise_m":MAX_RISE},"scope":"production geometry/navigation; deterministic source corpus; open-door circulation; no renderer, visual approval, FPS, EOS, relay or WAN claim","source_sha256":{}}
 	for path:String in ["res://tests/review092_house_contract.gd","res://scripts/procedural_house.gd","res://scripts/house_validation.gd","res://scripts/map_catalog.gd","res://scripts/map_navigation.gd","res://scripts/arena.gd","res://scripts/door_catalog.gd"]:
 		report.source_sha256[path]=FileAccess.get_sha256(path)
 	if not report_path.is_empty():
@@ -232,5 +282,5 @@ func _run()->void:
 		if file!=null:file.store_string(JSON.stringify(report,"\t"));file.close()
 		else:check(false,"review report path writable")
 	for failure:String in failures:print("REVIEW092_HOUSE_DIAGNOSTIC "+failure)
-	print("REVIEW092_HOUSE_RESULT checks=%d failures=%d layouts=%d"%[checks,failures.size(),signatures.size()])
+	print("REVIEW092_HOUSE_RESULT checks=%d failures=%d layouts=%d partial=%s"%[checks,failures.size(),signatures.size(),str(stopped_early)])
 	quit.call_deferred(0 if failures.is_empty() else 1)
