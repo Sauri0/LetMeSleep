@@ -169,15 +169,38 @@ func build_portal_sample(finish: String = "liso") -> Node3D:
 	sample.set_meta("portal_finish", finish)
 	return sample
 
+func _house_building_bounds(data: Dictionary = map_data) -> AABB:
+	# Authored exterior maps use bounds/half extents for the playable lot. Only
+	# building_bounds may define implicit house art such as a fallback roof.
+	var authored: Variant = data.get("building_bounds")
+	if authored is AABB:
+		return authored
+	var catalog: Variant = data.get("bounds")
+	if catalog is AABB:
+		return catalog
+	var half_x := float(data.get("half_x", 4.0))
+	var half_z := float(data.get("half_z", 3.0))
+	return AABB(Vector3(-half_x, 0.0, -half_z),
+		Vector3(half_x * 2.0, float(data.get("ceiling", 4.0)), half_z * 2.0))
+
+func _fallback_roof_box(data: Dictionary = map_data) -> AABB:
+	var building := _house_building_bounds(data)
+	return AABB(Vector3(building.position.x, building.end.y, building.position.z),
+		Vector3(building.size.x, 0.15, building.size.z))
+
 func _build_map_colliders() -> void:
-	var half_x: float = float(map_data.get("half_x", 4.0))
-	var half_z: float = float(map_data.get("half_z", 3.0))
-	var ceiling: float = float(map_data.get("ceiling", 4.0))
-	_collider(Vector3(0, -0.10, 0), Vector3(half_x * 2 + 0.3, 0.2, half_z * 2 + 0.3))
-	_collider(Vector3(0, ceiling + 0.1, 0), Vector3(half_x * 2 + 0.3, 0.2, half_z * 2 + 0.3))
-	for side: float in [-1.0, 1.0]:
-		_collider(Vector3(side * (half_x + 0.08), ceiling * 0.5, 0), Vector3(0.16, ceiling, half_z * 2 + 0.3))
-		_collider(Vector3(0, ceiling * 0.5, side * (half_z + 0.08)), Vector3(half_x * 2 + 0.3, ceiling, 0.16))
+	# The old implicit box is valid only for shell maps. On an authored exterior
+	# map half_x/half_z describe the lot: using them here would roof the patio and
+	# fence players inside an invisible 40 m box. Its obstacles own collision.
+	if not map_data.has("authored_version"):
+		var half_x: float = float(map_data.get("half_x", 4.0))
+		var half_z: float = float(map_data.get("half_z", 3.0))
+		var ceiling: float = float(map_data.get("ceiling", 4.0))
+		_collider(Vector3(0, -0.10, 0), Vector3(half_x * 2 + 0.3, 0.2, half_z * 2 + 0.3))
+		_collider(Vector3(0, ceiling + 0.1, 0), Vector3(half_x * 2 + 0.3, 0.2, half_z * 2 + 0.3))
+		for side: float in [-1.0, 1.0]:
+			_collider(Vector3(side * (half_x + 0.08), ceiling * 0.5, 0), Vector3(0.16, ceiling, half_z * 2 + 0.3))
+			_collider(Vector3(0, ceiling * 0.5, side * (half_z + 0.08)), Vector3(half_x * 2 + 0.3, ceiling, 0.16))
 	for obstacle: AABB in map_data.get("obstacles", []):
 		_collider(obstacle.get_center(), obstacle.size)
 	for support: AABB in PickupSupports.get_boxes(current_map):
@@ -475,7 +498,7 @@ func _build_lighting() -> void:
 	moon.shadow_enabled = not Maps.is_playable(current_map)
 	moon.directional_shadow_max_distance = 20.0
 	map_root.add_child(moon)
-	if map_data.has("generator_version"):
+	if map_data.has("generator_version") or map_data.has("authored_version"):
 		_build_generated_lighting()
 		return
 	if Maps.is_playable(current_map) and map_data.has("structures"):
@@ -665,16 +688,20 @@ func _build_catalog_house() -> void:
 	# Generated houses include this solid in their catalog. A fallback on the
 	# same plane fought that surface at every camera angle (brown/cream stripes).
 	if not has_catalog_ceiling:
-		_box(self, Vector3(0, float(map_data.ceiling) + 0.075, 0), Vector3(float(map_data.half_x) * 2.0, 0.15, float(map_data.half_z) * 2.0), ceiling_paint)
+		var roof := _fallback_roof_box()
+		_box(self, roof.get_center(), roof.size, ceiling_paint)
 	for room: Dictionary in map_data.get("rooms", []):
 		_build_room_details(room)
 	_finish_house_art()
 	for station: Dictionary in map_data.get("stations", []):
 		_build_station_at(station)
+	var building := _house_building_bounds()
 	for floor_index: int in range(map_data.floor_levels.size()):
 		var y: float = map_data.floor_levels[floor_index]
 		for side: float in [-1.0, 1.0]:
-			var label: Label3D = _label(self, "%02d / %s"%[floor_index+1,"PLANTA BAJA" if floor_index==0 else "PISO %d"%floor_index], Vector3(side*(float(map_data.half_x)-3.0), y+2.35, 4.0 if side<0 else -4.0), .0032, Color("264c56"))
+			var label_x := building.position.x + 3.0 if side < 0.0 else building.end.x - 3.0
+			var label_z := building.get_center().z + (4.0 if side < 0.0 else -4.0)
+			var label: Label3D = _label(self, "%02d / %s"%[floor_index+1,"PLANTA BAJA" if floor_index==0 else "PISO %d"%floor_index], Vector3(label_x, y+2.35, label_z), .0032, Color("264c56"))
 			label.rotation.y = PI if side < 0 else 0.0
 
 func _furniture_from_catalog(data: Dictionary) -> void:

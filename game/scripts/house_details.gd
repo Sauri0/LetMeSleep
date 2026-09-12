@@ -7,6 +7,22 @@ const Joinery = preload("res://scripts/frame_joinery.gd")
 
 static func window_specs(data: Dictionary) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
+	if data.has("windows"):
+		for index: int in range(Array(data.windows).size()):
+			var source: Variant = Array(data.windows)[index]
+			if not source is Dictionary or not source.get("p") is Vector3:
+				continue
+			var spec := (source as Dictionary).duplicate(true)
+			spec["id"] = str(spec.get("id", "window-%02d" % index))
+			spec["axis"] = int(spec.get("axis", 2))
+			spec["rear"] = bool(spec.get("rear", false))
+			spec["room"] = str(spec.get("room", "Exterior"))
+			spec["tint"] = Color(spec.get("tint", Color("91a4ab")))
+			result.append(spec)
+		return result
+	# Authored maps never fall through to the coordinate-specific legacy facade.
+	if data.has("authored_version"):
+		return result
 	if data.has("generator_version"):
 		for room: Dictionary in data.rooms:
 			var b: AABB=room.bounds
@@ -117,7 +133,8 @@ static func trim(world: Node3D, bounds: AABB) -> void:
 		var floor_y:float=levels[floor_index]
 		# The next slab is 20 cm thick with an 11 mm ceiling finish below it.
 		# A fixed 6.4 m crown on the middle storey pierced the upper floor.
-		var ceiling:float=float(levels[floor_index+1])-.211 if floor_index+1<levels.size() else float(world.map_data.ceiling)
+		var building:AABB=world._house_building_bounds()
+		var ceiling:float=float(levels[floor_index+1])-.211 if floor_index+1<levels.size() else building.end.y
 		var baseboard:=bounds.position.y<=floor_y+.001 and bounds.end.y>=floor_y+.13
 		var cornice:=bounds.position.y<ceiling and bounds.end.y>=ceiling-.001
 		if not baseboard and not cornice:continue
@@ -160,7 +177,10 @@ static func build_room(world: Node3D, room: Dictionary) -> void:
 	world._room_wall_finish(bounds,color,wet)
 	var room_root:=Node3D.new();room_root.name="RoomDetails_"+name.validate_node_name()
 	room_root.set_meta("room_name",name);room_root.set_meta("floor",int(room.floor));world.map_root.add_child(room_root)
-	var ceiling_height:=2.99 if int(room.floor)<world.map_data.floor_levels.size()-1 else 3.19
+	var levels:Array=world.map_data.floor_levels
+	var building:AABB=world._house_building_bounds()
+	var ceiling_y:float=float(levels[int(room.floor)+1])-.21 if int(room.floor)+1<levels.size() else building.end.y-.01
+	var ceiling_height:=ceiling_y-y
 	_warm_diffuser(asset(room_root,"pendant",Vector3(center.x,y+ceiling_height,center.z)))
 	# Wet-room tiles are material regions of the slab built by World.
 	if not wet:
@@ -313,6 +333,10 @@ static func build_stairs(world: Node3D) -> void:
 		world._collider(box.get_center(),box.size)
 
 static func build_exterior(world: Node3D) -> void:
+	# Authored outdoor geometry is driven by exterior metadata and the alfa
+	# library adapter. Never cover that 40 m lot with the legacy backdrop here.
+	if world.map_data.has("authored_version"):
+		return
 	var night:=Node3D.new();night.name="NightExterior";world.map_root.add_child(night)
 	for definition:Array in [[Vector3(0,-.08,-17),0.0],[Vector3(0,-.08,17),PI],[Vector3(-20,-.08,0),PI/2],[Vector3(20,-.08,0),-PI/2]]:
 		var landscape:=asset(night,"night_landscape",definition[0],Vector3.ONE,float(definition[1]))
@@ -331,11 +355,15 @@ static func finish(world: Node3D) -> void:
 	build_portals(world)
 	build_stairs(world)
 	build_exterior(world)
-	if world.map_data.has("generator_version"):
+	if world.map_data.has("generator_version") or world.map_data.has("authored_version"):
+		var levels:Array=world.map_data.floor_levels
+		var building:AABB=world._house_building_bounds()
 		for corridor: AABB in world.map_data.corridors:
 			world._room_wall_finish(corridor,Color("a9a191"),false)
 			if corridor.size.x>corridor.size.z:
-				asset(world.map_root,"pendant",Vector3(0,corridor.position.y+2.99,corridor.get_center().z),Vector3.ONE*.85)
+				var floor_index:=levels.find(corridor.position.y)
+				var ceiling_y:=float(levels[floor_index+1])-.21 if floor_index>=0 and floor_index+1<levels.size() else building.end.y-.01
+				asset(world.map_root,"pendant",Vector3(corridor.get_center().x,ceiling_y,corridor.get_center().z),Vector3.ONE*.85)
 		return
 	for floor_y:float in [0.0,3.2]:
 		world._room_wall_finish(AABB(Vector3(-1.9,floor_y,-10.75),Vector3(3.8,3.0 if floor_y==0.0 else 3.2,21.5)),Color("a9a191"),false)
