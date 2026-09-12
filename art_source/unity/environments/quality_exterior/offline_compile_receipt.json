@@ -2,7 +2,7 @@
   "status": "PASS_OFFLINE_COMPILE_ONLY",
   "scope": "New importer plus actual source of map data, surface and shared folder helper against installed Unity API; no editor/import/render.",
   "unityApiVersion": "6000.3.24f1",
-  "sourceSha256": "a9b6bea95c6fe647cc0ecef8a053e2fa3aa713706bf7e9b1e774ea534c8da13b",
+  "sourceSha256": "8c05ad593017832eb45b7947148cfcb745050c8a014f3004b5de3e714f086f48",
   "dependencies": [
     {
       "name": "unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs",

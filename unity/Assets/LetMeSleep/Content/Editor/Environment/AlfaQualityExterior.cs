@@ -38,7 +38,7 @@ namespace LetMeSleep.Content.Editor
         }
         [Serializable] public class Receipt
         {
-            public string unityVersion, utc, sourceSha256;
+            public string unityVersion, utc, sourceSha256, meshUpdateStrategy;
             public int meshes, instances, collidersBefore, collidersAfter, lightsBefore, lightsAfter;
             public string[] verified, pending;
         }
@@ -120,6 +120,7 @@ namespace LetMeSleep.Content.Editor
                 sha = BitConverter.ToString(hash.ComputeHash(sourceBytes)).Replace("-", "").ToLowerInvariant();
             var receipt = new Receipt {
                 unityVersion = Application.unityVersion, utc = DateTime.UtcNow.ToString("o"), sourceSha256 = sha,
+                meshUpdateStrategy = "Public Mesh API replacement with explicit upload and CPU readback; existing asset GUID retained",
                 meshes = meshes.Count, instances = recipe.instances.Length,
                 collidersBefore = collidersBefore, collidersAfter = house.GetComponentsInChildren<Collider>(true).Length,
                 lightsBefore = lightsBefore, lightsAfter = house.GetComponentsInChildren<Light>(true).Length,
@@ -154,18 +155,39 @@ namespace LetMeSleep.Content.Editor
 
         static Mesh MakeMesh(MeshSpec spec)
         {
-            var mesh = new Mesh { name = "Exterior_" + spec.name, indexFormat = IndexFormat.UInt32 };
+            string name = "Exterior_" + spec.name;
+            string path = Output + "/Meshes/" + name + ".asset";
+            var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            bool create = mesh == null;
+            if (create) mesh = new Mesh { name = name };
+            UpdateMeshData(mesh, spec);
+            if (create) AssetDatabase.CreateAsset(mesh, path);
+            EditorUtility.SetDirty(mesh);
+            return mesh;
+        }
+
+        // Also used by the Director's controlled same-session topology regression.
+        // No AssetDatabase save here: callers decide asset lifecycle separately.
+        public static void UpdateMeshData(Mesh mesh, MeshSpec spec)
+        {
+            Require(mesh != null && spec != null, "Exterior mesh update requires target and recipe.");
+            // Fresh-session evidence showed the serialized data was correct while
+            // resident rendering was stale. Notify Unity through its native setters;
+            // Upload alone was separately tested and did not correct that state.
+            mesh.Clear(false);
+            mesh.indexFormat = IndexFormat.UInt32;
             mesh.vertices = spec.vertices;
             mesh.subMeshCount = spec.submeshes.Length;
             for (int i = 0; i < spec.submeshes.Length; i++) mesh.SetTriangles(spec.submeshes[i].triangles, i);
             mesh.uv = spec.vertices.Select(v => new Vector2(v.x, v.z)).ToArray();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            string path = Output + "/Meshes/" + mesh.name + ".asset";
-            var saved = AssetDatabase.LoadAssetAtPath<Mesh>(path);
-            if (saved == null) { AssetDatabase.CreateAsset(mesh, path); saved = mesh; }
-            else { EditorUtility.CopySerialized(mesh, saved); Object.DestroyImmediate(mesh); EditorUtility.SetDirty(saved); }
-            return saved;
+            mesh.MarkModified();
+            mesh.UploadMeshData(false);
+            Require(mesh.vertices.SequenceEqual(spec.vertices), "Exterior vertex readback differs: " + spec.name);
+            Require(mesh.subMeshCount == spec.submeshes.Length, "Exterior submesh count differs: " + spec.name);
+            for (int i = 0; i < spec.submeshes.Length; i++)
+                Require(mesh.GetTriangles(i).SequenceEqual(spec.submeshes[i].triangles), "Exterior index readback differs: " + spec.name + "/" + i);
         }
 
         static void ValidateRecipe(Recipe recipe)
