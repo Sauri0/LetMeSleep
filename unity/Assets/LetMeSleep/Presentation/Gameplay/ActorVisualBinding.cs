@@ -351,7 +351,54 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void SetWorldPose(Vector3 position, Quaternion rotation)
         {
+            rotation = ResolveVisualRotation(rotation);
             transform.SetPositionAndRotation(position, rotation);
+        }
+
+        private Quaternion visualRotation;
+        private float lastVisualPoseTime;
+        private bool hasVisualRotation;
+        private bool returningFromSurface;
+
+        private Quaternion ResolveVisualRotation(Quaternion bodyRotation)
+        {
+            if (proxy == null || proxy.Role != PlayerRole.Mosquito || current == null)
+                return bodyRotation;
+
+            float now = Time.unscaledTime;
+            float elapsed = hasVisualRotation ? Mathf.Clamp(now - lastVisualPoseTime, 0f, .1f) : 0f;
+            lastVisualPoseTime = now;
+            bool supported = current.SurfaceAttachment.HasValue && world != null &&
+                (current.LifeState == GameplayModel.LifeState.ApproachingSurface ||
+                 current.LifeState == GameplayModel.LifeState.Surface);
+            if (supported && world.ResolveSurface(current.SurfaceAttachment.Value, out var contact) &&
+                GameplayModel.SurfaceVisualFrame.TryResolve(contact.WorldNormal,
+                    (bodyRotation * Vector3.forward).ToFloat(),
+                    hasVisualRotation ? (visualRotation * Vector3.forward).ToFloat() : GameplayModel.Float3.Zero,
+                    elapsed * 12f, out var up, out var forward))
+            {
+                Quaternion target = Quaternion.LookRotation(forward.ToUnity(), up.ToUnity());
+                // Ease the approach tilt; attached feet must face the actual surface.
+                visualRotation = !hasVisualRotation || current.LifeState == GameplayModel.LifeState.Surface
+                    ? target : Quaternion.Slerp(visualRotation, target, 1f - Mathf.Exp(-24f * elapsed));
+                returningFromSurface = true;
+            }
+            else if (hasVisualRotation && returningFromSurface && current.LifeState == GameplayModel.LifeState.Flying)
+            {
+                visualRotation = Quaternion.Slerp(visualRotation, bodyRotation, 1f - Mathf.Exp(-24f * elapsed));
+                if (Quaternion.Angle(visualRotation, bodyRotation) < .1f)
+                {
+                    visualRotation = bodyRotation;
+                    returningFromSurface = false;
+                }
+            }
+            else
+            {
+                visualRotation = bodyRotation;
+                returningFromSurface = false;
+            }
+            hasVisualRotation = true;
+            return visualRotation;
         }
 
         private static float PlanarSpeed(GameplayModel.Float3 velocity)
