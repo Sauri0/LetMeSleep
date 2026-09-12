@@ -9,7 +9,7 @@ namespace LetMeSleep.Gameplay.Unity
 {
     // Room/Online owns lifecycle. This adapter never creates or sorts a RoomSession.
     [RequireComponent(typeof(UnityGameplayWorld))]
-    public sealed class GameplayRuntime : MonoBehaviour
+    public sealed class GameplayRuntime : MonoBehaviour, IGameplayPresentationSink
     {
         public bool IsHost = true;
         public bool AutomaticTick = true;
@@ -35,6 +35,7 @@ namespace LetMeSleep.Gameplay.Unity
         public event Action<GameplayEvent> EventReady;
         public event Action<RoundEndReason, PlayerRole> RoundFinished;
         private readonly Dictionary<uint, BotController> bots = new Dictionary<uint, BotController>();
+        private readonly ReplicaStateGate replicaGate = new ReplicaStateGate();
         private float accumulator, yaw, pitch, sendAccumulator, snapshotAccumulator;
         private uint inputSequence, actionSequence, knownViewRevision;
         private bool biteNeedsRelease, wasAttached, focus = true, finishedSent;
@@ -49,6 +50,7 @@ namespace LetMeSleep.Gameplay.Unity
             if (!World) Awake();
             roundConfig = config; accumulator = sendAccumulator = snapshotAccumulator = 0; inputSequence = actionSequence = knownViewRevision = 0; yaw = pitch = 0; cameraDistance = 0; finishedSent = false;
             LatestSnapshot = null; LocalPrivate = null; held = default;
+            replicaGate.Reset(config);
             queuedActions.Clear(); bots.Clear(); biteNeedsRelease = true; wasAttached = false;
             if (IsHost)
             {
@@ -57,11 +59,13 @@ namespace LetMeSleep.Gameplay.Unity
                 ApplySnapshot(Authority.CaptureSnapshot());
             }
             else World.BeginRound(roster, config.DoorDefinitions);
+            SetInputBlocked(false);
         }
         public void StopRound()
         {
             if (IsHost) Authority?.EndRound(RoundEndReason.Aborted);
             roundConfig = null; LatestSnapshot = null; LocalPrivate = null; queuedActions.Clear(); bots.Clear(); SetInputBlocked(true);
+            replicaGate.Reset(null);
         }
         public void SetInputBlocked(bool blocked)
         {
@@ -148,7 +152,7 @@ namespace LetMeSleep.Gameplay.Unity
             Authority.Advance(new HostTick(next));
             var latest = Authority.CaptureSnapshot(); ApplySnapshot(latest);
             LocalPrivate = Authority.CapturePrivate(LocalActorId); if (LocalPrivate != null) PrivateReady?.Invoke(LocalPrivate);
-            foreach (var item in Authority.DrainEvents()) EventReady?.Invoke(item);
+            foreach (var item in Authority.DrainEvents()) ApplyEvent(item);
             snapshotAccumulator += 1f / 30;
             if (snapshotAccumulator >= .05f || latest.SimulationPhase == SimulationPhase.Ended) { snapshotAccumulator -= .05f; SnapshotReady?.Invoke(latest); }
             if (latest.SimulationPhase == SimulationPhase.Ended && !finishedSent) { finishedSent = true; RoundFinished?.Invoke(latest.Result, latest.Winner); }
@@ -176,7 +180,7 @@ namespace LetMeSleep.Gameplay.Unity
         }
         public void ApplySnapshot(GameSessionState snapshot)
         {
-            if (snapshot == null || roundConfig == null || snapshot.SessionEpoch != roundConfig.SessionEpoch || snapshot.RoundId != roundConfig.RoundId || (LatestSnapshot != null && snapshot.HostTick < LatestSnapshot.HostTick)) return;
+            if (!replicaGate.AcceptSnapshot(snapshot)) return;
             LatestSnapshot = snapshot;
             if (!IsHost)
             {
@@ -190,7 +194,11 @@ namespace LetMeSleep.Gameplay.Unity
                 // Preserve local world look; only discard movement/action prediction from the old frame.
             }
         }
-        public void ApplyPrivate(ActorPrivateState state) { if (state != null && state.ActorId == LocalActorId) { LocalPrivate = state; PrivateReady?.Invoke(state); } }
+        public void ApplySnapshot(GameSessionState snapshot, double renderHostTime) => ApplySnapshot(snapshot);
+        public void ApplyPrivate(ActorPrivateState state)
+        { if (replicaGate.AcceptPrivate(state, LocalActorId)) { LocalPrivate = state; PrivateReady?.Invoke(state); } }
+        public void ApplyEvent(in GameplayEvent item)
+        { if (replicaGate.AcceptEvent(item)) EventReady?.Invoke(item); }
         private void LateUpdate()
         {
             if (!UseBuiltInCamera || !LocalCamera) return;

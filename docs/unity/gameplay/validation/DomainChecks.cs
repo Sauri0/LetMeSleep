@@ -121,4 +121,43 @@ public sealed class DomainChecks
     }
     [Test] public void BalanceIdentityIncludesActualParameters()
     { Assert.That(new BalanceProfile(12).Hash, Is.Not.EqualTo(new BalanceProfile(35).Hash)); }
+    [Test] public void ReplicaRejectsWrongContentBalanceAndRegressingSnapshots()
+    {
+        var a = Start(new World()); var gate = new ReplicaStateGate(); gate.Reset(a.Config); Tick(a);
+        Assert.That(gate.AcceptSnapshot(a.CaptureSnapshot()), Is.True);
+        var wrongContent = new GameplayRoundConfig(1, 1, "house-patio-v1", "different", 30, 20, new BalanceProfile(35));
+        var wrongBalance = new GameplayRoundConfig(1, 1, "house-patio-v1", "test", 30, 20, new BalanceProfile(12));
+        Assert.That(gate.AcceptSnapshot(new GameSessionState(wrongContent, 2, SimulationPhase.Running, 0, RoundEndReason.None, PlayerRole.Unassigned, Array.Empty<ActorSnapshot>(), Array.Empty<DoorSnapshot>())), Is.False);
+        Assert.That(gate.AcceptSnapshot(new GameSessionState(wrongBalance, 2, SimulationPhase.Running, 0, RoundEndReason.None, PlayerRole.Unassigned, Array.Empty<ActorSnapshot>(), Array.Empty<DoorSnapshot>())), Is.False);
+        Assert.That(gate.AcceptSnapshot(new GameSessionState(a.Config, 0, SimulationPhase.Running, 0, RoundEndReason.None, PlayerRole.Unassigned, Array.Empty<ActorSnapshot>(), Array.Empty<DoorSnapshot>())), Is.False);
+    }
+    [Test] public void ReplicaRejectsLatePrivateAcrossRoundsAndOldTicks()
+    {
+        var a = Start(new World()); var gate = new ReplicaStateGate(); gate.Reset(a.Config);
+        var old = a.CapturePrivate(2); Tick(a); var fresh = a.CapturePrivate(2);
+        Assert.That(gate.AcceptPrivate(fresh, 2), Is.True); Assert.That(gate.AcceptPrivate(old, 2), Is.False);
+        gate.Reset(new GameplayRoundConfig(1, 2, "house-patio-v1", "test", 30));
+        Assert.That(gate.AcceptPrivate(fresh, 2), Is.False);
+        var next = new ActorPrivateState(2, 0, 0, CommandReject.None, InteractionHint.None, 0, 0, 0, 0, true, DoorUseResult.Accepted, 1, 2, 0);
+        Assert.That(gate.AcceptPrivate(next, 2), Is.True); Assert.That(gate.AcceptPrivate(next, 1), Is.False);
+    }
+    [Test] public void ReplicaEventsDeduplicateAllowReorderingAndResetPerRound()
+    {
+        var a = Start(new World()); var gate = new ReplicaStateGate(); gate.Reset(a.Config);
+        GameplayEvent Event(ulong id, ulong round = 1) => new GameplayEvent(1, round, id, 0, GameplayEventKind.StrikeStarted, 1, 0, 1, default, default);
+        Assert.That(gate.AcceptEvent(Event(18)), Is.True); Assert.That(gate.AcceptEvent(Event(16)), Is.True); Assert.That(gate.AcceptEvent(Event(18)), Is.False);
+        Assert.That(gate.AcceptEvent(Event(2048)), Is.True); Assert.That(gate.AcceptEvent(Event(16)), Is.False);
+        gate.Reset(new GameplayRoundConfig(1, 2, "house-patio-v1", "test", 30));
+        Assert.That(gate.AcceptEvent(Event(2049)), Is.False); Assert.That(gate.AcceptEvent(Event(1, 2)), Is.True);
+    }
+    [Test] public void InvalidDoorGeometryIsRejectedBeforeRound()
+    {
+        var a = Start(new World()); var roster = new[] { new SpawnActor(1, "h", PlayerRole.Human, default), new SpawnActor(2, "m", PlayerRole.Mosquito, new Float3(0, 1, 0)) };
+        foreach (var door in new[] {
+            new DoorDefinition(1, 1, new Float3(float.NaN, 0, 0), Rotation.Identity, new Float3(1, 2, .04f), default),
+            new DoorDefinition(1, 1, default, Rotation.Identity, new Float3(-1, 2, .04f), default),
+            new DoorDefinition(1, 1, default, Rotation.Identity, new Float3(1, 2, .04f), default, openSign: 0),
+            new DoorDefinition(1, 1, default, new Rotation(0, 0, 0, 0), new Float3(1, 2, .04f), default) })
+            Assert.Throws<ArgumentException>(() => a.BeginRound(new GameplayRoundConfig(1, 2, "house-patio-v1", "test", doors: new[] { door }), roster));
+    }
 }

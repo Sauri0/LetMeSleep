@@ -64,8 +64,10 @@ namespace LetMeSleep.Gameplay
             }
             if (humans < 1 || humans > 5 || insects < 1) throw new ArgumentException("Both teams required.");
             ids.Clear();
+            if (next.DoorDefinitions.Count > 128) throw new ArgumentException("Too many doors.");
+            var surfaceIds = new HashSet<uint>();
             foreach (var door in next.DoorDefinitions)
-                if (door.DoorId == 0 || door.SurfaceId == 0 || !ids.Add(door.DoorId) || !MathEx.Finite(door.OpenAngleRadians) || door.OpenAngleRadians <= 0 || door.OpenAngleRadians > (float)Math.PI || !MathEx.Finite(door.InitialAngleRadians) || door.InitialAngleRadians < 0 || door.InitialAngleRadians > door.OpenAngleRadians) throw new ArgumentException("Invalid door definition.");
+                if (door.DoorId == 0 || door.SurfaceId == 0 || !ids.Add(door.DoorId) || !surfaceIds.Add(door.SurfaceId) || !MathEx.Finite(door.OpenAngleRadians) || door.OpenAngleRadians <= 0 || door.OpenAngleRadians > (float)Math.PI || !MathEx.Finite(door.InitialAngleRadians) || door.InitialAngleRadians < 0 || door.InitialAngleRadians > door.OpenAngleRadians || !door.HingePosition.IsFinite || door.HingePosition.Length > 10000 || !door.LeafSize.IsFinite || door.LeafSize.X <= 0 || door.LeafSize.Y <= 0 || door.LeafSize.Z <= 0 || door.LeafSize.Length > 100 || !door.HandleLocalPoint.IsFinite || !door.LeafCenterLocal.IsFinite || !ValidRotation(door.ClosedRotation) || !ValidRotation(door.LeafRotationLocal) || (door.OpenSign != -1 && door.OpenSign != 1)) throw new ArgumentException("Invalid door definition.");
             world.BeginRound(roster, next.DoorDefinitions);
             config = next; tick = 0; blood = 0; eventId = 0; strikeId = 0; result = RoundEndReason.None; winner = PlayerRole.Unassigned; phase = SimulationPhase.Running;
             actors.Clear(); doors.Clear(); pending.Clear(); events.Clear();
@@ -94,6 +96,7 @@ namespace LetMeSleep.Gameplay
             return CommandReject.None;
         }
         private static bool ValidAim(Float3 aim) => aim.IsFinite && Math.Abs(aim.LengthSquared - 1) <= .02f;
+        private static bool ValidRotation(Rotation r) => MathEx.Finite(r.X) && MathEx.Finite(r.Y) && MathEx.Finite(r.Z) && MathEx.Finite(r.W) && Math.Abs(r.X * r.X + r.Y * r.Y + r.Z * r.Z + r.W * r.W - 1) < .002f;
         private void ResetRate(Actor a) { if (tick - a.RateTick >= 30) { a.RateTick = tick; a.InputCount = 0; a.ActionCount = 0; } }
         private CommandReject Input(string principal, in PlayerInputCommand c, bool bot)
         {
@@ -360,7 +363,7 @@ namespace LetMeSleep.Gameplay
         public ActorPrivateState CapturePrivate(uint actorId)
         {
             if (!actors.TryGetValue(actorId, out var a)) return null;
-            return new ActorPrivateState(actorId, a.InputSequence, a.ActionSequence, a.Rejection, a.Hint, MathEx.Clamp(a.Preparation / config.Balance.PreparationSeconds, 0, 1), a.Extraction, a.Recovery, a.HelpTarget, CanAct(a), a.DoorResult);
+            return new ActorPrivateState(actorId, a.InputSequence, a.ActionSequence, a.Rejection, a.Hint, MathEx.Clamp(a.Preparation / config.Balance.PreparationSeconds, 0, 1), a.Extraction, a.Recovery, a.HelpTarget, CanAct(a), a.DoorResult, config.SessionEpoch, config.RoundId, tick);
         }
         public IReadOnlyList<GameplayEvent> DrainEvents() { var copy = Array.AsReadOnly(events.ToArray()); events.Clear(); return copy; }
         public void RemoveActor(uint actorId, ActorRemovalReason reason)

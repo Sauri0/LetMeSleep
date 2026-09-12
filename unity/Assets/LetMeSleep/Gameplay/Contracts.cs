@@ -191,6 +191,9 @@ namespace LetMeSleep.Gameplay
     }
     public sealed class ActorPrivateState
     {
+        public ulong SessionEpoch { get; }
+        public ulong RoundId { get; }
+        public uint HostTick { get; }
         public uint ActorId { get; }
         public uint LastAcceptedInputSequence { get; }
         public uint LastAcceptedActionSequence { get; }
@@ -202,8 +205,8 @@ namespace LetMeSleep.Gameplay
         public uint HelpTargetId { get; }
         public bool CanAct { get; }
         public DoorUseResult LastDoorResult { get; }
-        public ActorPrivateState(uint actor, uint input, uint action, CommandReject rejection, InteractionHint hint, float preparation, float extraction, float recovery, uint help, bool canAct, DoorUseResult door)
-        { ActorId = actor; LastAcceptedInputSequence = input; LastAcceptedActionSequence = action; Rejection = rejection; InteractionHint = hint; PreparationProgress = preparation; ExtractionProgress = extraction; RecoverySeconds = recovery; HelpTargetId = help; CanAct = canAct; LastDoorResult = door; }
+        public ActorPrivateState(uint actor, uint input, uint action, CommandReject rejection, InteractionHint hint, float preparation, float extraction, float recovery, uint help, bool canAct, DoorUseResult door, ulong sessionEpoch = 0, ulong roundId = 0, uint hostTick = 0)
+        { ActorId = actor; LastAcceptedInputSequence = input; LastAcceptedActionSequence = action; Rejection = rejection; InteractionHint = hint; PreparationProgress = preparation; ExtractionProgress = extraction; RecoverySeconds = recovery; HelpTargetId = help; CanAct = canAct; LastDoorResult = door; SessionEpoch = sessionEpoch; RoundId = roundId; HostTick = hostTick; }
     }
     public readonly struct DoorDefinition
     {
