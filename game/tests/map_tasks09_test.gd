@@ -146,12 +146,13 @@ func _doors_and_extension() -> void:
 	# validated three-floor geometry. This is an explicit restricted-catalog
 	# fixture, not a claim that the generator emits a one-station map.
 	var extended=make_sim(Generator.map_id(1),{"task_deadline":24,"task_floor":24})
+	# Dispatch consumes one physics tick before measuring the remaining interval.
 	var farthest: Dictionary={}
 	for source: Vector3 in extended._map_data.nav_nodes:
 		if source.y<float(extended._map_data.ceiling)-3.3: continue
 		for station_index: int in range(extended._map_data.stations.size()):
 			var estimate: Dictionary=extended._task_route(source,station_index)
-			if not estimate.is_empty() and estimate.required_seconds>24 and estimate.required_seconds<=35.5 and (farthest.is_empty() or estimate.required_seconds>farthest.required_seconds):
+			if not estimate.is_empty() and estimate.required_seconds>24 and estimate.required_seconds<=35.5-DT and (farthest.is_empty() or estimate.required_seconds>farthest.required_seconds):
 				farthest=estimate;farthest.source=source;farthest.station_index=station_index
 	check(not farthest.is_empty(),"real three-floor route exercises a needed extension")
 	if not farthest.is_empty():
@@ -160,7 +161,7 @@ func _doors_and_extension() -> void:
 		extended.actors[1]._next_task=0
 		extended.step(DT)
 		var task: Dictionary=extended.actors[1]._task.duplicate(true)
-		check(not task.is_empty() and task.extended and task.budget==task.required_seconds and task.base_deadline==24,"only issued visible budget extends, personal penalty clock remains intact")
+		check(not task.is_empty() and task.extended and task.budget==task.required_seconds and task.base_deadline==24,"only issued visible budget extends, personal penalty clock remains intact: "+JSON.stringify({"task":task,"witness":farthest,"position":extended.actors[1].p,"deadline":extended.actors[1]._deadline}))
 		if not task.is_empty():
 			var result: Dictionary=walk_task(extended)
 			check(result.completed and result.collision_free and result.seconds<task.budget,"extended real route is physically completable without sprint")
