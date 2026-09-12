@@ -192,24 +192,14 @@ namespace LetMeSleep.Presentation.Editor
                 moonObject.transform.localRotation = Quaternion.Euler(42f, -28f, 0f);
                 Light moon = moonObject.AddComponent<Light>();
 
-                var mapLightTemplateObject = new GameObject("MapPointLight_Template");
-                mapLightTemplateObject.transform.SetParent(root.transform, false);
-                Light mapLightTemplate = mapLightTemplateObject.AddComponent<Light>();
-                mapLightTemplate.type = LightType.Point;
-                mapLightTemplate.shadows = LightShadows.Soft;
-                mapLightTemplate.shadowResolution = (LightShadowResolution)512;
-                UniversalAdditionalLightData additionalLightData =
-                    mapLightTemplateObject.AddComponent<UniversalAdditionalLightData>();
-                var serializedLightData = new SerializedObject(additionalLightData);
-                SerializedProperty resolutionTier = serializedLightData.FindProperty(
-                    "m_AdditionalLightsShadowResolutionTier");
-                if (resolutionTier == null)
-                    throw new InvalidOperationException(
-                        "URP additional-light custom shadow tier is unavailable.");
-                resolutionTier.intValue = UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierCustom;
-                serializedLightData.ApplyModifiedPropertiesWithoutUndo();
-                mapLightTemplate.enabled = false;
-                mapLightTemplateObject.SetActive(false);
+                Light mapLightLowTemplate = CreateMapLightTemplate(
+                    root.transform,
+                    "MapPointLight_LowTemplate",
+                    UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierLow);
+                Light mapLightMediumTemplate = CreateMapLightTemplate(
+                    root.transform,
+                    "MapPointLight_MediumTemplate",
+                    UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierMedium);
 
                 var volumeObject = new GameObject("Volume_Global");
                 volumeObject.transform.SetParent(root.transform, false);
@@ -225,7 +215,8 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(rig, "moon", moon);
                 Assign(rig, "globalVolume", volume);
                 Assign(rig, "nightSkybox", nightSkybox);
-                Assign(rig, "mapLightTemplate", mapLightTemplate);
+                Assign(rig, "mapLightLowTemplate", mapLightLowTemplate);
+                Assign(rig, "mapLightMediumTemplate", mapLightMediumTemplate);
                 rig.ApplyPreset();
                 moon.lightmapBakeType = LightmapBakeType.Mixed;
 
@@ -236,6 +227,30 @@ namespace LetMeSleep.Presentation.Editor
             {
                 UnityEngine.Object.DestroyImmediate(root);
             }
+        }
+
+        private static Light CreateMapLightTemplate(Transform parent, string name, int resolutionTier)
+        {
+            var templateObject = new GameObject(name);
+            templateObject.transform.SetParent(parent, false);
+            Light template = templateObject.AddComponent<Light>();
+            template.type = LightType.Point;
+            template.shadows = LightShadows.Soft;
+
+            UniversalAdditionalLightData additionalLightData =
+                templateObject.AddComponent<UniversalAdditionalLightData>();
+            var serializedLightData = new SerializedObject(additionalLightData);
+            SerializedProperty tierProperty = serializedLightData.FindProperty(
+                "m_AdditionalLightsShadowResolutionTier");
+            if (tierProperty == null)
+                throw new InvalidOperationException(
+                    "URP additional-light shadow resolution tier is unavailable.");
+            tierProperty.intValue = resolutionTier;
+            serializedLightData.ApplyModifiedPropertiesWithoutUndo();
+
+            template.enabled = false;
+            templateObject.SetActive(false);
+            return template;
         }
 
         private static ParticleSystem BuildImpactVfx()

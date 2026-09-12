@@ -17,7 +17,8 @@ namespace LetMeSleep.Presentation
         [SerializeField] private Light moon = null;
         [SerializeField] private Volume globalVolume = null;
         [SerializeField] private Material nightSkybox = null;
-        [SerializeField] private Light mapLightTemplate = null;
+        [SerializeField] private Light mapLightLowTemplate = null;
+        [SerializeField] private Light mapLightMediumTemplate = null;
 
         private readonly List<Light> mapLights = new List<Light>();
         private Transform boundAnchors;
@@ -56,8 +57,8 @@ namespace LetMeSleep.Presentation
         {
             if (presentationAnchors == null)
                 throw new ArgumentNullException(nameof(presentationAnchors));
-            if (mapLightTemplate == null)
-                throw new InvalidOperationException("The map light template is not assigned. Rebuild the presentation library.");
+            if (mapLightLowTemplate == null || mapLightMediumTemplate == null)
+                throw new InvalidOperationException("The map light templates are not assigned. Rebuild the presentation library.");
 
             ClearMapLights();
             boundAnchors = presentationAnchors;
@@ -128,16 +129,16 @@ namespace LetMeSleep.Presentation
         private Light CreateMapLight(
             Transform anchor, LocalLightProfile profile, bool castsShadows)
         {
-            Light localLight = Instantiate(mapLightTemplate, anchor, false);
+            Light template = profile.ShadowTier == LocalShadowTier.Medium
+                ? mapLightMediumTemplate
+                : mapLightLowTemplate;
+            Light localLight = Instantiate(template, anchor, false);
             GameObject lightObject = localLight.gameObject;
             lightObject.name = "LMS_LocalLight_" + ResolveZone(anchor.name);
             localLight.type = LightType.Point;
             localLight.color = profile.Color;
             localLight.intensity = profile.Intensity;
             localLight.range = profile.Range;
-            // The template authors URP's tier as Custom. In that mode the pipeline
-            // reads this explicit per-light resolution in both Editor and Player.
-            localLight.shadowResolution = (LightShadowResolution)profile.ShadowResolution;
             localLight.bounceIntensity = 0f;
             localLight.renderMode = LightRenderMode.Auto;
 #if UNITY_EDITOR
@@ -173,23 +174,23 @@ namespace LetMeSleep.Presentation
         private static LocalLightProfile ResolveProfile(string anchorName, bool house)
         {
             if (Contains(anchorName, "Patio"))
-                return new LocalLightProfile(new Color(0.42f, 0.58f, 0.92f), 0.55f, 6.5f, false, 256);
+                return new LocalLightProfile(new Color(0.42f, 0.58f, 0.92f), 0.55f, 6.5f, false, LocalShadowTier.Low);
             if (Contains(anchorName, "Lobby"))
-                return new LocalLightProfile(new Color(1f, 0.62f, 0.30f), 2.25f, 6.4f, true, 512);
+                return new LocalLightProfile(new Color(1f, 0.62f, 0.30f), 2.25f, 6.4f, true, LocalShadowTier.Medium);
             if (Contains(anchorName, "Bedroom"))
-                return new LocalLightProfile(new Color(1f, 0.58f, 0.32f), 1.30f, 4.0f, true, 256);
+                return new LocalLightProfile(new Color(1f, 0.58f, 0.32f), 1.30f, 4.0f, true, LocalShadowTier.Low);
             if (Contains(anchorName, "Living"))
-                return new LocalLightProfile(new Color(1f, 0.64f, 0.36f), 1.45f, 4.8f, true, 512);
+                return new LocalLightProfile(new Color(1f, 0.64f, 0.36f), 1.45f, 4.8f, true, LocalShadowTier.Medium);
             if (Contains(anchorName, "Dining") || Contains(anchorName, "Kitchen"))
-                return new LocalLightProfile(new Color(1f, 0.68f, 0.40f), 1.25f, 4.2f, false, 256);
+                return new LocalLightProfile(new Color(1f, 0.68f, 0.40f), 1.25f, 4.2f, false, LocalShadowTier.Low);
             if (Contains(anchorName, "Bathroom") || Contains(anchorName, "Utility"))
-                return new LocalLightProfile(new Color(1f, 0.76f, 0.56f), 1.05f, 3.6f, false, 256);
+                return new LocalLightProfile(new Color(1f, 0.76f, 0.56f), 1.05f, 3.6f, false, LocalShadowTier.Low);
             if (Contains(anchorName, "Hall") || Contains(anchorName, "Landing"))
-                return new LocalLightProfile(new Color(1f, 0.70f, 0.44f), 0.92f, 3.35f, false, 256);
+                return new LocalLightProfile(new Color(1f, 0.70f, 0.44f), 0.92f, 3.35f, false, LocalShadowTier.Low);
 
             return house
-                ? new LocalLightProfile(new Color(1f, 0.68f, 0.40f), 1.10f, 4.0f, false, 256)
-                : new LocalLightProfile(new Color(1f, 0.64f, 0.34f), 1.45f, 4.8f, false, 256);
+                ? new LocalLightProfile(new Color(1f, 0.68f, 0.40f), 1.10f, 4.0f, false, LocalShadowTier.Low)
+                : new LocalLightProfile(new Color(1f, 0.64f, 0.34f), 1.45f, 4.8f, false, LocalShadowTier.Low);
         }
 
         private static string ResolveZone(string anchorName)
@@ -209,20 +210,26 @@ namespace LetMeSleep.Presentation
         private readonly struct LocalLightProfile
         {
             public LocalLightProfile(
-                Color color, float intensity, float range, bool shadowCandidate, int shadowResolution)
+                Color color, float intensity, float range, bool shadowCandidate, LocalShadowTier shadowTier)
             {
                 Color = color;
                 Intensity = intensity;
                 Range = range;
                 ShadowCandidate = shadowCandidate;
-                ShadowResolution = shadowResolution;
+                ShadowTier = shadowTier;
             }
 
             public Color Color { get; }
             public float Intensity { get; }
             public float Range { get; }
             public bool ShadowCandidate { get; }
-            public int ShadowResolution { get; }
+            public LocalShadowTier ShadowTier { get; }
+        }
+
+        private enum LocalShadowTier
+        {
+            Low,
+            Medium
         }
     }
 }
