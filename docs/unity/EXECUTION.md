@@ -99,3 +99,7 @@ Trabajo reactivado por propietarios, sin comenzar beta:
 Verificación del lote: mismas vistas comparables de estar/pasillo, dormitorio y lobby; movimiento continuo humano/mosquito con estados reales (no sólo poses forzadas); navegación UI y composición a720/1080. Comparar siluetas, proporciones, lectura doméstica, materiales, fuentes de luz y acciones con referencias, sin copiar textos/mecánicas. Documentar diferencias pendientes honestamente.
 
 Audio fantasma reportado: procesos inspeccionados, no había Let-me-sleep.exe ni Godot activo. Era UnityPID33400 en Play de W1. Director y W1 confirmaron AudioListener.volume=0. Las pruebas físicas/visuales siguientes deben ser silenciosas; abrir editores batch con -noaudio cuando no se pruebe audio. No modificar ajustes reales ni silenciar otros programas. El usuario fue informado.
+
+Branko también rechazó sonidos y música frente a Godot. La recuperación del audio existente se incluye en este mismo lote de calidad alfa, no se aplaza a omega. Comparación por archivos/código: qa/AUDIO-MIGRATION-GAP-ALFA2.md. W2 recibió stems y catálogo originales disponibles y créditos; no se presume una escucha realizada ni se amplían modos/herramientas por el inventario histórico.
+
+W1 terminó recorrido adicional sin defecto runtime, commit e84de46 con recibos. EditorPID33400 cerrado y slot cedido a M1 para Blender CPU headless2hilos sin render. M1 verificó ausencia delPID antes de iniciar. M2/UI/W2 siguen archivos aislados; pruebas audibles requieren coordinación.
