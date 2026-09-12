@@ -13,6 +13,9 @@ namespace LetMeSleep.Presentation.Gameplay
         private const float MaximumExtrapolationSeconds = 0.10f;
         private const float HumanStrideMeters = 1.2f;
         private const float MosquitoStrideMeters = 0.3f;
+        // SurfaceWalk source contract cc4c871: .116 / .58 * .5 = .100 Unity m/cycle.
+        private const float MosquitoSurfaceStrideMeters = 0.1f;
+        private const float MaximumSurfaceWalkPlayback = 8f;
 
         private GameplayActorProxy proxy;
         private UnityGameplayWorld world;
@@ -163,10 +166,23 @@ namespace LetMeSleep.Presentation.Gameplay
 
             currentMotion = motion;
             ApplyAnimatorSpeed(state, motion);
+            if (IsSurfaceWalk(motion) && view.Animator != null &&
+                TryGetMotion(motion, out CharacterView.MotionBinding surfaceBinding))
+            {
+                float fadeSeconds = immediate ? 0f : CrossFadeSeconds(state);
+                view.PlayMotion(motion, fadeSeconds);
+                float phase = AnimationPhase(state, motion);
+                if (immediate)
+                    view.Animator.Play(surfaceBinding.StateName, 0, phase);
+                else
+                    view.Animator.CrossFadeInFixedTime(surfaceBinding.StateName, fadeSeconds, 0,
+                        phase * MotionDuration(motion));
+                return;
+            }
             if (immediate && TryGetMotion(motion, out CharacterView.MotionBinding binding) && view.Animator != null)
             {
                 view.PlayMotion(motion, 0f);
-                view.Animator.Play(binding.StateName, 0, Mathf.Repeat(state.MotionPhase, 1f));
+                view.Animator.Play(binding.StateName, 0, AnimationPhase(state, motion));
                 return;
             }
             view.PlayMotion(motion, CrossFadeSeconds(state));
@@ -174,14 +190,16 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void SynchronizeLoopPhase(GameplayModel.ActorSnapshot state, int motion)
         {
-            if (localActor || !UsesAuthoritativeDistancePhase(motion) ||
+            if ((localActor && !IsSurfaceWalk(motion)) || !UsesAuthoritativeDistancePhase(motion) ||
                 view.Animator == null || !TryGetMotion(motion, out CharacterView.MotionBinding binding) || !binding.Loop)
+                return;
+            if (IsSurfaceWalk(motion) && view.Animator.IsInTransition(0))
                 return;
             AnimatorStateInfo info = view.Animator.GetCurrentAnimatorStateInfo(0);
             if (!info.IsName(binding.StateName))
                 return;
             float rendered = Mathf.Repeat(info.normalizedTime, 1f);
-            float authoritative = Mathf.Repeat(state.MotionPhase, 1f);
+            float authoritative = AnimationPhase(state, motion);
             float phaseError = Mathf.Abs(Mathf.DeltaAngle(rendered * 360f, authoritative * 360f)) / 360f;
             if (phaseError > 0.20f)
                 view.Animator.Play(binding.StateName, 0, authoritative);
@@ -236,6 +254,19 @@ namespace LetMeSleep.Presentation.Gameplay
                 return;
             }
 
+            if (IsSurfaceWalk(motion))
+            {
+                Vector3 velocity = state.Velocity.ToUnity();
+                if (state.SurfaceAttachment.HasValue && world != null &&
+                    world.ResolveSurface(state.SurfaceAttachment.Value, out var contact))
+                    velocity = Vector3.ProjectOnPlane(velocity, contact.WorldNormal.ToUnity());
+                // The cap is representational headroom, not a gameplay speed change.
+                view.Animator.speed = Mathf.Clamp(
+                    MotionDuration(motion) * velocity.magnitude / MosquitoSurfaceStrideMeters,
+                    0f, MaximumSurfaceWalkPlayback);
+                return;
+            }
+
             float speed = proxy.Role == PlayerRole.Human
                 ? PlanarSpeed(state.Velocity)
                 : state.Velocity.Length;
@@ -245,6 +276,21 @@ namespace LetMeSleep.Presentation.Gameplay
             float clipDuration = MotionDuration(motion);
             float playback = clipDuration * speed / distancePerCycle;
             view.Animator.speed = Mathf.Clamp(playback, 0.35f, 2.5f);
+        }
+
+        private bool IsSurfaceWalk(int motion)
+        {
+            return proxy != null && proxy.Role == PlayerRole.Mosquito && motion == 6;
+        }
+
+        private float AnimationPhase(GameplayModel.ActorSnapshot state, int motion)
+        {
+            // Authority exposes accumulated distance / .3 for both mosquito modes.
+            // Convert the accumulated phase before wrapping, including on reentry.
+            float phase = IsSurfaceWalk(motion)
+                ? state.MotionPhase * (MosquitoStrideMeters / MosquitoSurfaceStrideMeters)
+                : state.MotionPhase;
+            return Mathf.Repeat(phase, 1f);
         }
 
         private bool UsesAuthoritativeDistancePhase(int motion)
