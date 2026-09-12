@@ -68,3 +68,11 @@ Se mantienen los 15 nombres/IDs por especie, rig, colisiones y boca del mosquito
 `plan_visual_evidence.py` produjo `visual_evidence_jobs.json`: tres assets reales, cinco vistas por asset, tres giros de 360°, treinta videos de animación, treinta hojas de cinco poses y dieciséis detalles (94 trabajos). No crea medios ni añade variantes cosméticas. Todos los trabajos comienzan `generated=false`, `reviewed=false`. Director posee el índice/capturas, W2 la reproducción; deben guardar fase real, cambios de hueso/malla, identidad de fuente y motor. Las vistas de agarre y picadura necesitan integración efectiva, no sólo una pose aislada.
 
 Pendiente: importar y regenerar prefabs con el builder, comprobar reproducción/fase en Unity y generar/revisar las capturas del catálogo. El manifiesto se sella con `--source-only`, `rendered=false` y `unity_import_verified=false`.
+
+## Corrección de pose inicial del importador Unity
+
+La integración nativa de esta fuente encontró CameraEye Y=1,512 m, con Hips Y=0,732 m, incluso en el modelo importado sin controller. La lectura binaria del FBX con el parser oficial de Blender confirmó `Model/Hips Lcl Translation Y=0,75` y las cinco matrices BindPose de Hips también Y=0,75. El archivo conserva el reposo correcto. La primera AnimationStack es Human_Blink; su fase cero baja Hips 18 mm, exactamente la diferencia observada en Unity.
+
+El builder `alpha-characters-5-bind-pose` reconstruye las transformaciones de reposo a partir de `renderer.localToWorldMatrix * sharedMesh.bindposes[i].inverse`, comprueba consistencia entre renderers y aplica padres antes que hijos. Lo hace antes de orientación/anclajes y de validar el prefab neutral. Los sockets conservan sus offsets locales; ninguna animación ni cámara recibe compensaciones. El gate de CameraEye sigue siendo 1,53 m ±5 mm. Las fases animadas conservan sus movimientos legítimos.
+
+Compilación de ambas assemblies contra referencias Unity 6000.3.24f1: PASS. Pendiente de repetición nativa del builder/idempotencia en el editor del Director; este resultado de compilación no sustituye esa prueba.

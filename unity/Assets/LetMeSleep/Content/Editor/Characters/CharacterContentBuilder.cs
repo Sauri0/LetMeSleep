@@ -19,7 +19,7 @@ namespace LetMeSleep.Content.Characters.Editor
     {
         public const string OutputRoot = "Assets/LetMeSleep/Content/Characters";
         public const string ReceiptPath = OutputRoot + "/BuildReceipt.json";
-        private const string BuilderVersion = "alpha-characters-4-bake-scale";
+        private const string BuilderVersion = "alpha-characters-5-bind-pose";
         private static string SourceRoot => Path.GetFullPath(Path.Combine(Application.dataPath,
             "../../art_source/unity/characters"));
         private static readonly string[] HumanStates = {
@@ -320,6 +320,7 @@ namespace LetMeSleep.Content.Characters.Editor
                 animator.runtimeAnimatorController = controller;
                 animator.applyRootMotion = false;
                 animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                RestoreBindPose(instance.transform);
                 var view = root.AddComponent<CharacterView>();
                 view.Animator = animator; view.VisualRoot = visual;
                 if (human)
@@ -405,6 +406,8 @@ namespace LetMeSleep.Content.Characters.Editor
                 var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
                 var view = instance.GetComponent<CharacterView>();
                 Require(view != null && view.Animator != null && view.Animator.avatar != null && view.Animator.avatar.isValid, "Invalid rig on " + name);
+                RestoreBindPose(view.Animator.transform);
+                view.RefreshAnchors();
                 Require(!view.Animator.avatar.isHuman && !view.Animator.applyRootMotion, "Expected in-place Generic rig on " + name);
                 Require(instance.transform.localScale == Vector3.one, "Actor root has non-unit scale");
                 Require(view.VisualRoot.localScale == Vector3.one * (audit.species == "Human" ? 1 : .5f), "Visual scale changed");
@@ -510,6 +513,7 @@ namespace LetMeSleep.Content.Characters.Editor
             var model = (GameObject)PrefabUtility.InstantiatePrefab(
                 AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath(species)), scene);
             model.name = "Model"; model.transform.SetParent(orientation, false);
+            RestoreBindPose(model.transform);
             string originName = species == "Human" ? "Head" : species == "Mosquito" ? "Thorax" : "Root";
             string frontName = species == "Human" ? "Socket.Eye" : species == "Mosquito" ? "Socket.Mouth" : "Socket.Impact";
             Vector3 forward = parent.InverseTransformDirection(Unique(model.transform, frontName).position - Unique(model.transform, originName).position);
@@ -521,6 +525,42 @@ namespace LetMeSleep.Content.Characters.Editor
             orientation.localRotation = Quaternion.AngleAxis(-sourceYaw, Vector3.up);
             Require(Vector3.Dot(orientation.up, parent.up) > .9999f, "Source orientation changed the up axis");
             return model;
+        }
+
+        private static void RestoreBindPose(Transform model)
+        {
+            // Unity may initialize an imported Generic hierarchy from the first FBX take.
+            // That animated pose is not the skin's bind pose (Blink lowers Hips by 18 mm).
+            // Reconstruct the actual bind transforms, never compensate an individual socket.
+            var matrices = new Dictionary<Transform, Matrix4x4>();
+            foreach (var renderer in model.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                Require(renderer.sharedMesh != null, "Missing mesh while restoring bind pose: " + renderer.name);
+                var poses = renderer.sharedMesh.bindposes;
+                Require(poses.Length == renderer.bones.Length, "Bind pose count mismatch: " + renderer.name);
+                for (int i = 0; i < poses.Length; i++)
+                {
+                    var bone = renderer.bones[i];
+                    Require(bone != null, "Missing bind bone: " + renderer.name);
+                    var matrix = renderer.localToWorldMatrix * poses[i].inverse;
+                    if (matrices.TryGetValue(bone, out var previous))
+                    {
+                        for (int element = 0; element < 16; element++)
+                            Require(Mathf.Abs(previous[element] - matrix[element]) < .0001f,
+                                "Inconsistent skin bind matrices for " + bone.name);
+                    }
+                    else matrices.Add(bone, matrix);
+                }
+            }
+            // Set parents before children; socket-only bones retain their local rest offset.
+            foreach (var bone in model.GetComponentsInChildren<Transform>(true))
+            {
+                if (!matrices.TryGetValue(bone, out var world)) continue;
+                var local = bone.parent == null ? world : bone.parent.worldToLocalMatrix * world;
+                bone.localPosition = local.GetColumn(3);
+                bone.localRotation = local.rotation;
+                bone.localScale = local.lossyScale;
+            }
         }
 
         private static OrientationRecord ValidateOrientation(Transform actor, Transform model, string species)
