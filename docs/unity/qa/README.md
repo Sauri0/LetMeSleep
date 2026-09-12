@@ -1,6 +1,6 @@
 # QA funcional — Unity 0.9.4 alfa
 
-Estado: **evidencia parcial**. Hay resultados Unity EditMode y un build/arranque EOS host; una partida WAN, PlayMode, revisión visual y paquete candidato permanecen sin acreditar.
+Estado: **evidencia parcial**. Hay resultados Unity EditMode, PlayMode de entrenamiento y un build/arranque EOS host; una partida WAN, revisión visual y paquete candidato permanecen sin acreditar.
 
 - [Matriz de aceptación](ACCEPTANCE-MATRIX-0.9.4-ALFA.md): requisitos, negativos y evidencia mínima.
 - [Checklist de candidata](CANDIDATE-CHECKLIST-0.9.4-ALFA.md): secuencia corta de decisión para un commit candidato.
@@ -11,6 +11,7 @@ Estado: **evidencia parcial**. Hay resultados Unity EditMode y un build/arranque
 - [Revisión funcional UI dde06ff](DELIVERY-REVIEW-UI-DDE06FF.md): cancelación async, deduplicación de intenciones y pausa de lobby.
 - [Revisión funcional de pickups ff5f290](DELIVERY-REVIEW-TOOL-PICKUPS-FF5F290.md): autoridad/equipo replicado, composición, eje físico y gates nativos.
 - [Revisión funcional de Bootstrap](BOOTSTRAP-FUNCTIONAL-REVIEW-2026-09-12.md): ciclo sala/ronda/resultados, errores online, entrenamiento y persistencia.
+- [Evidencia PlayMode de entrenamiento](TRAINING-BOOTSTRAP-PLAYMODE-2026-09-12.md): escena de arranque, ambos roles, actores, cámara, pickups, estabilidad numérica y limpieza.
 - [Suite Core RoomSession](CORE-ROOMSESSION-TESTS.md): cobertura EditMode y límite de la comprobación externa previa.
 - [Suite Gameplay Authority](GAMEPLAY-AUTHORITY-TESTS.md): puertas autoritativas y vigencia física de la unión de picadura.
 - [Suite MessageFraming](MESSAGE-FRAMING-TESTS.md): límites, fragmentación y presupuesto acotado de reensamblado Online.

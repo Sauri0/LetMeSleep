@@ -1,8 +1,8 @@
 # Revisión funcional de Bootstrap — 2026-09-12
 
-Alcance: `AlfaApplication*.cs`, `OnlineGameplaySession`, coordinador de sala, movimiento de lobby, preferencias y su enlace con UI/Presentation. Revisión estática sobre la integración principal; no se abrió Unity.
+Alcance: `AlfaApplication*.cs`, `OnlineGameplaySession`, coordinador de sala, movimiento de lobby, preferencias y su enlace con UI/Presentation. La revisión estática se complementó con la suite PlayMode nativa de entrenamiento del 2026-09-12.
 
-Dictamen: **BLOCK hasta cerrar ciclo, personalización y evidencia nativa/WAN**.
+Dictamen: **BLOCK hasta cerrar los flujos online/WAN, personalización entre dos pares, revisión visual y candidata reproducible**.
 
 ## Bloqueos encontrados
 
@@ -14,13 +14,13 @@ Dictamen: **BLOCK hasta cerrar ciclo, personalización y evidencia nativa/WAN**.
 
 Para `IncompatibleVersion`, sala llena o fase incorrecta, `room.Current` todavía es null. La aplicación llamaba `PresentRoom(null, ...)`, por lo que el formulario seguía ocupado. La corrección activa devuelve un error online y libera el latch; debe mapear incompatibilidad a su estado específico y probar reintento/cancelación.
 
-### B3 — Alta — Salir de Resultados de entrenamiento dejaba la partida viva
+### B3 — Resuelto — Salir del entrenamiento dejaba la partida viva
 
-La UI cambiaba de pantalla sin llamar a la aplicación. Gameplay, casa y audio de ronda quedaban activos detrás del menú. El commit UI `40b136d` cambia el flujo para ejecutar `CancelTraining`; queda pendiente de integración y prueba nativa.
+La UI cambiaba de pantalla sin llamar a la aplicación. Gameplay, casa y audio de ronda quedaban activos detrás del menú. La corrección integrada ejecuta `CancelTraining`; la prueba PlayMode verificó en ambos roles que desaparecen runtime, actores y pickups y vuelve la cámara de menú.
 
-### B4 — Alta — Personalización guardada sólo afecta el preview
+### B4 — Alta — Personalización online pendiente de prueba entre pares
 
-`appearance` se carga, guarda y aplica al visor. El roster usa `CosmeticProfileId=default` y los presentadores de gameplay/lobby no aplican ni replican los colores guardados. La personalización base no cambia el personaje real.
+El problema original hacía que `appearance` sólo afectara el preview. La corrección activa replica un paquete acotado por el canal 2, valida miembro, código de sala e IDs permitidos, y aplica los colores a lobby y gameplay. Falta verificar con dos pares el primer envío, un cambio en vivo, entrada a ronda y reconexión.
 
 ### B5 — Alta — El snapshot final del invitado podía perderse
 
@@ -28,12 +28,12 @@ El estado final viajaba como datagrama no fiable mientras `RoomView.Results` via
 
 ## Hallazgos restantes
 
-- El nombre se carga de preferencias pero no se coloca en el formulario al reiniciar. `40b136d` agrega el enlace de UI; queda pendiente de integración.
-- `SavePreferences` no controla fallos de escritura/reemplazo. Una excepción deja el estado en memoria aplicado pero el latch visual en Guardando/Aplicando.
-- La ruta de usuario dependía de la mera existencia de `N:`. La corrección activa limita esa ruta al editor y usa `Application.persistentDataPath` en build.
-- Al cerrar una sala remota, `ShowOnlineChoice` activa una vista y `PresentOnline(RoomClosed)` actualiza otra vista oculta; el motivo no queda visible.
-- Tras una salida intermedia, un nuevo miembro del lobby puede recibir el mismo spawn físico que conserva un sobreviviente. Elegir un spawn libre evita solapamiento.
-- `docs/unity/CORE-CONTRACT.md` todavía declara protocolo alfa-1 mientras el código ya usa alfa-2.
+- El nombre guardado ya se coloca en el formulario mediante la corrección UI integrada.
+- La escritura de preferencias ahora revierte el estado y muestra feedback si falla. Aún debe envolver `Directory.CreateDirectory(DataPath)` y capturar `UnauthorizedAccessException` también durante carga, para que una carpeta inaccesible no aborte `Start`.
+- La ruta de usuario ya queda limitada a `N:` en editor y usa `Application.persistentDataPath` en build.
+- La corrección activa muestra el estado `RoomClosed` sobre el formulario visible de unión.
+- La corrección activa selecciona el spawn más alejado de los miembros persistentes para evitar solapamientos al reconstruir el lobby.
+- La corrección activa alinea `docs/unity/CORE-CONTRACT.md` con el protocolo alfa-2 del código.
 
 ## Matriz mínima de reverificación
 
@@ -46,3 +46,6 @@ El estado final viajaba como datagrama no fiable mientras `RoomView.Results` via
 7. Guardar nombre, colores y ajustes, reiniciar proceso y comprobar formulario, preview, lobby y partida.
 8. Simular escritura denegada/corrupta en preferencias; conservar último estado válido y liberar controles.
 
+## Evidencia nativa agregada
+
+La suite `TrainingBootstrapPlayModeTests` quedó verde `2/2` en Unity `6000.3.24f1`. Cubre arranque real, entrenamiento humano y mosquito, tres actores, cámara por rol, siete pickups físicos, ausencia de valores no finitos durante varios frames y limpieza con `CancelTraining`. Ver [recibo PlayMode de entrenamiento](TRAINING-BOOTSTRAP-PLAYMODE-2026-09-12.md).
