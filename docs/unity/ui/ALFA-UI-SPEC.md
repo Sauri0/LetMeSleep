@@ -458,6 +458,8 @@ La UI puede bloquear una intención por vacío básico o estado busy. Toda valid
 
 ## 12. Entrega visual posterior
 
+La receta machine-readable de estados, resoluciones, propiedad, criterios y evidencia histórica está en [ALFA-UI-CAPTURE-RECIPE.json](./ALFA-UI-CAPTURE-RECIPE.json).
+
 Cuando el Director asigne turno de Unity, revisar en movimiento y con capturas nativas:
 
 1. Menú y online a 1280×720 y 1920×1080.

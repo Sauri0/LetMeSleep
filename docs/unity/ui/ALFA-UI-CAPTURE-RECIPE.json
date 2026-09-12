@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "area": "UI",
+  "owner": "Revisar interfaz visual",
+  "sourceBranch": "codex/unity-ui",
+  "sourceCommit": "0cdcbd3d2477347f70b164e991bd5fbdef334d87",
+  "currentStatus": "Captura pendiente",
+  "captureRules": {
+    "resolutions": [
+      "1920x1080",
+      "1280x720"
+    ],
+    "format": "PNG nativo del Game View, sin reescalado posterior",
+    "requirements": [
+      "Registrar commit integrado y SHA-256 de cada PNG.",
+      "Usar únicamente escenas, modelos, estados y datos existentes en el alfa.",
+      "Conservar las capturas fallidas como evidencia histórica.",
+      "No marcar una ficha aprobada hasta la revisión de Branko."
+    ]
+  },
+  "sharedUnityPaths": [
+    "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiFactory.cs",
+    "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiTheme.cs",
+    "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiIcon.cs",
+    "unity/Assets/LetMeSleep/UI/Runtime/CharacterPreviewOrbit.cs",
+    "unity/Assets/LetMeSleep/UI/Fonts/Bangers-Regular SDF.asset",
+    "unity/Assets/LetMeSleep/UI/Fonts/AtkinsonHyperlegible-Regular SDF.asset"
+  ],
+  "assets": [
+    {
+      "id": "ui-main-menu-alpha",
+      "name": "Menú principal alfa",
+      "category": "UI",
+      "owner": "Revisar interfaz visual",
+      "status": "Captura pendiente",
+      "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildMain",
+      "externalVisualDependencies": [
+        "Escena Casa con patio: Modelador 2",
+        "Humano y mosquito: Modelador 1"
+      ],
+      "requiredCaptures": [
+        {
+          "state": "ShowMainMenu; foco inicial MainPlayButton; versión real visible",
+          "resolution": "1920x1080"
+        },
+        {
+          "state": "ShowMainMenu; foco inicial MainPlayButton; versión real visible",
+          "resolution": "1280x720"
+        }
+      ],
+      "acceptance": [
+        "Los cinco botones muestran símbolo y texto completos.",
+        "El riel 480x880 no tapa al humano ni al mosquito.",
+        "Logo, subtítulo, ayudas y versión no se solapan ni truncan.",
+        "El foco se distingue por superficie, contorno y contraste."
+      ],
+      "pending": [
+        "Recapturar después de 0cdcbd3 para verificar iconos uGUI y encabezado reducido."
+      ],
+      "variants": [
+        "Foco en JUGAR ONLINE",
+        "Foco en SALIR"
+      ],
+      "animations": [],
+      "evidence": [
+        {
+          "path": "N:/LetMeSleep/Validation/Alfa-VisualRecovery/menu-1080.png",
+          "type": "image",
+          "sha256": "6373597f92acc2ca0cddd31f6af8b18d1361ec9f2009a0ec8a4ad5b7d2f3bdd1",
+          "status": "Revisado con fallas",
+          "capturedUiCommit": "c6a5ba2",
+          "note": "Histórica: iconos ausentes y encabezado demasiado alto; anterior a 0cdcbd3."
+        }
+      ]
+    },
+    {
+      "id": "ui-online-alpha",
+      "name": "Crear y unirse a sala",
+      "category": "UI",
+      "owner": "Revisar interfaz visual",
+      "status": "Captura pendiente",
+      "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildOnlineChoice/BuildOnlineForm",
+      "requiredCaptures": [
+        {
+          "state": "ShowOnlineChoice",
+          "resolution": "1920x1080"
+        },
+        {
+          "state": "ShowJoinRoom con nombre y código XXXXX-XXXXX; OnlineOperationPhase.Idle",
+          "resolution": "1280x720"
+        },
+        {
+          "state": "ShowJoinRoom; OnlineOperationPhase.RecoverableError con reintento visible",
+          "resolution": "1920x1080"
+        }
+      ],
+      "acceptance": [
+        "Código, inputs y acciones caben completos.",
+        "Busy, error y reintento no muestran controles incompatibles.",
+        "Los iconos de crear, pegar, volver y reintentar son legibles."
+      ],
+      "pending": [
+        "Falta evidencia nativa de estados Idle, Busy y RecoverableError."
+      ],
+      "variants": ["Selección", "Crear", "Unirse", "Error recuperable"],
+      "animations": [],
+      "evidence": []
+    },
+    {
+      "id": "ui-lobby-alpha",
+      "name": "Lobby online alfa",
+      "category": "UI",
+      "owner": "Revisar interfaz visual",
+      "status": "Captura pendiente",
+      "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildLobby",
+      "externalVisualDependencies": [
+        "Escena PrivateLobby: Modelador 2",
+        "Personajes de participantes: Modelador 1"
+      ],
+      "requiredCaptures": [
+        {
+          "state": "PresentLobby como owner; código completo; al menos dos miembros, uno LISTO; CanStart=true",
+          "resolution": "1920x1080"
+        },
+        {
+          "state": "PresentLobby como invitado; CanStart=false; CanExplore=true",
+          "resolution": "1280x720"
+        }
+      ],
+      "acceptance": [
+        "Centro de la escena queda libre para personajes.",
+        "Código completo, roster, reglas y estados se leen sin elipsis.",
+        "Owner e invitado no ven acciones que no les pertenecen."
+      ],
+      "pending": [
+        "Falta evidencia nativa de owner e invitado."
+      ],
+      "variants": ["Owner", "Invitado", "Ready pending", "Start bloqueado"],
+      "animations": [],
+      "evidence": []
+    },
+    {
+      "id": "ui-training-alpha",
+      "name": "Selección de entrenamiento",
+      "category": "UI",
+      "owner": "Revisar interfaz visual",
+      "status": "Captura pendiente",
+      "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildTraining",
+      "requiredCaptures": [
+        {
+          "state": "PresentTraining con rol Human, IsLoading=false",
+          "resolution": "1280x720"
+        },
+        {
+          "state": "PresentTraining con rol Mosquito, IsLoading=true",
+          "resolution": "1920x1080"
+        }
+      ],
+      "acceptance": [
+        "Rol seleccionado conserva contraste en texto e icono.",
+        "Centro y derecha permanecen libres para el modelo.",
+        "Estado de preparación y cancelar no se superponen."
+      ],
+      "pending": [
+        "Falta evidencia nativa de ambos roles."
+      ],
+      "variants": ["Humano", "Mosquito", "Preparando"],
+      "animations": [],
+      "evidence": []
+    },
+    {
+      "id": "ui-customization-alpha",
+      "name": "Personalizador alfa",
+      "category": "UI",
+      "owner": "Revisar interfaz visual",
+      "status": "Captura pendiente",
+      "unityPath": [
+        "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildCustomization",
+        "unity/Assets/LetMeSleep/UI/Runtime/CharacterPreviewOrbit.cs"
+      ],
+      "externalVisualDependencies": [
+        "Prefabs humano y mosquito: Modelador 1",
+        "RenderTexture y cámara preview: Director/Bootstrap"
+      ],
+      "requiredCaptures": [
+        {
+          "state": "ShowCustomization; Human; PreviewAngle.Front; colores guardados",
+          "resolution": "1280x720"
+        },
+        {
+          "state": "ShowCustomization; Human; PreviewAngle.Side; borrador con cambios",
+          "resolution": "1920x1080"
+        },
+        {
+          "state": "ShowCustomization; Mosquito; PreviewAngle.Front",
+          "resolution": "1280x720"
+        }
+      ],
+      "acceptance": [
+        "La silueta conserva la proporción de la RenderTexture sin ensancharse.",
+        "FRENTE, PERFIL, ESPALDA y CENTRAR se leen completos a 720p.",
+        "Badge, pestañas y acciones muestran iconos reconocibles.",
+        "Nombres de colores, prenda predeterminada y estado Guardar son legibles."
+      ],
+      "pending": [
+        "Recapturar después de 0cdcbd3 para verificar ratio, copy CENTRAR e iconos uGUI."
+      ],
+      "variants": ["Humano frente", "Humano perfil", "Mosquito frente", "Cambios sin guardar"],
+      "animations": ["Arrastre orbital completo y extremos de zoom"],
+      "evidence": [
+        {
+          "path": "N:/LetMeSleep/Validation/Alfa-VisualRecovery/customization-720.png",
+          "type": "image",
+          "sha256": "08a60bda996485772bbaa428e401a80f52762fe3ae41d1ce3c51b44ed7e3703c",
+          "status": "Revisado con fallas",
+          "capturedUiCommit": "c6a5ba2",
+          "note": "Histórica: visor ensanchado, CENTRAR VISTA truncado e icono de cabecera ausente; anterior a 0cdcbd3."
+        }
+      ]
+    },
+    {
+      "id": "ui-settings-alpha",
+      "name": "Ajustes alfa",
+      "category": "UI",
+      "owner": "Revisar interfaz visual",
+      "status": "Captura pendiente",
+      "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildSettings",
+      "requiredCaptures": [
+        {
+          "state": "OpenSettings desde MainMenu; SupportsVideo=true; SupportsRebinding según runtime",
+          "resolution": "1280x720"
+        },
+        {
+          "state": "OpenSettings desde Pause; borrador con cambios; scroll en CONTROLES",
+          "resolution": "1920x1080"
+        }
+      ],
+      "acceptance": [
+        "Audio, Video y Controles conservan jerarquía durante scroll.",
+        "Valores, flechas, dropdown y acciones no truncan.",
+        "Aplicando bloquea controles sin perder el estado visible."
+      ],
+      "pending": [
+        "Falta evidencia nativa desde menú y pausa."
+      ],
+      "variants": ["Desde menú", "Desde pausa", "Cambios pendientes", "Aplicando"],
+      "animations": [],
+      "evidence": []
+    },
+    {
+      "id": "ui-hud-human-alpha",
+      "name": "HUD Sangre · humano",
+      "category": "UI",
+      "owner": "Revisar interfaz visual",
+      "status": "Captura pendiente",
+      "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildHud",
+      "externalVisualDependencies": ["Estado autoritativo BloodHudUiState: Worker 1"],
+      "requiredCaptures": [
+        {
+          "state": "Role=Human; ActorState=Bitten; Interaction vacía; ayuda defensiva visible",
+          "resolution": "1920x1080"
+        },
+        {
+          "state": "Role=Human; ActorState=Recovering; StateProgress01=0.5; NetworkMessage visible",
+          "resolution": "1280x720"
+        }
+      ],
+      "acceptance": [
+        "Rol, reloj y cuota son legibles sin tapar el mundo.",
+        "Sólo aparece el prompt correspondiente al estado actual.",
+        "No existen marcas de picadura ni indicadores corporales."
+      ],
+      "pending": ["Falta evidencia nativa del HUD humano corregido."],
+      "variants": ["Normal", "Picado", "Recuperando", "Red degradada"],
+      "animations": ["Progreso de recuperación"],
+      "evidence": []
+    },
+    {
+      "id": "ui-hud-mosquito-alpha",
+      "name": "HUD Sangre · mosquito",
+      "category": "UI",
+      "owner": "Revisar interfaz visual",
+      "status": "Captura pendiente",
+      "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildHud",
+      "externalVisualDependencies": ["Estado autoritativo BloodHudUiState: Worker 1"],
+      "requiredCaptures": [
+        {
+          "state": "Role=Mosquito; ActorState=Extracting; StateProgress01=0.5; Interaction=MANTENÉ [E] PARA PICAR",
+          "resolution": "1920x1080"
+        },
+        {
+          "state": "Role=Mosquito; ActorState=Stunned; ayuda de vuelo visible",
+          "resolution": "1280x720"
+        }
+      ],
+      "acceptance": [
+        "Badge de mosquito e icono de sangre se distinguen.",
+        "Extracción, interacción y ayuda no se solapan.",
+        "No aparecen vidas, minimapa ni marcas sobre personajes."
+      ],
+      "pending": ["Falta evidencia nativa del HUD mosquito corregido."],
+      "variants": ["Vuelo", "Extrayendo", "Aturdido", "Adherido"],
+      "animations": ["Progreso de extracción"],
+      "evidence": []
+    },
+    {
+      "id": "ui-modal-results-alpha",
+      "name": "Pausa, confirmaciones y resultados",
+      "category": "UI",
+      "owner": "Revisar interfaz visual",
+      "status": "Captura pendiente",
+      "unityPath": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs#BuildPause/BuildResults/BuildConfirm",
+      "requiredCaptures": [
+        {
+          "state": "PauseView desde partida online",
+          "resolution": "1280x720"
+        },
+        {
+          "state": "ConfirmDialog de salida con acción segura enfocada",
+          "resolution": "1920x1080"
+        },
+        {
+          "state": "ResultsView con Humans y con Mosquitoes",
+          "resolution": "1920x1080"
+        }
+      ],
+      "acceptance": [
+        "Scrim separa el modal del mundo sin ocultarlo por completo.",
+        "Acción segura y destructiva se distinguen también por texto y posición.",
+        "Resultado y estadísticas caben en cuatro líneas."
+      ],
+      "pending": ["Falta evidencia nativa de pausa, confirmación y ambos resultados."],
+      "variants": ["Pausa online", "Pausa entrenamiento", "Confirmación", "Victoria humana", "Victoria mosquito"],
+      "animations": [],
+      "evidence": []
+    }
+  ]
+}
