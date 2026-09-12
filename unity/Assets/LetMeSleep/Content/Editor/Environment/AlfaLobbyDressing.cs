@@ -91,7 +91,7 @@ namespace LetMeSleep.Content.Editor
             const string name="Lobby_LanternGlow";string path=Output+"/Materials/"+name+".mat";
             var material=AssetDatabase.LoadAssetAtPath<Material>(path);
             if(material==null){material=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=name,enableInstancing=true};AssetDatabase.CreateAsset(material,path);}
-            material.SetColor("_BaseColor",new Color(.90f,.78f,.57f));material.SetColor("_EmissionColor",new Color(.18f,.10f,.035f));
+            material.SetColor("_BaseColor",new Color(.90f,.78f,.57f));material.SetColor("_EmissionColor",new Color(.55f,.25f,.05f));material.SetFloat("_Metallic",0);material.SetShaderPassEnabled("ShadowCaster",false);
             material.EnableKeyword("_EMISSION");material.SetFloat("_Smoothness",.25f);EditorUtility.SetDirty(material);materials[name]=material;
         }
 

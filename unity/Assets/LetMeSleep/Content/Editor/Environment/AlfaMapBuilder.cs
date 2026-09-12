@@ -379,6 +379,8 @@ namespace LetMeSleep.Content.Editor
                 "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaLobbyDressing.cs",
                 "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaHouseDressing.cs",
                 "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaFloorFinish.cs",
+                "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityMeshes.cs",
+                "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityLiving.cs",
                 "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs","unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs",
                 "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs","unity/Assets/LetMeSleep/Gameplay/Contracts.cs"};
             var payload=new System.Text.StringBuilder(mapId+"\n");

@@ -1,0 +1,54 @@
+# Estar testigo — reconstrucción artística de entorno
+
+## Brecha observada
+
+Se revisaron las seis imágenes `N:/LetMeSleep/References/EnvironmentQuality-20260912/01.png`…`06.png`, y las capturas reales living-round3 y living-round5 de `N:/LetMeSleep/Validation/Alfa-VisualRecovery`. Round5 es el antes de esta reconstrucción. Sus cojines todavía son prismas, la cortina es una sucesión de listones, sofá y mesa tienen grandes caras planas sin ensambles, y la pared apenas compone una habitación. La luz mejorada de W2 permite ver mejor esos límites; no los resuelve.
+
+Las referencias piden siluetas intencionales y domésticas: madera con cantos y uniones legibles, tapicería con masa y costuras, tela que pliega y cuelga, herrajes pequeños, lámparas con cuerpo y luz compacta, plantas con hojas diferenciadas y profundidad entre habitación/exterior. No se copian las herramientas, crafting, modos, carteles o marcas de los conceptos.
+
+## Primer conjunto en fuente
+
+AlfaQualityMeshes.cs genera mallas en metros con chamfers de radio elegido, lofts acolchados de cinco anillos, superficies de tela plegada con espesor, cuerpos torneados y hojas con nervio. AlfaQualityLiving.cs monta el testigo. Los nuevos elementos no proceden de escalar el mesh de una mesa. Los materiales Quality_* son propios de este conjunto y siguen el contrato W2.
+
+- Sofá con bastidor visto, cuatro patas, faldón, apoyabrazos acolchados, dos almohadones de asiento y dos de respaldo. Cojines pequeños con contorno cosido y volumen abombado; manta con ondulación y caída sobre el borde delantero. El asiento conserva cota de apoyo0.575.
+- Mesa de café con tres tablas y dos remates transversales, patas afinadas, faldones entre patas y pequeños tarugos. Tapa0.480 y pickup1005 a0.485; las patas apoyan en el campo de alfombra a0.008. El comedor permanece igual.
+- Estante con montantes, remates de pie/coronamiento, canto delantero de baldas y fondo de tablas. Libros con bloque de papel, tapas y lomo redondeado; cesta tejida en balda inferior y planta en maceta torneada sobre la tapa. Mantiene la pared posterior y despeja ventana/puerta.
+- Alfombra con contorno recortado, borde de lino y trama albedo real repetible de bajo contraste. El mismo tejido se aplica a tapicería y cortinas con UV métricas: repetición8.33cm, paso de hilo2.6mm, contraste inferior6%; sin normal de ruido.
+- Cortinas como paños con pliegues que se abren hacia abajo, dobladillo y presillas; barra cilíndrica y remates. Marco de ventana con capas y montantes, sin modificar los ocho panes transparentes ni sus colliders.
+- Puerta del estar conserva pivote y hoja móvil, con cantos propios en sus piezas, metal diferenciado y tarugos. Molduras bajo techo y cuadro original de colinas componen la pared del sofá.
+- Lámpara de pie en(0.65,0,3.85), base/asta torneadas y pantalla cónica hueca de pared fina, dobladillos y bulbo interior. Plafón del estar con roseta, cuenco esmerilado y aro. No se añade Light ni se cambia LightAnchor_Living.
+
+La pantalla sigue el contrato W2: opaca con emisión estilizada baja; Base(0.72,0.58,0.42), Emission(0.14,0.07,0.02), Smoothness0.12; interior Base(0.88,0.72,0.50), Emission(0.20,0.10,0.03). Sin sombras/especular/reflejos de entorno. Window_Glass permanece intacto. Ajuste separado solicitado por W2 tras round4: Lobby_LanternGlow sube sólo su emisión a(0.55,0.25,0.05), conserva base/anchors y desactiva ShadowCaster; el difusor de casa conserva su receta.
+
+## Fuente editable y evidencia
+
+BuildAlfaMaps genera mallas/materiales Unity mediante sus APIs y exporta las mismas piezas a `art_source/unity/environments/quality_living/generated_meshes.json`, con triángulos, UV, materiales, origen y jerarquía, más Quality_LinenWeave.png. `import_generated_meshes.py` reconstruye ese conjunto en LivingWitnessKit.blend editable, con trama empaquetada, cuando Director ceda turno Blender CPU. El export no contiene una imagen conceptual sustitutiva.
+
+Estado de esta entrega: **fuente y compilación offline; todavía sin render nuevo ni .blend generado**. La producción no queda cerrada hasta reconstruir/revisar el .blend y mirar capturas reales. No se abrió Unity, Blender, Play ni audio desde M2. Hash de contenido ampliado a21 entradas para incluir ambos nuevos generadores C#.
+
+## Revisión visual siguiente
+
+Director dispone del Editor23792 para regenerar. Capturar el mismo encuadre de living-round5, más una esquina contraria que incluya la estantería y la lámpara, un detalle bajo de mesa/asiento/manta, ventana a contraluz y puerta entreabierta. Mantener la iluminación W2 para comparar formas. Las vistas neutras del kit y despiece deben salir de los mismos assets, según ASSET-CATALOG-VIEWS.md.
+
+Juzgar si sofá y cojines se leen blandos, si la mesa muestra espesor/uniones sin parecer maqueta, si la tela cae y los apoyos convencen, si las piezas de madera/metal/tela se separan y si pared/lámpara/ventana forman una habitación. Revisar contacto y orden de transparencia; ninguna cantidad de objetos, triángulos o checks constituye aprobación artística. El exterior de la ventana sigue pendiente de profundidad real: no se oculta con una ilustración detrás del vidrio.
+
+Después de revisar el estar completo, propagar el lenguaje aprobado a dormitorios y restantes muebles, lobby, puertas/marcos/luminarias y fachada/patio con vegetación, rocas y suelo apropiados. **Esa propagación y el exterior todavía no están implementados en este lote**. Se mantiene el alcance de mapas alfa existentes y los contratos de circulación/pickups; sin nuevas mecánicas.
+
+## Checkpoint transferible
+
+Reanudado con TEAM-RECOVERY-20260912: responsable **Modelador Elementos**. Conserva temporalmente montaje/puntos comunes de este delta. **Modelador Terreno y Mapas** trabaja exterior en worktree maps y módulo separado; no se le transfieren estos archivos hasta integrar y acordar la división. Presentación/Audio tiene nuevo responsable; los valores W2 históricos aquí recogidos constituyen el contrato recibido, no propiedad actual de Gameplay.
+
+- Worktree `N:/LetMeSleep/Worktrees/environment`, rama `codex/unity-environment`, base anterior4605ea0 (integrado por Director como7d669ef). SHA de esta entrega comunicado al Director; producción gráfica todavía abierta.
+- Elementos: AlfaQualityMeshes.cs concentra geometría/materiales reutilizables; AlfaQualityLiving.cs todavía mezcla montaje del estar, muebles, carpintería, luminarias y exportación. Si se separan Modelador Elementos/Mapas, el primero debe tomar geometría/materiales; el segundo, poses y composición. Separar métodos antes de editar ambos el mismo archivo.
+- Archivos compartidos: AlfaHouseDressing.cs invoca el testigo y contiene gates; AlfaMapBuilder.cs mantiene el hash, importación y mapa; AlfaLobbyDressing.cs contiene sólo el ajuste de núcleo de farol en este delta. compute_content_hash.ps1 ahora exige21 inputs. Coordinar con Director antes de dividir ownership de estos puntos.
+- Blender: import_generated_meshes.py requiere el JSON/PNG que produce el siguiente BuildAlfaMaps. No ejecutar antes ni atribuirle un .blend todavía inexistente. El turno CPU debe producir LivingWitnessKit.blend y receipt; después hacen falta vistas neutras/despiece.
+- Evidencia real disponible: living-round3 y round5 son el antes. De esta reconstrucción sólo se verificó compilación offline y sintaxis Python. Pendientes import/build nativo, captura comparable, corrección artística, .blend y pruebas de puerta/pickup/recorrido.
+- Sigue después: completar habitación según capturas, profundidad exterior y propagación a alfa. No duplicar ese trabajo con nuevas tareas sin asignación explícita del Director.
+
+### Receta de integración y captura del Director
+
+1. Integrar el commit selectivo de esta entrega sobre el AlfaMapBuilder existente. Recalcular ContentHash con compute_content_hash.ps1 (21 entradas) en la rama central.
+2. En el Editor autorizado, Edit mode y escenas generadas cerradas, ejecutar `LetMeSleep.Content.Editor.AlfaMapBuilder.BuildAlfaMaps();`. No iniciar otro Editor desde el worktree de Elementos.
+3. Conservar receipt nativo y archivos generados; capturar con Presentation actual el encuadre de living-round5 y los detalles arriba indicados. Revisar apoyos y errores; no aprobar por compilación.
+4. Entregar a Elementos generated_meshes.json y Quality_LinenWeave.png, y conceder turno Blender CPU para import_generated_meshes.py. El script crea LivingWitnessKit.blend y receipt, con puntos coincidentes soldados para edición y UV conservadas por esquina. Su sintaxis está revisada, pero su ejecución todavía no se acredita.
+5. Revisar el .blend y vistas neutras contra los assets Unity antes de cerrar exportación. La incorporación del exterior y propagación se coordina con Mapas después de revisar el testigo.

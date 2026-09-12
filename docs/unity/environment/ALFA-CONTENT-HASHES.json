@@ -1,12 +1,13 @@
 {
+  "algorithm": "SHA256 map ID and ordered file/hash records; UTF8 text newlines normalized toLF, FBX raw",
   "maps": [
     {
       "map_id": "house-patio-v1",
-      "content_hash": "sha256-00f7ddb67b1aa5f15f26b20dd8ee7440928500ad9602e4aa0b50837b317509ef"
+      "content_hash": "sha256-374a77303c61244a83bdd110ced9708045dd6ef9d3ac3b93ae6cfec920be3e2d"
     },
     {
       "map_id": "private-lobby-v1",
-      "content_hash": "sha256-0eb3b5cb27633817beffe6e2cf28935010146dc40128b937e19731357c03cce2"
+      "content_hash": "sha256-c10806ba22dbbccc9cc15407ce03aa98eb9f5ba544e0929965342916a0b9ec07"
     }
   ],
   "files": [
@@ -25,10 +26,11 @@
     "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaLobbyDressing.cs",
     "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaHouseDressing.cs",
     "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaFloorFinish.cs",
+    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityMeshes.cs",
+    "unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityLiving.cs",
     "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayToolPickup.cs",
     "unity/Assets/LetMeSleep/Gameplay/ToolContracts.cs",
     "unity/Assets/LetMeSleep/Gameplay.Unity/GameplayDoor.cs",
     "unity/Assets/LetMeSleep/Gameplay/Contracts.cs"
-  ],
-  "algorithm": "SHA256 map ID and ordered file/hash records; UTF8 text newlines normalized toLF, FBX raw"
+  ]
 }

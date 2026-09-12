@@ -48,6 +48,7 @@ namespace LetMeSleep.Content.Editor
                 lightAnchor.localPosition=new Vector3(fixture.localPosition.x,ceiling-.38f,fixture.localPosition.z);
                 lightAnchor.localRotation=Quaternion.LookRotation(Vector3.down,Vector3.forward);
             }
+            BuildQualityLiving(house);
             CheckHouseDressing(house,data);
         }
 
@@ -236,8 +237,13 @@ namespace LetMeSleep.Content.Editor
             var boards=shelf.GetComponentsInChildren<Collider>().Where(c=>c.name.Contains("Shelf_Board")).Select(ColliderBounds).ToArray();
             foreach(var book in books.GetComponentsInChildren<BoxCollider>())Need(boards.Any(board=>SupportedBy(ColliderBounds(book),board)),"Living book has lost shelf support");
             var seat=ColliderBounds(sofa.GetComponentsInChildren<Collider>().Single(c=>c.name.Contains("Sofa_Seat")));
-            foreach(var renderer in textiles.GetComponentsInChildren<Renderer>().Where(r=>r.name!="Throw_Band"))Need(SupportedBy(renderer.bounds,seat),"Living textile has lost seat support");
-            Need(SupportedBy(textiles.Find("Throw_Band").GetComponent<Renderer>().bounds,textiles.Find("Seat_Throw").GetComponent<Renderer>().bounds),"Living throw band must rest on the cloth");
+            foreach(var renderer in textiles.GetComponentsInChildren<Renderer>().Where(r=>r.name.StartsWith("Cushion_",StringComparison.Ordinal)))Need(SupportedBy(renderer.bounds,seat),"Living cushion has lost seat support");
+            // A draped cloth hangs over the seat front, so its whole AABB must not be
+            // mistaken for a flat slab resting at one height. Test its actual vertices.
+            var cloth=textiles.Find("Seat_Throw").GetComponent<MeshFilter>();int supported=0;
+            foreach(var vertex in cloth.sharedMesh.vertices){var p=cloth.transform.TransformPoint(vertex);var local=sofa.InverseTransformPoint(p);
+                if(local.z>=-.40f&&local.z<=.32f){Need(p.y>=seat.max.y-.001f,"Draped cloth penetrates sofa seat");if(Mathf.Abs(p.y-seat.max.y)<.001f)supported++;}}
+            Need(supported>=8,"Draped cloth needs actual seat contact vertices");
             var top=ColliderBounds(table.Find("Coffee_Top").GetComponent<Collider>());
             Need(Mathf.Abs(top.max.y-.48f)<.0001f,"Coffee tabletop must be .48 m high");
             Need(Mathf.Abs(pickup.position.y-top.max.y-.005f)<.0001f&&pickup.position.x>top.min.x&&pickup.position.x<top.max.x&&pickup.position.z>top.min.z&&pickup.position.z<top.max.z,"Living pickup lost tabletop support");
