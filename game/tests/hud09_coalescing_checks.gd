@@ -32,6 +32,8 @@ class AudioWitness extends Node:
 	func clear() -> void: pass
 
 class WorldWitness extends Node3D:
+	# Match World's rendered-actor registry; this inert fixture creates no views.
+	var actors: Dictionary = {}
 	var audio_fx: Node
 	var door_views: Node3D
 	var menu_camera: Camera3D
