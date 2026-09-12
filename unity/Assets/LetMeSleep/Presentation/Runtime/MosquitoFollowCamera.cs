@@ -8,6 +8,7 @@ namespace LetMeSleep.Presentation
     {
         private const int HitCapacity = 12;
         private const int OverlapCapacity = 12;
+        private const int DepenetrationIterations = 4;
 
         [SerializeField] private AlfaPresentationPreset preset = null;
         [SerializeField] private Camera controlledCamera = null;
@@ -22,6 +23,7 @@ namespace LetMeSleep.Presentation
         private readonly RaycastHit[] hits = new RaycastHit[HitCapacity];
         private readonly Collider[] overlaps = new Collider[OverlapCapacity];
         private Func<Collider, bool> collisionFilter;
+        private SphereCollider collisionProbe;
         private Quaternion desiredRotation = Quaternion.identity;
         private Quaternion smoothedRotation = Quaternion.identity;
         private float desiredDistance = 0.85f;
@@ -49,7 +51,7 @@ namespace LetMeSleep.Presentation
             smoothedRotation = Quaternion.Slerp(smoothedRotation, desiredRotation, rotationFactor);
 
             float radius = preset != null ? preset.CameraCollisionRadius : 0.08f;
-            Vector3 anchorPosition = safeAnchor.position;
+            Vector3 anchorPosition = ResolveSafePoint(safeAnchor.position, radius);
             Vector3 desiredPivot = pivot.position;
 
             // Sweep 1: a known safe actor anchor to the visual camera pivot.
@@ -114,6 +116,8 @@ namespace LetMeSleep.Presentation
 
         private void Initialize()
         {
+            if (controlledCamera == null)
+                controlledCamera = GetComponent<Camera>();
             if (cameraTransform == null && controlledCamera != null)
                 cameraTransform = controlledCamera.transform;
             if (safeAnchor == null || pivot == null || cameraTransform == null)
@@ -141,13 +145,70 @@ namespace LetMeSleep.Presentation
             for (int i = 0; i < count; i++)
             {
                 Collider collider = hits[i].collider;
-                if (collider == null ||
-                    (collisionFilter != null && !collisionFilter(collider)) ||
-                    collider.transform.IsChildOf(safeAnchor))
+                if (!IsCollisionCandidate(collider))
                     continue;
                 nearest = Mathf.Min(nearest, Mathf.Max(0f, hits[i].distance - collisionPadding));
             }
             return start + direction * nearest;
+        }
+
+        private Vector3 ResolveSafePoint(Vector3 point, float radius)
+        {
+            if (!IsBlocked(point, radius))
+                return point;
+
+            EnsureCollisionProbe(radius);
+            collisionProbe.enabled = true;
+            try
+            {
+                for (int iteration = 0; iteration < DepenetrationIterations; iteration++)
+                {
+                    int count = Physics.OverlapSphereNonAlloc(
+                        point, radius, overlaps, collisionMask, QueryTriggerInteraction.Ignore);
+                    bool moved = false;
+                    for (int i = 0; i < count; i++)
+                    {
+                        Collider collider = overlaps[i];
+                        if (!IsCollisionCandidate(collider))
+                            continue;
+                        if (!Physics.ComputePenetration(
+                                collisionProbe, point, Quaternion.identity,
+                                collider, collider.transform.position, collider.transform.rotation,
+                                out Vector3 direction, out float distance) || distance <= 0f)
+                            continue;
+
+                        point += direction * (distance + collisionPadding);
+                        moved = true;
+                    }
+
+                    if (!moved || !IsBlocked(point, radius))
+                        break;
+                }
+            }
+            finally
+            {
+                collisionProbe.enabled = false;
+            }
+
+            return point;
+        }
+
+        private void EnsureCollisionProbe(float radius)
+        {
+            if (collisionProbe == null)
+            {
+                var probeObject = new GameObject("CameraCollisionProbe")
+                {
+                    hideFlags = HideFlags.HideAndDontSave,
+                    layer = 2
+                };
+                probeObject.transform.SetParent(transform, false);
+                collisionProbe = probeObject.AddComponent<SphereCollider>();
+                collisionProbe.isTrigger = true;
+                collisionProbe.enabled = false;
+            }
+
+            collisionProbe.radius = radius;
         }
 
         private bool IsBlocked(Vector3 point, float radius)
@@ -157,12 +218,17 @@ namespace LetMeSleep.Presentation
             for (int i = 0; i < count; i++)
             {
                 Collider collider = overlaps[i];
-                if (collider != null &&
-                    (collisionFilter == null || collisionFilter(collider)) &&
-                    !collider.transform.IsChildOf(safeAnchor))
+                if (IsCollisionCandidate(collider))
                     return true;
             }
             return false;
+        }
+
+        private bool IsCollisionCandidate(Collider collider)
+        {
+            return collider != null && collider != collisionProbe &&
+                (collisionFilter == null || collisionFilter(collider)) &&
+                !collider.transform.IsChildOf(safeAnchor);
         }
 
         private static float DampingFactor(float dampingSeconds, float deltaTime)
