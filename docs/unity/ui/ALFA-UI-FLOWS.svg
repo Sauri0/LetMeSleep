@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Flujo de interfaz Let me sleep 0.9.4 alfa</title>
+  <desc id="desc">Wireflow documental para menú, online, lobby, Sangre, entrenamiento, personalización y ajustes.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#CBD9EA"/>
+    </marker>
+    <style>
+      .bg{fill:#101727}.panel{fill:#223552;stroke:#66A9F5;stroke-width:3}.modal{fill:#2E4668;stroke:#F2B84B;stroke-width:3}.game{fill:#17243A;stroke:#67D19A;stroke-width:3}.title{fill:#F5E9D6;font:700 28px Arial,sans-serif}.body{fill:#CBD9EA;font:20px Arial,sans-serif}.small{fill:#CBD9EA;font:17px Arial,sans-serif}.line{fill:none;stroke:#CBD9EA;stroke-width:3;marker-end:url(#arrow)}.return{fill:none;stroke:#718198;stroke-width:2;stroke-dasharray:8 8;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="1000"/>
+  <text x="70" y="62" class="title" font-size="36">LET ME SLEEP · 0.9.4/ALFA · WIREFLOW</text>
+  <text x="70" y="94" class="small">Documento de navegación. No representa una captura ni calidad final del juego.</text>
+
+  <g transform="translate(70 145)">
+    <rect class="panel" width="280" height="250" rx="12"/>
+    <text x="24" y="42" class="title">MENÚ</text>
+    <text x="24" y="82" class="body">Jugar online</text>
+    <text x="24" y="116" class="body">Entrenamiento</text>
+    <text x="24" y="150" class="body">Personalizar</text>
+    <text x="24" y="184" class="body">Ajustes</text>
+    <text x="24" y="218" class="body">Salir del juego</text>
+  </g>
+
+  <g transform="translate(470 120)">
+    <rect class="panel" width="330" height="165" rx="12"/>
+    <text x="24" y="42" class="title">JUGAR ONLINE</text>
+    <text x="24" y="84" class="body">Crear sala</text>
+    <text x="24" y="120" class="body">Unirme con código</text>
+    <text x="24" y="148" class="small">Sin LAN · IP · puerto</text>
+  </g>
+
+  <g transform="translate(920 105)">
+    <rect class="modal" width="350" height="205" rx="12"/>
+    <text x="24" y="42" class="title">CONEXIÓN</text>
+    <text x="24" y="82" class="body">Nombre</text>
+    <text x="24" y="116" class="body">Código (sólo Unirse)</text>
+    <text x="24" y="150" class="body">Crear / Unirme</text>
+    <text x="24" y="182" class="small">Busy · Cancelar · Error</text>
+  </g>
+
+  <g transform="translate(1310 110)">
+    <rect class="game" width="240" height="195" rx="12"/>
+    <text x="24" y="42" class="title">LOBBY 3D</text>
+    <text x="24" y="82" class="body">Código</text>
+    <text x="24" y="116" class="body">Listos</text>
+    <text x="24" y="150" class="body">Admin</text>
+    <text x="24" y="180" class="small">Roles sorteados</text>
+  </g>
+
+  <g transform="translate(1225 470)">
+    <rect class="game" width="325" height="220" rx="12"/>
+    <text x="24" y="42" class="title">RONDA · SANGRE</text>
+    <text x="24" y="82" class="body">HUD humano / mosquito</text>
+    <text x="24" y="116" class="body">Pausa → Ajustes</text>
+    <text x="24" y="150" class="body">Resultado</text>
+    <text x="24" y="188" class="small">Sin marcas de picadura</text>
+  </g>
+
+  <g transform="translate(460 465)">
+    <rect class="panel" width="355" height="225" rx="12"/>
+    <text x="24" y="42" class="title">ENTRENAMIENTO</text>
+    <text x="24" y="82" class="body">Humano / Mosquito</text>
+    <text x="24" y="116" class="body">Sangre</text>
+    <text x="24" y="150" class="body">Casa con patio</text>
+    <text x="24" y="190" class="small">Bots · Repetir · Menú</text>
+  </g>
+
+  <g transform="translate(70 515)">
+    <rect class="panel" width="310" height="210" rx="12"/>
+    <text x="24" y="42" class="title">PERSONALIZAR</text>
+    <text x="24" y="82" class="body">Piel / Pijama</text>
+    <text x="24" y="116" class="body">Color mosquito</text>
+    <text x="24" y="150" class="body">Giro / Zoom / Vistas</text>
+    <text x="24" y="184" class="small">Guardar · Restablecer</text>
+  </g>
+
+  <g transform="translate(650 805)">
+    <rect class="modal" width="330" height="145" rx="12"/>
+    <text x="24" y="42" class="title">AJUSTES</text>
+    <text x="24" y="82" class="body">Audio · Video · Controles</text>
+    <text x="24" y="116" class="small">Sólo capacidades conectadas</text>
+  </g>
+
+  <path class="line" d="M350 225 H470"/>
+  <path class="line" d="M800 205 H920"/>
+  <path class="line" d="M1270 205 H1310"/>
+  <path class="line" d="M1430 305 V470"/>
+  <path class="return" d="M1330 470 C1120 380 1070 350 1440 305"/>
+  <path class="line" d="M350 290 C410 290 390 575 460 575"/>
+  <path class="line" d="M220 395 V515"/>
+  <path class="line" d="M300 395 C440 760 600 820 650 860"/>
+  <path class="line" d="M1225 585 C1070 650 1040 805 980 855"/>
+  <path class="return" d="M460 650 C390 760 260 760 220 725"/>
+
+  <text x="92" y="970" class="small">Escape vuelve un nivel · Modales encierran foco · Juego captura ratón · Menús lo liberan</text>
+</svg>
