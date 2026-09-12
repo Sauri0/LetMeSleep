@@ -34,7 +34,7 @@ func _initialize() -> void:
 	for floors: int in [2,3]:
 		for quadrant: int in range(4):
 			for minimum: bool in [true,false]:
-				var fixture: Dictionary={"floor_count":floors,"service_quadrant":quadrant,"half_x":13.0 if minimum else 14.0,
+				var fixture: Dictionary={"floor_count":floors,"service_quadrant":quadrant,"half_x":14.5 if minimum else 14.8,
 					"half_z":11.0 if minimum else 11.4,"hall_half":1.8 if minimum else 1.7,"hall_end":6.6 if minimum else 6.4}
 				var data:=Generator.new().generate_structure(1,fixture)
 				check(not data.is_empty(),"extreme fixture generates")

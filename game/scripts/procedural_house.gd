@@ -73,7 +73,7 @@ func generate_structure(seed_value: int, dimension_fixture: Dictionary={}) -> Di
 	_solid_keys.clear()
 	_name_counts.clear()
 	var floor_count := _integer(2,3)
-	var half_x := _grid(13.0,14.0)
+	var half_x := _grid(14.5,14.8)
 	var half_z := _grid(11.0,11.4)
 	var hall_half := _grid(1.7,1.8)
 	var service_quadrant := _integer(0,3)
@@ -84,7 +84,7 @@ func generate_structure(seed_value: int, dimension_fixture: Dictionary={}) -> Di
 	hall_half=float(dimension_fixture.get("hall_half",hall_half))
 	service_quadrant=int(dimension_fixture.get("service_quadrant",service_quadrant))
 	if floor_count not in [2,3] or not is_finite(half_x) or not is_finite(half_z) or not is_finite(hall_half): return {}
-	if half_x<13 or half_x>14 or half_z<11 or half_z>11.4 or hall_half<1.7 or hall_half>1.8 or service_quadrant<0 or service_quadrant>3: return {}
+	if half_x<14.5 or half_x>14.8 or half_z<11 or half_z>11.4 or hall_half<1.7 or hall_half>1.8 or service_quadrant<0 or service_quadrant>3: return {}
 	if dimension_fixture.has("hall_end"):
 		var hall_end: float=dimension_fixture.hall_end
 		if not is_finite(hall_end) or hall_end<float(LAYOUT.hall_end_min) or hall_end>float(LAYOUT.hall_end_max): return {}
@@ -490,17 +490,23 @@ func _furniture_candidates(room: Dictionary, spec: Dictionary, near_beds: Array[
 				var across:=2 if foot_axis==0 else 0
 				approach[foot_axis]=box.end[foot_axis]+.72 if foot[foot_axis]>0 else box.position[foot_axis]-.72
 				approach[across]=clampf(anchor[across],box.position[across]+.25,box.end[across]-.25)
-			var access:=_access_band(anchor,approach)
-			var inside: AABB=room.interior_bounds
-			if not inside.has_point(approach+Vector3(-.61,.1,-.61)) or not inside.has_point(approach+Vector3(.61,.1,.61)): continue
-			var open_leaf: AABB=DoorGeometry.leaf_transform(_data.doors[room.id],PI*.5)*DoorGeometry.leaf_box(_data.doors[room.id])
-			if HouseChecks.route_hits_box(anchor,approach,box) or HouseChecks.route_hits_box(anchor,approach,open_leaf): continue
-			var edge:=minf(minf(box.position.x-region.position.x,region.end.x-box.end.x),minf(box.position.z-region.position.z,region.end.z-box.end.z))
-			var interior_seat: bool=str(spec.asset_id) in ["armchair","sofa","dining_set","game_table"] and float(room.area_m2)>30
-			var score:=absf(edge-(.7 if interior_seat else .2))*2.0-box.get_center().distance_squared_to(room.portal)*.005
-			result.append({"box":box,"rotation_y":yaw,"approach":approach,"access":access,"origin":anchor,"score":score,"spec":spec})
+			var approaches: Array[Vector3]=[approach]
+			var across_axis: int=(2 if quarter==0 else 0) if str(spec.asset_id)=="bed" else (0 if quarter==0 else 2)
+			for coordinate: float in [box.position[across_axis]+.1,box.end[across_axis]-.1]:
+				var alternate:=approach;alternate[across_axis]=coordinate
+				if not approaches.has(alternate): approaches.append(alternate)
+			for point: Vector3 in approaches:
+				var access:=_access_band(anchor,point)
+				var inside: AABB=room.interior_bounds
+				if not inside.has_point(point+Vector3(-.65,.1,-.65)) or not inside.has_point(point+Vector3(.65,.1,.65)): continue
+				var open_leaf: AABB=DoorGeometry.leaf_transform(_data.doors[room.id],PI*.5)*DoorGeometry.leaf_box(_data.doors[room.id])
+				if HouseChecks.route_hits_box(anchor,point,box) or HouseChecks.route_hits_box(anchor,point,open_leaf): continue
+				var edge:=minf(minf(box.position.x-region.position.x,region.end.x-box.end.x),minf(box.position.z-region.position.z,region.end.z-box.end.z))
+				var interior_seat: bool=str(spec.asset_id) in ["armchair","sofa","dining_set","game_table"] and float(room.area_m2)>30
+				var score:=absf(edge-(.7 if interior_seat else .2))*2.0-box.get_center().distance_squared_to(room.portal)*.005+point.distance_to(anchor)*.001
+				result.append({"box":box,"rotation_y":yaw,"approach":point,"access":access,"origin":anchor,"score":score,"spec":spec})
 	result.sort_custom(func(a:Dictionary,b:Dictionary)->bool:return float(a.score)<float(b.score))
-	if result.size()>32: result.resize(32)
+	if result.size()>64: result.resize(64)
 	return result
 
 func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
@@ -560,12 +566,36 @@ func _solve_furniture(room: Dictionary, specs: Array[Dictionary]) -> Array:
 	room.placement_failure={"stage":"bedside_assignment","states":states.size()}
 	return []
 
+func _reserve_room_routes(room: Dictionary) -> void:
+	var center: Vector3=room.center
+	var portal: Vector3=room.portal
+	var lane:=_access_band(portal,center,1.56);lane.size.y=2.4
+	room.movement_clearance=[lane]
+	room.movement_routes=[{"from":portal,"to":center,"width":1.56,"height":2.4}]
+	for zone: Dictionary in room.functional_zones:
+		room.movement_clearance.append(_access_band(center,zone.anchor))
+		room.movement_routes.append({"from":center,"to":zone.anchor,"width":1.3,"height":2.05})
+	var swing_origin:=portal-Vector3(1.15,0,1.15)
+	var axis: int=room.door_axis
+	swing_origin[axis]=portal[axis]-.15 if center[axis]>portal[axis] else portal[axis]-2.15
+	room.clearance=room.movement_clearance.duplicate()
+	room.clearance.append(AABB(swing_origin,Vector3(2.3,2.45,2.3)))
+
 func _furnish_room(room: Dictionary) -> void:
 	var b: AABB=room.bounds
 	var center:=Vector3(b.get_center().x,b.position.y,b.get_center().z)
 	center[2 if int(room.door_axis)==0 else 0]=Vector3(room.portal)[2 if int(room.door_axis)==0 else 0]
+	if room.functional_zones.size()>1:
+		var depth_axis: int=room.door_axis
+		var inside: AABB=room.interior_bounds
+		var direction:=signf(center[depth_axis]-Vector3(room.portal)[depth_axis])
+		center[depth_axis]=clampf(Vector3(room.portal)[depth_axis]+direction*maxf(2.8,absf(center[depth_axis]-Vector3(room.portal)[depth_axis])),inside.position[depth_axis]+.78,inside.end[depth_axis]-.78)
 	room.center=center
 	for zone: Dictionary in room.functional_zones:
+		if room.functional_zones.size()>1:
+			var aligned: Vector3=zone.anchor
+			aligned[int(room.door_axis)]=center[int(room.door_axis)]
+			zone.anchor=aligned
 		if room.functional_zones.size()==1:
 			var anchor:=center
 			var door_axis: int=room.door_axis
@@ -583,21 +613,28 @@ func _furnish_room(room: Dictionary) -> void:
 				if not region.grow(.001).encloses(body) or DoorGeometry.intersects_body(_data.doors[room.id],PI*.5,body): continue
 				zone.anchor=point;solved=true;break
 			if solved: break
-	var portal: Vector3=room.portal
-	var lane:=_access_band(portal,center,1.56);lane.size.y=2.4
-	room.movement_clearance=[lane]
-	room.movement_routes=[{"from":portal,"to":center,"width":1.56,"height":2.4}]
-	for zone: Dictionary in room.functional_zones:
-		room.movement_clearance.append(_access_band(center,zone.anchor))
-		room.movement_routes.append({"from":center,"to":zone.anchor,"width":1.3,"height":2.05})
-	var swing_origin:=portal-Vector3(1.15,0,1.15)
-	var axis: int=room.door_axis
-	swing_origin[axis]=portal[axis]-.15 if center[axis]>portal[axis] else portal[axis]-2.15
-	room.clearance=room.movement_clearance.duplicate()
-	room.clearance.append(AABB(swing_origin,Vector3(2.3,2.45,2.3)))
 	room.functional_approaches=[]
+	room.bed_aisles=[]
 	var specs:=_furnishing_specs(room)
-	var placed:=_solve_furniture(room,specs)
+	var original_anchors: Array[Vector3]=[]
+	for zone: Dictionary in room.functional_zones: original_anchors.append(zone.anchor)
+	var placed: Array=[]
+	_reserve_room_routes(room)
+	var open_leaf: AABB=DoorGeometry.leaf_transform(_data.doors[room.id],PI*.5)*DoorGeometry.leaf_box(_data.doors[room.id])
+	for offset: Vector2 in [Vector2.ZERO,Vector2(-.5,0),Vector2(.5,0),Vector2(0,-.5),Vector2(0,.5),Vector2(-.5,-.5),Vector2(-.5,.5),Vector2(.5,-.5),Vector2(.5,.5)]:
+		var clear:=true
+		for index: int in range(room.functional_zones.size()):
+			var zone: Dictionary=room.functional_zones[index]
+			var region: AABB=zone.bounds
+			var point:=original_anchors[index]+Vector3(offset.x,0,offset.y)
+			point.x=clampf(point.x,region.position.x+.66,region.end.x-.66)
+			point.z=clampf(point.z,region.position.z+.66,region.end.z-.66)
+			if HouseChecks.route_hits_box(center,point,open_leaf): clear=false;break
+			zone.anchor=point
+		if not clear: continue
+		_reserve_room_routes(room)
+		placed=_solve_furniture(room,specs)
+		if not placed.is_empty(): room.erase("placement_failure");break
 	var essential_expected:=0
 	for spec: Dictionary in specs:
 		if bool(spec.essential): essential_expected+=1
@@ -630,7 +667,7 @@ func _furnish_room(room: Dictionary) -> void:
 		for second: int in range(first+1,placed.size()):
 			if str(placed[second].spec.asset_id)!="bed": continue
 			var aisle:=HouseChecks.bed_aisle(placed[first].box,placed[second].box)
-			if aisle.has_volume(): room.clearance.append(aisle)
+			if aisle.has_volume(): room.clearance.append(aisle);room.bed_aisles.append(aisle)
 	room.furniture_count=placed.size()
 	room.furnishing_report={"essential_expected":essential_expected,"essential_placed":essential_placed,"objects":placed.size(),
 		"occupied_m2":occupied,"occupancy":occupied/float(room.area_m2),"under_target":occupied/float(room.area_m2)<.12,
@@ -748,13 +785,21 @@ func _place_support(room: Dictionary, tool: String) -> bool:
 			var box:=AABB(origin,size)
 			var approach:=Vector3(origin.x+size.x*.5,b.position.y,origin.z-.76)
 			var access:=AABB(center.min(approach)-Vector3(.63,0,.63),(center-approach).abs()+Vector3(1.26,1.95,1.26))
-			if box.intersects(access) or DoorGeometry.intersects_body(_data.doors[room.id],PI*.5,access): continue
+			var open_leaf: AABB=DoorGeometry.leaf_transform(_data.doors[room.id],PI*.5)*DoorGeometry.leaf_box(_data.doors[room.id])
+			if HouseChecks.route_hits_box(center,approach,box,1.26,1.95) or HouseChecks.route_hits_box(center,approach,open_leaf,1.26,1.95): continue
 			var free:=true
-			for clearance: AABB in room.clearance:
-				if box.grow(.08).intersects(clearance): free=false;break
+			if HouseChecks.door_sweep_intersects(_data.doors[room.id],box.grow(.08)): continue
+			for route: Dictionary in room.movement_routes:
+				if HouseChecks.route_hits_box(route.from,route.to,box.grow(.08),float(route.width),float(route.height)): free=false;break
+			for route: Dictionary in room.functional_approaches:
+				if HouseChecks.route_hits_box(route.origin,route.p,box.grow(.08)): free=false;break
+			for point: Vector3 in room.get("support_approaches",[]):
+				if HouseChecks.route_hits_box(center,point,box.grow(.08),1.26,1.95): free=false;break
+			for aisle: AABB in room.bed_aisles:
+				if box.grow(.08).intersects(aisle): free=false;break
 			for obstacle: AABB in obstacles:
 				if obstacle.end.y<=b.position.y+.002 or obstacle.position.y>=b.position.y+1.95: continue
-				if box.grow(.06).intersects(obstacle) or access.intersects(obstacle): free=false;break
+				if box.grow(.06).intersects(obstacle) or HouseChecks.route_hits_box(center,approach,obstacle,1.26,1.95): free=false;break
 			if not free: continue
 			var id:=str(room.id)+"-"+tool
 			var spec: Dictionary={"id":id,"kind":kind,"origin":origin}

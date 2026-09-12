@@ -4,6 +4,7 @@ extends RefCounted
 ## Human points are feet; mosquito points are centers. Reuse routes between repaths.
 
 const Geometry = preload("res://scripts/navigation_geometry.gd")
+const DoorGeometry = preload("res://scripts/door_geometry.gd")
 const Maps = preload("res://scripts/map_catalog.gd")
 const HouseBarriers = preload("res://scripts/house_barriers.gd")
 const PickupSupports = preload("res://scripts/pickup_supports.gd")
@@ -30,6 +31,11 @@ static func _geometry(human: bool, map_id: String) -> Dictionary:
 	var data: Dictionary = _data(map_id)
 	var extra: Array[AABB] = HouseBarriers.get_boxes(map_id)
 	extra.append_array(PickupSupports.get_boxes(map_id))
+	if human and int(data.get("generator_version",0))>=3:
+		# Plan through the doorway with its leaf open, as authority movement does.
+		# Direct shortcuts and graph connections must not cut through that leaf.
+		for door: Dictionary in data.doors.values():
+			extra.append(DoorGeometry.leaf_transform(door,PI*.5)*DoorGeometry.leaf_box(door))
 	var result := Geometry.create(data, human, extra)
 	_cache[key] = result
 	return result
