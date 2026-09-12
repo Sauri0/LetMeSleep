@@ -16,8 +16,11 @@ namespace LetMeSleep.Audio
         [SerializeField] private bool spatial = false;
         private AudioSource source;
         private Coroutine fade;
+        private bool playbackRequested;
+        private float level = 1f;
 
         public AudioClip Clip => clip;
+        public bool IsPlaying => playbackRequested;
 
         private void Awake()
         {
@@ -32,19 +35,42 @@ namespace LetMeSleep.Audio
 
         public void Play()
         {
+            PlayScheduled(AudioSettings.dspTime);
+        }
+
+        public void PlayScheduled(double dspTime)
+        {
             ConfigureSource();
             if (clip == null)
                 return;
+            if (playbackRequested)
+            {
+                StartFade(volume * level, false);
+                return;
+            }
             source.clip = clip;
-            source.volume = fadeSeconds > 0f ? 0f : volume;
-            if (!source.isPlaying)
+            source.volume = fadeSeconds > 0f ? 0f : volume * level;
+            if (dspTime > AudioSettings.dspTime + 0.001)
+                source.PlayScheduled(dspTime);
+            else
                 source.Play();
-            StartFade(volume, false);
+            playbackRequested = true;
+            StartFade(volume * level, false);
+        }
+
+        public void SetLevel(float value)
+        {
+            value = Mathf.Clamp01(value);
+            if (Mathf.Abs(level - value) < 0.01f)
+                return;
+            level = value;
+            if (playbackRequested)
+                StartFade(volume * level, false);
         }
 
         public void Stop()
         {
-            if (source == null || !source.isPlaying)
+            if (source == null || !playbackRequested)
                 return;
             StartFade(0f, true);
         }
@@ -86,7 +112,10 @@ namespace LetMeSleep.Audio
                 source.volume = target;
             }
             if (stopAfter)
+            {
                 source.Stop();
+                playbackRequested = false;
+            }
             fade = null;
         }
     }

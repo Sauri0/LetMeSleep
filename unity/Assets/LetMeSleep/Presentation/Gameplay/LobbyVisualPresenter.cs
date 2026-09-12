@@ -9,10 +9,13 @@ namespace LetMeSleep.Presentation.Gameplay
     [DisallowMultipleComponent]
     public sealed class LobbyVisualPresenter : MonoBehaviour
     {
+        private const float HumanStrideMeters = 1.2f;
+
         private sealed class VisualState
         {
             internal CharacterView View;
             internal int Motion = -1;
+            internal float WalkClipDuration = 1f;
         }
 
         [SerializeField] private LobbyMovementRuntime lobby = null;
@@ -44,7 +47,11 @@ namespace LetMeSleep.Presentation.Gameplay
             view.SetFirstPersonVisibility(false);
             if (view.Animator != null)
                 view.Animator.applyRootMotion = false;
-            visuals[playerId] = new VisualState { View = view };
+            visuals[playerId] = new VisualState
+            {
+                View = view,
+                WalkClipDuration = FindClipDuration(view, "Human_Walk")
+            };
             ApplyLatest(playerId);
         }
 
@@ -86,7 +93,40 @@ namespace LetMeSleep.Presentation.Gameplay
                 visual.Motion = motion;
                 visual.View.PlayMotion(motion, 0.10f);
             }
-            SynchronizeLoop(visual.View, motion, pose.MotionPhase);
+            ApplyPlaybackSpeed(visual, motion, planar.magnitude);
+            if (motion == 1)
+                SynchronizeLoop(visual.View, motion, pose.MotionPhase);
+        }
+
+        private static void ApplyPlaybackSpeed(VisualState visual, int motion, float planarSpeed)
+        {
+            CharacterView view = visual.View;
+            if (view.Animator == null)
+                return;
+            if (motion == 0)
+            {
+                view.Animator.speed = 1f;
+                return;
+            }
+
+            view.Animator.speed = Mathf.Clamp(
+                visual.WalkClipDuration * planarSpeed / HumanStrideMeters, 0.35f, 2.5f);
+        }
+
+        private static float FindClipDuration(CharacterView view, string clipName)
+        {
+            RuntimeAnimatorController controller = view.Animator.runtimeAnimatorController;
+            if (controller != null)
+            {
+                AnimationClip[] clips = controller.animationClips;
+                for (int i = 0; i < clips.Length; i++)
+                {
+                    if (clips[i] == null || clips[i].name != clipName)
+                        continue;
+                    return clips[i].length;
+                }
+            }
+            return 1f;
         }
 
         private static void SynchronizeLoop(CharacterView view, int motion, float phase)

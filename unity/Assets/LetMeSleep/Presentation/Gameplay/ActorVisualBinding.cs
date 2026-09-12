@@ -11,6 +11,8 @@ namespace LetMeSleep.Presentation.Gameplay
     public sealed class ActorVisualBinding : MonoBehaviour
     {
         private const float MaximumExtrapolationSeconds = 0.10f;
+        private const float HumanStrideMeters = 1.2f;
+        private const float MosquitoStrideMeters = 0.3f;
 
         private GameplayActorProxy proxy;
         private UnityGameplayWorld world;
@@ -29,6 +31,7 @@ namespace LetMeSleep.Presentation.Gameplay
         private Transform leftHand;
         private Transform rightHand;
         private GameObject flyswatter;
+        private readonly float[] motionDurations = new float[32];
 
         public uint ActorId => proxy != null ? proxy.ActorId : 0;
         public CharacterView View => view;
@@ -53,6 +56,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 view.SetFirstPersonVisibility(isLocal && proxy.Role == PlayerRole.Human);
                 leftHand = FindDescendant(view.transform, "Hand.L");
                 rightHand = FindDescendant(view.transform, "Hand.R");
+                CacheMotionDurations();
             }
         }
 
@@ -152,11 +156,13 @@ namespace LetMeSleep.Presentation.Gameplay
             int motion = SelectMotion(state);
             if (motion == currentMotion)
             {
+                ApplyAnimatorSpeed(state, motion);
                 SynchronizeLoopPhase(state, motion);
                 return;
             }
 
             currentMotion = motion;
+            ApplyAnimatorSpeed(state, motion);
             if (immediate && TryGetMotion(motion, out CharacterView.MotionBinding binding) && view.Animator != null)
             {
                 view.PlayMotion(motion, 0f);
@@ -168,7 +174,8 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void SynchronizeLoopPhase(GameplayModel.ActorSnapshot state, int motion)
         {
-            if (localActor || view.Animator == null || !TryGetMotion(motion, out CharacterView.MotionBinding binding) || !binding.Loop)
+            if (localActor || !UsesAuthoritativeDistancePhase(motion) ||
+                view.Animator == null || !TryGetMotion(motion, out CharacterView.MotionBinding binding) || !binding.Loop)
                 return;
             AnimatorStateInfo info = view.Animator.GetCurrentAnimatorStateInfo(0);
             if (!info.IsName(binding.StateName))
@@ -184,21 +191,67 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             temporaryMotion = motion;
             float duration = MotionDuration(motion);
-            temporaryUntil = Time.unscaledTime + Mathf.Clamp(duration, 0.08f, 0.45f);
+            temporaryUntil = Time.unscaledTime + Mathf.Clamp(duration, 0.08f, 2.5f);
             currentMotion = motion;
+            if (view.Animator != null)
+                view.Animator.speed = 1f;
             view.PlayMotion(motion, 0.06f);
         }
 
         private float MotionDuration(int motion)
         {
-            if (!TryGetMotion(motion, out CharacterView.MotionBinding binding) ||
-                view.Animator == null || view.Animator.runtimeAnimatorController == null)
-                return 0.18f;
+            return motion >= 0 && motion < motionDurations.Length && motionDurations[motion] > 0f
+                ? motionDurations[motion]
+                : 0.18f;
+        }
+
+        private void CacheMotionDurations()
+        {
+            if (view.Animator == null || view.Animator.runtimeAnimatorController == null || view.Motions == null)
+                return;
             AnimationClip[] clips = view.Animator.runtimeAnimatorController.animationClips;
-            for (int i = 0; i < clips.Length; i++)
-                if (clips[i] != null && clips[i].name == binding.ClipName)
-                    return clips[i].length;
-            return 0.18f;
+            for (int i = 0; i < view.Motions.Length; i++)
+            {
+                CharacterView.MotionBinding binding = view.Motions[i];
+                if (binding == null || binding.Id < 0 || binding.Id >= motionDurations.Length)
+                    continue;
+                for (int clipIndex = 0; clipIndex < clips.Length; clipIndex++)
+                {
+                    AnimationClip clip = clips[clipIndex];
+                    if (clip == null || clip.name != binding.ClipName)
+                        continue;
+                    motionDurations[binding.Id] = clip.length;
+                    break;
+                }
+            }
+        }
+
+        private void ApplyAnimatorSpeed(GameplayModel.ActorSnapshot state, int motion)
+        {
+            if (view.Animator == null || temporaryMotion >= 0)
+                return;
+            if (!UsesAuthoritativeDistancePhase(motion))
+            {
+                view.Animator.speed = 1f;
+                return;
+            }
+
+            float speed = proxy.Role == PlayerRole.Human
+                ? PlanarSpeed(state.Velocity)
+                : state.Velocity.Length;
+            float distancePerCycle = proxy.Role == PlayerRole.Human
+                ? HumanStrideMeters
+                : MosquitoStrideMeters;
+            float clipDuration = MotionDuration(motion);
+            float playback = clipDuration * speed / distancePerCycle;
+            view.Animator.speed = Mathf.Clamp(playback, 0.35f, 2.5f);
+        }
+
+        private bool UsesAuthoritativeDistancePhase(int motion)
+        {
+            return proxy.Role == PlayerRole.Human
+                ? motion == 1 || motion == 2
+                : motion == 2 || motion == 6;
         }
 
         private bool TryGetMotion(int id, out CharacterView.MotionBinding result)
@@ -236,7 +289,7 @@ namespace LetMeSleep.Presentation.Gameplay
 
             switch (state.LifeState)
             {
-                case GameplayModel.LifeState.ApproachingSurface: return 3;
+                case GameplayModel.LifeState.ApproachingSurface: return 4;
                 case GameplayModel.LifeState.Surface: return state.Velocity.Length > 0.08f ? 6 : 5;
                 case GameplayModel.LifeState.PreparingBite: return 7;
                 case GameplayModel.LifeState.Biting: return 8;

@@ -303,18 +303,28 @@ namespace LetMeSleep.Presentation.Editor
         private static Dictionary<string, AudioCue> BuildAudioCues(AudioMixer mixer)
         {
             var cues = new Dictionary<string, AudioCue>();
-            cues["StrikeSwing"] = CreateCue("StrikeSwing", "SFX_StrikeSwing.wav", 40, 4, 0.98f, 1.03f, 1f, 0.8f, 18f, FindGroup(mixer, "Character"));
-            cues["StrikeImpact"] = CreateCue("StrikeImpact", "SFX_StrikeImpact.wav", 24, 4, 0.97f, 1.03f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
-            cues["BiteStarted"] = CreateCue("BiteStarted", "SFX_BiteStart.wav", 24, 8, 0.98f, 1.02f, 1f, 0.35f, 12f, FindGroup(mixer, "Critical"));
-            cues["MosquitoWingLoop"] = CreateCue("MosquitoWingLoop", "SFX_MosquitoWingLoop.wav", 56, 12, 0.92f, 1.12f, 1f, 0.35f, 12f, FindGroup(mixer, "Mosquito"), true);
+            cues["StrikeSwing"] = CreateCue("StrikeSwing", new[] { "SFX_StrikeSwing.wav", "SFX_Legacy_Swish.ogg" }, 40, 4, 0.98f, 1.03f, 1f, 0.8f, 18f, FindGroup(mixer, "Character"));
+            cues["StrikeImpact"] = CreateCue("StrikeImpact", new[] { "SFX_StrikeImpact.wav", "SFX_Legacy_Clap.ogg", "SFX_Legacy_Impact.ogg" }, 24, 4, 0.97f, 1.03f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
+            cues["BiteStarted"] = CreateCue("BiteStarted", new[] { "SFX_BiteStart.wav", "SFX_Legacy_Bite.ogg" }, 24, 8, 0.98f, 1.02f, 1f, 0.35f, 12f, FindGroup(mixer, "Critical"));
+            cues["MosquitoWingLoop"] = CreateCue("MosquitoWingLoop", "SFX_Legacy_Buzz_Flight.ogg", 56, 12, 0.92f, 1.12f, 1f, 0.35f, 12f, FindGroup(mixer, "Mosquito"), true);
+            cues["MosquitoWingPerchLoop"] = CreateCue("MosquitoWingPerchLoop", "SFX_Legacy_Buzz_Perch.ogg", 56, 12, 0.72f, 0.84f, 1f, 0.35f, 10f, FindGroup(mixer, "Mosquito"), true);
+            cues["MosquitoWingBiteLoop"] = CreateCue("MosquitoWingBiteLoop", "SFX_Legacy_Buzz_Bite.ogg", 48, 12, 0.90f, 1.04f, 1f, 0.35f, 12f, FindGroup(mixer, "Mosquito"), true);
+            cues["MosquitoPerch"] = CreateCue("MosquitoPerch", "SFX_Legacy_Perch.ogg", 56, 6, 0.96f, 1.04f, 1f, 0.35f, 10f, FindGroup(mixer, "Mosquito"));
+            cues["MosquitoDetach"] = CreateCue("MosquitoDetach", "SFX_Legacy_Detach.ogg", 56, 6, 0.96f, 1.04f, 1f, 0.35f, 10f, FindGroup(mixer, "Mosquito"));
+            cues["HumanFootstep"] = CreateCue("HumanFootstep", "SFX_Legacy_Step_Wood.ogg", 80, 12, 0.94f, 1.06f, 1f, 0.7f, 15f, FindGroup(mixer, "Foley"));
+            cues["HumanLand"] = CreateCue("HumanLand", "SFX_Legacy_Land.ogg", 64, 8, 0.96f, 1.03f, 1f, 0.7f, 16f, FindGroup(mixer, "Foley"));
+            cues["MosquitoKnockedDown"] = CreateCue("MosquitoKnockedDown", new[] { "SFX_Legacy_Stun.ogg", "SFX_Legacy_Fall.ogg" }, 24, 4, 0.97f, 1.03f, 1f, 0.35f, 18f, FindGroup(mixer, "Critical"));
             cues["DoorOpen"] = CreateCue("DoorOpen", "SFX_DoorOpen.wav", 96, 10, 0.98f, 1.02f, 1f, 0.8f, 20f, FindGroup(mixer, "World"));
             cues["DoorClose"] = CreateCue("DoorClose", "SFX_DoorClose.wav", 96, 10, 0.98f, 1.02f, 1f, 0.8f, 20f, FindGroup(mixer, "World"));
             cues["HumanFainted"] = CreateCue("HumanFainted", "SFX_HumanFainted.wav", 24, 4, 0.98f, 1.02f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
-            cues["Recovered"] = CreateCue("Recovered", "SFX_Recovered.wav", 24, 4, 0.98f, 1.02f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
+            cues["Recovered"] = CreateCue("Recovered", new[] { "SFX_Recovered.wav", "SFX_Legacy_Recover.ogg" }, 24, 4, 0.98f, 1.02f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
             cues["RoundStart"] = CreateCue("RoundStart", "STG_RoundStart.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
             cues["HumansWin"] = CreateCue("HumansWin", "STG_HumansWin.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
             cues["MosquitoesWin"] = CreateCue("MosquitoesWin", "STG_MosquitoesWin.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
             cues["UiReady"] = CreateCue("UiReady", "UI_Ready.wav", 48, 4, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "UI"));
+            cues["UiSelect"] = CreateCue("UiSelect", "UI_Legacy_Select.ogg", 48, 4, 0.99f, 1.01f, 0f, 1f, 1f, FindGroup(mixer, "UI"));
+            cues["UiConfirm"] = CreateCue("UiConfirm", "UI_Legacy_Confirm.ogg", 40, 4, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "UI"));
+            cues["UiError"] = CreateCue("UiError", "UI_Legacy_Error.ogg", 32, 2, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "UI"));
             return cues;
         }
 
@@ -324,17 +334,31 @@ namespace LetMeSleep.Presentation.Editor
             float minimumDistance, float maximumDistance, AudioMixerGroup output,
             bool loop = false)
         {
+            return CreateCue(id, new[] { clipName }, priority, simultaneous,
+                minimumPitch, maximumPitch, spatialBlend, minimumDistance,
+                maximumDistance, output, loop);
+        }
+
+        private static AudioCue CreateCue(
+            string id, string[] clipNames, int priority, int simultaneous,
+            float minimumPitch, float maximumPitch, float spatialBlend,
+            float minimumDistance, float maximumDistance, AudioMixerGroup output,
+            bool loop = false)
+        {
             string path = $"{AudioRoot}/Cues/{id}.asset";
             AudioCue cue = CreateOrLoad<AudioCue>(path);
-            AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>($"{ClipRoot}/{clipName}");
-            if (clip == null)
-                throw new FileNotFoundException("Audio clip failed to import", clipName);
 
             var serialized = new SerializedObject(cue);
             serialized.FindProperty("cueId").stringValue = id;
             SerializedProperty clips = serialized.FindProperty("clips");
-            clips.arraySize = 1;
-            clips.GetArrayElementAtIndex(0).objectReferenceValue = clip;
+            clips.arraySize = clipNames.Length;
+            for (int i = 0; i < clipNames.Length; i++)
+            {
+                AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>($"{ClipRoot}/{clipNames[i]}");
+                if (clip == null)
+                    throw new FileNotFoundException("Audio clip failed to import", clipNames[i]);
+                clips.GetArrayElementAtIndex(i).objectReferenceValue = clip;
+            }
             serialized.FindProperty("output").objectReferenceValue = output;
             serialized.FindProperty("priority").intValue = priority;
             serialized.FindProperty("maximumSimultaneous").intValue = simultaneous;
@@ -355,15 +379,30 @@ namespace LetMeSleep.Presentation.Editor
             try
             {
                 AudioEmitterPool emitters = root.AddComponent<AudioEmitterPool>();
-                AudioBedPlayer menu = CreateBed(root.transform, "Music_Menu", "MUS_NightMischief_Menu.wav", 0.45f, true, false, FindGroup(mixer, "Music"));
-                AudioBedPlayer round = CreateBed(root.transform, "Music_Round", "MUS_NightMischief_Round.wav", 0.42f, false, false, FindGroup(mixer, "Music"));
-                AudioBedPlayer ambience = CreateBed(root.transform, "Ambience_NightHouse", "AMB_NightHouse.wav", 0.40f, true, false, FindGroup(mixer, "Ambience"));
+                AudioMixerGroup musicGroup = FindGroup(mixer, "Music");
+                AudioMixerGroup ambienceGroup = FindGroup(mixer, "Ambience");
+                AudioBedPlayer menu = CreateBed(root.transform, "Music_Menu_Base", "MUS_Legacy_Menu_Base.ogg", 0.70f, false, false, musicGroup);
+                AudioBedPlayer menuRhythm = CreateBed(root.transform, "Music_Menu_Rhythm", "MUS_Legacy_Menu_Rhythm.ogg", 0.50f, false, false, musicGroup);
+                AudioBedPlayer menuMelody = CreateBed(root.transform, "Music_Menu_Melody", "MUS_Legacy_Menu_Melody.ogg", 0.45f, false, false, musicGroup);
+                AudioBedPlayer round = CreateBed(root.transform, "Music_Round_Base", "MUS_Legacy_Gameplay_Base.ogg", 0.62f, false, false, musicGroup);
+                AudioBedPlayer roundRhythm = CreateBed(root.transform, "Music_Round_Rhythm", "MUS_Legacy_Gameplay_Rhythm.ogg", 0.42f, false, false, musicGroup);
+                AudioBedPlayer roundMelody = CreateBed(root.transform, "Music_Round_Melody", "MUS_Legacy_Gameplay_Melody.ogg", 0.35f, false, false, musicGroup);
+                AudioBedPlayer quiet = CreateBed(root.transform, "Music_Quiet", "MUS_Legacy_Quiet.ogg", 0.68f, false, false, musicGroup);
+                AudioBedPlayer ambience = CreateBed(root.transform, "Ambience_NightHouse", "AMB_NightHouse.wav", 0.30f, false, false, ambienceGroup);
+                AudioBedPlayer nightAir = CreateBed(root.transform, "Ambience_NightAir", "AMB_Legacy_NightAir.ogg", 0.22f, false, false, ambienceGroup);
 
                 var catalog = root.AddComponent<AlfaAudioCatalog>();
                 Assign(catalog, "strikeSwing", cues["StrikeSwing"]);
                 Assign(catalog, "strikeImpact", cues["StrikeImpact"]);
                 Assign(catalog, "biteStarted", cues["BiteStarted"]);
                 Assign(catalog, "mosquitoWingLoop", cues["MosquitoWingLoop"]);
+                Assign(catalog, "mosquitoWingPerchLoop", cues["MosquitoWingPerchLoop"]);
+                Assign(catalog, "mosquitoWingBiteLoop", cues["MosquitoWingBiteLoop"]);
+                Assign(catalog, "mosquitoPerch", cues["MosquitoPerch"]);
+                Assign(catalog, "mosquitoDetach", cues["MosquitoDetach"]);
+                Assign(catalog, "humanFootstep", cues["HumanFootstep"]);
+                Assign(catalog, "humanLand", cues["HumanLand"]);
+                Assign(catalog, "mosquitoKnockedDown", cues["MosquitoKnockedDown"]);
                 Assign(catalog, "doorOpen", cues["DoorOpen"]);
                 Assign(catalog, "doorClose", cues["DoorClose"]);
                 Assign(catalog, "humanFainted", cues["HumanFainted"]);
@@ -372,13 +411,22 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(catalog, "humansWin", cues["HumansWin"]);
                 Assign(catalog, "mosquitoesWin", cues["MosquitoesWin"]);
                 Assign(catalog, "uiReady", cues["UiReady"]);
+                Assign(catalog, "uiSelect", cues["UiSelect"]);
+                Assign(catalog, "uiConfirm", cues["UiConfirm"]);
+                Assign(catalog, "uiError", cues["UiError"]);
 
                 AlfaAudioDirector director = root.AddComponent<AlfaAudioDirector>();
                 Assign(director, "emitters", emitters);
                 Assign(director, "catalog", catalog);
                 Assign(director, "menuMusic", menu);
+                Assign(director, "menuRhythm", menuRhythm);
+                Assign(director, "menuMelody", menuMelody);
                 Assign(director, "roundMusic", round);
+                Assign(director, "roundRhythm", roundRhythm);
+                Assign(director, "roundMelody", roundMelody);
+                Assign(director, "quietMusic", quiet);
                 Assign(director, "ambience", ambience);
+                Assign(director, "nightAir", nightAir);
 
                 return PrefabUtility.SaveAsPrefabAsset(root, AudioRoot + "/Prefabs/LMS_AlfaAudioRoot.prefab");
             }

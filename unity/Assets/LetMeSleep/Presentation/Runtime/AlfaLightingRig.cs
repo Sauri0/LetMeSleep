@@ -10,8 +10,8 @@ namespace LetMeSleep.Presentation
     {
         private const string LightAnchorPrefix = "LightAnchor_";
         private const int PreviewLayer = 30;
-        private const int MaximumShadowedPointLights = 4;
-        private const int MaximumShadowedPointLightsPerZone = 2;
+        private const int MaximumShadowedLocalLights = 4;
+        private const int MaximumShadowedLocalLightsPerZone = 2;
 
         [SerializeField] private AlfaPresentationPreset preset = null;
         [SerializeField] private Light moon = null;
@@ -82,8 +82,8 @@ namespace LetMeSleep.Presentation
                 string zone = ResolveZone(anchor.name);
                 shadowCounts.TryGetValue(zone, out int zoneShadowCount);
                 bool castsShadows = profile.ShadowCandidate
-                    && shadowCount < MaximumShadowedPointLights
-                    && zoneShadowCount < MaximumShadowedPointLightsPerZone;
+                    && shadowCount < MaximumShadowedLocalLights
+                    && zoneShadowCount < MaximumShadowedLocalLightsPerZone;
 
                 Light localLight = CreateMapLight(anchor, profile, castsShadows);
                 mapLights.Add(localLight);
@@ -135,7 +135,12 @@ namespace LetMeSleep.Presentation
             Light localLight = Instantiate(template, anchor, false);
             GameObject lightObject = localLight.gameObject;
             lightObject.name = "LMS_LocalLight_" + ResolveZone(anchor.name);
-            localLight.type = LightType.Point;
+            localLight.type = profile.Type;
+            if (profile.Type == LightType.Spot)
+            {
+                localLight.spotAngle = 125f;
+                localLight.innerSpotAngle = 80f;
+            }
             localLight.color = profile.Color;
             localLight.intensity = profile.Intensity;
             localLight.range = profile.Range;
@@ -174,22 +179,22 @@ namespace LetMeSleep.Presentation
         private static LocalLightProfile ResolveProfile(string anchorName, bool house)
         {
             if (Contains(anchorName, "Patio"))
-                return new LocalLightProfile(new Color(0.42f, 0.58f, 0.92f), 0.55f, 6.5f, false, LocalShadowTier.Low);
+                return new LocalLightProfile(new Color(0.42f, 0.58f, 0.92f), 0.42f, 5.5f, false, LocalShadowTier.Low, LightType.Point);
             if (Contains(anchorName, "Lobby"))
-                return new LocalLightProfile(new Color(1f, 0.62f, 0.30f), 2.25f, 6.4f, true, LocalShadowTier.Medium);
+                return new LocalLightProfile(new Color(1f, 0.62f, 0.30f), 1.45f, 5.6f, true, LocalShadowTier.Medium);
             if (Contains(anchorName, "Bedroom"))
-                return new LocalLightProfile(new Color(1f, 0.58f, 0.32f), 1.30f, 4.0f, true, LocalShadowTier.Low);
+                return new LocalLightProfile(new Color(1f, 0.58f, 0.32f), 0.90f, 3.7f, true, LocalShadowTier.Low);
             if (Contains(anchorName, "Living"))
-                return new LocalLightProfile(new Color(1f, 0.64f, 0.36f), 1.45f, 4.8f, true, LocalShadowTier.Medium);
+                return new LocalLightProfile(new Color(1f, 0.64f, 0.36f), 1.10f, 4.5f, true, LocalShadowTier.Medium);
             if (Contains(anchorName, "Dining") || Contains(anchorName, "Kitchen"))
-                return new LocalLightProfile(new Color(1f, 0.68f, 0.40f), 1.25f, 4.2f, false, LocalShadowTier.Low);
+                return new LocalLightProfile(new Color(1f, 0.68f, 0.40f), 0.90f, 3.8f, false, LocalShadowTier.Low);
             if (Contains(anchorName, "Bathroom") || Contains(anchorName, "Utility"))
-                return new LocalLightProfile(new Color(1f, 0.76f, 0.56f), 1.05f, 3.6f, false, LocalShadowTier.Low);
+                return new LocalLightProfile(new Color(1f, 0.76f, 0.56f), 0.78f, 3.2f, false, LocalShadowTier.Low);
             if (Contains(anchorName, "Hall") || Contains(anchorName, "Landing"))
-                return new LocalLightProfile(new Color(1f, 0.70f, 0.44f), 0.92f, 3.35f, false, LocalShadowTier.Low);
+                return new LocalLightProfile(new Color(1f, 0.70f, 0.44f), 0.60f, 3.0f, false, LocalShadowTier.Low);
 
             return house
-                ? new LocalLightProfile(new Color(1f, 0.68f, 0.40f), 1.10f, 4.0f, false, LocalShadowTier.Low)
+                ? new LocalLightProfile(new Color(1f, 0.68f, 0.40f), 0.85f, 3.8f, false, LocalShadowTier.Low)
                 : new LocalLightProfile(new Color(1f, 0.64f, 0.34f), 1.45f, 4.8f, false, LocalShadowTier.Low);
         }
 
@@ -210,13 +215,15 @@ namespace LetMeSleep.Presentation
         private readonly struct LocalLightProfile
         {
             public LocalLightProfile(
-                Color color, float intensity, float range, bool shadowCandidate, LocalShadowTier shadowTier)
+                Color color, float intensity, float range, bool shadowCandidate, LocalShadowTier shadowTier,
+                LightType type = LightType.Spot)
             {
                 Color = color;
                 Intensity = intensity;
                 Range = range;
                 ShadowCandidate = shadowCandidate;
                 ShadowTier = shadowTier;
+                Type = type;
             }
 
             public Color Color { get; }
@@ -224,6 +231,7 @@ namespace LetMeSleep.Presentation
             public float Range { get; }
             public bool ShadowCandidate { get; }
             public LocalShadowTier ShadowTier { get; }
+            public LightType Type { get; }
         }
 
         private enum LocalShadowTier
