@@ -1,5 +1,5 @@
 {
-  "version": "0.9.4-alpha-character-integration-2",
+  "version": "0.9.4-alpha-character-motion-revision-3",
   "generator": "build_characters.py",
   "blender": "5.2.1 LTS",
   "source_units": "meters",
@@ -23,8 +23,8 @@
       "species": "Human",
       "mesh_count": 5,
       "bones": 64,
-      "triangles": 11224,
-      "vertices": 5680,
+      "triangles": 10924,
+      "vertices": 5530,
       "unweighted_vertices": 0,
       "bad_weight_sums": 0,
       "degenerate_triangles": 0,
@@ -60,18 +60,18 @@
         {
           "name": "Human_Walk",
           "start": 1,
-          "end": 31,
+          "end": 41,
           "fps": 30,
-          "duration_seconds": 1.0,
+          "duration_seconds": 1.3333333333333333,
           "loop": true,
           "root_motion": false
         },
         {
           "name": "Human_Run",
           "start": 1,
-          "end": 21,
+          "end": 25,
           "fps": 30,
-          "duration_seconds": 0.6666666666666666,
+          "duration_seconds": 0.8,
           "loop": true,
           "root_motion": false
         },
@@ -87,9 +87,18 @@
         {
           "name": "Human_Jump",
           "start": 1,
-          "end": 31,
+          "end": 37,
           "fps": 30,
-          "duration_seconds": 1.0,
+          "duration_seconds": 1.2,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Land",
+          "start": 1,
+          "end": 19,
+          "fps": 30,
+          "duration_seconds": 0.6,
           "loop": false,
           "root_motion": false
         },
@@ -105,15 +114,6 @@
         {
           "name": "Human_Clap",
           "start": 1,
-          "end": 25,
-          "fps": 30,
-          "duration_seconds": 0.8,
-          "loop": false,
-          "root_motion": false
-        },
-        {
-          "name": "Human_Fall",
-          "start": 1,
           "end": 31,
           "fps": 30,
           "duration_seconds": 1.0,
@@ -121,11 +121,11 @@
           "root_motion": false
         },
         {
-          "name": "Human_Land",
+          "name": "Human_Swat",
           "start": 1,
-          "end": 19,
+          "end": 31,
           "fps": 30,
-          "duration_seconds": 0.6,
+          "duration_seconds": 1.0,
           "loop": false,
           "root_motion": false
         },
@@ -139,11 +139,20 @@
           "root_motion": false
         },
         {
+          "name": "Human_Fall",
+          "start": 1,
+          "end": 37,
+          "fps": 30,
+          "duration_seconds": 1.2,
+          "loop": false,
+          "root_motion": false
+        },
+        {
           "name": "Human_Faint",
           "start": 1,
-          "end": 46,
+          "end": 55,
           "fps": 30,
-          "duration_seconds": 1.5,
+          "duration_seconds": 1.8,
           "loop": false,
           "root_motion": false
         },
@@ -153,15 +162,6 @@
           "end": 61,
           "fps": 30,
           "duration_seconds": 2.0,
-          "loop": false,
-          "root_motion": false
-        },
-        {
-          "name": "Human_Swat",
-          "start": 1,
-          "end": 25,
-          "fps": 30,
-          "duration_seconds": 0.8,
           "loop": false,
           "root_motion": false
         }
@@ -177,9 +177,11 @@
         }
       },
       "contact": {
-        "clap_palm_center_distance_m": 0.05000004833561826,
+        "clap_palm_center_distance_m": 0.05008772757227183,
         "approximate_palm_thickness_m": 0.048,
-        "target_surface_gap_m": 0.002
+        "target_surface_gap_m": 0.002,
+        "sample_frame": 15,
+        "minimum_leg_reach_margin_m": 0.0015927914013900146
       },
       "bounds_min": [
         -0.9374077320098877,
@@ -188,12 +190,12 @@
       ],
       "bounds_max": [
         0.9374076128005981,
-        0.1850000023841858,
+        0.18000000715255737,
         1.9284138679504395
       ],
       "dimensions": [
         1.8748153448104858,
-        0.4350000023841858,
+        0.4300000071525574,
         1.9284138679504395
       ],
       "sockets": [
@@ -569,12 +571,12 @@
           "parent": "Hand.L",
           "head_blender_m": [
             0.8500000238418579,
-            -0.02500000037252903,
+            -0.03999999910593033,
             1.149999976158142
           ],
           "tail_blender_m": [
             0.8500000238418579,
-            -0.07500000298023224,
+            -0.09000000357627869,
             1.149999976158142
           ]
         },
@@ -849,12 +851,12 @@
           "parent": "Hand.R",
           "head_blender_m": [
             -0.8500000238418579,
-            -0.02500000037252903,
+            -0.03999999910593033,
             1.149999976158142
           ],
           "tail_blender_m": [
             -0.8500000238418579,
-            -0.07500000298023224,
+            -0.09000000357627869,
             1.149999976158142
           ]
         },
@@ -1294,48 +1296,12 @@
       "nonfinite_vertices": 0,
       "clips": [
         {
-          "name": "Mosquito_Idle",
-          "start": 1,
-          "end": 31,
-          "fps": 30,
-          "duration_seconds": 1.0,
-          "loop": true,
-          "root_motion": false
-        },
-        {
           "name": "Mosquito_Fly",
           "start": 1,
           "end": 13,
           "fps": 30,
           "duration_seconds": 0.4,
           "loop": true,
-          "root_motion": false
-        },
-        {
-          "name": "Mosquito_Land",
-          "start": 1,
-          "end": 25,
-          "fps": 30,
-          "duration_seconds": 0.8,
-          "loop": false,
-          "root_motion": false
-        },
-        {
-          "name": "Mosquito_Bite",
-          "start": 1,
-          "end": 31,
-          "fps": 30,
-          "duration_seconds": 1.0,
-          "loop": false,
-          "root_motion": false
-        },
-        {
-          "name": "Mosquito_Hit",
-          "start": 1,
-          "end": 25,
-          "fps": 30,
-          "duration_seconds": 0.8,
-          "loop": false,
           "root_motion": false
         },
         {
@@ -1348,21 +1314,12 @@
           "root_motion": false
         },
         {
-          "name": "Mosquito_Brake",
+          "name": "Mosquito_Idle",
           "start": 1,
-          "end": 19,
+          "end": 61,
           "fps": 30,
-          "duration_seconds": 0.6,
-          "loop": false,
-          "root_motion": false
-        },
-        {
-          "name": "Mosquito_PerchEnter",
-          "start": 1,
-          "end": 25,
-          "fps": 30,
-          "duration_seconds": 0.8,
-          "loop": false,
+          "duration_seconds": 2.0,
+          "loop": true,
           "root_motion": false
         },
         {
@@ -1375,20 +1332,47 @@
           "root_motion": false
         },
         {
+          "name": "Mosquito_PerchEnter",
+          "start": 1,
+          "end": 25,
+          "fps": 30,
+          "duration_seconds": 0.8,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Mosquito_Land",
+          "start": 1,
+          "end": 25,
+          "fps": 30,
+          "duration_seconds": 0.8,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Mosquito_Brake",
+          "start": 1,
+          "end": 25,
+          "fps": 30,
+          "duration_seconds": 0.8,
+          "loop": false,
+          "root_motion": false
+        },
+        {
           "name": "Mosquito_SurfaceWalk",
           "start": 1,
-          "end": 19,
+          "end": 31,
           "fps": 30,
-          "duration_seconds": 0.6,
+          "duration_seconds": 1.0,
           "loop": true,
           "root_motion": false
         },
         {
           "name": "Mosquito_BiteStart",
           "start": 1,
-          "end": 13,
+          "end": 19,
           "fps": 30,
-          "duration_seconds": 0.4,
+          "duration_seconds": 0.6,
           "loop": false,
           "root_motion": false
         },
@@ -1402,7 +1386,25 @@
           "root_motion": false
         },
         {
+          "name": "Mosquito_Bite",
+          "start": 1,
+          "end": 37,
+          "fps": 30,
+          "duration_seconds": 1.2,
+          "loop": false,
+          "root_motion": false
+        },
+        {
           "name": "Mosquito_Detach",
+          "start": 1,
+          "end": 19,
+          "fps": 30,
+          "duration_seconds": 0.6,
+          "loop": false,
+          "root_motion": false
+        },
+        {
+          "name": "Mosquito_Hit",
           "start": 1,
           "end": 19,
           "fps": 30,
@@ -1422,9 +1424,9 @@
         {
           "name": "Mosquito_Recover",
           "start": 1,
-          "end": 31,
+          "end": 37,
           "fps": 30,
-          "duration_seconds": 1.0,
+          "duration_seconds": 1.2,
           "loop": false,
           "root_motion": false
         }
@@ -1439,19 +1441,19 @@
         "gameplay_collision_radius_m": 0.055
       },
       "bounds_min": [
-        -0.24034053087234497,
+        -0.2404453605413437,
         -0.1899999976158142,
-        -0.10239865630865097
+        -0.10245659202337265
       ],
       "bounds_max": [
-        0.24034053087234497,
+        0.2404453605413437,
         0.19154348969459534,
-        0.06949436664581299
+        0.08647826313972473
       ],
       "dimensions": [
-        0.48068106174468994,
+        0.4808907210826874,
         0.38154348731040955,
-        0.17189302295446396
+        0.18893485516309738
       ],
       "sockets": [
         "Socket.Mouth",
@@ -1695,26 +1697,26 @@
           "parent": "Thorax",
           "head_blender_m": [
             0.026000000536441803,
-            -0.03200000151991844,
+            -0.032999999821186066,
             -0.0010000000474974513
           ],
           "tail_blender_m": [
-            0.06499999761581421,
-            -0.04500000178813934,
-            -0.032999999821186066
+            0.06300000101327896,
+            -0.05380000174045563,
+            -0.03200000151991844
           ]
         },
         {
           "name": "Leg102.L",
           "parent": "Leg101.L",
           "head_blender_m": [
-            0.06499999761581421,
-            -0.04500000178813934,
-            -0.032999999821186066
+            0.06300000101327896,
+            -0.05380000174045563,
+            -0.03200000151991844
           ],
           "tail_blender_m": [
-            0.09200000017881393,
-            0.007000000216066837,
+            0.09000000357627869,
+            -0.08500000089406967,
             -0.09600000083446503
           ]
         },
@@ -1722,13 +1724,13 @@
           "name": "Leg103.L",
           "parent": "Leg102.L",
           "head_blender_m": [
-            0.09200000017881393,
-            0.007000000216066837,
+            0.09000000357627869,
+            -0.08500000089406967,
             -0.09600000083446503
           ],
           "tail_blender_m": [
             0.10100000351667404,
-            0.023000000044703484,
+            -0.07900000363588333,
             -0.10100000351667404
           ]
         },
@@ -1741,22 +1743,22 @@
             -0.0010000000474974513
           ],
           "tail_blender_m": [
-            0.06499999761581421,
-            -0.007000000216066837,
-            -0.032999999821186066
+            0.06300000101327896,
+            0.01080000028014183,
+            -0.03200000151991844
           ]
         },
         {
           "name": "Leg202.L",
           "parent": "Leg201.L",
           "head_blender_m": [
-            0.06499999761581421,
-            -0.007000000216066837,
-            -0.032999999821186066
+            0.06300000101327896,
+            0.01080000028014183,
+            -0.03200000151991844
           ],
           "tail_blender_m": [
-            0.09200000017881393,
-            0.04500000178813934,
+            0.09000000357627869,
+            0.017999999225139618,
             -0.09600000083446503
           ]
         },
@@ -1764,13 +1766,13 @@
           "name": "Leg203.L",
           "parent": "Leg202.L",
           "head_blender_m": [
-            0.09200000017881393,
-            0.04500000178813934,
+            0.09000000357627869,
+            0.017999999225139618,
             -0.09600000083446503
           ],
           "tail_blender_m": [
             0.10100000351667404,
-            0.061000000685453415,
+            0.024000000208616257,
             -0.10100000351667404
           ]
         },
@@ -1779,26 +1781,26 @@
           "parent": "Thorax",
           "head_blender_m": [
             0.026000000536441803,
-            0.03999999910593033,
+            0.041999999433755875,
             -0.0010000000474974513
           ],
           "tail_blender_m": [
-            0.06499999761581421,
-            0.027000000700354576,
-            -0.032999999821186066
+            0.06300000101327896,
+            0.06880000233650208,
+            -0.03200000151991844
           ]
         },
         {
           "name": "Leg302.L",
           "parent": "Leg301.L",
           "head_blender_m": [
-            0.06499999761581421,
-            0.027000000700354576,
-            -0.032999999821186066
+            0.06300000101327896,
+            0.06880000233650208,
+            -0.03200000151991844
           ],
           "tail_blender_m": [
-            0.09200000017881393,
-            0.07900000363588333,
+            0.09000000357627869,
+            0.10899999737739563,
             -0.09600000083446503
           ]
         },
@@ -1806,13 +1808,13 @@
           "name": "Leg303.L",
           "parent": "Leg302.L",
           "head_blender_m": [
-            0.09200000017881393,
-            0.07900000363588333,
+            0.09000000357627869,
+            0.10899999737739563,
             -0.09600000083446503
           ],
           "tail_blender_m": [
             0.10100000351667404,
-            0.0949999988079071,
+            0.11500000208616257,
             -0.10100000351667404
           ]
         },
@@ -1849,26 +1851,26 @@
           "parent": "Thorax",
           "head_blender_m": [
             -0.026000000536441803,
-            -0.03200000151991844,
+            -0.032999999821186066,
             -0.0010000000474974513
           ],
           "tail_blender_m": [
-            -0.06499999761581421,
-            -0.04500000178813934,
-            -0.032999999821186066
+            -0.06300000101327896,
+            -0.05380000174045563,
+            -0.03200000151991844
           ]
         },
         {
           "name": "Leg102.R",
           "parent": "Leg101.R",
           "head_blender_m": [
-            -0.06499999761581421,
-            -0.04500000178813934,
-            -0.032999999821186066
+            -0.06300000101327896,
+            -0.05380000174045563,
+            -0.03200000151991844
           ],
           "tail_blender_m": [
-            -0.09200000017881393,
-            0.007000000216066837,
+            -0.09000000357627869,
+            -0.08500000089406967,
             -0.09600000083446503
           ]
         },
@@ -1876,13 +1878,13 @@
           "name": "Leg103.R",
           "parent": "Leg102.R",
           "head_blender_m": [
-            -0.09200000017881393,
-            0.007000000216066837,
+            -0.09000000357627869,
+            -0.08500000089406967,
             -0.09600000083446503
           ],
           "tail_blender_m": [
             -0.10100000351667404,
-            0.023000000044703484,
+            -0.07900000363588333,
             -0.10100000351667404
           ]
         },
@@ -1895,22 +1897,22 @@
             -0.0010000000474974513
           ],
           "tail_blender_m": [
-            -0.06499999761581421,
-            -0.007000000216066837,
-            -0.032999999821186066
+            -0.06300000101327896,
+            0.01080000028014183,
+            -0.03200000151991844
           ]
         },
         {
           "name": "Leg202.R",
           "parent": "Leg201.R",
           "head_blender_m": [
-            -0.06499999761581421,
-            -0.007000000216066837,
-            -0.032999999821186066
+            -0.06300000101327896,
+            0.01080000028014183,
+            -0.03200000151991844
           ],
           "tail_blender_m": [
-            -0.09200000017881393,
-            0.04500000178813934,
+            -0.09000000357627869,
+            0.017999999225139618,
             -0.09600000083446503
           ]
         },
@@ -1918,13 +1920,13 @@
           "name": "Leg203.R",
           "parent": "Leg202.R",
           "head_blender_m": [
-            -0.09200000017881393,
-            0.04500000178813934,
+            -0.09000000357627869,
+            0.017999999225139618,
             -0.09600000083446503
           ],
           "tail_blender_m": [
             -0.10100000351667404,
-            0.061000000685453415,
+            0.024000000208616257,
             -0.10100000351667404
           ]
         },
@@ -1933,26 +1935,26 @@
           "parent": "Thorax",
           "head_blender_m": [
             -0.026000000536441803,
-            0.03999999910593033,
+            0.041999999433755875,
             -0.0010000000474974513
           ],
           "tail_blender_m": [
-            -0.06499999761581421,
-            0.027000000700354576,
-            -0.032999999821186066
+            -0.06300000101327896,
+            0.06880000233650208,
+            -0.03200000151991844
           ]
         },
         {
           "name": "Leg302.R",
           "parent": "Leg301.R",
           "head_blender_m": [
-            -0.06499999761581421,
-            0.027000000700354576,
-            -0.032999999821186066
+            -0.06300000101327896,
+            0.06880000233650208,
+            -0.03200000151991844
           ],
           "tail_blender_m": [
-            -0.09200000017881393,
-            0.07900000363588333,
+            -0.09000000357627869,
+            0.10899999737739563,
             -0.09600000083446503
           ]
         },
@@ -1960,13 +1962,13 @@
           "name": "Leg303.R",
           "parent": "Leg302.R",
           "head_blender_m": [
-            -0.09200000017881393,
-            0.07900000363588333,
+            -0.09000000357627869,
+            0.10899999737739563,
             -0.09600000083446503
           ],
           "tail_blender_m": [
             -0.10100000351667404,
-            0.0949999988079071,
+            0.11500000208616257,
             -0.10100000351667404
           ]
         },
@@ -2179,57 +2181,85 @@
     }
   ],
   "files": {
+    "audit_motion.py": {
+      "sha256": "647847032e72bf3ef2c34b4289a19f9e00c80490869442832bea89fe3ac08474",
+      "bytes": 9136
+    },
+    "author_motion.py": {
+      "sha256": "a1a4d855d7f19141660bf83a0813f439de672585436dae27397c189cabac9339",
+      "bytes": 12872
+    },
     "build_characters.py": {
-      "sha256": "1d2162775092a86f0d15cec9d411cc53897c898c7f2bddcec374bad8000076fc",
-      "bytes": 34759
+      "sha256": "b5c26019fbcf0ac2f18ffba9e6d7f41721da79910338823d359a532a95b843d9",
+      "bytes": 30217
+    },
+    "check_motion_audit.py": {
+      "sha256": "87a1181c2a1beabe7153ec5ed4e42b6b4971b7f99108060aef0890f9df56c5d2",
+      "bytes": 2451
     },
     "compile_unity.py": {
       "sha256": "9896720ccb80995441c52b482524f7c1d3ff2f0d14f83b4cd490a003da1a0ae9",
       "bytes": 2187
     },
     "fbx_roundtrip.json": {
-      "sha256": "bf56febe1d979a4f3326bf726d6f0fe36624e450393ce374c04a6dbc543e396b",
-      "bytes": 2754
+      "sha256": "a1a3c096af5efc97557aa0b0499408024bc9fcbc713267bf37885aa4ec9b1d82",
+      "bytes": 3296
     },
     "flyswatter/audit.json": {
       "sha256": "8746b773998015b57cb4438ab873b46408cc50cda6b9a489c2f7e14f81e271f3",
       "bytes": 2126
     },
     "flyswatter/LMS_Flyswatter_alpha.blend": {
-      "sha256": "45278840e215880607219bc7da05ad710a4e0ddc1e38dc04fd800434f5e52aa9",
-      "bytes": 120824
+      "sha256": "c1d19a8f62f38e29f38f00cc564d8f20ee634febdbd6d0c27eda12c2494759eb",
+      "bytes": 120835
     },
     "flyswatter/LMS_Flyswatter_alpha.fbx": {
-      "sha256": "e765d7e9da680910863174a83699aa0e020f28add20dfb427ac58caf017bb0f3",
+      "sha256": "62f9f31d046b6a2c7bc1a6a8b12c4f37cc24c0ef3090a04e0840928425e7bf5e",
       "bytes": 31964
     },
     "human/audit.json": {
-      "sha256": "41ad34467d2c40874cff278492fee1168f30a83c78d33785f6a2d0aa1a41e72c",
-      "bytes": 24143
+      "sha256": "32ae4faa9b56288c7d29ce08ad829aab379bbd27553b35bab7e5528076918bdc",
+      "bytes": 24225
     },
     "human/LMS_Human_alpha.blend": {
-      "sha256": "b8b658cca23540572711e78a0759abc68e04ff7a84de6860655f9c40dfab4e62",
-      "bytes": 632635
+      "sha256": "4e81d0b6a4672155d5f2b7a03fe378d555e75d3f8eec51c5104fd129a5029965",
+      "bytes": 1004848
     },
     "human/LMS_Human_alpha.fbx": {
-      "sha256": "9795fd298c02c57d954353dbc6b73697042ab88797de10b7f03bff1abd2f1574",
-      "bytes": 8025772
+      "sha256": "25eed8e425dfab509760e8713950bd4e550a88daf1e1c0e5f3c7e1e1f78dfe95",
+      "bytes": 8112332
     },
     "integration.json": {
-      "sha256": "51c06ba21056c6d658f7f6fb6ba36b76c79141aa1c17e064ca866b09d0c4fcf2",
-      "bytes": 3553
+      "sha256": "452c9c4543bfb07ee26fc229a85705c3b3bea2c797774d03a4adcabcc741777f",
+      "bytes": 3938
     },
     "mosquito/audit.json": {
-      "sha256": "8f5b862e68ab304e0699af67abb93bdba6b055ac12e26cc16c594c38f8987cdf",
-      "bytes": 15802
+      "sha256": "bf7fbc9fc476faa1b26bc00af0f854365f2fab62a5a368ada887bbc63b73912f",
+      "bytes": 15785
     },
     "mosquito/LMS_Mosquito_alpha.blend": {
-      "sha256": "fd1ff24c97a6fe88ec34a3b62aaa9d5e49f565c932353c8d6a079f58d49ccec3",
-      "bytes": 270734
+      "sha256": "6ad0b09ff1c48a0b2b727b7e5e780d507da459b35de05c9586c9419e5a46a458",
+      "bytes": 397821
     },
     "mosquito/LMS_Mosquito_alpha.fbx": {
-      "sha256": "6b64bf99d5bb1e01149b6419a952864b273e566ec822e996deedec68e6b0218b",
-      "bytes": 3721388
+      "sha256": "49e2f87ed548b113ba915ee46e7d989df59dbf7cad6e08876b8e3594b3aac088",
+      "bytes": 3766444
+    },
+    "motion_audit.json": {
+      "sha256": "dbf5fc158be4e8e8dcf41bf4421ed272a23a9992e91cdd58dea742b6b4d1341b",
+      "bytes": 210922
+    },
+    "motion_audit_before.json": {
+      "sha256": "bf00b63c92f54a79a5fa9c8be640d2471e39e1375ea685ac485b22dbd505c4da",
+      "bytes": 213381
+    },
+    "motion_gate.json": {
+      "sha256": "3fee6bcf85d8d892eb3e05fe02fd05e2c0fa11077255457fd8246e406d81bb64",
+      "bytes": 258
+    },
+    "plan_visual_evidence.py": {
+      "sha256": "d260e0a89a1315ccdc9a29e8be2a6c82b8df79301a51f78212faa617f623c7bc",
+      "bytes": 6547
     },
     "render_review.py": {
       "sha256": "b7fcc64b091bb2daff37a3d22ab960f6c76868e66db280417b8b32e5f78cd59c",
@@ -2280,16 +2310,20 @@
       "bytes": 682488
     },
     "seal_manifest.py": {
-      "sha256": "1fb104fc6669cc74278dbbbcd83905b75d8e26a401f756a9e385b2c58d31a101",
-      "bytes": 2140
+      "sha256": "c865bf3272521071c2f3154ff441766bf99408f6224b466bd649387b4ea56e9e",
+      "bytes": 3113
     },
     "unity_compile.json": {
       "sha256": "6117fd994e58ca44c66e2224280ba1d6fb1c81a1b29ec832b1bf3f2017241fec",
       "bytes": 819
     },
     "verify_fbx.py": {
-      "sha256": "1973b25f051d9c9ffef5919bd83a16e67956b0d787f02e27cd36b798bf2ce17b",
-      "bytes": 2273
+      "sha256": "f0b8a5dfea0e1fff3fc4ba6e8138bb9f6961ca1fc1a68ff17bf53325a2bbf473",
+      "bytes": 2505
+    },
+    "visual_evidence_jobs.json": {
+      "sha256": "0a847daae5f4f0326fb4a27eeefaf920dfdf88ea9a37d77ff1d352e2f251e03c",
+      "bytes": 71864
     }
   },
   "review_status": "Previous sample captures retained; integration revision needs Unity review",
@@ -2304,6 +2338,7 @@
     ]
   },
   "fbx_roundtrip_verified": true,
+  "source_motion_verified": true,
   "reference_images": {
     "work/references094/expanded/human-turnarounds.png": "23c18de0216b50d2a23c7c924e6453104f996c629ffd1db33f67c44a098e4e01",
     "work/references094/expanded/mosquito-turnarounds.png": "7babf3d0efca4d1eabd99add8eca896e8ad1eb4b54994725e939249a27e75d51",

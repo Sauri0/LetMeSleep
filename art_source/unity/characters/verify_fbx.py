@@ -1,6 +1,7 @@
 """Independent FBX import audit, no rendering. Run with Blender --background."""
 import bpy
 import json
+import hashlib
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
@@ -32,7 +33,9 @@ for species in ['Human','Mosquito','Flyswatter']:
     if len(rig.data.bones)!=source['bones']: errors.append('bone_count_changed')
     if triangles!=source['triangles']: errors.append('triangles_changed')
     if not all(any(clip['name'] in a for a in actions) for clip in source['clips']): errors.append('missing_action')
-    results.append({'species':species,'dimensions':dimensions,'triangles':triangles,'bones':len(rig.data.bones),
+    results.append({'species':species,'fbx_sha256':hashlib.sha256((folder/f'LMS_{species}_alpha.fbx').read_bytes()).hexdigest(),
+                    'source_audit_sha256':hashlib.sha256((folder/'audit.json').read_bytes()).hexdigest(),
+                    'dimensions':dimensions,'triangles':triangles,'bones':len(rig.data.bones),
                     'actions':actions,'sockets':sockets,'errors':errors,'passed':not errors})
 (ROOT/'fbx_roundtrip.json').write_text(json.dumps(results,indent=2),encoding='utf8',newline='\n')
 assert all(r['passed'] for r in results), results

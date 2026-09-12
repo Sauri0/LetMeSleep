@@ -1,12 +1,14 @@
 [
   {
     "species": "Human",
+    "fbx_sha256": "25eed8e425dfab509760e8713950bd4e550a88daf1e1c0e5f3c7e1e1f78dfe95",
+    "source_audit_sha256": "32ae4faa9b56288c7d29ce08ad829aab379bbd27553b35bab7e5528076918bdc",
     "dimensions": [
       1.8748153448104858,
-      0.4350002408027649,
+      0.4300002455711365,
       1.9284138840795872
     ],
-    "triangles": 11224,
+    "triangles": 10924,
     "bones": 64,
     "actions": [
       "LMS_HumanRig|LMS_HumanRig|Human_Blink",
@@ -40,10 +42,12 @@
   },
   {
     "species": "Mosquito",
+    "fbx_sha256": "49e2f87ed548b113ba915ee46e7d989df59dbf7cad6e08876b8e3594b3aac088",
+    "source_audit_sha256": "bf7fbc9fc476faa1b26bc00af0f854365f2fab62a5a368ada887bbc63b73912f",
     "dimensions": [
-      0.48068106174468994,
+      0.4808907210826874,
       0.38154347240924835,
-      0.17189303040504456
+      0.18893486261367798
     ],
     "triangles": 1736,
     "bones": 33,
@@ -78,6 +82,8 @@
   },
   {
     "species": "Flyswatter",
+    "fbx_sha256": "62f9f31d046b6a2c7bc1a6a8b12c4f37cc24c0ef3090a04e0840928425e7bf5e",
+    "source_audit_sha256": "8746b773998015b57cb4438ab873b46408cc50cda6b9a489c2f7e14f81e271f3",
     "dimensions": [
       0.17000000178813934,
       0.02282535657286644,

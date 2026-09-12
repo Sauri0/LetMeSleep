@@ -6,10 +6,12 @@ import bpy
 import math
 import json
 import hashlib
+import sys
 from pathlib import Path
-from mathutils import Vector, Matrix
+from mathutils import Vector, Matrix, Euler
 
 OUT = Path(__file__).resolve().parent
+sys.path.insert(0,str(OUT))
 FPS = 30
 
 
@@ -107,23 +109,29 @@ class Character:
 
     def clip(self, name, end, poses):
         self.rig.animation_data_create(); self.rig.animation_data.action=None
+        previous={}
         for frame, changes in poses:
             for b in self.rig.pose.bones:
-                b.rotation_euler=(0,0,0); b.location=(0,0,0); b.scale=(1,1,1)
+                b.rotation_mode='QUATERNION'; b.rotation_quaternion=(1,0,0,0)
+                b.location=(0,0,0); b.scale=(1,1,1)
             for bone, transform in changes.items():
                 b=self.rig.pose.bones[bone]
                 if isinstance(transform,dict):
-                    for prop,val in transform.items(): setattr(b,prop,val)
-                else: b.rotation_euler=transform
+                    for prop,val in transform.items():
+                        if prop=='rotation_euler': b.rotation_quaternion=Euler(val,'XYZ').to_quaternion()
+                        else: setattr(b,prop,val)
+                else: b.rotation_quaternion=Euler(transform,'XYZ').to_quaternion()
             for b in self.rig.pose.bones:
-                for prop in ('rotation_euler','location','scale'): b.keyframe_insert(prop,frame=frame)
+                if b.name in previous: b.rotation_quaternion.make_compatible(previous[b.name])
+                previous[b.name]=b.rotation_quaternion.copy()
+                for prop in ('rotation_quaternion','location','scale'): b.keyframe_insert(prop,frame=frame)
         action=self.rig.animation_data.action
         action.name=self.species+'_'+name; action.use_fake_user=True
         self.clips.append({'name':action.name,'start':1,'end':end,'fps':FPS,'duration_seconds':(end-1)/FPS,
                            'loop':name in ['Idle','Walk','Run','Fly','Hover','PerchIdle','SurfaceWalk','BiteLoop'],'root_motion':False})
         self.rig.animation_data.action=None
         for b in self.rig.pose.bones:
-            b.rotation_euler=(0,0,0); b.location=(0,0,0); b.scale=(1,1,1)
+            b.rotation_quaternion=(1,0,0,0); b.location=(0,0,0); b.scale=(1,1,1)
         bpy.context.view_layer.update()
 
     def export(self):
@@ -222,7 +230,7 @@ def human():
         c.bone('UpperArm.'+side,(s*.25,0,1.17),(s*.52,0,1.16),'Shoulder.'+side)
         c.bone('LowerArm.'+side,(s*.52,0,1.16),(s*.75,0,1.15),'UpperArm.'+side)
         c.bone('Hand.'+side,(s*.75,0,1.15),(s*.837,0,1.15),'LowerArm.'+side)
-        c.bone('Socket.Grip.'+side,(s*.85,-.025,1.15),(s*.85,-.075,1.15),'Hand.'+side,False)
+        c.bone('Socket.Grip.'+side,(s*.85,-.040,1.15),(s*.85,-.090,1.15),'Hand.'+side,False)
         c.bone('UpperLeg.'+side,(s*.125,0,.78),(s*.125,0,.44),'Hips')
         c.bone('LowerLeg.'+side,(s*.125,0,.44),(s*.125,0,.12),'UpperLeg.'+side)
         c.bone('Foot.'+side,(s*.125,0,.12),(s*.125,-.12,.07),'LowerLeg.'+side)
@@ -297,7 +305,19 @@ def human():
             longitudinal=(v.co-start).dot(direction)
             blend=max(0,min(1,(longitudinal+.007)/.023))
             if blend<1: groups['Hand.'+side].add([v.index],1-blend,'REPLACE')
-            if blend>0: groups[name].add([v.index],blend,'REPLACE')
+            if blend>0:
+                # Blend adjacent phalanges across their shared joint instead of assigning
+                # a hard nearest-bone step; this retains round finger sections on flexion.
+                segment_weights={name:1.0}
+                for joint in [1,2]:
+                    joint_at=(digitpaths[joint][1]-start).dot(direction)
+                    half_width=.010
+                    if abs(longitudinal-joint_at)<half_width:
+                        amount=(longitudinal-joint_at+half_width)/(2*half_width)
+                        segment_weights={digitpaths[joint-1][0]:1-amount,digitpaths[joint][0]:amount}
+                        break
+                for segment,weight in segment_weights.items():
+                    if weight>0:groups[segment].add([v.index],blend*weight,'REPLACE')
         # Smooth skin weights across welded joints, preserving a four-influence ceiling.
         neighbors=[set() for _ in hand.data.vertices]
         for edge in hand.data.edges:
@@ -315,30 +335,40 @@ def human():
         for group in hand.vertex_groups: group.remove(list(range(len(hand.data.vertices))))
         for i,weight in enumerate(weights):
             for group,w in weight.items(): hand.vertex_groups[group].add([i],w,'REPLACE')
+        for poly in hand.data.polygons: poly.use_smooth=True
         c.finger_paths[side]=paths
     torso=tube('PajamaJacket',[(0,0,z) for z in [.73,.81,.94,1.09,1.18,1.23,1.28]],
-               [.235,.245,.23,.235,.255,.22,.095],[.135,.15,.142,.145,.14,.135,.105],blue)
+               [.21,.22,.21,.225,.255,.22,.095],[.128,.14,.138,.145,.14,.135,.105],blue)
     groups={n:torso.vertex_groups.new(name=n) for n in ['Hips','Spine','Chest']}
     for v in torso.data.vertices:
         weights=(('Hips',1-max(0,min(1,(v.co.z-.79)/.15))),('Chest',max(0,min(1,(v.co.z-1.02)/.13))))
         wh,wc=[p[1] for p in weights]; ws=1-wh-wc
         for n,w in [('Hips',wh),('Spine',ws),('Chest',wc)]:
             if w>0: groups[n].add([v.index],w,'REPLACE')
-    strip('JacketPlacket',[(0,-.153,.83),(0,-.153,1.18)],.008,trim,'Chest')
+    strip('JacketPlacket',[(0,-.146,z) for z in [.83,.9,1.0,1.1,1.18]],.006,trim,'Chest')
     for z in [.91,1.015,1.12]: ellipsoid('JacketButton',(0,-.164,z),(.009,.004,.009),white,'Chest',8,4)
     strip('Collar.L',[(-.09,-.08,1.275),(-.075,-.144,1.205),(0,-.151,1.175)],.018,trim,'Chest')
     strip('Collar.R',[(.09,-.08,1.275),(.075,-.144,1.205),(0,-.151,1.175)],.018,trim,'Chest')
     strip('PocketPiping',[(.07,-.145,1.065),(.14,-.129,1.065)],.008,trim,'Chest')
+    # Jacket details deform with the same body weights instead of rotating rigidly
+    # through the lower torso when crouching or leaning.
+    for detail in [o for o in bpy.context.scene.objects if o.name.startswith(('JacketPlacket','JacketButton','PocketPiping'))]:
+        detail.vertex_groups.clear()
+        detail_groups={n:detail.vertex_groups.new(name=n) for n in ['Hips','Spine','Chest']}
+        for vertex in detail.data.vertices:
+            wh=1-max(0,min(1,(vertex.co.z-.79)/.15));wc=max(0,min(1,(vertex.co.z-1.02)/.13))
+            for name,weight in [('Hips',wh),('Spine',1-wh-wc),('Chest',wc)]:
+                if weight>0:detail_groups[name].add([vertex.index],weight,'REPLACE')
     tube('Neck',[(0,0,1.22),(0,0,1.37)],[.071,.083],[.067,.075],skin,'Neck')
     head=tube('Head',[(0,0,z) for z in [1.30,1.35,1.47,1.58,1.67,1.72]],
-              [.12,.19,.22,.215,.17,.08],[.115,.15,.185,.175,.145,.07],skin,'Head',20)
+              [.10,.15,.195,.205,.16,.075],[.10,.135,.18,.17,.14,.07],skin,'Head',16)
     # A small integral nose, never attached cheek spheres.
     for v in head.data.vertices:
-        if abs(v.co.x)<.01 and v.co.y<-.18 and abs(v.co.z-1.47)<.005: v.co.y-=.025
+        if abs(v.co.x)<.01 and v.co.y<-.17 and abs(v.co.z-1.47)<.005: v.co.y-=.032
     for side,s in [('L',1),('R',-1)]:
-        ellipsoid('Ear.'+side,(s*.211,0,1.50),(.033,.026,.048),skin,'Head',12,6)
-        ellipsoid('EyeWhite.'+side,(s*.087,-.169,1.552),(.072,.043,.077),white,'Eye.'+side)
-        ellipsoid('Pupil.'+side,(s*.077,-.209,1.552),(.025,.009,.035),dark,'Eye.'+side,12,6)
+        ellipsoid('Ear.'+side,(s*.195,0,1.50),(.027,.022,.043),skin,'Head',10,5)
+        ellipsoid('EyeWhite.'+side,(s*.084,-.161,1.552),(.063,.031,.069),white,'Eye.'+side,12,6)
+        ellipsoid('Pupil.'+side,(s*.077,-.191,1.552),(.022,.006,.030),dark,'Eye.'+side,12,6)
         strip('Brow.'+side,[(s*.028,-.174,1.642),(s*.083,-.19,1.658),(s*.148,-.154,1.641)],.012,dark,'Brow.'+side)
     strip('Mouth',[(-.048,-.158,1.403),(0,-.177,1.393),(.048,-.158,1.403)],.006,dark,'Head')
     tube('Nightcap',[(0,0,1.666),(0,.015,1.75),(.045,.024,1.85),(.13,.025,1.88),(.20,.02,1.81)],
@@ -354,66 +384,8 @@ def human():
         c.curl[side]={'inward_displacement_m':(tip-rest).dot(Vector((0,-1,0))), 'angle_radians_per_joint':.55}
         for i in range(1,4): c.rig.pose.bones[f'Index{i:02d}.'+side].rotation_euler.x=0
         bpy.context.view_layer.update()
-    def relaxed(): return {'UpperArm.L':(0,0,-1.20),'UpperArm.R':(0,0,1.20),'LowerArm.L':(.12,0,0),'LowerArm.R':(.12,0,0)}
-    idle=relaxed(); breathe={**idle,'Chest':(.025,0,0)}
-    c.clip('Idle',61,[(1,idle),(31,breathe),(61,idle)])
-    curled={name:(.65,0,0) for side in ['L','R'] for name,*_ in c.finger_paths[side]}
-    c.clip('FingerCurl',61,[(1,{}),(16,curled),(46,curled),(61,{})])
-    closed={**idle,'Eye.L':{'scale':(1,1,.09)},'Eye.R':{'scale':(1,1,.09)}}
-    c.clip('Blink',31,[(1,idle),(12,idle),(15,closed),(18,idle),(31,idle)])
-    for name,angle,duration in [('Walk',.40,31),('Run',.68,21)]:
-        poses=[]
-        for frame,sign in [(1,1),((duration+1)//2,-1),(duration,1)]:
-            p=relaxed()
-            for side,s in [('L',1),('R',-1)]:
-                p['UpperLeg.'+side]=(sign*s*angle,0,0)
-                p['LowerLeg.'+side]=(-max(0,sign*s)*angle*.85,0,0)
-                p['UpperArm.'+side]=(-sign*s*angle*.6,0,-s*1.2)
-            poses.append((frame,p))
-        c.clip(name,duration,poses)
-    crouch={**idle,'Hips':{'location':(0,-.30,0)},'UpperLeg.L':(.75,0,0),'UpperLeg.R':(.75,0,0),'LowerLeg.L':(-1.25,0,0),'LowerLeg.R':(-1.25,0,0),'Chest':(-.25,0,0)}
-    c.clip('Crouch',31,[(1,idle),(16,crouch),(31,crouch)])
-    c.clip('Jump',31,[(1,idle),(8,crouch),(16,{**idle,'Hips':{'location':(0,.15,0)},'LowerLeg.L':(-.5,0,0),'LowerLeg.R':(-.5,0,0)}),(25,crouch),(31,idle)])
-    c.clip('Turn',31,[(1,idle),(16,{**idle,'Chest':(0,.28,0),'Head':(0,.22,0)}),(31,idle)])
-    def solve_clap(separation):
-        """Analytic two-bone reach; contact uses posed palms, not guessed angles."""
-        for pb in c.rig.pose.bones: pb.rotation_euler=(0,0,0)
-        bpy.context.view_layer.update()
-        pose={}; centers=[]
-        def point_bone(name,origin,direction,normal):
-            y=direction.normalized(); z=(normal-y*normal.dot(y)).normalized(); x=y.cross(z).normalized()
-            rotation=Matrix((x,y,z)).transposed().to_4x4(); rotation.translation=origin
-            pb=c.rig.pose.bones[name]; pb.matrix=rotation
-            bpy.context.view_layer.update(); pose[name]=tuple(pb.rotation_euler)
-        for side,s in [('L',1),('R',-1)]:
-            upper=c.rig.pose.bones['UpperArm.'+side]; lower=c.rig.pose.bones['LowerArm.'+side]
-            shoulder=upper.head.copy(); wrist=Vector((s*separation,-.38,1.05))
-            vector=wrist-shoulder; distance=vector.length; direction=vector.normalized()
-            a=upper.length; b=lower.length
-            along=(a*a-b*b+distance*distance)/(2*distance)
-            pole=Vector((s*.65,-.12,.96))-shoulder
-            perpendicular=(pole-direction*pole.dot(direction)).normalized()
-            elbow=shoulder+direction*along+perpendicular*math.sqrt(max(0,a*a-along*along))
-            point_bone('UpperArm.'+side,shoulder,elbow-shoulder,Vector((0,-1,0)))
-            point_bone('LowerArm.'+side,elbow,wrist-elbow,Vector((0,-1,0)))
-            point_bone('Hand.'+side,wrist,Vector((0,0,1)),Vector((-s,0,0)))
-            centers.append(c.rig.pose.bones['Hand.'+side].matrix@Vector((0,.042,0)))
-        if abs(separation-.025)<1e-6:
-            c.contact={'clap_palm_center_distance_m':(centers[0]-centers[1]).length,
-                       'approximate_palm_thickness_m':.048,'target_surface_gap_m':.002}
-        for pb in c.rig.pose.bones: pb.rotation_euler=(0,0,0)
-        bpy.context.view_layer.update()
-        return pose
-    clap_open=solve_clap(.15); clap_contact=solve_clap(.025)
-    c.clip('Clap',25,[(1,idle),(8,clap_open),(12,clap_contact),(16,clap_open),(25,idle)])
-    c.clip('Fall',31,[(1,idle),(16,{**idle,'Hips':{'rotation_euler':(1.2,0,.15),'location':(0,-.4,0)}}),(31,{**idle,'Hips':{'rotation_euler':(1.57,0,.15),'location':(0,-.60,0)}})])
-    prone={**idle,'Hips':{'rotation_euler':(1.57,0,.15),'location':(0,-.60,0)},'Head':(.18,0,.10)}
-    c.clip('Land',19,[(1,crouch),(8,{**idle,'Chest':(-.12,0,0)}),(19,idle)])
-    c.clip('Hit',19,[(1,idle),(5,{**idle,'Chest':(.16,0,-.10),'Head':(-.15,0,.15)}),(19,idle)])
-    c.clip('Faint',46,[(1,idle),(12,{**idle,'Head':(.38,0,.10),'Chest':(-.18,0,0)}),(25,crouch),(46,prone)])
-    c.clip('Recover',61,[(1,prone),(20,{**crouch,'Chest':(-.40,0,.12)}),(42,crouch),(61,idle)])
-    c.clip('Swat',25,[(1,idle),(8,{**idle,'UpperArm.R':(-.75,.2,1.3),'LowerArm.R':(.6,0,0)}),
-                      (13,{**idle,'UpperArm.R':(.70,-.2,.65),'LowerArm.R':(.15,0,0)}),(25,idle)])
+    from author_motion import human as animate_human
+    animate_human(c)
     return c.export()
 
 
@@ -451,58 +423,26 @@ def mosquito():
         strip('Antenna.'+side,[p(s*.013,-.076,.140),p(s*.026,-.08,.166),p(s*.043,-.086,.171)],.002,dark,'Head')
         c.bone('Wing.'+side,p(s*.017,.0,.132),p(s*.22,.065,.163),'Thorax')
         c.bone('Socket.WingRoot.'+side,p(s*.017,0,.132),p(s*.017,-.02,.132),'Thorax',False)
-        verts=[p(s*x,y,z) for x,y,z in [(.017,0,.132),(.125,-.002,.163),(.24,.060,.173),(.193,.104,.167),(.067,.072,.143)]]
+        verts=[p(s*x,y,z) for x,y,z in [(.017,0,.132),(.118,.018,.169),(.24,.100,.19),(.150,.110,.176),(.055,.044,.145)]]
         # Thin solid double-sided geometry keeps FBX silhouette independent of culling settings.
         verts += [(x,y,z-.0006) for x,y,z in verts]
         faces=[(0,1,2,3,4),(9,8,7,6,5)]+[(i,(i+1)%5,(i+1)%5+5,i+5) for i in range(5)]
         mesh('WingMembrane.'+side,verts,faces,wing,'Wing.'+side)
         strip('WingLeadingEdge.'+side,[verts[i] for i in [0,1,2]],.0015,shell,'Wing.'+side)
         strip('WingVein.'+side,[verts[i] for i in [0,3]],.0008,shell,'Wing.'+side)
-        for i,y in enumerate([-.032,.006,.040],1):
-            pts=[p(s*.026,y,.104),p(s*.065,y-.013,.072),p(s*.092,y+.039,.009),p(s*.101,y+.055,.004)]
+        for i,(y,dy) in enumerate([(-.033,-.052),(.006,.012),(.042,.067)],1):
+            pts=[p(s*.026,y,.104),p(s*.063,y+dy*.4,.073),p(s*.090,y+dy,.009),p(s*.101,y+dy+.006,.004)]
             parent='Thorax'
             for j in range(3):
                 name=f'Leg{i}{j+1:02d}.{side}'
                 c.bone(name,pts[j],pts[j+1],parent); parent=name
                 tube('Limb_'+name,[pts[j],pts[j+1]],[.0035-j*.0007,.0030-j*.0007],[.0035-j*.0007,.0030-j*.0007],dark,name,6)
     c.bind()
-    c.clip('Idle',31,[(1,{}),(16,{'Abdomen01':(.05,0,0)}),(31,{})])
     mouth=c.rig.data.bones['Socket.Mouth'].head_local
     c.contact={'gameplay_tip_rest_unity_m':[mouth.x*.5,mouth.z*.5,-mouth.y*.5],
                'gameplay_collision_radius_m':.055}
-    assert (Vector(c.contact['gameplay_tip_rest_unity_m'])-Vector((0,0,.095))).length<1e-6
-    flight=[]
-    for frame,sign in [(1,1),(3,-1),(5,1),(7,-1),(9,1),(11,-1),(13,1)]:
-        pose={'Wing.L':(sign*.62,0,0),'Wing.R':(sign*.62,0,0),'Abdomen01':(-.08,0,0)}
-        for side in ['L','R']:
-            for i in range(1,4): pose[f'Leg{i}02.{side}']=(.55,0,0)
-        flight.append((frame,pose))
-    c.clip('Fly',13,flight)
-    c.clip('Land',25,[(1,flight[0][1]),(13,{'Wing.L':(.15,.15,0),'Wing.R':(.15,-.15,0)}),(25,{})])
-    c.clip('Bite',31,[(1,{}),(9,{'Head':(.22,0,0),'Proboscis':(.16,0,0)}),(23,{'Head':(.25,0,0),'Proboscis':(.16,0,0),'Abdomen01':(-.08,0,0)}),(31,{})])
-    c.clip('Hit',25,[(1,{}),(9,{'Thorax':(.7,0,1.4),'Wing.L':(.8,0,0),'Wing.R':(-.3,0,0)}),(25,{'Thorax':(1.5,0,2.6)})])
-    folded={'Wing.L':(.12,.30,0),'Wing.R':(.12,-.30,0),'Abdomen01':(.06,0,0)}
-    bite={'Head':(.22,0,0),'Proboscis':(.16,0,0),**folded}
-    fallen={'Thorax':(1.5,0,2.6),'Wing.L':(.9,.2,0),'Wing.R':(.9,-.2,0)}
-    c.clip('Hover',13,[(f,{**pose,'Abdomen01':(.025*math.sin(2*math.pi*(f-1)/12),0,0)}) for f,pose in flight])
-    c.clip('Brake',19,[(1,flight[0][1]),(7,{'Thorax':(-.24,0,0),'Wing.L':(.85,0,0),'Wing.R':(.85,0,0)}),(19,folded)])
-    c.clip('PerchEnter',25,[(1,flight[0][1]),(12,{'Thorax':(-.12,0,0),**folded}),(25,folded)])
-    c.clip('PerchIdle',61,[(1,folded),(31,{**folded,'Abdomen01':(.08,0,0)}),(61,folded)])
-    walk=[]
-    for frame,sign in [(1,1),(10,-1),(19,1)]:
-        pose=dict(folded)
-        for side,s in [('L',1),('R',-1)]:
-            for i in range(1,4):
-                phase=sign*s*(-1 if i==2 else 1)
-                pose[f'Leg{i}01.{side}']=(phase*.15,0,phase*.18)
-                pose[f'Leg{i}02.{side}']=(max(0,phase)*.25,0,0)
-        walk.append((frame,pose))
-    c.clip('SurfaceWalk',19,walk)
-    c.clip('BiteStart',13,[(1,folded),(13,bite)])
-    c.clip('BiteLoop',31,[(1,bite),(16,{**bite,'Abdomen01':(.035,0,0),'Abdomen02':(-.04,0,0)}),(31,bite)])
-    c.clip('Detach',19,[(1,bite),(7,{'Head':(-.15,0,0),'Wing.L':(.7,0,0),'Wing.R':(.7,0,0)}),(19,flight[0][1])])
-    c.clip('Fall',31,[(1,{}),(11,{'Thorax':(.6,.3,1.0)}),(31,fallen)])
-    c.clip('Recover',31,[(1,fallen),(16,folded),(31,flight[0][1])])
+    from author_motion import mosquito as animate_mosquito
+    animate_mosquito(c)
     return c.export()
 
 
@@ -536,7 +476,7 @@ def flyswatter():
 
 if __name__=='__main__':
     results=[human(),mosquito(),flyswatter()]
-    manifest={'version':'0.9.4-alpha-character-integration-2','generator':Path(__file__).name,
+    manifest={'version':'0.9.4-alpha-character-motion-revision-3','generator':Path(__file__).name,
               'blender':bpy.app.version_string,'source_units':'meters','source_up':'+Z','source_forward':'-Y',
               'fbx_axis_forward':'-Z','fbx_axis_up':'Y','unity_human_scale':1,'unity_mosquito_scale':.5,
               'mosquito_collision_radius_m':.055,'human_capsule':{'radius':.25,'height':1.72,'crouched_height':1.0},

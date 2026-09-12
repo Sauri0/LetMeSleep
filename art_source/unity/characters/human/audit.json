@@ -2,8 +2,8 @@
   "species": "Human",
   "mesh_count": 5,
   "bones": 64,
-  "triangles": 11224,
-  "vertices": 5680,
+  "triangles": 10924,
+  "vertices": 5530,
   "unweighted_vertices": 0,
   "bad_weight_sums": 0,
   "degenerate_triangles": 0,
@@ -39,18 +39,18 @@
     {
       "name": "Human_Walk",
       "start": 1,
-      "end": 31,
+      "end": 41,
       "fps": 30,
-      "duration_seconds": 1.0,
+      "duration_seconds": 1.3333333333333333,
       "loop": true,
       "root_motion": false
     },
     {
       "name": "Human_Run",
       "start": 1,
-      "end": 21,
+      "end": 25,
       "fps": 30,
-      "duration_seconds": 0.6666666666666666,
+      "duration_seconds": 0.8,
       "loop": true,
       "root_motion": false
     },
@@ -66,9 +66,18 @@
     {
       "name": "Human_Jump",
       "start": 1,
-      "end": 31,
+      "end": 37,
       "fps": 30,
-      "duration_seconds": 1.0,
+      "duration_seconds": 1.2,
+      "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Land",
+      "start": 1,
+      "end": 19,
+      "fps": 30,
+      "duration_seconds": 0.6,
       "loop": false,
       "root_motion": false
     },
@@ -84,15 +93,6 @@
     {
       "name": "Human_Clap",
       "start": 1,
-      "end": 25,
-      "fps": 30,
-      "duration_seconds": 0.8,
-      "loop": false,
-      "root_motion": false
-    },
-    {
-      "name": "Human_Fall",
-      "start": 1,
       "end": 31,
       "fps": 30,
       "duration_seconds": 1.0,
@@ -100,11 +100,11 @@
       "root_motion": false
     },
     {
-      "name": "Human_Land",
+      "name": "Human_Swat",
       "start": 1,
-      "end": 19,
+      "end": 31,
       "fps": 30,
-      "duration_seconds": 0.6,
+      "duration_seconds": 1.0,
       "loop": false,
       "root_motion": false
     },
@@ -118,11 +118,20 @@
       "root_motion": false
     },
     {
+      "name": "Human_Fall",
+      "start": 1,
+      "end": 37,
+      "fps": 30,
+      "duration_seconds": 1.2,
+      "loop": false,
+      "root_motion": false
+    },
+    {
       "name": "Human_Faint",
       "start": 1,
-      "end": 46,
+      "end": 55,
       "fps": 30,
-      "duration_seconds": 1.5,
+      "duration_seconds": 1.8,
       "loop": false,
       "root_motion": false
     },
@@ -132,15 +141,6 @@
       "end": 61,
       "fps": 30,
       "duration_seconds": 2.0,
-      "loop": false,
-      "root_motion": false
-    },
-    {
-      "name": "Human_Swat",
-      "start": 1,
-      "end": 25,
-      "fps": 30,
-      "duration_seconds": 0.8,
       "loop": false,
       "root_motion": false
     }
@@ -156,9 +156,11 @@
     }
   },
   "contact": {
-    "clap_palm_center_distance_m": 0.05000004833561826,
+    "clap_palm_center_distance_m": 0.05008772757227183,
     "approximate_palm_thickness_m": 0.048,
-    "target_surface_gap_m": 0.002
+    "target_surface_gap_m": 0.002,
+    "sample_frame": 15,
+    "minimum_leg_reach_margin_m": 0.0015927914013900146
   },
   "bounds_min": [
     -0.9374077320098877,
@@ -167,12 +169,12 @@
   ],
   "bounds_max": [
     0.9374076128005981,
-    0.1850000023841858,
+    0.18000000715255737,
     1.9284138679504395
   ],
   "dimensions": [
     1.8748153448104858,
-    0.4350000023841858,
+    0.4300000071525574,
     1.9284138679504395
   ],
   "sockets": [
@@ -548,12 +550,12 @@
       "parent": "Hand.L",
       "head_blender_m": [
         0.8500000238418579,
-        -0.02500000037252903,
+        -0.03999999910593033,
         1.149999976158142
       ],
       "tail_blender_m": [
         0.8500000238418579,
-        -0.07500000298023224,
+        -0.09000000357627869,
         1.149999976158142
       ]
     },
@@ -828,12 +830,12 @@
       "parent": "Hand.R",
       "head_blender_m": [
         -0.8500000238418579,
-        -0.02500000037252903,
+        -0.03999999910593033,
         1.149999976158142
       ],
       "tail_blender_m": [
         -0.8500000238418579,
-        -0.07500000298023224,
+        -0.09000000357627869,
         1.149999976158142
       ]
     },

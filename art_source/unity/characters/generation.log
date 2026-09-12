@@ -1,6 +1,6 @@
-N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\build_characters.py:19: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\build_characters.py:21: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
   m.use_nodes = True
-N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\build_characters.py:19: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\build_characters.py:21: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
   m.use_nodes = True
 Info: Saved as "LMS_Human_alpha.blend"
 
@@ -10,19 +10,19 @@ FBX export starting... 'N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity
 (bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
 (bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
 (bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
-export finished in 1.9679 sec.
+export finished in 1.6088 sec.
 Info: Saved as "LMS_Mosquito_alpha.blend"
 
 FBX export starting... 'N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\mosquito\\LMS_Mosquito_alpha.fbx'
 (bpy.data.armatures['LMS_MosquitoSkeleton'], 'POSE')
 (bpy.data.armatures['LMS_MosquitoSkeleton'], 'POSE')
 (bpy.data.armatures['LMS_MosquitoSkeleton'], 'POSE')
-export finished in 1.0908 sec.
+export finished in 0.7400 sec.
 Info: Saved as "LMS_Flyswatter_alpha.blend"
 
 FBX export starting... 'N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\flyswatter\\LMS_Flyswatter_alpha.fbx'
 (bpy.data.armatures['LMS_FlyswatterSkeleton'], 'POSE')
-export finished in 0.0104 sec.
+export finished in 0.0064 sec.
 LMS_CHARACTER_GENERATION_PASSED
 Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
 

@@ -1,6 +1,6 @@
 {
-  "version": "0.9.4-alpha-character-integration-2",
-  "status": "builder_compiles_pending_resident_unity_execution",
+  "version": "0.9.4-alpha-character-motion-revision-3",
+  "status": "source_motion_and_fbx_verified_awaiting_unity_visual_review",
   "human": {
     "source_rig": "LMS_HumanRig",
     "unity_visual_scale": 1,
@@ -45,7 +45,9 @@
       "Swat",
       "Blink",
       "FingerCurl"
-    ]
+    ],
+    "grip_source_y_m": -0.04,
+    "motion_notes": "30Hz authored poses, IK supports, grounded fall recovery, right hand closes during Swat. Durations from current audit.json; state IDs unchanged."
   },
   "mosquito": {
     "source_rig": "LMS_MosquitoRig",
@@ -93,7 +95,8 @@
       0,
       0,
       0.095
-    ]
+    ],
+    "motion_notes": "Tripod SurfaceWalk support targets; separate leg directions and leaf wings; smooth flight-to-perch folding. Runtime attachment remains Presentation."
   },
   "unity_material_setup": {
     "opaque": "URP Lit; use stable source material names and base colors",

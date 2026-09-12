@@ -10,6 +10,16 @@ manifest=json.loads(path.read_text())
 roundtrip=json.loads((ROOT/'fbx_roundtrip.json').read_text())
 assert all(a['passed'] for a in roundtrip)
 assert all(a['passed'] for a in manifest['audits'])
+for audit in roundtrip:
+    folder=ROOT/audit['species'].lower()
+    assert audit['fbx_sha256']==hashlib.sha256((folder/('LMS_'+audit['species']+'_alpha.fbx')).read_bytes()).hexdigest(), 'Stale FBX roundtrip'
+    assert audit['source_audit_sha256']==hashlib.sha256((folder/'audit.json').read_bytes()).hexdigest(), 'Stale geometry audit'
+gate=json.loads((ROOT/'motion_gate.json').read_text())
+assert gate['passed'] and gate['motion_audit_sha256']==hashlib.sha256((ROOT/'motion_audit.json').read_bytes()).hexdigest(), 'Motion gate missing or stale'
+motion=json.loads((ROOT/'motion_audit.json').read_text())
+for row in motion['actions']:
+    source=ROOT/row['species'].lower()/('LMS_'+row['species']+'_alpha.'+row['format'])
+    assert row['source_sha256']==hashlib.sha256(source.read_bytes()).hexdigest(), 'Stale motion source'
 expected=[f'{s}_{view}.png' for s in ['human','mosquito'] for view in ['front','side','back','threequarter']]
 expected+=['human_hand_open.png','human_hand_curl.png','human_clap_contact.png']
 for name in ([] if '--source-only' in sys.argv else expected):
@@ -21,9 +31,11 @@ manifest['rendered']='--source-only' not in sys.argv
 manifest['review_status']='Previous sample captures retained; integration revision needs Unity review' if '--source-only' in sys.argv else 'Current source revision rendered'
 manifest['review_renderer']={'engine':'Cycles','device':'CPU','threads':2,'samples':24,'resolution':[720,900]}
 manifest['fbx_roundtrip_verified']=True
+manifest['source_motion_verified']=True
 manifest['unity_import_verified']=False
 manifest['files']={}
 for file in sorted(ROOT.rglob('*')):
+    if any(part.startswith('.') or part=='__pycache__' for part in file.relative_to(ROOT).parts): continue
     if file.is_file() and file.name!='manifest.json' and file.suffix in ['.blend','.fbx','.py','.png','.json']:
         manifest['files'][file.relative_to(ROOT).as_posix()]={'sha256':hashlib.sha256(file.read_bytes()).hexdigest(),'bytes':file.stat().st_size}
 manifest['reference_images']={}
