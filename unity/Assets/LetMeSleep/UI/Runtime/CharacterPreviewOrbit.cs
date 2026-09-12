@@ -77,6 +77,9 @@ namespace LetMeSleep.UI
             zoomFactor = 1f;
             RecalculateFraming();
             ApplyOrbit();
+            // Install optional presentation once per clone, after its camera is positioned.
+            // Reusing a role or hiding/showing the preview must not reinstall components.
+            setup.OnPreviewCreated?.Invoke(instance, setup.Camera);
             instance.SetActive(previewVisible);
         }
 

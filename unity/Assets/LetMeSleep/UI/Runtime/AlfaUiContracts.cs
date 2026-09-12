@@ -80,14 +80,22 @@ namespace LetMeSleep.UI
         public RenderTexture Texture { get; }
         public GameObject HumanPrefab { get; }
         public GameObject MosquitoPrefab { get; }
+        public Action<GameObject, Camera> OnPreviewCreated { get; }
 
         public CharacterPreviewSetup(Camera camera, Transform stage, RenderTexture texture, GameObject humanPrefab, GameObject mosquitoPrefab)
+            : this(camera, stage, texture, humanPrefab, mosquitoPrefab, null)
+        {
+        }
+
+        public CharacterPreviewSetup(Camera camera, Transform stage, RenderTexture texture, GameObject humanPrefab,
+            GameObject mosquitoPrefab, Action<GameObject, Camera> onPreviewCreated)
         {
             Camera = camera;
             Stage = stage;
             Texture = texture;
             HumanPrefab = humanPrefab;
             MosquitoPrefab = mosquitoPrefab;
+            OnPreviewCreated = onPreviewCreated;
         }
 
         public bool IsUsable => Camera != null && Stage != null && Texture != null && HumanPrefab != null && MosquitoPrefab != null;
