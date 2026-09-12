@@ -1,0 +1,34 @@
+{
+  "pid": 32600,
+  "finished": true,
+  "exitCode": 0,
+  "threads": 2,
+  "render": false,
+  "utc": "2026-09-12T20:06:04.6939388Z",
+  "stdout": "art_source/unity/environments/quality_exterior/.verification/blender-stdout.log",
+  "stderr": "art_source/unity/environments/quality_exterior/.verification/blender-stderr.log",
+  "blenderVersion": "5.2.1 LTS 9e2066aef7ef",
+  "files": [
+    {
+      "name": "ExteriorWitnessKit.blend",
+      "bytes": 210399,
+      "sha256": "8a0b183939b8171335eb84d95811c8f8878b5580bc19ada862543d59ecad6b7d"
+    },
+    {
+      "name": "generated_exterior.json",
+      "bytes": 569074,
+      "sha256": "45ef23ee76812cde8e9db1fa24845b800f07f6a6bdab39b60504751568865a55"
+    },
+    {
+      "name": "import_blender.py",
+      "bytes": 2530,
+      "sha256": "01bfd3f8a6f57b0024653661ae3dfc1e53e0318c229d0ea58de91eb3a86c0f05"
+    }
+  ],
+  "warning": "Material.use_nodes deprecation for Blender 6.0; reconstruction completed on 5.2.1 LTS.",
+  "pending": [
+    "Native Unity import and screenshots",
+    "Visual approval",
+    "Human and mosquito traversal"
+  ]
+}

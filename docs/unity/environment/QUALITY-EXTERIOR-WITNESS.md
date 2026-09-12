@@ -2,7 +2,7 @@
 
 Responsable: Modelador Terreno y Mapas. Base `c888d96`, worktree `N:/LetMeSleep/Worktrees/maps`, rama `codex/unity-maps-specialist`. La reasignación de TEAM-RECOVERY-20260912 prevalece sobre el AGENTS histórico.
 
-Estado: fuentes geométricas e importador compilado offline. **Aún no aprobado visualmente ni probado en recorrido nativo.** Blender pendiente de turno del Director; no se afirma que el `.blend` exista hasta su reconstrucción. No se inició Unity ni Blender durante esta preparación.
+Estado: fuentes geométricas, importador compilado offline y `ExteriorWitnessKit.blend` reconstruido. **Aún no aprobado visualmente ni probado en recorrido nativo.** Director concedió turno Blender CPU de dos hilos sin render: PID32600 terminó ExitCode0 en aproximadamente dos segundos y el turno se liberó explícitamente. Blender 5.2.1 LTS, hash9e2066aef7ef; único aviso de futura deprecación de Material.use_nodes. No se inició Unity.
 
 ## Referencias y composición
 
@@ -24,6 +24,7 @@ Paleta mate: verdes fríos, corteza cálida contenida, piedra gris oliva y tierr
 - `generated_exterior.json`: 20 mallas con submateriales, 209 instancias; 5,934 triángulos únicos, no conteo total de escena ni rendimiento medido.
 - `geometry_validation.json`: comprobación offline de índices, coordenadas, triángulos no degenerados y distancia real a los dos spawns de mosquito del patio.
 - `import_blender.py`: reconstruye las mallas exactas como objetos enlazados editables por colección y material. Conversión Unity `(x,y,z)` → Blender `(x,-z,y)`; giro Y de Unity → giro Z positivo de Blender.
+- `ExteriorWitnessKit.blend`: archivo editable guardado, 20 mallas y 209 objetos; `blender_reconstruction_receipt.json` registra PID, versión, hashes, tamaño y rutas de logs. No contiene un render de aprobación.
 - `verify_importer.ps1` y `offline_compile_receipt.json`: compilación aislada contra Unity 6000.3.24f1 y fuentes reales de dependencias. No lanza editor, no importa assets y no equivale a prueba de integración.
 
 Archivo Unity propio: `unity/Assets/LetMeSleep/Content/Editor/Environment/AlfaQualityExterior.cs` con `.meta`. No se editaron AlfaMapBuilder, AlfaHouseDressing, AlfaQualityLiving, AlfaQualityMeshes, AlfaLobbyDressing, hash común, escenas ni prefabs.
@@ -61,4 +62,4 @@ El build nativo emitirá `LMS_QUALITY_EXTERIOR_BUILT` y `unity_import_receipt.js
 4. Patio a altura mosquito, incluyendo sus dos posiciones de aparición; comprobar hojas en ambos lados y ausencia de aparición visual dentro de ramas.
 5. Fachada frontal como vista de autor adicional, claramente distinta del recorrido jugable. No usar esa cámara exterior como evidencia de cámara runtime.
 
-Brechas abiertas: importación y capturas nativas pendientes; aprobación de luz/materiales/composición pendiente; `.blend` pendiente de turno; ninguna medición FPS/memoria. Cerca estructural, cubierta continua y banco siguen sus fuentes existentes y todavía requieren revisión artística posterior. No se proclama patio/fachada terminados por sumar este módulo.
+Brechas abiertas: importación y capturas nativas pendientes; aprobación de luz/materiales/composición pendiente; ninguna medición FPS/memoria. Cerca estructural, cubierta continua y banco siguen sus fuentes existentes y todavía requieren revisión artística posterior. No se proclama patio/fachada terminados por sumar este módulo. Los pendientes de geometry_validation.json reflejan el momento de la prueba geométrica anterior; los receipts posteriores documentan compilación y reconstrucción completadas.
