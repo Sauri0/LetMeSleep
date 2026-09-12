@@ -614,7 +614,7 @@ namespace LetMeSleep.UI
             factory.Button(angles, "PreviewFrontButton", "FRENTE", () => previewOrbit.SetAngle(PreviewAngle.Front), false, false, 48f);
             factory.Button(angles, "PreviewSideButton", "PERFIL", () => previewOrbit.SetAngle(PreviewAngle.Side), false, false, 48f);
             factory.Button(angles, "PreviewBackButton", "ESPALDA", () => previewOrbit.SetAngle(PreviewAngle.Back), false, false, 48f);
-            factory.Button(angles, "PreviewResetButton", "RESTABLECER VISTA", () => previewOrbit.ResetView(), false, false, 48f);
+            factory.Button(angles, "PreviewResetButton", "CENTRAR VISTA", () => previewOrbit.ResetView(), false, false, 48f);
 
             var optionsPanel = factory.Panel(columns, "OptionsPanel", AlfaUiTheme.Night700, 640f, 900f);
             var content = factory.Vertical(optionsPanel, "Content", 12f);
@@ -955,14 +955,18 @@ namespace LetMeSleep.UI
             foreach (var option in options)
             {
                 var captured = option;
-                var label = (option.Id == selectedId ? "✓ " : string.Empty) + option.Label;
+                var label = (option.Id == selectedId ? "> " : string.Empty) + option.Label;
                 var button = factory.Button(parent, "Color_" + option.Id, label, () => selected(captured), false, false, 52f);
                 var colors = button.colors;
                 colors.normalColor = option.Color;
                 colors.highlightedColor = Color.Lerp(option.Color, Color.white, 0.18f);
                 colors.selectedColor = AlfaUiTheme.Lamp400;
                 button.colors = colors;
-                button.GetComponentInChildren<TextMeshProUGUI>().color = RelativeLuminance(option.Color) > 0.5f ? AlfaUiTheme.Ink900 : AlfaUiTheme.Sheet100;
+                var buttonLabel = button.GetComponentInChildren<TextMeshProUGUI>();
+                buttonLabel.color = RelativeLuminance(option.Color) > 0.5f ? AlfaUiTheme.Ink900 : AlfaUiTheme.Sheet100;
+                buttonLabel.enableAutoSizing = true;
+                buttonLabel.fontSizeMin = 15f;
+                buttonLabel.fontSizeMax = 18f;
                 button.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 112f;
             }
         }
@@ -988,8 +992,8 @@ namespace LetMeSleep.UI
             {
                 var label = child.GetComponentInChildren<TextMeshProUGUI>();
                 if (label == null) continue;
-                var plain = label.text.StartsWith("✓ ", StringComparison.Ordinal) ? label.text.Substring(2) : label.text;
-                label.text = child.name == "Color_" + selectedId ? "✓ " + plain : plain;
+                var plain = label.text.StartsWith("> ", StringComparison.Ordinal) ? label.text.Substring(2) : label.text;
+                label.text = child.name == "Color_" + selectedId ? "> " + plain : plain;
             }
         }
 

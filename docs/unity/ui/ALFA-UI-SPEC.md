@@ -271,12 +271,12 @@ Controles del visor:
 
 - Arrastre horizontal: giro orbital del modelo.
 - Rueda: zoom limitado; nunca atraviesa el modelo.
-- Botones `FRENTE`, `PERFIL`, `ESPALDA` y `RESTABLECER VISTA` para teclado/mando.
+- Botones `FRENTE`, `PERFIL`, `ESPALDA` y `CENTRAR VISTA` para teclado/mando.
 - Teclas de navegación recorren primero pestañas, luego colores, vistas y acciones.
 
 El frente del prefab mira a `+Z`; el visor coloca la cámara sobre ese eje y calcula centro, distancia y zoom desde los bounds del modelo. Cambiar entre humano y mosquito no altera la escala ni los colliders del prefab.
 
-El color seleccionado usa borde, check y nombre; no sólo tono. `GUARDAR` confirma `Personalización guardada.` y sólo se habilita si existe un cambio. `Escape` con cambios abre `¿Salir sin guardar?`, con `SEGUIR EDITANDO` enfocado. No hay aleatorio, presets, pelo, rostro, accesorios, ropa adicional ni emotes en alfa.
+El color seleccionado usa borde, prefijo ASCII `>` y nombre; no sólo tono. `GUARDAR` confirma `Personalización guardada.` y sólo se habilita si existe un cambio. `Escape` con cambios abre `¿Salir sin guardar?`, con `SEGUIR EDITANDO` enfocado. No hay aleatorio, presets, pelo, rostro, accesorios, ropa adicional ni emotes en alfa.
 
 ### 5.6 Ajustes
 
