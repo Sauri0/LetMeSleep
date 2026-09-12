@@ -16,7 +16,7 @@ Este bloque sustituye los estados de proceso, cola y captura históricos de abaj
 - Alfa-VisualRecovery/living-crafted2-* y living-crafted3-*; cinco por tanda. ON/OFF sólo alterna PointLight, material emisivo constante. opposite está ocluida, no sirve como vista general. Exterior1 cinco vistas cámara, no recorrido físico.
 - Alfa-VisualRecovery/standing-lamp-materials3.json, emissive-status-house.json, emissive-status-lobby.json, textile-meshes3.json; scripts de captura conservados.
 - TeamRecovery/stability-director: menu immediate/deferred, human-double-quiesce/after-two-frames, mosquito-destroy-component/observed, quit-ui-before/invoked/observed, editor-noaudio-after-quit.json. Revisión independiente stability/native-lifecycle-review-2-20260912.md. Helper ya sin error de interop. No cierre del defecto auditivo publicado todavía.
-- ArtCatalog/index.html regenerado:32fichas/76PNG con hashes, historia separada de actuales, ninguna aprobación artística nueva. Servidor8764 y ZIP continúan desactualizado/detenido respectivamente: índice local disponible; no presentar ZIP previo como actualizado.
+- ArtCatalog/index.html regenerado:32fichas/76PNG con hashes, historia separada de actuales, ninguna aprobación artística nueva. Servidor8764 detenido; ZIP previo desactualizado. Índice local disponible; no presentar ZIP previo como actualizado.
 - Revisiones independientes visual/UI-NATIVE{2,3,4}-*, LIVING-CRAFTED{2,3}-*, EXTERIOR1-* y functional recibieron cada delta. Referencias obligatorias en N:/LetMeSleep/References, no calcar contenido inventado.
 
 ## Procesos y siguiente cola
