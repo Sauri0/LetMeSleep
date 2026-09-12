@@ -126,21 +126,22 @@ static func sweep_box(shape: Dictionary, displacement: Vector3, box: AABB) -> Di
 static func map_hit(shape: Dictionary, displacement: Vector3, map_id: String, doors: Dictionary) -> Dictionary:
 	var first: Dictionary={}
 	var candidates: Array[AABB]=ArenaData._nearby(bounds(shape,displacement),map_id)
-	var map: Dictionary=ArenaData._map(map_id)
-	candidates.append(AABB(Vector3(-float(map.half_x),float(map.ceiling),-float(map.half_z)),Vector3(float(map.half_x)*2,1,float(map.half_z)*2)))
+	var lot: AABB=ArenaData.world_bounds(map_id)
+	candidates.append(AABB(Vector3(lot.position.x,lot.end.y,lot.position.z),Vector3(lot.size.x,1,lot.size.z)))
 	for box: AABB in candidates:
 		var hit:=sweep_box(shape,displacement,box)
 		if hit.is_empty() or (not first.is_empty() and float(first.fraction)<=float(hit.fraction)):continue
 		hit.kind="map"
 		hit.material="tile" if box.size.y<.3 or box.size.y>2.5 else "wood"
 		first=hit
-	if map_id!="house":return first
+	var definitions: Dictionary=ArenaData._door_definitions(map_id) if not doors.is_empty() else {}
 	for id: String in doors:
-		if not Doors.DEFINITIONS.has(id):continue
-		var transform:=Doors.leaf_transform(Doors.DEFINITIONS[id],float(doors[id].angle))
+		if not definitions.has(id):continue
+		var definition: Dictionary=definitions[id]
+		var transform:=Doors.leaf_transform(definition,float(doors[id].angle))
 		var inverse:=transform.affine_inverse()
 		var local: Dictionary={"from":inverse*Vector3(shape.from),"to":inverse*Vector3(shape.to),"radius":shape.radius}
-		var hit:=sweep_box(local,inverse.basis*displacement,Doors.leaf_box(Doors.DEFINITIONS[id]))
+		var hit:=sweep_box(local,inverse.basis*displacement,Doors.leaf_box(definition))
 		if hit.is_empty() or (not first.is_empty() and float(first.fraction)<=float(hit.fraction)):continue
 		hit.p=transform*Vector3(hit.p)
 		hit.normal=transform.basis*Vector3(hit.normal)

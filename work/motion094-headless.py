@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 
 parser = argparse.ArgumentParser()
-parser.add_argument('test', choices=['bounds', 'house', 'practice'])
+parser.add_argument('test', choices=['bounds', 'house', 'practice', 'throw'])
 args = parser.parse_args()
 repo = Path(__file__).resolve().parent.parent
 game = repo / 'game'

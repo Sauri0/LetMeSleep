@@ -21,3 +21,9 @@ Revalidación: assets M2 d7d3d1e y ajuste QA 3d34628 integrados como 195a9bc/b04
 Todos usan Godot 4.5.2 headless, audio Dummy, sin autoload EOS ni renderer; stderr vacío. El runner copia únicamente dependencias de scripts a un proyecto temporal. Los recibos motion094-*.run.json registran dependencias y resultados.
 
 Las pruebas no sustituyen la validación visual, UI completa, partidas largas ni WAN. QA cubre las partidas largas. Director conserva simulation/network/versionado; esos archivos no se modificaron aquí. No se abrió ninguna ventana del juego, no se exportó ni publicó.
+
+## Corrección adicional de lanzamientos
+
+Director asignó projectile_collision.gd por el retorno exclusivo para `house` que descartaba las puertas authored. `map_hit` usa ahora las definiciones cacheadas del mapa seleccionado y conserva el barrido continuo en coordenadas de la hoja y la prioridad del impacto más cercano. El límite superior usa los mismos bounds del solar que Arena.
+
+`python work/motion094-headless.py throw`: 388 comprobaciones, 0 fallos, stderr vacío. Prueba diario y zapatilla contra las 16 puertas, desde ambos lados, abiertas/cerradas/a 45 grados, normales de impacto, alcance corto libre, techo prioritario y vuelo libre sobre patio. Antes de corregir runtime fallaron 128 comprobaciones de puertas; las trayectorias libres ya pasaban. No cambian daño, velocidad, alcance ni reglas de combate.

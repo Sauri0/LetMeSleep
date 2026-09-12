@@ -1,0 +1,34 @@
+{
+  "test": "tests/motion094_throw_test.gd",
+  "exit_code": 0,
+  "stderr_bytes": 0,
+  "headless": true,
+  "autoloads": false,
+  "results": [
+    "MOTION094_THROW checks=388 failures=0"
+  ],
+  "dependencies": [
+    "assets/art/house/alfa/manifest.json",
+    "assets/art/house/alfa_library.gd",
+    "scripts/arena.gd",
+    "scripts/door_catalog.gd",
+    "scripts/door_geometry.gd",
+    "scripts/emote_catalog.gd",
+    "scripts/emote_pose.gd",
+    "scripts/fixed_house.gd",
+    "scripts/furniture_blueprint.gd",
+    "scripts/geometry_cache.gd",
+    "scripts/house_barriers.gd",
+    "scripts/house_validation.gd",
+    "scripts/human_pose.gd",
+    "scripts/map_catalog.gd",
+    "scripts/navigation_geometry.gd",
+    "scripts/pickup_placement.gd",
+    "scripts/pickup_support_geometry.gd",
+    "scripts/pickup_supports.gd",
+    "scripts/procedural_house.gd",
+    "scripts/projectile_collision.gd",
+    "scripts/tool_catalog.gd",
+    "tests/motion094_throw_test.gd"
+  ]
+}
