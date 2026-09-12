@@ -54,6 +54,20 @@ func _run() -> void:
 	_check(Array(report.get("errors", [])).is_empty(), "authored exterior reports no invalid assets")
 	_check(bool(report.get("visual_only", false)) and report.get("collision_source", "") == "map obstacles",
 		"authored exterior leaves collision authority with map obstacles")
+	var architecture: Node = exterior.get_node_or_null("AuthoredArchitecture") if is_instance_valid(exterior) else null
+	var architecture_report: Dictionary = architecture.get_meta("build_report", {}) if is_instance_valid(architecture) else {}
+	_check(architecture_report.get("roof_panels", 0) == 2 and architecture_report.get("gables", 0) == 2,
+		"authored facade builds a two-slope roof and both gables")
+	_check(architecture_report.get("canopies", 0) == 6 and architecture_report.get("porch_posts", 0) == 2
+		and architecture_report.get("chimneys", 0) == 1,
+		"authored facade builds modular porch and chimney")
+	_check(float(architecture_report.get("ridge_y", 99.0)) <= expected.bounds.end.y,
+		"roof ridge stays inside the authored lot height")
+	var facade_assets: Array[Node] = architecture.find_children("*", "Node3D", true, false) if is_instance_valid(architecture) else []
+	_check(facade_assets.filter(func(node: Node) -> bool: return node.get_meta("alfa_asset_id", "") == "alfa_canopy").size() == 6,
+		"porch uses six unscaled alfa canopy modules")
+	_check(facade_assets.filter(func(node: Node) -> bool: return node.get_meta("alfa_asset_id", "") == "alfa_porch_post").size() == 2,
+		"porch uses two measured alfa posts")
 
 	var meshes: Array[Node] = exterior.find_children("*", "MeshInstance3D", true, false) if is_instance_valid(exterior) else []
 	var area_meshes := meshes.filter(func(node: Node) -> bool: return node.get_meta("catalog_kind", "") == "exterior_area")
@@ -93,6 +107,9 @@ func _run() -> void:
 		"the only roof visual covers the building footprint")
 	_check(world.map_root.get_node_or_null("NightExterior") == null,
 		"authored map does not receive the legacy exterior shell")
+	var shutters: Array[Node] = world.map_root.find_children("*", "Node3D", true, false).filter(func(node: Node) -> bool:
+		return node.get_meta("alfa_asset_id", "") == "alfa_shutter")
+	_check(shutters.size() == expected.windows.size() * 2, "every authored window receives paired alfa shutters")
 
 	var lights: Array[Node] = world.map_root.find_children("*", "SpotLight3D", true, false)
 	var horizontal_corridors := 0

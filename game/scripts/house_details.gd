@@ -76,6 +76,19 @@ static func asset(parent: Node3D, name: String, at: Vector3, scale: Vector3 = Ve
 	view.position=at;view.scale=scale;view.rotation.y=yaw
 	return view
 
+static func alfa_asset(parent: Node3D, name: String, at: Vector3, yaw: float = 0.0) -> Node3D:
+	var library: Script = load(ALFA_LIBRARY_PATH) if ResourceLoader.exists(ALFA_LIBRARY_PATH) else null
+	if library == null or not library.has_asset(name):
+		return null
+	var view: Node3D = library.instantiate_asset(name)
+	if not is_instance_valid(view):
+		return null
+	parent.add_child(view)
+	view.position = at
+	view.rotation.y = yaw
+	view.set_meta("catalog_kind", "authored_facade")
+	return view
+
 static func floor_pieces(bounds:AABB) -> Array[AABB]:
 	var result:Array[AABB]=[]
 	var x:=bounds.position.x
@@ -286,6 +299,13 @@ static func build_windows(world: Node3D, specs: Array[Dictionary]) -> void:
 		# Window +Z points indoors; Blender furnishings face -Z.
 		asset(root,"window_frame",Vector3(0,0,.03),Vector3.ONE,PI)
 		world._box(root,Vector3(0,0,.003),Vector3(1.45,1.42,.008),glass).cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		if world.map_data.has("authored_version"):
+			# Alfa shutters use a back/base pivot and face -Z, matching the
+			# exterior side of this window-local frame without mesh scaling.
+			for side: float in [-1.0, 1.0]:
+				var shutter := alfa_asset(root, "alfa_shutter", Vector3(side * .99, -.60, -.035))
+				if is_instance_valid(shutter):
+					shutter.set_meta("window_id", str(spec.get("id", "")))
 		for side:float in [-1.0,1.0]:
 			var curtain:=asset(root,"curtain",Vector3(side*.91,-.74,.18),Vector3(1.05,.95,1))
 			Library._tint_cloth(curtain,Color(spec.tint).lightened(.15))
@@ -431,6 +451,74 @@ static func _build_authored_prop(root: Node3D, library: Script, prop: Dictionary
 	placement.add_child(visual)
 	return true
 
+static func _gable(world: Node3D, root: Node3D, points: PackedVector3Array, material: Material, id: String) -> void:
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for point: Vector3 in points:
+		tool.add_vertex(point)
+	tool.generate_normals()
+	var mesh := MeshInstance3D.new()
+	mesh.name = "AuthoredGable_" + id
+	mesh.mesh = tool.commit()
+	mesh.material_override = material
+	mesh.set_meta("catalog_kind", "authored_gable")
+	root.add_child(mesh)
+
+static func build_authored_architecture(world: Node3D, exterior_root: Node3D) -> Dictionary:
+	var existing := exterior_root.get_node_or_null("AuthoredArchitecture")
+	if existing != null:
+		return Dictionary(existing.get_meta("build_report", {}))
+	var root := Node3D.new()
+	root.name = "AuthoredArchitecture"
+	exterior_root.add_child(root)
+	var building: AABB = world._house_building_bounds()
+	var lot: AABB = world.map_data.get("bounds", building)
+	var eave_y := building.end.y + .04
+	var rise := minf(2.25, maxf(.8, lot.end.y - eave_y - .15))
+	var ridge_y := eave_y + rise
+	var half_run := building.size.x * .5 + .55
+	var roof_depth := building.size.z + 1.1
+	var slope_length := sqrt(half_run * half_run + rise * rise)
+	var roof_angle := atan2(rise, half_run)
+	var roof_material: Material = world._surface_material(Color("b9553e"), "tile")
+	for side: float in [-1.0, 1.0]:
+		var panel: MeshInstance3D = world._box(root,
+			Vector3(building.get_center().x + side * half_run * .5, eave_y + rise * .5, building.get_center().z),
+			Vector3(slope_length, .16, roof_depth), roof_material)
+		panel.name = "AuthoredRoof_%s" % ("East" if side > 0.0 else "West")
+		panel.rotation.z = -side * roof_angle
+		panel.set_meta("catalog_kind", "authored_roof")
+	var wall_material: Material = world._surface_material(Color("d7cbbd"), "wall")
+	var x0 := building.position.x
+	var x1 := building.end.x
+	var ridge_x := building.get_center().x
+	var front_z := building.position.z - .006
+	var rear_z := building.end.z + .006
+	_gable(world, root, PackedVector3Array([
+		Vector3(x0, eave_y, front_z), Vector3(ridge_x, ridge_y, front_z), Vector3(x1, eave_y, front_z)]),
+		wall_material, "Front")
+	_gable(world, root, PackedVector3Array([
+		Vector3(x0, eave_y, rear_z), Vector3(x1, eave_y, rear_z), Vector3(ridge_x, ridge_y, rear_z)]),
+		wall_material, "Patio")
+
+	# A tiled porch spans the centered front entrance. Six unscaled alfa canopy
+	# modules make a 4.8 x 1.2 m cover; two measured posts hold its outer edge.
+	var facade_x := building.get_center().x
+	for z_offset: float in [.02, .62]:
+		for x_offset: float in [-1.6, 0.0, 1.6]:
+			alfa_asset(root, "alfa_canopy", Vector3(facade_x + x_offset, 2.62, building.position.z - z_offset))
+	for x_offset: float in [-2.28, 2.28]:
+		alfa_asset(root, "alfa_porch_post", Vector3(facade_x + x_offset, 0.0, building.position.z - 1.14))
+
+	var chimney_x := building.position.x + building.size.x * .72
+	var normalized_x := absf(chimney_x - ridge_x) / (building.size.x * .5)
+	var chimney_y := eave_y + rise * (1.0 - normalized_x) - .10
+	alfa_asset(root, "alfa_chimney", Vector3(chimney_x, chimney_y, building.get_center().z + 1.2))
+	var report := {"roof_panels": 2, "gables": 2, "canopies": 6, "porch_posts": 2,
+		"chimneys": 1, "visual_only": true, "ridge_y": ridge_y}
+	root.set_meta("build_report", report)
+	return report
+
 static func build_authored_exterior(world: Node3D) -> Dictionary:
 	var existing: Node = world.map_root.get_node_or_null("AuthoredExterior")
 	if existing != null:
@@ -468,6 +556,7 @@ static func build_authored_exterior(world: Node3D) -> Dictionary:
 		"requested_props": Array(exterior.get("props", [])).size(), "errors": errors,
 		"visual_only": true, "collision_source": "map obstacles"}
 	root.set_meta("build_report", report)
+	build_authored_architecture(world, root)
 	return report
 
 static func finish(world: Node3D) -> void:

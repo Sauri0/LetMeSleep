@@ -75,7 +75,9 @@ func _run() -> void:
 	_check(bool(exterior_report.visual_only) and exterior_report.collision_source == "map obstacles",
 		"exterior adapter declares map obstacles as sole collision source")
 	var exterior_meshes: Array[Node] = world.map_root.get_node("AuthoredExterior").find_children("*", "MeshInstance3D", true, false)
-	_check(exterior_meshes.size() == 2, "one garden area and one straight path segment are visible")
+	var metadata_meshes := exterior_meshes.filter(func(node: Node) -> bool:
+		return node.get_meta("catalog_kind", "") in ["exterior_area", "exterior_path"])
+	_check(metadata_meshes.size() == 2, "one garden area and one straight path segment are visible")
 	var area_mesh := exterior_meshes.filter(func(node: Node) -> bool: return node.get_meta("catalog_kind", "") == "exterior_area")[0] as MeshInstance3D
 	var source_bounds: AABB = area_mesh.get_meta("source_bounds")
 	_check(is_equal_approx((area_mesh.mesh as BoxMesh).size.y, .036) and is_equal_approx(source_bounds.size.y, .08),
