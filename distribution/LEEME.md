@@ -1,6 +1,6 @@
-# Let me sleep · 0.9.1 · Windows 64 bits
+# Let me sleep · 0.9.2 · Windows 64 bits
 
-Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.9.1 / protocolo 10**.
+Descomprimí toda la carpeta y abrí **Let-me-sleep.exe**. No necesitás Godot. Todos los jugadores de una sala deben usar **0.9.2 / protocolo 11**.
 
 Esta versión corrige techos y uniones, amplía los pasos junto a las escaleras y mejora la continuidad del movimiento y de los mosquitos adheridos. La personalización permite reconocer mejor la selección; la cámara sigue girando al mirar hacia abajo. El menú usa Epic Online Services para crear salas e invitar con un código **LMS1-**. **Esta candidata todavía requiere comprobar una partida entre dos casas; consultá PRUEBAS.md para ver el alcance validado.**
 
@@ -101,7 +101,7 @@ Abrí **TU PINTA** en el menú principal. Elegí humano o mosquito; girá el mod
 - **Supervivencia:** los mosquitos deben sobrevivir hasta terminar el tiempo, con una vida y sin hambre. Los humanos intentan eliminarlos.
 - **Tareas:** los humanos comparten una meta de trabajos, con asignaciones y plazos personales. Fallar reduce plazos siguientes hasta el mínimo; no elimina la reserva necesaria para viajar. Los mosquitos pueden interrumpir tareas; si reciben un golpe, quedan aturdidos y pueden ser ayudados. No hay un límite de vidas en este modo.
 
-Se permiten de uno a cinco humanos, hasta doce mosquitos y dieciséis participantes totales; también uno contra uno. Cada ronda genera una casa con 16–24 habitaciones y dos o tres pisos. Todos los participantes juegan la misma distribución. Mirá los puestos cercanos para encontrar tareas y herramientas; las etiquetas lejanas se ocultan para dejar ver el escenario.
+Se permiten de uno a cinco humanos, hasta doce mosquitos y dieciséis participantes totales; también uno contra uno. Cada ronda genera una casa con hasta 22 habitaciones y dos o tres pisos. Todos los participantes juegan la misma distribución. Mirá los puestos cercanos para encontrar tareas y herramientas; las etiquetas lejanas se ocultan para dejar ver el escenario.
 
 ## Archivos y límites de esta entrega
 
@@ -110,3 +110,7 @@ Se permiten de uno a cinco humanos, hasta doce mosquitos y dieciséis participan
 ## Tu pinta
 
 En el menú principal podés combinar ojos, boca y cejas por separado para cada personaje. El humano también tiene bigotes y barbas opcionales; el color de pelo se comparte con cejas, bigote y barba. Ropa, piel, pantuflas y accesorios conservan sus colores propios. Arrastrá la vista para girar y usá la rueda para acercar. Los cambios se guardan en esta PC y se muestran en sala y partida; son sólo apariencia. Los perfiles anteriores conservan el estilo de cara al migrar a las tres piezas, con bigote y barba desactivados.
+
+## Cámara del mosquito
+
+La rueda acerca hasta primera persona o aleja la vista. Estando quieto podés mirar alrededor; al moverte, el mosquito se orienta hacia la mirada. La rueda no cambia la cámara del humano.
