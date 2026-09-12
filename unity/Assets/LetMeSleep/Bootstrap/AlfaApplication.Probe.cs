@@ -27,6 +27,8 @@ namespace LetMeSleep.Bootstrap
         [Serializable] private sealed class PlayerProbeReceipt
         {
             public string version,unity,gpu,utc;
+            public bool preferencesRecovered,preferencesWriteBlocked;
+            public string loadedPlayerName,loadedSkin,loadedPajama,loadedMosquito;
             public bool humanRuntime,mosquitoRuntime,humanStationary,returnedToMenu,onlineRoomCreated,onlineRoomLeft;
             public int width,height,frames; public float medianFrameMs,p95FrameMs;
             public string failure="";
@@ -36,9 +38,14 @@ namespace LetMeSleep.Bootstrap
             Directory.CreateDirectory(output);
             Screen.SetResolution(1920,1080,FullScreenMode.Windowed);
             var receipt=new PlayerProbeReceipt { version=Application.version,unity=Application.unityVersion,
-                gpu=SystemInfo.graphicsDeviceName,utc=DateTime.UtcNow.ToString("O") };
+                gpu=SystemInfo.graphicsDeviceName,utc=DateTime.UtcNow.ToString("O"),
+                preferencesRecovered=preferenceStore?.RecoveredFromBackup==true,
+                preferencesWriteBlocked=preferenceStore?.WriteBlocked==true,
+                loadedPlayerName=playerName,loadedSkin=appearance.SkinColorId,
+                loadedPajama=appearance.PajamaColorId,loadedMosquito=appearance.MosquitoColorId };
             yield return new WaitForSecondsRealtime(2);
             ScreenCapture.CaptureScreenshot(Path.Combine(output,"menu.png"));
+            yield return null; yield return null;
             var timings=new List<float>();
             foreach(var role in new[]{AlfaRole.Human,AlfaRole.Mosquito})
             {
