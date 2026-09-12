@@ -1,7 +1,7 @@
 param([string]$OutputDirectory = '', [switch]$SkipTests)
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
-if (-not $OutputDirectory) { $OutputDirectory = Join-Path $repo 'outputs/launcher-1.1.0' }
+if (-not $OutputDirectory) { $OutputDirectory = Join-Path $repo 'outputs/launcher-1.1.1' }
 $OutputDirectory = [IO.Path]::GetFullPath($OutputDirectory)
 [IO.Directory]::CreateDirectory($OutputDirectory) | Out-Null
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'

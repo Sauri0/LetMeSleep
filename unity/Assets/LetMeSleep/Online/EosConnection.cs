@@ -58,7 +58,7 @@ namespace LetMeSleep.Online
                 if (library == null) { Fail("NativeSdkMissing"); return; }
                 Bindings.Hook(library, (handle, symbol) => handle.LoadFunctionAsIntPtr(symbol));
 #endif
-                var init = new InitializeOptions { ProductName = "Let me sleep", ProductVersion = "0.9.4-alfa" };
+                var init = new InitializeOptions { ProductName = "Let me sleep", ProductVersion = Application.version };
                 var result = PlatformInterface.Initialize(ref init);
                 if (result != Result.Success) { Fail("SDK_" + result); return; }
                 ownsSdk = true;

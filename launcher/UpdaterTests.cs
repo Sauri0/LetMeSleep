@@ -41,6 +41,13 @@ namespace LetMeSleep.Updater {
                     Check(Updater.ParseVersion("v0.9.3-preview") == null, "unsupported tag ignored");
                     string[] stages = { "0.9.3", "0.9.4-alfa", "0.9.4-beta", "0.9.4-omega", "0.9.4-delta", "0.9.4-gamma", "0.9.4", "0.9.5-alfa" };
                     for (int i = 1; i < stages.Length; i++) Check(Updater.ParseVersion(stages[i]) > Updater.ParseVersion(stages[i-1]), "release order " + stages[i-1] + " -> " + stages[i]);
+                    Check(Updater.ParseVersion("0.9.4-alfa.1") > Updater.ParseVersion("0.9.4-alfa"), "alfa revision upgrades original candidate");
+                    Check(Updater.ParseVersion("0.9.4-alfa.10") > Updater.ParseVersion("0.9.4-alfa.2"), "revision ordering is numeric");
+                    Check(Updater.ParseVersion("0.9.4-beta") > Updater.ParseVersion("0.9.4-alfa.999"), "revisions do not skip stage order");
+                    Check(Updater.ParseVersion("v0.9.4-alfa.1").ToString() == "0.9.4-alfa.1", "revision manifest and filename roundtrip");
+                    foreach (string invalid in new[] { "0.9.4-alfa.0", "0.9.4-alfa.01", "0.9.4-alfa.-1", "0.9.4-alfa.999999999999999" })
+                        Check(Updater.ParseVersion(invalid) == null, "reject ambiguous revision " + invalid);
+                    Check(Updater.SelectRelease(new[] { Release("v0.9.4-alfa"), Release("v0.9.4-alfa.1"), Release("v0.9.4-alfa.2", false, false) }).tag_name == "v0.9.4-alfa.1", "choose complete revision only");
                     foreach (string badVersion in new[] { "0.9.4/delta", "0.9.4-rc", "0.9.4-GAMMA", "0.09.4-alfa", "launcher-v1.0.1" })
                         Check(Updater.ParseVersion(badVersion) == null, "reject noncanonical version " + badVersion);
                     Check(Updater.SelectRelease(new[] { Release("v0.9.4-omega"), Release("v0.9.4-delta"), Release("v0.9.4-beta"), Release("v0.9.4-gamma",true) }).tag_name == "v0.9.4-delta", "delta follows omega; draft gamma excluded");

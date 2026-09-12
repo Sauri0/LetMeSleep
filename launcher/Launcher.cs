@@ -59,7 +59,7 @@ namespace LetMeSleep.Updater {
             changeFolder.Text = "Cambiar carpeta"; changeFolder.SetBounds(276,306,180,38); changeFolder.Visible = false;
             hint.Text = "Actualizaciones automáticas.\nTus ajustes y personalización se conservan."; hint.ForeColor = Theme.Muted;
             hint.Font = new Font("Segoe UI",9); hint.SetBounds(279,290,485,42);
-            var footer = new Label { Text = "WINDOWS 64 BITS   ·   INICIO 1.1.0", ForeColor = Theme.Muted, Font = new Font("Segoe UI",8), Bounds = new Rectangle(279,414,460,20) };
+            var footer = new Label { Text = "WINDOWS 64 BITS   ·   INICIO 1.1.1", ForeColor = Theme.Muted, Font = new Font("Segoe UI",8), Bounds = new Rectangle(279,414,460,20) };
             Controls.AddRange(new Control[] { side, heading, status, bar, retry, previous, folderCaption, folder, browse, installButton, changeFolder, hint, footer });
             FormClosed += (s,e) => { art.Image.Dispose(); Icon.Dispose(); };
             browse.Click += (s,e) => {

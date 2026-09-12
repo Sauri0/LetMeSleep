@@ -23,7 +23,7 @@ namespace LetMeSleep.Editor
                 SandboxId=PlayEveryWare.EpicOnlineServices.SandboxId.FromString(source.sandboxId), DeploymentId=Guid.Parse(source.deploymentId) };
             config.platformOptionsFlags |= PlayEveryWare.EpicOnlineServices.WrappedPlatformFlags.DisableOverlay; config.Write();
             NativePluginPolicy.Apply();
-            PlayerSettings.productName="Let me sleep"; PlayerSettings.bundleVersion="0.9.4-alfa";
+            PlayerSettings.productName="Let me sleep"; PlayerSettings.bundleVersion="0.9.4-alfa.1";
             LastOutput="N:/LetMeSleep/Artifacts/alfa-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss");
             Directory.CreateDirectory(LastOutput);
             var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes=new[]{AlfaBootstrapBuilder.ScenePath},

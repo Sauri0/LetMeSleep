@@ -1,10 +1,10 @@
 param(
     [Parameter(Mandatory=$true)][string]$BuildDirectory,
-    [string]$Version='0.9.4-alfa',
+    [string]$Version='0.9.4-alfa.1',
     [string]$OutputDirectory='N:/LetMeSleep/Artifacts/packages'
 )
 $ErrorActionPreference='Stop'
-if ($Version -notmatch '^\d+\.\d+\.\d+-(alfa|beta|omega|delta|gamma)$') { throw 'Invalid playtest version.' }
+if ($Version -notmatch '^\d+\.\d+\.\d+-(alfa|beta|omega|delta|gamma)(\.[1-9]\d*)?$') { throw 'Invalid playtest version.' }
 $buildPath=[IO.Path]::GetFullPath($BuildDirectory)
 $outputPath=[IO.Path]::GetFullPath($OutputDirectory)
 $receiptPath=Join-Path $buildPath 'build-receipt.json'
