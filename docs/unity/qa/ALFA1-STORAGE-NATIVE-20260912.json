@@ -1,0 +1,69 @@
+{
+  "status": "completed",
+  "duration": 0.16,
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LetMeSleep.Tests.Storage.EditMode.PreferenceFileStoreTests.ActivationIoFailurePreservesPrimaryAndLeavesNoPartialFile",
+      "Status": "Passed",
+      "Duration": 0.0311144,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.Storage.EditMode.PreferenceFileStoreTests.MalformedPrimaryRecoversBackupWithoutMutatingFiles",
+      "Status": "Passed",
+      "Duration": 0.0075937,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.Storage.EditMode.PreferenceFileStoreTests.NewProfileThenReplacementCreatesPreviousBackup",
+      "Status": "Passed",
+      "Duration": 0.011608,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.Storage.EditMode.PreferenceFileStoreTests.OversizedPrimaryFallsBackToCurrentBackupWithoutMutation",
+      "Status": "Passed",
+      "Duration": 0.0304068,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.Storage.EditMode.PreferenceFileStoreTests.SaveAfterMalformedPrimaryArchivesItAndPreservesGoodBackup",
+      "Status": "Passed",
+      "Duration": 0.0111027,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.Storage.EditMode.PreferenceFileStoreTests.UnsupportedBackupAlsoBlocksSaveWhenPrimaryIsMalformed",
+      "Status": "Passed",
+      "Duration": 0.0084739,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.Storage.EditMode.PreferenceFileStoreTests.UnsupportedPrimaryBlocksLoadAndSaveWithoutModification",
+      "Status": "Passed",
+      "Duration": 0.0080686,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LetMeSleep.Tests.Storage.EditMode.PreferenceFileStoreTests.Utf8LimitIsInclusiveAndOversizedSavePreservesPrimary",
+      "Status": "Passed",
+      "Duration": 0.0283579,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 # QA funcional — Unity 0.9.4 alfa
 
-Estado: **candidata pública distribuible para diagnóstico; alfa todavía BLOCK**. Pasaron build limpio, paquete, instalación pública, UI, Unity EditMode y PlayMode acotado. Siguen pendientes el par EOS/WAN, rondas y recorrido integral, rendimiento objetivo y aprobación de Branko.
+Estado: **candidata pública alfa.1 distribuible para diagnóstico; alfa todavía BLOCK**. Pasaron build limpio, paquete, actualización pública, UI, almacenamiento nativo/Windows y rondas automáticas de ambos roles. Siguen pendientes el par EOS/WAN, rondas online y recorrido manual integral, rendimiento objetivo y aprobación de Branko.
+
+- [Informe alfa.1](FINAL-REVIEW-0.9.4-ALFA1-CANDIDATE.md): recuperación de guardados, protección de esquemas futuros, launcher 1.1.1 y nueva identidad publicada. El informe alfa original de abajo conserva su evidencia histórica.
 
 - [Informe QA final de la candidata](FINAL-REVIEW-0.9.4-ALFA-CANDIDATE.md): identidad pública, evidencia, dictamen U094-01…17 y condiciones para aprobar alfa.
 - [Matriz de aceptación](ACCEPTANCE-MATRIX-0.9.4-ALFA.md): requisitos, negativos y evidencia mínima.

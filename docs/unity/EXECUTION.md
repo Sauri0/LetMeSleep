@@ -55,3 +55,11 @@ Spatial contract: Unity metres, Y-up/Z-forward. Human capsule radius .25, height
 - Scope and external gates remain unchanged: candidate only; WAN/two identities, complete manual rounds, visual/fun approval and target-hardware profile pending. No beta/omega/delta/gamma execution or completion claim.
 - Public installed executable also ran with a visible window after the hidden-render limitation was identified. All six runtime/online-host booleans passed; human render at1920x1080 inspected. Visible probe receipt ALFA-PUBLIC-VISIBLE-PLAYER-20260912.json. Timings remain short application-loop samples, not a sustained frame-rate benchmark. Player processes exited cleanly.
 - After publishing and verifying the visible installed player, Director closed its resident Unity editor (PID18620). No game playtest process remains. Resume with one editor only after coordinating the slot; pending work is in the acceptance report and external gates.
+
+## Public revision alfa.1 — 2026-09-12
+
+- No stage transition. Source f0e6b80fd067ea7f25768c21d1e2cf898a8c65d1, tag/release v0.9.4-alfa.1; Windows build Succeeded, zero errors, normalized source content clean. Original alfa assets remain immutable.
+- Preference recovery and future-schema protection validated with eight native storage tests, five native JSON-classifier cases, and Windows recovery/future/new-profile runs. All three Windows probes passed runtime/host checks. No WAN claim.
+- Launcher1.1.1: 63 tests, published ZIP download/checksum/manifest, update of original alfa installation, second-start reuse, old slot retained. Public launcher hash verified. See qa/FINAL-REVIEW-0.9.4-ALFA1-CANDIDATE.md.
+- Team: W1 full-round/retry evidence integrated; QA storage test suite integrated and final notes reviewed. Other owners remain frozen; no conflicting root edits requested.
+- Beta still waits for independent players/networks and Branko approval. Art/balance/manual traversal/target GPU verification remain explicitly unaccepted. No questions sent while user sleeps.
