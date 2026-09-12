@@ -474,7 +474,7 @@ namespace LetMeSleep.UI
             factory.FeatureButton(menu, "MainTrainingButton", "ENTRENAMIENTO", "PRACTICÁ CON BOTS", ShowTraining, AlfaUiIconKind.Training, false, false, 72f);
             factory.FeatureButton(menu, "MainCustomizeButton", "PERSONALIZAR", "HUMANO Y MOSQUITO", ShowCustomization, AlfaUiIconKind.Customize, false, false, 72f);
             factory.FeatureButton(menu, "MainSettingsButton", "AJUSTES", "AUDIO · VIDEO · CONTROLES", () => OpenSettings(AlfaUiScreen.MainMenu), AlfaUiIconKind.Settings, false, false, 72f);
-            var quit = factory.FeatureButton(menu, "MainQuitButton", "SALIR", "CERRAR EL JUEGO", ConfirmQuit, AlfaUiIconKind.Exit, false, false, 66f);
+            var quit = factory.FeatureButton(menu, "MainQuitButton", "SALIR", "CERRAR EL JUEGO", ConfirmQuit, AlfaUiIconKind.Exit, false, false, 72f);
             AlfaUiFactory.QuietButton(quit);
             factory.Text(menu, "NavigationHint", "FLECHAS / TAB  ·  ENTER  ·  ESC", 16f, AlfaUiTheme.Moon200);
             var version = string.IsNullOrWhiteSpace(Application.version) ? "ALFA" : Application.version.Replace("-", " / ").ToUpperInvariant();
