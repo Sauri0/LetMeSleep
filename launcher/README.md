@@ -1,4 +1,4 @@
-# Inicio con actualización automática · 1.0.1
+# Inicio con actualización automática · 1.1.0 (candidata de alfa)
 
 Descargar una sola vez **Let-me-sleep-Launcher.exe** y abrir siempre ese archivo (o un acceso directo a él). El launcher instala y actualiza el juego; el juego continúa en la versión 0.9.3 hasta que se publique otra. El ejecutable antiguo del juego no adquiere actualización automática por sí solo.
 
@@ -6,7 +6,9 @@ No hace falta descargar el ZIP principal. Cuando no encuentra una instalación p
 
 1.0.1 incorpora un logo de mosquito nocturno, icono de Windows en siete tamaños (16 a 256 px), interfaz con paleta azul/crema/amarillo, botones diferenciados, foco visible y barra de progreso. Los recursos están incrustados en el EXE: el usuario sigue descargando un solo archivo. [Origen y prompt del logo](assets/DESIGN.md).
 
-El launcher consulta la [API pública de releases de GitHub](https://docs.github.com/en/rest/releases/releases). Entre las últimas 100 publicaciones elige la versión numérica más alta con ZIP Windows y checksum completos. Incluye las versiones de prueba públicas de Let me sleep; excluye borradores, tags ajenos, publicaciones incompletas y paquetes para otros sistemas. No pide credenciales ni accede a repositorios privados.
+El launcher consulta la API pública de releases de GitHub. Entre las últimas 100 publicaciones elige la versión más alta con ZIP Windows y checksum completos. Compara primero la versión numérica y después las etapas en el orden alfa → beta → omega → delta → gamma → versión sin sufijo. Incluye las versiones de prueba públicas de Let me sleep; excluye borradores, tags ajenos, etapas desconocidas, publicaciones incompletas y paquetes para otros sistemas. No pide credenciales ni accede a repositorios privados.
+
+Los nombres técnicos usan guion: `v0.9.4-alfa` y `Let-me-sleep-0.9.4-alfa-Windows.zip`. Las versiones 1.0.0/1.0.1 del launcher no reconocen estas etapas: al publicarse 1.1.0 habrá que reemplazar el archivo del launcher una vez. La nueva versión reconoce la ubicación ya elegida y las instalaciones anteriores. Esta candidata aún requiere validación de descarga del paquete alfa publicado; compilar el launcher no publica el juego.
 
 Instala en la carpeta elegida, con una subcarpeta `versions` y una carpeta independiente por versión. Descarga por HTTPS, verifica tamaño, SHA-256 y el manifiesto BUILD.json del paquete. Rechaza rutas inseguras y colisiones de nombres del ZIP. Solo activa una instalación validada mediante reemplazo atómico de `current.txt`. Conserva las instalaciones anteriores; por ahora no elimina automáticamente versiones viejas. No toca los ajustes Godot en `user://` ni los archivos existentes en la carpeta elegida.
 
@@ -14,6 +16,6 @@ Si GitHub no responde o una descarga falla, permite reintentar o abrir la versi�
 
 El launcher actualiza **el juego**, no su propio ejecutable. Requiere Windows de 64 bits con .NET Framework 4.5 o posterior (incluido en Windows 10/11). No requiere .NET SDK en la computadora de los jugadores. Los futuros paquetes generados por `work/build.ps1` incluyen el launcher y `Jugar.cmd` lo usa preferentemente. Los ZIP históricos permanecen intactos.
 
-Compilar: `powershell -File work/build-launcher.ps1`. Compila con el C# de .NET Framework y ejecuta 39 comprobaciones de selección de versiones, integridad, rutas, extracción, cancelación, activación y persistencia de ubicación. La prueba `work/updater-tests.exe --install-latest-no-launch <carpeta-aislada>` instala realmente desde GitHub y comprueba que un segundo arranque no reinstala. Nunca abre el juego.
+Compilar: `powershell -File work/build-launcher.ps1`. Compila con el C# de .NET Framework y ejecuta 54 comprobaciones de selección y orden de etapas, integridad, rutas, extracción, cancelación, activación y persistencia de ubicación. La prueba `work/updater-tests.exe --install-latest-no-launch <carpeta-aislada>` instala realmente desde GitHub y comprueba que un segundo arranque no reinstala. Nunca abre el juego.
 
 Validación 1.0.1: 39 comprobaciones correctas y captura fuera de pantalla de los controles reales, revisada visualmente. El icono contiene siete tamaños y está incrustado tanto en los recursos de Windows como en la ventana. No se abrió ninguna ventana interactiva ni el juego. El selector de carpetas no se recorrió manualmente. El motor de descarga no cambió respecto a la prueba real de instalación de 0.9.3 en 1.0.0. La verificación online entre dos casas no cambia.
