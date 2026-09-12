@@ -17,6 +17,7 @@ namespace LetMeSleep.Audio
         [SerializeField, Min(0.02f)] private float maximumDistance = 18f;
         [SerializeField, Range(0, 256)] private int priority = 80;
         [SerializeField, Min(1)] private int maximumSimultaneous = 4;
+        [SerializeField] private bool loop = false;
 
         public string CueId => cueId;
         public AudioMixerGroup Output => output;
@@ -28,6 +29,7 @@ namespace LetMeSleep.Audio
         public float MaximumDistance => maximumDistance;
         public int Priority => priority;
         public int MaximumSimultaneous => maximumSimultaneous;
+        public bool Loop => loop;
 
         public bool TrySelectClip(out AudioClip clip)
         {

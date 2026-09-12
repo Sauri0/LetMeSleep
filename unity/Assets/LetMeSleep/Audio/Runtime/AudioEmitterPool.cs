@@ -12,6 +12,8 @@ namespace LetMeSleep.Audio
             public AudioCue Cue;
             public Transform Follow;
             public double StartedAt;
+            public float FadeRemaining;
+            public float FadeStartVolume;
         }
 
         private static readonly AnimationCurve Rolloff = new AnimationCurve(
@@ -56,6 +58,19 @@ namespace LetMeSleep.Audio
                     continue;
                 }
 
+                if (voice.FadeRemaining > 0f)
+                {
+                    voice.FadeRemaining -= Time.unscaledDeltaTime;
+                    voice.Source.volume = voice.FadeStartVolume * Mathf.Clamp01(voice.FadeRemaining / 0.04f);
+                    if (voice.FadeRemaining <= 0f)
+                    {
+                        voice.Source.Stop();
+                        voice.Cue = null;
+                        voice.Follow = null;
+                        continue;
+                    }
+                }
+
                 if (voice.Follow != null)
                     voice.Source.transform.position = voice.Follow.position;
             }
@@ -89,7 +104,7 @@ namespace LetMeSleep.Audio
             source.maxDistance = cue.MaximumDistance;
             source.rolloffMode = AudioRolloffMode.Custom;
             source.SetCustomCurve(AudioSourceCurveType.CustomRolloff, Rolloff);
-            source.loop = false;
+            source.loop = cue.Loop;
             source.playOnAwake = false;
             source.dopplerLevel = 0f;
             source.transform.position = follow != null ? follow.position : position;
@@ -97,8 +112,25 @@ namespace LetMeSleep.Audio
             voice.Cue = cue;
             voice.Follow = follow;
             voice.StartedAt = AudioSettings.dspTime;
+            voice.FadeRemaining = 0f;
+            voice.FadeStartVolume = cue.Volume;
             source.Play();
             return true;
+        }
+
+        public void Stop(AudioCue cue, Transform follow = null)
+        {
+            if (cue == null)
+                return;
+            for (int i = 0; i < voices.Count; i++)
+            {
+                Voice voice = voices[i];
+                if (voice.Cue != cue || !voice.Source.isPlaying ||
+                    (follow != null && voice.Follow != follow))
+                    continue;
+                voice.FadeStartVolume = voice.Source.volume;
+                voice.FadeRemaining = 0.04f;
+            }
         }
 
         public void StopAllVoices()

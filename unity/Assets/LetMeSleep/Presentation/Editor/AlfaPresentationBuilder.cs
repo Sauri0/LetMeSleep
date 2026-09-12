@@ -188,7 +188,7 @@ namespace LetMeSleep.Presentation.Editor
             cues["StrikeSwing"] = CreateCue("StrikeSwing", "SFX_StrikeSwing.wav", 40, 4, 0.98f, 1.03f, 1f, 0.8f, 18f, FindGroup(mixer, "Character"));
             cues["StrikeImpact"] = CreateCue("StrikeImpact", "SFX_StrikeImpact.wav", 24, 4, 0.97f, 1.03f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
             cues["BiteStarted"] = CreateCue("BiteStarted", "SFX_BiteStart.wav", 24, 8, 0.98f, 1.02f, 1f, 0.35f, 12f, FindGroup(mixer, "Critical"));
-            cues["MosquitoWingLoop"] = CreateCue("MosquitoWingLoop", "SFX_MosquitoWingLoop.wav", 56, 12, 0.92f, 1.12f, 1f, 0.35f, 12f, FindGroup(mixer, "Mosquito"));
+            cues["MosquitoWingLoop"] = CreateCue("MosquitoWingLoop", "SFX_MosquitoWingLoop.wav", 56, 12, 0.92f, 1.12f, 1f, 0.35f, 12f, FindGroup(mixer, "Mosquito"), true);
             cues["DoorOpen"] = CreateCue("DoorOpen", "SFX_DoorOpen.wav", 96, 10, 0.98f, 1.02f, 1f, 0.8f, 20f, FindGroup(mixer, "World"));
             cues["DoorClose"] = CreateCue("DoorClose", "SFX_DoorClose.wav", 96, 10, 0.98f, 1.02f, 1f, 0.8f, 20f, FindGroup(mixer, "World"));
             cues["HumanFainted"] = CreateCue("HumanFainted", "SFX_HumanFainted.wav", 24, 4, 0.98f, 1.02f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
@@ -203,7 +203,8 @@ namespace LetMeSleep.Presentation.Editor
         private static AudioCue CreateCue(
             string id, string clipName, int priority, int simultaneous,
             float minimumPitch, float maximumPitch, float spatialBlend,
-            float minimumDistance, float maximumDistance, AudioMixerGroup output)
+            float minimumDistance, float maximumDistance, AudioMixerGroup output,
+            bool loop = false)
         {
             string path = $"{AudioRoot}/Cues/{id}.asset";
             AudioCue cue = CreateOrLoad<AudioCue>(path);
@@ -224,6 +225,7 @@ namespace LetMeSleep.Presentation.Editor
             serialized.FindProperty("spatialBlend").floatValue = spatialBlend;
             serialized.FindProperty("minimumDistance").floatValue = minimumDistance;
             serialized.FindProperty("maximumDistance").floatValue = maximumDistance;
+            serialized.FindProperty("loop").boolValue = loop;
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(cue);
             return cue;
