@@ -73,6 +73,9 @@ namespace LetMeSleep.Gameplay.Unity
             if (!IsWorldCollider(collider)) return false;
             var actor = Actor(collider); if (actor && actor.ActorId == own) return false;
             bool mosquito = actors.TryGetValue(own, out var self) && self.Role == PlayerRole.Mosquito;
+            // Mosquitoes contact anatomical surfaces inside the wider human locomotion capsule.
+            // Resolving that overlap on the human would repeatedly push it away from a biting insect.
+            if (self && self.Role == PlayerRole.Human && actor && actor.Role == PlayerRole.Mosquito) return false;
             var anatomy = collider.GetComponent<GameplayBodySurface>();
             if (collider.isTrigger) return mosquito && anatomy;
             if (mosquito && actor && actor.Role == PlayerRole.Human) return false;
