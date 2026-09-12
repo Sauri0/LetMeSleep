@@ -11,3 +11,5 @@ Alfa sigue en recuperación; no publicar esta integración como arte aprobado ni
 - Catálogo: 32 fichas, 5 con capturas parciales actuales, 33 PNG contando historia. Índice local `N:/LetMeSleep/Validation/ArtCatalog/index.html`; no es release ni certificación visual.
 
 Pendiente: integrar siguiente M1 sólo con auditorías coherentes; resolver iluminación observada, validar contacto visual y uso de objetos afectados, completar animaciones/evidencia y escucha real. WAN con dos casas continúa pendiente de Branko/amigos. El próximo paquete exige esos gates y mantener pruebas técnicas apropiadas sin repetir por rutina toda la batería antigua.
+
+W2 entregó c3a3a11 al cierre de esta tanda: orientación de spots hacia interior/piso, fill adelantado y DynamicGI.UpdateEnvironment tras Trilight. Integrado para la próxima captura; no probado nativamente todavía porque M1 ocupa CPU. Script de diagnóstico preparado en Validation/Alfa-VisualRecovery/DumpPresentationLighting.cs.
