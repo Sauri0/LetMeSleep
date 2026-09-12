@@ -36,6 +36,12 @@ func _run() -> void:
 			"target": Vector3(-8, 1.8, 0), "range": 6.5}],
 		"windows": [{"id": "patio-window", "p": Vector3(4, 1.55, 10), "axis": 2,
 			"rear": true, "room": "Estar", "tint": Color("8aa6a0")}],
+		"exterior": {"bounds": lot,
+			"areas": [{"id": "patio-grass", "kind": "garden",
+				"bounds": AABB(Vector3(-12, -.08, 10), Vector3(24, .08, 10))}],
+			"paths": [{"id": "patio-path", "kind": "stone", "surface": "stone",
+				"points": [Vector3(0, 0, 9.9), Vector3(0, 0, 18)], "from": Vector3(0, 0, 9.9),
+				"to": Vector3(0, 0, 18), "width": 2.6}], "props": []},
 		"structures": [], "pickup_supports": [],
 	}
 	var world: Node3D = WorldScript.new()
@@ -61,6 +67,15 @@ func _run() -> void:
 	var without_windows := data.duplicate(true)
 	without_windows.erase("windows")
 	_check(Details.window_specs(without_windows).is_empty(), "authored map never receives legacy magic windows")
+	var exterior_report := Details.build_authored_exterior(world)
+	_check(exterior_report.areas == 1 and exterior_report.path_segments == 1 and exterior_report.props == 0,
+		"authored exterior builds exact metadata surfaces without optional props")
+	_check(bool(exterior_report.visual_only) and exterior_report.collision_source == "map obstacles",
+		"exterior adapter declares map obstacles as sole collision source")
+	var exterior_meshes: Array[Node] = world.map_root.get_node("AuthoredExterior").find_children("*", "MeshInstance3D", true, false)
+	_check(exterior_meshes.size() == 2, "one garden area and one straight path segment are visible")
+	_check(world.map_root.find_children("*", "StaticBody3D", true, false).size() == obstacles.size(),
+		"visual exterior adds no duplicate collision")
 	world._build_generated_lighting()
 	var room_lights := 0
 	var hall_lights := 0

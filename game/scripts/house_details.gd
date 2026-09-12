@@ -4,6 +4,7 @@ const Library = preload("res://assets/art/house/house_library.gd")
 const Doors = preload("res://scripts/door_catalog.gd")
 const Barriers = preload("res://scripts/house_barriers.gd")
 const Joinery = preload("res://scripts/frame_joinery.gd")
+const ALFA_LIBRARY_PATH := "res://assets/art/house/alfa_library.gd"
 
 static func window_specs(data: Dictionary) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
@@ -336,6 +337,7 @@ static func build_exterior(world: Node3D) -> void:
 	# Authored outdoor geometry is driven by exterior metadata and the alfa
 	# library adapter. Never cover that 40 m lot with the legacy backdrop here.
 	if world.map_data.has("authored_version"):
+		build_authored_exterior(world)
 		return
 	var night:=Node3D.new();night.name="NightExterior";world.map_root.add_child(night)
 	for definition:Array in [[Vector3(0,-.08,-17),0.0],[Vector3(0,-.08,17),PI],[Vector3(-20,-.08,0),PI/2],[Vector3(20,-.08,0),-PI/2]]:
@@ -349,6 +351,119 @@ static func build_exterior(world: Node3D) -> void:
 				mesh.set_surface_override_material(surface,mat)
 	var ground:=StandardMaterial3D.new();ground.albedo_color=Color("162b31");ground.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
 	world._box(night,Vector3(0,-.16,0),Vector3(64,.08,64),ground)
+
+static func _path_points(path: Dictionary) -> Array[Vector3]:
+	var result: Array[Vector3] = []
+	for point: Variant in path.get("points", []):
+		if point is Vector3:
+			result.append(point)
+	if result.size() < 2 and path.get("from") is Vector3 and path.get("to") is Vector3:
+		result = [Vector3(path.from), Vector3(path.to)]
+	return result
+
+static func _build_authored_area(world: Node3D, root: Node3D, area: Dictionary) -> bool:
+	if not area.get("bounds") is AABB:
+		return false
+	var bounds: AABB = area.bounds
+	if not bounds.has_volume():
+		return false
+	var kind := str(area.get("kind", "garden"))
+	var tint := Color(area.get("color", Color("42634f") if kind == "garden" else Color("786f61")))
+	var mesh: MeshInstance3D = world._box(root, bounds.get_center(), bounds.size, world._surface_material(tint, kind))
+	mesh.name = "ExteriorArea_" + str(area.get("id", kind)).validate_node_name()
+	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mesh.set_meta("catalog_kind", "exterior_area")
+	mesh.set_meta("exterior_id", str(area.get("id", "")))
+	mesh.set_meta("exterior_surface", kind)
+	return true
+
+static func _build_authored_path(world: Node3D, root: Node3D, path: Dictionary) -> int:
+	var points := _path_points(path)
+	var width := float(path.get("width", 0.0))
+	if points.size() < 2 or width <= 0.0:
+		return 0
+	var tint := Color(path.get("color", Color("918579")))
+	var material: Material = world._surface_material(tint, str(path.get("surface", "stone")))
+	var built := 0
+	for index: int in range(points.size() - 1):
+		var from := points[index]
+		var to := points[index + 1]
+		var delta := to - from
+		var horizontal := Vector2(delta.x, delta.z)
+		if horizontal.length() < 0.01:
+			continue
+		var segment := Node3D.new()
+		segment.name = "ExteriorPath_%s_%02d" % [str(path.get("id", "path")).validate_node_name(), index]
+		segment.position = (from + to) * 0.5 + Vector3.UP * 0.014
+		segment.rotation.y = atan2(delta.x, delta.z)
+		root.add_child(segment)
+		var mesh: MeshInstance3D = world._box(segment, Vector3.ZERO, Vector3(width, .028, horizontal.length()), material)
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mesh.set_meta("catalog_kind", "exterior_path")
+		mesh.set_meta("exterior_id", str(path.get("id", "")))
+		mesh.set_meta("exterior_surface", str(path.get("surface", "stone")))
+		built += 1
+	return built
+
+static func _build_authored_prop(root: Node3D, library: Script, prop: Dictionary) -> bool:
+	if not prop.get("p") is Vector3 or not prop.get("scale", Vector3.ONE) is Vector3:
+		return false
+	var asset_id := str(prop.get("asset_id", ""))
+	if asset_id.is_empty() or not library.has_asset(asset_id):
+		return false
+	var visual: Node3D = library.instantiate_asset(asset_id)
+	if not is_instance_valid(visual):
+		return false
+	var placement := Node3D.new()
+	placement.name = "ExteriorProp_" + str(prop.get("id", asset_id)).validate_node_name()
+	placement.position = Vector3(prop.p)
+	placement.rotation.y = float(prop.get("yaw", 0.0))
+	placement.scale = Vector3(prop.get("scale", Vector3.ONE))
+	placement.set_meta("catalog_kind", "exterior_prop")
+	placement.set_meta("exterior_id", str(prop.get("id", "")))
+	placement.set_meta("authored_asset", asset_id)
+	root.add_child(placement)
+	placement.add_child(visual)
+	return true
+
+static func build_authored_exterior(world: Node3D) -> Dictionary:
+	var existing: Node = world.map_root.get_node_or_null("AuthoredExterior")
+	if existing != null:
+		return Dictionary(existing.get_meta("build_report", {}))
+	var root := Node3D.new()
+	root.name = "AuthoredExterior"
+	world.map_root.add_child(root)
+	var exterior: Dictionary = world.map_data.get("exterior", {})
+	var errors: Array[String] = []
+	var areas := 0
+	for area: Variant in exterior.get("areas", []):
+		if area is Dictionary and _build_authored_area(world, root, area):
+			areas += 1
+		else:
+			errors.append("invalid exterior area")
+	var path_segments := 0
+	for path: Variant in exterior.get("paths", []):
+		if not path is Dictionary:
+			errors.append("invalid exterior path")
+			continue
+		var built := _build_authored_path(world, root, path)
+		if built == 0:
+			errors.append("invalid exterior path " + str(path.get("id", "")))
+		path_segments += built
+	var props := 0
+	var library: Script = load(ALFA_LIBRARY_PATH) if ResourceLoader.exists(ALFA_LIBRARY_PATH) else null
+	for prop: Variant in exterior.get("props", []):
+		if library != null and prop is Dictionary and _build_authored_prop(root, library, prop):
+			props += 1
+		else:
+			errors.append("invalid or unavailable exterior prop " + str(prop.get("id", "")) if prop is Dictionary else "invalid exterior prop")
+	var report := {"areas": areas, "path_segments": path_segments, "props": props,
+		"requested_areas": Array(exterior.get("areas", [])).size(),
+		"requested_paths": Array(exterior.get("paths", [])).size(),
+		"requested_props": Array(exterior.get("props", [])).size(), "errors": errors,
+		"visual_only": true, "collision_source": "map obstacles"}
+	root.set_meta("build_report", report)
+	return report
 
 static func finish(world: Node3D) -> void:
 	build_windows(world,window_specs(world.map_data))

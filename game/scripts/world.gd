@@ -615,7 +615,7 @@ void fragment(){
   vec2 joint = 1.0-smoothstep(vec2(0.018),vec2(0.018)+footprint,distance_to_joint);
   float seam = max(joint.x,joint.y);
   shade = 1.0-seam*0.22;
- } else {
+ } else if(surface_kind < 5.5){
   vec3 face = abs(normalize(n));
   float horizontal = face.z>0.5 ? p.x : p.z;
   float panel = horizontal*1.55;
@@ -623,6 +623,15 @@ void fragment(){
   float panel_aa = max(fwidth(panel),.001);
   float joint = 1.0-smoothstep(.013,.013+panel_aa,min(u,1.0-u));
   shade = .96 - joint*.12;
+ } else if(surface_kind < 6.5){
+  float patch = hash(floor(p.xz*.55));
+  float blade = sin(p.x*5.2+p.z*3.7)*.018;
+  shade = .86 + (patch*.16+blade)*detail_amount;
+ } else {
+  vec2 cell = floor(p.xz*1.35);
+  float facet = hash(cell);
+  float diagonal = step(fract(p.x*1.35),fract(p.z*1.35));
+  shade = .83 + (facet*.12+diagonal*.045)*detail_amount;
  }
  ALBEDO = tint.rgb * shade;
  ROUGHNESS = finish_roughness;
@@ -633,7 +642,7 @@ void fragment(){
 	var architectural := kind in ["wood", "wall", "step", "tile", "panel"]
 	material.set_shader_parameter("detail_amount", 0.0 if architectural else 1.0)
 	material.set_shader_parameter("finish_roughness", 0.82 if architectural else 0.88)
-	material.set_shader_parameter("surface_kind", 0.0 if kind == "wood" else 1.0 if kind == "wall" else 3.0 if kind == "step" else 4.0 if kind == "tile" else 5.0 if kind == "panel" else 2.0)
+	material.set_shader_parameter("surface_kind", 0.0 if kind == "wood" else 1.0 if kind == "wall" else 3.0 if kind == "step" else 4.0 if kind == "tile" else 5.0 if kind == "panel" else 6.0 if kind == "garden" else 7.0 if kind == "stone" else 2.0)
 	surface_materials[key] = material
 	return material
 
