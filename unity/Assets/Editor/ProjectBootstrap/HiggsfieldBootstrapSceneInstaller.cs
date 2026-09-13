@@ -157,7 +157,7 @@ namespace LetMeSleep.Editor
                     {
                         if (copy.IsValid() && copy.isLoaded)
                             Require(EditorSceneManager.CloseScene(copy, true), "Failed to close copied scene.");
-                        if (previousActive.IsValid() && previousActive.isLoaded)
+                        if (previousActive.IsValid() && previousActive.isLoaded && SceneManager.GetActiveScene() != previousActive)
                             Require(SceneManager.SetActiveScene(previousActive), "Failed to restore active scene.");
                     }
                     catch (Exception error) { receipt.success = false; receipt.error += "\n" + error; throw; }

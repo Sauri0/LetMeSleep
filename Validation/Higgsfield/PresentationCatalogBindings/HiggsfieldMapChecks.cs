@@ -100,7 +100,9 @@ public static class HiggsfieldMapChecks
             try
             {
                 testScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
-                Check(SceneManager.SetActiveScene(testScene), "Cannot activate test scene.");
+                if (SceneManager.GetActiveScene() != testScene)
+                    Check(SceneManager.SetActiveScene(testScene), "Cannot activate test scene.");
+                Check(SceneManager.GetActiveScene() == testScene, "Test scene is not active.");
                 rigObject = Object.Instantiate(rigPrefab);
                 SceneManager.MoveGameObjectToScene(rigObject, testScene);
                 rig = rigObject.GetComponentInChildren<AlfaLightingRig>(true);
@@ -163,7 +165,9 @@ public static class HiggsfieldMapChecks
                     {
                         if (testScene.IsValid() && testScene.isLoaded)
                             Check(EditorSceneManager.CloseScene(testScene, true), "Cannot close test scene.");
-                        Check(SceneManager.SetActiveScene(originalScene), "Cannot restore original active scene.");
+                        if (SceneManager.GetActiveScene() != originalScene)
+                            Check(SceneManager.SetActiveScene(originalScene), "Cannot restore original active scene.");
+                        Check(SceneManager.GetActiveScene() == originalScene, "Original scene is not active.");
                         try { EqualEnvironment(originalEnvironment); }
                         catch
                         {
