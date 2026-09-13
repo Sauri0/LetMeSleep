@@ -19,7 +19,7 @@ namespace LetMeSleep.Content.Characters.Editor
     {
         public const string OutputRoot = "Assets/LetMeSleep/Content/Characters";
         public const string ReceiptPath = OutputRoot + "/BuildReceipt.json";
-        private const string BuilderVersion = "alpha-characters-6-wing-transmission";
+        private const string BuilderVersion = "alpha-characters-7-gait-clips";
         private static string SourceRoot => Path.GetFullPath(Path.Combine(Application.dataPath,
             "../../art_source/unity/characters"));
         private static readonly string[] HumanStates = {
@@ -123,10 +123,11 @@ namespace LetMeSleep.Content.Characters.Editor
                 var mosquito = ReadAudit("Mosquito");
                 var tool = ReadAudit("Flyswatter");
                 ImportModel(human); ImportModel(mosquito); ImportModel(tool);
-                var humanController = BuildController(human, HumanStates);
+                var humanStates = HumanStatesFor(human);
+                var humanController = BuildController(human, humanStates);
                 var mosquitoController = BuildController(mosquito, MosquitoStates);
-                BuildCharacter(human, humanController, HumanStates, false);
-                BuildCharacter(human, humanController, HumanStates, true);
+                BuildCharacter(human, humanController, humanStates, false);
+                BuildCharacter(human, humanController, humanStates, true);
                 BuildCharacter(mosquito, mosquitoController, MosquitoStates, false);
                 BuildTool(tool);
                 AssetDatabase.SaveAssets();
@@ -279,6 +280,18 @@ namespace LetMeSleep.Content.Characters.Editor
         private static void SetKeyword(Material material, string keyword, bool enabled)
         {
             if (enabled) material.EnableKeyword(keyword); else material.DisableKeyword(keyword);
+        }
+
+        private static string[] HumanStatesFor(SourceAudit audit)
+        {
+            bool slow = audit.clips.Any(c => c.name == "Human_WalkSlow");
+            bool trot = audit.clips.Any(c => c.name == "Human_Trot");
+            if (!slow && !trot) return HumanStates; // Existing source remains usable until the new export arrives.
+            foreach (string name in new[] { "Human_WalkSlow", "Human_Walk", "Human_Trot", "Human_Run" })
+                Require(audit.clips.Count(c => c.name == name && c.loop && c.duration_seconds > 0) == 1,
+                    "Incomplete human locomotion export: " + name);
+            // Append only; existing gameplay IDs 0..14 and unrelated actions stay stable.
+            return HumanStates.Concat(new[] { "WalkSlow", "Trot" }).ToArray();
         }
 
         private static AnimatorController BuildController(SourceAudit audit, string[] states)

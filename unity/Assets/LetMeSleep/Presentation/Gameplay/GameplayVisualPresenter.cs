@@ -28,6 +28,27 @@ namespace LetMeSleep.Presentation.Gameplay
         private readonly List<uint> removedPickups = new List<uint>();
         private UnityGameplayWorld subscribedWorld;
         private bool subscribed;
+        private GameplayAudioPresenter locomotionAudio;
+
+        public void SetLocomotionAudio(GameplayAudioPresenter audio)
+        {
+            foreach (var visual in visuals.Values)
+            {
+                if (!visual) continue;
+                var source = visual.GetComponent<HumanLocomotionPresenter>();
+                if (!source) continue;
+                if (locomotionAudio) locomotionAudio.UnregisterLocomotion(source);
+                if (audio) audio.RegisterLocomotion(source);
+            }
+            locomotionAudio = audio;
+        }
+
+        private void RemoveLocomotionAudio(ActorVisualBinding visual)
+        {
+            if (!visual || !locomotionAudio) return;
+            var source = visual.GetComponent<HumanLocomotionPresenter>();
+            if (source) locomotionAudio.UnregisterLocomotion(source);
+        }
 
         private void OnEnable() => Subscribe();
         private void Start() => Subscribe();
@@ -93,7 +114,10 @@ namespace LetMeSleep.Presentation.Gameplay
             {
                 uint actorId = removedActors[i];
                 if (visuals[actorId] != null)
+                {
+                    RemoveLocomotionAudio(visuals[actorId]);
                     Destroy(visuals[actorId].gameObject);
+                }
                 visuals.Remove(actorId);
             }
 
@@ -112,7 +136,7 @@ namespace LetMeSleep.Presentation.Gameplay
             if (visuals.TryGetValue(proxy.ActorId,out var existing))
             {
                 if(existing && existing.transform.parent==proxy.transform) return;
-                if(existing) Destroy(existing.gameObject);
+                if(existing) { RemoveLocomotionAudio(existing); Destroy(existing.gameObject); }
                 visuals.Remove(proxy.ActorId);
             }
             bool local = gameplay != null && proxy.ActorId == gameplay.LocalActorId;
@@ -136,6 +160,11 @@ namespace LetMeSleep.Presentation.Gameplay
 
             ActorVisualBinding binding = instance.AddComponent<ActorVisualBinding>();
             binding.Initialize(proxy, gameplay.World, view, local);
+            if (proxy.Role == PlayerRole.Human && HumanLocomotionSetup.TryConfigure(view, proxy.ActorId, out var gait))
+            {
+                binding.BindLocomotion(gait);
+                if (locomotionAudio) locomotionAudio.RegisterLocomotion(gait);
+            }
             visuals.Add(proxy.ActorId, binding);
             if(VisualAttentionFactory.TryInstall(instance,false,out var attention,out var reason))
             {
@@ -344,7 +373,7 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if(mosquitoCamera) mosquitoCamera.Unbind();
             foreach (ActorVisualBinding visual in visuals.Values)
-                if (visual != null) Destroy(visual.gameObject);
+                if (visual != null) { RemoveLocomotionAudio(visual); Destroy(visual.gameObject); }
             visuals.Clear();
             foreach (GameObject pickup in pickupVisuals.Values)
                 if (pickup != null) Destroy(pickup);

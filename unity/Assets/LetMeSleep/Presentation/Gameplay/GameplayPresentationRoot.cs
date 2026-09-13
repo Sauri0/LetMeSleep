@@ -26,8 +26,9 @@ namespace LetMeSleep.Presentation.Gameplay
         public void Bind(GameplayRuntime runtime)
         {
             gameplay = runtime;
-            visuals?.Bind(runtime);
             audioEvents?.Bind(runtime, audioDirector);
+            visuals?.SetLocomotionAudio(audioEvents);
+            visuals?.Bind(runtime);
             vfxEvents?.Bind(runtime);
             if (runtime != null)
                 runtime.UseBuiltInCamera = false;

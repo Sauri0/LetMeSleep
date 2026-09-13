@@ -1,5 +1,20 @@
 # Human locomotion clock — implementation handoff
 
+## Implemented seam update (supersedes manual installation steps below)
+
+The following integration is now implemented as a delta based on Gameplay's released final wrist Binding `6de665324c016abc0a864527e3ab08b16b9bd6e8`. Hand/tool solver code is preserved. The original handoff below remains implementation background, not additional installation work.
+
+- CharacterContentBuilder retains original human IDs0..14. With a complete source audit containing all four named loops, it appends WalkSlow/Trot at15/16 and connects actual imported clips by exact name. Old audit with neither new clip retains the old controller; partial new export fails explicitly. No character geometry/material edits.
+- HumanLocomotionSetup only creates a presenter when Human_WalkSlow, Human_Walk, Human_Trot and Human_Run all resolve to unique, nonlegacy, positive-duration looping references, plus owned foot source bones. Missing/partial clips create no graph and do not silence legacy footsteps. Runtime names are a completeness gate; Director still verifies final source JSON/hashes, not a claim of automatic source certification.
+- GameplayVisualPresenter binds that presenter to ActorVisualBinding and registers its audio source; destruction/replacement unregisters. GameplayPresentationRoot binds audio before creating/registering visuals. RegisterLocomotion now selects the shared stream **per actor**, not globally. The explicit global EnableSharedHumanLocomotionAudio API remains available but is not called by this seam. Thus a mixed old/new first-person or remote prefab set cannot silence the old instances.
+- Binding bypasses old gait Play/Speed/Sync only for eligible configured humans, releases ownership before action/temporary/recovery/crouch/idle, and reapplies controller state. It evaluates gait after the base visual position, before hands, then publishes once after anchors. Landing frame suppresses foot contacts.
+- Configured human local visuals now use the existing bounded interpolation/extrapolation path as remotes do; current local snapshot placement at30Hz would otherwise look like a teleport-speed displacement to a144Hz render clock. This adds the existing visual interpolation delay, at most the bounded snapshot interval, to those local visuals. Authority, input and proxy movement are unchanged; native camera/hand feel must be checked. Old humans and mosquito placement stay on their original paths.
+- Pause uses Time.deltaTime; cut is actual ShouldCut/first-state, not the old always-true local flag. No graph is acquired without valid clips. Scene/prefab generation and native validation remain Director-owned.
+
+Verification: all Presentation/Gameplay source including the released final wrist Binding and seam compiles offline with zero warnings/errors. Central Gameplay source was separately compiled for this check because its existing Unity DLL had not yet exposed the final ToolOffset method; no gameplay source was changed. CharacterContentBuilder is compiled separately. The pure clock frequency/reset suite remains the evidence for algorithm behavior; no graph/controller takeover, actual first-person interpolation, sound, meshes or G4 PASS is claimed.
+
+Candidate scope is functional cadence/contact/audio correction only. No new silhouette, materials, aesthetic redesign or Higgsfield artifacts were produced. Current blocker for activating the route is the complete imported functional clip set, followed by native action/locomotion/camera/audio checks. Future visual redesign is separate.
+
 2026-09-12. Source implementation, not installed in ActorVisualBinding. Director requested that file remain owned by Gameplay during hit calibration. No Unity execution; G4 remains OPEN for final mesh/pose/contact/audio evidence.
 
 ## Delivered

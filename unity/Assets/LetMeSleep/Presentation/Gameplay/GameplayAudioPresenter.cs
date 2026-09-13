@@ -114,7 +114,6 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if (!source || !source.IsConfigured)
                 throw new ArgumentException("Configure the visual locomotion presenter before registering audio.");
-            sharedHumanLocomotionAudio = true;
             if (locomotionSources.TryGetValue(source.ActorId, out var previous))
             {
                 if (previous == source) return;
@@ -141,7 +140,7 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void HandleFootContact(HumanLocomotionPresenter source, HumanLocomotionPresenter.FootContact contact)
         {
-            if (!isActiveAndEnabled || !sharedHumanLocomotionAudio || !source ||
+            if (!isActiveAndEnabled || !source ||
                 !locomotionSources.TryGetValue(source.ActorId, out var registered) || registered != source ||
                 !gameplay || gameplay.World == null || gameplay.LatestSnapshot == null ||
                 gameplay.LatestSnapshot.SimulationPhase != GameplayModel.SimulationPhase.Running ||
@@ -224,7 +223,8 @@ namespace LetMeSleep.Presentation.Gameplay
                         actor.Velocity.Z * actor.Velocity.Z);
                     bool walking = !first && previous.Grounded && actor.Grounded &&
                         actor.LifeState == GameplayModel.LifeState.Active;
-                    if (!sharedHumanLocomotionAudio && previous.Steps.Advance(displacement.magnitude, planarSpeed,
+                    if (!sharedHumanLocomotionAudio && !locomotionSources.ContainsKey(actor.ActorId) &&
+                        previous.Steps.Advance(displacement.magnitude, planarSpeed,
                         snapshot.HostTime - previous.HostTime, Time.unscaledTime, walking))
                         emitters.Play(SelectFootstepCue(catalog, ground), proxy.transform.position);
                 }

@@ -46,6 +46,31 @@ namespace LetMeSleep.Presentation.Gameplay
         private GameObject flyswatter;
         private ToolView strikeTool;
         private readonly float[] motionDurations = new float[32];
+        private HumanLocomotionPresenter locomotion;
+        private bool usingLocomotion, locomotionDiscontinuity;
+        private int landedFrame = -1;
+
+        public void BindLocomotion(HumanLocomotionPresenter value)
+        {
+            if (locomotion) locomotion.Suspend();
+            locomotion = value;
+            usingLocomotion = false;
+            locomotionDiscontinuity = true;
+        }
+
+        private bool HasLocomotion => locomotion && locomotion.isActiveAndEnabled && locomotion.IsConfigured;
+        private bool CanUseLocomotion(GameplayModel.ActorSnapshot state) => HasLocomotion &&
+            proxy.Role == PlayerRole.Human && state != null && state.Grounded &&
+            state.LifeState == GameplayModel.LifeState.Active && state.CrouchFraction <= 0.1f &&
+            state.StrikeState.Phase == GameplayModel.StrikePhase.None && temporaryMotion < 0 &&
+            PlanarSpeed(state.Velocity) > 0.1f;
+
+        private void ReleaseLocomotion()
+        {
+            if (locomotion) locomotion.Suspend();
+            if (usingLocomotion) currentMotion = -1; // Controller state must be explicitly reapplied.
+            usingLocomotion = false;
+        }
 
         public uint ActorId => proxy != null ? proxy.ActorId : 0;
         public CharacterView View => view;
@@ -83,7 +108,12 @@ namespace LetMeSleep.Presentation.Gameplay
             if (state == null || proxy == null || state.ActorId != proxy.ActorId)
                 return;
 
-            bool cut = current == null || localActor || ShouldCut(current, state);
+            bool discontinuity = current == null || ShouldCut(current, state);
+            if (current != null && !current.Grounded && state.Grounded) landedFrame = Time.frameCount;
+            locomotionDiscontinuity |= discontinuity;
+            // New human gait measures rendered displacement; smooth local visuals too, so
+            // 30Hz snapshot jumps are not mistaken for 144Hz teleport-speed movement.
+            bool cut = discontinuity || (localActor && !HasLocomotion);
             previous = cut ? state : current;
             previousHostTick = cut ? hostTick : currentHostTick;
             current = state;
@@ -144,11 +174,12 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if (proxy == null || view == null || current == null)
             {
+                ReleaseLocomotion();
                 ReleaseBiteAttention();
                 return;
             }
 
-            if (localActor)
+            if (localActor && !HasLocomotion)
             {
                 SetWorldPose(current.Position.ToUnity(), current.BodyRotation.ToUnity());
             }
@@ -178,13 +209,32 @@ namespace LetMeSleep.Presentation.Gameplay
                 ApplyMotion(current, false);
             }
 
+            if (HasLocomotion)
+            {
+                bool eligible = CanUseLocomotion(current);
+                if (!eligible && usingLocomotion)
+                {
+                    ReleaseLocomotion();
+                    ApplyMotion(current, false);
+                }
+                locomotion.EvaluateRenderedPose(transform.position, eligible, locomotionDiscontinuity,
+                    Time.frameCount, Time.deltaTime);
+                locomotionDiscontinuity = false;
+            }
             ApplyAuthoritativeHands();
             view.RefreshAnchors();
+            if (HasLocomotion) locomotion.PublishContacts(Time.frameCount, landedFrame == Time.frameCount);
             ApplyBiteAnchor();
         }
 
         private void ApplyMotion(GameplayModel.ActorSnapshot state, bool immediate)
         {
+            if (CanUseLocomotion(state))
+            {
+                usingLocomotion = true;
+                return; // Manual gait owns speed, state and phase; no old 1.2m resync/clamp.
+            }
+            if (usingLocomotion) ReleaseLocomotion();
             int motion = SelectMotion(state);
             if (motion == currentMotion)
             {
@@ -236,6 +286,7 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void PlayTemporary(int motion)
         {
+            ReleaseLocomotion();
             temporaryMotion = motion;
             float duration = MotionDuration(motion);
             temporaryUntil = Time.unscaledTime + Mathf.Clamp(duration, 0.08f, 2.5f);
@@ -454,6 +505,7 @@ namespace LetMeSleep.Presentation.Gameplay
         }
         private void OnDisable()
         {
+            ReleaseLocomotion();
             ReleaseBiteAttention();
             if (attention) attention.AfterEvaluation -= MeasureBiteResidual;
             attention = null;
