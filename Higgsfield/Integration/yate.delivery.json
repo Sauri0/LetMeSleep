@@ -1,0 +1,112 @@
+{
+  "status": "PASS_STRICT_RECIPE_REPRODUCTION_AND_CURRENT_CENTRAL_CSHARP_CONTRACT",
+  "mapId": "hf-yate-a-la-deriva-v1",
+  "recipePath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\UnityRecipe\\hf-yate-a-la-deriva-v1.recipe.json",
+  "recipeSha256": "28c2d86e4d798f7f426be20c5a2a934c658b0c542a6ac54cebbbde24bcf4a05c",
+  "validationPath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\UnityRecipe\\hf-yate-a-la-deriva-v1.validation.json",
+  "validationSha256": "fd72997bf7eb865f02bf603c308756dc74b4529f0083a06161491280dcf91a4c",
+  "sourceHashes": {
+    "fbx": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\HF_MAP_04_yate_UNITY.fbx",
+      "sha256": "e3eb92985e2300e3788607d8a39520de00d711ed091db9d42760ae0e3bc3ae14"
+    },
+    "glb": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\HF_MAP_04_yate.glb",
+      "sha256": "ab83efca5c93342ef44e125c7e0deb7d2e5a227ef7de61b2b0178fcd136260ba"
+    },
+    "audit": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\scene-audit.json",
+      "sha256": "e5e947dcede0706762ac4283134159b52ee9420e30cf1039e83353ed63900b80"
+    },
+    "report": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\HF_MAP_04_yate_report.json",
+      "sha256": "0b56d6f2520909faafd0f59e4e2c1e13298abd4317590e5fc2dadf4d25794a84"
+    }
+  },
+  "centralValidationCode": [
+    {
+      "path": "N:\\LetMeSleep\\Repository\\Higgsfield\\Integration\\prepare_map_recipe.py",
+      "sha256": "ae8a700db5f15b80f471ea6bef29e3c150e5712c5b8f14ddcbeb50a622b97249"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Repository\\Higgsfield\\Integration\\Verify-RecipeOffline.ps1",
+      "sha256": "75fc0d622d4352e26e3aead1f19f26b0ed11ab982a403c684d1e1f19facfae76"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Repository\\Higgsfield\\Integration\\RecipeFileChecks.cs",
+      "sha256": "46cf13c13f3f6edea0a5344f0656f735eb572c0392f2bfba3df9f9f64a8b793a"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Repository\\unity\\Assets\\LetMeSleep\\Content\\Editor\\Environment\\Higgsfield\\HiggsfieldImportContract.cs",
+      "sha256": "2e653409eea254522dd85ecad276b0288eb41e5d2a523acd6240f24de37d51c2"
+    }
+  ],
+  "exactReproduction": "Central prepare(config) returned structures identical to saved recipe and validation; files were not overwritten",
+  "contractCheck": "Central Verify-RecipeOffline.ps1 compiled current actual HiggsfieldImportContract; Validate and Resolve passed all160 paths",
+  "objects": 213,
+  "meshes": 160,
+  "materials": 23,
+  "classification": {
+    "foam": 1,
+    "water": 1,
+    "decoration": 62,
+    "solid": 96
+  },
+  "humanSpawns": 5,
+  "mosquitoSpawns": 16,
+  "playBoundsMin": [
+    -4.6,
+    0.7,
+    -15.2
+  ],
+  "playBoundsMax": [
+    4.6,
+    10.4,
+    15.1
+  ],
+  "glass": {
+    "sourceName": "YATE_Glass",
+    "rgb": [
+      0.09000000357627869,
+      0.27000001072883606,
+      0.3400000035762787
+    ],
+    "colorSpace": "linear",
+    "emissionRgb": [
+      0,
+      0,
+      0
+    ],
+    "emissionStrength": 0,
+    "alphaMode": "BLEND",
+    "opacity": 0.30000001192092896,
+    "doubleSided": true
+  },
+  "water": {
+    "path": "Water_Ocean",
+    "kind": "water",
+    "descendants": false,
+    "canPerch": false,
+    "waveAmplitude": 0.14,
+    "waveLength": 13.25200877883002,
+    "waveSpeed": 0.6283185307179586
+  },
+  "foam": {
+    "path": "Foam_Ocean_SparseStreaks",
+    "kind": "foam",
+    "descendants": false,
+    "canPerch": false,
+    "waveAmplitude": 0.025,
+    "waveLength": 4,
+    "waveSpeed": 0.7853981633974483
+  },
+  "waveScope": "Amplitude envelope .085+.055=.14m, 10s cycle and wavelength from first wave-vector magnitude; runtime directions/time functions are approximate and do not reproduce independent Blender morph drivers",
+  "nativeApplicationsStarted": false,
+  "reservedSourceFilesEdited": false,
+  "pending": [
+    "Native renderer type and Water_Ocean imported vertex count against <=20000 CPU guard",
+    "Glass transparency sorting/culling and native material state",
+    "Water motion, foam continuity and performance",
+    "Native ground/capsule/routes/lighting and map registration"
+  ]
+}

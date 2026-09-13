@@ -1,5 +1,7 @@
 # Yate — final descriptor, recipe awaiting alpha support
 
+Historical preflight snapshot: the coordinator subsequently implemented alpha/report/wave support and generated the final recipe. Current validation is in `YATE-DELIVERY.md` and `yate.delivery.json`; the blockers below describe the earlier state.
+
 `yate.final-input.json` identifies the coordinator-confirmed final Yate exports for `hf-yate-a-la-deriva-v1`. It pins the clean FBX SHA256 `e3eb92985e2300e3788607d8a39520de00d711ed091db9d42760ae0e3bc3ae14` (1,982,188 bytes), Default collision layer, 5 human / 16 mosquito spawns and two water/foam objects. Reported Blender bounds `[-4.6,-15.2,.7]..[4.6,15.1,10.4]` become explicit Unity XYZ `[-4.6,.7,-15.2]..[4.6,10.4,15.1]`; the ocean background is excluded from playable bounds.
 
 Read-only preflight crosschecked 213 object names/full hierarchy paths across clean FBX, GLB and audit; 160 mesh objects, 138 GLB mesh definitions, 73,884 triangles and 23 effective materials. Every effective FBX material slot, GLB primitive material, base RGBA and emission agrees with the audit. Classification is 96 solid, 62 decoration, one water and one foam. Five/sixteen EMPTY spawns retain `.003` physical names and their audited world origins are inside bounds. GLB contains zero animation clips. Hashes and details are in `yate.preflight.json`.
