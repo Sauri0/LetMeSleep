@@ -1,0 +1,491 @@
+{
+  "schema_version": 1,
+  "outputAssetPath": "Assets/LetMeSleep/Presentation/Generated/hf-casa-del-patio-v1-Catalog-Provisional.asset",
+  "receiptPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/catalog-provisional-receipt.json",
+  "declaredCount": 1,
+  "requireFiveMaps": false,
+  "allowMissingSpatialDataForAuthoring": false,
+  "entries": [
+    {
+      "mapId": "hf-casa-del-patio-v1",
+      "displayName": "Casa del patio",
+      "prefabPath": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-casa-del-patio-v1/Prefabs/hf-casa-del-patio-v1.prefab",
+      "lighting": {
+        "MapId": 1,
+        "SunColor": {
+          "r": 0.5,
+          "g": 0.65,
+          "b": 1,
+          "a": 1
+        },
+        "SunUnityIntensity": 0.8,
+        "SunShadows": 2,
+        "AmbientSky": {
+          "r": 0.16,
+          "g": 0.23,
+          "b": 0.38,
+          "a": 1
+        },
+        "AmbientEquator": {
+          "r": 0.12,
+          "g": 0.16,
+          "b": 0.23,
+          "a": 1
+        },
+        "AmbientGround": {
+          "r": 0.06,
+          "g": 0.08,
+          "b": 0.13,
+          "a": 1
+        },
+        "AmbientIntensity": 1,
+        "ReflectionIntensity": 1,
+        "FogEnabled": false,
+        "FogColor": {
+          "r": 0.5,
+          "g": 0.5,
+          "b": 0.5,
+          "a": 1
+        },
+        "FogMode": 3,
+        "FogStart": 0,
+        "FogEnd": 300,
+        "FogDensity": 0.01,
+        "VolumeWeight": 1,
+        "CullingMask": -1073741825,
+        "LocalLights": [],
+        "SuppressLights": []
+      },
+      "skyboxAssetPath": "Assets/LetMeSleep/Presentation/Generated/Materials/hf-casa-del-patio-v1-Skybox.mat",
+      "volumeProfileAssetPath": null,
+      "sunEulerDegrees": [
+        48,
+        -35,
+        0
+      ],
+      "localLights": [
+        {
+          "anchorPath": "Environment/CASA_Porch_Lamp_L_Light_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.49000000953674316,
+            "b": 0.17000000178813934,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -2.5999999046325684,
+            1.9800000190734863,
+            -5.510000228881836
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Porch_Lamp_R_Light_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.49000000953674316,
+            "b": 0.17000000178813934,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            1.7999999523162842,
+            1.9800000190734863,
+            -5.510000228881836
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Rear_Lamp_L_Light_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.49000000953674316,
+            "b": 0.17000000178813934,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -2.5999999046325684,
+            2.059999942779541,
+            4.96999979019165
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Rear_Lamp_R_Light_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.49000000953674316,
+            "b": 0.17000000178813934,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            1.7999999523162842,
+            2.059999942779541,
+            4.96999979019165
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Shed_Lamp_Light_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.49000000953674316,
+            "b": 0.17000000178813934,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -14.0,
+            2.130000114440918,
+            10.819999694824219
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Path_Lantern_Light_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.49000000953674316,
+            "b": 0.17000000178813934,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -1.7000000476837158,
+            2.130000114440918,
+            -18.209999084472656
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Path_Lantern_Light_Anchor.001",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.49000000953674316,
+            "b": 0.17000000178813934,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            1.100000023841858,
+            2.130000114440918,
+            17.59000015258789
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Path_Lantern_Light_Anchor.002",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.49000000953674316,
+            "b": 0.17000000178813934,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -8.100000381469727,
+            2.130000114440918,
+            10.09000015258789
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Path_Lantern_Light_Anchor.003",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.49000000953674316,
+            "b": 0.17000000178813934,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            8.100000381469727,
+            2.130000114440918,
+            -9.90999984741211
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Interior_Living_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6600000262260437,
+            "b": 0.3499999940395355,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            -4.400000095367432,
+            2.4700000286102295,
+            0.4000000059604645
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Interior_Kitchen_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6600000262260437,
+            "b": 0.3499999940395355,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            4.0,
+            2.4700000286102295,
+            -0.4000000059604645
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Interior_Foyer_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6600000262260437,
+            "b": 0.3499999940395355,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            -0.550000011920929,
+            2.4700000286102295,
+            -2.700000047683716
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Interior_HallRear_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6600000262260437,
+            "b": 0.3499999940395355,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            -0.6000000238418579,
+            2.4700000286102295,
+            3.75
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Interior_BathGround_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6600000262260437,
+            "b": 0.3499999940395355,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            4.5,
+            2.5199999809265137,
+            3.299999952316284
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Interior_BedroomOne_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6600000262260437,
+            "b": 0.3499999940395355,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            -4.25,
+            5.369999885559082,
+            0.10000000149011612
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Interior_BedroomTwo_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6600000262260437,
+            "b": 0.3499999940395355,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            4.099999904632568,
+            5.369999885559082,
+            -0.800000011920929
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Interior_BathUpper_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6600000262260437,
+            "b": 0.3499999940395355,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            4.5,
+            5.389999866485596,
+            3.299999952316284
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Interior_UpperLanding_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6600000262260437,
+            "b": 0.3499999940395355,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            -0.550000011920929,
+            5.369999885559082,
+            1.100000023841858
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Fireplace_Practical_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.2800000011920929,
+            "b": 0.054999999701976776,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -4.550000190734863,
+            0.8999999761581421,
+            -4.199999809265137
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Bedside_One_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6399999856948853,
+            "b": 0.30000001192092896,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -5.945000171661377,
+            4.329999923706055,
+            3.190000057220459
+          ]
+        },
+        {
+          "anchorPath": "Environment/CASA_Bedside_Two_Anchor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6399999856948853,
+            "b": 0.30000001192092896,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            5.954999923706055,
+            4.329999923706055,
+            -3.859999895095825
+          ]
+        }
+      ],
+      "suppressLightPaths": []
+    }
+  ]
+}

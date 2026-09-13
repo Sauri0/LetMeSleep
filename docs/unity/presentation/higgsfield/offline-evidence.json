@@ -1,0 +1,336 @@
+{
+  "scope": "Offline FBX hierarchy and review JSON comparison only. Runtime path resolution remains required.",
+  "maps": [
+    {
+      "mapId": "hf-isla-del-laguito-v2",
+      "sourceSha256": {
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/01-isla/unity-final-review-config.json": "02a14bbc74cf75f4236d572d7a5ed49289baed5076b45701cc7fdd5b9e41778d",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-isla-del-laguito-v2/Prefabs/hf-isla-del-laguito-v2.prefab": "13ef4b2505412526106e2c04436229fa0d4cbc9a5502dccc1df36dbb5e608f52",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-isla-del-laguito-v2/Models/Environment.fbx": "8ce74c4f24dbbc1e11896c206ba2e9879b4826f3047cafb3ad2cf086b508d633",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-isla-del-laguito-v2/Models/Environment.fbx.meta": "68e137a8d7abc5b326bd863f1d8cd2069b851341424652a021d3cd8b8a11fc13",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-isla-del-laguito-v2/Data/isla-navigation-schema1.json": "ff47a91de5ffab18c51f73e2de317dfc0edec9ed5349f41056d10d7f553c446a",
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/01-isla/scene-audit.json": "b0f0a4122ee9efa3050e6b4745889687feb2b824d3a268c29298009d5889671b"
+      },
+      "contentHash": "157a5af113a05652a5621bd998e01d798a8613b01fa5103cda7d04f8ebcf28cd",
+      "spatialSchemaVersion": 1,
+      "spatialMapId": "hf-isla-del-laguito-v2",
+      "spatialReady": true,
+      "localLightCount": 0,
+      "softLocalShadows": 0,
+      "anchors": []
+    },
+    {
+      "mapId": "hf-casa-del-patio-v1",
+      "sourceSha256": {
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/unity-review-config.json": "2111c9045952df2cd6324bf408336589deda2b2c867a670d323da41165675df9",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-casa-del-patio-v1/Prefabs/hf-casa-del-patio-v1.prefab": "ada14a82ef7073ff616eccee02befc71578115b0d6d2c3b841929d7a892b042a",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-casa-del-patio-v1/Models/Environment.fbx": "f0586b7087395c0f97e7b1eaf548aabcb62ab937ca9f93a98d2ac0ae79688bd7",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-casa-del-patio-v1/Models/Environment.fbx.meta": "b34daa24b9ac5cca9b41deb55d876c39f35191a8be1d60246558d0fa75e4cf64",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-casa-del-patio-v1/Data/casa-navigation-schema1.json": "a18d1506f5db50e1f5472497b24982e38390391ed51667b93d34bcbd0e135251",
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/scene-audit.json": "91121101893ac210cb3b0d44cad2e64323edd615eace8c84c9ebe1401af9c3b1"
+      },
+      "contentHash": "019cca020c67d1e1d4d758556f76e3b2c553f715f21a0207f618ce3be01eede1",
+      "spatialSchemaVersion": 1,
+      "spatialMapId": "hf-casa-del-patio-v1",
+      "spatialReady": true,
+      "localLightCount": 21,
+      "softLocalShadows": 9,
+      "anchors": [
+        {
+          "reviewName": "CASA_Porch_Lamp_L_Light",
+          "fbxNullPath": "Environment/CASA_Porch_Lamp_L_Light_Anchor",
+          "fbxTranslation": [
+            -2.5999999046325684,
+            1.9800000190734863,
+            5.510000228881836
+          ],
+          "reviewUnityPosition": [
+            -2.5999999046325684,
+            1.9800000190734863,
+            -5.510000228881836
+          ]
+        },
+        {
+          "reviewName": "CASA_Porch_Lamp_R_Light",
+          "fbxNullPath": "Environment/CASA_Porch_Lamp_R_Light_Anchor",
+          "fbxTranslation": [
+            1.7999999523162842,
+            1.9800000190734863,
+            5.510000228881836
+          ],
+          "reviewUnityPosition": [
+            1.7999999523162842,
+            1.9800000190734863,
+            -5.510000228881836
+          ]
+        },
+        {
+          "reviewName": "CASA_Rear_Lamp_L_Light",
+          "fbxNullPath": "Environment/CASA_Rear_Lamp_L_Light_Anchor",
+          "fbxTranslation": [
+            -2.5999999046325684,
+            2.059999942779541,
+            -4.96999979019165
+          ],
+          "reviewUnityPosition": [
+            -2.5999999046325684,
+            2.059999942779541,
+            4.96999979019165
+          ]
+        },
+        {
+          "reviewName": "CASA_Rear_Lamp_R_Light",
+          "fbxNullPath": "Environment/CASA_Rear_Lamp_R_Light_Anchor",
+          "fbxTranslation": [
+            1.7999999523162842,
+            2.059999942779541,
+            -4.96999979019165
+          ],
+          "reviewUnityPosition": [
+            1.7999999523162842,
+            2.059999942779541,
+            4.96999979019165
+          ]
+        },
+        {
+          "reviewName": "CASA_Shed_Lamp_Light",
+          "fbxNullPath": "Environment/CASA_Shed_Lamp_Light_Anchor",
+          "fbxTranslation": [
+            -14.0,
+            2.130000114440918,
+            -10.819999694824219
+          ],
+          "reviewUnityPosition": [
+            -14.0,
+            2.130000114440918,
+            10.819999694824219
+          ]
+        },
+        {
+          "reviewName": "CASA_Path_Lantern_Light",
+          "fbxNullPath": "Environment/CASA_Path_Lantern_Light_Anchor",
+          "fbxTranslation": [
+            -1.7000000476837158,
+            2.130000114440918,
+            18.209999084472656
+          ],
+          "reviewUnityPosition": [
+            -1.7000000476837158,
+            2.130000114440918,
+            -18.209999084472656
+          ]
+        },
+        {
+          "reviewName": "CASA_Path_Lantern_Light.001",
+          "fbxNullPath": "Environment/CASA_Path_Lantern_Light_Anchor.001",
+          "fbxTranslation": [
+            1.100000023841858,
+            2.130000114440918,
+            -17.59000015258789
+          ],
+          "reviewUnityPosition": [
+            1.100000023841858,
+            2.130000114440918,
+            17.59000015258789
+          ]
+        },
+        {
+          "reviewName": "CASA_Path_Lantern_Light.002",
+          "fbxNullPath": "Environment/CASA_Path_Lantern_Light_Anchor.002",
+          "fbxTranslation": [
+            -8.100000381469727,
+            2.130000114440918,
+            -10.09000015258789
+          ],
+          "reviewUnityPosition": [
+            -8.100000381469727,
+            2.130000114440918,
+            10.09000015258789
+          ]
+        },
+        {
+          "reviewName": "CASA_Path_Lantern_Light.003",
+          "fbxNullPath": "Environment/CASA_Path_Lantern_Light_Anchor.003",
+          "fbxTranslation": [
+            8.100000381469727,
+            2.130000114440918,
+            9.90999984741211
+          ],
+          "reviewUnityPosition": [
+            8.100000381469727,
+            2.130000114440918,
+            -9.90999984741211
+          ]
+        },
+        {
+          "reviewName": "CASA_Interior_Living",
+          "fbxNullPath": "Environment/CASA_Interior_Living_Anchor",
+          "fbxTranslation": [
+            -4.400000095367432,
+            2.4700000286102295,
+            -0.4000000059604645
+          ],
+          "reviewUnityPosition": [
+            -4.400000095367432,
+            2.4700000286102295,
+            0.4000000059604645
+          ]
+        },
+        {
+          "reviewName": "CASA_Interior_Kitchen",
+          "fbxNullPath": "Environment/CASA_Interior_Kitchen_Anchor",
+          "fbxTranslation": [
+            4.0,
+            2.4700000286102295,
+            0.4000000059604645
+          ],
+          "reviewUnityPosition": [
+            4.0,
+            2.4700000286102295,
+            -0.4000000059604645
+          ]
+        },
+        {
+          "reviewName": "CASA_Interior_Foyer",
+          "fbxNullPath": "Environment/CASA_Interior_Foyer_Anchor",
+          "fbxTranslation": [
+            -0.550000011920929,
+            2.4700000286102295,
+            2.700000047683716
+          ],
+          "reviewUnityPosition": [
+            -0.550000011920929,
+            2.4700000286102295,
+            -2.700000047683716
+          ]
+        },
+        {
+          "reviewName": "CASA_Interior_HallRear",
+          "fbxNullPath": "Environment/CASA_Interior_HallRear_Anchor",
+          "fbxTranslation": [
+            -0.6000000238418579,
+            2.4700000286102295,
+            -3.75
+          ],
+          "reviewUnityPosition": [
+            -0.6000000238418579,
+            2.4700000286102295,
+            3.75
+          ]
+        },
+        {
+          "reviewName": "CASA_Interior_BathGround",
+          "fbxNullPath": "Environment/CASA_Interior_BathGround_Anchor",
+          "fbxTranslation": [
+            4.5,
+            2.5199999809265137,
+            -3.299999952316284
+          ],
+          "reviewUnityPosition": [
+            4.5,
+            2.5199999809265137,
+            3.299999952316284
+          ]
+        },
+        {
+          "reviewName": "CASA_Interior_BedroomOne",
+          "fbxNullPath": "Environment/CASA_Interior_BedroomOne_Anchor",
+          "fbxTranslation": [
+            -4.25,
+            5.369999885559082,
+            -0.10000000149011612
+          ],
+          "reviewUnityPosition": [
+            -4.25,
+            5.369999885559082,
+            0.10000000149011612
+          ]
+        },
+        {
+          "reviewName": "CASA_Interior_BedroomTwo",
+          "fbxNullPath": "Environment/CASA_Interior_BedroomTwo_Anchor",
+          "fbxTranslation": [
+            4.099999904632568,
+            5.369999885559082,
+            0.800000011920929
+          ],
+          "reviewUnityPosition": [
+            4.099999904632568,
+            5.369999885559082,
+            -0.800000011920929
+          ]
+        },
+        {
+          "reviewName": "CASA_Interior_BathUpper",
+          "fbxNullPath": "Environment/CASA_Interior_BathUpper_Anchor",
+          "fbxTranslation": [
+            4.5,
+            5.389999866485596,
+            -3.299999952316284
+          ],
+          "reviewUnityPosition": [
+            4.5,
+            5.389999866485596,
+            3.299999952316284
+          ]
+        },
+        {
+          "reviewName": "CASA_Interior_UpperLanding",
+          "fbxNullPath": "Environment/CASA_Interior_UpperLanding_Anchor",
+          "fbxTranslation": [
+            -0.550000011920929,
+            5.369999885559082,
+            -1.100000023841858
+          ],
+          "reviewUnityPosition": [
+            -0.550000011920929,
+            5.369999885559082,
+            1.100000023841858
+          ]
+        },
+        {
+          "reviewName": "CASA_Fireplace_Practical",
+          "fbxNullPath": "Environment/CASA_Fireplace_Practical_Anchor",
+          "fbxTranslation": [
+            -4.550000190734863,
+            0.8999999761581421,
+            4.199999809265137
+          ],
+          "reviewUnityPosition": [
+            -4.550000190734863,
+            0.8999999761581421,
+            -4.199999809265137
+          ]
+        },
+        {
+          "reviewName": "CASA_Bedside_One",
+          "fbxNullPath": "Environment/CASA_Bedside_One_Anchor",
+          "fbxTranslation": [
+            -5.945000171661377,
+            4.329999923706055,
+            -3.190000057220459
+          ],
+          "reviewUnityPosition": [
+            -5.945000171661377,
+            4.329999923706055,
+            3.190000057220459
+          ]
+        },
+        {
+          "reviewName": "CASA_Bedside_Two",
+          "fbxNullPath": "Environment/CASA_Bedside_Two_Anchor",
+          "fbxTranslation": [
+            5.954999923706055,
+            4.329999923706055,
+            3.859999895095825
+          ],
+          "reviewUnityPosition": [
+            5.954999923706055,
+            4.329999923706055,
+            -3.859999895095825
+          ]
+        }
+      ]
+    }
+  ]
+}

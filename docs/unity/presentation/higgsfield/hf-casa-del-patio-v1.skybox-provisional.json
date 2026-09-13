@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "outputAssetPath": "Assets/LetMeSleep/Presentation/Generated/Materials/hf-casa-del-patio-v1-Skybox.mat",
+  "receiptPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/skybox-provisional-receipt.json",
+  "builtinResourcePath": "Default-Skybox.mat",
+  "expectedBuiltinGuid": "0000000000000000f000000000000000",
+  "expectedBuiltinFileId": 10304,
+  "skyTint": {
+    "r": 0.16,
+    "g": 0.23,
+    "b": 0.38,
+    "a": 1
+  },
+  "groundColor": {
+    "r": 0.06,
+    "g": 0.08,
+    "b": 0.13,
+    "a": 1
+  }
+}

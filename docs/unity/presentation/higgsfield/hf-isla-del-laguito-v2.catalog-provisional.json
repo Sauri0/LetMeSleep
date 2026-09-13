@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "outputAssetPath": "Assets/LetMeSleep/Presentation/Generated/hf-isla-del-laguito-v2-Catalog-Provisional.asset",
+  "receiptPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/01-isla/catalog-provisional-receipt.json",
+  "declaredCount": 1,
+  "requireFiveMaps": false,
+  "allowMissingSpatialDataForAuthoring": false,
+  "entries": [
+    {
+      "mapId": "hf-isla-del-laguito-v2",
+      "displayName": "Isla del laguito",
+      "prefabPath": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-isla-del-laguito-v2/Prefabs/hf-isla-del-laguito-v2.prefab",
+      "lighting": {
+        "MapId": 0,
+        "SunColor": {
+          "r": 1,
+          "g": 0.94,
+          "b": 0.82,
+          "a": 1
+        },
+        "SunUnityIntensity": 1.05,
+        "SunShadows": 2,
+        "AmbientSky": {
+          "r": 0.6,
+          "g": 0.72,
+          "b": 0.85,
+          "a": 1
+        },
+        "AmbientEquator": {
+          "r": 0.45,
+          "g": 0.5,
+          "b": 0.55,
+          "a": 1
+        },
+        "AmbientGround": {
+          "r": 0.28,
+          "g": 0.3,
+          "b": 0.26,
+          "a": 1
+        },
+        "AmbientIntensity": 1,
+        "ReflectionIntensity": 1,
+        "FogEnabled": false,
+        "FogColor": {
+          "r": 0.5,
+          "g": 0.5,
+          "b": 0.5,
+          "a": 1
+        },
+        "FogMode": 3,
+        "FogStart": 0,
+        "FogEnd": 300,
+        "FogDensity": 0.01,
+        "VolumeWeight": 1,
+        "CullingMask": -1073741825,
+        "LocalLights": [],
+        "SuppressLights": []
+      },
+      "skyboxAssetPath": "Assets/LetMeSleep/Presentation/Generated/Materials/hf-isla-del-laguito-v2-Skybox.mat",
+      "volumeProfileAssetPath": null,
+      "sunEulerDegrees": [
+        48,
+        -35,
+        0
+      ],
+      "localLights": [],
+      "suppressLightPaths": []
+    }
+  ]
+}
