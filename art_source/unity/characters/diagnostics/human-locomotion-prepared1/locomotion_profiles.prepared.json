@@ -1,0 +1,144 @@
+{
+  "revision": "human-locomotion-v1-prepared",
+  "status": "prepared-not-exported",
+  "baseline_blend_sha256": "918ddcf802ef761cf89bf20bedcec4019de8d8adc4bb765c2e5c7361e3f862a1",
+  "source_fps": 30,
+  "source_start_frame": 1,
+  "source_end_frame": 61,
+  "coordinate_system": "source Z up / -Y forward; actor=(-sourceX, sourceZ, -sourceY)",
+  "profiles": [
+    {
+      "clip": "Human_WalkSlow",
+      "reference": "Human_Walk",
+      "speed": 1.0,
+      "contacts": 2.4,
+      "duty": 0.6,
+      "hip": 0.695,
+      "rise": 0.025,
+      "lift": 0.09,
+      "ramp": 0.22,
+      "lean": 0.025,
+      "arm": 0.16,
+      "elbow": 0.2,
+      "nominal_duration_seconds": 0.8333333333333334,
+      "distance_per_cycle_m": 0.8333333333333334,
+      "source_duration_seconds": 2.0,
+      "contact_markers": [
+        {
+          "foot": "L",
+          "phase": 0.0
+        },
+        {
+          "foot": "R",
+          "phase": 0.5
+        }
+      ],
+      "stance_duration_phase": 0.6,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "clip": "Human_Walk",
+      "reference": "Human_Walk",
+      "speed": 1.55,
+      "contacts": 3.2,
+      "duty": 0.56,
+      "hip": 0.685,
+      "rise": 0.035,
+      "lift": 0.1,
+      "ramp": 0.22,
+      "lean": 0.04,
+      "arm": 0.16,
+      "elbow": 0.2,
+      "nominal_duration_seconds": 0.625,
+      "distance_per_cycle_m": 0.96875,
+      "source_duration_seconds": 2.0,
+      "contact_markers": [
+        {
+          "foot": "L",
+          "phase": 0.0
+        },
+        {
+          "foot": "R",
+          "phase": 0.5
+        }
+      ],
+      "stance_duration_phase": 0.56,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "clip": "Human_Trot",
+      "reference": "Human_Run",
+      "speed": 3.1,
+      "contacts": 4.0,
+      "duty": 0.32,
+      "hip": 0.69,
+      "compression": 0.03,
+      "lift": 0.15,
+      "ramp": 0.18,
+      "lean": 0.08,
+      "arm": 0.28,
+      "elbow": 0.6,
+      "nominal_duration_seconds": 0.5,
+      "distance_per_cycle_m": 1.55,
+      "source_duration_seconds": 2.0,
+      "contact_markers": [
+        {
+          "foot": "L",
+          "phase": 0.0
+        },
+        {
+          "foot": "R",
+          "phase": 0.5
+        }
+      ],
+      "stance_duration_phase": 0.32,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "clip": "Human_Run",
+      "reference": "Human_Run",
+      "speed": 5.0,
+      "contacts": 4.6,
+      "duty": 0.24,
+      "hip": 0.68,
+      "compression": 0.035,
+      "lift": 0.2,
+      "ramp": 0.16,
+      "lean": 0.1,
+      "arm": 0.28,
+      "elbow": 0.6,
+      "nominal_duration_seconds": 0.4347826086956522,
+      "distance_per_cycle_m": 2.173913043478261,
+      "source_duration_seconds": 2.0,
+      "contact_markers": [
+        {
+          "foot": "L",
+          "phase": 0.0
+        },
+        {
+          "foot": "R",
+          "phase": 0.5
+        }
+      ],
+      "stance_duration_phase": 0.24,
+      "loop": true,
+      "root_motion": false
+    }
+  ],
+  "playback": "phase += presented_horizontal_distance / D; sample frac(phase) * actual imported Clip.length",
+  "gates_pending": [
+    "native source/FBX audit",
+    "Unity import and reference assignment",
+    "mesh/articulation and audio perception",
+    "blend transitions and starts/stops",
+    "crouched locomotion, turns and uneven terrain"
+  ],
+  "offline_validation": {
+    "tests_run": 6,
+    "status": "passed",
+    "scope": "Pure contract math only; bpy scripts syntax checked separately. Native export and audit have not run."
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "status": "prepared-not-exported",
+  "scripts": [
+    {
+      "file": "human_locomotion_contract.py",
+      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
+      "syntax": "passed"
+    },
+    {
+      "file": "author_human_locomotion.py",
+      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
+      "syntax": "passed"
+    },
+    {
+      "file": "export_human_locomotion.py",
+      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
+      "syntax": "passed"
+    },
+    {
+      "file": "audit_human_locomotion.py",
+      "sha256": "df30c9bb54f6a309ba2c75505bd9d1a4bfe6fc268ddd44eb3d989a59f74cab66",
+      "syntax": "passed"
+    },
+    {
+      "file": "check_human_locomotion_contract.py",
+      "sha256": "f7147bc4ee3ca4140f0328de8c88ff2331a53d54301c496282540f2501c3175b",
+      "syntax": "passed"
+    }
+  ],
+  "scope": "Python3.14 compile only; no bpy import, Blender process, export or native auditor execution."
+}
