@@ -17,7 +17,7 @@ using UnityEngine.Audio;
 
 namespace LetMeSleep.Bootstrap
 {
-    public sealed partial class AlfaApplication : MonoBehaviour, IMenuActions
+    public sealed partial class AlfaApplication : MonoBehaviour, IMenuActions, IRoomMapActions
     {
         public GameObject HousePrefab, LobbyPrefab, HumanPrefab, MosquitoPrefab, GameplayPresentationPrefab, MenuAudioPrefab;
         public Camera MenuCamera, PreviewCamera;
@@ -86,7 +86,11 @@ namespace LetMeSleep.Bootstrap
             StartPlaytestJournal();
             ui = AlfaUiRuntime.Create(this, new AlfaUiDependencies(HeadingFont, BodyFont, preview:
                 new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab, ConfigurePreviewAttention)));
-            if (HiggsfieldMaps) ui.SetTrainingMaps(HiggsfieldMaps.Entries.Select(entry => new TrainingMapOption(entry.MapId, entry.DisplayName)).ToArray());
+            if (HiggsfieldMaps)
+            {
+                var options = HiggsfieldMaps.Entries.Select(entry => new TrainingMapOption(entry.MapId, entry.DisplayName)).ToArray();
+                ui.SetTrainingMaps(options); ui.SetRoomMaps(options);
+            }
             menuAudio = Instantiate(MenuAudioPrefab).GetComponent<AlfaAudioDirector>();
             ui.FeedbackRequested += OnUiFeedback;
             ui.ScreenChanged += OnUiScreenChanged;
@@ -166,11 +170,27 @@ namespace LetMeSleep.Bootstrap
             ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.Cancelled));
         }
         public void CopyRoomCode(string code) { GUIUtility.systemCopyBuffer = code; }
-        public void SetReady(bool ready) { lastError=""; var result=room?.SetReady(ready); if(result.HasValue && result.Value!=RoomError.None) PresentRoom(room.Current,"No se pudo marcar Listo."); }
+        public void SetReady(bool ready)
+        {
+            lastError = "";
+            if (ready && room?.Current != null && !IsAvailableMap(room.Current.Rules.MapId))
+            { PresentRoom(room.Current, "Este mapa no está instalado en esta versión."); return; }
+            var result = room?.SetReady(ready);
+            if (result.HasValue && result.Value != RoomError.None) PresentRoom(room.Current, "No se pudo marcar Listo.");
+        }
         public void SetHumanCount(int? count)
         {
             var previous = room?.Current?.Rules;
-            if (previous != null) room.SetRules(new RoomRules(count, previous.RoundSeconds, previous.BloodQuota));
+            if (previous != null) room.SetRules(new RoomRules(count, previous.RoundSeconds, previous.BloodQuota, previous.MapId));
+        }
+        public void SetRoomMap(string mapId)
+        {
+            if (quiescing || lobby?.IsOwner != true || !IsAvailableMap(mapId)) return;
+            var current = room?.Current;
+            if (current == null || current.Phase != RoomPhase.Waiting) return;
+            var previous = current.Rules;
+            var error = room.SetRules(new RoomRules(previous.HumanCount, previous.RoundSeconds, previous.BloodQuota, mapId));
+            if (error != RoomError.None) PresentRoom(room.Current, "No se pudo cambiar el mapa.");
         }
         public void StartRound()
         {
@@ -180,6 +200,10 @@ namespace LetMeSleep.Bootstrap
         private void OnRoomChanged(RoomView view)
         {
             if (quiescing || view == null) return;
+            if (view.Phase == RoomPhase.Playing && !IsAvailableMap(view.Rules.MapId))
+            {
+                LeaveRoom(); ui.ShowJoinRoom(); ShowOnlineError("Este mapa no está instalado en esta versión."); return;
+            }
             ObservePlaytestRoom(view);
             training = false;
             if (view.Phase == RoomPhase.Waiting)
@@ -218,12 +242,15 @@ namespace LetMeSleep.Bootstrap
         private void PresentRoom(RoomView view, string message = "")
         {
             if (view == null || view.Phase != RoomPhase.Waiting) return;
-            bool canStart = view.Members.Count >= 2 && view.Members.All(m => m.Ready)
+            bool canStart = IsAvailableMap(view.Rules.MapId) && view.Members.Count >= 2 && view.Members.All(m => m.Ready)
                 && (!view.Rules.HumanCount.HasValue || view.Rules.HumanCount.Value < view.Members.Count);
             string reason = message.Length > 0 ? message : view.Members.Count < 2 ? "Invitá a alguien con el código de la sala." : "Todos deben marcar Listo para empezar.";
             var members = view.Members.Select(m => new LobbyMemberUiState(m.Id, m.Name, m.Ready));
+            string mapLabel = view.Rules.MapId == RoomRules.AlfaMap ? "Casa con patio" :
+                HiggsfieldMaps?.Entries.FirstOrDefault(entry => entry.MapId == view.Rules.MapId)?.DisplayName ?? "Mapa no instalado";
             ui.PresentLobby(new LobbyUiState(lobby.IsOwner, lobby.Code, members, view.Members.First(m => m.Id == LocalId).Ready,
-                false, view.Rules.HumanCount, canStart, canStart ? "" : reason, canExplore: true));
+                false, view.Rules.HumanCount, canStart, canStart ? "" : reason, view.Rules.MapId, mapLabel, canExplore: true,
+                isWaiting: view.Phase == RoomPhase.Waiting));
         }
         public void LeaveRoom()
         {
