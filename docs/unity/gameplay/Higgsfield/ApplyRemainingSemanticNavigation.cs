@@ -11,7 +11,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using Object=UnityEngine.Object;
 
-// Save only a fully validated final Yate/Puerto schema and explicitly authorized Yate pose delta.
+// Save only fully validated final schemas and coordinator-authorized local map repairs.
 public static class ApplyRemainingSemanticNavigation
 {
     public sealed class Receipt
@@ -22,6 +22,7 @@ public static class ApplyRemainingSemanticNavigation
         public string hashDerivation="SHA256(oldContentHash + newline + nav-schema1 + newline + navigationSha256 [+ newline + storageRevision + newline + worldDeltaF9Invariant])";
         public YateStorageCandidate.Receipt storage;
         public YateBulkheadCandidate.Receipt bulkhead;
+        public PuertoStairCandidate.Receipt puertoStair;
         public bool prefabReadback,sceneReadback;
     }
     public static string Run(string configPath,string output)
@@ -38,11 +39,13 @@ public static class ApplyRemainingSemanticNavigation
         Require(validation.mapId==config.mapId && validation.status=="PASS_SCOPED" && validation.errors.Count==0 && validation.pending.Count==0 && validation.cleanup && validation.navigationSha256==navHash && validation.cases.Count==49 && validation.cases.All(c=>c.status=="PASS") && validation.passages.All(p=>p.status=="PASS_STATIC_CLEARANCE"),"Require exact complete 49-case PASS and clear portals for this candidate.");
         Require(!yate || validation.yateStorageCandidate!=null && validation.yateStorageCandidate.maximumConservativeBoxPenetration<=.002f && validation.yateStorageCandidate.supports.Count==5,"Yate must include validated chest relocation/support.");
         Require(!yate || validation.yateBulkheadCandidate?.renderAndColliderMatch==true && validation.yateBulkheadCandidate.materialReferencesPreserved,"Yate must include the validated coherent bulkhead repair.");
+        Require(yate || validation.puertoStairCandidate?.renderAndColliderMatch==true && validation.puertoStairCandidate.materialReferencesPreserved && validation.puertoStairCandidate.bevel==.03f,"Puerto must include the validated local 30mm stair bevel.");
         var plan=Newtonsoft.Json.JsonConvert.DeserializeObject<HiggsfieldMapChecks.Plan>(json);
         Require(plan.map_id==config.mapId && plan.schema_version==1 && plan.zones.Length>=2 && plan.portals.Length==validation.passages.Count,"Unexpected schema/portal counts.");
-        var receipt=new Receipt{mapId=config.mapId,oldContentHash=validation.contentHash,navigationSha256=navHash,validatedReport=config.validationReportPath,storage=validation.yateStorageCandidate,bulkhead=validation.yateBulkheadCandidate};
+        var receipt=new Receipt{mapId=config.mapId,oldContentHash=validation.contentHash,navigationSha256=navHash,validatedReport=config.validationReportPath,storage=validation.yateStorageCandidate,bulkhead=validation.yateBulkheadCandidate,puertoStair=validation.puertoStairCandidate};
         receipt.newContentHash=Hash(receipt.oldContentHash+"\nnav-schema1\n"+navHash+(receipt.storage==null?"":"\n"+receipt.storage.revision+"\n"+VectorStamp(receipt.storage.worldDelta)));
         if(receipt.bulkhead!=null){receipt.newContentHash=Hash(receipt.newContentHash+"\n"+receipt.bulkhead.revision+"\n"+receipt.bulkhead.candidateMeshSha256);receipt.hashDerivation+="; then SHA256(previous + newline + bulkheadRevision + newline + bulkheadMeshSha256)";}
+        if(receipt.puertoStair!=null){receipt.newContentHash=Hash(receipt.newContentHash+"\n"+receipt.puertoStair.revision+"\n"+receipt.puertoStair.candidateMeshSha256);receipt.hashDerivation+="; then SHA256(previous + newline + stairRevision + newline + stairMeshSha256)";}
         Directory.CreateDirectory(output);GameObject loaded=null;var owned=new List<Object>();Mesh wallAsset=null;
         try
         {
@@ -50,9 +53,9 @@ public static class ApplyRemainingSemanticNavigation
             var scene=EditorSceneManager.OpenScene(scenePath,OpenSceneMode.Single);var sceneMap=FindMap(scene.GetRootGameObjects(),config.mapId);
             Require(map.ContentHash==receipt.oldContentHash && sceneMap.ContentHash==receipt.oldContentHash,"Validated content changed; do not overwrite coordinator edits.");
             VerifyParts(map,receipt.storage,false);VerifyParts(sceneMap,receipt.storage,false);
-            VerifyWall(map,receipt.bulkhead,false);VerifyWall(sceneMap,receipt.bulkhead,false);
+            VerifyWall(map,receipt.bulkhead,false);VerifyWall(sceneMap,receipt.bulkhead,false);VerifyStair(map,receipt.puertoStair,false);VerifyStair(sceneMap,receipt.puertoStair,false);
             receipt.originalSpatialDataPath=AssetDatabase.GetAssetPath(map.SpatialData);receipt.originalSpatialDataGuid=AssetDatabase.AssetPathToGUID(receipt.originalSpatialDataPath);receipt.originalSpatialDataSha256=Hash(map.SpatialData.text);
-            receipt.prefabBefore=Stamp(map,receipt.storage);receipt.sceneBefore=Stamp(sceneMap,receipt.storage);
+            receipt.prefabBefore=Stamp(map,receipt.storage,receipt.puertoStair);receipt.sceneBefore=Stamp(sceneMap,receipt.storage,receipt.puertoStair);
             if(!AssetDatabase.IsValidFolder(root+"/Data"))AssetDatabase.CreateFolder(root,"Data");
             if(receipt.bulkhead!=null)
             {
@@ -61,19 +64,26 @@ public static class ApplyRemainingSemanticNavigation
                 if(wallAsset)Require(CampTechnicalCandidate.Hash(wallAsset)==rebuilt.candidateMeshSha256,"Existing bulkhead asset differs.");
                 else{generated.name="YateSwimBulkheadNotch_v1";AssetDatabase.CreateAsset(generated,wallPath);owned.Remove(generated);wallAsset=generated;}
             }
+            if(receipt.puertoStair!=null)
+            {
+                var rebuilt=PuertoStairCandidate.Apply(loaded,owned);Require(rebuilt.candidateMeshSha256==receipt.puertoStair.candidateMeshSha256,"Rebuilt stair differs from validation.");
+                string stairPath=root+"/Data/puerto-exterior-stair-bevel-v1.asset";var generated=FindPart(map,PuertoStairCandidate.Name).GetComponent<MeshFilter>().sharedMesh;wallAsset=AssetDatabase.LoadAssetAtPath<Mesh>(stairPath);
+                if(wallAsset)Require(CampTechnicalCandidate.Hash(wallAsset)==rebuilt.candidateMeshSha256,"Existing stair asset differs.");
+                else{generated.name="PuertoExteriorStairBevel_v1";AssetDatabase.CreateAsset(generated,stairPath);owned.Remove(generated);wallAsset=generated;}
+            }
             Write(navPath,json);
             var nav=AssetDatabase.LoadAssetAtPath<TextAsset>(navPath);Require(nav && Hash(nav.text)==navHash,"Navigation import mismatch.");receipt.navigationGuid=AssetDatabase.AssetPathToGUID(navPath);
             Assign(map,nav,receipt,wallAsset);PrefabUtility.SaveAsPrefabAsset(loaded,prefab);Assign(sceneMap,nav,receipt,wallAsset);
             if(PrefabUtility.IsPartOfPrefabInstance(sceneMap))PrefabUtility.RecordPrefabInstancePropertyModifications(sceneMap);
             if(receipt.storage!=null)foreach(var part in receipt.storage.parts){var transform=FindPart(sceneMap,part.name);if(PrefabUtility.IsPartOfPrefabInstance(transform))PrefabUtility.RecordPrefabInstancePropertyModifications(transform);}
-            if(wallAsset){var wall=FindPart(sceneMap,YateBulkheadCandidate.Name);foreach(var component in new Object[]{wall.GetComponent<MeshFilter>(),wall.GetComponent<MeshCollider>()})if(PrefabUtility.IsPartOfPrefabInstance(component))PrefabUtility.RecordPrefabInstancePropertyModifications(component);}
+            if(wallAsset){var wall=FindPart(sceneMap,receipt.bulkhead!=null?YateBulkheadCandidate.Name:PuertoStairCandidate.Name);foreach(var component in new Object[]{wall.GetComponent<MeshFilter>(),wall.GetComponent<MeshCollider>()})if(PrefabUtility.IsPartOfPrefabInstance(component))PrefabUtility.RecordPrefabInstancePropertyModifications(component);}
             EditorSceneManager.MarkSceneDirty(scene);Require(EditorSceneManager.SaveScene(scene),"Scene save failed.");AssetDatabase.SaveAssets();
             PrefabUtility.UnloadPrefabContents(loaded);loaded=null;loaded=PrefabUtility.LoadPrefabContents(prefab);map=loaded.GetComponent<EnvironmentMapDefinition>();
-            receipt.prefabReadback=Readback(map,receipt,navPath);receipt.prefabAfter=Stamp(map,receipt.storage);VerifyParts(map,receipt.storage,true);
-            VerifyWall(map,receipt.bulkhead,true);
+            receipt.prefabReadback=Readback(map,receipt,navPath);receipt.prefabAfter=Stamp(map,receipt.storage,receipt.puertoStair);VerifyParts(map,receipt.storage,true);
+            VerifyWall(map,receipt.bulkhead,true);VerifyStair(map,receipt.puertoStair,true);
             PrefabUtility.UnloadPrefabContents(loaded);loaded=null;scene=EditorSceneManager.OpenScene(scenePath,OpenSceneMode.Single);sceneMap=FindMap(scene.GetRootGameObjects(),config.mapId);
-            receipt.sceneReadback=Readback(sceneMap,receipt,navPath);receipt.sceneAfter=Stamp(sceneMap,receipt.storage);VerifyParts(sceneMap,receipt.storage,true);
-            VerifyWall(sceneMap,receipt.bulkhead,true);
+            receipt.sceneReadback=Readback(sceneMap,receipt,navPath);receipt.sceneAfter=Stamp(sceneMap,receipt.storage,receipt.puertoStair);VerifyParts(sceneMap,receipt.storage,true);
+            VerifyWall(sceneMap,receipt.bulkhead,true);VerifyStair(sceneMap,receipt.puertoStair,true);
             Require(receipt.prefabReadback && receipt.sceneReadback && receipt.prefabBefore==receipt.prefabAfter && receipt.sceneBefore==receipt.sceneAfter,"Readback or unrelated-content preservation failed.");
             receipt.status="APPLIED_READBACK_PASS";Write(provenancePath,HiggsfieldMapJson.Write(receipt));AssetDatabase.SaveAssets();
         }
@@ -93,19 +103,21 @@ public static class ApplyRemainingSemanticNavigation
         }
     }
     static void Assign(EnvironmentMapDefinition map,TextAsset nav,Receipt receipt,Mesh wallAsset)
-    {if(receipt.storage!=null)foreach(var part in receipt.storage.parts){var transform=FindPart(map,part.name);transform.position=part.after;EditorUtility.SetDirty(transform);}if(wallAsset){var wall=FindPart(map,YateBulkheadCandidate.Name);wall.GetComponent<MeshFilter>().sharedMesh=wallAsset;wall.GetComponent<MeshCollider>().sharedMesh=wallAsset;EditorUtility.SetDirty(wall.GetComponent<MeshFilter>());EditorUtility.SetDirty(wall.GetComponent<MeshCollider>());}map.SpatialData=nav;map.ContentHash=receipt.newContentHash;EditorUtility.SetDirty(map);}
+    {if(receipt.storage!=null)foreach(var part in receipt.storage.parts){var transform=FindPart(map,part.name);transform.position=part.after;EditorUtility.SetDirty(transform);}if(wallAsset){var wall=FindPart(map,receipt.bulkhead!=null?YateBulkheadCandidate.Name:PuertoStairCandidate.Name);wall.GetComponent<MeshFilter>().sharedMesh=wallAsset;wall.GetComponent<MeshCollider>().sharedMesh=wallAsset;EditorUtility.SetDirty(wall.GetComponent<MeshFilter>());EditorUtility.SetDirty(wall.GetComponent<MeshCollider>());}map.SpatialData=nav;map.ContentHash=receipt.newContentHash;EditorUtility.SetDirty(map);}
     static void VerifyWall(EnvironmentMapDefinition map,YateBulkheadCandidate.Receipt wall,bool after)
     {if(wall==null)return;var transform=FindPart(map,YateBulkheadCandidate.Name);var mesh=transform.GetComponent<MeshFilter>().sharedMesh;Require(mesh==transform.GetComponent<MeshCollider>().sharedMesh && CampTechnicalCandidate.Hash(mesh)==(after?wall.candidateMeshSha256:wall.originalMeshSha256),"Bulkhead visible/collision geometry differs from validated revision.");}
+    static void VerifyStair(EnvironmentMapDefinition map,PuertoStairCandidate.Receipt stair,bool after)
+    {if(stair==null)return;var transform=FindPart(map,PuertoStairCandidate.Name);var mesh=transform.GetComponent<MeshFilter>().sharedMesh;Require(mesh==transform.GetComponent<MeshCollider>().sharedMesh && CampTechnicalCandidate.Hash(mesh)==(after?stair.candidateMeshSha256:stair.originalMeshSha256),"Stair visible/collision geometry differs from validated revision.");}
     static bool Readback(EnvironmentMapDefinition map,Receipt receipt,string navPath)=>map.MapId==receipt.mapId && map.ContentHash==receipt.newContentHash && AssetDatabase.GetAssetPath(map.SpatialData)==navPath && Hash(map.SpatialData.text)==receipt.navigationSha256;
     static EnvironmentMapDefinition FindMap(GameObject[] roots,string id)=>roots.SelectMany(g=>g.GetComponentsInChildren<EnvironmentMapDefinition>(true)).Single(m=>m.MapId==id);
     static Transform FindPart(EnvironmentMapDefinition map,string name)=>map.GetComponentsInChildren<Transform>(true).Single(t=>t.name==name);
-    static string Stamp(EnvironmentMapDefinition map,YateStorageCandidate.Receipt storage)
+    static string Stamp(EnvironmentMapDefinition map,YateStorageCandidate.Receipt storage,PuertoStairCandidate.Receipt stair)
     {
         var movable=storage?.parts.Select(p=>p.name).ToArray()??Array.Empty<string>();
         var rows=map.GetComponentsInChildren<Transform>(true).Select(t=>PathOf(t,map.transform)+"|"+(movable.Contains(t.name)?"approved-storage-position":VectorStamp(t.localPosition))+"|"+t.localRotation.ToString("F9")+"|"+VectorStamp(t.localScale)+"|"+t.gameObject.activeSelf).ToList();
         foreach(var renderer in map.GetComponentsInChildren<Renderer>(true))rows.Add("renderer|"+PathOf(renderer.transform,map.transform)+"|"+renderer.enabled+"|"+string.Join(",",renderer.sharedMaterials.Select(Asset)));
-        foreach(var filter in map.GetComponentsInChildren<MeshFilter>(true))rows.Add("mesh|"+PathOf(filter.transform,map.transform)+"|"+(storage!=null && filter.name==YateBulkheadCandidate.Name?"approved-bulkhead-mesh":Asset(filter.sharedMesh)));
-        foreach(var collider in map.GetComponentsInChildren<Collider>(true))rows.Add("collider|"+PathOf(collider.transform,map.transform)+"|"+collider.enabled+"|"+collider.isTrigger+"|"+collider.contactOffset+"|"+Asset(collider.sharedMaterial)+(collider is MeshCollider mc?"|"+mc.convex+"|"+mc.cookingOptions+"|"+(storage!=null && mc.name==YateBulkheadCandidate.Name?"approved-bulkhead-mesh":Asset(mc.sharedMesh)):collider is BoxCollider bc?"|"+VectorStamp(bc.center)+"|"+VectorStamp(bc.size):""));
+        foreach(var filter in map.GetComponentsInChildren<MeshFilter>(true))rows.Add("mesh|"+PathOf(filter.transform,map.transform)+"|"+((storage!=null && filter.name==YateBulkheadCandidate.Name || stair!=null && filter.name==PuertoStairCandidate.Name)?"approved-local-mesh":Asset(filter.sharedMesh)));
+        foreach(var collider in map.GetComponentsInChildren<Collider>(true))rows.Add("collider|"+PathOf(collider.transform,map.transform)+"|"+collider.enabled+"|"+collider.isTrigger+"|"+collider.contactOffset+"|"+Asset(collider.sharedMaterial)+(collider is MeshCollider mc?"|"+mc.convex+"|"+mc.cookingOptions+"|"+((storage!=null && mc.name==YateBulkheadCandidate.Name || stair!=null && mc.name==PuertoStairCandidate.Name)?"approved-local-mesh":Asset(mc.sharedMesh)):collider is BoxCollider bc?"|"+VectorStamp(bc.center)+"|"+VectorStamp(bc.size):""));
         return Hash(string.Join("\n",rows.OrderBy(s=>s,StringComparer.Ordinal)));
     }
     static string Asset(Object value){if(!value)return "null";Require(AssetDatabase.TryGetGUIDAndLocalFileIdentifier(value,out string guid,out long local),"Persisted reference required.");return guid+":"+local+":"+AssetDatabase.GetAssetDependencyHash(AssetDatabase.GetAssetPath(value));}

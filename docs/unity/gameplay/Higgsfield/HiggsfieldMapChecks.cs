@@ -21,7 +21,7 @@ public static class HiggsfieldMapChecks
     {
         public string mapId, prefabPath, action, navigationOverridePath, colliderCandidate, validationReportPath, caseFilter;
         public int humanPool = 5, mosquitoPool = 16;
-        public bool diagnosticRoutesOnly, campSpawnSupportCandidate, yateStorageCandidate, yateBulkheadCandidate;
+        public bool diagnosticRoutesOnly, campSpawnSupportCandidate, yateStorageCandidate, yateBulkheadCandidate, puertoStairCandidate;
         public Route[] routes;
     }
     [Serializable] public sealed class Route
@@ -52,6 +52,7 @@ public static class HiggsfieldMapChecks
         public CampTechnicalCandidate.SpawnReceipt campSpawnCandidate;
         public YateStorageCandidate.Receipt yateStorageCandidate;
         public YateBulkheadCandidate.Receipt yateBulkheadCandidate;
+        public PuertoStairCandidate.Receipt puertoStairCandidate;
     }
     public sealed class Case
     {
@@ -146,6 +147,7 @@ public static class HiggsfieldMapChecks
             if(config.campSpawnSupportCandidate)report.campSpawnCandidate=CampTechnicalCandidate.SurveySpawn(map,true);
             if(config.yateStorageCandidate)report.yateStorageCandidate=YateStorageCandidate.Apply(clone);
             if(config.yateBulkheadCandidate)report.yateBulkheadCandidate=YateBulkheadCandidate.Apply(clone,ownedGeometry);
+            if(config.puertoStairCandidate)report.puertoStairCandidate=PuertoStairCandidate.Apply(clone,ownedGeometry);
             world.RegisterGeometry();
             report.nativeColliderCount = clone.GetComponentsInChildren<Collider>(false).Count(c => c.enabled && !c.isTrigger);
             Require(report.nativeColliderCount > 0, "No active physical map colliders.");

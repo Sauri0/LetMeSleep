@@ -101,3 +101,9 @@ All reported tests are native headless queries/authority integration, one tested
 actor plus a distant opposite-role actor. Runtime exploration is20s per spawn,
 with actual10Hz BotController/SteerBot and30Hz authority. No combat, WAN, simultaneous
 21-player load, visual quality or performance acceptance is inferred.
+
+Final adjusted Blender copy delivered by Mapas (original source preserved):
+`N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/UnityAdjustedSource/HF_MAP_04_yate_UNITY_ADJUSTED.blend`.
+SHA256 `de6304396d5c95aab52003be5118058b15a7819e734694fb14f5d5fecaf8ae50`.
+Its adjustment-receipt.json binds both changes to the persisted ContentHash.
+Source-copy readback PASS is Mapas evidence, separate from native regression.
