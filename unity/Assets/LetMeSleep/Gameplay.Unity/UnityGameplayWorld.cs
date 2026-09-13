@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace LetMeSleep.Gameplay.Unity
 {
-    public sealed partial class UnityGameplayWorld : MonoBehaviour, IGameplayWorld, IGameplayToolWorld
+    public sealed partial class UnityGameplayWorld : MonoBehaviour, IGameplayWorld, IGameplayToolWorld, ISurfaceTraversalWorld
     {
         public LayerMask GeometryMask = ~0;
         public Transform MapRoot;
@@ -168,7 +168,7 @@ namespace LetMeSleep.Gameplay.Unity
             var hit = FirstRay(query.Position.ToUnity(), query.Direction.ToUnity(), query.Reach + .055f, query.ActorId, false);
             if (!hit.HasValue || Actor(hit.Value.collider)) return false;
             var surface = hit.Value.collider.GetComponentInParent<GameplaySurface>();
-            if (!surface || !surface.CanPerch || !surfaces.ContainsKey(surface.SurfaceId)) return false;
+            if (!surface || !surface.isActiveAndEnabled || !surface.CanPerch || !surfaces.TryGetValue(surface.SurfaceId, out var registered) || registered != surface) return false;
             var point = hit.Value.point; var normal = hit.Value.normal.normalized;
             var localPoint = surface.transform.InverseTransformPoint(point).ToFloat(); var localNormal = surface.transform.InverseTransformDirection(normal).ToFloat();
             var tangent = Vector3.ProjectOnPlane(query.Direction.ToUnity(), normal);
@@ -180,10 +180,94 @@ namespace LetMeSleep.Gameplay.Unity
         public bool ResolveSurface(in SurfaceAttachment attachment, out SurfaceContact contact)
         {
             contact = default;
-            if (!surfaces.TryGetValue(attachment.SurfaceId, out var surface) || !surface || !surface.CanPerch) return false;
+            if (!surfaces.TryGetValue(attachment.SurfaceId, out var surface) || !surface || !surface.isActiveAndEnabled || !surface.CanPerch) return false;
+            if (surface.TryGetComponent<Collider>(out var collider) && !collider.enabled) return false;
             var point = surface.transform.TransformPoint(attachment.LocalPoint.ToUnity()); var normal = surface.transform.TransformDirection(attachment.LocalNormal.ToUnity()).normalized;
             contact = new SurfaceContact(new SurfaceAttachment(attachment.SurfaceId, surface.Revision, attachment.LocalPoint, attachment.LocalNormal, attachment.TangentForward), point.ToFloat(), normal.ToFloat()); return true;
         }
+        public bool TryFollowSurface(uint actorId, in SurfaceAttachment previous, Float3 position,
+            Float3 travelDirection, out SurfaceContact contact)
+        {
+            contact = default;
+            if (!position.IsFinite || !travelDirection.IsFinite || !ResolveSurface(previous, out var prior) ||
+                !surfaces.TryGetValue(previous.SurfaceId, out var oldSurface)) return false;
+            var oldCollider = oldSurface.GetComponent<Collider>();
+            if (!oldCollider || !oldCollider.enabled) return false;
+            Vector3 origin = position.ToUnity(), oldNormal = prior.WorldNormal.ToUnity();
+            Vector3 tangent = Vector3.ProjectOnPlane(travelDirection.ToUnity(), oldNormal);
+            bool moving = tangent.sqrMagnitude > .000001f;
+            if (moving)
+            {
+                tangent.Normalize();
+                // .015 reach plus the existing .055 body radius = .070 m.
+                if (TrySurface(new SurfaceQuery(actorId, position, tangent.ToFloat(), .015f), out var front) &&
+                    Vector3.Dot(oldNormal, front.WorldNormal.ToUnity()) < .98f &&
+                    Vector3.Dot(tangent, front.WorldNormal.ToUnity()) < -.2f &&
+                    ValidSurfaceNeighbor(actorId, origin, prior, oldCollider, front))
+                { contact = front; TraceSurfaceTransition(actorId, prior, front, origin, "front"); return true; }
+            }
+            if (TrySurface(new SurfaceQuery(actorId, position, -prior.WorldNormal, .12f), out var under) &&
+                ValidSurfaceNeighbor(actorId, origin, prior, oldCollider, under))
+            { contact = under; TraceSurfaceTransition(actorId, prior, under, origin, "support"); return true; }
+            if (moving)
+            {
+                // Sample just below an exposed edge and back toward its side face.
+                Vector3 wrapOrigin = origin + tangent * .03f - oldNormal * .09f;
+                if (TrySurface(new SurfaceQuery(actorId, wrapOrigin.ToFloat(), (-tangent).ToFloat(), .08f), out var wrap) &&
+                    Vector3.Dot(tangent, wrap.WorldNormal.ToUnity()) > .2f &&
+                    ValidSurfaceNeighbor(actorId, origin, prior, oldCollider, wrap))
+                { contact = wrap; TraceSurfaceTransition(actorId, prior, wrap, origin, "wrap"); return true; }
+            }
+            return false;
+        }
+
+        private bool ValidSurfaceNeighbor(uint actorId, Vector3 origin, in SurfaceContact prior,
+            Collider oldCollider, in SurfaceContact candidate)
+        {
+            Vector3 point = candidate.WorldPoint.ToUnity(), normal = candidate.WorldNormal.ToUnity();
+            if (!candidate.WorldPoint.IsFinite || !candidate.WorldNormal.IsFinite ||
+                !MathEx.Finite(candidate.WorldNormal.LengthSquared) || Mathf.Abs(normal.sqrMagnitude - 1) > .001f ||
+                !surfaces.TryGetValue(candidate.Attachment.SurfaceId, out var nextSurface)) return false;
+            var nextCollider = nextSurface.GetComponent<Collider>();
+            if (!nextCollider || !nextCollider.enabled || !nextSurface.isActiveAndEnabled || !nextSurface.CanPerch) return false;
+            Vector3 center = point + normal * .057f;
+            if (Vector3.Distance(center, origin) > .15f ||
+                Vector3.Distance(point, prior.WorldPoint.ToUnity()) > .18f || !FreeMosquito(actorId, center)) return false;
+            bool convexOld = ClosestPointSupported(oldCollider), convexNext = ClosestPointSupported(nextCollider);
+            if (!convexOld || !convexNext)
+            {
+                // Nonconvex meshes need topology-aware edge handling. Retain only a
+                // locally witnessed same-plane path; never infer joins from bounds.
+                if (oldCollider != nextCollider || Vector3.Dot(normal, prior.WorldNormal.ToUnity()) < .98f) return false;
+                for (int i = 1; i <= 3; i++)
+                {
+                    Vector3 sample = Vector3.Lerp(prior.WorldPoint.ToUnity(), point, i / 4f);
+                    if (!oldCollider.Raycast(new Ray(sample + normal * .02f, -normal), out var hit, .04f) ||
+                        Vector3.Distance(hit.point, sample) > .003f) return false;
+                }
+                return true;
+            }
+            if (oldCollider == nextCollider) return true;
+            // Witness a physical join near the contact, not just AABB overlap.
+            Vector3 onNew = point, onOld = oldCollider.ClosestPoint(onNew);
+            for (int i = 0; i < 3; i++)
+            { onNew = nextCollider.ClosestPoint(onOld); onOld = oldCollider.ClosestPoint(onNew); }
+            return Vector3.Distance(onOld, onNew) <= .002f &&
+                Vector3.Distance(onOld, point) <= .15f && Vector3.Distance(onOld, origin) <= .18f;
+        }
+        private static bool ClosestPointSupported(Collider collider) =>
+            collider is BoxCollider || collider is SphereCollider || collider is CapsuleCollider ||
+            (collider is MeshCollider mesh && mesh.convex);
+
+        private void TraceSurfaceTransition(uint actorId, in SurfaceContact previous, in SurfaceContact next,
+            Vector3 origin, string kind)
+        {
+            if (previous.Attachment.SurfaceId == next.Attachment.SurfaceId &&
+                Float3.Dot(previous.WorldNormal, next.WorldNormal) >= .98f) return;
+            float distance = Vector3.Distance(origin, next.WorldPoint.ToUnity() + next.WorldNormal.ToUnity() * .057f);
+            Debug.Log($"LMS_SURFACE_TRANSITION actor={actorId} old={previous.Attachment.SurfaceId} new={next.Attachment.SurfaceId} kind={kind} meters={distance:F4} normal={next.WorldNormal.ToUnity()}", this);
+        }
+
         private bool FreeMosquito(uint actor, Vector3 position, uint victim = 0)
         {
             foreach (var collider in Physics.OverlapSphere(position, .054f, GeometryMask, QueryTriggerInteraction.Ignore))

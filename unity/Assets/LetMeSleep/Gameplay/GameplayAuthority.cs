@@ -5,6 +5,13 @@ using LetMeSleep.Core;
 
 namespace LetMeSleep.Gameplay
 {
+    // Optional host-world capability, not a replicated/network contract.
+    public interface ISurfaceTraversalWorld
+    {
+        bool TryFollowSurface(uint actorId, in SurfaceAttachment previous, Float3 position,
+            Float3 travelDirection, out SurfaceContact contact);
+    }
+
     public sealed class GameplayAuthority : IGameplayAuthority
     {
         private sealed class Actor
@@ -23,6 +30,8 @@ namespace LetMeSleep.Gameplay
             internal uint EquippedPickup;
             internal string EquippedTool = GameplayTools.Hands;
             internal SurfaceAttachment? Surface;
+            internal Float3 SurfaceNormal, SurfaceForward;
+            internal int SurfaceTransitionTicks;
             internal BiteAttachment? Bite;
             internal StrikePlan Plan;
             internal StrikeState Strike;
@@ -231,6 +240,7 @@ namespace LetMeSleep.Gameplay
             if (a.State == LifeState.Stunned || a.State == LifeState.Fainted || a.State == LifeState.Recovering) { a.Velocity = default; return; }
             if (a.Bite.HasValue) { a.Velocity = default; return; }
             var input = a.Input;
+            var surfaceTravel = Float3.Zero;
             if (a.State == LifeState.Falling) a.Velocity += new Float3(0, -12 * dt, 0);
             else if (a.Spawn.Role == PlayerRole.Human)
             {
@@ -245,11 +255,20 @@ namespace LetMeSleep.Gameplay
             else if (a.Surface.HasValue)
             {
                 if (!world.ResolveSurface(a.Surface.Value, out var contact)) { Detach(a); return; }
-                var right = new Float3((float)Math.Cos(a.Yaw), 0, -(float)Math.Sin(a.Yaw));
-                var desired = Float3.ProjectPlane(a.Aim * input.MovePlanar.Y + right * input.MovePlanar.X, contact.WorldNormal);
+                var carried = SurfaceVisualFrame.TransportForward(a.SurfaceNormal, contact.WorldNormal, a.SurfaceForward);
+                if (!SurfaceVisualFrame.TryResolve(contact.WorldNormal, a.Aim, carried, 12f * dt,
+                    out var normal, out var forward)) { Detach(a); return; }
+                a.SurfaceNormal = normal; a.SurfaceForward = forward;
+                var right = Float3.Cross(normal, forward);
+                var desired = Float3.ClampLength(forward * input.MovePlanar.Y + right * input.MovePlanar.X);
+                surfaceTravel = desired;
                 var target = contact.WorldPoint + contact.WorldNormal * .057f;
+                if ((a.State == LifeState.Surface || a.SurfaceTransitionTicks > 0) &&
+                    (target - a.Position).Length > .16f) { Detach(a); return; }
                 if (a.State == LifeState.ApproachingSurface) a.Velocity = Float3.ClampLength((target - a.Position) / dt, .65f);
-                else a.Velocity = Float3.ClampLength(desired) * .65f + (target - a.Position) * 8;
+                // Carry a moving support through the motor rather than losing most
+                // of its displacement to a spring that is re-anchored every tick.
+                else a.Velocity = desired * .65f + (target - a.Position) / dt;
             }
             else
             {
@@ -269,6 +288,29 @@ namespace LetMeSleep.Gameplay
             }
             else if (a.Surface.HasValue && world.ResolveSurface(a.Surface.Value, out var support))
             {
+                if (a.SurfaceTransitionTicks > 0)
+                {
+                    // Keep the verified new contact while the existing motor slides
+                    // around the edge. A normal ray can miss until the body rounds it.
+                    a.Surface = support.Attachment;
+                    if ((a.Position - (support.WorldPoint + support.WorldNormal * .057f)).Length < .008f)
+                    { a.SurfaceTransitionTicks = 0; SetState(a, LifeState.Surface); }
+                    else if (++a.SurfaceTransitionTicks > 20) Detach(a);
+                    return;
+                }
+                if (a.State == LifeState.Surface && world is ISurfaceTraversalWorld traversal)
+                {
+                    if (!traversal.TryFollowSurface(a.Spawn.ActorId, a.Surface.Value, a.Position, surfaceTravel, out var next))
+                    { Detach(a); return; }
+                    if (!next.WorldPoint.IsFinite || !next.WorldNormal.IsFinite ||
+                        !MathEx.Finite(next.WorldNormal.LengthSquared) || Math.Abs(next.WorldNormal.LengthSquared - 1) > .001f ||
+                        (next.WorldPoint + next.WorldNormal * .057f - a.Position).Length > .15f)
+                    { Detach(a); return; }
+                    a.Surface = next.Attachment;
+                    if (Float3.Dot(support.WorldNormal, next.WorldNormal) < .98f)
+                    { a.SurfaceTransitionTicks = 1; SetState(a, LifeState.ApproachingSurface); }
+                    return;
+                }
                 // Keep the acquisition reach while travelling toward the selected support.
                 // A newly interposed surface cancels approach; an attached insect retains the tight follow probe.
                 bool approaching = a.State == LifeState.ApproachingSurface;
@@ -406,6 +448,7 @@ namespace LetMeSleep.Gameplay
             if (a.Bite.HasValue) Emit(GameplayEventKind.BiteEnded, a, a.Bite.Value.VictimId);
             bool attached = a.Bite.HasValue || a.Surface.HasValue;
             a.Bite = null; a.Surface = null; a.Preparation = 0; a.Extraction = 0; a.BiteArmed = false;
+            a.SurfaceTransitionTicks = 0; a.SurfaceNormal = a.SurfaceForward = Float3.Zero;
             if (attached) { a.ViewRevision++; ClearHeld(a); }
             if (CanAct(a)) SetState(a, LifeState.Flying);
         }
