@@ -34,6 +34,7 @@ public static class HiggsfieldMapChecks
         public int schema_version;
         public string catalogAssetPath, expectedCatalogGuid, expectedCatalogSha256;
         public string rigPrefabPath;
+        public string baselineScenePath;
         public string[] mapIds;
     }
     [Serializable] sealed class MapResult
@@ -89,6 +90,15 @@ public static class HiggsfieldMapChecks
             fixtureSha256 = HashFile(typeof(HiggsfieldMapChecks).Assembly.Location),
             catalogGuid = request.expectedCatalogGuid, catalogSha256 = request.expectedCatalogSha256 };
         Scene originalScene = SceneManager.GetActiveScene(), testScene = default;
+        if (string.IsNullOrEmpty(originalScene.path))
+        {
+            Check(Application.isBatchMode && SceneManager.sceneCount == 1,
+                "Only a dedicated batch may replace its initial untitled scene.");
+            Check(!string.IsNullOrEmpty(request.baselineScenePath) &&
+                AssetDatabase.LoadAssetAtPath<SceneAsset>(request.baselineScenePath), "Explicit saved baseline scene required.");
+            TrackAsset(assets, request.baselineScenePath);
+            originalScene = EditorSceneManager.OpenScene(request.baselineScenePath, OpenSceneMode.Single);
+        }
         Check(originalScene.IsValid() && originalScene.isLoaded, "Loaded original active scene required.");
         bool originalDirty = originalScene.isDirty;
         var originalEnvironment = CaptureEnvironment();
