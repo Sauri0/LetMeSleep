@@ -11,6 +11,10 @@ LOADING_SUFFIX = ': correct identity, runtime, navigation, three finite actors a
 LOADING_SCOPE = 'Ten local training sessions via application API; no WAN, full playthrough, role-capacity or performance claim.'
 VERIFIED = 'Integración local verificada'
 PENDING = 'Integración Unity en verificación'
+INSPECTION_SCOPES = {
+    'catalog': 'Post-adjustment inspection of existing catalog; not creation or visual approval.',
+    'scene': 'Post-adjustment inspection of existing saved scene binding; no scene creation or save.',
+}
 
 
 def receipt_label(kind, data):
@@ -61,7 +65,8 @@ def validate_receipt(kind, raw):
     data = json.loads(text, object_pairs_hook=unique_object)
     require(isinstance(data, dict), 'Receipt must be an object')
     require(data.get('success') is True, 'Literal success:true required')
-    require(data.get('error') is None or data.get('error') == '', 'Nonempty error')
+    for error_field in ('error', 'cleanupError', 'rollbackError'):
+        require(data.get(error_field) is None or data.get(error_field) == '', 'Nonempty ' + error_field)
     require(not data.get('errors') and not data.get('pending'), 'Errors or pending evidence')
     require(isinstance(data.get('scope'), str) and data['scope'].strip(), 'Native scope missing')
     require(isinstance(data.get('unityVersion'), str) and re.fullmatch(r'\d+\.\d+\.\d+[A-Za-z][0-9A-Za-z.]*', data['unityVersion']), 'Unity version missing')
@@ -70,6 +75,9 @@ def validate_receipt(kind, raw):
     require(isinstance(rows, list) and len(rows) == 5 and all(isinstance(row, dict) for row in rows), 'Five map records required')
     ids = [row.get('mapId') for row in rows]
     require(all(isinstance(i, str) for i in ids) and set(ids) == MAP_IDS, 'Final five unique IDs required')
+    if 'inspectionOnly' in data:
+        validate_inspection(kind, data)
+        return data
     for row in rows:
         hex_value(row, 'contentHash')
         hex_value(row, 'spatialSha256')
@@ -101,11 +109,49 @@ def validate_receipt(kind, raw):
     return data
 
 
+def validate_inspection(kind, data):
+    """HiggsfieldNightCorrection's actual schema; never infer creation-only guards."""
+    require(data['inspectionOnly'] is True, 'Literal inspectionOnly:true required')
+    require(data['scope'] == INSPECTION_SCOPES[kind], 'Native post-adjustment scope required')
+    asset_path(data, 'catalogAssetPath', '.asset')
+    hex_value(data, 'catalogGuid', 32)
+    hex_value(data, 'catalogSha256')
+    for row in data['maps']:
+        asset_path(row, 'prefabPath', '.prefab')
+        for field in ('prefabGuid', 'prefabDependencyHash', 'skyboxGuid'):
+            hex_value(row, field, 32)
+        for field in ('prefabSha256', 'contentHash', 'spatialSha256'):
+            hex_value(row, field)
+        if row['mapId'] in ('hf-casa-del-patio-v1', 'hf-campamento-pinar-v2'):
+            require('protectedSkyboxSha256' in row and row['protectedSkyboxSha256'] is None, 'Changed skybox scope')
+        else:
+            hex_value(row, 'protectedSkyboxSha256')
+    if kind == 'catalog':
+        require(type(data.get('declaredCount')) is int and data['declaredCount'] == 5, 'Declared five-map count')
+        require(data.get('fiveMapStructuralCheck') is True, 'Structural inspection guard')
+        asset_path(data, 'outputAssetPath', '.asset')
+        hex_value(data, 'assetGuid', 32)
+        hex_value(data, 'assetSha256')
+        for left, right in (('outputAssetPath', 'catalogAssetPath'), ('assetGuid', 'catalogGuid'), ('assetSha256', 'catalogSha256')):
+            require(data[left].lower() == data[right].lower(), 'Catalog aliases must agree')
+    else:
+        require(data.get('savedBindingVerified') is True and data.get('sceneUnchanged') is True, 'Saved unchanged scene guards')
+        asset_path(data, 'scenePath', '.unity')
+        hex_value(data, 'sceneGuid', 32)
+        hex_value(data, 'sceneSha256')
+        hex_value(data, 'sceneMetaSha256')
+
+
 def integration_status(receipts):
     """All three validated receipts must agree before publishing local verification."""
     if set(receipts) != {'catalog', 'scene', 'loading'}:
         return PENDING
     catalog, scene, loading = (receipts[k] for k in ('catalog', 'scene', 'loading'))
+    inspected = catalog.get('inspectionOnly') is True
+    if inspected != (scene.get('inspectionOnly') is True):
+        return PENDING
+    if inspected and catalog['configSha256'].lower() != scene['configSha256'].lower():
+        return PENDING
     if len({r['unityVersion'] for r in (catalog, scene, loading)}) != 1:
         return PENDING
     for left, right in (('outputAssetPath', 'catalogAssetPath'), ('assetGuid', 'catalogGuid'), ('assetSha256', 'catalogSha256')):
@@ -114,5 +160,8 @@ def integration_status(receipts):
     scene_maps = {row['mapId']: row for row in scene['maps']}
     for row in catalog['maps']:
         if any(row[field].lower() != scene_maps[row['mapId']][field].lower() for field in ('contentHash', 'spatialSha256')):
+            return PENDING
+        if inspected and any(row[field] != scene_maps[row['mapId']][field] for field in
+                ('prefabPath', 'prefabGuid', 'prefabSha256', 'prefabDependencyHash', 'skyboxGuid', 'protectedSkyboxSha256')):
             return PENDING
     return VERIFIED

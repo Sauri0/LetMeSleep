@@ -1,0 +1,19 @@
+{
+  "status": "PASS_LOCAL_RELATIVE_LINKS_AND_FILE_HASHES",
+  "files": 73,
+  "links": 110,
+  "imageElements": 35,
+  "counts": {
+    "maps": 5,
+    "recommendedBlendFiles": 5,
+    "recommendedGlbFiles": 5,
+    "recommendedCleanFbxFiles": 5,
+    "artPreviews": 10,
+    "unityCaptures": 5,
+    "concepts": 20
+  },
+  "sourceFilesModified": false,
+  "externalRequests": false,
+  "htmlSha256": "1189557e99069c0e7864c5f17475d37f2883577af16f0e778124fa8e5a5f08f5",
+  "manifestSha256": "83d1735fbbbd855f4c6edf1fc3d870aacce631c9742cc6d2909182cda3e12347"
+}

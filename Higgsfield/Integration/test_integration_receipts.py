@@ -2,7 +2,7 @@ import copy
 import json
 import unittest
 from integration_receipts import (MAP_IDS, ROLES, LOADING_SUFFIX, LOADING_SCOPE,
-                                  VERIFIED, PENDING, validate_receipt, integration_status, receipt_label)
+                                  VERIFIED, PENDING, INSPECTION_SCOPES, validate_receipt, integration_status, receipt_label)
 
 
 def fixtures():
@@ -25,7 +25,54 @@ def encode(value):
     return (value if isinstance(value, str) else json.dumps(value)).encode()
 
 
+def inspection_fixtures():
+    data=fixtures()
+    for kind in ('catalog','scene'):
+        old=data[kind]
+        shared=dict(success=True, unityVersion=old['unityVersion'], configSha256='a'*64,
+            scope=INSPECTION_SCOPES[kind], inspectionOnly=True,
+            catalogAssetPath='Assets/Maps.asset', catalogGuid='a'*32, catalogSha256='d'*64)
+        shared['maps']=[dict(mapId=i,prefabPath='Assets/'+i+'.prefab',prefabGuid='1'*32,
+            prefabSha256='2'*64,prefabDependencyHash='3'*32,contentHash='b'*64,spatialSha256='c'*64,
+            skyboxGuid='4'*32,protectedSkyboxSha256=None if i in ('hf-casa-del-patio-v1','hf-campamento-pinar-v2') else '5'*64) for i in sorted(MAP_IDS)]
+        if kind=='catalog':shared.update(declaredCount=5,fiveMapStructuralCheck=True,
+            outputAssetPath=shared['catalogAssetPath'],assetGuid=shared['catalogGuid'],assetSha256=shared['catalogSha256'])
+        else:shared.update(scenePath='Assets/Copy.unity',sceneGuid='c'*32,sceneSha256='1'*64,
+            sceneMetaSha256='2'*64,savedBindingVerified=True,sceneUnchanged=True)
+        data[kind]=shared
+    return data
+
+
 class NativeReceiptTests(unittest.TestCase):
+    def test_inspection_schema_and_strict_guards(self):
+        data=inspection_fixtures()
+        self.assertEqual(integration_status({k:validate_receipt(k,encode(v)) for k,v in data.items()}),VERIFIED)
+        for kind,fields in [('catalog',['inspectionOnly','fiveMapStructuralCheck']),('scene',['inspectionOnly','savedBindingVerified','sceneUnchanged'])]:
+            for field in fields:
+                for value in (False,1,'true',None):
+                    mutated=copy.deepcopy(data[kind]);mutated[field]=value
+                    with self.subTest(kind=kind,field=field,value=value):
+                        with self.assertRaises(ValueError):validate_receipt(kind,encode(mutated))
+            for error_field in ('error','cleanupError','rollbackError'):
+                mutated=copy.deepcopy(data[kind]);mutated[error_field]='failed'
+                with self.assertRaises(ValueError):validate_receipt(kind,encode(mutated))
+            mutated=copy.deepcopy(data[kind]);mutated['scope']='Creation receipt'
+            with self.assertRaises(ValueError):validate_receipt(kind,encode(mutated))
+
+    def test_inspection_identity_and_alias_mismatches(self):
+        for field in ('prefabPath','prefabGuid','prefabSha256','prefabDependencyHash','skyboxGuid','protectedSkyboxSha256'):
+            data=inspection_fixtures()
+            # Isla has a protected unchanged skybox.
+            row=next(r for r in data['scene']['maps'] if r['mapId']=='hf-isla-del-laguito-v2')
+            row[field]='Assets/Other.prefab' if field=='prefabPath' else '9'*len(row[field])
+            self.assertEqual(integration_status({k:validate_receipt(k,encode(v)) for k,v in data.items()}),PENDING,field)
+        data=inspection_fixtures();data['catalog']['assetSha256']='9'*64
+        with self.assertRaises(ValueError):validate_receipt('catalog',encode(data['catalog']))
+        data=inspection_fixtures();data['scene']['configSha256']='9'*64
+        self.assertEqual(integration_status({k:validate_receipt(k,encode(v)) for k,v in data.items()}),PENDING)
+        data=inspection_fixtures();data['scene']=fixtures()['scene']
+        self.assertEqual(integration_status({k:validate_receipt(k,encode(v)) for k,v in data.items()}),PENDING)
+
     def test_scope_drives_post_adjustment_label_without_changing_receipt(self):
         for kind in ('catalog','scene'):
             data=fixtures()[kind]

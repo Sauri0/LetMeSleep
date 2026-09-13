@@ -1,22 +1,32 @@
-# Índice local de entrega de mapas
+# Índice local de entrega de mapas — final emitido
 
-## Ampliación preparada, pendiente de regeneración coordinada
+El coordinador confirmó las capturas nocturnas finales y autorizó la regeneración. Entrada: `N:/LetMeSleep/Artifacts/Higgsfield/Mapas/ENTREGA.html`. Manifiesto y verificación vecinos `ENTREGA.manifest.json`, `ENTREGA.verification.json`.
 
-El generador ahora incorpora cinco capturas Unity adicionales: Isla/UnityFinal, Casa/UnityFinal, Campamento/UnityFinalV2, Yate/UnityFinalV3 y Puerto/UnityPresentationProvisional. Cada captura se etiqueta como Unity; Puerto mantiene su condición provisional. Quedan separados los diez renders de Blender y los veinte bocetos. La futura salida espera 35 imágenes.
+Estado en introducción y cinco mapas: **Integración local verificada**. Alcance: catálogo final y enlace guardado de escena comprobados tras el ajuste nocturno, más diez sesiones locales por la API de la aplicación (cinco IDs × Human/Mosquito) con regreso al menú. No se afirma WAN, FPS, partida completa ni equivalencia portable completa.
 
-Se registra el alcance de la revisión visual: ninguna evidencia P0/P1 identificada en esas cinco imágenes y dos P2 pendientes (agua radial del Yate y fondo de acantilado de Puerto), sin rediseño nuevo. La captura no certifica navegación, interiores ocultos o rendimiento.
+Incluye cinco fuentes Blender (Casa, Yate y Puerto usan UnityAdjustedSource), cinco GLB, cinco FBX limpios, diez vistas Blender, cinco capturas Unity y veinte bocetos únicos. Casa/Campamento muestran Human de GameLoadingFinal, aprobadas por el coordinador junto con sus versiones Mosquito; Isla/Yate/Puerto conservan las vistas anteriores identificadas. Puerto mantiene la etiqueta de presentación provisional de su captura. Las notas de las fuentes ajustadas explican que GLB/FBX conservan los elementos originales.
 
-Se añadieron argumentos opcionales `--catalog-receipt`, `--scene-receipt`, `--loading-receipt`. Sin argumentos, busca `UnityPackage/catalog-receipt.json`, `UnityPackage/scene-receipt.json` y `UnityPackage/GameLoading/five-map-game-loading.txt` dentro de Mapas. `integration_receipts.py` valida los esquemas reales de los builders: literal `success: true`, error ausente/nulo/vacío y guardas propias. El catálogo conserva `sceneInstalled: false` porque su alcance es sólo autoría; la escena exige originalPreserved, catalogPreserved y savedBindingVerified verdaderos. Ambos necesitan los cinco IDs finales únicos y hashes espaciales/contenido. El texto exige cabecera `PASS Unity <versión>`, diez líneas exactas (cinco IDs × Human/Mosquito) y la declaración original de alcance al final.
+Recibos finales enlazados sin reescribir bytes:
 
-Sólo con los tres recibos válidos, la misma versión Unity, la referencia de catálogo coincidente (ruta/GUID/SHA) y hashes por mapa coincidentes entre catálogo/escena, el intro y cada `unityStatus` dicen **Integración local verificada**. De otro modo continúan en verificación. No se renombra ni reescribe el contenido crudo de los recibos. Su alcance nativo se conserva en el manifiesto; no se extiende a WAN, FPS o partida completa.
+- `UnityPackage/catalog-receipt-night-final.json`, SHA256 `34f8cdf203dbe052a2278fb0060370ba17f50236cdf095f6101db139f8a78abe`.
+- `UnityPackage/scene-receipt-night-final.json`, SHA256 `901c97e44543e93a3b59537f833209cdc930a31aa39b84a775f68840ab9f99b8`.
+- `UnityPackage/GameLoadingFinal/five-map-game-loading.txt`, SHA256 `f457a736d60c8f9a71ef2d7f104bb667bca923399ebb13bbeed4a54c894f08c6`.
 
-Los recibos externos exitosos se copian a UnityEvidence con hash en el nombre durante la regeneración, para conservar todos los enlaces dentro de Mapas. La selección de fuente Yate cambia a UnityAdjustedSource sólo cuando exista el recibo de copia con status exacto, los tres objetos (baúl, tapa y mamparo) y SHA del archivo verificados. Aclara que los exports NormalsV3 anteriores no incluyen esos dos ajustes.
+Los dos JSON se etiquetan **validación postajuste**. `integration_receipts.py` reconoce por separado los esquemas reales de creación y de inspección (`HiggsfieldNightCorrection.cs`). En inspección exige inspectionOnly literal true, scope nativo exacto, cinco IDs finales, guardas estructurales del catálogo y sceneUnchanged/savedBindingVerified de escena. Verifica hashes de prefab, dependencias, skybox, contenido y datos espaciales; los cruza entre ambos recibos junto con configSha256 y la referencia de catálogo. No inventa guardas propias de creación que el esquema de inspección no emite. Rechaza errores, booleanos fingidos, IDs duplicados/anteriores y JSON ambiguo.
 
-Puerto también selecciona su copia UnityAdjustedSource al validar el recibo final de bisel y SHA: sólo segundo peldaño, 30 mm. Conserva la fuente original en historial y explicita que GLB/FBX no incluyen el bisel y que la triangulación de la copia difiere de Unity.
+La carga exige `PASS Unity <versión>`, diez líneas exactas mapa/rol PASS y el scope original final. Sólo con los tres recibos válidos y concordantes publica el estado verificado. Nueve pruebas con casos negativos PASS: `python -B -m unittest discover -s Higgsfield/Integration -p test_integration_receipts.py -v`.
 
-Si el scope nativo de catálogo/escena declara readback o post-adjustment, el enlace se etiqueta «validación postajuste», conservando el recibo y su alcance sin reescribir. Los argumentos permiten apuntar a recibos de una revisión posterior; no se sustituyen automáticamente por archivos de nombres probables. La regeneración sigue pendiente de la orden final tras el ajuste nocturno de Casa y Campamento.
+Comando final ejecutado:
 
-La ampliación está verificada por sintaxis y siete pruebas con múltiples casos negativos de formatos nativos, guardas booleanas, JSON ambiguo, IDs finales, diez roles y cruces entre recibos (`python -B -m unittest discover -s Higgsfield/Integration -p test_integration_receipts.py -v`), sin escribir ni regenerar los artifacts de entrega. **Esperar la orden final del coordinador** para generar y actualizar los hashes y recuentos de abajo.
+```powershell
+python -B Higgsfield/Integration/build_maps_delivery_index.py --catalog-receipt N:/LetMeSleep/Artifacts/Higgsfield/Mapas/UnityPackage/catalog-receipt-night-final.json --scene-receipt N:/LetMeSleep/Artifacts/Higgsfield/Mapas/UnityPackage/scene-receipt-night-final.json --loading-receipt N:/LetMeSleep/Artifacts/Higgsfield/Mapas/UnityPackage/GameLoadingFinal/five-map-game-loading.txt
+```
+
+Validación final **PASS_LOCAL_RELATIVE_LINKS_AND_FILE_HASHES**: **73 archivos, 110 href/src locales, 35 imágenes**. Todos los enlaces están dentro de Mapas; veinte hashes de bocetos únicos, fuentes ajustadas recomendadas, tres recibos finales sin rechazos y seis apariciones del estado verificado comprobadas. Los bytes de los recibos originales permanecieron intactos. Sin nuevas imágenes, render, importación ni cambios a fuentes. No se ejecutó una nueva inspección del HTML en navegador; se verificaron contenido, rutas y hashes.
+
+HTML SHA256: `1189557e99069c0e7864c5f17475d37f2883577af16f0e778124fa8e5a5f08f5`.
+Manifiesto SHA256: `83d1735fbbbd855f4c6edf1fc3d870aacce631c9742cc6d2909182cda3e12347`.
+Copia exacta de la verificación emitida: `MAPS-ART-INDEX.verification.json`.
 
 ## Entrega emitida anteriormente
 

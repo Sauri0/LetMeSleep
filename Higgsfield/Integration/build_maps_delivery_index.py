@@ -66,6 +66,10 @@ blend_overrides = {'casa':'UnityAdjustedSource/HF_MAP_02_casa_UNITY_ADJUSTED.ble
 unity_previews=['01-isla/UnityFinal/unity-overview.png','02-casa/UnityFinal/unity-overview.png',
                 '03-campamento/UnityFinalV2/unity-overview.png','04-yate/UnityFinalV3/unity-overview.png',
                 '05-pueblo/UnityPresentationProvisional/unity-overview.png']
+night_captures={
+    'casa':'UnityPackage/GameLoadingFinal/hf-casa-del-patio-v1-Human.png',
+    'campamento':'UnityPackage/GameLoadingFinal/hf-campamento-pinar-v2-Human.png',
+}
 yate_adjustment_path=ROOT/'04-yate/UnityAdjustedSource/adjustment-receipt.json'
 yate_adjustment=None
 if yate_adjustment_path.is_file():
@@ -96,7 +100,8 @@ for index,(slug,title,folder,stem,map_id,description,glb,fbx,overview,detail,det
                       asset(f'{folder}/{glb}','Modelo · GLB','glb',True),asset(f'{folder}/{fbx}','Export limpio · FBX','fbx',True)]
     entry['previews']=[asset(f'{folder}/{overview}','Vista general del arte','overview',True),
                        asset(f'{folder}/{detail}',detail_label,'detail',True)]
-    entry['unityCapture']=asset(unity_previews[index],
+    entry['unityCapture']=asset(night_captures.get(slug,unity_previews[index]),
+        'Captura Unity final · noche, rol humano' if slug in night_captures else
         'Captura Unity · presentación provisional' if slug=='puerto' else 'Captura Unity · vista general revisada','unity_capture',True)
     entry['unityCaptureScope']='Revisión de imagen estática; no certifica interiores ocultos, física, navegación ni rendimiento.'
     entry['concepts']=[]
@@ -191,6 +196,7 @@ manifest=dict(schemaVersion=1,generatedAtUtc=datetime.now(timezone.utc).isoforma
     counts=dict(maps=5,recommendedBlendFiles=5,recommendedGlbFiles=5,recommendedCleanFbxFiles=5,artPreviews=10,unityCaptures=5,concepts=20),
     maps=maps,history=history,excludedDuplicates=[duplicate],evidence=[concept_manifest]+extras,
     integrationReceipts=integration_receipts,visualReview=dict(scope='Cinco capturas Unity revisadas; sin bloqueos P0/P1 identificados en esas imágenes.',
+        finalNightReview='Casa y Campamento: capturas finales de ambos roles aprobadas por el coordinador; el índice muestra el rol humano. Cielo oscuro, rutas legibles y luces cálidas visibles.',
         remainingP2=['Yate: patrón radial marcado del agua.','Puerto: escala y lectura del fondo de acantilado.'],redesignRequested=False),
     fileRecords=list(records.values()),pathPolicy='All href/src values are relative to ENTREGA.html; move the complete folder to retain links.')
 
