@@ -1,0 +1,159 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "model": "sam_3_3d_body",
+      "variant": "default",
+      "params": {},
+      "estimate": {
+        "credits": 1
+      }
+    },
+    {
+      "model": "hunyuan3d_v3_1_text_to_3d",
+      "variant": "default",
+      "params": {
+        "mode": "std",
+        "enable_pbr": false
+      },
+      "estimate": {
+        "credits": 7
+      }
+    },
+    {
+      "model": "hunyuan3d_v3_image_to_3d",
+      "variant": "default",
+      "params": {
+        "enable_pbr": false,
+        "face_count": 500000,
+        "generate_type": "Normal",
+        "polygon_type": "triangle"
+      },
+      "estimate": {
+        "credits": 11
+      }
+    },
+    {
+      "model": "kimodo",
+      "variant": "default",
+      "params": {},
+      "estimate": {
+        "credits": 0.1
+      }
+    },
+    {
+      "model": "meshy_v5_remesh",
+      "variant": "default",
+      "params": {},
+      "estimate": {
+        "credits": 6
+      }
+    },
+    {
+      "model": "meshy_v5_retexture",
+      "variant": "default",
+      "params": {},
+      "estimate": {
+        "credits": 9.5
+      }
+    },
+    {
+      "model": "meshy_v6_text_to_3d",
+      "variant": "default",
+      "params": {},
+      "estimate": {
+        "credits": 25
+      }
+    },
+    {
+      "model": "meshy_v7_image_to_3d",
+      "variant": "default",
+      "params": {
+        "should_texture": true,
+        "enable_rigging": false,
+        "enable_animation": false,
+        "ultra_mode": false
+      },
+      "estimate": {
+        "credits": 38
+      }
+    },
+    {
+      "model": "tripo_3d",
+      "variant": "default",
+      "params": {
+        "texture": true,
+        "texture_quality": "standard",
+        "geometry_quality": "standard"
+      },
+      "estimate": {
+        "credits": 5
+      }
+    },
+    {
+      "model": "tripo_h3_1_image_to_3d",
+      "variant": "default",
+      "params": {
+        "texture": true,
+        "pbr": true,
+        "texture_quality": "standard",
+        "geometry_quality": "standard",
+        "quad": false
+      },
+      "estimate": {
+        "credits": 9
+      }
+    },
+    {
+      "model": "tripo_h3_1_multiview_to_3d",
+      "variant": "default",
+      "params": {
+        "texture": true,
+        "pbr": true,
+        "texture_quality": "standard",
+        "geometry_quality": "standard",
+        "quad": false
+      },
+      "estimate": {
+        "credits": 9
+      }
+    },
+    {
+      "model": "hunyuan3d_v3_1_text_to_3d",
+      "variant": "pro_pbr",
+      "params": {
+        "mode": "pro",
+        "enable_pbr": true
+      },
+      "estimate": {
+        "credits": 16
+      }
+    },
+    {
+      "model": "meshy_v7_image_to_3d",
+      "variant": "with_rig_animation",
+      "params": {
+        "should_texture": true,
+        "enable_rigging": true,
+        "enable_animation": true,
+        "ultra_mode": false
+      },
+      "estimate": {
+        "credits": 47.5
+      }
+    },
+    {
+      "model": "meshy_v7_image_to_3d",
+      "variant": "geometry_only",
+      "params": {
+        "should_texture": false,
+        "enable_rigging": false,
+        "enable_animation": false,
+        "ultra_mode": false
+      },
+      "estimate": {
+        "credits": 25
+      }
+    }
+  ]
+}

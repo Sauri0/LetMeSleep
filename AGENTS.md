@@ -1,5 +1,34 @@
 # Let me sleep — Unity migration
 
+## Nueva etapa autorizada: Higgsfield / Humanos
+
+Observación y visibilidad: Branko pidió Blender abierto y visible para seguir
+el avance, y capturas por app/visor en vez del escritorio que puede tapar con
+otras ventanas. Para evidencia usar captura interna del visor o render de Blender
+en la sesión asignada; si minimizada no actualiza framebuffer, usar render interno.
+No traer ventanas al frente repetidamente ni prometer captura de ventana minimizada
+infalible. Captura de escritorio sólo para verificar disposición de ventanas.
+
+Corrección posterior de Branko: crear lo nuevo DESDE CERO directamente desde
+los bocetos; no reciclar ni usar modelos/estética del alfa como base artística
+o referencia para Higgsfield. Requisitos técnicos de integración separados de
+la autoría; fuentes nuevas, antecedentes intactos. Ver sección prioritaria de
+Higgsfield/HUMANOS-INICIO.md. Esta corrección prevalece sobre propuestas previas
+de adaptar/reutilizar la base humana antigua.
+
+Branko indicó «Comenza» después de ceder temporalmente la coordinación a
+Encargado de Higgfield (01a09869-54a6-7f71-8e90-05de22618557). Se inicia la nueva
+actualización por departamentos secuenciales, con Humanos como único departamento
+en producción. Rigen Higgsfield/PLAN-EQUIPO-BOCETOS.md y
+Higgsfield/HUMANOS-INICIO.md. Esta orden sustituye el STOP inferior únicamente
+para los tickets nuevos emitidos por el Encargado; el alfa y sus asignaciones
+históricas permanecen congelados. Director cedió turnos, integración y coordinación
+y retomará después del cierre verificado. No debe pedírsele autorización operativa.
+
+El Encargado asigna los turnos Unity/Blender, contratos compartidos y tareas de
+apoyo; sólo Humanos produce contenido propio. Usar las tareas existentes,
+conservar WIP y trabajar en N:. No activar otros departamentos por leer su plan.
+
 **STOP — última orden del usuario:** alfa congelada tal como está. No continuar
 implementación, pruebas, builds, importación ni iniciar otra etapa hasta nueva
 orden. Ver `docs/unity/ALFA-FROZEN-20260913.md`. Este estado sustituye las

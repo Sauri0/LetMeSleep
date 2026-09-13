@@ -1,0 +1,22 @@
+{
+  "coordinator": "01a09869-54a6-7f71-8e90-05de22618557",
+  "last_verified_balance": 3000,
+  "plan": "ultra",
+  "pilot_ceiling": 100,
+  "jobs": [
+    {
+      "ticket": "HUM-REF-001",
+      "owner": "Modelador Humanos",
+      "thread_id": "01a09723-96eb-7331-9047-8849d78cb5a4",
+      "purpose": "Primer humano nuevo aislado directamente desde bocetos; sin modelos alfa",
+      "state": "submitted_pending_reconciliation",
+      "model": "seedream_v5_pro",
+      "parameters": {"resolution": "2k", "aspect_ratio": "3:4", "count": 1},
+      "media_ids": ["71288a48-d16d-4f2f-a06a-51e77f67d233", "506e6c92-c304-42c1-b0f8-954b5113131c"],
+      "estimated_credits_exact": 3,
+      "ceiling": 3,
+      "actual_cost": null,
+      "job_id": "dceec95b-d2a2-4608-8ca9-c76d686ccaee"
+    }
+  ]
+}
