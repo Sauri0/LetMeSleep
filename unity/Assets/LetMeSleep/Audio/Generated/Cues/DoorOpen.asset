@@ -15,6 +15,7 @@ MonoBehaviour:
   cueId: DoorOpen
   clips:
   - {fileID: 8300000, guid: ba304d8e93c356d38ea3f8e3d719552a, type: 3}
+  - {fileID: 8300000, guid: b67bb784b46b73498e99ce88698efe9e, type: 3}
   output: {fileID: 8917803077845754786, guid: 515402da301a4f544aa209da70d9751a, type: 2}
   volume: 1
   minimumPitch: 0.98

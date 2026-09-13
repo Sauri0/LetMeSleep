@@ -1,8 +1,8 @@
 {
-    "builder": "alpha-characters-4-bake-scale",
+    "builder": "alpha-characters-6-wing-transmission",
     "unityVersion": "6000.3.24f1",
-    "sourceDigest": "9ade06da4ddc6fb4ba1163718298da2951ddf3222fc25f40c1fa214ec9b66452",
-    "builderDigest": "941b9c83dd53c3a70bfe2c20ff2f6dc0fff9af21611f96a2ff2a05170f53a36a",
+    "sourceDigest": "f78d3a76849f95ffda1194a09ed7f9cdc6b01268638a7bb54600539f64e1f41f",
+    "builderDigest": "fb1941997fb575ff82675e13745e41f30a8266c901df9aebf9fc502c34303ec5",
     "success": true,
     "scope": "Imported assets and sampled animation structure; no playtest, visual approval or performance claim",
     "errors": [],
@@ -64,6 +64,10 @@
             "guid": "967f42a7b6d7b114a801ff8a847c0b03"
         },
         {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_WingVein.mat",
+            "guid": "d40e404de9546774d95406f709782620"
+        },
+        {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Tool_Grip.mat",
             "guid": "668a9298ab6e67a4a9cfc333be03c512"
         },
@@ -74,6 +78,10 @@
         {
             "path": "Assets/LetMeSleep/Content/Characters/Models/LMS_Flyswatter_alpha.fbx",
             "guid": "ad686c9c0b59f0e429e46a59d3193970"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Models/LMS_HumanMenu.fbx",
+            "guid": "037d83dcdef3d204c96894ac2df9f658"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Models/LMS_Human_alpha.fbx",
@@ -92,6 +100,10 @@
             "guid": "6c4acc1f866d9014ab97e5cf102f1036"
         },
         {
+            "path": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_HumanMenu.prefab",
+            "guid": "e7abfd4f9d7b0eb4a9b95bab6de62985"
+        },
+        {
             "path": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human_FirstPerson.prefab",
             "guid": "f6dcd4206beb90b48b3e8fc07805185a"
         },
@@ -103,15 +115,15 @@
     "validations": [
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human.prefab",
-            "triangles": 11224,
+            "triangles": 9652,
             "renderers": 5,
-            "bones": 64,
+            "bones": 65,
             "clips": 15,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
             "rootStationary": true,
-            "maximumLoopFootDelta": 0.00006786402082070708,
+            "maximumLoopFootDelta": 0.00003759126047953032,
             "motions": [
                 {
                     "Id": 0,
@@ -248,6 +260,7 @@
                 "LMS_HumanRig/Root/Hips/Spine/Chest",
                 "LMS_HumanRig/Root/Hips/Spine/Chest/Neck",
                 "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Jaw",
                 "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Eye",
                 "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Head",
                 "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Eye.L",
@@ -309,19 +322,19 @@
             ],
             "orientation": {
                 "frontPointActorLocal": {
-                    "x": -1.4861868180560123e-8,
-                    "y": 1.5299997329711915,
-                    "z": 0.16999995708465577
+                    "x": 1.486184686427805e-8,
+                    "y": 1.5299996137619019,
+                    "z": 0.16999971866607667
                 },
                 "leftPointActorLocal": {
                     "x": -0.2499999701976776,
-                    "y": 1.1699994802474976,
-                    "z": -2.1855692367012126e-8
+                    "y": 1.169999599456787,
+                    "z": -9.735359185469861e-8
                 },
                 "rightPointActorLocal": {
                     "x": 0.2499999701976776,
-                    "y": 1.1699994802474976,
-                    "z": 2.1855692367012126e-8
+                    "y": 1.169999599456787,
+                    "z": -1.410649872468639e-7
                 },
                 "sourceCorrectionEuler": {
                     "x": 0.0,
@@ -334,15 +347,15 @@
         },
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human_FirstPerson.prefab",
-            "triangles": 11224,
+            "triangles": 9652,
             "renderers": 5,
-            "bones": 64,
+            "bones": 65,
             "clips": 15,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
             "rootStationary": true,
-            "maximumLoopFootDelta": 0.00006786402082070708,
+            "maximumLoopFootDelta": 0.00003759126047953032,
             "motions": [
                 {
                     "Id": 0,
@@ -479,6 +492,7 @@
                 "LMS_HumanRig/Root/Hips/Spine/Chest",
                 "LMS_HumanRig/Root/Hips/Spine/Chest/Neck",
                 "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head",
+                "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Jaw",
                 "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Eye",
                 "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Head",
                 "LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Eye.L",
@@ -540,19 +554,19 @@
             ],
             "orientation": {
                 "frontPointActorLocal": {
-                    "x": -1.4861868180560123e-8,
-                    "y": 1.5299997329711915,
-                    "z": 0.16999995708465577
+                    "x": 1.486184686427805e-8,
+                    "y": 1.5299996137619019,
+                    "z": 0.16999971866607667
                 },
                 "leftPointActorLocal": {
                     "x": -0.2499999701976776,
-                    "y": 1.1699994802474976,
-                    "z": -2.1855692367012126e-8
+                    "y": 1.169999599456787,
+                    "z": -9.735359185469861e-8
                 },
                 "rightPointActorLocal": {
                     "x": 0.2499999701976776,
-                    "y": 1.1699994802474976,
-                    "z": 2.1855692367012126e-8
+                    "y": 1.169999599456787,
+                    "z": -1.410649872468639e-7
                 },
                 "sourceCorrectionEuler": {
                     "x": 0.0,
@@ -565,9 +579,9 @@
         },
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Mosquito.prefab",
-            "triangles": 1736,
+            "triangles": 3588,
             "renderers": 3,
-            "bones": 33,
+            "bones": 39,
             "clips": 15,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
@@ -705,12 +719,19 @@
                 "LMS_MosquitoRig/Root/Thorax/Head/Proboscis",
                 "LMS_MosquitoRig/Root/Thorax/Head/Proboscis/Socket.Mouth",
                 "LMS_MosquitoRig/Root/Thorax/Head/Socket.AimForward",
+                "LMS_MosquitoRig/Root/Thorax/Head/Pupil.L",
+                "LMS_MosquitoRig/Root/Thorax/Head/LidUpper.L",
+                "LMS_MosquitoRig/Root/Thorax/Head/LidLower.L",
+                "LMS_MosquitoRig/Root/Thorax/Head/Pupil.R",
+                "LMS_MosquitoRig/Root/Thorax/Head/LidUpper.R",
+                "LMS_MosquitoRig/Root/Thorax/Head/LidLower.R",
                 "LMS_MosquitoRig/Root/Thorax/Abdomen01",
                 "LMS_MosquitoRig/Root/Thorax/Abdomen01/Abdomen02",
                 "LMS_MosquitoRig/Root/Thorax/Socket.Back",
                 "LMS_MosquitoRig/Root/Thorax/Socket.CameraTarget",
-                "LMS_MosquitoRig/Root/Thorax/Wing.L",
                 "LMS_MosquitoRig/Root/Thorax/Socket.WingRoot.L",
+                "LMS_MosquitoRig/Root/Thorax/Socket.WingRoot.R",
+                "LMS_MosquitoRig/Root/Thorax/Wing.L",
                 "LMS_MosquitoRig/Root/Thorax/Leg101.L",
                 "LMS_MosquitoRig/Root/Thorax/Leg101.L/Leg102.L",
                 "LMS_MosquitoRig/Root/Thorax/Leg101.L/Leg102.L/Leg103.L",
@@ -721,7 +742,6 @@
                 "LMS_MosquitoRig/Root/Thorax/Leg301.L/Leg302.L",
                 "LMS_MosquitoRig/Root/Thorax/Leg301.L/Leg302.L/Leg303.L",
                 "LMS_MosquitoRig/Root/Thorax/Wing.R",
-                "LMS_MosquitoRig/Root/Thorax/Socket.WingRoot.R",
                 "LMS_MosquitoRig/Root/Thorax/Leg101.R",
                 "LMS_MosquitoRig/Root/Thorax/Leg101.R/Leg102.R",
                 "LMS_MosquitoRig/Root/Thorax/Leg101.R/Leg102.R/Leg103.R",
@@ -735,26 +755,26 @@
             ],
             "orientation": {
                 "frontPointActorLocal": {
-                    "x": -8.305164556077216e-9,
-                    "y": 1.4901161193847657e-8,
-                    "z": 0.09499997645616532
+                    "x": -8.305175214218253e-9,
+                    "y": 0.0,
+                    "z": 0.09499996155500412
                 },
                 "leftPointActorLocal": {
-                    "x": -0.00850000325590372,
-                    "y": 0.013499997556209565,
-                    "z": -2.605738957939252e-9
+                    "x": -0.008499999530613423,
+                    "y": 0.040999989956617358,
+                    "z": -8.193674183587519e-9
                 },
                 "rightPointActorLocal": {
-                    "x": 0.008499997667968274,
-                    "y": 0.013500000350177288,
-                    "z": -1.1195517846118719e-9
+                    "x": 0.008500002324581147,
+                    "y": 0.04099998623132706,
+                    "z": -6.707487010260138e-9
                 },
                 "sourceCorrectionEuler": {
                     "x": 0.0,
                     "y": 180.0,
                     "z": 0.0
                 },
-                "nearestTipVertexDistance": 0.0006999894976615906,
+                "nearestTipVertexDistance": 0.00034999343915842474,
                 "bakeMeshScaleCompensated": true
             }
         },

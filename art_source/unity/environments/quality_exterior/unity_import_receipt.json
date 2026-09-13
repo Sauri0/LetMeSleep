@@ -1,0 +1,25 @@
+{
+    "unityVersion": "6000.3.24f1",
+    "utc": "2026-09-12T23:42:44.5021626Z",
+    "sourceSha256": "b90b3d406aa02518cd219e8404e97072a5ddf5494dc3cdde669b49a76c190bcd",
+    "meshUpdateStrategy": "Public Mesh API replacement with explicit upload and CPU readback; existing asset GUID retained",
+    "meshes": 40,
+    "instances": 328,
+    "collidersBefore": 485,
+    "collidersAfter": 485,
+    "lightsBefore": 0,
+    "lightsAfter": 0,
+    "verified": [
+        "Finite indexed meshes imported",
+        "Existing collider objects, geometry, transforms and surface IDs unchanged",
+        "Spawn and pickup arrays and world poses unchanged",
+        "PlayBounds unchanged",
+        "No added lights or colliders"
+    ],
+    "pending": [
+        "Native living and patio visual review",
+        "Human and mosquito traversal",
+        "Night lighting/readability approval",
+        "Hardware performance"
+    ]
+}

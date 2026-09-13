@@ -15,6 +15,7 @@ MonoBehaviour:
   cueId: StrikeSwing
   clips:
   - {fileID: 8300000, guid: e2db5705001f5692acf3bb98f5ed63af, type: 3}
+  - {fileID: 8300000, guid: 137ca2e9ee93f361c8909238b5f9ca26, type: 3}
   output: {fileID: -4072463979378329480, guid: 515402da301a4f544aa209da70d9751a, type: 2}
   volume: 1
   minimumPitch: 0.98

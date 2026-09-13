@@ -15,6 +15,8 @@ MonoBehaviour:
   cueId: StrikeImpact
   clips:
   - {fileID: 8300000, guid: ff4f2e2e0d985131b43c87f654b1b916, type: 3}
+  - {fileID: 8300000, guid: 3ba1ec49adc43508ba9d8a97f7dbf6c6, type: 3}
+  - {fileID: 8300000, guid: 1fe0df891427641d6b3a59c6bbc904dc, type: 3}
   output: {fileID: -6938030865840934976, guid: 515402da301a4f544aa209da70d9751a, type: 2}
   volume: 1
   minimumPitch: 0.97

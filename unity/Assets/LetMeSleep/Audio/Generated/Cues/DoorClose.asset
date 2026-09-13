@@ -15,6 +15,7 @@ MonoBehaviour:
   cueId: DoorClose
   clips:
   - {fileID: 8300000, guid: 8a628c06dd11581f8a2df435819f6067, type: 3}
+  - {fileID: 8300000, guid: 1c1a10f2c69cb028a15f88512cb82f4d, type: 3}
   output: {fileID: 8917803077845754786, guid: 515402da301a4f544aa209da70d9751a, type: 2}
   volume: 1
   minimumPitch: 0.98

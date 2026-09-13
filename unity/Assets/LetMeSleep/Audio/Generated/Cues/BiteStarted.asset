@@ -15,6 +15,7 @@ MonoBehaviour:
   cueId: BiteStarted
   clips:
   - {fileID: 8300000, guid: 6bb50890f3c15c32806cf12bc9adadd6, type: 3}
+  - {fileID: 8300000, guid: 62986588f5ccdec0e3fcc6befddc5309, type: 3}
   output: {fileID: -6938030865840934976, guid: 515402da301a4f544aa209da70d9751a, type: 2}
   volume: 1
   minimumPitch: 0.98

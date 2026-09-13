@@ -15,6 +15,7 @@ MonoBehaviour:
   cueId: Recovered
   clips:
   - {fileID: 8300000, guid: 229b79f0ff565379b213841c3a7daed5, type: 3}
+  - {fileID: 8300000, guid: e75aecdde442f7ad91b3c15bd7dc66e3, type: 3}
   output: {fileID: -6938030865840934976, guid: 515402da301a4f544aa209da70d9751a, type: 2}
   volume: 1
   minimumPitch: 0.98
