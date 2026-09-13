@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Globalization;
+using Newtonsoft.Json;
 using LetMeSleep.Bootstrap;
 using LetMeSleep.Content.Environment;
 using LetMeSleep.Presentation;
@@ -18,6 +20,14 @@ using Object = UnityEngine.Object;
 // Exact entrypoint required by the existing HiggsfieldExternalFixture adapter.
 public static class HiggsfieldMapChecks
 {
+    static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
+    {
+        TypeNameHandling = TypeNameHandling.None,
+        MissingMemberHandling = MissingMemberHandling.Error,
+        CheckAdditionalContent = true,
+        MaxDepth = 32,
+        Culture = CultureInfo.InvariantCulture
+    };
 #pragma warning disable CS0649
     [Serializable] public sealed class Request
     {
@@ -54,7 +64,7 @@ public static class HiggsfieldMapChecks
         Check(!outputPath.StartsWith(Path.GetFullPath(Application.dataPath) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase), "Report must be outside Assets.");
         Check(!File.Exists(outputPath) && !Directory.Exists(outputPath), "Report must be new.");
         byte[] config = File.ReadAllBytes(configPath);
-        var request = JsonUtility.FromJson<Request>(Encoding.UTF8.GetString(config));
+        var request = JsonConvert.DeserializeObject<Request>(Encoding.UTF8.GetString(config), JsonSettings);
         Check(request != null && request.schema_version == 1 && request.mapIds != null && request.mapIds.Length == 5 &&
             new HashSet<string>(request.mapIds).Count == 5, "Five distinct explicit IDs required.");
         var catalog = AssetDatabase.LoadAssetAtPath<HiggsfieldMapCatalog>(request.catalogAssetPath);
@@ -257,7 +267,7 @@ public static class HiggsfieldMapChecks
     static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     static void Write(FileStream stream, Report report)
     {
-        byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(report, true)); stream.Position = 0; stream.SetLength(0);
+        byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(report, Formatting.Indented, JsonSettings)); stream.Position = 0; stream.SetLength(0);
         stream.Write(bytes,0,bytes.Length); stream.Flush(true);
     }
 }

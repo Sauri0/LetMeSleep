@@ -17,6 +17,7 @@ foreach ($setting in @{TargetFramework='netstandard2.1'; LangVersion='9'; Enable
 }
 $fixtureItems = $fixtureXml.CreateElement('ItemGroup'); $null = $fixtureProject.AppendChild($fixtureItems)
 $fixtureReferences = @(Get-ChildItem -LiteralPath $UnityManaged -Filter '*.dll')
+$fixtureReferences += Get-Item -LiteralPath (Join-Path (Split-Path $UnityManaged -Parent) 'Newtonsoft.Json.dll')
 foreach ($assemblyName in @('LetMeSleep.Bootstrap','LetMeSleep.Presentation','LetMeSleep.Content.Environment','LetMeSleep.Core','Unity.RenderPipelines.Core.Runtime','Unity.RenderPipelines.Universal.Runtime')) {
     $fixtureReferences += Get-Item -LiteralPath (Join-Path $ScriptAssemblies ($assemblyName + '.dll'))
 }

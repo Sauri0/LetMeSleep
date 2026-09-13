@@ -2,6 +2,8 @@
 
 Preparado y compilado offline; **no ejecutado en Unity**. Sólo requiere el catálogo final guardado y la ruta del prefab real `LMS_AlfaLightingRoot`. No contiene IDs de mapa fijos: admite Yate v3 u otra revisión aprobada indicada por Root.
 
+Config y recibos usan Newtonsoft.Json incluido en Unity (`Editor/Data/Managed/Newtonsoft.Json.dll`), sin paquetes nuevos. Se eliminó JsonUtility porque Root confirmó campos/listas vacíos al deserializar tipos anidados de DLL externas cargadas con Assembly.LoadFrom. Se conservan los guards de identidad, cinco IDs y output nuevo; se rechazan miembros desconocidos y contenido adicional, con profundidad máxima32, cultura invariante y TypeNameHandling.None. Los recibos incluyen explícitamente listas, booleanos y errores también cuando el resultado es fallido.
+
 ## Uso por Root
 
 1. Ejecutar `build.ps1` con PowerShell. Compila contra los assemblies Unity/Proyecto centrales existentes, sin compilar copias de las clases del juego ni instalar scripts dentro de Assets. Genera proyecto y DLL únicamente en `N:/LetMeSleep/Validation/Higgsfield/PresentationCatalogBindings-20260913/`; acepta otras rutas con `-OutputDirectory` bajo el directorio permitido por el adapter.
@@ -38,3 +40,5 @@ El recibo externo nuevo registra éxito por paso/mapa, versión Unity, SHA de co
 Esto prueba código real y referencias de iluminación mediante APIs nativas **en Edit Mode**. Las destrucciones son inmediatas; no cubre Destroy diferido ni Update/LateUpdate de Play Mode, agua GPU/CPU, sombras renderizadas, shader compilation, navegación, UI, audio, multiplayer, FPS o WAN. Tampoco ejecuta la aplicación alfa ni su transición de pantallas. No afirma calidad visual a partir de igualdad de parámetros.
 
 Compilación offline: dotnet10.0.202 + Unity6000.3.24f1 + assemblies centrales; 0 errores/0 advertencias. La primera ejecución nativa y los cinco resultados PASS/FAIL quedan pendientes del turno de Root, cuando exista el catálogo final.
+
+Regresión JSON offline: se cargó la DLL recompilada mediante Assembly.LoadFrom en PowerShell/.NET, se deserializó su Request real con cinco IDs y se invocó su método Write real sobre un Report con cinco MapResult. Se conservaron listas, enteros, booleanos false/true y texto de error; contenido JSON adicional fue rechazado. Evidencia: `N:/LetMeSleep/Validation/Higgsfield/PresentationCatalogBindings-20260913/json-roundtrip-92709d4cb6bd4939ba512d179f3ec6a8.json`. Es una prueba de serialización .NET sin APIs nativas, no una ejecución del ciclo de iluminación en Unity.
