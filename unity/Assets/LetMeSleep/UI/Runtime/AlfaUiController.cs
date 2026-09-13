@@ -867,9 +867,14 @@ namespace LetMeSleep.UI
             AlfaUiFactory.Fill(hudProgress.rectTransform);
 
             hudHintPanel = factory.Panel(view.transform, "ContextHintPanel", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.72f)).gameObject;
-            Anchor(hudHintPanel.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(26f, 26f), new Vector2(490f, 48f));
-            hudHint = factory.Text(hudHintPanel.transform, "ContextHint", string.Empty, 15f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
-            AlfaUiFactory.Fill(hudHint.rectTransform, 16f, 16f, 7f, 7f);
+            // 568x64 text area fits two 24px lines (16px at 720p); keep critical instructions whole.
+            // Right edge 626 leaves 54px before the centered interaction panel at reference 1080p.
+            Anchor(hudHintPanel.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(26f, 26f), new Vector2(600f, 84f));
+            hudHint = factory.Text(hudHintPanel.transform, "ContextHint", string.Empty, 24f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
+            hudHint.textWrappingMode = TextWrappingModes.Normal;
+            hudHint.enableAutoSizing = false;
+            hudHint.overflowMode = TextOverflowModes.Overflow;
+            AlfaUiFactory.Fill(hudHint.rectTransform, 16f, 16f, 10f, 10f);
             var reticle = factory.Icon(view.transform, "Reticle", AlfaUiIconKind.Crosshair, AlfaUiTheme.Sheet100);
             Anchor(reticle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(18f, 18f));
         }
