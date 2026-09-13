@@ -38,7 +38,8 @@ namespace LetMeSleep.Tests.PlayMode
             Transform head = Bone(actor.transform, "Head");
             head.localRotation *= Quaternion.Euler(10, 0, 0); // An evaluated, non-bind entry pose.
             Quaternion headBeforeBuild = head.rotation;
-            rig = MosquitoRagdollBuilder.Build(actor.transform, animator, new MosquitoRagdollSettings(new Vector3(0, -12, 0), 0));
+            var settings = new MosquitoRagdollSettings(new Vector3(0, -12, 0), 0);
+            rig = MosquitoRagdollBuilder.Build(actor.transform, animator, settings);
             Assert.That(Quaternion.Angle(head.rotation, headBeforeBuild), Is.LessThan(.001f), "Build must not reset the animated skin.");
             Assert.That(Quaternion.Angle(head.rotation, rig.GetBody(MosquitoBodyId.Head).rotation), Is.GreaterThan(9f), "Joint neutral must come from bind, not current animation.");
             Assert.That(rig.BodyCount, Is.EqualTo(18));
@@ -77,6 +78,7 @@ namespace LetMeSleep.Tests.PlayMode
             floorCollider.contactOffset = .0005f;
             var first = rig.CaptureAnimatedPose(Vector3.zero, Vector3.zero, actor.transform.position);
             float dt = Time.fixedDeltaTime;
+            TestContext.WriteLine($"R4 configuration: dt={dt:F6}s; solver={settings.SolverIterations}/{settings.SolverVelocityIterations}; inertiaRatio={settings.MaxInertiaRatio}; angularDamping={settings.AngularDamping}; maxDepenetrationVelocity={settings.MaxDepenetrationVelocity}; projection=None; gapGate=0.012m");
             actor.transform.position += Vector3.right * (.1f * dt);
             head.localRotation *= Quaternion.Euler(dt * 40, 0, 0);
             var release = rig.CaptureAnimatedPose(first, dt);
@@ -96,6 +98,8 @@ namespace LetMeSleep.Tests.PlayMode
                 Assert.That(Vector3.Distance(expected.OriginVelocity, actual.OriginVelocity), Is.LessThan(.001f), "Velocity must be converted to/from COM without drift.");
                 Assert.That(inertia.x > 0 && inertia.y > 0 && inertia.z > 0, Is.True);
                 Assert.That(inertia.magnitude, Is.LessThan(.001f), "Inertia must come from metre-scale colliders, not identity.");
+                float ratio = Mathf.Max(inertia.x, Mathf.Max(inertia.y, inertia.z)) / Mathf.Min(inertia.x, Mathf.Min(inertia.y, inertia.z));
+                Assert.That(ratio, Is.LessThanOrEqualTo(settings.MaxInertiaRatio + .001f), "Apply inertia conditioning after refreshing the release pose's compound shapes.");
                 var rb = rig.GetBody((MosquitoBodyId)i);
                 TestContext.WriteLine($"R4 body {i} {rb.name}: COM={rb.centerOfMass:F6}; inertia={inertia:E4}; angular={rb.angularVelocity:F4}");
             }
@@ -137,7 +141,7 @@ namespace LetMeSleep.Tests.PlayMode
                 articulation = Mathf.Max(articulation, Quaternion.Angle(initialRelative,
                     Quaternion.Inverse(thorax.rotation) * rig.GetBody(MosquitoBodyId.Head).rotation));
                 Assert.That(float.IsNaN(thorax.position.y) || thorax.position.sqrMagnitude > 100, Is.False, "No nonfinite or explosive motion.");
-                if (step < 3 || (step + 1) % Mathf.Max(1, Mathf.RoundToInt(1f / dt)) == 0)
+                if (step < Mathf.CeilToInt(.6f / dt) || (step + 1) % Mathf.Max(1, Mathf.RoundToInt(1f / dt)) == 0)
                 {
                     AssertInternalExclusions();
                     LogMotion(step, dt);
