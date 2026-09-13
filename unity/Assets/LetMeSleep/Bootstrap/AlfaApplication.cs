@@ -143,6 +143,7 @@ namespace LetMeSleep.Bootstrap
         private void OpenPendingRoom()
         {
             if (quiescing) return;
+            initializedRoomMap = false;
             pendingOnline = false;
             room?.Dispose(); transport?.Dispose(); lobby?.Dispose();
             lobby = new EosLobbySession(connection); transport = new EosPeerTransport(connection, lobby);
@@ -197,9 +198,19 @@ namespace LetMeSleep.Bootstrap
             var error = room?.StartRound() ?? RoomError.Closed;
             if (error != RoomError.None) PresentRoom(room.Current, "Todavía falta que todos estén listos.");
         }
+        private bool initializedRoomMap;
         private void OnRoomChanged(RoomView view)
         {
             if (quiescing || view == null) return;
+            if (!initializedRoomMap && view.Phase == RoomPhase.Waiting && lobby.IsOwner)
+            {
+                initializedRoomMap = true;
+                if (HiggsfieldMaps)
+                {
+                    SetRoomMap(HiggsfieldMaps.Entries[0].MapId);
+                    return; // SetRules publishes the authoritative updated view synchronously.
+                }
+            }
             if (view.Phase == RoomPhase.Playing && !IsAvailableMap(view.Rules.MapId))
             {
                 LeaveRoom(); ui.ShowJoinRoom(); ShowOnlineError("Este mapa no está instalado en esta versión."); return;
