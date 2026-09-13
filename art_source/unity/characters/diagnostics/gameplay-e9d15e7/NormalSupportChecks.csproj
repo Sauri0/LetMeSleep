@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <UseSharedCompilation>false</UseSharedCompilation>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="NormalSupportChecks.cs" />
+    <Compile Include="../../../../../Unity/Assets/LetMeSleep/Content/Editor/Characters/EyelidMorphSupport.cs" Link="EyelidMorphSupport.cs" />
+  </ItemGroup>
+</Project>
