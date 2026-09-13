@@ -1,0 +1,47 @@
+{
+  "status": "PASS_EXCLUSIVE_CASA_COPY_MARKER_DELTA_AND_SAVED_EMPTY_READBACK",
+  "source": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\UnityAdjustedSource\\HF_MAP_02_casa_UNITY_ADJUSTED.blend",
+  "sourceSha256": "4745f076b6df86722f5ad4777dae833a9b108e787b926b3429e9029cc9e9338f",
+  "savedScene": "HF_MAP_02_casa",
+  "marker": "Spawn_Human_03.001",
+  "originalBlenderXYZ": [
+    -2.5,
+    2.0999999046325684,
+    0.25
+  ],
+  "adjustedBlenderXYZ": [
+    -2.5,
+    2.0999999046325684,
+    0.28411149978637695
+  ],
+  "unityTargetXYZ": {
+    "x": -2.5,
+    "y": 0.28411149978637695,
+    "z": 2.0999999046325684
+  },
+  "actualDeltaZ": 0.03411149978637695,
+  "preservedFiles": {
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\HF_MAP_02_casa.blend": "4e01e7b309e1c923b45b47ed5e398902b682ca976ac93d2fa30c2b1ce414bd8d",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\HF_MAP_02_casa.fbx": "904f41a6cda3ddbf3550ec1535f611c92accc16edc8d6088be1f36a8d963c5bb",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\HF_MAP_02_casa_UNITY.fbx": "f0586b7087395c0f97e7b1eaf548aabcb62ab937ca9f93a98d2ac0ae79688bd7",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\HF_MAP_02_casa_UNITY.glb": "5c234458219a9c00ee4b62a56dd64e9f564877d04cc588c3a711580925decefd",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\scene-audit.json": "91121101893ac210cb3b0d44cad2e64323edd615eace8c84c9ebe1401af9c3b1",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\UnityFinal\\unity-native-review.json": "7108ee65ec53a503d016ae5a49ec52faccb7b82cf879bec010a9c2f4caa69347",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo.blend": "ae73c46d661bbaaa6248627988ee13296dc5476038b06e0f55aa413c3e61c32a"
+  },
+  "restoredActiveScene": "HF_MAP_05_pueblo",
+  "restoredLiveMarkerXYZ": [
+    -2.5,
+    2.0999999046325684,
+    0.25
+  ],
+  "invariants": [
+    "Only temporary marker Z changed before writing the standalone copy",
+    "Live marker restored and all live objects/meshes/scenes identical to before",
+    "Original Casa source/exports/audit and Puerto file hashes unchanged",
+    "Saved marker independently read back; no scene opened or linked",
+    "No new FBX/GLB exports or Unity reimport"
+  ],
+  "readbackMethod": "Saved unlinked EMPTY matrix_basis; parent/constraints/animation absent. matrix_world is unevaluated until scene-linked.",
+  "portableUnityEquivalence": "Only this marker delta matches the documented Unity adjustment; full engine/source equivalence is not claimed"
+}
