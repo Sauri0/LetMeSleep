@@ -28,6 +28,7 @@ namespace LetMeSleep.Bootstrap
         [Serializable] public sealed class Entry
         {
             public string MapId;
+            public string DisplayName;
             public EnvironmentMapDefinition Prefab;
             // LocalLights and SuppressLights must remain empty; use the relative bindings below.
             public HiggsfieldMapLighting.Configuration Lighting = new HiggsfieldMapLighting.Configuration();
@@ -37,6 +38,7 @@ namespace LetMeSleep.Bootstrap
 
         [SerializeField] private Entry[] entries = Array.Empty<Entry>();
         public int Count => entries == null ? 0 : entries.Length;
+        public IReadOnlyList<Entry> Entries { get { Validate(); return Array.AsReadOnly(entries); } }
 
         /// <summary>Reject invalid entries anywhere in the catalog, including duplicate ordinal IDs.</summary>
         public void Validate()
@@ -47,6 +49,7 @@ namespace LetMeSleep.Bootstrap
             {
                 if (entry == null || string.IsNullOrWhiteSpace(entry.MapId) || entry.MapId != entry.MapId.Trim() || !ids.Add(entry.MapId))
                     throw new InvalidOperationException("Catalog has an empty, padded or duplicate map ID.");
+                if (string.IsNullOrWhiteSpace(entry.DisplayName)) throw new InvalidOperationException("Map display name is required: " + entry.MapId);
                 if (!entry.Prefab || entry.Prefab.gameObject.scene.IsValid() ||
                     !string.Equals(entry.MapId, entry.Prefab.MapId, StringComparison.Ordinal) ||
                     string.IsNullOrWhiteSpace(entry.Prefab.ContentHash))

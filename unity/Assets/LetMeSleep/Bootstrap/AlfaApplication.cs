@@ -26,6 +26,7 @@ namespace LetMeSleep.Bootstrap
         public TMP_FontAsset HeadingFont, BodyFont;
         public AudioMixer Mixer;
         public LetMeSleep.Presentation.AlfaLightingRig LightingRig;
+        public HiggsfieldMapCatalog HiggsfieldMaps;
         private AlfaUiController ui;
         private AlfaAudioDirector menuAudio;
         private EosConnection connection;
@@ -85,6 +86,7 @@ namespace LetMeSleep.Bootstrap
             StartPlaytestJournal();
             ui = AlfaUiRuntime.Create(this, new AlfaUiDependencies(HeadingFont, BodyFont, preview:
                 new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab, ConfigurePreviewAttention)));
+            if (HiggsfieldMaps) ui.SetTrainingMaps(HiggsfieldMaps.Entries.Select(entry => new TrainingMapOption(entry.MapId, entry.DisplayName)).ToArray());
             menuAudio = Instantiate(MenuAudioPrefab).GetComponent<AlfaAudioDirector>();
             ui.FeedbackRequested += OnUiFeedback;
             ui.ScreenChanged += OnUiScreenChanged;
@@ -187,7 +189,7 @@ namespace LetMeSleep.Bootstrap
             }
             else if (view.Phase == RoomPhase.Playing && activeRound != view.Round)
             {
-                StopLobbyMovement(); PrepareGame(false); activeRound = view.Round;
+                StopLobbyMovement(); PrepareGame(false, view.Rules.MapId); activeRound = view.Round;
                 gameNetwork = new OnlineGameplaySession(lobby, room, transport, LocalId, map.ContentHash,
                     game.Authority, game, () => game.World.GetDoorDefinitions(), () => game.World.GetToolDefinitions());
                 gameNetwork.BeginReceived += BeginGame;
@@ -234,8 +236,8 @@ namespace LetMeSleep.Bootstrap
         public void StartTraining(AlfaRole role, string modeId, string mapId)
         {
             if (quiescing) return;
-            if (modeId != AlfaUiController.BloodModeId || mapId != RoomRules.AlfaMap) return;
-            trainingRole = role; training = true; StopLobbyMovement(); PrepareGame(true);
+            if (modeId != AlfaUiController.BloodModeId || !IsAvailableMap(mapId)) return;
+            trainingRole = role; training = true; StopLobbyMovement(); PrepareGame(true, mapId);
             var human = role == AlfaRole.Human;
             var roster = new[] {
                 new SpawnActor(1, "practice", human ? PlayerRole.Human : PlayerRole.Mosquito, SpawnPoint(human,0), isBot:false),
@@ -246,10 +248,10 @@ namespace LetMeSleep.Bootstrap
             game.AutomaticTick = true;
         }
         public void CancelTraining() { if (training) LeaveRoom(); }
-        private void PrepareGame(bool practice)
+        private void PrepareGame(bool practice, string mapId = RoomRules.AlfaMap)
         {
             if (quiescing) return;
-            StopGame(); training = practice; showingResults = false; LoadMap(true); menuAudio.gameObject.SetActive(false);
+            StopGame(); training = practice; showingResults = false; LoadMap(true, mapId); menuAudio.gameObject.SetActive(false);
             var root = new GameObject("Gameplay"); game = root.AddComponent<GameplayRuntime>();
             game.World.MapRoot = map.transform;
             game.NavigationData = map.SpatialData;
@@ -346,12 +348,17 @@ namespace LetMeSleep.Bootstrap
             if (presentation) { presentation.SetActive(false); Destroy(presentation); presentation = null; }
             activeRoster = null; showingResults = false;
         }
-        private void LoadMap(bool house)
+        private bool IsAvailableMap(string mapId) => mapId == RoomRules.AlfaMap ||
+            (HiggsfieldMaps && HiggsfieldMaps.Entries.Any(entry => entry.MapId == mapId));
+        private void LoadMap(bool house, string mapId = RoomRules.AlfaMap)
         {
             if (quiescing) return;
+            var entry = house && mapId != RoomRules.AlfaMap ? HiggsfieldMaps.Resolve(mapId) : null;
+            LightingRig.UnbindHiggsfield();
             if (map) { map.gameObject.SetActive(false); Destroy(map.gameObject); }
-            map = Instantiate(house ? HousePrefab : LobbyPrefab).GetComponent<EnvironmentMapDefinition>();
-            LightingRig.BindMap(map.PresentationAnchors,house);
+            map = Instantiate(entry != null ? entry.Prefab.gameObject : house ? HousePrefab : LobbyPrefab).GetComponent<EnvironmentMapDefinition>();
+            if (entry != null) LightingRig.BindHiggsfield(map.transform, HiggsfieldMaps.ResolveLighting(mapId, map));
+            else LightingRig.BindMap(map.PresentationAnchors,house);
             MenuCamera.enabled = true; MenuCamera.GetComponent<AudioListener>().enabled = true;
             MenuCamera.transform.position = map.PlayBounds.center + new Vector3(5, 4, -6);
             MenuCamera.transform.LookAt(map.PlayBounds.center + Vector3.up);
