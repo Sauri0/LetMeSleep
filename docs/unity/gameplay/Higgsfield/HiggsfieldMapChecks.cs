@@ -19,7 +19,7 @@ public static class HiggsfieldMapChecks
 #pragma warning disable 0649
     [Serializable] public sealed class Config
     {
-        public string mapId, prefabPath, action, navigationOverridePath, colliderCandidate, validationReportPath;
+        public string mapId, prefabPath, action, navigationOverridePath, colliderCandidate, validationReportPath, caseFilter;
         public int humanPool = 5, mosquitoPool = 16;
         public bool diagnosticRoutesOnly;
         public Route[] routes;

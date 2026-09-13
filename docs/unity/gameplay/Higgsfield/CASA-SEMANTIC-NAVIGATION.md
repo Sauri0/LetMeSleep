@@ -3,6 +3,11 @@
 2026-09-13. Trabajo externo en worktree gameplay; sin modificar motor ni arte.
 Unity6000.3.24f1 central, batch CPU sin gráficos. Turno liberado al coordinador.
 
+Regresión posterior al cambio de motor central8e9a150:44/44casos y17pasajesPASS
+sobre estos datos persistidos, penetraciónmáxima.8562mm. Informe
+`N:/LetMeSleep/Validation/Higgsfield/CasaV1-20260913/applied-motor-regression-01/map-checks-20260913-072724-110.json`.
+Ver comparación de baseline/peldaño en `HUMAN-MOTOR-TANGENCY-CANDIDATE.md`.
+
 ## Resultado y persistencia
 
 `N:/LetMeSleep/Validation/Higgsfield/CasaV1-20260913/semantic-runtime-01/map-checks-20260913-065612-598.json`

@@ -16,7 +16,7 @@ public static class HumanMotorContactChecks
 {
     public sealed class Report
     {
-        public string status,utc,unityVersion,motorAssembly,motorMvid;
+        public string status,utc,unityVersion,motorAssembly,motorMvid,caseFilter;
         public string scope="Native direct MotorQuery regression, synthetic geometry; no authority/input/visual/WAN certification.";
         public List<Case> cases=new List<Case>();
         public bool cleanup;
@@ -32,7 +32,8 @@ public static class HumanMotorContactChecks
     {
         if(EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || EditorApplication.isUpdating)throw new Exception("Idle native slot required.");
         Directory.CreateDirectory(output);
-        var report=new Report{utc=DateTime.UtcNow.ToString("O"),unityVersion=Application.unityVersion,motorAssembly=typeof(UnityGameplayWorld).Assembly.Location,motorMvid=typeof(UnityGameplayWorld).Module.ModuleVersionId.ToString()};
+        var config=Newtonsoft.Json.JsonConvert.DeserializeObject<HiggsfieldMapChecks.Config>(File.ReadAllText(configPath));
+        var report=new Report{utc=DateTime.UtcNow.ToString("O"),unityVersion=Application.unityVersion,motorAssembly=typeof(UnityGameplayWorld).Assembly.Location,motorMvid=typeof(UnityGameplayWorld).Module.ModuleVersionId.ToString(),caseFilter=config.caseFilter};
         RunCase(report,"flat-triangle-tangent",f=>{
             f.Plane(0);f.Start(Vector3.zero);f.Walk(new Vector3(0,0,3.1f),30);
             Check(f.Position.z>3,"Tangent flat mesh stopped forward travel.");Check(f.Grounded,"Lost flat ground.");
@@ -63,7 +64,7 @@ public static class HumanMotorContactChecks
             float gap=2-f.Position.y-1.72f;f.Row.minMeasuredNormalGap=gap;f.Row.minExpectedNormalGap=.0009f;
             Check(f.Position.y>.25f && gap>=.0009f && gap<.005f,"Ceiling clearance changed.");
         });
-        foreach(float height in new[]{.2f,.24f})RunCase(report,"step-"+height,f=>{
+        foreach(float height in new[]{.2f,.24f})RunCase(report,height<.22f?"step-20cm":"step-24cm",f=>{
             f.Floor();f.Box("Step",new Vector3(0,height*.5f,2),new Vector3(2,height,2));f.Start(new Vector3(0,.001f,0));
             for(int t=0;t<45 && f.Position.z<2;t++)f.Walk(new Vector3(0,0,3.1f),1);
             if(height<.22f)Check(f.Position.z>=2 && f.Position.y>=height && f.Position.y<height+.01f,"Legal20cm step failed.");
@@ -74,11 +75,12 @@ public static class HumanMotorContactChecks
             for(int t=0;t<30;t++)f.Move(new Vector3(0,0,3.8f),false);
             Check(Mathf.Abs(f.Position.z-1.944f)<.0002f,"Mosquito sphere clearance changed.");
         });
-        report.status=report.cases.All(c=>c.status=="PASS")?"PASS_SCOPED":"FAIL";report.cleanup=true;
+        report.status=report.cases.Count>0 && report.cases.All(c=>c.status=="PASS")?"PASS_SCOPED":"FAIL";report.cleanup=true;
         string path=Path.Combine(output,"human-motor-contacts-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff")+".json");File.WriteAllText(path,HiggsfieldMapJson.Write(report));return path;
     }
     static void RunCase(Report report,string id,Action<Fixture> test)
     {
+        if(!string.IsNullOrEmpty(report.caseFilter) && report.caseFilter!=id)return;
         var row=new Case{id=id};report.cases.Add(row);
         try{using(var fixture=new Fixture(row)){test(fixture);Check(row.maxPenetration<=.002f,"Motor penetration exceeded2mm.");row.status="PASS";}}
         catch(Exception e){row.status="FAIL";row.reason=e.Message;}

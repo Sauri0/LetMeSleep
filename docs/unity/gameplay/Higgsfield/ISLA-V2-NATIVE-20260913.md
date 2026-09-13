@@ -1,5 +1,10 @@
 # Isla v2: navegación aplicada, recorrido al muelle bloqueado
 
+**Informe histórico anterior al fix de motor.** El candidato central8e9a150
+superó después48/48casos y263/263portales sobre esta geometría original, sin
+proxies. Evidencia actual en `HUMAN-MOTOR-TANGENCY-CANDIDATE.md`; no se aplicaron
+los hulls experimentales. Se conserva abajo el fallo original y su alcance.
+
 Turno batch CPU delegado por Higgsfield root `01a09869-54a6-7f71-8e90-05de22618557`.
 Unity 6000.3.24f1 central, procesos secuenciales `-batchmode -nographics -noaudio`,
 sin render, PlayMode ni Blender. Último PID 37960 terminó con exit 0; fixture

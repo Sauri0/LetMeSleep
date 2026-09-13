@@ -96,3 +96,49 @@ config de diagnóstico; erroresvacíos ycleanuptrue.
 No se ejecutaron48casosISLA niCASA ampliada debido al test24cm pendiente de
 baseline. No se sumaron cambios de motor/geometría. Procesos37588/32464
 terminaronexit0; turno devuelto/disponible para coordinación y comparación.
+
+## Baseline24cm: comportamiento previo confirmado
+
+Coordinador autorizó sustituir temporalmente sólo el archivo central por padre
+de8e9a150, ejecutar24cm, y restaurar exactamente el candidato. Se añadió filtro
+externo caseFilter, comprobando que un filtro vacío de resultados nunca daPASS.
+Los nombres de casos de peldaños pasan a step-20cm/step-24cm para evitar locale.
+
+`Run-Step24BaselineGuard.ps1` verificó blob actual igual al candidato antes de
+escribir; copia de bytes guardada en
+`N:/LetMeSleep/Validation/Higgsfield/HumanMotorCandidate/baseline-step24-01/UnityGameplayWorld.candidate.bytes`.
+Ejecutó UnityPID2676 y restauró en finally después de su exit0. Recibo
+`restore-guard.json`: estadoCANDIDATE_RESTORED_EXACT_BYTES, SHA antes/después
+`c72db690508ddd361e30f82bf4a4f51120ce2d10fa67467f091962af40de7b8a`.
+Blob candidato011c3733e48297d4042abf3e20f003897afa2874; baseline
+9af4e025bd6f195955b119866c0900c0c5863d88. No se commiteó la sustitución temporal.
+
+Baseline MVIDbd865ebc-d9de-444f-8024-9fe1e06fe8bd, informe
+`human-motor-contacts-20260913-072507-719.json` en esa carpeta: **también sube24cm**.
+En21ticks llegaY.240159169/Z2.0874424, penetración0. Candidato anterior:
+21ticks,Y.240159109/Z2.088491, penetración0. La expectativa «24cm bloqueado» no
+era un límite previo del motor. Se conservan ambosFAIL del criterio antiguo;
+el resultado comparado es comportamiento previo preservado, no10/10retroactivo.
+El origen exacto de la subida por cápsula no se trazó dentro del solver.
+
+El coordinador autorizó ampliar tras ese resultado. ISLA original completa:
+`N:/LetMeSleep/Validation/Higgsfield/IslaV2-20260913/original-motor-full-01/map-checks-20260913-072625-647.json`
+da **PASS_SCOPED48/48**,263/263portalesPASS, máximo.000965312m, errores/pending
+vacíos ycleanuptrue. MVID004842f1 confirma el motor candidato recompilado tras
+restauración. Ningún hull/proxy ni cambio de asset. Incluye21spawns,4rutas
+humanas,7vuelos por input y16stress Explore/input propio; estos últimos no se
+presentan comoBotController completo.
+
+CASA aplicada completa:
+`N:/LetMeSleep/Validation/Higgsfield/CasaV1-20260913/applied-motor-regression-01/map-checks-20260913-072724-110.json`
+da **PASS_SCOPED44/44**,17/17pasajesPASS, máximo.000856190862m, errores/pending
+vacíos ycleanuptrue. Incluye28físicos y16patrullas GameplayRuntime real, con
+30.732666–37.729120m por bot. NavigationSha256 yContentHash son los ya persistidos
+documentados en CASA-SEMANTIC-NAVIGATION.md; sin override deJSON ni cambios de
+geometría. Config `casa-v1.applied-regression.json`.
+
+Procesos2176/14452 terminaronexit0, turnoCPU liberado después deCASA. El motor
+candidato supera la ruta defectuosa original y estas regresiones. No se afirma
+equivalencia universal de contacto rasante, cobertura de todos los mapas,
+render/FPS, combate niWAN. Campamento v1 excluido por defecto conocido dewinding;
+Campamento v2 debe validarse después de recibir su fuente/import correcto.
