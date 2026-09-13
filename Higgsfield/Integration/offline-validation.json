@@ -1,44 +1,44 @@
 {
   "status": "PASS_OFFLINE_COMPILE_AND_CONTRACT_CHECKS_ONLY",
   "unityApiVersion": "6000.3.24f1",
-  "checks": "PASS 49 offline contract checks; no Unity/native import or geometry execution.",
+  "checks": "PASS 56 offline contract checks; no Unity/native import or geometry execution.",
   "assemblySeparation": "Runtime and surface compiled separately; Editor references both. Contract checks execute pure System code only.",
   "files": [
     {
-      "path": "unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs",
-      "sha256": "e5defdb7d06f361d13923eccd898f8a6b1979a58a9f192cd275dbd5448c82ea9"
+      "sha256": "e5defdb7d06f361d13923eccd898f8a6b1979a58a9f192cd275dbd5448c82ea9",
+      "path": "unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs"
     },
     {
-      "path": "unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/HiggsfieldLowPolyWater.cs",
-      "sha256": "30e8361bcbdaa094c718d133496b8bb20842926e527faafd59ac7c3138e2064c"
+      "sha256": "7c1f0e28b99af5df0a28b8b289c1d13fe3e69941c2cc9ef0ca4ec5f5870d13ad",
+      "path": "unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/HiggsfieldLowPolyWater.cs"
     },
     {
-      "path": "unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/HiggsfieldWaveNames.cs",
-      "sha256": "4e4e60137970d1b9b0a67e01e4562f3b9335af3ed32b754dd7ded4ec4bbec6ff"
+      "sha256": "a34dcce6e6a3f928643c9f9786c6f198c3083dbceddebd28872bc7e8d870bf0c",
+      "path": "unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/HiggsfieldWaveNames.cs"
     },
     {
-      "path": "unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/HiggsfieldStaticBatching.cs",
-      "sha256": "23c7b8d2bf538daf55a70b27a348597f7d8fb4e156e8bce97a964e3f7e753e6e"
+      "sha256": "e8f683af037a4f59469d8d5939d38bbd1a7d3035ec464aa5b8fcc5b75c869daf",
+      "path": "unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/HiggsfieldStaticBatching.cs"
     },
     {
-      "path": "unity/Assets/LetMeSleep/Gameplay.Unity/GameplaySurface.cs",
-      "sha256": "1baa0671d41c6e44307ec83269089350831e60b82e894b27ab6a6ef340edf82d"
+      "sha256": "1baa0671d41c6e44307ec83269089350831e60b82e894b27ab6a6ef340edf82d",
+      "path": "unity/Assets/LetMeSleep/Gameplay.Unity/GameplaySurface.cs"
     },
     {
-      "path": "unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldImportContract.cs",
-      "sha256": "9073576c467ea2ee7ee67847eaf9b5556ac011dbfbb50ad7527e63bed6438003"
+      "sha256": "8880920f7b647ac9d4c6cd1d5af042ef6258f4fd4604f4181ea82d7706fd066d",
+      "path": "unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldImportContract.cs"
     },
     {
-      "path": "unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldEnvironmentImporter.cs",
-      "sha256": "e53cdfab37077ff27bb23f94b64f8ad2ac31deb2f5f41268124b3dcadbaed500"
+      "sha256": "38d1c9e58689d9f1eb8ae1a6301f1d18e3e0dc5c34877ec734d436b7aac205d3",
+      "path": "unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldEnvironmentImporter.cs"
     },
     {
-      "path": "unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldEmissionRepair.cs",
-      "sha256": "0c330d80cc0318c1349591fb1882eb3af28b531f9b481d3126ebf90867b1e4cd"
+      "sha256": "cd95eb1adc331fdae76b58a667c1c7f708ebfcaae3f6e527db08f60b5335cb76",
+      "path": "unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldEmissionRepair.cs"
     },
     {
-      "path": "Higgsfield/Integration/ContractChecks.cs",
-      "sha256": "f478f907c187d9419c002b3a349e59ba7610a602ac12d1b6318274fe7469291d"
+      "sha256": "1176612b53a1b68011aef9e4a53f132ccc2e6cd765d0e0cc9fda9d2f7752689d",
+      "path": "Higgsfield/Integration/ContractChecks.cs"
     }
   ],
   "pending": [

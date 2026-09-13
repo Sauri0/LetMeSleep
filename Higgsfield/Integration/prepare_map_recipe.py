@@ -161,6 +161,19 @@ def emission_fields(gltf_material, audited):
     return dict(emissionRgb=factor if any(exported) else [0, 0, 0], emissionStrength=strength if any(exported) else 0)
 
 
+def surface_fields(gltf_material, audited):
+    mode = gltf_material.get('alphaMode', 'OPAQUE')
+    need(mode in ('OPAQUE', 'BLEND'), 'Unsupported alpha mode: ' + mode)
+    rgba = gltf_material['pbrMetallicRoughness']['baseColorFactor']
+    color = audited['base_color']
+    alpha = audited.get('alpha', color[3])
+    need(len(rgba) == 4 and math.isfinite(alpha) and 0 < alpha <= 1, 'Invalid material alpha')
+    need(max(abs(a - b) for a, b in zip(rgba, color[:3] + [alpha])) < 1e-6, 'GLB/audit RGBA mismatch: ' + gltf_material['name'])
+    need(mode != 'BLEND' or 'alpha' in audited, 'Transparent material requires audited Principled Alpha')
+    need(mode != 'OPAQUE' or alpha == 1, 'Opaque material has non-unit opacity')
+    return dict(alphaMode=mode, opacity=alpha, doubleSided=mode == 'BLEND' and gltf_material.get('doubleSided', False))
+
+
 def validate_nested_report_counts(report, audit, object_count, mesh_count, material_count, human_count, mosquito_count):
     """Compare explicitly reported export counts; scene counts include preserved exclusions."""
     if 'counts' not in report:
@@ -169,6 +182,8 @@ def validate_nested_report_counts(report, audit, object_count, mesh_count, mater
     need(isinstance(counts, dict), 'Report counts must be an object')
     expected = dict(export_objects=object_count, export_mesh_objects=mesh_count, materials=material_count,
                     human_spawns=human_count, mosquito_spawns=mosquito_count)
+    expected.update(objects=object_count, mesh_objects=mesh_count,
+                    triangles_instanced=sum(o.get('triangles', 0) for o in audit['objects'] if o['type'] == 'MESH'))
     if 'triangles_instanced_total' in counts:
         meshes = [o for o in audit['objects'] if o['type'] == 'MESH']
         need(all(type(o.get('triangles')) is int and o['triangles'] >= 0 for o in meshes), 'Missing audited triangle count')
@@ -200,7 +215,7 @@ def prepare(config, config_dir):
     need(isinstance(summary, dict), 'Report checks must be an object')
     if 'expectedScene' in config:
         need(audit.get('scene') == config['expectedScene'], 'Audit belongs to a different scene')
-        need(report.get('scene', summary.get('scene')) == config['expectedScene'], 'Report belongs to a different scene')
+        need(report.get('scene', summary.get('scene', report.get('map'))) == config['expectedScene'], 'Report belongs to a different scene')
     glb = files['glb']
     magic, version, size = struct.unpack_from('<4sII', glb)
     need((magic, version, size) == (b'glTF', 2, len(glb)), 'GLB header mismatch')
@@ -239,11 +254,11 @@ def prepare(config, config_dir):
     audit_materials = {m['name']: m for m in audit['materials']}
     need(len(audit_materials) == len(audit['materials']), 'Ambiguous audit materials')
     need(set(fbm.values()) == set(audit_materials) == {m['name'] for m in gltf['materials']}, 'Material names differ between final exports')
-    emissions = {}
+    emissions, surfaces = {}, {}
     for m in gltf['materials']:
         color = audit_materials[m['name']]['base_color']
         need(len(color) == 4 and all(math.isfinite(v) and 0 <= v <= 1 for v in color), 'Invalid audit RGBA: ' + m['name'])
-        need(max(abs(a - b) for a, b in zip(m['pbrMetallicRoughness']['baseColorFactor'], color)) < 1e-6, 'GLB/audit colour mismatch: ' + m['name'])
+        surfaces[m['name']] = surface_fields(m, audit_materials[m['name']])
         emissions[m['name']] = emission_fields(m, audit_materials[m['name']])
     rules, mesh_evidence, deduplicated_slots = [], [], []
     overrides = config.get('kinds', {})
@@ -262,16 +277,30 @@ def prepare(config, config_dir):
         primitive_materials = [gltf['materials'][p['material']]['name'] for p in mesh['primitives']]
         need(set(primitive_materials) <= set(slots), 'GLB primitive references foreign material: ' + name)
         props = authored['properties']
-        period = props.get('wave_loop_seconds', 8)
-        amplitude = props.get('wave_amplitude', .025)
+        period = props.get('wave_loop_seconds', props.get('wave_period_seconds', 8))
+        amplitude = props.get('wave_amplitude', props.get('wave_amplitude_m', .025))
         wavelength = props.get('wave_length', 4)
+        if kind == 'water' and 'wave_params' in props:
+            wave = json.loads(props['wave_params']) if isinstance(props['wave_params'], str) else props['wave_params']
+            need(isinstance(wave, dict), 'Wave parameters must be an object')
+            period = props.get('wave_loop_seconds', wave.get('loop_seconds', period))
+            if 'Wave_A' in wave and 'Wave_B' in wave:
+                # Preserve the source amplitude envelope/period; the shared runtime uses its own two-sine directions.
+                amplitude = props.get('wave_amplitude', sum(wave[k]['amplitude'] for k in ('Wave_A', 'Wave_B')))
+                frequency = math.hypot(wave['Wave_A']['kx'], wave['Wave_A']['ky'])
+                need(frequency > 0 and math.isfinite(frequency), 'Invalid authored wave frequency')
+                wavelength = props.get('wave_length', 2 * math.pi / frequency)
         need(math.isfinite(period) and period > 0 and math.isfinite(amplitude) and 0 <= amplitude <= .15 and math.isfinite(wavelength) and wavelength > 0, 'Invalid wave properties: ' + path)
         rules.append(dict(path=path, kind=kind, descendants=False, canPerch=kind == 'solid' and props.get('can_perch', True) is not False,
-                          waveAmplitude=amplitude, waveLength=wavelength, waveSpeed=2 * math.pi / period))
+                            waveAmplitude=amplitude, waveLength=wavelength, waveSpeed=2 * math.pi / period))
+        if path in config.get('gpuWaterPaths', []):
+            need(kind in ('water', 'foam'), 'GPU water path must be visual water/foam: ' + path)
+            rules[-1]['waterAnimation'] = 'gpu'
         mesh_evidence.append(dict(path=path, role=role, kind=kind, materialSlots=slots,
                                   glbPrimitiveMaterials=primitive_materials,
                                   glbPositionAccessorVertices=sum(gltf['accessors'][p['attributes']['POSITION']]['count'] for p in mesh['primitives'])))
     need(set(overrides) <= {r['path'] for r in rules}, 'Kind override does not match a mesh path')
+    need(set(config.get('gpuWaterPaths', [])) <= {r['path'] for r in rules}, 'GPU water path does not match a mesh path')
     if 'expectedWaterCount' in config:
         need(sum(r['kind'] in ('water', 'foam') for r in rules) == config['expectedWaterCount'], 'Unexpected water/foam geometry classification')
     actual_mesh_count = sum(o['type'] == 'MESH' for o in audit_objects.values())
@@ -315,7 +344,7 @@ def prepare(config, config_dir):
                   humanSpawns=[p for p, _ in human], mosquitoSpawns=[p for p, _ in mosquito],
                   lobbySpawns=[], toolPickups=[], presentationRoot='', boundsMinEmpty='', boundsMaxEmpty='',
                   playBoundsMin=low, playBoundsMax=high, nodes=sorted(rules, key=lambda r: r['path']),
-                  materials=[dict(sourceName=m['name'], rgb=m['base_color'][:3], colorSpace='linear', **emissions[m['name']]) for m in sorted(audit['materials'], key=lambda m: m['name'])])
+                  materials=[dict(sourceName=m['name'], rgb=m['base_color'][:3], colorSpace='linear', **emissions[m['name']], **surfaces[m['name']]) for m in sorted(audit['materials'], key=lambda m: m['name'])])
     channels = [n['props'][1].split('\x00')[0] for n in objects if n['name'] == 'Deformer' and n['props'][2] == 'BlendShapeChannel']
     validation = dict(status='PASS_OFFLINE_FINAL_EXPORT_CONTRACT_ONLY', mapId=config['mapId'],
                       sources={key: dict(path=str(source_paths[key]), sha256=hashes[key]) for key in source_paths},

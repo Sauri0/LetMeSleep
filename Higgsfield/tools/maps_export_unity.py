@@ -1,7 +1,6 @@
 """Compatibility export of an existing authored map; restores every original mesh/slot."""
 import argparse,json,site
-site.addsitedir(r'C:\Users\brank\AppData\Roaming\Blender Foundation\Blender\5.2\extensions\.local\lib\python3.13\site-packages')
-from blmcp.tools_helpers.connection import send_code
+from maps_connection import send_code
 parser=argparse.ArgumentParser();parser.add_argument('--map',required=True,choices=['01-isla','02-casa','03-campamento','04-yate','05-pueblo']);args=parser.parse_args()
 code='scene_name='+repr('HF_MAP_'+args.map.replace('-','_'))+'\nfolder_name='+repr('N:/LetMeSleep/Artifacts/Higgsfield/Mapas/'+args.map)+'\n'+'''
 import bpy,importlib,contextlib,json

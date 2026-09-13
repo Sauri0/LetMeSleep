@@ -1,7 +1,6 @@
 """Read-only inspection of the active map, with concise console summary."""
 import json,site,sys
-site.addsitedir(r'C:\Users\brank\AppData\Roaming\Blender Foundation\Blender\5.2\extensions\.local\lib\python3.13\site-packages')
-from blmcp.tools_helpers.connection import send_code
+from maps_connection import send_code
 code='''import bpy,json,math
 from pathlib import Path
 from mathutils import Vector
@@ -31,7 +30,7 @@ materials=[]
 for name in sorted(mat_names):
     m=bpy.data.materials[name]
     bsdf=next((n for n in m.node_tree.nodes if n.type=='BSDF_PRINCIPLED'),None) if m.use_nodes else None
-    materials.append({'name':name,'diffuse':list(m.diffuse_color),'base_color':list(bsdf.inputs['Base Color'].default_value) if bsdf else None,'emission_color':list(bsdf.inputs['Emission Color'].default_value) if bsdf else [0,0,0,1],'emission_strength':float(bsdf.inputs['Emission Strength'].default_value) if bsdf else 0})
+    materials.append({'name':name,'diffuse':list(m.diffuse_color),'base_color':list(bsdf.inputs['Base Color'].default_value) if bsdf else None,'alpha':float(bsdf.inputs['Alpha'].default_value) if bsdf else 1,'emission_color':list(bsdf.inputs['Emission Color'].default_value) if bsdf else [0,0,0,1],'emission_strength':float(bsdf.inputs['Emission Strength'].default_value) if bsdf else 0})
 report={'scene':scene.name,'file':bpy.data.filepath,'source_object_count':len(scene.objects),'excluded_objects':excluded,'objects':items,'materials':materials,'fps':scene.render.fps,'frame_start':scene.frame_start,'frame_end':scene.frame_end,'camera':scene.camera.name if scene.camera else None,'triangles':sum(o.get('triangles',0) for o in items),'mesh_count':sum(o['type']=='MESH' for o in items)}
 out=folder/'scene-audit.json'
 out.write_text(json.dumps(report,indent=2),encoding='utf-8')

@@ -55,6 +55,13 @@ public static class ContractChecks
         Reject(x => x.nodes[0].kind = "everything", "unknown classification");
         Reject(x => x.nodes[1].path = x.nodes[0].path, "ambiguous override");
         Reject(x => x.nodes[0].waveAmplitude = 1f, "excessive water displacement");
+        Reject(x => x.nodes[0].waterAnimation = "gpu", "GPU animation on solid or foliage");
+        Reject(x => x.nodes[2].waterAnimation = "auto", "Unknown animation mode");
+        var gpu = Valid(); gpu.nodes[2].waterAnimation = "gpu"; gpu.Validate(); checks++;
+        Reject(x => x.materials[0].alphaMode = "MASK", "Unsupported masked material");
+        Reject(x => x.materials[0].opacity = .3f, "Partial alpha on opaque material");
+        Reject(x => x.materials[0].doubleSided = true, "Opaque surfaces must use correct normals");
+        var glass = Valid(); glass.materials[0].alphaMode = "BLEND"; glass.materials[0].opacity = .3f; glass.materials[0].doubleSided = true; glass.Validate(); checks++;
         Reject(x => x.materials[0].rgb[0] = float.NaN, "invalid swatch");
         Reject(x => x.materials[0].colorSpace = "guess", "unspecified colour encoding");
         Reject(x => x.materials = new[] { x.materials[0], x.materials[0] }, "ambiguous material");

@@ -1,8 +1,7 @@
 """Operate approved map scenes via the installed Higgsfield Scene Builder."""
 import argparse,json,site
 from pathlib import Path
-site.addsitedir(r'C:\Users\brank\AppData\Roaming\Blender Foundation\Blender\5.2\extensions\.local\lib\python3.13\site-packages')
-from blmcp.tools_helpers.connection import send_code
+from maps_connection import send_code
 parser=argparse.ArgumentParser()
 parser.add_argument('--prepare',action='store_true')
 parser.add_argument('--submit',action='store_true')

@@ -22,7 +22,8 @@ $taskContract = 'unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/H
 $taskEditor = @($taskContract, 'unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldEnvironmentImporter.cs', 'unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldEmissionRepair.cs')
 Compile-Higgsfield 'Higgsfield.Runtime' $taskRuntime
 Compile-Higgsfield 'Higgsfield.Surface' $taskSurface
-Compile-Higgsfield 'Higgsfield.Editor' $taskEditor @('Higgsfield.Runtime.dll', 'Higgsfield.Surface.dll')
+Compile-Higgsfield 'Higgsfield.GpuWater' @('unity/Assets/LetMeSleep/Presentation/Runtime/HiggsfieldWater/HiggsfieldGpuWater.cs', 'unity/Assets/LetMeSleep/Presentation/Runtime/HiggsfieldWater/HiggsfieldGpuWaterBinding.cs')
+Compile-Higgsfield 'Higgsfield.Editor' $taskEditor @('Higgsfield.Runtime.dll', 'Higgsfield.Surface.dll', 'Higgsfield.GpuWater.dll')
 Compile-Higgsfield 'ContractChecks' @($taskContract, $taskWavePolicy, 'Higgsfield/Integration/ContractChecks.cs') @() 'exe'
 $taskVersion = (Get-ChildItem "$UnityEditorData/NetCoreRuntime/shared/Microsoft.NETCore.App" -Directory | Sort-Object { [version]$_.Name } -Descending | Select-Object -First 1).Name
 @{ runtimeOptions = @{ tfm='net6.0'; framework=@{ name='Microsoft.NETCore.App'; version=$taskVersion } } } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $taskVerification 'ContractChecks.runtimeconfig.json') -Encoding utf8

@@ -51,6 +51,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                 Need(n.path.Split('/').All(p => p.Length > 0 && p != "." && p != ".."), "Invalid relative node path.");
                 Need(Finite(n.waveAmplitude) && n.waveAmplitude >= 0 && n.waveAmplitude <= .15f, "Wave amplitude must be 0..0.15 m.");
                 Need(Finite(n.waveLength) && n.waveLength > 0 && Finite(n.waveSpeed), "Invalid wave settings.");
+                Need(n.waterAnimation == "cpu" || (n.waterAnimation == "gpu" && (n.kind == "water" || n.kind == "foam")), "Invalid explicit water animation mode.");
             }
             Need(materials != null && materials.Length > 0 && materials.All(m => m != null), "Explicit flat-colour swatches required.");
             CheckNames(materials.Select(m => m.sourceName).ToArray(), 1, "material names");
@@ -59,6 +60,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                 Need(m.rgb?.Length == 3 && m.rgb.All(v => Finite(v) && v >= 0 && v <= 1), "Material RGB must be three sRGB values in 0..1.");
                 Need(m.colorSpace == "linear" || m.colorSpace == "srgb", "Explicit material colour space must be linear or srgb.");
                 m.ValidateEmission();
+                m.ValidateSurface();
             }
         }
 
@@ -98,6 +100,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
     [Serializable] public sealed class HiggsfieldNodeRule
     {
         public string path, kind;
+        public string waterAnimation = "cpu";
         public bool descendants, canPerch = true;
         public float waveAmplitude = .025f, waveLength = 4f, waveSpeed = .65f;
     }
@@ -106,6 +109,15 @@ namespace LetMeSleep.Content.Editor.Higgsfield
         public string sourceName;
         public float[] rgb;
         public string colorSpace = "srgb";
+        public string alphaMode = "OPAQUE";
+        public float opacity = 1;
+        public bool doubleSided;
+        public void ValidateSurface()
+        {
+            HiggsfieldImportContract.Need(alphaMode == "OPAQUE" || alphaMode == "BLEND", "Unsupported material alpha mode: " + sourceName);
+            HiggsfieldImportContract.Need(HiggsfieldImportContract.Finite(opacity) && opacity > 0 && opacity <= 1, "Invalid material opacity: " + sourceName);
+            HiggsfieldImportContract.Need(alphaMode != "OPAQUE" || (opacity == 1 && !doubleSided), "Opaque geometry requires full opacity and outward faces: " + sourceName);
+        }
         // Always linear. Missing fields in old recipes mean black, independently of base colour.
         public float[] emissionRgb;
         public float emissionStrength;

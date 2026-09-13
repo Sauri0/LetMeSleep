@@ -7,6 +7,7 @@ using System.Text;
 using LetMeSleep.Content.Environment;
 using LetMeSleep.Content.Environment.Higgsfield;
 using LetMeSleep.Gameplay.Unity;
+using LetMeSleep.Presentation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -116,11 +117,12 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                 {
                     var swatch = recipe.materials[i];
                     var material = new Material(shader) { name = swatch.sourceName };
-                    var color = new Color(swatch.rgb[0], swatch.rgb[1], swatch.rgb[2], 1);
+                    var color = new Color(swatch.rgb[0], swatch.rgb[1], swatch.rgb[2], swatch.opacity);
                     material.SetColor("_BaseColor", swatch.colorSpace == "linear" ? color.gamma : color);
                     material.SetFloat("_Metallic", 0); material.SetFloat("_Smoothness", 0);
-                    material.SetFloat("_Surface", 0); // Flat colour, opaque; no realistic texture or transparency dependency.
+                    material.SetFloat("_Surface", 0);
                     ApplyEmission(material, swatch);
+                    if (swatch.alphaMode == "BLEND") ApplyTransparentSurface(material, swatch);
                     AssetDatabase.CreateAsset(material, destination + "/Materials/Color_" + i.ToString("000") + ".mat");
                     materials.Add(swatch.sourceName, material);
                 }
@@ -153,7 +155,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                         return materials[m.name];
                     }).ToArray();
                     meshEntries.Add(new MeshEntry { path = path, kind = rule.kind, vertices = mesh.vertexCount, submeshes = mesh.subMeshCount,
-                        materialSlots = oldMaterials.Select(m => m.name).ToArray(), waterMode = rule.kind == "water" || rule.kind == "foam" ? (skinned != null ? "authored-blendshapes" : "private-mesh-cpu") : "none" });
+                        materialSlots = oldMaterials.Select(m => m.name).ToArray(), waterMode = rule.kind == "water" || rule.kind == "foam" ? (rule.waterAnimation == "gpu" ? "flat-gpu" : skinned != null ? "authored-blendshapes" : "private-mesh-cpu") : "none" });
                     renderer.shadowCastingMode = rule.kind == "water" || rule.kind == "foam" ? UnityEngine.Rendering.ShadowCastingMode.Off : UnityEngine.Rendering.ShadowCastingMode.On;
                     renderer.receiveShadows = true; // Includes foliage/branches; collider exclusion does not disable shadows.
                     if (rule.kind == "solid")
@@ -168,6 +170,17 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                     }
                     if (rule.kind == "water" || rule.kind == "foam")
                     {
+                        if (rule.waterAnimation == "gpu")
+                        {
+                            Need(renderer is MeshRenderer && skinned == null, "GPU water requires a static MeshRenderer: " + path);
+                            var waterShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/LetMeSleep/Presentation/Runtime/HiggsfieldWater/HiggsfieldGpuWater.shader");
+                            Need(waterShader != null && waterShader.name == HiggsfieldGpuWater.ShaderName, "Explicit GPU water shader missing.");
+                            var binding = renderer.gameObject.AddComponent<HiggsfieldGpuWaterBinding>();
+                            binding.Water = (MeshRenderer)renderer; binding.WaterShader = waterShader;
+                            binding.Settings = new HiggsfieldGpuWater.Parameters { Amplitude = rule.waveAmplitude, Wavelength = rule.waveLength, Speed = rule.waveSpeed };
+                        }
+                        else
+                        {
                         Need(skinned != null || mesh.vertexCount <= HiggsfieldLowPolyWater.MaximumAnimatedVertices, "Water exceeds CPU animation vertex budget: " + path);
                         var water = renderer.gameObject.AddComponent<HiggsfieldLowPolyWater>();
                         if (skinned != null)
@@ -176,6 +189,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                             water.WaveA = waveA; water.WaveB = waveB;
                         }
                         water.Amplitude = rule.waveAmplitude; water.Wavelength = rule.waveLength; water.Speed = rule.waveSpeed;
+                        }
                         waterCount++;
                     }
                     // Do not static-batch water; keep authored hierarchy and mesh topology for every object.
@@ -249,6 +263,20 @@ namespace LetMeSleep.Content.Editor.Higgsfield
             return false;
         }
 
+        static void ApplyTransparentSurface(Material material, HiggsfieldSwatch swatch)
+        {
+            swatch.ValidateSurface();
+            material.SetFloat("_Surface", 1); material.SetFloat("_Blend", 0);
+            material.SetFloat("_BlendModePreserveSpecular", 0);
+            material.SetFloat("_Cull", swatch.doubleSided ? 0 : 2);
+            // Use the installed URP editor's own blend/pass setup, without adding a runtime dependency.
+            var gui = Type.GetType("UnityEditor.BaseShaderGUI, Unity.RenderPipelines.Universal.Editor", true);
+            var setup = gui.GetMethod("SetMaterialKeywords", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            Need(setup != null, "Installed URP material setup API missing.");
+            setup.Invoke(null, new object[] { material, null, null });
+            Need(material.IsKeywordEnabled("_SURFACE_TYPE_TRANSPARENT") && material.renderQueue >= 3000 &&
+                material.GetFloat("_ZWrite") == 0 && !material.GetShaderPassEnabled("ShadowCaster"), "Transparent material setup failed.");
+        }
         public static void ApplyEmission(Material material, HiggsfieldSwatch swatch)
         {
             Need(material != null && material.shader != null && material.shader.name == "Universal Render Pipeline/Lit", "Emission requires URP/Lit.");
