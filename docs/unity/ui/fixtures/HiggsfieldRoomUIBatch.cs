@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -44,10 +45,10 @@ public static class HiggsfieldMapChecks
     {
         if(!Application.isBatchMode)throw new InvalidOperationException("Use the dedicated batch editor with graphics.");
         if(SystemInfo.graphicsDeviceType==GraphicsDeviceType.Null)throw new InvalidOperationException("Graphics required; omit -nographics.");
-        config=JsonUtility.FromJson<Config>(File.ReadAllText(configPath)) ?? new Config();
+        config=JsonConvert.DeserializeObject<Config>(File.ReadAllText(configPath)) ?? new Config();
         output=Path.GetFullPath(outputPath);Directory.CreateDirectory(output);
         if(File.Exists(Path.Combine(output,"batch.json")))throw new InvalidOperationException("Use fresh output directory.");
-        var catalog=JsonUtility.FromJson<Catalog>(File.ReadAllText(config.catalogInput));
+        var catalog=JsonConvert.DeserializeObject<Catalog>(File.ReadAllText(config.catalogInput));
         maps=(catalog?.entries ?? Array.Empty<Entry>()).Select(entry=>new TrainingMapOption(entry.mapId,entry.displayName)).ToArray();
         if(maps.Length!=5 || maps.Select(map=>map.Id).Distinct().Count()!=5)throw new InvalidOperationException("Require five unique real catalog entries.");
         FixtureEditorOptions.Restore();
@@ -174,5 +175,5 @@ public static class HiggsfieldMapChecks
             Save();
         }
     }
-    private static void Save()=>File.WriteAllText(Path.Combine(output,"batch.json"),JsonUtility.ToJson(report,true));
+    private static void Save()=>File.WriteAllText(Path.Combine(output,"batch.json"),JsonConvert.SerializeObject(report,Formatting.Indented));
 }

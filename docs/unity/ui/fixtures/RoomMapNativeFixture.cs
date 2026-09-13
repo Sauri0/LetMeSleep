@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -66,7 +67,7 @@ namespace LetMeSleep.Validation
             catch(Exception e){ f.Fail(e); }
             return f.directory;
         }
-        public static string Status()=>active ? JsonUtility.ToJson(active.receipt,true) : "No fixture active.";
+        public static string Status()=>active ? JsonConvert.SerializeObject(active.receipt,Formatting.Indented) : "No fixture active.";
         public static string ShowMapForReview(int index)
         {
             if(!active || active.receipt.state!="checks-completed-awaiting-visual-review")
@@ -154,7 +155,7 @@ namespace LetMeSleep.Validation
             receipt.state="checks-completed-awaiting-visual-review";Save();
         }
         private void Fail(Exception e){receipt.state="failed";receipt.failure=e.ToString();Save();}
-        private void Save()=>File.WriteAllText(Path.Combine(directory,"receipt.json"),JsonUtility.ToJson(receipt,true));
+        private void Save()=>File.WriteAllText(Path.Combine(directory,"receipt.json"),JsonConvert.SerializeObject(receipt,Formatting.Indented));
         private void OnDestroy()
         {
             if(receipt!=null){if(receipt.state=="running")receipt.state="interrupted";Save();}

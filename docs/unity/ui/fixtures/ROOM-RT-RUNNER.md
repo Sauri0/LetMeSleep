@@ -9,6 +9,7 @@
 - Config: `N:/LetMeSleep/Validation/Higgsfield/RoomUI/config.json`.
 - JSON de catálogo: `N:/LetMeSleep/Artifacts/Higgsfield/Mapas/UnityPackage/catalog-input.json`; sólo consume `entries[].mapId/displayName`. Exige cinco IDs únicos; no carga prefabs ni geometría.
 - Fuentes C#: `HiggsfieldRoomUIBatch.cs`, `RoomMapNativeFixture.cs`, `FixtureIsolation.cs`. Compilarlas juntas, sin el runner de entrenamiento que comparte el nombre requerido por el loader.
+- Referencia Newtonsoft existente: `N:/LetMeSleep/Repository/unity/Library/PackageCache/com.unity.nuget.newtonsoft-json@4dfd81071c64/Runtime/Newtonsoft.Json.dll`, con `Private=false`; Unity ya la proporciona. No requiere instalar paquetes. Config, catálogo, estado y recibos usan `JsonConvert`, ya que `JsonUtility` no pobló los DTOs privados del ensamblado cargado externamente.
 - Mismo loader Root: `LetMeSleep.Content.Editor.Higgsfield.HiggsfieldExternalFixture.Run`, clase externa `HiggsfieldMapChecks.Run(configPath, outputPath)`.
 - Ejecutar `Run-RoomMapBatch.ps1` sólo con turno Unity/proyecto/GPU exclusivo. Usa monitor 1, gráficos activos, sin `-quit` ni `-nographics`. Worker UI no lo ejecutó.
 
@@ -40,3 +41,9 @@ Valida texto completo de TMP y límites de botones en cada mapa a 1280×720 y 19
 Compilación externa: cero errores/advertencias. `CheckFixtureOptions.py --output N:/LetMeSleep/Validation/UI-RoomFixtureOptions-20260913` pasa 40 comprobaciones con dobles de API y guard real extraído: todas las combinaciones enabled/opciones, restauración anterior a reload, pérdida simulada de suscripciones estáticas, quitting e idempotencia.
 
 **Pendiente:** ejecución Unity de sala, aislamiento nativo de fuentes, recarga real del dominio y revisión de capturas. La compilación y los dobles no certifican esos comportamientos. No se reutiliza el PASS visual anterior de entrenamiento.
+
+## Corrección de JSON externo
+
+El intento de Root `N:/LetMeSleep/Validation/Higgsfield/RoomUI/run-20260913-084525-ed5821fc` falló en preflight: JsonUtility dejó vacío el catálogo externo aunque el JSON tenía cinco entradas. Se reemplazó por Newtonsoft tanto la lectura Config/Catalog como la escritura de batch/receipt/Status. Se conserva la exigencia de cinco IDs únicos; no hay IDs hardcodeados.
+
+`CheckRoomJson.py` pasa cinco pruebas offline con las declaraciones reales de DTOs privados anidados: Config con overrides/defaults, cinco entradas reales, comparación de IDs/nombres contra otro lector JSON, recibo batch completo y recibo/Status del fixture. Compilación corregida sin errores/advertencias. Reejecución nativa pendiente por Root.
