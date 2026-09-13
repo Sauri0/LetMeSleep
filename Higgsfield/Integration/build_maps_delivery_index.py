@@ -3,7 +3,7 @@ import hashlib
 import html
 import json
 import argparse
-import re
+from integration_receipts import validate_receipt, integration_status
 import struct
 from datetime import datetime, timezone
 from html.parser import HTMLParser
@@ -141,31 +141,22 @@ if yate_adjustment:
 
 # Final integration evidence is optional and must explicitly declare success.
 # External source receipts are copied as immutable evidence only on final generation.
-def successful_receipt(path):
-    if not path.is_file():return None
-    raw=path.read_bytes()
-    try:text=raw.decode('utf-8-sig')
-    except UnicodeDecodeError:return None
-    if path.suffix.lower()=='.json':
-        try:data=json.loads(text)
-        except json.JSONDecodeError:return None
-        if not isinstance(data,dict):return None
-        status=data.get('status')
-        if not isinstance(status,str) or not (status=='PASS' or status.startswith('PASS_') or status in ('SUCCESS','SUCCEEDED')):return None
-        if re.search(r'FAIL|PENDING|INCOMPLETE|PARTIAL',status,re.I) or data.get('errors') or data.get('pending'):return None
-    else:
-        match=re.search(r'(?im)^\s*(?:status\s*[:=]\s*)?(PASS(?:_[A-Z0-9_]+)?|SUCCESS)\s*$',text)
-        if not match or re.search(r'(?i)\b(?:FAIL|FAILED|PENDING|INCOMPLETE)\b',text):return None
-        status=match.group(1)
-    return raw,status
 integration_receipts=[]
+validated_receipts={}
+receipt_rejections=[]
 for kind,label,source in [
     ('catalog','Catálogo Unity',args.catalog_receipt or ROOT/'UnityPackage/catalog-receipt.json'),
     ('scene','Escenas Unity',args.scene_receipt or ROOT/'UnityPackage/scene-receipt.json'),
-    ('loading','Carga de los cinco mapas',args.loading_receipt or ROOT/'GameLoading/five-map-game-loading.txt')]:
-    verified=successful_receipt(source)
-    if verified is None:continue
-    raw,status=verified
+    ('loading','Carga de los cinco mapas',args.loading_receipt or ROOT/'UnityPackage/GameLoading/five-map-game-loading.txt')]:
+    if not source.is_file():
+        receipt_rejections.append(dict(kind=kind,reason='Receipt absent'))
+        continue
+    raw=source.read_bytes()
+    try: data=validate_receipt(kind,raw)
+    except (ValueError, UnicodeDecodeError) as error:
+        receipt_rejections.append(dict(kind=kind,reason=str(error)))
+        continue
+    validated_receipts[kind]=data
     if source.resolve().is_relative_to(ROOT.resolve()):relative=source.resolve().relative_to(ROOT.resolve()).as_posix()
     else:
         folder=ROOT/'UnityEvidence';folder.mkdir(exist_ok=True)
@@ -173,10 +164,13 @@ for kind,label,source in [
         if target.exists():assert target.read_bytes()==raw
         else:target.write_bytes(raw)
         relative=target.relative_to(ROOT).as_posix()
-    item=asset(relative,label+' · '+status,'successful_integration_receipt')
-    integration_receipts.append(dict(kind=kind,status=status,scope='Éxito declarado por este recibo; no se extiende a verificaciones ajenas.',sourcePath=str(source),asset=item))
+    item=asset(relative,label,'successful_integration_receipt')
+    integration_receipts.append(dict(kind=kind,validation='native_schema_valid',scope=data['scope'],sourcePath=str(source),asset=item))
+unity_status=integration_status(validated_receipts)
+for entry in maps:entry['unityStatus']=unity_status
 manifest=dict(schemaVersion=1,generatedAtUtc=datetime.now(timezone.utc).isoformat(),root=str(ROOT),index='ENTREGA.html',
-    scope='Entrega de arte Higgsfield; integración Unity en verificación, sin equivalencia portable afirmada',
+    scope='Entrega de arte Higgsfield; '+unity_status+'; sin equivalencia portable afirmada',
+    integrationStatus=unity_status,receiptRejections=receipt_rejections,
     counts=dict(maps=5,recommendedBlendFiles=5,recommendedGlbFiles=5,recommendedCleanFbxFiles=5,artPreviews=10,unityCaptures=5,concepts=20),
     maps=maps,history=history,excludedDuplicates=[duplicate],evidence=[concept_manifest]+extras,
     integrationReceipts=integration_receipts,visualReview=dict(scope='Cinco capturas Unity revisadas; sin bloqueos P0/P1 identificados en esas imágenes.',
@@ -200,7 +194,7 @@ for i,entry in enumerate(maps,1):
     evidence_links=''.join(f'<li>{link(item)}</li>' for item in entry.get('evidence',[]))
     sections.append(f'''<article id="{entry['slug']}" aria-labelledby="title-{entry['slug']}">
       <header class="map-heading"><span class="number">{i:02}</span><div><h2 id="title-{entry['slug']}">{escape(entry['title'])}</h2><p>{escape(entry['description'])}</p></div></header>
-      <p class="state"><span>Higgsfield · Arte terminado</span><span>Unity · En verificación</span></p>
+      <p class="state"><span>Higgsfield · Arte terminado</span><span>{escape(entry["unityStatus"])}</span></p>
       <div class="preview-grid">{previews}</div>
       <details class="unity-capture"><summary>Ver captura Unity revisada</summary>{unity_capture}<p class="muted">{escape(entry['unityCaptureScope'])}</p></details>
       <ul class="downloads" aria-label="Fuentes recomendadas de {escape(entry['title'],quote=True)}">{downloads}</ul>
@@ -236,7 +230,7 @@ footer{{padding:30px 0 44px;color:var(--muted);font-size:13px}}footer h2{{font-s
 @media(prefers-reduced-motion:reduce){{*{{scroll-behavior:auto}}}}
 </style></head><body><div class="wrap">
 <header class="masthead"><p class="eyebrow">Let me sleep · Archivo de arte</p><h1>Cinco mapas para explorar</h1>
-<p class="intro">Fuentes Higgsfield, vistas del arte terminado, cinco capturas Unity revisadas y los 20 bocetos aprobados. La integración en Unity está en verificación. Abrí una imagen para verla completa o elegí el formato del modelo.</p>
+<p class="intro">Fuentes Higgsfield, vistas del arte terminado, cinco capturas Unity revisadas y los 20 bocetos aprobados. {escape(unity_status)}. Abrí una imagen para verla completa o elegí el formato del modelo.</p>
 <p class="totals"><span>5 fuentes editables</span><span>10 vistas de arte</span><span>5 capturas Unity</span><span>20 bocetos</span></p><nav aria-label="Ir a un mapa">{nav}</nav></header>
 <main>{''.join(sections)}</main>
 <footer><h2>Sobre esta entrega</h2><p>Las vistas de Blender, los bocetos y las capturas Unity se identifican por separado; no certifican una partida completa ni rendimiento. La revisión de las cinco capturas no identificó bloqueos P0/P1. Quedan dos observaciones P2: el patrón radial del agua del Yate y la escala del fondo de acantilado de Puerto. Los enlaces principales señalan las fuentes recomendadas. Conservá la carpeta completa para mantener los enlaces locales.</p>
