@@ -155,11 +155,11 @@ namespace LetMeSleep.Presentation
                     collider.contactOffset = settings.ContactOffset;
                     collider.enabled = true;
                 }
-                // Child collider transforms are queued when autoSyncTransforms is off. Native mass
-                // properties and joint frames must see the finished compound geometry, not its origin.
-                // Bodies still have detectCollisions=false: this does not expose the prepared rig.
+                // Flush compound geometry before creating the inspectable bind joints. Keep native
+                // mass calculation automatic while prepared: a kinematic body with collision disabled
+                // can still report the provisional (1,1,1) tensor. Conditioning is deferred to release.
                 UnityEngine.Physics.SyncTransforms();
-                foreach (var body in bodies) FinalizeMassProperties(body, settings);
+                foreach (var body in bodies) { body.ResetCenterOfMass(); body.ResetInertiaTensor(); }
                 for (int i = 1; i < bodies.Length; i++)
                     joints.Add(AddJoint(i, bodies, frame));
                 foreach (Collider collider in colliders) collider.enabled = false;
@@ -211,12 +211,17 @@ namespace LetMeSleep.Presentation
 
         internal static void FinalizeMassProperties(Rigidbody body, MosquitoRagdollSettings settings)
         {
+            if (body.isKinematic || !body.detectCollisions)
+                throw new InvalidOperationException("Finalize inertia only after activating the dynamic body's collision shapes.");
             body.ResetCenterOfMass();
             body.ResetInertiaTensor();
             Vector3 moments = body.inertiaTensor;
             Quaternion principalAxes = body.inertiaTensorRotation;
             float largest = Mathf.Max(moments.x, Mathf.Max(moments.y, moments.z));
             float floor = largest / settings.MaxInertiaRatio;
+            // Assigning a tensor disables automatic calculation. Never freeze a provisional or
+            // already well-conditioned value merely by copying it back to the same property.
+            if (moments.x >= floor && moments.y >= floor && moments.z >= floor) return;
             // V2 native evidence: thin legs have 109–192:1 moment ratios (axial ~4e-9 kg m²),
             // with >0.13m knee separation at first contact and persistent axial chatter at 50Hz.
             // Preserve COM, principal axes, largest moments, metre² scaling and mass scaling.

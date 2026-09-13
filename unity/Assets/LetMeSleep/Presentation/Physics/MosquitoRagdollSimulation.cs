@@ -123,7 +123,6 @@ namespace LetMeSleep.Presentation
                 foreach (var attachment in attachments) attachment.Refresh();
                 foreach (Collider collider in colliders) collider.enabled = true;
                 UnityEngine.Physics.SyncTransforms();
-                foreach (var body in bodies) MosquitoRagdollBuilder.FinalizeMassProperties(body, settings);
 
                 // Rebuild the native reference frames AFTER compound mass properties and kinematic
                 // flags are finalized. All 18 bodies temporarily use the cached bind pose; neither
@@ -134,7 +133,11 @@ namespace LetMeSleep.Presentation
                     bodies[i].rotation = bindRotations[i];
                     bodies[i].PublishTransform();
                 }
-                foreach (var body in bodies) body.isKinematic = false;
+                // Native shapes must participate in the dynamic actor before reading its inertia.
+                // No simulation step or user callback occurs during this synchronous setup.
+                foreach (var body in bodies) { body.isKinematic = false; body.detectCollisions = true; }
+                UnityEngine.Physics.SyncTransforms();
+                foreach (var body in bodies) MosquitoRagdollBuilder.FinalizeMassProperties(body, settings);
                 foreach (var joint in joints)
                 {
                     var connected = joint.connectedBody;
@@ -147,7 +150,7 @@ namespace LetMeSleep.Presentation
                 }
                 PlaceBodies(pose);
                 // Ignore only collisions between our own new colliders. Existing actor/world colliders are untouched.
-                // Set the exclusions after switching ALL bodies to dynamic, then expose collision.
+                // Set exclusions after switching ALL bodies to dynamic, before the first physics step.
                 for (int i = 0; i < colliders.Length; i++)
                 for (int j = i + 1; j < colliders.Length; j++)
                     if (colliders[i].attachedRigidbody != colliders[j].attachedRigidbody)
