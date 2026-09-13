@@ -9,7 +9,7 @@ $stamp = [DateTime]::UtcNow.ToString('yyyyMMdd-HHmmss-fff')
 $output = Join-Path $OutputRoot $stamp
 $sources = Join-Path $output 'sources'
 New-Item -ItemType Directory -Path $sources | Out-Null
-foreach ($file in @('HiggsfieldMapChecks.cs','HiggsfieldMapJson.cs','HiggsfieldIslaPreparation.cs','SouthArrivalColliderCandidate.cs','CompleteSouthArrivalSupport.cs','HiggsfieldCasaPreparation.cs','ApplyCasaSemanticNavigation.cs','HumanMotorContactChecks.cs','HiggsfieldCampPreparation.cs','CampTechnicalCandidate.cs','ApplyCampSemanticNavigation.cs','HiggsfieldRemainingMapsPreparation.cs','YateStorageCandidate.cs','ApplyRemainingSemanticNavigation.cs','YateBulkheadCandidate.cs','PuertoStairCandidate.cs')) {
+foreach ($file in @('HiggsfieldMapChecks.cs','HiggsfieldMapJson.cs','HiggsfieldIslaPreparation.cs','SouthArrivalColliderCandidate.cs','CompleteSouthArrivalSupport.cs','HiggsfieldCasaPreparation.cs','ApplyCasaSemanticNavigation.cs','HumanMotorContactChecks.cs','HiggsfieldCampPreparation.cs','CampTechnicalCandidate.cs','ApplyCampSemanticNavigation.cs','HiggsfieldRemainingMapsPreparation.cs','YateStorageCandidate.cs','ApplyRemainingSemanticNavigation.cs','YateBulkheadCandidate.cs','PuertoStairCandidate.cs','CampEdgeCandidate.cs','ApplyCampEdge.cs')) {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot $file) -Destination $sources
 }
 Copy-Item -LiteralPath $Config -Destination (Join-Path $output 'checks.json')

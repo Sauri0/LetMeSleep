@@ -21,7 +21,7 @@ public static class HiggsfieldMapChecks
     {
         public string mapId, prefabPath, action, navigationOverridePath, colliderCandidate, validationReportPath, caseFilter;
         public int humanPool = 5, mosquitoPool = 16;
-        public bool diagnosticRoutesOnly, campSpawnSupportCandidate, yateStorageCandidate, yateBulkheadCandidate, puertoStairCandidate;
+        public bool diagnosticRoutesOnly, campSpawnSupportCandidate, yateStorageCandidate, yateBulkheadCandidate, puertoStairCandidate, campEdgeCandidate;
         public Route[] routes;
     }
     [Serializable] public sealed class Route
@@ -53,6 +53,7 @@ public static class HiggsfieldMapChecks
         public YateStorageCandidate.Receipt yateStorageCandidate;
         public YateBulkheadCandidate.Receipt yateBulkheadCandidate;
         public PuertoStairCandidate.Receipt puertoStairCandidate;
+        public CampEdgeCandidate.Receipt campEdgeCandidate;
     }
     public sealed class Case
     {
@@ -84,6 +85,7 @@ public static class HiggsfieldMapChecks
             if(preparation.status!="PREPARED_NATIVE_VALIDATION_PENDING")return preparationPath;
             return Run(preparation.checksPath,outputDirectory);
         }
+        if(operation.action=="apply-camp-edge")return ApplyCampEdge.Run(configPath,outputDirectory);
         if(operation.action=="prepare-camp")return HiggsfieldCampPreparation.Run(configPath,outputDirectory);
         if(operation.action=="prepare-remaining-map")return HiggsfieldRemainingMapsPreparation.Run(configPath,outputDirectory);
         if(operation.action=="apply-remaining-map")return ApplyRemainingSemanticNavigation.Run(configPath,outputDirectory);
@@ -117,7 +119,7 @@ public static class HiggsfieldMapChecks
             foreach (var behaviour in clone.GetComponentsInChildren<MonoBehaviour>(true))
             {
                 if (!behaviour) { report.errors.Add("Missing script on cloned prefab."); continue; }
-                if (behaviour is EnvironmentMapDefinition || behaviour is GameplaySurface || behaviour is GameplayDoor || behaviour is GameplayToolPickup) continue;
+                if (behaviour is EnvironmentMapDefinition || behaviour is GameplaySurface || behaviour is GameplayDoor || behaviour is GameplayToolPickup || behaviour.GetType().Name=="GameplayRecoveryVolume") continue;
                 report.strippedBehaviours.Add(behaviour.GetType().FullName);
                 Object.DestroyImmediate(behaviour);
             }
@@ -148,6 +150,7 @@ public static class HiggsfieldMapChecks
             if(config.yateStorageCandidate)report.yateStorageCandidate=YateStorageCandidate.Apply(clone);
             if(config.yateBulkheadCandidate)report.yateBulkheadCandidate=YateBulkheadCandidate.Apply(clone,ownedGeometry);
             if(config.puertoStairCandidate)report.puertoStairCandidate=PuertoStairCandidate.Apply(clone,ownedGeometry);
+            if(config.campEdgeCandidate)report.campEdgeCandidate=CampEdgeCandidate.Apply(clone,ownedGeometry);
             world.RegisterGeometry();
             report.nativeColliderCount = clone.GetComponentsInChildren<Collider>(false).Count(c => c.enabled && !c.isTrigger);
             Require(report.nativeColliderCount > 0, "No active physical map colliders.");

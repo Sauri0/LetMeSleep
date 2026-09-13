@@ -101,14 +101,14 @@ motor, geometry or tolerance modification was made. A read-only motor trace was
 compiled but never executed or retained in the delivered sources after that
 decision; the exact internal sweep/snap origin remains unisolated.
 
-## Persisted result and final regression
+## Historical v1 persistence and regression
 
 `applied-01/camp-semantic-apply.json` reports
 `APPLIED_READBACK_PASS_WITH_RECORDED_STRICT_EXCEPTION` in both prefab and scene.
 `ApplyCampSemanticNavigation` guards the exact48/49 report, accepted failure,
 25 clear portals, hashes and original content before saving through Unity APIs.
 
-- Final content hash:
+- Historical v1 content hash:
   `fc9399387e8a9d4bcae5f4a70e3291233170f54d92383d63a9a8b5cb648ad168`.
 - Navigation SHA256:
   `c51fa78d0f4203d38c6e0eeb0713da48fb0772d6437aad5971b6276b878aa9bb`.
@@ -141,6 +141,47 @@ errors and cleanuptrue. It uses the saved new ContentHash and prefab SpatialData
 `preparation-02/camp-v2-preparation.json` also records25native `LGT_*` transforms:
 all23review anchors plus `LGT_Moon` and `LGT_Moon_Fill`. Light configuration remains
 the Presentation owner's responsibility.
+
+## V2 edge correction — strict exception closed
+
+The coordinator subsequently authorized correcting the measured north-tent edge.
+The exact source edge (Blender vertices 116–114, polygon 53) predicts 2.329224mm
+penetration versus the observed 2.326175mm. Only two top vertices of
+`CAMP_Terrain_Paths` were lowered 3mm in both the visible mesh and its closed
+collider. Unity positions (-11.2279024,.03999901,17.4469318) and
+(-9.602903,.03999901,17.9469318) retain X/Z and finish at Y=.03699901.
+Triangle counts/indices, material references, other geometry, navigation and the
+previous Spawn05 correction remain unchanged. Visible upward normals remain
+above .9999977 after recalculation. No motor or tolerance change was made.
+
+Evidence root: `N:/LetMeSleep/Validation/Higgsfield/CompleteScope/Gameplay/Camp`.
+
+- Baseline `baseline-native-01`: strict 48/49; maximum 2.32617534mm.
+- Candidate `candidate-native-01/map-checks-20260913-095518-114.json`: 49/49,
+  25/25 portals and 16/16 Runtime patrols; maximum .868111732mm.
+- `applied-01/camp-edge-apply.json`: `APPLIED_READBACK_PASS` in prefab and scene.
+- Persisted regression, no overrides:
+  `applied-regression-01/map-checks-20260913-101818-510.json`: **49/49 PASS,
+  25/25 portal PASS**, maximum **.868111732mm**, no errors or pending checks in
+  this bounded battery, cleanup true. The former strict exception is closed.
+- Final ContentHash:
+  `3551537b2702090fb67e41e10ed8dccd9a3703dc33a6cfd8c01fa4fa8ce90f36`.
+- Final prefab dependency hash: `f9ffa9495f47961bac47a4a3037ce383`.
+- Visible mesh SHA256:
+  `f8254e5122cd437a7ac5eea93a3866382e70ee3287fb5c47a59ae1f529c7fac3`.
+- Collider mesh SHA256:
+  `0e6a82d4726673abdf46348d2f33acb6c36ba1efa280e4637ca79a75314c632d`.
+- Unrelated scope stamp before/after:
+  `978e9f7e7467c8ec6c504a71723bb144532fd2034bf7e796f1759a2e3612617a`.
+
+`CampEdgeCandidate` and `ApplyCampEdge` guard exact original content/mesh hashes,
+2 vertices, 3mm delta, topology, normals, navigation, Spawn05 and the passing
+candidate receipt before saving through Unity APIs. New assets are
+`camp-path-visible-edge-v2.asset`, `camp-paths-closed-edge-v2.asset`, and
+`camp-technical-revision-v2.json` plus their Unity metadata. V1 provenance remains
+historical. Blender adjusted source is coordinated separately using this receipt.
+This regression predates the new recovery volumes; it does not certify that
+subsequent integration or the separate surface traversal battery.
 
 ## Scope
 
