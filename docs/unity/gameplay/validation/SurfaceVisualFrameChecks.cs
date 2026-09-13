@@ -6,6 +6,52 @@ public sealed class SurfaceVisualFrameChecks
 {
     private static void Near(Float3 actual, Float3 expected) => Assert.That((actual - expected).Length, Is.LessThan(.0001f));
 
+    [TestCase(.6f)] [TestCase(-.6f)]
+    public void WallHeadingIncludesPitchInsteadOfOnlyBodyYaw(float pitch)
+    {
+        var wall = new Float3(-1, 0, 0); var aim = MathEx.Aim((float)Math.PI / 2, pitch);
+        SurfaceVisualFrame.TryResolve(wall, aim, Float3.Zero, 10, out _, out var forward);
+        Near(forward, pitch > 0 ? Float3.Up : -Float3.Up);
+    }
+    [Test]
+    public void FloorWallCeilingTransportAndReverseKeepTheSameLocalHeading()
+    {
+        var up = Float3.Up; var forward = Float3.Forward;
+        foreach (var normal in new[] { -Float3.Forward, -Float3.Up, -Float3.Forward, Float3.Up })
+        {
+            var carried = SurfaceVisualFrame.TransportForward(up, normal, forward);
+            SurfaceVisualFrame.TryResolve(normal, normal, carried, 0, out up, out forward);
+            Assert.That(Float3.Dot(up, forward), Is.EqualTo(0).Within(.0001f));
+            Assert.That(forward.Length, Is.EqualTo(1).Within(.0001f));
+            if (normal.Y == -1) Near(forward, -Float3.Forward);
+        }
+        Near(forward, Float3.Forward);
+    }
+    [Test]
+    public void RotatingObjectNormalTransportIsReversibleAndFinite()
+    {
+        var tilted = new Float3(1, 2, 3).Normalized;
+        var transported = SurfaceVisualFrame.TransportForward(Float3.Up, tilted, Float3.Forward);
+        Near(SurfaceVisualFrame.TransportForward(tilted, Float3.Up, transported), Float3.Forward);
+        Near(SurfaceVisualFrame.TransportForward(Float3.Up, -Float3.Up, Float3.Forward), Float3.Forward);
+    }
+    [Test]
+    public void ConvexAndConcaveQuarterTurnsDoNotDiscardHeading()
+    {
+        foreach (float sign in new[] { -1f, 1f })
+        {
+            var normal = Float3.Forward * sign;
+            var transported = SurfaceVisualFrame.TransportForward(Float3.Up, normal, Float3.Forward);
+            Near(transported, Float3.Up * -sign);
+        }
+    }
+    [Test]
+    public void InvalidTransportHistoryCannotIntroduceNonfiniteBasis()
+    {
+        foreach (var bad in new[] { Float3.Zero, new Float3(float.NaN, 0, 0), new Float3(float.MaxValue, 0, 0) })
+            Near(SurfaceVisualFrame.TransportForward(bad, Float3.Up, Float3.Forward), Float3.Zero);
+    }
+
     [TestCase(0, 1, 0)] [TestCase(0, -1, 0)]
     [TestCase(1, 0, 0)] [TestCase(-1, 0, 0)]
     [TestCase(0, 0, 1)] [TestCase(0, 0, -1)]

@@ -455,6 +455,7 @@ namespace LetMeSleep.Presentation.Gameplay
             ReleaseBiteAttention();
             if (attention) attention.AfterEvaluation -= MeasureBiteResidual;
             attention = null;
+            hasSurfaceHeading = false;
         }
 
         private void ApplyAuthoritativeHands()
@@ -521,6 +522,8 @@ namespace LetMeSleep.Presentation.Gameplay
         private float lastVisualPoseTime;
         private bool hasVisualRotation;
         private bool returningFromSurface;
+        private bool hasSurfaceHeading;
+        private Vector3 previousSurfaceNormal, previousSurfaceForward;
 
         private Quaternion ResolveVisualRotation(Quaternion bodyRotation)
         {
@@ -533,6 +536,7 @@ namespace LetMeSleep.Presentation.Gameplay
             bool supported = current.SurfaceAttachment.HasValue && world != null &&
                 (current.LifeState == GameplayModel.LifeState.ApproachingSurface ||
                  current.LifeState == GameplayModel.LifeState.Surface);
+            if (!supported) hasSurfaceHeading = false;
             if (TryBiteSurface(out _, out _, out var biteNormal))
             {
                 Vector3 biteForward = -biteNormal;
@@ -544,10 +548,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 returningFromSurface = true; // Reuse smooth visual release on detach to flight.
             }
             else if (supported && world.ResolveSurface(current.SurfaceAttachment.Value, out var contact) &&
-                GameplayModel.SurfaceVisualFrame.TryResolve(contact.WorldNormal,
-                    (bodyRotation * Vector3.forward).ToFloat(),
-                    hasVisualRotation ? (visualRotation * Vector3.forward).ToFloat() : GameplayModel.Float3.Zero,
-                    elapsed * 12f, out var up, out var forward))
+                TrySurfaceHeading(contact.WorldNormal, elapsed, out var up, out var forward))
             {
                 Quaternion target = Quaternion.LookRotation(forward.ToUnity(), up.ToUnity());
                 // Ease the approach tilt; attached feet must face the actual surface.
@@ -571,6 +572,23 @@ namespace LetMeSleep.Presentation.Gameplay
             }
             hasVisualRotation = true;
             return visualRotation;
+        }
+
+        private bool TrySurfaceHeading(GameplayModel.Float3 normal, float elapsed,
+            out GameplayModel.Float3 up, out GameplayModel.Float3 forward)
+        {
+            Vector3 previous = hasVisualRotation ? visualRotation * Vector3.forward : Vector3.zero;
+            if (hasSurfaceHeading)
+            {
+                // Transport heading with the support plane before applying new view intent.
+                previous = GameplayModel.SurfaceVisualFrame.TransportForward(previousSurfaceNormal.ToFloat(),
+                    normal, previousSurfaceForward.ToFloat()).ToUnity();
+            }
+            bool valid = GameplayModel.SurfaceVisualFrame.TryResolve(normal, current.ViewForward,
+                previous.ToFloat(), elapsed * 12f, out up, out forward);
+            hasSurfaceHeading = valid;
+            if (valid) { previousSurfaceNormal = up.ToUnity(); previousSurfaceForward = forward.ToUnity(); }
+            return valid;
         }
 
         private static float PlanarSpeed(GameplayModel.Float3 velocity)
