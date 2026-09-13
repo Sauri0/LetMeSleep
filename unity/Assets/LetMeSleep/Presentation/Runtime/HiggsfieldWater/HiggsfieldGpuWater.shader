@@ -43,7 +43,7 @@ Shader "LetMeSleep/Higgsfield/FlatGpuWater"
         {
             float4 positionCS : SV_POSITION;
             half4 color : COLOR;
-            half fogFactor : TEXCOORD0;
+            float3 positionWS : TEXCOORD0;
             UNITY_VERTEX_OUTPUT_STEREO
         };
 
@@ -62,7 +62,7 @@ Shader "LetMeSleep/Higgsfield/FlatGpuWater"
                  0.35 * sin((world.z - world.x * 0.21) * k * 0.71 + phase * 0.83));
             world.y += height;
             output.positionCS = TransformWorldToHClip(world);
-            output.fogFactor = ComputeFogFactor(output.positionCS.z);
+            output.positionWS = world;
             output.color = _WaterUseVertexColors > 0.5 ? input.color : half4(1,1,1,1);
             return output;
         }
@@ -71,7 +71,7 @@ Shader "LetMeSleep/Higgsfield/FlatGpuWater"
             UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
             // Flat authored palette; no textures, specular, normal smoothing or PBR.
             half3 color = _BaseColor.rgb * input.color.rgb;
-            if (_WaterUseFog > 0.5) color = MixFog(color, input.fogFactor);
+            if (_WaterUseFog > 0.5) color = MixFog(color, ComputeFogFactor(TransformWorldToHClip(input.positionWS).z));
             return half4(color, 1);
         }
         half WaterDepth(Varyings input) : SV_Target
