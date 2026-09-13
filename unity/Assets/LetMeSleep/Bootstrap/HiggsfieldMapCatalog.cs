@@ -29,6 +29,8 @@ namespace LetMeSleep.Bootstrap
         {
             public string MapId;
             public string DisplayName;
+            // Zero preserves the role preset. Explicit opt-in, metres.
+            public float CameraFarPlane;
             public EnvironmentMapDefinition Prefab;
             // LocalLights and SuppressLights must remain empty; use the relative bindings below.
             public HiggsfieldMapLighting.Configuration Lighting = new HiggsfieldMapLighting.Configuration();
@@ -56,6 +58,8 @@ namespace LetMeSleep.Bootstrap
                     throw new InvalidOperationException("Missing prefab/content identity or mismatched map ID: " + entry.MapId);
                 if (entry.MapId == IslandMapId && entry.Lighting != null && entry.Lighting.MapId != HiggsfieldMapLighting.Map.Island)
                     throw new InvalidOperationException("The verified island ID requires the Island lighting category.");
+                if (!Finite(entry.CameraFarPlane) || (entry.CameraFarPlane != 0 && (entry.CameraFarPlane < 10 || entry.CameraFarPlane > 1000)))
+                    throw new InvalidOperationException("Camera far must be zero or 10..1000 metres: " + entry.MapId);
                 ResolveEntryLighting(entry, entry.Prefab.transform); // Validate paths and values without creating lights.
             }
         }

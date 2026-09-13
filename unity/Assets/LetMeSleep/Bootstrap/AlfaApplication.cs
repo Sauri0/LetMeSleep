@@ -9,6 +9,7 @@ using LetMeSleep.Core;
 using LetMeSleep.Gameplay;
 using LetMeSleep.Gameplay.Unity;
 using LetMeSleep.Online;
+using LetMeSleep.Presentation;
 using LetMeSleep.Presentation.Gameplay;
 using LetMeSleep.UI;
 using TMPro;
@@ -36,6 +37,7 @@ namespace LetMeSleep.Bootstrap
         private OnlineGameplaySession gameNetwork;
         private GameplayRuntime game;
         private GameObject presentation;
+        private HiggsfieldCameraDistanceOverride cameraDistance;
         private EnvironmentMapDefinition map;
         private GameObject menuCharacters;
         private GameObject customizationBackdrop;
@@ -295,6 +297,7 @@ namespace LetMeSleep.Bootstrap
             game.NavigationData = map.SpatialData;
             game.IsHost = practice || lobby.IsOwner; game.AutomaticTick = false;
             presentation = Instantiate(GameplayPresentationPrefab); presentation.GetComponent<GameplayPresentationRoot>().Bind(game);
+            BindCameraDistance(mapId);
             game.EventReady += ObserveCombatFeedback;
             game.RoundFinished += (_, __) => { if (!quiescing && !training) room?.FinishRound(); };
         }
@@ -377,8 +380,22 @@ namespace LetMeSleep.Bootstrap
             showingResults = true; game?.SetInputBlocked(true);
             ui.PresentResults(new ResultsUiState(MatchOutcome.Interrupted, training, training || lobby.IsOwner, 0, 20, 0, reason));
         }
+        private void BindCameraDistance(string mapId)
+        {
+            if (cameraDistance) cameraDistance.Unbind();
+            if (mapId == RoomRules.AlfaMap) return;
+            float far = HiggsfieldMaps.Resolve(mapId).CameraFarPlane;
+            if (far == 0) return;
+            var cameras = presentation.GetComponentsInChildren<Camera>(true);
+            if (cameras.Length != 1) throw new InvalidOperationException("Expected exactly one shared gameplay camera.");
+            if (!cameraDistance) cameraDistance = GetComponent<HiggsfieldCameraDistanceOverride>();
+            if (!cameraDistance) cameraDistance = gameObject.AddComponent<HiggsfieldCameraDistanceOverride>();
+            cameraDistance.Bind(cameras[0], map.transform, far);
+        }
+
         private void StopGame()
         {
+            if (cameraDistance) cameraDistance.Unbind();
             combatFeedback = ""; combatFeedbackUntil = 0;
             appliedAppearance.Clear();
             gameNetwork?.Dispose(); gameNetwork = null;
@@ -390,6 +407,7 @@ namespace LetMeSleep.Bootstrap
             (HiggsfieldMaps && HiggsfieldMaps.Entries.Any(entry => entry.MapId == mapId));
         private void LoadMap(bool house, string mapId = RoomRules.AlfaMap)
         {
+            if (cameraDistance) cameraDistance.Unbind();
             if (quiescing) return;
             var entry = house && mapId != RoomRules.AlfaMap ? HiggsfieldMaps.Resolve(mapId) : null;
             LightingRig.UnbindHiggsfield();

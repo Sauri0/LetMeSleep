@@ -35,6 +35,7 @@ namespace LetMeSleep.Editor
         [Serializable] public sealed class MapInput
         {
             public string mapId, displayName, prefabPath;
+            public float cameraFarPlane; // Zero preserves the role preset; explicit metres otherwise.
             public HiggsfieldMapLighting.Configuration lighting;
             public string skyboxAssetPath, volumeProfileAssetPath;
             public float[] sunEulerDegrees;
@@ -149,7 +150,7 @@ namespace LetMeSleep.Editor
                             UnityIntensity = light.unityIntensity, Range = light.range, SpotAngle = light.spotAngle,
                             InnerSpotAngle = light.innerSpotAngle, Shadows = shadows } };
                 }
-                entries[i] = new HiggsfieldMapCatalog.Entry { MapId = input.mapId, DisplayName = input.displayName,
+                entries[i] = new HiggsfieldMapCatalog.Entry { MapId = input.mapId, DisplayName = input.displayName, CameraFarPlane = input.cameraFarPlane,
                     Prefab = definition, Lighting = input.lighting, LocalLights = bindings, SuppressLightPaths = input.suppressLightPaths };
                 receipt.localLightCount = bindings.Length; receipts[i] = receipt;
             }
