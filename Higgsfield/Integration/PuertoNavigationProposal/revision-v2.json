@@ -1,0 +1,4045 @@
+{
+  "status": "OFFLINE_V2_PROPOSAL_NATIVE_PENDING_WITH_BRIDGE_FOOT_CONTACT_RISK",
+  "frozenV1": {
+    "navigation.json": "bdc2ae4e6af11150469483c7802b3b1c4f1f06b06817b80181586d9d50648126",
+    "prepare.json": "c86956bb584bae57adb154289cc78eb3f5ec92b5889879ea376754121449b2b8",
+    "source-evidence.json": "4c1eadfdad672130bf539f195f85ed97a5cd19574d60c2698645323b42fc2dbd",
+    "route-diagnostics.json": "6be497288f061d589ebec9b0ee7597b428e301ed5870f39c540820e913026ec1"
+  },
+  "navigationUnchanged": true,
+  "routeComparisons": [
+    {
+      "route": "plaza-and-northern-cottages",
+      "role": "human",
+      "oldPoints": 25,
+      "newPoints": 18,
+      "oldXZLengthIncludingSpawn": 70.2031123698741,
+      "newXZLengthIncludingSpawn": 48.20341130668798,
+      "idealTicksAtWalk3_1": 466.4846255485934
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "role": "human",
+      "oldPoints": 15,
+      "newPoints": 11,
+      "oldXZLengthIncludingSpawn": 56.97783027773032,
+      "newXZLengthIncludingSpawn": 39.04093010681705,
+      "idealTicksAtWalk3_1": 377.81545264661656
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "role": "human",
+      "oldPoints": 13,
+      "newPoints": 13,
+      "oldXZLengthIncludingSpawn": 35.831098884280706,
+      "newXZLengthIncludingSpawn": 35.831098884280706,
+      "idealTicksAtWalk3_1": 346.7525698478778
+    },
+    {
+      "route": "footbridge-both-directions",
+      "role": "human",
+      "oldPoints": 29,
+      "newPoints": 25,
+      "oldXZLengthIncludingSpawn": 46.8147228323389,
+      "newXZLengthIncludingSpawn": 46.268713250627016,
+      "idealTicksAtWalk3_1": 447.7617411351001
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "role": "human",
+      "oldPoints": 29,
+      "newPoints": 29,
+      "oldXZLengthIncludingSpawn": 38.973213749463724,
+      "newXZLengthIncludingSpawn": 38.973213749463724,
+      "idealTicksAtWalk3_1": 377.16013305932637
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "role": "human",
+      "oldPoints": 33,
+      "newPoints": 33,
+      "oldXZLengthIncludingSpawn": 47.68710086788086,
+      "newXZLengthIncludingSpawn": 47.68710086788086,
+      "idealTicksAtWalk3_1": 461.48807291497604
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "role": "human",
+      "oldPoints": 57,
+      "newPoints": 57,
+      "oldXZLengthIncludingSpawn": 33.528158812201276,
+      "newXZLengthIncludingSpawn": 33.528158812201276,
+      "idealTicksAtWalk3_1": 324.4660530213027
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "role": "human",
+      "oldPoints": 62,
+      "newPoints": 62,
+      "oldXZLengthIncludingSpawn": 24.999472452938708,
+      "newXZLengthIncludingSpawn": 24.999472452938708,
+      "idealTicksAtWalk3_1": 241.93037857682623
+    },
+    {
+      "route": "flight-cottage01-door",
+      "role": "mosquito",
+      "oldPoints": 9,
+      "newPoints": 9,
+      "oldXZLengthIncludingSpawn": 19.196235825362244,
+      "newXZLengthIncludingSpawn": 19.196235825362244,
+      "idealTicksAtWalk3_1": null
+    },
+    {
+      "route": "flight-harbor-and-bridge",
+      "role": "mosquito",
+      "oldPoints": 8,
+      "newPoints": 8,
+      "oldXZLengthIncludingSpawn": 55.20422472365176,
+      "newXZLengthIncludingSpawn": 55.20422472365176,
+      "idealTicksAtWalk3_1": null
+    },
+    {
+      "route": "flight-lighthouse-spiral",
+      "role": "mosquito",
+      "oldPoints": 62,
+      "newPoints": 62,
+      "oldXZLengthIncludingSpawn": 29.60040403232525,
+      "newXZLengthIncludingSpawn": 29.60040403232525,
+      "idealTicksAtWalk3_1": null
+    },
+    {
+      "route": "flight-north-village-and-workshop-door",
+      "role": "mosquito",
+      "oldPoints": 13,
+      "newPoints": 13,
+      "oldXZLengthIncludingSpawn": 60.08276253029822,
+      "newXZLengthIncludingSpawn": 60.08276253029822,
+      "idealTicksAtWalk3_1": null
+    }
+  ],
+  "humanProbeEvidence": [
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 0,
+      "probe": {
+        "x": -3.0,
+        "y": 4.8,
+        "z": 5.0
+      },
+      "whitelistedSupport": "Plaza_ContinuousPaving",
+      "sourceFloor": [
+        -3.0,
+        3.265000104904175,
+        5.0
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 1,
+      "probe": {
+        "x": -4.0,
+        "y": 4.8,
+        "z": 7.0
+      },
+      "whitelistedSupport": "Plaza_ContinuousPaving",
+      "sourceFloor": [
+        -4.0,
+        3.265000104904175,
+        7.0
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 2,
+      "probe": {
+        "x": -7.0,
+        "y": 4.8,
+        "z": 7.0
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -7.0,
+        3.200000047683716,
+        7.0
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 3,
+      "probe": {
+        "x": -12.0,
+        "y": 4.8,
+        "z": 7.0
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -12.0,
+        3.200000047683716,
+        7.0
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 4,
+      "probe": {
+        "x": -12.0,
+        "y": 4.8,
+        "z": 9.2
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -12.0,
+        3.200000047683716,
+        9.2
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 5,
+      "probe": {
+        "x": -12.0,
+        "y": 4.8,
+        "z": 10.0
+      },
+      "whitelistedSupport": "Cottage_02_Foundation",
+      "sourceFloor": [
+        -12.0,
+        3.319999933242798,
+        10.0
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 6,
+      "probe": {
+        "x": -12.0,
+        "y": 4.8,
+        "z": 11.1
+      },
+      "whitelistedSupport": "Cottage_02_Foundation",
+      "sourceFloor": [
+        -12.0,
+        3.319999933242798,
+        11.1
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 7,
+      "probe": {
+        "x": -11.0,
+        "y": 4.8,
+        "z": 12.5
+      },
+      "whitelistedSupport": "Cottage_02_Foundation",
+      "sourceFloor": [
+        -11.0,
+        3.319999933242798,
+        12.5
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 8,
+      "probe": {
+        "x": -12.0,
+        "y": 4.8,
+        "z": 11.1
+      },
+      "whitelistedSupport": "Cottage_02_Foundation",
+      "sourceFloor": [
+        -12.0,
+        3.319999933242798,
+        11.1
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 9,
+      "probe": {
+        "x": -12.0,
+        "y": 4.8,
+        "z": 9.2
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -12.0,
+        3.200000047683716,
+        9.2
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 10,
+      "probe": {
+        "x": -12.0,
+        "y": 4.8,
+        "z": 7.0
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -12.0,
+        3.200000047683716,
+        7.0
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 11,
+      "probe": {
+        "x": -7.0,
+        "y": 4.8,
+        "z": 7.0
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -7.0,
+        3.200000047683716,
+        7.0
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 12,
+      "probe": {
+        "x": 0.0,
+        "y": 4.8,
+        "z": 7.0
+      },
+      "whitelistedSupport": "Plaza_ContinuousPaving",
+      "sourceFloor": [
+        0.0,
+        3.265000104904175,
+        7.0
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 13,
+      "probe": {
+        "x": 2.0,
+        "y": 4.8,
+        "z": 10.7
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        2.0,
+        3.200000047683716,
+        10.7
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 14,
+      "probe": {
+        "x": 2.0,
+        "y": 4.8,
+        "z": 12.2
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        2.0,
+        3.200000047683716,
+        12.2
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 15,
+      "probe": {
+        "x": 2.0,
+        "y": 4.8,
+        "z": 13.0
+      },
+      "whitelistedSupport": "Cottage_03_Foundation",
+      "sourceFloor": [
+        2.0,
+        3.319999933242798,
+        13.0
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 16,
+      "probe": {
+        "x": 2.0,
+        "y": 4.8,
+        "z": 14.1
+      },
+      "whitelistedSupport": "Cottage_03_Foundation",
+      "sourceFloor": [
+        2.0,
+        3.319999933242798,
+        14.1
+      ]
+    },
+    {
+      "route": "plaza-and-northern-cottages",
+      "index": 17,
+      "probe": {
+        "x": 3.0,
+        "y": 4.8,
+        "z": 15.5
+      },
+      "whitelistedSupport": "Cottage_03_Foundation",
+      "sourceFloor": [
+        3.0,
+        3.319999933242798,
+        15.5
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 0,
+      "probe": {
+        "x": -14,
+        "y": 4.8,
+        "z": -7
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -14,
+        3.200000047683716,
+        -7
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 1,
+      "probe": {
+        "x": -14,
+        "y": 4.8,
+        "z": -5.7
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -14,
+        3.200000047683716,
+        -5.7
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 2,
+      "probe": {
+        "x": -14,
+        "y": 4.8,
+        "z": -5
+      },
+      "whitelistedSupport": "Cottage_01_Foundation",
+      "sourceFloor": [
+        -14,
+        3.319999933242798,
+        -5
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 3,
+      "probe": {
+        "x": -14,
+        "y": 4.8,
+        "z": -3.9
+      },
+      "whitelistedSupport": "Cottage_01_Foundation",
+      "sourceFloor": [
+        -14,
+        3.319999933242798,
+        -3.9
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 4,
+      "probe": {
+        "x": -13,
+        "y": 4.8,
+        "z": -2.5
+      },
+      "whitelistedSupport": "Cottage_01_Foundation",
+      "sourceFloor": [
+        -13,
+        3.319999933242798,
+        -2.5
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 5,
+      "probe": {
+        "x": -14,
+        "y": 4.8,
+        "z": -3.9
+      },
+      "whitelistedSupport": "Cottage_01_Foundation",
+      "sourceFloor": [
+        -14,
+        3.319999933242798,
+        -3.9
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 6,
+      "probe": {
+        "x": -14,
+        "y": 4.8,
+        "z": -5.7
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -14,
+        3.200000047683716,
+        -5.7
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 7,
+      "probe": {
+        "x": -14,
+        "y": 4.8,
+        "z": -8
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -14,
+        3.200000047683716,
+        -8
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 8,
+      "probe": {
+        "x": -19.2,
+        "y": 4.8,
+        "z": -8
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -19.2,
+        3.200000047683716,
+        -8
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 9,
+      "probe": {
+        "x": -19.2,
+        "y": 4.8,
+        "z": 4
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -19.2,
+        3.200000047683716,
+        4
+      ]
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "index": 10,
+      "probe": {
+        "x": -9,
+        "y": 4.8,
+        "z": 4
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -9,
+        3.200000047683716,
+        4
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 0,
+      "probe": {
+        "x": 9.0,
+        "y": 4.8,
+        "z": -9.4
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_8",
+      "sourceFloor": [
+        9.0,
+        3.259999990463257,
+        -9.4
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 1,
+      "probe": {
+        "x": 12.0,
+        "y": 4.8,
+        "z": -10.6
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        12.0,
+        3.200000047683716,
+        -10.6
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 2,
+      "probe": {
+        "x": 15.0,
+        "y": 4.8,
+        "z": -10.6
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        15.0,
+        3.25,
+        -10.6
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 3,
+      "probe": {
+        "x": 15.0,
+        "y": 4.8,
+        "z": -9.0
+      },
+      "whitelistedSupport": "Workshop_QuaysidePorch_Support",
+      "sourceFloor": [
+        15.0,
+        3.3299999237060547,
+        -9.0
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 4,
+      "probe": {
+        "x": 15.0,
+        "y": 4.8,
+        "z": -8.0
+      },
+      "whitelistedSupport": "Workshop_QuaysidePorch_Support",
+      "sourceFloor": [
+        15.0,
+        3.3299999237060547,
+        -8.0
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 5,
+      "probe": {
+        "x": 15.0,
+        "y": 4.8,
+        "z": -6.4
+      },
+      "whitelistedSupport": "BoatWorkshop_Foundation",
+      "sourceFloor": [
+        15.0,
+        3.319999933242798,
+        -6.4
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 6,
+      "probe": {
+        "x": 13.1,
+        "y": 4.8,
+        "z": -6.4
+      },
+      "whitelistedSupport": "BoatWorkshop_Foundation",
+      "sourceFloor": [
+        13.1,
+        3.319999933242798,
+        -6.4
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 7,
+      "probe": {
+        "x": 13.1,
+        "y": 4.8,
+        "z": -1.0
+      },
+      "whitelistedSupport": "BoatWorkshop_Foundation",
+      "sourceFloor": [
+        13.1,
+        3.319999933242798,
+        -1.0
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 8,
+      "probe": {
+        "x": 17.1,
+        "y": 4.8,
+        "z": -1.0
+      },
+      "whitelistedSupport": "BoatWorkshop_Foundation",
+      "sourceFloor": [
+        17.1,
+        3.319999933242798,
+        -1.0
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 9,
+      "probe": {
+        "x": 17.1,
+        "y": 4.8,
+        "z": -6.4
+      },
+      "whitelistedSupport": "BoatWorkshop_Foundation",
+      "sourceFloor": [
+        17.1,
+        3.319999933242798,
+        -6.4
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 10,
+      "probe": {
+        "x": 15.0,
+        "y": 4.8,
+        "z": -6.4
+      },
+      "whitelistedSupport": "BoatWorkshop_Foundation",
+      "sourceFloor": [
+        15.0,
+        3.319999933242798,
+        -6.4
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 11,
+      "probe": {
+        "x": 15.0,
+        "y": 4.8,
+        "z": -8.0
+      },
+      "whitelistedSupport": "Workshop_QuaysidePorch_Support",
+      "sourceFloor": [
+        15.0,
+        3.3299999237060547,
+        -8.0
+      ]
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "index": 12,
+      "probe": {
+        "x": 15.0,
+        "y": 4.8,
+        "z": -10.6
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        15.0,
+        3.25,
+        -10.6
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 0,
+      "probe": {
+        "x": 8.4,
+        "y": 4.8,
+        "z": -9
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_8",
+      "sourceFloor": [
+        8.4,
+        3.259999990463257,
+        -9
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 1,
+      "probe": {
+        "x": 8.4,
+        "y": 4.8,
+        "z": -10.5
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_8",
+      "sourceFloor": [
+        8.4,
+        3.259999990463257,
+        -10.5
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 2,
+      "probe": {
+        "x": 8.4,
+        "y": 4.8,
+        "z": -11.4
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_8",
+      "sourceFloor": [
+        8.4,
+        3.259999990463257,
+        -11.4
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 3,
+      "probe": {
+        "x": 7.4,
+        "y": 4.8,
+        "z": -11.5
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        7.4,
+        3.2952294826507567,
+        -11.5
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 4,
+      "probe": {
+        "x": 6.5,
+        "y": 4.8,
+        "z": -12.2
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        6.5,
+        3.347085475921631,
+        -12.2
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 5,
+      "probe": {
+        "x": 4,
+        "y": 4.8,
+        "z": -12.2
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        4,
+        3.4721319675445557,
+        -12.2
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 6,
+      "probe": {
+        "x": 0,
+        "y": 4.8,
+        "z": -12.2
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        0,
+        3.559999942779541,
+        -12.2
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 7,
+      "probe": {
+        "x": -4,
+        "y": 4.8,
+        "z": -12.2
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        -4,
+        3.4721319675445557,
+        -12.2
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 8,
+      "probe": {
+        "x": -6.5,
+        "y": 4.8,
+        "z": -12.2
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        -6.5,
+        3.347085475921631,
+        -12.2
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 9,
+      "probe": {
+        "x": -7.4,
+        "y": 4.8,
+        "z": -11.5
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        -7.4,
+        3.2952294826507567,
+        -11.5
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 10,
+      "probe": {
+        "x": -8.4,
+        "y": 4.8,
+        "z": -11.4
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_-8",
+      "sourceFloor": [
+        -8.4,
+        3.259999990463257,
+        -11.4
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 11,
+      "probe": {
+        "x": -8.4,
+        "y": 4.8,
+        "z": -10.5
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_-8",
+      "sourceFloor": [
+        -8.4,
+        3.259999990463257,
+        -10.5
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 12,
+      "probe": {
+        "x": -8.4,
+        "y": 4.8,
+        "z": -9
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_-8",
+      "sourceFloor": [
+        -8.4,
+        3.259999990463257,
+        -9
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 13,
+      "probe": {
+        "x": -8.4,
+        "y": 4.8,
+        "z": -10.5
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_-8",
+      "sourceFloor": [
+        -8.4,
+        3.259999990463257,
+        -10.5
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 14,
+      "probe": {
+        "x": -8.4,
+        "y": 4.8,
+        "z": -11.4
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_-8",
+      "sourceFloor": [
+        -8.4,
+        3.259999990463257,
+        -11.4
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 15,
+      "probe": {
+        "x": -7.4,
+        "y": 4.8,
+        "z": -11.5
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        -7.4,
+        3.2952294826507567,
+        -11.5
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 16,
+      "probe": {
+        "x": -6.5,
+        "y": 4.8,
+        "z": -12.2
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        -6.5,
+        3.347085475921631,
+        -12.2
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 17,
+      "probe": {
+        "x": -4,
+        "y": 4.8,
+        "z": -12.2
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        -4,
+        3.4721319675445557,
+        -12.2
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 18,
+      "probe": {
+        "x": 0,
+        "y": 4.8,
+        "z": -12.2
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        0,
+        3.559999942779541,
+        -12.2
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 19,
+      "probe": {
+        "x": 4,
+        "y": 4.8,
+        "z": -12.2
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        4,
+        3.4721319675445557,
+        -12.2
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 20,
+      "probe": {
+        "x": 6.5,
+        "y": 4.8,
+        "z": -12.2
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        6.5,
+        3.347085475921631,
+        -12.2
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 21,
+      "probe": {
+        "x": 7.4,
+        "y": 4.8,
+        "z": -11.5
+      },
+      "whitelistedSupport": "Footbridge_CamberedContinuousDeck",
+      "sourceFloor": [
+        7.4,
+        3.2952294826507567,
+        -11.5
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 22,
+      "probe": {
+        "x": 8.4,
+        "y": 4.8,
+        "z": -11.4
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_8",
+      "sourceFloor": [
+        8.4,
+        3.259999990463257,
+        -11.4
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 23,
+      "probe": {
+        "x": 8.4,
+        "y": 4.8,
+        "z": -10.5
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_8",
+      "sourceFloor": [
+        8.4,
+        3.259999990463257,
+        -10.5
+      ]
+    },
+    {
+      "route": "footbridge-both-directions",
+      "index": 24,
+      "probe": {
+        "x": 8.4,
+        "y": 4.8,
+        "z": -9
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_8",
+      "sourceFloor": [
+        8.4,
+        3.259999990463257,
+        -9
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 0,
+      "probe": {
+        "x": -14.0,
+        "y": 4.8,
+        "z": -9.8
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -14.0,
+        3.200000047683716,
+        -9.8
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 1,
+      "probe": {
+        "x": -14.0,
+        "y": 4.8,
+        "z": -12.0
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        3.25,
+        -12.0
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 2,
+      "probe": {
+        "x": -14.0,
+        "y": 4.8,
+        "z": -14.259
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        3.25,
+        -14.259
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 3,
+      "probe": {
+        "x": -14.0,
+        "y": 3.1599999618530275,
+        "z": -14.959
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        3.0399999618530273,
+        -14.959
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 4,
+      "probe": {
+        "x": -14.0,
+        "y": 2.9599999141693116,
+        "z": -15.409
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        2.8399999141693115,
+        -15.409
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 5,
+      "probe": {
+        "x": -14.0,
+        "y": 2.760000104904175,
+        "z": -15.859
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        2.640000104904175,
+        -15.859
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 6,
+      "probe": {
+        "x": -14.0,
+        "y": 2.560000057220459,
+        "z": -16.309
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        2.440000057220459,
+        -16.309
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 7,
+      "probe": {
+        "x": -14.0,
+        "y": 2.3600000095367433,
+        "z": -16.759
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        2.240000009536743,
+        -16.759
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 8,
+      "probe": {
+        "x": -14.0,
+        "y": 2.1599999618530275,
+        "z": -17.209
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        2.0399999618530273,
+        -17.209
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 9,
+      "probe": {
+        "x": -14.0,
+        "y": 1.9600000333786012,
+        "z": -17.659
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        1.840000033378601,
+        -17.659
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 10,
+      "probe": {
+        "x": -14.0,
+        "y": 1.7599999856948854,
+        "z": -18.109
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        1.6399999856948853,
+        -18.109
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 11,
+      "probe": {
+        "x": -14.0,
+        "y": 1.560000057220459,
+        "z": -18.559
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        1.440000057220459,
+        -18.559
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 12,
+      "probe": {
+        "x": -14.0,
+        "y": 1.3600000095367433,
+        "z": -19.009
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        1.2400000095367432,
+        -19.009
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 13,
+      "probe": {
+        "x": -14.0,
+        "y": 2.2,
+        "z": -19.734
+      },
+      "whitelistedSupport": "Pier_1_StructuralDeck",
+      "sourceFloor": [
+        -14.0,
+        1.2400000095367432,
+        -19.734
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 14,
+      "probe": {
+        "x": -14.0,
+        "y": 2.2,
+        "z": -27.8
+      },
+      "whitelistedSupport": "Pier_1_StructuralDeck",
+      "sourceFloor": [
+        -14.0,
+        1.2400000095367432,
+        -27.8
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 15,
+      "probe": {
+        "x": -14.0,
+        "y": 2.2,
+        "z": -19.734
+      },
+      "whitelistedSupport": "Pier_1_StructuralDeck",
+      "sourceFloor": [
+        -14.0,
+        1.2400000095367432,
+        -19.734
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 16,
+      "probe": {
+        "x": -14.0,
+        "y": 1.3600000095367433,
+        "z": -19.009
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        1.2400000095367432,
+        -19.009
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 17,
+      "probe": {
+        "x": -14.0,
+        "y": 1.560000057220459,
+        "z": -18.559
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        1.440000057220459,
+        -18.559
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 18,
+      "probe": {
+        "x": -14.0,
+        "y": 1.7599999856948854,
+        "z": -18.109
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        1.6399999856948853,
+        -18.109
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 19,
+      "probe": {
+        "x": -14.0,
+        "y": 1.9600000333786012,
+        "z": -17.659
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        1.840000033378601,
+        -17.659
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 20,
+      "probe": {
+        "x": -14.0,
+        "y": 2.1599999618530275,
+        "z": -17.209
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        2.0399999618530273,
+        -17.209
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 21,
+      "probe": {
+        "x": -14.0,
+        "y": 2.3600000095367433,
+        "z": -16.759
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        2.240000009536743,
+        -16.759
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 22,
+      "probe": {
+        "x": -14.0,
+        "y": 2.560000057220459,
+        "z": -16.309
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        2.440000057220459,
+        -16.309
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 23,
+      "probe": {
+        "x": -14.0,
+        "y": 2.760000104904175,
+        "z": -15.859
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        2.640000104904175,
+        -15.859
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 24,
+      "probe": {
+        "x": -14.0,
+        "y": 2.9599999141693116,
+        "z": -15.409
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        2.8399999141693115,
+        -15.409
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 25,
+      "probe": {
+        "x": -14.0,
+        "y": 3.1599999618530275,
+        "z": -14.959
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        3.0399999618530273,
+        -14.959
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 26,
+      "probe": {
+        "x": -14.0,
+        "y": 4.8,
+        "z": -14.259
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        3.25,
+        -14.259
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 27,
+      "probe": {
+        "x": -14.0,
+        "y": 4.8,
+        "z": -12.0
+      },
+      "whitelistedSupport": "Harbor_StairApproach_1",
+      "sourceFloor": [
+        -14.0,
+        3.25,
+        -12.0
+      ]
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "index": 28,
+      "probe": {
+        "x": -14.0,
+        "y": 4.8,
+        "z": -9.8
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        -14.0,
+        3.200000047683716,
+        -9.8
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 0,
+      "probe": {
+        "x": 9.0,
+        "y": 4.8,
+        "z": -9.4
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_8",
+      "sourceFloor": [
+        9.0,
+        3.259999990463257,
+        -9.4
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 1,
+      "probe": {
+        "x": 12.0,
+        "y": 4.8,
+        "z": -10.6
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        12.0,
+        3.200000047683716,
+        -10.6
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 2,
+      "probe": {
+        "x": 14.0,
+        "y": 4.8,
+        "z": -10.6
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        14.0,
+        3.25,
+        -10.6
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 3,
+      "probe": {
+        "x": 13.2,
+        "y": 4.8,
+        "z": -12.0
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        3.25,
+        -12.0
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 4,
+      "probe": {
+        "x": 13.2,
+        "y": 4.8,
+        "z": -14.024999999999999
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        3.25,
+        -14.024999999999999
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 5,
+      "probe": {
+        "x": 13.2,
+        "y": 3.1599999618530275,
+        "z": -14.724999999999998
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        3.0399999618530273,
+        -14.724999999999998
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 6,
+      "probe": {
+        "x": 13.2,
+        "y": 2.9599999141693116,
+        "z": -15.174999999999999
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        2.8399999141693115,
+        -15.174999999999999
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 7,
+      "probe": {
+        "x": 13.2,
+        "y": 2.760000104904175,
+        "z": -15.624999999999998
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        2.640000104904175,
+        -15.624999999999998
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 8,
+      "probe": {
+        "x": 13.2,
+        "y": 2.560000057220459,
+        "z": -16.075
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        2.440000057220459,
+        -16.075
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 9,
+      "probe": {
+        "x": 13.2,
+        "y": 2.3600000095367433,
+        "z": -16.525
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        2.240000009536743,
+        -16.525
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 10,
+      "probe": {
+        "x": 13.2,
+        "y": 2.1599999618530275,
+        "z": -16.974999999999998
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        2.0399999618530273,
+        -16.974999999999998
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 11,
+      "probe": {
+        "x": 13.2,
+        "y": 1.9600000333786012,
+        "z": -17.424999999999997
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        1.840000033378601,
+        -17.424999999999997
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 12,
+      "probe": {
+        "x": 13.2,
+        "y": 1.7599999856948854,
+        "z": -17.875
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        1.6399999856948853,
+        -17.875
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 13,
+      "probe": {
+        "x": 13.2,
+        "y": 1.560000057220459,
+        "z": -18.325
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        1.440000057220459,
+        -18.325
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 14,
+      "probe": {
+        "x": 13.2,
+        "y": 1.3600000095367433,
+        "z": -18.775
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        1.2400000095367432,
+        -18.775
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 15,
+      "probe": {
+        "x": 13.2,
+        "y": 2.2,
+        "z": -19.5
+      },
+      "whitelistedSupport": "Pier_2_StructuralDeck",
+      "sourceFloor": [
+        13.2,
+        1.2400000095367432,
+        -19.5
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 16,
+      "probe": {
+        "x": 13.2,
+        "y": 2.2,
+        "z": -27.8
+      },
+      "whitelistedSupport": "Pier_2_StructuralDeck",
+      "sourceFloor": [
+        13.2,
+        1.2400000095367432,
+        -27.8
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 17,
+      "probe": {
+        "x": 13.2,
+        "y": 2.2,
+        "z": -19.5
+      },
+      "whitelistedSupport": "Pier_2_StructuralDeck",
+      "sourceFloor": [
+        13.2,
+        1.2400000095367432,
+        -19.5
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 18,
+      "probe": {
+        "x": 13.2,
+        "y": 1.3600000095367433,
+        "z": -18.775
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        1.2400000095367432,
+        -18.775
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 19,
+      "probe": {
+        "x": 13.2,
+        "y": 1.560000057220459,
+        "z": -18.325
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        1.440000057220459,
+        -18.325
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 20,
+      "probe": {
+        "x": 13.2,
+        "y": 1.7599999856948854,
+        "z": -17.875
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        1.6399999856948853,
+        -17.875
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 21,
+      "probe": {
+        "x": 13.2,
+        "y": 1.9600000333786012,
+        "z": -17.424999999999997
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        1.840000033378601,
+        -17.424999999999997
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 22,
+      "probe": {
+        "x": 13.2,
+        "y": 2.1599999618530275,
+        "z": -16.974999999999998
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        2.0399999618530273,
+        -16.974999999999998
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 23,
+      "probe": {
+        "x": 13.2,
+        "y": 2.3600000095367433,
+        "z": -16.525
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        2.240000009536743,
+        -16.525
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 24,
+      "probe": {
+        "x": 13.2,
+        "y": 2.560000057220459,
+        "z": -16.075
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        2.440000057220459,
+        -16.075
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 25,
+      "probe": {
+        "x": 13.2,
+        "y": 2.760000104904175,
+        "z": -15.624999999999998
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        2.640000104904175,
+        -15.624999999999998
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 26,
+      "probe": {
+        "x": 13.2,
+        "y": 2.9599999141693116,
+        "z": -15.174999999999999
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        2.8399999141693115,
+        -15.174999999999999
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 27,
+      "probe": {
+        "x": 13.2,
+        "y": 3.1599999618530275,
+        "z": -14.724999999999998
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        3.0399999618530273,
+        -14.724999999999998
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 28,
+      "probe": {
+        "x": 13.2,
+        "y": 4.8,
+        "z": -14.024999999999999
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        3.25,
+        -14.024999999999999
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 29,
+      "probe": {
+        "x": 13.2,
+        "y": 4.8,
+        "z": -12.0
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        13.2,
+        3.25,
+        -12.0
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 30,
+      "probe": {
+        "x": 14.0,
+        "y": 4.8,
+        "z": -10.6
+      },
+      "whitelistedSupport": "Harbor_StairApproach_2",
+      "sourceFloor": [
+        14.0,
+        3.25,
+        -10.6
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 31,
+      "probe": {
+        "x": 12.0,
+        "y": 4.8,
+        "z": -10.6
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        12.0,
+        3.200000047683716,
+        -10.6
+      ]
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "index": 32,
+      "probe": {
+        "x": 9.0,
+        "y": 4.8,
+        "z": -9.4
+      },
+      "whitelistedSupport": "Footbridge_LandConnector_8",
+      "sourceFloor": [
+        9.0,
+        3.259999990463257,
+        -9.4
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 0,
+      "probe": {
+        "x": 29.0,
+        "y": 8.0,
+        "z": 21.8
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        29.0,
+        7.27000093460083,
+        21.8
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 1,
+      "probe": {
+        "x": 28.6,
+        "y": 7.369999999999999,
+        "z": 21.8
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        28.6,
+        7.270008563995361,
+        21.8
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 2,
+      "probe": {
+        "x": 27.3,
+        "y": 7.369999999999999,
+        "z": 20.2
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        27.3,
+        7.199999809265137,
+        20.2
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 3,
+      "probe": {
+        "x": 26.0,
+        "y": 7.369999999999999,
+        "z": 20.8
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        26.0,
+        7.270008563995361,
+        20.8
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 4,
+      "probe": {
+        "x": 24.0,
+        "y": 7.369999999999999,
+        "z": 19.1
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        24.0,
+        7.2699971199035645,
+        19.1
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 5,
+      "probe": {
+        "x": 23.63749975,
+        "y": 7.361383999999999,
+        "z": 18.791875
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        23.63749975,
+        7.261383533477783,
+        18.791875
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 6,
+      "probe": {
+        "x": 23.36250025,
+        "y": 7.337613999999999,
+        "z": 18.5581245
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        23.36250025,
+        7.237614154815674,
+        18.5581245
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 7,
+      "probe": {
+        "x": 23.08750075,
+        "y": 7.313841,
+        "z": 18.324375000000003
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        23.08750075,
+        7.213840961456299,
+        18.324375000000003
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 8,
+      "probe": {
+        "x": 22.8125,
+        "y": 7.290068,
+        "z": 18.0906255
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        22.8125,
+        7.190067768096924,
+        18.0906255
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 9,
+      "probe": {
+        "x": 22.53749925,
+        "y": 7.266298,
+        "z": 17.8568755
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        22.53749925,
+        7.1662983894348145,
+        17.8568755
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 10,
+      "probe": {
+        "x": 22.26249975,
+        "y": 7.192854,
+        "z": 17.623125
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        22.26249975,
+        7.092854022979736,
+        17.623125
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 11,
+      "probe": {
+        "x": 21.98750025,
+        "y": 7.119108,
+        "z": 17.3893755
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        21.98750025,
+        7.019108295440674,
+        17.3893755
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 12,
+      "probe": {
+        "x": 21.71250075,
+        "y": 7.045374,
+        "z": 17.1556255
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        21.71250075,
+        6.945374011993408,
+        17.1556255
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 13,
+      "probe": {
+        "x": 21.4375,
+        "y": 6.9198319999999995,
+        "z": 16.92187525
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        21.4375,
+        6.8198323249816895,
+        16.92187525
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 14,
+      "probe": {
+        "x": 21.16249925,
+        "y": 6.778242,
+        "z": 16.688126
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        21.16249925,
+        6.678242206573486,
+        16.688126
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 15,
+      "probe": {
+        "x": 20.88749975,
+        "y": 6.611452,
+        "z": 16.454376
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        20.88749975,
+        6.5114521980285645,
+        16.454376
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 16,
+      "probe": {
+        "x": 20.61250025,
+        "y": 6.499200999999999,
+        "z": 16.2206255
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        20.61250025,
+        6.399200916290283,
+        16.2206255
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 17,
+      "probe": {
+        "x": 20.33750075,
+        "y": 6.38695,
+        "z": 15.98687525
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        20.33750075,
+        6.286949634552002,
+        15.98687525
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 18,
+      "probe": {
+        "x": 20.0625,
+        "y": 6.273485,
+        "z": 15.75312525
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        20.0625,
+        6.173485279083252,
+        15.75312525
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 19,
+      "probe": {
+        "x": 19.78749925,
+        "y": 6.092912999999999,
+        "z": 15.519375499999999
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        19.78749925,
+        5.992912769317627,
+        15.519375499999999
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 20,
+      "probe": {
+        "x": 19.51249975,
+        "y": 5.9123399999999995,
+        "z": 15.285625250000002
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        19.51249975,
+        5.812340259552002,
+        15.285625250000002
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 21,
+      "probe": {
+        "x": 19.23750025,
+        "y": 5.7291739999999995,
+        "z": 15.051875
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        19.23750025,
+        5.629173755645752,
+        15.051875
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 22,
+      "probe": {
+        "x": 18.96250075,
+        "y": 5.538430999999999,
+        "z": 14.818125
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        18.96250075,
+        5.438431262969971,
+        14.818125
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 23,
+      "probe": {
+        "x": 18.6875,
+        "y": 5.347681,
+        "z": 14.584375
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        18.6875,
+        5.247681140899658,
+        14.584375
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 24,
+      "probe": {
+        "x": 18.41249925,
+        "y": 5.1569389999999995,
+        "z": 14.350624999999999
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        18.41249925,
+        5.056938648223877,
+        14.350624999999999
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 25,
+      "probe": {
+        "x": 18.13749975,
+        "y": 4.966196,
+        "z": 14.116875
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        18.13749975,
+        4.866196155548096,
+        14.116875
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 26,
+      "probe": {
+        "x": 17.7,
+        "y": 5.3,
+        "z": 14.7
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        17.7,
+        4.866196155548096,
+        14.7
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 27,
+      "probe": {
+        "x": 17.25,
+        "y": 5.3,
+        "z": 15.2
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        17.25,
+        4.725404455175462,
+        15.2
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 28,
+      "probe": {
+        "x": 16.5,
+        "y": 5.3,
+        "z": 15.2
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        16.5,
+        4.422819386246678,
+        15.2
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 29,
+      "probe": {
+        "x": 17.25,
+        "y": 5.3,
+        "z": 15.2
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        17.25,
+        4.725404455175462,
+        15.2
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 30,
+      "probe": {
+        "x": 17.7,
+        "y": 5.3,
+        "z": 14.7
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        17.7,
+        4.866196155548096,
+        14.7
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 31,
+      "probe": {
+        "x": 18.13749975,
+        "y": 4.966196,
+        "z": 14.116875
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        18.13749975,
+        4.866196155548096,
+        14.116875
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 32,
+      "probe": {
+        "x": 18.41249925,
+        "y": 5.1569389999999995,
+        "z": 14.350624999999999
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        18.41249925,
+        5.056938648223877,
+        14.350624999999999
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 33,
+      "probe": {
+        "x": 18.6875,
+        "y": 5.347681,
+        "z": 14.584375
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        18.6875,
+        5.247681140899658,
+        14.584375
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 34,
+      "probe": {
+        "x": 18.96250075,
+        "y": 5.538430999999999,
+        "z": 14.818125
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        18.96250075,
+        5.438431262969971,
+        14.818125
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 35,
+      "probe": {
+        "x": 19.23750025,
+        "y": 5.7291739999999995,
+        "z": 15.051875
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        19.23750025,
+        5.629173755645752,
+        15.051875
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 36,
+      "probe": {
+        "x": 19.51249975,
+        "y": 5.9123399999999995,
+        "z": 15.285625250000002
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        19.51249975,
+        5.812340259552002,
+        15.285625250000002
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 37,
+      "probe": {
+        "x": 19.78749925,
+        "y": 6.092912999999999,
+        "z": 15.519375499999999
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        19.78749925,
+        5.992912769317627,
+        15.519375499999999
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 38,
+      "probe": {
+        "x": 20.0625,
+        "y": 6.273485,
+        "z": 15.75312525
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        20.0625,
+        6.173485279083252,
+        15.75312525
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 39,
+      "probe": {
+        "x": 20.33750075,
+        "y": 6.38695,
+        "z": 15.98687525
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        20.33750075,
+        6.286949634552002,
+        15.98687525
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 40,
+      "probe": {
+        "x": 20.61250025,
+        "y": 6.499200999999999,
+        "z": 16.2206255
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        20.61250025,
+        6.399200916290283,
+        16.2206255
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 41,
+      "probe": {
+        "x": 20.88749975,
+        "y": 6.611452,
+        "z": 16.454376
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        20.88749975,
+        6.5114521980285645,
+        16.454376
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 42,
+      "probe": {
+        "x": 21.16249925,
+        "y": 6.778242,
+        "z": 16.688126
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        21.16249925,
+        6.678242206573486,
+        16.688126
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 43,
+      "probe": {
+        "x": 21.4375,
+        "y": 6.9198319999999995,
+        "z": 16.92187525
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        21.4375,
+        6.8198323249816895,
+        16.92187525
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 44,
+      "probe": {
+        "x": 21.71250075,
+        "y": 7.045374,
+        "z": 17.1556255
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        21.71250075,
+        6.945374011993408,
+        17.1556255
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 45,
+      "probe": {
+        "x": 21.98750025,
+        "y": 7.119108,
+        "z": 17.3893755
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        21.98750025,
+        7.019108295440674,
+        17.3893755
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 46,
+      "probe": {
+        "x": 22.26249975,
+        "y": 7.192854,
+        "z": 17.623125
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        22.26249975,
+        7.092854022979736,
+        17.623125
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 47,
+      "probe": {
+        "x": 22.53749925,
+        "y": 7.266298,
+        "z": 17.8568755
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        22.53749925,
+        7.1662983894348145,
+        17.8568755
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 48,
+      "probe": {
+        "x": 22.8125,
+        "y": 7.290068,
+        "z": 18.0906255
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        22.8125,
+        7.190067768096924,
+        18.0906255
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 49,
+      "probe": {
+        "x": 23.08750075,
+        "y": 7.313841,
+        "z": 18.324375000000003
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        23.08750075,
+        7.213840961456299,
+        18.324375000000003
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 50,
+      "probe": {
+        "x": 23.36250025,
+        "y": 7.337613999999999,
+        "z": 18.5581245
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        23.36250025,
+        7.237614154815674,
+        18.5581245
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 51,
+      "probe": {
+        "x": 23.63749975,
+        "y": 7.361383999999999,
+        "z": 18.791875
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        23.63749975,
+        7.261383533477783,
+        18.791875
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 52,
+      "probe": {
+        "x": 24.0,
+        "y": 7.369999999999999,
+        "z": 19.1
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        24.0,
+        7.2699971199035645,
+        19.1
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 53,
+      "probe": {
+        "x": 26.0,
+        "y": 7.369999999999999,
+        "z": 20.8
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        26.0,
+        7.270008563995361,
+        20.8
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 54,
+      "probe": {
+        "x": 27.3,
+        "y": 7.369999999999999,
+        "z": 20.2
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        27.3,
+        7.199999809265137,
+        20.2
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 55,
+      "probe": {
+        "x": 28.6,
+        "y": 7.369999999999999,
+        "z": 21.8
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        28.6,
+        7.270008563995361,
+        21.8
+      ]
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "index": 56,
+      "probe": {
+        "x": 29.0,
+        "y": 8.0,
+        "z": 21.8
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        29.0,
+        7.27000093460083,
+        21.8
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 0,
+      "probe": {
+        "x": 29.0,
+        "y": 8.0,
+        "z": 22.5
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        29.0,
+        7.270004749298096,
+        22.5
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 1,
+      "probe": {
+        "x": 29.0,
+        "y": 8.0,
+        "z": 23.35
+      },
+      "whitelistedSupport": "Lighthouse_Approach_StoneStairway",
+      "sourceFloor": [
+        29.0,
+        7.270004749298096,
+        23.35
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 2,
+      "probe": {
+        "x": 29.0,
+        "y": 8.0,
+        "z": 23.95
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        29.0,
+        7.199999809265137,
+        23.95
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 3,
+      "probe": {
+        "x": 29.0,
+        "y": 8.0,
+        "z": 24.1
+      },
+      "whitelistedSupport": "Terrain_Playable_110x85",
+      "sourceFloor": [
+        29.0,
+        7.199999809265137,
+        24.1
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 4,
+      "probe": {
+        "x": 29.1804155,
+        "y": 7.44,
+        "z": 24.976812
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.1804155,
+        7.360000133514404,
+        24.976812
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 5,
+      "probe": {
+        "x": 29.519485749999998,
+        "y": 7.6,
+        "z": 25.100224
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.519485749999998,
+        7.519999980926514,
+        25.100224
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 6,
+      "probe": {
+        "x": 29.795899,
+        "y": 7.76,
+        "z": 25.332162
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.795899,
+        7.679999828338623,
+        25.332162
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 7,
+      "probe": {
+        "x": 29.97631525,
+        "y": 7.92,
+        "z": 25.644650499999997
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.97631525,
+        7.840000152587891,
+        25.644650499999997
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 8,
+      "probe": {
+        "x": 30.038973,
+        "y": 8.08,
+        "z": 26.0
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        30.038973,
+        8.0,
+        26.0
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 9,
+      "probe": {
+        "x": 29.97631525,
+        "y": 8.24,
+        "z": 26.355349500000003
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.97631525,
+        8.15999984741211,
+        26.355349500000003
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 10,
+      "probe": {
+        "x": 29.795899,
+        "y": 8.4,
+        "z": 26.667838
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.795899,
+        8.319999694824219,
+        26.667838
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 11,
+      "probe": {
+        "x": 29.519485749999998,
+        "y": 8.56,
+        "z": 26.899776
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.519485749999998,
+        8.479999542236328,
+        26.899776
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 12,
+      "probe": {
+        "x": 29.1804155,
+        "y": 8.72,
+        "z": 27.023188
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.1804155,
+        8.640000343322754,
+        27.023188
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 13,
+      "probe": {
+        "x": 28.8195845,
+        "y": 8.88,
+        "z": 27.023188
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.8195845,
+        8.800000190734863,
+        27.023188
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 14,
+      "probe": {
+        "x": 28.48051425,
+        "y": 9.040000000000001,
+        "z": 26.899776
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.48051425,
+        8.960000038146973,
+        26.899776
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 15,
+      "probe": {
+        "x": 28.204101,
+        "y": 9.2,
+        "z": 26.667838
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.204101,
+        9.119999885559082,
+        26.667838
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 16,
+      "probe": {
+        "x": 28.02368475,
+        "y": 9.36,
+        "z": 26.3553495
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.02368475,
+        9.279999732971191,
+        26.3553495
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 17,
+      "probe": {
+        "x": 27.961027,
+        "y": 9.52,
+        "z": 26.0
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        27.961027,
+        9.4399995803833,
+        26.0
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 18,
+      "probe": {
+        "x": 28.02368475,
+        "y": 9.68,
+        "z": 25.6446505
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.02368475,
+        9.600000381469727,
+        25.6446505
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 19,
+      "probe": {
+        "x": 28.204101,
+        "y": 9.84,
+        "z": 25.332162
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.204101,
+        9.760000228881836,
+        25.332162
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 20,
+      "probe": {
+        "x": 28.48051425,
+        "y": 10.0,
+        "z": 25.100224
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.48051425,
+        9.920000076293945,
+        25.100224
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 21,
+      "probe": {
+        "x": 28.8195845,
+        "y": 10.16,
+        "z": 24.976812
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.8195845,
+        10.079999923706055,
+        24.976812
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 22,
+      "probe": {
+        "x": 29.1804155,
+        "y": 10.32,
+        "z": 24.976812
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.1804155,
+        10.239999771118164,
+        24.976812
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 23,
+      "probe": {
+        "x": 29.519485749999998,
+        "y": 10.48,
+        "z": 25.100224
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.519485749999998,
+        10.399999618530273,
+        25.100224
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 24,
+      "probe": {
+        "x": 29.795899,
+        "y": 10.64,
+        "z": 25.332162
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.795899,
+        10.5600004196167,
+        25.332162
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 25,
+      "probe": {
+        "x": 29.97631525,
+        "y": 10.8,
+        "z": 25.644650499999997
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.97631525,
+        10.720000267028809,
+        25.644650499999997
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 26,
+      "probe": {
+        "x": 30.038973,
+        "y": 10.96,
+        "z": 26.0
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        30.038973,
+        10.880000114440918,
+        26.0
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 27,
+      "probe": {
+        "x": 29.97631525,
+        "y": 11.12,
+        "z": 26.355349500000003
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.97631525,
+        11.039999961853027,
+        26.355349500000003
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 28,
+      "probe": {
+        "x": 29.795899,
+        "y": 11.28,
+        "z": 26.667838
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.795899,
+        11.199999809265137,
+        26.667838
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 29,
+      "probe": {
+        "x": 29.519485749999998,
+        "y": 11.44,
+        "z": 26.899776
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.519485749999998,
+        11.359999656677246,
+        26.899776
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 30,
+      "probe": {
+        "x": 29.1804155,
+        "y": 11.6,
+        "z": 27.023188
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.1804155,
+        11.520000457763672,
+        27.023188
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 31,
+      "probe": {
+        "x": 28.8195845,
+        "y": 11.76,
+        "z": 27.023188
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.8195845,
+        11.680000305175781,
+        27.023188
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 32,
+      "probe": {
+        "x": 28.48051425,
+        "y": 11.92,
+        "z": 26.899776
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.48051425,
+        11.84000015258789,
+        26.899776
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 33,
+      "probe": {
+        "x": 28.204101,
+        "y": 12.08,
+        "z": 26.667838
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.204101,
+        12.0,
+        26.667838
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 34,
+      "probe": {
+        "x": 28.02368475,
+        "y": 12.24,
+        "z": 26.3553495
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.02368475,
+        12.15999984741211,
+        26.3553495
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 35,
+      "probe": {
+        "x": 27.961027,
+        "y": 12.4,
+        "z": 26.0
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        27.961027,
+        12.319999694824219,
+        26.0
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 36,
+      "probe": {
+        "x": 28.02368475,
+        "y": 12.56,
+        "z": 25.6446505
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.02368475,
+        12.479999542236328,
+        25.6446505
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 37,
+      "probe": {
+        "x": 28.204101,
+        "y": 12.72,
+        "z": 25.332162
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.204101,
+        12.640000343322754,
+        25.332162
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 38,
+      "probe": {
+        "x": 28.48051425,
+        "y": 12.88,
+        "z": 25.100224
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.48051425,
+        12.800000190734863,
+        25.100224
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 39,
+      "probe": {
+        "x": 28.8195845,
+        "y": 13.040000000000001,
+        "z": 24.976812
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.8195845,
+        12.960000038146973,
+        24.976812
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 40,
+      "probe": {
+        "x": 29.1804155,
+        "y": 13.2,
+        "z": 24.976812
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.1804155,
+        13.119999885559082,
+        24.976812
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 41,
+      "probe": {
+        "x": 29.519485749999998,
+        "y": 13.36,
+        "z": 25.100224
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.519485749999998,
+        13.279999732971191,
+        25.100224
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 42,
+      "probe": {
+        "x": 29.795899,
+        "y": 13.52,
+        "z": 25.332162
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.795899,
+        13.4399995803833,
+        25.332162
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 43,
+      "probe": {
+        "x": 29.97631525,
+        "y": 13.68,
+        "z": 25.644650499999997
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.97631525,
+        13.600000381469727,
+        25.644650499999997
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 44,
+      "probe": {
+        "x": 30.038973,
+        "y": 13.84,
+        "z": 26.0
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        30.038973,
+        13.760000228881836,
+        26.0
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 45,
+      "probe": {
+        "x": 29.97631525,
+        "y": 14.0,
+        "z": 26.355349500000003
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.97631525,
+        13.920000076293945,
+        26.355349500000003
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 46,
+      "probe": {
+        "x": 29.795899,
+        "y": 14.16,
+        "z": 26.667838
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.795899,
+        14.079999923706055,
+        26.667838
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 47,
+      "probe": {
+        "x": 29.519485749999998,
+        "y": 14.32,
+        "z": 26.899776
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.519485749999998,
+        14.239999771118164,
+        26.899776
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 48,
+      "probe": {
+        "x": 29.1804155,
+        "y": 14.48,
+        "z": 27.023188
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.1804155,
+        14.399999618530273,
+        27.023188
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 49,
+      "probe": {
+        "x": 28.8195845,
+        "y": 14.64,
+        "z": 27.023188
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.8195845,
+        14.5600004196167,
+        27.023188
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 50,
+      "probe": {
+        "x": 28.48051425,
+        "y": 14.8,
+        "z": 26.899776
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.48051425,
+        14.720000267028809,
+        26.899776
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 51,
+      "probe": {
+        "x": 28.204101,
+        "y": 14.96,
+        "z": 26.667838
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.204101,
+        14.880000114440918,
+        26.667838
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 52,
+      "probe": {
+        "x": 28.02368475,
+        "y": 15.12,
+        "z": 26.3553495
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.02368475,
+        15.039999961853027,
+        26.3553495
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 53,
+      "probe": {
+        "x": 27.961027,
+        "y": 15.28,
+        "z": 26.0
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        27.961027,
+        15.199999809265137,
+        26.0
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 54,
+      "probe": {
+        "x": 28.02368475,
+        "y": 15.44,
+        "z": 25.6446505
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.02368475,
+        15.359999656677246,
+        25.6446505
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 55,
+      "probe": {
+        "x": 28.204101,
+        "y": 15.6,
+        "z": 25.332162
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.204101,
+        15.520000457763672,
+        25.332162
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 56,
+      "probe": {
+        "x": 28.48051425,
+        "y": 15.76,
+        "z": 25.100224
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.48051425,
+        15.680000305175781,
+        25.100224
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 57,
+      "probe": {
+        "x": 28.8195845,
+        "y": 15.92,
+        "z": 24.976812
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        28.8195845,
+        15.84000015258789,
+        24.976812
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 58,
+      "probe": {
+        "x": 29.1804155,
+        "y": 16.08,
+        "z": 24.976812
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.1804155,
+        16.0,
+        24.976812
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 59,
+      "probe": {
+        "x": 29.519485749999998,
+        "y": 16.24,
+        "z": 25.100224
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.519485749999998,
+        16.15999984741211,
+        25.100224
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 60,
+      "probe": {
+        "x": 29.85,
+        "y": 16.5,
+        "z": 24.6
+      },
+      "whitelistedSupport": "Lighthouse_ConnectedSpiralStair_56Treads",
+      "sourceFloor": [
+        29.85,
+        16.15999984741211,
+        24.6
+      ]
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "index": 61,
+      "probe": {
+        "x": 30.1,
+        "y": 16.5,
+        "z": 24.1
+      },
+      "whitelistedSupport": "Lighthouse_Balcony_StairwellOpen",
+      "sourceFloor": [
+        30.1,
+        16.15999984741211,
+        24.1
+      ]
+    }
+  ],
+  "bridgeContacts": [
+    {
+      "pointXZ": [
+        -8.4,
+        -11.4
+      ],
+      "eligibleFloor": [
+        3.259999990463257,
+        "Footbridge_LandConnector_-8"
+      ],
+      "highestSolidSurface": [
+        3.259999990463257,
+        "Footbridge_LandConnector_-8"
+      ],
+      "surfaceAboveEligibleFloor": 0.0,
+      "sampledCapsuleMinSurfaceDistance": 0.17875441357588212,
+      "nearest": "Rock_Shore_043",
+      "capsuleRadius": 0.25,
+      "staticPlacementRisk": true
+    },
+    {
+      "pointXZ": [
+        -8.2,
+        -11.42
+      ],
+      "eligibleFloor": [
+        3.259999990463257,
+        "Footbridge_LandConnector_-8"
+      ],
+      "highestSolidSurface": [
+        3.259999990463257,
+        "Footbridge_LandConnector_-8"
+      ],
+      "surfaceAboveEligibleFloor": 0.0,
+      "sampledCapsuleMinSurfaceDistance": 0.2825377482020423,
+      "nearest": "Rock_Shore_043",
+      "capsuleRadius": 0.25,
+      "staticPlacementRisk": false
+    },
+    {
+      "pointXZ": [
+        -8,
+        -11.44
+      ],
+      "eligibleFloor": [
+        3.259999990463257,
+        "Footbridge_LandConnector_-8"
+      ],
+      "highestSolidSurface": [
+        3.259999990463257,
+        "Footbridge_LandConnector_-8"
+      ],
+      "surfaceAboveEligibleFloor": 0.0,
+      "sampledCapsuleMinSurfaceDistance": 0.25256361323466814,
+      "nearest": "Footbridge_CamberedContinuousDeck",
+      "capsuleRadius": 0.25,
+      "staticPlacementRisk": false
+    },
+    {
+      "pointXZ": [
+        -7.8,
+        -11.46
+      ],
+      "eligibleFloor": [
+        3.2717620372772216,
+        "Footbridge_CamberedContinuousDeck"
+      ],
+      "highestSolidSurface": [
+        3.2717620372772216,
+        "Footbridge_CamberedContinuousDeck"
+      ],
+      "surfaceAboveEligibleFloor": 0.0,
+      "sampledCapsuleMinSurfaceDistance": 0.252563613234668,
+      "nearest": "Footbridge_CamberedContinuousDeck",
+      "capsuleRadius": 0.25,
+      "staticPlacementRisk": false
+    },
+    {
+      "pointXZ": [
+        -7.4,
+        -11.5
+      ],
+      "eligibleFloor": [
+        3.2952294826507567,
+        "Footbridge_CamberedContinuousDeck"
+      ],
+      "highestSolidSurface": [
+        3.2952294826507567,
+        "Footbridge_CamberedContinuousDeck"
+      ],
+      "surfaceAboveEligibleFloor": 0.0,
+      "sampledCapsuleMinSurfaceDistance": 0.25257195841200436,
+      "nearest": "Footbridge_CamberedContinuousDeck",
+      "capsuleRadius": 0.25,
+      "staticPlacementRisk": false
+    },
+    {
+      "pointXZ": [
+        8.4,
+        -11.4
+      ],
+      "eligibleFloor": [
+        3.259999990463257,
+        "Footbridge_LandConnector_8"
+      ],
+      "highestSolidSurface": [
+        3.3285846739501617,
+        "Rock_Shore_045"
+      ],
+      "surfaceAboveEligibleFloor": 0.06858468348690483,
+      "sampledCapsuleMinSurfaceDistance": 0.16777172631048612,
+      "nearest": "Rock_Shore_045",
+      "capsuleRadius": 0.25,
+      "staticPlacementRisk": true
+    },
+    {
+      "pointXZ": [
+        8.2,
+        -11.42
+      ],
+      "eligibleFloor": [
+        3.259999990463257,
+        "Footbridge_LandConnector_8"
+      ],
+      "highestSolidSurface": [
+        3.297073701634457,
+        "Rock_Shore_045"
+      ],
+      "surfaceAboveEligibleFloor": 0.03707371117120006,
+      "sampledCapsuleMinSurfaceDistance": 0.1964388149400379,
+      "nearest": "Rock_Shore_045",
+      "capsuleRadius": 0.25,
+      "staticPlacementRisk": true
+    },
+    {
+      "pointXZ": [
+        8,
+        -11.44
+      ],
+      "eligibleFloor": [
+        3.259999990463257,
+        "Footbridge_LandConnector_8"
+      ],
+      "highestSolidSurface": [
+        3.259999990463257,
+        "Footbridge_LandConnector_8"
+      ],
+      "surfaceAboveEligibleFloor": 0.0,
+      "sampledCapsuleMinSurfaceDistance": 0.23406023454395986,
+      "nearest": "Rock_Shore_045",
+      "capsuleRadius": 0.25,
+      "staticPlacementRisk": true
+    },
+    {
+      "pointXZ": [
+        7.8,
+        -11.46
+      ],
+      "eligibleFloor": [
+        3.2717620372772216,
+        "Footbridge_CamberedContinuousDeck"
+      ],
+      "highestSolidSurface": [
+        3.2717620372772216,
+        "Footbridge_CamberedContinuousDeck"
+      ],
+      "surfaceAboveEligibleFloor": 0.0,
+      "sampledCapsuleMinSurfaceDistance": 0.252563613234668,
+      "nearest": "Footbridge_CamberedContinuousDeck",
+      "capsuleRadius": 0.25,
+      "staticPlacementRisk": false
+    },
+    {
+      "pointXZ": [
+        7.4,
+        -11.5
+      ],
+      "eligibleFloor": [
+        3.2952294826507567,
+        "Footbridge_CamberedContinuousDeck"
+      ],
+      "highestSolidSurface": [
+        3.2952294826507567,
+        "Footbridge_CamberedContinuousDeck"
+      ],
+      "surfaceAboveEligibleFloor": 0.0,
+      "sampledCapsuleMinSurfaceDistance": 0.25257195841200436,
+      "nearest": "Footbridge_CamberedContinuousDeck",
+      "capsuleRadius": 0.25,
+      "staticPlacementRisk": false
+    }
+  ],
+  "decisions": [
+    "Keep 8 human, 4 flight and 16 runtime routes; maxTicks stays 600; no sprint or engine change.",
+    "Shorten plaza and Cottage01 by removing redundant return travel; retain all three cottages and street coverage.",
+    "Bridge route follows the north end of the existing deck and land connectors; no source edits or artificial feet lift.",
+    "The source rocks partly occupy eligible connector-floor space. Report this collision risk rather than claim a clear human bridge.",
+    "Gameplay may measure actual rock support if the real motor can traverse it; native collision/step/slope verification is required."
+  ],
+  "limitations": [
+    "XZ ideal duration includes spawn-to-first point but excludes acceleration/braking/turns, vertical stair travel and collisions.",
+    "Bridge capsule surface samples are an offline static-placement diagnostic, not an actual dynamic sweep/solid-volume or engine result."
+  ]
+}

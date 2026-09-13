@@ -1,0 +1,1685 @@
+{
+  "status": "OFFLINE_HELICAL_CHAIN_NATIVE_PENDING",
+  "issues": [],
+  "frozen": {
+    "navigation.json": "bdc2ae4e6af11150469483c7802b3b1c4f1f06b06817b80181586d9d50648126",
+    "prepare.json": "c86956bb584bae57adb154289cc78eb3f5ec92b5889879ea376754121449b2b8",
+    "source-evidence.json": "4c1eadfdad672130bf539f195f85ed97a5cd19574d60c2698645323b42fc2dbd",
+    "route-diagnostics.json": "6be497288f061d589ebec9b0ee7597b428e301ed5870f39c540820e913026ec1",
+    "prepare-v2.json": "73d892990891668ea013af1a2266fcba30d5d60565f94230b0d03834a1a3aefa",
+    "revision-v2.json": "47178b5437334658d02e7d3cdf5f46148d1784af27b451dcd8aa5e62cbc125a0"
+  },
+  "reason": "V1/V2 isolated vertical portals were clear, but the path between them intersected intermediate treads. Replace with a chain following the actual helix.",
+  "oldBlockedSegments": [
+    {
+      "start": [
+        29,
+        8.45,
+        24.85
+      ],
+      "end": [
+        28.05,
+        10.15,
+        26
+      ],
+      "result": {
+        "minDistance": 0.0019698473950978458,
+        "nearest": "Lighthouse_ConnectedSpiralStair_56Treads",
+        "sampleSpacingMax": 0.01,
+        "clear": false
+      }
+    },
+    {
+      "start": [
+        28.05,
+        11.25,
+        26
+      ],
+      "end": [
+        28.05,
+        13.05,
+        26
+      ],
+      "result": {
+        "minDistance": 0.004033454347052157,
+        "nearest": "Lighthouse_ConnectedSpiralStair_56Treads",
+        "sampleSpacingMax": 0.01,
+        "clear": false
+      }
+    }
+  ],
+  "zones": 46,
+  "portals": 53,
+  "connected": true,
+  "mosquitoSpawnsCovered": 16,
+  "passages": [
+    {
+      "id": "central_north",
+      "start": [
+        0.0,
+        6.0,
+        9.149999999999999
+      ],
+      "end": [
+        0.0,
+        6.0,
+        10.25
+      ],
+      "result": null
+    },
+    {
+      "id": "central_home02",
+      "start": [
+        -7.95,
+        5.0,
+        5.0
+      ],
+      "end": [
+        -9.05,
+        5.0,
+        5.0
+      ],
+      "result": null
+    },
+    {
+      "id": "central_home01",
+      "start": [
+        -9.45,
+        5.0,
+        -8.0
+      ],
+      "end": [
+        -10.55,
+        5.0,
+        -8.0
+      ],
+      "result": null
+    },
+    {
+      "id": "home01_west",
+      "start": [
+        -18.45,
+        6.0,
+        -7.0
+      ],
+      "end": [
+        -19.55,
+        6.0,
+        -7.0
+      ],
+      "result": null
+    },
+    {
+      "id": "home02_west",
+      "start": [
+        -17.25,
+        6.0,
+        5.0
+      ],
+      "end": [
+        -18.35,
+        6.0,
+        5.0
+      ],
+      "result": null
+    },
+    {
+      "id": "central_upper",
+      "start": [
+        3.0,
+        9.45,
+        0.0
+      ],
+      "end": [
+        3.0,
+        10.55,
+        0.0
+      ],
+      "result": null
+    },
+    {
+      "id": "north_upper",
+      "start": [
+        0.0,
+        9.45,
+        11.0
+      ],
+      "end": [
+        0.0,
+        10.55,
+        11.0
+      ],
+      "result": null
+    },
+    {
+      "id": "west_upper",
+      "start": [
+        -23.0,
+        10.45,
+        4.0
+      ],
+      "end": [
+        -23.0,
+        11.55,
+        4.0
+      ],
+      "result": null
+    },
+    {
+      "id": "central_harbor",
+      "start": [
+        0.0,
+        6.0,
+        -10.45
+      ],
+      "end": [
+        0.0,
+        6.0,
+        -11.55
+      ],
+      "result": null
+    },
+    {
+      "id": "home01_harbor",
+      "start": [
+        -14.0,
+        5.0,
+        -10.45
+      ],
+      "end": [
+        -14.0,
+        5.0,
+        -11.55
+      ],
+      "result": null
+    },
+    {
+      "id": "harbor_east",
+      "start": [
+        22.0,
+        6.0,
+        -11.55
+      ],
+      "end": [
+        22.0,
+        6.0,
+        -10.45
+      ],
+      "result": null
+    },
+    {
+      "id": "central_eastern",
+      "start": [
+        9.45,
+        6.0,
+        5.0
+      ],
+      "end": [
+        10.55,
+        6.0,
+        5.0
+      ],
+      "result": null
+    },
+    {
+      "id": "eastern_workshop_lane",
+      "start": [
+        22.45,
+        7.0,
+        4.0
+      ],
+      "end": [
+        23.55,
+        7.0,
+        4.0
+      ],
+      "result": null
+    },
+    {
+      "id": "eastern_north",
+      "start": [
+        22.0,
+        11.0,
+        18.95
+      ],
+      "end": [
+        22.0,
+        11.0,
+        20.05
+      ],
+      "result": null
+    },
+    {
+      "id": "north_upper_village",
+      "start": [
+        20.55,
+        12.0,
+        25.0
+      ],
+      "end": [
+        19.45,
+        12.0,
+        25.0
+      ],
+      "result": null
+    },
+    {
+      "id": "east_to_lighthouse_approach",
+      "start": [
+        25.45,
+        11.0,
+        20.0
+      ],
+      "end": [
+        26.55,
+        11.0,
+        20.0
+      ],
+      "result": null
+    },
+    {
+      "id": "north_to_lighthouse_west",
+      "start": [
+        24.45,
+        12.0,
+        25.0
+      ],
+      "end": [
+        25.55,
+        12.0,
+        25.0
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_around_east",
+      "start": [
+        34.0,
+        12.0,
+        23.05
+      ],
+      "end": [
+        34.0,
+        12.0,
+        24.150000000000002
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_around_north",
+      "start": [
+        32.25,
+        13.0,
+        31.0
+      ],
+      "end": [
+        31.15,
+        13.0,
+        31.0
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_around_west",
+      "start": [
+        26.388908729,
+        13.0,
+        29.088908729
+      ],
+      "end": [
+        25.611091271,
+        13.0,
+        28.311091271
+      ],
+      "result": null
+    },
+    {
+      "id": "workshop_from_harbor",
+      "start": [
+        15.0,
+        4.7,
+        -11.25
+      ],
+      "end": [
+        15.0,
+        4.7,
+        -10.149999999999999
+      ],
+      "result": null
+    },
+    {
+      "id": "cottage1_open_door",
+      "start": [
+        -14.0,
+        4.6,
+        -5.55
+      ],
+      "end": [
+        -14.0,
+        4.6,
+        -4.45
+      ],
+      "result": null
+    },
+    {
+      "id": "cottage1_approach",
+      "start": [
+        -14.0,
+        4.6,
+        -6.7
+      ],
+      "end": [
+        -14.0,
+        4.6,
+        -5.6000000000000005
+      ],
+      "result": null
+    },
+    {
+      "id": "cottage2_open_door",
+      "start": [
+        -12.0,
+        4.6,
+        9.45
+      ],
+      "end": [
+        -12.0,
+        4.6,
+        10.55
+      ],
+      "result": null
+    },
+    {
+      "id": "cottage2_approach",
+      "start": [
+        -12.0,
+        4.6,
+        8.299999999999999
+      ],
+      "end": [
+        -12.0,
+        4.6,
+        9.4
+      ],
+      "result": null
+    },
+    {
+      "id": "cottage3_open_door",
+      "start": [
+        2.0,
+        4.6,
+        12.45
+      ],
+      "end": [
+        2.0,
+        4.6,
+        13.55
+      ],
+      "result": null
+    },
+    {
+      "id": "cottage3_approach",
+      "start": [
+        2.0,
+        4.6,
+        11.299999999999999
+      ],
+      "end": [
+        2.0,
+        4.6,
+        12.4
+      ],
+      "result": null
+    },
+    {
+      "id": "workshop_open_door",
+      "start": [
+        15.0,
+        4.7,
+        -8.55
+      ],
+      "end": [
+        15.0,
+        4.7,
+        -7.45
+      ],
+      "result": null
+    },
+    {
+      "id": "workshop_west_bypass",
+      "start": [
+        14.200000000000001,
+        4.7,
+        -6.25
+      ],
+      "end": [
+        13.1,
+        4.7,
+        -6.25
+      ],
+      "result": null
+    },
+    {
+      "id": "workshop_east_bypass",
+      "start": [
+        15.8,
+        4.7,
+        -6.25
+      ],
+      "end": [
+        16.900000000000002,
+        4.7,
+        -6.25
+      ],
+      "result": null
+    },
+    {
+      "id": "workshop_west_rear",
+      "start": [
+        13.1,
+        4.7,
+        -1.6500000000000001
+      ],
+      "end": [
+        13.1,
+        4.7,
+        -0.55
+      ],
+      "result": null
+    },
+    {
+      "id": "workshop_east_rear",
+      "start": [
+        17.1,
+        4.7,
+        -1.6500000000000001
+      ],
+      "end": [
+        17.1,
+        4.7,
+        -0.55
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_open_door",
+      "start": [
+        29.0,
+        8.45,
+        23.05
+      ],
+      "end": [
+        29.0,
+        8.45,
+        24.150000000000002
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_01",
+      "start": [
+        29.085167314107295,
+        8.294190698067998,
+        24.8494698267452
+      ],
+      "end": [
+        29.9538041858927,
+        8.745809301932,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_02",
+      "start": [
+        30.038973,
+        8.774190606503392,
+        25.49849215578548
+      ],
+      "end": [
+        30.038973,
+        9.225809393496608,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_03",
+      "start": [
+        29.9538041858927,
+        9.254190698068,
+        26.649021826745198
+      ],
+      "end": [
+        29.085167314107295,
+        9.705809301932002,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_04",
+      "start": [
+        28.9148326858927,
+        9.734190698068002,
+        27.1505301732548
+      ],
+      "end": [
+        28.046195814107296,
+        10.185809301932,
+        26.649021826745198
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_05",
+      "start": [
+        27.961027,
+        10.21419060650339,
+        26.50150784421452
+      ],
+      "end": [
+        27.961027,
+        10.665809393496609,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_06",
+      "start": [
+        28.046195814107296,
+        10.694190698067999,
+        25.350978173254802
+      ],
+      "end": [
+        28.9148326858927,
+        11.145809301932001,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_07",
+      "start": [
+        29.085167314107295,
+        11.174190698068,
+        24.8494698267452
+      ],
+      "end": [
+        29.9538041858927,
+        11.625809301932001,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_08",
+      "start": [
+        30.038973,
+        11.654190606503395,
+        25.49849215578548
+      ],
+      "end": [
+        30.038973,
+        12.105809393496607,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_09",
+      "start": [
+        29.9538041858927,
+        12.134190698067998,
+        26.649021826745198
+      ],
+      "end": [
+        29.085167314107295,
+        12.585809301932,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_10",
+      "start": [
+        28.9148326858927,
+        12.614190698067999,
+        27.1505301732548
+      ],
+      "end": [
+        28.046195814107296,
+        13.065809301932001,
+        26.649021826745198
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_11",
+      "start": [
+        27.961027,
+        13.09419060650339,
+        26.50150784421452
+      ],
+      "end": [
+        27.961027,
+        13.54580939349661,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_12",
+      "start": [
+        28.046195814107296,
+        13.574190698068,
+        25.350978173254802
+      ],
+      "end": [
+        28.9148326858927,
+        14.025809301932002,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_13",
+      "start": [
+        29.085167314107295,
+        14.054190698067998,
+        24.8494698267452
+      ],
+      "end": [
+        29.9538041858927,
+        14.505809301932,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_14",
+      "start": [
+        30.038973,
+        14.534190606503392,
+        25.49849215578548
+      ],
+      "end": [
+        30.038973,
+        14.985809393496607,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_15",
+      "start": [
+        29.9538041858927,
+        15.014190698067999,
+        26.649021826745198
+      ],
+      "end": [
+        29.085167314107295,
+        15.465809301932001,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_16",
+      "start": [
+        28.9148326858927,
+        15.494190698068,
+        27.1505301732548
+      ],
+      "end": [
+        28.046195814107296,
+        15.945809301932002,
+        26.649021826745198
+      ],
+      "result": {
+        "minDistance": 0.49498072049709685,
+        "nearest": "Lighthouse_Balcony_StairwellOpen",
+        "sampleSpacingMax": 0.01,
+        "clear": true
+      }
+    },
+    {
+      "id": "lighthouse_helical_transition_17",
+      "start": [
+        27.961027,
+        15.97419060650339,
+        26.50150784421452
+      ],
+      "end": [
+        27.961027,
+        16.425809393496607,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_18",
+      "start": [
+        28.046195814107296,
+        16.454190698068,
+        25.350978173254802
+      ],
+      "end": [
+        28.9148326858927,
+        16.905809301932,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_helical_transition_19",
+      "start": [
+        29.047020550154357,
+        16.9370537758022,
+        24.928260003620633
+      ],
+      "end": [
+        29.991950949845638,
+        17.3829462241978,
+        25.27218799637937
+      ],
+      "result": null
+    },
+    {
+      "id": "lighthouse_entry_to_helix",
+      "start": [
+        28.977674624494288,
+        8.490843147507654,
+        23.96664413512759
+      ],
+      "end": [
+        29.107492689613007,
+        8.253347550560342,
+        25.032825691617607
+      ],
+      "result": null
+    }
+  ],
+  "fullHelicalConnections": [
+    {
+      "id": "helical-portal-01",
+      "start": [
+        29.085167314107295,
+        8.294190698067998,
+        24.8494698267452
+      ],
+      "end": [
+        29.9538041858927,
+        8.745809301932,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-01",
+      "start": [
+        29.0,
+        8.45,
+        24.15
+      ],
+      "end": [
+        29.085167314107295,
+        8.294190698067998,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-02",
+      "start": [
+        30.038973,
+        8.774190606503392,
+        25.49849215578548
+      ],
+      "end": [
+        30.038973,
+        9.225809393496608,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-02",
+      "start": [
+        29.9538041858927,
+        8.745809301932,
+        25.350978173254802
+      ],
+      "end": [
+        30.038973,
+        8.774190606503392,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-03",
+      "start": [
+        29.9538041858927,
+        9.254190698068,
+        26.649021826745198
+      ],
+      "end": [
+        29.085167314107295,
+        9.705809301932002,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-03",
+      "start": [
+        30.038973,
+        9.225809393496608,
+        26.50150784421452
+      ],
+      "end": [
+        29.9538041858927,
+        9.254190698068,
+        26.649021826745198
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-04",
+      "start": [
+        28.9148326858927,
+        9.734190698068002,
+        27.1505301732548
+      ],
+      "end": [
+        28.046195814107296,
+        10.185809301932,
+        26.649021826745198
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-04",
+      "start": [
+        29.085167314107295,
+        9.705809301932002,
+        27.1505301732548
+      ],
+      "end": [
+        28.9148326858927,
+        9.734190698068002,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-05",
+      "start": [
+        27.961027,
+        10.21419060650339,
+        26.50150784421452
+      ],
+      "end": [
+        27.961027,
+        10.665809393496609,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-05",
+      "start": [
+        28.046195814107296,
+        10.185809301932,
+        26.649021826745198
+      ],
+      "end": [
+        27.961027,
+        10.21419060650339,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-06",
+      "start": [
+        28.046195814107296,
+        10.694190698067999,
+        25.350978173254802
+      ],
+      "end": [
+        28.9148326858927,
+        11.145809301932001,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-06",
+      "start": [
+        27.961027,
+        10.665809393496609,
+        25.49849215578548
+      ],
+      "end": [
+        28.046195814107296,
+        10.694190698067999,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-07",
+      "start": [
+        29.085167314107295,
+        11.174190698068,
+        24.8494698267452
+      ],
+      "end": [
+        29.9538041858927,
+        11.625809301932001,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-07",
+      "start": [
+        28.9148326858927,
+        11.145809301932001,
+        24.8494698267452
+      ],
+      "end": [
+        29.085167314107295,
+        11.174190698068,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-08",
+      "start": [
+        30.038973,
+        11.654190606503395,
+        25.49849215578548
+      ],
+      "end": [
+        30.038973,
+        12.105809393496607,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-08",
+      "start": [
+        29.9538041858927,
+        11.625809301932001,
+        25.350978173254802
+      ],
+      "end": [
+        30.038973,
+        11.654190606503395,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-09",
+      "start": [
+        29.9538041858927,
+        12.134190698067998,
+        26.649021826745198
+      ],
+      "end": [
+        29.085167314107295,
+        12.585809301932,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-09",
+      "start": [
+        30.038973,
+        12.105809393496607,
+        26.50150784421452
+      ],
+      "end": [
+        29.9538041858927,
+        12.134190698067998,
+        26.649021826745198
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-10",
+      "start": [
+        28.9148326858927,
+        12.614190698067999,
+        27.1505301732548
+      ],
+      "end": [
+        28.046195814107296,
+        13.065809301932001,
+        26.649021826745198
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-10",
+      "start": [
+        29.085167314107295,
+        12.585809301932,
+        27.1505301732548
+      ],
+      "end": [
+        28.9148326858927,
+        12.614190698067999,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-11",
+      "start": [
+        27.961027,
+        13.09419060650339,
+        26.50150784421452
+      ],
+      "end": [
+        27.961027,
+        13.54580939349661,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-11",
+      "start": [
+        28.046195814107296,
+        13.065809301932001,
+        26.649021826745198
+      ],
+      "end": [
+        27.961027,
+        13.09419060650339,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-12",
+      "start": [
+        28.046195814107296,
+        13.574190698068,
+        25.350978173254802
+      ],
+      "end": [
+        28.9148326858927,
+        14.025809301932002,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-12",
+      "start": [
+        27.961027,
+        13.54580939349661,
+        25.49849215578548
+      ],
+      "end": [
+        28.046195814107296,
+        13.574190698068,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-13",
+      "start": [
+        29.085167314107295,
+        14.054190698067998,
+        24.8494698267452
+      ],
+      "end": [
+        29.9538041858927,
+        14.505809301932,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-13",
+      "start": [
+        28.9148326858927,
+        14.025809301932002,
+        24.8494698267452
+      ],
+      "end": [
+        29.085167314107295,
+        14.054190698067998,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-14",
+      "start": [
+        30.038973,
+        14.534190606503392,
+        25.49849215578548
+      ],
+      "end": [
+        30.038973,
+        14.985809393496607,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-14",
+      "start": [
+        29.9538041858927,
+        14.505809301932,
+        25.350978173254802
+      ],
+      "end": [
+        30.038973,
+        14.534190606503392,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-15",
+      "start": [
+        29.9538041858927,
+        15.014190698067999,
+        26.649021826745198
+      ],
+      "end": [
+        29.085167314107295,
+        15.465809301932001,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-15",
+      "start": [
+        30.038973,
+        14.985809393496607,
+        26.50150784421452
+      ],
+      "end": [
+        29.9538041858927,
+        15.014190698067999,
+        26.649021826745198
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-16",
+      "start": [
+        28.9148326858927,
+        15.494190698068,
+        27.1505301732548
+      ],
+      "end": [
+        28.046195814107296,
+        15.945809301932002,
+        26.649021826745198
+      ],
+      "result": {
+        "minDistance": 0.49498072049709685,
+        "nearest": "Lighthouse_Balcony_StairwellOpen",
+        "sampleSpacingMax": 0.01,
+        "clear": true
+      }
+    },
+    {
+      "id": "helical-approach-16",
+      "start": [
+        29.085167314107295,
+        15.465809301932001,
+        27.1505301732548
+      ],
+      "end": [
+        28.9148326858927,
+        15.494190698068,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-17",
+      "start": [
+        27.961027,
+        15.97419060650339,
+        26.50150784421452
+      ],
+      "end": [
+        27.961027,
+        16.425809393496607,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-17",
+      "start": [
+        28.046195814107296,
+        15.945809301932002,
+        26.649021826745198
+      ],
+      "end": [
+        27.961027,
+        15.97419060650339,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-18",
+      "start": [
+        28.046195814107296,
+        16.454190698068,
+        25.350978173254802
+      ],
+      "end": [
+        28.9148326858927,
+        16.905809301932,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-18",
+      "start": [
+        27.961027,
+        16.425809393496607,
+        25.49849215578548
+      ],
+      "end": [
+        28.046195814107296,
+        16.454190698068,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-portal-19",
+      "start": [
+        29.047020550154357,
+        16.9370537758022,
+        24.928260003620633
+      ],
+      "end": [
+        29.991950949845638,
+        17.3829462241978,
+        25.27218799637937
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-approach-19",
+      "start": [
+        28.9148326858927,
+        16.905809301932,
+        24.8494698267452
+      ],
+      "end": [
+        29.047020550154357,
+        16.9370537758022,
+        24.928260003620633
+      ],
+      "result": null
+    },
+    {
+      "id": "helical-exit-to-balcony",
+      "start": [
+        29.991950949845638,
+        17.3829462241978,
+        25.27218799637937
+      ],
+      "end": [
+        30.1,
+        17.3,
+        24.1
+      ],
+      "result": null
+    }
+  ],
+  "actualSameRegionConnections": [
+    {
+      "zone": "lighthouse_entry",
+      "fromPortal": "lighthouse_open_door",
+      "toPortal": "lighthouse_entry_to_helix",
+      "start": [
+        29.0,
+        8.45,
+        24.150000000000002
+      ],
+      "end": [
+        28.977674624494288,
+        8.490843147507654,
+        23.96664413512759
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_00",
+      "fromPortal": "lighthouse_helical_transition_01",
+      "toPortal": "lighthouse_entry_to_helix",
+      "start": [
+        29.085167314107295,
+        8.294190698067998,
+        24.8494698267452
+      ],
+      "end": [
+        29.107492689613007,
+        8.253347550560342,
+        25.032825691617607
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_01",
+      "fromPortal": "lighthouse_helical_transition_01",
+      "toPortal": "lighthouse_helical_transition_02",
+      "start": [
+        29.9538041858927,
+        8.745809301932,
+        25.350978173254802
+      ],
+      "end": [
+        30.038973,
+        8.774190606503392,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_02",
+      "fromPortal": "lighthouse_helical_transition_02",
+      "toPortal": "lighthouse_helical_transition_03",
+      "start": [
+        30.038973,
+        9.225809393496608,
+        26.50150784421452
+      ],
+      "end": [
+        29.9538041858927,
+        9.254190698068,
+        26.649021826745198
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_03",
+      "fromPortal": "lighthouse_helical_transition_03",
+      "toPortal": "lighthouse_helical_transition_04",
+      "start": [
+        29.085167314107295,
+        9.705809301932002,
+        27.1505301732548
+      ],
+      "end": [
+        28.9148326858927,
+        9.734190698068002,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_04",
+      "fromPortal": "lighthouse_helical_transition_04",
+      "toPortal": "lighthouse_helical_transition_05",
+      "start": [
+        28.046195814107296,
+        10.185809301932,
+        26.649021826745198
+      ],
+      "end": [
+        27.961027,
+        10.21419060650339,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_05",
+      "fromPortal": "lighthouse_helical_transition_05",
+      "toPortal": "lighthouse_helical_transition_06",
+      "start": [
+        27.961027,
+        10.665809393496609,
+        25.49849215578548
+      ],
+      "end": [
+        28.046195814107296,
+        10.694190698067999,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_06",
+      "fromPortal": "lighthouse_helical_transition_06",
+      "toPortal": "lighthouse_helical_transition_07",
+      "start": [
+        28.9148326858927,
+        11.145809301932001,
+        24.8494698267452
+      ],
+      "end": [
+        29.085167314107295,
+        11.174190698068,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_07",
+      "fromPortal": "lighthouse_helical_transition_07",
+      "toPortal": "lighthouse_helical_transition_08",
+      "start": [
+        29.9538041858927,
+        11.625809301932001,
+        25.350978173254802
+      ],
+      "end": [
+        30.038973,
+        11.654190606503395,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_08",
+      "fromPortal": "lighthouse_helical_transition_08",
+      "toPortal": "lighthouse_helical_transition_09",
+      "start": [
+        30.038973,
+        12.105809393496607,
+        26.50150784421452
+      ],
+      "end": [
+        29.9538041858927,
+        12.134190698067998,
+        26.649021826745198
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_09",
+      "fromPortal": "lighthouse_helical_transition_09",
+      "toPortal": "lighthouse_helical_transition_10",
+      "start": [
+        29.085167314107295,
+        12.585809301932,
+        27.1505301732548
+      ],
+      "end": [
+        28.9148326858927,
+        12.614190698067999,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_10",
+      "fromPortal": "lighthouse_helical_transition_10",
+      "toPortal": "lighthouse_helical_transition_11",
+      "start": [
+        28.046195814107296,
+        13.065809301932001,
+        26.649021826745198
+      ],
+      "end": [
+        27.961027,
+        13.09419060650339,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_11",
+      "fromPortal": "lighthouse_helical_transition_11",
+      "toPortal": "lighthouse_helical_transition_12",
+      "start": [
+        27.961027,
+        13.54580939349661,
+        25.49849215578548
+      ],
+      "end": [
+        28.046195814107296,
+        13.574190698068,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_12",
+      "fromPortal": "lighthouse_helical_transition_12",
+      "toPortal": "lighthouse_helical_transition_13",
+      "start": [
+        28.9148326858927,
+        14.025809301932002,
+        24.8494698267452
+      ],
+      "end": [
+        29.085167314107295,
+        14.054190698067998,
+        24.8494698267452
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_13",
+      "fromPortal": "lighthouse_helical_transition_13",
+      "toPortal": "lighthouse_helical_transition_14",
+      "start": [
+        29.9538041858927,
+        14.505809301932,
+        25.350978173254802
+      ],
+      "end": [
+        30.038973,
+        14.534190606503392,
+        25.49849215578548
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_14",
+      "fromPortal": "lighthouse_helical_transition_14",
+      "toPortal": "lighthouse_helical_transition_15",
+      "start": [
+        30.038973,
+        14.985809393496607,
+        26.50150784421452
+      ],
+      "end": [
+        29.9538041858927,
+        15.014190698067999,
+        26.649021826745198
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_15",
+      "fromPortal": "lighthouse_helical_transition_15",
+      "toPortal": "lighthouse_helical_transition_16",
+      "start": [
+        29.085167314107295,
+        15.465809301932001,
+        27.1505301732548
+      ],
+      "end": [
+        28.9148326858927,
+        15.494190698068,
+        27.1505301732548
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_16",
+      "fromPortal": "lighthouse_helical_transition_16",
+      "toPortal": "lighthouse_helical_transition_17",
+      "start": [
+        28.046195814107296,
+        15.945809301932002,
+        26.649021826745198
+      ],
+      "end": [
+        27.961027,
+        15.97419060650339,
+        26.50150784421452
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_17",
+      "fromPortal": "lighthouse_helical_transition_17",
+      "toPortal": "lighthouse_helical_transition_18",
+      "start": [
+        27.961027,
+        16.425809393496607,
+        25.49849215578548
+      ],
+      "end": [
+        28.046195814107296,
+        16.454190698068,
+        25.350978173254802
+      ],
+      "result": null
+    },
+    {
+      "zone": "lighthouse_helical_section_18",
+      "fromPortal": "lighthouse_helical_transition_18",
+      "toPortal": "lighthouse_helical_transition_19",
+      "start": [
+        28.9148326858927,
+        16.905809301932,
+        24.8494698267452
+      ],
+      "end": [
+        29.047020550154357,
+        16.9370537758022,
+        24.928260003620633
+      ],
+      "result": null
+    }
+  ],
+  "routeCoordinatesUnchangedFromV2": true,
+  "limitations": [
+    "Air boxes enclose short semantic sections; not certified empty volumes.",
+    "Checks sample source surfaces, not engine collision or navigation runtime.",
+    "V2 bridge foot-contact risk remains unchanged and explicit."
+  ]
+}

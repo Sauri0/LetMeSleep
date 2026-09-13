@@ -1,0 +1,78 @@
+{
+  "status": "OFFLINE_DIAGNOSTIC_NATIVE_PENDING",
+  "scope": "Human torso/head only: radius .25 from feet+.60 to feet+1.45, sampled every .25m; excludes step/foot physics. Flight source-surface sweep radius .055 at <=1cm. Not full motor/capsule validation.",
+  "routes": [
+    {
+      "route": "plaza-and-northern-cottages",
+      "role": "human",
+      "samples": 311,
+      "issues": []
+    },
+    {
+      "route": "cottage01-and-village-street",
+      "role": "human",
+      "samples": 248,
+      "issues": []
+    },
+    {
+      "route": "workshop-open-door-and-boat-bypass",
+      "role": "human",
+      "samples": 162,
+      "issues": []
+    },
+    {
+      "route": "footbridge-both-directions",
+      "role": "human",
+      "samples": 222,
+      "issues": []
+    },
+    {
+      "route": "pier1-stair-down-and-up",
+      "role": "human",
+      "samples": 193,
+      "issues": []
+    },
+    {
+      "route": "pier2-stair-down-and-up",
+      "role": "human",
+      "samples": 233,
+      "issues": []
+    },
+    {
+      "route": "lighthouse-exterior-stairs-down-and-up",
+      "role": "human",
+      "samples": 219,
+      "issues": []
+    },
+    {
+      "route": "lighthouse-56-tread-ascent",
+      "role": "human",
+      "samples": 196,
+      "issues": []
+    },
+    {
+      "route": "flight-cottage01-door",
+      "role": "mosquito",
+      "samples": 9,
+      "issues": []
+    },
+    {
+      "route": "flight-harbor-and-bridge",
+      "role": "mosquito",
+      "samples": 8,
+      "issues": []
+    },
+    {
+      "route": "flight-lighthouse-spiral",
+      "role": "mosquito",
+      "samples": 62,
+      "issues": []
+    },
+    {
+      "route": "flight-north-village-and-workshop-door",
+      "role": "mosquito",
+      "samples": 13,
+      "issues": []
+    }
+  ]
+}
