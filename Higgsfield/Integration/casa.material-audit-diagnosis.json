@@ -1,0 +1,17 @@
+{
+  "status": "RESOLVED_WITH_COORDINATOR_EFFECTIVE_MATERIAL_AUDIT",
+  "diagnosis": "Audit used datablock materials instead of effective object material slots",
+  "mismatchedAuditInstancePalettes": 182,
+  "auditPaletteCount": 28,
+  "exportPaletteCount": 29,
+  "fbxGlbInstancePaletteMismatches": 0,
+  "checkedMeshObjects": 3664,
+  "example": {
+    "object": "CASA_Roof_Tile_-1_00_08",
+    "staleAudit": "CASA_Roof",
+    "fbx": "CASA_RoofDark",
+    "glb": "CASA_RoofDark"
+  },
+  "action": "Coordinator regenerated audit with o.material_slots; all strict generator checks then passed using29effectivecolours. No generator weakening or export patches.",
+  "exportsModified": false
+}

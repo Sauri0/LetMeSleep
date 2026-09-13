@@ -1,0 +1,17 @@
+{
+  "sourceFinal": true,
+  "mapId": "hf-casa-del-patio-v1",
+  "expectedScene": "HF_MAP_02_casa",
+  "expectedWaterCount": 0,
+  "fbx": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/HF_MAP_02_casa_UNITY.fbx",
+  "glb": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/HF_MAP_02_casa_UNITY.glb",
+  "audit": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/scene-audit.json",
+  "report": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/HF_MAP_02_casa_report.json",
+  "humanCount": 5,
+  "mosquitoCount": 16,
+  "humanPrefix": "Spawn_Human_",
+  "mosquitoPrefix": "Spawn_Mosquito_",
+  "collisionLayer": "Default",
+  "firstSurfaceId": 1000000,
+  "kinds": {}
+}

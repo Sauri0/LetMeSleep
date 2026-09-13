@@ -1,0 +1,43 @@
+{
+  "status": "PASS_STRICT_EXPORT_CROSSCHECKS_AND_CSHARP_CONTRACT",
+  "recipePath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/UnityRecipe/hf-casa-del-patio-v1.recipe.json",
+  "recipeSha256": "48d6398ea4616794eb3522dcb78a023069ddf549efc719a6ce29a29f8ec5e555",
+  "validationPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/UnityRecipe/hf-casa-del-patio-v1.validation.json",
+  "validationSha256": "95ef5de8bc0249555f20fdbf186e31da87ec22f8b6eec910b5a83b55409de87e",
+  "generatorSha256": "6608333bc4fa98a1eca62464ab29f876d85752f7490b68a7b40594446607b957",
+  "sourceHashes": {
+    "fbx": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\HF_MAP_02_casa_UNITY.fbx",
+      "sha256": "f0586b7087395c0f97e7b1eaf548aabcb62ab937ca9f93a98d2ac0ae79688bd7"
+    },
+    "glb": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\HF_MAP_02_casa_UNITY.glb",
+      "sha256": "5c234458219a9c00ee4b62a56dd64e9f564877d04cc588c3a711580925decefd"
+    },
+    "audit": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\scene-audit.json",
+      "sha256": "06cee0329bb6e212a96ed94962e85ac5ac04a9ee40d9f01cd959c9dc0fae9369"
+    },
+    "report": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\02-casa\\HF_MAP_02_casa_report.json",
+      "sha256": "041de9a854fae15a7177f3cc5f58718e8308b9cb3765fb21b3eed5eceba59247"
+    }
+  },
+  "checkedPaths": 3664,
+  "materials": 29,
+  "humanSpawns": 5,
+  "mosquitoSpawns": 16,
+  "classification": {
+    "solid": 3313,
+    "decoration": 351
+  },
+  "contractCheck": "Actual C# HiggsfieldImportContract compiled without Unity; Validate and Resolve passed all3664rules",
+  "nativeApplicationsStarted": false,
+  "pending": [
+    "Native hierarchy, axis/scale, material slots and colliders",
+    "Spawn rotation/capsule/flight clearance and allowed room roles",
+    "Water renderer/motion/culling/performance",
+    "Visual and lighting approval owned by root",
+    "SpatialData navigation schema and RoomRules/UI/Online integration owned by root"
+  ]
+}
