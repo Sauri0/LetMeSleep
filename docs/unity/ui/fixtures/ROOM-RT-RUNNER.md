@@ -47,3 +47,9 @@ Compilación externa: cero errores/advertencias. `CheckFixtureOptions.py --outpu
 El intento de Root `N:/LetMeSleep/Validation/Higgsfield/RoomUI/run-20260913-084525-ed5821fc` falló en preflight: JsonUtility dejó vacío el catálogo externo aunque el JSON tenía cinco entradas. Se reemplazó por Newtonsoft tanto la lectura Config/Catalog como la escritura de batch/receipt/Status. Se conserva la exigencia de cinco IDs únicos; no hay IDs hardcodeados.
 
 `CheckRoomJson.py` pasa cinco pruebas offline con las declaraciones reales de DTOs privados anidados: Config con overrides/defaults, cinco entradas reales, comparación de IDs/nombres contra otro lector JSON, recibo batch completo y recibo/Status del fixture. Compilación corregida sin errores/advertencias. Reejecución nativa pendiente por Root.
+
+## Recorte detectado en miembros y cantidad seleccionada
+
+El intento `run-20260913-084949-54eee275` llegó a UI y falló texto completo en `Member1` a ambas resoluciones. Root confirmó aislamiento de fuentes/opciones; las capturas muestran recorte real incluso con nombres cortos del fixture. La comprobación usa `TMP_Text.isTextOverflowing` después de `ForceMeshUpdate`, no compara longitud de markup.
+
+Corrección local: retirar el margen vertical adicional de 10+10 del texto de miembros (Fill ya reservaba 8+8), y reducir el padding horizontal de etiquetas de cantidad de 16+18 a 6+6 para que quepan «✓ 1» y «✓ AUTO». Mantiene fuentes, dimensiones de paneles y controles. La verificación completa permanece para los nombres cortos, estados y textos estáticos de este fixture; no afirma que cualquier nombre de usuario arbitrariamente largo deba caber sin elipsis. Se añaden detalles de overflow con texto parseado, rect, margen e índice TMP para diagnósticos posteriores. Compilación offline verificada; repetición nativa pendiente.

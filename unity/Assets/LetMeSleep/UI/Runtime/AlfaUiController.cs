@@ -695,7 +695,8 @@ namespace LetMeSleep.UI
                 Anchor(stateIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(30f, 30f));
                 var row = factory.Text(rowPanel, $"Member{i + 1}", string.Empty, AlfaUiTheme.LabelSize, AlfaUiTheme.Sheet100);
                 AlfaUiFactory.Fill(row.rectTransform, 52f, 14f, 8f, 8f);
-                row.margin = new Vector4(4f, 10f, 14f, 10f);
+                // Fill already reserves 8 px vertically; another 20 px clipped the two lines.
+                row.margin = new Vector4(4f, 0f, 14f, 0f);
                 rowPanel.gameObject.SetActive(false);
                 memberRows.Add(row);
                 memberRowRoots.Add(rowPanel.gameObject);
@@ -734,6 +735,8 @@ namespace LetMeSleep.UI
                 var button = factory.Button(counts, "HumanCount" + count, count == 0 ? "AUTO" : count.ToString(), () => ChangeLobbyHumanCount(captured == 0 ? (int?)null : captured), false, false, 48f);
                 button.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = count == 0 ? 104f : 52f;
                 humanCountLabels[count] = button.GetComponentInChildren<TextMeshProUGUI>();
+                // Compact count buttons must fit the selected "✓ 1" as well as "✓ AUTO".
+                AlfaUiFactory.Fill(humanCountLabels[count].rectTransform, 6f, 6f, 8f, 8f);
             }
             factory.Text(rules, "RoleNote", "Los roles se sortean al empezar cada ronda.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
             lobbyReadyButton = factory.Button(rules, "LobbyReadyButton", "LISTO", () =>

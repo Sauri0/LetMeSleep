@@ -93,6 +93,10 @@ namespace LetMeSleep.Validation
             foreach(var text in ui.GetComponentsInChildren<TextMeshProUGUI>().Where(t=>t.gameObject.activeInHierarchy))
             {
                 text.ForceMeshUpdate();
+                if(text.isTextOverflowing)
+                    receipt.checks.Add("Overflow detail: "+text.name+" parsed="+text.GetParsedText().Replace("\n"," | ")+
+                        " rect="+text.rectTransform.rect+" margin="+text.margin+" fontSize="+text.fontSize+
+                        " firstOverflowCharacterIndex="+text.firstOverflowCharacterIndex);
                 Check(!text.isTextOverflowing,"TMP full text "+label+"/"+text.name);
             }
             foreach(var b in ui.GetComponentsInChildren<Button>().Where(b=>b.gameObject.activeInHierarchy))
