@@ -98,3 +98,17 @@ patrols use GameplayRuntime/ObserveBot/BotController/SteerBot at10Hz with author
 at30Hz for20s per spawn. One actor is tested at a time with a distant opposite-role
 actor. This does not certify combat, simultaneous21-player load, WAN, rendering,
 frame rate or complete arbitrary-path physical coverage.
+
+## Adjusted editable source delivery
+
+Mapas delivered a separate copy with source readback PASS:
+`N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/UnityAdjustedSource/HF_MAP_05_pueblo_UNITY_ADJUSTED.blend`.
+SHA256 independently checked from disk:
+`18466cf28d52587f5b246e95b95093557e5e310b6bfd6ee69df960760390fce7`.
+Neighbor `adjustment-receipt.json` records the exact30mm plane, cap material
+`PDF05_StoneLight`,468 unchanged external triangles and preserved original files.
+Removed volume0.001125007m3 matches the expected0.001125m3.
+The editable quad mesh triangulates to484 triangles versus Unity492, because
+Unity clips preexisting triangle diagonals. The clipped surface is equivalent;
+the source copy does not claim identical triangulation or mesh hash. No export
+or reimport occurred, and the verified Unity assets remain unchanged.
