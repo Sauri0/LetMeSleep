@@ -1,0 +1,367 @@
+{
+  "scope": "Offline comparison of the coordinator native transform readback with the unchanged lighting config. Not a new Unity run or catalog Bind PASS.",
+  "mapId": "hf-campamento-pinar-v2",
+  "readbackPath": "N:/LetMeSleep/Validation/Higgsfield/CampV2-20260913/preparation-02/camp-v2-preparation.json",
+  "readbackSha256": "7ef70cda5e908c494a1a776874e4622b6b7c448edb5c55c4774fec1fda106708",
+  "configSha256": "5557d3230d4bb03ae49a3d6534fffa9f485e6b289331e10e9d098a0dd047890c",
+  "nativeContentHash": "d9b4ff479990e28d34bd14d1e5b18ceaceb687fc5b95d03efa2fe669f6dd62af",
+  "nativeSourceSha256": "3fd036eb8ede448aa48eb72764ae9f143dbf6ecff375e1ae10d144dfb44badc3",
+  "nativePrefabDependencyHash": "469b8e14e3e976898192e245898f1922",
+  "nativeAnchorCount": 25,
+  "configuredAnchorCount": 23,
+  "extraNativeAnchors": [
+    "LGT_Moon",
+    "LGT_Moon_Fill"
+  ],
+  "maximumDistanceMetres": 1.0708365489381519e-06,
+  "allWithinOneCentimetre": true,
+  "coordinatorConfirmedParentPath": "Environment/LGT_*",
+  "pathEvidenceLimit": "Readback stores names and positions, not full hierarchy paths; parent path confirmation supplied by coordinator. Final catalog resolver still checks full paths.",
+  "comparisons": [
+    {
+      "anchorPath": "Environment/LGT_Fire",
+      "nativePosition": [
+        0.7,
+        1.2,
+        0.2
+      ],
+      "expectedMapLocalPosition": [
+        0.699999988079071,
+        1.2000000476837158,
+        0.20000000298023224
+      ],
+      "distanceMetres": 4.924151793853984e-08,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Fire_Outer",
+      "nativePosition": [
+        0.7,
+        2.8,
+        0.2
+      ],
+      "expectedMapLocalPosition": [
+        0.699999988079071,
+        2.799999952316284,
+        0.20000000298023224
+      ],
+      "distanceMetres": 4.924151772351983e-08,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_00",
+      "nativePosition": [
+        -8.12,
+        2.33,
+        11.5
+      ],
+      "expectedMapLocalPosition": [
+        -8.119999885559082,
+        2.3299999237060547,
+        11.5
+      ],
+      "distanceMetres": 1.375408653049179e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_01",
+      "nativePosition": [
+        6.38,
+        2.33,
+        14.5
+      ],
+      "expectedMapLocalPosition": [
+        6.380000114440918,
+        2.3299999237060547,
+        14.5
+      ],
+      "distanceMetres": 1.3754086604392701e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_02",
+      "nativePosition": [
+        14.88,
+        2.33,
+        6.5
+      ],
+      "expectedMapLocalPosition": [
+        14.880000114440918,
+        2.3299999237060547,
+        6.5
+      ],
+      "distanceMetres": 1.375408653049179e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_03",
+      "nativePosition": [
+        -15.12,
+        2.33,
+        -6.5
+      ],
+      "expectedMapLocalPosition": [
+        -15.119999885559082,
+        2.3299999237060547,
+        -6.5
+      ],
+      "distanceMetres": 1.375408653049179e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_04",
+      "nativePosition": [
+        8.88,
+        2.33,
+        -17
+      ],
+      "expectedMapLocalPosition": [
+        8.880000114440918,
+        2.3299999237060547,
+        -17.0
+      ],
+      "distanceMetres": 1.375408653049179e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_05",
+      "nativePosition": [
+        28.88,
+        2.33,
+        9
+      ],
+      "expectedMapLocalPosition": [
+        28.8799991607666,
+        2.3299999237060547,
+        9.0
+      ],
+      "distanceMetres": 8.426941684178627e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_06",
+      "nativePosition": [
+        37.18,
+        2.33,
+        10
+      ],
+      "expectedMapLocalPosition": [
+        37.18000030517578,
+        2.3299999237060547,
+        10.0
+      ],
+      "distanceMetres": 3.1456799541149916e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_07",
+      "nativePosition": [
+        38.88,
+        2.33,
+        -17.5
+      ],
+      "expectedMapLocalPosition": [
+        38.880001068115234,
+        2.3299999237060547,
+        -17.5
+      ],
+      "distanceMetres": 1.0708365489381519e-06,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_08",
+      "nativePosition": [
+        -10.62,
+        2.33,
+        18
+      ],
+      "expectedMapLocalPosition": [
+        -10.619999885559082,
+        2.3299999237060547,
+        18.0
+      ],
+      "distanceMetres": 1.375408653049179e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Jetty_Lantern",
+      "nativePosition": [
+        41,
+        1.9,
+        -19.4
+      ],
+      "expectedMapLocalPosition": [
+        41.0,
+        1.899999976158142,
+        -19.399999618530273
+      ],
+      "distanceMetres": 3.822140570201981e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lookout_Ambient",
+      "nativePosition": [
+        0.7,
+        12,
+        0.2
+      ],
+      "expectedMapLocalPosition": [
+        0.699999988079071,
+        12.0,
+        0.20000000298023224
+      ],
+      "distanceMetres": 1.2287812263542101e-08,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_09",
+      "nativePosition": [
+        -15.62,
+        2.33,
+        -10.5
+      ],
+      "expectedMapLocalPosition": [
+        -15.619999885559082,
+        2.3299999237060547,
+        -10.5
+      ],
+      "distanceMetres": 1.375408653049179e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_Lantern_10",
+      "nativePosition": [
+        20.88,
+        2.33,
+        14.5
+      ],
+      "expectedMapLocalPosition": [
+        20.8799991607666,
+        2.3299999237060547,
+        14.5
+      ],
+      "distanceMetres": 8.426941684178627e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_CAMP_Shelter",
+      "nativePosition": [
+        -24.5,
+        2.05,
+        5
+      ],
+      "expectedMapLocalPosition": [
+        -24.5,
+        2.049999952316284,
+        5.0
+      ],
+      "distanceMetres": 4.7683715642676816e-08,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_CAMP_Washroom",
+      "nativePosition": [
+        -28,
+        1.7,
+        20
+      ],
+      "expectedMapLocalPosition": [
+        -28.0,
+        1.7000000476837158,
+        20.0
+      ],
+      "distanceMetres": 4.768371586472142e-08,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_CAMP_Tent_01",
+      "nativePosition": [
+        -13.1541929,
+        0.345000029,
+        12.97582
+      ],
+      "expectedMapLocalPosition": [
+        -13.154192924499512,
+        0.3450000286102295,
+        12.97581958770752
+      ],
+      "distanceMetres": 4.130199364716506e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_CAMP_Tent_02",
+      "nativePosition": [
+        -11.125514,
+        0.345000029,
+        15.33276
+      ],
+      "expectedMapLocalPosition": [
+        -11.125514030456543,
+        0.3450000286102295,
+        15.332759857177734
+      ],
+      "distanceMetres": 1.4603408010373938e-07,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_CAMP_Tent_03",
+      "nativePosition": [
+        -14.4358473,
+        0.345000029,
+        16.3593616
+      ],
+      "expectedMapLocalPosition": [
+        -14.435847282409668,
+        0.3450000286102295,
+        16.35936164855957
+      ],
+      "distanceMetres": 5.1648849190721164e-08,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_CAMP_Tent_04",
+      "nativePosition": [
+        10.6193409,
+        0.345000029,
+        -7.18773746
+      ],
+      "expectedMapLocalPosition": [
+        10.619340896606445,
+        0.3450000286102295,
+        -7.187737464904785
+      ],
+      "distanceMetres": 5.977043174329022e-09,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_CAMP_Tent_05",
+      "nativePosition": [
+        13.1904058,
+        0.345000029,
+        -5.265438
+      ],
+      "expectedMapLocalPosition": [
+        13.19040584564209,
+        0.3450000286102295,
+        -5.265438079833984
+      ],
+      "distanceMetres": 9.196095558116598e-08,
+      "withinOneCentimetre": true
+    },
+    {
+      "anchorPath": "Environment/LGT_CAMP_Tent_06",
+      "nativePosition": [
+        12.8627825,
+        0.345000029,
+        -9.38593
+      ],
+      "expectedMapLocalPosition": [
+        12.86278247833252,
+        0.3450000286102295,
+        -9.385930061340332
+      ],
+      "distanceMetres": 6.505588322571683e-08,
+      "withinOneCentimetre": true
+    }
+  ]
+}

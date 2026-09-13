@@ -1,5 +1,5 @@
 {
-  "scope": "Offline source/FBX verification, not Unity Transform validation or visual approval. Yate/Puerto Unity intensities and Trilight are provisional.",
+  "scope": "Offline source/FBX verification plus Camp native readback comparison supplied by coordinator; see nativeAnchorFollowup. No catalog binding or visual approval. Yate/Puerto intensities remain provisional.",
   "maps": [
     {
       "mapId": "hf-campamento-pinar-v2",
@@ -507,7 +507,18 @@
           ],
           "maximumCoordinateError": 0.0
         }
-      ]
+      ],
+      "nativeAnchorFollowup": {
+        "readbackPath": "N:/LetMeSleep/Validation/Higgsfield/CampV2-20260913/preparation-02/camp-v2-preparation.json",
+        "readbackSha256": "7ef70cda5e908c494a1a776874e4622b6b7c448edb5c55c4774fec1fda106708",
+        "configuredAnchorCount": 23,
+        "maximumDistanceMetres": 1.0708365489381519e-06,
+        "allWithinOneCentimetre": true,
+        "extraNativeAnchors": [
+          "LGT_Moon",
+          "LGT_Moon_Fill"
+        ]
+      }
     },
     {
       "mapId": "hf-yate-a-la-deriva-v2",
