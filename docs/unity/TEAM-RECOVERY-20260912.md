@@ -29,6 +29,8 @@ Branko creó/renombró las doce tareas y autorizó retomar con «listo todos». 
 
 ## Reglas de trabajo
 
+**Monitor de pruebas:** por instrucción explícita de Branko, usar exclusivamente el monitor principal horizontal. En este equipo Windows identifica DISPLAY1 como principal (0,0,1920,1080) y DISPLAY2 como secundario vertical (-1080,-309,1080,1920). La invocación del player con `-monitor 1` produjo la captura horizontal correcta el 2026-09-13; verificar el destino real en cada sesión, sin asumir que la numeración de captura DXGI coincide con Unity. Nunca usar el monitor vertical para capturas, recorridos o evaluación visual. Esta regla del banco local no obliga a otros jugadores a usar una pantalla concreta.
+
 No están solos: no revertir trabajo ajeno, no reset/clean, no stage global, no cambiar modelos, no crear subagentes ni publicar por cuenta propia. Cada autor usa sólo su carpeta en N:. Las carpetas de revisión son informes, no repositorios runtime alternativos. Leer central y fuentes de otros está permitido; escribir requiere propiedad explícita.
 
 Un único editor/render/proceso Blender de carga por turno concedido por Director. Por defecto los doce preparan fuentes y revisiones; Director importa, ejecuta y captura. Tests del juego con -noaudio hasta prueba de escucha asignada. Sin colas de generación invisibles ni procesos huérfanos. Informar proceso/resultado/cleanup.
