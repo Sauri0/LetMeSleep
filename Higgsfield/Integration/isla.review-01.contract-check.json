@@ -1,0 +1,11 @@
+{
+  "status": "PASS_ACTUAL_CSHARP_CONTRACT_OFFLINE",
+  "recipe": "isla.review-01.recipe.json",
+  "recipeSha256": "118bf0f78b192aad4a090e4e5d48e2a28726878e85c861aadcc76c550cf82811",
+  "contractSource": "unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldImportContract.cs",
+  "contractSha256": "841e83664d2d0f45ed6eaf43092ead93656caaf79cb83e8fdd65b2e451740a0e",
+  "execution": "PowerShell Add-Type compiles only the System-only contract; System.Text.Json IncludeFields deserializes real recipe; Validate succeeds; all 471 paths Resolve to their declared kind",
+  "checkedPaths": 471,
+  "nativeUnityLoaded": false,
+  "pending": "Native import/axis/materials/physics/water/visual review; navigation SpatialData and capacity16"
+}

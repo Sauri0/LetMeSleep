@@ -1,0 +1,8304 @@
+{
+  "status": "PASS_OFFLINE_FINAL_EXPORT_CONTRACT_ONLY",
+  "sourceHashes": {
+    "HF_MAP_01_isla.fbx": "a04362dcee8551fed1321ed8e353a921c633fe7663ad0f906f04096b68f727f8",
+    "HF_MAP_01_isla.glb": "0eabf0f2bec8d478588c4af303cadeb93c5e570eb79c50034f5e8a004072ca25",
+    "scene-audit.json": "0e8279730700311e435e0fb8c56fe62e8de7f8581db0a1c64eb1b1aad3c1e33e",
+    "HF_MAP_01_isla_build_report.json": "25c987de49accecdd30de14c4b9037bb77f5a5fb5e679ec5e2bb9195dddbb608"
+  },
+  "objects": 488,
+  "meshes": 471,
+  "materials": 38,
+  "trianglesInstances": 126177,
+  "classification": {
+    "solid": 321,
+    "decoration": 3,
+    "foliage": 144,
+    "foam": 1,
+    "water": 2
+  },
+  "checks": [
+    "488 model names agree audit/GLB/FBX",
+    "Exact full hierarchy paths agree GLB/FBX",
+    "Every mesh has one rule from explicit GLB collision_role",
+    "All FBX unique material slot orders equal audit; repeated-name slots collapsed by exporter",
+    "All GLB primitive materials covered; 38 GLB base colours equal audit",
+    "Three spawns are existing EMPTYs"
+  ],
+  "fbxVersion": 7400,
+  "fbxGlobalSettings": {
+    "UpAxis": [
+      1
+    ],
+    "UpAxisSign": [
+      1
+    ],
+    "FrontAxis": [
+      2
+    ],
+    "FrontAxisSign": [
+      1
+    ],
+    "CoordAxis": [
+      0
+    ],
+    "CoordAxisSign": [
+      1
+    ],
+    "OriginalUpAxis": [
+      -1
+    ],
+    "OriginalUpAxisSign": [
+      1
+    ],
+    "UnitScaleFactor": [
+      1.0
+    ],
+    "OriginalUnitScaleFactor": [
+      1.0
+    ],
+    "AmbientColor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "DefaultCamera": [
+      "Producer Perspective"
+    ],
+    "TimeMode": [
+      11
+    ],
+    "TimeSpanStart": [
+      0
+    ],
+    "TimeSpanStop": [
+      46186158000
+    ],
+    "CustomFrameRate": [
+      24.0
+    ]
+  },
+  "fbxBlendShapeChannels": [
+    "Wave_A",
+    "Wave_B",
+    "Wave_A",
+    "Wave_B"
+  ],
+  "spawnEvidence": [
+    {
+      "name": "Spawn_Human_01",
+      "blenderWorldXYZ": [
+        0.0,
+        -23.0,
+        2.3045051097869873
+      ],
+      "glbWorldXYZ": [
+        0,
+        2.3045051097869873,
+        23
+      ],
+      "fbxRawTranslation": [
+        0.0,
+        230.4505157470703,
+        2300.0
+      ],
+      "fbxRawScale": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "name": "Spawn_Human_02",
+      "blenderWorldXYZ": [
+        24.0,
+        -3.0,
+        2.639775037765503
+      ],
+      "glbWorldXYZ": [
+        24,
+        2.639775037765503,
+        3
+      ],
+      "fbxRawTranslation": [
+        2400.0,
+        263.9775085449219,
+        300.0
+      ],
+      "fbxRawScale": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_01",
+      "blenderWorldXYZ": [
+        -4.0,
+        -5.0,
+        6.0
+      ],
+      "glbWorldXYZ": [
+        -4,
+        6,
+        5
+      ],
+      "fbxRawTranslation": [
+        -400.0,
+        600.0,
+        500.0
+      ],
+      "fbxRawScale": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    }
+  ],
+  "boundsPolicy": "Solid authored bounds + 2m horizontal/upper margin; symmetric X/Z; lower bound minus .5m rounded down; excludes ocean and foam",
+  "playBoundsMin": [
+    -54,
+    -4,
+    -49
+  ],
+  "playBoundsMax": [
+    54,
+    19,
+    49
+  ],
+  "wholeTreeColliders": [
+    "Pine_Tree_000",
+    "Pine_Tree_001",
+    "Pine_Tree_002",
+    "Pine_Tree_003",
+    "Pine_Tree_004",
+    "Pine_Tree_005",
+    "Pine_Tree_006",
+    "Pine_Tree_007",
+    "Pine_Tree_008",
+    "Pine_Tree_009",
+    "Pine_Tree_010",
+    "Pine_Tree_011",
+    "Pine_Tree_012",
+    "Pine_Tree_013",
+    "Pine_Tree_014",
+    "Pine_Tree_015",
+    "Pine_Tree_016",
+    "Pine_Tree_017",
+    "Pine_Tree_018",
+    "Pine_Tree_019",
+    "Pine_Tree_020",
+    "Pine_Tree_021",
+    "Pine_Tree_022",
+    "Pine_Tree_023",
+    "Pine_Tree_024",
+    "Pine_Tree_025",
+    "Pine_Tree_026",
+    "Pine_Tree_027",
+    "Pine_Tree_028",
+    "Pine_Tree_029",
+    "Pine_Tree_030",
+    "Pine_Tree_031",
+    "Pine_Tree_032",
+    "Pine_Tree_033",
+    "Pine_Tree_034",
+    "Pine_Tree_035",
+    "Pine_Tree_036",
+    "Pine_Tree_037",
+    "Pine_Tree_038",
+    "Pine_Tree_039",
+    "Pine_Tree_040",
+    "Pine_Tree_041",
+    "Pine_Tree_042",
+    "Pine_Tree_043",
+    "Pine_Tree_044",
+    "Pine_Tree_045",
+    "Pine_Tree_046",
+    "Pine_Tree_047",
+    "Pine_Tree_048",
+    "Pine_Tree_049",
+    "Pine_Tree_050",
+    "Pine_Tree_051",
+    "Pine_Tree_052",
+    "Pine_Tree_053",
+    "Pine_Tree_054",
+    "Pine_Tree_055",
+    "Pine_Tree_056",
+    "Pine_Tree_057",
+    "Pine_Tree_058",
+    "Pine_Tree_059",
+    "Pine_Tree_060",
+    "Pine_Tree_061",
+    "Pine_Tree_062",
+    "Pine_Tree_063",
+    "Pine_Tree_064",
+    "Pine_Tree_065",
+    "Pine_Tree_066",
+    "Pine_Tree_067",
+    "Pine_Tree_068",
+    "Pine_Tree_069",
+    "Pine_Tree_070",
+    "Pine_Tree_071",
+    "Pine_Tree_072",
+    "Pine_Tree_073",
+    "Pine_Tree_074",
+    "Pine_Tree_075",
+    "Pine_Tree_076",
+    "Pine_Tree_077",
+    "Pine_Tree_078",
+    "Pine_Tree_079",
+    "Pine_Tree_080"
+  ],
+  "meshesAndSlots": [
+    {
+      "path": "Beach_Driftwood_0",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 208
+    },
+    {
+      "path": "Beach_Driftwood_1",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 208
+    },
+    {
+      "path": "Beach_Driftwood_2",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 208
+    },
+    {
+      "path": "Bridge_Approach_1_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPositionAccessorVertices": 144
+    },
+    {
+      "path": "Bridge_Approach_-1_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPositionAccessorVertices": 144
+    },
+    {
+      "path": "Bridge_North_Inlet_Root/Bridge_North_Inlet_Deck_Posts_Ropes_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark",
+        "ISLA_Rope"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark",
+        "ISLA_Rope"
+      ],
+      "glbPositionAccessorVertices": 7008
+    },
+    {
+      "path": "Cabin_Barrel",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_Metal"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_Metal"
+      ],
+      "glbPositionAccessorVertices": 1172
+    },
+    {
+      "path": "Cabin_Root/Cabin_Door_Hinge/Cabin_Door_Open_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark",
+        "ISLA_Metal"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark",
+        "ISLA_Metal"
+      ],
+      "glbPositionAccessorVertices": 216
+    },
+    {
+      "path": "Cabin_Root/Cabin_Entry_Steps_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPositionAccessorVertices": 72
+    },
+    {
+      "path": "Cabin_Root/Cabin_Floor_and_Porch_Boards_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 648
+    },
+    {
+      "path": "Cabin_Root/Cabin_Foundation_Timbers_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 360
+    },
+    {
+      "path": "Cabin_Root/Cabin_Header_KneeBraces_LampBracket_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark",
+        "ISLA_WoodLight",
+        "ISLA_Metal"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark",
+        "ISLA_WoodLight",
+        "ISLA_Metal"
+      ],
+      "glbPositionAccessorVertices": 120
+    },
+    {
+      "path": "Cabin_Root/Cabin_Porch_Lantern_NONSOLID",
+      "role": "non_solid",
+      "kind": "decoration",
+      "materialSlots": [
+        "ISLA_Metal",
+        "ISLA_Lamp"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Metal",
+        "ISLA_Lamp"
+      ],
+      "glbPositionAccessorVertices": 192
+    },
+    {
+      "path": "Cabin_Root/Cabin_Porch_Railings_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark",
+        "ISLA_WoodLight"
+      ],
+      "glbPositionAccessorVertices": 864
+    },
+    {
+      "path": "Cabin_Root/Cabin_Roof_Planks_Gables_REMOVABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Roof",
+        "ISLA_RoofLight",
+        "ISLA_Wood",
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Roof",
+        "ISLA_RoofLight",
+        "ISLA_Wood",
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 2760
+    },
+    {
+      "path": "Cabin_Root/Cabin_Roof_Rafters_REMOVABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 144
+    },
+    {
+      "path": "Cabin_Root/Cabin_Roof_Underboards_REMOVABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 48
+    },
+    {
+      "path": "Cabin_Root/Cabin_Stone_Footings_Stair_Supports_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_StoneWarm",
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_StoneWarm",
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 312
+    },
+    {
+      "path": "Cabin_Root/Cabin_Structural_and_Window_Frames_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark",
+        "ISLA_WoodLight"
+      ],
+      "glbPositionAccessorVertices": 1368
+    },
+    {
+      "path": "Cabin_Root/Cabin_Wall_Back_Window_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_Wood"
+      ],
+      "glbPositionAccessorVertices": 408
+    },
+    {
+      "path": "Cabin_Root/Cabin_Wall_East_Windows_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_Wood"
+      ],
+      "glbPositionAccessorVertices": 552
+    },
+    {
+      "path": "Cabin_Root/Cabin_Wall_Front_OpenDoor_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_Wood"
+      ],
+      "glbPositionAccessorVertices": 768
+    },
+    {
+      "path": "Cabin_Root/Cabin_Wall_West_Window_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_Wood"
+      ],
+      "glbPositionAccessorVertices": 408
+    },
+    {
+      "path": "Cabin_Root/Interior_Bed_Linen_Blanket",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark",
+        "ISLA_Wood",
+        "ISLA_Linen",
+        "ISLA_Blanket"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark",
+        "ISLA_Wood",
+        "ISLA_Linen",
+        "ISLA_Blanket"
+      ],
+      "glbPositionAccessorVertices": 240
+    },
+    {
+      "path": "Cabin_Root/Interior_Bedside_Lamp",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Metal",
+        "ISLA_Lamp"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Metal",
+        "ISLA_Lamp"
+      ],
+      "glbPositionAccessorVertices": 144
+    },
+    {
+      "path": "Cabin_Root/Interior_Bedside_Table",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodDark",
+        "ISLA_Metal"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodDark",
+        "ISLA_Metal"
+      ],
+      "glbPositionAccessorVertices": 168
+    },
+    {
+      "path": "Cabin_Root/Interior_Bookshelf_and_Books",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark",
+        "ISLA_Wood",
+        "ISLA_BookRed",
+        "ISLA_BookBlue",
+        "ISLA_Linen"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark",
+        "ISLA_Wood",
+        "ISLA_BookRed",
+        "ISLA_BookBlue",
+        "ISLA_Linen"
+      ],
+      "glbPositionAccessorVertices": 672
+    },
+    {
+      "path": "Cabin_Root/Interior_Cooktop_and_Kettle",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Metal",
+        "ISLA_WoodDark",
+        "ISLA_Porcelain"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Metal",
+        "ISLA_WoodDark",
+        "ISLA_Porcelain"
+      ],
+      "glbPositionAccessorVertices": 312
+    },
+    {
+      "path": "Cabin_Root/Interior_Kitchenette_Cabinets_Sink",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark",
+        "ISLA_Wood",
+        "ISLA_Metal",
+        "ISLA_Porcelain"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark",
+        "ISLA_Wood",
+        "ISLA_Metal",
+        "ISLA_Porcelain"
+      ],
+      "glbPositionAccessorVertices": 504
+    },
+    {
+      "path": "Cabin_Root/Interior_Small_Woven_Rug_NONSOLID",
+      "role": "non_solid",
+      "kind": "decoration",
+      "materialSlots": [
+        "ISLA_Rug",
+        "ISLA_Linen"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Rug",
+        "ISLA_Linen"
+      ],
+      "glbPositionAccessorVertices": 72
+    },
+    {
+      "path": "Cabin_Root/Interior_Timber_Chair",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark",
+        "ISLA_WoodLight"
+      ],
+      "glbPositionAccessorVertices": 288
+    },
+    {
+      "path": "Coast_Boulder_000",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_001",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_002",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_003",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_004",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_005",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_006",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_007",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_008",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_009",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_010",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_011",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_012",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_013",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_014",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_015",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_016",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_017",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_018",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_019",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_020",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_022",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_023",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_024",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_025",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_026",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_027",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_028",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_029",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_030",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_031",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_032",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_033",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_034",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_035",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_036",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_037",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_038",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_039",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_040",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_041",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_042",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_043",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_044",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_045",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_046",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_047",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_048",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_049",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_050",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_052",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_053",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_054",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_055",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_056",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_057",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_058",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_059",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_060",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_061",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_062",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_063",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_064",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_065",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_067",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_068",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_069",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_070",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_071",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_072",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_073",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_074",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_075",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_076",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_077",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_078",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_079",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_080",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_081",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_082",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_083",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_084",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_085",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_086",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_087",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_088",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_089",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_090",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_091",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_092",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_093",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_094",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Coast_Boulder_095",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Dock_Arrival_Beach_Approach_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPositionAccessorVertices": 120
+    },
+    {
+      "path": "Dock_Arrival_Root/Dock_Arrival_Deck_Posts_Ropes_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark",
+        "ISLA_Rope"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark",
+        "ISLA_Rope"
+      ],
+      "glbPositionAccessorVertices": 9600
+    },
+    {
+      "path": "Dock_Lake_Bank_Approach_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ],
+      "glbPositionAccessorVertices": 144
+    },
+    {
+      "path": "Dock_Lake_Root/Dock_Lake_Deck_Posts_Ropes_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark",
+        "ISLA_Rope"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark",
+        "ISLA_Rope"
+      ],
+      "glbPositionAccessorVertices": 4416
+    },
+    {
+      "path": "Grass_Patch_01_01_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 63
+    },
+    {
+      "path": "Grass_Patch_01_02_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2583
+    },
+    {
+      "path": "Grass_Patch_01_03_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2457
+    },
+    {
+      "path": "Grass_Patch_01_04_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2646
+    },
+    {
+      "path": "Grass_Patch_01_05_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2205
+    },
+    {
+      "path": "Grass_Patch_02_01_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 1575
+    },
+    {
+      "path": "Grass_Patch_02_02_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2709
+    },
+    {
+      "path": "Grass_Patch_02_03_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 4410
+    },
+    {
+      "path": "Grass_Patch_02_04_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 3654
+    },
+    {
+      "path": "Grass_Patch_02_05_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 3087
+    },
+    {
+      "path": "Grass_Patch_02_06_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 1638
+    },
+    {
+      "path": "Grass_Patch_03_01_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 819
+    },
+    {
+      "path": "Grass_Patch_03_02_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 3276
+    },
+    {
+      "path": "Grass_Patch_03_03_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2205
+    },
+    {
+      "path": "Grass_Patch_03_04_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2394
+    },
+    {
+      "path": "Grass_Patch_03_05_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2394
+    },
+    {
+      "path": "Grass_Patch_03_06_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2646
+    },
+    {
+      "path": "Grass_Patch_03_07_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 63
+    },
+    {
+      "path": "Grass_Patch_04_01_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 441
+    },
+    {
+      "path": "Grass_Patch_04_02_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 1890
+    },
+    {
+      "path": "Grass_Patch_04_03_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 378
+    },
+    {
+      "path": "Grass_Patch_04_04_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 126
+    },
+    {
+      "path": "Grass_Patch_04_05_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2583
+    },
+    {
+      "path": "Grass_Patch_04_06_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 3843
+    },
+    {
+      "path": "Grass_Patch_04_07_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 189
+    },
+    {
+      "path": "Grass_Patch_05_01_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 756
+    },
+    {
+      "path": "Grass_Patch_05_02_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 1575
+    },
+    {
+      "path": "Grass_Patch_05_03_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 441
+    },
+    {
+      "path": "Grass_Patch_05_04_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 504
+    },
+    {
+      "path": "Grass_Patch_05_05_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2331
+    },
+    {
+      "path": "Grass_Patch_05_06_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 3339
+    },
+    {
+      "path": "Grass_Patch_05_07_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 315
+    },
+    {
+      "path": "Grass_Patch_06_01_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 630
+    },
+    {
+      "path": "Grass_Patch_06_02_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 3276
+    },
+    {
+      "path": "Grass_Patch_06_03_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2331
+    },
+    {
+      "path": "Grass_Patch_06_04_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2205
+    },
+    {
+      "path": "Grass_Patch_06_05_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 1548
+    },
+    {
+      "path": "Grass_Patch_06_06_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2331
+    },
+    {
+      "path": "Grass_Patch_06_07_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 126
+    },
+    {
+      "path": "Grass_Patch_07_01_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 1008
+    },
+    {
+      "path": "Grass_Patch_07_02_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2835
+    },
+    {
+      "path": "Grass_Patch_07_03_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 3528
+    },
+    {
+      "path": "Grass_Patch_07_04_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 1449
+    },
+    {
+      "path": "Grass_Patch_07_05_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 1578
+    },
+    {
+      "path": "Grass_Patch_07_06_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 693
+    },
+    {
+      "path": "Grass_Patch_08_01_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 63
+    },
+    {
+      "path": "Grass_Patch_08_02_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 1008
+    },
+    {
+      "path": "Grass_Patch_08_03_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2646
+    },
+    {
+      "path": "Grass_Patch_08_04_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 3150
+    },
+    {
+      "path": "Grass_Patch_08_05_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_GrassDark",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 2457
+    },
+    {
+      "path": "Grove_Rock_003",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_008",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_009",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_012",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_013",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_015",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_018",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_020",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_021",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_022",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_024",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_025",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_026",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_030",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_033",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_034",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_036",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_039",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_041",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_048",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_050",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_051",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_053",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_054",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_058",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_060",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_061",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_063",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_065",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_066",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_068",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_069",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_070",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_071",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_073",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_076",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_078",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_079",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_080",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_081",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_083",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_086",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Grove_Rock_088",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Reed_Clusters_NONSOLID",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_Reed",
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Reed",
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 16104
+    },
+    {
+      "path": "Lake_Shore_Rock_000",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_002",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_003",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_004",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_005",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_006",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_007",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_008",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_009",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_010",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_011",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_012",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_013",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_014",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_015",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_016",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_017",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_018",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_019",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_020",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_022",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_023",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_024",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_026",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_027",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_028",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_029",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_030",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_031",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_032",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_034",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_035",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_036",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_037",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_038",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_040",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_041",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_042",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_043",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_044",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_046",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_047",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_048",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_049",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_050",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_051",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_052",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_053",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lake_Shore_Rock_054",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lookout_Back_Rope_Rail_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_WoodDark",
+        "ISLA_Rope"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodDark",
+        "ISLA_Rope"
+      ],
+      "glbPositionAccessorVertices": 720
+    },
+    {
+      "path": "Lookout_Rock_3",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lookout_Rock_4",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Stone",
+        "ISLA_StoneLight",
+        "ISLA_StoneDark",
+        "ISLA_StoneWarm"
+      ],
+      "glbPositionAccessorVertices": 128
+    },
+    {
+      "path": "Lookout_Stone_Trail_Steps_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_StoneWarm",
+        "ISLA_Path"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_StoneWarm",
+        "ISLA_Path"
+      ],
+      "glbPositionAccessorVertices": 3384
+    },
+    {
+      "path": "Lookout_Terrace_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Path"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Path"
+      ],
+      "glbPositionAccessorVertices": 120
+    },
+    {
+      "path": "Ocean_Shore_Foam_NONSOLID",
+      "role": "non_solid",
+      "kind": "foam",
+      "materialSlots": [
+        "ISLA_Foam"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Foam"
+      ],
+      "glbPositionAccessorVertices": 3360
+    },
+    {
+      "path": "Path_Cabin_Access_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Path"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Path"
+      ],
+      "glbPositionAccessorVertices": 952
+    },
+    {
+      "path": "Path_Lake_Jetty_Connection_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Path"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Path"
+      ],
+      "glbPositionAccessorVertices": 580
+    },
+    {
+      "path": "Path_Lake_Loop_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Path"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Path"
+      ],
+      "glbPositionAccessorVertices": 5476
+    },
+    {
+      "path": "Path_Lookout_Gentle_Trail_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Path"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Path"
+      ],
+      "glbPositionAccessorVertices": 3174
+    },
+    {
+      "path": "Path_Outer_Coast_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Path"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Path"
+      ],
+      "glbPositionAccessorVertices": 6650
+    },
+    {
+      "path": "Path_Picnic_Access_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Path"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Path"
+      ],
+      "glbPositionAccessorVertices": 944
+    },
+    {
+      "path": "Path_South_Arrival_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Path"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Path"
+      ],
+      "glbPositionAccessorVertices": 920
+    },
+    {
+      "path": "Picnic_Barrel",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_Metal"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_Metal"
+      ],
+      "glbPositionAccessorVertices": 1172
+    },
+    {
+      "path": "Picnic_Crate",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 504
+    },
+    {
+      "path": "Picnic_Root/Picnic_Bench_1_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 144
+    },
+    {
+      "path": "Picnic_Root/Picnic_Bench_-1_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 144
+    },
+    {
+      "path": "Picnic_Root/Picnic_Lantern_and_Mugs_NONSOLID",
+      "role": "non_solid",
+      "kind": "decoration",
+      "materialSlots": [
+        "ISLA_Metal",
+        "ISLA_Lamp",
+        "ISLA_Porcelain"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Metal",
+        "ISLA_Lamp",
+        "ISLA_Porcelain"
+      ],
+      "glbPositionAccessorVertices": 312
+    },
+    {
+      "path": "Picnic_Root/Picnic_Table_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 264
+    },
+    {
+      "path": "Pine_Tree_000",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_001",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_002",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_003",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_004",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_005",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_006",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_007",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_008",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_009",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_010",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_011",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_012",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_013",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_014",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_015",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_016",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_017",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_018",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_019",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_020",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_021",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_022",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_023",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_024",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_025",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_026",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_027",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_028",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_029",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_030",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_031",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_032",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_033",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_034",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_035",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_036",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_037",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_038",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_039",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_040",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_041",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_042",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_043",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_044",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_045",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_046",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_047",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_048",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_049",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_050",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_051",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_052",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_053",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_054",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_055",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_056",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_057",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_058",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_059",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_060",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_061",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_062",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_063",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_064",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_065",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_066",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_067",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_068",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_069",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_070",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_071",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_072",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_073",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_074",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_075",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_076",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_077",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_078",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_079",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Pine_Tree_080",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Trunk",
+        "ISLA_Pine",
+        "ISLA_PineLight",
+        "ISLA_PineTip"
+      ],
+      "glbPositionAccessorVertices": 606
+    },
+    {
+      "path": "Rowboat_Root/Rowboat_Hollow_Planked_Hull",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 312
+    },
+    {
+      "path": "Rowboat_Root/Rowboat_Seats_Ribs_Gunwale_Oar",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_WoodLight",
+        "ISLA_WoodDark"
+      ],
+      "glbPositionAccessorVertices": 888
+    },
+    {
+      "path": "Shrub_NONSOLID_000",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_002",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_003",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_005",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_006",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_012",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_014",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_015",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_022",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_023",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_025",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_027",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_028",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_029",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_030",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_031",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_032",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_033",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_034",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_040",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_041",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_046",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_047",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_048",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_049",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_053",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_054",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_055",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_059",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_061",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_063",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_065",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_066",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_069",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_070",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_073",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_074",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_075",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_076",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_077",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_078",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_079",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_083",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_085",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_086",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_089",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_090",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_092",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_099",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_108",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_111",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_114",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_115",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_116",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_117",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_121",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_123",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_124",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_127",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_128",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_131",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_133",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_134",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_135",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_138",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_142",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_143",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_145",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_146",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_151",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_152",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_153",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_155",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_159",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_160",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_161",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_163",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_165",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_169",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_171",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_172",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_175",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_181",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_183",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_185",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_186",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_187",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_188",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_191",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_194",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_195",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_196",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Shrub_NONSOLID_197",
+      "role": "non_solid",
+      "kind": "foliage",
+      "materialSlots": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_PineLight",
+        "ISLA_Grass",
+        "ISLA_GrassLight"
+      ],
+      "glbPositionAccessorVertices": 108
+    },
+    {
+      "path": "Terrain_Banks_Submerged_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Soil"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Soil"
+      ],
+      "glbPositionAccessorVertices": 1152
+    },
+    {
+      "path": "Terrain_Island_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Grass",
+        "ISLA_GrassLight",
+        "ISLA_GrassDark",
+        "ISLA_Soil",
+        "ISLA_Sand",
+        "ISLA_SandLight"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Grass",
+        "ISLA_GrassLight",
+        "ISLA_GrassDark",
+        "ISLA_Soil",
+        "ISLA_Sand",
+        "ISLA_SandLight"
+      ],
+      "glbPositionAccessorVertices": 20642
+    },
+    {
+      "path": "Terrain_Lake_Bed_COLLIDABLE",
+      "role": "static_solid",
+      "kind": "solid",
+      "materialSlots": [
+        "ISLA_Soil"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Soil"
+      ],
+      "glbPositionAccessorVertices": 3237
+    },
+    {
+      "path": "Water_Lake",
+      "role": "non_solid",
+      "kind": "water",
+      "materialSlots": [
+        "ISLA_Lake",
+        "ISLA_LakeLight",
+        "ISLA_LakeDeep"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Lake",
+        "ISLA_LakeLight",
+        "ISLA_LakeDeep"
+      ],
+      "glbPositionAccessorVertices": 8866
+    },
+    {
+      "path": "Water_Ocean",
+      "role": "non_solid",
+      "kind": "water",
+      "materialSlots": [
+        "ISLA_Ocean",
+        "ISLA_OceanLight",
+        "ISLA_OceanDeep",
+        "ISLA_OceanShallow"
+      ],
+      "glbPrimitiveMaterials": [
+        "ISLA_Ocean",
+        "ISLA_OceanLight",
+        "ISLA_OceanDeep",
+        "ISLA_OceanShallow"
+      ],
+      "glbPositionAccessorVertices": 38400
+    }
+  ],
+  "exporterDeduplicatedSlots": [
+    {
+      "name": "Cabin_Wall_Back_Window_COLLIDABLE",
+      "audit": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_Wood"
+      ],
+      "fbx": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ]
+    },
+    {
+      "name": "Cabin_Wall_East_Windows_COLLIDABLE",
+      "audit": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_Wood"
+      ],
+      "fbx": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ]
+    },
+    {
+      "name": "Cabin_Wall_Front_OpenDoor_COLLIDABLE",
+      "audit": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_Wood"
+      ],
+      "fbx": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ]
+    },
+    {
+      "name": "Cabin_Wall_West_Window_COLLIDABLE",
+      "audit": [
+        "ISLA_Wood",
+        "ISLA_WoodLight",
+        "ISLA_Wood"
+      ],
+      "fbx": [
+        "ISLA_Wood",
+        "ISLA_WoodLight"
+      ]
+    }
+  ],
+  "pending": [
+    "Unity importer axis/scale and any generated path wrappers",
+    "Actual material/submesh preservation",
+    "Spawn rotation, capsule clearance, routes and room capacity16",
+    "Whole-tree canopy collision",
+    "Water morph renderer, foam seams, normals/culling and performance",
+    "URP culling/lighting/colour visual review",
+    "SpatialData is import-recipe, not schema_version=1/map_id/zones/portals navigation; BeginRound not ready"
+  ]
+}
