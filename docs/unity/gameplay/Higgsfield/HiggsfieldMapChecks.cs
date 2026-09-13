@@ -21,14 +21,14 @@ public static class HiggsfieldMapChecks
     {
         public string mapId, prefabPath, action, navigationOverridePath, colliderCandidate, validationReportPath, caseFilter;
         public int humanPool = 5, mosquitoPool = 16;
-        public bool diagnosticRoutesOnly, campSpawnSupportCandidate;
+        public bool diagnosticRoutesOnly, campSpawnSupportCandidate, yateStorageCandidate, yateBulkheadCandidate;
         public Route[] routes;
     }
     [Serializable] public sealed class Route
     {
         public string id, role;
         public int spawnIndex, maxTicks = 600;
-        public bool crouch, sprint, patrol, runtimePatrol;
+        public bool crouch, sprint, patrol, runtimePatrol, sphereSupport;
         public Vector3[] points;
     }
     [Serializable] public sealed class Plan { public int schema_version; public string map_id; public Zone[] zones; public Portal[] portals; public Stair stair; }
@@ -50,6 +50,8 @@ public static class HiggsfieldMapChecks
         public SouthArrivalColliderCandidate.Receipt colliderCandidate;
         public CampTechnicalCandidate.Receipt campColliderCandidate;
         public CampTechnicalCandidate.SpawnReceipt campSpawnCandidate;
+        public YateStorageCandidate.Receipt yateStorageCandidate;
+        public YateBulkheadCandidate.Receipt yateBulkheadCandidate;
     }
     public sealed class Case
     {
@@ -74,7 +76,16 @@ public static class HiggsfieldMapChecks
     public static string Run(string configPath, string outputDirectory)
     {
         var operation = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(File.ReadAllText(configPath));
+        if(operation.action=="prepare-and-validate-remaining-map")
+        {
+            var preparationPath=HiggsfieldRemainingMapsPreparation.Run(configPath,outputDirectory);
+            var preparation=Newtonsoft.Json.JsonConvert.DeserializeObject<HiggsfieldRemainingMapsPreparation.Receipt>(File.ReadAllText(preparationPath));
+            if(preparation.status!="PREPARED_NATIVE_VALIDATION_PENDING")return preparationPath;
+            return Run(preparation.checksPath,outputDirectory);
+        }
         if(operation.action=="prepare-camp")return HiggsfieldCampPreparation.Run(configPath,outputDirectory);
+        if(operation.action=="prepare-remaining-map")return HiggsfieldRemainingMapsPreparation.Run(configPath,outputDirectory);
+        if(operation.action=="apply-remaining-map")return ApplyRemainingSemanticNavigation.Run(configPath,outputDirectory);
         if(operation.action=="apply-camp-recorded-exception")return ApplyCampSemanticNavigation.Run(configPath,outputDirectory);
         if(operation.action=="human-motor-contacts")return HumanMotorContactChecks.Run(configPath,outputDirectory);
         if(operation.action=="apply-casa-semantic")return ApplyCasaSemanticNavigation.Run(configPath,outputDirectory);
@@ -133,6 +144,8 @@ public static class HiggsfieldMapChecks
                 report.colliderCandidate=config.colliderCandidate=="south-arrival-one-row-convex-support" ? CompleteSouthArrivalSupport.Apply(clone,ownedGeometry,1) : SouthArrivalColliderCandidate.Apply(clone,ownedGeometry,config.colliderCandidate=="south-arrival-complete-convex-support");
             }
             if(config.campSpawnSupportCandidate)report.campSpawnCandidate=CampTechnicalCandidate.SurveySpawn(map,true);
+            if(config.yateStorageCandidate)report.yateStorageCandidate=YateStorageCandidate.Apply(clone);
+            if(config.yateBulkheadCandidate)report.yateBulkheadCandidate=YateBulkheadCandidate.Apply(clone,ownedGeometry);
             world.RegisterGeometry();
             report.nativeColliderCount = clone.GetComponentsInChildren<Collider>(false).Count(c => c.enabled && !c.isTrigger);
             Require(report.nativeColliderCount > 0, "No active physical map colliders.");
