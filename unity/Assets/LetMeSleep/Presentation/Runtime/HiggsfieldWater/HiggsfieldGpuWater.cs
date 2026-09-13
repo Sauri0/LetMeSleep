@@ -15,6 +15,7 @@ namespace LetMeSleep.Presentation
         {
             public float Amplitude, Wavelength, Speed, Phase;
             public bool UseTimeOverride, UseVertexColors;
+            public bool UseFog; // Explicit opt-in; default false preserves existing maps/materials.
             public float TimeSeconds;
             public static Parameters Default => new Parameters { Amplitude = .025f, Wavelength = 4, Speed = .65f };
         }
@@ -166,6 +167,7 @@ namespace LetMeSleep.Presentation
             material.SetFloat("_WaterSpeed", p.Speed); material.SetFloat("_WaterPhase", p.Phase);
             material.SetFloat("_WaterTimeOverride", p.TimeSeconds); material.SetFloat("_WaterUseTimeOverride", p.UseTimeOverride ? 1 : 0);
             material.SetFloat("_WaterUseVertexColors", p.UseVertexColors ? 1 : 0);
+            material.SetFloat("_WaterUseFog", p.UseFog ? 1 : 0);
         }
         static void Validate(Parameters p)
         {

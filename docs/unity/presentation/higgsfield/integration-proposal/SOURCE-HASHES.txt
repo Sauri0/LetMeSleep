@@ -1,0 +1,2 @@
+AlfaApplication.cs SHA256 d682b814668e344d9c036b6e89982fb0075ce9acd887276a83eb9a9e7f92904d
+HiggsfieldMapCatalog.cs SHA256 173b5ce2d8f4479692f2eeb974b4641bcca0c8b442c5d0b8d0e9eafab81fc8f3
