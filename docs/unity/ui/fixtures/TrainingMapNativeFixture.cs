@@ -26,18 +26,28 @@ namespace LetMeSleep.Validation
         private Spy spy;
         private Receipt receipt;
         private string directory;
+        private Camera renderCamera;
         private readonly TrainingMapOption[] maps=Enumerable.Range(1,5)
             .Select(i=>new TrainingMapOption("fixture-only-map-"+i,"Mapa de prueba explícito "+i)).ToArray();
         public static string Run(TMP_FontAsset heading,TMP_FontAsset body,int width,int height)
+            => RunCore(heading,body,width,height,null);
+        public static string RunRenderTexture(TMP_FontAsset heading,TMP_FontAsset body,Camera camera)
+        {
+            if(!camera || !camera.targetTexture)throw new ArgumentException("Camera with target RenderTexture required.");
+            return RunCore(heading,body,camera.targetTexture.width,camera.targetTexture.height,camera);
+        }
+        private static string RunCore(TMP_FontAsset heading,TMP_FontAsset body,int width,int height,Camera camera)
         {
             if(!Application.isPlaying) throw new InvalidOperationException("Play Mode required.");
             if(active || FindObjectsByType<AlfaUiController>(FindObjectsSortMode.None).Length!=0)
                 throw new InvalidOperationException("Use isolated empty Play scene; do not overlay or disable a live product UI.");
             if(!heading || !body) throw new ArgumentException("Pass actual project font assets.");
-            if(!((width==1280&&height==720)||(width==1920&&height==1080)) || Screen.width!=width || Screen.height!=height)
+            if(!((width==1280&&height==720)||(width==1920&&height==1080)) || (!camera && (Screen.width!=width || Screen.height!=height)))
                 throw new ArgumentException("Set exact 720p/1080p viewport on primary horizontal monitor first.");
             var f=new GameObject("TrainingMapNativeFixture").AddComponent<TrainingMapNativeFixture>(); active=f;
             f.receipt=new Receipt{width=width,height=height};
+            f.renderCamera=camera;
+            if(camera)f.receipt.scope="ScreenSpaceCamera RenderTexture UI; explicit 16:9 scale factor, synthetic IDs/actions. Not GameView/physical input/map loading.";
             f.directory="N:/LetMeSleep/Validation/UI-TrainingMaps-Native-20260913/run-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N").Substring(0,8);
             Directory.CreateDirectory(f.directory);
             try
@@ -45,6 +55,13 @@ namespace LetMeSleep.Validation
                 bool hadEvents=EventSystem.current!=null;
                 f.spy=new Spy(f.receipt);
                 f.ui=AlfaUiRuntime.Create(f.spy,new AlfaUiDependencies(heading,body,persistentAcrossScenes:false));
+                if(camera)
+                {
+                    var canvas=f.ui.GetComponent<Canvas>();
+                    canvas.renderMode=RenderMode.ScreenSpaceCamera;canvas.worldCamera=camera;canvas.planeDistance=5;
+                    // Isolate layout from batch desktop size; this is explicitly RT validation.
+                    f.ui.GetComponent<CanvasScaler>().enabled=false;canvas.scaleFactor=width/1920f;
+                }
                 if(!hadEvents) f.ownedEvents=EventSystem.current;
                 f.StartCoroutine(f.Exercise());
             }
@@ -73,7 +90,8 @@ namespace LetMeSleep.Validation
         private void Layout(string label)
         {
             Canvas.ForceUpdateCanvases();
-            Check(Screen.width==receipt.width&&Screen.height==receipt.height,"viewport "+label);
+            var pixelRect=ui.GetComponent<Canvas>().pixelRect;
+            Check(Mathf.Abs(pixelRect.width-receipt.width)<.5f&&Mathf.Abs(pixelRect.height-receipt.height)<.5f,"canvas pixelRect "+label);
             foreach(var text in ui.GetComponentsInChildren<TextMeshProUGUI>().Where(t=>t.gameObject.activeInHierarchy))
             {
                 text.ForceMeshUpdate();
@@ -82,7 +100,8 @@ namespace LetMeSleep.Validation
             foreach(var b in ui.GetComponentsInChildren<Button>().Where(b=>b.gameObject.activeInHierarchy))
             {
                 var corners=new Vector3[4];((RectTransform)b.transform).GetWorldCorners(corners);
-                Check(corners.All(c=>c.x>=-.5f&&c.y>=-.5f&&c.x<=Screen.width+.5f&&c.y<=Screen.height+.5f),"button bounds "+label+"/"+b.name);
+                Check(corners.All(c=>{var p=RectTransformUtility.WorldToScreenPoint(renderCamera,c);
+                    return p.x>=-.5f&&p.y>=-.5f&&p.x<=receipt.width+.5f&&p.y<=receipt.height+.5f;}),"button bounds "+label+"/"+b.name);
             }
         }
         private bool Step(Action action)
