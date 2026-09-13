@@ -1,0 +1,13 @@
+{
+  "sourceFinal": false,
+  "mapId": "hf-isla-del-laguito-v1",
+  "fbx": "FINAL_EXPORT.fbx",
+  "glb": "FINAL_EXPORT.glb",
+  "audit": "scene-audit.json",
+  "report": "FINAL_EXPORT_build_report.json",
+  "humanCount": 5,
+  "mosquitoCount": 16,
+  "collisionLayer": "Default",
+  "firstSurfaceId": 1000000,
+  "kinds": {}
+}

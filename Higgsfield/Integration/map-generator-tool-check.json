@@ -1,0 +1,31 @@
+{
+  "status": "PASS_TOOL_ONLY_SYNTHETIC_CHECKS",
+  "scope": "Six bounded tests, AST syntax and CLI help. No active export/audit read, no recipes generated, no Unity/Blender.",
+  "testsPassed": 6,
+  "defaultHumanCount": 5,
+  "defaultMosquitoCount": 16,
+  "defaultCollisionLayer": "Default",
+  "finalityGate": "sourceFinal must be true before export reads",
+  "sourceFiles": [
+    {
+      "path": "prepare_map_recipe.py",
+      "sha256": "7e517a4a412d0f17690e50c98c889edb61e43a0194f09331efe9c16e7dbcc633"
+    },
+    {
+      "path": "Prepare-IslaReview.py",
+      "sha256": "63d4b3804c938a135c336715ffb6712aa8624702fcfddd7b464c925286762a7e"
+    },
+    {
+      "path": "test_prepare_map_recipe.py",
+      "sha256": "5ef710bc559d837f841a89864a08c07d510e75d6750fb4e8b1b8c492155b70fe"
+    },
+    {
+      "path": "map-input.EXAMPLE.json",
+      "sha256": "9f4336895459fe89859d00ce6d170a14b4c5cdeaeee435736930c9ea7d72883c"
+    }
+  ],
+  "pending": [
+    "Run only after final export confirmation",
+    "Native import and gameplay/navigation/lighting remain central"
+  ]
+}
