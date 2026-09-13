@@ -1,0 +1,14 @@
+# Yate — final descriptor, recipe awaiting alpha support
+
+`yate.final-input.json` identifies the coordinator-confirmed final Yate exports for `hf-yate-a-la-deriva-v1`. It pins the clean FBX SHA256 `e3eb92985e2300e3788607d8a39520de00d711ed091db9d42760ae0e3bc3ae14` (1,982,188 bytes), Default collision layer, 5 human / 16 mosquito spawns and two water/foam objects. Reported Blender bounds `[-4.6,-15.2,.7]..[4.6,15.1,10.4]` become explicit Unity XYZ `[-4.6,.7,-15.2]..[4.6,10.4,15.1]`; the ocean background is excluded from playable bounds.
+
+Read-only preflight crosschecked 213 object names/full hierarchy paths across clean FBX, GLB and audit; 160 mesh objects, 138 GLB mesh definitions, 73,884 triangles and 23 effective materials. Every effective FBX material slot, GLB primitive material, base RGBA and emission agrees with the audit. Classification is 96 solid, 62 decoration, one water and one foam. Five/sixteen EMPTY spawns retain `.003` physical names and their audited world origins are inside bounds. GLB contains zero animation clips. Hashes and details are in `yate.preflight.json`.
+
+The recipe has deliberately not been generated with the current opaque-only contract. Coordinator owns changes to auditor/contract/importer/generator; none of those files were edited here. Required integration points:
+
+- `YATE_Glass` explicitly uses GLB `alphaMode=BLEND` and alpha `0.30000001192092896`; RGB is approximately `[.09,.27,.34]`. The updated audit already records matching alpha. Preserve authored transparency through the new contract.
+- The report identifies its scene using `map: HF_MAP_04_yate`, with no `scene` or `checks.scene`. The descriptor keeps `expectedScene`; generation should recognize this exact schema rather than omit identity validation. Its count aliases are `counts.objects`, `mesh_objects`, `unique_meshes` and `triangles_instanced`.
+- `Water_Ocean` has 16,160 authored vertices and Wave_A/Wave_B, but GLB POSITION entries total 96,000 across six primitives. These are not native Unity vertex counts. Check the actual renderer/mesh against the existing 20,000-vertex CPU limit before choosing a runtime path. Do not raise the limit merely to pass import.
+- `Foam_Ocean_SparseStreaks` has 80 authored vertices, 240 GLB entries and no morphs. Its authored note allows runtime movement with water. `wave_params` on the ocean is a JSON string specifying a 10-second authored loop; the current generic recipe generator does not read that nested format and would use default wave settings. Independent authored morph behavior is not equivalent to the generic CPU wave model.
+
+No strict delivered recipe or actual C# recipe validation is claimed yet. No Blender/headless, bridge, GUI or Unity process was started for this descriptor. Per coordinator steering, future headless instances must first isolate their Blender user resources/extensions on N:; do not restart or repair the currently active Blender session.

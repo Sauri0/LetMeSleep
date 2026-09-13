@@ -1,0 +1,115 @@
+{
+  "status": "DESCRIPTOR_AND_READ_ONLY_PREFLIGHT_READY_RECIPE_PENDING_COORDINATOR_ALPHA_SUPPORT",
+  "mapId": "hf-yate-a-la-deriva-v1",
+  "sources": {
+    "fbx": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\HF_MAP_04_yate_UNITY.fbx",
+      "sha256": "e3eb92985e2300e3788607d8a39520de00d711ed091db9d42760ae0e3bc3ae14"
+    },
+    "glb": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\HF_MAP_04_yate.glb",
+      "sha256": "ab83efca5c93342ef44e125c7e0deb7d2e5a227ef7de61b2b0178fcd136260ba"
+    },
+    "audit": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\scene-audit.json",
+      "sha256": "e5e947dcede0706762ac4283134159b52ee9420e30cf1039e83353ed63900b80"
+    },
+    "report": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\HF_MAP_04_yate_report.json",
+      "sha256": "0b56d6f2520909faafd0f59e4e2c1e13298abd4317590e5fc2dadf4d25794a84"
+    }
+  },
+  "checks": [
+    "All audit/GLB/FBX names and full hierarchy paths agree",
+    "All effective material slots, GLB primitive coverage, base RGBA and emission crosschecked",
+    "Report.map and audit.scene identity agree explicitly",
+    "Report count aliases checked explicitly",
+    "5/16 physical EMPTY paths and world origins inside explicit bounds",
+    "GLB has zero animation clips"
+  ],
+  "classification": {
+    "foam": 1,
+    "water": 1,
+    "decoration": 62,
+    "solid": 96
+  },
+  "water": [
+    {
+      "path": "Foam_Ocean_SparseStreaks",
+      "kind": "foam",
+      "authoredVertices": 80,
+      "glbPositionEntries": 240,
+      "morphNames": [],
+      "properties": {
+        "collision_role": "non_solid",
+        "runtime_note": "root may advect with water; no redundant morphs"
+      }
+    },
+    {
+      "path": "Water_Ocean",
+      "kind": "water",
+      "authoredVertices": 16160,
+      "glbPositionEntries": 96000,
+      "morphNames": [
+        "Wave_A",
+        "Wave_B"
+      ],
+      "properties": {
+        "collision_role": "non_solid",
+        "semantic_name": "Water_Ocean",
+        "rest_mesh_z": 0.0,
+        "wave_params": "{\"Wave_A\": {\"amplitude\": 0.085, \"kx\": 0.42, \"ky\": 0.22}, \"Wave_B\": {\"amplitude\": 0.055, \"kx\": -0.2, \"ky\": 0.48}, \"loop_seconds\": 10, \"frames\": [1, 241], \"only_water_deforms\": true, \"ocean_hole\": \"conforms to underwater footprint, buried into shell thickness\"}"
+      }
+    }
+  ],
+  "transparentMaterials": [
+    {
+      "name": "YATE_Glass",
+      "alphaMode": "BLEND",
+      "alpha": 0.30000001192092896
+    }
+  ],
+  "humanSpawns": [
+    "Spawn_Human_01.003",
+    "Spawn_Human_02.003",
+    "Spawn_Human_03.003",
+    "Spawn_Human_04.003",
+    "Spawn_Human_05.003"
+  ],
+  "mosquitoSpawns": [
+    "Spawn_Mosquito_01.003",
+    "Spawn_Mosquito_02.003",
+    "Spawn_Mosquito_03.003",
+    "Spawn_Mosquito_04.003",
+    "Spawn_Mosquito_05.003",
+    "Spawn_Mosquito_06.003",
+    "Spawn_Mosquito_07.003",
+    "Spawn_Mosquito_08.003",
+    "Spawn_Mosquito_09.003",
+    "Spawn_Mosquito_10.003",
+    "Spawn_Mosquito_11.003",
+    "Spawn_Mosquito_12.003",
+    "Spawn_Mosquito_13.003",
+    "Spawn_Mosquito_14.003",
+    "Spawn_Mosquito_15.003",
+    "Spawn_Mosquito_16.003"
+  ],
+  "playBoundsMin": [
+    -4.6,
+    0.7,
+    -15.2
+  ],
+  "playBoundsMax": [
+    4.6,
+    10.4,
+    15.1
+  ],
+  "pending": [
+    "Coordinator alpha contract/importer/generator implementation",
+    "Generator expectedScene must explicitly recognize this report.map schema",
+    "Water_Ocean actual Unity renderer/vertex count and <=20000 CPU guard",
+    "wave_params is an authored JSON string: generic generator currently uses its default wave settings",
+    "Strict delivered recipe and actual C# contract validation not yet run"
+  ],
+  "nativeApplicationsStarted": false
+}
