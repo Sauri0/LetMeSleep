@@ -1,0 +1,376 @@
+[
+  {
+    "path": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\.validation\\blink-winding1\\candidate-v2\\human\\LMS_Human_alpha.fbx",
+    "sha256": "2473a8e6420dcb7c15d58c6dcb0e9fc64769bc8af6636844c71851a42bd84b66",
+    "exported_winding": [
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      }
+    ],
+    "scope": "FBX polygon winding relative to eye center, five samples per lid."
+  },
+  {
+    "path": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\.validation\\blink-winding1\\candidate-v2\\menu\\LMS_HumanMenu.fbx",
+    "sha256": "44738cda7b3cba4baa7b4e0b68e40acc1eda30a0bed701a153ebd0348aa3678c",
+    "exported_winding": [
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      }
+    ],
+    "scope": "FBX polygon winding relative to eye center, five samples per lid."
+  }
+]

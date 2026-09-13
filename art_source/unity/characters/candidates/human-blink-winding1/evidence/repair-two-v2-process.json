@@ -1,0 +1,26 @@
+{
+  "stage": "repair-two-v2",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\repair_human_lid_winding.py",
+    "--",
+    "--baseline-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/candidates/human-menu-joints3",
+    "--output-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/blink-winding1/candidate-v2"
+  ],
+  "slot_note": "SameDirector4min slot: inspected8092 failed beforeexport only cyclic-reversed-face assertion corrected; twoexports stillpending",
+  "started_utc": "2026-09-13T01:19:10.099836+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 31512,
+  "exit_code": 0,
+  "seconds": 16.218458200004534,
+  "finished_utc": "2026-09-13T01:19:26.318698+00:00"
+}

@@ -1,0 +1,47 @@
+{
+  "scope": "Candidate only; 120 lower eyelid polygon windings reversed in each file. No canonical promotion.",
+  "source_fix_commit": "2f2f115",
+  "baseline": "human-menu-joints3 / 98f238c",
+  "native_processes": [
+    {
+      "pid": 8092,
+      "exit": 1,
+      "stage": "pre-export cyclic assertion, corrected"
+    },
+    {
+      "pid": 31512,
+      "exit": 0,
+      "stage": "two exports and fresh one-sided facial audit"
+    }
+  ],
+  "unity_visual_acceptance": false,
+  "source_fbx_checks": "fbx-preservation.json and fbx-winding.json; all positions/shapes/skin/modelproperties/curvepayloads/materialassignments preserved",
+  "files": {
+    "fbx-winding.json": "a004a2aa31beac3be37ab3c17f64d0b8a5518eb90300242fb1c17200947cf7ea",
+    "HumanFaceImportDifferential.cs": "ec952343f510c5fc516a9a95c3b095d019078380f42a07a222fa7f2651217441",
+    "winding_repair.json": "449ac1c5ee5309cc705a799fdce219ca02e8b0783dae39a60e8df615103ef0db",
+    "evidence/repair-two-exports-process.json": "ad648dcd864422c0bee4f5400887ced5bea032451899baf475510db755f9083b",
+    "evidence/repair-two-exports.err.log": "bfc60a9e4890e8b3f8903ac97a194772eb63d67c0f04751635ede2fd9c225d8f",
+    "evidence/repair-two-exports.log": "c4471b51e0121208f04f03055d1c98f51cdd9ef200339928c7e429e1fbfe3ca1",
+    "evidence/repair-two-v2-process.json": "0d5e4b89d355d673f036cf8c94e355d00f2a13150886cf447e6684f3c685fff9",
+    "evidence/repair-two-v2.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/repair-two-v2.log": "1198ebf4a5d303efe122efc4ec55613223bb759985411236b6e9ceff8cd9a622",
+    "human/audit.json": "736de8d07c9cdbf7c79cc22f7b54b016babbb17a409988d5443bb7863c5cf92e",
+    "human/fbx-preservation.json": "1d030aabeede2bee7066f0963510f3f21d27e7ff0d082dc3bf7b9c2b894bc005",
+    "human/LMS_Human_alpha.blend": "918ddcf802ef761cf89bf20bedcec4019de8d8adc4bb765c2e5c7361e3f862a1",
+    "human/LMS_Human_alpha.fbx": "2473a8e6420dcb7c15d58c6dcb0e9fc64769bc8af6636844c71851a42bd84b66",
+    "menu/facial_audit.json": "52a8c505af675bfd9b51b4d0af0b77fb1b94a41deb3ac302bc7580c779e81894",
+    "menu/fbx-preservation.json": "f24bc7f241b593de48dab8b2f4b758e6e6144e19965463019a9a208eff074a54",
+    "menu/LMS_HumanMenu.blend": "665ff9c53429ae49346a370c1b57884bdaab9a4871f838b016e2fb04a2773ab2",
+    "menu/LMS_HumanMenu.fbx": "44738cda7b3cba4baa7b4e0b68e40acc1eda30a0bed701a153ebd0348aa3678c",
+    "menu/menu_audit.json": "0317f0d15e0ada9826cf617db074cea63a92d1dd98948c4eff4bc3aa2c266381",
+    "source-snapshot/audit_fbx_eyelid_winding.py": "544944b84e7144ae60798345004e090bcb1e7b8aaa91b1170972431360bae018",
+    "source-snapshot/audit_human_facial.py": "d18634c52416e1ebeee2c768ab9a7a94a86a73d0d48b559b688c9a883d8a2277",
+    "source-snapshot/author_human_facial.py": "b8ce9cb1db3be76924c9304aa607f952a8f8a170460cae9001f389099c77fb11",
+    "source-snapshot/build_characters.py": "77a7dd9c5b949456d582c36a0c94822b78859cf15327161b9837e301f4a3759d",
+    "source-snapshot/compare_fbx_winding_repair.py": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+    "source-snapshot/export_human_menu.py": "c5f27ad14b55bc5b48a48fc592ae762cec8c49c4db8c8bbfc0916efa8d9732f7",
+    "source-snapshot/inspect_fbx_morph_regions.py": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+    "source-snapshot/repair_human_lid_winding.py": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5"
+  }
+}

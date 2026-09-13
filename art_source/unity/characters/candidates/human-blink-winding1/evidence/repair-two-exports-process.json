@@ -1,0 +1,26 @@
+{
+  "stage": "repair-two-exports",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\repair_human_lid_winding.py",
+    "--",
+    "--baseline-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/candidates/human-menu-joints3",
+    "--output-root",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/.validation/blink-winding1/candidate"
+  ],
+  "slot_note": "Director explicit4min slot afterUnity2176 exit: two winding-only candidate exports CPU2 BelowNormal no render no promotion",
+  "started_utc": "2026-09-13T01:18:17.937924+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 8092,
+  "exit_code": 1,
+  "seconds": 10.316500999993877,
+  "finished_utc": "2026-09-13T01:18:28.254686+00:00"
+}

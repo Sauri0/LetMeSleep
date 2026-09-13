@@ -1,0 +1,28 @@
+00:00.781  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\candidates\human-menu-joints3\human\LMS_Human_alpha.blend"
+Info: Saved as "LMS_Human_alpha.blend"
+
+FBX export starting... 'N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\.validation\\blink-winding1\\candidate-v2\\human\\LMS_Human_alpha.fbx'
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+export finished in 1.7490 sec.
+WINDING_CANDIDATE {"part": "human", "baseline_blend_sha256": "ffdb5bb58b45de48d849b0f9691628acca0244ac67ae8dc80610bb56230e7e8c", "invariants_before": {"meshes": "d56fadd31c7c3490ff1d0fb72d60f843831b78b1ea768e647e1d24e8a88be110", "rigs": "c6a02a77948389ec7996eb7cd0a544a5f9362fd04c72bb8af01783a2a009311c", "clips": "754b53b5228bcfe7b049e806cb1d3178ae9b1f7c45a27607d3247b60d9ee4b2b"}, "invariants_after": {"meshes": "d56fadd31c7c3490ff1d0fb72d60f843831b78b1ea768e647e1d24e8a88be110", "rigs": "c6a02a77948389ec7996eb7cd0a544a5f9362fd04c72bb8af01783a2a009311c", "clips": "754b53b5228bcfe7b049e806cb1d3178ae9b1f7c45a27607d3247b60d9ee4b2b"}, "changed_polygon_indices": [743, 744, 745, 746, 747, 748, 749, 750, 751, 752, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777, 778, 779, 780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799, 800, 801, 802, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879, 880, 881, 882, 883, 884, 885, 886, 887, 888, 889, 890, 891, 892, 893, 894, 895, 896, 897, 898, 899, 900, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921, 922], "winding": {"flipped_faces": 120, "validated_faces": 240, "samples_per_face": 5, "sides": {"L": {"faces": 120, "flipped": 60}, "R": {"faces": 120, "flipped": 60}}}, "files": {"LMS_Human_alpha.blend": "918ddcf802ef761cf89bf20bedcec4019de8d8adc4bb765c2e5c7361e3f862a1", "LMS_Human_alpha.fbx": "2473a8e6420dcb7c15d58c6dcb0e9fc64769bc8af6636844c71851a42bd84b66"}}
+00:09.156  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\candidates\human-menu-joints3\menu\LMS_HumanMenu.blend"
+Info: Saved as "LMS_HumanMenu.blend"
+
+FBX export starting... 'N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\.validation\\blink-winding1\\candidate-v2\\menu\\LMS_HumanMenu.fbx'
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+export finished in 0.9583 sec.
+WINDING_CANDIDATE {"part": "menu", "baseline_blend_sha256": "e609a8be0d8ab2854c1e551042722740e77ba8551fafac408e46e92273181de8", "invariants_before": {"meshes": "d56fadd31c7c3490ff1d0fb72d60f843831b78b1ea768e647e1d24e8a88be110", "rigs": "c6a02a77948389ec7996eb7cd0a544a5f9362fd04c72bb8af01783a2a009311c", "clips": "0e690059f363d7a85f11f53eb8339a98c9196cfb8d14ac70c216b0866f1ac9fe"}, "invariants_after": {"meshes": "d56fadd31c7c3490ff1d0fb72d60f843831b78b1ea768e647e1d24e8a88be110", "rigs": "c6a02a77948389ec7996eb7cd0a544a5f9362fd04c72bb8af01783a2a009311c", "clips": "0e690059f363d7a85f11f53eb8339a98c9196cfb8d14ac70c216b0866f1ac9fe"}, "changed_polygon_indices": [743, 744, 745, 746, 747, 748, 749, 750, 751, 752, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777, 778, 779, 780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799, 800, 801, 802, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879, 880, 881, 882, 883, 884, 885, 886, 887, 888, 889, 890, 891, 892, 893, 894, 895, 896, 897, 898, 899, 900, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921, 922], "winding": {"flipped_faces": 120, "validated_faces": 240, "samples_per_face": 5, "sides": {"L": {"faces": 120, "flipped": 60}, "R": {"faces": 120, "flipped": 60}}}, "files": {"LMS_HumanMenu.blend": "665ff9c53429ae49346a370c1b57884bdaab9a4871f838b016e2fb04a2773ab2", "LMS_HumanMenu.fbx": "44738cda7b3cba4baa7b4e0b68e40acc1eda30a0bed701a153ebd0348aa3678c"}}
+00:14.953  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\.validation\blink-winding1\candidate-v2\menu\LMS_HumanMenu.blend"
+FBX version: 7400
+{"passed": true, "errors": []}
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

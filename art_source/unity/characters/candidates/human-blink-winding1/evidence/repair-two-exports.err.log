@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\repair_human_lid_winding.py", line 102, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\repair_human_lid_winding.py", line 71, in main
+    assert all(list(head.data.polygons[i].vertices)==list(reversed(polygons[i])) for i in changed)
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+Error: script failed, file: 'N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\repair_human_lid_winding.py', exiting.
