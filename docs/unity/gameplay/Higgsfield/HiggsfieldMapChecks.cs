@@ -19,7 +19,7 @@ public static class HiggsfieldMapChecks
 #pragma warning disable 0649
     [Serializable] public sealed class Config
     {
-        public string mapId, prefabPath, action, navigationOverridePath;
+        public string mapId, prefabPath, action, navigationOverridePath, colliderCandidate;
         public int humanPool = 5, mosquitoPool = 16;
         public Route[] routes;
     }
@@ -46,6 +46,7 @@ public static class HiggsfieldMapChecks
         public int humanPool, mosquitoPool, nativeColliderCount;
         public double seconds;
         public bool cleanup;
+        public SouthArrivalColliderCandidate.Receipt colliderCandidate;
     }
     public sealed class Case
     {
@@ -69,7 +70,7 @@ public static class HiggsfieldMapChecks
         Directory.CreateDirectory(outputDirectory);
         string reportPath = Path.Combine(outputDirectory, "map-checks-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff") + ".json");
         var report = new Report { utc = DateTime.UtcNow.ToString("O"), unityVersion = Application.unityVersion };
-        var watch = Stopwatch.StartNew(); GameObject owner = null; TextAsset candidate = null;
+        var watch = Stopwatch.StartNew(); GameObject owner = null; TextAsset candidate = null;var ownedGeometry=new List<Object>();
         try
         {
             report.configSha256 = Hash(File.ReadAllBytes(configPath));
@@ -109,6 +110,11 @@ public static class HiggsfieldMapChecks
             Require(Finite(map.PlayBounds.min) && Finite(map.PlayBounds.max) && map.PlayBounds.size.x > 0 && map.PlayBounds.size.y > 0 && map.PlayBounds.size.z > 0, "Invalid PlayBounds.");
             var world = owner.AddComponent<UnityGameplayWorld>(); world.MapRoot = clone.transform;
             clone.SetActive(true); owner.SetActive(true); Physics.SyncTransforms();
+            if(!string.IsNullOrWhiteSpace(config.colliderCandidate))
+            {
+                Require(config.colliderCandidate=="south-arrival-local-convex-band","Unknown collider candidate.");
+                report.colliderCandidate=SouthArrivalColliderCandidate.Apply(clone,ownedGeometry);
+            }
             world.RegisterGeometry();
             report.nativeColliderCount = clone.GetComponentsInChildren<Collider>(false).Count(c => c.enabled && !c.isTrigger);
             Require(report.nativeColliderCount > 0, "No active physical map colliders.");
@@ -139,6 +145,7 @@ public static class HiggsfieldMapChecks
         {
             if (owner) Object.DestroyImmediate(owner);
             if (candidate) Object.DestroyImmediate(candidate);
+            foreach(var geometry in ownedGeometry) if(geometry) Object.DestroyImmediate(geometry);
             Physics.SyncTransforms(); report.cleanup = !owner; report.seconds = watch.Elapsed.TotalSeconds;
             File.WriteAllText(reportPath, HiggsfieldMapJson.Write(report));
         }
