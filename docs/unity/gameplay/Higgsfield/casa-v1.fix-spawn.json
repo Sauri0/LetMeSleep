@@ -1,0 +1,8 @@
+{
+  "mapId": "hf-casa-del-patio-v1",
+  "prefabPath": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-casa-del-patio-v1/Prefabs/hf-casa-del-patio-v1.prefab",
+  "humanPool": 5,
+  "mosquitoPool": 16,
+  "action": "fix-casa-spawn",
+  "routes": []
+}
