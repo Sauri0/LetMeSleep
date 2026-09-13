@@ -1,5 +1,10 @@
 # Let me sleep — Unity migration
 
+**STOP — última orden del usuario:** alfa congelada tal como está. No continuar
+implementación, pruebas, builds, importación ni iniciar otra etapa hasta nueva
+orden. Ver `docs/unity/ALFA-FROZEN-20260913.md`. Este estado sustituye las
+autorizaciones de continuación que figuran debajo. Higgsfield lo coordina el usuario.
+
 Team reassigned by Branko on 2026-09-12 after his explicit «listo todos». The current ownership and task IDs in `N:/LetMeSleep/Repository/docs/unity/TEAM-RECOVERY-20260912.md` supersede the historical role mapping below and in older worktree AGENTS files. Read that central file before editing. Preserve existing task model settings. The general pause for creating chats is lifted; editor/GPU/Blender slots still require Director assignment.
 
 Active stage: 0.9.4/alfa. Master plan: docs/unity/PLAN-UNITY-0.9.4.md. Latest user steering authorizes autonomous completion of the plan while asleep, without questions; see docs/unity/EXECUTION.md. Execute stages in order under Director coordination. Keep external evidence and user review pending explicitly; no worker starts a later stage independently.

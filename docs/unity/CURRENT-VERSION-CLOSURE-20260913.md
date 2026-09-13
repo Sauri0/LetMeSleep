@@ -1,5 +1,9 @@
 # Cierre de versión actual antes de renovación 3D
 
+**Sustituido por la orden final de detener todo y congelar como está.**
+El orden de trabajo de abajo queda histórico, no es una cola activa.
+Estado y pendientes: `ALFA-FROZEN-20260913.md`.
+
 Branko solicita cerrar todo lo posible de la versión actual con el equipo,
 reservando la renovación de modelos para Higgsfield. La tarea de Higgsfield
 trabaja con él directamente. No generar reemplazos, nuevas variantes ni

@@ -1,5 +1,9 @@
 # Unity execution checkpoint
 
+**STOP — alfa congelada por orden final del usuario.** Consultar
+`ALFA-FROZEN-20260913.md`. Las instrucciones históricas de ejecución siguientes
+no autorizan continuar hasta nueva orden. Higgsfield lo coordina el usuario.
+
 Active objective authorized by Branko: complete migration and cycle 0.9.4. On 2026-09-12 Branko further authorized autonomous decisions and asked for no more questions while asleep. Execute stages in order with technical acceptance; record artistic decisions for later user review. Do not claim user playtesting or WAN evidence that has not happened.
 
 Latest steering: Tasks keeps three personal lives and human fainting, balance to refine through online play. At least five fixed maps; Director chooses house/patio, maritime island, night swamp camp, mountain cabin and farm/barn. Only house/patio and independent lobby in alfa.
@@ -105,3 +109,8 @@ Branko también rechazó sonidos y música frente a Godot. La recuperación del 
 W1 terminó recorrido adicional sin defecto runtime, commit e84de46 con recibos. EditorPID33400 cerrado y slot cedido a M1 para Blender CPU headless2hilos sin render. M1 verificó ausencia delPID antes de iniciar. M2/UI/W2 siguen archivos aislados; pruebas audibles requieren coordinación.
 
 Precisión M1 tras aislar curvas: la supuesta pérdida de traslación Hips en FBX no se confirmó; las curvas existen y el reimportador de Blender añadía use_connect=True, invalidando la evaluación del auditor. No justificar cambios de exportación por ese falso positivo. Las penetraciones de suelo medidas en las poses fuente .blend siguen confirmadas. Director rectificó la explicación al usuario; validación Unity real posterior necesaria.
+# STOP: alfa congelada por orden del usuario
+
+Consultar `ALFA-FROZEN-20260913.md`. No continuar las instrucciones históricas
+de ejecución que siguen hasta nueva orden. Sólo Higgsfield sigue bajo control
+directo del usuario.

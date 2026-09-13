@@ -1,5 +1,9 @@
 # Equipo reorganizado — recuperación artística alfa
 
+**Equipo detenido por orden final del usuario.** Ver `ALFA-FROZEN-20260913.md`.
+No continuar ni reabrir procesos/pruebas por las asignaciones históricas siguientes.
+Higgsfield queda bajo coordinación directa del usuario.
+
 Branko creó/renombró las doce tareas y autorizó retomar con «listo todos». Se conservan sus modelos configurados. Los títulos y responsables actuales sustituyen los anteriores: el historial de un chat no determina su propiedad nueva. Director integra y publica; alfa aún no aprobada, no iniciar beta.
 
 ## Responsables y carpetas

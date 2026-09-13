@@ -1,5 +1,9 @@
 # Correcciones de la prueba de Branko — alfa
 
+**Tanda detenida y alfa congelada por orden del usuario.** Los trabajos y
+pruebas pendientes de este documento quedan anotados, no activos. Consultar
+`../ALFA-FROZEN-20260913.md` para el cierre y último fallo de compilación de tests.
+
 La prueba del usuario corresponde a la candidata basada en `e9d15e7`.
 La tanda siguiente sigue en desarrollo y todavía no está publicada. Todos los
 tests visibles deben usar el monitor principal horizontal; el vertical queda
