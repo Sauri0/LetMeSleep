@@ -43,6 +43,11 @@ namespace LetMeSleep.UI
         private bool onlineCancelLatched;
         private bool lobbyReadyLatched;
         private bool lobbyStartLatched;
+        private bool lobbyRulesLatched;
+        private TrainingMapOption[] roomMaps = Array.Empty<TrainingMapOption>();
+        private TextMeshProUGUI roomMapLabel;
+        private UnityEngine.UI.Button roomMapPrevious;
+        private UnityEngine.UI.Button roomMapNext;
         private bool trainingStartLatched;
         private bool trainingCancelLatched;
         private bool customizationSaveLatched;
@@ -230,12 +235,15 @@ namespace LetMeSleep.UI
                 Focus(onlineState.CanRetry ? onlineRetryButton.gameObject : onlinePrimaryButton.gameObject);
         }
 
+        // Each presentation is an authoritative snapshot, including all pending flags.
+        // Actions must publish another snapshot on completion or rejection to release intent latches.
         public void PresentLobby(LobbyUiState state)
         {
             lobbyState = state ?? throw new ArgumentNullException(nameof(state));
             gameplayIsTraining = false;
             lobbyReadyLatched = state.ReadyPending;
             lobbyStartLatched = state.StartPending;
+            lobbyRulesLatched = state.RulesPending;
             lobbyCode.text = string.IsNullOrWhiteSpace(state.RoomCode) ? "PREPARANDO EL CÓDIGO…" : state.RoomCode;
             lobbyCopyButton.interactable = !string.IsNullOrWhiteSpace(state.RoomCode);
             lobbyStatus.text = string.IsNullOrWhiteSpace(state.RoomCode) ? "Preparando el código…" : "Compartí este código para invitar a tus amigos.";
@@ -272,9 +280,74 @@ namespace LetMeSleep.UI
 
             if (lobbyStartLatched) lobbyStatus.text = "Iniciando ronda…";
             else if (lobbyReadyLatched) lobbyStatus.text = "Guardando estado…";
+            else if (lobbyRulesLatched) lobbyStatus.text = "Guardando reglas…";
+            UpdateRoomMapView();
+            UpdateLobbyControls();
 
             if (screen != AlfaUiScreen.Lobby)
                 SetScreen(AlfaUiScreen.Lobby, "LobbyReadyButton");
+        }
+
+        public void SetRoomMaps(IReadOnlyList<TrainingMapOption> maps)
+        {
+            var copy = maps == null ? Array.Empty<TrainingMapOption>() : maps.ToArray();
+            if (copy.Any(map => map == null) || copy.Select(map => map.Id).Distinct(StringComparer.Ordinal).Count() != copy.Length)
+                throw new ArgumentException("Room maps must be non-null with unique IDs.", nameof(maps));
+            roomMaps = copy;
+            UpdateRoomMapView();
+        }
+
+        private bool LobbyBusy => lobbyReadyLatched || lobbyStartLatched || lobbyRulesLatched ||
+            (lobbyState != null && (lobbyState.ReadyPending || lobbyState.StartPending || lobbyState.RulesPending));
+
+        private bool CanEditLobbyRules => lobbyState != null && lobbyState.IsOwner && lobbyState.IsWaiting && !LobbyBusy;
+
+        private bool CanCycleRoomMap => CanEditLobbyRules && actions is IRoomMapActions &&
+            roomMaps.Any(map => map.Id != lobbyState.MapId);
+
+        private void CycleRoomMap(int delta)
+        {
+            if (!CanCycleRoomMap || (delta != -1 && delta != 1)) return;
+            var index = Array.FindIndex(roomMaps, map => map.Id == lobbyState.MapId);
+            var next = index < 0 ? (delta > 0 ? 0 : roomMaps.Length - 1) :
+                (index + delta + roomMaps.Length) % roomMaps.Length;
+            lobbyRulesLatched = true;
+            UpdateRoomMapView();
+            UpdateLobbyControls();
+            lobbyStatus.text = "Guardando reglas…";
+            ((IRoomMapActions)actions).SetRoomMap(roomMaps[next].Id);
+        }
+
+        private void UpdateRoomMapView()
+        {
+            if (roomMapLabel == null) return;
+            var id = lobbyState?.MapId ?? HousePatioMapId;
+            roomMapLabel.text = id == HousePatioMapId ? "CASA CON PATIO" :
+                roomMaps.FirstOrDefault(map => map.Id == id)?.DisplayName ??
+                (lobbyState != null && !string.IsNullOrWhiteSpace(lobbyState.MapLabel) && lobbyState.MapLabel != "CASA CON PATIO"
+                    ? lobbyState.MapLabel : id);
+            roomMapPrevious.interactable = roomMapNext.interactable = CanCycleRoomMap;
+        }
+
+        private void UpdateLobbyControls()
+        {
+            if (lobbyState == null) return;
+            var available = lobbyState.IsWaiting && !LobbyBusy;
+            lobbyReadyButton.interactable = available;
+            lobbyStartButton.interactable = available && lobbyState.IsOwner && lobbyState.CanStart;
+            lobbyExploreButton.interactable = available && lobbyState.CanExplore;
+            foreach (var entry in humanCountLabels)
+                entry.Value.transform.parent.GetComponent<UnityEngine.UI.Button>().interactable = CanEditLobbyRules;
+        }
+
+        private void ChangeLobbyHumanCount(int? count)
+        {
+            if (!CanEditLobbyRules || lobbyState.HumanCount == count) return;
+            lobbyRulesLatched = true;
+            UpdateRoomMapView();
+            UpdateLobbyControls();
+            lobbyStatus.text = "Guardando reglas…";
+            actions.SetHumanCount(count);
         }
 
         public void SetTrainingMaps(IReadOnlyList<TrainingMapOption> maps)
@@ -638,21 +711,37 @@ namespace LetMeSleep.UI
                 AlfaUiTheme.Moon200, TextAlignmentOptions.Center, true);
             factory.Divider(rules, "AuthorityDivider", new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.5f));
             AddReadOnlyField(rules, "MODO", "SANGRE");
-            AddReadOnlyField(rules, "MAPA", "CASA CON PATIO");
+            var mapRow = factory.Horizontal(rules, "RoomMapRow", 8f, TextAnchor.MiddleCenter);
+            var mapCaption = factory.Text(mapRow, "Label", "MAPA", AlfaUiTheme.LabelSize, AlfaUiTheme.Sheet100);
+            var captionLayout = mapCaption.GetComponent<UnityEngine.UI.LayoutElement>();
+            captionLayout.minWidth = captionLayout.preferredWidth = 64f;
+            captionLayout.flexibleWidth = 0f;
+            roomMapPrevious = factory.Button(mapRow, "RoomMapPrevious", "‹", () => CycleRoomMap(-1), false, false, 60f);
+            roomMapPrevious.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 48f;
+            roomMapPrevious.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 0f;
+            roomMapLabel = factory.Text(mapRow, "RoomMapValue", "CASA CON PATIO", AlfaUiTheme.BodySize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
+            roomMapLabel.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 200f;
+            roomMapLabel.richText = false;
+            roomMapNext = factory.Button(mapRow, "RoomMapNext", "›", () => CycleRoomMap(1), false, false, 60f);
+            roomMapNext.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 48f;
+            roomMapNext.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 0f;
+            UpdateRoomMapView();
             factory.Text(rules, "HumanCountLabel", "CANTIDAD DE HUMANOS", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
             var counts = factory.Horizontal(rules, "HumanCount", 6f, TextAnchor.MiddleCenter);
             for (var count = 0; count <= 5; count++)
             {
                 var captured = count;
-                var button = factory.Button(counts, "HumanCount" + count, count == 0 ? "AUTO" : count.ToString(), () => actions.SetHumanCount(captured == 0 ? (int?)null : captured), false, false, 48f);
+                var button = factory.Button(counts, "HumanCount" + count, count == 0 ? "AUTO" : count.ToString(), () => ChangeLobbyHumanCount(captured == 0 ? (int?)null : captured), false, false, 48f);
                 button.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = count == 0 ? 104f : 52f;
                 humanCountLabels[count] = button.GetComponentInChildren<TextMeshProUGUI>();
             }
             factory.Text(rules, "RoleNote", "Los roles se sortean al empezar cada ronda.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
             lobbyReadyButton = factory.Button(rules, "LobbyReadyButton", "LISTO", () =>
             {
-                if (lobbyState == null || lobbyReadyLatched || lobbyState.ReadyPending) return;
+                if (lobbyState == null || !lobbyState.IsWaiting || LobbyBusy) return;
                 lobbyReadyLatched = true;
+                UpdateRoomMapView();
+                UpdateLobbyControls();
                 lobbyReadyButton.interactable = false;
                 lobbyStartButton.interactable = false;
                 lobbyReadyLabel.text = "GUARDANDO…";
@@ -1385,9 +1474,9 @@ namespace LetMeSleep.UI
 
         private void BeginRound()
         {
-            if (lobbyState == null || lobbyStartLatched || lobbyState.StartPending ||
-                !lobbyState.IsOwner || !lobbyState.CanStart) return;
+            if (!CanEditLobbyRules || !lobbyState.CanStart) return;
             lobbyStartLatched = true;
+            UpdateRoomMapView();
             gameplayIsTraining = false;
             lobbyStartButton.interactable = false;
             lobbyReadyButton.interactable = false;
@@ -1439,6 +1528,7 @@ namespace LetMeSleep.UI
 
         private void BeginLobbyExploration()
         {
+            if (lobbyState == null || !lobbyState.IsWaiting || !lobbyState.CanExplore || LobbyBusy) return;
             lobbyExploring = true;
             screens[AlfaUiScreen.Lobby].SetActive(false);
             actions.SetLobbyExploration(true);

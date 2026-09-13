@@ -123,6 +123,11 @@ namespace LetMeSleep.UI
         void QuitGame();
     }
 
+    public interface IRoomMapActions
+    {
+        void SetRoomMap(string mapId);
+    }
+
     public sealed class OnlineUiState
     {
         public OnlineOperationPhase Phase { get; }
@@ -193,6 +198,8 @@ namespace LetMeSleep.UI
         public string MapLabel { get; }
         public bool CanExplore { get; }
         public bool StartPending { get; }
+        public bool IsWaiting { get; }
+        public bool RulesPending { get; }
 
         public LobbyUiState(
             bool isOwner,
@@ -206,7 +213,9 @@ namespace LetMeSleep.UI
             string mapId = RoomRules.AlfaMap,
             string mapLabel = "CASA CON PATIO",
             bool canExplore = false,
-            bool startPending = false)
+            bool startPending = false,
+            bool isWaiting = true,
+            bool rulesPending = false)
         {
             IsOwner = isOwner;
             RoomCode = AlfaRoomCode.FormatForDisplay(roomCode);
@@ -220,16 +229,19 @@ namespace LetMeSleep.UI
             MapLabel = string.IsNullOrWhiteSpace(mapLabel) ? "CASA CON PATIO" : mapLabel;
             CanExplore = canExplore;
             StartPending = startPending;
+            IsWaiting = isWaiting;
+            RulesPending = rulesPending;
         }
 
         public static LobbyUiState FromRoomView(RoomView room, string localMemberId, string roomCode, bool canStart,
-            string startBlockReason, bool readyPending = false, bool startPending = false)
+            string startBlockReason, bool readyPending = false, bool startPending = false, bool rulesPending = false)
         {
             if (room == null) throw new ArgumentNullException(nameof(room));
             var members = room.Members.Select(member => new LobbyMemberUiState(member.Id, member.Name, member.Ready));
             var local = room.Members.FirstOrDefault(member => member.Id == localMemberId);
             return new LobbyUiState(room.OwnerId == localMemberId, roomCode, members, local != null && local.Ready,
-                readyPending, room.Rules.HumanCount, canStart, startBlockReason, room.Rules.MapId, startPending: startPending);
+                readyPending, room.Rules.HumanCount, canStart, startBlockReason, room.Rules.MapId, startPending: startPending,
+                isWaiting: room.Phase == RoomPhase.Waiting, rulesPending: rulesPending);
         }
     }
 
