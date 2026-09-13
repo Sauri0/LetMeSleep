@@ -42,6 +42,8 @@ namespace LetMeSleep.Presentation
         private ConfigurableJoint[] joints;
         private MosquitoRagdollBuilder.Attachment[] attachments;
         private MosquitoLocalPose[] restoreBodies, restoreAuxiliary;
+        private Vector3[] bindPositions;
+        private Quaternion[] bindRotations;
         private bool restoreAnimatorEnabled, borrowed, initialized, wasSleeping;
         private float settledFor;
         private MosquitoRagdollPose heldPose;
@@ -53,6 +55,13 @@ namespace LetMeSleep.Presentation
             PhysicalRoot = physicalRoot; this.animator = animator; this.settings = settings;
             this.bones = bones; this.auxiliary = auxiliary; this.bodies = bodies; this.parts = parts;
             this.colliders = colliders; this.joints = joints; this.attachments = attachments;
+            bindPositions = new Vector3[bodies.Length];
+            bindRotations = new Quaternion[bodies.Length];
+            for (int i = 0; i < bodies.Length; i++)
+            {
+                bindPositions[i] = bodies[i].transform.position;
+                bindRotations[i] = bodies[i].transform.rotation;
+            }
             initialized = true;
         }
 
@@ -113,7 +122,32 @@ namespace LetMeSleep.Presentation
                 PlaceKinematic(pose);
                 foreach (var attachment in attachments) attachment.Refresh();
                 foreach (Collider collider in colliders) collider.enabled = true;
+                UnityEngine.Physics.SyncTransforms();
+                foreach (var body in bodies) { body.ResetCenterOfMass(); body.ResetInertiaTensor(); }
+
+                // Rebuild the native reference frames AFTER compound mass properties and kinematic
+                // flags are finalized. All 18 bodies temporarily use the cached bind pose; neither
+                // the skin nor a physics step sees this intermediate setup. This also handles re-entry.
+                for (int i = 0; i < bodies.Length; i++)
+                {
+                    bodies[i].position = bindPositions[i];
+                    bodies[i].rotation = bindRotations[i];
+                    bodies[i].PublishTransform();
+                }
+                foreach (var body in bodies) body.isKinematic = false;
+                foreach (var joint in joints)
+                {
+                    var connected = joint.connectedBody;
+                    var anchor = joint.anchor;
+                    var connectedAnchor = joint.connectedAnchor;
+                    joint.connectedBody = null;
+                    joint.connectedBody = connected;
+                    joint.anchor = anchor;
+                    joint.connectedAnchor = connectedAnchor;
+                }
+                PlaceBodies(pose);
                 // Ignore only collisions between our own new colliders. Existing actor/world colliders are untouched.
+                // Set the exclusions after switching ALL bodies to dynamic, then expose collision.
                 for (int i = 0; i < colliders.Length; i++)
                 for (int j = i + 1; j < colliders.Length; j++)
                     if (colliders[i].attachedRigidbody != colliders[j].attachedRigidbody)
@@ -122,9 +156,6 @@ namespace LetMeSleep.Presentation
                 {
                     var body = bodies[i];
                     var sample = pose.GetBody((MosquitoBodyId)i);
-                    body.ResetCenterOfMass();
-                    body.ResetInertiaTensor();
-                    body.isKinematic = false;
                     body.angularVelocity = sample.AngularVelocity;
                     // Unity stores velocity at COM, while our transferable contract stores bone-origin velocity.
                     body.linearVelocity = sample.OriginVelocity + Vector3.Cross(sample.AngularVelocity, body.worldCenterOfMass - sample.Position);
@@ -261,15 +292,20 @@ namespace LetMeSleep.Presentation
         private void PlaceKinematic(MosquitoRagdollPose pose)
         {
             DeactivatePhysics();
+            PlaceBodies(pose);
+            WriteSkin(pose);
+        }
+
+        private void PlaceBodies(MosquitoRagdollPose pose)
+        {
             for (int i = 0; i < bodies.Length; i++)
             {
                 var p = pose.GetBody((MosquitoBodyId)i);
                 bodies[i].position = p.Position;
                 bodies[i].rotation = p.Rotation;
-                // Set the Transform as well while kinematic: attachments need the new parent frame now.
-                bodies[i].transform.SetPositionAndRotation(p.Position, p.Rotation);
+                // Publish from physics instead of issuing a second Transform teleport back to physics.
+                bodies[i].PublishTransform();
             }
-            WriteSkin(pose);
         }
 
         private void WriteSkin(MosquitoRagdollPose pose)

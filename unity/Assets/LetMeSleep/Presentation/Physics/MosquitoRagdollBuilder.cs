@@ -150,13 +150,19 @@ namespace LetMeSleep.Presentation
                     string footName = AuxiliaryNames[2 + side * 3 + leg];
                     AddAttachment(bodies[i + 1], named[footName], bind[footName], frame.Point(toe), .0013f, colliders, attachments);
                 }
-                for (int i = 1; i < bodies.Length; i++)
-                    joints.Add(AddJoint(i, bodies, frame));
                 foreach (Collider collider in colliders)
                 {
                     collider.contactOffset = settings.ContactOffset;
-                    collider.enabled = false;
+                    collider.enabled = true;
                 }
+                // Child collider transforms are queued when autoSyncTransforms is off. Native mass
+                // properties and joint frames must see the finished compound geometry, not its origin.
+                // Bodies still have detectCollisions=false: this does not expose the prepared rig.
+                UnityEngine.Physics.SyncTransforms();
+                foreach (var body in bodies) { body.ResetCenterOfMass(); body.ResetInertiaTensor(); }
+                for (int i = 1; i < bodies.Length; i++)
+                    joints.Add(AddJoint(i, bodies, frame));
+                foreach (Collider collider in colliders) collider.enabled = false;
                 simulation = visualRoot.gameObject.AddComponent<MosquitoRagdollSimulation>();
                 simulation.Initialize(physicalRoot, animator, settings, bones, auxiliary, bodies, parts,
                     colliders.ToArray(), joints.ToArray(), attachments.ToArray());
@@ -237,7 +243,7 @@ namespace LetMeSleep.Presentation
             else if (i == 4 || i == 5)
             {
                 int sign = i == 4 ? 1 : -1;
-                Vector3 span = frame.Point(sign * .220f, .065f, .181f) - bodies[i].position;
+                Vector3 span = frame.Point(sign * .220f, .065f, .181f) - bodies[i].transform.position;
                 x = Vector3.Cross(span, frame.Z).normalized;
                 y = span.normalized;
                 low = -65; high = 90; lateral = 55; twist = 0;
@@ -257,7 +263,7 @@ namespace LetMeSleep.Presentation
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedBody = bodies[Parents[i]];
             joint.anchor = Vector3.zero;
-            joint.connectedAnchor = bodies[Parents[i]].transform.InverseTransformPoint(bodies[i].position);
+            joint.connectedAnchor = bodies[Parents[i]].transform.InverseTransformPoint(bodies[i].transform.position);
             joint.axis = bodies[i].transform.InverseTransformDirection(x).normalized;
             joint.secondaryAxis = bodies[i].transform.InverseTransformDirection(Vector3.ProjectOnPlane(y, x).normalized);
             joint.xMotion = joint.yMotion = joint.zMotion = ConfigurableJointMotion.Locked;
