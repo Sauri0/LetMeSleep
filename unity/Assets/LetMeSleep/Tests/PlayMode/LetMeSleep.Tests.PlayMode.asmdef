@@ -7,7 +7,8 @@
     "LetMeSleep.Gameplay",
     "LetMeSleep.Gameplay.Unity",
     "LetMeSleep.Presentation",
-    "LetMeSleep.UI"
+    "LetMeSleep.UI",
+    "LetMeSleep.Content.Environment"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

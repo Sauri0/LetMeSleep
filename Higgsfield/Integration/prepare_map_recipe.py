@@ -194,7 +194,7 @@ def prepare(config, config_dir):
         world_position(authored)  # Matrix presence/finite check; never substitute local location.
         role, kind = classify(authored, n, path, overrides)
         slots = fbx_slots[name]
-        need(slots == list(dict.fromkeys(authored['materials'])), 'FBX/audit unique slot order differs: ' + name)
+        need(slots == authored['materials'] or slots == list(dict.fromkeys(authored['materials'])), 'FBX/audit slot order differs: ' + name)
         if slots != authored['materials']:
             deduplicated_slots.append(dict(name=name, audit=authored['materials'], fbx=slots))
         mesh = gltf['meshes'][n['mesh']]
