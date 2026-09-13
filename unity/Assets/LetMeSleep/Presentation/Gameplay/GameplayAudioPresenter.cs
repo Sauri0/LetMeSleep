@@ -77,6 +77,9 @@ namespace LetMeSleep.Presentation.Gameplay
         private readonly Dictionary<uint, ToolAudioState> toolStates =
             new Dictionary<uint, ToolAudioState>();
         private readonly List<AudioZone> audioZones = new List<AudioZone>();
+        private readonly Dictionary<uint, HumanLocomotionPresenter> locomotionSources =
+            new Dictionary<uint, HumanLocomotionPresenter>();
+        private bool sharedHumanLocomotionAudio;
         private ulong currentEpoch;
         private ulong currentRound;
         private bool subscribed;
@@ -89,16 +92,67 @@ namespace LetMeSleep.Presentation.Gameplay
         private void OnDisable()
         {
             Unsubscribe();
+            ClearLocomotionSources();
             StopWingLoops();
         }
 
         public void Bind(GameplayRuntime runtime, AlfaAudioDirector director)
         {
             Unsubscribe();
+            ClearLocomotionSources();
             StopWingLoops();
             gameplay = runtime;
             audioDirector = director;
             Subscribe();
+        }
+
+        // Explicit integration switch: missing/unregistered visuals stay silent, never fall back
+        // to snapshot footsteps. Enable before subscribing to the first round snapshot.
+        public void EnableSharedHumanLocomotionAudio() => sharedHumanLocomotionAudio = true;
+
+        public void RegisterLocomotion(HumanLocomotionPresenter source)
+        {
+            if (!source || !source.IsConfigured)
+                throw new ArgumentException("Configure the visual locomotion presenter before registering audio.");
+            sharedHumanLocomotionAudio = true;
+            if (locomotionSources.TryGetValue(source.ActorId, out var previous))
+            {
+                if (previous == source) return;
+                if (previous) previous.ContactReady -= HandleFootContact;
+            }
+            locomotionSources[source.ActorId] = source;
+            source.ContactReady += HandleFootContact;
+        }
+
+        public void UnregisterLocomotion(HumanLocomotionPresenter source)
+        {
+            if (!source) return;
+            source.ContactReady -= HandleFootContact;
+            if (locomotionSources.TryGetValue(source.ActorId, out var current) && current == source)
+                locomotionSources.Remove(source.ActorId);
+        }
+
+        private void ClearLocomotionSources()
+        {
+            foreach (var source in locomotionSources.Values)
+                if (source) source.ContactReady -= HandleFootContact;
+            locomotionSources.Clear();
+        }
+
+        private void HandleFootContact(HumanLocomotionPresenter source, HumanLocomotionPresenter.FootContact contact)
+        {
+            if (!isActiveAndEnabled || !sharedHumanLocomotionAudio || !source ||
+                !locomotionSources.TryGetValue(source.ActorId, out var registered) || registered != source ||
+                !gameplay || gameplay.World == null || gameplay.LatestSnapshot == null ||
+                gameplay.LatestSnapshot.SimulationPhase != GameplayModel.SimulationPhase.Running ||
+                !gameplay.World.Actors.TryGetValue(source.ActorId, out var proxy) || proxy.State == null ||
+                proxy.Role != PlayerRole.Human || proxy.State.LifeState != GameplayModel.LifeState.Active ||
+                !proxy.State.Grounded || proxy.State.StrikeState.Phase != GameplayModel.StrikePhase.None ||
+                !audioDirector || !audioDirector.Catalog || !audioDirector.Emitters)
+                return;
+            EnsureAudioZones(gameplay.World.MapRoot);
+            audioDirector.Emitters.Play(SelectFootstepCue(audioDirector.Catalog,
+                ResolveGroundMaterial(contact.Position)), contact.Position);
         }
 
         public void ApplySnapshot(GameplayModel.GameSessionState snapshot)
@@ -170,7 +224,7 @@ namespace LetMeSleep.Presentation.Gameplay
                         actor.Velocity.Z * actor.Velocity.Z);
                     bool walking = !first && previous.Grounded && actor.Grounded &&
                         actor.LifeState == GameplayModel.LifeState.Active;
-                    if (previous.Steps.Advance(displacement.magnitude, planarSpeed,
+                    if (!sharedHumanLocomotionAudio && previous.Steps.Advance(displacement.magnitude, planarSpeed,
                         snapshot.HostTime - previous.HostTime, Time.unscaledTime, walking))
                         emitters.Play(SelectFootstepCue(catalog, ground), proxy.transform.position);
                 }
