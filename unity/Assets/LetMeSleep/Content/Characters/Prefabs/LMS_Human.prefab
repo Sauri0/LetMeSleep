@@ -299,7 +299,7 @@ GameObject:
   - component: {fileID: 1148042351287699800}
   - component: {fileID: 6399267936585410066}
   - component: {fileID: 7854026478028426998}
-  - component: {fileID: 5722334703350194628}
+  - component: {fileID: 8929790411792617679}
   m_Layer: 0
   m_Name: LMS_Human
   m_TagString: Untagged
@@ -451,6 +451,14 @@ MonoBehaviour:
     StateName: Base Layer.FingerCurl
     ClipName: Human_FingerCurl
     Loop: 0
+  - Id: 15
+    StateName: Base Layer.WalkSlow
+    ClipName: Human_WalkSlow
+    Loop: 1
+  - Id: 16
+    StateName: Base Layer.Trot
+    ClipName: Human_Trot
+    Loop: 1
   firstPerson: 0
 --- !u!136 &7854026478028426998
 CapsuleCollider:
@@ -475,7 +483,7 @@ CapsuleCollider:
   m_Height: 1.72
   m_Direction: 1
   m_Center: {x: 0, y: 0.86, z: 0}
---- !u!114 &5722334703350194628
+--- !u!114 &8929790411792617679
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -489,7 +497,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.VisualAttentionContract
   Schema: lms.visual-attention.v1
   RigRevision: human-joints2-facial
-  SourceSha256: 2473a8e6420dcb7c15d58c6dcb0e9fc64769bc8af6636844c71851a42bd84b66
+  SourceSha256: ccb0f1f92918ea52e738719190be934d7ec14843b4b6206284bd4cb89895297b
   UnityAxesVerified: 1
   LegacyScaleBlinkVerified: 0
   Rig:

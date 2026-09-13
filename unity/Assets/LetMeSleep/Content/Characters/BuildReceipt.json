@@ -1,8 +1,8 @@
 {
-    "builder": "alpha-characters-6-wing-transmission",
+    "builder": "alpha-characters-7-gait-clips",
     "unityVersion": "6000.3.24f1",
-    "sourceDigest": "f78d3a76849f95ffda1194a09ed7f9cdc6b01268638a7bb54600539f64e1f41f",
-    "builderDigest": "fb1941997fb575ff82675e13745e41f30a8266c901df9aebf9fc502c34303ec5",
+    "sourceDigest": "f60c52adb1b1fa3848fcffe7d02ef28b382edeffd56d2844d0cd4ca86132e577",
+    "builderDigest": "59e48d86e314819905bc6563b53d735456634f13759140475b59e017b2f11fff",
     "success": true,
     "scope": "Imported assets and sampled animation structure; no playtest, visual approval or performance claim",
     "errors": [],
@@ -118,12 +118,12 @@
             "triangles": 9652,
             "renderers": 5,
             "bones": 65,
-            "clips": 15,
+            "clips": 17,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
             "rootStationary": true,
-            "maximumLoopFootDelta": 0.00003759126047953032,
+            "maximumLoopFootDelta": 0.00010910608398262411,
             "motions": [
                 {
                     "Id": 0,
@@ -214,6 +214,18 @@
                     "StateName": "Base Layer.FingerCurl",
                     "ClipName": "Human_FingerCurl",
                     "Loop": false
+                },
+                {
+                    "Id": 15,
+                    "StateName": "Base Layer.WalkSlow",
+                    "ClipName": "Human_WalkSlow",
+                    "Loop": true
+                },
+                {
+                    "Id": 16,
+                    "StateName": "Base Layer.Trot",
+                    "ClipName": "Human_Trot",
+                    "Loop": true
                 }
             ],
             "anchors": [
@@ -350,12 +362,12 @@
             "triangles": 9652,
             "renderers": 5,
             "bones": 65,
-            "clips": 15,
+            "clips": 17,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
             "rootStationary": true,
-            "maximumLoopFootDelta": 0.00003759126047953032,
+            "maximumLoopFootDelta": 0.00010910608398262411,
             "motions": [
                 {
                     "Id": 0,
@@ -446,6 +458,18 @@
                     "StateName": "Base Layer.FingerCurl",
                     "ClipName": "Human_FingerCurl",
                     "Loop": false
+                },
+                {
+                    "Id": 15,
+                    "StateName": "Base Layer.WalkSlow",
+                    "ClipName": "Human_WalkSlow",
+                    "Loop": true
+                },
+                {
+                    "Id": 16,
+                    "StateName": "Base Layer.Trot",
+                    "ClipName": "Human_Trot",
+                    "Loop": true
                 }
             ],
             "anchors": [
