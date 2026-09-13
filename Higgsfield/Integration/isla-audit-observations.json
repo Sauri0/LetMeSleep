@@ -1,0 +1,42 @@
+{
+  "status": "INTERIM_AUDIT_READ_ONLY_NOT_FINAL_EXPORT",
+  "source": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/01-isla/scene-audit.json",
+  "sourceSha256": "d3148f3802e58ac217d9306e7f855af00c1f098042ad1f2dbf20bbc381302de6",
+  "meshes": 1915,
+  "triangles": 121676,
+  "materials": 37,
+  "colourEncoding": "Blender Principled base_color scene-linear; raw values copied to draft swatches with linear tag",
+  "water": [
+    {
+      "name": "Water_Lake",
+      "vertices": 1537,
+      "triangles": 2976,
+      "materials": [
+        "ISLA_Lake",
+        "ISLA_LakeLight",
+        "ISLA_LakeDeep"
+      ],
+      "shape_keys": [
+        "Basis_Rest",
+        "Wave_A",
+        "Wave_B"
+      ]
+    },
+    {
+      "name": "Water_Ocean",
+      "vertices": 6561,
+      "triangles": 12800,
+      "materials": [
+        "ISLA_Ocean",
+        "ISLA_OceanLight",
+        "ISLA_OceanDeep"
+      ],
+      "shape_keys": [
+        "Basis_Rest",
+        "Wave_A",
+        "Wave_B"
+      ]
+    }
+  ],
+  "pending": "Final FBX, exact imported hierarchy/material names, native verification. Draft remains sourceFinal=false."
+}
