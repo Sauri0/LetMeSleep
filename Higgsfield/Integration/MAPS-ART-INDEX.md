@@ -1,5 +1,19 @@
 # Índice local de entrega de mapas
 
+## Ampliación preparada, pendiente de regeneración coordinada
+
+El generador ahora incorpora cinco capturas Unity adicionales: Isla/UnityFinal, Casa/UnityFinal, Campamento/UnityFinalV2, Yate/UnityFinalV3 y Puerto/UnityPresentationProvisional. Cada captura se etiqueta como Unity; Puerto mantiene su condición provisional. Quedan separados los diez renders de Blender y los veinte bocetos. La futura salida espera 35 imágenes.
+
+Se registra el alcance de la revisión visual: ninguna evidencia P0/P1 identificada en esas cinco imágenes y dos P2 pendientes (agua radial del Yate y fondo de acantilado de Puerto), sin rediseño nuevo. La captura no certifica navegación, interiores ocultos o rendimiento.
+
+Se añadieron argumentos opcionales `--catalog-receipt`, `--scene-receipt`, `--loading-receipt`. Sin argumentos, busca `UnityPackage/catalog-receipt.json`, `UnityPackage/scene-receipt.json` y `GameLoading/five-map-game-loading.txt` dentro de Mapas. Sólo incluye JSON con status explícito PASS/PASS_* o SUCCESS/SUCCEEDED, sin errors/pending ni calificadores FAIL/PENDING/INCOMPLETE/PARTIAL; el texto debe declarar PASS/SUCCESS en una línea de estado y no contener marcadores de fallo o pendiente. Si el recibo final utiliza otro esquema, se debe adaptar al formato real antes de generar. Ausente o mal formado no se publica como aprobado.
+
+Los recibos externos exitosos se copian a UnityEvidence con hash en el nombre durante la regeneración, para conservar todos los enlaces dentro de Mapas. La selección de fuente Yate cambia a UnityAdjustedSource sólo cuando exista el recibo de copia con status exacto, los tres objetos (baúl, tapa y mamparo) y SHA del archivo verificados. Aclara que los exports NormalsV3 anteriores no incluyen esos dos ajustes.
+
+La ampliación está verificada por sintaxis y doce casos del filtro de recibos, sin escribir ni regenerar los artifacts de entrega. **Esperar la orden final del coordinador** para generar y actualizar los hashes y recuentos de abajo.
+
+## Entrega emitida anteriormente
+
 Entrada: `N:/LetMeSleep/Artifacts/Higgsfield/Mapas/ENTREGA.html`.
 Inventario: `ENTREGA.manifest.json`; verificación: `ENTREGA.verification.json`, en la misma carpeta.
 

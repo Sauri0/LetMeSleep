@@ -2,6 +2,8 @@
 import hashlib
 import html
 import json
+import argparse
+import re
 import struct
 from datetime import datetime, timezone
 from html.parser import HTMLParser
@@ -13,6 +15,11 @@ HERE = Path(__file__).resolve().parent
 INDEX = ROOT / 'ENTREGA.html'
 MANIFEST = ROOT / 'ENTREGA.manifest.json'
 records = {}
+parser_args=argparse.ArgumentParser(description=__doc__)
+parser_args.add_argument('--catalog-receipt',type=Path)
+parser_args.add_argument('--scene-receipt',type=Path)
+parser_args.add_argument('--loading-receipt',type=Path)
+args=parser_args.parse_args()
 
 def asset(relative, label, role, recommended=False):
     path = (ROOT / relative).resolve()
@@ -56,6 +63,18 @@ concept_by_index = {item['index']:item for item in concepts}
 concept_labels = ['Vista general','Distribución conceptual','Recorridos e interiores','Piezas y materiales']
 blend_overrides = {'casa':'UnityAdjustedSource/HF_MAP_02_casa_UNITY_ADJUSTED.blend',
                    'yate':'NormalsV3/HF_MAP_04_yate_NORMALS_V3.blend'}
+unity_previews=['01-isla/UnityFinal/unity-overview.png','02-casa/UnityFinal/unity-overview.png',
+                '03-campamento/UnityFinalV2/unity-overview.png','04-yate/UnityFinalV3/unity-overview.png',
+                '05-pueblo/UnityPresentationProvisional/unity-overview.png']
+yate_adjustment_path=ROOT/'04-yate/UnityAdjustedSource/adjustment-receipt.json'
+yate_adjustment=None
+if yate_adjustment_path.is_file():
+    candidate=json.loads(yate_adjustment_path.read_text())
+    if candidate.get('status')=='PASS_EXCLUSIVE_YATE_COPY_STORAGE_AND_BULKHEAD_READBACK_LIVE_RESTORED':
+        assert {p['name'] for p in candidate['parts']}=={'YATE_DeckStorage_01','YATE_DeckStorage_Lid_01','YATE_Lower_EndBulkhead_-11.6'}
+        assert Path(candidate['source']).resolve()==(yate_adjustment_path.parent/'HF_MAP_04_yate_UNITY_ADJUSTED.blend').resolve()
+        assert hashlib.sha256(Path(candidate['source']).read_bytes()).hexdigest()==candidate['sourceSha256']
+        yate_adjustment=candidate;blend_overrides['yate']='UnityAdjustedSource/HF_MAP_04_yate_UNITY_ADJUSTED.blend'
 maps = []
 for index,(slug,title,folder,stem,map_id,description,glb,fbx,overview,detail,detail_label,note) in enumerate(specs):
     entry=dict(slug=slug,title=title,mapId=map_id,description=description,source='Higgsfield / Scene Builder',
@@ -65,6 +84,9 @@ for index,(slug,title,folder,stem,map_id,description,glb,fbx,overview,detail,det
                       asset(f'{folder}/{glb}','Modelo · GLB','glb',True),asset(f'{folder}/{fbx}','Export limpio · FBX','fbx',True)]
     entry['previews']=[asset(f'{folder}/{overview}','Vista general del arte','overview',True),
                        asset(f'{folder}/{detail}',detail_label,'detail',True)]
+    entry['unityCapture']=asset(unity_previews[index],
+        'Captura Unity · presentación provisional' if slug=='puerto' else 'Captura Unity · vista general revisada','unity_capture',True)
+    entry['unityCaptureScope']='Revisión de imagen estática; no certifica interiores ocultos, física, navegación ni rendimiento.'
     entry['concepts']=[]
     for offset,label in enumerate(concept_labels):
         number=index*4+offset+1;original=concept_by_index[number]
@@ -111,10 +133,54 @@ extras=[asset('Bocetos/INDICE.md','Notas de interpretación de los bocetos','evi
         asset('04-yate/NormalsV3/glb-winding-readback.json','Yate · verificación independiente del GLB','evidence'),
         asset('04-yate/UnityRecipeV3/hf-yate-a-la-deriva-v3.recipe.json','Yate · receta GPU v3','evidence')]
 maps[3]['evidence']=extras[2:]
+if yate_adjustment:
+    maps[3]['note']='Copia Blender ajustada: baúl y tapa desplazados; mamparo rebajado dentro del corredor de la escalera. Los GLB y FBX NormalsV3 conservan esos elementos originales: no se reexportaron ni reimportaron. El océano mantiene las normales corregidas. Estos ajustes no certifican equivalencia portable completa.'
+    maps[3]['unitySourceAdjustment']=yate_adjustment
+    maps[3]['evidence'].append(asset('04-yate/UnityAdjustedSource/adjustment-receipt.json','Yate · recibo de copia ajustada','evidence'))
+    history.append(asset('04-yate/NormalsV3/HF_MAP_04_yate_NORMALS_V3.blend','Yate · NormalsV3 anterior a ajustes de baúl y mamparo','history'))
+
+# Final integration evidence is optional and must explicitly declare success.
+# External source receipts are copied as immutable evidence only on final generation.
+def successful_receipt(path):
+    if not path.is_file():return None
+    raw=path.read_bytes()
+    try:text=raw.decode('utf-8-sig')
+    except UnicodeDecodeError:return None
+    if path.suffix.lower()=='.json':
+        try:data=json.loads(text)
+        except json.JSONDecodeError:return None
+        if not isinstance(data,dict):return None
+        status=data.get('status')
+        if not isinstance(status,str) or not (status=='PASS' or status.startswith('PASS_') or status in ('SUCCESS','SUCCEEDED')):return None
+        if re.search(r'FAIL|PENDING|INCOMPLETE|PARTIAL',status,re.I) or data.get('errors') or data.get('pending'):return None
+    else:
+        match=re.search(r'(?im)^\s*(?:status\s*[:=]\s*)?(PASS(?:_[A-Z0-9_]+)?|SUCCESS)\s*$',text)
+        if not match or re.search(r'(?i)\b(?:FAIL|FAILED|PENDING|INCOMPLETE)\b',text):return None
+        status=match.group(1)
+    return raw,status
+integration_receipts=[]
+for kind,label,source in [
+    ('catalog','Catálogo Unity',args.catalog_receipt or ROOT/'UnityPackage/catalog-receipt.json'),
+    ('scene','Escenas Unity',args.scene_receipt or ROOT/'UnityPackage/scene-receipt.json'),
+    ('loading','Carga de los cinco mapas',args.loading_receipt or ROOT/'GameLoading/five-map-game-loading.txt')]:
+    verified=successful_receipt(source)
+    if verified is None:continue
+    raw,status=verified
+    if source.resolve().is_relative_to(ROOT.resolve()):relative=source.resolve().relative_to(ROOT.resolve()).as_posix()
+    else:
+        folder=ROOT/'UnityEvidence';folder.mkdir(exist_ok=True)
+        target=folder/(kind+'-'+hashlib.sha256(raw).hexdigest()[:12]+source.suffix.lower())
+        if target.exists():assert target.read_bytes()==raw
+        else:target.write_bytes(raw)
+        relative=target.relative_to(ROOT).as_posix()
+    item=asset(relative,label+' · '+status,'successful_integration_receipt')
+    integration_receipts.append(dict(kind=kind,status=status,scope='Éxito declarado por este recibo; no se extiende a verificaciones ajenas.',sourcePath=str(source),asset=item))
 manifest=dict(schemaVersion=1,generatedAtUtc=datetime.now(timezone.utc).isoformat(),root=str(ROOT),index='ENTREGA.html',
     scope='Entrega de arte Higgsfield; integración Unity en verificación, sin equivalencia portable afirmada',
-    counts=dict(maps=5,recommendedBlendFiles=5,recommendedGlbFiles=5,recommendedCleanFbxFiles=5,artPreviews=10,concepts=20),
+    counts=dict(maps=5,recommendedBlendFiles=5,recommendedGlbFiles=5,recommendedCleanFbxFiles=5,artPreviews=10,unityCaptures=5,concepts=20),
     maps=maps,history=history,excludedDuplicates=[duplicate],evidence=[concept_manifest]+extras,
+    integrationReceipts=integration_receipts,visualReview=dict(scope='Cinco capturas Unity revisadas; sin bloqueos P0/P1 identificados en esas imágenes.',
+        remainingP2=['Yate: patrón radial marcado del agua.','Puerto: escala y lectura del fondo de acantilado.'],redesignRequested=False),
     fileRecords=list(records.values()),pathPolicy='All href/src values are relative to ENTREGA.html; move the complete folder to retain links.')
 
 escape=html.escape
@@ -128,6 +194,7 @@ sections=[]
 for i,entry in enumerate(maps,1):
     downloads=''.join(f'<li>{link(item)}<small>{item["bytes"]/1048576:.1f} MB</small></li>' for item in entry['sources'])
     previews=''.join(figure(item,f'{entry["title"]}: {item["label"]}') for item in entry['previews'])
+    unity_capture=figure(entry['unityCapture'],f'{entry["title"]}: {entry["unityCapture"]["label"]}')
     sketches=''.join(figure(item,f'{entry["title"]}: boceto {item["label"]}') for item in entry['concepts'])
     hashes=''.join(f'<tr><th scope="row">{escape(item["role"].upper())}</th><td><code>{item["sha256"]}</code><small>{escape(item["path"])}</small></td></tr>' for item in entry['sources'])
     evidence_links=''.join(f'<li>{link(item)}</li>' for item in entry.get('evidence',[]))
@@ -135,6 +202,7 @@ for i,entry in enumerate(maps,1):
       <header class="map-heading"><span class="number">{i:02}</span><div><h2 id="title-{entry['slug']}">{escape(entry['title'])}</h2><p>{escape(entry['description'])}</p></div></header>
       <p class="state"><span>Higgsfield · Arte terminado</span><span>Unity · En verificación</span></p>
       <div class="preview-grid">{previews}</div>
+      <details class="unity-capture"><summary>Ver captura Unity revisada</summary>{unity_capture}<p class="muted">{escape(entry['unityCaptureScope'])}</p></details>
       <ul class="downloads" aria-label="Fuentes recomendadas de {escape(entry['title'],quote=True)}">{downloads}</ul>
       <p class="note{' attention' if entry['slug']=='casa' else ''}">{escape(entry['note'])}</p>
       {'<ul class="evidence">'+evidence_links+'</ul>' if evidence_links else ''}
@@ -143,6 +211,8 @@ for i,entry in enumerate(maps,1):
     </article>''')
 nav=''.join(f'<a href="#{m["slug"]}">{escape(m["title"])}</a>' for m in maps)
 history_links=''.join(f'<li>{link(item)}</li>' for item in history)
+integration_links=''.join(f'<li>{link(item["asset"])}</li>' for item in integration_receipts)
+integration_section=('<details><summary>Recibos de integración con éxito declarado</summary><ul>'+integration_links+'</ul><p>Cada recibo conserva su alcance. Las comprobaciones ausentes o pendientes no se presentan como aprobadas.</p></details>') if integration_receipts else ''
 page=f'''<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light"><title>Let me sleep · Entrega de mapas</title>
@@ -156,6 +226,7 @@ nav{{display:flex;gap:8px 24px;flex-wrap:wrap;margin-top:24px;font-size:14px}}.t
 article{{padding:32px 0;border-bottom:1px solid var(--line);scroll-margin-top:20px}}.map-heading{{display:flex;gap:17px;align-items:baseline}}.number{{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}}h2{{font-size:25px;line-height:1.25;margin:0;letter-spacing:-.02em}}.map-heading p{{margin:6px 0 0;color:var(--muted)}}
 .state{{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;color:var(--muted);margin:14px 0}}.state span:first-child{{color:var(--green);font-weight:650}}
 .preview-grid,.concept-grid{{display:grid;grid-template-columns:1fr 1fr;gap:16px}}figure{{margin:0;min-width:0}}figure a{{display:block;background:#e4e8e2;line-height:0}}img{{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:contain}}figcaption{{font-size:12px;color:var(--muted);padding:6px 0}}
+.unity-capture figure{{margin-top:12px;max-width:900px}}.unity-capture img{{aspect-ratio:8/5}}
 .downloads{{list-style:none;display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0;padding:0}}.downloads li{{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#fff;padding:9px 13px;font-size:14px}}small{{font-size:12px;color:var(--muted)}}
 .note{{font-size:13px;max-width:950px;margin:16px 0;color:var(--muted)}}.attention{{padding:12px 15px;background:#efe7d6;border-left:3px solid #967b26;color:#554821}}
 details{{margin-top:12px}}summary{{cursor:pointer;color:var(--green);font-size:14px;width:fit-content;padding:4px 0}}.muted{{color:var(--muted);font-size:13px}}.concept-grid{{margin-top:14px}}.concept-grid img{{aspect-ratio:16/9}}
@@ -165,10 +236,11 @@ footer{{padding:30px 0 44px;color:var(--muted);font-size:13px}}footer h2{{font-s
 @media(prefers-reduced-motion:reduce){{*{{scroll-behavior:auto}}}}
 </style></head><body><div class="wrap">
 <header class="masthead"><p class="eyebrow">Let me sleep · Archivo de arte</p><h1>Cinco mapas para explorar</h1>
-<p class="intro">Fuentes Higgsfield, vistas del arte terminado y los 20 bocetos aprobados. La integración en Unity está en verificación. Abrí una imagen para verla completa o elegí el formato del modelo.</p>
-<p class="totals"><span>5 fuentes editables</span><span>10 vistas de arte</span><span>20 bocetos</span></p><nav aria-label="Ir a un mapa">{nav}</nav></header>
+<p class="intro">Fuentes Higgsfield, vistas del arte terminado, cinco capturas Unity revisadas y los 20 bocetos aprobados. La integración en Unity está en verificación. Abrí una imagen para verla completa o elegí el formato del modelo.</p>
+<p class="totals"><span>5 fuentes editables</span><span>10 vistas de arte</span><span>5 capturas Unity</span><span>20 bocetos</span></p><nav aria-label="Ir a un mapa">{nav}</nav></header>
 <main>{''.join(sections)}</main>
-<footer><h2>Sobre esta entrega</h2><p>Las imágenes son renders de arte de Blender y referencias conceptuales; no certifican una partida completa ni rendimiento en Unity. Los enlaces principales señalan las fuentes recomendadas. Conservá la carpeta completa para mantener los enlaces locales.</p>
+<footer><h2>Sobre esta entrega</h2><p>Las vistas de Blender, los bocetos y las capturas Unity se identifican por separado; no certifican una partida completa ni rendimiento. La revisión de las cinco capturas no identificó bloqueos P0/P1. Quedan dos observaciones P2: el patrón radial del agua del Yate y la escala del fondo de acantilado de Puerto. Los enlaces principales señalan las fuentes recomendadas. Conservá la carpeta completa para mantener los enlaces locales.</p>
+{integration_section}
 <div class="footer-links"><a href="ENTREGA.manifest.json">Manifiesto completo · rutas y SHA256</a>{link(extras[0])}{link(extras[1])}</div>
 <details><summary>Historial técnico · candidatos anteriores, no recomendados</summary><p>Estas referencias se conservan como evidencia. No reemplazan los archivos recomendados de cada mapa.</p><ul>{history_links}</ul></details>
 <p>Inventario verificado: {escape(manifest['generatedAtUtc'])}. La copia duplicada 05-detail.png no se cuenta nuevamente entre los 20 bocetos.</p></footer>
@@ -193,7 +265,7 @@ for value in parser.links:
     else:
         target=(ROOT/unquote(url.path)).resolve()
         assert target.is_relative_to(ROOT.resolve()) and target.is_file(), value
-assert parser.images==30
+assert parser.images==35
 assert len({item['sha256'] for m in maps for item in m['concepts']})==20
 assert all(hashlib.sha256((ROOT/item['path']).read_bytes()).hexdigest()==item['sha256'] for item in records.values())
 verification=dict(status='PASS_LOCAL_RELATIVE_LINKS_AND_FILE_HASHES',files=len(records),links=len(parser.links),imageElements=parser.images,
