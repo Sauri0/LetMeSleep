@@ -16,6 +16,21 @@ def empty(name, x):
 
 
 class Checks(unittest.TestCase):
+    def test_nested_report_counts_preserve_export_exclusions(self):
+        audit = dict(source_object_count=3, excluded_objects=[dict(name='Hidden')], objects=[
+            dict(name='Solid', type='MESH', triangles=4, properties=dict(collision_role='static_solid')),
+            dict(name='Spawn', type='EMPTY')])
+        counts = dict(scene_objects=3, export_objects=2, export_mesh_objects=1, triangles_instanced_total=4,
+                      materials=1, human_spawns=1, mosquito_spawns=0, collision_roles=dict(static_solid=1))
+        tool.validate_nested_report_counts(dict(counts=counts), audit, 2, 1, 1, 1, 0)
+        for key in counts:
+            bad = {**counts, key: {} if key == 'collision_roles' else 99}
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                tool.validate_nested_report_counts(dict(counts=bad), audit, 2, 1, 1, 1, 0)
+        audit['excluded_objects'][0]['name'] = 'Solid'
+        with self.assertRaises(ValueError):
+            tool.validate_nested_report_counts(dict(counts=counts), audit, 2, 1, 1, 1, 0)
+
     def test_emission_audit_product_and_legacy_zero(self):
         self.assertEqual(tool.emission_fields({'name': 'Old'}, {}), {'emissionRgb': [0, 0, 0], 'emissionStrength': 0})
         glb = {'name': 'Window', 'emissiveFactor': [.48, .2736, .0864]}

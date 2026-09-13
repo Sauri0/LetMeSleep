@@ -161,6 +161,33 @@ def emission_fields(gltf_material, audited):
     return dict(emissionRgb=factor if any(exported) else [0, 0, 0], emissionStrength=strength if any(exported) else 0)
 
 
+def validate_nested_report_counts(report, audit, object_count, mesh_count, material_count, human_count, mosquito_count):
+    """Compare explicitly reported export counts; scene counts include preserved exclusions."""
+    if 'counts' not in report:
+        return
+    counts = report['counts']
+    need(isinstance(counts, dict), 'Report counts must be an object')
+    expected = dict(export_objects=object_count, export_mesh_objects=mesh_count, materials=material_count,
+                    human_spawns=human_count, mosquito_spawns=mosquito_count)
+    if 'triangles_instanced_total' in counts:
+        meshes = [o for o in audit['objects'] if o['type'] == 'MESH']
+        need(all(type(o.get('triangles')) is int and o['triangles'] >= 0 for o in meshes), 'Missing audited triangle count')
+        expected['triangles_instanced_total'] = sum(o['triangles'] for o in meshes)
+    if 'scene_objects' in counts:
+        excluded = audit.get('excluded_objects', [])
+        exported_names = {o['name'] for o in audit['objects']}
+        excluded_names = [o['name'] for o in excluded]
+        need(len(set(excluded_names)) == len(excluded_names) and not exported_names.intersection(excluded_names), 'Ambiguous exported/excluded object list')
+        expected['scene_objects'] = object_count + len(excluded)
+        need(audit.get('source_object_count', expected['scene_objects']) == expected['scene_objects'], 'Audit source object count differs')
+    for key, actual in expected.items():
+        if key in counts:
+            need(type(counts[key]) is int and counts[key] == actual, 'Report nested count differs: ' + key)
+    if 'collision_roles' in counts:
+        actual = dict(collections.Counter(o['properties']['collision_role'] for o in audit['objects'] if o['type'] == 'MESH'))
+        need(counts['collision_roles'] == actual, 'Report collision role counts differ')
+
+
 def prepare(config, config_dir):
     validate_config(config)  # Finality and counts checked before touching export files.
     source_paths = {key: (config_dir / config[key]).resolve() for key in ('fbx', 'glb', 'audit', 'report')}
@@ -260,6 +287,7 @@ def prepare(config, config_dir):
     need(config.get('firstSurfaceId', 1000000) + len(solids) - 1 <= 4294967295, 'Surface IDs overflow uint')
     human = select_spawns(audit_objects, paths, config.get('humanPrefix', 'Spawn_Human_'), config.get('humanCount', 5))
     mosquito = select_spawns(audit_objects, paths, config.get('mosquitoPrefix', 'Spawn_Mosquito_'), config.get('mosquitoCount', 16))
+    validate_nested_report_counts(report, audit, len(nodes), len(rules), len(audit_materials), len(human), len(mosquito))
     spawns = human + mosquito
     need(len({path for path, _ in spawns}) == len(spawns), 'Cross-role spawn marker overlap')
     for i, (path, position) in enumerate(spawns):
@@ -294,6 +322,7 @@ def prepare(config, config_dir):
                       objects=len(nodes), meshes=len(rules), materials=len(audit_materials),
                       classification=dict(collections.Counter(r['kind'] for r in rules)),
                       checks=['All names/full paths agree audit/GLB/FBX', 'Every mesh classified from audit properties.collision_role; GLB role conflicts rejected',
+                              'Present nested report export/scene/triangle/material/spawn/collision counts agree with audit and exports',
                               'FBX unique material slots equal audit; duplicates recorded', 'All GLB primitive materials covered and base colours agree',
                               'Required EMPTY spawn counts, finite world matrices, distinct world origins and bounds checked'],
                       fbxVersion=fbx_version, fbxGlobalSettings=properties(next(n for n in tree if n['name'] == 'GlobalSettings')),

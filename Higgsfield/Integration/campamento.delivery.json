@@ -1,0 +1,331 @@
+{
+  "status": "PASS_STRICT_EXPORT_CROSSCHECKS_AND_CSHARP_CONTRACT",
+  "mapId": "hf-campamento-pinar-v1",
+  "recipePath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\UnityRecipe\\hf-campamento-pinar-v1.recipe.json",
+  "recipeSha256": "de9ef0efc4d1ef93445de747f17156f9c37f6dace21a5a06f4f35ceea2350f43",
+  "validationPath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\UnityRecipe\\hf-campamento-pinar-v1.validation.json",
+  "validationSha256": "5c305a5b2964a5a5edcbbfeaa81ae2f5c1b150ff3bc39e04fcc51328631ff608",
+  "generatorSha256": "4da43bd9166d005045a9f67cb5e251d5ecc3f07d1b71074a28b8f58f3f6aea0c",
+  "sourceHashes": {
+    "fbx": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\HF_MAP_03_campamento_UNITY.fbx",
+      "sha256": "7928ebce668c4fdd4a2a46807aba1c74996b9b0813444da5854678308d2b7808"
+    },
+    "glb": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\HF_MAP_03_campamento.glb",
+      "sha256": "b3636b640aa0891eda5637f76c743560395e0606abb6b8fb564a342f8706a241"
+    },
+    "audit": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\scene-audit.json",
+      "sha256": "e674942a24baebc02cbb127313d59448f0ac9e7693c890d89676f8409e47d350"
+    },
+    "report": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\HF_MAP_03_campamento_report.json",
+      "sha256": "093f562f83805c0bbb2ddd19822163ec3a8206dbb14ee8128cc0dcac9ed44554"
+    }
+  },
+  "objects": 1493,
+  "meshes": 1436,
+  "materials": 40,
+  "classification": {
+    "solid": 501,
+    "decoration": 920,
+    "water": 8,
+    "foam": 7
+  },
+  "humanSpawns": 5,
+  "mosquitoSpawns": 16,
+  "playBoundsMin": [
+    -46,
+    -0.5,
+    -36
+  ],
+  "playBoundsMax": [
+    46,
+    10,
+    36
+  ],
+  "triangles": 76947,
+  "sourceObjects": 1508,
+  "explicitlyExcludedObjects": [
+    {
+      "name": "CAMP_Pot_0",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Pot_0_Lid",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Pot_1",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Pot_1_Lid",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Pot_2",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Pot_2_Lid",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Sky_Dome",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Moon",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Moon_Halo",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Bank_West_01",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Bank_West_02",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Bank_East_01",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Bank_East_02",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Lake_Rim",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    },
+    {
+      "name": "CAMP_Shore_Jetty",
+      "type": "MESH",
+      "reason": "authored export_exclude=true, hide_render=true"
+    }
+  ],
+  "uniqueGlbMeshes": 1056,
+  "emission": [
+    {
+      "name": "CAMP_Mat_Ember",
+      "linearProduct": [
+        4.5,
+        1.4399999678134918,
+        0.2699999939650297
+      ]
+    },
+    {
+      "name": "CAMP_Mat_LanternGlass",
+      "linearProduct": [
+        2.200000047683716,
+        1.3420000605583198,
+        0.48400000786781305
+      ]
+    },
+    {
+      "name": "CAMP_Prod_FlameAmber",
+      "linearProduct": [
+        2.5,
+        0.7000000029802322,
+        0.06250000093132257
+      ]
+    },
+    {
+      "name": "CAMP_Prod_FlameGold",
+      "linearProduct": [
+        3,
+        2.1600000858306885,
+        0.35999999195337296
+      ]
+    },
+    {
+      "name": "CAMP_Prod_FlameHeart",
+      "linearProduct": [
+        3,
+        2.790000021457672,
+        1.3199999928474426
+      ]
+    }
+  ],
+  "water": [
+    {
+      "path": "CAMP_Prod_LakeCenter",
+      "kind": "water",
+      "auditedAndGlbAndFbxMorphs": [
+        "Wave1",
+        "Wave2"
+      ],
+      "glbPositionEntries": 54,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "supported-pair"
+    },
+    {
+      "path": "CAMP_Prod_LakeSeam",
+      "kind": "water",
+      "auditedAndGlbAndFbxMorphs": [
+        "Wave1",
+        "Wave2"
+      ],
+      "glbPositionEntries": 16,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "supported-pair"
+    },
+    {
+      "path": "Foam_Creek_01",
+      "kind": "foam",
+      "auditedAndGlbAndFbxMorphs": [],
+      "glbPositionEntries": 7,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "REJECTED"
+    },
+    {
+      "path": "Foam_Creek_02",
+      "kind": "foam",
+      "auditedAndGlbAndFbxMorphs": [],
+      "glbPositionEntries": 7,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "REJECTED"
+    },
+    {
+      "path": "Foam_Creek_03",
+      "kind": "foam",
+      "auditedAndGlbAndFbxMorphs": [],
+      "glbPositionEntries": 7,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "REJECTED"
+    },
+    {
+      "path": "Foam_Lake_01",
+      "kind": "foam",
+      "auditedAndGlbAndFbxMorphs": [
+        "Wave1"
+      ],
+      "glbPositionEntries": 7,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "REJECTED"
+    },
+    {
+      "path": "Foam_Lake_02",
+      "kind": "foam",
+      "auditedAndGlbAndFbxMorphs": [
+        "Wave1"
+      ],
+      "glbPositionEntries": 7,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "REJECTED"
+    },
+    {
+      "path": "Foam_Lake_03",
+      "kind": "foam",
+      "auditedAndGlbAndFbxMorphs": [],
+      "glbPositionEntries": 7,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "REJECTED"
+    },
+    {
+      "path": "Foam_Lake_04",
+      "kind": "foam",
+      "auditedAndGlbAndFbxMorphs": [],
+      "glbPositionEntries": 7,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "REJECTED"
+    },
+    {
+      "path": "Water_Creek",
+      "kind": "water",
+      "auditedAndGlbAndFbxMorphs": [
+        "Wave1",
+        "Wave2"
+      ],
+      "glbPositionEntries": 384,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "supported-pair"
+    },
+    {
+      "path": "Water_Creek_Deep",
+      "kind": "water",
+      "auditedAndGlbAndFbxMorphs": [
+        "Wave1",
+        "Wave2"
+      ],
+      "glbPositionEntries": 192,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "supported-pair"
+    },
+    {
+      "path": "Water_Creek_Shallow",
+      "kind": "water",
+      "auditedAndGlbAndFbxMorphs": [
+        "Wave1",
+        "Wave2"
+      ],
+      "glbPositionEntries": 192,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "supported-pair"
+    },
+    {
+      "path": "Water_Lake",
+      "kind": "water",
+      "auditedAndGlbAndFbxMorphs": [
+        "Wave1",
+        "Wave2"
+      ],
+      "glbPositionEntries": 272,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "supported-pair"
+    },
+    {
+      "path": "Water_Lake_Deep",
+      "kind": "water",
+      "auditedAndGlbAndFbxMorphs": [
+        "Wave1",
+        "Wave2"
+      ],
+      "glbPositionEntries": 136,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "supported-pair"
+    },
+    {
+      "path": "Water_Lake_Shallow",
+      "kind": "water",
+      "auditedAndGlbAndFbxMorphs": [
+        "Wave1",
+        "Wave2"
+      ],
+      "glbPositionEntries": 136,
+      "runtimeIfMeshFilter": "private-mesh-cpu",
+      "runtimeIfSkinned": "supported-pair"
+    }
+  ],
+  "contractCheck": "Actual C# Validate and Resolve passed all 1436 paths using Verify-RecipeOffline.ps1",
+  "nativeApplicationsStarted": false,
+  "pending": [
+    "Native hierarchy, axis/scale, material slots and colliders",
+    "Spawn rotation/capsule/flight clearance and allowed room roles",
+    "Water renderer/motion/culling/performance",
+    "Visual and lighting approval owned by root",
+    "SpatialData navigation schema and RoomRules/UI/Online integration owned by root",
+    "Foam_Lake_01 and Foam_Lake_02 have one morph; native SkinnedMeshRenderer would be rejected",
+    "Water/foam CPU parameters use contract defaults: .025m amplitude,4m wavelength,8s cycle; these do not reproduce authored independent Blender morph drivers"
+  ]
+}

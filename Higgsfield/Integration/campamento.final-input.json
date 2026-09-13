@@ -1,0 +1,23 @@
+{
+  "sourceFinal": true,
+  "mapId": "hf-campamento-pinar-v1",
+  "expectedScene": "HF_MAP_03_campamento",
+  "expectedWaterCount": 15,
+  "sourceSha256": "7928ebce668c4fdd4a2a46807aba1c74996b9b0813444da5854678308d2b7808",
+  "fbx": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/03-campamento/HF_MAP_03_campamento_UNITY.fbx",
+  "glb": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/03-campamento/HF_MAP_03_campamento.glb",
+  "audit": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/03-campamento/scene-audit.json",
+  "report": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/03-campamento/HF_MAP_03_campamento_report.json",
+  "humanCount": 5,
+  "mosquitoCount": 16,
+  "humanPrefix": "Spawn_Human_",
+  "mosquitoPrefix": "Spawn_Mosquito_",
+  "collisionLayer": "Default",
+  "firstSurfaceId": 1000000,
+  "playBoundsMin": [-46, -0.5, -36],
+  "playBoundsMax": [46, 10, 36],
+  "kinds": {
+    "CAMP_Prod_LakeCenter": "water",
+    "CAMP_Prod_LakeSeam": "water"
+  }
+}
