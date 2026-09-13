@@ -78,7 +78,7 @@ public static class AuthorityStrikeProbe
         report.limits.Add("Commands and collision plans are production, but map/aim scenarios are controlled. Tool attachment reproduces the production Grip/socket mounting convention.");
         report.limits.Add("Fresh owned instances per case; face/attention behaviours disabled. No animator crossfade timing or autonomous LateUpdate-order certification.");
         string pathOut=Path.Combine(directory,"authority-strike-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff")+".json");
-        File.WriteAllText(pathOut,JsonUtility.ToJson(report,true));
+        File.WriteAllText(pathOut,AuthorityStrikeJson.Write(report));
         return report.status+" cases="+report.casesCompleted+" failed="+report.failedCases+" JSON="+pathOut;
     }
     sealed class Fixture : IDisposable

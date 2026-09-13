@@ -48,6 +48,8 @@ Las manos se miden por el origen del hueso Hand: no existe un anclaje de contact
 
 ## Estado inicial
 
-Compilación offline: `N:/LetMeSleep/Validation/AuthorityStrike-20260913/compiled-20260913-013247-940/`, cero errores y cero advertencias. No se ejecutó Unity desde esta tarea. Director recibió `run-in-director-slot.cs`; el JSON nativo se guardará en `N:/LetMeSleep/Validation/AuthorityStrike-20260913/native/`.
+Compilación offline vigente: `N:/LetMeSleep/Validation/AuthorityStrike-20260913/compiled-20260913-013523-080/`, cero errores y cero advertencias. No se ejecutó Unity desde esta tarea. Director recibió `run-in-director-slot.cs`; el JSON nativo se guardará en `N:/LetMeSleep/Validation/AuthorityStrike-20260913/native/`.
+
+La primera compilación `compiled-20260913-013247-940` queda obsoleta: usaba JsonUtility, que según la evidencia del revisor omitió listas de DTO externos en este entorno. La versión vigente incorpora `AuthorityStrikeJson.cs`, adaptación nominal del escritor de campos ya usado por el revisor, para conservar muestras/hashes completos. No se repite ni elimina evidencia anterior.
 
 Estado: harness preparado; medición nativa y corrección pendientes de evidencia. Ningún cambio runtime en esta entrega inicial.
