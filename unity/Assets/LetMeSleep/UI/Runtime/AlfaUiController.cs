@@ -27,6 +27,11 @@ namespace LetMeSleep.UI
         private OnlineUiState onlineState = new OnlineUiState();
         private LobbyUiState lobbyState;
         private TrainingUiState trainingState = new TrainingUiState();
+        private TrainingMapOption[] trainingMaps = { new TrainingMapOption(HousePatioMapId, "CASA CON PATIO") };
+        private string selectedTrainingMapId = HousePatioMapId;
+        private const string NoTrainingMaps = "No hay mapas de entrenamiento disponibles.";
+        private TextMeshProUGUI trainingMapLabel;
+        private UnityEngine.UI.Button trainingMapPrevious, trainingMapNext;
         private CustomizationUiState customizationState;
         private BasicCustomizationDraft customizationDraft;
         private SettingsUiState settingsState;
@@ -272,6 +277,38 @@ namespace LetMeSleep.UI
                 SetScreen(AlfaUiScreen.Lobby, "LobbyReadyButton");
         }
 
+        public void SetTrainingMaps(IReadOnlyList<TrainingMapOption> maps)
+        {
+            var copy = maps == null ? Array.Empty<TrainingMapOption>() : maps.ToArray();
+            if (copy.Any(map => map == null) || copy.Select(map => map.Id).Distinct(StringComparer.Ordinal).Count() != copy.Length)
+                throw new ArgumentException("Training maps must be non-null with unique IDs.", nameof(maps));
+            trainingMaps = copy;
+            if (!HasSelectedTrainingMap) selectedTrainingMapId = trainingMaps.FirstOrDefault()?.Id;
+            UpdateTrainingMapView();
+        }
+
+        private bool HasSelectedTrainingMap => trainingMaps.Any(map => map.Id == selectedTrainingMapId);
+
+        private void CycleTrainingMap(int delta)
+        {
+            if (TrainingBusy || trainingMaps.Length == 0) return;
+            int index = Array.FindIndex(trainingMaps, map => map.Id == selectedTrainingMapId);
+            selectedTrainingMapId = trainingMaps[(index + delta + trainingMaps.Length) % trainingMaps.Length].Id;
+            UpdateTrainingMapView();
+        }
+
+        private void UpdateTrainingMapView()
+        {
+            if (trainingMapLabel == null) return;
+            trainingMapLabel.text = trainingMaps.FirstOrDefault(map => map.Id == selectedTrainingMapId)?.DisplayName ?? "SIN MAPAS";
+            trainingMapPrevious.interactable = trainingMapNext.interactable = !TrainingBusy && trainingMaps.Length > 1;
+            trainingStartButton.interactable = !TrainingBusy && HasSelectedTrainingMap;
+            if (!TrainingBusy && !HasSelectedTrainingMap) trainingStatus.text = NoTrainingMaps;
+            else if (trainingStatus.text == NoTrainingMaps) trainingStatus.text = trainingState.Message;
+            if (resultsState != null && resultsState.IsTraining && resultsPrimary != null)
+                resultsPrimary.interactable = !TrainingBusy && !resultsActionLatched && HasSelectedTrainingMap;
+        }
+
         public void PresentTraining(TrainingUiState state)
         {
             trainingState = state ?? new TrainingUiState();
@@ -290,17 +327,19 @@ namespace LetMeSleep.UI
             if (screen == AlfaUiScreen.Results && resultsState != null && resultsState.IsTraining)
             {
                 resultsActionLatched = busy;
-                resultsPrimary.interactable = !busy;
+                resultsPrimary.interactable = !busy && HasSelectedTrainingMap;
                 resultsLeave.interactable = !trainingCancelLatched;
                 resultsPrimaryLabel.text = busy ? "PREPARANDO…" : "REPETIR ENTRENAMIENTO";
                 resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = busy ?
                     trainingCancelLatched ? "CANCELANDO…" : "CANCELAR" : "VOLVER AL MENÚ";
             }
+            UpdateTrainingMapView();
         }
 
         public void ShowTraining()
         {
             PresentTraining(trainingState);
+            UpdateTrainingMapView();
             SetScreen(AlfaUiScreen.Training, trainingState.SelectedRole == AlfaRole.Human ? "TrainingHumanButton" : "TrainingMosquitoButton");
         }
 
@@ -425,11 +464,12 @@ namespace LetMeSleep.UI
             var reason = string.IsNullOrWhiteSpace(state.Reason) ? string.Empty : "\n" + state.Reason;
             resultsStats.text = $"Sangre compartida: {state.BloodCurrent:0.#} / {state.BloodTarget:0.#}\nTiempo: {FormatClock(state.ElapsedSeconds)}{reason}";
             resultsPrimary.gameObject.SetActive(state.IsTraining || state.IsOwner);
-            resultsPrimary.interactable = true;
+            resultsPrimary.interactable = !state.IsTraining || HasSelectedTrainingMap;
             resultsLeave.interactable = true;
             resultsPrimaryLabel.text = state.IsTraining ? "REPETIR ENTRENAMIENTO" : "VOLVER AL LOBBY";
             resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = state.IsTraining ? "VOLVER AL MENÚ" : "SALIR DE LA SALA";
             if (!state.IsTraining && !state.IsOwner) resultsStats.text += "\n\nESPERANDO AL ANFITRIÓN…";
+            if (state.IsTraining && !HasSelectedTrainingMap) resultsStats.text += "\n\n" + NoTrainingMaps;
             SetScreen(AlfaUiScreen.Results, resultsPrimary.gameObject.activeSelf ? "ResultsPrimaryButton" : "ResultsLeaveButton");
         }
 
@@ -649,12 +689,16 @@ namespace LetMeSleep.UI
             trainingMosquitoButton = factory.FeatureButton(roles, "TrainingMosquitoButton", "MOSQUITO", "VOLÁ Y EXTRAÉ SANGRE",
                 () => SelectTrainingRole(AlfaRole.Mosquito), AlfaUiIconKind.Mosquito, false, false, 86f);
             AddReadOnlyField(content, "MODO", "SANGRE");
-            AddReadOnlyField(content, "MAPA", "CASA CON PATIO");
+            trainingMapLabel = AddCycleField(content, "MAPA", "TrainingMap", -1, 1, CycleTrainingMap);
+            trainingMapPrevious = trainingMapLabel.transform.parent.Find("TrainingMapPrevious").GetComponent<UnityEngine.UI.Button>();
+            trainingMapNext = trainingMapLabel.transform.parent.Find("TrainingMapNext").GetComponent<UnityEngine.UI.Button>();
+            trainingMapLabel.textWrappingMode = TextWrappingModes.Normal;
             trainingStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
             trainingStartButton = factory.Button(content, "TrainingStartButton", "EMPEZAR", BeginTraining, true, false, 74f, AlfaUiIconKind.Play);
             trainingStartLabel = trainingStartButton.GetComponentInChildren<TextMeshProUGUI>();
             trainingBackButton = factory.Button(content, "TrainingBackButton", "VOLVER", BackFromTraining, false, false, 58f, AlfaUiIconKind.Back);
             trainingBackLabel = trainingBackButton.GetComponentInChildren<TextMeshProUGUI>();
+            UpdateTrainingMapView();
         }
 
         private void BuildCustomization(AlfaUiDependencies dependencies)
@@ -1090,6 +1134,11 @@ namespace LetMeSleep.UI
         private void StartTrainingIntent(AlfaRole role, bool fromResults)
         {
             if (TrainingBusy || (fromResults && resultsActionLatched)) return;
+            if (!HasSelectedTrainingMap)
+            {
+                UpdateTrainingMapView();
+                return;
+            }
             gameplayIsTraining = true;
             trainingStartLatched = true;
             trainingCancelLatched = false;
@@ -1110,7 +1159,8 @@ namespace LetMeSleep.UI
                 trainingBackLabel.text = "CANCELAR";
             }
             trainingStatus.text = "Preparando entrenamiento…";
-            actions.StartTraining(role, BloodModeId, HousePatioMapId);
+            UpdateTrainingMapView();
+            actions.StartTraining(role, BloodModeId, selectedTrainingMapId);
         }
 
         private void RequestTrainingCancel()

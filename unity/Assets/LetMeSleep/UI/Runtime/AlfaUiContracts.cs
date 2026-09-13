@@ -233,6 +233,20 @@ namespace LetMeSleep.UI
         }
     }
 
+    public sealed class TrainingMapOption
+    {
+        public string Id { get; }
+        public string DisplayName { get; }
+
+        public TrainingMapOption(string id, string displayName)
+        {
+            if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException("Map ID is required.", nameof(id));
+            if (string.IsNullOrWhiteSpace(displayName)) throw new ArgumentException("Map display name is required.", nameof(displayName));
+            Id = id;
+            DisplayName = displayName;
+        }
+    }
+
     public sealed class TrainingUiState
     {
         public AlfaRole SelectedRole { get; }
