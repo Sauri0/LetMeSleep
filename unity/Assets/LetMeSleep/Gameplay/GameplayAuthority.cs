@@ -119,7 +119,11 @@ namespace LetMeSleep.Gameplay
             if (a.Spawn.Role == PlayerRole.Human && c.ViewPitchRadians > 1.308997f) return a.Rejection = CommandReject.InvalidDirection;
             if (a.HasInput && !MathEx.Newer(c.Header.Sequence, a.InputSequence)) return CommandReject.StaleSequence;
             ResetRate(a); if (++a.InputCount > 60) return a.Rejection = CommandReject.RateLimited;
-            a.Input = c; a.InputTick = tick; a.InputSequence = c.Header.Sequence; a.HasInput = true; a.Yaw = c.ViewYawRadians; a.Pitch = c.ViewPitchRadians; a.Aim = c.AimForward.Normalized;
+            a.InputTick = tick; a.InputSequence = c.Header.Sequence; a.HasInput = true;
+            // Accept and acknowledge the validated stream while incapacitated, but do
+            // not turn mouse/control intent into body orientation or deferred movement.
+            if (!CanAct(a)) { ClearHeld(a); return a.Rejection = CommandReject.None; }
+            a.Input = c; a.Yaw = c.ViewYawRadians; a.Pitch = c.ViewPitchRadians; a.Aim = c.AimForward.Normalized;
             if (!c.BiteHeld) a.BiteArmed = true;
             return a.Rejection = CommandReject.None;
         }
@@ -390,7 +394,13 @@ namespace LetMeSleep.Gameplay
         private void EmitDoor(Door door, uint source) => events.Add(new GameplayEvent(config.SessionEpoch, config.RoundId, ++eventId, tick, GameplayEventKind.DoorChanged, source, 0, door.Revision, door.Definition.HingePosition, Float3.Up, door.Snapshot));
         private static bool CanAct(Actor a) => a.State != LifeState.Falling && a.State != LifeState.Stunned && a.State != LifeState.Fainted && a.State != LifeState.Recovering;
         private static void ClearHeld(Actor a) { a.Input = default; a.Jump = false; a.BiteArmed = false; }
-        private static void SetState(Actor a, LifeState state) { if (a.State != state) { a.State = state; a.Revision++; } }
+        private static void SetState(Actor a, LifeState state)
+        {
+            if (a.State == state) return;
+            bool wasControllable = CanAct(a);
+            a.State = state; a.Revision++;
+            if (!CanAct(a) || !wasControllable) ClearHeld(a);
+        }
         private void Detach(Actor a)
         {
             if (a.Bite.HasValue) Emit(GameplayEventKind.BiteEnded, a, a.Bite.Value.VictimId);

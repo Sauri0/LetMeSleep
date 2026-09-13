@@ -44,6 +44,7 @@ namespace LetMeSleep.Gameplay.Unity
         private float accumulator, yaw, pitch, sendAccumulator, snapshotAccumulator;
         private uint inputSequence, actionSequence, knownViewRevision;
         private bool biteNeedsRelease, wasAttached, focus = true, finishedSent;
+        private bool controlsNeedRelease;
         private readonly Queue<ActionKind> queuedActions = new Queue<ActionKind>();
         private PlayerInputCommand held;
         private GameplayRoundConfig roundConfig;
@@ -57,7 +58,7 @@ namespace LetMeSleep.Gameplay.Unity
             roundConfig = config; accumulator = sendAccumulator = snapshotAccumulator = 0; inputSequence = actionSequence = knownViewRevision = 0; yaw = pitch = 0; cameraDistance = 0; finishedSent = false;
             LatestSnapshot = null; LocalPrivate = null; held = default;
             replicaGate.Reset(config);
-            queuedActions.Clear(); bots.Clear(); biteNeedsRelease = true; wasAttached = false;
+            queuedActions.Clear(); bots.Clear(); biteNeedsRelease = true; wasAttached = false; controlsNeedRelease = false;
             botNavigation = null; World.ResetBotSteering();
             if (IsHost)
             {
@@ -108,6 +109,21 @@ namespace LetMeSleep.Gameplay.Unity
             var keyboard = Keyboard.current; var mouse = Mouse.current;
             if (InputBlocked || !focus || keyboard == null || mouse == null)
             { held = new PlayerInputCommand(default, default, 0, yaw, pitch, LocalViewForward); queuedActions.Clear(); return; }
+            if (!BodyControlsAvailable(self.LifeState))
+            { ClearIncapacitatedInput(self); return; }
+            if (controlsNeedRelease)
+            {
+                held = new PlayerInputCommand(default, default, 0, yaw, pitch, LocalViewForward);
+                queuedActions.Clear();
+                // Pause/UI keys are not part of this gate. Resume requires a fresh
+                // gameplay press instead of replaying a button held through recovery.
+                controlsNeedRelease = keyboard.wKey.isPressed || keyboard.aKey.isPressed ||
+                    keyboard.sKey.isPressed || keyboard.dKey.isPressed || keyboard.spaceKey.isPressed ||
+                    keyboard.leftCtrlKey.isPressed || keyboard.leftShiftKey.isPressed ||
+                    keyboard.eKey.isPressed || keyboard.rKey.isPressed || keyboard.fKey.isPressed ||
+                    keyboard.gKey.isPressed || mouse.leftButton.isPressed;
+                return;
+            }
             var delta = mouse.delta.ReadValue(); yaw = Mathf.Repeat(yaw + delta.x * MouseSensitivity + Mathf.PI, Mathf.PI * 2) - Mathf.PI;
             pitch = Mathf.Clamp(pitch + delta.y * MouseSensitivity * (InvertY ? -1 : 1), -110 * Mathf.Deg2Rad, (self.Role == PlayerRole.Human ? 75 : 89) * Mathf.Deg2Rad);
             bool e = keyboard.eKey.isPressed;
@@ -134,7 +150,7 @@ namespace LetMeSleep.Gameplay.Unity
         private void SendLocal(bool forceNeutral = false)
         {
             var self = LocalActor(); if (self == null) return;
-            bool neutral = forceNeutral || InputBlocked || !focus;
+            bool neutral = forceNeutral || InputBlocked || !focus || controlsNeedRelease || !BodyControlsAvailable(self.LifeState);
             var h = new CommandHeader(roundConfig.SessionEpoch, roundConfig.RoundId, LocalActorId, ++inputSequence, LatestSnapshot.HostTick, self.ViewRevision);
             var input = new PlayerInputCommand(h, neutral ? default : held.MovePlanar, neutral ? 0 : held.Vertical, yaw, pitch, LocalViewForward, !neutral && held.SprintHeld, !neutral && held.CrouchHeld, !neutral && held.BiteHeld, !neutral && held.UseHeld);
             if (IsHost) Authority.SubmitInput(LocalPrincipal, input); else InputReady?.Invoke(input);
@@ -204,6 +220,7 @@ namespace LetMeSleep.Gameplay.Unity
                 foreach (var pickup in snapshot.ToolPickups) World.ApplyToolState(pickup);
             }
             var self = LocalActor();
+            if (self != null && !BodyControlsAvailable(self.LifeState)) ClearIncapacitatedInput(self);
             if (self != null && self.ViewRevision != knownViewRevision)
             {
                 knownViewRevision = self.ViewRevision; queuedActions.Clear(); biteNeedsRelease = true;
@@ -213,6 +230,14 @@ namespace LetMeSleep.Gameplay.Unity
             if (!IsHost) SnapshotReady?.Invoke(snapshot);
         }
         public void ApplySnapshot(GameSessionState snapshot, double renderHostTime) => ApplySnapshot(snapshot);
+        private static bool BodyControlsAvailable(LifeState state) =>
+            state != LifeState.Falling && state != LifeState.Fainted && state != LifeState.Stunned && state != LifeState.Recovering;
+        private void ClearIncapacitatedInput(ActorSnapshot self)
+        {
+            yaw = self.ViewYawRadians; pitch = self.ViewPitchRadians;
+            held = new PlayerInputCommand(default, default, 0, yaw, pitch, LocalViewForward);
+            queuedActions.Clear(); biteNeedsRelease = true; controlsNeedRelease = true;
+        }
         public void ApplyPrivate(ActorPrivateState state)
         { if (replicaGate.AcceptPrivate(state, LocalActorId)) { LocalPrivate = state; PrivateReady?.Invoke(state); } }
         public void ApplyEvent(in GameplayEvent item)
