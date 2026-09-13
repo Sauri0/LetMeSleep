@@ -96,9 +96,25 @@ namespace LetMeSleep.Gameplay.Unity
         {
             if (delta.sqrMagnitude < 1e-12f) return null;
             RaycastHit[] hits = human
-                ? Physics.CapsuleCastAll(position + Vector3.up * radius, position + Vector3.up * (height - radius), radius, delta.normalized, delta.magnitude + Skin, GeometryMask, QueryTriggerInteraction.Collide)
+                ? Physics.CapsuleCastAll(position + Vector3.up * radius, position + Vector3.up * (height - radius), radius - Skin, delta.normalized, delta.magnitude + 2 * Skin, GeometryMask, QueryTriggerInteraction.Collide)
                 : Physics.SphereCastAll(position, radius, delta.normalized, delta.magnitude + Skin, GeometryMask, QueryTriggerInteraction.Collide);
-            foreach (var hit in hits.OrderBy(h => h.distance).ThenBy(h => Actor(h.collider)?.ActorId ?? 0)) if (BlocksMotor(hit.collider, actorId)) return hit;
+            if (human)
+            {
+                // Keep capsule endpoints/physical radius unchanged. The inset query avoids
+                // initial tangency; restore full-radius distance for returned planar hits.
+                // Bound query extension to one extra Skin. Grazing contacts beyond that
+                // finite query remain a validation concern, not an exact equivalence claim.
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    float closing = -Vector3.Dot(delta.normalized, hits[i].normal);
+                    // A nearly tangent returned hit stops conservatively, without dividing
+                    // by a tiny incidence or extending the sweep to an unbounded distance.
+                    hits[i].distance = closing <= .0001f || closing * hits[i].distance <= Skin
+                        ? 0 : hits[i].distance - Skin / closing;
+                }
+            }
+            foreach (var hit in hits.OrderBy(h => h.distance).ThenBy(h => Actor(h.collider)?.ActorId ?? 0))
+                if ((!human || hit.distance <= delta.magnitude + Skin) && BlocksMotor(hit.collider, actorId)) return hit;
             return null;
         }
         public MotorResult MoveHuman(in MotorQuery query) => Move(query, true);
