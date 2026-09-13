@@ -1,0 +1,30 @@
+{
+  "kind": "Roslyn compile only; no Unity editor or physics execution",
+  "utc": "2026-09-13T01:23:18.7572201Z",
+  "unity_data": "N:/Unity/Editors/6000.3.24f1/Editor/Data",
+  "git_head": "53722687b8da5d3477b0734bf7ddd2ffdcefe83c",
+  "module_exit_code": 0,
+  "proof_exit_code": 0,
+  "source_sha256": [
+    {
+      "path": "N:\\LetMeSleep\\Worktrees\\mosquito-physics\\unity\\Assets\\LetMeSleep\\Presentation\\Physics\\MosquitoRagdollBuilder.cs",
+      "sha256": "6d41ba7636eb7918a9faab79f372b3b789c8569e6741a77350fe247b7b0b2fb1"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Worktrees\\mosquito-physics\\unity\\Assets\\LetMeSleep\\Presentation\\Physics\\MosquitoRagdollPart.cs",
+      "sha256": "d69742cb2e09294eac08655086d97c82bcfb1900a25494002033a6ee01d1b7aa"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Worktrees\\mosquito-physics\\unity\\Assets\\LetMeSleep\\Presentation\\Physics\\MosquitoRagdollPose.cs",
+      "sha256": "bff3e75d1c2d637dc6a024f2553a1602be18e6852464d5e1a448a5a7abf47d7f"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Worktrees\\mosquito-physics\\unity\\Assets\\LetMeSleep\\Presentation\\Physics\\MosquitoRagdollSimulation.cs",
+      "sha256": "1991009481d96c1f1b7177c18ce9aea9d8fa13db195339f5597830fdae1c7a07"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Worktrees\\mosquito-physics\\docs\\unity\\mosquito\\physics-validation\\MosquitoRagdollPlayModeProof.cs",
+      "sha256": "fe78b610eab3911405675d5158f42c423f0fc551208c9cd4757bd360b247fe1d"
+    }
+  ]
+}
