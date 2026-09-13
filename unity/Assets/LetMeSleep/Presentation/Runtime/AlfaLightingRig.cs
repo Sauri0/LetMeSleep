@@ -23,6 +23,23 @@ namespace LetMeSleep.Presentation
 
         private readonly List<Light> mapLights = new List<Light>();
         private Transform boundAnchors;
+        private HiggsfieldMapLighting higgsfieldLighting;
+
+        public bool IsHiggsfieldBound => higgsfieldLighting && higgsfieldLighting.IsBound;
+
+        public void BindHiggsfield(Transform mapRoot, HiggsfieldMapLighting.Configuration configuration)
+        {
+            HiggsfieldMapLighting.Validate(mapRoot, moon, configuration);
+            if (!higgsfieldLighting) higgsfieldLighting = gameObject.AddComponent<HiggsfieldMapLighting>();
+            var previousLights = new List<Light>(mapLights);
+            if (lobbyFill) previousLights.Add(lobbyFill);
+            higgsfieldLighting.Bind(mapRoot, moon, globalVolume, configuration, previousLights);
+        }
+
+        public void UnbindHiggsfield()
+        {
+            if (higgsfieldLighting) higgsfieldLighting.Unbind();
+        }
 
         public AlfaPresentationPreset Preset => preset;
         public Light Moon => moon;
@@ -37,6 +54,7 @@ namespace LetMeSleep.Presentation
 
         public void ApplyPreset()
         {
+            if (IsHiggsfieldBound) return;
             if (preset == null || moon == null)
                 return;
             moon.type = LightType.Directional;
@@ -73,6 +91,7 @@ namespace LetMeSleep.Presentation
             if (mapLightLowTemplate == null || mapLightMediumTemplate == null)
                 throw new InvalidOperationException("The map light templates are not assigned. Rebuild the presentation library.");
 
+            UnbindHiggsfield();
             ClearMapLights();
             boundAnchors = presentationAnchors;
             ApplyPreset();
@@ -122,10 +141,13 @@ namespace LetMeSleep.Presentation
 
         private void OnDestroy()
         {
+            UnbindHiggsfield();
             ClearMapLights();
             if (RenderSettings.sun == moon)
                 RenderSettings.sun = null;
         }
+
+        private void OnDisable() => UnbindHiggsfield();
 
         private void ClearMapLights()
         {
