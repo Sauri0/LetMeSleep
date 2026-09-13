@@ -141,7 +141,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                     if (skinned != null)
                     {
                         Need((rule.kind == "water" || rule.kind == "foam") && skinned.bones.Length == 0, "Only boneless water blendshapes supported as SkinnedMeshRenderer: " + path);
-                        Need(HiggsfieldLowPolyWater.FindShape(mesh, "Wave_A") >= 0 && HiggsfieldLowPolyWater.FindShape(mesh, "Wave_B") >= 0, "Missing/ambiguous Wave_A or Wave_B on " + path);
+                        Need(HiggsfieldLowPolyWater.TryWavePair(mesh, out _, out _), "Expected exactly Wave_A/Wave_B or Wave1/Wave2, without ambiguous/additional morphs on " + path);
                     }
                     Need(mesh.vertexCount > 0 && mesh.normals.Length == mesh.vertexCount, "Authored normals missing: " + path);
                     Need(mesh.vertices.All(Finite), "Non-finite mesh coordinates: " + path);
@@ -170,6 +170,11 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                     {
                         Need(skinned != null || mesh.vertexCount <= HiggsfieldLowPolyWater.MaximumAnimatedVertices, "Water exceeds CPU animation vertex budget: " + path);
                         var water = renderer.gameObject.AddComponent<HiggsfieldLowPolyWater>();
+                        if (skinned != null)
+                        {
+                            HiggsfieldLowPolyWater.TryWavePair(mesh, out string waveA, out string waveB);
+                            water.WaveA = waveA; water.WaveB = waveB;
+                        }
                         water.Amplitude = rule.waveAmplitude; water.Wavelength = rule.waveLength; water.Speed = rule.waveSpeed;
                         waterCount++;
                     }

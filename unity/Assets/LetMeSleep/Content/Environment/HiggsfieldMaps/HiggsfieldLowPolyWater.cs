@@ -27,7 +27,9 @@ namespace LetMeSleep.Content.Environment.Higgsfield
             {
                 shapeA = FindShape(skinned.sharedMesh, WaveA);
                 shapeB = FindShape(skinned.sharedMesh, WaveB);
-                if (shapeA < 0 || shapeB < 0 || shapeA == shapeB || skinned.bones.Length != 0 || GetComponent<Collider>() != null)
+                if (!TryWavePair(skinned.sharedMesh, out string authoredA, out string authoredB) ||
+                    WaveA != authoredA || WaveB != authoredB || shapeA < 0 || shapeB < 0 || shapeA == shapeB ||
+                    skinned.bones.Length != 0 || GetComponent<Collider>() != null)
                 {
                     Debug.LogError("Higgsfield skinned water requires two authored wave blendshapes, no bones and no collider.", this);
                     enabled = false; return;
@@ -88,14 +90,17 @@ namespace LetMeSleep.Content.Environment.Higgsfield
             animated = null;
             rest = displaced = null;
         }
-        public static int FindShape(Mesh mesh, string name)
+        public static bool TryWavePair(Mesh mesh, out string waveA, out string waveB)
+            => HiggsfieldWaveNames.TryPair(ShapeNames(mesh), out waveA, out waveB);
+
+        static string[] ShapeNames(Mesh mesh)
         {
-            if (mesh == null || string.IsNullOrEmpty(name)) return -1;
-            int match = -1;
+            if (mesh == null) return null;
+            var names = new string[mesh.blendShapeCount];
             for (int i = 0; i < mesh.blendShapeCount; i++)
-                if (mesh.GetBlendShapeName(i) == name || mesh.GetBlendShapeName(i).EndsWith("." + name, System.StringComparison.Ordinal))
-                { if (match >= 0) return -1; match = i; }
-            return match;
+                names[i] = mesh.GetBlendShapeName(i);
+            return names;
         }
+        public static int FindShape(Mesh mesh, string name) => HiggsfieldWaveNames.Find(ShapeNames(mesh), name);
     }
 }

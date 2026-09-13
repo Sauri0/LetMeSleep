@@ -1,0 +1,31 @@
+{
+  "status": "PRESERVED_FREE_DRAFT_INSPECTED_OFFLINE_ONLY",
+  "sourceDirectory": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/03-campamento/SourceFreeDraft",
+  "sources": [
+    {"file": "HF_MAP_03_campamento.fbx", "sha256": "8bc0f6d1a1b1930af2ebb09de78fe9139b6a58a4afe6e6c69085d8e34daa44ea"},
+    {"file": "HF_MAP_03_campamento.glb", "sha256": "4b1dbc20114960393d1a541bd04e740b90d676f649495dc10771ebb3f6c2f656"},
+    {"file": "HF_MAP_03_campamento_report.json", "sha256": "071d60b145a836ebb1c374c0e140af0bc15ca2c25422ada702697047d071eb21"}
+  ],
+  "cleanUnityFbxPresent": false,
+  "fbxVersion": 7400,
+  "fbxSkinOrClusterDeformers": 0,
+  "glbNodeCount": 841,
+  "glbMeshCount": 534,
+  "morphedNodes": [
+    {"name": "Water_Creek", "targets": ["Wave1", "Wave2"], "glbPositionEntries": 384},
+    {"name": "Water_Creek_Deep", "targets": ["Wave1", "Wave2"], "glbPositionEntries": 192},
+    {"name": "Water_Creek_Shallow", "targets": ["Wave1", "Wave2"], "glbPositionEntries": 192},
+    {"name": "Water_Lake", "targets": ["Wave1", "Wave2"], "glbPositionEntries": 272},
+    {"name": "Water_Lake_Deep", "targets": ["Wave1", "Wave2"], "glbPositionEntries": 136},
+    {"name": "Water_Lake_Shallow", "targets": ["Wave1", "Wave2"], "glbPositionEntries": 136},
+    {"name": "Foam_Lake_01", "targets": ["Wave1"], "glbPositionEntries": 7},
+    {"name": "Foam_Lake_02", "targets": ["Wave1"], "glbPositionEntries": 7}
+  ],
+  "pending": [
+    "Astra final source and clean stock export have not been inspected",
+    "Actual Unity renderer type, imported vertex counts and readability unknown",
+    "Single-morph foam remains unsupported if imported skinned",
+    "Runtime complementary waves differ from original independent driver timing",
+    "Native import, batching execution, visual seams, memory and performance unmeasured"
+  ]
+}

@@ -1,5 +1,6 @@
 using System;
 using LetMeSleep.Content.Editor.Higgsfield;
+using LetMeSleep.Content.Environment.Higgsfield;
 
 public static class ContractChecks
 {
@@ -25,6 +26,14 @@ public static class ContractChecks
     }
     public static int Main()
     {
+        Expect(HiggsfieldWaveNames.TryPair(new[] { "Wave_A", "Wave_B" }, out var a, out var b) && a == "Wave_A" && b == "Wave_B", "Isla pair");
+        Expect(HiggsfieldWaveNames.TryPair(new[] { "Key.Wave2", "Key.Wave1" }, out a, out b) && a == "Wave1" && b == "Wave2", "Campamento pair with FBX prefix and reversed order");
+        foreach (var names in new[] {
+            null, Array.Empty<string>(), new[] { "Wave1" }, new[] { "Wave_A", "Wave2" },
+            new[] { "Wave1", "Other.Wave1" }, new[] { "Wave1", "Wave2", "Jaw" },
+            new[] { "wave1", "Wave2" }, new[] { "FakeWave1", "Wave2" }, new[] { "Wave1", (string)null } })
+            Expect(!HiggsfieldWaveNames.TryPair(names, out _, out _), "Reject partial, mixed, duplicate, extra or unknown morph set");
+        Expect(HiggsfieldWaveNames.Find(new[] { "Wave_A", "Key.Wave_A" }, "Wave_A") == -1, "Reject ambiguous suffix");
         var c = Valid(); c.Validate(); checks++;
         Expect(c.Resolve("Forest/Tree01/Trunk").kind == "solid", "Trunk override");
         Expect(c.Resolve("Forest/Tree01/Leaves").kind == "foliage", "Leaves excluded");
