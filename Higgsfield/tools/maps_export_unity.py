@@ -10,20 +10,23 @@ s=importlib.import_module('bl_ext.user_default.higgsfield_blender.features.overl
 assert not s._scene_conversation().busy(),'Generation still active'
 scene=bpy.context.scene;assert scene.name==scene_name
 folder=Path(folder_name);assert Path(bpy.data.filepath).parent==folder
-modifiers=[(o.name,m.name,m.type) for o in scene.objects if o.type=='MESH' for m in o.modifiers if m.show_render]
+excluded=[o for o in scene.objects if o.get('export_exclude',False)]
+assert all(o.type=='MESH' and o.hide_render for o in excluded),'Only explicitly hidden source meshes may be excluded'
+owned=[o for o in scene.objects if o not in excluded]
+modifiers=[(o.name,m.name,m.type) for o in owned if o.type=='MESH' for m in o.modifiers if m.show_render]
 assert not modifiers,'Inspect/evaluate structural modifiers before raw-mesh export: '+repr(modifiers[:20])
 selected=list(bpy.context.selected_objects);active=bpy.context.view_layer.objects.active
 originals=[];copies=[]
 try:
-    for o in scene.objects:
+    for o in owned:
         if o.type=='MESH':
             slots=[(slot.link,slot.material) for slot in o.material_slots]
             originals.append((o,o.data,slots));dup=o.data.copy();copies.append(dup);o.data=dup
             for slot,(_,material) in zip(o.material_slots,slots):slot.link='DATA';slot.material=material
     for o in bpy.context.selected_objects:o.select_set(False)
-    for o in scene.objects:o.select_set(True)
-    assert len(bpy.context.selected_objects)==len(scene.objects),'Hidden objects require explicit inspection'
-    bpy.context.view_layer.objects.active=next(o for o in scene.objects if o.type=='MESH')
+    for o in owned:o.select_set(True)
+    assert set(bpy.context.selected_objects)==set(owned),'Hidden objects require explicit inspection'
+    bpy.context.view_layer.objects.active=next(o for o in owned if o.type=='MESH')
     with (folder/'unity-clean-export.log').open('w',encoding='utf8') as log,contextlib.redirect_stdout(log):
         bpy.ops.export_scene.fbx(filepath=str(folder/(scene_name+'_UNITY.fbx')),use_selection=True,object_types={'MESH','EMPTY','CAMERA','LIGHT'},global_scale=1,apply_unit_scale=True,apply_scale_options='FBX_SCALE_UNITS',bake_space_transform=False,axis_forward='-Z',axis_up='Y',use_mesh_modifiers=False,mesh_smooth_type='FACE',bake_anim=False,add_leaf_bones=False,use_custom_props=True)
 finally:
@@ -36,7 +39,7 @@ finally:
     for o in selected:o.select_set(True)
     bpy.context.view_layer.objects.active=active
 logs=(folder/'unity-clean-export.log').read_text(encoding='utf8')
-result={'file':str(folder/(scene_name+'_UNITY.fbx')),'bytes':(folder/(scene_name+'_UNITY.fbx')).stat().st_size,'objects':len(scene.objects),'warnings':logs.count('WARNING'),'original_materials_restored':all([slot.material for slot in o.material_slots]==[material for link,material in slots] for o,data,slots in originals)}
+result={'file':str(folder/(scene_name+'_UNITY.fbx')),'bytes':(folder/(scene_name+'_UNITY.fbx')).stat().st_size,'objects':len(owned),'excluded_hidden_source_meshes':[o.name for o in excluded],'warnings':logs.count('WARNING'),'original_materials_restored':all([slot.material for slot in o.material_slots]==[material for link,material in slots] for o,data,slots in originals)}
 (folder/'unity-clean-export-receipt.json').write_text(json.dumps(result,indent=2),encoding='utf8')
 '''
 response=send_code(code,strict_json=True)

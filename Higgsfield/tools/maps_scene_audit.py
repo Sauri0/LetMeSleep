@@ -10,7 +10,12 @@ assert scene.name.startswith('HF_MAP_'),'Not an assigned map scene'
 folder=Path(bpy.data.filepath).parent
 assert folder.is_relative_to(Path('N:/LetMeSleep/Artifacts/Higgsfield/Mapas'))
 items=[]
+excluded=[]
 for o in scene.objects:
+    if o.get('export_exclude',False):
+        assert o.type=='MESH' and o.hide_render,'Only explicitly hidden source meshes may be excluded'
+        excluded.append({'name':o.name,'type':o.type,'reason':'authored export_exclude=true, hide_render=true'})
+        continue
     item={'name':o.name,'type':o.type,'location':list(o.matrix_world.translation),'scale':list(o.scale),'parent':o.parent.name if o.parent else None,'collections':[c.name for c in o.users_collection]}
     item['matrix_world']=[list(row) for row in o.matrix_world]
     item['properties']={k:o[k] for k in o.keys() if isinstance(o[k],(str,int,float,bool))}
@@ -27,9 +32,9 @@ for name in sorted(mat_names):
     m=bpy.data.materials[name]
     bsdf=next((n for n in m.node_tree.nodes if n.type=='BSDF_PRINCIPLED'),None) if m.use_nodes else None
     materials.append({'name':name,'diffuse':list(m.diffuse_color),'base_color':list(bsdf.inputs['Base Color'].default_value) if bsdf else None,'emission_color':list(bsdf.inputs['Emission Color'].default_value) if bsdf else [0,0,0,1],'emission_strength':float(bsdf.inputs['Emission Strength'].default_value) if bsdf else 0})
-report={'scene':scene.name,'file':bpy.data.filepath,'objects':items,'materials':materials,'fps':scene.render.fps,'frame_start':scene.frame_start,'frame_end':scene.frame_end,'camera':scene.camera.name if scene.camera else None,'triangles':sum(o.get('triangles',0) for o in items),'mesh_count':sum(o['type']=='MESH' for o in items)}
+report={'scene':scene.name,'file':bpy.data.filepath,'source_object_count':len(scene.objects),'excluded_objects':excluded,'objects':items,'materials':materials,'fps':scene.render.fps,'frame_start':scene.frame_start,'frame_end':scene.frame_end,'camera':scene.camera.name if scene.camera else None,'triangles':sum(o.get('triangles',0) for o in items),'mesh_count':sum(o['type']=='MESH' for o in items)}
 out=folder/'scene-audit.json'
 out.write_text(json.dumps(report,indent=2),encoding='utf-8')
-result={'scene':scene.name,'objects':len(items),'meshes':report['mesh_count'],'triangles':report['triangles'],'materials':len(materials),'water':[o for o in items if o['name'].startswith('Water_')],'markers':[o for o in items if o['type']=='EMPTY'],'report':str(out)}
+result={'scene':scene.name,'objects':len(items),'meshes':report['mesh_count'],'triangles':report['triangles'],'materials':len(materials),'water':[{'name':o['name'],'vertices':o.get('vertices',0),'shape_keys':o.get('shape_keys',[])} for o in items if o['name'].startswith('Water_')],'markers':[{'name':o['name'],'location':o['location']} for o in items if o['type']=='EMPTY'],'report':str(out)}
 '''
 print(json.dumps(send_code(code,strict_json=True),ensure_ascii=False))
