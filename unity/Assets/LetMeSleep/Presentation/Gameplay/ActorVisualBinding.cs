@@ -37,8 +37,12 @@ namespace LetMeSleep.Presentation.Gameplay
         public float LastBitePreCorrectionMeters { get; private set; }
         public float LastBiteFinalResidualMeters { get; private set; }
         public int LastBiteSampleFrame { get; private set; } = -1;
-        private Transform leftHand;
-        private Transform rightHand;
+        private sealed class ArmChain
+        {
+            public Transform Upper, Lower, Hand;
+            public bool IsValid => Upper && Lower && Hand && Lower.IsChildOf(Upper) && Hand.IsChildOf(Lower);
+        }
+        private ArmChain leftArm, rightArm;
         private GameObject flyswatter;
         private readonly float[] motionDurations = new float[32];
 
@@ -63,8 +67,11 @@ namespace LetMeSleep.Presentation.Gameplay
             if (view != null)
             {
                 view.SetFirstPersonVisibility(isLocal && proxy.Role == PlayerRole.Human);
-                leftHand = FindDescendant(view.transform, "Hand.L");
-                rightHand = FindDescendant(view.transform, "Hand.R");
+                if (proxy.Role == PlayerRole.Human)
+                {
+                    leftArm = FindArm("L");
+                    rightArm = FindArm("R");
+                }
                 CacheMotionDurations();
             }
         }
@@ -79,6 +86,12 @@ namespace LetMeSleep.Presentation.Gameplay
             previousHostTick = cut ? hostTick : currentHostTick;
             current = state;
             currentHostTick = hostTick;
+            if (proxy.Role == PlayerRole.Human && temporaryMotion == 12 &&
+                (state.CrouchFraction > .25f || state.LifeState != GameplayModel.LifeState.Active))
+            {
+                // Crouch remains the lower-body pose; the arm solve supplies the stroke.
+                temporaryMotion = -1; temporaryUntil = 0;
+            }
             uint tickDelta = unchecked(currentHostTick - previousHostTick);
             snapshotInterval = tickDelta == 0 ? 0.05f : Mathf.Clamp(tickDelta / 30f, 1f / 60f, 0.10f);
             snapshotArrivalTime = Time.unscaledTime;
@@ -104,7 +117,12 @@ namespace LetMeSleep.Presentation.Gameplay
             switch (item.Kind)
             {
                 case GameplayModel.GameplayEventKind.StrikeStarted:
-                    if (proxy.Role == PlayerRole.Human) motion = 12;
+                    if (proxy.Role == PlayerRole.Human)
+                    {
+                        if (current != null && current.CrouchFraction > .25f)
+                        { temporaryMotion = -1; temporaryUntil = 0; ApplyMotion(current, false); }
+                        else motion = 12;
+                    }
                     break;
                 case GameplayModel.GameplayEventKind.BiteStarted:
                     if (proxy.Role == PlayerRole.Mosquito) motion = 7;
@@ -331,7 +349,8 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if (proxy.Role == PlayerRole.Human)
             {
-                if (state.StrikeState.Phase != GameplayModel.StrikePhase.None) return 12;
+                if (state.StrikeState.Phase != GameplayModel.StrikePhase.None)
+                    return state.CrouchFraction > .25f ? 3 : 12;
                 if (state.LifeState == GameplayModel.LifeState.Fainted) return 10;
                 if (state.LifeState == GameplayModel.LifeState.Recovering) return 11;
                 if (state.LifeState == GameplayModel.LifeState.Falling) return 9;
@@ -444,14 +463,21 @@ namespace LetMeSleep.Presentation.Gameplay
                 current.StrikeState.Phase == GameplayModel.StrikePhase.None)
                 return;
             if (current.StrikeState.Hand < 0)
-                AlignHand(leftHand, 5u);
+                AlignArm(leftArm, 5u, -1f);
             else
-                AlignHand(rightHand, 6u);
+                AlignArm(rightArm, 6u, 1f);
         }
 
-        private void AlignHand(Transform hand, uint localSurfaceId)
+        private ArmChain FindArm(string side) => new ArmChain
         {
-            if (hand == null || !proxy.BodySurfaces.TryGetValue(
+            Upper = FindDescendant(view.transform, "UpperArm." + side),
+            Lower = FindDescendant(view.transform, "LowerArm." + side),
+            Hand = FindDescendant(view.transform, "Hand." + side)
+        };
+
+        private void AlignArm(ArmChain arm, uint localSurfaceId, float side)
+        {
+            if (arm == null || !arm.IsValid || !proxy.BodySurfaces.TryGetValue(
                     proxy.ActorId * 100 + localSurfaceId, out GameplayBodySurface forearm) ||
                 forearm.Collider == null)
                 return;
@@ -459,7 +485,30 @@ namespace LetMeSleep.Presentation.Gameplay
             if (capsule == null)
                 return;
             float endpoint = Mathf.Max(0f, capsule.height * 0.5f - capsule.radius);
-            hand.position = forearm.transform.TransformPoint(Vector3.up * endpoint);
+            Vector3 target = forearm.transform.TransformPoint(Vector3.up * endpoint);
+            Vector3 shoulder = arm.Upper.position, elbow = arm.Lower.position, wrist = arm.Hand.position;
+            float upperLength = Vector3.Distance(shoulder, elbow), lowerLength = Vector3.Distance(elbow, wrist);
+            if (!Finite(target) || !Finite(shoulder) || !Finite(elbow) || !Finite(wrist) ||
+                upperLength < .001f || lowerLength < .001f) return;
+            Vector3 delta = target - shoulder;
+            Vector3 axis = delta.sqrMagnitude > .000001f ? delta.normalized : (wrist - shoulder).normalized;
+            if (axis.sqrMagnitude < .5f) axis = transform.forward;
+            float length = Mathf.Clamp(delta.magnitude, Mathf.Abs(upperLength - lowerLength) + .0001f,
+                upperLength + lowerLength - .0001f);
+            Vector3 bend = Vector3.ProjectOnPlane(elbow - shoulder, axis);
+            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(transform.right * side - transform.forward * .3f, axis);
+            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(transform.up, axis);
+            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(transform.forward, axis);
+            float along = (upperLength * upperLength - lowerLength * lowerLength + length * length) / (2 * length);
+            Vector3 solvedElbow = shoulder + axis * along + bend.normalized *
+                Mathf.Sqrt(Mathf.Max(0, upperLength * upperLength - along * along));
+            Vector3 reachableTarget = shoulder + axis * length;
+            // Rotate real segments around their joints. Never stretch local offsets to
+            // reach a collider target authored with different proportions.
+            arm.Upper.rotation = Quaternion.FromToRotation(elbow - shoulder, solvedElbow - shoulder) * arm.Upper.rotation;
+            arm.Lower.rotation = Quaternion.FromToRotation(arm.Hand.position - arm.Lower.position,
+                reachableTarget - arm.Lower.position) * arm.Lower.rotation;
+            // Hand local pose stays authored, including the grip's angle to the forearm.
         }
 
         private void SetWorldPose(Vector3 position, Quaternion rotation)
