@@ -12,6 +12,8 @@ using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 
@@ -75,7 +77,8 @@ namespace LetMeSleep.Tests.PlayMode
             var pixels = new Texture2D(1280, 720, TextureFormat.RGB24, false);
             try
             {
-                camera.targetTexture = target; camera.aspect = 1280f / 720f; camera.Render();
+                camera.targetTexture = target; camera.aspect = 1280f / 720f;
+                RenderPipeline.SubmitRenderRequest(camera, new UniversalRenderPipeline.SingleCameraRequest { destination = target });
                 RenderTexture.active = target;
                 pixels.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0); pixels.Apply();
                 File.WriteAllBytes(path, pixels.EncodeToPNG());
