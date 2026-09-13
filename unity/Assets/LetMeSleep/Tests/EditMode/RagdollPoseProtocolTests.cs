@@ -107,6 +107,10 @@ namespace LetMeSleep.Tests.EditMode
             Assert.False(gate.TryAccept(Frame(101, revision: 5), true, 110));
             Assert.False(gate.TryAccept(Frame(106, revision: 5), true, 110));
             Assert.True(gate.TryAccept(Frame(110, revision: 5), true, 110));
+            var ahead = Gate(); Assert.True(ahead.TryAccept(Frame(115), true, 115));
+            Assert.True(ahead.ObserveLifecycle(1, RagdollRigProfile.Human17, 1, 5, 90, 110, true));
+            Assert.False(ahead.TryAccept(Frame(112, revision: 5), true, 116));
+            Assert.True(ahead.TryAccept(Frame(116, revision: 5), true, 116));
             Assert.False(RagdollPoseCodec.IsValid(Frame(revision: 0)));
             var empty = new RagdollPoseGate(); empty.Reset(1, 1);
             Assert.False(empty.ObserveLifecycle(1, RagdollRigProfile.Human17, 1, 0, 0, 0, true));
