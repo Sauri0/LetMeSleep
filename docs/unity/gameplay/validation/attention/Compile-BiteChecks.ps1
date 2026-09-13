@@ -45,7 +45,8 @@ if ($Mode -eq 'Integrated') {
     $literal = $dll.Replace('\','/').Replace('"','""')
     @"
 var assembly = System.Reflection.Assembly.LoadFrom(@"$literal");
-return assembly.GetType("BiteContactChecks").GetMethod("RunAll").Invoke(null, null);
+var entry = UnityEngine.Application.isPlaying ? "RunAll" : "RunAllManualEditMode";
+return assembly.GetType("BiteContactChecks").GetMethod(entry).Invoke(null, null);
 "@ | Set-Content -LiteralPath (Join-Path $output 'run-in-director-slot.cs')
 }
 Write-Output "Evidence: $output"

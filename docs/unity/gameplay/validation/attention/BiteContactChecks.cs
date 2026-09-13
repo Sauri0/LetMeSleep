@@ -14,10 +14,20 @@ using Object = UnityEngine.Object;
 // Synthetic rig and synchronous callbacks: no imported animation/real-time claim.
 public static class BiteContactChecks
 {
-    [Serializable] public sealed class Result { public int cases, failures; public List<string> outcomes = new List<string>(); }
+    [Serializable] public sealed class Result { public int cases, failures; public string disableScope; public List<string> outcomes = new List<string>(); }
     public static string RunAll()
     {
-        var result = new Result();
+        if (!Application.isPlaying) throw new InvalidOperationException("RunAll requires Play Mode for automatic OnDisable. Use RunAllManualEditMode for explicitly manual cleanup checks.");
+        return Run(false);
+    }
+    public static string RunAllManualEditMode()
+    {
+        if (Application.isPlaying) throw new InvalidOperationException("Use RunAll in Play Mode.");
+        return Run(true);
+    }
+    private static string Run(bool manualDisable)
+    {
+        var result = new Result { disableScope = manualDisable ? "Explicit OnDisable invocation; automatic lifecycle NOT tested" : "Automatic OnDisable in Play Mode" };
         Run(result, "yaw_after_attach_preserves_tip_and_authority", f => {
             foreach (float yaw in new[] { 0f, 90f, 180f, 270f })
             {
@@ -76,9 +86,10 @@ public static class BiteContactChecks
             f.Evaluate();
             Check(f.Rig.HeadTrackingEnabled && f.Binding.LastBiteSampleFrame == -1, "Stale pose retained contact");
         });
-        Run(result, "disable_releases_tracking_and_unsubscribes", f => {
+        Run(result, manualDisable ? "manual_disable_cleanup_releases_tracking_and_unsubscribes" : "disable_releases_tracking_and_unsubscribes", f => {
             f.Attach(Vector3.back, 0, 1, Vector3.zero, Quaternion.identity); f.Evaluate();
             f.Binding.enabled = false;
+            if (manualDisable) Call(f.Binding, "OnDisable");
             Check(f.Rig.HeadTrackingEnabled && f.Binding.LastBiteSampleFrame == -1, "Disabled owner retained lock");
             f.Rig.PrepareForAnimation(); f.Rig.EvaluateAfterAnimation(.1f);
             Check(f.Binding.LastBiteSampleFrame == -1, "Disabled owner sampled facial event");

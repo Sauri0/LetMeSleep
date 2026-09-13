@@ -68,6 +68,14 @@ central runtime with:
 Only that Integrated output is suitable for Director's existing eval_file/native
 slot. Execute its `run-in-director-slot.cs` once and save the returned JSON; the
 six synchronous cases create/destroy their own synthetic world, not a game session.
+The entry now distinguishes `RunAll` (requires Play Mode; automatic OnDisable)
+from `RunAllManualEditMode` (explicitly invokes OnDisable, reports manual cleanup
+scope). The generated snippet selects the matching entry and the JSON labels it.
+Director's original central fd1b9c8 Edit Mode run reported five PASS and failure
+of `disable_releases_tracking_and_unsubscribes`: that harness wrongly assumed
+automatic MonoBehaviour disable callbacks in Edit Mode. Preserve that original
+result. The manual cleanup check cannot certify automatic lifecycle; Play Mode
+validation remains required. No runtime cleanup was changed for this harness fix.
 The default PatchedSources artifact is an offline compilation check, not a runtime
 plugin; do not load it into the central editor.
 
