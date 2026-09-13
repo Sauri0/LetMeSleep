@@ -53,6 +53,7 @@ namespace LetMeSleep.Tests.PlayMode
                 var rb = rig.GetBody((MosquitoBodyId)i);
                 Assert.That(Vector3.Distance(rb.transform.lossyScale, Vector3.one), Is.LessThan(.00001f));
                 Assert.That(rb.isKinematic, Is.True);
+                TestContext.WriteLine($"R4 prepared body {i}: inertia={rb.inertiaTensor:E4}; automatic={rb.automaticInertiaTensor}; kinematic={rb.isKinematic}; detectCollisions={rb.detectCollisions}");
                 mass += rb.mass;
             }
             Assert.That(mass, Is.EqualTo(.060f).Within(.000001f));
@@ -93,6 +94,9 @@ namespace LetMeSleep.Tests.PlayMode
                 var expected = release.GetBody((MosquitoBodyId)i);
                 var actual = transferred.GetBody((MosquitoBodyId)i);
                 var inertia = rig.GetBody((MosquitoBodyId)i).inertiaTensor;
+                var rb = rig.GetBody((MosquitoBodyId)i);
+                // Print before the assertions so a failed initialization still identifies the body/state.
+                TestContext.WriteLine($"R4 body {i} {rb.name}: COM={rb.centerOfMass:F6}; inertia={inertia:E4}; angular={rb.angularVelocity:F4}; automatic={rb.automaticInertiaTensor}; kinematic={rb.isKinematic}; detectCollisions={rb.detectCollisions}");
                 Assert.That(Vector3.Distance(expected.Position, actual.Position), Is.LessThan(.00001f));
                 Assert.That(Quaternion.Angle(expected.Rotation, actual.Rotation), Is.LessThan(.05f));
                 Assert.That(Vector3.Distance(expected.OriginVelocity, actual.OriginVelocity), Is.LessThan(.001f), "Velocity must be converted to/from COM without drift.");
@@ -100,8 +104,6 @@ namespace LetMeSleep.Tests.PlayMode
                 Assert.That(inertia.magnitude, Is.LessThan(.001f), "Inertia must come from metre-scale colliders, not identity.");
                 float ratio = Mathf.Max(inertia.x, Mathf.Max(inertia.y, inertia.z)) / Mathf.Min(inertia.x, Mathf.Min(inertia.y, inertia.z));
                 Assert.That(ratio, Is.LessThanOrEqualTo(settings.MaxInertiaRatio + .001f), "Apply inertia conditioning after refreshing the release pose's compound shapes.");
-                var rb = rig.GetBody((MosquitoBodyId)i);
-                TestContext.WriteLine($"R4 body {i} {rb.name}: COM={rb.centerOfMass:F6}; inertia={inertia:E4}; angular={rb.angularVelocity:F4}");
             }
             AssertInternalExclusions();
             var jointBodies = new Rigidbody[rig.JointCount];

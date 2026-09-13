@@ -56,6 +56,18 @@ namespace LetMeSleep.Bootstrap
         {
             get
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                // Isolate manual validation without starting the automated build probe.
+                // No resolution, input, screen capture or automatic exit is implied.
+                string[] args = Environment.GetCommandLineArgs();
+                int fixtureOption = Array.IndexOf(args, "--lms-validation-data");
+                if (fixtureOption >= 0)
+                {
+                    if (fixtureOption + 1 >= args.Length || !Path.IsPathRooted(args[fixtureOption + 1]))
+                        throw new ArgumentException("--lms-validation-data requires an absolute directory.");
+                    return Path.GetFullPath(args[fixtureOption + 1]);
+                }
+#endif
 #if UNITY_EDITOR
                 return "N:/LetMeSleep/UserData/Unity";
 #else
