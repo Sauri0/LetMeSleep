@@ -30,6 +30,8 @@ namespace LetMeSleep.Bootstrap
             public bool preferencesRecovered,preferencesWriteBlocked;
             public string loadedPlayerName,loadedSkin,loadedPajama,loadedMosquito;
             public bool humanRuntime,mosquitoRuntime,humanStationary,returnedToMenu,onlineRoomCreated,onlineRoomLeft;
+            public bool humanGameplayVisible,mosquitoGameplayVisible;
+            public int runtimeErrorCount;
             public int width,height,frames; public float medianFrameMs,p95FrameMs;
             public string failure="";
         }
@@ -43,13 +45,26 @@ namespace LetMeSleep.Bootstrap
                 preferencesWriteBlocked=preferenceStore?.WriteBlocked==true,
                 loadedPlayerName=playerName,loadedSkin=appearance.SkinColorId,
                 loadedPajama=appearance.PajamaColorId,loadedMosquito=appearance.MosquitoColorId };
-            yield return new WaitForSecondsRealtime(2);
+            int observedErrors=0;
+            Application.LogCallback countErrors=(message,stack,type)=>
+            {
+                if(type==LogType.Error || type==LogType.Exception || type==LogType.Assert) observedErrors++;
+            };
+            Application.logMessageReceived+=countErrors;
+            string[] probeArgs=Environment.GetCommandLineArgs();
+            int menuOption=Array.IndexOf(probeArgs,"--lms-probe-menu-seconds");
+            float menuSeconds=2;
+            if(menuOption>=0 && menuOption+1<probeArgs.Length && int.TryParse(probeArgs[menuOption+1],out int requestedMenuSeconds))
+                menuSeconds=Mathf.Clamp(requestedMenuSeconds,2,30);
+            yield return new WaitForSecondsRealtime(menuSeconds);
             ScreenCapture.CaptureScreenshot(Path.Combine(output,"menu.png"));
             yield return null; yield return null;
             var timings=new List<float>();
             foreach(var role in new[]{AlfaRole.Human,AlfaRole.Mosquito})
             {
                 StartTraining(role,AlfaUiController.BloodModeId,Core.RoomRules.AlfaMap);
+                // The ordinary training button also switches the UI after StartTraining.
+                ui.ShowGameplay(true);
                 game.CaptureLocalInput=false; var start=game.LatestSnapshot.Actors.First(a=>a.ActorId==game.LocalActorId).Position;
                 double until=Time.realtimeSinceStartupAsDouble+15;
                 while(Time.realtimeSinceStartupAsDouble<until)
@@ -59,8 +74,9 @@ namespace LetMeSleep.Bootstrap
                 }
                 var state=game.LatestSnapshot;
                 bool valid=state.Actors.Count==3 && state.Actors.All(a=>a.Position.IsFinite);
-                if(role==AlfaRole.Human) { receipt.humanRuntime=valid; receipt.humanStationary=(state.Actors.First(a=>a.ActorId==game.LocalActorId).Position-start).Length<.035f; }
-                else receipt.mosquitoRuntime=valid;
+                bool gameplayVisible=ui.CurrentScreen==AlfaUiScreen.Gameplay;
+                if(role==AlfaRole.Human) { receipt.humanRuntime=valid; receipt.humanGameplayVisible=gameplayVisible; receipt.humanStationary=(state.Actors.First(a=>a.ActorId==game.LocalActorId).Position-start).Length<.035f; }
+                else { receipt.mosquitoRuntime=valid; receipt.mosquitoGameplayVisible=gameplayVisible; }
                 ScreenCapture.CaptureScreenshot(Path.Combine(output,role.ToString().ToLowerInvariant()+".png"));
                 yield return null; yield return null;
                 CancelTraining(); yield return null; yield return null;
@@ -76,7 +92,10 @@ namespace LetMeSleep.Bootstrap
             receipt.onlineRoomLeft=ui.CurrentScreen==AlfaUiScreen.MainMenu && game==null && lobbyMovement==null;
             receipt.width=Screen.width; receipt.height=Screen.height; receipt.frames=timings.Count;
             timings.Sort(); if(timings.Count>0) { receipt.medianFrameMs=timings[timings.Count/2]; receipt.p95FrameMs=timings[Math.Min(timings.Count-1,(int)(timings.Count*.95))]; }
-            bool pass=receipt.humanRuntime && receipt.mosquitoRuntime && receipt.humanStationary && receipt.returnedToMenu && receipt.onlineRoomCreated && receipt.onlineRoomLeft;
+            Application.logMessageReceived-=countErrors;
+            receipt.runtimeErrorCount=observedErrors;
+            bool pass=receipt.humanRuntime && receipt.mosquitoRuntime && receipt.humanGameplayVisible && receipt.mosquitoGameplayVisible &&
+                receipt.runtimeErrorCount==0 && receipt.humanStationary && receipt.returnedToMenu && receipt.onlineRoomCreated && receipt.onlineRoomLeft;
             if(!pass) receipt.failure="One or more explicit player checks failed; inspect booleans and player log.";
             File.WriteAllText(Path.Combine(output,"player-probe.json"),JsonUtility.ToJson(receipt,true));
             Application.Quit(pass?0:2);
