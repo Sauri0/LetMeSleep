@@ -16,9 +16,9 @@ MonoBehaviour:
   clips:
   - {fileID: 8300000, guid: 17c43b8597e793b7802a49f2d9ee9766, type: 3}
   output: {fileID: 191841830913780297, guid: 515402da301a4f544aa209da70d9751a, type: 2}
-  volume: 1
-  minimumPitch: 0.92
-  maximumPitch: 1.12
+  volume: 0.35
+  minimumPitch: 0.98
+  maximumPitch: 1.02
   spatialBlend: 1
   minimumDistance: 0.35
   maximumDistance: 12

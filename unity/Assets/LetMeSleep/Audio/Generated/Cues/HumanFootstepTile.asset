@@ -17,8 +17,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5942a1ba992799af179e19c3a908d26b, type: 3}
   output: {fileID: -4072463979378329480, guid: 515402da301a4f544aa209da70d9751a, type: 2}
   volume: 1
-  minimumPitch: 0.94
-  maximumPitch: 1.06
+  minimumPitch: 0.98
+  maximumPitch: 1.02
   spatialBlend: 1
   minimumDistance: 0.7
   maximumDistance: 15
