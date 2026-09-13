@@ -13,9 +13,14 @@ public static class SouthArrivalColliderCandidate
         public string variant="local-convex-band", scope="TEMPORARY CLONE ONLY; native effectiveness unverified";
         public int sourceTriangles,removedTriangles,hullInputVertices;
         public float minZ,maxZ,thicknessDown=.04f,upperBoundTopRaise;
+        public List<Receipt> segments;
+        public float contactOffset;
+        public string cookingOptions;
+        public int cookingFlags,maxRowsPerHull;
     }
-    public static Receipt Apply(GameObject map,List<Object> owned)
+    public static Receipt Apply(GameObject map,List<Object> owned,bool completeSupport=false)
     {
+        if(completeSupport)return CompleteSouthArrivalSupport.Apply(map,owned);
         if(map.GetComponent<EnvironmentMapDefinition>()?.MapId!="hf-isla-del-laguito-v2")throw new Exception("South arrival candidate is isla v2 only.");
         var matches=map.GetComponentsInChildren<MeshCollider>(true).Where(c=>c.name=="Path_South_Arrival_COLLIDABLE").ToArray();
         if(matches.Length!=1 || matches[0].convex)throw new Exception("Expected one concave south-arrival collider.");

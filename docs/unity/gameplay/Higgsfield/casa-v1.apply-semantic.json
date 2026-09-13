@@ -1,0 +1,7 @@
+{
+  "mapId": "hf-casa-del-patio-v1",
+  "prefabPath": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-casa-del-patio-v1/Prefabs/hf-casa-del-patio-v1.prefab",
+  "action": "apply-casa-semantic",
+  "navigationOverridePath": "N:/LetMeSleep/Validation/Higgsfield/MapChecks/20260913-065513-470/navigation-candidate.json",
+  "validationReportPath": "N:/LetMeSleep/Validation/Higgsfield/CasaV1-20260913/semantic-runtime-01/map-checks-20260913-065612-598.json"
+}

@@ -9,10 +9,17 @@ $stamp = [DateTime]::UtcNow.ToString('yyyyMMdd-HHmmss-fff')
 $output = Join-Path $OutputRoot $stamp
 $sources = Join-Path $output 'sources'
 New-Item -ItemType Directory -Path $sources | Out-Null
-foreach ($file in @('HiggsfieldMapChecks.cs','HiggsfieldMapJson.cs','HiggsfieldIslaPreparation.cs','SouthArrivalColliderCandidate.cs','HiggsfieldCasaPreparation.cs')) {
+foreach ($file in @('HiggsfieldMapChecks.cs','HiggsfieldMapJson.cs','HiggsfieldIslaPreparation.cs','SouthArrivalColliderCandidate.cs','CompleteSouthArrivalSupport.cs','HiggsfieldCasaPreparation.cs','ApplyCasaSemanticNavigation.cs')) {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot $file) -Destination $sources
 }
 Copy-Item -LiteralPath $Config -Destination (Join-Path $output 'checks.json')
+$checkConfig = Get-Content -Raw -LiteralPath (Join-Path $output 'checks.json') | ConvertFrom-Json
+if ($checkConfig.navigationOverridePath) {
+    $navCopy = Join-Path $output 'navigation-candidate.json'
+    Copy-Item -LiteralPath $checkConfig.navigationOverridePath -Destination $navCopy
+    $checkConfig.navigationOverridePath = $navCopy.Replace('\','/')
+    $checkConfig | ConvertTo-Json -Depth 40 | Set-Content -LiteralPath (Join-Path $output 'checks.json')
+}
 $references = @(Get-ChildItem -LiteralPath (Join-Path $UnityEditorData 'Managed/UnityEngine') -Filter '*.dll')
 $references += Get-Item -LiteralPath (Join-Path $UnityEditorData 'Managed/Newtonsoft.Json.dll')
 # Unity 6000 places the modular UnityEditor.CoreModule in Managed/UnityEngine.

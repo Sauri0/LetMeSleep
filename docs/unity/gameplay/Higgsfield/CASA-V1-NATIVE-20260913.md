@@ -1,5 +1,9 @@
 # Casa v1: recorridos aprobados, navegación pendiente
 
+**Informe histórico del primer lote.** Estado posterior: navegación semántica
+aplicada y44/44casos aprobados; ver `CASA-SEMANTIC-NAVIGATION.md`. La interpretación
+de las patrullas de stress se corrige abajo; los28casos físicos siguen aprobados.
+
 Turno Unity CPU delegado por coordinador Higgsfield. Batch central Unity
 6000.3.24f1, `-nographics -noaudio`, sin render, PlayMode ni Blender. Se usaron
 procesos secuenciales y se liberó el turno tras terminar PID10600, exit0 y
@@ -77,8 +81,9 @@ corregido; no ejecutar ese action como si fuera un test de lectura.
 
 Se midieron celdas de.6m en espacio libre expandido.056m para la esfera. El
 último candidato conecta208 regiones y211 portales de caras adyacentes, pasando
-211/211 consultas estáticas. Usa callbacks reales de GameplayBotNavigation y
-Authority para patrullas, sin modificar reglas. Se ejecutaron dos variantes:
+211/211 consultas estáticas. Usa Explore y Authority reales con un adaptador
+propio de input máximo a30Hz; **no ejecuta BotController ni SteerBot**. Son
+ensayos de stress del adaptador, no del runtime completo. Dos variantes:
 
 - `candidate-01`: celdas originales.15/16 patrullas salen de toda región.
 - `candidate-02`: crece cada cara hasta.15m extra sólo si el volumen ampliado
@@ -87,15 +92,17 @@ Authority para patrullas, sin modificar reglas. Se ejecutaron dos variantes:
 La retícula resulta demasiado ajustada para los puntos de portal integrados
 (±.55m), el cambio de waypoint a.24m y la inercia del vuelo. Las celdas de.6m
 dejan apenas.05m desde el punto extremo hasta su borde. Es una hipótesis de
-incompatibilidad de la autoría con el controlador, apoyada por las salidas
-registradas; no acredita un defecto de paredes/muebles. La siguiente autoría
+incompatibilidad con el adaptador de stress, apoyada por las salidas
+registradas; no acredita un fallo del BotController real ni de paredes/muebles. La siguiente autoría
 debe usar volúmenes de salas/corredores con margen suficiente y transiciones
 medidas. No se debe publicar este grafo por haber pasado clearance estático.
 
 El chequeo estricto de Bounds también marcó un spawn sobre una frontera por
 precisión float; el runtime admite.04m de tolerancia y sí inicia esa patrulla.
-La decisión de rechazar se apoya en las **salidas reales durante15 patrullas**,
-no en ese mensaje de borde.
+La decisión de no publicar ese candidato se apoyó en salidas durante15ensayos
+de stress, no en ese mensaje de borde. El requisito de estar siempre dentro de
+una caja también era más estricto que BotPatrol: admite tránsito sin región si
+hay un pasaje activo. Estos resultados no demuestran que el runtime real falle.
 
 Candidatos, hashes y logs completos en
 `N:/LetMeSleep/Validation/Higgsfield/CasaV1-20260913/preparation-03`,

@@ -1,5 +1,10 @@
 # Sendero sur: contacto tangente y candidato local de collider
 
+**Actualización:** el candidato local fue ejecutado por el coordinador y el
+soporte completo por el worker. Ambos avances y fallos se documentan en
+`SOUTH-ARRIVAL-COMPLETE-SUPPORT.md`. Este informe conserva la propuesta original;
+su sección «sin ejecución nativa» describe el estado previo, no el actual.
+
 Investigación offline 2026-09-13, sin abrir Unity/Blender ni alterar assets.
 El archivo `preparation-04/measured-path-meshes.json` no contiene este sendero;
 se extrajo la geometría del **FBX realmente importado** con `Inspect-IslaFbx.py`,

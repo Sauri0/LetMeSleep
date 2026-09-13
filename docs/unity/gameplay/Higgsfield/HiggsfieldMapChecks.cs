@@ -19,15 +19,16 @@ public static class HiggsfieldMapChecks
 #pragma warning disable 0649
     [Serializable] public sealed class Config
     {
-        public string mapId, prefabPath, action, navigationOverridePath, colliderCandidate;
+        public string mapId, prefabPath, action, navigationOverridePath, colliderCandidate, validationReportPath;
         public int humanPool = 5, mosquitoPool = 16;
+        public bool diagnosticRoutesOnly;
         public Route[] routes;
     }
     [Serializable] public sealed class Route
     {
         public string id, role;
         public int spawnIndex, maxTicks = 600;
-        public bool crouch, sprint, patrol;
+        public bool crouch, sprint, patrol, runtimePatrol;
         public Vector3[] points;
     }
     [Serializable] public sealed class Plan { public int schema_version; public string map_id; public Zone[] zones; public Portal[] portals; public Stair stair; }
@@ -54,6 +55,13 @@ public static class HiggsfieldMapChecks
         public int ticks, reached, requested;
         public float initialPenetration, finalPenetration, maxPenetration;
         public string initialBlocker, finalBlocker;
+        public string peakBlocker;
+        public Vector3 peakPosition;
+        public uint peakTick;
+        public string driver;
+        public List<string> visitedRegions = new List<string>();
+        public float traveled;
+        public int longestStillTicks, longestLostNavigationTicks, unzonedTransitTicks;
         public List<Sample> samples = new List<Sample>();
         public List<Hit> failureHits = new List<Hit>();
     }
@@ -64,6 +72,7 @@ public static class HiggsfieldMapChecks
     public static string Run(string configPath, string outputDirectory)
     {
         var operation = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(File.ReadAllText(configPath));
+        if(operation.action=="apply-casa-semantic")return ApplyCasaSemanticNavigation.Run(configPath,outputDirectory);
         if (operation.action == "prepare-casa" || operation.action == "apply-casa" || operation.action == "fix-casa-spawn") return HiggsfieldCasaPreparation.Run(configPath, outputDirectory);
         if (operation.action == "prepare-isla" || operation.action == "apply-isla") return HiggsfieldIslaPreparation.Run(configPath, outputDirectory);
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || EditorApplication.isUpdating)
@@ -113,8 +122,8 @@ public static class HiggsfieldMapChecks
             clone.SetActive(true); owner.SetActive(true); Physics.SyncTransforms();
             if(!string.IsNullOrWhiteSpace(config.colliderCandidate))
             {
-                Require(config.colliderCandidate=="south-arrival-local-convex-band","Unknown collider candidate.");
-                report.colliderCandidate=SouthArrivalColliderCandidate.Apply(clone,ownedGeometry);
+                Require(config.colliderCandidate=="south-arrival-local-convex-band" || config.colliderCandidate=="south-arrival-complete-convex-support" || config.colliderCandidate=="south-arrival-one-row-convex-support","Unknown collider candidate.");
+                report.colliderCandidate=config.colliderCandidate=="south-arrival-one-row-convex-support" ? CompleteSouthArrivalSupport.Apply(clone,ownedGeometry,1) : SouthArrivalColliderCandidate.Apply(clone,ownedGeometry,config.colliderCandidate=="south-arrival-complete-convex-support");
             }
             world.RegisterGeometry();
             report.nativeColliderCount = clone.GetComponentsInChildren<Collider>(false).Count(c => c.enabled && !c.isTrigger);
@@ -122,19 +131,24 @@ public static class HiggsfieldMapChecks
             report.humanPool = map.HumanSpawnPoints?.Length ?? 0; report.mosquitoPool = map.MosquitoSpawnPoints?.Length ?? 0;
             if (report.humanPool < config.humanPool || report.mosquitoPool < config.mosquitoPool) report.errors.Add("Spawn pools below contract: " + report.humanPool + " human / " + report.mosquitoPool + " mosquito.");
             Require(report.humanPool <= 32 && report.mosquitoPool <= 32, "More than 32 spawns in a pool exceeds this bounded fixture.");
-            CheckNavigation(map, world, report, watch);
-            CheckSpawns(map.HumanSpawnPoints, PlayerRole.Human, map, world, report, watch);
-            CheckSpawns(map.MosquitoSpawnPoints, PlayerRole.Mosquito, map, world, report, watch);
+            if(config.diagnosticRoutesOnly)report.pending.Add("Route-only diagnostic: spawn suite and navigation clearance deliberately not repeated; not a map acceptance run.");
+            else
+            {
+                CheckNavigation(map, world, report, watch);
+                CheckSpawns(map.HumanSpawnPoints, PlayerRole.Human, map, world, report, watch);
+                CheckSpawns(map.MosquitoSpawnPoints, PlayerRole.Mosquito, map, world, report, watch);
+            }
             var routes = config.routes ?? Array.Empty<Route>(); var ids = new HashSet<string>();
             foreach (var route in routes)
             {
                 Budget(watch); Require(route != null && !string.IsNullOrWhiteSpace(route.id) && ids.Add(route.id), "Route IDs must be nonempty and unique.");
                 Require(route.role == "human" || route.role == "mosquito", "Route role must be human or mosquito.");
-                Require(route.maxTicks >= 1 && route.maxTicks <= 600 && route.points != null && (route.points.Length >= 1 || route.patrol && route.role == "mosquito") && route.points.Length <= 64 && route.points.All(Finite), "Invalid route bounds/points: " + route.id);
+                Require(route.maxTicks >= 1 && route.maxTicks <= 600 && route.points != null && (route.points.Length >= 1 || (route.patrol || route.runtimePatrol) && route.role == "mosquito") && route.points.Length <= 64 && route.points.All(Finite) && !(route.patrol && route.runtimePatrol), "Invalid route bounds/points: " + route.id);
                 var role = route.role == "human" ? PlayerRole.Human : PlayerRole.Mosquito;
                 var pool = role == PlayerRole.Human ? map.HumanSpawnPoints : map.MosquitoSpawnPoints;
                 Require(pool != null && route.spawnIndex >= 0 && route.spawnIndex < pool.Length && pool[route.spawnIndex], "Invalid route spawn: " + route.id);
-                RunCase("route/" + route.id, role, pool[route.spawnIndex].position, route, map, world, report, watch);
+                if(route.runtimePatrol) RunRuntimePatrol(route,pool[route.spawnIndex].position,map,world,report,watch);
+                else RunCase("route/" + route.id, role, pool[route.spawnIndex].position, route, map, world, report, watch);
             }
             if (routes.Count(r => r.role == "human") < 2 || routes.Count(r => r.role == "mosquito") < 2)
                 report.pending.Add("Author and execute at least two human and two mosquito routes through actual bottlenecks; pool checks do not establish traversal.");
@@ -170,7 +184,7 @@ public static class HiggsfieldMapChecks
 
     static void RunCase(string id, PlayerRole role, Vector3 position, Route route, EnvironmentMapDefinition map, UnityGameplayWorld world, Report report, Stopwatch watch)
     {
-        var c = new Case { id = id, role = role.ToString(), requested = route?.points.Length ?? 0 }; report.cases.Add(c);
+        var c = new Case { id = id, role = role.ToString(), requested = route?.points.Length ?? 0, driver = route?.patrol==true ? "Explore + custom maximum-input adapter at 30Hz; stress only, no BotController/SteerBot" : "Custom waypoint input + actual authority/motor at 30Hz" }; report.cases.Add(c);
         try
         {
             foreach (var actor in world.Actors.Values.ToArray()) Object.DestroyImmediate(actor.gameObject);
@@ -236,6 +250,52 @@ public static class HiggsfieldMapChecks
             }
         }
     }
+    static void RunRuntimePatrol(Route route, Vector3 position, EnvironmentMapDefinition map, UnityGameplayWorld world, Report report, Stopwatch watch)
+    {
+        var c=new Case{id="route/"+route.id,role="Mosquito",driver="Actual GameplayRuntime.TickHost at30Hz; actual ObserveBot/BotController/SteerBot at10Hz; no visible enemy"};report.cases.Add(c);
+        GameplayRuntime runtime=null;
+        try
+        {
+            Require(route.role=="mosquito" && route.points.Length==0,"Runtime patrol requires mosquito and empty points; targets come only from actual navigation.");
+            Require(map.SpatialData,"Runtime patrol requires navigation data.");
+            foreach(var actor in world.Actors.Values.ToArray()) Object.DestroyImmediate(actor.gameObject);
+            ((IDictionary<uint,GameplayActorProxy>)world.Actors).Clear();
+            Require(!world.GetComponent<GameplayRuntime>(),"Unexpected existing runtime on fixture owner.");
+            runtime=world.gameObject.AddComponent<GameplayRuntime>();
+            runtime.IsHost=true;runtime.AutomaticTick=false;runtime.CaptureLocalInput=false;runtime.UseBuiltInCamera=false;runtime.NavigationData=map.SpatialData;
+            runtime.BeginRound(new GameplayRoundConfig(901,1,map.MapId,map.ContentHash,doors:world.GetDoorDefinitions(),tools:world.GetToolDefinitions()),new[]{
+                new SpawnActor(1,"probe",PlayerRole.Mosquito,position.ToFloat(),isBot:true),
+                new SpawnActor(2,"fixture-opposite-role",PlayerRole.Human,(map.transform.position+new Vector3(2000,2000,2000)).ToFloat())});
+            var host=runtime.Authority;var proxy=world.Actors[1];
+            c.initialPenetration=Penetration(proxy,map.transform,out c.initialBlocker);c.maxPenetration=c.initialPenetration;SampleState(c,host,map);
+            const BindingFlags privateInstance=BindingFlags.Instance|BindingFlags.NonPublic;
+            var nav=typeof(GameplayRuntime).GetField("botNavigation",privateInstance).GetValue(runtime);
+            Require(nav!=null,"Actual runtime did not instantiate navigation.");
+            var regions=(BotRegion[])nav.GetType().GetField("regions",privateInstance).GetValue(nav);
+            var patrols=(IDictionary<uint,BotPatrol>)nav.GetType().GetField("patrols",privateInstance).GetValue(nav);
+            var routeField=typeof(BotPatrol).GetField("route",privateInstance);
+            var visited=new HashSet<string>();int still=0,lost=0;
+            for(int t=0;t<route.maxTicks;t++)
+            {
+                Budget(watch);Require(host.IsRunning,"Round ended before patrol budget.");var previous=proxy.State.Position;uint previousTick=host.CurrentTick;
+                runtime.TickHost();Require(host.CurrentTick==previousTick+1,"Runtime failed to advance exactly one host tick.");Track(c,proxy,host,map);
+                var local=map.transform.InverseTransformPoint(proxy.State.Position.ToUnity()).ToFloat();string region=regions.Where(r=>r.Contains(local)).Select(r=>r.Id).FirstOrDefault();
+                if(region!=null && visited.Add(region))c.visitedRegions.Add(region);
+                // Read-only diagnostics: do not call Explore a second time or replace actual steering.
+                bool active=patrols.TryGetValue(1,out var patrol) && routeField.GetValue(patrol)!=null;
+                if(region==null && active)c.unzonedTransitTicks++;
+                lost=region==null && !active?lost+1:0;c.longestLostNavigationTicks=Math.Max(c.longestLostNavigationTicks,lost);
+                float moved=(proxy.State.Position-previous).Length;c.traveled+=moved;still=moved<.001f?still+1:0;c.longestStillTicks=Math.Max(c.longestStillTicks,still);
+                Require(still<150,"Actual runtime remained still for150ticks.");Require(lost<150,"Actual runtime stayed outside regions with no active passage for150ticks.");
+            }
+            Require(c.initialPenetration<=.002f && c.maxPenetration<=.002f,"Actual motor penetration exceeded2mm.");
+            Require(visited.Count>=2 && c.traveled>2,"Actual runtime did not reach two semantic regions and travel2m within20s.");
+            c.status="PASS";c.reason="Scoped20s exploration; visited "+visited.Count+" regions. Does not establish all graph edges, combat or long-running behavior.";
+        }
+        catch(TimeoutException){c.reason="Global time budget reached.";throw;}
+        catch(Exception e){c.status="FAIL";c.reason=(e.InnerException??e).Message;}
+        finally{if(runtime){runtime.StopRound();Object.DestroyImmediate(runtime);}}
+    }
     static void Tick(GameplayAuthority host, ref uint sequence, Vector3 delta, PlayerRole role, bool crouch, bool sprint)
     {
         // Forward input follows aim. Vertical-only flight uses the existing Vertical channel.
@@ -259,6 +319,7 @@ public static class HiggsfieldMapChecks
         SampleState(c, host, map);
         Require(map.PlayBounds.Contains(map.transform.InverseTransformPoint(proxy.State.Position.ToUnity())), "Actor left authored PlayBounds. Bounds are not an enforced motor boundary.");
         c.finalPenetration = Penetration(proxy, map.transform, out c.finalBlocker);
+        if(c.finalPenetration>c.maxPenetration){c.peakBlocker=c.finalBlocker;c.peakPosition=map.transform.InverseTransformPoint(proxy.State.Position.ToUnity());c.peakTick=host.CurrentTick;}
         c.maxPenetration = Mathf.Max(c.maxPenetration, c.finalPenetration);
     }
     static void SampleState(Case c, GameplayAuthority host, EnvironmentMapDefinition map)
@@ -305,7 +366,7 @@ public static class HiggsfieldMapChecks
             for (int n = 0; n < p.zones.Length; n++) foreach (var passage in passages) { if (reached.Contains(passage.From)) reached.Add(passage.To); if (reached.Contains(passage.To)) reached.Add(passage.From); }
             if (reached.Count != zones.Count) report.errors.Add("Navigation graph contains disconnected zones (door state ignored for connectivity).");
             foreach (var spawn in map.MosquitoSpawnPoints ?? Array.Empty<Transform>())
-                if (spawn && !p.zones.Any(z => new Bounds((Point(z.min) + Point(z.max)) * .5f, Point(z.max) - Point(z.min)).Contains(map.transform.InverseTransformPoint(spawn.position)))) report.errors.Add("Mosquito spawn outside every navigation zone: " + spawn.name);
+                if (spawn && !p.zones.Any(z => new BotRegion(z.id,Point(z.min).ToFloat(),Point(z.max).ToFloat()).Contains(map.transform.InverseTransformPoint(spawn.position).ToFloat()))) report.errors.Add("Mosquito spawn outside every navigation zone: " + spawn.name);
             foreach (var passage in passages)
             {
                 Budget(watch); var row = new Passage { id = passage.Id, localPoints = passage.Points.Select(v => v.ToUnity()).ToArray(), status = "PASS_STATIC_CLEARANCE" }; report.passages.Add(row);

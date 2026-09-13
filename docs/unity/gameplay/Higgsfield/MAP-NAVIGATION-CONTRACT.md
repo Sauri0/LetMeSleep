@@ -155,11 +155,26 @@ perch/bite/strike, puertas interactivas, red/WAN, FPS ni límites efectivos del
 mundo. PlayBounds es metadato, no barrera del motor. Agua no define natación ni
 protección contra caídas. Esas decisiones/reglas quedan en coordinación.
 
-El fixture ahora admite rutas `patrol:true`, rol mosquito y `points:[]`: ejecuta
+El fixture admite rutas `patrol:true`, rol mosquito y `points:[]`: **stress del
+adaptador propio**, sin BotController/SteerBot. Ejecuta
 GameplayBotNavigation.Explore real durante maxTicks, con el motor habitual,
 exige visitar tres regiones, recorrer >2m y no salir de toda región ni detenerse
 150 ticks. No representa exploración exhaustiva. `navigationOverridePath` permite
 probar un plan candidato sólo en el clon antes de aplicarlo a un asset.
+
+Para entrega de bots usar `runtimePatrol:true`, mutuamente excluyente con
+`patrol`, mosquito y `points:[]`. Instancia GameplayRuntime sobre el world
+temporal, BeginRound con un mosquito IsBot y humano remoto no visible, y llama
+TickHost600veces: Authority30Hz y decisiones reales10Hz, ObserveBot/BotController/
+SteerBot originales. CaptureLocalInput/AutomaticTick/UseBuiltInCamera desactivados.
+No vuelve a llamar Explore para observarlo. Registra regiones visitadas, metros,
+máximo tiempo inmóvil y tiempo sin región ni pasaje activo. Usa BotRegion.Contains
+real (tolerancia.04m); permite tránsito sin región con pasaje activo. Exige dos
+regiones,>2m y menos150ticks consecutivos inmóvil/perdido; conserva checks de
+PlayBounds/estado finito/penetración2mm. No prueba combate, todos los pasajes ni
+sesiones largas. CASE.driver etiqueta explícitamente ambos modos. El compilador
+copia el JSON candidato a la evidencia inmutable; no lee un override mutable
+durante la ejecución posterior.
 
 El parser de DTO externos utiliza Newtonsoft.Json incluido con Unity: la primera
 ejecución nativa mostró que JsonUtility omitía arrays de tipos en DLL externa.

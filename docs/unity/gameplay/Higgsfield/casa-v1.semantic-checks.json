@@ -1,0 +1,701 @@
+{
+  "mapId": "hf-casa-del-patio-v1",
+  "prefabPath": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-casa-del-patio-v1/Prefabs/hf-casa-del-patio-v1.prefab",
+  "action": null,
+  "navigationOverridePath": "N:/LetMeSleep/Worktrees/gameplay/docs/unity/gameplay/Higgsfield/casa-v1.semantic-navigation.json",
+  "colliderCandidate": null,
+  "humanPool": 5,
+  "mosquitoPool": 16,
+  "routes": [
+    {
+      "id": "patio-entry-living",
+      "role": "human",
+      "spawnIndex": 0,
+      "maxTicks": 600,
+      "crouch": false,
+      "sprint": false,
+      "patrol": false,
+      "points": [
+        {
+          "x": -0.400000125,
+          "y": 0.02699965,
+          "z": -11.4999981
+        },
+        {
+          "x": -0.4000001,
+          "y": 0.0269991141,
+          "z": -8.5
+        },
+        {
+          "x": -0.400000066,
+          "y": 0.127999991,
+          "z": -7.89999962
+        },
+        {
+          "x": -0.4,
+          "y": 0.213000163,
+          "z": -7.299999
+        },
+        {
+          "x": -0.3999999,
+          "y": 0.2129998,
+          "z": -5.4
+        },
+        {
+          "x": -0.400000036,
+          "y": 0.2770001,
+          "z": -4.49999952
+        },
+        {
+          "x": -0.400000036,
+          "y": 0.27700004,
+          "z": -0.249999836
+        },
+        {
+          "x": -2,
+          "y": 0.27700004,
+          "z": -0.249999836
+        },
+        {
+          "x": -2.49999976,
+          "y": 0.252999723,
+          "z": 1.49999893
+        }
+      ]
+    },
+    {
+      "id": "hall-kitchen",
+      "role": "human",
+      "spawnIndex": 1,
+      "maxTicks": 600,
+      "crouch": false,
+      "sprint": false,
+      "patrol": false,
+      "points": [
+        {
+          "x": 0.50000006,
+          "y": 0.2770001,
+          "z": -2.64999986
+        },
+        {
+          "x": 0.50000006,
+          "y": 0.276999831,
+          "z": -2.99999928
+        },
+        {
+          "x": 1.60000014,
+          "y": 0.276999831,
+          "z": -2.99999952
+        },
+        {
+          "x": 2.20000029,
+          "y": 0.276999831,
+          "z": -2.99999952
+        },
+        {
+          "x": 3.2,
+          "y": 0.276999831,
+          "z": -2.99999952
+        }
+      ]
+    },
+    {
+      "id": "only-stair-up",
+      "role": "human",
+      "spawnIndex": 1,
+      "maxTicks": 600,
+      "crouch": false,
+      "sprint": false,
+      "patrol": false,
+      "points": [
+        {
+          "x": 1.225,
+          "y": 0.277,
+          "z": -1.99999964
+        },
+        {
+          "x": 1.225,
+          "y": 0.43425,
+          "z": -1.33
+        },
+        {
+          "x": 1.225,
+          "y": 0.615500033,
+          "z": -1.05
+        },
+        {
+          "x": 1.225,
+          "y": 0.79675,
+          "z": -0.77
+        },
+        {
+          "x": 1.225,
+          "y": 0.978000045,
+          "z": -0.49
+        },
+        {
+          "x": 1.225,
+          "y": 1.15925,
+          "z": -0.209999979
+        },
+        {
+          "x": 1.225,
+          "y": 1.34049988,
+          "z": 0.06999999
+        },
+        {
+          "x": 1.225,
+          "y": 1.52174985,
+          "z": 0.35
+        },
+        {
+          "x": 1.225,
+          "y": 1.703,
+          "z": 0.63
+        },
+        {
+          "x": 1.225,
+          "y": 1.88424993,
+          "z": 0.9100001
+        },
+        {
+          "x": 1.225,
+          "y": 2.06549978,
+          "z": 1.19
+        },
+        {
+          "x": 1.225,
+          "y": 2.24674988,
+          "z": 1.47
+        },
+        {
+          "x": 1.225,
+          "y": 2.42799973,
+          "z": 1.75
+        },
+        {
+          "x": 1.225,
+          "y": 2.60924983,
+          "z": 2.03
+        },
+        {
+          "x": 1.225,
+          "y": 2.79049969,
+          "z": 2.31
+        },
+        {
+          "x": 1.225,
+          "y": 2.97174978,
+          "z": 2.59
+        },
+        {
+          "x": 1.225,
+          "y": 3.15299988,
+          "z": 2.87
+        },
+        {
+          "x": 1.22500014,
+          "y": 3.153,
+          "z": 3.70000029
+        },
+        {
+          "x": -0.650000036,
+          "y": 3.177,
+          "z": 3.94999981
+        }
+      ]
+    },
+    {
+      "id": "only-stair-down",
+      "role": "human",
+      "spawnIndex": 3,
+      "maxTicks": 600,
+      "crouch": false,
+      "sprint": false,
+      "patrol": false,
+      "points": [
+        {
+          "x": 1.22500014,
+          "y": 3.153,
+          "z": 3.70000029
+        },
+        {
+          "x": 1.225,
+          "y": 3.15299988,
+          "z": 2.87
+        },
+        {
+          "x": 1.225,
+          "y": 2.97174978,
+          "z": 2.59
+        },
+        {
+          "x": 1.225,
+          "y": 2.79049969,
+          "z": 2.31
+        },
+        {
+          "x": 1.225,
+          "y": 2.60924983,
+          "z": 2.03
+        },
+        {
+          "x": 1.225,
+          "y": 2.42799973,
+          "z": 1.75
+        },
+        {
+          "x": 1.225,
+          "y": 2.24674988,
+          "z": 1.47
+        },
+        {
+          "x": 1.225,
+          "y": 2.06549978,
+          "z": 1.19
+        },
+        {
+          "x": 1.225,
+          "y": 1.88424993,
+          "z": 0.9100001
+        },
+        {
+          "x": 1.225,
+          "y": 1.703,
+          "z": 0.63
+        },
+        {
+          "x": 1.225,
+          "y": 1.52174985,
+          "z": 0.35
+        },
+        {
+          "x": 1.225,
+          "y": 1.34049988,
+          "z": 0.06999999
+        },
+        {
+          "x": 1.225,
+          "y": 1.15925,
+          "z": -0.209999979
+        },
+        {
+          "x": 1.225,
+          "y": 0.978000045,
+          "z": -0.49
+        },
+        {
+          "x": 1.225,
+          "y": 0.79675,
+          "z": -0.77
+        },
+        {
+          "x": 1.225,
+          "y": 0.615500033,
+          "z": -1.05
+        },
+        {
+          "x": 1.225,
+          "y": 0.43425,
+          "z": -1.33
+        },
+        {
+          "x": 1.225,
+          "y": 0.277,
+          "z": -1.99999964
+        },
+        {
+          "x": -0.6000001,
+          "y": 0.2770001,
+          "z": -2.64999986
+        }
+      ]
+    },
+    {
+      "id": "rear-patio-entry",
+      "role": "human",
+      "spawnIndex": 4,
+      "maxTicks": 600,
+      "crouch": false,
+      "sprint": false,
+      "patrol": false,
+      "points": [
+        {
+          "x": 3.50000119,
+          "y": 0.002997899,
+          "z": 11.5
+        },
+        {
+          "x": -0.4000001,
+          "y": 0.02700058,
+          "z": 9.999999
+        },
+        {
+          "x": -0.4000001,
+          "y": 0.0270008482,
+          "z": 8.499999
+        },
+        {
+          "x": -0.4,
+          "y": 0.128,
+          "z": 7.79999971
+        },
+        {
+          "x": -0.400000036,
+          "y": 0.2529998,
+          "z": 7.199999
+        },
+        {
+          "x": -0.400000036,
+          "y": 0.2530001,
+          "z": 5.499999
+        },
+        {
+          "x": -0.400000036,
+          "y": 0.276999921,
+          "z": 4.2
+        }
+      ]
+    },
+    {
+      "id": "flight-stair-up",
+      "role": "mosquito",
+      "spawnIndex": 5,
+      "maxTicks": 600,
+      "crouch": false,
+      "sprint": false,
+      "patrol": false,
+      "points": [
+        {
+          "x": 1.225,
+          "y": 1.4,
+          "z": -2
+        },
+        {
+          "x": 1.225,
+          "y": 1.33425,
+          "z": -1.33
+        },
+        {
+          "x": 1.225,
+          "y": 1.51550007,
+          "z": -1.05
+        },
+        {
+          "x": 1.225,
+          "y": 1.69674993,
+          "z": -0.77
+        },
+        {
+          "x": 1.225,
+          "y": 1.878,
+          "z": -0.49
+        },
+        {
+          "x": 1.225,
+          "y": 2.05924988,
+          "z": -0.209999979
+        },
+        {
+          "x": 1.225,
+          "y": 2.2405,
+          "z": 0.06999999
+        },
+        {
+          "x": 1.225,
+          "y": 2.42174983,
+          "z": 0.35
+        },
+        {
+          "x": 1.225,
+          "y": 2.603,
+          "z": 0.63
+        },
+        {
+          "x": 1.225,
+          "y": 2.78424978,
+          "z": 0.9100001
+        },
+        {
+          "x": 1.225,
+          "y": 2.96549988,
+          "z": 1.19
+        },
+        {
+          "x": 1.225,
+          "y": 3.14675,
+          "z": 1.47
+        },
+        {
+          "x": 1.225,
+          "y": 3.32799959,
+          "z": 1.75
+        },
+        {
+          "x": 1.225,
+          "y": 3.50924969,
+          "z": 2.03
+        },
+        {
+          "x": 1.225,
+          "y": 3.69049978,
+          "z": 2.31
+        },
+        {
+          "x": 1.225,
+          "y": 3.87174988,
+          "z": 2.59
+        },
+        {
+          "x": 1.225,
+          "y": 4.053,
+          "z": 2.87
+        },
+        {
+          "x": 1.225,
+          "y": 4.2,
+          "z": 3.8
+        },
+        {
+          "x": -0.55,
+          "y": 4.8,
+          "z": 3.8
+        }
+      ]
+    },
+    {
+      "id": "flight-stair-down",
+      "role": "mosquito",
+      "spawnIndex": 11,
+      "maxTicks": 600,
+      "crouch": false,
+      "sprint": false,
+      "patrol": false,
+      "points": [
+        {
+          "x": 1.225,
+          "y": 4.2,
+          "z": 3.8
+        },
+        {
+          "x": 1.225,
+          "y": 4.053,
+          "z": 2.87
+        },
+        {
+          "x": 1.225,
+          "y": 3.87174988,
+          "z": 2.59
+        },
+        {
+          "x": 1.225,
+          "y": 3.69049978,
+          "z": 2.31
+        },
+        {
+          "x": 1.225,
+          "y": 3.50924969,
+          "z": 2.03
+        },
+        {
+          "x": 1.225,
+          "y": 3.32799959,
+          "z": 1.75
+        },
+        {
+          "x": 1.225,
+          "y": 3.14675,
+          "z": 1.47
+        },
+        {
+          "x": 1.225,
+          "y": 2.96549988,
+          "z": 1.19
+        },
+        {
+          "x": 1.225,
+          "y": 2.78424978,
+          "z": 0.9100001
+        },
+        {
+          "x": 1.225,
+          "y": 2.603,
+          "z": 0.63
+        },
+        {
+          "x": 1.225,
+          "y": 2.42174983,
+          "z": 0.35
+        },
+        {
+          "x": 1.225,
+          "y": 2.2405,
+          "z": 0.06999999
+        },
+        {
+          "x": 1.225,
+          "y": 2.05924988,
+          "z": -0.209999979
+        },
+        {
+          "x": 1.225,
+          "y": 1.878,
+          "z": -0.49
+        },
+        {
+          "x": 1.225,
+          "y": 1.69674993,
+          "z": -0.77
+        },
+        {
+          "x": 1.225,
+          "y": 1.51550007,
+          "z": -1.05
+        },
+        {
+          "x": 1.225,
+          "y": 1.33425,
+          "z": -1.33
+        },
+        {
+          "x": 1.225,
+          "y": 1.4,
+          "z": -2
+        },
+        {
+          "x": -0.55,
+          "y": 1.8,
+          "z": -3.5
+        }
+      ]
+    },
+    {
+      "id": "runtime-patrol-1",
+      "role": "mosquito",
+      "spawnIndex": 0,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-2",
+      "role": "mosquito",
+      "spawnIndex": 1,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-3",
+      "role": "mosquito",
+      "spawnIndex": 2,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-4",
+      "role": "mosquito",
+      "spawnIndex": 3,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-5",
+      "role": "mosquito",
+      "spawnIndex": 4,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-6",
+      "role": "mosquito",
+      "spawnIndex": 5,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-7",
+      "role": "mosquito",
+      "spawnIndex": 6,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-8",
+      "role": "mosquito",
+      "spawnIndex": 7,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-9",
+      "role": "mosquito",
+      "spawnIndex": 8,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-10",
+      "role": "mosquito",
+      "spawnIndex": 9,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-11",
+      "role": "mosquito",
+      "spawnIndex": 10,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-12",
+      "role": "mosquito",
+      "spawnIndex": 11,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-13",
+      "role": "mosquito",
+      "spawnIndex": 12,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-14",
+      "role": "mosquito",
+      "spawnIndex": 13,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-15",
+      "role": "mosquito",
+      "spawnIndex": 14,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    },
+    {
+      "id": "runtime-patrol-16",
+      "role": "mosquito",
+      "spawnIndex": 15,
+      "maxTicks": 600,
+      "runtimePatrol": true,
+      "points": []
+    }
+  ]
+}
