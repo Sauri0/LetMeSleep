@@ -72,6 +72,7 @@ public static class HiggsfieldMapChecks
     public static string Run(string configPath, string outputDirectory)
     {
         var operation = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(File.ReadAllText(configPath));
+        if(operation.action=="human-motor-contacts")return HumanMotorContactChecks.Run(configPath,outputDirectory);
         if(operation.action=="apply-casa-semantic")return ApplyCasaSemanticNavigation.Run(configPath,outputDirectory);
         if (operation.action == "prepare-casa" || operation.action == "apply-casa" || operation.action == "fix-casa-spawn") return HiggsfieldCasaPreparation.Run(configPath, outputDirectory);
         if (operation.action == "prepare-isla" || operation.action == "apply-isla") return HiggsfieldIslaPreparation.Run(configPath, outputDirectory);
