@@ -20,4 +20,6 @@ The actual C# `HiggsfieldImportContract.Validate` and `Resolve` passed all 1436 
 ./Higgsfield/Integration/Verify-RecipeOffline.ps1 -Recipe N:/LetMeSleep/Artifacts/Higgsfield/Mapas/03-campamento/UnityRecipe/hf-campamento-pinar-v1.recipe.json
 ```
 
-No native applications, bridge or paid generation were started by this task. Root owns the native import now underway. Renderer types, water seams/motion, capsules and routes, lighting, navigation/registry and runtime performance remain outside this offline acceptance. Do not change source art or relax import guards to hide a native failure.
+No native applications, bridge or paid generation were started by this task. Root completed native import after the offline delivery; its saved receipt was then read directly from the central repository. Unity 6000.3.24f1 reports 1436 renderers, 501 colliders, 15 water/foam components and 5/16 spawns, ContentHash `2dca679e77ef62b560ad583f61e544d0148324b463292899ef1b28c1ce3b9610`. All 15 water/foam entries use `private-mesh-cpu`, including both single-morph foams: no support change was needed. Actual imported water vertex counts and receipt SHA256 are appended to `campamento.delivery.json`.
+
+Receipt status remains `IMPORTED_REQUIRES_NATIVE_REVIEW`. Root's native review and Play Mode water verification are still in progress. Water seams/motion, capsules and routes, lighting, navigation/registry and runtime performance are not certified by successful asset import. Do not change source art or relax import guards to hide a native failure.

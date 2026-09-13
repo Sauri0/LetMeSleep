@@ -325,7 +325,112 @@
     "Water renderer/motion/culling/performance",
     "Visual and lighting approval owned by root",
     "SpatialData navigation schema and RoomRules/UI/Online integration owned by root",
-    "Foam_Lake_01 and Foam_Lake_02 have one morph; native SkinnedMeshRenderer would be rejected",
-    "Water/foam CPU parameters use contract defaults: .025m amplitude,4m wavelength,8s cycle; these do not reproduce authored independent Blender morph drivers"
-  ]
+    "Water/foam CPU parameters use contract defaults: .025m amplitude,4m wavelength,8s cycle; these do not reproduce authored independent Blender morph drivers",
+    "Single-morph concern resolved for this export by native MeshFilter/private-mesh-cpu receipt; no foam support changes made"
+  ],
+  "nativeImportByCoordinator": {
+    "status": "IMPORTED_REQUIRES_NATIVE_REVIEW",
+    "unityVersion": "6000.3.24f1",
+    "contentHash": "2dca679e77ef62b560ad583f61e544d0148324b463292899ef1b28c1ce3b9610",
+    "meshRenderers": 1436,
+    "staticColliders": 501,
+    "animatedWaterAndFoam": 15,
+    "humanSpawns": 5,
+    "mosquitoSpawns": 16,
+    "receiptPath": "N:\\LetMeSleep\\Repository\\unity\\Assets\\LetMeSleep\\Content\\Environment\\HiggsfieldMaps\\hf-campamento-pinar-v1\\Data\\import-receipt.json",
+    "receiptSha256": "6c5d70845fbe0d2c18fc6a2626ec8f149b1337834e819d097f58b17dbd9afc47",
+    "water": [
+      {
+        "path": "CAMP_Prod_LakeCenter",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 24,
+        "submeshes": 1
+      },
+      {
+        "path": "CAMP_Prod_LakeSeam",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 12,
+        "submeshes": 1
+      },
+      {
+        "path": "Foam_Creek_01",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 7,
+        "submeshes": 1
+      },
+      {
+        "path": "Foam_Creek_02",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 7,
+        "submeshes": 1
+      },
+      {
+        "path": "Foam_Creek_03",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 7,
+        "submeshes": 1
+      },
+      {
+        "path": "Foam_Lake_01",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 7,
+        "submeshes": 1
+      },
+      {
+        "path": "Foam_Lake_02",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 7,
+        "submeshes": 1
+      },
+      {
+        "path": "Foam_Lake_03",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 7,
+        "submeshes": 1
+      },
+      {
+        "path": "Foam_Lake_04",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 7,
+        "submeshes": 1
+      },
+      {
+        "path": "Water_Creek",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 177,
+        "submeshes": 1
+      },
+      {
+        "path": "Water_Creek_Deep",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 92,
+        "submeshes": 1
+      },
+      {
+        "path": "Water_Creek_Shallow",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 89,
+        "submeshes": 1
+      },
+      {
+        "path": "Water_Lake",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 141,
+        "submeshes": 1
+      },
+      {
+        "path": "Water_Lake_Deep",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 67,
+        "submeshes": 1
+      },
+      {
+        "path": "Water_Lake_Shallow",
+        "waterMode": "private-mesh-cpu",
+        "vertices": 70,
+        "submeshes": 1
+      }
+    ],
+    "scope": "Coordinator ran Unity; this task only read the saved receipt. Native review and Play Mode water verification still pending."
+  }
 }
