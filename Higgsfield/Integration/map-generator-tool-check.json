@@ -1,7 +1,7 @@
 {
   "status": "PASS_TOOL_ONLY_SYNTHETIC_CHECKS",
-  "scope": "Six bounded tests, AST syntax and CLI help. No active export/audit read, no recipes generated, no Unity/Blender.",
-  "testsPassed": 6,
+  "scope": "Seven bounded synthetic tests, including Blender scalar B/C/Z under FBX 7400/7500. Attempted final recipe preparation rejected sourceFinal=false before export reads; no recipe generated.",
+  "testsPassed": 7,
   "defaultHumanCount": 5,
   "defaultMosquitoCount": 16,
   "defaultCollisionLayer": "Default",
@@ -9,7 +9,7 @@
   "sourceFiles": [
     {
       "path": "prepare_map_recipe.py",
-      "sha256": "7e517a4a412d0f17690e50c98c889edb61e43a0194f09331efe9c16e7dbcc633"
+      "sha256": "69e7ac42c7843040eb4e0babf742b2682703a3b13131533e09a094de021a0268"
     },
     {
       "path": "Prepare-IslaReview.py",
@@ -17,7 +17,7 @@
     },
     {
       "path": "test_prepare_map_recipe.py",
-      "sha256": "5ef710bc559d837f841a89864a08c07d510e75d6750fb4e8b1b8c492155b70fe"
+      "sha256": "a6bbd8bd7943579682f1392120955c047208014f25e4a0428ccf80fab1347259"
     },
     {
       "path": "map-input.EXAMPLE.json",

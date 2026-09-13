@@ -34,8 +34,10 @@ def fbx_tree(data):
         for _ in range(count):
             kind = chr(data[p])
             p += 1
-            if kind in 'YCIFDL':
-                scalar = dict(Y='h', C='?', I='i', F='f', D='d', L='q')[kind]
+            if kind in 'ZYBCIFDL':
+                # Blender 5.2 io_scene_fbx: B=bool, C=char, Z=signed byte.
+                # Uppercase scalar types must not enter the lowercase array branch.
+                scalar = dict(Z='b', Y='h', B='?', C='c', I='i', F='f', D='d', L='q')[kind]
                 value = struct.unpack_from('<' + scalar, data, p)[0]
                 p += struct.calcsize(scalar)
             elif kind in 'SR':

@@ -1,5 +1,6 @@
 """Bounded pure-data checks. Never reads an export or writes a recipe."""
 import unittest
+import struct
 from unittest.mock import patch
 from pathlib import Path
 import prepare_map_recipe as tool
@@ -15,6 +16,17 @@ def empty(name, x):
 
 
 class Checks(unittest.TestCase):
+    def test_fbx_blender_scalar_bool_char_and_signed_byte(self):
+        payload = b'B\x01B\x00CQZ' + struct.pack('<b', -7) + b'I' + struct.pack('<i', 123456)
+        for version, layout, header in ((7400, '<IIIB', 13), (7500, '<QQQB', 25)):
+            with self.subTest(version=version):
+                prefix = b'Kaydara FBX Binary  \x00\x1a\x00' + struct.pack('<I', version)
+                end = len(prefix) + header + 1 + len(payload) + header
+                encoded = prefix + struct.pack(layout, end, 5, len(payload), 1) + b'P' + payload + bytes(header * 2)
+                actual_version, nodes = tool.fbx_tree(encoded)
+                self.assertEqual(actual_version, version)
+                self.assertEqual(nodes[0]['props'], [True, False, b'Q', -7, 123456])
+
     def test_nonfinal_rejected_before_source_io(self):
         c = config(); c['sourceFinal'] = False
         with patch.object(Path, 'read_bytes', side_effect=AssertionError('Source access forbidden')):

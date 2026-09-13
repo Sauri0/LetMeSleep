@@ -40,3 +40,5 @@ El generador no produce navegación, luces, cámaras, RoomRules ni registro UI/O
 ## Comprobación de este cambio
 
 Sólo seis pruebas pequeñas de datos sintéticos: fuente no final rechazada antes de leer archivos; IDs/cupos configurables; roles ausentes/conflictivos; copa separada sin collider; agua; spawns anidados usando matrices mundiales. No crean exports ni recetas y no ejecutan el parser contra fuentes activas. Además se comprueba sintaxis de las entradas y `--help`. Evidencia: `map-generator-tool-check.json`.
+
+Corrección de compatibilidad FBX: contrastado con `N:/Blender/5.2/scripts/addons_core/io_scene_fbx/parse_fbx.py:118`, los escalares son `Z` byte con signo, `B` booleano y `C` carácter; no son arrays. Una séptima prueba comprueba esos tipos, el desplazamiento del siguiente escalar y ambas cabeceras 7400/7500 con un bloque sintético. No se cambia el FBX. Tras el aviso de que Scene Builder aún estaba activo, el intento de preparación encontró `sourceFinal:false` y se detuvo antes de leer exports o escribir receta; se espera confirmación nueva de fuente quieta.
