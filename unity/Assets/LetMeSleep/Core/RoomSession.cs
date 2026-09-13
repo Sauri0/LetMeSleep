@@ -20,6 +20,21 @@ namespace LetMeSleep.Core
     {
         public const int Capacity = 16;
         public const string AlfaMap = "house-patio-v1";
+        public const string IslaDelLaguitoMap = "hf-isla-del-laguito-v2";
+        public const string CasaDelPatioMap = "hf-casa-del-patio-v1";
+        public const string CampamentoPinarMap = "hf-campamento-pinar-v2";
+        public const string YateALaDerivaMap = "hf-yate-a-la-deriva-v3";
+        public const string PuertoDelFaroMap = "hf-puerto-del-faro-v1";
+        private static readonly IReadOnlyList<string> Maps = Array.AsReadOnly(new[]
+        {
+            AlfaMap,
+            IslaDelLaguitoMap,
+            CasaDelPatioMap,
+            CampamentoPinarMap,
+            YateALaDerivaMap,
+            PuertoDelFaroMap
+        });
+        public static IReadOnlyList<string> SupportedMapIds => Maps;
         public int? HumanCount { get; }
         public int RoundSeconds { get; }
         public float BloodQuota { get; }
@@ -30,7 +45,8 @@ namespace LetMeSleep.Core
         }
         public bool IsValid => (!HumanCount.HasValue || (HumanCount.Value >= 1 && HumanCount.Value <= 5))
             && RoundSeconds >= 30 && RoundSeconds <= 1800 && BloodQuota > 0 && BloodQuota <= 1000
-            && !float.IsNaN(BloodQuota) && !float.IsInfinity(BloodQuota) && MapId == AlfaMap;
+            && !float.IsNaN(BloodQuota) && !float.IsInfinity(BloodQuota) && IsSupportedMapId(MapId);
+        public static bool IsSupportedMapId(string mapId) => Maps.Contains(mapId);
     }
 
     public sealed class MemberView
