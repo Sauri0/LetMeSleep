@@ -1,0 +1,44 @@
+{
+  "status": "PASS_CASA_EMISSION_ONLY_RECIPE_OFFLINE",
+  "newRecipePath": "N:\\LetMeSleep\\Worktrees\\maps\\Higgsfield\\Integration\\.verification\\CasaEmission\\hf-casa-del-patio-v1.recipe.json",
+  "newRecipeSha256": "91ca28d7a3d096a4f58f6971924dbee109ddc6bd7c222107ea702f23041d04f6",
+  "oldRecipePath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/UnityRecipe/hf-casa-del-patio-v1.recipe.json",
+  "oldRecipeSha256": "48d6398ea4616794eb3522dcb78a023069ddf549efc719a6ce29a29f8ec5e555",
+  "unchanged": "Actual C# comparator confirms every non-emission field including baseRGB/map/source/paths/spawns remains equal",
+  "emittingMaterials": [
+    {
+      "name": "CASA_LampGlass",
+      "emissionRgb": [
+        1.0,
+        0.4,
+        0.075
+      ],
+      "strength": 2.3,
+      "linearProduct": [
+        2.3,
+        0.92,
+        0.1725
+      ]
+    },
+    {
+      "name": "CASA_WindowAmber",
+      "emissionRgb": [
+        0.48,
+        0.27359998,
+        0.0864
+      ],
+      "strength": 1.0,
+      "linearProduct": [
+        0.48,
+        0.27359998,
+        0.0864
+      ]
+    }
+  ],
+  "nativeRepairExecuted": false,
+  "pending": [
+    "Authorized native repair slot",
+    "Material readback/prefab metadata save",
+    "Visual comparison"
+  ]
+}

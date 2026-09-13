@@ -138,6 +138,29 @@ def select_spawns(audit_objects, paths, prefix, count):
     return [(paths[o['name']], world_position(o)) for o in objects]
 
 
+def emission_fields(gltf_material, audited):
+    name = gltf_material['name']
+    need('emissiveTexture' not in gltf_material, 'Textured emission is outside the flat-colour contract: ' + name)
+    factor = gltf_material.get('emissiveFactor', [0, 0, 0])
+    strength = gltf_material.get('extensions', {}).get('KHR_materials_emissive_strength', {}).get('emissiveStrength', 1)
+    need(isinstance(factor, list) and len(factor) == 3 and all(math.isfinite(v) and 0 <= v <= 3.402823466e38 for v in factor), 'Invalid GLB emission RGB: ' + name)
+    need(math.isfinite(strength) and 0 <= strength <= 3.402823466e38, 'Invalid GLB emission strength: ' + name)
+    exported = [v * strength for v in factor]
+    need(all(math.isfinite(v) and v <= 3.402823466e38 for v in exported), 'GLB emission product overflows float: ' + name)
+    has_color, has_strength = 'emission_color' in audited, 'emission_strength' in audited
+    need(has_color == has_strength, 'Audit must provide both emission fields: ' + name)
+    if has_color:
+        color, authored_strength = audited['emission_color'], audited['emission_strength']
+        need(isinstance(color, list) and len(color) in (3, 4) and all(math.isfinite(v) and v >= 0 for v in color), 'Invalid audit emission colour: ' + name)
+        need(math.isfinite(authored_strength) and authored_strength >= 0, 'Invalid audit emission strength: ' + name)
+        authored = [v * authored_strength for v in color[:3]]
+        need(all(math.isfinite(v) for v in authored), 'Audit emission overflows: ' + name)
+        need(all(math.isclose(a, b, rel_tol=1e-5, abs_tol=1e-6) for a, b in zip(authored, exported)), 'GLB/audit emission mismatch: ' + name)
+    else:
+        need(not any(exported), 'Emissive GLB needs the updated emission audit: ' + name)
+    return dict(emissionRgb=factor if any(exported) else [0, 0, 0], emissionStrength=strength if any(exported) else 0)
+
+
 def prepare(config, config_dir):
     validate_config(config)  # Finality and counts checked before touching export files.
     source_paths = {key: (config_dir / config[key]).resolve() for key in ('fbx', 'glb', 'audit', 'report')}
@@ -189,10 +212,12 @@ def prepare(config, config_dir):
     audit_materials = {m['name']: m for m in audit['materials']}
     need(len(audit_materials) == len(audit['materials']), 'Ambiguous audit materials')
     need(set(fbm.values()) == set(audit_materials) == {m['name'] for m in gltf['materials']}, 'Material names differ between final exports')
+    emissions = {}
     for m in gltf['materials']:
         color = audit_materials[m['name']]['base_color']
         need(len(color) == 4 and all(math.isfinite(v) and 0 <= v <= 1 for v in color), 'Invalid audit RGBA: ' + m['name'])
         need(max(abs(a - b) for a, b in zip(m['pbrMetallicRoughness']['baseColorFactor'], color)) < 1e-6, 'GLB/audit colour mismatch: ' + m['name'])
+        emissions[m['name']] = emission_fields(m, audit_materials[m['name']])
     rules, mesh_evidence, deduplicated_slots = [], [], []
     overrides = config.get('kinds', {})
     for index, n in enumerate(nodes):
@@ -262,7 +287,7 @@ def prepare(config, config_dir):
                   humanSpawns=[p for p, _ in human], mosquitoSpawns=[p for p, _ in mosquito],
                   lobbySpawns=[], toolPickups=[], presentationRoot='', boundsMinEmpty='', boundsMaxEmpty='',
                   playBoundsMin=low, playBoundsMax=high, nodes=sorted(rules, key=lambda r: r['path']),
-                  materials=[dict(sourceName=m['name'], rgb=m['base_color'][:3], colorSpace='linear') for m in sorted(audit['materials'], key=lambda m: m['name'])])
+                  materials=[dict(sourceName=m['name'], rgb=m['base_color'][:3], colorSpace='linear', **emissions[m['name']]) for m in sorted(audit['materials'], key=lambda m: m['name'])])
     channels = [n['props'][1].split('\x00')[0] for n in objects if n['name'] == 'Deformer' and n['props'][2] == 'BlendShapeChannel']
     validation = dict(status='PASS_OFFLINE_FINAL_EXPORT_CONTRACT_ONLY', mapId=config['mapId'],
                       sources={key: dict(path=str(source_paths[key]), sha256=hashes[key]) for key in source_paths},
@@ -273,6 +298,7 @@ def prepare(config, config_dir):
                               'Required EMPTY spawn counts, finite world matrices, distinct world origins and bounds checked'],
                       fbxVersion=fbx_version, fbxGlobalSettings=properties(next(n for n in tree if n['name'] == 'GlobalSettings')),
                       fbxBlendShapeChannels=channels, meshesAndSlots=mesh_evidence, exporterDeduplicatedSlots=deduplicated_slots,
+                      emissionChecks=emissions,
                       humanSpawns=len(human), mosquitoSpawns=len(mosquito),
                       spawnEvidence=[dict(path=p, blenderWorldXYZ=v, unityExpectedXYZ=[v[0], v[2], v[1]]) for p, v in spawns],
                       boundsPolicy=bounds_policy, playBoundsMin=low, playBoundsMax=high,

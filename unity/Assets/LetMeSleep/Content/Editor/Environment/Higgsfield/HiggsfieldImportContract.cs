@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace LetMeSleep.Content.Editor.Higgsfield
@@ -57,6 +58,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
             {
                 Need(m.rgb?.Length == 3 && m.rgb.All(v => Finite(v) && v >= 0 && v <= 1), "Material RGB must be three sRGB values in 0..1.");
                 Need(m.colorSpace == "linear" || m.colorSpace == "srgb", "Explicit material colour space must be linear or srgb.");
+                m.ValidateEmission();
             }
         }
 
@@ -66,6 +68,24 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                 .OrderByDescending(n => n.path.Length).ToArray();
             Need(matches.Length > 0, "Unclassified mesh: " + relativePath);
             return matches[0]; // Most specific path overrides a parent rule; exact duplicate rules are rejected.
+        }
+        public static void ValidateEmissionOnlyChange(HiggsfieldImportContract before, HiggsfieldImportContract after)
+        {
+            Need(before != null && after != null, "Both recipes required.");
+            before.Validate(); after.Validate();
+            Need(EqualExceptEmission(before, after), "Emission repair cannot change map, FBX, paths, palette/base RGB, spawns or other recipe fields.");
+        }
+        static bool EqualExceptEmission(object a, object b)
+        {
+            if (ReferenceEquals(a, b)) return true;
+            if (a == null || b == null || a.GetType() != b.GetType()) return false;
+            var type = a.GetType();
+            if (type.IsValueType || a is string) return a.Equals(b);
+            if (a is Array aa && b is Array bb)
+                return aa.Length == bb.Length && Enumerable.Range(0, aa.Length).All(i => EqualExceptEmission(aa.GetValue(i), bb.GetValue(i)));
+            return type.GetFields(BindingFlags.Public | BindingFlags.Instance)
+                .Where(f => type != typeof(HiggsfieldSwatch) || (f.Name != "emissionRgb" && f.Name != "emissionStrength"))
+                .All(f => EqualExceptEmission(f.GetValue(a), f.GetValue(b)));
         }
         static void CheckNames(string[] names, int count, string label)
         {
@@ -81,5 +101,26 @@ namespace LetMeSleep.Content.Editor.Higgsfield
         public bool descendants, canPerch = true;
         public float waveAmplitude = .025f, waveLength = 4f, waveSpeed = .65f;
     }
-    [Serializable] public sealed class HiggsfieldSwatch { public string sourceName; public float[] rgb; public string colorSpace = "srgb"; }
+    [Serializable] public sealed class HiggsfieldSwatch
+    {
+        public string sourceName;
+        public float[] rgb;
+        public string colorSpace = "srgb";
+        // Always linear. Missing fields in old recipes mean black, independently of base colour.
+        public float[] emissionRgb;
+        public float emissionStrength;
+        public void ValidateEmission()
+        {
+            HiggsfieldImportContract.Need(HiggsfieldImportContract.Finite(emissionStrength) && emissionStrength >= 0, "Invalid emission strength: " + sourceName);
+            HiggsfieldImportContract.Need(emissionRgb == null || (emissionRgb.Length == 3 && emissionRgb.All(v => HiggsfieldImportContract.Finite(v) && v >= 0)), "Invalid linear emission RGB: " + sourceName);
+            HiggsfieldImportContract.Need(emissionRgb != null || emissionStrength == 0, "Positive strength requires emission RGB: " + sourceName);
+            if (emissionRgb != null)
+                HiggsfieldImportContract.Need(emissionRgb.All(v => HiggsfieldImportContract.Finite(v * emissionStrength)), "Emission product overflows: " + sourceName);
+        }
+        public float[] EmissionLinear()
+        {
+            ValidateEmission();
+            return emissionRgb == null ? new float[3] : emissionRgb.Select(v => v * emissionStrength).ToArray();
+        }
+    }
 }

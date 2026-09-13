@@ -120,6 +120,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                     material.SetColor("_BaseColor", swatch.colorSpace == "linear" ? color.gamma : color);
                     material.SetFloat("_Metallic", 0); material.SetFloat("_Smoothness", 0);
                     material.SetFloat("_Surface", 0); // Flat colour, opaque; no realistic texture or transparency dependency.
+                    ApplyEmission(material, swatch);
                     AssetDatabase.CreateAsset(material, destination + "/Materials/Color_" + i.ToString("000") + ".mat");
                     materials.Add(swatch.sourceName, material);
                 }
@@ -241,6 +242,27 @@ namespace LetMeSleep.Content.Editor.Higgsfield
             for (int i = 0; i < SceneManager.sceneCount; i++)
                 Need(!string.IsNullOrEmpty(SceneManager.GetSceneAt(i).path), "Cannot add a generated scene alongside an Untitled scene. Save or close it manually first; this importer never saves user scenes. In batch, use an empty clean initial scene or a saved scene.");
             return false;
+        }
+
+        public static void ApplyEmission(Material material, HiggsfieldSwatch swatch)
+        {
+            Need(material != null && material.shader != null && material.shader.name == "Universal Render Pipeline/Lit", "Emission requires URP/Lit.");
+            Need(material.HasProperty("_EmissionColor") && material.GetTexture("_EmissionMap") == null, "Only flat, untextured emission is supported.");
+            float[] rgb = swatch.EmissionLinear();
+            // SetVector writes linear shader data directly, avoiding SetColor's HDR gamma conversion.
+            material.SetVector("_EmissionColor", new Vector4(rgb[0], rgb[1], rgb[2], 1));
+            bool on = rgb.Any(v => v > 0);
+            if (on)
+            {
+                material.EnableKeyword("_EMISSION");
+                var flags = material.globalIlluminationFlags & ~MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+                material.globalIlluminationFlags = (flags & MaterialGlobalIlluminationFlags.AnyEmissive) == 0 ? flags | MaterialGlobalIlluminationFlags.BakedEmissive : flags;
+            }
+            else
+            {
+                material.DisableKeyword("_EMISSION");
+                material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+            }
         }
 
         static Dictionary<string, Transform> NodePaths(Transform root)

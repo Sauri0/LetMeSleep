@@ -1,7 +1,7 @@
 {
   "status": "PASS_TOOL_ONLY_SYNTHETIC_CHECKS",
-  "scope": "Eight bounded synthetic tests; latest verifies .001 spawn physical names preserved. Casa preparation reads report metadata only; no active FBX/GLB/audit, no final recipe generated.",
-  "testsPassed": 8,
+  "scope": "Nine synthetic generator tests plus actual Casa GLB/audit emission crosscheck and emission-only C# comparison; no native applications or repair executed.",
+  "testsPassed": 9,
   "defaultHumanCount": 5,
   "defaultMosquitoCount": 16,
   "defaultCollisionLayer": "Default",
@@ -9,7 +9,7 @@
   "sourceFiles": [
     {
       "path": "prepare_map_recipe.py",
-      "sha256": "6608333bc4fa98a1eca62464ab29f876d85752f7490b68a7b40594446607b957"
+      "sha256": "7ac2e6c779e9cad63a0e8a2d7bf28c11750a90fe4f50ef1dd068378e068bbefe"
     },
     {
       "path": "Prepare-IslaReview.py",
@@ -17,7 +17,7 @@
     },
     {
       "path": "test_prepare_map_recipe.py",
-      "sha256": "c82880be8c0b3bc7f09bc48782284a7e1bdf02c78565d656f41c29ed0b09c05b"
+      "sha256": "8419676d19bc10aaaa0e9b4520a36a33b357290097eba163659fab9e2539dc1b"
     },
     {
       "path": "map-input.EXAMPLE.json",

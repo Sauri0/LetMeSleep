@@ -49,6 +49,26 @@ public static class ContractChecks
         Reject(x => x.materials[0].rgb[0] = float.NaN, "invalid swatch");
         Reject(x => x.materials[0].colorSpace = "guess", "unspecified colour encoding");
         Reject(x => x.materials = new[] { x.materials[0], x.materials[0] }, "ambiguous material");
+        Expect(c.materials[0].EmissionLinear()[0] == 0, "Old recipe emission defaults to zero");
+        var emissive = Valid(); emissive.materials[0].emissionRgb = new[] { 1f, .4f, .075f }; emissive.materials[0].emissionStrength = 2.3f;
+        emissive.Validate();
+        Expect(Math.Abs(emissive.materials[0].EmissionLinear()[1] - .92f) < .00001f, "Linear HDR product");
+        HiggsfieldImportContract.ValidateEmissionOnlyChange(Valid(), emissive); checks++;
+        Reject(x => x.materials[0].emissionStrength = -1, "negative emission");
+        Reject(x => x.materials[0].emissionStrength = float.NaN, "NaN emission");
+        Reject(x => x.materials[0].emissionStrength = 1, "missing emission RGB");
+        Reject(x => x.materials[0].emissionRgb = new[] { 1f, -1f, 0f }, "negative emission RGB");
+        Reject(x => { x.materials[0].emissionRgb = new[] { float.MaxValue, 0f, 0f }; x.materials[0].emissionStrength = 2; }, "emission overflow");
+        foreach (var change in new Action<HiggsfieldImportContract>[] {
+            x => x.mapId = "hf-another-map", x => x.sourceSha256 = new string('b', 64),
+            x => x.materials[0].rgb[0] = .3f, x => x.nodes[0].path = "AnotherForest",
+            x => x.humanSpawns[0] = "OtherSpawn" })
+        {
+            var changed = Valid(); change(changed);
+            bool rejected = false;
+            try { HiggsfieldImportContract.ValidateEmissionOnlyChange(Valid(), changed); } catch (InvalidOperationException) { rejected = true; }
+            Expect(rejected, "Repair rejects non-emission changes");
+        }
         Console.WriteLine("PASS " + checks + " offline contract checks; no Unity/native import or geometry execution.");
         return 0;
     }

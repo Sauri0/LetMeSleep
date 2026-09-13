@@ -17,7 +17,7 @@ function Compile-Higgsfield([string]$Name, [string[]]$Sources, [string[]]$ExtraR
 $taskRuntime = @('unity/Assets/LetMeSleep/Content/Environment/EnvironmentMapDefinition.cs', 'unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/HiggsfieldLowPolyWater.cs')
 $taskSurface = @('unity/Assets/LetMeSleep/Gameplay.Unity/GameplaySurface.cs')
 $taskContract = 'unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldImportContract.cs'
-$taskEditor = @($taskContract, 'unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldEnvironmentImporter.cs')
+$taskEditor = @($taskContract, 'unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldEnvironmentImporter.cs', 'unity/Assets/LetMeSleep/Content/Editor/Environment/Higgsfield/HiggsfieldEmissionRepair.cs')
 Compile-Higgsfield 'Higgsfield.Runtime' $taskRuntime
 Compile-Higgsfield 'Higgsfield.Surface' $taskSurface
 Compile-Higgsfield 'Higgsfield.Editor' $taskEditor @('Higgsfield.Runtime.dll', 'Higgsfield.Surface.dll')

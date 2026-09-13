@@ -16,6 +16,18 @@ def empty(name, x):
 
 
 class Checks(unittest.TestCase):
+    def test_emission_audit_product_and_legacy_zero(self):
+        self.assertEqual(tool.emission_fields({'name': 'Old'}, {}), {'emissionRgb': [0, 0, 0], 'emissionStrength': 0})
+        glb = {'name': 'Window', 'emissiveFactor': [.48, .2736, .0864]}
+        audit = {'emission_color': [1, .57, .18, 1], 'emission_strength': .48}
+        self.assertEqual(tool.emission_fields(glb, audit)['emissionStrength'], 1)
+        lamp = {'name': 'Lamp', 'emissiveFactor': [1, .4, .075], 'extensions': {'KHR_materials_emissive_strength': {'emissiveStrength': 2.3}}}
+        self.assertEqual(tool.emission_fields(lamp, {'emission_color': [1, .4, .075, 1], 'emission_strength': 2.3})['emissionStrength'], 2.3)
+        for bad in ({}, {'emission_color': [1, .57, .18], 'emission_strength': .6}, {'emission_color': [1, .57, .18], 'emission_strength': -1}):
+            with self.assertRaises(ValueError): tool.emission_fields(glb, bad)
+        with self.assertRaises(ValueError): tool.emission_fields({'name': 'Bad', 'emissiveFactor': [float('nan'), 0, 0]}, {})
+        with self.assertRaises(ValueError): tool.emission_fields({'name': 'Texture', 'emissiveTexture': {'index': 0}}, {})
+
     def test_fbx_blender_scalar_bool_char_and_signed_byte(self):
         payload = b'B\x01B\x00CQZ' + struct.pack('<b', -7) + b'I' + struct.pack('<i', 123456)
         for version, layout, header in ((7400, '<IIIB', 13), (7500, '<QQQB', 25)):
