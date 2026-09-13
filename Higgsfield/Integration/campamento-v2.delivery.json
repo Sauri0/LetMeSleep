@@ -1,0 +1,306 @@
+{
+  "status": "PASS_WINDING_REPAIR_EXPORT_READBACK_AND_STRICT_RECIPE_REQUIRES_UNITY_V2_REVIEW",
+  "mapId": "hf-campamento-pinar-v2",
+  "recipePath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\UnityRecipeV2\\hf-campamento-pinar-v2.recipe.json",
+  "recipeSha256": "a476f692f8bea9429cd437a9f16c0f72735e54e6d305414f5f6b3a2a9171daae",
+  "validationPath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\UnityRecipeV2\\hf-campamento-pinar-v2.validation.json",
+  "validationSha256": "387b8e5c75b8e2e854a1d4a2cc5c7a060f35f6524b4783c226a04f2851f5fb6a",
+  "sourceHashes": {
+    "fbx": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\NormalsV2\\HF_MAP_03_campamento_UNITY_V2.fbx",
+      "sha256": "3fd036eb8ede448aa48eb72764ae9f143dbf6ecff375e1ae10d144dfb44badc3"
+    },
+    "glb": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\NormalsV2\\HF_MAP_03_campamento_UNITY_V2.glb",
+      "sha256": "d93aeb853c0193b27126541d50342d6517d0f76ae906ce665f7c306f4a9b76d7"
+    },
+    "audit": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\NormalsV2\\scene-audit.json",
+      "sha256": "e674942a24baebc02cbb127313d59448f0ac9e7693c890d89676f8409e47d350"
+    },
+    "report": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\NormalsV2\\HF_MAP_03_campamento_report.json",
+      "sha256": "8179898cbe02d76ff8a09987b7c4095bfdee6e53ec5ab9afff65829776eb5eae"
+    }
+  },
+  "sourceBlendBeforeSha256": "54d0326e0381185883230a4f38ff6c1d41507bf31aef5a10ad8150272892ec1a",
+  "sourceBlendAfterSha256": "47b8e7d6e674244d9d46aaa32bf6f1e8fe0f71d99750612f84eaa44811a887df",
+  "preservedOriginalsManifest": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\SourceBeforeNormals\\preservation-manifest.json",
+  "preservedOriginalsManifestSha256": "fcef15963c33cf69af60987c9b87b1452784c00ea8c9b9f727131e69b5a674ae",
+  "normalsProofPath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\NormalsV2\\normals-repair.json",
+  "normalsProofSha256": "a95a2266a04ae05dbd608922cd4cd5a53cebcd2947677e64a1ca03cdca4f5440",
+  "readbackPath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\03-campamento\\NormalsV2\\normals-readback.json",
+  "readbackSha256": "b61118e826c67ce8072854d69e24909cba608171cd1e0018885ef9abd999ea3b",
+  "flippedObjects": 12,
+  "flippedPolygons": 1743,
+  "changes": [
+    {
+      "object": "CAMP_Terrain_Grass",
+      "before": {
+        "triangles": 1363,
+        "directions": {
+          "down": 1363
+        },
+        "signedWorldVolume": 13.118917258999625
+      },
+      "after": {
+        "triangles": 1363,
+        "directions": {
+          "up": 1363
+        },
+        "signedWorldVolume": -13.118917258999625
+      },
+      "flippedPolygons": 1363
+    },
+    {
+      "object": "CAMP_Lake_Bed",
+      "before": {
+        "triangles": 16,
+        "directions": {
+          "down": 16
+        },
+        "signedWorldVolume": -8.307281821847331E-06
+      },
+      "after": {
+        "triangles": 16,
+        "directions": {
+          "up": 16
+        },
+        "signedWorldVolume": 8.307282107248664E-06
+      },
+      "flippedPolygons": 1
+    },
+    {
+      "object": "Water_Creek",
+      "before": {
+        "triangles": 192,
+        "directions": {
+          "down": 192
+        },
+        "signedWorldVolume": 5.714275588865805E-06
+      },
+      "after": {
+        "triangles": 192,
+        "directions": {
+          "up": 192
+        },
+        "signedWorldVolume": -5.7142755888658045E-06
+      },
+      "flippedPolygons": 96
+    },
+    {
+      "object": "Water_Creek_Deep",
+      "before": {
+        "triangles": 96,
+        "directions": {
+          "down": 96
+        },
+        "signedWorldVolume": -3.461532403094732E-06
+      },
+      "after": {
+        "triangles": 96,
+        "directions": {
+          "up": 96
+        },
+        "signedWorldVolume": 3.461532403094732E-06
+      },
+      "flippedPolygons": 48
+    },
+    {
+      "object": "Water_Creek_Shallow",
+      "before": {
+        "triangles": 96,
+        "directions": {
+          "down": 96
+        },
+        "signedWorldVolume": 1.7857101918822514E-06
+      },
+      "after": {
+        "triangles": 96,
+        "directions": {
+          "up": 96
+        },
+        "signedWorldVolume": -1.7857101918822514E-06
+      },
+      "flippedPolygons": 48
+    },
+    {
+      "object": "Water_Lake",
+      "before": {
+        "triangles": 136,
+        "directions": {
+          "down": 136
+        },
+        "signedWorldVolume": 9.537189823024975E-06
+      },
+      "after": {
+        "triangles": 136,
+        "directions": {
+          "up": 136
+        },
+        "signedWorldVolume": -9.537189823024975E-06
+      },
+      "flippedPolygons": 68
+    },
+    {
+      "object": "Water_Lake_Deep",
+      "before": {
+        "triangles": 68,
+        "directions": {
+          "down": 68
+        },
+        "signedWorldVolume": 4.0605066611069783E-07
+      },
+      "after": {
+        "triangles": 68,
+        "directions": {
+          "up": 68
+        },
+        "signedWorldVolume": -4.060506661106979E-07
+      },
+      "flippedPolygons": 34
+    },
+    {
+      "object": "Water_Lake_Shallow",
+      "before": {
+        "triangles": 68,
+        "directions": {
+          "down": 68
+        },
+        "signedWorldVolume": 2.383717392954546E-06
+      },
+      "after": {
+        "triangles": 68,
+        "directions": {
+          "up": 68
+        },
+        "signedWorldVolume": -2.383717392954546E-06
+      },
+      "flippedPolygons": 34
+    },
+    {
+      "object": "CAMP_Prod_LakeCenter",
+      "before": {
+        "triangles": 18,
+        "directions": {
+          "down": 17,
+          "up": 1
+        },
+        "signedWorldVolume": 2.0559814045232697E-07
+      },
+      "after": {
+        "triangles": 18,
+        "directions": {
+          "up": 18
+        },
+        "signedWorldVolume": -2.0587913486524998E-07
+      },
+      "flippedPolygons": 17
+    },
+    {
+      "object": "CAMP_Prod_LakeSeam",
+      "before": {
+        "triangles": 8,
+        "directions": {
+          "down": 8
+        },
+        "signedWorldVolume": 0.0
+      },
+      "after": {
+        "triangles": 8,
+        "directions": {
+          "up": 8
+        },
+        "signedWorldVolume": 0.0
+      },
+      "flippedPolygons": 4
+    },
+    {
+      "object": "CAMP_Shelter_Roof_R",
+      "before": {
+        "triangles": 8,
+        "directions": {
+          "down": 8
+        },
+        "signedWorldVolume": -8.931383490562439E-07
+      },
+      "after": {
+        "triangles": 8,
+        "directions": {
+          "up": 8
+        },
+        "signedWorldVolume": 8.931383490562439E-07
+      },
+      "flippedPolygons": 4
+    },
+    {
+      "object": "CAMP_Prod_ChoppingBoard",
+      "before": {
+        "triangles": 44,
+        "directions": {
+          "up": 14,
+          "down": 14,
+          "side": 16
+        },
+        "signedWorldVolume": -0.0029385894922597795
+      },
+      "after": {
+        "triangles": 44,
+        "directions": {
+          "down": 14,
+          "up": 14,
+          "side": 16
+        },
+        "signedWorldVolume": 0.0029385894922597795
+      },
+      "flippedPolygons": 26
+    }
+  ],
+  "invariants": [
+    "All vertex and shape-key positions/weights unchanged",
+    "Polygon membership/count/material indices/smoothing unchanged",
+    "All object transforms/parents/material slots unchanged in every saved scene",
+    "All other mesh geometry unchanged, including preserved exclusions",
+    "Old and new audit objects/materials/exclusions equal exactly",
+    "GLB has no animation clips"
+  ],
+  "counts": {
+    "objects": 1493,
+    "meshObjects": 1436,
+    "triangles": 76947,
+    "materials": 40,
+    "glbUniqueMeshes": 1056,
+    "humanSpawns": 5,
+    "mosquitoSpawns": 16
+  },
+  "classification": {
+    "solid": 501,
+    "decoration": 920,
+    "water": 8,
+    "foam": 7
+  },
+  "playBoundsMin": [
+    -46,
+    -0.5,
+    -36
+  ],
+  "playBoundsMax": [
+    46,
+    10,
+    36
+  ],
+  "contractCheck": "PASS actual C# Validate/Resolve 1436 paths",
+  "nativeExecution": {
+    "blender": "5.2.1 LTS headless, factory startup, autoexec disabled",
+    "unity": false,
+    "bridge": false,
+    "render": false,
+    "higgsfieldOrBridgeAddonLoaded": false
+  },
+  "pending": [
+    "Unity v2 visual culling review",
+    "5 human ground and capsule checks",
+    "Water motion/culling in Play Mode",
+    "Runtime performance and map registration"
+  ]
+}
