@@ -1,0 +1,491 @@
+{
+  "schema_version": 1,
+  "outputAssetPath": "Assets/LetMeSleep/Presentation/Generated/hf-puerto-del-faro-v1-Catalog-Provisional.asset",
+  "receiptPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/hf-puerto-del-faro-v1-catalog-provisional-receipt.json",
+  "declaredCount": 1,
+  "requireFiveMaps": false,
+  "allowMissingSpatialDataForAuthoring": false,
+  "entries": [
+    {
+      "mapId": "hf-puerto-del-faro-v1",
+      "displayName": "Puerto del faro",
+      "prefabPath": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-puerto-del-faro-v1/Prefabs/hf-puerto-del-faro-v1.prefab",
+      "lighting": {
+        "MapId": 4,
+        "SunColor": {
+          "r": 0.5600000023841858,
+          "g": 0.699999988079071,
+          "b": 1.0,
+          "a": 1
+        },
+        "SunUnityIntensity": 0.8,
+        "SunShadows": 2,
+        "AmbientSky": {
+          "r": 0.16,
+          "g": 0.23,
+          "b": 0.38,
+          "a": 1
+        },
+        "AmbientEquator": {
+          "r": 0.12,
+          "g": 0.16,
+          "b": 0.23,
+          "a": 1
+        },
+        "AmbientGround": {
+          "r": 0.06,
+          "g": 0.08,
+          "b": 0.13,
+          "a": 1
+        },
+        "AmbientIntensity": 1,
+        "ReflectionIntensity": 1,
+        "FogEnabled": false,
+        "FogColor": {
+          "r": 0.5,
+          "g": 0.5,
+          "b": 0.5,
+          "a": 1
+        },
+        "FogMode": 3,
+        "FogStart": 0,
+        "FogEnd": 300,
+        "FogDensity": 0.01,
+        "VolumeWeight": 1,
+        "CullingMask": -1073741825,
+        "LocalLights": [],
+        "SuppressLights": []
+      },
+      "skyboxAssetPath": "Assets/LetMeSleep/Presentation/Generated/Materials/hf-puerto-del-faro-v1-Skybox.mat",
+      "volumeProfileAssetPath": null,
+      "sunEulerDegrees": [
+        53.00538011849841,
+        75.22270461378136,
+        0
+      ],
+      "localLights": [
+        {
+          "anchorPath": "Environment/Anchor_LGT_Pueblo_LighthouseLens",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6000000238418579,
+            "b": 0.25,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 12,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            29.0,
+            17.5,
+            26.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Cottage_01_BedsideLamp",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -16.5,
+            4.435999870300293,
+            -3.549999952316284
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Cottage_01_ExteriorLantern",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -13.0,
+            5.486000061035156,
+            -5.380000114440918
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Cottage_01_InteriorFill",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.699999988079071,
+            "b": 0.4000000059604645,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            -14.0,
+            6.00600004196167,
+            -2.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Cottage_02_BedsideLamp",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -14.5,
+            4.435999870300293,
+            11.449999809265137
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Cottage_02_ExteriorLantern",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -11.0,
+            5.486000061035156,
+            9.619999885559082
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Cottage_02_InteriorFill",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.699999988079071,
+            "b": 0.4000000059604645,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            -12.0,
+            6.00600004196167,
+            13.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Cottage_03_BedsideLamp",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -0.5,
+            4.435999870300293,
+            14.449999809265137
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Cottage_03_ExteriorLantern",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            3.0,
+            5.486000061035156,
+            12.619999885559082
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Cottage_03_InteriorFill",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.699999988079071,
+            "b": 0.4000000059604645,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            2.0,
+            6.00600004196167,
+            16.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Workshop_ExteriorLantern",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            17.100000381469727,
+            5.579999923706055,
+            -8.399999618530273
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Workshop_BenchLamp",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            11.600000381469727,
+            4.480000019073486,
+            -1.5
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Workshop_Interior",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.6499999761581421,
+            "b": 0.3199999928474426,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            15.0,
+            6.099999904632568,
+            -3.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Pier_1_EndLantern",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -15.399999618530273,
+            2.0799999237060547,
+            -29.233999252319336
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_Pier_2_EndLantern",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            12.600000381469727,
+            2.0799999237060547,
+            -29.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_PathLantern_1",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -19.549999237060547,
+            5.430004596710205,
+            -8.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_PathLantern_2",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -18.549999237060547,
+            5.429996967315674,
+            7.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_PathLantern_3",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            -3.549999952316284,
+            5.429996967315674,
+            9.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_PathLantern_4",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            8.449999809265137,
+            5.429996967315674,
+            7.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_PathLantern_5",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            22.450000762939453,
+            7.560902118682861,
+            13.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/Anchor_LGT_PathLantern_6",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.5,
+            "b": 0.20000000298023224,
+            "a": 1
+          },
+          "unityIntensity": 2.2,
+          "range": 5,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "None",
+          "expectedMapLocalPosition": [
+            27.450000762939453,
+            9.429996490478516,
+            21.0
+          ]
+        }
+      ],
+      "suppressLightPaths": []
+    }
+  ]
+}

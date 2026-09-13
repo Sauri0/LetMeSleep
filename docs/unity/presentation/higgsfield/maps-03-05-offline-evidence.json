@@ -1,0 +1,1184 @@
+{
+  "scope": "Offline source/FBX verification, not Unity Transform validation or visual approval. Yate/Puerto Unity intensities and Trilight are provisional.",
+  "maps": [
+    {
+      "mapId": "hf-campamento-pinar-v2",
+      "prefabExistsAtPreparation": true,
+      "spatial": {
+        "path": "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-campamento-pinar-v2/Data/import-recipe.json",
+        "schema_version": null,
+        "map_id": null,
+        "contentHash": "d9b4ff479990e28d34bd14d1e5b18ceaceb687fc5b95d03efa2fe669f6dd62af"
+      },
+      "sourceSha256": {
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/03-campamento/scene-audit.json": "e674942a24baebc02cbb127313d59448f0ac9e7693c890d89676f8409e47d350",
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/03-campamento/unity-review-v2.json": "84b942dfd83f7ac31842e7f1455b0577735c0bc3317acec43d444ff9b2ce7e20",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-campamento-pinar-v2/Models/Environment.fbx": "3fd036eb8ede448aa48eb72764ae9f143dbf6ecff375e1ae10d144dfb44badc3",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-campamento-pinar-v2/Prefabs/hf-campamento-pinar-v2.prefab": "1a0fda018ef847f405d4efc3cf1868360d810f9931c168e22fb47bc462727f20",
+        "N:/LetMeSleep/Repository/unity/Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-campamento-pinar-v2/Data/import-recipe.json": "a476f692f8bea9429cd437a9f16c0f72735e54e6d305414f5f6b3a2a9171daae"
+      },
+      "localLights": 23,
+      "softLocalShadows": 3,
+      "intensitiesFromUnityReview": true,
+      "worldParametersAvailableInAudit": false,
+      "sun": null,
+      "camera": null,
+      "anchors": [
+        {
+          "sourceLight": "LGT_Fire",
+          "fbxPath": "Environment/LGT_Fire",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            0.699999988079071,
+            1.2000000476837158,
+            -0.20000000298023224
+          ],
+          "sourceBlenderPosition": [
+            0.699999988079071,
+            0.20000000298023224,
+            1.2000000476837158
+          ],
+          "expectedUnityPosition": [
+            0.699999988079071,
+            1.2000000476837158,
+            0.20000000298023224
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Fire_Outer",
+          "fbxPath": "Environment/LGT_Fire_Outer",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            0.699999988079071,
+            2.799999952316284,
+            -0.20000000298023224
+          ],
+          "sourceBlenderPosition": [
+            0.699999988079071,
+            0.20000000298023224,
+            2.799999952316284
+          ],
+          "expectedUnityPosition": [
+            0.699999988079071,
+            2.799999952316284,
+            0.20000000298023224
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_00",
+          "fbxPath": "Environment/LGT_Lantern_00",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            -8.119999885559082,
+            2.3299999237060547,
+            -11.5
+          ],
+          "sourceBlenderPosition": [
+            -8.119999885559082,
+            11.5,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            -8.119999885559082,
+            2.3299999237060547,
+            11.5
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_01",
+          "fbxPath": "Environment/LGT_Lantern_01",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            6.380000114440918,
+            2.3299999237060547,
+            -14.5
+          ],
+          "sourceBlenderPosition": [
+            6.380000114440918,
+            14.5,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            6.380000114440918,
+            2.3299999237060547,
+            14.5
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_02",
+          "fbxPath": "Environment/LGT_Lantern_02",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            14.880000114440918,
+            2.3299999237060547,
+            -6.5
+          ],
+          "sourceBlenderPosition": [
+            14.880000114440918,
+            6.5,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            14.880000114440918,
+            2.3299999237060547,
+            6.5
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_03",
+          "fbxPath": "Environment/LGT_Lantern_03",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            -15.119999885559082,
+            2.3299999237060547,
+            6.5
+          ],
+          "sourceBlenderPosition": [
+            -15.119999885559082,
+            -6.5,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            -15.119999885559082,
+            2.3299999237060547,
+            -6.5
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_04",
+          "fbxPath": "Environment/LGT_Lantern_04",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            8.880000114440918,
+            2.3299999237060547,
+            17.0
+          ],
+          "sourceBlenderPosition": [
+            8.880000114440918,
+            -17.0,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            8.880000114440918,
+            2.3299999237060547,
+            -17.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_05",
+          "fbxPath": "Environment/LGT_Lantern_05",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            28.8799991607666,
+            2.3299999237060547,
+            -9.0
+          ],
+          "sourceBlenderPosition": [
+            28.8799991607666,
+            9.0,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            28.8799991607666,
+            2.3299999237060547,
+            9.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_06",
+          "fbxPath": "Environment/LGT_Lantern_06",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            37.18000030517578,
+            2.3299999237060547,
+            -10.0
+          ],
+          "sourceBlenderPosition": [
+            37.18000030517578,
+            10.0,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            37.18000030517578,
+            2.3299999237060547,
+            10.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_07",
+          "fbxPath": "Environment/LGT_Lantern_07",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            38.880001068115234,
+            2.3299999237060547,
+            17.5
+          ],
+          "sourceBlenderPosition": [
+            38.880001068115234,
+            -17.5,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            38.880001068115234,
+            2.3299999237060547,
+            -17.5
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_08",
+          "fbxPath": "Environment/LGT_Lantern_08",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            -10.619999885559082,
+            2.3299999237060547,
+            -18.0
+          ],
+          "sourceBlenderPosition": [
+            -10.619999885559082,
+            18.0,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            -10.619999885559082,
+            2.3299999237060547,
+            18.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Jetty_Lantern",
+          "fbxPath": "Environment/LGT_Jetty_Lantern",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            41.0,
+            1.899999976158142,
+            19.399999618530273
+          ],
+          "sourceBlenderPosition": [
+            41.0,
+            -19.399999618530273,
+            1.899999976158142
+          ],
+          "expectedUnityPosition": [
+            41.0,
+            1.899999976158142,
+            -19.399999618530273
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lookout_Ambient",
+          "fbxPath": "Environment/LGT_Lookout_Ambient",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            0.699999988079071,
+            12.0,
+            -0.20000000298023224
+          ],
+          "sourceBlenderPosition": [
+            0.699999988079071,
+            0.20000000298023224,
+            12.0
+          ],
+          "expectedUnityPosition": [
+            0.699999988079071,
+            12.0,
+            0.20000000298023224
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_09",
+          "fbxPath": "Environment/LGT_Lantern_09",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            -15.619999885559082,
+            2.3299999237060547,
+            10.5
+          ],
+          "sourceBlenderPosition": [
+            -15.619999885559082,
+            -10.5,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            -15.619999885559082,
+            2.3299999237060547,
+            -10.5
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Lantern_10",
+          "fbxPath": "Environment/LGT_Lantern_10",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            20.8799991607666,
+            2.3299999237060547,
+            -14.5
+          ],
+          "sourceBlenderPosition": [
+            20.8799991607666,
+            14.5,
+            2.3299999237060547
+          ],
+          "expectedUnityPosition": [
+            20.8799991607666,
+            2.3299999237060547,
+            14.5
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_CAMP_Shelter",
+          "fbxPath": "Environment/LGT_CAMP_Shelter",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            -24.5,
+            2.049999952316284,
+            -5.0
+          ],
+          "sourceBlenderPosition": [
+            -24.5,
+            5.0,
+            2.049999952316284
+          ],
+          "expectedUnityPosition": [
+            -24.5,
+            2.049999952316284,
+            5.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_CAMP_Washroom",
+          "fbxPath": "Environment/LGT_CAMP_Washroom",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            -28.0,
+            1.7000000476837158,
+            -20.0
+          ],
+          "sourceBlenderPosition": [
+            -28.0,
+            20.0,
+            1.7000000476837158
+          ],
+          "expectedUnityPosition": [
+            -28.0,
+            1.7000000476837158,
+            20.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_CAMP_Tent_01",
+          "fbxPath": "Environment/LGT_CAMP_Tent_01",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            -13.154192924499512,
+            0.3450000286102295,
+            -12.97581958770752
+          ],
+          "sourceBlenderPosition": [
+            -13.154192924499512,
+            12.97581958770752,
+            0.3450000286102295
+          ],
+          "expectedUnityPosition": [
+            -13.154192924499512,
+            0.3450000286102295,
+            12.97581958770752
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_CAMP_Tent_02",
+          "fbxPath": "Environment/LGT_CAMP_Tent_02",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            -11.125514030456543,
+            0.3450000286102295,
+            -15.332759857177734
+          ],
+          "sourceBlenderPosition": [
+            -11.125514030456543,
+            15.332759857177734,
+            0.3450000286102295
+          ],
+          "expectedUnityPosition": [
+            -11.125514030456543,
+            0.3450000286102295,
+            15.332759857177734
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_CAMP_Tent_03",
+          "fbxPath": "Environment/LGT_CAMP_Tent_03",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            -14.435847282409668,
+            0.3450000286102295,
+            -16.35936164855957
+          ],
+          "sourceBlenderPosition": [
+            -14.435847282409668,
+            16.35936164855957,
+            0.3450000286102295
+          ],
+          "expectedUnityPosition": [
+            -14.435847282409668,
+            0.3450000286102295,
+            16.35936164855957
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_CAMP_Tent_04",
+          "fbxPath": "Environment/LGT_CAMP_Tent_04",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            10.619340896606445,
+            0.3450000286102295,
+            7.187737464904785
+          ],
+          "sourceBlenderPosition": [
+            10.619340896606445,
+            -7.187737464904785,
+            0.3450000286102295
+          ],
+          "expectedUnityPosition": [
+            10.619340896606445,
+            0.3450000286102295,
+            -7.187737464904785
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_CAMP_Tent_05",
+          "fbxPath": "Environment/LGT_CAMP_Tent_05",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            13.19040584564209,
+            0.3450000286102295,
+            5.265438079833984
+          ],
+          "sourceBlenderPosition": [
+            13.19040584564209,
+            -5.265438079833984,
+            0.3450000286102295
+          ],
+          "expectedUnityPosition": [
+            13.19040584564209,
+            0.3450000286102295,
+            -5.265438079833984
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_CAMP_Tent_06",
+          "fbxPath": "Environment/LGT_CAMP_Tent_06",
+          "fbxNodeKind": "Light",
+          "fbxTranslation": [
+            12.86278247833252,
+            0.3450000286102295,
+            9.385930061340332
+          ],
+          "sourceBlenderPosition": [
+            12.86278247833252,
+            -9.385930061340332,
+            0.3450000286102295
+          ],
+          "expectedUnityPosition": [
+            12.86278247833252,
+            0.3450000286102295,
+            -9.385930061340332
+          ],
+          "maximumCoordinateError": 0.0
+        }
+      ]
+    },
+    {
+      "mapId": "hf-yate-a-la-deriva-v2",
+      "prefabExistsAtPreparation": false,
+      "spatial": null,
+      "sourceSha256": {
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/scene-audit.json": "e5e947dcede0706762ac4283134159b52ee9420e30cf1039e83353ed63900b80",
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/HF_MAP_04_yate_report.json": "0b56d6f2520909faafd0f59e4e2c1e13298abd4317590e5fc2dadf4d25794a84",
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/HF_MAP_04_yate_UNITY.fbx": "e3eb92985e2300e3788607d8a39520de00d711ed091db9d42760ae0e3bc3ae14"
+      },
+      "localLights": 6,
+      "softLocalShadows": 6,
+      "intensitiesFromUnityReview": false,
+      "worldParametersAvailableInAudit": false,
+      "sun": {
+        "sourceName": "YATE_Sun_LateAfternoon",
+        "sourceForwardUnity": [
+          0.5270464290176986,
+          -0.7378647145224903,
+          0.4216369584397647
+        ],
+        "unityEuler": [
+          47.54983827292651,
+          51.340203994095845,
+          0
+        ],
+        "sourceEnergy": 2.4000000953674316,
+        "energyCopiedToUnity": false
+      },
+      "camera": {
+        "sourceOrthoScale": 39.0,
+        "fitHalfHeight": 14.453375993620057,
+        "sourceForwardUnity": [
+          -0.5773157512207289,
+          -0.43216192983036245,
+          0.6927788895439456
+        ],
+        "playBoundsBlender": [
+          [
+            -4.6,
+            -15.2,
+            0.7
+          ],
+          [
+            4.6,
+            15.1,
+            10.4
+          ]
+        ]
+      },
+      "anchors": [
+        {
+          "sourceLight": "YATE_Practical_SalonAft",
+          "fbxPath": "Environment/YATE_Anchor_Practical_SalonAft",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            0.0,
+            5.650000095367432,
+            2.0
+          ],
+          "sourceBlenderPosition": [
+            0.0,
+            -2.0,
+            5.650000095367432
+          ],
+          "expectedUnityPosition": [
+            0.0,
+            5.650000095367432,
+            -2.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "YATE_Practical_Galley",
+          "fbxPath": "Environment/YATE_Anchor_Practical_Galley",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            0.0,
+            5.650000095367432,
+            -5.650000095367432
+          ],
+          "sourceBlenderPosition": [
+            0.0,
+            5.650000095367432,
+            5.650000095367432
+          ],
+          "expectedUnityPosition": [
+            0.0,
+            5.650000095367432,
+            5.650000095367432
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "YATE_Practical_CabinPort",
+          "fbxPath": "Environment/YATE_Anchor_Practical_CabinPort",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -2.0,
+            2.9600000381469727,
+            8.600000381469727
+          ],
+          "sourceBlenderPosition": [
+            -2.0,
+            -8.600000381469727,
+            2.9600000381469727
+          ],
+          "expectedUnityPosition": [
+            -2.0,
+            2.9600000381469727,
+            -8.600000381469727
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "YATE_Practical_CabinStarboard",
+          "fbxPath": "Environment/YATE_Anchor_Practical_CabinStarboard",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            2.0,
+            2.9600000381469727,
+            8.600000381469727
+          ],
+          "sourceBlenderPosition": [
+            2.0,
+            -8.600000381469727,
+            2.9600000381469727
+          ],
+          "expectedUnityPosition": [
+            2.0,
+            2.9600000381469727,
+            -8.600000381469727
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "YATE_Practical_LowerCorridor",
+          "fbxPath": "Environment/YATE_Anchor_Practical_LowerCorridor",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            0.0,
+            2.9600000381469727,
+            3.700000047683716
+          ],
+          "sourceBlenderPosition": [
+            0.0,
+            -3.700000047683716,
+            2.9600000381469727
+          ],
+          "expectedUnityPosition": [
+            0.0,
+            2.9600000381469727,
+            -3.700000047683716
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "YATE_Practical_Bathroom",
+          "fbxPath": "Environment/YATE_Anchor_Practical_Bathroom",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            2.0,
+            2.950000047683716,
+            3.200000047683716
+          ],
+          "sourceBlenderPosition": [
+            2.0,
+            -3.200000047683716,
+            2.950000047683716
+          ],
+          "expectedUnityPosition": [
+            2.0,
+            2.950000047683716,
+            -3.200000047683716
+          ],
+          "maximumCoordinateError": 0.0
+        }
+      ]
+    },
+    {
+      "mapId": "hf-puerto-del-faro-v1",
+      "prefabExistsAtPreparation": false,
+      "spatial": null,
+      "sourceSha256": {
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/scene-audit.json": "50506cfbfd1102f12a736eae886776907fb98f2d2e72082a315d7f1dc308925c",
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/HF_MAP_05_pueblo_report.json": "58043227e2fce6bc77fb5c2e102b2815079b061f58d2338f25f89a03906a990e",
+        "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/HF_MAP_05_pueblo_UNITY.fbx": "aa4bb192353bfbebe5f3d48e4dd6950245b854f397b95a7fb7d7ac85a2a834a4"
+      },
+      "localLights": 21,
+      "softLocalShadows": 4,
+      "intensitiesFromUnityReview": false,
+      "worldParametersAvailableInAudit": false,
+      "sun": {
+        "sourceName": "LGT_Pueblo_CoolMoon_Key",
+        "sourceForwardUnity": [
+          0.5818371987205239,
+          -0.7986920174275427,
+          0.15348138480798057
+        ],
+        "unityEuler": [
+          53.00538011849841,
+          75.22270461378136,
+          0
+        ],
+        "sourceEnergy": 1.7999999523162842,
+        "energyCopiedToUnity": false
+      },
+      "camera": {
+        "sourceOrthoScale": 127.0,
+        "fitHalfHeight": 55.82876454029873,
+        "sourceForwardUnity": [
+          -0.4736497846379614,
+          -0.5460901681339143,
+          0.6909713523583202
+        ],
+        "playBoundsBlender": [
+          [
+            -55,
+            -42.5,
+            -2
+          ],
+          [
+            55,
+            42.5,
+            20
+          ]
+        ]
+      },
+      "anchors": [
+        {
+          "sourceLight": "LGT_Pueblo_LighthouseLens",
+          "fbxPath": "Environment/Anchor_LGT_Pueblo_LighthouseLens",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            29.0,
+            17.5,
+            -26.0
+          ],
+          "sourceBlenderPosition": [
+            29.0,
+            26.0,
+            17.5
+          ],
+          "expectedUnityPosition": [
+            29.0,
+            17.5,
+            26.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Cottage_01_BedsideLamp",
+          "fbxPath": "Environment/Anchor_LGT_Cottage_01_BedsideLamp",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -16.5,
+            4.435999870300293,
+            3.549999952316284
+          ],
+          "sourceBlenderPosition": [
+            -16.5,
+            -3.549999952316284,
+            4.435999870300293
+          ],
+          "expectedUnityPosition": [
+            -16.5,
+            4.435999870300293,
+            -3.549999952316284
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Cottage_01_ExteriorLantern",
+          "fbxPath": "Environment/Anchor_LGT_Cottage_01_ExteriorLantern",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -13.0,
+            5.486000061035156,
+            5.380000114440918
+          ],
+          "sourceBlenderPosition": [
+            -13.0,
+            -5.380000114440918,
+            5.486000061035156
+          ],
+          "expectedUnityPosition": [
+            -13.0,
+            5.486000061035156,
+            -5.380000114440918
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Cottage_01_InteriorFill",
+          "fbxPath": "Environment/Anchor_LGT_Cottage_01_InteriorFill",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -14.0,
+            6.00600004196167,
+            2.0
+          ],
+          "sourceBlenderPosition": [
+            -14.0,
+            -2.0,
+            6.00600004196167
+          ],
+          "expectedUnityPosition": [
+            -14.0,
+            6.00600004196167,
+            -2.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Cottage_02_BedsideLamp",
+          "fbxPath": "Environment/Anchor_LGT_Cottage_02_BedsideLamp",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -14.5,
+            4.435999870300293,
+            -11.449999809265137
+          ],
+          "sourceBlenderPosition": [
+            -14.5,
+            11.449999809265137,
+            4.435999870300293
+          ],
+          "expectedUnityPosition": [
+            -14.5,
+            4.435999870300293,
+            11.449999809265137
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Cottage_02_ExteriorLantern",
+          "fbxPath": "Environment/Anchor_LGT_Cottage_02_ExteriorLantern",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -11.0,
+            5.486000061035156,
+            -9.619999885559082
+          ],
+          "sourceBlenderPosition": [
+            -11.0,
+            9.619999885559082,
+            5.486000061035156
+          ],
+          "expectedUnityPosition": [
+            -11.0,
+            5.486000061035156,
+            9.619999885559082
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Cottage_02_InteriorFill",
+          "fbxPath": "Environment/Anchor_LGT_Cottage_02_InteriorFill",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -12.0,
+            6.00600004196167,
+            -13.0
+          ],
+          "sourceBlenderPosition": [
+            -12.0,
+            13.0,
+            6.00600004196167
+          ],
+          "expectedUnityPosition": [
+            -12.0,
+            6.00600004196167,
+            13.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Cottage_03_BedsideLamp",
+          "fbxPath": "Environment/Anchor_LGT_Cottage_03_BedsideLamp",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -0.5,
+            4.435999870300293,
+            -14.449999809265137
+          ],
+          "sourceBlenderPosition": [
+            -0.5,
+            14.449999809265137,
+            4.435999870300293
+          ],
+          "expectedUnityPosition": [
+            -0.5,
+            4.435999870300293,
+            14.449999809265137
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Cottage_03_ExteriorLantern",
+          "fbxPath": "Environment/Anchor_LGT_Cottage_03_ExteriorLantern",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            3.0,
+            5.486000061035156,
+            -12.619999885559082
+          ],
+          "sourceBlenderPosition": [
+            3.0,
+            12.619999885559082,
+            5.486000061035156
+          ],
+          "expectedUnityPosition": [
+            3.0,
+            5.486000061035156,
+            12.619999885559082
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Cottage_03_InteriorFill",
+          "fbxPath": "Environment/Anchor_LGT_Cottage_03_InteriorFill",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            2.0,
+            6.00600004196167,
+            -16.0
+          ],
+          "sourceBlenderPosition": [
+            2.0,
+            16.0,
+            6.00600004196167
+          ],
+          "expectedUnityPosition": [
+            2.0,
+            6.00600004196167,
+            16.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Workshop_ExteriorLantern",
+          "fbxPath": "Environment/Anchor_LGT_Workshop_ExteriorLantern",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            17.100000381469727,
+            5.579999923706055,
+            8.399999618530273
+          ],
+          "sourceBlenderPosition": [
+            17.100000381469727,
+            -8.399999618530273,
+            5.579999923706055
+          ],
+          "expectedUnityPosition": [
+            17.100000381469727,
+            5.579999923706055,
+            -8.399999618530273
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Workshop_BenchLamp",
+          "fbxPath": "Environment/Anchor_LGT_Workshop_BenchLamp",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            11.600000381469727,
+            4.480000019073486,
+            1.5
+          ],
+          "sourceBlenderPosition": [
+            11.600000381469727,
+            -1.5,
+            4.480000019073486
+          ],
+          "expectedUnityPosition": [
+            11.600000381469727,
+            4.480000019073486,
+            -1.5
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Workshop_Interior",
+          "fbxPath": "Environment/Anchor_LGT_Workshop_Interior",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            15.0,
+            6.099999904632568,
+            3.0
+          ],
+          "sourceBlenderPosition": [
+            15.0,
+            -3.0,
+            6.099999904632568
+          ],
+          "expectedUnityPosition": [
+            15.0,
+            6.099999904632568,
+            -3.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Pier_1_EndLantern",
+          "fbxPath": "Environment/Anchor_LGT_Pier_1_EndLantern",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -15.399999618530273,
+            2.0799999237060547,
+            29.233999252319336
+          ],
+          "sourceBlenderPosition": [
+            -15.399999618530273,
+            -29.233999252319336,
+            2.0799999237060547
+          ],
+          "expectedUnityPosition": [
+            -15.399999618530273,
+            2.0799999237060547,
+            -29.233999252319336
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_Pier_2_EndLantern",
+          "fbxPath": "Environment/Anchor_LGT_Pier_2_EndLantern",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            12.600000381469727,
+            2.0799999237060547,
+            29.0
+          ],
+          "sourceBlenderPosition": [
+            12.600000381469727,
+            -29.0,
+            2.0799999237060547
+          ],
+          "expectedUnityPosition": [
+            12.600000381469727,
+            2.0799999237060547,
+            -29.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_PathLantern_1",
+          "fbxPath": "Environment/Anchor_LGT_PathLantern_1",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -19.549999237060547,
+            5.430004596710205,
+            8.0
+          ],
+          "sourceBlenderPosition": [
+            -19.549999237060547,
+            -8.0,
+            5.430004596710205
+          ],
+          "expectedUnityPosition": [
+            -19.549999237060547,
+            5.430004596710205,
+            -8.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_PathLantern_2",
+          "fbxPath": "Environment/Anchor_LGT_PathLantern_2",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -18.549999237060547,
+            5.429996967315674,
+            -7.0
+          ],
+          "sourceBlenderPosition": [
+            -18.549999237060547,
+            7.0,
+            5.429996967315674
+          ],
+          "expectedUnityPosition": [
+            -18.549999237060547,
+            5.429996967315674,
+            7.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_PathLantern_3",
+          "fbxPath": "Environment/Anchor_LGT_PathLantern_3",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            -3.549999952316284,
+            5.429996967315674,
+            -9.0
+          ],
+          "sourceBlenderPosition": [
+            -3.549999952316284,
+            9.0,
+            5.429996967315674
+          ],
+          "expectedUnityPosition": [
+            -3.549999952316284,
+            5.429996967315674,
+            9.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_PathLantern_4",
+          "fbxPath": "Environment/Anchor_LGT_PathLantern_4",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            8.449999809265137,
+            5.429996967315674,
+            -7.0
+          ],
+          "sourceBlenderPosition": [
+            8.449999809265137,
+            7.0,
+            5.429996967315674
+          ],
+          "expectedUnityPosition": [
+            8.449999809265137,
+            5.429996967315674,
+            7.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_PathLantern_5",
+          "fbxPath": "Environment/Anchor_LGT_PathLantern_5",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            22.450000762939453,
+            7.560902118682861,
+            -13.0
+          ],
+          "sourceBlenderPosition": [
+            22.450000762939453,
+            13.0,
+            7.560902118682861
+          ],
+          "expectedUnityPosition": [
+            22.450000762939453,
+            7.560902118682861,
+            13.0
+          ],
+          "maximumCoordinateError": 0.0
+        },
+        {
+          "sourceLight": "LGT_PathLantern_6",
+          "fbxPath": "Environment/Anchor_LGT_PathLantern_6",
+          "fbxNodeKind": "Null",
+          "fbxTranslation": [
+            27.450000762939453,
+            9.429996490478516,
+            -21.0
+          ],
+          "sourceBlenderPosition": [
+            27.450000762939453,
+            21.0,
+            9.429996490478516
+          ],
+          "expectedUnityPosition": [
+            27.450000762939453,
+            9.429996490478516,
+            21.0
+          ],
+          "maximumCoordinateError": 0.0
+        }
+      ]
+    }
+  ]
+}

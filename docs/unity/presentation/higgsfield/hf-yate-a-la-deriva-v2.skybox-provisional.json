@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "outputAssetPath": "Assets/LetMeSleep/Presentation/Generated/Materials/hf-yate-a-la-deriva-v2-Skybox.mat",
+  "receiptPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/hf-yate-a-la-deriva-v2-skybox-provisional-receipt.json",
+  "builtinResourcePath": "Default-Skybox.mat",
+  "expectedBuiltinGuid": "0000000000000000f000000000000000",
+  "expectedBuiltinFileId": 10304,
+  "skyTint": {
+    "r": 0.6,
+    "g": 0.72,
+    "b": 0.85,
+    "a": 1
+  },
+  "groundColor": {
+    "r": 0.28,
+    "g": 0.3,
+    "b": 0.26,
+    "a": 1
+  }
+}

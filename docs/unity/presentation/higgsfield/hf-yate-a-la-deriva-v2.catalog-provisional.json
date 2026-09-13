@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "outputAssetPath": "Assets/LetMeSleep/Presentation/Generated/hf-yate-a-la-deriva-v2-Catalog-Provisional.asset",
+  "receiptPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/hf-yate-a-la-deriva-v2-catalog-provisional-receipt.json",
+  "declaredCount": 1,
+  "requireFiveMaps": false,
+  "allowMissingSpatialDataForAuthoring": false,
+  "entries": [
+    {
+      "mapId": "hf-yate-a-la-deriva-v2",
+      "displayName": "Yate a la deriva",
+      "prefabPath": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-yate-a-la-deriva-v2/Prefabs/hf-yate-a-la-deriva-v2.prefab",
+      "lighting": {
+        "MapId": 3,
+        "SunColor": {
+          "r": 1.0,
+          "g": 0.8399999737739563,
+          "b": 0.6200000047683716,
+          "a": 1
+        },
+        "SunUnityIntensity": 1.05,
+        "SunShadows": 2,
+        "AmbientSky": {
+          "r": 0.6,
+          "g": 0.72,
+          "b": 0.85,
+          "a": 1
+        },
+        "AmbientEquator": {
+          "r": 0.45,
+          "g": 0.5,
+          "b": 0.55,
+          "a": 1
+        },
+        "AmbientGround": {
+          "r": 0.28,
+          "g": 0.3,
+          "b": 0.26,
+          "a": 1
+        },
+        "AmbientIntensity": 1,
+        "ReflectionIntensity": 1,
+        "FogEnabled": false,
+        "FogColor": {
+          "r": 0.5,
+          "g": 0.5,
+          "b": 0.5,
+          "a": 1
+        },
+        "FogMode": 3,
+        "FogStart": 0,
+        "FogEnd": 300,
+        "FogDensity": 0.01,
+        "VolumeWeight": 1,
+        "CullingMask": -1073741825,
+        "LocalLights": [],
+        "SuppressLights": []
+      },
+      "skyboxAssetPath": "Assets/LetMeSleep/Presentation/Generated/Materials/hf-yate-a-la-deriva-v2-Skybox.mat",
+      "volumeProfileAssetPath": null,
+      "sunEulerDegrees": [
+        47.54983827292651,
+        51.340203994095845,
+        0
+      ],
+      "localLights": [
+        {
+          "anchorPath": "Environment/YATE_Anchor_Practical_SalonAft",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.8299999833106995,
+            "b": 0.6000000238418579,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            0.0,
+            5.650000095367432,
+            -2.0
+          ]
+        },
+        {
+          "anchorPath": "Environment/YATE_Anchor_Practical_Galley",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.8299999833106995,
+            "b": 0.6000000238418579,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            0.0,
+            5.650000095367432,
+            5.650000095367432
+          ]
+        },
+        {
+          "anchorPath": "Environment/YATE_Anchor_Practical_CabinPort",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.8299999833106995,
+            "b": 0.6000000238418579,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            -2.0,
+            2.9600000381469727,
+            -8.600000381469727
+          ]
+        },
+        {
+          "anchorPath": "Environment/YATE_Anchor_Practical_CabinStarboard",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.8299999833106995,
+            "b": 0.6000000238418579,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            2.0,
+            2.9600000381469727,
+            -8.600000381469727
+          ]
+        },
+        {
+          "anchorPath": "Environment/YATE_Anchor_Practical_LowerCorridor",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.8299999833106995,
+            "b": 0.6000000238418579,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            0.0,
+            2.9600000381469727,
+            -3.700000047683716
+          ]
+        },
+        {
+          "anchorPath": "Environment/YATE_Anchor_Practical_Bathroom",
+          "type": "Point",
+          "color": {
+            "r": 1.0,
+            "g": 0.8299999833106995,
+            "b": 0.6000000238418579,
+            "a": 1
+          },
+          "unityIntensity": 3.5,
+          "range": 7,
+          "spotAngle": 90,
+          "innerSpotAngle": 60,
+          "shadows": "Soft",
+          "expectedMapLocalPosition": [
+            2.0,
+            2.950000047683716,
+            -3.200000047683716
+          ]
+        }
+      ],
+      "suppressLightPaths": []
+    }
+  ]
+}

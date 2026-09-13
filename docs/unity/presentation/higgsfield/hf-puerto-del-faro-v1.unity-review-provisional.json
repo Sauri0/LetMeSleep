@@ -1,0 +1,389 @@
+{
+  "prefab": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-puerto-del-faro-v1/Prefabs/hf-puerto-del-faro-v1.prefab",
+  "output": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/UnityPresentationProvisional",
+  "camera": [
+    85.0,
+    100.0,
+    -123.0
+  ],
+  "target": [
+    2.1378531253983795,
+    4.464848953165443,
+    -2.118767616413237
+  ],
+  "orthoSize": 63.5,
+  "night": true,
+  "lights": [
+    {
+      "name": "LGT_Pueblo_LighthouseLens",
+      "position": [
+        29.0,
+        17.5,
+        26.0
+      ],
+      "color": [
+        1.0,
+        0.6000000238418579,
+        0.25
+      ],
+      "intensity": 3.5,
+      "range": 12,
+      "shadows": false
+    },
+    {
+      "name": "LGT_Cottage_01_BedsideLamp",
+      "position": [
+        -16.5,
+        4.435999870300293,
+        -3.549999952316284
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_Cottage_01_ExteriorLantern",
+      "position": [
+        -13.0,
+        5.486000061035156,
+        -5.380000114440918
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_Cottage_01_InteriorFill",
+      "position": [
+        -14.0,
+        6.00600004196167,
+        -2.0
+      ],
+      "color": [
+        1.0,
+        0.699999988079071,
+        0.4000000059604645
+      ],
+      "intensity": 3.5,
+      "range": 7,
+      "shadows": true
+    },
+    {
+      "name": "LGT_Cottage_02_BedsideLamp",
+      "position": [
+        -14.5,
+        4.435999870300293,
+        11.449999809265137
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_Cottage_02_ExteriorLantern",
+      "position": [
+        -11.0,
+        5.486000061035156,
+        9.619999885559082
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_Cottage_02_InteriorFill",
+      "position": [
+        -12.0,
+        6.00600004196167,
+        13.0
+      ],
+      "color": [
+        1.0,
+        0.699999988079071,
+        0.4000000059604645
+      ],
+      "intensity": 3.5,
+      "range": 7,
+      "shadows": true
+    },
+    {
+      "name": "LGT_Cottage_03_BedsideLamp",
+      "position": [
+        -0.5,
+        4.435999870300293,
+        14.449999809265137
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_Cottage_03_ExteriorLantern",
+      "position": [
+        3.0,
+        5.486000061035156,
+        12.619999885559082
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_Cottage_03_InteriorFill",
+      "position": [
+        2.0,
+        6.00600004196167,
+        16.0
+      ],
+      "color": [
+        1.0,
+        0.699999988079071,
+        0.4000000059604645
+      ],
+      "intensity": 3.5,
+      "range": 7,
+      "shadows": true
+    },
+    {
+      "name": "LGT_Workshop_ExteriorLantern",
+      "position": [
+        17.100000381469727,
+        5.579999923706055,
+        -8.399999618530273
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_Workshop_BenchLamp",
+      "position": [
+        11.600000381469727,
+        4.480000019073486,
+        -1.5
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_Workshop_Interior",
+      "position": [
+        15.0,
+        6.099999904632568,
+        -3.0
+      ],
+      "color": [
+        1.0,
+        0.6499999761581421,
+        0.3199999928474426
+      ],
+      "intensity": 3.5,
+      "range": 7,
+      "shadows": true
+    },
+    {
+      "name": "LGT_Pier_1_EndLantern",
+      "position": [
+        -15.399999618530273,
+        2.0799999237060547,
+        -29.233999252319336
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_Pier_2_EndLantern",
+      "position": [
+        12.600000381469727,
+        2.0799999237060547,
+        -29.0
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_PathLantern_1",
+      "position": [
+        -19.549999237060547,
+        5.430004596710205,
+        -8.0
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_PathLantern_2",
+      "position": [
+        -18.549999237060547,
+        5.429996967315674,
+        7.0
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_PathLantern_3",
+      "position": [
+        -3.549999952316284,
+        5.429996967315674,
+        9.0
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_PathLantern_4",
+      "position": [
+        8.449999809265137,
+        5.429996967315674,
+        7.0
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_PathLantern_5",
+      "position": [
+        22.450000762939453,
+        7.560902118682861,
+        13.0
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    },
+    {
+      "name": "LGT_PathLantern_6",
+      "position": [
+        27.450000762939453,
+        9.429996490478516,
+        21.0
+      ],
+      "color": [
+        1.0,
+        0.5,
+        0.20000000298023224
+      ],
+      "intensity": 2.2,
+      "range": 5,
+      "shadows": false
+    }
+  ],
+  "restoreShadowDistance": 40,
+  "restoreAntiAliasing": 0,
+  "savePresentationScene": false,
+  "captureShadowDistance": 160,
+  "sunIntensity": 0.8,
+  "sunColor": [
+    0.5600000023841858,
+    0.699999988079071,
+    1.0
+  ],
+  "sunEuler": [
+    53.00538011849841,
+    75.22270461378136,
+    0
+  ],
+  "ambientSky": [
+    0.16,
+    0.23,
+    0.38
+  ],
+  "ambientEquator": [
+    0.12,
+    0.16,
+    0.23
+  ],
+  "ambientGround": [
+    0.06,
+    0.08,
+    0.13
+  ],
+  "background": [
+    0.025,
+    0.055,
+    0.09
+  ]
+}

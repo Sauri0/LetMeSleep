@@ -1,0 +1,149 @@
+{
+  "prefab": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-yate-a-la-deriva-v2/Prefabs/hf-yate-a-la-deriva-v2.prefab",
+  "output": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/UnityPresentationProvisional",
+  "camera": [
+    35.0,
+    29.0,
+    -42.0
+  ],
+  "target": [
+    0.7061032940036611,
+    3.3285774716372423,
+    -0.8473246609352643
+  ],
+  "orthoSize": 19.5,
+  "night": false,
+  "lights": [
+    {
+      "name": "YATE_Practical_SalonAft",
+      "position": [
+        0.0,
+        5.650000095367432,
+        -2.0
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6000000238418579
+      ],
+      "intensity": 3.5,
+      "range": 7,
+      "shadows": true
+    },
+    {
+      "name": "YATE_Practical_Galley",
+      "position": [
+        0.0,
+        5.650000095367432,
+        5.650000095367432
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6000000238418579
+      ],
+      "intensity": 3.5,
+      "range": 7,
+      "shadows": true
+    },
+    {
+      "name": "YATE_Practical_CabinPort",
+      "position": [
+        -2.0,
+        2.9600000381469727,
+        -8.600000381469727
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6000000238418579
+      ],
+      "intensity": 3.5,
+      "range": 7,
+      "shadows": true
+    },
+    {
+      "name": "YATE_Practical_CabinStarboard",
+      "position": [
+        2.0,
+        2.9600000381469727,
+        -8.600000381469727
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6000000238418579
+      ],
+      "intensity": 3.5,
+      "range": 7,
+      "shadows": true
+    },
+    {
+      "name": "YATE_Practical_LowerCorridor",
+      "position": [
+        0.0,
+        2.9600000381469727,
+        -3.700000047683716
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6000000238418579
+      ],
+      "intensity": 3.5,
+      "range": 7,
+      "shadows": true
+    },
+    {
+      "name": "YATE_Practical_Bathroom",
+      "position": [
+        2.0,
+        2.950000047683716,
+        -3.200000047683716
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6000000238418579
+      ],
+      "intensity": 3.5,
+      "range": 7,
+      "shadows": true
+    }
+  ],
+  "restoreShadowDistance": 40,
+  "restoreAntiAliasing": 0,
+  "savePresentationScene": false,
+  "captureShadowDistance": 85,
+  "sunIntensity": 1.05,
+  "sunColor": [
+    1.0,
+    0.8399999737739563,
+    0.6200000047683716
+  ],
+  "sunEuler": [
+    47.54983827292651,
+    51.340203994095845,
+    0
+  ],
+  "ambientSky": [
+    0.6,
+    0.72,
+    0.85
+  ],
+  "ambientEquator": [
+    0.45,
+    0.5,
+    0.55
+  ],
+  "ambientGround": [
+    0.28,
+    0.3,
+    0.26
+  ],
+  "background": [
+    0.19,
+    0.35,
+    0.46
+  ]
+}

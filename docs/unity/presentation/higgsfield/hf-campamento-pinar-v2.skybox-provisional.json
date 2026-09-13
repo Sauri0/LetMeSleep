@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "outputAssetPath": "Assets/LetMeSleep/Presentation/Generated/Materials/hf-campamento-pinar-v2-Skybox.mat",
+  "receiptPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/03-campamento/hf-campamento-pinar-v2-skybox-provisional-receipt.json",
+  "builtinResourcePath": "Default-Skybox.mat",
+  "expectedBuiltinGuid": "0000000000000000f000000000000000",
+  "expectedBuiltinFileId": 10304,
+  "skyTint": {
+    "r": 0.13,
+    "g": 0.2,
+    "b": 0.32,
+    "a": 1
+  },
+  "groundColor": {
+    "r": 0.05,
+    "g": 0.07,
+    "b": 0.1,
+    "a": 1
+  }
+}
