@@ -1,5 +1,7 @@
 # Corrección nocturna final: Casa y Campamento
 
+**Resultado definitivo:** ajuste aplicado por Root, cuatro capturas nocturnas Human/Mosquito aprobadas por Root, diez sesiones locales finales Play Mode PASS y revalidación de iluminación cinco mapas PASS. Los recibos `*-night-final.json` y `night-adjustment-receipt.json` registran éxito. Catálogo actual SHA256 `bd686d181fdf16356bc87b92146bd7e9283856beb528354eb50226ccbd54d3ea`; escena y GUIDs preservados. Detalles e interpretación del caso agregado 1/1 en PRESENTATION-CLOSURE.md. La preparación y condiciones previas se conservan abajo como historial.
+
 Las diez cargas Play Mode previas pasaron según Root, pero las capturas Human de Casa/Campamento muestran horizonte y superficies demasiado claros para noche. Se inspeccionaron `UnityPackage/GameLoading/hf-casa-del-patio-v1-Human.png` y `hf-campamento-pinar-v2-Human.png`. El PASS anterior de bindings acredita parámetros/restauración, no aprobación nocturna visual.
 
 | Parámetro | Casa v1 | Campamento v2 |

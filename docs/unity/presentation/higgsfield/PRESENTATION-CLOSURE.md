@@ -1,5 +1,21 @@
 # Cierre de Presentación — cinco mapas Higgsfield
 
+## Cierre definitivo después de la corrección nocturna
+
+Root aplicó el ajuste nocturno y aprobó visualmente las cuatro capturas Human/Mosquito de Casa y Campamento: cielo nocturno, rutas legibles y luces cálidas. Esta aprobación proviene de la revisión de imágenes por Root, no de igualdad de parámetros. Las imágenes finales están en `N:/LetMeSleep/Artifacts/Higgsfield/Mapas/UnityPackage/GameLoadingFinal/`.
+
+Se verificaron los cuatro recibos actuales `night-adjustment-receipt.json`, `catalog-receipt-night-final.json`, `scene-receipt-night-final.json` y `lighting-receipt-night-final.json` en UnityPackage: **success=true**. La revalidación de iluminación terminó con los cinco mapas PASS en bind/rebind/unbind/destrucción, `assetsUnchanged=true` y `originalSceneStateRestored=true`.
+
+El catálogo conserva GUID `5a2287ce1168159439a0d2aa8486f5d8`; su **SHA256 final** es `bd686d181fdf16356bc87b92146bd7e9283856beb528354eb50226ccbd54d3ea`. La escena conserva SHA256 `c4fb082660d80211238ad7e7a649cc9fef17a1172972d76a17c8584cb5798e51`, con `savedBindingVerified=true` y `sceneUnchanged=true`. Los recibos anteriores, descritos abajo, documentan la fase previa y no sustituyen estos hashes actuales.
+
+**Diez cargas Play Mode finales PASS**: cinco mapas × Human/Mosquito. `N:/LetMeSleep/Validation/Higgsfield/FiveMapGameLoading-20260913/run-night-final/results.xml` registra 1 caso agregado ejecutado, 1 Passed, 0 Failed; no son diez casos NUnit independientes. El reporte `UnityPackage/GameLoadingFinal/five-map-game-loading.txt` enumera las diez sesiones locales, verificando identidad/runtime/navegación, tres actores con valores finitos y regreso al menú. No acredita WAN, recorrido completo, capacidad de roles ni rendimiento.
+
+El primer preflight de NightCorrection rechazó el wrapper EditorJsonUtility antes de mutar o generar recibos. Root corrigió el acceso a los cuerpos MonoBehaviour/Material, mantuvo las invariantes y obtuvo el PASS posterior. Ese intento inicial no es un fallo del resultado final y la versión vieja del worker no debe reemplazar la corrección central. No se editaron helpers ni se ejecutó Unity/GPU durante este cierre documental.
+
+**Departamento cerrado, sin cambios adicionales pendientes.**
+
+## Evidencia histórica anterior al ajuste nocturno
+
 **PASS nativo de iluminación para los cinco mapas en Edit Mode**, ejecutado por Root con Unity **6000.3.24f1**. Los recibos finales de catálogo y copia de escena también registran PASS. Este cierre documenta esos resultados leídos del disco; el worker no ejecutó nuevas sesiones Unity/GPU.
 
 ## Resultado final
