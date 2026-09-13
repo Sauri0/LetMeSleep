@@ -1,6 +1,17 @@
 # Puerto v1 — propuesta de navegación para Gameplay
 
-Usar **`navigation-v3.json` y `prepare-v3.json`**, en `N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/NavigationProposal`. La carpeta de este documento conserva las mismas propuestas y sus generadores. No se modificaron helpers existentes, geometría, materiales, assets Unity ni spawns. No se ejecutó Blender, Unity ni generación paga.
+Usar **`navigation-v4.json` y `prepare-v4.json`**, en `N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/NavigationProposal`. La carpeta de este documento conserva las mismas propuestas y sus generadores. No se modificaron helpers existentes, geometría, materiales, assets Unity ni spawns. No se ejecutó Blender, Unity ni generación paga desde esta tarea.
+
+## Revisión v4: cruces inequívocos entre regiones
+
+Gameplay ejecutó v3: los 53 portales pasaron y todos los humanos completaron sus recorridos, incluidos puente y faro; informó un pico de penetración en la escalera exterior que investiga por separado. Varias patrullas Runtime permanecieron en su región original por solapamientos en el grafo o por objetivos muy lejanos. El recibo nativo de referencia queda fijado por hash en `revision-v4.json`.
+
+V4 tiene **47 regiones y 57 portales**. Cada uno de los 114 extremos selecciona como **primera región**, respetando el orden del JSON, el from/to previsto. Se fijaron fronteras exteriores comunes X −10, −17.8 y 20, Y 10 y Z 19.5; se dividieron los espacios aéreos altos que solapaban los senderos y las aproximaciones al faro. Las puertas conectan directamente calle e interior, eliminando tres cajas de acceso superpuestas. La entrada del faro termina en Z 24.55 para no absorber el primer tramo de la hélice.
+
+El puerto marítimo se divide en muelle oeste, zona del puente y muelle este, con enlaces X ±8, Z −24. Runtime12 dispone de tres salidas a 12.61–15.93 m de su spawn. Las 57 esferas de portal pasan fuente, el grafo está conectado y los 16 spawns están cubiertos. Se preservan las rutas v3, sus presupuestos y la hélice; no se aumentó ningún umbral de la prueba. Falta la ejecución nativa de v4.
+
+SHA256 navegación v4: `86c770ee8175e55490812bcf4b6a8040f6cd0a6ba33c06ade7fb52cc84d56e8d`.
+SHA256 configuración v4: `f53dfa2fd266f66a4b9d1a4d446e10cd2956c7c580ee93ef320edf2182001a45`.
 
 ## Revisión v3: continuidad de la hélice
 

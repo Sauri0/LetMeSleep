@@ -1,0 +1,2327 @@
+{
+  "status": "OFFLINE_REGION_BOUNDARIES_NATIVE_PENDING",
+  "issues": [],
+  "frozen": {
+    "navigation-v3.json": "02ef2bd431a05cf3fb2932c9f04ddeb00d6a0b870c6e94575350adb5944c006d",
+    "navigation.json": "bdc2ae4e6af11150469483c7802b3b1c4f1f06b06817b80181586d9d50648126",
+    "prepare-v2.json": "73d892990891668ea013af1a2266fcba30d5d60565f94230b0d03834a1a3aefa",
+    "prepare-v3.json": "52d22a08795df602f650eca57c380cd27874851067043343aee02b676a446fa7",
+    "prepare.json": "c86956bb584bae57adb154289cc78eb3f5ec92b5889879ea376754121449b2b8",
+    "revision-v2.json": "47178b5437334658d02e7d3cdf5f46148d1784af27b451dcd8aa5e62cbc125a0",
+    "revision-v3.json": "5168b332fe859e42449f1a242750808906de413c6a87dec54e267eb377a78d7e",
+    "route-diagnostics-v2.json": "841f1ac337475db3a389355745f6e5eeade3a9a46e0d1b4f4cf64ce42627e2b4",
+    "route-diagnostics.json": "6be497288f061d589ebec9b0ee7597b428e301ed5870f39c540820e913026ec1",
+    "source-evidence.json": "4c1eadfdad672130bf539f195f85ed97a5cd19574d60c2698645323b42fc2dbd"
+  },
+  "nativeFeedbackSource": "N:\\LetMeSleep\\Validation\\Higgsfield\\PuertoV1-20260913\\semantic-native-01\\map-checks-20260913-084257-741.json",
+  "nativeFeedbackSha256": "d6aa17dd168fd81bd3dc71205d08baf07c194d30fca8be2f020cbeb3917ac806",
+  "zones": 47,
+  "portals": 57,
+  "connected": true,
+  "passages": [
+    {
+      "id": "central_north",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            0.0,
+            6.0,
+            9.149999999999999
+          ],
+          "expected": "plaza_and_central_streets",
+          "firstRegion": "plaza_and_central_streets",
+          "allRegions": [
+            "plaza_and_central_streets"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            0.0,
+            6.0,
+            10.25
+          ],
+          "expected": "north_central_lane",
+          "firstRegion": "north_central_lane",
+          "allRegions": [
+            "north_central_lane"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "central_home02",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            -9.45,
+            5.0,
+            5.0
+          ],
+          "expected": "plaza_and_central_streets",
+          "firstRegion": "plaza_and_central_streets",
+          "allRegions": [
+            "plaza_and_central_streets"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            -10.55,
+            5.0,
+            5.0
+          ],
+          "expected": "home02_approach",
+          "firstRegion": "home02_approach",
+          "allRegions": [
+            "home02_approach"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "central_home01",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            -9.45,
+            5.0,
+            -8.0
+          ],
+          "expected": "plaza_and_central_streets",
+          "firstRegion": "plaza_and_central_streets",
+          "allRegions": [
+            "plaza_and_central_streets"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            -10.55,
+            5.0,
+            -8.0
+          ],
+          "expected": "home01_approach",
+          "firstRegion": "home01_approach",
+          "allRegions": [
+            "home01_approach"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "home01_west",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            -17.25,
+            6.0,
+            -7.0
+          ],
+          "expected": "home01_approach",
+          "firstRegion": "home01_approach",
+          "allRegions": [
+            "home01_approach"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            -18.35,
+            6.0,
+            -7.0
+          ],
+          "expected": "western_village_exterior",
+          "firstRegion": "western_village_exterior",
+          "allRegions": [
+            "western_village_exterior"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "home02_west",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            -17.25,
+            6.0,
+            5.0
+          ],
+          "expected": "home02_approach",
+          "firstRegion": "home02_approach",
+          "allRegions": [
+            "home02_approach"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            -18.35,
+            6.0,
+            5.0
+          ],
+          "expected": "western_village_exterior",
+          "firstRegion": "western_village_exterior",
+          "allRegions": [
+            "western_village_exterior"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "central_upper",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            3.0,
+            9.45,
+            0.0
+          ],
+          "expected": "plaza_and_central_streets",
+          "firstRegion": "plaza_and_central_streets",
+          "allRegions": [
+            "plaza_and_central_streets"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            3.0,
+            10.55,
+            0.0
+          ],
+          "expected": "above_village_roofs",
+          "firstRegion": "above_village_roofs",
+          "allRegions": [
+            "above_village_roofs"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "north_upper",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            0.0,
+            9.45,
+            11.0
+          ],
+          "expected": "north_central_lane",
+          "firstRegion": "north_central_lane",
+          "allRegions": [
+            "north_central_lane"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            0.0,
+            10.55,
+            11.0
+          ],
+          "expected": "above_village_roofs",
+          "firstRegion": "above_village_roofs",
+          "allRegions": [
+            "above_village_roofs"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "west_upper",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            -23.0,
+            9.45,
+            4.0
+          ],
+          "expected": "western_village_exterior",
+          "firstRegion": "western_village_exterior",
+          "allRegions": [
+            "western_village_exterior"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            -23.0,
+            10.55,
+            4.0
+          ],
+          "expected": "above_village_roofs",
+          "firstRegion": "above_village_roofs",
+          "allRegions": [
+            "above_village_roofs"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "central_harbor",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            0.0,
+            6.0,
+            -10.45
+          ],
+          "expected": "plaza_and_central_streets",
+          "firstRegion": "plaza_and_central_streets",
+          "allRegions": [
+            "plaza_and_central_streets"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            0.0,
+            6.0,
+            -11.55
+          ],
+          "expected": "harbor_bridge_air",
+          "firstRegion": "harbor_bridge_air",
+          "allRegions": [
+            "harbor_bridge_air"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "home01_harbor",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            -14.0,
+            5.0,
+            -10.45
+          ],
+          "expected": "home01_approach",
+          "firstRegion": "home01_approach",
+          "allRegions": [
+            "home01_approach"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            -14.0,
+            5.0,
+            -11.55
+          ],
+          "expected": "west_pier_air",
+          "firstRegion": "west_pier_air",
+          "allRegions": [
+            "west_pier_air"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "harbor_east",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            22.0,
+            6.0,
+            -11.55
+          ],
+          "expected": "east_pier_air",
+          "firstRegion": "east_pier_air",
+          "allRegions": [
+            "east_pier_air"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            22.0,
+            6.0,
+            -10.45
+          ],
+          "expected": "east_workshop_lane",
+          "firstRegion": "east_workshop_lane",
+          "allRegions": [
+            "east_workshop_lane"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "central_eastern",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            9.45,
+            6.0,
+            5.0
+          ],
+          "expected": "plaza_and_central_streets",
+          "firstRegion": "plaza_and_central_streets",
+          "allRegions": [
+            "plaza_and_central_streets"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            10.55,
+            6.0,
+            5.0
+          ],
+          "expected": "eastern_trail",
+          "firstRegion": "eastern_trail",
+          "allRegions": [
+            "eastern_trail"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "eastern_workshop_lane",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            19.45,
+            7.0,
+            4.0
+          ],
+          "expected": "eastern_trail",
+          "firstRegion": "eastern_trail",
+          "allRegions": [
+            "eastern_trail"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            20.55,
+            7.0,
+            4.0
+          ],
+          "expected": "east_workshop_lane",
+          "firstRegion": "east_workshop_lane",
+          "allRegions": [
+            "east_workshop_lane"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "eastern_north",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            18.0,
+            9.2,
+            18.95
+          ],
+          "expected": "eastern_trail",
+          "firstRegion": "eastern_trail",
+          "allRegions": [
+            "eastern_trail"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            18.0,
+            9.2,
+            20.05
+          ],
+          "expected": "north_trail",
+          "firstRegion": "north_trail",
+          "allRegions": [
+            "north_trail"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "north_upper_village",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            20.0,
+            12.0,
+            20.05
+          ],
+          "expected": "north_trail",
+          "firstRegion": "north_trail",
+          "allRegions": [
+            "north_trail"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            20.0,
+            12.0,
+            18.95
+          ],
+          "expected": "above_village_roofs",
+          "firstRegion": "above_village_roofs",
+          "allRegions": [
+            "above_village_roofs"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "east_to_lighthouse_approach",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            23.45,
+            11.0,
+            21.0
+          ],
+          "expected": "north_trail",
+          "firstRegion": "north_trail",
+          "allRegions": [
+            "north_trail"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            24.55,
+            11.0,
+            21.0
+          ],
+          "expected": "lighthouse_south_approach",
+          "firstRegion": "lighthouse_south_approach",
+          "allRegions": [
+            "lighthouse_south_approach"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "north_to_lighthouse_west",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            23.45,
+            12.0,
+            25.0
+          ],
+          "expected": "north_trail",
+          "firstRegion": "north_trail",
+          "allRegions": [
+            "north_trail"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            24.55,
+            12.0,
+            25.0
+          ],
+          "expected": "lighthouse_west_air",
+          "firstRegion": "lighthouse_west_air",
+          "allRegions": [
+            "lighthouse_west_air"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_around_east",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            34.0,
+            12.0,
+            23.05
+          ],
+          "expected": "lighthouse_south_approach",
+          "firstRegion": "lighthouse_south_approach",
+          "allRegions": [
+            "lighthouse_south_approach"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            34.0,
+            12.0,
+            24.150000000000002
+          ],
+          "expected": "lighthouse_east_air",
+          "firstRegion": "lighthouse_east_air",
+          "allRegions": [
+            "lighthouse_east_air"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_around_north",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            32.25,
+            13.0,
+            31.0
+          ],
+          "expected": "lighthouse_east_air",
+          "firstRegion": "lighthouse_east_air",
+          "allRegions": [
+            "lighthouse_east_air"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            31.15,
+            13.0,
+            31.0
+          ],
+          "expected": "lighthouse_north_air",
+          "firstRegion": "lighthouse_north_air",
+          "allRegions": [
+            "lighthouse_north_air"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_around_west",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            26.388908729,
+            13.0,
+            29.088908729
+          ],
+          "expected": "lighthouse_north_air",
+          "firstRegion": "lighthouse_north_air",
+          "allRegions": [
+            "lighthouse_north_air"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            25.611091271,
+            13.0,
+            28.311091271
+          ],
+          "expected": "lighthouse_west_air",
+          "firstRegion": "lighthouse_west_air",
+          "allRegions": [
+            "lighthouse_west_air"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "workshop_from_harbor",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            15.0,
+            4.7,
+            -11.25
+          ],
+          "expected": "east_pier_air",
+          "firstRegion": "east_pier_air",
+          "allRegions": [
+            "east_pier_air"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            15.0,
+            4.7,
+            -10.149999999999999
+          ],
+          "expected": "workshop_forecourt",
+          "firstRegion": "workshop_forecourt",
+          "allRegions": [
+            "workshop_forecourt"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "cottage1_open_door",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            -14.0,
+            4.6,
+            -5.55
+          ],
+          "expected": "home01_approach",
+          "firstRegion": "home01_approach",
+          "allRegions": [
+            "home01_approach"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            -14.0,
+            4.6,
+            -4.45
+          ],
+          "expected": "cottage1_interior",
+          "firstRegion": "cottage1_interior",
+          "allRegions": [
+            "cottage1_interior"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "cottage2_open_door",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            -12.0,
+            4.6,
+            9.45
+          ],
+          "expected": "home02_approach",
+          "firstRegion": "home02_approach",
+          "allRegions": [
+            "home02_approach"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            -12.0,
+            4.6,
+            10.55
+          ],
+          "expected": "cottage2_interior",
+          "firstRegion": "cottage2_interior",
+          "allRegions": [
+            "cottage2_interior"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "cottage3_open_door",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            2.0,
+            4.6,
+            12.45
+          ],
+          "expected": "north_central_lane",
+          "firstRegion": "north_central_lane",
+          "allRegions": [
+            "north_central_lane"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            2.0,
+            4.6,
+            13.55
+          ],
+          "expected": "cottage3_interior",
+          "firstRegion": "cottage3_interior",
+          "allRegions": [
+            "cottage3_interior"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "workshop_open_door",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            15.0,
+            4.7,
+            -8.55
+          ],
+          "expected": "workshop_forecourt",
+          "firstRegion": "workshop_forecourt",
+          "allRegions": [
+            "workshop_forecourt"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            15.0,
+            4.7,
+            -7.45
+          ],
+          "expected": "workshop_entry_aisle",
+          "firstRegion": "workshop_entry_aisle",
+          "allRegions": [
+            "workshop_entry_aisle"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "workshop_west_bypass",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            14.200000000000001,
+            4.7,
+            -6.25
+          ],
+          "expected": "workshop_entry_aisle",
+          "firstRegion": "workshop_entry_aisle",
+          "allRegions": [
+            "workshop_entry_aisle"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            13.1,
+            4.7,
+            -6.25
+          ],
+          "expected": "workshop_west_aisle",
+          "firstRegion": "workshop_west_aisle",
+          "allRegions": [
+            "workshop_west_aisle"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "workshop_east_bypass",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            15.8,
+            4.7,
+            -6.25
+          ],
+          "expected": "workshop_entry_aisle",
+          "firstRegion": "workshop_entry_aisle",
+          "allRegions": [
+            "workshop_entry_aisle"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            16.900000000000002,
+            4.7,
+            -6.25
+          ],
+          "expected": "workshop_east_aisle",
+          "firstRegion": "workshop_east_aisle",
+          "allRegions": [
+            "workshop_east_aisle"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "workshop_west_rear",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            13.1,
+            4.7,
+            -1.6500000000000001
+          ],
+          "expected": "workshop_west_aisle",
+          "firstRegion": "workshop_west_aisle",
+          "allRegions": [
+            "workshop_west_aisle"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            13.1,
+            4.7,
+            -0.55
+          ],
+          "expected": "workshop_rear_aisle",
+          "firstRegion": "workshop_rear_aisle",
+          "allRegions": [
+            "workshop_rear_aisle"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "workshop_east_rear",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            17.1,
+            4.7,
+            -1.6500000000000001
+          ],
+          "expected": "workshop_east_aisle",
+          "firstRegion": "workshop_east_aisle",
+          "allRegions": [
+            "workshop_east_aisle"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            17.1,
+            4.7,
+            -0.55
+          ],
+          "expected": "workshop_rear_aisle",
+          "firstRegion": "workshop_rear_aisle",
+          "allRegions": [
+            "workshop_rear_aisle"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_open_door",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            29.0,
+            8.45,
+            23.05
+          ],
+          "expected": "lighthouse_south_approach",
+          "firstRegion": "lighthouse_south_approach",
+          "allRegions": [
+            "lighthouse_south_approach"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            29.0,
+            8.45,
+            24.150000000000002
+          ],
+          "expected": "lighthouse_entry",
+          "firstRegion": "lighthouse_entry",
+          "allRegions": [
+            "lighthouse_entry",
+            "lighthouse_helical_section_00"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_01",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            29.085167314107295,
+            8.294190698067998,
+            24.8494698267452
+          ],
+          "expected": "lighthouse_helical_section_00",
+          "firstRegion": "lighthouse_helical_section_00",
+          "allRegions": [
+            "lighthouse_helical_section_00"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            29.9538041858927,
+            8.745809301932,
+            25.350978173254802
+          ],
+          "expected": "lighthouse_helical_section_01",
+          "firstRegion": "lighthouse_helical_section_01",
+          "allRegions": [
+            "lighthouse_helical_section_01"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_02",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            30.038973,
+            8.774190606503392,
+            25.49849215578548
+          ],
+          "expected": "lighthouse_helical_section_01",
+          "firstRegion": "lighthouse_helical_section_01",
+          "allRegions": [
+            "lighthouse_helical_section_01"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            30.038973,
+            9.225809393496608,
+            26.50150784421452
+          ],
+          "expected": "lighthouse_helical_section_02",
+          "firstRegion": "lighthouse_helical_section_02",
+          "allRegions": [
+            "lighthouse_helical_section_02"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_03",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            29.9538041858927,
+            9.254190698068,
+            26.649021826745198
+          ],
+          "expected": "lighthouse_helical_section_02",
+          "firstRegion": "lighthouse_helical_section_02",
+          "allRegions": [
+            "lighthouse_helical_section_02"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            29.085167314107295,
+            9.705809301932002,
+            27.1505301732548
+          ],
+          "expected": "lighthouse_helical_section_03",
+          "firstRegion": "lighthouse_helical_section_03",
+          "allRegions": [
+            "lighthouse_helical_section_03"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_04",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            28.9148326858927,
+            9.734190698068002,
+            27.1505301732548
+          ],
+          "expected": "lighthouse_helical_section_03",
+          "firstRegion": "lighthouse_helical_section_03",
+          "allRegions": [
+            "lighthouse_helical_section_03"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            28.046195814107296,
+            10.185809301932,
+            26.649021826745198
+          ],
+          "expected": "lighthouse_helical_section_04",
+          "firstRegion": "lighthouse_helical_section_04",
+          "allRegions": [
+            "lighthouse_helical_section_04"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_05",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            27.961027,
+            10.21419060650339,
+            26.50150784421452
+          ],
+          "expected": "lighthouse_helical_section_04",
+          "firstRegion": "lighthouse_helical_section_04",
+          "allRegions": [
+            "lighthouse_helical_section_04"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            27.961027,
+            10.665809393496609,
+            25.49849215578548
+          ],
+          "expected": "lighthouse_helical_section_05",
+          "firstRegion": "lighthouse_helical_section_05",
+          "allRegions": [
+            "lighthouse_helical_section_05"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_06",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            28.046195814107296,
+            10.694190698067999,
+            25.350978173254802
+          ],
+          "expected": "lighthouse_helical_section_05",
+          "firstRegion": "lighthouse_helical_section_05",
+          "allRegions": [
+            "lighthouse_helical_section_05"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            28.9148326858927,
+            11.145809301932001,
+            24.8494698267452
+          ],
+          "expected": "lighthouse_helical_section_06",
+          "firstRegion": "lighthouse_helical_section_06",
+          "allRegions": [
+            "lighthouse_helical_section_06"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_07",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            29.085167314107295,
+            11.174190698068,
+            24.8494698267452
+          ],
+          "expected": "lighthouse_helical_section_06",
+          "firstRegion": "lighthouse_helical_section_06",
+          "allRegions": [
+            "lighthouse_helical_section_06"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            29.9538041858927,
+            11.625809301932001,
+            25.350978173254802
+          ],
+          "expected": "lighthouse_helical_section_07",
+          "firstRegion": "lighthouse_helical_section_07",
+          "allRegions": [
+            "lighthouse_helical_section_07"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_08",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            30.038973,
+            11.654190606503395,
+            25.49849215578548
+          ],
+          "expected": "lighthouse_helical_section_07",
+          "firstRegion": "lighthouse_helical_section_07",
+          "allRegions": [
+            "lighthouse_helical_section_07"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            30.038973,
+            12.105809393496607,
+            26.50150784421452
+          ],
+          "expected": "lighthouse_helical_section_08",
+          "firstRegion": "lighthouse_helical_section_08",
+          "allRegions": [
+            "lighthouse_helical_section_08"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_09",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            29.9538041858927,
+            12.134190698067998,
+            26.649021826745198
+          ],
+          "expected": "lighthouse_helical_section_08",
+          "firstRegion": "lighthouse_helical_section_08",
+          "allRegions": [
+            "lighthouse_helical_section_08"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            29.085167314107295,
+            12.585809301932,
+            27.1505301732548
+          ],
+          "expected": "lighthouse_helical_section_09",
+          "firstRegion": "lighthouse_helical_section_09",
+          "allRegions": [
+            "lighthouse_helical_section_09"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_10",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            28.9148326858927,
+            12.614190698067999,
+            27.1505301732548
+          ],
+          "expected": "lighthouse_helical_section_09",
+          "firstRegion": "lighthouse_helical_section_09",
+          "allRegions": [
+            "lighthouse_helical_section_09"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            28.046195814107296,
+            13.065809301932001,
+            26.649021826745198
+          ],
+          "expected": "lighthouse_helical_section_10",
+          "firstRegion": "lighthouse_helical_section_10",
+          "allRegions": [
+            "lighthouse_helical_section_10"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_11",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            27.961027,
+            13.09419060650339,
+            26.50150784421452
+          ],
+          "expected": "lighthouse_helical_section_10",
+          "firstRegion": "lighthouse_helical_section_10",
+          "allRegions": [
+            "lighthouse_helical_section_10"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            27.961027,
+            13.54580939349661,
+            25.49849215578548
+          ],
+          "expected": "lighthouse_helical_section_11",
+          "firstRegion": "lighthouse_helical_section_11",
+          "allRegions": [
+            "lighthouse_helical_section_11"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_12",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            28.046195814107296,
+            13.574190698068,
+            25.350978173254802
+          ],
+          "expected": "lighthouse_helical_section_11",
+          "firstRegion": "lighthouse_helical_section_11",
+          "allRegions": [
+            "lighthouse_helical_section_11"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            28.9148326858927,
+            14.025809301932002,
+            24.8494698267452
+          ],
+          "expected": "lighthouse_helical_section_12",
+          "firstRegion": "lighthouse_helical_section_12",
+          "allRegions": [
+            "lighthouse_helical_section_12"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_13",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            29.085167314107295,
+            14.054190698067998,
+            24.8494698267452
+          ],
+          "expected": "lighthouse_helical_section_12",
+          "firstRegion": "lighthouse_helical_section_12",
+          "allRegions": [
+            "lighthouse_helical_section_12"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            29.9538041858927,
+            14.505809301932,
+            25.350978173254802
+          ],
+          "expected": "lighthouse_helical_section_13",
+          "firstRegion": "lighthouse_helical_section_13",
+          "allRegions": [
+            "lighthouse_helical_section_13"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_14",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            30.038973,
+            14.534190606503392,
+            25.49849215578548
+          ],
+          "expected": "lighthouse_helical_section_13",
+          "firstRegion": "lighthouse_helical_section_13",
+          "allRegions": [
+            "lighthouse_helical_section_13"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            30.038973,
+            14.985809393496607,
+            26.50150784421452
+          ],
+          "expected": "lighthouse_helical_section_14",
+          "firstRegion": "lighthouse_helical_section_14",
+          "allRegions": [
+            "lighthouse_helical_section_14"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_15",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            29.9538041858927,
+            15.014190698067999,
+            26.649021826745198
+          ],
+          "expected": "lighthouse_helical_section_14",
+          "firstRegion": "lighthouse_helical_section_14",
+          "allRegions": [
+            "lighthouse_helical_section_14"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            29.085167314107295,
+            15.465809301932001,
+            27.1505301732548
+          ],
+          "expected": "lighthouse_helical_section_15",
+          "firstRegion": "lighthouse_helical_section_15",
+          "allRegions": [
+            "lighthouse_helical_section_15"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_16",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            28.9148326858927,
+            15.494190698068,
+            27.1505301732548
+          ],
+          "expected": "lighthouse_helical_section_15",
+          "firstRegion": "lighthouse_helical_section_15",
+          "allRegions": [
+            "lighthouse_helical_section_15"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            28.046195814107296,
+            15.945809301932002,
+            26.649021826745198
+          ],
+          "expected": "lighthouse_helical_section_16",
+          "firstRegion": "lighthouse_helical_section_16",
+          "allRegions": [
+            "lighthouse_helical_section_16"
+          ]
+        }
+      ],
+      "sourceSphereSweep": {
+        "minDistance": 0.49498072049709685,
+        "nearest": "Lighthouse_Balcony_StairwellOpen",
+        "sampleSpacingMax": 0.01,
+        "clear": true
+      }
+    },
+    {
+      "id": "lighthouse_helical_transition_17",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            27.961027,
+            15.97419060650339,
+            26.50150784421452
+          ],
+          "expected": "lighthouse_helical_section_16",
+          "firstRegion": "lighthouse_helical_section_16",
+          "allRegions": [
+            "lighthouse_helical_section_16"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            27.961027,
+            16.425809393496607,
+            25.49849215578548
+          ],
+          "expected": "lighthouse_helical_section_17",
+          "firstRegion": "lighthouse_helical_section_17",
+          "allRegions": [
+            "lighthouse_helical_section_17"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_18",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            28.046195814107296,
+            16.454190698068,
+            25.350978173254802
+          ],
+          "expected": "lighthouse_helical_section_17",
+          "firstRegion": "lighthouse_helical_section_17",
+          "allRegions": [
+            "lighthouse_helical_section_17"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            28.9148326858927,
+            16.905809301932,
+            24.8494698267452
+          ],
+          "expected": "lighthouse_helical_section_18",
+          "firstRegion": "lighthouse_helical_section_18",
+          "allRegions": [
+            "lighthouse_helical_section_18"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_helical_transition_19",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            29.047020550154357,
+            16.9370537758022,
+            24.928260003620633
+          ],
+          "expected": "lighthouse_helical_section_18",
+          "firstRegion": "lighthouse_helical_section_18",
+          "allRegions": [
+            "lighthouse_helical_section_18"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            29.991950949845638,
+            17.3829462241978,
+            25.27218799637937
+          ],
+          "expected": "lighthouse_helical_section_19",
+          "firstRegion": "lighthouse_helical_section_19",
+          "allRegions": [
+            "lighthouse_helical_section_19"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "lighthouse_entry_to_helix",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            28.977674624494288,
+            8.490843147507654,
+            23.96664413512759
+          ],
+          "expected": "lighthouse_entry",
+          "firstRegion": "lighthouse_entry",
+          "allRegions": [
+            "lighthouse_entry"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            29.107492689613007,
+            8.253347550560342,
+            25.032825691617607
+          ],
+          "expected": "lighthouse_helical_section_00",
+          "firstRegion": "lighthouse_helical_section_00",
+          "allRegions": [
+            "lighthouse_helical_section_00"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "upper_village_northwest",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            -15.0,
+            12.0,
+            18.95
+          ],
+          "expected": "above_village_roofs",
+          "firstRegion": "above_village_roofs",
+          "allRegions": [
+            "above_village_roofs"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            -15.0,
+            12.0,
+            20.05
+          ],
+          "expected": "above_northwest_village",
+          "firstRegion": "above_northwest_village",
+          "allRegions": [
+            "above_northwest_village"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "upper_northwest_northtrail",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            6.45,
+            12.0,
+            26.0
+          ],
+          "expected": "above_northwest_village",
+          "firstRegion": "above_northwest_village",
+          "allRegions": [
+            "above_northwest_village"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            7.55,
+            12.0,
+            26.0
+          ],
+          "expected": "north_trail",
+          "firstRegion": "north_trail",
+          "allRegions": [
+            "north_trail"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "east_lane_upper",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            32.0,
+            9.45,
+            -5.0
+          ],
+          "expected": "east_workshop_lane",
+          "firstRegion": "east_workshop_lane",
+          "allRegions": [
+            "east_workshop_lane"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            32.0,
+            10.55,
+            -5.0
+          ],
+          "expected": "above_east_harbor",
+          "firstRegion": "above_east_harbor",
+          "allRegions": [
+            "above_east_harbor"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "upper_village_east",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            23.45,
+            12.0,
+            5.0
+          ],
+          "expected": "above_village_roofs",
+          "firstRegion": "above_village_roofs",
+          "allRegions": [
+            "above_village_roofs"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            24.55,
+            12.0,
+            5.0
+          ],
+          "expected": "above_east_harbor",
+          "firstRegion": "above_east_harbor",
+          "allRegions": [
+            "above_east_harbor"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "upper_east_to_lighthouse",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            32.0,
+            13.0,
+            18.95
+          ],
+          "expected": "above_east_harbor",
+          "firstRegion": "above_east_harbor",
+          "allRegions": [
+            "above_east_harbor"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            32.0,
+            13.0,
+            20.05
+          ],
+          "expected": "lighthouse_south_approach",
+          "firstRegion": "lighthouse_south_approach",
+          "allRegions": [
+            "lighthouse_south_approach"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "harbor_west_bridge",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            -8.55,
+            5.0,
+            -24.0
+          ],
+          "expected": "west_pier_air",
+          "firstRegion": "west_pier_air",
+          "allRegions": [
+            "west_pier_air"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            -7.45,
+            5.0,
+            -24.0
+          ],
+          "expected": "harbor_bridge_air",
+          "firstRegion": "harbor_bridge_air",
+          "allRegions": [
+            "harbor_bridge_air"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    },
+    {
+      "id": "harbor_bridge_east",
+      "assignments": [
+        {
+          "endpoint": "from",
+          "point": [
+            7.45,
+            5.0,
+            -24.0
+          ],
+          "expected": "harbor_bridge_air",
+          "firstRegion": "harbor_bridge_air",
+          "allRegions": [
+            "harbor_bridge_air"
+          ]
+        },
+        {
+          "endpoint": "to",
+          "point": [
+            8.55,
+            5.0,
+            -24.0
+          ],
+          "expected": "east_pier_air",
+          "firstRegion": "east_pier_air",
+          "allRegions": [
+            "east_pier_air"
+          ]
+        }
+      ],
+      "sourceSphereSweep": null
+    }
+  ],
+  "spawnAssignments": [
+    {
+      "name": "Spawn_Mosquito_01_Pueblo",
+      "position": [
+        -5.0,
+        7.0,
+        -5.0
+      ],
+      "firstRegion": "plaza_and_central_streets",
+      "allRegions": [
+        "plaza_and_central_streets"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "central_north",
+          "distance": 15.040694797781118
+        },
+        {
+          "portal": "central_home02",
+          "distance": 11.126657179944027
+        },
+        {
+          "portal": "central_home01",
+          "distance": 5.7273466806192195
+        },
+        {
+          "portal": "central_upper",
+          "distance": 9.746922591259253
+        },
+        {
+          "portal": "central_harbor",
+          "distance": 7.463410748444708
+        },
+        {
+          "portal": "central_eastern",
+          "distance": 17.601207344952222
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_02_Pueblo",
+      "position": [
+        4.0,
+        8.0,
+        -4.0
+      ],
+      "firstRegion": "plaza_and_central_streets",
+      "allRegions": [
+        "plaza_and_central_streets"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "central_north",
+          "distance": 13.889654423346895
+        },
+        {
+          "portal": "central_home02",
+          "distance": 16.459116015144918
+        },
+        {
+          "portal": "central_home01",
+          "distance": 14.349303118967136
+        },
+        {
+          "portal": "central_upper",
+          "distance": 4.37064068530004
+        },
+        {
+          "portal": "central_harbor",
+          "distance": 7.848726011270873
+        },
+        {
+          "portal": "central_eastern",
+          "distance": 10.709925303194229
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_03_Pueblo",
+      "position": [
+        -20.0,
+        10.0,
+        1.0
+      ],
+      "firstRegion": "western_village_exterior",
+      "allRegions": [
+        "western_village_exterior",
+        "above_village_roofs"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "home01_west",
+          "distance": 9.095191037026105
+        },
+        {
+          "portal": "home02_west",
+          "distance": 5.892580080066795
+        },
+        {
+          "portal": "west_upper",
+          "distance": 4.278142120126446
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_04_Pueblo",
+      "position": [
+        -5.0,
+        12.0,
+        15.0
+      ],
+      "firstRegion": "above_village_roofs",
+      "allRegions": [
+        "above_village_roofs"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "central_upper",
+          "distance": 17.061726172928694
+        },
+        {
+          "portal": "north_upper",
+          "distance": 6.565249424050848
+        },
+        {
+          "portal": "west_upper",
+          "distance": 21.144798414740208
+        },
+        {
+          "portal": "north_upper_village",
+          "distance": 25.310126431924434
+        },
+        {
+          "portal": "upper_village_northwest",
+          "distance": 10.751860304152022
+        },
+        {
+          "portal": "upper_village_east",
+          "distance": 30.1563011657597
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_05_Pueblo",
+      "position": [
+        10.0,
+        11.0,
+        18.0
+      ],
+      "firstRegion": "above_village_roofs",
+      "allRegions": [
+        "above_village_roofs"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "central_upper",
+          "distance": 19.31844973076256
+        },
+        {
+          "portal": "north_upper",
+          "distance": 12.214847522584963
+        },
+        {
+          "portal": "west_upper",
+          "distance": 35.849721058886914
+        },
+        {
+          "portal": "north_upper_village",
+          "distance": 10.094676815034743
+        },
+        {
+          "portal": "upper_village_northwest",
+          "distance": 25.03802108793744
+        },
+        {
+          "portal": "upper_village_east",
+          "distance": 18.732391731970587
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_06_Pueblo",
+      "position": [
+        22.0,
+        13.0,
+        20.0
+      ],
+      "firstRegion": "north_trail",
+      "allRegions": [
+        "north_trail"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "eastern_north",
+          "distance": 5.517472247324857
+        },
+        {
+          "portal": "north_upper_village",
+          "distance": 2.2366269246345043
+        },
+        {
+          "portal": "east_to_lighthouse_approach",
+          "distance": 2.665051594247285
+        },
+        {
+          "portal": "north_to_lighthouse_west",
+          "distance": 5.3011791141216875
+        },
+        {
+          "portal": "upper_northwest_northtrail",
+          "distance": 15.678089807116171
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_07_Pueblo",
+      "position": [
+        32.0,
+        14.0,
+        18.0
+      ],
+      "firstRegion": "above_east_harbor",
+      "allRegions": [
+        "above_east_harbor"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "east_lane_upper",
+          "distance": 23.257310678580186
+        },
+        {
+          "portal": "upper_village_east",
+          "distance": 15.116299150255
+        },
+        {
+          "portal": "upper_east_to_lighthouse",
+          "distance": 1.3793114224133716
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_08_Pueblo",
+      "position": [
+        35.0,
+        17.0,
+        28.0
+      ],
+      "firstRegion": "lighthouse_east_air",
+      "allRegions": [
+        "lighthouse_east_air"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "lighthouse_around_east",
+          "distance": 6.389248782133936
+        },
+        {
+          "portal": "lighthouse_around_north",
+          "distance": 5.706356105256663
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_09_Pueblo",
+      "position": [
+        21.0,
+        8.0,
+        -10.0
+      ],
+      "firstRegion": "east_workshop_lane",
+      "allRegions": [
+        "east_workshop_lane"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "harbor_east",
+          "distance": 2.280898945591409
+        },
+        {
+          "portal": "eastern_workshop_lane",
+          "distance": 14.04288075859081
+        },
+        {
+          "portal": "east_lane_upper",
+          "distance": 12.169737055499597
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_10_Pueblo",
+      "position": [
+        -17.0,
+        6.0,
+        -17.0
+      ],
+      "firstRegion": "west_pier_air",
+      "allRegions": [
+        "west_pier_air"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "home01_harbor",
+          "distance": 6.300991985394045
+        },
+        {
+          "portal": "harbor_west_bridge",
+          "distance": 11.018280265086743
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_11_Pueblo",
+      "position": [
+        -7.0,
+        5.0,
+        -25.0
+      ],
+      "firstRegion": "harbor_bridge_air",
+      "allRegions": [
+        "harbor_bridge_air"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "central_harbor",
+          "distance": 15.195476300531023
+        },
+        {
+          "portal": "harbor_west_bridge",
+          "distance": 1.0965856099730655
+        },
+        {
+          "portal": "harbor_bridge_east",
+          "distance": 14.48456074584245
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_12_Pueblo",
+      "position": [
+        21.0,
+        5.0,
+        -26.0
+      ],
+      "firstRegion": "east_pier_air",
+      "allRegions": [
+        "east_pier_air"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "harbor_east",
+          "distance": 14.51903922441151
+        },
+        {
+          "portal": "workshop_from_harbor",
+          "distance": 15.926471674542356
+        },
+        {
+          "portal": "harbor_bridge_east",
+          "distance": 12.609619343977041
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_13_Pueblo",
+      "position": [
+        -30.0,
+        9.0,
+        -20.0
+      ],
+      "firstRegion": "west_pier_air",
+      "allRegions": [
+        "west_pier_air"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "home01_harbor",
+          "distance": 18.531122470050214
+        },
+        {
+          "portal": "harbor_west_bridge",
+          "distance": 22.18338342093018
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_14_Pueblo",
+      "position": [
+        -30.0,
+        15.0,
+        25.0
+      ],
+      "firstRegion": "above_northwest_village",
+      "allRegions": [
+        "above_northwest_village"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "upper_village_northwest",
+          "distance": 16.078012936927248
+        },
+        {
+          "portal": "upper_northwest_northtrail",
+          "distance": 36.58691706061062
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_15_Pueblo",
+      "position": [
+        9.0,
+        12.0,
+        29.0
+      ],
+      "firstRegion": "north_trail",
+      "allRegions": [
+        "north_trail"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "eastern_north",
+          "distance": 12.997788273394823
+        },
+        {
+          "portal": "north_upper_village",
+          "distance": 14.181061314302255
+        },
+        {
+          "portal": "east_to_lighthouse_approach",
+          "distance": 16.54697857616308
+        },
+        {
+          "portal": "north_to_lighthouse_west",
+          "distance": 14.99341522135634
+        },
+        {
+          "portal": "upper_northwest_northtrail",
+          "distance": 3.3320414163092273
+        }
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_16_Pueblo",
+      "position": [
+        38.0,
+        11.0,
+        -10.0
+      ],
+      "firstRegion": "above_east_harbor",
+      "allRegions": [
+        "above_east_harbor"
+      ],
+      "outgoingChoices": [
+        {
+          "portal": "east_lane_upper",
+          "distance": 7.823202668984104
+        },
+        {
+          "portal": "upper_village_east",
+          "distance": 20.17182440930914
+        },
+        {
+          "portal": "upper_east_to_lighthouse",
+          "distance": 29.632794333305792
+        }
+      ]
+    }
+  ],
+  "routeCoordinatesUnchanged": true,
+  "decisions": [
+    "Place portal endpoints on opposite exclusive street boundaries under first-match region lookup.",
+    "Split harbor air into west pier, bridge and east pier regions; give nearby logical exits to Runtime12.",
+    "Preserve the complete source-checked lighthouse helix and every authored route.",
+    "Do not change native fixture thresholds, movement speed, colliders or physics."
+  ]
+}
