@@ -489,7 +489,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.VisualAttentionContract
   Schema: lms.visual-attention.v1
   RigRevision: human-joints2-facial
-  SourceSha256: 9e85748b5ec38f57791bb7377dbe43bc6328792986837c7fdb260371f6a8d20b
+  SourceSha256: 2473a8e6420dcb7c15d58c6dcb0e9fc64769bc8af6636844c71851a42bd84b66
   UnityAxesVerified: 1
   LegacyScaleBlinkVerified: 0
   Rig:
