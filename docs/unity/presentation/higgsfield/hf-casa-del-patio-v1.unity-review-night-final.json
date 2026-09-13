@@ -1,0 +1,374 @@
+{
+  "prefab": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-casa-del-patio-v1/Prefabs/hf-casa-del-patio-v1.prefab",
+  "camera": [
+    38,
+    35,
+    44
+  ],
+  "savePresentationScene": false,
+  "restoreShadowDistance": 40,
+  "night": true,
+  "orthoSize": 24,
+  "lights": [
+    {
+      "name": "CASA_Porch_Lamp_L_Light",
+      "intensity": 2.2,
+      "position": [
+        -2.5999999046325684,
+        1.9800000190734863,
+        -5.510000228881836
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.49000000953674316,
+        0.17000000178813934
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Porch_Lamp_R_Light",
+      "intensity": 2.2,
+      "position": [
+        1.7999999523162842,
+        1.9800000190734863,
+        -5.510000228881836
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.49000000953674316,
+        0.17000000178813934
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Rear_Lamp_L_Light",
+      "intensity": 2.2,
+      "position": [
+        -2.5999999046325684,
+        2.059999942779541,
+        4.96999979019165
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.49000000953674316,
+        0.17000000178813934
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Rear_Lamp_R_Light",
+      "intensity": 2.2,
+      "position": [
+        1.7999999523162842,
+        2.059999942779541,
+        4.96999979019165
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.49000000953674316,
+        0.17000000178813934
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Shed_Lamp_Light",
+      "intensity": 2.2,
+      "position": [
+        -14.0,
+        2.130000114440918,
+        10.819999694824219
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.49000000953674316,
+        0.17000000178813934
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Path_Lantern_Light",
+      "intensity": 2.2,
+      "position": [
+        -1.7000000476837158,
+        2.130000114440918,
+        -18.209999084472656
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.49000000953674316,
+        0.17000000178813934
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Path_Lantern_Light.001",
+      "intensity": 2.2,
+      "position": [
+        1.100000023841858,
+        2.130000114440918,
+        17.59000015258789
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.49000000953674316,
+        0.17000000178813934
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Path_Lantern_Light.002",
+      "intensity": 2.2,
+      "position": [
+        -8.100000381469727,
+        2.130000114440918,
+        10.09000015258789
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.49000000953674316,
+        0.17000000178813934
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Path_Lantern_Light.003",
+      "intensity": 2.2,
+      "position": [
+        8.100000381469727,
+        2.130000114440918,
+        -9.90999984741211
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.49000000953674316,
+        0.17000000178813934
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Interior_Living",
+      "intensity": 3.5,
+      "position": [
+        -4.400000095367432,
+        2.4700000286102295,
+        0.4000000059604645
+      ],
+      "shadows": true,
+      "color": [
+        1.0,
+        0.6600000262260437,
+        0.3499999940395355
+      ],
+      "range": 7
+    },
+    {
+      "name": "CASA_Interior_Kitchen",
+      "intensity": 3.5,
+      "position": [
+        4.0,
+        2.4700000286102295,
+        -0.4000000059604645
+      ],
+      "shadows": true,
+      "color": [
+        1.0,
+        0.6600000262260437,
+        0.3499999940395355
+      ],
+      "range": 7
+    },
+    {
+      "name": "CASA_Interior_Foyer",
+      "intensity": 3.5,
+      "position": [
+        -0.550000011920929,
+        2.4700000286102295,
+        -2.700000047683716
+      ],
+      "shadows": true,
+      "color": [
+        1.0,
+        0.6600000262260437,
+        0.3499999940395355
+      ],
+      "range": 7
+    },
+    {
+      "name": "CASA_Interior_HallRear",
+      "intensity": 3.5,
+      "position": [
+        -0.6000000238418579,
+        2.4700000286102295,
+        3.75
+      ],
+      "shadows": true,
+      "color": [
+        1.0,
+        0.6600000262260437,
+        0.3499999940395355
+      ],
+      "range": 7
+    },
+    {
+      "name": "CASA_Interior_BathGround",
+      "intensity": 3.5,
+      "position": [
+        4.5,
+        2.5199999809265137,
+        3.299999952316284
+      ],
+      "shadows": true,
+      "color": [
+        1.0,
+        0.6600000262260437,
+        0.3499999940395355
+      ],
+      "range": 7
+    },
+    {
+      "name": "CASA_Interior_BedroomOne",
+      "intensity": 3.5,
+      "position": [
+        -4.25,
+        5.369999885559082,
+        0.10000000149011612
+      ],
+      "shadows": true,
+      "color": [
+        1.0,
+        0.6600000262260437,
+        0.3499999940395355
+      ],
+      "range": 7
+    },
+    {
+      "name": "CASA_Interior_BedroomTwo",
+      "intensity": 3.5,
+      "position": [
+        4.099999904632568,
+        5.369999885559082,
+        -0.800000011920929
+      ],
+      "shadows": true,
+      "color": [
+        1.0,
+        0.6600000262260437,
+        0.3499999940395355
+      ],
+      "range": 7
+    },
+    {
+      "name": "CASA_Interior_BathUpper",
+      "intensity": 3.5,
+      "position": [
+        4.5,
+        5.389999866485596,
+        3.299999952316284
+      ],
+      "shadows": true,
+      "color": [
+        1.0,
+        0.6600000262260437,
+        0.3499999940395355
+      ],
+      "range": 7
+    },
+    {
+      "name": "CASA_Interior_UpperLanding",
+      "intensity": 3.5,
+      "position": [
+        -0.550000011920929,
+        5.369999885559082,
+        1.100000023841858
+      ],
+      "shadows": true,
+      "color": [
+        1.0,
+        0.6600000262260437,
+        0.3499999940395355
+      ],
+      "range": 7
+    },
+    {
+      "name": "CASA_Fireplace_Practical",
+      "intensity": 2.2,
+      "position": [
+        -4.550000190734863,
+        0.8999999761581421,
+        -4.199999809265137
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.2800000011920929,
+        0.054999999701976776
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Bedside_One",
+      "intensity": 2.2,
+      "position": [
+        -5.945000171661377,
+        4.329999923706055,
+        3.190000057220459
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.6399999856948853,
+        0.30000001192092896
+      ],
+      "range": 5
+    },
+    {
+      "name": "CASA_Bedside_Two",
+      "intensity": 2.2,
+      "position": [
+        5.954999923706055,
+        4.329999923706055,
+        -3.859999895095825
+      ],
+      "shadows": false,
+      "color": [
+        1.0,
+        0.6399999856948853,
+        0.30000001192092896
+      ],
+      "range": 5
+    }
+  ],
+  "restoreAntiAliasing": 0,
+  "target": [
+    0,
+    1,
+    0
+  ],
+  "output": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/UnityPackage/hf-casa-del-patio-v1-NightReview",
+  "captureShadowDistance": 85,
+  "sunIntensity": 0.1,
+  "ambientSky": [
+    0.05,
+    0.08,
+    0.14
+  ],
+  "ambientEquator": [
+    0.03,
+    0.045,
+    0.075
+  ],
+  "ambientGround": [
+    0.015,
+    0.02,
+    0.035
+  ]
+}

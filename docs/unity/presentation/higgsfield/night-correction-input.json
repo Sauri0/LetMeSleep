@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "catalogPath": "Assets/LetMeSleep/Presentation/Generated/HiggsfieldFiveMaps.asset",
+  "catalogGuid": "5a2287ce1168159439a0d2aa8486f5d8",
+  "catalogSha256": "21ec0558ce3218d707412881791e2b05084e224c734270e75700d293402b39cd",
+  "scenePath": "Assets/Scenes/LetMeSleepHiggsfield.unity",
+  "sceneGuid": "60df67d16705fc64d9244c13fd7979e4",
+  "sceneSha256": "c4fb082660d80211238ad7e7a649cc9fef17a1172972d76a17c8584cb5798e51",
+  "receiptPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/UnityPackage/night-adjustment-receipt.json",
+  "catalogReceiptPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/UnityPackage/catalog-receipt-night-final.json",
+  "sceneReceiptPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/UnityPackage/scene-receipt-night-final.json",
+  "maps": [
+    {
+      "mapId": "hf-casa-del-patio-v1",
+      "skyboxPath": "Assets/LetMeSleep/Presentation/Generated/Materials/hf-casa-del-patio-v1-Skybox.mat",
+      "skyboxGuid": "fcb5d519da824e244b45e54ea32149d6",
+      "skyboxSha256": "fab591a09d6c9f1d6e768caba54d6be4cf68d78c96702e2ea8dee1d5b6a63ff1",
+      "moonIntensity": 0.1,
+      "exposure": 0.1,
+      "ambientSky": [
+        0.05,
+        0.08,
+        0.14
+      ],
+      "ambientEquator": [
+        0.03,
+        0.045,
+        0.075
+      ],
+      "ambientGround": [
+        0.015,
+        0.02,
+        0.035
+      ]
+    },
+    {
+      "mapId": "hf-campamento-pinar-v2",
+      "skyboxPath": "Assets/LetMeSleep/Presentation/Generated/Materials/hf-campamento-pinar-v2-Skybox.mat",
+      "skyboxGuid": "a1b0563c10797514f85dba6de16a42fc",
+      "skyboxSha256": "43d2308dc5c59ca17266ce7f403945b308f86b810417911c6c7bcceff64b5804",
+      "moonIntensity": 0.08,
+      "exposure": 0.08,
+      "ambientSky": [
+        0.05,
+        0.08,
+        0.14
+      ],
+      "ambientEquator": [
+        0.03,
+        0.045,
+        0.075
+      ],
+      "ambientGround": [
+        0.015,
+        0.02,
+        0.035
+      ]
+    }
+  ]
+}

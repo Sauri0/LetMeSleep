@@ -18,24 +18,24 @@
           "b": 1,
           "a": 1
         },
-        "SunUnityIntensity": 0.8,
+        "SunUnityIntensity": 0.1,
         "SunShadows": 2,
         "AmbientSky": {
-          "r": 0.16,
-          "g": 0.23,
-          "b": 0.38,
+          "r": 0.05,
+          "g": 0.08,
+          "b": 0.14,
           "a": 1
         },
         "AmbientEquator": {
-          "r": 0.12,
-          "g": 0.16,
-          "b": 0.23,
+          "r": 0.03,
+          "g": 0.045,
+          "b": 0.075,
           "a": 1
         },
         "AmbientGround": {
-          "r": 0.06,
-          "g": 0.08,
-          "b": 0.13,
+          "r": 0.015,
+          "g": 0.02,
+          "b": 0.035,
           "a": 1
         },
         "AmbientIntensity": 1,

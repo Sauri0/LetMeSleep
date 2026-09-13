@@ -18,6 +18,8 @@ namespace LetMeSleep.Editor
             public string builtinResourcePath, expectedBuiltinGuid;
             public long expectedBuiltinFileId;
             public Color skyTint, groundColor;
+            public bool overrideExposure;
+            public float exposure;
         }
         [Serializable] private sealed class Receipt
         {
@@ -26,6 +28,8 @@ namespace LetMeSleep.Editor
             public string sourceGuid, shader;
             public long sourceFileId;
             public Color skyTint, groundColor;
+            public bool exposureOverridden;
+            public float exposure;
             public string scope = "Provisional procedural sky from approved ambient colors. Review camera used SolidColor; visible sky has not been visually validated.";
         }
 #pragma warning restore CS0649
@@ -73,14 +77,19 @@ namespace LetMeSleep.Editor
             Require(builtin.shader && builtin.shader.name == "Skybox/Procedural" && builtin.HasProperty("_SkyTint") &&
                 builtin.HasProperty("_GroundColor"), "Expected procedural shader properties missing.");
             ValidateColor(request.skyTint); ValidateColor(request.groundColor);
+            Require(!request.overrideExposure || (builtin.HasProperty("_Exposure") &&
+                !float.IsNaN(request.exposure) && !float.IsInfinity(request.exposure) && request.exposure >= 0 && request.exposure <= 8),
+                "Explicit exposure requires a supported _Exposure property and value 0..8.");
             var copy = new Material(builtin) { name = Path.GetFileNameWithoutExtension(output) };
             bool created = false;
             try
             {
                 copy.SetColor("_SkyTint", request.skyTint); copy.SetColor("_GroundColor", request.groundColor);
+                if (request.overrideExposure) copy.SetFloat("_Exposure", request.exposure);
                 var receipt = new Receipt { unityVersion = Application.unityVersion, configSha256 = Hash(config),
                     outputAssetPath = output, sourceGuid = request.expectedBuiltinGuid, sourceFileId = request.expectedBuiltinFileId,
-                    shader = copy.shader.name, skyTint = request.skyTint, groundColor = request.groundColor };
+                    shader = copy.shader.name, skyTint = request.skyTint, groundColor = request.groundColor,
+                    exposureOverridden = request.overrideExposure, exposure = copy.GetFloat("_Exposure") };
                 using (var stream = new FileStream(receiptPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
                 {
                     Write(stream, receipt);
