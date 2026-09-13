@@ -123,7 +123,7 @@ namespace LetMeSleep.Presentation
                 foreach (var attachment in attachments) attachment.Refresh();
                 foreach (Collider collider in colliders) collider.enabled = true;
                 UnityEngine.Physics.SyncTransforms();
-                foreach (var body in bodies) { body.ResetCenterOfMass(); body.ResetInertiaTensor(); }
+                foreach (var body in bodies) MosquitoRagdollBuilder.FinalizeMassProperties(body, settings);
 
                 // Rebuild the native reference frames AFTER compound mass properties and kinematic
                 // flags are finalized. All 18 bodies temporarily use the cached bind pose; neither

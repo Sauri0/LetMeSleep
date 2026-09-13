@@ -116,9 +116,9 @@ namespace LetMeSleep.Presentation
                     rb.useGravity = false;
                     rb.mass = Masses[i] * settings.MassScale;
                     rb.linearDamping = .02f;
-                    rb.angularDamping = .15f;
+                    rb.angularDamping = settings.AngularDamping;
                     rb.maxAngularVelocity = 80f;
-                    rb.maxDepenetrationVelocity = 1f;
+                    rb.maxDepenetrationVelocity = settings.MaxDepenetrationVelocity;
                     rb.sleepThreshold = 0f; // Sleep uses the explicit speed + contact gate in Simulation.
                     rb.solverIterations = settings.SolverIterations;
                     rb.solverVelocityIterations = settings.SolverVelocityIterations;
@@ -159,7 +159,7 @@ namespace LetMeSleep.Presentation
                 // properties and joint frames must see the finished compound geometry, not its origin.
                 // Bodies still have detectCollisions=false: this does not expose the prepared rig.
                 UnityEngine.Physics.SyncTransforms();
-                foreach (var body in bodies) { body.ResetCenterOfMass(); body.ResetInertiaTensor(); }
+                foreach (var body in bodies) FinalizeMassProperties(body, settings);
                 for (int i = 1; i < bodies.Length; i++)
                     joints.Add(AddJoint(i, bodies, frame));
                 foreach (Collider collider in colliders) collider.enabled = false;
@@ -207,6 +207,22 @@ namespace LetMeSleep.Presentation
         private static void RequireBind(Dictionary<string, Matrix4x4> bind, string name)
         {
             if (!bind.ContainsKey(name)) throw new ArgumentException("Skin has no R4 bind matrix for " + name);
+        }
+
+        internal static void FinalizeMassProperties(Rigidbody body, MosquitoRagdollSettings settings)
+        {
+            body.ResetCenterOfMass();
+            body.ResetInertiaTensor();
+            Vector3 moments = body.inertiaTensor;
+            Quaternion principalAxes = body.inertiaTensorRotation;
+            float largest = Mathf.Max(moments.x, Mathf.Max(moments.y, moments.z));
+            float floor = largest / settings.MaxInertiaRatio;
+            // V2 native evidence: thin legs have 109–192:1 moment ratios (axial ~4e-9 kg m²),
+            // with >0.13m knee separation at first contact and persistent axial chatter at 50Hz.
+            // Preserve COM, principal axes, largest moments, metre² scaling and mass scaling.
+            // Increase only the weak moments; do not use an arbitrary identity tensor or pose drive.
+            body.inertiaTensor = new Vector3(Mathf.Max(moments.x, floor), Mathf.Max(moments.y, floor), Mathf.Max(moments.z, floor));
+            body.inertiaTensorRotation = principalAxes;
         }
 
         private static void ValidateSkeleton(Dictionary<string, Transform> named, Dictionary<string, Matrix4x4> bind, SourceFrame frame)
@@ -270,10 +286,12 @@ namespace LetMeSleep.Presentation
             joint.angularXMotion = ConfigurableJointMotion.Limited;
             joint.angularYMotion = lateral == 0 ? ConfigurableJointMotion.Locked : ConfigurableJointMotion.Limited;
             joint.angularZMotion = twist == 0 ? ConfigurableJointMotion.Locked : ConfigurableJointMotion.Limited;
-            joint.lowAngularXLimit = new SoftJointLimit { limit = low, contactDistance = 1 };
-            joint.highAngularXLimit = new SoftJointLimit { limit = high, contactDistance = 1 };
-            joint.angularYLimit = new SoftJointLimit { limit = lateral, contactDistance = 1 };
-            joint.angularZLimit = new SoftJointLimit { limit = twist, contactDistance = 1 };
+            // A 5-degree activation margin anticipates hard stops at contact; the limits themselves
+            // are unchanged. This is solver contact generation, not post-step pose projection.
+            joint.lowAngularXLimit = new SoftJointLimit { limit = low, contactDistance = 5 };
+            joint.highAngularXLimit = new SoftJointLimit { limit = high, contactDistance = 5 };
+            joint.angularYLimit = new SoftJointLimit { limit = lateral, contactDistance = 5 };
+            joint.angularZLimit = new SoftJointLimit { limit = twist, contactDistance = 5 };
             joint.xDrive = joint.yDrive = joint.zDrive = new JointDrive();
             joint.angularXDrive = joint.angularYZDrive = joint.slerpDrive = new JointDrive();
             joint.projectionMode = JointProjectionMode.None;

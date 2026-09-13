@@ -100,10 +100,16 @@ namespace LetMeSleep.Presentation
         public float SettleSeconds { get; }
         public int SolverIterations { get; }
         public int SolverVelocityIterations { get; }
+        /// <summary>Condition the shape-derived principal moments for the millimetre-scale joint chain.
+        /// This is an effective inertia model, not the exact solid-collider mass distribution.</summary>
+        public float MaxInertiaRatio { get; }
+        public float AngularDamping { get; }
+        public float MaxDepenetrationVelocity { get; }
 
         public MosquitoRagdollSettings(Vector3 gravity, int collisionLayer, float massScale = 1f,
             float contactOffset = .0005f, float settleLinearSpeed = .02f, float settleAngularSpeed = .3f,
-            float settleSeconds = .35f, int solverIterations = 12, int solverVelocityIterations = 4)
+            float settleSeconds = .35f, int solverIterations = 32, int solverVelocityIterations = 12,
+            float maxInertiaRatio = 10f, float angularDamping = 2f, float maxDepenetrationVelocity = .2f)
         {
             RagdollValue.RequireFinite(gravity, nameof(gravity));
             if (collisionLayer < 0 || collisionLayer > 31) throw new ArgumentOutOfRangeException(nameof(collisionLayer));
@@ -114,9 +120,16 @@ namespace LetMeSleep.Presentation
             RagdollValue.RequirePositive(settleSeconds, nameof(settleSeconds));
             if (solverIterations < 1 || solverIterations > 255 || solverVelocityIterations < 1 || solverVelocityIterations > 255)
                 throw new ArgumentOutOfRangeException(nameof(solverIterations));
+            if (!RagdollValue.Finite(maxInertiaRatio) || maxInertiaRatio < 1)
+                throw new ArgumentOutOfRangeException(nameof(maxInertiaRatio));
+            if (!RagdollValue.Finite(angularDamping) || angularDamping < 0)
+                throw new ArgumentOutOfRangeException(nameof(angularDamping));
+            RagdollValue.RequirePositive(maxDepenetrationVelocity, nameof(maxDepenetrationVelocity));
             Gravity = gravity; CollisionLayer = collisionLayer; MassScale = massScale; ContactOffset = contactOffset;
             SettleLinearSpeed = settleLinearSpeed; SettleAngularSpeed = settleAngularSpeed; SettleSeconds = settleSeconds;
             SolverIterations = solverIterations; SolverVelocityIterations = solverVelocityIterations;
+            MaxInertiaRatio = maxInertiaRatio; AngularDamping = angularDamping;
+            MaxDepenetrationVelocity = maxDepenetrationVelocity;
         }
     }
 
