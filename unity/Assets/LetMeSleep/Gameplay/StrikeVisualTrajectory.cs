@@ -1,3 +1,5 @@
+using System;
+
 namespace LetMeSleep.Gameplay
 {
     // Presentation of the existing Authority sweep, not a new damage/reach contract.
@@ -29,6 +31,27 @@ namespace LetMeSleep.Gameplay
             if (elapsed <= ClosureTickSeconds)
                 return strike.Origin + (strike.Target - strike.Origin) * SweepFraction(elapsed);
             return restContact + (strike.Target - restContact) * PoseWeight(strike);
+        }
+        // Radial alignment minimizes outer reach but can put the wrist inside
+        // |upper-lower|. Tilt only enough to reach the inner arm sphere, preserving
+        // the intended contact and the rigid hand/contact offset length.
+        public static Float3 ToolOffset(Float3 shoulderToContact, float offsetLength,
+            float minimumArmReach, Float3 pole)
+        {
+            if (!shoulderToContact.IsFinite || !MathEx.Finite(offsetLength) || offsetLength <= .00001f) return Float3.Zero;
+            float distance = shoulderToContact.Length;
+            var axis = distance > .00001f ? shoulderToContact / distance : Float3.Forward;
+            float cosine = 1;
+            if (distance > .00001f && MathEx.Finite(minimumArmReach) && minimumArmReach > 0 &&
+                Math.Abs(distance - offsetLength) < minimumArmReach)
+                cosine = MathEx.Clamp((distance * distance + offsetLength * offsetLength - minimumArmReach * minimumArmReach) /
+                    (2 * distance * offsetLength), -1, 1);
+            if (cosine >= 1) return axis * offsetLength;
+            var tangent = Float3.ProjectPlane(pole, axis);
+            if (!tangent.IsFinite || tangent.LengthSquared < .000001f) tangent = Float3.ProjectPlane(Float3.Up, axis);
+            if (tangent.LengthSquared < .000001f) tangent = Float3.ProjectPlane(Float3.Forward, axis);
+            float sine = (float)Math.Sqrt(Math.Max(0, 1 - cosine * cosine));
+            return (axis * cosine + tangent.Normalized * sine) * offsetLength;
         }
         private static float Smooth(float t) { t = MathEx.Clamp(t, 0, 1); return t * t * (3 - 2 * t); }
     }

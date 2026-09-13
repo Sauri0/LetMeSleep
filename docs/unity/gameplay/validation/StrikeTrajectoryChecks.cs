@@ -48,6 +48,22 @@ public sealed class StrikeTrajectoryChecks
         Assert.That((StrikeVisualTrajectory.Contact(default,rest)-rest).Length,Is.Zero);
         Assert.That(StrikeVisualTrajectory.PoseWeight(default),Is.Zero);
     }
+    [TestCase(.36f)] [TestCase(.39f)] [TestCase(.42f)]
+    public void RigidToolTiltsAroundFixedContactToAvoidUnreachableInnerArmSphere(float distance)
+    {
+        var contact=Float3.Up*distance;
+        var offset=StrikeVisualTrajectory.ToolOffset(contact,.39f,.04f,Float3.Up);
+        Assert.That(offset.Length,Is.EqualTo(.39f).Within(.000002f));
+        Assert.That((contact-offset).Length,Is.EqualTo(.04f).Within(.000002f));
+        Assert.That((contact-offset+offset-contact).Length,Is.LessThan(.000002f));
+    }
+    [Test] public void ToolDirectionPreservesRadialOuterReachAndFiniteZeroContact()
+    {
+        var contact=new Float3(1,2,3);
+        Assert.That((StrikeVisualTrajectory.ToolOffset(contact,.39f,.04f,Float3.Up)-contact.Normalized*.39f).Length,Is.LessThan(.000002f));
+        var zero=StrikeVisualTrajectory.ToolOffset(Float3.Zero,.39f,.04f,Float3.Zero);
+        Assert.That(zero.IsFinite,Is.True);Assert.That(zero.Length,Is.EqualTo(.39f).Within(.000002f));
+    }
     static StrikeState State(float elapsed,Float3 origin,Float3 target)=>new StrikeState(1,GameplayTools.Hands,1,elapsed<.08f?StrikePhase.Windup:elapsed<.25f?StrikePhase.Active:StrikePhase.Recovery,0,origin,target,-Float3.Forward,elapsed/.6f);
     sealed class World:IGameplayWorld
     {

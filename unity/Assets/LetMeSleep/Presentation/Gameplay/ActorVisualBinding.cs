@@ -488,6 +488,7 @@ namespace LetMeSleep.Presentation.Gameplay
             if (capsule == null)
                 return;
             Vector3 shoulder = arm.Upper.position, elbow = arm.Lower.position, wrist = arm.Hand.position;
+            float upperLength = Vector3.Distance(shoulder, elbow), lowerLength = Vector3.Distance(elbow, wrist);
             // The collision center follows Authority's timeline. The anatomical proxy
             // has different lengths and shoulder height; do not feed its clamped wrist
             // back into the real rig as a second, unrelated contact trajectory.
@@ -505,8 +506,9 @@ namespace LetMeSleep.Presentation.Gameplay
                 // translate individual bones. Measure the full real Hand -> Impact
                 // offset, including the authored hand/socket offset, not only .365 m.
                 Vector3 offset = restContact - wrist;
-                Vector3 direction = contact - shoulder;
-                if (direction.sqrMagnitude < .000001f) direction = (strike.Target - strike.Origin).ToUnity();
+                Vector3 direction = GameplayModel.StrikeVisualTrajectory.ToolOffset((contact - shoulder).ToFloat(),
+                    offset.magnitude, Mathf.Abs(upperLength - lowerLength) + .0001f,
+                    (elbow - shoulder).ToFloat()).ToUnity();
                 if (offset.sqrMagnitude > .000001f && direction.sqrMagnitude > .000001f)
                 {
                     Quaternion aligned = Quaternion.FromToRotation(offset, direction) * handRotation;
@@ -517,7 +519,6 @@ namespace LetMeSleep.Presentation.Gameplay
                     target = contact - rotatedOffset;
                 }
             }
-            float upperLength = Vector3.Distance(shoulder, elbow), lowerLength = Vector3.Distance(elbow, wrist);
             if (!Finite(target) || !Finite(shoulder) || !Finite(elbow) || !Finite(wrist) ||
                 upperLength < .001f || lowerLength < .001f) return;
             Vector3 delta = target - shoulder;

@@ -77,3 +77,28 @@ Validación CPU: 121/121, `cpu-correction-v1/`. Compilación offline de Gameplay
 El harness añade exceso de alcance geométrico del contacto, longitud Hand→Impact y residuo por encima de ese límite, para separar sincronización y geometría en la siguiente ejecución. Recompilar `Compile-AuthorityStrikeProbe.ps1` después de importar el commit en central. Compilación del harness actualizado previa a integración: `compiled-20260913-014421-083`, 0/0; no cargar módulos compilados offline como reemplazos en Unity.
 
 Pendiente: comparación nativa posterior a la corrección, evaluación visual de muñeca/agarre y fluidez, y calibración del alcance si persiste un objetivo fuera del volumen físico del rig. El golpe bloqueado deja de emitir barridos, pero StrikeState conserva Target; esta corrección no introduce nuevo estado replicado de contacto contra pared ni certifica una pose que se detenga en esa pared. La esfera colisiona por volumen: el punto de contacto del hit tampoco equivale necesariamente a su centro To.
+
+## Comparación nativa de la primera corrección y ajuste final
+
+Director integró `5a336dd` como `3582d72` y ejecutó sobre el mismo rig: `native/authority-strike-20260913-014832-813.json`. Misma cobertura: 54/972/304, cero fallos del harness, sin aprobación visual. Análisis `analysis-after-v1/`.
+
+| Configuración | Máximo antes | Máximo después | Máximo exceso de alcance después |
+|---|---:|---:|---:|
+| Matamoscas agachado/libre | 65.54 cm | 9.47 cm | 9.47 cm |
+| Matamoscas de pie/libre | 54.06 cm | 7.60 cm | 7.60 cm |
+| Matamoscas agachado/cercano | 59.63 cm | 2.51 cm | 0 |
+| Matamoscas de pie/cercano | 59.57 cm | 1.09 cm | 0 |
+| Manos agachado/libre | 41.08 cm | 34.23 cm | 34.23 cm |
+| Manos de pie/libre | 43.50 cm | 43.44 cm | 43.44 cm |
+
+La diferencia entre distancia medida y exceso geométrico máximo para manos no supera 0.0122 mm: el solver alcanza el contacto si es físicamente alcanzable, pero hay targets legales claramente fuera del volumen del brazo real. Esto sigue abierto y no se corrige ampliando huesos, disminuyendo alcance ni relajando el criterio de medición. Con herramienta, el máximo al límite llega a 37.60 cm de pie y 28.54 cm agachado, también atribuible al alcance exterior.
+
+El ajuste de orientación radial dejó otro caso resoluble: cuando distancia hombro→contacto y longitud Hand→Impact casi coinciden, la muñeca cae dentro de `|UpperArm-LowerArm|`, aproximadamente 4 cm. Eso explica residuos evitables de herramienta de hasta 3.88 cm. El ajuste final de `StrikeVisualTrajectory.ToolOffset` usa ley de cosenos para inclinar mínimamente el offset rígido y ubicar la muñeca sobre el radio mínimo, manteniendo Contact y la longitud del offset. Binding lo usa antes de resolver el brazo. No cambia proxy, Authority ni el alcance exterior.
+
+Cuatro tests CPU adicionales cubren tres posiciones dentro de esa esfera y el alcance radial/caso cero. Resultado final 125/125 en `cpu-correction-v2/`; compilación final Gameplay/adapter/Binding 0/0 en `adapter-correction/20260913-015117-754/`. **El ajuste final todavía requiere ejecución nativa del Director**, cuyo editor se cerró para una prueba física separada.
+
+Conservación en la primera corrección nativa: longitudes varían como máximo 8.41 μm, pelvis/piernas 0, Grip/socket 0 m/0°. La muñeca con herramienta cambia orientación intencionalmente; la apariencia requiere render y clip continuo. Se enviaron los recibos y análisis al revisor de Animaciones.
+
+Precisión de la matriz: el escenario llamado `reach_limit` coloca un obstáculo a 1.20 m del ojo. Está dentro del raycast del matamoscas; para manos supera la distancia de búsqueda y usa el destino libre de .62 m. Por eso esas filas de manos duplican libre y **no acreditan una prueba adicional del máximo .72 m**. Se conserva la geometría para comparación antes/después; una matriz ampliada debe añadir un obstáculo de manos dentro de la búsqueda si se decide calibrar ese máximo.
+
+Binding queda liberado después del commit final de muñeca para el seam de locomoción de Presentación. Mantener suspensión del controlador de gait antes de golpes/temporales/recuperación, y resolver brazos después de la posición base final. Cualquier prueba posterior debe identificar ambas integraciones y no heredar esta medición como aprobación del takeover.
