@@ -62,3 +62,37 @@ con tolerancia numérica10µm. Las rutas de mapas luego prueban Authority real.
 
 No se abrió Unity durante la preparación. Root conserva turno de importación
 Campamento y devolverá slot después de integrar/compilar el candidato.
+
+## Primera ejecución nativa sobre central8e9a150
+
+Coordinador integró motor como8e9a150 y tests como1151858. Slot posterior
+autorizó10regresiones y rutaISLA original, ampliando sólo si ambas pasaban.
+Compilaciones externas `MapChecks/20260913-071940-537` y
+`MapChecks/20260913-072001-642`,0errores/0advertencias. Motor cargado desde DLL
+central, MVID `004842f1-0257-41d9-b84e-572f5438ef96`; Unity6000.3.24f1 batch CPU.
+
+`N:/LetMeSleep/Validation/Higgsfield/HumanMotorCandidate/native-8e9a150/human-motor-contacts-20260913-072011-214.json`:
+**9/10PASS**, penetración0 en todos. Plano tangente avanza3.10m; pendientes
+avanzan4.46/4.66m; pared frontal conserva gap1.00005mm y techo.99999mm.
+Roce oblicuo0.1 da gap.0323057mm contra mínimo esperado.0222413mm;
+oblicuo1 da.307083mm contra.297003mm. Ambos deslizan>8m sin penetración.
+Peldaño20cm y mosquito pasan.
+
+Único fallo: expectativa de bloquear24cm; actor llegaZ2.08849,Y.240159 sin
+penetración. **Aún no establece una regresión:** el helper infirió un límite
+de altura desde TryStep(.22), pero la proyección del movimiento contra la
+esquina redondeada de la cápsula también puede subir. Falta ejecutar la misma
+geometría con el motor anterior para saber si la expectativa del test es válida.
+Se mantiene elFAIL histórico; no se cambia balance ni se declara causa probada.
+
+`N:/LetMeSleep/Validation/Higgsfield/IslaV2-20260913/original-motor-candidate-01/map-checks-20260913-072045-121.json`:
+**rutaPASS22/22**, ida/vuelta en394ticks más30settle. Sin proxies/hulls,
+colliderCandidate:null; máximo.0009417086m (0.942mm) en tick186 sobre
+`Environment/Dock_Arrival_Beach_Approach_COLLIDABLE`, pies
+(-.000010231, .83906436, -34.8494949), bajo tolerancia2mm.
+AgregadoINCOMPLETE corresponde sólo a cobertura deliberadamente omitida en
+config de diagnóstico; erroresvacíos ycleanuptrue.
+
+No se ejecutaron48casosISLA niCASA ampliada debido al test24cm pendiente de
+baseline. No se sumaron cambios de motor/geometría. Procesos37588/32464
+terminaronexit0; turno devuelto/disponible para coordinación y comparación.
