@@ -12,6 +12,8 @@ Sólo con los tres recibos válidos, la misma versión Unity, la referencia de c
 
 Los recibos externos exitosos se copian a UnityEvidence con hash en el nombre durante la regeneración, para conservar todos los enlaces dentro de Mapas. La selección de fuente Yate cambia a UnityAdjustedSource sólo cuando exista el recibo de copia con status exacto, los tres objetos (baúl, tapa y mamparo) y SHA del archivo verificados. Aclara que los exports NormalsV3 anteriores no incluyen esos dos ajustes.
 
+Puerto también selecciona su copia UnityAdjustedSource al validar el recibo final de bisel y SHA: sólo segundo peldaño, 30 mm. Conserva la fuente original en historial y explicita que GLB/FBX no incluyen el bisel y que la triangulación de la copia difiere de Unity.
+
 La ampliación está verificada por sintaxis y seis pruebas con múltiples casos negativos de formatos nativos, guardas booleanas, JSON ambiguo, IDs finales, diez roles y cruces entre recibos (`python -B -m unittest discover -s Higgsfield/Integration -p test_integration_receipts.py -v`), sin escribir ni regenerar los artifacts de entrega. **Esperar la orden final del coordinador** para generar y actualizar los hashes y recuentos de abajo.
 
 ## Entrega emitida anteriormente

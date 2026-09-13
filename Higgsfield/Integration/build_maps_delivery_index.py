@@ -75,12 +75,24 @@ if yate_adjustment_path.is_file():
         assert Path(candidate['source']).resolve()==(yate_adjustment_path.parent/'HF_MAP_04_yate_UNITY_ADJUSTED.blend').resolve()
         assert hashlib.sha256(Path(candidate['source']).read_bytes()).hexdigest()==candidate['sourceSha256']
         yate_adjustment=candidate;blend_overrides['yate']='UnityAdjustedSource/HF_MAP_04_yate_UNITY_ADJUSTED.blend'
+puerto_adjustment_path=ROOT/'05-pueblo/UnityAdjustedSource/adjustment-receipt.json'
+puerto_adjustment=None
+if puerto_adjustment_path.is_file():
+    candidate=json.loads(puerto_adjustment_path.read_text(encoding='utf-8'))
+    if candidate.get('status')=='PASS_EXCLUSIVE_PUERTO_COPY_SECOND_STEP_BEVEL_READBACK_LIVE_RESTORED':
+        assert candidate['objectName']=='Lighthouse_Approach_StoneStairway'
+        assert candidate['geometry']['bevelMeters']==.03 and candidate['geometry']['unchangedTriangles']==468
+        assert candidate['objectTransformPreserved'] is True and candidate['newExportsOrUnityImport'] is False
+        assert Path(candidate['source']).resolve()==(puerto_adjustment_path.parent/'HF_MAP_05_pueblo_UNITY_ADJUSTED.blend').resolve()
+        assert hashlib.sha256(Path(candidate['source']).read_bytes()).hexdigest()==candidate['sourceSha256']
+        assert all(hashlib.sha256(Path(p).read_bytes()).hexdigest()==sha for p,sha in candidate['preservedFiles'].items())
+        puerto_adjustment=candidate;blend_overrides['puerto']='UnityAdjustedSource/HF_MAP_05_pueblo_UNITY_ADJUSTED.blend'
 maps = []
 for index,(slug,title,folder,stem,map_id,description,glb,fbx,overview,detail,detail_label,note) in enumerate(specs):
     entry=dict(slug=slug,title=title,mapId=map_id,description=description,source='Higgsfield / Scene Builder',
                artStatus='Arte terminado',unityStatus='Integración Unity en verificación',portableUnityEquivalence='not_claimed',note=note)
     blend=blend_overrides.get(slug,f'{stem}.blend')
-    entry['sources']=[asset(f'{folder}/{blend}','Fuente ajustada · Blender' if slug=='casa' else 'Fuente editable · Blender','blend',True),
+    entry['sources']=[asset(f'{folder}/{blend}','Fuente ajustada · Blender' if blend.startswith('UnityAdjustedSource/') else 'Fuente editable · Blender','blend',True),
                       asset(f'{folder}/{glb}','Modelo · GLB','glb',True),asset(f'{folder}/{fbx}','Export limpio · FBX','fbx',True)]
     entry['previews']=[asset(f'{folder}/{overview}','Vista general del arte','overview',True),
                        asset(f'{folder}/{detail}',detail_label,'detail',True)]
@@ -138,6 +150,11 @@ if yate_adjustment:
     maps[3]['unitySourceAdjustment']=yate_adjustment
     maps[3]['evidence'].append(asset('04-yate/UnityAdjustedSource/adjustment-receipt.json','Yate · recibo de copia ajustada','evidence'))
     history.append(asset('04-yate/NormalsV3/HF_MAP_04_yate_NORMALS_V3.blend','Yate · NormalsV3 anterior a ajustes de baúl y mamparo','history'))
+if puerto_adjustment:
+    maps[4]['note']='Copia Blender ajustada: bisel de 30 mm en el canto superior frontal del segundo peldaño exterior del faro, con material conservado. La superficie recortada sigue el plano final de Unity; su triangulación difiere. Los GLB y FBX conservan el peldaño original: no se reexportaron ni reimportaron. No se certifica equivalencia portable completa. El archivo se llama pueblo; el mapa es Puerto del Faro.'
+    maps[4]['unitySourceAdjustment']=puerto_adjustment
+    maps[4]['evidence']=[asset('05-pueblo/UnityAdjustedSource/adjustment-receipt.json','Puerto · recibo de copia ajustada','evidence')]
+    history.append(asset('05-pueblo/HF_MAP_05_pueblo.blend','Puerto · fuente original anterior al bisel del segundo peldaño','history'))
 
 # Final integration evidence is optional and must explicitly declare success.
 # External source receipts are copied as immutable evidence only on final generation.

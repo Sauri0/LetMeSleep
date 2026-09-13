@@ -1,3 +1,7 @@
+# Puerto del Faro — fuente ajustada y receta GPU
+
+Fuente Blender recomendada: `05-pueblo/UnityAdjustedSource/HF_MAP_05_pueblo_UNITY_ADJUSTED.blend`, SHA256 `18466cf28d52587f5b246e95b95093557e5e310b6bfd6ee69df960760390fce7`. Contiene sólo el bisel final de 30 mm del segundo peldaño exterior. Readback PASS y originales preservados. Los FBX/GLB siguientes conservan el peldaño original; no hubo reexport/import. Detalle y recibo: `PuertoAdjustedSource/README.md`, `PuertoAdjustedSource/delivery.json`.
+
 # Puerto del Faro — explicit GPU water recipe delivered
 
 Final source descriptor: `puerto.final-input.json`, map ID `hf-puerto-del-faro-v1`. The clean FBX is `N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/HF_MAP_05_pueblo_UNITY.fbx`, SHA256 `aa4bb192353bfbebe5f3d48e4dd6950245b854f397b95a7fb7d7ac85a2a834a4`. Source exports remain unchanged.

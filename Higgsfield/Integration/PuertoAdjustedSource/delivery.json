@@ -1,0 +1,129 @@
+{
+  "status": "PASS_EXCLUSIVE_PUERTO_COPY_SECOND_STEP_BEVEL_READBACK_LIVE_RESTORED",
+  "source": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\UnityAdjustedSource\\HF_MAP_05_pueblo_UNITY_ADJUSTED.blend",
+  "sourceSha256": "18466cf28d52587f5b246e95b95093557e5e310b6bfd6ee69df960760390fce7",
+  "originalSourceSha256": "ae73c46d661bbaaa6248627988ee13296dc5476038b06e0f55aa413c3e61c32a",
+  "objectName": "Lighthouse_Approach_StoneStairway",
+  "geometry": {
+    "selectedOriginalPolygons": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "unchangedPolygons": 234,
+    "unchangedTriangles": 468,
+    "originalTriangles": 480,
+    "adjustedTriangles": 484,
+    "vertices": 322,
+    "polygons": 241,
+    "capMaterial": "PDF05_StoneLight",
+    "bevelMeters": 0.03,
+    "removedVolumeObserved": 0.0011250070063377748,
+    "removedVolumeExpected": 0.001125,
+    "nativePlane": "(Blender Z - edgeStart.z) - dot(P - edgeStart, inward) + 0.03 = 0",
+    "nativeTriangulationReplicated": false,
+    "scope": "Same clipped step surface; triangulation differs from the native Unity triangle clip."
+  },
+  "adjustedMeshGeometrySha256": "cc0cc0804436a7614d632479c5ae89208e4d8cb0495141b07451c5f506856113",
+  "preservedFiles": {
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\attachments.json": "31dfaf647aae44d6ca02a4391e907a92208fcdc832224a95bd01758b1d62b14b",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\audit-console.json": "eae5b9585e9207276ecb4e5f0902d15b0d0a18a1edda3a41142af38129cc5389",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\cpu-water-results.xml": "e12c8b2c657ace63463d5d2abc4a4e23efd0ace990eff667c6ed551117f3e4c0",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\cpu-water-test.log": "1fbe7c03066caf7e4d422a3fe825153891d0b5295c097750000be98bb633d111",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\gpu-water-results.xml": "480fc9c3c6605bb8fe393325ccad7121f6c9f8d95b189f77280b82d1f9f1533f",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\gpu-water-test.log": "1d2a68aa5b244c61ae56ec76fc82ea067edce2790fc7e1f11a7be3555a2768a1",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\hf-puerto-del-faro-v1-skybox-provisional-receipt.json": "bb0559fec37d2b477e71a146e206f3334870f39486c9b09500ee02c8a8e9e6ed",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo.blend": "ae73c46d661bbaaa6248627988ee13296dc5476038b06e0f55aa413c3e61c32a",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo.blend1": "2b36a8d24142f8105a913c6eaa607f3181e0a976c7587675cb812210c16a73e1",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo.fbx": "1a5a87e42a68418ae52697aff3b9f6fd68dded4275014c42fdfd2fa1f250ad82",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo.glb": "3f3cf82115234df39975365a9f26624348fcfd583a9c8e831b0067779cc10086",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_checkpoint_audited.blend": "00d2858c1937eb9cdfd247c3593093b408edcbf1be44f1264d92e3cba47449b0",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_checkpoint_buildings_shells.blend": "014281af395bf6925d5f4b33fae506cff6b47a27fde99324573c2bfb95e8f061",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_checkpoint_circulation.blend": "4d766a827e99a01680d7dd71378b3e5cbca7af3ec0c4a21f0a394866b05371b1",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_checkpoint_complete_previews_ready.blend": "f565a77529255276e8d936839506980bde09f6b810df09ab963b31d35b870bd1",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_checkpoint_empty.blend": "ba78c2930066c5496b90003e91b3fcd9ce4a1b7403613fd315f8c523548d4ee9",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_checkpoint_furnishings.blend": "301d7cf2cc49e2832978f63cb7b07d5dedbe3365a3dcae4c1c7ac39e2785e65f",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_checkpoint_harbor.blend": "617de7f81b23bfe69f1843f5e5682ca3389753fe935422f907827588460506ec",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_checkpoint_landscape.blend": "8696b1d30f3c9527285a8fd782fb0cc9299495a7e51a10964f929a34567495bd",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_checkpoint_terrain.blend": "c70a31245c0393c2354d6bfc6b200006dc5b6094070993f7ea56d0d727d59c31",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_closeup.png": "8539452a118c882cb1966cc3f2ba3d71960c1aeb2ed41fdd1eba31fe1440aa91",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_overview.png": "b32c319663182db066587da9073b7ea76591a9971aef32038c17f0b658ff1d72",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_passport.txt": "77b226733a82af44887b911abc8c10877fb5a0afd70448b3b999a693be025d64",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_report.json": "58043227e2fce6bc77fb5c2e102b2815079b061f58d2338f25f89a03906a990e",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_report.txt": "3296e0b057548e5c2551c5145a794e9c3c288a52502d52e399c2368e2a17717e",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_UNITY.fbx": "aa4bb192353bfbebe5f3d48e4dd6950245b854f397b95a7fb7d7ac85a2a834a4",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\PROMPT.txt": "249fa9356cc595ce72ed68a311c6206097ca12b079f0b3fc4279af57f02953a5",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\root-native-checkpoint.json": "f2449f35d4efc1dfc05ec24b02cc981e28bc9152c10b2a860bde27af9369bcf4",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\scene-audit.json": "50506cfbfd1102f12a736eae886776907fb98f2d2e72082a315d7f1dc308925c",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\scene-builder-request.json": "8bede0a1b4db190b2449f2bf6ca369e997eee50cb4e2908c9de2572a822722dc",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\unity-clean-export-receipt.json": "21da6a03a35b896768065865ef564e0d837cb7201a9b4983d6b8e056cdce4e23",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\unity-clean-export.log": "f9703d62693115a2ee58a807600a6d93cbe2fe545d183d36dd35a7a889d89396",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\unity-import-gpu.log": "077b9e90b4166d38fb46d4572bcfe22fa1f11cc7e08487f0ae90975ae86c2b56",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\unity-review-gpu.log": "219c43b8b4f166c3de86d8a0e4e86d05bad11086721800b1de30dcd48b6f837f"
+  },
+  "nativeApplyReceipt": "N:\\LetMeSleep\\Validation\\Higgsfield\\PuertoV1-20260913\\applied-01\\puerto-semantic-apply.json",
+  "nativeApplySha256": "aa8cb421f763b328b3b4c9a8428ac087c22bfac540ff7a65c69f52e4f86bb072",
+  "nativeContentHash": "3be1751178d5df73b75b089c315e617b8935466bf7814866c502824db9787fa9",
+  "nativeStairMeshSha256": "9095d590b03a6d9be01a22adb40c1be388ef9201e0caf85a788bed4907bb54d9",
+  "nativeAdjustment": {
+    "revision": "puerto-exterior-stair-second-tread-bevel-01",
+    "objectName": "Lighthouse_Approach_StoneStairway",
+    "originalAssetPath": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-puerto-del-faro-v1/Models/Environment.fbx",
+    "originalGuid": "dc7b6cc7e78f7b844b07f36a67609fc1",
+    "originalMeshSha256": "590d5afb1bab0e206525127a5c6cf1425ce57612005448b0673b46d48ca9aec2",
+    "candidateMeshSha256": "9095d590b03a6d9be01a22adb40c1be388ef9201e0caf85a788bed4907bb54d9",
+    "originalMeshLocalId": 5135238771083559522,
+    "edgeStart": {
+      "x": 17.4654388,
+      "y": 5.05693865,
+      "z": 15.1861744
+    },
+    "edgeEnd": {
+      "x": 19.08456,
+      "y": 5.05693865,
+      "z": 13.2813263
+    },
+    "inward": {
+      "x": 0.7619393,
+      "y": 0,
+      "z": 0.6476484
+    },
+    "originalMin": {
+      "x": 17.19044,
+      "y": 4.56619358,
+      "z": 13.047575
+    },
+    "originalMax": {
+      "x": 29.80956,
+      "y": 7.27001,
+      "z": 24.3024254
+    },
+    "candidateMin": {
+      "x": 17.19044,
+      "y": 4.56619358,
+      "z": 13.047575
+    },
+    "candidateMax": {
+      "x": 29.80956,
+      "y": 7.27001,
+      "z": 24.3024254
+    },
+    "bevel": 0.03,
+    "originalTriangles": 480,
+    "candidateTriangles": 492,
+    "selectedTriangles": 12,
+    "unchangedTriangles": 468,
+    "capTriangles": 7,
+    "originalTangents": 896,
+    "candidateTangents": 1476,
+    "renderAndColliderMatch": true,
+    "materialReferencesPreserved": true
+  },
+  "restoredScene": "HF_MAP_05_pueblo",
+  "objectTransformPreserved": true,
+  "newExportsOrUnityImport": false,
+  "scope": "Exclusive source copy with final 30 mm second-step bevel; original blend/FBX/GLB unchanged; no whole-engine portable equivalence claimed."
+}
