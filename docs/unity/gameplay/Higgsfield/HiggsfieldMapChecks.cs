@@ -21,7 +21,7 @@ public static class HiggsfieldMapChecks
     {
         public string mapId, prefabPath, action, navigationOverridePath, colliderCandidate, validationReportPath, caseFilter;
         public int humanPool = 5, mosquitoPool = 16;
-        public bool diagnosticRoutesOnly;
+        public bool diagnosticRoutesOnly, campSpawnSupportCandidate;
         public Route[] routes;
     }
     [Serializable] public sealed class Route
@@ -48,6 +48,8 @@ public static class HiggsfieldMapChecks
         public double seconds;
         public bool cleanup;
         public SouthArrivalColliderCandidate.Receipt colliderCandidate;
+        public CampTechnicalCandidate.Receipt campColliderCandidate;
+        public CampTechnicalCandidate.SpawnReceipt campSpawnCandidate;
     }
     public sealed class Case
     {
@@ -72,6 +74,8 @@ public static class HiggsfieldMapChecks
     public static string Run(string configPath, string outputDirectory)
     {
         var operation = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(File.ReadAllText(configPath));
+        if(operation.action=="prepare-camp")return HiggsfieldCampPreparation.Run(configPath,outputDirectory);
+        if(operation.action=="apply-camp-recorded-exception")return ApplyCampSemanticNavigation.Run(configPath,outputDirectory);
         if(operation.action=="human-motor-contacts")return HumanMotorContactChecks.Run(configPath,outputDirectory);
         if(operation.action=="apply-casa-semantic")return ApplyCasaSemanticNavigation.Run(configPath,outputDirectory);
         if (operation.action == "prepare-casa" || operation.action == "apply-casa" || operation.action == "fix-casa-spawn") return HiggsfieldCasaPreparation.Run(configPath, outputDirectory);
@@ -121,11 +125,14 @@ public static class HiggsfieldMapChecks
             Require(Finite(map.PlayBounds.min) && Finite(map.PlayBounds.max) && map.PlayBounds.size.x > 0 && map.PlayBounds.size.y > 0 && map.PlayBounds.size.z > 0, "Invalid PlayBounds.");
             var world = owner.AddComponent<UnityGameplayWorld>(); world.MapRoot = clone.transform;
             clone.SetActive(true); owner.SetActive(true); Physics.SyncTransforms();
-            if(!string.IsNullOrWhiteSpace(config.colliderCandidate))
+            if(config.colliderCandidate=="camp-paths-exact-down-extrusion")
+                report.campColliderCandidate=CampTechnicalCandidate.ApplyPaths(clone,ownedGeometry);
+            else if(!string.IsNullOrWhiteSpace(config.colliderCandidate))
             {
                 Require(config.colliderCandidate=="south-arrival-local-convex-band" || config.colliderCandidate=="south-arrival-complete-convex-support" || config.colliderCandidate=="south-arrival-one-row-convex-support","Unknown collider candidate.");
                 report.colliderCandidate=config.colliderCandidate=="south-arrival-one-row-convex-support" ? CompleteSouthArrivalSupport.Apply(clone,ownedGeometry,1) : SouthArrivalColliderCandidate.Apply(clone,ownedGeometry,config.colliderCandidate=="south-arrival-complete-convex-support");
             }
+            if(config.campSpawnSupportCandidate)report.campSpawnCandidate=CampTechnicalCandidate.SurveySpawn(map,true);
             world.RegisterGeometry();
             report.nativeColliderCount = clone.GetComponentsInChildren<Collider>(false).Count(c => c.enabled && !c.isTrigger);
             Require(report.nativeColliderCount > 0, "No active physical map colliders.");

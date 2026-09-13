@@ -1,0 +1,200 @@
+{
+  "status": "OFFLINE_TOPOLOGY_ONLY_NATIVE_PENDING",
+  "mapId": "hf-campamento-pinar-v2",
+  "sourceSha256": "3fd036eb8ede448aa48eb72764ae9f143dbf6ecff375e1ae10d144dfb44badc3",
+  "auditSha256": "e674942a24baebc02cbb127313d59448f0ac9e7693c890d89676f8409e47d350",
+  "recipeSha256": "a476f692f8bea9429cd437a9f16c0f72735e54e6d305414f5f6b3a2a9171daae",
+  "zones": 20,
+  "portals": 25,
+  "plannedHumanRoutes": 8,
+  "plannedFlightRoutes": 4,
+  "plannedRealPatrols": 16,
+  "spawnAssignments": [
+    {
+      "name": "Spawn_Mosquito_01.002",
+      "unityPosition": [
+        5.5,
+        2.0,
+        0.20000000298023224
+      ],
+      "zones": [
+        "fire_plaza"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_02.002",
+      "unityPosition": [
+        4.094112396240234,
+        2.0,
+        3.5941126346588135
+      ],
+      "zones": [
+        "fire_plaza"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_03.002",
+      "unityPosition": [
+        0.699999988079071,
+        2.0,
+        5.0
+      ],
+      "zones": [
+        "fire_plaza"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_04.002",
+      "unityPosition": [
+        -2.694112539291382,
+        2.0,
+        3.5941126346588135
+      ],
+      "zones": [
+        "fire_plaza"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_05.002",
+      "unityPosition": [
+        -4.099999904632568,
+        2.0,
+        0.20000000298023224
+      ],
+      "zones": [
+        "fire_plaza"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_06.002",
+      "unityPosition": [
+        -2.694112539291382,
+        2.0,
+        -3.194112539291382
+      ],
+      "zones": [
+        "fire_plaza"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_07.002",
+      "unityPosition": [
+        0.699999988079071,
+        2.0,
+        -4.599999904632568
+      ],
+      "zones": [
+        "fire_plaza"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_08.002",
+      "unityPosition": [
+        4.094112396240234,
+        2.0,
+        -3.194112539291382
+      ],
+      "zones": [
+        "fire_plaza"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_09.002",
+      "unityPosition": [
+        -12.0,
+        2.5,
+        16.5
+      ],
+      "zones": [
+        "tent_cluster_north_air"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_10.002",
+      "unityPosition": [
+        12.0,
+        2.5,
+        -6.5
+      ],
+      "zones": [
+        "tent_cluster_south_air"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_11.002",
+      "unityPosition": [
+        -24.0,
+        2.5,
+        7.5
+      ],
+      "zones": [
+        "shelter_clearing"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_12.002",
+      "unityPosition": [
+        28.0,
+        2.5,
+        10.5
+      ],
+      "zones": [
+        "north_bridge_approach"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_13.002",
+      "unityPosition": [
+        36.0,
+        2.5,
+        9.0
+      ],
+      "zones": [
+        "creek_air"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_14.002",
+      "unityPosition": [
+        34.5,
+        2.5,
+        -21.0
+      ],
+      "zones": [
+        "lake_air"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_15.002",
+      "unityPosition": [
+        -0.5,
+        2.5,
+        -12.5
+      ],
+      "zones": [
+        "south_path"
+      ]
+    },
+    {
+      "name": "Spawn_Mosquito_16.002",
+      "unityPosition": [
+        -31.152240753173828,
+        2.5,
+        21.73463249206543
+      ],
+      "zones": [
+        "washroom_west"
+      ]
+    }
+  ],
+  "washroomDoorCenter": [
+    -27.276144981384277,
+    1.3,
+    20.34063720703125
+  ],
+  "washroomFrontNormal": [
+    0.9048187136650085,
+    0,
+    0.4257969856262207
+  ]
+}
