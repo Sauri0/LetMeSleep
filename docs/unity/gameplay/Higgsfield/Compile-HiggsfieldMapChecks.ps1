@@ -9,11 +9,12 @@ $stamp = [DateTime]::UtcNow.ToString('yyyyMMdd-HHmmss-fff')
 $output = Join-Path $OutputRoot $stamp
 $sources = Join-Path $output 'sources'
 New-Item -ItemType Directory -Path $sources | Out-Null
-foreach ($file in @('HiggsfieldMapChecks.cs','HiggsfieldMapJson.cs')) {
+foreach ($file in @('HiggsfieldMapChecks.cs','HiggsfieldMapJson.cs','HiggsfieldIslaPreparation.cs')) {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot $file) -Destination $sources
 }
 Copy-Item -LiteralPath $Config -Destination (Join-Path $output 'checks.json')
 $references = @(Get-ChildItem -LiteralPath (Join-Path $UnityEditorData 'Managed/UnityEngine') -Filter '*.dll')
+$references += Get-Item -LiteralPath (Join-Path $UnityEditorData 'Managed/Newtonsoft.Json.dll')
 # Unity 6000 places the modular UnityEditor.CoreModule in Managed/UnityEngine.
 # Do not also reference the monolithic Managed/UnityEditor.dll (duplicate types).
 # Only integrated central assemblies. Never rebuild or consume gameplay worktree WIP.

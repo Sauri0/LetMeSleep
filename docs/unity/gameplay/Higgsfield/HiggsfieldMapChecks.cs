@@ -19,7 +19,7 @@ public static class HiggsfieldMapChecks
 #pragma warning disable 0649
     [Serializable] public sealed class Config
     {
-        public string mapId, prefabPath;
+        public string mapId, prefabPath, action, navigationOverridePath;
         public int humanPool = 5, mosquitoPool = 16;
         public Route[] routes;
     }
@@ -27,7 +27,7 @@ public static class HiggsfieldMapChecks
     {
         public string id, role;
         public int spawnIndex, maxTicks = 600;
-        public bool crouch, sprint;
+        public bool crouch, sprint, patrol;
         public Vector3[] points;
     }
     [Serializable] public sealed class Plan { public int schema_version; public string map_id; public Zone[] zones; public Portal[] portals; public Stair stair; }
@@ -38,7 +38,7 @@ public static class HiggsfieldMapChecks
 #pragma warning restore 0649
     public sealed class Report
     {
-        public string status = "INCOMPLETE", utc, unityVersion, mapId, contentHash, configSha256, prefabDependencyHash;
+        public string status = "INCOMPLETE", utc, unityVersion, mapId, contentHash, configSha256, prefabDependencyHash, navigationSha256, navigationSource;
         public string scope = "Native EditMode physics queries + integrated authority at 30 Hz. No Physics.Simulate, player, rendering, WAN, performance or full-map coverage certification.";
         public List<string> errors = new List<string>(), pending = new List<string>(), strippedBehaviours = new List<string>(), loadedAssemblies = new List<string>();
         public List<Case> cases = new List<Case>();
@@ -54,22 +54,26 @@ public static class HiggsfieldMapChecks
         public float initialPenetration, finalPenetration, maxPenetration;
         public string initialBlocker, finalBlocker;
         public List<Sample> samples = new List<Sample>();
+        public List<Hit> failureHits = new List<Hit>();
     }
+    public sealed class Hit { public string collider, query; public float distance; public Vector3 point, normal; }
     public sealed class Sample { public uint tick; public Vector3 localPosition; public bool grounded; public float crouch; }
     public sealed class Passage { public string id, status, blocker; public Vector3[] localPoints; }
 
     public static string Run(string configPath, string outputDirectory)
     {
+        var operation = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(File.ReadAllText(configPath));
+        if (operation.action == "prepare-isla" || operation.action == "apply-isla") return HiggsfieldIslaPreparation.Run(configPath, outputDirectory);
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || EditorApplication.isUpdating)
             throw new InvalidOperationException("Run only in an idle Editor, outside Play Mode, in the coordinator's native slot.");
         Directory.CreateDirectory(outputDirectory);
         string reportPath = Path.Combine(outputDirectory, "map-checks-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff") + ".json");
         var report = new Report { utc = DateTime.UtcNow.ToString("O"), unityVersion = Application.unityVersion };
-        var watch = Stopwatch.StartNew(); GameObject owner = null;
+        var watch = Stopwatch.StartNew(); GameObject owner = null; TextAsset candidate = null;
         try
         {
             report.configSha256 = Hash(File.ReadAllBytes(configPath));
-            var config = JsonUtility.FromJson<Config>(File.ReadAllText(configPath));
+            var config = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(File.ReadAllText(configPath));
             Require(config != null && !string.IsNullOrWhiteSpace(config.mapId), "Missing config mapId.");
             Require(config.humanPool >= 5 && config.humanPool <= 32 && config.mosquitoPool >= 16 && config.mosquitoPool <= 32, "Pool contract must cover at least 5 human / 16 mosquito spawns; max 32 per pool.");
             Require(config.routes == null || config.routes.Length <= 32, "At most 32 routes per bounded run.");
@@ -97,6 +101,9 @@ public static class HiggsfieldMapChecks
             var definitions = clone.GetComponentsInChildren<EnvironmentMapDefinition>(true);
             Require(definitions.Length == 1 && definitions[0].transform == clone.transform, "Exactly one map definition must be on prefab root.");
             var map = definitions[0]; report.mapId = map.MapId; report.contentHash = map.ContentHash;
+            if(!string.IsNullOrWhiteSpace(config.navigationOverridePath)) { candidate=new TextAsset(File.ReadAllText(config.navigationOverridePath));map.SpatialData=candidate;report.navigationSource="Candidate override on temporary clone: "+config.navigationOverridePath; }
+            else report.navigationSource="Prefab SpatialData";
+            if(map.SpatialData) report.navigationSha256=Hash(System.Text.Encoding.UTF8.GetBytes(map.SpatialData.text));
             Require(map.MapId == config.mapId, "Config and map IDs differ.");
             Require(!string.IsNullOrWhiteSpace(map.ContentHash), "Missing map content hash.");
             Require(Finite(map.PlayBounds.min) && Finite(map.PlayBounds.max) && map.PlayBounds.size.x > 0 && map.PlayBounds.size.y > 0 && map.PlayBounds.size.z > 0, "Invalid PlayBounds.");
@@ -116,7 +123,7 @@ public static class HiggsfieldMapChecks
             {
                 Budget(watch); Require(route != null && !string.IsNullOrWhiteSpace(route.id) && ids.Add(route.id), "Route IDs must be nonempty and unique.");
                 Require(route.role == "human" || route.role == "mosquito", "Route role must be human or mosquito.");
-                Require(route.maxTicks >= 1 && route.maxTicks <= 600 && route.points != null && route.points.Length >= 1 && route.points.Length <= 64 && route.points.All(Finite), "Invalid route bounds/points: " + route.id);
+                Require(route.maxTicks >= 1 && route.maxTicks <= 600 && route.points != null && (route.points.Length >= 1 || route.patrol && route.role == "mosquito") && route.points.Length <= 64 && route.points.All(Finite), "Invalid route bounds/points: " + route.id);
                 var role = route.role == "human" ? PlayerRole.Human : PlayerRole.Mosquito;
                 var pool = role == PlayerRole.Human ? map.HumanSpawnPoints : map.MosquitoSpawnPoints;
                 Require(pool != null && route.spawnIndex >= 0 && route.spawnIndex < pool.Length && pool[route.spawnIndex], "Invalid route spawn: " + route.id);
@@ -131,6 +138,7 @@ public static class HiggsfieldMapChecks
         finally
         {
             if (owner) Object.DestroyImmediate(owner);
+            if (candidate) Object.DestroyImmediate(candidate);
             Physics.SyncTransforms(); report.cleanup = !owner; report.seconds = watch.Elapsed.TotalSeconds;
             File.WriteAllText(reportPath, HiggsfieldMapJson.Write(report));
         }
@@ -171,7 +179,23 @@ public static class HiggsfieldMapChecks
             for (int t = 0; t < 30; t++) { Budget(watch); Tick(host, ref sequence, Vector3.zero, role, false, false); Track(c, proxy, host, map); }
             Require(role != PlayerRole.Human || proxy.State.Grounded, "Human did not settle grounded after 30 ticks.");
             Require(Vector3.Distance(position, proxy.State.Position.ToUnity()) <= .5f, "Spawn moved more than 0.5m during neutral settling.");
-            if (route != null)
+            if (route != null && route.patrol)
+            {
+                var type=typeof(UnityGameplayWorld).Assembly.GetType("LetMeSleep.Gameplay.Unity.GameplayBotNavigation",true);
+                var nav=Activator.CreateInstance(type,BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic,null,new object[]{map.SpatialData,map.MapId,world},null);
+                var explore=type.GetMethod("Explore");var regions=(BotRegion[])type.GetField("regions",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(nav);
+                var visited=new HashSet<string>();float traveled=0;int still=0;
+                for(int t=0;t<route.maxTicks;t++)
+                {
+                    Budget(watch);var previous=proxy.State.Position;var direction=(Float3)explore.Invoke(nav,new object[]{proxy.State,host.CurrentTick});
+                    Tick(host,ref sequence,direction.ToUnity(),role,false,false);Track(c,proxy,host,map);
+                    var local=map.transform.InverseTransformPoint(proxy.State.Position.ToUnity()).ToFloat();var zone=regions.Where(r=>r.Contains(local)).Select(r=>r.Id).FirstOrDefault();
+                    Require(zone!=null,"Patrol left every authored region.");visited.Add(zone);
+                    float moved=(proxy.State.Position-previous).Length;traveled+=moved;still=moved<.001f?still+1:0;Require(still<150,"Patrol stalled for 150 ticks.");
+                }
+                Require(visited.Count>=3 && traveled>2,"Patrol did not traverse at least three regions and 2m.");c.reason="Visited "+visited.Count+" regions; traveled "+traveled.ToString("F2",System.Globalization.CultureInfo.InvariantCulture)+"m.";
+            }
+            else if (route != null)
             {
                 for (int t = 0; t <= route.maxTicks && c.reached < route.points.Length;)
                 {
@@ -190,7 +214,19 @@ public static class HiggsfieldMapChecks
             c.status = "PASS";
         }
         catch (TimeoutException) { c.reason = "Global time budget reached."; throw; }
-        catch (Exception e) { c.status = "FAIL"; c.reason = e.Message; }
+        catch (Exception e)
+        {
+            c.status = "FAIL"; c.reason = e.Message;
+            if(route!=null && route.points!=null && c.reached<route.points.Length && world.Actors.TryGetValue(1,out var actor))
+            {
+                var pos=actor.State.Position.ToUnity();var delta=map.transform.TransformPoint(route.points[c.reached])-pos;delta.y=0;
+                foreach(var movement in new[]{delta.normalized*Mathf.Min(delta.magnitude,.75f),(delta.normalized*3.1f+Vector3.down*.5f)/30,Vector3.down*.23f})
+                {
+                    var hits=Physics.CapsuleCastAll(pos+Vector3.up*.25f,pos+Vector3.up*1.47f,.25f,movement.normalized,movement.magnitude+.001f,~0,QueryTriggerInteraction.Ignore);
+                    foreach(var hit in hits.Where(h=>h.collider.transform.IsChildOf(map.transform)).OrderBy(h=>h.distance)) c.failureHits.Add(new Hit{collider=PathOf(hit.collider.transform,map.transform),query=movement.ToString("F5"),distance=hit.distance,point=hit.point,normal=hit.normal});
+                }
+            }
+        }
     }
     static void Tick(GameplayAuthority host, ref uint sequence, Vector3 delta, PlayerRole role, bool crouch, bool sprint)
     {
@@ -236,9 +272,9 @@ public static class HiggsfieldMapChecks
         try
         {
             Require(map.SpatialData, "SpatialData absent; import recipe is not navigation data.");
-            var p = JsonUtility.FromJson<Plan>(map.SpatialData.text);
+            var p = Newtonsoft.Json.JsonConvert.DeserializeObject<Plan>(map.SpatialData.text);
             Require(p != null && p.schema_version == 1 && p.map_id == map.MapId && p.zones != null && p.zones.Length > 0 && p.portals != null, "SpatialData must contain schema_version:1, exact map_id, zones[] and portals[].");
-            Require(p.zones.Length <= 256 && p.portals.Length <= 512, "Navigation exceeds bounded fixture limits.");
+            Require(p.zones.Length <= 1024 && p.portals.Length <= 3072, "Navigation exceeds bounded fixture limits.");
             var zones = new HashSet<string>(); var links = new HashSet<string>();
             foreach (var z in p.zones) { Require(z != null && !string.IsNullOrWhiteSpace(z.id) && zones.Add(z.id), "Invalid/duplicate zone ID."); var min = Point(z.min); var max = Point(z.max); Require(min.x < max.x && min.y < max.y && min.z < max.z, "Invalid zone bounds: " + z.id); }
             foreach (var link in p.portals)

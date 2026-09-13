@@ -50,7 +50,8 @@ modifican Assets, escenas, importer, Core, Bootstrap ni reglas de movimiento.
    corresponde. Un timeout de ruta no distingue mal waypoint de paso bloqueado:
    revisar muestras y geometría antes de atribuir el defecto al motor.
 
-No ejecución nativa realizada por este worker. Compilación no acredita motor,
+La entrega inicial no incluía ejecución nativa. El turno delegado posterior de
+isla v2 está documentado en `ISLA-V2-NATIVE-20260913.md`. Compilación no acredita motor,
 colliders, importación ni recorrido. El archivo ejemplo conserva `routes: []`
 deliberadamente y nunca permite certificar traversal. V1 además falla pools y
 SpatialData mientras mantenga 2/1 y la receta de importación.
@@ -144,7 +145,7 @@ es criterio diagnóstico del mapa y se informa incluso si el motor resuelve una
 penetración inicial.
 
 Máximos: 32 spawns/rol, 32 rutas, 64 puntos/ruta, 600 ticks/ruta + 30 de
-asentamiento, 256 zonas y 512 portales. Presupuesto cooperativo global 45s;
+asentamiento, 1024 zonas y 3072 portales. Presupuesto cooperativo global 45s;
 una llamada nativa individual no se puede interrumpir. Partir configs si agota
 tiempo. `FAIL` indica contrato/caso fallido; `INCOMPLETE` falta cobertura o tiempo;
 `PASS_SCOPED` aprueba solamente las comprobaciones enumeradas en ese JSON.
@@ -153,6 +154,30 @@ No acredita arte, navegación humana automática, patrulla completa, animación,
 perch/bite/strike, puertas interactivas, red/WAN, FPS ni límites efectivos del
 mundo. PlayBounds es metadato, no barrera del motor. Agua no define natación ni
 protección contra caídas. Esas decisiones/reglas quedan en coordinación.
+
+El fixture ahora admite rutas `patrol:true`, rol mosquito y `points:[]`: ejecuta
+GameplayBotNavigation.Explore real durante maxTicks, con el motor habitual,
+exige visitar tres regiones, recorrer >2m y no salir de toda región ni detenerse
+150 ticks. No representa exploración exhaustiva. `navigationOverridePath` permite
+probar un plan candidato sólo en el clon antes de aplicarlo a un asset.
+
+El parser de DTO externos utiliza Newtonsoft.Json incluido con Unity: la primera
+ejecución nativa mostró que JsonUtility omitía arrays de tipos en DLL externa.
+El constructor de GameplayBotNavigation sigue usando su parser integrado real.
+El writer externo evita la pérdida de listas en informes. Los fallos de rutas
+incluyen casts de diagnóstico horizontal, forward+gravedad y ground snap; sus
+contactos no sustituyen la traza interna del motor.
+
+`HiggsfieldIslaPreparation.cs` está limitado por código al prefab de isla v2.
+`action:prepare-isla` mide colliders, construye corredores de celdas de 1m
+expandidas .056m sin colisión y guarda candidatos externos. Presupuesto 90s,
+máximo 1024 celdas seleccionadas. A* se usa sólo para autoría offline del grafo;
+no cambia el algoritmo del juego. Un interior que no cabe en esa discretización
+queda explícitamente pendiente; no prueba que sea físicamente inaccesible.
+`action:apply-isla` requiere el mismo dependency hash del prefab medido y el hash
+del JSON preparado; usa Unity APIs para asignar SpatialData y ContentHash en
+prefab/escena isla. El nuevo hash es SHA256(oldHash + LF + nav-schema1 + LF +
+navigationSHA256), local a esa revisión, sin certificar el catálogo autoritativo.
 
 ## Riesgos observados en isla revisión 01
 

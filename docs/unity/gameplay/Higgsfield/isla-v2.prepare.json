@@ -1,0 +1,8 @@
+{
+  "mapId": "hf-isla-del-laguito-v2",
+  "prefabPath": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-isla-del-laguito-v2/Prefabs/hf-isla-del-laguito-v2.prefab",
+  "humanPool": 5,
+  "mosquitoPool": 16,
+  "routes": [],
+  "action": "prepare-isla"
+}
