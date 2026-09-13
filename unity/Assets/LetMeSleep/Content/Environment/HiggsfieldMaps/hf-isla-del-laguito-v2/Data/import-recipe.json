@@ -1,0 +1,5419 @@
+{
+  "mapId": "hf-isla-del-laguito-v2",
+  "sourceFbx": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\01-isla\\HF_MAP_01_isla_UNITY.fbx",
+  "sourceSha256": "8ce74c4f24dbbc1e11896c206ba2e9879b4826f3047cafb3ad2cf086b508d633",
+  "sourceFinal": true,
+  "importScale": 1,
+  "collisionLayer": "Default",
+  "firstSurfaceId": 1000000,
+  "requiredHumanSpawns": 5,
+  "requiredMosquitoSpawns": 16,
+  "humanSpawns": [
+    "Spawn_Human_01",
+    "Spawn_Human_02",
+    "Spawn_Human_03",
+    "Spawn_Human_04",
+    "Spawn_Human_05"
+  ],
+  "mosquitoSpawns": [
+    "Spawn_Mosquito_01",
+    "Spawn_Mosquito_02",
+    "Spawn_Mosquito_03",
+    "Spawn_Mosquito_04",
+    "Spawn_Mosquito_05",
+    "Spawn_Mosquito_06",
+    "Spawn_Mosquito_07",
+    "Spawn_Mosquito_08",
+    "Spawn_Mosquito_09",
+    "Spawn_Mosquito_10",
+    "Spawn_Mosquito_11",
+    "Spawn_Mosquito_12",
+    "Spawn_Mosquito_13",
+    "Spawn_Mosquito_14",
+    "Spawn_Mosquito_15",
+    "Spawn_Mosquito_16"
+  ],
+  "lobbySpawns": [],
+  "toolPickups": [],
+  "presentationRoot": "",
+  "boundsMinEmpty": "",
+  "boundsMaxEmpty": "",
+  "playBoundsMin": [
+    -54,
+    -4,
+    -49
+  ],
+  "playBoundsMax": [
+    54,
+    15,
+    49
+  ],
+  "nodes": [
+    {
+      "path": "Beach_Driftwood_0",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Beach_Driftwood_1",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Beach_Driftwood_2",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Bridge_Approach_-1_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Bridge_Approach_1_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Bridge_North_Inlet_Root/Bridge_North_Inlet_Deck_Posts_Ropes_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Barrel",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Door_Hinge/Cabin_Door_Open_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Entry_Steps_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Floor_and_Porch_Boards_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Foundation_Timbers_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Header_KneeBraces_LampBracket_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Porch_Lantern_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Porch_Railings_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Roof_Planks_Gables_REMOVABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Roof_Rafters_REMOVABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Roof_Underboards_REMOVABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Shell_Gable_Backing_Back_REMOVABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Shell_Gable_Backing_Front_REMOVABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Shell_Lining_Back_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Shell_Lining_East_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Shell_Lining_Front_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Shell_Lining_West_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Stone_Footings_Stair_Supports_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Structural_and_Window_Frames_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Wall_Back_Window_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Wall_East_Windows_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Wall_Front_OpenDoor_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Cabin_Wall_West_Window_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Interior_Bed_Linen_Blanket",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Interior_Bedside_Lamp",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Interior_Bedside_Table",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Interior_Bookshelf_and_Books",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Interior_Cooktop_and_Kettle",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Interior_Kitchenette_Cabinets_Sink",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Interior_Small_Woven_Rug_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Cabin_Root/Interior_Timber_Chair",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_000",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_001",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_002",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_003",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_004",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_005",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_006",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_007",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_008",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_009",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_010",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_011",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_012",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_013",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_014",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_015",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_016",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_017",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_018",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_019",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_020",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_022",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_023",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_024",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_025",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_026",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_027",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_028",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_029",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_030",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_031",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_032",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_033",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_034",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_035",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_036",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_037",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_038",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_039",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_040",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_041",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_042",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_043",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_044",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_045",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_046",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_047",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_048",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_049",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_050",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_052",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_053",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_054",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_055",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_056",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_057",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_058",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_059",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_060",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_061",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_062",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_063",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_064",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_065",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_067",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_068",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_069",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_070",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_071",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_072",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_073",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_074",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_075",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_076",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_077",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_078",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_079",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_080",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_081",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_082",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_083",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_084",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_085",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_086",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_087",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_088",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_089",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_090",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_091",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_092",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_093",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_094",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Coast_Boulder_095",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Dock_Arrival_Beach_Approach_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Dock_Arrival_Root/Dock_Arrival_Deck_Posts_Ropes_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Dock_Lake_Bank_Approach_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Dock_Lake_Root/Dock_Lake_Deck_Posts_Ropes_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_01_01_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_01_02_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_01_03_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_01_04_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_01_05_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_02_01_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_02_02_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_02_03_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_02_04_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_02_05_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_02_06_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_03_01_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_03_02_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_03_03_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_03_04_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_03_05_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_03_06_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_03_07_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_04_01_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_04_02_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_04_03_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_04_04_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_04_05_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_04_06_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_04_07_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_05_01_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_05_02_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_05_03_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_05_04_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_05_05_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_05_06_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_05_07_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_06_01_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_06_02_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_06_03_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_06_04_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_06_05_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_06_06_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_06_07_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_07_01_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_07_02_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_07_03_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_07_04_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_07_05_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_07_06_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_08_01_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_08_02_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_08_03_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_08_04_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grass_Patch_08_05_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_003",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_008",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_009",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_012",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_013",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_015",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_018",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_020",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_021",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_022",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_024",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_025",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_026",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_030",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_033",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_034",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_036",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_039",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_041",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_048",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_050",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_051",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_053",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_054",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_058",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_060",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_061",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_063",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_065",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_066",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_068",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_069",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_070",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_071",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_073",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_076",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_078",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_079",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_080",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_081",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_083",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_086",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Grove_Rock_088",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Reed_Clusters_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_000",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_002",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_003",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_004",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_005",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_006",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_007",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_008",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_009",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_010",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_011",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_012",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_013",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_014",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_015",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_016",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_017",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_018",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_019",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_020",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_022",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_023",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_024",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_026",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_027",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_028",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_029",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_030",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_031",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_032",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_034",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_035",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_036",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_037",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_038",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_040",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_041",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_042",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_043",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_044",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_046",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_047",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_048",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_049",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_050",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_051",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_052",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_053",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lake_Shore_Rock_054",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lookout_Back_Rope_Rail_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lookout_Rock_3",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lookout_Rock_4",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lookout_Stone_Trail_Steps_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Lookout_Terrace_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Ocean_Shore_Foam_NONSOLID",
+      "kind": "foam",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Path_Cabin_Access_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Path_Lake_Jetty_Connection_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Path_Lake_Loop_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Path_Lookout_Gentle_Trail_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Path_Outer_Coast_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Path_Picnic_Access_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Path_South_Arrival_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Picnic_Barrel",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Picnic_Crate",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Picnic_Root/Picnic_Bench_-1_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Picnic_Root/Picnic_Bench_1_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Picnic_Root/Picnic_Lantern_and_Mugs_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Picnic_Root/Picnic_Table_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_000_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_000_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_001_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_001_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_002_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_002_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_003_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_003_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_004_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_004_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_005_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_005_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_006_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_006_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_007_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_007_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_008_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_008_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_009_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_009_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_010_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_010_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_011_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_011_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_012_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_012_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_013_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_013_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_014_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_014_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_015_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_015_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_016_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_016_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_017_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_017_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_018_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_018_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_019_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_019_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_020_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_020_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_021_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_021_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_022_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_022_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_023_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_023_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_024_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_024_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_025_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_025_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_026_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_026_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_027_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_027_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_028_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_028_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_029_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_029_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_030_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_030_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_031_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_031_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_032_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_032_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_033_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_033_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_034_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_034_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_035_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_035_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_036_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_036_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_037_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_037_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_038_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_038_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_039_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_039_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_040_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_040_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_041_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_041_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_042_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_042_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_043_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_043_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_044_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_044_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_045_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_045_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_046_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_046_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_047_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_047_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_048_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_048_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_049_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_049_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_050_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_050_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_051_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_051_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_052_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_052_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_053_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_053_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_054_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_054_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_055_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_055_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_056_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_056_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_057_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_057_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_058_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_058_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_059_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_059_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_060_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_060_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_061_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_061_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_062_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_062_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_063_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_063_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_064_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_064_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_065_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_065_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_066_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_066_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_067_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_067_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_068_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_068_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_069_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_069_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_070_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_070_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_071_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_071_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_072_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_072_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_073_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_073_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_074_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_074_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_075_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_075_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_076_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_076_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_077_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_077_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_078_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_078_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_079_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_079_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_080_Foliage_NONSOLID",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Pine_Tree_080_Trunk_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Rowboat_Root/Rowboat_Hollow_Planked_Hull",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Rowboat_Root/Rowboat_Seats_Ribs_Gunwale_Oar",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_000",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_002",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_003",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_005",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_006",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_012",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_014",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_015",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_022",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_023",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_025",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_027",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_028",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_029",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_030",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_031",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_032",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_033",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_034",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_040",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_041",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_046",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_047",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_048",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_049",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_053",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_054",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_055",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_059",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_061",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_063",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_065",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_066",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_069",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_070",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_073",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_074",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_075",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_076",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_077",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_078",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_079",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_083",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_085",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_086",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_089",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_090",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_092",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_099",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_108",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_111",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_114",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_115",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_116",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_117",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_121",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_123",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_124",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_127",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_128",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_131",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_133",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_134",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_135",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_138",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_142",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_143",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_145",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_146",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_151",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_152",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_153",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_155",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_159",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_160",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_161",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_163",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_165",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_169",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_171",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_172",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_175",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_181",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_183",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_185",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_186",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_187",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_188",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_191",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_194",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_195",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_196",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Shrub_NONSOLID_197",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Terrain_Banks_Submerged_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Terrain_Island_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Terrain_Lake_Bed_COLLIDABLE",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Water_Lake",
+      "kind": "water",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Water_Ocean",
+      "kind": "water",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    }
+  ],
+  "materials": [
+    {
+      "sourceName": "ISLA_Blanket",
+      "rgb": [
+        0.3324515223503113,
+        0.18447498977184296,
+        0.13286831974983215
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_BookBlue",
+      "rgb": [
+        0.07421357184648514,
+        0.177888423204422,
+        0.1946178376674652
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_BookRed",
+      "rgb": [
+        0.2917706370353699,
+        0.07818742096424103,
+        0.04970656707882881
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Foam",
+      "rgb": [
+        0.5520114302635193,
+        0.7835378050804138,
+        0.7083757519721985
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Grass",
+      "rgb": [
+        0.2158605009317398,
+        0.2961382567882538,
+        0.08437620848417282
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_GrassDark",
+      "rgb": [
+        0.16202937066555023,
+        0.23074005544185638,
+        0.07036009430885315
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_GrassLight",
+      "rgb": [
+        0.28744083642959595,
+        0.37123769521713257,
+        0.11443537473678589
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Lake",
+      "rgb": [
+        0.04817182570695877,
+        0.34670406579971313,
+        0.41788506507873535
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_LakeDeep",
+      "rgb": [
+        0.03189603239297867,
+        0.27049779891967773,
+        0.34670406579971313
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_LakeLight",
+      "rgb": [
+        0.0802198201417923,
+        0.4125426113605499,
+        0.47353148460388184
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Lamp",
+      "rgb": [
+        0.9130986332893372,
+        0.5711248517036438,
+        0.18782077729701996
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Linen",
+      "rgb": [
+        0.7379103899002075,
+        0.6795424818992615,
+        0.4969329833984375
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Metal",
+      "rgb": [
+        0.04970656707882881,
+        0.0666259378194809,
+        0.06480326503515244
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Ocean",
+      "rgb": [
+        0.03310476616024971,
+        0.20507873594760895,
+        0.31854677200317383
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_OceanDeep",
+      "rgb": [
+        0.026241222396492958,
+        0.17464740574359894,
+        0.2746773064136505
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_OceanLight",
+      "rgb": [
+        0.04666508734226227,
+        0.26635560393333435,
+        0.366252601146698
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_OceanShallow",
+      "rgb": [
+        0.09084171056747437,
+        0.38132601976394653,
+        0.4564110338687897
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Path",
+      "rgb": [
+        0.5711248517036438,
+        0.40724021196365356,
+        0.18116424977779388
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Pine",
+      "rgb": [
+        0.03560131415724754,
+        0.109461709856987,
+        0.05126945674419403
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_PineLight",
+      "rgb": [
+        0.08650045841932297,
+        0.18447498977184296,
+        0.061246052384376526
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_PineTip",
+      "rgb": [
+        0.177888423204422,
+        0.25015828013420105,
+        0.05448027700185776
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Porcelain",
+      "rgb": [
+        0.6104955673217773,
+        0.5906188488006592,
+        0.5028864741325378
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Reed",
+      "rgb": [
+        0.21952620148658752,
+        0.2961382567882538,
+        0.07818742096424103
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Roof",
+      "rgb": [
+        0.31854677200317383,
+        0.14702726900577545,
+        0.05448027700185776
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_RoofLight",
+      "rgb": [
+        0.46207699179649353,
+        0.2541520893573761,
+        0.09758734703063965
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Rope",
+      "rgb": [
+        0.533276379108429,
+        0.41788506507873535,
+        0.22696587443351746
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Rug",
+      "rgb": [
+        0.33716362714767456,
+        0.1384316086769104,
+        0.0802198201417923
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Sand",
+      "rgb": [
+        0.7758222222328186,
+        0.6172065734863281,
+        0.31398871541023254
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_SandLight",
+      "rgb": [
+        0.8468732237815857,
+        0.68668532371521,
+        0.38642942905426025
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Soil",
+      "rgb": [
+        0.30946892499923706,
+        0.22696587443351746,
+        0.10224173218011856
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Stone",
+      "rgb": [
+        0.2345505803823471,
+        0.24228112399578094,
+        0.2158605009317398
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_StoneDark",
+      "rgb": [
+        0.12213877588510513,
+        0.15896083414554596,
+        0.14702726900577545
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_StoneLight",
+      "rgb": [
+        0.3762621283531189,
+        0.366252601146698,
+        0.2961382567882538
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_StoneWarm",
+      "rgb": [
+        0.31854677200317383,
+        0.2788942754268646,
+        0.19120168685913086
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Trunk",
+      "rgb": [
+        0.18782077729701996,
+        0.08437620848417282,
+        0.03433980792760849
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_Wood",
+      "rgb": [
+        0.366252601146698,
+        0.17464740574359894,
+        0.05951123684644699
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_WoodDark",
+      "rgb": [
+        0.13013647496700287,
+        0.061246052384376526,
+        0.028426039963960648
+      ],
+      "colorSpace": "linear"
+    },
+    {
+      "sourceName": "ISLA_WoodLight",
+      "rgb": [
+        0.5028864741325378,
+        0.2788942754268646,
+        0.10702310502529144
+      ],
+      "colorSpace": "linear"
+    }
+  ]
+}
