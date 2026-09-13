@@ -1,0 +1,21 @@
+{
+  "sourceFinal": true,
+  "mapId": "hf-puerto-del-faro-v1",
+  "expectedScene": "HF_MAP_05_pueblo",
+  "expectedWaterCount": 2,
+  "gpuWaterPaths": ["Water_Ocean_Pueblo"],
+  "sourceSha256": "aa4bb192353bfbebe5f3d48e4dd6950245b854f397b95a7fb7d7ac85a2a834a4",
+  "fbx": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/HF_MAP_05_pueblo_UNITY.fbx",
+  "glb": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/HF_MAP_05_pueblo.glb",
+  "audit": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/scene-audit.json",
+  "report": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/05-pueblo/HF_MAP_05_pueblo_report.json",
+  "humanCount": 5,
+  "mosquitoCount": 16,
+  "humanPrefix": "Spawn_Human_",
+  "mosquitoPrefix": "Spawn_Mosquito_",
+  "collisionLayer": "Default",
+  "firstSurfaceId": 1000000,
+  "playBoundsMin": [-55, -2, -42.5],
+  "playBoundsMax": [55, 20, 42.5],
+  "kinds": {}
+}

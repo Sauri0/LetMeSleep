@@ -1,0 +1,392 @@
+{
+  "status": "PASS_EXPLICIT_GPU_RECIPE_REPRODUCTION_AND_CURRENT_CENTRAL_CSHARP_CONTRACT",
+  "mapId": "hf-puerto-del-faro-v1",
+  "recipePath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\UnityRecipeGpu\\hf-puerto-del-faro-v1.recipe.json",
+  "recipeSha256": "fd3ae29ef31b71bfdf66d5cb4f86b9664a1b5a06553a6ee9268b950cbe01a2b5",
+  "validationPath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\UnityRecipeGpu\\hf-puerto-del-faro-v1.validation.json",
+  "validationSha256": "1b564d0e860bf4d06657913c2d5380a889463ff3f3afd748bff62a7f0c2c8c80",
+  "sourceHashes": {
+    "fbx": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_UNITY.fbx",
+      "sha256": "aa4bb192353bfbebe5f3d48e4dd6950245b854f397b95a7fb7d7ac85a2a834a4"
+    },
+    "glb": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo.glb",
+      "sha256": "3f3cf82115234df39975365a9f26624348fcfd583a9c8e831b0067779cc10086"
+    },
+    "audit": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\scene-audit.json",
+      "sha256": "50506cfbfd1102f12a736eae886776907fb98f2d2e72082a315d7f1dc308925c"
+    },
+    "report": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo_report.json",
+      "sha256": "58043227e2fce6bc77fb5c2e102b2815079b061f58d2338f25f89a03906a990e"
+    }
+  },
+  "centralValidationCode": [
+    {
+      "path": "N:\\LetMeSleep\\Repository\\Higgsfield\\Integration\\prepare_map_recipe.py",
+      "sha256": "0dab9f5d764dfc01aee6d87f7ae0f2f8ca58e84d7a68a1b62b3310f6a84b2c43"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Repository\\Higgsfield\\Integration\\Verify-RecipeOffline.ps1",
+      "sha256": "75fc0d622d4352e26e3aead1f19f26b0ed11ab982a403c684d1e1f19facfae76"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Repository\\Higgsfield\\Integration\\RecipeFileChecks.cs",
+      "sha256": "46cf13c13f3f6edea0a5344f0656f735eb572c0392f2bfba3df9f9f64a8b793a"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Repository\\unity\\Assets\\LetMeSleep\\Content\\Editor\\Environment\\Higgsfield\\HiggsfieldImportContract.cs",
+      "sha256": "8880920f7b647ac9d4c6cd1d5af042ef6258f4fd4604f4181ea82d7706fd066d"
+    }
+  ],
+  "counts": {
+    "objects": 811,
+    "meshes": 730,
+    "glbUniqueMeshes": 242,
+    "triangles": 175746,
+    "materials": 36,
+    "humanSpawns": 5,
+    "mosquitoSpawns": 16
+  },
+  "classification": {
+    "decoration": 270,
+    "solid": 458,
+    "foam": 1,
+    "water": 1
+  },
+  "markerIdentityChecks": [
+    {
+      "physicalName": "Spawn_Human_01_Pueblo",
+      "semanticName": "Spawn_Human_01",
+      "role": "Human",
+      "blenderWorldXYZ": [
+        -3.0,
+        0.0,
+        3.331102132797241
+      ]
+    },
+    {
+      "physicalName": "Spawn_Human_02_Pueblo",
+      "semanticName": "Spawn_Human_02",
+      "role": "Human",
+      "blenderWorldXYZ": [
+        4.0,
+        3.0,
+        3.332998037338257
+      ]
+    },
+    {
+      "physicalName": "Spawn_Human_03_Pueblo",
+      "semanticName": "Spawn_Human_03",
+      "role": "Human",
+      "blenderWorldXYZ": [
+        -13.0,
+        -7.0,
+        3.2449986934661865
+      ]
+    },
+    {
+      "physicalName": "Spawn_Human_04_Pueblo",
+      "semanticName": "Spawn_Human_04",
+      "role": "Human",
+      "blenderWorldXYZ": [
+        9.0,
+        -7.0,
+        3.21000075340271
+      ]
+    },
+    {
+      "physicalName": "Spawn_Human_05_Pueblo",
+      "semanticName": "Spawn_Human_05",
+      "role": "Human",
+      "blenderWorldXYZ": [
+        29.0,
+        21.0,
+        7.245000839233398
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_01_Pueblo",
+      "semanticName": "Spawn_Mosquito_01",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        -5.0,
+        -5.0,
+        7.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_02_Pueblo",
+      "semanticName": "Spawn_Mosquito_02",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        4.0,
+        -4.0,
+        8.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_03_Pueblo",
+      "semanticName": "Spawn_Mosquito_03",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        -20.0,
+        1.0,
+        10.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_04_Pueblo",
+      "semanticName": "Spawn_Mosquito_04",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        -5.0,
+        15.0,
+        12.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_05_Pueblo",
+      "semanticName": "Spawn_Mosquito_05",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        10.0,
+        18.0,
+        11.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_06_Pueblo",
+      "semanticName": "Spawn_Mosquito_06",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        22.0,
+        20.0,
+        13.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_07_Pueblo",
+      "semanticName": "Spawn_Mosquito_07",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        32.0,
+        18.0,
+        14.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_08_Pueblo",
+      "semanticName": "Spawn_Mosquito_08",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        35.0,
+        28.0,
+        17.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_09_Pueblo",
+      "semanticName": "Spawn_Mosquito_09",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        21.0,
+        -10.0,
+        8.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_10_Pueblo",
+      "semanticName": "Spawn_Mosquito_10",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        -17.0,
+        -17.0,
+        6.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_11_Pueblo",
+      "semanticName": "Spawn_Mosquito_11",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        -7.0,
+        -25.0,
+        5.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_12_Pueblo",
+      "semanticName": "Spawn_Mosquito_12",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        21.0,
+        -26.0,
+        5.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_13_Pueblo",
+      "semanticName": "Spawn_Mosquito_13",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        -30.0,
+        -20.0,
+        9.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_14_Pueblo",
+      "semanticName": "Spawn_Mosquito_14",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        -30.0,
+        25.0,
+        15.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_15_Pueblo",
+      "semanticName": "Spawn_Mosquito_15",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        9.0,
+        29.0,
+        12.0
+      ]
+    },
+    {
+      "physicalName": "Spawn_Mosquito_16_Pueblo",
+      "semanticName": "Spawn_Mosquito_16",
+      "role": "Mosquito",
+      "blenderWorldXYZ": [
+        38.0,
+        -10.0,
+        11.0
+      ]
+    }
+  ],
+  "playBoundsMin": [
+    -55,
+    -2,
+    -42.5
+  ],
+  "playBoundsMax": [
+    55,
+    20,
+    42.5
+  ],
+  "water": [
+    {
+      "recipe": {
+        "path": "Foam_Shoreline_SparsePatches",
+        "kind": "foam",
+        "descendants": false,
+        "canPerch": false,
+        "waveAmplitude": 0.025,
+        "waveLength": 4,
+        "waveSpeed": 0.7853981633974483
+      },
+      "authoredVertices": 160,
+      "glbPositionEntries": 160,
+      "morphNames": [],
+      "sourceProperties": {
+        "collision_role": "non_solid",
+        "map": "HF_MAP_05_pueblo",
+        "semantic_name": "Foam_Shoreline_SparsePatches"
+      }
+    },
+    {
+      "recipe": {
+        "path": "Water_Ocean_Pueblo",
+        "kind": "water",
+        "descendants": false,
+        "canPerch": false,
+        "waveAmplitude": 0.09,
+        "waveLength": 4,
+        "waveSpeed": 0.7853981633974483,
+        "waterAnimation": "gpu"
+      },
+      "authoredVertices": 3721,
+      "glbPositionEntries": 21597,
+      "morphNames": [
+        "Wave_A",
+        "Wave_B"
+      ],
+      "sourceProperties": {
+        "collision_role": "non_solid",
+        "map": "HF_MAP_05_pueblo",
+        "semantic_name": "Water_Ocean",
+        "wave_amplitude_m": 0.09,
+        "wave_period_seconds": 8.0,
+        "wave_notes": "Rest sea level 0m. Wave_A sin(.14x+.085y)*.09m; Wave_B cos(.10x-.13y)*.07m. 8-second blend loop. Static exports omit action sampling."
+      }
+    }
+  ],
+  "emissiveMaterials": [
+    {
+      "sourceName": "PDF05_Amber",
+      "rgb": [
+        1.0,
+        0.46000000834465027,
+        0.08500000089406967
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        1,
+        0.46000000834465027,
+        0.08500000089406967
+      ],
+      "emissionStrength": 2.0999999046325684,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    }
+  ],
+  "materialAlpha": "All 36 materials OPAQUE, opacity1",
+  "checks": [
+    "Central generator reproduced saved recipe and validation identically",
+    "Actual current central C# Validate and Resolve passed all730 paths",
+    "All physical/semantic spawn aliases agree audit/GLB/report with expected role and map",
+    "Top-level report object/material/unique mesh/triangle/collision counts explicitly crosschecked",
+    "GLB instanced triangle count equals audit and report",
+    "Bounds marker world positions agree explicit report bounds",
+    "No source exclusions and no GLB animation clips",
+    "Source hashes revalidated after checks"
+  ],
+  "nativeApplicationsStarted": false,
+  "reservedSourceFilesEdited": false,
+  "previewReview": "Coordinator reported exterior/interior previews acceptable; this task did not perform native visual approval",
+  "pending": [
+    "Native GPU water component/shader/material assignment, displacement, bounds and culling",
+    "Foam continuity, glass where applicable, normals, ground/capsule/routes/stairs",
+    "Native lighting, performance and map registration"
+  ],
+  "descriptor": "Higgsfield\\Integration\\puerto.final-input.json",
+  "previousCandidate": {
+    "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\UnityRecipe\\hf-puerto-del-faro-v1.recipe.json",
+    "sha256": "3adc548ead01072c32043f739f929461ea0e9b4a1e258c4eaffd21aadd05a137",
+    "preserved": true
+  },
+  "recipeChanges": [
+    {
+      "path": "Water_Ocean_Pueblo",
+      "field": "waterAnimation",
+      "before": "cpu",
+      "after": "gpu"
+    },
+    {
+      "path": "Water_Ocean_Pueblo",
+      "field": "waveAmplitude",
+      "before": 0.025,
+      "after": 0.09
+    }
+  ],
+  "gpuWaterPaths": [
+    "Water_Ocean_Pueblo"
+  ],
+  "contractCheck": "Actual current central C# Validate/Resolve passed all 730 paths; generated recipe and validation reproduced identically",
+  "waveScope": "Authored wave_amplitude_m=.09 and wave_period_seconds=8 now recognized. .09m is a conservative runtime envelope; wavelength remains generic4m. Not exact parity with .09/.07 source wave functions or signed morph weights."
+}

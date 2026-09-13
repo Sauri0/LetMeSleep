@@ -1,0 +1,135 @@
+{
+  "counts": {
+    "objects": 213,
+    "meshes": 160,
+    "materials": 23,
+    "humanSpawns": 5,
+    "mosquitoSpawns": 16
+  },
+  "classification": {
+    "foam": 1,
+    "water": 1,
+    "decoration": 62,
+    "solid": 96
+  },
+  "glass": {
+    "sourceName": "YATE_Glass",
+    "rgb": [
+      0.09000000357627869,
+      0.27000001072883606,
+      0.3400000035762787
+    ],
+    "colorSpace": "linear",
+    "emissionRgb": [
+      0,
+      0,
+      0
+    ],
+    "emissionStrength": 0,
+    "alphaMode": "BLEND",
+    "opacity": 0.30000001192092896,
+    "doubleSided": true
+  },
+  "water": {
+    "path": "Water_Ocean",
+    "kind": "water",
+    "descendants": false,
+    "canPerch": false,
+    "waveAmplitude": 0.14,
+    "waveLength": 13.25200877883002,
+    "waveSpeed": 0.6283185307179586,
+    "waterAnimation": "gpu"
+  },
+  "foam": {
+    "path": "Foam_Ocean_SparseStreaks",
+    "kind": "foam",
+    "descendants": false,
+    "canPerch": false,
+    "waveAmplitude": 0.025,
+    "waveLength": 4,
+    "waveSpeed": 0.7853981633974483
+  },
+  "playBoundsMin": [
+    -4.6,
+    0.7,
+    -15.2
+  ],
+  "playBoundsMax": [
+    4.6,
+    10.4,
+    15.1
+  ],
+  "status": "PASS_EXPLICIT_GPU_RECIPE_REPRODUCTION_AND_CURRENT_CENTRAL_CSHARP_CONTRACT",
+  "mapId": "hf-yate-a-la-deriva-v2",
+  "descriptor": "Higgsfield\\Integration\\yate.gpu-input.json",
+  "recipePath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\UnityRecipeV2\\hf-yate-a-la-deriva-v2.recipe.json",
+  "recipeSha256": "6b47362e7b862bb99c6532f8f3cbf1412c6b15e1344e3d7b3af6c7f55682da81",
+  "validationPath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\UnityRecipeV2\\hf-yate-a-la-deriva-v2.validation.json",
+  "validationSha256": "4c1540b9d23bd055d967544a06f69ed25816dc69c60c8a1c087b09abc1a47bce",
+  "sourceHashes": {
+    "fbx": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\HF_MAP_04_yate_UNITY.fbx",
+      "sha256": "e3eb92985e2300e3788607d8a39520de00d711ed091db9d42760ae0e3bc3ae14"
+    },
+    "glb": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\HF_MAP_04_yate.glb",
+      "sha256": "ab83efca5c93342ef44e125c7e0deb7d2e5a227ef7de61b2b0178fcd136260ba"
+    },
+    "audit": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\scene-audit.json",
+      "sha256": "e5e947dcede0706762ac4283134159b52ee9420e30cf1039e83353ed63900b80"
+    },
+    "report": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\HF_MAP_04_yate_report.json",
+      "sha256": "0b56d6f2520909faafd0f59e4e2c1e13298abd4317590e5fc2dadf4d25794a84"
+    }
+  },
+  "centralValidationCode": [
+    {
+      "path": "N:\\LetMeSleep\\Repository\\Higgsfield\\Integration\\prepare_map_recipe.py",
+      "sha256": "0dab9f5d764dfc01aee6d87f7ae0f2f8ca58e84d7a68a1b62b3310f6a84b2c43"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Repository\\Higgsfield\\Integration\\Verify-RecipeOffline.ps1",
+      "sha256": "75fc0d622d4352e26e3aead1f19f26b0ed11ab982a403c684d1e1f19facfae76"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Repository\\Higgsfield\\Integration\\RecipeFileChecks.cs",
+      "sha256": "46cf13c13f3f6edea0a5344f0656f735eb572c0392f2bfba3df9f9f64a8b793a"
+    },
+    {
+      "path": "N:\\LetMeSleep\\Repository\\unity\\Assets\\LetMeSleep\\Content\\Editor\\Environment\\Higgsfield\\HiggsfieldImportContract.cs",
+      "sha256": "8880920f7b647ac9d4c6cd1d5af042ef6258f4fd4604f4181ea82d7706fd066d"
+    }
+  ],
+  "previousCandidate": {
+    "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\UnityRecipe\\hf-yate-a-la-deriva-v1.recipe.json",
+    "sha256": "28c2d86e4d798f7f426be20c5a2a934c658b0c542a6ac54cebbbde24bcf4a05c",
+    "preserved": true
+  },
+  "recipeChanges": [
+    {
+      "field": "mapId",
+      "before": "hf-yate-a-la-deriva-v1",
+      "after": "hf-yate-a-la-deriva-v2"
+    },
+    {
+      "path": "Water_Ocean",
+      "field": "waterAnimation",
+      "before": "cpu",
+      "after": "gpu"
+    }
+  ],
+  "gpuWaterPaths": [
+    "Water_Ocean"
+  ],
+  "contractCheck": "Actual current central C# Validate/Resolve passed all 160 paths; generated recipe and validation reproduced identically",
+  "nativeApplicationsStarted": false,
+  "reservedSourceFilesEdited": false,
+  "pending": [
+    "Native GPU water component/shader/material assignment, displacement, bounds and culling",
+    "Foam continuity, glass where applicable, normals, ground/capsule/routes/stairs",
+    "Native lighting, performance and map registration"
+  ],
+  "waveScope": "Yate amplitude envelope .14m,10s cycle,13.25200877883m wavelength retained; runtime directions/time functions approximate independent Blender drivers."
+}

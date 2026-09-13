@@ -1,0 +1,21 @@
+{
+  "sourceFinal": true,
+  "mapId": "hf-yate-a-la-deriva-v2",
+  "expectedScene": "HF_MAP_04_yate",
+  "expectedWaterCount": 2,
+  "gpuWaterPaths": ["Water_Ocean"],
+  "sourceSha256": "e3eb92985e2300e3788607d8a39520de00d711ed091db9d42760ae0e3bc3ae14",
+  "fbx": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/HF_MAP_04_yate_UNITY.fbx",
+  "glb": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/HF_MAP_04_yate.glb",
+  "audit": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/scene-audit.json",
+  "report": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/HF_MAP_04_yate_report.json",
+  "humanCount": 5,
+  "mosquitoCount": 16,
+  "humanPrefix": "Spawn_Human_",
+  "mosquitoPrefix": "Spawn_Mosquito_",
+  "collisionLayer": "Default",
+  "firstSurfaceId": 1000000,
+  "playBoundsMin": [-4.6, 0.7, -15.2],
+  "playBoundsMax": [4.6, 10.4, 15.1],
+  "kinds": {}
+}
