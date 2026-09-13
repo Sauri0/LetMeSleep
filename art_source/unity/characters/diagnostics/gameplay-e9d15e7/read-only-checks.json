@@ -1,0 +1,36 @@
+{
+  "source_data_checks": [
+    {
+      "sha256": "9e85748b5ec38f57791bb7377dbe43bc6328792986837c7fdb260371f6a8d20b",
+      "shape_count": 8,
+      "moving_counts": [
+        130
+      ],
+      "max_target_error_m": 5.718845233041532e-08,
+      "non_head_vertices": 0,
+      "all_coordinates_match_authoring": true
+    },
+    {
+      "sha256": "3412a9caaec030c3fe89d646fd063c8431ac3db38a9b76a8c49d8bc0d98470ff",
+      "shape_count": 8,
+      "moving_counts": [
+        130
+      ],
+      "max_target_error_m": 5.718845233041532e-08,
+      "non_head_vertices": 0,
+      "all_coordinates_match_authoring": true
+    }
+  ],
+  "external_script_compile": {
+    "file": "HumanFaceImportDifferential.cs",
+    "sha256": "4739e7af43ef4c822335201cca64383494e0b760877e1606289c9425d9f806c2",
+    "framework": "netstandard2.1",
+    "language": "C#9",
+    "unity_references": "6000.3.24f1",
+    "warnings": 0,
+    "errors": 0,
+    "execution_scope": "dotnet build only, no Unity invocation"
+  },
+  "native_runs_this_diagnosis": 0,
+  "scope": "Initial read-only diagnostic before the later Director native export slot. See human-blink-winding1 manifest for subsequent runs."
+}

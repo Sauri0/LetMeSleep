@@ -7,6 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="NormalSupportChecks.cs" />
-    <Compile Include="../../../../../Unity/Assets/LetMeSleep/Content/Editor/Characters/EyelidMorphSupport.cs" Link="EyelidMorphSupport.cs" />
+    <Compile Include="../../../../../unity/Assets/LetMeSleep/Content/Editor/Characters/EyelidMorphSupport.cs" Link="EyelidMorphSupport.cs" />
   </ItemGroup>
 </Project>

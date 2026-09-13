@@ -1,0 +1,47 @@
+{
+  "utc": "2026-09-13T01:30:01.8811097Z",
+  "unity": "6000.3.24f1",
+  "sourceSha": "44738cda7b3cba4baa7b4e0b68e40acc1eda30a0bed701a153ebd0348aa3678c",
+  "mesh": "HumanHead",
+  "vertexCount": 3485,
+  "scope": "Imported normal deltas outside authored eye ROI; paired left+right samples, no renderer/visual acceptance.",
+  "elapsedSeconds": 0.0023633,
+  "rows": [
+    {
+      "closure": 0.25,
+      "outsideEyeRecords": 0,
+      "overOneDegree": 0,
+      "maxOutsideAngle": 0.0,
+      "maxChinAngle": 0.0,
+      "maxCheekAngle": 0.0,
+      "vertices": []
+    },
+    {
+      "closure": 0.5,
+      "outsideEyeRecords": 0,
+      "overOneDegree": 0,
+      "maxOutsideAngle": 0.0,
+      "maxChinAngle": 0.0,
+      "maxCheekAngle": 0.0,
+      "vertices": []
+    },
+    {
+      "closure": 0.75,
+      "outsideEyeRecords": 0,
+      "overOneDegree": 0,
+      "maxOutsideAngle": 0.0,
+      "maxChinAngle": 0.0,
+      "maxCheekAngle": 0.0,
+      "vertices": []
+    },
+    {
+      "closure": 1.0,
+      "outsideEyeRecords": 0,
+      "overOneDegree": 0,
+      "maxOutsideAngle": 0.0,
+      "maxChinAngle": 0.0,
+      "maxCheekAngle": 0.0,
+      "vertices": []
+    }
+  ]
+}
