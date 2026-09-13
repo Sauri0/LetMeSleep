@@ -49,11 +49,11 @@ MonoBehaviour:
       Skybox: {fileID: 2100000, guid: fcb5d519da824e244b45e54ea32149d6, type: 2}
       SunWorldRotation: {x: 0.38791162, y: -0.2747084, z: 0.12230806, w: 0.87126374}
       SunColor: {r: 0.5, g: 0.65, b: 1, a: 1}
-      SunUnityIntensity: 0.8
+      SunUnityIntensity: 0.1
       SunShadows: 2
-      AmbientSky: {r: 0.16, g: 0.23, b: 0.38, a: 1}
-      AmbientEquator: {r: 0.12, g: 0.16, b: 0.23, a: 1}
-      AmbientGround: {r: 0.06, g: 0.08, b: 0.13, a: 1}
+      AmbientSky: {r: 0.05, g: 0.08, b: 0.14, a: 1}
+      AmbientEquator: {r: 0.03, g: 0.045, b: 0.075, a: 1}
+      AmbientGround: {r: 0.015, g: 0.02, b: 0.035, a: 1}
       AmbientIntensity: 1
       ReflectionIntensity: 1
       FogEnabled: 0
@@ -287,11 +287,11 @@ MonoBehaviour:
       Skybox: {fileID: 2100000, guid: a1b0563c10797514f85dba6de16a42fc, type: 2}
       SunWorldRotation: {x: 0.38791162, y: -0.2747084, z: 0.12230806, w: 0.87126374}
       SunColor: {r: 0.55, g: 0.7, b: 1, a: 1}
-      SunUnityIntensity: 0.7
+      SunUnityIntensity: 0.08
       SunShadows: 2
-      AmbientSky: {r: 0.13, g: 0.2, b: 0.32, a: 1}
-      AmbientEquator: {r: 0.1, g: 0.14, b: 0.21, a: 1}
-      AmbientGround: {r: 0.05, g: 0.07, b: 0.1, a: 1}
+      AmbientSky: {r: 0.05, g: 0.08, b: 0.14, a: 1}
+      AmbientEquator: {r: 0.03, g: 0.045, b: 0.075, a: 1}
+      AmbientGround: {r: 0.015, g: 0.02, b: 0.035, a: 1}
       AmbientIntensity: 1
       ReflectionIntensity: 1
       FogEnabled: 0

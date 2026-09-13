@@ -209,7 +209,9 @@ namespace LetMeSleep.Editor
         }
         static JObject StripCatalog(JObject root)
         {
-            var entries = root["entries"] as JArray; Need(entries != null && entries.Count == 5, "Unexpected catalog serialization.");
+            var body = root["MonoBehaviour"] as JObject ?? root;
+            var entries = body["entries"] as JArray; Need(entries != null && entries.Count == 5,
+                "Unexpected catalog serialization: " + string.Join(",", root.Properties().Select(p => p.Name)));
             foreach (var entry in entries.OfType<JObject>().Where(e => AllowedIds.Contains((string)e["MapId"])))
             {
                 var light = (JObject)entry["Lighting"];
@@ -219,7 +221,9 @@ namespace LetMeSleep.Editor
         }
         static JObject StripMaterial(JObject root)
         {
-            var saved = root["m_SavedProperties"] as JObject; Need(saved != null, "Unexpected material serialization.");
+            var body = root["Material"] as JObject ?? root;
+            var saved = body["m_SavedProperties"] as JObject; Need(saved != null,
+                "Unexpected material serialization: " + string.Join(",", root.Properties().Select(p => p.Name)));
             foreach (string collection in new[] { "m_Floats", "m_Colors" })
             {
                 var array = saved[collection] as JArray; Need(array != null, "Missing material property array.");
