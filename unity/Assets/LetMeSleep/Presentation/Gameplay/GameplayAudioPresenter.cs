@@ -13,7 +13,9 @@ namespace LetMeSleep.Presentation.Gameplay
     {
         private sealed class ActorAudioState
         {
-            internal float MotionPhase;
+            internal Vector3 Position;
+            internal double HostTime;
+            internal readonly FootstepCadence Steps = new FootstepCadence();
             internal bool Grounded;
             internal bool Attached;
             internal AudioCue WingCue;
@@ -93,6 +95,7 @@ namespace LetMeSleep.Presentation.Gameplay
         public void Bind(GameplayRuntime runtime, AlfaAudioDirector director)
         {
             Unsubscribe();
+            StopWingLoops();
             gameplay = runtime;
             audioDirector = director;
             Subscribe();
@@ -102,12 +105,17 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if (snapshot == null || audioDirector == null)
                 return;
+            if (snapshot.SimulationPhase != GameplayModel.SimulationPhase.Running)
+            {
+                StopWingLoops();
+                return;
+            }
             if (snapshot.SessionEpoch != currentEpoch || snapshot.RoundId != currentRound)
             {
                 currentEpoch = snapshot.SessionEpoch;
                 currentRound = snapshot.RoundId;
                 playedEvents.Clear();
-                actorStates.Clear();
+                StopWingLoops();
                 toolStates.Clear();
                 audioZones.Clear();
                 audioDirector.EnterRound();
@@ -141,7 +149,6 @@ namespace LetMeSleep.Presentation.Gameplay
                     if (actor.BiteAttachment.HasValue &&
                         actor.BiteAttachment.Value.VictimId == gameplay.LocalActorId)
                         localActivity = true;
-                    previous.Follow = proxy.transform;
                     UpdateWingLoop(actor, proxy.transform, previous, catalog, emitters);
                     bool attached = actor.SurfaceAttachment.HasValue || actor.BiteAttachment.HasValue;
                     if (!first && attached != previous.Attached)
@@ -156,12 +163,20 @@ namespace LetMeSleep.Presentation.Gameplay
                         emitters.Play(catalog.HumanJump, proxy.transform.position);
                     if (!first && actor.Grounded && !previous.Grounded)
                         emitters.Play(SelectLandCue(catalog, ground), proxy.transform.position);
-                    if (!first && actor.Grounded && actor.LifeState == GameplayModel.LifeState.Active &&
-                        actor.Velocity.LengthSquared > 0.04f && CrossedFootstep(previous.MotionPhase, actor.MotionPhase))
+                    Vector3 position = actor.Position.ToUnity();
+                    Vector3 displacement = position - previous.Position;
+                    displacement.y = 0f;
+                    float planarSpeed = Mathf.Sqrt(actor.Velocity.X * actor.Velocity.X +
+                        actor.Velocity.Z * actor.Velocity.Z);
+                    bool walking = !first && previous.Grounded && actor.Grounded &&
+                        actor.LifeState == GameplayModel.LifeState.Active;
+                    if (previous.Steps.Advance(displacement.magnitude, planarSpeed,
+                        snapshot.HostTime - previous.HostTime, Time.unscaledTime, walking))
                         emitters.Play(SelectFootstepCue(catalog, ground), proxy.transform.position);
                 }
 
-                previous.MotionPhase = actor.MotionPhase;
+                previous.Position = actor.Position.ToUnity();
+                previous.HostTime = snapshot.HostTime;
                 previous.Grounded = actor.Grounded;
 
                 if (actor.ActorId == gameplay.LocalActorId)
@@ -234,6 +249,7 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void HandleRoundFinished(GameplayModel.RoundEndReason reason, PlayerRole winner)
         {
+            StopWingLoops();
             if (audioDirector == null)
                 return;
             if (winner == PlayerRole.Human)
@@ -377,7 +393,16 @@ namespace LetMeSleep.Presentation.Gameplay
             GameplayModel.ActorSnapshot actor, Transform follow, ActorAudioState state,
             AlfaAudioCatalog catalog, AudioEmitterPool emitters)
         {
-            AudioCue desired = SelectWingCue(actor.LifeState, catalog);
+            AudioCue desired = !actor.SurfaceAttachment.HasValue && !actor.BiteAttachment.HasValue &&
+                (actor.LifeState == GameplayModel.LifeState.Flying ||
+                 actor.LifeState == GameplayModel.LifeState.ApproachingSurface)
+                ? catalog.MosquitoWingLoop : null;
+            if (state.Follow != follow)
+            {
+                if (state.WingCue != null) emitters.Stop(state.WingCue, state.Follow);
+                state.WingCue = null;
+                state.Follow = follow;
+            }
             if (desired == state.WingCue)
             {
                 if (desired != null)
@@ -390,35 +415,6 @@ namespace LetMeSleep.Presentation.Gameplay
             state.WingCue = desired;
             if (desired != null)
                 emitters.Play(desired, follow.position, follow);
-        }
-
-        private static AudioCue SelectWingCue(GameplayModel.LifeState state, AlfaAudioCatalog catalog)
-        {
-            if (!ShouldBuzz(state))
-                return null;
-            if (state == GameplayModel.LifeState.PreparingBite || state == GameplayModel.LifeState.Biting)
-                return catalog.MosquitoWingBiteLoop;
-            if (state == GameplayModel.LifeState.ApproachingSurface || state == GameplayModel.LifeState.Surface)
-                return catalog.MosquitoWingPerchLoop;
-            return catalog.MosquitoWingLoop;
-        }
-
-        private static bool CrossedFootstep(float previous, float current)
-        {
-            previous = Mathf.Repeat(previous, 1f);
-            current = Mathf.Repeat(current, 1f);
-            float delta = Mathf.Repeat(current - previous, 1f);
-            if (delta <= 0.0001f || delta > 0.60f)
-                return false;
-            return (previous < 0.5f && current >= 0.5f) || current < previous;
-        }
-
-        private static bool ShouldBuzz(GameplayModel.LifeState state)
-        {
-            return state != GameplayModel.LifeState.Falling &&
-                state != GameplayModel.LifeState.Stunned &&
-                state != GameplayModel.LifeState.Fainted &&
-                state != GameplayModel.LifeState.Recovering;
         }
 
         private enum GroundMaterial
