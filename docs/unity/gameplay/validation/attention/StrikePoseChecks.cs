@@ -106,11 +106,16 @@ public static class StrikePoseChecks
         }
         public void Target(int side, Vector3 target)
         {
-            var surface = actor.BodySurfaces[side < 0 ? 105u : 106u];
-            var collider = surface.Collider;
-            float endpoint = Mathf.Max(0, collider.height * .5f - collider.radius);
-            surface.transform.rotation = Quaternion.identity;
-            surface.transform.position = target - Vector3.up * endpoint;
+            // Synthetic solver unit: a constant contact trajectory replaces the old
+            // mutated forearm endpoint. Legal planning is covered by AuthorityStrikeProbe.
+            var s = actor.State;
+            var strike = new StrikeState(1, GameplayTools.Hands, side, StrikePhase.Active, 0,
+                target.ToFloat(), target.ToFloat(), -Float3.Forward, .2f / .6f);
+            var state = new ActorSnapshot(s.ActorId, s.Role, s.LifeState, s.StateRevision,
+                s.Position, s.Velocity, s.BodyRotation, s.ViewForward, s.ViewYawRadians,
+                s.ViewPitchRadians, s.ViewRevision, s.PoseRevision, s.Grounded, s.CrouchFraction,
+                s.MotionPhase, s.SurfaceAttachment, s.BiteAttachment, strike, s.RecoveryEndTick, s.EquippedToolId);
+            actor.Apply(state); Binding.ApplySnapshot(state, 1);
         }
         public void Solve(int side, Vector3 target)
         {

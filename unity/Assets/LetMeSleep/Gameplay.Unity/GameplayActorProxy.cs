@@ -70,12 +70,19 @@ namespace LetMeSleep.Gameplay.Unity
                 var wrist = shoulder + new Vector3(side * .025f, -.49f, .055f - stride * .13f);
                 if (state.StrikeState.Phase != StrikePhase.None && state.StrikeState.Hand == side)
                 {
-                    var target = transform.InverseTransformPoint(state.StrikeState.Target.ToUnity());
-                    if (GameplayTools.IsFlyswatter(state.StrikeState.ToolId))
-                        target -= transform.InverseTransformDirection((state.StrikeState.Target - state.StrikeState.Origin).Normalized.ToUnity()) * GameplayTools.FlyswatterGripToImpact;
-                    float p = state.StrikeState.Progress;
-                    float extension = p < .42f ? Mathf.SmoothStep(0, 1, p / .42f) : 1 - Mathf.SmoothStep(0, 1, (p - .42f) / .58f);
-                    wrist = Vector3.Lerp(wrist, target, extension);
+                    var strike = state.StrikeState;
+                    var offset = GameplayTools.IsFlyswatter(strike.ToolId)
+                        ? (strike.Target - strike.Origin).Normalized.ToUnity() * GameplayTools.FlyswatterGripToImpact
+                        : Vector3.zero;
+                    var restContact = transform.TransformPoint(wrist) + offset;
+                    var contact = StrikeVisualTrajectory.Contact(strike, restContact.ToFloat()).ToUnity();
+                    if (offset.sqrMagnitude > 0)
+                    {
+                        var direction = contact - transform.TransformPoint(shoulder);
+                        if (direction.sqrMagnitude > .000001f)
+                            offset = Vector3.Slerp(offset, direction.normalized * offset.magnitude, StrikeVisualTrajectory.PoseWeight(strike));
+                    }
+                    wrist = transform.InverseTransformPoint(contact - offset);
                 }
                 wrist = shoulder + Vector3.ClampMagnitude(wrist - shoulder, .55f);
                 var elbow = BendJoint(shoulder, wrist, .28f, .28f, new Vector3(side, 0, -.3f));

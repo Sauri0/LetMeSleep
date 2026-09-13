@@ -44,6 +44,7 @@ namespace LetMeSleep.Presentation.Gameplay
         }
         private ArmChain leftArm, rightArm;
         private GameObject flyswatter;
+        private ToolView strikeTool;
         private readonly float[] motionDurations = new float[32];
 
         public uint ActorId => proxy != null ? proxy.ActorId : 0;
@@ -52,6 +53,7 @@ namespace LetMeSleep.Presentation.Gameplay
         public void BindFlyswatter(GameObject instance)
         {
             flyswatter = instance;
+            strikeTool = instance != null ? instance.GetComponent<ToolView>() : null;
             if (flyswatter != null)
                 flyswatter.SetActive(false);
         }
@@ -485,9 +487,36 @@ namespace LetMeSleep.Presentation.Gameplay
             var capsule = forearm.Collider as CapsuleCollider;
             if (capsule == null)
                 return;
-            float endpoint = Mathf.Max(0f, capsule.height * 0.5f - capsule.radius);
-            Vector3 target = forearm.transform.TransformPoint(Vector3.up * endpoint);
             Vector3 shoulder = arm.Upper.position, elbow = arm.Lower.position, wrist = arm.Hand.position;
+            // The collision center follows Authority's timeline. The anatomical proxy
+            // has different lengths and shoulder height; do not feed its clamped wrist
+            // back into the real rig as a second, unrelated contact trajectory.
+            var strike = current.StrikeState;
+            bool hasTool = GameplayModel.GameplayTools.IsFlyswatter(strike.ToolId) &&
+                strikeTool && strikeTool.Impact && strikeTool.Grip;
+            view.RefreshAnchors();
+            Vector3 restContact = hasTool ? strikeTool.Impact.position : wrist;
+            Vector3 contact = GameplayModel.StrikeVisualTrajectory.Contact(strike, restContact.ToFloat()).ToUnity();
+            Quaternion handRotation = arm.Hand.rotation;
+            Vector3 target = contact;
+            if (hasTool)
+            {
+                // Rotate the hand and mounted grip together; never detach the tool or
+                // translate individual bones. Measure the full real Hand -> Impact
+                // offset, including the authored hand/socket offset, not only .365 m.
+                Vector3 offset = restContact - wrist;
+                Vector3 direction = contact - shoulder;
+                if (direction.sqrMagnitude < .000001f) direction = (strike.Target - strike.Origin).ToUnity();
+                if (offset.sqrMagnitude > .000001f && direction.sqrMagnitude > .000001f)
+                {
+                    Quaternion aligned = Quaternion.FromToRotation(offset, direction) * handRotation;
+                    Quaternion desired = Quaternion.Slerp(handRotation, aligned,
+                        GameplayModel.StrikeVisualTrajectory.PoseWeight(strike));
+                    Vector3 rotatedOffset = desired * Quaternion.Inverse(handRotation) * offset;
+                    handRotation = desired;
+                    target = contact - rotatedOffset;
+                }
+            }
             float upperLength = Vector3.Distance(shoulder, elbow), lowerLength = Vector3.Distance(elbow, wrist);
             if (!Finite(target) || !Finite(shoulder) || !Finite(elbow) || !Finite(wrist) ||
                 upperLength < .001f || lowerLength < .001f) return;
@@ -509,7 +538,10 @@ namespace LetMeSleep.Presentation.Gameplay
             arm.Upper.rotation = Quaternion.FromToRotation(elbow - shoulder, solvedElbow - shoulder) * arm.Upper.rotation;
             arm.Lower.rotation = Quaternion.FromToRotation(arm.Hand.position - arm.Lower.position,
                 reachableTarget - arm.Lower.position) * arm.Lower.rotation;
-            // Hand local pose stays authored, including the grip's angle to the forearm.
+            // Bare-hand local finger/wrist pose remains authored. A held tool needs
+            // explicit wrist orientation as well as position to put Impact on the
+            // sweep; the socket, grip and tool remain rigidly mounted to that hand.
+            if (hasTool) arm.Hand.rotation = handRotation;
         }
 
         private void SetWorldPose(Vector3 position, Quaternion rotation)

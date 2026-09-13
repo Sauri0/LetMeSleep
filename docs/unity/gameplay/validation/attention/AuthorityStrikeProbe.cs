@@ -30,6 +30,7 @@ public static class AuthorityStrikeProbe
         public float endResidual, pointToSweep, visualSegmentToSweep, previousEndResidual;
         public float upperLength, lowerLength, handToProxy, reachExcess, gripDistance, gripAngle;
         public float upperLengthDelta, lowerLengthDelta, pelvisIKDelta, legsIKDelta;
+        public float handToImpactLength, contactReachExcess, avoidableEndResidual;
     }
     [Serializable] public sealed class Case
     {
@@ -168,6 +169,7 @@ public static class AuthorityStrikeProbe
                 sample.proxyWrist=forearm.transform.TransformPoint(Vector3.up*Mathf.Max(0,forearm.Collider.height*.5f-forearm.Collider.radius));
                 sample.shoulder=upper.position;sample.reachExcess=Mathf.Max(0,Vector3.Distance(sample.proxyWrist,upper.position)-(beforeUpper+beforeLower-.0001f));
                 sample.proxyTargetClamped=sample.reachExcess>.0001f;
+                sample.handToImpactLength=tool?Vector3.Distance(tool.Impact.position,hand.position):0;
                 typeof(ActorVisualBinding).GetMethod("LateUpdate",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(binding,null);
                 sample.handPoint=hand.position;sample.visualPoint=tool?tool.Impact.position:hand.position;
                 sample.hasPreviousVisual=hasPrevious;sample.previousVisualPoint=previousVisual;
@@ -182,6 +184,8 @@ public static class AuthorityStrikeProbe
                     var capture=recorder.sweeps[0];var q=capture.query;
                     sample.swept=true;sample.sweepFrom=q.From.ToUnity();sample.sweepTo=q.To.ToUnity();sample.radius=q.Radius;sample.hit=capture.hit.Hit;sample.hitPoint=capture.hit.Point.ToUnity();
                     sample.endResidual=Vector3.Distance(sample.visualPoint,sample.sweepTo);sample.pointToSweep=PointSegment(sample.visualPoint,sample.sweepFrom,sample.sweepTo);
+                    sample.contactReachExcess=Mathf.Max(0,Vector3.Distance(sample.shoulder,sample.sweepTo)-(beforeUpper+beforeLower-.0001f+sample.handToImpactLength));
+                    sample.avoidableEndResidual=Mathf.Max(0,sample.endResidual-sample.contactReachExcess);
                     sample.previousEndResidual=hasPrevious?Vector3.Distance(previousVisual,sample.sweepFrom):0;
                     sample.visualSegmentToSweep=hasPrevious?SegmentDistance(previousVisual,sample.visualPoint,sample.sweepFrom,sample.sweepTo):sample.pointToSweep;
                     if(capture.hit.Hit && capture.hit.ActorId==0)blocked=true;
