@@ -19,14 +19,14 @@ for o in scene.objects:
     if o.type=='MESH':
         o.data.calc_loop_triangles()
         corners=[o.matrix_world@Vector(v) for v in o.bound_box]
-        item.update(vertices=len(o.data.vertices),triangles=len(o.data.loop_triangles),bounds_min=[min(v[i] for v in corners) for i in range(3)],bounds_max=[max(v[i] for v in corners) for i in range(3)],materials=[m.name for m in o.data.materials if m],shape_keys=[k.name for k in o.data.shape_keys.key_blocks] if o.data.shape_keys else [])
+        item.update(vertices=len(o.data.vertices),triangles=len(o.data.loop_triangles),bounds_min=[min(v[i] for v in corners) for i in range(3)],bounds_max=[max(v[i] for v in corners) for i in range(3)],materials=[slot.material.name for slot in o.material_slots if slot.material],shape_keys=[k.name for k in o.data.shape_keys.key_blocks] if o.data.shape_keys else [])
     items.append(item)
 mat_names={m for o in items for m in o.get('materials',[])}
 materials=[]
 for name in sorted(mat_names):
     m=bpy.data.materials[name]
     bsdf=next((n for n in m.node_tree.nodes if n.type=='BSDF_PRINCIPLED'),None) if m.use_nodes else None
-    materials.append({'name':name,'diffuse':list(m.diffuse_color),'base_color':list(bsdf.inputs['Base Color'].default_value) if bsdf else None})
+    materials.append({'name':name,'diffuse':list(m.diffuse_color),'base_color':list(bsdf.inputs['Base Color'].default_value) if bsdf else None,'emission_color':list(bsdf.inputs['Emission Color'].default_value) if bsdf else [0,0,0,1],'emission_strength':float(bsdf.inputs['Emission Strength'].default_value) if bsdf else 0})
 report={'scene':scene.name,'file':bpy.data.filepath,'objects':items,'materials':materials,'fps':scene.render.fps,'frame_start':scene.frame_start,'frame_end':scene.frame_end,'camera':scene.camera.name if scene.camera else None,'triangles':sum(o.get('triangles',0) for o in items),'mesh_count':sum(o['type']=='MESH' for o in items)}
 out=folder/'scene-audit.json'
 out.write_text(json.dumps(report,indent=2),encoding='utf-8')

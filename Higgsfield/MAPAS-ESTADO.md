@@ -4,6 +4,14 @@ Branko aprobó los cinco conceptos y pidió ejecutarlos. Veinte bocetos Higgsfie
 
 ## Estado actualizado — 2026-09-13, ejecución autorizada
 
+Actualización 03:14 ART: CASA importada `hf-casa-del-patio-v1` con 3664 renderers, 3313 colliders, 29 materiales y los 5 spawns humanos con suelo/clearance. Fuente .blend final verificada; export original GLB bloqueó Blender, recuperado desde guardado sin perder autoría. Usar `HF_MAP_02_casa_UNITY.fbx` y `_UNITY.glb`; GLB estático sólo escena activa exportó en 2.6s. Chat CASA interrumpido exitosamente tras entrega para impedir reintentos. Render nativo en `02-casa/UnityFinal/`; emisiones autoradas pendientes de incorporar por extensión del contrato (Mapas está trabajando).
+
+Blender visible ahora ejecuta CAMPAMENTO con Free mode: chat `e82b2f90-30b1-4aa6-9fd0-790e9977a202`, escena `HF_MAP_03_campamento`, primer envío aceptado. Saldo antes y durante =1971.73, no afirmar factura definitiva hasta cierre. Restan yate/puerto sin iniciar. No reenviar solicitud campamento ni cambiar escena mientras esté busy.
+
+Gameplay tiene Unity CPU central para CASA (21 spawns, escalera y navegación); root se abstiene de abrir Unity. Isla: 47/48 casos PASS, cabaña sí accesible con ruta correcta. Único fallo vigente al muelle en contacto tangente con Path_South_Arrival_COLLIDABLE; candidato local de collider derivado preparado por Gameplay, todavía sin prueba nativa ni aplicación. Mirador y navegación aérea interior pendientes. No afirmar isla cerrada.
+
+UI: selector de mapas inyectable integrado72895f1. Catálogo Bootstrap integrado17110f5, carga/iluminación por ID e inyección desde catálogo modificadas por root, todavía sin asset de catálogo instalado. Presentación prepara builder de catálogo/escena nueva; no modifica alfa. Water PlayMode isla PASS permanece válido. Auditor ahora usa materiales efectivos por objeto y exporta emisión Principled, para conservar colores de instancias y ventanas/faroles.
+
 Los veinte bocetos están aprobados. Isla construida e importada como **hf-isla-del-laguito-v2**; CASA está en su primera creación Scene Builder (chat `0d0d7c32-fc34-4666-b717-4a6ecb54d99d`). Campamento, yate y puerto siguen preparados, todavía sin generación 3D. No confundir la aprobación de bocetos con entrega de cinco mapas jugables.
 
 Isla final: 595 objetos fuente / 558 renderers Unity / 327 colliders; 5 spawns humanos y 16 mosquitos. Importación nativa y prueba PlayMode del agua PASS (1/1). Evidencia `01-isla/UnityFinal/`. El FBX original de la corrección quedó incompatible con Unity; usar exclusivamente `HF_MAP_01_isla_UNITY.fbx`, exportado por Blender estándar conservando geometría y materiales. No volver a editar binarios FBX.

@@ -9,7 +9,9 @@ parser.add_argument('--submit',action='store_true')
 parser.add_argument('--status',action='store_true')
 parser.add_argument('--followup',help='Named UTF-8 prompt file inside the assigned map folder')
 parser.add_argument('--map',default='01-isla')
+parser.add_argument('--model',help='Scene Builder picker ID; only applied when preparing a new idle scene')
 args=parser.parse_args()
+assert not args.model or args.prepare,'Model selection is only allowed on new scene preparation'
 assert args.map in ['01-isla','02-casa','03-campamento','04-yate','05-pueblo']
 folder='N:/LetMeSleep/Artifacts/Higgsfield/Mapas/'+args.map
 base="import bpy,importlib,json\nfrom pathlib import Path\np='bl_ext.user_default.higgsfield_blender'\ns=importlib.import_module(p+'.features.overlays.composer_surface')\ng=importlib.import_module(p+'.features.bridge_gate')\nh=importlib.import_module(p+'.root').addon()\n"
@@ -31,6 +33,13 @@ collection=bpy.data.collections.new(scene_name+'_CONTENT')
 scene.collection.children.link(collection)
 s._new_scene_thread(bind_scene=True)
 s.switch_mode(h,s.composer_module.SCENE_BUILDER)
+'''
+    if args.model:
+        base+='requested_model='+repr(args.model)+'\n'+'''choices=importlib.import_module(p+'.features.supercomputer').model_choices()
+assert requested_model in [row[0] for row in choices],'Model not in current picker'
+s._composer.scene_model=requested_model
+'''
+    base+='''
 bpy.ops.wm.save_as_mainfile(filepath=str(folder/(scene_name+'.blend')))
 result={'prepared':True,'scene':scene.name,'file':bpy.data.filepath,'objects':len(scene.objects),'bridge_ready':g.ready(),'model':s._scene_model()}
 '''
