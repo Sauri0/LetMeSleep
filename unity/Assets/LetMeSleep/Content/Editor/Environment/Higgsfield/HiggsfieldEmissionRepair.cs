@@ -14,6 +14,23 @@ namespace LetMeSleep.Content.Editor.Higgsfield
     // Explicit in-place material repair. No ModelImporter, scene opening, prefab instantiation or geometry building.
     public static class HiggsfieldEmissionRepair
     {
+        [Serializable] sealed class CommandConfiguration
+        {
+            public string mapId, sourceFbxSha256, newRecipePath, expectedContentHash, receiptPath;
+        }
+        public static void RunFromCommandLine()
+        {
+            try
+            {
+                var args=System.Environment.GetCommandLineArgs();
+                int index=Array.IndexOf(args,"-higgsfieldEmissionRepair");
+                if(index<0 || index+1>=args.Length)throw new ArgumentException("Explicit emission repair configuration required.");
+                var config=JsonUtility.FromJson<CommandConfiguration>(File.ReadAllText(args[index+1]));
+                string receipt=Repair(config.mapId,config.sourceFbxSha256,config.newRecipePath,config.expectedContentHash,config.receiptPath);
+                Debug.Log("HIGGSFIELD_EMISSION_REPAIR_DONE "+receipt);
+            }
+            catch(Exception error){Debug.LogException(error);EditorApplication.Exit(1);}
+        }
         const string Strategy = "higgsfield-emission-repair-1";
 
         public static string Repair(string mapId, string sourceFbxSha256, string newRecipePath, string expectedContentHash, string receiptPath)
@@ -55,7 +72,9 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                 var swatch = next.materials[i];
                 string path = folder + "/Materials/Color_" + i.ToString("000") + ".mat";
                 var material = AssetDatabase.LoadAssetAtPath<Material>(path);
-                Need(material != null && material.name == swatch.sourceName && material.shader.name == "Universal Render Pipeline/Lit", "Material palette/path mismatch: " + path);
+                // CreateAsset may adopt Color_NNN (the asset filename) as the material's native name.
+                // Identity still comes from immutable recipe order/path and exact renderer references below.
+                Need(material != null && (material.name == swatch.sourceName || material.name == Path.GetFileNameWithoutExtension(path)) && material.shader.name == "Universal Render Pipeline/Lit", "Material palette/path mismatch: " + path);
                 Need(!EditorUtility.IsDirty(material), "Material has unsaved changes: " + path);
                 Need(material.GetTexture("_BaseMap") == null && material.GetTexture("_EmissionMap") == null, "Flat untextured material required: " + path);
                 var reference = new Material(material.shader);
@@ -76,7 +95,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                         material.globalIlluminationFlags != desired.globalIlluminationFlags)
                     {
                         backups.Add(material, EditorJsonUtility.ToJson(material));
-                        changes.Add(new MaterialChange { path = path, guid = AssetDatabase.AssetPathToGUID(path), name = material.name,
+                        changes.Add(new MaterialChange { path = path, guid = AssetDatabase.AssetPathToGUID(path), name = swatch.sourceName,
                             beforeFileSha256 = HashFile(path), baseRgb = A(material.GetVector("_BaseColor")),
                             beforeEmission = A(material.GetVector("_EmissionColor")), afterEmission = A(desired.GetVector("_EmissionColor")),
                             beforeKeyword = material.IsKeywordEnabled("_EMISSION"), afterKeyword = desired.IsKeywordEnabled("_EMISSION"),
@@ -87,12 +106,17 @@ namespace LetMeSleep.Content.Editor.Higgsfield
             }
             Need(prefab.transform.childCount == 1, "Expected one authored model root in prefab.");
             Transform visual = prefab.transform.GetChild(0);
+            var importedSlots=JsonUtility.FromJson<ImportedPalette>(File.ReadAllText(folder+"/Data/import-receipt.json"));
+            Need(importedSlots?.meshes!=null,"Native import material-slot receipt required.");
+            var expectedSlots=importedSlots.meshes.ToDictionary(m=>m.path,m=>m.materialSlots,StringComparer.Ordinal);
             var usedRules = new HashSet<string>(StringComparer.Ordinal);
             foreach (var renderer in visual.GetComponentsInChildren<Renderer>(true))
             {
                 string path = Relative(renderer.transform, visual);
                 usedRules.Add(next.Resolve(path).path);
-                Need(renderer.sharedMaterials.All(m => m != null && palette.TryGetValue(m.name, out var expected) && expected == m), "Renderer material paths differ: " + path);
+                Need(expectedSlots.TryGetValue(path,out var slots) && slots!=null && slots.Length==renderer.sharedMaterials.Length &&
+                    slots.Select((name,index)=>palette.TryGetValue(name,out var expected) && expected==renderer.sharedMaterials[index]).All(match=>match),
+                    "Renderer material paths differ from native import receipt: " + path);
             }
             Need(usedRules.Count == next.nodes.Length, "Authored mesh paths differ from recipe.");
             string geometryBefore = GeometryFingerprint(prefab, definition);
@@ -189,6 +213,8 @@ namespace LetMeSleep.Content.Editor.Higgsfield
         static string Hash(byte[] bytes) { using (var sha = SHA256.Create()) return BitConverter.ToString(sha.ComputeHash(bytes)).Replace("-", "").ToLowerInvariant(); }
         static void Need(bool value, string message) => HiggsfieldImportContract.Need(value, message);
         static void WriteReceipt(string path, Receipt receipt) => File.WriteAllText(path, JsonUtility.ToJson(receipt, true));
+        [Serializable] sealed class ImportedPalette { public ImportedSlots[] meshes; }
+        [Serializable] sealed class ImportedSlots { public string path; public string[] materialSlots; }
         [Serializable] sealed class DefinitionSnapshot
         {
             public string MapId, GeometryContract;

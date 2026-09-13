@@ -22,6 +22,8 @@ namespace LetMeSleep.Content.Editor.Higgsfield
             public int restoreAntiAliasing = -1;
             public bool savePresentationScene;
             public LocalLight[] lights;
+            public float[] sunColor, sunEuler, ambientSky, ambientEquator, ambientGround, background;
+            public float sunIntensity = -1, captureShadowDistance = 250;
         }
         [Serializable] public class LocalLight { public string name; public float[] position, color; public float intensity, range; public bool shadows; }
         [Serializable] class Marker
@@ -93,10 +95,16 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                 RenderSettings.ambientSkyColor=config.night?new Color(.16f,.23f,.38f):new Color(.6f,.72f,.85f);
                 RenderSettings.ambientEquatorColor=config.night?new Color(.12f,.16f,.23f):new Color(.45f,.5f,.55f);
                 RenderSettings.ambientGroundColor=config.night?new Color(.06f,.08f,.13f):new Color(.28f,.3f,.26f);
+                if(config.ambientSky?.Length==3)RenderSettings.ambientSkyColor=C(config.ambientSky);
+                if(config.ambientEquator?.Length==3)RenderSettings.ambientEquatorColor=C(config.ambientEquator);
+                if(config.ambientGround?.Length==3)RenderSettings.ambientGroundColor=C(config.ambientGround);
                 var light=new GameObject("Review_Key").AddComponent<Light>();
                 light.type=LightType.Directional; light.intensity=config.night?.8f:1.05f;
                 light.color=config.night?new Color(.5f,.65f,1):new Color(1,.94f,.82f);
                 light.transform.rotation=Quaternion.Euler(48,-35,0);
+                if(config.sunIntensity>=0)light.intensity=config.sunIntensity;
+                if(config.sunColor?.Length==3)light.color=C(config.sunColor);
+                if(config.sunEuler?.Length==3)light.transform.rotation=Quaternion.Euler(V(config.sunEuler));
                 light.shadows=LightShadows.Soft;
                 RenderSettings.sun=light;
                 foreach(var source in config.lights??Array.Empty<LocalLight>())
@@ -114,7 +122,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                 {
                     temporaryPipeline=UnityEngine.Object.Instantiate(sourcePipeline);
                     var serialized=new SerializedObject(temporaryPipeline);
-                    var shadow=serialized.FindProperty("m_ShadowDistance"); if(shadow!=null)shadow.floatValue=250;
+                    var shadow=serialized.FindProperty("m_ShadowDistance"); if(shadow!=null)shadow.floatValue=config.captureShadowDistance;
                     var msaa=serialized.FindProperty("m_MSAA"); if(msaa!=null)msaa.intValue=4;
                     serialized.ApplyModifiedPropertiesWithoutUndo();
                     QualitySettings.renderPipeline=temporaryPipeline;
@@ -123,7 +131,7 @@ namespace LetMeSleep.Content.Editor.Higgsfield
                 cam.transform.position=V(config.camera); cam.transform.LookAt(V(config.target));
                 cam.nearClipPlane=.1f; cam.farClipPlane=1000; cam.fieldOfView=48;
                 if(config.orthoSize>0){cam.orthographic=true;cam.orthographicSize=config.orthoSize;}
-                cam.clearFlags=CameraClearFlags.SolidColor; cam.backgroundColor=new Color(.19f,.35f,.46f);
+                cam.clearFlags=CameraClearFlags.SolidColor; cam.backgroundColor=config.background?.Length==3?C(config.background):config.night?new Color(.025f,.055f,.09f):new Color(.19f,.35f,.46f);
                 var rt=new RenderTexture(1600,1000,24); rt.Create(); cam.targetTexture=rt;
                 cam.Render();
                 var previous=RenderTexture.active; RenderTexture.active=rt;
@@ -150,5 +158,6 @@ namespace LetMeSleep.Content.Editor.Higgsfield
             if(failed)EditorApplication.Exit(1);
         }
         static Vector3 V(float[] a) => new Vector3(a[0],a[1],a[2]);
+        static Color C(float[] a) => new Color(a[0],a[1],a[2]);
     }
 }
