@@ -274,7 +274,8 @@ namespace LetMeSleep.UI
             foreach (var entry in humanCountLabels)
             {
                 var selected = (entry.Key == 0 && !state.HumanCount.HasValue) || (state.HumanCount.HasValue && entry.Key == state.HumanCount.Value);
-                entry.Value.text = (selected ? "✓ " : string.Empty) + (entry.Key == 0 ? "AUTO" : entry.Key.ToString());
+                var countLabel = entry.Key == 0 ? "AUTO" : entry.Key.ToString();
+                entry.Value.text = selected ? "[" + countLabel + "]" : countLabel;
                 entry.Value.transform.parent.GetComponent<UnityEngine.UI.Button>().interactable = state.IsOwner && !lobbyStartLatched;
             }
 
@@ -735,7 +736,7 @@ namespace LetMeSleep.UI
                 var button = factory.Button(counts, "HumanCount" + count, count == 0 ? "AUTO" : count.ToString(), () => ChangeLobbyHumanCount(captured == 0 ? (int?)null : captured), false, false, 48f);
                 button.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = count == 0 ? 104f : 52f;
                 humanCountLabels[count] = button.GetComponentInChildren<TextMeshProUGUI>();
-                // Compact count buttons must fit the selected "✓ 1" as well as "✓ AUTO".
+                // ASCII selection markers fit the existing font: "[1]" and "[AUTO]".
                 AlfaUiFactory.Fill(humanCountLabels[count].rectTransform, 6f, 6f, 8f, 8f);
             }
             factory.Text(rules, "RoleNote", "Los roles se sortean al empezar cada ronda.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);

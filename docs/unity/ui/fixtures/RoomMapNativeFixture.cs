@@ -109,9 +109,9 @@ namespace LetMeSleep.Validation
         private bool Step(Action action)
         {try{action();return true;}catch(Exception e){Fail(e);return false;}}
         private LobbyUiState State(string mapId=AlfaUiController.HousePatioMapId,bool owner=true,bool waiting=true,
-            bool ready=false,bool start=false,bool rules=false)
+            bool ready=false,bool start=false,bool rules=false,int? humanCount=1)
             => new LobbyUiState(owner,"ABCDEF",new[]{new LobbyMemberUiState("host","Anfitrion",true),
-                new LobbyMemberUiState("guest","Invitado",true)},true,ready,1,true,"",mapId,
+                new LobbyMemberUiState("guest","Invitado",true)},true,ready,humanCount,true,"",mapId,
                 maps.FirstOrDefault(m=>m.Id==mapId)?.DisplayName ?? "CASA CON PATIO",startPending:start,isWaiting:waiting,rulesPending:rules);
         private IEnumerator Exercise()
         {
@@ -119,6 +119,17 @@ namespace LetMeSleep.Validation
             if(!Step(()=>{ui.SetRoomMaps(maps);ui.PresentLobby(State());}))yield break;
             yield return null;
             if(!Step(()=>{Check(MapLabel().text=="CASA CON PATIO","default alpha authoritative");Layout("alpha");}))yield break;
+            if(!Step(()=>{
+                Check(B("HumanCount1").GetComponentInChildren<TextMeshProUGUI>().text=="[1]","selected count uses ASCII brackets");
+                ui.PresentLobby(State(humanCount:null));
+            }))yield break;
+            yield return null;
+            if(!Step(()=>{
+                Check(B("HumanCount0").GetComponentInChildren<TextMeshProUGUI>().text=="[AUTO]","selected AUTO uses ASCII brackets");
+                Check(B("HumanCount1").GetComponentInChildren<TextMeshProUGUI>().text=="1","unselected count has no marker");
+                Layout("auto-count");ui.PresentLobby(State());
+            }))yield break;
+            yield return null;
             for(int i=0;i<maps.Length;i++)
             {
                 int index=i;
