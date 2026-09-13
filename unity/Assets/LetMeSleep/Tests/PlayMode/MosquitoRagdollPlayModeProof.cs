@@ -96,12 +96,26 @@ namespace LetMeSleep.Tests.PlayMode
                 Assert.That(Vector3.Distance(expected.OriginVelocity, actual.OriginVelocity), Is.LessThan(.001f), "Velocity must be converted to/from COM without drift.");
                 Assert.That(inertia.x > 0 && inertia.y > 0 && inertia.z > 0, Is.True);
                 Assert.That(inertia.magnitude, Is.LessThan(.001f), "Inertia must come from metre-scale colliders, not identity.");
+                var rb = rig.GetBody((MosquitoBodyId)i);
+                TestContext.WriteLine($"R4 body {i} {rb.name}: COM={rb.centerOfMass:F6}; inertia={inertia:E4}; angular={rb.angularVelocity:F4}");
+            }
+            AssertInternalExclusions();
+            var jointBodies = new Rigidbody[rig.JointCount];
+            var peakGaps = new float[rig.JointCount];
+            for (int i = 0; i < rig.JointCount; i++)
+            {
+                var joint = rig.GetJoint(i);
+                jointBodies[i] = joint.GetComponent<Rigidbody>();
+                float nativeGap = NativeGap(joint, jointBodies[i]);
+                TestContext.WriteLine($"R4 initial joint {i} {joint.name}: gap={nativeGap:F8}m; anchor={joint.anchor:F6}; connectedAnchor={joint.connectedAnchor:F6}; axis={joint.axis:F6}; secondary={joint.secondaryAxis:F6}");
+                Assert.That(nativeGap, Is.LessThan(.0002f), "Before simulation, R4 pivots must coincide within 0.2mm.");
             }
             var thorax = rig.GetBody(MosquitoBodyId.Thorax);
             Quaternion initialRelative = Quaternion.Inverse(thorax.rotation) * rig.GetBody(MosquitoBodyId.Head).rotation;
             rig.ApplyImpulse(MosquitoBodyId.Thorax, new Vector3(.001f, 0, .001f), thorax.worldCenterOfMass + Vector3.up * .012f);
             bool touched = false, slept = false;
-            float maxGap = 0, articulation = 0, minHeight = float.PositiveInfinity;
+            float maxGap = 0, maxNativeGap = 0, maxPublicationLag = 0, articulation = 0, minHeight = float.PositiveInfinity;
+            int firstBadStep = -1, peakStep = -1, peakJoint = -1;
             int steps = Mathf.CeilToInt(10f / dt);
             for (int step = 0; step < steps; step++)
             {
@@ -114,15 +128,28 @@ namespace LetMeSleep.Tests.PlayMode
                 {
                     var joint = rig.GetJoint(i);
                     maxGap = Mathf.Max(maxGap, Vector3.Distance(joint.transform.TransformPoint(joint.anchor), joint.connectedBody.transform.TransformPoint(joint.connectedAnchor)));
+                    float gap = NativeGap(joint, jointBodies[i]);
+                    peakGaps[i] = Mathf.Max(peakGaps[i], gap);
+                    if (gap > maxNativeGap) { maxNativeGap = gap; peakStep = step; peakJoint = i; }
+                    if (gap >= .012f && firstBadStep < 0) firstBadStep = step;
+                    maxPublicationLag = Mathf.Max(maxPublicationLag, Vector3.Distance(jointBodies[i].position, jointBodies[i].transform.position));
                 }
                 articulation = Mathf.Max(articulation, Quaternion.Angle(initialRelative,
                     Quaternion.Inverse(thorax.rotation) * rig.GetBody(MosquitoBodyId.Head).rotation));
                 Assert.That(float.IsNaN(thorax.position.y) || thorax.position.sqrMagnitude > 100, Is.False, "No nonfinite or explosive motion.");
+                if (step < 3 || (step + 1) % Mathf.Max(1, Mathf.RoundToInt(1f / dt)) == 0)
+                {
+                    AssertInternalExclusions();
+                    LogMotion(step, dt);
+                }
             }
             TestContext.WriteLine($"R4 synthetic proof: contact={touched}; sleep={slept}; maxJointGap={maxGap:F6}m; headArticulation={articulation:F2}deg; minThoraxY={minHeight:F4}m");
+            TestContext.WriteLine($"R4 native anchors: maxGap={maxNativeGap:F8}m; peakJoint={peakJoint}; peakStep={peakStep}; first12mmStep={firstBadStep}; maxTransformPositionLag={maxPublicationLag:F8}m");
+            for (int i = 0; i < peakGaps.Length; i++) TestContext.WriteLine($"R4 peak joint {i} {rig.GetJoint(i).name}: nativeGap={peakGaps[i]:F8}m");
             Assert.That(touched, Is.True, "Must physically contact the synthetic environment.");
             Assert.That(minHeight, Is.InRange(-.02f, .25f), "Must fall and be supported instead of falling through the floor.");
             Assert.That(maxGap, Is.LessThan(.012f), "Initial 12mm gross-separation gate; report measured value for tighter tuning.");
+            Assert.That(maxNativeGap, Is.LessThan(.012f), "The 12mm gate also applies to native physics anchors, independently of Transform publication.");
             Assert.That(articulation, Is.GreaterThan(2), "Connected bodies must articulate instead of acting as a rigid statue.");
             Assert.That(slept, Is.True, "Contact and low physical velocities should eventually allow sleep.");
 
@@ -184,6 +211,37 @@ namespace LetMeSleep.Tests.PlayMode
         {
             foreach (Transform t in root.GetComponentsInChildren<Transform>(true)) if (t.name == name) return t;
             throw new InvalidOperationException("Missing real R4 bone " + name);
+        }
+        private static float NativeGap(ConfigurableJoint joint, Rigidbody body) => Vector3.Distance(
+            body.position + body.rotation * joint.anchor,
+            joint.connectedBody.position + joint.connectedBody.rotation * joint.connectedAnchor);
+
+        private void AssertInternalExclusions()
+        {
+            for (int i = 0; i < rig.ColliderCount; i++)
+            for (int j = i + 1; j < rig.ColliderCount; j++)
+            {
+                var a = rig.GetCollider(i); var b = rig.GetCollider(j);
+                if (a.attachedRigidbody == b.attachedRigidbody) continue;
+                Assert.That(UnityEngine.Physics.GetIgnoreCollision(a, b), Is.True, $"Self-collision filter lost: {a.transform.parent.name} / {b.transform.parent.name}");
+            }
+        }
+
+        private void LogMotion(int step, float dt)
+        {
+            float linear = 0, angular = 0, energy = 0;
+            int linearBody = -1, angularBody = -1, sleeping = 0;
+            for (int i = 0; i < rig.BodyCount; i++)
+            {
+                var body = rig.GetBody((MosquitoBodyId)i);
+                float v = body.linearVelocity.magnitude, w = body.angularVelocity.magnitude;
+                if (v > linear) { linear = v; linearBody = i; }
+                if (w > angular) { angular = w; angularBody = i; }
+                if (body.IsSleeping()) sleeping++;
+                Vector3 inertiaAngular = Quaternion.Inverse(body.rotation * body.inertiaTensorRotation) * body.angularVelocity;
+                energy += .5f * (body.mass * v * v + Vector3.Dot(Vector3.Scale(body.inertiaTensor, inertiaAngular), inertiaAngular));
+            }
+            TestContext.WriteLine($"R4 step={step} t={(step + 1) * dt:F3}s: contact={rig.HasEnvironmentContact}; asleep={sleeping}/18; fastestLinearBody={linearBody} v={linear:F5}m/s; fastestAngularBody={angularBody} w={angular:F5}rad/s; energy={energy:E5}J");
         }
         private static void PutSkinInBind(Transform root)
         {
