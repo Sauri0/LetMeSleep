@@ -12,7 +12,7 @@ fuera de las pruebas. No cerrar alfa ni abrir beta por resultados unitarios.
 | Golpear agachado levanta al humano | `08ee42e`: mantener Crouch durante preparación, golpe y recuperación; cancelar Swat de pie al agacharse. | Check nativo sintético PASS. Falta transición y pelvis del humano real. |
 | Muñeca se estira | `08ee42e` longitudes reales; `3582d72` misma trayectoria temporal que colisión y orientación de mano/herramienta con offset real. | 72 muestras con rig real sin estirar. Otros 54 escenarios con Authority real confirmaron desajuste de matamoscas de hasta 65.54 cm antes. Medición posterior realizada, análisis y vistas en movimiento pendientes. |
 | Parpadeo deforma mentón/cachetes | `1361949` filtro de normales y `a758252` modelo canónico con 120 caras inferiores de párpados orientadas correctamente. | A/B GPU: sin triángulos de mentón/cachete y cierre completo de ambos ojos, cabeza quieta/girada. Revisión independiente acotada; forma abultada y parpadeo continuo en juego pendientes. |
-| Pasos/carrera/escaleras | `a3a58a6`: cadencia horizontal limitada, sin acumulación de eventos, pitch 0.98–1.02. | 129 assertions CPU del reloj de audio. Mitigación: no sincroniza aún el apoyo visual; clips y fase de locomoción requieren revisión conjunta. |
+| Pasos/carrera/escaleras | `a3a58a6` mitigación de cadencia/pitch; `545171d` reloj único y `3e3c57f` conexión por actor sólo con cuatro clips válidos. | 16 escenarios de frecuencia del reloj y compilación del seam; aún sin clips nuevos importados. Humanos tiene slot para export funcional. Pendiente audio/apoyos y cambios de Animator en player. |
 | No se entiende picar, defenderse o acertar | `221aec2`: texto contextual y feedback sólo con StrikeImpact confirmado. `39d7aa2`: panel más legible. `fd1b9c8`: orientación de picadura/contacto y bloqueo de Head/Neck conservando ojos. | Bite 6/6 checks PlayMode; falta comprensión del jugador y captura de HUD 720/1080. Sin marcadores de picadura. |
 | Control durante muerte/desmayo y cuerpo rígido | `5372268`: neutralizar entrada durante Falling/Fainted/Stunned/Recovering, conservar validación/ack y exigir soltar botones para rearmar. Ragdoll articulado pendiente de integración. | 104/104 CPU; no prueba de mouse real ni caída articulada. La física debe poder rotar el cuerpo libremente aunque el input esté bloqueado. |
 | Movimiento y zoom mosquito a primera persona | `d2068dc`: distancia solicitada cero, cámara después de pose final, oclusión temporal de cuerpo propio y restauración. | 5/5 PlayMode camera checks. Falta vista real en paredes/techo, movimiento y transición con rueda. |
@@ -47,6 +47,9 @@ articulaciones de 20.39 cm y sin reposo, por lo que falló el límite de 12 mm.
 La segunda prueba también falló: gap máximo 13.11 cm en Leg202.R, paso 18;
 anclajes iniciales coinciden y no hay desfase Transform/Rigidbody. La
 inestabilidad se produce durante el contacto y no entra en reposo a 10 s.
+El tercer candidato `1b17f0d`, con inercia/solver de contacto ajustados, falló
+antes de simular: tensor de inercia identidad en comprobación inicial.
+Recibo `ragdoll-tests-v3.xml`; autor corrigiendo. Módulo sigue sin activación.
 Motor, snapshots, recuperación y
 representación remota todavía requieren integración y verificación.
 
