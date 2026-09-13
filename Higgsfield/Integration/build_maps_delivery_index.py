@@ -3,7 +3,7 @@ import hashlib
 import html
 import json
 import argparse
-from integration_receipts import validate_receipt, integration_status
+from integration_receipts import validate_receipt, integration_status, receipt_label
 import struct
 from datetime import datetime, timezone
 from html.parser import HTMLParser
@@ -181,7 +181,7 @@ for kind,label,source in [
         if target.exists():assert target.read_bytes()==raw
         else:target.write_bytes(raw)
         relative=target.relative_to(ROOT).as_posix()
-    item=asset(relative,label,'successful_integration_receipt')
+    item=asset(relative,receipt_label(kind,data),'successful_integration_receipt')
     integration_receipts.append(dict(kind=kind,validation='native_schema_valid',scope=data['scope'],sourcePath=str(source),asset=item))
 unity_status=integration_status(validated_receipts)
 for entry in maps:entry['unityStatus']=unity_status

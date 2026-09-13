@@ -2,7 +2,7 @@ import copy
 import json
 import unittest
 from integration_receipts import (MAP_IDS, ROLES, LOADING_SUFFIX, LOADING_SCOPE,
-                                  VERIFIED, PENDING, validate_receipt, integration_status)
+                                  VERIFIED, PENDING, validate_receipt, integration_status, receipt_label)
 
 
 def fixtures():
@@ -26,6 +26,15 @@ def encode(value):
 
 
 class NativeReceiptTests(unittest.TestCase):
+    def test_scope_drives_post_adjustment_label_without_changing_receipt(self):
+        for kind in ('catalog','scene'):
+            data=fixtures()[kind]
+            self.assertNotIn('postajuste',receipt_label(kind,data))
+            for scope in ('Final native readback only.', 'Post-adjustment catalog validation.', 'Validación postajuste.'):
+                data['scope']=scope;before=encode(data)
+                self.assertTrue(receipt_label(kind,data).endswith('validación postajuste'))
+                self.assertEqual(encode(data),before)
+
     def test_real_schemas_and_complete_gate(self):
         parsed = {k: validate_receipt(k, encode(v)) for k, v in fixtures().items()}
         self.assertEqual(integration_status(parsed), VERIFIED)

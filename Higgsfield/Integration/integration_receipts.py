@@ -13,6 +13,13 @@ VERIFIED = 'Integración local verificada'
 PENDING = 'Integración Unity en verificación'
 
 
+def receipt_label(kind, data):
+    label = {'catalog': 'Catálogo Unity', 'scene': 'Escenas Unity', 'loading': 'Carga de los cinco mapas'}[kind]
+    if kind in ('catalog', 'scene') and re.search(r'\breadback\b|\bpost[ -]adjustment\b|\bpostajuste\b', data['scope'], re.I):
+        return label + ' · validación postajuste'
+    return label
+
+
 def require(condition, message):
     if not condition:
         raise ValueError(message)
