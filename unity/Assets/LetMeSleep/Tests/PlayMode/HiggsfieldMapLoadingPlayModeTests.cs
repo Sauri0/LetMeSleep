@@ -52,6 +52,8 @@ namespace LetMeSleep.Tests.PlayMode
                 Assert.That(runtime.LatestSnapshot.Actors.Count, Is.EqualTo(3));
                 Assert.That(runtime.LatestSnapshot.Actors.All(a => a.Position.IsFinite), Is.True);
                 Assert.That(ui.CurrentScreen, Is.EqualTo(AlfaUiScreen.Gameplay));
+                Directory.CreateDirectory(config.output);
+                CaptureGameplayCamera(Path.Combine(config.output, id + "-" + role + ".png"));
                 app.CancelTraining(); yield return null; yield return null;
                 Assert.That(Field<GameplayRuntime>("game"), Is.Null);
                 Assert.That(ui.CurrentScreen, Is.EqualTo(AlfaUiScreen.MainMenu));
@@ -62,6 +64,28 @@ namespace LetMeSleep.Tests.PlayMode
             File.WriteAllText(Path.Combine(config.output, "five-map-game-loading.txt"), "PASS Unity " + Application.unityVersion + "\n" + report + "Ten local training sessions via application API; no WAN, full playthrough, role-capacity or performance claim.");
         }
         T Field<T>(string name) => (T)typeof(AlfaApplication).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(app);
+        void CaptureGameplayCamera(string path)
+        {
+            var cameras = Field<GameObject>("presentation").GetComponentsInChildren<Camera>()
+                .Where(camera => camera.enabled && camera.gameObject.activeInHierarchy).ToArray();
+            Assert.That(cameras.Length, Is.EqualTo(1), "Exactly one active gameplay camera expected.");
+            var camera = cameras[0]; var previousTarget = camera.targetTexture;
+            var previousActive = RenderTexture.active; float previousAspect = camera.aspect;
+            var target = RenderTexture.GetTemporary(1280, 720, 24, RenderTextureFormat.ARGB32);
+            var pixels = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+            try
+            {
+                camera.targetTexture = target; camera.aspect = 1280f / 720f; camera.Render();
+                RenderTexture.active = target;
+                pixels.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0); pixels.Apply();
+                File.WriteAllBytes(path, pixels.EncodeToPNG());
+            }
+            finally
+            {
+                camera.targetTexture = previousTarget; camera.aspect = previousAspect;
+                RenderTexture.active = previousActive; RenderTexture.ReleaseTemporary(target); Object.Destroy(pixels);
+            }
+        }
         [UnityTearDown] public IEnumerator Cleanup()
         {
             if (app) app.CancelTraining();
