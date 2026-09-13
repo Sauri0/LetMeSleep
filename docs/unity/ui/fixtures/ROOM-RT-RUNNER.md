@@ -1,4 +1,6 @@
-# Runner nativo de sala: preparado, sin ejecutar
+# Runner nativo de sala
+
+**Estado final:** Root aprobó checks y revisión visual a 720p/1080p en `run-20260913-090108-724ce4e3`, con hashes originales intactos. Ver [ROOM-UI-PASS-20260913.md](ROOM-UI-PASS-20260913.md) para evidencia y alcance. Las notas de pendientes que siguen describen etapas anteriores y quedan actualizadas por ese cierre.
 
 2026-09-13. Reemplaza la ejecución del runner de entrenamiento para este ticket. El runner anterior produjo cambios en tablas de fuente y opciones del editor; **no volver a ejecutar sus scripts/DLL para validar sala**. La restauración de esos diffs antiguos corresponde a Root, con su backup y turno exclusivo. Este cambio no toca fuentes originales, ProjectSettings, Bootstrap ni Core.
 
