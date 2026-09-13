@@ -53,6 +53,7 @@ namespace LetMeSleep.Gameplay
         private readonly Dictionary<uint, ToolPickupSnapshot> pickups = new Dictionary<uint, ToolPickupSnapshot>();
         private readonly Queue<PlayerActionCommand> pending = new Queue<PlayerActionCommand>();
         private readonly List<GameplayEvent> events = new List<GameplayEvent>();
+        private readonly HashSet<uint> boundsHeldActors = new HashSet<uint>();
         private GameplayRoundConfig config;
         private uint tick;
         private float blood;
@@ -87,7 +88,7 @@ namespace LetMeSleep.Gameplay
             world.BeginRound(roster, next.DoorDefinitions);
             if (world is IGameplayToolWorld toolWorld) toolWorld.BeginTools(next.ToolDefinitions);
             config = next; tick = 0; blood = 0; eventId = 0; strikeId = 0; result = RoundEndReason.None; winner = PlayerRole.Unassigned; phase = SimulationPhase.Running;
-            actors.Clear(); doors.Clear(); pickups.Clear(); pending.Clear(); events.Clear();
+            actors.Clear(); doors.Clear(); pickups.Clear(); pending.Clear(); events.Clear(); boundsHeldActors.Clear();
             foreach (var spawn in roster) actors.Add(spawn.ActorId, new Actor { Spawn = spawn, Position = spawn.Position, State = spawn.Role == PlayerRole.Human ? LifeState.Active : LifeState.Flying });
             foreach (var definition in next.DoorDefinitions)
             {
@@ -100,6 +101,7 @@ namespace LetMeSleep.Gameplay
                 pickups.Add(state.PickupId, state); ((IGameplayToolWorld)world).ApplyToolState(state);
             }
             Synchronize();
+            if (world is IGameplayBoundsWorld boundsWorld) boundsWorld.BeginBoundsRecovery(roster);
         }
 
         public CommandReject SubmitInput(string authenticatedPuid, in PlayerInputCommand command) => Input(authenticatedPuid, command, false);
@@ -131,7 +133,7 @@ namespace LetMeSleep.Gameplay
             a.InputTick = tick; a.InputSequence = c.Header.Sequence; a.HasInput = true;
             // Accept and acknowledge the validated stream while incapacitated, but do
             // not turn mouse/control intent into body orientation or deferred movement.
-            if (!CanAct(a)) { ClearHeld(a); return a.Rejection = CommandReject.None; }
+            if (!CanAct(a) || boundsHeldActors.Contains(a.Spawn.ActorId)) { ClearHeld(a); return a.Rejection = CommandReject.None; }
             a.Input = c; a.Yaw = c.ViewYawRadians; a.Pitch = c.ViewPitchRadians; a.Aim = c.AimForward.Normalized;
             if (!c.BiteHeld) a.BiteArmed = true;
             return a.Rejection = CommandReject.None;
@@ -155,21 +157,29 @@ namespace LetMeSleep.Gameplay
             if (!IsRunning) return;
             if (hostTick.Index != tick + 1 || Math.Abs(hostTick.DeltaSeconds - 1f / 30) > .00001f) throw new ArgumentException("Advance requires consecutive fixed 30 Hz ticks.");
             tick = hostTick.Index; const float dt = 1f / 30;
+            boundsHeldActors.Clear();
             foreach (var a in actors.Values)
             {
                 a.Hint = InteractionHint.None; a.Protection = Math.Max(0, a.Protection - dt);
                 if (!a.HasInput || tick - a.InputTick > 7) { a.Input = default; a.BiteArmed = false; }
             }
+            RecoverWorldBounds(); // Guard inherited invalid positions before queued actions/combat.
             ProcessActions(); UpdateDoors(dt);
-            foreach (var a in actors.Values.OrderBy(a => a.Spawn.ActorId)) Move(a, dt);
+            foreach (var a in actors.Values.OrderBy(a => a.Spawn.ActorId))
+                if (!boundsHeldActors.Contains(a.Spawn.ActorId)) Move(a, dt);
             Synchronize();
+            RecoverWorldBounds(); // This tick's movement can cross a fall region.
             foreach (var a in actors.Values.OrderBy(a => a.Spawn.ActorId)) UpdateStrike(a);
             Synchronize(); // Contact queries use this tick's strike/limb pose as well as locomotion.
             int activeHumans = actors.Values.Count(a => a.Spawn.Role == PlayerRole.Human && a.State == LifeState.Active);
-            foreach (var a in actors.Values.Where(a => a.Spawn.Role == PlayerRole.Mosquito).OrderBy(a => a.Spawn.ActorId)) UpdateContact(a, activeHumans, dt);
+            foreach (var a in actors.Values.Where(a => a.Spawn.Role == PlayerRole.Mosquito).OrderBy(a => a.Spawn.ActorId))
+                if (!boundsHeldActors.Contains(a.Spawn.ActorId)) UpdateContact(a, activeHumans, dt);
+            if (world is IGameplayBoundsWorld contactBounds && contactBounds.BoundsRecoveryEnabled)
+            { Synchronize(); RecoverWorldBounds(); }
             Extract(dt);
             Recover(dt);
             Synchronize();
+            RecoverWorldBounds(); // Contact/recovery branches can reposition actors without Move.
             if (blood >= config.BloodGoal) Finish(RoundEndReason.BloodGoal, PlayerRole.Mosquito);
             else if (tick >= config.RoundDurationTicks) Finish(RoundEndReason.TimeExpired, PlayerRole.Human);
         }
@@ -178,7 +188,7 @@ namespace LetMeSleep.Gameplay
             while (pending.Count > 0)
             {
                 var c = pending.Dequeue(); if (!actors.TryGetValue(c.Header.ActorId, out var a) || c.Header.ViewRevision != a.ViewRevision) continue;
-                if (!CanAct(a)) { a.Rejection = CommandReject.InvalidState; continue; }
+                if (!CanAct(a) || boundsHeldActors.Contains(a.Spawn.ActorId)) { a.Rejection = CommandReject.InvalidState; continue; }
                 switch (c.Kind)
                 {
                     case ActionKind.Jump:
@@ -209,6 +219,42 @@ namespace LetMeSleep.Gameplay
                         else DropTool(a, false);
                         break;
                 }
+            }
+        }
+        private void RecoverWorldBounds()
+        {
+            if (!(world is IGameplayBoundsWorld boundsWorld) || !boundsWorld.BoundsRecoveryEnabled) return;
+            foreach (var a in actors.Values.OrderBy(a => a.Spawn.ActorId))
+            {
+                var outcome = boundsWorld.CheckBounds(new BoundsRecoveryQuery(a.Spawn.ActorId, tick,
+                    a.Spawn.Role, a.Position, 1.72f - .72f * a.Crouch,
+                    a.Spawn.Role == PlayerRole.Human ? .25f : .055f, a.Grounded, a.State));
+                if (outcome.Status == BoundsRecoveryStatus.Disabled || outcome.Status == BoundsRecoveryStatus.NotRequired) continue;
+                // Failed/deferred rescue also cannot attack, extract or continue drifting from outside.
+                // Try again on a later tick; never manufacture a destination when all are occupied.
+                bool firstHold = boundsHeldActors.Add(a.Spawn.ActorId);
+                if (!firstHold) continue;
+                bool rescued = outcome.Status == BoundsRecoveryStatus.Recovered;
+                if (rescued && (!outcome.Position.IsFinite || outcome.Position.Length > 10000))
+                    throw new InvalidOperationException("Bounds world returned an invalid recovery destination.");
+                // Existing detach events clear bite preparation/extraction and surface frames.
+                if (a.Spawn.Role == PlayerRole.Mosquito) Detach(a);
+                foreach (var attached in actors.Values.Where(other => other.Bite.HasValue
+                    && other.Bite.Value.VictimId == a.Spawn.ActorId).ToArray()) Detach(attached);
+                if (a.HelpTarget != 0) { Emit(GameplayEventKind.HelpEnded, a, a.HelpTarget); a.HelpTarget = 0; }
+                foreach (var helper in actors.Values.Where(other => other.HelpTarget == a.Spawn.ActorId))
+                { Emit(GameplayEventKind.HelpEnded, helper, a.Spawn.ActorId); helper.HelpTarget = 0; }
+                if (rescued) { a.Position = outcome.Position; a.Grounded = outcome.Grounded;
+                    a.ViewRevision++; a.PoseRevision++; a.Revision++; }
+                a.Velocity = default;
+                a.Strike = default; a.Plan = default; a.HitActors.Clear(); a.StrikeBlocked = false;
+                ClearHeld(a);
+                // Keep antireplay acknowledgements, equipment, blood and combat recovery timer.
+                int queued = pending.Count;
+                for (int i = 0; i < queued; i++)
+                { var command = pending.Dequeue(); if (command.Header.ActorId != a.Spawn.ActorId) pending.Enqueue(command); }
+                // Reserve the new occupied capsule/sphere before the next actor chooses a point.
+                Synchronize();
             }
         }
         private bool TryPickTool(Actor a, Float3 aim)
@@ -323,7 +369,7 @@ namespace LetMeSleep.Gameplay
         }
         private void UpdateStrike(Actor a)
         {
-            if (a.Strike.Phase == StrikePhase.None || a.State != LifeState.Active) return;
+            if (a.Strike.Phase == StrikePhase.None || a.State != LifeState.Active || boundsHeldActors.Contains(a.Spawn.ActorId)) return;
             var s = a.Strike; float elapsed = (tick - s.StartTick) / 30f;
             if (elapsed >= .6f) { a.Strike = default; return; }
             var nextPhase = elapsed < .08f ? StrikePhase.Windup : elapsed < .25f ? StrikePhase.Active : StrikePhase.Recovery;
@@ -462,7 +508,7 @@ namespace LetMeSleep.Gameplay
         public ActorPrivateState CapturePrivate(uint actorId)
         {
             if (!actors.TryGetValue(actorId, out var a)) return null;
-            return new ActorPrivateState(actorId, a.InputSequence, a.ActionSequence, a.Rejection, a.Hint, MathEx.Clamp(a.Preparation / config.Balance.PreparationSeconds, 0, 1), a.Extraction, a.Recovery, a.HelpTarget, CanAct(a), a.DoorResult, config.SessionEpoch, config.RoundId, tick);
+            return new ActorPrivateState(actorId, a.InputSequence, a.ActionSequence, a.Rejection, a.Hint, MathEx.Clamp(a.Preparation / config.Balance.PreparationSeconds, 0, 1), a.Extraction, a.Recovery, a.HelpTarget, CanAct(a) && !boundsHeldActors.Contains(actorId), a.DoorResult, config.SessionEpoch, config.RoundId, tick);
         }
         public IReadOnlyList<GameplayEvent> DrainEvents() { var copy = Array.AsReadOnly(events.ToArray()); events.Clear(); return copy; }
         public void RemoveActor(uint actorId, ActorRemovalReason reason)
@@ -480,6 +526,8 @@ namespace LetMeSleep.Gameplay
         {
             if (!IsRunning) return;
             phase = SimulationPhase.Ended; result = reason; winner = team; pending.Clear();
+            if (world is IGameplayBoundsWorld boundsWorld) boundsWorld.EndBoundsRecovery();
+            boundsHeldActors.Clear();
             foreach (var a in actors.Values) { a.Bite = null; a.Surface = null; a.Strike = default; a.Velocity = default; ClearHeld(a); }
             events.Add(new GameplayEvent(config.SessionEpoch, config.RoundId, ++eventId, tick, GameplayEventKind.RoundEnded, 0, 0, 0, default, default, null, reason));
         }
