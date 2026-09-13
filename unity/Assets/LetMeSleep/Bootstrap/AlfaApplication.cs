@@ -49,6 +49,8 @@ namespace LetMeSleep.Bootstrap
         private SpawnActor[] activeRoster;
         private AlfaRole trainingRole;
         private double hudAt;
+        private string combatFeedback = "";
+        private double combatFeedbackUntil;
         private string LocalId => connection?.LocalUserId?.ToString() ?? "practice";
         private string DataPath
         {
@@ -241,6 +243,7 @@ namespace LetMeSleep.Bootstrap
             game.NavigationData = map.SpatialData;
             game.IsHost = practice || lobby.IsOwner; game.AutomaticTick = false;
             presentation = Instantiate(GameplayPresentationPrefab); presentation.GetComponent<GameplayPresentationRoot>().Bind(game);
+            game.EventReady += ObserveCombatFeedback;
             game.RoundFinished += (_, __) => { if (!quiescing && !training) room?.FinishRound(); };
         }
         private void BeginGame(GameplayRoundConfig config, IReadOnlyList<SpawnActor> roster)
@@ -278,8 +281,38 @@ namespace LetMeSleep.Bootstrap
                 : actor?.LifeState == LifeState.Recovering ? HudActorState.Recovering : actor?.LifeState == LifeState.Stunned ? HudActorState.Stunned : HudActorState.Normal;
             string interaction = personal?.InteractionHint == InteractionHint.Door ? "F · Abrir / cerrar puerta" : personal?.InteractionHint == InteractionHint.Tool ? "F · Recoger matamoscas · G soltar" : personal?.InteractionHint == InteractionHint.ContactRequired ? "Acercate al cuerpo y mantené E" : "";
             ui.PresentHud(new BloodHudUiState(role, state.TimeRemainingTicks / 30f, state.BloodCollected, state.BloodGoal, interaction,
+                contextHint: CombatContext(state, actor),
                 actorState: status, stateProgress01: personal?.ExtractionProgress ?? 0,
                 networkMessage: !training && gameNetwork != null && !gameNetwork.Ready ? "Esperando a los jugadores…" : ""));
+        }
+        private void ObserveCombatFeedback(GameplayEvent item)
+        {
+            var state = game?.LatestSnapshot;
+            if (state == null || item.SessionEpoch != state.SessionEpoch || item.RoundId != state.RoundId ||
+                item.SourceActorId != game.LocalActorId || item.Kind != GameplayEventKind.StrikeImpact) return;
+            var target = state.Actors.FirstOrDefault(a => a.ActorId == item.TargetActorId);
+            combatFeedback = target?.Role == PlayerRole.Mosquito ? "¡Impacto en el mosquito!" : "El golpe chocó con un obstáculo.";
+            combatFeedbackUntil = Time.unscaledTimeAsDouble + 1.1;
+        }
+        private string CombatContext(GameSessionState state, ActorSnapshot actor)
+        {
+            if (actor == null) return "";
+            if (actor.LifeState == LifeState.Falling || actor.LifeState == LifeState.Fainted ||
+                actor.LifeState == LifeState.Stunned || actor.LifeState == LifeState.Recovering)
+                return "Estás incapacitado. Esperá la recuperación.";
+            if (Time.unscaledTimeAsDouble < combatFeedbackUntil) return combatFeedback;
+            if (actor.Role == PlayerRole.Human)
+            {
+                bool beingBitten = state.Actors.Any(a => a.BiteAttachment.HasValue &&
+                    a.BiteAttachment.Value.VictimId == actor.ActorId);
+                return beingBitten ? "¡Te están picando! Buscá al mosquito y golpeá hacia él." :
+                    "Clic · golpear hacia la mira   ·   Ctrl · agacharte";
+            }
+            if (actor.LifeState == LifeState.PreparingBite) return "Contacto logrado. Mantené E para empezar a extraer.";
+            if (actor.LifeState == LifeState.Biting) return "Extrayendo sangre · Mantené E · Soltá E para despegar";
+            if (actor.LifeState == LifeState.Surface || actor.LifeState == LifeState.ApproachingSurface)
+                return "W A S D · desplazarte   ·   F · despegar";
+            return "W · volar hacia la mira   ·   F · posarte   ·   E mantenida en contacto · picar";
         }
         public void SetGameplayInputBlocked(bool blocked) { game?.SetInputBlocked(blocked); }
         public void ResumeGame() { if (game?.LatestSnapshot != null) { game.SetInputBlocked(false); ui.ShowGameplay(); } }
@@ -294,9 +327,10 @@ namespace LetMeSleep.Bootstrap
         }
         private void StopGame()
         {
+            combatFeedback = ""; combatFeedbackUntil = 0;
             appliedAppearance.Clear();
             gameNetwork?.Dispose(); gameNetwork = null;
-            if (game) { game.StopRound(); game.gameObject.SetActive(false); Destroy(game.gameObject); game = null; }
+            if (game) { game.EventReady -= ObserveCombatFeedback; game.StopRound(); game.gameObject.SetActive(false); Destroy(game.gameObject); game = null; }
             if (presentation) { presentation.SetActive(false); Destroy(presentation); presentation = null; }
             activeRoster = null; showingResults = false;
         }
