@@ -1,0 +1,772 @@
+[
+  {
+    "path": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\candidates\\human-menu-joints3\\human\\LMS_Human_alpha.fbx",
+    "sha256": "9e85748b5ec38f57791bb7377dbe43bc6328792986837c7fdb260371f6a8d20b",
+    "exported_winding": [
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      }
+    ],
+    "scope": "FBX polygon winding relative to eye center, five samples per lid.",
+    "in_memory_source_repair": {
+      "flipped_faces": 120,
+      "validated_faces": 240,
+      "samples_per_face": 5,
+      "sides": {
+        "L": {
+          "faces": 120,
+          "flipped": 60
+        },
+        "R": {
+          "faces": 120,
+          "flipped": 60
+        }
+      }
+    },
+    "after_in_memory_repair": [
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      }
+    ],
+    "shape_coordinates_and_face_vertex_sets_unchanged": true
+  },
+  {
+    "path": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\candidates\\human-menu-joints3\\menu\\LMS_HumanMenu.fbx",
+    "sha256": "3412a9caaec030c3fe89d646fd063c8431ac3db38a9b76a8c49d8bc0d98470ff",
+    "exported_winding": [
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 0,
+        "inward": 60,
+        "degenerate": 0
+      }
+    ],
+    "scope": "FBX polygon winding relative to eye center, five samples per lid.",
+    "in_memory_source_repair": {
+      "flipped_faces": 120,
+      "validated_faces": 240,
+      "samples_per_face": 5,
+      "sides": {
+        "L": {
+          "faces": 120,
+          "flipped": 60
+        },
+        "R": {
+          "faces": 120,
+          "flipped": 60
+        }
+      }
+    },
+    "after_in_memory_repair": [
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "upper",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink25.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink50.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink75.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "L",
+        "lid": "lower",
+        "shape": "Blink.L",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "upper",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Basis",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink25.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink50.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink75.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      },
+      {
+        "side": "R",
+        "lid": "lower",
+        "shape": "Blink.R",
+        "faces": 60,
+        "outward": 60,
+        "inward": 0,
+        "degenerate": 0
+      }
+    ],
+    "shape_coordinates_and_face_vertex_sets_unchanged": true
+  }
+]

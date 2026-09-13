@@ -41,6 +41,7 @@ def main():
                   bone_names=audit['bone_names'],bones=65,source_up='+Z',source_forward='-Y',
                   material_palette=audit['material_palette'],renderers=audit['renderers'],triangles=audit['triangles'],vertices=audit['vertices'],
                   blend_shapes=audit.get('blend_shapes',{}),facial_contract=audit.get('facial_contract',{}),
+                  eyelid_winding=audit.get('eyelid_winding'),
                   actor_mapping='(-source_x,source_z,-source_y)',combat_clips_modified=False,
                   geometry_source_note='Coherent generated crown-fixed base; geometry unchanged by menu authoring')
     out.mkdir(parents=True)

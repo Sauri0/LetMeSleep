@@ -57,8 +57,10 @@ def main():
                 for x in [-.034,-.017,0,.017,.034]:
                     for z in [-.034,-.017,0,.017,.034]:
                         origin=center+forward*.20+right*x+up*z
-                        _,_,index,_=tree.ray_cast(origin,-forward,.30)
+                        _,normal,index,_=tree.ray_cast(origin,-forward,.30)
                         material='miss' if index is None else materials[index]
+                        if index is not None and normal.dot(forward)<=0:
+                            material='backface:'+material
                         counts[material]=counts.get(material,0)+1
                 hits[side]=counts
                 if closure==1 and counts.get('Human_Skin',0)!=25:errors.append(kind+'/'+side+': closed lid exposes eyeball or gap')
@@ -66,7 +68,7 @@ def main():
             view.to_mesh_clear()
         reports.append({'format':kind,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'eye_bind':bind,
                         'shape_names':sorted(shapes),'max_source_fbx_morph_difference_m':difference,'samples':rows})
-    result={'contract':CONTRACT,'scope':'Native bind/morph fidelity; nine partial lid closures and frontal25ray samples per eye; not Unity/procedural tracking approval',
+    result={'contract':CONTRACT,'scope':'Native bind/morph fidelity; nine partial closures and frontal25ray samples per eye requiring front-facing skin at full closure; not Unity/procedural tracking approval',
             'reports':reports,'errors':errors,'passed_numeric_gates':not errors,'visual_approval':False}
     (root/'facial_audit.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf8',newline='\n')
     print(json.dumps({'passed':not errors,'errors':errors}),flush=True)

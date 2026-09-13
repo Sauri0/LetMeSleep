@@ -66,6 +66,46 @@ def finish_shapes(c, obj):
         shape.slider_min=0;shape.slider_max=1;shape.value=0
 
 
+def _outward_measure(points, center):
+    a=tuple(points[1][i]-points[0][i] for i in range(3))
+    b=tuple(points[2][i]-points[0][i] for i in range(3))
+    normal=(a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0])
+    radial=tuple(sum(p[i] for p in points)/len(points)-center[i] for i in range(3))
+    return sum(a*b for a,b in zip(normal,radial))
+
+
+def orient_lid_faces(c, obj):
+    """Run AFTER global normal consistency: open shells need an eye-center reference.
+
+    Flips polygon winding only. Vertex order, shape coordinates, skin and
+    materials stay unchanged. A double-sided ray check cannot verify this.
+    """
+    if obj.name!='HumanHead':return None
+    result={'flipped_faces':0,'validated_faces':0,'samples_per_face':5,'sides':{}}
+    for side,sign in [('L',1),('R',-1)]:
+        targets=c.eyelid_targets['Blink.'+side]
+        ids={v.index for v in obj.data.vertices if any(
+            all(abs(a-b)<.000002 for a,b in zip(key,v.co)) for key in targets)}
+        assert len(ids)==156,(side,len(ids),'Eyelid vertex mapping changed')
+        faces=[p for p in obj.data.polygons if all(i in ids for i in p.vertices)]
+        assert len(faces)==120,(side,len(faces),'Eyelid topology changed')
+        center=(sign*.081,-.108,1.558);flipped=0
+        for polygon in faces:
+            points=[obj.data.vertices[i].co for i in polygon.vertices]
+            if _outward_measure(points,center)<0:
+                polygon.flip();flipped+=1
+        # Validate all authored shapes, including the formerly culled lower lid.
+        for name in CONTRACT['blink_samples'][side]:
+            coordinates=obj.data.shape_keys.key_blocks[name].data
+            for polygon in faces:
+                assert _outward_measure([coordinates[i].co for i in polygon.vertices],center)>1e-12,(
+                    side,name,polygon.index,'Inward or degenerate eyelid face')
+        result['sides'][side]={'faces':len(faces),'flipped':flipped}
+        result['flipped_faces']+=flipped;result['validated_faces']+=len(faces)
+    obj.data.update()
+    return result
+
+
 def preview_pose(rig,head,closure,yaw=0,pitch=0):
     """Reference mapping for Blender witnesses; runtime has one separate owner."""
     from mathutils import Quaternion

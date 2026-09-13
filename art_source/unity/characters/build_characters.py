@@ -170,6 +170,11 @@ class Character:
             bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
             bpy.ops.mesh.normals_make_consistent(inside=False); bpy.ops.object.mode_set(mode='OBJECT')
             obj.select_set(False)
+        lid_winding=None
+        if self.species=='Human':
+            from author_human_facial import orient_lid_faces
+            for obj in meshes:
+                if obj.name=='HumanHead':lid_winding=orient_lid_faces(self,obj)
         audit={'species':self.species,'mesh_count':len(meshes),'bones':len(self.rig.data.bones),
                'triangles':0,'vertices':0,'unweighted_vertices':0,'bad_weight_sums':0,
                'degenerate_triangles':0,'nonfinite_vertices':0,'clips':self.clips,'curl':self.curl,'contact':self.contact}
@@ -191,7 +196,9 @@ class Character:
         audit['renderers']=[{'name':o.name,'materials':[m.name for m in o.data.materials]} for o in meshes]
         audit['blend_shapes']={o.name:[k.name for k in o.data.shape_keys.key_blocks if k.name!='Basis']
                                for o in meshes if o.data.shape_keys}
-        if self.species=='Human':audit['facial_contract']=getattr(self,'facial_contract',{})
+        if self.species=='Human':
+            audit['facial_contract']=getattr(self,'facial_contract',{})
+            audit['eyelid_winding']=lid_winding
         audit['bone_names']=[b.name for b in self.rig.data.bones]
         audit['bind_bones']=[{'name':b.name,'parent':b.parent.name if b.parent else '',
                               'head_blender_m':list(b.head_local),'tail_blender_m':list(b.tail_local)} for b in self.rig.data.bones]

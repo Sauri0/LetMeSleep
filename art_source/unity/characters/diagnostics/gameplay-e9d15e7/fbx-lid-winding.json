@@ -1,0 +1,74 @@
+[
+  {
+    "side": "L",
+    "lid": "upper",
+    "closure": 0,
+    "faces": 60,
+    "outward": 60,
+    "inward": 0,
+    "degenerate": 0
+  },
+  {
+    "side": "L",
+    "lid": "upper",
+    "closure": 1,
+    "faces": 60,
+    "outward": 60,
+    "inward": 0,
+    "degenerate": 0
+  },
+  {
+    "side": "L",
+    "lid": "lower",
+    "closure": 0,
+    "faces": 60,
+    "outward": 0,
+    "inward": 60,
+    "degenerate": 0
+  },
+  {
+    "side": "L",
+    "lid": "lower",
+    "closure": 1,
+    "faces": 60,
+    "outward": 0,
+    "inward": 60,
+    "degenerate": 0
+  },
+  {
+    "side": "R",
+    "lid": "upper",
+    "closure": 0,
+    "faces": 60,
+    "outward": 60,
+    "inward": 0,
+    "degenerate": 0
+  },
+  {
+    "side": "R",
+    "lid": "upper",
+    "closure": 1,
+    "faces": 60,
+    "outward": 60,
+    "inward": 0,
+    "degenerate": 0
+  },
+  {
+    "side": "R",
+    "lid": "lower",
+    "closure": 0,
+    "faces": 60,
+    "outward": 0,
+    "inward": 60,
+    "degenerate": 0
+  },
+  {
+    "side": "R",
+    "lid": "lower",
+    "closure": 1,
+    "faces": 60,
+    "outward": 0,
+    "inward": 60,
+    "degenerate": 0
+  }
+]
