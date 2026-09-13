@@ -1,0 +1,2330 @@
+{
+    "status": "IMPORTED_REQUIRES_NATIVE_REVIEW",
+    "mapId": "hf-yate-a-la-deriva-v3",
+    "unityVersion": "6000.3.24f1",
+    "sourceSha256": "217774581132711b6197a6115954e6e63acd3fdbf42b2705c0c115e6bc146870",
+    "contentHash": "e7d8582abe2051468531520905b68f28b55696fb69e5c8705b6c0e38910a43d2",
+    "prefab": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-yate-a-la-deriva-v3/Prefabs/hf-yate-a-la-deriva-v3.prefab",
+    "scene": "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/hf-yate-a-la-deriva-v3/Scenes/hf-yate-a-la-deriva-v3.unity",
+    "meshRenderers": 160,
+    "staticColliders": 96,
+    "animatedWaterAndFoam": 2,
+    "humanSpawns": 5,
+    "mosquitoSpawns": 16,
+    "has16MarkersPerRole": false,
+    "playBoundsMin": [
+        -4.599999904632568,
+        0.6999998092651367,
+        -15.19999885559082
+    ],
+    "playBoundsMax": [
+        4.599999904632568,
+        10.399999618530274,
+        15.100000381469727
+    ],
+    "markers": [
+        {
+            "name": "Spawn_Human_01.003",
+            "worldPosition": [
+                -0.4000000059604645,
+                3.444000005722046,
+                -10.75
+            ]
+        },
+        {
+            "name": "Spawn_Human_02.003",
+            "worldPosition": [
+                0.0,
+                3.444000005722046,
+                -4.0
+            ]
+        },
+        {
+            "name": "Spawn_Human_03.003",
+            "worldPosition": [
+                3.2799999713897707,
+                3.444000005722046,
+                2.0
+            ]
+        },
+        {
+            "name": "Spawn_Human_04.003",
+            "worldPosition": [
+                0.0,
+                3.444000005722046,
+                12.75
+            ]
+        },
+        {
+            "name": "Spawn_Human_05.003",
+            "worldPosition": [
+                0.0,
+                6.144000053405762,
+                -4.900000095367432
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_01.003",
+            "worldPosition": [
+                -2.0,
+                5.599999904632568,
+                -9.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_02.003",
+            "worldPosition": [
+                2.0,
+                5.800000190734863,
+                -10.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_03.003",
+            "worldPosition": [
+                0.0,
+                5.300000190734863,
+                -12.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_04.003",
+            "worldPosition": [
+                -3.0,
+                5.400000095367432,
+                0.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_05.003",
+            "worldPosition": [
+                3.0,
+                5.5,
+                0.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_06.003",
+            "worldPosition": [
+                -3.0,
+                5.5,
+                6.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_07.003",
+            "worldPosition": [
+                3.0,
+                5.5,
+                6.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_08.003",
+            "worldPosition": [
+                -1.0,
+                5.5,
+                11.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_09.003",
+            "worldPosition": [
+                1.0,
+                5.599999904632568,
+                13.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_10.003",
+            "worldPosition": [
+                0.0,
+                8.0,
+                -4.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_11.003",
+            "worldPosition": [
+                -1.0,
+                8.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_12.003",
+            "worldPosition": [
+                1.0,
+                8.0,
+                4.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_13.003",
+            "worldPosition": [
+                -2.0,
+                2.5,
+                -9.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_14.003",
+            "worldPosition": [
+                2.0,
+                2.5,
+                -9.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_15.003",
+            "worldPosition": [
+                0.0,
+                2.5,
+                -3.0
+            ]
+        },
+        {
+            "name": "Spawn_Mosquito_16.003",
+            "worldPosition": [
+                1.5,
+                5.199999809265137,
+                5.199999809265137
+            ]
+        }
+    ],
+    "meshes": [
+        {
+            "path": "Foam_Ocean_SparseStreaks",
+            "kind": "foam",
+            "waterMode": "private-mesh-cpu",
+            "vertices": 240,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Foam"
+            ]
+        },
+        {
+            "path": "Water_Ocean",
+            "kind": "water",
+            "waterMode": "flat-gpu",
+            "vertices": 21385,
+            "submeshes": 6,
+            "materialSlots": [
+                "YATE_OceanPatch_02",
+                "YATE_OceanPatch_03",
+                "YATE_OceanPatch_05",
+                "YATE_OceanPatch_01",
+                "YATE_OceanPatch_00",
+                "YATE_OceanPatch_04"
+            ]
+        },
+        {
+            "path": "YATE_Accommodation_Trim",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 264,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakLight"
+            ]
+        },
+        {
+            "path": "YATE_AftDining_Ceramics",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 1772,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Linen",
+                "YATE_White",
+                "YATE_Tile"
+            ]
+        },
+        {
+            "path": "YATE_AftDining_Chair_01",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 564,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_TeakDark"
+            ]
+        },
+        {
+            "path": "YATE_AftDining_Chair_02",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 564,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_TeakDark"
+            ]
+        },
+        {
+            "path": "YATE_AftDining_Chair_03",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 564,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_TeakDark"
+            ]
+        },
+        {
+            "path": "YATE_AftDining_Chair_04",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 564,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_TeakDark"
+            ]
+        },
+        {
+            "path": "YATE_AftDining_Table",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 216,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_TeakDark",
+                "YATE_Teak"
+            ]
+        },
+        {
+            "path": "YATE_AftRail_Port",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 432,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_AftTransom_Bench",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 816,
+            "submeshes": 4,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakDark",
+                "YATE_Upholstery",
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_-2.8499999999999996",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_-4.9",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_DoorHandle",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 48,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Brass"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_DoorLintel",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_Door_Open",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 96,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Teak"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_Front",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_Mirror",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 96,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_ShowerScreen",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_ShowerTray_Riser",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 264,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Tile",
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_Toilet",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 556,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Bathroom_Vanity_Basin_Faucet",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 784,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_White",
+                "YATE_Tile",
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Bollard_Bow_01",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 216,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Bollard_Bow_02",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 216,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Cabin_Port_Bed",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 912,
+            "submeshes": 6,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakDark",
+                "YATE_Linen",
+                "YATE_CushionBlue",
+                "YATE_TeakLight",
+                "YATE_Brass"
+            ]
+        },
+        {
+            "path": "YATE_Cabin_Port_NightstandLamp",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 288,
+            "submeshes": 4,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakLight",
+                "YATE_Brass",
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_Cabin_Port_Wardrobe",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 224,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakLight"
+            ]
+        },
+        {
+            "path": "YATE_Cabin_Starboard_Bed",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 912,
+            "submeshes": 6,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakDark",
+                "YATE_Linen",
+                "YATE_CushionBlue",
+                "YATE_TeakLight",
+                "YATE_Brass"
+            ]
+        },
+        {
+            "path": "YATE_Cabin_Starboard_NightstandLamp",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 288,
+            "submeshes": 4,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakLight",
+                "YATE_Brass",
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_Cabin_Starboard_Wardrobe",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 224,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakLight"
+            ]
+        },
+        {
+            "path": "YATE_CeilingFixture_Bathroom",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 144,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Brass",
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_CeilingFixture_CabinPort",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 144,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Brass",
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_CeilingFixture_CabinStarboard",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 144,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Brass",
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_CeilingFixture_Galley",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 144,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Brass",
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_CeilingFixture_LowerCorridor",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 144,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Brass",
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_CeilingFixture_SalonAft",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 144,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Brass",
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_Cleat_00",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 240,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Cleat_01",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 240,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Cleat_02",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 240,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Cleat_03",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 240,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Cleat_04",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 240,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Cleat_05",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 240,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Cleat_06",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 240,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Cleat_Master",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 240,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_DeckStorage_00",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 208,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_Metal",
+                "YATE_Brass"
+            ]
+        },
+        {
+            "path": "YATE_DeckStorage_01",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 240,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_Metal",
+                "YATE_Brass"
+            ]
+        },
+        {
+            "path": "YATE_DeckStorage_02",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 240,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_Metal",
+                "YATE_Brass"
+            ]
+        },
+        {
+            "path": "YATE_DeckStorage_Lid_00",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 96,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_TeakLight"
+            ]
+        },
+        {
+            "path": "YATE_DeckStorage_Lid_01",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 96,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_TeakLight"
+            ]
+        },
+        {
+            "path": "YATE_DeckStorage_Lid_02",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 96,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_TeakLight"
+            ]
+        },
+        {
+            "path": "YATE_Fender_01",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 450,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_White",
+                "YATE_Navy",
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_Fender_02",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 450,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_White",
+                "YATE_Navy",
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_Fender_03",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 450,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_White",
+                "YATE_Navy",
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_Fender_04",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 450,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_White",
+                "YATE_Navy",
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_Fender_05",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 450,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_White",
+                "YATE_Navy",
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_Fender_06",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 450,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_White",
+                "YATE_Navy",
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_FlybridgeRail_Aft",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 360,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_FlybridgeRail_Port",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 812,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_FlybridgeRail_Starboard",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 812,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Flybridge_AftBench",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 816,
+            "submeshes": 4,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakDark",
+                "YATE_Upholstery",
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Flybridge_Coaming_Windshield",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 328,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_White",
+                "YATE_Glass",
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Flybridge_DrinksTable",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 216,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_TeakDark",
+                "YATE_Teak"
+            ]
+        },
+        {
+            "path": "YATE_Flybridge_Helm_Console_Wheel_Controls",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 1716,
+            "submeshes": 6,
+            "materialSlots": [
+                "YATE_White",
+                "YATE_TeakDark",
+                "YATE_Dark",
+                "YATE_Tile",
+                "YATE_Metal",
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_Flybridge_PortBench",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 720,
+            "submeshes": 4,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakDark",
+                "YATE_Upholstery",
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_FoldedTowels_01",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 288,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_FoldedTowels_02",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 288,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Linen"
+            ]
+        },
+        {
+            "path": "YATE_Foredeck_Lounge_Port",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 816,
+            "submeshes": 4,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakDark",
+                "YATE_Upholstery",
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Foredeck_Lounge_Starboard",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 816,
+            "submeshes": 4,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakDark",
+                "YATE_Upholstery",
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Foredeck_LowTable",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 216,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_TeakDark",
+                "YATE_Teak"
+            ]
+        },
+        {
+            "path": "YATE_Galley_Cabinets_Sink_Oven_Hob",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 3680,
+            "submeshes": 7,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_Linen",
+                "YATE_Cream",
+                "YATE_Brass",
+                "YATE_Metal",
+                "YATE_Dark",
+                "YATE_Tile"
+            ]
+        },
+        {
+            "path": "YATE_Galley_Kettle_Board",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 524,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_TeakDark",
+                "YATE_Metal",
+                "YATE_Dark"
+            ]
+        },
+        {
+            "path": "YATE_Galley_UpperCabinets",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 960,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_Cream",
+                "YATE_Brass"
+            ]
+        },
+        {
+            "path": "YATE_Gunwale_TimberCap",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 928,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_TeakDark"
+            ]
+        },
+        {
+            "path": "YATE_Helm_DoubleSeat",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 720,
+            "submeshes": 4,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakDark",
+                "YATE_Upholstery",
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Hull_Continuous_Sealed",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 1056,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Cream",
+                "YATE_Navy"
+            ]
+        },
+        {
+            "path": "YATE_InteriorStairwellGuard_Aft",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 288,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_InteriorStairwellGuard_Port",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 432,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_InteriorStairwellGuard_Starboard",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 432,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_LifeRing_Port",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 768,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Red",
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_LifeRing_Starboard",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 768,
+            "submeshes": 2,
+            "materialSlots": [
+                "YATE_Red",
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_LowerCabinFloor",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Lower_EndBulkhead_-11.6",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Lower_EndBulkhead_7.7",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Lower_InteriorHullLiner_-3.15",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 120,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Lower_InteriorHullLiner_3.15",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 120,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_MainDeck_Continuous",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 172,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_MainRail_-1",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 2584,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_MainRail_1",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 2584,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_PortCabin_-11.6",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_PortCabin_-5.55",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_PortCabin_DoorHandle",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 48,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Brass"
+            ]
+        },
+        {
+            "path": "YATE_PortCabin_DoorLintel",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_PortCabin_Door_Open",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 96,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Teak"
+            ]
+        },
+        {
+            "path": "YATE_PortCabin_ForwardPartition",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Porthole_-1_0",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 312,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Glass",
+                "YATE_Brass",
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Porthole_-1_1",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 312,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Glass",
+                "YATE_Brass",
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Porthole_-1_2",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 312,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Glass",
+                "YATE_Brass",
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Porthole_-1_3",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 312,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Glass",
+                "YATE_Brass",
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Porthole_1_0",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 312,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Glass",
+                "YATE_Brass",
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Porthole_1_1",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 312,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Glass",
+                "YATE_Brass",
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Porthole_1_2",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 312,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Glass",
+                "YATE_Brass",
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Porthole_1_3",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 312,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Glass",
+                "YATE_Brass",
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_RadarArch_Removable",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 144,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Radar_Antenna_NavigationLights",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 408,
+            "submeshes": 4,
+            "materialSlots": [
+                "YATE_Metal",
+                "YATE_White",
+                "YATE_Red",
+                "YATE_Tile"
+            ]
+        },
+        {
+            "path": "YATE_Roof_Removable_FlybridgeDeck",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 60,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_RopeCoil_01",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 4350,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_RopeCoil_02",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 4350,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_RopeCoil_03",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 4350,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_RopeCoil_04",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 4350,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_RopeCoil_05",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 4350,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Rope"
+            ]
+        },
+        {
+            "path": "YATE_Salon_AftDoorFrame_-1",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_AftDoorFrame_1",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_AftDoorLintel",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_AftGlazing_-1",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_AftGlazing_1",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_CoffeeTable",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 216,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_TeakDark",
+                "YATE_Teak"
+            ]
+        },
+        {
+            "path": "YATE_Salon_ForwardBulkhead",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_PortSolidSill",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_SealedCornerReturns",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 96,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_SlopedWindshield",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 8,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_Sofa",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 816,
+            "submeshes": 4,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakDark",
+                "YATE_Upholstery",
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_StarboardSolidSill",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_TopBeam_-1",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_TopBeam_1",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_-1_0",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_-1_1",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_-1_2",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_-1_3",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_-1_4",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_1_0",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_1_1",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_1_2",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_1_3",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_1_4",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Salon_Window_-1_0",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_Window_-1_1",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_Window_-1_2",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_Window_-1_3",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_Window_1_0",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_Window_1_1",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_Window_1_2",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_Window_1_3",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Glass"
+            ]
+        },
+        {
+            "path": "YATE_Salon_WindshieldFrames",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 192,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_Stair_AftToFlybridge",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 1128,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_White",
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Stair_Interior_LowerToMain",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 1104,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_White",
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_Stair_SwimToAft",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 984,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_TeakLight",
+                "YATE_White",
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_StarboardCabin_-11.6",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_StarboardCabin_-5.55",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_StarboardCabin_DoorHandle",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 48,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Brass"
+            ]
+        },
+        {
+            "path": "YATE_StarboardCabin_DoorLintel",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_StarboardCabin_Door_Open",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 96,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Teak"
+            ]
+        },
+        {
+            "path": "YATE_StarboardCabin_ForwardPartition",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_SweptAftPillars_PlatformBrackets",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 120,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_White"
+            ]
+        },
+        {
+            "path": "YATE_SwimLadder",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 480,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Metal"
+            ]
+        },
+        {
+            "path": "YATE_SwimPlatform",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 24,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_SwimPlatform_Fascia",
+            "kind": "solid",
+            "waterMode": "none",
+            "vertices": 288,
+            "submeshes": 1,
+            "materialSlots": [
+                "YATE_Cream"
+            ]
+        },
+        {
+            "path": "YATE_Teak_Flybridge",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 1032,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakLight",
+                "YATE_TeakDark"
+            ]
+        },
+        {
+            "path": "YATE_Teak_LowerDeck",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 1392,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakLight",
+                "YATE_TeakDark"
+            ]
+        },
+        {
+            "path": "YATE_Teak_MainDeck",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 2592,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakLight",
+                "YATE_TeakDark"
+            ]
+        },
+        {
+            "path": "YATE_Teak_SwimPlatform",
+            "kind": "decoration",
+            "waterMode": "none",
+            "vertices": 96,
+            "submeshes": 3,
+            "materialSlots": [
+                "YATE_Teak",
+                "YATE_TeakLight",
+                "YATE_TeakDark"
+            ]
+        }
+    ],
+    "surfaces": [
+        {
+            "path": "YATE_AftDining_Chair_01",
+            "id": 1000000
+        },
+        {
+            "path": "YATE_AftDining_Chair_02",
+            "id": 1000001
+        },
+        {
+            "path": "YATE_AftDining_Chair_03",
+            "id": 1000002
+        },
+        {
+            "path": "YATE_AftDining_Chair_04",
+            "id": 1000003
+        },
+        {
+            "path": "YATE_AftDining_Table",
+            "id": 1000004
+        },
+        {
+            "path": "YATE_AftRail_Port",
+            "id": 1000005
+        },
+        {
+            "path": "YATE_AftTransom_Bench",
+            "id": 1000006
+        },
+        {
+            "path": "YATE_Bathroom_-2.8499999999999996",
+            "id": 1000007
+        },
+        {
+            "path": "YATE_Bathroom_-4.9",
+            "id": 1000008
+        },
+        {
+            "path": "YATE_Bathroom_DoorLintel",
+            "id": 1000009
+        },
+        {
+            "path": "YATE_Bathroom_Door_Open",
+            "id": 1000010
+        },
+        {
+            "path": "YATE_Bathroom_Front",
+            "id": 1000011
+        },
+        {
+            "path": "YATE_Bathroom_ShowerTray_Riser",
+            "id": 1000012
+        },
+        {
+            "path": "YATE_Bathroom_Toilet",
+            "id": 1000013
+        },
+        {
+            "path": "YATE_Bathroom_Vanity_Basin_Faucet",
+            "id": 1000014
+        },
+        {
+            "path": "YATE_Bollard_Bow_01",
+            "id": 1000015
+        },
+        {
+            "path": "YATE_Bollard_Bow_02",
+            "id": 1000016
+        },
+        {
+            "path": "YATE_Cabin_Port_Bed",
+            "id": 1000017
+        },
+        {
+            "path": "YATE_Cabin_Port_NightstandLamp",
+            "id": 1000018
+        },
+        {
+            "path": "YATE_Cabin_Port_Wardrobe",
+            "id": 1000019
+        },
+        {
+            "path": "YATE_Cabin_Starboard_Bed",
+            "id": 1000020
+        },
+        {
+            "path": "YATE_Cabin_Starboard_NightstandLamp",
+            "id": 1000021
+        },
+        {
+            "path": "YATE_Cabin_Starboard_Wardrobe",
+            "id": 1000022
+        },
+        {
+            "path": "YATE_DeckStorage_00",
+            "id": 1000023
+        },
+        {
+            "path": "YATE_DeckStorage_01",
+            "id": 1000024
+        },
+        {
+            "path": "YATE_DeckStorage_02",
+            "id": 1000025
+        },
+        {
+            "path": "YATE_DeckStorage_Lid_00",
+            "id": 1000026
+        },
+        {
+            "path": "YATE_DeckStorage_Lid_01",
+            "id": 1000027
+        },
+        {
+            "path": "YATE_DeckStorage_Lid_02",
+            "id": 1000028
+        },
+        {
+            "path": "YATE_FlybridgeRail_Aft",
+            "id": 1000029
+        },
+        {
+            "path": "YATE_FlybridgeRail_Port",
+            "id": 1000030
+        },
+        {
+            "path": "YATE_FlybridgeRail_Starboard",
+            "id": 1000031
+        },
+        {
+            "path": "YATE_Flybridge_AftBench",
+            "id": 1000032
+        },
+        {
+            "path": "YATE_Flybridge_Coaming_Windshield",
+            "id": 1000033
+        },
+        {
+            "path": "YATE_Flybridge_DrinksTable",
+            "id": 1000034
+        },
+        {
+            "path": "YATE_Flybridge_Helm_Console_Wheel_Controls",
+            "id": 1000035
+        },
+        {
+            "path": "YATE_Flybridge_PortBench",
+            "id": 1000036
+        },
+        {
+            "path": "YATE_Foredeck_Lounge_Port",
+            "id": 1000037
+        },
+        {
+            "path": "YATE_Foredeck_Lounge_Starboard",
+            "id": 1000038
+        },
+        {
+            "path": "YATE_Foredeck_LowTable",
+            "id": 1000039
+        },
+        {
+            "path": "YATE_Galley_Cabinets_Sink_Oven_Hob",
+            "id": 1000040
+        },
+        {
+            "path": "YATE_Galley_UpperCabinets",
+            "id": 1000041
+        },
+        {
+            "path": "YATE_Helm_DoubleSeat",
+            "id": 1000042
+        },
+        {
+            "path": "YATE_Hull_Continuous_Sealed",
+            "id": 1000043
+        },
+        {
+            "path": "YATE_InteriorStairwellGuard_Aft",
+            "id": 1000044
+        },
+        {
+            "path": "YATE_InteriorStairwellGuard_Port",
+            "id": 1000045
+        },
+        {
+            "path": "YATE_InteriorStairwellGuard_Starboard",
+            "id": 1000046
+        },
+        {
+            "path": "YATE_LowerCabinFloor",
+            "id": 1000047
+        },
+        {
+            "path": "YATE_Lower_EndBulkhead_-11.6",
+            "id": 1000048
+        },
+        {
+            "path": "YATE_Lower_EndBulkhead_7.7",
+            "id": 1000049
+        },
+        {
+            "path": "YATE_Lower_InteriorHullLiner_-3.15",
+            "id": 1000050
+        },
+        {
+            "path": "YATE_Lower_InteriorHullLiner_3.15",
+            "id": 1000051
+        },
+        {
+            "path": "YATE_MainDeck_Continuous",
+            "id": 1000052
+        },
+        {
+            "path": "YATE_MainRail_-1",
+            "id": 1000053
+        },
+        {
+            "path": "YATE_MainRail_1",
+            "id": 1000054
+        },
+        {
+            "path": "YATE_PortCabin_-11.6",
+            "id": 1000055
+        },
+        {
+            "path": "YATE_PortCabin_-5.55",
+            "id": 1000056
+        },
+        {
+            "path": "YATE_PortCabin_DoorLintel",
+            "id": 1000057
+        },
+        {
+            "path": "YATE_PortCabin_Door_Open",
+            "id": 1000058
+        },
+        {
+            "path": "YATE_PortCabin_ForwardPartition",
+            "id": 1000059
+        },
+        {
+            "path": "YATE_RadarArch_Removable",
+            "id": 1000060
+        },
+        {
+            "path": "YATE_Roof_Removable_FlybridgeDeck",
+            "id": 1000061
+        },
+        {
+            "path": "YATE_Salon_AftDoorFrame_-1",
+            "id": 1000062
+        },
+        {
+            "path": "YATE_Salon_AftDoorFrame_1",
+            "id": 1000063
+        },
+        {
+            "path": "YATE_Salon_AftDoorLintel",
+            "id": 1000064
+        },
+        {
+            "path": "YATE_Salon_CoffeeTable",
+            "id": 1000065
+        },
+        {
+            "path": "YATE_Salon_ForwardBulkhead",
+            "id": 1000066
+        },
+        {
+            "path": "YATE_Salon_PortSolidSill",
+            "id": 1000067
+        },
+        {
+            "path": "YATE_Salon_SealedCornerReturns",
+            "id": 1000068
+        },
+        {
+            "path": "YATE_Salon_Sofa",
+            "id": 1000069
+        },
+        {
+            "path": "YATE_Salon_StarboardSolidSill",
+            "id": 1000070
+        },
+        {
+            "path": "YATE_Salon_TopBeam_-1",
+            "id": 1000071
+        },
+        {
+            "path": "YATE_Salon_TopBeam_1",
+            "id": 1000072
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_-1_0",
+            "id": 1000073
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_-1_1",
+            "id": 1000074
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_-1_2",
+            "id": 1000075
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_-1_3",
+            "id": 1000076
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_-1_4",
+            "id": 1000077
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_1_0",
+            "id": 1000078
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_1_1",
+            "id": 1000079
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_1_2",
+            "id": 1000080
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_1_3",
+            "id": 1000081
+        },
+        {
+            "path": "YATE_Salon_WindowPillar_1_4",
+            "id": 1000082
+        },
+        {
+            "path": "YATE_Salon_WindshieldFrames",
+            "id": 1000083
+        },
+        {
+            "path": "YATE_Stair_AftToFlybridge",
+            "id": 1000084
+        },
+        {
+            "path": "YATE_Stair_Interior_LowerToMain",
+            "id": 1000085
+        },
+        {
+            "path": "YATE_Stair_SwimToAft",
+            "id": 1000086
+        },
+        {
+            "path": "YATE_StarboardCabin_-11.6",
+            "id": 1000087
+        },
+        {
+            "path": "YATE_StarboardCabin_-5.55",
+            "id": 1000088
+        },
+        {
+            "path": "YATE_StarboardCabin_DoorLintel",
+            "id": 1000089
+        },
+        {
+            "path": "YATE_StarboardCabin_Door_Open",
+            "id": 1000090
+        },
+        {
+            "path": "YATE_StarboardCabin_ForwardPartition",
+            "id": 1000091
+        },
+        {
+            "path": "YATE_SweptAftPillars_PlatformBrackets",
+            "id": 1000092
+        },
+        {
+            "path": "YATE_SwimLadder",
+            "id": 1000093
+        },
+        {
+            "path": "YATE_SwimPlatform",
+            "id": 1000094
+        },
+        {
+            "path": "YATE_SwimPlatform_Fascia",
+            "id": 1000095
+        }
+    ],
+    "pending": [
+        "FBX axes/metres against authored dimensions",
+        "16-player role capacity and spawn capsule/flight clearance",
+        "Routes, stairs, doors and bounds enforcement",
+        "Water motion/foam seams and native performance",
+        "Lighting/cameras and visual approval",
+        "RoomRules, UI/Online registry and authoritative content hash integration"
+    ]
+}

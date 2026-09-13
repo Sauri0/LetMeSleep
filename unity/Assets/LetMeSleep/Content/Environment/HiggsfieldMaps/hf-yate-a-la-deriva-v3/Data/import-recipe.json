@@ -1,0 +1,1910 @@
+{
+  "mapId": "hf-yate-a-la-deriva-v3",
+  "sourceFbx": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\HF_MAP_04_yate_UNITY_V3.fbx",
+  "sourceSha256": "217774581132711b6197a6115954e6e63acd3fdbf42b2705c0c115e6bc146870",
+  "sourceFinal": true,
+  "importScale": 1,
+  "collisionLayer": "Default",
+  "firstSurfaceId": 1000000,
+  "requiredHumanSpawns": 5,
+  "requiredMosquitoSpawns": 16,
+  "humanSpawns": [
+    "Spawn_Human_01.003",
+    "Spawn_Human_02.003",
+    "Spawn_Human_03.003",
+    "Spawn_Human_04.003",
+    "Spawn_Human_05.003"
+  ],
+  "mosquitoSpawns": [
+    "Spawn_Mosquito_01.003",
+    "Spawn_Mosquito_02.003",
+    "Spawn_Mosquito_03.003",
+    "Spawn_Mosquito_04.003",
+    "Spawn_Mosquito_05.003",
+    "Spawn_Mosquito_06.003",
+    "Spawn_Mosquito_07.003",
+    "Spawn_Mosquito_08.003",
+    "Spawn_Mosquito_09.003",
+    "Spawn_Mosquito_10.003",
+    "Spawn_Mosquito_11.003",
+    "Spawn_Mosquito_12.003",
+    "Spawn_Mosquito_13.003",
+    "Spawn_Mosquito_14.003",
+    "Spawn_Mosquito_15.003",
+    "Spawn_Mosquito_16.003"
+  ],
+  "lobbySpawns": [],
+  "toolPickups": [],
+  "presentationRoot": "",
+  "boundsMinEmpty": "",
+  "boundsMaxEmpty": "",
+  "playBoundsMin": [
+    -4.6,
+    0.7,
+    -15.2
+  ],
+  "playBoundsMax": [
+    4.6,
+    10.4,
+    15.1
+  ],
+  "nodes": [
+    {
+      "path": "Foam_Ocean_SparseStreaks",
+      "kind": "foam",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "Water_Ocean",
+      "kind": "water",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.14,
+      "waveLength": 13.25200877883002,
+      "waveSpeed": 0.6283185307179586,
+      "waterAnimation": "gpu"
+    },
+    {
+      "path": "YATE_Accommodation_Trim",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_AftDining_Ceramics",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_AftDining_Chair_01",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_AftDining_Chair_02",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_AftDining_Chair_03",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_AftDining_Chair_04",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_AftDining_Table",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_AftRail_Port",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_AftTransom_Bench",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_-2.8499999999999996",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_-4.9",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_DoorHandle",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_DoorLintel",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_Door_Open",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_Front",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_Mirror",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_ShowerScreen",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_ShowerTray_Riser",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_Toilet",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bathroom_Vanity_Basin_Faucet",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bollard_Bow_01",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Bollard_Bow_02",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cabin_Port_Bed",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cabin_Port_NightstandLamp",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cabin_Port_Wardrobe",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cabin_Starboard_Bed",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cabin_Starboard_NightstandLamp",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cabin_Starboard_Wardrobe",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_CeilingFixture_Bathroom",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_CeilingFixture_CabinPort",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_CeilingFixture_CabinStarboard",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_CeilingFixture_Galley",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_CeilingFixture_LowerCorridor",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_CeilingFixture_SalonAft",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cleat_00",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cleat_01",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cleat_02",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cleat_03",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cleat_04",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cleat_05",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cleat_06",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Cleat_Master",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_DeckStorage_00",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_DeckStorage_01",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_DeckStorage_02",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_DeckStorage_Lid_00",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_DeckStorage_Lid_01",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_DeckStorage_Lid_02",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Fender_01",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Fender_02",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Fender_03",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Fender_04",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Fender_05",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Fender_06",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_FlybridgeRail_Aft",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_FlybridgeRail_Port",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_FlybridgeRail_Starboard",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Flybridge_AftBench",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Flybridge_Coaming_Windshield",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Flybridge_DrinksTable",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Flybridge_Helm_Console_Wheel_Controls",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Flybridge_PortBench",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_FoldedTowels_01",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_FoldedTowels_02",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Foredeck_Lounge_Port",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Foredeck_Lounge_Starboard",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Foredeck_LowTable",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Galley_Cabinets_Sink_Oven_Hob",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Galley_Kettle_Board",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Galley_UpperCabinets",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Gunwale_TimberCap",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Helm_DoubleSeat",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Hull_Continuous_Sealed",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_InteriorStairwellGuard_Aft",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_InteriorStairwellGuard_Port",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_InteriorStairwellGuard_Starboard",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_LifeRing_Port",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_LifeRing_Starboard",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_LowerCabinFloor",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Lower_EndBulkhead_-11.6",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Lower_EndBulkhead_7.7",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Lower_InteriorHullLiner_-3.15",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Lower_InteriorHullLiner_3.15",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_MainDeck_Continuous",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_MainRail_-1",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_MainRail_1",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_PortCabin_-11.6",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_PortCabin_-5.55",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_PortCabin_DoorHandle",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_PortCabin_DoorLintel",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_PortCabin_Door_Open",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_PortCabin_ForwardPartition",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Porthole_-1_0",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Porthole_-1_1",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Porthole_-1_2",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Porthole_-1_3",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Porthole_1_0",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Porthole_1_1",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Porthole_1_2",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Porthole_1_3",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_RadarArch_Removable",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Radar_Antenna_NavigationLights",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Roof_Removable_FlybridgeDeck",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_RopeCoil_01",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_RopeCoil_02",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_RopeCoil_03",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_RopeCoil_04",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_RopeCoil_05",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_AftDoorFrame_-1",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_AftDoorFrame_1",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_AftDoorLintel",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_AftGlazing_-1",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_AftGlazing_1",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_CoffeeTable",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_ForwardBulkhead",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_PortSolidSill",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_SealedCornerReturns",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_SlopedWindshield",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_Sofa",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_StarboardSolidSill",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_TopBeam_-1",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_TopBeam_1",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindowPillar_-1_0",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindowPillar_-1_1",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindowPillar_-1_2",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindowPillar_-1_3",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindowPillar_-1_4",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindowPillar_1_0",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindowPillar_1_1",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindowPillar_1_2",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindowPillar_1_3",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindowPillar_1_4",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_Window_-1_0",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_Window_-1_1",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_Window_-1_2",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_Window_-1_3",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_Window_1_0",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_Window_1_1",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_Window_1_2",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_Window_1_3",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Salon_WindshieldFrames",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Stair_AftToFlybridge",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Stair_Interior_LowerToMain",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Stair_SwimToAft",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_StarboardCabin_-11.6",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_StarboardCabin_-5.55",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_StarboardCabin_DoorHandle",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_StarboardCabin_DoorLintel",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_StarboardCabin_Door_Open",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_StarboardCabin_ForwardPartition",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_SweptAftPillars_PlatformBrackets",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_SwimLadder",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_SwimPlatform",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_SwimPlatform_Fascia",
+      "kind": "solid",
+      "descendants": false,
+      "canPerch": true,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Teak_Flybridge",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Teak_LowerDeck",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Teak_MainDeck",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    },
+    {
+      "path": "YATE_Teak_SwimPlatform",
+      "kind": "decoration",
+      "descendants": false,
+      "canPerch": false,
+      "waveAmplitude": 0.025,
+      "waveLength": 4,
+      "waveSpeed": 0.7853981633974483
+    }
+  ],
+  "materials": [
+    {
+      "sourceName": "YATE_Brass",
+      "rgb": [
+        0.5299999713897705,
+        0.36000001430511475,
+        0.11999999731779099
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Cream",
+      "rgb": [
+        0.8199999928474426,
+        0.7400000095367432,
+        0.5699999928474426
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_CushionBlue",
+      "rgb": [
+        0.11999999731779099,
+        0.25,
+        0.3199999928474426
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Dark",
+      "rgb": [
+        0.017999999225139618,
+        0.03200000151991844,
+        0.03700000047683716
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Foam",
+      "rgb": [
+        0.6499999761581421,
+        0.8500000238418579,
+        0.8100000023841858
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Glass",
+      "rgb": [
+        0.09000000357627869,
+        0.27000001072883606,
+        0.3400000035762787
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "BLEND",
+      "opacity": 0.30000001192092896,
+      "doubleSided": true
+    },
+    {
+      "sourceName": "YATE_Linen",
+      "rgb": [
+        0.8999999761581421,
+        0.8600000143051147,
+        0.7099999785423279
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Metal",
+      "rgb": [
+        0.47999998927116394,
+        0.5600000023841858,
+        0.5799999833106995
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Navy",
+      "rgb": [
+        0.017999999225139618,
+        0.07199999690055847,
+        0.14000000059604645
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_OceanPatch_00",
+      "rgb": [
+        0.02500000037252903,
+        0.25,
+        0.3400000035762787
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_OceanPatch_01",
+      "rgb": [
+        0.02800000086426735,
+        0.30000001192092896,
+        0.38999998569488525
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_OceanPatch_02",
+      "rgb": [
+        0.03500000014901161,
+        0.33000001311302185,
+        0.4000000059604645
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_OceanPatch_03",
+      "rgb": [
+        0.03999999910593033,
+        0.2800000011920929,
+        0.3700000047683716
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_OceanPatch_04",
+      "rgb": [
+        0.052000001072883606,
+        0.3499999940395355,
+        0.41999998688697815
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_OceanPatch_05",
+      "rgb": [
+        0.02800000086426735,
+        0.28999999165534973,
+        0.3700000047683716
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Red",
+      "rgb": [
+        0.699999988079071,
+        0.09000000357627869,
+        0.054999999701976776
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Rope",
+      "rgb": [
+        0.550000011920929,
+        0.4000000059604645,
+        0.20999999344348907
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Teak",
+      "rgb": [
+        0.47999998927116394,
+        0.27000001072883606,
+        0.11999999731779099
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_TeakDark",
+      "rgb": [
+        0.4300000071525574,
+        0.23499999940395355,
+        0.10499999672174454
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_TeakLight",
+      "rgb": [
+        0.5400000214576721,
+        0.3100000023841858,
+        0.15000000596046448
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Tile",
+      "rgb": [
+        0.4000000059604645,
+        0.5799999833106995,
+        0.6000000238418579
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_Upholstery",
+      "rgb": [
+        0.6899999976158142,
+        0.6499999761581421,
+        0.5199999809265137
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    },
+    {
+      "sourceName": "YATE_White",
+      "rgb": [
+        0.9300000071525574,
+        0.9100000262260437,
+        0.8299999833106995
+      ],
+      "colorSpace": "linear",
+      "emissionRgb": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0,
+      "alphaMode": "OPAQUE",
+      "opacity": 1.0,
+      "doubleSided": false
+    }
+  ]
+}
