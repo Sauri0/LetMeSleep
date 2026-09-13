@@ -1,0 +1,33 @@
+{
+  "status": "native-numeric-gates-passed-visual-audio-pending",
+  "generated_utc": "2026-09-13T02:05:04.307406+00:00",
+  "source_preparation_commit": "1bca463",
+  "files_sha256": {
+    "evidence/human-locomotion1-process.json": "e8cb97ec5069b7b68b63b35aee2575fefa09e28ffe6368860339c4eac71cb993",
+    "evidence/human-locomotion1.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/human-locomotion1.log": "b38afe7fc9d03df01f89dac69bffa49eeb6a12b253684b4d3999f6694f4e0ca8",
+    "human/audit.json": "fb773409478f32c76b6a1c58898b4186ed55ec270703f2a8aeb41eb287f2ed3f",
+    "human/human_arm_reach_samples.json": "932135fac470b8ecb24948c690b52b0bd717385b94e110f472d015745912c712",
+    "human/human_arm_reach_summary.json": "9feece333fd4aaa38e0e52ede93564ee1210987c23d2b344fef35a62bce05f9d",
+    "human/LMS_Human_alpha.blend": "78db69ddd6e2923804ee2b2528c50f51536aefe0b349477a622aa554a4ae1e15",
+    "human/LMS_Human_alpha.fbx": "ccb0f1f92918ea52e738719190be934d7ec14843b4b6206284bd4cb89895297b",
+    "human/locomotion_fbx_preservation.json": "4a1db28f1e983416161cc2c7a2466435740ef753a315643060c10a2b44a67cf9",
+    "human/locomotion_native_audit.json": "65d1198d61fd5ae57b829379f624b6745dca97195b8bf0886bff07235a95940f",
+    "human/locomotion_profiles.json": "06ea4c4bca71220148f12f0753a5ba31e30dd0cd8ff6e883a12ea5273577a1a4",
+    "human/preservation.json": "ec8db90e59df46e1b4234f02daad7bfd1109ef799e789be04e3ea75d29ac5c33",
+    "human/source-snapshot/audit_human_joints.py": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+    "human/source-snapshot/audit_human_locomotion.py": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
+    "human/source-snapshot/author_human_facial.py": "b8ce9cb1db3be76924c9304aa607f952a8f8a170460cae9001f389099c77fb11",
+    "human/source-snapshot/author_human_locomotion.py": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
+    "human/source-snapshot/author_motion.py": "1f85fb7bdd1449c9f59c3ad2a326d983ef1c94fd0e7d6fc925335022718621c1",
+    "human/source-snapshot/build_characters.py": "77a7dd9c5b949456d582c36a0c94822b78859cf15327161b9837e301f4a3759d",
+    "human/source-snapshot/compare_fbx_winding_repair.py": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+    "human/source-snapshot/export_human_locomotion.py": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
+    "human/source-snapshot/human_locomotion_contract.py": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
+    "human/source-snapshot/human_menu_contract.py": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+    "human/source-snapshot/inspect_fbx_morph_regions.py": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+    "human/source-snapshot/repair_human_lid_winding.py": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+    "human/source-snapshot/verify_human_menu.py": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+    ".gitattributes": "9b981ea657a5a7e4a200fd392514fe4f6c57a39623d18f96c751b6e77c936491"
+  }
+}

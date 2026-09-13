@@ -1,0 +1,22 @@
+00:01.703  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\candidates\human-blink-winding1\human\LMS_Human_alpha.blend"
+00:23.609  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\candidates\human-blink-winding1\human\LMS_Human_alpha.blend"
+00:24.656  blend            | Read blend: "N:\LetMeSleep\Worktrees\characters\art_source\unity\characters\candidates\human-locomotion1\human\LMS_Human_alpha.blend"
+Info: Saved as "LMS_Human_alpha.blend"
+
+FBX export starting... 'N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\candidates\\human-locomotion1\\human\\LMS_Human_alpha.fbx'
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+(bpy.data.armatures['LMS_HumanSkeleton'], 'POSE')
+export finished in 2.3641 sec.
+Failed to remove: (<built-in function unlink>, 'C:\\Users\\brank\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions\\.local\\lib\\python3.13\\site-packages\\cryptography\\hazmat\\bindings\\_rust.pyd', PermissionError(13, 'Acceso denegado'))
+Failed to remove: (<built-in function rmdir>, 'C:\\Users\\brank\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions\\.local\\lib\\python3.13\\site-packages\\cryptography\\hazmat\\bindings', OSError(41, 'El directorio no está vacío'))
+Failed to remove: (<built-in function rmdir>, 'C:\\Users\\brank\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions\\.local\\lib\\python3.13\\site-packages\\cryptography\\hazmat', OSError(41, 'El directorio no está vacío'))
+Failed to remove: (<built-in function rmdir>, 'C:\\Users\\brank\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions\\.local\\lib\\python3.13\\site-packages\\cryptography', OSError(41, 'El directorio no está vacío'))
+FBX version: 7400
+FBX version: 7400
+HUMAN_LOCOMOTION_CANDIDATE {"output": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\candidates\\human-locomotion1\\human", "files": {"LMS_Human_alpha.blend": "78db69ddd6e2923804ee2b2528c50f51536aefe0b349477a622aa554a4ae1e15", "LMS_Human_alpha.fbx": "ccb0f1f92918ea52e738719190be934d7ec14843b4b6206284bd4cb89895297b"}, "status": "native-numeric-gates-passed-visual-audio-pending"}
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

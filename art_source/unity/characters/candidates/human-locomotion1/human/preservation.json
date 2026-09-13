@@ -1,0 +1,117 @@
+{
+  "baseline_blend_sha256": "918ddcf802ef761cf89bf20bedcec4019de8d8adc4bb765c2e5c7361e3f862a1",
+  "baseline_root": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\candidates\\human-blink-winding1\\human",
+  "scene_before": {
+    "meshes": "d56fadd31c7c3490ff1d0fb72d60f843831b78b1ea768e647e1d24e8a88be110",
+    "rigs": "c6a02a77948389ec7996eb7cd0a544a5f9362fd04c72bb8af01783a2a009311c",
+    "winding": "6dc7f4a843cbf5a640b31c1896daa12c368cd26807fed2e04e5c18487cced456"
+  },
+  "scene_after": {
+    "meshes": "d56fadd31c7c3490ff1d0fb72d60f843831b78b1ea768e647e1d24e8a88be110",
+    "rigs": "c6a02a77948389ec7996eb7cd0a544a5f9362fd04c72bb8af01783a2a009311c",
+    "winding": "6dc7f4a843cbf5a640b31c1896daa12c368cd26807fed2e04e5c18487cced456"
+  },
+  "actions_before": {
+    "Human_Blink": "357a8b8e6d9767688c38df23a6a94ebb6d61e96b751ee0a2c684d0fb1d29f5ed",
+    "Human_Clap": "8b53f4430dbd23d2d38be5c2c1f9045c10594e4be55b0afec1d30aec26fdf05c",
+    "Human_Crouch": "12baf92b4f33535e50ba0839dd92986ab8a0e374dbaac6800c39d39a2abb3ad8",
+    "Human_Faint": "da5bf825fff87013a3b06cb844b2377b28b522d007c5d384bc493da78336301e",
+    "Human_Fall": "b1f535ba6222391a1d7f58af77a39c106669a68ab2b7d11337c37af08e015ee4",
+    "Human_FingerCurl": "13a570dd9c5c2aabb28956be97f123c300badb80e9f58880d9be042b212b92fc",
+    "Human_Hit": "1560a3a3297ed7042a21d3c424035ceef9d28336daac92cf88a5b9be07ad2efd",
+    "Human_Idle": "b9bcc7b631b35fa7343c4edc9c71e55bd3a1bd1c6c4af905c8ffaf7d7df1c60d",
+    "Human_Jump": "ffa18244002b2d4f951eb39cefd588d4cd0ac4136e6b65d1c26b42be6c2fdcf5",
+    "Human_Land": "478b290cc13091f672ecbeb0ff69b5bed9cb30feb23053b83eac5178fc79732c",
+    "Human_Recover": "52e8576e7d6f3487730f13154da6bc3e0491af9f744e702626f4ef81dc8283d3",
+    "Human_Run": "0632530d02e14208bb498756fd114dff6bd02b57eb227efe827853b2f44f81f1",
+    "Human_Swat": "3a8e9883c871ac33891288bd4821bb6b80032d8daf5e09ffeae1e5e07f992214",
+    "Human_Turn": "7f33d72807f5a58da5f728d5415377f33b6b1c86af823868950b96ee0603599f",
+    "Human_Walk": "a4a31aa10c7149c1ec718be0d64dcb7c0b2ff6fadaee84911ec0e08f85b2791c"
+  },
+  "actions_after": {
+    "Human_Blink": "357a8b8e6d9767688c38df23a6a94ebb6d61e96b751ee0a2c684d0fb1d29f5ed",
+    "Human_Clap": "8b53f4430dbd23d2d38be5c2c1f9045c10594e4be55b0afec1d30aec26fdf05c",
+    "Human_Crouch": "12baf92b4f33535e50ba0839dd92986ab8a0e374dbaac6800c39d39a2abb3ad8",
+    "Human_Faint": "da5bf825fff87013a3b06cb844b2377b28b522d007c5d384bc493da78336301e",
+    "Human_Fall": "b1f535ba6222391a1d7f58af77a39c106669a68ab2b7d11337c37af08e015ee4",
+    "Human_FingerCurl": "13a570dd9c5c2aabb28956be97f123c300badb80e9f58880d9be042b212b92fc",
+    "Human_Hit": "1560a3a3297ed7042a21d3c424035ceef9d28336daac92cf88a5b9be07ad2efd",
+    "Human_Idle": "b9bcc7b631b35fa7343c4edc9c71e55bd3a1bd1c6c4af905c8ffaf7d7df1c60d",
+    "Human_Jump": "ffa18244002b2d4f951eb39cefd588d4cd0ac4136e6b65d1c26b42be6c2fdcf5",
+    "Human_Land": "478b290cc13091f672ecbeb0ff69b5bed9cb30feb23053b83eac5178fc79732c",
+    "Human_Recover": "52e8576e7d6f3487730f13154da6bc3e0491af9f744e702626f4ef81dc8283d3",
+    "Human_Run": "50bd23e13324766e863005341d6c32db353f2fd1b62fa786f2923f424a14afca",
+    "Human_Swat": "3a8e9883c871ac33891288bd4821bb6b80032d8daf5e09ffeae1e5e07f992214",
+    "Human_Trot": "af064639b0013db1e8135333abcc12dd519835352d7cc0f353cd300780f9c849",
+    "Human_Turn": "7f33d72807f5a58da5f728d5415377f33b6b1c86af823868950b96ee0603599f",
+    "Human_Walk": "42b8f7d2a643f6c95b35154dd7223eb1c4b662ce3779d3c7dbdfc9efd2878125",
+    "Human_WalkSlow": "1e1c9c6c24dc488d2b7bbec69f7cca6104e5a572047c9a55e623bf8b30af359f"
+  },
+  "preserved_action_names": [
+    "Human_Blink",
+    "Human_Clap",
+    "Human_Crouch",
+    "Human_Faint",
+    "Human_Fall",
+    "Human_FingerCurl",
+    "Human_Hit",
+    "Human_Idle",
+    "Human_Jump",
+    "Human_Land",
+    "Human_Recover",
+    "Human_Swat",
+    "Human_Turn"
+  ],
+  "files_sha256": {
+    "LMS_Human_alpha.blend": "78db69ddd6e2923804ee2b2528c50f51536aefe0b349477a622aa554a4ae1e15",
+    "LMS_Human_alpha.fbx": "ccb0f1f92918ea52e738719190be934d7ec14843b4b6206284bd4cb89895297b"
+  },
+  "author": {
+    "clips": [
+      {
+        "name": "Human_WalkSlow",
+        "start": 1,
+        "end": 61,
+        "fps": 30,
+        "duration_seconds": 2.0,
+        "loop": true,
+        "root_motion": false
+      },
+      {
+        "name": "Human_Walk",
+        "start": 1,
+        "end": 61,
+        "fps": 30,
+        "duration_seconds": 2.0,
+        "loop": true,
+        "root_motion": false
+      },
+      {
+        "name": "Human_Trot",
+        "start": 1,
+        "end": 61,
+        "fps": 30,
+        "duration_seconds": 2.0,
+        "loop": true,
+        "root_motion": false
+      },
+      {
+        "name": "Human_Run",
+        "start": 1,
+        "end": 61,
+        "fps": 30,
+        "duration_seconds": 2.0,
+        "loop": true,
+        "root_motion": false
+      }
+    ],
+    "minimum_authored_extension_margin_m": 0.021489169152340226,
+    "grip_source_by_clip": {
+      "Human_WalkSlow": "Human_Walk",
+      "Human_Walk": "Human_Walk",
+      "Human_Trot": "Human_Run",
+      "Human_Run": "Human_Run"
+    }
+  },
+  "scope": "Exact source geometry/skin/morph/rig/winding and 13 unrelated action curves. New motion has separate audit; perception pending."
+}

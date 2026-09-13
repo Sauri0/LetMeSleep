@@ -1,6 +1,6 @@
 # Locomoción humana funcional: fuente preparada, sin exportación
 
-Estado: **prepared-not-exported**. Seis pruebas matemáticas pasan y cinco scripts compilan con Python3.14. No se ejecutó Blender, el auditor nativo ni Unity para estos clips. No existen FBX nuevos de esta entrega. La orden de Director limita el trabajo a clips funcionales y datos de alcance; rediseño estético queda fuera.
+Estado al commit1bca463: **prepared-not-exported**. Seis pruebas matemáticas pasaron y cinco scripts compilaron con Python3.14. Esta entrega inicial no ejecutó Blender ni Unity. La exportación posterior autorizada, sus hashes y medidas están en `HUMAN-LOCOMOTION-NATIVE-DELIVERY.md`. La orden de Director limita el trabajo a clips funcionales y datos de alcance; rediseño estético queda fuera.
 
 Fallo que aborda: el ciclo fuente actual tiene una distancia de apoyo incompatible con la velocidad y la cadencia visual/audio usadas en juego. La propuesta mantiene longitud de piernas y reemplaza trayectoria de apoyo/vuelo/pelvis. Conserva transformaciones locales de manos, dedos y sockets de agarre; el arreglo de la muñeca durante el golpe pertenece a Gameplay, integrado por Director en9b214e8, y requiere su verificación de runtime.
 

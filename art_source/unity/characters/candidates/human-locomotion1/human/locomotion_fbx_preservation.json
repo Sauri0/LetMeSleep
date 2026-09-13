@@ -1,0 +1,50 @@
+{
+  "before": {
+    "path": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\candidates\\human-blink-winding1\\human\\LMS_Human_alpha.fbx",
+    "sha256": "2473a8e6420dcb7c15d58c6dcb0e9fc64769bc8af6636844c71851a42bd84b66",
+    "counts": {
+      "positions": 5,
+      "shapes": 8,
+      "skin": 325,
+      "bone_model_properties": 71,
+      "animation_curve_payloads": 9150,
+      "materials": 5
+    },
+    "hashes": {
+      "positions": "0592f4b3c5f3bf33a86a47a9de0262c21d395b6b31d8f7dce31a3f19355535ab",
+      "shapes": "e778e910ff4e603f13260708077777cf3a0894cfb7604e0d65073c2fd1af250d",
+      "skin": "379beb313507a888ffc24d7e352f2b02a290ae0be24dfba57337eebcd83349c0",
+      "bone_model_properties": "523275f009850ac26bc9ebbf73714993026ebfc0df83fd20a1efdb826fbed7ad",
+      "animation_curve_payloads": "bf8b08e0684502e6e4c7965e9eee5f82dbb77c08de2b2b471feafbe66baf400f",
+      "materials": "788679cfca48b5c9a1053160ba90cd30cb80a95b934330e804f9c27a2923cc9e"
+    }
+  },
+  "after": {
+    "path": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\candidates\\human-locomotion1\\human\\LMS_Human_alpha.fbx",
+    "sha256": "ccb0f1f92918ea52e738719190be934d7ec14843b4b6206284bd4cb89895297b",
+    "counts": {
+      "positions": 5,
+      "shapes": 8,
+      "skin": 325,
+      "bone_model_properties": 71,
+      "animation_curve_payloads": 10370,
+      "materials": 5
+    },
+    "hashes": {
+      "positions": "0592f4b3c5f3bf33a86a47a9de0262c21d395b6b31d8f7dce31a3f19355535ab",
+      "shapes": "e778e910ff4e603f13260708077777cf3a0894cfb7604e0d65073c2fd1af250d",
+      "skin": "379beb313507a888ffc24d7e352f2b02a290ae0be24dfba57337eebcd83349c0",
+      "bone_model_properties": "523275f009850ac26bc9ebbf73714993026ebfc0df83fd20a1efdb826fbed7ad",
+      "animation_curve_payloads": "45b813e14bdae6bfedd6cf9810e82a73b8292d1b818e465ae959fddd0dfa290f",
+      "materials": "788679cfca48b5c9a1053160ba90cd30cb80a95b934330e804f9c27a2923cc9e"
+    }
+  },
+  "preserved": {
+    "positions": true,
+    "shapes": true,
+    "skin": true,
+    "bone_model_properties": true,
+    "materials": true,
+    "polygon_winding": true
+  }
+}

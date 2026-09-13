@@ -1,0 +1,27 @@
+{
+  "stage": "human-locomotion1",
+  "argv": [
+    "N:/Blender/blender.exe",
+    "-b",
+    "-t",
+    "2",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\export_human_locomotion.py",
+    "--",
+    "--baseline-human",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/candidates/human-blink-winding1/human",
+    "--output-human",
+    "N:/LetMeSleep/Worktrees/characters/art_source/unity/characters/candidates/human-locomotion1/human",
+    "--audit"
+  ],
+  "slot_note": "Director asign\u00f3 slot tras Unity PID380 terminado; humano funcional exclusivo, sin renders, con auditor fuente/roundtrip y datos rig",
+  "started_utc": "2026-09-13T02:01:14.729881+00:00",
+  "threads": 2,
+  "priority": "BelowNormal",
+  "pid": 27188,
+  "exit_code": 0,
+  "seconds": 72.39562040001329,
+  "finished_utc": "2026-09-13T02:02:27.126956+00:00"
+}

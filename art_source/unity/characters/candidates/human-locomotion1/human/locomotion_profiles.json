@@ -1,0 +1,157 @@
+{
+  "revision": "human-locomotion-v1-prepared",
+  "status": "native-numeric-gates-passed-visual-audio-pending",
+  "baseline_blend_sha256": "918ddcf802ef761cf89bf20bedcec4019de8d8adc4bb765c2e5c7361e3f862a1",
+  "source_fps": 30,
+  "source_start_frame": 1,
+  "source_end_frame": 61,
+  "coordinate_system": "source Z up / -Y forward; actor=(-sourceX, sourceZ, -sourceY)",
+  "profiles": [
+    {
+      "clip": "Human_WalkSlow",
+      "reference": "Human_Walk",
+      "speed": 1.0,
+      "contacts": 2.4,
+      "duty": 0.6,
+      "hip": 0.695,
+      "rise": 0.025,
+      "lift": 0.09,
+      "ramp": 0.22,
+      "lean": 0.025,
+      "arm": 0.16,
+      "elbow": 0.2,
+      "nominal_duration_seconds": 0.8333333333333334,
+      "distance_per_cycle_m": 0.8333333333333334,
+      "source_duration_seconds": 2.0,
+      "contact_markers": [
+        {
+          "foot": "L",
+          "phase": 0.0
+        },
+        {
+          "foot": "R",
+          "phase": 0.5
+        }
+      ],
+      "stance_duration_phase": 0.6,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "clip": "Human_Walk",
+      "reference": "Human_Walk",
+      "speed": 1.55,
+      "contacts": 3.2,
+      "duty": 0.56,
+      "hip": 0.685,
+      "rise": 0.035,
+      "lift": 0.1,
+      "ramp": 0.22,
+      "lean": 0.04,
+      "arm": 0.16,
+      "elbow": 0.2,
+      "nominal_duration_seconds": 0.625,
+      "distance_per_cycle_m": 0.96875,
+      "source_duration_seconds": 2.0,
+      "contact_markers": [
+        {
+          "foot": "L",
+          "phase": 0.0
+        },
+        {
+          "foot": "R",
+          "phase": 0.5
+        }
+      ],
+      "stance_duration_phase": 0.56,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "clip": "Human_Trot",
+      "reference": "Human_Run",
+      "speed": 3.1,
+      "contacts": 4.0,
+      "duty": 0.32,
+      "hip": 0.69,
+      "compression": 0.03,
+      "lift": 0.15,
+      "ramp": 0.18,
+      "lean": 0.08,
+      "arm": 0.28,
+      "elbow": 0.6,
+      "nominal_duration_seconds": 0.5,
+      "distance_per_cycle_m": 1.55,
+      "source_duration_seconds": 2.0,
+      "contact_markers": [
+        {
+          "foot": "L",
+          "phase": 0.0
+        },
+        {
+          "foot": "R",
+          "phase": 0.5
+        }
+      ],
+      "stance_duration_phase": 0.32,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "clip": "Human_Run",
+      "reference": "Human_Run",
+      "speed": 5.0,
+      "contacts": 4.6,
+      "duty": 0.24,
+      "hip": 0.68,
+      "compression": 0.035,
+      "lift": 0.2,
+      "ramp": 0.16,
+      "lean": 0.1,
+      "arm": 0.28,
+      "elbow": 0.6,
+      "nominal_duration_seconds": 0.4347826086956522,
+      "distance_per_cycle_m": 2.173913043478261,
+      "source_duration_seconds": 2.0,
+      "contact_markers": [
+        {
+          "foot": "L",
+          "phase": 0.0
+        },
+        {
+          "foot": "R",
+          "phase": 0.5
+        }
+      ],
+      "stance_duration_phase": 0.24,
+      "loop": true,
+      "root_motion": false
+    }
+  ],
+  "playback": "phase += presented_horizontal_distance / D; sample frac(phase) * actual imported Clip.length",
+  "gates_pending": [
+    "Unity import and reference assignment",
+    "mesh/articulation and audio perception",
+    "blend transitions and starts/stops",
+    "crouched locomotion, turns and uneven terrain"
+  ],
+  "files_sha256": {
+    "LMS_Human_alpha.blend": "78db69ddd6e2923804ee2b2528c50f51536aefe0b349477a622aa554a4ae1e15",
+    "LMS_Human_alpha.fbx": "ccb0f1f92918ea52e738719190be934d7ec14843b4b6206284bd4cb89895297b"
+  },
+  "source_snapshot_sha256": {
+    "human_locomotion_contract.py": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
+    "author_human_locomotion.py": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
+    "export_human_locomotion.py": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
+    "audit_human_locomotion.py": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
+    "author_motion.py": "1f85fb7bdd1449c9f59c3ad2a326d983ef1c94fd0e7d6fc925335022718621c1",
+    "build_characters.py": "77a7dd9c5b949456d582c36a0c94822b78859cf15327161b9837e301f4a3759d",
+    "verify_human_menu.py": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+    "human_menu_contract.py": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+    "repair_human_lid_winding.py": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+    "author_human_facial.py": "b8ce9cb1db3be76924c9304aa607f952a8f8a170460cae9001f389099c77fb11",
+    "audit_human_joints.py": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+    "compare_fbx_winding_repair.py": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+    "inspect_fbx_morph_regions.py": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264"
+  }
+}
