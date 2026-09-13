@@ -170,7 +170,7 @@ namespace LetMeSleep.Presentation
                     warm.transform.position+=bindings.HumanSeatRoot.forward*.85f;
                     warm.transform.LookAt(bindings.HumanSeatRoot.TransformPoint(new Vector3(0,1.15f,.35f)));
                     warm.shadows=LightShadows.Soft;
-                    warm.shadowResolution=UnityEngine.Rendering.LightShadowResolution.Low;
+                    // URP uses the pipeline additional-light shadow resolution tier; do not set the Built-in-only property.
                     warm.shadowStrength=.8f; warm.shadowBias=.025f; warm.shadowNormalBias=.08f;
                     warm.shadowNearPlane=.05f;
                 }

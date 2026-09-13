@@ -175,6 +175,10 @@ namespace LetMeSleep.Presentation.Gameplay
             {
                 mosquitoCamera.SetCollisionFilter(gameplay.World.IsWorldCollider);
                 mosquitoCamera.BindAnchors(proxy.transform, view.GetAnchor("CameraTarget"));
+                var coreBones=new List<Transform>();
+                foreach(var bone in view.Animator.GetComponentsInChildren<Transform>(true))
+                    if(bone.name=="Thorax" || bone.name=="Head" || bone.name=="Abdomen01" || bone.name=="Abdomen02") coreBones.Add(bone);
+                mosquitoCamera.BindLocalVisual(view.transform,view.GetComponentsInChildren<Renderer>(true),coreBones.ToArray(),view.GetAnchor("AimForward"));
             }
         }
 
@@ -338,6 +342,7 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void ClearVisuals()
         {
+            if(mosquitoCamera) mosquitoCamera.Unbind();
             foreach (ActorVisualBinding visual in visuals.Values)
                 if (visual != null) Destroy(visual.gameObject);
             visuals.Clear();
