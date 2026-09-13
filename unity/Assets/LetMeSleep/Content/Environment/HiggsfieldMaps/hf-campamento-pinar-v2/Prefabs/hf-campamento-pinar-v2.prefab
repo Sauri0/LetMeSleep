@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.EnvironmentMapDefinition
   MapId: hf-campamento-pinar-v2
-  ContentHash: fc9399387e8a9d4bcae5f4a70e3291233170f54d92383d63a9a8b5cb648ad168
+  ContentHash: 3551537b2702090fb67e41e10ed8dccd9a3703dc33a6cfd8c01fa4fa8ce90f36
   SpatialData: {fileID: 4900000, guid: 9c1cf8ff13207694f84b6176aa364564, type: 3}
   HumanSpawnPoints:
   - {fileID: 9027868090736219709}
@@ -4490,6 +4490,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 553c4e871a1643b479dbcf6f5d9f8565, type: 2}
+    - target: {fileID: 2391472020784955350, guid: d9a8d8d4ba7c2f540af5edad800efbd0, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: bf11c01b8ee4512428d17a5e487b1eeb, type: 2}
     - target: {fileID: 2395583555708903957, guid: d9a8d8d4ba7c2f540af5edad800efbd0, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -13849,7 +13853,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 832c19931529fa044a43b69dce85fc6c, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 0297e528d386a1d4882796053563f114, type: 2}
 --- !u!114 &6114044465244604325
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -20,7 +20,9 @@ def run(validation_path, application_path, output_directory):
     application = json.loads(Path(application_path).read_text(encoding="utf-8-sig"))
     assert validation["status"] == "PASS_SCOPED" and validation["cleanup"]
     assert not validation["errors"] and len(validation["cases"]) == 49
+    assert not validation["pending"] and len(validation["passages"]) == 25
     assert all(case["status"] == "PASS" for case in validation["cases"])
+    assert all(passage["status"] == "PASS_STATIC_CLEARANCE" for passage in validation["passages"])
     change = validation["campEdgeCandidate"]
     assert change["revision"] == "camp-path-north-edge-lower3mm-01"
     assert change["deltaY"] == -0.003 and change["materialReferencesPreserved"]
