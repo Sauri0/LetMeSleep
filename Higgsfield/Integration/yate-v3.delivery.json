@@ -1,0 +1,141 @@
+{
+  "status": "PASS_YATE_SINGLE_MESH_WINDING_REPAIR_AND_STRICT_GPU_V3_RECIPE",
+  "mapId": "hf-yate-a-la-deriva-v3",
+  "recipePath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\UnityRecipeV3\\hf-yate-a-la-deriva-v3.recipe.json",
+  "recipeSha256": "ebae0978d8fcaf9ff371601e7a3175503f82b61e8e87c5faba5e36337d5d1a08",
+  "validationPath": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\UnityRecipeV3\\hf-yate-a-la-deriva-v3.validation.json",
+  "validationSha256": "6612f877a707117d2054163dc178d7d0c03d1512d22193fd0002d90946ab6b60",
+  "sourceHashes": {
+    "fbx": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\HF_MAP_04_yate_UNITY_V3.fbx",
+      "sha256": "217774581132711b6197a6115954e6e63acd3fdbf42b2705c0c115e6bc146870"
+    },
+    "glb": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\HF_MAP_04_yate_UNITY_V3.glb",
+      "sha256": "2eae6e1fdc496e9a9b141f30ff1e2adc52472725d30d0e0b14b11b78395cc2a8"
+    },
+    "audit": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\scene-audit.json",
+      "sha256": "cf6fa62b3899c39649630b330732b37ed264bc8806671442d12769bb82ebd84c"
+    },
+    "report": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\HF_MAP_04_yate_report.json",
+      "sha256": "928213f81032f62f2e038e8945c8c36147e06e5907636d85a6964dc1cd8bd517"
+    }
+  },
+  "sourceBlend": {
+    "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\HF_MAP_04_yate_NORMALS_V3.blend",
+    "sha256": "17b2a4196712dc55c2675b83ff0b2110886b142b9399b295f0df2565274c9769"
+  },
+  "normalsRepair": {
+    "status": "PASS_SINGLE_OBJECT_WINDING_SAVED_AND_EXPORTED",
+    "blender": "5.2.1 LTS",
+    "object": "Water_Ocean",
+    "mesh": "YATE_Ocean_AnnulusMesh",
+    "flippedPolygons": 32000,
+    "before": {
+      "down": 32000
+    },
+    "sourceFileUnmodified": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\HF_MAP_04_yate.blend",
+    "puertoFile": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo.blend",
+    "puertoFileBeforeSha256": "ae73c46d661bbaaa6248627988ee13296dc5476038b06e0f55aa413c3e61c32a",
+    "after": {
+      "up": 32000
+    },
+    "savedScenes": [
+      "HF_MAP_04_yate"
+    ],
+    "invariants": [
+      "All mesh coordinates, morph coordinates/weights, material slots, polygon membership/count/smoothing preserved",
+      "All other meshes and all scene object transforms/parents/frame numbers preserved",
+      "Live Yate audit objects/materials equal preserved source audit",
+      "Standalone blend contains only HF_MAP_04_yate scene plus dependencies",
+      "Original Yate files and Puerto file never saved over"
+    ],
+    "restoredActiveScene": "HF_MAP_05_pueblo",
+    "restoredActiveFile": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo.blend",
+    "puertoFileAfterSha256": "ae73c46d661bbaaa6248627988ee13296dc5476038b06e0f55aa413c3e61c32a",
+    "files": {
+      "fbx-export.log": {
+        "bytes": 154,
+        "sha256": "fc26580a29e9448dd1ba27fbb9dd51ebb4dd5e3f722047b190390ec1961dc669"
+      },
+      "glb-export.log": {
+        "bytes": 15387,
+        "sha256": "df3830859793e7b3749c81915dd2adc48691578465ae731be1f7a926c45a1edf"
+      },
+      "HF_MAP_04_yate_NORMALS_V3.blend": {
+        "bytes": 4880447,
+        "sha256": "17b2a4196712dc55c2675b83ff0b2110886b142b9399b295f0df2565274c9769"
+      },
+      "HF_MAP_04_yate_report.json": {
+        "bytes": 3265,
+        "sha256": "928213f81032f62f2e038e8945c8c36147e06e5907636d85a6964dc1cd8bd517"
+      },
+      "HF_MAP_04_yate_UNITY_V3.fbx": {
+        "bytes": 2005292,
+        "sha256": "217774581132711b6197a6115954e6e63acd3fdbf42b2705c0c115e6bc146870"
+      },
+      "HF_MAP_04_yate_UNITY_V3.glb": {
+        "bytes": 8730224,
+        "sha256": "2eae6e1fdc496e9a9b141f30ff1e2adc52472725d30d0e0b14b11b78395cc2a8"
+      },
+      "scene-audit.json": {
+        "bytes": 246052,
+        "sha256": "cf6fa62b3899c39649630b330732b37ed264bc8806671442d12769bb82ebd84c"
+      }
+    }
+  },
+  "serializedGlbWindingReadback": {
+    "status": "PASS_SERIALIZED_GLB_WORLD_WINDING_READBACK",
+    "before": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\SourceBeforeNormals\\HF_MAP_04_yate.glb",
+      "sha256": "ab83efca5c93342ef44e125c7e0deb7d2e5a227ef7de61b2b0178fcd136260ba",
+      "glbWorldTriangleY": {
+        "down": 32000
+      },
+      "morphNames": [
+        "Wave_A",
+        "Wave_B"
+      ],
+      "animationClips": 0
+    },
+    "after": {
+      "path": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\HF_MAP_04_yate_UNITY_V3.glb",
+      "sha256": "2eae6e1fdc496e9a9b141f30ff1e2adc52472725d30d0e0b14b11b78395cc2a8",
+      "glbWorldTriangleY": {
+        "up": 32000
+      },
+      "morphNames": [
+        "Wave_A",
+        "Wave_B"
+      ],
+      "animationClips": 0
+    }
+  },
+  "recipeDiff": "Only mapId,sourceFbx,sourceSha256 differ from GPU v2; other recipe fields identical",
+  "contractCheck": "Actual current central C# Validate and Resolve passed all160 paths; central generator reproduced recipe and validation",
+  "centralCodeHashes": {
+    "N:\\LetMeSleep\\Repository\\Higgsfield\\Integration\\prepare_map_recipe.py": "0dab9f5d764dfc01aee6d87f7ae0f2f8ca58e84d7a68a1b62b3310f6a84b2c43",
+    "N:\\LetMeSleep\\Repository\\unity\\Assets\\LetMeSleep\\Content\\Editor\\Environment\\Higgsfield\\HiggsfieldImportContract.cs": "8880920f7b647ac9d4c6cd1d5af042ef6258f4fd4604f4181ea82d7706fd066d"
+  },
+  "counts": {
+    "objects": 213,
+    "meshes": 160,
+    "materials": 23,
+    "triangles": 73884,
+    "humanSpawns": 5,
+    "mosquitoSpawns": 16
+  },
+  "gpuWaterPaths": [
+    "Water_Ocean"
+  ],
+  "reservedSourceFilesEdited": false,
+  "nativeApplicationsStarted": false,
+  "existingBlenderMcpUsed": true,
+  "pending": [
+    "Unity v3 source normals/culling and GPU shader review",
+    "Runtime water and glass sorting/performance",
+    "Map registry revision and navigation integration"
+  ]
+}
