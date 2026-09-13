@@ -3,6 +3,7 @@ using UnityEngine;
 namespace LetMeSleep.Presentation
 {
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(1300)]
     public sealed class HumanViewCamera : MonoBehaviour
     {
         private const float MinimumPitchRadians = -1.91986218f; // -110 degrees
@@ -19,6 +20,7 @@ namespace LetMeSleep.Presentation
         private uint viewRevision;
         private bool initialized;
         private bool hasView;
+        private System.Action refreshEyeAnchor;
 
         public uint ViewRevision => viewRevision;
         public float PitchRadians => pitchRadians;
@@ -36,6 +38,7 @@ namespace LetMeSleep.Presentation
             if (pitchPivot == null)
                 return;
 
+            refreshEyeAnchor?.Invoke(); // After final body/facial writers, before reading the copied anchor.
             if (followEyePosition && eyeAnchor != null)
                 pitchPivot.position = eyeAnchor.position;
             pitchPivot.rotation = Quaternion.Euler(
@@ -71,9 +74,10 @@ namespace LetMeSleep.Presentation
             controlledCamera.farClipPlane = preset.FarPlane;
         }
 
-        public void BindEye(Transform anchor)
+        public void BindEye(Transform anchor, System.Action refreshAnchor = null)
         {
             eyeAnchor = anchor;
+            refreshEyeAnchor = refreshAnchor;
             initialized = false;
             Initialize();
         }

@@ -9,6 +9,7 @@ namespace LetMeSleep.Presentation.Gameplay
     [DisallowMultipleComponent]
     public sealed class HumanLocomotionPresenter : MonoBehaviour
     {
+        public enum PoseOwner { Controller, Locomotion }
         [Serializable]
         public sealed class GaitClip
         {
@@ -69,19 +70,19 @@ namespace LetMeSleep.Presentation.Gameplay
 
         // Call after base interpolation, before hands/anchors/facial final writers.
         // eligible=false covers stop, crouch, jump, strike and recovery; release before controller action setup.
-        public void EvaluateRenderedPose(Vector3 position, bool eligible, bool discontinuity,
+        public PoseOwner EvaluateRenderedPose(Vector3 position, bool eligible, bool discontinuity,
             int frameId, float deltaSeconds)
         {
-            if (clock == null) return;
+            if (clock == null) return PoseOwner.Controller;
             if (!isActiveAndEnabled || !animator || !animator.enabled || !eligible ||
                 discontinuity || deltaSeconds <= 0 || deltaSeconds > 0.25f ||
                 float.IsNaN(deltaSeconds) || float.IsInfinity(deltaSeconds) ||
                 !Finite(position.x) || !Finite(position.y) || !Finite(position.z))
-            { Suspend(); return; }
-            if (evaluatedFrame == frameId) return;
+            { Suspend(); return PoseOwner.Controller; }
+            if (evaluatedFrame == frameId) return OwnsPose ? PoseOwner.Locomotion : PoseOwner.Controller;
             uint generation = clock.Generation;
             var sample = clock.Advance(position.x, position.z, deltaSeconds, frameId, true);
-            if (generation != clock.Generation) { ReleasePose(); evaluatedFrame = -1; return; }
+            if (generation != clock.Generation) { ReleasePose(); evaluatedFrame = -1; return PoseOwner.Controller; }
             AcquirePose();
             for (int i = 0; i < clips.Length; i++)
             {
@@ -93,6 +94,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 mixer.SetInputWeight(sample.UpperProfile, (float)sample.Blend);
             graph.Evaluate(0);
             evaluatedFrame = frameId;
+            return PoseOwner.Locomotion;
         }
 
         // Call after foot-anchor refresh/optional support correction, once per frame.

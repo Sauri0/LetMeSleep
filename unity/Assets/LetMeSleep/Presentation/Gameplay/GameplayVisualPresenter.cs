@@ -199,7 +199,7 @@ namespace LetMeSleep.Presentation.Gameplay
             AudioListener listener = camera != null ? camera.GetComponent<AudioListener>() : null;
             if (listener != null) listener.enabled = true;
             if (proxy.Role == PlayerRole.Human && humanCamera != null)
-                humanCamera.BindEye(view.GetAnchor("CameraEye"));
+                humanCamera.BindEye(view.GetAnchor("CameraEye"), view.RefreshAnchors);
             else if (proxy.Role == PlayerRole.Mosquito && mosquitoCamera != null)
             {
                 mosquitoCamera.SetCollisionFilter(gameplay.World.IsWorldCollider);
@@ -371,6 +371,7 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void ClearVisuals()
         {
+            if (humanCamera) humanCamera.BindEye(null);
             if(mosquitoCamera) mosquitoCamera.Unbind();
             foreach (ActorVisualBinding visual in visuals.Values)
                 if (visual != null) { RemoveLocomotionAudio(visual); Destroy(visual.gameObject); }

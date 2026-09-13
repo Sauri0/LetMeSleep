@@ -48,6 +48,7 @@ namespace LetMeSleep.Presentation.Gameplay
         private readonly float[] motionDurations = new float[32];
         private HumanLocomotionPresenter locomotion;
         private bool usingLocomotion, locomotionDiscontinuity;
+        private bool localGaitInterpolation;
         private int landedFrame = -1;
 
         public void BindLocomotion(HumanLocomotionPresenter value)
@@ -113,7 +114,9 @@ namespace LetMeSleep.Presentation.Gameplay
             locomotionDiscontinuity |= discontinuity;
             // New human gait measures rendered displacement; smooth local visuals too, so
             // 30Hz snapshot jumps are not mistaken for 144Hz teleport-speed movement.
-            bool cut = discontinuity || (localActor && !HasLocomotion);
+            bool gaitTransition = localActor && CanUseLocomotion(current) != CanUseLocomotion(state);
+            locomotionDiscontinuity |= gaitTransition;
+            bool cut = discontinuity || (localActor && (!CanUseLocomotion(state) || gaitTransition));
             previous = cut ? state : current;
             previousHostTick = cut ? hostTick : currentHostTick;
             current = state;
@@ -179,7 +182,23 @@ namespace LetMeSleep.Presentation.Gameplay
                 return;
             }
 
-            if (localActor && !HasLocomotion)
+            if (temporaryMotion >= 0 && Time.unscaledTime >= temporaryUntil)
+            {
+                temporaryMotion = -1;
+                ApplyMotion(current, false);
+            }
+
+            bool interpolateLocal = localActor && CanUseLocomotion(current) && Time.deltaTime > 0;
+            if (localActor && interpolateLocal != localGaitInterpolation)
+            {
+                // Entry/exit (including event-only strikes and pause) starts at current pose.
+                previous = current;
+                previousHostTick = currentHostTick;
+                snapshotArrivalTime = Time.unscaledTime;
+                locomotionDiscontinuity = true;
+                localGaitInterpolation = interpolateLocal;
+            }
+            if (localActor && !interpolateLocal)
             {
                 SetWorldPose(current.Position.ToUnity(), current.BodyRotation.ToUnity());
             }
@@ -203,12 +222,6 @@ namespace LetMeSleep.Presentation.Gameplay
                 SetWorldPose(position, rotation);
             }
 
-            if (temporaryMotion >= 0 && Time.unscaledTime >= temporaryUntil)
-            {
-                temporaryMotion = -1;
-                ApplyMotion(current, false);
-            }
-
             if (HasLocomotion)
             {
                 bool eligible = CanUseLocomotion(current);
@@ -217,8 +230,15 @@ namespace LetMeSleep.Presentation.Gameplay
                     ReleaseLocomotion();
                     ApplyMotion(current, false);
                 }
-                locomotion.EvaluateRenderedPose(transform.position, eligible, locomotionDiscontinuity,
+                var owner = locomotion.EvaluateRenderedPose(transform.position, eligible, locomotionDiscontinuity,
                     Time.frameCount, Time.deltaTime);
+                if (owner == HumanLocomotionPresenter.PoseOwner.Controller)
+                {
+                    bool reapply = usingLocomotion || currentMotion < 0;
+                    ReleaseLocomotion();
+                    if (reapply) ApplyMotion(current, true, false);
+                }
+                else usingLocomotion = true;
                 locomotionDiscontinuity = false;
             }
             ApplyAuthoritativeHands();
@@ -227,9 +247,9 @@ namespace LetMeSleep.Presentation.Gameplay
             ApplyBiteAnchor();
         }
 
-        private void ApplyMotion(GameplayModel.ActorSnapshot state, bool immediate)
+        private void ApplyMotion(GameplayModel.ActorSnapshot state, bool immediate, bool allowLocomotion = true)
         {
-            if (CanUseLocomotion(state))
+            if (allowLocomotion && CanUseLocomotion(state))
             {
                 usingLocomotion = true;
                 return; // Manual gait owns speed, state and phase; no old 1.2m resync/clamp.

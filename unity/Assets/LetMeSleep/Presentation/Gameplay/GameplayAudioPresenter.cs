@@ -86,13 +86,19 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void OnEnable()
         {
+            foreach (var source in locomotionSources.Values)
+            {
+                if (!source) continue;
+                source.ContactReady -= HandleFootContact;
+                source.ContactReady += HandleFootContact;
+            }
             Subscribe();
         }
 
         private void OnDisable()
         {
             Unsubscribe();
-            ClearLocomotionSources();
+            ClearLocomotionSources(false);
             StopWingLoops();
         }
 
@@ -131,11 +137,11 @@ namespace LetMeSleep.Presentation.Gameplay
                 locomotionSources.Remove(source.ActorId);
         }
 
-        private void ClearLocomotionSources()
+        private void ClearLocomotionSources(bool forget = true)
         {
             foreach (var source in locomotionSources.Values)
                 if (source) source.ContactReady -= HandleFootContact;
-            locomotionSources.Clear();
+            if (forget) locomotionSources.Clear();
         }
 
         private void HandleFootContact(HumanLocomotionPresenter source, HumanLocomotionPresenter.FootContact contact)
