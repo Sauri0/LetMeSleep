@@ -1,4 +1,11 @@
-# Mapas Higgsfield — actualización cerrada
+# Mapas Higgsfield — verificación completa en curso
+
+La entrega descrita debajo corresponde al cierre local de c5d2ee2. El objetivo
+activo de Branko incluye además límites, estabilidad bajo carga, fondos/lejanía,
+hitboxes y marcha/adhesión del mosquito. Esa cobertura todavía no está cerrada.
+Encargado de Higgfield conserva coordinación y turnos; Director lo confirmó.
+Ver MAPAS-VERIFICACION-COMPLETA.md. No interpretar el estado histórico inferior
+como aprobación de pruebas aún no ejecutadas ni como un relevo definitivo.
 
 Los veinte bocetos y los cinco mapas aprobados están realizados. Integración local final verificada en Unity 6000.3.24f1, con fuentes editables Blender y agua animada. Ver MAPAS-ENTREGA-UNITY.md para uso, evidencias y límites.
 
