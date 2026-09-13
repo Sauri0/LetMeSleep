@@ -31,6 +31,12 @@ namespace LetMeSleep.Presentation.Gameplay
         private int temporaryMotion = -1;
         private float temporaryUntil;
         private bool warnedBiteOffset;
+        private VisualAttentionRig attention;
+        private bool biteSamplePending, loggedBiteContact, warnedBiteResidual;
+        private int biteSampleFrame;
+        public float LastBitePreCorrectionMeters { get; private set; }
+        public float LastBiteFinalResidualMeters { get; private set; }
+        public int LastBiteSampleFrame { get; private set; } = -1;
         private Transform leftHand;
         private Transform rightHand;
         private GameObject flyswatter;
@@ -117,7 +123,10 @@ namespace LetMeSleep.Presentation.Gameplay
         private void LateUpdate()
         {
             if (proxy == null || view == null || current == null)
+            {
+                ReleaseBiteAttention();
                 return;
+            }
 
             if (localActor)
             {
@@ -349,19 +358,19 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void ApplyBiteAnchor()
         {
-            if (proxy.Role != PlayerRole.Mosquito || !current.BiteAttachment.HasValue || world == null)
-                return;
-            GameplayModel.BiteAttachment attachment = current.BiteAttachment.Value;
-            if (!world.Actors.TryGetValue(attachment.VictimId, out GameplayActorProxy victim) ||
-                victim.State == null || victim.State.PoseRevision != attachment.PoseRevision ||
-                !victim.BodySurfaces.TryGetValue(attachment.SurfaceId, out GameplayBodySurface surface))
-                return;
+            if (!TryBiteSurface(out _, out var target, out _)) { ReleaseBiteAttention(); return; }
             Transform tip = view.GetAnchor("ProboscisTip");
-            if (tip == null)
-                return;
+            if (tip == null) { ReleaseBiteAttention(); return; }
+            if (!attention)
+            {
+                attention = view.GetComponent<VisualAttentionRig>();
+                if (attention) attention.AfterEvaluation += MeasureBiteResidual;
+            }
+            if (attention) attention.SetHeadTrackingEnabled(false);
+            view.RefreshAnchors();
 
-            Vector3 target = surface.transform.TransformPoint(attachment.LocalPoint.ToUnity());
             Vector3 correction = target - tip.position;
+            LastBitePreCorrectionMeters = correction.magnitude;
             if (!warnedBiteOffset && correction.sqrMagnitude > 0.0225f)
             {
                 warnedBiteOffset = true;
@@ -369,6 +378,64 @@ namespace LetMeSleep.Presentation.Gameplay
             }
             transform.position += correction;
             view.RefreshAnchors();
+            biteSamplePending = true;
+            biteSampleFrame = Time.frameCount;
+            if (!attention || !attention.isActiveAndEnabled || !attention.IsConfigured)
+                MeasureBiteResidual();
+        }
+
+        private bool TryBiteSurface(out GameplayBodySurface surface, out Vector3 point, out Vector3 normal)
+        {
+            surface = null; point = normal = default;
+            if (!proxy || proxy.Role != PlayerRole.Mosquito || current == null ||
+                !current.BiteAttachment.HasValue || !world ||
+                (current.LifeState != GameplayModel.LifeState.PreparingBite && current.LifeState != GameplayModel.LifeState.Biting)) return false;
+            var attachment = current.BiteAttachment.Value;
+            if (!world.Actors.TryGetValue(attachment.VictimId, out var victim) || !victim ||
+                !victim.gameObject.activeInHierarchy || victim.State == null ||
+                victim.State.PoseRevision != attachment.PoseRevision ||
+                !victim.BodySurfaces.TryGetValue(attachment.SurfaceId, out surface) || !surface ||
+                !surface.gameObject.activeInHierarchy) return false;
+            point = surface.transform.TransformPoint(attachment.LocalPoint.ToUnity());
+            normal = surface.transform.TransformDirection(attachment.LocalNormal.ToUnity());
+            if (!Finite(point) || !Finite(normal) || normal.sqrMagnitude < .000001f) return false;
+            normal.Normalize();
+            return true;
+        }
+
+        private void MeasureBiteResidual()
+        {
+            if (!biteSamplePending || biteSampleFrame != Time.frameCount) return;
+            biteSamplePending = false;
+            if (!view || !TryBiteSurface(out _, out var target, out _)) return;
+            view.RefreshAnchors(); // Measure the source bone after the final facial writer.
+            var tip = view.GetAnchor("ProboscisTip");
+            if (!tip) return;
+            LastBiteFinalResidualMeters = Vector3.Distance(target, tip.position);
+            LastBiteSampleFrame = Time.frameCount;
+            if (!loggedBiteContact)
+            {
+                loggedBiteContact = true;
+                Debug.Log($"LMS_BITE_CONTACT actor={ActorId} preCorrection={LastBitePreCorrectionMeters:F4} finalResidual={LastBiteFinalResidualMeters:F4} frame={LastBiteSampleFrame}", this);
+            }
+            if (!warnedBiteResidual && LastBiteFinalResidualMeters > .001f)
+            {
+                warnedBiteResidual = true;
+                Debug.LogError($"LMS_BITE_VISUAL_RESIDUAL actor={ActorId} preCorrection={LastBitePreCorrectionMeters:F4} finalResidual={LastBiteFinalResidualMeters:F4} frame={LastBiteSampleFrame}", this);
+            }
+        }
+
+        private void ReleaseBiteAttention()
+        {
+            if (attention) attention.SetHeadTrackingEnabled(true);
+            biteSamplePending = loggedBiteContact = warnedBiteResidual = false;
+            LastBiteSampleFrame = -1;
+        }
+        private void OnDisable()
+        {
+            ReleaseBiteAttention();
+            if (attention) attention.AfterEvaluation -= MeasureBiteResidual;
+            attention = null;
         }
 
         private void ApplyAuthoritativeHands()
@@ -417,7 +484,17 @@ namespace LetMeSleep.Presentation.Gameplay
             bool supported = current.SurfaceAttachment.HasValue && world != null &&
                 (current.LifeState == GameplayModel.LifeState.ApproachingSurface ||
                  current.LifeState == GameplayModel.LifeState.Surface);
-            if (supported && world.ResolveSurface(current.SurfaceAttachment.Value, out var contact) &&
+            if (TryBiteSurface(out _, out _, out var biteNormal))
+            {
+                Vector3 biteForward = -biteNormal;
+                Vector3 stableUp = hasVisualRotation ? visualRotation * Vector3.up : Vector3.up;
+                Vector3 biteUp = Vector3.ProjectOnPlane(stableUp, biteForward);
+                if (biteUp.sqrMagnitude < .000001f) biteUp = Vector3.ProjectOnPlane(Vector3.up, biteForward);
+                if (biteUp.sqrMagnitude < .000001f) biteUp = Vector3.ProjectOnPlane(Vector3.forward, biteForward);
+                visualRotation = Quaternion.LookRotation(biteForward, biteUp.normalized);
+                returningFromSurface = true; // Reuse smooth visual release on detach to flight.
+            }
+            else if (supported && world.ResolveSurface(current.SurfaceAttachment.Value, out var contact) &&
                 GameplayModel.SurfaceVisualFrame.TryResolve(contact.WorldNormal,
                     (bodyRotation * Vector3.forward).ToFloat(),
                     hasVisualRotation ? (visualRotation * Vector3.forward).ToFloat() : GameplayModel.Float3.Zero,
@@ -451,6 +528,10 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             return Mathf.Sqrt(velocity.X * velocity.X + velocity.Z * velocity.Z);
         }
+        private static bool Finite(Vector3 value) =>
+            !float.IsNaN(value.x) && !float.IsInfinity(value.x) &&
+            !float.IsNaN(value.y) && !float.IsInfinity(value.y) &&
+            !float.IsNaN(value.z) && !float.IsInfinity(value.z);
 
         private static Transform FindDescendant(Transform root, string exactName)
         {

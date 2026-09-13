@@ -75,6 +75,10 @@ namespace LetMeSleep.Presentation
         private System.Random random,microRandom;
         private double nextMicro;
         private float microYaw,microPitch;
+        private bool headTrackingEnabled=true;
+        public bool HeadTrackingEnabled=>headTrackingEnabled;
+        // Contact owners observe the completed facial pose, including eyes and lids.
+        public event Action AfterEvaluation;
         public bool IsConfigured=>configured;
         public bool IsManualEvaluation=>configured && binding.ManualEvaluation;
         public Transform LookOrigin=>configured ? binding.Head : transform;
@@ -107,6 +111,19 @@ namespace LetMeSleep.Presentation
         public void SetLookTarget(Transform value) { target=value; hasPoint=false; }
         public void SetLookPoint(Vector3 value) { target=null; point=value; hasPoint=true; }
         public void ClearLookTarget() { target=null; hasPoint=false; }
+        public void SetHeadTrackingEnabled(bool enabled)
+        {
+            if(headTrackingEnabled==enabled) return;
+            headTrackingEnabled=enabled;
+            if(!enabled)
+            {
+                // The mouth constraint needs an immediate lock. Release starts from zero
+                // and uses the existing exponential tracking response; eyes/blink stay live.
+                head?.Restore(); neck?.Restore();
+                if(head!=null) head.yaw=head.pitch=0;
+                if(neck!=null) neck.yaw=neck.pitch=0;
+            }
+        }
         public void SetReducedMotion(bool value)
         {
             reduced=value;
@@ -131,8 +148,11 @@ namespace LetMeSleep.Presentation
             // not another allowance on top of the neck's correction.
             Quaternion headBaseRotation=head.bone.rotation;
             Quaternion headBaseFrame=Quaternion.LookRotation(head.bone.TransformDirection(head.forward),head.bone.TransformDirection(head.up));
-            Apply(neck,destination,looking,dt); Apply(head,destination,looking,dt);
-            ClampHeadCorrection(head,headBaseFrame,headBaseRotation);
+            if(headTrackingEnabled)
+            {
+                Apply(neck,destination,looking,dt); Apply(head,destination,looking,dt);
+                ClampHeadCorrection(head,headBaseFrame,headBaseRotation);
+            }
             if(!reduced && clock>=nextMicro)
             {
                 // Shared tiny target offset avoids divergent eyes; Apply supplies the existing smooth response.
@@ -165,6 +185,7 @@ namespace LetMeSleep.Presentation
             }
             foreach(var lid in leftLids) lid.Apply(closureLeft);
             foreach(var lid in rightLids) lid.Apply(closureRight);
+            AfterEvaluation?.Invoke();
         }
         private static int[] Shapes(SkinnedMeshRenderer renderer,string[] names)
         {
