@@ -1,0 +1,238 @@
+{
+  "status": "PENDING_FINAL_EXPORT_REPORT_ONLY",
+  "sourceFinal": false,
+  "reportPath": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/02-casa/HF_MAP_02_casa_report.json",
+  "reportSha256": "041de9a854fae15a7177f3cc5f58718e8308b9cb3765fb21b3eed5eceba59247",
+  "scene": "HF_MAP_02_casa",
+  "declaredCounts": {
+    "objects": 3751,
+    "meshObjects": 3664,
+    "uniqueMeshes": 589,
+    "triangles": 118152,
+    "materials": 29
+  },
+  "water": {
+    "present": false,
+    "wave_morphs": false,
+    "reason": "explicit dry 45x40m property; no ocean/lake/creek"
+  },
+  "spawnAliases": [
+    {
+      "name": "Spawn_Human_01.001",
+      "logical_name": "Spawn_Human_01",
+      "location_m": [
+        -0.4000000059604645,
+        -11.5,
+        0.02399999462068081
+      ],
+      "origin": "floor/feet; not actor centre"
+    },
+    {
+      "name": "Spawn_Human_02.001",
+      "logical_name": "Spawn_Human_02",
+      "location_m": [
+        -0.6000000238418579,
+        -2.6500000953674316,
+        0.27400001883506775
+      ],
+      "origin": "floor/feet; not actor centre"
+    },
+    {
+      "name": "Spawn_Human_03.001",
+      "logical_name": "Spawn_Human_03",
+      "location_m": [
+        -2.5,
+        2.0999999046325684,
+        0.25
+      ],
+      "origin": "floor/feet; not actor centre"
+    },
+    {
+      "name": "Spawn_Human_04.001",
+      "logical_name": "Spawn_Human_04",
+      "location_m": [
+        -0.6499999761581421,
+        3.950000047683716,
+        3.1740000247955322
+      ],
+      "origin": "floor/feet; not actor centre"
+    },
+    {
+      "name": "Spawn_Human_05.001",
+      "logical_name": "Spawn_Human_05",
+      "location_m": [
+        3.5,
+        11.5,
+        1.4901161193847656E-08
+      ],
+      "origin": "floor/feet; not actor centre"
+    },
+    {
+      "name": "Spawn_Mosquito_01.001",
+      "logical_name": "Spawn_Mosquito_01",
+      "location_m": [
+        -0.4000000059604645,
+        -14.0,
+        2.200000047683716
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_02.001",
+      "logical_name": "Spawn_Mosquito_02",
+      "location_m": [
+        4.0,
+        -12.0,
+        2.0999999046325684
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_03.001",
+      "logical_name": "Spawn_Mosquito_03",
+      "location_m": [
+        -5.0,
+        -12.0,
+        2.4000000953674316
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_04.001",
+      "logical_name": "Spawn_Mosquito_04",
+      "location_m": [
+        -10.0,
+        -5.0,
+        2.0
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_05.001",
+      "logical_name": "Spawn_Mosquito_05",
+      "location_m": [
+        10.0,
+        -4.0,
+        2.200000047683716
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_06.001",
+      "logical_name": "Spawn_Mosquito_06",
+      "location_m": [
+        -0.550000011920929,
+        -3.5,
+        1.7999999523162842
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_07.001",
+      "logical_name": "Spawn_Mosquito_07",
+      "location_m": [
+        -0.5,
+        3.799999952316284,
+        1.899999976158142
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_08.001",
+      "logical_name": "Spawn_Mosquito_08",
+      "location_m": [
+        -3.0999999046325684,
+        1.0,
+        1.7999999523162842
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_09.001",
+      "logical_name": "Spawn_Mosquito_09",
+      "location_m": [
+        -4.699999809265137,
+        -1.7999999523162842,
+        1.899999976158142
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_10.001",
+      "logical_name": "Spawn_Mosquito_10",
+      "location_m": [
+        3.200000047683716,
+        0.4000000059604645,
+        1.899999976158142
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_11.001",
+      "logical_name": "Spawn_Mosquito_11",
+      "location_m": [
+        3.5,
+        3.200000047683716,
+        1.899999976158142
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_12.001",
+      "logical_name": "Spawn_Mosquito_12",
+      "location_m": [
+        -0.550000011920929,
+        3.799999952316284,
+        4.800000190734863
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_13.001",
+      "logical_name": "Spawn_Mosquito_13",
+      "location_m": [
+        -3.200000047683716,
+        0.20000000298023224,
+        4.800000190734863
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_14.001",
+      "logical_name": "Spawn_Mosquito_14",
+      "location_m": [
+        3.200000047683716,
+        -1.7000000476837158,
+        4.800000190734863
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_15.001",
+      "logical_name": "Spawn_Mosquito_15",
+      "location_m": [
+        -6.0,
+        10.5,
+        2.299999952316284
+      ],
+      "origin": "freeflight point"
+    },
+    {
+      "name": "Spawn_Mosquito_16.001",
+      "logical_name": "Spawn_Mosquito_16",
+      "location_m": [
+        5.0,
+        11.199999809265137,
+        2.4000000953674316
+      ],
+      "origin": "freeflight point"
+    }
+  ],
+  "pending": [
+    "GLB final",
+    "scene-audit final with world matrices and effective instance material slots",
+    "Clean stock FBX final",
+    "Explicit quiet/final confirmation from coordinator",
+    "Native import and gameplay checks"
+  ]
+}

@@ -92,6 +92,10 @@ def validate_config(config):
     if 'sourceSha256' in config:
         need(re.fullmatch('[a-fA-F0-9]{64}', config['sourceSha256']), 'Invalid expected sourceSha256')
     need(isinstance(config.get('kinds', {}), dict), 'kinds must map exact paths to categories')
+    if 'expectedScene' in config:
+        need(isinstance(config['expectedScene'], str) and config['expectedScene'].strip(), 'Invalid expected scene')
+    if 'expectedWaterCount' in config:
+        need(type(config['expectedWaterCount']) is int and config['expectedWaterCount'] >= 0, 'Invalid expected water/foam count')
     if 'playBoundsMin' in config or 'playBoundsMax' in config:
         low, high = config.get('playBoundsMin'), config.get('playBoundsMax')
         need(isinstance(low, list) and isinstance(high, list) and len(low) == len(high) == 3, 'Both XYZ bounds required')
@@ -142,6 +146,11 @@ def prepare(config, config_dir):
     need('sourceSha256' not in config or hashes['fbx'] == config['sourceSha256'].lower(), 'Expected FBX hash mismatch')
     audit = json.loads(files['audit'].decode('utf-8-sig'))
     report = json.loads(files['report'].decode('utf-8-sig'))
+    summary = report.get('checks', report)
+    need(isinstance(summary, dict), 'Report checks must be an object')
+    if 'expectedScene' in config:
+        need(audit.get('scene') == config['expectedScene'], 'Audit belongs to a different scene')
+        need(report.get('scene', summary.get('scene')) == config['expectedScene'], 'Report belongs to a different scene')
     glb = files['glb']
     magic, version, size = struct.unpack_from('<4sII', glb)
     need((magic, version, size) == (b'glTF', 2, len(glb)), 'GLB header mismatch')
@@ -211,14 +220,16 @@ def prepare(config, config_dir):
                                   glbPrimitiveMaterials=primitive_materials,
                                   glbPositionAccessorVertices=sum(gltf['accessors'][p['attributes']['POSITION']]['count'] for p in mesh['primitives'])))
     need(set(overrides) <= {r['path'] for r in rules}, 'Kind override does not match a mesh path')
+    if 'expectedWaterCount' in config:
+        need(sum(r['kind'] in ('water', 'foam') for r in rules) == config['expectedWaterCount'], 'Unexpected water/foam geometry classification')
     actual_mesh_count = sum(o['type'] == 'MESH' for o in audit_objects.values())
     need(len(rules) == actual_mesh_count > 0, 'Audit/export mesh counts differ')
     if 'mesh_count' in audit:
         need(audit['mesh_count'] == actual_mesh_count, 'Audit summary mesh count differs')
-    if 'mesh_objects' in report:
-        need(report['mesh_objects'] == actual_mesh_count, 'Report mesh count differs')
-    if 'objects' in report:
-        need(report['objects'] == len(nodes), 'Report object count differs')
+    if 'mesh_objects' in summary:
+        need(summary['mesh_objects'] == actual_mesh_count, 'Report mesh count differs')
+    if 'objects' in summary:
+        need(summary['objects'] == len(nodes), 'Report object count differs')
     solids = [audit_objects[e['path'].split('/')[-1]] for e in mesh_evidence if e['kind'] == 'solid']
     need(solids, 'No explicit static solids')
     need(config.get('firstSurfaceId', 1000000) + len(solids) - 1 <= 4294967295, 'Surface IDs overflow uint')

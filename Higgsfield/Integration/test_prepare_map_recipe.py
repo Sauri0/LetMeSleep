@@ -69,6 +69,13 @@ class Checks(unittest.TestCase):
         objects['Spawn_Human_01']['type'] = 'MESH'
         with self.assertRaises(ValueError): tool.select_spawns(objects, paths, 'Spawn_Human_', 5)
 
+    def test_spawn_alias_suffix_is_preserved(self):
+        name = 'Spawn_Human_01.001'
+        marker = empty(name, 1)
+        marker['properties'] = {'logical_name': 'Spawn_Human_01'}
+        selected = tool.select_spawns({name: marker}, {name: 'CASA_Markers/' + name}, 'Spawn_Human_', 1)
+        self.assertEqual(selected, [('CASA_Markers/Spawn_Human_01.001', [1, 2, 3])])
+
 
 if __name__ == '__main__':
     unittest.main()
