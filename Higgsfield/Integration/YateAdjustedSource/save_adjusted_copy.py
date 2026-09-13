@@ -13,6 +13,8 @@ def run(config_path,visible_mcp_slot_granted=False):
     assert cfg['finalNativeApplyReceipt'] and cfg['finalNativeApplySha256'] and isinstance(cfg['finalNativeAdjustmentKeyPath'],list)
     assert sha(cfg['finalNativeApplyReceipt'])==cfg['finalNativeApplySha256']
     applied=json.loads(Path(cfg['finalNativeApplyReceipt']).read_text(encoding='utf-8-sig'))
+    assert applied['status']=='APPLIED_READBACK_PASS' and applied['prefabReadback'] and applied['sceneReadback']
+    assert applied['newContentHash']==cfg['finalContentHash']
     native=applied
     for key in cfg['finalNativeAdjustmentKeyPath']:native=native[key]
     names=['YATE_DeckStorage_01','YATE_DeckStorage_Lid_01']
@@ -118,9 +120,12 @@ def run(config_path,visible_mcp_slot_granted=False):
     assert {m.name:mesh_state(m) for m in bpy.data.meshes}==meshes
     assert {s.name:[o.name for o in s.objects] for s in bpy.data.scenes}==members
     assert bpy.context.scene==active_scene and bpy.data.filepath==active_file
+    assert bpy.context.mode=='OBJECT' and not bpy.app.is_job_running('RENDER')
+    assert not sys.modules['bl_ext.user_default.higgsfield_blender.features.overlays.composer_surface']._scene_conversation().busy()
     assert all(sha(p)==h for p,h in preserved.items())
     receipt=dict(status='PASS_EXCLUSIVE_YATE_COPY_STORAGE_AND_BULKHEAD_READBACK_LIVE_RESTORED',source=str(output),sourceSha256=sha(output),parts=saved,
         preservedFiles=preserved,nativeApplyReceipt=cfg['finalNativeApplyReceipt'],nativeApplySha256=cfg['finalNativeApplySha256'],
+        nativeContentHash=cfg['finalContentHash'],nativeBulkheadMeshSha256=native_wall['candidateMeshSha256'],
         restoredScene=active_scene.name,restoredLiveMatrices={n:[list(r) for r in m] for n,m in matrices.items()},
         newExportsOrUnityImport=False,scope='Confirmed storage translation and bulkhead notch synchronized; no claim of whole-engine portable equivalence.')
     (out/'adjustment-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')

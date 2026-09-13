@@ -1,4 +1,16 @@
-# Yate — copia ajustada preparada, no ejecutada
+# Yate — copia ajustada entregada
+
+La operación conjunta terminó con **PASS_EXCLUSIVE_YATE_COPY_STORAGE_AND_BULKHEAD_READBACK_LIVE_RESTORED**. Archivo: `N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/UnityAdjustedSource/HF_MAP_04_yate_UNITY_ADJUSTED.blend`, 4.881.135 bytes, SHA256 `de6304396d5c95aab52003be5118058b15a7819e734694fb14f5d5fecaf8ae50`. El recibo vecino `adjustment-receipt.json` se conserva aquí como `delivery.json`.
+
+Se comprobó el recibo nativo aplicado y leído nuevamente en prefab/escena: `applied-01/yate-semantic-apply.json`, SHA256 `a712d24a7f3a5e07848f5e0c9ac94edea09dd8819be369ecbd50feb67c5fef04`, ContentHash `dee1fea0f5f21429ed434668ee408a6ec3efd67984ad24e0640faa1177ca20d6`. `final-adjustment.json` fija ambos registros; el JSON pending anterior queda sólo como historial.
+
+Se usó el MCP visible ya abierto, en el turno concedido por el coordinador, con Puerto activo, OBJECT, sin render y Scene Builder idle antes y después. El archivo escrito contiene únicamente la escena Yate y sus dependencias. La lectura independiente de los tres objetos guardados confirmó los desplazamientos de baúl/tapa y la geometría del mamparo. Todas las matrices, mallas y miembros de las escenas vivas se restauraron; los catorce archivos preservados conservan sus hashes. No hubo nuevos exports FBX/GLB ni importación Unity.
+
+El mamparo ajustado tiene 16 vértices, diez polígonos y 28 triángulos; se verificaron dos caras por arista y volumen positivo igual al original menos la muesca. Los tres objetos fuente carecían de capas UV; la copia conserva esa ausencia. La rama genérica de interpolación UV del script no fue necesaria ni ejecutada. El SHA de malla Blender documenta su propia serialización; no se presenta como idéntico al hash de buffers Unity.
+
+Los exports NormalsV3 siguen con el baúl y mamparo originales. La copia editable sincroniza las dos reparaciones, sin afirmar equivalencia portable completa. El índice queda pendiente de la regeneración final ordenada por el coordinador.
+
+## Preparación anterior
 
 Gameplay confirmó como candidato validado el desplazamiento de `YATE_DeckStorage_01` y `YATE_DeckStorage_Lid_01`: ΔUnity mundo [−1.4,0,+2] m, equivalente a ΔBlender [−1.4,+2,0] m. Ambos objetos tienen transformación original identidad y geometría baked. El recibo `storage-native-01/map-checks-20260913-082944-913.json`, bajo `N:/LetMeSleep/Validation/Higgsfield/YateV3-20260913`, conserva los mesh GUID/local IDs, materiales, cinco apoyos sobre teak, penetración conservadora cero y separación visual máxima 0.0002384 mm.
 

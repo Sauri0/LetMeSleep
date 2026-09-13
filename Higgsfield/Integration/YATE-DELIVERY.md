@@ -1,5 +1,13 @@
 # Yate v3 — corrected ocean winding and explicit GPU water
 
+## Editable source synchronized with the final native repairs
+
+`N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/UnityAdjustedSource/HF_MAP_04_yate_UNITY_ADJUSTED.blend` is the adjusted editable copy, SHA256 `de6304396d5c95aab52003be5118058b15a7819e734694fb14f5d5fecaf8ae50`. It includes the rigid storage/lid translation (Blender −1.4,+2,0 m) and the bulkhead notch within X [1.625,3.075], above Z 2.70. The final Unity apply/readback ContentHash is `dee1fea0f5f21429ed434668ee408a6ec3efd67984ad24e0640faa1177ca20d6`.
+
+The existing visible MCP wrote only the Yate scene and dependencies, then independently read back the three changed objects. Source-copy validation passed; all live geometry/transforms were restored, Puerto remained active and idle, and original NormalsV3 files retained their hashes. Details and receipts are in `YateAdjustedSource/README.md` and `YateAdjustedSource/delivery.json`. No new FBX/GLB or Unity import was performed: the NormalsV3 exports below retain the original storage position and uncut bulkhead. Full portable engine/source equivalence is not claimed.
+
+## Original NormalsV3 export package
+
 Recipe: `N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/UnityRecipeV3/hf-yate-a-la-deriva-v3.recipe.json`.
 SHA256: `ebae0978d8fcaf9ff371601e7a3175503f82b61e8e87c5faba5e36337d5d1a08`.
 Descriptor: `yate-v3.gpu-input.json`. Adjacent validation JSON records strict export crosschecks. Current evidence is `yate-v3.delivery.json`; v1/v2 recipes and metadata remain historical evidence.

@@ -1,0 +1,116 @@
+{
+  "status": "PASS_EXCLUSIVE_YATE_COPY_STORAGE_AND_BULKHEAD_READBACK_LIVE_RESTORED",
+  "source": "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\UnityAdjustedSource\\HF_MAP_04_yate_UNITY_ADJUSTED.blend",
+  "sourceSha256": "de6304396d5c95aab52003be5118058b15a7819e734694fb14f5d5fecaf8ae50",
+  "parts": [
+    {
+      "name": "YATE_DeckStorage_01",
+      "blenderWorldXYZ": [
+        -1.399999976158142,
+        2.0,
+        0.0
+      ],
+      "meshGeometrySha256": "aee1665cb26b149fff28cdef319c35c408eb5d0e79030bf2b5e7b61b34216db9"
+    },
+    {
+      "name": "YATE_DeckStorage_Lid_01",
+      "blenderWorldXYZ": [
+        -1.399999976158142,
+        2.0,
+        0.0
+      ],
+      "meshGeometrySha256": "1c5d09943c5b5d31fe21c33f572a1186466817c0874e9afdc75b24350c85f0dc"
+    },
+    {
+      "name": "YATE_Lower_EndBulkhead_-11.6",
+      "meshGeometrySha256": "7c52c1b1fffe2d54424ff5c9ee6ffb67f7eea8cd7252f849d8b9d10d6c2f0a8f",
+      "vertices": 16,
+      "polygons": 10,
+      "notch": {
+        "objectName": "YATE_Lower_EndBulkhead_-11.6",
+        "openingMinX": 1.625,
+        "openingMaxX": 3.075,
+        "remainingTopBlenderZ": 2.7,
+        "preserveOriginalOuterBounds": true,
+        "preserveExteriorUvsAndMaterial": true
+      }
+    }
+  ],
+  "preservedFiles": {
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\fbx-export.log": "fc26580a29e9448dd1ba27fbb9dd51ebb4dd5e3f722047b190390ec1961dc669",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\glb-export.log": "df3830859793e7b3749c81915dd2adc48691578465ae731be1f7a926c45a1edf",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\glb-winding-readback.json": "ed99e3df681543cde546e54be1f138bf5665b3bd69edc795515df865fa81104b",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\HF_MAP_04_yate_NORMALS_V3.blend": "17b2a4196712dc55c2675b83ff0b2110886b142b9399b295f0df2565274c9769",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\HF_MAP_04_yate_report.json": "928213f81032f62f2e038e8945c8c36147e06e5907636d85a6964dc1cd8bd517",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\HF_MAP_04_yate_UNITY_V3.fbx": "217774581132711b6197a6115954e6e63acd3fdbf42b2705c0c115e6bc146870",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\HF_MAP_04_yate_UNITY_V3.glb": "2eae6e1fdc496e9a9b141f30ff1e2adc52472725d30d0e0b14b11b78395cc2a8",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\normals-repair.json": "741a3b9bfc6c1ba35bc672fc02e64dbb762e9d94db8d648adca9427b4f9b8835",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\scene-audit.json": "cf6fa62b3899c39649630b330732b37ed264bc8806671442d12769bb82ebd84c",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\unity-import.log": "a17563d3a71663771950bede1cb22424348a7b72ee34a64723a4f25facdfe219",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\unity-review.log": "3cb26c3b0e7f6d25f98b10943096853139836ae469f3802118c37624ed8e61eb",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\water-results.xml": "914b0fb5d9e9dcd0f48a37df1c668406316ff03c958243bd828b32ba2366e1fb",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\04-yate\\NormalsV3\\water-tests.log": "90f602fa6469f523ae89db3b9eb5e55fafc7609fa8166194b1db8b008beeb3bb",
+    "N:\\LetMeSleep\\Artifacts\\Higgsfield\\Mapas\\05-pueblo\\HF_MAP_05_pueblo.blend": "ae73c46d661bbaaa6248627988ee13296dc5476038b06e0f55aa413c3e61c32a"
+  },
+  "nativeApplyReceipt": "N:/LetMeSleep/Validation/Higgsfield/YateV3-20260913/applied-01/yate-semantic-apply.json",
+  "nativeApplySha256": "a712d24a7f3a5e07848f5e0c9ac94edea09dd8819be369ecbd50feb67c5fef04",
+  "nativeContentHash": "dee1fea0f5f21429ed434668ee408a6ec3efd67984ad24e0640faa1177ca20d6",
+  "nativeBulkheadMeshSha256": "61fe46b11272eda3f4521d6e230a6ecdee79747c2b7ae6a5cadd38f0ce0b970e",
+  "restoredScene": "HF_MAP_05_pueblo",
+  "restoredLiveMatrices": {
+    "YATE_DeckStorage_01": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "YATE_DeckStorage_Lid_01": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "newExportsOrUnityImport": false,
+  "scope": "Confirmed storage translation and bulkhead notch synchronized; no claim of whole-engine portable equivalence."
+}

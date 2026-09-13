@@ -1,0 +1,40 @@
+{
+  "status": "FINAL_NATIVE_READBACK_CONFIRMED_VISIBLE_MCP_SLOT_GRANTED",
+  "ready": true,
+  "candidateReceipt": "N:/LetMeSleep/Validation/Higgsfield/YateV3-20260913/storage-native-01/map-checks-20260913-082944-913.json",
+  "finalNativeApplyReceipt": "N:/LetMeSleep/Validation/Higgsfield/YateV3-20260913/applied-01/yate-semantic-apply.json",
+  "finalNativeApplySha256": "a712d24a7f3a5e07848f5e0c9ac94edea09dd8819be369ecbd50feb67c5fef04",
+  "finalNativeAdjustmentKeyPath": [
+    "storage"
+  ],
+  "finalNativeBulkheadKeyPath": [
+    "bulkhead"
+  ],
+  "sourceBlend": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/NormalsV3/HF_MAP_04_yate_NORMALS_V3.blend",
+  "sourceSha256": "17b2a4196712dc55c2675b83ff0b2110886b142b9399b295f0df2565274c9769",
+  "outputDirectory": "N:/LetMeSleep/Artifacts/Higgsfield/Mapas/04-yate/UnityAdjustedSource",
+  "objectNames": [
+    "YATE_DeckStorage_01",
+    "YATE_DeckStorage_Lid_01"
+  ],
+  "unityWorldDelta": [
+    -1.4,
+    0,
+    2
+  ],
+  "blenderWorldDelta": [
+    -1.4,
+    2,
+    0
+  ],
+  "bulkhead": {
+    "objectName": "YATE_Lower_EndBulkhead_-11.6",
+    "openingMinX": 1.625,
+    "openingMaxX": 3.075,
+    "remainingTopBlenderZ": 2.7,
+    "preserveOriginalOuterBounds": true,
+    "preserveExteriorUvsAndMaterial": true
+  },
+  "newExportsOrUnityImport": false,
+  "finalContentHash": "dee1fea0f5f21429ed434668ee408a6ec3efd67984ad24e0640faa1177ca20d6"
+}
