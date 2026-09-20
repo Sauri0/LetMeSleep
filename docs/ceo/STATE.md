@@ -1,5 +1,25 @@
 # Relevo CEO — 2026-09-19
 
+## Estado actual: diez capturas aceptadas y candidata Windows en compilación
+
+- Capture smoke11 y full12: 1/1 cada uno; diez PNG full12 inspeccionados por CEO
+  a 1080p, mundo y HUD visibles/legibles en cinco mapas por ambos roles. Solución
+  externa: emisión explícita UI para cámara Overlay temporal. Sin cambio del juego.
+  Ver GAMEPLAY-CAPTURE-20260920.md; no arte final, FPS, animaciones ni WAN.
+- SurfaceAcquisition06 native02 mide seis GAP originales: cuatro con cuerpo o
+  destino solapado; Puerto2 tienen piso/terreno coplanares. CEO mantiene abierto
+  si Puerto es sólo expectativa de fixture o autoría problemática para el jugador;
+  técnica revisa rama real de detach sólo lectura. No cambio de selector/tolerancia.
+- SurfaceDisposition01/REPORT.md corregido separa CampExterior válido del helper
+  CampSelf rechazado. Los estados históricos14FAIL/11GAP se preservan siempre.
+- Aislado candidato pasó de a654d8b a4947f72 por fast-forward. Nueve byte-rewrites
+  de editor tenían blobs canónicos idénticos: copiados con hashes en
+  BuildCandidateInputs02/preserved-before-advance. Fuente canónica limpia, Library
+  reutilizada como caché. Central conserva todo su WIP; no reset ni limpieza.
+- CEO ejecuta WindowsCandidateBuild04 sobre4947f72 (personalización y guía incluidas).
+  Turno Unity exclusivo hasta salida terminal; log/context/PID externos. Todavía
+  no afirmar build exitosa, ZIP ni release final. Objetivo completo sigue activo.
+
 ## Cierre posterior: recuperación de pozo con roster real pasa
 
 - Well native03 confirma causa del negativo: único fallback Frozen inseguro,
