@@ -163,9 +163,7 @@ namespace LetMeSleep.Gameplay
                 // a 3D arrival radius can become narrower than one bot decision stride.
                 // Advance on horizontal crossing; the ordinary motor remains responsible
                 // for floors, stairs and every physical obstruction.
-                while (objectivePointIndex < objectivePoints.Length &&
-                       ReachedDirectedWaypoint(objectivePoints[objectivePointIndex], position))
-                    objectivePointIndex++;
+                AdvanceReachedDirectedWaypoints(position);
                 if (objectivePointIndex < objectivePoints.Length) return Travel(objectivePoints[objectivePointIndex] - position,
                     "task:" + targetRegion + ":" + objectivePassage.Id + ":" + objectivePointIndex, objectivePassage.Id);
                 objectivePassage = null; objectivePoints = null;
@@ -187,8 +185,22 @@ namespace LetMeSleep.Gameplay
                 ? objectivePassage.Points.ToArray()
                 : objectivePassage.Points.Reverse().ToArray();
             objectivePointIndex = 0;
-            return Travel(objectivePoints[0] - position,
-                "task:" + targetRegion + ":" + objectivePassage.Id + ":0", objectivePassage.Id);
+            AdvanceReachedDirectedWaypoints(position);
+            if (objectivePointIndex < objectivePoints.Length)
+                return Travel(objectivePoints[objectivePointIndex] - position,
+                    "task:" + targetRegion + ":" + objectivePassage.Id + ":" + objectivePointIndex, objectivePassage.Id);
+
+            objectivePassage = null; objectivePoints = null; objectivePointIndex = 0;
+            return target.Contains(position)
+                ? Travel(approachPoint - position,
+                    "approach:" + targetRegion + ":" + approachPoint.X + ":" + approachPoint.Y + ":" + approachPoint.Z, null)
+                : Float3.Zero;
+        }
+        private void AdvanceReachedDirectedWaypoints(Float3 position)
+        {
+            while (objectivePointIndex < objectivePoints.Length &&
+                   ReachedDirectedWaypoint(objectivePoints[objectivePointIndex], position))
+                objectivePointIndex++;
         }
         private bool CanFollowDirectedPassage(Float3 position, string current)
         {

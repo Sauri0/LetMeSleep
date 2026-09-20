@@ -98,6 +98,75 @@ namespace LetMeSleep.Tests.EditMode
         }
 
         [Test]
+        public void AcquisitionSkipsReachedFirstWaypointBeforeChoosingMovementDirection()
+        {
+            var patrol = AcquisitionPatrol(new[]
+            {
+                new Float3(0, 1, 0),
+                new Float3(1, 1, 0),
+                new Float3(2, 1, 0)
+            });
+
+            Float3 direction = patrol.DirectionTo(new Float3(0, 1.014f, 0), "start", "finish",
+                new Float3(3, 1, 0), 0, _ => true);
+
+            Assert.That(direction.X, Is.GreaterThan(.9f));
+            Assert.That(System.Math.Abs(direction.Z), Is.LessThan(.0001f),
+                "A torso-height delta at an already reached first waypoint must not create an arbitrary yaw.");
+            Assert.That(patrol.CurrentProgress.Value.WaypointKey, Does.EndWith(":1"));
+        }
+
+        [Test]
+        public void AcquisitionDoesNotSkipSameHorizontalWaypointOnAnotherLevel()
+        {
+            var patrol = AcquisitionPatrol(new[]
+            {
+                new Float3(0, 3, 0),
+                new Float3(1, 3, 0)
+            });
+
+            Float3 direction = patrol.DirectionTo(new Float3(0, 1, 0), "start", "finish",
+                new Float3(3, 3, 0), 0, _ => true);
+
+            Assert.That(System.Math.Abs(direction.X), Is.LessThan(.0001f));
+            Assert.That(direction.Y, Is.GreaterThan(1.9f));
+            Assert.That(patrol.CurrentProgress.Value.WaypointKey, Does.EndWith(":0"));
+        }
+
+        [Test]
+        public void AcquisitionKeepsFirstWaypointWhenItHasNotBeenReached()
+        {
+            var patrol = AcquisitionPatrol(new[]
+            {
+                new Float3(.5f, 1, 0),
+                new Float3(1.5f, 1, 0)
+            });
+
+            Float3 direction = patrol.DirectionTo(new Float3(0, 1, 0), "start", "finish",
+                new Float3(3, 1, 0), 0, _ => true);
+
+            Assert.That(direction.X, Is.EqualTo(.5f).Within(.0001f));
+            Assert.That(patrol.CurrentProgress.Value.WaypointKey, Does.EndWith(":0"));
+        }
+
+        [Test]
+        public void FullyConsumedMalformedPassageDoesNotShortcutToDistantTarget()
+        {
+            var patrol = AcquisitionPatrol(new[]
+            {
+                new Float3(0, 1, 0),
+                new Float3(.1f, 1, 0)
+            });
+
+            Float3 direction = patrol.DirectionTo(new Float3(0, 1, 0), "start", "finish",
+                new Float3(3, 1, 0), 0, _ => true);
+
+            Assert.That(direction, Is.EqualTo(Float3.Zero));
+            Assert.That(patrol.CurrentProgress.HasValue, Is.False,
+                "Consuming a malformed short passage outside its target region must not permit direct travel.");
+        }
+
+        [Test]
         public void WeightedRouteUsesThreeShortPassagesInsteadOfTwoLongPassages()
         {
             WeightedGraph(out var regions, out var passages);
@@ -198,6 +267,19 @@ namespace LetMeSleep.Tests.EditMode
                 new Float3(1, 1.6f, 0),
                 new Float3(1.55f, 1.6f, 0),
                 new Float3(2.1f, 1.6f, 0)
+            })
+        }, 1);
+
+        private static BotPatrol AcquisitionPatrol(Float3[] points) => new BotPatrol(new[]
+        {
+            new BotRegion("start", new Float3(-1, 0, -1), new Float3(1, 2, 1)),
+            new BotRegion("finish", new Float3(2.5f, 0, -1), new Float3(4, 4, 1))
+        }, new[]
+        {
+            new BotPassage("directed", "start", "finish", points, new[]
+            {
+                new BotRegion("directed:corridor", new Float3(-.5f, 0, -.5f),
+                    new Float3(2.5f, 4, .5f))
             })
         }, 1);
     }
