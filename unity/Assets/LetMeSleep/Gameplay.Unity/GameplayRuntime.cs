@@ -315,7 +315,8 @@ namespace LetMeSleep.Gameplay.Unity
             return new BotObservation(self, visible, free, doorAhead, direction => World.SteerBot(self, direction),
                 roundConfig.ModeId, privateState, objective,
                 item => botNavigation == null ? Float3.Zero : World.TaskDirection(self, item, navigationTick),
-                new BotTrainingContext(opportunities, rescueSpeed, equipped), botNavigation?.ContextFor(self.ActorId));
+                new BotTrainingContext(opportunities, rescueSpeed, equipped), botNavigation?.ContextFor(self.ActorId),
+                (item, aim) => World.CanWorkObjective(self.ActorId, item, self.Position, aim));
         }
         public void ApplySnapshot(GameSessionState snapshot)
         {

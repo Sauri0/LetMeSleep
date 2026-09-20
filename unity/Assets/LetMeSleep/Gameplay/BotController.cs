@@ -50,6 +50,7 @@ namespace LetMeSleep.Gameplay
         public TaskAssignment OwnAssignment { get; }
         public ObjectiveDefinition TaskObjective { get; }
         public Func<ObjectiveDefinition, Float3> TaskDirection { get; }
+        public Func<ObjectiveDefinition, Float3, bool> CanWorkTask { get; }
         public ActorPrivateState OwnPrivate { get; }
         public BotTrainingContext Training { get; }
         public BotNavigationContext Navigation { get; }
@@ -58,10 +59,12 @@ namespace LetMeSleep.Gameplay
         public BotObservation(ActorSnapshot self, IReadOnlyList<BotTarget> visible, Float3 freeDirection, bool doorAhead, Func<Float3, Float3> steer, string modeId, ActorPrivateState ownPrivate, ObjectiveDefinition taskObjective, Func<ObjectiveDefinition, Float3> taskDirection, BotTrainingContext training)
             : this(self, visible, freeDirection, doorAhead, steer, modeId, ownPrivate, taskObjective, taskDirection, training, null) { }
         public BotObservation(ActorSnapshot self, IReadOnlyList<BotTarget> visible, Float3 freeDirection, bool doorAhead, Func<Float3, Float3> steer, string modeId, ActorPrivateState ownPrivate, ObjectiveDefinition taskObjective, Func<ObjectiveDefinition, Float3> taskDirection, BotTrainingContext training, BotNavigationContext navigation)
+            : this(self, visible, freeDirection, doorAhead, steer, modeId, ownPrivate, taskObjective, taskDirection, training, navigation, null) { }
+        public BotObservation(ActorSnapshot self, IReadOnlyList<BotTarget> visible, Float3 freeDirection, bool doorAhead, Func<Float3, Float3> steer, string modeId, ActorPrivateState ownPrivate, ObjectiveDefinition taskObjective, Func<ObjectiveDefinition, Float3> taskDirection, BotTrainingContext training, BotNavigationContext navigation, Func<ObjectiveDefinition, Float3, bool> canWorkTask)
         { Navigation = navigation; OwnPrivate = ownPrivate; Training = training; Self = self; Visible = Array.AsReadOnly(GameplayRoundConfig.Copy(visible)); FreeDirection = freeDirection; DoorAhead = doorAhead; Steer = steer; ModeId = modeId;
             if (!GameModes.IsValid(modeId) || (ownPrivate != null && ownPrivate.ActorId != self.ActorId)) throw new ArgumentException("Bot observation identity mismatch.");
             if (modeId == GameModes.Tasks && self.Role == PlayerRole.Human && ownPrivate?.TaskAssignment != null && taskObjective?.ObjectiveId == ownPrivate.TaskAssignment.ObjectiveId)
-            { OwnAssignment = ownPrivate.TaskAssignment; TaskObjective = taskObjective; TaskDirection = taskDirection; }
+            { OwnAssignment = ownPrivate.TaskAssignment; TaskObjective = taskObjective; TaskDirection = taskDirection; CanWorkTask = canWorkTask; }
         }
     }
     public readonly struct BotTick
@@ -292,9 +295,17 @@ namespace LetMeSleep.Gameplay
                 forward = taskTravel.LengthSquared < .0001f ? 0 : 1;
                 if ((observation.TaskObjective.Position - self.Position).Length <= observation.TaskObjective.UseRadius * .9f)
                 {
-                    forward = 0; helpHeld = true;
                     var aim = (observation.TaskObjective.Position - origin).Normalized;
-                    if (aim.LengthSquared > .5f) { yaw = (float)Math.Atan2(aim.X, aim.Z); pitch = MathEx.Clamp((float)Math.Asin(MathEx.Clamp(aim.Y, -1, 1)), -1.919862f, 1.308996f); direction = MathEx.Aim(yaw, pitch); }
+                    if (aim.LengthSquared > .5f)
+                    {
+                        float workYaw = (float)Math.Atan2(aim.X, aim.Z);
+                        float workPitch = MathEx.Clamp((float)Math.Asin(MathEx.Clamp(aim.Y, -1, 1)), -1.919862f, 1.308996f);
+                        var workAim = MathEx.Aim(workYaw, workPitch);
+                        // Test the command's actual aim from the observed posture before stopping.
+                        // Proximity alone does not reveal whether another surface occludes the task.
+                        if (observation.CanWorkTask?.Invoke(observation.TaskObjective, workAim) == true)
+                        { forward = 0; helpHeld = true; yaw = workYaw; pitch = workPitch; direction = workAim; }
+                    }
                 }
             }
             if (!threat && !helpHeld && self.EquippedToolId == GameplayTools.Hands && self.Role == PlayerRole.Human && observation.Training != null && HasFreeSlot(observation.OwnPrivate))

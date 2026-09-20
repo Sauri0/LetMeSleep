@@ -107,7 +107,69 @@ namespace LetMeSleep.Tests
             var objective=new ObjectiveDefinition("test",ObjectiveKind.Clean,"task.test","task.action.hold_clean",Float3.Zero,Float3.Zero,1,30,"room");
             var assignment=new TaskAssignment("test",0,900,30,0,TaskAssignmentStatus.Active,0);
             var own=new ActorPrivateState(1,0,0,default,default,0,0,0,0,true,default,1,1,0,assignment);
-            return new BotObservation(self,seen,Float3.Forward,false,null,GameModes.Tasks,own,objective,_=>Float3.Zero,context);
+            return new BotObservation(self,seen,Float3.Forward,false,null,GameModes.Tasks,own,objective,_=>Float3.Zero,context,null,(_,__)=>true);
+        }
+        private static BotObservation NearbyTaskObservation(Func<ObjectiveDefinition,Float3,bool> canWork, Float3? target = null,
+            Func<Float3,Float3> steer = null)
+        {
+            var objective=new ObjectiveDefinition("nearby",ObjectiveKind.Clean,"task.test","task.action.hold_clean",
+                target ?? Float3.Forward,(target ?? Float3.Forward)+new Float3(.5f,0,0),target.HasValue ? 3 : 1.25f,90,"room");
+            var assignment=new TaskAssignment("nearby",0,2000,90,0,TaskAssignmentStatus.Active,0);
+            var own=new ActorPrivateState(1,0,0,default,default,0,0,0,0,true,default,1,1,0,assignment);
+            return new BotObservation(Actor(1,PlayerRole.Human,Float3.Zero),Array.Empty<BotTarget>(),Float3.Forward,
+                false,steer,GameModes.Tasks,own,objective,_=>new Float3(1,0,0),null,null,canWork);
+        }
+        [Test] public void NearbyOccludedTaskKeepsApproachTravelAndStillReplansWhenStalled()
+        {
+            var bot=new BotController();int observations=0,steers=0;
+            var observation=NearbyTaskObservation((objective,aim)=>{observations++;return false;},steer:direction=>{steers++;return direction;});
+            for(uint tick=0;tick<150;tick+=3)
+            {
+                var command=Decide(bot,observation,tick);
+                Assert.That(command.Input.UseHeld,Is.False);
+                Assert.That(command.Input.MovePlanar.Y,Is.GreaterThan(0));
+                Assert.That(command.Input.AimForward.X,Is.GreaterThan(.99f));
+            }
+            Assert.That(observation.OwnAssignment.ProgressTicks,Is.Zero);
+            Assert.That(observations,Is.EqualTo(50));Assert.That(steers,Is.EqualTo(50));
+            Decide(bot,observation,150);Assert.That(bot.ReplanCount,Is.EqualTo(1));
+            Assert.That(bot.BlockedUntilTick,Is.EqualTo(330));
+        }
+        [Test] public void NearbyVisibleTaskStopsAndWorksWithoutFalseStall()
+        {
+            var bot=new BotController();int steers=0;Float3 observedAim=default;
+            var observation=NearbyTaskObservation((objective,aim)=>{observedAim=aim;return true;},steer:direction=>{steers++;return direction;});
+            for(uint tick=0;tick<=600;tick+=3)
+            {
+                var command=Decide(bot,observation,tick);
+                Assert.That(command.Input.UseHeld,Is.True);Assert.That(command.Input.MovePlanar.Y,Is.Zero);
+                Assert.That((command.Input.AimForward-observedAim).Length,Is.LessThan(.0001f));
+            }
+            Assert.That(steers,Is.Zero);Assert.That(bot.ReplanCount,Is.Zero);
+        }
+        [Test] public void MissingTaskWorkObservationDoesNotGrantPermissionToStop()
+        {
+            var command=Decide(new BotController(),NearbyTaskObservation(null),0);
+            Assert.That(command.Input.UseHeld,Is.False);Assert.That(command.Input.MovePlanar.Y,Is.GreaterThan(0));
+        }
+        [Test] public void TaskWorkObservationReceivesTheClampedCommandAim()
+        {
+            Float3 observedAim=default;
+            var observation=NearbyTaskObservation((objective,aim)=>{observedAim=aim;return true;},new Float3(0,2.5f,.01f));
+            var command=Decide(new BotController(),observation,0);
+            Assert.That(command.Input.UseHeld,Is.True);
+            Assert.That((command.Input.AimForward-observedAim).Length,Is.LessThan(.0001f));
+            Assert.That(observedAim.Y,Is.EqualTo((float)Math.Sin(1.308996f)).Within(.0001f));
+        }
+        [Test] public void TaskBecomingOccludedResumesApproachWithoutCarryingWorkStallTime()
+        {
+            var bot=new BotController();bool visible=true;
+            var observation=NearbyTaskObservation((objective,aim)=>visible);
+            Decide(bot,observation,0);Decide(bot,observation,600);visible=false;
+            var command=Decide(bot,observation,603);
+            Assert.That(command.Input.UseHeld,Is.False);Assert.That(command.Input.MovePlanar.Y,Is.GreaterThan(0));
+            Assert.That(bot.ReplanCount,Is.Zero);Decide(bot,observation,752);Assert.That(bot.ReplanCount,Is.Zero);
+            Decide(bot,observation,753);Assert.That(bot.ReplanCount,Is.EqualTo(1));
         }
         [TestCase(1.99f,0f,false)] [TestCase(2f,0f,true)] [TestCase(4f,-1f,false)] [TestCase(4f,1f,true)]
         public void TaskDefenseMatchesDistanceOrApproachLiteral(float distance,float velocityZ,bool works)

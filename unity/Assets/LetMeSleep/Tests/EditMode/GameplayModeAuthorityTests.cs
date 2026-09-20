@@ -160,7 +160,7 @@ namespace LetMeSleep.Tests.EditMode
         [Test] public void TaskBotOnlyUsesOwnAssignmentAndSurvivalEvades()
         {
             var a = Start(new World(), GameModes.Tasks); var bot = new BotController();
-            var commands = bot.Decide(new BotObservation(Actor(a, 1), Array.Empty<BotTarget>(), Float3.Forward, false, modeId: GameModes.Tasks, ownPrivate: a.CapturePrivate(1), taskObjective: Objective()), new BotTick(1, 1, 1));
+            var commands = bot.Decide(new BotObservation(Actor(a, 1), Array.Empty<BotTarget>(), Float3.Forward, false, null, GameModes.Tasks, a.CapturePrivate(1), Objective(), null, null, null, (_,__)=>true), new BotTick(1, 1, 1));
             Assert.That(commands.Input.UseHeld, Is.True);
             Assert.Throws<ArgumentException>(() => new BotObservation(Actor(a, 2), Array.Empty<BotTarget>(), Float3.Forward, false, modeId: GameModes.Tasks, ownPrivate: a.CapturePrivate(1), taskObjective: Objective()));
             var evasive = bot.Decide(new BotObservation(Actor(a, 2), new[] { new BotTarget(Actor(a, 1), Float3.Forward) }, Float3.Forward, false, modeId: GameModes.Survival), new BotTick(1, 1, 2));

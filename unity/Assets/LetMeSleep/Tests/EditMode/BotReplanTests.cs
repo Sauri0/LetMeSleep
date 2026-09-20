@@ -28,7 +28,7 @@ namespace LetMeSleep.Tests
             var context = new BotNavigationContext(()=>patrol.CurrentProgress, patrol.InvalidatePassage);
             return new BotObservation(Actor(position,life),Array.Empty<BotTarget>(),Float3.Forward,false,
                 steerZero ? _=>Float3.Zero : (Func<Float3,Float3>)null,GameModes.Tasks,own,objective,
-                _=>patrol.DirectionTo(position+Float3.Up,"finish",destination+Float3.Up,tick,_=>true),null,context);
+                _=>patrol.DirectionTo(position+Float3.Up,"finish",destination+Float3.Up,tick,_=>true),null,context,(_,__)=>true);
         }
         private static BotCommands Decide(BotController bot,BotObservation observation,uint tick,ulong round=1)
             =>bot.Decide(observation,new BotTick(1,round,tick));
