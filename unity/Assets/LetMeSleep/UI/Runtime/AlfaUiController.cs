@@ -15,6 +15,7 @@ namespace LetMeSleep.UI
         public const string BloodModeId = "blood";
         public const string HousePatioMapId = "house-patio-v1";
         private static readonly int[] FrameLimitOptions = { 0, 30, 60, 90, 120, 144, 165, 240 };
+        private static readonly int[] RoundDurationOptions = { 30, 60, 90, 120, 150, 180, 240, 300, 420, 600, 900, 1200, 1800 };
 
         private readonly Dictionary<AlfaUiScreen, GameObject> screens = new Dictionary<AlfaUiScreen, GameObject>();
         private readonly Dictionary<int, TextMeshProUGUI> humanCountLabels = new Dictionary<int, TextMeshProUGUI>();
@@ -31,8 +32,9 @@ namespace LetMeSleep.UI
         private TrainingMapOption[] trainingMaps = { new TrainingMapOption(HousePatioMapId, "CASA CON PATIO") };
         private string selectedTrainingMapId = HousePatioMapId;
         private const string NoTrainingMaps = "No hay mapas de entrenamiento disponibles.";
-        private TextMeshProUGUI trainingMapLabel, trainingModeLabel, roomModeLabel;
-        private UnityEngine.UI.Button trainingModePrevious, trainingModeNext, roomModePrevious, roomModeNext;
+        private TextMeshProUGUI trainingMapLabel, trainingModeLabel, roomModeLabel, roomDurationLabel;
+        private UnityEngine.UI.Button trainingModePrevious, trainingModeNext, roomModePrevious, roomModeNext,
+            roomDurationPrevious, roomDurationNext;
         private TextMeshProUGUI hudTask, hudLives;
         private GameObject hudTaskPanel, hudReticle;
         private bool isSpectator;
@@ -382,6 +384,11 @@ namespace LetMeSleep.UI
                 roomModeLabel.text = AlfaModeText.Name(lobbyState?.ModeId ?? GameModes.Blood);
                 roomModePrevious.interactable = roomModeNext.interactable = CanEditLobbyRules && actions is IRoomModeActions;
             }
+            if (roomDurationLabel != null)
+            {
+                roomDurationLabel.text = FormatClock(lobbyState?.RoundSeconds ?? GameModes.DefaultRoundSeconds(GameModes.Blood));
+                roomDurationPrevious.interactable = roomDurationNext.interactable = CanEditLobbyRules && actions is IRoomModeActions;
+            }
         }
 
         private void UpdateLobbyControls()
@@ -431,6 +438,18 @@ namespace LetMeSleep.UI
             lobbyRulesLatched = true; UpdateRoomMapView(); UpdateLobbyControls();
             lobbyStatus.text = "Guardando reglas…";
             modes.SetRoomMode(AlfaModeText.ModeIds[(index + delta + AlfaModeText.ModeIds.Length) % AlfaModeText.ModeIds.Length]);
+        }
+        private void CycleRoomDuration(int delta)
+        {
+            if (!CanEditLobbyRules || !(actions is IRoomModeActions modes) || (delta != -1 && delta != 1)) return;
+            int current = lobbyState.RoundSeconds;
+            int next = delta > 0
+                ? RoundDurationOptions.FirstOrDefault(value => value > current)
+                : RoundDurationOptions.LastOrDefault(value => value < current);
+            if (next == 0) next = delta > 0 ? RoundDurationOptions[0] : RoundDurationOptions[RoundDurationOptions.Length - 1];
+            lobbyRulesLatched = true; UpdateRoomMapView(); UpdateLobbyControls();
+            lobbyStatus.text = "Guardando reglas…";
+            modes.SetRoomDurationSeconds(next);
         }
 
         private void CycleTrainingMap(int delta)
@@ -818,7 +837,7 @@ namespace LetMeSleep.UI
             }
 
             var rulesPanel = factory.Panel(safe, "RulesPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f));
-            Anchor(rulesPanel, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), Vector2.zero, new Vector2(520f, 700f));
+            Anchor(rulesPanel, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), Vector2.zero, new Vector2(520f, 780f));
             var rules = factory.Vertical(rulesPanel, "Rules", 12f);
             AlfaUiFactory.Fill(rules, 26f, 26f, 24f, 24f);
             factory.SectionHeader(rules, "RulesHeader", "PRÓXIMA RONDA", AlfaUiIconKind.Play, AlfaUiTheme.Lamp400);
@@ -833,6 +852,17 @@ namespace LetMeSleep.UI
             modeCaption.minWidth = modeCaption.preferredWidth = 64f;
             roomModeLabel.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 200f;
             foreach (var button in new[] { roomModePrevious, roomModeNext })
+            {
+                var layout = button.GetComponent<UnityEngine.UI.LayoutElement>();
+                layout.preferredWidth = 48f; layout.flexibleWidth = 0f; layout.minHeight = layout.preferredHeight = 60f;
+            }
+            roomDurationLabel = AddCycleField(rules, "TIEMPO", "RoomDuration", -1, 1, CycleRoomDuration);
+            roomDurationPrevious = roomDurationLabel.transform.parent.Find("RoomDurationPrevious").GetComponent<UnityEngine.UI.Button>();
+            roomDurationNext = roomDurationLabel.transform.parent.Find("RoomDurationNext").GetComponent<UnityEngine.UI.Button>();
+            var durationCaption = roomDurationLabel.transform.parent.Find("Label").GetComponent<UnityEngine.UI.LayoutElement>();
+            durationCaption.minWidth = durationCaption.preferredWidth = 64f;
+            roomDurationLabel.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 200f;
+            foreach (var button in new[] { roomDurationPrevious, roomDurationNext })
             {
                 var layout = button.GetComponent<UnityEngine.UI.LayoutElement>();
                 layout.preferredWidth = 48f; layout.flexibleWidth = 0f; layout.minHeight = layout.preferredHeight = 60f;

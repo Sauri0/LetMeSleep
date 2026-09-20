@@ -34,6 +34,16 @@ namespace LetMeSleep.Bootstrap
             {
                 case "task.isla.cabin_access": return "LIMPIÁ EL ACCESO DE LA CABAÑA";
                 case "task.casa.bathroom_tile": return "LIMPIÁ LOS AZULEJOS DEL BAÑO";
+                case "task.casa.ground_basin": return "LIMPIÁ EL LAVAMANOS DE ABAJO";
+                case "task.casa.ground_toilet": return "ACTIVÁ EL BOTÓN DEL INODORO DE ABAJO";
+                case "task.casa.kitchen_sink": return "LIMPIÁ LA BACHA DE LA COCINA";
+                case "task.casa.oven": return "REPARÁ LA MANIJA DEL HORNO";
+                case "task.casa.fridge": return "REPARÁ LA MANIJA DE LA HELADERA";
+                case "task.casa.coffee_table": return "LIMPIÁ LA MESA RATONA";
+                case "task.casa.bedroom_one_lamp": return "ACTIVÁ LA LÁMPARA DEL DORMITORIO 1";
+                case "task.casa.bedroom_two_lamp": return "ACTIVÁ LA LÁMPARA DEL DORMITORIO 2";
+                case "task.casa.upper_basin": return "LIMPIÁ EL LAVAMANOS DE ARRIBA";
+                case "task.casa.upper_toilet": return "ACTIVÁ EL BOTÓN DEL INODORO DE ARRIBA";
                 case "task.camp.washroom": return "LIMPIÁ EL LAVADERO";
                 case "task.yacht.main_deck": return "LIMPIÁ LA CUBIERTA PRINCIPAL";
                 case "task.port.lighthouse_floor": return "LIMPIÁ EL SUELO DEL FARO";

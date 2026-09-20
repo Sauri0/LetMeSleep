@@ -133,6 +133,7 @@ namespace LetMeSleep.UI
     public interface IRoomModeActions
     {
         void SetRoomMode(string modeId);
+        void SetRoomDurationSeconds(int seconds);
     }
 
     public interface IVoiceActions
@@ -258,6 +259,7 @@ namespace LetMeSleep.UI
         public bool IsWaiting { get; }
         public bool RulesPending { get; }
         public string ModeId { get; }
+        public int RoundSeconds { get; }
 
         public LobbyUiState(
             bool isOwner,
@@ -273,9 +275,11 @@ namespace LetMeSleep.UI
             bool canExplore = false,
             bool startPending = false,
             bool isWaiting = true,
-            bool rulesPending = false, string modeId = GameModes.Blood)
+            bool rulesPending = false, string modeId = GameModes.Blood, int roundSeconds = 180)
         {
             ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode.");
+            if (roundSeconds < 30 || roundSeconds > 1800) throw new ArgumentOutOfRangeException(nameof(roundSeconds));
+            RoundSeconds = roundSeconds;
             IsOwner = isOwner;
             RoomCode = AlfaRoomCode.FormatForDisplay(roomCode);
             Members = Array.AsReadOnly((members ?? Enumerable.Empty<LobbyMemberUiState>()).ToArray());
@@ -296,11 +300,12 @@ namespace LetMeSleep.UI
             string startBlockReason, bool readyPending = false, bool startPending = false, bool rulesPending = false)
         {
             if (room == null) throw new ArgumentNullException(nameof(room));
-            var members = room.Members.Select(member => new LobbyMemberUiState(member.Id, member.Name, member.Ready));
+            var members = room.Members.Select(member => new LobbyMemberUiState(member.Id, member.Name, member.Ready, member.Connected));
             var local = room.Members.FirstOrDefault(member => member.Id == localMemberId);
             return new LobbyUiState(room.OwnerId == localMemberId, roomCode, members, local != null && local.Ready,
                 readyPending, room.Rules.HumanCount, canStart, startBlockReason, room.Rules.MapId, startPending: startPending,
-                isWaiting: room.Phase == RoomPhase.Waiting, rulesPending: rulesPending, modeId: room.Rules.ModeId);
+                isWaiting: room.Phase == RoomPhase.Waiting, rulesPending: rulesPending, modeId: room.Rules.ModeId,
+                roundSeconds: room.Rules.RoundSeconds);
         }
     }
 

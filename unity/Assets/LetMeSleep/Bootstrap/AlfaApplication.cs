@@ -188,8 +188,14 @@ namespace LetMeSleep.Bootstrap
         }
         public void SetHumanCount(int? count)
         {
+            if (count.HasValue && (count.Value < 1 || count.Value > 5)) return;
             var previous = room?.Current?.Rules;
-            if (previous != null) room.SetRules(new RoomRules(count, previous.RoundSeconds, previous.BloodQuota, previous.MapId, previous.ModeId, previous.ModeRuleProfileId));
+            if (previous != null)
+            {
+                float quota = previous.ModeId == GameModes.Blood && count.HasValue
+                    ? GameModes.BloodQuotaForHumans(count.Value) : previous.BloodQuota;
+                room.SetRules(new RoomRules(count, previous.RoundSeconds, quota, previous.MapId, previous.ModeId, previous.ModeRuleProfileId));
+            }
         }
         public void SetRoomMap(string mapId)
         {
@@ -205,9 +211,21 @@ namespace LetMeSleep.Bootstrap
             var view = room?.Current;
             if (quiescing || lobby?.IsOwner != true || view == null || view.Phase != RoomPhase.Waiting || !GameModes.IsValid(modeId)) return;
             var previous = view.Rules;
-            var result = room.SetRules(new RoomRules(previous.HumanCount, modeId == GameModes.Tasks ? 120 : 180,
-                modeId == GameModes.Blood ? 20 : 0, previous.MapId, modeId));
+            float quota = modeId == GameModes.Blood
+                ? previous.HumanCount.HasValue ? GameModes.BloodQuotaForHumans(previous.HumanCount.Value) : 20f
+                : 0f;
+            var result = room.SetRules(new RoomRules(previous.HumanCount, GameModes.DefaultRoundSeconds(modeId),
+                quota, previous.MapId, modeId));
             if (result != RoomError.None) PresentRoom(room.Current, "No se pudo cambiar el modo.");
+        }
+        public void SetRoomDurationSeconds(int seconds)
+        {
+            var view = room?.Current;
+            if (quiescing || lobby?.IsOwner != true || view == null || view.Phase != RoomPhase.Waiting || seconds < 30 || seconds > 1800) return;
+            var previous = view.Rules;
+            var result = room.SetRules(new RoomRules(previous.HumanCount, seconds, previous.BloodQuota,
+                previous.MapId, previous.ModeId, previous.ModeRuleProfileId));
+            if (result != RoomError.None) PresentRoom(room.Current, "No se pudo cambiar la duración.");
         }
         public void StartRound()
         {
@@ -285,12 +303,12 @@ namespace LetMeSleep.Bootstrap
             bool canStart = IsModeAvailable(view.Rules.MapId, view.Rules.ModeId) && view.Members.Count >= 2 && view.Members.All(m => m.Ready)
                 && (!view.Rules.HumanCount.HasValue || view.Rules.HumanCount.Value < view.Members.Count);
             string reason = message.Length > 0 ? message : !IsModeAvailable(view.Rules.MapId, view.Rules.ModeId) ? "Este mapa todavía no tiene tareas preparadas para jugar." : view.Members.Count < 2 ? "Invitá a alguien con el código de la sala." : "Todos deben marcar Listo para empezar.";
-            var members = view.Members.Select(m => new LobbyMemberUiState(m.Id, m.Name, m.Ready));
+            var members = view.Members.Select(m => new LobbyMemberUiState(m.Id, m.Name, m.Ready, m.Connected));
             string mapLabel = view.Rules.MapId == RoomRules.AlfaMap ? "Casa con patio" :
                 HiggsfieldMaps?.Entries.FirstOrDefault(entry => entry.MapId == view.Rules.MapId)?.DisplayName ?? "Mapa no instalado";
             ui.PresentLobby(new LobbyUiState(lobby.IsOwner, lobby.Code, members, view.Members.First(m => m.Id == LocalId).Ready,
                 false, view.Rules.HumanCount, canStart, canStart ? "" : reason, view.Rules.MapId, mapLabel, canExplore: true,
-                isWaiting: view.Phase == RoomPhase.Waiting, modeId: view.Rules.ModeId));
+                isWaiting: view.Phase == RoomPhase.Waiting, modeId: view.Rules.ModeId, roundSeconds: view.Rules.RoundSeconds));
         }
         public void LeaveRoom()
         {
@@ -317,7 +335,8 @@ namespace LetMeSleep.Bootstrap
                     new SpawnActor(2, "bot-1", human ? PlayerRole.Mosquito : PlayerRole.Human, SpawnPoint(!human,0), isBot:true),
                     new SpawnActor(3, "bot-2", PlayerRole.Mosquito, SpawnPoint(false,1), isBot:true)
                 };
-                BeginGame(new GameplayRoundConfig(NewEpoch(), 1, map.MapId, map.ContentHash, modeId == GameModes.Tasks ? 120 : 180,
+                BeginGame(new GameplayRoundConfig(NewEpoch(), 1, map.MapId, map.ContentHash, GameModes.DefaultRoundSeconds(modeId),
+                    bloodGoal: modeId == GameModes.Blood ? GameModes.BloodQuotaForHumans(1) : 0,
                     doors: game.World.GetDoorDefinitions(), tools: game.World.GetToolDefinitions(), modeId: modeId, objectives: GetObjectivesForMode(modeId)), roster);
                 game.AutomaticTick = true;
             }
