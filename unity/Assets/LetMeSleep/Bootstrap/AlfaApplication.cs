@@ -152,7 +152,7 @@ namespace LetMeSleep.Bootstrap
             StopVoiceRoom(); room?.Dispose(); transport?.Dispose(); lobby?.Dispose();
             lobby = new EosLobbySession(connection); transport = new EosPeerTransport(connection, lobby);
             transport.PeerStateChanged += ObservePlaytestPeer;
-            peerAppearances.Clear(); peerAppearanceTimes.Clear(); appliedAppearance.Clear(); appearanceAt = 0;
+            peerAppearanceState.Clear(); appliedAppearance.Clear(); appearanceAt = 0;
             transport.PacketReceived += ReceiveAppearance;
             room = new OnlineRoomCoordinator(connection, lobby, transport, playerName);
             room.RoomChanged += OnRoomChanged;
