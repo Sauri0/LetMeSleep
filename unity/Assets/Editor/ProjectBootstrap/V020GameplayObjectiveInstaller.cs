@@ -159,6 +159,49 @@ public static class V020GameplayObjectiveInstaller
             throw new InvalidOperationException("Casa boundary spawn verification requires both routes to pass.");
     }
 
+    [MenuItem("Tools/Let Me Sleep/v0.2.0/Diagnose Casa spawn 3 coffee steering A-B (no save)")]
+    public static void DiagnoseCasaSpawn3CoffeeSteeringOnly()
+    {
+        GameplayObjectiveCatalog.Entry[] entries = BuildAndValidateCasaCatalog(false);
+        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CasaPrefabPath);
+        var map = prefab ? prefab.GetComponent<EnvironmentMapDefinition>() : null;
+        Transform[] humans = (map?.HumanSpawnPoints ?? Array.Empty<Transform>()).Where(spawn => spawn).ToArray();
+        Transform mosquito = (map?.MosquitoSpawnPoints ?? Array.Empty<Transform>()).FirstOrDefault(spawn => spawn);
+        if (humans.Length < 4 || !mosquito)
+            throw new InvalidOperationException("Casa spawn 3 steering diagnostic requires spawn 3 and one mosquito spawn.");
+        bool rawControl = ProveHumanRoute(entries, humans[3].position.ToFloat(),
+            "spawn:3-coffee-raw", "casa.clean.coffee_table", mosquito.position.ToFloat(),
+            9303, trace: true, decisionTrace: true, disableTraversalPrediction: true);
+        bool predictor = ProveHumanRoute(entries, humans[3].position.ToFloat(),
+            "spawn:3-coffee-predictor", "casa.clean.coffee_table", mosquito.position.ToFloat(),
+            9403, trace: true, decisionTrace: true);
+        Debug.Log("LMS_OBJECTIVE_SPAWN3_COFFEE_AB rawControl=" + (rawControl ? "PASS" : "FAIL") +
+                  " predictor=" + (predictor ? "PASS" : "FAIL") + " saved=0");
+        if (!rawControl)
+            throw new InvalidOperationException("Casa spawn 3 A-B control did not reproduce the previously passing raw-clearance route.");
+    }
+
+    [MenuItem("Tools/Let Me Sleep/v0.2.0/Diagnose remaining Casa spawn routes (no save)")]
+    public static void DiagnoseCasaRemainingSpawnRoutesOnly()
+    {
+        GameplayObjectiveCatalog.Entry[] entries = BuildAndValidateCasaCatalog(false);
+        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CasaPrefabPath);
+        var map = prefab ? prefab.GetComponent<EnvironmentMapDefinition>() : null;
+        Transform[] humans = (map?.HumanSpawnPoints ?? Array.Empty<Transform>()).Where(spawn => spawn).ToArray();
+        Transform mosquito = (map?.MosquitoSpawnPoints ?? Array.Empty<Transform>()).FirstOrDefault(spawn => spawn);
+        if (humans.Length < 5 || !mosquito)
+            throw new InvalidOperationException("Casa remaining-route diagnostic requires spawns 0/4 and one mosquito spawn.");
+        bool frontBathroom = ProveHumanRoute(entries, humans[0].position.ToFloat(),
+            "spawn:0-ground-basin-diagnostic", "casa.clean.ground_basin",
+            mosquito.position.ToFloat(), 9500, trace: true, decisionTrace: true);
+        bool rearKitchen = ProveHumanRoute(entries, humans[4].position.ToFloat(),
+            "spawn:4-kitchen-sink-diagnostic", "casa.clean.kitchen_sink",
+            mosquito.position.ToFloat(), 9504, trace: true, decisionTrace: true);
+        Debug.Log("LMS_OBJECTIVE_REMAINING_ROUTE_DIAGNOSTIC spawn0GroundBasin=" +
+                  (frontBathroom ? "PASS" : "FAIL") + " spawn4KitchenSink=" +
+                  (rearKitchen ? "PASS" : "FAIL") + " saved=0");
+    }
+
     [MenuItem("Tools/Let Me Sleep/v0.2.0/Install validated Casa objective catalog")]
     public static void InstallCasaCatalog()
     {
@@ -570,7 +613,8 @@ public static class V020GameplayObjectiveInstaller
 
     private static bool ProveHumanRoute(IReadOnlyList<GameplayObjectiveCatalog.Entry> entries,
         Float3 source, string sourceId, string targetId, Float3 mosquitoSpawn, ulong run,
-        bool trace = false, bool decisionTrace = false)
+        bool trace = false, bool decisionTrace = false,
+        bool disableTraversalPrediction = false)
     {
         var fixture = new GameObject("Casa independent human route " + run);
         GameplayRuntime runtime = null;
@@ -596,6 +640,9 @@ public static class V020GameplayObjectiveInstaller
             catalog.ConfigureForEditor(CasaMapId, entries.Select(Copy).ToArray());
             var world = fixture.AddComponent<UnityGameplayWorld>();
             world.MapRoot = root.transform;
+#if UNITY_EDITOR
+            world.DisableBotHumanTraversalPredictionForDiagnostic = disableTraversalPrediction;
+#endif
             var doors = world.GetDoorDefinitions();
             var tools = world.GetToolDefinitions();
             runtime = fixture.AddComponent<GameplayRuntime>();
@@ -718,7 +765,12 @@ public static class V020GameplayObjectiveInstaller
     {
         bool wanted = sourceId == "spawn:0-threat" && (sample.Tick == 14 || sample.Tick == 17) ||
                       sourceId == "spawn:4-threat" &&
-                      (sample.Tick == 317 || sample.Tick == 320 || sample.Tick == 323 || sample.Tick == 326);
+                      (sample.Tick == 317 || sample.Tick == 320 || sample.Tick == 323 || sample.Tick == 326) ||
+                      sourceId == "spawn:3-coffee-predictor" ||
+                      sourceId == "spawn:3-coffee-raw" && (sample.Tick == 2 || (sample.Tick - 2) % 15 == 0) ||
+                      (sourceId == "spawn:0-ground-basin-diagnostic" ||
+                       sourceId == "spawn:4-kitchen-sink-diagnostic") &&
+                      (sample.Tick == 2 || (sample.Tick - 2) % 15 == 0);
         if (!wanted) return;
         const BindingFlags hidden = BindingFlags.Instance | BindingFlags.NonPublic;
         var bots = typeof(GameplayRuntime).GetField("bots", hidden)?.GetValue(runtime)
