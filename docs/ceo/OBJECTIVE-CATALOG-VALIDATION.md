@@ -37,6 +37,17 @@ histórico de inicio del bot (1.125 m) evita trabajar y produce un ciclo físico
 Isla picnic work01 inicia trabajo en269 ticks aislado; la ronda multi-humano
 requiere investigación separada.
 
+Las rondas aceptan opcionalmente `-taskTraceActor 1..5`, `-taskTraceFrom` y
+`-taskTraceTo` (intervalo máximo900 ticks dentro de1..4500). Un callback sólo
+de editor captura inmediatamente después de Decide y antes del siguiente bot
+o del avance físico, evitando mezclar las trazas compartidas entre actores.
+Se elimina al detener la ronda. Incluye progreso/replan, disponibilidad,
+apoyo/espacio del approach, ruta abierta y colliders bloqueantes por actor.
+`round-trace-event-equivalence-01.json` compara los52 eventos Casa y51 Isla:
+misma secuencia exacta de estados/posiciones/resultados con y sin diagnóstico.
+Casa muestra approach ocupado por actor3 con ruta abierta; Isla muestra origen
+terminal reconocido y tarea disponible pero dirección cero. Son causas distintas.
+
 ## Estado posterior y entradas adicionales
 
 La decisión D06 pide **al menos diez** objetivos por mapa. El catálogo final

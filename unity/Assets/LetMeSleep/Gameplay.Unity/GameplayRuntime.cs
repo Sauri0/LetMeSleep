@@ -59,6 +59,10 @@ namespace LetMeSleep.Gameplay.Unity
         public event Action<ActorPrivateState> PrivateReady;
         public event Action<GameplayEvent> EventReady;
         public event Action<RoundEndReason, PlayerRole> RoundFinished;
+#if UNITY_EDITOR
+        // Runs before the next bot can overwrite shared navigation/steering traces.
+        public Action<uint, uint> BotDecisionForDiagnostic;
+#endif
         private readonly Dictionary<uint, BotController> bots = new Dictionary<uint, BotController>();
         private readonly ReplicaStateGate replicaGate = new ReplicaStateGate();
         private float accumulator, yaw, pitch, sendAccumulator, snapshotAccumulator;
@@ -95,6 +99,9 @@ namespace LetMeSleep.Gameplay.Unity
         }
         public void StopRound()
         {
+#if UNITY_EDITOR
+            BotDecisionForDiagnostic = null;
+#endif
             if (IsHost) Authority?.EndRound(RoundEndReason.Aborted);
             roundConfig = null; LatestSnapshot = null; LocalPrivate = null; queuedActions.Clear(); bots.Clear(); SetInputBlocked(true);
             botNavigation = null; World?.ResetBotSteering(); World?.ResetModeMap();
@@ -260,6 +267,9 @@ namespace LetMeSleep.Gameplay.Unity
                 if (self.Eliminated) continue;
                 var observation = ObserveBot(self, snapshot);
                 var commands = bot.Value.Decide(observation, new BotTick(snapshot.SessionEpoch, snapshot.RoundId, next));
+#if UNITY_EDITOR
+                BotDecisionForDiagnostic?.Invoke(bot.Key, next);
+#endif
                 Authority.SubmitBotInput(commands.Input); if (commands.Action.HasValue) Authority.SubmitBotAction(commands.Action.Value);
             }
             Authority.Advance(new HostTick(next));

@@ -509,6 +509,7 @@ public static class V020GameplayObjectiveInstaller
                 modeRules: new ModeRuleProfile(GameModes.Tasks), objectives: world.GetObjectiveDefinitions());
             runtime.BeginRound(config, roster);
             var previous = new Dictionary<uint, string>();
+            ConfigureRoundDecisionTrace(runtime);
             for (uint tick = 1; tick <= config.RoundDurationTicks && runtime.Authority.IsRunning; tick++)
             {
                 runtime.TickHost();
@@ -1234,12 +1235,29 @@ public static class V020GameplayObjectiveInstaller
         { Tick = tick; Self = self; Opponent = opponent; Assignment = assignment; Visible = visible; Threat = threat; WorkProbe = workProbe; }
     }
 
-    private static void EnableDecisionTrace(GameplayRuntime runtime)
+    private static void ConfigureRoundDecisionTrace(GameplayRuntime runtime)
+    {
+        string[] args = Environment.GetCommandLineArgs();
+        if (!args.Contains("-taskTraceActor")) return;
+        if (!uint.TryParse(CommandArgument(args, "-taskTraceActor"), out uint actor) || actor < 1 || actor > 5 ||
+            !uint.TryParse(CommandArgument(args, "-taskTraceFrom"), out uint first) || first < 1 ||
+            !uint.TryParse(CommandArgument(args, "-taskTraceTo"), out uint last) || last < first || last > 4500 || last - first > 900)
+            throw new ArgumentException("Round trace requires actor1..5 and a bounded interval of at most900 ticks within1..4500.");
+        EnableDecisionTrace(runtime, actor);
+        runtime.BotDecisionForDiagnostic = (id, tick) =>
+        {
+            if (id != actor || tick < first || tick > last) return;
+            var sample = CaptureDecisionTrace(runtime, tick, actor);
+            LogDecisionTrace(runtime, sample, "external:round:actor:" + actor);
+        };
+    }
+
+    private static void EnableDecisionTrace(GameplayRuntime runtime, uint actorId = 1)
     {
         const BindingFlags hidden = BindingFlags.Instance | BindingFlags.NonPublic;
         var bots = typeof(GameplayRuntime).GetField("bots", hidden)?.GetValue(runtime)
             as IDictionary<uint, BotController>;
-        if (bots == null || !bots.TryGetValue(1, out var controller))
+        if (bots == null || !bots.TryGetValue(actorId, out var controller))
             throw new InvalidOperationException("Casa threat diagnostic could not enable the human bot trace.");
         FieldInfo decisionCapture = typeof(BotController).GetField("captureDecisionDiagnostic", hidden);
         object navigation = typeof(GameplayRuntime).GetField("botNavigation", hidden)?.GetValue(runtime);
@@ -1252,10 +1270,10 @@ public static class V020GameplayObjectiveInstaller
         steeringCapture.SetValue(runtime.World, true);
     }
 
-    private static DecisionTraceSample CaptureDecisionTrace(GameplayRuntime runtime, uint tick)
+    private static DecisionTraceSample CaptureDecisionTrace(GameplayRuntime runtime, uint tick, uint actorId = 1)
     {
         GameSessionState state = runtime.Authority.CaptureSnapshot();
-        ActorSnapshot self = state.Actors.FirstOrDefault(item => item.ActorId == 1);
+        ActorSnapshot self = state.Actors.FirstOrDefault(item => item.ActorId == actorId);
         ActorSnapshot opponent = state.Actors.FirstOrDefault(item => item.Role == PlayerRole.Mosquito);
         if (self == null || opponent == null)
             throw new InvalidOperationException("Casa threat diagnostic is missing its human or mosquito at tick " + tick + ".");
@@ -1279,9 +1297,24 @@ public static class V020GameplayObjectiveInstaller
             // This is not evidence that BotController invoked its work callback.
             bool canWork = runtime.World.CanWorkObjective(self.ActorId, objective, self.Position, commandAim);
             workProbe = string.Format(CultureInfo.InvariantCulture,
-                "phase=pre-tick distance={0:R} withinBotMargin={1} aim={2:R},{3:R},{4:R} canWorkFromObservedPose={5}",
+                "phase=pre-tick distance={0:R} withinLegacyMargin={1} aim={2:R},{3:R},{4:R} canWorkFromObservedPose={5} withinUseRadius={6}",
                 distance, distance <= objective.UseRadius * .9f ? 1 : 0,
-                commandAim.X, commandAim.Y, commandAim.Z, canWork ? 1 : 0);
+                commandAim.X, commandAim.Y, commandAim.Z, canWork ? 1 : 0, distance <= objective.UseRadius ? 1 : 0);
+            const BindingFlags hidden = BindingFlags.Instance | BindingFlags.NonPublic;
+            var freeMethod = typeof(UnityGameplayWorld).GetMethod("ApproachFree", hidden);
+            bool free = (bool)freeMethod.Invoke(runtime.World, new object[] { actorId, objective.ApproachPoint.ToUnity() });
+            object nav = typeof(UnityGameplayWorld).GetField("modeNavigation", hidden).GetValue(runtime.World);
+            bool open = (bool)nav.GetType().GetMethod("HasOpenRoute").Invoke(nav,
+                new object[] { self.Position, objective.RouteRegionId, objective.ApproachPoint });
+            var blocksMotor = typeof(UnityGameplayWorld).GetMethod("BlocksMotor", hidden);
+            Vector3 point = objective.ApproachPoint.ToUnity();
+            string blockers = string.Join(";", Physics.OverlapCapsule(point + Vector3.up * .251f,
+                point + Vector3.up * 1.469f, .249f, runtime.World.GeometryMask, QueryTriggerInteraction.Collide)
+                .Where(c => (bool)blocksMotor.Invoke(runtime.World, new object[] { c, actorId }))
+                .Select(c => c.GetComponentInParent<GameplayActorProxy>() is GameplayActorProxy proxy
+                    ? "actor:" + proxy.ActorId + ":" + c.name : HierarchyPath(runtime.World.MapRoot, c.transform)));
+            workProbe += " available=" + (runtime.World.IsObjectiveAvailable(actorId, objective) ? 1 : 0) +
+                " approachFree=" + (free ? 1 : 0) + " openRoute=" + (open ? 1 : 0) + " approachBlockers=[" + blockers + "]";
         }
         return new DecisionTraceSample(tick, self, opponent, assignment, visible, threat, workProbe);
     }
@@ -1301,7 +1334,8 @@ public static class V020GameplayObjectiveInstaller
 
     private static void LogDecisionTrace(GameplayRuntime runtime, DecisionTraceSample sample, string sourceId)
     {
-        bool wanted = sourceId == "spawn:0-threat" && (sample.Tick == 14 || sample.Tick == 17) ||
+        bool wanted = sourceId.StartsWith("external:round:", StringComparison.Ordinal) ||
+                      sourceId == "spawn:0-threat" && (sample.Tick == 14 || sample.Tick == 17) ||
                       sourceId == "spawn:4-threat" &&
                       (sample.Tick == 317 || sample.Tick == 320 || sample.Tick == 323 || sample.Tick == 326) ||
                       sourceId == "spawn:3-coffee-predictor" ||
@@ -1322,6 +1356,12 @@ public static class V020GameplayObjectiveInstaller
         string decision = typeof(BotController).GetField("lastDecisionDiagnostic", hidden)?.GetValue(controller) as string;
         object navigation = typeof(GameplayRuntime).GetField("botNavigation", hidden)?.GetValue(runtime);
         string route = navigation?.GetType().GetField("lastDirectionDiagnostic", hidden)?.GetValue(navigation) as string;
+        var context = navigation?.GetType().GetMethod("ContextFor")?.Invoke(navigation,
+            new object[] { sample.Self.ActorId }) as BotNavigationContext;
+        var progress = context?.ReadProgress();
+        string progressTrace = progress.HasValue ? string.Format(CultureInfo.InvariantCulture,
+            "passage={0} waypoint={1} remaining={2:R}", progress.Value.PassageId,
+            progress.Value.WaypointKey, progress.Value.RemainingDistance) : "none";
         string steering = typeof(UnityGameplayWorld).GetField("lastBotSteeringDiagnostic", hidden)?
             .GetValue(runtime.World) as string;
         if (string.IsNullOrEmpty(decision))
@@ -1338,7 +1378,7 @@ public static class V020GameplayObjectiveInstaller
             "LMS_OBJECTIVE_BOT_DECISION source={0} tick={1} assignment={2} status={3} progress={22} " +
             "opponent={4} distance={5:R} visible={6} threat={7} selected={8} blocksTask={9} " +
             "position={10:R},{11:R},{12:R} velocity={13:R},{14:R},{15:R} view={16:R},{17:R},{18:R} " +
-            "decision=({19}) route=({20}) steering=({21}) workProbe=({23})",
+            "decision=({19}) route=({20}) steering=({21}) workProbe=({23}) progressProbe=({24}) replans={25} blockedUntil={26}",
             sourceId, sample.Tick, sample.Assignment?.ObjectiveId ?? "none",
             sample.Assignment == null ? "none" : sample.Assignment.Status.ToString(),
             sample.Opponent.ActorId, (sample.Opponent.Position - sample.Self.Position).Length,
@@ -1346,7 +1386,8 @@ public static class V020GameplayObjectiveInstaller
             sample.Self.Position.X, sample.Self.Position.Y, sample.Self.Position.Z,
             sample.Self.Velocity.X, sample.Self.Velocity.Y, sample.Self.Velocity.Z,
             sample.Self.ViewForward.X, sample.Self.ViewForward.Y, sample.Self.ViewForward.Z,
-            decision, route, steering, sample.Assignment?.ProgressTicks ?? 0, sample.WorkProbe));
+            decision, route, steering, sample.Assignment?.ProgressTicks ?? 0, sample.WorkProbe,
+            progressTrace, controller.ReplanCount, controller.BlockedUntilTick));
     }
 
     private static bool IsDiagnosticThreat(ActorSnapshot self, BotTarget target)
