@@ -204,9 +204,18 @@ namespace LetMeSleep.Gameplay.Unity
         {
             var local = world.MapRoot.InverseTransformPoint(worldPosition.ToUnity()).ToFloat();
             var approach = world.MapRoot.InverseTransformPoint(worldApproach.ToUnity()).ToFloat();
-            if (!TryHumanRegion(local, out var from, out _) ||
-                !TryTargetPoint(targetRegion, approach, out _, out _)) return false;
-            return Reachable(from.Id, targetRegion, IsOpen);
+            if (!TryTargetPoint(targetRegion, approach, out _, out _)) return false;
+            if (TryHumanRegion(local, out var from, out _)) return Reachable(from.Id, targetRegion, IsOpen);
+
+            // Availability is checked on every host tick after assignment. A human already
+            // traversing an authored route may be farther than the region-classification
+            // radius from both endpoints, while still inside its measured corridor. Preserve
+            // connectivity through that open passage without changing assignment admission
+            // or its 330-tick budget contract.
+            var sample = local + Float3.Up;
+            return passages.Any(passage => passage.TraversalRegions.Count > 0 && IsOpen(passage.Id) &&
+                passage.TraversalRegions.Any(corridor => corridor.Contains(sample)) &&
+                (Reachable(passage.From, targetRegion, IsOpen) || Reachable(passage.To, targetRegion, IsOpen)));
         }
         public bool RouteWithin(Float3 worldPosition, string targetRegion, Float3 worldApproach, uint budgetTicks)
             => RouteWithin(worldPosition, targetRegion, worldApproach, budgetTicks, null);

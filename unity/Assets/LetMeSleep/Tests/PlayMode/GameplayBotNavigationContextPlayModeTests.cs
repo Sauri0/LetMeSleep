@@ -180,6 +180,71 @@ namespace LetMeSleep.Tests.PlayMode
         }
 
         [Test]
+        public void OpenHumanCorridorPreservesAvailabilityBeyondRegionClassificationRadius()
+        {
+            navigation = ConfigureJson(LongHumanRouteJson);
+            var target = Objective("human_finish", new Float3(10, 0, 0));
+
+            Assert.That(HasOpenRoute(navigation, new Float3(5, 0, 0), target), Is.True);
+        }
+
+        [Test]
+        public void PointOutsideOrAboveHumanCorridorDoesNotPreserveAvailability()
+        {
+            navigation = ConfigureJson(LongHumanRouteJson);
+            var target = Objective("human_finish", new Float3(10, 0, 0));
+
+            Assert.That(HasOpenRoute(navigation, new Float3(5, 0, 1), target), Is.False,
+                "A nearby point outside the authored corridor must not borrow its connectivity.");
+            Assert.That(HasOpenRoute(navigation, new Float3(5, 5, 0), target), Is.False,
+                "The same XZ on another floor must not borrow a corridor at a different height.");
+        }
+
+        [Test]
+        public void ClosedHumanCorridorDoesNotPreserveAvailability()
+        {
+            navigation = ConfigureJson(LongHumanRouteJson);
+            var doors = (System.Collections.IDictionary)navigation.GetType().GetField("doors",
+                BindingFlags.Instance | BindingFlags.NonPublic).GetValue(navigation);
+            doors.Add("human-route", null);
+
+            Assert.That(HasOpenRoute(navigation, new Float3(5, 0, 0),
+                Objective("human_finish", new Float3(10, 0, 0))), Is.False);
+        }
+
+        [Test]
+        public void CorridorContinuityDoesNotPermitNewAssignmentFromItsMidpoint()
+        {
+            navigation = ConfigureJson(LongHumanRouteJson);
+            var target = Objective("human_finish", new Float3(10, 0, 0));
+
+            Assert.That(RouteWithin(navigation, new Float3(5, 0, 0), target, 1000), Is.False,
+                "Assignment admission must retain the existing three-metre source-region contract.");
+        }
+
+        [Test]
+        public void LegacyPortalEndpointAvailabilityStillWorks()
+        {
+            navigation = ConfigureJson(LegacyAirGraphJson);
+
+            Assert.That(HasOpenRoute(navigation, Float3.Zero,
+                Objective("air_finish", new Float3(4, 0, 0))), Is.True);
+        }
+
+        [Test]
+        public void LegacyStairCorridorPreservesAvailabilityButNotAssignmentAdmission()
+        {
+            navigation = ConfigureJson(LegacyLongStairJson);
+            var target = Objective("upper", new Float3(0, 2, 10));
+            var midpoint = new Float3(0, 1, 4.5f);
+
+            Assert.That(HasOpenRoute(navigation, midpoint, target), Is.True,
+                "Legacy stairs use the same authored-corridor continuity as human routes.");
+            Assert.That(RouteWithin(navigation, midpoint, target, 1000), Is.False,
+                "Corridor continuity must not widen assignment admission beyond three metres.");
+        }
+
+        [Test]
         public void PartialOrInvalidHumanGraphsAreRejected()
         {
             string[] invalid =
@@ -239,6 +304,14 @@ namespace LetMeSleep.Tests.PlayMode
             {""id"":""air_finish"",""min"":[2.1,0,-2],""max"":[6,3,2]}],""portals"":[
             {""id"":""air-passage"",""from"":""air_start"",""to"":""air_finish"",""center"":[2.05,1,0],
              ""normal"":[1,0,0],""width"":1,""height"":2,""door"":false}]}";
+        private const string LegacyLongStairJson = @"{
+            ""schema_version"":1,""map_id"":""test-map"",""zones"":[
+            {""id"":""lower"",""min"":[-1,0,-1],""max"":[1,2,1]},
+            {""id"":""upper"",""min"":[-1,2,9],""max"":[1,4,11]}],""portals"":[],
+            ""stair"":{""id"":""long-stair"",""from"":""lower"",""to"":""upper"",
+            ""lower_flight"":{""clear_x"":[-0.5,0.5],""start_y"":0.5,""end_y"":1.5,""start_z"":0,""end_z"":5},
+            ""upper_flight"":{""clear_x"":[-0.5,0.5],""start_y"":1.5,""end_y"":3,""start_z"":5,""end_z"":10},
+            ""mid_landing"":{""id"":""landing"",""min"":[-0.5,1.45,4.9],""max"":[0.5,1.55,5.1]}}}";
         private const string SeparateGraphJson = @"{
             ""schema_version"":1,""map_id"":""test-map"",""zones"":[
             {""id"":""air_start"",""min"":[-2,0,-2],""max"":[2,3,2]},
@@ -252,6 +325,17 @@ namespace LetMeSleep.Tests.PlayMode
             {""id"":""human-route"",""from"":""human_start"",""to"":""human_finish"",""points"":[
              {""position"":[1.5,1,0]},{""position"":[2.5,1,0]},{""position"":[3.5,1,0]}],
              ""traversal_regions"":[{""id"":""human-route:corridor"",""min"":[1.2,0.5,-0.5],""max"":[3.8,1.5,0.5]}]}]}";
+        private const string LongHumanRouteJson = @"{
+            ""schema_version"":1,""map_id"":""test-map"",""zones"":[
+            {""id"":""air_start"",""min"":[-1,0,-1],""max"":[1,2,1]},
+            {""id"":""air_finish"",""min"":[9,0,-1],""max"":[11,2,1]}],""portals"":[],
+            ""human_zones"":[
+            {""id"":""human_start"",""min"":[-1,0,-1],""max"":[1,2,1]},
+            {""id"":""human_finish"",""min"":[9,0,-1],""max"":[11,2,1]}],
+            ""human_portals"":[],""human_routes"":[
+            {""id"":""human-route"",""from"":""human_start"",""to"":""human_finish"",""points"":[
+             {""position"":[0.5,1,0]},{""position"":[5,1,0]},{""position"":[9.5,1,0]}],
+             ""traversal_regions"":[{""id"":""human-route:corridor"",""min"":[0.2,0.5,-0.5],""max"":[9.8,1.5,0.5]}]}]}";
         private void EnterStair()
         {
             Direction(navigation, 1, 2, new Float3(-.65f, 3.174f, 3.95f));
@@ -313,6 +397,13 @@ namespace LetMeSleep.Tests.PlayMode
         }
         private static bool KnowsRegion(object adapter, string id)
             => (bool)adapter.GetType().GetMethod("KnowsRegion").Invoke(adapter, new object[] { id });
+        private static bool HasOpenRoute(object adapter, Float3 position, ObjectiveDefinition target)
+            => (bool)adapter.GetType().GetMethod("HasOpenRoute").Invoke(adapter,
+                new object[] { position, target.RouteRegionId, target.ApproachPoint });
+        private static bool RouteWithin(object adapter, Float3 position, ObjectiveDefinition target, uint budget)
+            => (bool)adapter.GetType().GetMethod("RouteWithin", new[]
+                { typeof(Float3), typeof(string), typeof(Float3), typeof(uint) }).Invoke(adapter,
+                new object[] { position, target.RouteRegionId, target.ApproachPoint, budget });
         private static ObjectiveDefinition Objective(string region, Float3 point)
             => new ObjectiveDefinition("objective-" + region, ObjectiveKind.Clean, "task.test",
                 "task.action.hold_clean", point, point, 1, 30, region);
