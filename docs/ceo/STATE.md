@@ -1,5 +1,31 @@
 # Relevo CEO — 2026-09-19
 
+## Gate actual: cinco catálogos instalados; candidata técnica en preparación
+
+- `bf753fb` integra continuación de dirección deseada sólo por tres ticks
+  predictivos completos, apoyados y sin overlap, avance mínimo .12 m. No cambia
+  canAdvance ni certificación de desvíos. Native03 49/49, sin omitidos; revisión
+  Sol sin bloqueantes. El test inicial de pared estaba mal planteado: avanzaba
+  .07593 m en3 ticks, por lo que el rechazo era correcto. Se añadió warmup físico,
+  manteniendo guardas/geometría. Astra cubre ahora el flag de actor dinámico.
+- `d7ea009` instala Yate con10 objetivos y dos rutas humanas separadas; legacy
+  intacto. Install05: ronda16/20 (meta14) y cobertura motor PASS. Foredeck→coffee
+  work02=260/330; helm→coffee work02=305/330. Hash de contenido
+  `3377a4f634bedb544a2af111b51d6d5a6a42c3bd577242484d5cb9cf8ddbeb37`.
+  Delta verificado:215 documentos intactos, sólo catálogo/ref navegación/hash.
+- Total instalado53 objetivos: Casa10, Camp10, Puerto11, Isla12, Yate10.
+  Regresión tras continuación: Casa08=20/20, Camp09=16/20, Puerto07=20/20,
+  Isla07=14/20, Yate05=16/20. Alcance entrenamiento con mosquito sin control;
+  no certifica todos los pares posibles, combate online ni WAN.
+- Causa de cuatro prefabs vaciados al importar checkout limpio: guard explícito
+  FacialContractImportGuard → InvalidateAll. La atribución inicial a fileID fue
+  incorrecta y se corrigió. Wrapper V2 externo invoca BuildAll con verificación
+  geométrica, backups y comparación HEAD; ejecución en candidata en curso.
+  No desactivar guard ni aceptar esos cambios como simple normalización.
+- Sin build/publicación todavía. Arte nuevo/catálogo visual/equipamiento, micrófono
+  real y prueba online en dos redes siguen pendientes. Autenticación Higgsfield
+  y segundo entorno EOS solicitados al usuario; no asumir respuesta ni identidad.
+
 ## Gate actual: Isla instalada y acceso humano de Yate
 
 - Yate candidato humano01 pasa static10 y foredeck-coffee02 desde snapshot
