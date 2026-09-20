@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace LetMeSleep.UI
 {
@@ -9,6 +10,8 @@ namespace LetMeSleep.UI
     {
         private readonly AlfaUiDependencies dependencies;
         private readonly Action<UiFeedbackKind> feedback;
+        private static Sprite roundedSprite;
+        private static Sprite horizontalFadeSprite;
 
         internal AlfaUiFactory(AlfaUiDependencies dependencies, Action<UiFeedbackKind> feedback = null)
         {
@@ -26,6 +29,7 @@ namespace LetMeSleep.UI
             var image = view.GetComponent<UnityEngine.UI.Image>();
             image.color = opaque ? AlfaUiTheme.Night800 : Color.clear;
             image.raycastTarget = opaque;
+            view.AddComponent<AlfaUiEntranceMotion>();
             return view;
         }
 
@@ -76,17 +80,17 @@ namespace LetMeSleep.UI
             var image = node.GetComponent<UnityEngine.UI.Image>();
             image.color = color ?? AlfaUiTheme.Night700;
             image.raycastTarget = false;
-            image.sprite = dependencies.PanelSprite;
-            image.type = dependencies.PanelSprite != null ? UnityEngine.UI.Image.Type.Sliced : UnityEngine.UI.Image.Type.Simple;
+            image.sprite = dependencies.PanelSprite != null ? dependencies.PanelSprite : RoundedSprite();
+            image.type = UnityEngine.UI.Image.Type.Sliced;
             var outline = node.GetComponent<UnityEngine.UI.Outline>();
-            outline.effectColor = new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.82f);
-            outline.effectDistance = new Vector2(1.5f, -1.5f);
+            outline.effectColor = new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.68f);
+            outline.effectDistance = new Vector2(1.25f, -1.25f);
             var shadow = PlainShadow(node);
-            shadow.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.3f);
-            shadow.effectDistance = new Vector2(0f, -3f);
+            shadow.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.55f);
+            shadow.effectDistance = new Vector2(0f, -5f);
             var topEdge = Node("TopEdge", node.transform, typeof(UnityEngine.UI.Image));
             var topEdgeImage = topEdge.GetComponent<UnityEngine.UI.Image>();
-            topEdgeImage.color = new Color(AlfaUiTheme.Sky400.r, AlfaUiTheme.Sky400.g, AlfaUiTheme.Sky400.b, 0.34f);
+            topEdgeImage.color = new Color(AlfaUiTheme.Sheet100.r, AlfaUiTheme.Sheet100.g, AlfaUiTheme.Sheet100.b, 0.18f);
             topEdgeImage.raycastTarget = false;
             var topEdgeRect = topEdge.GetComponent<RectTransform>();
             topEdgeRect.anchorMin = new Vector2(0f, 1f);
@@ -206,8 +210,8 @@ namespace LetMeSleep.UI
         {
             var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button), typeof(UnityEngine.UI.LayoutElement), typeof(UnityEngine.UI.Outline), typeof(UnityEngine.UI.Shadow));
             var image = node.GetComponent<UnityEngine.UI.Image>();
-            image.sprite = dependencies.ButtonSprite;
-            image.type = dependencies.ButtonSprite != null ? UnityEngine.UI.Image.Type.Sliced : UnityEngine.UI.Image.Type.Simple;
+            image.sprite = dependencies.ButtonSprite != null ? dependencies.ButtonSprite : RoundedSprite();
+            image.type = UnityEngine.UI.Image.Type.Sliced;
             var button = node.GetComponent<UnityEngine.UI.Button>();
             button.targetGraphic = image;
             button.colors = AlfaUiTheme.ButtonColors(primary, destructive);
@@ -222,11 +226,11 @@ namespace LetMeSleep.UI
                 });
             }
             var outline = node.GetComponent<UnityEngine.UI.Outline>();
-            outline.effectColor = primary ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Border;
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.effectColor = primary ? AlfaUiTheme.Sheet100 : new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.8f);
+            outline.effectDistance = new Vector2(1.5f, -1.5f);
             var shadow = PlainShadow(node);
-            shadow.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.35f);
-            shadow.effectDistance = new Vector2(0f, -2f);
+            shadow.effectColor = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.68f);
+            shadow.effectDistance = new Vector2(0f, -5f);
             var layout = node.GetComponent<UnityEngine.UI.LayoutElement>();
             layout.minHeight = Mathf.Max(44f, height);
             layout.preferredHeight = height;
@@ -238,6 +242,7 @@ namespace LetMeSleep.UI
             text.characterSpacing = 0.8f;
             var iconPlateSize = Mathf.Clamp(height - 16f, 34f, 50f);
             Fill(text.rectTransform, icon == AlfaUiIconKind.None ? 16f : iconPlateSize + 34f, 18f, 8f, 8f);
+            RectTransform iconPlate = null;
             if (icon != AlfaUiIconKind.None)
             {
                 var plate = Node("IconPlate", node.transform, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Outline));
@@ -250,6 +255,7 @@ namespace LetMeSleep.UI
                     new Color(AlfaUiTheme.Moon200.r, AlfaUiTheme.Moon200.g, AlfaUiTheme.Moon200.b, 0.22f);
                 plateOutline.enabled = false;
                 var plateRect = plate.GetComponent<RectTransform>();
+                iconPlate = plateRect;
                 plateRect.anchorMin = new Vector2(0f, 0.5f);
                 plateRect.anchorMax = new Vector2(0f, 0.5f);
                 plateRect.pivot = new Vector2(0f, 0.5f);
@@ -270,6 +276,18 @@ namespace LetMeSleep.UI
             shineRect.pivot = new Vector2(0.5f, 1f);
             shineRect.offsetMin = new Vector2(3f, -2f);
             shineRect.offsetMax = new Vector2(-3f, 0f);
+            var lowerBevel = Node("LowerBevel", node.transform, typeof(UnityEngine.UI.Image));
+            var lowerBevelImage = lowerBevel.GetComponent<UnityEngine.UI.Image>();
+            lowerBevelImage.color = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.34f);
+            lowerBevelImage.raycastTarget = false;
+            var lowerBevelRect = lowerBevel.GetComponent<RectTransform>();
+            lowerBevelRect.anchorMin = Vector2.zero;
+            lowerBevelRect.anchorMax = new Vector2(1f, 0f);
+            lowerBevelRect.pivot = new Vector2(0.5f, 0f);
+            lowerBevelRect.offsetMin = new Vector2(6f, 2f);
+            lowerBevelRect.offsetMax = new Vector2(-6f, 5f);
+            var motion = node.AddComponent<AlfaUiFocusMotion>();
+            motion.Bind(shineImage, iconPlate, shadow);
             return button;
         }
 
@@ -286,7 +304,76 @@ namespace LetMeSleep.UI
                 TextAlignmentOptions.Left, true);
             subtitleText.characterSpacing = 0.6f;
             Fill(subtitleText.rectTransform, 82f, 16f, 40f, 5f);
+            var rail = Node("FocusRail", button.transform, typeof(UnityEngine.UI.Image));
+            var railImage = rail.GetComponent<UnityEngine.UI.Image>();
+            railImage.color = new Color(AlfaUiTheme.Lamp400.r, AlfaUiTheme.Lamp400.g, AlfaUiTheme.Lamp400.b, primary ? 0.9f : 0.22f);
+            railImage.raycastTarget = false;
+            var railRect = rail.GetComponent<RectTransform>();
+            railRect.anchorMin = new Vector2(0f, 0.18f);
+            railRect.anchorMax = new Vector2(0f, 0.82f);
+            railRect.pivot = new Vector2(0f, 0.5f);
+            railRect.anchoredPosition = new Vector2(4f, 0f);
+            railRect.sizeDelta = new Vector2(5f, 0f);
+            button.GetComponent<AlfaUiFocusMotion>().BindAccent(railImage);
             return button;
+        }
+
+        private static Sprite RoundedSprite()
+        {
+            if (roundedSprite != null) return roundedSprite;
+            const int size = 48;
+            const float radius = 12f;
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false, true)
+            {
+                name = "LMS UI rounded surface",
+                hideFlags = HideFlags.HideAndDontSave,
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
+            var pixels = new Color32[size * size];
+            for (var y = 0; y < size; y++)
+            for (var x = 0; x < size; x++)
+            {
+                var nearestX = Mathf.Clamp(x + 0.5f, radius, size - radius);
+                var nearestY = Mathf.Clamp(y + 0.5f, radius, size - radius);
+                var distance = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(nearestX, nearestY));
+                var alpha = (byte)Mathf.RoundToInt(255f * Mathf.Clamp01(radius + 0.5f - distance));
+                pixels[y * size + x] = new Color32(255, 255, 255, alpha);
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+            roundedSprite = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f),
+                100f, 0, SpriteMeshType.FullRect, new Vector4(14f, 14f, 14f, 14f));
+            roundedSprite.name = "LMS UI rounded surface";
+            roundedSprite.hideFlags = HideFlags.HideAndDontSave;
+            return roundedSprite;
+        }
+
+        internal static Sprite HorizontalFadeSprite()
+        {
+            if (horizontalFadeSprite != null) return horizontalFadeSprite;
+            const int width = 256;
+            const int height = 4;
+            var texture = new Texture2D(width, height, TextureFormat.RGBA32, false, true)
+            {
+                name = "LMS UI horizontal fade",
+                hideFlags = HideFlags.HideAndDontSave,
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
+            var pixels = new Color32[width * height];
+            for (var x = 0; x < width; x++)
+            {
+                var t = Mathf.InverseLerp(0.30f, 1f, x / (width - 1f));
+                var alpha = (byte)Mathf.RoundToInt(255f * (1f - t * t * (3f - 2f * t)));
+                for (var y = 0; y < height; y++) pixels[y * width + x] = new Color32(255, 255, 255, alpha);
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+            horizontalFadeSprite = Sprite.Create(texture, new Rect(0f, 0f, width, height), new Vector2(0.5f, 0.5f), 100f);
+            horizontalFadeSprite.name = "LMS UI horizontal fade";
+            horizontalFadeSprite.hideFlags = HideFlags.HideAndDontSave;
+            return horizontalFadeSprite;
         }
 
         internal AlfaUiIcon Icon(Transform parent, string name, AlfaUiIconKind kind, Color color)
@@ -328,8 +415,8 @@ namespace LetMeSleep.UI
             var node = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(TMP_InputField), typeof(UnityEngine.UI.LayoutElement), typeof(UnityEngine.UI.Outline));
             var image = node.GetComponent<UnityEngine.UI.Image>();
             image.color = AlfaUiTheme.Night800;
-            image.sprite = dependencies.ButtonSprite;
-            image.type = dependencies.ButtonSprite != null ? UnityEngine.UI.Image.Type.Sliced : UnityEngine.UI.Image.Type.Simple;
+            image.sprite = dependencies.ButtonSprite != null ? dependencies.ButtonSprite : RoundedSprite();
+            image.type = UnityEngine.UI.Image.Type.Sliced;
             var outline = node.GetComponent<UnityEngine.UI.Outline>();
             outline.effectColor = AlfaUiTheme.Border;
             outline.effectDistance = new Vector2(2f, -2f);
@@ -374,11 +461,15 @@ namespace LetMeSleep.UI
             var background = Node("Background", root.transform, typeof(UnityEngine.UI.Image));
             Stretch(background.GetComponent<RectTransform>(), 0f, 0f, 17f, 17f);
             background.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night600;
+            background.GetComponent<UnityEngine.UI.Image>().sprite = RoundedSprite();
+            background.GetComponent<UnityEngine.UI.Image>().type = UnityEngine.UI.Image.Type.Sliced;
             var fillArea = Node("Fill Area", root.transform);
             Stretch(fillArea.GetComponent<RectTransform>(), 8f, 8f, 17f, 17f);
             var fill = Node("Fill", fillArea.transform, typeof(UnityEngine.UI.Image));
             Fill(fill.GetComponent<RectTransform>());
-            fill.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Sky400;
+            fill.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Lamp400;
+            fill.GetComponent<UnityEngine.UI.Image>().sprite = RoundedSprite();
+            fill.GetComponent<UnityEngine.UI.Image>().type = UnityEngine.UI.Image.Type.Sliced;
             var handleArea = Node("Handle Slide Area", root.transform);
             var handleAreaRect = handleArea.GetComponent<RectTransform>();
             handleAreaRect.anchorMin = new Vector2(0f, 0.5f);
@@ -388,8 +479,10 @@ namespace LetMeSleep.UI
             var handleRect = handle.GetComponent<RectTransform>();
             handleRect.anchorMin = new Vector2(0.5f, 0.5f);
             handleRect.anchorMax = new Vector2(0.5f, 0.5f);
-            handleRect.sizeDelta = new Vector2(18f, 0f);
+            handleRect.sizeDelta = new Vector2(22f, 22f);
             handle.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Sheet100;
+            handle.GetComponent<UnityEngine.UI.Image>().sprite = RoundedSprite();
+            handle.GetComponent<UnityEngine.UI.Image>().type = UnityEngine.UI.Image.Type.Sliced;
             var slider = root.GetComponent<UnityEngine.UI.Slider>();
             slider.fillRect = fill.GetComponent<RectTransform>();
             slider.handleRect = handleRect;
@@ -408,6 +501,8 @@ namespace LetMeSleep.UI
             box.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 44f;
             box.GetComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 44f;
             box.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night600;
+            box.GetComponent<UnityEngine.UI.Image>().sprite = RoundedSprite();
+            box.GetComponent<UnityEngine.UI.Image>().type = UnityEngine.UI.Image.Type.Sliced;
             var check = Node("Check", box.transform, typeof(UnityEngine.UI.Image));
             Fill(check.GetComponent<RectTransform>(), 8f, 8f, 8f, 8f);
             check.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Mint400;
@@ -429,8 +524,8 @@ namespace LetMeSleep.UI
             var root = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(TMP_Dropdown), typeof(UnityEngine.UI.LayoutElement), typeof(UnityEngine.UI.Outline));
             var background = root.GetComponent<UnityEngine.UI.Image>();
             background.color = AlfaUiTheme.Night600;
-            background.sprite = dependencies.ButtonSprite;
-            background.type = dependencies.ButtonSprite != null ? UnityEngine.UI.Image.Type.Sliced : UnityEngine.UI.Image.Type.Simple;
+            background.sprite = dependencies.ButtonSprite != null ? dependencies.ButtonSprite : RoundedSprite();
+            background.type = UnityEngine.UI.Image.Type.Sliced;
             root.GetComponent<UnityEngine.UI.Outline>().effectColor = AlfaUiTheme.Border;
             root.GetComponent<UnityEngine.UI.Outline>().effectDistance = new Vector2(1.5f, -1.5f);
             var layout = root.GetComponent<UnityEngine.UI.LayoutElement>();
@@ -456,6 +551,8 @@ namespace LetMeSleep.UI
             templateRect.anchoredPosition = Vector2.zero;
             templateRect.sizeDelta = new Vector2(0f, 270f);
             template.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night700;
+            template.GetComponent<UnityEngine.UI.Image>().sprite = RoundedSprite();
+            template.GetComponent<UnityEngine.UI.Image>().type = UnityEngine.UI.Image.Type.Sliced;
 
             var viewport = Node("Viewport", template.transform, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Mask));
             Fill(viewport.GetComponent<RectTransform>(), 4f, 4f, 4f, 4f);
@@ -479,6 +576,8 @@ namespace LetMeSleep.UI
             item.GetComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 44f;
             var itemBackground = item.GetComponent<UnityEngine.UI.Image>();
             itemBackground.color = AlfaUiTheme.Night600;
+            itemBackground.sprite = RoundedSprite();
+            itemBackground.type = UnityEngine.UI.Image.Type.Sliced;
             var check = Text(item.transform, "Item Checkmark", "✓", AlfaUiTheme.BodySize, AlfaUiTheme.Mint400, TextAlignmentOptions.Center);
             var checkRect = check.rectTransform;
             checkRect.anchorMin = Vector2.zero;
@@ -519,6 +618,8 @@ namespace LetMeSleep.UI
         {
             var root = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.ScrollRect), typeof(UnityEngine.UI.LayoutElement));
             root.GetComponent<UnityEngine.UI.Image>().color = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.35f);
+            root.GetComponent<UnityEngine.UI.Image>().sprite = RoundedSprite();
+            root.GetComponent<UnityEngine.UI.Image>().type = UnityEngine.UI.Image.Type.Sliced;
             var rootLayout = root.GetComponent<UnityEngine.UI.LayoutElement>();
             rootLayout.preferredHeight = preferredHeight;
             rootLayout.flexibleHeight = 1f;
@@ -581,5 +682,122 @@ namespace LetMeSleep.UI
                 UnityEngine.Object.Destroy(parent.GetChild(i).gameObject);
             }
         }
+    }
+
+    [DisallowMultipleComponent]
+    internal sealed class AlfaUiEntranceMotion : MonoBehaviour
+    {
+        private CanvasGroup group;
+        private float progress;
+
+        private void Awake() => group = GetComponent<CanvasGroup>();
+
+        private void OnEnable()
+        {
+            if (group == null) group = GetComponent<CanvasGroup>();
+            progress = 0f;
+            if (group != null) group.alpha = 0.55f;
+        }
+
+        private void Update()
+        {
+            if (group == null || progress >= 1f) return;
+            if (AlfaUiMotionPreferences.ReducedMotion)
+            {
+                progress = 1f;
+                group.alpha = 1f;
+                return;
+            }
+            progress = Mathf.Min(1f, progress + Time.unscaledDeltaTime / AlfaUiTheme.EntranceDuration);
+            group.alpha = Mathf.Lerp(0.55f, 1f, 1f - Mathf.Pow(1f - progress, 3f));
+        }
+    }
+
+    [DisallowMultipleComponent]
+    internal sealed class AlfaUiFocusMotion : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
+        ISelectHandler, IDeselectHandler, IPointerDownHandler, IPointerUpHandler
+    {
+        private UnityEngine.UI.Image shine;
+        private UnityEngine.UI.Image accent;
+        private RectTransform iconPlate;
+        private UnityEngine.UI.Shadow shadow;
+        private Color shineBase;
+        private Color accentBase;
+        private bool pointerInside;
+        private bool selected;
+        private bool pressed;
+        private float amount;
+        private UnityEngine.UI.Selectable selectable;
+
+        private void Awake() => selectable = GetComponent<UnityEngine.UI.Selectable>();
+
+        internal void Bind(UnityEngine.UI.Image shineGraphic, RectTransform icon, UnityEngine.UI.Shadow buttonShadow)
+        {
+            shine = shineGraphic;
+            iconPlate = icon;
+            shadow = buttonShadow;
+            shineBase = shine != null ? shine.color : Color.clear;
+        }
+
+        internal void BindAccent(UnityEngine.UI.Image graphic)
+        {
+            accent = graphic;
+            accentBase = graphic != null ? graphic.color : Color.clear;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData) => pointerInside = true;
+        public void OnPointerExit(PointerEventData eventData) { pointerInside = false; pressed = false; }
+        public void OnSelect(BaseEventData eventData) => selected = true;
+        public void OnDeselect(BaseEventData eventData) { selected = false; pressed = false; }
+        public void OnPointerDown(PointerEventData eventData) => pressed = true;
+        public void OnPointerUp(PointerEventData eventData) => pressed = false;
+
+        private void OnDisable()
+        {
+            pointerInside = selected = pressed = false;
+            amount = 0f;
+            Apply(0f);
+        }
+
+        private void Update()
+        {
+            if (selectable == null) selectable = GetComponent<UnityEngine.UI.Selectable>();
+            if (AlfaUiMotionPreferences.ReducedMotion || selectable == null || !selectable.IsInteractable())
+            {
+                pressed = false;
+                if (amount <= 0f) return;
+                amount = 0f;
+                Apply(0f);
+                return;
+            }
+            var target = pointerInside || selected ? (pressed ? 0.55f : 1f) : 0f;
+            var next = Mathf.MoveTowards(amount, target, Time.unscaledDeltaTime / AlfaUiTheme.FocusDuration);
+            if (Mathf.Approximately(next, amount)) return;
+            amount = next;
+            Apply(amount);
+        }
+
+        private void Apply(float value)
+        {
+            if (shine != null)
+            {
+                var color = shineBase;
+                color.a = Mathf.Clamp01(shineBase.a + value * 0.18f);
+                shine.color = color;
+            }
+            if (accent != null)
+            {
+                var color = accentBase;
+                color.a = Mathf.Clamp01(accentBase.a + value * 0.65f);
+                accent.color = color;
+            }
+            if (iconPlate != null) iconPlate.localScale = Vector3.one * (1f + value * 0.07f);
+            if (shadow != null) shadow.effectDistance = new Vector2(0f, -5f - value * 2f);
+        }
+    }
+
+    internal static class AlfaUiMotionPreferences
+    {
+        internal static bool ReducedMotion { get; set; }
     }
 }

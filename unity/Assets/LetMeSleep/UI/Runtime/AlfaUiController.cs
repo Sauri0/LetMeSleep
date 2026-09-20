@@ -40,6 +40,7 @@ namespace LetMeSleep.UI
         private readonly TextMeshProUGUI[] hudEquipmentLabels = new TextMeshProUGUI[4];
         private readonly AlfaUiIcon[] hudEquipmentIcons = new AlfaUiIcon[4];
         private GameObject hudTaskPanel, hudReticle, hudEquipmentPanel, hudThrowTrack;
+        private RectTransform hudEquipmentRect, hudStaminaLabelRect, hudStaminaTrackRect, hudThrowRect, hudSwapRect;
         private bool isSpectator;
         private UnityEngine.UI.Image hudTaskFill, hudStaminaFill, hudThrowFill;
         private AlfaUiIcon hudScoreIcon;
@@ -203,6 +204,7 @@ namespace LetMeSleep.UI
         {
             if (initialized) throw new InvalidOperationException("Alfa UI is already initialized.");
             actions = menuActions ?? throw new ArgumentNullException(nameof(menuActions));
+            AlfaUiMotionPreferences.ReducedMotion = false;
             factory = new AlfaUiFactory(dependencies, RequestFeedback);
             BuildViews(dependencies ?? new AlfaUiDependencies());
             initialized = true;
@@ -597,6 +599,7 @@ namespace LetMeSleep.UI
             settingsState = state ?? throw new ArgumentNullException(nameof(state));
             settingsApplyLatched = state.IsApplying;
             settingsDraft = state.Draft.Copy();
+            AlfaUiMotionPreferences.ReducedMotion = settingsDraft.ReduceMenuMotion;
             settingsControlsGroup.interactable = !settingsApplyLatched;
             settingsControlsGroup.blocksRaycasts = !settingsApplyLatched;
             masterVolume.SetValueWithoutNotify(settingsDraft.MasterVolume);
@@ -679,13 +682,13 @@ namespace LetMeSleep.UI
             hudEquipmentPanel.SetActive(equipment != null);
             if (equipment != null)
             {
-                hudEquipmentLabels[0].text = (equipment.SelectedSlot == -1 ? ">  " : "") + "0  MANOS\n<size=70%>SIN OBJETO</size>";
+                hudEquipmentLabels[0].text = (equipment.SelectedSlot == -1 ? ">  " : "") + "0  MANOS\n<size=85%>SIN OBJETO</size>";
                 hudEquipmentIcons[0].Kind = AlfaUiIconKind.Hands;
                 for (int i = 0; i < equipment.Slots.Count; i++)
                 {
                     var slot = equipment.Slots[i];
                     hudEquipmentLabels[i + 1].text = (equipment.SelectedSlot == i ? ">  " : "") + (i + 1) + "  " + slot.Label +
-                        (slot.ResourceText.Length == 0 ? "" : "\n<size=70%>" + slot.ResourceText + "</size>");
+                        (slot.ResourceText.Length == 0 ? "" : "\n<size=85%>" + slot.ResourceText + "</size>");
                     hudEquipmentIcons[i + 1].Kind = slot.Icon;
                 }
                 for (int i = 0; i < hudEquipmentLabels.Length; i++)
@@ -701,7 +704,9 @@ namespace LetMeSleep.UI
                 hudThrowLabel.text = equipment.ThrowAwaitingRelease ? "LANZAMIENTO PENDIENTE" : "CARGA PANTUFLA  " + Mathf.RoundToInt(equipment.ThrowCharge01 * 100) + "% · SOLTÁ CLIC";
                 hudThrowFill.rectTransform.anchorMax = new Vector2(equipment.ThrowCharge01, 1f);
                 hudSwapOffer.text = equipment.SwapOfferText;
-                hudSwapOffer.gameObject.SetActive(!string.IsNullOrWhiteSpace(equipment.SwapOfferText));
+                var hasSwapOffer = !string.IsNullOrWhiteSpace(equipment.SwapOfferText);
+                hudSwapOffer.gameObject.SetActive(hasSwapOffer);
+                UpdateEquipmentLayout(charging, hasSwapOffer);
             }
             hudReticle.SetActive(!state.IsSpectator);
             hudBloodFill.rectTransform.anchorMax = new Vector2(bloodRatio, 1f);
@@ -793,32 +798,53 @@ namespace LetMeSleep.UI
         {
             var view = factory.View("MainMenuView", transform, false);
             var backdrop = view.GetComponent<UnityEngine.UI.Image>();
-            // Keep the living room's lighting intact; contrast is provided by the left rail.
             backdrop.color = Color.clear;
             backdrop.raycastTarget = false;
             screens[AlfaUiScreen.MainMenu] = view;
 
-            var panel = factory.Panel(view.transform, "MenuRail",
-                new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.92f), 500f, 880f);
-            Anchor(panel, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(48f, 0f), new Vector2(500f, 880f));
-            panel.GetComponent<UnityEngine.UI.Outline>().effectColor = new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.72f);
-            var menu = factory.Vertical(panel, "Content", 9f, TextAnchor.MiddleLeft);
-            AlfaUiFactory.Fill(menu, 32f, 32f, 28f, 24f);
-            factory.BrandLockup(menu, "Brand");
-            factory.Text(menu, "Subtitle", "HUMANOS CONTRA MOSQUITOS", 22f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
-            factory.Divider(menu, "BrandDivider", new Color(AlfaUiTheme.Lamp400.r, AlfaUiTheme.Lamp400.g, AlfaUiTheme.Lamp400.b, 0.9f), 3f);
-            factory.Text(menu, "Question", "ELEGÍ CÓMO JUGAR", 20f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
-            var play = factory.FeatureButton(menu, "MainPlayButton", "JUGAR ONLINE", "CREÁ O UNITE A UNA SALA", ShowOnlineChoice, AlfaUiIconKind.Online, true, false, 88f);
-            AlfaUiFactory.NightPrimaryButton(play);
-            factory.FeatureButton(menu, "MainTrainingButton", "ENTRENAMIENTO", "PRACTICÁ CON BOTS", ShowTraining, AlfaUiIconKind.Training, false, false, 72f);
-            factory.FeatureButton(menu, "MainCustomizeButton", "PERSONALIZAR", "HUMANO Y MOSQUITO", ShowCustomization, AlfaUiIconKind.Customize, false, false, 72f);
-            factory.FeatureButton(menu, "MainSettingsButton", "AJUSTES", "AUDIO · VIDEO · CONTROLES", () => OpenSettings(AlfaUiScreen.MainMenu), AlfaUiIconKind.Settings, false, false, 72f);
-            var quit = factory.FeatureButton(menu, "MainQuitButton", "SALIR", "CERRAR EL JUEGO", ConfirmQuit, AlfaUiIconKind.Exit, false, false, 72f);
-            AlfaUiFactory.QuietButton(quit);
-            factory.Text(menu, "NavigationHint", "FLECHAS / TAB  ·  ENTER  ·  ESC", 16f, AlfaUiTheme.Moon200);
-            var version = string.IsNullOrWhiteSpace(Application.version) ? "ALFA" : Application.version.Replace("-", " / ").ToUpperInvariant();
-            factory.Text(menu, "Version", version + "  ·  WINDOWS", 16f, AlfaUiTheme.Disabled);
+            // Layered atmosphere keeps the live character scene visible instead of boxing it in a full-screen card.
+            var nightWash = AlfaUiFactory.Node("NightWash", view.transform, typeof(UnityEngine.UI.Image));
+            var nightWashImage = nightWash.GetComponent<UnityEngine.UI.Image>();
+            nightWashImage.color = new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.84f);
+            nightWashImage.sprite = AlfaUiFactory.HorizontalFadeSprite();
+            nightWashImage.raycastTarget = false;
+            Anchor(nightWash.GetComponent<RectTransform>(), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), Vector2.zero, new Vector2(900f, 1080f));
+            var seam = AlfaUiFactory.Node("WarmSeam", view.transform, typeof(UnityEngine.UI.Image));
+            seam.GetComponent<UnityEngine.UI.Image>().color = new Color(AlfaUiTheme.Lamp400.r, AlfaUiTheme.Lamp400.g, AlfaUiTheme.Lamp400.b, 0.76f);
+            seam.GetComponent<UnityEngine.UI.Image>().raycastTarget = false;
+            Anchor(seam.GetComponent<RectTransform>(), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(52f, -4f), new Vector2(5f, 920f));
 
+            var brand = factory.BrandLockup(view.transform, "Brand", 220f);
+            Anchor(brand, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(82f, -58f), new Vector2(520f, 220f));
+            var subtitle = factory.Text(view.transform, "Subtitle", "HUMANOS CONTRA MOSQUITOS", 20f,
+                AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
+            Anchor(subtitle.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(86f, -278f), new Vector2(500f, 36f));
+
+            var menu = factory.Vertical(view.transform, "MenuRail", 10f, TextAnchor.MiddleLeft);
+            Anchor(menu, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(84f, 126f), new Vector2(470f, 650f));
+            factory.Text(menu, "Question", "ELEGÍ CÓMO JUGAR", 18f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
+            factory.Divider(menu, "BrandDivider", new Color(AlfaUiTheme.Lamp400.r, AlfaUiTheme.Lamp400.g, AlfaUiTheme.Lamp400.b, 0.86f), 3f);
+            factory.FeatureButton(menu, "MainPlayButton", "JUGAR ONLINE", "CREÁ O UNITE A UNA SALA", ShowOnlineChoice, AlfaUiIconKind.Online, true, false, 94f);
+            factory.FeatureButton(menu, "MainTrainingButton", "ENTRENAMIENTO", "PRACTICÁ CON BOTS", ShowTraining, AlfaUiIconKind.Training, false, false, 78f);
+            factory.FeatureButton(menu, "MainCustomizeButton", "PERSONALIZAR", "HUMANO Y MOSQUITO", ShowCustomization, AlfaUiIconKind.Customize, false, false, 78f);
+            factory.FeatureButton(menu, "MainSettingsButton", "AJUSTES", "AUDIO · VIDEO · CONTROLES", () => OpenSettings(AlfaUiScreen.MainMenu), AlfaUiIconKind.Settings, false, false, 72f);
+            var quit = factory.Button(menu, "MainQuitButton", "SALIR", ConfirmQuit, false, false, 62f, AlfaUiIconKind.Exit);
+            AlfaUiFactory.QuietButton(quit, 20f);
+            factory.Text(menu, "NavigationHint", "FLECHAS / TAB  ·  ENTER  ·  ESC", 15f, AlfaUiTheme.Moon200);
+            var version = string.IsNullOrWhiteSpace(Application.version) ? "ALFA" : Application.version.Replace("-", " / ").ToUpperInvariant();
+            factory.Text(menu, "Version", version + "  ·  WINDOWS", 14f, AlfaUiTheme.Disabled);
+
+            var cast = factory.Panel(view.transform, "CastRibbon",
+                new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.66f));
+            Anchor(cast, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-58f, 44f), new Vector2(500f, 74f));
+            var humanIcon = factory.Icon(cast, "HumanMark", AlfaUiIconKind.Human, AlfaUiTheme.Sky400);
+            Anchor(humanIcon.rectTransform, new Vector2(0f, .5f), new Vector2(0f, .5f), new Vector2(0f, .5f), new Vector2(20f, 0f), new Vector2(40f, 40f));
+            var humanText = factory.Text(cast, "HumanLabel", "HUMANOS", 17f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
+            Anchor(humanText.rectTransform, new Vector2(0f, .5f), new Vector2(0f, .5f), new Vector2(0f, .5f), new Vector2(70f, 0f), new Vector2(140f, 38f));
+            var mosquitoIcon = factory.Icon(cast, "MosquitoMark", AlfaUiIconKind.Mosquito, AlfaUiTheme.Pajama500);
+            Anchor(mosquitoIcon.rectTransform, new Vector2(0f, .5f), new Vector2(0f, .5f), new Vector2(0f, .5f), new Vector2(252f, 0f), new Vector2(40f, 40f));
+            var mosquitoText = factory.Text(cast, "MosquitoLabel", "MOSQUITOS", 17f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
+            Anchor(mosquitoText.rectTransform, new Vector2(0f, .5f), new Vector2(0f, .5f), new Vector2(0f, .5f), new Vector2(302f, 0f), new Vector2(170f, 38f));
         }
 
         private void BuildOnlineChoice()
@@ -1225,27 +1251,27 @@ namespace LetMeSleep.UI
         {
             var view = factory.View("GameplayHudView", transform, false);
             screens[AlfaUiScreen.Gameplay] = view;
-            var role = factory.Panel(view.transform, "RoleBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.86f));
-            Anchor(role, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(26f, -24f), new Vector2(210f, 62f));
+            var role = factory.Panel(view.transform, "RoleBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.78f));
+            Anchor(role, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(26f, -22f), new Vector2(178f, 50f));
             hudRoleBackground = role.GetComponent<UnityEngine.UI.Image>();
             hudRoleOutline = role.GetComponent<UnityEngine.UI.Outline>();
             hudRoleIcon = factory.Icon(role, "RoleIcon", AlfaUiIconKind.Human, AlfaUiTheme.Sky400);
-            Anchor(hudRoleIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 0f), new Vector2(36f, 36f));
-            hudRoleLabel = factory.Text(role, "RoleLabel", "HUMANO", 18f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
-            AlfaUiFactory.Fill(hudRoleLabel.rectTransform, 54f, 12f, 8f, 8f);
+            Anchor(hudRoleIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(30f, 30f));
+            hudRoleLabel = factory.Text(role, "RoleLabel", "HUMANO", 16f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            AlfaUiFactory.Fill(hudRoleLabel.rectTransform, 46f, 10f, 6f, 6f);
 
             var clock = factory.Panel(view.transform, "ClockBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f));
-            Anchor(clock, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(1f, 1f), new Vector2(-8f, -24f), new Vector2(170f, 66f));
+            Anchor(clock, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(1f, 1f), new Vector2(-6f, -22f), new Vector2(150f, 58f));
             var clockIcon = factory.Icon(clock, "ClockIcon", AlfaUiIconKind.Clock, AlfaUiTheme.Lamp400);
-            Anchor(clockIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 0f), new Vector2(32f, 32f));
-            hudClock = factory.Text(clock, "Clock", "03:00", 28f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
-            AlfaUiFactory.Fill(hudClock.rectTransform, 52f, 12f, 8f, 8f);
+            Anchor(clockIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(28f, 28f));
+            hudClock = factory.Text(clock, "Clock", "03:00", 25f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            AlfaUiFactory.Fill(hudClock.rectTransform, 44f, 10f, 6f, 6f);
 
             var blood = factory.Panel(view.transform, "BloodBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f));
-            Anchor(blood, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 1f), new Vector2(8f, -24f), new Vector2(260f, 66f));
+            Anchor(blood, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 1f), new Vector2(6f, -22f), new Vector2(248f, 58f));
             var bloodIcon = factory.Icon(blood, "BloodIcon", AlfaUiIconKind.Blood, AlfaUiTheme.Pajama500); hudScoreIcon = bloodIcon;
             Anchor(bloodIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 3f), new Vector2(30f, 30f));
-            hudBlood = factory.Text(blood, "Blood", "SANGRE  0 / 20", 20f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            hudBlood = factory.Text(blood, "Blood", "SANGRE  0 / 20", 18f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
             AlfaUiFactory.Fill(hudBlood.rectTransform, 50f, 14f, 5f, 17f);
             var bloodTrack = AlfaUiFactory.Node("BloodTrack", blood, typeof(UnityEngine.UI.Image));
             var bloodTrackImage = bloodTrack.GetComponent<UnityEngine.UI.Image>();
@@ -1265,13 +1291,14 @@ namespace LetMeSleep.UI
             Anchor(hudVoice.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -78f), new Vector2(420f, 42f));
 
             hudPromptPanel = factory.Panel(view.transform, "InteractionPrompt", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f)).gameObject;
-            Anchor(hudPromptPanel.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 80f), new Vector2(560f, 58f));
-            hudInteraction = factory.Text(hudPromptPanel.transform, "Interaction", string.Empty, 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            // Keep a deliberate gutter before the right-aligned equipment belt at 720p.
+            Anchor(hudPromptPanel.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 34f), new Vector2(440f, 50f));
+            hudInteraction = factory.Text(hudPromptPanel.transform, "Interaction", string.Empty, 20f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
             AlfaUiFactory.Fill(hudInteraction.rectTransform, 18f, 18f, 8f, 8f);
 
             hudStatePanel = factory.Panel(view.transform, "ActorStatePanel", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.9f)).gameObject;
-            Anchor(hudStatePanel.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 152f), new Vector2(500f, 76f));
-            hudActorState = factory.Text(hudStatePanel.transform, "ActorState", string.Empty, 24f, AlfaUiTheme.Pajama500, TextAlignmentOptions.Center, true);
+            Anchor(hudStatePanel.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 102f), new Vector2(430f, 62f));
+            hudActorState = factory.Text(hudStatePanel.transform, "ActorState", string.Empty, 21f, AlfaUiTheme.Pajama500, TextAlignmentOptions.Center, true);
             AlfaUiFactory.Fill(hudActorState.rectTransform, 18f, 18f, 6f, 20f);
             var progressRoot = AlfaUiFactory.Node("StateProgress", hudStatePanel.transform, typeof(UnityEngine.UI.Image));
             var progressTrack = progressRoot.GetComponent<UnityEngine.UI.Image>();
@@ -1285,19 +1312,18 @@ namespace LetMeSleep.UI
             AlfaUiFactory.Fill(hudProgress.rectTransform);
 
             hudHintPanel = factory.Panel(view.transform, "ContextHintPanel", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.72f)).gameObject;
-            // 568x64 text area fits two 24px lines (16px at 720p); keep critical instructions whole.
-            // Right edge 626 leaves 54px before the centered interaction panel at reference 1080p.
-            Anchor(hudHintPanel.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(26f, 26f), new Vector2(600f, 84f));
-            hudHint = factory.Text(hudHintPanel.transform, "ContextHint", string.Empty, 24f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
+            // Compact two-line context stays left of the central interaction prompt at both target resolutions.
+            Anchor(hudHintPanel.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(26f, 26f), new Vector2(540f, 64f));
+            hudHint = factory.Text(hudHintPanel.transform, "ContextHint", string.Empty, 18f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
             hudHint.textWrappingMode = TextWrappingModes.Normal;
             hudHint.enableAutoSizing = false;
             hudHint.overflowMode = TextOverflowModes.Overflow;
             AlfaUiFactory.Fill(hudHint.rectTransform, 16f, 16f, 10f, 10f);
             hudLives = factory.Text(view.transform, "Lives", string.Empty, 20f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
-            Anchor(hudLives.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -98f), new Vector2(260f, 34f));
+            Anchor(hudLives.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -82f), new Vector2(260f, 32f));
             hudTaskPanel = factory.Panel(view.transform, "PrivateTask", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, .9f)).gameObject;
-            Anchor(hudTaskPanel.GetComponent<RectTransform>(), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -108f), new Vector2(460f, 148f));
-            hudTask = factory.Text(hudTaskPanel.transform, "PrivateTaskText", string.Empty, 21f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left);
+            Anchor(hudTaskPanel.GetComponent<RectTransform>(), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -104f), new Vector2(400f, 112f));
+            hudTask = factory.Text(hudTaskPanel.transform, "PrivateTaskText", string.Empty, 18f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left);
             hudTask.textWrappingMode = TextWrappingModes.Normal;
             AlfaUiFactory.Fill(hudTask.rectTransform, 18f, 18f, 12f, 28f);
             var taskTrack = AlfaUiFactory.Node("TaskProgress", hudTaskPanel.transform, typeof(UnityEngine.UI.Image));
@@ -1307,38 +1333,67 @@ namespace LetMeSleep.UI
             hudTaskFill.color = AlfaUiTheme.Mint400; hudTaskFill.raycastTarget = false; AlfaUiFactory.Fill(hudTaskFill.rectTransform);
             hudTaskPanel.SetActive(false);
 
-            hudEquipmentPanel = factory.Panel(view.transform, "PrivateEquipment", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, .88f)).gameObject;
-            Anchor(hudEquipmentPanel.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-28f, 26f), new Vector2(430f, 378f));
+            hudEquipmentPanel = factory.Panel(view.transform, "PrivateEquipment", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, .80f)).gameObject;
+            hudEquipmentRect = hudEquipmentPanel.GetComponent<RectTransform>();
+            Anchor(hudEquipmentRect, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-26f, 26f), new Vector2(700f, 176f));
             for (int i = 0; i < 4; i++)
             {
-                hudEquipmentIcons[i] = factory.Icon(hudEquipmentPanel.transform, "EquipmentIcon" + i, i == 0 ? AlfaUiIconKind.Hands : AlfaUiIconKind.None, AlfaUiTheme.Moon200);
-                Anchor(hudEquipmentIcons[i].rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -14f - i * 45f), new Vector2(34f, 34f));
-                hudEquipmentLabels[i] = factory.Text(hudEquipmentPanel.transform, "EquipmentSlot" + i, i == 0 ? ">  0  MANOS" : i + "  VACÍO", 17f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
-                Anchor(hudEquipmentLabels[i].rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), new Vector2(58f, -10f - i * 45f), new Vector2(-74f, 42f));
+                var slot = factory.Panel(hudEquipmentPanel.transform, "EquipmentSlotPlate" + i,
+                    new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, .78f));
+                Anchor(slot, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(12f + i * 167f, -10f), new Vector2(164f, 100f));
+                AlfaUiFactory.PlainShadow(slot.gameObject).enabled = false;
+                hudEquipmentIcons[i] = factory.Icon(slot, "EquipmentIcon" + i, i == 0 ? AlfaUiIconKind.Hands : AlfaUiIconKind.None, AlfaUiTheme.Moon200);
+                Anchor(hudEquipmentIcons[i].rectTransform, new Vector2(0f, .5f), new Vector2(0f, .5f), new Vector2(0f, .5f), new Vector2(7f, 0f), new Vector2(22f, 22f));
+                hudEquipmentLabels[i] = factory.Text(slot, "EquipmentSlot" + i, i == 0 ? ">  0  MANOS" : i + "  VACÍO", 18f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
+                hudEquipmentLabels[i].textWrappingMode = TextWrappingModes.Normal;
+                hudEquipmentLabels[i].overflowMode = TextOverflowModes.Overflow;
+                AlfaUiFactory.Fill(hudEquipmentLabels[i].rectTransform, 30f, 6f, 6f, 6f);
             }
-            hudStaminaLabel = factory.Text(hudEquipmentPanel.transform, "StaminaLabel", "ESTAMINA  100%", 16f, AlfaUiTheme.Mint400, TextAlignmentOptions.Left, true);
-            Anchor(hudStaminaLabel.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), new Vector2(16f, 132f), new Vector2(-32f, 24f));
+            hudStaminaLabel = factory.Text(hudEquipmentPanel.transform, "StaminaLabel", "ESTAMINA  100%", 18f, AlfaUiTheme.Mint400, TextAlignmentOptions.Left, true);
+            hudStaminaLabelRect = hudStaminaLabel.rectTransform;
+            Anchor(hudStaminaLabelRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), new Vector2(0f, -116f), new Vector2(-28f, 34f));
             var staminaTrack = AlfaUiFactory.Node("StaminaTrack", hudEquipmentPanel.transform, typeof(UnityEngine.UI.Image));
             staminaTrack.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night600;
-            Anchor(staminaTrack.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), new Vector2(16f, 121f), new Vector2(-32f, 8f));
+            hudStaminaTrackRect = staminaTrack.GetComponent<RectTransform>();
+            Anchor(hudStaminaTrackRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), new Vector2(0f, -154f), new Vector2(-28f, 8f));
             hudStaminaFill = AlfaUiFactory.Node("Fill", staminaTrack.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
             hudStaminaFill.color = AlfaUiTheme.Mint400; hudStaminaFill.raycastTarget = false; AlfaUiFactory.Fill(hudStaminaFill.rectTransform);
             hudThrowTrack = AlfaUiFactory.Node("ThrowCharge", hudEquipmentPanel.transform).gameObject;
-            Anchor(hudThrowTrack.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), new Vector2(16f, 66f), new Vector2(-32f, 42f));
-            hudThrowLabel = factory.Text(hudThrowTrack.transform, "ThrowLabel", "CARGA PANTUFLA", 15f, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
-            Anchor(hudThrowLabel.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), Vector2.zero, new Vector2(0f, 22f));
+            hudThrowRect = hudThrowTrack.GetComponent<RectTransform>();
+            Anchor(hudThrowRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), new Vector2(0f, -168f), new Vector2(-28f, 50f));
+            hudThrowLabel = factory.Text(hudThrowTrack.transform, "ThrowLabel", "CARGA PANTUFLA", 18f, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
+            Anchor(hudThrowLabel.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), Vector2.zero, new Vector2(0f, 34f));
             var throwBar = AlfaUiFactory.Node("Track", hudThrowTrack.transform, typeof(UnityEngine.UI.Image));
             throwBar.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night600;
             Anchor(throwBar.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), Vector2.zero, new Vector2(0f, 8f));
             hudThrowFill = AlfaUiFactory.Node("Fill", throwBar.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
             hudThrowFill.color = AlfaUiTheme.Lamp400; hudThrowFill.raycastTarget = false; AlfaUiFactory.Fill(hudThrowFill.rectTransform);
-            hudSwapOffer = factory.Text(hudEquipmentPanel.transform, "SwapOffer", string.Empty, 15f, AlfaUiTheme.Pajama500, TextAlignmentOptions.Left, true);
+            hudSwapOffer = factory.Text(hudEquipmentPanel.transform, "SwapOffer", string.Empty, 18f, AlfaUiTheme.Pajama500, TextAlignmentOptions.Left, true);
             hudSwapOffer.textWrappingMode = TextWrappingModes.Normal;
             hudSwapOffer.overflowMode = TextOverflowModes.Overflow;
-            Anchor(hudSwapOffer.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), new Vector2(16f, 8f), new Vector2(-32f, 48f));
+            hudSwapRect = hudSwapOffer.rectTransform;
+            Anchor(hudSwapRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), new Vector2(0f, -168f), new Vector2(-28f, 60f));
             hudEquipmentPanel.SetActive(false);
             var reticle = factory.Icon(view.transform, "Reticle", AlfaUiIconKind.Crosshair, AlfaUiTheme.Sheet100); hudReticle = reticle.gameObject;
             Anchor(reticle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(18f, 18f));
+        }
+
+        private void UpdateEquipmentLayout(bool charging, bool hasSwapOffer)
+        {
+            var nextTop = 168f;
+            if (charging)
+            {
+                Anchor(hudThrowRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f),
+                    new Vector2(0f, -nextTop), new Vector2(-28f, 50f));
+                nextTop += 56f;
+            }
+            if (hasSwapOffer)
+            {
+                Anchor(hudSwapRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f),
+                    new Vector2(0f, -nextTop), new Vector2(-28f, 60f));
+                nextTop += 66f;
+            }
+            hudEquipmentRect.sizeDelta = new Vector2(700f, charging || hasSwapOffer ? nextTop + 4f : 176f);
         }
 
         private void BuildPause()

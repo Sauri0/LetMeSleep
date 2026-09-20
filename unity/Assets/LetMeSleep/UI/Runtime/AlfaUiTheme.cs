@@ -5,19 +5,24 @@ namespace LetMeSleep.UI
 {
     internal static class AlfaUiTheme
     {
-        internal static readonly Color Ink900 = Hex("081526");
-        internal static readonly Color Night800 = Hex("10233D");
-        internal static readonly Color Night700 = Hex("18365A");
-        internal static readonly Color Night600 = Hex("244B78");
-        internal static readonly Color Moon200 = Hex("BED4EA");
-        internal static readonly Color Sheet100 = Hex("FFF1D6");
-        internal static readonly Color Lamp400 = Hex("F6C453");
-        internal static readonly Color Pajama500 = Hex("EF6258");
-        internal static readonly Color Mint400 = Hex("65D49B");
-        internal static readonly Color Sky400 = Hex("4FA9F5");
-        internal static readonly Color Disabled = Hex("6E8299");
-        internal static readonly Color Border = Hex("4D83BD");
-        internal static readonly Color Scrim = Hex("06111F", 0.82f);
+        internal static readonly Color Ink900 = Hex("080B12");
+        internal static readonly Color Night800 = Hex("121824");
+        internal static readonly Color Night700 = Hex("1C2534");
+        internal static readonly Color Night600 = Hex("303B4D");
+        internal static readonly Color Moon200 = Hex("CAD3DC");
+        internal static readonly Color Sheet100 = Hex("FFF1D2");
+        internal static readonly Color Lamp400 = Hex("F0B84E");
+        internal static readonly Color Pajama500 = Hex("DF6559");
+        internal static readonly Color Mint400 = Hex("74C89C");
+        internal static readonly Color Sky400 = Hex("70ACD5");
+        internal static readonly Color Disabled = Hex("77818E");
+        internal static readonly Color Border = Hex("756D62");
+        internal static readonly Color Scrim = Hex("070A10", 0.80f);
+        internal static readonly Color WarmSurface = Hex("29251F");
+        internal static readonly Color ChalkShadow = Hex("D8C7A4", 0.28f);
+
+        internal const float FocusDuration = 0.16f;
+        internal const float EntranceDuration = 0.19f;
 
         internal const float LogoSize = 88f;
         internal const float H1Size = 48f;
@@ -39,16 +44,16 @@ namespace LetMeSleep.UI
 
         internal static UnityEngine.UI.ColorBlock ButtonColors(bool primary, bool destructive = false)
         {
-            var normal = destructive ? Pajama500 : primary ? Sky400 : Night600;
+            var normal = destructive ? Pajama500 : primary ? Lamp400 : Night600;
             return new UnityEngine.UI.ColorBlock
             {
                 normalColor = normal,
-                highlightedColor = primary ? Hex("72C2FF") : Hex("35699D"),
-                pressedColor = primary ? Hex("2E82C9") : Sky400,
-                selectedColor = Sky400,
+                highlightedColor = primary ? Hex("FFD277") : Hex("46556B"),
+                pressedColor = primary ? Hex("C98A2E") : Hex("252E3D"),
+                selectedColor = primary ? Hex("FFD277") : Hex("46556B"),
                 disabledColor = new Color(Disabled.r, Disabled.g, Disabled.b, 0.48f),
                 colorMultiplier = 1f,
-                fadeDuration = 0.08f
+                fadeDuration = FocusDuration
             };
         }
 
