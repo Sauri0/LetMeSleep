@@ -2,6 +2,20 @@
 
 ## Gate actual: interacción y salida de objetivos
 
+- `4de9476` y `d835bb7` consumen el primer waypoint ya alcanzado al adquirir
+  tareas y patrulla, usando sus criterios anteriores. CPU85/85; native01
+  DirectedRoute+Replan48/48. Isla puente ya completa su tarea, pero ronda02
+  sólo3/20: al abandonar zonas de origen aparece WaitingForRoute en corredores.
+  Técnica revisa admisión/coste desde el tramo intermedio; no está instalado.
+- Regresión de rondas posterior: Casa03=17/20, Camp04=16/20, Puerto02=19/20;
+  todas cumplen cuota14. Casa tenía20/20 en una versión anterior: no afirmar
+  identidad de resultado ni confundir el comparador de rutas sin regresiones
+  con invariancia de las asignaciones/posiciones durante toda la ronda.
+- Bootstrap/escenas/online consumen los catálogos y hashes desde los prefabs
+  actuales; revisión InstalledCatalogIntegrationReview.md no requiere cambios.
+  El preflight histórico de límites conserva guardas anteriores y requiere una
+  nueva revisión versionada si se reutiliza; no actualizarlo silenciosamente.
+
 - Puerto instalado: install01 pasa ronda19/20 y cobertura motor, 11 objetivos.
   Nuevo ContentHash `51bfeb3b5884edae81530ab123797e39eeb07a412fb0b8bddefb232639e375c2`.
   PortCatalogInstall01/delta-verification.json acredita1 componente añadido,
