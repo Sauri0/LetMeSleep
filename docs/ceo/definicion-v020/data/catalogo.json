@@ -1,0 +1,602 @@
+[
+  {
+    "id": "C01",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Cuántas siluetas humanas distintas incluimos?",
+    "why": "No confundir colores distintos con modelos completos.",
+    "example": "Una base con ropa modular frente a dos cuerpos; ninguno puede ganar alcance o esquivar mejor por su forma.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Una base modular",
+        "detail": "Concentrar calidad en un cuerpo nuevo y variedad de rostro/ropa."
+      },
+      {
+        "id": "B",
+        "label": "Dos bases compatibles",
+        "detail": "Dos siluetas adultas con mismas reglas de colisión y alcance."
+      },
+      {
+        "id": "C",
+        "label": "Tres bases compatibles",
+        "detail": "Más variedad corporal; todas requieren rig, combinaciones y validación."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "C02",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Cuántos peinados compondrán el catálogo humano?",
+    "why": "Cierra una cantidad de piezas, contando calvo como opción.",
+    "example": "Pelo corto, medio y largo deben funcionar bajo los accesorios de cabeza.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Ocho en total",
+        "detail": "Cantidad propuesta en el plan histórico, con siete peinados más calvo."
+      },
+      {
+        "id": "B",
+        "label": "Cuatro en total",
+        "detail": "Tres peinados bien diferenciados más calvo; elegir cuáles en notas."
+      },
+      {
+        "id": "C",
+        "label": "Seis en total",
+        "detail": "Cinco peinados más calvo; equilibrio entre variedad y combinaciones."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "C03",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Cuánta variedad modular de ojos, cejas y bocas querés?",
+    "why": "Cada pieza tiene que deformarse en expresiones, no ser sólo una miniatura.",
+    "example": "Ojos tipo 2, cejas 4 y boca 1 deben convivir sin romper la cara.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Seis por categoría",
+        "detail": "18 variantes de piezas faciales, propuesta histórica."
+      },
+      {
+        "id": "B",
+        "label": "Tres por categoría",
+        "detail": "Nueve piezas, con expresiones completas para cada combinación."
+      },
+      {
+        "id": "C",
+        "label": "Rostros completos curados",
+        "detail": "Seis rostros sin mezclar partes; menos combinaciones y siluetas más controladas."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "C04",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Qué catálogo de vello facial humano incluimos?",
+    "why": "Precisa bigotes/barbas y su relación con el color del pelo.",
+    "example": "Un bigote debe seguir la boca sin cruzar labios al hablar.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Seis opciones",
+        "detail": "Incluye ninguna; color vinculado al pelo con separación opcional."
+      },
+      {
+        "id": "B",
+        "label": "Cuatro opciones",
+        "detail": "Ninguno, bigote, barba corta y barba completa estilizada."
+      },
+      {
+        "id": "C",
+        "label": "Tres opciones",
+        "detail": "Ninguno y dos diseños de bigote; dejar cuáles en notas."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "C05",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Qué catálogo de ropa acompaña al pijama base obligatorio?",
+    "why": "La propuesta histórica habla de pijama más cuatro conjuntos; falta definir alcance aprobado.",
+    "example": "Cambiar prendas de noche sin convertirlas en clases o ventajas.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Pijama más cuatro conjuntos",
+        "detail": "Separables en superior/inferior cuando las combinaciones sean compatibles."
+      },
+      {
+        "id": "B",
+        "label": "Pijama y dos conjuntos",
+        "detail": "Variedad más concentrada, con piezas combinables."
+      },
+      {
+        "id": "C",
+        "label": "Cinco pijamas completos",
+        "detail": "Variantes de corte y patrón, conjuntos indivisibles para evitar combinaciones rotas."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "C06",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Cuántos accesorios de cabeza humanos se incluyen?",
+    "why": "Gorro nocturno base se conserva; cada añadido exige ocultación correcta del pelo.",
+    "example": "Un gorro diferente no debe aumentar hitbox ni dar una pista injusta del rol.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Seis opciones totales",
+        "detail": "Contar el gorro nocturno y una opción sin accesorio."
+      },
+      {
+        "id": "B",
+        "label": "Cuatro opciones totales",
+        "detail": "Gorro, sin accesorio y dos variantes por detallar."
+      },
+      {
+        "id": "C",
+        "label": "Tres opciones totales",
+        "detail": "Gorro, sin accesorio y una variante por detallar."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "C07",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Cuántas gafas y variantes de calzado humano incluimos?",
+    "why": "Cierra piezas pequeñas que también necesitan primeros planos y agarres/pies correctos.",
+    "example": "Las pantuflas siguen siendo el calzado inicial.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Cuatro y cuatro",
+        "detail": "Cuatro gafas contando ninguna; cuatro calzados contando pantuflas."
+      },
+      {
+        "id": "B",
+        "label": "Tres y tres",
+        "detail": "Dos gafas más ninguna; tres estilos de pantuflas/calzado de noche."
+      },
+      {
+        "id": "C",
+        "label": "Dos y dos",
+        "detail": "Ninguna/una gafa y dos calzados claramente distintos."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "C08",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Cuántos cuerpos cosméticos de mosquito incluimos?",
+    "why": "La silueta visual varía, pero alcance y colisión deben ser equivalentes.",
+    "example": "Un abdomen más redondo no puede absorber golpes fuera de la silueta de forma injusta.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Tres cuerpos",
+        "detail": "Cantidad propuesta histórica; cada uno con todas las animaciones."
+      },
+      {
+        "id": "B",
+        "label": "Dos cuerpos",
+        "detail": "Dos familias visuales con piezas compatibles."
+      },
+      {
+        "id": "C",
+        "label": "Un cuerpo modular",
+        "detail": "Una base nueva, diferenciada mediante alas, cara, patrones y colores."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "C09",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Qué variedad de alas y expresión mosquito querés?",
+    "why": "Precisa el catálogo del segundo rol con el mismo rigor que el humano.",
+    "example": "Alas largas y ojos expresivos deben seguir leyendo sobre el cielo y paredes.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Cuatro alas y seis expresiones",
+        "detail": "Cantidad histórica; expresiones mediante ojos/cejas compatibles."
+      },
+      {
+        "id": "B",
+        "label": "Tres alas y cuatro expresiones",
+        "detail": "Variedad media, todas revisadas en vuelo y reposo."
+      },
+      {
+        "id": "C",
+        "label": "Dos alas y tres expresiones",
+        "detail": "Pocas variantes muy distintas, con transiciones completas."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "C10",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Cuántos patrones de abdomen mosquito incluimos?",
+    "why": "Patrones son cosméticos; no ocultan mejor al mosquito ni indican poder.",
+    "example": "Franjas, manchas y un tono liso deben mantener lectura de sangre extraída.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Cinco patrones",
+        "detail": "Cantidad propuesta histórica, con paletas por partes."
+      },
+      {
+        "id": "B",
+        "label": "Tres patrones",
+        "detail": "Liso y dos gráficos; colores por partes."
+      },
+      {
+        "id": "C",
+        "label": "Patrones curados por cuerpo",
+        "detail": "Dos por cada cuerpo elegido en C08; no combinación universal."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": "C08"
+  },
+  {
+    "id": "C11",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Qué variedad de accesorios mosquito incluimos?",
+    "why": "Sin introducir clases ni modificar alcance de probóscide/patas.",
+    "example": "Un accesorio pequeño de cabeza no debe interferir con alas o pared.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Seis opciones totales",
+        "detail": "Incluye ninguna; seleccionar diseños concretos en notas."
+      },
+      {
+        "id": "B",
+        "label": "Cuatro opciones totales",
+        "detail": "Ninguno más tres diseños discretos."
+      },
+      {
+        "id": "C",
+        "label": "Dos opciones totales",
+        "detail": "Ninguno más un accesorio característico."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "C12",
+    "section": "Catálogo y alcance exacto",
+    "title": "¿Qué conjunto de emotes entra en esta versión?",
+    "why": "Todos cancelables por acciones de juego y sin ventaja competitiva.",
+    "example": "Saludar en la sala o celebrar al acabar una ronda.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Cuatro emotes comunes",
+        "detail": "Saludar, señalar, reír y celebrar, adaptados a ambos roles."
+      },
+      {
+        "id": "B",
+        "label": "Dos por rol",
+        "detail": "Saludo y celebración distintivos para cada personaje."
+      },
+      {
+        "id": "C",
+        "label": "Cuatro humanos y dos mosquito",
+        "detail": "Humano usa el conjunto histórico; mosquito saludo y celebración."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "D01",
+    "section": "Reglas por cerrar",
+    "title": "¿Cómo elige el anfitrión la composición humana/mosquito?",
+    "why": "Roles se sortean cada ronda y no hay proporción fija 2:1; se precisa la interfaz de cantidad.",
+    "example": "Con seis personas, el host quiere probar dos humanos y cuatro mosquitos.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Cantidad humana explícita",
+        "detail": "Host elige entre 1 y N−1 humanos; UI muestra resto como mosquitos."
+      },
+      {
+        "id": "B",
+        "label": "Presets editables",
+        "detail": "Composiciones sugeridas por tamaño más ajuste numérico."
+      },
+      {
+        "id": "C",
+        "label": "Cantidad automática revisable",
+        "detail": "Proponer una composición equilibrada, host puede cambiar antes de listo."
+      }
+    ],
+    "recommended": "B",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "D02",
+    "section": "Reglas por cerrar",
+    "title": "¿Qué variedad de acciones tendrán las tareas?",
+    "why": "Se conservan objetivos privados y accesibles; la interacción concreta sigue abierta.",
+    "example": "Limpiar una mesa, reparar una lámpara o accionar un interruptor.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Mantener una tecla",
+        "detail": "Diferencia por objeto, duración y animación; control consistente."
+      },
+      {
+        "id": "B",
+        "label": "Mantener y accionar",
+        "detail": "Tareas largas al mantener y acciones cortas de un toque."
+      },
+      {
+        "id": "C",
+        "label": "Dos gestos sencillos",
+        "detail": "Mantener y una secuencia breve sin pulsaciones frenéticas; explicar cada gesto."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "D03",
+    "section": "Reglas por cerrar",
+    "title": "¿Cuántos puntos de tarea distintos queremos por mapa?",
+    "why": "Un solo punto por mapa no proporciona variedad ni reparto suficiente; cantidad depende de población y rutas.",
+    "example": "Cinco humanos reciben tareas que no deberían amontonarse siempre en el mismo lugar.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Mínimo diez puntos",
+        "detail": "Dos alternativas por humano a cinco humanos, distribuido entre zonas."
+      },
+      {
+        "id": "B",
+        "label": "Mínimo quince puntos",
+        "detail": "Más variedad por ronda y mejor reparto; más authoring y validación."
+      },
+      {
+        "id": "C",
+        "label": "Cantidad por zonas",
+        "detail": "Al menos dos por zona jugable principal, con mínimo diez por mapa."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": "O02"
+  },
+  {
+    "id": "D04",
+    "section": "Reglas por cerrar",
+    "title": "¿Qué progreso conserva una tarea si la interrumpen?",
+    "why": "Defenderse no debería generar una penalidad invisible.",
+    "example": "Vas por 70 %, soltás la tecla para espantar un mosquito y volvés.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Conserva con pérdida gradual",
+        "detail": "Breve gracia y luego baja lentamente; valores concretos se prueban."
+      },
+      {
+        "id": "B",
+        "label": "Conserva hasta vencer",
+        "detail": "El porcentaje queda hasta el plazo; reduce castigo por defenderse."
+      },
+      {
+        "id": "C",
+        "label": "Pierde un tramo fijo",
+        "detail": "Cada interrupción válida resta una fracción anunciada, nunca oculta."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "D05",
+    "section": "Reglas por cerrar",
+    "title": "¿Cuánto se acorta el plazo personal al fallar una tarea?",
+    "why": "Afecta sólo a esa persona y respeta el mínimo elegido en J13; no acorta la ronda.",
+    "example": "Plazo de 30 s: una pérdida de 5 s deja la siguiente tarea en 25 s.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Cinco segundos",
+        "detail": "Penalidad lineal fácil de explicar, hasta el mínimo."
+      },
+      {
+        "id": "B",
+        "label": "Tres segundos",
+        "detail": "Escalada más suave para grupos nuevos."
+      },
+      {
+        "id": "C",
+        "label": "Diez por ciento del inicial",
+        "detail": "Se adapta al preset, redondeado y explicado en HUD."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": "J13"
+  },
+  {
+    "id": "D06",
+    "section": "Reglas por cerrar",
+    "title": "¿Cuánto tarda el rescate de un mosquito aliado?",
+    "why": "Debe haber oportunidad de intervenir y riesgo claro, sin ayuda instantánea o interminable.",
+    "example": "Un aliado se acerca al caído mientras el humano busca dónde cayó.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Dos segundos continuos",
+        "detail": "Tiempo corto con cancelación al alejarse o recibir impacto."
+      },
+      {
+        "id": "B",
+        "label": "Tres segundos continuos",
+        "detail": "Más compromiso; requiere buena cobertura."
+      },
+      {
+        "id": "C",
+        "label": "Uno y medio segundos",
+        "detail": "Rescate rápido, mayor presión al humano para impedirlo."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "D07",
+    "section": "Reglas por cerrar",
+    "title": "¿Qué esquema inicial de teclas preferís para inventario e interacción?",
+    "why": "Siempre será reasignable; define el tutorial y conflicto con voz.",
+    "example": "Manos fuera de slots: 1/2/3 seleccionan objetos y otra tecla vuelve a manos.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Números y E",
+        "detail": "1/2/3 slots, 4 manos, E interactuar, G soltar; PTT aparte."
+      },
+      {
+        "id": "B",
+        "label": "Rueda más números",
+        "detail": "Rueda recorre manos y slots, números directos; E interactuar."
+      },
+      {
+        "id": "C",
+        "label": "Teclas cercanas",
+        "detail": "Q alterna manos/objeto, rueda slots y E interactuar; números alternativos."
+      }
+    ],
+    "recommended": "B",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "D08",
+    "section": "Reglas por cerrar",
+    "title": "¿Qué equipo de entrada debe quedar listo para v0.2.0?",
+    "why": "Precisa aceptación de controles sin confundir una opción de menú con soporte real.",
+    "example": "Un amigo usa teclado y ratón; otro quiere conectar mando.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Teclado y ratón completos",
+        "detail": "Reasignación y sensibilidad por rol; mando queda fuera de esta entrega."
+      },
+      {
+        "id": "B",
+        "label": "Teclado/ratón y mando",
+        "detail": "Ambos completos en menú, gameplay y voz; mayor alcance de QA."
+      },
+      {
+        "id": "C",
+        "label": "Teclado/ratón más remapeo accesible",
+        "detail": "Priorizar una mano/remapeo completo y mantener/alternar acciones permitidas; sin mando ahora."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  }
+]

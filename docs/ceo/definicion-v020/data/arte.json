@@ -1,0 +1,1027 @@
+[
+  {
+    "id": "A01",
+    "section": "Arte y personajes",
+    "title": "¿Qué tratamiento de formas querés para el humano nuevo?",
+    "why": "Define la silueta y el modelado que se revisarán antes de producir variantes.",
+    "example": "Compará la fila superior de la lámina: mismo pijama, distinta construcción de cara y cuerpo.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Facetado marcado · A",
+        "detail": "Planos visibles, nariz y mandíbula angulares; lectura muy gráfica."
+      },
+      {
+        "id": "B",
+        "label": "Redondeado suave · B",
+        "detail": "Rostro y ropa más suaves; conservar silueta adulta y detalles legibles."
+      },
+      {
+        "id": "C",
+        "label": "Mixto pintado · C",
+        "detail": "Cuerpo con planos y rostro más suave; textura sutil sin ruido."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null,
+    "visual": "personajes"
+  },
+  {
+    "id": "A02",
+    "section": "Arte y personajes",
+    "title": "¿Qué tratamiento de formas querés para el mosquito?",
+    "why": "Puede compartir materiales con el humano sin copiar exactamente sus proporciones.",
+    "example": "Compará la fila inferior; las alas y patas deberán verificarse después en 3D y movimiento.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Facetado marcado · A",
+        "detail": "Abdomen y cabeza con planos definidos; alas geométricas."
+      },
+      {
+        "id": "B",
+        "label": "Redondeado suave · B",
+        "detail": "Volúmenes menos angulares y expresión más amable."
+      },
+      {
+        "id": "C",
+        "label": "Mixto pintado · C",
+        "detail": "Facetas moderadas con variación de material y alas delicadas."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null,
+    "visual": "personajes"
+  },
+  {
+    "id": "A03",
+    "section": "Arte y personajes",
+    "title": "¿Cuánto exageramos las proporciones humanas?",
+    "why": "Afecta identidad y expresividad; las hitboxes deben seguir siendo justas.",
+    "example": "Un mismo gorro y pijama pueden sentirse caricaturescos o bastante naturales.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Exageración moderada",
+        "detail": "Cabeza y manos algo grandes, piernas adultas, sin parecer un niño."
+      },
+      {
+        "id": "B",
+        "label": "Caricatura fuerte",
+        "detail": "Cabeza y gestos grandes, torso compacto; exige revisar ergonomía y cámara."
+      },
+      {
+        "id": "C",
+        "label": "Casi natural estilizado",
+        "detail": "Proporciones adultas cercanas a reales, con planos y materiales simplificados."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A04",
+    "section": "Arte y personajes",
+    "title": "¿Qué expresión base tendrá el mosquito?",
+    "why": "La mirada comunica su personalidad incluso cuando no habla.",
+    "example": "Un mosquito quieto sobre una mesa: ¿travieso, torpe o insistente?",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Travieso",
+        "detail": "Cejas y ojos atentos, picardía sin gesto maligno."
+      },
+      {
+        "id": "B",
+        "label": "Torpe y simpático",
+        "detail": "Ojos cansados, pequeñas dudas y reacciones cómicas."
+      },
+      {
+        "id": "C",
+        "label": "Concentrado y molesto",
+        "detail": "Mirada insistente; humor sale del contraste con el humano."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A05",
+    "section": "Arte y personajes",
+    "title": "¿Cuánta textura pintada deben tener ropa y objetos?",
+    "why": "Equilibra riqueza visual y claridad al volar cerca.",
+    "example": "La costura del pijama y la madera se pueden leer sin texturas fotográficas.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Sutil",
+        "detail": "Colores amplios, costuras y vetas seleccionadas."
+      },
+      {
+        "id": "B",
+        "label": "Casi ninguna",
+        "detail": "Materiales planos; interés mediante forma y luz."
+      },
+      {
+        "id": "C",
+        "label": "Visible pero estilizada",
+        "detail": "Pinceladas y desgaste más presentes, sin ruido realista."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A06",
+    "section": "Arte y personajes",
+    "title": "¿Qué contraste de color tendrá la personalización?",
+    "why": "La paleta debe permitir identificar jugadores sin volverlos camuflaje competitivo.",
+    "example": "Pijama azul apagado frente a rojo brillante en Casa de noche.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Paleta curada",
+        "detail": "Colores variados con luminosidad controlada y lectura parecida."
+      },
+      {
+        "id": "B",
+        "label": "Paleta amplia",
+        "detail": "Más saturación y tonos; revisar cada combinación extrema."
+      },
+      {
+        "id": "C",
+        "label": "Paletas por conjunto",
+        "detail": "Combinaciones diseñadas completas y pocos acentos elegibles."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A07",
+    "section": "Arte y personajes",
+    "title": "¿Cómo distinguimos visualmente a jugadores con el mismo modelo?",
+    "why": "Resuelve lectura social sin añadir estadísticas ni clases.",
+    "example": "Dos humanos llevan pijama azul y se cruzan en el pasillo.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Color secundario y nombre contextual",
+        "detail": "Detalles cosméticos y nombre al mirarlos cerca."
+      },
+      {
+        "id": "B",
+        "label": "Patrones de ropa claros",
+        "detail": "Rayas, cuadros o liso, manteniendo materiales coherentes."
+      },
+      {
+        "id": "C",
+        "label": "Accesorio identificador",
+        "detail": "Variantes cosméticas de gorro/gafas, sujetas a aprobación de catálogo."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A08",
+    "section": "Arte y personajes",
+    "title": "¿Cuánta expresividad facial querés en juego?",
+    "why": "Define trabajo de rig y animación visible a otros, además del personalizador.",
+    "example": "Después de fallar una palmada, el humano puede fruncir el ceño o hacer una mueca breve.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Emociones esenciales",
+        "detail": "Reposo, esfuerzo, golpe, desmayo y recuperación claros."
+      },
+      {
+        "id": "B",
+        "label": "Humor expresivo",
+        "detail": "Las mismas acciones con gestos más exagerados y transiciones cuidadas."
+      },
+      {
+        "id": "C",
+        "label": "Actuación contenida",
+        "detail": "Parpadeo y mirada presentes; cambios faciales pequeños."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A09",
+    "section": "Arte y personajes",
+    "title": "¿Qué lectura visual tendrán las alas del mosquito?",
+    "why": "Deben percibirse sin ocultar enemigos ni producir parpadeo molesto.",
+    "example": "Al posarse se ven separadas; durante vuelo su vibración no tapa el centro.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Translúcidas discretas",
+        "detail": "Venas/facetas visibles al reposo y vibración suave al volar."
+      },
+      {
+        "id": "B",
+        "label": "Gráficas",
+        "detail": "Mayor opacidad y silueta clara; menos transparencia."
+      },
+      {
+        "id": "C",
+        "label": "Muy ligeras",
+        "detail": "Casi transparentes con contorno fino, revisar sobre fondos claros."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A10",
+    "section": "Arte y personajes",
+    "title": "¿Cómo representamos la sangre sin marcas de picadura?",
+    "why": "Define intensidad visual y tono, preservando la decisión de no poner marcas sobre el cuerpo.",
+    "example": "Una extracción exitosa puede reflejarse en el abdomen y contador, sin heridas.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Abdomen y HUD",
+        "detail": "Cambio sutil de volumen/color y progreso; sin gotas en pantalla."
+      },
+      {
+        "id": "B",
+        "label": "Sólo feedback gráfico",
+        "detail": "Progreso y sonido; abdomen apenas cambia."
+      },
+      {
+        "id": "C",
+        "label": "Abdomen expresivo",
+        "detail": "Llenado visible más exagerado, manteniendo hitbox y silueta de juego justas."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A11",
+    "section": "Arte y personajes",
+    "title": "¿Qué acabado visual unifica los cinco mapas?",
+    "why": "Los escenarios ya definidos necesitan compartir lenguaje de materiales.",
+    "example": "Madera de cabaña, muebles de casa y cubierta del yate deben pertenecer al mismo juego.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Materiales limpios",
+        "detail": "Facetas legibles, desgaste sólo donde cuenta una historia."
+      },
+      {
+        "id": "B",
+        "label": "Habitados y desordenados",
+        "detail": "Más uso, objetos cotidianos y desgaste estilizado sin bloquear rutas."
+      },
+      {
+        "id": "C",
+        "label": "Maqueta gráfica",
+        "detail": "Formas muy limpias, colores por zonas y pocos detalles pequeños."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A12",
+    "section": "Arte y personajes",
+    "title": "¿Cómo identificamos objetos utilizables sin añadir balizas?",
+    "why": "La escena debe enseñar qué se puede usar sin revelar información privada ajena.",
+    "example": "Al mirar una puerta o herramienta a alcance, aparece una pista breve.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Contorno al apuntar",
+        "detail": "Sólo el objeto cercano bajo la mira, más texto de acción."
+      },
+      {
+        "id": "B",
+        "label": "Cambio de brillo sutil",
+        "detail": "Respuesta material y texto, sin silueta luminosa."
+      },
+      {
+        "id": "C",
+        "label": "Sólo texto contextual",
+        "detail": "Sin modificar el objeto; máxima limpieza visual."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A13",
+    "section": "Animación y cámaras",
+    "title": "¿Qué peso debe tener el caminar humano?",
+    "why": "La animación y el sonido deben transmitir el mismo ritmo.",
+    "example": "Un humano en pantuflas persigue un mosquito que acaba de escapar.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Ágil con sueño",
+        "detail": "Arranque rápido, hombros cansados y pasos algo arrastrados."
+      },
+      {
+        "id": "B",
+        "label": "Cómico pesado",
+        "detail": "Más balanceo y arrastre visual, sin añadir retraso al control."
+      },
+      {
+        "id": "C",
+        "label": "Natural ligero",
+        "detail": "Poco balanceo y locomoción sobria."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A14",
+    "section": "Animación y cámaras",
+    "title": "¿Cómo debe verse una defensa manual fallida?",
+    "why": "El jugador necesita leer el error sin perder control por una broma larga.",
+    "example": "Palmada que no toca al mosquito: termina rápido o tiene pequeña reacción.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Recuperación breve",
+        "detail": "Trayectoria clara, retorno rápido y mueca corta."
+      },
+      {
+        "id": "B",
+        "label": "Reacción cómica marcada",
+        "detail": "Más gesto posterior; duración jugable se mantiene pactada."
+      },
+      {
+        "id": "C",
+        "label": "Muy sobria",
+        "detail": "Casi sin actuación adicional; prioridad absoluta a claridad del golpe."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A15",
+    "section": "Animación y cámaras",
+    "title": "¿Qué tratamiento damos al desmayo y caída?",
+    "why": "Es una de las acciones más repetidas y debe ser cómica sin romper colisiones.",
+    "example": "Un mosquito cae sobre una mesa y después recibe ayuda.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Caída dirigida",
+        "detail": "Poses diseñadas con ajuste físico acotado al entorno."
+      },
+      {
+        "id": "B",
+        "label": "Física cómica controlada",
+        "detail": "Más movimiento secundario, con límites para evitar vibración/enganches."
+      },
+      {
+        "id": "C",
+        "label": "Secuencia rápida",
+        "detail": "Caída simple y recuperación clara; mínima variación física."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A16",
+    "section": "Animación y cámaras",
+    "title": "¿Qué protagonismo tienen los gestos de ayuda/rescate?",
+    "why": "Deben comunicar inicio, progreso e interrupción.",
+    "example": "Un aliado ayuda a un mosquito caído y debe apartarse ante un humano.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Breves y legibles",
+        "detail": "Gesto claro y progreso discreto, cancelación inmediata."
+      },
+      {
+        "id": "B",
+        "label": "Más teatrales",
+        "detail": "Animación cómica durante el mismo tiempo de interacción acordado."
+      },
+      {
+        "id": "C",
+        "label": "Funcionales mínimos",
+        "detail": "Poca actuación y señal visual breve para priorizar combate."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A17",
+    "section": "Animación y cámaras",
+    "title": "¿Cuánto movimiento secundario tienen gorro y pijama?",
+    "why": "Añade vida, pero no debe tapar cámara ni cambiar alcance real.",
+    "example": "El gorro responde a un giro rápido y se estabiliza.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Moderado",
+        "detail": "Gorro y tela reaccionan poco; silueta estable."
+      },
+      {
+        "id": "B",
+        "label": "Muy discreto",
+        "detail": "Movimiento principalmente animado y predecible."
+      },
+      {
+        "id": "C",
+        "label": "Expresivo",
+        "detail": "Reacción más visible en cámara externa; suprimir interferencias en primera persona."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A18",
+    "section": "Animación y cámaras",
+    "title": "¿Qué personalidad tiene el mosquito al estar quieto?",
+    "why": "Permite reconocer estados sin llenar el HUD.",
+    "example": "Posado en pared esperando el momento de despegar.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Atento",
+        "detail": "Antenas y patas ajustan postura con movimientos pequeños."
+      },
+      {
+        "id": "B",
+        "label": "Impaciente",
+        "detail": "Pequeños balanceos y miradas cómicas; sin mover el contacto real."
+      },
+      {
+        "id": "C",
+        "label": "Sigiloso",
+        "detail": "Casi inmóvil; sólo respiración/antenas sutiles."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A19",
+    "section": "Animación y cámaras",
+    "title": "¿Cuánto cuerpo humano querés ver al mirar hacia abajo?",
+    "why": "Concreta la primera persona con cuerpo visible ya acordada.",
+    "example": "Mirás el pecho o las piernas para defenderte de un mosquito.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Cuerpo completo coherente",
+        "detail": "Torso, brazos y piernas visibles donde el encuadre lo permita."
+      },
+      {
+        "id": "B",
+        "label": "Torso discreto",
+        "detail": "Mantener piernas y manos claras; reducir obstrucción del pecho."
+      },
+      {
+        "id": "C",
+        "label": "Énfasis en manos y piernas",
+        "detail": "Cuerpo presente con encuadre más despejado; nunca cámara flotante sin cuerpo."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A20",
+    "section": "Animación y cámaras",
+    "title": "¿Cómo se adapta la cámara mosquito al pasar de suelo a pared y techo?",
+    "why": "Evita mareo y mantiene orientación durante el perchado.",
+    "example": "Subís por una pata de mesa y llegás debajo del tablero.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Horizonte estable",
+        "detail": "La cámara mantiene arriba del mundo con ajuste suave al obstáculo."
+      },
+      {
+        "id": "B",
+        "label": "Sigue parcialmente el soporte",
+        "detail": "Inclinación limitada para sentir el contacto sin volcar la vista."
+      },
+      {
+        "id": "C",
+        "label": "Sigue el cuerpo",
+        "detail": "Mayor rotación, con opción accesible de horizonte estable."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null,
+    "visual": "camara"
+  },
+  {
+    "id": "A21",
+    "section": "Animación y cámaras",
+    "title": "¿Qué distancia de cámara mosquito preferís por defecto?",
+    "why": "Cambia cuánto entorno se ve y cuán grande aparece el personaje.",
+    "example": "Volar en el patio frente a pasar por una ventana estrecha.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Media adaptable",
+        "detail": "Distancia media; se acerca al detectar obstáculos."
+      },
+      {
+        "id": "B",
+        "label": "Cercana",
+        "detail": "Personaje más protagonista y vuelo íntimo; menos campo periférico."
+      },
+      {
+        "id": "C",
+        "label": "Lejana moderada",
+        "detail": "Más lectura del espacio, sin permitir ver a través de paredes."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A22",
+    "section": "Animación y cámaras",
+    "title": "¿Qué intensidad de sacudida y balanceo visual tendrá el preset inicial?",
+    "why": "Define confort sin cambiar precisión o reglas de impacto.",
+    "example": "Correr, recibir golpe y despegar pueden mover cámara o sólo el cuerpo.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Suave y regulable",
+        "detail": "Feedback perceptible; slider hasta cero."
+      },
+      {
+        "id": "B",
+        "label": "Cero por defecto",
+        "detail": "Cámara estable; animación y audio comunican el impacto."
+      },
+      {
+        "id": "C",
+        "label": "Expresivo y regulable",
+        "detail": "Más movimiento en preset inicial, siempre desactivable."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A23",
+    "section": "Mapas y ambiente",
+    "title": "¿Qué tratamiento de luz preferís para Casa y Campamento nocturnos?",
+    "why": "Comparar oscuridad estética con lectura jugable; Isla conserva su identidad diurna.",
+    "example": "La lámina usa una cabaña ilustrativa, no sustituye geometría ni cambia la hora de los cinco mapas.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Cálido con noche azul · A",
+        "detail": "Luces domésticas/fogón como puntos de referencia."
+      },
+      {
+        "id": "B",
+        "label": "Luna fría legible · B",
+        "detail": "Luz ambiental más uniforme y contrastes plateados."
+      },
+      {
+        "id": "C",
+        "label": "Mezcla por zona",
+        "detail": "Interiores A y exteriores B; C queda sólo como referencia de crepúsculo para Puerto."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null,
+    "visual": "iluminacion"
+  },
+  {
+    "id": "A24",
+    "section": "Mapas y ambiente",
+    "title": "¿Qué tono de crepúsculo querés en Puerto del Faro?",
+    "why": "Respeta el anochecer acordado y precisa la identidad cromática.",
+    "example": "Ves el faro y las casas desde un muelle.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Lavanda con luces cálidas",
+        "detail": "Referencia C del tablero, lectura amplia del horizonte."
+      },
+      {
+        "id": "B",
+        "label": "Azul profundo y faro cálido",
+        "detail": "Anochecer más avanzado; cuidar rutas oscuras."
+      },
+      {
+        "id": "C",
+        "label": "Melocotón apagado",
+        "detail": "Última luz cálida sobre agua y fachadas, sin parecer mediodía."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null,
+    "visual": "iluminacion"
+  },
+  {
+    "id": "A25",
+    "section": "Mapas y ambiente",
+    "title": "¿Qué sensación debe dominar Isla del Laguito diurna?",
+    "why": "Jerarquiza ambientación sobre la geografía existente: lago, cabaña, bosque, playa y muelles.",
+    "example": "Un humano recorre la orilla mientras un mosquito usa la vegetación.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Vacaciones tranquilas",
+        "detail": "Luz clara, agua suave y rincones cálidos."
+      },
+      {
+        "id": "B",
+        "label": "Exploración boscosa",
+        "detail": "Bosque más protagonista visual, senderos legibles."
+      },
+      {
+        "id": "C",
+        "label": "Isla juguetona",
+        "detail": "Acentos de color y detalles cotidianos más cómicos."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A26",
+    "section": "Mapas y ambiente",
+    "title": "¿Qué carácter doméstico debe tener Casa del Patio?",
+    "why": "Define decoración sin quitar sus dos plantas, habitaciones, escalera, patio y cobertizo.",
+    "example": "Entrás al dormitorio tras perseguir algo por la cocina.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Casa vivida ordenada",
+        "detail": "Objetos cotidianos y rutas despejadas."
+      },
+      {
+        "id": "B",
+        "label": "Desorden amable",
+        "detail": "Más ropa/objetos de fondo, sin rellenar rutas con colisiones."
+      },
+      {
+        "id": "C",
+        "label": "Casa sencilla acogedora",
+        "detail": "Menos objetos; materiales y luz llevan la identidad."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A27",
+    "section": "Mapas y ambiente",
+    "title": "¿Qué contraste organiza Campamento Pinar?",
+    "why": "Conserva las seis carpas, fogón, refugio y arroyo; define lectura ambiental.",
+    "example": "El jugador reconoce dónde está sin minimapa.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Fogón central cálido",
+        "detail": "El fogón orienta, bosque azul y senderos claros."
+      },
+      {
+        "id": "B",
+        "label": "Carpas como referencias",
+        "detail": "Colores/lámparas distinguen zonas y retornos."
+      },
+      {
+        "id": "C",
+        "label": "Arroyo como guía",
+        "detail": "Agua y puentes sirven de orientación sonora/visual."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A28",
+    "section": "Mapas y ambiente",
+    "title": "¿Qué personalidad material tendrá Yate a la Deriva?",
+    "why": "Conserva el yate pequeño de 30 m y sus cubiertas/interiores.",
+    "example": "Pasás de cubierta al salón y luego al camarote.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Vacacional sencillo",
+        "detail": "Madera y tapizados claros, detalles náuticos moderados."
+      },
+      {
+        "id": "B",
+        "label": "Usado pero cuidado",
+        "detail": "Pequeño desgaste estilizado y objetos personales."
+      },
+      {
+        "id": "C",
+        "label": "Elegante caricaturesco",
+        "detail": "Acabados más pulidos y contraste de materiales, sin realismo brillante."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A29",
+    "section": "Mapas y ambiente",
+    "title": "¿Qué punto de referencia debe dominar Puerto además del faro?",
+    "why": "Ayuda a diferenciar zonas manteniendo casas, taller y muelles existentes.",
+    "example": "Alguien dice por voz «estoy cerca del taller» y todos lo ubican.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Taller reconocible",
+        "detail": "Color/accesorios propios y acceso claramente visible."
+      },
+      {
+        "id": "B",
+        "label": "Plaza entre casas",
+        "detail": "Composición y luz destacan el espacio de encuentro existente."
+      },
+      {
+        "id": "C",
+        "label": "Muelle principal",
+        "detail": "Barcas, postes y sonidos dan identidad al borde del puerto."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A30",
+    "section": "Mapas y ambiente",
+    "title": "¿Cuánto detalle ambiental pequeño querés cerca de rutas?",
+    "why": "Mucho detalle puede esconder mosquitos de manera poco predecible.",
+    "example": "Patas de muebles, hojas y utensilios rodean una tarea.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Detalle concentrado",
+        "detail": "Zonas decorativas ricas; suelo/ruta y objetos usables limpios."
+      },
+      {
+        "id": "B",
+        "label": "Detalle uniforme moderado",
+        "detail": "Todo recibe una densidad parecida, sin acumulaciones grandes."
+      },
+      {
+        "id": "C",
+        "label": "Detalle abundante con contraste",
+        "detail": "Escena más llena; asegurar lectura mediante materiales y luz."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A31",
+    "section": "Mapas y ambiente",
+    "title": "¿Cómo comunicamos el límite jugable del mapa?",
+    "why": "El límite físico debe ser seguro y comprensible.",
+    "example": "Un mosquito intenta volar más allá de la costa o el humano llega al borde no transitable.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Entorno y aviso breve",
+        "detail": "Obstáculo/lectura ambiental y texto sólo al insistir."
+      },
+      {
+        "id": "B",
+        "label": "Señal suave de proximidad",
+        "detail": "Ligera indicación antes de tocar el límite, sin superficies posables."
+      },
+      {
+        "id": "C",
+        "label": "Sólo entorno",
+        "detail": "Sin mensajes, exige que bordes y barreras sean inequívocos."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A32",
+    "section": "Mapas y ambiente",
+    "title": "¿Qué explicación visual acompaña una recuperación por agua o caída fuera del mapa?",
+    "why": "La recuperación segura ya es obligatoria; se define cómo entiende el jugador lo ocurrido.",
+    "example": "Caés al agua y reaparecés en un destino seguro validado.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Transición corta y motivo",
+        "detail": "Fundido breve y «Volviste a una zona segura». Sin penalidad nueva."
+      },
+      {
+        "id": "B",
+        "label": "Transición casi inmediata",
+        "detail": "Mensaje pequeño; menor interrupción."
+      },
+      {
+        "id": "C",
+        "label": "Transición cómica breve",
+        "detail": "Efecto audiovisual estilizado, sin alargar la pérdida de control."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A33",
+    "section": "Mapas y ambiente",
+    "title": "¿Qué comportamiento visual del agua preferís?",
+    "why": "Ya se acordó agua estilizada con movimiento suave; resta intensidad y lectura.",
+    "example": "Compará lago tranquilo, arroyo y mar alrededor del yate.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Suave por entorno",
+        "detail": "Lago calmo, arroyo direccional y mar algo más activo."
+      },
+      {
+        "id": "B",
+        "label": "Muy calmada",
+        "detail": "Priorizar reflejos legibles y bajo movimiento en todos."
+      },
+      {
+        "id": "C",
+        "label": "Más expresiva",
+        "detail": "Ondas/espuma visibles, sin ocultar bordes ni encarecer excesivamente el render."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "A34",
+    "section": "Mapas y ambiente",
+    "title": "¿Qué evidencia visual querés usar para aprobar el arte integrado?",
+    "why": "Una imagen bonita no demuestra rig, colisiones ni calidad en movimiento.",
+    "example": "Revisamos humano, mosquito y cada mapa antes de llamar definitivo al contenido.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Comparativa y clip",
+        "detail": "Frente/perfil/espalda más video corto de acciones y recorrido real."
+      },
+      {
+        "id": "B",
+        "label": "Recorrido comentado",
+        "detail": "Video más largo organizado por criterios, acompañado de vistas fijas."
+      },
+      {
+        "id": "C",
+        "label": "Build revisable y selección de clips",
+        "detail": "Probar vos la candidata más clips de los puntos delicados."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  }
+]

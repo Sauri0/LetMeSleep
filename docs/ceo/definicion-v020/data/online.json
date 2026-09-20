@@ -1,0 +1,782 @@
+[
+  {
+    "id": "O01",
+    "section": "Online y sesiones",
+    "title": "Forma de escribir y compartir el código privado",
+    "why": "El código privado ya es la puerta de entrada. La decisión útil es cómo reducir errores al copiarlo o escribirlo sin leer el portapapeles, detectar contenido ajeno ni exponer identificadores técnicos.",
+    "example": "Escenario visual: el anfitrión ve una tarjeta con Copiar; la persona invitada abre Unirse y elige pegar explícitamente, escribir por bloques o revisar una confirmación antes de conectar.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Copiar y pegar explícito",
+        "detail": "Tarjeta grande con botón Copiar y campo único con acción Pegar iniciada por la persona. Normaliza guiones, espacios y mayúsculas y muestra el código completo antes de conectar."
+      },
+      {
+        "id": "B",
+        "label": "Ingreso por bloques",
+        "detail": "Presentar el código en dos o tres grupos visuales con avance automático entre casillas. Favorece dictado por voz y escritura manual, aunque ocupa más espacio."
+      },
+      {
+        "id": "C",
+        "label": "Campo único con revisión",
+        "detail": "Usar un campo normal con contador de caracteres y una pantalla breve de confirmación. Es familiar para teclado/control y evita cualquier lectura automática del portapapeles."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Online/EosLobbySession.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "O02",
+    "section": "Online y sesiones",
+    "title": "Tamaño de grupo objetivo para la primera validación",
+    "why": "La sala admite una capacidad estructural mayor que la ya probada. Hace falta fijar el grupo que guía mezcla, legibilidad de roster y pruebas de v0.2.0 sin presentar dieciséis participantes como soporte demostrado.",
+    "example": "Escenario visual: tres maquetas de roster y mezcla con 2–4, 5–8 y 9–16 lugares. El número elegido define el primer gate; los escalones superiores sólo se anuncian después de pasar pruebas equivalentes.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Dos a cuatro",
+        "detail": "Diseñar la primera aceptación para 2–4 personas reales. Facilita sesiones repetibles y conversación clara; luego se escala con evidencia."
+      },
+      {
+        "id": "B",
+        "label": "Cinco a ocho",
+        "detail": "Tomar 5–8 como objetivo inicial de experiencia. Representa mejor una reunión mediana, pero exige más equipos, voces y combinaciones de rol en cada prueba."
+      },
+      {
+        "id": "C",
+        "label": "Nueve a dieciséis",
+        "detail": "Orientar desde el inicio roster y UX a 9–16, manteniendo la capacidad como meta no aprobada hasta completar carga, red y escucha con ese grupo."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/V0.2.0-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O03",
+    "section": "Online y sesiones",
+    "title": "Ingreso cuando una ronda ya empezó",
+    "why": "Un amigo puede recibir el código tarde o reconectarse mientras el resto juega. Hay que decidir si observa, espera o entra de inmediato sin alterar roles, objetivos privados ni el balance de los tres modos ya definidos.",
+    "example": "Escenario visual: cuatro personas están a mitad de Supervivencia y una quinta ingresa con el código. Mostrar cómo vería una sala de espera, una cámara de espectador o una incorporación inmediata en un punto seguro.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Esperar próxima ronda",
+        "detail": "Permitir entrar a la sala, conversar con límites definidos y ver un resumen no sensible, pero asignar rol y actor recién al comienzo siguiente. Conserva el balance y evita filtrar tareas privadas."
+      },
+      {
+        "id": "B",
+        "label": "Espectador hasta reinicio",
+        "detail": "Dar una vista espectador limitada durante la ronda y entrar en la siguiente. Es más entretenido que una espera estática, pero requiere reglas de cámara, información y voz para no dar ventaja."
+      },
+      {
+        "id": "C",
+        "label": "Entrada inmediata segura",
+        "detail": "Crear un actor durante la ronda con rol y aparición validados por el host. Reduce espera, pero complica balance, objetivos, vidas, tareas y sincronización tardía; exigiría mucha más evidencia."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/V0.2.0-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O04",
+    "section": "Online y sesiones",
+    "title": "Confirmación de listo antes de iniciar",
+    "why": "La sala necesita distinguir contenido cargado de intención de jugar. Todas las alternativas preservan la validación del host; cambia cuánto consentimiento explícito y tiempo de reacción se pide antes del inicio.",
+    "example": "Escenario visual: roster con estados Cargando/Listo y un botón de inicio que puede requerir unanimidad, activar una cuenta regresiva cancelable o dejar a quien no confirmó para la ronda siguiente.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Todos listos",
+        "detail": "Iniciar sólo cuando cada miembro conectado cargó contenido y marcó Listo. Es la regla más clara para grupos de amigos."
+      },
+      {
+        "id": "B",
+        "label": "Cuenta regresiva cancelable",
+        "detail": "Con todos cargados, el anfitrión puede iniciar una cuenta de 10 segundos aunque falte una confirmación; cualquiera puede cancelarla. Reduce espera sin sorprender."
+      },
+      {
+        "id": "C",
+        "label": "Listos entran, resto espera",
+        "detail": "Con al menos dos listos, iniciar con ese subconjunto y mantener a los demás en la sala para la ronda siguiente. Agiliza grupos variables, pero exige mostrar composición antes de arrancar."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Core/RoomSession.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "O05",
+    "section": "Online y sesiones",
+    "title": "Cómo explicar el sorteo aleatorio de roles",
+    "why": "La asignación aleatoria por ronda se mantiene. La decisión es cuánta información mostrar para que el resultado parezca comprensible sin insinuar turnos garantizados ni alterar silenciosamente la composición válida.",
+    "example": "Escenario visual: pantalla de inicio con resultado del sorteo, composición de la ronda y, según la opción, historial reciente o una preferencia futura marcada como revisión de política.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Resultado y composición",
+        "detail": "Mostrar quién quedó humano o mosquito y la cantidad total de cada rol, con una animación corta. No expone semilla ni promete compensación."
+      },
+      {
+        "id": "B",
+        "label": "Resultado más historial",
+        "detail": "Añadir los roles de las últimas tres rondas como contexto. Ayuda a percibir variedad, aunque el siguiente sorteo sigue siendo aleatorio."
+      },
+      {
+        "id": "C",
+        "label": "Preferencia como revisión futura",
+        "detail": "Permitir indicar un rol deseado sólo si se aprueba explícitamente revisar la política; la UI aclara que no garantiza resultado. Requiere decisión y pruebas nuevas antes de activarse."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Core/RoomSession.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "O06",
+    "section": "Online y sesiones",
+    "title": "Momento para elegir mapa y modo",
+    "why": "Los cinco mapas finales y los tres modos ya forman parte del alcance. Falta decidir cuánto control ve el grupo y cuándo queda bloqueada la selección para que todos carguen la misma identidad de contenido.",
+    "example": "Escenario visual: encabezado de sala con tarjetas de mapa y modo, más un candado al iniciar. Comparar selección exclusiva del anfitrión, votación visible o una rotación automática anunciada.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Anfitrión elige antes",
+        "detail": "El anfitrión selecciona mapa y modo en la sala; todos ven la elección y sus reglas antes de marcar Listo. Al iniciar queda bloqueada hasta la ronda siguiente."
+      },
+      {
+        "id": "B",
+        "label": "Votación del grupo",
+        "detail": "Cada integrante vota entre opciones compatibles y el anfitrión desempata. Reparte decisión, pero alarga la preparación y necesita reglas de empate y cambio de voto."
+      },
+      {
+        "id": "C",
+        "label": "Rotación automática",
+        "detail": "La sesión recorre mapas y modos sin repetir hasta agotar la lista, mostrando cuál sigue. Favorece variedad, aunque ofrece menos control cuando el grupo quiere practicar algo concreto."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Core/RoomSession.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "O07",
+    "section": "Online y sesiones",
+    "title": "Ventana de reingreso tras una desconexión",
+    "why": "Una desconexión breve no debe duplicar actores ni permitir reaparecer a voluntad. Todas las alternativas ligan el retorno a la misma identidad autenticada y a puntos seguros; cambia cuánto se reserva y cuándo vuelve a controlar.",
+    "example": "Escenario visual: la fila queda gris con una cuenta regresiva de 30 o 60 segundos; al regresar, la persona recupera control en el mismo estado seguro o espera una transición autorizada.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Reserva de 30 segundos",
+        "detail": "La misma identidad recupera su actor conservado durante 30 s si continúa válido; un bot puede mantenerlo inmóvil o seguro. Después aplica ingreso tardío."
+      },
+      {
+        "id": "B",
+        "label": "Reserva de 60 segundos",
+        "detail": "Dar 60 s para redes más lentas. Mejora recuperación, pero mantiene plaza y estado provisional durante más tiempo."
+      },
+      {
+        "id": "C",
+        "label": "Retorno en transición",
+        "detail": "Conservar membresía durante 60 s, pero devolver control sólo al siguiente checkpoint o ronda. Evita saltos en mitad de una acción a costa de más espera."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/ONLINE-READINESS.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O08",
+    "section": "Online y sesiones",
+    "title": "Continuidad de ronda ante una desconexión",
+    "why": "Cuando alguien se va, la ronda puede quedar desequilibrada. Las alternativas deben conservar autoridad del host y objetivos posibles, con un plazo concreto para distinguir un corte breve de una salida.",
+    "example": "Escenario visual: aviso de desconexión con cuenta de 30 s y etiqueta Bot temporal, Actor retirado o Pausa breve; al vencer se aplica la regla específica del modo.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Bot durante 30 segundos",
+        "detail": "El host controla temporalmente al actor durante la reserva; si no vuelve, lo retira o ajusta sólo lo permitido por el modo. Mantiene ritmo."
+      },
+      {
+        "id": "B",
+        "label": "Retiro al vencer reserva",
+        "detail": "Conservar al actor seguro durante 30 s sin bot y retirarlo al vencer, recalculando únicamente cuotas previstas. Evita conducta automática inesperada."
+      },
+      {
+        "id": "C",
+        "label": "Pausa breve votada",
+        "detail": "Ofrecer al grupo una pausa máxima de 30 s una vez por ronda; después continuar con retiro seguro. Favorece grupos coordinados, pero interrumpe el ritmo."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/MODES-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O09",
+    "section": "Online y sesiones",
+    "title": "Cómo reunir al grupo después de perder al anfitrión",
+    "why": "El cierre del anfitrión termina la sala y purga ronda/voz; no se ofrece migración. La decisión es cómo facilitar que el mismo grupo cree una reunión nueva sin sugerir que el código anterior sigue activo.",
+    "example": "Escenario visual: modal «El anfitrión cerró la sala» con tres salidas posibles: crear una sala nueva, volver juntos al menú con instrucciones o conservar un resumen local de participantes.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Crear sala nueva",
+        "detail": "Mostrar a todos Volver al menú y, a una persona, Crear nueva sala; el nuevo anfitrión comparte un código nuevo por el canal habitual."
+      },
+      {
+        "id": "B",
+        "label": "Guía breve de reencuentro",
+        "detail": "Cerrar y mostrar pasos numerados: acordar quién crea, esperar su nuevo código y usar Unirse. Es neutral y funciona aunque nadie quiera crear inmediatamente."
+      },
+      {
+        "id": "C",
+        "label": "Resumen local de grupo",
+        "detail": "Además del cierre seguro, conservar sólo nombres visibles de la reunión durante esa pantalla para ayudar a comprobar quién falta; no guarda PUID ni reconecta automáticamente."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Online/EosLobbySession.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "O10",
+    "section": "Online y sesiones",
+    "title": "Nivel de ayuda ante errores de conexión",
+    "why": "Los identificadores y resultados crudos del SDK nunca se muestran. La decisión es cuánto contexto y asistencia saneada recibe una persona ante código inválido, versión distinta, sala llena o timeout.",
+    "example": "Escenario visual: tarjeta con título humano y acción principal; según la opción añade una explicación desplegable o permite exportar un diagnóstico sin PUID para soporte consentido.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Mensaje y acción directa",
+        "detail": "Una frase específica y botones Reintentar, Cambiar código o Actualizar según corresponda. Mantiene la pantalla breve."
+      },
+      {
+        "id": "B",
+        "label": "Ayuda contextual desplegable",
+        "detail": "Añadir Qué puedo hacer con dos o tres pasos y estado de servicio/conexión expresado en lenguaje común. Ayuda a resolver sin abandonar."
+      },
+      {
+        "id": "C",
+        "label": "Diagnóstico saneado opcional",
+        "detail": "Incluir lo anterior y un botón explícito para copiar un informe sin PUID, secretos ni stack trace. Facilita soporte entre amigos, con más trabajo de revisión."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Online/EosLobbySession.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "O11",
+    "section": "Voz y sonido",
+    "title": "Tecla y personalización de pulsar para hablar",
+    "why": "PTT seguirá abriendo captura sólo mientras se mantiene una acción. La decisión es cómo asignarla entre teclado y control para que sea accesible sin activar un modo de transmisión continua.",
+    "example": "Escenario visual: Ajustes muestra «Pulsar para hablar: V / LB» y una animación de mantener. Comparar atajo fijo, reasignación completa o presets accesibles.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Reasignable por dispositivo",
+        "detail": "Permitir cambiar la acción mantenida de teclado, mouse y control, detectar conflictos y ofrecer Restaurar. Da control sin cambiar la regla de captura."
+      },
+      {
+        "id": "B",
+        "label": "Atajo fijo más alternativo",
+        "detail": "Usar V en teclado y un botón definido en control, con una segunda tecla opcional. Es simple de enseñar y probar."
+      },
+      {
+        "id": "C",
+        "label": "Presets de accesibilidad",
+        "detail": "Ofrecer tres mapas de botones mantenidos, incluido uno de baja tensión, sin convertirlo en toggle. Reduce configuración fina y mantiene PTT explícito."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O12",
+    "section": "Voz y sonido",
+    "title": "Presentación de dispositivos y fallos de entrada",
+    "why": "El juego nunca cambia de micrófono sin consentimiento. La decisión es cómo ordenar dispositivos y explicar que el elegido desapareció o no pudo abrirse para que la persona seleccione otro conscientemente.",
+    "example": "Escenario visual: lista con dispositivo activo, disponibles y no disponible; un fallo puede aparecer junto al selector, en un aviso persistente o en un asistente de comprobación.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Lista con estado en línea",
+        "detail": "Mostrar el elegido primero, marcar Disponible/No disponible y dejar Seleccionar como acción explícita. Un fallo permanece junto al nombre."
+      },
+      {
+        "id": "B",
+        "label": "Aviso persistente con acceso",
+        "detail": "Mantener la lista simple y mostrar una banda «Micrófono desconectado» que abre Ajustes. Es visible durante sala y partida sin modal."
+      },
+      {
+        "id": "C",
+        "label": "Comprobación guiada",
+        "detail": "Al fallar PTT, abrir una guía opcional que enumera dispositivos, permiso y prueba local iniciada por la persona. Ayuda a hardware complejo con más pasos."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O13",
+    "section": "Voz y sonido",
+    "title": "Ayuda al pulsar PTT sin micrófono disponible",
+    "why": "Jugar y escuchar siempre siguen permitidos. La decisión es cómo ayudar cuando se pulsa PTT sin dispositivo elegido o disponible, sin abrir hardware ni bloquear la partida.",
+    "example": "Escenario visual: al mantener PTT aparece un toast, una pista junto al icono o una invitación a diagnóstico; todos desaparecen sin interrumpir el control.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Aviso breve no modal",
+        "detail": "Mostrar «Elegí un micrófono en Ajustes» durante unos segundos con acceso directo. No tapa la partida."
+      },
+      {
+        "id": "B",
+        "label": "Feedback junto al PTT",
+        "detail": "El icono propio cambia a micrófono tachado y muestra una etiqueta pequeña mientras se mantiene la acción. Enseña la causa en el mismo lugar."
+      },
+      {
+        "id": "C",
+        "label": "Ayuda progresiva",
+        "detail": "Primer intento usa feedback breve; tras tres intentos fallidos ofrece abrir la comprobación de dispositivos. Evita insistencia y asiste a quien la necesita."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O14",
+    "section": "Voz y sonido",
+    "title": "Ubicación y confirmación del mute propio",
+    "why": "Mutear siempre cierra captura, purga envío y bloquea PTT. La decisión es dónde se accede y qué feedback persistente confirma el estado para evitar que alguien crea estar transmitiendo.",
+    "example": "Escenario visual: comparar un botón junto al indicador PTT, una fila en el menú rápido y una combinación de ambos con icono rojo persistente.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Menú rápido más icono",
+        "detail": "Mute propio está en el menú rápido y deja un icono persistente en HUD/sala. Equilibra acceso y prevención de cambios accidentales."
+      },
+      {
+        "id": "B",
+        "label": "Junto al control PTT",
+        "detail": "Colocar mute al lado de la asignación/indicador PTT y mostrar respuesta bloqueada al mantener. Es directo para teclado/control."
+      },
+      {
+        "id": "C",
+        "label": "Acceso doble coherente",
+        "detail": "Permitir cambiarlo desde menú rápido y Ajustes, ambos sincronizados y con el mismo icono persistente. Es más descubrible, pero añade dos puntos a probar."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Online/VoiceOnlineSession.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "O15",
+    "section": "Voz y sonido",
+    "title": "Alcance temporal del mute de otra persona",
+    "why": "El mute ajeno es local y nunca cambia lo que oyen los demás. Todas las opciones evitan almacenamiento permanente de identidad; cambia si se restablece durante la misma reunión.",
+    "example": "Escenario visual: un altavoz tachado en el roster indica «silenciado para ti» y explica cuándo se quitará: al terminar ronda, al salir de la sala o tras una confirmación nueva.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Hasta salir de la sala",
+        "detail": "Mantenerlo entre rondas de la misma sala y borrarlo al salir. Evita repetir la acción y no crea una lista persistente."
+      },
+      {
+        "id": "B",
+        "label": "Sólo la ronda actual",
+        "detail": "Restablecerlo al mostrar resultados. Sirve para situaciones momentáneas, aunque puede reactivar una voz al empezar la siguiente."
+      },
+      {
+        "id": "C",
+        "label": "Preguntar al cambiar ronda",
+        "detail": "Mantenerlo durante la ronda y, en resultados, ofrecer Conservar o Quitar. Da control explícito con una interacción adicional."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "unity/Assets/LetMeSleep/Online/VoiceOnlineSession.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "O16",
+    "section": "Voz y sonido",
+    "title": "Distancia base de voz por proximidad",
+    "why": "Hay que escoger una propuesta medible para empezar a balancear los cinco mapas. Todas usan voz clara cerca, caída gradual y corte; los números son provisionales hasta prueba en escala real.",
+    "example": "Escenario visual: anillos desde cada actor con zona clara y zona de caída. Comparar 4/12 m, 6/18 m y perfiles interior/exterior, escuchando puertas y pisos.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Clara 4 m, corte 12 m",
+        "detail": "Favorece encuentros cercanos y reduce ruido simultáneo. Puede ser demasiado corta en exteriores amplios."
+      },
+      {
+        "id": "B",
+        "label": "Clara 6 m, corte 18 m",
+        "detail": "Da margen para coordinación en habitaciones y patios; aumenta solapamiento y ancho de banda audible."
+      },
+      {
+        "id": "C",
+        "label": "Dos perfiles 4/12 y 8/24",
+        "detail": "Usar perfil interior y exterior declarados por mapa. Se adapta a escala, pero duplica balance y pruebas por entorno."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O17",
+    "section": "Voz y sonido",
+    "title": "Audición entre roles dentro de proximidad",
+    "why": "La voz física entre ambos bandos se conserva. La decisión es cuánto atenuar la voz rival dentro del alcance antes de aplicar la ventaja específica mosquito‑mosquito.",
+    "example": "Escenario visual: matriz Humano↔Humano, Humano↔Mosquito y Mosquito↔Mosquito; todas las celdas son audibles cerca, con curvas iguales o atenuadas.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Curva base compartida",
+        "detail": "Humanos y mosquitos se oyen con la misma curva base; luego la regla mosquito modifica timbre y alcance por oyente. Es fácil de aprender."
+      },
+      {
+        "id": "B",
+        "label": "Rival 25 % más bajo",
+        "detail": "Dentro del mismo radio, la voz del rol rival recibe 25 % menos ganancia. Refuerza equipos sin ocultar una presencia cercana."
+      },
+      {
+        "id": "C",
+        "label": "Rival sólo en zona clara",
+        "detail": "La voz rival se oye en la zona clara y cae más rápido después; mismo rol mantiene toda la curva. Aumenta sigilo y requiere balance fino."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O18",
+    "section": "Voz y sonido",
+    "title": "Diferencia de alcance de la voz mosquito",
+    "why": "El mosquito debe sonar más agudo sin acelerar el habla, llegar menos a humanos y resultar más inteligible entre mosquitos. Falta fijar una proporción inicial, no decidir si la ventaja existe.",
+    "example": "Escenario visual: radios superpuestos alrededor de un mosquito. Comparar corte humano/mosquito de 8/16 m, 6/18 m o una relación porcentual sobre la distancia base.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Ocho y dieciséis metros",
+        "detail": "Humanos dejan de oír a 8 m y mosquitos a 16 m, con caída gradual. Relación 1:2 fácil de comunicar y medir."
+      },
+      {
+        "id": "B",
+        "label": "Seis y dieciocho metros",
+        "detail": "Acentúa sigilo frente a humanos y coordinación mosquito. Puede aislar demasiado en mapas abiertos."
+      },
+      {
+        "id": "C",
+        "label": "Sesenta y ciento veinte por ciento",
+        "detail": "Calcular ambos cortes sobre el perfil de mapa: humanos 60 % y mosquitos 120 % de la base. Se adapta a escala, pero es menos intuitivo."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O19",
+    "section": "Voz y sonido",
+    "title": "Voz de participantes eliminados",
+    "why": "En Supervivencia puede haber eliminados antes del final. Si siguen hablando con jugadores activos podrían entregar información o distraer; si quedan completamente aislados, la espera puede sentirse vacía.",
+    "example": "Escenario visual: al ser eliminado, aparece una banda «Voz de ronda desactivada» y se indica si puede hablar con otros eliminados, sólo escuchar o quedar en silencio hasta resultados.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Canal de eliminados",
+        "detail": "Cortar envío y recepción con actores activos y permitir proximidad o chat entre eliminados en una ruta separada. Evita ventaja y mantiene compañía, pero requiere reglas claras de transición."
+      },
+      {
+        "id": "B",
+        "label": "Sólo escuchar activos",
+        "detail": "El eliminado no transmite, pero oye según cámara/proximidad. Reduce filtración saliente, aunque todavía puede recibir información y compartirla fuera del juego."
+      },
+      {
+        "id": "C",
+        "label": "Silencio hasta resultados",
+        "detail": "Detener toda voz de ronda al quedar eliminado y reactivarla en resultados. Es la regla competitiva más estricta, pero puede volver larga la espera."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/MODES-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O20",
+    "section": "Voz y sonido",
+    "title": "Intensidad de oclusión por geometría",
+    "why": "Puertas, paredes y pisos deben afectar la voz sin silencios arbitrarios. Todas las opciones usan el hook local de oclusión; cambia cuánto filtran y si distinguen puertas.",
+    "example": "Escenario visual: dos oyentes a 8 m, uno en la misma habitación y otro detrás de pared/puerta. Comparar atenuación leve, fuerte o propagación por aberturas.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Filtro leve uniforme",
+        "detail": "Una obstrucción reduce 6 dB y recorta agudos, sin cortar por completo. Es estable ante geometría imperfecta."
+      },
+      {
+        "id": "B",
+        "label": "Pared fuerte, puerta suave",
+        "detail": "Pared/piso reduce 12 dB; puerta cerrada 8 dB y abierta 2 dB. Da lectura material más rica y exige estados correctos."
+      },
+      {
+        "id": "C",
+        "label": "Propagación por abertura",
+        "detail": "Buscar una puerta o abertura cercana y atenuar según ese recorrido. Puede sonar natural en interiores, con mayor coste y casos límite."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O21",
+    "section": "Voz y sonido",
+    "title": "Mezcla de voz con ambiente, música y señales",
+    "why": "La voz debe ser comprensible sin ocultar peligro ni acciones. Todas las opciones conservan controles de volumen; cambia qué categorías bajan temporalmente al recibir voz audible.",
+    "example": "Escenario visual: mezclador Voz/Efectos/Ambiente/Música y tres curvas de ducking durante una frase: música+ambiente, sólo música o ninguna reducción automática.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Música y ambiente menos 4 dB",
+        "detail": "Aplicar ducking suave sólo mientras hay voz audible; efectos críticos quedan intactos. Favorece comprensión en mapas ruidosos."
+      },
+      {
+        "id": "B",
+        "label": "Sólo música menos 6 dB",
+        "detail": "Conservar ambiente espacial y bajar más la música. Mantiene pistas del mundo, aunque un ambiente intenso puede competir."
+      },
+      {
+        "id": "C",
+        "label": "Sin ducking, límites por voz",
+        "detail": "No mover categorías; usar compresión suave y límite de voces simultáneas, con sliders claros. Evita bombeo y depende más de ajuste del jugador."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O22",
+    "section": "Voz y sonido",
+    "title": "Ubicación de indicadores de voces audibles",
+    "why": "Nunca se marca PTT de alguien fuera de alcance. La decisión es dónde identificar a una persona cuya voz ya llegó, equilibrando orientación, legibilidad y espacio de pantalla.",
+    "example": "Escenario visual: una voz audible puede encender icono en roster, sobre el actor visible o en ambos lugares; al salir de alcance el indicador desaparece junto al audio.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Roster de sesión",
+        "detail": "Marcar nombre e icono sólo mientras su audio es audible. Funciona aunque el actor esté fuera de cámara y no revela voces fuera de regla."
+      },
+      {
+        "id": "B",
+        "label": "Sobre actor visible",
+        "detail": "Mostrar un pulso discreto sobre personajes visibles y audibles. Refuerza espacialidad, pero no identifica a quien habla detrás del jugador."
+      },
+      {
+        "id": "C",
+        "label": "Roster más pulso visible",
+        "detail": "Combinar ambos con intensidad mínima. Es la opción más clara, aunque suma elementos y necesita prueba de saturación con varias voces."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O23",
+    "section": "Entrega y validación",
+    "title": "Matriz mínima de hardware para aceptar voz",
+    "why": "Las señales sintéticas no acreditan hardware. Todas las alternativas incluyen ausencia/desconexión y al menos dos dispositivos reales; cambia la amplitud del gate inicial.",
+    "example": "Escenario visual: tabla de dispositivos con PTT, selección, nivel, mute, foco y audio residual; cada columna conserva evidencia y sistema operativo.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "USB más integrado en dos equipos",
+        "detail": "Validar headset USB e integrado en dos PCs, incluyendo desconexión y dispositivo ausente. Es el mínimo recomendado."
+      },
+      {
+        "id": "B",
+        "label": "Agregar Bluetooth",
+        "detail": "Además del mínimo USB/integrado en dos equipos, sumar Bluetooth y su cambio de perfil. Más cobertura de latencia y drivers."
+      },
+      {
+        "id": "C",
+        "label": "Agregar interfaz y mic virtual",
+        "detail": "Además de USB/integrado, probar interfaz profesional y micrófono virtual. Amplía compatibilidad, pero eleva mucho el costo del gate."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/V0.2.0-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O24",
+    "section": "Entrega y validación",
+    "title": "Momento de exigir redes independientes",
+    "why": "El objetivo es jugar con amigos online y ninguna opción permite afirmar WAN sin evidencia. La decisión es si esa sesión bloquea toda publicación o una candidata privada claramente rotulada.",
+    "example": "Escenario visual: escalera tests→dos procesos→dos equipos→redes independientes. El estado público sólo se vuelve aprobado cuando el último peldaño pasa.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Antes de cualquier release pública",
+        "detail": "Exigir al menos dos rondas con dos identidades reales en redes independientes antes de publicar v0.2.0. Mantiene el criterio completo de entrega."
+      },
+      {
+        "id": "B",
+        "label": "Candidata privada primero",
+        "detail": "Preparar y compartir con autorización la candidata para testers, sin afirmar WAN; publicar la versión final tras dos rondas WAN verificadas."
+      },
+      {
+        "id": "C",
+        "label": "Dos sesiones WAN independientes",
+        "detail": "Además de las dos rondas mínimas, repetir en otro día o par de redes. Aumenta confianza y coordinación."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/V0.2.0-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O25",
+    "section": "Entrega y validación",
+    "title": "Regla para certificar capacidad simultánea",
+    "why": "Las cifras sintéticas guían la carga, pero el máximo publicado debe pasar red, CPU, mezcla y escucha. Todas las opciones certifican únicamente lo observado; cambia el umbral deseado.",
+    "example": "Escenario visual: peldaños 2, 4, 8 y 16 con estado No probado/Probado. El texto de release toma el último peldaño verde, nunca el límite teórico.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Escalar hasta primer fallo",
+        "detail": "Probar 2→4→8→16 y certificar el último escalón que cumpla criterios. Produce el máximo basado en evidencia."
+      },
+      {
+        "id": "B",
+        "label": "Objetivo mínimo de cuatro",
+        "detail": "Bloquear release hasta cuatro personas y tratar 8/16 como mejoras si pasan. Es alcanzable para un grupo pequeño."
+      },
+      {
+        "id": "C",
+        "label": "Objetivo mínimo de ocho",
+        "detail": "Bloquear release hasta ocho personas reales o carga equivalente más escucha representativa. Ofrece mayor ambición y exige coordinación."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/VOICE-001-DESIGN.md",
+    "dependsOn": null
+  },
+  {
+    "id": "O26",
+    "section": "Entrega y validación",
+    "title": "Formato de aceptación auditiva humana",
+    "why": "La escucha es obligatoria; métricas automáticas sólo acompañan. La decisión es cuántas personas y cuánto control comparativo usar para evaluar comprensión, timbre mosquito y fatiga.",
+    "example": "Escenario visual: ficha por frase con rol, distancia, oclusión, voces simultáneas, dispositivo y puntuación; no se guardan grabaciones salvo consentimiento separado.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Dos personas con guion",
+        "detail": "Dos testers recorren frases, distancias, ambos roles, pared/puerta y solapamiento; califican comprensión y audio residual. Es el gate mínimo repetible."
+      },
+      {
+        "id": "B",
+        "label": "Tres personas y rotación",
+        "detail": "Tres testers alternan hablante/oyente/observador y repiten en dos dispositivos. Mejora cobertura y reduce sesgo individual."
+      },
+      {
+        "id": "C",
+        "label": "Comparación A/B ciega",
+        "detail": "Además del recorrido, comparar dos mezclas o timbres sin mostrar cuál es cuál. Da mejor decisión perceptual, con preparación y tiempo extra."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/VOICE-001-DESIGN.md",
+    "dependsOn": null
+  }
+]

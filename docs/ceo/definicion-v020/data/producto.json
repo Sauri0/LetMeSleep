@@ -267,7 +267,8 @@
     "recommended": null,
     "basis": "Valor provisional en código",
     "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
-    "dependsOn": null
+    "dependsOn": null,
+    "visual": "hud"
   },
   {
     "id": "P10",
@@ -551,7 +552,7 @@
       {
         "id": "A",
         "label": "Resumen temporal de cambios",
-        "detail": "Aviso de 4 segundos: «Modo: Tareas. Volvé a marcar listo». "
+        "detail": "Aviso de 4 segundos: «Modo: Tareas. Volvé a marcar listo»."
       },
       {
         "id": "B",
@@ -662,7 +663,7 @@
   {
     "id": "P23",
     "section": "Personalización",
-    "title": "¿Cómo debería recorrerse la personalización básica disponible?",
+    "title": "¿Cómo debería recorrerse el catálogo de personalización previsto?",
     "why": "Se mantienen colores de piel, pijama y mosquito; esta pregunta no añade prendas ni piezas nuevas.",
     "example": "Boceto: visor del personaje y paletas en un lateral.",
     "priority": "decisiva",
@@ -671,17 +672,17 @@
       {
         "id": "A",
         "label": "Por rol primero",
-        "detail": "Elegir Humano o Mosquito y después sus colores; pocas opciones simultáneas."
+        "detail": "Elegir Humano o Mosquito y después cuerpo, piezas y colores; pocas opciones simultáneas."
       },
       {
         "id": "B",
         "label": "Ambos roles juntos",
-        "detail": "Dos previews y sus paletas; comparación rápida con menos tamaño por personaje."
+        "detail": "Dos previews y acceso a categorías de cada rol; comparación rápida con menos tamaño por personaje."
       },
       {
         "id": "C",
         "label": "Asistente corto",
-        "detail": "Piel, pijama y mosquito en tres pasos; guía clara pero más navegación."
+        "detail": "Pasos por cuerpo, rostro, ropa/accesorios y colores; guía clara pero más navegación."
       }
     ],
     "recommended": null,
@@ -752,7 +753,7 @@
   {
     "id": "P26",
     "section": "Personalización",
-    "title": "¿Cómo debería guardarse una nueva combinación de colores?",
+    "title": "¿Cómo debería guardarse una nueva combinación de piezas y colores?",
     "why": "El juego ya persiste apariencia; esta decisión define el compromiso visible del usuario.",
     "example": "Probás tres pijamas y cerrás la pantalla sin querer.",
     "priority": "detalle",
@@ -812,7 +813,7 @@
   {
     "id": "P28",
     "section": "Personalización",
-    "title": "¿Cómo te gustaría reutilizar combinaciones dentro del catálogo existente?",
+    "title": "¿Cómo te gustaría reutilizar combinaciones del catálogo acordado?",
     "why": "Explora comodidad de uso sin introducir progresión, ventas ni más piezas artísticas.",
     "example": "Alternar entre dos combinaciones de colores que te gustan para ambos roles.",
     "priority": "decisiva",

@@ -1,0 +1,44 @@
+{
+  "created_at_utc": "2026-09-20T06:14:15.329075+00:00",
+  "questions": 150,
+  "options": 450,
+  "sections": {
+    "Identidad y experiencia": 8,
+    "Interfaz y accesibilidad": 14,
+    "Personalización": 6,
+    "Jugabilidad": 8,
+    "Modos": 8,
+    "Inventario y herramientas": 8,
+    "Bots": 8,
+    "Arte y personajes": 12,
+    "Animación y cámaras": 10,
+    "Mapas y ambiente": 12,
+    "Catálogo y alcance exacto": 12,
+    "Reglas por cerrar": 8,
+    "Online y sesiones": 10,
+    "Voz y sonido": 12,
+    "Entrega y validación": 6,
+    "Música y efectos": 8
+  },
+  "checks": [
+    "150 unique IDs, 450 valid options and dependency IDs",
+    "node --check browser script passed",
+    "Browser page renders without console errors",
+    "Single answer persisted across reload",
+    "Delegation counted separately from answered",
+    "Custom answer requires text",
+    "Multiple selection checked on J21",
+    "Search by ID produced one question",
+    "Initial route produced exactly 20 after clearing filter",
+    "Markdown export button initiated download",
+    "JSON import accepted known ID and ignored unknown ID",
+    "Four visual comparisons rendered",
+    "Final state: zero answered, zero delegated, 150 pending; test notes removed"
+  ],
+  "limitations": [
+    "User responses not provided yet",
+    "No gameplay decisions approved by recommendations",
+    "No live game artwork or WAN acceptance asserted"
+  ],
+  "sha256_index": "356c66bffbc18b3327ee8a1e1c556f9471b99bf28c42ffeb142707a06fa2cb35"
+}

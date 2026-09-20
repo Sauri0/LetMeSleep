@@ -1,0 +1,4525 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "P01",
+      "section": "Identidad y experiencia",
+      "title": "¿Qué sensación debería dominar una buena partida entre amigos?",
+      "why": "Orienta el ritmo y la presentación sin cambiar los roles ni los tres modos acordados.",
+      "example": "Imaginate contar la partida: «Nos reímos del susto», «Casi nos descubren» o «Ganamos por coordinarnos».",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Comedia de situación",
+          "detail": "Errores y escapes divertidos; celebraciones breves y expresivas."
+        },
+        {
+          "id": "B",
+          "label": "Tensión ligera",
+          "detail": "Momentos tranquilos que hacen más intenso un encuentro; menos festejos durante la ronda."
+        },
+        {
+          "id": "C",
+          "label": "Cooperación competitiva",
+          "detail": "Que se entiendan las decisiones del equipo y por qué funcionaron; presentación más sobria."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/V0.2.0-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P02",
+      "section": "Identidad y experiencia",
+      "title": "¿Qué tono deberían tener los textos del juego?",
+      "why": "Define una voz consistente para botones, ayudas y errores.",
+      "example": "Al quedar eliminado: «Se terminó tu vuelo», «Eliminado: observá a tu equipo» o «Eliminado. Tab: siguiente aliado».",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Cercano con humor discreto",
+          "detail": "Frases cálidas fuera del combate; instrucciones literales cuando hay que actuar."
+        },
+        {
+          "id": "B",
+          "label": "Claro y conversacional",
+          "detail": "Español rioplatense directo, sin bromas que tapen una instrucción."
+        },
+        {
+          "id": "C",
+          "label": "Breve y neutral",
+          "detail": "Mensajes de pocas palabras; menos personalidad y lectura más rápida."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P03",
+      "section": "Identidad y experiencia",
+      "title": "¿Qué debería destacar la primera pantalla para un amigo nuevo?",
+      "why": "Todos conservan acceso a jugar, entrenar y ajustes; cambia la jerarquía visual.",
+      "example": "Boceto: una tarjeta central grande y dos accesos secundarios debajo.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Entrar con amigos",
+          "detail": "Unirse con código es la tarjeta principal; entrenamiento queda a un clic."
+        },
+        {
+          "id": "B",
+          "label": "Prepararse para jugar",
+          "detail": "Entrenamiento ocupa la tarjeta principal en el primer inicio; luego se recuerda jugar online."
+        },
+        {
+          "id": "C",
+          "label": "Elegir sin preferencia",
+          "detail": "Crear, unirse y entrenar aparecen con igual tamaño; hay más decisiones de entrada."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P04",
+      "section": "Identidad y experiencia",
+      "title": "¿Cómo debería aprender alguien su rol la primera vez?",
+      "why": "Define la ayuda inicial; no cambia que los roles online se sorteen cada ronda.",
+      "example": "Un amigo entra por primera vez como mosquito y necesita entender vuelo, posarse y picar.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Tarjeta de 20 segundos",
+          "detail": "Tres controles esenciales antes de jugar, descartable de inmediato; aprendizaje durante la ronda."
+        },
+        {
+          "id": "B",
+          "label": "Práctica guiada de 2 minutos",
+          "detail": "Ofrecer tres pasos en entrenamiento antes de unirse; siempre se puede omitir."
+        },
+        {
+          "id": "C",
+          "label": "Ayuda contextual",
+          "detail": "Sin tarjeta inicial; una pista aparece al acercarse por primera vez a cada interacción."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/MODES-UI-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P05",
+      "section": "Identidad y experiencia",
+      "title": "¿Cuándo deberían retirarse las ayudas para principiantes?",
+      "why": "Evita que las pistas permanentes molesten o que desaparezcan demasiado pronto.",
+      "example": "La pista de posarse aparece antes de usar F; después de varios intentos puede dejar de mostrarse.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Después del primer éxito",
+          "detail": "La pista se retira al completar esa acción una vez; se recupera desde ayuda."
+        },
+        {
+          "id": "B",
+          "label": "Después de tres éxitos",
+          "detail": "Repite hasta tres usos correctos por acción; más apoyo durante la adaptación."
+        },
+        {
+          "id": "C",
+          "label": "Cuando el jugador decida",
+          "detail": "Permanecen hasta desactivar «Ayudas»; el control es explícito y el HUD más ocupado."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/MODES-UI-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P06",
+      "section": "Identidad y experiencia",
+      "title": "¿Qué prioridad debe guiar la primera sesión de prueba con amigos?",
+      "why": "Todos los requisitos de entrega siguen vigentes; esto ordena la sesión y la observación.",
+      "example": "Sesión propuesta de 30 minutos, con una meta clara para las notas de prueba.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Entrar y repetir sin fricción",
+          "detail": "Medir desde código de sala hasta revancha; registrar cada espera o salida inesperada."
+        },
+        {
+          "id": "B",
+          "label": "Entender lo que ocurre",
+          "detail": "Observar si pueden explicar roles, acciones y resultados sin ayuda externa."
+        },
+        {
+          "id": "C",
+          "label": "Sentir bien los controles",
+          "detail": "Concentrarse en cámara, vuelo, superficies y defensa; registrar situaciones incómodas."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/V0.2.0-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P07",
+      "section": "Identidad y experiencia",
+      "title": "¿Cómo se debería ofrecer ayuda después de una dificultad repetida?",
+      "why": "Define acompañamiento sin alterar dificultad, daño ni información del rival.",
+      "example": "Un jugador falla tres intentos de posarse o no termina su primera tarea.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Consejo opcional discreto",
+          "detail": "Mostrar una sola sugerencia breve tras tres intentos; nunca pausar."
+        },
+        {
+          "id": "B",
+          "label": "Acceso a práctica al terminar",
+          "detail": "Ofrecer repetir esa acción en entrenamiento desde resultados; no intervenir en combate."
+        },
+        {
+          "id": "C",
+          "label": "Sólo ayuda solicitada",
+          "detail": "No inferir errores; el jugador abre la guía cuando la necesita."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/MODES-UI-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P08",
+      "section": "Identidad y experiencia",
+      "title": "¿Qué información debería acompañar el cambio de rol entre rondas?",
+      "why": "La asignación aleatoria permanece; se define cómo comunicar el cambio.",
+      "example": "Después de jugar humano, la siguiente ronda te asigna mosquito.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Tarjeta de rol durante 3 segundos",
+          "detail": "Rol, objetivo del modo y tres controles; luego se desvanece."
+        },
+        {
+          "id": "B",
+          "label": "Aviso compacto durante 1 segundo",
+          "detail": "Nombre e icono del rol; ayuda completa disponible bajo demanda."
+        },
+        {
+          "id": "C",
+          "label": "Tarjeta sólo al cambiar de rol",
+          "detail": "Mostrar 3 segundos si el rol difiere del anterior; si se repite, aviso de 1 segundo."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/MODES-UI-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P09",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Cuánta información debería permanecer visible en el HUD?",
+      "why": "Busca equilibrio entre vista del mundo y lectura inmediata. Las tareas siguen privadas para su dueño.",
+      "example": "Boceto: marcador arriba, estado propio abajo y tarjeta de tarea en un lateral.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Esencial siempre visible",
+          "detail": "Tiempo, marcador, vidas y tarea compacta; detalle al mantener una tecla."
+        },
+        {
+          "id": "B",
+          "label": "Información contextual",
+          "detail": "Tiempo y marcador fijos; controles y detalles de tarea aparecen cuando son relevantes."
+        },
+        {
+          "id": "C",
+          "label": "Panel completo",
+          "detail": "Estado, controles, plazo y progreso siempre visibles; mayor ocupación de pantalla."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null,
+      "visual": "hud"
+    },
+    {
+      "id": "P10",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Cómo preferís leer el avance de tu tarea privada?",
+      "why": "La misma información puede mostrarse con distintas densidades. No añade pistas para rivales.",
+      "example": "Ejemplo: «Limpiar el lavadero · 40 % · quedan 32 s».",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Barra y porcentaje",
+          "detail": "Título, barra horizontal y 40 %; preciso y fácil de comparar."
+        },
+        {
+          "id": "B",
+          "label": "Barra sin porcentaje",
+          "detail": "Título y avance visual, con segundos restantes; menos números."
+        },
+        {
+          "id": "C",
+          "label": "Texto compacto",
+          "detail": "Una línea con nombre, porcentaje y tiempo; ocupa menos altura."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "docs/ceo/MODES-UI-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P11",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Cómo debería destacarse un plazo de tarea que está por vencer?",
+      "why": "Se define énfasis visual local, no cambiar el plazo de las reglas.",
+      "example": "Quedan 10 segundos y el jugador todavía está limpiando.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Umbral fijo de 10 segundos",
+          "detail": "Borde destacado y texto «Poco tiempo», sin parpadeo."
+        },
+        {
+          "id": "B",
+          "label": "Último 20 % del plazo",
+          "detail": "El aviso se adapta a la duración asignada; puede aparecer antes en tareas largas."
+        },
+        {
+          "id": "C",
+          "label": "Tiempo legible sin alarma",
+          "detail": "El contador permanece estable; se evita urgencia visual añadida."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/MODES-UI-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P12",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Cómo debería explicar el HUD una acción que no se puede hacer?",
+      "why": "Reduce intentos confusos sin revelar objetivos o posiciones privadas ajenas.",
+      "example": "Mantenés R lejos de tu objetivo asignado.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Razón inmediata",
+          "detail": "Mostrar «Acercate a tu tarea» durante 2 segundos al intentar."
+        },
+        {
+          "id": "B",
+          "label": "Pista antes de intentar",
+          "detail": "Cambiar la indicación según distancia y estado; más información en pantalla."
+        },
+        {
+          "id": "C",
+          "label": "Detalle bajo demanda",
+          "detail": "Mostrar sólo que no está disponible; la guía explica distancia, estado e interrupciones."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "docs/ceo/MODES-UI-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P13",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Qué escala de interfaz querés como referencia para una pantalla de 1080p?",
+      "why": "Orienta la densidad; las cifras son propuestas a probar, no un resultado de legibilidad certificado.",
+      "example": "Comparar el mismo HUD con texto de cuerpo de 18, 22 o 26 píxeles aproximados.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Compacta: 18 px",
+          "detail": "Más mundo visible y paneles menores; lectura más exigente a distancia."
+        },
+        {
+          "id": "B",
+          "label": "Media: 22 px",
+          "detail": "Equilibra lectura y espacio; algunos textos ocuparán dos líneas."
+        },
+        {
+          "id": "C",
+          "label": "Grande: 26 px",
+          "detail": "Prioriza lectura desde más lejos; requiere redistribuir tarjetas y botones."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P14",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Cómo deberían distinguirse estados sin depender sólo del color?",
+      "why": "Listo, conexión, advertencias y vidas deben poder compararse visualmente.",
+      "example": "Ver «Listo» y «Sin conexión» en el lobby aunque sus colores se perciban similares.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Icono y texto en todos los estados",
+          "detail": "Redundancia permanente; filas un poco más anchas."
+        },
+        {
+          "id": "B",
+          "label": "Icono permanente, texto al enfocar",
+          "detail": "Vista más limpia; necesita explorar con cursor o navegación."
+        },
+        {
+          "id": "C",
+          "label": "Texto permanente, icono en alertas",
+          "detail": "Lectura directa y menos símbolos; depende más del idioma."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P15",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Qué control de movimiento visual debería ofrecerse en ajustes?",
+      "why": "Define alcance de una preferencia de comodidad sin alterar la simulación.",
+      "example": "Una persona disfruta el escenario del menú pero le incomoda el movimiento continuo de cámara.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Un interruptor global",
+          "detail": "«Reducir movimiento» atenúa transiciones y adornos; configuración simple."
+        },
+        {
+          "id": "B",
+          "label": "Menú y juego separados",
+          "detail": "Dos controles permiten conservar animación del menú y reducir efectos de cámara en partida."
+        },
+        {
+          "id": "C",
+          "label": "Controles por efecto",
+          "detail": "Balanceo, transiciones y pulsos por separado; mayor flexibilidad y más ajustes."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiContracts.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P16",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Qué formato debería tener la guía de controles?",
+      "why": "La primera implementación tiene controles concretos; aquí se define cómo enseñarlos.",
+      "example": "Humano: defender y usar herramientas. Mosquito: vuelo, superficie y picadura.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Dos tarjetas por rol",
+          "detail": "Un esquema de teclado para cada rol, accesible desde pausa."
+        },
+        {
+          "id": "B",
+          "label": "Lista por acción",
+          "detail": "Buscar «Posarse» o «Soltar objeto»; menos visual pero más fácil de recorrer."
+        },
+        {
+          "id": "C",
+          "label": "Demostraciones breves",
+          "detail": "Clips o animaciones de 5–8 segundos por acción; requieren producir y mantener más contenido."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P17",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Cómo te gustaría ajustar la sensibilidad de cada rol?",
+      "why": "Ya existen valores separados; se define cómo hacerlos comprensibles.",
+      "example": "El vuelo necesita una sensibilidad diferente de la defensa humana.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Deslizador y número",
+          "detail": "Mostrar el valor de cada rol y restablecer; ajuste directo."
+        },
+        {
+          "id": "B",
+          "label": "Tres presets y ajuste fino",
+          "detail": "Suave, media y rápida, más deslizador opcional; mejor punto de partida."
+        },
+        {
+          "id": "C",
+          "label": "Zona breve de prueba",
+          "detail": "Cambiar el valor mientras se mira un objetivo de práctica; exige una pantalla interactiva adicional."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiContracts.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P18",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Cómo debería organizarse la selección de los cinco mapas en el lobby?",
+      "why": "El anfitrión sigue eligiendo entre los cinco mapas; cambia el acceso visual.",
+      "example": "Boceto A: una imagen grande con flechas. B: cinco miniaturas. C: lista y vista previa.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Una tarjeta con flechas",
+          "detail": "Preview grande del mapa elegido; comparar exige recorrerlos."
+        },
+        {
+          "id": "B",
+          "label": "Cinco miniaturas visibles",
+          "detail": "Comparación inmediata; cada imagen tendrá menos detalle."
+        },
+        {
+          "id": "C",
+          "label": "Lista de nombres y preview",
+          "detail": "Más espacio para descripción y modo; lectura menos visual."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P19",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Cómo debería comunicarse un cambio de reglas hecho por el anfitrión?",
+      "why": "El estado de listo se invalida; aquí se decide cómo explicar qué cambió.",
+      "example": "Estabas listo y el anfitrión cambia de Sangre a Tareas.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Resumen temporal de cambios",
+          "detail": "Aviso de 4 segundos: «Modo: Tareas. Volvé a marcar listo»."
+        },
+        {
+          "id": "B",
+          "label": "Fila resaltada hasta estar listo",
+          "detail": "Destacar las reglas modificadas hasta tu nueva confirmación; menos avisos flotantes."
+        },
+        {
+          "id": "C",
+          "label": "Panel de última modificación",
+          "detail": "Mostrar permanentemente quién cambió qué y cuándo; agrega información al lobby."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "docs/ceo/MODES-UI-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P20",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Qué debería priorizar la pantalla de resultados?",
+      "why": "La victoria y su causa siempre deben quedar claras; cambia el segundo nivel de información.",
+      "example": "Final de Tareas: gana Humanos porque completa la meta compartida.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Causa y revancha",
+          "detail": "Ganador, objetivo alcanzado y volver a la sala; lectura en pocos segundos."
+        },
+        {
+          "id": "B",
+          "label": "Resumen del equipo",
+          "detail": "Añadir marcador final, tiempo y vivos; sin revelar tareas privadas ajenas."
+        },
+        {
+          "id": "C",
+          "label": "Resumen personal",
+          "detail": "Añadir tus acciones y tareas propias a la causa de victoria; requiere registrar estadísticas adicionales."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "docs/ceo/MODES-UI-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P21",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Cómo debería presentarse la observación después de quedar eliminado?",
+      "why": "Sólo se observa a aliados vivos y nunca se cambia el dueño de datos privados.",
+      "example": "Boceto: «Espectador · Ana» arriba y «Tab: siguiente aliado» abajo.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "HUD mínimo",
+          "detail": "Nombre del aliado, marcador público y control para cambiar; más espacio para mirar."
+        },
+        {
+          "id": "B",
+          "label": "Contexto del equipo",
+          "detail": "Añadir lista de aliados vivos y quién estás observando; no mostrar sus tareas privadas."
+        },
+        {
+          "id": "C",
+          "label": "Ayuda de espectador al entrar",
+          "detail": "Tarjeta explicativa de 3 segundos y luego HUD mínimo; enseña sin ocupar toda la espera."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "docs/ceo/MODES-UI-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "P22",
+      "section": "Interfaz y accesibilidad",
+      "title": "¿Cómo deberían explicarse los errores al entrar a una sala?",
+      "why": "La persona debe saber qué puede hacer sin interpretar mensajes técnicos.",
+      "example": "El código es correcto pero el anfitrión cerró la sala.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Mensaje y siguiente acción",
+          "detail": "«La sala se cerró» con Volver y un campo para otro código."
+        },
+        {
+          "id": "B",
+          "label": "Mensaje con diagnóstico desplegable",
+          "detail": "Misma ayuda simple y un detalle copiable para reportar problemas."
+        },
+        {
+          "id": "C",
+          "label": "Pasos de ayuda en pantalla",
+          "detail": "Mostrar dos o tres comprobaciones según el error; más texto, menos búsqueda externa."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P23",
+      "section": "Personalización",
+      "title": "¿Cómo debería recorrerse el catálogo de personalización previsto?",
+      "why": "Se mantienen colores de piel, pijama y mosquito; esta pregunta no añade prendas ni piezas nuevas.",
+      "example": "Boceto: visor del personaje y paletas en un lateral.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Por rol primero",
+          "detail": "Elegir Humano o Mosquito y después cuerpo, piezas y colores; pocas opciones simultáneas."
+        },
+        {
+          "id": "B",
+          "label": "Ambos roles juntos",
+          "detail": "Dos previews y acceso a categorías de cada rol; comparación rápida con menos tamaño por personaje."
+        },
+        {
+          "id": "C",
+          "label": "Asistente corto",
+          "detail": "Pasos por cuerpo, rostro, ropa/accesorios y colores; guía clara pero más navegación."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P24",
+      "section": "Personalización",
+      "title": "¿Cómo deberían identificarse los colores de una paleta?",
+      "why": "Facilita elegir y recordar una apariencia sin depender únicamente de la muestra visual.",
+      "example": "Una muestra de pijama azul puede decir «Azul noche» o llevar un código breve.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Muestra y nombre",
+          "detail": "Cada color tiene un nombre visible; paleta más grande."
+        },
+        {
+          "id": "B",
+          "label": "Muestra con nombre al enfocar",
+          "detail": "Más compacta; el nombre aparece con cursor o selección por teclado."
+        },
+        {
+          "id": "C",
+          "label": "Muestra y número",
+          "detail": "Identificadores 01–08 para comunicar el color; menos expresivo y más fácil de citar."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P25",
+      "section": "Personalización",
+      "title": "¿Qué interacción debería ofrecer el visor de apariencia?",
+      "why": "Define cómo revisar los colores sin cambiar modelos o ampliar el catálogo artístico.",
+      "example": "Querés comprobar cómo se ve el pijama por detrás antes de guardar.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Giro libre con arrastre",
+          "detail": "Rotar con cursor y botón de restablecer vista; control continuo."
+        },
+        {
+          "id": "B",
+          "label": "Vistas predefinidas",
+          "detail": "Frente, espalda y perfil; comparación consistente con menos control."
+        },
+        {
+          "id": "C",
+          "label": "Giro automático opcional",
+          "detail": "Botón para una vuelta de 8 segundos y pausa; cómodo para observar sin arrastrar."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/CharacterPreviewOrbit.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P26",
+      "section": "Personalización",
+      "title": "¿Cómo debería guardarse una nueva combinación de piezas y colores?",
+      "why": "El juego ya persiste apariencia; esta decisión define el compromiso visible del usuario.",
+      "example": "Probás tres pijamas y cerrás la pantalla sin querer.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Aplicar explícitamente",
+          "detail": "Guardar y cancelar; los cambios sin guardar piden confirmación."
+        },
+        {
+          "id": "B",
+          "label": "Guardar cada cambio con deshacer",
+          "detail": "Resultado inmediato y botón para volver a la combinación inicial de esa sesión."
+        },
+        {
+          "id": "C",
+          "label": "Confirmar al salir",
+          "detail": "Probar sin guardar y elegir conservar o descartar al cerrar; un paso final obligatorio."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P27",
+      "section": "Personalización",
+      "title": "¿Qué debería ocurrir al cambiar apariencia mientras estás en el lobby?",
+      "why": "Define el momento de mostrar el cambio a amigos; no afecta habilidades ni roles.",
+      "example": "Cambiás el color del mosquito mientras los demás esperan para iniciar.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Publicar al aplicar",
+          "detail": "Los demás ven la combinación cuando la guardás; evita ver pruebas intermedias."
+        },
+        {
+          "id": "B",
+          "label": "Vista previa compartida",
+          "detail": "Los demás ven cada prueba de color; más expresión, más actualizaciones visuales."
+        },
+        {
+          "id": "C",
+          "label": "Aplicar al volver a la sala",
+          "detail": "El editor queda privado hasta cerrarlo y confirmar; cambio visible en un momento claro."
+        }
+      ],
+      "recommended": null,
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Bootstrap/AlfaApplication.Appearance.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "P28",
+      "section": "Personalización",
+      "title": "¿Cómo te gustaría reutilizar combinaciones del catálogo acordado?",
+      "why": "Explora comodidad de uso sin introducir progresión, ventas ni más piezas artísticas.",
+      "example": "Alternar entre dos combinaciones de colores que te gustan para ambos roles.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Una combinación guardada",
+          "detail": "Mantener sólo la última; interfaz y persistencia simples."
+        },
+        {
+          "id": "B",
+          "label": "Tres favoritos locales",
+          "detail": "Guardar hasta tres combinaciones con nombre; añade una pequeña gestión de favoritos."
+        },
+        {
+          "id": "C",
+          "label": "Combinaciones sugeridas editables",
+          "detail": "Ofrecer seis paletas iniciales y editar sus colores; requiere diseñar las propuestas, sin desbloqueos."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/PARITY-AND-CONTENT.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J01",
+      "section": "Jugabilidad",
+      "title": "¿Cómo debe gastar estamina el humano al correr?",
+      "why": "Define cuánto puede escapar o rotar entre tareas sin convertir la carrera en movimiento permanente.",
+      "example": "Propuesta de referencia: con la barra llena, un humano cruza un pasillo durante 6 segundos a 5 m/s; luego vuelve a 3,1 m/s sin quedar inmóvil.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Consumo continuo",
+          "detail": "Propuesta: 100 puntos, coste 16/s; permite unos 6,25 s de carrera completa y caminar siempre."
+        },
+        {
+          "id": "B",
+          "label": "Ráfagas cortas",
+          "detail": "Propuesta: 100 puntos, coste 25/s; unos 4 s de carrera, pensada para esquivas breves."
+        },
+        {
+          "id": "C",
+          "label": "Aceleración progresiva",
+          "detail": "El coste crece mientras se mantiene correr: barato al inicio y caro después de 3 s."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J02",
+      "section": "Jugabilidad",
+      "title": "¿Cuándo y a qué ritmo se recupera la estamina humana?",
+      "why": "El retardo de recuperación determina si perseguir, defender y cumplir tareas forma ciclos legibles o pausas frustrantes.",
+      "example": "Tras correr hasta cero, el jugador se esconde detrás de una puerta. ¿Cuánto tarda en volver a tener una carrera útil?",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Pausa breve",
+          "detail": "Propuesta: retardo de 1,25 s y recuperación de 22 puntos/s; de cero a lleno en 4,55 s."
+        },
+        {
+          "id": "B",
+          "label": "Recuperación inmediata",
+          "detail": "Propuesta: sin retardo y 14 puntos/s; suaviza el control pero favorece alternar carrera a pulsos."
+        },
+        {
+          "id": "C",
+          "label": "Recuperación por postura",
+          "detail": "Propuesta: 12/s caminando y 28/s quieto o agachado; premia detenerse de forma visible."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J03",
+      "section": "Jugabilidad",
+      "title": "¿Qué acciones humanas, además de correr, consumen estamina?",
+      "why": "Evita que salto, golpes y herramientas exigentes tengan costes contradictorios o dejen al jugador sin defensa básica.",
+      "example": "Un humano llega sin estamina y un mosquito se posa cerca: la palmada básica debe seguir disponible, pero una cadena de saltos o raquetazos puede limitarse.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Salto y herramientas pesadas",
+          "detail": "Propuesta: salto 12; raqueta/aerosol según recurso propio; palmada y matamoscas básico cuestan 0."
+        },
+        {
+          "id": "B",
+          "label": "Sólo correr",
+          "detail": "La barra nunca condiciona saltos ni defensa; las herramientas usan únicamente cooldown o munición."
+        },
+        {
+          "id": "C",
+          "label": "Saltos y acciones cargadas",
+          "detail": "Propuesta: salto 10 y lanzamiento cargado 8–15; manos y defensa básica siempre gratuitas, sin reservar una única palmada."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J04",
+      "section": "Jugabilidad",
+      "title": "¿Qué sensación debe tener la aceleración y el freno del mosquito?",
+      "why": "W ya sigue la mirada; faltan la inercia y la distancia de frenado que hacen al vuelo preciso o desafiante.",
+      "example": "Volando a 3,8 m/s hacia una pared, el jugador suelta W a un metro. La opción elegida decide si se detiene a tiempo o debe anticipar.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Ágil con freno fuerte",
+          "detail": "Conservar propuesta actual: aceleración 13 m/s², frenado 28 m/s² y velocidad 3,8 m/s."
+        },
+        {
+          "id": "B",
+          "label": "Inercia moderada",
+          "detail": "Propuesta: aceleración 10, frenado 16 y velocidad 4,1 m/s; exige anticipar sin sentirse flotante."
+        },
+        {
+          "id": "C",
+          "label": "Vuelo muy preciso",
+          "detail": "Propuesta: aceleración 20, frenado 36 y velocidad 3,5 m/s; prioriza entrar por huecos pequeños."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/GameplayAuthority.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J05",
+      "section": "Jugabilidad",
+      "title": "¿Cómo se activa y cancela el posado del mosquito?",
+      "why": "El control debe distinguir intención de posarse, caminar por superficies y volver a volar sin enganches accidentales.",
+      "example": "El mosquito roza el marco de una puerta mientras persigue a alguien: ¿se posa sólo si pulsó la acción o por contacto automático?",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Alternar con tecla",
+          "detail": "Una pulsación busca superficie; otra o saltar desprende. El roce normal no cambia de estado."
+        },
+        {
+          "id": "B",
+          "label": "Mantener para adherir",
+          "detail": "Se posa mientras la acción está sostenida y se desprende al soltar; reduce estados persistentes."
+        },
+        {
+          "id": "C",
+          "label": "Contacto asistido",
+          "detail": "Con velocidad baja se posa automáticamente; una tecla desactiva temporalmente la adhesión."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J06",
+      "section": "Jugabilidad",
+      "title": "¿Qué compromiso temporal debe exigir iniciar una picadura?",
+      "why": "La preparación define la ventana de reacción humana antes de que empiece la extracción.",
+      "example": "Un mosquito consigue contacto válido en un brazo. Con 0,6 s de preparación el humano ve y oye la amenaza antes de que la sangre progrese.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Preparación de 0,6 s",
+          "detail": "Conservar el valor provisional; soltar, perder contacto o recibir golpe cancela y obliga a preparar otra vez."
+        },
+        {
+          "id": "B",
+          "label": "Preparación de 0,35 s",
+          "detail": "Ataque más inmediato; requiere señales muy claras y favorece al mosquito en encuentros cortos."
+        },
+        {
+          "id": "C",
+          "label": "Preparación variable",
+          "detail": "Propuesta: 0,45 s en zonas expuestas y 0,8 s en espalda; añade balance según superficie sin marcas visuales."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J07",
+      "section": "Jugabilidad",
+      "title": "¿Cómo debe recuperarse un humano después del desmayo?",
+      "why": "La duración y el control durante la recuperación determinan si el desmayo es una consecuencia clara o un bloqueo prolongado.",
+      "example": "La extracción se completa, el humano cae y aterriza. La propuesta actual inicia 12 s de recuperación desde el apoyo y añade 1,5 s de protección al levantarse.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "12 s más protección",
+          "detail": "Conservar 12 s desde el aterrizaje, transición de 0,4 s y protección de 1,5 s al volver."
+        },
+        {
+          "id": "B",
+          "label": "Recuperación corta",
+          "detail": "Propuesta: 8 s y protección 2 s; reduce tiempo sin control y evita repicadura inmediata."
+        },
+        {
+          "id": "C",
+          "label": "Recuperación activa",
+          "detail": "Propuesta: base 14 s, reducible hasta 8 s con una secuencia simple; nunca afecta la defensa básica al despertar."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J08",
+      "section": "Jugabilidad",
+      "title": "¿Qué interacción gana cuando varios objetos están bajo la mirada?",
+      "why": "Puertas, tareas, rescates y pickups pueden compartir una zona; una prioridad fija evita acciones sorpresivas.",
+      "example": "Un aliado caído está junto a una puerta y un aerosol. El jugador mantiene Usar: debe quedar claro si rescata, abre o recoge.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Contexto vital primero",
+          "detail": "Prioridad propuesta: rescate > tarea activa > puerta > pickup; HUD muestra una sola acción elegida."
+        },
+        {
+          "id": "B",
+          "label": "Centro de mirada",
+          "detail": "Gana el collider más centrado y cercano, sin prioridad por categoría; máxima consistencia espacial."
+        },
+        {
+          "id": "C",
+          "label": "Pulsar y mantener",
+          "detail": "Pulsación usa puerta/pickup; mantener reserva rescate/tarea. Reduce ambigüedad a cambio de más aprendizaje."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/MODES-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J09",
+      "section": "Modos",
+      "title": "¿Qué duración base debe tener cada modo?",
+      "why": "Una sola duración de 180 s existe hoy, pero los ritmos de Sangre, Supervivencia y Tareas son distintos.",
+      "example": "Una sala juega tres rondas seguidas. Con perfiles distintos, Sangre puede durar 3 min, Supervivencia 2,5 min y Tareas 4 min.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Duración por modo",
+          "detail": "Propuesta: Sangre 180 s, Supervivencia 150 s y Tareas 240 s; el host elige variantes dentro de límites."
+        },
+        {
+          "id": "B",
+          "label": "Tres minutos para todos",
+          "detail": "Conservar 180 s como base común; simplifica lobby, balance y aprendizaje."
+        },
+        {
+          "id": "C",
+          "label": "Escala por población",
+          "detail": "Propuesta: base 150 s más 10 s por participante desde el tercero, con tope de 300 s."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Core/RoomSession.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J10",
+      "section": "Modos",
+      "title": "¿Cómo escala la cuota de sangre con la población?",
+      "why": "La cuota fija provisional de 20 puede ser trivial con muchos mosquitos o imposible con pocos.",
+      "example": "Con 1 humano y 1 mosquito la misma cuota no debería requerir el mismo número de contactos que con 5 humanos y 6 mosquitos.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Escala por humanos",
+          "detail": "Propuesta: 12 unidades base + 6 por humano; 18 con uno y 42 con cinco."
+        },
+        {
+          "id": "B",
+          "label": "Cuota fija 20",
+          "detail": "Conservar el valor actual en todas las salas y ajustar sólo tiempo/extracción."
+        },
+        {
+          "id": "C",
+          "label": "Escala por ambos equipos",
+          "detail": "Propuesta: 10 + 5 por humano + 2 por mosquito, con tope de 50."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J11",
+      "section": "Modos",
+      "title": "¿Cómo contribuyen varios mosquitos que pican al mismo humano?",
+      "why": "La regla determina si concentrarse en una víctima es cooperación válida o una explosión de progreso imposible de defender.",
+      "example": "Tres mosquitos pican al mismo humano durante 2 s. El código actual reparte una tasa total, de modo que no triplican el desmayo ni la sangre.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Tasa total compartida",
+          "detail": "Conservar el reparto actual: juntos aseguran continuidad, pero la víctima recibe como máximo una tasa completa."
+        },
+        {
+          "id": "B",
+          "label": "Rendimiento decreciente",
+          "detail": "Propuesta: 100% + 40% + 20% para los tres primeros; coopera sin triplicar."
+        },
+        {
+          "id": "C",
+          "label": "Suma completa",
+          "detail": "Cada mosquito aporta 100%; favorece ataques coordinados y exige fuerte contrajuego humano."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/GameplayAuthority.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J12",
+      "section": "Modos",
+      "title": "¿Cómo se distribuyen las herramientas en Supervivencia?",
+      "why": "La eliminación de un solo impacto vuelve decisivo el acceso humano a herramientas; su reposición puede inclinar toda la ronda.",
+      "example": "Un humano toma la única raqueta y luego la deja en una zona peligrosa. Falta decidir si el equipo debe recuperarla físicamente o si reaparece.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Pickups finitos por ronda",
+          "detail": "Los objetos quedan donde se sueltan y no reaparecen; el equipo debe administrarlos y recuperarlos."
+        },
+        {
+          "id": "B",
+          "label": "Reposición a 45 s",
+          "detail": "Un objeto abandonado o perdido vuelve a su soporte tras 45 s si nadie lo lleva."
+        },
+        {
+          "id": "C",
+          "label": "Sólo defensa básica",
+          "detail": "Supervivencia deshabilita herramientas y se balancea únicamente con manos y movimiento."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/MODES-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J13",
+      "section": "Modos",
+      "title": "¿Qué cadencia y plazo inicial deben usar las tareas personales?",
+      "why": "Cadencia y plazo fijan cuántas oportunidades caben y cuánto tiempo real queda para desplazarse y trabajar.",
+      "example": "Los valores provisionales emiten una oportunidad cada 40 s, con 30 s de plazo inicial y un mínimo posterior de 15 s.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "40/30/15 segundos",
+          "detail": "Conservar cadencia 40 s, plazo 30 s y mínimo 15 s; trabajo y ruta deben caber dentro."
+        },
+        {
+          "id": "B",
+          "label": "45/35/20 segundos",
+          "detail": "Más margen y menos oportunidades; apropiado para mapas grandes o jugadores nuevos."
+        },
+        {
+          "id": "C",
+          "label": "35/25/12 segundos",
+          "detail": "Más presión y rotación; requiere objetivos cercanos y tareas cortas."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/ModeRules.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J14",
+      "section": "Modos",
+      "title": "¿Qué porcentaje de oportunidades debe exigir la meta compartida de Tareas?",
+      "why": "La meta decide cuántos fallos personales puede absorber el equipo antes de perder.",
+      "example": "Si hay 12 oportunidades viables, la fórmula actual exige 8 completadas; 4 pueden fallar sin perder automáticamente.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Dos tercios",
+          "detail": "Conservar ceil(2/3): 8 de 12. Tolera fallos sin volver irrelevantes a los mosquitos."
+        },
+        {
+          "id": "B",
+          "label": "Tres cuartos",
+          "detail": "Propuesta: ceil(75%): 9 de 12. Hace cada interrupción más valiosa."
+        },
+        {
+          "id": "C",
+          "label": "Escala por dificultad",
+          "detail": "Propuesta: 60% fácil, 67% normal y 75% difícil; añade una opción visible de sala."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/ModeRules.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J15",
+      "section": "Modos",
+      "title": "¿Puede recuperarse el plazo personal después de completar tareas?",
+      "why": "Hoy cada fallo resta 3 s hasta el mínimo y los aciertos no restauran margen; eso puede crear una espiral irreversible.",
+      "example": "Una persona falla dos veces: su plazo baja de 30 a 24 s. Luego completa dos tareas seguidas. ¿Sigue en 24 o recupera tiempo?",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Recupera un escalón",
+          "detail": "Propuesta: cada acierto devuelve 3 s, hasta el plazo inicial; premia recomponerse."
+        },
+        {
+          "id": "B",
+          "label": "No recupera",
+          "detail": "Conservar el código provisional: los fallos acumulados duran toda la ronda."
+        },
+        {
+          "id": "C",
+          "label": "Racha de dos",
+          "detail": "Recupera 3 s sólo tras dos aciertos consecutivos; mantiene presión con salida gradual."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/ModeRules.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J16",
+      "section": "Modos",
+      "title": "¿Cuánta protección recibe un mosquito al reaparecer en Tareas?",
+      "why": "Las tres vidas están fijadas; falta impedir que una vida nueva se pierda antes de recuperar control sin permitir atacar invulnerable.",
+      "example": "El mosquito reaparece cerca de un humano tras perder una vida. Durante la protección puede alejarse, pero no debería iniciar una picadura segura.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "1,5 s sin atacar",
+          "detail": "Conservar 1,5 s de protección y bloquear picadura/ayuda hasta que termine o el mosquito actúe."
+        },
+        {
+          "id": "B",
+          "label": "2,5 s cancelables",
+          "detail": "Más margen para mapas abiertos; moverse no cancela, pero picar o posarse sí."
+        },
+        {
+          "id": "C",
+          "label": "1 s y mayor separación",
+          "detail": "Protección breve, con punto seguro más alejado; ninguna acción ofensiva puede aprovechar invulnerabilidad."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J17",
+      "section": "Inventario y herramientas",
+      "title": "¿Qué ocurre al recoger un objeto con los tres slots ocupados?",
+      "why": "Debe existir una regla autoritativa que evite duplicados y pérdidas accidentales.",
+      "example": "El jugador lleva matamoscas, diario y aerosol, mira una raqueta y pulsa recoger.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Intercambiar slot activo",
+          "detail": "Suelta de forma segura el objeto activo y ocupa ese slot; muestra una confirmación breve antes de ejecutar."
+        },
+        {
+          "id": "B",
+          "label": "Rechazar recogida",
+          "detail": "No cambia nada; el HUD indica Inventario lleno y obliga a soltar primero."
+        },
+        {
+          "id": "C",
+          "label": "Elegir slot",
+          "detail": "Abre un selector radial de los tres slots; el objeto elegido se suelta si hay espacio físico."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J18",
+      "section": "Inventario y herramientas",
+      "title": "¿Cómo se seleccionan slots y manos durante una acción?",
+      "why": "Cambiar equipo en mitad de un golpe, carga o aerosol necesita una cancelación predecible.",
+      "example": "El jugador está cargando un lanzamiento con botón derecho y pulsa el slot 2 o la tecla de manos.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Cambio cancela acción",
+          "detail": "1–3 seleccionan slots y una tecla vuelve a manos; cambiar cancela carga sin lanzar ni gastar recurso."
+        },
+        {
+          "id": "B",
+          "label": "Cambio bloqueado",
+          "detail": "No permite cambiar hasta terminar o cancelar explícitamente la acción actual."
+        },
+        {
+          "id": "C",
+          "label": "Cola de cambio",
+          "detail": "Registra la selección y la aplica al terminar la animación; fluido pero menos inmediato."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J19",
+      "section": "Inventario y herramientas",
+      "title": "¿Cómo se suelta una herramienta sin convertir soltar en lanzamiento?",
+      "why": "El drop debe ser reproducible en red, no atravesar paredes ni confundirse con un proyectil ofensivo.",
+      "example": "Frente a una mesa, el jugador pulsa soltar con un matamoscas; el host debe hallar una pose libre o rechazar la acción.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Depositar delante",
+          "detail": "Coloca a 0,6–1 m sobre el primer soporte libre; si no hay espacio, conserva el objeto."
+        },
+        {
+          "id": "B",
+          "label": "Caída física corta",
+          "detail": "Aparece junto a la mano con velocidad mínima y se asienta por física autoritativa."
+        },
+        {
+          "id": "C",
+          "label": "Volver a origen",
+          "detail": "Regresa al punto authored del mapa; máxima seguridad, menor naturalidad."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/GameplayAuthority.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J20",
+      "section": "Inventario y herramientas",
+      "title": "¿Qué ventaja concreta ofrece el matamoscas frente a las manos?",
+      "why": "Ya existe como herramienta, pero necesita un intercambio de alcance, área y cadencia que no vuelva inútil la defensa manual.",
+      "example": "El código provisional mide 36,5 cm del agarre al impacto y cabeza de 8,5 cm; falta decidir qué sacrifica por ese alcance.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Más alcance, más lento",
+          "detail": "Propuesta: +35% alcance, ventana/cooldown 25% más largos y área moderada."
+        },
+        {
+          "id": "B",
+          "label": "Más área, mismo alcance",
+          "detail": "Facilita acertar lateralmente, pero no alcanza zonas que las manos no puedan defender."
+        },
+        {
+          "id": "C",
+          "label": "Golpe fuerte comprometido",
+          "detail": "Derribo más largo a cambio de carga visible de 0,45 s y recuperación lenta."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J21",
+      "section": "Inventario y herramientas",
+      "title": "¿Qué objetos pueden lanzarse con carga?",
+      "why": "El plan exige lanzamiento sólo donde corresponda; la lista debe ser cerrada para animación, red y balance.",
+      "example": "Mantener botón derecho muestra potencia y soltar lanza. Un aerosol o una raqueta no deberían comportarse como una pantufla por accidente.",
+      "priority": "decisiva",
+      "type": "multi",
+      "options": [
+        {
+          "id": "A",
+          "label": "Pantufla",
+          "detail": "Arrojable recuperable, arco medio y golpe de precisión; propuesta principal."
+        },
+        {
+          "id": "B",
+          "label": "Diario enrollado",
+          "detail": "Arrojable más pesado y corto; queda en el suelo y debe recogerse."
+        },
+        {
+          "id": "C",
+          "label": "Matamoscas",
+          "detail": "Permitir lanzarlo añade riesgo de perder la herramienta de mayor alcance; no propuesto por defecto."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J22",
+      "section": "Inventario y herramientas",
+      "title": "¿Cómo se traduce la carga en potencia de lanzamiento?",
+      "why": "Necesita límites legibles para que latencia y FPS no cambien alcance ni daño.",
+      "example": "Una carga corta sirve a dos metros; una completa cruza una habitación, pero deja una ventana de recuperación.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Carga de 0,9 s",
+          "detail": "Propuesta: mínimo 35%, máximo a 0,9 s, curva suave y autoestabilización hasta 1,5 s."
+        },
+        {
+          "id": "B",
+          "label": "Tres escalones",
+          "detail": "Toque, media y completa a 0/0,5/1 s; fácil de leer y sincronizar."
+        },
+        {
+          "id": "C",
+          "label": "Potencia fija",
+          "detail": "Mantener sólo apunta y soltar lanza siempre igual; sacrifica expresión por consistencia."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J23",
+      "section": "Inventario y herramientas",
+      "title": "¿Qué recurso y efecto usa la raqueta eléctrica?",
+      "why": "Debe diferenciarse del matamoscas sin convertirse en defensa automática continua.",
+      "example": "El jugador activa la raqueta cerca de un mosquito: falta decidir si gasta una carga por golpe o energía mientras está encendida.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Pulsos con batería",
+          "detail": "Propuesta: 5 cargas, un pulso de 0,35 s y cooldown 1,2 s; recarga sólo al reaparecer el pickup."
+        },
+        {
+          "id": "B",
+          "label": "Energía continua",
+          "detail": "Propuesta: 6 s encendida por batería y recarga lenta al estar guardada; exige proximidad sostenida."
+        },
+        {
+          "id": "C",
+          "label": "Cooldown sin batería",
+          "detail": "Uso ilimitado con cooldown de 2,5 s; menos gestión de inventario, más predecible."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J24",
+      "section": "Inventario y herramientas",
+      "title": "¿Cómo funciona el aerosol y dónde se repone?",
+      "why": "Área, duración y recurso determinan si es control de espacio o una eliminación segura desde lejos.",
+      "example": "Un humano rocía una puerta durante una persecución. El mosquito debería poder ver/oir la nube y rodearla, no recibir un impacto invisible.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Nube corta consumible",
+          "detail": "Propuesta: 4 s totales por envase, cono 2 m, nube 1,2 s; no se repone hasta nueva ronda o pickup."
+        },
+        {
+          "id": "B",
+          "label": "Ráfagas recargables",
+          "detail": "Propuesta: 3 cargas; cada una vuelve en 20 s mientras el aerosol está guardado."
+        },
+        {
+          "id": "C",
+          "label": "Repelente sin derribo",
+          "detail": "No elimina: fuerza desprendimiento y bloquea picadura 2 s; 6 usos por envase."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J25",
+      "section": "Bots",
+      "title": "Además del entrenamiento obligatorio, ¿dónde permitimos bots?",
+      "why": "Entrenamiento los necesita, pero añadirlos automáticamente a salas privadas cambia expectativas y balance entre amigos.",
+      "example": "Dos amigos crean una sala para probar 2 humanos contra 2 mosquitos: ¿el juego completa los dos puestos faltantes sin pedirlo?",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Sólo entrenamiento",
+          "detail": "Entrenamiento completo con bots; sala privada sólo con personas."
+        },
+        {
+          "id": "B",
+          "label": "Sala privada opcional",
+          "detail": "El host habilita bots visibles y cantidad; entrenamiento siempre disponible."
+        },
+        {
+          "id": "C",
+          "label": "Sala y reemplazo temporal",
+          "detail": "Lo anterior más sustitución visible ante desconexiones, coherente con O08 y sin exponer datos privados."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J26",
+      "section": "Bots",
+      "title": "¿Qué niveles de dificultad de bots deben existir en v0.2.0?",
+      "why": "La dificultad debe modificar reacción y decisión, nunca percepción omnisciente ni reglas físicas.",
+      "example": "Un mosquito cruza una puerta y deja de verse. Un bot difícil puede recordar la dirección unos segundos, pero no conocer su posición detrás de paredes.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Normal único",
+          "detail": "Un perfil verificable para publicar; reacción propuesta 250–400 ms y mismos permisos que jugadores."
+        },
+        {
+          "id": "B",
+          "label": "Fácil y normal",
+          "detail": "Fácil reacciona 500–700 ms y falla más; normal conserva 250–400 ms."
+        },
+        {
+          "id": "C",
+          "label": "Tres niveles",
+          "detail": "Fácil/normal/difícil cambian reacción, puntería y prioridades, con más matriz de balance."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/gameplay/ACCEPTANCE.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J27",
+      "section": "Bots",
+      "title": "¿Cuánto dura la memoria de un objetivo que salió de vista?",
+      "why": "Sin memoria los bots olvidan de inmediato; con demasiada parecen atravesar paredes con información.",
+      "example": "El humano ve al mosquito entrar detrás de un sofá. Puede investigar la última posición, pero debe perderlo si no vuelve a verlo.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Memoria de 3 s",
+          "detail": "Recuerda última posición y dirección durante 3 s; después vuelve a patrulla sin actualizar datos ocultos."
+        },
+        {
+          "id": "B",
+          "label": "Memoria de 1 s",
+          "detail": "Muy reactivo a oclusión; permite escapes fáciles alrededor de muebles."
+        },
+        {
+          "id": "C",
+          "label": "Memoria de 6 s",
+          "detail": "Persecución más firme, con mayor riesgo de parecer omnisciente en interiores."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/gameplay/ACCEPTANCE.md",
+      "dependsOn": null
+    },
+    {
+      "id": "J28",
+      "section": "Bots",
+      "title": "¿Cómo prioriza un bot humano su tarea frente a un mosquito visible?",
+      "why": "En Tareas debe cumplir su asignación privada y defenderse sin abandonar siempre el objetivo ni ignorar peligro inmediato.",
+      "example": "Le faltan 20 ticks para limpiar y aparece un mosquito a 1,5 m. ¿Termina, interrumpe o decide según riesgo?",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Defensa por amenaza",
+          "detail": "Interrumpe si el mosquito está a menos de 2 m, se acerca o ya pica; luego retoma progreso conservado."
+        },
+        {
+          "id": "B",
+          "label": "Tarea hasta contacto",
+          "detail": "Sólo interrumpe al recibir picadura o golpe; maximiza meta pero parece poco humano."
+        },
+        {
+          "id": "C",
+          "label": "Margen de finalización",
+          "detail": "Si resta menos de 20% termina; de otro modo se defiende ante amenaza cercana."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/BotController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J29",
+      "section": "Bots",
+      "title": "¿Cómo elige víctima un bot mosquito cuando ve varios humanos?",
+      "why": "La selección afecta concentración de ataques, legibilidad y si siempre castiga al mismo jugador.",
+      "example": "Ve un humano cercano alerta, otro más lejos haciendo una tarea y un tercero casi desmayado.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Puntuación de oportunidad",
+          "detail": "Propuesta: distancia, línea libre, tarea activa y ataques recientes; penaliza repetir víctima durante 8 s."
+        },
+        {
+          "id": "B",
+          "label": "Más cercano",
+          "detail": "Conservar selección simple por distancia visible; fácil de entender y probar."
+        },
+        {
+          "id": "C",
+          "label": "Más vulnerable",
+          "detail": "Prioriza quien está ocupado o con menor capacidad de defensa; más competitivo, menos casual."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/BotController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J30",
+      "section": "Bots",
+      "title": "¿Hasta qué punto usan puertas y herramientas los bots humanos?",
+      "why": "Sin estas interacciones pueden atascarse o no representar una partida real; usar todo aumenta complejidad y riesgo.",
+      "example": "La ruta a una tarea cruza una puerta cerrada y hay un matamoscas en una mesa lateral.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Puertas y herramienta cercana",
+          "detail": "Abre rutas necesarias y recoge una herramienta si el desvío es menor a 4 m y tiene slot libre."
+        },
+        {
+          "id": "B",
+          "label": "Sólo puertas",
+          "detail": "Completa navegación y tareas; combate siempre con manos para reducir variables."
+        },
+        {
+          "id": "C",
+          "label": "Catálogo completo",
+          "detail": "Evalúa slots, recursos, lanzamientos y aerosol como un jugador; requiere balance y pruebas mucho mayores."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "unity/Assets/LetMeSleep/Gameplay/BotPatrol.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J31",
+      "section": "Bots",
+      "title": "¿Cuándo debe un bot mosquito rescatar a un aliado caído?",
+      "why": "El rescate conserva vidas en Tareas y recuperación en Sangre, pero agruparse puede regalar varias bajas.",
+      "example": "Un aliado está a 6 m y le quedan 4 s de ventana; un humano vigila el trayecto.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Riesgo y tiempo",
+          "detail": "Rescata si puede llegar con 1,5 s de margen y no ve un humano a menos de 2,5 m del aliado."
+        },
+        {
+          "id": "B",
+          "label": "Siempre rescata",
+          "detail": "Prioridad absoluta al aliado alcanzable; comportamiento cooperativo y fácil de leer."
+        },
+        {
+          "id": "C",
+          "label": "Sólo última vida",
+          "detail": "En Tareas arriesga rescate únicamente si el aliado sería eliminado; en Sangre usa riesgo y tiempo."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/BotController.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "J32",
+      "section": "Bots",
+      "title": "¿Qué hace un bot cuando no progresa por una ruta durante varios segundos?",
+      "why": "Debe recuperarse de puertas, muebles y rutas temporales sin teletransportarse ni empujar paredes indefinidamente.",
+      "example": "El bot avanza hacia un pasaje, pero su distancia no mejora durante 5 s por un objeto o actor que bloquea.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Replanificar y esperar",
+          "detail": "A los 5 s marca el pasaje 6 s, busca otra ruta; si no existe, espera/patrulla la región y registra el atasco."
+        },
+        {
+          "id": "B",
+          "label": "Retroceder y reintentar",
+          "detail": "Retrocede 1 m, cambia ángulo y reintenta hasta tres veces antes de esperar."
+        },
+        {
+          "id": "C",
+          "label": "Cancelar objetivo",
+          "detail": "Abandona la persecución o tarea y solicita otra oportunidad no penalizante; reduce bloqueos, puede evadir contenido."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Gameplay/BotPatrol.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "A01",
+      "section": "Arte y personajes",
+      "title": "¿Qué tratamiento de formas querés para el humano nuevo?",
+      "why": "Define la silueta y el modelado que se revisarán antes de producir variantes.",
+      "example": "Compará la fila superior de la lámina: mismo pijama, distinta construcción de cara y cuerpo.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Facetado marcado · A",
+          "detail": "Planos visibles, nariz y mandíbula angulares; lectura muy gráfica."
+        },
+        {
+          "id": "B",
+          "label": "Redondeado suave · B",
+          "detail": "Rostro y ropa más suaves; conservar silueta adulta y detalles legibles."
+        },
+        {
+          "id": "C",
+          "label": "Mixto pintado · C",
+          "detail": "Cuerpo con planos y rostro más suave; textura sutil sin ruido."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null,
+      "visual": "personajes"
+    },
+    {
+      "id": "A02",
+      "section": "Arte y personajes",
+      "title": "¿Qué tratamiento de formas querés para el mosquito?",
+      "why": "Puede compartir materiales con el humano sin copiar exactamente sus proporciones.",
+      "example": "Compará la fila inferior; las alas y patas deberán verificarse después en 3D y movimiento.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Facetado marcado · A",
+          "detail": "Abdomen y cabeza con planos definidos; alas geométricas."
+        },
+        {
+          "id": "B",
+          "label": "Redondeado suave · B",
+          "detail": "Volúmenes menos angulares y expresión más amable."
+        },
+        {
+          "id": "C",
+          "label": "Mixto pintado · C",
+          "detail": "Facetas moderadas con variación de material y alas delicadas."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null,
+      "visual": "personajes"
+    },
+    {
+      "id": "A03",
+      "section": "Arte y personajes",
+      "title": "¿Cuánto exageramos las proporciones humanas?",
+      "why": "Afecta identidad y expresividad; las hitboxes deben seguir siendo justas.",
+      "example": "Un mismo gorro y pijama pueden sentirse caricaturescos o bastante naturales.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Exageración moderada",
+          "detail": "Cabeza y manos algo grandes, piernas adultas, sin parecer un niño."
+        },
+        {
+          "id": "B",
+          "label": "Caricatura fuerte",
+          "detail": "Cabeza y gestos grandes, torso compacto; exige revisar ergonomía y cámara."
+        },
+        {
+          "id": "C",
+          "label": "Casi natural estilizado",
+          "detail": "Proporciones adultas cercanas a reales, con planos y materiales simplificados."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A04",
+      "section": "Arte y personajes",
+      "title": "¿Qué expresión base tendrá el mosquito?",
+      "why": "La mirada comunica su personalidad incluso cuando no habla.",
+      "example": "Un mosquito quieto sobre una mesa: ¿travieso, torpe o insistente?",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Travieso",
+          "detail": "Cejas y ojos atentos, picardía sin gesto maligno."
+        },
+        {
+          "id": "B",
+          "label": "Torpe y simpático",
+          "detail": "Ojos cansados, pequeñas dudas y reacciones cómicas."
+        },
+        {
+          "id": "C",
+          "label": "Concentrado y molesto",
+          "detail": "Mirada insistente; humor sale del contraste con el humano."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A05",
+      "section": "Arte y personajes",
+      "title": "¿Cuánta textura pintada deben tener ropa y objetos?",
+      "why": "Equilibra riqueza visual y claridad al volar cerca.",
+      "example": "La costura del pijama y la madera se pueden leer sin texturas fotográficas.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Sutil",
+          "detail": "Colores amplios, costuras y vetas seleccionadas."
+        },
+        {
+          "id": "B",
+          "label": "Casi ninguna",
+          "detail": "Materiales planos; interés mediante forma y luz."
+        },
+        {
+          "id": "C",
+          "label": "Visible pero estilizada",
+          "detail": "Pinceladas y desgaste más presentes, sin ruido realista."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A06",
+      "section": "Arte y personajes",
+      "title": "¿Qué contraste de color tendrá la personalización?",
+      "why": "La paleta debe permitir identificar jugadores sin volverlos camuflaje competitivo.",
+      "example": "Pijama azul apagado frente a rojo brillante en Casa de noche.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Paleta curada",
+          "detail": "Colores variados con luminosidad controlada y lectura parecida."
+        },
+        {
+          "id": "B",
+          "label": "Paleta amplia",
+          "detail": "Más saturación y tonos; revisar cada combinación extrema."
+        },
+        {
+          "id": "C",
+          "label": "Paletas por conjunto",
+          "detail": "Combinaciones diseñadas completas y pocos acentos elegibles."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A07",
+      "section": "Arte y personajes",
+      "title": "¿Cómo distinguimos visualmente a jugadores con el mismo modelo?",
+      "why": "Resuelve lectura social sin añadir estadísticas ni clases.",
+      "example": "Dos humanos llevan pijama azul y se cruzan en el pasillo.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Color secundario y nombre contextual",
+          "detail": "Detalles cosméticos y nombre al mirarlos cerca."
+        },
+        {
+          "id": "B",
+          "label": "Patrones de ropa claros",
+          "detail": "Rayas, cuadros o liso, manteniendo materiales coherentes."
+        },
+        {
+          "id": "C",
+          "label": "Accesorio identificador",
+          "detail": "Variantes cosméticas de gorro/gafas, sujetas a aprobación de catálogo."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A08",
+      "section": "Arte y personajes",
+      "title": "¿Cuánta expresividad facial querés en juego?",
+      "why": "Define trabajo de rig y animación visible a otros, además del personalizador.",
+      "example": "Después de fallar una palmada, el humano puede fruncir el ceño o hacer una mueca breve.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Emociones esenciales",
+          "detail": "Reposo, esfuerzo, golpe, desmayo y recuperación claros."
+        },
+        {
+          "id": "B",
+          "label": "Humor expresivo",
+          "detail": "Las mismas acciones con gestos más exagerados y transiciones cuidadas."
+        },
+        {
+          "id": "C",
+          "label": "Actuación contenida",
+          "detail": "Parpadeo y mirada presentes; cambios faciales pequeños."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A09",
+      "section": "Arte y personajes",
+      "title": "¿Qué lectura visual tendrán las alas del mosquito?",
+      "why": "Deben percibirse sin ocultar enemigos ni producir parpadeo molesto.",
+      "example": "Al posarse se ven separadas; durante vuelo su vibración no tapa el centro.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Translúcidas discretas",
+          "detail": "Venas/facetas visibles al reposo y vibración suave al volar."
+        },
+        {
+          "id": "B",
+          "label": "Gráficas",
+          "detail": "Mayor opacidad y silueta clara; menos transparencia."
+        },
+        {
+          "id": "C",
+          "label": "Muy ligeras",
+          "detail": "Casi transparentes con contorno fino, revisar sobre fondos claros."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A10",
+      "section": "Arte y personajes",
+      "title": "¿Cómo representamos la sangre sin marcas de picadura?",
+      "why": "Define intensidad visual y tono, preservando la decisión de no poner marcas sobre el cuerpo.",
+      "example": "Una extracción exitosa puede reflejarse en el abdomen y contador, sin heridas.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Abdomen y HUD",
+          "detail": "Cambio sutil de volumen/color y progreso; sin gotas en pantalla."
+        },
+        {
+          "id": "B",
+          "label": "Sólo feedback gráfico",
+          "detail": "Progreso y sonido; abdomen apenas cambia."
+        },
+        {
+          "id": "C",
+          "label": "Abdomen expresivo",
+          "detail": "Llenado visible más exagerado, manteniendo hitbox y silueta de juego justas."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A11",
+      "section": "Arte y personajes",
+      "title": "¿Qué acabado visual unifica los cinco mapas?",
+      "why": "Los escenarios ya definidos necesitan compartir lenguaje de materiales.",
+      "example": "Madera de cabaña, muebles de casa y cubierta del yate deben pertenecer al mismo juego.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Materiales limpios",
+          "detail": "Facetas legibles, desgaste sólo donde cuenta una historia."
+        },
+        {
+          "id": "B",
+          "label": "Habitados y desordenados",
+          "detail": "Más uso, objetos cotidianos y desgaste estilizado sin bloquear rutas."
+        },
+        {
+          "id": "C",
+          "label": "Maqueta gráfica",
+          "detail": "Formas muy limpias, colores por zonas y pocos detalles pequeños."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A12",
+      "section": "Arte y personajes",
+      "title": "¿Cómo identificamos objetos utilizables sin añadir balizas?",
+      "why": "La escena debe enseñar qué se puede usar sin revelar información privada ajena.",
+      "example": "Al mirar una puerta o herramienta a alcance, aparece una pista breve.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Contorno al apuntar",
+          "detail": "Sólo el objeto cercano bajo la mira, más texto de acción."
+        },
+        {
+          "id": "B",
+          "label": "Cambio de brillo sutil",
+          "detail": "Respuesta material y texto, sin silueta luminosa."
+        },
+        {
+          "id": "C",
+          "label": "Sólo texto contextual",
+          "detail": "Sin modificar el objeto; máxima limpieza visual."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A13",
+      "section": "Animación y cámaras",
+      "title": "¿Qué peso debe tener el caminar humano?",
+      "why": "La animación y el sonido deben transmitir el mismo ritmo.",
+      "example": "Un humano en pantuflas persigue un mosquito que acaba de escapar.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Ágil con sueño",
+          "detail": "Arranque rápido, hombros cansados y pasos algo arrastrados."
+        },
+        {
+          "id": "B",
+          "label": "Cómico pesado",
+          "detail": "Más balanceo y arrastre visual, sin añadir retraso al control."
+        },
+        {
+          "id": "C",
+          "label": "Natural ligero",
+          "detail": "Poco balanceo y locomoción sobria."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A14",
+      "section": "Animación y cámaras",
+      "title": "¿Cómo debe verse una defensa manual fallida?",
+      "why": "El jugador necesita leer el error sin perder control por una broma larga.",
+      "example": "Palmada que no toca al mosquito: termina rápido o tiene pequeña reacción.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Recuperación breve",
+          "detail": "Trayectoria clara, retorno rápido y mueca corta."
+        },
+        {
+          "id": "B",
+          "label": "Reacción cómica marcada",
+          "detail": "Más gesto posterior; duración jugable se mantiene pactada."
+        },
+        {
+          "id": "C",
+          "label": "Muy sobria",
+          "detail": "Casi sin actuación adicional; prioridad absoluta a claridad del golpe."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A15",
+      "section": "Animación y cámaras",
+      "title": "¿Qué tratamiento damos al desmayo y caída?",
+      "why": "Es una de las acciones más repetidas y debe ser cómica sin romper colisiones.",
+      "example": "Un mosquito cae sobre una mesa y después recibe ayuda.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Caída dirigida",
+          "detail": "Poses diseñadas con ajuste físico acotado al entorno."
+        },
+        {
+          "id": "B",
+          "label": "Física cómica controlada",
+          "detail": "Más movimiento secundario, con límites para evitar vibración/enganches."
+        },
+        {
+          "id": "C",
+          "label": "Secuencia rápida",
+          "detail": "Caída simple y recuperación clara; mínima variación física."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A16",
+      "section": "Animación y cámaras",
+      "title": "¿Qué protagonismo tienen los gestos de ayuda/rescate?",
+      "why": "Deben comunicar inicio, progreso e interrupción.",
+      "example": "Un aliado ayuda a un mosquito caído y debe apartarse ante un humano.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Breves y legibles",
+          "detail": "Gesto claro y progreso discreto, cancelación inmediata."
+        },
+        {
+          "id": "B",
+          "label": "Más teatrales",
+          "detail": "Animación cómica durante el mismo tiempo de interacción acordado."
+        },
+        {
+          "id": "C",
+          "label": "Funcionales mínimos",
+          "detail": "Poca actuación y señal visual breve para priorizar combate."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A17",
+      "section": "Animación y cámaras",
+      "title": "¿Cuánto movimiento secundario tienen gorro y pijama?",
+      "why": "Añade vida, pero no debe tapar cámara ni cambiar alcance real.",
+      "example": "El gorro responde a un giro rápido y se estabiliza.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Moderado",
+          "detail": "Gorro y tela reaccionan poco; silueta estable."
+        },
+        {
+          "id": "B",
+          "label": "Muy discreto",
+          "detail": "Movimiento principalmente animado y predecible."
+        },
+        {
+          "id": "C",
+          "label": "Expresivo",
+          "detail": "Reacción más visible en cámara externa; suprimir interferencias en primera persona."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A18",
+      "section": "Animación y cámaras",
+      "title": "¿Qué personalidad tiene el mosquito al estar quieto?",
+      "why": "Permite reconocer estados sin llenar el HUD.",
+      "example": "Posado en pared esperando el momento de despegar.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Atento",
+          "detail": "Antenas y patas ajustan postura con movimientos pequeños."
+        },
+        {
+          "id": "B",
+          "label": "Impaciente",
+          "detail": "Pequeños balanceos y miradas cómicas; sin mover el contacto real."
+        },
+        {
+          "id": "C",
+          "label": "Sigiloso",
+          "detail": "Casi inmóvil; sólo respiración/antenas sutiles."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A19",
+      "section": "Animación y cámaras",
+      "title": "¿Cuánto cuerpo humano querés ver al mirar hacia abajo?",
+      "why": "Concreta la primera persona con cuerpo visible ya acordada.",
+      "example": "Mirás el pecho o las piernas para defenderte de un mosquito.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Cuerpo completo coherente",
+          "detail": "Torso, brazos y piernas visibles donde el encuadre lo permita."
+        },
+        {
+          "id": "B",
+          "label": "Torso discreto",
+          "detail": "Mantener piernas y manos claras; reducir obstrucción del pecho."
+        },
+        {
+          "id": "C",
+          "label": "Énfasis en manos y piernas",
+          "detail": "Cuerpo presente con encuadre más despejado; nunca cámara flotante sin cuerpo."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A20",
+      "section": "Animación y cámaras",
+      "title": "¿Cómo se adapta la cámara mosquito al pasar de suelo a pared y techo?",
+      "why": "Evita mareo y mantiene orientación durante el perchado.",
+      "example": "Subís por una pata de mesa y llegás debajo del tablero.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Horizonte estable",
+          "detail": "La cámara mantiene arriba del mundo con ajuste suave al obstáculo."
+        },
+        {
+          "id": "B",
+          "label": "Sigue parcialmente el soporte",
+          "detail": "Inclinación limitada para sentir el contacto sin volcar la vista."
+        },
+        {
+          "id": "C",
+          "label": "Sigue el cuerpo",
+          "detail": "Mayor rotación, con opción accesible de horizonte estable."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null,
+      "visual": "camara"
+    },
+    {
+      "id": "A21",
+      "section": "Animación y cámaras",
+      "title": "¿Qué distancia de cámara mosquito preferís por defecto?",
+      "why": "Cambia cuánto entorno se ve y cuán grande aparece el personaje.",
+      "example": "Volar en el patio frente a pasar por una ventana estrecha.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Media adaptable",
+          "detail": "Distancia media; se acerca al detectar obstáculos."
+        },
+        {
+          "id": "B",
+          "label": "Cercana",
+          "detail": "Personaje más protagonista y vuelo íntimo; menos campo periférico."
+        },
+        {
+          "id": "C",
+          "label": "Lejana moderada",
+          "detail": "Más lectura del espacio, sin permitir ver a través de paredes."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A22",
+      "section": "Animación y cámaras",
+      "title": "¿Qué intensidad de sacudida y balanceo visual tendrá el preset inicial?",
+      "why": "Define confort sin cambiar precisión o reglas de impacto.",
+      "example": "Correr, recibir golpe y despegar pueden mover cámara o sólo el cuerpo.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Suave y regulable",
+          "detail": "Feedback perceptible; slider hasta cero."
+        },
+        {
+          "id": "B",
+          "label": "Cero por defecto",
+          "detail": "Cámara estable; animación y audio comunican el impacto."
+        },
+        {
+          "id": "C",
+          "label": "Expresivo y regulable",
+          "detail": "Más movimiento en preset inicial, siempre desactivable."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A23",
+      "section": "Mapas y ambiente",
+      "title": "¿Qué tratamiento de luz preferís para Casa y Campamento nocturnos?",
+      "why": "Comparar oscuridad estética con lectura jugable; Isla conserva su identidad diurna.",
+      "example": "La lámina usa una cabaña ilustrativa, no sustituye geometría ni cambia la hora de los cinco mapas.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Cálido con noche azul · A",
+          "detail": "Luces domésticas/fogón como puntos de referencia."
+        },
+        {
+          "id": "B",
+          "label": "Luna fría legible · B",
+          "detail": "Luz ambiental más uniforme y contrastes plateados."
+        },
+        {
+          "id": "C",
+          "label": "Mezcla por zona",
+          "detail": "Interiores A y exteriores B; C queda sólo como referencia de crepúsculo para Puerto."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null,
+      "visual": "iluminacion"
+    },
+    {
+      "id": "A24",
+      "section": "Mapas y ambiente",
+      "title": "¿Qué tono de crepúsculo querés en Puerto del Faro?",
+      "why": "Respeta el anochecer acordado y precisa la identidad cromática.",
+      "example": "Ves el faro y las casas desde un muelle.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Lavanda con luces cálidas",
+          "detail": "Referencia C del tablero, lectura amplia del horizonte."
+        },
+        {
+          "id": "B",
+          "label": "Azul profundo y faro cálido",
+          "detail": "Anochecer más avanzado; cuidar rutas oscuras."
+        },
+        {
+          "id": "C",
+          "label": "Melocotón apagado",
+          "detail": "Última luz cálida sobre agua y fachadas, sin parecer mediodía."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null,
+      "visual": "iluminacion"
+    },
+    {
+      "id": "A25",
+      "section": "Mapas y ambiente",
+      "title": "¿Qué sensación debe dominar Isla del Laguito diurna?",
+      "why": "Jerarquiza ambientación sobre la geografía existente: lago, cabaña, bosque, playa y muelles.",
+      "example": "Un humano recorre la orilla mientras un mosquito usa la vegetación.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Vacaciones tranquilas",
+          "detail": "Luz clara, agua suave y rincones cálidos."
+        },
+        {
+          "id": "B",
+          "label": "Exploración boscosa",
+          "detail": "Bosque más protagonista visual, senderos legibles."
+        },
+        {
+          "id": "C",
+          "label": "Isla juguetona",
+          "detail": "Acentos de color y detalles cotidianos más cómicos."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A26",
+      "section": "Mapas y ambiente",
+      "title": "¿Qué carácter doméstico debe tener Casa del Patio?",
+      "why": "Define decoración sin quitar sus dos plantas, habitaciones, escalera, patio y cobertizo.",
+      "example": "Entrás al dormitorio tras perseguir algo por la cocina.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Casa vivida ordenada",
+          "detail": "Objetos cotidianos y rutas despejadas."
+        },
+        {
+          "id": "B",
+          "label": "Desorden amable",
+          "detail": "Más ropa/objetos de fondo, sin rellenar rutas con colisiones."
+        },
+        {
+          "id": "C",
+          "label": "Casa sencilla acogedora",
+          "detail": "Menos objetos; materiales y luz llevan la identidad."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A27",
+      "section": "Mapas y ambiente",
+      "title": "¿Qué contraste organiza Campamento Pinar?",
+      "why": "Conserva las seis carpas, fogón, refugio y arroyo; define lectura ambiental.",
+      "example": "El jugador reconoce dónde está sin minimapa.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Fogón central cálido",
+          "detail": "El fogón orienta, bosque azul y senderos claros."
+        },
+        {
+          "id": "B",
+          "label": "Carpas como referencias",
+          "detail": "Colores/lámparas distinguen zonas y retornos."
+        },
+        {
+          "id": "C",
+          "label": "Arroyo como guía",
+          "detail": "Agua y puentes sirven de orientación sonora/visual."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A28",
+      "section": "Mapas y ambiente",
+      "title": "¿Qué personalidad material tendrá Yate a la Deriva?",
+      "why": "Conserva el yate pequeño de 30 m y sus cubiertas/interiores.",
+      "example": "Pasás de cubierta al salón y luego al camarote.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Vacacional sencillo",
+          "detail": "Madera y tapizados claros, detalles náuticos moderados."
+        },
+        {
+          "id": "B",
+          "label": "Usado pero cuidado",
+          "detail": "Pequeño desgaste estilizado y objetos personales."
+        },
+        {
+          "id": "C",
+          "label": "Elegante caricaturesco",
+          "detail": "Acabados más pulidos y contraste de materiales, sin realismo brillante."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A29",
+      "section": "Mapas y ambiente",
+      "title": "¿Qué punto de referencia debe dominar Puerto además del faro?",
+      "why": "Ayuda a diferenciar zonas manteniendo casas, taller y muelles existentes.",
+      "example": "Alguien dice por voz «estoy cerca del taller» y todos lo ubican.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Taller reconocible",
+          "detail": "Color/accesorios propios y acceso claramente visible."
+        },
+        {
+          "id": "B",
+          "label": "Plaza entre casas",
+          "detail": "Composición y luz destacan el espacio de encuentro existente."
+        },
+        {
+          "id": "C",
+          "label": "Muelle principal",
+          "detail": "Barcas, postes y sonidos dan identidad al borde del puerto."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A30",
+      "section": "Mapas y ambiente",
+      "title": "¿Cuánto detalle ambiental pequeño querés cerca de rutas?",
+      "why": "Mucho detalle puede esconder mosquitos de manera poco predecible.",
+      "example": "Patas de muebles, hojas y utensilios rodean una tarea.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Detalle concentrado",
+          "detail": "Zonas decorativas ricas; suelo/ruta y objetos usables limpios."
+        },
+        {
+          "id": "B",
+          "label": "Detalle uniforme moderado",
+          "detail": "Todo recibe una densidad parecida, sin acumulaciones grandes."
+        },
+        {
+          "id": "C",
+          "label": "Detalle abundante con contraste",
+          "detail": "Escena más llena; asegurar lectura mediante materiales y luz."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A31",
+      "section": "Mapas y ambiente",
+      "title": "¿Cómo comunicamos el límite jugable del mapa?",
+      "why": "El límite físico debe ser seguro y comprensible.",
+      "example": "Un mosquito intenta volar más allá de la costa o el humano llega al borde no transitable.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Entorno y aviso breve",
+          "detail": "Obstáculo/lectura ambiental y texto sólo al insistir."
+        },
+        {
+          "id": "B",
+          "label": "Señal suave de proximidad",
+          "detail": "Ligera indicación antes de tocar el límite, sin superficies posables."
+        },
+        {
+          "id": "C",
+          "label": "Sólo entorno",
+          "detail": "Sin mensajes, exige que bordes y barreras sean inequívocos."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A32",
+      "section": "Mapas y ambiente",
+      "title": "¿Qué explicación visual acompaña una recuperación por agua o caída fuera del mapa?",
+      "why": "La recuperación segura ya es obligatoria; se define cómo entiende el jugador lo ocurrido.",
+      "example": "Caés al agua y reaparecés en un destino seguro validado.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Transición corta y motivo",
+          "detail": "Fundido breve y «Volviste a una zona segura». Sin penalidad nueva."
+        },
+        {
+          "id": "B",
+          "label": "Transición casi inmediata",
+          "detail": "Mensaje pequeño; menor interrupción."
+        },
+        {
+          "id": "C",
+          "label": "Transición cómica breve",
+          "detail": "Efecto audiovisual estilizado, sin alargar la pérdida de control."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A33",
+      "section": "Mapas y ambiente",
+      "title": "¿Qué comportamiento visual del agua preferís?",
+      "why": "Ya se acordó agua estilizada con movimiento suave; resta intensidad y lectura.",
+      "example": "Compará lago tranquilo, arroyo y mar alrededor del yate.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Suave por entorno",
+          "detail": "Lago calmo, arroyo direccional y mar algo más activo."
+        },
+        {
+          "id": "B",
+          "label": "Muy calmada",
+          "detail": "Priorizar reflejos legibles y bajo movimiento en todos."
+        },
+        {
+          "id": "C",
+          "label": "Más expresiva",
+          "detail": "Ondas/espuma visibles, sin ocultar bordes ni encarecer excesivamente el render."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "A34",
+      "section": "Mapas y ambiente",
+      "title": "¿Qué evidencia visual querés usar para aprobar el arte integrado?",
+      "why": "Una imagen bonita no demuestra rig, colisiones ni calidad en movimiento.",
+      "example": "Revisamos humano, mosquito y cada mapa antes de llamar definitivo al contenido.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Comparativa y clip",
+          "detail": "Frente/perfil/espalda más video corto de acciones y recorrido real."
+        },
+        {
+          "id": "B",
+          "label": "Recorrido comentado",
+          "detail": "Video más largo organizado por criterios, acompañado de vistas fijas."
+        },
+        {
+          "id": "C",
+          "label": "Build revisable y selección de clips",
+          "detail": "Probar vos la candidata más clips de los puntos delicados."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "Higgsfield/MAPAS-BOCETOS-20260913.md; Higgsfield/HUMANOS-INICIO.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C01",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Cuántas siluetas humanas distintas incluimos?",
+      "why": "No confundir colores distintos con modelos completos.",
+      "example": "Una base con ropa modular frente a dos cuerpos; ninguno puede ganar alcance o esquivar mejor por su forma.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Una base modular",
+          "detail": "Concentrar calidad en un cuerpo nuevo y variedad de rostro/ropa."
+        },
+        {
+          "id": "B",
+          "label": "Dos bases compatibles",
+          "detail": "Dos siluetas adultas con mismas reglas de colisión y alcance."
+        },
+        {
+          "id": "C",
+          "label": "Tres bases compatibles",
+          "detail": "Más variedad corporal; todas requieren rig, combinaciones y validación."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C02",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Cuántos peinados compondrán el catálogo humano?",
+      "why": "Cierra una cantidad de piezas, contando calvo como opción.",
+      "example": "Pelo corto, medio y largo deben funcionar bajo los accesorios de cabeza.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Ocho en total",
+          "detail": "Cantidad propuesta en el plan histórico, con siete peinados más calvo."
+        },
+        {
+          "id": "B",
+          "label": "Cuatro en total",
+          "detail": "Tres peinados bien diferenciados más calvo; elegir cuáles en notas."
+        },
+        {
+          "id": "C",
+          "label": "Seis en total",
+          "detail": "Cinco peinados más calvo; equilibrio entre variedad y combinaciones."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C03",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Cuánta variedad modular de ojos, cejas y bocas querés?",
+      "why": "Cada pieza tiene que deformarse en expresiones, no ser sólo una miniatura.",
+      "example": "Ojos tipo 2, cejas 4 y boca 1 deben convivir sin romper la cara.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Seis por categoría",
+          "detail": "18 variantes de piezas faciales, propuesta histórica."
+        },
+        {
+          "id": "B",
+          "label": "Tres por categoría",
+          "detail": "Nueve piezas, con expresiones completas para cada combinación."
+        },
+        {
+          "id": "C",
+          "label": "Rostros completos curados",
+          "detail": "Seis rostros sin mezclar partes; menos combinaciones y siluetas más controladas."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C04",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Qué catálogo de vello facial humano incluimos?",
+      "why": "Precisa bigotes/barbas y su relación con el color del pelo.",
+      "example": "Un bigote debe seguir la boca sin cruzar labios al hablar.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Seis opciones",
+          "detail": "Incluye ninguna; color vinculado al pelo con separación opcional."
+        },
+        {
+          "id": "B",
+          "label": "Cuatro opciones",
+          "detail": "Ninguno, bigote, barba corta y barba completa estilizada."
+        },
+        {
+          "id": "C",
+          "label": "Tres opciones",
+          "detail": "Ninguno y dos diseños de bigote; dejar cuáles en notas."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C05",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Qué catálogo de ropa acompaña al pijama base obligatorio?",
+      "why": "La propuesta histórica habla de pijama más cuatro conjuntos; falta definir alcance aprobado.",
+      "example": "Cambiar prendas de noche sin convertirlas en clases o ventajas.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Pijama más cuatro conjuntos",
+          "detail": "Separables en superior/inferior cuando las combinaciones sean compatibles."
+        },
+        {
+          "id": "B",
+          "label": "Pijama y dos conjuntos",
+          "detail": "Variedad más concentrada, con piezas combinables."
+        },
+        {
+          "id": "C",
+          "label": "Cinco pijamas completos",
+          "detail": "Variantes de corte y patrón, conjuntos indivisibles para evitar combinaciones rotas."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C06",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Cuántos accesorios de cabeza humanos se incluyen?",
+      "why": "Gorro nocturno base se conserva; cada añadido exige ocultación correcta del pelo.",
+      "example": "Un gorro diferente no debe aumentar hitbox ni dar una pista injusta del rol.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Seis opciones totales",
+          "detail": "Contar el gorro nocturno y una opción sin accesorio."
+        },
+        {
+          "id": "B",
+          "label": "Cuatro opciones totales",
+          "detail": "Gorro, sin accesorio y dos variantes por detallar."
+        },
+        {
+          "id": "C",
+          "label": "Tres opciones totales",
+          "detail": "Gorro, sin accesorio y una variante por detallar."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C07",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Cuántas gafas y variantes de calzado humano incluimos?",
+      "why": "Cierra piezas pequeñas que también necesitan primeros planos y agarres/pies correctos.",
+      "example": "Las pantuflas siguen siendo el calzado inicial.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Cuatro y cuatro",
+          "detail": "Cuatro gafas contando ninguna; cuatro calzados contando pantuflas."
+        },
+        {
+          "id": "B",
+          "label": "Tres y tres",
+          "detail": "Dos gafas más ninguna; tres estilos de pantuflas/calzado de noche."
+        },
+        {
+          "id": "C",
+          "label": "Dos y dos",
+          "detail": "Ninguna/una gafa y dos calzados claramente distintos."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C08",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Cuántos cuerpos cosméticos de mosquito incluimos?",
+      "why": "La silueta visual varía, pero alcance y colisión deben ser equivalentes.",
+      "example": "Un abdomen más redondo no puede absorber golpes fuera de la silueta de forma injusta.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Tres cuerpos",
+          "detail": "Cantidad propuesta histórica; cada uno con todas las animaciones."
+        },
+        {
+          "id": "B",
+          "label": "Dos cuerpos",
+          "detail": "Dos familias visuales con piezas compatibles."
+        },
+        {
+          "id": "C",
+          "label": "Un cuerpo modular",
+          "detail": "Una base nueva, diferenciada mediante alas, cara, patrones y colores."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C09",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Qué variedad de alas y expresión mosquito querés?",
+      "why": "Precisa el catálogo del segundo rol con el mismo rigor que el humano.",
+      "example": "Alas largas y ojos expresivos deben seguir leyendo sobre el cielo y paredes.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Cuatro alas y seis expresiones",
+          "detail": "Cantidad histórica; expresiones mediante ojos/cejas compatibles."
+        },
+        {
+          "id": "B",
+          "label": "Tres alas y cuatro expresiones",
+          "detail": "Variedad media, todas revisadas en vuelo y reposo."
+        },
+        {
+          "id": "C",
+          "label": "Dos alas y tres expresiones",
+          "detail": "Pocas variantes muy distintas, con transiciones completas."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C10",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Cuántos patrones de abdomen mosquito incluimos?",
+      "why": "Patrones son cosméticos; no ocultan mejor al mosquito ni indican poder.",
+      "example": "Franjas, manchas y un tono liso deben mantener lectura de sangre extraída.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Cinco patrones",
+          "detail": "Cantidad propuesta histórica, con paletas por partes."
+        },
+        {
+          "id": "B",
+          "label": "Tres patrones",
+          "detail": "Liso y dos gráficos; colores por partes."
+        },
+        {
+          "id": "C",
+          "label": "Patrones curados por cuerpo",
+          "detail": "Dos por cada cuerpo elegido en C08; no combinación universal."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": "C08"
+    },
+    {
+      "id": "C11",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Qué variedad de accesorios mosquito incluimos?",
+      "why": "Sin introducir clases ni modificar alcance de probóscide/patas.",
+      "example": "Un accesorio pequeño de cabeza no debe interferir con alas o pared.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Seis opciones totales",
+          "detail": "Incluye ninguna; seleccionar diseños concretos en notas."
+        },
+        {
+          "id": "B",
+          "label": "Cuatro opciones totales",
+          "detail": "Ninguno más tres diseños discretos."
+        },
+        {
+          "id": "C",
+          "label": "Dos opciones totales",
+          "detail": "Ninguno más un accesorio característico."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "C12",
+      "section": "Catálogo y alcance exacto",
+      "title": "¿Qué conjunto de emotes entra en esta versión?",
+      "why": "Todos cancelables por acciones de juego y sin ventaja competitiva.",
+      "example": "Saludar en la sala o celebrar al acabar una ronda.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Cuatro emotes comunes",
+          "detail": "Saludar, señalar, reír y celebrar, adaptados a ambos roles."
+        },
+        {
+          "id": "B",
+          "label": "Dos por rol",
+          "detail": "Saludo y celebración distintivos para cada personaje."
+        },
+        {
+          "id": "C",
+          "label": "Cuatro humanos y dos mosquito",
+          "detail": "Humano usa el conjunto histórico; mosquito saludo y celebración."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "D01",
+      "section": "Reglas por cerrar",
+      "title": "¿Cómo elige el anfitrión la composición humana/mosquito?",
+      "why": "Roles se sortean cada ronda y no hay proporción fija 2:1; se precisa la interfaz de cantidad.",
+      "example": "Con seis personas, el host quiere probar dos humanos y cuatro mosquitos.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Cantidad humana explícita",
+          "detail": "Host elige entre 1 y N−1 humanos; UI muestra resto como mosquitos."
+        },
+        {
+          "id": "B",
+          "label": "Presets editables",
+          "detail": "Composiciones sugeridas por tamaño más ajuste numérico."
+        },
+        {
+          "id": "C",
+          "label": "Cantidad automática revisable",
+          "detail": "Proponer una composición equilibrada, host puede cambiar antes de listo."
+        }
+      ],
+      "recommended": "B",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "D02",
+      "section": "Reglas por cerrar",
+      "title": "¿Qué variedad de acciones tendrán las tareas?",
+      "why": "Se conservan objetivos privados y accesibles; la interacción concreta sigue abierta.",
+      "example": "Limpiar una mesa, reparar una lámpara o accionar un interruptor.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Mantener una tecla",
+          "detail": "Diferencia por objeto, duración y animación; control consistente."
+        },
+        {
+          "id": "B",
+          "label": "Mantener y accionar",
+          "detail": "Tareas largas al mantener y acciones cortas de un toque."
+        },
+        {
+          "id": "C",
+          "label": "Dos gestos sencillos",
+          "detail": "Mantener y una secuencia breve sin pulsaciones frenéticas; explicar cada gesto."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "D03",
+      "section": "Reglas por cerrar",
+      "title": "¿Cuántos puntos de tarea distintos queremos por mapa?",
+      "why": "Un solo punto por mapa no proporciona variedad ni reparto suficiente; cantidad depende de población y rutas.",
+      "example": "Cinco humanos reciben tareas que no deberían amontonarse siempre en el mismo lugar.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Mínimo diez puntos",
+          "detail": "Dos alternativas por humano a cinco humanos, distribuido entre zonas."
+        },
+        {
+          "id": "B",
+          "label": "Mínimo quince puntos",
+          "detail": "Más variedad por ronda y mejor reparto; más authoring y validación."
+        },
+        {
+          "id": "C",
+          "label": "Cantidad por zonas",
+          "detail": "Al menos dos por zona jugable principal, con mínimo diez por mapa."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": "O02"
+    },
+    {
+      "id": "D04",
+      "section": "Reglas por cerrar",
+      "title": "¿Qué progreso conserva una tarea si la interrumpen?",
+      "why": "Defenderse no debería generar una penalidad invisible.",
+      "example": "Vas por 70 %, soltás la tecla para espantar un mosquito y volvés.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Conserva con pérdida gradual",
+          "detail": "Breve gracia y luego baja lentamente; valores concretos se prueban."
+        },
+        {
+          "id": "B",
+          "label": "Conserva hasta vencer",
+          "detail": "El porcentaje queda hasta el plazo; reduce castigo por defenderse."
+        },
+        {
+          "id": "C",
+          "label": "Pierde un tramo fijo",
+          "detail": "Cada interrupción válida resta una fracción anunciada, nunca oculta."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "D05",
+      "section": "Reglas por cerrar",
+      "title": "¿Cuánto se acorta el plazo personal al fallar una tarea?",
+      "why": "Afecta sólo a esa persona y respeta el mínimo elegido en J13; no acorta la ronda.",
+      "example": "Plazo de 30 s: una pérdida de 5 s deja la siguiente tarea en 25 s.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Cinco segundos",
+          "detail": "Penalidad lineal fácil de explicar, hasta el mínimo."
+        },
+        {
+          "id": "B",
+          "label": "Tres segundos",
+          "detail": "Escalada más suave para grupos nuevos."
+        },
+        {
+          "id": "C",
+          "label": "Diez por ciento del inicial",
+          "detail": "Se adapta al preset, redondeado y explicado en HUD."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": "J13"
+    },
+    {
+      "id": "D06",
+      "section": "Reglas por cerrar",
+      "title": "¿Cuánto tarda el rescate de un mosquito aliado?",
+      "why": "Debe haber oportunidad de intervenir y riesgo claro, sin ayuda instantánea o interminable.",
+      "example": "Un aliado se acerca al caído mientras el humano busca dónde cayó.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Dos segundos continuos",
+          "detail": "Tiempo corto con cancelación al alejarse o recibir impacto."
+        },
+        {
+          "id": "B",
+          "label": "Tres segundos continuos",
+          "detail": "Más compromiso; requiere buena cobertura."
+        },
+        {
+          "id": "C",
+          "label": "Uno y medio segundos",
+          "detail": "Rescate rápido, mayor presión al humano para impedirlo."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "D07",
+      "section": "Reglas por cerrar",
+      "title": "¿Qué esquema inicial de teclas preferís para inventario e interacción?",
+      "why": "Siempre será reasignable; define el tutorial y conflicto con voz.",
+      "example": "Manos fuera de slots: 1/2/3 seleccionan objetos y otra tecla vuelve a manos.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Números y E",
+          "detail": "1/2/3 slots, 4 manos, E interactuar, G soltar; PTT aparte."
+        },
+        {
+          "id": "B",
+          "label": "Rueda más números",
+          "detail": "Rueda recorre manos y slots, números directos; E interactuar."
+        },
+        {
+          "id": "C",
+          "label": "Teclas cercanas",
+          "detail": "Q alterna manos/objeto, rueda slots y E interactuar; números alternativos."
+        }
+      ],
+      "recommended": "B",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "D08",
+      "section": "Reglas por cerrar",
+      "title": "¿Qué equipo de entrada debe quedar listo para v0.2.0?",
+      "why": "Precisa aceptación de controles sin confundir una opción de menú con soporte real.",
+      "example": "Un amigo usa teclado y ratón; otro quiere conectar mando.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Teclado y ratón completos",
+          "detail": "Reasignación y sensibilidad por rol; mando queda fuera de esta entrega."
+        },
+        {
+          "id": "B",
+          "label": "Teclado/ratón y mando",
+          "detail": "Ambos completos en menú, gameplay y voz; mayor alcance de QA."
+        },
+        {
+          "id": "C",
+          "label": "Teclado/ratón más remapeo accesible",
+          "detail": "Priorizar una mano/remapeo completo y mantener/alternar acciones permitidas; sin mando ahora."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/unity/PLAN-UNITY-0.9.4.md (cantidades históricas propuestas, no aprobadas); docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O01",
+      "section": "Online y sesiones",
+      "title": "Forma de escribir y compartir el código privado",
+      "why": "El código privado ya es la puerta de entrada. La decisión útil es cómo reducir errores al copiarlo o escribirlo sin leer el portapapeles, detectar contenido ajeno ni exponer identificadores técnicos.",
+      "example": "Escenario visual: el anfitrión ve una tarjeta con Copiar; la persona invitada abre Unirse y elige pegar explícitamente, escribir por bloques o revisar una confirmación antes de conectar.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Copiar y pegar explícito",
+          "detail": "Tarjeta grande con botón Copiar y campo único con acción Pegar iniciada por la persona. Normaliza guiones, espacios y mayúsculas y muestra el código completo antes de conectar."
+        },
+        {
+          "id": "B",
+          "label": "Ingreso por bloques",
+          "detail": "Presentar el código en dos o tres grupos visuales con avance automático entre casillas. Favorece dictado por voz y escritura manual, aunque ocupa más espacio."
+        },
+        {
+          "id": "C",
+          "label": "Campo único con revisión",
+          "detail": "Usar un campo normal con contador de caracteres y una pantalla breve de confirmación. Es familiar para teclado/control y evita cualquier lectura automática del portapapeles."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Online/EosLobbySession.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "O02",
+      "section": "Online y sesiones",
+      "title": "Tamaño de grupo objetivo para la primera validación",
+      "why": "La sala admite una capacidad estructural mayor que la ya probada. Hace falta fijar el grupo que guía mezcla, legibilidad de roster y pruebas de v0.2.0 sin presentar dieciséis participantes como soporte demostrado.",
+      "example": "Escenario visual: tres maquetas de roster y mezcla con 2–4, 5–8 y 9–16 lugares. El número elegido define el primer gate; los escalones superiores sólo se anuncian después de pasar pruebas equivalentes.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Dos a cuatro",
+          "detail": "Diseñar la primera aceptación para 2–4 personas reales. Facilita sesiones repetibles y conversación clara; luego se escala con evidencia."
+        },
+        {
+          "id": "B",
+          "label": "Cinco a ocho",
+          "detail": "Tomar 5–8 como objetivo inicial de experiencia. Representa mejor una reunión mediana, pero exige más equipos, voces y combinaciones de rol en cada prueba."
+        },
+        {
+          "id": "C",
+          "label": "Nueve a dieciséis",
+          "detail": "Orientar desde el inicio roster y UX a 9–16, manteniendo la capacidad como meta no aprobada hasta completar carga, red y escucha con ese grupo."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/V0.2.0-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O03",
+      "section": "Online y sesiones",
+      "title": "Ingreso cuando una ronda ya empezó",
+      "why": "Un amigo puede recibir el código tarde o reconectarse mientras el resto juega. Hay que decidir si observa, espera o entra de inmediato sin alterar roles, objetivos privados ni el balance de los tres modos ya definidos.",
+      "example": "Escenario visual: cuatro personas están a mitad de Supervivencia y una quinta ingresa con el código. Mostrar cómo vería una sala de espera, una cámara de espectador o una incorporación inmediata en un punto seguro.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Esperar próxima ronda",
+          "detail": "Permitir entrar a la sala, conversar con límites definidos y ver un resumen no sensible, pero asignar rol y actor recién al comienzo siguiente. Conserva el balance y evita filtrar tareas privadas."
+        },
+        {
+          "id": "B",
+          "label": "Espectador hasta reinicio",
+          "detail": "Dar una vista espectador limitada durante la ronda y entrar en la siguiente. Es más entretenido que una espera estática, pero requiere reglas de cámara, información y voz para no dar ventaja."
+        },
+        {
+          "id": "C",
+          "label": "Entrada inmediata segura",
+          "detail": "Crear un actor durante la ronda con rol y aparición validados por el host. Reduce espera, pero complica balance, objetivos, vidas, tareas y sincronización tardía; exigiría mucha más evidencia."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/V0.2.0-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O04",
+      "section": "Online y sesiones",
+      "title": "Confirmación de listo antes de iniciar",
+      "why": "La sala necesita distinguir contenido cargado de intención de jugar. Todas las alternativas preservan la validación del host; cambia cuánto consentimiento explícito y tiempo de reacción se pide antes del inicio.",
+      "example": "Escenario visual: roster con estados Cargando/Listo y un botón de inicio que puede requerir unanimidad, activar una cuenta regresiva cancelable o dejar a quien no confirmó para la ronda siguiente.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Todos listos",
+          "detail": "Iniciar sólo cuando cada miembro conectado cargó contenido y marcó Listo. Es la regla más clara para grupos de amigos."
+        },
+        {
+          "id": "B",
+          "label": "Cuenta regresiva cancelable",
+          "detail": "Con todos cargados, el anfitrión puede iniciar una cuenta de 10 segundos aunque falte una confirmación; cualquiera puede cancelarla. Reduce espera sin sorprender."
+        },
+        {
+          "id": "C",
+          "label": "Listos entran, resto espera",
+          "detail": "Con al menos dos listos, iniciar con ese subconjunto y mantener a los demás en la sala para la ronda siguiente. Agiliza grupos variables, pero exige mostrar composición antes de arrancar."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Core/RoomSession.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "O05",
+      "section": "Online y sesiones",
+      "title": "Cómo explicar el sorteo aleatorio de roles",
+      "why": "La asignación aleatoria por ronda se mantiene. La decisión es cuánta información mostrar para que el resultado parezca comprensible sin insinuar turnos garantizados ni alterar silenciosamente la composición válida.",
+      "example": "Escenario visual: pantalla de inicio con resultado del sorteo, composición de la ronda y, según la opción, historial reciente o una preferencia futura marcada como revisión de política.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Resultado y composición",
+          "detail": "Mostrar quién quedó humano o mosquito y la cantidad total de cada rol, con una animación corta. No expone semilla ni promete compensación."
+        },
+        {
+          "id": "B",
+          "label": "Resultado más historial",
+          "detail": "Añadir los roles de las últimas tres rondas como contexto. Ayuda a percibir variedad, aunque el siguiente sorteo sigue siendo aleatorio."
+        },
+        {
+          "id": "C",
+          "label": "Preferencia como revisión futura",
+          "detail": "Permitir indicar un rol deseado sólo si se aprueba explícitamente revisar la política; la UI aclara que no garantiza resultado. Requiere decisión y pruebas nuevas antes de activarse."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Core/RoomSession.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "O06",
+      "section": "Online y sesiones",
+      "title": "Momento para elegir mapa y modo",
+      "why": "Los cinco mapas finales y los tres modos ya forman parte del alcance. Falta decidir cuánto control ve el grupo y cuándo queda bloqueada la selección para que todos carguen la misma identidad de contenido.",
+      "example": "Escenario visual: encabezado de sala con tarjetas de mapa y modo, más un candado al iniciar. Comparar selección exclusiva del anfitrión, votación visible o una rotación automática anunciada.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Anfitrión elige antes",
+          "detail": "El anfitrión selecciona mapa y modo en la sala; todos ven la elección y sus reglas antes de marcar Listo. Al iniciar queda bloqueada hasta la ronda siguiente."
+        },
+        {
+          "id": "B",
+          "label": "Votación del grupo",
+          "detail": "Cada integrante vota entre opciones compatibles y el anfitrión desempata. Reparte decisión, pero alarga la preparación y necesita reglas de empate y cambio de voto."
+        },
+        {
+          "id": "C",
+          "label": "Rotación automática",
+          "detail": "La sesión recorre mapas y modos sin repetir hasta agotar la lista, mostrando cuál sigue. Favorece variedad, aunque ofrece menos control cuando el grupo quiere practicar algo concreto."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Core/RoomSession.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "O07",
+      "section": "Online y sesiones",
+      "title": "Ventana de reingreso tras una desconexión",
+      "why": "Una desconexión breve no debe duplicar actores ni permitir reaparecer a voluntad. Todas las alternativas ligan el retorno a la misma identidad autenticada y a puntos seguros; cambia cuánto se reserva y cuándo vuelve a controlar.",
+      "example": "Escenario visual: la fila queda gris con una cuenta regresiva de 30 o 60 segundos; al regresar, la persona recupera control en el mismo estado seguro o espera una transición autorizada.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Reserva de 30 segundos",
+          "detail": "La misma identidad recupera su actor conservado durante 30 s si continúa válido; un bot puede mantenerlo inmóvil o seguro. Después aplica ingreso tardío."
+        },
+        {
+          "id": "B",
+          "label": "Reserva de 60 segundos",
+          "detail": "Dar 60 s para redes más lentas. Mejora recuperación, pero mantiene plaza y estado provisional durante más tiempo."
+        },
+        {
+          "id": "C",
+          "label": "Retorno en transición",
+          "detail": "Conservar membresía durante 60 s, pero devolver control sólo al siguiente checkpoint o ronda. Evita saltos en mitad de una acción a costa de más espera."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/ONLINE-READINESS.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O08",
+      "section": "Online y sesiones",
+      "title": "Continuidad de ronda ante una desconexión",
+      "why": "Cuando alguien se va, la ronda puede quedar desequilibrada. Las alternativas deben conservar autoridad del host y objetivos posibles, con un plazo concreto para distinguir un corte breve de una salida.",
+      "example": "Escenario visual: aviso de desconexión con cuenta de 30 s y etiqueta Bot temporal, Actor retirado o Pausa breve; al vencer se aplica la regla específica del modo.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Bot durante 30 segundos",
+          "detail": "El host controla temporalmente al actor durante la reserva; si no vuelve, lo retira o ajusta sólo lo permitido por el modo. Mantiene ritmo."
+        },
+        {
+          "id": "B",
+          "label": "Retiro al vencer reserva",
+          "detail": "Conservar al actor seguro durante 30 s sin bot y retirarlo al vencer, recalculando únicamente cuotas previstas. Evita conducta automática inesperada."
+        },
+        {
+          "id": "C",
+          "label": "Pausa breve votada",
+          "detail": "Ofrecer al grupo una pausa máxima de 30 s una vez por ronda; después continuar con retiro seguro. Favorece grupos coordinados, pero interrumpe el ritmo."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/MODES-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O09",
+      "section": "Online y sesiones",
+      "title": "Cómo reunir al grupo después de perder al anfitrión",
+      "why": "El cierre del anfitrión termina la sala y purga ronda/voz; no se ofrece migración. La decisión es cómo facilitar que el mismo grupo cree una reunión nueva sin sugerir que el código anterior sigue activo.",
+      "example": "Escenario visual: modal «El anfitrión cerró la sala» con tres salidas posibles: crear una sala nueva, volver juntos al menú con instrucciones o conservar un resumen local de participantes.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Crear sala nueva",
+          "detail": "Mostrar a todos Volver al menú y, a una persona, Crear nueva sala; el nuevo anfitrión comparte un código nuevo por el canal habitual."
+        },
+        {
+          "id": "B",
+          "label": "Guía breve de reencuentro",
+          "detail": "Cerrar y mostrar pasos numerados: acordar quién crea, esperar su nuevo código y usar Unirse. Es neutral y funciona aunque nadie quiera crear inmediatamente."
+        },
+        {
+          "id": "C",
+          "label": "Resumen local de grupo",
+          "detail": "Además del cierre seguro, conservar sólo nombres visibles de la reunión durante esa pantalla para ayudar a comprobar quién falta; no guarda PUID ni reconecta automáticamente."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Online/EosLobbySession.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "O10",
+      "section": "Online y sesiones",
+      "title": "Nivel de ayuda ante errores de conexión",
+      "why": "Los identificadores y resultados crudos del SDK nunca se muestran. La decisión es cuánto contexto y asistencia saneada recibe una persona ante código inválido, versión distinta, sala llena o timeout.",
+      "example": "Escenario visual: tarjeta con título humano y acción principal; según la opción añade una explicación desplegable o permite exportar un diagnóstico sin PUID para soporte consentido.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Mensaje y acción directa",
+          "detail": "Una frase específica y botones Reintentar, Cambiar código o Actualizar según corresponda. Mantiene la pantalla breve."
+        },
+        {
+          "id": "B",
+          "label": "Ayuda contextual desplegable",
+          "detail": "Añadir Qué puedo hacer con dos o tres pasos y estado de servicio/conexión expresado en lenguaje común. Ayuda a resolver sin abandonar."
+        },
+        {
+          "id": "C",
+          "label": "Diagnóstico saneado opcional",
+          "detail": "Incluir lo anterior y un botón explícito para copiar un informe sin PUID, secretos ni stack trace. Facilita soporte entre amigos, con más trabajo de revisión."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Online/EosLobbySession.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "O11",
+      "section": "Voz y sonido",
+      "title": "Tecla y personalización de pulsar para hablar",
+      "why": "PTT seguirá abriendo captura sólo mientras se mantiene una acción. La decisión es cómo asignarla entre teclado y control para que sea accesible sin activar un modo de transmisión continua.",
+      "example": "Escenario visual: Ajustes muestra «Pulsar para hablar: V / LB» y una animación de mantener. Comparar atajo fijo, reasignación completa o presets accesibles.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Reasignable por dispositivo",
+          "detail": "Permitir cambiar la acción mantenida de teclado, mouse y control, detectar conflictos y ofrecer Restaurar. Da control sin cambiar la regla de captura."
+        },
+        {
+          "id": "B",
+          "label": "Atajo fijo más alternativo",
+          "detail": "Usar V en teclado y un botón definido en control, con una segunda tecla opcional. Es simple de enseñar y probar."
+        },
+        {
+          "id": "C",
+          "label": "Presets de accesibilidad",
+          "detail": "Ofrecer tres mapas de botones mantenidos, incluido uno de baja tensión, sin convertirlo en toggle. Reduce configuración fina y mantiene PTT explícito."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O12",
+      "section": "Voz y sonido",
+      "title": "Presentación de dispositivos y fallos de entrada",
+      "why": "El juego nunca cambia de micrófono sin consentimiento. La decisión es cómo ordenar dispositivos y explicar que el elegido desapareció o no pudo abrirse para que la persona seleccione otro conscientemente.",
+      "example": "Escenario visual: lista con dispositivo activo, disponibles y no disponible; un fallo puede aparecer junto al selector, en un aviso persistente o en un asistente de comprobación.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Lista con estado en línea",
+          "detail": "Mostrar el elegido primero, marcar Disponible/No disponible y dejar Seleccionar como acción explícita. Un fallo permanece junto al nombre."
+        },
+        {
+          "id": "B",
+          "label": "Aviso persistente con acceso",
+          "detail": "Mantener la lista simple y mostrar una banda «Micrófono desconectado» que abre Ajustes. Es visible durante sala y partida sin modal."
+        },
+        {
+          "id": "C",
+          "label": "Comprobación guiada",
+          "detail": "Al fallar PTT, abrir una guía opcional que enumera dispositivos, permiso y prueba local iniciada por la persona. Ayuda a hardware complejo con más pasos."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O13",
+      "section": "Voz y sonido",
+      "title": "Ayuda al pulsar PTT sin micrófono disponible",
+      "why": "Jugar y escuchar siempre siguen permitidos. La decisión es cómo ayudar cuando se pulsa PTT sin dispositivo elegido o disponible, sin abrir hardware ni bloquear la partida.",
+      "example": "Escenario visual: al mantener PTT aparece un toast, una pista junto al icono o una invitación a diagnóstico; todos desaparecen sin interrumpir el control.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Aviso breve no modal",
+          "detail": "Mostrar «Elegí un micrófono en Ajustes» durante unos segundos con acceso directo. No tapa la partida."
+        },
+        {
+          "id": "B",
+          "label": "Feedback junto al PTT",
+          "detail": "El icono propio cambia a micrófono tachado y muestra una etiqueta pequeña mientras se mantiene la acción. Enseña la causa en el mismo lugar."
+        },
+        {
+          "id": "C",
+          "label": "Ayuda progresiva",
+          "detail": "Primer intento usa feedback breve; tras tres intentos fallidos ofrece abrir la comprobación de dispositivos. Evita insistencia y asiste a quien la necesita."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O14",
+      "section": "Voz y sonido",
+      "title": "Ubicación y confirmación del mute propio",
+      "why": "Mutear siempre cierra captura, purga envío y bloquea PTT. La decisión es dónde se accede y qué feedback persistente confirma el estado para evitar que alguien crea estar transmitiendo.",
+      "example": "Escenario visual: comparar un botón junto al indicador PTT, una fila en el menú rápido y una combinación de ambos con icono rojo persistente.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Menú rápido más icono",
+          "detail": "Mute propio está en el menú rápido y deja un icono persistente en HUD/sala. Equilibra acceso y prevención de cambios accidentales."
+        },
+        {
+          "id": "B",
+          "label": "Junto al control PTT",
+          "detail": "Colocar mute al lado de la asignación/indicador PTT y mostrar respuesta bloqueada al mantener. Es directo para teclado/control."
+        },
+        {
+          "id": "C",
+          "label": "Acceso doble coherente",
+          "detail": "Permitir cambiarlo desde menú rápido y Ajustes, ambos sincronizados y con el mismo icono persistente. Es más descubrible, pero añade dos puntos a probar."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Valor provisional en código",
+      "source": "unity/Assets/LetMeSleep/Online/VoiceOnlineSession.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "O15",
+      "section": "Voz y sonido",
+      "title": "Alcance temporal del mute de otra persona",
+      "why": "El mute ajeno es local y nunca cambia lo que oyen los demás. Todas las opciones evitan almacenamiento permanente de identidad; cambia si se restablece durante la misma reunión.",
+      "example": "Escenario visual: un altavoz tachado en el roster indica «silenciado para ti» y explica cuándo se quitará: al terminar ronda, al salir de la sala o tras una confirmación nueva.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Hasta salir de la sala",
+          "detail": "Mantenerlo entre rondas de la misma sala y borrarlo al salir. Evita repetir la acción y no crea una lista persistente."
+        },
+        {
+          "id": "B",
+          "label": "Sólo la ronda actual",
+          "detail": "Restablecerlo al mostrar resultados. Sirve para situaciones momentáneas, aunque puede reactivar una voz al empezar la siguiente."
+        },
+        {
+          "id": "C",
+          "label": "Preguntar al cambiar ronda",
+          "detail": "Mantenerlo durante la ronda y, en resultados, ofrecer Conservar o Quitar. Da control explícito con una interacción adicional."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "unity/Assets/LetMeSleep/Online/VoiceOnlineSession.cs",
+      "dependsOn": null
+    },
+    {
+      "id": "O16",
+      "section": "Voz y sonido",
+      "title": "Distancia base de voz por proximidad",
+      "why": "Hay que escoger una propuesta medible para empezar a balancear los cinco mapas. Todas usan voz clara cerca, caída gradual y corte; los números son provisionales hasta prueba en escala real.",
+      "example": "Escenario visual: anillos desde cada actor con zona clara y zona de caída. Comparar 4/12 m, 6/18 m y perfiles interior/exterior, escuchando puertas y pisos.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Clara 4 m, corte 12 m",
+          "detail": "Favorece encuentros cercanos y reduce ruido simultáneo. Puede ser demasiado corta en exteriores amplios."
+        },
+        {
+          "id": "B",
+          "label": "Clara 6 m, corte 18 m",
+          "detail": "Da margen para coordinación en habitaciones y patios; aumenta solapamiento y ancho de banda audible."
+        },
+        {
+          "id": "C",
+          "label": "Dos perfiles 4/12 y 8/24",
+          "detail": "Usar perfil interior y exterior declarados por mapa. Se adapta a escala, pero duplica balance y pruebas por entorno."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O17",
+      "section": "Voz y sonido",
+      "title": "Audición entre roles dentro de proximidad",
+      "why": "La voz física entre ambos bandos se conserva. La decisión es cuánto atenuar la voz rival dentro del alcance antes de aplicar la ventaja específica mosquito‑mosquito.",
+      "example": "Escenario visual: matriz Humano↔Humano, Humano↔Mosquito y Mosquito↔Mosquito; todas las celdas son audibles cerca, con curvas iguales o atenuadas.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Curva base compartida",
+          "detail": "Humanos y mosquitos se oyen con la misma curva base; luego la regla mosquito modifica timbre y alcance por oyente. Es fácil de aprender."
+        },
+        {
+          "id": "B",
+          "label": "Rival 25 % más bajo",
+          "detail": "Dentro del mismo radio, la voz del rol rival recibe 25 % menos ganancia. Refuerza equipos sin ocultar una presencia cercana."
+        },
+        {
+          "id": "C",
+          "label": "Rival sólo en zona clara",
+          "detail": "La voz rival se oye en la zona clara y cae más rápido después; mismo rol mantiene toda la curva. Aumenta sigilo y requiere balance fino."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O18",
+      "section": "Voz y sonido",
+      "title": "Diferencia de alcance de la voz mosquito",
+      "why": "El mosquito debe sonar más agudo sin acelerar el habla, llegar menos a humanos y resultar más inteligible entre mosquitos. Falta fijar una proporción inicial, no decidir si la ventaja existe.",
+      "example": "Escenario visual: radios superpuestos alrededor de un mosquito. Comparar corte humano/mosquito de 8/16 m, 6/18 m o una relación porcentual sobre la distancia base.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Ocho y dieciséis metros",
+          "detail": "Humanos dejan de oír a 8 m y mosquitos a 16 m, con caída gradual. Relación 1:2 fácil de comunicar y medir."
+        },
+        {
+          "id": "B",
+          "label": "Seis y dieciocho metros",
+          "detail": "Acentúa sigilo frente a humanos y coordinación mosquito. Puede aislar demasiado en mapas abiertos."
+        },
+        {
+          "id": "C",
+          "label": "Sesenta y ciento veinte por ciento",
+          "detail": "Calcular ambos cortes sobre el perfil de mapa: humanos 60 % y mosquitos 120 % de la base. Se adapta a escala, pero es menos intuitivo."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O19",
+      "section": "Voz y sonido",
+      "title": "Voz de participantes eliminados",
+      "why": "En Supervivencia puede haber eliminados antes del final. Si siguen hablando con jugadores activos podrían entregar información o distraer; si quedan completamente aislados, la espera puede sentirse vacía.",
+      "example": "Escenario visual: al ser eliminado, aparece una banda «Voz de ronda desactivada» y se indica si puede hablar con otros eliminados, sólo escuchar o quedar en silencio hasta resultados.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Canal de eliminados",
+          "detail": "Cortar envío y recepción con actores activos y permitir proximidad o chat entre eliminados en una ruta separada. Evita ventaja y mantiene compañía, pero requiere reglas claras de transición."
+        },
+        {
+          "id": "B",
+          "label": "Sólo escuchar activos",
+          "detail": "El eliminado no transmite, pero oye según cámara/proximidad. Reduce filtración saliente, aunque todavía puede recibir información y compartirla fuera del juego."
+        },
+        {
+          "id": "C",
+          "label": "Silencio hasta resultados",
+          "detail": "Detener toda voz de ronda al quedar eliminado y reactivarla en resultados. Es la regla competitiva más estricta, pero puede volver larga la espera."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/MODES-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O20",
+      "section": "Voz y sonido",
+      "title": "Intensidad de oclusión por geometría",
+      "why": "Puertas, paredes y pisos deben afectar la voz sin silencios arbitrarios. Todas las opciones usan el hook local de oclusión; cambia cuánto filtran y si distinguen puertas.",
+      "example": "Escenario visual: dos oyentes a 8 m, uno en la misma habitación y otro detrás de pared/puerta. Comparar atenuación leve, fuerte o propagación por aberturas.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Filtro leve uniforme",
+          "detail": "Una obstrucción reduce 6 dB y recorta agudos, sin cortar por completo. Es estable ante geometría imperfecta."
+        },
+        {
+          "id": "B",
+          "label": "Pared fuerte, puerta suave",
+          "detail": "Pared/piso reduce 12 dB; puerta cerrada 8 dB y abierta 2 dB. Da lectura material más rica y exige estados correctos."
+        },
+        {
+          "id": "C",
+          "label": "Propagación por abertura",
+          "detail": "Buscar una puerta o abertura cercana y atenuar según ese recorrido. Puede sonar natural en interiores, con mayor coste y casos límite."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O21",
+      "section": "Voz y sonido",
+      "title": "Mezcla de voz con ambiente, música y señales",
+      "why": "La voz debe ser comprensible sin ocultar peligro ni acciones. Todas las opciones conservan controles de volumen; cambia qué categorías bajan temporalmente al recibir voz audible.",
+      "example": "Escenario visual: mezclador Voz/Efectos/Ambiente/Música y tres curvas de ducking durante una frase: música+ambiente, sólo música o ninguna reducción automática.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Música y ambiente menos 4 dB",
+          "detail": "Aplicar ducking suave sólo mientras hay voz audible; efectos críticos quedan intactos. Favorece comprensión en mapas ruidosos."
+        },
+        {
+          "id": "B",
+          "label": "Sólo música menos 6 dB",
+          "detail": "Conservar ambiente espacial y bajar más la música. Mantiene pistas del mundo, aunque un ambiente intenso puede competir."
+        },
+        {
+          "id": "C",
+          "label": "Sin ducking, límites por voz",
+          "detail": "No mover categorías; usar compresión suave y límite de voces simultáneas, con sliders claros. Evita bombeo y depende más de ajuste del jugador."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O22",
+      "section": "Voz y sonido",
+      "title": "Ubicación de indicadores de voces audibles",
+      "why": "Nunca se marca PTT de alguien fuera de alcance. La decisión es dónde identificar a una persona cuya voz ya llegó, equilibrando orientación, legibilidad y espacio de pantalla.",
+      "example": "Escenario visual: una voz audible puede encender icono en roster, sobre el actor visible o en ambos lugares; al salir de alcance el indicador desaparece junto al audio.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Roster de sesión",
+          "detail": "Marcar nombre e icono sólo mientras su audio es audible. Funciona aunque el actor esté fuera de cámara y no revela voces fuera de regla."
+        },
+        {
+          "id": "B",
+          "label": "Sobre actor visible",
+          "detail": "Mostrar un pulso discreto sobre personajes visibles y audibles. Refuerza espacialidad, pero no identifica a quien habla detrás del jugador."
+        },
+        {
+          "id": "C",
+          "label": "Roster más pulso visible",
+          "detail": "Combinar ambos con intensidad mínima. Es la opción más clara, aunque suma elementos y necesita prueba de saturación con varias voces."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/INVENTORY-VOICE-V020.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O23",
+      "section": "Entrega y validación",
+      "title": "Matriz mínima de hardware para aceptar voz",
+      "why": "Las señales sintéticas no acreditan hardware. Todas las alternativas incluyen ausencia/desconexión y al menos dos dispositivos reales; cambia la amplitud del gate inicial.",
+      "example": "Escenario visual: tabla de dispositivos con PTT, selección, nivel, mute, foco y audio residual; cada columna conserva evidencia y sistema operativo.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "USB más integrado en dos equipos",
+          "detail": "Validar headset USB e integrado en dos PCs, incluyendo desconexión y dispositivo ausente. Es el mínimo recomendado."
+        },
+        {
+          "id": "B",
+          "label": "Agregar Bluetooth",
+          "detail": "Además del mínimo USB/integrado en dos equipos, sumar Bluetooth y su cambio de perfil. Más cobertura de latencia y drivers."
+        },
+        {
+          "id": "C",
+          "label": "Agregar interfaz y mic virtual",
+          "detail": "Además de USB/integrado, probar interfaz profesional y micrófono virtual. Amplía compatibilidad, pero eleva mucho el costo del gate."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/V0.2.0-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O24",
+      "section": "Entrega y validación",
+      "title": "Momento de exigir redes independientes",
+      "why": "El objetivo es jugar con amigos online y ninguna opción permite afirmar WAN sin evidencia. La decisión es si esa sesión bloquea toda publicación o una candidata privada claramente rotulada.",
+      "example": "Escenario visual: escalera tests→dos procesos→dos equipos→redes independientes. El estado público sólo se vuelve aprobado cuando el último peldaño pasa.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Antes de cualquier release pública",
+          "detail": "Exigir al menos dos rondas con dos identidades reales en redes independientes antes de publicar v0.2.0. Mantiene el criterio completo de entrega."
+        },
+        {
+          "id": "B",
+          "label": "Candidata privada primero",
+          "detail": "Preparar y compartir con autorización la candidata para testers, sin afirmar WAN; publicar la versión final tras dos rondas WAN verificadas."
+        },
+        {
+          "id": "C",
+          "label": "Dos sesiones WAN independientes",
+          "detail": "Además de las dos rondas mínimas, repetir en otro día o par de redes. Aumenta confianza y coordinación."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/V0.2.0-DELIVERY.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O25",
+      "section": "Entrega y validación",
+      "title": "Regla para certificar capacidad simultánea",
+      "why": "Las cifras sintéticas guían la carga, pero el máximo publicado debe pasar red, CPU, mezcla y escucha. Todas las opciones certifican únicamente lo observado; cambia el umbral deseado.",
+      "example": "Escenario visual: peldaños 2, 4, 8 y 16 con estado No probado/Probado. El texto de release toma el último peldaño verde, nunca el límite teórico.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Escalar hasta primer fallo",
+          "detail": "Probar 2→4→8→16 y certificar el último escalón que cumpla criterios. Produce el máximo basado en evidencia."
+        },
+        {
+          "id": "B",
+          "label": "Objetivo mínimo de cuatro",
+          "detail": "Bloquear release hasta cuatro personas y tratar 8/16 como mejoras si pasan. Es alcanzable para un grupo pequeño."
+        },
+        {
+          "id": "C",
+          "label": "Objetivo mínimo de ocho",
+          "detail": "Bloquear release hasta ocho personas reales o carga equivalente más escucha representativa. Ofrece mayor ambición y exige coordinación."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/VOICE-001-DESIGN.md",
+      "dependsOn": null
+    },
+    {
+      "id": "O26",
+      "section": "Entrega y validación",
+      "title": "Formato de aceptación auditiva humana",
+      "why": "La escucha es obligatoria; métricas automáticas sólo acompañan. La decisión es cuántas personas y cuánto control comparativo usar para evaluar comprensión, timbre mosquito y fatiga.",
+      "example": "Escenario visual: ficha por frase con rol, distancia, oclusión, voces simultáneas, dispositivo y puntuación; no se guardan grabaciones salvo consentimiento separado.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Dos personas con guion",
+          "detail": "Dos testers recorren frases, distancias, ambos roles, pared/puerta y solapamiento; califican comprensión y audio residual. Es el gate mínimo repetible."
+        },
+        {
+          "id": "B",
+          "label": "Tres personas y rotación",
+          "detail": "Tres testers alternan hablante/oyente/observador y repiten en dos dispositivos. Mejora cobertura y reduce sesgo individual."
+        },
+        {
+          "id": "C",
+          "label": "Comparación A/B ciega",
+          "detail": "Además del recorrido, comparar dos mezclas o timbres sin mostrar cuál es cuál. Da mejor decisión perceptual, con preparación y tiempo extra."
+        }
+      ],
+      "recommended": "A",
+      "basis": "Por definir",
+      "source": "docs/ceo/VOICE-001-DESIGN.md",
+      "dependsOn": null
+    },
+    {
+      "id": "S01",
+      "section": "Música y efectos",
+      "title": "¿Qué identidad musical tendrá Let Me Sleep?",
+      "why": "Fija instrumentos, tono y relación con la noche; no depende de copiar música de otro juego.",
+      "example": "El menú presenta el juego antes de que haya voces o peligro.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Acústica nocturna juguetona",
+          "detail": "Maderas, pizzicato y percusión suave; cálida y cómica."
+        },
+        {
+          "id": "B",
+          "label": "Electrónica suave",
+          "detail": "Sintetizadores discretos y ritmos ligeros; más moderna."
+        },
+        {
+          "id": "C",
+          "label": "Caja musical y jazz ligero",
+          "detail": "Motivo de sueño reconocible con variaciones ágiles para resultados."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "S02",
+      "section": "Música y efectos",
+      "title": "¿Cuánta música habrá durante la ronda?",
+      "why": "La música no debe tapar zumbido, pasos o voz cercana.",
+      "example": "Un mosquito se acerca mientras dos humanos hablan en la casa.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Ambiente primero",
+          "detail": "Música sólo al empezar, terminar y en transiciones; mundo sonoro durante juego."
+        },
+        {
+          "id": "B",
+          "label": "Fondo discreto continuo",
+          "detail": "Base musical muy baja, con prioridad de señales y voz."
+        },
+        {
+          "id": "C",
+          "label": "Entradas puntuales",
+          "detail": "Fragmentos durante momentos públicos del modo; nunca revela un rival oculto."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "S03",
+      "section": "Música y efectos",
+      "title": "¿Qué estilo tendrán golpes y herramientas?",
+      "why": "Precisa la mezcla entre humor y lectura del impacto real.",
+      "example": "Matamoscas golpea aire, madera o mosquito: se distinguen sin exagerar volumen.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Foley estilizado",
+          "detail": "Sonidos reconocibles con pequeño énfasis cómico."
+        },
+        {
+          "id": "B",
+          "label": "Caricatura sonora",
+          "detail": "Más elasticidad y golpes expresivos, sin chirridos invasivos."
+        },
+        {
+          "id": "C",
+          "label": "Secos y contenidos",
+          "detail": "Impactos breves, pocos adornos y lectura precisa."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "S04",
+      "section": "Música y efectos",
+      "title": "¿Qué intensidad subjetiva tendrá el zumbido mosquito?",
+      "why": "Debe informar distancia sin fatigar ni sonar constante cuando está posado.",
+      "example": "Tras diez minutos de partida, el zumbido sigue siendo útil.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Suave pero localizable",
+          "detail": "Timbre menos agudo; aumenta sólo al acercarse mucho."
+        },
+        {
+          "id": "B",
+          "label": "Amenaza cercana marcada",
+          "detail": "Muy tenue lejos y claro cerca del cuerpo humano."
+        },
+        {
+          "id": "C",
+          "label": "Carácter cómico",
+          "detail": "Timbre más expresivo con variación moderada; sin repetir un efecto molesto."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "S05",
+      "section": "Música y efectos",
+      "title": "¿Qué señal auditiva anuncia que te están picando?",
+      "why": "Sin marcas de picadura: hace falta feedback justo que no apunte automáticamente al atacante.",
+      "example": "El humano nota el contacto pero debe localizar y defender manualmente.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Aviso corporal discreto",
+          "detail": "Un sonido breve al inicio más reacción, sin indicar coordenadas."
+        },
+        {
+          "id": "B",
+          "label": "Reacción vocal breve",
+          "detail": "Quejido humano estilizado con cooldown para evitar repetición."
+        },
+        {
+          "id": "C",
+          "label": "Combinación muy sutil",
+          "detail": "Foley corto y reacción casi susurrada; revisar accesibilidad auditiva."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "S06",
+      "section": "Música y efectos",
+      "title": "¿Cuánto protagonismo tienen los pasos humanos?",
+      "why": "Los pasos afectan orientación de ambos roles y coherencia de materiales.",
+      "example": "Un humano pasa del suelo de madera a la hierba del patio.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Material legible, volumen moderado",
+          "detail": "Madera, hierba y metal diferenciados; sin sonar como golpes."
+        },
+        {
+          "id": "B",
+          "label": "Más discretos",
+          "detail": "Pantuflas suaves; correr y metal se distinguen más."
+        },
+        {
+          "id": "C",
+          "label": "Cómicos pero claros",
+          "detail": "Pequeño arrastre/chancleteo característico, con variación para no repetirse."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "S07",
+      "section": "Música y efectos",
+      "title": "¿Qué densidad de ambiente debe tener cada mapa?",
+      "why": "Aves, agua, viento y crujidos enriquecen el lugar sin ocultar voces.",
+      "example": "Campamento nocturno con arroyo y fogón mientras hablás con un aliado.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Capas selectivas",
+          "detail": "Un fondo suave más fuentes locales concretas."
+        },
+        {
+          "id": "B",
+          "label": "Ambiente muy tranquilo",
+          "detail": "Pocas capas y pausas; prioriza escucha competitiva."
+        },
+        {
+          "id": "C",
+          "label": "Entorno vivo",
+          "detail": "Más variedad aleatoria acotada y espacial, evitando sonidos falsos de enemigos."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "S08",
+      "section": "Música y efectos",
+      "title": "¿Qué presentación sonora acompaña la victoria y derrota?",
+      "why": "Da cierre sin prolongar la espera para jugar otra ronda.",
+      "example": "La pantalla de resultados aparece y el grupo decide revancha.",
+      "priority": "detalle",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Motivo corto de 3 segundos",
+          "detail": "Variación musical ganadora/perdedora, después voz clara."
+        },
+        {
+          "id": "B",
+          "label": "Celebración de 5 segundos",
+          "detail": "Motivo y reacción de personajes, siempre saltables."
+        },
+        {
+          "id": "C",
+          "label": "Cierre discreto",
+          "detail": "Un acento breve y ambiente de sala, casi sin fanfarria."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "T01",
+      "section": "Entrega y validación",
+      "title": "¿Qué objetivo de rendimiento debe orientar la configuración inicial?",
+      "why": "Es una meta por medir en hardware declarado, no una promesa de FPS actual.",
+      "example": "El mismo mapa debe conservar lectura y respuesta al bajar calidad.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "1080p a 60 FPS",
+          "detail": "Equilibrio visual y fluidez en el equipo de referencia que indiqués."
+        },
+        {
+          "id": "B",
+          "label": "720p a 60 FPS en equipo modesto",
+          "detail": "Priorizar escalabilidad; indicar CPU/GPU/RAM real en notas."
+        },
+        {
+          "id": "C",
+          "label": "1080p a 120 FPS en equipo potente",
+          "detail": "Priorizar baja latencia; requiere hardware y métricas representativas."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    },
+    {
+      "id": "T02",
+      "section": "Entrega y validación",
+      "title": "¿Qué idiomas deben estar completos en v0.2.0?",
+      "why": "Incluye interfaz, tutoriales, nombres de tareas, errores y guía para amigos.",
+      "example": "Nadie debe encontrar claves internas o media interfaz traducida.",
+      "priority": "decisiva",
+      "type": "single",
+      "options": [
+        {
+          "id": "A",
+          "label": "Español completo",
+          "detail": "Redacción elegida en P02; estructura preparada para ampliar."
+        },
+        {
+          "id": "B",
+          "label": "Español e inglés",
+          "detail": "Dos localizaciones completas y revisión de texto/espacio."
+        },
+        {
+          "id": "C",
+          "label": "Español neutro y rioplatense",
+          "detail": "Dos variantes de tono, mismo significado y controles."
+        }
+      ],
+      "recommended": null,
+      "basis": "Por definir",
+      "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+      "dependsOn": null
+    }
+  ],
+  "fixed": [
+    "Windows v0.2.0 en Unity; entrega completa y publicada en GitHub con launcher compatible.",
+    "Cinco mapas fijos: Isla del Laguito, Casa del Patio, Campamento Pinar, Yate a la Deriva y Puerto del Faro.",
+    "Tres modos: Sangre, Supervivencia y Tareas; entrenamiento con bots y ambos roles.",
+    "Humano en primera persona con cuerpo visible; mosquito en tercera persona y W hacia la mirada.",
+    "Roles sorteados por ronda; sin proporción obligatoria 2:1.",
+    "Defensa manual y picadura sin marcas; inventario de tres espacios con manos fuera de slots.",
+    "Tres vidas personales de mosquito en Tareas, objetivos privados y respawn protegido.",
+    "Voz por PTT; mute detiene captura; no cambiar micrófono sin consentimiento.",
+    "Sala privada por código y cierre al salir el anfitrión; ninguna propuesta aquí añade migración de host automáticamente.",
+    "Arte nuevo sin reciclar estética alfa; fuentes Higgsfield preservadas; bocetos nuevos son exploratorios.",
+    "Sin crafting, armas de fuego, clases con estadísticas, tienda, recompensas diarias ni minimapa.",
+    "Pruebas CPU no certifican arte, audio, WAN o capacidad; la descarga final debe comprobarse."
+  ]
+}

@@ -1,0 +1,302 @@
+[
+  {
+    "id": "S01",
+    "section": "Música y efectos",
+    "title": "¿Qué identidad musical tendrá Let Me Sleep?",
+    "why": "Fija instrumentos, tono y relación con la noche; no depende de copiar música de otro juego.",
+    "example": "El menú presenta el juego antes de que haya voces o peligro.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Acústica nocturna juguetona",
+        "detail": "Maderas, pizzicato y percusión suave; cálida y cómica."
+      },
+      {
+        "id": "B",
+        "label": "Electrónica suave",
+        "detail": "Sintetizadores discretos y ritmos ligeros; más moderna."
+      },
+      {
+        "id": "C",
+        "label": "Caja musical y jazz ligero",
+        "detail": "Motivo de sueño reconocible con variaciones ágiles para resultados."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "S02",
+    "section": "Música y efectos",
+    "title": "¿Cuánta música habrá durante la ronda?",
+    "why": "La música no debe tapar zumbido, pasos o voz cercana.",
+    "example": "Un mosquito se acerca mientras dos humanos hablan en la casa.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Ambiente primero",
+        "detail": "Música sólo al empezar, terminar y en transiciones; mundo sonoro durante juego."
+      },
+      {
+        "id": "B",
+        "label": "Fondo discreto continuo",
+        "detail": "Base musical muy baja, con prioridad de señales y voz."
+      },
+      {
+        "id": "C",
+        "label": "Entradas puntuales",
+        "detail": "Fragmentos durante momentos públicos del modo; nunca revela un rival oculto."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "S03",
+    "section": "Música y efectos",
+    "title": "¿Qué estilo tendrán golpes y herramientas?",
+    "why": "Precisa la mezcla entre humor y lectura del impacto real.",
+    "example": "Matamoscas golpea aire, madera o mosquito: se distinguen sin exagerar volumen.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Foley estilizado",
+        "detail": "Sonidos reconocibles con pequeño énfasis cómico."
+      },
+      {
+        "id": "B",
+        "label": "Caricatura sonora",
+        "detail": "Más elasticidad y golpes expresivos, sin chirridos invasivos."
+      },
+      {
+        "id": "C",
+        "label": "Secos y contenidos",
+        "detail": "Impactos breves, pocos adornos y lectura precisa."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "S04",
+    "section": "Música y efectos",
+    "title": "¿Qué intensidad subjetiva tendrá el zumbido mosquito?",
+    "why": "Debe informar distancia sin fatigar ni sonar constante cuando está posado.",
+    "example": "Tras diez minutos de partida, el zumbido sigue siendo útil.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Suave pero localizable",
+        "detail": "Timbre menos agudo; aumenta sólo al acercarse mucho."
+      },
+      {
+        "id": "B",
+        "label": "Amenaza cercana marcada",
+        "detail": "Muy tenue lejos y claro cerca del cuerpo humano."
+      },
+      {
+        "id": "C",
+        "label": "Carácter cómico",
+        "detail": "Timbre más expresivo con variación moderada; sin repetir un efecto molesto."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "S05",
+    "section": "Música y efectos",
+    "title": "¿Qué señal auditiva anuncia que te están picando?",
+    "why": "Sin marcas de picadura: hace falta feedback justo que no apunte automáticamente al atacante.",
+    "example": "El humano nota el contacto pero debe localizar y defender manualmente.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Aviso corporal discreto",
+        "detail": "Un sonido breve al inicio más reacción, sin indicar coordenadas."
+      },
+      {
+        "id": "B",
+        "label": "Reacción vocal breve",
+        "detail": "Quejido humano estilizado con cooldown para evitar repetición."
+      },
+      {
+        "id": "C",
+        "label": "Combinación muy sutil",
+        "detail": "Foley corto y reacción casi susurrada; revisar accesibilidad auditiva."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "S06",
+    "section": "Música y efectos",
+    "title": "¿Cuánto protagonismo tienen los pasos humanos?",
+    "why": "Los pasos afectan orientación de ambos roles y coherencia de materiales.",
+    "example": "Un humano pasa del suelo de madera a la hierba del patio.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Material legible, volumen moderado",
+        "detail": "Madera, hierba y metal diferenciados; sin sonar como golpes."
+      },
+      {
+        "id": "B",
+        "label": "Más discretos",
+        "detail": "Pantuflas suaves; correr y metal se distinguen más."
+      },
+      {
+        "id": "C",
+        "label": "Cómicos pero claros",
+        "detail": "Pequeño arrastre/chancleteo característico, con variación para no repetirse."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "S07",
+    "section": "Música y efectos",
+    "title": "¿Qué densidad de ambiente debe tener cada mapa?",
+    "why": "Aves, agua, viento y crujidos enriquecen el lugar sin ocultar voces.",
+    "example": "Campamento nocturno con arroyo y fogón mientras hablás con un aliado.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Capas selectivas",
+        "detail": "Un fondo suave más fuentes locales concretas."
+      },
+      {
+        "id": "B",
+        "label": "Ambiente muy tranquilo",
+        "detail": "Pocas capas y pausas; prioriza escucha competitiva."
+      },
+      {
+        "id": "C",
+        "label": "Entorno vivo",
+        "detail": "Más variedad aleatoria acotada y espacial, evitando sonidos falsos de enemigos."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "S08",
+    "section": "Música y efectos",
+    "title": "¿Qué presentación sonora acompaña la victoria y derrota?",
+    "why": "Da cierre sin prolongar la espera para jugar otra ronda.",
+    "example": "La pantalla de resultados aparece y el grupo decide revancha.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Motivo corto de 3 segundos",
+        "detail": "Variación musical ganadora/perdedora, después voz clara."
+      },
+      {
+        "id": "B",
+        "label": "Celebración de 5 segundos",
+        "detail": "Motivo y reacción de personajes, siempre saltables."
+      },
+      {
+        "id": "C",
+        "label": "Cierre discreto",
+        "detail": "Un acento breve y ambiente de sala, casi sin fanfarria."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "T01",
+    "section": "Entrega y validación",
+    "title": "¿Qué objetivo de rendimiento debe orientar la configuración inicial?",
+    "why": "Es una meta por medir en hardware declarado, no una promesa de FPS actual.",
+    "example": "El mismo mapa debe conservar lectura y respuesta al bajar calidad.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "1080p a 60 FPS",
+        "detail": "Equilibrio visual y fluidez en el equipo de referencia que indiqués."
+      },
+      {
+        "id": "B",
+        "label": "720p a 60 FPS en equipo modesto",
+        "detail": "Priorizar escalabilidad; indicar CPU/GPU/RAM real en notas."
+      },
+      {
+        "id": "C",
+        "label": "1080p a 120 FPS en equipo potente",
+        "detail": "Priorizar baja latencia; requiere hardware y métricas representativas."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "T02",
+    "section": "Entrega y validación",
+    "title": "¿Qué idiomas deben estar completos en v0.2.0?",
+    "why": "Incluye interfaz, tutoriales, nombres de tareas, errores y guía para amigos.",
+    "example": "Nadie debe encontrar claves internas o media interfaz traducida.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Español completo",
+        "detail": "Redacción elegida en P02; estructura preparada para ampliar."
+      },
+      {
+        "id": "B",
+        "label": "Español e inglés",
+        "detail": "Dos localizaciones completas y revisión de texto/espacio."
+      },
+      {
+        "id": "C",
+        "label": "Español neutro y rioplatense",
+        "detail": "Dos variantes de tono, mismo significado y controles."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/AUDIO-V020.md; docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  }
+]

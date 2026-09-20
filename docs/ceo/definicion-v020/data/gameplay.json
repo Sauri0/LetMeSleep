@@ -1,0 +1,962 @@
+[
+  {
+    "id": "J01",
+    "section": "Jugabilidad",
+    "title": "¿Cómo debe gastar estamina el humano al correr?",
+    "why": "Define cuánto puede escapar o rotar entre tareas sin convertir la carrera en movimiento permanente.",
+    "example": "Propuesta de referencia: con la barra llena, un humano cruza un pasillo durante 6 segundos a 5 m/s; luego vuelve a 3,1 m/s sin quedar inmóvil.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Consumo continuo",
+        "detail": "Propuesta: 100 puntos, coste 16/s; permite unos 6,25 s de carrera completa y caminar siempre."
+      },
+      {
+        "id": "B",
+        "label": "Ráfagas cortas",
+        "detail": "Propuesta: 100 puntos, coste 25/s; unos 4 s de carrera, pensada para esquivas breves."
+      },
+      {
+        "id": "C",
+        "label": "Aceleración progresiva",
+        "detail": "El coste crece mientras se mantiene correr: barato al inicio y caro después de 3 s."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J02",
+    "section": "Jugabilidad",
+    "title": "¿Cuándo y a qué ritmo se recupera la estamina humana?",
+    "why": "El retardo de recuperación determina si perseguir, defender y cumplir tareas forma ciclos legibles o pausas frustrantes.",
+    "example": "Tras correr hasta cero, el jugador se esconde detrás de una puerta. ¿Cuánto tarda en volver a tener una carrera útil?",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Pausa breve",
+        "detail": "Propuesta: retardo de 1,25 s y recuperación de 22 puntos/s; de cero a lleno en 4,55 s."
+      },
+      {
+        "id": "B",
+        "label": "Recuperación inmediata",
+        "detail": "Propuesta: sin retardo y 14 puntos/s; suaviza el control pero favorece alternar carrera a pulsos."
+      },
+      {
+        "id": "C",
+        "label": "Recuperación por postura",
+        "detail": "Propuesta: 12/s caminando y 28/s quieto o agachado; premia detenerse de forma visible."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J03",
+    "section": "Jugabilidad",
+    "title": "¿Qué acciones humanas, además de correr, consumen estamina?",
+    "why": "Evita que salto, golpes y herramientas exigentes tengan costes contradictorios o dejen al jugador sin defensa básica.",
+    "example": "Un humano llega sin estamina y un mosquito se posa cerca: la palmada básica debe seguir disponible, pero una cadena de saltos o raquetazos puede limitarse.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Salto y herramientas pesadas",
+        "detail": "Propuesta: salto 12; raqueta/aerosol según recurso propio; palmada y matamoscas básico cuestan 0."
+      },
+      {
+        "id": "B",
+        "label": "Sólo correr",
+        "detail": "La barra nunca condiciona saltos ni defensa; las herramientas usan únicamente cooldown o munición."
+      },
+      {
+        "id": "C",
+        "label": "Saltos y acciones cargadas",
+        "detail": "Propuesta: salto 10 y lanzamiento cargado 8–15; manos y defensa básica siempre gratuitas, sin reservar una única palmada."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J04",
+    "section": "Jugabilidad",
+    "title": "¿Qué sensación debe tener la aceleración y el freno del mosquito?",
+    "why": "W ya sigue la mirada; faltan la inercia y la distancia de frenado que hacen al vuelo preciso o desafiante.",
+    "example": "Volando a 3,8 m/s hacia una pared, el jugador suelta W a un metro. La opción elegida decide si se detiene a tiempo o debe anticipar.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Ágil con freno fuerte",
+        "detail": "Conservar propuesta actual: aceleración 13 m/s², frenado 28 m/s² y velocidad 3,8 m/s."
+      },
+      {
+        "id": "B",
+        "label": "Inercia moderada",
+        "detail": "Propuesta: aceleración 10, frenado 16 y velocidad 4,1 m/s; exige anticipar sin sentirse flotante."
+      },
+      {
+        "id": "C",
+        "label": "Vuelo muy preciso",
+        "detail": "Propuesta: aceleración 20, frenado 36 y velocidad 3,5 m/s; prioriza entrar por huecos pequeños."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/GameplayAuthority.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J05",
+    "section": "Jugabilidad",
+    "title": "¿Cómo se activa y cancela el posado del mosquito?",
+    "why": "El control debe distinguir intención de posarse, caminar por superficies y volver a volar sin enganches accidentales.",
+    "example": "El mosquito roza el marco de una puerta mientras persigue a alguien: ¿se posa sólo si pulsó la acción o por contacto automático?",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Alternar con tecla",
+        "detail": "Una pulsación busca superficie; otra o saltar desprende. El roce normal no cambia de estado."
+      },
+      {
+        "id": "B",
+        "label": "Mantener para adherir",
+        "detail": "Se posa mientras la acción está sostenida y se desprende al soltar; reduce estados persistentes."
+      },
+      {
+        "id": "C",
+        "label": "Contacto asistido",
+        "detail": "Con velocidad baja se posa automáticamente; una tecla desactiva temporalmente la adhesión."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J06",
+    "section": "Jugabilidad",
+    "title": "¿Qué compromiso temporal debe exigir iniciar una picadura?",
+    "why": "La preparación define la ventana de reacción humana antes de que empiece la extracción.",
+    "example": "Un mosquito consigue contacto válido en un brazo. Con 0,6 s de preparación el humano ve y oye la amenaza antes de que la sangre progrese.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Preparación de 0,6 s",
+        "detail": "Conservar el valor provisional; soltar, perder contacto o recibir golpe cancela y obliga a preparar otra vez."
+      },
+      {
+        "id": "B",
+        "label": "Preparación de 0,35 s",
+        "detail": "Ataque más inmediato; requiere señales muy claras y favorece al mosquito en encuentros cortos."
+      },
+      {
+        "id": "C",
+        "label": "Preparación variable",
+        "detail": "Propuesta: 0,45 s en zonas expuestas y 0,8 s en espalda; añade balance según superficie sin marcas visuales."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J07",
+    "section": "Jugabilidad",
+    "title": "¿Cómo debe recuperarse un humano después del desmayo?",
+    "why": "La duración y el control durante la recuperación determinan si el desmayo es una consecuencia clara o un bloqueo prolongado.",
+    "example": "La extracción se completa, el humano cae y aterriza. La propuesta actual inicia 12 s de recuperación desde el apoyo y añade 1,5 s de protección al levantarse.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "12 s más protección",
+        "detail": "Conservar 12 s desde el aterrizaje, transición de 0,4 s y protección de 1,5 s al volver."
+      },
+      {
+        "id": "B",
+        "label": "Recuperación corta",
+        "detail": "Propuesta: 8 s y protección 2 s; reduce tiempo sin control y evita repicadura inmediata."
+      },
+      {
+        "id": "C",
+        "label": "Recuperación activa",
+        "detail": "Propuesta: base 14 s, reducible hasta 8 s con una secuencia simple; nunca afecta la defensa básica al despertar."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J08",
+    "section": "Jugabilidad",
+    "title": "¿Qué interacción gana cuando varios objetos están bajo la mirada?",
+    "why": "Puertas, tareas, rescates y pickups pueden compartir una zona; una prioridad fija evita acciones sorpresivas.",
+    "example": "Un aliado caído está junto a una puerta y un aerosol. El jugador mantiene Usar: debe quedar claro si rescata, abre o recoge.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Contexto vital primero",
+        "detail": "Prioridad propuesta: rescate > tarea activa > puerta > pickup; HUD muestra una sola acción elegida."
+      },
+      {
+        "id": "B",
+        "label": "Centro de mirada",
+        "detail": "Gana el collider más centrado y cercano, sin prioridad por categoría; máxima consistencia espacial."
+      },
+      {
+        "id": "C",
+        "label": "Pulsar y mantener",
+        "detail": "Pulsación usa puerta/pickup; mantener reserva rescate/tarea. Reduce ambigüedad a cambio de más aprendizaje."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/MODES-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J09",
+    "section": "Modos",
+    "title": "¿Qué duración base debe tener cada modo?",
+    "why": "Una sola duración de 180 s existe hoy, pero los ritmos de Sangre, Supervivencia y Tareas son distintos.",
+    "example": "Una sala juega tres rondas seguidas. Con perfiles distintos, Sangre puede durar 3 min, Supervivencia 2,5 min y Tareas 4 min.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Duración por modo",
+        "detail": "Propuesta: Sangre 180 s, Supervivencia 150 s y Tareas 240 s; el host elige variantes dentro de límites."
+      },
+      {
+        "id": "B",
+        "label": "Tres minutos para todos",
+        "detail": "Conservar 180 s como base común; simplifica lobby, balance y aprendizaje."
+      },
+      {
+        "id": "C",
+        "label": "Escala por población",
+        "detail": "Propuesta: base 150 s más 10 s por participante desde el tercero, con tope de 300 s."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Core/RoomSession.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J10",
+    "section": "Modos",
+    "title": "¿Cómo escala la cuota de sangre con la población?",
+    "why": "La cuota fija provisional de 20 puede ser trivial con muchos mosquitos o imposible con pocos.",
+    "example": "Con 1 humano y 1 mosquito la misma cuota no debería requerir el mismo número de contactos que con 5 humanos y 6 mosquitos.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Escala por humanos",
+        "detail": "Propuesta: 12 unidades base + 6 por humano; 18 con uno y 42 con cinco."
+      },
+      {
+        "id": "B",
+        "label": "Cuota fija 20",
+        "detail": "Conservar el valor actual en todas las salas y ajustar sólo tiempo/extracción."
+      },
+      {
+        "id": "C",
+        "label": "Escala por ambos equipos",
+        "detail": "Propuesta: 10 + 5 por humano + 2 por mosquito, con tope de 50."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J11",
+    "section": "Modos",
+    "title": "¿Cómo contribuyen varios mosquitos que pican al mismo humano?",
+    "why": "La regla determina si concentrarse en una víctima es cooperación válida o una explosión de progreso imposible de defender.",
+    "example": "Tres mosquitos pican al mismo humano durante 2 s. El código actual reparte una tasa total, de modo que no triplican el desmayo ni la sangre.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Tasa total compartida",
+        "detail": "Conservar el reparto actual: juntos aseguran continuidad, pero la víctima recibe como máximo una tasa completa."
+      },
+      {
+        "id": "B",
+        "label": "Rendimiento decreciente",
+        "detail": "Propuesta: 100% + 40% + 20% para los tres primeros; coopera sin triplicar."
+      },
+      {
+        "id": "C",
+        "label": "Suma completa",
+        "detail": "Cada mosquito aporta 100%; favorece ataques coordinados y exige fuerte contrajuego humano."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/GameplayAuthority.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J12",
+    "section": "Modos",
+    "title": "¿Cómo se distribuyen las herramientas en Supervivencia?",
+    "why": "La eliminación de un solo impacto vuelve decisivo el acceso humano a herramientas; su reposición puede inclinar toda la ronda.",
+    "example": "Un humano toma la única raqueta y luego la deja en una zona peligrosa. Falta decidir si el equipo debe recuperarla físicamente o si reaparece.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Pickups finitos por ronda",
+        "detail": "Los objetos quedan donde se sueltan y no reaparecen; el equipo debe administrarlos y recuperarlos."
+      },
+      {
+        "id": "B",
+        "label": "Reposición a 45 s",
+        "detail": "Un objeto abandonado o perdido vuelve a su soporte tras 45 s si nadie lo lleva."
+      },
+      {
+        "id": "C",
+        "label": "Sólo defensa básica",
+        "detail": "Supervivencia deshabilita herramientas y se balancea únicamente con manos y movimiento."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/MODES-V020.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J13",
+    "section": "Modos",
+    "title": "¿Qué cadencia y plazo inicial deben usar las tareas personales?",
+    "why": "Cadencia y plazo fijan cuántas oportunidades caben y cuánto tiempo real queda para desplazarse y trabajar.",
+    "example": "Los valores provisionales emiten una oportunidad cada 40 s, con 30 s de plazo inicial y un mínimo posterior de 15 s.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "40/30/15 segundos",
+        "detail": "Conservar cadencia 40 s, plazo 30 s y mínimo 15 s; trabajo y ruta deben caber dentro."
+      },
+      {
+        "id": "B",
+        "label": "45/35/20 segundos",
+        "detail": "Más margen y menos oportunidades; apropiado para mapas grandes o jugadores nuevos."
+      },
+      {
+        "id": "C",
+        "label": "35/25/12 segundos",
+        "detail": "Más presión y rotación; requiere objetivos cercanos y tareas cortas."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/ModeRules.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J14",
+    "section": "Modos",
+    "title": "¿Qué porcentaje de oportunidades debe exigir la meta compartida de Tareas?",
+    "why": "La meta decide cuántos fallos personales puede absorber el equipo antes de perder.",
+    "example": "Si hay 12 oportunidades viables, la fórmula actual exige 8 completadas; 4 pueden fallar sin perder automáticamente.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Dos tercios",
+        "detail": "Conservar ceil(2/3): 8 de 12. Tolera fallos sin volver irrelevantes a los mosquitos."
+      },
+      {
+        "id": "B",
+        "label": "Tres cuartos",
+        "detail": "Propuesta: ceil(75%): 9 de 12. Hace cada interrupción más valiosa."
+      },
+      {
+        "id": "C",
+        "label": "Escala por dificultad",
+        "detail": "Propuesta: 60% fácil, 67% normal y 75% difícil; añade una opción visible de sala."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/ModeRules.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J15",
+    "section": "Modos",
+    "title": "¿Puede recuperarse el plazo personal después de completar tareas?",
+    "why": "Hoy cada fallo resta 3 s hasta el mínimo y los aciertos no restauran margen; eso puede crear una espiral irreversible.",
+    "example": "Una persona falla dos veces: su plazo baja de 30 a 24 s. Luego completa dos tareas seguidas. ¿Sigue en 24 o recupera tiempo?",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Recupera un escalón",
+        "detail": "Propuesta: cada acierto devuelve 3 s, hasta el plazo inicial; premia recomponerse."
+      },
+      {
+        "id": "B",
+        "label": "No recupera",
+        "detail": "Conservar el código provisional: los fallos acumulados duran toda la ronda."
+      },
+      {
+        "id": "C",
+        "label": "Racha de dos",
+        "detail": "Recupera 3 s sólo tras dos aciertos consecutivos; mantiene presión con salida gradual."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/ModeRules.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J16",
+    "section": "Modos",
+    "title": "¿Cuánta protección recibe un mosquito al reaparecer en Tareas?",
+    "why": "Las tres vidas están fijadas; falta impedir que una vida nueva se pierda antes de recuperar control sin permitir atacar invulnerable.",
+    "example": "El mosquito reaparece cerca de un humano tras perder una vida. Durante la protección puede alejarse, pero no debería iniciar una picadura segura.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "1,5 s sin atacar",
+        "detail": "Conservar 1,5 s de protección y bloquear picadura/ayuda hasta que termine o el mosquito actúe."
+      },
+      {
+        "id": "B",
+        "label": "2,5 s cancelables",
+        "detail": "Más margen para mapas abiertos; moverse no cancela, pero picar o posarse sí."
+      },
+      {
+        "id": "C",
+        "label": "1 s y mayor separación",
+        "detail": "Protección breve, con punto seguro más alejado; ninguna acción ofensiva puede aprovechar invulnerabilidad."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J17",
+    "section": "Inventario y herramientas",
+    "title": "¿Qué ocurre al recoger un objeto con los tres slots ocupados?",
+    "why": "Debe existir una regla autoritativa que evite duplicados y pérdidas accidentales.",
+    "example": "El jugador lleva matamoscas, diario y aerosol, mira una raqueta y pulsa recoger.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Intercambiar slot activo",
+        "detail": "Suelta de forma segura el objeto activo y ocupa ese slot; muestra una confirmación breve antes de ejecutar."
+      },
+      {
+        "id": "B",
+        "label": "Rechazar recogida",
+        "detail": "No cambia nada; el HUD indica Inventario lleno y obliga a soltar primero."
+      },
+      {
+        "id": "C",
+        "label": "Elegir slot",
+        "detail": "Abre un selector radial de los tres slots; el objeto elegido se suelta si hay espacio físico."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J18",
+    "section": "Inventario y herramientas",
+    "title": "¿Cómo se seleccionan slots y manos durante una acción?",
+    "why": "Cambiar equipo en mitad de un golpe, carga o aerosol necesita una cancelación predecible.",
+    "example": "El jugador está cargando un lanzamiento con botón derecho y pulsa el slot 2 o la tecla de manos.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Cambio cancela acción",
+        "detail": "1–3 seleccionan slots y una tecla vuelve a manos; cambiar cancela carga sin lanzar ni gastar recurso."
+      },
+      {
+        "id": "B",
+        "label": "Cambio bloqueado",
+        "detail": "No permite cambiar hasta terminar o cancelar explícitamente la acción actual."
+      },
+      {
+        "id": "C",
+        "label": "Cola de cambio",
+        "detail": "Registra la selección y la aplica al terminar la animación; fluido pero menos inmediato."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J19",
+    "section": "Inventario y herramientas",
+    "title": "¿Cómo se suelta una herramienta sin convertir soltar en lanzamiento?",
+    "why": "El drop debe ser reproducible en red, no atravesar paredes ni confundirse con un proyectil ofensivo.",
+    "example": "Frente a una mesa, el jugador pulsa soltar con un matamoscas; el host debe hallar una pose libre o rechazar la acción.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Depositar delante",
+        "detail": "Coloca a 0,6–1 m sobre el primer soporte libre; si no hay espacio, conserva el objeto."
+      },
+      {
+        "id": "B",
+        "label": "Caída física corta",
+        "detail": "Aparece junto a la mano con velocidad mínima y se asienta por física autoritativa."
+      },
+      {
+        "id": "C",
+        "label": "Volver a origen",
+        "detail": "Regresa al punto authored del mapa; máxima seguridad, menor naturalidad."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/GameplayAuthority.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J20",
+    "section": "Inventario y herramientas",
+    "title": "¿Qué ventaja concreta ofrece el matamoscas frente a las manos?",
+    "why": "Ya existe como herramienta, pero necesita un intercambio de alcance, área y cadencia que no vuelva inútil la defensa manual.",
+    "example": "El código provisional mide 36,5 cm del agarre al impacto y cabeza de 8,5 cm; falta decidir qué sacrifica por ese alcance.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Más alcance, más lento",
+        "detail": "Propuesta: +35% alcance, ventana/cooldown 25% más largos y área moderada."
+      },
+      {
+        "id": "B",
+        "label": "Más área, mismo alcance",
+        "detail": "Facilita acertar lateralmente, pero no alcanza zonas que las manos no puedan defender."
+      },
+      {
+        "id": "C",
+        "label": "Golpe fuerte comprometido",
+        "detail": "Derribo más largo a cambio de carga visible de 0,45 s y recuperación lenta."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/Contracts.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J21",
+    "section": "Inventario y herramientas",
+    "title": "¿Qué objetos pueden lanzarse con carga?",
+    "why": "El plan exige lanzamiento sólo donde corresponda; la lista debe ser cerrada para animación, red y balance.",
+    "example": "Mantener botón derecho muestra potencia y soltar lanza. Un aerosol o una raqueta no deberían comportarse como una pantufla por accidente.",
+    "priority": "decisiva",
+    "type": "multi",
+    "options": [
+      {
+        "id": "A",
+        "label": "Pantufla",
+        "detail": "Arrojable recuperable, arco medio y golpe de precisión; propuesta principal."
+      },
+      {
+        "id": "B",
+        "label": "Diario enrollado",
+        "detail": "Arrojable más pesado y corto; queda en el suelo y debe recogerse."
+      },
+      {
+        "id": "C",
+        "label": "Matamoscas",
+        "detail": "Permitir lanzarlo añade riesgo de perder la herramienta de mayor alcance; no propuesto por defecto."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J22",
+    "section": "Inventario y herramientas",
+    "title": "¿Cómo se traduce la carga en potencia de lanzamiento?",
+    "why": "Necesita límites legibles para que latencia y FPS no cambien alcance ni daño.",
+    "example": "Una carga corta sirve a dos metros; una completa cruza una habitación, pero deja una ventana de recuperación.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Carga de 0,9 s",
+        "detail": "Propuesta: mínimo 35%, máximo a 0,9 s, curva suave y autoestabilización hasta 1,5 s."
+      },
+      {
+        "id": "B",
+        "label": "Tres escalones",
+        "detail": "Toque, media y completa a 0/0,5/1 s; fácil de leer y sincronizar."
+      },
+      {
+        "id": "C",
+        "label": "Potencia fija",
+        "detail": "Mantener sólo apunta y soltar lanza siempre igual; sacrifica expresión por consistencia."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J23",
+    "section": "Inventario y herramientas",
+    "title": "¿Qué recurso y efecto usa la raqueta eléctrica?",
+    "why": "Debe diferenciarse del matamoscas sin convertirse en defensa automática continua.",
+    "example": "El jugador activa la raqueta cerca de un mosquito: falta decidir si gasta una carga por golpe o energía mientras está encendida.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Pulsos con batería",
+        "detail": "Propuesta: 5 cargas, un pulso de 0,35 s y cooldown 1,2 s; recarga sólo al reaparecer el pickup."
+      },
+      {
+        "id": "B",
+        "label": "Energía continua",
+        "detail": "Propuesta: 6 s encendida por batería y recarga lenta al estar guardada; exige proximidad sostenida."
+      },
+      {
+        "id": "C",
+        "label": "Cooldown sin batería",
+        "detail": "Uso ilimitado con cooldown de 2,5 s; menos gestión de inventario, más predecible."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J24",
+    "section": "Inventario y herramientas",
+    "title": "¿Cómo funciona el aerosol y dónde se repone?",
+    "why": "Área, duración y recurso determinan si es control de espacio o una eliminación segura desde lejos.",
+    "example": "Un humano rocía una puerta durante una persecución. El mosquito debería poder ver/oir la nube y rodearla, no recibir un impacto invisible.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Nube corta consumible",
+        "detail": "Propuesta: 4 s totales por envase, cono 2 m, nube 1,2 s; no se repone hasta nueva ronda o pickup."
+      },
+      {
+        "id": "B",
+        "label": "Ráfagas recargables",
+        "detail": "Propuesta: 3 cargas; cada una vuelve en 20 s mientras el aerosol está guardado."
+      },
+      {
+        "id": "C",
+        "label": "Repelente sin derribo",
+        "detail": "No elimina: fuerza desprendimiento y bloquea picadura 2 s; 6 usos por envase."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J25",
+    "section": "Bots",
+    "title": "Además del entrenamiento obligatorio, ¿dónde permitimos bots?",
+    "why": "Entrenamiento los necesita, pero añadirlos automáticamente a salas privadas cambia expectativas y balance entre amigos.",
+    "example": "Dos amigos crean una sala para probar 2 humanos contra 2 mosquitos: ¿el juego completa los dos puestos faltantes sin pedirlo?",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Sólo entrenamiento",
+        "detail": "Entrenamiento completo con bots; sala privada sólo con personas."
+      },
+      {
+        "id": "B",
+        "label": "Sala privada opcional",
+        "detail": "El host habilita bots visibles y cantidad; entrenamiento siempre disponible."
+      },
+      {
+        "id": "C",
+        "label": "Sala y reemplazo temporal",
+        "detail": "Lo anterior más sustitución visible ante desconexiones, coherente con O08 y sin exponer datos privados."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/PLAN-UNITY-0.9.4.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J26",
+    "section": "Bots",
+    "title": "¿Qué niveles de dificultad de bots deben existir en v0.2.0?",
+    "why": "La dificultad debe modificar reacción y decisión, nunca percepción omnisciente ni reglas físicas.",
+    "example": "Un mosquito cruza una puerta y deja de verse. Un bot difícil puede recordar la dirección unos segundos, pero no conocer su posición detrás de paredes.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Normal único",
+        "detail": "Un perfil verificable para publicar; reacción propuesta 250–400 ms y mismos permisos que jugadores."
+      },
+      {
+        "id": "B",
+        "label": "Fácil y normal",
+        "detail": "Fácil reacciona 500–700 ms y falla más; normal conserva 250–400 ms."
+      },
+      {
+        "id": "C",
+        "label": "Tres niveles",
+        "detail": "Fácil/normal/difícil cambian reacción, puntería y prioridades, con más matriz de balance."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/gameplay/ACCEPTANCE.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J27",
+    "section": "Bots",
+    "title": "¿Cuánto dura la memoria de un objetivo que salió de vista?",
+    "why": "Sin memoria los bots olvidan de inmediato; con demasiada parecen atravesar paredes con información.",
+    "example": "El humano ve al mosquito entrar detrás de un sofá. Puede investigar la última posición, pero debe perderlo si no vuelve a verlo.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Memoria de 3 s",
+        "detail": "Recuerda última posición y dirección durante 3 s; después vuelve a patrulla sin actualizar datos ocultos."
+      },
+      {
+        "id": "B",
+        "label": "Memoria de 1 s",
+        "detail": "Muy reactivo a oclusión; permite escapes fáciles alrededor de muebles."
+      },
+      {
+        "id": "C",
+        "label": "Memoria de 6 s",
+        "detail": "Persecución más firme, con mayor riesgo de parecer omnisciente en interiores."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "docs/unity/gameplay/ACCEPTANCE.md",
+    "dependsOn": null
+  },
+  {
+    "id": "J28",
+    "section": "Bots",
+    "title": "¿Cómo prioriza un bot humano su tarea frente a un mosquito visible?",
+    "why": "En Tareas debe cumplir su asignación privada y defenderse sin abandonar siempre el objetivo ni ignorar peligro inmediato.",
+    "example": "Le faltan 20 ticks para limpiar y aparece un mosquito a 1,5 m. ¿Termina, interrumpe o decide según riesgo?",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Defensa por amenaza",
+        "detail": "Interrumpe si el mosquito está a menos de 2 m, se acerca o ya pica; luego retoma progreso conservado."
+      },
+      {
+        "id": "B",
+        "label": "Tarea hasta contacto",
+        "detail": "Sólo interrumpe al recibir picadura o golpe; maximiza meta pero parece poco humano."
+      },
+      {
+        "id": "C",
+        "label": "Margen de finalización",
+        "detail": "Si resta menos de 20% termina; de otro modo se defiende ante amenaza cercana."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/BotController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J29",
+    "section": "Bots",
+    "title": "¿Cómo elige víctima un bot mosquito cuando ve varios humanos?",
+    "why": "La selección afecta concentración de ataques, legibilidad y si siempre castiga al mismo jugador.",
+    "example": "Ve un humano cercano alerta, otro más lejos haciendo una tarea y un tercero casi desmayado.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Puntuación de oportunidad",
+        "detail": "Propuesta: distancia, línea libre, tarea activa y ataques recientes; penaliza repetir víctima durante 8 s."
+      },
+      {
+        "id": "B",
+        "label": "Más cercano",
+        "detail": "Conservar selección simple por distancia visible; fácil de entender y probar."
+      },
+      {
+        "id": "C",
+        "label": "Más vulnerable",
+        "detail": "Prioriza quien está ocupado o con menor capacidad de defensa; más competitivo, menos casual."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/BotController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J30",
+    "section": "Bots",
+    "title": "¿Hasta qué punto usan puertas y herramientas los bots humanos?",
+    "why": "Sin estas interacciones pueden atascarse o no representar una partida real; usar todo aumenta complejidad y riesgo.",
+    "example": "La ruta a una tarea cruza una puerta cerrada y hay un matamoscas en una mesa lateral.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Puertas y herramienta cercana",
+        "detail": "Abre rutas necesarias y recoge una herramienta si el desvío es menor a 4 m y tiene slot libre."
+      },
+      {
+        "id": "B",
+        "label": "Sólo puertas",
+        "detail": "Completa navegación y tareas; combate siempre con manos para reducir variables."
+      },
+      {
+        "id": "C",
+        "label": "Catálogo completo",
+        "detail": "Evalúa slots, recursos, lanzamientos y aerosol como un jugador; requiere balance y pruebas mucho mayores."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Por definir",
+    "source": "unity/Assets/LetMeSleep/Gameplay/BotPatrol.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J31",
+    "section": "Bots",
+    "title": "¿Cuándo debe un bot mosquito rescatar a un aliado caído?",
+    "why": "El rescate conserva vidas en Tareas y recuperación en Sangre, pero agruparse puede regalar varias bajas.",
+    "example": "Un aliado está a 6 m y le quedan 4 s de ventana; un humano vigila el trayecto.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Riesgo y tiempo",
+        "detail": "Rescata si puede llegar con 1,5 s de margen y no ve un humano a menos de 2,5 m del aliado."
+      },
+      {
+        "id": "B",
+        "label": "Siempre rescata",
+        "detail": "Prioridad absoluta al aliado alcanzable; comportamiento cooperativo y fácil de leer."
+      },
+      {
+        "id": "C",
+        "label": "Sólo última vida",
+        "detail": "En Tareas arriesga rescate únicamente si el aliado sería eliminado; en Sangre usa riesgo y tiempo."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/BotController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "J32",
+    "section": "Bots",
+    "title": "¿Qué hace un bot cuando no progresa por una ruta durante varios segundos?",
+    "why": "Debe recuperarse de puertas, muebles y rutas temporales sin teletransportarse ni empujar paredes indefinidamente.",
+    "example": "El bot avanza hacia un pasaje, pero su distancia no mejora durante 5 s por un objeto o actor que bloquea.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Replanificar y esperar",
+        "detail": "A los 5 s marca el pasaje 6 s, busca otra ruta; si no existe, espera/patrulla la región y registra el atasco."
+      },
+      {
+        "id": "B",
+        "label": "Retroceder y reintentar",
+        "detail": "Retrocede 1 m, cambia ángulo y reintenta hasta tres veces antes de esperar."
+      },
+      {
+        "id": "C",
+        "label": "Cancelar objetivo",
+        "detail": "Abandona la persecución o tarea y solicita otra oportunidad no penalizante; reduce bloqueos, puede evadir contenido."
+      }
+    ],
+    "recommended": "A",
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Gameplay/BotPatrol.cs",
+    "dependsOn": null
+  }
+]
