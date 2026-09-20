@@ -61,7 +61,7 @@ namespace LetMeSleep.Tests.EditMode
                 Assert.That(playing.Members.All(member => member.Ready), Is.True);
                 Assert.That(playing.Members.All(member => member.Role != PlayerRole.Unassigned), Is.True);
                 Assert.That(playing.Rules.RoundSeconds, Is.EqualTo(240));
-                Assert.That(playing.Rules.BloodQuota, Is.EqualTo(25));
+                Assert.That(playing.Rules.BloodQuota, Is.EqualTo(18), "J10 scales the round quota from its one assigned human.");
             }
         }
 

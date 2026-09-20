@@ -9,9 +9,10 @@ namespace LetMeSleep.Tests.EditMode
 {
     public sealed class GameplayModeAuthorityTests
     {
-        private sealed class World : IGameplayWorld, IGameplayModeWorld
+        private sealed class World : IGameplayWorld, IGameplayModeWorld, IGameplayTaskSelectionWorld
         {
             public bool Available = true, Work = true, Respawn = true, Valid = true, FreeRecovery = true, Bite = false, Surface = false;
+            public bool Assignable = true;
             public Float3? HumanPosition;
             public uint Hit = 2;
             public int MosquitoMoves, StrikePlans, StrikeSweeps;
@@ -32,6 +33,7 @@ namespace LetMeSleep.Tests.EditMode
             public void ApplyDoorPose(in DoorPose p) { }
             public bool ValidateObjective(in SpawnActor h, ObjectiveDefinition o) => Valid;
             public bool IsObjectiveAvailable(uint id, ObjectiveDefinition o) => Available;
+            public bool CanAssignObjective(uint id, ObjectiveDefinition o) => Assignable;
             public bool CanWorkObjective(uint id, ObjectiveDefinition o, Float3 p, Float3 aim) => Work;
             public bool TryMosquitoRespawn(uint id, out Float3 p) { p = Float3.Forward * .3f; return Respawn; }
         }
@@ -74,6 +76,25 @@ namespace LetMeSleep.Tests.EditMode
             var a = Start(new World(), GameModes.Blood); Strike(a); Assert.That(Actor(a).Eliminated, Is.False);
             Step(a, 895); Assert.That(a.CaptureSnapshot().Winner, Is.EqualTo(PlayerRole.Human)); Assert.That(a.CaptureSnapshot().Result, Is.EqualTo(RoundEndReason.TimeExpired));
         }
+        [Test] public void SelectionBudgetSkipsDistantTaskBeforeAssignment()
+        {
+            var w = new World { Assignable = false }; var a = TaskSession(w);
+            Assert.That(OwnTask(a), Is.Null); Step(a, 10); Assert.That(OwnTask(a), Is.Null);
+            w.Assignable = true; Step(a);
+            Assert.That(OwnTask(a), Is.Not.Null);
+            Assert.That(OwnTask(a).IssuedTick, Is.EqualTo(a.CurrentTick));
+        }
+
+        [Test] public void MovingOutsideSelectionBudgetCannotPauseAnAlreadyAssignedDeadline()
+        {
+            var w = new World { Work = false }; var a = TaskSession(w);
+            var original = OwnTask(a); w.Assignable = false;
+            Step(a, (int)original.DeadlineTick);
+            Assert.That(OwnTask(a).DeadlineTick, Is.EqualTo(original.DeadlineTick));
+            Assert.That(OwnTask(a).Status, Is.EqualTo(TaskAssignmentStatus.Missed));
+            Assert.That(OwnTask(a).PersonalFailures, Is.EqualTo(1));
+        }
+
         [Test] public void TaskAssignmentPrivateAndGoalDoesNotFinishEarly()
         {
             var a = Start(new World(), GameModes.Tasks, goal: 1);

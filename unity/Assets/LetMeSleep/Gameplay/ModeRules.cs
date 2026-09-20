@@ -99,6 +99,12 @@ namespace LetMeSleep.Gameplay
         bool CanWorkObjective(uint actorId, ObjectiveDefinition objective, Float3 position, Float3 aim);
         bool TryMosquitoRespawn(uint actorId, out Float3 position);
     }
+    // Optional selection-only budget. Moving away after assignment must not turn
+    // distance into an environmental obstruction that extends the task deadline.
+    public interface IGameplayTaskSelectionWorld
+    {
+        bool CanAssignObjective(uint actorId, ObjectiveDefinition objective);
+    }
     internal sealed class TaskRules
     {
         private sealed class Personal
@@ -152,6 +158,7 @@ namespace LetMeSleep.Gameplay
                 {
                     var objective = config.Objectives[(offset + i) % config.Objectives.Count];
                     if (!world.IsObjectiveAvailable(actorId, objective)) continue;
+                    if (world is IGameplayTaskSelectionWorld selection && !selection.CanAssignObjective(actorId, objective)) continue;
                     p.Objective = objective; p.Issued = tick; p.Deadline = tick + duration; p.Status = TaskAssignmentStatus.Active; break;
                 }
                 if (p.Objective == null) return false;

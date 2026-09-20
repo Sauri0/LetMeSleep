@@ -21,6 +21,10 @@ namespace LetMeSleep.Core
         public const string Blood = "blood", Survival = "survival", Tasks = "tasks";
         public static bool IsValid(string mode) => mode == Blood || mode == Survival || mode == Tasks;
         public static string ProfileId(string mode) => IsValid(mode) ? "v020-" + mode + "-1" : null;
+        public static int DefaultRoundSeconds(string mode) => mode == Blood ? 180 : mode == Survival ? 150
+            : mode == Tasks ? 240 : throw new ArgumentException("Unknown game mode.", nameof(mode));
+        public static float BloodQuotaForHumans(int humans) => humans >= 1 && humans <= 5 ? 12 + 6 * humans
+            : throw new ArgumentOutOfRangeException(nameof(humans));
     }
     public sealed class RoomRules
     {
@@ -201,6 +205,9 @@ namespace LetMeSleep.Core
                 var temp = order[i]; order[i] = order[j]; order[j] = temp;
             }
             int humans = rules.HumanCount ?? (1 + random.Next(Math.Min(5, order.Length - 1)));
+            if (rules.ModeId == GameModes.Blood)
+                rules = new RoomRules(rules.HumanCount, rules.RoundSeconds, GameModes.BloodQuotaForHumans(humans),
+                    rules.MapId, rules.ModeId, rules.ModeRuleProfileId);
             for (int i = 0; i < order.Length; i++)
                 order[i].Role = i < humans ? PlayerRole.Human : PlayerRole.Mosquito;
             phase = RoomPhase.Playing; round++; revision++;

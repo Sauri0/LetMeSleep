@@ -8,6 +8,37 @@ namespace LetMeSleep.Tests.EditMode
 {
     public sealed class RoomSessionRulesAndRosterTests
     {
+        [TestCase(GameModes.Blood, 180)]
+        [TestCase(GameModes.Survival, 150)]
+        [TestCase(GameModes.Tasks, 240)]
+        public void UserSelectedModeDefaults(string mode, int seconds)
+        {
+            Assert.That(GameModes.DefaultRoundSeconds(mode), Is.EqualTo(seconds));
+        }
+
+        [TestCase(1, 18)]
+        [TestCase(3, 30)]
+        [TestCase(5, 42)]
+        public void BloodQuotaUsesActualAssignedHumansAndPreservesChosenDuration(int humans, int quota)
+        {
+            var session = new RoomSession("owner", "Owner", new SequenceRandom(0));
+            for (int i = 0; i < 5; i++) session.Join("guest" + i, "Guest" + i, RoomSession.Protocol);
+            session.ChangeRules("owner", new RoomRules(humans, 210, 20));
+            var before = session.Snapshot(); ReadyEveryone(session); session.StartRound("owner");
+            var playing = session.Snapshot();
+            Assert.That(playing.Rules.BloodQuota, Is.EqualTo(quota));
+            Assert.That(playing.Rules.RoundSeconds, Is.EqualTo(210));
+            Assert.That(playing.Members.Count(m => m.Role == PlayerRole.Human), Is.EqualTo(humans));
+            Assert.That(before.Rules.BloodQuota, Is.EqualTo(20));
+        }
+
+        [Test]
+        public void RandomHumanCompositionAlsoSetsQuotaFromFinalRoleAssignment()
+        {
+            var session = TwoPlayerSession(); ReadyEveryone(session); session.StartRound("owner-puid");
+            var playing = session.Snapshot();
+            Assert.That(playing.Rules.BloodQuota, Is.EqualTo(GameModes.BloodQuotaForHumans(playing.Members.Count(m => m.Role == PlayerRole.Human))));
+        }
         [Test]
         public void RulesAcceptOnlyFiniteBoundedAlfaValues()
         {
