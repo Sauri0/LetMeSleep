@@ -251,7 +251,8 @@ namespace LetMeSleep.Gameplay
         }
         private bool ReachedDirectedWaypoint(Float3 waypoint, Float3 position)
         {
-            if (PlanarDistance(waypoint, position) >= .24f) return false;
+            if (PlanarDistance(waypoint, position) >= .24f)
+                return CrossedDirectedWaypoint(position);
             if (objectivePassage.TraversalRegions.Count > 0)
                 return Math.Abs(waypoint.Y - position.Y) <= .35f;
             // Ordinary portal centers are authored near torso height, while ground-human
@@ -260,6 +261,23 @@ namespace LetMeSleep.Gameplay
             return regions.Any(region =>
                 (region.Id == objectivePassage.From || region.Id == objectivePassage.To) &&
                 position.Y >= region.Min.Y - .04f && position.Y <= region.Max.Y + .04f);
+        }
+        private bool CrossedDirectedWaypoint(Float3 position)
+        {
+            if (objectivePassage.TraversalRegions.Count == 0 || objectivePoints == null ||
+                objectivePointIndex <= 0 || objectivePointIndex >= objectivePoints.Length ||
+                !objectivePassage.TraversalRegions.Any(region => region.Contains(position))) return false;
+            Float3 previous = objectivePoints[objectivePointIndex - 1];
+            Float3 waypoint = objectivePoints[objectivePointIndex];
+            if (Math.Abs(position.Y - waypoint.Y) > .35f) return false;
+            var segment = new Float3(waypoint.X - previous.X, 0, waypoint.Z - previous.Z);
+            float length = segment.Length;
+            if (length < .0001f) return false;
+            var offset = new Float3(position.X - previous.X, 0, position.Z - previous.Z);
+            float along = Float3.Dot(offset, segment / length);
+            if (along < length || along > length + .24f) return false;
+            float lateralSquared = Math.Max(0, offset.LengthSquared - along * along);
+            return lateralSquared < .24f * .24f;
         }
         private int VisitCount(string id) => visits.TryGetValue(id, out int count) ? count : 0;
         private static float PlanarDistance(Float3 a, Float3 b)

@@ -332,6 +332,149 @@ namespace LetMeSleep.Tests.EditMode
                 new Float3(5.5f, 1, 0), 100, _ => true).X, Is.GreaterThan(0));
         }
 
+        [Test]
+        public void CrossedLastIntervalWithinLateralRadiusConsumesWaypoint()
+        {
+            var patrol = CrossingPatrol();
+            PrimeLastInterval(patrol);
+
+            Float3 direction = patrol.DirectionTo(new Float3(3.15f, 1, .20f), "finish", "finish",
+                new Float3(3.8f, 1, 0), 12, _ => true);
+
+            Assert.That(direction.X, Is.GreaterThan(.6f));
+            Assert.That(patrol.CurrentProgress.Value.PassageId, Is.Null);
+            Assert.That(patrol.CurrentProgress.Value.WaypointKey, Does.StartWith("approach:"));
+        }
+
+        [Test]
+        public void CrossedWaypointAtLateralRadiusDoesNotAdvance()
+        {
+            var patrol = CrossingPatrol();
+            PrimeLastInterval(patrol);
+
+            patrol.DirectionTo(new Float3(3.15f, 1, .24f), "finish", "finish",
+                new Float3(3.8f, 1, 0), 12, _ => true);
+
+            Assert.That(patrol.CurrentProgress.Value.PassageId, Is.EqualTo("crossing"));
+            Assert.That(patrol.CurrentProgress.Value.WaypointKey, Does.EndWith(":3"));
+        }
+
+        [Test]
+        public void PositionBeforeWaypointPlaneDoesNotAdvance()
+        {
+            var patrol = CrossingPatrol();
+            PrimeLastInterval(patrol);
+
+            patrol.DirectionTo(new Float3(2.7f, 1, .20f), "finish", "finish",
+                new Float3(3.8f, 1, 0), 12, _ => true);
+
+            Assert.That(patrol.CurrentProgress.Value.PassageId, Is.EqualTo("crossing"));
+            Assert.That(patrol.CurrentProgress.Value.WaypointKey, Does.EndWith(":3"));
+        }
+
+        [Test]
+        public void CrossedWaypointOnAnotherFloorDoesNotAdvance()
+        {
+            var patrol = CrossingPatrol();
+            PrimeLastInterval(patrol);
+
+            Float3 direction = patrol.DirectionTo(new Float3(3.15f, 3, .20f), "finish",
+                new Float3(3.8f, 1, 0), 12, _ => true);
+
+            Assert.That(direction, Is.EqualTo(Float3.Zero));
+            Assert.That(patrol.CurrentProgress.HasValue, Is.False,
+                "The route may be discarded on the wrong floor, but it cannot complete into an approach.");
+        }
+
+        [Test]
+        public void AscendingWaypointCannotBeConsumedNearPreviousPointHeight()
+        {
+            var patrol = AscendingCrossingPatrol();
+            patrol.DirectionTo(new Float3(0, 1, 0), "start", "finish",
+                new Float3(3.8f, 3, 0), 0, _ => true);
+
+            patrol.DirectionTo(new Float3(1.15f, 1, .20f), "start", "finish",
+                new Float3(3.8f, 3, 0), 3, _ => true);
+
+            Assert.That(patrol.CurrentProgress.Value.PassageId, Is.EqualTo("ascending"));
+            Assert.That(patrol.CurrentProgress.Value.WaypointKey, Does.EndWith(":1"));
+        }
+
+        [Test]
+        public void ClosedPassageDoesNotConsumeCrossedWaypoint()
+        {
+            var patrol = CrossingPatrol();
+            patrol.DirectionTo(new Float3(0, 1, 0), "start", "finish",
+                new Float3(3.8f, 1, 0), 0, _ => true);
+            patrol.DirectionTo(new Float3(1, 1, 0), "start", "finish",
+                new Float3(3.8f, 1, 0), 3, _ => true);
+
+            Float3 direction = patrol.DirectionTo(new Float3(2.15f, 1, .20f), "start", "finish",
+                new Float3(3.8f, 1, 0), 6, _ => false);
+
+            Assert.That(direction, Is.EqualTo(Float3.Zero));
+            Assert.That(patrol.CurrentProgress.HasValue, Is.False);
+        }
+
+        [Test]
+        public void DistantTeleportBeyondCrossingWindowDoesNotSkipWaypoints()
+        {
+            var patrol = CrossingPatrol();
+            patrol.DirectionTo(new Float3(0, 1, 0), "start", "finish",
+                new Float3(3.8f, 1, 0), 0, _ => true);
+            patrol.DirectionTo(new Float3(1, 1, 0), "start", "finish",
+                new Float3(3.8f, 1, 0), 3, _ => true);
+
+            Float3 direction = patrol.DirectionTo(new Float3(2.4f, 1, 0), "start", "finish",
+                new Float3(3.8f, 1, 0), 6, _ => true);
+
+            Assert.That(direction, Is.EqualTo(Float3.Zero));
+            Assert.That(patrol.CurrentProgress.HasValue, Is.False,
+                "A distant sample cannot consume the waypoint or acquire the middle of a corridor.");
+        }
+
+        private static void PrimeLastInterval(BotPatrol patrol)
+        {
+            var target = new Float3(3.8f, 1, 0);
+            patrol.DirectionTo(new Float3(0, 1, 0), "start", "finish", target, 0, _ => true);
+            patrol.DirectionTo(new Float3(1, 1, 0), "start", "finish", target, 3, _ => true);
+            patrol.DirectionTo(new Float3(2, 1, 0), "start", "finish", target, 6, _ => true);
+        }
+
+        private static BotPatrol CrossingPatrol() => new BotPatrol(new[]
+        {
+            new BotRegion("start", new Float3(-1, 0, -1), new Float3(.5f, 2, 1)),
+            new BotRegion("finish", new Float3(2.5f, 0, -1), new Float3(4, 2, 1))
+        }, new[]
+        {
+            new BotPassage("crossing", "start", "finish", new[]
+            {
+                new Float3(0, 1, 0), new Float3(1, 1, 0),
+                new Float3(2, 1, 0), new Float3(3, 1, 0)
+            }, new[]
+            {
+                new BotRegion("crossing:0", new Float3(-.3f, 0, -.5f), new Float3(1.2f, 4, .5f)),
+                new BotRegion("crossing:1", new Float3(.8f, 0, -.5f), new Float3(2.2f, 4, .5f)),
+                new BotRegion("crossing:2", new Float3(1.8f, 0, -.5f), new Float3(3.3f, 4, .5f))
+            })
+        }, 1);
+
+        private static BotPatrol AscendingCrossingPatrol() => new BotPatrol(new[]
+        {
+            new BotRegion("start", new Float3(-1, 0, -1), new Float3(.5f, 2, 1)),
+            new BotRegion("finish", new Float3(2.5f, 2, -1), new Float3(4, 4, 1))
+        }, new[]
+        {
+            new BotPassage("ascending", "start", "finish", new[]
+            {
+                new Float3(0, 1, 0), new Float3(1, 2, 0), new Float3(3, 3, 0)
+            }, new[]
+            {
+                new BotRegion("ascending:corridor", new Float3(-.3f, 0, -.5f),
+                    new Float3(3.3f, 4, .5f))
+            })
+        }, 1);
+
         private static BotPatrol TerminalCorridorPatrol()
         {
             var regions = new[]
