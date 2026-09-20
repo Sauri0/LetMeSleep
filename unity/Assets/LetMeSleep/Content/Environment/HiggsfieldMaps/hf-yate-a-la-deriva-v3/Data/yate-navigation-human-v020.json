@@ -1,0 +1,2404 @@
+{
+  "schema_version": 1,
+  "map_id": "hf-yate-a-la-deriva-v3",
+  "zones": [
+    {
+      "id": "aft_stern",
+      "min": [
+        -3.7,
+        3.7,
+        -13.6
+      ],
+      "max": [
+        3.7,
+        6,
+        -10.65
+      ]
+    },
+    {
+      "id": "aft_center",
+      "min": [
+        -0.88,
+        3.7,
+        -10.65
+      ],
+      "max": [
+        3.7,
+        6,
+        -4.6
+      ]
+    },
+    {
+      "id": "aft_port",
+      "min": [
+        -3.7,
+        3.7,
+        -10.65
+      ],
+      "max": [
+        -2.22,
+        6,
+        -4.6
+      ]
+    },
+    {
+      "id": "aft_stair",
+      "min": [
+        -2.22,
+        3.6,
+        -10.65
+      ],
+      "max": [
+        -0.88,
+        8.3,
+        -5.6
+      ]
+    },
+    {
+      "id": "aft_stair_front",
+      "min": [
+        -2.22,
+        3.7,
+        -5.6
+      ],
+      "max": [
+        -0.88,
+        6,
+        -4.6
+      ]
+    },
+    {
+      "id": "salon_aft",
+      "min": [
+        -2.25,
+        3.7,
+        -4.6
+      ],
+      "max": [
+        2.25,
+        5.6,
+        -0.6
+      ]
+    },
+    {
+      "id": "salon_port",
+      "min": [
+        -2.25,
+        3.7,
+        -0.6
+      ],
+      "max": [
+        -0.9,
+        5.6,
+        4.6
+      ]
+    },
+    {
+      "id": "salon_starboard",
+      "min": [
+        0.9,
+        3.7,
+        -0.6
+      ],
+      "max": [
+        2.25,
+        5.6,
+        4.6
+      ]
+    },
+    {
+      "id": "salon_fore",
+      "min": [
+        -2.25,
+        3.7,
+        4.6
+      ],
+      "max": [
+        2.25,
+        5.6,
+        7.4
+      ]
+    },
+    {
+      "id": "main_port",
+      "min": [
+        -3.7,
+        3.7,
+        -4.6
+      ],
+      "max": [
+        -2.65,
+        6,
+        7.5
+      ]
+    },
+    {
+      "id": "main_starboard",
+      "min": [
+        2.65,
+        3.7,
+        -4.6
+      ],
+      "max": [
+        3.7,
+        6,
+        7.5
+      ]
+    },
+    {
+      "id": "foredeck",
+      "min": [
+        -3.7,
+        3.7,
+        7.5
+      ],
+      "max": [
+        3.7,
+        6.1,
+        14.7
+      ]
+    },
+    {
+      "id": "flybridge_aft",
+      "min": [
+        -2.5,
+        6.4,
+        -5.6
+      ],
+      "max": [
+        2.5,
+        8.8,
+        -1.5
+      ]
+    },
+    {
+      "id": "flybridge_mid",
+      "min": [
+        -2.5,
+        6.4,
+        -1.5
+      ],
+      "max": [
+        2.5,
+        9.5,
+        2.75
+      ]
+    },
+    {
+      "id": "flybridge_fore",
+      "min": [
+        -2.5,
+        6.4,
+        2.75
+      ],
+      "max": [
+        2.5,
+        9,
+        6.5
+      ]
+    },
+    {
+      "id": "lower_corridor",
+      "min": [
+        -0.79,
+        1,
+        -11.5
+      ],
+      "max": [
+        0.79,
+        3.1,
+        -0.55
+      ]
+    },
+    {
+      "id": "lower_port_cabin",
+      "min": [
+        -3.08,
+        1,
+        -11.5
+      ],
+      "max": [
+        -0.93,
+        3.1,
+        -5.05
+      ]
+    },
+    {
+      "id": "lower_starboard_cabin",
+      "min": [
+        0.93,
+        1,
+        -11.5
+      ],
+      "max": [
+        3.08,
+        3.1,
+        -5.05
+      ]
+    },
+    {
+      "id": "lower_bathroom",
+      "min": [
+        0.93,
+        1,
+        -4.85
+      ],
+      "max": [
+        3.08,
+        3.1,
+        -1.48
+      ]
+    },
+    {
+      "id": "lower_foyer_port",
+      "min": [
+        -3.08,
+        1,
+        -0.55
+      ],
+      "max": [
+        -0.8,
+        3.1,
+        7.55
+      ]
+    },
+    {
+      "id": "lower_foyer_starboard",
+      "min": [
+        0.8,
+        1,
+        -0.55
+      ],
+      "max": [
+        3.08,
+        3.1,
+        7.55
+      ]
+    },
+    {
+      "id": "lower_fore",
+      "min": [
+        -0.8,
+        1,
+        4.6
+      ],
+      "max": [
+        0.8,
+        3.1,
+        7.55
+      ]
+    },
+    {
+      "id": "interior_stair",
+      "min": [
+        -0.8,
+        1,
+        -0.55
+      ],
+      "max": [
+        0.8,
+        5.6,
+        4.6
+      ]
+    },
+    {
+      "id": "swim_platform",
+      "min": [
+        -3.5,
+        1.35,
+        -15
+      ],
+      "max": [
+        3.5,
+        4.5,
+        -14.1
+      ]
+    },
+    {
+      "id": "swim_stair",
+      "min": [
+        1.7,
+        1.2,
+        -14.1
+      ],
+      "max": [
+        3,
+        5.8,
+        -10.65
+      ]
+    }
+  ],
+  "portals": [
+    {
+      "id": "stern_center",
+      "from": "aft_stern",
+      "to": "aft_center",
+      "center": [
+        0,
+        5,
+        -10.65
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "stern_port",
+      "from": "aft_stern",
+      "to": "aft_port",
+      "center": [
+        -3,
+        5,
+        -10.65
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "stern_aft_stair",
+      "from": "aft_stern",
+      "to": "aft_stair",
+      "center": [
+        -1.55,
+        5,
+        -10.65
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "aft_center_front",
+      "from": "aft_stair_front",
+      "to": "aft_center",
+      "center": [
+        -0.88,
+        5.2,
+        -5.05
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "aft_to_salon",
+      "from": "aft_center",
+      "to": "salon_aft",
+      "center": [
+        0,
+        5,
+        -4.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1.6,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "aft_to_port_walk",
+      "from": "aft_port",
+      "to": "main_port",
+      "center": [
+        -3.1,
+        5,
+        -4.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "aft_to_starboard_walk",
+      "from": "aft_center",
+      "to": "main_starboard",
+      "center": [
+        3.1,
+        5,
+        -4.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "port_to_foredeck",
+      "from": "main_port",
+      "to": "foredeck",
+      "center": [
+        -3,
+        5.3,
+        7.5
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "starboard_to_foredeck",
+      "from": "main_starboard",
+      "to": "foredeck",
+      "center": [
+        3,
+        5.3,
+        7.5
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "salon_port_lane",
+      "from": "salon_aft",
+      "to": "salon_port",
+      "center": [
+        -1.35,
+        5.2,
+        -0.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "salon_starboard_lane",
+      "from": "salon_aft",
+      "to": "salon_starboard",
+      "center": [
+        1.35,
+        5.2,
+        -0.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "salon_port_fore",
+      "from": "salon_port",
+      "to": "salon_fore",
+      "center": [
+        -1.35,
+        5.2,
+        4.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "salon_starboard_fore",
+      "from": "salon_starboard",
+      "to": "salon_fore",
+      "center": [
+        1.35,
+        5.2,
+        4.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "aft_stair_to_flybridge",
+      "from": "aft_stair",
+      "to": "flybridge_aft",
+      "center": [
+        -1.55,
+        7.7,
+        -5.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "flybridge_aft_mid",
+      "from": "flybridge_aft",
+      "to": "flybridge_mid",
+      "center": [
+        -0.75,
+        7.8,
+        -1.5
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "flybridge_mid_fore",
+      "from": "flybridge_mid",
+      "to": "flybridge_fore",
+      "center": [
+        1.4,
+        8,
+        2.75
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "salon_to_interior_stair",
+      "from": "salon_fore",
+      "to": "interior_stair",
+      "center": [
+        0,
+        4.9,
+        4.6
+      ],
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "interior_stair_lower",
+      "from": "lower_corridor",
+      "to": "interior_stair",
+      "center": [
+        0,
+        2,
+        -0.55
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "corridor_port_cabin",
+      "from": "lower_corridor",
+      "to": "lower_port_cabin",
+      "center": [
+        -0.86,
+        2.5,
+        -6.1
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "width": 1.1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "corridor_starboard_cabin",
+      "from": "lower_corridor",
+      "to": "lower_starboard_cabin",
+      "center": [
+        0.86,
+        2.5,
+        -6.1
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "width": 1.1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "corridor_bathroom",
+      "from": "lower_corridor",
+      "to": "lower_bathroom",
+      "center": [
+        0.86,
+        2.3,
+        -3.4
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "width": 1.1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "lower_corridor_foyer_port",
+      "from": "lower_corridor",
+      "to": "lower_foyer_port",
+      "center": [
+        -0.8,
+        1.7,
+        -0.55
+      ],
+      "normal": [
+        -0.70710678,
+        0,
+        0.70710678
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "lower_corridor_foyer_starboard",
+      "from": "lower_corridor",
+      "to": "lower_foyer_starboard",
+      "center": [
+        0.8,
+        1.7,
+        -0.55
+      ],
+      "normal": [
+        0.70710678,
+        0,
+        0.70710678
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "lower_port_fore",
+      "from": "lower_foyer_port",
+      "to": "lower_fore",
+      "center": [
+        -0.8,
+        1.7,
+        6
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "lower_starboard_fore",
+      "from": "lower_foyer_starboard",
+      "to": "lower_fore",
+      "center": [
+        0.8,
+        1.7,
+        6
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "swim_platform_stair",
+      "from": "swim_platform",
+      "to": "swim_stair",
+      "center": [
+        2.35,
+        2.1,
+        -14.1
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "swim_stair_stern",
+      "from": "swim_stair",
+      "to": "aft_stern",
+      "center": [
+        2.35,
+        4.9,
+        -13.5
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    }
+  ],
+  "human_zones": [
+    {
+      "id": "aft_stern",
+      "min": [
+        -3.7,
+        3.7,
+        -13.6
+      ],
+      "max": [
+        3.7,
+        6,
+        -10.65
+      ]
+    },
+    {
+      "id": "aft_center",
+      "min": [
+        -0.88,
+        3.7,
+        -10.65
+      ],
+      "max": [
+        3.7,
+        6,
+        -4.6
+      ]
+    },
+    {
+      "id": "aft_port",
+      "min": [
+        -3.7,
+        3.7,
+        -10.65
+      ],
+      "max": [
+        -2.22,
+        6,
+        -4.6
+      ]
+    },
+    {
+      "id": "aft_stair",
+      "min": [
+        -2.22,
+        3.6,
+        -10.65
+      ],
+      "max": [
+        -0.88,
+        8.3,
+        -5.6
+      ]
+    },
+    {
+      "id": "aft_stair_front",
+      "min": [
+        -2.22,
+        3.7,
+        -5.6
+      ],
+      "max": [
+        -0.88,
+        6,
+        -4.6
+      ]
+    },
+    {
+      "id": "salon_aft",
+      "min": [
+        -2.25,
+        3.7,
+        -4.6
+      ],
+      "max": [
+        2.25,
+        5.6,
+        -0.6
+      ]
+    },
+    {
+      "id": "salon_port",
+      "min": [
+        -2.25,
+        3.7,
+        -0.6
+      ],
+      "max": [
+        -0.9,
+        5.6,
+        4.6
+      ]
+    },
+    {
+      "id": "salon_starboard",
+      "min": [
+        0.9,
+        3.7,
+        -0.6
+      ],
+      "max": [
+        2.25,
+        5.6,
+        4.6
+      ]
+    },
+    {
+      "id": "salon_fore",
+      "min": [
+        -2.25,
+        3.7,
+        4.6
+      ],
+      "max": [
+        2.25,
+        5.6,
+        7.4
+      ]
+    },
+    {
+      "id": "main_port",
+      "min": [
+        -3.7,
+        3.7,
+        -4.6
+      ],
+      "max": [
+        -2.65,
+        6,
+        7.5
+      ]
+    },
+    {
+      "id": "main_starboard",
+      "min": [
+        2.65,
+        3.7,
+        -4.6
+      ],
+      "max": [
+        3.7,
+        6,
+        7.5
+      ]
+    },
+    {
+      "id": "foredeck",
+      "min": [
+        -3.7,
+        3.7,
+        7.5
+      ],
+      "max": [
+        3.7,
+        6.1,
+        14.7
+      ]
+    },
+    {
+      "id": "flybridge_aft",
+      "min": [
+        -2.5,
+        6.4,
+        -5.6
+      ],
+      "max": [
+        2.5,
+        8.8,
+        -1.5
+      ]
+    },
+    {
+      "id": "flybridge_mid",
+      "min": [
+        -2.5,
+        6.4,
+        -1.5
+      ],
+      "max": [
+        2.5,
+        9.5,
+        2.75
+      ]
+    },
+    {
+      "id": "flybridge_fore",
+      "min": [
+        -2.5,
+        6.4,
+        2.75
+      ],
+      "max": [
+        2.5,
+        9,
+        6.5
+      ]
+    },
+    {
+      "id": "lower_corridor",
+      "min": [
+        -0.79,
+        1,
+        -11.5
+      ],
+      "max": [
+        0.79,
+        3.1,
+        -0.55
+      ]
+    },
+    {
+      "id": "lower_port_cabin",
+      "min": [
+        -3.08,
+        1,
+        -11.5
+      ],
+      "max": [
+        -0.93,
+        3.1,
+        -5.05
+      ]
+    },
+    {
+      "id": "lower_starboard_cabin",
+      "min": [
+        0.93,
+        1,
+        -11.5
+      ],
+      "max": [
+        3.08,
+        3.1,
+        -5.05
+      ]
+    },
+    {
+      "id": "lower_bathroom",
+      "min": [
+        0.93,
+        1,
+        -4.85
+      ],
+      "max": [
+        3.08,
+        3.1,
+        -1.48
+      ]
+    },
+    {
+      "id": "lower_foyer_port",
+      "min": [
+        -3.08,
+        1,
+        -0.55
+      ],
+      "max": [
+        -0.8,
+        3.1,
+        7.55
+      ]
+    },
+    {
+      "id": "lower_foyer_starboard",
+      "min": [
+        0.8,
+        1,
+        -0.55
+      ],
+      "max": [
+        3.08,
+        3.1,
+        7.55
+      ]
+    },
+    {
+      "id": "lower_fore",
+      "min": [
+        -0.8,
+        1,
+        4.6
+      ],
+      "max": [
+        0.8,
+        3.1,
+        7.55
+      ]
+    },
+    {
+      "id": "interior_stair",
+      "min": [
+        -0.8,
+        1,
+        -0.55
+      ],
+      "max": [
+        0.8,
+        5.6,
+        4.6
+      ]
+    },
+    {
+      "id": "swim_platform",
+      "min": [
+        -3.5,
+        1.35,
+        -15
+      ],
+      "max": [
+        3.5,
+        4.5,
+        -14.1
+      ]
+    },
+    {
+      "id": "swim_stair",
+      "min": [
+        1.7,
+        1.2,
+        -14.1
+      ],
+      "max": [
+        3,
+        5.8,
+        -10.65
+      ]
+    }
+  ],
+  "human_portals": [
+    {
+      "id": "stern_center",
+      "from": "aft_stern",
+      "to": "aft_center",
+      "center": [
+        0,
+        5,
+        -10.65
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "stern_port",
+      "from": "aft_stern",
+      "to": "aft_port",
+      "center": [
+        -3,
+        5,
+        -10.65
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "stern_aft_stair",
+      "from": "aft_stern",
+      "to": "aft_stair",
+      "center": [
+        -1.55,
+        5,
+        -10.65
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "aft_center_front",
+      "from": "aft_stair_front",
+      "to": "aft_center",
+      "center": [
+        -0.88,
+        5.2,
+        -5.05
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "aft_to_salon",
+      "from": "aft_center",
+      "to": "salon_aft",
+      "center": [
+        0,
+        5,
+        -4.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1.6,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "aft_to_port_walk",
+      "from": "aft_port",
+      "to": "main_port",
+      "center": [
+        -3.1,
+        5,
+        -4.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "port_to_foredeck",
+      "from": "main_port",
+      "to": "foredeck",
+      "center": [
+        -3,
+        5.3,
+        7.5
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "starboard_to_foredeck",
+      "from": "main_starboard",
+      "to": "foredeck",
+      "center": [
+        3,
+        5.3,
+        7.5
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "salon_port_lane",
+      "from": "salon_aft",
+      "to": "salon_port",
+      "center": [
+        -1.35,
+        5.2,
+        -0.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "salon_starboard_lane",
+      "from": "salon_aft",
+      "to": "salon_starboard",
+      "center": [
+        1.35,
+        5.2,
+        -0.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "salon_port_fore",
+      "from": "salon_port",
+      "to": "salon_fore",
+      "center": [
+        -1.35,
+        5.2,
+        4.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "salon_starboard_fore",
+      "from": "salon_starboard",
+      "to": "salon_fore",
+      "center": [
+        1.35,
+        5.2,
+        4.6
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "flybridge_aft_mid",
+      "from": "flybridge_aft",
+      "to": "flybridge_mid",
+      "center": [
+        -0.75,
+        7.8,
+        -1.5
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "flybridge_mid_fore",
+      "from": "flybridge_mid",
+      "to": "flybridge_fore",
+      "center": [
+        1.4,
+        8,
+        2.75
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "salon_to_interior_stair",
+      "from": "salon_fore",
+      "to": "interior_stair",
+      "center": [
+        0,
+        4.9,
+        4.6
+      ],
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "interior_stair_lower",
+      "from": "lower_corridor",
+      "to": "interior_stair",
+      "center": [
+        0,
+        2,
+        -0.55
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "corridor_port_cabin",
+      "from": "lower_corridor",
+      "to": "lower_port_cabin",
+      "center": [
+        -0.86,
+        2.5,
+        -6.1
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "width": 1.1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "corridor_starboard_cabin",
+      "from": "lower_corridor",
+      "to": "lower_starboard_cabin",
+      "center": [
+        0.86,
+        2.5,
+        -6.1
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "width": 1.1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "corridor_bathroom",
+      "from": "lower_corridor",
+      "to": "lower_bathroom",
+      "center": [
+        0.86,
+        2.3,
+        -3.4
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "width": 1.1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "lower_corridor_foyer_port",
+      "from": "lower_corridor",
+      "to": "lower_foyer_port",
+      "center": [
+        -0.8,
+        1.7,
+        -0.55
+      ],
+      "normal": [
+        -0.70710678,
+        0,
+        0.70710678
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "lower_corridor_foyer_starboard",
+      "from": "lower_corridor",
+      "to": "lower_foyer_starboard",
+      "center": [
+        0.8,
+        1.7,
+        -0.55
+      ],
+      "normal": [
+        0.70710678,
+        0,
+        0.70710678
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "lower_port_fore",
+      "from": "lower_foyer_port",
+      "to": "lower_fore",
+      "center": [
+        -0.8,
+        1.7,
+        6
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "lower_starboard_fore",
+      "from": "lower_foyer_starboard",
+      "to": "lower_fore",
+      "center": [
+        0.8,
+        1.7,
+        6
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "swim_platform_stair",
+      "from": "swim_platform",
+      "to": "swim_stair",
+      "center": [
+        2.35,
+        2.1,
+        -14.1
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    },
+    {
+      "id": "swim_stair_stern",
+      "from": "swim_stair",
+      "to": "aft_stern",
+      "center": [
+        2.35,
+        4.9,
+        -13.5
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width": 1,
+      "height": 1.5,
+      "door": false
+    }
+  ],
+  "human_routes": [
+    {
+      "id": "aft_to_starboard_walk",
+      "from": "aft_center",
+      "to": "main_starboard",
+      "points": [
+        {
+          "position": [
+            0,
+            4.400159,
+            -5.15
+          ]
+        },
+        {
+          "position": [
+            3.07635522,
+            4.40015936,
+            -6.84750557
+          ]
+        },
+        {
+          "position": [
+            3.1,
+            4.400159,
+            -5.15
+          ]
+        },
+        {
+          "position": [
+            3.1,
+            4.400159,
+            -4.6
+          ]
+        },
+        {
+          "position": [
+            3.1,
+            4.400159,
+            -4.05
+          ]
+        }
+      ],
+      "traversal_regions": [
+        {
+          "id": "aft_to_starboard_walk_segment_0_slice_0",
+          "min": [
+            -0.28,
+            4.20012741,
+            -5.61861173
+          ],
+          "max": [
+            0.62181725,
+            4.71879644,
+            -4.87
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_0_slice_1",
+          "min": [
+            0.06181725,
+            4.20012741,
+            -5.80722346
+          ],
+          "max": [
+            0.96363449,
+            4.71879644,
+            -5.05861173
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_0_slice_2",
+          "min": [
+            0.40363449,
+            4.20012741,
+            -5.99583519
+          ],
+          "max": [
+            1.30545174,
+            4.71879644,
+            -5.24722346
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_0_slice_3",
+          "min": [
+            0.74545174,
+            4.20012741,
+            -6.18444692
+          ],
+          "max": [
+            1.64726899,
+            4.71879644,
+            -5.43583519
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_0_slice_4",
+          "min": [
+            1.08726899,
+            4.20012741,
+            -6.37305865
+          ],
+          "max": [
+            1.98908623,
+            4.71879644,
+            -5.62444692
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_0_slice_5",
+          "min": [
+            1.42908623,
+            4.20012741,
+            -6.56167038
+          ],
+          "max": [
+            2.33090348,
+            4.71879644,
+            -5.81305865
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_0_slice_6",
+          "min": [
+            1.77090348,
+            4.20012741,
+            -6.75028211
+          ],
+          "max": [
+            2.67272073,
+            4.71879644,
+            -6.00167038
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_0_slice_7",
+          "min": [
+            2.11272073,
+            4.20012741,
+            -6.93889384
+          ],
+          "max": [
+            3.01453797,
+            4.71879644,
+            -6.19028211
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_0_slice_8",
+          "min": [
+            2.45453797,
+            4.20012741,
+            -7.12750557
+          ],
+          "max": [
+            3.35635522,
+            4.71879644,
+            -6.37889384
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_1_slice_0",
+          "min": [
+            2.79635522,
+            4.20012741,
+            -7.12750557
+          ],
+          "max": [
+            3.36108418,
+            4.71879644,
+            -6.22800446
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_1_slice_1",
+          "min": [
+            2.80108418,
+            4.20012741,
+            -6.78800446
+          ],
+          "max": [
+            3.36581313,
+            4.71879644,
+            -5.88850334
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_1_slice_2",
+          "min": [
+            2.80581313,
+            4.20012741,
+            -6.44850334
+          ],
+          "max": [
+            3.37054209,
+            4.71879644,
+            -5.54900223
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_1_slice_3",
+          "min": [
+            2.81054209,
+            4.20012741,
+            -6.10900223
+          ],
+          "max": [
+            3.37527104,
+            4.71879644,
+            -5.20950111
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_1_slice_4",
+          "min": [
+            2.81527104,
+            4.20012741,
+            -5.76950111
+          ],
+          "max": [
+            3.38,
+            4.71879644,
+            -4.87
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_2_slice_0",
+          "min": [
+            2.82,
+            4.20012741,
+            -5.43
+          ],
+          "max": [
+            3.38,
+            4.71879644,
+            -4.595
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_2_slice_1",
+          "min": [
+            2.82,
+            4.20012741,
+            -5.155
+          ],
+          "max": [
+            3.38,
+            4.71879644,
+            -4.32
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_3_slice_0",
+          "min": [
+            2.82,
+            4.20012741,
+            -4.88
+          ],
+          "max": [
+            3.38,
+            4.71879644,
+            -4.045
+          ]
+        },
+        {
+          "id": "aft_to_starboard_walk_segment_3_slice_1",
+          "min": [
+            2.82,
+            4.20012741,
+            -4.605
+          ],
+          "max": [
+            3.38,
+            4.71879644,
+            -3.77
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aft_stair_to_flybridge",
+      "from": "aft_stair",
+      "to": "flybridge_aft",
+      "points": [
+        {
+          "position": [
+            -1.55,
+            4.56875,
+            -10.3968754
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            4.7375,
+            -10.0906258
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            4.90625,
+            -9.784374
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            5.075,
+            -9.478125
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            5.24375,
+            -9.171875
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            5.4125,
+            -8.865625
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            5.58125,
+            -8.559376
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            5.75,
+            -8.253124
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            5.91875,
+            -7.94687462
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            6.0875,
+            -7.640625
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            6.25625,
+            -7.33437538
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            6.425,
+            -7.028125
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            6.59375,
+            -6.721875
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            6.7625,
+            -6.41562462
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            6.93125,
+            -6.109375
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            7.1,
+            -5.80312538
+          ]
+        },
+        {
+          "position": [
+            -1.55,
+            7.1,
+            -5.3
+          ]
+        },
+        {
+          "position": [
+            -1.125,
+            7.10015774,
+            -5.249998
+          ]
+        },
+        {
+          "position": [
+            -1.125,
+            7.10015774,
+            -3.954998
+          ]
+        },
+        {
+          "position": [
+            -0.750195265,
+            7.10015774,
+            -3.954998
+          ]
+        }
+      ],
+      "traversal_regions": [
+        {
+          "id": "aft_stair_to_flybridge_segment_0_slice_0",
+          "min": [
+            -1.83,
+            4.28875,
+            -10.6768754
+          ],
+          "max": [
+            -1.27,
+            5.0875,
+            -9.8106258
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_1_slice_0",
+          "min": [
+            -1.83,
+            4.4575,
+            -10.3706258
+          ],
+          "max": [
+            -1.27,
+            5.25625,
+            -9.504374
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_2_slice_0",
+          "min": [
+            -1.83,
+            4.62625,
+            -10.064374
+          ],
+          "max": [
+            -1.27,
+            5.425,
+            -9.198125
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_3_slice_0",
+          "min": [
+            -1.83,
+            4.795,
+            -9.758125
+          ],
+          "max": [
+            -1.27,
+            5.59375,
+            -8.891875
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_4_slice_0",
+          "min": [
+            -1.83,
+            4.96375,
+            -9.451875
+          ],
+          "max": [
+            -1.27,
+            5.7625,
+            -8.585625
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_5_slice_0",
+          "min": [
+            -1.83,
+            5.1325,
+            -9.145625
+          ],
+          "max": [
+            -1.27,
+            5.93125,
+            -8.279376
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_6_slice_0",
+          "min": [
+            -1.83,
+            5.30125,
+            -8.839376
+          ],
+          "max": [
+            -1.27,
+            6.1,
+            -7.973124
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_7_slice_0",
+          "min": [
+            -1.83,
+            5.47,
+            -8.533124
+          ],
+          "max": [
+            -1.27,
+            6.26875,
+            -7.66687462
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_8_slice_0",
+          "min": [
+            -1.83,
+            5.63875,
+            -8.22687462
+          ],
+          "max": [
+            -1.27,
+            6.4375,
+            -7.360625
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_9_slice_0",
+          "min": [
+            -1.83,
+            5.8075,
+            -7.920625
+          ],
+          "max": [
+            -1.27,
+            6.60625,
+            -7.05437538
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_10_slice_0",
+          "min": [
+            -1.83,
+            5.97625,
+            -7.61437538
+          ],
+          "max": [
+            -1.27,
+            6.775,
+            -6.748125
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_11_slice_0",
+          "min": [
+            -1.83,
+            6.145,
+            -7.308125
+          ],
+          "max": [
+            -1.27,
+            6.94375,
+            -6.441875
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_12_slice_0",
+          "min": [
+            -1.83,
+            6.31375,
+            -7.001875
+          ],
+          "max": [
+            -1.27,
+            7.1125,
+            -6.13562462
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_13_slice_0",
+          "min": [
+            -1.83,
+            6.4825,
+            -6.69562462
+          ],
+          "max": [
+            -1.27,
+            7.28125,
+            -5.829375
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_14_slice_0",
+          "min": [
+            -1.83,
+            6.65125,
+            -6.389375
+          ],
+          "max": [
+            -1.27,
+            7.45,
+            -5.52312538
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_15_slice_0",
+          "min": [
+            -1.83,
+            6.82,
+            -6.08312538
+          ],
+          "max": [
+            -1.27,
+            7.45,
+            -5.27156269
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_15_slice_1",
+          "min": [
+            -1.83,
+            6.82,
+            -5.83156269
+          ],
+          "max": [
+            -1.27,
+            7.45,
+            -5.02
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_16_slice_0",
+          "min": [
+            -1.83,
+            6.82,
+            -5.58
+          ],
+          "max": [
+            -1.0575,
+            7.45007887,
+            -4.994999
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_16_slice_1",
+          "min": [
+            -1.6175,
+            6.82007887,
+            -5.554999
+          ],
+          "max": [
+            -0.845,
+            7.45015774,
+            -4.969998
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_17_slice_0",
+          "min": [
+            -1.405,
+            6.82015774,
+            -5.529998
+          ],
+          "max": [
+            -0.845,
+            7.45015774,
+            -4.646248
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_17_slice_1",
+          "min": [
+            -1.405,
+            6.82015774,
+            -5.206248
+          ],
+          "max": [
+            -0.845,
+            7.45015774,
+            -4.322498
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_17_slice_2",
+          "min": [
+            -1.405,
+            6.82015774,
+            -4.882498
+          ],
+          "max": [
+            -0.845,
+            7.45015774,
+            -3.998748
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_17_slice_3",
+          "min": [
+            -1.405,
+            6.82015774,
+            -4.558748
+          ],
+          "max": [
+            -0.845,
+            7.45015774,
+            -3.674998
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_18_slice_0",
+          "min": [
+            -1.405,
+            6.82015774,
+            -4.234998
+          ],
+          "max": [
+            -0.47019526,
+            7.45015774,
+            -3.674998
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_19_slice_0",
+          "min": [
+            -1.03019527,
+            6.82015774,
+            -4.234998
+          ],
+          "max": [
+            -0.47019526,
+            7.45015774,
+            -3.3027689
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_19_slice_1",
+          "min": [
+            -1.03019527,
+            6.82015774,
+            -3.8627689
+          ],
+          "max": [
+            -0.47019526,
+            7.45015774,
+            -2.93053981
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_19_slice_2",
+          "min": [
+            -1.03019527,
+            6.82015774,
+            -3.49053981
+          ],
+          "max": [
+            -0.47019526,
+            7.45015774,
+            -2.55831071
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_19_slice_3",
+          "min": [
+            -1.03019527,
+            6.82015774,
+            -3.11831071
+          ],
+          "max": [
+            -0.47019526,
+            7.45015774,
+            -2.18608162
+          ]
+        },
+        {
+          "id": "aft_stair_to_flybridge_segment_19_slice_4",
+          "min": [
+            -1.03019527,
+            6.82015774,
+            -2.74608162
+          ],
+          "max": [
+            -0.47019526,
+            7.45015774,
+            -1.81385252
+          ]
+        }
+      ]
+    }
+  ]
+}

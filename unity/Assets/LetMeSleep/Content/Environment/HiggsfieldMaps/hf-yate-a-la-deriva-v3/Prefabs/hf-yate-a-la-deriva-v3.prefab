@@ -206,6 +206,7 @@ GameObject:
   - component: {fileID: 382907605790544460}
   - component: {fileID: 9175423909353019758}
   - component: {fileID: 497416103529587275}
+  - component: {fileID: 48820772377993663}
   m_Layer: 0
   m_Name: hf-yate-a-la-deriva-v3
   m_TagString: Untagged
@@ -243,8 +244,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.EnvironmentMapDefinition
   MapId: hf-yate-a-la-deriva-v3
-  ContentHash: 65ed844005ff7dc907064769760dac7fcc6fa85f1f6c27109fe9b735413ddfbc
-  SpatialData: {fileID: 4900000, guid: a766be1ffb3ca594285b6d1a5a8b82de, type: 3}
+  ContentHash: 3377a4f634bedb544a2af111b51d6d5a6a42c3bd577242484d5cb9cf8ddbeb37
+  SpatialData: {fileID: 4900000, guid: b4ece3b4e52b815448ffd9dcc13444d4, type: 3}
   HumanSpawnPoints:
   - {fileID: 8184617971429098325}
   - {fileID: 2200897754850826018}
@@ -953,6 +954,130 @@ MonoBehaviour:
   RetryTicks: 30
   InteriorMargin: 0.02
   SupportProbe: 0.08
+--- !u!114 &48820772377993663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3377767108526195489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21d3e5b304964cc89cc545eae60fec08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.GameplayObjectiveCatalog
+  mapId: hf-yate-a-la-deriva-v3
+  entries:
+  - ObjectiveId: yacht.clean.aft_dining_table
+    Kind: 1
+    DisplayKey: task.yacht.aft_dining_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 1.6687498, y: 4.1179996, z: -7.175}
+    LocalApproachPoint: {x: 2.176883, y: 3.4000006, z: -6.964523}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: aft_center
+    RouteBudgetTicks: 330
+    TargetPath: Environment/YATE_AftDining_Table
+  - ObjectiveId: yacht.switch.port_cabin_lamp
+    Kind: 2
+    DisplayKey: task.yacht.port_cabin_lamp
+    ActionKey: task.action.hold_switch
+    LocalPosition: {x: -2.4499998, y: 1.3975013, z: -7.094998}
+    LocalApproachPoint: {x: -2.162987, y: 0.8000009, z: -6.4020867}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: lower_port_cabin
+    RouteBudgetTicks: 330
+    TargetPath: Environment/YATE_Cabin_Port_NightstandLamp
+  - ObjectiveId: yacht.switch.starboard_cabin_lamp
+    Kind: 2
+    DisplayKey: task.yacht.starboard_cabin_lamp
+    ActionKey: task.action.hold_switch
+    LocalPosition: {x: 2.4499998, y: 1.3975013, z: -7.094998}
+    LocalApproachPoint: {x: 2.4499998, y: 0.8000009, z: -6.344997}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: lower_starboard_cabin
+    RouteBudgetTicks: 330
+    TargetPath: Environment/YATE_Cabin_Starboard_NightstandLamp
+  - ObjectiveId: yacht.repair.helm_console
+    Kind: 0
+    DisplayKey: task.yacht.helm_console
+    ActionKey: task.action.hold_repair
+    LocalPosition: {x: -0.99999994, y: 6.8434954, z: 4.672345}
+    LocalApproachPoint: {x: -1.2104754, y: 6.0999975, z: 4.1642118}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: flybridge_fore
+    RouteBudgetTicks: 330
+    TargetPath: Environment/YATE_Flybridge_Helm_Console_Wheel_Controls
+  - ObjectiveId: yacht.clean.galley_sink
+    Kind: 1
+    DisplayKey: task.yacht.galley_sink
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 0, y: 4.334998, z: 6.7324986}
+    LocalApproachPoint: {x: -0.28701228, y: 3.3999982, z: 6.039588}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: salon_fore
+    RouteBudgetTicks: 330
+    TargetPath: Environment/YATE_Galley_Cabinets_Sink_Oven_Hob
+  - ObjectiveId: yacht.clean.aft_dining_chair
+    Kind: 1
+    DisplayKey: task.yacht.aft_dining_chair
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 0.55, y: 3.859, z: -9.037794}
+    LocalApproachPoint: {x: -0.37387943, y: 3.4000008, z: -8.655109}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: aft_center
+    RouteBudgetTicks: 330
+    TargetPath: Environment/YATE_AftDining_Chair_01
+  - ObjectiveId: yacht.clean.flybridge_drinks_table
+    Kind: 1
+    DisplayKey: task.yacht.flybridge_drinks_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 0.25, y: 6.494, z: -3.049999}
+    LocalApproachPoint: {x: -0.44290954, y: 6.099999, z: -3.3370104}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: flybridge_aft
+    RouteBudgetTicks: 330
+    TargetPath: Environment/YATE_Flybridge_DrinksTable
+  - ObjectiveId: yacht.clean.foredeck_table
+    Kind: 1
+    DisplayKey: task.yacht.foredeck_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 0, y: 3.614, z: 10.6}
+    LocalApproachPoint: {x: -0.000000052154064, y: 3.3999972, z: 11.599999}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: foredeck
+    RouteBudgetTicks: 330
+    TargetPath: Environment/YATE_Foredeck_LowTable
+  - ObjectiveId: yacht.clean.salon_coffee_table
+    Kind: 1
+    DisplayKey: task.yacht.salon_coffee_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -0.87999994, y: 3.674, z: -2.5499995}
+    LocalApproachPoint: {x: -1.1670126, y: 3.3999996, z: -1.8570887}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: salon_aft
+    RouteBudgetTicks: 330
+    TargetPath: Environment/YATE_Salon_CoffeeTable
+  - ObjectiveId: yacht.clean.bathroom_toilet
+    Kind: 1
+    DisplayKey: task.yacht.bathroom_toilet
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 2.5999994, y: 1.1000009, z: -4.392499}
+    LocalApproachPoint: {x: 2.5999994, y: 0.80000037, z: -3.392498}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: lower_bathroom
+    RouteBudgetTicks: 330
+    TargetPath: Environment/YATE_Bathroom_Toilet
 --- !u!1 &5715012620406718894
 GameObject:
   m_ObjectHideFlags: 0
