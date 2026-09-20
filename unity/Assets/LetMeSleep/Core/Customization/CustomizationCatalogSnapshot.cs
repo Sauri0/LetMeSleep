@@ -74,7 +74,7 @@ namespace LetMeSleep.Core.Customization
         internal CustomizationOptionSnapshot(CustomizationOptionRecord source)
         {
             Role = source.Role; SlotId = source.SlotId; OptionId = source.OptionId;
-            WireOptionId = source.WireOptionId; Kind = source.Kind; Label = source.Label ?? source.OptionId;
+            WireOptionId = source.WireOptionId; Kind = source.Kind; Label = source.Label ?? string.Empty;
             HasSwatch = source.HasSwatch; SwatchRgba = source.SwatchRgba;
             AssetId = source.AssetId ?? string.Empty; HasRuntimeAsset = source.HasRuntimeAsset;
             CompatibleBaseOptionIds = Array.AsReadOnly(Clean(source.CompatibleBaseOptionIds));

@@ -70,6 +70,8 @@ namespace LetMeSleep.Tests.EditMode
             var snapshot = ValidSnapshot();
             Assert.That(snapshot.TrySlot("human.hair", out var slot), Is.True);
             Assert.That(slot.Label, Is.Empty);
+            Assert.That(slot.TryOption("none", out var option), Is.True);
+            Assert.That(option.Label, Is.Empty);
         }
 
         [Test]
