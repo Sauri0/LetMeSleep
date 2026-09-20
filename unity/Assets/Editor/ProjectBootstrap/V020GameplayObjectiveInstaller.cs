@@ -10,6 +10,7 @@ using LetMeSleep.Content.Environment;
 using LetMeSleep.Core;
 using LetMeSleep.Gameplay;
 using LetMeSleep.Gameplay.Unity;
+using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -26,6 +27,7 @@ public static class V020GameplayObjectiveInstaller
     {
         internal string ObjectiveId, DisplayKey, ActionKey, TargetName, Region;
         internal GameplayObjectiveKind Kind;
+        internal Vector3? ContactPoint, ApproachPoint;
     }
 
     private sealed class AuthoredApproach
@@ -39,13 +41,70 @@ public static class V020GameplayObjectiveInstaller
     [Serializable] private sealed class ExternalMap
     {
         public string mapId, prefabPath;
+        public string navigationPath, navigationAssetPath;
         public ExternalObjective[] objectives;
     }
     [Serializable] private sealed class ExternalObjective
     {
         public string objectiveId, kind, displayKey, actionKey, targetName, routeRegionId;
+        public float[] contactPoint, approachPoint;
     }
 #pragma warning restore 0649
+
+    private sealed class NavigationOverride
+    {
+        internal TextAsset Data;
+        internal string AssetPath;
+    }
+    private static readonly Dictionary<string, NavigationOverride> NavigationOverrides =
+        new Dictionary<string, NavigationOverride>(StringComparer.Ordinal);
+
+    private static void ClearNavigationOverrides()
+    {
+        EditorApplication.delayCall -= ClearNavigationOverrides;
+        foreach (var candidate in NavigationOverrides.Values)
+            if (candidate.Data) Object.DestroyImmediate(candidate.Data);
+        NavigationOverrides.Clear();
+    }
+
+    private static TextAsset NavigationFor(EnvironmentMapDefinition map)
+        => NavigationOverrides.TryGetValue(map.MapId, out var candidate) ? candidate.Data : map.SpatialData;
+
+    private static string AbsoluteAssetPath(string assetPath)
+        => System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.dataPath, "..", assetPath));
+
+    private static void RegisterNavigationOverride(ExternalMap candidate)
+    {
+        if (string.IsNullOrEmpty(candidate.navigationPath) && string.IsNullOrEmpty(candidate.navigationAssetPath)) return;
+        string expectedAsset = "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/" + candidate.mapId +
+                               "/Data/isla-navigation-human-v020.json";
+        // The first separate graph is deliberately scoped to Isla. Other maps need their own reviewed recipe.
+        if (candidate.mapId != "hf-isla-del-laguito-v2" || candidate.navigationAssetPath != expectedAsset ||
+            string.IsNullOrWhiteSpace(candidate.navigationPath) || !System.IO.Path.IsPathRooted(candidate.navigationPath))
+            throw new ArgumentException("Separate human navigation requires the reviewed Isla source and asset paths.");
+        var map = AssetDatabase.LoadAssetAtPath<GameObject>(candidate.prefabPath)?.GetComponent<EnvironmentMapDefinition>();
+        if (!map || !map.SpatialData) throw new InvalidOperationException("Original navigation missing.");
+        string text = File.ReadAllText(candidate.navigationPath);
+        JObject proposed = JObject.Parse(text), original = JObject.Parse(map.SpatialData.text);
+        string[] humanFields = { "human_zones", "human_portals", "human_routes" };
+        if (humanFields.Any(field => proposed[field] == null || proposed[field].Type != JTokenType.Array))
+            throw new ArgumentException("All separate human navigation arrays are required.");
+        foreach (string field in humanFields) { proposed.Remove(field); original.Remove(field); }
+        if (!JToken.DeepEquals(original, proposed))
+            throw new ArgumentException("Separate human navigation must preserve all legacy navigation data.");
+        if (File.Exists(AbsoluteAssetPath(expectedAsset)) && File.ReadAllText(AbsoluteAssetPath(expectedAsset)) != text)
+            throw new InvalidOperationException("Refusing to overwrite a different installed navigation version.");
+        if (NavigationOverrides.TryGetValue(candidate.mapId, out var cached))
+        {
+            if (cached.Data.text != text) throw new InvalidOperationException("Navigation source changed during validation.");
+            return;
+        }
+        NavigationOverrides.Add(candidate.mapId, new NavigationOverride
+        { Data = new TextAsset(text) { name = candidate.mapId + " external human navigation", hideFlags = HideFlags.HideAndDontSave }, AssetPath = expectedAsset });
+        EditorApplication.delayCall -= ClearNavigationOverrides;
+        EditorApplication.delayCall += ClearNavigationOverrides;
+        Debug.Log("LMS_OBJECTIVE_NAVIGATION map=" + candidate.mapId + " sha256=" + Hash(text) + " saved=0 legacyUnchanged=1");
+    }
 
     // Explicit batch input; never saves a prefab or treats source metadata as proof.
     public static void ProbeExternalGeometryOnly()
@@ -159,6 +218,7 @@ public static class V020GameplayObjectiveInstaller
 
     private static ExternalManifest ReadExternalManifest(string[] args)
     {
+        ClearNavigationOverrides();
         string path = CommandArgument(args, "-objectiveManifest");
         if (!System.IO.Path.IsPathRooted(path)) throw new ArgumentException("Absolute manifest path required.");
         var manifest = JsonUtility.FromJson<ExternalManifest>(File.ReadAllText(path));
@@ -173,6 +233,7 @@ public static class V020GameplayObjectiveInstaller
         Recipe recipe = Recipes.SingleOrDefault(item => item.MapId == candidate.mapId);
         if (recipe == null || candidate.prefabPath != recipe.PrefabPath)
             throw new ArgumentException("Manifest must identify an existing final map prefab.");
+        RegisterNavigationOverride(candidate);
         if (candidate.objectives == null || candidate.objectives.Length == 0 || candidate.objectives.Length > 128 ||
             requireCatalogCount && (candidate.objectives.Length < 10 ||
                 candidate.objectives.Length > LetMeSleep.Online.GameplayWireCodec.MaxObjectives) || candidate.objectives.Any(item => item == null) ||
@@ -187,7 +248,16 @@ public static class V020GameplayObjectiveInstaller
                 .Any(string.IsNullOrWhiteSpace) || !Enum.TryParse(item.kind, false, out GameplayObjectiveKind kind) ||
                 (kind != GameplayObjectiveKind.Clean && kind != GameplayObjectiveKind.Repair && kind != GameplayObjectiveKind.Switch))
                 throw new ArgumentException("Invalid objective metadata: " + item.objectiveId);
-            return Spec(item.objectiveId, kind, item.displayKey, item.actionKey, item.targetName, item.routeRegionId);
+            var spec = Spec(item.objectiveId, kind, item.displayKey, item.actionKey, item.targetName, item.routeRegionId);
+            if (item.contactPoint != null || item.approachPoint != null)
+            {
+                if (item.contactPoint?.Length != 3 || item.approachPoint?.Length != 3 ||
+                    item.contactPoint.Concat(item.approachPoint).Any(value => !MathEx.Finite(value) || Math.Abs(value) > 10000))
+                    throw new ArgumentException("Explicit contact and approach require two finite local xyz points.");
+                spec.ContactPoint = new Vector3(item.contactPoint[0], item.contactPoint[1], item.contactPoint[2]);
+                spec.ApproachPoint = new Vector3(item.approachPoint[0], item.approachPoint[1], item.approachPoint[2]);
+            }
+            return spec;
         }).ToArray();
     }
 
@@ -235,6 +305,7 @@ public static class V020GameplayObjectiveInstaller
     [MenuItem("Tools/Let Me Sleep/v0.2.0/Validate objective candidates (no save)")]
     public static void ValidateCandidatesOnly()
     {
+        ClearNavigationOverrides();
         var failures = new List<string>();
         foreach (var recipe in Recipes)
         {
@@ -422,7 +493,7 @@ public static class V020GameplayObjectiveInstaller
             var tools = world.GetToolDefinitions();
             runtime = fixture.AddComponent<GameplayRuntime>();
             runtime.IsHost = true; runtime.AutomaticTick = false; runtime.CaptureLocalInput = false;
-            runtime.NavigationData = map.SpatialData; runtime.LocalActorId = 1;
+            runtime.NavigationData = NavigationFor(map); runtime.LocalActorId = 1;
             Transform[] humans = map.HumanSpawnPoints.Where(item => item).ToArray();
             Transform mosquito = map.MosquitoSpawnPoints.FirstOrDefault(item => item);
             if (humans.Length != 5 || !mosquito)
@@ -492,6 +563,7 @@ public static class V020GameplayObjectiveInstaller
 
     private static void InstallCatalog(string mapId, string prefabPath, GameplayObjectiveCatalog.Entry[] entries)
     {
+        string expectedContentHash = null;
         GameObject root = PrefabUtility.LoadPrefabContents(prefabPath);
         try
         {
@@ -499,7 +571,10 @@ public static class V020GameplayObjectiveInstaller
             if (!map || map.MapId != mapId || string.IsNullOrWhiteSpace(map.ContentHash))
                 throw new InvalidOperationException(mapId + " prefab identity/content hash missing.");
             var catalog = root.GetComponent<GameplayObjectiveCatalog>() ?? root.AddComponent<GameplayObjectiveCatalog>();
-            if (CatalogEquals(catalog, mapId, entries))
+            NavigationOverrides.TryGetValue(mapId, out var navigation);
+            bool navigationMatches = navigation == null || map.SpatialData &&
+                AssetDatabase.GetAssetPath(map.SpatialData) == navigation.AssetPath && map.SpatialData.text == navigation.Data.text;
+            if (CatalogEquals(catalog, mapId, entries) && navigationMatches)
             {
                 Debug.Log("LMS_OBJECTIVE_INSTALL map=" + mapId + " objectives=" + entries.Length + " changed=0");
                 return;
@@ -507,13 +582,27 @@ public static class V020GameplayObjectiveInstaller
             string previousHash = map.ContentHash;
             catalog.ConfigureForEditor(mapId, entries);
             string catalogHash = ObjectiveDefinition.CatalogHash(Definitions(root.transform, entries));
-            map.ContentHash = Hash("objectives-v020\n" + previousHash + "\n" + catalogHash);
+            string navigationHash = navigation == null ? "" : Hash(navigation.Data.text);
+            if (navigation != null)
+            {
+                string absoluteNavigationPath = AbsoluteAssetPath(navigation.AssetPath);
+                if (!File.Exists(absoluteNavigationPath)) File.WriteAllText(absoluteNavigationPath, navigation.Data.text, new UTF8Encoding(false));
+                AssetDatabase.ImportAsset(navigation.AssetPath, ImportAssetOptions.ForceSynchronousImport);
+                var savedNavigation = AssetDatabase.LoadAssetAtPath<TextAsset>(navigation.AssetPath);
+                if (!savedNavigation || savedNavigation.text != navigation.Data.text)
+                    throw new InvalidOperationException("Navigation asset readback failed before prefab save.");
+                map.SpatialData = savedNavigation;
+            }
+            map.ContentHash = Hash("objectives-v020\n" + previousHash + "\n" + catalogHash +
+                (navigation == null ? "" : "\nhuman-navigation\n" + navigationHash));
+            expectedContentHash = map.ContentHash;
             EditorUtility.SetDirty(catalog);
             EditorUtility.SetDirty(map);
             if (!PrefabUtility.SaveAsPrefabAsset(root, prefabPath))
                 throw new InvalidOperationException("Could not save " + mapId + " objective catalog.");
             Debug.Log("LMS_OBJECTIVE_INSTALL map=" + mapId + " objectives=" + entries.Length + " changed=1 previousHash=" +
-                      previousHash + " contentHash=" + map.ContentHash + " catalogHash=" + catalogHash);
+                      previousHash + " contentHash=" + map.ContentHash + " catalogHash=" + catalogHash +
+                      " navigationHash=" + navigationHash);
         }
         finally { PrefabUtility.UnloadPrefabContents(root); }
         AssetDatabase.SaveAssets();
@@ -521,8 +610,13 @@ public static class V020GameplayObjectiveInstaller
         var saved = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
         var savedMap = saved ? saved.GetComponent<EnvironmentMapDefinition>() : null;
         var savedCatalog = saved ? saved.GetComponent<GameplayObjectiveCatalog>() : null;
-        if (!savedMap || !savedCatalog || !CatalogEquals(savedCatalog, mapId, entries))
+        if (!savedMap || !savedCatalog || !CatalogEquals(savedCatalog, mapId, entries) ||
+            savedMap.ContentHash != expectedContentHash)
             throw new InvalidOperationException(mapId + " objective catalog readback failed.");
+        if (NavigationOverrides.TryGetValue(mapId, out var expectedNavigation) &&
+            (!savedMap.SpatialData || AssetDatabase.GetAssetPath(savedMap.SpatialData) != expectedNavigation.AssetPath ||
+             savedMap.SpatialData.text != expectedNavigation.Data.text))
+            throw new InvalidOperationException(mapId + " navigation reference readback failed.");
     }
 
     private static GameplayObjectiveCatalog.Entry[] BuildAndValidateCasaCatalog(bool validateMotor = true)
@@ -550,7 +644,7 @@ public static class V020GameplayObjectiveInstaller
             var toolDefinitions = world.GetToolDefinitions();
             const BindingFlags hidden = BindingFlags.Instance | BindingFlags.NonPublic;
             object navigation = typeof(UnityGameplayWorld).GetMethod("ConfigureModeMap", hidden)
-                ?.Invoke(world, new object[] { map.SpatialData, mapId, false });
+                ?.Invoke(world, new object[] { NavigationFor(map), mapId, false });
             MethodInfo approachFree = typeof(UnityGameplayWorld).GetMethod("ApproachFree", hidden);
             MethodInfo routeWithin = navigation?.GetType().GetMethod("RouteWithin");
             if (navigation == null || approachFree == null || routeWithin == null)
@@ -581,7 +675,7 @@ public static class V020GameplayObjectiveInstaller
 
             runtime = fixture.AddComponent<GameplayRuntime>();
             runtime.IsHost = true; runtime.AutomaticTick = false; runtime.CaptureLocalInput = false;
-            runtime.NavigationData = map.SpatialData;
+            runtime.NavigationData = NavigationFor(map);
             var objectives = world.GetObjectiveDefinitions();
             var roster = Roster(map);
             var config = new GameplayRoundConfig(1, 1, map.MapId, map.ContentHash, 180, 0,
@@ -619,6 +713,9 @@ public static class V020GameplayObjectiveInstaller
         if (containsFootPoint == null)
             throw new InvalidOperationException("Objective navigation foot-region contract missing.");
         var candidates = new List<AuthoredApproach>();
+        if (spec.ContactPoint.HasValue)
+            candidates.Add(ValidateExplicitApproach(spec, root, collider, world, approachFree,
+                navigation, containsFootPoint, routeWithin, spawns));
         int probes = 0, supported = 0, near = 0, clear = 0, inRegion = 0, visible = 0, routed = 0;
         var regionWitnesses = new Dictionary<string, int>(StringComparer.Ordinal);
         var authoredRegions = navigation.GetType().GetField("regions", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -626,6 +723,7 @@ public static class V020GameplayObjectiveInstaller
         Vector3? firstClearFoot = null;
         foreach (IEnumerable<Vector3> witnesses in new[] { AxisWitnesses(collider), HorizontalEdgeWitnesses(collider) })
         {
+            if (spec.ContactPoint.HasValue) break;
             foreach (Vector3 point in witnesses)
             foreach (float radius in new[] { .55f, .75f, 1f })
             foreach (Vector3 direction in HorizontalDirections())
@@ -703,6 +801,37 @@ public static class V020GameplayObjectiveInstaller
             " firstClearFoot=" + (firstClearFoot.HasValue ? firstClearFoot.Value.ToString("R") : "none") +
             " otherRegions=" + string.Join(",", regionWitnesses.OrderByDescending(item => item.Value)
                 .ThenBy(item => item.Key, StringComparer.Ordinal).Select(item => item.Key + ":" + item.Value)) + ".");
+    }
+
+    private static AuthoredApproach ValidateExplicitApproach(CatalogSpec spec, Transform root, Collider target,
+        UnityGameplayWorld world, MethodInfo approachFree, object navigation, MethodInfo containsFootPoint,
+        MethodInfo routeWithin, IReadOnlyList<Transform> spawns)
+    {
+        Vector3 point = root.TransformPoint(spec.ContactPoint.Value);
+        Vector3 requestedFoot = root.TransformPoint(spec.ApproachPoint.Value);
+        RaycastHit support = Physics.RaycastAll(requestedFoot + Vector3.up * .1f, Vector3.down, .2f,
+                world.GeometryMask, QueryTriggerInteraction.Ignore).OrderBy(hit => hit.distance)
+            .FirstOrDefault(hit => world.IsWorldCollider(hit.collider) && !hit.collider.GetComponentInParent<GameplayActorProxy>());
+        if (!support.collider || support.collider == target || support.normal.y < .55f ||
+            Vector3.Distance(support.point, requestedFoot) > .01f)
+            throw new InvalidOperationException(spec.ObjectiveId + " explicit approach lacks matching independent walkable support.");
+        Vector3 foot = support.point;
+        if (Vector3.Distance(point, foot) > 1.25f || !(bool)approachFree.Invoke(world, new object[] { 0u, foot }) ||
+            !(bool)containsFootPoint.Invoke(navigation, new object[] { spec.Region, foot.ToFloat() }))
+            throw new InvalidOperationException(spec.ObjectiveId + " explicit approach fails range, clearance or authored region.");
+        Vector3 eye = foot + Vector3.up * 1.53f, aim = point - eye;
+        if (aim.sqrMagnitude < .0001f || !target.Raycast(new Ray(eye, aim.normalized), out RaycastHit contact, aim.magnitude + .02f) ||
+            Vector3.Distance(contact.point, point) > .02f)
+            throw new InvalidOperationException(spec.ObjectiveId + " explicit contact is not on the target surface.");
+        RaycastHit first = Physics.RaycastAll(eye, aim.normalized, Mathf.Min(4.6f, aim.magnitude + .3f),
+                world.GeometryMask, QueryTriggerInteraction.Collide).OrderBy(hit => hit.distance)
+            .FirstOrDefault(hit => world.IsWorldCollider(hit.collider) && !hit.collider.isTrigger);
+        if (first.collider != target || Vector3.Distance(first.point, point) > .35f)
+            throw new InvalidOperationException(spec.ObjectiveId + " explicit contact is occluded.");
+        if (!(spawns ?? Array.Empty<Transform>()).Any(spawn => spawn && (bool)routeWithin.Invoke(navigation,
+                new object[] { spawn.position.ToFloat(), spec.Region, foot.ToFloat(), 330u })))
+            throw new InvalidOperationException(spec.ObjectiveId + " explicit approach has no spawn route within budget.");
+        return new AuthoredApproach { Point = point, Approach = foot, Support = support.collider };
     }
 
     private static Recipe RecipeFor(string mapId, string shortId, string displayKey,
@@ -1003,7 +1132,7 @@ public static class V020GameplayObjectiveInstaller
             var tools = world.GetToolDefinitions();
             runtime = fixture.AddComponent<GameplayRuntime>();
             runtime.IsHost = true; runtime.AutomaticTick = false; runtime.CaptureLocalInput = false;
-            runtime.NavigationData = map.SpatialData; runtime.LocalActorId = 1;
+            runtime.NavigationData = NavigationFor(map); runtime.LocalActorId = 1;
             ObjectiveDefinition target = world.GetObjectiveDefinitions().Single(item => item.ObjectiveId == targetId);
             budget = target.RouteBudgetTicks;
             var config = new GameplayRoundConfig(run, run, map.MapId, map.ContentHash, 180, 0,

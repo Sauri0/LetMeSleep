@@ -1,5 +1,31 @@
 # Catálogos de objetivos: validación v0.2.0
 
+## Autoría explícita de Isla y diagnóstico de continuidad
+
+El manifiesto externo puede indicar `navigationPath` absoluto y el destino
+revisado `navigationAssetPath` para la navegación humana de Isla. Se compara
+todo el contenido legacy con el original y se exige conservarlo. La validación
+usa un TextAsset temporal: no importa ni modifica el mapa. Sólo después de
+ronda y cobertura física se importa la nueva versión de datos, se referencia
+desde el prefab y se incluye su hash en ContentHash, con readback de ambos.
+Los datos originales permanecen intactos. El cache temporal se limpia al
+iniciar otro comando y al volver al editor, incluso después de una excepción.
+
+Cada objetivo admite opcionalmente `contactPoint` y `approachPoint` locales.
+Son propuestas que se vuelven a consultar contra PhysX: apoyo caminable
+independiente a no más de 1 cm del pie, espacio corporal, distancia de uso,
+región, contacto superficial, LOS y ruta desde spawn dentro de 330 ticks.
+El contacto explícito debe coincidir con el raycast del target a 2 cm; una
+muestra aproximada aceptada por el radio de interacción anterior no basta.
+No sustituir un fallo de estas consultas por las mediciones del autor.
+
+`DiagnoseExternalRouteOnly` exige exactamente uno de `-objectiveSpawn`,
+`-objectiveSourceObjective` o `-objectiveStart x,y,z`, además del target.
+El origen registrado permite distinguir un obstáculo fijo de una interacción
+entre actores: Camp ronda02 queda13/20, pero el mismo origen del actor5 sin
+otros humanos llega al cooler en220 ticks. El diagnóstico aislado no acredita
+el resultado de la ronda. Las transiciones de ronda incluyen posición y apoyo.
+
 ## Estado posterior y entradas adicionales
 
 La decisión D06 pide **al menos diez** objetivos por mapa. El catálogo final
