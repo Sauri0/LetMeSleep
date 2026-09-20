@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -44,8 +46,17 @@ namespace LetMeSleep.Content.Characters
         public MotionBinding[] Motions = Array.Empty<MotionBinding>();
         [SerializeField] private bool firstPerson;
         private MaterialPropertyBlock colorBlock;
+        private Renderer[] authoredHeadRenderers;
+        private ColorBinding[] authoredColors;
+        private Dictionary<Component, RuntimeBindings> customizationBindings;
         private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
         private static readonly int Motion = UnityEngine.Animator.StringToHash("Motion");
+
+        private sealed class RuntimeBindings
+        {
+            public Renderer[] Heads;
+            public ColorBinding[] Colors;
+        }
 
         public bool IsFirstPerson => firstPerson;
         private void OnEnable() { SetFirstPersonVisibility(firstPerson); RefreshAnchors(); }
@@ -57,7 +68,6 @@ namespace LetMeSleep.Content.Characters
             foreach (var renderer in HeadRenderers)
             {
                 if (renderer == null) continue;
-                renderer.enabled = true;
                 renderer.shadowCastingMode = enabled ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On;
             }
         }
@@ -95,6 +105,50 @@ namespace LetMeSleep.Content.Characters
         public void SetSkinColor(Color color) => SetColor("Skin", color);
         public void SetPajamaColor(Color color) => SetColor("Pajamas", color);
         public void SetMosquitoColor(Color color) => SetColor("Mosquito", color);
+        public void ApplyColor(string channel, Color color) => SetColor(channel, color);
+
+        internal void SetCustomizationBindings(Component owner, Renderer[] heads, ColorBinding[] colors)
+        {
+            if (ReferenceEquals(owner, null)) throw new ArgumentNullException(nameof(owner));
+            if (customizationBindings == null)
+            {
+                authoredHeadRenderers = (HeadRenderers ?? Array.Empty<Renderer>()).ToArray();
+                authoredColors = (Colors ?? Array.Empty<ColorBinding>()).ToArray();
+                customizationBindings = new Dictionary<Component, RuntimeBindings>();
+            }
+            customizationBindings[owner] = new RuntimeBindings
+            {
+                Heads = (heads ?? Array.Empty<Renderer>()).Where(item => item != null).Distinct().ToArray(),
+                Colors = (colors ?? Array.Empty<ColorBinding>()).Where(item => item != null).ToArray()
+            };
+            RebuildCustomizationBindings();
+        }
+
+        internal void ClearCustomizationBindings(Component owner)
+        {
+            if (ReferenceEquals(owner, null) || customizationBindings == null || !customizationBindings.Remove(owner)) return;
+            if (customizationBindings.Count == 0)
+            {
+                HeadRenderers = authoredHeadRenderers ?? Array.Empty<Renderer>();
+                Colors = authoredColors ?? Array.Empty<ColorBinding>();
+                authoredHeadRenderers = null;
+                authoredColors = null;
+                customizationBindings = null;
+                SetFirstPersonVisibility(firstPerson);
+                return;
+            }
+            RebuildCustomizationBindings();
+        }
+
+        private void RebuildCustomizationBindings()
+        {
+            HeadRenderers = (authoredHeadRenderers ?? Array.Empty<Renderer>())
+                .Concat(customizationBindings.Values.SelectMany(item => item.Heads)).Where(item => item != null)
+                .Distinct().ToArray();
+            Colors = (authoredColors ?? Array.Empty<ColorBinding>())
+                .Concat(customizationBindings.Values.SelectMany(item => item.Colors)).Where(item => item != null).ToArray();
+            SetFirstPersonVisibility(firstPerson);
+        }
 
         private void SetColor(string category, Color color)
         {
