@@ -4,7 +4,8 @@
   "references": [
     "LetMeSleep.Core",
     "LetMeSleep.Gameplay",
-    "LetMeSleep.Online"
+    "LetMeSleep.Online",
+    "LetMeSleep.Bootstrap"
   ],
   "includePlatforms": [
     "Editor"
