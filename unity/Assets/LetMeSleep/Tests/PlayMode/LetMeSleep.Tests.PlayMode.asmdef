@@ -2,6 +2,8 @@
   "name": "LetMeSleep.Tests.PlayMode",
   "rootNamespace": "LetMeSleep.Tests.PlayMode",
   "references": [
+    "Unity.ugui",
+    "Unity.TextMeshPro",
     "LetMeSleep.Bootstrap",
     "LetMeSleep.Core",
     "LetMeSleep.Gameplay",

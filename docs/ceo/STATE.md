@@ -1,5 +1,24 @@
 # Relevo CEO — 2026-09-19
 
+## Resultado nativo — escalera Casa corregida, revisión UI final pendiente
+
+- `bot-stair-native-02.xml`:67/67 EditMode PASS, cero omitidos. El intento01
+  no ejecutó pruebas por referencias TMPro/ugui faltantes del nuevo test UI;
+  CEO las añadió al asmdef PlayMode y recompiló.
+- `stair-customization-native-01.xml`:17/17 PASS:7 adaptador navegación,
+  7 steering real y3 persistencia/pantallas de personalización.
+- `casa-spawn3-coffee-ab-02.log`: control raw y predictor PASS; predictor
+  alcanza el objetivo en155ticks. `casa-catalog-08.log`:10objetivos mínimos PASS.
+  Misma matriz50spawn:22→40PASS,18mejoras,0regresiones. En21pares onward
+  comunes tampoco hay regresiones;1par sólo baseline no es comparable.
+  No se instaló el prefab y los10spawnFAIL restantes siguen pendientes.
+- Capturas UI720/1080 inspeccionadas: PERSONALIZAR cabe, pero el fixture
+  ocultó RECORRER SALA y no ejerció ambos botones simultáneos. TIEMPO se
+  parte en dos líneas. Terra prepara delta limitado de fila/fixture/rótulo.
+- Native finalizado, slot libre; agentes conservan propiedad. Astra integra
+  4files de navegación con evidencia; técnica prepara commit de motor/steering
+  previamente comprobados y diagnóstico de las10rutas restantes.
+
 ## En curso — corredor de escalera y guardado privado
 
 Astra implementa una corrección limitada a BotPatrol/GameplayBotNavigation:
