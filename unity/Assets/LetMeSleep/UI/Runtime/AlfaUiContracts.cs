@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LetMeSleep.Core;
+using LetMeSleep.Core.Customization;
 using TMPro;
 using UnityEngine;
 
@@ -43,6 +44,7 @@ namespace LetMeSleep.UI
     }
 
     public enum AlfaRole { Human, Mosquito }
+    public enum CustomizationUiMode { Basic, Modular }
     public enum MatchOutcome { Interrupted, Humans, Mosquitoes }
     public enum PreviewAngle { Front, Side, Back }
     public enum HudActorState { Normal, Extracting, Bitten, Recovering, Fainted, Stunned, Attached, Spectating }
@@ -121,6 +123,14 @@ namespace LetMeSleep.UI
         void ReturnToLobby();
         void SetLobbyExploration(bool exploring);
         void QuitGame();
+    }
+
+    // Deliberately separate from IMenuActions while the basic three-colour flow remains live.
+    // Bootstrap opts in only after persistence and the visual feature gate are ready.
+    public interface IModularCustomizationActions
+    {
+        void PreviewModularCustomization(AppearanceSelection draft, AlfaRole editedRole);
+        void SaveModularCustomization(AppearanceSelection draft, AlfaRole editedRole);
     }
 
     public interface IRoomMapActions
@@ -378,12 +388,24 @@ namespace LetMeSleep.UI
 
     public sealed class CustomizationUiState
     {
+        public CustomizationUiMode Mode { get; }
         public IReadOnlyList<NamedColorOption> SkinColors { get; }
         public IReadOnlyList<NamedColorOption> PajamaColors { get; }
         public IReadOnlyList<NamedColorOption> MosquitoColors { get; }
         public BasicCustomizationDraft Saved { get; }
         public BasicCustomizationDraft Draft { get; }
+        public CustomizationCatalogSnapshot Catalog { get; }
+        public AppearanceSelection PublishedSelection { get; }
+        public AppearanceSelection DraftSelection { get; }
+        // This is a screen tab only. It is not part of AppearanceSelection or a network payload.
+        public AlfaRole EditedRole { get; }
+        // A caller must explicitly certify the visual applicator before promising a changed 3D preview.
+        public bool ModularPreviewAvailable { get; }
+        // UI-only lookup. A null result means that the option is rendered by its visible name alone.
+        public Func<string, string, Sprite> ThumbnailResolver { get; }
         public bool IsSaving { get; }
+        // A retained profile can be visible but cannot safely be edited by this build.
+        public bool IsReadOnly { get; }
         public string Message { get; }
 
         public CustomizationUiState(
@@ -393,14 +415,48 @@ namespace LetMeSleep.UI
             BasicCustomizationDraft saved,
             BasicCustomizationDraft draft = null,
             bool isSaving = false,
-            string message = "")
+            string message = "",
+            bool isReadOnly = false)
         {
+            Mode = CustomizationUiMode.Basic;
             SkinColors = Array.AsReadOnly((skinColors ?? Enumerable.Empty<NamedColorOption>()).ToArray());
             PajamaColors = Array.AsReadOnly((pajamaColors ?? Enumerable.Empty<NamedColorOption>()).ToArray());
             MosquitoColors = Array.AsReadOnly((mosquitoColors ?? Enumerable.Empty<NamedColorOption>()).ToArray());
             Saved = saved?.Copy() ?? throw new ArgumentNullException(nameof(saved));
             Draft = draft?.Copy() ?? Saved.Copy();
             IsSaving = isSaving;
+            IsReadOnly = isReadOnly;
+            Message = message ?? string.Empty;
+        }
+
+        public CustomizationUiState(
+            CustomizationCatalogSnapshot catalog,
+            AppearanceSelection publishedSelection,
+            AppearanceSelection draftSelection,
+            AlfaRole editedRole,
+            bool isSaving = false,
+            string message = "",
+            bool modularPreviewAvailable = false,
+            Func<string, string, Sprite> thumbnailResolver = null,
+            bool isReadOnly = false)
+        {
+            if (catalog == null) throw new ArgumentNullException(nameof(catalog));
+            if (editedRole != AlfaRole.Human && editedRole != AlfaRole.Mosquito)
+                throw new ArgumentOutOfRangeException(nameof(editedRole));
+            if (!catalog.TryNormalize(publishedSelection, out var normalizedPublished, out var publishedError))
+                throw new ArgumentException("Published modular selection is invalid: " + publishedError, nameof(publishedSelection));
+            if (!catalog.TryNormalize(draftSelection ?? publishedSelection, out var normalizedDraft, out var draftError))
+                throw new ArgumentException("Draft modular selection is invalid: " + draftError, nameof(draftSelection));
+
+            Mode = CustomizationUiMode.Modular;
+            Catalog = catalog;
+            PublishedSelection = normalizedPublished;
+            DraftSelection = normalizedDraft;
+            EditedRole = editedRole;
+            ModularPreviewAvailable = modularPreviewAvailable;
+            ThumbnailResolver = thumbnailResolver;
+            IsSaving = isSaving;
+            IsReadOnly = isReadOnly;
             Message = message ?? string.Empty;
         }
     }

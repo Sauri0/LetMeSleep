@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LetMeSleep.Core;
+using LetMeSleep.Core.Customization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -45,6 +46,7 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.Button trainingMapPrevious, trainingMapNext;
         private CustomizationUiState customizationState;
         private BasicCustomizationDraft customizationDraft;
+        private AppearanceSelection modularCustomizationDraft;
         private SettingsUiState settingsState;
         private AlfaSettingsDraft settingsDraft;
         private VoiceUiState voiceState = new VoiceUiState(false, false, false, false, string.Empty, "V", string.Empty, null);
@@ -64,6 +66,9 @@ namespace LetMeSleep.UI
         private bool trainingCancelLatched;
         private bool customizationSaveLatched;
         private BasicCustomizationDraft customizationSessionBaseline;
+        private AppearanceSelection modularCustomizationSessionBaseline;
+        private AlfaRole modularEditedRole;
+        private string modularSelectedSlotId = string.Empty;
         private AlfaUiScreen customizationReturnScreen = AlfaUiScreen.MainMenu;
         private string customizationLobbyCode = string.Empty;
         private bool settingsApplyLatched;
@@ -115,11 +120,15 @@ namespace LetMeSleep.UI
         private RectTransform mosquitoPaletteRoot;
         private GameObject humanCustomizationFields;
         private GameObject mosquitoCustomizationFields;
+        private GameObject modularCustomizationFields;
+        private RectTransform modularCategoryRoot;
+        private RectTransform modularOptionRoot;
         private UnityEngine.UI.Button customizationHumanButton;
         private UnityEngine.UI.Button customizationMosquitoButton;
         private CanvasGroup customizationControlsGroup;
         private UnityEngine.UI.Button customizationSaveButton;
         private TextMeshProUGUI customizationSaveLabel;
+        private UnityEngine.UI.Button customizationResetButton;
 
         private UnityEngine.UI.Slider masterVolume;
         private UnityEngine.UI.Slider musicVolume;
@@ -215,6 +224,8 @@ namespace LetMeSleep.UI
             if (screen == AlfaUiScreen.Customization)
             {
                 customizationSessionBaseline = null;
+                modularCustomizationSessionBaseline = null;
+                modularSelectedSlotId = string.Empty;
                 customizationReturnScreen = AlfaUiScreen.MainMenu;
                 customizationLobbyCode = string.Empty;
             }
@@ -534,12 +545,26 @@ namespace LetMeSleep.UI
         {
             customizationState = state ?? throw new ArgumentNullException(nameof(state));
             customizationSaveLatched = state.IsSaving;
-            customizationDraft = state.Draft.Copy();
             customizationControlsGroup.interactable = !customizationSaveLatched;
             customizationControlsGroup.blocksRaycasts = !customizationSaveLatched;
-            BuildPalette(humanPaletteRoot, state.SkinColors, customizationDraft.SkinColorId, option => SetCustomizationColor("skin", option));
-            BuildPalette(pajamaPaletteRoot, state.PajamaColors, customizationDraft.PajamaColorId, option => SetCustomizationColor("pajama", option));
-            BuildPalette(mosquitoPaletteRoot, state.MosquitoColors, customizationDraft.MosquitoColorId, option => SetCustomizationColor("mosquito", option));
+            if (state.Mode == CustomizationUiMode.Modular)
+            {
+                customizationDraft = null;
+                modularCustomizationDraft = state.DraftSelection.Copy();
+                modularEditedRole = state.EditedRole;
+                EnsureModularSelectedSlot();
+                BuildModularCustomization();
+                ResetModularScrollPositions();
+            }
+            else
+            {
+                modularCustomizationDraft = null;
+                modularSelectedSlotId = string.Empty;
+                customizationDraft = state.Draft.Copy();
+                BuildPalette(humanPaletteRoot, state.SkinColors, customizationDraft.SkinColorId, option => SetCustomizationColor("skin", option));
+                BuildPalette(pajamaPaletteRoot, state.PajamaColors, customizationDraft.PajamaColorId, option => SetCustomizationColor("pajama", option));
+                BuildPalette(mosquitoPaletteRoot, state.MosquitoColors, customizationDraft.MosquitoColorId, option => SetCustomizationColor("mosquito", option));
+            }
             UpdateCustomizationView();
         }
 
@@ -551,10 +576,20 @@ namespace LetMeSleep.UI
                 customizationReturnScreen = screen == AlfaUiScreen.Lobby && lobbyState?.IsWaiting == true
                     ? AlfaUiScreen.Lobby : AlfaUiScreen.MainMenu;
                 customizationLobbyCode = customizationReturnScreen == AlfaUiScreen.Lobby ? lobbyState.RoomCode : string.Empty;
-                customizationSessionBaseline = customizationDraft.Copy();
+                if (customizationState.Mode == CustomizationUiMode.Modular)
+                {
+                    customizationSessionBaseline = null;
+                    modularCustomizationSessionBaseline = modularCustomizationDraft.Copy();
+                }
+                else
+                {
+                    modularCustomizationSessionBaseline = null;
+                    customizationSessionBaseline = customizationDraft.Copy();
+                }
             }
-            SetScreen(AlfaUiScreen.Customization, customizationDraft.Role == AlfaRole.Human ? "CustomizationHumanButton" : "CustomizationMosquitoButton");
-            previewOrbit?.Show(customizationDraft.Role);
+            AlfaRole role = customizationState.Mode == CustomizationUiMode.Modular ? modularEditedRole : customizationDraft.Role;
+            SetScreen(AlfaUiScreen.Customization, role == AlfaRole.Human ? "CustomizationHumanButton" : "CustomizationMosquitoButton");
+            previewOrbit?.Show(role);
         }
 
         public void PresentSettings(SettingsUiState state)
@@ -1085,6 +1120,12 @@ namespace LetMeSleep.UI
             mosquitoCustomizationFields = factory.Vertical(content, "MosquitoFields", 10f).gameObject;
             factory.Text(mosquitoCustomizationFields.transform, "MosquitoColorLabel", "COLOR", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
             mosquitoPaletteRoot = CreatePaletteLayout(mosquitoCustomizationFields.transform, "MosquitoPalette");
+            modularCustomizationFields = factory.Vertical(content, "ModularFields", 8f).gameObject;
+            factory.Text(modularCustomizationFields.transform, "CategoryLabel", "CATEGORÍAS", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
+            factory.ScrollView(modularCustomizationFields.transform, "CategoryScroll", out modularCategoryRoot, 134f);
+            factory.Text(modularCustomizationFields.transform, "OptionsLabel", "OPCIONES", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
+            factory.ScrollView(modularCustomizationFields.transform, "OptionsScroll", out modularOptionRoot, 210f);
+            modularCustomizationFields.SetActive(false);
             customizationStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
             var footer = factory.Vertical(optionsPanel, "Actions", 10f);
             Anchor(footer, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 20f), new Vector2(-40f, 148f));
@@ -1092,7 +1133,8 @@ namespace LetMeSleep.UI
             ApplyPositiveStyle(customizationSaveButton);
             customizationSaveLabel = customizationSaveButton.GetComponentInChildren<TextMeshProUGUI>();
             var secondary = factory.Horizontal(footer, "SecondaryActions", 12f);
-            AlfaUiFactory.QuietButton(factory.Button(secondary, "CustomizationResetButton", "DESHACER CAMBIOS", ResetCustomization, false, false, 66f), 20f);
+            customizationResetButton = factory.Button(secondary, "CustomizationResetButton", "DESHACER CAMBIOS", ResetCustomization, false, false, 66f);
+            AlfaUiFactory.QuietButton(customizationResetButton, 20f);
             AlfaUiFactory.QuietButton(factory.Button(secondary, "CustomizationBackButton", "VOLVER", CloseCustomization, false, false, 66f, AlfaUiIconKind.Back), 20f);
         }
 
@@ -1563,7 +1605,20 @@ namespace LetMeSleep.UI
 
         private void SetCustomizationRole(AlfaRole role)
         {
-            if (customizationDraft == null || customizationSaveLatched) return;
+            if (customizationState == null || customizationSaveLatched || customizationState.IsReadOnly) return;
+            if (customizationState.Mode == CustomizationUiMode.Modular)
+            {
+                modularEditedRole = role;
+                modularSelectedSlotId = string.Empty;
+                EnsureModularSelectedSlot();
+                BuildModularCustomization();
+                ResetModularScrollPositions();
+                UpdateCustomizationView();
+                // The selection is unchanged; this lets the provider update the local role preview only.
+                SendModularPreview();
+                return;
+            }
+            if (customizationDraft == null) return;
             customizationDraft.Role = role;
             UpdateCustomizationView();
             actions.PreviewCustomization(customizationDraft.Copy());
@@ -1571,12 +1626,162 @@ namespace LetMeSleep.UI
 
         private void SetCustomizationColor(string category, NamedColorOption option)
         {
-            if (customizationDraft == null || option == null || customizationSaveLatched) return;
+            if (customizationDraft == null || option == null || customizationSaveLatched || customizationState?.IsReadOnly == true) return;
             if (category == "skin") customizationDraft.SkinColorId = option.Id;
             else if (category == "pajama") customizationDraft.PajamaColorId = option.Id;
             else customizationDraft.MosquitoColorId = option.Id;
             UpdateCustomizationView();
             actions.PreviewCustomization(customizationDraft.Copy());
+        }
+
+        private static CustomizationRole ToCustomizationRole(AlfaRole role) =>
+            role == AlfaRole.Human ? CustomizationRole.Human : CustomizationRole.Mosquito;
+
+        private IEnumerable<CustomizationSlotSnapshot> VisibleModularSlots()
+        {
+            if (customizationState?.Catalog == null) return Enumerable.Empty<CustomizationSlotSnapshot>();
+            CustomizationRole role = ToCustomizationRole(modularEditedRole);
+            return customizationState.Catalog.Slots.Where(slot => slot.Role == role &&
+                !string.IsNullOrWhiteSpace(slot.Label) &&
+                slot.Options.Any(option => !string.IsNullOrWhiteSpace(option.Label)));
+        }
+
+        private void EnsureModularSelectedSlot()
+        {
+            if (VisibleModularSlots().Any(slot => string.Equals(slot.SlotId, modularSelectedSlotId, StringComparison.Ordinal))) return;
+            modularSelectedSlotId = VisibleModularSlots().Select(slot => slot.SlotId).FirstOrDefault() ?? string.Empty;
+        }
+
+        private void BuildModularCustomization()
+        {
+            if (modularCategoryRoot == null || modularOptionRoot == null) return;
+            AlfaUiFactory.Clear(modularCategoryRoot);
+            AlfaUiFactory.Clear(modularOptionRoot);
+            foreach (var slot in VisibleModularSlots())
+            {
+                var capturedSlot = slot;
+                bool selected = string.Equals(slot.SlotId, modularSelectedSlotId, StringComparison.Ordinal);
+                var button = factory.Button(modularCategoryRoot, "ModularCategory_" + slot.WireSlotId,
+                    (selected ? "> " : string.Empty) + slot.Label,
+                    () => SelectModularCategory(capturedSlot.SlotId), false, false, 54f);
+                ApplyModularButtonStyle(button, selected);
+            }
+
+            var current = VisibleModularSlots().FirstOrDefault(slot =>
+                string.Equals(slot.SlotId, modularSelectedSlotId, StringComparison.Ordinal));
+            if (current == null) return;
+            string selectedOption = modularCustomizationDraft.For(ToCustomizationRole(modularEditedRole)).OptionFor(current.SlotId);
+            foreach (var option in current.Options.Where(item => !string.IsNullOrWhiteSpace(item.Label)))
+            {
+                var capturedOption = option;
+                bool selected = string.Equals(option.OptionId, selectedOption, StringComparison.Ordinal);
+                var button = factory.Button(modularOptionRoot,
+                    "ModularOption_" + current.WireSlotId + "_" + option.WireOptionId,
+                    (selected ? "> " : string.Empty) + option.Label,
+                    () => SetModularCustomizationOption(current.SlotId, capturedOption.OptionId), false, false, 60f);
+                ApplyModularButtonStyle(button, selected);
+                AddModularOptionVisual(button, current, option);
+            }
+        }
+
+        private void ResetModularScrollPositions()
+        {
+            ResetScrollPosition(modularCategoryRoot);
+            ResetScrollPosition(modularOptionRoot);
+        }
+
+        private static void ResetScrollPosition(RectTransform content)
+        {
+            var scroll = content?.GetComponentInParent<UnityEngine.UI.ScrollRect>();
+            if (scroll == null) return;
+            scroll.StopMovement();
+            scroll.horizontalNormalizedPosition = 0f;
+            scroll.verticalNormalizedPosition = 1f;
+        }
+
+        private void AddModularOptionVisual(UnityEngine.UI.Button button, CustomizationSlotSnapshot slot,
+            CustomizationOptionSnapshot option)
+        {
+            Sprite thumbnail = option.HasSwatch ? null : customizationState.ThumbnailResolver?.Invoke(slot.SlotId, option.OptionId);
+            if (!option.HasSwatch && thumbnail == null) return;
+            var visual = AlfaUiFactory.Node(option.HasSwatch ? "ColorSwatch" : "Thumbnail", button.transform, typeof(UnityEngine.UI.Image));
+            var image = visual.GetComponent<UnityEngine.UI.Image>();
+            image.raycastTarget = false;
+            if (option.HasSwatch) image.color = ColorFromRgba(option.SwatchRgba);
+            else
+            {
+                image.sprite = thumbnail;
+                image.preserveAspect = true;
+            }
+            Anchor(visual.GetComponent<RectTransform>(), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f),
+                new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(36f, 36f));
+            var label = button.GetComponentInChildren<TextMeshProUGUI>();
+            if (label != null) AlfaUiFactory.Fill(label.rectTransform, 58f, 16f, 8f, 8f);
+        }
+
+        private static Color ColorFromRgba(uint value) => new Color(
+            ((value >> 24) & 255) / 255f,
+            ((value >> 16) & 255) / 255f,
+            ((value >> 8) & 255) / 255f,
+            (value & 255) / 255f);
+
+        private static void ApplyModularButtonStyle(UnityEngine.UI.Button button, bool selected)
+        {
+            var colors = button.colors;
+            colors.normalColor = AlfaUiTheme.Night600;
+            colors.highlightedColor = Color.Lerp(AlfaUiTheme.Night600, AlfaUiTheme.Sky400, 0.3f);
+            colors.selectedColor = AlfaUiTheme.Sky400;
+            button.colors = colors;
+            var outline = button.GetComponent<UnityEngine.UI.Outline>();
+            if (outline != null)
+            {
+                outline.effectColor = selected ? AlfaUiTheme.Lamp400 : AlfaUiTheme.Ink900;
+                outline.effectDistance = selected ? new Vector2(3f, -3f) : new Vector2(1f, -1f);
+            }
+            var label = button.GetComponentInChildren<TextMeshProUGUI>();
+            if (label != null)
+            {
+                label.alignment = TextAlignmentOptions.Left;
+                label.enableAutoSizing = true;
+                label.fontSizeMin = 16f;
+                label.fontSizeMax = 20f;
+            }
+        }
+
+        private void SelectModularCategory(string slotId)
+        {
+            if (customizationState?.Mode != CustomizationUiMode.Modular || customizationSaveLatched || customizationState.IsReadOnly) return;
+            if (!VisibleModularSlots().Any(slot => string.Equals(slot.SlotId, slotId, StringComparison.Ordinal))) return;
+            modularSelectedSlotId = slotId;
+            BuildModularCustomization();
+        }
+
+        private void SetModularCustomizationOption(string slotId, string optionId)
+        {
+            if (customizationState?.Mode != CustomizationUiMode.Modular || customizationSaveLatched || customizationState.IsReadOnly) return;
+            if (!customizationState.Catalog.TrySlot(slotId, out var slot) || slot.Role != ToCustomizationRole(modularEditedRole) ||
+                !slot.TryOption(optionId, out var option) || string.IsNullOrWhiteSpace(option.Label)) return;
+            var next = modularCustomizationDraft.Copy();
+            next.For(ToCustomizationRole(modularEditedRole)).SetOption(slotId, optionId);
+            if (!customizationState.Catalog.TryNormalize(next, out var normalized, out var error))
+            {
+                customizationStatus.text = "No se pudo seleccionar esa opción. Probá otra.";
+                return;
+            }
+            modularCustomizationDraft = normalized;
+            BuildModularCustomization();
+            UpdateCustomizationView();
+            SendModularPreview();
+        }
+
+        private void SendModularPreview()
+        {
+            if (actions is IModularCustomizationActions modularActions)
+            {
+                modularActions.PreviewModularCustomization(modularCustomizationDraft.Copy(), modularEditedRole);
+                return;
+            }
+            customizationStatus.text = "Esta selección todavía no se puede guardar.";
         }
 
         private static RectTransform CreatePaletteLayout(Transform parent, string name)
@@ -1631,23 +1836,49 @@ namespace LetMeSleep.UI
 
         private void UpdateCustomizationView()
         {
-            if (customizationDraft == null || customizationState == null) return;
-            var human = customizationDraft.Role == AlfaRole.Human;
-            humanCustomizationFields.SetActive(human);
-            mosquitoCustomizationFields.SetActive(!human);
+            if (customizationState == null) return;
+            bool modular = customizationState.Mode == CustomizationUiMode.Modular;
+            if (modular && modularCustomizationDraft == null) return;
+            if (!modular && customizationDraft == null) return;
+            var role = modular ? modularEditedRole : customizationDraft.Role;
+            var human = role == AlfaRole.Human;
+            bool editable = !customizationState.IsReadOnly;
+            humanCustomizationFields.SetActive(editable && !modular && human);
+            mosquitoCustomizationFields.SetActive(editable && !modular && !human);
+            modularCustomizationFields.SetActive(editable && modular);
+            customizationHumanButton.interactable = editable && !customizationSaveLatched;
+            customizationMosquitoButton.interactable = editable && !customizationSaveLatched;
+            customizationResetButton.interactable = editable && !customizationSaveLatched;
             SetRoleButtonSelection(customizationHumanButton, human, AlfaRole.Human);
             SetRoleButtonSelection(customizationMosquitoButton, !human, AlfaRole.Mosquito);
             customizationPreviewTitle.text = human ? "VISTA EN VIVO · HUMANO" : "VISTA EN VIVO · MOSQUITO";
             customizationPreviewIcon.Kind = human ? AlfaUiIconKind.Human : AlfaUiIconKind.Mosquito;
             customizationPreviewIcon.color = human ? AlfaUiTheme.Sky400 : AlfaUiTheme.Pajama500;
-            customizationCategoryTitle.text = human ? "PALETA DEL HUMANO" : "PALETA DEL MOSQUITO";
-            previewOrbit?.Show(customizationDraft.Role);
-            customizationStatus.text = customizationSaveLatched ? "Aplicando apariencia…" : customizationState.Message;
-            customizationSaveButton.interactable = !customizationSaveLatched && !customizationDraft.SameValues(customizationState.Saved);
+            customizationCategoryTitle.text = !editable ? "PERSONALIZACIÓN NO DISPONIBLE" : modular
+                ? (VisibleModularSlots().Any() ? "CATEGORÍAS DEL " + (human ? "HUMANO" : "MOSQUITO") : "SIN OPCIONES DISPONIBLES")
+                : human ? "PALETA DEL HUMANO" : "PALETA DEL MOSQUITO";
+            previewOrbit?.Show(role);
+            if (customizationSaveLatched) customizationStatus.text = "Aplicando apariencia…";
+            else if (customizationState.IsReadOnly)
+                customizationStatus.text = string.IsNullOrWhiteSpace(customizationState.Message)
+                    ? "Esta personalización todavía no está disponible en esta versión."
+                    : customizationState.Message;
+            else if (modular && !customizationState.ModularPreviewAvailable)
+                customizationStatus.text = string.IsNullOrWhiteSpace(customizationState.Message)
+                    ? "La vista de estas piezas llegará cuando estén listas en el juego."
+                    : customizationState.Message;
+            else customizationStatus.text = customizationState.Message;
+            bool dirty = modular
+                ? !modularCustomizationDraft.CanonicalEquals(customizationState.PublishedSelection)
+                : !customizationDraft.SameValues(customizationState.Saved);
+            customizationSaveButton.interactable = editable && !customizationSaveLatched && dirty;
             customizationSaveLabel.text = customizationSaveLatched ? "APLICANDO…" : "APLICAR";
-            MarkPalette(humanPaletteRoot, customizationDraft.SkinColorId);
-            MarkPalette(pajamaPaletteRoot, customizationDraft.PajamaColorId);
-            MarkPalette(mosquitoPaletteRoot, customizationDraft.MosquitoColorId);
+            if (!modular)
+            {
+                MarkPalette(humanPaletteRoot, customizationDraft.SkinColorId);
+                MarkPalette(pajamaPaletteRoot, customizationDraft.PajamaColorId);
+                MarkPalette(mosquitoPaletteRoot, customizationDraft.MosquitoColorId);
+            }
         }
 
         private static void MarkPalette(Transform parent, string selectedId)
@@ -1672,7 +1903,24 @@ namespace LetMeSleep.UI
 
         private void SaveCustomization()
         {
-            if (customizationDraft == null || customizationState == null || customizationSaveLatched || customizationState.IsSaving) return;
+            if (customizationState == null || customizationSaveLatched || customizationState.IsSaving || customizationState.IsReadOnly) return;
+            if (customizationState.Mode == CustomizationUiMode.Modular)
+            {
+                if (modularCustomizationDraft == null) return;
+                var modularActions = actions as IModularCustomizationActions;
+                if (modularActions == null)
+                {
+                    customizationStatus.text = "Esta selección todavía no se puede guardar.";
+                    return;
+                }
+                customizationSaveLatched = true;
+                customizationSaveButton.interactable = false;
+                customizationSaveLabel.text = "APLICANDO…";
+                customizationStatus.text = "Aplicando apariencia…";
+                modularActions.SaveModularCustomization(modularCustomizationDraft.Copy(), modularEditedRole);
+                return;
+            }
+            if (customizationDraft == null) return;
             customizationSaveLatched = true;
             customizationSaveButton.interactable = false;
             customizationSaveLabel.text = "APLICANDO…";
@@ -1682,7 +1930,15 @@ namespace LetMeSleep.UI
 
         private void ResetCustomization()
         {
-            if (customizationState == null || customizationSaveLatched) return;
+            if (customizationState == null || customizationSaveLatched || customizationState.IsReadOnly) return;
+            if (customizationState.Mode == CustomizationUiMode.Modular)
+            {
+                modularCustomizationDraft = (modularCustomizationSessionBaseline ?? customizationState.DraftSelection).Copy();
+                BuildModularCustomization();
+                UpdateCustomizationView();
+                SendModularPreview();
+                return;
+            }
             customizationDraft = (customizationSessionBaseline ?? customizationState.Draft).Copy();
             UpdateCustomizationView();
             actions.PreviewCustomization(customizationDraft.Copy());
@@ -1694,6 +1950,8 @@ namespace LetMeSleep.UI
             var returnScreen = customizationReturnScreen;
             var returnLobbyCode = customizationLobbyCode;
             customizationSessionBaseline = null;
+            modularCustomizationSessionBaseline = null;
+            modularSelectedSlotId = string.Empty;
             customizationReturnScreen = AlfaUiScreen.MainMenu;
             customizationLobbyCode = string.Empty;
             if (returnScreen == AlfaUiScreen.Lobby && lobbyState?.IsWaiting == true && string.Equals(lobbyState.RoomCode, returnLobbyCode, StringComparison.Ordinal))
@@ -2032,7 +2290,10 @@ namespace LetMeSleep.UI
                 case AlfaUiScreen.JoinRoom: return "PlayerNameInput";
                 case AlfaUiScreen.Lobby: return lobbyReadyButton != null && lobbyReadyButton.interactable ? "LobbyReadyButton" : "LobbyCopyButton";
                 case AlfaUiScreen.Training: return trainingState.SelectedRole == AlfaRole.Human ? "TrainingHumanButton" : "TrainingMosquitoButton";
-                case AlfaUiScreen.Customization: return customizationDraft != null && customizationDraft.Role == AlfaRole.Mosquito ? "CustomizationMosquitoButton" : "CustomizationHumanButton";
+                case AlfaUiScreen.Customization:
+                    return customizationState?.Mode == CustomizationUiMode.Modular
+                        ? modularEditedRole == AlfaRole.Mosquito ? "CustomizationMosquitoButton" : "CustomizationHumanButton"
+                        : customizationDraft != null && customizationDraft.Role == AlfaRole.Mosquito ? "CustomizationMosquitoButton" : "CustomizationHumanButton";
                 case AlfaUiScreen.Settings: return "MasterVolumeSlider";
                 case AlfaUiScreen.Pause: return "PauseContinueButton";
                 case AlfaUiScreen.Results: return resultsPrimary != null && resultsPrimary.gameObject.activeSelf ? "ResultsPrimaryButton" : "ResultsLeaveButton";
@@ -2040,7 +2301,10 @@ namespace LetMeSleep.UI
             }
         }
 
-        private bool CustomizationDirty() => customizationState != null && customizationDraft != null && !customizationDraft.SameValues(customizationState.Saved);
+        private bool CustomizationDirty() => customizationState != null &&
+            (customizationState.Mode == CustomizationUiMode.Modular
+                ? modularCustomizationDraft != null && !modularCustomizationDraft.CanonicalEquals(customizationState.PublishedSelection)
+                : customizationDraft != null && !customizationDraft.SameValues(customizationState.Saved));
         private bool SettingsDirty() => settingsState != null && settingsDraft != null && !settingsDraft.SameValues(settingsState.Saved);
         private bool OnlineBusy => onlineSubmissionLatched || onlineState.IsBusy;
         private bool TrainingBusy => trainingStartLatched || trainingState.IsLoading;
