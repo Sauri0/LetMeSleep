@@ -1,5 +1,25 @@
 # Relevo CEO — 2026-09-19
 
+## Gate actual: Isla instalada y acceso humano de Yate
+
+- `67253c6` reconoce un waypoint recién cruzado dentro del corredor: ventana
+  longitudinal/lateral de .24 m y altura relativa al punto actual <= .35 m.
+  CPU146/146, native Directed28/28 + Replan33/33. Crate work02 pasa260/330
+  con progreso real; cerrado/otra planta/teleport lejano no consumen el punto.
+- `0c6965a` instala Isla: 12 objetivos, ronda14/20 (meta14) y mínimos de
+  cobertura motor PASS. No significa que todos los pares sean transitables.
+  ContentHash `68efb70c3b1904f6a38f9edb7f36fee8592557e326f1496ad14d706420100097`.
+  IslaCatalogInstall01/delta-verification.json: 677 documentos intactos,
+  sólo catálogo, referencia de navegación y hash; legacy sin cambios.
+- Yate ForedeckPillarV2 completa cuatro tramos físicos ida/regreso en98 ticks,
+  con7 muestras airborne al cruzar el bracket y llegada grounded en cada tramo.
+  MTD cero; control directo se atasca. Es un testigo de MoveHuman dirigido,
+  todavía no de seguimiento bot, objetivo ni ronda. Autoría humana externa
+  acotada en preparación; Yate aún no instalado (ronda anterior13/20).
+- Regresión de rondas tras cruce: Casa07=20/20, Camp08=16/20, Puerto06=20/20;
+  todas mantienen resultado y cuota14. Arte Higgsfield
+  sigue sin sesión; nuevo arte/equipamiento, WAN/micrófono real y build pendientes.
+
 ## Gate actual: crate de Isla y costado de Yate
 
 - `cdb0f8e` radio real/espera entre tareas, `b13118b` adquisición desde extremo
