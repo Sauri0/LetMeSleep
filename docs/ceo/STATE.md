@@ -1,5 +1,32 @@
 # Relevo CEO — 2026-09-19
 
+## Gate actual: crate de Isla y costado de Yate
+
+- `cdb0f8e` radio real/espera entre tareas, `b13118b` adquisición desde extremo
+  conectado y `13c22f3` disponibilidad estructural integrados. Nativos101/101
+  EditMode y32/32 PlayMode, sin omitidos; revisión independiente sin bloqueantes.
+  Galley work03 inicia en tick2 frente a FAIL330. Rondas actuales: Casa06=20/20,
+  Camp07=16/20, Puerto05=20/20; las tres cumplen cuota14.
+- Isla install05 pasa ronda14/20, pero cobertura falla sólo picnic_crate sin
+  ruta desde spawn: spawn1 sí recibe tarea y queda3.586m corto; otros no reciben
+  ese destino. Diagnóstico cabin-crate01 en ejecución. No guardó prefab/nav.
+  Yate install03 llega13/20 y aborta antes del motor/guardado; Astra mide pilar.
+- La primera versión radius/idle expuso regresión Casa11/20 al detener bots
+  entre tareas; el filtro estructural la resuelve. Isla ahora emite20/20 tareas
+  frente a12/20 antes de la quietud. No confundir oportunidad con asignación real.
+- `7a2dba6` añade diagnóstico por actor inmediato entre Decide y próximo bot.
+  Casa occupancy01 demuestra ruta abierta pero approach ocupado por actor3:
+  esa ocupación remota ponía A2 en WaitingForRoute. El cambio excluye sólo
+  actores del chequeo estructural; colisión/LOS físicos siguen obligatorios.
+- Isla endpoint01 demuestra A2 con tarea disponible/ruta abierta pero dirección
+  cero desde corredor terminal del objetivo anterior. Técnica permite ahora
+  adquisición desde primer/último corredor conectado, nunca desde tramo medio,
+  otra planta, pasaje cerrado o en cooldown. Seis casos nuevos incluidos en101.
+- Diagnósticos reproducen exactamente52 eventos Casa y51 Isla, posiciones y
+  resultados incluidos, frente a rondas sin hook; receipt event-equivalence01.
+- Yate foredeck-coffee01 falla330 aislado. El grupo de costado del salón sigue
+  pendiente y no se explica por otros humanos. Arte/build/WAN continúan pendientes.
+
 ## Gate actual: rodeo físico y continuidad en corredores
 
 - `ac2e5c5` conserva disponibilidad de una tarea en corredores humanos/escaliers
