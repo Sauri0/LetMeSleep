@@ -1,5 +1,33 @@
 # Relevo CEO — 2026-09-19
 
+## Gate actual: candidata técnica 02 y cinco smoke funcionales PASS
+
+- Build `N:/LetMeSleep/Artifacts/0.2.0-20260920-151024`, fuente
+  `a654d8b8c30c8556d3e1103db85f3559f55f9063`: Succeeded, cero errores,
+  sourceDirty=false, 310490614 bytes. Sin ZIP/release ni entrega artística final.
+- WindowsCandidateSmoke02/verification-manifest.json: cinco casos PASS:
+  Puerto/Survival, Yate/Blood, Isla/Tasks, Casa/Blood, Camp/Tasks. Ambos roles,
+  estabilidad tras apoyo, retorno menú y crear/salir de sala con una identidad,
+  cero errores. No cubre las 15 combinaciones, recorrido ni dos jugadores/WAN.
+  Ventanas ocultas: gráficos y timings siguen sin certificar.
+- `a654d8b` corrige únicamente el probe: primer apoyo observado por evento
+  SnapshotApplied, caída acotada y deriva posterior. Puerto apoyo tick3 y deriva0;
+  Yate tick2 y deriva0.000000238 m; Isla <1 mm. Física/mapas intactos.
+  Revisión independiente encontró y cerró P1 de muestreo por frame.
+- `e746d08` integra contrato/catálogo modular y `6841ca6` codec aislado.
+  Native02: 20/20 EditMode (10 catálogo +10 codec), 5/5 PlayMode, sin omitidos.
+  RuntimeReady sólo acredita datos/referencias; no hay catálogo de producción,
+  aplicación visual, migración ni publicación v2 activada.
+- Próximo trabajo asignado: continuidad_tecnica añade Label de slot fuera del
+  fingerprint; personalizacion_estado_v020 implementa presentación UI modular
+  por callback explícito, conservando interfaz básica. No toca persistencia,
+  Bootstrap ni arte aún. Contratos externos ModularVisualIntegrationContract-01
+  y ModularUiPersistenceContract-01 documentan dependencias y gate compuesto.
+- Pendientes del usuario ya solicitados: sesión Higgsfield, segundo entorno EOS
+  y permiso para abrir jugador visible. Sin respuesta no se asumen. Arte nuevo,
+  herramientas, integración modular completa, escucha/PTT real y WAN siguen
+  abiertos; objetivo activo.
+
 ## Gate actual: primera candidata Windows compilada
 
 - Build técnico `0.2.0-20260920-144021`: Succeeded, cero errores, Unity
