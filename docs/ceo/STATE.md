@@ -1,5 +1,29 @@
 # Relevo CEO — 2026-09-19
 
+## Gate actual: personalización publicada y rollback integrado
+
+- `269995e` conecta canal 2 con la apariencia modular publicada. Recibe sólo
+  de miembros conectados de la sala vigente, valida catálogo/fingerprint y
+  conserva la última selección aceptada ante mensajes inválidos. La reserva
+  de 30 segundos conserva apariencia y no habilita IA ni nuevos inputs.
+- `db814d0` añade integración real de persistencia con catálogo/hosts sintéticos:
+  migración separada de publicado/borrador, Preview privado, Apply publicado,
+  fallo real de File.Replace en ambos cambios de rol y restauración de bytes,
+  memoria y MPB visual. Prefabs ausentes o incorrectos no abren el runtime.
+- appearance-channel-edit-02.xml: 10/10 codec; appearance-channel-play-02.xml:
+  9/9 (6 recepción/publicación y 3 integración), sin omitidos. El intento edit-01
+  falló al compilar porque el fixture usaba UI/Unity en el assembly puro EditMode;
+  se movió a PlayMode con su meta, sin ampliar referencias ni relajar aserciones.
+  Los metas nuevos están incluidos. Revisión independiente no encontró otro defecto.
+- Esto valida fixtures locales; no acredita EOS con dos identidades, WAN ni
+  personajes de producción. No hay proveedor/catálogo artístico final asignado.
+- SurfaceTrace09 reprodujo nueve casos en checkout aislado a654d8b; técnica
+  prepara causas y comparación de fuentes. Mantener los 14 FAIL históricos
+  hasta evidencia específica, sin sustituirlos por smoke de arranque.
+- Slot Unity libre tras ambos gates. Arte/Higgsfield, herramientas nuevas,
+  gráficos/FPS, micrófono real y dos identidades/redes siguen pendientes.
+  Objetivo v0.2.0 activo; todavía no hay ZIP/release final.
+
 ## Gate actual: base modular integrada, validación de producción pendiente
 
 - `073c985` mantiene vacías las etiquetas ausentes de opciones. Edit01:21/21
