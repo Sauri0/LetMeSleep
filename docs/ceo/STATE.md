@@ -1,5 +1,21 @@
 # Relevo CEO — 2026-09-19
 
+## En curso: personalización modular y matriz Windows restante
+
+- La aclaración directa J25/O08 también se aplica a O07: reserva de 30 segundos
+  sin control por IA. DECISIONES.md/json ya no conservan el permiso contradictorio
+  de usar un bot en O07. Archivo original de respuestas intacto.
+- `4dbb479` añade etiquetas de categorías sin modificar identidad wire. Cambio
+  CEO posterior: las opciones sin etiqueta tampoco muestran IDs técnicos; aún
+  pendiente gate nativo combinado.
+- Tres tickets activos y separados: continuidad_tecnica posee ensamblador/host
+  visual y CharacterView; personalizacion_estado_v020 posee UI modular;
+  personalizacion_red_v020 posee persistencia/migración/proveedor Bootstrap.
+  No hay catálogo ni arte nuevo aprobado; activación de producción pendiente.
+- CEO ejecuta las diez combinaciones mapa/modo restantes sobre build congelada
+  a654d8b en WindowsCandidateSmoke03. No asumir resultado hasta sus recibos.
+  La tanda usa el slot serial de player; Unity espera fuentes congeladas y su fin.
+
 ## Gate actual: candidata técnica 02 y cinco smoke funcionales PASS
 
 - Build `N:/LetMeSleep/Artifacts/0.2.0-20260920-151024`, fuente

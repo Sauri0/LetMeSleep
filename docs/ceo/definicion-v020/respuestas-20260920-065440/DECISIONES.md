@@ -734,9 +734,11 @@ Estado: **user_choice**.
 - **A · Anfitrión elige antes** — El anfitrión selecciona mapa y modo en la sala; todos ven la elección y sus reglas antes de marcar Listo. Al iniciar queda bloqueada hasta la ronda siguiente.
 ### O07 · Ventana de reingreso tras una desconexión
 
-Estado: **user_choice**.
+Estado: **user_followup_supersedes_choice**.
 
-- **A · Reserva de 30 segundos** — La misma identidad recupera su actor conservado durante 30 s si continúa válido; un bot puede mantenerlo inmóvil o seguro. Después aplica ingreso tardío.
+- **A · Reserva de 30 segundos** — La misma identidad recupera su actor conservado durante 30 s si continúa válido, sin control por IA. Después aplica ingreso tardío.
+
+Aclaración J25/O08 aplicada también a O07: ningún bot online. Se conserva la elección de 30 segundos; queda sustituida la frase original que permitía un bot.
 
 Revisar: disconnect_expiry.
 ### O08 · Continuidad de ronda ante una desconexión

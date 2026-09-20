@@ -2863,14 +2863,16 @@
       "issues": [
         "disconnect_expiry"
       ],
-      "status": "user_choice",
+      "status": "user_followup_supersedes_choice",
       "decisions": [
         {
           "id": "A",
           "label": "Reserva de 30 segundos",
-          "detail": "La misma identidad recupera su actor conservado durante 30 s si continúa válido; un bot puede mantenerlo inmóvil o seguro. Después aplica ingreso tardío."
+          "detail": "La misma identidad recupera su actor conservado durante 30 s si continúa válido, sin control por IA. Después aplica ingreso tardío."
         }
-      ]
+      ],
+      "followup_source": "Ningún bot online: reservar al jugador 30 s sin que una IA lo controle.",
+      "followup_effect": "Se conserva la reserva elegida en O07; la aclaración J25/O08 sustituye cualquier permiso de control por IA."
     },
     {
       "id": "O08",

@@ -21,3 +21,6 @@ No son modificaciones del JSON original, que se conserva intacto.
 
    Sustituye O08=A del archivo; J25=A permanece vigente. Reserva de identidad/actor
    durante30s no autoriza movimiento/acciones por IA.
+
+   También sustituye la frase de O07 que permitía mantener al actor mediante un
+   bot. O07 conserva la reserva de 30 segundos, siempre sin control por IA.
