@@ -130,13 +130,14 @@ namespace LetMeSleep.Online
 
         private static void WriteSnapshot(BinaryWriter w, GameSessionState s)
         {
-            Require(s != null && s.Actors.Count <= MaxActors && s.Doors.Count <= MaxDoors && s.ToolPickups.Count <= MaxToolPickups, "Invalid snapshot counts.");
+            Require(s != null && s.Actors.Count <= MaxActors && s.Doors.Count <= MaxDoors && s.ToolPickups.Count <= MaxToolPickups && s.ToolEffects.Count <= MaxToolPickups, "Invalid snapshot counts.");
             w.Write(s.SessionEpoch); w.Write(s.RoundId); w.Write(s.HostTick); S(w, s.MapId, 128); S(w, s.ContentHash, 128); S(w, s.BalanceHash, 512); S(w, s.ModeId, 16);
             w.Write((byte)s.SimulationPhase); w.Write(s.TimeRemainingTicks); w.Write(s.BloodCollected); w.Write(s.BloodGoal);
             w.Write(s.TasksCompleted); w.Write(s.TasksGoal); w.Write(s.ViableTaskOpportunities); w.Write((byte)s.Result); w.Write((byte)s.Winner);
             w.Write((byte)s.Actors.Count); foreach (var actor in s.Actors) WriteActor(w, actor);
             w.Write((ushort)s.Doors.Count); foreach (var door in s.Doors) WriteDoor(w, door);
             w.Write((byte)s.ToolPickups.Count); foreach (var pickup in s.ToolPickups) WritePickup(w, pickup);
+            w.Write((byte)s.ToolEffects.Count); foreach (var effect in s.ToolEffects) WriteToolEffect(w, effect);
         }
         private static GameSessionState ReadSnapshot(BinaryReader r)
         {
@@ -172,8 +173,18 @@ namespace LetMeSleep.Online
                 var owned = pickups.Where(p => p.OwnerActorId == actor.ActorId).ToArray();
                 Require(owned.Length <= 3 && (actor.EquippedToolId == GameplayTools.Hands || owned.Any(p => p.ToolId == actor.EquippedToolId)), "Equipment ownership mismatch.");
             }
+            int effectCount = r.ReadByte(); Require(effectCount <= MaxToolPickups, "Too many tool effects.");
+            var effects = new ToolEffectSnapshot[effectCount]; ids.Clear(); var effectPickups = new HashSet<uint>();
+            for (int i = 0; i < effectCount; i++)
+            {
+                var effect = ReadToolEffect(r, tick); effects[i] = effect;
+                Require(ids.Add(effect.EffectId) && effectPickups.Add(effect.PickupId), "Duplicate tool effect.");
+                Require(actors.Any(a => a.ActorId == effect.SourceActorId && a.Role == PlayerRole.Human), "Invalid effect source.");
+                Require(pickups.Any(p => p.PickupId == effect.PickupId && p.ToolId ==
+                    (effect.Kind == ToolEffectKind.RacketPulse ? GameplayTools.ElectricRacket : GameplayTools.Aerosol)), "Effect/pickup mismatch.");
+            }
             return new GameSessionState(epoch, round, tick, map, content, balanceHash, mode, phase, remaining,
-                blood, goal, result, winner, actors, doors, pickups, tasksCompleted, tasksGoal, viable);
+                blood, goal, result, winner, actors, doors, pickups, tasksCompleted, tasksGoal, viable, effects);
         }
         private static void ValidateBalanceHash(string hash, string mode)
         {
@@ -237,17 +248,29 @@ namespace LetMeSleep.Online
             return new ActorSnapshot(id, role, life, revision, position, velocity, body, view, yaw, pitch, viewRevision, poseRevision, grounded, crouch, motion, surface, bite, strike, recovery, equipped, lives);
         }
         private static void WritePickup(BinaryWriter w, ToolPickupSnapshot p)
-        { w.Write(p.PickupId); S(w, p.ToolId, 24); V(w, p.Position); Q(w, p.Rotation); w.Write(p.OwnerActorId); w.Write(p.Revision); w.Write((byte)p.Phase); V(w, p.Velocity); w.Write(p.ThrowerActorId); w.Write(p.ResourceUnits); w.Write(p.ImpactConsumed); }
+        { w.Write(p.PickupId); S(w, p.ToolId, 24); V(w, p.Position); Q(w, p.Rotation); w.Write(p.OwnerActorId); w.Write(p.Revision); w.Write((byte)p.Phase); V(w, p.Velocity); w.Write(p.ThrowerActorId); w.Write(p.ResourceUnits); w.Write(p.ImpactConsumed); w.Write(p.CooldownUntilTick); }
         private static ToolPickupSnapshot ReadPickup(BinaryReader r)
         {
             uint id = Id(r); string tool = S(r, 24); Require(GameplayTools.IsPickup(tool), "Unknown pickup tool.");
             var position = V(r); var rotation = Q(r); uint owner = r.ReadUInt32(), revision = Id(r);
-            var phase = E<ToolPickupPhase>(r); var velocity = V(r); uint thrower = r.ReadUInt32(); int resource = r.ReadInt32(); bool consumed = B(r);
+            var phase = E<ToolPickupPhase>(r); var velocity = V(r); uint thrower = r.ReadUInt32(); int resource = r.ReadInt32(); bool consumed = B(r); uint cooldown = r.ReadUInt32();
+            Require(cooldown <= 54000 + HumanEquipmentProfile.RacketCooldownTicks && (tool == GameplayTools.ElectricRacket || cooldown == 0), "Invalid tool cooldown.");
             Require(resource >= 0 && resource <= GameplayTools.InitialResourceUnits(tool), "Invalid pickup resources.");
             Require((phase == ToolPickupPhase.Held) == (owner != 0), "Pickup phase/owner mismatch.");
             if (phase == ToolPickupPhase.Projectile) Require(tool == GameplayTools.Slipper && thrower != 0 && velocity.Length <= 200, "Invalid projectile.");
             else Require(thrower == 0 && velocity.LengthSquared == 0 && !consumed, "Inactive projectile payload.");
-            return new ToolPickupSnapshot(id, tool, position, rotation, owner, revision, phase, velocity, thrower, resource, consumed);
+            return new ToolPickupSnapshot(id, tool, position, rotation, owner, revision, phase, velocity, thrower, resource, consumed, cooldown);
+        }
+        private static void WriteToolEffect(BinaryWriter w, ToolEffectSnapshot e)
+        { w.Write(e.EffectId); w.Write(e.PickupId); w.Write(e.SourceActorId); w.Write((byte)e.Kind); V(w, e.Origin); V(w, e.Forward); w.Write(e.StartTick); w.Write(e.EndHalfTick); }
+        private static ToolEffectSnapshot ReadToolEffect(BinaryReader r, uint tick)
+        {
+            uint id = Id(r), pickup = Id(r), source = Id(r); var kind = E<ToolEffectKind>(r);
+            var origin = V(r); var forward = Unit(r); uint start = Tick(r), end = r.ReadUInt32();
+            Require(start <= tick && end > tick * 2, "Expired or future tool effect.");
+            if (kind == ToolEffectKind.RacketPulse) Require(end == start * 2 + HumanEquipmentProfile.RacketPulseHalfTicks, "Invalid pulse duration.");
+            else Require(end >= start * 2 + HumanEquipmentProfile.AerosolCloudHalfTicks && end <= tick * 2 + HumanEquipmentProfile.AerosolCloudHalfTicks, "Invalid cloud duration.");
+            return new ToolEffectSnapshot(id, pickup, source, kind, origin, forward, start, end);
         }
         private static void WriteSurface(BinaryWriter w, SurfaceAttachment a) { w.Write(a.SurfaceId); w.Write(a.Revision); V(w, a.LocalPoint); V(w, a.LocalNormal); V(w, a.TangentForward); }
         private static SurfaceAttachment ReadSurface(BinaryReader r) => new SurfaceAttachment(Id(r), Id(r), V(r), Unit(r), Unit(r));

@@ -2,7 +2,25 @@
 
 La definición vigente usa tres slots más manos, estamina humana y lanzamiento
 de pantufla con carga. El dominio conserva recursos por pickup; la UI de
-inventario y los efectos de raqueta/aerosol todavía están en implementación.
+inventario y los efectos de raqueta/aerosol avanzaron como se detalla abajo.
+
+## Evidencia posterior: efectos
+
+`effects-latejoin-native-01.xml`:88/88 PASS, cero omitidos. Incluye los
+efectos de armas y sus recursos, cooldown, duración en medios ticks, codec,
+inventario y entrada tardía. `effects-motor-hud-native-01.xml`:16/17 PASS;
+los once casos físicos de equipo y los dos de textoHUD pasan. El fallo
+corresponde a una expectativa incorrecta del comparador de escalón legado,
+fuera del equipo. No declarar toda esa suite PASS.
+
+El mundo comprueba alcance/conos, primera obstrucción, emisión bloqueada,
+mosquito que toca la boquilla y puerta cerrada sobre una nube persistente.
+El codec exige efecto vinculado a pickup del tipo correcto y humano existente,
+con ID único, caducidad canónica y cooldown/combustible conservados.
+
+La captura gráfica real `equipment-hud-visual-01.xml` falló por desbordamiento
+del texto SwapOffer a720p. Falta corregir y repetir el layout. Los VFX de armas,
+modelos visibles y pickups completos de los cinco mapas siguen pendientes.
 
 ## Cambios integrados por CEO
 

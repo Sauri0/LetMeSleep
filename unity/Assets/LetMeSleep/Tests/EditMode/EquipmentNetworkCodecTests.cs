@@ -87,5 +87,41 @@ namespace LetMeSleep.Tests.EditMode
                 ToolPickupPhase.Projectile, new Float3(0,-1,8), thrower, 0, false);
             Assert.Throws<InvalidDataException>(() => GameplayWireCodec.Encode(Snapshot(item)));
         }
+        private static GameSessionState Effects(string tool, params ToolEffectSnapshot[] effects)
+        {
+            var pickup = new ToolPickupSnapshot(8, tool, Float3.Zero, Rotation.Identity, 1, 3, ToolPickupPhase.Held,
+                default, 0, tool == GameplayTools.ElectricRacket ? 4 : 110, false, tool == GameplayTools.ElectricRacket ? 41u : 0u);
+            var state = Snapshot(pickup); var config = new GameplayRoundConfig(1, 2, RoomRules.AlfaMap, "content", 180);
+            return new GameSessionState(config, 10, SimulationPhase.Running, 0, RoundEndReason.None, PlayerRole.Unassigned,
+                state.Actors, state.Doors, state.ToolPickups, 0, 0, 0, effects);
+        }
+        [Test] public void PulseReplicatesHalfTickExpiryAndPersistentBatteryCooldown()
+        {
+            var effect = new ToolEffectSnapshot(1, 8, 1, ToolEffectKind.RacketPulse, new Float3(0,1,0), Float3.Forward, 5, 31);
+            Assert.That(GameplayWireCodec.TryDecode(GameplayWireCodec.Encode(Effects(GameplayTools.ElectricRacket, effect)), out GameSessionState decoded), Is.True);
+            Assert.That(decoded.ToolEffects[0].EndHalfTick, Is.EqualTo(31));
+            Assert.That(decoded.ToolPickups[0].CooldownUntilTick, Is.EqualTo(41));
+            Assert.That(decoded.ToolPickups[0].ResourceUnits, Is.EqualTo(4));
+        }
+        [Test] public void CloudMayExtendDuringEmissionButCannotExceedLifetimeAfterLatestTick()
+        {
+            var valid = new ToolEffectSnapshot(1, 8, 1, ToolEffectKind.AerosolCloud, new Float3(0,1,0), Float3.Forward, 1, 92);
+            Assert.DoesNotThrow(() => GameplayWireCodec.Encode(Effects(GameplayTools.Aerosol, valid)));
+            var invalid = new ToolEffectSnapshot(1, 8, 1, ToolEffectKind.AerosolCloud, new Float3(0,1,0), Float3.Forward, 1, 93);
+            Assert.Throws<InvalidDataException>(() => GameplayWireCodec.Encode(Effects(GameplayTools.Aerosol, invalid)));
+        }
+        [Test] public void EffectsRejectWrongSourceAndMismatchedPickupType()
+        {
+            var wrongSource = new ToolEffectSnapshot(1, 8, 2, ToolEffectKind.RacketPulse, new Float3(0,1,0), Float3.Forward, 5, 31);
+            Assert.Throws<InvalidDataException>(() => GameplayWireCodec.Encode(Effects(GameplayTools.ElectricRacket, wrongSource)));
+            var wrongKind = new ToolEffectSnapshot(1, 8, 1, ToolEffectKind.RacketPulse, new Float3(0,1,0), Float3.Forward, 5, 31);
+            Assert.Throws<InvalidDataException>(() => GameplayWireCodec.Encode(Effects(GameplayTools.Aerosol, wrongKind)));
+        }
+        [Test] public void DuplicateEffectsForSamePickupAreRejected()
+        {
+            var first = new ToolEffectSnapshot(1, 8, 1, ToolEffectKind.RacketPulse, new Float3(0,1,0), Float3.Forward, 5, 31);
+            var duplicate = new ToolEffectSnapshot(2, 8, 1, ToolEffectKind.RacketPulse, new Float3(0,1,0), Float3.Forward, 5, 31);
+            Assert.Throws<InvalidDataException>(() => GameplayWireCodec.Encode(Effects(GameplayTools.ElectricRacket, first, duplicate)));
+        }
     }
 }

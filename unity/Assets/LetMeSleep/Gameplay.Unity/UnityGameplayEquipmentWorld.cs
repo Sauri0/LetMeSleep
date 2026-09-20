@@ -51,7 +51,7 @@ namespace LetMeSleep.Gameplay.Unity
             var origin = actor.transform.position + Vector3.up * 1.1f;
             // Try three local deposits, in nearest-first order. Every ray stops at
             // its first obstruction; another support below it is never considered.
-            foreach (float distance in new[] { .6f, .8f, 1f })
+            foreach (float distance in new[] { HumanEquipmentProfile.DepositMinimumDistance, .8f, HumanEquipmentProfile.DepositMaximumDistance })
             {
                 var top = origin + forward * distance;
                 var pathRoot = origin - q * center;
@@ -96,7 +96,8 @@ namespace LetMeSleep.Gameplay.Unity
                 EquipmentCast(start, q, center, half, delta, actorId, pickupId).HasValue ||
                 EquipmentOverlap(start + delta, q, center, half, actorId, pickupId, out _)) return false;
             position = (start + delta).ToFloat(); rotation = q.ToRotation();
-            velocity = aim * Mathf.Lerp(6, 14, (power - .35f) / .65f) + Float3.Up * 1.5f;
+            velocity = aim * Mathf.Lerp(HumanEquipmentProfile.LaunchMinimumSpeed, HumanEquipmentProfile.LaunchMaximumSpeed,
+                (power - .35f) / .65f) + Float3.Up * HumanEquipmentProfile.LaunchLiftSpeed;
             return true;
         }
 

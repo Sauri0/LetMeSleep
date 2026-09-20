@@ -16,7 +16,7 @@ namespace LetMeSleep.Tests.PlayMode
 
         [TearDown] public void Cleanup() { if (root) Object.DestroyImmediate(root); }
 
-        private void Fixture()
+        private void Fixture(string toolId = GameplayTools.Slipper, bool withMosquito = false)
         {
             root = new GameObject("Equipment fixture");
             world = root.AddComponent<UnityGameplayWorld>();
@@ -28,10 +28,12 @@ namespace LetMeSleep.Tests.PlayMode
             var collider = item.AddComponent<BoxCollider>();
             collider.center = new Vector3(0, .05f, .15f); collider.size = new Vector3(.2f, .1f, .3f);
             pickup = item.AddComponent<GameplayToolPickup>();
-            pickup.PickupId = 1; pickup.ToolId = GameplayTools.Slipper; pickup.InteractionCollider = collider;
-            world.BeginRound(new[] { new SpawnActor(1, "human", PlayerRole.Human, Float3.Zero) }, Array.Empty<DoorDefinition>());
+            pickup.PickupId = 1; pickup.ToolId = toolId; pickup.InteractionCollider = collider;
+            var human = new SpawnActor(1, "human", PlayerRole.Human, Float3.Zero);
+            var roster = withMosquito ? new[] { human, new SpawnActor(2, "mosquito", PlayerRole.Mosquito, new Float3(0, 1.53f, 1)) } : new[] { human };
+            world.BeginRound(roster, Array.Empty<DoorDefinition>());
             world.BeginTools(world.GetToolDefinitions());
-            world.ApplyToolState(new ToolPickupSnapshot(1, GameplayTools.Slipper, new Float3(3, .1f, 3), Rotation.Identity, 1, 2));
+            world.ApplyToolState(new ToolPickupSnapshot(1, toolId, new Float3(3, .1f, 3), Rotation.Identity, 1, 2));
             Physics.SyncTransforms();
         }
 
@@ -96,6 +98,45 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(hit.Fraction, Is.Zero);
             Assert.That(hit.StartedOverlapping, Is.True, "Authority must recover the pickup instead of depositing at this penetrating origin.");
             Assert.That(hit.Normal.IsFinite, Is.True);
+        }
+
+        [Test] public void EffectConeHitsVisibleMosquitoButStopsAtFirstWall()
+        {
+            Fixture(GameplayTools.Aerosol, true);
+            Assert.That(world.TryToolEffectOrigin(1, 1, Float3.Forward, out var origin, out var direction), Is.True);
+            var query = new ToolEffectQuery(ToolEffectKind.AerosolCloud, 1, 1, origin, direction, 2, 30);
+            Assert.That(world.QueryToolEffect(query).Count, Is.EqualTo(1));
+            Cube("Cover", new Vector3(0, 1.5f, .7f), new Vector3(2, 3, .01f)); Physics.SyncTransforms();
+            Assert.That(world.QueryToolEffect(query).Count, Is.Zero);
+        }
+
+        [Test] public void EffectOriginCannotCrossThinWallOrUseAnotherActorsItem()
+        {
+            Fixture(GameplayTools.ElectricRacket, true);
+            Assert.That(world.TryToolEffectOrigin(2, 1, Float3.Forward, out _, out _), Is.False);
+            Cube("Muzzle cover", new Vector3(0, 1.5f, .2f), new Vector3(2, 3, .01f)); Physics.SyncTransforms();
+            Assert.That(world.TryToolEffectOrigin(1, 1, Float3.Forward, out _, out _), Is.False);
+        }
+
+        [Test] public void EffectConeRejectsVisibleActorOutsideAngle()
+        {
+            Fixture(GameplayTools.Aerosol, true);
+            var query = new ToolEffectQuery(ToolEffectKind.AerosolCloud, 1, 1, new Float3(0,1.53f,.35f), new Float3(1,0,0), 2, 30);
+            Assert.That(world.QueryToolEffect(query).Count, Is.Zero);
+        }
+        [Test] public void MosquitoTouchingMuzzleRemainsAValidPulseTarget()
+        {
+            Fixture(GameplayTools.ElectricRacket, true);
+            world.Actors[2].transform.position = new Vector3(0, 1.53f, .15f); Physics.SyncTransforms();
+            Assert.That(world.TryToolEffectOrigin(1, 1, Float3.Forward, out var origin, out var direction), Is.True);
+            Assert.That(world.QueryToolEffect(new ToolEffectQuery(ToolEffectKind.RacketPulse, 1, 1, origin, direction, 1.05f, 35)).Count, Is.EqualTo(1));
+        }
+        [Test] public void PersistentCloudDoesNotCastThroughDoorThatClosedOverItsOrigin()
+        {
+            Fixture(GameplayTools.Aerosol, true);
+            var origin = new Float3(0,1.53f,.35f);
+            Cube("Door over cloud", new Vector3(0,1.53f,.35f), new Vector3(2,3,.1f)); Physics.SyncTransforms();
+            Assert.That(world.QueryToolEffect(new ToolEffectQuery(ToolEffectKind.AerosolCloud, 1, 1, origin, Float3.Forward, 2, 30)).Count, Is.Zero);
         }
     }
 }
