@@ -329,10 +329,7 @@ namespace LetMeSleep.Presentation.Gameplay
             }
             else if (state.Role == PlayerRole.Mosquito && mosquitoCamera != null)
             {
-                Quaternion rotation = Quaternion.Euler(
-                    -gameplay.LocalViewPitch * Mathf.Rad2Deg,
-                    gameplay.LocalViewYaw * Mathf.Rad2Deg, 0f);
-                mosquitoCamera.SetView(rotation, gameplay.MosquitoCameraDistance);
+                mosquitoCamera.SetView(gameplay.LocalCameraRotation, gameplay.MosquitoCameraDistance);
             }
         }
 

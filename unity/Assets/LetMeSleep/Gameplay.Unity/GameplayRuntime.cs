@@ -31,6 +31,26 @@ namespace LetMeSleep.Gameplay.Unity
         public Float3 LocalViewForward => MathEx.Aim(yaw, pitch);
         public float LocalViewYaw => yaw;
         public float LocalViewPitch => pitch;
+        public Quaternion LocalCameraRotation
+        {
+            get
+            {
+                var self = LocalActor();
+                if (self != null && self.Role == PlayerRole.Mosquito)
+                { UpdateMosquitoLook(self, 0, 0); return mosquitoLook.View; }
+                return Quaternion.Euler(-pitch * Mathf.Rad2Deg, yaw * Mathf.Rad2Deg, 0);
+            }
+        }
+        private void UpdateMosquitoLook(ActorSnapshot self, float yawDelta, float pitchDelta)
+        {
+            if (!mosquitoLookReady) { mosquitoLook.Reset(self.BodyRotation, LocalViewForward); mosquitoLookReady = true; }
+            mosquitoLook.Step(self.BodyRotation, yawDelta, pitchDelta);
+            var aim = mosquitoLook.Forward;
+            // asin is the canonical world pitch; the orbit limit is relative to support,
+            // so a wall can legitimately look straight up in world space.
+            if (aim.X * aim.X + aim.Z * aim.Z > .00000001f) yaw = Mathf.Atan2(aim.X, aim.Z);
+            pitch = Mathf.Asin(Mathf.Clamp(aim.Y, -1, 1));
+        }
         public event Action<PlayerInputCommand> InputReady;
         public event Action<PlayerActionCommand> ActionReady;
         public event Action<GameSessionState> SnapshotReady;
@@ -45,6 +65,8 @@ namespace LetMeSleep.Gameplay.Unity
         private uint inputSequence, actionSequence, knownViewRevision;
         private bool biteNeedsRelease, wasAttached, focus = true, finishedSent;
         private bool controlsNeedRelease;
+        private readonly MosquitoLookFrame mosquitoLook = new MosquitoLookFrame();
+        private bool mosquitoLookReady;
         private readonly Queue<PlayerActionCommand> queuedActions = new Queue<PlayerActionCommand>();
         private PlayerActionCommand? localThrow;
         private PlayerInputCommand held;
@@ -59,7 +81,7 @@ namespace LetMeSleep.Gameplay.Unity
             roundConfig = config; accumulator = sendAccumulator = snapshotAccumulator = 0; inputSequence = actionSequence = knownViewRevision = 0; yaw = pitch = 0; cameraDistance = 0; finishedSent = false;
             LatestSnapshot = null; LocalPrivate = null; held = default;
             replicaGate.Reset(config);
-            queuedActions.Clear(); bots.Clear(); localThrow = null; biteNeedsRelease = true; wasAttached = false; controlsNeedRelease = false;
+            queuedActions.Clear(); bots.Clear(); localThrow = null; biteNeedsRelease = true; wasAttached = false; controlsNeedRelease = false; mosquitoLookReady = false;
             botNavigation = World.ConfigureModeMap(NavigationData, config.MapId, config.ModeId == GameModes.Tasks);
             World.ResetBotSteering();
             if (IsHost)
@@ -125,8 +147,18 @@ namespace LetMeSleep.Gameplay.Unity
                     keyboard.gKey.isPressed || mouse.leftButton.isPressed;
                 return;
             }
-            var delta = mouse.delta.ReadValue(); yaw = Mathf.Repeat(yaw + delta.x * MouseSensitivity + Mathf.PI, Mathf.PI * 2) - Mathf.PI;
-            pitch = Mathf.Clamp(pitch + delta.y * MouseSensitivity * (InvertY ? -1 : 1), -110 * Mathf.Deg2Rad, (self.Role == PlayerRole.Human ? 75 : 89) * Mathf.Deg2Rad);
+            var delta = mouse.delta.ReadValue();
+            if (self.Role == PlayerRole.Mosquito)
+            {
+                // Orbit relative to the body's support horizon. The authority keeps the
+                // body heading still while movement is neutral, but accepts this aim.
+                UpdateMosquitoLook(self, delta.x * MouseSensitivity, delta.y * MouseSensitivity * (InvertY ? -1 : 1));
+            }
+            else
+            {
+                yaw = Mathf.Repeat(yaw + delta.x * MouseSensitivity + Mathf.PI, Mathf.PI * 2) - Mathf.PI;
+                pitch = Mathf.Clamp(pitch + delta.y * MouseSensitivity * (InvertY ? -1 : 1), -110 * Mathf.Deg2Rad, 75 * Mathf.Deg2Rad);
+            }
             bool e = keyboard.eKey.isPressed;
             if (!e) biteNeedsRelease = false;
             bool attached = self.BiteAttachment.HasValue;
@@ -265,9 +297,24 @@ namespace LetMeSleep.Gameplay.Unity
             ActorPrivateState privateState = Authority.CapturePrivate(self.ActorId);
             ObjectiveDefinition objective = privateState?.TaskAssignment == null ? null : roundConfig.Objectives
                 .FirstOrDefault(item => item.ObjectiveId == privateState.TaskAssignment.ObjectiveId);
+            var opportunities = new List<BotToolOpportunity>();
+            ToolPickupSnapshot? equipped = null;
+            foreach (var pickup in state.ToolPickups)
+            {
+                if (privateState != null && pickup.PickupId == privateState.Inventory.ActivePickup &&
+                    pickup.OwnerActorId == self.ActorId && pickup.Phase == ToolPickupPhase.Held)
+                    equipped = pickup;
+                if (self.Role != PlayerRole.Human || botNavigation == null ||
+                    !World.TryObserveTool(self.ActorId, pickup, origin, out var visiblePoint) ||
+                    !botNavigation.TryToolDetour(self, pickup.Position,
+                        privateState?.TaskAssignment?.Status == TaskAssignmentStatus.Active ? objective : null, out var detour)) continue;
+                if (detour < 4) opportunities.Add(new BotToolOpportunity(pickup, detour, visiblePoint));
+            }
+            float rescueSpeed = self.SurfaceAttachment.HasValue ? .65f : Mathf.Clamp(self.Velocity.Length, 1f, 3.8f);
             return new BotObservation(self, visible, free, doorAhead, direction => World.SteerBot(self, direction),
                 roundConfig.ModeId, privateState, objective,
-                item => botNavigation == null ? Float3.Zero : World.TaskDirection(self, item));
+                item => botNavigation == null ? Float3.Zero : World.TaskDirection(self, item),
+                new BotTrainingContext(opportunities, rescueSpeed, equipped));
         }
         public void ApplySnapshot(GameSessionState snapshot)
         {
@@ -296,6 +343,7 @@ namespace LetMeSleep.Gameplay.Unity
         private void ClearIncapacitatedInput(ActorSnapshot self)
         {
             yaw = self.ViewYawRadians; pitch = self.ViewPitchRadians;
+            mosquitoLookReady = false;
             held = new PlayerInputCommand(default, default, 0, yaw, pitch, LocalViewForward);
             queuedActions.Clear(); localThrow = null; biteNeedsRelease = true; controlsNeedRelease = true;
         }
@@ -307,7 +355,8 @@ namespace LetMeSleep.Gameplay.Unity
         {
             if (!UseBuiltInCamera || !LocalCamera) return;
             var self = LocalActor(); if (self == null) return;
-            var forward = LocalViewForward.ToUnity(); var center = self.Position.ToUnity();
+            var viewRotation = LocalCameraRotation;
+            var forward = viewRotation * Vector3.forward; var center = self.Position.ToUnity();
             if (self.Role == PlayerRole.Human)
             {
                 LocalCamera.transform.SetPositionAndRotation(center + Vector3.up * (1.53f - .64f * self.CrouchFraction), Quaternion.AngleAxis(yaw * Mathf.Rad2Deg, Vector3.up) * Quaternion.AngleAxis(-pitch * Mathf.Rad2Deg, Vector3.right));
@@ -315,11 +364,11 @@ namespace LetMeSleep.Gameplay.Unity
             }
             else
             {
-                var pivot = CameraSweep(center, center + Vector3.up * .12f, self.ActorId);
+                var pivot = CameraSweep(center, center + self.BodyRotation.Up.ToUnity() * .12f, self.ActorId);
                 var desired = CameraSweep(pivot, pivot - forward * MosquitoCameraDistance, self.ActorId);
                 float available = Vector3.Distance(pivot, desired);
                 cameraDistance = available < cameraDistance ? available : Mathf.MoveTowards(cameraDistance, available, Time.unscaledDeltaTime * 3);
-                LocalCamera.transform.SetPositionAndRotation(pivot - forward * cameraDistance, Quaternion.LookRotation(forward, Vector3.up)); LocalCamera.nearClipPlane = .01f;
+                LocalCamera.transform.SetPositionAndRotation(pivot - forward * cameraDistance, viewRotation); LocalCamera.nearClipPlane = .01f;
             }
         }
         private Vector3 CameraSweep(Vector3 from, Vector3 to, uint actorId)

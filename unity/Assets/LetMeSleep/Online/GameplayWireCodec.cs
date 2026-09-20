@@ -110,7 +110,7 @@ namespace LetMeSleep.Online
         }
         private static PlayerInputCommand ReadInput(BinaryReader r)
         {
-            var h = Header(r); var move = new Float2(F(r, -1, 1), F(r, -1, 1)); float vertical = F(r, -1, 1), yaw = F(r), pitch = F(r, -1.919863f, 1.553344f); var aim = Unit(r);
+            var h = Header(r); var move = new Float2(F(r, -1, 1), F(r, -1, 1)); float vertical = F(r, -1, 1), yaw = F(r), pitch = F(r, -1.919863f, 1.570797f); var aim = Unit(r);
             Require(Float3.Dot(MathEx.Aim(yaw, pitch), aim.Normalized) >= .99984f, "Aim mismatch.");
             return new PlayerInputCommand(h, move, vertical, yaw, pitch, aim, B(r), B(r), B(r), B(r), B(r));
         }
@@ -228,8 +228,10 @@ namespace LetMeSleep.Online
         private static ActorSnapshot ReadActor(BinaryReader r, uint hostTick, string mode)
         {
             uint id = Id(r); var role = E<PlayerRole>(r); Require(role != PlayerRole.Unassigned, "Unassigned actor."); var life = E<LifeState>(r); uint revision = Id(r);
-            var position = V(r); var velocity = V(r); Require(velocity.Length <= 200, "Invalid velocity."); var body = Q(r); var view = Unit(r); float yaw = F(r), pitch = F(r, -1.919863f, 1.553344f);
-            Require(Float3.Dot(MathEx.Aim(yaw, pitch), view.Normalized) >= .99984f && (role != PlayerRole.Human || pitch <= 1.308997f), "View mismatch.");
+            var position = V(r); var velocity = V(r); Require(velocity.Length <= 200, "Invalid velocity."); var body = Q(r); var view = Unit(r); float yaw = F(r), pitch = F(r, -1.919863f, 1.570797f);
+            Require(Float3.Dot(MathEx.Aim(yaw, pitch), view.Normalized) >= .99984f &&
+                (role != PlayerRole.Human || pitch <= 1.308997f) &&
+                (role != PlayerRole.Mosquito || pitch >= -1.570797f), "View mismatch.");
             uint viewRevision = Id(r), poseRevision = r.ReadUInt32(); bool grounded = B(r); float crouch = F(r, 0, 1), motion = F(r, 0, 1000000); uint recovery = r.ReadUInt32(); Require(recovery <= hostTick + 4000, "Invalid recovery deadline.");
             SurfaceAttachment? surface = B(r) ? ReadSurface(r) : (SurfaceAttachment?)null;
             BiteAttachment? bite = B(r) ? ReadBite(r) : (BiteAttachment?)null;

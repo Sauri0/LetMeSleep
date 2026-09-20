@@ -645,7 +645,7 @@ namespace LetMeSleep.Presentation.Gameplay
             if (TryBiteSurface(out _, out _, out var biteNormal))
             {
                 Vector3 biteForward = -biteNormal;
-                Vector3 stableUp = hasVisualRotation ? visualRotation * Vector3.up : Vector3.up;
+                Vector3 stableUp = current.BodyRotation.Up.ToUnity();
                 Vector3 biteUp = Vector3.ProjectOnPlane(stableUp, biteForward);
                 if (biteUp.sqrMagnitude < .000001f) biteUp = Vector3.ProjectOnPlane(Vector3.up, biteForward);
                 if (biteUp.sqrMagnitude < .000001f) biteUp = Vector3.ProjectOnPlane(Vector3.forward, biteForward);
@@ -689,7 +689,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 previous = GameplayModel.SurfaceVisualFrame.TransportForward(previousSurfaceNormal.ToFloat(),
                     normal, previousSurfaceForward.ToFloat()).ToUnity();
             }
-            bool valid = GameplayModel.SurfaceVisualFrame.TryResolve(normal, current.ViewForward,
+            bool valid = GameplayModel.SurfaceVisualFrame.TryResolve(normal, current.BodyRotation.Forward,
                 previous.ToFloat(), elapsed * 12f, out up, out forward);
             hasSurfaceHeading = valid;
             if (valid) { previousSurfaceNormal = up.ToUnity(); previousSurfaceForward = forward.ToUnity(); }

@@ -2,12 +2,22 @@
 
 Fecha: 2026-09-20. Ticket acotado a Gameplay/BotController.cs y tests propios. Fuente de decisiones: docs/ceo/definicion-v020/respuestas-20260920-065440/DECISIONES.md, J25–J32. Ninguna habilitación de bots online.
 
+Integración posterior CEO: Runtime ya proporciona contexto por bot: inventario
+privado propio, pickup activo público concordante, herramientas con primer
+contacto visible y desvío estimado por rutas authored abiertas. ContactPoint
+procede del collider observado; el bot no apunta a una raíz fuera del collider.
+Velocidad para ETA: observada entre1 y3,8m/s en vuelo,0,65 sobre superficie.
+No certifica una ruta física completa ni acceso a inventarios de otros actores.
+`horizon-bots-authority-native-01.xml`:71/71PASS, incluye32bots y9horizonte.
+`vfx-perception-native-02.xml`:18/18PASS, incluidos4negativos/positivos de
+percepción física de herramientas. Backend de replanteo de pasajes pendiente.
+
 ## Contrato
 
 Se conserva exactamente el constructor previo de BotObservation (incluido TaskDirection). Overload nuevo añade como último parámetro `BotTrainingContext training`; el contexto es opcional y exclusivamente de datos:
 
-- `BotTrainingContext(IReadOnlyList<BotToolOpportunity> visibleTools, float rescueTravelSpeed)` conserva el overload de dos argumentos. Nuevo overload de tres a�ade `ToolPickupSnapshot? equippedPickup`; propiedad p�blica `EquippedPickup`.
-- `BotToolOpportunity(ToolPickupSnapshot pickup, float detourMeters)`: sólo pickups actualmente observables con LOS; DetourMeters es desvío de ruta calculado por navegación, NO distancia euclídea presentada como ruta.
+- `BotTrainingContext(IReadOnlyList<BotToolOpportunity> visibleTools, float rescueTravelSpeed)` conserva el overload de dos argumentos. Nuevo overload de tres añade `ToolPickupSnapshot? equippedPickup`; propiedad pública `EquippedPickup`.
+- `BotToolOpportunity(ToolPickupSnapshot pickup, float detourMeters, Float3 contactPoint)`: sólo pickups actualmente observables con LOS; DetourMeters es desvío estimado por topología abierta. El constructor de dos argumentos conserva compatibilidad y usa pickup.Position como punto de contacto.
 - `VisibleTools` copia inmutable del listado. `RescueTravelSpeed` debe ser positiva y finita; sin contexto se usa 1 m/s como estimación conservadora, no información oculta.
 - OwnPrivate se valida contra Self.ActorId y sólo informa inventario/tarea propios.
 - BotController expone `SelectedActorId`, `ReplanCount`, `BlockedUntilTick` y `BlockedDirection`; no hay callbacks ni cambios de navegación implícitos. Backend pendiente deberá consumir una subida de ReplanCount para bloquear el pasaje hasta BlockedUntilTick y buscar otra ruta.
@@ -22,7 +32,7 @@ Mosquitos puntúan distancia, visibilidad, inmovilidad observable y golpe públi
 
 Rescate exige aliado actualmente visible, expiración RecoveryEndTick conocida, llegada estimada más 45 ticks de margen y ningún humano visible a menos de 2.5 m del aliado. Los 1.5 s corresponden a margen al LLEGAR, según J31; no se afirma completar rescate dentro de ese margen. Sin expiry válido no supone tiempo infinito.
 
-Herramientas: sólo con slot libre propio, manos equipadas, sin amenaza actual ni tarea ya mantenida en rango; desvío estrictamente menor de 4 m; ignora raqueta/aerosol agotados. No confirma intercambios de inventario lleno. Usa interacción ordinaria de autoridad. Herramientas/ETA todavía requieren conectar el nuevo contexto en Runtime.
+Herramientas: sólo con slot libre propio, manos equipadas, sin amenaza actual ni tarea ya mantenida en rango; desvío estrictamente menor de 4 m; ignora raqueta/aerosol agotados. No confirma intercambios de inventario lleno. Usa interacción ordinaria de autoridad. Contexto Runtime integrado posteriormente, según el checkpoint superior.
 
 Atasco: intención de caminar/volar sin desplazar al menos 0.15 m durante 150 ticks incrementa ReplanCount y bloquea dirección 180 ticks. Incluye Steer que devuelve cero. Mientras el destino siga en esa dirección espera; una dirección alternativa puede seguir. El umbral 0.15 m es concreción técnica reversible. Por sí solo este dominio NO replantea el grafo ni registra pasajes físicos: ese enlace de navegación queda pendiente y no se certifica J32 completo.
 
@@ -35,14 +45,14 @@ Pendiente actualizar prueba histórica TaskBotOnlyUsesOwnAssignmentAndSurvivalEv
 
 ## Uso de equipo por los bots (segunda parte)
 
-El adaptador deber� resolver EquippedPickup desde el ledger p�blico actual, exigiendo la triple coincidencia de actor propietario, pickup activo del inventario privado propio y fase Held. El dominio repite esa comprobaci�n m�s ToolId de Self y revisi�n de inventario no nula. Sin ese dato no fabrica revisiones ni inicia lanzamiento. No se ampli� el acceso a otros inventarios privados.
+El adaptador deberá resolver EquippedPickup desde el ledger público actual, exigiendo la triple coincidencia de actor propietario, pickup activo del inventario privado propio y fase Held. El dominio repite esa comprobación más ToolId de Self y revisión de inventario no nula. Sin ese dato no fabrica revisiones ni inicia lanzamiento. No se amplió el acceso a otros inventarios privados.
 
-- Aerosol: PrimaryHeld mientras el enemigo siga visible dentro de 2 m y queden unidades; neutral al perderlo. No env�a Primary redundantes para simular emisi�n.
-- Raqueta: Primary dentro de 1.05 m, recurso positivo y cooldown p�blico cumplido. La autoridad sigue validando todos los comandos.
-- Pantufla: alcance de decisi�n del bot 4 m, concreci�n CEO reversible; carga hasta 27 ticks y ReleaseThrow expl�cito. Begin/Release llevan SelectedSlot, ActivePickup, revisi�n actual del pickup e InventoryRevision. No renueva carga activa. No inicia sin estamina para potencia completa (15 puntos). Al perder visibilidad/alcance/coherencia cancela con CancelThrow y PrimaryHeld=false, sin lanzar hacia un recuerdo.
-- Estos cambios no modifican velocidades/alcance f�sico de proyectiles ni recursos de herramientas. El contexto nuevo a�n debe cablearse en Runtime; los tests verifican comandos de dominio, no una sesi�n gr�fica ni LOS de PhysX.
+- Aerosol: PrimaryHeld mientras el enemigo siga visible dentro de 2 m y queden unidades; neutral al perderlo. No envía Primary redundantes para simular emisión.
+- Raqueta: Primary dentro de 1.05 m, recurso positivo y cooldown público cumplido. La autoridad sigue validando todos los comandos.
+- Pantufla: alcance de decisión del bot 4 m, concreción CEO reversible; carga hasta 27 ticks y ReleaseThrow explícito. Begin/Release llevan SelectedSlot, ActivePickup, revisión actual del pickup e InventoryRevision. No renueva carga activa. No inicia sin estamina para potencia completa (15 puntos). Al perder visibilidad/alcance/coherencia cancela con CancelThrow y PrimaryHeld=false, sin lanzar hacia un recuerdo.
+- Estos cambios no modifican velocidades/alcance físico de proyectiles ni recursos de herramientas. Los tests iniciales verificaban comandos de dominio; el checkpoint posterior añade integración Runtime y percepción PhysX. Sigue pendiente la sesión gráfica completa.
 
-Los 13 casos agregados al primer corte cubren OR literal de amenazas 1.99/2 m y aproximaci�n/alejamiento a4 m, tarea mantenida que no se interrumpe para recoger, herramienta agotada descartada, PrimaryHeld/neutral de aerosol, propietario/pickup inv�lidos, Begin/Release con revisiones exactas, cancelaci�n por ocultaci�n, carga sin renovaci�n, revisi�n obsoleta y cooldown/recurso de raqueta. En conjunto son29 tests.
+Los 13 casos agregados al primer corte cubren OR literal de amenazas 1.99/2 m y aproximación/alejamiento a4 m, tarea mantenida que no se interrumpe para recoger, herramienta agotada descartada, PrimaryHeld/neutral de aerosol, propietario/pickup inválidos, Begin/Release con revisiones exactas, cancelación por ocultación, carga sin renovación, revisión obsoleta y cooldown/recurso de raqueta. En conjunto son29 tests.
 ## Herramienta agotada: vuelta a manos
 
 Seguimiento autorizado tras gate nativo `bots-directed-native-01`: 40/40 PASS (29 bots +9 modos +2 rutas) para commit10736cd.

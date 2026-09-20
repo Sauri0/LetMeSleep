@@ -49,6 +49,22 @@ namespace LetMeSleep.Gameplay.Unity
             }
             return false;
         }
+        internal bool TryObserveTool(uint actorId, in ToolPickupSnapshot state, Float3 origin, out Float3 visiblePoint)
+        {
+            visiblePoint = default;
+            if (state.Phase != ToolPickupPhase.World || state.OwnerActorId != 0 ||
+                !toolPickups.TryGetValue(state.PickupId, out var pickup) || !pickup.InteractionCollider ||
+                !pickup.InteractionCollider.enabled || !pickup.gameObject.activeInHierarchy) return false;
+            var point = pickup.InteractionCollider.ClosestPoint(origin.ToUnity()).ToFloat();
+            var delta = point - origin;
+            if (delta.LengthSquared < .000001f || delta.Length > 12) return false;
+            // Reuse the same first-obstruction query as interaction. Merely knowing the
+            // public pickup ledger never grants perception through a wall or another prop.
+            if (!TryToolInteraction(new ToolInteractionQuery(actorId, origin, delta.Normalized, delta.Length + .03f), out var candidate) ||
+                candidate.PickupId != state.PickupId || candidate.Revision != state.Revision) return false;
+            visiblePoint = point;
+            return true;
+        }
         public bool TryDropTool(uint actorId, out Float3 position, out Rotation rotation)
         {
             position = default; rotation = Rotation.Identity;

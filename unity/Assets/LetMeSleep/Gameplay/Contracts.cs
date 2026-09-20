@@ -53,6 +53,28 @@ namespace LetMeSleep.Gameplay
         public Rotation(float x, float y, float z, float w) { X = x; Y = y; Z = z; W = w; }
         public static Rotation Identity => new Rotation(0, 0, 0, 1);
         public static Rotation Yaw(float radians) => new Rotation(0, (float)Math.Sin(radians / 2), 0, (float)Math.Cos(radians / 2));
+        public Float3 Forward => new Float3(2 * (X * Z + W * Y), 2 * (Y * Z - W * X), 1 - 2 * (X * X + Y * Y));
+        public Float3 Up => new Float3(2 * (X * Y - W * Z), 1 - 2 * (X * X + Z * Z), 2 * (Y * Z + W * X));
+        public static Rotation Look(Float3 forward, Float3 up)
+        {
+            if (!forward.IsFinite || !up.IsFinite || forward.LengthSquared < .000001f || up.LengthSquared < .000001f)
+                return Identity;
+            var z = forward.Normalized; var x = Float3.Cross(up, z).Normalized;
+            if (x.LengthSquared < .000001f)
+                x = Float3.Cross(Math.Abs(z.Y) < .9f ? Float3.Up : Float3.Forward, z).Normalized;
+            var y = Float3.Cross(z, x);
+            float qx, qy, qz, qw, trace = x.X + y.Y + z.Z;
+            if (trace > 0)
+            { float s = (float)Math.Sqrt(trace + 1) * 2; qw = .25f * s; qx = (y.Z - z.Y) / s; qy = (z.X - x.Z) / s; qz = (x.Y - y.X) / s; }
+            else if (x.X > y.Y && x.X > z.Z)
+            { float s = (float)Math.Sqrt(1 + x.X - y.Y - z.Z) * 2; qw = (y.Z - z.Y) / s; qx = .25f * s; qy = (y.X + x.Y) / s; qz = (z.X + x.Z) / s; }
+            else if (y.Y > z.Z)
+            { float s = (float)Math.Sqrt(1 + y.Y - x.X - z.Z) * 2; qw = (z.X - x.Z) / s; qx = (y.X + x.Y) / s; qy = .25f * s; qz = (z.Y + y.Z) / s; }
+            else
+            { float s = (float)Math.Sqrt(1 + z.Z - x.X - y.Y) * 2; qw = (x.Y - y.X) / s; qx = (z.X + x.Z) / s; qy = (z.Y + y.Z) / s; qz = .25f * s; }
+            float length = (float)Math.Sqrt(qx * qx + qy * qy + qz * qz + qw * qw);
+            return new Rotation(qx / length, qy / length, qz / length, qw / length);
+        }
     }
     public static class MathEx
     {

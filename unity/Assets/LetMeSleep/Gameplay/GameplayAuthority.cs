@@ -25,6 +25,7 @@ namespace LetMeSleep.Gameplay
         {
             internal SpawnActor Spawn;
             internal Float3 Position, Velocity, Aim = Float3.Forward;
+            internal Rotation MosquitoBody = Rotation.Identity;
             internal float Yaw, Pitch, Crouch, Motion, Preparation, Extraction, Recovery, Protection;
             internal LifeState State;
             internal uint Revision = 1, ViewRevision = 1, PoseRevision, InputSequence, ActionSequence, InputTick, RateTick, HelpTarget;
@@ -186,8 +187,9 @@ namespace LetMeSleep.Gameplay
         {
             var reject = Validate(principal, c.Header, bot, out var a); if (reject != CommandReject.None) return reject;
             if (!c.MovePlanar.IsFinite || !MathEx.Finite(c.Vertical) || !MathEx.Finite(c.ViewYawRadians) || !MathEx.Finite(c.ViewPitchRadians)) return a.Rejection = CommandReject.InvalidNumber;
-            if (!ValidAim(c.AimForward) || Math.Abs(c.ViewYawRadians) > 10000 || c.ViewPitchRadians < -1.919863f || c.ViewPitchRadians > 1.553344f || Float3.Dot(MathEx.Aim(c.ViewYawRadians, c.ViewPitchRadians), c.AimForward.Normalized) < .99984f) return a.Rejection = CommandReject.InvalidDirection;
+            if (!ValidAim(c.AimForward) || Math.Abs(c.ViewYawRadians) > 10000 || c.ViewPitchRadians < -1.919863f || c.ViewPitchRadians > 1.570797f || Float3.Dot(MathEx.Aim(c.ViewYawRadians, c.ViewPitchRadians), c.AimForward.Normalized) < .99984f) return a.Rejection = CommandReject.InvalidDirection;
             if (a.Spawn.Role == PlayerRole.Human && c.ViewPitchRadians > 1.308997f) return a.Rejection = CommandReject.InvalidDirection;
+            if (a.Spawn.Role == PlayerRole.Mosquito && c.ViewPitchRadians < -1.570797f) return a.Rejection = CommandReject.InvalidDirection;
             if (a.HasInput && !MathEx.Newer(c.Header.Sequence, a.InputSequence)) return CommandReject.StaleSequence;
             ResetRate(a); if (++a.InputCount > 60) return a.Rejection = CommandReject.RateLimited;
             a.InputTick = tick; a.InputSequence = c.Header.Sequence; a.HasInput = true;
@@ -377,9 +379,12 @@ namespace LetMeSleep.Gameplay
                     !clearance.IsSurfaceDestinationClear(a.Spawn.ActorId, contact))
                 { Detach(a); return; }
                 var carried = SurfaceVisualFrame.TransportForward(a.SurfaceNormal, contact.WorldNormal, a.SurfaceForward);
-                if (!SurfaceVisualFrame.TryResolve(contact.WorldNormal, a.Aim, carried, 12f * dt,
+                bool steering = input.MovePlanar.X * input.MovePlanar.X + input.MovePlanar.Y * input.MovePlanar.Y > .0001f;
+                var bodyIntent = steering || carried.LengthSquared < .0001f ? a.Aim : carried;
+                if (!SurfaceVisualFrame.TryResolve(contact.WorldNormal, bodyIntent, carried, 12f * dt,
                     out var normal, out var forward)) { Detach(a); return; }
                 a.SurfaceNormal = normal; a.SurfaceForward = forward;
+                a.MosquitoBody = Rotation.Look(forward, normal);
                 var right = Float3.Cross(normal, forward);
                 var desired = Float3.ClampLength(forward * input.MovePlanar.Y + right * input.MovePlanar.X);
                 surfaceTravel = desired;
@@ -393,6 +398,8 @@ namespace LetMeSleep.Gameplay
             }
             else
             {
+                if (input.MovePlanar.X * input.MovePlanar.X + input.MovePlanar.Y * input.MovePlanar.Y + input.Vertical * input.Vertical > .0001f)
+                    a.MosquitoBody = Rotation.Yaw(a.Yaw);
                 var right = new Float3((float)Math.Cos(a.Yaw), 0, -(float)Math.Sin(a.Yaw));
                 var desired = Float3.ClampLength(a.Aim * input.MovePlanar.Y + right * input.MovePlanar.X + Float3.Up * MathEx.Clamp(input.Vertical, -1, 1)) * 3.8f;
                 a.Velocity = Float3.MoveTowards(a.Velocity, desired, (desired.LengthSquared < .0001f ? 28 : 13) * dt);
@@ -467,6 +474,7 @@ namespace LetMeSleep.Gameplay
             {
                 if (!a.Input.BiteHeld || !actors.TryGetValue(a.Bite.Value.VictimId, out var victim) || victim.State != LifeState.Active || victim.Protection > 0 || !world.ResolveBite(a.Spawn.ActorId, a.Bite.Value, humans, out var contact)) { Detach(a); return; }
                 a.Position = contact.MosquitoPosition; a.Bite = contact.Attachment; a.PoseRevision++;
+                a.MosquitoBody = Rotation.Look(-contact.WorldNormal, a.MosquitoBody.Up);
                 if (a.State == LifeState.PreparingBite)
                 {
                     a.Preparation += dt; a.Hint = InteractionHint.Preparing;
@@ -479,7 +487,9 @@ namespace LetMeSleep.Gameplay
                 a.Hint = InteractionHint.ContactRequired;
                 if (world.TryBiteContact(new BiteQuery(a.Spawn.ActorId, a.Position, a.Aim, .025f, humans), out var contact) && actors.TryGetValue(contact.Attachment.VictimId, out var victim) && victim.State == LifeState.Active && victim.Protection <= 0)
                 {
-                    a.Surface = null; a.Bite = contact.Attachment; a.Position = contact.MosquitoPosition; a.Velocity = default; a.Preparation = 0; a.Extraction = 0; SetState(a, LifeState.PreparingBite);
+                    a.Surface = null; a.Bite = contact.Attachment; a.Position = contact.MosquitoPosition; a.Velocity = default; a.Preparation = 0; a.Extraction = 0;
+                    a.MosquitoBody = Rotation.Look(-contact.WorldNormal, a.MosquitoBody.Up);
+                    SetState(a, LifeState.PreparingBite);
                 }
             }
         }
@@ -615,6 +625,8 @@ namespace LetMeSleep.Gameplay
             if (a.State == state) return;
             bool wasControllable = CanAct(a);
             a.State = state; a.Revision++; a.SurfaceApproachTicks = 0;
+            if (a.Spawn.Role == PlayerRole.Mosquito && state == LifeState.Recovering)
+                a.MosquitoBody = Rotation.Look(MathEx.Aim(a.Yaw, 0), Float3.Up);
             if (!CanAct(a) || !wasControllable) ClearHeld(a);
         }
         private void Detach(Actor a)
@@ -623,12 +635,14 @@ namespace LetMeSleep.Gameplay
             bool attached = a.Bite.HasValue || a.Surface.HasValue;
             a.Bite = null; a.Surface = null; a.Preparation = 0; a.Extraction = 0; a.BiteArmed = false;
             a.SurfaceTransitionTicks = 0; a.SurfaceNormal = a.SurfaceForward = Float3.Zero;
+            if (a.Spawn.Role == PlayerRole.Mosquito)
+                a.MosquitoBody = Rotation.Look(MathEx.Aim(a.Yaw, 0), Float3.Up);
             if (attached) { a.ViewRevision++; ClearHeld(a); }
             if (CanAct(a)) SetState(a, LifeState.Flying);
         }
         private void KnockDown(Actor a, Float3 impulse) { if (config.ModeId == GameModes.Survival) { Eliminate(a); return; } a.HelpWork = 0; a.AwaitingRespawn = false; Detach(a); a.Velocity = impulse + new Float3(0, -.6f, 0); a.Grounded = false; SetState(a, LifeState.Falling); Emit(GameplayEventKind.MosquitoKnockedDown, a); }
         private void Emit(GameplayEventKind kind, Actor a, uint target = 0, Float3 position = default, Float3 normal = default) => events.Add(new GameplayEvent(config.SessionEpoch, config.RoundId, ++eventId, tick, kind, a.Spawn.ActorId, target, a.Revision, position.LengthSquared == 0 ? a.Position : position, normal));
-        private ActorSnapshot Snapshot(Actor a) => new ActorSnapshot(a.Spawn.ActorId, a.Spawn.Role, a.State, a.Revision, a.Position, a.Velocity, Rotation.Yaw(a.Yaw), a.Aim, a.Yaw, a.Pitch, a.ViewRevision, a.PoseRevision, a.Grounded, a.Crouch, a.Motion, a.Surface, a.Bite, a.Strike, tick + (uint)Math.Ceiling(a.Recovery * 30), a.EquippedTool, a.Lives);
+        private ActorSnapshot Snapshot(Actor a) => new ActorSnapshot(a.Spawn.ActorId, a.Spawn.Role, a.State, a.Revision, a.Position, a.Velocity, a.Spawn.Role == PlayerRole.Mosquito ? a.MosquitoBody : Rotation.Yaw(a.Yaw), a.Aim, a.Yaw, a.Pitch, a.ViewRevision, a.PoseRevision, a.Grounded, a.Crouch, a.Motion, a.Surface, a.Bite, a.Strike, tick + (uint)Math.Ceiling(a.Recovery * 30), a.EquippedTool, a.Lives);
         private ActorSnapshot[] ActorSnapshots() => actors.Values.OrderBy(a => a.Spawn.ActorId).Select(Snapshot).ToArray();
         private void Synchronize() => world.SynchronizeActors(ActorSnapshots());
         public GameSessionState CaptureSnapshot()
