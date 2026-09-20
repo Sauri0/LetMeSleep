@@ -75,7 +75,7 @@ namespace LetMeSleep.Core
     // Neither UI visibility nor the caller-supplied display name grants authority.
     public sealed class RoomSession
     {
-        public const string Protocol = "lms-unity-094-alfa-2";
+        public const string Protocol = "lms-unity-020-1";
         private sealed class Member
         {
             internal string Id, Name;

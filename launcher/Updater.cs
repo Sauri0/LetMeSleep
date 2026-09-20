@@ -23,18 +23,21 @@ namespace LetMeSleep.Updater {
     }
     public sealed class Build {
         public string version { get; set; }
+        public int releaseSeries { get; set; }
         public string executable { get; set; }
         public Dictionary<string,string> files { get; set; }
     }
     public sealed class Installation {
         public string DirectoryPath;
         public GameVersion Version;
+        public int ReleaseSeries;
         public string Executable { get { return Path.Combine(DirectoryPath, "Let-me-sleep.exe"); } }
     }
     public sealed class Updater {
         const long MaxZip = 2147483648L;
         const long MaxExpanded = 6442450944L;
         public const string ReleasesUrl = "https://api.github.com/repos/Sauri0/LetMeSleep/releases?per_page=100";
+        public const string SeriesMarker = "Let-me-sleep-series-2.json";
         public readonly string Root;
         readonly Action<string,int> progress;
         readonly CancellationToken cancel;
@@ -47,12 +50,25 @@ namespace LetMeSleep.Updater {
         public static Release SelectRelease(IEnumerable<Release> releases) {
             // Public numbered playtest releases are included, even when GitHub marks them prerelease.
             return releases.Where(r => !r.draft && ParseVersion(r.tag_name) != null && HasAssets(r))
-                .OrderByDescending(r => ParseVersion(r.tag_name)).FirstOrDefault();
+                .OrderByDescending(r => ReleaseSeries(r)).ThenByDescending(r => ParseVersion(r.tag_name)).FirstOrDefault();
+        }
+        // The 0.2.0 relaunch starts a new numbering series. Keep semantic version
+        // comparisons numeric; opt releases into the new series explicitly.
+        public static int ReleaseSeries(Release release) {
+            return release.assets != null && release.assets.Any(a => a.name == SeriesMarker) ? 1 : 0;
+        }
+        public static bool KeepInstalled(Installation current, Release release) {
+            if (current == null) return false;
+            int series = ReleaseSeries(release);
+            return current.ReleaseSeries > series || (current.ReleaseSeries == series && current.Version >= ParseVersion(release.tag_name));
         }
         static bool HasAssets(Release r) {
             var name = "Let-me-sleep-" + ParseVersion(r.tag_name) + "-Windows.zip";
             return r.assets != null && r.assets.Count(a => a.name == name && a.size > 0 && a.size <= MaxZip) == 1
-                && r.assets.Count(a => a.name == name + ".sha256.txt" && a.size > 0 && a.size <= 1024) == 1;
+                && r.assets.Count(a => a.name == name + ".sha256.txt" && a.size > 0 && a.size <= 1024) == 1
+                && (!r.assets.Any(a => a.name == SeriesMarker) ||
+                    (r.assets.Count(a => a.name == SeriesMarker) == 1 && r.assets.Single(a => a.name == SeriesMarker).size > 0
+                    && r.assets.Single(a => a.name == SeriesMarker).size <= 1024));
         }
         public static void CheckAssetUrl(string url, string tag, string name) {
             var expected = "https://github.com/Sauri0/LetMeSleep/releases/download/" + tag + "/" + name;
@@ -134,19 +150,20 @@ namespace LetMeSleep.Updater {
                 }
             }
         }
-        public static Installation ValidateInstallation(string directory, GameVersion expected) {
+        public static Installation ValidateInstallation(string directory, GameVersion expected, int? expectedSeries = null) {
             var buildPath = Path.Combine(directory, "BUILD.json");
             if (new FileInfo(buildPath).Length > 1048576) throw new InvalidDataException("Manifiesto demasiado grande.");
             var build = Json.Deserialize<Build>(File.ReadAllText(buildPath));
             var version = ParseVersion(build.version);
             if (version == null || (expected != null && version != expected) || build.executable != "Let-me-sleep.exe"
+                || build.releaseSeries < 0 || build.releaseSeries > 1 || (expectedSeries.HasValue && build.releaseSeries != expectedSeries.Value)
                 || build.files == null || !build.files.ContainsKey("Let-me-sleep.exe")) throw new InvalidDataException("Identidad de versión incorrecta.");
             foreach (var file in build.files) {
                 string path = SafePath(directory, file.Key);
                 if (!Regex.IsMatch(file.Value ?? "", "^[a-fA-F0-9]{64}$") || !String.Equals(Hash(path), file.Value, StringComparison.OrdinalIgnoreCase))
                     throw new InvalidDataException("Archivo de instalación dañado: " + file.Key);
             }
-            return new Installation { DirectoryPath = directory, Version = version };
+            return new Installation { DirectoryPath = directory, Version = version, ReleaseSeries = build.releaseSeries };
         }
         public Installation Current() {
             try {
@@ -175,7 +192,7 @@ namespace LetMeSleep.Updater {
             var latest = SelectRelease(releases);
             if (latest == null) throw new InvalidDataException("Todavía no hay una versión completa disponible.");
             var version = ParseVersion(latest.tag_name);
-            if (current != null && current.Version >= version) { progress("Todo listo · " + current.Version, 100); return current; }
+            if (KeepInstalled(current, latest)) { progress("Todo listo · " + current.Version, 100); return current; }
             string package = "Let-me-sleep-" + version + "-Windows", filename = package + ".zip";
             var asset = latest.assets.Single(a => a.name == filename);
             var checkAsset = latest.assets.Single(a => a.name == filename + ".sha256.txt");
@@ -191,14 +208,14 @@ namespace LetMeSleep.Updater {
                 VerifyChecksum(zip, checksum, filename);
                 Directory.CreateDirectory(staging); Extract(zip, staging, package, cancel);
                 progress("Preparando " + version + "…", 98);
-                ValidateInstallation(staging, version); cancel.ThrowIfCancellationRequested();
+                ValidateInstallation(staging, version, ReleaseSeries(latest)); cancel.ThrowIfCancellationRequested();
                 string slot = version + "-" + Guid.NewGuid().ToString("N");
                 string destination = SafePath(Root, "versions/" + slot);
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));
                 Directory.Move(staging, destination);
                 Activate(Root, slot);
                 progress("Todo listo · " + version, 100);
-                return new Installation { DirectoryPath = destination, Version = version };
+                return new Installation { DirectoryPath = destination, Version = version, ReleaseSeries = ReleaseSeries(latest) };
             } finally {
                 // Only this call's randomly named workspace is removed; installed versions and preferences are never deleted.
                 string safeJob = SafePath(Root, Path.GetFileName(job));

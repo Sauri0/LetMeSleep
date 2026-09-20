@@ -11,16 +11,18 @@ namespace LetMeSleep.Updater {
         static int checks;
         static void Check(bool value, string name) { if (!value) throw new Exception("FAIL " + name); checks++; Console.WriteLine("PASS " + name); }
         static void Reject(Action action, string name) { bool rejected = false; try { action(); } catch { rejected = true; } Check(rejected, name); }
-        static Release Release(string tag, bool draft = false, bool complete = true) {
+        static Release Release(string tag, bool draft = false, bool complete = true, int series = 0) {
             var name = "Let-me-sleep-" + tag.TrimStart('v') + "-Windows.zip";
-            return new Release { tag_name = tag, draft = draft, assets = complete ? new[] { new Asset { name = name, size = 100 }, new Asset { name = name + ".sha256.txt", size = 100 } } : new Asset[0] };
+            var assets = complete ? new List<Asset> { new Asset { name = name, size = 100 }, new Asset { name = name + ".sha256.txt", size = 100 } } : new List<Asset>();
+            if (series == 1) assets.Add(new Asset { name = Updater.SeriesMarker, size = 30 });
+            return new Release { tag_name = tag, draft = draft, assets = assets.ToArray() };
         }
         static void Entry(ZipArchive archive, string name, string text) {
             using (var writer = new StreamWriter(archive.CreateEntry(name).Open())) writer.Write(text);
         }
-        static void Fixture(string dir, string version) {
+        static void Fixture(string dir, string version, int series = 0) {
             Directory.CreateDirectory(dir); File.WriteAllText(Path.Combine(dir, "Let-me-sleep.exe"), "fixture - never executable");
-            var build = new Build { version = version, executable = "Let-me-sleep.exe", files = new Dictionary<string,string> { { "Let-me-sleep.exe", Updater.Hash(Path.Combine(dir,"Let-me-sleep.exe")) } } };
+            var build = new Build { version = version, releaseSeries = series, executable = "Let-me-sleep.exe", files = new Dictionary<string,string> { { "Let-me-sleep.exe", Updater.Hash(Path.Combine(dir,"Let-me-sleep.exe")) } } };
             File.WriteAllText(Path.Combine(dir, "BUILD.json"), new JavaScriptSerializer().Serialize(build));
         }
         static int Main(string[] args) {
@@ -53,6 +55,19 @@ namespace LetMeSleep.Updater {
                     Check(Updater.SelectRelease(new[] { Release("v0.9.4-omega"), Release("v0.9.4-delta"), Release("v0.9.4-beta"), Release("v0.9.4-gamma",true) }).tag_name == "v0.9.4-delta", "delta follows omega; draft gamma excluded");
                     Check(Updater.SelectRelease(new[] { Release("v0.9.3"), Release("v0.9.10"), Release("v99.0.0", true), Release("v99.1.0", false, false) }).tag_name == "v0.9.10", "newest complete public numbered playtest");
                     Check(Updater.SelectRelease(new[] { Release("v1.0.0", false, false) }) == null, "incomplete release never installed");
+                    var relaunch = Release("v0.2.0", series: 1);
+                    Check(Updater.SelectRelease(new[] { Release("v0.9.4-alfa.2"), relaunch }).tag_name == "v0.2.0", "explicit new series supersedes old numbering");
+                    Check(Updater.SelectRelease(new[] { relaunch, Release("v0.2.1", series: 1) }).tag_name == "v0.2.1", "new series upgrades numerically");
+                    Check(Updater.SelectRelease(new[] { Release("v0.9.4-alfa.2"), Release("v0.2.0", complete: false, series: 1) }).tag_name == "v0.9.4-alfa.2", "partial relaunch does not displace usable package");
+                    Check(Updater.SelectRelease(new[] { Release("v0.9.4-alfa.2"), Release("v0.2.0", draft: true, series: 1) }).tag_name == "v0.9.4-alfa.2", "draft relaunch is never selected");
+                    var invalidMarker = Release("v0.2.0", series: 1); invalidMarker.assets.Last().size = 0;
+                    Check(Updater.SelectRelease(new[] { invalidMarker }) == null, "empty series marker rejected");
+                    Check(!Updater.KeepInstalled(new Installation { Version = Updater.ParseVersion("0.9.4-alfa.2") }, relaunch), "existing old install upgrades to relaunch");
+                    Check(Updater.KeepInstalled(new Installation { Version = Updater.ParseVersion("0.2.0"), ReleaseSeries = 1 }, Release("v0.9.4-alfa.2")), "new install never rolls back to legacy feed");
+                    Check(Updater.KeepInstalled(new Installation { Version = Updater.ParseVersion("0.2.0"), ReleaseSeries = 1 }, relaunch), "same relaunch keeps installation");
+                    string relaunchDir = Path.Combine(root, "relaunch"); Fixture(relaunchDir, "0.2.0", 1);
+                    Check(Updater.ValidateInstallation(relaunchDir, Updater.ParseVersion("0.2.0"), 1).ReleaseSeries == 1, "relaunch manifest preserves series");
+                    Reject(() => Updater.ValidateInstallation(relaunchDir, Updater.ParseVersion("0.2.0"), 0), "release and package series mismatch rejected");
                     Updater.CheckAssetUrl("https://github.com/Sauri0/LetMeSleep/releases/download/v0.9.3/test.zip", "v0.9.3", "test.zip"); checks++;
                     Reject(() => Updater.CheckAssetUrl("https://github.com/another/repo/releases/download/v0.9.3/test.zip", "v0.9.3", "test.zip"), "foreign repository rejected");
                     foreach (string bad in new[] { "../escape", "/absolute", "C:/escape", "sub/../../escape", "sub\\escape", "file:stream", "foo./x", "NUL.txt", "folder//file" })
