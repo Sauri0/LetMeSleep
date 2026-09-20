@@ -169,7 +169,6 @@ namespace LetMeSleep.Presentation.Gameplay
             SelectAudibleWingActors(snapshot);
 
             liveActors.Clear();
-            bool localActivity = false;
             for (int i = 0; i < snapshot.Actors.Count; i++)
             {
                 GameplayModel.ActorSnapshot actor = snapshot.Actors[i];
@@ -186,9 +185,6 @@ namespace LetMeSleep.Presentation.Gameplay
 
                 if (actor.Role == PlayerRole.Mosquito)
                 {
-                    if (actor.BiteAttachment.HasValue &&
-                        actor.BiteAttachment.Value.VictimId == gameplay.LocalActorId)
-                        localActivity = true;
                     UpdateWingLoop(actor, proxy.transform, previous, catalog, emitters,
                         audibleWingActors.Contains(actor.ActorId));
                     bool attached = actor.SurfaceAttachment.HasValue || actor.BiteAttachment.HasValue;
@@ -221,17 +217,11 @@ namespace LetMeSleep.Presentation.Gameplay
                 previous.HostTime = snapshot.HostTime;
                 previous.Grounded = actor.Grounded;
 
-                if (actor.ActorId == gameplay.LocalActorId)
-                    localActivity |= actor.StrikeState.Phase != GameplayModel.StrikePhase.None ||
-                        actor.LifeState == GameplayModel.LifeState.PreparingBite ||
-                        actor.LifeState == GameplayModel.LifeState.Biting ||
-                        actor.LifeState == GameplayModel.LifeState.Stunned ||
-                        actor.LifeState == GameplayModel.LifeState.Recovering;
             }
 
             bool urgent = snapshot.TimeRemainingTicks <= 20u * 30u ||
                 (snapshot.BloodGoal > 0f && snapshot.BloodCollected / snapshot.BloodGoal >= 0.85f);
-            audioDirector.SetRoundIntensity(localActivity, urgent);
+            audioDirector.SetPublicRoundUrgency(urgent);
             ApplyToolAudio(snapshot.ToolPickups, catalog, emitters);
 
             removedActors.Clear();

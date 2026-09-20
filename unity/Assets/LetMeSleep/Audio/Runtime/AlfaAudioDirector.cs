@@ -18,7 +18,17 @@ namespace LetMeSleep.Audio
         [SerializeField] private AudioBedPlayer nightAir = null;
         private AudioContext context;
         private float nextUiCueTime;
-        private int roundIntensity = -1;
+        private bool urgencyPlayed;
+        private float roundMusicStopAt = -1f;
+        // Public urgency gets one short phrase, never a continuous combat bed.
+        private const float UrgencyPhraseSeconds = 4f;
+
+        private void Update()
+        {
+            if (roundMusicStopAt < 0f || Time.unscaledTime < roundMusicStopAt) return;
+            roundMusicStopAt = -1f;
+            StopBeds(roundMusic, roundRhythm, roundMelody);
+        }
 
         public AudioEmitterPool Emitters => emitters;
         public AlfaAudioCatalog Catalog => catalog;
@@ -26,6 +36,7 @@ namespace LetMeSleep.Audio
         public void EnterMenu()
         {
             context = AudioContext.Menu;
+            roundMusicStopAt = -1f;
             StopBeds(roundMusic, roundRhythm, roundMelody, quietMusic);
             PlaySynchronized(menuMusic, menuRhythm, menuMelody);
             ambience?.Play();
@@ -37,26 +48,31 @@ namespace LetMeSleep.Audio
             bool changed = context != AudioContext.Round;
             context = AudioContext.Round;
             StopBeds(menuMusic, menuRhythm, menuMelody, quietMusic);
-            PlaySynchronized(roundMusic, roundRhythm, roundMelody);
             ambience?.Play();
             nightAir?.Play();
             if (changed)
+            {
+                urgencyPlayed = false;
+                roundMusicStopAt = -1f;
+                StopBeds(roundMusic, roundRhythm, roundMelody);
                 Play2D(catalog != null ? catalog.RoundStart : null);
+            }
         }
 
-        public void SetRoundIntensity(bool active, bool urgent)
+        public void SetPublicRoundUrgency(bool urgent)
         {
-            int next = urgent ? 2 : active ? 1 : 0;
-            if (next == roundIntensity)
-                return;
-            roundIntensity = next;
-            roundRhythm?.SetLevel(next == 2 ? 1f : next == 1 ? 0.70f : 0.25f);
-            roundMelody?.SetLevel(next == 2 ? 1f : next == 1 ? 0.55f : 0.18f);
+            if (context != AudioContext.Round || !urgent || urgencyPlayed) return;
+            urgencyPlayed = true;
+            roundRhythm?.SetLevel(.7f);
+            roundMelody?.SetLevel(.55f);
+            PlaySynchronized(roundMusic, roundRhythm, roundMelody);
+            roundMusicStopAt = Time.unscaledTime + UrgencyPhraseSeconds;
         }
 
         public void EnterQuietMenu()
         {
             context = AudioContext.QuietMenu;
+            roundMusicStopAt = -1f;
             StopBeds(menuMusic, menuRhythm, menuMelody, roundMusic, roundRhythm, roundMelody);
             quietMusic?.Play();
             ambience?.Play();
@@ -66,6 +82,7 @@ namespace LetMeSleep.Audio
         public void FinishHumansWin()
         {
             context = AudioContext.Results;
+            roundMusicStopAt = -1f;
             StopBeds(roundMusic, roundRhythm, roundMelody);
             Play2D(catalog != null ? catalog.HumansWin : null);
         }
@@ -73,6 +90,7 @@ namespace LetMeSleep.Audio
         public void FinishMosquitoesWin()
         {
             context = AudioContext.Results;
+            roundMusicStopAt = -1f;
             StopBeds(roundMusic, roundRhythm, roundMelody);
             Play2D(catalog != null ? catalog.MosquitoesWin : null);
         }
@@ -80,7 +98,8 @@ namespace LetMeSleep.Audio
         public void StopAll()
         {
             context = AudioContext.None;
-            roundIntensity = -1;
+            urgencyPlayed = false;
+            roundMusicStopAt = -1f;
             StopBeds(menuMusic, menuRhythm, menuMelody, roundMusic, roundRhythm,
                 roundMelody, quietMusic, ambience, nightAir);
             emitters?.StopAllVoices();
