@@ -21,6 +21,16 @@ namespace LetMeSleep.Editor
             const string scene = "Assets/Scenes/LetMeSleepHiggsfield.unity";
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(scene) == null)
                 throw new InvalidOperationException("Five-map scene is missing.");
+            // A fresh import deliberately invalidates facial certificates. Re-run the
+            // existing geometry checks before requiring a clean, reproducible candidate.
+            var transient = new GameObject("V020 facial preparation") { hideFlags = HideFlags.HideAndDontSave };
+            try
+            {
+                var app = transient.AddComponent<LetMeSleep.Bootstrap.AlfaApplication>();
+                app.hideFlags = HideFlags.HideAndDontSave;
+                FacialContentBuilder.BuildAll(app);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(transient); }
             PlayerSettings.productName = "Let me sleep";
             PlayerSettings.bundleVersion = "0.2.0";
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(scene, true) };
