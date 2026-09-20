@@ -64,6 +64,7 @@ GameObject:
   - component: {fileID: 6595325786033429776}
   - component: {fileID: 1099540524772273299}
   - component: {fileID: 1211131423659509162}
+  - component: {fileID: 7371523782296400605}
   m_Layer: 0
   m_Name: hf-isla-del-laguito-v2
   m_TagString: Untagged
@@ -101,8 +102,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.EnvironmentMapDefinition
   MapId: hf-isla-del-laguito-v2
-  ContentHash: 930fdad8872107d390518433c4474da70c1b94d24f91f9a4ec7c7678265f4840
-  SpatialData: {fileID: 4900000, guid: 0bf789e81b81c9a4284a1129cb24b192, type: 3}
+  ContentHash: 68efb70c3b1904f6a38f9edb7f36fee8592557e326f1496ad14d706420100097
+  SpatialData: {fileID: 4900000, guid: 020c7891469f5be439897bc9e99f7c7c, type: 3}
   HumanSpawnPoints:
   - {fileID: 6825209667059447914}
   - {fileID: 3784750164302690678}
@@ -1013,6 +1014,152 @@ MonoBehaviour:
   RetryTicks: 30
   InteriorMargin: 0.02
   SupportProbe: 0.08
+--- !u!114 &7371523782296400605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812989840375776048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21d3e5b304964cc89cc545eae60fec08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.GameplayObjectiveCatalog
+  mapId: hf-isla-del-laguito-v2
+  entries:
+  - ObjectiveId: isla.clean.cabin_barrel
+    Kind: 1
+    DisplayKey: task.isla.cabin_barrel
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 32.54079, y: 3.254949, z: -1.4999995}
+    LocalApproachPoint: {x: 31.540789, y: 2.7447636, z: -1.4999993}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_cabin_barrel_exterior
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Cabin_Barrel
+  - ObjectiveId: isla.repair.cabin_porch_rail
+    Kind: 0
+    DisplayKey: task.isla.cabin_porch_rail
+    ActionKey: task.action.hold_repair
+    LocalPosition: {x: 25.074194, y: 3.8600001, z: 0.8638072}
+    LocalApproachPoint: {x: 24.898613, y: 3.0900006, z: -0.018896103}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_cabin_entry_tasks
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Cabin_Root/Cabin_Porch_Railings_COLLIDABLE
+  - ObjectiveId: isla.repair.cabin_door
+    Kind: 0
+    DisplayKey: task.isla.cabin_door
+    ActionKey: task.action.hold_repair
+    LocalPosition: {x: 26.042913, y: 3.5460002, z: 0.8949692}
+    LocalApproachPoint: {x: 25.335806, y: 3.2700007, z: 0.18786478}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_cabin_entry_tasks
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Cabin_Root/Cabin_Door_Hinge/Cabin_Door_Open_COLLIDABLE
+  - ObjectiveId: isla.clean.picnic_barrel
+    Kind: 1
+    DisplayKey: task.isla.picnic_barrel
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 25.519207, y: 2.9401574, z: -21.853498}
+    LocalApproachPoint: {x: 24.8121, y: 2.484337, z: -22.560602}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_picnic_barrel_arc_03
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Picnic_Barrel
+  - ObjectiveId: isla.repair.picnic_crate
+    Kind: 0
+    DisplayKey: task.isla.picnic_crate
+    ActionKey: task.action.hold_repair
+    LocalPosition: {x: 21.322502, y: 2.158202, z: -25.130001}
+    LocalApproachPoint: {x: 21.852833, y: 2.1465302, z: -24.599667}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_picnic_crate_floor
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Picnic_Crate
+  - ObjectiveId: isla.clean.picnic_table
+    Kind: 1
+    DisplayKey: task.isla.picnic_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 24.08502, y: 3.1137247, z: -22.297863}
+    LocalApproachPoint: {x: 24.777931, y: 2.4806035, z: -22.584873}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_picnic_barrel_arc_03
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Picnic_Root/Picnic_Table_COLLIDABLE
+  - ObjectiveId: isla.repair.lookout_rope_rail
+    Kind: 0
+    DisplayKey: task.isla.lookout_rope_rail
+    ActionKey: task.action.hold_repair
+    LocalPosition: {x: 18.669895, y: 7.6422634, z: 28.449993}
+    LocalApproachPoint: {x: 18.669893, y: 7.4832134, z: 27.44999}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_lookout_top_tasks
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Lookout_Back_Rope_Rail_COLLIDABLE
+  - ObjectiveId: isla.clean.lookout_terrace
+    Kind: 1
+    DisplayKey: task.isla.lookout_terrace
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 18.999996, y: 7.6005797, z: 25.999994}
+    LocalApproachPoint: {x: 19.923874, y: 7.5608473, z: 26.382671}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_spawn_lookout
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Lookout_Terrace_COLLIDABLE
+  - ObjectiveId: isla.clean.lookout_steps
+    Kind: 1
+    DisplayKey: task.isla.lookout_steps
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 17.760305, y: 7.569803, z: 26.592316}
+    LocalApproachPoint: {x: 18.648426, y: 7.577017, z: 26.592316}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_lookout_top_tasks
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Lookout_Stone_Trail_Steps_COLLIDABLE
+  - ObjectiveId: isla.repair.bridge_structure
+    Kind: 0
+    DisplayKey: task.isla.bridge_structure
+    ActionKey: task.action.hold_repair
+    LocalPosition: {x: -4.050188, y: 3.0644925, z: 17.749023}
+    LocalApproachPoint: {x: -4.704817, y: 2.9078536, z: 17.094387}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_bridge_structure_west
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Bridge_North_Inlet_Root/Bridge_North_Inlet_Deck_Posts_Ropes_COLLIDABLE
+  - ObjectiveId: isla.clean.bridge_west_approach
+    Kind: 1
+    DisplayKey: task.isla.bridge_west_approach
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -5.0674996, y: 2.8884184, z: 15.662496}
+    LocalApproachPoint: {x: -4.6848164, y: 2.906313, z: 16.586372}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_bridge_west
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Bridge_Approach_-1_COLLIDABLE
+  - ObjectiveId: isla.clean.bridge_east_approach
+    Kind: 1
+    DisplayKey: task.isla.bridge_east_approach
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 5.0674987, y: 2.9761548, z: 15.662496}
+    LocalApproachPoint: {x: 4.684815, y: 2.9652023, z: 16.586372}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: human_bridge_east
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Bridge_Approach_1_COLLIDABLE
 --- !u!1 &2972676317437537770
 GameObject:
   m_ObjectHideFlags: 0
