@@ -189,6 +189,19 @@ namespace LetMeSleep.Tests
             var updated=EquippedObservation(tool,resource:0,inventoryRevision:8);
             Assert.That(Decide(bot,updated,63).Action.Value.InventoryRevision,Is.EqualTo(8));
         }
+        [Test] public void ToolAimAndReachUseObservedColliderPointInsteadOfOffsetRoot()
+        {
+            var bot=new BotController();var self=Actor(1,PlayerRole.Human,Float3.Zero);
+            var own=new ActorPrivateState(1,0,0,default,default,0,0,0,0,true,default);
+            var pickup=new ToolPickupSnapshot(10,GameplayTools.Flyswatter,new Float3(10,0,0),Rotation.Identity);
+            var contact=new Float3(0,1.53f,1);
+            var observation=Observe(self,Array.Empty<BotTarget>(),new BotTrainingContext(new[]{new BotToolOpportunity(pickup,1,contact)},1),own);
+            var command=Decide(bot,observation,0);
+            Assert.That(command.Action.Value.Kind,Is.EqualTo(ActionKind.Use));
+            Assert.That((command.Action.Value.AimForward-Float3.Forward).Length,Is.LessThan(.00001));
+            Assert.That(command.Input.MovePlanar.Y,Is.Zero);
+            Assert.That((new BotToolOpportunity(pickup,1).ContactPoint-pickup.Position).Length,Is.Zero,"Old constructor preserves root-point semantics.");
+        }
         [Test] public void SurvivalEvadesAfterReactionAndNeverBites()
         {
             var bot=new BotController();var self=Actor(1,PlayerRole.Mosquito,Float3.Zero,LifeState.Flying);var o=Observe(self,new[]{Target(Actor(2,PlayerRole.Human,Float3.Forward))},mode:GameModes.Survival);

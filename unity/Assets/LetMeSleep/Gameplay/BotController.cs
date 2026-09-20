@@ -14,7 +14,13 @@ namespace LetMeSleep.Gameplay
     {
         public readonly ToolPickupSnapshot Pickup;
         public readonly float DetourMeters;
-        public BotToolOpportunity(ToolPickupSnapshot pickup, float detourMeters) { Pickup = pickup; DetourMeters = detourMeters; }
+        public readonly Float3 ContactPoint;
+        public BotToolOpportunity(ToolPickupSnapshot pickup, float detourMeters) : this(pickup, detourMeters, pickup.Position) { }
+        public BotToolOpportunity(ToolPickupSnapshot pickup, float detourMeters, Float3 contactPoint)
+        {
+            if (!contactPoint.IsFinite) throw new ArgumentException("Tool contact point must be finite.", nameof(contactPoint));
+            Pickup = pickup; DetourMeters = detourMeters; ContactPoint = contactPoint;
+        }
     }
     public sealed class BotTrainingContext
     {
@@ -253,7 +259,7 @@ namespace LetMeSleep.Gameplay
                         && ((candidate.Pickup.ToolId != GameplayTools.Aerosol && candidate.Pickup.ToolId != GameplayTools.ElectricRacket) || candidate.Pickup.ResourceUnits > 0) && (!tool.HasValue || candidate.DetourMeters < tool.Value.DetourMeters)) tool = candidate;
                 if (tool.HasValue)
                 {
-                    var delta = tool.Value.Pickup.Position - origin; direction = delta.Normalized;
+                    var delta = tool.Value.ContactPoint - origin; direction = delta.Normalized;
                     yaw = (float)Math.Atan2(direction.X, direction.Z); pitch = MathEx.Clamp((float)Math.Asin(MathEx.Clamp(direction.Y, -1, 1)), -1.919862f, 1.308996f);
                     direction = MathEx.Aim(yaw, pitch); forward = 1; helpHeld = false;
                     if (delta.Length < 1.4f) { action = ActionKind.Use; forward = 0; }
