@@ -26,6 +26,17 @@ entre actores: Camp ronda02 queda13/20, pero el mismo origen del actor5 sin
 otros humanos llega al cooler en220 ticks. El diagnóstico aislado no acredita
 el resultado de la ronda. Las transiciones de ronda incluyen posición y apoyo.
 
+`-objectiveRequireWork` prolonga ese diagnóstico hasta observar progreso nuevo,
+sin terminar por mera proximidad al approach. Conserva el presupuesto de ruta
+y no altera la aceptación normal del catálogo. Cada decisión registra además
+una consulta independiente de contacto/LOS **antes** del tick y con la postura
+y el aim calculado del bot. `canWorkFromObservedPose` no significa que el bot
+haya invocado el callback ni sustituye la distancia máxima de la autoridad.
+Yate galley work02 demuestra el caso: 1.24656928 m y LOS válido, pero el margen
+histórico de inicio del bot (1.125 m) evita trabajar y produce un ciclo físico.
+Isla picnic work01 inicia trabajo en269 ticks aislado; la ronda multi-humano
+requiere investigación separada.
+
 ## Estado posterior y entradas adicionales
 
 La decisión D06 pide **al menos diez** objetivos por mapa. El catálogo final

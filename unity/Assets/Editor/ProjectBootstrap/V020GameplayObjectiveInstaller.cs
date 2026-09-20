@@ -203,7 +203,8 @@ public static class V020GameplayObjectiveInstaller
         }
         ProveHumanRoute(entries, source, sourceId, target,
             mosquito.position.ToFloat(), 9800, trace: true, decisionTrace: true,
-            mapId: candidate.mapId, prefabPath: candidate.prefabPath);
+            mapId: candidate.mapId, prefabPath: candidate.prefabPath,
+            requireWork: args.Contains("-objectiveRequireWork"));
         Debug.Log("LMS_OBJECTIVE_ROUTE_DIAGNOSTIC map=" + candidate.mapId + " cases=1 saved=0");
     }
 
@@ -1096,7 +1097,8 @@ public static class V020GameplayObjectiveInstaller
     private static bool ProveHumanRoute(IReadOnlyList<GameplayObjectiveCatalog.Entry> entries,
         Float3 source, string sourceId, string targetId, Float3 mosquitoSpawn, ulong run,
         bool trace = false, bool decisionTrace = false,
-        bool disableTraversalPrediction = false, string mapId = CasaMapId, string prefabPath = CasaPrefabPath)
+        bool disableTraversalPrediction = false, string mapId = CasaMapId, string prefabPath = CasaPrefabPath,
+        bool requireWork = false)
     {
         var fixture = new GameObject(mapId + " independent human route " + run);
         GameplayRuntime runtime = null;
@@ -1184,7 +1186,7 @@ public static class V020GameplayObjectiveInstaller
                 // grounded actor reached a usable contact with valid range and LOS.
                 // Retained/decaying progress alone is never a fresh arrival witness.
                 if (targetAssigned && actor.Grounded &&
-                    (horizontal <= .70f && vertical <= .08f || workAdvanced))
+                    (!requireWork && horizontal <= .70f && vertical <= .08f || workAdvanced))
                 {
                     reachedTick = tick;
                     reason = workAdvanced ? "reached-supported-interaction" : "reached-supported-approach";
@@ -1212,10 +1214,10 @@ public static class V020GameplayObjectiveInstaller
                                                 sourceId + ": ticks=" + simulatedTicks + " reason=" + reason);
         Debug.Log(string.Format(CultureInfo.InvariantCulture,
             "LMS_OBJECTIVE_MOTOR source={0} target={1} result={2} reachedTick={3} budget={4} " +
-            "bestHorizontal={5:R} bestVertical={6:R} finalState={7} grounded={8} reason={9} assigned={10} maxWorkProgress={11} targetStatus={12}",
+            "bestHorizontal={5:R} bestVertical={6:R} finalState={7} grounded={8} reason={9} assigned={10} maxWorkProgress={11} targetStatus={12} requireWork={13}",
             sourceId, targetId, pass ? "PASS" : "FAIL", reachedTick, budget,
             bestHorizontal, bestVertical, finalState, finalGrounded ? 1 : 0, reason, targetAssigned ? 1 : 0,
-            maximumWorkProgress, lastTargetStatus.HasValue ? lastTargetStatus.Value.ToString() : "none"));
+            maximumWorkProgress, lastTargetStatus.HasValue ? lastTargetStatus.Value.ToString() : "none", requireWork ? 1 : 0));
         return pass;
     }
 
@@ -1225,10 +1227,11 @@ public static class V020GameplayObjectiveInstaller
         internal readonly ActorSnapshot Self, Opponent;
         internal readonly TaskAssignment Assignment;
         internal readonly bool Visible, Threat;
+        internal readonly string WorkProbe;
         internal bool HasValue => Self != null && Opponent != null;
         internal DecisionTraceSample(uint tick, ActorSnapshot self, ActorSnapshot opponent,
-            TaskAssignment assignment, bool visible, bool threat)
-        { Tick = tick; Self = self; Opponent = opponent; Assignment = assignment; Visible = visible; Threat = threat; }
+            TaskAssignment assignment, bool visible, bool threat, string workProbe)
+        { Tick = tick; Self = self; Opponent = opponent; Assignment = assignment; Visible = visible; Threat = threat; WorkProbe = workProbe; }
     }
 
     private static void EnableDecisionTrace(GameplayRuntime runtime)
@@ -1262,7 +1265,25 @@ public static class V020GameplayObjectiveInstaller
         var target = new BotTarget(opponent, opponent.Position);
         bool threat = visible && IsDiagnosticThreat(self, target);
         TaskAssignment assignment = runtime.Authority.CapturePrivate(self.ActorId)?.TaskAssignment;
-        return new DecisionTraceSample(tick, self, opponent, assignment, visible, threat);
+        string workProbe = "not-applicable";
+        var objective = assignment == null ? null : runtime.World.GetObjectiveDefinitions()
+            .FirstOrDefault(item => item.ObjectiveId == assignment.ObjectiveId);
+        if (objective != null)
+        {
+            Float3 aim = (objective.Position - origin).Normalized;
+            float yaw = (float)Math.Atan2(aim.X, aim.Z);
+            float pitch = MathEx.Clamp((float)Math.Asin(MathEx.Clamp(aim.Y, -1, 1)), -1.919862f, 1.308996f);
+            Float3 commandAim = MathEx.Aim(yaw, pitch);
+            float distance = (objective.Position - self.Position).Length;
+            // Independent query before TickHost, while proxies still match this snapshot.
+            // This is not evidence that BotController invoked its work callback.
+            bool canWork = runtime.World.CanWorkObjective(self.ActorId, objective, self.Position, commandAim);
+            workProbe = string.Format(CultureInfo.InvariantCulture,
+                "phase=pre-tick distance={0:R} withinBotMargin={1} aim={2:R},{3:R},{4:R} canWorkFromObservedPose={5}",
+                distance, distance <= objective.UseRadius * .9f ? 1 : 0,
+                commandAim.X, commandAim.Y, commandAim.Z, canWork ? 1 : 0);
+        }
+        return new DecisionTraceSample(tick, self, opponent, assignment, visible, threat, workProbe);
     }
 
     private static void ClearDecisionTrace(GameplayRuntime runtime)
@@ -1317,7 +1338,7 @@ public static class V020GameplayObjectiveInstaller
             "LMS_OBJECTIVE_BOT_DECISION source={0} tick={1} assignment={2} status={3} progress={22} " +
             "opponent={4} distance={5:R} visible={6} threat={7} selected={8} blocksTask={9} " +
             "position={10:R},{11:R},{12:R} velocity={13:R},{14:R},{15:R} view={16:R},{17:R},{18:R} " +
-            "decision=({19}) route=({20}) steering=({21})",
+            "decision=({19}) route=({20}) steering=({21}) workProbe=({23})",
             sourceId, sample.Tick, sample.Assignment?.ObjectiveId ?? "none",
             sample.Assignment == null ? "none" : sample.Assignment.Status.ToString(),
             sample.Opponent.ActorId, (sample.Opponent.Position - sample.Self.Position).Length,
@@ -1325,7 +1346,7 @@ public static class V020GameplayObjectiveInstaller
             sample.Self.Position.X, sample.Self.Position.Y, sample.Self.Position.Z,
             sample.Self.Velocity.X, sample.Self.Velocity.Y, sample.Self.Velocity.Z,
             sample.Self.ViewForward.X, sample.Self.ViewForward.Y, sample.Self.ViewForward.Z,
-            decision, route, steering, sample.Assignment?.ProgressTicks ?? 0));
+            decision, route, steering, sample.Assignment?.ProgressTicks ?? 0, sample.WorkProbe));
     }
 
     private static bool IsDiagnosticThreat(ActorSnapshot self, BotTarget target)
