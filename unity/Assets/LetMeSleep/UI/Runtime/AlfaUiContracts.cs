@@ -135,6 +135,56 @@ namespace LetMeSleep.UI
         void SetRoomMode(string modeId);
     }
 
+    public interface IVoiceActions
+    {
+        void SetLocalVoiceMuted(bool muted);
+        void SetPeerVoiceMuted(string memberId, bool muted);
+        void BeginPushToTalkRebind(Action<string, string> completed);
+    }
+
+    public sealed class VoiceParticipantUiState
+    {
+        public string MemberId { get; }
+        public string DisplayName { get; }
+        public bool Audible { get; }
+        public bool Muted { get; }
+        public bool Speaking { get; }
+
+        public VoiceParticipantUiState(string memberId, string displayName, bool audible, bool muted, bool speaking)
+        {
+            MemberId = memberId ?? string.Empty;
+            DisplayName = displayName ?? "Jugador";
+            Audible = audible;
+            Muted = muted;
+            Speaking = speaking;
+        }
+    }
+
+    public sealed class VoiceUiState
+    {
+        public bool InRoom { get; }
+        public bool LocalMuted { get; }
+        public bool Transmitting { get; }
+        public bool DeviceAvailable { get; }
+        public string ScopeLabel { get; }
+        public string BindingLabel { get; }
+        public string Notice { get; }
+        public IReadOnlyList<VoiceParticipantUiState> Participants { get; }
+
+        public VoiceUiState(bool inRoom, bool localMuted, bool transmitting, bool deviceAvailable,
+            string scopeLabel, string bindingLabel, string notice, IEnumerable<VoiceParticipantUiState> participants)
+        {
+            InRoom = inRoom;
+            LocalMuted = localMuted;
+            Transmitting = transmitting;
+            DeviceAvailable = deviceAvailable;
+            ScopeLabel = scopeLabel ?? string.Empty;
+            BindingLabel = bindingLabel ?? "V";
+            Notice = notice ?? string.Empty;
+            Participants = Array.AsReadOnly((participants ?? Enumerable.Empty<VoiceParticipantUiState>()).ToArray());
+        }
+    }
+
     public sealed class OnlineUiState
     {
         public OnlineOperationPhase Phase { get; }
@@ -356,6 +406,9 @@ namespace LetMeSleep.UI
         public float MasterVolume;
         public float MusicVolume;
         public float EffectsVolume;
+        public float VoiceVolume;
+        public string VoiceDevice;
+        public string PushToTalkBinding;
         public bool FullScreen;
         public int ResolutionIndex;
         public int QualityIndex;
@@ -372,6 +425,8 @@ namespace LetMeSleep.UI
         {
             return other != null && Mathf.Approximately(MasterVolume, other.MasterVolume) &&
                    Mathf.Approximately(MusicVolume, other.MusicVolume) && Mathf.Approximately(EffectsVolume, other.EffectsVolume) &&
+                   Mathf.Approximately(VoiceVolume, other.VoiceVolume) && string.Equals(VoiceDevice, other.VoiceDevice, StringComparison.Ordinal) &&
+                   string.Equals(PushToTalkBinding, other.PushToTalkBinding, StringComparison.Ordinal) &&
                    FullScreen == other.FullScreen && ResolutionIndex == other.ResolutionIndex && QualityIndex == other.QualityIndex &&
                    VSync == other.VSync && FrameLimit == other.FrameLimit &&
                    Mathf.Approximately(HumanSensitivity, other.HumanSensitivity) &&
@@ -386,6 +441,7 @@ namespace LetMeSleep.UI
         public AlfaSettingsDraft Draft { get; }
         public IReadOnlyList<string> Resolutions { get; }
         public IReadOnlyList<string> Qualities { get; }
+        public IReadOnlyList<string> VoiceDevices { get; }
         public bool SupportsVideo { get; }
         public bool SupportsRebinding { get; }
         public bool SupportsReducedMenuMotion { get; }
@@ -394,12 +450,13 @@ namespace LetMeSleep.UI
 
         public SettingsUiState(AlfaSettingsDraft saved, AlfaSettingsDraft draft, IEnumerable<string> resolutions,
             IEnumerable<string> qualities, bool supportsVideo, bool supportsRebinding, bool isApplying = false, string message = "",
-            bool supportsReducedMenuMotion = false)
+            bool supportsReducedMenuMotion = false, IEnumerable<string> voiceDevices = null)
         {
             Saved = saved?.Copy() ?? throw new ArgumentNullException(nameof(saved));
             Draft = draft?.Copy() ?? Saved.Copy();
             Resolutions = Array.AsReadOnly((resolutions ?? Enumerable.Empty<string>()).ToArray());
             Qualities = Array.AsReadOnly((qualities ?? Enumerable.Empty<string>()).ToArray());
+            VoiceDevices = Array.AsReadOnly((voiceDevices ?? Enumerable.Empty<string>()).ToArray());
             SupportsVideo = supportsVideo;
             SupportsRebinding = supportsRebinding;
             SupportsReducedMenuMotion = supportsReducedMenuMotion;

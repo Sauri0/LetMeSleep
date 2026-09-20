@@ -69,7 +69,10 @@ namespace LetMeSleep.Online
         {
             payload = null; concealed = false;
             if (!active || temporarilyCleared || !FiniteTime(now)) return false;
-            if (now - lastArrival >= IdleSeconds || (ended && expected >= endSequence)) { Clear(); return false; }
+            if (ended && expected >= endSequence) { Clear(); return false; }
+            // Silence and delayed delivery are not an authenticated stream close. Keep the
+            // replay watermark so a newer frame from the same held PTT can resume safely.
+            if (now - lastArrival >= IdleSeconds) { ClearTemporary(); return false; }
             if (now + 0.000001 < nextPlayout) return false;
             if (frames.TryGetValue(expected, out payload))
             {

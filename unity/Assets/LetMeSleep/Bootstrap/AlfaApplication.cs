@@ -18,7 +18,7 @@ using UnityEngine.Audio;
 
 namespace LetMeSleep.Bootstrap
 {
-    public sealed partial class AlfaApplication : MonoBehaviour, IMenuActions, IRoomMapActions, IRoomModeActions, ISpectatorActions
+    public sealed partial class AlfaApplication : MonoBehaviour, IMenuActions, IRoomMapActions, IRoomModeActions, ISpectatorActions, IVoiceActions
     {
         public GameObject HousePrefab, LobbyPrefab, HumanPrefab, MosquitoPrefab, GameplayPresentationPrefab, MenuAudioPrefab;
         public Camera MenuCamera, PreviewCamera;
@@ -106,7 +106,7 @@ namespace LetMeSleep.Bootstrap
         {
             if (quiescing) return;
             double now = Time.realtimeSinceStartupAsDouble;
-            connection?.Tick(now); lobby?.Tick(now); room?.Tick(now); transport?.Poll(); gameNetwork?.Tick(now);
+            connection?.Tick(now); lobby?.Tick(now); room?.Tick(now); transport?.Poll(); gameNetwork?.Tick(now); voiceRuntime?.Tick(now);
             if (pendingOnline && connection?.State == ConnectionState.Ready) OpenPendingRoom();
             if (pendingOnline && connection?.State == ConnectionState.Failed)
             { pendingOnline = false; ShowOnlineError("No pudimos iniciar la conexión. " + connection.FailureCode); }
@@ -149,7 +149,7 @@ namespace LetMeSleep.Bootstrap
             if (quiescing) return;
             initializedRoomMap = false;
             pendingOnline = false;
-            room?.Dispose(); transport?.Dispose(); lobby?.Dispose();
+            StopVoiceRoom(); room?.Dispose(); transport?.Dispose(); lobby?.Dispose();
             lobby = new EosLobbySession(connection); transport = new EosPeerTransport(connection, lobby);
             transport.PeerStateChanged += ObservePlaytestPeer;
             peerAppearances.Clear(); peerAppearanceTimes.Clear(); appliedAppearance.Clear(); appearanceAt = 0;
@@ -157,6 +157,7 @@ namespace LetMeSleep.Bootstrap
             room = new OnlineRoomCoordinator(connection, lobby, transport, playerName);
             room.RoomChanged += OnRoomChanged;
             lobby.Changed += OnLobbyChanged;
+            StartVoiceRoom();
             ui.PresentOnline(new OnlineUiState(createOnline ? OnlineOperationPhase.Creating : OnlineOperationPhase.Searching, canCancel: true));
             if (createOnline) lobby.Create(); else lobby.Join(joinCode);
         }
@@ -164,14 +165,16 @@ namespace LetMeSleep.Bootstrap
         {
             if (quiescing) return;
             RecordPlaytest("Lobby",lobby.State.ToString());
+            SyncVoiceContext();
             if (lobby.State == LobbyState.Closed && !intentionalLeave)
-            { StopGame(); StopLobbyMovement(); LoadMap(false); ui.ShowJoinRoom(); if(closingError.Length>0) ShowOnlineError(closingError); else ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.RoomClosed)); }
+            { StopVoiceRoom(); StopGame(); StopLobbyMovement(); LoadMap(false); ui.ShowJoinRoom(); if(closingError.Length>0) ShowOnlineError(closingError); else ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.RoomClosed)); }
         }
         public void CancelOnline()
         {
             RecordPlaytest("CancelOnlineRequested");
             pendingOnline = false; intentionalLeave = true;
             if (lobby != null) lobby.Leave();
+            StopVoiceRoom();
             ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.Cancelled));
         }
         public void CopyRoomCode(string code) { GUIUtility.systemCopyBuffer = code; }
@@ -235,7 +238,7 @@ namespace LetMeSleep.Bootstrap
             if (view.Phase == RoomPhase.Waiting)
             {
                 if (lastPhase != RoomPhase.Waiting) { StopGame(); LoadMap(false); menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu(); }
-                SyncLobbyMovement(view); PresentRoom(view);
+                SyncLobbyMovement(view); SyncVoiceContext(view); PresentRoom(view);
             }
             else if (view.Phase == RoomPhase.Playing && activeRound != view.Round)
             {
@@ -266,8 +269,14 @@ namespace LetMeSleep.Bootstrap
             }
             else if (view.Phase == RoomPhase.Playing && game != null && game.IsHost && activeRoster != null)
             {
-                foreach (var actor in activeRoster) if (!view.Members.Any(m => m.Id == actor.OwnerPuid)) game.Authority.RemoveActor(actor.ActorId, ActorRemovalReason.Disconnected);
+                foreach (var actor in activeRoster)
+                {
+                    var member = view.Members.FirstOrDefault(item => item.Id == actor.OwnerPuid);
+                    if (member == null) game.Authority.RemoveActor(actor.ActorId, ActorRemovalReason.Disconnected);
+                    else game.Authority.SetActorConnected(actor.ActorId, member.Connected);
+                }
             }
+            SyncVoiceContext(view);
             lastPhase = view.Phase;
         }
         private void PresentRoom(RoomView view, string message = "")
@@ -287,7 +296,7 @@ namespace LetMeSleep.Bootstrap
         {
             if (quiescing) return;
             RecordPlaytest("LeaveRequested",lobby?.IsOwner==true ? "Owner" : "Guest");
-            pendingOnline = false; intentionalLeave = true; StopGame(); StopLobbyMovement(); lobby?.Leave(); room?.Dispose(); room = null;
+            pendingOnline = false; intentionalLeave = true; StopVoiceRoom(); StopGame(); StopLobbyMovement(); lobby?.Leave(); room?.Dispose(); room = null;
             transport?.Dispose(); transport = null; lastPhase = RoomPhase.Closed; activeRound = -1;
             LoadMap(false); menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu(); ui.ShowMainMenu();
         }
@@ -342,6 +351,7 @@ namespace LetMeSleep.Bootstrap
             game.LocalActorId = local.ActorId; game.LocalPrincipal = local.OwnerPuid;
             game.MouseSensitivity = .002f * (local.Role == PlayerRole.Human ? settings.HumanSensitivity : settings.MosquitoSensitivity);
             game.InvertY = settings.InvertY; game.BeginRound(config, roster);
+            SyncVoiceContext();
             if (!training) RecordPlaytest("RoundStarted",state:game.LatestSnapshot,role:local.Role.ToString());
             MenuCamera.enabled = false; MenuCamera.GetComponent<AudioListener>().enabled = false;
             presentation.GetComponentInChildren<AlfaAudioDirector>().EnterRound();
@@ -577,6 +587,7 @@ namespace LetMeSleep.Bootstrap
             ShutdownStep(() => { if (presentation) Destroy(presentation); }); presentation = null;
             ShutdownStep(() => { if (lobbyMovement) Destroy(lobbyMovement.gameObject); }); lobbyMovement = null;
             activeRoster = null; activeConfig = null; spectator = null; showingResults = false;
+            ShutdownStep(StopVoiceRoom);
             DisposeForShutdown(ref room);
             DisposeForShutdown(ref transport);
             DisposeForShutdown(ref lobby);

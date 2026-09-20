@@ -15,15 +15,17 @@ WAN, hardware real o escucha humana.
   12 kHz, 20 ms y 126 bytes. No conserva estado implícito entre paquetes.
 - `Online/VoiceRateLimiter.cs` y `VoiceJitterBuffer.cs`: límites por emisor,
   prebuffer de 60 ms, ventana futura de 24, cola de 12, hasta tres cuadros por
-  tick, cierre a 300 ms y concealment acotado. Un `End` descarta cuadros iguales
+  tick, purga temporal tras 300 ms sin datos y concealment acotado. La inactividad
+  no suplanta un cierre autenticado: una secuencia nueva del mismo PTT puede
+  reanudar tras una entrega demorada. Un `End` descarta cuadros iguales
   o posteriores a su secuencia y deja tombstone para que un stream cerrado no
   reviva por paquetes tardíos. Las purgas temporales de audibilidad, mute,
   foco o pausa conservan un watermark: permiten reanudar el mismo stream sólo
   con una secuencia nueva, sin reproducir audio ya descartado.
-- `Online/VoiceOnlineSession.cs`: PTT, autenticación PUID→actor desde membresía
-  real, ronda/epoch, mute local/por actor, volumen, foco/pausa, purga y cambio de
+- `Online/VoiceOnlineSession.cs`: PTT, autenticación miembro→actor desde membresía
+  real, ronda/epoch, mute local/por identidad de sala, volumen, foco/pausa, purga y cambio de
   audibilidad sin reiniciar PTT. Reiniciar PTT no repone los token buckets.
-- `Online/VoiceEosChannelTransport.cs`: adaptador exclusivo del canal EOS P2P 3;
+- `Online/VoiceEosChannelTransport.cs`: adaptador exclusivo del canal EOS P2P 4;
   no modifica ni posee el transporte compartido.
 - `Audio/Runtime/VoiceMicrophoneCapture.cs`: `Microphone.Start` aparece sólo en
   `BeginPushToTalk`. Cierra y limpia al soltar, perder foco, pausar, deshabilitar
@@ -37,6 +39,19 @@ WAN, hardware real o escucha humana.
 - `Audio/Runtime/VoiceMosquitoTimbre.cs`: pitch shifter streaming con dos
   cabezas de retardo y crossfade. Produce una salida por muestra de entrada; no
   acelera el `AudioSource` ni cambia la duración.
+- `Online/VoiceSpatialPolicy.cs`: política pura con voz clara hasta 4 m, corte
+  humano a 12 m, mosquito→humano a 8 m y mosquito→mosquito a 16 m. Separa vivos
+  de eliminados y aplica -6 dB más low-pass cuando el mundo reporta oclusión.
+- `Bootstrap/VoiceRuntimeCoordinator.cs` y `AlfaApplication.Voice.cs`: ciclo de
+  vida de sala, PTT Input System, dispositivo elegido, contextos de lobby/ronda/
+  espera, playout por participante, duck local de música/ambiente, foco/pausa y
+  cierre antes de liberar EOS. El lobby usa posiciones 3D; quienes esperan la
+  próxima ronda sólo comparten voz entre sí. Activos y eliminados no se cruzan;
+  eliminados conservan proximidad dentro de su cohorte.
+- Bootstrap/UI persisten volumen de voz, dispositivo y tecla/botón PTT; muestran
+  estado de captura, falta del dispositivo elegido, mute propio y mute por
+  participante. Elegir PTT no abre el micrófono y el runtime nunca cambia al
+  usuario a otro dispositivo automáticamente.
 
 ## API pública para integración
 
@@ -81,22 +96,26 @@ WAN, hardware real o escucha humana.
 
 ## Gate Unity
 
-Unity 6000.3.24f1 importó y compiló los assemblies y terminó el runner EditMode
-con exit code 0: **12/12 passed, 0 failed, 0 skipped**, duración reportada
-0,0761273 s. Evidencia:
+Unity 6000.3.24f1 importó y compiló la integración final de voz, Bootstrap y UI.
+El gate combinado terminó con exit code 0: **118/118 passed, 0 failed, 0
+skipped**. Dentro de esa corrida, `VoiceNetworkTests` aportó 15 casos. La señal
+sintética de Audio aportó otros 2 casos. Evidencia:
 
-- `N:/LetMeSleep/Validation/V020/voice-native-01.xml`
-- `N:/LetMeSleep/Validation/V020/voice-native-01.log`
+- `N:/LetMeSleep/Validation/V020/reconnect-voice-native-01.xml`
+- `N:/LetMeSleep/Validation/V020/reconnect-voice-native-01.log`
 
-Los filtros específicos son:
+Una segunda corrida combinada terminó con **7/7 passed, 0 failed, 0 skipped**:
+6 casos de `GameplayModeWorldPlayModeTests` y el ciclo de vida nativo de
+`VoicePlayoutStream`. Evidencia:
 
-- `LetMeSleep.Tests.EditMode.VoiceNetworkTests` — 10 casos pasados.
-- `LetMeSleep.Tests.VoiceEditMode.VoiceAudioSignalTests` — 2 casos pasados.
+- `N:/LetMeSleep/Validation/V020/modeworld-voice-native-01.xml`
+- `N:/LetMeSleep/Validation/V020/modeworld-voice-native-01.log`
 
-Los 10 casos de red y 2 de Audio usan datagramas en memoria y señales generadas.
-El runner no abrió `Microphone`, no reprodujo hardware y no estableció una
-sesión EOS. Este gate acredita compilación Unity y comportamiento determinista
-del núcleo; no acredita escucha, dispositivo, LAN o WAN.
+Las pruebas de red usan transporte en memoria y las de Audio usan señales
+generadas. El runner no abrió `Microphone`, no reprodujo hardware y no
+estableció una sesión EOS. Este gate acredita importación, compilación Unity,
+ciclo de vida de clips y comportamiento determinista del núcleo integrado; no
+acredita escucha, dispositivo, LAN o WAN.
 
 ## Corrección posterior de ciclo de vida
 
@@ -128,6 +147,23 @@ Evidencia:
 - `N:/LetMeSleep/Validation/V020/voice-native-02.xml`
 - `N:/LetMeSleep/Validation/V020/clearance-voice-native-01.xml`
 
+## Integración de sala y presentación
+
+La voz comparte el `EosPeerTransport` existente pero usa canal **4**; lobby
+movement continúa en canal 3. El contexto se deriva de `RoomView`, roster
+autenticado y snapshot aplicado. Los paquetes conservan epoch/ronda/actor y no
+aceptan un actor declarado por el remitente fuera de esa relación. El mute se
+guarda por `MemberId` durante toda la permanencia local en la sala, aunque el
+actor cambie entre rondas; `Dispose` lo elimina al abandonar.
+
+En lobby, el epoch privado se deriva del código de sala y el actor local/remoto
+se asigna por orden canónico de miembros. Durante ronda se usa el epoch/round
+autoritativo del Begin. Un ingreso tardío que aún no participa usa un scope de
+espera distinto y sólo incluye otros miembros sin actor en el roster activo.
+Las rutas lobby/ronda nacen cerradas y sólo se habilitan después del primer
+cálculo espacial; así no hay un cuadro inicial que eluda distancia, cohorte u
+oclusión.
+
 ## Límites abiertos
 
 - IMA ADPCM 12 kHz es baseline medible sin dependencia externa; no sustituye un
@@ -138,5 +174,6 @@ Evidencia:
   participantes. Los 15 pares son una ruta sintética de cálculo, no soporte.
 - El DSP conserva duración y sube frecuencia sintética. Falta escucha de habla
   humana, inteligibilidad por rol, artefactos, fatiga y presupuesto en Unity.
-- Bootstrap/UI aún deben construir el contexto desde roster/vida/rol, asignar
-  input PTT, gestionar objetos de playout y reflejar dispositivos/mute/volumen.
+- La integración nativa acredita compilación y pruebas deterministas; aún
+  requiere dos identidades EOS reales para validar lobby,
+  ronda, espera tardía, pérdida/reordenamiento y cierre de host extremo a extremo.

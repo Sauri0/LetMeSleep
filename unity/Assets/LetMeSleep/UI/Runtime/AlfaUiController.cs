@@ -43,6 +43,7 @@ namespace LetMeSleep.UI
         private BasicCustomizationDraft customizationDraft;
         private SettingsUiState settingsState;
         private AlfaSettingsDraft settingsDraft;
+        private VoiceUiState voiceState = new VoiceUiState(false, false, false, false, string.Empty, "V", string.Empty, null);
         private bool initialized;
         private bool createMode;
         private bool lobbyExploring;
@@ -115,6 +116,9 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.Slider masterVolume;
         private UnityEngine.UI.Slider musicVolume;
         private UnityEngine.UI.Slider effectsVolume;
+        private UnityEngine.UI.Slider voiceVolume;
+        private TMP_Dropdown voiceDeviceDropdown;
+        private TextMeshProUGUI pushToTalkBindingLabel;
         private UnityEngine.UI.Slider humanSensitivity;
         private UnityEngine.UI.Slider mosquitoSensitivity;
         private UnityEngine.UI.Toggle fullScreen;
@@ -137,6 +141,7 @@ namespace LetMeSleep.UI
         private TextMeshProUGUI hudHint;
         private TextMeshProUGUI hudActorState;
         private TextMeshProUGUI hudNetwork;
+        private TextMeshProUGUI hudVoice;
         private TextMeshProUGUI hudRoleLabel;
         private AlfaUiIcon hudRoleIcon;
         private UnityEngine.UI.Image hudRoleBackground;
@@ -149,6 +154,11 @@ namespace LetMeSleep.UI
 
         private UnityEngine.UI.Button pauseLeaveButton;
         private TextMeshProUGUI pauseLeaveLabel;
+        private UnityEngine.UI.Button pauseVoiceMuteButton;
+        private TextMeshProUGUI pauseVoiceMuteLabel;
+        private TextMeshProUGUI pauseVoiceStatus;
+        private RectTransform pauseVoicePeers;
+        private string pauseVoiceKey = string.Empty;
 
         private TextMeshProUGUI resultsTitle;
         private TextMeshProUGUI resultsStats;
@@ -292,9 +302,40 @@ namespace LetMeSleep.UI
             else if (lobbyRulesLatched) lobbyStatus.text = "Guardando reglas…";
             UpdateRoomMapView();
             UpdateLobbyControls();
+            UpdateLobbyVoiceMarkers();
 
             if (screen != AlfaUiScreen.Lobby)
                 SetScreen(AlfaUiScreen.Lobby, "LobbyReadyButton");
+        }
+
+        private void UpdateLobbyVoiceMarkers()
+        {
+            if (lobbyState == null || voiceState == null) return;
+            for (int i = 0; i < lobbyState.Members.Count && i < memberRows.Count; i++)
+            {
+                LobbyMemberUiState member = lobbyState.Members[i];
+                VoiceParticipantUiState voice = voiceState.Participants.FirstOrDefault(item => item.MemberId == member.Id);
+                string readiness = member.Connected ? member.Ready ? "LISTO" : "NO LISTO" : "SIN CONEXIÓN";
+                string voiceLabel = voice == null ? string.Empty : voice.Muted ? " · SILENCIADO" : voice.Speaking ? " · HABLANDO" : string.Empty;
+                memberRows[i].text = $"{member.Name}\n<size=70%>{readiness}  ·  {member.RoleLabel}{voiceLabel}</size>";
+            }
+        }
+
+        private void RebuildPauseVoicePeers()
+        {
+            if (pauseVoicePeers == null || voiceState == null) return;
+            string key = string.Join("|", voiceState.Participants.Select(item => item.MemberId + ":" + item.Muted + ":" + item.Speaking));
+            if (key == pauseVoiceKey) return;
+            pauseVoiceKey = key;
+            for (int i = pauseVoicePeers.childCount - 1; i >= 0; i--) Destroy(pauseVoicePeers.GetChild(i).gameObject);
+            foreach (VoiceParticipantUiState participant in voiceState.Participants)
+            {
+                string label = participant.Muted ? participant.DisplayName + " · ACTIVAR" : participant.DisplayName + (participant.Speaking ? " · HABLANDO" : " · SILENCIAR");
+                string memberId = participant.MemberId; bool nextMuted = !participant.Muted;
+                var button = factory.Button(pauseVoicePeers, "VoicePeer-" + memberId.GetHashCode(), label,
+                    () => (actions as IVoiceActions)?.SetPeerVoiceMuted(memberId, nextMuted), false, false, 38f, AlfaUiIconKind.Audio);
+                button.interactable = actions is IVoiceActions;
+            }
         }
 
         public void SetRoomMaps(IReadOnlyList<TrainingMapOption> maps)
@@ -482,11 +523,13 @@ namespace LetMeSleep.UI
             masterVolume.SetValueWithoutNotify(settingsDraft.MasterVolume);
             musicVolume.SetValueWithoutNotify(settingsDraft.MusicVolume);
             effectsVolume.SetValueWithoutNotify(settingsDraft.EffectsVolume);
+            voiceVolume.SetValueWithoutNotify(settingsDraft.VoiceVolume);
             humanSensitivity.SetValueWithoutNotify(settingsDraft.HumanSensitivity);
             mosquitoSensitivity.SetValueWithoutNotify(settingsDraft.MosquitoSensitivity);
             UpdateSliderValue(masterVolume);
             UpdateSliderValue(musicVolume);
             UpdateSliderValue(effectsVolume);
+            UpdateSliderValue(voiceVolume);
             UpdateSliderValue(humanSensitivity);
             UpdateSliderValue(mosquitoSensitivity);
             fullScreen.SetIsOnWithoutNotify(settingsDraft.FullScreen);
@@ -499,10 +542,35 @@ namespace LetMeSleep.UI
             reduceMenuMotion.transform.parent.gameObject.SetActive(state.SupportsReducedMenuMotion);
             videoSettings.SetActive(state.SupportsVideo);
             rebindNote.SetActive(state.SupportsRebinding);
+            var deviceOptions = new[] { "ELEGÍ UN MICRÓFONO" }.Concat(state.VoiceDevices).ToList();
+            voiceDeviceDropdown.ClearOptions(); voiceDeviceDropdown.AddOptions(deviceOptions);
+            int voiceDeviceIndex = state.VoiceDevices.ToList().FindIndex(device => string.Equals(device, settingsDraft.VoiceDevice, StringComparison.Ordinal));
+            voiceDeviceDropdown.SetValueWithoutNotify(voiceDeviceIndex + 1); voiceDeviceDropdown.RefreshShownValue();
+            pushToTalkBindingLabel.text = "PTT · " + (voiceState?.BindingLabel ?? "V");
             settingsStatus.text = state.IsApplying ? "Aplicando ajustes…" : state.Message;
             settingsApplyButton.interactable = !settingsApplyLatched && !settingsDraft.SameValues(state.Saved);
             settingsApplyLabel.text = settingsApplyLatched ? "APLICANDO…" : "APLICAR";
             UpdateSettingsCycles();
+        }
+
+        public void PresentVoice(VoiceUiState state)
+        {
+            voiceState = state ?? throw new ArgumentNullException(nameof(state));
+            if (hudVoice != null)
+            {
+                string status = state.LocalMuted ? "VOZ SILENCIADA" : state.Transmitting ? "HABLANDO" :
+                    !state.DeviceAvailable ? "VOZ · ELEGÍ MICRÓFONO" : "PTT " + state.BindingLabel;
+                hudVoice.text = state.InRoom ? status : string.Empty;
+                hudVoice.color = state.Transmitting ? AlfaUiTheme.Mint400 : state.LocalMuted || !state.DeviceAvailable ? AlfaUiTheme.Pajama500 : AlfaUiTheme.Moon200;
+            }
+            if (pauseVoiceStatus != null)
+                pauseVoiceStatus.text = string.IsNullOrWhiteSpace(state.Notice) ? state.ScopeLabel : state.Notice;
+            if (pauseVoiceMuteLabel != null)
+                pauseVoiceMuteLabel.text = state.LocalMuted ? "ACTIVAR MI MICRÓFONO" : "SILENCIAR MI MICRÓFONO";
+            if (pauseVoiceMuteButton != null) pauseVoiceMuteButton.interactable = state.InRoom && actions is IVoiceActions;
+            if (pushToTalkBindingLabel != null) pushToTalkBindingLabel.text = "PTT · " + state.BindingLabel;
+            UpdateLobbyVoiceMarkers();
+            RebuildPauseVoicePeers();
         }
 
         public void OpenSettings(AlfaUiScreen returnTo)
@@ -954,22 +1022,35 @@ namespace LetMeSleep.UI
             leftLayout.preferredWidth = 570f;
             leftLayout.flexibleWidth = 1f;
 
-            var audioPanel = factory.Panel(leftColumn, "AudioPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f), -1f, 250f);
+            var audioPanel = factory.Panel(leftColumn, "AudioPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f), -1f, 330f);
             var audio = factory.Vertical(audioPanel, "AudioContent", 10f);
             AlfaUiFactory.Fill(audio, 22f, 22f, 20f, 20f);
             factory.SectionHeader(audio, "AudioHeader", "AUDIO", AlfaUiIconKind.Audio, AlfaUiTheme.Lamp400);
             masterVolume = AddSliderField(audio, "VOLUMEN GENERAL", "MasterVolumeSlider", value => ChangeSetting(draft => draft.MasterVolume = value));
             musicVolume = AddSliderField(audio, "MÚSICA", "MusicVolumeSlider", value => ChangeSetting(draft => draft.MusicVolume = value));
             effectsVolume = AddSliderField(audio, "EFECTOS", "EffectsVolumeSlider", value => ChangeSetting(draft => draft.EffectsVolume = value));
+            voiceVolume = AddSliderField(audio, "VOCES", "VoiceVolumeSlider", value => ChangeSetting(draft => draft.VoiceVolume = value));
+            voiceDeviceDropdown = factory.Dropdown(audio, "VoiceDeviceDropdown", new[] { "ELEGÍ UN MICRÓFONO" }, index =>
+            {
+                string device = index > 0 && settingsState != null && index - 1 < settingsState.VoiceDevices.Count ? settingsState.VoiceDevices[index - 1] : string.Empty;
+                ChangeSetting(draft => draft.VoiceDevice = device);
+            });
 
-            var controlsPanel = factory.Panel(leftColumn, "ControlsPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f), -1f, 292f);
+            var controlsPanel = factory.Panel(leftColumn, "ControlsPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f), -1f, 212f);
             var controls = factory.Vertical(controlsPanel, "ControlsContent", 10f);
             AlfaUiFactory.Fill(controls, 22f, 22f, 20f, 20f);
             factory.SectionHeader(controls, "ControlsHeader", "CONTROLES", AlfaUiIconKind.Controls, AlfaUiTheme.Mint400);
             humanSensitivity = AddSliderField(controls, "SENSIBILIDAD HUMANO", "HumanSensitivitySlider", value => ChangeSetting(draft => draft.HumanSensitivity = value), 0.1f, 2f);
             mosquitoSensitivity = AddSliderField(controls, "SENSIBILIDAD MOSQUITO", "MosquitoSensitivitySlider", value => ChangeSetting(draft => draft.MosquitoSensitivity = value), 0.1f, 2f);
             invertY = factory.Toggle(controls, "InvertYToggle", "INVERTIR EJE VERTICAL", value => ChangeSetting(draft => draft.InvertY = value));
-            rebindNote = factory.Text(controls, "RebindNote", "La reasignación usa el contrato de entrada del juego.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200).gameObject;
+            var pttButton = factory.Button(controls, "PushToTalkRebindButton", "PTT · V", () =>
+                (actions as IVoiceActions)?.BeginPushToTalkRebind((path, label) =>
+                {
+                    if (settingsDraft != null) settingsDraft.PushToTalkBinding = path;
+                    if (pushToTalkBindingLabel != null) pushToTalkBindingLabel.text = "PTT · " + label;
+                }), false, false, 44f, AlfaUiIconKind.Audio);
+            pushToTalkBindingLabel = pttButton.GetComponentInChildren<TextMeshProUGUI>();
+            rebindNote = pttButton.gameObject;
 
             var videoPanel = factory.Panel(sections, "VideoPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f), 570f, 558f);
             videoPanel.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1f;
@@ -1040,6 +1121,8 @@ namespace LetMeSleep.UI
 
             hudNetwork = factory.Text(view.transform, "NetworkState", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Pajama500, TextAlignmentOptions.Right);
             Anchor(hudNetwork.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -28f), new Vector2(420f, 56f));
+            hudVoice = factory.Text(view.transform, "VoiceState", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Right, true);
+            Anchor(hudVoice.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -78f), new Vector2(420f, 42f));
 
             hudPromptPanel = factory.Panel(view.transform, "InteractionPrompt", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f)).gameObject;
             Anchor(hudPromptPanel.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 80f), new Vector2(560f, 58f));
@@ -1093,13 +1176,20 @@ namespace LetMeSleep.UI
             view.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Scrim;
             view.GetComponent<UnityEngine.UI.Image>().raycastTarget = true;
             screens[AlfaUiScreen.Pause] = view;
-            var panel = CenteredPanel(view.transform, "PauseCard", 560f, 520f);
-            var content = factory.Vertical(panel, "Content", 14f);
+            var panel = CenteredPanel(view.transform, "PauseCard", 720f, 760f);
+            var content = factory.Vertical(panel, "Content", 10f);
             AlfaUiFactory.Fill(content, 34f, 34f, 30f, 30f);
             factory.Text(content, "Title", "PAUSA", AlfaUiTheme.H1Size, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
             factory.Button(content, "PauseContinueButton", "CONTINUAR", ResumeFromPause, true, false, 68f, AlfaUiIconKind.Play);
             factory.Button(content, "PauseSettingsButton", "AJUSTES", () => OpenSettings(AlfaUiScreen.Pause), false, false, 58f, AlfaUiIconKind.Settings);
             factory.Button(content, "PauseControlsButton", "CONTROLES", () => OpenSettings(AlfaUiScreen.Pause), false, false, 58f, AlfaUiIconKind.Training);
+            pauseVoiceStatus = factory.Text(content, "PauseVoiceStatus", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
+            pauseVoiceMuteButton = factory.Button(content, "PauseVoiceMuteButton", "SILENCIAR MI MICRÓFONO", () =>
+                (actions as IVoiceActions)?.SetLocalVoiceMuted(!voiceState.LocalMuted), false, false, 48f, AlfaUiIconKind.Audio);
+            pauseVoiceMuteLabel = pauseVoiceMuteButton.GetComponentInChildren<TextMeshProUGUI>();
+            pauseVoicePeers = factory.Vertical(content, "PauseVoicePeers", 4f);
+            var voicePeersLayout = pauseVoicePeers.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+            voicePeersLayout.preferredHeight = 190f; voicePeersLayout.flexibleHeight = 1f;
             pauseLeaveButton = factory.Button(content, "PauseLeaveButton", "SALIR DE LA SALA", LeaveGameplayContext, false, true, 58f, AlfaUiIconKind.Exit);
             pauseLeaveLabel = pauseLeaveButton.GetComponentInChildren<TextMeshProUGUI>();
         }
@@ -1511,7 +1601,7 @@ namespace LetMeSleep.UI
             settingsDraft = settingsState.Saved.Copy();
             PresentSettings(new SettingsUiState(settingsState.Saved, settingsDraft, settingsState.Resolutions,
                 settingsState.Qualities, settingsState.SupportsVideo, settingsState.SupportsRebinding,
-                supportsReducedMenuMotion: settingsState.SupportsReducedMenuMotion));
+                supportsReducedMenuMotion: settingsState.SupportsReducedMenuMotion, voiceDevices: settingsState.VoiceDevices));
         }
 
         private void CloseSettings()
@@ -1952,6 +2042,8 @@ namespace LetMeSleep.UI
                 MasterVolume = 1f,
                 MusicVolume = 0.8f,
                 EffectsVolume = 1f,
+                VoiceVolume = .8f,
+                PushToTalkBinding = "<Keyboard>/v",
                 FullScreen = true,
                 VSync = false,
                 FrameLimit = 0,

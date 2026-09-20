@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace LetMeSleep.Audio
 {
@@ -19,7 +20,7 @@ namespace LetMeSleep.Audio
         public uint ActorId { get; private set; }
         public float Level { get; private set; }
 
-        public void Initialize(uint actorId)
+        public void Initialize(uint actorId, AudioMixerGroup output = null)
         {
             if (actorId == 0) throw new ArgumentOutOfRangeException(nameof(actorId));
             Clear();
@@ -27,6 +28,10 @@ namespace LetMeSleep.Audio
             source = GetComponent<AudioSource>();
             ReleaseOwnedClip();
             source.playOnAwake = false; source.loop = true; source.spatialBlend = 1f; source.pitch = 1f;
+            source.outputAudioMixerGroup = output;
+            source.rolloffMode = AudioRolloffMode.Custom;
+            source.minDistance = 1f; source.maxDistance = 10000f;
+            source.SetCustomCurve(AudioSourceCurveType.CustomRolloff, AnimationCurve.Constant(0, 10000f, 1f));
             ownedClip = AudioClip.Create("VoicePlayout", BufferSamples, 1, SampleRate, true, OnAudioRead, OnAudioSetPosition);
             source.clip = ownedClip;
             lowPass = GetComponent<AudioLowPassFilter>();
@@ -73,6 +78,12 @@ namespace LetMeSleep.Audio
             if (!initialized) return;
             source.mute = muted;
             if (muted) Clear();
+        }
+
+        public void SetSpatial(bool spatial)
+        {
+            if (!initialized) return;
+            source.spatialBlend = spatial ? 1f : 0f;
         }
 
         public void Clear()

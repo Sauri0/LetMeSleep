@@ -21,6 +21,12 @@ namespace LetMeSleep.Tests.VoicePlayMode
             AudioClip firstOwned = source.clip;
             Assert.That(firstOwned, Is.Not.Null);
             Assert.That(firstOwned, Is.Not.SameAs(externalClip));
+            Assert.That(source.pitch, Is.EqualTo(1f));
+            Assert.That(source.spatialBlend, Is.EqualTo(1f));
+            Assert.That(source.rolloffMode, Is.EqualTo(AudioRolloffMode.Custom));
+            Assert.That(source.maxDistance, Is.EqualTo(10000f));
+            stream.SetSpatial(false);
+            Assert.That(source.spatialBlend, Is.EqualTo(0f));
 
             stream.Initialize(2);
             AudioClip secondOwned = source.clip;

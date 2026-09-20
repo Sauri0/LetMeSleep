@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using LetMeSleep.Audio;
 using LetMeSleep.Content.Characters;
 using LetMeSleep.UI;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace LetMeSleep.Bootstrap
             public int resolutionWidth; public int resolutionHeight;
         }
         private AlfaSettingsDraft settings = new AlfaSettingsDraft { MasterVolume = .8f, MusicVolume = .5f, EffectsVolume = .85f,
+            VoiceVolume = .8f, PushToTalkBinding = "<Keyboard>/v",
             HumanSensitivity = 1f, MosquitoSensitivity = 1f, FullScreen = true, VSync = false, FrameLimit = 0 };
         private BasicCustomizationDraft appearance = new BasicCustomizationDraft(AlfaRole.Human, "warm", "blue", "red");
         private BasicCustomizationDraft previewAppearance;
@@ -144,8 +146,9 @@ namespace LetMeSleep.Bootstrap
         private void PresentPreferences()
         {
             ui.PresentSettings(new SettingsUiState(settings, settings, resolutions.Select(r => r.width + " × " + r.height),
-                QualitySettings.names, true, false, message: saveError,
-                supportsReducedMenuMotion: livingMenu && livingMenu.IsConfigured));
+                QualitySettings.names, true, true, message: saveError,
+                supportsReducedMenuMotion: livingMenu && livingMenu.IsConfigured,
+                voiceDevices: VoiceMicrophoneCapture.Devices));
             ui.PresentCustomization(new CustomizationUiState(Skins, Pajamas, MosquitoColors, appearance, message: saveError));
         }
         public void ApplySettings(AlfaSettingsDraft draft)
@@ -164,6 +167,13 @@ namespace LetMeSleep.Bootstrap
         {
             var value = draft.Copy(); value.MasterVolume = FiniteClamp(value.MasterVolume,0,1,.8f);
             value.MusicVolume = FiniteClamp(value.MusicVolume,0,1,.5f); value.EffectsVolume = FiniteClamp(value.EffectsVolume,0,1,.85f);
+            if (string.IsNullOrWhiteSpace(value.PushToTalkBinding))
+            {
+                value.PushToTalkBinding = "<Keyboard>/v";
+                value.VoiceVolume = .8f; // additive schema-1 migration
+            }
+            else value.VoiceVolume = FiniteClamp(value.VoiceVolume,0,1,.8f);
+            value.VoiceDevice = value.VoiceDevice ?? string.Empty;
             value.HumanSensitivity = FiniteClamp(value.HumanSensitivity,.1f,2f,1f);
             value.MosquitoSensitivity = FiniteClamp(value.MosquitoSensitivity,.1f,2f,1f);
             value.ResolutionIndex = Mathf.Clamp(value.ResolutionIndex,0,Math.Max(0,resolutions.Length-1));
@@ -186,6 +196,7 @@ namespace LetMeSleep.Bootstrap
                 }
             }
             SetVolume("Master",settings.MasterVolume); SetVolume("Music",settings.MusicVolume);
+            SetVolume("Voice", settings.VoiceVolume); ApplyVoicePreferences();
             foreach (var category in new[]{"Ambience","Character","Critical","Mosquito","World","UI"}) SetVolume(category, settings.EffectsVolume);
             if (game) { game.MouseSensitivity = .002f * (game.LatestSnapshot?.Actors.FirstOrDefault(a=>a.ActorId==game.LocalActorId)?.Role == Core.PlayerRole.Mosquito ? settings.MosquitoSensitivity : settings.HumanSensitivity); game.InvertY = settings.InvertY; }
         }

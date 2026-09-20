@@ -27,7 +27,7 @@ namespace LetMeSleep.Online
         private readonly Func<double> clock;
         private readonly Dictionary<string, Receiver> receiversByMember = new Dictionary<string, Receiver>(StringComparer.Ordinal);
         private readonly Dictionary<uint, Receiver> receiversByActor = new Dictionary<uint, Receiver>();
-        private readonly HashSet<uint> mutedActors = new HashSet<uint>();
+        private readonly HashSet<string> mutedMembers = new HashSet<string>(StringComparer.Ordinal);
         private VoiceRoundContext context;
         private VoiceRateLimiter outgoingLimiter = new VoiceRateLimiter();
         private readonly VoiceRateLimiter outgoingControlLimiter = new VoiceRateLimiter(4, 2);
@@ -102,10 +102,10 @@ namespace LetMeSleep.Online
         public void Tick(double now)
         {
             ThrowIfDisposed();
-            if (!ValidTime(now) || context == null || !context.LocalCanListen || localMuted || !focused || paused) return;
+            if (!ValidTime(now) || context == null || !context.LocalCanListen || !focused || paused) return;
             foreach (Receiver receiver in receiversByMember.Values)
             {
-                if (mutedActors.Contains(receiver.Route.ActorId)) { receiver.Jitter.ClearTemporary(); continue; }
+                if (mutedMembers.Contains(receiver.Route.MemberId)) { receiver.Jitter.ClearTemporary(); continue; }
                 for (int emitted = 0; emitted < 3 && receiver.Jitter.TryDequeue(now, out byte[] payload, out bool concealed); emitted++)
                 {
                     if (!codec.TryDecode(new ArraySegment<byte>(payload), out float[] samples)) { receiver.Jitter.ClearTemporary(); break; }
@@ -124,16 +124,30 @@ namespace LetMeSleep.Online
             ThrowIfDisposed();
             if (localMuted == muted) return;
             localMuted = muted;
-            if (muted) { StopTransmission(true, clock()); ClearReceiverBuffers(); }
+            if (muted) StopTransmission(true, clock());
         }
 
         public void SetPeerMuted(uint actorId, bool muted)
         {
             ThrowIfDisposed();
             if (actorId == 0) throw new ArgumentOutOfRangeException(nameof(actorId));
-            if (muted) { mutedActors.Add(actorId); if (receiversByActor.TryGetValue(actorId, out Receiver receiver)) receiver.Jitter.ClearTemporary(); }
-            else mutedActors.Remove(actorId);
+            if (!receiversByActor.TryGetValue(actorId, out Receiver receiver)) throw new ArgumentOutOfRangeException(nameof(actorId));
+            SetMemberMuted(receiver.Route.MemberId, muted);
         }
+
+        public void SetMemberMuted(string memberId, bool muted)
+        {
+            ThrowIfDisposed();
+            if (string.IsNullOrWhiteSpace(memberId) || memberId.Length > 128) throw new ArgumentOutOfRangeException(nameof(memberId));
+            if (muted)
+            {
+                mutedMembers.Add(memberId);
+                if (receiversByMember.TryGetValue(memberId, out Receiver receiver)) receiver.Jitter.ClearTemporary();
+            }
+            else mutedMembers.Remove(memberId);
+        }
+
+        public bool IsMemberMuted(string memberId) => !string.IsNullOrEmpty(memberId) && mutedMembers.Contains(memberId);
 
         /// <summary>Updates local proximity/occlusion routing without replacing authenticated membership or interrupting PTT.</summary>
         public void SetPeerAudibility(uint actorId, bool peerCanHearLocal, bool localCanHearPeer)
@@ -172,8 +186,8 @@ namespace LetMeSleep.Online
 
         private void OnPacketReceived(string memberId, ArraySegment<byte> data)
         {
-            if (disposed || context == null || !context.LocalCanListen || localMuted || !focused || paused) return;
-            if (!receiversByMember.TryGetValue(memberId, out Receiver receiver) || !receiver.CanSpeakToLocal || mutedActors.Contains(receiver.Route.ActorId)) return;
+            if (disposed || context == null || !context.LocalCanListen || !focused || paused) return;
+            if (!receiversByMember.TryGetValue(memberId, out Receiver receiver) || !receiver.CanSpeakToLocal || mutedMembers.Contains(memberId)) return;
             double now = clock();
             if (!ValidTime(now) || !receiver.Limiter.TryConsume(now) || !VoiceWireCodec.TryDecode(data, out VoicePacket packet)) return;
             if (packet.SessionEpoch != context.SessionEpoch || packet.RoundId != context.RoundId || packet.ActorId != receiver.Route.ActorId) return;
@@ -223,7 +237,7 @@ namespace LetMeSleep.Online
         {
             if (disposed) return;
             ClearRound(); disposed = true; transport.PacketReceived -= OnPacketReceived; transport.Dispose();
-            FrameDecoded = null; LocalTransmissionStopped = null;
+            mutedMembers.Clear(); FrameDecoded = null; LocalTransmissionStopped = null;
         }
     }
 }

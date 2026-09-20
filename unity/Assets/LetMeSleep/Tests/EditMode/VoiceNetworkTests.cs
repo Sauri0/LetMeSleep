@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LetMeSleep.Core;
+using LetMeSleep.Gameplay;
 using LetMeSleep.Online;
 using NUnit.Framework;
 
@@ -40,7 +42,7 @@ namespace LetMeSleep.Tests.EditMode
         }
 
         [Test]
-        public void JitterBuffer_ReordersConcealsOneGapRejectsReplayAndPurgesIdle()
+        public void JitterBuffer_ReordersConcealsOneGapRejectsReplayAndTemporarilyPurgesIdle()
         {
             byte[] one = FilledPayload(1), three = FilledPayload(3);
             var jitter = new VoiceJitterBuffer();
@@ -55,7 +57,9 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(jitter.TryDequeue(0.100, out byte[] third, out bool thirdConcealed), Is.True);
             Assert.That(third, Is.EqualTo(three)); Assert.That(thirdConcealed, Is.False);
             Assert.That(jitter.TryDequeue(0.320, out _, out _), Is.False);
-            Assert.That(jitter.IsActive, Is.False);
+            Assert.That(jitter.IsActive, Is.True, "An idle network interval is not an authenticated End packet.");
+            Assert.That(jitter.AcceptAudio(5, 3, three, 0.33), Is.False, "Idle purge retains the replay watermark.");
+            Assert.That(jitter.AcceptAudio(5, 5, three, 0.34), Is.True, "A delayed newer frame can resume the same held PTT stream.");
         }
 
         [Test]
@@ -170,6 +174,73 @@ namespace LetMeSleep.Tests.EditMode
             now = 2; transport.Receive("peer-a", VoiceWireCodec.Encode(new VoicePacket(VoicePacketKind.Audio, 1, 2, 4, 1, 1, payload)));
             session.SetPeerMuted(4, true); now = 2.1; session.Tick(now);
             Assert.That(heard, Is.Zero);
+        }
+
+        [Test]
+        public void Session_PeerMuteFollowsAuthenticatedMemberAcrossRounds()
+        {
+            using var transport = new FakeTransport("peer-a", "peer-b");
+            using var session = new VoiceOnlineSession(transport, () => 0);
+            session.UpdateRound(new VoiceRoundContext(1, 2, 3, true, true,
+                new[] { new VoicePeerRoute("peer-a", 4, true, true, false) }));
+            session.SetPeerMuted(4, true);
+            Assert.That(session.IsMemberMuted("peer-a"), Is.True);
+
+            session.UpdateRound(new VoiceRoundContext(1, 3, 8, true, true, new[]
+            {
+                new VoicePeerRoute("peer-a", 9, true, true, false),
+                new VoicePeerRoute("peer-b", 4, true, true, false)
+            }));
+            Assert.That(session.IsMemberMuted("peer-a"), Is.True, "Mute belongs to the authenticated room identity, not a per-round actor id.");
+            Assert.That(session.IsMemberMuted("peer-b"), Is.False, "Actor-id reuse must not transfer mute to another member.");
+        }
+
+        [Test]
+        public void Session_LocalMicrophoneMuteStopsSendingButKeepsIncomingVoice()
+        {
+            double now = 0;
+            using var transport = new FakeTransport("peer-a");
+            using var session = new VoiceOnlineSession(transport, () => now);
+            session.UpdateRound(new VoiceRoundContext(1, 2, 3, true, true,
+                new[] { new VoicePeerRoute("peer-a", 4, true, true, false) }));
+            session.SetLocalMuted(true);
+            Assert.That(session.BeginPushToTalk(now), Is.False);
+            int heard = 0; session.FrameDecoded += _ => heard++;
+            byte[] payload = new VoiceImaAdpcmCodec().Encode(Sine(300, .2f));
+            transport.Receive("peer-a", VoiceWireCodec.Encode(new VoicePacket(VoicePacketKind.Audio, 1, 2, 4, 1, 1, payload)));
+            now = .06; session.Tick(now);
+            Assert.That(heard, Is.EqualTo(1), "Silencing the local microphone must not deafen incoming room voice.");
+        }
+
+        [Test]
+        public void VoiceUsesDedicatedChannelFourWithoutCollidingWithLobbyMovement()
+        {
+            Assert.That(VoiceProtocol.Channel, Is.EqualTo(4));
+            Assert.That(EosPeerTransport.MaximumChannel, Is.EqualTo(4));
+            Assert.That(EosPeerTransport.IsSupportedChannel(0), Is.True);
+            Assert.That(EosPeerTransport.IsSupportedChannel(3), Is.True, "Lobby movement remains on channel 3.");
+            Assert.That(EosPeerTransport.IsSupportedChannel(4), Is.True, "Voice owns channel 4.");
+            Assert.That(EosPeerTransport.IsSupportedChannel(5), Is.False);
+        }
+
+        [Test]
+        public void SpatialPolicy_UsesApprovedRoleDistancesOcclusionAndEliminatedCohorts()
+        {
+            var origin = Float3.Zero;
+            Assert.That(VoiceSpatialPolicy.Evaluate(PlayerRole.Human, false, origin, PlayerRole.Mosquito, false,
+                new Float3(3.9f, 0, 0), false).Gain, Is.EqualTo(1).Within(.0001));
+            Assert.That(VoiceSpatialPolicy.Evaluate(PlayerRole.Human, false, origin, PlayerRole.Human, false,
+                new Float3(12f, 0, 0), false).Audible, Is.False);
+            Assert.That(VoiceSpatialPolicy.Evaluate(PlayerRole.Mosquito, false, origin, PlayerRole.Human, false,
+                new Float3(8f, 0, 0), false).Audible, Is.False);
+            Assert.That(VoiceSpatialPolicy.Evaluate(PlayerRole.Mosquito, false, origin, PlayerRole.Mosquito, false,
+                new Float3(12f, 0, 0), false).Audible, Is.True);
+            var blocked = VoiceSpatialPolicy.Evaluate(PlayerRole.Human, true, origin, PlayerRole.Human, true,
+                new Float3(4f, 0, 0), true);
+            Assert.That(blocked.Gain, Is.EqualTo(VoiceSpatialPolicy.OccludedGain).Within(.0001));
+            Assert.That(blocked.LowPassHertz, Is.EqualTo(VoiceSpatialPolicy.OccludedLowPassHertz));
+            Assert.That(VoiceSpatialPolicy.Evaluate(PlayerRole.Human, true, origin, PlayerRole.Human, false,
+                new Float3(1f, 0, 0), false).Audible, Is.False);
         }
 
         [Test]

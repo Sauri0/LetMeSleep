@@ -8,6 +8,8 @@ namespace LetMeSleep.Online
     public sealed class EosPeerTransport : IDisposable
     {
         public const int MaximumPacketBytes = 1170;
+        public const byte MaximumChannel = 4;
+        public static bool IsSupportedChannel(byte channel) => channel <= MaximumChannel;
         private readonly EosConnection connection;
         private readonly EosLobbySession room;
         private readonly P2PInterface p2p;
@@ -37,7 +39,7 @@ namespace LetMeSleep.Online
         public Result Send(string memberId, byte channel, ArraySegment<byte> data, bool reliable)
         {
             if (disposed || connection.State != ConnectionState.Ready || room.State != LobbyState.Connected || !room.Contains(memberId)) return Result.AccessDenied;
-            if (data.Array == null || data.Count < 1 || data.Count > MaximumPacketBytes || channel > 3) return Result.InvalidParameters;
+            if (data.Array == null || data.Count < 1 || data.Count > MaximumPacketBytes || !IsSupportedChannel(channel)) return Result.InvalidParameters;
             var options = new SendPacketOptions
             {
                 LocalUserId = connection.LocalUserId, RemoteUserId = ProductUserId.FromString(memberId), SocketId = socket,
@@ -61,7 +63,7 @@ namespace LetMeSleep.Online
                     new ArraySegment<byte>(receiveBuffer), out uint length);
                 if (result == Result.NotFound) break;
                 if (result != Result.Success) break;
-                if (room.State != LobbyState.Connected || peer == null || sourceSocket.SocketName != socket.SocketName || channel > 3) continue;
+                if (room.State != LobbyState.Connected || peer == null || sourceSocket.SocketName != socket.SocketName || !IsSupportedChannel(channel)) continue;
                 string member = peer.ToString();
                 if (room.Contains(member)) PacketReceived?.Invoke(member, channel, new ArraySegment<byte>(receiveBuffer, 0, (int)length));
             }

@@ -5,7 +5,7 @@ namespace LetMeSleep.Online
 {
     public static class VoiceProtocol
     {
-        public const byte Channel = 3;
+        public const byte Channel = 4;
         public const int SampleRate = 12000;
         public const int FrameSamples = 240;
         public const int FrameMilliseconds = 20;

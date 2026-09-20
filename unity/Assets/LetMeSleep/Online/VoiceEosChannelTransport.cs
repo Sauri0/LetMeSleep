@@ -3,7 +3,7 @@ using Epic.OnlineServices;
 
 namespace LetMeSleep.Online
 {
-    /// <summary>Dedicated voice view over EOS P2P channel 3. Does not own the shared peer transport.</summary>
+    /// <summary>Dedicated voice view over EOS P2P channel 4. Does not own the shared peer transport.</summary>
     public sealed class VoiceEosChannelTransport : IVoiceDatagramTransport
     {
         private readonly EosPeerTransport transport;
