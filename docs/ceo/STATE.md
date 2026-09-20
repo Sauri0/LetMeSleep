@@ -1,5 +1,20 @@
 # Relevo CEO — 2026-09-19
 
+## Gate actual: matriz de arranque Windows 15/15 PASS
+
+- `WindowsCandidateSmoke03/verification-matrix.json` reúne cinco casos Smoke02
+  y diez Smoke03 con hashes verificados del mismo ejecutable/fuente a654d8b.
+  Las 15 combinaciones de cinco mapas y tres modos pasan: arranque de ambos
+  roles de entrenamiento, apoyo/quietud inicial, regreso al menú y crear/salir
+  de sala EOS con una identidad. Cero errores runtime observados en los recibos.
+- No son rondas completas ni recorrido completo, gráficos/FPS, dos jugadores
+  o WAN. La candidata sigue sin ZIP/release y sin arte final aprobado.
+- Slot player liberado. Pendiente gate Unity combinado de personalización:
+  ensamblador freeze03 corrige cleanup, actividad real de clones, validación
+  de rutas y layer30 de preview. UI/persistencia cierran estado de sólo lectura
+  y rollback visual cuando falla el guardado al cambiar de rol. Sin aceptar
+  esos tickets hasta prueba nativa y revisión de capturas.
+
 ## En curso: personalización modular y matriz Windows restante
 
 - La aclaración directa J25/O08 también se aplica a O07: reserva de 30 segundos
