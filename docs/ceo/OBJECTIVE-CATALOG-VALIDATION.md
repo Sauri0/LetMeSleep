@@ -1,9 +1,13 @@
 # Catálogos de objetivos: validación v0.2.0
 
-## Autoría explícita de Isla y diagnóstico de continuidad
+## Autoría humana separada y diagnóstico de continuidad
 
 El manifiesto externo puede indicar `navigationPath` absoluto y el destino
-revisado `navigationAssetPath` para la navegación humana de Isla. Se compara
+revisado `navigationAssetPath` para la navegación humana de Isla o Yate. Los
+únicos destinos admitidos son `Data/isla-navigation-human-v020.json` y
+`Data/yate-navigation-human-v020.json` dentro de sus mapas finales respectivos.
+Isla está instalada; la extensión Yate habilita validar su candidato medido
+ForedeckPillarV2 y no acredita que ese catálogo haya superado los gates. Se compara
 todo el contenido legacy con el original y se exige conservarlo. La validación
 usa un TextAsset temporal: no importa ni modifica el mapa. Sólo después de
 ronda y cobertura física se importa la nueva versión de datos, se referencia

@@ -76,12 +76,14 @@ public static class V020GameplayObjectiveInstaller
     private static void RegisterNavigationOverride(ExternalMap candidate)
     {
         if (string.IsNullOrEmpty(candidate.navigationPath) && string.IsNullOrEmpty(candidate.navigationAssetPath)) return;
+        string navigationName = candidate.mapId == "hf-isla-del-laguito-v2" ? "isla-navigation-human-v020.json" :
+            candidate.mapId == "hf-yate-a-la-deriva-v3" ? "yate-navigation-human-v020.json" : null;
         string expectedAsset = "Assets/LetMeSleep/Content/Environment/HiggsfieldMaps/" + candidate.mapId +
-                               "/Data/isla-navigation-human-v020.json";
-        // The first separate graph is deliberately scoped to Isla. Other maps need their own reviewed recipe.
-        if (candidate.mapId != "hf-isla-del-laguito-v2" || candidate.navigationAssetPath != expectedAsset ||
+                               "/Data/" + navigationName;
+        // Only maps with a separately reviewed human graph recipe can use this override.
+        if (navigationName == null || candidate.navigationAssetPath != expectedAsset ||
             string.IsNullOrWhiteSpace(candidate.navigationPath) || !System.IO.Path.IsPathRooted(candidate.navigationPath))
-            throw new ArgumentException("Separate human navigation requires the reviewed Isla source and asset paths.");
+            throw new ArgumentException("Separate human navigation requires reviewed map-specific source and asset paths.");
         var map = AssetDatabase.LoadAssetAtPath<GameObject>(candidate.prefabPath)?.GetComponent<EnvironmentMapDefinition>();
         if (!map || !map.SpatialData) throw new InvalidOperationException("Original navigation missing.");
         string text = File.ReadAllText(candidate.navigationPath);
