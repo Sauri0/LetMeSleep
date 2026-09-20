@@ -1,5 +1,27 @@
 # Relevo CEO — 2026-09-19
 
+## En curso — corredor de escalera y guardado privado
+
+Astra implementa una corrección limitada a BotPatrol/GameplayBotNavigation:
+posición física separada de región lógica y continuidad de un pasaje de escalera
+ya iniciado. Debe respetar cierre, blacklist J32, límites del corredor y cambio
+de objetivo. Técnica revisa el delta y conserva steering/motor; próximo gate
+EditMode, steering, A/B café y comparación exacta de Casa. Sin instalación aún.
+
+Terra corrige P26/P27/P28 y añade acceso desde lobby; revisión CEO pidió
+Deshacer respecto a la entrada real, Apply fallido, migración, snapshots de la
+misma sala y regreso contextual. Falta gate nativo y revisión del espacio UI.
+
+El acceso web a 3D Jutsu muestra login; el catálogo MCP lista modelos3D pero
+el cotizador de imágenes rechaza su uso y no existe generate_3d callable.
+No se envió trabajo ni referencia. Sesión Blender continúa pendiente.
+
+Triage de sólo lectura de Frozen85 guardado en
+`N:/LetMeSleep/Validation/V020/surface-frozen85-triage-01.json`: conserva
+14 FAIL y11 COVERAGE_GAP. Los dos casos de Workshop en Puerto registran
+~33mm de penetración contra Terrain_Playable_110x85 en tick1; es evidencia
+para aislar depenetración/fixture, no causa corregida ni nueva ejecución.
+
 ## Checkpoint posterior — Casa A/B, probe de dos ciclos, apariencia privada
 
 - Steering07: 7/7 PASS con snapshots reales y cadencia3; esto no cerró Casa.

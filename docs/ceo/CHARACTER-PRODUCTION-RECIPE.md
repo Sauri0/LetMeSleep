@@ -146,3 +146,15 @@ alfa ni placeholders como arte entregable de las herramientas nuevas.
 La ausencia de diseños completos para B02/B03 no bloquea preparar B01 ni el
 primer cuerpo mosquito. Tampoco se interpreta una cantidad no fijada en C08
 como veto a producir el cuerpo canónico de PER07.
+
+### Comprobación de alternativas de acceso
+
+El 20/09 CEO abrió `https://higgsfield.ai/es/3d-jutsu` en Chrome: la página
+mostró **Iniciar sesión** y **Regístrate**. No se automatizó autenticación.
+El conector MCP sí devuelve el catálogo 3D (`image_to_3d`, proveedor Meshy),
+pero las herramientas disponibles no incluyen `generate_3d` ni su cotizador.
+Un intento de cotización de sólo lectura con `estimate_image_cost` devolvió
+`INVALID_ARGUMENT`: el modelo es 3D y requiere `generate_3d`. No produjo
+precio ni trabajo y no se subió ninguna referencia. Scene Builder puede
+editar/importar escenas, pero no sustituye la generación de personajes desde
+los bocetos. Sigue pendiente la sesión de la extensión ya solicitada al usuario.
