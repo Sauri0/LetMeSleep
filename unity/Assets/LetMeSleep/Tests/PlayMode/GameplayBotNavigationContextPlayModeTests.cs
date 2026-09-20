@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using LetMeSleep.Core;
 using LetMeSleep.Gameplay;
@@ -125,6 +126,81 @@ namespace LetMeSleep.Tests.PlayMode
         }
 
         [Test]
+        public void HumanGraphDoesNotCrossTheAuthoredMosquitoGraph()
+        {
+            navigation = ConfigureJson(SeparateGraphJson);
+            var humanTarget = Objective("human_finish", new Float3(4, 0, 0));
+            var airTarget = Objective("air_finish", new Float3(4, 0, 0));
+
+            Assert.That(Direction(navigation, 1, 0, Float3.Zero, airTarget).Length, Is.Zero,
+                "A human must not borrow an air-only passage.");
+            Assert.That(Direction(navigation, 1, 0, Float3.Zero, humanTarget).X, Is.GreaterThan(0));
+            Assert.That(KnowsRegion(navigation, "air_finish"), Is.False);
+            Assert.That(KnowsRegion(navigation, "human_finish"), Is.True);
+        }
+
+        [Test]
+        public void HumanGraphDoesNotChangeMosquitoExploration()
+        {
+            var legacy = ConfigureJson(LegacyAirGraphJson);
+            var separated = ConfigureJson(SeparateGraphJson);
+
+            var expected = Explore(legacy, 70, 12, Float3.Zero);
+            var actual = Explore(separated, 70, 12, Float3.Zero);
+
+            Assert.That(actual.X, Is.EqualTo(expected.X).Within(.000001f));
+            Assert.That(actual.Y, Is.EqualTo(expected.Y).Within(.000001f));
+            Assert.That(actual.Z, Is.EqualTo(expected.Z).Within(.000001f));
+            Assert.That(actual.Length, Is.GreaterThan(0));
+            Assert.That(Context(legacy, 70).ReadProgress().Value.PassageId, Is.EqualTo("air-passage"));
+            Assert.That(Context(separated, 70).ReadProgress().Value.PassageId, Is.EqualTo("air-passage"),
+                "The separated mosquito patrol must remain visible to the existing bot context.");
+        }
+
+        [Test]
+        public void HumanRoutePreservesMeasuredPolylineAndTraversalCorridor()
+        {
+            navigation = ConfigureJson(SeparateGraphJson);
+            var passages = (BotPassage[])navigation.GetType().GetField("passages",
+                BindingFlags.Instance | BindingFlags.NonPublic).GetValue(navigation);
+            var route = passages.Single(p => p.Id == "human-route");
+
+            Assert.That(route.From, Is.EqualTo("human_start"));
+            Assert.That(route.To, Is.EqualTo("human_finish"));
+            Assert.That(route.Points.Select(p => p.X), Is.EqualTo(new[] { 1.5f, 2.5f, 3.5f }));
+            Assert.That(route.Points.All(p => p.Y == 1 && p.Z == 0), Is.True);
+            Assert.That(route.TraversalRegions.Count, Is.EqualTo(1));
+            Assert.That(route.TraversalRegions[0].Id, Is.EqualTo("human-route:corridor"));
+            Assert.That(route.TraversalRegions[0].Min.X, Is.EqualTo(1.2f));
+            Assert.That(route.TraversalRegions[0].Max.X, Is.EqualTo(3.8f));
+
+            var mosquito = (BotPassage[])navigation.GetType().GetField("mosquitoPassages",
+                BindingFlags.Instance | BindingFlags.NonPublic).GetValue(navigation);
+            Assert.That(mosquito.Select(p => p.Id), Is.EqualTo(new[] { "air-passage" }));
+        }
+
+        [Test]
+        public void PartialOrInvalidHumanGraphsAreRejected()
+        {
+            string[] invalid =
+            {
+                LegacyAirGraphJson.TrimEnd('}') + ",\"human_zones\":[]}",
+                SeparateGraphJson.Replace("\"id\":\"human_finish\"", "\"id\":\"human_start\""),
+                SeparateGraphJson.Replace("\"from\":\"human_start\",\"to\":\"human_finish\"",
+                    "\"from\":\"missing\",\"to\":\"human_finish\""),
+                SeparateGraphJson.Replace("\"position\":[2.5,1,0]", "\"position\":[2.5,1]"),
+                SeparateGraphJson.Replace("\"min\":[1.2,0.5,-0.5],\"max\":[3.8,1.5,0.5]",
+                    "\"min\":[3.8,0.5,-0.5],\"max\":[1.2,1.5,0.5]")
+            };
+
+            foreach (var json in invalid)
+            {
+                var error = Assert.Throws<TargetInvocationException>(() => ConfigureJson(json));
+                Assert.That(error.InnerException, Is.TypeOf<ArgumentException>(), json);
+            }
+        }
+
+        [Test]
         public void CasaStairReplayKeepsTheAuthoredPassageAndPhysicalSampleAtTick44()
         {
             ConfigureStairMap(); EnterStair();
@@ -157,6 +233,25 @@ namespace LetMeSleep.Tests.PlayMode
         }
 
         private static readonly Float3 StairFoot = new Float3(1.22218943f, 2.73779845f, 1.940733f);
+        private const string LegacyAirGraphJson = @"{
+            ""schema_version"":1,""map_id"":""test-map"",""zones"":[
+            {""id"":""air_start"",""min"":[-2,0,-2],""max"":[2,3,2]},
+            {""id"":""air_finish"",""min"":[2.1,0,-2],""max"":[6,3,2]}],""portals"":[
+            {""id"":""air-passage"",""from"":""air_start"",""to"":""air_finish"",""center"":[2.05,1,0],
+             ""normal"":[1,0,0],""width"":1,""height"":2,""door"":false}]}";
+        private const string SeparateGraphJson = @"{
+            ""schema_version"":1,""map_id"":""test-map"",""zones"":[
+            {""id"":""air_start"",""min"":[-2,0,-2],""max"":[2,3,2]},
+            {""id"":""air_finish"",""min"":[2.1,0,-2],""max"":[6,3,2]}],""portals"":[
+            {""id"":""air-passage"",""from"":""air_start"",""to"":""air_finish"",""center"":[2.05,1,0],
+             ""normal"":[1,0,0],""width"":1,""height"":2,""door"":false}],
+            ""human_zones"":[
+            {""id"":""human_start"",""min"":[-2,0,-2],""max"":[2,3,2]},
+            {""id"":""human_finish"",""min"":[2.1,0,-2],""max"":[6,3,2]}],
+            ""human_portals"":[],""human_routes"":[
+            {""id"":""human-route"",""from"":""human_start"",""to"":""human_finish"",""points"":[
+             {""position"":[1.5,1,0]},{""position"":[2.5,1,0]},{""position"":[3.5,1,0]}],
+             ""traversal_regions"":[{""id"":""human-route:corridor"",""min"":[1.2,0.5,-0.5],""max"":[3.8,1.5,0.5]}]}]}";
         private void EnterStair()
         {
             Direction(navigation, 1, 2, new Float3(-.65f, 3.174f, 3.95f));
@@ -191,15 +286,35 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(method, Is.Not.Null);
             return method.Invoke(world, new object[] { topology, "test-map", false });
         }
+        private object ConfigureJson(string json)
+        {
+            if (topology) Object.DestroyImmediate(topology);
+            topology = new TextAsset(json);
+            return ConfigureMap();
+        }
         private static BotNavigationContext Context(object adapter, uint actor)
             => (BotNavigationContext)adapter.GetType().GetMethod("ContextFor").Invoke(adapter, new object[] { actor });
         private Float3 Direction(object adapter, uint actor, uint tick, Float3 position = default)
+            => Direction(adapter, actor, tick, position, objective);
+        private static Float3 Direction(object adapter, uint actor, uint tick, Float3 position,
+            ObjectiveDefinition target)
         {
             var snapshot = new ActorSnapshot(actor, PlayerRole.Human, LifeState.Active, 1, position,
                 Float3.Zero, Rotation.Identity, Float3.Forward, 0, 0, 1, 1, true, 0, 0, null, null, default, 0);
             var method = adapter.GetType().GetMethod("DirectionTo", new[] { typeof(ActorSnapshot), typeof(ObjectiveDefinition), typeof(uint) });
             Assert.That(method, Is.Not.Null);
-            return (Float3)method.Invoke(adapter, new object[] { snapshot, objective, tick });
+            return (Float3)method.Invoke(adapter, new object[] { snapshot, target, tick });
         }
+        private static Float3 Explore(object adapter, uint actor, uint tick, Float3 position)
+        {
+            var snapshot = new ActorSnapshot(actor, PlayerRole.Mosquito, LifeState.Active, 1, position,
+                Float3.Zero, Rotation.Identity, Float3.Forward, 0, 0, 1, 1, true, 0, 0, null, null, default, 0);
+            return (Float3)adapter.GetType().GetMethod("Explore").Invoke(adapter, new object[] { snapshot, tick });
+        }
+        private static bool KnowsRegion(object adapter, string id)
+            => (bool)adapter.GetType().GetMethod("KnowsRegion").Invoke(adapter, new object[] { id });
+        private static ObjectiveDefinition Objective(string region, Float3 point)
+            => new ObjectiveDefinition("objective-" + region, ObjectiveKind.Clean, "task.test",
+                "task.action.hold_clean", point, point, 1, 30, region);
     }
 }

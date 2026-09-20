@@ -10,17 +10,26 @@ namespace LetMeSleep.Gameplay.Unity
     {
         // DTO for the authored map schema. No dependency from Gameplay to Content.
 #pragma warning disable 0649 // Populated by JsonUtility from the authored SpatialData.
-        [Serializable] private sealed class Plan { public int schema_version; public string map_id; public Zone[] zones; public Portal[] portals; public Stair stair; }
+        [Serializable] private sealed class Plan
+        {
+            public int schema_version; public string map_id; public Zone[] zones; public Portal[] portals; public Stair stair;
+            public Zone[] human_zones; public Portal[] human_portals; public HumanRoute[] human_routes;
+        }
         [Serializable] private sealed class Zone { public string id; public float[] min, max; }
         [Serializable] private sealed class Portal { public string id, from, to; public float[] center, normal; public float width, height; public bool door; }
+        [Serializable] private sealed class HumanRoute { public string id, from, to; public RoutePoint[] points; public Zone[] traversal_regions; }
+        [Serializable] private sealed class RoutePoint { public float[] position; }
         [Serializable] private sealed class Flight { public float[] clear_x; public float start_y, end_y, start_z, end_z; }
         [Serializable] private sealed class Stair { public string id, from, to; public Flight lower_flight, upper_flight; public Zone mid_landing; }
 #pragma warning restore 0649
         private readonly UnityGameplayWorld world;
         private readonly BotRegion[] regions;
         private readonly BotPassage[] passages;
+        private readonly BotRegion[] mosquitoRegions;
+        private readonly BotPassage[] mosquitoPassages;
         private readonly Dictionary<string, GameplayDoor> doors = new Dictionary<string, GameplayDoor>();
         private readonly Dictionary<uint, BotPatrol> patrols = new Dictionary<uint, BotPatrol>();
+        private readonly Dictionary<uint, BotPatrol> mosquitoPatrols = new Dictionary<uint, BotPatrol>();
 #if UNITY_EDITOR
         private bool captureDirectionDiagnostic = false;
         private string lastDirectionDiagnostic;
@@ -31,29 +40,74 @@ namespace LetMeSleep.Gameplay.Unity
             var plan = JsonUtility.FromJson<Plan>(data.text);
             if (plan == null || plan.schema_version != 1 || plan.map_id != mapId || plan.zones == null || plan.portals == null)
                 throw new ArgumentException("Bot navigation data must match the active map and schema 1.");
-            regions = plan.zones.Select(z => new BotRegion(z.id, Point(z.min), Point(z.max))).ToArray();
-            if (regions.Length == 0 || regions.Select(r => r.Id).Distinct().Count() != regions.Length)
-                throw new ArgumentException("Bot navigation regions must have unique IDs.");
             MapId = mapId;
-            var links = new List<BotPassage>();
-            var known = new HashSet<string>(regions.Select(r => r.Id));
-            foreach (var portal in plan.portals)
+            mosquitoRegions = Regions(plan.zones, false, "Bot navigation");
+            var mosquitoLinks = PortalPassages(plan.portals, mosquitoRegions, false);
+            AddLegacyStair(plan.stair, mosquitoRegions, mosquitoLinks);
+            mosquitoPassages = mosquitoLinks.ToArray();
+
+            bool hasHumanData = plan.human_zones != null || plan.human_portals != null || plan.human_routes != null;
+            if (!hasHumanData)
             {
-                // Exterior/service voids without authored walkable regions are not routes.
-                if (!known.Contains(portal.from) || !known.Contains(portal.to)) continue;
-                if (portal.width < .3f || portal.height < .5f) continue;
+                regions = mosquitoRegions;
+                passages = mosquitoPassages;
+                return;
+            }
+
+            if (plan.human_zones == null || plan.human_portals == null || plan.human_routes == null)
+                throw new ArgumentException("Human navigation requires human_zones, human_portals and human_routes together.");
+            regions = Regions(plan.human_zones, true, "Human navigation");
+            var humanLinks = PortalPassages(plan.human_portals, regions, true);
+            AddHumanRoutes(plan.human_routes, regions, humanLinks);
+            passages = humanLinks.ToArray();
+        }
+        private BotRegion[] Regions(Zone[] source, bool strict, string label)
+        {
+            var result = source.Select(z =>
+            {
+                if (z == null || (strict && string.IsNullOrWhiteSpace(z.id))) throw new ArgumentException(label + " region ID is required.");
+                var min = Point(z.min); var max = Point(z.max);
+                if (strict && (min.X > max.X || min.Y > max.Y || min.Z > max.Z))
+                    throw new ArgumentException(label + " region bounds are inverted: " + z.id);
+                return new BotRegion(z.id, min, max);
+            }).ToArray();
+            if (result.Length == 0 || result.Select(r => r.Id).Distinct(StringComparer.Ordinal).Count() != result.Length)
+                throw new ArgumentException(label + " regions must have unique IDs.");
+            return result;
+        }
+        private List<BotPassage> PortalPassages(Portal[] source, BotRegion[] graphRegions, bool strict)
+        {
+            var links = new List<BotPassage>(); var known = new HashSet<string>(graphRegions.Select(r => r.Id), StringComparer.Ordinal);
+            var passageIds = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var portal in source)
+            {
+                if (portal == null || string.IsNullOrWhiteSpace(portal.id) || string.IsNullOrWhiteSpace(portal.from) || string.IsNullOrWhiteSpace(portal.to))
+                { if (strict) throw new ArgumentException("Human portal IDs and endpoints are required."); continue; }
+                // Legacy schemas intentionally ignore service/exterior links outside their graph.
+                if (!known.Contains(portal.from) || !known.Contains(portal.to) || portal.from == portal.to)
+                { if (strict) throw new ArgumentException("Human portal endpoints must name distinct human regions: " + portal.id); continue; }
+                if ((strict && (!MathEx.Finite(portal.width) || !MathEx.Finite(portal.height))) ||
+                    portal.width < .3f || portal.height < .5f)
+                { if (strict) throw new ArgumentException("Human portal dimensions are invalid: " + portal.id); continue; }
+                if (strict && !passageIds.Add(portal.id)) throw new ArgumentException("Duplicate human passage ID: " + portal.id);
                 var center = Point(portal.center); var normal = Point(portal.normal).Normalized;
                 if (normal.LengthSquared < .9f) throw new ArgumentException("Invalid portal normal.");
                 links.Add(new BotPassage(portal.id, portal.from, portal.to,
                     new[] { center - normal * .55f, center, center + normal * .55f }));
-                if (portal.door)
-                {
-                    // Missing/ambiguous authored door binding is closed, never an invisible shortcut.
-                    var matches = world.Doors.Values.Where(d => d.name == portal.id).ToArray();
-                    doors.Add(portal.id, matches.Length == 1 ? matches[0] : null);
-                }
+                if (portal.door) BindDoor(portal.id);
             }
-            var stair = plan.stair;
+            return links;
+        }
+        private void BindDoor(string passageId)
+        {
+            if (doors.ContainsKey(passageId)) return;
+            // Missing/ambiguous authored door binding is closed, never an invisible shortcut.
+            var matches = world.Doors.Values.Where(d => d.name == passageId).ToArray();
+            doors.Add(passageId, matches.Length == 1 ? matches[0] : null);
+        }
+        private static void AddLegacyStair(Stair stair, BotRegion[] graphRegions, List<BotPassage> links)
+        {
+            var known = new HashSet<string>(graphRegions.Select(r => r.Id), StringComparer.Ordinal);
             if (stair?.lower_flight != null && stair.upper_flight != null && stair.mid_landing != null && known.Contains(stair.from) && known.Contains(stair.to))
             {
                 var lower = stair.lower_flight; var upper = stair.upper_flight;
@@ -71,20 +125,52 @@ namespace LetMeSleep.Gameplay.Unity
                         new BotRegion(stair.id + ":landing", Point(stair.mid_landing.min) + new Float3(0, .85f - .35f, -.24f),
                             Point(stair.mid_landing.max) + new Float3(0, .85f + .35f, .24f)) }));
             }
-            passages = links.ToArray();
+        }
+        private static void AddHumanRoutes(HumanRoute[] routes, BotRegion[] graphRegions, List<BotPassage> links)
+        {
+            var known = new HashSet<string>(graphRegions.Select(r => r.Id), StringComparer.Ordinal);
+            var ids = new HashSet<string>(links.Select(p => p.Id), StringComparer.Ordinal);
+            foreach (var route in routes)
+            {
+                if (route == null || string.IsNullOrWhiteSpace(route.id) || string.IsNullOrWhiteSpace(route.from) || string.IsNullOrWhiteSpace(route.to) ||
+                    !known.Contains(route.from) || !known.Contains(route.to) || route.from == route.to)
+                    throw new ArgumentException("Human route IDs and distinct human endpoints are required.");
+                if (!ids.Add(route.id)) throw new ArgumentException("Duplicate human passage ID: " + route.id);
+                if (route.points == null || route.points.Length < 2 || route.traversal_regions == null || route.traversal_regions.Length == 0)
+                    throw new ArgumentException("Human route requires a polyline and traversal_regions: " + route.id);
+                var points = route.points.Select(p => p == null ? throw new ArgumentException("Human route point missing: " + route.id) : Point(p.position)).ToArray();
+                var traversal = RegionsForRoute(route.traversal_regions, route.id);
+                links.Add(new BotPassage(route.id, route.from, route.to, points, traversal));
+            }
+        }
+        private static BotRegion[] RegionsForRoute(Zone[] source, string routeId)
+        {
+            var result = source.Select(z =>
+            {
+                if (z == null || string.IsNullOrWhiteSpace(z.id)) throw new ArgumentException("Traversal region ID is required: " + routeId);
+                var min = Point(z.min); var max = Point(z.max);
+                if (min.X > max.X || min.Y > max.Y || min.Z > max.Z)
+                    throw new ArgumentException("Traversal region bounds are inverted: " + routeId + "/" + z.id);
+                return new BotRegion(z.id, min, max);
+            }).ToArray();
+            if (result.Select(r => r.Id).Distinct(StringComparer.Ordinal).Count() != result.Length)
+                throw new ArgumentException("Traversal region IDs must be unique within route: " + routeId);
+            return result;
         }
         public string MapId { get; }
         public BotNavigationContext ContextFor(uint actorId) => new BotNavigationContext(
-            () => patrols.TryGetValue(actorId, out var patrol) ? patrol.CurrentProgress : null,
+            () => patrols.TryGetValue(actorId, out var humanPatrol) ? humanPatrol.CurrentProgress :
+                mosquitoPatrols.TryGetValue(actorId, out var mosquitoPatrol) ? mosquitoPatrol.CurrentProgress : null,
             (passageId, untilTick) =>
             {
-                if (patrols.TryGetValue(actorId, out var patrol)) patrol.InvalidatePassage(passageId, untilTick);
+                if (patrols.TryGetValue(actorId, out var humanPatrol)) humanPatrol.InvalidatePassage(passageId, untilTick);
+                if (mosquitoPatrols.TryGetValue(actorId, out var mosquitoPatrol)) mosquitoPatrol.InvalidatePassage(passageId, untilTick);
             });
         public Float3 Explore(ActorSnapshot actor, uint tick)
         {
             if (actor.Role != PlayerRole.Mosquito) return Float3.Zero;
-            if (!patrols.TryGetValue(actor.ActorId, out var patrol))
-                patrols.Add(actor.ActorId, patrol = new BotPatrol(regions, passages, actor.ActorId));
+            if (!mosquitoPatrols.TryGetValue(actor.ActorId, out var patrol))
+                mosquitoPatrols.Add(actor.ActorId, patrol = new BotPatrol(mosquitoRegions, mosquitoPassages, actor.ActorId));
             var local = world.MapRoot.InverseTransformPoint(actor.Position.ToUnity()).ToFloat();
             var direction = patrol.Direction(local, tick, IsOpen);
             return world.MapRoot.TransformVector(direction.ToUnity()).ToFloat();
