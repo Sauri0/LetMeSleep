@@ -14,7 +14,7 @@ namespace LetMeSleep.Gameplay.Unity
             foreach (var pickup in MapComponents<GameplayToolPickup>())
             {
                 pickup.Initialize();
-                if (pickup.PickupId == 0 || pickup.ToolId != GameplayTools.Flyswatter || toolPickups.ContainsKey(pickup.PickupId) || !pickup.InteractionCollider || !pickup.InteractionCollider.transform.IsChildOf(MapRoot)) throw new InvalidOperationException("Invalid, duplicate or foreign map pickup.");
+                if (pickup.PickupId == 0 || !GameplayTools.IsPickup(pickup.ToolId) || toolPickups.ContainsKey(pickup.PickupId) || !pickup.InteractionCollider || !pickup.InteractionCollider.transform.IsChildOf(MapRoot)) throw new InvalidOperationException("Invalid, duplicate or foreign map pickup.");
                 toolPickups.Add(pickup.PickupId, pickup);
             }
             if (toolPickups.Count > 32) throw new InvalidOperationException("Too many map pickups.");

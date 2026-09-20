@@ -151,7 +151,7 @@ namespace LetMeSleep.Tests.EditMode
 
             var packet = (byte[])encode.Invoke(null, new object[] { config, roster });
             var identityBytes = (byte[])identity.Invoke(null, new object[] { config });
-            Assert.That(packet[0], Is.EqualTo(4));
+            Assert.That(packet[0], Is.EqualTo(5));
             Assert.That(packet.Length, Is.LessThanOrEqualTo(MessageFraming.MaximumMessageBytes));
             Assert.That(ContainsAscii(packet, config.ModeId), Is.True);
             Assert.That(ContainsAscii(packet, config.ModeRuleProfileId), Is.True);
@@ -161,7 +161,7 @@ namespace LetMeSleep.Tests.EditMode
 
             using var reader = new BinaryReader(new MemoryStream(packet, false), Encoding.UTF8);
             reader.ReadByte(); reader.ReadUInt64(); reader.ReadUInt64();
-            foreach (int limit in new[] { 64, 128, 16, 64, 64, 512 }) RoomWireCodec.ReadText(reader, limit);
+            foreach (int limit in new[] { 64, 128, 16, 64, 64, 64, 512 }) RoomWireCodec.ReadText(reader, limit);
             reader.ReadInt32(); reader.ReadSingle(); reader.ReadInt32();
             for (int i = 0; i < 5; i++) reader.ReadSingle();
             Assert.That(reader.ReadByte(), Is.EqualTo(config.ModeRules.MosquitoLives));
@@ -174,9 +174,9 @@ namespace LetMeSleep.Tests.EditMode
         [Test]
         public void ReleaseProtocolAndWireSchemasAreExplicitlyDecoupledFromAlpha()
         {
-            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-3"));
+            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-4"));
             Assert.That(RoomWireCodec.Version, Is.EqualTo(3));
-            Assert.That(GameplayWireCodec.Version, Is.EqualTo(4));
+            Assert.That(GameplayWireCodec.Version, Is.EqualTo(5));
         }
 
         [TestCase(GameModes.Blood)]
@@ -249,7 +249,7 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(Accept(packet), Is.True);
             for (int length = 0; length < packet.Length; length++)
                 Assert.That(Accept(packet.Take(length).ToArray()), Is.False, "truncated at " + length);
-            var old = (byte[])packet.Clone(); old[0] = 3;
+            var old = (byte[])packet.Clone(); old[0] = 4;
             Assert.That(Accept(old), Is.False);
             var changed = (byte[])packet.Clone();
             ReplaceAscii(changed, config.BalanceHash, "x" + config.BalanceHash.Substring(1));

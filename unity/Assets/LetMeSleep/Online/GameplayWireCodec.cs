@@ -13,7 +13,7 @@ namespace LetMeSleep.Online
     public static class GameplayWireCodec
     {
         public const int MaxMessageBytes = 16384, MaxActors = 16, MaxDoors = 128, MaxToolPickups = 32, MaxObjectives = 24;
-        public const ushort Version = 4;
+        public const ushort Version = 5;
         private const uint Magic = 0x314D534C;
         private static readonly UTF8Encoding Utf8 = new UTF8Encoding(false, true);
         private enum Kind : byte { Input = 1, Action, Snapshot, Private, Event }
@@ -106,16 +106,27 @@ namespace LetMeSleep.Online
         private static void WriteInput(BinaryWriter w, PlayerInputCommand c)
         {
             Header(w, c.Header); w.Write(c.MovePlanar.X); w.Write(c.MovePlanar.Y); w.Write(c.Vertical); w.Write(c.ViewYawRadians); w.Write(c.ViewPitchRadians); V(w, c.AimForward);
-            w.Write(c.SprintHeld); w.Write(c.CrouchHeld); w.Write(c.BiteHeld); w.Write(c.UseHeld);
+            w.Write(c.SprintHeld); w.Write(c.CrouchHeld); w.Write(c.BiteHeld); w.Write(c.UseHeld); w.Write(c.PrimaryHeld);
         }
         private static PlayerInputCommand ReadInput(BinaryReader r)
         {
             var h = Header(r); var move = new Float2(F(r, -1, 1), F(r, -1, 1)); float vertical = F(r, -1, 1), yaw = F(r), pitch = F(r, -1.919863f, 1.553344f); var aim = Unit(r);
             Require(Float3.Dot(MathEx.Aim(yaw, pitch), aim.Normalized) >= .99984f, "Aim mismatch.");
-            return new PlayerInputCommand(h, move, vertical, yaw, pitch, aim, B(r), B(r), B(r), B(r));
+            return new PlayerInputCommand(h, move, vertical, yaw, pitch, aim, B(r), B(r), B(r), B(r), B(r));
         }
-        private static void WriteAction(BinaryWriter w, PlayerActionCommand c) { Header(w, c.Header); w.Write((byte)c.Kind); V(w, c.AimForward); }
-        private static PlayerActionCommand ReadAction(BinaryReader r) => new PlayerActionCommand(Header(r), E<ActionKind>(r), Unit(r));
+        private static void WriteAction(BinaryWriter w, PlayerActionCommand c)
+        { Header(w, c.Header); w.Write((byte)c.Kind); V(w, c.AimForward); w.Write((sbyte)c.SlotIndex); w.Write(c.TargetPickupId); w.Write(c.ExpectedPickupRevision); w.Write(c.InventoryRevision); }
+        private static PlayerActionCommand ReadAction(BinaryReader r)
+        {
+            var header = Header(r); var kind = E<ActionKind>(r); var aim = Unit(r);
+            int slot = r.ReadSByte(); uint pickup = r.ReadUInt32(), revision = r.ReadUInt32(), inventory = r.ReadUInt32();
+            Require(slot >= -1 && slot <= 2, "Invalid inventory slot.");
+            if (kind == ActionKind.SelectInventorySlot) Require(inventory != 0 && pickup == 0 && revision == 0, "Invalid slot selection.");
+            else if (kind == ActionKind.BeginThrow || kind == ActionKind.ReleaseThrow || kind == ActionKind.ConfirmPickup)
+                Require(slot >= 0 && pickup != 0 && revision != 0 && inventory != 0, "Missing equipment identity.");
+            else Require(slot == -1 && pickup == 0 && revision == 0 && inventory == 0, "Unexpected equipment payload.");
+            return new PlayerActionCommand(header, kind, aim, slot, pickup, revision, inventory);
+        }
 
         private static void WriteSnapshot(BinaryWriter w, GameSessionState s)
         {
@@ -145,19 +156,28 @@ namespace LetMeSleep.Online
                 if (actor.BiteAttachment.HasValue) Require(actor.BiteAttachment.Value.VictimId != actor.ActorId && actors.Any(a => a.ActorId == actor.BiteAttachment.Value.VictimId && a.Role == PlayerRole.Human), "Invalid bite victim.");
             int doorCount = r.ReadUInt16(); Require(doorCount <= MaxDoors, "Too many doors."); var doors = new DoorSnapshot[doorCount]; ids.Clear(); var surfaceIds = new HashSet<uint>();
             for (int i = 0; i < doorCount; i++) { doors[i] = ReadDoor(r, tick); Require(ids.Add(doors[i].DoorId) && surfaceIds.Add(doors[i].SurfaceId), "Duplicate door/surface."); }
-            int pickupCount = r.ReadByte(); Require(pickupCount <= MaxToolPickups, "Too many pickups."); var pickups = new ToolPickupSnapshot[pickupCount]; ids.Clear(); var owners = new HashSet<uint>();
+            int pickupCount = r.ReadByte(); Require(pickupCount <= MaxToolPickups, "Too many pickups."); var pickups = new ToolPickupSnapshot[pickupCount]; ids.Clear();
             for (int i = 0; i < pickupCount; i++)
             {
                 pickups[i] = ReadPickup(r); Require(ids.Add(pickups[i].PickupId), "Duplicate pickup.");
-                if (pickups[i].OwnerActorId != 0) Require(owners.Add(pickups[i].OwnerActorId) && actors.Any(a => a.ActorId == pickups[i].OwnerActorId && a.Role == PlayerRole.Human && a.EquippedToolId == pickups[i].ToolId), "Invalid pickup owner.");
+                if (pickups[i].OwnerActorId != 0)
+                {
+                    Require(actors.Any(a => a.ActorId == pickups[i].OwnerActorId && a.Role == PlayerRole.Human), "Invalid pickup owner.");
+                }
+                if (pickups[i].Phase == ToolPickupPhase.Projectile)
+                    Require(actors.Any(a => a.ActorId == pickups[i].ThrowerActorId && a.Role == PlayerRole.Human), "Invalid projectile thrower.");
             }
-            foreach (var actor in actors) Require(actor.EquippedToolId == GameplayTools.Hands ? !owners.Contains(actor.ActorId) : owners.Contains(actor.ActorId), "Equipment ownership mismatch.");
+            foreach (var actor in actors)
+            {
+                var owned = pickups.Where(p => p.OwnerActorId == actor.ActorId).ToArray();
+                Require(owned.Length <= 3 && (actor.EquippedToolId == GameplayTools.Hands || owned.Any(p => p.ToolId == actor.EquippedToolId)), "Equipment ownership mismatch.");
+            }
             return new GameSessionState(epoch, round, tick, map, content, balanceHash, mode, phase, remaining,
                 blood, goal, result, winner, actors, doors, pickups, tasksCompleted, tasksGoal, viable);
         }
         private static void ValidateBalanceHash(string hash, string mode)
         {
-            var fields = hash.Split(':'); Require(fields.Length == 16 && fields[0] == BalanceProfile.Id, "Unsupported balance identity.");
+            var fields = hash.Split(':'); Require(fields.Length == 17 && fields[0] == BalanceProfile.Id, "Unsupported balance identity.");
             var values = new float[5];
             for (int i = 0; i < 5; i++) Require(float.TryParse(fields[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out values[i]) && MathEx.Finite(values[i]), "Invalid balance value.");
             var balance = new BalanceProfile(values[0], values[1], values[2], values[3], values[4]);
@@ -166,7 +186,8 @@ namespace LetMeSleep.Online
             for (int i = 0; i < numbers.Length; i++) Require(uint.TryParse(fields[i + 7], NumberStyles.None, CultureInfo.InvariantCulture, out numbers[i]), "Invalid mode profile value.");
             var rules = new ModeRuleProfile(mode, numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7]);
             Require(numbers[0] == rules.MosquitoLives && fields[15].Length == 64 && fields[15].All(c => c >= '0' && c <= '9' || c >= 'a' && c <= 'f')
-                && hash == balance.Hash + ":" + rules.Hash + ":" + fields[15], "Noncanonical balance identity.");
+                && fields[16] == HumanEquipmentProfile.Hash
+                && hash == balance.Hash + ":" + rules.Hash + ":" + fields[15] + ":" + fields[16], "Noncanonical balance identity.");
         }
         private static bool ResultMatchesMode(string mode, RoundEndReason reason)
         {
@@ -202,7 +223,7 @@ namespace LetMeSleep.Online
             SurfaceAttachment? surface = B(r) ? ReadSurface(r) : (SurfaceAttachment?)null;
             BiteAttachment? bite = B(r) ? ReadBite(r) : (BiteAttachment?)null;
             var strike = ReadStrike(r, hostTick);
-            string equipped = S(r, 24); Require(equipped == GameplayTools.Hands || (role == PlayerRole.Human && equipped == GameplayTools.Flyswatter), "Invalid equipment.");
+            string equipped = S(r, 24); Require(equipped == GameplayTools.Hands || (role == PlayerRole.Human && GameplayTools.IsPickup(equipped)), "Invalid equipment.");
             int lives = r.ReadByte();
             if (strike.Phase != StrikePhase.None) Require(strike.ToolId == equipped || (GameplayTools.IsFlyswatter(strike.ToolId) && equipped == GameplayTools.Flyswatter), "Strike/equipment mismatch.");
             if (role == PlayerRole.Human) Require((life == LifeState.Active || life == LifeState.Falling || life == LifeState.Fainted || life == LifeState.Recovering) && !surface.HasValue && !bite.HasValue, "Human state mismatch.");
@@ -216,12 +237,17 @@ namespace LetMeSleep.Online
             return new ActorSnapshot(id, role, life, revision, position, velocity, body, view, yaw, pitch, viewRevision, poseRevision, grounded, crouch, motion, surface, bite, strike, recovery, equipped, lives);
         }
         private static void WritePickup(BinaryWriter w, ToolPickupSnapshot p)
-        { w.Write(p.PickupId); S(w, p.ToolId, 24); V(w, p.Position); Q(w, p.Rotation); w.Write(p.OwnerActorId); w.Write(p.Revision); }
+        { w.Write(p.PickupId); S(w, p.ToolId, 24); V(w, p.Position); Q(w, p.Rotation); w.Write(p.OwnerActorId); w.Write(p.Revision); w.Write((byte)p.Phase); V(w, p.Velocity); w.Write(p.ThrowerActorId); w.Write(p.ResourceUnits); w.Write(p.ImpactConsumed); }
         private static ToolPickupSnapshot ReadPickup(BinaryReader r)
         {
-            uint id = Id(r); string tool = S(r, 24); Require(tool == GameplayTools.Flyswatter, "Unknown pickup tool.");
+            uint id = Id(r); string tool = S(r, 24); Require(GameplayTools.IsPickup(tool), "Unknown pickup tool.");
             var position = V(r); var rotation = Q(r); uint owner = r.ReadUInt32(), revision = Id(r);
-            return new ToolPickupSnapshot(id, tool, position, rotation, owner, revision);
+            var phase = E<ToolPickupPhase>(r); var velocity = V(r); uint thrower = r.ReadUInt32(); int resource = r.ReadInt32(); bool consumed = B(r);
+            Require(resource >= 0 && resource <= GameplayTools.InitialResourceUnits(tool), "Invalid pickup resources.");
+            Require((phase == ToolPickupPhase.Held) == (owner != 0), "Pickup phase/owner mismatch.");
+            if (phase == ToolPickupPhase.Projectile) Require(tool == GameplayTools.Slipper && thrower != 0 && velocity.Length <= 200, "Invalid projectile.");
+            else Require(thrower == 0 && velocity.LengthSquared == 0 && !consumed, "Inactive projectile payload.");
+            return new ToolPickupSnapshot(id, tool, position, rotation, owner, revision, phase, velocity, thrower, resource, consumed);
         }
         private static void WriteSurface(BinaryWriter w, SurfaceAttachment a) { w.Write(a.SurfaceId); w.Write(a.Revision); V(w, a.LocalPoint); V(w, a.LocalNormal); V(w, a.TangentForward); }
         private static SurfaceAttachment ReadSurface(BinaryReader r) => new SurfaceAttachment(Id(r), Id(r), V(r), Unit(r), Unit(r));
@@ -235,7 +261,7 @@ namespace LetMeSleep.Online
         private static StrikeState ReadStrike(BinaryReader r, uint tick)
         {
             var phase = E<StrikePhase>(r); if (phase == StrikePhase.None) return default;
-            ulong id = Epoch(r); string tool = S(r, 24); Require(tool == GameplayTools.Hands || GameplayTools.IsFlyswatter(tool), "Unknown tool.");
+            ulong id = Epoch(r); string tool = S(r, 24); Require(tool == GameplayTools.Hands || GameplayTools.IsFlyswatter(tool) || GameplayTools.IsPickup(tool), "Unknown tool.");
             int hand = r.ReadSByte(); Require(hand == -1 || hand == 1, "Invalid hand."); uint start = Tick(r); Require(start <= tick, "Future strike.");
             return new StrikeState(id, tool, hand, phase, start, V(r), V(r), Unit(r), F(r, 0, 1));
         }
@@ -251,13 +277,41 @@ namespace LetMeSleep.Online
             Require(p != null, "Null private state."); w.Write(p.SessionEpoch); w.Write(p.RoundId); w.Write(p.HostTick); w.Write(p.ActorId); w.Write(p.LastAcceptedInputSequence); w.Write(p.LastAcceptedActionSequence); w.Write((byte)p.Rejection); w.Write((byte)p.InteractionHint); w.Write(p.PreparationProgress); w.Write(p.ExtractionProgress); w.Write(p.RecoverySeconds); w.Write(p.HelpTargetId); w.Write(p.CanAct); w.Write((byte)p.LastDoorResult);
             w.Write(p.TaskAssignment != null);
             if (p.TaskAssignment != null) WriteTaskAssignment(w, p.TaskAssignment);
+            var inventory = p.Inventory;
+            w.Write(inventory.Revision); w.Write(inventory.Slot0); w.Write(inventory.Slot1); w.Write(inventory.Slot2); w.Write((sbyte)inventory.SelectedSlot);
+            w.Write(p.StaminaUnits); w.Write(p.SprintExhausted);
+            var charge = p.ThrowCharge;
+            w.Write(charge.PickupId); w.Write(charge.InventoryRevision); w.Write(charge.ElapsedTicks); w.Write(charge.AwaitingRelease); w.Write(charge.ReleaseWaitTicks);
+            w.Write(p.SwapOffer.HasValue);
+            if (p.SwapOffer.HasValue)
+            { var offer = p.SwapOffer.Value; w.Write(offer.PickupId); w.Write(offer.PickupRevision); w.Write(offer.InventoryRevision); w.Write((sbyte)offer.SlotIndex); w.Write(offer.ExpiresAtTick); }
         }
         private static ActorPrivateState ReadPrivate(BinaryReader r)
         {
             ulong epoch = Epoch(r), round = Epoch(r); uint tick = Tick(r), actor = Id(r), input = r.ReadUInt32(), action = r.ReadUInt32(); var reject = E<CommandReject>(r); var hint = E<InteractionHint>(r);
             float preparation = F(r, 0, 1), extraction = F(r, 0, 1.001f), recovery = F(r, 0, 120); uint help = r.ReadUInt32(); Require(help != actor, "Self help."); bool canAct = B(r); var door = E<DoorUseResult>(r);
             TaskAssignment assignment = B(r) ? ReadTaskAssignment(r, tick) : null;
-            return new ActorPrivateState(actor, input, action, reject, hint, preparation, extraction, recovery, help, canAct, door, epoch, round, tick, assignment);
+            uint revision = r.ReadUInt32(), slot0 = r.ReadUInt32(), slot1 = r.ReadUInt32(), slot2 = r.ReadUInt32(); int selected = r.ReadSByte();
+            Require(selected >= -1 && selected <= 2, "Invalid selected slot.");
+            var slots = new[] { slot0, slot1, slot2 }.Where(id => id != 0).ToArray();
+            Require(slots.Distinct().Count() == slots.Length && (revision != 0 || slots.Length == 0 && selected == -1), "Invalid inventory identity.");
+            var inventory = new HumanInventorySnapshot(revision, slot0, slot1, slot2, selected);
+            int stamina = r.ReadInt32(); bool exhausted = B(r);
+            Require(stamina >= 0 && stamina <= HumanEquipmentProfile.Maximum, "Invalid stamina.");
+            uint pickup = r.ReadUInt32(), chargeRevision = r.ReadUInt32(); int elapsed = r.ReadInt32(); bool awaiting = B(r); int wait = r.ReadInt32();
+            Require(elapsed >= 0 && elapsed <= HumanEquipmentProfile.ChargeLimitTicks && wait >= 0 && wait < HumanEquipmentProfile.ReleaseWaitTicks, "Invalid charge duration.");
+            if (pickup == 0) Require(chargeRevision == 0 && elapsed == 0 && !awaiting && wait == 0, "Inactive charge payload.");
+            else Require(pickup == inventory.ActivePickup && revision != 0 && chargeRevision == revision && (awaiting || wait == 0), "Charge/inventory mismatch.");
+            var charge = new ThrowChargeSnapshot(pickup, chargeRevision, elapsed, awaiting, wait);
+            PickupSwapOffer? offer = null;
+            if (B(r))
+            {
+                uint incoming = Id(r), pickupRevision = Id(r), inventoryRevision = Id(r); int slot = r.ReadSByte(); uint expires = r.ReadUInt32();
+                Require(slot >= 0 && slot <= 2 && slot == selected && inventoryRevision == revision && slots.Length == 3 && !slots.Contains(incoming) && expires >= tick && expires <= tick + 60, "Invalid swap offer.");
+                offer = new PickupSwapOffer(incoming, pickupRevision, inventoryRevision, slot, expires);
+            }
+            Require(revision != 0 || stamina == 0 && !exhausted && !charge.Active && !offer.HasValue, "Equipment on empty actor inventory.");
+            return new ActorPrivateState(actor, input, action, reject, hint, preparation, extraction, recovery, help, canAct, door, epoch, round, tick, assignment, inventory, stamina, exhausted, charge, offer);
         }
         private static void WriteTaskAssignment(BinaryWriter w, TaskAssignment assignment)
         {

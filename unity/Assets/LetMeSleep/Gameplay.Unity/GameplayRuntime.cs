@@ -45,7 +45,8 @@ namespace LetMeSleep.Gameplay.Unity
         private uint inputSequence, actionSequence, knownViewRevision;
         private bool biteNeedsRelease, wasAttached, focus = true, finishedSent;
         private bool controlsNeedRelease;
-        private readonly Queue<ActionKind> queuedActions = new Queue<ActionKind>();
+        private readonly Queue<PlayerActionCommand> queuedActions = new Queue<PlayerActionCommand>();
+        private PlayerActionCommand? localThrow;
         private PlayerInputCommand held;
         private GameplayRoundConfig roundConfig;
         private float cameraDistance;
@@ -58,12 +59,12 @@ namespace LetMeSleep.Gameplay.Unity
             roundConfig = config; accumulator = sendAccumulator = snapshotAccumulator = 0; inputSequence = actionSequence = knownViewRevision = 0; yaw = pitch = 0; cameraDistance = 0; finishedSent = false;
             LatestSnapshot = null; LocalPrivate = null; held = default;
             replicaGate.Reset(config);
-            queuedActions.Clear(); bots.Clear(); biteNeedsRelease = true; wasAttached = false; controlsNeedRelease = false;
-            botNavigation = null; World.ResetBotSteering();
+            queuedActions.Clear(); bots.Clear(); localThrow = null; biteNeedsRelease = true; wasAttached = false; controlsNeedRelease = false;
+            botNavigation = World.ConfigureModeMap(NavigationData, config.MapId, config.ModeId == GameModes.Tasks);
+            World.ResetBotSteering();
             if (IsHost)
             {
                 Authority.BeginRound(config, roster);
-                if (NavigationData) botNavigation = new GameplayBotNavigation(NavigationData, config.MapId, World);
                 foreach (var spawn in roster.Where(a => a.IsBot)) bots.Add(spawn.ActorId, new BotController());
                 ApplySnapshot(Authority.CaptureSnapshot());
             }
@@ -74,7 +75,7 @@ namespace LetMeSleep.Gameplay.Unity
         {
             if (IsHost) Authority?.EndRound(RoundEndReason.Aborted);
             roundConfig = null; LatestSnapshot = null; LocalPrivate = null; queuedActions.Clear(); bots.Clear(); SetInputBlocked(true);
-            botNavigation = null; World?.ResetBotSteering();
+            botNavigation = null; World?.ResetBotSteering(); World?.ResetModeMap();
             replicaGate.Reset(null);
         }
         public void SetInputBlocked(bool blocked)
@@ -132,32 +133,85 @@ namespace LetMeSleep.Gameplay.Unity
             if (keyboard.eKey.wasPressedThisFrame && attached && wasAttached) { Enqueue(ActionKind.Detach); biteNeedsRelease = true; }
             wasAttached = attached;
             if (keyboard.spaceKey.wasPressedThisFrame && self.Role == PlayerRole.Human) Enqueue(ActionKind.Jump);
-            if (keyboard.fKey.wasPressedThisFrame) Enqueue(self.Role == PlayerRole.Human ? ActionKind.Use : ActionKind.PerchToggle);
+            if (self.Role == PlayerRole.Human && keyboard.eKey.wasPressedThisFrame)
+            {
+                if (LocalPrivate?.SwapOffer is PickupSwapOffer offer)
+                    Enqueue(new PlayerActionCommand(default, ActionKind.ConfirmPickup, default, offer.SlotIndex, offer.PickupId, offer.PickupRevision, offer.InventoryRevision));
+                else Enqueue(ActionKind.Use);
+            }
+            if (self.Role == PlayerRole.Mosquito && keyboard.fKey.wasPressedThisFrame) Enqueue(ActionKind.PerchToggle);
             if (keyboard.gKey.wasPressedThisFrame && self.Role == PlayerRole.Human) Enqueue(ActionKind.DropTool);
-            if (mouse.leftButton.wasPressedThisFrame && self.Role == PlayerRole.Human) Enqueue(ActionKind.Primary);
+            if (self.Role == PlayerRole.Human)
+            {
+                PollEquipment(keyboard, mouse, self);
+                if (mouse.leftButton.wasPressedThisFrame)
+                {
+                    if (self.EquippedToolId == GameplayTools.Slipper && LocalPrivate != null)
+                    {
+                        var inventory = LocalPrivate.Inventory;
+                        var pickup = LatestSnapshot.ToolPickups.FirstOrDefault(p => p.PickupId == inventory.ActivePickup && p.OwnerActorId == self.ActorId);
+                        if (pickup.PickupId != 0)
+                        {
+                            localThrow = new PlayerActionCommand(default, ActionKind.BeginThrow, default, inventory.SelectedSlot, pickup.PickupId, pickup.Revision, inventory.Revision);
+                            Enqueue(localThrow.Value);
+                        }
+                    }
+                    else Enqueue(ActionKind.Primary);
+                }
+                if (mouse.leftButton.wasReleasedThisFrame && localThrow.HasValue)
+                {
+                    var charge = localThrow.Value;
+                    Enqueue(new PlayerActionCommand(default, ActionKind.ReleaseThrow, default, charge.SlotIndex, charge.TargetPickupId, charge.ExpectedPickupRevision, charge.InventoryRevision));
+                    localThrow = null;
+                }
+            }
             if (self.Role == PlayerRole.Mosquito) MosquitoCameraDistance = Mathf.Clamp(MosquitoCameraDistance - mouse.scroll.ReadValue().y * .0015f, 0, 2.5f);
             float x = (keyboard.dKey.isPressed ? 1 : 0) - (keyboard.aKey.isPressed ? 1 : 0);
             float y = (keyboard.wKey.isPressed ? 1 : 0) - (keyboard.sKey.isPressed ? 1 : 0);
             float vertical = self.Role == PlayerRole.Mosquito ? (keyboard.spaceKey.isPressed ? 1 : 0) - (keyboard.leftCtrlKey.isPressed ? 1 : 0) : 0;
-            held = new PlayerInputCommand(default, new Float2(x, y), vertical, yaw, pitch, LocalViewForward, keyboard.leftShiftKey.isPressed, keyboard.leftCtrlKey.isPressed, e && !biteNeedsRelease, keyboard.rKey.isPressed);
+            held = new PlayerInputCommand(default, new Float2(x, y), vertical, yaw, pitch, LocalViewForward, keyboard.leftShiftKey.isPressed, keyboard.leftCtrlKey.isPressed, e && !biteNeedsRelease, self.Role == PlayerRole.Human ? e : keyboard.rKey.isPressed, mouse.leftButton.isPressed);
         }
-        private void Enqueue(ActionKind kind) { if (queuedActions.Count < 8) queuedActions.Enqueue(kind); }
+        private void Enqueue(ActionKind kind) => Enqueue(new PlayerActionCommand(default, kind, default));
+        private void Enqueue(PlayerActionCommand command) { if (queuedActions.Count < 8) queuedActions.Enqueue(command); }
+        private void PollEquipment(Keyboard keyboard, Mouse mouse, ActorSnapshot self)
+        {
+            if (LocalPrivate == null || LocalPrivate.Inventory.Revision == 0) return;
+            int selected = LocalPrivate.Inventory.SelectedSlot, next = selected;
+            if (keyboard.digit1Key.wasPressedThisFrame) next = 0;
+            else if (keyboard.digit2Key.wasPressedThisFrame) next = 1;
+            else if (keyboard.digit3Key.wasPressedThisFrame) next = 2;
+            else if (keyboard.digit0Key.wasPressedThisFrame) next = -1;
+            else if (mouse.scroll.ReadValue().y != 0) next = ((selected + 1 + (mouse.scroll.ReadValue().y > 0 ? 1 : 3)) % 4) - 1;
+            if (next == selected) return;
+            localThrow = null;
+            Enqueue(ActionKind.CancelThrow);
+            Enqueue(new PlayerActionCommand(default, ActionKind.SelectInventorySlot, default, next, 0, 0, LocalPrivate.Inventory.Revision));
+        }
         private void SendNeutral()
         {
             if (roundConfig == null || LocalActorId == 0) return;
+            localThrow = null;
+            var self = LocalActor();
+            if (self != null && self.Role == PlayerRole.Human && !self.Eliminated)
+            {
+                var cancel = new PlayerActionCommand(new CommandHeader(roundConfig.SessionEpoch, roundConfig.RoundId, LocalActorId, ++actionSequence, LatestSnapshot.HostTick, self.ViewRevision), ActionKind.CancelThrow, LocalViewForward);
+                if (IsHost) Authority.SubmitAction(LocalPrincipal, cancel); else ActionReady?.Invoke(cancel);
+            }
             held = new PlayerInputCommand(default, default, 0, yaw, pitch, LocalViewForward); SendLocal(true);
         }
         private void SendLocal(bool forceNeutral = false)
         {
             var self = LocalActor(); if (self == null) return;
+            if (self.Eliminated)
+            { held = new PlayerInputCommand(default, default, 0, yaw, pitch, LocalViewForward); queuedActions.Clear(); return; }
             bool neutral = forceNeutral || InputBlocked || !focus || controlsNeedRelease || !BodyControlsAvailable(self.LifeState);
             var h = new CommandHeader(roundConfig.SessionEpoch, roundConfig.RoundId, LocalActorId, ++inputSequence, LatestSnapshot.HostTick, self.ViewRevision);
-            var input = new PlayerInputCommand(h, neutral ? default : held.MovePlanar, neutral ? 0 : held.Vertical, yaw, pitch, LocalViewForward, !neutral && held.SprintHeld, !neutral && held.CrouchHeld, !neutral && held.BiteHeld, !neutral && held.UseHeld);
+            var input = new PlayerInputCommand(h, neutral ? default : held.MovePlanar, neutral ? 0 : held.Vertical, yaw, pitch, LocalViewForward, !neutral && held.SprintHeld, !neutral && held.CrouchHeld, !neutral && held.BiteHeld, !neutral && held.UseHeld, !neutral && held.PrimaryHeld);
             if (IsHost) Authority.SubmitInput(LocalPrincipal, input); else InputReady?.Invoke(input);
             while (queuedActions.Count > 0)
             {
                 var action = queuedActions.Dequeue(); if (neutral) continue;
-                var command = new PlayerActionCommand(new CommandHeader(roundConfig.SessionEpoch, roundConfig.RoundId, LocalActorId, ++actionSequence, LatestSnapshot.HostTick, self.ViewRevision), action, LocalViewForward);
+                var command = new PlayerActionCommand(new CommandHeader(roundConfig.SessionEpoch, roundConfig.RoundId, LocalActorId, ++actionSequence, LatestSnapshot.HostTick, self.ViewRevision), action.Kind, LocalViewForward, action.SlotIndex, action.TargetPickupId, action.ExpectedPickupRevision, action.InventoryRevision);
                 if (IsHost) Authority.SubmitAction(LocalPrincipal, command); else ActionReady?.Invoke(command);
             }
         }
@@ -171,6 +225,7 @@ namespace LetMeSleep.Gameplay.Unity
             {
                 if ((next + bot.Key) % 3 != 0) continue;
                 var self = snapshot.Actors.FirstOrDefault(a => a.ActorId == bot.Key); if (self == null) continue;
+                if (self.Eliminated) continue;
                 var observation = ObserveBot(self, snapshot);
                 var commands = bot.Value.Decide(observation, new BotTick(snapshot.SessionEpoch, snapshot.RoundId, next));
                 Authority.SubmitBotInput(commands.Input); if (commands.Action.HasValue) Authority.SubmitBotAction(commands.Action.Value);
@@ -207,7 +262,12 @@ namespace LetMeSleep.Gameplay.Unity
             }
             var doorQuery = new DoorInteractionQuery(self.ActorId, state.HostTick, origin, self.ViewForward, 1.6f);
             bool doorAhead = World.TryDoorInteraction(doorQuery, out var door) && World.Doors.TryGetValue(door.DoorId, out var physicalDoor) && Mathf.Abs(physicalDoor.AngleRadians) < .1f;
-            return new BotObservation(self, visible, free, doorAhead, direction => World.SteerBot(self, direction));
+            ActorPrivateState privateState = Authority.CapturePrivate(self.ActorId);
+            ObjectiveDefinition objective = privateState?.TaskAssignment == null ? null : roundConfig.Objectives
+                .FirstOrDefault(item => item.ObjectiveId == privateState.TaskAssignment.ObjectiveId);
+            return new BotObservation(self, visible, free, doorAhead, direction => World.SteerBot(self, direction),
+                roundConfig.ModeId, privateState, objective,
+                item => botNavigation == null ? Float3.Zero : World.TaskDirection(self, item));
         }
         public void ApplySnapshot(GameSessionState snapshot)
         {
@@ -231,12 +291,13 @@ namespace LetMeSleep.Gameplay.Unity
         }
         public void ApplySnapshot(GameSessionState snapshot, double renderHostTime) => ApplySnapshot(snapshot);
         private static bool BodyControlsAvailable(LifeState state) =>
-            state != LifeState.Falling && state != LifeState.Fainted && state != LifeState.Stunned && state != LifeState.Recovering;
+            state != LifeState.Falling && state != LifeState.Fainted && state != LifeState.Stunned &&
+            state != LifeState.Recovering && state != LifeState.Eliminated;
         private void ClearIncapacitatedInput(ActorSnapshot self)
         {
             yaw = self.ViewYawRadians; pitch = self.ViewPitchRadians;
             held = new PlayerInputCommand(default, default, 0, yaw, pitch, LocalViewForward);
-            queuedActions.Clear(); biteNeedsRelease = true; controlsNeedRelease = true;
+            queuedActions.Clear(); localThrow = null; biteNeedsRelease = true; controlsNeedRelease = true;
         }
         public void ApplyPrivate(ActorPrivateState state)
         { if (replicaGate.AcceptPrivate(state, LocalActorId)) { LocalPrivate = state; PrivateReady?.Invoke(state); } }
