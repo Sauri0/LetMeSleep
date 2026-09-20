@@ -15,21 +15,25 @@ CEO coordina revisión en movimiento de cinco mapas y próximos turnos.
 - Motion01 generó clips Puerto/Camp. CEO inspeccionó cuatro frames de cada uno:
   bandas de terreno/piso visibles en faro; Camp testigo parcialmente oculto.
   Técnica prepara A/B de autoría Puerto, sin cambios aplicados aún.
-- UI freeze03: gate 2/2 PASS, pero CEO detecta solapamiento de InteractionPrompt
-  con inventario y una letra huérfana en REUTILIZABLE. Freeze04 corrige ancho y
-  distribución; CPU0/0, revisión nativa pendiente. Intento de lanzamiento abortó
-  antes de iniciar por Unity de otro proyecto; no se interviene ese proceso.
+- UI freeze04 integrada en e2d7d80: gate2/2 y ochoPNG inspeccionados, más cinco
+  pruebas funcionales y un caso visual modular que pasó tras aportar argumento
+  de evidencia faltante. Primera mejora de menú/HUD; no cierre de todo el diseño.
+  Ver UI-REDESIGN-FIRST-PASS-20260920.md. WIP Atkinson preservado aparte.
 - HumanArmPose01 completó en aislado: manos llegan a177,70° de codo con longitudes
   óseas constantes; no prueba elongación de skinning. Matamoscas izquierda queda
   excluida por no ser ruta válida. Marcha/deformación visual aún pendientes.
-- CEO prepara HumanMotionVisual01 (CPU0/0): secuencia actual idle/marcha/golpe
-  en estudio de frente/perfil con snapshots inyectados; no acredita input ni
-  autoría nueva. Estado prepara integración R4 aislada, sin tocar producción:
-  deben resolverse propiedad de pose, posición autoritativa y recuperación.
-- PuertoFloorRepair01 v1 recorta huella real en memoria con atributos conservados;
-  grilla no ejecutó por Stopwatch del fixture sin inicializar. FAIL preservado,
-  sin assets cambiados. Técnica agrega exactos Frozen y corrige runner antes de
-  siguiente gate. No aceptar la reparación por área geométrica solamente.
+- HumanMotionVisual01 completó1/1,144PNG y seisMP4 normalizados (no tiempo real),
+  ochoPNG inspeccionados. Diagnóstico estudio con snapshots y attention desactivada;
+  no acredita input ni transiciones. Red revisa fuentes: pelvis baja6–9,5cm y
+  codo casi constante explican marcha rígida; informe preciso en preparación.
+- Estado prepara código externo R4 con raíz guiada por autoridad; primer contrato
+  réplica libre+fallback al separarse0.055m no basta como solución visual. Debe
+  mantener representación vulnerable, propiedad de pose y recuperación coherentes.
+- PuertoFloorRepair01 v2 PASS en memoria: mismos dos Frozen pasan de desprendidos
+  a Surface1000132; exactReconstruction4/4, grilla19estables/31inválidos sin cambios,
+  caras coplanares50→0, perímetro32/32 sin huecos. CEO cotejó JSON y algoritmo.
+  V1 falló por Stopwatch del fixture, preservado. Sin assets cambiados; técnica
+  prepara clip A/B y luego hará falta persistencia/readback antes de integración.
 
 ## Candidata Windows 04 comprobada; Puerto pendiente
 
