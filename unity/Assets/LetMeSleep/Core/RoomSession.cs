@@ -16,6 +16,12 @@ namespace LetMeSleep.Core
         public int Next(int exclusiveMax) { return random.Next(exclusiveMax); }
     }
 
+    public static class GameModes
+    {
+        public const string Blood = "blood", Survival = "survival", Tasks = "tasks";
+        public static bool IsValid(string mode) => mode == Blood || mode == Survival || mode == Tasks;
+        public static string ProfileId(string mode) => IsValid(mode) ? "v020-" + mode + "-1" : null;
+    }
     public sealed class RoomRules
     {
         public const int Capacity = 16;
@@ -39,13 +45,17 @@ namespace LetMeSleep.Core
         public int RoundSeconds { get; }
         public float BloodQuota { get; }
         public string MapId { get; }
-        public RoomRules(int? humanCount = null, int roundSeconds = 180, float bloodQuota = 20, string mapId = AlfaMap)
+        public string ModeId { get; }
+        public string ModeRuleProfileId { get; }
+        public RoomRules(int? humanCount = null, int roundSeconds = 180, float bloodQuota = 20, string mapId = AlfaMap, string modeId = GameModes.Blood, string modeRuleProfileId = null)
         {
-            HumanCount = humanCount; RoundSeconds = roundSeconds; BloodQuota = bloodQuota; MapId = mapId;
+            HumanCount = humanCount; RoundSeconds = roundSeconds; BloodQuota = modeId == GameModes.Blood ? bloodQuota : 0; MapId = mapId;
+            ModeId = modeId; ModeRuleProfileId = modeRuleProfileId ?? GameModes.ProfileId(modeId);
         }
         public bool IsValid => (!HumanCount.HasValue || (HumanCount.Value >= 1 && HumanCount.Value <= 5))
-            && RoundSeconds >= 30 && RoundSeconds <= 1800 && BloodQuota > 0 && BloodQuota <= 1000
-            && !float.IsNaN(BloodQuota) && !float.IsInfinity(BloodQuota) && IsSupportedMapId(MapId);
+            && RoundSeconds >= 30 && RoundSeconds <= 1800
+            && (ModeId == GameModes.Blood ? BloodQuota > 0 && BloodQuota <= 1000 && !float.IsNaN(BloodQuota) && !float.IsInfinity(BloodQuota) : BloodQuota == 0)
+            && GameModes.IsValid(ModeId) && ModeRuleProfileId == GameModes.ProfileId(ModeId) && IsSupportedMapId(MapId);
         public static bool IsSupportedMapId(string mapId) => Maps.Contains(mapId);
     }
 
