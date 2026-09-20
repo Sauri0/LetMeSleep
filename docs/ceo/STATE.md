@@ -2,6 +2,39 @@
 
 ## Navegación por rol y objetivos externos — último gate
 
+- `3988b7` integra steering compuesto: native03 10/10 PASS; Yate testigo
+  flybridge pasa310/330, Casa12 mantiene47/50 y21onward comunes sin regresiones.
+  Yate motor02:19/50; sólo dos mejoras de locomoción en45 entradas comparables,
+  cinco de dining con autoría cambiada aparte. Catálogo todavía rechazado.
+- Puerto v5 añade undécimo objetivo de piso del faro; static05 PASS11. El
+  máximo autorado es24 según wire, mínimo10 segúnD06. `e07a069` añade cinco
+  etiquetas; catalog-labels-native-02.xml35/35 PASS, sin omitidos.
+- Camp motor01:21/50, spawn2 sólo1ruta, dos objetivos con1onward; no instalar.
+  Puerto motor01:19/55 y faltas de cobertura, aún con criterio viejo de llegada.
+- Se confirmó falso FAIL del fixture en Yate coffee: diagnostic01 completó90
+  ticks de trabajo real desde otro lado del objeto. Fixture acepta ahora
+  incremento NUEVO de progreso+grounded como llegada válida; diagnostic02
+  PASS11. Camp stump02 conserva FAIL330/progreso0: BotController se frena por
+  proximidad aunque Stump_Top tape el target. Astra corrige condición de trabajo
+  en BotController/GameplayRuntime y tests asignados; no cambia mapas ni motor.
+- Isla approaches05:13 candidatos geométricos y1 negativo válido, cero errores
+  y hashes/cleanup intactos; referencia las10 llegadas de routes04 sin repetirlas.
+  Técnica prepara grafo/catálogo externo de12 puntos, todavía sin integrar.
+
+- Gate posterior `bot-composite-stair-native-01.xml`: 8/10 PASS, dos fallos
+  nuevos (escalera compuesta y pared en el mismo mesh). Cambio steering NO
+  aceptado ni commiteado; Astra corrige horizonte predictor con ticks completos
+  y distancia realmente recorrida. Propiedad sólo steering y sus tests.
+- `camp-port-geometry-probe-01.log`: seis candidatos Camp aceptados; dos de
+  Puerto (Bench_05 y Lighthouse_OpenDoor) aceptados, CentralStairPost rechazado
+  por región. Campv5/Puertov4 pendientes de cobertura y motor.
+- Isla native04 ejecutó 18 recorridos: 10 ARRIVED, 6 BUDGET, 2 STALLED.
+  Puente y acceso oeste pasan en ambos sentidos; tramo oeste recortado cuesta
+  237 ticks estimados /234 reales, no los337 de la medición hasta extremo este.
+  Los14 probes de objetos dieron ERROR por resolución incorrecta del path;
+  exit0 y errors[] global NO acreditan ese bloque. Técnica prepara v5 sólo
+  approaches con propagación de errores, preservando rutas válidas de04.
+
 - Casa ronda02, después de integrar el grafo por rol: 20/20, cuota14,
   4500 ticks, TasksMet/Human; recibo human-graph-round-regression-receipt-01.json.
 - Yate entrada física native01: seguimiento explícito MoveHuman por 16 peldaños

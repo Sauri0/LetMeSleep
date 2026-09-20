@@ -2,6 +2,21 @@
 
 ## Estado posterior y entradas adicionales
 
+La decisión D06 pide **al menos diez** objetivos por mapa. El catálogo final
+admite de 10 a 24 (límite vigente de `GameplayWireCodec.MaxObjectives`), todos
+distintos. El límite anterior de exactamente diez era una restricción del
+fixture, no del producto. Puerto v5 añade un undécimo punto cerca del faro.
+
+La llegada física admite dos testigos: aproximación autorada con las distancias
+originales, o actor apoyado con incremento NUEVO de progreso aceptado por la
+autoridad en el objetivo asignado. Progreso retenido o decreciente no acredita
+llegada. La ronda completa sigue siendo obligatoria antes de instalar.
+Motivo: Yate coffee diagnostic01 completaba90 ticks desde otro lado válido pero
+el fixture fallaba por no pisar el approach exacto. Diagnostic02 reconoce el
+primer progreso real en tick11; Camp stump02 conserva FAIL con progreso0 porque
+otra pieza tapa su contacto. Este cambio de criterio no se cuenta como mejora
+de locomoción ni se mezcla silenciosamente con comparaciones anteriores.
+
 `ProbeExternalGeometryOnly` admite entre 1 y 128 candidatos distintos por mapa
 con el mismo manifiesto. Evalúa contacto, soporte, espacio corporal, región,
 LOS y presupuesto authored desde al menos un spawn; no inicia ronda, no exige
@@ -37,7 +52,7 @@ antes situaba al humano encima del tablero. Sus rutas motor siguen pendientes.
 
 `V020GameplayObjectiveInstaller.ValidateExternalCatalogsOnly` acepta un archivo
 absoluto mediante `-objectiveManifest`. Es un diagnóstico sin guardado de mapas.
-El manifiesto tiene `maps[]`, cada mapa con `mapId`, `prefabPath` y diez
+El manifiesto tiene `maps[]`, cada mapa con `mapId`, `prefabPath` y de diez a 24
 `objectives[]`. Cada objetivo identifica `objectiveId`, `kind` (Clean, Repair,
 Switch), `displayKey`, `actionKey`, `targetName` y `routeRegionId`.
 

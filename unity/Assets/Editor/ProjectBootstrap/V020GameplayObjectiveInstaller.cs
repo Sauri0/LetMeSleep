@@ -84,7 +84,8 @@ public static class V020GameplayObjectiveInstaller
                 CatalogSpec[] specs = ExternalSpecs(candidate);
                 BuildAndValidateCatalog(candidate.mapId, candidate.prefabPath, specs, motor, true);
                 Debug.Log("LMS_OBJECTIVE_CATALOG map=" + candidate.mapId +
-                          " objectives=10 distinctTargets=10 saved=0 status=PASS scope=" + (motor ? "motor" : "static-only"));
+                          " objectives=" + specs.Length + " distinctTargets=" + specs.Length +
+                          " saved=0 status=PASS scope=" + (motor ? "motor" : "static-only"));
             }
             catch (Exception error)
             {
@@ -141,16 +142,18 @@ public static class V020GameplayObjectiveInstaller
         return manifest;
     }
 
-    private static CatalogSpec[] ExternalSpecs(ExternalMap candidate, bool requireTen = true)
+    private static CatalogSpec[] ExternalSpecs(ExternalMap candidate, bool requireCatalogCount = true)
     {
         Recipe recipe = Recipes.SingleOrDefault(item => item.MapId == candidate.mapId);
         if (recipe == null || candidate.prefabPath != recipe.PrefabPath)
             throw new ArgumentException("Manifest must identify an existing final map prefab.");
         if (candidate.objectives == null || candidate.objectives.Length == 0 || candidate.objectives.Length > 128 ||
-            requireTen && candidate.objectives.Length != 10 || candidate.objectives.Any(item => item == null) ||
+            requireCatalogCount && (candidate.objectives.Length < 10 ||
+                candidate.objectives.Length > LetMeSleep.Online.GameplayWireCodec.MaxObjectives) || candidate.objectives.Any(item => item == null) ||
             candidate.objectives.Select(item => item.objectiveId).Distinct(StringComparer.Ordinal).Count() != candidate.objectives.Length ||
             candidate.objectives.Select(item => item.targetName).Distinct(StringComparer.Ordinal).Count() != candidate.objectives.Length)
-            throw new ArgumentException(requireTen ? "Each catalog requires ten distinct objective IDs and targets." :
+            throw new ArgumentException(requireCatalogCount ? "Each catalog requires 10 to " +
+                LetMeSleep.Online.GameplayWireCodec.MaxObjectives + " distinct objective IDs and targets." :
                 "Geometry probe requires 1 to 128 distinct objective IDs and targets.");
         return candidate.objectives.Select(item =>
         {
@@ -468,7 +471,7 @@ public static class V020GameplayObjectiveInstaller
             var catalog = root.GetComponent<GameplayObjectiveCatalog>() ?? root.AddComponent<GameplayObjectiveCatalog>();
             if (CatalogEquals(catalog, mapId, entries))
             {
-                Debug.Log("LMS_OBJECTIVE_INSTALL map=" + mapId + " objectives=10 changed=0");
+                Debug.Log("LMS_OBJECTIVE_INSTALL map=" + mapId + " objectives=" + entries.Length + " changed=0");
                 return;
             }
             string previousHash = map.ContentHash;
@@ -479,7 +482,7 @@ public static class V020GameplayObjectiveInstaller
             EditorUtility.SetDirty(map);
             if (!PrefabUtility.SaveAsPrefabAsset(root, prefabPath))
                 throw new InvalidOperationException("Could not save " + mapId + " objective catalog.");
-            Debug.Log("LMS_OBJECTIVE_INSTALL map=" + mapId + " objectives=10 changed=1 previousHash=" +
+            Debug.Log("LMS_OBJECTIVE_INSTALL map=" + mapId + " objectives=" + entries.Length + " changed=1 previousHash=" +
                       previousHash + " contentHash=" + map.ContentHash + " catalogHash=" + catalogHash);
         }
         finally { PrefabUtility.UnloadPrefabContents(root); }
@@ -540,8 +543,9 @@ public static class V020GameplayObjectiveInstaller
                 throw new InvalidOperationException(string.Join(" | ", geometryFailures));
             var entries = authored.ToArray();
             if (geometryOnly) return entries.Select(Copy).ToArray();
-            if (entries.Length != 10 || entries.Select(entry => entry.TargetPath).Distinct(StringComparer.Ordinal).Count() != 10)
-                throw new InvalidOperationException(mapId + " requires ten distinct authored objective targets.");
+            if (entries.Length < 10 || entries.Length > LetMeSleep.Online.GameplayWireCodec.MaxObjectives ||
+                entries.Select(entry => entry.TargetPath).Distinct(StringComparer.Ordinal).Count() != entries.Length)
+                throw new InvalidOperationException(mapId + " requires at least ten distinct authored objective targets within the wire limit.");
             var catalog = root.GetComponent<GameplayObjectiveCatalog>() ?? root.AddComponent<GameplayObjectiveCatalog>();
             catalog.ConfigureForEditor(mapId, entries);
 
@@ -773,6 +777,7 @@ public static class V020GameplayObjectiveInstaller
             bool region = (bool)knowsRegion.Invoke(navigation,
                 new object[] { objective.RouteRegionId });
             bool allRoutes = true;
+            int reachableSpawns = 0;
             int spawnIndex = 0;
             foreach (Transform spawn in spawns ?? Array.Empty<Transform>())
             {
@@ -782,6 +787,7 @@ public static class V020GameplayObjectiveInstaller
                     objective.ApproachPoint, objective.RouteBudgetTicks
                 });
                 allRoutes &= route;
+                if (route) reachableSpawns++;
                 string breakdown = spawn ? (string)diagnoseRoute.Invoke(navigation, new object[]
                 {
                     spawn.position.ToFloat(), objective.RouteRegionId,
@@ -796,7 +802,21 @@ public static class V020GameplayObjectiveInstaller
             var probe = new SpawnActor(1, "candidate-diagnostic", PlayerRole.Human,
                 spawns != null && spawns.Count > 0 && spawns[0] ? spawns[0].position.ToFloat() : Float3.Zero);
             bool aggregate = world.ValidateObjective(probe, objective);
-            Debug.Log($"LMS_OBJECTIVE_DIAGNOSTIC objective={objective.ObjectiveId} witness=PASS approach={(support ? "PASS" : "FAIL")} region={(region ? "PASS" : "FAIL")} routes={(allRoutes ? "PASS" : "FAIL")} aggregate={(aggregate ? "PASS" : "FAIL")}");
+            int onwardChoices = 0;
+            var onwardDiagnostics = new List<string>();
+            foreach (var next in objectives.Where(item => item.ObjectiveId != objective.ObjectiveId))
+            {
+                bool onward = (bool)routeWithin.Invoke(navigation, new object[] {
+                    objective.ApproachPoint, next.RouteRegionId, next.ApproachPoint, next.RouteBudgetTicks });
+                if (onward) onwardChoices++;
+                onwardDiagnostics.Add("LMS_OBJECTIVE_ONWARD source=" + objective.ObjectiveId + " target=" +
+                    next.ObjectiveId + " route=" + (onward ? "PASS " : "FAIL ") +
+                    (string)diagnoseRoute.Invoke(navigation, new object[] {
+                        objective.ApproachPoint, next.RouteRegionId, next.ApproachPoint, next.RouteBudgetTicks }));
+            }
+            if (onwardChoices < Math.Min(2, Math.Max(0, objectives.Count - 1)))
+                foreach (string diagnostic in onwardDiagnostics) Debug.Log(diagnostic);
+            Debug.Log($"LMS_OBJECTIVE_DIAGNOSTIC objective={objective.ObjectiveId} witness=not-isolated approach={(support ? "PASS" : "FAIL")} region={(region ? "PASS" : "FAIL")} allSpawnRoutes={(allRoutes ? "PASS" : "FAIL")} reachableSpawns={reachableSpawns} onwardChoices={onwardChoices} aggregate={(aggregate ? "PASS" : "FAIL")}");
         }
     }
 
@@ -925,6 +945,8 @@ public static class V020GameplayObjectiveInstaller
         uint reachedTick = 0;
         uint simulatedTicks = 0;
         bool targetAssigned = false;
+        uint maximumWorkProgress = 0;
+        TaskAssignmentStatus? lastTargetStatus = null;
         string reason = "budget";
         LifeState finalState = LifeState.Active;
         bool finalGrounded = false;
@@ -981,6 +1003,12 @@ public static class V020GameplayObjectiveInstaller
                 if (actor == null) { reason = "missing-actor"; break; }
                 TaskAssignment assignment = runtime.Authority.CapturePrivate(1)?.TaskAssignment;
                 targetAssigned |= assignment?.ObjectiveId == targetId && assignment.Status == TaskAssignmentStatus.Active;
+                bool workAdvanced = assignment?.ObjectiveId == targetId && assignment.ProgressTicks > maximumWorkProgress;
+                if (assignment?.ObjectiveId == targetId)
+                {
+                    maximumWorkProgress = Math.Max(maximumWorkProgress, assignment.ProgressTicks);
+                    lastTargetStatus = assignment.Status;
+                }
                 if (trace && (tick == 1 || tick % 30 == 0))
                     LogHumanRouteTrace(runtime, actor, target, sourceId, tick);
                 finalState = actor.LifeState; finalGrounded = actor.Grounded;
@@ -992,8 +1020,17 @@ public static class V020GameplayObjectiveInstaller
                 if (actor.LifeState == LifeState.Falling || actor.LifeState == LifeState.Fainted ||
                     actor.LifeState == LifeState.Recovering || actor.LifeState == LifeState.Eliminated)
                 { reason = "unsafe-state:" + actor.LifeState; break; }
-                if (targetAssigned && actor.Grounded && horizontal <= .70f && vertical <= .08f)
-                { reachedTick = tick; reason = "reached-supported-approach"; break; }
+                // The authored approach is one verified access point, not the only legal
+                // side of an object. Actual new authority-accepted work proves that the
+                // grounded actor reached a usable contact with valid range and LOS.
+                // Retained/decaying progress alone is never a fresh arrival witness.
+                if (targetAssigned && actor.Grounded &&
+                    (horizontal <= .70f && vertical <= .08f || workAdvanced))
+                {
+                    reachedTick = tick;
+                    reason = workAdvanced ? "reached-supported-interaction" : "reached-supported-approach";
+                    break;
+                }
                 if (!runtime.Authority.IsRunning)
                 { reason = "round-ended-before-approach"; break; }
             }
@@ -1016,9 +1053,10 @@ public static class V020GameplayObjectiveInstaller
                                                 sourceId + ": ticks=" + simulatedTicks + " reason=" + reason);
         Debug.Log(string.Format(CultureInfo.InvariantCulture,
             "LMS_OBJECTIVE_MOTOR source={0} target={1} result={2} reachedTick={3} budget={4} " +
-            "bestHorizontal={5:R} bestVertical={6:R} finalState={7} grounded={8} reason={9} assigned={10}",
+            "bestHorizontal={5:R} bestVertical={6:R} finalState={7} grounded={8} reason={9} assigned={10} maxWorkProgress={11} targetStatus={12}",
             sourceId, targetId, pass ? "PASS" : "FAIL", reachedTick, budget,
-            bestHorizontal, bestVertical, finalState, finalGrounded ? 1 : 0, reason, targetAssigned ? 1 : 0));
+            bestHorizontal, bestVertical, finalState, finalGrounded ? 1 : 0, reason, targetAssigned ? 1 : 0,
+            maximumWorkProgress, lastTargetStatus.HasValue ? lastTargetStatus.Value.ToString() : "none"));
         return pass;
     }
 
@@ -1117,7 +1155,7 @@ public static class V020GameplayObjectiveInstaller
         uint selected = controller.SelectedActorId;
         bool blocksTask = sample.Visible && sample.Threat && selected == sample.Opponent.ActorId;
         Debug.Log(string.Format(CultureInfo.InvariantCulture,
-            "LMS_OBJECTIVE_BOT_DECISION source={0} tick={1} assignment={2} status={3} " +
+            "LMS_OBJECTIVE_BOT_DECISION source={0} tick={1} assignment={2} status={3} progress={22} " +
             "opponent={4} distance={5:R} visible={6} threat={7} selected={8} blocksTask={9} " +
             "position={10:R},{11:R},{12:R} velocity={13:R},{14:R},{15:R} view={16:R},{17:R},{18:R} " +
             "decision=({19}) route=({20}) steering=({21})",
@@ -1128,7 +1166,7 @@ public static class V020GameplayObjectiveInstaller
             sample.Self.Position.X, sample.Self.Position.Y, sample.Self.Position.Z,
             sample.Self.Velocity.X, sample.Self.Velocity.Y, sample.Self.Velocity.Z,
             sample.Self.ViewForward.X, sample.Self.ViewForward.Y, sample.Self.ViewForward.Z,
-            decision, route, steering));
+            decision, route, steering, sample.Assignment?.ProgressTicks ?? 0));
     }
 
     private static bool IsDiagnosticThreat(ActorSnapshot self, BotTarget target)
