@@ -252,16 +252,8 @@ namespace LetMeSleep.Gameplay.Unity
             bool convexOld = ClosestPointSupported(oldCollider), convexNext = ClosestPointSupported(nextCollider);
             if (!convexOld || !convexNext)
             {
-                // Nonconvex meshes need topology-aware edge handling. Retain only a
-                // locally witnessed same-plane path; never infer joins from bounds.
-                if (oldCollider != nextCollider || Vector3.Dot(normal, prior.WorldNormal.ToUnity()) < .98f) return false;
-                for (int i = 1; i <= 3; i++)
-                {
-                    Vector3 sample = Vector3.Lerp(prior.WorldPoint.ToUnity(), point, i / 4f);
-                    if (!oldCollider.Raycast(new Ray(sample + normal * .02f, -normal), out var hit, .04f) ||
-                        Vector3.Distance(hit.point, sample) > .003f) return false;
-                }
-                return true;
+                return WitnessMeshSurfacePath(oldCollider, nextCollider,
+                    prior.WorldPoint.ToUnity(), prior.WorldNormal.ToUnity(), point, normal);
             }
             if (oldCollider == nextCollider) return true;
             // Witness a physical join near the contact, not just AABB overlap.
