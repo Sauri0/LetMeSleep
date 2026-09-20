@@ -126,6 +126,8 @@ namespace LetMeSleep.Gameplay.Unity
 
         internal Float3 TaskDirection(ActorSnapshot actor, ObjectiveDefinition objective) =>
             modeNavigation == null ? Float3.Zero : modeNavigation.DirectionTo(actor, objective);
+        internal Float3 TaskDirection(ActorSnapshot actor, ObjectiveDefinition objective, uint tick) =>
+            modeNavigation == null ? Float3.Zero : modeNavigation.DirectionTo(actor, objective, tick);
 
         private void BindObjectiveCatalog()
         {

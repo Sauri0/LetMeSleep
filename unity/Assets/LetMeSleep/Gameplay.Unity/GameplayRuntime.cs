@@ -272,6 +272,7 @@ namespace LetMeSleep.Gameplay.Unity
         }
         private BotObservation ObserveBot(ActorSnapshot self, GameSessionState state)
         {
+            uint navigationTick = state.HostTick + 1;
             var origin = self.Position + (self.Role == PlayerRole.Human ? Float3.Up * (1.53f - .64f * self.CrouchFraction) : Float3.Zero);
             var visible = new List<BotTarget>();
             foreach (var target in state.Actors)
@@ -289,7 +290,7 @@ namespace LetMeSleep.Gameplay.Unity
             var free = new Float3((float)Math.Sin(angle), 0, (float)Math.Cos(angle));
             if (botNavigation != null && self.Role == PlayerRole.Mosquito)
             {
-                var explore = botNavigation.Explore(self, state.HostTick);
+                var explore = botNavigation.Explore(self, navigationTick);
                 if (explore.LengthSquared > .01f) free = explore;
             }
             var doorQuery = new DoorInteractionQuery(self.ActorId, state.HostTick, origin, self.ViewForward, 1.6f);
@@ -313,8 +314,8 @@ namespace LetMeSleep.Gameplay.Unity
             float rescueSpeed = self.SurfaceAttachment.HasValue ? .65f : Mathf.Clamp(self.Velocity.Length, 1f, 3.8f);
             return new BotObservation(self, visible, free, doorAhead, direction => World.SteerBot(self, direction),
                 roundConfig.ModeId, privateState, objective,
-                item => botNavigation == null ? Float3.Zero : World.TaskDirection(self, item),
-                new BotTrainingContext(opportunities, rescueSpeed, equipped));
+                item => botNavigation == null ? Float3.Zero : World.TaskDirection(self, item, navigationTick),
+                new BotTrainingContext(opportunities, rescueSpeed, equipped), botNavigation?.ContextFor(self.ActorId));
         }
         public void ApplySnapshot(GameSessionState snapshot)
         {

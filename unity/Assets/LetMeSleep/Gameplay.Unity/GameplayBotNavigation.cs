@@ -71,6 +71,12 @@ namespace LetMeSleep.Gameplay.Unity
             passages = links.ToArray();
         }
         public string MapId { get; }
+        public BotNavigationContext ContextFor(uint actorId) => new BotNavigationContext(
+            () => patrols.TryGetValue(actorId, out var patrol) ? patrol.CurrentProgress : null,
+            (passageId, untilTick) =>
+            {
+                if (patrols.TryGetValue(actorId, out var patrol)) patrol.InvalidatePassage(passageId, untilTick);
+            });
         public Float3 Explore(ActorSnapshot actor, uint tick)
         {
             if (actor.Role != PlayerRole.Mosquito) return Float3.Zero;
@@ -80,7 +86,8 @@ namespace LetMeSleep.Gameplay.Unity
             var direction = patrol.Direction(local, tick, IsOpen);
             return world.MapRoot.TransformVector(direction.ToUnity()).ToFloat();
         }
-        public Float3 DirectionTo(ActorSnapshot actor, ObjectiveDefinition objective)
+        public Float3 DirectionTo(ActorSnapshot actor, ObjectiveDefinition objective) => DirectionTo(actor, objective, 0);
+        public Float3 DirectionTo(ActorSnapshot actor, ObjectiveDefinition objective, uint tick)
         {
             if (actor.Role != PlayerRole.Human || objective == null) return Float3.Zero;
             var local = world.MapRoot.InverseTransformPoint(actor.Position.ToUnity()).ToFloat();
@@ -89,7 +96,7 @@ namespace LetMeSleep.Gameplay.Unity
                 !TryTargetPoint(objective.RouteRegionId, approach, out var navigationApproach, out _)) return Float3.Zero;
             if (!patrols.TryGetValue(actor.ActorId, out var patrol))
                 patrols.Add(actor.ActorId, patrol = new BotPatrol(regions, passages, actor.ActorId));
-            var direction = patrol.DirectionTo(navigationPoint, objective.RouteRegionId, navigationApproach, IsOpen);
+            var direction = patrol.DirectionTo(navigationPoint, objective.RouteRegionId, navigationApproach, tick, IsOpen);
             var worldDirection = world.MapRoot.TransformVector(direction.ToUnity()).ToFloat();
 #if UNITY_EDITOR
             if (captureDirectionDiagnostic)

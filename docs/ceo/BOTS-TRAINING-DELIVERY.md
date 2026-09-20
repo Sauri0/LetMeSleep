@@ -1,6 +1,6 @@
 # Bots de entrenamiento — contrato y evidencia
 
-Fecha: 2026-09-20. Ticket acotado a Gameplay/BotController.cs y tests propios. Fuente de decisiones: docs/ceo/definicion-v020/respuestas-20260920-065440/DECISIONES.md, J25–J32. Ninguna habilitación de bots online.
+Fecha: 2026-09-20. Alcance: BotController, BotPatrol, GameplayBotNavigation, enlace Runtime/World y pruebas propias. Fuente de decisiones: docs/ceo/definicion-v020/respuestas-20260920-065440/DECISIONES.md, J25–J32. Ninguna habilitación de bots online.
 
 Integración posterior CEO: Runtime ya proporciona contexto por bot: inventario
 privado propio, pickup activo público concordante, herramientas con primer
@@ -10,7 +10,23 @@ Velocidad para ETA: observada entre1 y3,8m/s en vuelo,0,65 sobre superficie.
 No certifica una ruta física completa ni acceso a inventarios de otros actores.
 `horizon-bots-authority-native-01.xml`:71/71PASS, incluye32bots y9horizonte.
 `vfx-perception-native-02.xml`:18/18PASS, incluidos4negativos/positivos de
-percepción física de herramientas. Backend de replanteo de pasajes pendiente.
+percepción física de herramientas. Backend J32 incorporado posteriormente, según la sección siguiente.
+
+## J32 — backend de replanteo integrado (2026-09-20)
+
+El entrenamiento conecta la intención del Controller con la patrulla propia del actor. Tras 150 ticks sin mejorar al menos 0.15 m el mejor registro de distancia al waypoint, invalida el pasaje utilizado durante 180 ticks. DirectionTo humano y Explore mosquito consultan la misma exclusión temporal: el pasaje vuelve a ser elegible exactamente al alcanzar BlockedUntilTick. La decisión siguiente puede elegir otra ruta topológica, aunque tenga un rumbo parecido. El bloqueo es local a ese bot/ronda y no cambia la puerta física.
+
+El progreso exige acercarse al waypoint real o avanzar de waypoint; desplazarse lateralmente o repetir una oscilación ya recorrida no reinicia el reloj. Un waypoint interior queda estable hasta llegada o invalidación. El conteo ocurre antes de Steer, por lo que Steer=0 también identifica atasco, pero sólo durante intención sostenida de movimiento. Estar quieto, trabajar, rescatar, picar, mantener un ataque, emitir una acción de interacción/equipo o estar incapacitado reinicia el seguimiento. Se eliminó el reloj autónomo de Explore que podía acumular durante una interrupción.
+
+BotNavigationContext ofrece ReadProgress e InvalidatePassage; BotNavigationProgress publica clave estable de waypoint, ID opcional del pasaje y distancia restante. Se conservan los constructores anteriores de BotObservation. GameplayRuntime proporciona ContextFor(actorId) y state.HostTick+1 a las rutas, el mismo tick que recibe Decide. El overload antiguo de DirectionTo conserva compatibilidad; entrenamiento usa el overload temporal. ConfigureModeMap crea una navegación nueva por ronda, y Controller reinicia sus observables por identidad/epoch/ronda.
+
+Cuando la intención final cambia para recoger una herramienta, perseguir, evadir o rescatar, no se bloquea un pasaje de tarea/exploración abandonado. Esas decisiones usan objetivos observados o proyección del movimiento libre; donde no hay un pasaje conocido, queda el replanteo direccional local existente. No se inventa una ruta física para perseguir actores ni para el interior de una región.
+
+Evidencia J32: `N:/LetMeSleep/Validation/V020/BotReplanIntegration/cpu-results.txt`, 54/54 CPU (32 bots existentes, 2 rutas existentes y 20 casos nuevos). Compilación offline Player y Editor de dominio/adaptador: 0 advertencias y 0 errores. Gate EditMode nativo definitivo: `N:/LetMeSleep/Validation/V020/bot-replan-native-02.xml`, 54/54 PASS, 0 fallos, 0 omitidos, en Unity 6000.3.24f1/Windows. La ejecución01 seleccionó sólo dos casos por namespace incorrecto y no se usa como evidencia de este conjunto.
+
+`N:/LetMeSleep/Validation/V020/bot-navigation-physics-native-01.xml`: los 4/4 GameplayBotNavigationContextPlayModeTests pasan en Unity 6000.3.24f1/Windows: contexto creado antes de la patrulla, aislamiento por actor, reapertura329/330 y nueva instancia ConfigureModeMap sin exclusiones heredadas. El archivo combinado contiene además pruebas ajenas de steering y no se presenta como PASS total. Los tres scripts nuevos ya tienen .meta generados por Unity.
+
+Esta evidencia no acredita reparación de las rutas físicas de Casa, comportamiento completo en los cinco mapas, dificultad final, gráficos ni WAN. La física/steering sigue en revisión independiente. No se habilitaron bots online.
 
 ## Contrato
 
@@ -20,7 +36,7 @@ Se conserva exactamente el constructor previo de BotObservation (incluido TaskDi
 - `BotToolOpportunity(ToolPickupSnapshot pickup, float detourMeters, Float3 contactPoint)`: sólo pickups actualmente observables con LOS; DetourMeters es desvío estimado por topología abierta. El constructor de dos argumentos conserva compatibilidad y usa pickup.Position como punto de contacto.
 - `VisibleTools` copia inmutable del listado. `RescueTravelSpeed` debe ser positiva y finita; sin contexto se usa 1 m/s como estimación conservadora, no información oculta.
 - OwnPrivate se valida contra Self.ActorId y sólo informa inventario/tarea propios.
-- BotController expone `SelectedActorId`, `ReplanCount`, `BlockedUntilTick` y `BlockedDirection`; no hay callbacks ni cambios de navegación implícitos. Backend pendiente deberá consumir una subida de ReplanCount para bloquear el pasaje hasta BlockedUntilTick y buscar otra ruta.
+- BotController expone `SelectedActorId`, `ReplanCount`, `BlockedUntilTick` y `BlockedDirection`. El overload con BotNavigationContext conecta la observación de waypoint y la invalidación real de pasajes descritas en J32; los overloads anteriores siguen disponibles.
 
 ## Comportamiento implementado
 
@@ -34,9 +50,9 @@ Rescate exige aliado actualmente visible, expiración RecoveryEndTick conocida, 
 
 Herramientas: sólo con slot libre propio, manos equipadas, sin amenaza actual ni tarea ya mantenida en rango; desvío estrictamente menor de 4 m; ignora raqueta/aerosol agotados. No confirma intercambios de inventario lleno. Usa interacción ordinaria de autoridad. Contexto Runtime integrado posteriormente, según el checkpoint superior.
 
-Atasco: intención de caminar/volar sin desplazar al menos 0.15 m durante 150 ticks incrementa ReplanCount y bloquea dirección 180 ticks. Incluye Steer que devuelve cero. Mientras el destino siga en esa dirección espera; una dirección alternativa puede seguir. El umbral 0.15 m es concreción técnica reversible. Por sí solo este dominio NO replantea el grafo ni registra pasajes físicos: ese enlace de navegación queda pendiente y no se certifica J32 completo.
+Atasco: el backend J32 superior reemplaza la detección inicial por desplazamiento local. Conserva el umbral técnico reversible de 0.15 m, pero lo aplica a progreso hacia waypoint/objetivo, con invalidación real y exclusión temporal de pasajes conocidos.
 
-## Evidencia actual
+## Evidencia histórica del primer corte
 
 `N:/Validation/V020/InventoryDraft/BotTests.csproj` compila contra fuentes reales centrales mediante Domain.csproj. CPU: 29/29 PASS, dominio 0 warnings/0 errors. No Unity ejecutado por este agente. Casos: límites reacción + cadencia real cada3ticks; recuerdo89/90ticks sin acción oculta; reset ronda; penalización239/240ticks; rescate44/45ticks y peligro visible; aliado oculto; atasco149/150 y bloqueo329/330; Steer cero; progreso real; desvío3.99/4m; inventario lleno; evasión Survival.
 

@@ -52,10 +52,13 @@ namespace LetMeSleep.Gameplay
         public Func<ObjectiveDefinition, Float3> TaskDirection { get; }
         public ActorPrivateState OwnPrivate { get; }
         public BotTrainingContext Training { get; }
+        public BotNavigationContext Navigation { get; }
         public BotObservation(ActorSnapshot self, IReadOnlyList<BotTarget> visible, Float3 freeDirection, bool doorAhead, Func<Float3, Float3> steer = null, string modeId = GameModes.Blood, ActorPrivateState ownPrivate = null, ObjectiveDefinition taskObjective = null, Func<ObjectiveDefinition, Float3> taskDirection = null)
             : this(self, visible, freeDirection, doorAhead, steer, modeId, ownPrivate, taskObjective, taskDirection, null) { }
         public BotObservation(ActorSnapshot self, IReadOnlyList<BotTarget> visible, Float3 freeDirection, bool doorAhead, Func<Float3, Float3> steer, string modeId, ActorPrivateState ownPrivate, ObjectiveDefinition taskObjective, Func<ObjectiveDefinition, Float3> taskDirection, BotTrainingContext training)
-        { OwnPrivate = ownPrivate; Training = training; Self = self; Visible = Array.AsReadOnly(GameplayRoundConfig.Copy(visible)); FreeDirection = freeDirection; DoorAhead = doorAhead; Steer = steer; ModeId = modeId;
+            : this(self, visible, freeDirection, doorAhead, steer, modeId, ownPrivate, taskObjective, taskDirection, training, null) { }
+        public BotObservation(ActorSnapshot self, IReadOnlyList<BotTarget> visible, Float3 freeDirection, bool doorAhead, Func<Float3, Float3> steer, string modeId, ActorPrivateState ownPrivate, ObjectiveDefinition taskObjective, Func<ObjectiveDefinition, Float3> taskDirection, BotTrainingContext training, BotNavigationContext navigation)
+        { Navigation = navigation; OwnPrivate = ownPrivate; Training = training; Self = self; Visible = Array.AsReadOnly(GameplayRoundConfig.Copy(visible)); FreeDirection = freeDirection; DoorAhead = doorAhead; Steer = steer; ModeId = modeId;
             if (!GameModes.IsValid(modeId) || (ownPrivate != null && ownPrivate.ActorId != self.ActorId)) throw new ArgumentException("Bot observation identity mismatch.");
             if (modeId == GameModes.Tasks && self.Role == PlayerRole.Human && ownPrivate?.TaskAssignment != null && taskObjective?.ObjectiveId == ownPrivate.TaskAssignment.ObjectiveId)
             { OwnAssignment = ownPrivate.TaskAssignment; TaskObjective = taskObjective; TaskDirection = taskDirection; }
@@ -88,7 +91,10 @@ namespace LetMeSleep.Gameplay
         private readonly Dictionary<uint, Memory> memory = new Dictionary<uint, Memory>();
         private readonly Dictionary<uint, uint> recentlyBitten = new Dictionary<uint, uint>();
         private ulong epoch, round; private uint actorId, progressTick; private bool tracking;
-        private Float3 progressPosition, blockedDirection;
+        private Float3 progressPosition, progressDirection, blockedDirection;
+        private string progressKey;
+        private float bestRemainingDistance, bestProjectedProgress;
+        private bool blockedByPassage;
 #if UNITY_EDITOR
         private bool captureDecisionDiagnostic = false;
         private string lastDecisionDiagnostic;
@@ -98,7 +104,7 @@ namespace LetMeSleep.Gameplay
         {
             if (actorId == self.ActorId && epoch == tick.Epoch && round == tick.Round) return;
             actorId = self.ActorId; epoch = tick.Epoch; round = tick.Round;
-            memory.Clear(); recentlyBitten.Clear(); tracking = false; BlockedUntilTick = 0; ReplanCount = 0;
+            memory.Clear(); recentlyBitten.Clear(); tracking = false; progressKey = null; blockedByPassage = false; blockedDirection = default; BlockedUntilTick = 0; ReplanCount = 0;
             inputSequence = actionSequence = nextStrike = nextThrowAttempt = 0;
             handsRequestInventoryRevision = handsRequestPickup = handsRequestViewRevision = 0; releaseBite = false;
         }
@@ -168,14 +174,38 @@ namespace LetMeSleep.Gameplay
         }
         private static bool HasFreeSlot(ActorPrivateState state) => state != null
             && (state.Inventory.Slot0 == 0 || state.Inventory.Slot1 == 0 || state.Inventory.Slot2 == 0);
-        private void TrackProgress(BotObservation observation, uint tick, Float3 desired, ref float forward)
+        private void TrackProgress(BotObservation observation, uint tick, Float3 desired,
+            bool followsNavigation, string directKey, Float3? directTarget, bool interacting, ref float forward)
         {
-            if (tick < BlockedUntilTick && Float3.Dot(desired, blockedDirection) > .8f) { forward = 0; tracking = false; return; }
-            if (forward <= 0) { tracking = false; return; }
-            if (!tracking || (observation.Self.Position - progressPosition).Length >= .15f)
-            { tracking = true; progressTick = tick; progressPosition = observation.Self.Position; return; }
+            // Intent is checked before local steering: a zero steering result still stalls.
+            // Deliberate work, biting, rescue, tool interaction and incapacity reset the clock.
+            if (forward <= 0 || interacting) { tracking = false; return; }
+            var routeProgress = followsNavigation ? observation.Navigation?.ReadProgress() : null;
+            bool hasPassage = routeProgress.HasValue && !string.IsNullOrEmpty(routeProgress.Value.PassageId);
+            if (!blockedByPassage && tick < BlockedUntilTick && Float3.Dot(desired, blockedDirection) > .8f)
+            { forward = 0; tracking = false; return; }
+            string key = routeProgress.HasValue ? "route:" + routeProgress.Value.WaypointKey : directKey;
+            float remaining = routeProgress?.RemainingDistance ??
+                (directTarget.HasValue ? (directTarget.Value - observation.Self.Position).Length : 0);
+            bool distanceMetric = routeProgress.HasValue || directTarget.HasValue;
+            if (!tracking || progressKey != key)
+            {
+                tracking = true; progressKey = key; progressTick = tick;
+                bestRemainingDistance = remaining; progressPosition = observation.Self.Position;
+                progressDirection = desired; bestProjectedProgress = 0; return;
+            }
+            // Compare against the best accepted distance, never the previous sample.
+            // Local oscillation cannot keep resetting the stall deadline.
+            float projected = Float3.Dot(observation.Self.Position - progressPosition, progressDirection);
+            bool advanced = distanceMetric ? remaining <= bestRemainingDistance - .15f
+                : projected >= bestProjectedProgress + .15f;
+            if (advanced)
+            { bestRemainingDistance = remaining; bestProjectedProgress = projected; progressTick = tick; return; }
             if (tick - progressTick < ReplanTicks) return;
-            BlockedUntilTick = tick + BlockTicks; blockedDirection = desired; ReplanCount++; tracking = false; forward = 0;
+            BlockedUntilTick = tick + BlockTicks; blockedDirection = desired;
+            blockedByPassage = hasPassage; ReplanCount++; tracking = false; forward = 0;
+            if (routeProgress.HasValue)
+                observation.Navigation.InvalidatePassage(routeProgress.Value.PassageId, BlockedUntilTick);
         }
         public BotCommands Decide(BotObservation observation, in BotTick tick)
         {
@@ -197,8 +227,13 @@ namespace LetMeSleep.Gameplay
             Float3 diagnosticBeforeSteer = default, diagnosticSteer = default;
             bool diagnosticSteerCalled = false;
 #endif
-            if (task) direction = taskTravel.Normalized;
+            bool followsNavigation = task || (self.Role == PlayerRole.Mosquito && !selected.HasValue);
+            string directProgressKey = selected.HasValue ? "actor:" + selected.Value.Actor.ActorId : "free";
+            Float3? directProgressTarget = selected.HasValue ? selected.Value.ContactPoint : (Float3?)null;
+            if (task) { direction = taskTravel.Normalized; directProgressKey = "task:" + observation.TaskObjective.ObjectiveId; directProgressTarget = observation.TaskObjective.ApproachPoint; }
             if (observation.ModeId == GameModes.Survival && self.Role == PlayerRole.Mosquito && selected.HasValue && selected.Value.Actor.Role == PlayerRole.Human) direction = -direction;
+            if (observation.ModeId == GameModes.Survival && self.Role == PlayerRole.Mosquito && selected.HasValue && selected.Value.Actor.Role == PlayerRole.Human)
+            { directProgressKey = "evade:" + selected.Value.Actor.ActorId; directProgressTarget = null; }
             if (direction.LengthSquared < .5f) direction = Float3.Forward;
             float yaw = (float)Math.Atan2(direction.X, direction.Z), pitch = (float)Math.Asin(MathEx.Clamp(direction.Y, -1, 1));
             pitch = MathEx.Clamp(pitch, -1.919862f, self.Role == PlayerRole.Human ? 1.308996f : 1.553343f); direction = MathEx.Aim(yaw, pitch);
@@ -274,6 +309,7 @@ namespace LetMeSleep.Gameplay
 #if UNITY_EDITOR
                     diagnosticTool = tool.Value.Pickup.PickupId;
 #endif
+                    followsNavigation = false; directProgressKey = "tool:" + tool.Value.Pickup.PickupId; directProgressTarget = tool.Value.ContactPoint;
                     var delta = tool.Value.ContactPoint - origin; direction = delta.Normalized;
                     yaw = (float)Math.Atan2(direction.X, direction.Z); pitch = MathEx.Clamp((float)Math.Asin(MathEx.Clamp(direction.Y, -1, 1)), -1.919862f, 1.308996f);
                     direction = MathEx.Aim(yaw, pitch); forward = 1; helpHeld = false;
@@ -291,7 +327,8 @@ namespace LetMeSleep.Gameplay
                     || handsRequestPickup != equipped.PickupId || handsRequestViewRevision != self.ViewRevision))
             { action = ActionKind.SelectInventorySlot; primaryHeld = false; helpHeld = false; equipmentPayload = false; }
             if (self.Eliminated || self.LifeState == LifeState.Falling || self.LifeState == LifeState.Stunned || self.LifeState == LifeState.Fainted || self.LifeState == LifeState.Recovering) { forward = 0; bite = false; helpHeld = false; primaryHeld = false; action = null; }
-            TrackProgress(observation, tick.Tick, direction, ref forward);
+            TrackProgress(observation, tick.Tick, direction, followsNavigation, directProgressKey,
+                directProgressTarget, bite || helpHeld || primaryHeld || action.HasValue, ref forward);
 #if UNITY_EDITOR
             diagnosticBeforeSteer = direction;
 #endif

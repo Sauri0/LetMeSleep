@@ -32,31 +32,46 @@ namespace LetMeSleep.Gameplay
         private BotPassage route;
         private Float3[] points;
         private int pointIndex;
-        private float bestDistance;
-        private uint progressTick;
         private string lastRegion;
+        private Float3? interiorPoint;
+        private string interiorRegion;
+        private uint interiorVersion;
+        public BotNavigationProgress? CurrentProgress { get; private set; }
+        public bool IsPassageBlocked(string passageId, uint tick) => passageId != null &&
+            retryAfter.TryGetValue(passageId, out var until) && tick < until;
+        public void InvalidatePassage(string passageId, uint untilTick)
+        {
+            if (!string.IsNullOrEmpty(passageId)) retryAfter[passageId] = untilTick;
+            if (passageId == null || route?.Id == passageId) Clear();
+            if (passageId == null || objectivePassage?.Id == passageId)
+            { objectivePassage = null; objectivePoints = null; objectivePointIndex = 0; }
+            CurrentProgress = null; interiorPoint = null;
+        }
+        private Float3 Travel(Float3 direction, string key, string passageId)
+        {
+            CurrentProgress = new BotNavigationProgress(key, passageId, direction.Length);
+            return direction;
+        }
         public BotPatrol(IReadOnlyList<BotRegion> regions, IReadOnlyList<BotPassage> passages, uint seed)
         { this.regions = GameplayRoundConfig.Copy(regions); this.passages = GameplayRoundConfig.Copy(passages); this.seed = seed; }
         public Float3 Direction(Float3 position, uint tick, Func<string, bool> passageOpen)
         {
+            CurrentProgress = null;
             string region = regions.Where(r => r.Contains(position)).Select(r => r.Id).FirstOrDefault();
             if (region != null && region != lastRegion)
             { visits[region] = VisitCount(region) + 1; lastRegion = region; }
             if (route != null)
             {
-                if (!passageOpen(route.Id) || (region != null && region != route.From && region != route.To)) Clear();
+                if (!passageOpen(route.Id) || IsPassageBlocked(route.Id, tick) || (region != null && region != route.From && region != route.To)) Clear();
                 else
                 {
                     while (pointIndex < points.Length && (points[pointIndex] - position).Length < .24f)
-                    { pointIndex++; bestDistance = float.MaxValue; progressTick = tick; }
+                    { pointIndex++; }
                     if (pointIndex == points.Length) Clear();
                     else
                     {
-                        float distance = (points[pointIndex] - position).Length;
-                        if (distance < bestDistance - .08f) { bestDistance = distance; progressTick = tick; }
-                        if (tick - progressTick > 150)
-                        { retryAfter[route.Id] = tick + 180; Clear(); }
-                        else return points[pointIndex] - position;
+                        return Travel(points[pointIndex] - position,
+                            "explore:" + route.Id + ":" + pointIndex, route.Id);
                     }
                 }
             }
@@ -70,17 +85,21 @@ namespace LetMeSleep.Gameplay
                 route = Enumerable.Range(0, choices.Length).Select(i => choices[(start + i) % choices.Length])
                     .OrderBy(p => VisitCount(p.From == region ? p.To : p.From)).First();
                 points = route.From == region ? route.Points.ToArray() : route.Points.Reverse().ToArray();
-                pointIndex = 0; bestDistance = float.MaxValue; progressTick = tick;
-                return points[0] - position;
+                pointIndex = 0;
+                return Travel(points[0] - position, "explore:" + route.Id + ":0", route.Id);
             }
             // Closed rooms remain closed. Inspect reachable interior instead of pushing the wall.
             var current = regions.First(r => r.Id == region);
-            float phase = tick / 150 + seed * 2.399963f;
-            var center = (current.Min + current.Max) * .5f;
-            var extent = (current.Max - current.Min) * .25f;
-            var interior = new Float3(center.X + (float)Math.Sin(phase) * extent.X,
-                Math.Min(current.Max.Y - .3f, current.Min.Y + 1.1f), center.Z + (float)Math.Cos(phase) * extent.Z);
-            return interior - position;
+            if (!interiorPoint.HasValue || interiorRegion != region || (interiorPoint.Value - position).Length < .24f)
+            {
+                float phase = tick / 150 + seed * 2.399963f;
+                var center = (current.Min + current.Max) * .5f;
+                var extent = (current.Max - current.Min) * .25f;
+                interiorPoint = new Float3(center.X + (float)Math.Sin(phase) * extent.X,
+                    Math.Min(current.Max.Y - .3f, current.Min.Y + 1.1f), center.Z + (float)Math.Cos(phase) * extent.Z);
+                interiorRegion = region; interiorVersion++;
+            }
+            return Travel(interiorPoint.Value - position, "interior:" + region + ":" + interiorVersion, null);
         }
         private BotPassage objectivePassage;
         private Float3[] objectivePoints;
@@ -106,13 +125,16 @@ namespace LetMeSleep.Gameplay
 #endif
         // Route only toward the owning bot's resolved assignment, through authored passages.
         // Returns zero while no open route exists; callers never substitute a straight wall-crossing vector.
-        public Float3 DirectionTo(Float3 position, string targetRegion, Float3 approachPoint, Func<string, bool> passageOpen)
+        public Float3 DirectionTo(Float3 position, string targetRegion, Float3 approachPoint, Func<string, bool> passageOpen) =>
+            DirectionTo(position, targetRegion, approachPoint, 0, passageOpen);
+        public Float3 DirectionTo(Float3 position, string targetRegion, Float3 approachPoint, uint tick, Func<string, bool> passageOpen)
         {
+            CurrentProgress = null;
             if (passageOpen == null || !position.IsFinite || !approachPoint.IsFinite) return Float3.Zero;
             string current = regions.Where(r => r.Contains(position)).Select(r => r.Id).FirstOrDefault();
             var target = regions.FirstOrDefault(r => r.Id == targetRegion);
             if (current == null || target.Id == null || !target.Contains(approachPoint)) return Float3.Zero;
-            if (objectiveRegion != targetRegion || (objectivePassage != null && (!passageOpen(objectivePassage.Id) || (current != objectivePassage.From && current != objectivePassage.To))))
+            if (objectiveRegion != targetRegion || (objectivePassage != null && (!passageOpen(objectivePassage.Id) || IsPassageBlocked(objectivePassage.Id, tick) || (current != objectivePassage.From && current != objectivePassage.To))))
             { objectivePassage = null; objectivePoints = null; objectiveRegion = targetRegion; }
             if (objectivePassage != null)
             {
@@ -125,17 +147,19 @@ namespace LetMeSleep.Gameplay
                        PlanarDistance(objectivePoints[objectivePointIndex], position) < .24f &&
                        Math.Abs(objectivePoints[objectivePointIndex].Y - position.Y) <= .35f)
                     objectivePointIndex++;
-                if (objectivePointIndex < objectivePoints.Length) return objectivePoints[objectivePointIndex] - position;
+                if (objectivePointIndex < objectivePoints.Length) return Travel(objectivePoints[objectivePointIndex] - position,
+                    "task:" + targetRegion + ":" + objectivePassage.Id + ":" + objectivePointIndex, objectivePassage.Id);
                 objectivePassage = null; objectivePoints = null;
             }
-            if (current == targetRegion) return approachPoint - position;
+            if (current == targetRegion) return Travel(approachPoint - position,
+                "approach:" + targetRegion + ":" + approachPoint.X + ":" + approachPoint.Y + ":" + approachPoint.Z, null);
             var queue = new Queue<string>(); queue.Enqueue(current);
             var visited = new HashSet<string> { current };
             var first = new Dictionary<string, BotPassage>();
             while (queue.Count > 0)
             {
                 string node = queue.Dequeue();
-                foreach (var passage in passages.Where(p => p.Points.Count > 0 && (p.From == node || p.To == node) && passageOpen(p.Id)).OrderBy(p => p.Id, StringComparer.Ordinal))
+                foreach (var passage in passages.Where(p => p.Points.Count > 0 && (p.From == node || p.To == node) && passageOpen(p.Id) && !IsPassageBlocked(p.Id, tick)).OrderBy(p => p.Id, StringComparer.Ordinal))
                 {
                     string next = passage.From == node ? passage.To : passage.From;
                     if (!visited.Add(next)) continue;
@@ -144,7 +168,8 @@ namespace LetMeSleep.Gameplay
                     {
                         objectivePassage = first[next]; objectiveRegion = targetRegion;
                         objectivePoints = objectivePassage.From == current ? objectivePassage.Points.ToArray() : objectivePassage.Points.Reverse().ToArray();
-                        objectivePointIndex = 0; return objectivePoints[0] - position;
+                        objectivePointIndex = 0; return Travel(objectivePoints[0] - position,
+                            "task:" + targetRegion + ":" + objectivePassage.Id + ":0", objectivePassage.Id);
                     }
                     queue.Enqueue(next);
                 }
