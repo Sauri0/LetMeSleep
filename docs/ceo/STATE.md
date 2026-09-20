@@ -2,6 +2,16 @@
 
 ## Gate actual: Isla instalada y acceso humano de Yate
 
+- Yate candidato humano01 pasa static10 y foredeck-coffee02 desde snapshot
+  en260/330 con trabajo real. Revisión independiente Sol sin bloqueantes;
+  `592082b` habilita su override exacto, preservando legacy. Install04 pasa
+  ronda14/20 pero aborta antes de guardar: foredeck_table y helm_console sólo
+  tienen1 salida probada, mínimo2. Nuevos diagnósticos desde los objetivos
+  exactos fallan330; Astra estudia foredeck, Sol descenso desde helm.
+- `57b7b21` prepara settings por API Unity: versión0.2.0 y escena de cinco mapas.
+  No hay build todavía. Plan TwoIdentityGameplayExecutionPlan-01.md confirma
+  que dos procesos en la misma sesión no producen dos identidades EOS; prueba
+  de gameplay real requiere segundo contexto y WAN sigue pendiente.
 - `67253c6` reconoce un waypoint recién cruzado dentro del corredor: ventana
   longitudinal/lateral de .24 m y altura relativa al punto actual <= .35 m.
   CPU146/146, native Directed28/28 + Replan33/33. Crate work02 pasa260/330
