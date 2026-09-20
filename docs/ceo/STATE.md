@@ -1,5 +1,36 @@
 # Relevo CEO — 2026-09-19
 
+## Siguiente gate — regiones y objetos de los otros cuatro mapas
+
+- `16a6445` mide desde la posición física. Adapter02:9/9 PASS; Casa11
+  mantiene47/50 y21onward comparables frente aCasa10, cero regresiones.
+- Validador genérico de CEO compilado y ejecutado; revisión técnica exigió
+  propagar excepciones de setup/tick para no ocultarlas como fallos de ruta.
+  Static02:10/40 aproximaciones;15targets sin collider sólido directo;
+ 15con clearance pero0aproximaciones dentro de la región indicada. No instalar.
+  Terra prepara manifiesto v2; técnica revisa regionesIsla/Camp readonly.
+- PuertoEdgeExposure/native-results-01:2casos NOT_EXPOSED para cuerpo y
+  clearance. Tramo y destino interceptados por Foundation/soportes.
+  errors=[],cleanup/originalsUnchanged=true. Astra revisa el detalle;
+  no cambia Frozen85 ni constituye PASS de rutas mosquito.
+- Sin Unity activo al terminar Static02. Próximo gate: metadatosv2 estables;
+  preservar archivos anteriores y distinguir sustituciones de mejoras de motor.
+## Selector ponderado y catálogos de otros mapas
+
+- `87bda58` comparte cálculo de distancia y primer pasaje entre admisión y
+  ejecución del bot. `bot-weighted-native-01.xml`:73/73 PASS;
+  `bot-weighted-adapter-native-01.xml`:7/7 PASS, sin omitidos.
+- Casa10 alcanza47/50 frente a40/50 deCasa09:7mejoras,0regresiones.
+  Los21pares onward comparables tampoco regresan;10objetivos cumplen cobertura
+  mínima, pero3rutas spawn y1onward continúan FAIL. Presupuesto330 intacto.
+  Evidencia `casa-catalog-09-to-10-all-comparable.json`; sin instalación aún.
+- Técnica alinea el inicio físico del coste con el del ejecutor y separa
+  diagnóstico de distancia authored/open. CEO generaliza validador no-save
+  por manifiesto para40candidatos externos de Terra; pendiente compilación.
+- Puerto: Foundation1000051 intercepta13cm antes de las dos aristas elegidas.
+  El diagnóstico nativo no evidencia rechazo en la arista propia. Astra prepara
+  testigos externos de exposición corporal; Frozen85 conserva sus resultados.
+  Ver `N:/LetMeSleep/Validation/V020/puerto-initial-overlap-diagnostic.md`.
 ## Integración posterior — personalización, portales y diagnóstico Puerto
 
 - `55c9cf2`: P26/P27/P28 integrados para el catálogo actual de colores.

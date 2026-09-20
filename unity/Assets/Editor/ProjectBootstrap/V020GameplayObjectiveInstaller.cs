@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -31,6 +32,70 @@ public static class V020GameplayObjectiveInstaller
     {
         internal Vector3 Point, Approach;
         internal Collider Support;
+    }
+
+#pragma warning disable 0649 // External authoring manifest, read by JsonUtility.
+    [Serializable] private sealed class ExternalManifest { public ExternalMap[] maps; }
+    [Serializable] private sealed class ExternalMap
+    {
+        public string mapId, prefabPath;
+        public ExternalObjective[] objectives;
+    }
+    [Serializable] private sealed class ExternalObjective
+    {
+        public string objectiveId, kind, displayKey, actionKey, targetName, routeRegionId;
+    }
+#pragma warning restore 0649
+
+    // Explicit batch input; never saves a prefab or treats source metadata as proof.
+    public static void ValidateExternalCatalogsOnly()
+    {
+        string[] args = Environment.GetCommandLineArgs();
+        int index = Array.IndexOf(args, "-objectiveManifest");
+        if (index < 0 || index + 1 >= args.Length ||
+            Array.LastIndexOf(args, "-objectiveManifest") != index || !System.IO.Path.IsPathRooted(args[index + 1]))
+            throw new ArgumentException("One absolute -objectiveManifest path required.");
+        var manifest = JsonUtility.FromJson<ExternalManifest>(File.ReadAllText(args[index + 1]));
+        if (manifest?.maps == null || manifest.maps.Length == 0 ||
+            manifest.maps.Any(item => item == null) ||
+            manifest.maps.Select(item => item.mapId).Distinct(StringComparer.Ordinal).Count() != manifest.maps.Length)
+            throw new ArgumentException("Manifest requires distinct maps.");
+        bool motor = !args.Contains("-objectiveStaticOnly");
+        var failures = new List<string>();
+        foreach (ExternalMap candidate in manifest.maps)
+        {
+            try
+            {
+                Recipe recipe = Recipes.SingleOrDefault(item => item.MapId == candidate.mapId);
+                if (recipe == null || candidate.prefabPath != recipe.PrefabPath)
+                    throw new ArgumentException("Manifest must identify an existing final map prefab.");
+                if (candidate.objectives == null || candidate.objectives.Length != 10 ||
+                    candidate.objectives.Any(item => item == null) ||
+                    candidate.objectives.Select(item => item.objectiveId).Distinct(StringComparer.Ordinal).Count() != 10 ||
+                    candidate.objectives.Select(item => item.targetName).Distinct(StringComparer.Ordinal).Count() != 10)
+                    throw new ArgumentException("Each catalog requires ten distinct objective IDs and targets.");
+                CatalogSpec[] specs = candidate.objectives.Select(item =>
+                {
+                    if (new[] { item.objectiveId, item.displayKey, item.actionKey, item.targetName, item.routeRegionId }
+                        .Any(string.IsNullOrWhiteSpace) ||
+                        !Enum.TryParse(item.kind, false, out GameplayObjectiveKind kind) ||
+                        (kind != GameplayObjectiveKind.Clean && kind != GameplayObjectiveKind.Repair && kind != GameplayObjectiveKind.Switch))
+                        throw new ArgumentException("Invalid objective metadata: " + item.objectiveId);
+                    return Spec(item.objectiveId, kind, item.displayKey, item.actionKey, item.targetName, item.routeRegionId);
+                }).ToArray();
+                BuildAndValidateCatalog(candidate.mapId, candidate.prefabPath, specs, motor, true);
+                Debug.Log("LMS_OBJECTIVE_CATALOG map=" + candidate.mapId +
+                          " objectives=10 distinctTargets=10 saved=0 status=PASS scope=" + (motor ? "motor" : "static-only"));
+            }
+            catch (Exception error)
+            {
+                failures.Add(candidate.mapId + ": " + error.GetBaseException().Message);
+                Debug.LogError("LMS_OBJECTIVE_CATALOG map=" + candidate.mapId + " saved=0 status=FAIL error=" +
+                               error.GetBaseException().Message);
+            }
+        }
+        if (failures.Count > 0)
+            throw new InvalidOperationException("External catalog validation failed: " + string.Join(" | ", failures));
     }
 
     private static readonly Recipe[] Recipes =
@@ -240,10 +305,14 @@ public static class V020GameplayObjectiveInstaller
     }
 
     private static GameplayObjectiveCatalog.Entry[] BuildAndValidateCasaCatalog(bool validateMotor = true)
+        => BuildAndValidateCatalog(CasaMapId, CasaPrefabPath, CasaSpecs, validateMotor);
+
+    private static GameplayObjectiveCatalog.Entry[] BuildAndValidateCatalog(string mapId, string prefabPath,
+        IReadOnlyList<CatalogSpec> specs, bool validateMotor, bool collectGeometryFailures = false)
     {
-        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CasaPrefabPath);
-        if (!prefab) throw new InvalidOperationException("Missing Casa prefab: " + CasaPrefabPath);
-        var fixture = new GameObject("Casa objective catalog validation");
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+        if (!prefab) throw new InvalidOperationException("Missing map prefab: " + prefabPath);
+        var fixture = new GameObject(mapId + " objective catalog validation");
         GameplayRuntime runtime = null;
         try
         {
@@ -252,26 +321,40 @@ public static class V020GameplayObjectiveInstaller
             root.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             root.transform.localScale = Vector3.one;
             var map = root.GetComponent<EnvironmentMapDefinition>();
-            if (!map || map.MapId != CasaMapId || string.IsNullOrWhiteSpace(map.ContentHash) || !map.SpatialData)
-                throw new InvalidOperationException("Casa map identity/navigation missing.");
+            if (!map || map.MapId != mapId || string.IsNullOrWhiteSpace(map.ContentHash) || !map.SpatialData)
+                throw new InvalidOperationException(mapId + " identity/navigation missing.");
             var world = fixture.AddComponent<UnityGameplayWorld>();
             world.MapRoot = root.transform;
             var doorDefinitions = world.GetDoorDefinitions();
             var toolDefinitions = world.GetToolDefinitions();
             const BindingFlags hidden = BindingFlags.Instance | BindingFlags.NonPublic;
             object navigation = typeof(UnityGameplayWorld).GetMethod("ConfigureModeMap", hidden)
-                ?.Invoke(world, new object[] { map.SpatialData, CasaMapId, false });
+                ?.Invoke(world, new object[] { map.SpatialData, mapId, false });
             MethodInfo approachFree = typeof(UnityGameplayWorld).GetMethod("ApproachFree", hidden);
             MethodInfo routeWithin = navigation?.GetType().GetMethod("RouteWithin");
             if (navigation == null || approachFree == null || routeWithin == null)
-                throw new InvalidOperationException("Casa authoring probe contract missing.");
+                throw new InvalidOperationException(mapId + " authoring probe contract missing.");
             Physics.SyncTransforms();
-            var entries = CasaSpecs.Select(spec => FindCatalogEntry(spec, root.transform, world,
-                approachFree, navigation, routeWithin, map.HumanSpawnPoints)).ToArray();
+            var authored = new List<GameplayObjectiveCatalog.Entry>();
+            var geometryFailures = new List<string>();
+            foreach (CatalogSpec spec in specs)
+            {
+                try { authored.Add(FindCatalogEntry(spec, root.transform, world,
+                    approachFree, navigation, routeWithin, map.HumanSpawnPoints)); }
+                catch (Exception error) when (collectGeometryFailures)
+                {
+                    geometryFailures.Add(spec.ObjectiveId + ": " + error.GetBaseException().Message);
+                    Debug.LogError("LMS_OBJECTIVE_AUTHORED map=" + mapId + " objective=" + spec.ObjectiveId +
+                                   " status=FAIL saved=0 error=" + error.GetBaseException().Message);
+                }
+            }
+            if (geometryFailures.Count > 0)
+                throw new InvalidOperationException(string.Join(" | ", geometryFailures));
+            var entries = authored.ToArray();
             if (entries.Length != 10 || entries.Select(entry => entry.TargetPath).Distinct(StringComparer.Ordinal).Count() != 10)
-                throw new InvalidOperationException("Casa requires ten distinct authored objective targets.");
+                throw new InvalidOperationException(mapId + " requires ten distinct authored objective targets.");
             var catalog = root.GetComponent<GameplayObjectiveCatalog>() ?? root.AddComponent<GameplayObjectiveCatalog>();
-            catalog.ConfigureForEditor(CasaMapId, entries);
+            catalog.ConfigureForEditor(mapId, entries);
 
             runtime = fixture.AddComponent<GameplayRuntime>();
             runtime.IsHost = true; runtime.AutomaticTick = false; runtime.CaptureLocalInput = false;
@@ -289,7 +372,7 @@ public static class V020GameplayObjectiveInstaller
             }
             LogCatalogCoverage(navigation, routeWithin, objectives, map.HumanSpawnPoints);
             runtime.StopRound();
-            if (validateMotor) ValidateCasaHumanRoutes(entries, map, objectives);
+            if (validateMotor) ValidateHumanRoutes(entries, map, objectives, prefabPath);
             return entries.Select(Copy).ToArray();
         }
         finally
@@ -313,10 +396,12 @@ public static class V020GameplayObjectiveInstaller
         if (containsFootPoint == null)
             throw new InvalidOperationException("Objective navigation foot-region contract missing.");
         var candidates = new List<AuthoredApproach>();
+        int probes = 0, supported = 0, near = 0, clear = 0, inRegion = 0, visible = 0, routed = 0;
         foreach (Vector3 point in AxisWitnesses(collider))
         foreach (float radius in new[] { .55f, .75f, 1f })
         foreach (Vector3 direction in HorizontalDirections())
         {
+            probes++;
             Vector3 probe = point + direction * radius + Vector3.up * .5f;
             RaycastHit floor = Physics.RaycastAll(probe, Vector3.down, 2.5f, world.GeometryMask,
                     QueryTriggerInteraction.Ignore)
@@ -324,10 +409,14 @@ public static class V020GameplayObjectiveInstaller
                 .FirstOrDefault(hit => world.IsWorldCollider(hit.collider) &&
                                        !hit.collider.GetComponentInParent<GameplayActorProxy>());
             if (!floor.collider || floor.normal.y < .55f) continue;
+            supported++;
             Vector3 approach = floor.point;
-            if (Vector3.Distance(point, approach) > 1.25f ||
-                !(bool)approachFree.Invoke(world, new object[] { 0u, approach }) ||
-                !(bool)containsFootPoint.Invoke(navigation, new object[] { spec.Region, approach.ToFloat() })) continue;
+            if (Vector3.Distance(point, approach) > 1.25f) continue;
+            near++;
+            if (!(bool)approachFree.Invoke(world, new object[] { 0u, approach })) continue;
+            clear++;
+            if (!(bool)containsFootPoint.Invoke(navigation, new object[] { spec.Region, approach.ToFloat() })) continue;
+            inRegion++;
             Vector3 eye = approach + Vector3.up * 1.53f;
             Vector3 aim = point - eye;
             if (aim.sqrMagnitude < .0001f) continue;
@@ -336,10 +425,12 @@ public static class V020GameplayObjectiveInstaller
                 .OrderBy(hit => hit.distance)
                 .FirstOrDefault(hit => world.IsWorldCollider(hit.collider) && !hit.collider.isTrigger);
             if (!first.collider || first.collider != collider || Vector3.Distance(first.point, point) > .35f) continue;
+            visible++;
             bool hasSpawnRoute = (spawns ?? Array.Empty<Transform>()).Any(spawn => spawn &&
                 (bool)routeWithin.Invoke(navigation, new object[]
                     { spawn.position.ToFloat(), spec.Region, approach.ToFloat(), 330u }));
             if (!hasSpawnRoute) continue;
+            routed++;
             candidates.Add(new AuthoredApproach { Point = point, Approach = approach, Support = floor.collider });
         }
         var selected = candidates.OrderBy(candidate => candidate.Approach.y)
@@ -359,14 +450,16 @@ public static class V020GameplayObjectiveInstaller
             Debug.Log(string.Format(CultureInfo.InvariantCulture,
                 "LMS_OBJECTIVE_AUTHORED map={0} objective={1} target={2} region={3} " +
                 "point={4:R},{5:R},{6:R} approach={7:R},{8:R},{9:R} support={10} saved=0",
-                CasaMapId, entry.ObjectiveId, spec.TargetName, entry.RouteRegionId,
+                root.GetComponent<EnvironmentMapDefinition>().MapId, entry.ObjectiveId, spec.TargetName, entry.RouteRegionId,
                 entry.LocalPosition.x, entry.LocalPosition.y, entry.LocalPosition.z,
                 entry.LocalApproachPoint.x, entry.LocalApproachPoint.y, entry.LocalApproachPoint.z,
                 HierarchyPath(root, selected.Support.transform)));
             return entry;
         }
         throw new InvalidOperationException(spec.ObjectiveId +
-                                            " has no exact contact/support/LOS/routed approach under current values.");
+            " has no exact contact/support/LOS/routed approach under current values; probes=" + probes +
+            " supported=" + supported + " near=" + near + " clear=" + clear +
+            " inRegion=" + inRegion + " visible=" + visible + " routed=" + routed + ".");
     }
 
     private static Recipe RecipeFor(string mapId, string shortId, string displayKey,
@@ -560,19 +653,20 @@ public static class V020GameplayObjectiveInstaller
         }
     }
 
-    private static void ValidateCasaHumanRoutes(IReadOnlyList<GameplayObjectiveCatalog.Entry> entries,
-        EnvironmentMapDefinition map, IReadOnlyList<ObjectiveDefinition> objectives)
+    private static void ValidateHumanRoutes(IReadOnlyList<GameplayObjectiveCatalog.Entry> entries,
+        EnvironmentMapDefinition map, IReadOnlyList<ObjectiveDefinition> objectives, string prefabPath)
     {
         Transform[] spawns = (map.HumanSpawnPoints ?? Array.Empty<Transform>()).Where(spawn => spawn).ToArray();
         Transform mosquito = (map.MosquitoSpawnPoints ?? Array.Empty<Transform>()).FirstOrDefault(spawn => spawn);
         if (spawns.Length == 0 || !mosquito)
-            throw new InvalidOperationException("Casa motor proof requires authored human and mosquito spawns.");
+            throw new InvalidOperationException(map.MapId + " motor proof requires authored human and mosquito spawns.");
         var spawnPasses = new bool[spawns.Length, objectives.Count];
         ulong run = 10;
         for (int spawn = 0; spawn < spawns.Length; spawn++)
         for (int target = 0; target < objectives.Count; target++)
             spawnPasses[spawn, target] = ProveHumanRoute(entries, spawns[spawn].position.ToFloat(),
-                "spawn:" + spawn, objectives[target].ObjectiveId, mosquito.position.ToFloat(), run++);
+                "spawn:" + spawn, objectives[target].ObjectiveId, mosquito.position.ToFloat(), run++,
+                mapId: map.MapId, prefabPath: prefabPath);
 
         var failures = new List<string>();
         for (int spawn = 0; spawn < spawns.Length; spawn++)
@@ -596,7 +690,7 @@ public static class V020GameplayObjectiveInstaller
             {
                 if (ProveHumanRoute(entries, objectives[source].ApproachPoint,
                         "objective:" + objectives[source].ObjectiveId, target.ObjectiveId,
-                        mosquito.position.ToFloat(), run++))
+                        mosquito.position.ToFloat(), run++, mapId: map.MapId, prefabPath: prefabPath))
                     onward++;
                 if (onward >= Math.Min(2, objectives.Count - 1)) break;
             }
@@ -606,17 +700,17 @@ public static class V020GameplayObjectiveInstaller
                 failures.Add(objectives[source].ObjectiveId + " has " + onward + " onward motor routes");
         }
         if (failures.Count > 0)
-            throw new InvalidOperationException("Casa human motor route proof failed: " + string.Join(" | ", failures));
-        Debug.Log("LMS_OBJECTIVE_MOTOR_CATALOG map=" + CasaMapId + " objectives=" + objectives.Count +
+            throw new InvalidOperationException(map.MapId + " human motor route proof failed: " + string.Join(" | ", failures));
+        Debug.Log("LMS_OBJECTIVE_MOTOR_CATALOG map=" + map.MapId + " objectives=" + objectives.Count +
                   " spawns=" + spawns.Length + " routeBudget=330 status=PASS");
     }
 
     private static bool ProveHumanRoute(IReadOnlyList<GameplayObjectiveCatalog.Entry> entries,
         Float3 source, string sourceId, string targetId, Float3 mosquitoSpawn, ulong run,
         bool trace = false, bool decisionTrace = false,
-        bool disableTraversalPrediction = false)
+        bool disableTraversalPrediction = false, string mapId = CasaMapId, string prefabPath = CasaPrefabPath)
     {
-        var fixture = new GameObject("Casa independent human route " + run);
+        var fixture = new GameObject(mapId + " independent human route " + run);
         GameplayRuntime runtime = null;
         float bestHorizontal = float.PositiveInfinity, bestVertical = float.PositiveInfinity;
         uint reachedTick = 0;
@@ -627,17 +721,17 @@ public static class V020GameplayObjectiveInstaller
         uint budget = 330;
         try
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CasaPrefabPath);
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
             var root = prefab ? (GameObject)PrefabUtility.InstantiatePrefab(prefab) : null;
-            if (!root) throw new InvalidOperationException("Missing Casa prefab for independent route proof.");
+            if (!root) throw new InvalidOperationException("Missing " + mapId + " prefab for independent route proof.");
             root.transform.SetParent(fixture.transform, false);
             root.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             root.transform.localScale = Vector3.one;
             var map = root.GetComponent<EnvironmentMapDefinition>();
-            if (!map || map.MapId != CasaMapId || !map.SpatialData)
-                throw new InvalidOperationException("Casa route fixture identity/navigation missing.");
+            if (!map || map.MapId != mapId || !map.SpatialData)
+                throw new InvalidOperationException(mapId + " route fixture identity/navigation missing.");
             var catalog = root.GetComponent<GameplayObjectiveCatalog>() ?? root.AddComponent<GameplayObjectiveCatalog>();
-            catalog.ConfigureForEditor(CasaMapId, entries.Select(Copy).ToArray());
+            catalog.ConfigureForEditor(mapId, entries.Select(Copy).ToArray());
             var world = fixture.AddComponent<UnityGameplayWorld>();
             world.MapRoot = root.transform;
 #if UNITY_EDITOR
@@ -693,9 +787,9 @@ public static class V020GameplayObjectiveInstaller
         }
         catch (Exception error)
         {
-            if (decisionTrace)
-                throw new InvalidOperationException("Casa threat diagnostic fixture is invalid for " + sourceId + ".", error);
-            reason = "begin-or-tick:" + error.GetBaseException().Message;
+            // Infrastructure failures cannot be hidden by the catalog's minimum route coverage.
+            throw new InvalidOperationException(mapId + " route fixture is invalid for " + sourceId +
+                                                " -> " + targetId + ".", error);
         }
         finally
         {
