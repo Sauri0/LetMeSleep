@@ -67,3 +67,15 @@ Evidencia offline: ambos runners compilaron con 0 warnings / 0 errores. Auditor�
 - Replay85 opcional: `N:/LetMeSleep/Validation/V020/SurfaceValidatedRoutes/Build/20260920-062549-010/run-in-coordinator-slot.cs`.
 
 Pendiente de CEO: ejecutar focused con su turno Unity, comprobar las cinco rutas solicitadas y negativos, y diagnosticar cualquier COVERAGE_GAP/FAIL sin ocultarlo. Los positivos nuevos no reemplazan los fallos históricos ni certifican navegación completa de cinco mapas.
+
+## Revisión del delta nativo 03 — aceptación limitada
+
+Lectura independiente de `surface-mode-witness-03.xml`: 16/16 PASS, cero omitidos, ejecutados a las 06:35:45Z. Son **11 casos de superficies y 5 de modos**; no 16 casos de superficies. Ejecución realizada por CEO. El helper de runtime conserva SHA256 `DF590B40ED4BEE11D2BD395B749C9E80E723E05901C07648C9F53177BB6668FE`. Tests revisados: SHA256 `2CAA4B95038D3B88253815862B892896FEB7C289176D8C335D9B9EF39A298A2D`.
+
+Conclusión: **favorable a integrar el cambio acotado de bisel**, sin cerrar los fallos de mapas. La selección de cara intermedia sigue limitada a los dos colliders elegibles; cada rama valida sus dos enlaces; profundidad, normales y distancias están acotadas; la llegada conserva FreeMosquito y la autoridad usa el motor real. No encontré un bypass de colisión introducido por el delta leído.
+
+Los tests nuevos cubren los huecos principales señalados antes: autoridad real con inputs, aproximación inicial, continuidad de attachment, transporte de dirección, llegada a la otra normal y estabilidad durante cinco ticks. Ejecutan ambos sentidos como casos independientes, no como una ida y vuelta consecutiva del mismo actor. Limitan cada desplazamiento observado a menos de 4 cm. El caso rotado/trasladado prueba conectividad positiva y rechaza una cara diagonal que permanece visible pero está separada 7,5 mm de sus extremos. La pareja con/sin bisel y los negativos anteriores de hueco, placa y llegada bloqueada siguen pasando.
+
+Límite de la afirmación de penetración: `Fixture.PenetratesMap` continúa usando ComputePenetration. El PASS afirma que esa consulta no detectó penetración en este fixture; no demuestra ausencia general de overlaps por caras posteriores. Mejora concreta recomendada: sumar OverlapSphere filtrado a colliders activos del mapa por tick, sin ignorar el soporte ni sustituirlo por Pen=0. El focused externo ya comprueba overlaps de 54 mm durante positivos. Este límite no invalida las comprobaciones de movimiento/continuidad que sí hace el test ni constituye por sí solo un bloqueo del delta acotado.
+
+Permanecen fuera de la aceptación: biseles en un tercer collider, cadenas que excedan la profundidad dos, escalas no uniformes, geometría móvil durante el cruce, rutas humanas y aceptación completa de los cinco mapas. No se midió coste/FPS de las consultas. Mantener los 21 FAIL históricos y resolverlos con causas/rutas separadas, aunque estos tests sintéticos pasen.
