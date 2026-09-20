@@ -1,5 +1,36 @@
 # Relevo CEO — 2026-09-19
 
+## Resultado posterior — J32 y carga gráfica
+
+- J32 aceptado en c47983d: bot-replan-native-02 54/54 PASS, sin omitidos,
+  más 4/4 del adaptador. La ejecución01 seleccionó sólo dos pruebas por un
+  namespace erróneo del comando y no se usa como prueba de las 54.
+- FiveMapGameReview01 PASS: diez sesiones de Sangre, cinco mapas por dos
+  roles, con carga/identidad/runtime/regreso al menú y diez capturas1280×720.
+  CEO inspeccionó las imágenes; detalle en FIVE-MAP-GAME-REVIEW-20260920.md.
+  No incluye Canvas/HUD ni audio, recorridos completos, FPS o WAN. Arte actual
+  de personajes aún provisional; faltan tres prefabs de herramientas.
+- Revisión independiente de Astra identifica causa del falso negativo físico:
+  el borde proyecta velocidad hacia arriba y el motor omite snap; el predictor
+  anterior lo forzaba. Técnica implementa simulación por ticks con velocidad,
+  grounded y condición de snap real. Todavía no validada ni aceptada.
+
+## Checkpoint 20/09 — J32 integrado, física todavía rechazada
+
+- bot-navigation-physics-native-01: 9/10 PASS. J32 adaptador 4/4 PASS;
+  steering 5/6 PASS, pero rechaza un escalón bajo que MoveHuman sí cruza.
+- bot-step-snap-diagnostic-01 reproduce el falso negativo del snap: cápsula
+  contacta el borde de Low step con normal Y < .55 antes del soporte. Ese
+  diagnóstico no autoriza ignorar paredes ni declara corregido el motor.
+- J32 está integrado en fuentes y sus tres metas fueron generados por Unity;
+  gate EditMode de 54 casos en curso. Sin commit del ticket todavía.
+- Casa sigue sin instalar. El PASS mínimo del catálogo06 no elimina las seis
+  regresiones spawn3 frente a04; exigir comparación de las mismas 50 rutas.
+- Preparada captura gráfica de cinco mapas por dos roles en
+  Validation/V020/FiveMapGameReview01, todavía no ejecutada.
+- La reserva online de 30 s sin IA permanece como decisión final. La sesión
+  Higgsfield sigue pendiente de la respuesta al usuario; no hubo submit nuevo.
+
 ## Actualización posterior: comparación de rutas y traspaso J32
 
 Casa-catalog-06 termina PASS de cobertura mínima (10 objetivos, saved0), pero
