@@ -52,9 +52,12 @@ modelos visibles y pickups completos de los cinco mapas siguen pendientes.
 - Compilación offline Bootstrap y dependencias: cero advertencias/errores.
 - Revisión independiente de red detectó ThrowerActorId huérfano/no humano.
   Se agregó validación cruzada y dos negativos. Harness CPU posterior: 41/41;
-  esos dos negativos esperan la siguiente ventana nativa.
+  ambos también quedan incluidos en la ventana nativa posterior de88/88.
 
 Las pruebas no acreditan EOS/WAN, micrófonos reales, cinco mapas jugados ni
 aprobación artística. Casa conserva catálogo sin instalar: diagnóstico motor
-control PASS en 19 ticks y ruta entre habitaciones FAIL por atasco, pendiente
-de corrección de tangencia del motor. No existe aún build final v0.2.0.
+control PASS en19 ticks y ruta entre habitaciones FAIL. La traza03 muestra
+avance en tick31 y vuelta en32: oscilación de dirección, no inmovilidad del motor.
+Se instrumentó la elección del controlador para aislar la causa. La modificación
+de tangencia del motor no resolvió Casa y se evalúa por separado.
+No existe aún build final v0.2.0.
