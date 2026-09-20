@@ -69,8 +69,7 @@ namespace LetMeSleep.Gameplay
                 if (!passageOpen(route.Id) || IsPassageBlocked(route.Id, tick) || (region != null && region != route.From && region != route.To)) Clear();
                 else
                 {
-                    while (pointIndex < points.Length && (points[pointIndex] - position).Length < .24f)
-                    { pointIndex++; }
+                    AdvanceReachedPatrolWaypoints(position);
                     if (pointIndex == points.Length) Clear();
                     else
                     {
@@ -90,7 +89,12 @@ namespace LetMeSleep.Gameplay
                     .OrderBy(p => VisitCount(p.From == region ? p.To : p.From)).First();
                 points = route.From == region ? route.Points.ToArray() : route.Points.Reverse().ToArray();
                 pointIndex = 0;
-                return Travel(points[0] - position, "explore:" + route.Id + ":0", route.Id);
+                AdvanceReachedPatrolWaypoints(position);
+                if (pointIndex < points.Length)
+                    return Travel(points[pointIndex] - position,
+                        "explore:" + route.Id + ":" + pointIndex, route.Id);
+                Clear();
+                return Float3.Zero;
             }
             // Closed rooms remain closed. Inspect reachable interior instead of pushing the wall.
             var current = regions.First(r => r.Id == region);
@@ -104,6 +108,11 @@ namespace LetMeSleep.Gameplay
                 interiorRegion = region; interiorVersion++;
             }
             return Travel(interiorPoint.Value - position, "interior:" + region + ":" + interiorVersion, null);
+        }
+        private void AdvanceReachedPatrolWaypoints(Float3 position)
+        {
+            while (pointIndex < points.Length && (points[pointIndex] - position).Length < .24f)
+                pointIndex++;
         }
         private BotPassage objectivePassage;
         private Float3[] objectivePoints;

@@ -6,6 +6,52 @@ namespace LetMeSleep.Tests.EditMode
     public sealed class BotPatrolDirectedRouteTests
     {
         [Test]
+        public void ExplorationAcquisitionSkipsReachedFirstWaypoint()
+        {
+            var patrol = ExplorationPatrol(new[]
+            {
+                new Float3(0, 1, 0),
+                new Float3(1, 1, 0)
+            });
+
+            Float3 direction = patrol.Direction(new Float3(0, 1, 0), 0, _ => true);
+
+            Assert.That(direction.X, Is.EqualTo(1).Within(.0001f));
+            Assert.That(patrol.CurrentProgress.Value.WaypointKey, Does.EndWith(":1"));
+        }
+
+        [Test]
+        public void ExplorationAcquisitionUsesThreeDimensionalArrival()
+        {
+            var patrol = ExplorationPatrol(new[]
+            {
+                new Float3(0, 1.3f, 0),
+                new Float3(1, 1.3f, 0)
+            });
+
+            Float3 direction = patrol.Direction(new Float3(0, 1, 0), 0, _ => true);
+
+            Assert.That(System.Math.Abs(direction.X), Is.LessThan(.0001f));
+            Assert.That(direction.Y, Is.EqualTo(.3f).Within(.0001f));
+            Assert.That(patrol.CurrentProgress.Value.WaypointKey, Does.EndWith(":0"));
+        }
+
+        [Test]
+        public void ExplorationAcquisitionHandlesFullyConsumedMalformedPassage()
+        {
+            var patrol = ExplorationPatrol(new[]
+            {
+                new Float3(0, 1, 0),
+                new Float3(.1f, 1, 0)
+            });
+
+            Float3 direction = patrol.Direction(new Float3(0, 1, 0), 0, _ => true);
+
+            Assert.That(direction, Is.EqualTo(Float3.Zero));
+            Assert.That(patrol.CurrentProgress.HasValue, Is.False);
+        }
+
+        [Test]
         public void ElevatedPortalWaypointAdvancesAfterHorizontalArrivalBetweenBotDecisions()
         {
             var patrol = new BotPatrol(new[]
@@ -281,6 +327,15 @@ namespace LetMeSleep.Tests.EditMode
                 new BotRegion("directed:corridor", new Float3(-.5f, 0, -.5f),
                     new Float3(2.5f, 4, .5f))
             })
+        }, 1);
+
+        private static BotPatrol ExplorationPatrol(Float3[] points) => new BotPatrol(new[]
+        {
+            new BotRegion("start", new Float3(-1, 0, -1), new Float3(1, 2, 1)),
+            new BotRegion("finish", new Float3(2.5f, 0, -1), new Float3(4, 2, 1))
+        }, new[]
+        {
+            new BotPassage("patrol", "start", "finish", points)
         }, 1);
     }
 }
