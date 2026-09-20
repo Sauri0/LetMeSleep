@@ -156,8 +156,11 @@ namespace LetMeSleep.Gameplay.Unity
         {
             var local = world.MapRoot.InverseTransformPoint(worldPosition.ToUnity()).ToFloat();
             var approach = world.MapRoot.InverseTransformPoint(worldApproach.ToUnity()).ToFloat();
-            if (!TryHumanRegion(local, out var from, out var navigationPoint) ||
+            if (!TryHumanRegion(local, out var from, out _) ||
                 !TryTargetPoint(targetRegion, approach, out var navigationApproach, out _)) return false;
+            // Classification may tolerate a sample just outside an authored volume, but the
+            // budget must still pay for travel from the actor's real physical position.
+            var navigationPoint = local + Float3.Up;
             // Measure between authored passage endpoints. Region centers can be far from a
             // perfectly valid doorway and would reject large but traversable rooms.
             float distance = ShortestAuthoredDistance(from.Id, navigationPoint, targetRegion,
@@ -174,17 +177,27 @@ namespace LetMeSleep.Gameplay.Unity
             float targetOffset = target.Id == null ? float.PositiveInfinity : Distance(approach + Float3.Up, navigationApproach);
             bool authoredConnected = from.Id != null && target.Id != null && Reachable(from.Id, target.Id, AlwaysOpen);
             bool openConnected = from.Id != null && target.Id != null && Reachable(from.Id, target.Id, IsOpen);
-            float distance = sourceWithin && targetWithin && authoredConnected
-                ? ShortestAuthoredDistance(from.Id, navigationPoint, target.Id, navigationApproach, null)
+            var physicalNavigationPoint = local + Float3.Up;
+            float authoredDistance = sourceWithin && targetWithin && authoredConnected
+                ? ShortestAuthoredDistance(from.Id, physicalNavigationPoint, target.Id, navigationApproach, null)
                 : float.PositiveInfinity;
-            int requiredTicks = MathEx.Finite(distance) ? Mathf.CeilToInt(distance / (3.1f / 30f)) : -1;
+            float openDistance = sourceWithin && targetWithin && openConnected
+                ? ShortestAuthoredDistance(from.Id, physicalNavigationPoint, target.Id, navigationApproach, IsOpen)
+                : float.PositiveInfinity;
+            int authoredRequiredTicks = MathEx.Finite(authoredDistance)
+                ? Mathf.CeilToInt(authoredDistance / (3.1f / 30f)) : -1;
+            int openRequiredTicks = MathEx.Finite(openDistance)
+                ? Mathf.CeilToInt(openDistance / (3.1f / 30f)) : -1;
+            bool authoredWithin = sourceWithin && targetWithin && authoredConnected && authoredRequiredTicks <= budgetTicks;
+            bool openWithin = sourceWithin && targetWithin && openConnected && openRequiredTicks <= budgetTicks;
             return string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 "sourceRegion={0} sourceOffset={1:R} sourceWithin={2} targetRegion={3} targetOffset={4:R} " +
-                "targetWithin={5} authoredConnected={6} openConnected={7} distance={8:R} requiredTicks={9} budget={10} within={11}",
+                "targetWithin={5} authoredConnected={6} openConnected={7} distance={8:R} requiredTicks={9} budget={10} within={11} " +
+                "authoredDistance={8:R} authoredRequiredTicks={9} authoredWithin={11} openDistance={12:R} openRequiredTicks={13} openWithin={14}",
                 from.Id ?? "none", sourceOffset, sourceWithin ? 1 : 0, target.Id ?? "none", targetOffset,
-                targetWithin ? 1 : 0, authoredConnected ? 1 : 0, openConnected ? 1 : 0, distance,
-                requiredTicks, budgetTicks,
-                sourceWithin && targetWithin && authoredConnected && requiredTicks <= budgetTicks ? 1 : 0);
+                targetWithin ? 1 : 0, authoredConnected ? 1 : 0, openConnected ? 1 : 0, authoredDistance,
+                authoredRequiredTicks, budgetTicks, authoredWithin ? 1 : 0, openDistance, openRequiredTicks,
+                openWithin ? 1 : 0);
         }
         public bool KnowsRegion(string regionId) => regions.Any(r => r.Id == regionId);
         public bool ContainsFootPoint(string regionId, Float3 worldFoot)

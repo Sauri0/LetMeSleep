@@ -87,6 +87,44 @@ namespace LetMeSleep.Tests.PlayMode
         }
 
         [Test]
+        public void RouteBudgetIncludesPhysicalOffsetOutsideNearestRegion()
+        {
+            var method = navigation.GetType().GetMethod("RouteWithin", new[]
+                { typeof(Float3), typeof(string), typeof(Float3), typeof(uint) });
+            Assert.That(method, Is.Not.Null);
+            var outside = new Float3(-4, 0, 0);
+
+            Assert.That((bool)method.Invoke(navigation,
+                new object[] { outside, objective.RouteRegionId, objective.ApproachPoint, 70u }), Is.False,
+                "The nearest-region clamp must not erase two metres from the admission cost.");
+            Assert.That((bool)method.Invoke(navigation,
+                new object[] { outside, objective.RouteRegionId, objective.ApproachPoint, 78u }), Is.True);
+        }
+
+        [Test]
+        public void RouteDiagnosticSeparatesAuthoredAndCurrentlyOpenDistance()
+        {
+            Object.DestroyImmediate(topology);
+            topology = new TextAsset("{\"schema_version\":1,\"map_id\":\"test-map\",\"zones\":[" +
+                "{\"id\":\"start\",\"min\":[-2,0,-2],\"max\":[2,3,2]}," +
+                "{\"id\":\"finish\",\"min\":[2.1,0,-2],\"max\":[6,3,2]}],\"portals\":[" +
+                "{\"id\":\"closed-door\",\"from\":\"start\",\"to\":\"finish\",\"center\":[2.05,1,0]," +
+                "\"normal\":[1,0,0],\"width\":1,\"height\":2,\"door\":true}]}");
+            navigation = ConfigureMap();
+            var method = navigation.GetType().GetMethod("DiagnoseRoute",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            string diagnostic = (string)method.Invoke(navigation, new object[]
+                { Float3.Zero, objective.RouteRegionId, objective.ApproachPoint, 100u });
+
+            StringAssert.Contains("authoredDistance=4", diagnostic);
+            StringAssert.Contains("authoredWithin=1", diagnostic);
+            StringAssert.Contains("openDistance=Infinity", diagnostic);
+            StringAssert.Contains("openWithin=0", diagnostic);
+        }
+
+        [Test]
         public void CasaStairReplayKeepsTheAuthoredPassageAndPhysicalSampleAtTick44()
         {
             ConfigureStairMap(); EnterStair();
