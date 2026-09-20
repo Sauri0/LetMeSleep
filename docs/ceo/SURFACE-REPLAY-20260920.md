@@ -22,3 +22,56 @@ La suite dirigida v2, ejecutada separadamente en `Build/20260920-070942-567`,
 obtuvo 7 PASS y 1 COVERAGE_GAP, sin FAIL; el hueco corresponde al perfil de
 escalera Casa. Incluye comprobación del destino corporal ocupado y techo de
 Camp. Esta evidencia tiene alcance dirigido y no reemplaza la matriz original.
+
+## Entrega REPLAY-FROZEN85 — preparación externa
+
+Candidato estable: `N:/LetMeSleep/Validation/V020/SurfaceValidatedRoutes/Build/20260920-074546-702`.
+Compilación offline contra las DLL reales de Library: **0 errores y 0 advertencias**.
+El agente no ejecutó Unity. `run-in-coordinator-slot.cs` contiene el comando
+completo para el turno nativo del CEO; `receipt.json` conserva fuentes y
+dependencias con sus hashes. Los Build anteriores y ambos JSON originales
+permanecen intactos.
+
+`frozen85-manifest.json` fija los 85 pares mapa/ID, objeto, SurfaceId, punto,
+normal, inicio, extremos de arista y normal objetivo. El runner crea las 85
+filas antes de construir fixtures y nunca ejecuta el selector RunMap,
+TrySurface, Witness ni FindGap para elegir casos. Las consultas físicas
+durante la simulación siguen delegándose al mundo real, incluyendo clearance.
+Una adquisición rechazada conserva la fila como COVERAGE_GAP, con razón y
+trazado; no se considera una mejora ni se reemplaza por otro objeto.
+
+Hay **80 criterios recuperables y cinco huecos históricos explícitos**.
+Los cinco casos `negative/real-gap` no serializaron dirección ni gapDistance;
+el source preservado demuestra que dependían de consultas físicas durante
+la selección. No existe captura confirmada de esos valores. Su adquisición
+se ejecuta como evidencia parcial separada en `frozenEvidence.partialAcquisition`,
+pero la fila completa permanece COVERAGE_GAP. Nunca se infiere el umbral a
+partir del runtime actual.
+
+Para los otros casos, las direcciones se reconstruyen con las fórmulas
+originales, sin consultas de selección. Se exige coincidencia exacta de los
+componentes float del centro, normal e inicio, y de la arista cuando corresponde;
+una diferencia produce cobertura ausente. No se cambiaron las tolerancias de
+movimiento, penetración, transición ni las duraciones. La prueba de agua
+conserva su criterio original, que no añadía la aserción de penetración de Walk.
+Los métodos Acquire/Walk/Edge/Gap/Forbidden y la enumeración geométrica se
+comparan con el source del Build original mediante auditoría offline.
+
+La auditoría registra ausencia de cambios tracked en los cinco mapas frente
+al HEAD de compilación original `51913bba2eb3d5098c536df3a4d584f619cacef9`.
+También congela hashes de modelos, prefabs y sus metadatos; el runner los
+verifica antes de cada mapa. Esto respalda la reconstrucción geométrica, pero
+el JSON histórico no contenía los vértices ordenados: la procedencia y ese
+límite quedan declarados en `frozen85-audit.json`. Cualquier cambio posterior
+de esos archivos bloquea el mapa con filas explícitas, sin seleccionar otros.
+
+Baseline SHA-256:
+`5D4C656AB09189D6311C6097B0F4F72B8382B8BEEF3F5A31784B2040B2873047`.
+Manifiesto SHA-256:
+`D819921506E8C0CEF45BCE9D3B8B5396BDF67F89AB96C0DA9C3F18315CE685C5`.
+
+Como evidencia funcional separada, `run-separate-synthetic-checks.cs` permite
+ejecutar la batería sintética existente, cuyo caso determinista
+`gap_and_nonperch_blocker_do_not_become_neighbors` cubre un hueco y un soporte
+no permitido. No ocupa ninguna de las 85 filas ni reconstruye sus datos
+ausentes. Ambos comandos están preparados, no ejecutados por este agente.
