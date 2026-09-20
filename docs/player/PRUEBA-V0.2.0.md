@@ -75,8 +75,6 @@ Una prueba entre redes diferentes comprueba algo que no demuestra jugar en
 una sola computadora. Anotá qué entorno usaron; no hace falta compartir
 contraseñas, direcciones IP públicas ni credenciales.
 
-## Informar un problema
-
 ## Limitaciones de esta candidata
 
 Esta entrega prioriza disponer de una versión testeable. El menú y el HUD tienen
@@ -96,3 +94,4 @@ Incluí versión/candidata, mapa, modo, rol, qué hiciste y qué ocurrió. Una
 captura o un video corto ayuda si se trata de cámara, animación, colisión o
 interfaz. Para audio, indicá si usabas auriculares o parlantes y qué micrófono.
 Si se repite, anotá los pasos más cortos que permiten provocarlo.
+
