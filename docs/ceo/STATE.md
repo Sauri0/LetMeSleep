@@ -1,5 +1,34 @@
 # Relevo CEO — 2026-09-19
 
+## Gate actual: primera candidata Windows compilada
+
+- Build técnico `0.2.0-20260920-144021`: Succeeded, cero errores, Unity
+  6000.3.24f1, fuente `f5488366421be793e40a844c920c0a94d7573693`,
+  `sourceDirty=false`. Recibo en Artifacts de ese directorio. No publicado.
+- Smoke standalone Casa/Sangre pasa funcionamiento: ambos roles, retorno al
+  menú y crear/salir de sala con una identidad EOS, cero errores observados.
+  Evidencia: Validation/V020/WindowsCandidateSmoke01/casa-blood.
+  Ventana oculta: PNG negros y resolución 1024x768; timings NO válidos como
+  rendimiento renderizado. Los booleanos de HUD prueban estado del controlador,
+  no aspecto visual. Ejecución visible solicitada al usuario; sigue pendiente.
+- Camp/Tasks pasa smoke funcional. Puerto/Survival aborta tanda por
+  humanStationary=false; todos los otros checks pasan, cero errores. Diagnóstico
+  StationaryTraining01 prueba caída inicial de 6,51 cm en tres ticks y quietud
+  posterior con/sin bots; Yate cae 4,30 cm en dos ticks. Probe corregido en WIP
+  para apoyo inicial acotado (.10 m, 30 ticks, sin eximir XZ), seguido de deriva
+  máxima <.035 m. Revisión independiente y nueva build pendientes. Isla/Yate
+  standalone todavía no ejecutados. No equivale a dos jugadores ni WAN.
+- CUST-FND asignado a continuidad_tecnica: contrato de selección y catálogo
+  validado, sin aplicación visual ni assets ficticios. personalizacion_estado_v020
+  revisa el contrato de integración de bases/rig/primera persona, sólo lectura.
+  Arte nuevo y herramientas, personalización completa, escucha/micrófono real,
+  prueba con dos identidades y dos redes siguen pendientes. Objetivo activo.
+- Foundation native01 pasa 9 EditMode +3 PlayMode. Freeze02 refuerza IDs,
+  tipos de assets y defaults; próximo gate 10+5. CUST-CODEC asignado a
+  personalizacion_red_v020 (Sol/high): codec v2 aislado, sin activar red/UI.
+  Probe usa SnapshotApplied por tick tras revisión independiente que detectó
+  riesgo de perder deriva entre frames; resolución estática aceptada.
+
 ## Gate actual: cinco catálogos instalados; candidata técnica en preparación
 
 - `f548836` cierra el flag de actores dinámicos: native04 51/51, sin omitidos.
