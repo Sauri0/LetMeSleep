@@ -1,5 +1,30 @@
 # Relevo CEO — 2026-09-19
 
+## Entrega acelerada solicitada — v0.2.0 publicada
+
+Branko pidió cerrar cuanto antes por cuota escasa de Codex (5% restante al
+consultar). Se congeló alcance integrado y se detuvo a los tres subagentes.
+Se entrega una candidata testeable con pendientes explícitos, no aprobación
+artística ni cumplimiento de todos los requisitos visuales anteriores.
+
+- Release pública de prueba: https://github.com/Sauri0/LetMeSleep/releases/tag/v0.2.0
+- Tag/build fuente61f8b71a2149f63218924fd65538116a49ccbdd2, Unity6000.3.24f1.
+- Build05 Succeeded/0errores/sourceDirtyfalse; artefacto0.2.0-20260920-181701.
+- Smoke05: ambos roles Casa/Sangre, menú, crear/salir EOS con una identidad,
+  cero errores. Capturas ocultas negras tanto batch como normal: no usar como
+  evidencia visual de ejecutable. UI sí revisada en editor; WAN/voz pendientes.
+- ZIP114868337bytes, SHA256
+  `3668a4cbe4142edea3d1bd7e79ba560412d4688e4b74de736c2ac4d864aed060`.
+- Launcher1.2.0 publicado. Descarga pública real, checksum, extracción/manifiesto,
+  segundo inicio y activación persistida:3/3, versión0.2.0, sin lanzar juego.
+- Evidencia: `N:/LetMeSleep/Validation/V020/AcceleratedDelivery01`.
+- Pendientes conservados: arte final, UI completa, marcha/brazos/caídas,
+  PuertoFloorRepair visual+persistencia, otros parpadeos, objetos, WAN/voz/FPS.
+  No reabrir exploración automáticamente tras esta entrega para consumir cuota.
+
+Los cambios diagnósticos de fuente del checkout aislado se preservaron antes
+de restaurarlos y avanzar en BuildCandidateInputs03. WIP central intacto.
+
 ## Prioridad nueva del usuario: UI, parpadeos y animación de personajes
 
 Branko rechaza UI simple/cuadrada, pide revisar choques de texturas/parpadeos
