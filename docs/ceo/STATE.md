@@ -2,6 +2,15 @@
 
 ## Gate actual: interacción y salida de objetivos
 
+- Camp instalado: install02 repite16/20 (cuota14) y pasa cobertura motor antes
+  de guardar10 entradas. ContentHash nuevo
+  `79b198e933f2c21eec610b2ec7148c4b7ac7636dc5d4acab9a4ed130a7e25a86`.
+  CampCatalogInstall01/delta-verification.json: 1 componente añadido,
+  sólo raíz y hash cambiados, 1037 documentos intactos, cero errores.
+  El backup anterior sigue disponible; Frozen85 no se modifica.
+- Isla static-human04 PASS12 con manifest03/contactos reales medidos porv8.
+  Todavía falta motor/ronda; no está instalado. Etiquetas nativas03:47/47.
+
 - La consulta humana de steering usa ahora CastMotor con la cápsula/filtros
   reales. Puerto ContactEscape demuestra falso solapamiento de0.23mm con
   radio0.26 y ausencia de penetración real con0.25. Native query01 pasa14/14

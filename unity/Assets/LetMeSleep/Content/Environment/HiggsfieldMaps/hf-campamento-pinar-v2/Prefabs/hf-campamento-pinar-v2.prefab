@@ -312,6 +312,7 @@ GameObject:
   - component: {fileID: 5902037700327117729}
   - component: {fileID: 1010624027987843496}
   - component: {fileID: 2522696349045836844}
+  - component: {fileID: 1462083129901378793}
   m_Layer: 0
   m_Name: hf-campamento-pinar-v2
   m_TagString: Untagged
@@ -349,7 +350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.EnvironmentMapDefinition
   MapId: hf-campamento-pinar-v2
-  ContentHash: a6fa3de9cc314f47609f65c4444e882137553d0d85ae28a507fcfb4a99ac6cc9
+  ContentHash: 79b198e933f2c21eec610b2ec7148c4b7ac7636dc5d4acab9a4ed130a7e25a86
   SpatialData: {fileID: 4900000, guid: 9c1cf8ff13207694f84b6176aa364564, type: 3}
   HumanSpawnPoints:
   - {fileID: 9027868090736219709}
@@ -1035,6 +1036,130 @@ MonoBehaviour:
   RetryTicks: 30
   InteriorMargin: 0.02
   SupportProbe: 0.08
+--- !u!114 &1462083129901378793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8496945472530983138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21d3e5b304964cc89cc545eae60fec08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.GameplayObjectiveCatalog
+  mapId: hf-campamento-pinar-v2
+  entries:
+  - ObjectiveId: camp.clean.barrel
+    Kind: 1
+    DisplayKey: task.camp.barrel
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -21.5, y: 0.44999966, z: 2.525}
+    LocalApproachPoint: {x: -21.5, y: -0.035000626, z: 3.5249999}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: shelter_clearing
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CAMP_Barrel_01
+  - ObjectiveId: camp.repair.cooler
+    Kind: 0
+    DisplayKey: task.camp.cooler
+    ActionKey: task.action.hold_repair
+    LocalPosition: {x: -11.799999, y: 0.20000151, z: 10.392821}
+    LocalApproachPoint: {x: -12.188908, y: -0.035001785, z: 10.003912}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: west_path
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CAMP_Cooler_01
+  - ObjectiveId: camp.clean.cook_table
+    Kind: 1
+    DisplayKey: task.camp.cook_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -23.6, y: 0.9499995, z: 5.91}
+    LocalApproachPoint: {x: -23.6, y: 0.039998796, z: 6.6599984}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: shelter_clearing
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CAMP_CookTable_Top
+  - ObjectiveId: camp.clean.crate_one
+    Kind: 1
+    DisplayKey: task.camp.crate_one
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -10.124493, y: 0.26, z: 9.6}
+    LocalApproachPoint: {x: -10.513401, y: -0.03500178, z: 9.988907}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: west_path
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CAMP_Crate_01_Base
+  - ObjectiveId: camp.clean.crate_two
+    Kind: 1
+    DisplayKey: task.camp.crate_two
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 11.999996, y: 0.25999942, z: -1.846755}
+    LocalApproachPoint: {x: 11.999995, y: -0.034999847, z: -0.846755}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: east_field
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CAMP_Crate_02_Base
+  - ObjectiveId: camp.clean.shelter_table
+    Kind: 1
+    DisplayKey: task.camp.shelter_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -25.85, y: 0.79999965, z: 4.9999995}
+    LocalApproachPoint: {x: -26.137012, y: -0.035001013, z: 5.6929092}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: shelter_clearing
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CAMP_Shelter_Table_Top
+  - ObjectiveId: camp.clean.east_field_stump
+    Kind: 1
+    DisplayKey: task.camp.east_field_stump
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 15.000001, y: 0.14999944, z: 8.304999}
+    LocalApproachPoint: {x: 15.000001, y: -0.035001665, z: 9.304998}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: east_field
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CAMP_Stump_1
+  - ObjectiveId: camp.clean.north_bridge_stump
+    Kind: 1
+    DisplayKey: task.camp.north_bridge_stump
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 23.000002, y: 0.14999932, z: 10.304999}
+    LocalApproachPoint: {x: 23.000004, y: -0.035002023, z: 11.304998}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: north_bridge_approach
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CAMP_Stump_3
+  - ObjectiveId: camp.clean.washroom_toilet
+    Kind: 1
+    DisplayKey: task.camp.washroom_toilet
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -28.352879, y: 0.2850001, z: 19.687616}
+    LocalApproachPoint: {x: -27.645771, y: 0.079999916, z: 20.394726}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: washroom_interior
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CAMP_Washroom_ToiletBowl
+  - ObjectiveId: camp.clean.washroom_bucket
+    Kind: 1
+    DisplayKey: task.camp.washroom_bucket
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -27.75, y: 0.22, z: 19.906364}
+    LocalApproachPoint: {x: -27.539524, y: 0.0799999, z: 20.414497}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: washroom_interior
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CAMP_Washroom_Bucket
 --- !u!1001 &8347507785382017302
 PrefabInstance:
   m_ObjectHideFlags: 0
