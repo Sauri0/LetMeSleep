@@ -1,0 +1,1000 @@
+{
+  "document": "Let Me Sleep v0.2.0 — decisiones",
+  "version": 1,
+  "exportedAt": "2026-09-20T06:54:40.170Z",
+  "answers": {
+    "P01": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J21": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P02": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P03": {
+      "mode": "choice",
+      "selected": [
+        "C"
+      ],
+      "note": ""
+    },
+    "P04": {
+      "mode": "choice",
+      "selected": [
+        "C"
+      ],
+      "note": ""
+    },
+    "P05": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P06": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "P07": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P08": {
+      "mode": "choice",
+      "selected": [
+        "C"
+      ],
+      "note": ""
+    },
+    "J01": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J02": {
+      "mode": "choice",
+      "selected": [
+        "C"
+      ],
+      "note": ""
+    },
+    "J03": {
+      "mode": "choice",
+      "selected": [
+        "C"
+      ],
+      "note": ""
+    },
+    "J05": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J06": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J07": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J08": {
+      "mode": "choice",
+      "selected": [
+        "B"
+      ],
+      "note": ""
+    },
+    "J09": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J10": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J11": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J12": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J13": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J14": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J15": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J16": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "D01": {
+      "mode": "choice",
+      "selected": [
+        "B"
+      ],
+      "note": ""
+    },
+    "D02": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "D03": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "D04": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "D06": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "D07": {
+      "mode": "choice",
+      "selected": [
+        "B"
+      ],
+      "note": ""
+    },
+    "D08": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J17": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J18": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J19": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J20": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J22": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J23": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J24": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J25": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J26": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J28": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J29": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J30": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J31": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "J32": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A01": {
+      "mode": "custom",
+      "selected": [],
+      "note": "mas poly todavia que el A pero por ahi va la cosa"
+    },
+    "A02": {
+      "mode": "custom",
+      "selected": [],
+      "note": "mas poly todavia que el A pero por ahi va la cosa"
+    },
+    "A03": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A04": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A05": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A06": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A07": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A08": {
+      "mode": "custom",
+      "selected": [],
+      "note": "todo"
+    },
+    "A09": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A10": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A11": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A12": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "C01": {
+      "mode": "choice",
+      "selected": [
+        "C"
+      ],
+      "note": ""
+    },
+    "C02": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "C03": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "C04": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "C05": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "C06": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "C07": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "C08": {
+      "mode": "custom",
+      "selected": [],
+      "note": "personalizacion total como enn uno de mis bocetos principales sobre personalizacion asi me gustaria que se vieran losn pesojanes tantio mosquitos como humanos asi identicos"
+    },
+    "C09": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "C10": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "C11": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "C12": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P23": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P24": {
+      "mode": "choice",
+      "selected": [
+        "B"
+      ],
+      "note": ""
+    },
+    "P25": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P26": {
+      "mode": "choice",
+      "selected": [
+        "B"
+      ],
+      "note": ""
+    },
+    "P27": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P28": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A13": {
+      "mode": "choice",
+      "selected": [
+        "B"
+      ],
+      "note": ""
+    },
+    "A14": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A15": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A16": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A17": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A18": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A19": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A20": {
+      "mode": "custom",
+      "selected": [],
+      "note": "sigue al mosquito en terminos de su horizonte, y lo que solo queda libre es cuando no te moves ahi si la camara podes moverla sin mover al mosquito pero si te moves vuelve a su horizonte"
+    },
+    "A21": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A22": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A23": {
+      "mode": "choice",
+      "selected": [
+        "C"
+      ],
+      "note": ""
+    },
+    "A24": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A25": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A26": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A27": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A28": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A29": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A30": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A31": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A32": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A33": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "A34": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P09": {
+      "mode": "choice",
+      "selected": [
+        "B"
+      ],
+      "note": ""
+    },
+    "P10": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P11": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P12": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "P13": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "P14": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "P15": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "P16": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "P17": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "P18": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "P19": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "P20": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "P21": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "P22": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "O01": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O02": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O03": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O04": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O05": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O06": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O07": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O08": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O09": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O10": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O11": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O12": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O13": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O14": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O15": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O16": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O17": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O18": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O19": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O20": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O21": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O22": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "S01": {
+      "mode": "choice",
+      "selected": [
+        "C"
+      ],
+      "note": ""
+    },
+    "S02": {
+      "mode": "choice",
+      "selected": [
+        "C"
+      ],
+      "note": ""
+    },
+    "S03": {
+      "mode": "choice",
+      "selected": [
+        "B"
+      ],
+      "note": ""
+    },
+    "S04": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "S05": {
+      "mode": "choice",
+      "selected": [
+        "C"
+      ],
+      "note": ""
+    },
+    "S06": {
+      "mode": "choice",
+      "selected": [
+        "B"
+      ],
+      "note": ""
+    },
+    "S07": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "S08": {
+      "mode": "delegate",
+      "selected": [],
+      "note": ""
+    },
+    "O23": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O24": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O25": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "O26": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "T01": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    },
+    "T02": {
+      "mode": "choice",
+      "selected": [
+        "A"
+      ],
+      "note": ""
+    }
+  }
+}

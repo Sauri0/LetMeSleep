@@ -1,0 +1,3558 @@
+{
+  "schema_version": 1,
+  "source_path": "C:\\Users\\brank\\Downloads\\LetMeSleep-respuestas.json",
+  "exported_at": "2026-09-20T06:54:40.170Z",
+  "source_sha256": "3d77c07e9f7d45a45086d6e1866e72b29fb6a1e11fd3d412d4b4fd2ff9ceb63e",
+  "questionnaire_sha256": "f322ee5064c963070c0c029b58f5974eb62e68fe4dc4577d8b2a055a24ee6e3a",
+  "counts": {
+    "user_choice": 128,
+    "ceo_delegated_decision": 13,
+    "ceo_delegated_followup": 3,
+    "user_custom": 5,
+    "user_followup_supersedes_choice": 1
+  },
+  "unanswered": [],
+  "issues": [
+    {
+      "id": "bots_online",
+      "questions": [
+        "J25",
+        "O08"
+      ],
+      "state": "resolved_by_user_followup",
+      "detail": "Ningún bot online. Reservar al jugador30s sin control por IA; sustituye O08=A del archivo original."
+    },
+    {
+      "id": "poly",
+      "questions": [
+        "A01",
+        "A02"
+      ],
+      "state": "resolved_by_visual_direction",
+      "detail": "Respuesta posterior: mirar los bocetos y reproducirlos idénticos. El criterio es fidelidad a proporciones, silueta y facetas de originales PER-06/PER-07/PER-08, no aumentar o reducir polígonos por una interpretación verbal."
+    },
+    {
+      "id": "reference",
+      "questions": [
+        "C08"
+      ],
+      "state": "references_located_count_pending",
+      "detail": "PER-08 personalización dual y PER-06/PER-07 ampliados localizados y vistos. Dirección visual: fidelidad a bocetos originales. Cantidad final de cuerpos mosquito y alcance de categorías extra no fijados; cantidades explícitas C01-C12 conservadas."
+    },
+    {
+      "id": "expressions",
+      "questions": [
+        "A08"
+      ],
+      "state": "interpretation_pending",
+      "detail": "Todo expresa amplitud, pero las alternativas de exageración y contención no son simultáneamente un único estilo. Conservar nota literal; definir intensidad por acción en boceto/clip."
+    },
+    {
+      "id": "appearance_save",
+      "questions": [
+        "P26",
+        "P27"
+      ],
+      "state": "implementation_interpretation",
+      "detail": "Guardar cada cambio localmente con deshacer; mantener Aplicar/publicar como acción explícita hacia el lobby. No transmitir cada prueba intermedia."
+    },
+    {
+      "id": "ptt_controller",
+      "questions": [
+        "D08",
+        "O11"
+      ],
+      "state": "scope_question_pending",
+      "detail": "Teclado/ratón completos y mando fuera de entrega frente a opción PTT que también menciona control. Confirmar si PTT requiere excepción; no prometer soporte completo de mando."
+    },
+    {
+      "id": "voice_distance",
+      "questions": [
+        "O16",
+        "O17",
+        "O18"
+      ],
+      "state": "implementation_interpretation",
+      "detail": "Base clara4m/corte12m; al hablar mosquito, cortes8m para humanos y16m para mosquitos sustituyen el corte base. No acumular dos cortes."
+    },
+    {
+      "id": "waiting_voice",
+      "questions": [
+        "O03",
+        "O19"
+      ],
+      "state": "detail_pending",
+      "detail": "Falta decidir con quién conversa quien espera y si canal eliminado es global o de proximidad; preservar separación de actores activos."
+    },
+    {
+      "id": "disconnect_expiry",
+      "questions": [
+        "O07",
+        "O08"
+      ],
+      "state": "detail_pending",
+      "detail": "Definir consecuencia exacta por modo al vencer30s; no recrear actor ni recuperar vidas automáticamente."
+    },
+    {
+      "id": "performance_machine",
+      "questions": [
+        "T01"
+      ],
+      "state": "reference_hardware_pending",
+      "detail": "1080p60 es objetivo, no evidencia. Falta fijar CPU/GPU/RAM del equipo de referencia."
+    },
+    {
+      "id": "task_decay",
+      "questions": [
+        "D04"
+      ],
+      "state": "balance_pending",
+      "detail": "Pérdida gradual tras gracia aprobada; valores concretos no incluidos en esta respuesta."
+    },
+    {
+      "id": "accessory_designs",
+      "questions": [
+        "C11"
+      ],
+      "state": "design_pending",
+      "detail": "Seis opciones mosquito incluida ninguna; los diseños concretos no están enumerados."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "P01",
+      "section": "Identidad y experiencia",
+      "question": "¿Qué sensación debería dominar una buena partida entre amigos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Comedia de situación",
+          "detail": "Errores y escapes divertidos; celebraciones breves y expresivas."
+        }
+      ]
+    },
+    {
+      "id": "P02",
+      "section": "Identidad y experiencia",
+      "question": "¿Qué tono deberían tener los textos del juego?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Cercano con humor discreto",
+          "detail": "Frases cálidas fuera del combate; instrucciones literales cuando hay que actuar."
+        }
+      ]
+    },
+    {
+      "id": "P03",
+      "section": "Identidad y experiencia",
+      "question": "¿Qué debería destacar la primera pantalla para un amigo nuevo?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "C"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Elegir sin preferencia",
+          "detail": "Crear, unirse y entrenar aparecen con igual tamaño; hay más decisiones de entrada."
+        }
+      ]
+    },
+    {
+      "id": "P04",
+      "section": "Identidad y experiencia",
+      "question": "¿Cómo debería aprender alguien su rol la primera vez?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "C"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Ayuda contextual",
+          "detail": "Sin tarjeta inicial; una pista aparece al acercarse por primera vez a cada interacción."
+        }
+      ]
+    },
+    {
+      "id": "P05",
+      "section": "Identidad y experiencia",
+      "question": "¿Cuándo deberían retirarse las ayudas para principiantes?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Después del primer éxito",
+          "detail": "La pista se retira al completar esa acción una vez; se recupera desde ayuda."
+        }
+      ]
+    },
+    {
+      "id": "P06",
+      "section": "Identidad y experiencia",
+      "question": "¿Qué prioridad debe guiar la primera sesión de prueba con amigos?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Entrar y repetir sin fricción",
+          "detail": "Medir desde código de sala hasta revancha; registrar cada espera o salida inesperada."
+        }
+      ],
+      "rationale": "Primero verificar ingreso y repetición de rondas para que la sesión con amigos pueda completarse."
+    },
+    {
+      "id": "P07",
+      "section": "Identidad y experiencia",
+      "question": "¿Cómo se debería ofrecer ayuda después de una dificultad repetida?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Consejo opcional discreto",
+          "detail": "Mostrar una sola sugerencia breve tras tres intentos; nunca pausar."
+        }
+      ]
+    },
+    {
+      "id": "P08",
+      "section": "Identidad y experiencia",
+      "question": "¿Qué información debería acompañar el cambio de rol entre rondas?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "C"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Tarjeta sólo al cambiar de rol",
+          "detail": "Mostrar 3 segundos si el rol difiere del anterior; si se repite, aviso de 1 segundo."
+        }
+      ]
+    },
+    {
+      "id": "P09",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Cuánta información debería permanecer visible en el HUD?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "B"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Información contextual",
+          "detail": "Tiempo y marcador fijos; controles y detalles de tarea aparecen cuando son relevantes."
+        }
+      ]
+    },
+    {
+      "id": "P10",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Cómo preferís leer el avance de tu tarea privada?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Barra y porcentaje",
+          "detail": "Título, barra horizontal y 40 %; preciso y fácil de comparar."
+        }
+      ]
+    },
+    {
+      "id": "P11",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Cómo debería destacarse un plazo de tarea que está por vencer?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Umbral fijo de 10 segundos",
+          "detail": "Borde destacado y texto «Poco tiempo», sin parpadeo."
+        }
+      ]
+    },
+    {
+      "id": "P12",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Cómo debería explicar el HUD una acción que no se puede hacer?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Razón inmediata",
+          "detail": "Mostrar «Acercate a tu tarea» durante 2 segundos al intentar."
+        }
+      ]
+    },
+    {
+      "id": "P13",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Qué escala de interfaz querés como referencia para una pantalla de 1080p?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Media: 22 px",
+          "detail": "Equilibra lectura y espacio; algunos textos ocuparán dos líneas."
+        }
+      ],
+      "rationale": "22 px como referencia a 1080p; verificar lectura y redistribución a 720p."
+    },
+    {
+      "id": "P14",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Cómo deberían distinguirse estados sin depender sólo del color?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Icono y texto en todos los estados",
+          "detail": "Redundancia permanente; filas un poco más anchas."
+        }
+      ],
+      "rationale": "Icono y texto evitan depender sólo del color y ayudan a reconocer estados."
+    },
+    {
+      "id": "P15",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Qué control de movimiento visual debería ofrecerse en ajustes?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Controles por efecto",
+          "detail": "Balanceo, transiciones y pulsos por separado; mayor flexibilidad y más ajustes."
+        }
+      ],
+      "rationale": "Controles por efecto permiten regular balanceo y sacudidas sin confundirlos con la orientación funcional de A20."
+    },
+    {
+      "id": "P16",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Qué formato debería tener la guía de controles?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Dos tarjetas por rol",
+          "detail": "Un esquema de teclado para cada rol, accesible desde pausa."
+        }
+      ],
+      "rationale": "Tarjetas por rol consultables desde pausa; no se muestran como introducción obligatoria, respetando P04."
+    },
+    {
+      "id": "P17",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Cómo te gustaría ajustar la sensibilidad de cada rol?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Tres presets y ajuste fino",
+          "detail": "Suave, media y rápida, más deslizador opcional; mejor punto de partida."
+        }
+      ],
+      "rationale": "Presets iniciales más ajuste fino y valor visible para cada rol."
+    },
+    {
+      "id": "P18",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Cómo debería organizarse la selección de los cinco mapas en el lobby?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Cinco miniaturas visibles",
+          "detail": "Comparación inmediata; cada imagen tendrá menos detalle."
+        }
+      ],
+      "rationale": "Los cinco mapas visibles facilitan comparar sin recorrer un carrusel."
+    },
+    {
+      "id": "P19",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Cómo debería comunicarse un cambio de reglas hecho por el anfitrión?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Fila resaltada hasta estar listo",
+          "detail": "Destacar las reglas modificadas hasta tu nueva confirmación; menos avisos flotantes."
+        }
+      ],
+      "rationale": "La regla cambiada sigue visible hasta confirmar listo; no depende de leer un aviso fugaz."
+    },
+    {
+      "id": "P20",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Qué debería priorizar la pantalla de resultados?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Causa y revancha",
+          "detail": "Ganador, objetivo alcanzado y volver a la sala; lectura en pocos segundos."
+        }
+      ],
+      "rationale": "Causa de victoria y regreso a sala claros; conservar la privacidad de tareas."
+    },
+    {
+      "id": "P21",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Cómo debería presentarse la observación después de quedar eliminado?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "HUD mínimo",
+          "detail": "Nombre del aliado, marcador público y control para cambiar; más espacio para mirar."
+        }
+      ],
+      "rationale": "HUD mínimo con aliado observado, marcador público y control para cambiar."
+    },
+    {
+      "id": "P22",
+      "section": "Interfaz y accesibilidad",
+      "question": "¿Cómo deberían explicarse los errores al entrar a una sala?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Mensaje con diagnóstico desplegable",
+          "detail": "Misma ayuda simple y un detalle copiable para reportar problemas."
+        }
+      ],
+      "rationale": "Acción directa más diagnóstico opcional copiable, sin exponer credenciales ni identificadores privados."
+    },
+    {
+      "id": "P23",
+      "section": "Personalización",
+      "question": "¿Cómo debería recorrerse el catálogo de personalización previsto?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Por rol primero",
+          "detail": "Elegir Humano o Mosquito y después cuerpo, piezas y colores; pocas opciones simultáneas."
+        }
+      ]
+    },
+    {
+      "id": "P24",
+      "section": "Personalización",
+      "question": "¿Cómo deberían identificarse los colores de una paleta?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "B"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Muestra con nombre al enfocar",
+          "detail": "Más compacta; el nombre aparece con cursor o selección por teclado."
+        }
+      ]
+    },
+    {
+      "id": "P25",
+      "section": "Personalización",
+      "question": "¿Qué interacción debería ofrecer el visor de apariencia?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Giro libre con arrastre",
+          "detail": "Rotar con cursor y botón de restablecer vista; control continuo."
+        }
+      ]
+    },
+    {
+      "id": "P26",
+      "section": "Personalización",
+      "question": "¿Cómo debería guardarse una nueva combinación de piezas y colores?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "B"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "appearance_save"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Guardar cada cambio con deshacer",
+          "detail": "Resultado inmediato y botón para volver a la combinación inicial de esa sesión."
+        }
+      ]
+    },
+    {
+      "id": "P27",
+      "section": "Personalización",
+      "question": "¿Qué debería ocurrir al cambiar apariencia mientras estás en el lobby?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "appearance_save"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Publicar al aplicar",
+          "detail": "Los demás ven la combinación cuando la guardás; evita ver pruebas intermedias."
+        }
+      ]
+    },
+    {
+      "id": "P28",
+      "section": "Personalización",
+      "question": "¿Cómo te gustaría reutilizar combinaciones del catálogo acordado?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Una combinación guardada",
+          "detail": "Mantener sólo la última; interfaz y persistencia simples."
+        }
+      ]
+    },
+    {
+      "id": "J01",
+      "section": "Jugabilidad",
+      "question": "¿Cómo debe gastar estamina el humano al correr?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Consumo continuo",
+          "detail": "Propuesta: 100 puntos, coste 16/s; permite unos 6,25 s de carrera completa y caminar siempre."
+        }
+      ]
+    },
+    {
+      "id": "J02",
+      "section": "Jugabilidad",
+      "question": "¿Cuándo y a qué ritmo se recupera la estamina humana?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "C"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Recuperación por postura",
+          "detail": "Propuesta: 12/s caminando y 28/s quieto o agachado; premia detenerse de forma visible."
+        }
+      ]
+    },
+    {
+      "id": "J03",
+      "section": "Jugabilidad",
+      "question": "¿Qué acciones humanas, además de correr, consumen estamina?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "C"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Saltos y acciones cargadas",
+          "detail": "Propuesta: salto 10 y lanzamiento cargado 8–15; manos y defensa básica siempre gratuitas, sin reservar una única palmada."
+        }
+      ]
+    },
+    {
+      "id": "J04",
+      "section": "Jugabilidad",
+      "question": "¿Qué sensación debe tener la aceleración y el freno del mosquito?",
+      "raw_answer": null,
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_followup",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Ágil con freno fuerte",
+          "detail": "Conservar propuesta actual: aceleración 13 m/s², frenado 28 m/s² y velocidad 3,8 m/s."
+        }
+      ],
+      "rationale": "Delegación posterior explícita: vuelo ágil actual, aceleración13m/s², frenado28m/s² y velocidad3,8m/s.",
+      "followup_source": "Respuesta directa posterior: Delegártelas: vuelo ágil actual, memoria de 3 s y penalidad de 5 s."
+    },
+    {
+      "id": "J05",
+      "section": "Jugabilidad",
+      "question": "¿Cómo se activa y cancela el posado del mosquito?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Alternar con tecla",
+          "detail": "Una pulsación busca superficie; otra o saltar desprende. El roce normal no cambia de estado."
+        }
+      ]
+    },
+    {
+      "id": "J06",
+      "section": "Jugabilidad",
+      "question": "¿Qué compromiso temporal debe exigir iniciar una picadura?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Preparación de 0,6 s",
+          "detail": "Conservar el valor provisional; soltar, perder contacto o recibir golpe cancela y obliga a preparar otra vez."
+        }
+      ]
+    },
+    {
+      "id": "J07",
+      "section": "Jugabilidad",
+      "question": "¿Cómo debe recuperarse un humano después del desmayo?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "12 s más protección",
+          "detail": "Conservar 12 s desde el aterrizaje, transición de 0,4 s y protección de 1,5 s al volver."
+        }
+      ]
+    },
+    {
+      "id": "J08",
+      "section": "Jugabilidad",
+      "question": "¿Qué interacción gana cuando varios objetos están bajo la mirada?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "B"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Centro de mirada",
+          "detail": "Gana el collider más centrado y cercano, sin prioridad por categoría; máxima consistencia espacial."
+        }
+      ]
+    },
+    {
+      "id": "J09",
+      "section": "Modos",
+      "question": "¿Qué duración base debe tener cada modo?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Duración por modo",
+          "detail": "Propuesta: Sangre 180 s, Supervivencia 150 s y Tareas 240 s; el host elige variantes dentro de límites."
+        }
+      ]
+    },
+    {
+      "id": "J10",
+      "section": "Modos",
+      "question": "¿Cómo escala la cuota de sangre con la población?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Escala por humanos",
+          "detail": "Propuesta: 12 unidades base + 6 por humano; 18 con uno y 42 con cinco."
+        }
+      ]
+    },
+    {
+      "id": "J11",
+      "section": "Modos",
+      "question": "¿Cómo contribuyen varios mosquitos que pican al mismo humano?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Tasa total compartida",
+          "detail": "Conservar el reparto actual: juntos aseguran continuidad, pero la víctima recibe como máximo una tasa completa."
+        }
+      ]
+    },
+    {
+      "id": "J12",
+      "section": "Modos",
+      "question": "¿Cómo se distribuyen las herramientas en Supervivencia?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Pickups finitos por ronda",
+          "detail": "Los objetos quedan donde se sueltan y no reaparecen; el equipo debe administrarlos y recuperarlos."
+        }
+      ]
+    },
+    {
+      "id": "J13",
+      "section": "Modos",
+      "question": "¿Qué cadencia y plazo inicial deben usar las tareas personales?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "40/30/15 segundos",
+          "detail": "Conservar cadencia 40 s, plazo 30 s y mínimo 15 s; trabajo y ruta deben caber dentro."
+        }
+      ]
+    },
+    {
+      "id": "J14",
+      "section": "Modos",
+      "question": "¿Qué porcentaje de oportunidades debe exigir la meta compartida de Tareas?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Dos tercios",
+          "detail": "Conservar ceil(2/3): 8 de 12. Tolera fallos sin volver irrelevantes a los mosquitos."
+        }
+      ]
+    },
+    {
+      "id": "J15",
+      "section": "Modos",
+      "question": "¿Puede recuperarse el plazo personal después de completar tareas?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Recupera un escalón",
+          "detail": "Propuesta: cada acierto devuelve 3 s, hasta el plazo inicial; premia recomponerse."
+        }
+      ]
+    },
+    {
+      "id": "J16",
+      "section": "Modos",
+      "question": "¿Cuánta protección recibe un mosquito al reaparecer en Tareas?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "1,5 s sin atacar",
+          "detail": "Conservar 1,5 s de protección y bloquear picadura/ayuda hasta que termine o el mosquito actúe."
+        }
+      ]
+    },
+    {
+      "id": "J17",
+      "section": "Inventario y herramientas",
+      "question": "¿Qué ocurre al recoger un objeto con los tres slots ocupados?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Intercambiar slot activo",
+          "detail": "Suelta de forma segura el objeto activo y ocupa ese slot; muestra una confirmación breve antes de ejecutar."
+        }
+      ]
+    },
+    {
+      "id": "J18",
+      "section": "Inventario y herramientas",
+      "question": "¿Cómo se seleccionan slots y manos durante una acción?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Cambio cancela acción",
+          "detail": "1–3 seleccionan slots y una tecla vuelve a manos; cambiar cancela carga sin lanzar ni gastar recurso."
+        }
+      ]
+    },
+    {
+      "id": "J19",
+      "section": "Inventario y herramientas",
+      "question": "¿Cómo se suelta una herramienta sin convertir soltar en lanzamiento?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Depositar delante",
+          "detail": "Coloca a 0,6–1 m sobre el primer soporte libre; si no hay espacio, conserva el objeto."
+        }
+      ]
+    },
+    {
+      "id": "J20",
+      "section": "Inventario y herramientas",
+      "question": "¿Qué ventaja concreta ofrece el matamoscas frente a las manos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Más alcance, más lento",
+          "detail": "Propuesta: +35% alcance, ventana/cooldown 25% más largos y área moderada."
+        }
+      ]
+    },
+    {
+      "id": "J21",
+      "section": "Inventario y herramientas",
+      "question": "¿Qué objetos pueden lanzarse con carga?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Pantufla",
+          "detail": "Arrojable recuperable, arco medio y golpe de precisión; propuesta principal."
+        }
+      ]
+    },
+    {
+      "id": "J22",
+      "section": "Inventario y herramientas",
+      "question": "¿Cómo se traduce la carga en potencia de lanzamiento?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Carga de 0,9 s",
+          "detail": "Propuesta: mínimo 35%, máximo a 0,9 s, curva suave y autoestabilización hasta 1,5 s."
+        }
+      ]
+    },
+    {
+      "id": "J23",
+      "section": "Inventario y herramientas",
+      "question": "¿Qué recurso y efecto usa la raqueta eléctrica?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Pulsos con batería",
+          "detail": "Propuesta: 5 cargas, un pulso de 0,35 s y cooldown 1,2 s; recarga sólo al reaparecer el pickup."
+        }
+      ]
+    },
+    {
+      "id": "J24",
+      "section": "Inventario y herramientas",
+      "question": "¿Cómo funciona el aerosol y dónde se repone?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Nube corta consumible",
+          "detail": "Propuesta: 4 s totales por envase, cono 2 m, nube 1,2 s; no se repone hasta nueva ronda o pickup."
+        }
+      ]
+    },
+    {
+      "id": "J25",
+      "section": "Bots",
+      "question": "Además del entrenamiento obligatorio, ¿dónde permitimos bots?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "bots_online"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Sólo entrenamiento",
+          "detail": "Entrenamiento completo con bots; sala privada sólo con personas."
+        }
+      ]
+    },
+    {
+      "id": "J26",
+      "section": "Bots",
+      "question": "¿Qué niveles de dificultad de bots deben existir en v0.2.0?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Normal único",
+          "detail": "Un perfil verificable para publicar; reacción propuesta 250–400 ms y mismos permisos que jugadores."
+        }
+      ]
+    },
+    {
+      "id": "J27",
+      "section": "Bots",
+      "question": "¿Cuánto dura la memoria de un objetivo que salió de vista?",
+      "raw_answer": null,
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_followup",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Memoria de 3 s",
+          "detail": "Recuerda última posición y dirección durante 3 s; después vuelve a patrulla sin actualizar datos ocultos."
+        }
+      ],
+      "rationale": "Delegación posterior explícita: recordar última información observada3s, sin actualizar información oculta.",
+      "followup_source": "Respuesta directa posterior: Delegártelas: vuelo ágil actual, memoria de 3 s y penalidad de 5 s."
+    },
+    {
+      "id": "J28",
+      "section": "Bots",
+      "question": "¿Cómo prioriza un bot humano su tarea frente a un mosquito visible?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Defensa por amenaza",
+          "detail": "Interrumpe si el mosquito está a menos de 2 m, se acerca o ya pica; luego retoma progreso conservado."
+        }
+      ]
+    },
+    {
+      "id": "J29",
+      "section": "Bots",
+      "question": "¿Cómo elige víctima un bot mosquito cuando ve varios humanos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Puntuación de oportunidad",
+          "detail": "Propuesta: distancia, línea libre, tarea activa y ataques recientes; penaliza repetir víctima durante 8 s."
+        }
+      ]
+    },
+    {
+      "id": "J30",
+      "section": "Bots",
+      "question": "¿Hasta qué punto usan puertas y herramientas los bots humanos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Puertas y herramienta cercana",
+          "detail": "Abre rutas necesarias y recoge una herramienta si el desvío es menor a 4 m y tiene slot libre."
+        }
+      ]
+    },
+    {
+      "id": "J31",
+      "section": "Bots",
+      "question": "¿Cuándo debe un bot mosquito rescatar a un aliado caído?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Riesgo y tiempo",
+          "detail": "Rescata si puede llegar con 1,5 s de margen y no ve un humano a menos de 2,5 m del aliado."
+        }
+      ]
+    },
+    {
+      "id": "J32",
+      "section": "Bots",
+      "question": "¿Qué hace un bot cuando no progresa por una ruta durante varios segundos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Replanificar y esperar",
+          "detail": "A los 5 s marca el pasaje 6 s, busca otra ruta; si no existe, espera/patrulla la región y registra el atasco."
+        }
+      ]
+    },
+    {
+      "id": "A01",
+      "section": "Arte y personajes",
+      "question": "¿Qué tratamiento de formas querés para el humano nuevo?",
+      "raw_answer": {
+        "mode": "custom",
+        "selected": [],
+        "note": "mas poly todavia que el A pero por ahi va la cosa"
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "poly"
+      ],
+      "status": "user_custom",
+      "decisions": [],
+      "literal_note": "mas poly todavia que el A pero por ahi va la cosa",
+      "followup_source": "mira los bocetos, los quiero identicos",
+      "visual_direction": "Reproducir fielmente bocetos originales de personalización; ver DIRECCION-VISUAL.md."
+    },
+    {
+      "id": "A02",
+      "section": "Arte y personajes",
+      "question": "¿Qué tratamiento de formas querés para el mosquito?",
+      "raw_answer": {
+        "mode": "custom",
+        "selected": [],
+        "note": "mas poly todavia que el A pero por ahi va la cosa"
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "poly"
+      ],
+      "status": "user_custom",
+      "decisions": [],
+      "literal_note": "mas poly todavia que el A pero por ahi va la cosa",
+      "followup_source": "mira los bocetos, los quiero identicos",
+      "visual_direction": "Reproducir fielmente bocetos originales de personalización; ver DIRECCION-VISUAL.md."
+    },
+    {
+      "id": "A03",
+      "section": "Arte y personajes",
+      "question": "¿Cuánto exageramos las proporciones humanas?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Exageración moderada",
+          "detail": "Cabeza y manos algo grandes, piernas adultas, sin parecer un niño."
+        }
+      ]
+    },
+    {
+      "id": "A04",
+      "section": "Arte y personajes",
+      "question": "¿Qué expresión base tendrá el mosquito?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Travieso",
+          "detail": "Cejas y ojos atentos, picardía sin gesto maligno."
+        }
+      ]
+    },
+    {
+      "id": "A05",
+      "section": "Arte y personajes",
+      "question": "¿Cuánta textura pintada deben tener ropa y objetos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Sutil",
+          "detail": "Colores amplios, costuras y vetas seleccionadas."
+        }
+      ]
+    },
+    {
+      "id": "A06",
+      "section": "Arte y personajes",
+      "question": "¿Qué contraste de color tendrá la personalización?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Paleta curada",
+          "detail": "Colores variados con luminosidad controlada y lectura parecida."
+        }
+      ]
+    },
+    {
+      "id": "A07",
+      "section": "Arte y personajes",
+      "question": "¿Cómo distinguimos visualmente a jugadores con el mismo modelo?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Color secundario y nombre contextual",
+          "detail": "Detalles cosméticos y nombre al mirarlos cerca."
+        }
+      ]
+    },
+    {
+      "id": "A08",
+      "section": "Arte y personajes",
+      "question": "¿Cuánta expresividad facial querés en juego?",
+      "raw_answer": {
+        "mode": "custom",
+        "selected": [],
+        "note": "todo"
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "expressions"
+      ],
+      "status": "user_custom",
+      "decisions": [],
+      "literal_note": "todo"
+    },
+    {
+      "id": "A09",
+      "section": "Arte y personajes",
+      "question": "¿Qué lectura visual tendrán las alas del mosquito?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Translúcidas discretas",
+          "detail": "Venas/facetas visibles al reposo y vibración suave al volar."
+        }
+      ]
+    },
+    {
+      "id": "A10",
+      "section": "Arte y personajes",
+      "question": "¿Cómo representamos la sangre sin marcas de picadura?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Abdomen y HUD",
+          "detail": "Cambio sutil de volumen/color y progreso; sin gotas en pantalla."
+        }
+      ]
+    },
+    {
+      "id": "A11",
+      "section": "Arte y personajes",
+      "question": "¿Qué acabado visual unifica los cinco mapas?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Materiales limpios",
+          "detail": "Facetas legibles, desgaste sólo donde cuenta una historia."
+        }
+      ]
+    },
+    {
+      "id": "A12",
+      "section": "Arte y personajes",
+      "question": "¿Cómo identificamos objetos utilizables sin añadir balizas?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Contorno al apuntar",
+          "detail": "Sólo el objeto cercano bajo la mira, más texto de acción."
+        }
+      ]
+    },
+    {
+      "id": "A13",
+      "section": "Animación y cámaras",
+      "question": "¿Qué peso debe tener el caminar humano?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "B"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Cómico pesado",
+          "detail": "Más balanceo y arrastre visual, sin añadir retraso al control."
+        }
+      ]
+    },
+    {
+      "id": "A14",
+      "section": "Animación y cámaras",
+      "question": "¿Cómo debe verse una defensa manual fallida?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Recuperación breve",
+          "detail": "Trayectoria clara, retorno rápido y mueca corta."
+        }
+      ]
+    },
+    {
+      "id": "A15",
+      "section": "Animación y cámaras",
+      "question": "¿Qué tratamiento damos al desmayo y caída?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Caída dirigida",
+          "detail": "Poses diseñadas con ajuste físico acotado al entorno."
+        }
+      ]
+    },
+    {
+      "id": "A16",
+      "section": "Animación y cámaras",
+      "question": "¿Qué protagonismo tienen los gestos de ayuda/rescate?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Breves y legibles",
+          "detail": "Gesto claro y progreso discreto, cancelación inmediata."
+        }
+      ]
+    },
+    {
+      "id": "A17",
+      "section": "Animación y cámaras",
+      "question": "¿Cuánto movimiento secundario tienen gorro y pijama?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Moderado",
+          "detail": "Gorro y tela reaccionan poco; silueta estable."
+        }
+      ]
+    },
+    {
+      "id": "A18",
+      "section": "Animación y cámaras",
+      "question": "¿Qué personalidad tiene el mosquito al estar quieto?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Atento",
+          "detail": "Antenas y patas ajustan postura con movimientos pequeños."
+        }
+      ]
+    },
+    {
+      "id": "A19",
+      "section": "Animación y cámaras",
+      "question": "¿Cuánto cuerpo humano querés ver al mirar hacia abajo?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Cuerpo completo coherente",
+          "detail": "Torso, brazos y piernas visibles donde el encuadre lo permita."
+        }
+      ]
+    },
+    {
+      "id": "A20",
+      "section": "Animación y cámaras",
+      "question": "¿Cómo se adapta la cámara mosquito al pasar de suelo a pared y techo?",
+      "raw_answer": {
+        "mode": "custom",
+        "selected": [],
+        "note": "sigue al mosquito en terminos de su horizonte, y lo que solo queda libre es cuando no te moves ahi si la camara podes moverla sin mover al mosquito pero si te moves vuelve a su horizonte"
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_custom",
+      "decisions": [],
+      "literal_note": "sigue al mosquito en terminos de su horizonte, y lo que solo queda libre es cuando no te moves ahi si la camara podes moverla sin mover al mosquito pero si te moves vuelve a su horizonte"
+    },
+    {
+      "id": "A21",
+      "section": "Animación y cámaras",
+      "question": "¿Qué distancia de cámara mosquito preferís por defecto?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Media adaptable",
+          "detail": "Distancia media; se acerca al detectar obstáculos."
+        }
+      ]
+    },
+    {
+      "id": "A22",
+      "section": "Animación y cámaras",
+      "question": "¿Qué intensidad de sacudida y balanceo visual tendrá el preset inicial?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Suave y regulable",
+          "detail": "Feedback perceptible; slider hasta cero."
+        }
+      ]
+    },
+    {
+      "id": "A23",
+      "section": "Mapas y ambiente",
+      "question": "¿Qué tratamiento de luz preferís para Casa y Campamento nocturnos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "C"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Mezcla por zona",
+          "detail": "Interiores A y exteriores B; C queda sólo como referencia de crepúsculo para Puerto."
+        }
+      ]
+    },
+    {
+      "id": "A24",
+      "section": "Mapas y ambiente",
+      "question": "¿Qué tono de crepúsculo querés en Puerto del Faro?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Lavanda con luces cálidas",
+          "detail": "Referencia C del tablero, lectura amplia del horizonte."
+        }
+      ]
+    },
+    {
+      "id": "A25",
+      "section": "Mapas y ambiente",
+      "question": "¿Qué sensación debe dominar Isla del Laguito diurna?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Vacaciones tranquilas",
+          "detail": "Luz clara, agua suave y rincones cálidos."
+        }
+      ]
+    },
+    {
+      "id": "A26",
+      "section": "Mapas y ambiente",
+      "question": "¿Qué carácter doméstico debe tener Casa del Patio?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Casa vivida ordenada",
+          "detail": "Objetos cotidianos y rutas despejadas."
+        }
+      ]
+    },
+    {
+      "id": "A27",
+      "section": "Mapas y ambiente",
+      "question": "¿Qué contraste organiza Campamento Pinar?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Fogón central cálido",
+          "detail": "El fogón orienta, bosque azul y senderos claros."
+        }
+      ]
+    },
+    {
+      "id": "A28",
+      "section": "Mapas y ambiente",
+      "question": "¿Qué personalidad material tendrá Yate a la Deriva?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Vacacional sencillo",
+          "detail": "Madera y tapizados claros, detalles náuticos moderados."
+        }
+      ]
+    },
+    {
+      "id": "A29",
+      "section": "Mapas y ambiente",
+      "question": "¿Qué punto de referencia debe dominar Puerto además del faro?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Taller reconocible",
+          "detail": "Color/accesorios propios y acceso claramente visible."
+        }
+      ]
+    },
+    {
+      "id": "A30",
+      "section": "Mapas y ambiente",
+      "question": "¿Cuánto detalle ambiental pequeño querés cerca de rutas?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Detalle concentrado",
+          "detail": "Zonas decorativas ricas; suelo/ruta y objetos usables limpios."
+        }
+      ]
+    },
+    {
+      "id": "A31",
+      "section": "Mapas y ambiente",
+      "question": "¿Cómo comunicamos el límite jugable del mapa?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Entorno y aviso breve",
+          "detail": "Obstáculo/lectura ambiental y texto sólo al insistir."
+        }
+      ]
+    },
+    {
+      "id": "A32",
+      "section": "Mapas y ambiente",
+      "question": "¿Qué explicación visual acompaña una recuperación por agua o caída fuera del mapa?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Transición corta y motivo",
+          "detail": "Fundido breve y «Volviste a una zona segura». Sin penalidad nueva."
+        }
+      ]
+    },
+    {
+      "id": "A33",
+      "section": "Mapas y ambiente",
+      "question": "¿Qué comportamiento visual del agua preferís?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Suave por entorno",
+          "detail": "Lago calmo, arroyo direccional y mar algo más activo."
+        }
+      ]
+    },
+    {
+      "id": "A34",
+      "section": "Mapas y ambiente",
+      "question": "¿Qué evidencia visual querés usar para aprobar el arte integrado?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Comparativa y clip",
+          "detail": "Frente/perfil/espalda más video corto de acciones y recorrido real."
+        }
+      ]
+    },
+    {
+      "id": "C01",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Cuántas siluetas humanas distintas incluimos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "C"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Tres bases compatibles",
+          "detail": "Más variedad corporal; todas requieren rig, combinaciones y validación."
+        }
+      ]
+    },
+    {
+      "id": "C02",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Cuántos peinados compondrán el catálogo humano?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Ocho en total",
+          "detail": "Cantidad propuesta en el plan histórico, con siete peinados más calvo."
+        }
+      ]
+    },
+    {
+      "id": "C03",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Cuánta variedad modular de ojos, cejas y bocas querés?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Seis por categoría",
+          "detail": "18 variantes de piezas faciales, propuesta histórica."
+        }
+      ]
+    },
+    {
+      "id": "C04",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Qué catálogo de vello facial humano incluimos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Seis opciones",
+          "detail": "Incluye ninguna; color vinculado al pelo con separación opcional."
+        }
+      ]
+    },
+    {
+      "id": "C05",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Qué catálogo de ropa acompaña al pijama base obligatorio?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Pijama más cuatro conjuntos",
+          "detail": "Separables en superior/inferior cuando las combinaciones sean compatibles."
+        }
+      ]
+    },
+    {
+      "id": "C06",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Cuántos accesorios de cabeza humanos se incluyen?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Seis opciones totales",
+          "detail": "Contar el gorro nocturno y una opción sin accesorio."
+        }
+      ]
+    },
+    {
+      "id": "C07",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Cuántas gafas y variantes de calzado humano incluimos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Cuatro y cuatro",
+          "detail": "Cuatro gafas contando ninguna; cuatro calzados contando pantuflas."
+        }
+      ]
+    },
+    {
+      "id": "C08",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Cuántos cuerpos cosméticos de mosquito incluimos?",
+      "raw_answer": {
+        "mode": "custom",
+        "selected": [],
+        "note": "personalizacion total como enn uno de mis bocetos principales sobre personalizacion asi me gustaria que se vieran losn pesojanes tantio mosquitos como humanos asi identicos"
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "reference"
+      ],
+      "status": "user_custom",
+      "decisions": [],
+      "literal_note": "personalizacion total como enn uno de mis bocetos principales sobre personalizacion asi me gustaria que se vieran losn pesojanes tantio mosquitos como humanos asi identicos"
+    },
+    {
+      "id": "C09",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Qué variedad de alas y expresión mosquito querés?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Cuatro alas y seis expresiones",
+          "detail": "Cantidad histórica; expresiones mediante ojos/cejas compatibles."
+        }
+      ]
+    },
+    {
+      "id": "C10",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Cuántos patrones de abdomen mosquito incluimos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Cinco patrones",
+          "detail": "Cantidad propuesta histórica, con paletas por partes."
+        }
+      ]
+    },
+    {
+      "id": "C11",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Qué variedad de accesorios mosquito incluimos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "accessory_designs"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Seis opciones totales",
+          "detail": "Incluye ninguna; seleccionar diseños concretos en notas."
+        }
+      ]
+    },
+    {
+      "id": "C12",
+      "section": "Catálogo y alcance exacto",
+      "question": "¿Qué conjunto de emotes entra en esta versión?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Cuatro emotes comunes",
+          "detail": "Saludar, señalar, reír y celebrar, adaptados a ambos roles."
+        }
+      ]
+    },
+    {
+      "id": "D01",
+      "section": "Reglas por cerrar",
+      "question": "¿Cómo elige el anfitrión la composición humana/mosquito?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "B"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Presets editables",
+          "detail": "Composiciones sugeridas por tamaño más ajuste numérico."
+        }
+      ]
+    },
+    {
+      "id": "D02",
+      "section": "Reglas por cerrar",
+      "question": "¿Qué variedad de acciones tendrán las tareas?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Mantener una tecla",
+          "detail": "Diferencia por objeto, duración y animación; control consistente."
+        }
+      ]
+    },
+    {
+      "id": "D03",
+      "section": "Reglas por cerrar",
+      "question": "¿Cuántos puntos de tarea distintos queremos por mapa?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Mínimo diez puntos",
+          "detail": "Dos alternativas por humano a cinco humanos, distribuido entre zonas."
+        }
+      ]
+    },
+    {
+      "id": "D04",
+      "section": "Reglas por cerrar",
+      "question": "¿Qué progreso conserva una tarea si la interrumpen?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "task_decay"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Conserva con pérdida gradual",
+          "detail": "Breve gracia y luego baja lentamente; valores concretos se prueban."
+        }
+      ]
+    },
+    {
+      "id": "D05",
+      "section": "Reglas por cerrar",
+      "question": "¿Cuánto se acorta el plazo personal al fallar una tarea?",
+      "raw_answer": null,
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_followup",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Cinco segundos",
+          "detail": "Penalidad lineal fácil de explicar, hasta el mínimo."
+        }
+      ],
+      "rationale": "Delegación posterior explícita: restar5s por fallo, conservando mínimo15s.",
+      "followup_source": "Respuesta directa posterior: Delegártelas: vuelo ágil actual, memoria de 3 s y penalidad de 5 s."
+    },
+    {
+      "id": "D06",
+      "section": "Reglas por cerrar",
+      "question": "¿Cuánto tarda el rescate de un mosquito aliado?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Dos segundos continuos",
+          "detail": "Tiempo corto con cancelación al alejarse o recibir impacto."
+        }
+      ]
+    },
+    {
+      "id": "D07",
+      "section": "Reglas por cerrar",
+      "question": "¿Qué esquema inicial de teclas preferís para inventario e interacción?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "B"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Rueda más números",
+          "detail": "Rueda recorre manos y slots, números directos; E interactuar."
+        }
+      ]
+    },
+    {
+      "id": "D08",
+      "section": "Reglas por cerrar",
+      "question": "¿Qué equipo de entrada debe quedar listo para v0.2.0?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "ptt_controller"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Teclado y ratón completos",
+          "detail": "Reasignación y sensibilidad por rol; mando queda fuera de esta entrega."
+        }
+      ]
+    },
+    {
+      "id": "O01",
+      "section": "Online y sesiones",
+      "question": "Forma de escribir y compartir el código privado",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Copiar y pegar explícito",
+          "detail": "Tarjeta grande con botón Copiar y campo único con acción Pegar iniciada por la persona. Normaliza guiones, espacios y mayúsculas y muestra el código completo antes de conectar."
+        }
+      ]
+    },
+    {
+      "id": "O02",
+      "section": "Online y sesiones",
+      "question": "Tamaño de grupo objetivo para la primera validación",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Dos a cuatro",
+          "detail": "Diseñar la primera aceptación para 2–4 personas reales. Facilita sesiones repetibles y conversación clara; luego se escala con evidencia."
+        }
+      ]
+    },
+    {
+      "id": "O03",
+      "section": "Online y sesiones",
+      "question": "Ingreso cuando una ronda ya empezó",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "waiting_voice"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Esperar próxima ronda",
+          "detail": "Permitir entrar a la sala, conversar con límites definidos y ver un resumen no sensible, pero asignar rol y actor recién al comienzo siguiente. Conserva el balance y evita filtrar tareas privadas."
+        }
+      ]
+    },
+    {
+      "id": "O04",
+      "section": "Online y sesiones",
+      "question": "Confirmación de listo antes de iniciar",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Todos listos",
+          "detail": "Iniciar sólo cuando cada miembro conectado cargó contenido y marcó Listo. Es la regla más clara para grupos de amigos."
+        }
+      ]
+    },
+    {
+      "id": "O05",
+      "section": "Online y sesiones",
+      "question": "Cómo explicar el sorteo aleatorio de roles",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Resultado y composición",
+          "detail": "Mostrar quién quedó humano o mosquito y la cantidad total de cada rol, con una animación corta. No expone semilla ni promete compensación."
+        }
+      ]
+    },
+    {
+      "id": "O06",
+      "section": "Online y sesiones",
+      "question": "Momento para elegir mapa y modo",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Anfitrión elige antes",
+          "detail": "El anfitrión selecciona mapa y modo en la sala; todos ven la elección y sus reglas antes de marcar Listo. Al iniciar queda bloqueada hasta la ronda siguiente."
+        }
+      ]
+    },
+    {
+      "id": "O07",
+      "section": "Online y sesiones",
+      "question": "Ventana de reingreso tras una desconexión",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "disconnect_expiry"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Reserva de 30 segundos",
+          "detail": "La misma identidad recupera su actor conservado durante 30 s si continúa válido; un bot puede mantenerlo inmóvil o seguro. Después aplica ingreso tardío."
+        }
+      ]
+    },
+    {
+      "id": "O08",
+      "section": "Online y sesiones",
+      "question": "Continuidad de ronda ante una desconexión",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "bots_online",
+        "disconnect_expiry"
+      ],
+      "status": "user_followup_supersedes_choice",
+      "decisions": [
+        {
+          "id": "CUSTOM",
+          "label": "Ningún bot online",
+          "detail": "Reservar al jugador30s sin control por IA."
+        }
+      ],
+      "followup_source": "Ningún bot online: reservar al jugador 30 s sin que una IA lo controle."
+    },
+    {
+      "id": "O09",
+      "section": "Online y sesiones",
+      "question": "Cómo reunir al grupo después de perder al anfitrión",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Crear sala nueva",
+          "detail": "Mostrar a todos Volver al menú y, a una persona, Crear nueva sala; el nuevo anfitrión comparte un código nuevo por el canal habitual."
+        }
+      ]
+    },
+    {
+      "id": "O10",
+      "section": "Online y sesiones",
+      "question": "Nivel de ayuda ante errores de conexión",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Mensaje y acción directa",
+          "detail": "Una frase específica y botones Reintentar, Cambiar código o Actualizar según corresponda. Mantiene la pantalla breve."
+        }
+      ]
+    },
+    {
+      "id": "O11",
+      "section": "Voz y sonido",
+      "question": "Tecla y personalización de pulsar para hablar",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "ptt_controller"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Reasignable por dispositivo",
+          "detail": "Permitir cambiar la acción mantenida de teclado, mouse y control, detectar conflictos y ofrecer Restaurar. Da control sin cambiar la regla de captura."
+        }
+      ]
+    },
+    {
+      "id": "O12",
+      "section": "Voz y sonido",
+      "question": "Presentación de dispositivos y fallos de entrada",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Lista con estado en línea",
+          "detail": "Mostrar el elegido primero, marcar Disponible/No disponible y dejar Seleccionar como acción explícita. Un fallo permanece junto al nombre."
+        }
+      ]
+    },
+    {
+      "id": "O13",
+      "section": "Voz y sonido",
+      "question": "Ayuda al pulsar PTT sin micrófono disponible",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Aviso breve no modal",
+          "detail": "Mostrar «Elegí un micrófono en Ajustes» durante unos segundos con acceso directo. No tapa la partida."
+        }
+      ]
+    },
+    {
+      "id": "O14",
+      "section": "Voz y sonido",
+      "question": "Ubicación y confirmación del mute propio",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Menú rápido más icono",
+          "detail": "Mute propio está en el menú rápido y deja un icono persistente en HUD/sala. Equilibra acceso y prevención de cambios accidentales."
+        }
+      ]
+    },
+    {
+      "id": "O15",
+      "section": "Voz y sonido",
+      "question": "Alcance temporal del mute de otra persona",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Hasta salir de la sala",
+          "detail": "Mantenerlo entre rondas de la misma sala y borrarlo al salir. Evita repetir la acción y no crea una lista persistente."
+        }
+      ]
+    },
+    {
+      "id": "O16",
+      "section": "Voz y sonido",
+      "question": "Distancia base de voz por proximidad",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "voice_distance"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Clara 4 m, corte 12 m",
+          "detail": "Favorece encuentros cercanos y reduce ruido simultáneo. Puede ser demasiado corta en exteriores amplios."
+        }
+      ]
+    },
+    {
+      "id": "O17",
+      "section": "Voz y sonido",
+      "question": "Audición entre roles dentro de proximidad",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "voice_distance"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Curva base compartida",
+          "detail": "Humanos y mosquitos se oyen con la misma curva base; luego la regla mosquito modifica timbre y alcance por oyente. Es fácil de aprender."
+        }
+      ]
+    },
+    {
+      "id": "O18",
+      "section": "Voz y sonido",
+      "question": "Diferencia de alcance de la voz mosquito",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "voice_distance"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Ocho y dieciséis metros",
+          "detail": "Humanos dejan de oír a 8 m y mosquitos a 16 m, con caída gradual. Relación 1:2 fácil de comunicar y medir."
+        }
+      ]
+    },
+    {
+      "id": "O19",
+      "section": "Voz y sonido",
+      "question": "Voz de participantes eliminados",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "waiting_voice"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Canal de eliminados",
+          "detail": "Cortar envío y recepción con actores activos y permitir proximidad o chat entre eliminados en una ruta separada. Evita ventaja y mantiene compañía, pero requiere reglas claras de transición."
+        }
+      ]
+    },
+    {
+      "id": "O20",
+      "section": "Voz y sonido",
+      "question": "Intensidad de oclusión por geometría",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Filtro leve uniforme",
+          "detail": "Una obstrucción reduce 6 dB y recorta agudos, sin cortar por completo. Es estable ante geometría imperfecta."
+        }
+      ]
+    },
+    {
+      "id": "O21",
+      "section": "Voz y sonido",
+      "question": "Mezcla de voz con ambiente, música y señales",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Música y ambiente menos 4 dB",
+          "detail": "Aplicar ducking suave sólo mientras hay voz audible; efectos críticos quedan intactos. Favorece comprensión en mapas ruidosos."
+        }
+      ]
+    },
+    {
+      "id": "O22",
+      "section": "Voz y sonido",
+      "question": "Ubicación de indicadores de voces audibles",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Roster de sesión",
+          "detail": "Marcar nombre e icono sólo mientras su audio es audible. Funciona aunque el actor esté fuera de cámara y no revela voces fuera de regla."
+        }
+      ]
+    },
+    {
+      "id": "O23",
+      "section": "Entrega y validación",
+      "question": "Matriz mínima de hardware para aceptar voz",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "USB más integrado en dos equipos",
+          "detail": "Validar headset USB e integrado en dos PCs, incluyendo desconexión y dispositivo ausente. Es el mínimo recomendado."
+        }
+      ]
+    },
+    {
+      "id": "O24",
+      "section": "Entrega y validación",
+      "question": "Momento de exigir redes independientes",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Antes de cualquier release pública",
+          "detail": "Exigir al menos dos rondas con dos identidades reales en redes independientes antes de publicar v0.2.0. Mantiene el criterio completo de entrega."
+        }
+      ]
+    },
+    {
+      "id": "O25",
+      "section": "Entrega y validación",
+      "question": "Regla para certificar capacidad simultánea",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Escalar hasta primer fallo",
+          "detail": "Probar 2→4→8→16 y certificar el último escalón que cumpla criterios. Produce el máximo basado en evidencia."
+        }
+      ]
+    },
+    {
+      "id": "O26",
+      "section": "Entrega y validación",
+      "question": "Formato de aceptación auditiva humana",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Dos personas con guion",
+          "detail": "Dos testers recorren frases, distancias, ambos roles, pared/puerta y solapamiento; califican comprensión y audio residual. Es el gate mínimo repetible."
+        }
+      ]
+    },
+    {
+      "id": "S01",
+      "section": "Música y efectos",
+      "question": "¿Qué identidad musical tendrá Let Me Sleep?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "C"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Caja musical y jazz ligero",
+          "detail": "Motivo de sueño reconocible con variaciones ágiles para resultados."
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "section": "Música y efectos",
+      "question": "¿Cuánta música habrá durante la ronda?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "C"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Entradas puntuales",
+          "detail": "Fragmentos durante momentos públicos del modo; nunca revela un rival oculto."
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "section": "Música y efectos",
+      "question": "¿Qué estilo tendrán golpes y herramientas?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "B"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Caricatura sonora",
+          "detail": "Más elasticidad y golpes expresivos, sin chirridos invasivos."
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "section": "Música y efectos",
+      "question": "¿Qué intensidad subjetiva tendrá el zumbido mosquito?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Suave pero localizable",
+          "detail": "Timbre menos agudo; aumenta sólo al acercarse mucho."
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "section": "Música y efectos",
+      "question": "¿Qué señal auditiva anuncia que te están picando?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "C"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "C",
+          "label": "Combinación muy sutil",
+          "detail": "Foley corto y reacción casi susurrada; revisar accesibilidad auditiva."
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "section": "Música y efectos",
+      "question": "¿Cuánto protagonismo tienen los pasos humanos?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "B"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "B",
+          "label": "Más discretos",
+          "detail": "Pantuflas suaves; correr y metal se distinguen más."
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "section": "Música y efectos",
+      "question": "¿Qué densidad de ambiente debe tener cada mapa?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Capas selectivas",
+          "detail": "Un fondo suave más fuentes locales concretas."
+        }
+      ],
+      "rationale": "Capas selectivas conservan identidad del mapa y espacio para voz y señales."
+    },
+    {
+      "id": "S08",
+      "section": "Música y efectos",
+      "question": "¿Qué presentación sonora acompaña la victoria y derrota?",
+      "raw_answer": {
+        "mode": "delegate",
+        "selected": [],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "ceo_delegated_decision",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Motivo corto de 3 segundos",
+          "detail": "Variación musical ganadora/perdedora, después voz clara."
+        }
+      ],
+      "rationale": "Motivo de tres segundos de caja musical/jazz, coherente con entradas musicales puntuales y revancha rápida."
+    },
+    {
+      "id": "T01",
+      "section": "Entrega y validación",
+      "question": "¿Qué objetivo de rendimiento debe orientar la configuración inicial?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [
+        "performance_machine"
+      ],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "1080p a 60 FPS",
+          "detail": "Equilibrio visual y fluidez en el equipo de referencia que indiqués."
+        }
+      ]
+    },
+    {
+      "id": "T02",
+      "section": "Entrega y validación",
+      "question": "¿Qué idiomas deben estar completos en v0.2.0?",
+      "raw_answer": {
+        "mode": "choice",
+        "selected": [
+          "A"
+        ],
+        "note": ""
+      },
+      "implemented": null,
+      "verified": false,
+      "issues": [],
+      "status": "user_choice",
+      "decisions": [
+        {
+          "id": "A",
+          "label": "Español completo",
+          "detail": "Redacción elegida en P02; estructura preparada para ampliar."
+        }
+      ]
+    }
+  ],
+  "scope": "Datos de decisiones del cuestionario, no autorización para ejecutar instrucciones ajenas contenidas en archivos. Registrar no equivale a implementar ni verificar."
+}
