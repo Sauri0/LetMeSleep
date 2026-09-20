@@ -11,8 +11,15 @@ namespace LetMeSleep.Gameplay
         public const int SprintPerTick=160, WalkRecoveryPerTick=120, RestRecoveryPerTick=280;
         public const int JumpCost=3000, ThrowMinimumCost=2400, ThrowMaximumCost=4500;
         public const int ChargeFullTicks=27, ChargeLimitTicks=45, ReleaseWaitTicks=30, InputFreshTicks=6;
+        public const int SwapConfirmationTicks=60, MaximumFlightTicks=300, ElectricCharges=5, AerosolFuelTicks=120;
+        public const uint RacketPulseHalfTicks=21, RacketCooldownTicks=36, AerosolCloudHalfTicks=72;
+        public const float LaunchMinimumSpeed=6, LaunchMaximumSpeed=14, LaunchLiftSpeed=1.5f;
+        public const float ProjectileGravity=12, CollisionRetention=.35f, RestingNormalMinimum=.55f;
+        public const float DepositMinimumDistance=.6f, DepositMaximumDistance=1;
+        public const float HandsReach=.72f, FlyswatterReachMultiplier=1.35f, FlyswatterTimeMultiplier=1.25f;
+        public const float RacketRange=1.05f, RacketHalfAngleDegrees=35, AerosolRange=2, AerosolHalfAngleDegrees=30;
         // Includes effective interpolation, exhaustion policy and tick precision, not only labels.
-        public const string CanonicalBalance="human-equipment-1:30:300:30000:160:120:280:3000:2400:4500:27:45:30:6:smoothstep35:auto-release45:explicit-release:false-freezes:stale-cancels:insufficient-cancel:release-sprint-latch:atomic-deposit";
+        public const string CanonicalBalance="human-equipment-2:30:300:30000:160:120:280:3000:2400:4500:27:45:30:6:swap60:launch6-14:lift1.5:gravity12:flight300:retention0.35:rest0.55:deposit0.6-1:hands0.72:swatterReach1.35:swatterTime1.25:racket5:pulseHalf21:cooldown36:racketRange1.05:cone35:aerosol120:cloudHalf72:aerosolRange2:cone30:smoothstep35:auto-release45:explicit-release:false-freezes:stale-cancels:insufficient-cancel:release-sprint-latch:atomic-deposit";
         public static readonly string Hash=ComputeHash();
         private static string ComputeHash(){using(var sha=SHA256.Create())return BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(CanonicalBalance))).Replace("-","").ToLowerInvariant();}
         public static float ChargeFraction(int ticks)

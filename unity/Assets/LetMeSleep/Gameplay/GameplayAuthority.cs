@@ -46,6 +46,7 @@ namespace LetMeSleep.Gameplay
             internal PickupSwapOffer? SwapOffer;
             internal uint ChargeStartTick, StaminaSpendTick;
             internal float SprintFraction;
+            internal bool PrimaryArmed = true;
             internal SurfaceAttachment? Surface;
             internal Float3 SurfaceNormal, SurfaceForward;
             internal int SurfaceTransitionTicks, SurfaceApproachTicks;
@@ -115,6 +116,7 @@ namespace LetMeSleep.Gameplay
             config = next; tick = 0; blood = 0; eventId = 0; strikeId = 0; result = RoundEndReason.None; winner = PlayerRole.Unassigned; phase = SimulationPhase.Running;
             actors.Clear(); doors.Clear(); pickups.Clear(); pending.Clear(); events.Clear(); boundsHeldActors.Clear();
             projectileTicks.Clear();
+            toolEffects.Clear(); toolEffectId = 0;
             foreach (var spawn in roster) actors.Add(spawn.ActorId, new Actor { Spawn = spawn, Position = spawn.Position, State = spawn.Role == PlayerRole.Human ? LifeState.Active : LifeState.Flying, Lives = spawn.Role == PlayerRole.Mosquito ? next.ModeRules.MosquitoLives : 0 });
             foreach (var definition in next.DoorDefinitions)
             {
@@ -146,6 +148,7 @@ namespace LetMeSleep.Gameplay
             if (!actors.TryGetValue(actorId, out var a) || a.Connected == connected) return;
             a.Connected = connected;
             ClearHeld(a);
+            CancelRacketEffects(actorId);
             if (!connected)
             {
                 if (a.Bite.HasValue || a.State == LifeState.ApproachingSurface) Detach(a);
@@ -193,6 +196,7 @@ namespace LetMeSleep.Gameplay
             if (!CanAct(a) || boundsHeldActors.Contains(a.Spawn.ActorId)) { ClearHeld(a); return a.Rejection = CommandReject.None; }
             a.Input = c; a.Yaw = c.ViewYawRadians; a.Pitch = c.ViewPitchRadians; a.Aim = c.AimForward.Normalized;
             if (!c.PrimaryHeld) a.ThrowCharge.ObserveNeutral();
+            if (!c.PrimaryHeld) a.PrimaryArmed = true;
             if (!c.BiteHeld) a.BiteArmed = true;
             return a.Rejection = CommandReject.None;
         }
@@ -232,6 +236,7 @@ namespace LetMeSleep.Gameplay
             foreach (var a in actors.Values.OrderBy(a => a.Spawn.ActorId)) UpdateStrike(a);
             Synchronize(); // Contact queries use this tick's strike/limb pose as well as locomotion.
             UpdateProjectiles(dt);
+            UpdateToolEffects();
             int activeHumans = actors.Values.Count(a => a.Spawn.Role == PlayerRole.Human && a.State == LifeState.Active);
             foreach (var a in actors.Values.Where(a => a.Spawn.Role == PlayerRole.Mosquito).OrderBy(a => a.Spawn.ActorId))
                 if (!boundsHeldActors.Contains(a.Spawn.ActorId)) UpdateContact(a, activeHumans, dt);
@@ -281,6 +286,8 @@ namespace LetMeSleep.Gameplay
                         if (a.Spawn.Role != PlayerRole.Human) { a.Rejection = CommandReject.WrongRole; break; }
                         if (a.ThrowCharge.Capture().Active) { a.Rejection = CommandReject.InvalidState; break; }
                         if (a.EquippedTool == GameplayTools.Slipper) { a.Rejection = CommandReject.InvalidState; break; }
+                        if (a.EquippedTool == GameplayTools.ElectricRacket) { if (a.PrimaryArmed) BeginRacketPulse(a); else a.Rejection = CommandReject.InvalidState; break; }
+                        if (a.EquippedTool == GameplayTools.Aerosol) break; // Emission follows fresh PrimaryHeld once per host tick.
                         if (a.Strike.Phase != StrikePhase.None) { a.Rejection = CommandReject.Cooldown; break; }
                         if (world.TryPlanStrike(a.Spawn.ActorId, c.AimForward, a.EquippedTool, out a.Plan))
                         {
@@ -298,7 +305,7 @@ namespace LetMeSleep.Gameplay
                     case ActionKind.SelectInventorySlot: SelectInventorySlot(a, c); break;
                     case ActionKind.BeginThrow: BeginThrow(a, c); break;
                     case ActionKind.ReleaseThrow: ReleaseThrow(a, c); break;
-                    case ActionKind.CancelThrow: a.ThrowCharge.Cancel(); break;
+                    case ActionKind.CancelThrow: CancelEquipmentActions(a); ClearHeld(a); break;
                     case ActionKind.ConfirmPickup: ConfirmPickup(a, c); break;
                 }
             }
@@ -439,10 +446,12 @@ namespace LetMeSleep.Gameplay
         {
             if (!a.Connected || a.Strike.Phase == StrikePhase.None || a.State != LifeState.Active || boundsHeldActors.Contains(a.Spawn.ActorId)) return;
             var s = a.Strike; float elapsed = (tick - s.StartTick) / 30f;
-            if (elapsed >= .6f) { a.Strike = default; return; }
-            var nextPhase = elapsed < .08f ? StrikePhase.Windup : elapsed < .25f ? StrikePhase.Active : StrikePhase.Recovery;
-            float now = MathEx.Clamp((elapsed - .08f) / .17f, 0, 1), prior = MathEx.Clamp((elapsed - 1f / 30 - .08f) / .17f, 0, 1);
-            a.Strike = new StrikeState(s.StrikeId, s.ToolId, s.Hand, nextPhase, s.StartTick, s.Origin, s.Target, s.Normal, MathEx.Clamp(elapsed / .6f, 0, 1));
+            float timeScale = GameplayTools.IsFlyswatter(s.ToolId) ? HumanEquipmentProfile.FlyswatterTimeMultiplier : 1;
+            float normalizedElapsed = elapsed / timeScale;
+            if (normalizedElapsed >= .6f) { a.Strike = default; return; }
+            var nextPhase = normalizedElapsed < .08f ? StrikePhase.Windup : normalizedElapsed < .25f ? StrikePhase.Active : StrikePhase.Recovery;
+            float now = MathEx.Clamp((normalizedElapsed - .08f) / .17f, 0, 1), prior = MathEx.Clamp(((elapsed - 1f / 30) / timeScale - .08f) / .17f, 0, 1);
+            a.Strike = new StrikeState(s.StrikeId, s.ToolId, s.Hand, nextPhase, s.StartTick, s.Origin, s.Target, s.Normal, MathEx.Clamp(normalizedElapsed / .6f, 0, 1));
             if (now <= prior || a.StrikeBlocked) return;
             var hit = world.SweepStrike(new StrikeSweep(a.Spawn.ActorId, s.StrikeId, s.Origin + (s.Target - s.Origin) * prior, s.Origin + (s.Target - s.Origin) * now, a.Plan.Radius));
             if (!hit.Hit) return;
@@ -529,7 +538,8 @@ namespace LetMeSleep.Gameplay
             if (taskRules == null) return;
             foreach (var a in actors.Values.Where(a => a.Spawn.Role == PlayerRole.Human).OrderBy(a => a.Spawn.ActorId))
             {
-                bool working = a.Connected && a.State == LifeState.Active && a.Input.UseHeld && a.Strike.Phase == StrikePhase.None && !a.ThrowCharge.Capture().Active
+                bool working = a.Connected && a.State == LifeState.Active && a.Input.UseHeld && !a.Input.PrimaryHeld && a.Strike.Phase == StrikePhase.None && !a.ThrowCharge.Capture().Active
+                    && !toolEffects.Values.Any(e => e.Snapshot.SourceActorId == a.Spawn.ActorId && e.Snapshot.Kind == ToolEffectKind.RacketPulse)
                     && a.TaskInterruptTick != tick && !boundsHeldActors.Contains(a.Spawn.ActorId)
                     && !actors.Values.Any(b => b.Bite.HasValue && b.Bite.Value.VictimId == a.Spawn.ActorId);
                 if (taskRules.Update(a.Spawn.ActorId, tick, working, a.Position, a.Aim))
@@ -622,7 +632,7 @@ namespace LetMeSleep.Gameplay
         private ActorSnapshot[] ActorSnapshots() => actors.Values.OrderBy(a => a.Spawn.ActorId).Select(Snapshot).ToArray();
         private void Synchronize() => world.SynchronizeActors(ActorSnapshots());
         public GameSessionState CaptureSnapshot()
-        { if (config == null) throw new InvalidOperationException("BeginRound first."); return new GameSessionState(config, tick, phase, blood, result, winner, ActorSnapshots(), doors.Values.OrderBy(d => d.Definition.DoorId).Select(d => d.Snapshot).ToArray(), pickups.Values.OrderBy(p => p.PickupId).ToArray(), taskRules?.Completed ?? 0, taskRules?.Goal ?? 0, taskRules?.Opportunities ?? 0); }
+        { if (config == null) throw new InvalidOperationException("BeginRound first."); return new GameSessionState(config, tick, phase, blood, result, winner, ActorSnapshots(), doors.Values.OrderBy(d => d.Definition.DoorId).Select(d => d.Snapshot).ToArray(), pickups.Values.OrderBy(p => p.PickupId).ToArray(), taskRules?.Completed ?? 0, taskRules?.Goal ?? 0, taskRules?.Opportunities ?? 0, EffectSnapshots()); }
         public ActorPrivateState CapturePrivate(uint actorId)
         {
             if (!actors.TryGetValue(actorId, out var a)) return null;
@@ -634,6 +644,7 @@ namespace LetMeSleep.Gameplay
         {
             if (!actors.TryGetValue(actorId, out var leaving)) return;
             DropAllTools(leaving); actors.Remove(actorId);
+            foreach (var id in toolEffects.Where(p => p.Value.Snapshot.SourceActorId == actorId).Select(p => p.Key).ToArray()) toolEffects.Remove(id);
             foreach (var a in actors.Values.Where(a => a.Bite.HasValue && a.Bite.Value.VictimId == actorId)) Detach(a);
             Synchronize();
             if (!IsRunning) return;
@@ -646,6 +657,7 @@ namespace LetMeSleep.Gameplay
             if (!IsRunning) return;
             phase = SimulationPhase.Ended; result = reason; winner = team; pending.Clear();
             foreach (var projectile in pickups.Values.Where(p => p.Phase == ToolPickupPhase.Projectile).ToArray()) RecoverProjectile(projectile);
+            toolEffects.Clear();
             if (world is IGameplayBoundsWorld boundsWorld) boundsWorld.EndBoundsRecovery();
             boundsHeldActors.Clear();
             foreach (var a in actors.Values) { a.Bite = null; a.Surface = null; a.Strike = default; a.Velocity = default; ClearHeld(a); }

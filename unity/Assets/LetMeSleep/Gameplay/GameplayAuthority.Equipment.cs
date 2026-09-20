@@ -16,8 +16,8 @@ namespace LetMeSleep.Gameplay
                 return c.SlotIndex>=0&&c.SlotIndex<3&&c.InventoryRevision!=0&&c.TargetPickupId!=0&&c.ExpectedPickupRevision!=0;
             return c.SlotIndex==-1&&c.TargetPickupId==0&&c.ExpectedPickupRevision==0&&c.InventoryRevision==0;
         }
-        private static void CancelEquipmentActions(Actor a)
-        {a.ThrowCharge.Cancel();a.SwapOffer=null;a.Strike=default;a.Plan=default;a.HitActors.Clear();a.StrikeBlocked=false;}
+        private void CancelEquipmentActions(Actor a)
+        {a.ThrowCharge.Cancel();a.SwapOffer=null;a.Strike=default;a.Plan=default;a.HitActors.Clear();a.StrikeBlocked=false;a.PrimaryArmed=!a.Input.PrimaryHeld;CancelRacketEffects(a.Spawn.ActorId);}
         private void RefreshEquipment(Actor a)
         {
             a.EquippedPickup=a.Inventory.ActivePickup;
@@ -50,7 +50,7 @@ namespace LetMeSleep.Gameplay
             var decision=a.Inventory.PlanPickup(pickup.PickupId,false,a.Inventory.Revision,out var plan);
             if(decision==InventoryPlanResult.ConfirmationRequired)
             {
-                a.SwapOffer=new PickupSwapOffer(pickup.PickupId,pickup.Revision,a.Inventory.Revision,a.Inventory.SelectedSlot,tick+60);
+                a.SwapOffer=new PickupSwapOffer(pickup.PickupId,pickup.Revision,a.Inventory.Revision,a.Inventory.SelectedSlot,tick+HumanEquipmentProfile.SwapConfirmationTicks);
                 a.Hint=InteractionHint.Tool;return true;
             }
             if(decision!=InventoryPlanResult.Ready){a.Rejection=CommandReject.InvalidState;return true;}
@@ -86,8 +86,8 @@ namespace LetMeSleep.Gameplay
             }
             if(!a.Inventory.CommitPickup(plan,true)){a.Rejection=CommandReject.InvalidState;return;}
             CancelEquipmentActions(a);a.TaskInterruptTick=tick;
-            if(previous.PickupId!=0)ApplyPickup(new ToolPickupSnapshot(previous.PickupId,previous.ToolId,position,rotation,0,previous.Revision+1,ToolPickupPhase.World,default,0,previous.ResourceUnits,false));
-            ApplyPickup(new ToolPickupSnapshot(pickup.PickupId,pickup.ToolId,pickup.Position,pickup.Rotation,a.Spawn.ActorId,pickup.Revision+1,ToolPickupPhase.Held,default,0,pickup.ResourceUnits,false));
+            if(previous.PickupId!=0)ApplyPickup(new ToolPickupSnapshot(previous.PickupId,previous.ToolId,position,rotation,0,previous.Revision+1,ToolPickupPhase.World,default,0,previous.ResourceUnits,false,previous.CooldownUntilTick));
+            ApplyPickup(new ToolPickupSnapshot(pickup.PickupId,pickup.ToolId,pickup.Position,pickup.Rotation,a.Spawn.ActorId,pickup.Revision+1,ToolPickupPhase.Held,default,0,pickup.ResourceUnits,false,pickup.CooldownUntilTick));
             RefreshEquipment(a);a.Hint=InteractionHint.Tool;
         }
         private void ApplyPickup(in ToolPickupSnapshot pickup)
@@ -104,7 +104,7 @@ namespace LetMeSleep.Gameplay
             }
             if(!a.Inventory.RemoveActive(a.Inventory.Revision,id,true)){a.Rejection=CommandReject.InvalidState;return;}
             CancelEquipmentActions(a);a.TaskInterruptTick=tick;
-            ApplyPickup(new ToolPickupSnapshot(id,pickup.ToolId,position,rotation,0,pickup.Revision+1,ToolPickupPhase.World,default,0,pickup.ResourceUnits,false));
+            ApplyPickup(new ToolPickupSnapshot(id,pickup.ToolId,position,rotation,0,pickup.Revision+1,ToolPickupPhase.World,default,0,pickup.ResourceUnits,false,pickup.CooldownUntilTick));
             RefreshEquipment(a);a.Hint=InteractionHint.Tool;
         }
         private void DropAllTools(Actor a)
@@ -120,7 +120,7 @@ namespace LetMeSleep.Gameplay
         }
         private void BeginThrow(Actor a,in PlayerActionCommand c)
         {
-            if(!(world is IGameplayEquipmentWorld)||!MatchesActivePickup(a,c,out var item)||item.ToolId!=GameplayTools.Slipper||a.Strike.Phase!=StrikePhase.None||!a.HasInput||tick-a.InputTick>HumanEquipmentProfile.InputFreshTicks)
+            if(!(world is IGameplayEquipmentWorld)||!MatchesActivePickup(a,c,out var item)||item.ToolId!=GameplayTools.Slipper||!a.PrimaryArmed||a.Strike.Phase!=StrikePhase.None||!a.HasInput||tick-a.InputTick>HumanEquipmentProfile.InputFreshTicks)
             {a.Rejection=CommandReject.InvalidState;return;}
             if(!a.ThrowCharge.Begin(item.ToolId,item.PickupId,a.Inventory.Revision)){a.Rejection=CommandReject.InvalidState;return;}
             if(!a.Input.PrimaryHeld)a.ThrowCharge.ObserveNeutral();
@@ -154,7 +154,7 @@ namespace LetMeSleep.Gameplay
                 &&position.IsFinite&&position.Length<=10000&&ValidRotation(rotation)&&velocity.IsFinite&&velocity.Length<=100;
             if(!a.ThrowCharge.CommitPreparedRelease(a.Inventory,a.Stamina,prepared,out _)){a.Rejection=prepared?CommandReject.InvalidState:CommandReject.Obstructed;return;}
             a.StaminaSpendTick=tick;a.TaskInterruptTick=tick;a.SwapOffer=null;
-            ApplyPickup(new ToolPickupSnapshot(item.PickupId,item.ToolId,position,rotation,0,item.Revision+1,ToolPickupPhase.Projectile,velocity,a.Spawn.ActorId,item.ResourceUnits,false));
+            ApplyPickup(new ToolPickupSnapshot(item.PickupId,item.ToolId,position,rotation,0,item.Revision+1,ToolPickupPhase.Projectile,velocity,a.Spawn.ActorId,item.ResourceUnits,false,item.CooldownUntilTick));
             projectileTicks[item.PickupId]=0;RefreshEquipment(a);
         }
         private void UpdateHumanStamina()
@@ -169,7 +169,7 @@ namespace LetMeSleep.Gameplay
         private void RecoverProjectile(ToolPickupSnapshot item)
         {
             var original=config.ToolDefinitions.First(d=>d.PickupId==item.PickupId);
-            ApplyPickup(new ToolPickupSnapshot(item.PickupId,item.ToolId,original.Position,original.Rotation,0,item.Revision+1,ToolPickupPhase.World,default,0,item.ResourceUnits,false));
+            ApplyPickup(new ToolPickupSnapshot(item.PickupId,item.ToolId,original.Position,original.Rotation,0,item.Revision+1,ToolPickupPhase.World,default,0,item.ResourceUnits,false,item.CooldownUntilTick));
             projectileTicks.Remove(item.PickupId);
         }
         private void UpdateProjectiles(float dt)
@@ -178,9 +178,9 @@ namespace LetMeSleep.Gameplay
             foreach(var item in pickups.Values.Where(p=>p.Phase==ToolPickupPhase.Projectile).ToArray())
             {
                 int age=projectileTicks.TryGetValue(item.PickupId,out var previousAge)?previousAge+1:1;
-                if(age>300){RecoverProjectile(item);continue;}
+                if(age>HumanEquipmentProfile.MaximumFlightTicks){RecoverProjectile(item);continue;}
                 projectileTicks[item.PickupId]=age;
-                var velocity=item.Velocity-new Float3(0,12*dt,0);var displacement=velocity*dt;
+                var velocity=item.Velocity-new Float3(0,HumanEquipmentProfile.ProjectileGravity*dt,0);var displacement=velocity*dt;
                 var position=item.Position+displacement;bool consumed=item.ImpactConsumed;var phase=ToolPickupPhase.Projectile;
                 if(equipment.SweepProjectile(new ToolProjectileQuery(item.PickupId,item.ThrowerActorId,item.Position,item.Rotation,displacement),out var hit))
                 {
@@ -190,11 +190,11 @@ namespace LetMeSleep.Gameplay
                     if(!consumed&&hit.ActorId!=0&&actors.TryGetValue(hit.ActorId,out var victim)&&victim.Spawn.Role==PlayerRole.Mosquito&&CanAct(victim)&&victim.Protection<=0)
                         KnockDown(victim,velocity.Normalized*1.2f);
                     consumed=true;
-                    if(hit.ActorId==0&&hit.Normal.Y>=.55f){phase=ToolPickupPhase.World;velocity=default;projectileTicks.Remove(item.PickupId);}
-                    else velocity=Float3.ProjectPlane(velocity,hit.Normal)*.35f;
+                    if(hit.ActorId==0&&hit.Normal.Y>=HumanEquipmentProfile.RestingNormalMinimum){phase=ToolPickupPhase.World;velocity=default;projectileTicks.Remove(item.PickupId);}
+                    else velocity=Float3.ProjectPlane(velocity,hit.Normal)*HumanEquipmentProfile.CollisionRetention;
                 }
                 if(!position.IsFinite||position.Length>10000){RecoverProjectile(item);continue;}
-                ApplyPickup(new ToolPickupSnapshot(item.PickupId,item.ToolId,position,item.Rotation,0,item.Revision+1,phase,velocity,phase==ToolPickupPhase.Projectile?item.ThrowerActorId:0,item.ResourceUnits,phase==ToolPickupPhase.Projectile&&consumed));
+                ApplyPickup(new ToolPickupSnapshot(item.PickupId,item.ToolId,position,item.Rotation,0,item.Revision+1,phase,velocity,phase==ToolPickupPhase.Projectile?item.ThrowerActorId:0,item.ResourceUnits,phase==ToolPickupPhase.Projectile&&consumed,item.CooldownUntilTick));
             }
         }
     }

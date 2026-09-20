@@ -42,3 +42,47 @@ Pendiente de la etapa siguiente: pulsos/cargas raqueta, aerosol/nube/combustible
 balance físico/temporal matamoscas, perfil completo de esos parámetros y
 validación nativa de efectos. No declarar esas armas terminadas por existir
 sus IDs o recursos iniciales en el ledger.
+
+## Etapa de efectos — estado CPU posterior
+
+Raqueta y aerosol ya tienen lógica autoritativa en
+`GameplayAuthority.ToolEffects.cs`. Raqueta consume una de5cargas por pulso,
+registra EndHalfTick=2*inicio+21 para0,35s exactos y cooldown36ticks. Aerosol
+consume una de120unidades por tick de emisión; una nube por pickup sigue la
+boquilla al emitir y permanece en la última pose72medios ticks (1,2s) al parar.
+Cambiar, depositar o volver a recoger no rellena recursos ni reinicia cooldown.
+La geometría se consulta mediante IGameplayToolEffectWorld; el dominio aplica
+KnockDown existente una vez por actor/efecto y respeta protección/vidas.
+
+Concreciones CEO, no respuestas literales adicionales: raqueta1,05m y cono de
+semiángulo35°, aerosol2m/30°, una nube por pickup, efecto KnockDown común.
+La desconexión cancela emisión pero deja expirar aerosol emitido; la retirada
+definitiva del actor limpia todos sus efectos para no publicar una fuente
+ausente. Fin de ronda limpia efectos. CancelThrow fiable también limpia held
+para evitar un tick adicional de emisión si adelanta al input neutral.
+
+Matamoscas usa alcance base de mano0,72m multiplicado una sola vez por1,35
+(0,972m) y tiempos de golpe multiplicados por1,25; la presentación conserva
+progreso normalizado. El perfil incluye el balance efectivo de lanzamiento,
+depósito, gravedad, retención, recuperación, armas, cono/rango y duraciones;
+EquipmentProfileHash cambia automáticamente para impedir mezcla de perfiles.
+
+ToolPickupSnapshot añade CooldownUntilTick manteniendo overloads previos;
+GameSessionState añade ToolEffects con lista copiada e independiente. El
+snapshot de efecto contiene EffectId/PickupId/SourceActorId/Kind/Origin/Forward/
+StartTick/EndHalfTick. La duración de aerosol puede extenderse durante emisión:
+el límite relevante es EndHalfTick≤2*HostTick+72, no72desde el inicio original.
+
+Regresión CPU posterior: **92/92 PASS** (44 pruebas de equipo/núcleo y48 de
+modos/reconexión/picaduras/puertas). Incluye recuperación real con protección,
+5pulsos hasta agotar,4s de aerosol y cola1,2s, cancelación entre canales,
+recursos/cooldown persistentes, fin de Supervivencia y retirada de una fuente
+con otra humana aún en ronda. Gate nativo de esta etapa pendiente del CEO;
+sin afirmación de VFX, audio, ergonomía visual o WAN terminados.
+
+Gate nativo posterior comunicado por CEO: `effects-latejoin01` **88/88 PASS**;
+`effects-motor-hud01` **16/17 PASS**, con11/11 mundo,2/2HUD y3/4motor. El fallo
+restante corresponde al comparador de escalón que asumía desplazamiento legado
+cero y permanece bajo revisión del CEO; no se oculta ni atribuye a aceptación
+de locomoción. Los módulos de dominio de efectos se entregan con metas y
+pruebas; todavía no se declara QA visual/sonoro completo ni WAN.

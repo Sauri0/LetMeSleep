@@ -9,7 +9,7 @@ namespace LetMeSleep.Tests.EditMode
 {
     public sealed class GameplayEquipmentAuthorityTests
     {
-        sealed class World : IGameplayWorld, IGameplayEquipmentWorld
+        sealed class World : IGameplayWorld, IGameplayEquipmentWorld, IGameplayToolEffectWorld
         {
             public readonly Dictionary<uint,ToolPickupSnapshot> Items=new Dictionary<uint,ToolPickupSnapshot>();
             public readonly Queue<ToolProjectileHit> Hits=new Queue<ToolProjectileHit>();
@@ -17,17 +17,21 @@ namespace LetMeSleep.Tests.EditMode
             public bool Deposit=true,Prepare=true,Grounded=true;
             public int Prepared,Sweeps;
             public MotorQuery LastHuman;
+            public bool EffectOriginValid=true,PlanStrike;
+            public bool BugGrounded,RecoverySafe;
+            public readonly List<ToolEffectHit> EffectHits=new List<ToolEffectHit>();
+            public readonly List<ToolEffectQuery> EffectQueries=new List<ToolEffectQuery>();
             public void BeginRound(IReadOnlyList<SpawnActor> a,IReadOnlyList<DoorDefinition> d){}
             public void SynchronizeActors(IReadOnlyList<ActorSnapshot> a){}
             public MotorResult MoveHuman(in MotorQuery q){if(q.ActorId==1)LastHuman=q;return new MotorResult(q.Position+q.Velocity/30,q.Velocity,Grounded,Float3.Up,q.CrouchFraction);}
-            public MotorResult MoveMosquito(in MotorQuery q)=>new MotorResult(q.Position,q.Velocity,false,Float3.Up,0);
+            public MotorResult MoveMosquito(in MotorQuery q)=>new MotorResult(q.Position,q.Velocity,BugGrounded,Float3.Up,0);
             public bool TrySurface(in SurfaceQuery q,out SurfaceContact c){c=default;return false;}
             public bool ResolveSurface(in SurfaceAttachment a,out SurfaceContact c){c=default;return false;}
             public bool TryBiteContact(in BiteQuery q,out BiteContact c){c=default;return false;}
             public bool ResolveBite(uint id,in BiteAttachment b,int humans,out BiteContact c){c=default;return false;}
-            public bool TryPlanStrike(uint id,Float3 aim,string tool,out StrikePlan p){p=default;return false;}
+            public bool TryPlanStrike(uint id,Float3 aim,string tool,out StrikePlan p){p=new StrikePlan(Float3.Zero,Float3.Forward,Float3.Up,.075f,1,tool);return PlanStrike;}
             public StrikeHit SweepStrike(in StrikeSweep q)=>default;
-            public bool TryFreeRecoveryPoint(uint id,Float3 p,out Float3 point){point=p;return false;}
+            public bool TryFreeRecoveryPoint(uint id,Float3 p,out Float3 point){point=p;return RecoverySafe;}
             public bool HasLineOfSight(uint id,Float3 p,uint other,Float3 end)=>true;
             public bool TryDoorInteraction(in DoorInteractionQuery q,out DoorInteractionCandidate c){c=default;return false;}
             public DoorSweepResult SweepDoor(in DoorMotionQuery q)=>new DoorSweepResult(q.ToAngleRadians,false);
@@ -41,16 +45,19 @@ namespace LetMeSleep.Tests.EditMode
             public bool TryPrepareThrow(uint actor,uint pickup,Float3 aim,float power,out Float3 p,out Rotation r,out Float3 v)
             {Prepared++;p=new Float3(0,1.5f,.5f);r=Rotation.Identity;v=aim*(6+8*power)+Float3.Up*1.5f;return Prepare;}
             public bool SweepProjectile(in ToolProjectileQuery q,out ToolProjectileHit h){Sweeps++;if(Hits.Count>0){h=Hits.Dequeue();return true;}h=default;return false;}
+            public bool TryToolEffectOrigin(uint actor,uint pickup,Float3 aim,out Float3 origin,out Float3 forward)
+            {origin=new Float3(0,1.5f,0);forward=aim;return EffectOriginValid;}
+            public IReadOnlyList<ToolEffectHit> QueryToolEffect(in ToolEffectQuery query){EffectQueries.Add(query);return EffectHits.ToArray();}
         }
         sealed class Session
         {
             public readonly World World=new World();public readonly GameplayAuthority Host;
             private uint input,action;
-            public Session(string firstTool=GameplayTools.Slipper)
+            public Session(string firstTool=GameplayTools.Slipper,string mode=GameModes.Blood)
             {
                 Host=new GameplayAuthority(World);
                 var definitions=new[]{new ToolPickupDefinition(1,firstTool,Float3.Zero,Rotation.Identity),new ToolPickupDefinition(2,GameplayTools.Flyswatter,Float3.Forward,Rotation.Identity),new ToolPickupDefinition(3,GameplayTools.ElectricRacket,new Float3(2,0,0),Rotation.Identity),new ToolPickupDefinition(4,GameplayTools.Aerosol,new Float3(3,0,0),Rotation.Identity)};
-                Host.BeginRound(new GameplayRoundConfig(1,1,"map","hash",tools:definitions),new[]{new SpawnActor(1,"human",PlayerRole.Human,Float3.Zero),new SpawnActor(2,"bug",PlayerRole.Mosquito,new Float3(0,1,2)),new SpawnActor(3,"other",PlayerRole.Human,new Float3(3,0,0))});
+                Host.BeginRound(new GameplayRoundConfig(1,1,"map","hash",tools:definitions,modeId:mode),new[]{new SpawnActor(1,"human",PlayerRole.Human,Float3.Zero),new SpawnActor(2,"bug",PlayerRole.Mosquito,new Float3(0,1,2)),new SpawnActor(3,"other",PlayerRole.Human,new Float3(3,0,0))});
             }
             public ActorPrivateState Private=>Host.CapturePrivate(1);
             CommandHeader Header(uint seq)=>new CommandHeader(1,1,1,seq,Host.CurrentTick,Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==1).ViewRevision);
@@ -182,6 +189,117 @@ namespace LetMeSleep.Tests.EditMode
         {
             var s=new Session();s.Pickup(1);s.Pickup(2);s.Pickup(3);s.World.Deposit=false;s.Host.RemoveActor(1,ActorRemovalReason.Left);
             Assert.That(s.World.Items.Values.All(i=>i.OwnerActorId==0),Is.True);Assert.That(s.World.Items[3].ResourceUnits,Is.EqualTo(5));
+        }
+        [Test] public void RacketUsesExactHalfTickLifetimeAndThirtySixTickCooldown()
+        {
+            var s=new Session(GameplayTools.ElectricRacket);s.Pickup(1);s.Act(ActionKind.Primary);s.Tick();
+            uint start=s.Host.CurrentTick;var effect=s.Host.CaptureSnapshot().ToolEffects.Single();
+            Assert.That(effect.EndHalfTick,Is.EqualTo(2*start+21));Assert.That(s.World.Items[1].ResourceUnits,Is.EqualTo(4));
+            Assert.That(s.World.Items[1].CooldownUntilTick,Is.EqualTo(start+36));Assert.That(s.Private.StaminaUnits,Is.EqualTo(30000));
+            for(int i=0;i<10;i++)s.Tick();Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.EqualTo(1));
+            s.Tick();Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.Zero);
+            s.Act(ActionKind.Primary);s.Tick();Assert.That(s.Private.Rejection,Is.EqualTo(CommandReject.Cooldown));Assert.That(s.World.Items[1].ResourceUnits,Is.EqualTo(4));
+            while(s.Host.CurrentTick<start+35)s.Tick();s.Act(ActionKind.Primary);s.Tick();Assert.That(s.World.Items[1].ResourceUnits,Is.EqualTo(3));
+        }
+        [Test] public void RacketDropAndPickupPreserveCooldownAndRemainingCharges()
+        {
+            var s=new Session(GameplayTools.ElectricRacket);s.Pickup(1);s.Act(ActionKind.Primary);s.Tick();uint cooldown=s.World.Items[1].CooldownUntilTick;
+            s.Act(ActionKind.DropTool);s.Tick();Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.Zero);
+            s.Pickup(1);Assert.That(s.World.Items[1].ResourceUnits,Is.EqualTo(4));Assert.That(s.World.Items[1].CooldownUntilTick,Is.EqualTo(cooldown));
+            s.Act(ActionKind.Primary);s.Tick();Assert.That(s.World.Items[1].ResourceUnits,Is.EqualTo(4));
+        }
+        [Test] public void ObstructedEffectOriginDoesNotConsumeBatteryOrFuel()
+        {
+            var racket=new Session(GameplayTools.ElectricRacket);racket.Pickup(1);racket.World.EffectOriginValid=false;racket.Act(ActionKind.Primary);racket.Tick();
+            Assert.That(racket.World.Items[1].ResourceUnits,Is.EqualTo(5));Assert.That(racket.Host.CaptureSnapshot().ToolEffects.Count,Is.Zero);
+            var spray=new Session(GameplayTools.Aerosol);spray.Pickup(1);spray.World.EffectOriginValid=false;spray.Tick(true);
+            Assert.That(spray.World.Items[1].ResourceUnits,Is.EqualTo(120));Assert.That(spray.Host.CaptureSnapshot().ToolEffects.Count,Is.Zero);
+        }
+        [Test] public void AerosolConsumesFourSecondsAndCloudPersistsThirtySixTicks()
+        {
+            var s=new Session(GameplayTools.Aerosol);s.Pickup(1);
+            for(int i=0;i<120;i++)s.Tick(true);
+            Assert.That(s.World.Items[1].ResourceUnits,Is.Zero);Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.EqualTo(1));
+            uint last=s.Host.CurrentTick;Assert.That(s.Host.CaptureSnapshot().ToolEffects.Single().EndHalfTick,Is.EqualTo(2*last+72));
+            for(int i=0;i<35;i++)s.Tick(false);Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.EqualTo(1));
+            s.Tick(false);Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.Zero);Assert.That(s.World.Items[1].ResourceUnits,Is.Zero);
+        }
+        [Test] public void AerosolOneCloudPerPickupAndDepositDoesNotRefill()
+        {
+            var s=new Session(GameplayTools.Aerosol);s.Pickup(1);s.Tick(true);uint effect=s.Host.CaptureSnapshot().ToolEffects.Single().EffectId;
+            for(int i=0;i<9;i++)s.Tick(true);
+            Assert.That(s.Host.CaptureSnapshot().ToolEffects.Single().EffectId,Is.EqualTo(effect));Assert.That(s.World.Items[1].ResourceUnits,Is.EqualTo(110));
+            s.Act(ActionKind.DropTool);s.Tick(false);Assert.That(s.Host.CaptureSnapshot().ToolEffects.Single().EffectId,Is.EqualTo(effect));
+            s.Pickup(1);Assert.That(s.World.Items[1].ResourceUnits,Is.EqualTo(110));
+        }
+        [Test] public void CancelStopsEmissionEvenWhenNeutralPacketHasNotArrived()
+        {
+            var s=new Session(GameplayTools.Aerosol);s.Pickup(1);s.Tick(true);int fuel=s.World.Items[1].ResourceUnits;
+            s.Act(ActionKind.CancelThrow);s.Host.Advance(new HostTick(s.Host.CurrentTick+1));
+            Assert.That(s.World.Items[1].ResourceUnits,Is.EqualTo(fuel));Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.EqualTo(1));
+        }
+        [Test] public void WeaponEffectKnocksDownMosquitoOnlyOnceAndNeverHuman()
+        {
+            var s=new Session(GameplayTools.ElectricRacket);s.Pickup(1);
+            var hit=new ToolEffectHit(2,new Float3(0,1.5f,.5f),Float3.Up);s.World.EffectHits.Add(hit);s.World.EffectHits.Add(hit);
+            s.World.EffectHits.Add(new ToolEffectHit(3,new Float3(0,1.5f,.5f),Float3.Up));s.Act(ActionKind.Primary);s.Tick();
+            Assert.That(s.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==2).LifeState,Is.EqualTo(LifeState.Falling));
+            Assert.That(s.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==3).LifeState,Is.EqualTo(LifeState.Active));
+            Assert.That(s.Host.DrainEvents().Count(e=>e.Kind==GameplayEventKind.MosquitoKnockedDown),Is.EqualTo(1));
+        }
+        [Test] public void SwatterReachAndStrikeWindowScaleFromHandsExactlyOnce()
+        {
+            Assert.That(GameplayTools.FlyswatterShoulderReach/HumanEquipmentProfile.HandsReach,Is.EqualTo(1.35f).Within(.00001));
+            var hands=new Session();hands.World.PlanStrike=true;hands.Act(ActionKind.Primary);hands.Tick();uint handStart=hands.Host.CurrentTick;
+            while(hands.Host.CurrentTick<handStart+18)hands.Tick();Assert.That(hands.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==1).StrikeState.Phase,Is.EqualTo(StrikePhase.None));
+            var swatter=new Session(GameplayTools.Flyswatter);swatter.Pickup(1);swatter.World.PlanStrike=true;swatter.Act(ActionKind.Primary);swatter.Tick();uint toolStart=swatter.Host.CurrentTick;
+            while(swatter.Host.CurrentTick<toolStart+22)swatter.Tick();Assert.That(swatter.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==1).StrikeState.Phase,Is.EqualTo(StrikePhase.Recovery));
+            swatter.Tick();Assert.That(swatter.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==1).StrikeState.Phase,Is.EqualTo(StrikePhase.None));
+        }
+        [Test] public void RacketHasFivePulsesAndCannotFireWhenEmpty()
+        {
+            var s=new Session(GameplayTools.ElectricRacket);s.Pickup(1);
+            for(int shot=0;shot<5;shot++)
+            {
+                s.Act(ActionKind.Primary);s.Tick();Assert.That(s.World.Items[1].ResourceUnits,Is.EqualTo(4-shot));
+                for(int i=0;i<35;i++)s.Tick();
+            }
+            s.Act(ActionKind.Primary);s.Tick();Assert.That(s.World.Items[1].ResourceUnits,Is.Zero);Assert.That(s.Private.Rejection,Is.EqualTo(CommandReject.InvalidState));
+            Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.Zero);
+        }
+        [Test] public void RecoveredMosquitoProtectionRejectsFreshWeaponPulse()
+        {
+            var s=new Session(GameplayTools.ElectricRacket);s.Pickup(1);s.World.BugGrounded=true;s.World.RecoverySafe=true;
+            s.World.EffectHits.Add(new ToolEffectHit(2,new Float3(0,1.5f,.5f),Float3.Up));s.Act(ActionKind.Primary);s.Tick();
+            Assert.That(s.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==2).LifeState,Is.EqualTo(LifeState.Falling));
+            int guard=0;while(s.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==2).LifeState!=LifeState.Flying&&guard++<1000)s.Tick();
+            Assert.That(guard,Is.LessThan(1000));s.Host.DrainEvents();s.Act(ActionKind.Primary);s.Tick();
+            Assert.That(s.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==2).LifeState,Is.EqualTo(LifeState.Flying));
+            Assert.That(s.Host.DrainEvents().Any(e=>e.Kind==GameplayEventKind.MosquitoKnockedDown),Is.False);
+        }
+        [Test] public void WeaponEffectUsesSurvivalEliminationAndClosesRoundNormally()
+        {
+            var s=new Session(GameplayTools.ElectricRacket,GameModes.Survival);s.Pickup(1);
+            s.World.EffectHits.Add(new ToolEffectHit(2,new Float3(0,1.5f,.5f),Float3.Up));s.Act(ActionKind.Primary);s.Tick();
+            Assert.That(s.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==2).LifeState,Is.EqualTo(LifeState.Eliminated));
+            Assert.That(s.Host.CaptureSnapshot().Result,Is.EqualTo(RoundEndReason.AllOpponentsEliminated));
+            Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.Zero);
+        }
+        [Test] public void RemovalClearsAerosolWithoutRelyingOnRoundEnd()
+        {
+            var s=new Session(GameplayTools.Aerosol);s.Pickup(1);s.Tick(true);
+            Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.EqualTo(1));
+            s.Host.RemoveActor(1,ActorRemovalReason.Left);
+            Assert.That(s.Host.IsRunning,Is.True);Assert.That(s.Host.CaptureSnapshot().Actors.Any(a=>a.ActorId==3),Is.True);
+            Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.Zero);
+        }
+        [Test] public void DisconnectStopsNewSprayButExistingCloudExpiresNaturally()
+        {
+            var s=new Session(GameplayTools.Aerosol);s.Pickup(1);s.Tick(true);int remaining=s.World.Items[1].ResourceUnits;
+            s.Host.SetActorConnected(1,false);s.Host.Advance(new HostTick(s.Host.CurrentTick+1));
+            Assert.That(s.World.Items[1].ResourceUnits,Is.EqualTo(remaining));Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.EqualTo(1));
+            for(int i=0;i<35;i++)s.Host.Advance(new HostTick(s.Host.CurrentTick+1));
+            Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.Zero);
         }
     }
 }

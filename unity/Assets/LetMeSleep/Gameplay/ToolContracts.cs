@@ -38,10 +38,13 @@ namespace LetMeSleep.Gameplay
         public readonly uint ThrowerActorId;
         public readonly int ResourceUnits;
         public readonly bool ImpactConsumed;
+        public readonly uint CooldownUntilTick;
         public ToolPickupSnapshot(uint id, string toolId, Float3 position, Rotation rotation, uint ownerActorId = 0, uint revision = 1)
             : this(id, toolId, position, rotation, ownerActorId, revision, ownerActorId == 0 ? ToolPickupPhase.World : ToolPickupPhase.Held, default, 0, GameplayTools.InitialResourceUnits(toolId), false) { }
         public ToolPickupSnapshot(uint id, string toolId, Float3 position, Rotation rotation, uint ownerActorId, uint revision, ToolPickupPhase phase, Float3 velocity, uint throwerActorId, int resourceUnits, bool impactConsumed)
-        { PickupId = id; ToolId = toolId; Position = position; Rotation = rotation; OwnerActorId = ownerActorId; Revision = revision; Phase = phase; Velocity = velocity; ThrowerActorId = throwerActorId; ResourceUnits = resourceUnits; ImpactConsumed = impactConsumed; }
+            : this(id, toolId, position, rotation, ownerActorId, revision, phase, velocity, throwerActorId, resourceUnits, impactConsumed, 0) { }
+        public ToolPickupSnapshot(uint id, string toolId, Float3 position, Rotation rotation, uint ownerActorId, uint revision, ToolPickupPhase phase, Float3 velocity, uint throwerActorId, int resourceUnits, bool impactConsumed, uint cooldownUntilTick)
+        { PickupId = id; ToolId = toolId; Position = position; Rotation = rotation; OwnerActorId = ownerActorId; Revision = revision; Phase = phase; Velocity = velocity; ThrowerActorId = throwerActorId; ResourceUnits = resourceUnits; ImpactConsumed = impactConsumed; CooldownUntilTick = cooldownUntilTick; }
     }
     public readonly struct ToolInteractionQuery
     {

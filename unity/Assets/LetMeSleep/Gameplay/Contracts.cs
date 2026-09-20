@@ -13,10 +13,10 @@ namespace LetMeSleep.Gameplay
         public const string ElectricRacket = "electric_racket";
         public const string Aerosol = "aerosol";
         public static bool IsPickup(string id) => id == Flyswatter || id == Slipper || id == ElectricRacket || id == Aerosol;
-        public static int InitialResourceUnits(string id) => id == ElectricRacket ? 5 : id == Aerosol ? 120 : 0;
+        public static int InitialResourceUnits(string id) => id == ElectricRacket ? HumanEquipmentProfile.ElectricCharges : id == Aerosol ? HumanEquipmentProfile.AerosolFuelTicks : 0;
         public const float FlyswatterGripToImpact = .365f;
         public const float FlyswatterHeadRadius = .085f;
-        public const float FlyswatterShoulderReach = 1.05f;
+        public const float FlyswatterShoulderReach = HumanEquipmentProfile.HandsReach * HumanEquipmentProfile.FlyswatterReachMultiplier;
         public static bool IsFlyswatter(string id) => id == Flyswatter || id == "swatter";
     }
     public readonly struct Float2
@@ -297,14 +297,19 @@ namespace LetMeSleep.Gameplay
         public IReadOnlyList<ActorSnapshot> Actors { get; }
         public IReadOnlyList<DoorSnapshot> Doors { get; }
         public IReadOnlyList<ToolPickupSnapshot> ToolPickups { get; }
+        public IReadOnlyList<ToolEffectSnapshot> ToolEffects { get; }
         public GameSessionState(GameplayRoundConfig config, uint tick, SimulationPhase phase, float blood, RoundEndReason result, PlayerRole winner, IReadOnlyList<ActorSnapshot> actors, IReadOnlyList<DoorSnapshot> doors, IReadOnlyList<ToolPickupSnapshot> toolPickups = null, int tasksCompleted = 0, int tasksGoal = 0, int viableTaskOpportunities = 0)
             : this(config.SessionEpoch, config.RoundId, tick, config.MapId, config.ContentHash, config.BalanceHash, config.ModeId, phase, tick >= config.RoundDurationTicks ? 0 : config.RoundDurationTicks - tick, blood, config.BloodGoal, result, winner, actors, doors, toolPickups, tasksCompleted, tasksGoal, viableTaskOpportunities) { }
+        public GameSessionState(GameplayRoundConfig config, uint tick, SimulationPhase phase, float blood, RoundEndReason result, PlayerRole winner, IReadOnlyList<ActorSnapshot> actors, IReadOnlyList<DoorSnapshot> doors, IReadOnlyList<ToolPickupSnapshot> toolPickups, int tasksCompleted, int tasksGoal, int viableTaskOpportunities, IReadOnlyList<ToolEffectSnapshot> toolEffects)
+            : this(config.SessionEpoch, config.RoundId, tick, config.MapId, config.ContentHash, config.BalanceHash, config.ModeId, phase, tick >= config.RoundDurationTicks ? 0 : config.RoundDurationTicks - tick, blood, config.BloodGoal, result, winner, actors, doors, toolPickups, tasksCompleted, tasksGoal, viableTaskOpportunities, toolEffects) { }
         // Wire DTO constructor: codec validates roster and mode-payload coherence before construction;
         // replica verifies map/content/balance identity against the accepted Begin config.
         public GameSessionState(ulong sessionEpoch, ulong roundId, uint tick, string mapId, string contentHash, string balanceHash, string modeId, SimulationPhase phase, uint timeRemainingTicks, float blood, float bloodGoal, RoundEndReason result, PlayerRole winner, IReadOnlyList<ActorSnapshot> actors, IReadOnlyList<DoorSnapshot> doors, IReadOnlyList<ToolPickupSnapshot> toolPickups = null, int tasksCompleted = 0, int tasksGoal = 0, int viableTaskOpportunities = 0)
+            : this(sessionEpoch, roundId, tick, mapId, contentHash, balanceHash, modeId, phase, timeRemainingTicks, blood, bloodGoal, result, winner, actors, doors, toolPickups, tasksCompleted, tasksGoal, viableTaskOpportunities, null) { }
+        public GameSessionState(ulong sessionEpoch, ulong roundId, uint tick, string mapId, string contentHash, string balanceHash, string modeId, SimulationPhase phase, uint timeRemainingTicks, float blood, float bloodGoal, RoundEndReason result, PlayerRole winner, IReadOnlyList<ActorSnapshot> actors, IReadOnlyList<DoorSnapshot> doors, IReadOnlyList<ToolPickupSnapshot> toolPickups, int tasksCompleted, int tasksGoal, int viableTaskOpportunities, IReadOnlyList<ToolEffectSnapshot> toolEffects)
         {
             if (sessionEpoch == 0 || roundId == 0 || tick > 54000 || timeRemainingTicks > 54000 - tick || !GameModes.IsValid(modeId) || string.IsNullOrWhiteSpace(mapId) || string.IsNullOrWhiteSpace(contentHash) || string.IsNullOrWhiteSpace(balanceHash) || !Enum.IsDefined(typeof(SimulationPhase), phase) || !Enum.IsDefined(typeof(RoundEndReason), result) || !Enum.IsDefined(typeof(PlayerRole), winner) || !MathEx.Finite(blood) || !MathEx.Finite(bloodGoal) || blood < 0 || blood > bloodGoal || bloodGoal > 1000 || tasksCompleted < 0 || tasksGoal < 0 || tasksGoal > viableTaskOpportunities || tasksCompleted > viableTaskOpportunities || viableTaskOpportunities > 9000 || (modeId == GameModes.Tasks ? tasksGoal == 0 : tasksCompleted != 0 || tasksGoal != 0 || viableTaskOpportunities != 0) || (modeId == GameModes.Blood ? bloodGoal <= 0 : blood != 0 || bloodGoal != 0)) throw new ArgumentException("Invalid session snapshot.");
-            ModeId = modeId; TasksCompleted = tasksCompleted; TasksGoal = tasksGoal; ViableTaskOpportunities = viableTaskOpportunities; SessionEpoch = sessionEpoch; RoundId = roundId; HostTick = tick; MapId = mapId; ContentHash = contentHash; BalanceHash = balanceHash; SimulationPhase = phase; TimeRemainingTicks = timeRemainingTicks; BloodCollected = blood; BloodGoal = bloodGoal; Result = result; Winner = winner; Actors = Array.AsReadOnly(GameplayRoundConfig.Copy(actors)); Doors = Array.AsReadOnly(GameplayRoundConfig.Copy(doors)); ToolPickups = Array.AsReadOnly(GameplayRoundConfig.Copy(toolPickups));
+            ModeId = modeId; TasksCompleted = tasksCompleted; TasksGoal = tasksGoal; ViableTaskOpportunities = viableTaskOpportunities; SessionEpoch = sessionEpoch; RoundId = roundId; HostTick = tick; MapId = mapId; ContentHash = contentHash; BalanceHash = balanceHash; SimulationPhase = phase; TimeRemainingTicks = timeRemainingTicks; BloodCollected = blood; BloodGoal = bloodGoal; Result = result; Winner = winner; Actors = Array.AsReadOnly(GameplayRoundConfig.Copy(actors)); Doors = Array.AsReadOnly(GameplayRoundConfig.Copy(doors)); ToolPickups = Array.AsReadOnly(GameplayRoundConfig.Copy(toolPickups)); ToolEffects = Array.AsReadOnly(GameplayRoundConfig.Copy(toolEffects));
         }
     }
     public interface IGameplayCommandSink
