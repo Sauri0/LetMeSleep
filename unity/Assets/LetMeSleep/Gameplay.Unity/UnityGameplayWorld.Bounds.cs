@@ -20,10 +20,23 @@ namespace LetMeSleep.Gameplay.Unity
             internal uint LastObservation;
             internal bool HasObservation;
             internal bool RescueUnsettled;
+            internal RecoveryDestination PendingRecovery;
+            internal readonly List<RecoveryDestination> RejectedDestinations = new List<RecoveryDestination>();
             internal uint LastStableTick;
             internal int StableTicks;
             internal BoundsRecoveryStatus Reported;
         }
+        private sealed class RecoveryDestination
+        {
+            internal Collider Support;
+            internal bool SupportLocal;
+            internal Vector3 Point;
+            internal Vector3 WorldPoint;
+            internal uint RejectedUntil;
+        }
+        private const float SupportContinuityTolerance = .02f;
+        private const float DestinationMatchTolerance = .01f;
+        private const int DestinationQuarantineCooldowns = 3;
         private readonly Dictionary<uint, BoundsMemory> boundsMemory = new Dictionary<uint, BoundsMemory>();
         private GameplayRecoveryVolume recoveryVolume;
         private GameplayRecoveryVolume.Settings recoverySettings;
@@ -81,17 +94,29 @@ namespace LetMeSleep.Gameplay.Unity
                         memory.StableTicks = memory.StableTicks > 0 && query.Tick == memory.LastStableTick + 1
                             ? memory.StableTicks + 1 : 1;
                         memory.LastStableTick = query.Tick;
-                        if(memory.StableTicks >= 30) memory.RescueUnsettled = false;
+                        if (memory.StableTicks >= 30)
+                        {
+                            memory.RescueUnsettled = false;
+                            memory.PendingRecovery = null;
+                            memory.RejectedDestinations.Clear();
+                        }
                     }
                     else memory.StableTicks = 0;
                 }
                 memory.Reported = BoundsRecoveryStatus.NotRequired;
                 return new BoundsRecoveryResult(BoundsRecoveryStatus.NotRequired);
             }
-            // A validated destination that falls straight back out is not repeatedly teleported.
-            // Wait for a real stable return or a new round/configuration; expose the failure.
-            if (memory.RescueUnsettled)
-                return Report(query.ActorId, memory, BoundsRecoveryStatus.UnstableRecovery);
+            // A destination that failed before the actor had a stable return is quarantined for
+            // this recovery episode. Other destinations remain available after the normal
+            // cooldown; quarantine itself expires after a longer bounded interval so a repaired
+            // support can be revalidated without allowing immediate A/B teleport ping-pong.
+            uint recoveryTick = query.Tick;
+            if (memory.RescueUnsettled && memory.PendingRecovery != null)
+            {
+                RejectDestination(memory, memory.PendingRecovery, recoveryTick);
+                memory.PendingRecovery = null;
+            }
+            memory.RejectedDestinations.RemoveAll(destination => !RejectionActive(destination, recoveryTick));
             if (memory.HasAttempt && query.Tick - memory.LastAttempt < (uint)recoverySettings.RetryTicks)
                 return new BoundsRecoveryResult(BoundsRecoveryStatus.RetryDeferred);
             memory.HasAttempt = true; memory.LastAttempt = query.Tick;
@@ -99,33 +124,76 @@ namespace LetMeSleep.Gameplay.Unity
             {
                 bool supportValid = !memory.SafePointIsSupportLocal || IsSupport(memory.Support);
                 var candidate = memory.Support ? memory.Support.transform.TransformPoint(memory.SafePoint) : memory.SafePoint;
-                if (supportValid && TrySafe(query, candidate, out var safe, out _))
-                    return Report(query.ActorId, memory, BoundsRecoveryStatus.Recovered, safe, NeedsGroundSupport(query));
+                if (supportValid && TrySafe(query, candidate, out var safe, out var support)
+                    && !RejectedDestination(memory, safe, support, recoveryTick))
+                    return Report(query.ActorId, memory, BoundsRecoveryStatus.Recovered, safe,
+                        NeedsGroundSupport(query), support);
             }
             var authored = query.Role == PlayerRole.Human ? recoverySettings.HumanSpawnPoints : recoverySettings.MosquitoSpawnPoints;
             for (int i = 0; i < (authored.Length > 0 ? authored.Length : memory.Spawns.Length); i++)
             {
                 var candidate = authored.Length > 0 ? recoveryVolume.transform.TransformPoint(authored[i]) : memory.Spawns[i];
-                if (TrySafe(query, candidate, out var safe, out _))
-                    return Report(query.ActorId, memory, BoundsRecoveryStatus.Recovered, safe, NeedsGroundSupport(query));
+                if (TrySafe(query, candidate, out var safe, out var support)
+                    && !RejectedDestination(memory, safe, support, recoveryTick))
+                    return Report(query.ActorId, memory, BoundsRecoveryStatus.Recovered, safe,
+                        NeedsGroundSupport(query), support);
             }
             return Report(query.ActorId, memory, BoundsRecoveryStatus.NoSafeDestination);
         }
 
         private BoundsRecoveryResult Report(uint actor, BoundsMemory memory, BoundsRecoveryStatus status,
-            Vector3 point = default, bool grounded = false)
+            Vector3 point = default, bool grounded = false, Collider support = null)
         {
             if (memory == null || memory.Reported != status || status == BoundsRecoveryStatus.Recovered)
             {
                 if (memory != null) memory.Reported = status;
                 if (memory != null && status == BoundsRecoveryStatus.Recovered)
-                { memory.RescueUnsettled = true; memory.StableTicks = 0; }
+                {
+                    memory.RescueUnsettled = true;
+                    memory.StableTicks = 0;
+                    memory.PendingRecovery = CaptureDestination(point, support);
+                }
                 BoundsRecoveryReported?.Invoke(actor, status);
                 if (status == BoundsRecoveryStatus.NoSafeDestination || status == BoundsRecoveryStatus.InvalidConfiguration
                     || status == BoundsRecoveryStatus.UnstableRecovery)
                     Debug.LogWarning($"LMS_BOUNDS_RECOVERY actor={actor} status={status}", this);
             }
             return new BoundsRecoveryResult(status, point.ToFloat(), grounded);
+        }
+        private static RecoveryDestination CaptureDestination(Vector3 point, Collider support)
+            => new RecoveryDestination
+            {
+                Support = support,
+                SupportLocal = support,
+                Point = support ? support.transform.InverseTransformPoint(point) : point,
+                WorldPoint = point
+            };
+        private void RejectDestination(BoundsMemory memory, RecoveryDestination destination, uint tick)
+        {
+            uint duration = (uint)(recoverySettings.RetryTicks * DestinationQuarantineCooldowns);
+            var rejected = memory.RejectedDestinations.FirstOrDefault(candidate => SameDestination(candidate, destination));
+            if (rejected == null) memory.RejectedDestinations.Add(destination);
+            else destination = rejected;
+            destination.RejectedUntil = tick + duration;
+        }
+        private static bool RejectedDestination(BoundsMemory memory, Vector3 point, Collider support, uint tick)
+            => memory.RejectedDestinations.Any(rejected => RejectionActive(rejected, tick)
+                && SameDestination(rejected, point, support));
+        private static bool RejectionActive(RecoveryDestination destination, uint tick)
+            => unchecked((int)(destination.RejectedUntil - tick)) > 0;
+        private static bool SameDestination(RecoveryDestination destination, Vector3 point, Collider support)
+        {
+            float tolerance = DestinationMatchTolerance * DestinationMatchTolerance;
+            if (destination.SupportLocal && support && ReferenceEquals(destination.Support, support))
+                return (destination.Point - support.transform.InverseTransformPoint(point)).sqrMagnitude <= tolerance;
+            return (destination.WorldPoint - point).sqrMagnitude <= tolerance;
+        }
+        private static bool SameDestination(RecoveryDestination first, RecoveryDestination second)
+        {
+            float tolerance = DestinationMatchTolerance * DestinationMatchTolerance;
+            if (first.SupportLocal && second.SupportLocal && ReferenceEquals(first.Support, second.Support))
+                return (first.Point - second.Point).sqrMagnitude <= tolerance;
+            return (first.WorldPoint - second.WorldPoint).sqrMagnitude <= tolerance;
         }
         private bool InFallZone(PlayerRole role, Vector3 position)
         {
@@ -167,9 +235,15 @@ namespace LetMeSleep.Gameplay.Unity
                 foreach (var step in new[] { Vector3.right, Vector3.left, Vector3.forward, Vector3.back })
                 {
                     var p = new Vector3(safe.x, footY, safe.z) + step * offset;
-                    if (!Physics.RaycastAll(p + Vector3.up * reach, Vector3.down, 2 * reach,
-                        GeometryMask, QueryTriggerInteraction.Ignore).Any(h => IsSupport(h.collider)
-                            && h.normal.y >= .55f && !InFallZone(q.Role, h.point))) return false;
+                    var peripheral = Physics.RaycastAll(p + Vector3.up * reach, Vector3.down, 2 * reach,
+                            GeometryMask, QueryTriggerInteraction.Ignore).OrderBy(h => h.distance)
+                        .FirstOrDefault(h => IsSupport(h.collider));
+                    if (!peripheral.collider || peripheral.normal.y < .55f
+                        || InFallZone(q.Role, peripheral.point)) return false;
+                    float dx = peripheral.point.x - hit.point.x;
+                    float dz = peripheral.point.z - hit.point.z;
+                    float expectedY = hit.point.y - (hit.normal.x * dx + hit.normal.z * dz) / hit.normal.y;
+                    if (Mathf.Abs(peripheral.point.y - expectedY) > SupportContinuityTolerance) return false;
                 }
             }
             if (InFallZone(q.Role, safe) || !EntirelyInside(q, safe)) return false;
