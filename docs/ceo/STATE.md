@@ -1,5 +1,20 @@
 # Relevo CEO — 2026-09-19
 
+## Incidente launcher Defender — posterior a publicación
+
+Usuario reportó bloqueo al abrir launcher. Defender confirmó
+Behavior:Win32/DefenseEvasion.A!ml en Desktop y original publicado bajo Artifacts.
+Se retiraron launcher1.2.0 y su checksum de la releasev0.2.0, con aviso público.
+No se restauró cuarentena, no se alteraron protecciones ni se recompiló para
+sortear detección. No se ha confirmado falso positivo; análisis Microsoft pendiente
+de realizar, no enviado. Original bloqueado impide recalcular hash actual.
+
+La instalación del juego descargada anteriormente pasó examen personalizado
+Defender completo (scan85D58BA6-7C32-468A-8AAA-764A5B64CD3C), sin nuevas detecciones
+del juego observadas. ZIP sigue disponible para extracción manual con Defender
+activo. Esto no certifica seguridad absoluta ni arregla el launcher.
+Evidencia: N:/LetMeSleep/Validation/V020/LauncherDefender01.
+
 ## Entrega acelerada solicitada — v0.2.0 publicada
 
 Branko pidió cerrar cuanto antes por cuota escasa de Codex (5% restante al
