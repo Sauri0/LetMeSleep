@@ -1,0 +1,187 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using LetMeSleep.Core;
+using LetMeSleep.Gameplay;
+using NUnit.Framework;
+
+namespace LetMeSleep.Tests.EditMode
+{
+    public sealed class GameplayEquipmentAuthorityTests
+    {
+        sealed class World : IGameplayWorld, IGameplayEquipmentWorld
+        {
+            public readonly Dictionary<uint,ToolPickupSnapshot> Items=new Dictionary<uint,ToolPickupSnapshot>();
+            public readonly Queue<ToolProjectileHit> Hits=new Queue<ToolProjectileHit>();
+            public uint Candidate=1;
+            public bool Deposit=true,Prepare=true,Grounded=true;
+            public int Prepared,Sweeps;
+            public MotorQuery LastHuman;
+            public void BeginRound(IReadOnlyList<SpawnActor> a,IReadOnlyList<DoorDefinition> d){}
+            public void SynchronizeActors(IReadOnlyList<ActorSnapshot> a){}
+            public MotorResult MoveHuman(in MotorQuery q){if(q.ActorId==1)LastHuman=q;return new MotorResult(q.Position+q.Velocity/30,q.Velocity,Grounded,Float3.Up,q.CrouchFraction);}
+            public MotorResult MoveMosquito(in MotorQuery q)=>new MotorResult(q.Position,q.Velocity,false,Float3.Up,0);
+            public bool TrySurface(in SurfaceQuery q,out SurfaceContact c){c=default;return false;}
+            public bool ResolveSurface(in SurfaceAttachment a,out SurfaceContact c){c=default;return false;}
+            public bool TryBiteContact(in BiteQuery q,out BiteContact c){c=default;return false;}
+            public bool ResolveBite(uint id,in BiteAttachment b,int humans,out BiteContact c){c=default;return false;}
+            public bool TryPlanStrike(uint id,Float3 aim,string tool,out StrikePlan p){p=default;return false;}
+            public StrikeHit SweepStrike(in StrikeSweep q)=>default;
+            public bool TryFreeRecoveryPoint(uint id,Float3 p,out Float3 point){point=p;return false;}
+            public bool HasLineOfSight(uint id,Float3 p,uint other,Float3 end)=>true;
+            public bool TryDoorInteraction(in DoorInteractionQuery q,out DoorInteractionCandidate c){c=default;return false;}
+            public DoorSweepResult SweepDoor(in DoorMotionQuery q)=>new DoorSweepResult(q.ToAngleRadians,false);
+            public void ApplyDoorPose(in DoorPose p){}
+            public void BeginTools(IReadOnlyList<ToolPickupDefinition> d){Items.Clear();}
+            public bool TryToolInteraction(in ToolInteractionQuery q,out ToolInteractionCandidate c)
+            {if(Items.TryGetValue(Candidate,out var item)){c=new ToolInteractionCandidate(Candidate,item.Revision,1);return true;}c=default;return false;}
+            public bool TryDropTool(uint actor,out Float3 p,out Rotation r)=>TryDropTool(actor,0,out p,out r);
+            public bool TryDropTool(uint actor,uint pickup,out Float3 p,out Rotation r){p=new Float3(.8f,0,0);r=Rotation.Identity;return Deposit;}
+            public void ApplyToolState(in ToolPickupSnapshot s)=>Items[s.PickupId]=s;
+            public bool TryPrepareThrow(uint actor,uint pickup,Float3 aim,float power,out Float3 p,out Rotation r,out Float3 v)
+            {Prepared++;p=new Float3(0,1.5f,.5f);r=Rotation.Identity;v=aim*(6+8*power)+Float3.Up*1.5f;return Prepare;}
+            public bool SweepProjectile(in ToolProjectileQuery q,out ToolProjectileHit h){Sweeps++;if(Hits.Count>0){h=Hits.Dequeue();return true;}h=default;return false;}
+        }
+        sealed class Session
+        {
+            public readonly World World=new World();public readonly GameplayAuthority Host;
+            private uint input,action;
+            public Session(string firstTool=GameplayTools.Slipper)
+            {
+                Host=new GameplayAuthority(World);
+                var definitions=new[]{new ToolPickupDefinition(1,firstTool,Float3.Zero,Rotation.Identity),new ToolPickupDefinition(2,GameplayTools.Flyswatter,Float3.Forward,Rotation.Identity),new ToolPickupDefinition(3,GameplayTools.ElectricRacket,new Float3(2,0,0),Rotation.Identity),new ToolPickupDefinition(4,GameplayTools.Aerosol,new Float3(3,0,0),Rotation.Identity)};
+                Host.BeginRound(new GameplayRoundConfig(1,1,"map","hash",tools:definitions),new[]{new SpawnActor(1,"human",PlayerRole.Human,Float3.Zero),new SpawnActor(2,"bug",PlayerRole.Mosquito,new Float3(0,1,2)),new SpawnActor(3,"other",PlayerRole.Human,new Float3(3,0,0))});
+            }
+            public ActorPrivateState Private=>Host.CapturePrivate(1);
+            CommandHeader Header(uint seq)=>new CommandHeader(1,1,1,seq,Host.CurrentTick,Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==1).ViewRevision);
+            public void Input(bool primary=false,bool sprint=false,bool move=false)
+            {Assert.That(Host.SubmitInput("human",new PlayerInputCommand(Header(++input),move?new Float2(0,1):default,0,0,0,Float3.Forward,sprint,false,false,false,primary)),Is.EqualTo(CommandReject.None));}
+            public PlayerActionCommand Act(ActionKind kind,bool payload=false,int? slot=null)
+            {
+                var state=Private;uint item=state.Inventory.ActivePickup;
+                uint revision=item==0?0:World.Items[item].Revision;
+                var command=payload?new PlayerActionCommand(Header(++action),kind,Float3.Forward,slot??state.Inventory.SelectedSlot,kind==ActionKind.SelectInventorySlot?0:item,kind==ActionKind.SelectInventorySlot?0:revision,state.Inventory.Revision):new PlayerActionCommand(Header(++action),kind,Float3.Forward);
+                Assert.That(Host.SubmitAction("human",command),Is.EqualTo(CommandReject.None));return command;
+            }
+            public void Tick(bool primary=false,bool sprint=false,bool move=false){Input(primary,sprint,move);Host.Advance(new HostTick(Host.CurrentTick+1));}
+            public void Pickup(uint id){World.Candidate=id;Act(ActionKind.Use);Tick();}
+            public void BeginCharge(){Input(true);Act(ActionKind.BeginThrow,true);Tick(true);Assert.That(Private.ThrowCharge.Active,Is.True);Assert.That(Private.ThrowCharge.ElapsedTicks,Is.Zero);}
+            public void Confirm()
+            {
+                var o=Private.SwapOffer.Value;
+                var c=new PlayerActionCommand(Header(++action),ActionKind.ConfirmPickup,Float3.Forward,o.SlotIndex,o.PickupId,o.PickupRevision,o.InventoryRevision);
+                Assert.That(Host.SubmitAction("human",c),Is.EqualTo(CommandReject.None));Tick();
+            }
+        }
+        [Test] public void HumanSprintConsumesButMosquitoPrivateStateHasNoHumanInventory()
+        {
+            var s=new Session();for(int i=0;i<30;i++)s.Tick(sprint:true,move:true);
+            Assert.That(s.Private.StaminaUnits,Is.EqualTo(25200));Assert.That(s.World.LastHuman.Velocity.Z,Is.EqualTo(5).Within(.0001));
+            var bug=s.Host.CapturePrivate(2);Assert.That(bug.StaminaUnits,Is.Zero);Assert.That(bug.Inventory.SelectedSlot,Is.EqualTo(-1));
+        }
+        [Test] public void GroundedJumpCostsOnceAndAirJumpIsFreeRejection()
+        {
+            var s=new Session();s.Tick();s.Act(ActionKind.Jump);s.Act(ActionKind.Jump);s.Tick();
+            Assert.That(s.Private.StaminaUnits,Is.EqualTo(27000));
+            s.World.Grounded=false;s.Tick();int before=s.Private.StaminaUnits;s.Act(ActionKind.Jump);s.Tick();
+            Assert.That(s.Private.StaminaUnits,Is.GreaterThanOrEqualTo(before));Assert.That(s.Private.Rejection,Is.EqualTo(CommandReject.InvalidState));
+        }
+        [Test] public void ThreeSlotsSwapOnlyAfterConfirmationAndSafeDeposit()
+        {
+            var s=new Session();s.Pickup(1);s.Pickup(2);s.Pickup(3);s.Pickup(4);
+            Assert.That(s.Private.SwapOffer.HasValue,Is.True);Assert.That(s.Private.Inventory.Slot2,Is.EqualTo(3));
+            s.World.Deposit=false;s.Confirm();Assert.That(s.Private.Inventory.Slot2,Is.EqualTo(3));Assert.That(s.World.Items[4].OwnerActorId,Is.Zero);
+            s.World.Deposit=true;s.Confirm();Assert.That(s.Private.Inventory.Slot2,Is.EqualTo(4));Assert.That(s.World.Items[3].OwnerActorId,Is.Zero);Assert.That(s.World.Items[3].ResourceUnits,Is.EqualTo(5));
+        }
+        [Test] public void AnotherHumanCannotDuplicateAnOwnedPickup()
+        {
+            var s=new Session();s.Pickup(1);
+            var c=new PlayerActionCommand(new CommandHeader(1,1,3,1,s.Host.CurrentTick,1),ActionKind.Use,Float3.Forward);
+            Assert.That(s.Host.SubmitAction("other",c),Is.EqualTo(CommandReject.None));s.Tick();
+            Assert.That(s.World.Items[1].OwnerActorId,Is.EqualTo(1));Assert.That(s.Host.CapturePrivate(3).Inventory.ActivePickup,Is.Zero);
+        }
+        [Test] public void ExplicitReleaseConsumesChargeOnceAndReusesPickupIdentity()
+        {
+            var s=new Session();s.Pickup(1);s.BeginCharge();for(int i=0;i<27;i++)s.Tick(true);
+            var command=s.Act(ActionKind.ReleaseThrow,true);s.Tick(true);
+            Assert.That(s.World.Items[1].Phase,Is.EqualTo(ToolPickupPhase.Projectile));Assert.That(s.Private.StaminaUnits,Is.EqualTo(25500));Assert.That(s.Private.Inventory.ActivePickup,Is.Zero);
+            Assert.That(s.Host.SubmitAction("human",command),Is.EqualTo(CommandReject.None));s.Tick();
+            Assert.That(s.World.Prepared,Is.EqualTo(1));Assert.That(s.World.Items.Count,Is.EqualTo(4));
+        }
+        [Test] public void AutoReleaseOccursAtFortyFiveHostTicksNotBeginTick()
+        {
+            var s=new Session();s.Pickup(1);s.BeginCharge();for(int i=0;i<44;i++)s.Tick(true);
+            Assert.That(s.Private.ThrowCharge.ElapsedTicks,Is.EqualTo(44));Assert.That(s.World.Prepared,Is.Zero);
+            s.Tick(true);Assert.That(s.World.Prepared,Is.EqualTo(1));Assert.That(s.Private.StaminaUnits,Is.EqualTo(25500));
+        }
+        [Test] public void QuickBeginAndReleaseSameBatchWithNeutralThrowsAtMinimumPower()
+        {
+            var s=new Session();s.Pickup(1);s.Input(false);s.Act(ActionKind.BeginThrow,true);s.Act(ActionKind.ReleaseThrow,true);s.Tick(false);
+            Assert.That(s.World.Prepared,Is.EqualTo(1));Assert.That(s.Private.StaminaUnits,Is.EqualTo(27600));
+            Assert.That(s.World.Items[1].Phase,Is.EqualTo(ToolPickupPhase.Projectile));
+        }
+        [Test] public void ReliableBeginOvertakingHeldInputStaysFrozenWithoutAutoRelease()
+        {
+            var s=new Session();s.Pickup(1);s.Input(false);s.Act(ActionKind.BeginThrow,true);s.Tick(false);
+            Assert.That(s.Private.ThrowCharge.Active,Is.True);Assert.That(s.Private.ThrowCharge.AwaitingRelease,Is.True);
+            for(int i=0;i<29;i++)s.Tick(true);
+            Assert.That(s.Private.ThrowCharge.ElapsedTicks,Is.Zero);Assert.That(s.World.Prepared,Is.Zero);
+            s.Tick(true);Assert.That(s.Private.ThrowCharge.Active,Is.False);
+        }
+        [Test] public void NeutralBeforeFocusCancelCannotAutoThrow()
+        {
+            var s=new Session();s.Pickup(1);s.BeginCharge();for(int i=0;i<44;i++)s.Tick(true);
+            s.Input(false);s.Act(ActionKind.CancelThrow);s.Tick(false);
+            Assert.That(s.World.Prepared,Is.Zero);Assert.That(s.Private.Inventory.ActivePickup,Is.EqualTo(1));Assert.That(s.Private.StaminaUnits,Is.EqualTo(30000));
+        }
+        [Test] public void NeutralFreezesPowerUntilExplicitReleaseAndOrphanTimesOut()
+        {
+            var s=new Session();s.Pickup(1);s.BeginCharge();for(int i=0;i<10;i++)s.Tick(true);
+            s.Tick(false);for(int i=0;i<10;i++)s.Tick(false);
+            Assert.That(s.Private.ThrowCharge.ElapsedTicks,Is.EqualTo(10));s.Act(ActionKind.ReleaseThrow,true);s.Tick(false);
+            Assert.That(s.Private.StaminaUnits,Is.EqualTo(30000-HumanEquipmentProfile.ThrowCost(10)));
+            var orphan=new Session();orphan.Pickup(1);orphan.BeginCharge();for(int i=0;i<30;i++)orphan.Tick(false);
+            Assert.That(orphan.Private.ThrowCharge.Active,Is.False);Assert.That(orphan.World.Prepared,Is.Zero);
+        }
+        [Test] public void StaleInputAndDisconnectCancelChargeWithoutLosingInventory()
+        {
+            var s=new Session();s.Pickup(1);s.BeginCharge();for(int i=0;i<7;i++)s.Host.Advance(new HostTick(s.Host.CurrentTick+1));
+            Assert.That(s.Private.ThrowCharge.Active,Is.False);Assert.That(s.World.Prepared,Is.Zero);
+            s.BeginCharge();s.Host.SetActorConnected(1,false);Assert.That(s.Private.ThrowCharge.Active,Is.False);Assert.That(s.Private.Inventory.ActivePickup,Is.EqualTo(1));
+            s.Host.SetActorConnected(1,true);Assert.That(s.Private.Inventory.ActivePickup,Is.EqualTo(1));Assert.That(s.Private.StaminaUnits,Is.EqualTo(30000));
+        }
+        [Test] public void InsufficientReleaseKeepsItemAndDoesNotPrepareProjectile()
+        {
+            var s=new Session();s.Pickup(1);for(int i=0;i<188;i++)s.Tick(sprint:true,move:true);
+            s.BeginCharge();int before=s.Private.StaminaUnits;s.Act(ActionKind.ReleaseThrow,true);s.Tick();
+            Assert.That(s.Private.Inventory.ActivePickup,Is.EqualTo(1));Assert.That(s.World.Prepared,Is.Zero);Assert.That(s.Private.StaminaUnits,Is.GreaterThanOrEqualTo(before));
+        }
+        [Test] public void FirstWallHitConsumesDamageAndKeepsFallingUntilSupport()
+        {
+            var s=new Session();s.Pickup(1);s.BeginCharge();s.World.Hits.Enqueue(new ToolProjectileHit(0,new Float3(0,1,.6f),new Float3(1,0,0),.5f));
+            s.Act(ActionKind.ReleaseThrow,true);s.Tick();Assert.That(s.World.Items[1].Phase,Is.EqualTo(ToolPickupPhase.Projectile));Assert.That(s.World.Items[1].ImpactConsumed,Is.True);
+            s.World.Hits.Enqueue(new ToolProjectileHit(2,new Float3(0,0,.6f),Float3.Up,.5f));s.Tick();
+            Assert.That(s.World.Items[1].Phase,Is.EqualTo(ToolPickupPhase.Projectile));Assert.That(s.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==2).LifeState,Is.EqualTo(LifeState.Flying));
+            s.World.Hits.Enqueue(new ToolProjectileHit(0,new Float3(0,0,.6f),Float3.Up,.5f));s.Tick();
+            Assert.That(s.World.Items[1].Phase,Is.EqualTo(ToolPickupPhase.World));
+        }
+        [Test] public void ActorHeadIsNotAStaticRestingPlaceForPickup()
+        {
+            var s=new Session();s.Pickup(1);s.BeginCharge();s.World.Hits.Enqueue(new ToolProjectileHit(3,new Float3(0,1.8f,.6f),Float3.Up,.5f));
+            s.Act(ActionKind.ReleaseThrow,true);s.Tick();
+            Assert.That(s.World.Items[1].Phase,Is.EqualTo(ToolPickupPhase.Projectile));Assert.That(s.World.Items[1].ImpactConsumed,Is.True);
+            s.Tick();Assert.That(s.World.Items[1].Velocity.Y,Is.LessThan(0));
+        }
+        [Test] public void InitialOverlapRecoversWithoutNewDamage()
+        {
+            var s=new Session();s.Pickup(1);s.BeginCharge();s.World.Hits.Enqueue(new ToolProjectileHit(2,new Float3(9,9,9),Float3.Up,0,true));
+            s.Act(ActionKind.ReleaseThrow,true);s.Tick();Assert.That(s.World.Items[1].Phase,Is.EqualTo(ToolPickupPhase.World));Assert.That(s.World.Items[1].Position.Length,Is.Zero);
+            Assert.That(s.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==2).LifeState,Is.EqualTo(LifeState.Flying));
+        }
+        [Test] public void RemovingHumanDepositsEverySlotWithoutRechargingResources()
+        {
+            var s=new Session();s.Pickup(1);s.Pickup(2);s.Pickup(3);s.World.Deposit=false;s.Host.RemoveActor(1,ActorRemovalReason.Left);
+            Assert.That(s.World.Items.Values.All(i=>i.OwnerActorId==0),Is.True);Assert.That(s.World.Items[3].ResourceUnits,Is.EqualTo(5));
+        }
+    }
+}

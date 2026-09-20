@@ -9,6 +9,11 @@ namespace LetMeSleep.Gameplay
     {
         public const string Hands = "hands";
         public const string Flyswatter = "flyswatter";
+        public const string Slipper = "slipper";
+        public const string ElectricRacket = "electric_racket";
+        public const string Aerosol = "aerosol";
+        public static bool IsPickup(string id) => id == Flyswatter || id == Slipper || id == ElectricRacket || id == Aerosol;
+        public static int InitialResourceUnits(string id) => id == ElectricRacket ? 5 : id == Aerosol ? 120 : 0;
         public const float FlyswatterGripToImpact = .365f;
         public const float FlyswatterHeadRadius = .085f;
         public const float FlyswatterShoulderReach = 1.05f;
@@ -59,7 +64,7 @@ namespace LetMeSleep.Gameplay
     public enum LifeState : byte { Active, Flying, ApproachingSurface, Surface, PreparingBite, Biting, Falling, Fainted, Stunned, Recovering, Eliminated }
     public enum SimulationPhase : byte { Running, Ended }
     public enum StrikePhase : byte { None, Windup, Active, Recovery }
-    public enum ActionKind : byte { Jump, Primary, PerchToggle, Detach, Use, DropTool }
+    public enum ActionKind : byte { Jump, Primary, PerchToggle, Detach, Use, DropTool, SelectInventorySlot, BeginThrow, ReleaseThrow, CancelThrow, ConfirmPickup }
     public enum CommandReject : byte { None, UnknownActor, WrongOwner, WrongRound, StaleSequence, InvalidNumber, InvalidDirection, WrongRole, InvalidState, Cooldown, OutOfReach, Obstructed, OldViewRevision, RateLimited }
     public enum RoundEndReason : byte { None, BloodGoal, TimeExpired, OpponentLeft, Aborted, AllOpponentsEliminated, TasksMet, TasksMissed }
     public enum ActorRemovalReason : byte { Left, Disconnected }
@@ -80,15 +85,22 @@ namespace LetMeSleep.Gameplay
         public readonly float Vertical, ViewYawRadians, ViewPitchRadians;
         public readonly Float3 AimForward;
         public readonly bool SprintHeld, CrouchHeld, BiteHeld, UseHeld;
+        public readonly bool PrimaryHeld;
         public PlayerInputCommand(CommandHeader header, Float2 move, float vertical, float yaw, float pitch, Float3 aim, bool sprint = false, bool crouch = false, bool bite = false, bool use = false)
-        { Header = header; MovePlanar = move; Vertical = vertical; ViewYawRadians = yaw; ViewPitchRadians = pitch; AimForward = aim; SprintHeld = sprint; CrouchHeld = crouch; BiteHeld = bite; UseHeld = use; }
+            : this(header, move, vertical, yaw, pitch, aim, sprint, crouch, bite, use, false) { }
+        public PlayerInputCommand(CommandHeader header, Float2 move, float vertical, float yaw, float pitch, Float3 aim, bool sprint, bool crouch, bool bite, bool use, bool primaryHeld)
+        { Header = header; MovePlanar = move; Vertical = vertical; ViewYawRadians = yaw; ViewPitchRadians = pitch; AimForward = aim; SprintHeld = sprint; CrouchHeld = crouch; BiteHeld = bite; UseHeld = use; PrimaryHeld = primaryHeld; }
     }
     public readonly struct PlayerActionCommand
     {
         public readonly CommandHeader Header;
         public readonly ActionKind Kind;
         public readonly Float3 AimForward;
-        public PlayerActionCommand(CommandHeader header, ActionKind kind, Float3 aim) { Header = header; Kind = kind; AimForward = aim; }
+        public readonly int SlotIndex;
+        public readonly uint TargetPickupId, ExpectedPickupRevision, InventoryRevision;
+        public PlayerActionCommand(CommandHeader header, ActionKind kind, Float3 aim) : this(header, kind, aim, -1, 0, 0, 0) { }
+        public PlayerActionCommand(CommandHeader header, ActionKind kind, Float3 aim, int slotIndex, uint targetPickupId, uint expectedPickupRevision, uint inventoryRevision)
+        { Header = header; Kind = kind; AimForward = aim; SlotIndex = slotIndex; TargetPickupId = targetPickupId; ExpectedPickupRevision = expectedPickupRevision; InventoryRevision = inventoryRevision; }
     }
     public readonly struct HostTick
     {
@@ -117,7 +129,8 @@ namespace LetMeSleep.Gameplay
         public ulong RoundId { get; }
         public string MapId { get; }
         public string ContentHash { get; }
-        public string BalanceHash => Balance.Hash + ":" + ModeRules.Hash + ":" + ObjectiveCatalogHash;
+        public string EquipmentProfileHash => HumanEquipmentProfile.Hash;
+        public string BalanceHash => Balance.Hash + ":" + ModeRules.Hash + ":" + ObjectiveCatalogHash + ":" + EquipmentProfileHash;
         public string ModeId { get; }
         public ModeRuleProfile ModeRules { get; }
         public string ModeRuleProfileId => ModeRules.Id;
@@ -224,8 +237,15 @@ namespace LetMeSleep.Gameplay
         public bool CanAct { get; }
         public DoorUseResult LastDoorResult { get; }
         public TaskAssignment TaskAssignment { get; }
+        public HumanInventorySnapshot Inventory { get; }
+        public int StaminaUnits { get; }
+        public bool SprintExhausted { get; }
+        public ThrowChargeSnapshot ThrowCharge { get; }
+        public PickupSwapOffer? SwapOffer { get; }
         public ActorPrivateState(uint actor, uint input, uint action, CommandReject rejection, InteractionHint hint, float preparation, float extraction, float recovery, uint help, bool canAct, DoorUseResult door, ulong sessionEpoch = 0, ulong roundId = 0, uint hostTick = 0, TaskAssignment taskAssignment = null)
-        { ActorId = actor; LastAcceptedInputSequence = input; LastAcceptedActionSequence = action; Rejection = rejection; InteractionHint = hint; PreparationProgress = preparation; ExtractionProgress = extraction; RecoverySeconds = recovery; HelpTargetId = help; CanAct = canAct; LastDoorResult = door; SessionEpoch = sessionEpoch; RoundId = roundId; HostTick = hostTick; TaskAssignment = taskAssignment; }
+            : this(actor, input, action, rejection, hint, preparation, extraction, recovery, help, canAct, door, sessionEpoch, roundId, hostTick, taskAssignment, new HumanInventorySnapshot(0, 0, 0, 0, -1), 0, false, default, null) { }
+        public ActorPrivateState(uint actor, uint input, uint action, CommandReject rejection, InteractionHint hint, float preparation, float extraction, float recovery, uint help, bool canAct, DoorUseResult door, ulong sessionEpoch, ulong roundId, uint hostTick, TaskAssignment taskAssignment, HumanInventorySnapshot inventory, int staminaUnits, bool sprintExhausted, ThrowChargeSnapshot throwCharge, PickupSwapOffer? swapOffer)
+        { ActorId = actor; LastAcceptedInputSequence = input; LastAcceptedActionSequence = action; Rejection = rejection; InteractionHint = hint; PreparationProgress = preparation; ExtractionProgress = extraction; RecoverySeconds = recovery; HelpTargetId = help; CanAct = canAct; LastDoorResult = door; SessionEpoch = sessionEpoch; RoundId = roundId; HostTick = hostTick; TaskAssignment = taskAssignment; Inventory = inventory; StaminaUnits = staminaUnits; SprintExhausted = sprintExhausted; ThrowCharge = throwCharge; SwapOffer = swapOffer; }
     }
     public readonly struct DoorDefinition
     {

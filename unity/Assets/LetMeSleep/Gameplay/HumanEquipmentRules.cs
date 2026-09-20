@@ -39,6 +39,8 @@ namespace LetMeSleep.Gameplay
         // Returns fraction of this tick at sprint speed; the final partial tick is charged exactly.
         // Caller supplies intent after movement/role/state validation. Inactive actors do not sprint.
         public float Step(bool sprintHeld,bool moving,bool crouching,bool controlsAvailable)
+            =>Step(sprintHeld,moving,crouching,controlsAvailable,true);
+        public float Step(bool sprintHeld,bool moving,bool crouching,bool controlsAvailable,bool allowRecovery)
         {
             if(!sprintHeld)SprintExhausted=false;
             bool sprint=controlsAvailable&&sprintHeld&&moving&&!crouching&&!SprintExhausted;
@@ -49,6 +51,7 @@ namespace LetMeSleep.Gameplay
                 return used/(float)HumanEquipmentProfile.SprintPerTick;
             }
             if(sprint&&Units==0)SprintExhausted=true;
+            if(!allowRecovery)return 0;
             int recovery=!moving||crouching?HumanEquipmentProfile.RestRecoveryPerTick:HumanEquipmentProfile.WalkRecoveryPerTick;
             Units=Math.Min(HumanEquipmentProfile.Maximum,Units+recovery);return 0;
         }
@@ -125,7 +128,7 @@ namespace LetMeSleep.Gameplay
         public bool AutoReleaseDue=>LimitReached&&!AwaitingRelease;
         public float Power=>Active?HumanEquipmentProfile.ThrowPower(ElapsedTicks):0;
         public int StaminaCost=>Active?HumanEquipmentProfile.ThrowCost(ElapsedTicks):0;
-        internal ThrowChargeSnapshot(uint pickup,uint revision,int ticks,bool awaitingRelease=false,int releaseWaitTicks=0){PickupId=pickup;InventoryRevision=revision;ElapsedTicks=ticks;AwaitingRelease=awaitingRelease;ReleaseWaitTicks=releaseWaitTicks;}
+        public ThrowChargeSnapshot(uint pickup,uint revision,int ticks,bool awaitingRelease=false,int releaseWaitTicks=0){PickupId=pickup;InventoryRevision=revision;ElapsedTicks=ticks;AwaitingRelease=awaitingRelease;ReleaseWaitTicks=releaseWaitTicks;}
     }
     public sealed class HumanThrowCharge
     {
@@ -156,6 +159,7 @@ namespace LetMeSleep.Gameplay
             elapsed=Math.Min(HumanEquipmentProfile.ChargeLimitTicks,elapsed+1);
         }
         public void Cancel(){pickup=revision=0;elapsed=releaseWait=0;awaitingRelease=false;}
+        public void ObserveNeutral(){if(pickup!=0)awaitingRelease=true;}
         // No resource mutation here: authority performs release as one transaction after world validation.
         public bool TryPreviewRelease(uint activePickup,uint inventoryRevision,out ThrowChargeSnapshot charge)
         {
