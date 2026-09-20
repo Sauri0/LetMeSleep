@@ -12,6 +12,17 @@
   No hay build todavía. Plan TwoIdentityGameplayExecutionPlan-01.md confirma
   que dos procesos en la misma sesión no producen dos identidades EOS; prueba
   de gameplay real requiere segundo contexto y WAN sigue pendiente.
+- Checkout aislado `N:/LetMeSleep/Worktrees/v020-candidate-20260920`, detached
+  `4c3cb31`, creado para build preservando WIP central. Primera importación
+  Unity pasa (clean-candidate-import-01.log), pero reescribe cuatro prefabs de
+  personajes; Terra revisa delta antes de aceptarlo. Dos settings sólo cambian
+  normalización de líneas/stat-cache. No copiar ni revertir a ciegas.
+- ForedeckBracketV3 reproduce posición212 exacta: motor directo llega34 ticks;
+  steering con destino fijo llega110, cuyo desvío pierde el corredor en bot real.
+  Rechazo directo procede de silla futura tras avance parcial; Astra prepara
+  continuación separada limitada al próximo intervalo de decisión, con negativos.
+  Helm no consume primer punto de escalera por DeckStorage; Sol prepara testigo
+  físico bidireccional externo. No ampliar radios ni saltar puntos cerrados.
 - `67253c6` reconoce un waypoint recién cruzado dentro del corredor: ventana
   longitudinal/lateral de .24 m y altura relativa al punto actual <= .35 m.
   CPU146/146, native Directed28/28 + Replan33/33. Crate work02 pasa260/330
