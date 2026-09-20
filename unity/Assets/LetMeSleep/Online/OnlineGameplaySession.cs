@@ -95,8 +95,7 @@ namespace LetMeSleep.Online
         }
         public void SendPrivate(string owner, ActorPrivateState state)
         {
-            if (Ready && lobby.IsOwner && owner != localId && state != null && state.SessionEpoch == config.SessionEpoch && state.RoundId == config.RoundId
-                && (config.ModeId == GameModes.Tasks ? state.TaskAssignment == null || config.Objectives.Any(o => o.ObjectiveId == state.TaskAssignment.ObjectiveId) : state.TaskAssignment == null)
+            if (Ready && lobby.IsOwner && owner != localId && PrivateMatchesRound(state)
                 && roster.Any(a => a.OwnerPuid == owner && a.ActorId == state.ActorId))
                 Send(owner, Private, GameplayWireCodec.Encode(state), false);
         }
@@ -146,8 +145,7 @@ namespace LetMeSleep.Online
             else if (kind == Private && GameplayWireCodec.TryDecode(packet, out ActorPrivateState state))
             {
                 var localActor = roster.FirstOrDefault(a => a.OwnerPuid == localId);
-                if (localActor.ActorId == 0 || state.ActorId != localActor.ActorId || state.SessionEpoch != config.SessionEpoch || state.RoundId != config.RoundId
-                    || (config.ModeId == GameModes.Tasks ? state.TaskAssignment == null || config.Objectives.Any(o => o.ObjectiveId == state.TaskAssignment.ObjectiveId) : state.TaskAssignment == null)) return;
+                if (localActor.ActorId == 0 || state.ActorId != localActor.ActorId || !PrivateMatchesRound(state)) return;
                 replica.ApplyPrivate(state);
             }
             else if (kind == Event && GameplayWireCodec.TryDecode(packet, out GameplayEvent item))
@@ -156,6 +154,11 @@ namespace LetMeSleep.Online
                 replica.ApplyEvent(item);
             }
         }
+        private bool PrivateMatchesRound(ActorPrivateState state) => config != null && state != null
+            && state.SessionEpoch == config.SessionEpoch && state.RoundId == config.RoundId
+            && roster.Any(a => a.ActorId == state.ActorId)
+            && (state.TaskAssignment == null || (config.ModeId == GameModes.Tasks
+                && config.Objectives.Any(o => o.ObjectiveId == state.TaskAssignment.ObjectiveId)));
         private bool SnapshotMatchesRound(GameSessionState snapshot) => snapshot != null && snapshot.SessionEpoch == config.SessionEpoch
             && snapshot.RoundId == config.RoundId && snapshot.MapId == config.MapId && snapshot.ContentHash == config.ContentHash
             && snapshot.BalanceHash == config.BalanceHash && snapshot.ModeId == config.ModeId;
@@ -171,7 +174,7 @@ namespace LetMeSleep.Online
         {
             using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
             if (round.Objectives.Count > GameplayWireCodec.MaxObjectives) throw new InvalidDataException("Too many objectives for Begin.");
-            writer.Write((byte)3); writer.Write(round.SessionEpoch); writer.Write(round.RoundId);
+            writer.Write((byte)4); writer.Write(round.SessionEpoch); writer.Write(round.RoundId);
             RoomWireCodec.WriteText(writer, round.MapId, 64); RoomWireCodec.WriteText(writer, round.ContentHash, 128);
             RoomWireCodec.WriteText(writer, round.ModeId, 16); RoomWireCodec.WriteText(writer, round.ModeRuleProfileId, 64);
             RoomWireCodec.WriteText(writer, round.ObjectiveCatalogHash, 64); RoomWireCodec.WriteText(writer, round.BalanceHash, 512);
@@ -180,6 +183,8 @@ namespace LetMeSleep.Online
             writer.Write(round.Balance.PreparationSeconds); writer.Write(round.Balance.HelpMultiplier); writer.Write(round.Balance.ProtectionSeconds);
             writer.Write((byte)round.ModeRules.MosquitoLives); writer.Write(round.ModeRules.TaskCadenceTicks); writer.Write(round.ModeRules.TaskDeadlineTicks);
             writer.Write(round.ModeRules.TaskMinimumDeadlineTicks); writer.Write(round.ModeRules.TaskFailurePenaltyTicks);
+            writer.Write(round.ModeRules.TaskSuccessRecoveryTicks); writer.Write(round.ModeRules.TaskInterruptionGraceTicks);
+            writer.Write(round.ModeRules.TaskDecayBasisPointsPerSecond);
             writer.Write((byte)round.Objectives.Count);
             foreach (var objective in round.Objectives)
             {
@@ -212,7 +217,7 @@ namespace LetMeSleep.Online
             try
             {
                 using var stream = new MemoryStream(packet, false); using var reader = new BinaryReader(stream, Encoding.UTF8);
-                if (reader.ReadByte() != 3) return false;
+                if (reader.ReadByte() != 4) return false;
                 ulong epoch = reader.ReadUInt64(), round = reader.ReadUInt64();
                 string map = RoomWireCodec.ReadText(reader, 64), hash = RoomWireCodec.ReadText(reader, 128);
                 string mode = RoomWireCodec.ReadText(reader, 16), profileId = RoomWireCodec.ReadText(reader, 64);
@@ -220,7 +225,8 @@ namespace LetMeSleep.Online
                 int seconds = reader.ReadInt32(); float goal = reader.ReadSingle(); int tasksGoal = reader.ReadInt32();
                 var balance = new BalanceProfile(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                 int lives = reader.ReadByte();
-                var modeRules = new ModeRuleProfile(mode, reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
+                var modeRules = new ModeRuleProfile(mode, reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(),
+                    reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
                 if (epoch == 0 || round != (ulong)room.Current.Round || map != room.Current.Rules.MapId || hash != contentHash
                     || seconds != room.Current.Rules.RoundSeconds || goal != room.Current.Rules.BloodQuota || mode != room.Current.Rules.ModeId
                     || profileId != room.Current.Rules.ModeRuleProfileId || profileId != modeRules.Id || lives != modeRules.MosquitoLives

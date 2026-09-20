@@ -13,7 +13,7 @@ namespace LetMeSleep.Online
     public static class GameplayWireCodec
     {
         public const int MaxMessageBytes = 16384, MaxActors = 16, MaxDoors = 128, MaxToolPickups = 32, MaxObjectives = 24;
-        public const ushort Version = 3;
+        public const ushort Version = 4;
         private const uint Magic = 0x314D534C;
         private static readonly UTF8Encoding Utf8 = new UTF8Encoding(false, true);
         private enum Kind : byte { Input = 1, Action, Snapshot, Private, Event }
@@ -157,16 +157,16 @@ namespace LetMeSleep.Online
         }
         private static void ValidateBalanceHash(string hash, string mode)
         {
-            var fields = hash.Split(':'); Require(fields.Length == 13 && fields[0] == BalanceProfile.Id, "Unsupported balance identity.");
+            var fields = hash.Split(':'); Require(fields.Length == 16 && fields[0] == BalanceProfile.Id, "Unsupported balance identity.");
             var values = new float[5];
             for (int i = 0; i < 5; i++) Require(float.TryParse(fields[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out values[i]) && MathEx.Finite(values[i]), "Invalid balance value.");
             var balance = new BalanceProfile(values[0], values[1], values[2], values[3], values[4]);
             Require(fields[6] == GameModes.ProfileId(mode), "Mode profile identity mismatch.");
-            var numbers = new uint[5];
+            var numbers = new uint[8];
             for (int i = 0; i < numbers.Length; i++) Require(uint.TryParse(fields[i + 7], NumberStyles.None, CultureInfo.InvariantCulture, out numbers[i]), "Invalid mode profile value.");
-            var rules = new ModeRuleProfile(mode, numbers[1], numbers[2], numbers[3], numbers[4]);
-            Require(numbers[0] == rules.MosquitoLives && fields[12].Length == 64 && fields[12].All(c => c >= '0' && c <= '9' || c >= 'a' && c <= 'f')
-                && hash == balance.Hash + ":" + rules.Hash + ":" + fields[12], "Noncanonical balance identity.");
+            var rules = new ModeRuleProfile(mode, numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7]);
+            Require(numbers[0] == rules.MosquitoLives && fields[15].Length == 64 && fields[15].All(c => c >= '0' && c <= '9' || c >= 'a' && c <= 'f')
+                && hash == balance.Hash + ":" + rules.Hash + ":" + fields[15], "Noncanonical balance identity.");
         }
         private static bool ResultMatchesMode(string mode, RoundEndReason reason)
         {

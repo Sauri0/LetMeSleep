@@ -87,6 +87,24 @@ namespace LetMeSleep.Tests.EditMode
         }
 
         [Test]
+        public void SnapshotPreservesAllTaskTimingRulesAndRejectsPreviousProtocol()
+        {
+            var rules = new ModeRuleProfile(GameModes.Tasks, taskSuccessRecoveryTicks: 120,
+                taskInterruptionGraceTicks: 45, taskDecayBasisPointsPerSecond: 1250);
+            var config = TasksConfig(rules);
+            var original = new GameSessionState(config, 30, SimulationPhase.Running, 0, RoundEndReason.None,
+                PlayerRole.Unassigned, Actors(GameModes.Tasks), Array.Empty<DoorSnapshot>(),
+                tasksCompleted: 1, tasksGoal: 2, viableTaskOpportunities: 3);
+            byte[] packet = GameplayWireCodec.Encode(original);
+            Assert.That(GameplayWireCodec.TryDecode(packet, out GameSessionState decoded), Is.True);
+            Assert.That(decoded.BalanceHash, Is.EqualTo(config.BalanceHash));
+            Assert.That(decoded.BalanceHash, Does.Contain(":" + rules.Hash + ":"));
+            packet[4] = 3; packet[5] = 0;
+            Assert.That(GameplayWireCodec.TryDecode(packet, out GameSessionState rejected), Is.False);
+            Assert.That(rejected, Is.Null);
+        }
+
+        [Test]
         public void PublicEventChannelRejectsPrivateTaskEventsAndLocationLeaks()
         {
             foreach (var kind in new[] { GameplayEventKind.TaskAssigned, GameplayEventKind.TaskProgressed, GameplayEventKind.TaskMissed })
@@ -133,29 +151,105 @@ namespace LetMeSleep.Tests.EditMode
 
             var packet = (byte[])encode.Invoke(null, new object[] { config, roster });
             var identityBytes = (byte[])identity.Invoke(null, new object[] { config });
-            Assert.That(packet[0], Is.EqualTo(3));
+            Assert.That(packet[0], Is.EqualTo(4));
             Assert.That(packet.Length, Is.LessThanOrEqualTo(MessageFraming.MaximumMessageBytes));
             Assert.That(ContainsAscii(packet, config.ModeId), Is.True);
             Assert.That(ContainsAscii(packet, config.ModeRuleProfileId), Is.True);
             Assert.That(ContainsAscii(packet, config.ObjectiveCatalogHash), Is.True);
             Assert.That(ContainsAscii(packet, config.Objectives[0].ObjectiveId), Is.True);
             Assert.That(ContainsAscii(identityBytes, config.BalanceHash), Is.True);
+
+            using var reader = new BinaryReader(new MemoryStream(packet, false), Encoding.UTF8);
+            reader.ReadByte(); reader.ReadUInt64(); reader.ReadUInt64();
+            foreach (int limit in new[] { 64, 128, 16, 64, 64, 512 }) RoomWireCodec.ReadText(reader, limit);
+            reader.ReadInt32(); reader.ReadSingle(); reader.ReadInt32();
+            for (int i = 0; i < 5; i++) reader.ReadSingle();
+            Assert.That(reader.ReadByte(), Is.EqualTo(config.ModeRules.MosquitoLives));
+            var serializedRules = new uint[7];
+            for (int i = 0; i < serializedRules.Length; i++) serializedRules[i] = reader.ReadUInt32();
+            Assert.That(serializedRules, Is.EqualTo(new uint[] { 1200, 900, 450, 150, 90, 30, 1000 }));
+            Assert.That(reader.ReadByte(), Is.EqualTo(config.Objectives.Count), "Rule fields must not shift the authored catalog.");
         }
 
         [Test]
         public void ReleaseProtocolAndWireSchemasAreExplicitlyDecoupledFromAlpha()
         {
-            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-1"));
+            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-2"));
             Assert.That(RoomWireCodec.Version, Is.EqualTo(2));
-            Assert.That(GameplayWireCodec.Version, Is.EqualTo(3));
+            Assert.That(GameplayWireCodec.Version, Is.EqualTo(4));
         }
 
-        private static GameplayRoundConfig TasksConfig()
+        [TestCase(GameModes.Blood)]
+        [TestCase(GameModes.Survival)]
+        public void PrivateStateWithoutTaskIsAcceptedOutsideTasks(string mode)
+        {
+            var config = new GameplayRoundConfig(81, 5, RoomRules.AlfaMap, "content", 120, modeId: mode);
+            var session = PrivateSession(config);
+            Assert.That(PrivateMatches(session, PrivateState()), Is.True);
+            Assert.That(PrivateMatches(session, PrivateState(assignment: KnownAssignment())), Is.False);
+        }
+
+        [Test]
+        public void TasksPrivateStateAllowsNoAssignmentAndKnownAssignmentButNotUnknownObjective()
+        {
+            var session = PrivateSession(TasksConfig());
+            Assert.That(PrivateMatches(session, PrivateState()), Is.True);
+            Assert.That(PrivateMatches(session, PrivateState(assignment: KnownAssignment())), Is.True);
+            var unknown = new TaskAssignment("task-not-in-catalog", 30, 300, 90, 17, TaskAssignmentStatus.Active, 1);
+            Assert.That(PrivateMatches(session, PrivateState(assignment: unknown)), Is.False);
+        }
+
+        [TestCase(82ul, 5ul, 1u)]
+        [TestCase(81ul, 6ul, 1u)]
+        [TestCase(81ul, 5ul, 99u)]
+        public void PrivateStateRejectsWrongEpochRoundOrRosterActor(ulong epoch, ulong round, uint actor)
+        {
+            var session = PrivateSession(TasksConfig());
+            Assert.That(PrivateMatches(session, PrivateState(actor, epoch, round, KnownAssignment())), Is.False);
+        }
+
+        [Test]
+        public void PrivateStateRequiresRoundAndNonNullPayload()
+        {
+            Assert.That(PrivateMatches(PrivateSession(null), PrivateState()), Is.False);
+            Assert.That(PrivateMatches(PrivateSession(TasksConfig()), null), Is.False);
+        }
+
+        private static TaskAssignment KnownAssignment() => new TaskAssignment(
+            "task-sink", 30, 300, 90, 17, TaskAssignmentStatus.Active, 1);
+
+        private static ActorPrivateState PrivateState(uint actor = 1, ulong epoch = 81, ulong round = 5,
+            TaskAssignment assignment = null) => new ActorPrivateState(actor, 7, 4, CommandReject.None,
+                InteractionHint.Task, 0, 0, 0, 0, true, DoorUseResult.Accepted, epoch, round, 60, assignment);
+
+        private static OnlineGameplaySession PrivateSession(GameplayRoundConfig config)
+        {
+            // Exercise the real pure session predicate without starting native EOS.
+#pragma warning disable SYSLIB0050
+            var session = (OnlineGameplaySession)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(OnlineGameplaySession));
+#pragma warning restore SYSLIB0050
+            typeof(OnlineGameplaySession).GetField("config", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(session, config);
+            typeof(OnlineGameplaySession).GetField("roster", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(session, new[]
+            {
+                new SpawnActor(1, "human", PlayerRole.Human, Float3.Zero),
+                new SpawnActor(2, "mosquito", PlayerRole.Mosquito, Float3.Forward)
+            });
+            return session;
+        }
+
+        private static bool PrivateMatches(OnlineGameplaySession session, ActorPrivateState state)
+        {
+            var method = typeof(OnlineGameplaySession).GetMethod("PrivateMatchesRound", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null, "The production send/receive predicate must exist.");
+            return (bool)method.Invoke(session, new object[] { state });
+        }
+
+        private static GameplayRoundConfig TasksConfig(ModeRuleProfile rules = null)
         {
             var objective = new ObjectiveDefinition("task-sink", ObjectiveKind.Clean, "task.sink", "action.clean",
                 new Float3(2, 0, 2), new Float3(2, 0, 2), 1, 90, "kitchen", 120);
             return new GameplayRoundConfig(81, 5, RoomRules.AlfaMap, "content", 120, modeId: GameModes.Tasks,
-                objectives: new[] { objective }, tasksGoal: 2);
+                objectives: new[] { objective }, tasksGoal: 2, modeRules: rules);
         }
 
         private static IReadOnlyList<ActorSnapshot> Actors(string mode) => new[]
