@@ -20,6 +20,8 @@ Shader "LetMeSleep/Higgsfield/FlatGpuWater"
         ZTest LEqual
 
         HLSLINCLUDE
+        // Match the installed URP fog keyword declaration (dynamic or variants).
+        #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Fog.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         CBUFFER_START(UnityPerMaterial)
             half4 _BaseColor;
@@ -89,7 +91,6 @@ Shader "LetMeSleep/Higgsfield/FlatGpuWater"
             #pragma target 3.0
             #pragma vertex WaterVertex
             #pragma fragment WaterColor
-            #pragma multi_compile_fog
             #pragma multi_compile_instancing
             ENDHLSL
         }

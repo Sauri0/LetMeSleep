@@ -6,6 +6,8 @@
     "LetMeSleep.Core",
     "LetMeSleep.Gameplay",
     "LetMeSleep.Gameplay.Unity",
+    "LetMeSleep.Content.Characters",
+    "LetMeSleep.Presentation.Gameplay",
     "LetMeSleep.Presentation",
     "LetMeSleep.UI",
     "LetMeSleep.Content.Environment"
