@@ -1,6 +1,6 @@
 # Revisión independiente de superficies — 2026-09-20
 
-Revisor: modos_dominio. Lectura de runtime/fixtures únicamente; no se abrió Unity ni se modificó física. Revisión detenida por cambio de prioridad del usuario hacia el cuestionario. Estas conclusiones no cierran los 21 fallos ni sustituyen la matriz que CEO está ejecutando.
+Revisor: modos_dominio. Lectura de runtime/fixtures únicamente; no se abrió Unity ni se modificó física. Revisión retomada después del cuestionario con un harness externo acotado. Estas conclusiones no cierran los 21 fallos ni sustituyen las ejecuciones nativas de CEO.
 
 ## Evidencia revisada
 
@@ -17,7 +17,7 @@ La pareja de tests con/sin cara conecta una pared con una tapa mediante un bisel
 
 Límites conservados: bisel en un tercer collider no será descubierto; geometría curva con más caras puede quedar fuera de profundidad 2. Eso es soporte limitado, no evidencia de una regresión. La búsqueda crea un array de dos colliders por intento recursivo y puede repetir el mismo collider: mejora de coste posible después de resolver corrección, sin afirmar impacto FPS medido.
 
-## Clasificación provisional de los 21 fallos
+## Clasificación histórica de los 21 fallos anteriores al diagnóstico completo
 
 | Casos originales | Cantidad | Evidencia y siguiente comprobación |
 |---|---:|---|
@@ -45,3 +45,25 @@ Límites conservados: bisel en un tercer collider no será descubierto; geometr�
 ## Orden de trabajo propuesto
 
 Conservar matriz anterior y completar diagnóstico actual. Evaluar el bisel contra los mismos IDs sin tocar criterios. Después agregar fixtures de inicio libre y rutas validadas, manteniendo fallos históricos y negativos de bloqueo por separado. Priorizar Casa bisel, Casa hueco/intermedio y Camp geometría previa al detach; esperar evidencia completa para Yate/Puerto. Ninguna propuesta de este informe autoriza cambiar las reglas de agua ni aceptar colisiones omitidas.
+
+
+## Actualización: diagnóstico completo y harness preparado
+
+El reporte `SurfaceDiagnostics/Build/20260920-053637-101/native-results/surface-maps.json` ya terminó con 64 PASS / 21 FAIL, sin errores y cleanup=true. Esta revisión conserva su contenido íntegro. En Casa edge/0..3, el candidato de bisel **ya no se desprende**: llega adherido al tick 106, con nueve transiciones y sobre Step05..08. El fallo todavía refleja la normal objetivo incompatible del fixture; no hay base para llamarlo PASS ni para decir que el cambio no mejoró el movimiento. La tabla histórica superior se mantiene como registro de la evidencia anterior.
+
+Se preparó exclusivamente en `N:/LetMeSleep/Validation/V020/SurfaceValidatedRoutes`:
+
+- `SurfaceMapChecks.cs`: copia del harness original, conserva selección/criterios originales; añade identificación de suite/baseline, observador y null para campos de raycasts fallidos.
+- `TracingGameplayWorld.cs`: decorador transparente de IGameplayWorld, SurfaceTraversal, Tools, Bounds y Mode. Captura las MotorQuery/TrySurface/TryFollowSurface reales antes de delegar al mundo integrado y el resultado después. Casts auxiliares se etiquetan como consultas informativas, no como iteraciones internas del motor.
+- `ValidatedRoutes.cs`: cinco slots positivos nuevos (Casa pared, techo y ascenso Step02→Step03; Camp pared y techo real), precondiciones de esfera completa libre, barrido, huella física y unión de hitPoints reales; tres negativos separados sobre los inicios bloqueados originales. Cada rechazo geométrico queda en selection. Sin candidato válido = COVERAGE_GAP. Una vez ejecutado el primer candidato válido, su fallo no permite buscar otro más fácil.
+- `baseline85.json`: copia byte a byte de los 85 resultados completos; cada ejecución la preserva como otro artefacto y no recalcula esos resultados a partir de los nuevos. `original-preservation.json` registra hash y comparación exacta de regiones originales de selección y criterios.
+- `Compile-ValidatedRoutes.ps1`, configs focused/replay85, README y recibos. No se copian fuentes del juego para crear una simulación alternativa; se referencian los DLLs Unity integrados y se registran sus hashes.
+
+Precondiciones positivas: radio 55 mm, OverlapSphere vacío, SphereCastAll con extensión de 1 mm, play bounds y testigos de superficie cada 1 mm. Unión escalera: extremos observados mediante raycast a no más de 2 mm. Durante el recorrido real también se rechazan overlaps de cuerpo de 54 mm aunque Pen=0. El perfil de escalera es una ruta explícita de la geometría actual; si cambió o no se valida, se registra hueco de cobertura. No ampliar tolerancias para que pase.
+
+Evidencia offline: ambos runners compilaron con 0 warnings / 0 errores. Auditoría de baseline byte idéntico (85 filas, 64/21) y regiones de selección/criterios originales sin cambios: PASS. No ejecución de Unity por este trabajador.
+
+- Focused final preparado: `N:/LetMeSleep/Validation/V020/SurfaceValidatedRoutes/Build/20260920-062546-157/run-in-coordinator-slot.cs`.
+- Replay85 opcional: `N:/LetMeSleep/Validation/V020/SurfaceValidatedRoutes/Build/20260920-062549-010/run-in-coordinator-slot.cs`.
+
+Pendiente de CEO: ejecutar focused con su turno Unity, comprobar las cinco rutas solicitadas y negativos, y diagnosticar cualquier COVERAGE_GAP/FAIL sin ocultarlo. Los positivos nuevos no reemplazan los fallos históricos ni certifican navegación completa de cinco mapas.
