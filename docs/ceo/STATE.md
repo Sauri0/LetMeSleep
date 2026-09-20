@@ -1,5 +1,41 @@
 # Relevo CEO — 2026-09-19
 
+## Gate actual: base modular integrada, validación de producción pendiente
+
+- `073c985` mantiene vacías las etiquetas ausentes de opciones. Edit01:21/21
+  PASS (11 catálogo +10 codec), sin omitidos.
+- `65b6206` integra ensamblador, metadata host/piezas y bindings CharacterView.
+  Play02:6/6 ensamblador y5/5 catálogo. Remap de bones, sockets, MPB, cleanup,
+  rollback de ensamblado, primera persona y layer de preview probados con fixtures.
+- `3a05962` integra UI modular:6/6 Play02, más PNG 720/1080 inspeccionados en
+  ModularCustomizationUiNative02. Categorías, swatches/miniaturas, borrador de
+  ambos roles y sólo lectura con VOLVER funcional. Se corrigió scroll heredado
+  al cambiar rol. Es Canvas sintético; no preview de personajes aprobados.
+- `810a0e9` integra persistencia/proveedor:4/4 contratos Play02 y4/4 boot03
+  sobre la escena real LetMeSleepHiggsfield, sin omitidos. V2 sin runtime y
+  campos desconocidos se preservan; no downgrade aV1. Mapeo legacy completo
+  de13 colores, categorías separadas. El proveedor valida HumanPrefab y
+  MosquitoPrefab reales de la aplicación. No hay proveedor/catálogo producción
+  asignado, ni canal2v2 integrado, ni prueba completa de migración con assets.
+- Conservar intentos originales: Play01 tuvo2 fallos de fixture y4 omitidos
+  por falta de --lms-validation-data; Play02 tuvo4 fallos SetUp por nombre de
+  escena alfa antiguo. Se corrigieron fixtures/comando, sin relajar aserciones.
+  Boot03 reejecutó esas4 pruebas y pasó. No afirmar un único run46/46: evidencia
+  vigente es Edit01(21) + subconjunto válido Play02(21) + Boot03(4).
+- Slot Unity libre. personalizacion_red_v020 trabaja CUST-PREF-ROLLBACK:
+  fixture integrado de migración y fallo de disco al cambiar rol, con hosts y
+  ensamblador reales sintéticos. El arreglo de rollback cross-role en fuente
+  fue revisado, pero su prueba nativa específica sigue pendiente.
+- continuidad_tecnica audita sólo lectura los14 FAIL de Frozen85 contra
+  evidencia posterior; reporte en SurfaceRemainingAudit01. No reescribir la
+  matriz histórica ni atribuirle los15 smoke de arranque.
+- CEO reserva Appearance.cs y reset de sesión para integración futura canal2:
+  enviar sólo publicado, nunca borrador ni defaults por V2 no disponible;
+  validar miembro/sala/fingerprint, aplicar rol real del host y conservar
+  última apariencia ante fallo. Aún sin implementación en ese archivo.
+- Arte/Higgsfield, herramientas nuevas, gráficos/FPS, dos identidades/WAN y
+  micrófono real continúan pendientes. No build final, ZIP ni release v0.2.0.
+
 ## Gate actual: matriz de arranque Windows 15/15 PASS
 
 - `WindowsCandidateSmoke03/verification-matrix.json` reúne cinco casos Smoke02
