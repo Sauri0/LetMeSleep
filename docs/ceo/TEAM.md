@@ -10,6 +10,13 @@ Máximo actual: CEO más tres subagentes simultáneos. Los perfiles siguientes s
 
 CEO mantiene prioridades, contratos compartidos, integración y la asignación exclusiva de Unity/Blender/render. Cada ticket identifica archivos propios, punto de partida, dependencia, prueba de aceptación y evidencia esperada. Los agentes no delegan de nuevo ni despiertan chats históricos. No están solos en el repositorio: preservar cambios ajenos y adaptar su trabajo. No reset/clean, staging global, publicación ni commits de secretos/cachés.
 
+Unity Test Runner: usar `-batchmode -runTests -testPlatform ... -testResults ...`
+**sin `-quit`**. `-quit` puede cerrar el editor con exit 0 antes de ejecutar las
+pruebas. En cambio, los builders/diagnósticos síncronos con `-executeMethod`
+sí pueden usar `-quit`. Un gate requiere XML con los casos esperados y cero
+fallos/omitidos; exit 0 por sí solo no acredita pruebas. Conservar cada intento
+con nombres nuevos de log/XML y no reabrir Unity si el proceso anterior sigue vivo.
+
 | Perfil | Modelo inicial | Esfuerzo | Propiedad y motivo |
 |---|---|---|---|
 | gameplay | gpt-5.6-sol | high | Gameplay/Gameplay.Unity y diagnóstico físico; necesita razonar sobre estados y regresiones. |
