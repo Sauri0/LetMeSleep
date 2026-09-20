@@ -164,8 +164,7 @@ namespace LetMeSleep.Gameplay
                 // Advance on horizontal crossing; the ordinary motor remains responsible
                 // for floors, stairs and every physical obstruction.
                 while (objectivePointIndex < objectivePoints.Length &&
-                       PlanarDistance(objectivePoints[objectivePointIndex], position) < .24f &&
-                       Math.Abs(objectivePoints[objectivePointIndex].Y - position.Y) <= .35f)
+                       ReachedDirectedWaypoint(objectivePoints[objectivePointIndex], position))
                     objectivePointIndex++;
                 if (objectivePointIndex < objectivePoints.Length) return Travel(objectivePoints[objectivePointIndex] - position,
                     "task:" + targetRegion + ":" + objectivePassage.Id + ":" + objectivePointIndex, objectivePassage.Id);
@@ -223,6 +222,18 @@ namespace LetMeSleep.Gameplay
         private bool CanSuspendDirectedPassage(Float3 position) => objectivePassage != null &&
             objectivePassage.TraversalRegions.Count > 0 && objectivePointIndex > 0 &&
             !regions.Any(r => r.Contains(position)) && CanFollowDirectedPassage(position, null);
+        private bool ReachedDirectedWaypoint(Float3 waypoint, Float3 position)
+        {
+            if (PlanarDistance(waypoint, position) >= .24f) return false;
+            if (objectivePassage.TraversalRegions.Count > 0)
+                return Math.Abs(waypoint.Y - position.Y) <= .35f;
+            // Ordinary portal centers are authored near torso height, while ground-human
+            // navigation samples use foot + 1 m. Accept that offset only on the physical
+            // floor band of either connected region, never at the same XZ on another floor.
+            return regions.Any(region =>
+                (region.Id == objectivePassage.From || region.Id == objectivePassage.To) &&
+                position.Y >= region.Min.Y - .04f && position.Y <= region.Max.Y + .04f);
+        }
         private int VisitCount(string id) => visits.TryGetValue(id, out int count) ? count : 0;
         private static float PlanarDistance(Float3 a, Float3 b)
         {
