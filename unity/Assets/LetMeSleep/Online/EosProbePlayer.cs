@@ -1,7 +1,9 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
+using LetMeSleep.Core;
 using UnityEngine;
 
 namespace LetMeSleep.Online
@@ -12,17 +14,25 @@ namespace LetMeSleep.Online
         private EosConnection connection;
         private EosLobbySession lobby;
         private EosPeerTransport transport;
+        private OnlineRoomCoordinator room;
+        private EosProbeLifecycle lifecycle;
         private string role, invitePath, receiptPath, cachePath;
         private bool startedRoom, finished;
-        private double startTime, lastSend;
+        private bool remoteSawPlaying, remoteSawResults, remoteSawReturnedLobby;
+        private bool ownerCloseRequested;
+        private double startTime, lastSend, nextAction;
         private string networkType = "NotEstablished";
         private string closeReason = "";
+        private string assignedRole = "";
         private int received;
         [Serializable] private sealed class Invitation { public string code, owner; }
         [Serializable] private sealed class Receipt
         {
-            public string schema = "lms-eos-unity-probe-1", role, result, networkType, closeReason, unityVersion;
+            public string schema = "lms-eos-unity-probe-2", role, result, networkType, closeReason, unityVersion;
             public int received;
+            public string assignedRole;
+            public bool roomHandshake, bothReady, roundStarted, resultObserved, returnedToLobby;
+            public bool ownerCloseRequested, ownerCloseObserved;
             public bool wanVerified = false;
         }
 
@@ -47,6 +57,7 @@ namespace LetMeSleep.Online
             try
             {
                 role = Arg("--role"); invitePath = Arg("--invitation"); receiptPath = Arg("--receipt"); cachePath = Arg("--cache");
+                if (role != "host" && role != "guest") throw new ArgumentException("Probe role must be host or guest.");
                 startTime = Time.realtimeSinceStartupAsDouble;
                 connection = new EosConnection();
                 connection.Initialize(EosConfiguration.Load(Arg("--configuration")), "Unity " + role, cachePath);
@@ -66,6 +77,8 @@ namespace LetMeSleep.Online
                 startedRoom = true;
                 lobby = new EosLobbySession(connection);
                 transport = new EosPeerTransport(connection, lobby, true);
+                room = new OnlineRoomCoordinator(connection, lobby, transport, "Unity " + role);
+                lifecycle = new EosProbeLifecycle(role == "host");
                 transport.PeerStateChanged += (_, state) =>
                 {
                     if (state.StartsWith("Closed:", StringComparison.Ordinal)) closeReason = state.Substring("Closed:".Length);
@@ -75,56 +88,98 @@ namespace LetMeSleep.Online
                 if (role == "host") lobby.Create();
                 else
                 {
-                    var invitation = JsonUtility.FromJson<Invitation>(File.ReadAllText(invitePath));
+                    Invitation invitation;
+                    try { invitation = JsonUtility.FromJson<Invitation>(File.ReadAllText(invitePath)); }
+                    catch (IOException) { Finish("InvitationReadFailed"); return; }
+                    if (invitation == null || string.IsNullOrWhiteSpace(invitation.code) || string.IsNullOrWhiteSpace(invitation.owner))
+                    { Finish("InvalidInvitation"); return; }
                     if (invitation.owner == connection.LocalUserId.ToString()) { Finish("SameDeviceIdentity"); return; }
                     lobby.Join(invitation.code);
                 }
             }
             lobby?.Tick(now);
+            room?.Tick(now);
             transport?.Poll();
             if (lobby != null && lobby.State == LobbyState.Failed) { Finish(lobby.ErrorCode); return; }
             if (lobby != null && lobby.State == LobbyState.Connected)
             {
                 if (role == "host" && !File.Exists(invitePath))
                 {
-                    File.WriteAllText(invitePath, JsonUtility.ToJson(new Invitation { code = lobby.Code, owner = lobby.OwnerId }));
-                }
-                if (role != "host" && now - lastSend >= .5)
-                {
-                    lastSend = now;
-                    transport.Send(lobby.OwnerId, 0, new ArraySegment<byte>(Encoding.UTF8.GetBytes("UnityHello")), true);
+                    try { File.WriteAllText(invitePath, JsonUtility.ToJson(new Invitation { code = lobby.Code, owner = lobby.OwnerId })); }
+                    catch (IOException) { Finish("InvitationWriteFailed"); return; }
                 }
             }
+            TickRoomLifecycle(now);
+        }
+
+        private void TickRoomLifecycle(double now)
+        {
+            if (lifecycle == null || lobby == null || room == null) return;
+            var view = room.Current;
+            var local = view?.Members.FirstOrDefault(member => member.Id == connection.LocalUserId.ToString());
+            bool rolesAssigned = view != null && view.Members.Count >= 2 && view.Members.All(member => member.Role != PlayerRole.Unassigned);
+            if (local != null && local.Role != PlayerRole.Unassigned) assignedRole = local.Role.ToString();
+            if (role != "host" && now - lastSend >= .5)
+            {
+                lastSend = now;
+                string progress = lifecycle.SawReturnedLobby ? "ProbeReturned" : lifecycle.SawResults ? "ProbeResults" : lifecycle.SawPlaying ? "ProbePlaying" : "UnityHello";
+                transport.Send(lobby.OwnerId, 2, new ArraySegment<byte>(Encoding.UTF8.GetBytes(progress)), true);
+            }
+            var action = lifecycle.Advance(lobby.State, view?.Phase, view?.Round ?? 0, local?.Ready == true,
+                view != null && view.Members.Count >= 2 && view.Members.All(member => member.Ready), rolesAssigned,
+                remoteSawPlaying, remoteSawResults, remoteSawReturnedLobby);
+            if (action == EosProbeLifecycleAction.None || now < nextAction) return;
+            nextAction = now + .5;
+            RoomError error = RoomError.None;
+            switch (action)
+            {
+                case EosProbeLifecycleAction.SetReady: error = room.SetReady(true); break;
+                case EosProbeLifecycleAction.StartRound: error = room.StartRound(); break;
+                case EosProbeLifecycleAction.FinishRound: error = room.FinishRound(); break;
+                case EosProbeLifecycleAction.ReturnToLobby: error = room.ReturnToLobby(); break;
+                case EosProbeLifecycleAction.CloseLobby: ownerCloseRequested = true; lobby.Leave(); break;
+                case EosProbeLifecycleAction.Complete: Finish("Success"); return;
+            }
+            if (error != RoomError.None) Finish("Room_" + error);
         }
         private void Receive(string peer, byte channel, ArraySegment<byte> data)
         {
             string text = Encoding.UTF8.GetString(data.Array, data.Offset, data.Count);
+            if (channel != 2) return;
             if (role == "host" && text == "UnityHello")
             {
                 received++;
-                transport.Send(peer, 0, new ArraySegment<byte>(Encoding.UTF8.GetBytes("UnityAck")), true);
-                // Keep host alive until the client confirms its receipt.
+                transport.Send(peer, 2, new ArraySegment<byte>(Encoding.UTF8.GetBytes("UnityAck")), true);
             }
             else if (role != "host" && text == "UnityAck")
             {
                 received++;
-                transport.Send(peer, 0, new ArraySegment<byte>(Encoding.UTF8.GetBytes("UnityConfirmed")), true);
-                Invoke(nameof(Succeed), 1);
+                transport.Send(peer, 2, new ArraySegment<byte>(Encoding.UTF8.GetBytes("UnityConfirmed")), true);
             }
-            else if (role == "host" && text == "UnityConfirmed") Invoke(nameof(Succeed), 1.5f);
+            else if (role == "host" && text == "UnityConfirmed") received++;
+            else if (role == "host" && text == "ProbePlaying") remoteSawPlaying = true;
+            else if (role == "host" && text == "ProbeResults") remoteSawResults = true;
+            else if (role == "host" && text == "ProbeReturned") remoteSawReturnedLobby = true;
         }
-        private void Succeed() => Finish("Success");
         private void Finish(string result)
         {
             if (finished) return;
             finished = true;
             if (!string.IsNullOrWhiteSpace(receiptPath))
-                File.WriteAllText(receiptPath, JsonUtility.ToJson(new Receipt { role = role, result = result, networkType = networkType, closeReason = closeReason, received = received, unityVersion = Application.unityVersion }, true));
+                File.WriteAllText(receiptPath, JsonUtility.ToJson(new Receipt {
+                    role = role, result = result, networkType = networkType, closeReason = closeReason, received = received,
+                    unityVersion = Application.unityVersion, assignedRole = assignedRole,
+                    roomHandshake = room?.Current != null || lifecycle?.SawPlaying == true,
+                    bothReady = lifecycle?.SawPlaying == true, roundStarted = lifecycle?.SawPlaying == true,
+                    resultObserved = lifecycle?.SawResults == true, returnedToLobby = lifecycle?.SawReturnedLobby == true,
+                    ownerCloseRequested = ownerCloseRequested,
+                    ownerCloseObserved = role != "host" && result == "Success"
+                }, true));
             Debug.Log("LMS_EOS_PROBE " + role + " " + result);
-            transport?.Dispose(); lobby?.Dispose(); connection?.Dispose();
+            room?.Dispose(); transport?.Dispose(); lobby?.Dispose(); connection?.Dispose();
             Application.Quit(result == "Success" ? 0 : 2);
         }
-        private void OnDestroy() { transport?.Dispose(); lobby?.Dispose(); connection?.Dispose(); }
+        private void OnDestroy() { room?.Dispose(); transport?.Dispose(); lobby?.Dispose(); connection?.Dispose(); }
     }
 }
 #endif
