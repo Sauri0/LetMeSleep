@@ -7,7 +7,7 @@ namespace LetMeSleep.Gameplay.Unity
         // The caller already bounds contact displacement and tests the destination body.
         // These witnesses prove a local connected path on the actual meshes, not AABBs.
         private static bool WitnessMeshSurfacePath(Collider previous, Collider next,
-            Vector3 from, Vector3 oldNormal, Vector3 to, Vector3 newNormal)
+            Vector3 from, Vector3 oldNormal, Vector3 to, Vector3 newNormal, int bridgesLeft = 2)
         {
             float cosine = Vector3.Dot(oldNormal, newNormal);
             if (cosine < -.98f) return false;
@@ -45,8 +45,24 @@ namespace LetMeSleep.Gameplay.Unity
             // Each face must reach the same seam; nearby disconnected planes fail here.
             Vector3 oldEnd = Vector3.MoveTowards(seam, from, Mathf.Min(.001f, oldLength * .5f));
             Vector3 newEnd = Vector3.MoveTowards(seam, to, Mathf.Min(.001f, newLength * .5f));
-            return MeshSurfaceSegment(previous, from, oldEnd, oldNormal) &&
-                MeshSurfaceSegment(next, to, newEnd, newNormal);
+            if (MeshSurfaceSegment(previous, from, oldEnd, oldNormal) &&
+                MeshSurfaceSegment(next, to, newEnd, newNormal)) return true;
+            // Authored bevels replace the mathematical corner with an intermediate face.
+            // Witness that face, then require physical joins on both sides recursively.
+            // This never fills a missing bevel or changes the 2mm seam tolerance.
+            if (bridgesLeft <= 0) return false;
+            Vector3 bridgeNormal = (oldNormal + newNormal).normalized;
+            if (bridgeNormal.sqrMagnitude < .9f) return false;
+            foreach (var surface in new[] { previous, next })
+            {
+                if (!surface.Raycast(new Ray(seam + bridgeNormal * .035f, -bridgeNormal), out var bridge, .07f) ||
+                    Vector3.Distance(bridge.point, seam) > .03f ||
+                    Vector3.Dot(bridge.normal, oldNormal) >= .98f || Vector3.Dot(bridge.normal, newNormal) >= .98f ||
+                    Vector3.Dot(bridge.normal, oldNormal) < -.1f || Vector3.Dot(bridge.normal, newNormal) < -.1f) continue;
+                if (WitnessMeshSurfacePath(previous, surface, from, oldNormal, bridge.point, bridge.normal, bridgesLeft - 1) &&
+                    WitnessMeshSurfacePath(surface, next, bridge.point, bridge.normal, to, newNormal, bridgesLeft - 1)) return true;
+            }
+            return false;
         }
 
         private static bool WitnessMeshRiser(Collider previous, Collider next,

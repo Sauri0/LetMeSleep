@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LetMeSleep.Core;
 using LetMeSleep.Gameplay;
 using LetMeSleep.Gameplay.Unity;
@@ -108,6 +109,117 @@ namespace LetMeSleep.Tests.PlayMode
                 "FreeMosquito must reject a geometrically penetrating destination.");
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SmallBevelRequiresAnActualConnectingFace(bool includeBevel)
+        {
+            fixture.DisableDefaultWallAndCeiling();
+            fixture.Bevel(includeBevel);
+            fixture.RefreshGeometry();
+            var previous = fixture.Acquire(new Vector3(0, .978f, -.057f), Vector3.forward);
+            bool followed = fixture.World.TryFollowSurface(2, previous.Attachment,
+                new Float3(0, 1.005f, -.057f), new Float3(0, 1, 0), out var next);
+            Assert.That(followed, Is.EqualTo(includeBevel),
+                "Two nearby faces need a physically witnessed connecting bevel.");
+            if (followed)
+            {
+                Assert.That(next.WorldNormal.Y, Is.GreaterThan(.98f));
+                Assert.That(fixture.PenetratesMap(next.WorldPoint.ToUnity() + next.WorldNormal.ToUnity() * .057f, .054f), Is.False);
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void BevelConnectivityIsPreservedAfterRotationAndTranslation(bool connected)
+        {
+            fixture.DisableDefaultWallAndCeiling();
+            Transform support = fixture.Bevel(true, connected ? 0 : .0075f);
+            support.SetPositionAndRotation(new Vector3(13, 7, -11), Quaternion.Euler(23, 61, -37));
+            fixture.RefreshGeometry();
+            var previous = fixture.Acquire(support.TransformPoint(new Vector3(0, .978f, -.057f)),
+                support.TransformDirection(Vector3.forward));
+            bool followed = fixture.World.TryFollowSurface(2, previous.Attachment,
+                support.TransformPoint(new Vector3(0, 1.005f, -.057f)).ToFloat(),
+                support.TransformDirection(Vector3.up).ToFloat(), out var next);
+            Assert.That(followed, Is.EqualTo(connected),
+                "A nearby diagonal fragment separated by 7.5mm must not act as a connecting face.");
+            if (followed)
+            {
+                Assert.That(Vector3.Dot(next.WorldNormal.ToUnity(), support.up), Is.GreaterThan(.98f));
+                Assert.That(fixture.PenetratesMap(next.WorldPoint.ToUnity() + next.WorldNormal.ToUnity() * .057f, .054f), Is.False);
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void AuthorityCrossesTheBevelWithoutDetachingOrPenetrating(bool reverse)
+        {
+            fixture.DisableDefaultWallAndCeiling();
+            fixture.Bevel(true);
+            fixture.RefreshGeometry();
+            foreach (var actor in fixture.World.Actors.Values.ToArray()) Object.DestroyImmediate(actor.gameObject);
+            ((IDictionary<uint, GameplayActorProxy>)fixture.World.Actors).Clear();
+            var authority = new GameplayAuthority(fixture.World);
+            authority.BeginRound(new GameplayRoundConfig(1, 1, "house-patio-v1", "bevel-authority", 300, 100),
+                new[]
+                {
+                    new SpawnActor(1, "h", PlayerRole.Human, new Float3(10, 0, 10)),
+                    new SpawnActor(2, "m", PlayerRole.Mosquito,
+                        (reverse ? new Vector3(0, 1.12f, .2f) : new Vector3(0, .78f, -.12f)).ToFloat())
+                });
+            uint sequence = 0;
+            ActorSnapshot Self() => authority.CaptureSnapshot().Actors.Single(a => a.ActorId == 2);
+            void Input(Vector3 aim, bool move)
+            {
+                aim.Normalize();
+                float yaw = Mathf.Atan2(aim.x, aim.z);
+                float pitch = Mathf.Clamp(Mathf.Asin(Mathf.Clamp(aim.y, -1, 1)), -1.919863f, 1.553343f);
+                Assert.That(authority.SubmitInput("m", new PlayerInputCommand(
+                    new CommandHeader(1, 1, 2, ++sequence, authority.CurrentTick, Self().ViewRevision),
+                    move ? new Float2(0, 1) : default, 0, yaw, pitch, MathEx.Aim(yaw, pitch))),
+                    Is.EqualTo(CommandReject.None));
+            }
+            void Tick(Vector3 aim, bool move)
+            {
+                var previous = Self().Position;
+                Input(aim, move);
+                authority.Advance(new HostTick(authority.CurrentTick + 1));
+                Assert.That((Self().Position - previous).Length, Is.LessThan(.04f), "Unbounded motor step");
+                Assert.That(fixture.PenetratesMap(Self().Position.ToUnity(), .054f), Is.False,
+                    "Traversal penetrated authored geometry at tick " + authority.CurrentTick);
+            }
+            Vector3 oldNormal = reverse ? Vector3.up : Vector3.back;
+            Input(-oldNormal, false);
+            Assert.That(authority.SubmitAction("m", new PlayerActionCommand(
+                new CommandHeader(1, 1, 2, 1, authority.CurrentTick, Self().ViewRevision),
+                ActionKind.PerchToggle, Self().ViewForward)), Is.EqualTo(CommandReject.None));
+            for (int i = 0; i < 20; i++) Tick(-oldNormal, false);
+            Assert.That(Self().LifeState, Is.EqualTo(LifeState.Surface), "Initial approach failed");
+            Vector3 tangent = reverse ? Vector3.back : Vector3.up;
+            for (int i = 0; i < 15; i++) Tick(tangent, false);
+            Vector3 wantedNormal = reverse ? Vector3.back : Vector3.up;
+            for (int i = 0; i < 70; i++)
+            {
+                var self = Self();
+                Assert.That(self.SurfaceAttachment.HasValue, Is.True, "Detached at tick " + authority.CurrentTick);
+                Assert.That(fixture.World.ResolveSurface(self.SurfaceAttachment.Value, out var support), Is.True);
+                Vector3 normal = support.WorldNormal.ToUnity();
+                if (Vector3.Dot(normal, oldNormal) < .98f)
+                {
+                    tangent = SurfaceVisualFrame.TransportForward(oldNormal.ToFloat(), normal.ToFloat(), tangent.ToFloat()).ToUnity();
+                    oldNormal = normal;
+                }
+                if (Vector3.Dot(normal, wantedNormal) > .98f && self.LifeState == LifeState.Surface)
+                {
+                    for (int j = 0; j < 5; j++) Tick(tangent, false);
+                    Assert.That(Self().LifeState, Is.EqualTo(LifeState.Surface));
+                    return;
+                }
+                Tick(tangent, true);
+            }
+            Assert.Fail("Did not arrive on the opposite face within the bounded traversal window");
+        }
+
         private sealed class Fixture : IDisposable
         {
             private readonly List<Mesh> meshes = new List<Mesh>();
@@ -144,6 +256,27 @@ namespace LetMeSleep.Tests.PlayMode
                 meshes.Add(box.Mesh);
                 go.AddComponent<GameplaySurface>().SurfaceId = id;
                 return box;
+            }
+
+            public Transform Bevel(bool includeBevel, float disconnection = 0)
+            {
+                var go = new GameObject("7.5mm authored bevel"); go.transform.SetParent(map, false);
+                var vertices = new List<Vector3>(); var triangles = new List<int>();
+                void Quad(Vector3 a, Vector3 b)
+                {
+                    int start = vertices.Count;
+                    vertices.Add(a + Vector3.left); vertices.Add(a + Vector3.right);
+                    vertices.Add(b + Vector3.right); vertices.Add(b + Vector3.left);
+                    triangles.AddRange(new[] { start, start+2, start+1, start, start+3, start+2 });
+                }
+                Quad(Vector3.zero, new Vector3(0, .9925f - disconnection, 0));
+                if (includeBevel) Quad(new Vector3(0, .9925f, 0), new Vector3(0, 1, .0075f));
+                Quad(new Vector3(0, 1, .0075f + disconnection), new Vector3(0, 1, 1));
+                var mesh = new Mesh { name = "Owned bevel witness mesh" };
+                mesh.SetVertices(vertices); mesh.SetTriangles(triangles, 0); mesh.RecalculateBounds(); mesh.RecalculateNormals();
+                meshes.Add(mesh); go.AddComponent<MeshCollider>().sharedMesh = mesh;
+                go.AddComponent<GameplaySurface>().SurfaceId = 10;
+                return go.transform;
             }
 
             public void Blocker(string name, Vector3 center, Vector3 size)
