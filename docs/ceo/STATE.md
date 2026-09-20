@@ -1,5 +1,26 @@
 # Relevo CEO — 2026-09-19
 
+## Checkpoint posterior — Casa A/B, probe de dos ciclos, apariencia privada
+
+- Steering07: 7/7 PASS con snapshots reales y cadencia3; esto no cerró Casa.
+  Casa-catalog07 sigue 23/50 PASS spawn, con las mismas seis regresiones frente
+  a04. Comparador externo exige claves y presupuestos idénticos.
+- Casa-spawn3-coffee-ab01: raw-control PASS152; predictor FAIL330. Tick44
+  reclasifica región en plena escalera, pierde straight_stair y apunta hacia
+  uf_west_rear_hall. Predictor además favorece desvíos con avance previsto
+  sobre despeje real. Técnica y Astra investigan ambas causas; no instalar.
+- 9520e77 integra probe de desarrollo con DOS CICLOS de RoomCoordinator:
+  9/9 EditMode nativos. No ejecuta dos partidas GameplayAuthority ni prueba
+  movimiento/herramientas/voz/WAN. Ver EOS-PROBE-TWO-ROUNDS.md.
+- 7109bd2 conserva tres inputs ya comprobados: fog URP, dependencias asmdef
+  de pruebas y serialización Unity6000.3 de QualitySettings. No cambia el
+  objetivo de rendimiento ni certifica60FPS.
+- personalizacion_estado_v020 (terra/high) implementa P26/P27/P28: borrador
+  local automático, deshacer de sesión y publicación al aplicar. WIP sólo
+  Preferences/UI personalizado/tests/doc; no catálogo ni arte nuevos aún.
+- Higgsfield continúa sin auth.json persistido; pregunta de login pendiente.
+  No se envió ninguna generación nueva. Sin build final ni release v0.2.0.
+
 ## Resultado posterior — J32 y carga gráfica
 
 - J32 aceptado en c47983d: bot-replan-native-02 54/54 PASS, sin omitidos,
