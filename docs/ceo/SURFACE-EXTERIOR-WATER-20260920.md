@@ -1,5 +1,24 @@
 # Superficies exteriores y pozo: resultados nativos
 
+## Cierre posterior del diagnóstico del pozo
+
+Native03 confirmó que el único fallback del fixture negativo era el punto
+Frozen sobre agua. Sus cuatro esquinas inferiores caen dentro del prisma y
+TrySafe lo rechaza; los 16 spawns reales del mapa sí resultan seguros.
+
+Native04, `WellWaterAuthority01/native-results-04/well-authority-positive.json`,
+PASS con errors vacío, cleanup y sourcesUnchanged true. BeginRound registra el
+spawn real `Spawn_Mosquito_01_Pueblo` (-5,7,-5). El fixture inyecta únicamente
+Actor.Position en tick0 para aislar el estado Frozen: no toca roster, memoria
+de recuperación ni cached-safe. Tras el mismo PerchToggle, ticks1/2 se aproximan
+y tick3 devuelve Recovered al spawn real, Flying y sin attachment. Nunca aparece
+Surface; CheckBounds inmediato devuelve NotRequired.
+
+Esto prueba recuperación con fallback real bajo una posición de ensayo inyectada,
+no navegación desde el spawn al pozo. Native02 permanece como negativo sin
+destino seguro; no hubo defecto de runtime demostrado ni cambio de física.
+Informe y hashes completos: `N:/LetMeSleep/Validation/V020/WellWaterAuthority01/DIAGNOSIS.md`.
+
 Unity 6000.3.24f1, checkout aislado `a654d8b`. Comparación con central `b645a52`:
 sin diferencias Git en Gameplay, Gameplay.Unity y Content/Environment. Ningún
 cambio de política ni física del runtime en estos ensayos.

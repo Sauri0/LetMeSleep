@@ -1,5 +1,19 @@
 # Relevo CEO — 2026-09-19
 
+## Cierre posterior: recuperación de pozo con roster real pasa
+
+- Well native03 confirma causa del negativo: único fallback Frozen inseguro,
+  cuatro esquinas corporales en agua. Los 16 spawns reales pasan TrySafe.
+- Well native04 PASS: BeginRound con spawn real (-5,7,-5), inyección de posición
+  Frozen sólo en fixture, mismo PerchToggle. Tick3 Recovered al spawn, Flying
+  sin attachment, post-check NotRequired. No afirmar vuelo real hasta el pozo.
+  Originales negativos intactos; ninguna modificación runtime necesaria.
+- Capture05 falló por comparar pose de cámara anterior al yield;06 conserva
+  PNG y diagnostica borrado de mundo en segundo render. HUD legible aislado,
+  composición aún no aceptada. Red prepara stack URP con actualización de Canvas.
+- Técnica liberó Unity tras native04. CEO reserva siguiente smoke de captura.
+  UI consolida clasificación de 14FAIL/11GAP Frozen sin cambiar sus estados.
+
 ## Resultado más reciente: Camp exterior pasa; recuperación del pozo no
 
 - SurfaceCampExterior01 native02: PASS_SCOPED 3/3, una esquina lateral exterior
