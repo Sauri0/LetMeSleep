@@ -1,0 +1,12 @@
+{
+  "name": "LetMeSleep.Tests.VoicePlayMode",
+  "rootNamespace": "LetMeSleep.Tests.VoicePlayMode",
+  "references": [
+    "LetMeSleep.Audio"
+  ],
+  "includePlatforms": [],
+  "autoReferenced": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

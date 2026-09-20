@@ -105,10 +105,10 @@ namespace LetMeSleep.Online
             if (!ValidTime(now) || context == null || !context.LocalCanListen || localMuted || !focused || paused) return;
             foreach (Receiver receiver in receiversByMember.Values)
             {
-                if (mutedActors.Contains(receiver.Route.ActorId)) { receiver.Jitter.Clear(); continue; }
+                if (mutedActors.Contains(receiver.Route.ActorId)) { receiver.Jitter.ClearTemporary(); continue; }
                 for (int emitted = 0; emitted < 3 && receiver.Jitter.TryDequeue(now, out byte[] payload, out bool concealed); emitted++)
                 {
-                    if (!codec.TryDecode(new ArraySegment<byte>(payload), out float[] samples)) { receiver.Jitter.Clear(); break; }
+                    if (!codec.TryDecode(new ArraySegment<byte>(payload), out float[] samples)) { receiver.Jitter.ClearTemporary(); break; }
                     float volume = masterVolume * (actorVolumes.TryGetValue(receiver.Route.ActorId, out float actorVolume) ? actorVolume : 1f);
                     if (concealed) volume *= 0.85f;
                     float square = 0;
@@ -131,7 +131,7 @@ namespace LetMeSleep.Online
         {
             ThrowIfDisposed();
             if (actorId == 0) throw new ArgumentOutOfRangeException(nameof(actorId));
-            if (muted) { mutedActors.Add(actorId); if (receiversByActor.TryGetValue(actorId, out Receiver receiver)) receiver.Jitter.Clear(); }
+            if (muted) { mutedActors.Add(actorId); if (receiversByActor.TryGetValue(actorId, out Receiver receiver)) receiver.Jitter.ClearTemporary(); }
             else mutedActors.Remove(actorId);
         }
 
@@ -142,7 +142,7 @@ namespace LetMeSleep.Online
             if (!receiversByActor.TryGetValue(actorId, out Receiver receiver)) throw new ArgumentOutOfRangeException(nameof(actorId));
             receiver.CanHearLocal = peerCanHearLocal;
             receiver.CanSpeakToLocal = localCanHearPeer;
-            if (!localCanHearPeer) receiver.Jitter.Clear();
+            if (!localCanHearPeer) receiver.Jitter.ClearTemporary();
         }
 
         public void SetMasterVolume(float volume) { ThrowIfDisposed(); masterVolume = ValidateVolume(volume); }
@@ -208,7 +208,7 @@ namespace LetMeSleep.Online
 
         private void ClearReceiverBuffers()
         {
-            foreach (Receiver receiver in receiversByMember.Values) receiver.Jitter.Clear();
+            foreach (Receiver receiver in receiversByMember.Values) receiver.Jitter.ClearTemporary();
         }
 
         private static bool ValidTime(double now) => now >= 0 && !double.IsNaN(now) && !double.IsInfinity(now);

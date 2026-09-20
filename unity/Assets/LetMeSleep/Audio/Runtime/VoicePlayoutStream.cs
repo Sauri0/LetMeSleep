@@ -12,6 +12,7 @@ namespace LetMeSleep.Audio
         private readonly float[] ring = new float[BufferSamples];
         private AudioSource source;
         private AudioLowPassFilter lowPass;
+        private AudioClip ownedClip;
         private readonly VoiceMosquitoTimbre mosquitoTimbre = new VoiceMosquitoTimbre();
         private int read, write, count;
         private bool initialized, mosquitoVoice;
@@ -21,10 +22,13 @@ namespace LetMeSleep.Audio
         public void Initialize(uint actorId)
         {
             if (actorId == 0) throw new ArgumentOutOfRangeException(nameof(actorId));
+            Clear();
             ActorId = actorId;
             source = GetComponent<AudioSource>();
+            ReleaseOwnedClip();
             source.playOnAwake = false; source.loop = true; source.spatialBlend = 1f; source.pitch = 1f;
-            source.clip = AudioClip.Create("VoicePlayout", BufferSamples, 1, SampleRate, true, OnAudioRead, OnAudioSetPosition);
+            ownedClip = AudioClip.Create("VoicePlayout", BufferSamples, 1, SampleRate, true, OnAudioRead, OnAudioSetPosition);
+            source.clip = ownedClip;
             lowPass = GetComponent<AudioLowPassFilter>();
             if (lowPass == null) lowPass = gameObject.AddComponent<AudioLowPassFilter>();
             lowPass.cutoffFrequency = 22000f; initialized = true; source.Play();
@@ -91,6 +95,20 @@ namespace LetMeSleep.Audio
 
         private void OnAudioSetPosition(int position) { }
         private void OnDisable() { Clear(); if (source != null) source.Stop(); }
-        private void OnDestroy() { Clear(); if (source != null) { source.Stop(); source.clip = null; } }
+        private void OnDestroy() { Clear(); initialized = false; ReleaseOwnedClip(); }
+
+        private void ReleaseOwnedClip()
+        {
+            AudioClip clip = ownedClip;
+            ownedClip = null;
+            if (source != null)
+            {
+                source.Stop();
+                if (source.clip == clip) source.clip = null;
+            }
+            if (clip == null) return;
+            if (Application.isPlaying) Destroy(clip);
+            else DestroyImmediate(clip);
+        }
     }
 }

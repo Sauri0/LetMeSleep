@@ -17,7 +17,9 @@ WAN, hardware real o escucha humana.
   prebuffer de 60 ms, ventana futura de 24, cola de 12, hasta tres cuadros por
   tick, cierre a 300 ms y concealment acotado. Un `End` descarta cuadros iguales
   o posteriores a su secuencia y deja tombstone para que un stream cerrado no
-  reviva por paquetes tardíos.
+  reviva por paquetes tardíos. Las purgas temporales de audibilidad, mute,
+  foco o pausa conservan un watermark: permiten reanudar el mismo stream sólo
+  con una secuencia nueva, sin reproducir audio ya descartado.
 - `Online/VoiceOnlineSession.cs`: PTT, autenticación PUID→actor desde membresía
   real, ronda/epoch, mute local/por actor, volumen, foco/pausa, purga y cambio de
   audibilidad sin reiniciar PTT. Reiniciar PTT no repone los token buckets.
@@ -30,7 +32,8 @@ WAN, hardware real o escucha humana.
   exactos de 240 muestras.
 - `Audio/Runtime/VoicePlayoutStream.cs`: ring PCM por actor, `pitch=1`, mute,
   volumen, RMS de boca y hooks locales de ganancia/low-pass para proximidad y
-  oclusión.
+  oclusión. El componente conserva y destruye únicamente el `AudioClip` runtime
+  que creó, tanto al reinicializarse como al destruirse.
 - `Audio/Runtime/VoiceMosquitoTimbre.cs`: pitch shifter streaming con dos
   cabezas de retardo y crossfade. Produce una salida por muestra de entrada; no
   acelera el `AudioSource` ni cambia la duración.
@@ -94,6 +97,36 @@ Los 10 casos de red y 2 de Audio usan datagramas en memoria y señales generadas
 El runner no abrió `Microphone`, no reprodujo hardware y no estableció una
 sesión EOS. Este gate acredita compilación Unity y comportamiento determinista
 del núcleo; no acredita escucha, dispositivo, LAN o WAN.
+
+## Corrección posterior de ciclo de vida
+
+Se añadieron dos regresiones EditMode y una PlayMode después del gate nativo
+anterior. Las regresiones de red ejercitan secuencia 1, purga temporal y
+secuencia 3 sobre el mismo stream, además de repetir el ciclo para mute, foco y
+pausa. También comprueban que un replay no entra y que ningún paquete igual o
+posterior al `End` revive el stream. La regresión PlayMode inicializa,
+reinicializa y destruye `VoicePlayoutStream`, espera la destrucción diferida de
+cada clip propio y comprueba que un clip externo sigue vivo.
+
+Validación offline posterior:
+
+- `LetMeSleep.Online`, `LetMeSleep.Audio` y `LetMeSleep.Tests.EditMode`
+  compilaron contra las referencias locales de Unity 6000.3.24f1 con 0 errores.
+  MSBuild informó conflictos preexistentes de versiones `System.Memory` y
+  `System.Buffers`; no son ejecución del runner Unity.
+- Harness externo enlazado a las fuentes reales: 16 aserciones pasadas para
+  audibilidad, mute, foco, pausa, replay y límite `End`.
+- Unity 6000.3.24f1 ejecutó EditMode con 14/14 casos pasados, 0 fallidos y
+  0 omitidos (`voice-native-02.xml`): 12 de red y 2 de señal sintética.
+- La corrida de clearance pasó 19/19 casos, 0 fallidos y 0 omitidos, incluido
+  `VoicePlayoutStreamLifecycleTests.InitializeReinitializeAndDestroyReleaseOnlyOwnedClips`
+  (`clearance-voice-native-01.xml`). La prueba PlayMode no abre micrófono ni
+  requiere hardware de audio.
+
+Evidencia:
+
+- `N:/LetMeSleep/Validation/V020/voice-native-02.xml`
+- `N:/LetMeSleep/Validation/V020/clearance-voice-native-01.xml`
 
 ## Límites abiertos
 

@@ -77,6 +77,29 @@ namespace LetMeSleep.Tests.EditMode
         }
 
         [Test]
+        public void JitterBuffer_TemporaryClearResumesSameStreamWithoutReplayOrCrossingEnd()
+        {
+            byte[] one = FilledPayload(1), three = FilledPayload(3);
+            var jitter = new VoiceJitterBuffer();
+            Assert.That(jitter.AcceptAudio(5, 1, one, 0), Is.True);
+            jitter.ClearTemporary();
+            Assert.That(jitter.TryDequeue(1, out _, out _), Is.False, "A temporary gate must not idle-close the open stream.");
+            Assert.That(jitter.AcceptAudio(5, 1, one, 1.01), Is.False, "Temporary purge must retain the replay watermark.");
+            Assert.That(jitter.AcceptAudio(5, 3, three, 1.02), Is.True, "A newer sequence from the same PTT stream must resume playout.");
+            Assert.That(jitter.TryDequeue(1.08, out byte[] resumed, out bool concealed), Is.True);
+            Assert.That(resumed, Is.EqualTo(three));
+            Assert.That(concealed, Is.False);
+            Assert.That(jitter.AcceptEnd(5, 4, 1.09), Is.True);
+            jitter.ClearTemporary();
+            Assert.That(jitter.AcceptAudio(5, 4, three, 1.10), Is.False);
+            Assert.That(jitter.AcceptAudio(5, 5, three, 1.11), Is.False);
+            Assert.That(jitter.AcceptAudio(6, 1, one, 1.12), Is.True);
+            jitter.ClearTemporary();
+            Assert.That(jitter.AcceptEnd(6, 100, 1.13), Is.True, "End after an intentionally ignored interval must still close the stream.");
+            Assert.That(jitter.AcceptAudio(6, 101, three, 1.14), Is.False);
+        }
+
+        [Test]
         public void RateLimiter_IsBoundedAndRejectsTimeRollback()
         {
             var limiter = new VoiceRateLimiter();
@@ -167,6 +190,39 @@ namespace LetMeSleep.Tests.EditMode
             now = 0.1; session.Tick(now); Assert.That(heard, Is.Zero);
             session.SetPeerAudibility(4, true, true);
             now = 0.2; Assert.That(session.SubmitCapturedFrame(Sine(220, 0.1f), now), Is.True);
+        }
+
+        [Test]
+        public void Session_TemporaryListeningGatesResumeNewSequencesFromSameStream()
+        {
+            double now = 0;
+            using var transport = new FakeTransport("peer-a");
+            using var session = new VoiceOnlineSession(transport, () => now);
+            session.UpdateRound(new VoiceRoundContext(1, 2, 3, true, true,
+                new[] { new VoicePeerRoute("peer-a", 4, true, true, false) }));
+            int heard = 0;
+            session.FrameDecoded += _ => heard++;
+            byte[] frame = new VoiceImaAdpcmCodec().Encode(Sine(300, 0.2f));
+
+            Receive(1); session.SetPeerAudibility(4, true, false); session.SetPeerAudibility(4, true, true);
+            now = 0.5; session.Tick(now);
+            Receive(1); Receive(3); now = 0.56; session.Tick(now);
+            Assert.That(heard, Is.EqualTo(1), "Audibility recovery must play only the new sequence from the open stream.");
+
+            now = 0.57; Receive(4); session.SetPeerMuted(4, true); session.SetPeerMuted(4, false);
+            Receive(4); Receive(6); now = 0.63; session.Tick(now);
+            Assert.That(heard, Is.EqualTo(2), "Unmute must resume the same stream without accepting replay.");
+
+            now = 0.64; Receive(7); session.SetApplicationFocused(false); session.SetApplicationFocused(true);
+            Receive(7); Receive(9); now = 0.70; session.Tick(now);
+            Assert.That(heard, Is.EqualTo(3), "Focus recovery must resume the same stream without accepting replay.");
+
+            now = 0.71; Receive(10); session.SetApplicationPaused(true); session.SetApplicationPaused(false);
+            Receive(10); Receive(12); now = 0.77; session.Tick(now);
+            Assert.That(heard, Is.EqualTo(4), "Pause recovery must resume the same stream without accepting replay.");
+
+            void Receive(uint packetSequence) => transport.Receive("peer-a", VoiceWireCodec.Encode(
+                new VoicePacket(VoicePacketKind.Audio, 1, 2, 4, 5, packetSequence, frame)));
         }
 
         [Test]
