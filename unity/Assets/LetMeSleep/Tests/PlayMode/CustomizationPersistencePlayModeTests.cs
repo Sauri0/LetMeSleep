@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using LetMeSleep.Bootstrap;
 using LetMeSleep.Core;
+using LetMeSleep.Core.Customization;
 using LetMeSleep.UI;
 using NUnit.Framework;
 using TMPro;
@@ -26,7 +27,19 @@ namespace LetMeSleep.Tests.PlayMode
             public BasicCustomizationDraft localAppearanceDraft;
         }
 
-        private const string BootScene = "LetMeSleepBoot";
+        [Serializable]
+        private sealed class PreferenceV2Fixture
+        {
+            public int schema = 2;
+            public string playerName = "Prueba";
+            public AlfaSettingsDraft settings;
+            public AppearanceSelection publishedAppearance;
+            public AppearanceSelection localAppearanceDraft;
+            public int resolutionWidth;
+            public int resolutionHeight;
+        }
+
+        private const string BootScene = "LetMeSleepHiggsfield";
         private string dataPath;
         private AlfaApplication application;
         private AlfaUiController ui;
@@ -118,7 +131,7 @@ namespace LetMeSleep.Tests.PlayMode
         public IEnumerator UnsupportedSchemaBlocksCustomizationWriteWithoutChangingTheFile()
         {
             ResetFixtureDirectory();
-            string future = "{\"schema\":2,\"appearance\":{\"Role\":0,\"SkinColorId\":\"warm\",\"PajamaColorId\":\"blue\",\"MosquitoColorId\":\"red\"}}";
+            string future = "{\"schema\":3,\"appearance\":{\"Role\":0,\"SkinColorId\":\"warm\",\"PajamaColorId\":\"blue\",\"MosquitoColorId\":\"red\"}}";
             File.WriteAllText(PreferencePath, future);
             byte[] before = File.ReadAllBytes(PreferencePath);
             yield return ReloadBootScene();
@@ -126,7 +139,57 @@ namespace LetMeSleep.Tests.PlayMode
             application.PreviewCustomization(LocalDraft());
 
             Assert.That(File.ReadAllBytes(PreferencePath), Is.EqualTo(before));
-            Assert.That(Field<CustomizationUiState>(ui, "customizationState").Message, Does.Contain("otra versión"));
+            var state = Field<CustomizationUiState>(ui, "customizationState");
+            Assert.That(state.Message, Does.Contain("otra versión"));
+            Assert.That(state.IsReadOnly, Is.True);
+            Assert.That(state.IsSaving, Is.False);
+            AssertNoTemporaryFiles();
+        }
+
+        [UnityTest]
+        public IEnumerator SchemaTwoWithoutRuntimePreservesTheExactFileAndDisablesBasicEditing()
+        {
+            ResetFixtureDirectory();
+            Directory.CreateDirectory(dataPath);
+            var published = new AppearanceSelection(new AppearanceLoadout(new[]
+            {
+                new AppearanceSlotSelection("human.future", "published")
+            }), new AppearanceLoadout());
+            var local = new AppearanceSelection(new AppearanceLoadout(new[]
+            {
+                new AppearanceSlotSelection("human.future", "private")
+            }), new AppearanceLoadout());
+            var fixture = new PreferenceV2Fixture
+            {
+                settings = new AlfaSettingsDraft { MasterVolume = .7f, MusicVolume = .4f, EffectsVolume = .8f,
+                    VoiceVolume = .6f, PushToTalkBinding = "<Keyboard>/v", FullScreen = false,
+                    HumanSensitivity = 1f, MosquitoSensitivity = 1f },
+                publishedAppearance = published,
+                localAppearanceDraft = local,
+                resolutionWidth = 1280,
+                resolutionHeight = 720
+            };
+            string json = JsonUtility.ToJson(fixture, true);
+            Assert.That(PreferenceSchemaCodec.IsExactV2RoundTrip(json), Is.True, "The fixture must be a known schema-2 document.");
+            File.WriteAllText(PreferencePath, json);
+            byte[] before = File.ReadAllBytes(PreferencePath);
+            yield return ReloadBootScene();
+
+            application.PreviewCustomization(LocalDraft());
+            var changedSettings = Field<AlfaSettingsDraft>(application, "settings").Copy();
+            changedSettings.MasterVolume = .2f;
+            application.ApplySettings(changedSettings);
+
+            Assert.That(File.ReadAllBytes(PreferencePath), Is.EqualTo(before));
+            var state = Field<CustomizationUiState>(ui, "customizationState");
+            Assert.That(state.Mode, Is.EqualTo(CustomizationUiMode.Basic));
+            Assert.That(state.IsReadOnly, Is.True, "The fallback controls must remain disabled for retained V2 data.");
+            Assert.That(state.IsSaving, Is.False, "A permanent data gate is not an operation in progress.");
+            Assert.That(state.Message, Does.Contain("modular"));
+            ui.ShowCustomization();
+            Assert.That(ui.CurrentScreen, Is.EqualTo(AlfaUiScreen.Customization));
+            Invoke(ui, "CloseCustomization");
+            Assert.That(ui.CurrentScreen, Is.EqualTo(AlfaUiScreen.MainMenu), "Read-only customization must allow returning to the menu.");
             AssertNoTemporaryFiles();
         }
 

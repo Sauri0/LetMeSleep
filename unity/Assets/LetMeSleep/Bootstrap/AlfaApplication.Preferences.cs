@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using LetMeSleep.Audio;
 using LetMeSleep.Content.Characters;
+using LetMeSleep.Core.Customization;
 using LetMeSleep.UI;
 using UnityEngine;
 
@@ -10,13 +11,6 @@ namespace LetMeSleep.Bootstrap
 {
     public sealed partial class AlfaApplication
     {
-        [Serializable] private sealed class Preferences
-        {
-            public int schema; public string playerName; public AlfaSettingsDraft settings; public BasicCustomizationDraft appearance;
-            public BasicCustomizationDraft localAppearanceDraft;
-            // Additive schema-1 fields. Zero/zero identifies a legacy positional selection.
-            public int resolutionWidth; public int resolutionHeight;
-        }
         private AlfaSettingsDraft settings = new AlfaSettingsDraft { MasterVolume = .8f, MusicVolume = .5f, EffectsVolume = .85f,
             VoiceVolume = .8f, PushToTalkBinding = "<Keyboard>/v",
             HumanSensitivity = 1f, MosquitoSensitivity = 1f, FullScreen = true, VSync = false, FrameLimit = 0 };
@@ -59,27 +53,59 @@ namespace LetMeSleep.Bootstrap
             settings.ResolutionIndex = currentIndex;
             settings.FullScreen = appliedFullscreen;
             bool loadedSettings = false, migrateResolution = false, migrateLocalAppearance = false;
+            ResolveModularCustomizationRuntime();
             try
             {
-                preferenceStore = new PreferenceFileStore(Path.Combine(DataPath, "preferences.json"), ClassifyPreferences);
+                string preferencePath = Path.Combine(DataPath, "preferences.json");
+                if (DetectStoredPreferenceSchema(preferencePath) == 2)
+                { loadedPreferenceSchema = 2; preferenceWritesBlocked = true; }
+                preferenceStore = new PreferenceFileStore(preferencePath, ClassifyPreferences);
                 string json = preferenceStore.Load();
-                if (preferenceStore.WriteBlocked) saveError = "Los ajustes son de otra versión. Se conservaron sin modificar.";
+                if (preferenceStore.WriteBlocked)
+                {
+                    preferenceWritesBlocked = true;
+                    saveError = "Los ajustes son de otra versión. Se conservaron sin modificar.";
+                }
                 else if (preferenceStore.RecoveredFromBackup) saveError = "Se recuperaron los ajustes de la copia de respaldo.";
                 if (json != null)
                 {
-                    var data = JsonUtility.FromJson<Preferences>(json);
-                    if (data.settings != null)
+                    var header = JsonUtility.FromJson<PreferencesHeader>(json);
+                    if (header != null && header.schema == 2 && PreferenceSchemaCodec.TryReadV2(json, out var modularData))
                     {
-                        settings = Sanitize(data.settings);
-                        settings.ResolutionIndex = ResolveResolutionIndex(resolutions, data.resolutionWidth,
-                            data.resolutionHeight, data.settings.ResolutionIndex, currentIndex);
-                        loadedSettings = true;
-                        migrateResolution = data.schema == 1 && data.resolutionWidth == 0 && data.resolutionHeight == 0;
+                        loadedPreferenceSchema = 2;
+                        if (modularData.settings != null)
+                        {
+                            settings = Sanitize(modularData.settings);
+                            settings.ResolutionIndex = ResolveResolutionIndex(resolutions, modularData.resolutionWidth,
+                                modularData.resolutionHeight, modularData.settings.ResolutionIndex, currentIndex);
+                            loadedSettings = true;
+                        }
+                        if (!string.IsNullOrWhiteSpace(modularData.playerName) && modularData.playerName.Length <= 24)
+                            playerName = modularData.playerName;
+                        if (!TryActivateModularPreferences(modularData, out string modularError))
+                        {
+                            preferenceWritesBlocked = true;
+                            saveError = "La personalización modular no está disponible. El archivo se conservará sin modificar.";
+                            customizationMessage = saveError;
+                            if (!string.IsNullOrEmpty(modularError)) Debug.LogWarning("Modular preferences unavailable: " + modularError);
+                        }
                     }
-                    if (ValidAppearance(data.appearance)) appearance = data.appearance;
-                    if (ValidAppearance(data.localAppearanceDraft)) localAppearanceDraft = data.localAppearanceDraft;
-                    else { localAppearanceDraft = appearance.Copy(); migrateLocalAppearance = true; }
-                    if (!string.IsNullOrWhiteSpace(data.playerName) && data.playerName.Length <= 24) playerName = data.playerName;
+                    else
+                    {
+                        var data = JsonUtility.FromJson<PreferencesV1>(json);
+                        if (data.settings != null)
+                        {
+                            settings = Sanitize(data.settings);
+                            settings.ResolutionIndex = ResolveResolutionIndex(resolutions, data.resolutionWidth,
+                                data.resolutionHeight, data.settings.ResolutionIndex, currentIndex);
+                            loadedSettings = true;
+                            migrateResolution = data.resolutionWidth == 0 && data.resolutionHeight == 0;
+                        }
+                        if (ValidAppearance(data.appearance)) appearance = data.appearance;
+                        if (ValidAppearance(data.localAppearanceDraft)) localAppearanceDraft = data.localAppearanceDraft;
+                        else { localAppearanceDraft = appearance.Copy(); migrateLocalAppearance = true; }
+                        if (!string.IsNullOrWhiteSpace(data.playerName) && data.playerName.Length <= 24) playerName = data.playerName;
+                    }
                 }
             }
             catch (Exception e) when (e is IOException || e is ArgumentException || e is UnauthorizedAccessException) { Debug.LogWarning("Preferences could not be loaded; using defaults."); }
@@ -92,8 +118,9 @@ namespace LetMeSleep.Bootstrap
                 preserveLaunchVideoChoice = true;
                 settings.ResolutionIndex = currentIndex; settings.FullScreen = appliedFullscreen;
             }
-            // Upgrade the legacy index once through the existing atomic/backup store, without changing schema.
-            if ((migrateResolution || migrateLocalAppearance) && !preferenceStore.WriteBlocked)
+            bool migratedToModular = loadedPreferenceSchema == 1 && TryMigrateLegacyPreferences();
+            // Upgrade schema-1 additive fields once through the existing atomic/backup store.
+            if (!migratedToModular && (migrateResolution || migrateLocalAppearance) && !preferenceStore.WriteBlocked)
             {
                 string loadNotice = saveError;
                 if (SavePreferences()) saveError = loadNotice;
@@ -102,7 +129,7 @@ namespace LetMeSleep.Bootstrap
             // says draft while the 3D view still falls back to the published appearance.
             previewAppearance = localAppearanceDraft.Copy();
             previousPreview = null;
-            customizationMessage = saveError;
+            if (string.IsNullOrEmpty(customizationMessage)) customizationMessage = saveError;
         }
 
         // Pure resolution policy: exercised externally without Unity/native execution.
@@ -125,20 +152,14 @@ namespace LetMeSleep.Bootstrap
         private string saveError = "";
         private string customizationMessage = "";
         private static PreferenceDocumentKind ClassifyPreferences(string json)
-        {
-            try
-            {
-                var data = JsonUtility.FromJson<Preferences>(json);
-                if (data == null || data.schema < 1) return PreferenceDocumentKind.Invalid;
-                return data.schema == 1 ? PreferenceDocumentKind.Current : PreferenceDocumentKind.UnsupportedVersion;
-            }
-            catch (ArgumentException) { return PreferenceDocumentKind.Invalid; }
-        }
+            => PreferenceSchemaCodec.Classify(json);
         private bool SavePreferences()
         {
             try {
             if (preferenceStore == null) preferenceStore = new PreferenceFileStore(Path.Combine(DataPath, "preferences.json"), ClassifyPreferences);
-            if (preferenceStore.WriteBlocked) { saveError = "Los ajustes son de otra versión. Se conservaron sin modificar."; return false; }
+            if (preferenceStore.WriteBlocked || preferenceWritesBlocked) { saveError = loadedPreferenceSchema == 2
+                ? "La personalización modular no está disponible. El archivo se conservará sin modificar."
+                : "Los ajustes son de otra versión. Se conservaron sin modificar."; return false; }
             var storedSettings = settings.Copy();
             var storedResolution = resolutions[settings.ResolutionIndex];
             int storedWidth = storedResolution.width, storedHeight = storedResolution.height;
@@ -148,9 +169,13 @@ namespace LetMeSleep.Bootstrap
                 storedSettings.FullScreen = launchSavedVideoSettings.FullScreen;
                 storedWidth = launchSavedWidth; storedHeight = launchSavedHeight;
             }
-            preferenceStore.Save(JsonUtility.ToJson(new Preferences { schema = 1, playerName = playerName,
-                settings = storedSettings, appearance = appearance, localAppearanceDraft = localAppearanceDraft,
-                resolutionWidth = storedWidth, resolutionHeight = storedHeight }, true));
+            if (loadedPreferenceSchema == 2)
+            {
+                if (!TryWriteModularPreferences(storedSettings, storedWidth, storedHeight)) return false;
+            }
+            else preferenceStore.Save(JsonUtility.ToJson(new PreferencesV1 { schema = 1, playerName = playerName,
+                    settings = storedSettings, appearance = appearance, localAppearanceDraft = localAppearanceDraft,
+                    resolutionWidth = storedWidth, resolutionHeight = storedHeight }, true));
             saveError = ""; return true;
             } catch (InvalidDataException) { saveError = "No se guardaron ajustes: el archivo pertenece a otra versión o no es válido."; return false; }
             catch (Exception e) when (e is IOException || e is UnauthorizedAccessException) { saveError = "No se pudo guardar. Revisá el acceso a la carpeta y volvé a intentar."; return false; }
@@ -161,8 +186,9 @@ namespace LetMeSleep.Bootstrap
                 QualitySettings.names, true, true, message: saveError,
                 supportsReducedMenuMotion: livingMenu && livingMenu.IsConfigured,
                 voiceDevices: VoiceMicrophoneCapture.Devices));
-            ui.PresentCustomization(new CustomizationUiState(Skins, Pajamas, MosquitoColors, appearance, localAppearanceDraft,
-                message: customizationMessage));
+            if (TryCreateModularUiState(out var modularState)) ui.PresentCustomization(modularState);
+            else ui.PresentCustomization(new CustomizationUiState(Skins, Pajamas, MosquitoColors, appearance, localAppearanceDraft,
+                isSaving: false, message: customizationMessage, isReadOnly: preferenceWritesBlocked));
         }
         public void ApplySettings(AlfaSettingsDraft draft)
         {
@@ -216,6 +242,8 @@ namespace LetMeSleep.Bootstrap
         private void SetVolume(string category,float volume) { if (Mixer) Mixer.SetFloat(category+"Volume",volume<=.0001f ? -80 : 20*Mathf.Log10(volume)); }
         public void PreviewCustomization(BasicCustomizationDraft draft)
         {
+            if (loadedPreferenceSchema != 1 || preferenceWritesBlocked) { customizationMessage = string.IsNullOrEmpty(saveError)
+                ? "La edición básica no está disponible para este archivo modular." : saveError; PresentPreferences(); return; }
             if (!ValidAppearance(draft)) return;
             var previous = localAppearanceDraft;
             localAppearanceDraft = draft.Copy();
@@ -235,6 +263,8 @@ namespace LetMeSleep.Bootstrap
         }
         public void SaveCustomization(BasicCustomizationDraft draft)
         {
+            if (loadedPreferenceSchema != 1 || preferenceWritesBlocked) { customizationMessage = string.IsNullOrEmpty(saveError)
+                ? "La edición básica no está disponible para este archivo modular." : saveError; PresentPreferences(); return; }
             if (!ValidAppearance(draft)) return;
             var previousAppearance = appearance;
             var previousLocalDraft = localAppearanceDraft;
@@ -261,9 +291,21 @@ namespace LetMeSleep.Bootstrap
         private void ApplyPreviewColors()
         {
             var orbit = ui.GetComponentInChildren<CharacterPreviewOrbit>(true); var instance=orbit?.CurrentInstance;
-            if (!instance || instance == previousPreview) return; previousPreview=instance;
+            if (!instance || instance == previousPreview) return;
             foreach(var child in instance.GetComponentsInChildren<Transform>(true)) child.gameObject.layer=30;
             foreach(var collider in instance.GetComponentsInChildren<Collider>(true)) collider.enabled=false;
+            if (loadedPreferenceSchema == 2 && modularCustomizationRuntime != null)
+            {
+                if (TryApplyModularPreview(instance, previewModularAppearance ?? localModularAppearanceDraft,
+                    modularEditedRole, out string error)) previousPreview = instance;
+                else
+                {
+                    if (!string.IsNullOrEmpty(error)) Debug.LogWarning("Modular preview application failed: " + error);
+                    customizationMessage = "No se pudo actualizar la vista previa modular.";
+                }
+                return;
+            }
+            previousPreview=instance;
             ApplyAppearance(instance.GetComponent<CharacterView>(),previewAppearance??appearance);
         }
         private static void ApplyAppearance(CharacterView view, BasicCustomizationDraft draft)
