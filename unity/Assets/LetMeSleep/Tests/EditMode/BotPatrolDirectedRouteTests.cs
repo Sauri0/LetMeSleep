@@ -97,6 +97,96 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(wrongFloor.Y, Is.LessThan(-2));
         }
 
+        [Test]
+        public void WeightedRouteUsesThreeShortPassagesInsteadOfTwoLongPassages()
+        {
+            WeightedGraph(out var regions, out var passages);
+            Assert.That(BotRoutePlanner.TryPlan(regions, passages, "start", Float3.Zero,
+                "finish", new Float3(10, 0, 0), _ => true, out var plan), Is.True);
+            Assert.That(plan.Distance, Is.EqualTo(10).Within(.0001f));
+            Assert.That(plan.FirstPassage.Id, Is.EqualTo("z-short-start"));
+
+            var patrol = new BotPatrol(regions, passages, 1);
+            Float3 direction = patrol.DirectionTo(Float3.Zero, "start", "finish",
+                new Float3(10, 0, 0), 0, _ => true);
+
+            Assert.That(direction.X, Is.GreaterThan(0));
+            Assert.That(direction.Z, Is.EqualTo(0).Within(.0001f));
+            Assert.That(patrol.CurrentProgress.Value.PassageId, Is.EqualTo(plan.FirstPassage.Id),
+                "Admission distance and execution must come from the same weighted route contract.");
+        }
+
+        [Test]
+        public void ClosedShortRouteUsesLongOpenAlternative()
+        {
+            WeightedGraph(out var regions, out var passages);
+            var patrol = new BotPatrol(regions, passages, 1);
+
+            Float3 direction = patrol.DirectionTo(Float3.Zero, "start", "finish",
+                new Float3(10, 0, 0), 0, id => id != "z-short-start");
+
+            Assert.That(direction.Z, Is.GreaterThan(0));
+            Assert.That(patrol.CurrentProgress.Value.PassageId, Is.EqualTo("a-long-start"));
+        }
+
+        [Test]
+        public void TemporarilyBlockedShortRouteUsesLongAlternativeDuringCooldown()
+        {
+            WeightedGraph(out var regions, out var passages);
+            var patrol = new BotPatrol(regions, passages, 1);
+            patrol.InvalidatePassage("z-short-start", 10);
+
+            patrol.DirectionTo(Float3.Zero, "start", "finish", new Float3(10, 0, 0), 5, _ => true);
+
+            Assert.That(patrol.CurrentProgress.Value.PassageId, Is.EqualTo("a-long-start"));
+        }
+
+        [Test]
+        public void EqualDistanceRoutesChooseFirstPassageByOrdinalId()
+        {
+            var regions = new[]
+            {
+                new BotRegion("start", new Float3(-1, -1, -1), new Float3(1, 1, 1)),
+                new BotRegion("finish", new Float3(9, -1, -1), new Float3(11, 1, 1))
+            };
+            var passages = new[]
+            {
+                new BotPassage("zeta", "start", "finish", new[]
+                    { new Float3(.5f, 0, 0), new Float3(9.5f, 0, 0) }),
+                new BotPassage("alpha", "start", "finish", new[]
+                    { new Float3(.5f, 0, 0), new Float3(9.5f, 0, 0) })
+            };
+
+            Assert.That(BotRoutePlanner.TryPlan(regions, passages, "start", Float3.Zero,
+                "finish", new Float3(10, 0, 0), _ => true, out var plan), Is.True);
+            Assert.That(plan.FirstPassage.Id, Is.EqualTo("alpha"));
+        }
+
+        private static void WeightedGraph(out BotRegion[] regions, out BotPassage[] passages)
+        {
+            regions = new[]
+            {
+                new BotRegion("start", new Float3(-1, -1, -1), new Float3(1, 1, 1)),
+                new BotRegion("long", new Float3(-1, -1, 19), new Float3(1, 1, 21)),
+                new BotRegion("short-a", new Float3(1, -1, -1), new Float3(3, 1, 1)),
+                new BotRegion("short-b", new Float3(4, -1, -1), new Float3(6, 1, 1)),
+                new BotRegion("finish", new Float3(9, -1, -1), new Float3(11, 1, 1))
+            };
+            passages = new[]
+            {
+                new BotPassage("a-long-start", "start", "long", new[]
+                    { new Float3(0, 0, .5f), new Float3(0, 0, 20) }),
+                new BotPassage("a-long-finish", "long", "finish", new[]
+                    { new Float3(0, 0, 20), new Float3(10, 0, 0) }),
+                new BotPassage("z-short-start", "start", "short-a", new[]
+                    { new Float3(.5f, 0, 0), new Float3(2, 0, 0) }),
+                new BotPassage("z-short-middle", "short-a", "short-b", new[]
+                    { new Float3(2, 0, 0), new Float3(5, 0, 0) }),
+                new BotPassage("z-short-finish", "short-b", "finish", new[]
+                    { new Float3(5, 0, 0), new Float3(9.5f, 0, 0) })
+            };
+        }
+
         private static BotPatrol OrdinaryExteriorPortal() => new BotPatrol(new[]
         {
             new BotRegion("outside", new Float3(-2, .1f, -2), new Float3(1.5f, 2.65f, 2)),

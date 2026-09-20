@@ -178,28 +178,17 @@ namespace LetMeSleep.Gameplay
                 return Float3.Zero;
             if (current == targetRegion) return Travel(approachPoint - position,
                 "approach:" + targetRegion + ":" + approachPoint.X + ":" + approachPoint.Y + ":" + approachPoint.Z, null);
-            var queue = new Queue<string>(); queue.Enqueue(current);
-            var visited = new HashSet<string> { current };
-            var first = new Dictionary<string, BotPassage>();
-            while (queue.Count > 0)
-            {
-                string node = queue.Dequeue();
-                foreach (var passage in passages.Where(p => p.Points.Count > 0 && (p.From == node || p.To == node) && passageOpen(p.Id) && !IsPassageBlocked(p.Id, tick)).OrderBy(p => p.Id, StringComparer.Ordinal))
-                {
-                    string next = passage.From == node ? passage.To : passage.From;
-                    if (!visited.Add(next)) continue;
-                    first[next] = node == current ? passage : first[node];
-                    if (next == targetRegion)
-                    {
-                        objectivePassage = first[next]; objectiveRegion = targetRegion;
-                        objectivePoints = objectivePassage.From == current ? objectivePassage.Points.ToArray() : objectivePassage.Points.Reverse().ToArray();
-                        objectivePointIndex = 0; return Travel(objectivePoints[0] - position,
-                            "task:" + targetRegion + ":" + objectivePassage.Id + ":0", objectivePassage.Id);
-                    }
-                    queue.Enqueue(next);
-                }
-            }
-            return Float3.Zero;
+            if (!BotRoutePlanner.TryPlan(regions, passages, current, position, targetRegion, approachPoint,
+                    id => passageOpen(id) && !IsPassageBlocked(id, tick), out var plan) ||
+                plan.FirstPassage == null) return Float3.Zero;
+            objectivePassage = plan.FirstPassage;
+            objectiveRegion = targetRegion;
+            objectivePoints = objectivePassage.From == current
+                ? objectivePassage.Points.ToArray()
+                : objectivePassage.Points.Reverse().ToArray();
+            objectivePointIndex = 0;
+            return Travel(objectivePoints[0] - position,
+                "task:" + targetRegion + ":" + objectivePassage.Id + ":0", objectivePassage.Id);
         }
         private bool CanFollowDirectedPassage(Float3 position, string current)
         {

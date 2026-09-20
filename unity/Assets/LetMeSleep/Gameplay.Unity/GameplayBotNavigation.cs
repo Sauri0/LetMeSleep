@@ -236,74 +236,8 @@ namespace LetMeSleep.Gameplay.Unity
         private float ShortestAuthoredDistance(string from, Float3 start, string target, Float3 finish,
             Func<string, bool> passageAllowed)
         {
-            if (from == target) return Distance(start, finish);
-            var nodes = new List<RoutePoint> { new RoutePoint(from, start), new RoutePoint(target, finish) };
-            var passageLengths = new List<float>();
-            foreach (var passage in passages.Where(item => item.Points.Count > 0 &&
-                                                           (passageAllowed == null || passageAllowed(item.Id))))
-            {
-                int passageIndex = passageLengths.Count;
-                float length = 0;
-                for (int i = 1; i < passage.Points.Count; i++) length += Distance(passage.Points[i - 1], passage.Points[i]);
-                passageLengths.Add(length);
-                nodes.Add(new RoutePoint(passage.From, passage.Points[0], passageIndex));
-                nodes.Add(new RoutePoint(passage.To, passage.Points[passage.Points.Count - 1], passageIndex));
-            }
-            var byRegion = nodes.Select((node, index) => new { node.Region, index })
-                .GroupBy(item => item.Region, StringComparer.Ordinal)
-                .ToDictionary(group => group.Key, group => group.Select(item => item.index).ToArray(), StringComparer.Ordinal);
-            var distance = Enumerable.Repeat(float.PositiveInfinity, nodes.Count).ToArray();
-            var pending = new SortedSet<RouteCost>(RouteCostComparer.Instance) { new RouteCost(0, 0) };
-            distance[0] = 0;
-            while (pending.Count > 0)
-            {
-                var current = pending.Min; pending.Remove(current);
-                if (current.Distance != distance[current.Node]) continue;
-                if (current.Node == 1) return current.Distance;
-                foreach (int next in byRegion[nodes[current.Node].Region])
-                {
-                    if (next == current.Node) continue;
-                    Relax(next, current.Distance + Distance(nodes[current.Node].Point, nodes[next].Point), distance, pending);
-                }
-                int passage = nodes[current.Node].Passage;
-                if (passage >= 0)
-                {
-                    int first = 2 + passage * 2;
-                    int next = current.Node == first ? first + 1 : first;
-                    Relax(next, current.Distance + passageLengths[passage], distance, pending);
-                }
-            }
-            return float.PositiveInfinity;
-        }
-        private static void Relax(int node, float candidate, float[] distances, SortedSet<RouteCost> pending)
-        {
-            if (candidate >= distances[node]) return;
-            if (!float.IsPositiveInfinity(distances[node])) pending.Remove(new RouteCost(distances[node], node));
-            distances[node] = candidate;
-            pending.Add(new RouteCost(candidate, node));
-        }
-        private readonly struct RoutePoint
-        {
-            internal readonly string Region;
-            internal readonly Float3 Point;
-            internal readonly int Passage;
-            internal RoutePoint(string region, Float3 point, int passage = -1)
-            { Region = region; Point = point; Passage = passage; }
-        }
-        private readonly struct RouteCost
-        {
-            internal readonly float Distance;
-            internal readonly int Node;
-            internal RouteCost(float distance, int node) { Distance = distance; Node = node; }
-        }
-        private sealed class RouteCostComparer : IComparer<RouteCost>
-        {
-            internal static readonly RouteCostComparer Instance = new RouteCostComparer();
-            public int Compare(RouteCost x, RouteCost y)
-            {
-                int distance = x.Distance.CompareTo(y.Distance);
-                return distance != 0 ? distance : x.Node.CompareTo(y.Node);
-            }
+            return BotRoutePlanner.TryPlan(regions, passages, from, start, target, finish,
+                passageAllowed, out var plan) ? plan.Distance : float.PositiveInfinity;
         }
         private static Float3 Clamp(Float3 point, BotRegion region) => new Float3(
             Mathf.Clamp(point.X, region.Min.X, region.Max.X), Mathf.Clamp(point.Y, region.Min.Y, region.Max.Y),
