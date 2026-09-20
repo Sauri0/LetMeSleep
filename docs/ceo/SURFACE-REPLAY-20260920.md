@@ -75,3 +75,23 @@ ejecutar la batería sintética existente, cuyo caso determinista
 `gap_and_nonperch_blocker_do_not_become_neighbors` cubre un hueco y un soporte
 no permitido. No ocupa ninguna de las 85 filas ni reconstruye sus datos
 ausentes. Ambos comandos están preparados, no ejecutados por este agente.
+
+## Resultado nativo comunicado y verificado — Frozen85
+
+CEO ejecutó el candidato `Build/20260920-074546-702`; el reporte
+`native-results/surface-maps.json` conserva **85 filas:60 PASS,14 FAIL y11
+COVERAGE_GAP**, cleanup verdadero, salida del runner0. El estado del reporte
+es FAIL; la salida0 no representa aceptación del juego.
+
+Los once huecos se desglosan en cinco `negative/real-gap` sin dirección/distancia
+históricas y seis adquisiciones rechazadas sobre el input congelado: Isla
+edge0/Footings y edge3/StructuralFrames; Camp ceiling/WashroomFloor; Yate
+edge1/MainDeck; Puerto join0 y join1 GroundFloor/HollowTower. No se buscaron
+reemplazos. Las filas conservan su razón y la adquisición parcial de los
+cinco negativos tiene un campo separado.
+
+Estos conteos **no declaran mejora ni cierran los21 fallos originales**:
+la etiqueta COVERAGE_GAP distingue condiciones que impiden ejercer el criterio,
+no convierte un fallo histórico en éxito. Quedan14 fallos actuales observados
+y once límites explícitos de cobertura. No se programó otro replay como parte
+de esta entrega.
