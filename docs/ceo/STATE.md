@@ -1,5 +1,30 @@
 # Relevo CEO — 2026-09-19
 
+## Integración posterior — personalización, portales y diagnóstico Puerto
+
+- `55c9cf2`: P26/P27/P28 integrados para el catálogo actual de colores.
+  `customization-native-03.xml`3/3 PASS, capturas720/1080 vistas con ambos
+  botones activos. El intento02 detectó overflow real y quedó preservado.
+  No acredita nuevas piezas ni envío por red de un catálogo completo.
+- `c98a3e6`, `1fa98af`, `017406f`: motor tangencial, steering transitable
+  y diagnósticos Casa integrados selectivamente. `d03261f` corrige llegada
+  de portal ordinario usando banda de alturas de regiones conectadas;
+  conserva guardia de escalera. `bot-portal-native-01.xml`:69/69 PASS.
+- Casa09 conserva40/50 y21onward comparables sin regresiones frente a08.
+  Los dos diagnósticos restantes avanzan después del portal pero aún fallan.
+  Nueva causa a corregir: selección de ruta por BFS (menos pasajes) distinta
+  de la distancia ponderada usada para decidir presupuesto. Técnica extrae
+  un selector compartido, sin subir330ticks ni modificar steering.
+- PuertoInitialOverlap/native-results-01 completó2casos,errors vacíos,
+  cleanup y originales intactos. Terreno es MeshCollider no convexo: overlap
+  inicial verdadero y ComputePenetration falso en ambos órdenes con centro
+  ~0.5–0.7micrómetros detrás del plano. Replay de2queries coincide exactamente.
+  B con inicio elevado elimina penetración pero conserva FAIL del objetivo
+  de arista; ambos adquieren la cara original. No cambia Frozen85.
+- Terra prepara40objetivos candidatos estáticos de los otros4mapas fuera
+  Assets. Astra investiga exposición real de las dos aristas Puerto. No hay
+  Unity activo; siguiente ventana necesita fuentes estables de técnica.
+
 ## Resultado nativo — escalera Casa corregida, revisión UI final pendiente
 
 - `bot-stair-native-02.xml`:67/67 EditMode PASS, cero omitidos. El intento01
