@@ -14,6 +14,8 @@ namespace LetMeSleep.Content.Characters
         {
             public CustomizationRole Role;
             public string SlotId;
+            [Tooltip("Approved display label. Leave empty to keep this category hidden in UI.")]
+            public string Label;
             [Range(1, CustomizationCatalogSnapshot.MaximumSelectedSlots)] public int WireSlotId;
             public bool Required;
             public bool AllowsNone;
@@ -55,6 +57,7 @@ namespace LetMeSleep.Content.Characters
                 {
                     Role = item.Role,
                     SlotId = item.SlotId,
+                    Label = item.Label,
                     WireSlotId = item.WireSlotId >= byte.MinValue && item.WireSlotId <= byte.MaxValue ? (byte)item.WireSlotId : (byte)0,
                     Required = item.Required,
                     AllowsNone = item.AllowsNone,

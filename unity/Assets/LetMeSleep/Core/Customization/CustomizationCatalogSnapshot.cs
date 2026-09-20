@@ -14,6 +14,7 @@ namespace LetMeSleep.Core.Customization
     {
         public CustomizationRole Role;
         public string SlotId;
+        public string Label;
         public byte WireSlotId;
         public bool Required;
         public bool AllowsNone;
@@ -45,7 +46,8 @@ namespace LetMeSleep.Core.Customization
         internal CustomizationSlotSnapshot(CustomizationSlotRecord source,
             IEnumerable<CustomizationOptionSnapshot> optionItems)
         {
-            Role = source.Role; SlotId = source.SlotId; WireSlotId = source.WireSlotId;
+            Role = source.Role; SlotId = source.SlotId; Label = source.Label ?? string.Empty;
+            WireSlotId = source.WireSlotId;
             Required = source.Required; AllowsNone = source.AllowsNone; IsBaseSlot = source.IsBaseSlot;
             DefaultOptionId = source.DefaultOptionId; CompatibilityFamily = source.CompatibilityFamily ?? string.Empty;
             options = optionItems.ToDictionary(item => item.OptionId, StringComparer.Ordinal);
@@ -53,6 +55,9 @@ namespace LetMeSleep.Core.Customization
         }
         public CustomizationRole Role { get; }
         public string SlotId { get; }
+        // Presentation metadata only. Empty means the UI must not expose this category yet;
+        // SlotId remains a technical identifier and is never used as a display fallback.
+        public string Label { get; }
         public byte WireSlotId { get; }
         public bool Required { get; }
         public bool AllowsNone { get; }

@@ -46,14 +46,30 @@ namespace LetMeSleep.Tests.EditMode
         public void FingerprintIsDeterministicAcrossAuthoringOrderAndExcludesLabels()
         {
             var slots = Slots(); var options = Options();
+            slots.First(item => item.SlotId == "human.base").Label = "Body";
             Assert.That(CustomizationCatalogSnapshot.TryCreate("lms.v020.characters", 1, slots, options,
                 out var first, out var firstErrors), Is.True, string.Join("; ", firstErrors));
+            foreach (var slot in slots) slot.Label = "Translated " + slot.SlotId;
             foreach (var option in options) option.Label = "Translated " + option.OptionId;
             Assert.That(CustomizationCatalogSnapshot.TryCreate("lms.v020.characters", 1, slots.Reverse(), options.Reverse(),
                 out var second, out var secondErrors), Is.True, string.Join("; ", secondErrors));
 
             Assert.That(second.Fingerprint, Is.EqualTo(first.Fingerprint));
             Assert.That(second.NetworkFingerprint, Is.EqualTo(first.NetworkFingerprint));
+            Assert.That(first.TrySlot("human.base", out var firstBase), Is.True);
+            Assert.That(second.TrySlot("human.base", out var secondBase), Is.True);
+            Assert.That(firstBase.Label, Is.EqualTo("Body"));
+            Assert.That(secondBase.Label, Is.EqualTo("Translated human.base"));
+            slots.First(item => item.SlotId == "human.base").Label = "Mutated after snapshot";
+            Assert.That(secondBase.Label, Is.EqualTo("Translated human.base"));
+        }
+
+        [Test]
+        public void MissingSlotLabelRemainsEmptyInsteadOfExposingTechnicalId()
+        {
+            var snapshot = ValidSnapshot();
+            Assert.That(snapshot.TrySlot("human.hair", out var slot), Is.True);
+            Assert.That(slot.Label, Is.Empty);
         }
 
         [Test]
