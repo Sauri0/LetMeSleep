@@ -1,0 +1,842 @@
+[
+  {
+    "id": "P01",
+    "section": "Identidad y experiencia",
+    "title": "¿Qué sensación debería dominar una buena partida entre amigos?",
+    "why": "Orienta el ritmo y la presentación sin cambiar los roles ni los tres modos acordados.",
+    "example": "Imaginate contar la partida: «Nos reímos del susto», «Casi nos descubren» o «Ganamos por coordinarnos».",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Comedia de situación",
+        "detail": "Errores y escapes divertidos; celebraciones breves y expresivas."
+      },
+      {
+        "id": "B",
+        "label": "Tensión ligera",
+        "detail": "Momentos tranquilos que hacen más intenso un encuentro; menos festejos durante la ronda."
+      },
+      {
+        "id": "C",
+        "label": "Cooperación competitiva",
+        "detail": "Que se entiendan las decisiones del equipo y por qué funcionaron; presentación más sobria."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/V0.2.0-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P02",
+    "section": "Identidad y experiencia",
+    "title": "¿Qué tono deberían tener los textos del juego?",
+    "why": "Define una voz consistente para botones, ayudas y errores.",
+    "example": "Al quedar eliminado: «Se terminó tu vuelo», «Eliminado: observá a tu equipo» o «Eliminado. Tab: siguiente aliado».",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Cercano con humor discreto",
+        "detail": "Frases cálidas fuera del combate; instrucciones literales cuando hay que actuar."
+      },
+      {
+        "id": "B",
+        "label": "Claro y conversacional",
+        "detail": "Español rioplatense directo, sin bromas que tapen una instrucción."
+      },
+      {
+        "id": "C",
+        "label": "Breve y neutral",
+        "detail": "Mensajes de pocas palabras; menos personalidad y lectura más rápida."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P03",
+    "section": "Identidad y experiencia",
+    "title": "¿Qué debería destacar la primera pantalla para un amigo nuevo?",
+    "why": "Todos conservan acceso a jugar, entrenar y ajustes; cambia la jerarquía visual.",
+    "example": "Boceto: una tarjeta central grande y dos accesos secundarios debajo.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Entrar con amigos",
+        "detail": "Unirse con código es la tarjeta principal; entrenamiento queda a un clic."
+      },
+      {
+        "id": "B",
+        "label": "Prepararse para jugar",
+        "detail": "Entrenamiento ocupa la tarjeta principal en el primer inicio; luego se recuerda jugar online."
+      },
+      {
+        "id": "C",
+        "label": "Elegir sin preferencia",
+        "detail": "Crear, unirse y entrenar aparecen con igual tamaño; hay más decisiones de entrada."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P04",
+    "section": "Identidad y experiencia",
+    "title": "¿Cómo debería aprender alguien su rol la primera vez?",
+    "why": "Define la ayuda inicial; no cambia que los roles online se sorteen cada ronda.",
+    "example": "Un amigo entra por primera vez como mosquito y necesita entender vuelo, posarse y picar.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Tarjeta de 20 segundos",
+        "detail": "Tres controles esenciales antes de jugar, descartable de inmediato; aprendizaje durante la ronda."
+      },
+      {
+        "id": "B",
+        "label": "Práctica guiada de 2 minutos",
+        "detail": "Ofrecer tres pasos en entrenamiento antes de unirse; siempre se puede omitir."
+      },
+      {
+        "id": "C",
+        "label": "Ayuda contextual",
+        "detail": "Sin tarjeta inicial; una pista aparece al acercarse por primera vez a cada interacción."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/MODES-UI-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P05",
+    "section": "Identidad y experiencia",
+    "title": "¿Cuándo deberían retirarse las ayudas para principiantes?",
+    "why": "Evita que las pistas permanentes molesten o que desaparezcan demasiado pronto.",
+    "example": "La pista de posarse aparece antes de usar F; después de varios intentos puede dejar de mostrarse.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Después del primer éxito",
+        "detail": "La pista se retira al completar esa acción una vez; se recupera desde ayuda."
+      },
+      {
+        "id": "B",
+        "label": "Después de tres éxitos",
+        "detail": "Repite hasta tres usos correctos por acción; más apoyo durante la adaptación."
+      },
+      {
+        "id": "C",
+        "label": "Cuando el jugador decida",
+        "detail": "Permanecen hasta desactivar «Ayudas»; el control es explícito y el HUD más ocupado."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/MODES-UI-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P06",
+    "section": "Identidad y experiencia",
+    "title": "¿Qué prioridad debe guiar la primera sesión de prueba con amigos?",
+    "why": "Todos los requisitos de entrega siguen vigentes; esto ordena la sesión y la observación.",
+    "example": "Sesión propuesta de 30 minutos, con una meta clara para las notas de prueba.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Entrar y repetir sin fricción",
+        "detail": "Medir desde código de sala hasta revancha; registrar cada espera o salida inesperada."
+      },
+      {
+        "id": "B",
+        "label": "Entender lo que ocurre",
+        "detail": "Observar si pueden explicar roles, acciones y resultados sin ayuda externa."
+      },
+      {
+        "id": "C",
+        "label": "Sentir bien los controles",
+        "detail": "Concentrarse en cámara, vuelo, superficies y defensa; registrar situaciones incómodas."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/V0.2.0-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P07",
+    "section": "Identidad y experiencia",
+    "title": "¿Cómo se debería ofrecer ayuda después de una dificultad repetida?",
+    "why": "Define acompañamiento sin alterar dificultad, daño ni información del rival.",
+    "example": "Un jugador falla tres intentos de posarse o no termina su primera tarea.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Consejo opcional discreto",
+        "detail": "Mostrar una sola sugerencia breve tras tres intentos; nunca pausar."
+      },
+      {
+        "id": "B",
+        "label": "Acceso a práctica al terminar",
+        "detail": "Ofrecer repetir esa acción en entrenamiento desde resultados; no intervenir en combate."
+      },
+      {
+        "id": "C",
+        "label": "Sólo ayuda solicitada",
+        "detail": "No inferir errores; el jugador abre la guía cuando la necesita."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/MODES-UI-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P08",
+    "section": "Identidad y experiencia",
+    "title": "¿Qué información debería acompañar el cambio de rol entre rondas?",
+    "why": "La asignación aleatoria permanece; se define cómo comunicar el cambio.",
+    "example": "Después de jugar humano, la siguiente ronda te asigna mosquito.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Tarjeta de rol durante 3 segundos",
+        "detail": "Rol, objetivo del modo y tres controles; luego se desvanece."
+      },
+      {
+        "id": "B",
+        "label": "Aviso compacto durante 1 segundo",
+        "detail": "Nombre e icono del rol; ayuda completa disponible bajo demanda."
+      },
+      {
+        "id": "C",
+        "label": "Tarjeta sólo al cambiar de rol",
+        "detail": "Mostrar 3 segundos si el rol difiere del anterior; si se repite, aviso de 1 segundo."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/MODES-UI-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P09",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Cuánta información debería permanecer visible en el HUD?",
+    "why": "Busca equilibrio entre vista del mundo y lectura inmediata. Las tareas siguen privadas para su dueño.",
+    "example": "Boceto: marcador arriba, estado propio abajo y tarjeta de tarea en un lateral.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Esencial siempre visible",
+        "detail": "Tiempo, marcador, vidas y tarea compacta; detalle al mantener una tecla."
+      },
+      {
+        "id": "B",
+        "label": "Información contextual",
+        "detail": "Tiempo y marcador fijos; controles y detalles de tarea aparecen cuando son relevantes."
+      },
+      {
+        "id": "C",
+        "label": "Panel completo",
+        "detail": "Estado, controles, plazo y progreso siempre visibles; mayor ocupación de pantalla."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P10",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Cómo preferís leer el avance de tu tarea privada?",
+    "why": "La misma información puede mostrarse con distintas densidades. No añade pistas para rivales.",
+    "example": "Ejemplo: «Limpiar el lavadero · 40 % · quedan 32 s».",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Barra y porcentaje",
+        "detail": "Título, barra horizontal y 40 %; preciso y fácil de comparar."
+      },
+      {
+        "id": "B",
+        "label": "Barra sin porcentaje",
+        "detail": "Título y avance visual, con segundos restantes; menos números."
+      },
+      {
+        "id": "C",
+        "label": "Texto compacto",
+        "detail": "Una línea con nombre, porcentaje y tiempo; ocupa menos altura."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "docs/ceo/MODES-UI-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P11",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Cómo debería destacarse un plazo de tarea que está por vencer?",
+    "why": "Se define énfasis visual local, no cambiar el plazo de las reglas.",
+    "example": "Quedan 10 segundos y el jugador todavía está limpiando.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Umbral fijo de 10 segundos",
+        "detail": "Borde destacado y texto «Poco tiempo», sin parpadeo."
+      },
+      {
+        "id": "B",
+        "label": "Último 20 % del plazo",
+        "detail": "El aviso se adapta a la duración asignada; puede aparecer antes en tareas largas."
+      },
+      {
+        "id": "C",
+        "label": "Tiempo legible sin alarma",
+        "detail": "El contador permanece estable; se evita urgencia visual añadida."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/MODES-UI-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P12",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Cómo debería explicar el HUD una acción que no se puede hacer?",
+    "why": "Reduce intentos confusos sin revelar objetivos o posiciones privadas ajenas.",
+    "example": "Mantenés R lejos de tu objetivo asignado.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Razón inmediata",
+        "detail": "Mostrar «Acercate a tu tarea» durante 2 segundos al intentar."
+      },
+      {
+        "id": "B",
+        "label": "Pista antes de intentar",
+        "detail": "Cambiar la indicación según distancia y estado; más información en pantalla."
+      },
+      {
+        "id": "C",
+        "label": "Detalle bajo demanda",
+        "detail": "Mostrar sólo que no está disponible; la guía explica distancia, estado e interrupciones."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "docs/ceo/MODES-UI-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P13",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Qué escala de interfaz querés como referencia para una pantalla de 1080p?",
+    "why": "Orienta la densidad; las cifras son propuestas a probar, no un resultado de legibilidad certificado.",
+    "example": "Comparar el mismo HUD con texto de cuerpo de 18, 22 o 26 píxeles aproximados.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Compacta: 18 px",
+        "detail": "Más mundo visible y paneles menores; lectura más exigente a distancia."
+      },
+      {
+        "id": "B",
+        "label": "Media: 22 px",
+        "detail": "Equilibra lectura y espacio; algunos textos ocuparán dos líneas."
+      },
+      {
+        "id": "C",
+        "label": "Grande: 26 px",
+        "detail": "Prioriza lectura desde más lejos; requiere redistribuir tarjetas y botones."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P14",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Cómo deberían distinguirse estados sin depender sólo del color?",
+    "why": "Listo, conexión, advertencias y vidas deben poder compararse visualmente.",
+    "example": "Ver «Listo» y «Sin conexión» en el lobby aunque sus colores se perciban similares.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Icono y texto en todos los estados",
+        "detail": "Redundancia permanente; filas un poco más anchas."
+      },
+      {
+        "id": "B",
+        "label": "Icono permanente, texto al enfocar",
+        "detail": "Vista más limpia; necesita explorar con cursor o navegación."
+      },
+      {
+        "id": "C",
+        "label": "Texto permanente, icono en alertas",
+        "detail": "Lectura directa y menos símbolos; depende más del idioma."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P15",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Qué control de movimiento visual debería ofrecerse en ajustes?",
+    "why": "Define alcance de una preferencia de comodidad sin alterar la simulación.",
+    "example": "Una persona disfruta el escenario del menú pero le incomoda el movimiento continuo de cámara.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Un interruptor global",
+        "detail": "«Reducir movimiento» atenúa transiciones y adornos; configuración simple."
+      },
+      {
+        "id": "B",
+        "label": "Menú y juego separados",
+        "detail": "Dos controles permiten conservar animación del menú y reducir efectos de cámara en partida."
+      },
+      {
+        "id": "C",
+        "label": "Controles por efecto",
+        "detail": "Balanceo, transiciones y pulsos por separado; mayor flexibilidad y más ajustes."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiContracts.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P16",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Qué formato debería tener la guía de controles?",
+    "why": "La primera implementación tiene controles concretos; aquí se define cómo enseñarlos.",
+    "example": "Humano: defender y usar herramientas. Mosquito: vuelo, superficie y picadura.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Dos tarjetas por rol",
+        "detail": "Un esquema de teclado para cada rol, accesible desde pausa."
+      },
+      {
+        "id": "B",
+        "label": "Lista por acción",
+        "detail": "Buscar «Posarse» o «Soltar objeto»; menos visual pero más fácil de recorrer."
+      },
+      {
+        "id": "C",
+        "label": "Demostraciones breves",
+        "detail": "Clips o animaciones de 5–8 segundos por acción; requieren producir y mantener más contenido."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P17",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Cómo te gustaría ajustar la sensibilidad de cada rol?",
+    "why": "Ya existen valores separados; se define cómo hacerlos comprensibles.",
+    "example": "El vuelo necesita una sensibilidad diferente de la defensa humana.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Deslizador y número",
+        "detail": "Mostrar el valor de cada rol y restablecer; ajuste directo."
+      },
+      {
+        "id": "B",
+        "label": "Tres presets y ajuste fino",
+        "detail": "Suave, media y rápida, más deslizador opcional; mejor punto de partida."
+      },
+      {
+        "id": "C",
+        "label": "Zona breve de prueba",
+        "detail": "Cambiar el valor mientras se mira un objetivo de práctica; exige una pantalla interactiva adicional."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiContracts.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P18",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Cómo debería organizarse la selección de los cinco mapas en el lobby?",
+    "why": "El anfitrión sigue eligiendo entre los cinco mapas; cambia el acceso visual.",
+    "example": "Boceto A: una imagen grande con flechas. B: cinco miniaturas. C: lista y vista previa.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Una tarjeta con flechas",
+        "detail": "Preview grande del mapa elegido; comparar exige recorrerlos."
+      },
+      {
+        "id": "B",
+        "label": "Cinco miniaturas visibles",
+        "detail": "Comparación inmediata; cada imagen tendrá menos detalle."
+      },
+      {
+        "id": "C",
+        "label": "Lista de nombres y preview",
+        "detail": "Más espacio para descripción y modo; lectura menos visual."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P19",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Cómo debería comunicarse un cambio de reglas hecho por el anfitrión?",
+    "why": "El estado de listo se invalida; aquí se decide cómo explicar qué cambió.",
+    "example": "Estabas listo y el anfitrión cambia de Sangre a Tareas.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Resumen temporal de cambios",
+        "detail": "Aviso de 4 segundos: «Modo: Tareas. Volvé a marcar listo». "
+      },
+      {
+        "id": "B",
+        "label": "Fila resaltada hasta estar listo",
+        "detail": "Destacar las reglas modificadas hasta tu nueva confirmación; menos avisos flotantes."
+      },
+      {
+        "id": "C",
+        "label": "Panel de última modificación",
+        "detail": "Mostrar permanentemente quién cambió qué y cuándo; agrega información al lobby."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "docs/ceo/MODES-UI-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P20",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Qué debería priorizar la pantalla de resultados?",
+    "why": "La victoria y su causa siempre deben quedar claras; cambia el segundo nivel de información.",
+    "example": "Final de Tareas: gana Humanos porque completa la meta compartida.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Causa y revancha",
+        "detail": "Ganador, objetivo alcanzado y volver a la sala; lectura en pocos segundos."
+      },
+      {
+        "id": "B",
+        "label": "Resumen del equipo",
+        "detail": "Añadir marcador final, tiempo y vivos; sin revelar tareas privadas ajenas."
+      },
+      {
+        "id": "C",
+        "label": "Resumen personal",
+        "detail": "Añadir tus acciones y tareas propias a la causa de victoria; requiere registrar estadísticas adicionales."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "docs/ceo/MODES-UI-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P21",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Cómo debería presentarse la observación después de quedar eliminado?",
+    "why": "Sólo se observa a aliados vivos y nunca se cambia el dueño de datos privados.",
+    "example": "Boceto: «Espectador · Ana» arriba y «Tab: siguiente aliado» abajo.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "HUD mínimo",
+        "detail": "Nombre del aliado, marcador público y control para cambiar; más espacio para mirar."
+      },
+      {
+        "id": "B",
+        "label": "Contexto del equipo",
+        "detail": "Añadir lista de aliados vivos y quién estás observando; no mostrar sus tareas privadas."
+      },
+      {
+        "id": "C",
+        "label": "Ayuda de espectador al entrar",
+        "detail": "Tarjeta explicativa de 3 segundos y luego HUD mínimo; enseña sin ocupar toda la espera."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "docs/ceo/MODES-UI-DELIVERY.md",
+    "dependsOn": null
+  },
+  {
+    "id": "P22",
+    "section": "Interfaz y accesibilidad",
+    "title": "¿Cómo deberían explicarse los errores al entrar a una sala?",
+    "why": "La persona debe saber qué puede hacer sin interpretar mensajes técnicos.",
+    "example": "El código es correcto pero el anfitrión cerró la sala.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Mensaje y siguiente acción",
+        "detail": "«La sala se cerró» con Volver y un campo para otro código."
+      },
+      {
+        "id": "B",
+        "label": "Mensaje con diagnóstico desplegable",
+        "detail": "Misma ayuda simple y un detalle copiable para reportar problemas."
+      },
+      {
+        "id": "C",
+        "label": "Pasos de ayuda en pantalla",
+        "detail": "Mostrar dos o tres comprobaciones según el error; más texto, menos búsqueda externa."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P23",
+    "section": "Personalización",
+    "title": "¿Cómo debería recorrerse la personalización básica disponible?",
+    "why": "Se mantienen colores de piel, pijama y mosquito; esta pregunta no añade prendas ni piezas nuevas.",
+    "example": "Boceto: visor del personaje y paletas en un lateral.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Por rol primero",
+        "detail": "Elegir Humano o Mosquito y después sus colores; pocas opciones simultáneas."
+      },
+      {
+        "id": "B",
+        "label": "Ambos roles juntos",
+        "detail": "Dos previews y sus paletas; comparación rápida con menos tamaño por personaje."
+      },
+      {
+        "id": "C",
+        "label": "Asistente corto",
+        "detail": "Piel, pijama y mosquito en tres pasos; guía clara pero más navegación."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P24",
+    "section": "Personalización",
+    "title": "¿Cómo deberían identificarse los colores de una paleta?",
+    "why": "Facilita elegir y recordar una apariencia sin depender únicamente de la muestra visual.",
+    "example": "Una muestra de pijama azul puede decir «Azul noche» o llevar un código breve.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Muestra y nombre",
+        "detail": "Cada color tiene un nombre visible; paleta más grande."
+      },
+      {
+        "id": "B",
+        "label": "Muestra con nombre al enfocar",
+        "detail": "Más compacta; el nombre aparece con cursor o selección por teclado."
+      },
+      {
+        "id": "C",
+        "label": "Muestra y número",
+        "detail": "Identificadores 01–08 para comunicar el color; menos expresivo y más fácil de citar."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P25",
+    "section": "Personalización",
+    "title": "¿Qué interacción debería ofrecer el visor de apariencia?",
+    "why": "Define cómo revisar los colores sin cambiar modelos o ampliar el catálogo artístico.",
+    "example": "Querés comprobar cómo se ve el pijama por detrás antes de guardar.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Giro libre con arrastre",
+        "detail": "Rotar con cursor y botón de restablecer vista; control continuo."
+      },
+      {
+        "id": "B",
+        "label": "Vistas predefinidas",
+        "detail": "Frente, espalda y perfil; comparación consistente con menos control."
+      },
+      {
+        "id": "C",
+        "label": "Giro automático opcional",
+        "detail": "Botón para una vuelta de 8 segundos y pausa; cómodo para observar sin arrastrar."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/CharacterPreviewOrbit.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P26",
+    "section": "Personalización",
+    "title": "¿Cómo debería guardarse una nueva combinación de colores?",
+    "why": "El juego ya persiste apariencia; esta decisión define el compromiso visible del usuario.",
+    "example": "Probás tres pijamas y cerrás la pantalla sin querer.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Aplicar explícitamente",
+        "detail": "Guardar y cancelar; los cambios sin guardar piden confirmación."
+      },
+      {
+        "id": "B",
+        "label": "Guardar cada cambio con deshacer",
+        "detail": "Resultado inmediato y botón para volver a la combinación inicial de esa sesión."
+      },
+      {
+        "id": "C",
+        "label": "Confirmar al salir",
+        "detail": "Probar sin guardar y elegir conservar o descartar al cerrar; un paso final obligatorio."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/UI/Runtime/AlfaUiController.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P27",
+    "section": "Personalización",
+    "title": "¿Qué debería ocurrir al cambiar apariencia mientras estás en el lobby?",
+    "why": "Define el momento de mostrar el cambio a amigos; no afecta habilidades ni roles.",
+    "example": "Cambiás el color del mosquito mientras los demás esperan para iniciar.",
+    "priority": "detalle",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Publicar al aplicar",
+        "detail": "Los demás ven la combinación cuando la guardás; evita ver pruebas intermedias."
+      },
+      {
+        "id": "B",
+        "label": "Vista previa compartida",
+        "detail": "Los demás ven cada prueba de color; más expresión, más actualizaciones visuales."
+      },
+      {
+        "id": "C",
+        "label": "Aplicar al volver a la sala",
+        "detail": "El editor queda privado hasta cerrarlo y confirmar; cambio visible en un momento claro."
+      }
+    ],
+    "recommended": null,
+    "basis": "Valor provisional en código",
+    "source": "unity/Assets/LetMeSleep/Bootstrap/AlfaApplication.Appearance.cs",
+    "dependsOn": null
+  },
+  {
+    "id": "P28",
+    "section": "Personalización",
+    "title": "¿Cómo te gustaría reutilizar combinaciones dentro del catálogo existente?",
+    "why": "Explora comodidad de uso sin introducir progresión, ventas ni más piezas artísticas.",
+    "example": "Alternar entre dos combinaciones de colores que te gustan para ambos roles.",
+    "priority": "decisiva",
+    "type": "single",
+    "options": [
+      {
+        "id": "A",
+        "label": "Una combinación guardada",
+        "detail": "Mantener sólo la última; interfaz y persistencia simples."
+      },
+      {
+        "id": "B",
+        "label": "Tres favoritos locales",
+        "detail": "Guardar hasta tres combinaciones con nombre; añade una pequeña gestión de favoritos."
+      },
+      {
+        "id": "C",
+        "label": "Combinaciones sugeridas editables",
+        "detail": "Ofrecer seis paletas iniciales y editar sus colores; requiere diseñar las propuestas, sin desbloqueos."
+      }
+    ],
+    "recommended": null,
+    "basis": "Por definir",
+    "source": "docs/ceo/PARITY-AND-CONTENT.md",
+    "dependsOn": null
+  }
+]
