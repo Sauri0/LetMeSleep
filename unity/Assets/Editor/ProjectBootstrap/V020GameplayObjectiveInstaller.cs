@@ -51,38 +51,14 @@ public static class V020GameplayObjectiveInstaller
     public static void ValidateExternalCatalogsOnly()
     {
         string[] args = Environment.GetCommandLineArgs();
-        int index = Array.IndexOf(args, "-objectiveManifest");
-        if (index < 0 || index + 1 >= args.Length ||
-            Array.LastIndexOf(args, "-objectiveManifest") != index || !System.IO.Path.IsPathRooted(args[index + 1]))
-            throw new ArgumentException("One absolute -objectiveManifest path required.");
-        var manifest = JsonUtility.FromJson<ExternalManifest>(File.ReadAllText(args[index + 1]));
-        if (manifest?.maps == null || manifest.maps.Length == 0 ||
-            manifest.maps.Any(item => item == null) ||
-            manifest.maps.Select(item => item.mapId).Distinct(StringComparer.Ordinal).Count() != manifest.maps.Length)
-            throw new ArgumentException("Manifest requires distinct maps.");
+        var manifest = ReadExternalManifest(args);
         bool motor = !args.Contains("-objectiveStaticOnly");
         var failures = new List<string>();
         foreach (ExternalMap candidate in manifest.maps)
         {
             try
             {
-                Recipe recipe = Recipes.SingleOrDefault(item => item.MapId == candidate.mapId);
-                if (recipe == null || candidate.prefabPath != recipe.PrefabPath)
-                    throw new ArgumentException("Manifest must identify an existing final map prefab.");
-                if (candidate.objectives == null || candidate.objectives.Length != 10 ||
-                    candidate.objectives.Any(item => item == null) ||
-                    candidate.objectives.Select(item => item.objectiveId).Distinct(StringComparer.Ordinal).Count() != 10 ||
-                    candidate.objectives.Select(item => item.targetName).Distinct(StringComparer.Ordinal).Count() != 10)
-                    throw new ArgumentException("Each catalog requires ten distinct objective IDs and targets.");
-                CatalogSpec[] specs = candidate.objectives.Select(item =>
-                {
-                    if (new[] { item.objectiveId, item.displayKey, item.actionKey, item.targetName, item.routeRegionId }
-                        .Any(string.IsNullOrWhiteSpace) ||
-                        !Enum.TryParse(item.kind, false, out GameplayObjectiveKind kind) ||
-                        (kind != GameplayObjectiveKind.Clean && kind != GameplayObjectiveKind.Repair && kind != GameplayObjectiveKind.Switch))
-                        throw new ArgumentException("Invalid objective metadata: " + item.objectiveId);
-                    return Spec(item.objectiveId, kind, item.displayKey, item.actionKey, item.targetName, item.routeRegionId);
-                }).ToArray();
+                CatalogSpec[] specs = ExternalSpecs(candidate);
                 BuildAndValidateCatalog(candidate.mapId, candidate.prefabPath, specs, motor, true);
                 Debug.Log("LMS_OBJECTIVE_CATALOG map=" + candidate.mapId +
                           " objectives=10 distinctTargets=10 saved=0 status=PASS scope=" + (motor ? "motor" : "static-only"));
@@ -96,6 +72,69 @@ public static class V020GameplayObjectiveInstaller
         }
         if (failures.Count > 0)
             throw new InvalidOperationException("External catalog validation failed: " + string.Join(" | ", failures));
+    }
+
+    public static void DiagnoseExternalRouteOnly()
+    {
+        string[] args = Environment.GetCommandLineArgs();
+        var candidate = ReadExternalManifest(args).maps.Single();
+        var specs = ExternalSpecs(candidate);
+        if (!int.TryParse(CommandArgument(args, "-objectiveSpawn"), NumberStyles.None,
+                CultureInfo.InvariantCulture, out int spawn) || spawn < 0)
+            throw new ArgumentException("Nonnegative -objectiveSpawn index required.");
+        string target = CommandArgument(args, "-objectiveTarget");
+        if (!specs.Any(item => item.ObjectiveId == target))
+            throw new ArgumentException("Requested diagnostic target is not in the manifest.");
+        var entries = BuildAndValidateCatalog(candidate.mapId, candidate.prefabPath, specs, false);
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(candidate.prefabPath);
+        var map = prefab ? prefab.GetComponent<EnvironmentMapDefinition>() : null;
+        Transform[] humans = (map?.HumanSpawnPoints ?? Array.Empty<Transform>()).Where(item => item).ToArray();
+        Transform mosquito = (map?.MosquitoSpawnPoints ?? Array.Empty<Transform>()).FirstOrDefault(item => item);
+        if (spawn >= humans.Length || !mosquito)
+            throw new InvalidOperationException("Diagnostic requires authored human and mosquito spawns.");
+        ProveHumanRoute(entries, humans[spawn].position.ToFloat(), "external:spawn:" + spawn, target,
+            mosquito.position.ToFloat(), 9800, trace: true, decisionTrace: true,
+            mapId: candidate.mapId, prefabPath: candidate.prefabPath);
+        Debug.Log("LMS_OBJECTIVE_ROUTE_DIAGNOSTIC map=" + candidate.mapId + " cases=1 saved=0");
+    }
+
+    private static string CommandArgument(string[] args, string flag)
+    {
+        int index = Array.IndexOf(args, flag);
+        if (index < 0 || index + 1 >= args.Length || Array.LastIndexOf(args, flag) != index ||
+            string.IsNullOrWhiteSpace(args[index + 1]))
+            throw new ArgumentException("One " + flag + " argument required.");
+        return args[index + 1];
+    }
+
+    private static ExternalManifest ReadExternalManifest(string[] args)
+    {
+        string path = CommandArgument(args, "-objectiveManifest");
+        if (!System.IO.Path.IsPathRooted(path)) throw new ArgumentException("Absolute manifest path required.");
+        var manifest = JsonUtility.FromJson<ExternalManifest>(File.ReadAllText(path));
+        if (manifest?.maps == null || manifest.maps.Length == 0 || manifest.maps.Any(item => item == null) ||
+            manifest.maps.Select(item => item.mapId).Distinct(StringComparer.Ordinal).Count() != manifest.maps.Length)
+            throw new ArgumentException("Manifest requires distinct maps.");
+        return manifest;
+    }
+
+    private static CatalogSpec[] ExternalSpecs(ExternalMap candidate)
+    {
+        Recipe recipe = Recipes.SingleOrDefault(item => item.MapId == candidate.mapId);
+        if (recipe == null || candidate.prefabPath != recipe.PrefabPath)
+            throw new ArgumentException("Manifest must identify an existing final map prefab.");
+        if (candidate.objectives == null || candidate.objectives.Length != 10 || candidate.objectives.Any(item => item == null) ||
+            candidate.objectives.Select(item => item.objectiveId).Distinct(StringComparer.Ordinal).Count() != 10 ||
+            candidate.objectives.Select(item => item.targetName).Distinct(StringComparer.Ordinal).Count() != 10)
+            throw new ArgumentException("Each catalog requires ten distinct objective IDs and targets.");
+        return candidate.objectives.Select(item =>
+        {
+            if (new[] { item.objectiveId, item.displayKey, item.actionKey, item.targetName, item.routeRegionId }
+                .Any(string.IsNullOrWhiteSpace) || !Enum.TryParse(item.kind, false, out GameplayObjectiveKind kind) ||
+                (kind != GameplayObjectiveKind.Clean && kind != GameplayObjectiveKind.Repair && kind != GameplayObjectiveKind.Switch))
+                throw new ArgumentException("Invalid objective metadata: " + item.objectiveId);
+            return Spec(item.objectiveId, kind, item.displayKey, item.actionKey, item.targetName, item.routeRegionId);
+        }).ToArray();
     }
 
     private static readonly Recipe[] Recipes =
@@ -162,6 +201,15 @@ public static class V020GameplayObjectiveInstaller
     {
         BuildAndValidateCasaCatalog();
         Debug.Log("LMS_OBJECTIVE_CATALOG map=" + CasaMapId + " objectives=10 distinctTargets=10 saved=0 status=PASS");
+    }
+
+    public static void VerifyInstalledCasaCatalogOnly()
+    {
+        var entries = BuildAndValidateCasaCatalog(false);
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CasaPrefabPath);
+        if (!prefab || !CatalogEquals(prefab.GetComponent<GameplayObjectiveCatalog>(), CasaMapId, entries))
+            throw new InvalidOperationException("Authoring no longer reproduces the installed Casa catalog exactly.");
+        Debug.Log("LMS_OBJECTIVE_INSTALLED_MATCH map=" + CasaMapId + " objectives=10 saved=0 status=PASS");
     }
 
     [MenuItem("Tools/Let Me Sleep/v0.2.0/Verify two Casa human routes (no save)")]
@@ -292,19 +340,28 @@ public static class V020GameplayObjectiveInstaller
     }
 
     public static void ValidateCasaTaskRoundOnly()
+        => ValidateTaskRound(CasaMapId, CasaPrefabPath, CasaSpecs);
+
+    public static void ValidateExternalTaskRoundOnly()
     {
-        GameplayObjectiveCatalog.Entry[] entries = BuildAndValidateCasaCatalog(false);
-        var fixture = new GameObject("Casa task round validation");
+        var candidate = ReadExternalManifest(Environment.GetCommandLineArgs()).maps.Single();
+        ValidateTaskRound(candidate.mapId, candidate.prefabPath, ExternalSpecs(candidate));
+    }
+
+    private static void ValidateTaskRound(string mapId, string prefabPath, IReadOnlyList<CatalogSpec> specs)
+    {
+        GameplayObjectiveCatalog.Entry[] entries = BuildAndValidateCatalog(mapId, prefabPath, specs, false);
+        var fixture = new GameObject(mapId + " task round validation");
         GameplayRuntime runtime = null;
         try
         {
-            var root = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(CasaPrefabPath));
+            var root = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath));
             root.transform.SetParent(fixture.transform, false);
             root.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             root.transform.localScale = Vector3.one;
             var map = root.GetComponent<EnvironmentMapDefinition>();
             var catalog = root.GetComponent<GameplayObjectiveCatalog>() ?? root.AddComponent<GameplayObjectiveCatalog>();
-            catalog.ConfigureForEditor(CasaMapId, entries);
+            catalog.ConfigureForEditor(mapId, entries);
             var world = fixture.AddComponent<UnityGameplayWorld>();
             world.MapRoot = root.transform;
             var doors = world.GetDoorDefinitions();
@@ -364,39 +421,50 @@ public static class V020GameplayObjectiveInstaller
 
     [MenuItem("Tools/Let Me Sleep/v0.2.0/Install validated Casa objective catalog")]
     public static void InstallCasaCatalog()
+        => InstallCatalog(CasaMapId, CasaPrefabPath, BuildAndValidateCasaCatalog());
+
+    public static void InstallExternalCatalog()
     {
-        GameplayObjectiveCatalog.Entry[] entries = BuildAndValidateCasaCatalog();
-        GameObject root = PrefabUtility.LoadPrefabContents(CasaPrefabPath);
+        var candidate = ReadExternalManifest(Environment.GetCommandLineArgs()).maps.Single();
+        var specs = ExternalSpecs(candidate);
+        ValidateTaskRound(candidate.mapId, candidate.prefabPath, specs);
+        var entries = BuildAndValidateCatalog(candidate.mapId, candidate.prefabPath, specs, true);
+        InstallCatalog(candidate.mapId, candidate.prefabPath, entries);
+    }
+
+    private static void InstallCatalog(string mapId, string prefabPath, GameplayObjectiveCatalog.Entry[] entries)
+    {
+        GameObject root = PrefabUtility.LoadPrefabContents(prefabPath);
         try
         {
             var map = root.GetComponent<EnvironmentMapDefinition>();
-            if (!map || map.MapId != CasaMapId || string.IsNullOrWhiteSpace(map.ContentHash))
-                throw new InvalidOperationException("Casa prefab identity/content hash missing.");
+            if (!map || map.MapId != mapId || string.IsNullOrWhiteSpace(map.ContentHash))
+                throw new InvalidOperationException(mapId + " prefab identity/content hash missing.");
             var catalog = root.GetComponent<GameplayObjectiveCatalog>() ?? root.AddComponent<GameplayObjectiveCatalog>();
-            if (CatalogEquals(catalog, CasaMapId, entries))
+            if (CatalogEquals(catalog, mapId, entries))
             {
-                Debug.Log("LMS_OBJECTIVE_INSTALL map=" + CasaMapId + " objectives=10 changed=0");
+                Debug.Log("LMS_OBJECTIVE_INSTALL map=" + mapId + " objectives=10 changed=0");
                 return;
             }
             string previousHash = map.ContentHash;
-            catalog.ConfigureForEditor(CasaMapId, entries);
+            catalog.ConfigureForEditor(mapId, entries);
             string catalogHash = ObjectiveDefinition.CatalogHash(Definitions(root.transform, entries));
             map.ContentHash = Hash("objectives-v020\n" + previousHash + "\n" + catalogHash);
             EditorUtility.SetDirty(catalog);
             EditorUtility.SetDirty(map);
-            if (!PrefabUtility.SaveAsPrefabAsset(root, CasaPrefabPath))
-                throw new InvalidOperationException("Could not save Casa objective catalog.");
-            Debug.Log("LMS_OBJECTIVE_INSTALL map=" + CasaMapId + " objectives=10 changed=1 previousHash=" +
+            if (!PrefabUtility.SaveAsPrefabAsset(root, prefabPath))
+                throw new InvalidOperationException("Could not save " + mapId + " objective catalog.");
+            Debug.Log("LMS_OBJECTIVE_INSTALL map=" + mapId + " objectives=10 changed=1 previousHash=" +
                       previousHash + " contentHash=" + map.ContentHash + " catalogHash=" + catalogHash);
         }
         finally { PrefabUtility.UnloadPrefabContents(root); }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-        var saved = AssetDatabase.LoadAssetAtPath<GameObject>(CasaPrefabPath);
+        var saved = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
         var savedMap = saved ? saved.GetComponent<EnvironmentMapDefinition>() : null;
         var savedCatalog = saved ? saved.GetComponent<GameplayObjectiveCatalog>() : null;
-        if (!savedMap || !savedCatalog || !CatalogEquals(savedCatalog, CasaMapId, entries))
-            throw new InvalidOperationException("Casa objective catalog readback failed.");
+        if (!savedMap || !savedCatalog || !CatalogEquals(savedCatalog, mapId, entries))
+            throw new InvalidOperationException(mapId + " objective catalog readback failed.");
     }
 
     private static GameplayObjectiveCatalog.Entry[] BuildAndValidateCasaCatalog(bool validateMotor = true)
@@ -496,48 +564,54 @@ public static class V020GameplayObjectiveInstaller
         var authoredRegions = navigation.GetType().GetField("regions", BindingFlags.Instance | BindingFlags.NonPublic)
             ?.GetValue(navigation) as IReadOnlyList<BotRegion>;
         Vector3? firstClearFoot = null;
-        foreach (Vector3 point in AxisWitnesses(collider))
-        foreach (float radius in new[] { .55f, .75f, 1f })
-        foreach (Vector3 direction in HorizontalDirections())
+        foreach (IEnumerable<Vector3> witnesses in new[] { AxisWitnesses(collider), HorizontalEdgeWitnesses(collider) })
         {
-            probes++;
-            Vector3 probe = point + direction * radius + Vector3.up * .5f;
-            RaycastHit floor = Physics.RaycastAll(probe, Vector3.down, 2.5f, world.GeometryMask,
-                    QueryTriggerInteraction.Ignore)
-                .OrderBy(hit => hit.distance)
-                .FirstOrDefault(hit => world.IsWorldCollider(hit.collider) &&
-                                       !hit.collider.GetComponentInParent<GameplayActorProxy>());
-            if (!floor.collider || floor.normal.y < .55f) continue;
-            supported++;
-            Vector3 approach = floor.point;
-            if (Vector3.Distance(point, approach) > 1.25f) continue;
-            near++;
-            if (!(bool)approachFree.Invoke(world, new object[] { 0u, approach })) continue;
-            clear++;
-            if (!firstClearFoot.HasValue) firstClearFoot = approach;
-            if (authoredRegions != null)
+            foreach (Vector3 point in witnesses)
+            foreach (float radius in new[] { .55f, .75f, 1f })
+            foreach (Vector3 direction in HorizontalDirections())
             {
-                Float3 sample = root.InverseTransformPoint(approach).ToFloat() + Float3.Up;
-                foreach (BotRegion region in authoredRegions.Where(item => item.Contains(sample)))
-                    regionWitnesses[region.Id] = regionWitnesses.TryGetValue(region.Id, out int count) ? count + 1 : 1;
+                probes++;
+                Vector3 probe = point + direction * radius + Vector3.up * .5f;
+                RaycastHit floor = Physics.RaycastAll(probe, Vector3.down, 2.5f, world.GeometryMask,
+                        QueryTriggerInteraction.Ignore)
+                    .OrderBy(hit => hit.distance)
+                    .FirstOrDefault(hit => world.IsWorldCollider(hit.collider) &&
+                                           !hit.collider.GetComponentInParent<GameplayActorProxy>());
+                // Standing on the target's own tabletop is not a ground approach to interact with it.
+                if (!floor.collider || floor.collider == collider || floor.normal.y < .55f) continue;
+                supported++;
+                Vector3 approach = floor.point;
+                if (Vector3.Distance(point, approach) > 1.25f) continue;
+                near++;
+                if (!(bool)approachFree.Invoke(world, new object[] { 0u, approach })) continue;
+                clear++;
+                if (!firstClearFoot.HasValue) firstClearFoot = approach;
+                if (authoredRegions != null)
+                {
+                    Float3 sample = root.InverseTransformPoint(approach).ToFloat() + Float3.Up;
+                    foreach (BotRegion region in authoredRegions.Where(item => item.Contains(sample)))
+                        regionWitnesses[region.Id] = regionWitnesses.TryGetValue(region.Id, out int count) ? count + 1 : 1;
+                }
+                if (!(bool)containsFootPoint.Invoke(navigation, new object[] { spec.Region, approach.ToFloat() })) continue;
+                inRegion++;
+                Vector3 eye = approach + Vector3.up * 1.53f;
+                Vector3 aim = point - eye;
+                if (aim.sqrMagnitude < .0001f) continue;
+                RaycastHit first = Physics.RaycastAll(eye, aim.normalized, Mathf.Min(4.6f, aim.magnitude + .3f),
+                        world.GeometryMask, QueryTriggerInteraction.Collide)
+                    .OrderBy(hit => hit.distance)
+                    .FirstOrDefault(hit => world.IsWorldCollider(hit.collider) && !hit.collider.isTrigger);
+                if (!first.collider || first.collider != collider || Vector3.Distance(first.point, point) > .35f) continue;
+                visible++;
+                bool hasSpawnRoute = (spawns ?? Array.Empty<Transform>()).Any(spawn => spawn &&
+                    (bool)routeWithin.Invoke(navigation, new object[]
+                        { spawn.position.ToFloat(), spec.Region, approach.ToFloat(), 330u }));
+                if (!hasSpawnRoute) continue;
+                routed++;
+                candidates.Add(new AuthoredApproach { Point = point, Approach = approach, Support = floor.collider });
             }
-            if (!(bool)containsFootPoint.Invoke(navigation, new object[] { spec.Region, approach.ToFloat() })) continue;
-            inRegion++;
-            Vector3 eye = approach + Vector3.up * 1.53f;
-            Vector3 aim = point - eye;
-            if (aim.sqrMagnitude < .0001f) continue;
-            RaycastHit first = Physics.RaycastAll(eye, aim.normalized, Mathf.Min(4.6f, aim.magnitude + .3f),
-                    world.GeometryMask, QueryTriggerInteraction.Collide)
-                .OrderBy(hit => hit.distance)
-                .FirstOrDefault(hit => world.IsWorldCollider(hit.collider) && !hit.collider.isTrigger);
-            if (!first.collider || first.collider != collider || Vector3.Distance(first.point, point) > .35f) continue;
-            visible++;
-            bool hasSpawnRoute = (spawns ?? Array.Empty<Transform>()).Any(spawn => spawn &&
-                (bool)routeWithin.Invoke(navigation, new object[]
-                    { spawn.position.ToFloat(), spec.Region, approach.ToFloat(), 330u }));
-            if (!hasSpawnRoute) continue;
-            routed++;
-            candidates.Add(new AuthoredApproach { Point = point, Approach = approach, Support = floor.collider });
+            // Preserve established central witnesses when valid. Edge sampling only fills a search gap.
+            if (candidates.Count > 0) break;
         }
         var selected = candidates.OrderBy(candidate => candidate.Approach.y)
             .ThenBy(candidate => Vector3.Distance(candidate.Point, candidate.Approach))
@@ -824,6 +898,7 @@ public static class V020GameplayObjectiveInstaller
         float bestHorizontal = float.PositiveInfinity, bestVertical = float.PositiveInfinity;
         uint reachedTick = 0;
         uint simulatedTicks = 0;
+        bool targetAssigned = false;
         string reason = "budget";
         LifeState finalState = LifeState.Active;
         bool finalGrounded = false;
@@ -869,6 +944,7 @@ public static class V020GameplayObjectiveInstaller
                 DecisionTraceSample decision = decisionTrace && (tick + 1) % 3 == 0
                     ? CaptureDecisionTrace(runtime, tick)
                     : default;
+                if (decisionTrace && decision.HasValue) ClearDecisionTrace(runtime);
                 runtime.TickHost();
                 simulatedTicks = runtime.Authority.CurrentTick;
                 if (decisionTrace && simulatedTicks != tick)
@@ -877,6 +953,8 @@ public static class V020GameplayObjectiveInstaller
                     LogDecisionTrace(runtime, decision, sourceId);
                 ActorSnapshot actor = runtime.LatestSnapshot?.Actors.FirstOrDefault(item => item.ActorId == 1);
                 if (actor == null) { reason = "missing-actor"; break; }
+                TaskAssignment assignment = runtime.Authority.CapturePrivate(1)?.TaskAssignment;
+                targetAssigned |= assignment?.ObjectiveId == targetId && assignment.Status == TaskAssignmentStatus.Active;
                 if (trace && (tick == 1 || tick % 30 == 0))
                     LogHumanRouteTrace(runtime, actor, target, sourceId, tick);
                 finalState = actor.LifeState; finalGrounded = actor.Grounded;
@@ -888,7 +966,7 @@ public static class V020GameplayObjectiveInstaller
                 if (actor.LifeState == LifeState.Falling || actor.LifeState == LifeState.Fainted ||
                     actor.LifeState == LifeState.Recovering || actor.LifeState == LifeState.Eliminated)
                 { reason = "unsafe-state:" + actor.LifeState; break; }
-                if (actor.Grounded && horizontal <= .70f && vertical <= .08f)
+                if (targetAssigned && actor.Grounded && horizontal <= .70f && vertical <= .08f)
                 { reachedTick = tick; reason = "reached-supported-approach"; break; }
                 if (!runtime.Authority.IsRunning)
                 { reason = "round-ended-before-approach"; break; }
@@ -912,9 +990,9 @@ public static class V020GameplayObjectiveInstaller
                                                 sourceId + ": ticks=" + simulatedTicks + " reason=" + reason);
         Debug.Log(string.Format(CultureInfo.InvariantCulture,
             "LMS_OBJECTIVE_MOTOR source={0} target={1} result={2} reachedTick={3} budget={4} " +
-            "bestHorizontal={5:R} bestVertical={6:R} finalState={7} grounded={8} reason={9}",
+            "bestHorizontal={5:R} bestVertical={6:R} finalState={7} grounded={8} reason={9} assigned={10}",
             sourceId, targetId, pass ? "PASS" : "FAIL", reachedTick, budget,
-            bestHorizontal, bestVertical, finalState, finalGrounded ? 1 : 0, reason));
+            bestHorizontal, bestVertical, finalState, finalGrounded ? 1 : 0, reason, targetAssigned ? 1 : 0));
         return pass;
     }
 
@@ -964,6 +1042,19 @@ public static class V020GameplayObjectiveInstaller
         return new DecisionTraceSample(tick, self, opponent, assignment, visible, threat);
     }
 
+    private static void ClearDecisionTrace(GameplayRuntime runtime)
+    {
+        const BindingFlags hidden = BindingFlags.Instance | BindingFlags.NonPublic;
+        var bots = typeof(GameplayRuntime).GetField("bots", hidden)?.GetValue(runtime)
+            as IDictionary<uint, BotController>;
+        if (bots == null || !bots.TryGetValue(1, out var controller))
+            throw new InvalidOperationException("Route diagnostic human bot missing.");
+        typeof(BotController).GetField("lastDecisionDiagnostic", hidden)?.SetValue(controller, null);
+        object navigation = typeof(GameplayRuntime).GetField("botNavigation", hidden)?.GetValue(runtime);
+        navigation?.GetType().GetField("lastDirectionDiagnostic", hidden)?.SetValue(navigation, null);
+        typeof(UnityGameplayWorld).GetField("lastBotSteeringDiagnostic", hidden)?.SetValue(runtime.World, null);
+    }
+
     private static void LogDecisionTrace(GameplayRuntime runtime, DecisionTraceSample sample, string sourceId)
     {
         bool wanted = sourceId == "spawn:0-threat" && (sample.Tick == 14 || sample.Tick == 17) ||
@@ -975,7 +1066,9 @@ public static class V020GameplayObjectiveInstaller
                        sourceId == "spawn:4-kitchen-sink-diagnostic") &&
                       (sample.Tick == 2 || (sample.Tick - 2) % 15 == 0) ||
                       sourceId == "spawn:0" && sample.Assignment?.ObjectiveId == "casa.switch.bedroom_two_lamp" &&
-                      (sample.Tick >= 62 && sample.Tick <= 95 || sample.Tick >= 305 && sample.Tick <= 330);
+                      (sample.Tick >= 62 && sample.Tick <= 95 || sample.Tick >= 305 && sample.Tick <= 330) ||
+                      sourceId.StartsWith("external:spawn:", StringComparison.Ordinal) &&
+                      sample.Assignment?.Status == TaskAssignmentStatus.Active;
         if (!wanted) return;
         const BindingFlags hidden = BindingFlags.Instance | BindingFlags.NonPublic;
         var bots = typeof(GameplayRuntime).GetField("bots", hidden)?.GetValue(runtime)
@@ -987,8 +1080,14 @@ public static class V020GameplayObjectiveInstaller
         string route = navigation?.GetType().GetField("lastDirectionDiagnostic", hidden)?.GetValue(navigation) as string;
         string steering = typeof(UnityGameplayWorld).GetField("lastBotSteeringDiagnostic", hidden)?
             .GetValue(runtime.World) as string;
-        if (string.IsNullOrEmpty(decision) || string.IsNullOrEmpty(route) || string.IsNullOrEmpty(steering))
-            throw new InvalidOperationException("Casa threat diagnostic did not capture the real decision, route and steering state.");
+        if (string.IsNullOrEmpty(decision))
+            throw new InvalidOperationException("Route diagnostic did not capture the current decision.");
+        bool taskCalled = decision.StartsWith("task=1 ", StringComparison.Ordinal);
+        bool steerCalled = decision.Contains(" steerCalled=1 ");
+        if (taskCalled && string.IsNullOrEmpty(route) || steerCalled && string.IsNullOrEmpty(steering))
+            throw new InvalidOperationException("Route diagnostic did not capture a called navigation or steering method.");
+        if (!taskCalled) route = "not-called";
+        if (!steerCalled) steering = "not-called";
         uint selected = controller.SelectedActorId;
         bool blocksTask = sample.Visible && sample.Threat && selected == sample.Opponent.ActorId;
         Debug.Log(string.Format(CultureInfo.InvariantCulture,
@@ -1058,6 +1157,24 @@ public static class V020GameplayObjectiveInstaller
             if (collider.Raycast(new Ray(collider.bounds.center + axis * reach, -axis), out RaycastHit hit,
                     reach * 2) && Vector3.Distance(hit.point, collider.bounds.center) <= reach)
                 yield return hit.point;
+    }
+
+    private static IEnumerable<Vector3> HorizontalEdgeWitnesses(Collider collider)
+    {
+        Bounds bounds = collider.bounds;
+        var seen = new HashSet<Vector3>();
+        foreach (float height in new[] { .1f, .5f, .9f, .98f })
+        foreach (float lateral in new[] { -.75f, 0f, .75f })
+        foreach (Vector3 direction in new[] { Vector3.right, Vector3.left, Vector3.forward, Vector3.back })
+        {
+            Vector3 center = bounds.center;
+            center.y = Mathf.Lerp(bounds.min.y, bounds.max.y, height);
+            Vector3 tangent = Vector3.Cross(Vector3.up, direction);
+            center += Vector3.Scale(tangent, bounds.extents) * lateral;
+            float distance = bounds.extents.magnitude + 1f;
+            if (collider.Raycast(new Ray(center + direction * distance, -direction), out var hit, distance * 2f) &&
+                seen.Add(hit.point)) yield return hit.point;
+        }
     }
 
     private static IEnumerable<Vector3> HorizontalDirections()

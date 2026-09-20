@@ -1,5 +1,30 @@
 # Relevo CEO — 2026-09-19
 
+## Navegación por rol y objetivos externos — último gate
+
+- `495bc7b` permite un grafo humano opcional (`human_zones`, `human_portals`,
+  `human_routes`) separado del vuelo. Sin estos campos conserva el grafo anterior.
+  `1ea63bf` añade 30 etiquetas españolas de objetivos candidatos.
+  `human-graph-labels-native-01.xml`: 43/43 PASS, sin omitidos (13 navegación,
+  30 etiquetas). No implica que Isla/Yate ya tengan rutas humanas nuevas.
+- Yate static03 encuentra 10 aproximaciones; corrige la mesa de comedor sobre
+  cubierta, rechazando el propio mueble como suelo. Casa instalada conserva sus
+  10 entradas exactas (`casa-installed-authoring-match-01.log`). Yate motor01
+  continúa 12/50 spawn y 13/73 onward; no instalar. Traza flybridge01 muestra
+  rechazo del ascenso en la entrada de Stair_AftToFlybridge y ciclos posteriores;
+  no llega al portal superior. Astra prepara testigo físico de entrada.
+- Camp static04 rechaza ambas linternas nuevas por LOS (8/10 aproximaciones).
+  Puerto static03 encuentra 10 pero falla cobertura de inicio: faltan destinos
+  cercanos al spawn del faro. Terra ajusta distribución fuera de Assets.
+- Isla medición02: 636 muestras, 635 con soporte, 451 con clearance; primera
+  medición01 inválida por serialización conservada. Borrador de 24 zonas y
+  conexiones incompletas NO integrado; técnica prepara recorridos medidos.
+- CEO generaliza ronda de Tareas e instalación: ronda de 150 s con 5 humanos,
+  cuota 14/20, luego cobertura motor antes de guardar. Diagnóstico aislado
+  exige asignación efectiva; exit0 del diagnóstico no significa ruta PASS.
+- Sin build final ni release; Higgsfield pendiente de autenticación, arte nuevo,
+  hardware de voz y dos redes siguen pendientes. Objetivo activo.
+
 ## Casa instalada; ronda Tareas completa comprobada
 
 - `casa-task-round-native-01.log`:5humanos bots, mosquito sin control,20/20

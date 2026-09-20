@@ -1,5 +1,32 @@
 # Catálogos de objetivos: validación v0.2.0
 
+## Estado posterior y entradas adicionales
+
+Casa ya tiene diez objetivos instalados tras la ronda nativa de 150 s:
+20/20 tareas completadas por cinco bots humanos contra un mosquito sin control.
+Se preservó backup del prefab; sólo cambió el componente catálogo, su referencia
+en raíz y ContentHash. La prueba no cubre red ni combate competitivo.
+
+`ValidateExternalTaskRoundOnly` ejecuta esa ronda para un manifiesto de un mapa.
+Exige 20 oportunidades, cuota 14, resultado TasksMet/Human y 4500 ticks.
+`InstallExternalCatalog` exige primero esa ronda y luego cobertura física con
+motor antes de guardar. No se ha instalado aún ninguno de los otros cuatro.
+
+`DiagnoseExternalRouteOnly` requiere `-objectiveSpawn` y `-objectiveTarget` y un
+manifiesto de un mapa. Emite posición y decisiones para una ruta de 330 ticks.
+Su exit0 significa diagnóstico ejecutado: el resultado de ruta está en
+`LMS_OBJECTIVE_MOTOR`. Una llegada incidental sin asignación no cuenta como PASS.
+Los campos de decisión se limpian antes de cada muestra; métodos no llamados
+se registran como `not-called` para no atribuirles estados de ticks anteriores.
+
+La búsqueda rechaza apoyo sobre el collider del propio objetivo. Conserva los
+rayos originales como primera opción; sólo si no sirven prueba contactos cerca
+de los bordes laterales. Los criterios de soporte, alcance y LOS no cambian.
+Casa conserva las diez entradas instaladas; Yate static03 corrige una mesa que
+antes situaba al humano encima del tablero. Sus rutas motor siguen pendientes.
+
+## Contrato y evidencia inicial
+
 `V020GameplayObjectiveInstaller.ValidateExternalCatalogsOnly` acepta un archivo
 absoluto mediante `-objectiveManifest`. Es un diagnóstico sin guardado de mapas.
 El manifiesto tiene `maps[]`, cada mapa con `mapId`, `prefabPath` y diez
