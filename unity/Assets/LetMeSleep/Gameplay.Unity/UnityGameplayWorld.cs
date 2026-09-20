@@ -18,6 +18,10 @@ namespace LetMeSleep.Gameplay.Unity
         private readonly Dictionary<uint, GameplayDoor> doors = new Dictionary<uint, GameplayDoor>();
         private readonly Dictionary<uint, GameplaySurface> surfaces = new Dictionary<uint, GameplaySurface>();
         private const float Skin = .001f;
+#if UNITY_EDITOR
+        // Test-only A/B switch for the measured legacy tangency predicate.
+        public bool PreserveNonClosingMotorHitsForDiagnostic;
+#endif
         private T[] MapComponents<T>() where T : Component
         {
             if (!MapRoot || !MapRoot.gameObject.activeInHierarchy) throw new InvalidOperationException("Assign an active MapRoot before registering gameplay geometry.");
@@ -108,10 +112,19 @@ namespace LetMeSleep.Gameplay.Unity
                 for (int i = 0; i < hits.Length; i++)
                 {
                     float closing = -Vector3.Dot(delta.normalized, hits[i].normal);
-                    // A nearly tangent returned hit stops conservatively, without dividing
-                    // by a tiny incidence or extending the sweep to an unbounded distance.
-                    hits[i].distance = closing <= .0001f || closing * hits[i].distance <= Skin
-                        ? 0 : hits[i].distance - Skin / closing;
+                    // A support can be returned again after the downward component has
+                    // already been projected away. That second, exactly tangent hit must
+                    // not consume every remaining motor iteration. Initial penetration is
+                    // resolved by Overlap before this sweep. Preserve the conservative
+                    // zero-distance result for every positive incidence, however small.
+                    bool preserveNonClosing = false;
+#if UNITY_EDITOR
+                    preserveNonClosing = PreserveNonClosingMotorHitsForDiagnostic;
+#endif
+                    if (closing <= 0 && !preserveNonClosing)
+                        hits[i].distance = float.PositiveInfinity;
+                    else hits[i].distance = closing <= .0001f || closing * hits[i].distance <= Skin
+                            ? 0 : hits[i].distance - Skin / closing;
                 }
             }
             foreach (var hit in hits.OrderBy(h => h.distance).ThenBy(h => Actor(h.collider)?.ActorId ?? 0))
