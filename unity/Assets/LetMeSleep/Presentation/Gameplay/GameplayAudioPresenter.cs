@@ -41,35 +41,9 @@ namespace LetMeSleep.Presentation.Gameplay
             internal GroundMaterial Material { get; }
         }
 
-        private readonly struct EventKey : IEquatable<EventKey>
-        {
-            private readonly ulong epoch;
-            private readonly ulong round;
-            private readonly ulong eventId;
-
-            public EventKey(ulong epoch, ulong round, ulong eventId)
-            {
-                this.epoch = epoch;
-                this.round = round;
-                this.eventId = eventId;
-            }
-
-            public bool Equals(EventKey other) => epoch == other.epoch && round == other.round && eventId == other.eventId;
-            public override bool Equals(object obj) => obj is EventKey other && Equals(other);
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    int hash = epoch.GetHashCode();
-                    hash = (hash * 397) ^ round.GetHashCode();
-                    return (hash * 397) ^ eventId.GetHashCode();
-                }
-            }
-        }
-
         [SerializeField] private GameplayRuntime gameplay = null;
         [SerializeField] private AlfaAudioDirector audioDirector = null;
-        private readonly HashSet<EventKey> playedEvents = new HashSet<EventKey>();
+        private readonly GameplayAudioEventGate eventGate = new GameplayAudioEventGate();
         private readonly Dictionary<uint, ActorAudioState> actorStates =
             new Dictionary<uint, ActorAudioState>();
         private readonly HashSet<uint> liveActors = new HashSet<uint>();
@@ -77,6 +51,8 @@ namespace LetMeSleep.Presentation.Gameplay
         private readonly Dictionary<uint, ToolAudioState> toolStates =
             new Dictionary<uint, ToolAudioState>();
         private readonly List<AudioZone> audioZones = new List<AudioZone>();
+        private readonly List<MosquitoBuzzCandidate> wingCandidates = new List<MosquitoBuzzCandidate>();
+        private readonly HashSet<uint> audibleWingActors = new HashSet<uint>();
         private readonly Dictionary<uint, HumanLocomotionPresenter> locomotionSources =
             new Dictionary<uint, HumanLocomotionPresenter>();
         private bool sharedHumanLocomotionAudio;
@@ -98,6 +74,7 @@ namespace LetMeSleep.Presentation.Gameplay
         private void OnDisable()
         {
             Unsubscribe();
+            eventGate.Suspend();
             ClearLocomotionSources(false);
             StopWingLoops();
         }
@@ -105,6 +82,7 @@ namespace LetMeSleep.Presentation.Gameplay
         public void Bind(GameplayRuntime runtime, AlfaAudioDirector director)
         {
             Unsubscribe();
+            eventGate.Suspend();
             ClearLocomotionSources();
             StopWingLoops();
             gameplay = runtime;
@@ -173,12 +151,14 @@ namespace LetMeSleep.Presentation.Gameplay
             {
                 currentEpoch = snapshot.SessionEpoch;
                 currentRound = snapshot.RoundId;
-                playedEvents.Clear();
+                eventGate.BeginRound(currentEpoch, currentRound);
                 StopWingLoops();
                 toolStates.Clear();
                 audioZones.Clear();
                 audioDirector.EnterRound();
             }
+            else
+                eventGate.ResumeRound(currentEpoch, currentRound);
 
             AlfaAudioCatalog catalog = audioDirector.Catalog;
             AudioEmitterPool emitters = audioDirector.Emitters;
@@ -186,6 +166,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 return;
 
             EnsureAudioZones(gameplay.World.MapRoot);
+            SelectAudibleWingActors(snapshot);
 
             liveActors.Clear();
             bool localActivity = false;
@@ -208,7 +189,8 @@ namespace LetMeSleep.Presentation.Gameplay
                     if (actor.BiteAttachment.HasValue &&
                         actor.BiteAttachment.Value.VictimId == gameplay.LocalActorId)
                         localActivity = true;
-                    UpdateWingLoop(actor, proxy.transform, previous, catalog, emitters);
+                    UpdateWingLoop(actor, proxy.transform, previous, catalog, emitters,
+                        audibleWingActors.Contains(actor.ActorId));
                     bool attached = actor.SurfaceAttachment.HasValue || actor.BiteAttachment.HasValue;
                     if (!first && attached != previous.Attached)
                         emitters.Play(attached ? catalog.MosquitoPerch : catalog.MosquitoDetach,
@@ -269,8 +251,7 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if (audioDirector == null || audioDirector.Emitters == null || audioDirector.Catalog == null)
                 return;
-            var key = new EventKey(item.SessionEpoch, item.RoundId, item.EventId);
-            if (!playedEvents.Add(key))
+            if (!eventGate.TryAccept(item.SessionEpoch, item.RoundId, item.EventId))
                 return;
 
             Vector3 position = item.Position.ToUnity();
@@ -309,6 +290,7 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void HandleRoundFinished(GameplayModel.RoundEndReason reason, PlayerRole winner)
         {
+            eventGate.EndRound();
             StopWingLoops();
             if (audioDirector == null)
                 return;
@@ -354,6 +336,29 @@ namespace LetMeSleep.Presentation.Gameplay
             actorStates.Clear();
             toolStates.Clear();
             audioZones.Clear();
+            wingCandidates.Clear();
+            audibleWingActors.Clear();
+        }
+
+        private void SelectAudibleWingActors(GameplayModel.GameSessionState snapshot)
+        {
+            wingCandidates.Clear();
+            audibleWingActors.Clear();
+            if (gameplay == null || gameplay.World == null ||
+                !gameplay.World.Actors.TryGetValue(gameplay.LocalActorId, out GameplayActorProxy listener))
+                return;
+
+            Vector3 listenerPosition = listener.transform.position;
+            for (int i = 0; i < snapshot.Actors.Count; i++)
+            {
+                GameplayModel.ActorSnapshot actor = snapshot.Actors[i];
+                if (actor.Role != PlayerRole.Mosquito || !ProducesWingLoop(actor) ||
+                    !gameplay.World.Actors.TryGetValue(actor.ActorId, out GameplayActorProxy proxy))
+                    continue;
+                wingCandidates.Add(new MosquitoBuzzCandidate(actor.ActorId,
+                    (proxy.transform.position - listenerPosition).sqrMagnitude));
+            }
+            MosquitoBuzzPolicy.SelectNearest(wingCandidates, audibleWingActors);
         }
 
         private void ApplyToolAudio(
@@ -451,11 +456,9 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private static void UpdateWingLoop(
             GameplayModel.ActorSnapshot actor, Transform follow, ActorAudioState state,
-            AlfaAudioCatalog catalog, AudioEmitterPool emitters)
+            AlfaAudioCatalog catalog, AudioEmitterPool emitters, bool audible)
         {
-            AudioCue desired = !actor.SurfaceAttachment.HasValue && !actor.BiteAttachment.HasValue &&
-                (actor.LifeState == GameplayModel.LifeState.Flying ||
-                 actor.LifeState == GameplayModel.LifeState.ApproachingSurface)
+            AudioCue desired = audible && ProducesWingLoop(actor)
                 ? catalog.MosquitoWingLoop : null;
             if (state.Follow != follow)
             {
@@ -475,6 +478,13 @@ namespace LetMeSleep.Presentation.Gameplay
             state.WingCue = desired;
             if (desired != null)
                 emitters.Play(desired, follow.position, follow);
+        }
+
+        private static bool ProducesWingLoop(GameplayModel.ActorSnapshot actor)
+        {
+            return !actor.SurfaceAttachment.HasValue && !actor.BiteAttachment.HasValue &&
+                (actor.LifeState == GameplayModel.LifeState.Flying ||
+                 actor.LifeState == GameplayModel.LifeState.ApproachingSurface);
         }
 
         private enum GroundMaterial
