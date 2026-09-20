@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LetMeSleep.Gameplay;
+using LetMeSleep.Core;
 using LetMeSleep.UI;
 using UnityEngine;
 
@@ -32,6 +33,10 @@ namespace LetMeSleep.Bootstrap
             public bool humanRuntime,mosquitoRuntime,humanStationary,returnedToMenu,onlineRoomCreated,onlineRoomLeft;
             public bool humanGameplayVisible,mosquitoGameplayVisible;
             public int runtimeErrorCount;
+            public bool humanSettled;
+            public uint humanSettledTick;
+            public float humanInitialDrop, humanInitialHorizontalDrift, humanMaxSettledDrift;
+            public Vector3 humanSpawnPosition, humanSettledPosition, humanEndPosition;
             public int width,height,frames; public float medianFrameMs,p95FrameMs;
             public string failure="";
         }
@@ -78,16 +83,66 @@ namespace LetMeSleep.Bootstrap
                 // The ordinary training button also switches the UI after StartTraining.
                 ui.ShowGameplay(true);
                 game.CaptureLocalInput=false; var start=game.LatestSnapshot.Actors.First(a=>a.ActorId==game.LocalActorId).Position;
-                double until=Time.realtimeSinceStartupAsDouble+15;
-                while(Time.realtimeSinceStartupAsDouble<until)
+                // Authoring spawn points may sit slightly above support. Measure idle drift
+                // from the first real grounded tick, with a bounded initial drop and no
+                // horizontal-motion exemption. Preserve the old 3.5 cm drift limit.
+                Float3 settledPosition = start;
+                bool settled = false, settlingValid = true;
+                uint initialTick = game.LatestSnapshot.HostTick;
+                float initialHorizontalDrift = 0, maxSettledDrift = 0;
+                Action<GameSessionState> observeHuman = observedState =>
                 {
-                    yield return null;
-                    if(until-Time.realtimeSinceStartupAsDouble<10) timings.Add(Time.unscaledDeltaTime*1000);
+                    if (role == AlfaRole.Human)
+                    {
+                        var observed = observedState.Actors.First(a => a.ActorId == game.LocalActorId);
+                        settlingValid &= observed.Position.IsFinite;
+                        if (!settled)
+                        {
+                            var delta = observed.Position - start;
+                            initialHorizontalDrift = Mathf.Max(initialHorizontalDrift, Mathf.Sqrt(delta.X * delta.X + delta.Z * delta.Z));
+                            settlingValid &= observed.Position.IsFinite && initialHorizontalDrift < .035f && delta.Y <= .035f && delta.Y >= -.10f;
+                            if (observed.Grounded)
+                            {
+                                settled = true; settledPosition = observed.Position;
+                                receipt.humanSettledTick = observedState.HostTick;
+                                settlingValid &= receipt.humanSettledTick - initialTick <= 30;
+                            }
+                            else if (observedState.HostTick - initialTick > 30) settlingValid = false;
+                        }
+                        if (settled) maxSettledDrift = Mathf.Max(maxSettledDrift, (observed.Position - settledPosition).Length);
+                    }
+                };
+                // Observe every simulation snapshot, including multiple ticks within one
+                // rendered frame. Sampling only LatestSnapshot could miss transient drift.
+                var observedRuntime = game;
+                observeHuman(observedRuntime.LatestSnapshot);
+                observedRuntime.SnapshotApplied += observeHuman;
+                double until=Time.realtimeSinceStartupAsDouble+15;
+                try
+                {
+                    while(Time.realtimeSinceStartupAsDouble<until)
+                    {
+                        yield return null;
+                        if(until-Time.realtimeSinceStartupAsDouble<10) timings.Add(Time.unscaledDeltaTime*1000);
+                    }
                 }
+                finally { observedRuntime.SnapshotApplied -= observeHuman; }
                 var state=game.LatestSnapshot;
                 bool valid=state.Actors.Count==3 && state.Actors.All(a=>a.Position.IsFinite);
                 bool gameplayVisible=ui.CurrentScreen==AlfaUiScreen.Gameplay;
-                if(role==AlfaRole.Human) { receipt.humanRuntime=valid; receipt.humanGameplayVisible=gameplayVisible; receipt.humanStationary=(state.Actors.First(a=>a.ActorId==game.LocalActorId).Position-start).Length<.035f; }
+                if(role==AlfaRole.Human)
+                {
+                    var end = state.Actors.First(a=>a.ActorId==game.LocalActorId).Position;
+                    receipt.humanRuntime=valid; receipt.humanGameplayVisible=gameplayVisible;
+                    receipt.humanSettled=settled;
+                    receipt.humanStationary=settled && settlingValid && maxSettledDrift < .035f;
+                    receipt.humanSpawnPosition=new Vector3(start.X,start.Y,start.Z);
+                    receipt.humanSettledPosition=new Vector3(settledPosition.X,settledPosition.Y,settledPosition.Z);
+                    receipt.humanEndPosition=new Vector3(end.X,end.Y,end.Z);
+                    receipt.humanInitialDrop=start.Y-settledPosition.Y;
+                    receipt.humanInitialHorizontalDrift=initialHorizontalDrift;
+                    receipt.humanMaxSettledDrift=maxSettledDrift;
+                }
                 else { receipt.mosquitoRuntime=valid; receipt.mosquitoGameplayVisible=gameplayVisible; }
                 ScreenCapture.CaptureScreenshot(Path.Combine(output,role.ToString().ToLowerInvariant()+".png"));
                 yield return null; yield return null;
