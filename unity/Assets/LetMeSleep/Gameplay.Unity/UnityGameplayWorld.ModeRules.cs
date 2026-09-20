@@ -182,7 +182,9 @@ namespace LetMeSleep.Gameplay.Unity
             if (!support.collider || support.normal.y < .55f || Mathf.Abs(support.point.y - point.y) > .08f) return false;
             return !Physics.OverlapCapsule(point + Vector3.up * .251f, point + Vector3.up * 1.469f, .249f,
                     GeometryMask, QueryTriggerInteraction.Collide)
-                .Any(collider => BlocksMotor(collider, actorId));
+                // Availability/admission checks the authored geometry, not a temporary
+                // character reservation. Real movement and work still collide with actors.
+                .Any(collider => !Actor(collider) && BlocksMotor(collider, actorId));
         }
 
         private static Transform ResolvePath(Transform root, string path)

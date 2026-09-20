@@ -192,6 +192,114 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(point.Y, Is.EqualTo(.059f).Within(.004f));
         }
 
+        [TestCase(PlayerRole.Human)]
+        [TestCase(PlayerRole.Mosquito)]
+        public void CharacterAtApproachDoesNotReserveStructuralTaskAvailability(PlayerRole occupantRole)
+        {
+            var fixture = CreateOccupiedApproachFixture(occupantRole, out var objective);
+            var mode = (IGameplayModeWorld)fixture.World;
+            var selection = (IGameplayTaskSelectionWorld)fixture.World;
+            Assert.That(mode.IsObjectiveAvailable(1, objective), Is.True);
+            Assert.That(selection.CanAssignObjective(1, objective), Is.True);
+
+            PlaceOccupant(fixture, occupantRole, objective.ApproachPoint);
+
+            Assert.That(mode.IsObjectiveAvailable(1, objective), Is.True,
+                "Another character at the destination does not close the authored route.");
+            Assert.That(selection.CanAssignObjective(1, objective), Is.True,
+                "Transient character occupancy is not an exclusive objective reservation.");
+            Assert.That(mode.ValidateObjective(new SpawnActor(1, "human", PlayerRole.Human,
+                new Float3(-1, .002f, 0)), objective), Is.True);
+        }
+
+        [Test]
+        public void AvailableOccupiedApproachStillBlocksPhysicalMovementAndWorkRay()
+        {
+            var fixture = CreateOccupiedApproachFixture(PlayerRole.Human, out var objective);
+            var mode = (IGameplayModeWorld)fixture.World;
+            var position = new Float3(-1, .002f, 0);
+            var aim = (objective.Position - (position + Float3.Up * 1.53f)).Normalized;
+            Assert.That(mode.CanWorkObjective(1, objective, position, aim), Is.True,
+                "The unobstructed fixture must first provide a real target ray witness.");
+            PlaceOccupant(fixture, PlayerRole.Human, objective.ApproachPoint);
+            Assert.That(mode.IsObjectiveAvailable(1, objective), Is.True);
+            Assert.That(mode.CanWorkObjective(1, objective, position, aim), Is.False,
+                "Structural availability must not remove another body from the actual work ray.");
+
+            bool grounded = true; float verticalVelocity = 0;
+            for (int tick = 0; tick < 20; tick++)
+            {
+                verticalVelocity = grounded ? -.5f : verticalVelocity - 12f / 30f;
+                var moved = fixture.World.MoveHuman(new MotorQuery(1, position,
+                    new Float3(3.1f, verticalVelocity, 0), 1f / 30f, 1.72f, .25f, 0, grounded));
+                position = moved.Position; verticalVelocity = moved.Velocity.Y; grounded = moved.Grounded;
+            }
+            Assert.That(position.X, Is.GreaterThan(-.8f), "The motor actually approached the occupied destination.");
+            Assert.That(position.X, Is.LessThan(-.49f), "Both real human capsules must still block one another.");
+            Assert.That(grounded, Is.True);
+        }
+
+        [Test]
+        public void MapPropAtApproachStillRejectsAvailabilityAndAdmission()
+        {
+            var fixture = CreateOccupiedApproachFixture(PlayerRole.Human, out var objective);
+            PlaceOccupant(fixture, PlayerRole.Human, objective.ApproachPoint);
+            var mode = (IGameplayModeWorld)fixture.World;
+            var selection = (IGameplayTaskSelectionWorld)fixture.World;
+            Assert.That(mode.IsObjectiveAvailable(1, objective), Is.True);
+            var prop = new GameObject("Physical map obstruction");
+            prop.transform.SetParent(fixture.World.MapRoot, false);
+            prop.transform.localPosition = new Vector3(0, .8f, 0);
+            prop.AddComponent<BoxCollider>().size = new Vector3(.3f, 1.4f, .3f);
+            Physics.SyncTransforms();
+            Assert.That(mode.IsObjectiveAvailable(1, objective), Is.False);
+            Assert.That(selection.CanAssignObjective(1, objective), Is.False);
+            Object.DestroyImmediate(prop); Physics.SyncTransforms();
+            Assert.That(mode.IsObjectiveAvailable(1, objective), Is.True);
+            Assert.That(selection.CanAssignObjective(1, objective), Is.True);
+        }
+
+        [Test]
+        public void CharacterAtUnsupportedApproachCannotSupplyStructuralGround()
+        {
+            var fixture = CreateOccupiedApproachFixture(PlayerRole.Human, out var objective);
+            PlaceOccupant(fixture, PlayerRole.Human, objective.ApproachPoint);
+            var approachFree = typeof(UnityGameplayWorld).GetMethod("ApproachFree",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(approachFree, Is.Not.Null, "Preserve existing reflection diagnostics.");
+            var arguments = new object[] { 1u, objective.ApproachPoint.ToUnity() };
+            Assert.That((bool)approachFree.Invoke(fixture.World, arguments), Is.True);
+            fixture.World.MapRoot.Find("TaskFloor").GetComponent<Collider>().enabled = false;
+            Physics.SyncTransforms();
+            Assert.That((bool)approachFree.Invoke(fixture.World, arguments), Is.False,
+                "An actor on the point cannot replace missing authored floor support.");
+            Assert.That(((IGameplayModeWorld)fixture.World).IsObjectiveAvailable(1, objective), Is.False);
+            Assert.That(((IGameplayTaskSelectionWorld)fixture.World).CanAssignObjective(1, objective), Is.False);
+        }
+
+        private TaskFixture CreateOccupiedApproachFixture(PlayerRole occupantRole, out ObjectiveDefinition objective)
+        {
+            var fixture = CreateTaskMap(new Vector3(-1, .002f, 0));
+            var definitions = fixture.World.GetObjectiveDefinitions();
+            fixture.Runtime.BeginRound(Config(definitions), new[] {
+                new SpawnActor(1, "observer", PlayerRole.Human, new Float3(-1, .002f, 0)),
+                new SpawnActor(2, "occupant", occupantRole, new Float3(1, .002f, 1)),
+                new SpawnActor(3, "mosquito", PlayerRole.Mosquito, new Float3(4, 1, 0))
+            });
+            objective = definitions.Single();
+            Physics.SyncTransforms();
+            return fixture;
+        }
+
+        private static void PlaceOccupant(TaskFixture fixture, PlayerRole role, Float3 position)
+        {
+            fixture.World.Actors[2].Apply(new ActorSnapshot(2, role,
+                role == PlayerRole.Human ? LifeState.Active : LifeState.Flying, 1,
+                position, Float3.Zero, Rotation.Yaw(0), Float3.Forward, 0, 0, 1, 1,
+                role == PlayerRole.Human, 0, 0, null, null, default, 0));
+            Physics.SyncTransforms();
+        }
+
         private TaskFixture CreateTaskMap(Vector3 humanSpawn, bool nonConvexTarget = false)
         {
             owner = new GameObject("Mode world fixture");
