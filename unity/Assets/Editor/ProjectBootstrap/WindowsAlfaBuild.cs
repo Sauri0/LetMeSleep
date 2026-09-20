@@ -46,6 +46,11 @@ namespace LetMeSleep.Editor
                 throw new InvalidOperationException("Run PrepareV020 and commit settings before building.");
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath) == null)
                 throw new InvalidOperationException("Candidate scene is missing: " + scenePath);
+            string playerGuide = version == "0.2.0"
+                ? Path.Combine(Directory.GetParent(Application.dataPath).Parent.FullName, "docs/player/PRUEBA-V0.2.0.md")
+                : null;
+            if (playerGuide != null && !File.Exists(playerGuide))
+                throw new InvalidOperationException("The v0.2.0 player testing guide is missing.");
             var source = EosConfiguration.Load("N:/LetMeSleep/Private/eos.local.json");
             Directory.CreateDirectory(Application.streamingAssetsPath);
             File.WriteAllText(Path.Combine(Application.streamingAssetsPath,"online.local.json"),JsonUtility.ToJson(source));
@@ -59,6 +64,8 @@ namespace LetMeSleep.Editor
             Directory.CreateDirectory(LastOutput);
             var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes=new[]{scenePath},
                 locationPathName=LastOutput+"/Let-me-sleep.exe",target=BuildTarget.StandaloneWindows64,options=BuildOptions.Development });
+            if (report.summary.result == BuildResult.Succeeded && playerGuide != null)
+                File.Copy(playerGuide, Path.Combine(LastOutput, "GUIA-DE-PRUEBA.md"));
             File.WriteAllText(LastOutput+"/build-receipt.json",JsonUtility.ToJson(new Receipt { result=report.summary.result.ToString(),errors=report.summary.totalErrors,
                 unity=Application.unityVersion,outputBytes=report.summary.totalSize,utc=DateTime.UtcNow.ToString("O"),
                 sourceCommit=sourceCommit,sourceDirty=SourceDirty(),version=PlayerSettings.bundleVersion },true));
