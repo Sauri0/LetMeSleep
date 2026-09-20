@@ -181,7 +181,9 @@ namespace LetMeSleep.Gameplay
             // authored passage. Outside stairs, retain the existing nearest-region policy;
             // physical collision queries remain responsible for reaching its first point.
             var source = regions.FirstOrDefault(r => r.Id == current);
-            if (source.Id == null || (!source.Contains(position) && passages.Any(p => p.TraversalRegions.Any(r => r.Contains(position)))))
+            bool insideAuthoredCorridor = passages.Any(p => p.TraversalRegions.Any(r => r.Contains(position)));
+            if (source.Id == null || (!source.Contains(position) && insideAuthoredCorridor &&
+                !CanAcquireFromConnectedEndpoint(position, current, tick, passageOpen)))
                 return Float3.Zero;
             if (current == targetRegion) return Travel(approachPoint - position,
                 "approach:" + targetRegion + ":" + approachPoint.X + ":" + approachPoint.Y + ":" + approachPoint.Z, null);
@@ -232,6 +234,21 @@ namespace LetMeSleep.Gameplay
         private bool CanSuspendDirectedPassage(Float3 position) => objectivePassage != null &&
             objectivePassage.TraversalRegions.Count > 0 && objectivePointIndex > 0 &&
             !regions.Any(r => r.Contains(position)) && CanFollowDirectedPassage(position, null);
+        private bool CanAcquireFromConnectedEndpoint(Float3 position, string current, uint tick,
+            Func<string, bool> passageOpen)
+        {
+            foreach (var passage in passages)
+            {
+                if (passage.TraversalRegions.Count == 0 ||
+                    (!string.Equals(passage.From, current, StringComparison.Ordinal) &&
+                     !string.Equals(passage.To, current, StringComparison.Ordinal)) ||
+                    !passageOpen(passage.Id) || IsPassageBlocked(passage.Id, tick)) continue;
+                int endpoint = string.Equals(passage.From, current, StringComparison.Ordinal)
+                    ? 0 : passage.TraversalRegions.Count - 1;
+                if (passage.TraversalRegions[endpoint].Contains(position)) return true;
+            }
+            return false;
+        }
         private bool ReachedDirectedWaypoint(Float3 waypoint, Float3 position)
         {
             if (PlanarDistance(waypoint, position) >= .24f) return false;

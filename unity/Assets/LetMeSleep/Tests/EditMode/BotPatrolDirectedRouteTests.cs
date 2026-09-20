@@ -277,6 +277,94 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(plan.FirstPassage.Id, Is.EqualTo("alpha"));
         }
 
+        [Test]
+        public void TerminalTraversalRegionCanAcquireANewRouteFromItsConnectedEndpoint()
+        {
+            var patrol = TerminalCorridorPatrol();
+            Float3 direction = patrol.DirectionTo(new Float3(-1.1f, 1, 0), "current", "target",
+                new Float3(5.5f, 1, 0), 10, _ => true);
+            Assert.That(direction.X, Is.GreaterThan(0));
+            Assert.That(patrol.CurrentProgress.Value.PassageId, Is.EqualTo("onward"));
+        }
+
+        [Test]
+        public void FirstTraversalRegionCanAcquireWhenCurrentIsTheFromEndpoint()
+        {
+            var patrol = TerminalCorridorPatrol();
+            Float3 direction = patrol.DirectionTo(new Float3(-4.9f, 1, 0), "previous", "target",
+                new Float3(5.5f, 1, 0), 10, _ => true);
+            Assert.That(direction.Length, Is.GreaterThan(0));
+            Assert.That(patrol.CurrentProgress.Value.PassageId, Is.EqualTo("ingress"));
+        }
+
+        [Test]
+        public void MiddleOfUnenteredCorridorCannotAcquireFromANearbyEndpoint()
+        {
+            var patrol = TerminalCorridorPatrol();
+            Assert.That(patrol.DirectionTo(new Float3(-3, 1, 0), "current", "target",
+                new Float3(5.5f, 1, 0), 10, _ => true).Length, Is.Zero);
+        }
+
+        [Test]
+        public void SamePlanarTerminalPointOnAnotherFloorCannotAcquire()
+        {
+            var patrol = TerminalCorridorPatrol();
+            Assert.That(patrol.DirectionTo(new Float3(-1.1f, 4, 0), "current", "target",
+                new Float3(5.5f, 1, 0), 10, _ => true).Length, Is.Zero);
+        }
+
+        [Test]
+        public void ClosedTerminalIngressCannotAuthorizeAcquisition()
+        {
+            var patrol = TerminalCorridorPatrol();
+            Assert.That(patrol.DirectionTo(new Float3(-1.1f, 1, 0), "current", "target",
+                new Float3(5.5f, 1, 0), 10, id => id != "ingress").Length, Is.Zero);
+        }
+
+        [Test]
+        public void BlacklistedTerminalIngressCannotAuthorizeAcquisitionBeforeExpiry()
+        {
+            var patrol = TerminalCorridorPatrol();
+            patrol.InvalidatePassage("ingress", 100);
+            Assert.That(patrol.DirectionTo(new Float3(-1.1f, 1, 0), "current", "target",
+                new Float3(5.5f, 1, 0), 99, _ => true).Length, Is.Zero);
+            Assert.That(patrol.DirectionTo(new Float3(-1.1f, 1, 0), "current", "target",
+                new Float3(5.5f, 1, 0), 100, _ => true).X, Is.GreaterThan(0));
+        }
+
+        private static BotPatrol TerminalCorridorPatrol()
+        {
+            var regions = new[]
+            {
+                new BotRegion("previous", new Float3(-6, 0, -1), new Float3(-5, 2, 1)),
+                new BotRegion("current", new Float3(-1, 0, -1), new Float3(0, 2, 1)),
+                new BotRegion("target", new Float3(5, 0, -1), new Float3(6, 2, 1)),
+                new BotRegion("upper-a", new Float3(-2, 3, -1), new Float3(-1.5f, 5, 1)),
+                new BotRegion("upper-b", new Float3(-.5f, 3, -1), new Float3(0, 5, 1))
+            };
+            var ingress = new BotPassage("ingress", "previous", "current", new[]
+            {
+                new Float3(-5.5f, 1, 0), new Float3(-3, 1, 0), new Float3(-.5f, 1, 0)
+            }, new[]
+            {
+                new BotRegion("ingress:first", new Float3(-5.8f, .5f, -.5f), new Float3(-4.8f, 1.5f, .5f)),
+                new BotRegion("ingress:middle", new Float3(-3.5f, .5f, -.5f), new Float3(-2.5f, 1.5f, .5f)),
+                new BotRegion("ingress:last", new Float3(-1.2f, .5f, -.5f), new Float3(-.2f, 1.5f, .5f))
+            });
+            var onward = new BotPassage("onward", "current", "target", new[]
+            {
+                new Float3(-.5f, 1, 0), new Float3(5.5f, 1, 0)
+            });
+            var upper = new BotPassage("upper", "upper-a", "upper-b", new[]
+            {
+                new Float3(-1.5f, 4, 0), new Float3(-.5f, 4, 0)
+            }, new[]
+            {
+                new BotRegion("upper:corridor", new Float3(-1.3f, 3.5f, -.5f), new Float3(-.9f, 4.5f, .5f))
+            });
+            return new BotPatrol(regions, new[] { ingress, onward, upper }, 1);
+        }
+
         private static void WeightedGraph(out BotRegion[] regions, out BotPassage[] passages)
         {
             regions = new[]
