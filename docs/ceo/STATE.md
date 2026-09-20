@@ -1,6 +1,29 @@
 # Relevo CEO — 2026-09-19
 
-## Estado actual: diez capturas aceptadas y candidata Windows en compilación
+## Prioridad nueva del usuario: UI, parpadeos y animación de personajes
+
+Branko rechaza UI simple/cuadrada, pide revisar choques de texturas/parpadeos
+en mapas y corregir rigidez/postura/brazos estirados/caídas de humano y mosquito.
+Ver VISUAL-MOTION-CORRECTIONS-20260920.md: requisitos obligatorios del objetivo,
+no aprobación de capturas actuales. Red rediseña UI tras auditoría luces breve;
+estado audita rig/motion; técnica mide Puerto y distingue collider de render.
+CEO coordina revisión en movimiento de cinco mapas y próximos turnos.
+
+## Candidata Windows 04 comprobada; Puerto pendiente
+
+- Build04 terminó Succeeded/0 errores/sourceDirty false sobre4947f72.
+  Artefacto privado0.2.0-20260920-172000 incluye guía; Smoke04 Casa Sangre
+  PASS con ambos roles, retorno al menú y crear/salir EOS con una identidad.
+  CEO inspeccionó tres PNG reales a1080p. Ver WINDOWS-CANDIDATE-04-20260920.md.
+- Rendimiento observado18,03ms mediana/24,58ms p95 no acredita1080p60;
+  red audita sólo lectura las54 sombras y atlas. Arte/objetos nuevos pendientes.
+- Puerto sí desprende al mosquito: continuidad de1000132 a1000455 dispara
+  Detach real. Técnica prepara grilla y F user-like en PuertoCoplanar01;
+  tiene turno exclusivo Unity después del cierre de Smoke04. Sin fix todavía.
+- La regla sin bots online/reserva30s sinIA sigue confirmada. Objetivo completo
+  activo; no ZIP ni release final, WAN ni aprobación artística nueva.
+
+## Checkpoint anterior: diez capturas aceptadas y candidata en compilación
 
 - Capture smoke11 y full12: 1/1 cada uno; diez PNG full12 inspeccionados por CEO
   a 1080p, mundo y HUD visibles/legibles en cinco mapas por ambos roles. Solución
