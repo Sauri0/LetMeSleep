@@ -2,6 +2,15 @@
 
 ## Gate actual: cinco catálogos instalados; candidata técnica en preparación
 
+- `f548836` cierra el flag de actores dinámicos: native04 51/51, sin omitidos.
+  `e38c298` añade recertificación geométrica existente a PrepareV020. Wrapper V2
+  restauró cuatro prefabs exactamente a sus blobs HEAD; comparación independiente
+  de bytes acredita esto. Ignorar booleanos git diff del wrapper (ruta relativa
+  errónea); conservar resultado original y independent-head-comparison.json.
+- Candidata aislada actualizada a `f548836`, preparación02 PASS y sin diffs
+  semánticos, staged ni untracked. BuildV020 Windows en curso en ese checkout,
+  log windows-candidate-build-01.log. Es candidata técnica, no entrega artística
+  ni release; faltan equipamiento visual, personalización completa y WAN.
 - `bf753fb` integra continuación de dirección deseada sólo por tres ticks
   predictivos completos, apoyados y sin overlap, avance mínimo .12 m. No cambia
   canAdvance ni certificación de desvíos. Native03 49/49, sin omitidos; revisión
