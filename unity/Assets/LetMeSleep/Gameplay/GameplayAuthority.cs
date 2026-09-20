@@ -12,6 +12,13 @@ namespace LetMeSleep.Gameplay
             Float3 travelDirection, out SurfaceContact contact);
     }
 
+    // Optional host-world capability. ResolveSurface intentionally remains actor-agnostic;
+    // an approaching mosquito needs an actor-aware body-volume check at the resolved target.
+    public interface ISurfaceClearanceWorld
+    {
+        bool IsSurfaceDestinationClear(uint actorId, in SurfaceContact contact);
+    }
+
     public sealed class GameplayAuthority : IGameplayAuthority
     {
         private sealed class Actor
@@ -219,7 +226,10 @@ namespace LetMeSleep.Gameplay
                     case ActionKind.PerchToggle:
                         if (a.Spawn.Role != PlayerRole.Mosquito) { a.Rejection = CommandReject.WrongRole; break; }
                         if (a.Surface.HasValue || a.Bite.HasValue) { Detach(a); break; }
-                        if (world.TrySurface(new SurfaceQuery(a.Spawn.ActorId, a.Position, c.AimForward, .25f), out var contact)) { a.Surface = contact.Attachment; SetState(a, LifeState.ApproachingSurface); }
+                        if (world.TrySurface(new SurfaceQuery(a.Spawn.ActorId, a.Position, c.AimForward, .25f), out var contact) &&
+                            (!(world is ISurfaceClearanceWorld clearance) ||
+                             clearance.IsSurfaceDestinationClear(a.Spawn.ActorId, contact)))
+                        { a.Surface = contact.Attachment; SetState(a, LifeState.ApproachingSurface); }
                         else a.Rejection = CommandReject.OutOfReach;
                         break;
                     case ActionKind.Primary:
@@ -327,6 +337,9 @@ namespace LetMeSleep.Gameplay
                 if (a.State == LifeState.ApproachingSurface && a.SurfaceTransitionTicks == 0 &&
                     ++a.SurfaceApproachTicks > 30) { Detach(a); return; }
                 if (!world.ResolveSurface(a.Surface.Value, out var contact)) { Detach(a); return; }
+                if (a.State == LifeState.ApproachingSurface && world is ISurfaceClearanceWorld clearance &&
+                    !clearance.IsSurfaceDestinationClear(a.Spawn.ActorId, contact))
+                { Detach(a); return; }
                 var carried = SurfaceVisualFrame.TransportForward(a.SurfaceNormal, contact.WorldNormal, a.SurfaceForward);
                 if (!SurfaceVisualFrame.TryResolve(contact.WorldNormal, a.Aim, carried, 12f * dt,
                     out var normal, out var forward)) { Detach(a); return; }

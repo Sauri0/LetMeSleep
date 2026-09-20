@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace LetMeSleep.Gameplay.Unity
 {
-    public sealed partial class UnityGameplayWorld : MonoBehaviour, IGameplayWorld, IGameplayToolWorld, ISurfaceTraversalWorld
+    public sealed partial class UnityGameplayWorld : MonoBehaviour, IGameplayWorld, IGameplayToolWorld,
+        ISurfaceTraversalWorld, ISurfaceClearanceWorld
     {
         public LayerMask GeometryMask = ~0;
         public Transform MapRoot;
@@ -191,7 +192,25 @@ namespace LetMeSleep.Gameplay.Unity
             if (tangent.sqrMagnitude < .0001f) tangent = Vector3.ProjectOnPlane(Vector3.forward, normal);
             if (tangent.sqrMagnitude < .0001f) tangent = Vector3.ProjectOnPlane(Vector3.up, normal);
             var attachment = new SurfaceAttachment(surface.SurfaceId, surface.Revision, localPoint, localNormal, surface.transform.InverseTransformDirection(tangent.normalized).ToFloat());
-            contact = new SurfaceContact(attachment, point.ToFloat(), normal.ToFloat()); return true;
+            var candidate = new SurfaceContact(attachment, point.ToFloat(), normal.ToFloat());
+            if (!IsSurfaceDestinationClear(query.ActorId, candidate)) return false;
+            contact = candidate; return true;
+        }
+        public bool IsSurfaceDestinationClear(uint actorId, in SurfaceContact contact)
+        {
+            if (!contact.WorldPoint.IsFinite || !contact.WorldNormal.IsFinite ||
+                !MathEx.Finite(contact.WorldNormal.LengthSquared) ||
+                Math.Abs(contact.WorldNormal.LengthSquared - 1) > .001f) return false;
+            Vector3 target = contact.WorldPoint.ToUnity() + contact.WorldNormal.ToUnity() * .057f;
+            foreach (var collider in Physics.OverlapSphere(target, .054f, GeometryMask,
+                         QueryTriggerInteraction.Collide))
+            {
+                if (!IsWorldCollider(collider)) continue;
+                var other = Actor(collider);
+                if (other && other.ActorId != actorId) return false;
+                if (BlocksMotor(collider, actorId)) return false;
+            }
+            return true;
         }
         public bool ResolveSurface(in SurfaceAttachment attachment, out SurfaceContact contact)
         {
