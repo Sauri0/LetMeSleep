@@ -50,3 +50,14 @@ salida cancelan su plazo. Esta duración es decisión CEO reversible para S02.
 No certifica identidad musical final, balance auditivo, duración del sting de
 resultado ni capas ambientales por mapa: los clips existentes siguen pendientes
 de escucha/comparación. RoundMusicPlayModeTests: 2/2 PASS en tools-music-native-01.xml (gate completo6/6). Los stings actuales de resultado miden1,8s: S08 exige3s y sigue pendiente el reemplazo musical final.
+### S08 — fuentes nuevas de tres segundos
+
+Generador `art_source/unity/audio/generate_v020_stings.py`: dos motivos originales
+con muestras glock/marimba/contrabajo del banco ya preservado y verificado por SHA.
+No se llamó servicio remoto. WAV estéreo44.1kHz, duraciónexacta3s, pico−10dBFS,
+RMS−22.90/−22.85dBFS y cola final en cero. Recibo de fuentes y notas en
+`art_source/unity/audio/v020-result-stings.json`; originales alfa intactos.
+V020AudioInstaller instaló ambas referencias mediante Unity (audio-stings-install-01,
+exit0, installed2); el builder quedó apuntando a los archivos nuevos.
+La escucha y mezcla dentro de la partida siguen pendientes: las medidas numéricas
+no acreditan calidad subjetiva ni comprensión de voz durante el motivo.

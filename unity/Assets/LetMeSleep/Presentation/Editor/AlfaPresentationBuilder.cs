@@ -341,8 +341,8 @@ namespace LetMeSleep.Presentation.Editor
             cues["HumanFainted"] = CreateCue("HumanFainted", "SFX_HumanFainted.wav", 24, 4, 0.98f, 1.02f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
             cues["Recovered"] = CreateCue("Recovered", new[] { "SFX_Recovered.wav", "SFX_Legacy_Recover.ogg" }, 24, 4, 0.98f, 1.02f, 1f, 0.7f, 22f, FindGroup(mixer, "Critical"));
             cues["RoundStart"] = CreateCue("RoundStart", "STG_RoundStart.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
-            cues["HumansWin"] = CreateCue("HumansWin", "STG_HumansWin.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
-            cues["MosquitoesWin"] = CreateCue("MosquitoesWin", "STG_MosquitoesWin.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
+            cues["HumansWin"] = CreateCue("HumansWin", "STG_V020_HumansWin.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
+            cues["MosquitoesWin"] = CreateCue("MosquitoesWin", "STG_V020_MosquitoesWin.wav", 24, 1, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "Critical"));
             cues["UiReady"] = CreateCue("UiReady", "UI_Ready.wav", 48, 4, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "UI"));
             cues["UiSelect"] = CreateCue("UiSelect", "UI_Legacy_Select.ogg", 48, 4, 0.99f, 1.01f, 0f, 1f, 1f, FindGroup(mixer, "UI"));
             cues["UiConfirm"] = CreateCue("UiConfirm", "UI_Legacy_Confirm.ogg", 40, 4, 1f, 1f, 0f, 1f, 1f, FindGroup(mixer, "UI"));

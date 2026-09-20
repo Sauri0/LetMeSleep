@@ -1,0 +1,83 @@
+{
+  "duration_seconds": 3,
+  "sample_rate": 44100,
+  "channels": 2,
+  "source_bank": "N:\\LetMeSleep\\Repository\\art_source\\audio\\sample-provenance.json",
+  "source_bank_sha256": "0bb78254df3cca16e43ade87aadb0c27664feb1b6520792b667f6ef88eb56492",
+  "generator_sha256": "0aecece6d663a497d045727103c551e21e8c12b446aaf007ec9e3d626fab9fd1",
+  "listening_review": "pending",
+  "assets": [
+    {
+      "path": "N:\\LetMeSleep\\Validation\\V020\\AudioCandidate01\\STG_V020_HumansWin.wav",
+      "sha256": "5a87b3a6bbce122dd2317d4404c587ac2e3d70af73cbcf3773a6e3953db6cc0e",
+      "score": [
+        [
+          0,
+          74
+        ],
+        [
+          0.24,
+          77
+        ],
+        [
+          0.56,
+          81
+        ],
+        [
+          0.96,
+          79
+        ],
+        [
+          1.28,
+          76
+        ],
+        [
+          1.72,
+          74
+        ]
+      ],
+      "peak_dbfs": -10,
+      "rms_dbfs": -22.898542404174805,
+      "last_sample": [
+        -0.0,
+        -0.0
+      ]
+    },
+    {
+      "path": "N:\\LetMeSleep\\Validation\\V020\\AudioCandidate01\\STG_V020_MosquitoesWin.wav",
+      "sha256": "86512597085987be423427d19148492d67ed8b7d6528c38652d4bd86ee21ea43",
+      "score": [
+        [
+          0,
+          74
+        ],
+        [
+          0.24,
+          77
+        ],
+        [
+          0.56,
+          81
+        ],
+        [
+          0.96,
+          84
+        ],
+        [
+          1.28,
+          81
+        ],
+        [
+          1.72,
+          77
+        ]
+      ],
+      "peak_dbfs": -10,
+      "rms_dbfs": -22.845590591430664,
+      "last_sample": [
+        -0.0,
+        -0.0
+      ]
+    }
+  ]
+}

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LetMeSleep.Audio::LetMeSleep.Audio.AudioCue
   cueId: MosquitoesWin
   clips:
-  - {fileID: 8300000, guid: 96e431a4f23056ae8f4121c958b3ef20, type: 3}
+  - {fileID: 8300000, guid: 968071d7e21a97d43aab9870725206e0, type: 3}
   output: {fileID: -6938030865840934976, guid: 515402da301a4f544aa209da70d9751a, type: 2}
   volume: 1
   minimumPitch: 1

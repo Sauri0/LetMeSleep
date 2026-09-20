@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LetMeSleep.Audio::LetMeSleep.Audio.AudioCue
   cueId: HumansWin
   clips:
-  - {fileID: 8300000, guid: 01702f4cac805b9da661e2a590422968, type: 3}
+  - {fileID: 8300000, guid: dc056cf2c0669d8428ab5eca4f72fcbf, type: 3}
   output: {fileID: -6938030865840934976, guid: 515402da301a4f544aa209da70d9751a, type: 2}
   volume: 1
   minimumPitch: 1
