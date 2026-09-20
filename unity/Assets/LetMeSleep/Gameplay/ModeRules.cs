@@ -17,13 +17,21 @@ namespace LetMeSleep.Gameplay
         public uint TaskDeadlineTicks { get; }
         public uint TaskMinimumDeadlineTicks { get; }
         public uint TaskFailurePenaltyTicks { get; }
-        public string Hash => string.Join(":", Id, MosquitoLives, TaskCadenceTicks, TaskDeadlineTicks, TaskMinimumDeadlineTicks, TaskFailurePenaltyTicks);
-        public ModeRuleProfile(string modeId, uint taskCadenceTicks = 1200, uint taskDeadlineTicks = 900, uint taskMinimumDeadlineTicks = 450, uint taskFailurePenaltyTicks = 90)
+        public uint TaskSuccessRecoveryTicks { get; }
+        public uint TaskInterruptionGraceTicks { get; }
+        public uint TaskDecayBasisPointsPerSecond { get; }
+        public string Hash => string.Join(":", Id, MosquitoLives, TaskCadenceTicks, TaskDeadlineTicks, TaskMinimumDeadlineTicks, TaskFailurePenaltyTicks,
+            TaskSuccessRecoveryTicks, TaskInterruptionGraceTicks, TaskDecayBasisPointsPerSecond);
+        public ModeRuleProfile(string modeId, uint taskCadenceTicks = 1200, uint taskDeadlineTicks = 900, uint taskMinimumDeadlineTicks = 450, uint taskFailurePenaltyTicks = 150,
+            uint taskSuccessRecoveryTicks = 90, uint taskInterruptionGraceTicks = 30, uint taskDecayBasisPointsPerSecond = 1000)
         {
             if (!GameModes.IsValid(modeId) || taskCadenceTicks < 30 || taskCadenceTicks > 54000 || taskDeadlineTicks < 1 || taskDeadlineTicks > taskCadenceTicks || taskMinimumDeadlineTicks < 1 || taskMinimumDeadlineTicks > taskDeadlineTicks || taskFailurePenaltyTicks < 1 || taskFailurePenaltyTicks > taskDeadlineTicks) throw new ArgumentException("Invalid mode profile.");
+            if (taskSuccessRecoveryTicks > 54000 || taskInterruptionGraceTicks > 54000 || taskDecayBasisPointsPerSecond > 10000) throw new ArgumentException("Invalid task recovery or decay profile.");
             ModeId = modeId; TaskCadenceTicks = taskCadenceTicks; TaskDeadlineTicks = taskDeadlineTicks;
             TaskMinimumDeadlineTicks = taskMinimumDeadlineTicks; TaskFailurePenaltyTicks = taskFailurePenaltyTicks;
+            TaskSuccessRecoveryTicks = taskSuccessRecoveryTicks; TaskInterruptionGraceTicks = taskInterruptionGraceTicks; TaskDecayBasisPointsPerSecond = taskDecayBasisPointsPerSecond;
         }
+        // Failure-only projection retained for callers; live windows also recover on success.
         public uint DeadlineFor(int failures) => (uint)Math.Max(TaskMinimumDeadlineTicks, (long)TaskDeadlineTicks - (long)Math.Max(0, failures) * TaskFailurePenaltyTicks);
     }
     public enum ObjectiveKind : byte { Repair, Clean, Switch }
@@ -95,7 +103,8 @@ namespace LetMeSleep.Gameplay
     {
         private sealed class Personal
         {
-            internal uint Slot, Issued, Deadline, Progress;
+            internal uint Slot, Issued, Deadline, Progress, PersonalDeadline, GraceUsed;
+            internal ulong DecayRemainder;
             internal int Failures;
             internal ObjectiveDefinition Objective;
             internal TaskAssignmentStatus Status;
@@ -111,7 +120,7 @@ namespace LetMeSleep.Gameplay
         {
             this.config = config; this.world = world;
             int slots = 1 + (int)((config.RoundDurationTicks - config.ModeRules.TaskDeadlineTicks) / config.ModeRules.TaskCadenceTicks);
-            foreach (var human in roster.Where(a => a.Role == PlayerRole.Human).OrderBy(a => a.ActorId)) people.Add(human.ActorId, new Personal());
+            foreach (var human in roster.Where(a => a.Role == PlayerRole.Human).OrderBy(a => a.ActorId)) people.Add(human.ActorId, new Personal { PersonalDeadline = config.ModeRules.TaskDeadlineTicks });
             Opportunities = slots * people.Count;
             Goal = config.ConfiguredTasksGoal == 0 ? (2 * Opportunities + 2) / 3 : Math.Min(config.ConfiguredTasksGoal, Opportunities);
         }
@@ -128,15 +137,15 @@ namespace LetMeSleep.Gameplay
             // Cadence is anchored to the round, never to completion or another human's failure.
             if (slot != p.Slot)
             {
-                if (!p.Finished && p.Objective != null && p.Status == TaskAssignmentStatus.Active && tick >= p.Deadline) p.Failures++;
-                p.Slot = slot; p.Objective = null; p.Progress = 0; p.Finished = false;
+                if (!p.Finished && p.Objective != null && p.Status == TaskAssignmentStatus.Active && tick >= p.Deadline) Miss(p);
+                p.Slot = slot; p.Objective = null; p.Progress = 0; p.Finished = false; p.GraceUsed = 0; p.DecayRemainder = 0;
             }
             uint start = slot * cadence;
             if (start + config.ModeRules.TaskDeadlineTicks > config.RoundDurationTicks || p.Finished) return false;
             uint end = Math.Min(start + cadence, config.RoundDurationTicks);
             if (p.Objective == null)
             {
-                uint duration = config.ModeRules.DeadlineFor(p.Failures);
+                uint duration = p.PersonalDeadline;
                 if (tick + duration > end) return false;
                 int offset = (int)(((ulong)actorId + config.RoundId + slot) % (ulong)config.Objectives.Count);
                 for (int i = 0; i < config.Objectives.Count; i++)
@@ -156,11 +165,35 @@ namespace LetMeSleep.Gameplay
             // A route reopened too late remains non-penalizing for this opportunity.
             if (p.Status == TaskAssignmentStatus.WaitingForRoute && tick >= p.Deadline) { p.Finished = true; return false; }
             p.Status = TaskAssignmentStatus.Active;
-            if (tick >= p.Deadline) { p.Failures++; p.Status = TaskAssignmentStatus.Missed; p.Finished = true; return false; }
-            if (tick == p.Issued || !canWork || (position - p.Objective.Position).Length > p.Objective.UseRadius || !world.CanWorkObjective(actorId, p.Objective, position, aim)) return false;
+            if (tick >= p.Deadline) { Miss(p); return false; }
+            if (tick == p.Issued) return false;
+            if (!canWork || (position - p.Objective.Position).Length > p.Objective.UseRadius || !world.CanWorkObjective(actorId, p.Objective, position, aim))
+            { Interrupt(p); return false; }
             p.Progress++;
             if (p.Progress < p.Objective.WorkTicks) return false;
-            p.Status = TaskAssignmentStatus.Completed; p.Finished = true; Completed++; return true;
+            p.Status = TaskAssignmentStatus.Completed; p.Finished = true;
+            p.PersonalDeadline = (uint)Math.Min(config.ModeRules.TaskDeadlineTicks, (ulong)p.PersonalDeadline + config.ModeRules.TaskSuccessRecoveryTicks);
+            Completed++; return true;
+        }
+        private void Miss(Personal p)
+        {
+            p.Failures++;
+            p.PersonalDeadline = (uint)Math.Max(config.ModeRules.TaskMinimumDeadlineTicks,
+                (long)p.PersonalDeadline - config.ModeRules.TaskFailurePenaltyTicks);
+            p.Status = TaskAssignmentStatus.Missed; p.Finished = true;
+        }
+        private void Interrupt(Personal p)
+        {
+            if (p.Progress == 0) return;
+            // One cumulative grace budget per assignment. Briefly resuming work
+            // neither replenishes grace nor discards fractional decay already owed.
+            if (p.GraceUsed < config.ModeRules.TaskInterruptionGraceTicks) { p.GraceUsed++; return; }
+            const uint denominator = 30 * 10000; // fixed 30Hz; basis points of total work per second
+            p.DecayRemainder += (ulong)p.Objective.WorkTicks * config.ModeRules.TaskDecayBasisPointsPerSecond;
+            ulong lost = p.DecayRemainder / denominator;
+            p.DecayRemainder %= denominator;
+            if (lost >= p.Progress) { p.Progress = 0; p.DecayRemainder = 0; }
+            else p.Progress -= (uint)lost;
         }
     }
 }

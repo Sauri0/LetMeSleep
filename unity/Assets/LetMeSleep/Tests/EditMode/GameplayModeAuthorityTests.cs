@@ -204,6 +204,102 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(room.Snapshot().Members.All(m => !m.Ready), Is.True); Assert.That(room.Snapshot().Rules.BloodQuota, Is.Zero);
             Assert.That(new RoomRules(modeId: "sleep").IsValid, Is.False); Assert.That(new RoomRules(modeId: GameModes.Tasks, modeRuleProfileId: "bad").IsValid, Is.False);
         }
+        private static GameplayAuthority TaskSession(World w, uint work = 100, ModeRuleProfile profile = null, bool secondHuman = false)
+        {
+            var a = new GameplayAuthority(w);
+            var roster = new List<SpawnActor> { new SpawnActor(1, "h", PlayerRole.Human, Float3.Zero), new SpawnActor(2, "m", PlayerRole.Mosquito, Float3.Forward) };
+            if (secondHuman) roster.Add(new SpawnActor(3, "h2", PlayerRole.Human, Float3.Zero));
+            a.BeginRound(Config(GameModes.Tasks, 600, profile: profile ?? new ModeRuleProfile(GameModes.Tasks), work: work), roster);
+            return a;
+        }
+        private static void WorkFor(GameplayAuthority a, int ticks, uint human = 1)
+        { for (int i = 0; i < ticks; i++) { Use(a, human); Step(a); } }
+        private static void ReleaseTask(GameplayAuthority a, uint human = 1)
+        { a.SubmitInput(human == 1 ? "h" : "h2", new PlayerInputCommand(Header(a, human), default, 0, 0, 0, Float3.Forward)); }
+        private static TaskAssignment OwnTask(GameplayAuthority a, uint human = 1) => a.CapturePrivate(human).TaskAssignment;
+
+        [Test] public void UserTaskDefaultsAndEachEffectiveBalanceValueAffectHash()
+        {
+            var p = new ModeRuleProfile(GameModes.Tasks);
+            Assert.That(p.TaskCadenceTicks, Is.EqualTo(1200)); Assert.That(p.TaskDeadlineTicks, Is.EqualTo(900));
+            Assert.That(p.TaskMinimumDeadlineTicks, Is.EqualTo(450)); Assert.That(p.TaskFailurePenaltyTicks, Is.EqualTo(150));
+            Assert.That(p.TaskSuccessRecoveryTicks, Is.EqualTo(90)); Assert.That(p.TaskInterruptionGraceTicks, Is.EqualTo(30));
+            Assert.That(p.TaskDecayBasisPointsPerSecond, Is.EqualTo(1000));
+            var baseline = Config(GameModes.Tasks, 120, profile: p).BalanceHash;
+            foreach (var changed in new[] { new ModeRuleProfile(GameModes.Tasks, taskSuccessRecoveryTicks: 89),
+                new ModeRuleProfile(GameModes.Tasks, taskInterruptionGraceTicks: 29), new ModeRuleProfile(GameModes.Tasks, taskDecayBasisPointsPerSecond: 999) })
+                Assert.That(Config(GameModes.Tasks, 120, profile: changed).BalanceHash, Is.Not.EqualTo(baseline));
+            Assert.Throws<ArgumentException>(() => new ModeRuleProfile(GameModes.Tasks, taskSuccessRecoveryTicks: 54001));
+            Assert.Throws<ArgumentException>(() => new ModeRuleProfile(GameModes.Tasks, taskInterruptionGraceTicks: 54001));
+            Assert.Throws<ArgumentException>(() => new ModeRuleProfile(GameModes.Tasks, taskDecayBasisPointsPerSecond: 10001));
+        }
+        [Test] public void RepeatedFailuresFloorDeadlineAndSuccessesRecoverWithoutErasingHistory()
+        {
+            var a = TaskSession(new World(), work: 3);
+            foreach (uint duration in new uint[] { 750, 600, 450, 450 })
+            {
+                Step(a, 1200); Assert.That(OwnTask(a).DeadlineTick - OwnTask(a).IssuedTick, Is.EqualTo(duration));
+            }
+            Assert.That(OwnTask(a).PersonalFailures, Is.EqualTo(4));
+            foreach (uint duration in new uint[] { 540, 630, 720, 810, 900, 900 })
+            {
+                WorkFor(a, 3); Assert.That(OwnTask(a).Status, Is.EqualTo(TaskAssignmentStatus.Completed));
+                Step(a, 1197); Assert.That(OwnTask(a).DeadlineTick - OwnTask(a).IssuedTick, Is.EqualTo(duration));
+                Assert.That(OwnTask(a).PersonalFailures, Is.EqualTo(4));
+            }
+            Assert.That(a.CaptureSnapshot().TasksGoal, Is.EqualTo(10));
+            Assert.That(a.CaptureSnapshot().ViableTaskOpportunities, Is.EqualTo(15));
+        }
+        [Test] public void FailureAfterRecoverySubtractsFromRecoveredPersonalDeadline()
+        {
+            var a = TaskSession(new World(), work: 3, secondHuman: true);
+            Step(a, 1200); WorkFor(a, 3); Step(a, 1197);
+            Assert.That(OwnTask(a).DeadlineTick - OwnTask(a).IssuedTick, Is.EqualTo(840));
+            Step(a, 1200);
+            Assert.That(OwnTask(a).DeadlineTick - OwnTask(a).IssuedTick, Is.EqualTo(690));
+            Assert.That(OwnTask(a).PersonalFailures, Is.EqualTo(2));
+            Assert.That(OwnTask(a, 3).DeadlineTick - OwnTask(a, 3).IssuedTick, Is.EqualTo(450));
+            Assert.That(OwnTask(a, 3).PersonalFailures, Is.EqualTo(3));
+            Assert.That(a.CapturePrivate(2).TaskAssignment, Is.Null);
+        }
+        [Test] public void InterruptionUsesOneSecondGraceThenTenPercentOfTotalWorkPerSecond()
+        {
+            var a = TaskSession(new World()); WorkFor(a, 40); ReleaseTask(a);
+            Step(a, 30); Assert.That(OwnTask(a).ProgressTicks, Is.EqualTo(40));
+            Step(a, 30); Assert.That(OwnTask(a).ProgressTicks, Is.EqualTo(30));
+            Step(a, 120); Assert.That(OwnTask(a).ProgressTicks, Is.Zero);
+            WorkFor(a, 10); Assert.That(OwnTask(a).ProgressTicks, Is.EqualTo(10), "Holding work never decays progress.");
+            ReleaseTask(a); Step(a, 3); Assert.That(OwnTask(a).ProgressTicks, Is.EqualTo(9), "Zero progress does not replenish assignment grace.");
+        }
+        [Test] public void BriefWorkAndRepeatedInputCannotReplenishGraceOrDiscardFractionalDecay()
+        {
+            var a = TaskSession(new World()); WorkFor(a, 40); ReleaseTask(a); Step(a, 30);
+            for (int i = 0; i < 6; i++)
+            {
+                WorkFor(a, 1); ReleaseTask(a); Step(a);
+                Use(a); Use(a); // Same-tick retries do not work until authority advances.
+                ReleaseTask(a);
+            }
+            Assert.That(OwnTask(a).ProgressTicks, Is.EqualTo(44), "Six work ticks minus two ticks of fractional decay.");
+            Assert.That(OwnTask(a).IssuedTick, Is.Zero); Assert.That(OwnTask(a).DeadlineTick, Is.EqualTo(900));
+        }
+        [Test] public void UnavailableRouteFreezesProgressAndGraceWithoutResettingPersonalWindow()
+        {
+            var w = new World(); var a = TaskSession(w); WorkFor(a, 40); ReleaseTask(a); Step(a, 30);
+            w.Available = false; Step(a, 60);
+            Assert.That(OwnTask(a).Status, Is.EqualTo(TaskAssignmentStatus.WaitingForRoute));
+            Assert.That(OwnTask(a).ProgressTicks, Is.EqualTo(40)); Assert.That(OwnTask(a).DeadlineTick, Is.EqualTo(960));
+            w.Available = true; Step(a, 3);
+            Assert.That(OwnTask(a).ProgressTicks, Is.EqualTo(39)); Assert.That(OwnTask(a).PersonalFailures, Is.Zero);
+        }
+        [Test] public void NewAssignmentRestoresGraceAndCompletedAssignmentCannotRewardTwice()
+        {
+            var a = TaskSession(new World(), work: 100); WorkFor(a, 40); ReleaseTask(a); Step(a, 60);
+            WorkFor(a, 70); Assert.That(OwnTask(a).Status, Is.EqualTo(TaskAssignmentStatus.Completed));
+            WorkFor(a, 20); Assert.That(a.CaptureSnapshot().TasksCompleted, Is.EqualTo(1));
+            Step(a, (int)(1200 - a.CurrentTick)); WorkFor(a, 40); ReleaseTask(a); Step(a, 30);
+            Assert.That(OwnTask(a).ProgressTicks, Is.EqualTo(40));
+        }
     }
 }
 
