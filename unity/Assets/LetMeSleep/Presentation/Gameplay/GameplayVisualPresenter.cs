@@ -15,6 +15,9 @@ namespace LetMeSleep.Presentation.Gameplay
         [SerializeField] private GameObject humanFirstPersonPrefab = null;
         [SerializeField] private GameObject mosquitoPrefab = null;
         [SerializeField] private GameObject flyswatterPrefab = null;
+        [SerializeField] private GameObject slipperPrefab = null;
+        [SerializeField] private GameObject electricRacketPrefab = null;
+        [SerializeField] private GameObject aerosolPrefab = null;
         [SerializeField] private HumanViewCamera humanCamera = null;
         [SerializeField] private MosquitoFollowCamera mosquitoCamera = null;
 
@@ -26,6 +29,7 @@ namespace LetMeSleep.Presentation.Gameplay
         private readonly HashSet<uint> livePickups = new HashSet<uint>();
         private readonly List<uint> removedActors = new List<uint>();
         private readonly List<uint> removedPickups = new List<uint>();
+        private readonly HashSet<string> diagnosedToolPrefabs = new HashSet<string>();
         private UnityGameplayWorld subscribedWorld;
         private bool subscribed;
         private GameplayAudioPresenter locomotionAudio;
@@ -76,11 +80,21 @@ namespace LetMeSleep.Presentation.Gameplay
         public void SetPrefabs(
             GameObject human, GameObject humanFirstPerson, GameObject mosquito,
             GameObject flyswatter)
+            => SetPrefabs(human, humanFirstPerson, mosquito, flyswatter, null, null, null);
+
+        public void SetPrefabs(
+            GameObject human, GameObject humanFirstPerson, GameObject mosquito,
+            GameObject flyswatter, GameObject slipper, GameObject electricRacket,
+            GameObject aerosol)
         {
             humanPrefab = human;
             humanFirstPersonPrefab = humanFirstPerson;
             mosquitoPrefab = mosquito;
             flyswatterPrefab = flyswatter;
+            slipperPrefab = slipper;
+            electricRacketPrefab = electricRacket;
+            aerosolPrefab = aerosol;
+            diagnosedToolPrefabs.Clear();
         }
 
         public void SetCameras(HumanViewCamera human, MosquitoFollowCamera mosquito)
@@ -175,7 +189,12 @@ namespace LetMeSleep.Presentation.Gameplay
             }
             else Debug.LogWarning($"LMS_FACIAL_SKIPPED actor={proxy.ActorId}: {reason}",instance);
             if (proxy.Role == PlayerRole.Human)
-                binding.BindFlyswatter(AttachFlyswatter(view));
+            {
+                binding.BindTool(GameplayModel.GameplayTools.Flyswatter, AttachTool(view, GameplayModel.GameplayTools.Flyswatter));
+                binding.BindTool(GameplayModel.GameplayTools.Slipper, AttachTool(view, GameplayModel.GameplayTools.Slipper));
+                binding.BindTool(GameplayModel.GameplayTools.ElectricRacket, AttachTool(view, GameplayModel.GameplayTools.ElectricRacket));
+                binding.BindTool(GameplayModel.GameplayTools.Aerosol, AttachTool(view, GameplayModel.GameplayTools.Aerosol));
+            }
             BindLocalCamera(proxy, view, local);
             if (proxy.State != null)
                 binding.ApplySnapshot(proxy.State, gameplay.LatestSnapshot != null ? gameplay.LatestSnapshot.HostTick : 0);
@@ -212,29 +231,54 @@ namespace LetMeSleep.Presentation.Gameplay
             }
         }
 
-        private GameObject AttachFlyswatter(CharacterView view)
+        private GameObject ToolPrefab(string toolId, bool diagnose = true)
         {
-            if (flyswatterPrefab == null)
+            if (!GameplayModel.GameplayTools.IsPickup(toolId))
             {
-                Debug.LogError("LMS_FLYSWATTER_PREFAB_MISSING", this);
+                if (diagnose && diagnosedToolPrefabs.Add(toolId))
+                    Debug.LogError($"LMS_TOOL_ID_UNSUPPORTED tool={toolId}", this);
                 return null;
             }
+            GameObject prefab = toolId == GameplayModel.GameplayTools.Flyswatter ? flyswatterPrefab :
+                toolId == GameplayModel.GameplayTools.Slipper ? slipperPrefab :
+                toolId == GameplayModel.GameplayTools.ElectricRacket ? electricRacketPrefab :
+                toolId == GameplayModel.GameplayTools.Aerosol ? aerosolPrefab : null;
+            if (prefab == null)
+            {
+                if (diagnose && diagnosedToolPrefabs.Add(toolId))
+                {
+                    string message = $"LMS_TOOL_PREFAB_MISSING tool={toolId}";
+                    if (toolId == GameplayModel.GameplayTools.Flyswatter) Debug.LogError(message, this);
+                    else Debug.LogWarning(message, this);
+                }
+                return null;
+            }
+            ToolView view = prefab.GetComponent<ToolView>();
+            if (view == null || view.ToolId != toolId || view.Grip == null || view.Impact == null ||
+                !view.Grip.IsChildOf(prefab.transform) || !view.Impact.IsChildOf(prefab.transform) ||
+                view.GripToImpact <= .001f || (view.Impact.position - view.Grip.position).sqrMagnitude <= .000001f)
+            {
+                if (diagnose && diagnosedToolPrefabs.Add(toolId))
+                    Debug.LogError($"LMS_TOOL_PREFAB_INVALID tool={toolId} prefab={prefab.name}", prefab);
+                return null;
+            }
+            return prefab;
+        }
+
+        private GameObject AttachTool(CharacterView view, string toolId)
+        {
+            GameObject prefab = ToolPrefab(toolId);
+            if (prefab == null) return null;
             Transform socket = view.GetAnchor("ToolSocket_R");
             if (socket == null)
             {
                 Debug.LogError($"LMS_TOOL_SOCKET_MISSING actor={view.name}", view);
                 return null;
             }
-            GameObject instance = Instantiate(flyswatterPrefab, socket);
-            instance.name = "Tool_Flyswatter";
+            GameObject instance = Instantiate(prefab, socket);
+            instance.name = "Tool_" + toolId;
             DisableColliders(instance);
             ToolView tool = instance.GetComponent<ToolView>();
-            if (tool == null || tool.Grip == null)
-            {
-                Debug.LogError("LMS_FLYSWATTER_BINDING_MISSING", instance);
-                Destroy(instance);
-                return null;
-            }
             Quaternion rotationDelta = socket.rotation * Quaternion.Inverse(tool.Grip.rotation);
             instance.transform.rotation = rotationDelta * instance.transform.rotation;
             instance.transform.position += socket.position - tool.Grip.position;
@@ -248,14 +292,20 @@ namespace LetMeSleep.Presentation.Gameplay
             {
                 GameplayModel.ToolPickupSnapshot state = pickups[i];
                 livePickups.Add(state.PickupId);
-                if (!GameplayModel.GameplayTools.IsFlyswatter(state.ToolId))
-                    continue;
+                GameObject prefab = ToolPrefab(state.ToolId);
+                if (prefab == null) { RemovePickupVisual(state.PickupId); continue; }
                 if (!pickupVisuals.TryGetValue(state.PickupId, out GameObject instance) || instance == null)
                 {
-                    if (flyswatterPrefab == null)
-                        continue;
-                    instance = Instantiate(flyswatterPrefab, transform);
-                    instance.name = $"Pickup_{state.PickupId}_Flyswatter";
+                    instance = Instantiate(prefab, transform);
+                    instance.name = $"Pickup_{state.PickupId}_{state.ToolId}";
+                    DisableColliders(instance);
+                    pickupVisuals[state.PickupId] = instance;
+                }
+                else if (instance.GetComponent<ToolView>()?.ToolId != state.ToolId)
+                {
+                    RemovePickupVisual(state.PickupId);
+                    instance = Instantiate(prefab, transform);
+                    instance.name = $"Pickup_{state.PickupId}_{state.ToolId}";
                     DisableColliders(instance);
                     pickupVisuals[state.PickupId] = instance;
                 }
@@ -277,6 +327,13 @@ namespace LetMeSleep.Presentation.Gameplay
                     Destroy(pickupVisuals[pickupId]);
                 pickupVisuals.Remove(pickupId);
             }
+        }
+
+        private void RemovePickupVisual(uint pickupId)
+        {
+            if (!pickupVisuals.TryGetValue(pickupId, out GameObject instance)) return;
+            if (instance != null) Destroy(instance);
+            pickupVisuals.Remove(pickupId);
         }
 
         private static void DisableColliders(GameObject instance)

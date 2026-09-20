@@ -474,11 +474,17 @@ namespace LetMeSleep.Presentation.Editor
             GameObject humanFirstPerson = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_Human_FirstPerson.prefab");
             GameObject mosquito = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_Mosquito.prefab");
             GameObject flyswatter = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_Flyswatter.prefab");
+            GameObject slipper = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_Slipper.prefab");
+            GameObject electricRacket = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_ElectricRacket.prefab");
+            GameObject aerosol = AssetDatabase.LoadAssetAtPath<GameObject>(characterRoot + "/LMS_Aerosol.prefab");
             if (human == null || humanFirstPerson == null || mosquito == null || flyswatter == null || audioRootPrefab == null)
             {
                 Debug.LogWarning("LMS_GAMEPLAY_PRESENTATION_DEFERRED; run the Character builder first, then rerun this builder.");
                 return;
             }
+            if (slipper == null) Debug.LogWarning("LMS_TOOL_PREFAB_MISSING tool=slipper");
+            if (electricRacket == null) Debug.LogWarning("LMS_TOOL_PREFAB_MISSING tool=electric_racket");
+            if (aerosol == null) Debug.LogWarning("LMS_TOOL_PREFAB_MISSING tool=aerosol");
 
             var root = new GameObject("LMS_GameplayPresentation");
             try
@@ -488,7 +494,7 @@ namespace LetMeSleep.Presentation.Editor
                 GameplayAudioPresenter audioEvents = root.AddComponent<GameplayAudioPresenter>();
                 GameplayVfxPresenter vfxEvents = root.AddComponent<GameplayVfxPresenter>();
                 GameplayPresentationRoot facade = root.AddComponent<GameplayPresentationRoot>();
-                visuals.SetPrefabs(human, humanFirstPerson, mosquito, flyswatter);
+                visuals.SetPrefabs(human, humanFirstPerson, mosquito, flyswatter, slipper, electricRacket, aerosol);
 
                 var cameraObject = new GameObject("PlayerCamera");
                 cameraObject.transform.SetParent(root.transform, false);

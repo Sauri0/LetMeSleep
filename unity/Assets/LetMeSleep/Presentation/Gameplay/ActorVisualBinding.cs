@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using LetMeSleep.Content.Characters;
 using LetMeSleep.Core;
 using LetMeSleep.Gameplay.Unity;
@@ -43,7 +44,7 @@ namespace LetMeSleep.Presentation.Gameplay
             public bool IsValid => Upper && Lower && Hand && Lower.IsChildOf(Upper) && Hand.IsChildOf(Lower);
         }
         private ArmChain leftArm, rightArm;
-        private GameObject flyswatter;
+        private readonly Dictionary<string, GameObject> tools = new Dictionary<string, GameObject>();
         private ToolView strikeTool;
         private readonly float[] motionDurations = new float[32];
         private HumanLocomotionPresenter locomotion;
@@ -78,10 +79,22 @@ namespace LetMeSleep.Presentation.Gameplay
 
         public void BindFlyswatter(GameObject instance)
         {
-            flyswatter = instance;
-            strikeTool = instance != null ? instance.GetComponent<ToolView>() : null;
-            if (flyswatter != null)
-                flyswatter.SetActive(false);
+            BindTool(GameplayModel.GameplayTools.Flyswatter, instance);
+        }
+
+        public void BindTool(string toolId, GameObject instance)
+        {
+            if (!GameplayModel.GameplayTools.IsPickup(toolId)) return;
+            if (tools.TryGetValue(toolId, out GameObject previous) && previous != null && previous != instance)
+                Destroy(previous);
+            if (instance == null) tools.Remove(toolId);
+            else
+            {
+                tools[toolId] = instance;
+                instance.SetActive(false);
+            }
+            if (toolId == GameplayModel.GameplayTools.Flyswatter)
+                strikeTool = instance != null ? instance.GetComponent<ToolView>() : null;
         }
 
         public void Initialize(
@@ -131,12 +144,9 @@ namespace LetMeSleep.Presentation.Gameplay
             snapshotInterval = tickDelta == 0 ? 0.05f : Mathf.Clamp(tickDelta / 30f, 1f / 60f, 0.10f);
             snapshotArrivalTime = Time.unscaledTime;
 
-            if (flyswatter != null)
-            {
-                bool equipped = GameplayModel.GameplayTools.IsFlyswatter(state.EquippedToolId);
-                if (flyswatter.activeSelf != equipped)
-                    flyswatter.SetActive(equipped);
-            }
+            foreach (var pair in tools)
+                if (pair.Value != null && pair.Value.activeSelf != (state.EquippedToolId == pair.Key))
+                    pair.Value.SetActive(state.EquippedToolId == pair.Key);
 
             if (cut)
                 SetWorldPose(state.Position.ToUnity(), state.BodyRotation.ToUnity());
