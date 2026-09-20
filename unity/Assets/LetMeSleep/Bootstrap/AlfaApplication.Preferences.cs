@@ -13,6 +13,7 @@ namespace LetMeSleep.Bootstrap
         [Serializable] private sealed class Preferences
         {
             public int schema; public string playerName; public AlfaSettingsDraft settings; public BasicCustomizationDraft appearance;
+            public BasicCustomizationDraft localAppearanceDraft;
             // Additive schema-1 fields. Zero/zero identifies a legacy positional selection.
             public int resolutionWidth; public int resolutionHeight;
         }
@@ -20,6 +21,8 @@ namespace LetMeSleep.Bootstrap
             VoiceVolume = .8f, PushToTalkBinding = "<Keyboard>/v",
             HumanSensitivity = 1f, MosquitoSensitivity = 1f, FullScreen = true, VSync = false, FrameLimit = 0 };
         private BasicCustomizationDraft appearance = new BasicCustomizationDraft(AlfaRole.Human, "warm", "blue", "red");
+        // The local draft is durable but never sent to peers. appearance remains the published value.
+        private BasicCustomizationDraft localAppearanceDraft = new BasicCustomizationDraft(AlfaRole.Human, "warm", "blue", "red");
         private BasicCustomizationDraft previewAppearance;
         private GameObject previousPreview;
         private Resolution[] resolutions;
@@ -55,7 +58,7 @@ namespace LetMeSleep.Bootstrap
             }
             settings.ResolutionIndex = currentIndex;
             settings.FullScreen = appliedFullscreen;
-            bool loadedSettings = false, migrateResolution = false;
+            bool loadedSettings = false, migrateResolution = false, migrateLocalAppearance = false;
             try
             {
                 preferenceStore = new PreferenceFileStore(Path.Combine(DataPath, "preferences.json"), ClassifyPreferences);
@@ -74,6 +77,8 @@ namespace LetMeSleep.Bootstrap
                         migrateResolution = data.schema == 1 && data.resolutionWidth == 0 && data.resolutionHeight == 0;
                     }
                     if (ValidAppearance(data.appearance)) appearance = data.appearance;
+                    if (ValidAppearance(data.localAppearanceDraft)) localAppearanceDraft = data.localAppearanceDraft;
+                    else { localAppearanceDraft = appearance.Copy(); migrateLocalAppearance = true; }
                     if (!string.IsNullOrWhiteSpace(data.playerName) && data.playerName.Length <= 24) playerName = data.playerName;
                 }
             }
@@ -88,11 +93,16 @@ namespace LetMeSleep.Bootstrap
                 settings.ResolutionIndex = currentIndex; settings.FullScreen = appliedFullscreen;
             }
             // Upgrade the legacy index once through the existing atomic/backup store, without changing schema.
-            if (migrateResolution && !preferenceStore.WriteBlocked)
+            if ((migrateResolution || migrateLocalAppearance) && !preferenceStore.WriteBlocked)
             {
                 string loadNotice = saveError;
                 if (SavePreferences()) saveError = loadNotice;
             }
+            // A restored private selection must drive the first preview too; otherwise the UI
+            // says draft while the 3D view still falls back to the published appearance.
+            previewAppearance = localAppearanceDraft.Copy();
+            previousPreview = null;
+            customizationMessage = saveError;
         }
 
         // Pure resolution policy: exercised externally without Unity/native execution.
@@ -113,6 +123,7 @@ namespace LetMeSleep.Bootstrap
             => width != previousWidth || height != previousHeight || fullscreen != previousFullscreen;
         // End pure resolution policy.
         private string saveError = "";
+        private string customizationMessage = "";
         private static PreferenceDocumentKind ClassifyPreferences(string json)
         {
             try
@@ -138,7 +149,8 @@ namespace LetMeSleep.Bootstrap
                 storedWidth = launchSavedWidth; storedHeight = launchSavedHeight;
             }
             preferenceStore.Save(JsonUtility.ToJson(new Preferences { schema = 1, playerName = playerName,
-                settings = storedSettings, appearance = appearance, resolutionWidth = storedWidth, resolutionHeight = storedHeight }, true));
+                settings = storedSettings, appearance = appearance, localAppearanceDraft = localAppearanceDraft,
+                resolutionWidth = storedWidth, resolutionHeight = storedHeight }, true));
             saveError = ""; return true;
             } catch (InvalidDataException) { saveError = "No se guardaron ajustes: el archivo pertenece a otra versión o no es válido."; return false; }
             catch (Exception e) when (e is IOException || e is UnauthorizedAccessException) { saveError = "No se pudo guardar. Revisá el acceso a la carpeta y volvé a intentar."; return false; }
@@ -149,7 +161,8 @@ namespace LetMeSleep.Bootstrap
                 QualitySettings.names, true, true, message: saveError,
                 supportsReducedMenuMotion: livingMenu && livingMenu.IsConfigured,
                 voiceDevices: VoiceMicrophoneCapture.Devices));
-            ui.PresentCustomization(new CustomizationUiState(Skins, Pajamas, MosquitoColors, appearance, message: saveError));
+            ui.PresentCustomization(new CustomizationUiState(Skins, Pajamas, MosquitoColors, appearance, localAppearanceDraft,
+                message: customizationMessage));
         }
         public void ApplySettings(AlfaSettingsDraft draft)
         {
@@ -202,9 +215,47 @@ namespace LetMeSleep.Bootstrap
         }
         private void SetVolume(string category,float volume) { if (Mixer) Mixer.SetFloat(category+"Volume",volume<=.0001f ? -80 : 20*Mathf.Log10(volume)); }
         public void PreviewCustomization(BasicCustomizationDraft draft)
-        { if (ValidAppearance(draft)) { previewAppearance = draft.Copy(); previousPreview = null; } }
+        {
+            if (!ValidAppearance(draft)) return;
+            var previous = localAppearanceDraft;
+            localAppearanceDraft = draft.Copy();
+            if (!SavePreferences())
+            {
+                localAppearanceDraft = previous;
+                previewAppearance = previous.Copy();
+                customizationMessage = saveError;
+            }
+            else
+            {
+                previewAppearance = localAppearanceDraft.Copy();
+                customizationMessage = "Guardado localmente. Aplicá para mostrarlo en la sala.";
+            }
+            previousPreview = null;
+            PresentPreferences();
+        }
         public void SaveCustomization(BasicCustomizationDraft draft)
-        { if (!ValidAppearance(draft)) return; var previous = appearance; appearance=draft.Copy(); if(!SavePreferences()) appearance=previous; previewAppearance=appearance.Copy(); previousPreview=null; appearanceAt=0; PresentPreferences(); }
+        {
+            if (!ValidAppearance(draft)) return;
+            var previousAppearance = appearance;
+            var previousLocalDraft = localAppearanceDraft;
+            appearance = draft.Copy();
+            localAppearanceDraft = draft.Copy();
+            if (!SavePreferences())
+            {
+                appearance = previousAppearance;
+                localAppearanceDraft = previousLocalDraft;
+                previewAppearance = previousLocalDraft.Copy();
+                customizationMessage = saveError;
+            }
+            else
+            {
+                previewAppearance = localAppearanceDraft.Copy();
+                customizationMessage = "Apariencia aplicada. Ya se mostrará en la sala.";
+                appearanceAt = 0;
+            }
+            previousPreview = null;
+            PresentPreferences();
+        }
         private static bool ValidAppearance(BasicCustomizationDraft draft)
             => draft != null && (draft.Role == AlfaRole.Human || draft.Role == AlfaRole.Mosquito) && Skins.Any(c=>c.Id==draft.SkinColorId) && Pajamas.Any(c=>c.Id==draft.PajamaColorId) && MosquitoColors.Any(c=>c.Id==draft.MosquitoColorId);
         private void ApplyPreviewColors()

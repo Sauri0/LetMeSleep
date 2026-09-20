@@ -63,6 +63,9 @@ namespace LetMeSleep.UI
         private bool trainingStartLatched;
         private bool trainingCancelLatched;
         private bool customizationSaveLatched;
+        private BasicCustomizationDraft customizationSessionBaseline;
+        private AlfaUiScreen customizationReturnScreen = AlfaUiScreen.MainMenu;
+        private string customizationLobbyCode = string.Empty;
         private bool settingsApplyLatched;
         private bool resultsActionLatched;
         private string rememberedPlayerName = string.Empty;
@@ -92,6 +95,7 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.Button lobbyStartButton;
         private TextMeshProUGUI lobbyStartLabel;
         private UnityEngine.UI.Button lobbyExploreButton;
+        private UnityEngine.UI.Button lobbyCustomizeButton;
 
         private UnityEngine.UI.Button trainingHumanButton;
         private UnityEngine.UI.Button trainingMosquitoButton;
@@ -208,6 +212,12 @@ namespace LetMeSleep.UI
 
         public void ShowMainMenu()
         {
+            if (screen == AlfaUiScreen.Customization)
+            {
+                customizationSessionBaseline = null;
+                customizationReturnScreen = AlfaUiScreen.MainMenu;
+                customizationLobbyCode = string.Empty;
+            }
             lobbyExploring = false;
             gameplayIsTraining = false;
             SetScreen(AlfaUiScreen.MainMenu, "MainPlayButton");
@@ -280,6 +290,8 @@ namespace LetMeSleep.UI
             lobbyReadyButton.gameObject.SetActive(state.IsWaiting);
             lobbyExploreButton.gameObject.SetActive(state.CanExplore);
             lobbyExploreButton.interactable = !lobbyStartLatched;
+            lobbyCustomizeButton.gameObject.SetActive(state.IsWaiting);
+            lobbyCustomizeButton.interactable = state.IsWaiting && !lobbyStartLatched;
 
             for (var i = 0; i < memberRows.Count; i++)
             {
@@ -310,7 +322,9 @@ namespace LetMeSleep.UI
             UpdateLobbyControls();
             UpdateLobbyVoiceMarkers();
 
-            if (screen != AlfaUiScreen.Lobby)
+            bool editingThisLobby = state.IsWaiting && screen == AlfaUiScreen.Customization &&
+                customizationReturnScreen == AlfaUiScreen.Lobby && string.Equals(state.RoomCode, customizationLobbyCode, StringComparison.Ordinal);
+            if (screen != AlfaUiScreen.Lobby && !editingThisLobby)
                 SetScreen(AlfaUiScreen.Lobby, "LobbyReadyButton");
         }
 
@@ -532,6 +546,13 @@ namespace LetMeSleep.UI
         public void ShowCustomization()
         {
             if (customizationState == null) PresentCustomization(DefaultCustomization());
+            if (screen != AlfaUiScreen.Customization)
+            {
+                customizationReturnScreen = screen == AlfaUiScreen.Lobby && lobbyState?.IsWaiting == true
+                    ? AlfaUiScreen.Lobby : AlfaUiScreen.MainMenu;
+                customizationLobbyCode = customizationReturnScreen == AlfaUiScreen.Lobby ? lobbyState.RoomCode : string.Empty;
+                customizationSessionBaseline = customizationDraft.Copy();
+            }
             SetScreen(AlfaUiScreen.Customization, customizationDraft.Role == AlfaRole.Human ? "CustomizationHumanButton" : "CustomizationMosquitoButton");
             previewOrbit?.Show(customizationDraft.Role);
         }
@@ -891,8 +912,10 @@ namespace LetMeSleep.UI
             roomDurationLabel = AddCycleField(rules, "TIEMPO", "RoomDuration", -1, 1, CycleRoomDuration);
             roomDurationPrevious = roomDurationLabel.transform.parent.Find("RoomDurationPrevious").GetComponent<UnityEngine.UI.Button>();
             roomDurationNext = roomDurationLabel.transform.parent.Find("RoomDurationNext").GetComponent<UnityEngine.UI.Button>();
-            var durationCaption = roomDurationLabel.transform.parent.Find("Label").GetComponent<UnityEngine.UI.LayoutElement>();
-            durationCaption.minWidth = durationCaption.preferredWidth = 64f;
+            var durationCaptionText = roomDurationLabel.transform.parent.Find("Label").GetComponent<TextMeshProUGUI>();
+            durationCaptionText.textWrappingMode = TextWrappingModes.NoWrap;
+            var durationCaption = durationCaptionText.GetComponent<UnityEngine.UI.LayoutElement>();
+            durationCaption.minWidth = durationCaption.preferredWidth = 88f;
             roomDurationLabel.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 200f;
             foreach (var button in new[] { roomDurationPrevious, roomDurationNext })
             {
@@ -945,7 +968,20 @@ namespace LetMeSleep.UI
             ApplyPositiveStyle(lobbyStartButton);
             lobbyStartLabel = lobbyStartButton.GetComponentInChildren<TextMeshProUGUI>();
             lobbyStartReason = factory.Text(rules, "StartReason", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Pajama500, TextAlignmentOptions.Center);
-            lobbyExploreButton = factory.Button(rules, "LobbyExploreButton", "RECORRER SALA", BeginLobbyExploration, false, false, 58f, AlfaUiIconKind.Explore);
+            var lobbyActions = factory.Horizontal(rules, "LobbyActions", 8f, TextAnchor.MiddleCenter);
+            lobbyActions.GetComponent<UnityEngine.UI.HorizontalLayoutGroup>().childForceExpandWidth = true;
+            lobbyExploreButton = factory.Button(lobbyActions, "LobbyExploreButton", "RECORRER", BeginLobbyExploration, false, false, 58f, AlfaUiIconKind.Explore);
+            lobbyCustomizeButton = factory.Button(lobbyActions, "LobbyCustomizeButton", "PERSONALIZAR", ShowCustomization, false, false, 58f, AlfaUiIconKind.Customize);
+            foreach (var button in new[] { lobbyExploreButton, lobbyCustomizeButton })
+            {
+                var layout = button.GetComponent<UnityEngine.UI.LayoutElement>();
+                layout.minWidth = 0f;
+                layout.flexibleWidth = 1f;
+                var label = button.GetComponentInChildren<TextMeshProUGUI>();
+                label.fontSize = 18f;
+                label.characterSpacing = .2f;
+                AlfaUiFactory.Fill(label.rectTransform, 66f, 12f, 8f, 8f);
+            }
             lobbyStatus = factory.Text(rules, "LobbyStatus", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
         }
 
@@ -1052,7 +1088,7 @@ namespace LetMeSleep.UI
             customizationStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
             var footer = factory.Vertical(optionsPanel, "Actions", 10f);
             Anchor(footer, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 20f), new Vector2(-40f, 148f));
-            customizationSaveButton = factory.Button(footer, "CustomizationSaveButton", "GUARDAR", SaveCustomization, true, false, 72f, AlfaUiIconKind.Ready);
+            customizationSaveButton = factory.Button(footer, "CustomizationSaveButton", "APLICAR", SaveCustomization, true, false, 72f, AlfaUiIconKind.Ready);
             ApplyPositiveStyle(customizationSaveButton);
             customizationSaveLabel = customizationSaveButton.GetComponentInChildren<TextMeshProUGUI>();
             var secondary = factory.Horizontal(footer, "SecondaryActions", 12f);
@@ -1606,9 +1642,9 @@ namespace LetMeSleep.UI
             customizationPreviewIcon.color = human ? AlfaUiTheme.Sky400 : AlfaUiTheme.Pajama500;
             customizationCategoryTitle.text = human ? "PALETA DEL HUMANO" : "PALETA DEL MOSQUITO";
             previewOrbit?.Show(customizationDraft.Role);
-            customizationStatus.text = customizationSaveLatched ? "Guardando…" : customizationState.Message;
+            customizationStatus.text = customizationSaveLatched ? "Aplicando apariencia…" : customizationState.Message;
             customizationSaveButton.interactable = !customizationSaveLatched && !customizationDraft.SameValues(customizationState.Saved);
-            customizationSaveLabel.text = customizationSaveLatched ? "GUARDANDO…" : "GUARDAR";
+            customizationSaveLabel.text = customizationSaveLatched ? "APLICANDO…" : "APLICAR";
             MarkPalette(humanPaletteRoot, customizationDraft.SkinColorId);
             MarkPalette(pajamaPaletteRoot, customizationDraft.PajamaColorId);
             MarkPalette(mosquitoPaletteRoot, customizationDraft.MosquitoColorId);
@@ -1639,15 +1675,15 @@ namespace LetMeSleep.UI
             if (customizationDraft == null || customizationState == null || customizationSaveLatched || customizationState.IsSaving) return;
             customizationSaveLatched = true;
             customizationSaveButton.interactable = false;
-            customizationSaveLabel.text = "GUARDANDO…";
-            customizationStatus.text = "Guardando…";
+            customizationSaveLabel.text = "APLICANDO…";
+            customizationStatus.text = "Aplicando apariencia…";
             actions.SaveCustomization(customizationDraft.Copy());
         }
 
         private void ResetCustomization()
         {
             if (customizationState == null || customizationSaveLatched) return;
-            customizationDraft = customizationState.Saved.Copy();
+            customizationDraft = (customizationSessionBaseline ?? customizationState.Draft).Copy();
             UpdateCustomizationView();
             actions.PreviewCustomization(customizationDraft.Copy());
         }
@@ -1655,12 +1691,14 @@ namespace LetMeSleep.UI
         private void CloseCustomization()
         {
             if (customizationSaveLatched) return;
-            if (CustomizationDirty())
-            {
-                ShowConfirm("¿SALIR SIN GUARDAR?", "Los cambios de personalización se perderán.", "SEGUIR EDITANDO", "SALIR", ShowMainMenu);
-                return;
-            }
-            ShowMainMenu();
+            var returnScreen = customizationReturnScreen;
+            var returnLobbyCode = customizationLobbyCode;
+            customizationSessionBaseline = null;
+            customizationReturnScreen = AlfaUiScreen.MainMenu;
+            customizationLobbyCode = string.Empty;
+            if (returnScreen == AlfaUiScreen.Lobby && lobbyState?.IsWaiting == true && string.Equals(lobbyState.RoomCode, returnLobbyCode, StringComparison.Ordinal))
+                SetScreen(AlfaUiScreen.Lobby, "LobbyReadyButton");
+            else ShowMainMenu();
         }
 
         private void ChangeSetting(Action<AlfaSettingsDraft> mutation)
