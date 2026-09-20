@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "kind": "coordination_manifest_not_native_config",
+  "date": "2026-09-19",
+  "coordinator": "CEO",
+  "max_concurrent_subagents": 3,
+  "repository": "N:/LetMeSleep/Repository",
+  "profiles": [
+    {
+      "id": "gameplay",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    },
+    {
+      "id": "online",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    },
+    {
+      "id": "presentation_audio",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    },
+    {
+      "id": "ui",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "medium",
+      "status": "on_demand"
+    },
+    {
+      "id": "higgsfield",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    },
+    {
+      "id": "humans",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    },
+    {
+      "id": "mosquitoes",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    },
+    {
+      "id": "maps",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    },
+    {
+      "id": "props",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "medium",
+      "status": "on_demand"
+    },
+    {
+      "id": "stability",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    },
+    {
+      "id": "visual",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    },
+    {
+      "id": "animation",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    },
+    {
+      "id": "functional",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "status": "on_demand"
+    }
+  ],
+  "escalation": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high",
+    "condition": "Two documented failed directed attempts with unresolved reasoning issue"
+  },
+  "measurement": "runs.jsonl",
+  "execution_state": "active",
+  "resume_plan": "docs/ceo/V0.2.0-PLAN-REANUDACION.md",
+  "resumed_date": "2026-09-20",
+  "paused_at_utc": "2026-09-20T05:47:27.748083+00:00",
+  "pause_checkpoint": "docs/ceo/PAUSE-CHECKPOINT.md",
+  "resumed_at_utc": "2026-09-20T05:51:21.978830+00:00"
+}
