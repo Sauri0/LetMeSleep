@@ -17,12 +17,21 @@
   Los metas nuevos están incluidos. Revisión independiente no encontró otro defecto.
 - Esto valida fixtures locales; no acredita EOS con dos identidades, WAN ni
   personajes de producción. No hay proveedor/catálogo artístico final asignado.
-- SurfaceTrace09 reprodujo nueve casos en checkout aislado a654d8b; técnica
-  prepara causas y comparación de fuentes. Mantener los 14 FAIL históricos
-  hasta evidencia específica, sin sustituirlos por smoke de arranque.
+- SurfaceTrace09/native-results-05 reprodujo nueve casos sobre a654d8b;
+  lógica física/prefabs relevantes iguales a central tras normalizar EOL.
+  Casa: cuatro expectativas de cara opuesta a la adquirida y dos filas de
+  una unión duplicada con hueco físico de 85.409 mm; no justifican modificar
+  motor ni convertir las filas históricas a PASS. Camp: tres pérdidas de
+  apoyo con overlap sólo del propio mesh y sin penetración medida; defecto
+  probable que aún requiere confirmar la rama exacta. Informe externo REPORT.md.
+- Técnica posee SURFACE-CAMP-SELF: diagnóstico de clearance, positivos Camp y
+  negativos de otro collider/actor/pliegue del mismo mesh. Sin ignorar siempre
+  el soporte ni ampliar tolerancias. UI audita sólo lectura la política de
+  Well_DeepWater frente a decisiones y recuperación; todavía sin cambio de regla.
 - Slot Unity libre tras ambos gates. Arte/Higgsfield, herramientas nuevas,
   gráficos/FPS, micrófono real y dos identidades/redes siguen pendientes.
-  Objetivo v0.2.0 activo; todavía no hay ZIP/release final.
+  Objetivo v0.2.0 activo; todavía no hay ZIP/release final. No iniciar otra
+  Unity hasta coordinar congelación de fuentes del siguiente experimento.
 
 ## Gate actual: base modular integrada, validación de producción pendiente
 
