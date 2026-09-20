@@ -1,5 +1,21 @@
 # Relevo CEO — 2026-09-19
 
+## Resultado más reciente: Camp exterior pasa; recuperación del pozo no
+
+- SurfaceCampExterior01 native02: PASS_SCOPED 3/3, una esquina lateral exterior
+  por Cooler/Crate01/Crate02, 57 muestras cada una sin overlap; cleanup true.
+  Nuevos inputs válidos, no reclasificar los Frozen interiores. Native01 fue
+  error de invocación por output preexistente y no ejecutó el diagnóstico.
+- WellWaterAuthority01 native02 FAIL: ticks1/2 ApproachingSurface, tick3
+  NoSafeDestination y Flying desprendido en Y3.404999; sigue allí hasta tick30.
+  Nunca Surface, pero no hay Recovered. No certificar recuperación completa.
+  Native01 fue error de fixture JSON antes de física; v2 corrige ancestro mapa.
+- Evidencia/alcance en SURFACE-EXTERIOR-WATER-20260920.md. Técnica investiga
+  sólo externamente si Fixture o mapa causa falta de destino seguro; sin fix
+  runtime ni nuevos Unity sin turno. CEO terminó ambos procesos Unity.
+- Red sigue diagnóstico externo del HUD ausente de captura04. Próximo ensayo
+  debe ser smoke de un mapa con evidencia de composición, antes de diez vistas.
+
 ## Seguimiento actual: regla online confirmada y capturas provisionales
 
 - Respuesta J25/O08 del usuario cotejada con ACLARACIONES, DECISIONES y PLAN:
