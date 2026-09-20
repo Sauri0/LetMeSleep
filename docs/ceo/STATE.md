@@ -1,5 +1,29 @@
 # Relevo CEO — 2026-09-19
 
+## En curso: revisión de clearance, agua y captura de partida
+
+- `c8d3f37` añade docs/player/PRUEBA-V0.2.0.md con controles cotejados contra
+  GameplayRuntime y recorrido de prueba. `004ae3e` incluye esa guía versionada
+  como GUIA-DE-PRUEBA.md en cada nueva build v0.2.0. El próximo build verificará
+  la copia y su hash; no se modificó retroactivamente la candidata anterior.
+- SURFACE-CAMP-SELF sigue WIP en UnityGameplayWorld.cs y
+  SurfaceDestinationClearancePlayModeTests.cs, propiedad continuidad_tecnica.
+  No integrar la excepción de propio MeshCollider por ComputePenetration=false:
+  esa API ignora backfaces y no demuestra por sí sola ausencia de intrusión.
+  CEO exige negativo de orientación inversa y distancia geométrica en Camp.
+  Native01 cerró sin XML por -quit: no ejecutó pruebas; preservar ese log.
+  TEAM.md ahora registra la invocación correcta sin -quit para Test Runner.
+- WATER-POLICY-AUDIT ya coteja receipt05 y prefab central: Well_DeepWater es
+  mosquito fall zone. El flujo actual recupera también ApproachingSurface/Surface;
+  adquirir transitoriamente paving por un ray no demuestra posado sumergido.
+  No cambiar política a rechazo inmediato sin evidencia. UI prepara prueba
+  externa de autoridad WellWaterAuthority01; conservar Frozen85 intacto.
+- Red prepara GameplayVisualCapture01: cámaras reales y HUD de entrenamiento
+  de cinco mapas/ambos roles con render directo a textura; sin ejecutar Unity
+  hasta slot. No confundir capturas con FPS, arte final ni WAN.
+- Slot Unity reservado a técnica hasta liberar explícitamente. Captura y agua
+  esperan su turno. Higgsfield sigue sin auth.json verificado; no generación.
+
 ## Gate actual: personalización publicada y rollback integrado
 
 - `269995e` conecta canal 2 con la apariencia modular publicada. Recibe sólo
