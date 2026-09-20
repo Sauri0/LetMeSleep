@@ -89,8 +89,11 @@ public sealed class WireChecks
         var bytes = GameplayWireCodec.Encode(Snapshot());
         using (var stream = new MemoryStream(bytes)) using (var reader = new BinaryReader(stream))
         {
-            stream.Position = 27; for (int i = 0; i < 3; i++) { int length = reader.ReadUInt16(); stream.Position += length; }
-            stream.Position += 15; bytes[stream.Position] = 17;
+            stream.Position = 27;
+            for (int i = 0; i < 4; i++) { int length = reader.ReadUInt16(); stream.Position += length; }
+            reader.ReadByte(); reader.ReadUInt32(); reader.ReadSingle(); reader.ReadSingle();
+            reader.ReadInt32(); reader.ReadInt32(); reader.ReadInt32(); reader.ReadByte(); reader.ReadByte();
+            bytes[stream.Position] = 17;
         }
         Assert.That(Any(bytes), Is.False);
         var invalid = new ActorPrivateState(13, 0, 0, CommandReject.None, InteractionHint.None, 0, 0, 0, 0, true, DoorUseResult.Accepted);

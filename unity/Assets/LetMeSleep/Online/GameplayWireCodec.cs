@@ -12,8 +12,8 @@ namespace LetMeSleep.Online
     /// <summary>Bounded binary DTO codec. Transport authenticates the sender; no owner/PUID is accepted in payloads.</summary>
     public static class GameplayWireCodec
     {
-        public const int MaxMessageBytes = 16384, MaxActors = 16, MaxDoors = 128, MaxToolPickups = 32;
-        public const ushort Version = 2;
+        public const int MaxMessageBytes = 16384, MaxActors = 16, MaxDoors = 128, MaxToolPickups = 32, MaxObjectives = 24;
+        public const ushort Version = 3;
         private const uint Magic = 0x314D534C;
         private static readonly UTF8Encoding Utf8 = new UTF8Encoding(false, true);
         private enum Kind : byte { Input = 1, Action, Snapshot, Private, Event }
@@ -81,8 +81,8 @@ namespace LetMeSleep.Online
         private static ulong Epoch(BinaryReader r) { ulong v = r.ReadUInt64(); Require(v != 0, "Zero epoch/round/event."); return v; }
         private static uint Tick(BinaryReader r) { uint v = r.ReadUInt32(); Require(v <= 54000, "Tick out of range."); return v; }
         private static bool B(BinaryReader r) { byte v = r.ReadByte(); Require(v <= 1, "Invalid boolean."); return v == 1; }
-        private static T E<T>(BinaryReader r, int max) where T : struct
-        { byte v = r.ReadByte(); Require(v <= max, "Invalid enum."); return (T)Enum.ToObject(typeof(T), v); }
+        private static T E<T>(BinaryReader r) where T : struct
+        { byte v = r.ReadByte(); var value = (T)Enum.ToObject(typeof(T), v); Require(Enum.IsDefined(typeof(T), value), "Invalid enum."); return value; }
         private static void V(BinaryWriter w, Float3 v) { w.Write(v.X); w.Write(v.Y); w.Write(v.Z); }
         private static Float3 V(BinaryReader r) => new Float3(F(r), F(r), F(r));
         private static Float3 Unit(BinaryReader r)
@@ -115,28 +115,31 @@ namespace LetMeSleep.Online
             return new PlayerInputCommand(h, move, vertical, yaw, pitch, aim, B(r), B(r), B(r), B(r));
         }
         private static void WriteAction(BinaryWriter w, PlayerActionCommand c) { Header(w, c.Header); w.Write((byte)c.Kind); V(w, c.AimForward); }
-        private static PlayerActionCommand ReadAction(BinaryReader r) => new PlayerActionCommand(Header(r), E<ActionKind>(r, 5), Unit(r));
+        private static PlayerActionCommand ReadAction(BinaryReader r) => new PlayerActionCommand(Header(r), E<ActionKind>(r), Unit(r));
 
         private static void WriteSnapshot(BinaryWriter w, GameSessionState s)
         {
             Require(s != null && s.Actors.Count <= MaxActors && s.Doors.Count <= MaxDoors && s.ToolPickups.Count <= MaxToolPickups, "Invalid snapshot counts.");
-            w.Write(s.SessionEpoch); w.Write(s.RoundId); w.Write(s.HostTick); S(w, s.MapId, 128); S(w, s.ContentHash, 128); S(w, s.BalanceHash, 256);
-            w.Write((byte)s.SimulationPhase); w.Write(s.TimeRemainingTicks); w.Write(s.BloodCollected); w.Write(s.BloodGoal); w.Write((byte)s.Result); w.Write((byte)s.Winner);
+            w.Write(s.SessionEpoch); w.Write(s.RoundId); w.Write(s.HostTick); S(w, s.MapId, 128); S(w, s.ContentHash, 128); S(w, s.BalanceHash, 512); S(w, s.ModeId, 16);
+            w.Write((byte)s.SimulationPhase); w.Write(s.TimeRemainingTicks); w.Write(s.BloodCollected); w.Write(s.BloodGoal);
+            w.Write(s.TasksCompleted); w.Write(s.TasksGoal); w.Write(s.ViableTaskOpportunities); w.Write((byte)s.Result); w.Write((byte)s.Winner);
             w.Write((byte)s.Actors.Count); foreach (var actor in s.Actors) WriteActor(w, actor);
             w.Write((ushort)s.Doors.Count); foreach (var door in s.Doors) WriteDoor(w, door);
             w.Write((byte)s.ToolPickups.Count); foreach (var pickup in s.ToolPickups) WritePickup(w, pickup);
         }
         private static GameSessionState ReadSnapshot(BinaryReader r)
         {
-            ulong epoch = Epoch(r), round = Epoch(r); uint tick = Tick(r); string map = S(r, 128), content = S(r, 128), balanceHash = S(r, 256);
-            var phase = E<SimulationPhase>(r, 1); uint remaining = Tick(r); float blood = F(r, 0, 1000), goal = F(r, .000001f, 1000); var result = E<RoundEndReason>(r, 4); var winner = E<PlayerRole>(r, 2);
+            ulong epoch = Epoch(r), round = Epoch(r); uint tick = Tick(r); string map = S(r, 128), content = S(r, 128), balanceHash = S(r, 512), mode = S(r, 16);
+            Require(GameModes.IsValid(mode), "Unknown game mode."); ValidateBalanceHash(balanceHash, mode);
+            var phase = E<SimulationPhase>(r); uint remaining = Tick(r); float blood = F(r, 0, 1000), goal = F(r, 0, 1000);
+            int tasksCompleted = r.ReadInt32(), tasksGoal = r.ReadInt32(), viable = r.ReadInt32(); var result = E<RoundEndReason>(r); var winner = E<PlayerRole>(r);
             uint total = tick + remaining;
             Require(total >= 900 && total <= 54000 && total % 30 == 0 && blood <= goal, "Invalid round progress.");
             Require(phase == SimulationPhase.Running ? result == RoundEndReason.None && winner == PlayerRole.Unassigned : result != RoundEndReason.None, "Inconsistent result.");
-            var balance = ParseBalance(balanceHash);
+            Require(ResultMatchesMode(mode, result) && WinnerMatchesResult(mode, result, winner), "Result does not match mode.");
             int count = r.ReadByte(); Require(count <= MaxActors, "Too many actors.");
             var actors = new ActorSnapshot[count]; var ids = new HashSet<uint>();
-            for (int i = 0; i < count; i++) { actors[i] = ReadActor(r, tick); Require(ids.Add(actors[i].ActorId), "Duplicate actor."); }
+            for (int i = 0; i < count; i++) { actors[i] = ReadActor(r, tick, mode); Require(ids.Add(actors[i].ActorId), "Duplicate actor."); }
             if (phase == SimulationPhase.Running) Require(actors.Count(a => a.Role == PlayerRole.Human) >= 1 && actors.Count(a => a.Role == PlayerRole.Human) <= 5 && actors.Any(a => a.Role == PlayerRole.Mosquito), "Missing team.");
             foreach (var actor in actors)
                 if (actor.BiteAttachment.HasValue) Require(actor.BiteAttachment.Value.VictimId != actor.ActorId && actors.Any(a => a.ActorId == actor.BiteAttachment.Value.VictimId && a.Role == PlayerRole.Human), "Invalid bite victim.");
@@ -149,30 +152,50 @@ namespace LetMeSleep.Online
                 if (pickups[i].OwnerActorId != 0) Require(owners.Add(pickups[i].OwnerActorId) && actors.Any(a => a.ActorId == pickups[i].OwnerActorId && a.Role == PlayerRole.Human && a.EquippedToolId == pickups[i].ToolId), "Invalid pickup owner.");
             }
             foreach (var actor in actors) Require(actor.EquippedToolId == GameplayTools.Hands ? !owners.Contains(actor.ActorId) : owners.Contains(actor.ActorId), "Equipment ownership mismatch.");
-            var config = new GameplayRoundConfig(epoch, round, map, content, (int)(total / 30), goal, balance);
-            Require(config.BalanceHash == balanceHash, "Noncanonical balance.");
-            return new GameSessionState(config, tick, phase, blood, result, winner, actors, doors, pickups);
+            return new GameSessionState(epoch, round, tick, map, content, balanceHash, mode, phase, remaining,
+                blood, goal, result, winner, actors, doors, pickups, tasksCompleted, tasksGoal, viable);
         }
-        private static BalanceProfile ParseBalance(string hash)
+        private static void ValidateBalanceHash(string hash, string mode)
         {
-            var fields = hash.Split(':'); Require(fields.Length == 6 && fields[0] == BalanceProfile.Id, "Unsupported balance version.");
+            var fields = hash.Split(':'); Require(fields.Length == 13 && fields[0] == BalanceProfile.Id, "Unsupported balance identity.");
             var values = new float[5];
             for (int i = 0; i < 5; i++) Require(float.TryParse(fields[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out values[i]) && MathEx.Finite(values[i]), "Invalid balance value.");
-            return new BalanceProfile(values[0], values[1], values[2], values[3], values[4]);
+            var balance = new BalanceProfile(values[0], values[1], values[2], values[3], values[4]);
+            Require(fields[6] == GameModes.ProfileId(mode), "Mode profile identity mismatch.");
+            var numbers = new uint[5];
+            for (int i = 0; i < numbers.Length; i++) Require(uint.TryParse(fields[i + 7], NumberStyles.None, CultureInfo.InvariantCulture, out numbers[i]), "Invalid mode profile value.");
+            var rules = new ModeRuleProfile(mode, numbers[1], numbers[2], numbers[3], numbers[4]);
+            Require(numbers[0] == rules.MosquitoLives && fields[12].Length == 64 && fields[12].All(c => c >= '0' && c <= '9' || c >= 'a' && c <= 'f')
+                && hash == balance.Hash + ":" + rules.Hash + ":" + fields[12], "Noncanonical balance identity.");
+        }
+        private static bool ResultMatchesMode(string mode, RoundEndReason reason)
+        {
+            if (reason == RoundEndReason.None || reason == RoundEndReason.OpponentLeft || reason == RoundEndReason.Aborted) return true;
+            if (mode == GameModes.Blood) return reason == RoundEndReason.BloodGoal || reason == RoundEndReason.TimeExpired;
+            if (mode == GameModes.Survival) return reason == RoundEndReason.AllOpponentsEliminated || reason == RoundEndReason.TimeExpired;
+            return reason == RoundEndReason.AllOpponentsEliminated || reason == RoundEndReason.TasksMet || reason == RoundEndReason.TasksMissed;
+        }
+        private static bool WinnerMatchesResult(string mode, RoundEndReason reason, PlayerRole winner)
+        {
+            if (reason == RoundEndReason.None || reason == RoundEndReason.Aborted) return winner == PlayerRole.Unassigned;
+            if (reason == RoundEndReason.OpponentLeft) return winner == PlayerRole.Human || winner == PlayerRole.Mosquito;
+            if (reason == RoundEndReason.BloodGoal || reason == RoundEndReason.TasksMissed) return winner == PlayerRole.Mosquito;
+            if (reason == RoundEndReason.AllOpponentsEliminated || reason == RoundEndReason.TasksMet) return winner == PlayerRole.Human;
+            return winner == (mode == GameModes.Survival ? PlayerRole.Mosquito : PlayerRole.Human);
         }
         private static void WriteActor(BinaryWriter w, ActorSnapshot a)
         {
-            Require(a != null, "Null actor.");
+            Require(a != null && a.LivesRemaining >= 0 && a.LivesRemaining <= 3, "Invalid actor lives.");
             w.Write(a.ActorId); w.Write((byte)a.Role); w.Write((byte)a.LifeState); w.Write(a.StateRevision); V(w, a.Position); V(w, a.Velocity); Q(w, a.BodyRotation); V(w, a.ViewForward); w.Write(a.ViewYawRadians); w.Write(a.ViewPitchRadians);
             w.Write(a.ViewRevision); w.Write(a.PoseRevision); w.Write(a.Grounded); w.Write(a.CrouchFraction); w.Write(a.MotionPhase); w.Write(a.RecoveryEndTick);
             w.Write(a.SurfaceAttachment.HasValue); if (a.SurfaceAttachment.HasValue) WriteSurface(w, a.SurfaceAttachment.Value);
             w.Write(a.BiteAttachment.HasValue); if (a.BiteAttachment.HasValue) WriteBite(w, a.BiteAttachment.Value);
             WriteStrike(w, a.StrikeState);
-            S(w, a.EquippedToolId, 24);
+            S(w, a.EquippedToolId, 24); w.Write((byte)a.LivesRemaining);
         }
-        private static ActorSnapshot ReadActor(BinaryReader r, uint hostTick)
+        private static ActorSnapshot ReadActor(BinaryReader r, uint hostTick, string mode)
         {
-            uint id = Id(r); var role = E<PlayerRole>(r, 2); Require(role != PlayerRole.Unassigned, "Unassigned actor."); var life = E<LifeState>(r, 9); uint revision = Id(r);
+            uint id = Id(r); var role = E<PlayerRole>(r); Require(role != PlayerRole.Unassigned, "Unassigned actor."); var life = E<LifeState>(r); uint revision = Id(r);
             var position = V(r); var velocity = V(r); Require(velocity.Length <= 200, "Invalid velocity."); var body = Q(r); var view = Unit(r); float yaw = F(r), pitch = F(r, -1.919863f, 1.553344f);
             Require(Float3.Dot(MathEx.Aim(yaw, pitch), view.Normalized) >= .99984f && (role != PlayerRole.Human || pitch <= 1.308997f), "View mismatch.");
             uint viewRevision = Id(r), poseRevision = r.ReadUInt32(); bool grounded = B(r); float crouch = F(r, 0, 1), motion = F(r, 0, 1000000); uint recovery = r.ReadUInt32(); Require(recovery <= hostTick + 4000, "Invalid recovery deadline.");
@@ -180,12 +203,17 @@ namespace LetMeSleep.Online
             BiteAttachment? bite = B(r) ? ReadBite(r) : (BiteAttachment?)null;
             var strike = ReadStrike(r, hostTick);
             string equipped = S(r, 24); Require(equipped == GameplayTools.Hands || (role == PlayerRole.Human && equipped == GameplayTools.Flyswatter), "Invalid equipment.");
+            int lives = r.ReadByte();
             if (strike.Phase != StrikePhase.None) Require(strike.ToolId == equipped || (GameplayTools.IsFlyswatter(strike.ToolId) && equipped == GameplayTools.Flyswatter), "Strike/equipment mismatch.");
             if (role == PlayerRole.Human) Require((life == LifeState.Active || life == LifeState.Falling || life == LifeState.Fainted || life == LifeState.Recovering) && !surface.HasValue && !bite.HasValue, "Human state mismatch.");
             else Require(life != LifeState.Active && life != LifeState.Fainted && strike.Phase == StrikePhase.None, "Mosquito state mismatch.");
             if (surface.HasValue) Require(life == LifeState.Surface || life == LifeState.ApproachingSurface, "Surface state mismatch.");
             if (bite.HasValue) Require(life == LifeState.Biting || life == LifeState.PreparingBite, "Bite state mismatch.");
-            return new ActorSnapshot(id, role, life, revision, position, velocity, body, view, yaw, pitch, viewRevision, poseRevision, grounded, crouch, motion, surface, bite, strike, recovery, equipped);
+            if (role == PlayerRole.Human) Require(lives == 0 && life != LifeState.Eliminated, "Human life payload mismatch.");
+            else if (mode == GameModes.Blood) Require(lives == 0 && life != LifeState.Eliminated, "Blood life payload mismatch.");
+            else if (mode == GameModes.Survival) Require(life == LifeState.Eliminated ? lives == 0 : lives == 1, "Survival life payload mismatch.");
+            else Require(life == LifeState.Eliminated ? lives == 0 : lives >= 1 && lives <= 3, "Tasks life payload mismatch.");
+            return new ActorSnapshot(id, role, life, revision, position, velocity, body, view, yaw, pitch, viewRevision, poseRevision, grounded, crouch, motion, surface, bite, strike, recovery, equipped, lives);
         }
         private static void WritePickup(BinaryWriter w, ToolPickupSnapshot p)
         { w.Write(p.PickupId); S(w, p.ToolId, 24); V(w, p.Position); Q(w, p.Rotation); w.Write(p.OwnerActorId); w.Write(p.Revision); }
@@ -206,7 +234,7 @@ namespace LetMeSleep.Online
         }
         private static StrikeState ReadStrike(BinaryReader r, uint tick)
         {
-            var phase = E<StrikePhase>(r, 3); if (phase == StrikePhase.None) return default;
+            var phase = E<StrikePhase>(r); if (phase == StrikePhase.None) return default;
             ulong id = Epoch(r); string tool = S(r, 24); Require(tool == GameplayTools.Hands || GameplayTools.IsFlyswatter(tool), "Unknown tool.");
             int hand = r.ReadSByte(); Require(hand == -1 || hand == 1, "Invalid hand."); uint start = Tick(r); Require(start <= tick, "Future strike.");
             return new StrikeState(id, tool, hand, phase, start, V(r), V(r), Unit(r), F(r, 0, 1));
@@ -221,12 +249,27 @@ namespace LetMeSleep.Online
         private static void WritePrivate(BinaryWriter w, ActorPrivateState p)
         {
             Require(p != null, "Null private state."); w.Write(p.SessionEpoch); w.Write(p.RoundId); w.Write(p.HostTick); w.Write(p.ActorId); w.Write(p.LastAcceptedInputSequence); w.Write(p.LastAcceptedActionSequence); w.Write((byte)p.Rejection); w.Write((byte)p.InteractionHint); w.Write(p.PreparationProgress); w.Write(p.ExtractionProgress); w.Write(p.RecoverySeconds); w.Write(p.HelpTargetId); w.Write(p.CanAct); w.Write((byte)p.LastDoorResult);
+            w.Write(p.TaskAssignment != null);
+            if (p.TaskAssignment != null) WriteTaskAssignment(w, p.TaskAssignment);
         }
         private static ActorPrivateState ReadPrivate(BinaryReader r)
         {
-            ulong epoch = Epoch(r), round = Epoch(r); uint tick = Tick(r), actor = Id(r), input = r.ReadUInt32(), action = r.ReadUInt32(); var reject = E<CommandReject>(r, 13); var hint = E<InteractionHint>(r, 9);
-            float preparation = F(r, 0, 1), extraction = F(r, 0, 1.001f), recovery = F(r, 0, 120); uint help = r.ReadUInt32(); Require(help != actor, "Self help."); bool canAct = B(r); var door = E<DoorUseResult>(r, 8);
-            return new ActorPrivateState(actor, input, action, reject, hint, preparation, extraction, recovery, help, canAct, door, epoch, round, tick);
+            ulong epoch = Epoch(r), round = Epoch(r); uint tick = Tick(r), actor = Id(r), input = r.ReadUInt32(), action = r.ReadUInt32(); var reject = E<CommandReject>(r); var hint = E<InteractionHint>(r);
+            float preparation = F(r, 0, 1), extraction = F(r, 0, 1.001f), recovery = F(r, 0, 120); uint help = r.ReadUInt32(); Require(help != actor, "Self help."); bool canAct = B(r); var door = E<DoorUseResult>(r);
+            TaskAssignment assignment = B(r) ? ReadTaskAssignment(r, tick) : null;
+            return new ActorPrivateState(actor, input, action, reject, hint, preparation, extraction, recovery, help, canAct, door, epoch, round, tick, assignment);
+        }
+        private static void WriteTaskAssignment(BinaryWriter w, TaskAssignment assignment)
+        {
+            S(w, assignment.ObjectiveId, 96); w.Write(assignment.IssuedTick); w.Write(assignment.DeadlineTick);
+            w.Write(assignment.WorkTicks); w.Write(assignment.ProgressTicks); w.Write((byte)assignment.Status); w.Write(assignment.PersonalFailures);
+        }
+        private static TaskAssignment ReadTaskAssignment(BinaryReader r, uint hostTick)
+        {
+            string objective = S(r, 96); uint issued = Tick(r), deadline = Tick(r), work = Tick(r), progress = Tick(r);
+            var status = E<TaskAssignmentStatus>(r); int failures = r.ReadInt32();
+            Require(issued <= hostTick, "Future task assignment.");
+            return new TaskAssignment(objective, issued, deadline, work, progress, status, failures);
         }
         private static void WriteEvent(BinaryWriter w, GameplayEvent e)
         {
@@ -234,10 +277,12 @@ namespace LetMeSleep.Online
         }
         private static GameplayEvent ReadEvent(BinaryReader r)
         {
-            ulong epoch = Epoch(r), round = Epoch(r), id = Epoch(r); uint tick = Tick(r); var kind = E<GameplayEventKind>(r, 11); uint source = r.ReadUInt32(), target = r.ReadUInt32(), revision = r.ReadUInt32(); var position = V(r); var normal = V(r); Require(normal.LengthSquared <= 1.02f, "Invalid event normal."); var reason = E<RoundEndReason>(r, 4);
+            ulong epoch = Epoch(r), round = Epoch(r), id = Epoch(r); uint tick = Tick(r); var kind = E<GameplayEventKind>(r); uint source = r.ReadUInt32(), target = r.ReadUInt32(), revision = r.ReadUInt32(); var position = V(r); var normal = V(r); Require(normal.LengthSquared <= 1.02f, "Invalid event normal."); var reason = E<RoundEndReason>(r);
             DoorSnapshot? door = B(r) ? ReadDoor(r, tick) : (DoorSnapshot?)null;
+            Require(kind != GameplayEventKind.TaskAssigned && kind != GameplayEventKind.TaskProgressed && kind != GameplayEventKind.TaskMissed, "Private task event on public channel.");
             Require((kind == GameplayEventKind.DoorChanged) == door.HasValue, "Door payload mismatch.");
             Require(kind == GameplayEventKind.RoundEnded ? reason != RoundEndReason.None : reason == RoundEndReason.None, "Event result mismatch.");
+            if (kind == GameplayEventKind.TaskCompleted) Require(target == 0 && position.LengthSquared == 0 && normal.LengthSquared == 0, "Task event leaks private objective data.");
             if (kind != GameplayEventKind.DoorChanged && kind != GameplayEventKind.RoundEnded) Require(source != 0, "Missing event source.");
             return new GameplayEvent(epoch, round, id, tick, kind, source, target, revision, position, normal, door, reason);
         }

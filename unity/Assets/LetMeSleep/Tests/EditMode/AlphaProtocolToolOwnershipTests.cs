@@ -11,16 +11,16 @@ namespace LetMeSleep.Tests.EditMode
     public sealed class AlphaProtocolToolOwnershipTests
     {
         [Test]
-        public void RoomAndGameplayWireVersionsStayOnAlphaTwo()
+        public void ReleaseProtocolAndWireSchemasRejectAlpha()
         {
-            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-094-alfa-2"));
-            Assert.That(GameplayWireCodec.Version, Is.EqualTo(2));
-            Assert.That(RoomSession.Protocol, Does.EndWith("-" + GameplayWireCodec.Version));
+            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-1"));
+            Assert.That(RoomWireCodec.Version, Is.EqualTo(2));
+            Assert.That(GameplayWireCodec.Version, Is.EqualTo(3));
 
             var room = new RoomSession("owner", "Owner", new RoomSessionTestSupport.SequenceRandom(0));
             var before = room.Snapshot();
 
-            Assert.That(room.Join("old-client", "Old", "lms-unity-094-alfa-1"),
+            Assert.That(room.Join("old-client", "Old", "lms-unity-094-alfa-2"),
                 Is.EqualTo(RoomError.IncompatibleVersion));
             Assert.That(room.Snapshot().Revision, Is.EqualTo(before.Revision));
             Assert.That(room.Snapshot().Members.Count, Is.EqualTo(before.Members.Count));
@@ -63,7 +63,7 @@ namespace LetMeSleep.Tests.EditMode
         public void PreviousGameplayWireVersionIsRejectedWithoutState()
         {
             byte[] packet = GameplayWireCodec.Encode(State(1, GameplayTools.Flyswatter));
-            byte[] version = BitConverter.GetBytes((ushort)1);
+            byte[] version = BitConverter.GetBytes((ushort)2);
             packet[4] = version[0];
             packet[5] = version[1];
 

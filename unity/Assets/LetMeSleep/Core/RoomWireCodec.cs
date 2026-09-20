@@ -8,12 +8,14 @@ namespace LetMeSleep.Core
     public static class RoomWireCodec
     {
         private static readonly UTF8Encoding Utf8 = new UTF8Encoding(false, true);
+        public const byte Version = 2;
         public static byte[] Encode(RoomView view)
         {
             using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Utf8, true);
-            writer.Write((byte)1); writer.Write(view.Revision); writer.Write(view.Round); WriteText(writer, view.OwnerId, 128);
+            writer.Write(Version); writer.Write(view.Revision); writer.Write(view.Round); WriteText(writer, view.OwnerId, 128);
             writer.Write((byte)view.Phase); writer.Write((byte)(view.Rules.HumanCount ?? 0));
             writer.Write(view.Rules.RoundSeconds); writer.Write(view.Rules.BloodQuota); WriteText(writer, view.Rules.MapId, 64);
+            WriteText(writer, view.Rules.ModeId, 16); WriteText(writer, view.Rules.ModeRuleProfileId, 64);
             writer.Write((byte)view.Members.Count);
             foreach (var member in view.Members)
             {
@@ -30,12 +32,14 @@ namespace LetMeSleep.Core
             try
             {
                 using var stream = new MemoryStream(packet, false); using var reader = new BinaryReader(stream, Utf8);
-                if (reader.ReadByte() != 1) return false;
+                if (reader.ReadByte() != Version) return false;
                 long revision = reader.ReadInt64(); int round = reader.ReadInt32(); string owner = ReadText(reader, 128);
                 var phase = (RoomPhase)reader.ReadByte(); int humanCount = reader.ReadByte();
                 int seconds = reader.ReadInt32(); float quota = reader.ReadSingle(); string map = ReadText(reader, 64);
-                var rules = new RoomRules(humanCount == 0 ? (int?)null : humanCount, seconds, quota, map);
-                if (owner != expectedOwner || revision < 0 || round < 0 || phase > RoomPhase.Closed || !rules.IsValid) return false;
+                string mode = ReadText(reader, 16), profile = ReadText(reader, 64);
+                var rules = new RoomRules(humanCount == 0 ? (int?)null : humanCount, seconds, quota, map, mode, profile);
+                if (owner != expectedOwner || revision < 0 || round < 0 || phase > RoomPhase.Closed || !rules.IsValid
+                    || (mode == GameModes.Blood ? quota != rules.BloodQuota : quota != 0)) return false;
                 int count = reader.ReadByte(); if (count > RoomRules.Capacity || (count == 0 && phase != RoomPhase.Closed)) return false;
                 var members = new MemberView[count]; var ids = new HashSet<string>(StringComparer.Ordinal);
                 for (int i = 0; i < count; i++)

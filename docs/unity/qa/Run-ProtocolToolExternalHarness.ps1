@@ -14,6 +14,7 @@ $temporaryRoot = Join-Path $testWorkspaceRoot '.codex-tmp-protocol-tool-tests'
 $required = @(
     $NUnitFrameworkPath,
     (Join-Path $SourceWorkspaceRoot 'unity\Assets\LetMeSleep\Core\RoomSession.cs'),
+    (Join-Path $SourceWorkspaceRoot 'unity\Assets\LetMeSleep\Core\RoomWireCodec.cs'),
     (Join-Path $SourceWorkspaceRoot 'unity\Assets\LetMeSleep\Gameplay'),
     (Join-Path $SourceWorkspaceRoot 'unity\Assets\LetMeSleep\Online\GameplayWireCodec.cs'),
     (Join-Path $testWorkspaceRoot 'unity\Assets\LetMeSleep\Tests\EditMode\RoomSessionTestSupport.cs'),
@@ -48,6 +49,7 @@ $project = @"
     </Reference>
     <Compile Include="Program.cs" />
     <Compile Include="$escapedSource\unity\Assets\LetMeSleep\Core\RoomSession.cs" Link="Core\RoomSession.cs" />
+    <Compile Include="$escapedSource\unity\Assets\LetMeSleep\Core\RoomWireCodec.cs" Link="Core\RoomWireCodec.cs" />
     <Compile Include="$escapedSource\unity\Assets\LetMeSleep\Gameplay\*.cs" Link="Gameplay\%(Filename)%(Extension)" />
     <Compile Include="$escapedSource\unity\Assets\LetMeSleep\Online\GameplayWireCodec.cs" Link="Online\GameplayWireCodec.cs" />
     <Compile Include="..\unity\Assets\LetMeSleep\Tests\EditMode\RoomSessionTestSupport.cs" Link="Tests\RoomSessionTestSupport.cs" />

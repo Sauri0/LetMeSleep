@@ -19,6 +19,7 @@ namespace LetMeSleep.Online
         private readonly IGameplayPresentationSink replica;
         private readonly Func<IReadOnlyList<DoorDefinition>> doors;
         private readonly Func<IReadOnlyList<ToolPickupDefinition>> tools;
+        private readonly Func<IReadOnlyList<ObjectiveDefinition>> objectives;
         private readonly MessageFraming framing = new MessageFraming();
         private readonly HashSet<string> waiting = new HashSet<string>(StringComparer.Ordinal);
         private readonly string localId, contentHash;
@@ -34,14 +35,18 @@ namespace LetMeSleep.Online
 
         public OnlineGameplaySession(EosLobbySession lobby, OnlineRoomCoordinator room, EosPeerTransport transport,
             string localId, string contentHash, IGameplayCommandSink authority, IGameplayPresentationSink replica,
-            Func<IReadOnlyList<DoorDefinition>> doors, Func<IReadOnlyList<ToolPickupDefinition>> tools)
+            Func<IReadOnlyList<DoorDefinition>> doors, Func<IReadOnlyList<ToolPickupDefinition>> tools,
+            Func<IReadOnlyList<ObjectiveDefinition>> objectives = null)
         {
             this.lobby = lobby; this.room = room; this.transport = transport; this.localId = localId;
             this.contentHash = contentHash; this.authority = authority; this.replica = replica; this.doors = doors; this.tools = tools;
+            this.objectives = objectives ?? (() => Array.Empty<ObjectiveDefinition>());
             transport.PacketReceived += ReceivePacket; framing.MessageReceived += ReceiveMessage;
         }
         public void StartHost(GameplayRoundConfig round, IReadOnlyList<SpawnActor> actors)
         {
+            var localObjectives = objectives() ?? Array.Empty<ObjectiveDefinition>();
+            var localTools = tools() ?? Array.Empty<ToolPickupDefinition>();
             if (round == null || !lobby.IsOwner || room.Current?.Phase != RoomPhase.Playing || round.RoundId != (ulong)room.Current.Round)
                 throw new InvalidOperationException("Only the active room owner can start gameplay.");
             if (actors == null || actors.Count != room.Current.Members.Count || actors.Count < 2 || actors.Count > RoomRules.Capacity
@@ -49,7 +54,12 @@ namespace LetMeSleep.Online
                 || actors.Any(a => a.ActorId == 0 || a.IsBot || !a.Position.IsFinite || !room.Current.Members.Any(m => m.Id == a.OwnerPuid && m.Role == a.Role)))
                 throw new ArgumentException("Round roster does not match authenticated room members.");
             if (round.MapId != room.Current.Rules.MapId || round.ContentHash != contentHash
-                || round.RoundDurationTicks != room.Current.Rules.RoundSeconds * 30 || round.BloodGoal != room.Current.Rules.BloodQuota)
+                || round.RoundDurationTicks != room.Current.Rules.RoundSeconds * 30 || round.BloodGoal != room.Current.Rules.BloodQuota
+                || round.ModeId != room.Current.Rules.ModeId || round.ModeRuleProfileId != room.Current.Rules.ModeRuleProfileId
+                || round.ModeRules.Hash != new ModeRuleProfile(round.ModeId).Hash || round.Objectives.Count > GameplayWireCodec.MaxObjectives
+                || round.ToolDefinitions.Count > GameplayWireCodec.MaxToolPickups || round.ToolDefinitions.Count != localTools.Count
+                || round.ToolDefinitions.Any(tool => !localTools.Any(local => local.PickupId == tool.PickupId && local.ToolId == tool.ToolId && SamePose(local, tool.Position, tool.Rotation)))
+                || (round.ModeId == GameModes.Tasks && round.ObjectiveCatalogHash != ObjectiveDefinition.CatalogHash(localObjectives)))
                 throw new ArgumentException("Round settings do not match room settings.");
             config = round; roster = actors.ToArray(); failed = false; waiting.Clear(); framing.Clear();
             foreach (var member in room.Current.Members) if (member.Id != localId) waiting.Add(member.Id);
@@ -81,14 +91,16 @@ namespace LetMeSleep.Online
         public void SendAction(PlayerActionCommand action) { if (Ready && !lobby.IsOwner) Send(lobby.OwnerId, Action, GameplayWireCodec.Encode(action), true); }
         public void SendSnapshot(GameSessionState snapshot)
         {
-            if (Ready && lobby.IsOwner) Broadcast(Snapshot, GameplayWireCodec.Encode(snapshot), snapshot.SimulationPhase == SimulationPhase.Ended);
+            if (Ready && lobby.IsOwner && SnapshotMatchesRound(snapshot)) Broadcast(Snapshot, GameplayWireCodec.Encode(snapshot), snapshot.SimulationPhase == SimulationPhase.Ended);
         }
         public void SendPrivate(string owner, ActorPrivateState state)
         {
-            if (Ready && lobby.IsOwner && owner != localId && roster.Any(a => a.OwnerPuid == owner && a.ActorId == state.ActorId))
+            if (Ready && lobby.IsOwner && owner != localId && state != null && state.SessionEpoch == config.SessionEpoch && state.RoundId == config.RoundId
+                && (config.ModeId == GameModes.Tasks ? state.TaskAssignment == null || config.Objectives.Any(o => o.ObjectiveId == state.TaskAssignment.ObjectiveId) : state.TaskAssignment == null)
+                && roster.Any(a => a.OwnerPuid == owner && a.ActorId == state.ActorId))
                 Send(owner, Private, GameplayWireCodec.Encode(state), false);
         }
-        public void SendEvent(GameplayEvent item) { if (Ready && lobby.IsOwner) Broadcast(Event, GameplayWireCodec.Encode(item), true); }
+        public void SendEvent(GameplayEvent item) { if (Ready && lobby.IsOwner && item.SessionEpoch == config.SessionEpoch && item.RoundId == config.RoundId) Broadcast(Event, GameplayWireCodec.Encode(item), true); }
         private void Broadcast(byte kind, byte[] data, bool reliable)
         {
             foreach (var member in room.Current.Members) if (member.Id != localId && lobby.Contains(member.Id)) Send(member.Id, kind, data, reliable);
@@ -127,26 +139,55 @@ namespace LetMeSleep.Online
             if (peer != lobby.OwnerId) return;
             if (kind == Snapshot && GameplayWireCodec.TryDecode(packet, out GameSessionState snapshot))
             {
-                if (snapshot.SessionEpoch != config.SessionEpoch || snapshot.RoundId != config.RoundId) return;
+                if (!SnapshotMatchesRound(snapshot)) return;
                 lastOwnerPacket = now; receivedSnapshot = true;
                 replica.ApplySnapshot(snapshot, snapshot.HostTime);
             }
-            else if (kind == Private && GameplayWireCodec.TryDecode(packet, out ActorPrivateState state)) replica.ApplyPrivate(state);
-            else if (kind == Event && GameplayWireCodec.TryDecode(packet, out GameplayEvent item)) replica.ApplyEvent(item);
+            else if (kind == Private && GameplayWireCodec.TryDecode(packet, out ActorPrivateState state))
+            {
+                var localActor = roster.FirstOrDefault(a => a.OwnerPuid == localId);
+                if (localActor.ActorId == 0 || state.ActorId != localActor.ActorId || state.SessionEpoch != config.SessionEpoch || state.RoundId != config.RoundId
+                    || (config.ModeId == GameModes.Tasks ? state.TaskAssignment == null || config.Objectives.Any(o => o.ObjectiveId == state.TaskAssignment.ObjectiveId) : state.TaskAssignment == null)) return;
+                replica.ApplyPrivate(state);
+            }
+            else if (kind == Event && GameplayWireCodec.TryDecode(packet, out GameplayEvent item))
+            {
+                if (item.SessionEpoch != config.SessionEpoch || item.RoundId != config.RoundId) return;
+                replica.ApplyEvent(item);
+            }
         }
+        private bool SnapshotMatchesRound(GameSessionState snapshot) => snapshot != null && snapshot.SessionEpoch == config.SessionEpoch
+            && snapshot.RoundId == config.RoundId && snapshot.MapId == config.MapId && snapshot.ContentHash == config.ContentHash
+            && snapshot.BalanceHash == config.BalanceHash && snapshot.ModeId == config.ModeId;
         private static byte[] RoundIdentity(GameplayRoundConfig round)
         {
-            using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream);
-            writer.Write(round.SessionEpoch); writer.Write(round.RoundId); return stream.ToArray();
+            using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
+            writer.Write(round.SessionEpoch); writer.Write(round.RoundId); RoomWireCodec.WriteText(writer, round.MapId, 64);
+            RoomWireCodec.WriteText(writer, round.ContentHash, 128); RoomWireCodec.WriteText(writer, round.ModeId, 16);
+            RoomWireCodec.WriteText(writer, round.ModeRuleProfileId, 64); RoomWireCodec.WriteText(writer, round.ObjectiveCatalogHash, 64);
+            RoomWireCodec.WriteText(writer, round.BalanceHash, 512); writer.Write(round.ConfiguredTasksGoal); return stream.ToArray();
         }
         private static byte[] EncodeBegin(GameplayRoundConfig round, SpawnActor[] actors)
         {
             using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
-            writer.Write((byte)2); writer.Write(round.SessionEpoch); writer.Write(round.RoundId);
+            if (round.Objectives.Count > GameplayWireCodec.MaxObjectives) throw new InvalidDataException("Too many objectives for Begin.");
+            writer.Write((byte)3); writer.Write(round.SessionEpoch); writer.Write(round.RoundId);
             RoomWireCodec.WriteText(writer, round.MapId, 64); RoomWireCodec.WriteText(writer, round.ContentHash, 128);
-            writer.Write((int)(round.RoundDurationTicks / 30)); writer.Write(round.BloodGoal);
+            RoomWireCodec.WriteText(writer, round.ModeId, 16); RoomWireCodec.WriteText(writer, round.ModeRuleProfileId, 64);
+            RoomWireCodec.WriteText(writer, round.ObjectiveCatalogHash, 64); RoomWireCodec.WriteText(writer, round.BalanceHash, 512);
+            writer.Write((int)(round.RoundDurationTicks / 30)); writer.Write(round.BloodGoal); writer.Write(round.ConfiguredTasksGoal);
             writer.Write(round.Balance.RecoveryBaseSeconds); writer.Write(round.Balance.FullExtractionSeconds);
             writer.Write(round.Balance.PreparationSeconds); writer.Write(round.Balance.HelpMultiplier); writer.Write(round.Balance.ProtectionSeconds);
+            writer.Write((byte)round.ModeRules.MosquitoLives); writer.Write(round.ModeRules.TaskCadenceTicks); writer.Write(round.ModeRules.TaskDeadlineTicks);
+            writer.Write(round.ModeRules.TaskMinimumDeadlineTicks); writer.Write(round.ModeRules.TaskFailurePenaltyTicks);
+            writer.Write((byte)round.Objectives.Count);
+            foreach (var objective in round.Objectives)
+            {
+                RoomWireCodec.WriteText(writer, objective.ObjectiveId, 96); writer.Write((byte)objective.Kind);
+                RoomWireCodec.WriteText(writer, objective.DisplayKey, 96); RoomWireCodec.WriteText(writer, objective.ActionKey, 96);
+                Write(writer, objective.Position); Write(writer, objective.ApproachPoint); writer.Write(objective.UseRadius); writer.Write(objective.WorkTicks);
+                RoomWireCodec.WriteText(writer, objective.RouteRegionId, 96); writer.Write(objective.RouteBudgetTicks);
+            }
             writer.Write((byte)round.ToolDefinitions.Count);
             foreach (var tool in round.ToolDefinitions)
             {
@@ -161,23 +202,44 @@ namespace LetMeSleep.Online
                 writer.Write(actor.Position.X); writer.Write(actor.Position.Y); writer.Write(actor.Position.Z);
                 RoomWireCodec.WriteText(writer, actor.SpawnId, 64); RoomWireCodec.WriteText(writer, actor.CosmeticProfileId, 128);
             }
+            if (stream.Length > MessageFraming.MaximumMessageBytes) throw new InvalidDataException("Begin exceeds framing limit.");
             return stream.ToArray();
         }
         private bool TryBegin(byte[] packet, out GameplayRoundConfig result, out SpawnActor[] actors)
         {
             result = null; actors = null;
-            if (room.Current?.Phase != RoomPhase.Playing || packet.Length > 8192) return false;
+            if (room.Current?.Phase != RoomPhase.Playing || packet == null || packet.Length < 32 || packet.Length > MessageFraming.MaximumMessageBytes) return false;
             try
             {
                 using var stream = new MemoryStream(packet, false); using var reader = new BinaryReader(stream, Encoding.UTF8);
-                if (reader.ReadByte() != 2) return false;
+                if (reader.ReadByte() != 3) return false;
                 ulong epoch = reader.ReadUInt64(), round = reader.ReadUInt64();
                 string map = RoomWireCodec.ReadText(reader, 64), hash = RoomWireCodec.ReadText(reader, 128);
-                int seconds = reader.ReadInt32(); float goal = reader.ReadSingle();
+                string mode = RoomWireCodec.ReadText(reader, 16), profileId = RoomWireCodec.ReadText(reader, 64);
+                string catalogHash = RoomWireCodec.ReadText(reader, 64), balanceHash = RoomWireCodec.ReadText(reader, 512);
+                int seconds = reader.ReadInt32(); float goal = reader.ReadSingle(); int tasksGoal = reader.ReadInt32();
                 var balance = new BalanceProfile(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                int lives = reader.ReadByte();
+                var modeRules = new ModeRuleProfile(mode, reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
                 if (epoch == 0 || round != (ulong)room.Current.Round || map != room.Current.Rules.MapId || hash != contentHash
-                    || seconds != room.Current.Rules.RoundSeconds || goal != room.Current.Rules.BloodQuota) return false;
-                var localTools = tools(); int toolCount = reader.ReadByte();
+                    || seconds != room.Current.Rules.RoundSeconds || goal != room.Current.Rules.BloodQuota || mode != room.Current.Rules.ModeId
+                    || profileId != room.Current.Rules.ModeRuleProfileId || profileId != modeRules.Id || lives != modeRules.MosquitoLives
+                    || modeRules.Hash != new ModeRuleProfile(mode).Hash) return false;
+                int objectiveCount = reader.ReadByte(); if (objectiveCount > GameplayWireCodec.MaxObjectives) return false;
+                var nextObjectives = new ObjectiveDefinition[objectiveCount]; var objectiveIds = new HashSet<string>(StringComparer.Ordinal);
+                for (int o = 0; o < objectiveCount; o++)
+                {
+                    string id = RoomWireCodec.ReadText(reader, 96); var kind = (ObjectiveKind)reader.ReadByte();
+                    string display = RoomWireCodec.ReadText(reader, 96), action = RoomWireCodec.ReadText(reader, 96);
+                    var position = ReadVector(reader); var approach = ReadVector(reader); float radius = reader.ReadSingle(); uint work = reader.ReadUInt32();
+                    string region = RoomWireCodec.ReadText(reader, 96); uint route = reader.ReadUInt32();
+                    if (!objectiveIds.Add(id)) return false;
+                    nextObjectives[o] = new ObjectiveDefinition(id, kind, display, action, position, approach, radius, work, region, route);
+                }
+                var localObjectives = objectives() ?? Array.Empty<ObjectiveDefinition>();
+                if ((mode == GameModes.Tasks && (objectiveCount == 0 || catalogHash != ObjectiveDefinition.CatalogHash(localObjectives)))
+                    || (mode != GameModes.Tasks && objectiveCount != 0)) return false;
+                var localTools = tools() ?? Array.Empty<ToolPickupDefinition>(); int toolCount = reader.ReadByte();
                 if (toolCount > 32 || toolCount != localTools.Count) return false;
                 var toolIds = new HashSet<uint>();
                 for (int t = 0; t < toolCount; t++)
@@ -195,15 +257,23 @@ namespace LetMeSleep.Online
                     var position = new Float3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     string spawn = RoomWireCodec.ReadText(reader, 64), cosmetic = RoomWireCodec.ReadText(reader, 128);
                     var member = room.Current.Members.FirstOrDefault(m => m.Id == owner);
-                    if (id == 0 || !ids.Add(id) || !owners.Add(owner) || member == null || member.Role != role || !position.IsFinite || position.LengthSquared > 250000) return false;
+                    if (id == 0 || !ids.Add(id) || !owners.Add(owner) || member == null || member.Role != role || !Enum.IsDefined(typeof(PlayerRole), role) || role == PlayerRole.Unassigned || !position.IsFinite || position.LengthSquared > 250000) return false;
                     nextActors[i] = new SpawnActor(id, owner, role, position, spawn, cosmetic);
                 }
                 if (stream.Position != stream.Length || !owners.Contains(localId)) return false;
-                result = new GameplayRoundConfig(epoch, round, map, hash, seconds, goal, balance, doors(), tools: localTools); actors = nextActors; return true;
+                result = new GameplayRoundConfig(epoch, round, map, hash, seconds, goal, balance, doors(), localTools, mode, modeRules, nextObjectives, tasksGoal);
+                if (result.ObjectiveCatalogHash != catalogHash || result.BalanceHash != balanceHash) return false;
+                actors = nextActors; return true;
             }
             catch (IOException) { return false; }
             catch (InvalidDataException) { return false; }
             catch (ArgumentException) { return false; }
+        }
+        private static void Write(BinaryWriter writer, Float3 value) { writer.Write(value.X); writer.Write(value.Y); writer.Write(value.Z); }
+        private static Float3 ReadVector(BinaryReader reader)
+        {
+            var value = new Float3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            if (!value.IsFinite) throw new InvalidDataException("Invalid vector."); return value;
         }
         private static bool SamePose(ToolPickupDefinition definition, Float3 position, Rotation rotation)
             => ToolDefinitionValidation.Matches(definition,new ToolPickupDefinition(definition.PickupId,definition.ToolId,position,rotation));
