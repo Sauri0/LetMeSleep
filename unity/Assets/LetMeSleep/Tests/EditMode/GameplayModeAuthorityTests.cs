@@ -11,20 +11,20 @@ namespace LetMeSleep.Tests.EditMode
     {
         private sealed class World : IGameplayWorld, IGameplayModeWorld
         {
-            public bool Available = true, Work = true, Respawn = true, Valid = true, FreeRecovery = true, Bite = false;
+            public bool Available = true, Work = true, Respawn = true, Valid = true, FreeRecovery = true, Bite = false, Surface = false;
             public Float3? HumanPosition;
             public uint Hit = 2;
-            public int MosquitoMoves;
+            public int MosquitoMoves, StrikePlans, StrikeSweeps;
             public void BeginRound(IReadOnlyList<SpawnActor> a, IReadOnlyList<DoorDefinition> d) { }
             public void SynchronizeActors(IReadOnlyList<ActorSnapshot> a) { }
             public MotorResult MoveHuman(in MotorQuery q) => new MotorResult(HumanPosition ?? q.Position, default, true, Float3.Up, 0);
             public MotorResult MoveMosquito(in MotorQuery q) { MosquitoMoves++; return new MotorResult(q.Position, default, true, Float3.Up, 0); }
-            public bool TrySurface(in SurfaceQuery q, out SurfaceContact c) { c = default; return false; }
-            public bool ResolveSurface(in SurfaceAttachment a, out SurfaceContact c) { c = default; return false; }
+            public bool TrySurface(in SurfaceQuery q, out SurfaceContact c) { c = new SurfaceContact(new SurfaceAttachment(1, 1, Float3.Zero, -Float3.Forward, Float3.Up), Float3.Zero, -Float3.Forward); return Surface; }
+            public bool ResolveSurface(in SurfaceAttachment a, out SurfaceContact c) { c = new SurfaceContact(a, Float3.Zero, -Float3.Forward); return Surface; }
             public bool TryBiteContact(in BiteQuery q, out BiteContact c) { c = new BiteContact(new BiteAttachment(1, 1, Float3.Zero, Float3.Up, 1), Float3.Forward * .3f, Float3.Up); return Bite; }
             public bool ResolveBite(uint id, in BiteAttachment a, int n, out BiteContact c) { c = new BiteContact(a, Float3.Forward * .3f, Float3.Up); return Bite; }
-            public bool TryPlanStrike(uint id, Float3 aim, string tool, out StrikePlan p) { p = new StrikePlan(Float3.Zero, Float3.Forward, Float3.Up, .1f, 0, tool); return true; }
-            public StrikeHit SweepStrike(in StrikeSweep q) => new StrikeHit(Hit != 0, Hit, Float3.Forward * .3f, Float3.Up);
+            public bool TryPlanStrike(uint id, Float3 aim, string tool, out StrikePlan p) { StrikePlans++; p = new StrikePlan(Float3.Zero, Float3.Forward, Float3.Up, .1f, 0, tool); return true; }
+            public StrikeHit SweepStrike(in StrikeSweep q) { StrikeSweeps++; return new StrikeHit(Hit != 0, Hit, Float3.Forward * .3f, Float3.Up); }
             public bool TryFreeRecoveryPoint(uint id, Float3 p, out Float3 free) { free = p; return FreeRecovery; }
             public bool HasLineOfSight(uint id, Float3 f, uint target, Float3 to) => true;
             public bool TryDoorInteraction(in DoorInteractionQuery q, out DoorInteractionCandidate c) { c = default; return false; }
@@ -299,6 +299,114 @@ namespace LetMeSleep.Tests.EditMode
             WorkFor(a, 20); Assert.That(a.CaptureSnapshot().TasksCompleted, Is.EqualTo(1));
             Step(a, (int)(1200 - a.CurrentTick)); WorkFor(a, 40); ReleaseTask(a); Step(a, 30);
             Assert.That(OwnTask(a).ProgressTicks, Is.EqualTo(40));
+        }
+
+        [Test] public void DisconnectedActorRejectsCommandsAndCannotAcquireBotControl()
+        {
+            var a = Start(new World(), GameModes.Tasks);
+            a.SetActorConnected(1, false); uint revision = Actor(a, 1).ViewRevision;
+            a.SetActorConnected(1, false); a.SetActorConnected(999, false);
+            Assert.That(Actor(a, 1).ViewRevision, Is.EqualTo(revision), "Repeated disconnect is idempotent.");
+            var input = new PlayerInputCommand(Header(a, 1), default, 0, 0, 0, Float3.Forward, use: true);
+            var action = new PlayerActionCommand(Header(a, 1), ActionKind.Primary, Float3.Forward);
+            Assert.That(a.SubmitInput("h", input), Is.EqualTo(CommandReject.InvalidState));
+            Assert.That(a.SubmitAction("h", action), Is.EqualTo(CommandReject.InvalidState));
+            Assert.That(a.SubmitBotInput(input), Is.EqualTo(CommandReject.WrongOwner));
+            Assert.That(a.SubmitBotAction(action), Is.EqualTo(CommandReject.WrongOwner));
+            Assert.That(a.CapturePrivate(1).CanAct, Is.False);
+            Assert.That(Actor(a, 1).LifeState, Is.EqualTo(LifeState.Active));
+        }
+
+        [Test] public void DisconnectRejoinInvalidatesQueuedActionAndResetsSequencesOnlyForNewRevision()
+        {
+            var w = new World(); var a = Start(w, GameModes.Blood);
+            uint originalRevision = Actor(a, 1).ViewRevision;
+            var oldHeader = new CommandHeader(1, 1, 1, 900, a.CurrentTick, originalRevision);
+            Assert.That(a.SubmitInput("h", new PlayerInputCommand(oldHeader, default, 0, 0, 0, Float3.Forward)), Is.EqualTo(CommandReject.None));
+            Assert.That(a.SubmitAction("h", new PlayerActionCommand(oldHeader, ActionKind.Primary, Float3.Forward)), Is.EqualTo(CommandReject.None));
+            a.SetActorConnected(1, false); a.SetActorConnected(1, true); Step(a);
+            Assert.That(w.StrikePlans, Is.Zero, "Queued old-revision action must not survive reconnect before Advance.");
+            Assert.That(a.SubmitInput("h", new PlayerInputCommand(oldHeader, default, 0, 0, 0, Float3.Forward)), Is.EqualTo(CommandReject.OldViewRevision));
+            Assert.That(a.SubmitAction("h", new PlayerActionCommand(oldHeader, ActionKind.Primary, Float3.Forward)), Is.EqualTo(CommandReject.OldViewRevision));
+            var fresh = new CommandHeader(1, 1, 1, 1, a.CurrentTick, Actor(a, 1).ViewRevision);
+            Assert.That(a.SubmitInput("h", new PlayerInputCommand(fresh, default, 0, 0, 0, Float3.Forward)), Is.EqualTo(CommandReject.None));
+            // Reuse the former action sequence with a different payload: old history must be gone.
+            var reused = new CommandHeader(1, 1, 1, 900, a.CurrentTick, Actor(a, 1).ViewRevision);
+            Assert.That(a.SubmitAction("h", new PlayerActionCommand(fresh, ActionKind.Use, Float3.Forward)), Is.EqualTo(CommandReject.None));
+            Assert.That(a.SubmitAction("h", new PlayerActionCommand(reused, ActionKind.Jump, Float3.Forward)), Is.EqualTo(CommandReject.None));
+            Assert.That(a.CapturePrivate(1).CanAct, Is.True);
+        }
+
+        [Test] public void DisconnectedMosquitoRemainsVulnerableToElimination()
+        {
+            var w = new World(); var a = Start(w, GameModes.Survival, secondMosquito: true);
+            a.SetActorConnected(2, false); int moves = w.MosquitoMoves; Step(a);
+            Assert.That(w.MosquitoMoves - moves, Is.EqualTo(2), "Both connected and disconnected flying actors still use the motor.");
+            Strike(a);
+            Assert.That(Actor(a).Eliminated, Is.True); Assert.That(Actor(a).LivesRemaining, Is.Zero);
+            a.SetActorConnected(2, true);
+            Assert.That(Actor(a).Eliminated, Is.True); Assert.That(a.CapturePrivate(2).CanAct, Is.False);
+        }
+
+        [Test] public void DisconnectedHumanCanStillBeBittenAndFaint()
+        {
+            var a = Start(new World { Bite = true }, GameModes.Blood); a.SetActorConnected(1, false);
+            bool fainted = false;
+            for (int i = 0; i < 290 && !fainted; i++)
+            {
+                Assert.That(a.SubmitInput("m", new PlayerInputCommand(Header(a, 2), default, 0, 0, 0, Float3.Forward, bite: true)), Is.EqualTo(CommandReject.None));
+                Step(a); fainted = Actor(a, 1).LifeState == LifeState.Falling || Actor(a, 1).LifeState == LifeState.Fainted;
+            }
+            Assert.That(fainted, Is.True); Assert.That(a.CaptureSnapshot().BloodCollected, Is.GreaterThan(0));
+            Assert.That(a.CapturePrivate(1).CanAct, Is.False);
+        }
+
+        [Test] public void DisconnectCancelsStartedStrikeBiteAndAutomaticSurfaceApproach()
+        {
+            var w = new World { Hit = 0 }; var a = Start(w, GameModes.Blood);
+            a.SubmitAction("h", new PlayerActionCommand(Header(a, 1), ActionKind.Primary, Float3.Forward)); Step(a);
+            Assert.That(Actor(a, 1).StrikeState.Phase, Is.Not.EqualTo(StrikePhase.None));
+            a.SetActorConnected(1, false); Step(a, 10);
+            Assert.That(Actor(a, 1).StrikeState.Phase, Is.EqualTo(StrikePhase.None)); Assert.That(w.StrikeSweeps, Is.Zero);
+            w.Bite = true;
+            a.SubmitInput("m", new PlayerInputCommand(Header(a, 2), default, 0, 0, 0, Float3.Forward)); Step(a);
+            a.SubmitInput("m", new PlayerInputCommand(Header(a, 2), default, 0, 0, 0, Float3.Forward, bite: true)); Step(a);
+            Assert.That(Actor(a).BiteAttachment.HasValue, Is.True);
+            a.SetActorConnected(2, false); Assert.That(Actor(a).BiteAttachment.HasValue, Is.False);
+            float blood = a.CaptureSnapshot().BloodCollected; Step(a, 30); Assert.That(a.CaptureSnapshot().BloodCollected, Is.EqualTo(blood));
+            a.SetActorConnected(2, true); w.Bite = false; w.Surface = true;
+            a.SubmitAction("m", new PlayerActionCommand(Header(a, 2), ActionKind.PerchToggle, Float3.Forward)); Step(a);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.ApproachingSurface));
+            var position = Actor(a).Position;
+            a.SetActorConnected(2, false);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.Flying)); Assert.That(Actor(a).SurfaceAttachment.HasValue, Is.False);
+            Assert.That(Actor(a).Position, Is.EqualTo(position));
+        }
+
+        [Test] public void DisconnectPreservesTaskWindowAndRecoveryContinuesWithoutRestoringLivesOnRejoin()
+        {
+            var w = new World { Respawn = false }; var a = TaskSession(w); WorkFor(a, 10);
+            var task = OwnTask(a); a.SetActorConnected(1, false); Step(a, 10); a.SetActorConnected(1, true);
+            Assert.That(OwnTask(a).IssuedTick, Is.EqualTo(task.IssuedTick)); Assert.That(OwnTask(a).DeadlineTick, Is.EqualTo(task.DeadlineTick));
+            Assert.That(OwnTask(a).ProgressTicks, Is.EqualTo(task.ProgressTicks)); Assert.That(OwnTask(a).PersonalFailures, Is.EqualTo(task.PersonalFailures));
+            // TaskSession uses one second of recovery. Keep the spawn blocked past expiry.
+            Strike(a); a.SetActorConnected(2, false); Step(a, 40);
+            Assert.That(Actor(a).LivesRemaining, Is.EqualTo(2));
+            var before = Actor(a); a.SetActorConnected(2, true);
+            Assert.That(Actor(a).Position, Is.EqualTo(before.Position)); Assert.That(Actor(a).LifeState, Is.EqualTo(before.LifeState));
+            Assert.That(Actor(a).LivesRemaining, Is.EqualTo(2));
+            a.SetActorConnected(2, false); w.Respawn = true; Step(a, 20);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.Flying)); Assert.That(Actor(a).LivesRemaining, Is.EqualTo(2));
+            Assert.That(a.CapturePrivate(2).CanAct, Is.False, "Recovery must not reconnect the player.");
+        }
+
+        [Test] public void DisconnectStopsHelpingImmediatelyWithoutGrantingFreeRescue()
+        {
+            var a = Start(new World(), GameModes.Tasks, secondMosquito: true); Strike(a); Use(a, 4); Step(a);
+            Assert.That(a.CapturePrivate(4).HelpTargetId, Is.EqualTo(2));
+            a.SetActorConnected(4, false); Assert.That(a.CapturePrivate(4).HelpTargetId, Is.Zero);
+            Step(a, 35); Assert.That(Actor(a).LivesRemaining, Is.EqualTo(2));
+            Assert.That(a.DrainEvents().Count(e => e.Kind == GameplayEventKind.HelpEnded && e.SourceActorId == 4), Is.EqualTo(1));
         }
     }
 }

@@ -32,6 +32,7 @@ namespace LetMeSleep.Gameplay
             internal uint TaskInterruptTick;
             internal float HelpWork;
             internal bool AwaitingRespawn;
+            internal bool Connected = true;
             internal bool HasInput, HasAction, Grounded, BiteArmed = true, Jump, StrikeBlocked;
             internal PlayerInputCommand Input;
             internal CommandReject Rejection;
@@ -130,13 +131,40 @@ namespace LetMeSleep.Gameplay
         public CommandReject SubmitBotInput(in PlayerInputCommand command) => Input(null, command, true);
         public CommandReject SubmitBotAction(in PlayerActionCommand command) => Action(null, command, true);
 
+        // Host lifecycle capability only. Call true after the authenticated rejoin
+        // barrier; network commands do not expose this method.
+        public void SetActorConnected(uint actorId, bool connected)
+        {
+            if (!actors.TryGetValue(actorId, out var a) || a.Connected == connected) return;
+            a.Connected = connected;
+            ClearHeld(a);
+            if (!connected)
+            {
+                if (a.Bite.HasValue || a.State == LifeState.ApproachingSurface) Detach(a);
+                a.Strike = default; a.Plan = default; a.HitActors.Clear(); a.StrikeBlocked = false;
+                if (a.HelpTarget != 0) Emit(GameplayEventKind.HelpEnded, a, a.HelpTarget);
+                a.HelpTarget = 0; a.Hint = InteractionHint.None; a.DoorResult = default;
+            }
+            else
+            {
+                a.HasInput = a.HasAction = false; a.InputSequence = a.ActionSequence = 0;
+                a.InputTick = a.RateTick = tick; a.InputCount = a.ActionCount = 0;
+                a.ActionHistory.Clear(); a.ActionHistoryOrder.Clear();
+            }
+            // Queued actions keep their old revision, even when leave/rejoin occur
+            // before the next tick. Other actors' queues remain intact.
+            a.ViewRevision++; a.Revision++;
+            a.Rejection = connected ? CommandReject.None : CommandReject.InvalidState;
+            Synchronize();
+        }
+
         private CommandReject Validate(string principal, CommandHeader h, bool bot, out Actor actor)
         {
             actor = null;
             if (!IsRunning || h.SessionEpoch != config.SessionEpoch || h.RoundId != config.RoundId) return CommandReject.WrongRound;
             if (!actors.TryGetValue(h.ActorId, out actor)) return CommandReject.UnknownActor;
             if (bot ? !actor.Spawn.IsBot : actor.Spawn.IsBot || string.IsNullOrEmpty(principal) || actor.Spawn.OwnerPuid != principal) return CommandReject.WrongOwner;
-            if (actor.State == LifeState.Eliminated) return CommandReject.InvalidState;
+            if (!actor.Connected || actor.State == LifeState.Eliminated) return CommandReject.InvalidState;
             if (h.ViewRevision != actor.ViewRevision) return CommandReject.OldViewRevision;
             return CommandReject.None;
         }
@@ -215,7 +243,7 @@ namespace LetMeSleep.Gameplay
             while (pending.Count > 0)
             {
                 var c = pending.Dequeue(); if (!actors.TryGetValue(c.Header.ActorId, out var a) || c.Header.ViewRevision != a.ViewRevision) continue;
-                if (!CanAct(a) || boundsHeldActors.Contains(a.Spawn.ActorId)) { a.Rejection = CommandReject.InvalidState; continue; }
+                if (!a.Connected || !CanAct(a) || boundsHeldActors.Contains(a.Spawn.ActorId)) { a.Rejection = CommandReject.InvalidState; continue; }
                 switch (c.Kind)
                 {
                     case ActionKind.Jump:
@@ -408,7 +436,7 @@ namespace LetMeSleep.Gameplay
         }
         private void UpdateStrike(Actor a)
         {
-            if (a.Strike.Phase == StrikePhase.None || a.State != LifeState.Active || boundsHeldActors.Contains(a.Spawn.ActorId)) return;
+            if (!a.Connected || a.Strike.Phase == StrikePhase.None || a.State != LifeState.Active || boundsHeldActors.Contains(a.Spawn.ActorId)) return;
             var s = a.Strike; float elapsed = (tick - s.StartTick) / 30f;
             if (elapsed >= .6f) { a.Strike = default; return; }
             var nextPhase = elapsed < .08f ? StrikePhase.Windup : elapsed < .25f ? StrikePhase.Active : StrikePhase.Recovery;
@@ -424,7 +452,7 @@ namespace LetMeSleep.Gameplay
         }
         private void UpdateContact(Actor a, int humans, float dt)
         {
-            if (!CanAct(a)) return;
+            if (!a.Connected || !CanAct(a)) return;
             if (a.Bite.HasValue)
             {
                 if (!a.Input.BiteHeld || !actors.TryGetValue(a.Bite.Value.VictimId, out var victim) || victim.State != LifeState.Active || victim.Protection > 0 || !world.ResolveBite(a.Spawn.ActorId, a.Bite.Value, humans, out var contact)) { Detach(a); return; }
@@ -447,7 +475,7 @@ namespace LetMeSleep.Gameplay
         }
         private void Extract(float dt)
         {
-            foreach (var group in actors.Values.Where(a => a.State == LifeState.Biting && a.Bite.HasValue).GroupBy(a => a.Bite.Value.VictimId).ToArray())
+            foreach (var group in actors.Values.Where(a => a.Connected && a.State == LifeState.Biting && a.Bite.HasValue).GroupBy(a => a.Bite.Value.VictimId).ToArray())
             {
                 if (!actors.TryGetValue(group.Key, out var victim) || victim.State != LifeState.Active) continue;
                 var attached = group.ToArray(); float share = dt / attached.Length;
@@ -465,7 +493,7 @@ namespace LetMeSleep.Gameplay
             foreach (var helper in actors.Values.Where(a => a.Spawn.Role == PlayerRole.Mosquito))
             {
                 uint target = 0;
-                if (CanAct(helper) && !helper.Bite.HasValue && helper.Input.UseHeld)
+                if (helper.Connected && CanAct(helper) && !helper.Bite.HasValue && helper.Input.UseHeld)
                 {
                     var candidate = actors.Values.Where(a => a.Spawn.Role == PlayerRole.Mosquito && a.State == LifeState.Stunned && (a.Position - helper.Position).Length <= .6f && Float3.Dot((a.Position - helper.Position).Normalized, helper.Aim) >= .7f && world.HasLineOfSight(helper.Spawn.ActorId, helper.Position, a.Spawn.ActorId, a.Position)).OrderBy(a => (a.Position - helper.Position).LengthSquared).FirstOrDefault();
                     if (candidate != null) { target = candidate.Spawn.ActorId; helped.Add(target); helper.Hint = InteractionHint.Helping; }
@@ -500,7 +528,7 @@ namespace LetMeSleep.Gameplay
             if (taskRules == null) return;
             foreach (var a in actors.Values.Where(a => a.Spawn.Role == PlayerRole.Human).OrderBy(a => a.Spawn.ActorId))
             {
-                bool working = a.State == LifeState.Active && a.Input.UseHeld && a.Strike.Phase == StrikePhase.None
+                bool working = a.Connected && a.State == LifeState.Active && a.Input.UseHeld && a.Strike.Phase == StrikePhase.None
                     && a.TaskInterruptTick != tick && !boundsHeldActors.Contains(a.Spawn.ActorId)
                     && !actors.Values.Any(b => b.Bite.HasValue && b.Bite.Value.VictimId == a.Spawn.ActorId);
                 if (taskRules.Update(a.Spawn.ActorId, tick, working, a.Position, a.Aim))
@@ -597,7 +625,7 @@ namespace LetMeSleep.Gameplay
         public ActorPrivateState CapturePrivate(uint actorId)
         {
             if (!actors.TryGetValue(actorId, out var a)) return null;
-            return new ActorPrivateState(actorId, a.InputSequence, a.ActionSequence, a.Rejection, a.Hint, MathEx.Clamp(a.Preparation / config.Balance.PreparationSeconds, 0, 1), a.Extraction, a.Recovery, a.HelpTarget, CanAct(a) && !boundsHeldActors.Contains(actorId), a.DoorResult, config.SessionEpoch, config.RoundId, tick, taskRules?.Capture(actorId));
+            return new ActorPrivateState(actorId, a.InputSequence, a.ActionSequence, a.Rejection, a.Hint, MathEx.Clamp(a.Preparation / config.Balance.PreparationSeconds, 0, 1), a.Extraction, a.Recovery, a.HelpTarget, a.Connected && CanAct(a) && !boundsHeldActors.Contains(actorId), a.DoorResult, config.SessionEpoch, config.RoundId, tick, taskRules?.Capture(actorId));
         }
         public IReadOnlyList<GameplayEvent> DrainEvents() { var copy = Array.AsReadOnly(events.ToArray()); events.Clear(); return copy; }
         public void RemoveActor(uint actorId, ActorRemovalReason reason)
