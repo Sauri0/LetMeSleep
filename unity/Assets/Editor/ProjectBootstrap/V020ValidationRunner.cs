@@ -8,6 +8,25 @@ namespace LetMeSleep.Editor
     /// <summary>Runs the external, versioned five-map PhysX harness in a batch editor.</summary>
     public static class V020ValidationRunner
     {
+        public static void RunExternalDiagnostic()
+        {
+            var args = Environment.GetCommandLineArgs();
+            string assemblyPath = Argument(args, "-surfaceAssembly");
+            string output = Argument(args, "-surfaceOutput");
+            int index = Array.IndexOf(args, "-surfaceMethod");
+            if (index < 0 || index + 1 >= args.Length || Array.LastIndexOf(args, "-surfaceMethod") != index)
+                throw new ArgumentException("One -surfaceMethod entry point required.");
+            if (!File.Exists(assemblyPath) || Directory.Exists(output))
+                throw new IOException("Existing diagnostic assembly and fresh evidence directory required.");
+            var assembly = Assembly.LoadFrom(assemblyPath);
+            string entry = args[index + 1];
+            var method = assembly.GetType("HiggsfieldMapChecks", true).GetMethod(entry,
+                BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+            if (method == null || method.ReturnType != typeof(string))
+                throw new MissingMethodException("Expected public static string HiggsfieldMapChecks." + entry + "(string output)");
+            Debug.Log("External diagnostic " + entry + ": " + method.Invoke(null, new object[] { output }));
+        }
+
         public static void RunPuertoInitialOverlap()
         {
             var args = Environment.GetCommandLineArgs();

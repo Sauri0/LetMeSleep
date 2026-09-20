@@ -1,5 +1,28 @@
 # Relevo CEO — 2026-09-19
 
+## Casa instalada; ronda Tareas completa comprobada
+
+- `casa-task-round-native-01.log`:5humanos bots, mosquito sin control,20/20
+  tareas completadas, cuota14, tick4500,TasksMet/Human. Flujo real de asignación,
+  movimiento, interacción y fin de150s; sin red, combate competitivo ni voz.
+  Revisión independiente añadió guardas explícitas de5humanos/cuota/resultado/tick.
+- `casa-catalog-install-01.log` instala10objetivos y hace readback. Antes:
+  ContentHash c6d58d5d4baafeed473e5acc9073c9ad1ddf5fbbc4e59ace9bbee6fd51ac718d;
+  después a499a455968474a77e0a138715a2c1fc733c4541bf11841be07bcab3a1c73106.
+  CasaCatalogInstall01/delta-verification.json prueba1componente añadido,
+  sólo raíz/ContentHash modificados y6646documentos prefab intactos.
+  Backup before.prefab conservado. Cambió deliberadamente SHA del prefab;
+  Frozen85 NO se actualiza y sus próximos replays deben declarar esta versión.
+- Diagnóstico lámparas: spawn4 rechaza tareas346/372ticks>330; no eran dos
+  rutas perseguidas. Spawn0 sí persigue y demora en viga/cama, sin bucle probado.
+  La ronda completa cumple todas las tareas. Ver CasaUpperLampReview/REVIEW.md.
+- Camp/Yate v2:16/20 aproximaciones. Terra prepara v3 (tres regiones corregidas
+  y un armario alto sustituido por objeto accesible), más Puerto separado.
+- Isla medición01 produjo metadata pero omitió samples por serialización:
+  exit0 NO acredita mediciones. Técnica corrige DLLv2 y valida readback/conteos.
+- Puerto exposición verificada: Foundation/FloorSupport bloquean tramo y meta
+  de dos aristas históricas. Corregir fixtures futuros, no motor por estos casos;
+  Frozen85 permanece60PASS/14FAIL/11GAP. Astra examina dos aristas Yate/Faro.
 ## Siguiente gate — regiones y objetos de los otros cuatro mapas
 
 - `16a6445` mide desde la posición física. Adapter02:9/9 PASS; Casa11

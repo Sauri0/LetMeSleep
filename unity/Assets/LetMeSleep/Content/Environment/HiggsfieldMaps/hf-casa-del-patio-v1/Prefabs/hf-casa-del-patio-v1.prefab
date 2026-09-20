@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 6528506897178228911}
   - component: {fileID: 1212557850719198287}
   - component: {fileID: 4125174524709702749}
+  - component: {fileID: 2269415749586960975}
   m_Layer: 0
   m_Name: hf-casa-del-patio-v1
   m_TagString: Untagged
@@ -154,7 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.EnvironmentMapDefinition
   MapId: hf-casa-del-patio-v1
-  ContentHash: c6d58d5d4baafeed473e5acc9073c9ad1ddf5fbbc4e59ace9bbee6fd51ac718d
+  ContentHash: a499a455968474a77e0a138715a2c1fc733c4541bf11841be07bcab3a1c73106
   SpatialData: {fileID: 4900000, guid: 3452b5182d3f1de4c89e186e010c27b5, type: 3}
   HumanSpawnPoints:
   - {fileID: 6729245978492338340}
@@ -210,6 +211,130 @@ MonoBehaviour:
   RetryTicks: 30
   InteriorMargin: 0.02
   SupportProbe: 0.08
+--- !u!114 &2269415749586960975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2654980088417929285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21d3e5b304964cc89cc545eae60fec08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.GameplayObjectiveCatalog
+  mapId: hf-casa-del-patio-v1
+  entries:
+  - ObjectiveId: casa.clean.ground_basin
+    Kind: 1
+    DisplayKey: task.casa.ground_basin
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 5.0519996, y: 1.2489995, z: 4.37}
+    LocalApproachPoint: {x: 5.602, y: 0.30599985, z: 4.369999}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: gf_bathroom
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CASA_Bathroom_Ground_Basin
+  - ObjectiveId: casa.switch.ground_toilet
+    Kind: 2
+    DisplayKey: task.casa.ground_toilet
+    ActionKey: task.action.hold_switch
+    LocalPosition: {x: 6.2999997, y: 1.14, z: 4.4599996}
+    LocalApproachPoint: {x: 5.55, y: 0.30599982, z: 4.459999}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: gf_bathroom
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CASA_Bathroom_Ground_WC_FlushButton
+  - ObjectiveId: casa.clean.kitchen_sink
+    Kind: 1
+    DisplayKey: task.casa.kitchen_sink
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 5.868, y: 1.255, z: -1.9699997}
+    LocalApproachPoint: {x: 5.5809875, y: 0.27399987, z: -1.2770901}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: gf_east_room
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CASA_Kitchen_Sink
+  - ObjectiveId: casa.repair.oven
+    Kind: 0
+    DisplayKey: task.casa.oven
+    ActionKey: task.action.hold_repair
+    LocalPosition: {x: 5.8200006, y: 0.9900001, z: -2.83}
+    LocalApproachPoint: {x: 5.3118668, y: 0.27399984, z: -3.0404754}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: gf_east_room
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CASA_Oven_Handle
+  - ObjectiveId: casa.repair.fridge
+    Kind: 0
+    DisplayKey: task.casa.fridge
+    ActionKey: task.action.hold_repair
+    LocalPosition: {x: 5.2600007, y: 1.1600001, z: -3.9799995}
+    LocalApproachPoint: {x: 5.2600007, y: 0.27399987, z: -3.229999}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: gf_east_room
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CASA_Fridge_Handle
+  - ObjectiveId: casa.clean.coffee_table
+    Kind: 1
+    DisplayKey: task.casa.coffee_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -5.1125007, y: 0.66899985, z: 0.9549999}
+    LocalApproachPoint: {x: -4.8254886, y: 0.29099977, z: 1.6479094}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: gf_west_room
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CASA_Living_CoffeeTable_Top_Plank_0
+  - ObjectiveId: casa.switch.bedroom_one_lamp
+    Kind: 2
+    DisplayKey: task.casa.bedroom_one_lamp
+    ActionKey: task.action.hold_switch
+    LocalPosition: {x: -5.9450006, y: 3.864, z: 3.19}
+    LocalApproachPoint: {x: -5.9450006, y: 3.1739998, z: 2.4400003}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: uf_west_room
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CASA_Bedroom_One_BedsideLamp_Base
+  - ObjectiveId: casa.switch.bedroom_two_lamp
+    Kind: 2
+    DisplayKey: task.casa.bedroom_two_lamp
+    ActionKey: task.action.hold_switch
+    LocalPosition: {x: 5.955, y: 3.864, z: -3.8599992}
+    LocalApproachPoint: {x: 5.955, y: 3.1739998, z: -3.3099988}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: uf_east_room
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CASA_Bedroom_Two_BedsideLamp_Base
+  - ObjectiveId: casa.clean.upper_basin
+    Kind: 1
+    DisplayKey: task.casa.upper_basin
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 4.4280005, y: 4.148999, z: 4.3700004}
+    LocalApproachPoint: {x: 3.9198673, y: 3.2059999, z: 4.159524}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: uf_bathroom
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CASA_Bathroom_Upper_Basin
+  - ObjectiveId: casa.switch.upper_toilet
+    Kind: 2
+    DisplayKey: task.casa.upper_toilet
+    ActionKey: task.action.hold_switch
+    LocalPosition: {x: 6.2999997, y: 4.04, z: 4.46}
+    LocalApproachPoint: {x: 5.55, y: 3.2059999, z: 4.459999}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: uf_bathroom
+    RouteBudgetTicks: 330
+    TargetPath: Environment/CASA_Bathroom_Upper_WC_FlushButton
 --- !u!1 &3294647227542159908
 GameObject:
   m_ObjectHideFlags: 0

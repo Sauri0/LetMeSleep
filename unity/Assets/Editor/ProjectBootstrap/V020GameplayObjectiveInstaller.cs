@@ -267,6 +267,101 @@ public static class V020GameplayObjectiveInstaller
                   (rearKitchen ? "PASS" : "FAIL") + " saved=0");
     }
 
+    public static void DiagnoseCasaUpperLampRoutesOnly()
+    {
+        GameplayObjectiveCatalog.Entry[] entries = BuildAndValidateCasaCatalog(false);
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CasaPrefabPath);
+        var map = prefab ? prefab.GetComponent<EnvironmentMapDefinition>() : null;
+        Transform[] humans = (map?.HumanSpawnPoints ?? Array.Empty<Transform>()).Where(spawn => spawn).ToArray();
+        Transform mosquito = (map?.MosquitoSpawnPoints ?? Array.Empty<Transform>()).FirstOrDefault(spawn => spawn);
+        if (humans.Length < 5 || !mosquito)
+            throw new InvalidOperationException("Casa lamp diagnostic requires spawns 0/4 and a mosquito spawn.");
+        var cases = new[]
+        {
+            new { Spawn = 0, Target = "casa.switch.bedroom_two_lamp" },
+            new { Spawn = 4, Target = "casa.switch.bedroom_one_lamp" },
+            new { Spawn = 4, Target = "casa.switch.bedroom_two_lamp" }
+        };
+        ulong run = 9600;
+        bool sourceZeroOnly = Environment.GetCommandLineArgs().Contains("-objectiveSourceZeroOnly");
+        foreach (var route in cases.Where(item => !sourceZeroOnly || item.Spawn == 0))
+            ProveHumanRoute(entries, humans[route.Spawn].position.ToFloat(), "spawn:" + route.Spawn,
+                route.Target, mosquito.position.ToFloat(), run++, trace: true, decisionTrace: true);
+        Debug.Log("LMS_OBJECTIVE_LAMP_DIAGNOSTIC cases=" + (sourceZeroOnly ? 1 : 3) +
+                  " saved=0 scope=observed-routes-not-catalog-approval");
+    }
+
+    public static void ValidateCasaTaskRoundOnly()
+    {
+        GameplayObjectiveCatalog.Entry[] entries = BuildAndValidateCasaCatalog(false);
+        var fixture = new GameObject("Casa task round validation");
+        GameplayRuntime runtime = null;
+        try
+        {
+            var root = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(CasaPrefabPath));
+            root.transform.SetParent(fixture.transform, false);
+            root.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            root.transform.localScale = Vector3.one;
+            var map = root.GetComponent<EnvironmentMapDefinition>();
+            var catalog = root.GetComponent<GameplayObjectiveCatalog>() ?? root.AddComponent<GameplayObjectiveCatalog>();
+            catalog.ConfigureForEditor(CasaMapId, entries);
+            var world = fixture.AddComponent<UnityGameplayWorld>();
+            world.MapRoot = root.transform;
+            var doors = world.GetDoorDefinitions();
+            var tools = world.GetToolDefinitions();
+            runtime = fixture.AddComponent<GameplayRuntime>();
+            runtime.IsHost = true; runtime.AutomaticTick = false; runtime.CaptureLocalInput = false;
+            runtime.NavigationData = map.SpatialData; runtime.LocalActorId = 1;
+            Transform[] humans = map.HumanSpawnPoints.Where(item => item).ToArray();
+            Transform mosquito = map.MosquitoSpawnPoints.FirstOrDefault(item => item);
+            if (humans.Length != 5 || !mosquito)
+                throw new InvalidOperationException("Task round proof requires exactly five humans and one mosquito spawn.");
+            var roster = humans.Select((spawn, index) => new SpawnActor((uint)index + 1,
+                "task-round-human-" + index, PlayerRole.Human, spawn.position.ToFloat(),
+                "task-round-spawn-" + index, "default", true)).ToList();
+            roster.Add(new SpawnActor((uint)humans.Length + 1, "task-round-static-mosquito", PlayerRole.Mosquito,
+                mosquito.position.ToFloat()));
+            var config = new GameplayRoundConfig(9700, 9700, map.MapId, map.ContentHash, 150, 0,
+                doors: doors, tools: tools, modeId: GameModes.Tasks,
+                modeRules: new ModeRuleProfile(GameModes.Tasks), objectives: world.GetObjectiveDefinitions());
+            runtime.BeginRound(config, roster);
+            var previous = new Dictionary<uint, string>();
+            for (uint tick = 1; tick <= config.RoundDurationTicks && runtime.Authority.IsRunning; tick++)
+            {
+                runtime.TickHost();
+                if (runtime.Authority.CurrentTick != tick)
+                    throw new InvalidOperationException("Task round did not advance its real host tick.");
+                foreach (var human in roster.Where(item => item.Role == PlayerRole.Human))
+                {
+                    TaskAssignment assignment = runtime.Authority.CapturePrivate(human.ActorId)?.TaskAssignment;
+                    string state = assignment == null ? "none" : assignment.IssuedTick + ":" + assignment.ObjectiveId +
+                        ":" + assignment.Status + ":" + (assignment.ProgressTicks > 0 ? "working" : "not-working");
+                    if (previous.TryGetValue(human.ActorId, out string last) && last == state) continue;
+                    previous[human.ActorId] = state;
+                    Debug.Log("LMS_TASK_ROUND actor=" + human.ActorId + " tick=" + tick + " state=" + state +
+                              " progress=" + (assignment?.ProgressTicks ?? 0) + " deadline=" + (assignment?.DeadlineTick ?? 0));
+                }
+            }
+            GameSessionState result = runtime.LatestSnapshot;
+            if (result == null) throw new InvalidOperationException("Task round produced no final state.");
+            Debug.Log("LMS_TASK_ROUND_RESULT map=" + map.MapId + " humans=" + humans.Length +
+                      " completed=" + result.TasksCompleted + " goal=" + result.TasksGoal +
+                      " opportunities=" + result.ViableTaskOpportunities + " tick=" + result.HostTick +
+                      " result=" + result.Result + " winner=" + result.Winner +
+                      " saved=0 scope=human-training-bots-uncontrolled-mosquito-no-network");
+            if (runtime.Authority.IsRunning || result.TasksGoal != 14 || result.ViableTaskOpportunities != 20 ||
+                result.TasksCompleted < result.TasksGoal || result.Result != RoundEndReason.TasksMet ||
+                result.Winner != PlayerRole.Human || result.HostTick != config.RoundDurationTicks)
+                throw new InvalidOperationException("Human task bots did not complete the configured round goal against a static mosquito.");
+        }
+        finally
+        {
+            if (runtime) runtime.StopRound();
+            Object.DestroyImmediate(fixture);
+            Physics.SyncTransforms();
+        }
+    }
+
     [MenuItem("Tools/Let Me Sleep/v0.2.0/Install validated Casa objective catalog")]
     public static void InstallCasaCatalog()
     {
@@ -397,6 +492,10 @@ public static class V020GameplayObjectiveInstaller
             throw new InvalidOperationException("Objective navigation foot-region contract missing.");
         var candidates = new List<AuthoredApproach>();
         int probes = 0, supported = 0, near = 0, clear = 0, inRegion = 0, visible = 0, routed = 0;
+        var regionWitnesses = new Dictionary<string, int>(StringComparer.Ordinal);
+        var authoredRegions = navigation.GetType().GetField("regions", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?.GetValue(navigation) as IReadOnlyList<BotRegion>;
+        Vector3? firstClearFoot = null;
         foreach (Vector3 point in AxisWitnesses(collider))
         foreach (float radius in new[] { .55f, .75f, 1f })
         foreach (Vector3 direction in HorizontalDirections())
@@ -415,6 +514,13 @@ public static class V020GameplayObjectiveInstaller
             near++;
             if (!(bool)approachFree.Invoke(world, new object[] { 0u, approach })) continue;
             clear++;
+            if (!firstClearFoot.HasValue) firstClearFoot = approach;
+            if (authoredRegions != null)
+            {
+                Float3 sample = root.InverseTransformPoint(approach).ToFloat() + Float3.Up;
+                foreach (BotRegion region in authoredRegions.Where(item => item.Contains(sample)))
+                    regionWitnesses[region.Id] = regionWitnesses.TryGetValue(region.Id, out int count) ? count + 1 : 1;
+            }
             if (!(bool)containsFootPoint.Invoke(navigation, new object[] { spec.Region, approach.ToFloat() })) continue;
             inRegion++;
             Vector3 eye = approach + Vector3.up * 1.53f;
@@ -459,7 +565,10 @@ public static class V020GameplayObjectiveInstaller
         throw new InvalidOperationException(spec.ObjectiveId +
             " has no exact contact/support/LOS/routed approach under current values; probes=" + probes +
             " supported=" + supported + " near=" + near + " clear=" + clear +
-            " inRegion=" + inRegion + " visible=" + visible + " routed=" + routed + ".");
+            " inRegion=" + inRegion + " visible=" + visible + " routed=" + routed +
+            " firstClearFoot=" + (firstClearFoot.HasValue ? firstClearFoot.Value.ToString("R") : "none") +
+            " otherRegions=" + string.Join(",", regionWitnesses.OrderByDescending(item => item.Value)
+                .ThenBy(item => item.Key, StringComparer.Ordinal).Select(item => item.Key + ":" + item.Value)) + ".");
     }
 
     private static Recipe RecipeFor(string mapId, string shortId, string displayKey,
@@ -864,7 +973,9 @@ public static class V020GameplayObjectiveInstaller
                       sourceId == "spawn:3-coffee-raw" && (sample.Tick == 2 || (sample.Tick - 2) % 15 == 0) ||
                       (sourceId == "spawn:0-ground-basin-diagnostic" ||
                        sourceId == "spawn:4-kitchen-sink-diagnostic") &&
-                      (sample.Tick == 2 || (sample.Tick - 2) % 15 == 0);
+                      (sample.Tick == 2 || (sample.Tick - 2) % 15 == 0) ||
+                      sourceId == "spawn:0" && sample.Assignment?.ObjectiveId == "casa.switch.bedroom_two_lamp" &&
+                      (sample.Tick >= 62 && sample.Tick <= 95 || sample.Tick >= 305 && sample.Tick <= 330);
         if (!wanted) return;
         const BindingFlags hidden = BindingFlags.Instance | BindingFlags.NonPublic;
         var bots = typeof(GameplayRuntime).GetField("bots", hidden)?.GetValue(runtime)
