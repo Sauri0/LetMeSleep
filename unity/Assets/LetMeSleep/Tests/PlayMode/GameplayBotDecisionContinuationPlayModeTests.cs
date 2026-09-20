@@ -15,6 +15,7 @@ namespace LetMeSleep.Tests.PlayMode
         private GameObject owner;
         private UnityGameplayWorld world;
         private int interval;
+        private ActorSnapshot otherHuman;
 
         [SetUp]
         public void SetUp()
@@ -216,9 +217,87 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(state.Position.X - start.X, Is.LessThan(.12f));
         }
 
+        [Test]
+        public void ActiveObjectiveCannotContinueThroughHumanInsideFirstInterval()
+        {
+            var state = TwoHumansOnTread(.65f);
+            for (int tick = 0; tick < interval; tick++) state = Move(state, Vector3.right);
+            var query = Clearance(state, Vector3.right);
+            Assert.That(world.Actors.Count, Is.EqualTo(2), "The obstacle actor must remain in the physical world.");
+            Assert.That((bool)query[6], Is.False);
+            Assert.That((bool)query[8], Is.False, "An actor contact inside the next interval must invalidate its prefix.");
+            Assert.That((string)typeof(UnityGameplayWorld).GetField("lastBotTraversalDiagnostic", Hidden).GetValue(world),
+                Does.Contain("Actor_2"), "The rejected prediction must actually encounter the other human.");
+            var selected = Steer(state, Vector3.right, 4);
+            Assert.That(Vector3.Dot(selected, Vector3.right), Is.LessThan(.9f),
+                "An active own objective must not authorize walking through a visible human body.");
+            for (int tick = 0; tick < interval; tick++)
+            {
+                state = Move(state, selected);
+                Assert.That(state.Position.X, Is.LessThan(otherHuman.Position.X));
+            }
+        }
+
+        [Test]
+        public void MovingHumanInvalidatesContinuationAtNextDecision()
+        {
+            var state = TwoHumansOnTread(.95f);
+            for (int tick = 0; tick < interval; tick++) state = Move(state, Vector3.right);
+            var first = Clearance(state, Vector3.right);
+            Assert.That((bool)first[6], Is.False, "The human farther ahead still blocks the complete horizon.");
+            Assert.That((bool)first[8], Is.True, "The current three-tick interval must be available before the human approaches.");
+            var selected = Steer(state, Vector3.right, 4);
+            Assert.That(Vector3.Dot(selected, Vector3.right), Is.GreaterThan(.98f));
+            var start = state.Position;
+            for (int tick = 0; tick < interval; tick++) state = Move(state, selected);
+            Assert.That(state.Position.X - start.X, Is.GreaterThanOrEqualTo(.12f));
+
+            // Actor2 moves after actor1 on the final authority tick of this interval.
+            // No spawn, relocation or forced collision state at the next decision.
+            float otherStartX = otherHuman.Position.X;
+            otherHuman = Move(otherHuman, Vector3.left);
+            Assert.That(otherHuman.Position.X, Is.LessThan(otherStartX - .01f));
+            Assert.That(otherHuman.Grounded, Is.True);
+            var second = Clearance(state, Vector3.right);
+            Assert.That(world.Actors.Count, Is.EqualTo(2));
+            Assert.That((bool)second[6], Is.False);
+            Assert.That((bool)second[8], Is.False, "Continuation must be recomputed against the newly closer actor.");
+            selected = Steer(state, Vector3.right, 7);
+            Assert.That(Vector3.Dot(selected, Vector3.right), Is.LessThan(.9f));
+            for (int tick = 0; tick < interval; tick++)
+            {
+                state = Move(state, selected);
+                Assert.That(state.Position.X, Is.LessThan(otherHuman.Position.X));
+            }
+        }
+
+        private ActorSnapshot TwoHumansOnTread(float otherX)
+        {
+            // Same measured riser as the wall sequence, extended to support actor2.
+            Box("Shared tread", new Vector3(.85f, .084375f, 0), new Vector3(1.2f, .16875f, 3));
+            var state = Snapshot(new Float3(0, .002f, 0), Float3.Zero, true);
+            otherHuman = Snapshot(new Float3(otherX, .17075f, 0), Float3.Zero, true, 2);
+            world.BeginRound(new[] {
+                new SpawnActor(1, "objective-bot", PlayerRole.Human, state.Position),
+                new SpawnActor(2, "visible-human", PlayerRole.Human, otherHuman.Position)
+            }, Array.Empty<DoorDefinition>());
+            Synchronize(state);
+            var support = (RaycastHit?)typeof(UnityGameplayWorld).GetMethod("CastMotor", Hidden).Invoke(world,
+                new object[] { 2u, otherHuman.Position.ToUnity(), Vector3.down * .01f, 1.72f, .25f, true });
+            Assert.That(support.HasValue && support.Value.normal.y > .55f, Is.True);
+            typeof(UnityGameplayWorld).GetField("captureBotSteeringDiagnostic", Hidden)?.SetValue(world, true);
+            return state;
+        }
+
+        private void Synchronize(ActorSnapshot state)
+        {
+            world.SynchronizeActors(otherHuman == null ? new[] { state } : new[] { state, otherHuman });
+            Physics.SyncTransforms();
+        }
+
         private object[] Clearance(ActorSnapshot state, Vector3 direction)
         {
-            world.SynchronizeActors(new[] { state }); Physics.SyncTransforms();
+            Synchronize(state);
             var arguments = new object[] { state, direction, .65f, true, null, Vector3.zero, false, 0f, false };
             typeof(UnityGameplayWorld).GetMethod("BotClearanceCore", Hidden).Invoke(world, arguments);
             return arguments;
@@ -226,7 +305,7 @@ namespace LetMeSleep.Tests.PlayMode
 
         private Vector3 Steer(ActorSnapshot state, Vector3 direction, uint tick)
         {
-            world.SynchronizeActors(new[] { state }); Physics.SyncTransforms();
+            Synchronize(state);
             typeof(UnityGameplayWorld).GetMethod("ObserveBotSteeringIntent", Hidden).Invoke(world,
                 new object[] { state, tick, "fixture.visible-own-objective" });
             return ((Float3)typeof(UnityGameplayWorld).GetMethod("SteerBot", Hidden).Invoke(world,
@@ -236,13 +315,13 @@ namespace LetMeSleep.Tests.PlayMode
         private ActorSnapshot Move(ActorSnapshot state, Vector3 direction)
         {
             float vertical = state.Grounded ? -.5f : state.Velocity.Y - 12f / 30f;
-            var moved = world.MoveHuman(new MotorQuery(1, state.Position,
+            var moved = world.MoveHuman(new MotorQuery(state.ActorId, state.Position,
                 (direction * 3.1f + Vector3.up * vertical).ToFloat(), 1f / 30f, 1.72f, .25f, 0, state.Grounded));
-            var body = world.Actors[1].MotorCollider;
+            var body = world.Actors[state.ActorId].MotorCollider;
             foreach (var other in Physics.OverlapBox(body.bounds.center, body.bounds.extents + Vector3.one * .01f,
                          Quaternion.identity, world.GeometryMask, QueryTriggerInteraction.Ignore))
             {
-                if (other == body || !world.IsWorldCollider(other) || other.GetComponentInParent<GameplayActorProxy>()) continue;
+                if (other == body || !world.IsWorldCollider(other)) continue;
                 bool forward = Physics.ComputePenetration(body, body.transform.position, body.transform.rotation,
                     other, other.transform.position, other.transform.rotation, out _, out float depth);
                 bool reverse = Physics.ComputePenetration(other, other.transform.position, other.transform.rotation,
@@ -250,14 +329,17 @@ namespace LetMeSleep.Tests.PlayMode
                 Assert.That(forward ? depth : 0, Is.LessThanOrEqualTo(.003f), "Motor contact must not become penetration.");
                 Assert.That(reverse ? reverseDepth : 0, Is.LessThanOrEqualTo(.003f));
             }
-            return Snapshot(moved.Position, moved.Velocity, moved.Grounded);
+            return Snapshot(moved.Position, moved.Velocity, moved.Grounded, state.ActorId);
         }
 
-        private void Reset(Float3 position) => world.BeginRound(new[]
-        { new SpawnActor(1, "human", PlayerRole.Human, position) }, Array.Empty<DoorDefinition>());
+        private void Reset(Float3 position)
+        {
+            otherHuman = null;
+            world.BeginRound(new[] { new SpawnActor(1, "human", PlayerRole.Human, position) }, Array.Empty<DoorDefinition>());
+        }
 
-        private static ActorSnapshot Snapshot(Float3 position, Float3 velocity, bool grounded) =>
-            new ActorSnapshot(1, PlayerRole.Human, LifeState.Active, 1, position, velocity,
+        private static ActorSnapshot Snapshot(Float3 position, Float3 velocity, bool grounded, uint actorId = 1) =>
+            new ActorSnapshot(actorId, PlayerRole.Human, LifeState.Active, 1, position, velocity,
                 Rotation.Identity, Float3.Forward, 0, 0, 1, 1, grounded, 0, 0, null, null, default, 0);
 
         private static Vector3 Horizontal(Vector3 value) { value.y = 0; return value.normalized; }
