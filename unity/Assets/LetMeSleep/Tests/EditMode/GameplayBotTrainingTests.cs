@@ -176,7 +176,18 @@ namespace LetMeSleep.Tests
         {
             var bot=new BotController();var cooling=EquippedObservation(GameplayTools.ElectricRacket,cooldown:20);Decide(bot,cooling,0);Assert.That(Decide(bot,cooling,12).Action.HasValue,Is.False);
             Assert.That(Decide(bot,cooling,21).Action.Value.Kind,Is.EqualTo(ActionKind.Primary));
-            Assert.That(Decide(bot,EquippedObservation(GameplayTools.ElectricRacket,resource:0),48).Action.HasValue,Is.False);
+            Assert.That(Decide(bot,EquippedObservation(GameplayTools.ElectricRacket,resource:0),48).Action.Value.Kind,Is.EqualTo(ActionKind.SelectInventorySlot));
+        }
+        [TestCase(GameplayTools.Aerosol)] [TestCase(GameplayTools.ElectricRacket)]
+        public void ExhaustedToolSelectsHandsOncePerObservedRevision(string tool)
+        {
+            var bot=new BotController();var o=EquippedObservation(tool,resource:0);
+            var select=Decide(bot,o,0);Assert.That(select.Action.Value.Kind,Is.EqualTo(ActionKind.SelectInventorySlot));
+            Assert.That(select.Action.Value.SlotIndex,Is.EqualTo(-1));Assert.That(select.Action.Value.InventoryRevision,Is.EqualTo(7));
+            Assert.That(select.Action.Value.TargetPickupId,Is.Zero);Assert.That(select.Action.Value.ExpectedPickupRevision,Is.Zero);Assert.That(select.Input.PrimaryHeld,Is.False);
+            for(uint t=3;t<=60;t+=3) Assert.That(Decide(bot,o,t).Action.HasValue,Is.False);
+            var updated=EquippedObservation(tool,resource:0,inventoryRevision:8);
+            Assert.That(Decide(bot,updated,63).Action.Value.InventoryRevision,Is.EqualTo(8));
         }
         [Test] public void SurvivalEvadesAfterReactionAndNeverBites()
         {

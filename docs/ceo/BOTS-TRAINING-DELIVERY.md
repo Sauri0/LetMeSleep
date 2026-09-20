@@ -43,3 +43,12 @@ El adaptador deber· resolver EquippedPickup desde el ledger p˙blico actual, exig
 - Estos cambios no modifican velocidades/alcance fÌsico de proyectiles ni recursos de herramientas. El contexto nuevo a˙n debe cablearse en Runtime; los tests verifican comandos de dominio, no una sesiÛn gr·fica ni LOS de PhysX.
 
 Los 13 casos agregados al primer corte cubren OR literal de amenazas 1.99/2 m y aproximaciÛn/alejamiento a4 m, tarea mantenida que no se interrumpe para recoger, herramienta agotada descartada, PrimaryHeld/neutral de aerosol, propietario/pickup inv·lidos, Begin/Release con revisiones exactas, cancelaciÛn por ocultaciÛn, carga sin renovaciÛn, revisiÛn obsoleta y cooldown/recurso de raqueta. En conjunto son29 tests.
+## Herramienta agotada: vuelta a manos
+
+Seguimiento autorizado tras gate nativo `bots-directed-native-01`: 40/40 PASS (29 bots +9 modos +2 rutas) para commit10736cd.
+
+El bot ahora emite SelectInventorySlot(-1) con InventoryRevision privada propia, TargetPickupId=0 y ExpectedPickupRevision=0 cuando su aerosol/raqueta equipados llegan a recurso0. Neutraliza PrimaryHeld/UseHeld; la transacci√≥n habitual de autoridad cancela acciones/carga sin consumir estamina. El objeto agotado permanece en su slot con su mismo ID y recurso0, sin ca√≠da ni recarga.
+
+Guarda la combinaci√≥n pickup/revisi√≥n de inventario/ViewRevision de la petici√≥n efectivamente emitida: no repite la selecci√≥n al recibir la misma observaci√≥n pendiente. Una revisi√≥n de inventario o control nueva permite otra petici√≥n v√°lida. No marca peticiones cuando el estado incapacitado impide emitirlas. No presupone acknowledgements ni cambia slots localmente.
+
+CPU de esta revisi√≥n: BotTests31/31 PASS; RegressionTests94/94 PASS. Dos escenarios de autoridad real ejecutan recogida‚Üíemisi√≥n/pulsos‚Üíagotamiento120/5‚Üíselecci√≥n de manos a cadencia de bot cada3ticks, conservan objeto/recursos y estamina100, y verifican LastAcceptedActionSequence. El mundo simulado s√≥lo responde geometr√≠a/motor y efectos; la autoridad, comandos, consumos y snapshot son fuentes centrales reales. El fixture incorpora suelo horizontal para impedir que su stub previo integrara gravedad hacia abajo mientras declaraba Grounded=true. No es evidencia PhysX ni gr√°fica. Gate nativo de esta ampliaci√≥n pendiente.

@@ -15,6 +15,7 @@ namespace LetMeSleep.Tests.EditMode
             public readonly Queue<ToolProjectileHit> Hits=new Queue<ToolProjectileHit>();
             public uint Candidate=1;
             public bool Deposit=true,Prepare=true,Grounded=true;
+            public bool FlatFloor;
             public int Prepared,Sweeps;
             public MotorQuery LastHuman;
             public bool EffectOriginValid=true,PlanStrike;
@@ -23,7 +24,7 @@ namespace LetMeSleep.Tests.EditMode
             public readonly List<ToolEffectQuery> EffectQueries=new List<ToolEffectQuery>();
             public void BeginRound(IReadOnlyList<SpawnActor> a,IReadOnlyList<DoorDefinition> d){}
             public void SynchronizeActors(IReadOnlyList<ActorSnapshot> a){}
-            public MotorResult MoveHuman(in MotorQuery q){if(q.ActorId==1)LastHuman=q;return new MotorResult(q.Position+q.Velocity/30,q.Velocity,Grounded,Float3.Up,q.CrouchFraction);}
+            public MotorResult MoveHuman(in MotorQuery q){if(q.ActorId==1)LastHuman=q;var position=q.Position+q.Velocity/30;var velocity=q.Velocity;if(FlatFloor&&Grounded){position=new Float3(position.X,0,position.Z);velocity=new Float3(velocity.X,0,velocity.Z);}return new MotorResult(position,velocity,Grounded,Float3.Up,q.CrouchFraction);}
             public MotorResult MoveMosquito(in MotorQuery q)=>new MotorResult(q.Position,q.Velocity,BugGrounded,Float3.Up,0);
             public bool TrySurface(in SurfaceQuery q,out SurfaceContact c){c=default;return false;}
             public bool ResolveSurface(in SurfaceAttachment a,out SurfaceContact c){c=default;return false;}
@@ -79,6 +80,45 @@ namespace LetMeSleep.Tests.EditMode
                 var c=new PlayerActionCommand(Header(++action),ActionKind.ConfirmPickup,Float3.Forward,o.SlotIndex,o.PickupId,o.PickupRevision,o.InventoryRevision);
                 Assert.That(Host.SubmitAction("human",c),Is.EqualTo(CommandReject.None));Tick();
             }
+        }
+        [TestCase(GameplayTools.Aerosol)] [TestCase(GameplayTools.ElectricRacket)]
+        public void TrainingBotCollectsUsesExhaustsAndSelectsHandsThroughAuthority(string tool)
+        {
+            var world=new World { FlatFloor=true };var authority=new GameplayAuthority(world);var bot=new BotController();
+            authority.BeginRound(new GameplayRoundConfig(1,1,"map","hash",tools:new[]{new ToolPickupDefinition(1,tool,new Float3(0,.5f,0),Rotation.Identity)}),
+                new[]{new SpawnActor(1,"human",PlayerRole.Human,Float3.Zero),new SpawnActor(2,"bug",PlayerRole.Mosquito,new Float3(0,1.53f,.5f))});
+            bool picked=false,used=false,selectedHands=false;uint selectionSequence=0;
+            for(int step=0;step<240&&!selectedHands;step++)
+            {
+                if(authority.CurrentTick%3==0)
+                {
+                    var snapshot=authority.CaptureSnapshot();var self=snapshot.Actors.Single(a=>a.ActorId==1);var bug=snapshot.Actors.Single(a=>a.ActorId==2);
+                    var own=authority.CapturePrivate(1);var item=world.Items[1];
+                    var tools=item.Phase==ToolPickupPhase.World?new[]{new BotToolOpportunity(item,1)}:Array.Empty<BotToolOpportunity>();
+                    var context=new BotTrainingContext(tools,1,item.Phase==ToolPickupPhase.Held?(ToolPickupSnapshot?)item:null);
+                    var visible=picked?new[]{new BotTarget(bug,bug.Position)}:Array.Empty<BotTarget>();
+                    var observation=new BotObservation(self,visible,Float3.Forward,false,null,GameModes.Blood,own,null,null,context);
+                    var commands=bot.Decide(observation,new BotTick(1,1,authority.CurrentTick));
+                    Assert.That(authority.SubmitInput("human",commands.Input),Is.EqualTo(CommandReject.None));
+                    if(commands.Action.HasValue)
+                    {
+                        Assert.That(authority.SubmitAction("human",commands.Action.Value),Is.EqualTo(CommandReject.None));
+                        if(commands.Action.Value.Kind==ActionKind.SelectInventorySlot) selectionSequence=commands.Action.Value.Header.Sequence;
+                    }
+                }
+                authority.Advance(new HostTick(authority.CurrentTick+1));
+                picked|=world.Items[1].OwnerActorId==1;
+                used|=world.Items[1].ResourceUnits<GameplayTools.InitialResourceUnits(tool);
+                var state=authority.CapturePrivate(1);
+                selectedHands=picked&&used&&world.Items[1].ResourceUnits==0&&state.Inventory.SelectedSlot==-1;
+            }
+            Assert.That(picked,Is.True,"pickup");Assert.That(used,Is.True,"use: "+authority.CaptureSnapshot().Actors.Single(a=>a.ActorId==1).EquippedToolId+" resource="+world.Items[1].ResourceUnits);Assert.That(selectedHands,Is.True,"hands: resource="+world.Items[1].ResourceUnits+" selected="+authority.CapturePrivate(1).Inventory.SelectedSlot);
+            Assert.That(authority.CaptureSnapshot().Actors.Single(a=>a.ActorId==1).EquippedToolId,Is.EqualTo(GameplayTools.Hands));
+            Assert.That(authority.CapturePrivate(1).LastAcceptedActionSequence,Is.EqualTo(selectionSequence));
+            Assert.That(authority.CapturePrivate(1).StaminaUnits,Is.EqualTo(HumanEquipmentProfile.Maximum));
+            Assert.That(authority.CapturePrivate(1).ThrowCharge.Active,Is.False);
+            Assert.That(world.Items[1].OwnerActorId,Is.EqualTo(1));Assert.That(world.Items[1].ResourceUnits,Is.Zero);
+            Assert.That(authority.CapturePrivate(1).Inventory.Slot0,Is.EqualTo(1),"The empty object remains owned; selection does not refill or drop it.");
         }
         [Test] public void HumanSprintConsumesButMosquitoPrivateStateHasNoHumanInventory()
         {

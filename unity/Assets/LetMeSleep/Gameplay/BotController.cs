@@ -68,6 +68,7 @@ namespace LetMeSleep.Gameplay
     public sealed class BotController : IBotController
     {
         private uint inputSequence, actionSequence, nextStrike, nextThrowAttempt;
+        private uint handsRequestInventoryRevision, handsRequestPickup, handsRequestViewRevision;
         private bool releaseBite;
         public const uint MemoryTicks = 90, RepeatVictimTicks = 240, ReplanTicks = 150, BlockTicks = 180;
         public uint SelectedActorId { get; private set; }
@@ -85,7 +86,8 @@ namespace LetMeSleep.Gameplay
             if (actorId == self.ActorId && epoch == tick.Epoch && round == tick.Round) return;
             actorId = self.ActorId; epoch = tick.Epoch; round = tick.Round;
             memory.Clear(); recentlyBitten.Clear(); tracking = false; BlockedUntilTick = 0; ReplanCount = 0;
-            inputSequence = actionSequence = nextStrike = nextThrowAttempt = 0; releaseBite = false;
+            inputSequence = actionSequence = nextStrike = nextThrowAttempt = 0;
+            handsRequestInventoryRevision = handsRequestPickup = handsRequestViewRevision = 0; releaseBite = false;
         }
         private void Remember(BotObservation observation, uint tick)
         {
@@ -260,6 +262,13 @@ namespace LetMeSleep.Gameplay
             if (observation.OwnPrivate?.ThrowCharge.Active == true && !primaryHeld && action != ActionKind.ReleaseThrow)
             { action = ActionKind.CancelThrow; equipmentPayload = false; }
             if (observation.DoorAhead && self.Role == PlayerRole.Human && !primaryHeld && !action.HasValue) action = ActionKind.Use;
+            // Selection is an ordinary authority transaction and cancels held actions for free.
+            // Do not repeat the same revision/owner request while its resulting state is pending.
+            if (validEquipment && equipped.ResourceUnits == 0
+                && (equipped.ToolId == GameplayTools.Aerosol || equipped.ToolId == GameplayTools.ElectricRacket)
+                && (handsRequestInventoryRevision != observation.OwnPrivate.Inventory.Revision
+                    || handsRequestPickup != equipped.PickupId || handsRequestViewRevision != self.ViewRevision))
+            { action = ActionKind.SelectInventorySlot; primaryHeld = false; helpHeld = false; equipmentPayload = false; }
             if (self.Eliminated || self.LifeState == LifeState.Falling || self.LifeState == LifeState.Stunned || self.LifeState == LifeState.Fainted || self.LifeState == LifeState.Recovering) { forward = 0; bite = false; helpHeld = false; primaryHeld = false; action = null; }
             TrackProgress(observation, tick.Tick, direction, ref forward);
             if (forward > 0 && observation.Steer != null && !action.HasValue)
@@ -280,6 +289,13 @@ namespace LetMeSleep.Gameplay
             if (equipmentPayload && action.HasValue)
                 command = new PlayerActionCommand(new CommandHeader(tick.Epoch, tick.Round, self.ActorId, actionSequence, tick.Tick, self.ViewRevision), action.Value, direction,
                     observation.OwnPrivate.Inventory.SelectedSlot, equipped.PickupId, equipped.Revision, observation.OwnPrivate.Inventory.Revision);
+            if (action == ActionKind.SelectInventorySlot)
+            {
+                handsRequestInventoryRevision = observation.OwnPrivate.Inventory.Revision;
+                handsRequestPickup = equipped.PickupId; handsRequestViewRevision = self.ViewRevision;
+                command = new PlayerActionCommand(new CommandHeader(tick.Epoch, tick.Round, self.ActorId, actionSequence, tick.Tick, self.ViewRevision), action.Value, direction,
+                    -1, 0, 0, observation.OwnPrivate.Inventory.Revision);
+            }
             return new BotCommands(input, command);
         }
     }
