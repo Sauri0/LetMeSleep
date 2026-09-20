@@ -35,6 +35,41 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(ModeHudText.ActionName("task.action.hold_repair"), Does.Not.Contain("Mantené R"));
         }
 
+        [TestCase("task.camp.barrel", "LIMPIÁ EL BARRIL DEL FOGÓN")]
+        [TestCase("task.camp.cooler", "REPARÁ LA CONSERVADORA")]
+        [TestCase("task.camp.cook_table", "LIMPIÁ LA MESA DE COCINA")]
+        [TestCase("task.camp.crate_one", "LIMPIÁ LA CAJA DE PROVISIONES 1")]
+        [TestCase("task.camp.crate_two", "LIMPIÁ LA CAJA DE PROVISIONES 2")]
+        [TestCase("task.camp.shelter_table", "LIMPIÁ LA MESA DEL REFUGIO")]
+        [TestCase("task.camp.east_field_lantern", "ACTIVÁ LA LINTERNA DEL CAMPO ESTE")]
+        [TestCase("task.camp.north_bridge_lantern", "ACTIVÁ LA LINTERNA DEL ACCESO NORTE")]
+        [TestCase("task.camp.washroom_toilet", "LIMPIÁ EL INODORO DEL BAÑO")]
+        [TestCase("task.camp.washroom_bucket", "LIMPIÁ EL BALDE DEL BAÑO")]
+        [TestCase("task.yacht.aft_dining_table", "LIMPIÁ LA MESA DE POPA")]
+        [TestCase("task.yacht.port_cabin_lamp", "ACTIVÁ LA LÁMPARA DEL CAMAROTE DE BABOR")]
+        [TestCase("task.yacht.starboard_cabin_lamp", "ACTIVÁ LA LÁMPARA DEL CAMAROTE DE ESTRIBOR")]
+        [TestCase("task.yacht.helm_console", "REPARÁ LA CONSOLA DEL TIMÓN")]
+        [TestCase("task.yacht.galley_sink", "LIMPIÁ LA PILETA DE LA COCINA")]
+        [TestCase("task.yacht.aft_dining_chair", "LIMPIÁ LA SILLA DE LA MESA DE POPA")]
+        [TestCase("task.yacht.flybridge_drinks_table", "LIMPIÁ LA MESA DE BEBIDAS DEL FLYBRIDGE")]
+        [TestCase("task.yacht.foredeck_table", "LIMPIÁ LA MESA BAJA DE PROA")]
+        [TestCase("task.yacht.salon_coffee_table", "LIMPIÁ LA MESA RATONA DEL SALÓN")]
+        [TestCase("task.yacht.bathroom_toilet", "LIMPIÁ EL INODORO")]
+        [TestCase("task.port.plaza_barrel", "LIMPIÁ EL BARRIL DE LA PLAZA")]
+        [TestCase("task.port.plaza_bench", "LIMPIÁ EL BANCO DE LA PLAZA")]
+        [TestCase("task.port.cottage_two_writing_desk", "LIMPIÁ EL ESCRITORIO DE LA CABAÑA 2")]
+        [TestCase("task.port.cottage_three_writing_desk", "LIMPIÁ EL ESCRITORIO DE LA CABAÑA 3")]
+        [TestCase("task.port.plaza_bench_three", "LIMPIÁ EL BANCO 3 DE LA PLAZA")]
+        [TestCase("task.port.cottage_one_bedside_table", "LIMPIÁ LA MESA DE LUZ DE LA CABAÑA 1")]
+        [TestCase("task.port.cottage_two_bedside_table", "LIMPIÁ LA MESA DE LUZ DE LA CABAÑA 2")]
+        [TestCase("task.port.cottage_three_bedside_table", "LIMPIÁ LA MESA DE LUZ DE LA CABAÑA 3")]
+        [TestCase("task.port.cottage_writing_desk", "LIMPIÁ EL ESCRITORIO DE LA CABAÑA 1")]
+        [TestCase("task.port.plaza_bench_two", "LIMPIÁ EL BANCO 2 DE LA PLAZA")]
+        public void CandidateObjectiveNamesAreAvailableInSpanish(string key, string expected)
+        {
+            Assert.That(ModeHudText.ObjectiveName(key), Is.EqualTo(expected));
+        }
+
         private static void AssertSlot(GameSessionState state, uint id, string name, string resource, AlfaUiIconKind icon)
         {
             var slot = ModeHudText.EquipmentSlot(state, id);

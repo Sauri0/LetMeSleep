@@ -46,8 +46,38 @@ namespace LetMeSleep.Bootstrap
                 case "task.casa.upper_basin": return "LIMPIÁ EL LAVAMANOS DE ARRIBA";
                 case "task.casa.upper_toilet": return "ACTIVÁ EL BOTÓN DEL INODORO DE ARRIBA";
                 case "task.camp.washroom": return "LIMPIÁ EL LAVADERO";
+                case "task.camp.barrel": return "LIMPIÁ EL BARRIL DEL FOGÓN";
+                case "task.camp.cooler": return "REPARÁ LA CONSERVADORA";
+                case "task.camp.cook_table": return "LIMPIÁ LA MESA DE COCINA";
+                case "task.camp.crate_one": return "LIMPIÁ LA CAJA DE PROVISIONES 1";
+                case "task.camp.crate_two": return "LIMPIÁ LA CAJA DE PROVISIONES 2";
+                case "task.camp.shelter_table": return "LIMPIÁ LA MESA DEL REFUGIO";
+                case "task.camp.east_field_lantern": return "ACTIVÁ LA LINTERNA DEL CAMPO ESTE";
+                case "task.camp.north_bridge_lantern": return "ACTIVÁ LA LINTERNA DEL ACCESO NORTE";
+                case "task.camp.washroom_toilet": return "LIMPIÁ EL INODORO DEL BAÑO";
+                case "task.camp.washroom_bucket": return "LIMPIÁ EL BALDE DEL BAÑO";
                 case "task.yacht.main_deck": return "LIMPIÁ LA CUBIERTA PRINCIPAL";
+                case "task.yacht.aft_dining_table": return "LIMPIÁ LA MESA DE POPA";
+                case "task.yacht.port_cabin_lamp": return "ACTIVÁ LA LÁMPARA DEL CAMAROTE DE BABOR";
+                case "task.yacht.starboard_cabin_lamp": return "ACTIVÁ LA LÁMPARA DEL CAMAROTE DE ESTRIBOR";
+                case "task.yacht.helm_console": return "REPARÁ LA CONSOLA DEL TIMÓN";
+                case "task.yacht.galley_sink": return "LIMPIÁ LA PILETA DE LA COCINA";
+                case "task.yacht.aft_dining_chair": return "LIMPIÁ LA SILLA DE LA MESA DE POPA";
+                case "task.yacht.flybridge_drinks_table": return "LIMPIÁ LA MESA DE BEBIDAS DEL FLYBRIDGE";
+                case "task.yacht.foredeck_table": return "LIMPIÁ LA MESA BAJA DE PROA";
+                case "task.yacht.salon_coffee_table": return "LIMPIÁ LA MESA RATONA DEL SALÓN";
+                case "task.yacht.bathroom_toilet": return "LIMPIÁ EL INODORO";
                 case "task.port.lighthouse_floor": return "LIMPIÁ EL SUELO DEL FARO";
+                case "task.port.plaza_barrel": return "LIMPIÁ EL BARRIL DE LA PLAZA";
+                case "task.port.plaza_bench": return "LIMPIÁ EL BANCO DE LA PLAZA";
+                case "task.port.cottage_two_writing_desk": return "LIMPIÁ EL ESCRITORIO DE LA CABAÑA 2";
+                case "task.port.cottage_three_writing_desk": return "LIMPIÁ EL ESCRITORIO DE LA CABAÑA 3";
+                case "task.port.plaza_bench_three": return "LIMPIÁ EL BANCO 3 DE LA PLAZA";
+                case "task.port.cottage_one_bedside_table": return "LIMPIÁ LA MESA DE LUZ DE LA CABAÑA 1";
+                case "task.port.cottage_two_bedside_table": return "LIMPIÁ LA MESA DE LUZ DE LA CABAÑA 2";
+                case "task.port.cottage_three_bedside_table": return "LIMPIÁ LA MESA DE LUZ DE LA CABAÑA 3";
+                case "task.port.cottage_writing_desk": return "LIMPIÁ EL ESCRITORIO DE LA CABAÑA 1";
+                case "task.port.plaza_bench_two": return "LIMPIÁ EL BANCO 2 DE LA PLAZA";
                 default: return "TU TAREA";
             }
         }
