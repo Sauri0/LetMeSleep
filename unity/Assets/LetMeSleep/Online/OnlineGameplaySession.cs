@@ -122,9 +122,9 @@ namespace LetMeSleep.Online
                 if (config == null || config.RoundId < next.RoundId)
                 {
                     config = next; roster = nextRoster; lastOwnerPacket = now; failed = false;
-                    BeginReceived?.Invoke(config, roster);
+                    if (!PrepareLocalRound()) return;
                 }
-                if (failed || config.RoundId != next.RoundId || config.SessionEpoch != next.SessionEpoch) return;
+                if (disposed || failed || config.RoundId != next.RoundId || config.SessionEpoch != next.SessionEpoch) return;
                 Send(peer, Ack, RoundIdentity(config), true); return;
             }
             if (config == null || failed) return;
@@ -277,6 +277,16 @@ namespace LetMeSleep.Online
         }
         private static bool SamePose(ToolPickupDefinition definition, Float3 position, Rotation rotation)
             => ToolDefinitionValidation.Matches(definition,new ToolPickupDefinition(definition.PickupId,definition.ToolId,position,rotation));
+        private bool PrepareLocalRound()
+        {
+            if (disposed || failed) return false;
+            var prepare = BeginReceived;
+            if (prepare == null) { Fail("LocalRoundPreparationFailed"); return false; }
+            try { prepare(config, roster); }
+            catch (Exception) { Fail("LocalRoundPreparationFailed"); return false; }
+            // A listener may leave/dispose while loading. It must not acknowledge readiness.
+            return !disposed && !failed;
+        }
         private void Fail(string reason) { if (failed) return; failed = true; Failed?.Invoke(reason); }
         public void Dispose()
         {
