@@ -4,7 +4,9 @@ Entrega del 20/09/2026. Archivos propios: GameplayAuthority.cs, GameplayModeAuth
 
 ## Contrato para integración
 
-API pública en la autoridad concreta: `void SetActorConnected(uint actorId, bool connected)`. Es capacidad del host; no está expuesta por IGameplayCommandSink ni existe un comando remoto que la invoque. El coordinador de sesión debe llamar `false` ante pérdida de conexión y `true` sólo después de autenticar y preparar el cliente que regresa. La API no realiza ese handshake.
+API pública en la autoridad concreta: `void SetActorConnected(uint actorId, bool connected)`. Es capacidad del host; no está expuesta por IGameplayCommandSink ni existe un comando remoto que la invoque. El coordinador llama `false` ante pérdida de conexión y puede llamar `true` después de autenticar al dueño, antes de completar la preparación del cliente. La red debe mantener Input/Action bloqueados hasta completar preparación y Ack; la API no realiza ese handshake ni sustituye esa barrera.
+
+Integración comunicada por CEO: Hello autenticado renueva RoomConnected y la revisión de autoridad; el mismo callback principal establece el estado de peer en reanudación antes de retornar. Esa barrera de canal impide procesar Input/Action hasta Ack, sin intercalado de mensajes durante el callback. Connected y CapturePrivate.CanAct describen disponibilidad del actor; no certifican que el canal de reanudación ya esté habilitado.
 
 Actor comienza con Connected=true. Actor desconocido o notificación repetida del mismo estado son no-op. Cada cambio efectivo incrementa ViewRevision y Revision; un detach de contacto puede renovar adicionalmente ViewRevision. El consumidor debe usar la revisión publicada, no asumir incremento exactamente uno.
 
@@ -19,7 +21,7 @@ Al desconectar:
 Al reconectar (false→true):
 
 - Se limpian HasInput/HasAction, secuencias de input/acción, contadores de frecuencia e historial de acciones; se renueva ViewRevision y se conserva la simulación existente.
-- Las secuencias bajas del cliente nuevo se aceptan únicamente con la revisión vigente. Los paquetes del cliente anterior son OldViewRevision; while disconnected son InvalidState. Nuevos inputs no dan control durante incapacidad ni reviven un eliminado.
+- Las secuencias bajas del cliente nuevo se aceptan únicamente con la revisión vigente. Los paquetes del cliente anterior son OldViewRevision; durante desconexión son InvalidState. Nuevos inputs no dan control durante incapacidad ni reviven un eliminado.
 - El reset de secuencias ocurre **al reconectar**, no al desconectar. Disconnect conserva acknowledgements anteriores hasta ese momento. Repetir true no reinicia el stream activo.
 
 ## Verificación y límites

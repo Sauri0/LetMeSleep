@@ -131,8 +131,9 @@ namespace LetMeSleep.Gameplay
         public CommandReject SubmitBotInput(in PlayerInputCommand command) => Input(null, command, true);
         public CommandReject SubmitBotAction(in PlayerActionCommand command) => Action(null, command, true);
 
-        // Host lifecycle capability only. Call true after the authenticated rejoin
-        // barrier; network commands do not expose this method.
+        // Host lifecycle capability only. The caller authenticates the owner and
+        // gates network commands until round preparation/Ack completes. This method
+        // may renew the actor revision before that channel gate opens.
         public void SetActorConnected(uint actorId, bool connected)
         {
             if (!actors.TryGetValue(actorId, out var a) || a.Connected == connected) return;
