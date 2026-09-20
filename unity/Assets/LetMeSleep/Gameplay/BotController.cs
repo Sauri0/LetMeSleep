@@ -224,6 +224,7 @@ namespace LetMeSleep.Gameplay
             var direction = selected.HasValue ? (selected.Value.ContactPoint - origin).Normalized : observation.FreeDirection.Normalized;
             bool task = observation.TaskObjective != null && observation.OwnAssignment.Status == TaskAssignmentStatus.Active
                 && self.Role == PlayerRole.Human && !threat;
+            bool waitsForTask = observation.ModeId == GameModes.Tasks && self.Role == PlayerRole.Human && !task;
             var taskTravel = task && observation.TaskDirection != null ? observation.TaskDirection(observation.TaskObjective) : Float3.Zero;
 #if UNITY_EDITOR
             uint diagnosticTool = 0;
@@ -293,7 +294,7 @@ namespace LetMeSleep.Gameplay
             if (task)
             {
                 forward = taskTravel.LengthSquared < .0001f ? 0 : 1;
-                if ((observation.TaskObjective.Position - self.Position).Length <= observation.TaskObjective.UseRadius * .9f)
+                if ((observation.TaskObjective.Position - self.Position).Length <= observation.TaskObjective.UseRadius)
                 {
                     var aim = (observation.TaskObjective.Position - origin).Normalized;
                     if (aim.LengthSquared > .5f)
@@ -308,6 +309,7 @@ namespace LetMeSleep.Gameplay
                     }
                 }
             }
+            bool pursuingTool = false;
             if (!threat && !helpHeld && self.EquippedToolId == GameplayTools.Hands && self.Role == PlayerRole.Human && observation.Training != null && HasFreeSlot(observation.OwnPrivate))
             {
                 BotToolOpportunity? tool = null;
@@ -317,6 +319,7 @@ namespace LetMeSleep.Gameplay
                         && ((candidate.Pickup.ToolId != GameplayTools.Aerosol && candidate.Pickup.ToolId != GameplayTools.ElectricRacket) || candidate.Pickup.ResourceUnits > 0) && (!tool.HasValue || candidate.DetourMeters < tool.Value.DetourMeters)) tool = candidate;
                 if (tool.HasValue)
                 {
+                    pursuingTool = true;
 #if UNITY_EDITOR
                     diagnosticTool = tool.Value.Pickup.PickupId;
 #endif
@@ -327,6 +330,10 @@ namespace LetMeSleep.Gameplay
                     if (delta.Length < 1.4f) { action = ActionKind.Use; forward = 0; }
                 }
             }
+            // Between task slots, remain at the last safe pose. Visible defence and an
+            // explicit tool diversion keep their existing movement; an arbitrary free
+            // vector must not walk a human out of the authored task graph.
+            if (waitsForTask && !selectedVisible && !pursuingTool) forward = 0;
             if (observation.OwnPrivate?.ThrowCharge.Active == true && !primaryHeld && action != ActionKind.ReleaseThrow)
             { action = ActionKind.CancelThrow; equipmentPayload = false; }
             if (observation.DoorAhead && self.Role == PlayerRole.Human && !primaryHeld && !action.HasValue) action = ActionKind.Use;

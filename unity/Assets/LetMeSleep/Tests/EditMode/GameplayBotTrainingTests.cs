@@ -110,10 +110,10 @@ namespace LetMeSleep.Tests
             return new BotObservation(self,seen,Float3.Forward,false,null,GameModes.Tasks,own,objective,_=>Float3.Zero,context,null,(_,__)=>true);
         }
         private static BotObservation NearbyTaskObservation(Func<ObjectiveDefinition,Float3,bool> canWork, Float3? target = null,
-            Func<Float3,Float3> steer = null)
+            Func<Float3,Float3> steer = null, float? useRadius = null)
         {
             var objective=new ObjectiveDefinition("nearby",ObjectiveKind.Clean,"task.test","task.action.hold_clean",
-                target ?? Float3.Forward,(target ?? Float3.Forward)+new Float3(.5f,0,0),target.HasValue ? 3 : 1.25f,90,"room");
+                target ?? Float3.Forward,(target ?? Float3.Forward)+new Float3(.5f,0,0),useRadius ?? (target.HasValue ? 3 : 1.25f),90,"room");
             var assignment=new TaskAssignment("nearby",0,2000,90,0,TaskAssignmentStatus.Active,0);
             var own=new ActorPrivateState(1,0,0,default,default,0,0,0,0,true,default,1,1,0,assignment);
             return new BotObservation(Actor(1,PlayerRole.Human,Float3.Zero),Array.Empty<BotTarget>(),Float3.Forward,
@@ -152,6 +152,24 @@ namespace LetMeSleep.Tests
             var command=Decide(new BotController(),NearbyTaskObservation(null),0);
             Assert.That(command.Input.UseHeld,Is.False);Assert.That(command.Input.MovePlanar.Y,Is.GreaterThan(0));
         }
+        [Test] public void WorkUsesTheAuthorityRadiusAndStillRequiresTheObservedPermission()
+        {
+            int allowedChecks=0,rejectedChecks=0;
+            var target=new Float3(0,0,1.2f);
+            var allowed=Decide(new BotController(),NearbyTaskObservation((_,__)=>{allowedChecks++;return true;},target,useRadius:1.25f),0);
+            var rejected=Decide(new BotController(),NearbyTaskObservation((_,__)=>{rejectedChecks++;return false;},target,useRadius:1.25f),0);
+            Assert.That(allowed.Input.UseHeld,Is.True);Assert.That(allowed.Input.MovePlanar.Y,Is.Zero);
+            Assert.That(rejected.Input.UseHeld,Is.False);Assert.That(rejected.Input.MovePlanar.Y,Is.GreaterThan(0));
+            Assert.That(allowedChecks,Is.EqualTo(1));Assert.That(rejectedChecks,Is.EqualTo(1));
+        }
+        [Test] public void WorkOutsideTheAuthorityRadiusKeepsTravellingWithoutQueryingPermission()
+        {
+            int checks=0;
+            var command=Decide(new BotController(),NearbyTaskObservation((_,__)=>{checks++;return true;},
+                new Float3(0,0,1.251f),useRadius:1.25f),0);
+            Assert.That(command.Input.UseHeld,Is.False);Assert.That(command.Input.MovePlanar.Y,Is.GreaterThan(0));
+            Assert.That(checks,Is.Zero);
+        }
         [Test] public void TaskWorkObservationReceivesTheClampedCommandAim()
         {
             Float3 observedAim=default;
@@ -184,6 +202,43 @@ namespace LetMeSleep.Tests
             var o=TaskObservation(self,Array.Empty<BotTarget>(),new BotTrainingContext(new[]{new BotToolOpportunity(tool,1)},1));
             var c=Decide(bot,o,0);Assert.That(c.Input.UseHeld,Is.True);Assert.That(c.Action.HasValue,Is.False);
         }
+        private static BotObservation BetweenTasks(TaskAssignmentStatus? status=null, BotTarget[] seen=null,
+            BotTrainingContext training=null, string mode=GameModes.Tasks)
+        {
+            ObjectiveDefinition objective=null;TaskAssignment assignment=null;
+            if(status.HasValue)
+            {
+                objective=new ObjectiveDefinition("idle",ObjectiveKind.Clean,"task.test","task.action.hold_clean",
+                    new Float3(0,0,4),new Float3(0,0,3),1.25f,30,"room");
+                uint progress=status==TaskAssignmentStatus.Completed?30u:0u;
+                assignment=new TaskAssignment("idle",0,900,30,progress,status.Value,0);
+            }
+            var own=new ActorPrivateState(1,0,0,default,default,0,0,0,0,true,default,1,1,0,assignment);
+            return new BotObservation(Actor(1,PlayerRole.Human,Float3.Zero),seen??Array.Empty<BotTarget>(),
+                Float3.Forward,false,null,mode,own,objective,null,training);
+        }
+        [Test] public void TasksHumanWithoutAnyAssignmentHoldsTheCurrentSafePose()
+            =>Assert.That(Decide(new BotController(),BetweenTasks(),0).Input.MovePlanar.Y,Is.Zero);
+        [TestCase(TaskAssignmentStatus.Completed)] [TestCase(TaskAssignmentStatus.Missed)]
+        [TestCase(TaskAssignmentStatus.WaitingForRoute)]
+        public void TasksHumanWithoutAnActiveAssignmentDoesNotFollowTheFreeVector(TaskAssignmentStatus status)
+            =>Assert.That(Decide(new BotController(),BetweenTasks(status),0).Input.MovePlanar.Y,Is.Zero);
+        [Test] public void TasksHumanBetweenAssignmentsStillMovesForAVisibleThreat()
+        {
+            var bot=new BotController();
+            var threat=Target(Actor(2,PlayerRole.Mosquito,Float3.Forward*3,LifeState.Flying,Float3.Forward*-1));
+            var observation=BetweenTasks(seen:new[]{threat});Decide(bot,observation,0);
+            Assert.That(Decide(bot,observation,BotController.ReactionTicks(1,2)).Input.MovePlanar.Y,Is.GreaterThan(0));
+        }
+        [Test] public void TasksHumanBetweenAssignmentsStillMovesForAnExplicitToolDiversion()
+        {
+            var tool=new ToolPickupSnapshot(10,GameplayTools.Flyswatter,new Float3(0,1.53f,2),Rotation.Identity);
+            var context=new BotTrainingContext(new[]{new BotToolOpportunity(tool,2)},1);
+            Assert.That(Decide(new BotController(),BetweenTasks(training:context),0).Input.MovePlanar.Y,Is.GreaterThan(0));
+        }
+        [TestCase(GameModes.Blood)] [TestCase(GameModes.Survival)]
+        public void HumansInOtherModesKeepTheirFreeMovement(string mode)
+            =>Assert.That(Decide(new BotController(),BetweenTasks(mode:mode),0).Input.MovePlanar.Y,Is.GreaterThan(0));
         [Test] public void DepletedToolIsNotPickedUp()
         {
             var bot=new BotController();var self=Actor(1,PlayerRole.Human,Float3.Zero);var own=new ActorPrivateState(1,0,0,default,default,0,0,0,0,true,default);
