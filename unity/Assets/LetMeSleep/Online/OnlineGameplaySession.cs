@@ -53,9 +53,10 @@ namespace LetMeSleep.Online
             var localTools = tools() ?? Array.Empty<ToolPickupDefinition>();
             if (round == null || !lobby.IsOwner || room.Current?.Phase != RoomPhase.Playing || round.RoundId != (ulong)room.Current.Round)
                 throw new InvalidOperationException("Only the active room owner can start gameplay.");
-            if (actors == null || actors.Count != room.Current.Members.Count || actors.Count < 2 || actors.Count > RoomRules.Capacity
+            var activeMembers = room.Current.Members.Where(member => member.Role != PlayerRole.Unassigned).ToArray();
+            if (actors == null || actors.Count != activeMembers.Length || actors.Count < 2 || actors.Count > RoomRules.Capacity
                 || actors.Select(a => a.ActorId).Distinct().Count() != actors.Count || actors.Select(a => a.OwnerPuid).Distinct().Count() != actors.Count
-                || actors.Any(a => a.ActorId == 0 || a.IsBot || !a.Position.IsFinite || !room.Current.Members.Any(m => m.Id == a.OwnerPuid && m.Role == a.Role)))
+                || actors.Any(a => a.ActorId == 0 || a.IsBot || !a.Position.IsFinite || !activeMembers.Any(m => m.Id == a.OwnerPuid && m.Role == a.Role)))
                 throw new ArgumentException("Round roster does not match authenticated room members.");
             if (round.MapId != room.Current.Rules.MapId || round.ContentHash != contentHash
                 || round.RoundDurationTicks != room.Current.Rules.RoundSeconds * 30 || round.BloodGoal != room.Current.Rules.BloodQuota
@@ -66,7 +67,7 @@ namespace LetMeSleep.Online
                 || (round.ModeId == GameModes.Tasks && round.ObjectiveCatalogHash != ObjectiveDefinition.CatalogHash(localObjectives)))
                 throw new ArgumentException("Round settings do not match room settings.");
             config = round; roster = actors.ToArray(); failed = false; waiting.Clear(); resuming.Clear(); framing.Clear();
-            foreach (var member in room.Current.Members) if (member.Id != localId) waiting.Add(member.Id);
+            foreach (var member in activeMembers) if (member.Id != localId) waiting.Add(member.Id);
             beginPacket = EncodeBegin(round, roster); barrierStart = now; retryAt = now + 1;
             foreach (var member in waiting) Send(member, Begin, beginPacket, true);
         }
@@ -155,7 +156,8 @@ namespace LetMeSleep.Online
         }
         private void Broadcast(byte kind, byte[] data, bool reliable)
         {
-            foreach (var member in room.Current.Members) if (member.Id != localId && lobby.Contains(member.Id)) Send(member.Id, kind, data, reliable);
+            foreach (var member in room.Current.Members)
+                if (member.Role != PlayerRole.Unassigned && member.Id != localId && lobby.Contains(member.Id)) Send(member.Id, kind, data, reliable);
         }
         private void Send(string peer, byte kind, byte[] data, bool reliable)
         {
@@ -242,10 +244,11 @@ namespace LetMeSleep.Online
         {
             using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
             if (round.Objectives.Count > GameplayWireCodec.MaxObjectives) throw new InvalidDataException("Too many objectives for Begin.");
-            writer.Write((byte)4); writer.Write(round.SessionEpoch); writer.Write(round.RoundId);
+            writer.Write((byte)5); writer.Write(round.SessionEpoch); writer.Write(round.RoundId);
             RoomWireCodec.WriteText(writer, round.MapId, 64); RoomWireCodec.WriteText(writer, round.ContentHash, 128);
             RoomWireCodec.WriteText(writer, round.ModeId, 16); RoomWireCodec.WriteText(writer, round.ModeRuleProfileId, 64);
-            RoomWireCodec.WriteText(writer, round.ObjectiveCatalogHash, 64); RoomWireCodec.WriteText(writer, round.BalanceHash, 512);
+            RoomWireCodec.WriteText(writer, round.ObjectiveCatalogHash, 64); RoomWireCodec.WriteText(writer, round.EquipmentProfileHash, 64);
+            RoomWireCodec.WriteText(writer, round.BalanceHash, 512);
             writer.Write((int)(round.RoundDurationTicks / 30)); writer.Write(round.BloodGoal); writer.Write(round.ConfiguredTasksGoal);
             writer.Write(round.Balance.RecoveryBaseSeconds); writer.Write(round.Balance.FullExtractionSeconds);
             writer.Write(round.Balance.PreparationSeconds); writer.Write(round.Balance.HelpMultiplier); writer.Write(round.Balance.ProtectionSeconds);
@@ -286,11 +289,12 @@ namespace LetMeSleep.Online
             try
             {
                 using var stream = new MemoryStream(packet, false); using var reader = new BinaryReader(stream, Encoding.UTF8);
-                if (reader.ReadByte() != 4) return false;
+                if (reader.ReadByte() != 5) return false;
                 ulong epoch = reader.ReadUInt64(), round = reader.ReadUInt64();
                 string map = RoomWireCodec.ReadText(reader, 64), hash = RoomWireCodec.ReadText(reader, 128);
                 string mode = RoomWireCodec.ReadText(reader, 16), profileId = RoomWireCodec.ReadText(reader, 64);
-                string catalogHash = RoomWireCodec.ReadText(reader, 64), balanceHash = RoomWireCodec.ReadText(reader, 512);
+                string catalogHash = RoomWireCodec.ReadText(reader, 64), equipmentHash = RoomWireCodec.ReadText(reader, 64);
+                string balanceHash = RoomWireCodec.ReadText(reader, 512);
                 int seconds = reader.ReadInt32(); float goal = reader.ReadSingle(); int tasksGoal = reader.ReadInt32();
                 var balance = new BalanceProfile(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                 int lives = reader.ReadByte();
@@ -324,20 +328,21 @@ namespace LetMeSleep.Online
                     var rotation = new Rotation(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     if (!toolIds.Add(id) || !localTools.Any(d => d.PickupId == id && d.ToolId == type && SamePose(d, position, rotation))) return false;
                 }
-                int count = reader.ReadByte(); if (count < 2 || count > RoomRules.Capacity || count != room.Current.Members.Count) return false;
+                var activeMembers = room.Current.Members.Where(member => member.Role != PlayerRole.Unassigned).ToArray();
+                int count = reader.ReadByte(); if (count < 2 || count > RoomRules.Capacity || count != activeMembers.Length) return false;
                 var nextActors = new SpawnActor[count]; var ids = new HashSet<uint>(); var owners = new HashSet<string>(StringComparer.Ordinal);
                 for (int i = 0; i < count; i++)
                 {
                     uint id = reader.ReadUInt32(); string owner = RoomWireCodec.ReadText(reader, 128); var role = (PlayerRole)reader.ReadByte();
                     var position = new Float3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     string spawn = RoomWireCodec.ReadText(reader, 64), cosmetic = RoomWireCodec.ReadText(reader, 128);
-                    var member = room.Current.Members.FirstOrDefault(m => m.Id == owner);
+                    var member = activeMembers.FirstOrDefault(m => m.Id == owner);
                     if (id == 0 || !ids.Add(id) || !owners.Add(owner) || member == null || member.Role != role || !Enum.IsDefined(typeof(PlayerRole), role) || role == PlayerRole.Unassigned || !position.IsFinite || position.LengthSquared > 250000) return false;
                     nextActors[i] = new SpawnActor(id, owner, role, position, spawn, cosmetic);
                 }
                 if (stream.Position != stream.Length || !owners.Contains(localId)) return false;
                 result = new GameplayRoundConfig(epoch, round, map, hash, seconds, goal, balance, doors(), localTools, mode, modeRules, nextObjectives, tasksGoal);
-                if (result.ObjectiveCatalogHash != catalogHash || result.BalanceHash != balanceHash) return false;
+                if (result.ObjectiveCatalogHash != catalogHash || result.EquipmentProfileHash != equipmentHash || result.BalanceHash != balanceHash) return false;
                 actors = nextActors; return true;
             }
             catch (IOException) { return false; }

@@ -69,7 +69,7 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(session.StartRound("owner-puid"), Is.EqualTo(RoomError.None));
 
             {
-                Assert.That(session.Join("late", "Late", RoomSession.Protocol), Is.EqualTo(RoomError.WrongPhase));
+                Assert.That(session.Join("late", "Late", RoomSession.Protocol), Is.EqualTo(RoomError.None));
                 Assert.That(session.SetReady("owner-puid", false), Is.EqualTo(RoomError.WrongPhase));
                 Assert.That(session.ChangeRules("owner-puid", new RoomRules(1)), Is.EqualTo(RoomError.WrongPhase));
                 Assert.That(session.StartRound("owner-puid"), Is.EqualTo(RoomError.WrongPhase));

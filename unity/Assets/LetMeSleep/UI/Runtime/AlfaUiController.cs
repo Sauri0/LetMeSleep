@@ -275,6 +275,7 @@ namespace LetMeSleep.UI
             lobbyStartButton.interactable = state.IsOwner && state.CanStart && !lobbyReadyLatched && !lobbyStartLatched;
             lobbyStartLabel.text = lobbyStartLatched ? "INICIANDO…" : "INICIAR RONDA";
             lobbyStartReason.text = state.IsOwner && !state.CanStart ? state.StartBlockReason : string.Empty;
+            lobbyReadyButton.gameObject.SetActive(state.IsWaiting);
             lobbyExploreButton.gameObject.SetActive(state.CanExplore);
             lobbyExploreButton.interactable = !lobbyStartLatched;
 
@@ -302,6 +303,7 @@ namespace LetMeSleep.UI
             if (lobbyStartLatched) lobbyStatus.text = "Iniciando ronda…";
             else if (lobbyReadyLatched) lobbyStatus.text = "Guardando estado…";
             else if (lobbyRulesLatched) lobbyStatus.text = "Guardando reglas…";
+            else if (!state.IsWaiting) lobbyStatus.text = "La ronda está en curso. Entrás en la próxima.";
             UpdateRoomMapView();
             UpdateLobbyControls();
             UpdateLobbyVoiceMarkers();

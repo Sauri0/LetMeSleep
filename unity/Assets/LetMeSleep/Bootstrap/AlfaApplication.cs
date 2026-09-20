@@ -253,6 +253,11 @@ namespace LetMeSleep.Bootstrap
             }
             ObservePlaytestRoom(view);
             training = false;
+            var localMember = view.Members.FirstOrDefault(member => member.Id == LocalId);
+            if (view.Phase == RoomPhase.Playing && localMember != null && localMember.Role == PlayerRole.Unassigned)
+            {
+                StopGame(); StopLobbyMovement(); PresentLateJoinWaiting(view); SyncVoiceContext(view); lastPhase = view.Phase; return;
+            }
             if (view.Phase == RoomPhase.Waiting)
             {
                 if (lastPhase != RoomPhase.Waiting) { StopGame(); LoadMap(false); menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu(); }
@@ -309,6 +314,15 @@ namespace LetMeSleep.Bootstrap
             ui.PresentLobby(new LobbyUiState(lobby.IsOwner, lobby.Code, members, view.Members.First(m => m.Id == LocalId).Ready,
                 false, view.Rules.HumanCount, canStart, canStart ? "" : reason, view.Rules.MapId, mapLabel, canExplore: true,
                 isWaiting: view.Phase == RoomPhase.Waiting, modeId: view.Rules.ModeId, roundSeconds: view.Rules.RoundSeconds));
+        }
+        private void PresentLateJoinWaiting(RoomView view)
+        {
+            var members = view.Members.Select(member => new LobbyMemberUiState(member.Id, member.Name, member.Ready, member.Connected));
+            string mapLabel = view.Rules.MapId == RoomRules.AlfaMap ? "Casa con patio" :
+                HiggsfieldMaps?.Entries.FirstOrDefault(entry => entry.MapId == view.Rules.MapId)?.DisplayName ?? "Mapa no instalado";
+            ui.PresentLobby(new LobbyUiState(false, lobby.Code, members, false, false, view.Rules.HumanCount,
+                false, "La ronda está en curso.", view.Rules.MapId, mapLabel, canExplore: false,
+                isWaiting: false, modeId: view.Rules.ModeId, roundSeconds: view.Rules.RoundSeconds));
         }
         public void LeaveRoom()
         {
