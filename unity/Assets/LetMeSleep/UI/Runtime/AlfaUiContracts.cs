@@ -45,7 +45,7 @@ namespace LetMeSleep.UI
     public enum AlfaRole { Human, Mosquito }
     public enum MatchOutcome { Interrupted, Humans, Mosquitoes }
     public enum PreviewAngle { Front, Side, Back }
-    public enum HudActorState { Normal, Extracting, Bitten, Recovering, Fainted, Stunned, Attached }
+    public enum HudActorState { Normal, Extracting, Bitten, Recovering, Fainted, Stunned, Attached, Spectating }
 
     public sealed class AlfaUiDependencies
     {
@@ -128,6 +128,13 @@ namespace LetMeSleep.UI
         void SetRoomMap(string mapId);
     }
 
+    public interface ISpectatorActions { void SpectateNext(); }
+
+    public interface IRoomModeActions
+    {
+        void SetRoomMode(string modeId);
+    }
+
     public sealed class OnlineUiState
     {
         public OnlineOperationPhase Phase { get; }
@@ -200,6 +207,7 @@ namespace LetMeSleep.UI
         public bool StartPending { get; }
         public bool IsWaiting { get; }
         public bool RulesPending { get; }
+        public string ModeId { get; }
 
         public LobbyUiState(
             bool isOwner,
@@ -215,8 +223,9 @@ namespace LetMeSleep.UI
             bool canExplore = false,
             bool startPending = false,
             bool isWaiting = true,
-            bool rulesPending = false)
+            bool rulesPending = false, string modeId = GameModes.Blood)
         {
+            ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode.");
             IsOwner = isOwner;
             RoomCode = AlfaRoomCode.FormatForDisplay(roomCode);
             Members = Array.AsReadOnly((members ?? Enumerable.Empty<LobbyMemberUiState>()).ToArray());
@@ -241,7 +250,7 @@ namespace LetMeSleep.UI
             var local = room.Members.FirstOrDefault(member => member.Id == localMemberId);
             return new LobbyUiState(room.OwnerId == localMemberId, roomCode, members, local != null && local.Ready,
                 readyPending, room.Rules.HumanCount, canStart, startBlockReason, room.Rules.MapId, startPending: startPending,
-                isWaiting: room.Phase == RoomPhase.Waiting, rulesPending: rulesPending);
+                isWaiting: room.Phase == RoomPhase.Waiting, rulesPending: rulesPending, modeId: room.Rules.ModeId);
         }
     }
 
@@ -249,25 +258,27 @@ namespace LetMeSleep.UI
     {
         public string Id { get; }
         public string DisplayName { get; }
+        public bool SupportsTasks { get; }
 
-        public TrainingMapOption(string id, string displayName)
+        public TrainingMapOption(string id, string displayName, bool supportsTasks = false)
         {
             if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException("Map ID is required.", nameof(id));
             if (string.IsNullOrWhiteSpace(displayName)) throw new ArgumentException("Map display name is required.", nameof(displayName));
             Id = id;
-            DisplayName = displayName;
+            DisplayName = displayName; SupportsTasks = supportsTasks;
         }
     }
 
     public sealed class TrainingUiState
     {
+        public string ModeId { get; }
         public AlfaRole SelectedRole { get; }
         public bool IsLoading { get; }
         public string Message { get; }
 
-        public TrainingUiState(AlfaRole selectedRole = AlfaRole.Human, bool isLoading = false, string message = "")
+        public TrainingUiState(AlfaRole selectedRole = AlfaRole.Human, bool isLoading = false, string message = "", string modeId = GameModes.Blood)
         {
-            SelectedRole = selectedRole;
+            SelectedRole = selectedRole; ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode.");
             IsLoading = isLoading;
             Message = message ?? string.Empty;
         }
@@ -399,6 +410,14 @@ namespace LetMeSleep.UI
 
     public sealed class BloodHudUiState
     {
+        public string ModeId { get; }
+        public int TasksCompleted { get; }
+        public int TasksGoal { get; }
+        public int MosquitoesAlive { get; }
+        public int LivesRemaining { get; }
+        public string PrivateTaskText { get; }
+        public float TaskProgress01 { get; }
+        public bool IsSpectator => ActorState == HudActorState.Spectating;
         public AlfaRole Role { get; }
         public float SecondsRemaining { get; }
         public float BloodCurrent { get; }
@@ -411,9 +430,12 @@ namespace LetMeSleep.UI
 
         public BloodHudUiState(AlfaRole role, float secondsRemaining, float bloodCurrent, float bloodTarget,
             string interaction = "", string contextHint = "", HudActorState actorState = HudActorState.Normal,
-            float stateProgress01 = 0f, string networkMessage = "")
+            float stateProgress01 = 0f, string networkMessage = "", string modeId = GameModes.Blood, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0, int livesRemaining = 0, string privateTaskText = "", float taskProgress01 = 0)
         {
-            Role = role;
+            Role = role; ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode.");
+            TasksCompleted = Math.Max(0, tasksCompleted); TasksGoal = Math.Max(0, tasksGoal); MosquitoesAlive = Math.Max(0, mosquitoesAlive); LivesRemaining = Math.Max(0, livesRemaining);
+            PrivateTaskText = role == AlfaRole.Human && modeId == GameModes.Tasks ? privateTaskText ?? string.Empty : string.Empty;
+            TaskProgress01 = Mathf.Clamp01(taskProgress01);
             SecondsRemaining = Mathf.Max(0f, secondsRemaining);
             BloodCurrent = Mathf.Max(0f, bloodCurrent);
             BloodTarget = Mathf.Max(0.01f, bloodTarget);
@@ -427,6 +449,11 @@ namespace LetMeSleep.UI
 
     public sealed class ResultsUiState
     {
+        public string ModeId { get; }
+        public string MapId { get; }
+        public int TasksCompleted { get; }
+        public int TasksGoal { get; }
+        public int MosquitoesAlive { get; }
         public MatchOutcome Outcome { get; }
         public bool IsTraining { get; }
         public bool IsOwner { get; }
@@ -437,8 +464,9 @@ namespace LetMeSleep.UI
         public AlfaRole TrainingRole { get; }
 
         public ResultsUiState(MatchOutcome outcome, bool isTraining, bool isOwner, float bloodCurrent,
-            float bloodTarget, float elapsedSeconds, string reason = "", AlfaRole trainingRole = AlfaRole.Human)
+            float bloodTarget, float elapsedSeconds, string reason = "", AlfaRole trainingRole = AlfaRole.Human, string modeId = GameModes.Blood, string mapId = RoomRules.AlfaMap, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0)
         {
+            ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode."); MapId = mapId; TasksCompleted = tasksCompleted; TasksGoal = tasksGoal; MosquitoesAlive = mosquitoesAlive;
             Outcome = outcome;
             IsTraining = isTraining;
             IsOwner = isOwner;

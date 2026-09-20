@@ -98,6 +98,7 @@ namespace LetMeSleep.Presentation.Gameplay
             for (int i = 0; i < snapshot.Actors.Count; i++)
             {
                 GameplayModel.ActorSnapshot state = snapshot.Actors[i];
+                if (state.Eliminated) continue;
                 aliveActors.Add(state.ActorId);
                 if (!gameplay.World.Actors.TryGetValue(state.ActorId, out GameplayActorProxy proxy))
                     continue;
@@ -132,7 +133,7 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private void EnsureVisual(GameplayActorProxy proxy)
         {
-            if (proxy == null) return;
+            if (proxy == null || proxy.State?.Eliminated == true) return;
             if (visuals.TryGetValue(proxy.ActorId,out var existing))
             {
                 if(existing && existing.transform.parent==proxy.transform) return;
@@ -318,7 +319,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 state = gameplay.LatestSnapshot.Actors[i];
                 break;
             }
-            if (state == null)
+            if (state == null || state.Eliminated)
                 return;
             if (state.Role == PlayerRole.Human && humanCamera != null)
             {

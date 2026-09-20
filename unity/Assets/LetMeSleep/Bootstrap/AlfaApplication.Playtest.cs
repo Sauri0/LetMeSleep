@@ -19,6 +19,8 @@ namespace LetMeSleep.Bootstrap
             public int sequence, round, members;
             public uint tick;
             public float blood;
+            public string modeId;
+            public int tasksCompleted, tasksGoal;
             // Events are evidence of observations, never automatic certification of WAN or process exit.
         }
         private StreamWriter playtestWriter;
@@ -73,7 +75,8 @@ namespace LetMeSleep.Bootstrap
                     lobbyHash=PlaytestHash(lobby?.Code), peerHash=PlaytestHash(peer),
                     round=state==null ? room?.Current?.Round ?? -1 : checked((int)state.RoundId),
                     members=room?.Current?.Members.Count ?? 0, epoch=state?.SessionEpoch.ToString() ?? "",
-                    tick=state?.HostTick ?? 0, blood=state?.BloodCollected ?? 0, mapHash=state?.ContentHash ?? "", role=role
+                    tick=state?.HostTick ?? 0, blood=state?.BloodCollected ?? 0, mapHash=state?.ContentHash ?? "", role=role,
+                    modeId=state?.ModeId ?? room?.Current?.Rules.ModeId ?? "", tasksCompleted=state?.TasksCompleted ?? 0, tasksGoal=state?.TasksGoal ?? 0
                 };
                 playtestWriter.WriteLine(JsonUtility.ToJson(item));
                 playtestWriter.Flush(); // Small event records only: no per-frame sampling or GPU readback.

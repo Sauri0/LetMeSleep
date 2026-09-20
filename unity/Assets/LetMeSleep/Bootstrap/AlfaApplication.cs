@@ -18,7 +18,7 @@ using UnityEngine.Audio;
 
 namespace LetMeSleep.Bootstrap
 {
-    public sealed partial class AlfaApplication : MonoBehaviour, IMenuActions, IRoomMapActions
+    public sealed partial class AlfaApplication : MonoBehaviour, IMenuActions, IRoomMapActions, IRoomModeActions, ISpectatorActions
     {
         public GameObject HousePrefab, LobbyPrefab, HumanPrefab, MosquitoPrefab, GameplayPresentationPrefab, MenuAudioPrefab;
         public Camera MenuCamera, PreviewCamera;
@@ -51,6 +51,8 @@ namespace LetMeSleep.Bootstrap
         private RoomPhase lastPhase = RoomPhase.Closed;
         private SpawnActor[] activeRoster;
         private AlfaRole trainingRole;
+        private GameplayRoundConfig activeConfig;
+        private GameplaySpectatorCamera spectator;
         private double hudAt;
         private string combatFeedback = "";
         private double combatFeedbackUntil;
@@ -90,7 +92,7 @@ namespace LetMeSleep.Bootstrap
                 new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab, ConfigurePreviewAttention)));
             if (HiggsfieldMaps)
             {
-                var options = HiggsfieldMaps.Entries.Select(entry => new TrainingMapOption(entry.MapId, entry.DisplayName)).ToArray();
+                var options = HiggsfieldMaps.Entries.Select(entry => new TrainingMapOption(entry.MapId, entry.DisplayName, HasTaskCatalog(entry.Prefab, entry.MapId))).ToArray();
                 ui.SetTrainingMaps(options); ui.SetRoomMaps(options);
             }
             menuAudio = Instantiate(MenuAudioPrefab).GetComponent<AlfaAudioDirector>();
@@ -176,15 +178,15 @@ namespace LetMeSleep.Bootstrap
         public void SetReady(bool ready)
         {
             lastError = "";
-            if (ready && room?.Current != null && !IsAvailableMap(room.Current.Rules.MapId))
-            { PresentRoom(room.Current, "Este mapa no está instalado en esta versión."); return; }
+            if (ready && room?.Current != null && !IsModeAvailable(room.Current.Rules.MapId, room.Current.Rules.ModeId))
+            { PresentRoom(room.Current, "El mapa no tiene el contenido necesario para este modo."); return; }
             var result = room?.SetReady(ready);
             if (result.HasValue && result.Value != RoomError.None) PresentRoom(room.Current, "No se pudo marcar Listo.");
         }
         public void SetHumanCount(int? count)
         {
             var previous = room?.Current?.Rules;
-            if (previous != null) room.SetRules(new RoomRules(count, previous.RoundSeconds, previous.BloodQuota, previous.MapId));
+            if (previous != null) room.SetRules(new RoomRules(count, previous.RoundSeconds, previous.BloodQuota, previous.MapId, previous.ModeId, previous.ModeRuleProfileId));
         }
         public void SetRoomMap(string mapId)
         {
@@ -192,11 +194,22 @@ namespace LetMeSleep.Bootstrap
             var current = room?.Current;
             if (current == null || current.Phase != RoomPhase.Waiting) return;
             var previous = current.Rules;
-            var error = room.SetRules(new RoomRules(previous.HumanCount, previous.RoundSeconds, previous.BloodQuota, mapId));
+            var error = room.SetRules(new RoomRules(previous.HumanCount, previous.RoundSeconds, previous.BloodQuota, mapId, previous.ModeId, previous.ModeRuleProfileId));
             if (error != RoomError.None) PresentRoom(room.Current, "No se pudo cambiar el mapa.");
+        }
+        public void SetRoomMode(string modeId)
+        {
+            var view = room?.Current;
+            if (quiescing || lobby?.IsOwner != true || view == null || view.Phase != RoomPhase.Waiting || !GameModes.IsValid(modeId)) return;
+            var previous = view.Rules;
+            var result = room.SetRules(new RoomRules(previous.HumanCount, modeId == GameModes.Tasks ? 120 : 180,
+                modeId == GameModes.Blood ? 20 : 0, previous.MapId, modeId));
+            if (result != RoomError.None) PresentRoom(room.Current, "No se pudo cambiar el modo.");
         }
         public void StartRound()
         {
+            if (room?.Current != null && !IsModeAvailable(room.Current.Rules.MapId, room.Current.Rules.ModeId))
+            { PresentRoom(room.Current, "El mapa no tiene el contenido necesario para este modo."); return; }
             var error = room?.StartRound() ?? RoomError.Closed;
             if (error != RoomError.None) PresentRoom(room.Current, "Todavía falta que todos estén listos.");
         }
@@ -213,9 +226,9 @@ namespace LetMeSleep.Bootstrap
                     return; // SetRules publishes the authoritative updated view synchronously.
                 }
             }
-            if (view.Phase == RoomPhase.Playing && !IsAvailableMap(view.Rules.MapId))
+            if (view.Phase == RoomPhase.Playing && !IsModeAvailable(view.Rules.MapId, view.Rules.ModeId))
             {
-                LeaveRoom(); ui.ShowJoinRoom(); ShowOnlineError("Este mapa no está instalado en esta versión."); return;
+                LeaveRoom(); ui.ShowJoinRoom(); ShowOnlineError("El mapa no tiene el contenido necesario para este modo."); return;
             }
             ObservePlaytestRoom(view);
             training = false;
@@ -226,25 +239,30 @@ namespace LetMeSleep.Bootstrap
             }
             else if (view.Phase == RoomPhase.Playing && activeRound != view.Round)
             {
-                StopLobbyMovement(); PrepareGame(false, view.Rules.MapId); activeRound = view.Round;
-                gameNetwork = new OnlineGameplaySession(lobby, room, transport, LocalId, map.ContentHash,
-                    game.Authority, game, () => game.World.GetDoorDefinitions(), () => game.World.GetToolDefinitions());
-                gameNetwork.BeginReceived += BeginGame;
-                gameNetwork.Failed += OnGameNetworkFailed;
-                game.InputReady += gameNetwork.SendInput; game.ActionReady += gameNetwork.SendAction;
-                game.SnapshotReady += state => {
-                    gameNetwork?.SendSnapshot(state);
-                    if (game.IsHost && activeRoster != null)
-                        foreach (var actor in activeRoster) { var personal = game.Authority.CapturePrivate(actor.ActorId); if (personal != null) gameNetwork?.SendPrivate(actor.OwnerPuid, personal); }
-                };
-                game.EventReady += item => gameNetwork?.SendEvent(item);
-                if (lobby.IsOwner)
+                try
                 {
-                    var roster = MakeRoster(view);
-                    var config = new GameplayRoundConfig(NewEpoch(), (ulong)view.Round, map.MapId, map.ContentHash,
-                        view.Rules.RoundSeconds, view.Rules.BloodQuota, doors: game.World.GetDoorDefinitions(), tools: game.World.GetToolDefinitions());
-                    BeginGame(config, roster); gameNetwork.StartHost(config, roster);
+                    StopLobbyMovement(); PrepareGame(false, view.Rules.MapId); activeRound = view.Round;
+                    gameNetwork = new OnlineGameplaySession(lobby, room, transport, LocalId, map.ContentHash,
+                        game.Authority, game, () => game.World.GetDoorDefinitions(), () => game.World.GetToolDefinitions(), () => GetObjectivesForMode(view.Rules.ModeId));
+                    gameNetwork.BeginReceived += BeginGame;
+                    gameNetwork.Failed += OnGameNetworkFailed;
+                    game.InputReady += gameNetwork.SendInput; game.ActionReady += gameNetwork.SendAction;
+                    game.SnapshotReady += state => {
+                        gameNetwork?.SendSnapshot(state);
+                        if (game.IsHost && activeRoster != null)
+                            foreach (var actor in activeRoster) { var personal = game.Authority.CapturePrivate(actor.ActorId); if (personal != null) gameNetwork?.SendPrivate(actor.OwnerPuid, personal); }
+                    };
+                    game.EventReady += item => gameNetwork?.SendEvent(item);
+                    if (lobby.IsOwner)
+                    {
+                        var roster = MakeRoster(view);
+                        var config = new GameplayRoundConfig(NewEpoch(), (ulong)view.Round, map.MapId, map.ContentHash,
+                            view.Rules.RoundSeconds, view.Rules.BloodQuota, doors: game.World.GetDoorDefinitions(), tools: game.World.GetToolDefinitions(), modeId: view.Rules.ModeId, objectives: GetObjectivesForMode(view.Rules.ModeId));
+                        BeginGame(config, roster); gameNetwork.StartHost(config, roster);
+                    }
                 }
+                catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is KeyNotFoundException)
+                { Debug.LogWarning("LMS_ROUND_START_FAILED " + error.Message); InterruptGame("No se pudo preparar el mapa de la ronda."); }
             }
             else if (view.Phase == RoomPhase.Playing && game != null && game.IsHost && activeRoster != null)
             {
@@ -255,15 +273,15 @@ namespace LetMeSleep.Bootstrap
         private void PresentRoom(RoomView view, string message = "")
         {
             if (view == null || view.Phase != RoomPhase.Waiting) return;
-            bool canStart = IsAvailableMap(view.Rules.MapId) && view.Members.Count >= 2 && view.Members.All(m => m.Ready)
+            bool canStart = IsModeAvailable(view.Rules.MapId, view.Rules.ModeId) && view.Members.Count >= 2 && view.Members.All(m => m.Ready)
                 && (!view.Rules.HumanCount.HasValue || view.Rules.HumanCount.Value < view.Members.Count);
-            string reason = message.Length > 0 ? message : view.Members.Count < 2 ? "Invitá a alguien con el código de la sala." : "Todos deben marcar Listo para empezar.";
+            string reason = message.Length > 0 ? message : !IsModeAvailable(view.Rules.MapId, view.Rules.ModeId) ? "Este mapa todavía no tiene tareas preparadas para jugar." : view.Members.Count < 2 ? "Invitá a alguien con el código de la sala." : "Todos deben marcar Listo para empezar.";
             var members = view.Members.Select(m => new LobbyMemberUiState(m.Id, m.Name, m.Ready));
             string mapLabel = view.Rules.MapId == RoomRules.AlfaMap ? "Casa con patio" :
                 HiggsfieldMaps?.Entries.FirstOrDefault(entry => entry.MapId == view.Rules.MapId)?.DisplayName ?? "Mapa no instalado";
             ui.PresentLobby(new LobbyUiState(lobby.IsOwner, lobby.Code, members, view.Members.First(m => m.Id == LocalId).Ready,
                 false, view.Rules.HumanCount, canStart, canStart ? "" : reason, view.Rules.MapId, mapLabel, canExplore: true,
-                isWaiting: view.Phase == RoomPhase.Waiting));
+                isWaiting: view.Phase == RoomPhase.Waiting, modeId: view.Rules.ModeId));
         }
         public void LeaveRoom()
         {
@@ -276,16 +294,30 @@ namespace LetMeSleep.Bootstrap
         public void StartTraining(AlfaRole role, string modeId, string mapId)
         {
             if (quiescing) return;
-            if (modeId != AlfaUiController.BloodModeId || !IsAvailableMap(mapId)) return;
-            trainingRole = role; training = true; StopLobbyMovement(); PrepareGame(true, mapId);
-            var human = role == AlfaRole.Human;
-            var roster = new[] {
-                new SpawnActor(1, "practice", human ? PlayerRole.Human : PlayerRole.Mosquito, SpawnPoint(human,0), isBot:false),
-                new SpawnActor(2, "bot-1", human ? PlayerRole.Mosquito : PlayerRole.Human, SpawnPoint(!human,0), isBot:true),
-                new SpawnActor(3, "bot-2", PlayerRole.Mosquito, SpawnPoint(false,1), isBot:true)
-            };
-            BeginGame(new GameplayRoundConfig(NewEpoch(), 1, map.MapId, map.ContentHash, doors: game.World.GetDoorDefinitions(), tools: game.World.GetToolDefinitions()), roster);
-            game.AutomaticTick = true;
+            if (!GameModes.IsValid(modeId) || !IsModeAvailable(mapId, modeId))
+            {
+                ui.PresentTraining(new TrainingUiState(role, message: "El mapa no tiene el contenido necesario para este modo.", modeId: GameModes.IsValid(modeId) ? modeId : GameModes.Blood));
+                ui.ShowTraining(); return;
+            }
+            try
+            {
+                trainingRole = role; training = true; StopLobbyMovement(); PrepareGame(true, mapId);
+                var human = role == AlfaRole.Human;
+                var roster = new[] {
+                    new SpawnActor(1, "practice", human ? PlayerRole.Human : PlayerRole.Mosquito, SpawnPoint(human,0), isBot:false),
+                    new SpawnActor(2, "bot-1", human ? PlayerRole.Mosquito : PlayerRole.Human, SpawnPoint(!human,0), isBot:true),
+                    new SpawnActor(3, "bot-2", PlayerRole.Mosquito, SpawnPoint(false,1), isBot:true)
+                };
+                BeginGame(new GameplayRoundConfig(NewEpoch(), 1, map.MapId, map.ContentHash, modeId == GameModes.Tasks ? 120 : 180,
+                    doors: game.World.GetDoorDefinitions(), tools: game.World.GetToolDefinitions(), modeId: modeId, objectives: GetObjectivesForMode(modeId)), roster);
+                game.AutomaticTick = true;
+            }
+            catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is KeyNotFoundException)
+            {
+                Debug.LogWarning("LMS_TRAINING_START_FAILED " + error.Message);
+                StopGame(); LoadMap(false); menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu();
+                ui.PresentTraining(new TrainingUiState(role, message: "No se pudo preparar el entrenamiento. Volvé a intentarlo o elegí otro mapa.", modeId: modeId)); ui.ShowTraining();
+            }
         }
         public void CancelTraining() { if (training) LeaveRoom(); }
         private void PrepareGame(bool practice, string mapId = RoomRules.AlfaMap)
@@ -295,23 +327,28 @@ namespace LetMeSleep.Bootstrap
             var root = new GameObject("Gameplay"); game = root.AddComponent<GameplayRuntime>();
             game.World.MapRoot = map.transform;
             game.NavigationData = map.SpatialData;
-            game.IsHost = practice || lobby.IsOwner; game.AutomaticTick = false;
+            game.IsHost = practice || lobby?.IsOwner == true; game.AutomaticTick = false;
             presentation = Instantiate(GameplayPresentationPrefab); presentation.GetComponent<GameplayPresentationRoot>().Bind(game);
             BindCameraDistance(mapId);
+            spectator = presentation.AddComponent<GameplaySpectatorCamera>();
+            spectator.Bind(game, presentation.GetComponentInChildren<Camera>(true));
             game.EventReady += ObserveCombatFeedback;
             game.RoundFinished += (_, __) => { if (!quiescing && !training) room?.FinishRound(); };
         }
         private void BeginGame(GameplayRoundConfig config, IReadOnlyList<SpawnActor> roster)
         {
             if (quiescing) return;
-            activeRoster = roster.ToArray(); var local = roster.First(a => a.OwnerPuid == (training ? "practice" : LocalId));
+            activeConfig = config; activeRoster = roster.ToArray(); var local = roster.First(a => a.OwnerPuid == (training ? "practice" : LocalId));
             game.LocalActorId = local.ActorId; game.LocalPrincipal = local.OwnerPuid;
             game.MouseSensitivity = .002f * (local.Role == PlayerRole.Human ? settings.HumanSensitivity : settings.MosquitoSensitivity);
             game.InvertY = settings.InvertY; game.BeginRound(config, roster);
             if (!training) RecordPlaytest("RoundStarted",state:game.LatestSnapshot,role:local.Role.ToString());
             MenuCamera.enabled = false; MenuCamera.GetComponent<AudioListener>().enabled = false;
             presentation.GetComponentInChildren<AlfaAudioDirector>().EnterRound();
-            PresentGame(game.LatestSnapshot ?? new GameSessionState(config, 0, SimulationPhase.Running, 0, RoundEndReason.None, PlayerRole.Unassigned, Array.Empty<ActorSnapshot>(), Array.Empty<DoorSnapshot>()));
+            ui.ShowGameplay(training);
+            if (game.LatestSnapshot != null) PresentGame(game.LatestSnapshot);
+            else ui.PresentHud(new BloodHudUiState(local.Role == PlayerRole.Human ? AlfaRole.Human : AlfaRole.Mosquito,
+                config.RoundDurationTicks / 30f, 0, config.BloodGoal, modeId: config.ModeId, networkMessage: "Esperando a los jugadores…"));
         }
         private SpawnActor[] MakeRoster(RoomView view)
         {
@@ -327,18 +364,24 @@ namespace LetMeSleep.Bootstrap
             if (state.SimulationPhase == SimulationPhase.Ended)
             {
                 showingResults = true;
-                ui.PresentResults(new ResultsUiState(state.Winner == PlayerRole.Human ? MatchOutcome.Humans : MatchOutcome.Mosquitoes,
-                    training, training || lobby.IsOwner, state.BloodCollected, state.BloodGoal, (float)state.HostTime, trainingRole: trainingRole)); return;
+                ui.PresentResults(new ResultsUiState(state.Winner == PlayerRole.Human ? MatchOutcome.Humans : state.Winner == PlayerRole.Mosquito ? MatchOutcome.Mosquitoes : MatchOutcome.Interrupted,
+                    training, training || lobby?.IsOwner == true, state.BloodCollected, state.BloodGoal, (float)state.HostTime, ModeHudText.ResultReason(state.Result), trainingRole: trainingRole, modeId: state.ModeId, mapId: state.MapId, tasksCompleted: state.TasksCompleted, tasksGoal: state.TasksGoal, mosquitoesAlive: state.Actors.Count(a => a.Role == PlayerRole.Mosquito && !a.Eliminated))); return;
             }
-            var actor = state.Actors.FirstOrDefault(a => a.ActorId == game.LocalActorId); var personal = game.LocalPrivate;
+            var actor = state.Actors.FirstOrDefault(a => a.ActorId == game.LocalActorId); var personal = ModeHudText.LocalPrivate(state, game.LocalActorId, game.LocalPrivate);
             var role = actor?.Role == PlayerRole.Mosquito ? AlfaRole.Mosquito : AlfaRole.Human;
-            var status = actor?.LifeState == LifeState.Fainted ? HudActorState.Fainted : actor?.LifeState == LifeState.Biting ? HudActorState.Extracting
+            var status = actor?.Eliminated == true ? HudActorState.Spectating : actor?.LifeState == LifeState.Fainted ? HudActorState.Fainted : actor?.LifeState == LifeState.Biting ? HudActorState.Extracting
                 : actor?.LifeState == LifeState.Recovering ? HudActorState.Recovering : actor?.LifeState == LifeState.Stunned ? HudActorState.Stunned : HudActorState.Normal;
             string interaction = personal?.InteractionHint == InteractionHint.Door ? "F · Abrir / cerrar puerta" : personal?.InteractionHint == InteractionHint.Tool ? "F · Recoger matamoscas · G soltar" : personal?.InteractionHint == InteractionHint.ContactRequired ? "Acercate al cuerpo y mantené E" : "";
+            if (actor?.Eliminated == true) interaction = "Tab · Cambiar compañero observado";
+            else if (personal?.InteractionHint == InteractionHint.Task) interaction = "Mantené R · Trabajar en tu tarea";
+            string privateTask = ModeHudText.PrivateTask(state, game.LocalActorId, personal, activeConfig?.Objectives, out float taskProgress);
             ui.PresentHud(new BloodHudUiState(role, state.TimeRemainingTicks / 30f, state.BloodCollected, state.BloodGoal, interaction,
                 contextHint: CombatContext(state, actor),
                 actorState: status, stateProgress01: personal?.ExtractionProgress ?? 0,
-                networkMessage: !training && gameNetwork != null && !gameNetwork.Ready ? "Esperando a los jugadores…" : ""));
+                networkMessage: !training && gameNetwork != null && !gameNetwork.Ready ? "Esperando a los jugadores…" : "",
+                modeId: state.ModeId, tasksCompleted: state.TasksCompleted, tasksGoal: state.TasksGoal,
+                mosquitoesAlive: state.Actors.Count(a => a.Role == PlayerRole.Mosquito && !a.Eliminated), livesRemaining: actor?.LivesRemaining ?? 0,
+                privateTaskText: privateTask, taskProgress01: taskProgress));
         }
         private void ObserveCombatFeedback(GameplayEvent item)
         {
@@ -352,23 +395,26 @@ namespace LetMeSleep.Bootstrap
         private string CombatContext(GameSessionState state, ActorSnapshot actor)
         {
             if (actor == null) return "";
+            if (actor.Eliminated) return "Observás a tu equipo hasta el final de la ronda. Tab · cambiar compañero";
             if (actor.LifeState == LifeState.Falling || actor.LifeState == LifeState.Fainted ||
                 actor.LifeState == LifeState.Stunned || actor.LifeState == LifeState.Recovering)
-                return "Estás incapacitado. Esperá la recuperación.";
+                return state.ModeId == GameModes.Tasks && actor.Role == PlayerRole.Mosquito ? "Esperá ayuda de un aliado. Sin rescate, perdés una vida." : "Estás incapacitado. Esperá la recuperación.";
             if (Time.unscaledTimeAsDouble < combatFeedbackUntil) return combatFeedback;
+            if (state.ModeId == GameModes.Survival && actor.Role == PlayerRole.Mosquito) return "Sobreviví hasta el final. Un golpe te elimina. W · volar · F · posarte";
             if (actor.Role == PlayerRole.Human)
             {
                 bool beingBitten = state.Actors.Any(a => a.BiteAttachment.HasValue &&
                     a.BiteAttachment.Value.VictimId == actor.ActorId);
                 return beingBitten ? "¡Te están picando! Buscá al mosquito y golpeá hacia él." :
-                    "Clic · golpear hacia la mira   ·   Ctrl · agacharte";
+                    state.ModeId == GameModes.Tasks ? "R mantenida · trabajar en tu tarea   ·   Clic · defenderte" : "Clic · golpear hacia la mira   ·   Ctrl · agacharte";
             }
-            if (actor.LifeState == LifeState.PreparingBite) return "Contacto logrado. Mantené E para empezar a extraer.";
-            if (actor.LifeState == LifeState.Biting) return "Extrayendo sangre · Mantené E · Soltá E para despegar";
+            if (actor.LifeState == LifeState.PreparingBite) return "Contacto logrado. Mantené E para picar.";
+            if (actor.LifeState == LifeState.Biting) return state.ModeId == GameModes.Blood ? "Extrayendo sangre · Mantené E · Soltá E para despegar" : "Interrumpiendo al humano · Mantené E · Soltá E para despegar";
             if (actor.LifeState == LifeState.Surface || actor.LifeState == LifeState.ApproachingSurface)
                 return "W A S D · desplazarte   ·   F · despegar";
             return "W · volar hacia la mira   ·   F · posarte   ·   E mantenida en contacto · picar";
         }
+        public void SpectateNext() { if (spectator) spectator.NextTarget(); }
         public void SetGameplayInputBlocked(bool blocked) { game?.SetInputBlocked(blocked); }
         public void ResumeGame() { if (game?.LatestSnapshot != null) { game.SetInputBlocked(false); ui.ShowGameplay(); } }
         public void ReturnToLobby() { if (training) LeaveRoom(); else room?.ReturnToLobby(); }
@@ -378,7 +424,7 @@ namespace LetMeSleep.Bootstrap
             if (quiescing) return;
             if (lobby?.IsOwner == true && room?.Current?.Phase == RoomPhase.Playing) room.FinishRound();
             showingResults = true; game?.SetInputBlocked(true);
-            ui.PresentResults(new ResultsUiState(MatchOutcome.Interrupted, training, training || lobby.IsOwner, 0, 20, 0, reason));
+            ui.PresentResults(new ResultsUiState(MatchOutcome.Interrupted, training, training || lobby?.IsOwner == true, 0, activeConfig?.BloodGoal ?? 20, 0, reason, trainingRole, activeConfig?.ModeId ?? GameModes.Blood, activeConfig?.MapId ?? RoomRules.AlfaMap));
         }
         private void BindCameraDistance(string mapId)
         {
@@ -401,7 +447,21 @@ namespace LetMeSleep.Bootstrap
             gameNetwork?.Dispose(); gameNetwork = null;
             if (game) { game.EventReady -= ObserveCombatFeedback; game.StopRound(); game.gameObject.SetActive(false); Destroy(game.gameObject); game = null; }
             if (presentation) { presentation.SetActive(false); Destroy(presentation); presentation = null; }
-            activeRoster = null; showingResults = false;
+            activeRoster = null; activeConfig = null; spectator = null; showingResults = false;
+        }
+        private IReadOnlyList<ObjectiveDefinition> GetObjectivesForMode(string modeId) => modeId == GameModes.Tasks ? game.World.GetObjectiveDefinitions() : Array.Empty<ObjectiveDefinition>();
+        private static bool HasTaskCatalog(EnvironmentMapDefinition definition, string mapId)
+        {
+            if (!definition || !definition.TryGetComponent<GameplayObjectiveCatalog>(out var catalog)) return false;
+            try { catalog.ValidateAuthoring(mapId); return true; }
+            catch (InvalidOperationException) { return false; }
+        }
+        private bool IsModeAvailable(string mapId, string modeId)
+        {
+            if (!GameModes.IsValid(modeId) || !IsAvailableMap(mapId)) return false;
+            if (modeId != GameModes.Tasks) return true;
+            var definition = mapId == RoomRules.AlfaMap ? HousePrefab ? HousePrefab.GetComponent<EnvironmentMapDefinition>() : null : HiggsfieldMaps.Entries.FirstOrDefault(e => e.MapId == mapId)?.Prefab;
+            return HasTaskCatalog(definition, mapId);
         }
         private bool IsAvailableMap(string mapId) => mapId == RoomRules.AlfaMap ||
             (HiggsfieldMaps && HiggsfieldMaps.Entries.Any(entry => entry.MapId == mapId));
@@ -516,7 +576,7 @@ namespace LetMeSleep.Bootstrap
             ShutdownStep(() => { if (game) Destroy(game.gameObject); }); game = null;
             ShutdownStep(() => { if (presentation) Destroy(presentation); }); presentation = null;
             ShutdownStep(() => { if (lobbyMovement) Destroy(lobbyMovement.gameObject); }); lobbyMovement = null;
-            activeRoster = null; showingResults = false;
+            activeRoster = null; activeConfig = null; spectator = null; showingResults = false;
             DisposeForShutdown(ref room);
             DisposeForShutdown(ref transport);
             DisposeForShutdown(ref lobby);

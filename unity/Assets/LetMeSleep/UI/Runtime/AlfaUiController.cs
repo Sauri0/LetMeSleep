@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LetMeSleep.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -30,7 +31,13 @@ namespace LetMeSleep.UI
         private TrainingMapOption[] trainingMaps = { new TrainingMapOption(HousePatioMapId, "CASA CON PATIO") };
         private string selectedTrainingMapId = HousePatioMapId;
         private const string NoTrainingMaps = "No hay mapas de entrenamiento disponibles.";
-        private TextMeshProUGUI trainingMapLabel;
+        private TextMeshProUGUI trainingMapLabel, trainingModeLabel, roomModeLabel;
+        private UnityEngine.UI.Button trainingModePrevious, trainingModeNext, roomModePrevious, roomModeNext;
+        private TextMeshProUGUI hudTask, hudLives;
+        private GameObject hudTaskPanel, hudReticle;
+        private bool isSpectator;
+        private UnityEngine.UI.Image hudTaskFill;
+        private AlfaUiIcon hudScoreIcon;
         private UnityEngine.UI.Button trainingMapPrevious, trainingMapNext;
         private CustomizationUiState customizationState;
         private BasicCustomizationDraft customizationDraft;
@@ -181,6 +188,7 @@ namespace LetMeSleep.UI
             var escape = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
             var gamepadBack = Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame;
             if (escape || gamepadBack) HandleEscape();
+            if (screen == AlfaUiScreen.Gameplay && isSpectator && !IsModalOpen && Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame && actions is ISpectatorActions spectatorActions) spectatorActions.SpectateNext();
             UpdateSelectionFeedback();
         }
 
@@ -328,6 +336,11 @@ namespace LetMeSleep.UI
                 (lobbyState != null && !string.IsNullOrWhiteSpace(lobbyState.MapLabel) && lobbyState.MapLabel != "CASA CON PATIO"
                     ? lobbyState.MapLabel : id);
             roomMapPrevious.interactable = roomMapNext.interactable = CanCycleRoomMap;
+            if (roomModeLabel != null)
+            {
+                roomModeLabel.text = AlfaModeText.Name(lobbyState?.ModeId ?? GameModes.Blood);
+                roomModePrevious.interactable = roomModeNext.interactable = CanEditLobbyRules && actions is IRoomModeActions;
+            }
         }
 
         private void UpdateLobbyControls()
@@ -362,6 +375,22 @@ namespace LetMeSleep.UI
         }
 
         private bool HasSelectedTrainingMap => trainingMaps.Any(map => map.Id == selectedTrainingMapId);
+        private bool TrainingModeAvailable => HasSelectedTrainingMap && (trainingState.ModeId != GameModes.Tasks || trainingMaps.First(map => map.Id == selectedTrainingMapId).SupportsTasks);
+        private void CycleTrainingMode(int delta)
+        {
+            if (TrainingBusy) return;
+            int index = Array.IndexOf(AlfaModeText.ModeIds, trainingState.ModeId);
+            string next = AlfaModeText.ModeIds[(index + delta + AlfaModeText.ModeIds.Length) % AlfaModeText.ModeIds.Length];
+            PresentTraining(new TrainingUiState(trainingState.SelectedRole, modeId: next));
+        }
+        private void CycleRoomMode(int delta)
+        {
+            if (!CanEditLobbyRules || !(actions is IRoomModeActions modes)) return;
+            int index = Array.IndexOf(AlfaModeText.ModeIds, lobbyState.ModeId);
+            lobbyRulesLatched = true; UpdateRoomMapView(); UpdateLobbyControls();
+            lobbyStatus.text = "Guardando reglas…";
+            modes.SetRoomMode(AlfaModeText.ModeIds[(index + delta + AlfaModeText.ModeIds.Length) % AlfaModeText.ModeIds.Length]);
+        }
 
         private void CycleTrainingMap(int delta)
         {
@@ -376,11 +405,17 @@ namespace LetMeSleep.UI
             if (trainingMapLabel == null) return;
             trainingMapLabel.text = trainingMaps.FirstOrDefault(map => map.Id == selectedTrainingMapId)?.DisplayName ?? "SIN MAPAS";
             trainingMapPrevious.interactable = trainingMapNext.interactable = !TrainingBusy && trainingMaps.Length > 1;
-            trainingStartButton.interactable = !TrainingBusy && HasSelectedTrainingMap;
+            trainingStartButton.interactable = !TrainingBusy && TrainingModeAvailable;
+            if (trainingModeLabel != null)
+            {
+                trainingModeLabel.text = AlfaModeText.Name(trainingState.ModeId);
+                trainingModePrevious.interactable = trainingModeNext.interactable = !TrainingBusy;
+            }
             if (!TrainingBusy && !HasSelectedTrainingMap) trainingStatus.text = NoTrainingMaps;
-            else if (trainingStatus.text == NoTrainingMaps) trainingStatus.text = trainingState.Message;
+            else if (!TrainingBusy && !TrainingModeAvailable) trainingStatus.text = "Este mapa todavía no tiene tareas preparadas. Elegí otro mapa o modo.";
+            else if (!TrainingBusy) trainingStatus.text = string.IsNullOrWhiteSpace(trainingState.Message) ? AlfaModeText.Instructions(trainingState.ModeId, trainingState.SelectedRole == AlfaRole.Mosquito) : trainingState.Message;
             if (resultsState != null && resultsState.IsTraining && resultsPrimary != null)
-                resultsPrimary.interactable = !TrainingBusy && !resultsActionLatched && HasSelectedTrainingMap;
+                resultsPrimary.interactable = !TrainingBusy && !resultsActionLatched && TrainingModeAvailable;
         }
 
         public void PresentTraining(TrainingUiState state)
@@ -401,7 +436,7 @@ namespace LetMeSleep.UI
             if (screen == AlfaUiScreen.Results && resultsState != null && resultsState.IsTraining)
             {
                 resultsActionLatched = busy;
-                resultsPrimary.interactable = !busy && HasSelectedTrainingMap;
+                resultsPrimary.interactable = !busy && TrainingModeAvailable;
                 resultsLeave.interactable = !trainingCancelLatched;
                 resultsPrimaryLabel.text = busy ? "PREPARANDO…" : "REPETIR ENTRENAMIENTO";
                 resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = busy ?
@@ -482,9 +517,18 @@ namespace LetMeSleep.UI
         public void PresentHud(BloodHudUiState state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
+            isSpectator = state.IsSpectator;
             hudClock.text = FormatClock(state.SecondsRemaining);
-            hudBlood.text = $"SANGRE  {state.BloodCurrent:0.#} / {state.BloodTarget:0.#}";
-            var bloodRatio = state.BloodTarget > 0f ? Mathf.Clamp01(state.BloodCurrent / state.BloodTarget) : 0f;
+            hudBlood.text = AlfaModeText.Score(state.ModeId, state.BloodCurrent, state.BloodTarget, state.TasksCompleted, state.TasksGoal, state.MosquitoesAlive);
+            hudScoreIcon.Kind = state.ModeId == GameModes.Blood ? AlfaUiIconKind.Blood : state.ModeId == GameModes.Tasks ? AlfaUiIconKind.Ready : AlfaUiIconKind.Mosquito;
+            hudBlood.fontSize = state.ModeId == GameModes.Survival ? 17f : 20f;
+            var bloodRatio = state.ModeId == GameModes.Tasks ? (state.TasksGoal > 0 ? Mathf.Clamp01((float)state.TasksCompleted / state.TasksGoal) : 0) : state.BloodTarget > 0f ? Mathf.Clamp01(state.BloodCurrent / state.BloodTarget) : 0f;
+            hudBloodFill.transform.parent.gameObject.SetActive(state.ModeId != GameModes.Survival);
+            hudTaskPanel.SetActive(!state.IsSpectator && !string.IsNullOrWhiteSpace(state.PrivateTaskText));
+            hudTask.text = state.PrivateTaskText;
+            hudTaskFill.rectTransform.anchorMax = new Vector2(state.TaskProgress01, 1f);
+            hudLives.text = state.IsSpectator ? "ESPECTADOR" : state.Role == AlfaRole.Mosquito && state.ModeId != GameModes.Blood ? $"VIDAS  {state.LivesRemaining}" : string.Empty;
+            hudReticle.SetActive(!state.IsSpectator);
             hudBloodFill.rectTransform.anchorMax = new Vector2(bloodRatio, 1f);
             hudRoleLabel.text = state.Role == AlfaRole.Human ? "HUMANO" : "MOSQUITO";
             hudRoleIcon.Kind = state.Role == AlfaRole.Human ? AlfaUiIconKind.Human : AlfaUiIconKind.Mosquito;
@@ -494,7 +538,7 @@ namespace LetMeSleep.UI
             hudRoleOutline.effectColor = new Color(roleColor.r, roleColor.g, roleColor.b, 0.9f);
             hudInteraction.text = state.Interaction;
             hudHint.text = string.IsNullOrWhiteSpace(state.ContextHint) ? DefaultRoleHint(state.Role) : state.ContextHint;
-            hudActorState.text = ActorStateText(state.Role, state.ActorState);
+            hudActorState.text = state.ModeId != GameModes.Blood && state.ActorState == HudActorState.Extracting ? "INTERRUMPIENDO" : ActorStateText(state.Role, state.ActorState);
             hudActorState.color = state.ActorState == HudActorState.Normal ? AlfaUiTheme.Moon200 : AlfaUiTheme.Pajama500;
             hudProgress.transform.parent.gameObject.SetActive(state.ActorState == HudActorState.Extracting || state.ActorState == HudActorState.Recovering);
             var rect = hudProgress.rectTransform;
@@ -513,7 +557,7 @@ namespace LetMeSleep.UI
             trainingStartLatched = false;
             trainingCancelLatched = false;
             if (trainingState.IsLoading)
-                trainingState = new TrainingUiState(trainingState.SelectedRole, false, trainingState.Message);
+                trainingState = new TrainingUiState(trainingState.SelectedRole, false, trainingState.Message, trainingState.ModeId);
             actions.SetGameplayInputBlocked(false);
             SetScreen(AlfaUiScreen.Gameplay, null);
         }
@@ -531,14 +575,15 @@ namespace LetMeSleep.UI
             resultsActionLatched = false;
             trainingStartLatched = false;
             trainingCancelLatched = false;
-            trainingState = new TrainingUiState(state.TrainingRole, false);
+            trainingState = new TrainingUiState(state.TrainingRole, false, modeId: state.ModeId);
+            selectedTrainingMapId = state.MapId;
             actions.SetGameplayInputBlocked(true);
             resultsTitle.text = state.Outcome == MatchOutcome.Humans ? "GANARON LOS HUMANOS" :
                 state.Outcome == MatchOutcome.Mosquitoes ? "GANARON LOS MOSQUITOS" : "RONDA INTERRUMPIDA";
             var reason = string.IsNullOrWhiteSpace(state.Reason) ? string.Empty : "\n" + state.Reason;
-            resultsStats.text = $"Sangre compartida: {state.BloodCurrent:0.#} / {state.BloodTarget:0.#}\nTiempo: {FormatClock(state.ElapsedSeconds)}{reason}";
+            resultsStats.text = AlfaModeText.Name(state.ModeId) + "\n" + AlfaModeText.ResultScore(state.ModeId, state.BloodCurrent, state.BloodTarget, state.TasksCompleted, state.TasksGoal, state.MosquitoesAlive) + $"\nTiempo: {FormatClock(state.ElapsedSeconds)}{reason}";
             resultsPrimary.gameObject.SetActive(state.IsTraining || state.IsOwner);
-            resultsPrimary.interactable = !state.IsTraining || HasSelectedTrainingMap;
+            resultsPrimary.interactable = !state.IsTraining || TrainingModeAvailable;
             resultsLeave.interactable = true;
             resultsPrimaryLabel.text = state.IsTraining ? "REPETIR ENTRENAMIENTO" : "VOLVER AL LOBBY";
             resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = state.IsTraining ? "VOLVER AL MENÚ" : "SALIR DE LA SALA";
@@ -712,7 +757,18 @@ namespace LetMeSleep.UI
             lobbyRoleBadge = factory.Text(rules, "LocalAuthority", "SOS INVITADO", AlfaUiTheme.NoteSize,
                 AlfaUiTheme.Moon200, TextAlignmentOptions.Center, true);
             factory.Divider(rules, "AuthorityDivider", new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.5f));
-            AddReadOnlyField(rules, "MODO", "SANGRE");
+            roomModeLabel = AddCycleField(rules, "MODO", "RoomMode", -1, 1, CycleRoomMode);
+            roomModePrevious = roomModeLabel.transform.parent.Find("RoomModePrevious").GetComponent<UnityEngine.UI.Button>();
+            roomModeNext = roomModeLabel.transform.parent.Find("RoomModeNext").GetComponent<UnityEngine.UI.Button>();
+            roomModeLabel.fontSize = 19f;
+            var modeCaption = roomModeLabel.transform.parent.Find("Label").GetComponent<UnityEngine.UI.LayoutElement>();
+            modeCaption.minWidth = modeCaption.preferredWidth = 64f;
+            roomModeLabel.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 200f;
+            foreach (var button in new[] { roomModePrevious, roomModeNext })
+            {
+                var layout = button.GetComponent<UnityEngine.UI.LayoutElement>();
+                layout.preferredWidth = 48f; layout.flexibleWidth = 0f; layout.minHeight = layout.preferredHeight = 60f;
+            }
             var mapRow = factory.Horizontal(rules, "RoomMapRow", 8f, TextAnchor.MiddleCenter);
             var mapCaption = factory.Text(mapRow, "Label", "MAPA", AlfaUiTheme.LabelSize, AlfaUiTheme.Sheet100);
             var captionLayout = mapCaption.GetComponent<UnityEngine.UI.LayoutElement>();
@@ -779,9 +835,11 @@ namespace LetMeSleep.UI
             var roles = factory.Horizontal(content, "Roles", 16f, TextAnchor.MiddleCenter);
             trainingHumanButton = factory.FeatureButton(roles, "TrainingHumanButton", "HUMANO", "DEFENDÉ TU DESCANSO",
                 () => SelectTrainingRole(AlfaRole.Human), AlfaUiIconKind.Human, true, false, 86f);
-            trainingMosquitoButton = factory.FeatureButton(roles, "TrainingMosquitoButton", "MOSQUITO", "VOLÁ Y EXTRAÉ SANGRE",
+            trainingMosquitoButton = factory.FeatureButton(roles, "TrainingMosquitoButton", "MOSQUITO", "VOLÁ Y EVITÁ LOS GOLPES",
                 () => SelectTrainingRole(AlfaRole.Mosquito), AlfaUiIconKind.Mosquito, false, false, 86f);
-            AddReadOnlyField(content, "MODO", "SANGRE");
+            trainingModeLabel = AddCycleField(content, "MODO", "TrainingMode", -1, 1, CycleTrainingMode);
+            trainingModePrevious = trainingModeLabel.transform.parent.Find("TrainingModePrevious").GetComponent<UnityEngine.UI.Button>();
+            trainingModeNext = trainingModeLabel.transform.parent.Find("TrainingModeNext").GetComponent<UnityEngine.UI.Button>();
             trainingMapLabel = AddCycleField(content, "MAPA", "TrainingMap", -1, 1, CycleTrainingMap);
             trainingMapPrevious = trainingMapLabel.transform.parent.Find("TrainingMapPrevious").GetComponent<UnityEngine.UI.Button>();
             trainingMapNext = trainingMapLabel.transform.parent.Find("TrainingMapNext").GetComponent<UnityEngine.UI.Button>();
@@ -964,7 +1022,7 @@ namespace LetMeSleep.UI
 
             var blood = factory.Panel(view.transform, "BloodBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f));
             Anchor(blood, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 1f), new Vector2(8f, -24f), new Vector2(260f, 66f));
-            var bloodIcon = factory.Icon(blood, "BloodIcon", AlfaUiIconKind.Blood, AlfaUiTheme.Pajama500);
+            var bloodIcon = factory.Icon(blood, "BloodIcon", AlfaUiIconKind.Blood, AlfaUiTheme.Pajama500); hudScoreIcon = bloodIcon;
             Anchor(bloodIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 3f), new Vector2(30f, 30f));
             hudBlood = factory.Text(blood, "Blood", "SANGRE  0 / 20", 20f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
             AlfaUiFactory.Fill(hudBlood.rectTransform, 50f, 14f, 5f, 17f);
@@ -1012,7 +1070,20 @@ namespace LetMeSleep.UI
             hudHint.enableAutoSizing = false;
             hudHint.overflowMode = TextOverflowModes.Overflow;
             AlfaUiFactory.Fill(hudHint.rectTransform, 16f, 16f, 10f, 10f);
-            var reticle = factory.Icon(view.transform, "Reticle", AlfaUiIconKind.Crosshair, AlfaUiTheme.Sheet100);
+            hudLives = factory.Text(view.transform, "Lives", string.Empty, 20f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
+            Anchor(hudLives.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -98f), new Vector2(260f, 34f));
+            hudTaskPanel = factory.Panel(view.transform, "PrivateTask", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, .9f)).gameObject;
+            Anchor(hudTaskPanel.GetComponent<RectTransform>(), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -108f), new Vector2(460f, 148f));
+            hudTask = factory.Text(hudTaskPanel.transform, "PrivateTaskText", string.Empty, 21f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left);
+            hudTask.textWrappingMode = TextWrappingModes.Normal;
+            AlfaUiFactory.Fill(hudTask.rectTransform, 18f, 18f, 12f, 28f);
+            var taskTrack = AlfaUiFactory.Node("TaskProgress", hudTaskPanel.transform, typeof(UnityEngine.UI.Image));
+            taskTrack.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night600;
+            Anchor(taskTrack.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), new Vector2(18f, 12f), new Vector2(-36f, 8f));
+            hudTaskFill = AlfaUiFactory.Node("Fill", taskTrack.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+            hudTaskFill.color = AlfaUiTheme.Mint400; hudTaskFill.raycastTarget = false; AlfaUiFactory.Fill(hudTaskFill.rectTransform);
+            hudTaskPanel.SetActive(false);
+            var reticle = factory.Icon(view.transform, "Reticle", AlfaUiIconKind.Crosshair, AlfaUiTheme.Sheet100); hudReticle = reticle.gameObject;
             Anchor(reticle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(18f, 18f));
         }
 
@@ -1210,7 +1281,7 @@ namespace LetMeSleep.UI
         {
             if (TrainingBusy) return;
             PresentTraining(new TrainingUiState(role, false, role == AlfaRole.Human ?
-                "Defendé tu descanso con mirada y alcance manual." : "Volá hacia la mira y picá por contacto válido."));
+                AlfaModeText.Instructions(trainingState.ModeId, false) : AlfaModeText.Instructions(trainingState.ModeId, true), trainingState.ModeId));
         }
 
         private void BeginTraining()
@@ -1227,7 +1298,7 @@ namespace LetMeSleep.UI
         private void StartTrainingIntent(AlfaRole role, bool fromResults)
         {
             if (TrainingBusy || (fromResults && resultsActionLatched)) return;
-            if (!HasSelectedTrainingMap)
+            if (!TrainingModeAvailable)
             {
                 UpdateTrainingMapView();
                 return;
@@ -1253,7 +1324,7 @@ namespace LetMeSleep.UI
             }
             trainingStatus.text = "Preparando entrenamiento…";
             UpdateTrainingMapView();
-            actions.StartTraining(role, BloodModeId, selectedTrainingMapId);
+            actions.StartTraining(role, trainingState.ModeId, selectedTrainingMapId);
         }
 
         private void RequestTrainingCancel()
@@ -1812,6 +1883,7 @@ namespace LetMeSleep.UI
         {
             switch (state)
             {
+                case HudActorState.Spectating: return "ELIMINADO · OBSERVANDO";
                 case HudActorState.Extracting: return "EXTRAYENDO";
                 case HudActorState.Bitten: return role == AlfaRole.Human ? "TE ESTÁN PICANDO · MIRÁ Y GOLPEÁ" : string.Empty;
                 case HudActorState.Recovering: return "RECUPERANDO…";

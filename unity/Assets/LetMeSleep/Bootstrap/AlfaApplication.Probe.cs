@@ -26,7 +26,7 @@ namespace LetMeSleep.Bootstrap
         }
         [Serializable] private sealed class PlayerProbeReceipt
         {
-            public string version,unity,gpu,utc;
+            public string version,unity,gpu,utc,modeId,mapId;
             public bool preferencesRecovered,preferencesWriteBlocked;
             public string loadedPlayerName,loadedSkin,loadedPajama,loadedMosquito;
             public bool humanRuntime,mosquitoRuntime,humanStationary,returnedToMenu,onlineRoomCreated,onlineRoomLeft;
@@ -59,10 +59,22 @@ namespace LetMeSleep.Bootstrap
             yield return new WaitForSecondsRealtime(menuSeconds);
             ScreenCapture.CaptureScreenshot(Path.Combine(output,"menu.png"));
             yield return null; yield return null;
+            string probeMode = Core.GameModes.Blood, probeMap = Core.RoomRules.AlfaMap;
+            int modeOption = Array.IndexOf(probeArgs, "--lms-probe-mode"), mapOption = Array.IndexOf(probeArgs, "--lms-probe-map");
+            if (modeOption >= 0 && modeOption + 1 < probeArgs.Length) probeMode = probeArgs[modeOption + 1];
+            if (mapOption >= 0 && mapOption + 1 < probeArgs.Length) probeMap = probeArgs[mapOption + 1];
+            receipt.modeId = probeMode; receipt.mapId = probeMap;
+            if (!Core.GameModes.IsValid(probeMode) || !IsModeAvailable(probeMap, probeMode))
+            {
+                receipt.failure = "Requested mode/map is unavailable.";
+                File.WriteAllText(Path.Combine(output, "player-probe.json"), JsonUtility.ToJson(receipt, true));
+                Application.logMessageReceived -= countErrors; Application.Quit(1); yield break;
+            }
             var timings=new List<float>();
             foreach(var role in new[]{AlfaRole.Human,AlfaRole.Mosquito})
             {
-                StartTraining(role,AlfaUiController.BloodModeId,Core.RoomRules.AlfaMap);
+                StartTraining(role,probeMode,probeMap);
+                if (game == null || game.LatestSnapshot == null) { receipt.failure = "Training failed to start."; break; }
                 // The ordinary training button also switches the UI after StartTraining.
                 ui.ShowGameplay(true);
                 game.CaptureLocalInput=false; var start=game.LatestSnapshot.Actors.First(a=>a.ActorId==game.LocalActorId).Position;
