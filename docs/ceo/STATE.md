@@ -15,12 +15,21 @@ CEO coordina revisión en movimiento de cinco mapas y próximos turnos.
 - Motion01 generó clips Puerto/Camp. CEO inspeccionó cuatro frames de cada uno:
   bandas de terreno/piso visibles en faro; Camp testigo parcialmente oculto.
   Técnica prepara A/B de autoría Puerto, sin cambios aplicados aún.
-- UI freeze01: captura real menú/HUD720/1080 1/1, pero gate equipo falla overflow
-  y revisión detecta SALIR/ESTAMINA invisibles, MANOS truncado. Red corrige freeze02;
-  no se aprueba primera iteración por el PASS parcial. Evidencia UiRedesignReview01.
-- CharacterMotionAudit01 identifica caídas humanas por clip y R4 mosquito
-  fuera de producción. HumanArmPose01 corre diagnóstico real Strike en aislado,
-  estado posee turno Unity hasta terminal. UI central puede editarse entretanto.
+- UI freeze03: gate 2/2 PASS, pero CEO detecta solapamiento de InteractionPrompt
+  con inventario y una letra huérfana en REUTILIZABLE. Freeze04 corrige ancho y
+  distribución; CPU0/0, revisión nativa pendiente. Intento de lanzamiento abortó
+  antes de iniciar por Unity de otro proyecto; no se interviene ese proceso.
+- HumanArmPose01 completó en aislado: manos llegan a177,70° de codo con longitudes
+  óseas constantes; no prueba elongación de skinning. Matamoscas izquierda queda
+  excluida por no ser ruta válida. Marcha/deformación visual aún pendientes.
+- CEO prepara HumanMotionVisual01 (CPU0/0): secuencia actual idle/marcha/golpe
+  en estudio de frente/perfil con snapshots inyectados; no acredita input ni
+  autoría nueva. Estado prepara integración R4 aislada, sin tocar producción:
+  deben resolverse propiedad de pose, posición autoritativa y recuperación.
+- PuertoFloorRepair01 v1 recorta huella real en memoria con atributos conservados;
+  grilla no ejecutó por Stopwatch del fixture sin inicializar. FAIL preservado,
+  sin assets cambiados. Técnica agrega exactos Frozen y corrige runner antes de
+  siguiente gate. No aceptar la reparación por área geométrica solamente.
 
 ## Candidata Windows 04 comprobada; Puerto pendiente
 
