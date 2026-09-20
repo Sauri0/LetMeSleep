@@ -1,5 +1,28 @@
 # Relevo CEO — 2026-09-19
 
+## Gate actual: interacción y salida de objetivos
+
+- `b341ff4` exige contacto/LOS real antes de que un bot se detenga a trabajar.
+  Los dos lotes nativos pasan 116/116 casos, sin omitidos. Camp stump03 pasa
+  en 155 ticks; anteriormente se detenía sin progreso. Casa catálogo13 PASS.
+- Camp motor02 cumple mínimos, pero instalación01 se abortó antes de guardar:
+  ronda determinista de 150 s completa 13/20 frente a cuota14. Ronda02 reproduce
+  el resultado. Actores3/5 quedan separados por aproximadamente0.501m; el
+  testigo aislado del actor5 hacia cooler pasa220 ticks desde la misma posición.
+  Revisar colisión entre humanos, sin cambiar semilla, cuota ni plazos.
+- Puerto motor02 sólo falla onward desde tres mesitas. Diagnóstico cottage3
+  muestra contacto con BedsideTable y ocho candidatos sin salida; investigar
+  sweeps al iniciar en contacto. Yate helm oscila frente a su consola; Astra
+  prepara testigo físico de candidatos, sin cambio de selector aún.
+- Isla v6 tiene8 ARRIVED,3 BUDGET,5 STALLED; sólo las cuatro familias
+  bidireccionales válidas entran al candidato03. v7 ejecutado con exit0 y
+  negativos explícitos; técnica revisa y prepara autoría final externa.
+- Instrumentación CEO admite origen en otro objetivo o posición registrada y
+  añade posición/grounded a transiciones de ronda. Compilada y ejecutada en
+  port-cottage-onward-diagnostic-02 y camp-task-round-diagnostic-02.
+- Sólo Casa tiene catálogo instalado. Los otros mapas, arte nuevo, equipo,
+  WAN/voz real y build/publicación siguen pendientes; objetivo activo.
+
 ## Navegación por rol y objetivos externos — último gate
 
 - `3988b7` integra steering compuesto: native03 10/10 PASS; Yate testigo

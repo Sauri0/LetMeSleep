@@ -103,9 +103,8 @@ public static class V020GameplayObjectiveInstaller
         string[] args = Environment.GetCommandLineArgs();
         var candidate = ReadExternalManifest(args).maps.Single();
         var specs = ExternalSpecs(candidate);
-        if (!int.TryParse(CommandArgument(args, "-objectiveSpawn"), NumberStyles.None,
-                CultureInfo.InvariantCulture, out int spawn) || spawn < 0)
-            throw new ArgumentException("Nonnegative -objectiveSpawn index required.");
+        if (new[] { "-objectiveSpawn", "-objectiveSourceObjective", "-objectiveStart" }.Count(args.Contains) != 1)
+            throw new ArgumentException("Specify one spawn, source objective or recorded start position.");
         string target = CommandArgument(args, "-objectiveTarget");
         if (!specs.Any(item => item.ObjectiveId == target))
             throw new ArgumentException("Requested diagnostic target is not in the manifest.");
@@ -114,9 +113,36 @@ public static class V020GameplayObjectiveInstaller
         var map = prefab ? prefab.GetComponent<EnvironmentMapDefinition>() : null;
         Transform[] humans = (map?.HumanSpawnPoints ?? Array.Empty<Transform>()).Where(item => item).ToArray();
         Transform mosquito = (map?.MosquitoSpawnPoints ?? Array.Empty<Transform>()).FirstOrDefault(item => item);
-        if (spawn >= humans.Length || !mosquito)
-            throw new InvalidOperationException("Diagnostic requires authored human and mosquito spawns.");
-        ProveHumanRoute(entries, humans[spawn].position.ToFloat(), "external:spawn:" + spawn, target,
+        if (!mosquito) throw new InvalidOperationException("Diagnostic requires an authored mosquito spawn.");
+        Float3 source;
+        string sourceId;
+        if (args.Contains("-objectiveSpawn"))
+        {
+            if (!int.TryParse(CommandArgument(args, "-objectiveSpawn"), NumberStyles.None,
+                    CultureInfo.InvariantCulture, out int spawn) || spawn < 0 || spawn >= humans.Length)
+                throw new ArgumentException("Existing nonnegative -objectiveSpawn index required.");
+            source = humans[spawn].position.ToFloat(); sourceId = "external:spawn:" + spawn;
+        }
+        else if (args.Contains("-objectiveSourceObjective"))
+        {
+            string id = CommandArgument(args, "-objectiveSourceObjective");
+            var entry = entries.SingleOrDefault(item => item.ObjectiveId == id);
+            if (entry == null || id == target) throw new ArgumentException("Distinct catalog source objective required.");
+            source = prefab.transform.TransformPoint(entry.LocalApproachPoint).ToFloat();
+            sourceId = "external:objective:" + id;
+        }
+        else
+        {
+            string[] coordinates = CommandArgument(args, "-objectiveStart").Split(',');
+            var values = new float[3];
+            if (coordinates.Length != 3) throw new ArgumentException("Start position requires x,y,z.");
+            for (int i = 0; i < 3; i++)
+                if (!float.TryParse(coordinates[i], NumberStyles.Float, CultureInfo.InvariantCulture, out values[i]) ||
+                    !MathEx.Finite(values[i]) || Math.Abs(values[i]) > 10000)
+                    throw new ArgumentException("Start position must be finite and bounded.");
+            source = new Float3(values[0], values[1], values[2]); sourceId = "external:recorded-position";
+        }
+        ProveHumanRoute(entries, source, sourceId, target,
             mosquito.position.ToFloat(), 9800, trace: true, decisionTrace: true,
             mapId: candidate.mapId, prefabPath: candidate.prefabPath);
         Debug.Log("LMS_OBJECTIVE_ROUTE_DIAGNOSTIC map=" + candidate.mapId + " cases=1 saved=0");
@@ -423,8 +449,12 @@ public static class V020GameplayObjectiveInstaller
                         ":" + assignment.Status + ":" + (assignment.ProgressTicks > 0 ? "working" : "not-working");
                     if (previous.TryGetValue(human.ActorId, out string last) && last == state) continue;
                     previous[human.ActorId] = state;
+                    var actor = runtime.LatestSnapshot?.Actors.FirstOrDefault(item => item.ActorId == human.ActorId);
+                    if (actor == null) throw new InvalidOperationException("Task round actor snapshot missing.");
                     Debug.Log("LMS_TASK_ROUND actor=" + human.ActorId + " tick=" + tick + " state=" + state +
-                              " progress=" + (assignment?.ProgressTicks ?? 0) + " deadline=" + (assignment?.DeadlineTick ?? 0));
+                              " progress=" + (assignment?.ProgressTicks ?? 0) + " deadline=" + (assignment?.DeadlineTick ?? 0) +
+                              string.Format(CultureInfo.InvariantCulture, " position={0:R},{1:R},{2:R} grounded={3}",
+                                  actor.Position.X, actor.Position.Y, actor.Position.Z, actor.Grounded ? 1 : 0));
                 }
             }
             GameSessionState result = runtime.LatestSnapshot;
@@ -1131,7 +1161,7 @@ public static class V020GameplayObjectiveInstaller
                       (sample.Tick == 2 || (sample.Tick - 2) % 15 == 0) ||
                       sourceId == "spawn:0" && sample.Assignment?.ObjectiveId == "casa.switch.bedroom_two_lamp" &&
                       (sample.Tick >= 62 && sample.Tick <= 95 || sample.Tick >= 305 && sample.Tick <= 330) ||
-                      sourceId.StartsWith("external:spawn:", StringComparison.Ordinal) &&
+                      sourceId.StartsWith("external:", StringComparison.Ordinal) &&
                       sample.Assignment?.Status == TaskAssignmentStatus.Active;
         if (!wanted) return;
         const BindingFlags hidden = BindingFlags.Instance | BindingFlags.NonPublic;
