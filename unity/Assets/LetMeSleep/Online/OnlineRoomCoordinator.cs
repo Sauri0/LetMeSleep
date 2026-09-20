@@ -22,6 +22,7 @@ namespace LetMeSleep.Online
         public RoomSession HostAuthority => hostRoom;
         public string Error { get; private set; } = "";
         public event Action<RoomView> RoomChanged;
+        public event Action<string> MemberReconnected;
 
         public OnlineRoomCoordinator(EosConnection connection, EosLobbySession lobby, EosPeerTransport transport, string playerName)
         {
@@ -34,6 +35,8 @@ namespace LetMeSleep.Online
         public void Tick(double monotonicSeconds)
         {
             clock = monotonicSeconds;
+            if (!disposed && hostRoom != null && lobby.State == LobbyState.Connected && lobby.IsOwner
+                && hostRoom.ExpireReservations(clock)) Publish();
             if (disposed || lobby.State != LobbyState.Connected || lobby.IsOwner || Current != null) return;
             if (awaitingSince < 0) awaitingSince = clock;
             if (clock - awaitingSince > 25) { Error = "RoomHandshakeTimedOut"; return; }
@@ -90,7 +93,7 @@ namespace LetMeSleep.Online
             if (hostRoom != null)
             {
                 foreach (var member in hostRoom.Snapshot().Members)
-                    if (!lobby.Contains(member.Id)) { hostRoom.Leave(member.Id); frames.Forget(member.Id); }
+                    if (!lobby.Contains(member.Id)) { hostRoom.Disconnect(member.Id, clock); frames.Forget(member.Id); }
                 Publish();
             }
         }
@@ -113,11 +116,15 @@ namespace LetMeSleep.Online
             {
                 using var stream = new MemoryStream(payload, false); using var reader = new BinaryReader(stream, Encoding.UTF8);
                 RoomError result;
+                bool reconnected = false;
                 if (kind == Hello)
                 {
                     string protocol = RoomWireCodec.ReadText(reader, 64), name = RoomWireCodec.ReadText(reader, 96);
                     if (stream.Position != stream.Length) return;
-                    result = hostRoom.Join(peer, name, protocol);
+                    var existing = hostRoom.Snapshot().Members.FirstOrDefault(m => m.Id == peer);
+                    result = existing != null && !existing.Connected
+                        ? hostRoom.Reconnect(peer, name, protocol, clock) : hostRoom.Join(peer, name, protocol);
+                    reconnected = result == RoomError.None && existing != null && !existing.Connected;
                     if (result == RoomError.DuplicateMember) result = RoomError.None;
                 }
                 else if (kind == Ready)
@@ -131,6 +138,7 @@ namespace LetMeSleep.Online
                 else return;
                 if (result != RoomError.None) Send(peer, Rejected, new[] { (byte)result });
                 Publish();
+                if (reconnected) MemberReconnected?.Invoke(peer);
             }
             catch (IOException) { }
             catch (InvalidDataException) { }
@@ -153,7 +161,7 @@ namespace LetMeSleep.Online
         {
             if (disposed) return;
             disposed = true; transport.PacketReceived -= ReceivePacket; lobby.Changed -= MembershipChanged;
-            frames.MessageReceived -= ReceiveMessage; frames.Clear(); RoomChanged = null;
+            frames.MessageReceived -= ReceiveMessage; frames.Clear(); RoomChanged = null; MemberReconnected = null;
         }
     }
 }

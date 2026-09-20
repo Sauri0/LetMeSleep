@@ -11,7 +11,8 @@ namespace LetMeSleep.Online
     /// <summary>Round barrier and authenticated gameplay packets over EOS. Owns no simulation.</summary>
     public sealed class OnlineGameplaySession : IDisposable
     {
-        private const byte Begin = 20, Ack = 21, Input = 22, Action = 23, Snapshot = 24, Private = 25, Event = 26;
+        private const byte Begin = 20, Ack = 21, Input = 22, Action = 23, Snapshot = 24, Private = 25, Event = 26, ResumeBegin = 27, ResumeAck = 28;
+        private sealed class ResumeAttempt { internal ulong Challenge; internal double RetryAt; }
         private readonly EosLobbySession lobby;
         private readonly OnlineRoomCoordinator room;
         private readonly EosPeerTransport transport;
@@ -22,6 +23,8 @@ namespace LetMeSleep.Online
         private readonly Func<IReadOnlyList<ObjectiveDefinition>> objectives;
         private readonly MessageFraming framing = new MessageFraming();
         private readonly HashSet<string> waiting = new HashSet<string>(StringComparer.Ordinal);
+        private readonly Dictionary<string, ResumeAttempt> resuming = new Dictionary<string, ResumeAttempt>(StringComparer.Ordinal);
+        private ulong resumeChallenge, acceptedResumeChallenge;
         private readonly string localId, contentHash;
         private SpawnActor[] roster = Array.Empty<SpawnActor>();
         private GameplayRoundConfig config;
@@ -42,6 +45,7 @@ namespace LetMeSleep.Online
             this.contentHash = contentHash; this.authority = authority; this.replica = replica; this.doors = doors; this.tools = tools;
             this.objectives = objectives ?? (() => Array.Empty<ObjectiveDefinition>());
             transport.PacketReceived += ReceivePacket; framing.MessageReceived += ReceiveMessage;
+            room.MemberReconnected += ResumeMember;
         }
         public void StartHost(GameplayRoundConfig round, IReadOnlyList<SpawnActor> actors)
         {
@@ -61,7 +65,7 @@ namespace LetMeSleep.Online
                 || round.ToolDefinitions.Any(tool => !localTools.Any(local => local.PickupId == tool.PickupId && local.ToolId == tool.ToolId && SamePose(local, tool.Position, tool.Rotation)))
                 || (round.ModeId == GameModes.Tasks && round.ObjectiveCatalogHash != ObjectiveDefinition.CatalogHash(localObjectives)))
                 throw new ArgumentException("Round settings do not match room settings.");
-            config = round; roster = actors.ToArray(); failed = false; waiting.Clear(); framing.Clear();
+            config = round; roster = actors.ToArray(); failed = false; waiting.Clear(); resuming.Clear(); framing.Clear();
             foreach (var member in room.Current.Members) if (member.Id != localId) waiting.Add(member.Id);
             beginPacket = EncodeBegin(round, roster); barrierStart = now; retryAt = now + 1;
             foreach (var member in waiting) Send(member, Begin, beginPacket, true);
@@ -79,6 +83,13 @@ namespace LetMeSleep.Online
                 return;
             }
             if (room.Current?.Phase != RoomPhase.Playing || config.RoundId != (ulong)room.Current.Round) return;
+            if (lobby.IsOwner)
+                foreach (var peer in resuming.Keys.ToArray())
+                {
+                    if (!lobby.Contains(peer) || !room.Current.Members.Any(m => m.Id == peer && m.Connected))
+                    { resuming.Remove(peer); continue; }
+                    if (now >= resuming[peer].RetryAt) { SendResumeBegin(peer); resuming[peer].RetryAt = now + 1; }
+                }
             if (lobby.IsOwner && waiting.Count > 0)
             {
                 waiting.RemoveWhere(id => !lobby.Contains(id));
@@ -100,6 +111,48 @@ namespace LetMeSleep.Online
                 Send(owner, Private, GameplayWireCodec.Encode(state), false);
         }
         public void SendEvent(GameplayEvent item) { if (Ready && lobby.IsOwner && item.SessionEpoch == config.SessionEpoch && item.RoundId == config.RoundId) Broadcast(Event, GameplayWireCodec.Encode(item), true); }
+        private void ResumeMember(string peer)
+        {
+            if (disposed || failed || !lobby.IsOwner || config == null || room.Current?.Phase != RoomPhase.Playing
+                || !roster.Any(a => a.OwnerPuid == peer)) return;
+            framing.Forget(peer);
+            BeginResumeAttempt(peer);
+            SendResumeBegin(peer);
+        }
+        private ulong BeginResumeAttempt(string peer)
+        {
+            // Monotonic within this host session; never reuse a challenge on repeated reconnects.
+            var challenge = checked(++resumeChallenge);
+            resuming[peer] = new ResumeAttempt { Challenge = challenge, RetryAt = now + 1 };
+            return challenge;
+        }
+        private bool HasPeerPrepared(string peer) => !waiting.Contains(peer) && !resuming.ContainsKey(peer);
+        private byte[] ResumeIdentity(ulong challenge)
+        {
+            using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
+            writer.Write(RoundIdentity(config)); writer.Write(challenge); return stream.ToArray();
+        }
+        private bool AcceptAcknowledgement(string peer, byte[] packet, bool resume)
+        {
+            if (config == null || packet == null) return false;
+            if (resume)
+            {
+                if (!resuming.TryGetValue(peer, out var attempt) || !packet.SequenceEqual(ResumeIdentity(attempt.Challenge))) return false;
+                resuming.Remove(peer); waiting.Remove(peer); return true;
+            }
+            if (resuming.ContainsKey(peer) || !packet.SequenceEqual(RoundIdentity(config))) return false;
+            waiting.Remove(peer); return true;
+        }
+        private void SendResumeBegin(string peer)
+        {
+            // Keep original actor IDs and round identity, including remaining reserved peers.
+            // Expired actors are excluded; the next snapshot supplies the current live state.
+            var remaining = roster.Where(a => room.Current.Members.Any(m => m.Id == a.OwnerPuid)).ToArray();
+            if (remaining.Length < 2 || !resuming.TryGetValue(peer, out var attempt)) return;
+            using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
+            writer.Write(attempt.Challenge); writer.Write(EncodeBegin(config, remaining));
+            Send(peer, ResumeBegin, stream.ToArray(), true);
+        }
         private void Broadcast(byte kind, byte[] data, bool reliable)
         {
             foreach (var member in room.Current.Members) if (member.Id != localId && lobby.Contains(member.Id)) Send(member.Id, kind, data, reliable);
@@ -115,22 +168,37 @@ namespace LetMeSleep.Online
         private void ReceiveMessage(string peer, byte kind, byte[] packet)
         {
             if (disposed || lobby.State != LobbyState.Connected || !lobby.Contains(peer)) return;
-            if (kind == Begin && !lobby.IsOwner && peer == lobby.OwnerId)
+            if ((kind == Begin || kind == ResumeBegin) && !lobby.IsOwner && peer == lobby.OwnerId)
             {
+                ulong challenge = 0;
+                if (kind == ResumeBegin)
+                {
+                    if (packet == null || packet.Length < 40 || packet.Length > MessageFraming.MaximumMessageBytes) return;
+                    using var resumeStream = new MemoryStream(packet, false); using var resumeReader = new BinaryReader(resumeStream);
+                    challenge = resumeReader.ReadUInt64();
+                    if (challenge == 0) return;
+                    packet = resumeReader.ReadBytes(packet.Length - 8);
+                }
                 if (!TryBegin(packet, out var next, out var nextRoster)) return;
+                bool sameRound = config != null && config.RoundId == next.RoundId && config.SessionEpoch == next.SessionEpoch;
+                if (sameRound && ((kind == Begin && acceptedResumeChallenge != 0)
+                    || (kind == ResumeBegin && challenge < acceptedResumeChallenge))) return;
                 if (config == null || config.RoundId < next.RoundId)
                 {
+                    acceptedResumeChallenge = 0;
                     config = next; roster = nextRoster; lastOwnerPacket = now; failed = false;
                     if (!PrepareLocalRound()) return;
                 }
                 if (disposed || failed || config.RoundId != next.RoundId || config.SessionEpoch != next.SessionEpoch) return;
-                Send(peer, Ack, RoundIdentity(config), true); return;
+                if (kind == ResumeBegin) acceptedResumeChallenge = challenge;
+                Send(peer, kind == ResumeBegin ? ResumeAck : Ack, kind == ResumeBegin ? ResumeIdentity(challenge) : RoundIdentity(config), true); return;
             }
             if (config == null || failed) return;
             if (lobby.IsOwner)
             {
-                if (kind == Ack && packet.SequenceEqual(RoundIdentity(config))) { waiting.Remove(peer); return; }
-                if (!Ready || !roster.Any(a => a.OwnerPuid == peer)) return;
+                if (kind == Ack || kind == ResumeAck) { AcceptAcknowledgement(peer, packet, kind == ResumeAck); return; }
+                if (!Ready || !HasPeerPrepared(peer) || !room.Current.Members.Any(m => m.Id == peer && m.Connected)
+                    || !roster.Any(a => a.OwnerPuid == peer)) return;
                 if (kind == Input && GameplayWireCodec.TryDecode(packet, out PlayerInputCommand input)) authority.SubmitInput(peer, input);
                 else if (kind == Action && GameplayWireCodec.TryDecode(packet, out PlayerActionCommand action)) authority.SubmitAction(peer, action);
                 return;
@@ -207,13 +275,14 @@ namespace LetMeSleep.Online
                 writer.Write(actor.Position.X); writer.Write(actor.Position.Y); writer.Write(actor.Position.Z);
                 RoomWireCodec.WriteText(writer, actor.SpawnId, 64); RoomWireCodec.WriteText(writer, actor.CosmeticProfileId, 128);
             }
-            if (stream.Length > MessageFraming.MaximumMessageBytes) throw new InvalidDataException("Begin exceeds framing limit.");
+            // The same payload is reused inside ResumeBegin with an eight-byte challenge.
+            if (stream.Length > MessageFraming.MaximumMessageBytes - sizeof(ulong)) throw new InvalidDataException("Begin exceeds resumable framing limit.");
             return stream.ToArray();
         }
         private bool TryBegin(byte[] packet, out GameplayRoundConfig result, out SpawnActor[] actors)
         {
             result = null; actors = null;
-            if (room.Current?.Phase != RoomPhase.Playing || packet == null || packet.Length < 32 || packet.Length > MessageFraming.MaximumMessageBytes) return false;
+            if (room.Current?.Phase != RoomPhase.Playing || packet == null || packet.Length < 32 || packet.Length > MessageFraming.MaximumMessageBytes - sizeof(ulong)) return false;
             try
             {
                 using var stream = new MemoryStream(packet, false); using var reader = new BinaryReader(stream, Encoding.UTF8);
@@ -297,7 +366,8 @@ namespace LetMeSleep.Online
         public void Dispose()
         {
             if (disposed) return; disposed = true; transport.PacketReceived -= ReceivePacket;
-            framing.MessageReceived -= ReceiveMessage; framing.Clear(); waiting.Clear(); BeginReceived = null; Failed = null;
+            room.MemberReconnected -= ResumeMember;
+            framing.MessageReceived -= ReceiveMessage; framing.Clear(); waiting.Clear(); resuming.Clear(); BeginReceived = null; Failed = null;
         }
     }
 }

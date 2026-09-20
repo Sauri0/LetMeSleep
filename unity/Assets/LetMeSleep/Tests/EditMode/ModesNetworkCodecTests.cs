@@ -174,8 +174,8 @@ namespace LetMeSleep.Tests.EditMode
         [Test]
         public void ReleaseProtocolAndWireSchemasAreExplicitlyDecoupledFromAlpha()
         {
-            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-2"));
-            Assert.That(RoomWireCodec.Version, Is.EqualTo(2));
+            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-3"));
+            Assert.That(RoomWireCodec.Version, Is.EqualTo(3));
             Assert.That(GameplayWireCodec.Version, Is.EqualTo(4));
         }
 
@@ -217,6 +217,93 @@ namespace LetMeSleep.Tests.EditMode
 
         private static TaskAssignment KnownAssignment() => new TaskAssignment(
             "task-sink", 30, 300, 90, 17, TaskAssignmentStatus.Active, 1);
+
+        [Test]
+        public void BeginDecoderValidatesFullPacketTruncationsVersionHashAndCanonicalRules()
+        {
+            var config = TasksConfig();
+            var core = RoomSessionTestSupport.TwoPlayerSession();
+            core.ChangeRules("owner-puid", new RoomRules(1, 120, 0, RoomRules.AlfaMap, GameModes.Tasks));
+            for (int i = 0; i < 5; i++)
+            {
+                RoomSessionTestSupport.ReadyEveryone(core); core.StartRound("owner-puid");
+                if (i < 4) { core.FinishRound("owner-puid"); core.ReturnToWaiting("owner-puid"); }
+            }
+            var actors = core.Snapshot().Members.Select((m, i) => new SpawnActor((uint)i + 1, m.Id, m.Role, Float3.Zero)).ToArray();
+#pragma warning disable SYSLIB0050
+            var room = (OnlineRoomCoordinator)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(OnlineRoomCoordinator));
+#pragma warning restore SYSLIB0050
+            typeof(OnlineRoomCoordinator).GetField("<Current>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(room, core.Snapshot());
+            var session = PrivateSession(null);
+            foreach (var field in new Dictionary<string, object>
+            {
+                ["room"] = room, ["localId"] = "guest-puid", ["contentHash"] = config.ContentHash,
+                ["doors"] = new Func<IReadOnlyList<DoorDefinition>>(() => Array.Empty<DoorDefinition>()),
+                ["tools"] = new Func<IReadOnlyList<ToolPickupDefinition>>(() => Array.Empty<ToolPickupDefinition>()),
+                ["objectives"] = new Func<IReadOnlyList<ObjectiveDefinition>>(() => config.Objectives)
+            }) typeof(OnlineGameplaySession).GetField(field.Key, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(session, field.Value);
+            var encode = typeof(OnlineGameplaySession).GetMethod("EncodeBegin", BindingFlags.Static | BindingFlags.NonPublic);
+            var decode = typeof(OnlineGameplaySession).GetMethod("TryBegin", BindingFlags.Instance | BindingFlags.NonPublic);
+            bool Accept(byte[] bytes) => (bool)decode.Invoke(session, new object[] { bytes, null, null });
+            var packet = (byte[])encode.Invoke(null, new object[] { config, actors });
+            Assert.That(Accept(packet), Is.True);
+            for (int length = 0; length < packet.Length; length++)
+                Assert.That(Accept(packet.Take(length).ToArray()), Is.False, "truncated at " + length);
+            var old = (byte[])packet.Clone(); old[0] = 3;
+            Assert.That(Accept(old), Is.False);
+            var changed = (byte[])packet.Clone();
+            ReplaceAscii(changed, config.BalanceHash, "x" + config.BalanceHash.Substring(1));
+            Assert.That(Accept(changed), Is.False);
+            var custom = TasksConfig(new ModeRuleProfile(GameModes.Tasks, taskSuccessRecoveryTicks: 120));
+            Assert.That(Accept((byte[])encode.Invoke(null, new object[] { custom, actors })), Is.False);
+            // A reserved peer retains the same authenticated role and is part of Begin.
+            core.Disconnect("guest-puid", 1);
+            typeof(OnlineRoomCoordinator).GetField("<Current>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(room, core.Snapshot());
+            Assert.That(Accept(packet), Is.True);
+        }
+
+        [Test]
+        public void ResumeAcknowledgementRequiresLatestPeerChallengeAndCannotPrepareAnotherPeer()
+        {
+            var session = PrivateSession(TasksConfig());
+            var type = typeof(OnlineGameplaySession);
+            var waitingField = type.GetField("waiting", BindingFlags.Instance | BindingFlags.NonPublic);
+            var resumingField = type.GetField("resuming", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(waitingField, Is.Not.Null);
+            Assert.That(resumingField, Is.Not.Null);
+            waitingField.SetValue(session, Activator.CreateInstance(waitingField.FieldType));
+            resumingField.SetValue(session, Activator.CreateInstance(resumingField.FieldType));
+            var waiting = (HashSet<string>)waitingField.GetValue(session);
+            waiting.Add("human");
+
+            var beginResume = type.GetMethod("BeginResumeAttempt", BindingFlags.Instance | BindingFlags.NonPublic);
+            var accept = type.GetMethod("AcceptAcknowledgement", BindingFlags.Instance | BindingFlags.NonPublic);
+            var prepared = type.GetMethod("HasPeerPrepared", BindingFlags.Instance | BindingFlags.NonPublic);
+            var roundIdentity = type.GetMethod("RoundIdentity", BindingFlags.Static | BindingFlags.NonPublic);
+            var resumeIdentity = type.GetMethod("ResumeIdentity", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(beginResume, Is.Not.Null); Assert.That(accept, Is.Not.Null); Assert.That(prepared, Is.Not.Null);
+            Assert.That(roundIdentity, Is.Not.Null); Assert.That(resumeIdentity, Is.Not.Null);
+
+            ulong first = (ulong)beginResume.Invoke(session, new object[] { "human" });
+            byte[] initialAck = (byte[])roundIdentity.Invoke(null, new object[] { TasksConfig() });
+            Assert.That(accept.Invoke(session, new object[] { "human", initialAck, false }), Is.False,
+                "An initial-round ACK must not clear an active resume barrier.");
+            Assert.That(prepared.Invoke(session, new object[] { "human" }), Is.False);
+            Assert.That(prepared.Invoke(session, new object[] { "mosquito" }), Is.True,
+                "A peer-specific resume must not pause another prepared member.");
+
+            ulong second = (ulong)beginResume.Invoke(session, new object[] { "human" });
+            Assert.That(second, Is.GreaterThan(first));
+            byte[] staleResumeAck = (byte[])resumeIdentity.Invoke(session, new object[] { first });
+            Assert.That(accept.Invoke(session, new object[] { "human", staleResumeAck, true }), Is.False,
+                "A previous reconnect challenge must not satisfy a newer attempt.");
+            Assert.That(prepared.Invoke(session, new object[] { "human" }), Is.False);
+
+            byte[] currentResumeAck = (byte[])resumeIdentity.Invoke(session, new object[] { second });
+            Assert.That(accept.Invoke(session, new object[] { "human", currentResumeAck, true }), Is.True);
+            Assert.That(prepared.Invoke(session, new object[] { "human" }), Is.True);
+            Assert.That(prepared.Invoke(session, new object[] { "mosquito" }), Is.True);
+        }
 
         private static ActorPrivateState PrivateState(uint actor = 1, ulong epoch = 81, ulong round = 5,
             TaskAssignment assignment = null) => new ActorPrivateState(actor, 7, 4, CommandReject.None,

@@ -65,8 +65,9 @@ namespace LetMeSleep.Core
         public string Name { get; }
         public bool Ready { get; }
         public PlayerRole Role { get; }
-        public MemberView(string id, string name, bool ready, PlayerRole role)
-        { Id = id; Name = name; Ready = ready; Role = role; }
+        public bool Connected { get; }
+        public MemberView(string id, string name, bool ready, PlayerRole role, bool connected = true)
+        { Id = id; Name = name; Ready = ready; Role = role; Connected = connected; }
     }
 
     public sealed class RoomView
@@ -85,11 +86,14 @@ namespace LetMeSleep.Core
     // Neither UI visibility nor the caller-supplied display name grants authority.
     public sealed class RoomSession
     {
-        public const string Protocol = "lms-unity-020-2";
+        public const string Protocol = "lms-unity-020-3";
+        public const double ReconnectReservationSeconds = 30;
         private sealed class Member
         {
             internal string Id, Name;
             internal bool Ready;
+            internal bool Connected = true;
+            internal double ReservedUntil;
             internal PlayerRole Role;
         }
         private readonly List<Member> members = new List<Member>();
@@ -99,6 +103,7 @@ namespace LetMeSleep.Core
         private RoomPhase phase = RoomPhase.Waiting;
         private long revision;
         private int round;
+        private double reservationClock;
         public RoomSession(string ownerId, string ownerName, IRandomSource random)
         {
             if (!ValidIdentity(ownerId, ownerName)) throw new ArgumentException("Invalid owner.");
@@ -107,18 +112,60 @@ namespace LetMeSleep.Core
             members.Add(new Member { Id = ownerId, Name = ownerName.Trim() });
         }
         public RoomView Snapshot() => new RoomView(revision, round, ownerId, phase, rules,
-            members.Select(m => new MemberView(m.Id, m.Name, m.Ready, m.Role)).ToArray());
+            members.Select(m => new MemberView(m.Id, m.Name, m.Ready, m.Role, m.Connected)).ToArray());
         public RoomError Join(string id, string name, string protocol)
         {
             if (phase == RoomPhase.Closed) return RoomError.Closed;
-            if (phase != RoomPhase.Waiting) return RoomError.WrongPhase;
             if (protocol != Protocol) return RoomError.IncompatibleVersion;
             if (!ValidIdentity(id, name)) return RoomError.InvalidMember;
             if (members.Any(m => m.Id == id)) return RoomError.DuplicateMember;
+            if (phase != RoomPhase.Waiting) return RoomError.WrongPhase;
             if (members.Count >= RoomRules.Capacity) return RoomError.Full;
             members.Add(new Member { Id = id, Name = name.Trim() });
             revision++;
             return RoomError.None;
+        }
+        // Host-only authenticated membership events, never a client-selected actor/name.
+        public RoomError Disconnect(string id, double monotonicSeconds)
+        {
+            AdvanceReservationClock(monotonicSeconds);
+            if (phase == RoomPhase.Closed) return RoomError.Closed;
+            var member = members.Find(m => m.Id == id);
+            if (member == null) return RoomError.UnknownMember;
+            if (id == ownerId || phase != RoomPhase.Playing) return Leave(id);
+            if (!member.Connected) return RoomError.None; // Duplicate events cannot renew grace.
+            member.Connected = false; member.Ready = false;
+            member.ReservedUntil = reservationClock + ReconnectReservationSeconds;
+            revision++;
+            return RoomError.None;
+        }
+        public RoomError Reconnect(string id, string name, string protocol, double monotonicSeconds)
+        {
+            AdvanceReservationClock(monotonicSeconds);
+            if (phase == RoomPhase.Closed) return RoomError.Closed;
+            if (protocol != Protocol) return RoomError.IncompatibleVersion;
+            if (!ValidIdentity(id, name)) return RoomError.InvalidMember;
+            ExpireReservations(reservationClock);
+            var member = members.Find(m => m.Id == id);
+            if (member == null) return RoomError.UnknownMember;
+            if (member.Connected) return RoomError.DuplicateMember;
+            member.Connected = true; member.ReservedUntil = 0;
+            revision++;
+            return RoomError.None;
+        }
+        public bool ExpireReservations(double monotonicSeconds)
+        {
+            AdvanceReservationClock(monotonicSeconds);
+            if (phase == RoomPhase.Closed) return false;
+            int removed = members.RemoveAll(m => !m.Connected && reservationClock >= m.ReservedUntil);
+            if (removed > 0) revision++;
+            return removed > 0;
+        }
+        private void AdvanceReservationClock(double value)
+        {
+            if (double.IsNaN(value) || double.IsInfinity(value) || value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value));
+            reservationClock = Math.Max(reservationClock, value);
         }
         public RoomError SetReady(string senderId, bool ready)
         {
@@ -170,6 +217,7 @@ namespace LetMeSleep.Core
         {
             var error = OwnerAction(senderId, RoomPhase.Results);
             if (error != RoomError.None) return error;
+            members.RemoveAll(m => !m.Connected);
             foreach (var m in members) { m.Ready = false; m.Role = PlayerRole.Unassigned; }
             phase = RoomPhase.Waiting; revision++;
             return RoomError.None;

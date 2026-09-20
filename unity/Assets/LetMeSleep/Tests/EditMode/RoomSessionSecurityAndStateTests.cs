@@ -134,6 +134,80 @@ namespace LetMeSleep.Tests.EditMode
         }
 
         [Test]
+        public void DisconnectReservesSameRoleForThirtySecondsWithoutExtendingDuplicateEvents()
+        {
+            var session = TwoPlayerSession(); ReadyEveryone(session); session.StartRound("owner-puid");
+            var before = session.Snapshot();
+            var role = Member(before, "guest-puid").Role;
+            Assert.That(session.Disconnect("guest-puid", 100), Is.EqualTo(RoomError.None));
+            var reserved = session.Snapshot();
+            Assert.That(reserved.Members.Count, Is.EqualTo(2));
+            Assert.That(Member(reserved, "guest-puid").Connected, Is.False);
+            Assert.That(Member(before, "guest-puid").Connected, Is.True, "Old snapshots are immutable.");
+            Assert.That(Member(reserved, "guest-puid").Role, Is.EqualTo(role));
+            session.Disconnect("guest-puid", 125);
+            Assert.That(session.Snapshot().Revision, Is.EqualTo(reserved.Revision));
+            Assert.That(session.ExpireReservations(129.999), Is.False);
+            Assert.That(session.ExpireReservations(130), Is.True);
+            Assert.That(session.Snapshot().Members.Count, Is.EqualTo(1));
+            Assert.That(session.Reconnect("guest-puid", "Guest", RoomSession.Protocol, 130), Is.EqualTo(RoomError.UnknownMember));
+        }
+
+        [Test]
+        public void AuthenticatedReconnectKeepsIdentityRoleRoundAndCannotBeClaimedByName()
+        {
+            var session = TwoPlayerSession(); ReadyEveryone(session); session.StartRound("owner-puid");
+            var before = session.Snapshot(); session.Disconnect("guest-puid", 10);
+            Assert.That(session.Reconnect("impostor", "Guest", RoomSession.Protocol, 11), Is.EqualTo(RoomError.UnknownMember));
+            Assert.That(session.Reconnect("guest-puid", "Guest", "old", 12), Is.EqualTo(RoomError.IncompatibleVersion));
+            Assert.That(Member(session.Snapshot(), "guest-puid").Connected, Is.False);
+            Assert.That(session.Reconnect("guest-puid", "Different name", RoomSession.Protocol, 39.999), Is.EqualTo(RoomError.None));
+            var after = session.Snapshot();
+            Assert.That(Member(after, "guest-puid").Connected, Is.True);
+            Assert.That(Member(after, "guest-puid").Role, Is.EqualTo(Member(before, "guest-puid").Role));
+            Assert.That(Member(after, "guest-puid").Name, Is.EqualTo("Guest"));
+            Assert.That(after.Round, Is.EqualTo(before.Round));
+            Assert.That(session.ExpireReservations(100), Is.False);
+        }
+
+        [Test]
+        public void ExactDeadlineAndBackwardClockCannotRenewAnExpiredReservation()
+        {
+            var session = TwoPlayerSession(); ReadyEveryone(session); session.StartRound("owner-puid");
+            session.Disconnect("guest-puid", 10); session.ExpireReservations(40);
+            Assert.That(session.Reconnect("guest-puid", "Guest", RoomSession.Protocol, 20), Is.EqualTo(RoomError.UnknownMember));
+            Assert.Throws<ArgumentOutOfRangeException>(() => session.ExpireReservations(double.NaN));
+            Assert.Throws<ArgumentOutOfRangeException>(() => session.ExpireReservations(double.PositiveInfinity));
+            Assert.Throws<ArgumentOutOfRangeException>(() => session.Disconnect("owner-puid", -1));
+        }
+
+        [Test]
+        public void WaitingDepartureIsImmediateOwnerLossClosesAndNewLobbyClearsReservations()
+        {
+            var waiting = TwoPlayerSession(); waiting.Disconnect("guest-puid", 1);
+            Assert.That(waiting.Snapshot().Members.Count, Is.EqualTo(1));
+            waiting.Disconnect("owner-puid", 2);
+            Assert.That(waiting.Snapshot().Phase, Is.EqualTo(RoomPhase.Closed));
+            var playing = TwoPlayerSession(); ReadyEveryone(playing); playing.StartRound("owner-puid");
+            playing.Disconnect("guest-puid", 1); playing.FinishRound("owner-puid"); playing.ReturnToWaiting("owner-puid");
+            Assert.That(playing.Snapshot().Members.Count, Is.EqualTo(1));
+            Assert.That(playing.Join("guest-puid", "Guest", RoomSession.Protocol), Is.EqualTo(RoomError.None));
+            Assert.That(Member(playing.Snapshot(), "guest-puid").Role, Is.EqualTo(PlayerRole.Unassigned));
+        }
+
+        [Test]
+        public void ReservedRoomMemberRoundTripsAndPreviousRoomSchemaIsRejected()
+        {
+            var session = TwoPlayerSession(); ReadyEveryone(session); session.StartRound("owner-puid");
+            session.Disconnect("guest-puid", 5);
+            var packet = RoomWireCodec.Encode(session.Snapshot());
+            Assert.That(RoomWireCodec.TryDecode(packet, "owner-puid", out var view), Is.True);
+            Assert.That(Member(view, "guest-puid").Connected, Is.False);
+            packet[0] = 2;
+            Assert.That(RoomWireCodec.TryDecode(packet, "owner-puid", out _), Is.False);
+        }
+
+        [Test]
         public void NoOpAndRejectedCommandsDoNotAdvanceRevision()
         {
             var session = new RoomSession("owner", "Owner", new SequenceRandom(0));

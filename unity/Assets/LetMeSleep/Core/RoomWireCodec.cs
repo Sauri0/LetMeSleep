@@ -8,7 +8,7 @@ namespace LetMeSleep.Core
     public static class RoomWireCodec
     {
         private static readonly UTF8Encoding Utf8 = new UTF8Encoding(false, true);
-        public const byte Version = 2;
+        public const byte Version = 3;
         public static byte[] Encode(RoomView view)
         {
             using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Utf8, true);
@@ -20,7 +20,7 @@ namespace LetMeSleep.Core
             foreach (var member in view.Members)
             {
                 WriteText(writer, member.Id, 128); WriteText(writer, member.Name, 96);
-                writer.Write(member.Ready); writer.Write((byte)member.Role);
+                writer.Write(member.Ready); writer.Write((byte)member.Role); writer.Write(member.Connected);
             }
             return stream.ToArray();
         }
@@ -45,10 +45,11 @@ namespace LetMeSleep.Core
                 for (int i = 0; i < count; i++)
                 {
                     string id = ReadText(reader, 128), name = ReadText(reader, 96);
-                    byte ready = reader.ReadByte(); var role = (PlayerRole)reader.ReadByte();
-                    if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(name) || name.Length > 24 || ready > 1 || role > PlayerRole.Mosquito || !ids.Add(id)) return false;
+                    byte ready = reader.ReadByte(); var role = (PlayerRole)reader.ReadByte(); byte connected = reader.ReadByte();
+                    if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(name) || name.Length > 24 || ready > 1 || role > PlayerRole.Mosquito || connected > 1 || !ids.Add(id)
+                        || (connected == 0 && (id == owner || ready != 0 || phase == RoomPhase.Waiting))) return false;
                     foreach (char value in id + name) if (char.IsControl(value)) return false;
-                    members[i] = new MemberView(id, name, ready == 1, role);
+                    members[i] = new MemberView(id, name, ready == 1, role, connected == 1);
                 }
                 if (stream.Position != stream.Length || (phase != RoomPhase.Closed && !ids.Contains(owner))) return false;
                 view = new RoomView(revision, round, owner, phase, rules, members); return true;

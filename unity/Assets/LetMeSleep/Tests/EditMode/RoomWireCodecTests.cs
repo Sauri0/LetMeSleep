@@ -16,13 +16,15 @@ namespace LetMeSleep.Tests.EditMode
             internal readonly string Name;
             internal readonly byte Ready;
             internal readonly byte Role;
+            internal readonly byte Connected;
 
-            internal RawMember(string id, string name, byte ready = 0, byte role = 0)
+            internal RawMember(string id, string name, byte ready = 0, byte role = 0, byte connected = 1)
             {
                 Id = id;
                 Name = name;
                 Ready = ready;
                 Role = role;
+                Connected = connected;
             }
         }
 
@@ -99,7 +101,7 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(RoomWireCodec.TryDecode(packet, "different-owner", out _), Is.False);
 
             var wrongVersion = (byte[])packet.Clone();
-            wrongVersion[0] = 2;
+            wrongVersion[0] = RoomWireCodec.Version - 1;
             Assert.That(RoomWireCodec.TryDecode(wrongVersion, "owner-puid", out _), Is.False);
 
             var trailing = new byte[packet.Length + 1];
@@ -116,6 +118,8 @@ namespace LetMeSleep.Tests.EditMode
         {
             var owner = new RawMember("owner", "Owner");
             var guest = new RawMember("guest", "Guest");
+            Assert.That(RoomWireCodec.TryDecode(Raw(members: new[] { owner, guest }), "owner", out _), Is.True,
+                "Malformed-field fixtures must first have a valid current-schema envelope.");
             var invalid = new Dictionary<string, byte[]>
             {
                 ["negative revision"] = Raw(revision: -1, members: new[] { owner }),
@@ -132,6 +136,10 @@ namespace LetMeSleep.Tests.EditMode
                 ["duplicate member"] = Raw(members: new[] { owner, owner }),
                 ["invalid ready byte"] = Raw(members: new[] { new RawMember("owner", "Owner", 2) }),
                 ["invalid role"] = Raw(members: new[] { new RawMember("owner", "Owner", role: 3) }),
+                ["invalid connected byte"] = Raw(members: new[] { new RawMember("owner", "Owner", connected: 2) }),
+                ["disconnected owner"] = Raw(phase: 1, members: new[] { new RawMember("owner", "Owner", connected: 0) }),
+                ["reserved guest in waiting"] = Raw(members: new[] { owner, new RawMember("guest", "Guest", connected: 0) }),
+                ["reserved guest ready"] = Raw(phase: 1, members: new[] { owner, new RawMember("guest", "Guest", ready: 1, connected: 0) }),
                 ["owner absent while open"] = Raw(members: new[] { guest }),
                 ["blank name"] = Raw(members: new[] { new RawMember("owner", " ") }),
                 ["control in name"] = Raw(members: new[] { new RawMember("owner", "Bad\nName") })
@@ -181,7 +189,7 @@ namespace LetMeSleep.Tests.EditMode
         }
 
         private static byte[] Raw(
-            byte version = 1,
+            byte version = RoomWireCodec.Version,
             long revision = 0,
             int round = 0,
             string owner = "owner",
@@ -205,6 +213,8 @@ namespace LetMeSleep.Tests.EditMode
             writer.Write(seconds);
             writer.Write(quota);
             RoomWireCodec.WriteText(writer, map, 64);
+            RoomWireCodec.WriteText(writer, GameModes.Blood, 16);
+            RoomWireCodec.WriteText(writer, GameModes.ProfileId(GameModes.Blood), 64);
             writer.Write(declaredCount ?? (byte)members.Length);
             foreach (var member in members)
             {
@@ -212,6 +222,7 @@ namespace LetMeSleep.Tests.EditMode
                 RoomWireCodec.WriteText(writer, member.Name, 96);
                 writer.Write(member.Ready);
                 writer.Write(member.Role);
+                writer.Write(member.Connected);
             }
             writer.Flush();
             return stream.ToArray();
@@ -231,6 +242,7 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(actual.Members.Select(member => member.Name), Is.EqualTo(expected.Members.Select(member => member.Name)));
             Assert.That(actual.Members.Select(member => member.Ready), Is.EqualTo(expected.Members.Select(member => member.Ready)));
             Assert.That(actual.Members.Select(member => member.Role), Is.EqualTo(expected.Members.Select(member => member.Role)));
+            Assert.That(actual.Members.Select(member => member.Connected), Is.EqualTo(expected.Members.Select(member => member.Connected)));
         }
     }
 }

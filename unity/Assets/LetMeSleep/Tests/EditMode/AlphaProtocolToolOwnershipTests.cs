@@ -13,8 +13,8 @@ namespace LetMeSleep.Tests.EditMode
         [Test]
         public void ReleaseProtocolAndWireSchemasRejectAlpha()
         {
-            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-2"));
-            Assert.That(RoomWireCodec.Version, Is.EqualTo(2));
+            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-3"));
+            Assert.That(RoomWireCodec.Version, Is.EqualTo(3));
             Assert.That(GameplayWireCodec.Version, Is.EqualTo(4));
 
             var room = new RoomSession("owner", "Owner", new RoomSessionTestSupport.SequenceRandom(0));
