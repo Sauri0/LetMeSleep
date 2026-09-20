@@ -34,6 +34,18 @@ namespace LetMeSleep.Bootstrap
             switch (key)
             {
                 case "task.isla.cabin_access": return "LIMPIÁ EL ACCESO DE LA CABAÑA";
+                case "task.isla.cabin_barrel": return "LIMPIÁ EL BARRIL DE LA CABAÑA";
+                case "task.isla.cabin_porch_rail": return "REPARÁ LA BARANDA DEL PORCHE";
+                case "task.isla.cabin_door": return "REPARÁ LA PUERTA DE LA CABAÑA";
+                case "task.isla.picnic_barrel": return "LIMPIÁ EL BARRIL DEL PÍCNIC";
+                case "task.isla.picnic_crate": return "REPARÁ LA CAJA DEL PÍCNIC";
+                case "task.isla.picnic_table": return "LIMPIÁ LA MESA DE PÍCNIC";
+                case "task.isla.lookout_rope_rail": return "REPARÁ LA BARANDA DE CUERDA DEL MIRADOR";
+                case "task.isla.lookout_terrace": return "LIMPIÁ LA TERRAZA DEL MIRADOR";
+                case "task.isla.lookout_steps": return "LIMPIÁ LOS ESCALONES DEL MIRADOR";
+                case "task.isla.bridge_structure": return "REPARÁ LA ESTRUCTURA DEL PUENTE";
+                case "task.isla.bridge_west_approach": return "LIMPIÁ EL ACCESO OESTE DEL PUENTE";
+                case "task.isla.bridge_east_approach": return "LIMPIÁ EL ACCESO ESTE DEL PUENTE";
                 case "task.casa.bathroom_tile": return "LIMPIÁ LOS AZULEJOS DEL BAÑO";
                 case "task.casa.ground_basin": return "LIMPIÁ EL LAVAMANOS DE ABAJO";
                 case "task.casa.ground_toilet": return "ACTIVÁ EL BOTÓN DEL INODORO DE ABAJO";

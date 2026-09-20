@@ -36,6 +36,18 @@ namespace LetMeSleep.Tests.PlayMode
         }
 
         [TestCase("task.camp.barrel", "LIMPIÁ EL BARRIL DEL FOGÓN")]
+        [TestCase("task.isla.cabin_barrel", "LIMPIÁ EL BARRIL DE LA CABAÑA")]
+        [TestCase("task.isla.cabin_porch_rail", "REPARÁ LA BARANDA DEL PORCHE")]
+        [TestCase("task.isla.cabin_door", "REPARÁ LA PUERTA DE LA CABAÑA")]
+        [TestCase("task.isla.picnic_barrel", "LIMPIÁ EL BARRIL DEL PÍCNIC")]
+        [TestCase("task.isla.picnic_crate", "REPARÁ LA CAJA DEL PÍCNIC")]
+        [TestCase("task.isla.picnic_table", "LIMPIÁ LA MESA DE PÍCNIC")]
+        [TestCase("task.isla.lookout_rope_rail", "REPARÁ LA BARANDA DE CUERDA DEL MIRADOR")]
+        [TestCase("task.isla.lookout_terrace", "LIMPIÁ LA TERRAZA DEL MIRADOR")]
+        [TestCase("task.isla.lookout_steps", "LIMPIÁ LOS ESCALONES DEL MIRADOR")]
+        [TestCase("task.isla.bridge_structure", "REPARÁ LA ESTRUCTURA DEL PUENTE")]
+        [TestCase("task.isla.bridge_west_approach", "LIMPIÁ EL ACCESO OESTE DEL PUENTE")]
+        [TestCase("task.isla.bridge_east_approach", "LIMPIÁ EL ACCESO ESTE DEL PUENTE")]
         [TestCase("task.camp.cooler", "REPARÁ LA CONSERVADORA")]
         [TestCase("task.camp.cook_table", "LIMPIÁ LA MESA DE COCINA")]
         [TestCase("task.camp.crate_one", "LIMPIÁ LA CAJA DE PROVISIONES 1")]
