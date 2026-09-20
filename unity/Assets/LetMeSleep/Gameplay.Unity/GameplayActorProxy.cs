@@ -40,6 +40,9 @@ namespace LetMeSleep.Gameplay.Unity
         public void Apply(ActorSnapshot state)
         {
             State = state; transform.SetPositionAndRotation(state.Position.ToUnity(), state.BodyRotation.ToUnity());
+            bool physical = !state.Eliminated;
+            if (MotorCollider) MotorCollider.enabled = physical;
+            foreach (var surface in BodySurfaces.Values) surface.Collider.enabled = physical;
             if (MotorCollider is CapsuleCollider capsule)
             {
                 capsule.height = 1.72f - .72f * state.CrouchFraction; capsule.center = Vector3.up * (capsule.height * .5f);

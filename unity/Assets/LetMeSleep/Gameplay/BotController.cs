@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if UNITY_EDITOR
+using System.Linq;
+#endif
 using LetMeSleep.Core;
 
 namespace LetMeSleep.Gameplay
@@ -86,6 +89,10 @@ namespace LetMeSleep.Gameplay
         private readonly Dictionary<uint, uint> recentlyBitten = new Dictionary<uint, uint>();
         private ulong epoch, round; private uint actorId, progressTick; private bool tracking;
         private Float3 progressPosition, blockedDirection;
+#if UNITY_EDITOR
+        private bool captureDecisionDiagnostic = false;
+        private string lastDecisionDiagnostic;
+#endif
         public static uint ReactionTicks(uint observer, uint target) => 8 + (observer * 17u + target * 31u) % 5;
         private void ResetIdentity(ActorSnapshot self, in BotTick tick)
         {
@@ -185,6 +192,11 @@ namespace LetMeSleep.Gameplay
             bool task = observation.TaskObjective != null && observation.OwnAssignment.Status == TaskAssignmentStatus.Active
                 && self.Role == PlayerRole.Human && !threat;
             var taskTravel = task && observation.TaskDirection != null ? observation.TaskDirection(observation.TaskObjective) : Float3.Zero;
+#if UNITY_EDITOR
+            uint diagnosticTool = 0;
+            Float3 diagnosticBeforeSteer = default, diagnosticSteer = default;
+            bool diagnosticSteerCalled = false;
+#endif
             if (task) direction = taskTravel.Normalized;
             if (observation.ModeId == GameModes.Survival && self.Role == PlayerRole.Mosquito && selected.HasValue && selected.Value.Actor.Role == PlayerRole.Human) direction = -direction;
             if (direction.LengthSquared < .5f) direction = Float3.Forward;
@@ -259,6 +271,9 @@ namespace LetMeSleep.Gameplay
                         && ((candidate.Pickup.ToolId != GameplayTools.Aerosol && candidate.Pickup.ToolId != GameplayTools.ElectricRacket) || candidate.Pickup.ResourceUnits > 0) && (!tool.HasValue || candidate.DetourMeters < tool.Value.DetourMeters)) tool = candidate;
                 if (tool.HasValue)
                 {
+#if UNITY_EDITOR
+                    diagnosticTool = tool.Value.Pickup.PickupId;
+#endif
                     var delta = tool.Value.ContactPoint - origin; direction = delta.Normalized;
                     yaw = (float)Math.Atan2(direction.X, direction.Z); pitch = MathEx.Clamp((float)Math.Asin(MathEx.Clamp(direction.Y, -1, 1)), -1.919862f, 1.308996f);
                     direction = MathEx.Aim(yaw, pitch); forward = 1; helpHeld = false;
@@ -277,9 +292,15 @@ namespace LetMeSleep.Gameplay
             { action = ActionKind.SelectInventorySlot; primaryHeld = false; helpHeld = false; equipmentPayload = false; }
             if (self.Eliminated || self.LifeState == LifeState.Falling || self.LifeState == LifeState.Stunned || self.LifeState == LifeState.Fainted || self.LifeState == LifeState.Recovering) { forward = 0; bite = false; helpHeld = false; primaryHeld = false; action = null; }
             TrackProgress(observation, tick.Tick, direction, ref forward);
+#if UNITY_EDITOR
+            diagnosticBeforeSteer = direction;
+#endif
             if (forward > 0 && observation.Steer != null && !action.HasValue)
             {
                 var travel = observation.Steer(direction);
+#if UNITY_EDITOR
+                diagnosticSteerCalled = true; diagnosticSteer = travel;
+#endif
                 if (travel.LengthSquared < .01f) forward = 0;
                 else
                 {
@@ -302,6 +323,23 @@ namespace LetMeSleep.Gameplay
                 command = new PlayerActionCommand(new CommandHeader(tick.Epoch, tick.Round, self.ActorId, actionSequence, tick.Tick, self.ViewRevision), action.Value, direction,
                     -1, 0, 0, observation.OwnPrivate.Inventory.Revision);
             }
+#if UNITY_EDITOR
+            if (captureDecisionDiagnostic)
+            {
+                string tools = observation.Training == null ? "none" : string.Join(";", observation.Training.VisibleTools.Select(item =>
+                    string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}:detour={1:R}",
+                        item.Pickup.PickupId, item.DetourMeters)));
+                lastDecisionDiagnostic = string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                    "task={0} taskTravel={1:R},{2:R},{3:R} tools=[{4}] selectedTool={5} " +
+                    "preSteer={6:R},{7:R},{8:R} steerCalled={9} steer={10:R},{11:R},{12:R} " +
+                    "finalAim={13:R},{14:R},{15:R} forward={16:R} action={17}",
+                    task ? 1 : 0, taskTravel.X, taskTravel.Y, taskTravel.Z, tools, diagnosticTool,
+                    diagnosticBeforeSteer.X, diagnosticBeforeSteer.Y, diagnosticBeforeSteer.Z,
+                    diagnosticSteerCalled ? 1 : 0, diagnosticSteer.X, diagnosticSteer.Y, diagnosticSteer.Z,
+                    direction.X, direction.Y, direction.Z, forward,
+                    action.HasValue ? action.Value.ToString() : "none");
+            }
+#endif
             return new BotCommands(input, command);
         }
     }

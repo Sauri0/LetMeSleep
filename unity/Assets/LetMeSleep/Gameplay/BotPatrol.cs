@@ -86,6 +86,24 @@ namespace LetMeSleep.Gameplay
         private Float3[] objectivePoints;
         private int objectivePointIndex;
         private string objectiveRegion;
+#if UNITY_EDITOR
+        // Opt-in editor diagnostics read this only after the real DirectionTo call.
+        // It never advances or recomputes the route.
+        public string DirectedRouteDiagnostic
+        {
+            get
+            {
+                string waypoint = objectivePoints != null && objectivePointIndex >= 0 &&
+                                  objectivePointIndex < objectivePoints.Length
+                    ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:R},{1:R},{2:R}",
+                        objectivePoints[objectivePointIndex].X, objectivePoints[objectivePointIndex].Y,
+                        objectivePoints[objectivePointIndex].Z)
+                    : "none";
+                return "passage=" + (objectivePassage?.Id ?? "none") + " targetRegion=" +
+                       (objectiveRegion ?? "none") + " pointIndex=" + objectivePointIndex + " waypoint=" + waypoint;
+            }
+        }
+#endif
         // Route only toward the owning bot's resolved assignment, through authored passages.
         // Returns zero while no open route exists; callers never substitute a straight wall-crossing vector.
         public Float3 DirectionTo(Float3 position, string targetRegion, Float3 approachPoint, Func<string, bool> passageOpen)
@@ -98,7 +116,15 @@ namespace LetMeSleep.Gameplay
             { objectivePassage = null; objectivePoints = null; objectiveRegion = targetRegion; }
             if (objectivePassage != null)
             {
-                while (objectivePointIndex < objectivePoints.Length && (objectivePoints[objectivePointIndex] - position).Length < .24f) objectivePointIndex++;
+                // Directed task travel is consumed by a ground human. Portal points are
+                // authored at torso height while the navigation sample is foot + 1m, so
+                // a 3D arrival radius can become narrower than one bot decision stride.
+                // Advance on horizontal crossing; the ordinary motor remains responsible
+                // for floors, stairs and every physical obstruction.
+                while (objectivePointIndex < objectivePoints.Length &&
+                       PlanarDistance(objectivePoints[objectivePointIndex], position) < .24f &&
+                       Math.Abs(objectivePoints[objectivePointIndex].Y - position.Y) <= .35f)
+                    objectivePointIndex++;
                 if (objectivePointIndex < objectivePoints.Length) return objectivePoints[objectivePointIndex] - position;
                 objectivePassage = null; objectivePoints = null;
             }
@@ -126,6 +152,11 @@ namespace LetMeSleep.Gameplay
             return Float3.Zero;
         }
         private int VisitCount(string id) => visits.TryGetValue(id, out int count) ? count : 0;
+        private static float PlanarDistance(Float3 a, Float3 b)
+        {
+            float x = a.X - b.X, z = a.Z - b.Z;
+            return (float)Math.Sqrt(x * x + z * z);
+        }
         private void Clear() { route = null; points = null; pointIndex = 0; }
     }
 }
