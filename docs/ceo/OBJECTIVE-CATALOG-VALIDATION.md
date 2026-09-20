@@ -2,6 +2,14 @@
 
 ## Estado posterior y entradas adicionales
 
+`ProbeExternalGeometryOnly` admite entre 1 y 128 candidatos distintos por mapa
+con el mismo manifiesto. Evalúa contacto, soporte, espacio corporal, región,
+LOS y presupuesto authored desde al menos un spawn; no inicia ronda, no exige
+cobertura del catálogo y no guarda. Sirve para descartar candidatos antes de
+seleccionar los diez definitivos. Un PASS de este sondeo no acredita motor ni
+distribución de tareas. Puerto geometry01 encuentra diez aproximaciones, aunque
+su catálogo static03 sigue rechazado por cobertura del spawn del faro.
+
 Casa ya tiene diez objetivos instalados tras la ronda nativa de 150 s:
 20/20 tareas completadas por cinco bots humanos contra un mosquito sin control.
 Se preservó backup del prefab; sólo cambió el componente catálogo, su referencia

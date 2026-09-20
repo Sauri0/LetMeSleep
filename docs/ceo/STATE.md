@@ -2,6 +2,18 @@
 
 ## Navegación por rol y objetivos externos — último gate
 
+- Casa ronda02, después de integrar el grafo por rol: 20/20, cuota14,
+  4500 ticks, TasksMet/Human; recibo human-graph-round-regression-receipt-01.json.
+- Yate entrada física native01: seguimiento explícito MoveHuman por 16 peldaños
+  más salida completa 17 puntos en 90 ticks; control a nivel completa en15.
+  Apoyo inicial adquirido por motor, no forzado. Final ascenso aún en aire
+  Y6.139, por lo que no acredita llegada asentada ni bot completo.
+  errors=[], originales intactos, cleanup=true. Confirma ascenso posible y
+  falso negativo del filtro previo observado en la traza; Astra corrige sólo
+  steering/tests con negativos físicos. Grafo Yate todavía sin nueva autoría.
+- Diagnostic02 con campos limpiados conserva exactamente las 123 líneas de
+  decisión/posición/resultado de01; corrección del fixture no altera el fallo.
+
 - `495bc7b` permite un grafo humano opcional (`human_zones`, `human_portals`,
   `human_routes`) separado del vuelo. Sin estos campos conserva el grafo anterior.
   `1ea63bf` añade 30 etiquetas españolas de objetivos candidatos.

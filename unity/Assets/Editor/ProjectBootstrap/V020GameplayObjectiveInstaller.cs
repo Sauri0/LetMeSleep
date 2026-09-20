@@ -48,6 +48,29 @@ public static class V020GameplayObjectiveInstaller
 #pragma warning restore 0649
 
     // Explicit batch input; never saves a prefab or treats source metadata as proof.
+    public static void ProbeExternalGeometryOnly()
+    {
+        var manifest = ReadExternalManifest(Environment.GetCommandLineArgs());
+        var failures = new List<string>();
+        foreach (var candidate in manifest.maps)
+        {
+            try
+            {
+                var specs = ExternalSpecs(candidate, false);
+                BuildAndValidateCatalog(candidate.mapId, candidate.prefabPath, specs, false, true, true);
+                Debug.Log("LMS_OBJECTIVE_GEOMETRY_PROBE map=" + candidate.mapId + " candidates=" +
+                          specs.Length + " saved=0 status=PASS scope=contact-support-clearance-region-los-authored-budget-only");
+            }
+            catch (Exception error)
+            {
+                failures.Add(candidate.mapId + ": " + error.GetBaseException().Message);
+                Debug.LogError("LMS_OBJECTIVE_GEOMETRY_PROBE map=" + candidate.mapId +
+                               " saved=0 status=FAIL error=" + error.GetBaseException().Message);
+            }
+        }
+        if (failures.Count > 0) throw new InvalidOperationException(string.Join(" | ", failures));
+    }
+
     public static void ValidateExternalCatalogsOnly()
     {
         string[] args = Environment.GetCommandLineArgs();
@@ -118,15 +141,17 @@ public static class V020GameplayObjectiveInstaller
         return manifest;
     }
 
-    private static CatalogSpec[] ExternalSpecs(ExternalMap candidate)
+    private static CatalogSpec[] ExternalSpecs(ExternalMap candidate, bool requireTen = true)
     {
         Recipe recipe = Recipes.SingleOrDefault(item => item.MapId == candidate.mapId);
         if (recipe == null || candidate.prefabPath != recipe.PrefabPath)
             throw new ArgumentException("Manifest must identify an existing final map prefab.");
-        if (candidate.objectives == null || candidate.objectives.Length != 10 || candidate.objectives.Any(item => item == null) ||
-            candidate.objectives.Select(item => item.objectiveId).Distinct(StringComparer.Ordinal).Count() != 10 ||
-            candidate.objectives.Select(item => item.targetName).Distinct(StringComparer.Ordinal).Count() != 10)
-            throw new ArgumentException("Each catalog requires ten distinct objective IDs and targets.");
+        if (candidate.objectives == null || candidate.objectives.Length == 0 || candidate.objectives.Length > 128 ||
+            requireTen && candidate.objectives.Length != 10 || candidate.objectives.Any(item => item == null) ||
+            candidate.objectives.Select(item => item.objectiveId).Distinct(StringComparer.Ordinal).Count() != candidate.objectives.Length ||
+            candidate.objectives.Select(item => item.targetName).Distinct(StringComparer.Ordinal).Count() != candidate.objectives.Length)
+            throw new ArgumentException(requireTen ? "Each catalog requires ten distinct objective IDs and targets." :
+                "Geometry probe requires 1 to 128 distinct objective IDs and targets.");
         return candidate.objectives.Select(item =>
         {
             if (new[] { item.objectiveId, item.displayKey, item.actionKey, item.targetName, item.routeRegionId }
@@ -471,7 +496,7 @@ public static class V020GameplayObjectiveInstaller
         => BuildAndValidateCatalog(CasaMapId, CasaPrefabPath, CasaSpecs, validateMotor);
 
     private static GameplayObjectiveCatalog.Entry[] BuildAndValidateCatalog(string mapId, string prefabPath,
-        IReadOnlyList<CatalogSpec> specs, bool validateMotor, bool collectGeometryFailures = false)
+        IReadOnlyList<CatalogSpec> specs, bool validateMotor, bool collectGeometryFailures = false, bool geometryOnly = false)
     {
         var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
         if (!prefab) throw new InvalidOperationException("Missing map prefab: " + prefabPath);
@@ -514,6 +539,7 @@ public static class V020GameplayObjectiveInstaller
             if (geometryFailures.Count > 0)
                 throw new InvalidOperationException(string.Join(" | ", geometryFailures));
             var entries = authored.ToArray();
+            if (geometryOnly) return entries.Select(Copy).ToArray();
             if (entries.Length != 10 || entries.Select(entry => entry.TargetPath).Distinct(StringComparer.Ordinal).Count() != 10)
                 throw new InvalidOperationException(mapId + " requires ten distinct authored objective targets.");
             var catalog = root.GetComponent<GameplayObjectiveCatalog>() ?? root.AddComponent<GameplayObjectiveCatalog>();

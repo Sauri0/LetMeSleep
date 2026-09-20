@@ -20,10 +20,19 @@ namespace LetMeSleep.Editor
                 throw new IOException("Existing diagnostic assembly and fresh evidence directory required.");
             var assembly = Assembly.LoadFrom(assemblyPath);
             string entry = args[index + 1];
-            var method = assembly.GetType("HiggsfieldMapChecks", true).GetMethod(entry,
+            int typeIndex = Array.IndexOf(args, "-surfaceType");
+            string entryType = "HiggsfieldMapChecks";
+            if (typeIndex >= 0)
+            {
+                if (typeIndex + 1 >= args.Length || Array.LastIndexOf(args, "-surfaceType") != typeIndex ||
+                    string.IsNullOrWhiteSpace(args[typeIndex + 1]))
+                    throw new ArgumentException("One nonempty -surfaceType required when specified.");
+                entryType = args[typeIndex + 1];
+            }
+            var method = assembly.GetType(entryType, true).GetMethod(entry,
                 BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
             if (method == null || method.ReturnType != typeof(string))
-                throw new MissingMethodException("Expected public static string HiggsfieldMapChecks." + entry + "(string output)");
+                throw new MissingMethodException("Expected public static string " + entryType + "." + entry + "(string output)");
             Debug.Log("External diagnostic " + entry + ": " + method.Invoke(null, new object[] { output }));
         }
 
