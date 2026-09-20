@@ -312,9 +312,23 @@ namespace LetMeSleep.Gameplay.Unity
                 if (detour < 4) opportunities.Add(new BotToolOpportunity(pickup, detour, visiblePoint));
             }
             float rescueSpeed = self.SurfaceAttachment.HasValue ? .65f : Mathf.Clamp(self.Velocity.Length, 1f, 3.8f);
-            return new BotObservation(self, visible, free, doorAhead, direction => World.SteerBot(self, direction),
+            World.ObserveBotSteeringIntent(self, navigationTick,
+                privateState?.TaskAssignment?.Status == TaskAssignmentStatus.Active ? objective?.ObjectiveId : null);
+            bool taskNavigationRequested = false;
+            Float3 taskNavigationDirection = Float3.Zero;
+            return new BotObservation(self, visible, free, doorAhead, direction => {
+                var travel = new Float3(direction.X, 0, direction.Z).Normalized;
+                if (!taskNavigationRequested || Float3.Dot(travel, taskNavigationDirection) < .9999f)
+                    World.ObserveBotSteeringIntent(self, navigationTick, null);
+                return World.SteerBot(self, direction);
+            },
                 roundConfig.ModeId, privateState, objective,
-                item => botNavigation == null ? Float3.Zero : World.TaskDirection(self, item, navigationTick),
+                item => {
+                    taskNavigationRequested = true;
+                    var travel = botNavigation == null ? Float3.Zero : World.TaskDirection(self, item, navigationTick);
+                    taskNavigationDirection = new Float3(travel.X, 0, travel.Z).Normalized;
+                    return travel;
+                },
                 new BotTrainingContext(opportunities, rescueSpeed, equipped), botNavigation?.ContextFor(self.ActorId),
                 (item, aim) => World.CanWorkObjective(self.ActorId, item, self.Position, aim));
         }

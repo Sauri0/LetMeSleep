@@ -7,6 +7,25 @@ namespace LetMeSleep.Gameplay.Unity
     public sealed partial class UnityGameplayWorld
     {
         private readonly Dictionary<uint, Vector3> botDetours = new Dictionary<uint, Vector3>();
+        private sealed class HumanObstacleDetour
+        {
+            internal Collider Obstacle;
+            internal Bounds Bounds;
+            internal Vector3 Escape, LastPosition;
+            internal Vector3[] Corners;
+            internal int Face, Corner;
+            internal uint Started, ProgressTick;
+            internal float BestDistance = float.PositiveInfinity, Travel;
+        }
+        private sealed class HumanSteeringIntent
+        {
+            internal string Objective;
+            internal uint Tick, LastSteered, RetryAfter;
+            internal Vector3 Position;
+            internal Collider RetryObstacle;
+            internal HumanObstacleDetour Detour;
+        }
+        private readonly Dictionary<uint, HumanSteeringIntent> humanSteeringIntents = new Dictionary<uint, HumanSteeringIntent>();
         private static readonly float[] BotYawSamples = { 0, 45, -45, 90, -90, 135, -135, 180 };
         private static readonly float[] BotFlightSamples = { 0, .65f, -.65f };
         private static readonly float[] BotGroundSamples = { 0 };
@@ -16,8 +35,37 @@ namespace LetMeSleep.Gameplay.Unity
         private string lastBotTraversalDiagnostic;
         public bool DisableBotHumanTraversalPredictionForDiagnostic;
 #endif
-        internal void ResetBotSteering() => botDetours.Clear();
+        internal void ResetBotSteering() { botDetours.Clear(); humanSteeringIntents.Clear(); }
+        internal void ObserveBotSteeringIntent(ActorSnapshot actor, uint tick, string objectiveId)
+        {
+            if (actor.Role != PlayerRole.Human || actor.LifeState != LifeState.Active || string.IsNullOrEmpty(objectiveId))
+            { if (humanSteeringIntents.Remove(actor.ActorId)) botDetours.Remove(actor.ActorId); return; }
+            if (!humanSteeringIntents.TryGetValue(actor.ActorId, out var intent) || intent.Objective != objectiveId ||
+                tick < intent.Tick || (actor.Position.ToUnity() - intent.Position).sqrMagnitude > 4)
+            {
+                intent = new HumanSteeringIntent { Objective = objectiveId, LastSteered = tick };
+                humanSteeringIntents[actor.ActorId] = intent; botDetours.Remove(actor.ActorId);
+            }
+            else if (intent.Detour != null && (intent.Tick > intent.LastSteered || tick - intent.Detour.Started >= 90))
+            { intent.Tick = tick; EndHumanDetour(intent); }
+            intent.Tick = tick; intent.Position = actor.Position.ToUnity();
+        }
         internal Float3 SteerBot(ActorSnapshot self, Float3 desired)
+        {
+            Vector3 direction = desired.ToUnity(); direction.y = 0; direction.Normalize();
+            bool hasIntent = self.Role == PlayerRole.Human && humanSteeringIntents.TryGetValue(self.ActorId, out _);
+            if (hasIntent)
+            {
+                var intent = humanSteeringIntents[self.ActorId]; intent.LastSteered = intent.Tick;
+                if (direction.sqrMagnitude < .1f) EndHumanDetour(intent);
+                else if (TryHumanDetour(self, direction, intent, out var detour)) return detour.ToFloat();
+            }
+            var result = SteerBotReactive(self, desired);
+            if (hasIntent && direction.sqrMagnitude > .1f && Vector3.Dot(direction, result.ToUnity()) < -.25f)
+                RememberHumanReversal(self, direction, humanSteeringIntents[self.ActorId]);
+            return result;
+        }
+        private Float3 SteerBotReactive(ActorSnapshot self, Float3 desired)
         {
             bool human = self.Role == PlayerRole.Human;
             var direction = desired.ToUnity(); if (human) direction.y = 0;
@@ -77,6 +125,124 @@ namespace LetMeSleep.Gameplay.Unity
             }
 #endif
             botDetours[self.ActorId] = best; return best.ToFloat();
+        }
+
+        private void EndHumanDetour(HumanSteeringIntent intent)
+        {
+            if (intent.Detour != null)
+            { intent.RetryObstacle = intent.Detour.Obstacle; intent.RetryAfter = intent.Tick + 60; }
+            intent.Detour = null;
+        }
+        private void RememberHumanReversal(ActorSnapshot actor, Vector3 desired, HumanSteeringIntent intent)
+        {
+            if (intent.Detour != null) return;
+            var hit = CastMotor(actor.ActorId, actor.Position.ToUnity(), desired * .65f,
+                1.72f - .72f * actor.CrouchFraction, .25f, true);
+            if (!hit.HasValue || Mathf.Abs(hit.Value.normal.y) >= .55f) return;
+            var obstacle = hit.Value.collider;
+            if (!obstacle || obstacle.attachedRigidbody || obstacle.GetComponentInParent<GameplayActorProxy>() ||
+                intent.RetryObstacle == obstacle && intent.Tick < intent.RetryAfter) return;
+            var bounds = obstacle.bounds;
+            if (bounds.size.x > 4 || bounds.size.z > 4 || bounds.max.y - actor.Position.Y < .35f) return;
+            int face = Mathf.Abs(hit.Value.normal.x) >= Mathf.Abs(hit.Value.normal.z)
+                ? (hit.Value.normal.x >= 0 ? 0 : 2) : (hit.Value.normal.z >= 0 ? 1 : 3);
+            intent.Detour = new HumanObstacleDetour { Obstacle = obstacle, Bounds = bounds, Face = face,
+                LastPosition = actor.Position.ToUnity(), Started = intent.Tick, ProgressTick = intent.Tick };
+        }
+        // Faces/corners are counterclockwise: east/north/west/south and NE/NW/SW/SE.
+        private static Vector3 DetourCorner(Bounds bounds, int corner, float height)
+        {
+            return new Vector3(corner == 0 || corner == 3 ? bounds.max.x + .45f : bounds.min.x - .45f,
+                height, corner < 2 ? bounds.max.z + .45f : bounds.min.z - .45f);
+        }
+        private static Vector3 FaceOutward(int face) => face == 0 ? Vector3.right : face == 1 ? Vector3.forward : face == 2 ? Vector3.left : Vector3.back;
+        private static bool OutsideFace(Vector3 position, Bounds bounds, int face) => face == 0 ? position.x >= bounds.max.x + .40f
+            : face == 1 ? position.z >= bounds.max.z + .40f : face == 2 ? position.x <= bounds.min.x - .40f : position.z <= bounds.min.z - .40f;
+        private bool TryHumanDetour(ActorSnapshot actor, Vector3 desired, HumanSteeringIntent intent, out Vector3 result)
+        {
+            result = Vector3.zero; var detour = intent.Detour; if (detour == null) return false;
+            Vector3 position = actor.Position.ToUnity();
+            detour.Travel += Vector3.Distance(position, detour.LastPosition); detour.LastPosition = position;
+            if (!detour.Obstacle || !detour.Obstacle.enabled || !detour.Obstacle.gameObject.activeInHierarchy ||
+                (detour.Obstacle.bounds.center - detour.Bounds.center).sqrMagnitude > .0004f ||
+                (detour.Obstacle.bounds.size - detour.Bounds.size).sqrMagnitude > .0004f ||
+                intent.Tick - detour.Started >= 90 || intent.Tick - detour.ProgressTick >= 30 || detour.Travel > 12)
+            { EndHumanDetour(intent); return false; }
+            // Query through the known obstacle's far plane, not merely the short horizon
+            // which caused the bot to return to the same face after backing away.
+            Vector3 absolute = new Vector3(Mathf.Abs(desired.x), 0, Mathf.Abs(desired.z));
+            float far = Vector3.Dot(detour.Bounds.center - position, desired) + Vector3.Dot(detour.Bounds.extents, absolute) + .25f + Skin;
+            if (far > 6) { EndHumanDetour(intent); return false; }
+            var direct = far > 0 ? CastMotor(actor.ActorId, position, desired * Mathf.Max(.65f, far),
+                1.72f - .72f * actor.CrouchFraction, .25f, true) : null;
+            if (!direct.HasValue)
+            { EndHumanDetour(intent); return false; }
+            if (direct.Value.collider != detour.Obstacle)
+            { EndHumanDetour(intent); return false; }
+            if (detour.Escape.sqrMagnitude < .1f)
+            {
+                Vector3 outward = FaceOutward(detour.Face);
+                float bestScore = float.NegativeInfinity;
+                foreach (float yaw in BotYawSamples)
+                {
+                    if (Mathf.Abs(yaw) < 45 || Mathf.Abs(yaw) > 135) continue;
+                    var candidate = (Quaternion.AngleAxis(yaw, Vector3.up) * desired).normalized;
+                    if (Vector3.Dot(candidate, outward) <= .05f) continue;
+                    float clearance = BotClearance(actor, candidate, .65f, out _, out _, out bool canAdvance, out _);
+                    if (clearance < .65f && !canAdvance || !BotHumanCanTraverse(actor, candidate, .65f, out _)) continue;
+                    float score = Vector3.Dot(candidate, desired) * .65f + Vector3.Dot(candidate, outward) * .45f;
+                    if (score > bestScore) { bestScore = score; detour.Escape = candidate; }
+                }
+                if (detour.Escape.sqrMagnitude < .1f) return false; // Back out reactively until a lateral is certified.
+                detour.ProgressTick = intent.Tick; detour.BestDistance = float.PositiveInfinity;
+            }
+            if (detour.Corners == null && OutsideFace(position, detour.Bounds, detour.Face))
+            {
+                Vector3 tangent = Vector3.Cross(FaceOutward(detour.Face), Vector3.up);
+                int step = Vector3.Dot(detour.Escape, tangent) >= 0 ? 1 : -1;
+                int first = step > 0 ? detour.Face : (detour.Face + 3) % 4;
+                detour.Corners = new Vector3[3];
+                for (int index = 0; index < 3; index++) detour.Corners[index] = DetourCorner(detour.Bounds, (first + step * index + 4) % 4, position.y);
+                // Keep the already acquired outward clearance on the first edge.
+                var corner = detour.Corners[0];
+                if (detour.Face == 0) corner.x = Mathf.Max(corner.x, position.x);
+                else if (detour.Face == 2) corner.x = Mathf.Min(corner.x, position.x);
+                else if (detour.Face == 1) corner.z = Mathf.Max(corner.z, position.z);
+                else corner.z = Mathf.Min(corner.z, position.z);
+                detour.Corners[0] = corner; detour.BestDistance = float.PositiveInfinity; detour.ProgressTick = intent.Tick;
+                float length = Vector3.Distance(position, corner);
+                for (int index = 1; index < 3; index++) length += Vector3.Distance(detour.Corners[index - 1], detour.Corners[index]);
+                if (length + detour.Travel > 12) { EndHumanDetour(intent); return false; }
+            }
+            Vector3 travel = detour.Escape; float remaining;
+            if (detour.Corners != null)
+            {
+                while (detour.Corner < 3)
+                {
+                    travel = detour.Corners[detour.Corner] - position; travel.y = 0;
+                    if (travel.magnitude >= .17f) break;
+                    detour.Corner++; detour.ProgressTick = intent.Tick; detour.BestDistance = float.PositiveInfinity;
+                }
+                if (detour.Corner >= 3) { EndHumanDetour(intent); return false; }
+                remaining = travel.magnitude; travel.Normalize();
+            }
+            else
+            {
+                Vector3 outward = FaceOutward(detour.Face);
+                float edge = Vector3.Dot(detour.Bounds.center - position, outward) +
+                    (detour.Face % 2 == 0 ? detour.Bounds.extents.x : detour.Bounds.extents.z) + .45f;
+                remaining = Mathf.Max(0, edge);
+            }
+            if (remaining < detour.BestDistance - .03f)
+            { detour.BestDistance = remaining; detour.ProgressTick = intent.Tick; }
+            // Certify the next cadence interval with the real motor predictor, including
+            // support. A waypoint/AABB is not permission to cross a wall or a drop.
+            var chosen = SteerBotReactive(actor, travel.ToFloat()).ToUnity();
+            if (Vector3.Dot(chosen, travel) >= .5f && BotHumanCanTraverse(actor, chosen, .35f, out _)) result = chosen;
+#if UNITY_EDITOR
+            if (captureBotSteeringDiagnostic) lastBotSteeringDiagnostic += " obstacleDetour=active corner=" + detour.Corner;
+#endif
+            return true;
         }
         private float BotClearance(ActorSnapshot actor, Vector3 direction, float distance,
             out Collider blocker, out Vector3 normal, out bool canAdvance,

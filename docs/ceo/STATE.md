@@ -1,5 +1,22 @@
 # Relevo CEO — 2026-09-19
 
+## Gate actual: rodeo físico y continuidad en corredores
+
+- `ac2e5c5` conserva disponibilidad de una tarea en corredores humanos/escaliers
+  abiertos aunque el actor esté a más de 3 m de una zona extrema; no amplía la
+  admisión de tareas nuevas ni su presupuesto. Native detour-corridor01: 41/41
+  PASS (19 navegación, 8 detour, 14 actor/escaleras), sin omitidos.
+- Rodeo persistente de Astra revisado por Terra sin hallazgos accionables.
+  Yate helm diagnostic04 pasa en 170/330 ticks con trabajo real; Isla picnic04
+  pasa en 264/330. Los diagnostics03 no ejecutaron por namespace erróneo en CLI,
+  y no constituyen evidencia física. Logs anteriores preservados.
+- Rondas tras rodeo: Casa04 17/20, Camp05 15/20, Puerto03 19/20, cuota14 PASS.
+  Camp tenía16/20 antes: no afirmar invariancia ni cero regresiones globales.
+  Isla install03 y Yate install01 sólo6/20: ambos abortaron antes de guardar.
+  Sus catálogos todavía no están instalados; técnica/Astra investigan las rondas.
+- Arte sigue bloqueado por sesión Higgsfield ausente; no hubo nuevas generaciones.
+  Equipamiento visual/mapas, WAN/micrófono real y build final siguen pendientes.
+
 ## Gate actual: interacción y salida de objetivos
 
 - `4de9476` y `d835bb7` consumen el primer waypoint ya alcanzado al adquirir
