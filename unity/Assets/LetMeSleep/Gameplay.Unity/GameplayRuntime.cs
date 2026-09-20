@@ -11,6 +11,7 @@ namespace LetMeSleep.Gameplay.Unity
     [RequireComponent(typeof(UnityGameplayWorld))]
     public sealed class GameplayRuntime : MonoBehaviour, IGameplayPresentationSink
     {
+        internal const uint BotDecisionIntervalTicks = 3;
         public bool IsHost = true;
         public bool AutomaticTick = true;
         public bool CaptureLocalInput = true;
@@ -262,7 +263,7 @@ namespace LetMeSleep.Gameplay.Unity
             var snapshot = Authority.CaptureSnapshot();
             foreach (var bot in bots)
             {
-                if ((next + bot.Key) % 3 != 0) continue;
+                if ((next + bot.Key) % BotDecisionIntervalTicks != 0) continue;
                 var self = snapshot.Actors.FirstOrDefault(a => a.ActorId == bot.Key); if (self == null) continue;
                 if (self.Eliminated) continue;
                 var observation = ObserveBot(self, snapshot);

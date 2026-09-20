@@ -71,13 +71,14 @@ namespace LetMeSleep.Gameplay.Unity
             var direction = desired.ToUnity(); if (human) direction.y = 0;
             direction.Normalize(); if (direction.sqrMagnitude < .1f) return Float3.Zero;
             const float lookAhead = .65f;
-            float desiredRawClearance = BotClearance(self, direction, lookAhead,
+            float desiredRawClearance = BotClearanceCore(self, direction, lookAhead,
+                human && humanSteeringIntents.ContainsKey(self.ActorId),
                 out Collider desiredBlocker, out Vector3 desiredNormal,
-                out bool desiredCanAdvance, out float desiredPredictedProgress);
+                out bool desiredCanAdvance, out float desiredPredictedProgress, out bool canContinueDecision);
 #if UNITY_EDITOR
             string desiredTraversalDiagnostic = lastBotTraversalDiagnostic;
 #endif
-            if (desiredRawClearance >= lookAhead || desiredCanAdvance)
+            if (desiredRawClearance >= lookAhead || desiredCanAdvance || canContinueDecision)
             {
 #if UNITY_EDITOR
                 if (captureBotSteeringDiagnostic)
@@ -85,6 +86,7 @@ namespace LetMeSleep.Gameplay.Unity
                         desiredCanAdvance, desiredPredictedProgress, desiredBlocker,
                         desiredNormal, 0, lookAhead * 3 + .65f, desiredRawClearance,
                         desiredCanAdvance, desiredPredictedProgress, desiredBlocker, desiredNormal);
+                if (captureBotSteeringDiagnostic) lastBotSteeringDiagnostic += " canContinueDecision=" + canContinueDecision;
 #endif
                 botDetours.Remove(self.ActorId); return direction.ToFloat();
             }
@@ -247,11 +249,18 @@ namespace LetMeSleep.Gameplay.Unity
         private float BotClearance(ActorSnapshot actor, Vector3 direction, float distance,
             out Collider blocker, out Vector3 normal, out bool canAdvance,
             out float predictedProgress)
+            => BotClearanceCore(actor, direction, distance, false, out blocker, out normal,
+                out canAdvance, out predictedProgress, out _);
+
+        private float BotClearanceCore(ActorSnapshot actor, Vector3 direction, float distance,
+            bool allowDecisionContinuation, out Collider blocker, out Vector3 normal,
+            out bool canAdvance, out float predictedProgress, out bool canContinueDecision)
         {
             var position = actor.Position.ToUnity(); bool human = actor.Role == PlayerRole.Human;
             float nearest = distance;
             Vector3 contactPoint = default;
             blocker = null; normal = default; canAdvance = false; predictedProgress = 0;
+            canContinueDecision = false;
             if (human)
             {
                 // Use the physical motor capsule, contact treatment and actor filtering.
@@ -284,9 +293,9 @@ namespace LetMeSleep.Gameplay.Unity
             predictionEnabled = !DisableBotHumanTraversalPredictionForDiagnostic;
 #endif
             if (predictionEnabled && human && nearest < distance &&
-                BotMayTraverseContact(actor.Position.ToUnity(), blocker, contactPoint, normal, actor.Grounded) &&
-                BotHumanCanTraverse(actor, direction, distance, out predictedProgress))
-                canAdvance = true;
+                BotMayTraverseContact(actor.Position.ToUnity(), blocker, contactPoint, normal, actor.Grounded))
+                canAdvance = BotHumanTraversalPrediction(actor, direction, distance, allowDecisionContinuation,
+                    out predictedProgress, out canContinueDecision);
             return nearest;
         }
 
@@ -308,9 +317,17 @@ namespace LetMeSleep.Gameplay.Unity
 
         private bool BotHumanCanTraverse(ActorSnapshot actor, Vector3 direction, float distance,
             out float predictedProgress)
+            => BotHumanTraversalPrediction(actor, direction, distance, false, out predictedProgress, out _);
+
+        private bool BotHumanTraversalPrediction(ActorSnapshot actor, Vector3 direction, float distance,
+            bool allowDecisionContinuation, out float predictedProgress, out bool canContinueDecision)
         {
             Vector3 start = actor.Position.ToUnity(), position = start;
             predictedProgress = 0;
+            canContinueDecision = false;
+            Vector3 decisionPosition = start;
+            float decisionVerticalVelocity = 0, decisionProgress = 0;
+            bool decisionGrounded = false, decisionComplete = false;
             float height = 1.72f - .72f * actor.CrouchFraction;
             const float radius = .25f;
             const float dt = 1f / 30f;
@@ -337,6 +354,21 @@ namespace LetMeSleep.Gameplay.Unity
                         height, radius, tick, out grounded))
                 {
                     predictedProgress = Vector3.Dot(position - start, direction.normalized);
+                    // A later rejected contact still blocks the full horizon. Only the
+                    // already completed authority interval may be used before re-querying.
+                    // Never count partial motion inside this failed tick as certification.
+                    if (allowDecisionContinuation && decisionComplete && decisionProgress >= .12f &&
+                        decisionPosition.y >= start.y - .23f &&
+                        actors.TryGetValue(actor.ActorId, out var proxy) &&
+                        !Overlap(proxy.MotorCollider, start, proxy.transform.rotation, out _) &&
+                        !Overlap(proxy.MotorCollider, decisionPosition, proxy.transform.rotation, out _))
+                    {
+                        var decisionSupport = CastMotor(actor.ActorId, decisionPosition,
+                            Vector3.down * .23f, height, radius, true);
+                        canContinueDecision = decisionSupport.HasValue && decisionSupport.Value.normal.y > .55f ||
+                            BotHumanCanSettle(actor.ActorId, decisionPosition, decisionVerticalVelocity,
+                                decisionGrounded, height, radius, (int)GameplayRuntime.BotDecisionIntervalTicks);
+                    }
                     return false;
                 }
                 verticalVelocity = velocity.y;
@@ -348,6 +380,11 @@ namespace LetMeSleep.Gameplay.Unity
                 }
                 predictedProgress = Vector3.Dot(position - start, direction.normalized);
                 tick++;
+                if (allowDecisionContinuation && tick == GameplayRuntime.BotDecisionIntervalTicks)
+                {
+                    decisionPosition = position; decisionVerticalVelocity = verticalVelocity;
+                    decisionGrounded = grounded; decisionProgress = predictedProgress; decisionComplete = true;
+                }
             }
             if (predictedProgress < distance)
             {
