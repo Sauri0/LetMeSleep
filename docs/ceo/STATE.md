@@ -1,5 +1,21 @@
 # Relevo CEO — 2026-09-19
 
+## Seguimiento actual: regla online confirmada y capturas provisionales
+
+- Respuesta J25/O08 del usuario cotejada con ACLARACIONES, DECISIONES y PLAN:
+  ningún bot online; reserva de 30 segundos sin control por IA. Ya registrada,
+  sin cambiar el original exportado ni reactivar la alternativa anterior.
+- Capturas de entrenamiento real: intentos01/02/04 ejecutan 1/1;03 falla al
+  escribir una propiedad URP readonly. Revisión PNG rechaza fidelidad del HUD:
+  01 tiene oclusión por mundo,02 pierde texto,04 omite HUD. No certificar interfaz
+  por XML PASS. Ver GAMEPLAY-CAPTURE-20260920.md; diez vistas01 sí inspeccionadas.
+- Técnica tiene turno Unity para SurfaceCampExterior01 v2, con tres rutas nuevas
+  por caras exteriores. No sustituye ni reclasifica los Frozen85 originales.
+- WELL-AUTHORITY freeze01 compilado externo, espera turno nativo. Red corrige
+  captura HUD externamente y debe probar un mapa antes de repetir los diez.
+- Harness temporal de captura04 retirado. No cambio runtime de física ni UI;
+  objetivo completo activo, arte nuevo/online real/build final siguen pendientes.
+
 ## Resultado posterior: Camp era una entrada dentro del sólido
 
 - Diagnóstico CEO SurfaceCampEscalation01 refuta el falso self-overlap:
