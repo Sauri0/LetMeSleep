@@ -2,6 +2,17 @@
 
 ## Gate actual: interacción y salida de objetivos
 
+- La consulta humana de steering usa ahora CastMotor con la cápsula/filtros
+  reales. Puerto ContactEscape demuestra falso solapamiento de0.23mm con
+  radio0.26 y ausencia de penetración real con0.25. Native query01 pasa14/14
+  (10 escaleras/negativos y4 actor/contacto); baseline actor02 era2/3.
+  Misma ronda Camp03 mejora13→16/20 y cumple cuota14. Puerto cottage3→plaza
+  diagnostic03 pasa170/330. Yate helm02 sigue FAIL: requiere rodeo local aparte.
+  Revisión independiente Astra no encuentra discrepancias de geometría/filtros.
+- Isla override en memoria conserva legacy; static03 acepta10/12. Porchrrail
+  explícito pasa; pasos/lookout y puente requieren obtener el ray hit real de
+  sus contactos aproximados anteriores. DLLv8 mide sólo esos dos rayos.
+
 - `b341ff4` exige contacto/LOS real antes de que un bot se detenga a trabajar.
   Los dos lotes nativos pasan 116/116 casos, sin omitidos. Camp stump03 pasa
   en 155 ticks; anteriormente se detenía sin progreso. Casa catálogo13 PASS.

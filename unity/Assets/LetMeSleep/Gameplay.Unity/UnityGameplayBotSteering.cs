@@ -83,18 +83,32 @@ namespace LetMeSleep.Gameplay.Unity
             out float predictedProgress)
         {
             var position = actor.Position.ToUnity(); bool human = actor.Role == PlayerRole.Human;
-            float radius = human ? .26f : .065f;
-            var hits = human
-                ? Physics.CapsuleCastAll(position + Vector3.up * .29f, position + Vector3.up * (1.46f - .64f * actor.CrouchFraction), radius, direction, distance, GeometryMask, QueryTriggerInteraction.Ignore)
-                : Physics.SphereCastAll(position, radius, direction, distance, GeometryMask, QueryTriggerInteraction.Ignore);
             float nearest = distance;
             Vector3 contactPoint = default;
             blocker = null; normal = default; canAdvance = false; predictedProgress = 0;
-            foreach (var hit in hits)
+            if (human)
             {
-                if (!IsWorldCollider(hit.collider) || hit.collider.GetComponentInParent<GameplayActorProxy>()) continue;
-                if (hit.distance >= nearest) continue;
-                nearest = hit.distance; blocker = hit.collider; normal = hit.normal; contactPoint = hit.point;
+                // Use the physical motor capsule, contact treatment and actor filtering.
+                // A larger steering capsule can begin inside furniture when the real body
+                // is clear, rejecting every exit. Ignoring other humans also deadlocks
+                // two bots whose motor capsules correctly block one another.
+                var hit = CastMotor(actor.ActorId, position, direction * distance,
+                    1.72f - .72f * actor.CrouchFraction, .25f, true);
+                if (hit.HasValue && hit.Value.distance < nearest)
+                {
+                    nearest = hit.Value.distance; blocker = hit.Value.collider;
+                    normal = hit.Value.normal; contactPoint = hit.Value.point;
+                }
+            }
+            else
+            {
+                foreach (var hit in Physics.SphereCastAll(position, .065f, direction, distance,
+                             GeometryMask, QueryTriggerInteraction.Ignore))
+                {
+                    if (!IsWorldCollider(hit.collider) || hit.collider.GetComponentInParent<GameplayActorProxy>()) continue;
+                    if (hit.distance >= nearest) continue;
+                    nearest = hit.distance; blocker = hit.collider; normal = hit.normal; contactPoint = hit.point;
+                }
             }
             // Steering must not reject ground geometry that the real human motor can
             // traverse as a slope or authored step. Predict with the same CastMotor,
