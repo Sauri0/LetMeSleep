@@ -1,0 +1,15 @@
+{
+  "name": "LetMeSleep.Tests.VoiceEditMode",
+  "rootNamespace": "LetMeSleep.Tests.VoiceEditMode",
+  "references": [
+    "LetMeSleep.Audio",
+    "LetMeSleep.Online"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "autoReferenced": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}
