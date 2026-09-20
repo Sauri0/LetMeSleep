@@ -77,6 +77,21 @@ contraseñas, direcciones IP públicas ni credenciales.
 
 ## Informar un problema
 
+## Limitaciones de esta candidata
+
+Esta entrega prioriza disponer de una versión testeable. El menú y el HUD tienen
+una primera mejora; el rediseño completo y el arte final de personajes siguen
+pendientes. La marcha humana, la deformación de brazos y las caídas de humano y
+mosquito todavía necesitan correcciones; no se incorporaron prototipos físicos
+sin validar. Hay un conflicto visible de piso/terreno en el faro de Puerto y la
+revisión de parpadeos de los cinco mapas aún no está completa.
+
+Las pruebas locales no certifican partidas entre dos redes ni voz con dos
+personas. No se garantiza 60 FPS. La personalización modular y los objetos
+nuevos todavía no cuentan con todo su contenido visual final.
+
+## Informar un problema
+
 Incluí versión/candidata, mapa, modo, rol, qué hiciste y qué ocurrió. Una
 captura o un video corto ayuda si se trata de cámara, animación, colisión o
 interfaz. Para audio, indicá si usabas auriculares o parlantes y qué micrófono.
