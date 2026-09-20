@@ -164,6 +164,7 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(commands.Input.UseHeld, Is.True);
             Assert.Throws<ArgumentException>(() => new BotObservation(Actor(a, 2), Array.Empty<BotTarget>(), Float3.Forward, false, modeId: GameModes.Tasks, ownPrivate: a.CapturePrivate(1), taskObjective: Objective()));
             var evasive = bot.Decide(new BotObservation(Actor(a, 2), new[] { new BotTarget(Actor(a, 1), Float3.Forward) }, Float3.Forward, false, modeId: GameModes.Survival), new BotTick(1, 1, 2));
+            evasive = bot.Decide(new BotObservation(Actor(a, 2), new[] { new BotTarget(Actor(a, 1), Float3.Forward) }, Float3.Forward, false, modeId: GameModes.Survival), new BotTick(1, 1, 14));
             Assert.That(evasive.Input.BiteHeld, Is.False); Assert.That(evasive.Input.AimForward.Z, Is.LessThan(0));
         }
         [Test] public void DisconnectAndRestartClearModeState()
