@@ -34,7 +34,7 @@ namespace LetMeSleep.Gameplay
             internal string EquippedTool = GameplayTools.Hands;
             internal SurfaceAttachment? Surface;
             internal Float3 SurfaceNormal, SurfaceForward;
-            internal int SurfaceTransitionTicks;
+            internal int SurfaceTransitionTicks, SurfaceApproachTicks;
             internal BiteAttachment? Bite;
             internal StrikePlan Plan;
             internal StrikeState Strike;
@@ -322,6 +322,10 @@ namespace LetMeSleep.Gameplay
             }
             else if (a.Surface.HasValue)
             {
+                // A ray-visible contact may have an obstructed body path. Give control
+                // back after one second instead of holding an impossible approach forever.
+                if (a.State == LifeState.ApproachingSurface && a.SurfaceTransitionTicks == 0 &&
+                    ++a.SurfaceApproachTicks > 30) { Detach(a); return; }
                 if (!world.ResolveSurface(a.Surface.Value, out var contact)) { Detach(a); return; }
                 var carried = SurfaceVisualFrame.TransportForward(a.SurfaceNormal, contact.WorldNormal, a.SurfaceForward);
                 if (!SurfaceVisualFrame.TryResolve(contact.WorldNormal, a.Aim, carried, 12f * dt,
@@ -558,7 +562,7 @@ namespace LetMeSleep.Gameplay
         {
             if (a.State == state) return;
             bool wasControllable = CanAct(a);
-            a.State = state; a.Revision++;
+            a.State = state; a.Revision++; a.SurfaceApproachTicks = 0;
             if (!CanAct(a) || !wasControllable) ClearHeld(a);
         }
         private void Detach(Actor a)

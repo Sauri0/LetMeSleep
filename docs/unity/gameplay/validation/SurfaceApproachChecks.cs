@@ -11,7 +11,7 @@ public sealed class SurfaceApproachChecks
     private sealed class PlaneWorld : IGameplayWorld
     {
         public readonly Float3 Normal;
-        public bool Exists = true, Obstructed;
+        public bool Exists = true, Obstructed, BlockMotor;
         public PlaneWorld(Float3 normal) { Normal = normal; }
         private SurfaceContact Contact(Float3 point, uint id = 10190) => new SurfaceContact(new SurfaceAttachment(id, 1, point, Normal, Float3.Cross(Normal, Math.Abs(Normal.Y) < .9f ? Float3.Up : Float3.Forward).Normalized), point, Normal);
         public bool TrySurface(in SurfaceQuery q, out SurfaceContact contact)
@@ -25,6 +25,7 @@ public sealed class SurfaceApproachChecks
         public bool ResolveSurface(in SurfaceAttachment a, out SurfaceContact contact) { contact = Contact(a.LocalPoint); return Exists && a.SurfaceId == 10190; }
         public MotorResult MoveMosquito(in MotorQuery q)
         {
+            if (BlockMotor) return new MotorResult(q.Position, Float3.Zero, false, Normal);
             var p = q.Position + q.Velocity * q.DeltaSeconds;
             float height = Float3.Dot(p, Normal);
             if (height < .055f) p += Normal * (.055f - height);
@@ -87,4 +88,25 @@ public sealed class SurfaceApproachChecks
         world.Obstructed = true; Advance(a);
         Assert.That(Self(a).LifeState, Is.EqualTo(LifeState.Flying)); Assert.That(Self(a).SurfaceAttachment.HasValue, Is.False);
     }
+    [Test] public void BlockedInitialApproachReturnsFlightInsteadOfHoldingForever()
+    {
+        var world = new PlaneWorld(Float3.Up) { BlockMotor = true }; var a = Begin(world);
+        Advance(a, 45);
+        Assert.That(Self(a).LifeState, Is.EqualTo(LifeState.Flying));
+        Assert.That(Self(a).SurfaceAttachment.HasValue, Is.False);
+        // An explicit later attempt can succeed after the obstruction disappears.
+        world.BlockMotor = false;
+        var state = Self(a);
+        Assert.That(a.SubmitAction("mosquito", new PlayerActionCommand(new CommandHeader(1, 1, 2, 2, a.CurrentTick, state.ViewRevision), ActionKind.PerchToggle, -Float3.Up)), Is.EqualTo(CommandReject.None));
+        Advance(a, 20);
+        Assert.That(Self(a).LifeState, Is.EqualTo(LifeState.Surface));
+    }
+    [Test] public void BrieflyBlockedInitialApproachStillReachesItsSurface()
+    {
+        var world = new PlaneWorld(Float3.Up) { BlockMotor = true }; var a = Begin(world);
+        Advance(a, 10); world.BlockMotor = false; Advance(a, 15);
+        Assert.That(Self(a).LifeState, Is.EqualTo(LifeState.Surface));
+        Assert.That(Self(a).SurfaceAttachment.HasValue, Is.True);
+    }
+
 }
