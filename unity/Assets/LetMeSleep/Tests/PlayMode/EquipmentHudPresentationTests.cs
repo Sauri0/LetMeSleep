@@ -45,6 +45,8 @@ namespace LetMeSleep.Tests.PlayMode
         [TestCase("task.camp.north_bridge_lantern", "ACTIVÁ LA LINTERNA DEL ACCESO NORTE")]
         [TestCase("task.camp.washroom_toilet", "LIMPIÁ EL INODORO DEL BAÑO")]
         [TestCase("task.camp.washroom_bucket", "LIMPIÁ EL BALDE DEL BAÑO")]
+        [TestCase("task.camp.east_field_stump", "LIMPIÁ EL TOCÓN DEL CAMPO ESTE")]
+        [TestCase("task.camp.north_bridge_stump", "LIMPIÁ EL TOCÓN DEL ACCESO NORTE")]
         [TestCase("task.yacht.aft_dining_table", "LIMPIÁ LA MESA DE POPA")]
         [TestCase("task.yacht.port_cabin_lamp", "ACTIVÁ LA LÁMPARA DEL CAMAROTE DE BABOR")]
         [TestCase("task.yacht.starboard_cabin_lamp", "ACTIVÁ LA LÁMPARA DEL CAMAROTE DE ESTRIBOR")]
@@ -65,6 +67,9 @@ namespace LetMeSleep.Tests.PlayMode
         [TestCase("task.port.cottage_three_bedside_table", "LIMPIÁ LA MESA DE LUZ DE LA CABAÑA 3")]
         [TestCase("task.port.cottage_writing_desk", "LIMPIÁ EL ESCRITORIO DE LA CABAÑA 1")]
         [TestCase("task.port.plaza_bench_two", "LIMPIÁ EL BANCO 2 DE LA PLAZA")]
+        [TestCase("task.port.lighthouse_bench", "LIMPIÁ EL BANCO DEL FARO")]
+        [TestCase("task.port.lighthouse_door", "ACTIVÁ LA PUERTA DEL FARO")]
+        [TestCase("task.port.lighthouse_floor", "LIMPIÁ EL SUELO DEL FARO")]
         public void CandidateObjectiveNamesAreAvailableInSpanish(string key, string expected)
         {
             Assert.That(ModeHudText.ObjectiveName(key), Is.EqualTo(expected));

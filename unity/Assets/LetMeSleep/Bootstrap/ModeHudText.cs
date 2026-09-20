@@ -56,6 +56,8 @@ namespace LetMeSleep.Bootstrap
                 case "task.camp.north_bridge_lantern": return "ACTIVÁ LA LINTERNA DEL ACCESO NORTE";
                 case "task.camp.washroom_toilet": return "LIMPIÁ EL INODORO DEL BAÑO";
                 case "task.camp.washroom_bucket": return "LIMPIÁ EL BALDE DEL BAÑO";
+                case "task.camp.east_field_stump": return "LIMPIÁ EL TOCÓN DEL CAMPO ESTE";
+                case "task.camp.north_bridge_stump": return "LIMPIÁ EL TOCÓN DEL ACCESO NORTE";
                 case "task.yacht.main_deck": return "LIMPIÁ LA CUBIERTA PRINCIPAL";
                 case "task.yacht.aft_dining_table": return "LIMPIÁ LA MESA DE POPA";
                 case "task.yacht.port_cabin_lamp": return "ACTIVÁ LA LÁMPARA DEL CAMAROTE DE BABOR";
@@ -68,6 +70,8 @@ namespace LetMeSleep.Bootstrap
                 case "task.yacht.salon_coffee_table": return "LIMPIÁ LA MESA RATONA DEL SALÓN";
                 case "task.yacht.bathroom_toilet": return "LIMPIÁ EL INODORO";
                 case "task.port.lighthouse_floor": return "LIMPIÁ EL SUELO DEL FARO";
+                case "task.port.lighthouse_bench": return "LIMPIÁ EL BANCO DEL FARO";
+                case "task.port.lighthouse_door": return "ACTIVÁ LA PUERTA DEL FARO";
                 case "task.port.plaza_barrel": return "LIMPIÁ EL BARRIL DE LA PLAZA";
                 case "task.port.plaza_bench": return "LIMPIÁ EL BANCO DE LA PLAZA";
                 case "task.port.cottage_two_writing_desk": return "LIMPIÁ EL ESCRITORIO DE LA CABAÑA 2";
