@@ -194,5 +194,145 @@ namespace LetMeSleep.Tests
                 Assert.That(Decide(bot,Task(patrol,Float3.Zero,tick),tick).Input.MovePlanar.Y,Is.Zero);
             Assert.That(bot.ReplanCount,Is.Zero);
         }
+        private static readonly Float3 StairSample = new Float3(1.22218943f, 3.73779845f, 1.940733f);
+        private static readonly Float3 StairDestination = new Float3(-4, 1.3f, 1);
+        private static BotPatrol StairPatrol(bool authoredCorridor = true) => new BotPatrol(new[] {
+            new BotRegion("lower",new Float3(-1.25f,.4f,-4.76f),new Float3(2.05f,2.65f,-1.65f)),
+            new BotRegion("upper",new Float3(-1.25f,3.3f,3.15f),new Float3(2.05f,5.15f,4.76f)),
+            new BotRegion("neighbour",new Float3(-1.25f,3.3f,-1.65f),new Float3(.3f,5.15f,3.15f)),
+            new BotRegion("finish",new Float3(-6.76f,.4f,-4.76f),new Float3(-1.55f,2.65f,4.76f))
+        },new[] {
+            new BotPassage("straight_stair","lower","upper",new[] {
+                new Float3(1.225f,1.4f,-2),new Float3(1.225f,2.603f,.63f),
+                new Float3(1.225f,2.603f,.63f),new Float3(1.225f,2.603f,.63f),
+                new Float3(1.225f,2.603f,.63f),new Float3(1.225f,4.2f,4.25f),new Float3(1.225f,4.2f,3.8f)
+            },authoredCorridor?new[] {
+                new BotRegion("lower-flight",new Float3(.65f,1.05f,-2),new Float3(1.8f,2.953f,1.08f)),
+                new BotRegion("upper-flight",new Float3(.65f,2.253f,.18f),new Float3(1.8f,4.55f,4.70f))
+            }:null),
+            new BotPassage("upper_neighbour","neighbour","upper",new[] {new Float3(-.55f,4.4f,2.6f),new Float3(-.55f,4.4f,3.7f)}),
+            new BotPassage("bottom_exit","lower","finish",new[] {new Float3(-1,1.3f,-2),new Float3(-2,1.3f,-2)})
+        },1);
+        private static Float3 StairDirection(BotPatrol patrol,Float3 sample,string source,uint tick=44,Func<string,bool> open=null)
+            =>patrol.DirectionTo(sample,source,"finish",StairDestination,tick,open??(_=>true));
+        private static void EnterStair(BotPatrol patrol)
+        {
+            StairDirection(patrol,new Float3(-.65f,4.174f,3.95f),"upper",2);
+            StairDirection(patrol,new Float3(1.20407653f,4.150159f,3.80167365f),"upper",20);
+            StairDirection(patrol,new Float3(1.21852863f,4.150159f,4.11133671f),"upper",23);
+        }
+        [Test] public void EnteredStairKeepsItsPhysicalWaypointWhenNearestRegionChanges()
+        {
+            var patrol=StairPatrol();EnterStair(patrol);
+            StairDirection(patrol,new Float3(1.22179532f,3.8707273f,2.25073266f),"upper",41);
+            string key=patrol.CurrentProgress.Value.WaypointKey;
+            var direction=StairDirection(patrol,StairSample,"neighbour");
+            Assert.That(patrol.CurrentProgress.Value.PassageId,Is.EqualTo("straight_stair"));
+            Assert.That(patrol.CurrentProgress.Value.WaypointKey,Is.EqualTo(key));
+            Assert.That(direction.X,Is.EqualTo(.00281057f).Within(.00001f));
+            Assert.That(direction.Y,Is.EqualTo(-1.13479845f).Within(.00001f));
+            Assert.That(direction.Z,Is.EqualTo(-1.310733f).Within(.00001f));
+        }
+        [Test] public void StairCorridorCannotInitiateAnUnenteredRouteFromTheShaft()
+        {
+            var patrol=StairPatrol();Assert.That(StairDirection(patrol,StairSample,"neighbour").Length,Is.Zero);
+            StairDirection(patrol,new Float3(-.65f,4.174f,3.95f),"upper",2);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour").Length,Is.Zero,
+                "Selecting a stair is insufficient; its entry waypoint must have been reached.");
+        }
+        [Test] public void ClosedEnteredStairWaitsWithoutMovingAndResumesOnlyWhenReopened()
+        {
+            var patrol=StairPatrol();EnterStair(patrol);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour",44,p=>p!="straight_stair").Length,Is.Zero);
+            Assert.That(patrol.CurrentProgress.HasValue,Is.False);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour",45).Z,Is.LessThan(-1));
+        }
+        [Test] public void BlacklistedEnteredStairPreservesItsExpiryAndResumesAfterSixSeconds()
+        {
+            var patrol=StairPatrol();EnterStair(patrol);StairDirection(patrol,StairSample,"neighbour");
+            patrol.InvalidatePassage("straight_stair",224);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour",44).Length,Is.Zero);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour",223).Length,Is.Zero);
+            Assert.That(patrol.IsPassageBlocked("straight_stair",223),Is.True);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour",224).Z,Is.LessThan(-1));
+            Assert.That(patrol.IsPassageBlocked("straight_stair",224),Is.False);
+        }
+        [Test] public void LeavingStairCorridorDiscardsSuspendedLeg()
+        {
+            var patrol=StairPatrol();EnterStair(patrol);StairDirection(patrol,StairSample,"neighbour");
+            patrol.InvalidatePassage("straight_stair",224);
+            StairDirection(patrol,new Float3(.2f,StairSample.Y,StairSample.Z),"neighbour",45);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour",224).Length,Is.Zero);
+        }
+        [Test] public void AnotherFloorAtSamePlanarPointCannotKeepTheEnteredStairLeg()
+        {
+            var patrol=StairPatrol();EnterStair(patrol);
+            Assert.That(StairDirection(patrol,new Float3(StairSample.X,1.3f,StairSample.Z),null).Length,Is.Zero);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour",45).Length,Is.Zero);
+        }
+        [Test] public void NewApproachInSameTargetRegionDiscardsEnteredStairLeg()
+        {
+            var patrol=StairPatrol();EnterStair(patrol);
+            Assert.That(patrol.DirectionTo(StairSample,"neighbour","finish",new Float3(-5,1.3f,1),44,_=>true).Length,Is.Zero);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour",45).Length,Is.Zero);
+        }
+        [Test] public void OrdinaryPassageDoesNotAcquireStairCorridorRetention()
+        {
+            var patrol=StairPatrol(false);EnterStair(patrol);
+            StairDirection(patrol,StairSample,"neighbour");
+            Assert.That(patrol.CurrentProgress.Value.PassageId,Is.EqualTo("upper_neighbour"),
+                "Ordinary passages replan under the existing nearest-region policy instead of retaining the old stair leg.");
+        }
+        [Test] public void StairExitReturnsToOrdinaryGraphRouting()
+        {
+            var patrol=StairPatrol();EnterStair(patrol);StairDirection(patrol,StairSample,"neighbour");
+            StairDirection(patrol,new Float3(1.225f,2.603f,.63f),"neighbour",60);
+            StairDirection(patrol,new Float3(1.225f,1.4f,-2),"lower",90);
+            Assert.That(patrol.CurrentProgress.Value.PassageId,Is.EqualTo("bottom_exit"));
+        }
+        [Test] public void AscendingStairAlsoKeepsTheEnteredUpperFlight()
+        {
+            var patrol=StairPatrol();var goal=new Float3(-.65f,4.174f,3.95f);
+            patrol.DirectionTo(new Float3(0,1.4f,-2.5f),"lower","upper",goal,0,_=>true);
+            patrol.DirectionTo(new Float3(1.225f,1.4f,-2),"lower","upper",goal,3,_=>true);
+            patrol.DirectionTo(new Float3(1.225f,2.603f,.63f),null,"upper",goal,30,_=>true);
+            var direction=patrol.DirectionTo(StairSample,"neighbour","upper",goal,44,_=>true);
+            Assert.That(patrol.CurrentProgress.Value.PassageId,Is.EqualTo("straight_stair"));
+            Assert.That(direction.Y,Is.GreaterThan(0));Assert.That(direction.Z,Is.GreaterThan(0));
+        }
+        [Test] public void GlobalInvalidationNeverSuspendsTheEnteredStairLeg()
+        {
+            var patrol=StairPatrol();EnterStair(patrol);StairDirection(patrol,StairSample,"neighbour");
+            patrol.InvalidatePassage(null,224);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour",45).Length,Is.Zero);
+            Assert.That(StairDirection(patrol,StairSample,"neighbour",224).Length,Is.Zero);
+        }
+        [Test] public void OutsideStairCorridorsTheNearestRegionPolicyKeepsThePhysicalOrigin()
+        {
+            var patrol=Patrol(false);
+            var position=new Float3(-5.2f,1,0);
+            var direction=patrol.DirectionTo(position,"start","finish",new Float3(10,1,0),0,_=>true);
+            Assert.That(patrol.CurrentProgress.Value.PassageId,Is.EqualTo("direct"));
+            Assert.That(direction.X,Is.EqualTo(9.2f).Within(.00001f),"Use the physical origin, not its nearest-region projection.");
+        }
+        [Test] public void ControllerStopsOnSuspendedStairAndDoesNotResetItsReplanCooldown()
+        {
+            var patrol=StairPatrol();EnterStair(patrol);var bot=new BotController();
+            var goal=StairDestination-Float3.Up;
+            var objective=new ObjectiveDefinition("objective",ObjectiveKind.Clean,"task.test","task.action.hold_clean",goal,goal,1,30,"finish");
+            var own=new ActorPrivateState(1,0,0,default,default,0,0,0,0,true,default,1,1,0,
+                new TaskAssignment("objective",0,2000,30,0,TaskAssignmentStatus.Active,0));
+            BotObservation Observe(uint tick)=>new BotObservation(Actor(StairSample-Float3.Up),Array.Empty<BotTarget>(),
+                Float3.Forward,false,null,GameModes.Tasks,own,objective,
+                _=>StairDirection(patrol,StairSample,"neighbour",tick),null,
+                new BotNavigationContext(()=>patrol.CurrentProgress,patrol.InvalidatePassage));
+            Decide(bot,Observe(44),44);
+            Assert.That(Decide(bot,Observe(194),194).Input.MovePlanar.Y,Is.Zero);
+            Assert.That(bot.ReplanCount,Is.EqualTo(1));Assert.That(bot.BlockedUntilTick,Is.EqualTo(374));
+            Assert.That(Decide(bot,Observe(197),197).Input.MovePlanar.Y,Is.Zero);
+            Assert.That(Decide(bot,Observe(373),373).Input.MovePlanar.Y,Is.Zero);
+            Assert.That(bot.BlockedUntilTick,Is.EqualTo(374));Assert.That(bot.ReplanCount,Is.EqualTo(1));
+            Assert.That(Decide(bot,Observe(374),374).Input.MovePlanar.Y,Is.GreaterThan(0));
+        }
     }
 }

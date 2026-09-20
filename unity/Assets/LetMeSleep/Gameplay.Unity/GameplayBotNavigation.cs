@@ -66,7 +66,10 @@ namespace LetMeSleep.Gameplay.Unity
                     new Float3(ux, upper.start_y + .85f, turnZ),
                     new Float3(ux, upper.start_y + .85f, upper.start_z),
                     new Float3(ux, upper.end_y + .85f, upper.end_z),
-                    new Float3(ux, upper.end_y + .85f, upper.end_z - .45f) }));
+                    new Float3(ux, upper.end_y + .85f, upper.end_z - .45f) },
+                    new[] { StairFlightRegion(stair.id + ":lower", lower), StairFlightRegion(stair.id + ":upper", upper),
+                        new BotRegion(stair.id + ":landing", Point(stair.mid_landing.min) + new Float3(0, .85f - .35f, -.24f),
+                            Point(stair.mid_landing.max) + new Float3(0, .85f + .35f, .24f)) }));
             }
             passages = links.ToArray();
         }
@@ -92,11 +95,13 @@ namespace LetMeSleep.Gameplay.Unity
             if (actor.Role != PlayerRole.Human || objective == null) return Float3.Zero;
             var local = world.MapRoot.InverseTransformPoint(actor.Position.ToUnity()).ToFloat();
             var approach = world.MapRoot.InverseTransformPoint(objective.ApproachPoint.ToUnity()).ToFloat();
-            if (!TryHumanRegion(local, out var sourceRegion, out var navigationPoint) ||
-                !TryTargetPoint(objective.RouteRegionId, approach, out var navigationApproach, out _)) return Float3.Zero;
+            bool sourceKnown = TryHumanRegion(local, out var sourceRegion, out _);
+            var navigationPoint = local + Float3.Up;
+            if (!TryTargetPoint(objective.RouteRegionId, approach, out var navigationApproach, out _)) return Float3.Zero;
             if (!patrols.TryGetValue(actor.ActorId, out var patrol))
                 patrols.Add(actor.ActorId, patrol = new BotPatrol(regions, passages, actor.ActorId));
-            var direction = patrol.DirectionTo(navigationPoint, objective.RouteRegionId, navigationApproach, tick, IsOpen);
+            var direction = patrol.DirectionTo(navigationPoint, sourceKnown ? sourceRegion.Id : null,
+                objective.RouteRegionId, navigationApproach, tick, IsOpen);
             var worldDirection = world.MapRoot.TransformVector(direction.ToUnity()).ToFloat();
 #if UNITY_EDITOR
             if (captureDirectionDiagnostic)
@@ -198,6 +203,13 @@ namespace LetMeSleep.Gameplay.Unity
             navigationPoint = region.Id == null ? default : Clamp(sample, region);
             return region.Id != null && Distance(sample, navigationPoint) <= 3f;
         }
+        // Width comes from the authored flight. Vertical slack matches waypoint arrival;
+        // longitudinal extension includes the existing .45m stair entry/exit points.
+        private static BotRegion StairFlightRegion(string id, Flight flight) => new BotRegion(id,
+            new Float3(Mathf.Min(flight.clear_x[0], flight.clear_x[1]), Mathf.Min(flight.start_y, flight.end_y) + .85f - .35f,
+                Mathf.Min(flight.start_z, flight.end_z) - .45f),
+            new Float3(Mathf.Max(flight.clear_x[0], flight.clear_x[1]), Mathf.Max(flight.start_y, flight.end_y) + .85f + .35f,
+                Mathf.Max(flight.start_z, flight.end_z) + .45f));
         private bool TryTargetPoint(string regionId, Float3 foot, out Float3 navigationPoint, out BotRegion region)
         {
             region = regions.FirstOrDefault(r => r.Id == regionId);

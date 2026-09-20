@@ -17,8 +17,12 @@ namespace LetMeSleep.Gameplay
         public string From { get; }
         public string To { get; }
         public IReadOnlyList<Float3> Points { get; }
+        public IReadOnlyList<BotRegion> TraversalRegions { get; }
         public BotPassage(string id, string from, string to, IReadOnlyList<Float3> points)
-        { Id = id; From = from; To = to; Points = Array.AsReadOnly(GameplayRoundConfig.Copy(points)); }
+            : this(id, from, to, points, null) { }
+        public BotPassage(string id, string from, string to, IReadOnlyList<Float3> points, IReadOnlyList<BotRegion> traversalRegions)
+        { Id = id; From = from; To = to; Points = Array.AsReadOnly(GameplayRoundConfig.Copy(points));
+            TraversalRegions = Array.AsReadOnly(GameplayRoundConfig.Copy(traversalRegions)); }
     }
     // Patrol uses authored public topology and passage availability, never hidden actor positions.
     // One instance per bot and round. All waypoints remain subject to the ordinary motor.
@@ -43,7 +47,7 @@ namespace LetMeSleep.Gameplay
         {
             if (!string.IsNullOrEmpty(passageId)) retryAfter[passageId] = untilTick;
             if (passageId == null || route?.Id == passageId) Clear();
-            if (passageId == null || objectivePassage?.Id == passageId)
+            if (passageId == null || (objectivePassage?.Id == passageId && !CanSuspendDirectedPassage(lastDirectedPosition)))
             { objectivePassage = null; objectivePoints = null; objectivePointIndex = 0; }
             CurrentProgress = null; interiorPoint = null;
         }
@@ -105,6 +109,8 @@ namespace LetMeSleep.Gameplay
         private Float3[] objectivePoints;
         private int objectivePointIndex;
         private string objectiveRegion;
+        private Float3 objectiveApproach;
+        private Float3 lastDirectedPosition;
 #if UNITY_EDITOR
         // Opt-in editor diagnostics read this only after the real DirectionTo call.
         // It never advances or recomputes the route.
@@ -128,14 +134,28 @@ namespace LetMeSleep.Gameplay
         public Float3 DirectionTo(Float3 position, string targetRegion, Float3 approachPoint, Func<string, bool> passageOpen) =>
             DirectionTo(position, targetRegion, approachPoint, 0, passageOpen);
         public Float3 DirectionTo(Float3 position, string targetRegion, Float3 approachPoint, uint tick, Func<string, bool> passageOpen)
+            => DirectionTo(position, regions.Where(r => r.Contains(position)).Select(r => r.Id).FirstOrDefault(),
+                targetRegion, approachPoint, tick, passageOpen);
+        // Classification selects graph nodes; steering and waypoint arrival use the real
+        // physical sample. Never move the sample to an unrelated nearby room's boundary.
+        public Float3 DirectionTo(Float3 position, string current, string targetRegion, Float3 approachPoint, uint tick, Func<string, bool> passageOpen)
         {
             CurrentProgress = null;
             if (passageOpen == null || !position.IsFinite || !approachPoint.IsFinite) return Float3.Zero;
-            string current = regions.Where(r => r.Contains(position)).Select(r => r.Id).FirstOrDefault();
+            lastDirectedPosition = position;
             var target = regions.FirstOrDefault(r => r.Id == targetRegion);
-            if (current == null || target.Id == null || !target.Contains(approachPoint)) return Float3.Zero;
-            if (objectiveRegion != targetRegion || (objectivePassage != null && (!passageOpen(objectivePassage.Id) || IsPassageBlocked(objectivePassage.Id, tick) || (current != objectivePassage.From && current != objectivePassage.To))))
-            { objectivePassage = null; objectivePoints = null; objectiveRegion = targetRegion; }
+            if (target.Id == null || !target.Contains(approachPoint)) return Float3.Zero;
+            if (objectiveRegion != targetRegion || (objectiveApproach - approachPoint).LengthSquared > .000001f ||
+                (objectivePassage != null && !CanFollowDirectedPassage(position, current)))
+            { objectivePassage = null; objectivePoints = null; objectiveRegion = targetRegion; objectiveApproach = approachPoint; }
+            if (objectivePassage != null && (!passageOpen(objectivePassage.Id) || IsPassageBlocked(objectivePassage.Id, tick)))
+            {
+                // A bot already inside an unclassified stair shaft cannot acquire another
+                // route from a fictitious room. Keep only this entered leg, suspended until
+                // it reopens; target/position/corridor guards above still discard stale legs.
+                if (CanSuspendDirectedPassage(position)) return Float3.Zero;
+                objectivePassage = null; objectivePoints = null;
+            }
             if (objectivePassage != null)
             {
                 // Directed task travel is consumed by a ground human. Portal points are
@@ -151,6 +171,12 @@ namespace LetMeSleep.Gameplay
                     "task:" + targetRegion + ":" + objectivePassage.Id + ":" + objectivePointIndex, objectivePassage.Id);
                 objectivePassage = null; objectivePoints = null;
             }
+            // An unclassified stair shaft is only reachable through an already entered
+            // authored passage. Outside stairs, retain the existing nearest-region policy;
+            // physical collision queries remain responsible for reaching its first point.
+            var source = regions.FirstOrDefault(r => r.Id == current);
+            if (source.Id == null || (!source.Contains(position) && passages.Any(p => p.TraversalRegions.Any(r => r.Contains(position)))))
+                return Float3.Zero;
             if (current == targetRegion) return Travel(approachPoint - position,
                 "approach:" + targetRegion + ":" + approachPoint.X + ":" + approachPoint.Y + ":" + approachPoint.Z, null);
             var queue = new Queue<string>(); queue.Enqueue(current);
@@ -176,6 +202,27 @@ namespace LetMeSleep.Gameplay
             }
             return Float3.Zero;
         }
+        private bool CanFollowDirectedPassage(Float3 position, string current)
+        {
+            if (objectivePassage.TraversalRegions.Count == 0)
+                return current == objectivePassage.From || current == objectivePassage.To;
+            if (objectivePointIndex == 0)
+                return regions.Any(r => (r.Id == objectivePassage.From || r.Id == objectivePassage.To) && r.Contains(position));
+            if (objectivePoints == null || objectivePointIndex >= objectivePoints.Length ||
+                !objectivePassage.TraversalRegions.Any(r => r.Contains(position))) return false;
+            var from = objectivePoints[objectivePointIndex - 1];
+            var to = objectivePoints[objectivePointIndex];
+            // Follow the active leg, not any part of the staircase on another floor.
+            if (position.Y < Math.Min(from.Y, to.Y) - .35f || position.Y > Math.Max(from.Y, to.Y) + .35f) return false;
+            var planar = new Float3(to.X - from.X, 0, to.Z - from.Z);
+            float length = planar.Length;
+            if (length < .0001f) return PlanarDistance(position, to) < .24f;
+            float along = Float3.Dot(position - from, planar / length);
+            return along >= -.24f && along <= length + .24f;
+        }
+        private bool CanSuspendDirectedPassage(Float3 position) => objectivePassage != null &&
+            objectivePassage.TraversalRegions.Count > 0 && objectivePointIndex > 0 &&
+            !regions.Any(r => r.Contains(position)) && CanFollowDirectedPassage(position, null);
         private int VisitCount(string id) => visits.TryGetValue(id, out int count) ? count : 0;
         private static float PlanarDistance(Float3 a, Float3 b)
         {
