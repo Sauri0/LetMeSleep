@@ -35,10 +35,12 @@ namespace LetMeSleep.UI
         private TextMeshProUGUI trainingMapLabel, trainingModeLabel, roomModeLabel, roomDurationLabel;
         private UnityEngine.UI.Button trainingModePrevious, trainingModeNext, roomModePrevious, roomModeNext,
             roomDurationPrevious, roomDurationNext;
-        private TextMeshProUGUI hudTask, hudLives;
-        private GameObject hudTaskPanel, hudReticle;
+        private TextMeshProUGUI hudTask, hudLives, hudStaminaLabel, hudThrowLabel, hudSwapOffer;
+        private readonly TextMeshProUGUI[] hudEquipmentLabels = new TextMeshProUGUI[4];
+        private readonly AlfaUiIcon[] hudEquipmentIcons = new AlfaUiIcon[4];
+        private GameObject hudTaskPanel, hudReticle, hudEquipmentPanel, hudThrowTrack;
         private bool isSpectator;
-        private UnityEngine.UI.Image hudTaskFill;
+        private UnityEngine.UI.Image hudTaskFill, hudStaminaFill, hudThrowFill;
         private AlfaUiIcon hudScoreIcon;
         private UnityEngine.UI.Button trainingMapPrevious, trainingMapNext;
         private CustomizationUiState customizationState;
@@ -617,6 +619,34 @@ namespace LetMeSleep.UI
             hudTask.text = state.PrivateTaskText;
             hudTaskFill.rectTransform.anchorMax = new Vector2(state.TaskProgress01, 1f);
             hudLives.text = state.IsSpectator ? "ESPECTADOR" : state.Role == AlfaRole.Mosquito && state.ModeId != GameModes.Blood ? $"VIDAS  {state.LivesRemaining}" : string.Empty;
+            var equipment = state.IsSpectator ? null : state.Equipment;
+            hudEquipmentPanel.SetActive(equipment != null);
+            if (equipment != null)
+            {
+                hudEquipmentLabels[0].text = (equipment.SelectedSlot == -1 ? ">  " : "") + "0  MANOS\n<size=70%>SIN OBJETO</size>";
+                hudEquipmentIcons[0].Kind = AlfaUiIconKind.Hands;
+                for (int i = 0; i < equipment.Slots.Count; i++)
+                {
+                    var slot = equipment.Slots[i];
+                    hudEquipmentLabels[i + 1].text = (equipment.SelectedSlot == i ? ">  " : "") + (i + 1) + "  " + slot.Label +
+                        (slot.ResourceText.Length == 0 ? "" : "\n<size=70%>" + slot.ResourceText + "</size>");
+                    hudEquipmentIcons[i + 1].Kind = slot.Icon;
+                }
+                for (int i = 0; i < hudEquipmentLabels.Length; i++)
+                {
+                    bool selected = equipment.SelectedSlot == i - 1;
+                    hudEquipmentLabels[i].color = selected ? AlfaUiTheme.Lamp400 : AlfaUiTheme.Sheet100;
+                    hudEquipmentIcons[i].color = selected ? AlfaUiTheme.Lamp400 : AlfaUiTheme.Moon200;
+                }
+                hudStaminaLabel.text = "ESTAMINA  " + Mathf.RoundToInt(equipment.Stamina01 * 100) + "%";
+                hudStaminaFill.rectTransform.anchorMax = new Vector2(equipment.Stamina01, 1f);
+                bool charging = equipment.ThrowCharge01 > 0 || equipment.ThrowAwaitingRelease;
+                hudThrowTrack.SetActive(charging);
+                hudThrowLabel.text = equipment.ThrowAwaitingRelease ? "LANZAMIENTO PENDIENTE" : "CARGA PANTUFLA  " + Mathf.RoundToInt(equipment.ThrowCharge01 * 100) + "% · SOLTÁ CLIC";
+                hudThrowFill.rectTransform.anchorMax = new Vector2(equipment.ThrowCharge01, 1f);
+                hudSwapOffer.text = equipment.SwapOfferText;
+                hudSwapOffer.gameObject.SetActive(!string.IsNullOrWhiteSpace(equipment.SwapOfferText));
+            }
             hudReticle.SetActive(!state.IsSpectator);
             hudBloodFill.rectTransform.anchorMax = new Vector2(bloodRatio, 1f);
             hudRoleLabel.text = state.Role == AlfaRole.Human ? "HUMANO" : "MOSQUITO";
@@ -1198,6 +1228,37 @@ namespace LetMeSleep.UI
             hudTaskFill = AlfaUiFactory.Node("Fill", taskTrack.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
             hudTaskFill.color = AlfaUiTheme.Mint400; hudTaskFill.raycastTarget = false; AlfaUiFactory.Fill(hudTaskFill.rectTransform);
             hudTaskPanel.SetActive(false);
+
+            hudEquipmentPanel = factory.Panel(view.transform, "PrivateEquipment", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, .88f)).gameObject;
+            Anchor(hudEquipmentPanel.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-28f, 26f), new Vector2(430f, 378f));
+            for (int i = 0; i < 4; i++)
+            {
+                hudEquipmentIcons[i] = factory.Icon(hudEquipmentPanel.transform, "EquipmentIcon" + i, i == 0 ? AlfaUiIconKind.Hands : AlfaUiIconKind.None, AlfaUiTheme.Moon200);
+                Anchor(hudEquipmentIcons[i].rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -14f - i * 45f), new Vector2(34f, 34f));
+                hudEquipmentLabels[i] = factory.Text(hudEquipmentPanel.transform, "EquipmentSlot" + i, i == 0 ? ">  0  MANOS" : i + "  VACÍO", 17f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
+                Anchor(hudEquipmentLabels[i].rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), new Vector2(58f, -10f - i * 45f), new Vector2(-74f, 42f));
+            }
+            hudStaminaLabel = factory.Text(hudEquipmentPanel.transform, "StaminaLabel", "ESTAMINA  100%", 16f, AlfaUiTheme.Mint400, TextAlignmentOptions.Left, true);
+            Anchor(hudStaminaLabel.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), new Vector2(16f, 132f), new Vector2(-32f, 24f));
+            var staminaTrack = AlfaUiFactory.Node("StaminaTrack", hudEquipmentPanel.transform, typeof(UnityEngine.UI.Image));
+            staminaTrack.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night600;
+            Anchor(staminaTrack.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), new Vector2(16f, 121f), new Vector2(-32f, 8f));
+            hudStaminaFill = AlfaUiFactory.Node("Fill", staminaTrack.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+            hudStaminaFill.color = AlfaUiTheme.Mint400; hudStaminaFill.raycastTarget = false; AlfaUiFactory.Fill(hudStaminaFill.rectTransform);
+            hudThrowTrack = AlfaUiFactory.Node("ThrowCharge", hudEquipmentPanel.transform).gameObject;
+            Anchor(hudThrowTrack.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), new Vector2(16f, 66f), new Vector2(-32f, 42f));
+            hudThrowLabel = factory.Text(hudThrowTrack.transform, "ThrowLabel", "CARGA PANTUFLA", 15f, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
+            Anchor(hudThrowLabel.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), Vector2.zero, new Vector2(0f, 22f));
+            var throwBar = AlfaUiFactory.Node("Track", hudThrowTrack.transform, typeof(UnityEngine.UI.Image));
+            throwBar.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night600;
+            Anchor(throwBar.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), Vector2.zero, new Vector2(0f, 8f));
+            hudThrowFill = AlfaUiFactory.Node("Fill", throwBar.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+            hudThrowFill.color = AlfaUiTheme.Lamp400; hudThrowFill.raycastTarget = false; AlfaUiFactory.Fill(hudThrowFill.rectTransform);
+            hudSwapOffer = factory.Text(hudEquipmentPanel.transform, "SwapOffer", string.Empty, 15f, AlfaUiTheme.Pajama500, TextAlignmentOptions.Left, true);
+            hudSwapOffer.textWrappingMode = TextWrappingModes.Normal;
+            hudSwapOffer.overflowMode = TextOverflowModes.Overflow;
+            Anchor(hudSwapOffer.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), new Vector2(16f, 8f), new Vector2(-32f, 48f));
+            hudEquipmentPanel.SetActive(false);
             var reticle = factory.Icon(view.transform, "Reticle", AlfaUiIconKind.Crosshair, AlfaUiTheme.Sheet100); hudReticle = reticle.gameObject;
             Anchor(reticle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(18f, 18f));
         }

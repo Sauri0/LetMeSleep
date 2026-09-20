@@ -24,7 +24,12 @@ namespace LetMeSleep.UI
         Crosshair,
         Audio,
         Video,
-        Controls
+        Controls,
+        Hands,
+        Flyswatter,
+        Slipper,
+        ElectricRacket,
+        Aerosol
     }
 
     [DisallowMultipleComponent]
@@ -175,6 +180,28 @@ namespace LetMeSleep.UI
                     break;
                 case AlfaUiIconKind.Crosshair:
                     Crosshair(0.86f);
+                    break;
+                case AlfaUiIconKind.Hands:
+                    Bar(new Vector2(-.16f, 0f), new Vector2(.2f, .42f), 18f);
+                    Bar(new Vector2(.16f, 0f), new Vector2(.2f, .42f), -18f);
+                    break;
+                case AlfaUiIconKind.Flyswatter:
+                    Bar(new Vector2(-.12f, -.18f), new Vector2(.09f, .58f), -28f);
+                    Outline(new Vector2(.16f, .22f), new Vector2(.38f, .42f), .065f);
+                    break;
+                case AlfaUiIconKind.Slipper:
+                    Bar(new Vector2(0f, -.08f), new Vector2(.3f, .72f), -58f);
+                    Bar(new Vector2(.18f, .2f), new Vector2(.28f, .16f), -18f);
+                    break;
+                case AlfaUiIconKind.ElectricRacket:
+                    Bar(new Vector2(-.12f, -.23f), new Vector2(.1f, .5f), -25f);
+                    Outline(new Vector2(.14f, .18f), new Vector2(.46f, .5f), .065f);
+                    Crosshair(.32f);
+                    break;
+                case AlfaUiIconKind.Aerosol:
+                    Outline(new Vector2(0f, -.08f), new Vector2(.42f, .66f), .065f);
+                    Bar(new Vector2(.08f, .29f), new Vector2(.26f, .08f));
+                    Bar(new Vector2(.24f, .31f), new Vector2(.12f, .06f));
                     break;
             }
         }

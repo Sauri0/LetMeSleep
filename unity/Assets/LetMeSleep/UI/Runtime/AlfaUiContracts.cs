@@ -470,6 +470,44 @@ namespace LetMeSleep.UI
         }
     }
 
+    public sealed class EquipmentSlotUiState
+    {
+        public string Label { get; }
+        public string ResourceText { get; }
+        public AlfaUiIconKind Icon { get; }
+
+        public EquipmentSlotUiState(string label, string resourceText, AlfaUiIconKind icon)
+        {
+            Label = string.IsNullOrWhiteSpace(label) ? "VACÍO" : label.Trim();
+            ResourceText = resourceText?.Trim() ?? string.Empty;
+            Icon = icon;
+        }
+    }
+
+    public sealed class EquipmentHudUiState
+    {
+        public IReadOnlyList<EquipmentSlotUiState> Slots { get; }
+        public int SelectedSlot { get; }
+        public float Stamina01 { get; }
+        public float ThrowCharge01 { get; }
+        public bool ThrowAwaitingRelease { get; }
+        public string SwapOfferText { get; }
+
+        public EquipmentHudUiState(IEnumerable<EquipmentSlotUiState> slots, int selectedSlot, float stamina01,
+            float throwCharge01 = 0f, bool throwAwaitingRelease = false, string swapOfferText = "")
+        {
+            var copy = (slots ?? Enumerable.Empty<EquipmentSlotUiState>()).ToArray();
+            if (copy.Length != 3 || copy.Any(slot => slot == null)) throw new ArgumentException("Equipment HUD requires exactly three slots.", nameof(slots));
+            if (selectedSlot < -1 || selectedSlot > 2) throw new ArgumentOutOfRangeException(nameof(selectedSlot));
+            Slots = Array.AsReadOnly(copy);
+            SelectedSlot = selectedSlot;
+            Stamina01 = Mathf.Clamp01(stamina01);
+            ThrowCharge01 = Mathf.Clamp01(throwCharge01);
+            ThrowAwaitingRelease = throwAwaitingRelease;
+            SwapOfferText = swapOfferText ?? string.Empty;
+        }
+    }
+
     public sealed class BloodHudUiState
     {
         public string ModeId { get; }
@@ -489,10 +527,12 @@ namespace LetMeSleep.UI
         public HudActorState ActorState { get; }
         public float StateProgress01 { get; }
         public string NetworkMessage { get; }
+        public EquipmentHudUiState Equipment { get; }
 
         public BloodHudUiState(AlfaRole role, float secondsRemaining, float bloodCurrent, float bloodTarget,
             string interaction = "", string contextHint = "", HudActorState actorState = HudActorState.Normal,
-            float stateProgress01 = 0f, string networkMessage = "", string modeId = GameModes.Blood, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0, int livesRemaining = 0, string privateTaskText = "", float taskProgress01 = 0)
+            float stateProgress01 = 0f, string networkMessage = "", string modeId = GameModes.Blood, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0, int livesRemaining = 0, string privateTaskText = "", float taskProgress01 = 0,
+            EquipmentHudUiState equipment = null)
         {
             Role = role; ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode.");
             TasksCompleted = Math.Max(0, tasksCompleted); TasksGoal = Math.Max(0, tasksGoal); MosquitoesAlive = Math.Max(0, mosquitoesAlive); LivesRemaining = Math.Max(0, livesRemaining);
@@ -506,6 +546,7 @@ namespace LetMeSleep.UI
             ActorState = actorState;
             StateProgress01 = Mathf.Clamp01(stateProgress01);
             NetworkMessage = networkMessage ?? string.Empty;
+            Equipment = role == AlfaRole.Human ? equipment : null;
         }
     }
 

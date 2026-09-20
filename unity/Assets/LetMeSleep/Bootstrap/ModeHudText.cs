@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using LetMeSleep.Core;
 using LetMeSleep.Gameplay;
@@ -54,12 +55,51 @@ namespace LetMeSleep.Bootstrap
         {
             switch (key)
             {
-                case "task.action.hold_clean": return "Mantené R junto al objeto para limpiar";
-                case "task.action.hold_switch": return "Mantené R junto al objeto para activar";
-                case "task.action.hold_repair": return "Mantené R junto al objeto para reparar";
-                default: return "Mantené R junto al objeto";
+                case "task.action.hold_clean": return "Mantené E junto al objeto para limpiar";
+                case "task.action.hold_switch": return "Mantené E junto al objeto para activar";
+                case "task.action.hold_repair": return "Mantené E junto al objeto para reparar";
+                default: return "Mantené E junto al objeto";
             }
         }
+        public static string EquipmentName(GameSessionState state, uint pickupId)
+        {
+            if (pickupId == 0) return "VACÍO";
+            var tool = state?.ToolPickups.FirstOrDefault(item => item.PickupId == pickupId).ToolId;
+            switch (tool)
+            {
+                case GameplayTools.Flyswatter: return "MATAMOSCAS";
+                case GameplayTools.Slipper: return "PANTUFLA";
+                case GameplayTools.ElectricRacket: return "RAQUETA ELÉCTRICA";
+                case GameplayTools.Aerosol: return "AEROSOL";
+                default: return "OBJETO";
+            }
+        }
+        public static EquipmentSlotUiState EquipmentSlot(GameSessionState state, uint pickupId)
+        {
+            if (pickupId == 0) return new EquipmentSlotUiState("VACÍO", "", AlfaUiIconKind.None);
+            var item = state == null ? default : state.ToolPickups.FirstOrDefault(candidate => candidate.PickupId == pickupId);
+            string tool = item.PickupId == pickupId ? item.ToolId : null;
+            AlfaUiIconKind icon = tool == GameplayTools.Flyswatter ? AlfaUiIconKind.Flyswatter :
+                tool == GameplayTools.Slipper ? AlfaUiIconKind.Slipper :
+                tool == GameplayTools.ElectricRacket ? AlfaUiIconKind.ElectricRacket :
+                tool == GameplayTools.Aerosol ? AlfaUiIconKind.Aerosol : AlfaUiIconKind.None;
+            string resource = tool == GameplayTools.ElectricRacket ? item.ResourceUnits + " CARGAS" :
+                tool == GameplayTools.Aerosol ? (item.ResourceUnits / (float)HumanEquipmentProfile.TickRate).ToString("0.0", CultureInfo.GetCultureInfo("es-AR")) + " s" :
+                tool == GameplayTools.Flyswatter || tool == GameplayTools.Slipper ? "REUTILIZABLE" : "";
+            return new EquipmentSlotUiState(EquipmentName(state, pickupId), resource, icon);
+        }
+        public static EquipmentSlotUiState[] EquipmentSlots(GameSessionState state, ActorPrivateState personal)
+        {
+            if (personal == null) return new[] { EquipmentSlot(state, 0), EquipmentSlot(state, 0), EquipmentSlot(state, 0) };
+            return new[]
+            {
+                EquipmentSlot(state, personal.Inventory.Slot0),
+                EquipmentSlot(state, personal.Inventory.Slot1),
+                EquipmentSlot(state, personal.Inventory.Slot2)
+            };
+        }
+        public static bool InventoryFullWithoutSelection(ActorPrivateState personal) => personal != null &&
+            personal.Inventory.SelectedSlot < 0 && personal.Inventory.Slot0 != 0 && personal.Inventory.Slot1 != 0 && personal.Inventory.Slot2 != 0;
         public static string ResultReason(RoundEndReason reason)
         {
             switch (reason)

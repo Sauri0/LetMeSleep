@@ -414,9 +414,28 @@ namespace LetMeSleep.Bootstrap
             var role = actor?.Role == PlayerRole.Mosquito ? AlfaRole.Mosquito : AlfaRole.Human;
             var status = actor?.Eliminated == true ? HudActorState.Spectating : actor?.LifeState == LifeState.Fainted ? HudActorState.Fainted : actor?.LifeState == LifeState.Biting ? HudActorState.Extracting
                 : actor?.LifeState == LifeState.Recovering ? HudActorState.Recovering : actor?.LifeState == LifeState.Stunned ? HudActorState.Stunned : HudActorState.Normal;
-            string interaction = personal?.InteractionHint == InteractionHint.Door ? "F · Abrir / cerrar puerta" : personal?.InteractionHint == InteractionHint.Tool ? "F · Recoger matamoscas · G soltar" : personal?.InteractionHint == InteractionHint.ContactRequired ? "Acercate al cuerpo y mantené E" : "";
+            EquipmentHudUiState equipment = null;
+            if (actor?.Role == PlayerRole.Human && personal != null)
+            {
+                string swap = "";
+                if (personal.SwapOffer.HasValue)
+                {
+                    var offer = personal.SwapOffer.Value;
+                    swap = "E · REEMPLAZAR\n" + ModeHudText.EquipmentName(state, personal.Inventory.ActivePickup) +
+                        " POR " + ModeHudText.EquipmentName(state, offer.PickupId);
+                }
+                equipment = new EquipmentHudUiState(ModeHudText.EquipmentSlots(state, personal), personal.Inventory.SelectedSlot,
+                    personal.StaminaUnits / (float)HumanEquipmentProfile.Maximum,
+                    personal.ThrowCharge.Active ? personal.ThrowCharge.ElapsedTicks / (float)HumanEquipmentProfile.ChargeLimitTicks : 0,
+                    personal.ThrowCharge.AwaitingRelease, swap);
+            }
+            string interaction = personal?.InteractionHint == InteractionHint.Door ? "E · Abrir / cerrar puerta" :
+                personal?.SwapOffer != null ? "E · Confirmar reemplazo" :
+                personal?.InteractionHint == InteractionHint.Tool && ModeHudText.InventoryFullWithoutSelection(personal) ? "Inventario lleno · elegí un espacio con 1, 2 o 3" :
+                personal?.InteractionHint == InteractionHint.Tool ? "E · Recoger objeto · G · soltar equipado" :
+                personal?.InteractionHint == InteractionHint.ContactRequired ? "Acercate al cuerpo y mantené E" : "";
             if (actor?.Eliminated == true) interaction = "Tab · Cambiar compañero observado";
-            else if (personal?.InteractionHint == InteractionHint.Task) interaction = "Mantené R · Trabajar en tu tarea";
+            else if (personal?.InteractionHint == InteractionHint.Task) interaction = "Mantené E · Trabajar en tu tarea";
             string privateTask = ModeHudText.PrivateTask(state, game.LocalActorId, personal, activeConfig?.Objectives, out float taskProgress);
             ui.PresentHud(new BloodHudUiState(role, state.TimeRemainingTicks / 30f, state.BloodCollected, state.BloodGoal, interaction,
                 contextHint: CombatContext(state, actor),
@@ -424,7 +443,7 @@ namespace LetMeSleep.Bootstrap
                 networkMessage: !training && gameNetwork != null && !gameNetwork.Ready ? "Esperando a los jugadores…" : "",
                 modeId: state.ModeId, tasksCompleted: state.TasksCompleted, tasksGoal: state.TasksGoal,
                 mosquitoesAlive: state.Actors.Count(a => a.Role == PlayerRole.Mosquito && !a.Eliminated), livesRemaining: actor?.LivesRemaining ?? 0,
-                privateTaskText: privateTask, taskProgress01: taskProgress));
+                privateTaskText: privateTask, taskProgress01: taskProgress, equipment: equipment));
         }
         private void ObserveCombatFeedback(GameplayEvent item)
         {
@@ -449,7 +468,7 @@ namespace LetMeSleep.Bootstrap
                 bool beingBitten = state.Actors.Any(a => a.BiteAttachment.HasValue &&
                     a.BiteAttachment.Value.VictimId == actor.ActorId);
                 return beingBitten ? "¡Te están picando! Buscá al mosquito y golpeá hacia él." :
-                    state.ModeId == GameModes.Tasks ? "R mantenida · trabajar en tu tarea   ·   Clic · defenderte" : "Clic · golpear hacia la mira   ·   Ctrl · agacharte";
+                    state.ModeId == GameModes.Tasks ? "E mantenida · trabajar en tu tarea   ·   Clic · defenderte" : "Clic · golpear hacia la mira   ·   Ctrl · agacharte";
             }
             if (actor.LifeState == LifeState.PreparingBite) return "Contacto logrado. Mantené E para picar.";
             if (actor.LifeState == LifeState.Biting) return state.ModeId == GameModes.Blood ? "Extrayendo sangre · Mantené E · Soltá E para despegar" : "Interrumpiendo al humano · Mantené E · Soltá E para despegar";
