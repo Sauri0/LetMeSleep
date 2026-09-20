@@ -1,0 +1,9 @@
+{
+  "hf-campamento-pinar-v2": {
+    "contentHash": "3551537b2702090fb67e41e10ed8dccd9a3703dc33a6cfd8c01fa4fa8ce90f36",
+    "dependencyHash": "f9ffa9495f47961bac47a4a3037ce383",
+    "evidencePath": "N:\\LetMeSleep\\Validation\\Higgsfield\\CompleteScope\\Gameplay\\Camp\\applied-regression-01\\map-checks-20260913-101818-510.json",
+    "evidenceSha256": "b87c0bd09ed23efe3cd8773d0a36844194fe74e582b79f5b5e4cb0f142cf2ecc",
+    "provenance": "Gameplay supplied native AssetDatabase.GetAssetDependencyHash after persisted49/49 regression in coordinator message; report anchors the same content generation."
+  }
+}

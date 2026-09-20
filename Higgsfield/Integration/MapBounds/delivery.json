@@ -1,0 +1,12 @@
+{
+  "status": "PREPARED_OFFLINE_NATIVE_APPLICATION_PENDING",
+  "sourceSha256": "2ad38be2609042386b64e2b8333047b32819f60b5dc2a85e5e3653b21d4a0cd4",
+  "configSha256": "c03aba77de6fce86aee6ff7b6e2ab3aeaca8cd0f68d401446fb3ff752f9c26f9",
+  "nativeExecuted": false,
+  "centralAssetsModified": false,
+  "compileReceipt": "N:\\LetMeSleep\\Validation\\Higgsfield\\CompleteScope\\MapBounds\\compile-20260913-102456-230\\compile-receipt.json",
+  "measurements": "N:\\LetMeSleep\\Validation\\Higgsfield\\CompleteScope\\MapBounds\\source-envelope-measurements.json",
+  "waterFootprints": "N:\\LetMeSleep\\Validation\\Higgsfield\\CompleteScope\\MapBounds\\water-footprints-v3.json",
+  "configurationChecks": "N:\\LetMeSleep\\Validation\\Higgsfield\\CompleteScope\\MapBounds\\configuration-checks.json",
+  "polygonChecks": "N:/LetMeSleep/Validation/Higgsfield/CompleteScope/Recovery/checks-result-v3.txt"
+}

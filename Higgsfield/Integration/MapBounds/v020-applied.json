@@ -1,0 +1,190 @@
+{
+  "status": "APPLIED_READBACK_PASS_BOUNDARY_ENVELOPE_ONLY",
+  "success": true,
+  "unityVersion": "6000.3.24f1",
+  "configSha256": "a80a178a6ae014433bb9ea56148a28e3337c8796ade89b082e2e9cd7ded91822",
+  "evidence": "N:\\LetMeSleep\\Validation\\V020\\map-apply-05-receipt.json",
+  "maps": [
+    {
+      "mapId": "hf-isla-del-laguito-v2",
+      "oldContentHash": "157a5af113a05652a5621bd998e01d798a8613b01fa5103cda7d04f8ebcf28cd",
+      "newContentHash": "930fdad8872107d390518433c4474da70c1b94d24f91f9a4ec7c7678265f4840",
+      "originalInvariant": "826b482d9a097eb0f111ad67f83c540c159d1b12bc89fe949c7f487ef4316221",
+      "finalInvariant": "826b482d9a097eb0f111ad67f83c540c159d1b12bc89fe949c7f487ef4316221",
+      "prefabSha256Before": "13ef4b2505412526106e2c04436229fa0d4cbc9a5502dccc1df36dbb5e608f52",
+      "prefabSha256After": "3243fac3add8d017c385f927eb89e9935badf979d79af45c29bf260374f6cf06",
+      "sceneSha256Before": "146443f90fab9de83a036d3564989abd643fc29a0289db46ce451be67ac5f0bc",
+      "sceneSha256After": "146443f90fab9de83a036d3564989abd643fc29a0289db46ce451be67ac5f0bc",
+      "prefabDependencyAfter": "8d7dd38bc020e4106964f38d2ea06cec",
+      "spatialSha256": "ff47a91de5ffab18c51f73e2de317dfc0edec9ed5349f41056d10d7f553c446a",
+      "innerMin": [
+        -54.0,
+        -4.0,
+        -49.0
+      ],
+      "innerMax": [
+        54.0,
+        16.0,
+        49.0
+      ],
+      "nativeProtectedMin": [
+        -51.87032,
+        -3.00000477,
+        -46.565
+      ],
+      "nativeProtectedMax": [
+        50.9802055,
+        12.8339911,
+        42.5243568
+      ],
+      "nativeProtectedColliderCount": 327,
+      "prefabReadback": true,
+      "sceneReadback": true
+    },
+    {
+      "mapId": "hf-casa-del-patio-v1",
+      "oldContentHash": "019cca020c67d1e1d4d758556f76e3b2c553f715f21a0207f618ce3be01eede1",
+      "newContentHash": "c6d58d5d4baafeed473e5acc9073c9ad1ddf5fbbc4e59ace9bbee6fd51ac718d",
+      "originalInvariant": "d9e06f73ce93a34e6594e33148446b58e88524d8ae6d3f54835e3243bd484b78",
+      "finalInvariant": "d9e06f73ce93a34e6594e33148446b58e88524d8ae6d3f54835e3243bd484b78",
+      "prefabSha256Before": "ada14a82ef7073ff616eccee02befc71578115b0d6d2c3b841929d7a892b042a",
+      "prefabSha256After": "af102a6bff84628d14d57965f160e9332408a0b750f7c5785f4903340c70b17f",
+      "sceneSha256Before": "213925b781f8c6ad22cb793bc21965c4568f18c5c6f2cb790eeed790b2580535",
+      "sceneSha256After": "213925b781f8c6ad22cb793bc21965c4568f18c5c6f2cb790eeed790b2580535",
+      "prefabDependencyAfter": "30453f0ab83fa0544c7bd62464fbcc27",
+      "spatialSha256": "a18d1506f5db50e1f5472497b24982e38390391ed51667b93d34bcbd0e135251",
+      "innerMin": [
+        -25.0,
+        -1.0,
+        -22.0
+      ],
+      "innerMax": [
+        25.0,
+        12.0,
+        22.0
+      ],
+      "nativeProtectedMin": [
+        -22.5,
+        -0.3500023,
+        -19.9999981
+      ],
+      "nativeProtectedMax": [
+        22.5,
+        9.085,
+        19.9999981
+      ],
+      "nativeProtectedColliderCount": 3313,
+      "prefabReadback": true,
+      "sceneReadback": true
+    },
+    {
+      "mapId": "hf-campamento-pinar-v2",
+      "oldContentHash": "3551537b2702090fb67e41e10ed8dccd9a3703dc33a6cfd8c01fa4fa8ce90f36",
+      "newContentHash": "a6fa3de9cc314f47609f65c4444e882137553d0d85ae28a507fcfb4a99ac6cc9",
+      "originalInvariant": "ba30609c5301f0e7a024578943d2f7c0eb996a123e2e54c286d375873b0fff31",
+      "finalInvariant": "ba30609c5301f0e7a024578943d2f7c0eb996a123e2e54c286d375873b0fff31",
+      "prefabSha256Before": "9b86cff4ffb88c2e0d78dcc023bd1baaa5af0027093c37fa25b2ad4918d56596",
+      "prefabSha256After": "12b27657ef0071c0c1a51adfc92f2ad5ff31ba6abaf718b1500e6d5a3bb086c6",
+      "sceneSha256Before": "e88354450401f4aeed3417728a9ec1284180bd2f02a6fd778a19724ecdab854b",
+      "sceneSha256After": "e88354450401f4aeed3417728a9ec1284180bd2f02a6fd778a19724ecdab854b",
+      "prefabDependencyAfter": "d36ee6f3b170c98f01e8d1dc0244681d",
+      "spatialSha256": "c51fa78d0f4203d38c6e0eeb0713da48fb0772d6437aad5971b6276b878aa9bb",
+      "innerMin": [
+        -50.0,
+        -0.5,
+        -40.0
+      ],
+      "innerMax": [
+        55.0,
+        10.0,
+        40.0
+      ],
+      "nativeProtectedMin": [
+        -48.6422272,
+        -3.72000051,
+        -39.403862
+      ],
+      "nativeProtectedMax": [
+        49.87767,
+        7.21680355,
+        38.97222
+      ],
+      "nativeProtectedColliderCount": 488,
+      "prefabReadback": true,
+      "sceneReadback": true
+    },
+    {
+      "mapId": "hf-yate-a-la-deriva-v3",
+      "oldContentHash": "dee1fea0f5f21429ed434668ee408a6ec3efd67984ad24e0640faa1177ca20d6",
+      "newContentHash": "65ed844005ff7dc907064769760dac7fcc6fa85f1f6c27109fe9b735413ddfbc",
+      "originalInvariant": "f0d9af8f5b9b68dc02e14f4f45a95bb06658284aa7e3e9d81f9029cf2b9894e7",
+      "finalInvariant": "f0d9af8f5b9b68dc02e14f4f45a95bb06658284aa7e3e9d81f9029cf2b9894e7",
+      "prefabSha256Before": "1d0e37a0b13956cd8d8ed67f1414eb25d52a498a7e8e0c70c6b45a612bff7ebb",
+      "prefabSha256After": "e567fe6ebd3168e1491c4c84b35b49f83dc166cdf15dee9ca927deb56910d33e",
+      "sceneSha256Before": "b530f1bb426f9962199e844a64586bf0b35f08a4a15e4ccd2a142c9580062ddd",
+      "sceneSha256After": "b530f1bb426f9962199e844a64586bf0b35f08a4a15e4ccd2a142c9580062ddd",
+      "prefabDependencyAfter": "8ee943cc94712ba36f41181dd464be39",
+      "spatialSha256": "fb3054eeb29ce855f32ba6293268fc28d24b0b68da65f6baa8124c171e24142a",
+      "innerMin": [
+        -7.0,
+        0.05,
+        -18.0
+      ],
+      "innerMax": [
+        7.0,
+        12.0,
+        18.0
+      ],
+      "nativeProtectedMin": [
+        -4.0,
+        -1.35000157,
+        -14.999999
+      ],
+      "nativeProtectedMax": [
+        4.0,
+        8.789999,
+        14.999999
+      ],
+      "nativeProtectedColliderCount": 96,
+      "prefabReadback": true,
+      "sceneReadback": true
+    },
+    {
+      "mapId": "hf-puerto-del-faro-v1",
+      "oldContentHash": "3be1751178d5df73b75b089c315e617b8935466bf7814866c502824db9787fa9",
+      "newContentHash": "154541efdc07443baaaa55daf0494c39596afe8ecd2a705eee7d12c2255e3b09",
+      "originalInvariant": "37fc9233a71c57a996300d1700b7c184385cc6bcb9acedaf3bd8a92da1e12fc1",
+      "finalInvariant": "37fc9233a71c57a996300d1700b7c184385cc6bcb9acedaf3bd8a92da1e12fc1",
+      "prefabSha256Before": "81d01cbab06860b562094b1eaecc3c5951342f31e33217d1bbd4c965824c43d5",
+      "prefabSha256After": "8bb7fd7036cd24a3919199a2141fe8709457030efa46872c4fe1d2fea979c94b",
+      "sceneSha256Before": "4813942bb78843bfa59d20909c987152755d14e1fe3b25c1dd19253cdfa21b35",
+      "sceneSha256After": "4813942bb78843bfa59d20909c987152755d14e1fe3b25c1dd19253cdfa21b35",
+      "prefabDependencyAfter": "af301adf1e0c47afdcbc77c281a14551",
+      "spatialSha256": "86c770ee8175e55490812bcf4b6a8040f6cd0a6ba33c06ade7fb52cc84d56e8d",
+      "innerMin": [
+        -58.0,
+        -2.0,
+        -46.0
+      ],
+      "innerMax": [
+        58.0,
+        22.0,
+        46.0
+      ],
+      "nativeProtectedMin": [
+        -57.40086,
+        -2.40735149,
+        -45.0957222
+      ],
+      "nativeProtectedMax": [
+        57.542202,
+        19.4999962,
+        44.1153831
+      ],
+      "nativeProtectedColliderCount": 418,
+      "prefabReadback": true,
+      "sceneReadback": true
+    }
+  ],
+  "scope": "Bounds envelope/recovery serialized and read back on all five final maps. Gameplay movement, full recovery and water graphics still require their own tests."
+}

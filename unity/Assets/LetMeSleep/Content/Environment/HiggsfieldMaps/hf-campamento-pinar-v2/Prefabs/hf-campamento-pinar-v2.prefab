@@ -1,5 +1,306 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &812875826188210222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3123491345964928693}
+  - component: {fileID: 3683638770753875356}
+  m_Layer: 0
+  m_Name: South
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &3123491345964928693
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812875826188210222}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2432190593950528589}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3683638770753875356
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812875826188210222}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 106, y: 20.5, z: 0.5}
+  m_Center: {x: 2.5, y: 0, z: -40.25}
+--- !u!1 &1614507768445803677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3262630500628767198}
+  - component: {fileID: 6812161199070179644}
+  m_Layer: 0
+  m_Name: North
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &3262630500628767198
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614507768445803677}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2432190593950528589}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6812161199070179644
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614507768445803677}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 106, y: 20.5, z: 0.5}
+  m_Center: {x: 2.5, y: 0, z: 40.25}
+--- !u!1 &3682857056405663382
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9135541029101381596}
+  - component: {fileID: 4341965951073007367}
+  m_Layer: 0
+  m_Name: Ceiling
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &9135541029101381596
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3682857056405663382}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2432190593950528589}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4341965951073007367
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3682857056405663382}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 106, y: 0.5, z: 81}
+  m_Center: {x: 2.5, y: 10.25, z: 0}
+--- !u!1 &3855990220950695293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2432190593950528589}
+  m_Layer: 0
+  m_Name: _LMS_ArtificialBoundaries_v1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &2432190593950528589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3855990220950695293}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5340416448358443173}
+  - {fileID: 5386881427933486673}
+  - {fileID: 3123491345964928693}
+  - {fileID: 3262630500628767198}
+  - {fileID: 9135541029101381596}
+  m_Father: {fileID: 5902037700327117729}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4331643597023382016
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5386881427933486673}
+  - component: {fileID: 8350050235258482308}
+  m_Layer: 0
+  m_Name: East
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &5386881427933486673
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331643597023382016}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2432190593950528589}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8350050235258482308
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331643597023382016}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5, y: 20.5, z: 81}
+  m_Center: {x: 55.25, y: 0, z: 0}
+--- !u!1 &6200823352831606469
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5340416448358443173}
+  - component: {fileID: 3947199084912155628}
+  m_Layer: 0
+  m_Name: West
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &5340416448358443173
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6200823352831606469}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2432190593950528589}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3947199084912155628
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6200823352831606469}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5, y: 20.5, z: 81}
+  m_Center: {x: -50.25, y: 0, z: 0}
 --- !u!1 &8496945472530983138
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,6 +311,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5902037700327117729}
   - component: {fileID: 1010624027987843496}
+  - component: {fileID: 2522696349045836844}
   m_Layer: 0
   m_Name: hf-campamento-pinar-v2
   m_TagString: Untagged
@@ -31,6 +333,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8382033882223861501}
+  - {fileID: 2432190593950528589}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1010624027987843496
@@ -46,7 +349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.EnvironmentMapDefinition
   MapId: hf-campamento-pinar-v2
-  ContentHash: 3551537b2702090fb67e41e10ed8dccd9a3703dc33a6cfd8c01fa4fa8ce90f36
+  ContentHash: a6fa3de9cc314f47609f65c4444e882137553d0d85ae28a507fcfb4a99ac6cc9
   SpatialData: {fileID: 4900000, guid: 9c1cf8ff13207694f84b6176aa364564, type: 3}
   HumanSpawnPoints:
   - {fileID: 9027868090736219709}
@@ -75,9 +378,663 @@ MonoBehaviour:
   ToolPickupPoints: []
   PresentationAnchors: {fileID: 0}
   PlayBounds:
-    m_Center: {x: 0, y: 4.75, z: 0}
-    m_Extent: {x: 46, y: 5.25, z: 36}
+    m_Center: {x: 2.5, y: 4.75, z: 0}
+    m_Extent: {x: 52.5, y: 5.25, z: 40}
   GeometryContract: lms-higgsfield-environment-1
+--- !u!114 &2522696349045836844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8496945472530983138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56a7424f1ca04942bf990db570d30f7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Gameplay.Unity::LetMeSleep.Gameplay.Unity.GameplayRecoveryVolume
+  SafetyBounds:
+    m_Center: {x: 2.5, y: 4.75, z: 0}
+    m_Extent: {x: 52.5, y: 5.25, z: 40}
+  HumanFallZones: []
+  MosquitoFallZones: []
+  HumanPolygonFallZones:
+  - Id: Water_Creek-0
+    Outer:
+    - {x: 30.40977, y: -16.57476}
+    - {x: 30.60929, y: -14.28045}
+    - {x: 30.74196, y: -12.65513}
+    - {x: 30.87529, y: -11.0218}
+    - {x: 31.00473, y: -9.44315}
+    - {x: 31.05165, y: -8.1072}
+    - {x: 31.10165, y: -6.7072}
+    - {x: 31.15166, y: -5.3072}
+    - {x: 31.20154, y: -3.9104}
+    - {x: 31.25144, y: -2.41338}
+    - {x: 31.30145, y: -0.91338}
+    - {x: 31.35144, y: 0.58662}
+    - {x: 31.40225, y: 2.10824}
+    - {x: 31.47824, y: 3.62984}
+    - {x: 31.55325, y: 5.12984}
+    - {x: 31.62824, y: 6.62984}
+    - {x: 31.70441, y: 8.15141}
+    - {x: 31.80576, y: 9.67295}
+    - {x: 31.90576, y: 11.17295}
+    - {x: 32.00576, y: 12.67295}
+    - {x: 32.10728, y: 14.19445}
+    - {x: 32.23398, y: 15.71592}
+    - {x: 32.35898, y: 17.21592}
+    - {x: 32.48398, y: 18.71592}
+    - {x: 32.60898, y: 20.21592}
+    - {x: 33.90449, y: 20.10796}
+    - {x: 35.2, y: 20}
+    - {x: 36.49551, y: 19.89204}
+    - {x: 37.79102, y: 19.78408}
+    - {x: 37.66602, y: 18.28408}
+    - {x: 37.54102, y: 16.78408}
+    - {x: 37.41602, y: 15.28408}
+    - {x: 37.29272, y: 13.80555}
+    - {x: 37.19424, y: 12.32705}
+    - {x: 37.09424, y: 10.82705}
+    - {x: 36.99424, y: 9.32705}
+    - {x: 36.89559, y: 7.84859}
+    - {x: 36.82175, y: 6.37016}
+    - {x: 36.74676, y: 4.87016}
+    - {x: 36.67176, y: 3.37016}
+    - {x: 36.59775, y: 1.89176}
+    - {x: 36.54856, y: 0.41338}
+    - {x: 36.49856, y: -1.08662}
+    - {x: 36.44855, y: -2.58662}
+    - {x: 36.39846, y: -4.0896}
+    - {x: 36.34834, y: -5.4928}
+    - {x: 36.29834, y: -6.8928}
+    - {x: 36.24834, y: -8.2928}
+    - {x: 36.19526, y: -9.75686}
+    - {x: 36.05805, y: -11.44487}
+    - {x: 35.92472, y: -13.07821}
+    - {x: 35.79071, y: -14.71955}
+    - {x: 35.59023, y: -17.02524}
+    - {x: 34.29511, y: -16.91262}
+    - {x: 33, y: -16.8}
+    - {x: 31.70489, y: -16.68738}
+    Holes: []
+    MinY: -10
+    MaxY: -0.14
+    EdgeTolerance: 0.001
+  - Id: Water_Creek_Deep-0
+    Outer:
+    - {x: 31.95395, y: -16.70904}
+    - {x: 32.15375, y: -14.41133}
+    - {x: 32.28682, y: -12.78124}
+    - {x: 32.42015, y: -11.1479}
+    - {x: 32.55191, y: -9.53666}
+    - {x: 32.60067, y: -8.16253}
+    - {x: 32.65067, y: -6.76252}
+    - {x: 32.70067, y: -5.36252}
+    - {x: 32.75062, y: -3.96382}
+    - {x: 32.80058, y: -2.46502}
+    - {x: 32.85059, y: -0.96502}
+    - {x: 32.90059, y: 0.53498}
+    - {x: 32.95091, y: 2.04371}
+    - {x: 33.02631, y: 3.55243}
+    - {x: 33.10131, y: 5.05243}
+    - {x: 33.17631, y: 6.55243}
+    - {x: 33.25178, y: 8.06115}
+    - {x: 33.35232, y: 9.56985}
+    - {x: 33.45232, y: 11.06985}
+    - {x: 33.55233, y: 12.56985}
+    - {x: 33.65294, y: 14.07853}
+    - {x: 33.77863, y: 15.5872}
+    - {x: 33.90363, y: 17.0872}
+    - {x: 34.02863, y: 18.5872}
+    - {x: 34.15363, y: 20.0872}
+    - {x: 35.2, y: 20}
+    - {x: 36.24637, y: 19.9128}
+    - {x: 36.12137, y: 18.4128}
+    - {x: 35.99637, y: 16.9128}
+    - {x: 35.87137, y: 15.4128}
+    - {x: 35.74706, y: 13.92147}
+    - {x: 35.64768, y: 12.43015}
+    - {x: 35.54768, y: 10.93015}
+    - {x: 35.44767, y: 9.43015}
+    - {x: 35.34822, y: 7.93885}
+    - {x: 35.27369, y: 6.44757}
+    - {x: 35.19869, y: 4.94757}
+    - {x: 35.12369, y: 3.44757}
+    - {x: 35.04909, y: 1.95629}
+    - {x: 34.99942, y: 0.46502}
+    - {x: 34.94942, y: -1.03498}
+    - {x: 34.89941, y: -2.53498}
+    - {x: 34.84938, y: -4.03618}
+    - {x: 34.79933, y: -5.43748}
+    - {x: 34.74933, y: -6.83748}
+    - {x: 34.69933, y: -8.23748}
+    - {x: 34.64809, y: -9.66335}
+    - {x: 34.51319, y: -11.31876}
+    - {x: 34.37986, y: -12.9521}
+    - {x: 34.24625, y: -14.58867}
+    - {x: 34.04605, y: -16.89096}
+    - {x: 33, y: -16.8}
+    Holes: []
+    MinY: -10
+    MaxY: -0.155
+    EdgeTolerance: 0.001
+  - Id: Water_Creek_Shallow-0
+    Outer:
+    - {x: 33.25245, y: -16.24369}
+    - {x: 33.45232, y: -13.94511}
+    - {x: 33.58549, y: -12.31378}
+    - {x: 33.71882, y: -10.68045}
+    - {x: 33.85118, y: -9.06079}
+    - {x: 33.90041, y: -7.6768}
+    - {x: 33.95041, y: -6.2768}
+    - {x: 34.00042, y: -4.8768}
+    - {x: 34.05039, y: -3.4776}
+    - {x: 34.10036, y: -1.97834}
+    - {x: 34.15036, y: -0.47834}
+    - {x: 34.20036, y: 1.02165}
+    - {x: 34.25056, y: 2.52706}
+    - {x: 34.32581, y: 4.03246}
+    - {x: 34.40081, y: 5.53246}
+    - {x: 34.47581, y: 7.03246}
+    - {x: 34.55111, y: 8.53785}
+    - {x: 34.65144, y: 10.04324}
+    - {x: 34.75144, y: 11.54324}
+    - {x: 34.85144, y: 13.04324}
+    - {x: 34.95182, y: 14.54861}
+    - {x: 35.07724, y: 16.05398}
+    - {x: 35.20224, y: 17.55398}
+    - {x: 35.32724, y: 19.05398}
+    - {x: 35.45224, y: 20.55398}
+    - {x: 36.1, y: 20.5}
+    - {x: 36.74775, y: 20.44602}
+    - {x: 36.62275, y: 18.94602}
+    - {x: 36.49775, y: 17.44602}
+    - {x: 36.37275, y: 15.94602}
+    - {x: 36.24818, y: 14.45139}
+    - {x: 36.14856, y: 12.95676}
+    - {x: 36.04856, y: 11.45676}
+    - {x: 35.94856, y: 9.95676}
+    - {x: 35.8489, y: 8.46215}
+    - {x: 35.77419, y: 6.96754}
+    - {x: 35.69919, y: 5.46754}
+    - {x: 35.62419, y: 3.96754}
+    - {x: 35.54944, y: 2.47294}
+    - {x: 35.49964, y: 0.97835}
+    - {x: 35.44964, y: -0.52166}
+    - {x: 35.39964, y: -2.02166}
+    - {x: 35.34961, y: -3.5224}
+    - {x: 35.29959, y: -4.9232}
+    - {x: 35.24958, y: -6.3232}
+    - {x: 35.19958, y: -7.7232}
+    - {x: 35.14882, y: -9.13921}
+    - {x: 35.01451, y: -10.78622}
+    - {x: 34.88118, y: -12.41955}
+    - {x: 34.74768, y: -14.05489}
+    - {x: 34.54756, y: -16.35631}
+    - {x: 33.9, y: -16.3}
+    Holes: []
+    MinY: -10
+    MaxY: -0.135
+    EdgeTolerance: 0.001
+  - Id: Water_Lake-0
+    Outer:
+    - {x: 23.1, y: -23.5}
+    - {x: 23.96689, y: -27.40492}
+    - {x: 26.3298, y: -30.65152}
+    - {x: 29.7228, y: -32.90698}
+    - {x: 33.70914, y: -34.0555}
+    - {x: 37.89086, y: -34.0555}
+    - {x: 41.8772, y: -32.90698}
+    - {x: 45.2702, y: -30.65152}
+    - {x: 47.31007, y: -27.95411}
+    - {x: 46.01857, y: -27.00963}
+    - {x: 44.72708, y: -26.06515}
+    - {x: 43.43559, y: -25.12067}
+    - {x: 42.1441, y: -24.17619}
+    - {x: 40.88465, y: -25.9903}
+    - {x: 39.2228, y: -27.0834}
+    - {x: 37.00845, y: -27.71662}
+    - {x: 34.59155, y: -27.71662}
+    - {x: 32.3772, y: -27.0834}
+    - {x: 30.71535, y: -25.9903}
+    - {x: 29.77895, y: -24.72539}
+    - {x: 29.5, y: -23.5}
+    - {x: 29.77895, y: -22.27461}
+    - {x: 30.71535, y: -21.0097}
+    - {x: 32.3772, y: -19.9166}
+    - {x: 34.59155, y: -19.28338}
+    - {x: 37.00845, y: -19.28338}
+    - {x: 39.2228, y: -19.9166}
+    - {x: 40.88465, y: -21.0097}
+    - {x: 41.82105, y: -22.27461}
+    - {x: 42.17694, y: -24.19752}
+    - {x: 43.73847, y: -23.84876}
+    - {x: 45.3, y: -23.5}
+    - {x: 46.86153, y: -23.15124}
+    - {x: 48.42305, y: -22.80248}
+    - {x: 47.63311, y: -19.59509}
+    - {x: 45.2702, y: -16.34848}
+    - {x: 41.8772, y: -14.09302}
+    - {x: 37.89086, y: -12.9445}
+    - {x: 33.70914, y: -12.9445}
+    - {x: 29.7228, y: -14.09302}
+    - {x: 26.3298, y: -16.34848}
+    - {x: 23.96689, y: -19.59508}
+    Holes: []
+    MinY: -10
+    MaxY: -0.14
+    EdgeTolerance: 0.001
+  - Id: Water_Lake_Deep-0
+    Outer:
+    - {x: 32.5139, y: -20.96667}
+    - {x: 33.69037, y: -20.16193}
+    - {x: 35.07415, y: -19.75163}
+    - {x: 36.52586, y: -19.75163}
+    - {x: 37.90963, y: -20.16193}
+    - {x: 39.0861, y: -20.96667}
+    - {x: 39.90216, y: -22.12017}
+    - {x: 40.1727, y: -23.2455}
+    - {x: 39, y: -23.5}
+    - {x: 37.89352, y: -23.74013}
+    - {x: 38.80702, y: -24.38925}
+    - {x: 39.78521, y: -25.08434}
+    - {x: 39.0861, y: -26.03333}
+    - {x: 37.90963, y: -26.83807}
+    - {x: 36.52586, y: -27.24837}
+    - {x: 35.07415, y: -27.24837}
+    - {x: 33.69037, y: -26.83807}
+    - {x: 32.5139, y: -26.03333}
+    - {x: 31.69785, y: -24.87984}
+    - {x: 31.4, y: -23.5}
+    - {x: 31.69785, y: -22.12016}
+    Holes:
+    - Vertices:
+      - {x: 33.88812, y: -23.10133}
+      - {x: 33.8, y: -23.5}
+      - {x: 33.88812, y: -23.89867}
+      - {x: 34.18341, y: -24.30917}
+      - {x: 34.70963, y: -24.66526}
+      - {x: 35.41451, y: -24.87263}
+      - {x: 36.18549, y: -24.87263}
+      - {x: 36.89037, y: -24.66526}
+      - {x: 37.41659, y: -24.30917}
+      - {x: 37.81918, y: -23.70855}
+      - {x: 37.71188, y: -23.10133}
+      - {x: 37.41659, y: -22.69083}
+      - {x: 36.89037, y: -22.33474}
+      - {x: 36.18549, y: -22.12737}
+      - {x: 35.41451, y: -22.12737}
+      - {x: 34.70963, y: -22.33474}
+      - {x: 34.18341, y: -22.69083}
+    MinY: -10
+    MaxY: -0.16
+    EdgeTolerance: 0.001
+  - Id: Water_Lake_Shallow-0
+    Outer:
+    - {x: 27.1, y: -25.5}
+    - {x: 27.70426, y: -28.11998}
+    - {x: 29.393, y: -30.35418}
+    - {x: 31.89735, y: -31.95792}
+    - {x: 34.90821, y: -32.79387}
+    - {x: 38.09179, y: -32.79387}
+    - {x: 41.10265, y: -31.95792}
+    - {x: 43.60701, y: -30.35418}
+    - {x: 45.19043, y: -28.29289}
+    - {x: 44.39342, y: -27.68893}
+    - {x: 43.5964, y: -27.08497}
+    - {x: 42.26254, y: -28.8735}
+    - {x: 40.29735, y: -30.12721}
+    - {x: 37.8255, y: -30.81167}
+    - {x: 35.1745, y: -30.81167}
+    - {x: 32.70265, y: -30.12721}
+    - {x: 30.73746, y: -28.8735}
+    - {x: 29.50891, y: -27.25788}
+    - {x: 29.1, y: -25.5}
+    - {x: 29.50891, y: -23.74212}
+    - {x: 30.73746, y: -22.1265}
+    - {x: 32.70265, y: -20.87279}
+    - {x: 35.1745, y: -20.18833}
+    - {x: 37.8255, y: -20.18833}
+    - {x: 40.29735, y: -20.87279}
+    - {x: 42.26254, y: -22.1265}
+    - {x: 43.49109, y: -23.74212}
+    - {x: 43.92575, y: -25.72547}
+    - {x: 44.9, y: -25.5}
+    - {x: 45.87425, y: -25.27453}
+    - {x: 45.29575, y: -22.88002}
+    - {x: 43.60701, y: -20.64582}
+    - {x: 41.10265, y: -19.04208}
+    - {x: 38.09179, y: -18.20613}
+    - {x: 34.90821, y: -18.20613}
+    - {x: 31.89735, y: -19.04208}
+    - {x: 29.393, y: -20.64582}
+    - {x: 27.70426, y: -22.88002}
+    Holes: []
+    MinY: -10
+    MaxY: -0.135
+    EdgeTolerance: 0.001
+  MosquitoPolygonFallZones:
+  - Id: Water_Creek-0
+    Outer:
+    - {x: 30.40977, y: -16.57476}
+    - {x: 30.60929, y: -14.28045}
+    - {x: 30.74196, y: -12.65513}
+    - {x: 30.87529, y: -11.0218}
+    - {x: 31.00473, y: -9.44315}
+    - {x: 31.05165, y: -8.1072}
+    - {x: 31.10165, y: -6.7072}
+    - {x: 31.15166, y: -5.3072}
+    - {x: 31.20154, y: -3.9104}
+    - {x: 31.25144, y: -2.41338}
+    - {x: 31.30145, y: -0.91338}
+    - {x: 31.35144, y: 0.58662}
+    - {x: 31.40225, y: 2.10824}
+    - {x: 31.47824, y: 3.62984}
+    - {x: 31.55325, y: 5.12984}
+    - {x: 31.62824, y: 6.62984}
+    - {x: 31.70441, y: 8.15141}
+    - {x: 31.80576, y: 9.67295}
+    - {x: 31.90576, y: 11.17295}
+    - {x: 32.00576, y: 12.67295}
+    - {x: 32.10728, y: 14.19445}
+    - {x: 32.23398, y: 15.71592}
+    - {x: 32.35898, y: 17.21592}
+    - {x: 32.48398, y: 18.71592}
+    - {x: 32.60898, y: 20.21592}
+    - {x: 33.90449, y: 20.10796}
+    - {x: 35.2, y: 20}
+    - {x: 36.49551, y: 19.89204}
+    - {x: 37.79102, y: 19.78408}
+    - {x: 37.66602, y: 18.28408}
+    - {x: 37.54102, y: 16.78408}
+    - {x: 37.41602, y: 15.28408}
+    - {x: 37.29272, y: 13.80555}
+    - {x: 37.19424, y: 12.32705}
+    - {x: 37.09424, y: 10.82705}
+    - {x: 36.99424, y: 9.32705}
+    - {x: 36.89559, y: 7.84859}
+    - {x: 36.82175, y: 6.37016}
+    - {x: 36.74676, y: 4.87016}
+    - {x: 36.67176, y: 3.37016}
+    - {x: 36.59775, y: 1.89176}
+    - {x: 36.54856, y: 0.41338}
+    - {x: 36.49856, y: -1.08662}
+    - {x: 36.44855, y: -2.58662}
+    - {x: 36.39846, y: -4.0896}
+    - {x: 36.34834, y: -5.4928}
+    - {x: 36.29834, y: -6.8928}
+    - {x: 36.24834, y: -8.2928}
+    - {x: 36.19526, y: -9.75686}
+    - {x: 36.05805, y: -11.44487}
+    - {x: 35.92472, y: -13.07821}
+    - {x: 35.79071, y: -14.71955}
+    - {x: 35.59023, y: -17.02524}
+    - {x: 34.29511, y: -16.91262}
+    - {x: 33, y: -16.8}
+    - {x: 31.70489, y: -16.68738}
+    Holes: []
+    MinY: -10
+    MaxY: -0.039997965
+    EdgeTolerance: 0.001
+  - Id: Water_Creek_Deep-0
+    Outer:
+    - {x: 31.95395, y: -16.70904}
+    - {x: 32.15375, y: -14.41133}
+    - {x: 32.28682, y: -12.78124}
+    - {x: 32.42015, y: -11.1479}
+    - {x: 32.55191, y: -9.53666}
+    - {x: 32.60067, y: -8.16253}
+    - {x: 32.65067, y: -6.76252}
+    - {x: 32.70067, y: -5.36252}
+    - {x: 32.75062, y: -3.96382}
+    - {x: 32.80058, y: -2.46502}
+    - {x: 32.85059, y: -0.96502}
+    - {x: 32.90059, y: 0.53498}
+    - {x: 32.95091, y: 2.04371}
+    - {x: 33.02631, y: 3.55243}
+    - {x: 33.10131, y: 5.05243}
+    - {x: 33.17631, y: 6.55243}
+    - {x: 33.25178, y: 8.06115}
+    - {x: 33.35232, y: 9.56985}
+    - {x: 33.45232, y: 11.06985}
+    - {x: 33.55233, y: 12.56985}
+    - {x: 33.65294, y: 14.07853}
+    - {x: 33.77863, y: 15.5872}
+    - {x: 33.90363, y: 17.0872}
+    - {x: 34.02863, y: 18.5872}
+    - {x: 34.15363, y: 20.0872}
+    - {x: 35.2, y: 20}
+    - {x: 36.24637, y: 19.9128}
+    - {x: 36.12137, y: 18.4128}
+    - {x: 35.99637, y: 16.9128}
+    - {x: 35.87137, y: 15.4128}
+    - {x: 35.74706, y: 13.92147}
+    - {x: 35.64768, y: 12.43015}
+    - {x: 35.54768, y: 10.93015}
+    - {x: 35.44767, y: 9.43015}
+    - {x: 35.34822, y: 7.93885}
+    - {x: 35.27369, y: 6.44757}
+    - {x: 35.19869, y: 4.94757}
+    - {x: 35.12369, y: 3.44757}
+    - {x: 35.04909, y: 1.95629}
+    - {x: 34.99942, y: 0.46502}
+    - {x: 34.94942, y: -1.03498}
+    - {x: 34.89941, y: -2.53498}
+    - {x: 34.84938, y: -4.03618}
+    - {x: 34.79933, y: -5.43748}
+    - {x: 34.74933, y: -6.83748}
+    - {x: 34.69933, y: -8.23748}
+    - {x: 34.64809, y: -9.66335}
+    - {x: 34.51319, y: -11.31876}
+    - {x: 34.37986, y: -12.9521}
+    - {x: 34.24625, y: -14.58867}
+    - {x: 34.04605, y: -16.89096}
+    - {x: 33, y: -16.8}
+    Holes: []
+    MinY: -10
+    MaxY: -0.05499798
+    EdgeTolerance: 0.001
+  - Id: Water_Creek_Shallow-0
+    Outer:
+    - {x: 33.25245, y: -16.24369}
+    - {x: 33.45232, y: -13.94511}
+    - {x: 33.58549, y: -12.31378}
+    - {x: 33.71882, y: -10.68045}
+    - {x: 33.85118, y: -9.06079}
+    - {x: 33.90041, y: -7.6768}
+    - {x: 33.95041, y: -6.2768}
+    - {x: 34.00042, y: -4.8768}
+    - {x: 34.05039, y: -3.4776}
+    - {x: 34.10036, y: -1.97834}
+    - {x: 34.15036, y: -0.47834}
+    - {x: 34.20036, y: 1.02165}
+    - {x: 34.25056, y: 2.52706}
+    - {x: 34.32581, y: 4.03246}
+    - {x: 34.40081, y: 5.53246}
+    - {x: 34.47581, y: 7.03246}
+    - {x: 34.55111, y: 8.53785}
+    - {x: 34.65144, y: 10.04324}
+    - {x: 34.75144, y: 11.54324}
+    - {x: 34.85144, y: 13.04324}
+    - {x: 34.95182, y: 14.54861}
+    - {x: 35.07724, y: 16.05398}
+    - {x: 35.20224, y: 17.55398}
+    - {x: 35.32724, y: 19.05398}
+    - {x: 35.45224, y: 20.55398}
+    - {x: 36.1, y: 20.5}
+    - {x: 36.74775, y: 20.44602}
+    - {x: 36.62275, y: 18.94602}
+    - {x: 36.49775, y: 17.44602}
+    - {x: 36.37275, y: 15.94602}
+    - {x: 36.24818, y: 14.45139}
+    - {x: 36.14856, y: 12.95676}
+    - {x: 36.04856, y: 11.45676}
+    - {x: 35.94856, y: 9.95676}
+    - {x: 35.8489, y: 8.46215}
+    - {x: 35.77419, y: 6.96754}
+    - {x: 35.69919, y: 5.46754}
+    - {x: 35.62419, y: 3.96754}
+    - {x: 35.54944, y: 2.47294}
+    - {x: 35.49964, y: 0.97835}
+    - {x: 35.44964, y: -0.52166}
+    - {x: 35.39964, y: -2.02166}
+    - {x: 35.34961, y: -3.5224}
+    - {x: 35.29959, y: -4.9232}
+    - {x: 35.24958, y: -6.3232}
+    - {x: 35.19958, y: -7.7232}
+    - {x: 35.14882, y: -9.13921}
+    - {x: 35.01451, y: -10.78622}
+    - {x: 34.88118, y: -12.41955}
+    - {x: 34.74768, y: -14.05489}
+    - {x: 34.54756, y: -16.35631}
+    - {x: 33.9, y: -16.3}
+    Holes: []
+    MinY: -10
+    MaxY: -0.034998044
+    EdgeTolerance: 0.001
+  - Id: Water_Lake-0
+    Outer:
+    - {x: 23.1, y: -23.5}
+    - {x: 23.96689, y: -27.40492}
+    - {x: 26.3298, y: -30.65152}
+    - {x: 29.7228, y: -32.90698}
+    - {x: 33.70914, y: -34.0555}
+    - {x: 37.89086, y: -34.0555}
+    - {x: 41.8772, y: -32.90698}
+    - {x: 45.2702, y: -30.65152}
+    - {x: 47.31007, y: -27.95411}
+    - {x: 46.01857, y: -27.00963}
+    - {x: 44.72708, y: -26.06515}
+    - {x: 43.43559, y: -25.12067}
+    - {x: 42.1441, y: -24.17619}
+    - {x: 40.88465, y: -25.9903}
+    - {x: 39.2228, y: -27.0834}
+    - {x: 37.00845, y: -27.71662}
+    - {x: 34.59155, y: -27.71662}
+    - {x: 32.3772, y: -27.0834}
+    - {x: 30.71535, y: -25.9903}
+    - {x: 29.77895, y: -24.72539}
+    - {x: 29.5, y: -23.5}
+    - {x: 29.77895, y: -22.27461}
+    - {x: 30.71535, y: -21.0097}
+    - {x: 32.3772, y: -19.9166}
+    - {x: 34.59155, y: -19.28338}
+    - {x: 37.00845, y: -19.28338}
+    - {x: 39.2228, y: -19.9166}
+    - {x: 40.88465, y: -21.0097}
+    - {x: 41.82105, y: -22.27461}
+    - {x: 42.17694, y: -24.19752}
+    - {x: 43.73847, y: -23.84876}
+    - {x: 45.3, y: -23.5}
+    - {x: 46.86153, y: -23.15124}
+    - {x: 48.42305, y: -22.80248}
+    - {x: 47.63311, y: -19.59509}
+    - {x: 45.2702, y: -16.34848}
+    - {x: 41.8772, y: -14.09302}
+    - {x: 37.89086, y: -12.9445}
+    - {x: 33.70914, y: -12.9445}
+    - {x: 29.7228, y: -14.09302}
+    - {x: 26.3298, y: -16.34848}
+    - {x: 23.96689, y: -19.59508}
+    Holes: []
+    MinY: -10
+    MaxY: -0.03999593
+    EdgeTolerance: 0.001
+  - Id: Water_Lake_Deep-0
+    Outer:
+    - {x: 32.5139, y: -20.96667}
+    - {x: 33.69037, y: -20.16193}
+    - {x: 35.07415, y: -19.75163}
+    - {x: 36.52586, y: -19.75163}
+    - {x: 37.90963, y: -20.16193}
+    - {x: 39.0861, y: -20.96667}
+    - {x: 39.90216, y: -22.12017}
+    - {x: 40.1727, y: -23.2455}
+    - {x: 39, y: -23.5}
+    - {x: 37.89352, y: -23.74013}
+    - {x: 38.80702, y: -24.38925}
+    - {x: 39.78521, y: -25.08434}
+    - {x: 39.0861, y: -26.03333}
+    - {x: 37.90963, y: -26.83807}
+    - {x: 36.52586, y: -27.24837}
+    - {x: 35.07415, y: -27.24837}
+    - {x: 33.69037, y: -26.83807}
+    - {x: 32.5139, y: -26.03333}
+    - {x: 31.69785, y: -24.87984}
+    - {x: 31.4, y: -23.5}
+    - {x: 31.69785, y: -22.12016}
+    Holes:
+    - Vertices:
+      - {x: 33.88812, y: -23.10133}
+      - {x: 33.8, y: -23.5}
+      - {x: 33.88812, y: -23.89867}
+      - {x: 34.18341, y: -24.30917}
+      - {x: 34.70963, y: -24.66526}
+      - {x: 35.41451, y: -24.87263}
+      - {x: 36.18549, y: -24.87263}
+      - {x: 36.89037, y: -24.66526}
+      - {x: 37.41659, y: -24.30917}
+      - {x: 37.81918, y: -23.70855}
+      - {x: 37.71188, y: -23.10133}
+      - {x: 37.41659, y: -22.69083}
+      - {x: 36.89037, y: -22.33474}
+      - {x: 36.18549, y: -22.12737}
+      - {x: 35.41451, y: -22.12737}
+      - {x: 34.70963, y: -22.33474}
+      - {x: 34.18341, y: -22.69083}
+    MinY: -10
+    MaxY: -0.05999674
+    EdgeTolerance: 0.001
+  - Id: Water_Lake_Shallow-0
+    Outer:
+    - {x: 27.1, y: -25.5}
+    - {x: 27.70426, y: -28.11998}
+    - {x: 29.393, y: -30.35418}
+    - {x: 31.89735, y: -31.95792}
+    - {x: 34.90821, y: -32.79387}
+    - {x: 38.09179, y: -32.79387}
+    - {x: 41.10265, y: -31.95792}
+    - {x: 43.60701, y: -30.35418}
+    - {x: 45.19043, y: -28.29289}
+    - {x: 44.39342, y: -27.68893}
+    - {x: 43.5964, y: -27.08497}
+    - {x: 42.26254, y: -28.8735}
+    - {x: 40.29735, y: -30.12721}
+    - {x: 37.8255, y: -30.81167}
+    - {x: 35.1745, y: -30.81167}
+    - {x: 32.70265, y: -30.12721}
+    - {x: 30.73746, y: -28.8735}
+    - {x: 29.50891, y: -27.25788}
+    - {x: 29.1, y: -25.5}
+    - {x: 29.50891, y: -23.74212}
+    - {x: 30.73746, y: -22.1265}
+    - {x: 32.70265, y: -20.87279}
+    - {x: 35.1745, y: -20.18833}
+    - {x: 37.8255, y: -20.18833}
+    - {x: 40.29735, y: -20.87279}
+    - {x: 42.26254, y: -22.1265}
+    - {x: 43.49109, y: -23.74212}
+    - {x: 43.92575, y: -25.72547}
+    - {x: 44.9, y: -25.5}
+    - {x: 45.87425, y: -25.27453}
+    - {x: 45.29575, y: -22.88002}
+    - {x: 43.60701, y: -20.64582}
+    - {x: 41.10265, y: -19.04208}
+    - {x: 38.09179, y: -18.20613}
+    - {x: 34.90821, y: -18.20613}
+    - {x: 31.89735, y: -19.04208}
+    - {x: 29.393, y: -20.64582}
+    - {x: 27.70426, y: -22.88002}
+    Holes: []
+    MinY: -10
+    MaxY: -0.034996085
+    EdgeTolerance: 0.001
+  HumanSpawnPoints: []
+  MosquitoSpawnPoints: []
+  RetryTicks: 30
+  InteriorMargin: 0.02
+  SupportProbe: 0.08
 --- !u!1001 &8347507785382017302
 PrefabInstance:
   m_ObjectHideFlags: 0
