@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using LetMeSleep.Core;
 using LetMeSleep.Gameplay;
@@ -14,6 +15,7 @@ namespace LetMeSleep.Tests.PlayMode
         private GameObject owner;
         private UnityGameplayWorld world;
         private MethodInfo steer;
+        private readonly List<Mesh> meshes = new List<Mesh>();
 
         [SetUp]
         public void SetUp()
@@ -39,6 +41,8 @@ namespace LetMeSleep.Tests.PlayMode
         public void TearDown()
         {
             if (owner) Object.DestroyImmediate(owner);
+            foreach (var mesh in meshes) Object.DestroyImmediate(mesh);
+            meshes.Clear();
             owner = null; world = null; steer = null;
         }
 
@@ -161,6 +165,91 @@ namespace LetMeSleep.Tests.PlayMode
                 "A low obstacle is not stepable when the complete raised capsule lacks headroom.");
         }
 
+        [Test]
+        public void TallCompoundStairKeepsRouteThroughRealAirborneSnapshots()
+        {
+            // One non-convex collider, with the riser/run measured on the Yate stair.
+            // Its total height exceeds the step limit; each individual rise does not.
+            var boxes = new List<Bounds>();
+            const float rise = .16875f, run = .30625f;
+            for (int step = 0; step < 6; step++)
+            {
+                float top = (step + 1) * rise;
+                boxes.Add(new Bounds(new Vector3(.65f + (step + .5f) * run, top * .5f, 0),
+                    new Vector3(run, top, 1.34f)));
+            }
+            CompoundBoxes("Tall compound staircase", boxes);
+            Box("Upper landing", new Vector3(3.2f, 3 * rise, 0), new Vector3(1.425f, 6 * rise, 1.34f));
+            Physics.SyncTransforms();
+            MotorResult moved = world.MoveHuman(new MotorQuery(1, new Float3(0, .002f, 0),
+                new Float3(0, -.4f, 0), 1f / 30f, 1.72f, .25f, 0, false));
+            Assert.That(moved.Grounded, Is.True, "The initial floor support must come from the real motor.");
+            bool sawAirborne = false;
+            Float3 commanded = new Float3(1, 0, 0);
+            for (int tick = 1; tick <= 100 && moved.Position.X < 3; tick++)
+            {
+                if ((tick - 1) % 3 == 0)
+                {
+                    commanded = Steer(new Float3(1, 0, 0), moved.Position, moved.Velocity, moved.Grounded);
+                    TestContext.Out.WriteLine("compound tick={0} position={1} grounded={2} velocity={3} steering={4} traversal={5}",
+                        tick, moved.Position, moved.Grounded, moved.Velocity,
+                        Diagnostic("lastBotSteeringDiagnostic"), Diagnostic("lastBotTraversalDiagnostic"));
+                    Assert.That(commanded.X, Is.GreaterThan(.98f),
+                        "The compound staircase must stay direct at real grounded/airborne snapshots. " +
+                        Diagnostic("lastBotSteeringDiagnostic") + " " + Diagnostic("lastBotTraversalDiagnostic"));
+                }
+                float vertical = moved.Grounded ? -.5f : moved.Velocity.Y - 12f / 30f;
+                moved = world.MoveHuman(new MotorQuery(1, moved.Position,
+                    new Float3(commanded.X * 3.1f, vertical, commanded.Z * 3.1f),
+                    1f / 30f, 1.72f, .25f, 0, moved.Grounded));
+                sawAirborne |= !moved.Grounded;
+            }
+            Assert.That(moved.Position.X, Is.GreaterThanOrEqualTo(3));
+            Assert.That(sawAirborne, Is.True, "Exercise projected ascent rather than inventing an airborne snapshot.");
+            for (int tick = 0; tick < 12 && !moved.Grounded; tick++)
+                moved = world.MoveHuman(new MotorQuery(1, moved.Position,
+                    new Float3(0, moved.Velocity.Y - 12f / 30f, 0), 1f / 30f, 1.72f, .25f, 0, moved.Grounded));
+            Assert.That(moved.Grounded, Is.True);
+            Assert.That(moved.Position.Y, Is.EqualTo(6 * rise).Within(.01f));
+        }
+
+        [Test]
+        public void LowTreadDoesNotLicenseTallWallInSameMesh()
+        {
+            CompoundBoxes("Low tread and tall wall", new[] {
+                new Bounds(new Vector3(.4f, .084375f, 0), new Vector3(.3f, .16875f, 1.5f)),
+                new Bounds(new Vector3(.85f, 1, 0), new Vector3(.1f, 2, 1.5f)) });
+            Float3 result = Steer(new Float3(1, 0, 0));
+            MotorResult moved = RunMotor(20);
+            TestContext.Out.WriteLine("compound wall steering={0} traversal={1} actualEnd={2}",
+                Diagnostic("lastBotSteeringDiagnostic"), Diagnostic("lastBotTraversalDiagnostic"), moved.Position);
+            Assert.That(moved.Position.X, Is.LessThan(.57f), "The real full capsule remains before the tall wall.");
+            Assert.That(result.X, Is.LessThan(.9f),
+                "A low contact on one mesh part must not authorize its later full-height wall.");
+        }
+
+        [Test]
+        public void GroundedPlatformEdgeDoesNotCertifyUnsupportedAdvance()
+        {
+            world.MapRoot.Find("Floor").GetComponent<Collider>().enabled = false;
+            Box("Platform ending ahead", new Vector3(-.95f, -.05f, 0), new Vector3(2.1f, .1f, 3));
+            Physics.SyncTransforms();
+            MotorResult support = world.MoveHuman(new MotorQuery(1, new Float3(0, .002f, 0),
+                new Float3(0, -.4f, 0), 1f / 30f, 1.72f, .25f, 0, false));
+            Assert.That(support.Grounded, Is.True);
+            var actor = Snapshot(support.Position, support.Velocity, support.Grounded);
+            var predict = typeof(UnityGameplayWorld).GetMethod("BotHumanCanTraverse", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(predict, Is.Not.Null);
+            var arguments = new object[] { actor, Vector3.right, .65f, 0f };
+            Assert.That((bool)predict.Invoke(world, arguments), Is.False,
+                "Forward movement in air is not certification of a supported traversal.");
+            Assert.That(world.Actors[1].transform.position, Is.EqualTo(support.Position.ToUnity()),
+                "The support check must not snap or move the actual actor.");
+            MotorResult dropped = RunMotor(20, support.Position);
+            Assert.That(dropped.Grounded, Is.False);
+            Assert.That(dropped.Position.Y, Is.LessThan(-.3f), "The real trajectory must exercise a drop.");
+        }
+
         private Float3 Steer(Float3 desired) => Steer(desired, new Float3(0, .002f, 0));
 
         private Float3 Steer(Float3 desired, Float3 position) =>
@@ -169,11 +258,14 @@ namespace LetMeSleep.Tests.PlayMode
         private Float3 Steer(Float3 desired, Float3 position, Float3 velocity, bool grounded)
         {
             Physics.SyncTransforms();
-            var actor = new ActorSnapshot(1, PlayerRole.Human, LifeState.Active, 1,
-                position, velocity, Rotation.Yaw(0), Float3.Forward,
-                0, 0, 1, 1, grounded, 0, 0, null, null, default, 0);
+            var actor = Snapshot(position, velocity, grounded);
             return (Float3)steer.Invoke(world, new object[] { actor, desired });
         }
+
+        private static ActorSnapshot Snapshot(Float3 position, Float3 velocity, bool grounded) =>
+            new ActorSnapshot(1, PlayerRole.Human, LifeState.Active, 1,
+                position, velocity, Rotation.Yaw(0), Float3.Forward,
+                0, 0, 1, 1, grounded, 0, 0, null, null, default, 0);
 
         private MotorResult RunMotor(int ticks) => RunMotor(ticks, new Float3(0, .002f, 0));
 
@@ -215,6 +307,27 @@ namespace LetMeSleep.Tests.PlayMode
             var collider = item.AddComponent<BoxCollider>();
             collider.size = size;
             return collider;
+        }
+
+        private void CompoundBoxes(string name, IEnumerable<Bounds> boxes)
+        {
+            var vertices = new List<Vector3>(); var triangles = new List<int>();
+            int[] faces = { 0, 3, 2, 0, 2, 1, 4, 5, 6, 4, 6, 7, 0, 4, 7, 0, 7, 3,
+                1, 2, 6, 1, 6, 5, 0, 1, 5, 0, 5, 4, 3, 7, 6, 3, 6, 2 };
+            foreach (Bounds box in boxes)
+            {
+                Vector3 min = box.min, max = box.max; int offset = vertices.Count;
+                vertices.AddRange(new[] {
+                    new Vector3(min.x,min.y,min.z), new Vector3(max.x,min.y,min.z),
+                    new Vector3(max.x,max.y,min.z), new Vector3(min.x,max.y,min.z),
+                    new Vector3(min.x,min.y,max.z), new Vector3(max.x,min.y,max.z),
+                    new Vector3(max.x,max.y,max.z), new Vector3(min.x,max.y,max.z) });
+                foreach (int index in faces) triangles.Add(offset + index);
+            }
+            var mesh = new Mesh { name = name }; meshes.Add(mesh);
+            mesh.SetVertices(vertices); mesh.SetTriangles(triangles, 0); mesh.RecalculateBounds();
+            var item = new GameObject(name); item.transform.SetParent(world.MapRoot, false);
+            item.AddComponent<MeshCollider>().sharedMesh = mesh;
         }
     }
 }

@@ -88,12 +88,13 @@ namespace LetMeSleep.Gameplay.Unity
                 ? Physics.CapsuleCastAll(position + Vector3.up * .29f, position + Vector3.up * (1.46f - .64f * actor.CrouchFraction), radius, direction, distance, GeometryMask, QueryTriggerInteraction.Ignore)
                 : Physics.SphereCastAll(position, radius, direction, distance, GeometryMask, QueryTriggerInteraction.Ignore);
             float nearest = distance;
+            Vector3 contactPoint = default;
             blocker = null; normal = default; canAdvance = false; predictedProgress = 0;
             foreach (var hit in hits)
             {
                 if (!IsWorldCollider(hit.collider) || hit.collider.GetComponentInParent<GameplayActorProxy>()) continue;
                 if (hit.distance >= nearest) continue;
-                nearest = hit.distance; blocker = hit.collider; normal = hit.normal;
+                nearest = hit.distance; blocker = hit.collider; normal = hit.normal; contactPoint = hit.point;
             }
             // Steering must not reject ground geometry that the real human motor can
             // traverse as a slope or authored step. Predict with the same CastMotor,
@@ -103,19 +104,26 @@ namespace LetMeSleep.Gameplay.Unity
             predictionEnabled = !DisableBotHumanTraversalPredictionForDiagnostic;
 #endif
             if (predictionEnabled && human && nearest < distance &&
-                BotMayTraverseContact(actor.Position.ToUnity(), blocker, normal, actor.Grounded) &&
+                BotMayTraverseContact(actor.Position.ToUnity(), blocker, contactPoint, normal, actor.Grounded) &&
                 BotHumanCanTraverse(actor, direction, distance, out predictedProgress))
                 canAdvance = true;
             return nearest;
         }
 
-        private static bool BotMayTraverseContact(Vector3 footPosition, Collider blocker, Vector3 normal,
+        private static bool BotMayTraverseContact(Vector3 footPosition, Collider blocker, Vector3 contactPoint, Vector3 normal,
             bool canStep)
         {
             if (!blocker) return false;
             bool walkableSupport = normal.y >= .55f;
             bool completeLowObstacle = blocker.bounds.max.y - footPosition.y <= .22f + Skin;
-            return walkableSupport || canStep && completeLowObstacle;
+            // A staircase may be one tall mesh. Its first tread still presents a low,
+            // upward-facing capsule contact; the full collider AABB cannot describe that
+            // local rise. Allow only the low upward contact into the motor prediction.
+            // Projected ascent can briefly be airborne, so its next edge is checked by
+            // height and normal rather than assigning an artificial grounded state.
+            float localRise = contactPoint.y - footPosition.y;
+            bool lowUpwardContact = normal.y > .05f && localRise >= -Skin && localRise <= .22f + Skin;
+            return walkableSupport || canStep && completeLowObstacle || lowUpwardContact;
         }
 
         private bool BotHumanCanTraverse(ActorSnapshot actor, Vector3 direction, float distance,
@@ -132,13 +140,17 @@ namespace LetMeSleep.Gameplay.Unity
             // Model the authority's repeated human ticks. A single .65 m displacement is
             // not equivalent: desired horizontal velocity is reapplied every tick, while
             // vertical velocity and grounded state carry through the real motor result.
-            float remainingDistance = distance;
+            // Cover the requested corridor with actual projected progress. A stair can
+            // spend several ticks rising; charging the requested input distance would
+            // stop before a later wall while still advertising the full look-ahead.
+            // Bound the extra work, and refuse certification if that bound is exhausted.
+            int maximumTicks = Mathf.CeilToInt(distance / (speed * dt)) * 3;
             int tick = 0;
-            while (remainingDistance > .0001f)
+            while (predictedProgress < distance && tick < maximumTicks)
             {
-                float horizontalDistance = Mathf.Min(speed * dt, remainingDistance);
                 verticalVelocity = grounded ? -.5f : verticalVelocity - 12 * dt;
-                Vector3 velocity = direction.normalized * (horizontalDistance / dt) +
+                // The authority never slows the final tick to fit a query distance.
+                Vector3 velocity = direction.normalized * speed +
                                    Vector3.up * verticalVelocity;
                 Vector3 before = position;
                 if (!BotHumanTick(actor.ActorId, grounded, ref position, ref velocity,
@@ -154,12 +166,52 @@ namespace LetMeSleep.Gameplay.Unity
                     predictedProgress = Vector3.Dot(position - start, direction.normalized);
                     return false;
                 }
-                remainingDistance -= horizontalDistance;
+                predictedProgress = Vector3.Dot(position - start, direction.normalized);
                 tick++;
             }
-            predictedProgress = Vector3.Dot(position - start, direction.normalized);
+            if (predictedProgress < distance)
+            {
+                TraceTraversal("horizon-exhausted", tick, position, null, Vector3.zero);
+                return false;
+            }
+            // This is a support query, not a snap or a change to predicted velocity.
+            // Short airborne arcs over a tread are valid; ending over a drop with no
+            // walkable support within the motor's grounded snap range is not certified.
+            RaycastHit? support = CastMotor(actor.ActorId, position, Vector3.down * .23f, height, radius, true);
+            if ((!support.HasValue || support.Value.normal.y <= .55f) &&
+                !BotHumanCanSettle(actor.ActorId, position, verticalVelocity, grounded, height, radius, tick))
+            {
+                TraceTraversal("unsupported-endpoint", tick, position, support?.collider, support?.normal ?? Vector3.zero);
+                return false;
+            }
             TraceTraversal("complete", tick, position, null, Vector3.zero);
-            return predictedProgress >= .12f;
+            return true;
+        }
+
+        private bool BotHumanCanSettle(uint actorId, Vector3 endpoint, float verticalVelocity,
+            bool grounded, float height, float radius, int tick)
+        {
+            // A downward cast can meet the next tread's rounded capsule contact before
+            // the supporting tread. Do not call that steep contact walkable. Instead
+            // model stopping horizontal input and let the real motor rules resolve it.
+            // These are local copies: this probe never moves or grounds the actor.
+            Vector3 position = endpoint;
+            int supportedTicks = 0;
+            for (int settle = 0; settle < 18; settle++)
+            {
+                verticalVelocity = grounded ? -.5f : verticalVelocity - 12f / 30f;
+                Vector3 velocity = Vector3.up * verticalVelocity;
+                if (!BotHumanTick(actorId, grounded, ref position, ref velocity,
+                        height, radius, tick + settle, out grounded)) return false;
+                verticalVelocity = velocity.y;
+                Vector3 drift = position - endpoint;
+                // A fall or a slide to a different ledge cannot certify this endpoint.
+                if (drift.y < -.23f || new Vector2(drift.x, drift.z).sqrMagnitude > radius * radius)
+                    return false;
+                supportedTicks = grounded ? supportedTicks + 1 : 0;
+                if (supportedTicks >= 2) return true;
+            }
+            return false;
         }
 
         private bool BotHumanTick(uint actorId, bool wasGrounded, ref Vector3 position,
@@ -175,7 +227,7 @@ namespace LetMeSleep.Gameplay.Unity
                 // A low/ground contact may reveal a second obstacle within the same
                 // horizon. Certify every actual motor contact so a step cannot license a
                 // later tall wall merely because projection finds lateral open space.
-                if (!BotMayTraverseContact(position, contact.collider, contact.normal, wasGrounded))
+                if (!BotMayTraverseContact(position, contact.collider, contact.point, contact.normal, wasGrounded))
                 {
                     TraceTraversal("contact-rejected", tick, position,
                         contact.collider, contact.normal);
