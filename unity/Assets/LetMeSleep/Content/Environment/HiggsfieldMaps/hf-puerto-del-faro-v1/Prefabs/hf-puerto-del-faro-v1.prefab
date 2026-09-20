@@ -206,6 +206,7 @@ GameObject:
   - component: {fileID: 154530521431390971}
   - component: {fileID: 2844855311516430381}
   - component: {fileID: 6784131111787596189}
+  - component: {fileID: 6949761566492841704}
   m_Layer: 0
   m_Name: hf-puerto-del-faro-v1
   m_TagString: Untagged
@@ -243,7 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.EnvironmentMapDefinition
   MapId: hf-puerto-del-faro-v1
-  ContentHash: 154541efdc07443baaaa55daf0494c39596afe8ecd2a705eee7d12c2255e3b09
+  ContentHash: 51bfeb3b5884edae81530ab123797e39eeb07a412fb0b8bddefb232639e375c2
   SpatialData: {fileID: 4900000, guid: f3fe41654cd52da4b8b127dedd298b87, type: 3}
   HumanSpawnPoints:
   - {fileID: 4270547865144447107}
@@ -843,6 +844,141 @@ MonoBehaviour:
   RetryTicks: 30
   InteriorMargin: 0.02
   SupportProbe: 0.08
+--- !u!114 &6949761566492841704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6775586637643697347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21d3e5b304964cc89cc545eae60fec08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Environment::LetMeSleep.Content.Environment.GameplayObjectiveCatalog
+  mapId: hf-puerto-del-faro-v1
+  entries:
+  - ObjectiveId: port.clean.plaza_barrel
+    Kind: 1
+    DisplayKey: task.port.plaza_barrel
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 5.8000007, y: 3.7259963, z: 7.238133}
+    LocalApproachPoint: {x: 5.411092, y: 3.1999977, z: 7.627041}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: plaza_and_central_streets
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Barrel_Plaza_01
+  - ObjectiveId: port.clean.plaza_bench
+    Kind: 1
+    DisplayKey: task.port.plaza_bench
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -5.1, y: 3.7399998, z: 5.5348043}
+    LocalApproachPoint: {x: -5.3870115, y: 3.2649984, z: 4.841894}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: plaza_and_central_streets
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Bench_Plaza_01
+  - ObjectiveId: port.clean.lighthouse_bench
+    Kind: 1
+    DisplayKey: task.port.lighthouse_bench
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 24.977581, y: 7.7900047, z: 23.026623}
+    LocalApproachPoint: {x: 24.97758, y: 7.199994, z: 22.026619}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: lighthouse_south_approach
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Bench_05
+  - ObjectiveId: port.switch.lighthouse_door
+    Kind: 2
+    DisplayKey: task.port.lighthouse_door
+    ActionKey: task.action.hold_switch
+    LocalPosition: {x: 27.979998, y: 7.2099943, z: 23.119999}
+    LocalApproachPoint: {x: 27.591087, y: 7.269995, z: 23.508907}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: lighthouse_south_approach
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Lighthouse_OpenDoor
+  - ObjectiveId: port.clean.plaza_bench_three
+    Kind: 1
+    DisplayKey: task.port.plaza_bench_three
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 0.000000005255351, y: 3.689997, z: -2.0348046}
+    LocalApproachPoint: {x: -0.28701264, y: 3.2649996, z: -1.3418949}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: plaza_and_central_streets
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Bench_03
+  - ObjectiveId: port.clean.cottage_one_bedside_table
+    Kind: 1
+    DisplayKey: task.port.cottage_one_bedside_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -16.499998, y: 4.026, z: -3.5499976}
+    LocalApproachPoint: {x: -16.499994, y: 3.3199995, z: -2.9999967}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: cottage1_interior
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Cottage_01_BedsideTable
+  - ObjectiveId: port.clean.cottage_two_bedside_table
+    Kind: 1
+    DisplayKey: task.port.cottage_two_bedside_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -14.499997, y: 4.0259976, z: 11.449999}
+    LocalApproachPoint: {x: -15.049997, y: 3.3199968, z: 11.449997}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: cottage2_interior
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Cottage_02_BedsideTable
+  - ObjectiveId: port.clean.cottage_three_bedside_table
+    Kind: 1
+    DisplayKey: task.port.cottage_three_bedside_table
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -0.4999999, y: 4.025997, z: 14.449996}
+    LocalApproachPoint: {x: -1.0303298, y: 3.3199964, z: 14.980323}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: cottage3_interior
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Cottage_03_BedsideTable
+  - ObjectiveId: port.clean.cottage_writing_desk
+    Kind: 1
+    DisplayKey: task.port.cottage_writing_desk
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: -13.325, y: 3.949656, z: 0.30000085}
+    LocalApproachPoint: {x: -12.775, y: 3.319999, z: 0.30000123}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: cottage1_interior
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Cottage_01_WritingDesk_Ceramics
+  - ObjectiveId: port.clean.plaza_bench_two
+    Kind: 1
+    DisplayKey: task.port.plaza_bench_two
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 4.8000007, y: 3.689989, z: 5.734804}
+    LocalApproachPoint: {x: 4.8000007, y: 3.2649984, z: 4.9848037}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: plaza_and_central_streets
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Bench_02
+  - ObjectiveId: port.clean.lighthouse_floor
+    Kind: 1
+    DisplayKey: task.port.lighthouse_floor
+    ActionKey: task.action.hold_clean
+    LocalPosition: {x: 28.999998, y: 7.139991, z: 23.4}
+    LocalApproachPoint: {x: 28.611088, y: 7.2699995, z: 23.788908}
+    UseRadius: 1.25
+    WorkTicks: 90
+    RouteRegionId: lighthouse_entry
+    RouteBudgetTicks: 330
+    TargetPath: Environment/Lighthouse_GroundFloor
 --- !u!1 &6820211311531245110
 GameObject:
   m_ObjectHideFlags: 0

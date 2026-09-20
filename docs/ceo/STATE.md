@@ -2,6 +2,19 @@
 
 ## Gate actual: interacción y salida de objetivos
 
+- Puerto instalado: install01 pasa ronda19/20 y cobertura motor, 11 objetivos.
+  Nuevo ContentHash `51bfeb3b5884edae81530ab123797e39eeb07a412fb0b8bddefb232639e375c2`.
+  PortCatalogInstall01/delta-verification.json acredita1 componente añadido,
+  sólo raíz/hash cambiados,939 documentos intactos. Casa14 sin regresiones
+  respecto de13 en todos los pares comparables (21 onward).
+- Isla install01 aborta antes de guardar: sólo1/20 tareas. Su prefab conserva
+  SHA3243fac3… original; no se importó navegación. Técnica revisa ejecución
+  de las polilíneas; CEO captura bridge-east y picnic desde spawn. Static PASS
+  y replays de movimiento dirigido no acreditan que el bot siga esas rutas.
+- Yate rodeo externo demuestra postura de trabajo real en58 ticks, con apoyo;
+  control con pared se bloquea correctamente. Astra propone selector persistente
+  general; todavía no implementado. No usar el replay dirigido como PASS del bot.
+
 - Camp instalado: install02 repite16/20 (cuota14) y pasa cobertura motor antes
   de guardar10 entradas. ContentHash nuevo
   `79b198e933f2c21eec610b2ec7148c4b7ac7636dc5d4acab9a4ed130a7e25a86`.
