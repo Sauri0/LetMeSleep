@@ -1,5 +1,22 @@
 # Relevo CEO — 2026-09-19
 
+## Resultado posterior: Camp era una entrada dentro del sólido
+
+- Diagnóstico CEO SurfaceCampEscalation01 refuta el falso self-overlap:
+  los tres inicios Frozen están dentro de cajas, sobre caras inferiores
+  orientadas hacia dentro. Al fallar, distancia real a lateral .052543/.041256/
+  .053680 m, menor que radio .054. Ver SURFACE-CAMP-GEOMETRY-20260920.md.
+- Excepción de clearance rechazada. WIP y patch guardados en rejected-candidate
+  con hashes; sólo UnityGameplayWorld.cs y su fixture asignado restaurados a
+  HEAD. Motor original nuevamente vigente. No se convierten Frozen FAIL aPASS.
+- Native02:6/1, pero nuevos negativos estaban contaminados por SetUp BoxCollider;
+  no aceptarlos como prueba. Escalamiento de agente intentado falló por límite
+  de threads; CEO realizó el diagnóstico geométrico independiente directamente.
+- CEO ejecuta captura de entrenamiento real con harness externo temporal,
+  GameplayVisualCapture01. Ajustó WaitForEndOfFrame a tres frames normales para
+  batch; render explícito a textura. No afirmar resultado antes de XML/PNG.
+  Slot Unity pertenece a CEO hasta finalizar y retirar el harness temporal.
+
 ## En curso: revisión de clearance, agua y captura de partida
 
 - `c8d3f37` añade docs/player/PRUEBA-V0.2.0.md con controles cotejados contra
