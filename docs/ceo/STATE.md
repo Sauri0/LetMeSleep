@@ -9,6 +9,19 @@ no aprobación de capturas actuales. Red rediseña UI tras auditoría luces brev
 estado audita rig/motion; técnica mide Puerto y distingue collider de render.
 CEO coordina revisión en movimiento de cinco mapas y próximos turnos.
 
+- RenderOverlap01 v2 examinó cinco mapas sin omisiones/cap, fuentes intactas;
+  sospechas geométricas completas guardadas, no conteo de defectos visibles.
+  MAP-RENDER-OVERLAPS-20260920.md registra límites y ranking por objeto/material.
+- Motion01 generó clips Puerto/Camp. CEO inspeccionó cuatro frames de cada uno:
+  bandas de terreno/piso visibles en faro; Camp testigo parcialmente oculto.
+  Técnica prepara A/B de autoría Puerto, sin cambios aplicados aún.
+- UI freeze01: captura real menú/HUD720/1080 1/1, pero gate equipo falla overflow
+  y revisión detecta SALIR/ESTAMINA invisibles, MANOS truncado. Red corrige freeze02;
+  no se aprueba primera iteración por el PASS parcial. Evidencia UiRedesignReview01.
+- CharacterMotionAudit01 identifica caídas humanas por clip y R4 mosquito
+  fuera de producción. HumanArmPose01 corre diagnóstico real Strike en aislado,
+  estado posee turno Unity hasta terminal. UI central puede editarse entretanto.
+
 ## Candidata Windows 04 comprobada; Puerto pendiente
 
 - Build04 terminó Succeeded/0 errores/sourceDirty false sobre4947f72.
