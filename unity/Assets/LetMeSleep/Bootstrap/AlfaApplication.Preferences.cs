@@ -295,8 +295,7 @@ namespace LetMeSleep.Bootstrap
         {
             var orbit = ui.GetComponentInChildren<CharacterPreviewOrbit>(true); var instance=orbit?.CurrentInstance;
             if (!instance || instance == previousPreview) return;
-            foreach(var child in instance.GetComponentsInChildren<Transform>(true)) child.gameObject.layer=30;
-            foreach(var collider in instance.GetComponentsInChildren<Collider>(true)) collider.enabled=false;
+            PreparePreviewInstance(instance);
             if (loadedPreferenceSchema == 2 && modularCustomizationRuntime != null)
             {
                 if (TryApplyModularPreview(instance, previewModularAppearance ?? localModularAppearanceDraft,
@@ -310,6 +309,14 @@ namespace LetMeSleep.Bootstrap
             }
             previousPreview=instance;
             ApplyAppearance(instance.GetComponent<CharacterView>(),previewAppearance??appearance);
+        }
+        /// <summary>The viewer clone renders on the preview layer only, without colliders. A modular preview can be
+        /// applied to a clone the same frame the viewer creates it (switching the role tab), before ApplyPreviewColors
+        /// ran; its parts copy the clone's layer, so the layer is set before any application.</summary>
+        private static void PreparePreviewInstance(GameObject instance)
+        {
+            foreach(var child in instance.GetComponentsInChildren<Transform>(true)) child.gameObject.layer=30;
+            foreach(var collider in instance.GetComponentsInChildren<Collider>(true)) collider.enabled=false;
         }
         private static void ApplyAppearance(CharacterView view, BasicCustomizationDraft draft)
         {

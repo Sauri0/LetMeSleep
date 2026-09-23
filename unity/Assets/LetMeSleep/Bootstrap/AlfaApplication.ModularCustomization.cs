@@ -263,9 +263,14 @@ namespace LetMeSleep.Bootstrap
         {
             error = string.Empty;
             if (!instance || selection == null || modularCustomizationRuntime == null) return false;
+            PreparePreviewInstance(instance);
             var view = UnityComponents.OnSelfOrChildren<CharacterView>(instance);
             var role = editedRole == AlfaRole.Mosquito ? CustomizationRole.Mosquito : CustomizationRole.Human;
-            return view && modularCustomizationRuntime.TryApply(view, selection, role, out error);
+            if (!view || !modularCustomizationRuntime.TryApply(view, selection, role, out error)) return false;
+            // The viewer framed the authored body; fit it to the assembled parts (keeps the user's angle and zoom).
+            var orbit = ui ? ui.GetComponentInChildren<CharacterPreviewOrbit>(true) : null;
+            if (orbit && orbit.CurrentInstance == instance) orbit.Reframe();
+            return true;
         }
     }
 }

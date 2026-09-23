@@ -99,6 +99,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7073644154943665480}
+  - {fileID: 3658115524565979249}
   m_Father: {fileID: 3731480269050756391}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1013522181999753054
@@ -257,6 +258,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8046240406143385339}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3470282483960542206
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3658115524565979249}
+  m_Layer: 0
+  m_Name: CustomizationParts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3658115524565979249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3470282483960542206}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8884736821076555153}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4641177921927530210
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,6 +332,8 @@ GameObject:
   - component: {fileID: 7329421078306969587}
   - component: {fileID: 3535108475877258862}
   - component: {fileID: 9175550103549967651}
+  - component: {fileID: 8960351711563678393}
+  - component: {fileID: 6908919235280564520}
   m_Layer: 0
   m_Name: LMS_HumanMenu
   m_TagString: Untagged
@@ -376,26 +410,32 @@ MonoBehaviour:
     MaterialIndex: 0
     Category: Skin
     Shade: 0
+    Alpha: 0
   - Renderer: {fileID: 3533959273109402020}
     MaterialIndex: 0
     Category: Skin
     Shade: 0
+    Alpha: 0
   - Renderer: {fileID: 9187007642840958501}
     MaterialIndex: 1
     Category: Skin
     Shade: 0
+    Alpha: 0
   - Renderer: {fileID: 9187007642840958501}
     MaterialIndex: 2
     Category: Pajamas
     Shade: 0
+    Alpha: 0
   - Renderer: {fileID: 9187007642840958501}
     MaterialIndex: 4
     Category: Pajamas
     Shade: 0.193
+    Alpha: 0
   - Renderer: {fileID: 8425845549608446922}
     MaterialIndex: 0
     Category: Skin
     Shade: 0
+    Alpha: 0
   Motions: []
   firstPerson: 0
 --- !u!136 &3535108475877258862
@@ -466,6 +506,59 @@ MonoBehaviour:
     EyeYawLimit: 22
     EyePitchLimit: 15
     ManualEvaluation: 0
+--- !u!114 &8960351711563678393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4994066705284740688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb45704dae4bbb4468f6977a9d5b31e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterCustomizationHost
+  Role: 0
+  View: {fileID: 7329421078306969587}
+  RigId: lms.human.v030
+  ExpectedVisualScale: {x: 1, y: 1, z: 1}
+  PartsRoot: {fileID: 3658115524565979249}
+  OwnedBaseRenderers:
+  - {fileID: 9187007642840958501}
+  - {fileID: 235152667245010057}
+  ColorChannels:
+  - Renderer: {fileID: 8425845549608446922}
+    MaterialIndex: 0
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+  - Renderer: {fileID: 8425845549608446922}
+    MaterialIndex: 4
+    ColorSlotId: human.hair_color
+    Shade: 0
+    Alpha: 0
+  - Renderer: {fileID: 7612392716627524277}
+    MaterialIndex: 0
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+  - Renderer: {fileID: 3533959273109402020}
+    MaterialIndex: 0
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+--- !u!114 &6908919235280564520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4994066705284740688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 927feed84aca92643b9f1462e0a90b9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterModularVisualAssembler
 --- !u!1 &8647678493777842122
 GameObject:
   m_ObjectHideFlags: 0

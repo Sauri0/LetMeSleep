@@ -179,6 +179,18 @@ namespace LetMeSleep.UI
             ApplyOrbit();
         }
 
+        /// <summary>
+        /// Re-fits the camera and the pedestal to the clone as it looks now, keeping the angle and zoom: modular parts
+        /// (long wings, a beanie, a backpack) can reach beyond the authored body the framing was computed from.
+        /// </summary>
+        public void Reframe()
+        {
+            if (!IsBound || instance == null) return;
+            RecalculateFraming();
+            ApplyOrbit();
+            RequestViews();
+        }
+
         public void Zoom(float delta)
         {
             zoomFactor = Mathf.Clamp((distance + delta) / Mathf.Max(0.0001f, fitDistance),

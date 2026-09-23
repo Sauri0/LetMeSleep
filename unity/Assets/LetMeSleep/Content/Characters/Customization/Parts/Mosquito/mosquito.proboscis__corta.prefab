@@ -1,0 +1,209 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4154795934404881281
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1710977827318208163}
+  - component: {fileID: 3490030705850617152}
+  m_Layer: 0
+  m_Name: MosquitoPartProboscis
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1710977827318208163
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4154795934404881281}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4731092549685664126}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!137 &3490030705850617152
+SkinnedMeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4154795934404881281}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: c6a938220aabe7b4586bcf9703a2bae9, type: 2}
+  - {fileID: 2100000, guid: 400ead8f0a24d38449438479e4002c50, type: 2}
+  - {fileID: 2100000, guid: 964765b520f441240be7006a3e884f81, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  serializedVersion: 2
+  m_Quality: 4
+  m_UpdateWhenOffscreen: 0
+  m_SkinnedMotionVectors: 1
+  m_Mesh: {fileID: 2288827789987146943, guid: 57a986758b5f2f344853790a2a68c595, type: 3}
+  m_Bones: []
+  m_BlendShapeWeights: []
+  m_RootBone: {fileID: 0}
+  m_AABB:
+    m_Center: {x: 0, y: 0.06543467, z: -0.100240886}
+    m_Extent: {x: 0.011800007, y: 0.047984645, z: 0.048667487}
+  m_DirtyAABB: 0
+--- !u!1 &4310358637377535970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4731092549685664126}
+  - component: {fileID: 3972485044101718192}
+  m_Layer: 0
+  m_Name: mosquito.proboscis__corta
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4731092549685664126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4310358637377535970}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1710977827318208163}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3972485044101718192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4310358637377535970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2463d0627bf3ec84ba18e01e7b106f31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterCustomizationPart
+  Role: 1
+  SlotId: mosquito.proboscis
+  Kind: 2
+  TargetRigId: lms.mosquito.v030
+  TargetVisualScale: {x: 0.5, y: 0.5, z: 0.5}
+  FacialImpact: 0
+  SkinnedRenderers:
+  - Renderer: {fileID: 3490030705850617152}
+    RootBonePath: LMS_MosquitoRig/Root
+    BonePaths:
+    - LMS_MosquitoRig/Root
+    - LMS_MosquitoRig/Root/Thorax
+    - LMS_MosquitoRig/Root/Thorax/Head
+    - LMS_MosquitoRig/Root/Thorax/Head/Proboscis
+    - LMS_MosquitoRig/Root/Thorax/Head/Proboscis/Socket.Mouth
+    - LMS_MosquitoRig/Root/Thorax/Head/Socket.AimForward
+    - LMS_MosquitoRig/Root/Thorax/Head/Pupil.L
+    - LMS_MosquitoRig/Root/Thorax/Head/LidUpper.L
+    - LMS_MosquitoRig/Root/Thorax/Head/LidLower.L
+    - LMS_MosquitoRig/Root/Thorax/Head/Pupil.R
+    - LMS_MosquitoRig/Root/Thorax/Head/LidUpper.R
+    - LMS_MosquitoRig/Root/Thorax/Head/LidLower.R
+    - LMS_MosquitoRig/Root/Thorax/Abdomen01
+    - LMS_MosquitoRig/Root/Thorax/Abdomen01/Abdomen02
+    - LMS_MosquitoRig/Root/Thorax/Socket.Back
+    - LMS_MosquitoRig/Root/Thorax/Socket.CameraTarget
+    - LMS_MosquitoRig/Root/Thorax/Socket.WingRoot.L
+    - LMS_MosquitoRig/Root/Thorax/Socket.WingRoot.R
+    - LMS_MosquitoRig/Root/Thorax/Wing.L
+    - LMS_MosquitoRig/Root/Thorax/Leg101.L
+    - LMS_MosquitoRig/Root/Thorax/Leg101.L/Leg102.L
+    - LMS_MosquitoRig/Root/Thorax/Leg101.L/Leg102.L/Leg103.L
+    - LMS_MosquitoRig/Root/Thorax/Leg201.L
+    - LMS_MosquitoRig/Root/Thorax/Leg201.L/Leg202.L
+    - LMS_MosquitoRig/Root/Thorax/Leg201.L/Leg202.L/Leg203.L
+    - LMS_MosquitoRig/Root/Thorax/Leg301.L
+    - LMS_MosquitoRig/Root/Thorax/Leg301.L/Leg302.L
+    - LMS_MosquitoRig/Root/Thorax/Leg301.L/Leg302.L/Leg303.L
+    - LMS_MosquitoRig/Root/Thorax/Wing.R
+    - LMS_MosquitoRig/Root/Thorax/Leg101.R
+    - LMS_MosquitoRig/Root/Thorax/Leg101.R/Leg102.R
+    - LMS_MosquitoRig/Root/Thorax/Leg101.R/Leg102.R/Leg103.R
+    - LMS_MosquitoRig/Root/Thorax/Leg201.R
+    - LMS_MosquitoRig/Root/Thorax/Leg201.R/Leg202.R
+    - LMS_MosquitoRig/Root/Thorax/Leg201.R/Leg202.R/Leg203.R
+    - LMS_MosquitoRig/Root/Thorax/Leg301.R
+    - LMS_MosquitoRig/Root/Thorax/Leg301.R/Leg302.R
+    - LMS_MosquitoRig/Root/Thorax/Leg301.R/Leg302.R/Leg303.R
+    - LMS_MosquitoRig/Root/Socket.GroundContact
+  SocketParts: []
+  ColorChannels:
+  - Renderer: {fileID: 3490030705850617152}
+    MaterialIndex: 0
+    ColorSlotId: mosquito.color
+    Shade: 0
+    Alpha: 0
+  - Renderer: {fileID: 3490030705850617152}
+    MaterialIndex: 1
+    ColorSlotId: mosquito.color
+    Shade: 0.177
+    Alpha: 0
+  - Renderer: {fileID: 3490030705850617152}
+    MaterialIndex: 2
+    ColorSlotId: mosquito.color
+    Shade: 0.352
+    Alpha: 0
+  FirstPersonHeadRenderers: []
+  ConditionalRenderers: []

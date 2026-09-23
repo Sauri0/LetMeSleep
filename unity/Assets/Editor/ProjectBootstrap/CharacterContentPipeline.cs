@@ -9,7 +9,8 @@ namespace LetMeSleep.Editor
     /// <summary>
     /// Character re-import in dependency order, for batch mode (-executeMethod) and the editor menu:
     /// gameplay characters and their idempotence check, the living-menu actor derived from LMS_Human,
-    /// then the facial certificates of the four prefabs (a fresh FBX import invalidates them).
+    /// the facial certificates of the four prefabs (a fresh FBX import invalidates them), then the
+    /// modular customization (parts, catalog, hosts and the build scene's provider).
     /// Unlike AlfaBootstrapBuilder.Build it does not rebuild the boot scene, and unlike
     /// WindowsAlfaBuild.PrepareV020 it does not touch player or build settings.
     /// </summary>
@@ -33,7 +34,10 @@ namespace LetMeSleep.Editor
             }
             finally { Object.DestroyImmediate(transient); }
             AssetDatabase.SaveAssets();
-            Debug.Log("LMS_CHARACTER_PIPELINE_PASSED characters, living menu and facial certificates rebuilt");
+            // v0.3.0 modular customization: part prefabs, catalog, hosts on the four rebuilt prefabs and the scene
+            // provider (existing thumbnails are reassigned; bake new ones with InstallAllWithThumbnails).
+            CharacterCustomizationContentBuilder.InstallAll();
+            Debug.Log("LMS_CHARACTER_PIPELINE_PASSED characters, living menu, facial certificates and modular customization rebuilt");
         }
 
         private static GameObject Required(string path) =>

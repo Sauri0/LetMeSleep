@@ -9,6 +9,9 @@ namespace LetMeSleep.Content.Characters
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CharacterCustomizationHost))]
+    // After the cameras (MosquitoFollowCamera 1250, HumanViewCamera 1300): parts mirror the render state those
+    // cameras give the authored body in the same frame (see LateUpdate).
+    [DefaultExecutionOrder(1400)]
     public sealed class CharacterModularVisualAssembler : MonoBehaviour
     {
         private sealed class PartPlan
@@ -35,6 +38,8 @@ namespace LetMeSleep.Content.Characters
             public readonly List<GameObject> Objects = new List<GameObject>();
             public readonly List<Renderer> Heads = new List<Renderer>();
             public readonly List<CharacterView.ColorBinding> Colors = new List<CharacterView.ColorBinding>();
+            public readonly List<Renderer> Renderers = new List<Renderer>();
+            public readonly List<Renderer> Hidden = new List<Renderer>();
         }
 
         private struct ColorTarget : IEquatable<ColorTarget>
@@ -52,10 +57,16 @@ namespace LetMeSleep.Content.Characters
             new Dictionary<ColorTarget, MaterialPropertyBlock>();
         private Renderer[] appliedHeads = Array.Empty<Renderer>();
         private CharacterView.ColorBinding[] appliedColors = Array.Empty<CharacterView.ColorBinding>();
+        private Renderer[] appliedRenderers = Array.Empty<Renderer>();
+        private CharacterCustomizationHost appliedHost;
+        private bool mirroredForceOff;
         private CharacterView appliedView;
         private string appliedKey;
         private bool baseStatesCaptured;
         private bool baseSuppressed;
+
+        /// <summary>True once a modular appearance is on the view (the authored base is hidden).</summary>
+        public bool HasAppliedParts => appliedView != null && appliedObjects.Count > 0;
 
         public bool CanApply(CharacterView view, CharacterCustomizationCatalog catalog,
             CustomizationRole role, out string reason)
@@ -107,11 +118,30 @@ namespace LetMeSleep.Content.Characters
             RestoreAuthoredColorBlocks();
             appliedHeads = Array.Empty<Renderer>();
             appliedColors = Array.Empty<CharacterView.ColorBinding>();
+            appliedRenderers = Array.Empty<Renderer>();
+            appliedHost = null;
+            mirroredForceOff = false;
             appliedView = null;
             appliedKey = null;
         }
 
         private void OnDestroy() => ClearAppliedParts();
+
+        /// <summary>
+        /// The parts follow the render state other presentation code gives the authored body they replace: a camera
+        /// that hides its own actor while it is inside it (MosquitoFollowCamera sets forceRenderingOff on the
+        /// authored renderers it bound before the parts existed) hides the parts too, in the same frame.
+        /// </summary>
+        private void LateUpdate()
+        {
+            if (appliedRenderers.Length == 0 || appliedHost == null) return;
+            bool hidden = false;
+            foreach (var renderer in appliedHost.OwnedBaseRenderers ?? Array.Empty<Renderer>())
+                if (renderer != null && renderer.forceRenderingOff) { hidden = true; break; }
+            if (hidden == mirroredForceOff) return;
+            mirroredForceOff = hidden;
+            foreach (var renderer in appliedRenderers) if (renderer != null) renderer.forceRenderingOff = hidden;
+        }
 
         private bool TryBuildPlan(CharacterView view, CharacterCustomizationCatalog catalog,
             AppearanceSelection selection, CustomizationRole role, out ApplicationPlan plan, out string error)
@@ -270,6 +300,12 @@ namespace LetMeSleep.Content.Characters
             foreach (var binding in part.ColorChannels ?? Array.Empty<CharacterCustomizationPart.ColorChannelBinding>())
                 if (!TryValidateColorBinding(prefab.transform, binding, out error) || !declaredRenderers.Contains(binding.Renderer))
                 { if (string.IsNullOrEmpty(error)) error = "Part color binding renderer is not owned by the part."; return false; }
+            var conditional = new HashSet<Renderer>();
+            foreach (var binding in part.ConditionalRenderers ?? Array.Empty<CharacterCustomizationPart.ConditionalRendererBinding>())
+                if (binding == null || binding.Renderer == null || !declaredRenderers.Contains(binding.Renderer) ||
+                    !conditional.Add(binding.Renderer) || !plan.Snapshot.TrySlot(binding.HiddenWhenSlotSelected, out var other) ||
+                    other.Role != plan.Role || other.SlotId == slot.SlotId)
+                { error = "Conditional renderer needs an owned renderer and another slot of the same role: " + option.OptionId; return false; }
             error = string.Empty;
             return true;
         }
@@ -282,9 +318,8 @@ namespace LetMeSleep.Content.Characters
             foreach (var part in plan.Parts)
                 foreach (var binding in part.Part.ColorChannels ?? Array.Empty<CharacterCustomizationPart.ColorChannelBinding>())
                     if (!TryValidateSelectedColor(plan, binding, boundSlots, out error)) return false;
-            foreach (var color in plan.Colors.Keys)
-                if (!boundSlots.Contains(color))
-                { error = "Selected color slot has no declared renderer channel: " + color; return false; }
+            // A selected colour whose consumer is not worn (hair colour under no visible hair, pajama colour with
+            // jeans, marking colour without markings) stays in the selection and simply has nothing to tint.
             error = string.Empty;
             return true;
         }
@@ -325,7 +360,8 @@ namespace LetMeSleep.Content.Characters
                 prepared.Objects.Add(stagingRoot);
                 foreach (var source in plan.Host.ColorChannels ?? Array.Empty<CharacterCustomizationPart.ColorChannelBinding>())
                     prepared.Colors.Add(new CharacterView.ColorBinding
-                    { Renderer = source.Renderer, MaterialIndex = source.MaterialIndex, Category = source.ColorSlotId });
+                    { Renderer = source.Renderer, MaterialIndex = source.MaterialIndex, Category = source.ColorSlotId,
+                      Shade = source.Shade, Alpha = source.Alpha });
 
                 foreach (var item in plan.Parts)
                 {
@@ -355,7 +391,11 @@ namespace LetMeSleep.Content.Characters
                         prepared.Heads.Add(rendererMap[head]);
                     foreach (var color in item.Part.ColorChannels ?? Array.Empty<CharacterCustomizationPart.ColorChannelBinding>())
                         prepared.Colors.Add(new CharacterView.ColorBinding
-                        { Renderer = rendererMap[color.Renderer], MaterialIndex = color.MaterialIndex, Category = color.ColorSlotId });
+                        { Renderer = rendererMap[color.Renderer], MaterialIndex = color.MaterialIndex, Category = color.ColorSlotId,
+                          Shade = color.Shade, Alpha = color.Alpha });
+                    prepared.Renderers.AddRange(rendererMap.Values);
+                    foreach (var conditional in item.Part.ConditionalRenderers ?? Array.Empty<CharacterCustomizationPart.ConditionalRendererBinding>())
+                        if (IsWorn(plan, conditional.HiddenWhenSlotSelected)) prepared.Hidden.Add(rendererMap[conditional.Renderer]);
 
                     foreach (var socket in item.Part.SocketParts ?? Array.Empty<CharacterCustomizationPart.SocketBinding>())
                     {
@@ -394,6 +434,16 @@ namespace LetMeSleep.Content.Characters
                 foreach (var color in plan.Colors) plan.View.ApplyColor(color.Key, color.Value);
                 foreach (var renderer in plan.Host.OwnedBaseRenderers) if (renderer != null) renderer.enabled = false;
                 baseSuppressed = true;
+                var reference = plan.Host.OwnedBaseRenderers.FirstOrDefault(item => item != null);
+                bool keepHidden = mirroredForceOff && previousView == plan.View;
+                foreach (var renderer in staged.Renderers)
+                {
+                    if (renderer == null) continue;
+                    // Rendering layers given to the actor before the parts existed (a map's rim light) carry over.
+                    if (reference != null) renderer.renderingLayerMask |= reference.renderingLayerMask;
+                    renderer.forceRenderingOff = keepHidden;
+                }
+                foreach (var renderer in staged.Hidden) if (renderer != null) renderer.enabled = false;
                 foreach (var item in staged.Objects) if (item != null) item.SetActive(true);
             }
             catch
@@ -419,8 +469,18 @@ namespace LetMeSleep.Content.Characters
             appliedObjects.AddRange(staged.Objects);
             appliedHeads = staged.Heads.ToArray();
             appliedColors = staged.Colors.ToArray();
+            appliedRenderers = staged.Renderers.Where(item => item != null).Distinct().ToArray();
+            appliedHost = plan.Host;
+            if (previousView != plan.View) mirroredForceOff = false;
             appliedView = plan.View;
             appliedKey = plan.Key;
+        }
+
+        private static bool IsWorn(ApplicationPlan plan, string slotId)
+        {
+            string optionId = plan.Selection.For(plan.Role).OptionFor(slotId);
+            return plan.Snapshot.TrySlot(slotId, out var slot) && slot.TryOption(optionId ?? string.Empty, out var option) &&
+                   option.Kind != CustomizationOptionKind.None;
         }
 
         private void CaptureAuthoredBaseStates(CharacterCustomizationHost host)

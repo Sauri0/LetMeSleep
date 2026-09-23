@@ -1,0 +1,221 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6127926875324249908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5292306473483275739}
+  - component: {fileID: 2439066880433676735}
+  m_Layer: 0
+  m_Name: HumanPartHeadwear
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5292306473483275739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6127926875324249908}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7850431487962232580}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!137 &2439066880433676735
+SkinnedMeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6127926875324249908}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0cddac09df0de94458fd221cb74ecbfc, type: 2}
+  - {fileID: 2100000, guid: 17dac829a9731324abd286531a357fc1, type: 2}
+  - {fileID: 2100000, guid: 173b87cf85b82ea4886a77373b87e9af, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  serializedVersion: 2
+  m_Quality: 4
+  m_UpdateWhenOffscreen: 0
+  m_SkinnedMotionVectors: 1
+  m_Mesh: {fileID: 768971715975964151, guid: 682b72512406acc48825996e9861d0b5, type: 3}
+  m_Bones: []
+  m_BlendShapeWeights: []
+  m_RootBone: {fileID: 0}
+  m_AABB:
+    m_Center: {x: 0.044377983, y: 1.6030414, z: 0.05219829}
+    m_Extent: {x: 0.23049492, y: 0.16295826, z: 0.18991075}
+  m_DirtyAABB: 0
+--- !u!1 &8675138870260132959
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7850431487962232580}
+  - component: {fileID: 1729211397392832814}
+  m_Layer: 0
+  m_Name: human.headwear__gorro-dormir
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7850431487962232580
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8675138870260132959}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5292306473483275739}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1729211397392832814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8675138870260132959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2463d0627bf3ec84ba18e01e7b106f31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterCustomizationPart
+  Role: 0
+  SlotId: human.headwear
+  Kind: 2
+  TargetRigId: lms.human.v030
+  TargetVisualScale: {x: 1, y: 1, z: 1}
+  FacialImpact: 0
+  SkinnedRenderers:
+  - Renderer: {fileID: 2439066880433676735}
+    RootBonePath: LMS_HumanRig/Root
+    BonePaths:
+    - LMS_HumanRig/Root
+    - LMS_HumanRig/Root/Hips
+    - LMS_HumanRig/Root/Hips/Spine
+    - LMS_HumanRig/Root/Hips/Spine/Chest
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Neck
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Jaw
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Eye
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Socket.Head
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Eye.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Brow.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Eye.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Neck/Head/Brow.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Socket.Back
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Socket.AimChest
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Socket.Grip.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Index01.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Index01.L/Index02.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Index01.L/Index02.L/Index03.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Middle01.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Middle01.L/Middle02.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Middle01.L/Middle02.L/Middle03.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Ring01.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Ring01.L/Ring02.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Ring01.L/Ring02.L/Ring03.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Little01.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Little01.L/Little02.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Little01.L/Little02.L/Little03.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Thumb01.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Thumb01.L/Thumb02.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Thumb01.L/Thumb02.L/Thumb03.L
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Socket.Grip.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Index01.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Index01.R/Index02.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Index01.R/Index02.R/Index03.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Middle01.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Middle01.R/Middle02.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Middle01.R/Middle02.R/Middle03.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Ring01.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Ring01.R/Ring02.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Ring01.R/Ring02.R/Ring03.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Little01.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Little01.R/Little02.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Little01.R/Little02.R/Little03.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Thumb01.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Thumb01.R/Thumb02.R
+    - LMS_HumanRig/Root/Hips/Spine/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Thumb01.R/Thumb02.R/Thumb03.R
+    - LMS_HumanRig/Root/Hips/UpperLeg.L
+    - LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L
+    - LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L
+    - LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Toe.L
+    - LMS_HumanRig/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Socket.Foot.L
+    - LMS_HumanRig/Root/Hips/UpperLeg.R
+    - LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R
+    - LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R
+    - LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Toe.R
+    - LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Socket.Foot.R
+  SocketParts: []
+  ColorChannels: []
+  FirstPersonHeadRenderers:
+  - {fileID: 2439066880433676735}
+  ConditionalRenderers: []

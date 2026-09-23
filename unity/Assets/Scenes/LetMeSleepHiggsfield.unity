@@ -545,6 +545,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1606550386}
   - component: {fileID: 1606550385}
+  - component: {fileID: 1606550387}
   m_Layer: 0
   m_Name: Let me sleep
   m_TagString: Untagged
@@ -571,6 +572,7 @@ MonoBehaviour:
   MenuSwat: {fileID: 2540471617426251484, guid: 037d83dcdef3d204c96894ac2df9f658, type: 3}
   MenuReturn: {fileID: -1428263153942126663, guid: 037d83dcdef3d204c96894ac2df9f658, type: 3}
   MenuMosquitoFlight: {fileID: -1491716763371280848, guid: 483916dd41effed479826b9930069204, type: 3}
+  ModularCustomizationProvider: {fileID: 1606550387}
   HousePrefab: {fileID: 6303858240215231663, guid: db816c550ac380a4985a9355ca87416b, type: 3}
   LobbyPrefab: {fileID: 4966161366376445688, guid: 404d24d7c50ad1143bb1c5e9ec238ab8, type: 3}
   HumanPrefab: {fileID: 8410320189168980418, guid: 6c4acc1f866d9014ab97e5cf102f1036, type: 3}
@@ -601,6 +603,72 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1606550387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606550384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 771cc7ecece64b740a01c131a33b9e60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Bootstrap::LetMeSleep.Bootstrap.ModularCustomizationRuntimeProvider
+  Catalog: {fileID: 11400000, guid: bb378f6f11ba41448b0202c1c653698b, type: 2}
+  LegacyMappings:
+  - Kind: 0
+    LegacyId: light
+    SlotId: human.skin
+    OptionId: claro
+  - Kind: 0
+    LegacyId: warm
+    SlotId: human.skin
+    OptionId: calido
+  - Kind: 0
+    LegacyId: tan
+    SlotId: human.skin
+    OptionId: bronce
+  - Kind: 0
+    LegacyId: dark
+    SlotId: human.skin
+    OptionId: oscuro
+  - Kind: 1
+    LegacyId: blue
+    SlotId: human.pajama
+    OptionId: azul
+  - Kind: 1
+    LegacyId: red
+    SlotId: human.pajama
+    OptionId: rojo
+  - Kind: 1
+    LegacyId: green
+    SlotId: human.pajama
+    OptionId: verde
+  - Kind: 1
+    LegacyId: purple
+    SlotId: human.pajama
+    OptionId: violeta
+  - Kind: 1
+    LegacyId: yellow
+    SlotId: human.pajama
+    OptionId: mostaza
+  - Kind: 2
+    LegacyId: red
+    SlotId: mosquito.color
+    OptionId: natural
+  - Kind: 2
+    LegacyId: blue
+    SlotId: mosquito.color
+    OptionId: hielo
+  - Kind: 2
+    LegacyId: green
+    SlotId: mosquito.color
+    OptionId: bosque
+  - Kind: 2
+    LegacyId: purple
+    SlotId: mosquito.color
+    OptionId: fantasia
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

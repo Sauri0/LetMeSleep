@@ -1,0 +1,1510 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7c145a4dfb4bf5438a2970c88cf280e, type: 3}
+  m_Name: LMS_CustomizationCatalog
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterCustomizationCatalog
+  CatalogId: lms.v030.characters
+  Revision: 1
+  Slots:
+  - Role: 0
+    SlotId: human.base
+    Label: 
+    WireSlotId: 1
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 1
+    DefaultOptionId: base
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.skin
+    Label: TONO DE PIEL
+    WireSlotId: 2
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: calido
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.hair
+    Label: PELO
+    WireSlotId: 3
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: corto
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.hair_color
+    Label: COLOR DE PELO
+    WireSlotId: 4
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: castano
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.headwear
+    Label: GORROS
+    WireSlotId: 6
+    Required: 0
+    AllowsNone: 1
+    IsBaseSlot: 0
+    DefaultOptionId: gorro-dormir
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.glasses
+    Label: LENTES
+    WireSlotId: 7
+    Required: 0
+    AllowsNone: 1
+    IsBaseSlot: 0
+    DefaultOptionId: none
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.top
+    Label: REMERA
+    WireSlotId: 8
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: remera
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.top_color
+    Label: COLOR DE REMERA
+    WireSlotId: 9
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: crema
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.bottom
+    Label: "PANTAL\xD3N"
+    WireSlotId: 10
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: pijama
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.pajama
+    Label: COLOR DE PIJAMA
+    WireSlotId: 11
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: azul
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.footwear
+    Label: CALZADO
+    WireSlotId: 12
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: pantuflas
+    CompatibilityFamily: 
+  - Role: 0
+    SlotId: human.back
+    Label: MOCHILA
+    WireSlotId: 14
+    Required: 0
+    AllowsNone: 1
+    IsBaseSlot: 0
+    DefaultOptionId: none
+    CompatibilityFamily: 
+  - Role: 1
+    SlotId: mosquito.base
+    Label: 
+    WireSlotId: 15
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 1
+    DefaultOptionId: base
+    CompatibilityFamily: 
+  - Role: 1
+    SlotId: mosquito.color
+    Label: COLOR DEL CUERPO
+    WireSlotId: 16
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: natural
+    CompatibilityFamily: 
+  - Role: 1
+    SlotId: mosquito.wings
+    Label: ALAS
+    WireSlotId: 17
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: clasicas
+    CompatibilityFamily: 
+  - Role: 1
+    SlotId: mosquito.wing_color
+    Label: COLOR DE ALAS
+    WireSlotId: 18
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: lavanda
+    CompatibilityFamily: 
+  - Role: 1
+    SlotId: mosquito.proboscis
+    Label: "PROB\xD3SCIDE"
+    WireSlotId: 20
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: estandar
+    CompatibilityFamily: 
+  - Role: 1
+    SlotId: mosquito.markings
+    Label: MARCAS
+    WireSlotId: 22
+    Required: 0
+    AllowsNone: 1
+    IsBaseSlot: 0
+    DefaultOptionId: none
+    CompatibilityFamily: 
+  - Role: 1
+    SlotId: mosquito.accent_color
+    Label: COLOR DE MARCAS
+    WireSlotId: 23
+    Required: 1
+    AllowsNone: 0
+    IsBaseSlot: 0
+    DefaultOptionId: crema
+    CompatibilityFamily: 
+  - Role: 1
+    SlotId: mosquito.accessory
+    Label: ACCESORIO
+    WireSlotId: 24
+    Required: 0
+    AllowsNone: 1
+    IsBaseSlot: 0
+    DefaultOptionId: none
+    CompatibilityFamily: 
+  Options:
+  - Role: 0
+    SlotId: human.base
+    OptionId: base
+    WireOptionId: 1
+    Kind: 2
+    Label: Cuerpo
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 79e54b063c08058409f6ec7fa92a5a5b
+    RuntimeAsset: {fileID: 2726506480738119742, guid: 79e54b063c08058409f6ec7fa92a5a5b, type: 3}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.skin
+    OptionId: muy-claro
+    WireOptionId: 1
+    Kind: 1
+    Label: Muy claro
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4288134374
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.skin
+    OptionId: claro
+    WireOptionId: 2
+    Kind: 1
+    Label: Claro
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4286754531
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.skin
+    OptionId: calido
+    WireOptionId: 3
+    Kind: 1
+    Label: "C\xE1lido"
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4284124105
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.skin
+    OptionId: bronce
+    WireOptionId: 4
+    Kind: 1
+    Label: Bronce
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4281950620
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.skin
+    OptionId: morena
+    WireOptionId: 5
+    Kind: 1
+    Label: Morena
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4280829300
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.skin
+    OptionId: oscuro
+    WireOptionId: 6
+    Kind: 1
+    Label: Oscuro
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4280036430
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.hair
+    OptionId: corto
+    WireOptionId: 1
+    Kind: 2
+    Label: Corto
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 491b460accbbbda44ad1a07524a66bcc
+    RuntimeAsset: {fileID: 8531505874354942502, guid: 491b460accbbbda44ad1a07524a66bcc, type: 3}
+    Thumbnail: {fileID: 21300000, guid: ed3bb6ead55e6014b858854c3cab253b, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.hair
+    OptionId: despeinado
+    WireOptionId: 2
+    Kind: 2
+    Label: Despeinado
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 094c5f916bb6a0e4a80b405d2f891103
+    RuntimeAsset: {fileID: 5491926975617156044, guid: 094c5f916bb6a0e4a80b405d2f891103, type: 3}
+    Thumbnail: {fileID: 21300000, guid: e8bfcb6fc4778544cb83d5c3ce44b89d, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.hair
+    OptionId: rulos
+    WireOptionId: 3
+    Kind: 2
+    Label: Rulos
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: b847ba96fae5dba4b8498295ead4c3ff
+    RuntimeAsset: {fileID: 639889447754939339, guid: b847ba96fae5dba4b8498295ead4c3ff, type: 3}
+    Thumbnail: {fileID: 21300000, guid: f32bc11bc83f0754dbf4e6d14d137b54, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.hair_color
+    OptionId: castano
+    WireOptionId: 1
+    Kind: 1
+    Label: "Casta\xF1o"
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4279838266
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.hair_color
+    OptionId: negro
+    WireOptionId: 2
+    Kind: 1
+    Label: Negro
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4279506459
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.hair_color
+    OptionId: castano-claro
+    WireOptionId: 3
+    Kind: 1
+    Label: "Casta\xF1o claro"
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4280961142
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.hair_color
+    OptionId: rubio
+    WireOptionId: 4
+    Kind: 1
+    Label: Rubio
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4284132054
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.hair_color
+    OptionId: pelirrojo
+    WireOptionId: 5
+    Kind: 1
+    Label: Pelirrojo
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4280240296
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.hair_color
+    OptionId: canoso
+    WireOptionId: 6
+    Kind: 1
+    Label: Canoso
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4289442228
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.headwear
+    OptionId: none
+    WireOptionId: 0
+    Kind: 0
+    Label: Sin gorro
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 21300000, guid: ad0cc94886bbdfa4b9577cd30a99f4d4, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.headwear
+    OptionId: gorro-dormir
+    WireOptionId: 1
+    Kind: 2
+    Label: Gorro de dormir
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: d4288bfdcb854ce43b61cdaf5eed489c
+    RuntimeAsset: {fileID: 8675138870260132959, guid: d4288bfdcb854ce43b61cdaf5eed489c, type: 3}
+    Thumbnail: {fileID: 21300000, guid: be5c1d1109726ea4ca29e76ad9bafb7e, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.headwear
+    OptionId: gorra
+    WireOptionId: 2
+    Kind: 2
+    Label: Gorra roja
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 1f0172fbe8ae38442b598b80e4e67390
+    RuntimeAsset: {fileID: 7500709099911631701, guid: 1f0172fbe8ae38442b598b80e4e67390, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 93f8f5f8967da8b41a56598f2eb8ea7e, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.headwear
+    OptionId: gorro-lana
+    WireOptionId: 3
+    Kind: 2
+    Label: Gorro de lana
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: d7f91f678a178184dbe36ed2d29a99df
+    RuntimeAsset: {fileID: 7316296968942070852, guid: d7f91f678a178184dbe36ed2d29a99df, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 21f09e4415d36354a92dd8847d572aa7, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.glasses
+    OptionId: none
+    WireOptionId: 0
+    Kind: 0
+    Label: Sin lentes
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 21300000, guid: 530d8aaee888bee42b7c016e72f63bf0, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.glasses
+    OptionId: redondos
+    WireOptionId: 1
+    Kind: 2
+    Label: Redondos
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: fec3d46877ea3cc4a8c8aff7b0729af3
+    RuntimeAsset: {fileID: 331621416292479837, guid: fec3d46877ea3cc4a8c8aff7b0729af3, type: 3}
+    Thumbnail: {fileID: 21300000, guid: b7742a16776c57d4ab5210622afd7d8c, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.glasses
+    OptionId: sol
+    WireOptionId: 2
+    Kind: 2
+    Label: De sol
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: fd48f4d8722fd8b4da52eaa45d57a06d
+    RuntimeAsset: {fileID: 3031263198577326306, guid: fd48f4d8722fd8b4da52eaa45d57a06d, type: 3}
+    Thumbnail: {fileID: 21300000, guid: facd0226446e8294daa9bb901299448e, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top
+    OptionId: remera
+    WireOptionId: 1
+    Kind: 2
+    Label: Remera
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: fe3e6ade205658942aaea3d28352681b
+    RuntimeAsset: {fileID: 7272771466905653341, guid: fe3e6ade205658942aaea3d28352681b, type: 3}
+    Thumbnail: {fileID: 21300000, guid: c12d99d0c266f8b4ca52913418fbfd6d, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top
+    OptionId: buzo
+    WireOptionId: 2
+    Kind: 2
+    Label: Buzo con capucha
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: bf70abeaf2e2a3849b039c857d6ea908
+    RuntimeAsset: {fileID: 4425478243742049877, guid: bf70abeaf2e2a3849b039c857d6ea908, type: 3}
+    Thumbnail: {fileID: 21300000, guid: b0be9e68d08850e46929a42750f9d6a3, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top_color
+    OptionId: crema
+    WireOptionId: 1
+    Kind: 1
+    Label: Crema
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4288004575
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top_color
+    OptionId: blanco
+    WireOptionId: 2
+    Kind: 1
+    Label: Blanco
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4293061100
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top_color
+    OptionId: gris
+    WireOptionId: 3
+    Kind: 1
+    Label: Gris
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4288516491
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top_color
+    OptionId: negro
+    WireOptionId: 4
+    Kind: 1
+    Label: Negro
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4282332980
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top_color
+    OptionId: rojo
+    WireOptionId: 5
+    Kind: 1
+    Label: Rojo
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4281217736
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top_color
+    OptionId: azul
+    WireOptionId: 6
+    Kind: 1
+    Label: Azul
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4292243247
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top_color
+    OptionId: verde
+    WireOptionId: 7
+    Kind: 1
+    Label: Verde
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4283079486
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top_color
+    OptionId: amarillo
+    WireOptionId: 8
+    Kind: 1
+    Label: Amarillo
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4281385714
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.top_color
+    OptionId: naranja
+    WireOptionId: 9
+    Kind: 1
+    Label: Naranja
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4281104616
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.bottom
+    OptionId: pijama
+    WireOptionId: 1
+    Kind: 2
+    Label: Pijama con lunares
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 4a6adcb10ca8a0341946363b210780d9
+    RuntimeAsset: {fileID: 303578677347253031, guid: 4a6adcb10ca8a0341946363b210780d9, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 8284af23119db2e4093c286d38381ec2, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.bottom
+    OptionId: jean
+    WireOptionId: 2
+    Kind: 2
+    Label: Jean
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 25c8b536f28364b4d9d02cf47cd8aa31
+    RuntimeAsset: {fileID: 1636705855974221213, guid: 25c8b536f28364b4d9d02cf47cd8aa31, type: 3}
+    Thumbnail: {fileID: 21300000, guid: c22d06bf1f6f9024998d79a8d5873296, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.pajama
+    OptionId: azul
+    WireOptionId: 1
+    Kind: 1
+    Label: Azul
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4288302893
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.pajama
+    OptionId: rojo
+    WireOptionId: 2
+    Kind: 1
+    Label: Rojo
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4280888230
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.pajama
+    OptionId: verde
+    WireOptionId: 3
+    Kind: 1
+    Label: Verde
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4282738217
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.pajama
+    OptionId: violeta
+    WireOptionId: 4
+    Kind: 1
+    Label: Violeta
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4287576166
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.pajama
+    OptionId: mostaza
+    WireOptionId: 5
+    Kind: 1
+    Label: Mostaza
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4281240248
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.pajama
+    OptionId: celeste
+    WireOptionId: 6
+    Kind: 1
+    Label: Celeste
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4291596111
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.footwear
+    OptionId: pantuflas
+    WireOptionId: 1
+    Kind: 2
+    Label: Pantuflas
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 79ebc13ad8c6b424d8bb0cbe4fc7385b
+    RuntimeAsset: {fileID: 4952766411850495105, guid: 79ebc13ad8c6b424d8bb0cbe4fc7385b, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 394a82b6cccc6bf47b451fc952150e91, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.footwear
+    OptionId: zapatillas
+    WireOptionId: 2
+    Kind: 2
+    Label: Zapatillas
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: f4e927042eed92d4b8ea6a462d61fa43
+    RuntimeAsset: {fileID: 5694191508702074481, guid: f4e927042eed92d4b8ea6a462d61fa43, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 71ee2ae5762fb0144919f9159ca1f27f, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.back
+    OptionId: none
+    WireOptionId: 0
+    Kind: 0
+    Label: Sin mochila
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 21300000, guid: e38d93a5eea25d64fa44241d9741be67, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 0
+    SlotId: human.back
+    OptionId: mochila
+    WireOptionId: 1
+    Kind: 2
+    Label: Mochila
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: e91b63b311e18f044a6d39d012ea351d
+    RuntimeAsset: {fileID: 1966986820123218891, guid: e91b63b311e18f044a6d39d012ea351d, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 8d1b4ef4ea6aa8a4ca9a8f765cb59569, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.base
+    OptionId: base
+    WireOptionId: 1
+    Kind: 2
+    Label: Cuerpo
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 8c341eeb7e63fa94b852cc5ce8052a58
+    RuntimeAsset: {fileID: 8040650020519663714, guid: 8c341eeb7e63fa94b852cc5ce8052a58, type: 3}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.color
+    OptionId: natural
+    WireOptionId: 1
+    Kind: 1
+    Label: Natural
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4280820382
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.color
+    OptionId: bosque
+    WireOptionId: 2
+    Kind: 1
+    Label: Bosque
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4282280540
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.color
+    OptionId: desierto
+    WireOptionId: 3
+    Kind: 1
+    Label: Desierto
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4283400617
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.color
+    OptionId: urbano
+    WireOptionId: 4
+    Kind: 1
+    Label: Urbano
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4284830026
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.color
+    OptionId: fantasia
+    WireOptionId: 5
+    Kind: 1
+    Label: "Fantas\xEDa"
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4292432485
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.color
+    OptionId: toxico
+    WireOptionId: 6
+    Kind: 1
+    Label: "T\xF3xico"
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4281514077
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.color
+    OptionId: sangre
+    WireOptionId: 7
+    Kind: 1
+    Label: Sangre
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4279833707
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.color
+    OptionId: hielo
+    WireOptionId: 8
+    Kind: 1
+    Label: Hielo
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4292719481
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.wings
+    OptionId: clasicas
+    WireOptionId: 1
+    Kind: 2
+    Label: "Cl\xE1sicas"
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 1cae6b7e020dca24186c80def44997e2
+    RuntimeAsset: {fileID: 3462832913044419042, guid: 1cae6b7e020dca24186c80def44997e2, type: 3}
+    Thumbnail: {fileID: 21300000, guid: cd87523a3f248c5489c58be0bd457320, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.wings
+    OptionId: redondas
+    WireOptionId: 2
+    Kind: 2
+    Label: Redondas
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 70e476225160aed4daccdbf3bea74758
+    RuntimeAsset: {fileID: 59533614138502458, guid: 70e476225160aed4daccdbf3bea74758, type: 3}
+    Thumbnail: {fileID: 21300000, guid: ab4eb422b5758aa48b3ed6e70b84d512, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.wings
+    OptionId: largas
+    WireOptionId: 3
+    Kind: 2
+    Label: Largas
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 076a062a53175ec4095c2147af02974d
+    RuntimeAsset: {fileID: 9001391595294195608, guid: 076a062a53175ec4095c2147af02974d, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 3b32013ab5c6fb045849ec8fec9a0e45, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.wing_color
+    OptionId: lavanda
+    WireOptionId: 1
+    Kind: 1
+    Label: Lavanda
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294362316
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.wing_color
+    OptionId: celeste
+    WireOptionId: 2
+    Kind: 1
+    Label: Celeste
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294435513
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.wing_color
+    OptionId: rosa
+    WireOptionId: 3
+    Kind: 1
+    Label: Rosa
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4292723445
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.wing_color
+    OptionId: menta
+    WireOptionId: 4
+    Kind: 1
+    Label: Menta
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4292276415
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.wing_color
+    OptionId: ambar
+    WireOptionId: 5
+    Kind: 1
+    Label: "\xC1mbar"
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4288601334
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.wing_color
+    OptionId: humo
+    WireOptionId: 6
+    Kind: 1
+    Label: Humo
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4290290847
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.proboscis
+    OptionId: estandar
+    WireOptionId: 1
+    Kind: 2
+    Label: "Est\xE1ndar"
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: d334960f4169b7d438473ab4be51dde4
+    RuntimeAsset: {fileID: 6465931720489023770, guid: d334960f4169b7d438473ab4be51dde4, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 9c191bbd4782a7d498ecac57c0e5f9c5, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.proboscis
+    OptionId: corta
+    WireOptionId: 2
+    Kind: 2
+    Label: Corta
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 8ae30856458e93f43a478ca910639ff1
+    RuntimeAsset: {fileID: 4310358637377535970, guid: 8ae30856458e93f43a478ca910639ff1, type: 3}
+    Thumbnail: {fileID: 21300000, guid: ccd8fd6f8b5a0be4bb7d7d68606c9456, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.proboscis
+    OptionId: larga
+    WireOptionId: 3
+    Kind: 2
+    Label: Larga
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 1223c2f9e5baec84e9eae00575982422
+    RuntimeAsset: {fileID: 9104439052861705330, guid: 1223c2f9e5baec84e9eae00575982422, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 77611c3ca317def4bbe74e13ff0c359d, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.proboscis
+    OptionId: curva
+    WireOptionId: 4
+    Kind: 2
+    Label: Curva
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 825c18b18ff89f14ea3ae0c1a249f8d8
+    RuntimeAsset: {fileID: 9075446844609066519, guid: 825c18b18ff89f14ea3ae0c1a249f8d8, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 437664969ede0004bbdf55c15104e883, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.markings
+    OptionId: none
+    WireOptionId: 0
+    Kind: 0
+    Label: Sin marcas
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 21300000, guid: 2de42db797953374d9e12b54d4c013a2, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.markings
+    OptionId: anillos
+    WireOptionId: 1
+    Kind: 2
+    Label: Anillos
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 20d9cb021484f834290ff57b4db7cd33
+    RuntimeAsset: {fileID: 4768635965608526537, guid: 20d9cb021484f834290ff57b4db7cd33, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 5ce83d94c6bac804897a04074e2cf0f8, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.markings
+    OptionId: lunares
+    WireOptionId: 2
+    Kind: 2
+    Label: Lunares
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 2584e7d57ec83de4eaabcc1a8e08179d
+    RuntimeAsset: {fileID: 6537947643374591472, guid: 2584e7d57ec83de4eaabcc1a8e08179d, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 2ad7277fad682e74196fd428c456c80c, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.markings
+    OptionId: rayas
+    WireOptionId: 3
+    Kind: 2
+    Label: Rayas
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: d0bdf45f70999884bb0a5e78adb24f73
+    RuntimeAsset: {fileID: 154273070716436117, guid: d0bdf45f70999884bb0a5e78adb24f73, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 7c52f8088d8e4ae43895ffda219cf4b9, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.accent_color
+    OptionId: crema
+    WireOptionId: 1
+    Kind: 1
+    Label: Crema
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4292733938
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.accent_color
+    OptionId: negro
+    WireOptionId: 2
+    Kind: 1
+    Label: Negro
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4279768605
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.accent_color
+    OptionId: amarillo
+    WireOptionId: 3
+    Kind: 1
+    Label: Amarillo
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4281385714
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.accent_color
+    OptionId: naranja
+    WireOptionId: 4
+    Kind: 1
+    Label: Naranja
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4281039598
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.accent_color
+    OptionId: verde
+    WireOptionId: 5
+    Kind: 1
+    Label: Verde
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4282110590
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.accent_color
+    OptionId: celeste
+    WireOptionId: 6
+    Kind: 1
+    Label: Celeste
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294100588
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.accent_color
+    OptionId: violeta
+    WireOptionId: 7
+    Kind: 1
+    Label: Violeta
+    HasSwatch: 1
+    Swatch:
+      serializedVersion: 2
+      rgba: 4292897690
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 0}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.accessory
+    OptionId: none
+    WireOptionId: 0
+    Kind: 0
+    Label: Ninguno
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 
+    RuntimeAsset: {fileID: 0}
+    Thumbnail: {fileID: 21300000, guid: 7dfbf3c996b21144b8b048e3bec04031, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.accessory
+    OptionId: hoja
+    WireOptionId: 1
+    Kind: 2
+    Label: Hoja
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: ffbbb79e030aca44b92c25617cbd2d19
+    RuntimeAsset: {fileID: 5526378695493833276, guid: ffbbb79e030aca44b92c25617cbd2d19, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 180bdb88f403dcf4fb9bd04657620084, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []
+  - Role: 1
+    SlotId: mosquito.accessory
+    OptionId: flor
+    WireOptionId: 2
+    Kind: 2
+    Label: Flor
+    HasSwatch: 0
+    Swatch:
+      serializedVersion: 2
+      rgba: 4294967295
+    AssetId: 36f7e11503bdb7a4094550a7e3e5338a
+    RuntimeAsset: {fileID: 6286639191125974705, guid: 36f7e11503bdb7a4094550a7e3e5338a, type: 3}
+    Thumbnail: {fileID: 21300000, guid: 072d73c41e22f0e45822322bed9bab87, type: 3}
+    CompatibleBaseOptionIds: []
+    CompatibilityTags: []
+    IncompatibleSlotIds: []

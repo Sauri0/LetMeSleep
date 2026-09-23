@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 939346545710557321}
   - component: {fileID: 8881669909046781372}
   - component: {fileID: 7338508213201193124}
+  - component: {fileID: 1268768474534290646}
+  - component: {fileID: 6543025384255664514}
   m_Layer: 0
   m_Name: LMS_Human_FirstPerson
   m_TagString: Untagged
@@ -88,26 +90,32 @@ MonoBehaviour:
     MaterialIndex: 0
     Category: Skin
     Shade: 0
+    Alpha: 0
   - Renderer: {fileID: 7049036109162105358}
     MaterialIndex: 0
     Category: Skin
     Shade: 0
+    Alpha: 0
   - Renderer: {fileID: 3433676978076908943}
     MaterialIndex: 1
     Category: Skin
     Shade: 0
+    Alpha: 0
   - Renderer: {fileID: 3433676978076908943}
     MaterialIndex: 2
     Category: Pajamas
     Shade: 0
+    Alpha: 0
   - Renderer: {fileID: 3433676978076908943}
     MaterialIndex: 4
     Category: Pajamas
     Shade: 0.193
+    Alpha: 0
   - Renderer: {fileID: 2609427107458568288}
     MaterialIndex: 0
     Category: Skin
     Shade: 0
+    Alpha: 0
   Motions:
   - Id: 0
     StateName: Base Layer.Idle
@@ -246,6 +254,59 @@ MonoBehaviour:
     EyeYawLimit: 22
     EyePitchLimit: 15
     ManualEvaluation: 0
+--- !u!114 &1268768474534290646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697310420551830672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb45704dae4bbb4468f6977a9d5b31e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterCustomizationHost
+  Role: 0
+  View: {fileID: 939346545710557321}
+  RigId: lms.human.v030
+  ExpectedVisualScale: {x: 1, y: 1, z: 1}
+  PartsRoot: {fileID: 7198406345329782193}
+  OwnedBaseRenderers:
+  - {fileID: 3433676978076908943}
+  - {fileID: 6024549494459180835}
+  ColorChannels:
+  - Renderer: {fileID: 2609427107458568288}
+    MaterialIndex: 0
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+  - Renderer: {fileID: 2609427107458568288}
+    MaterialIndex: 4
+    ColorSlotId: human.hair_color
+    Shade: 0
+    Alpha: 0
+  - Renderer: {fileID: 4142387061027684639}
+    MaterialIndex: 0
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+  - Renderer: {fileID: 7049036109162105358}
+    MaterialIndex: 0
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+--- !u!114 &6543025384255664514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697310420551830672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 927feed84aca92643b9f1462e0a90b9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterModularVisualAssembler
 --- !u!1 &1362711562768657105
 GameObject:
   m_ObjectHideFlags: 0
@@ -501,7 +562,39 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3237234430416751615}
+  - {fileID: 7198406345329782193}
   m_Father: {fileID: 3189013030155719438}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7325980665834301166
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7198406345329782193}
+  m_Layer: 0
+  m_Name: CustomizationParts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7198406345329782193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7325980665834301166}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6596358165419477381}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7798176990981438838
 GameObject:

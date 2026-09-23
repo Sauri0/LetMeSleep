@@ -799,10 +799,18 @@ namespace LetMeSleep.UI
         {
             var key = ((slot.SlotId ?? string.Empty) + " " + (slot.Label ?? string.Empty)).ToLowerInvariant();
             bool Has(params string[] words) => words.Any(word => key.Contains(word));
+            // A colour category shows the palette (the skin tone keeps its face): "COLOR DE ALAS" is not a wing style.
+            var visible = slot.Options.Where(option => option.Kind != CustomizationOptionKind.None).ToList();
+            if (visible.Count > 0 && visible.All(option => option.HasSwatch))
+                return Has("skin", "piel", "tono") ? AlfaUiIconKind.Face : AlfaUiIconKind.Palette;
             if (Has("wing", "ala")) return AlfaUiIconKind.Wings;
-            if (Has("eye", "ojo")) return AlfaUiIconKind.Eye;
+            if (Has("eye", "ojo", "glass", "lente", "anteojo")) return AlfaUiIconKind.Eye;
             if (Has("probosc", "trompa", "aguij", "sting")) return AlfaUiIconKind.Proboscis;
             if (Has("hat", "gorro", "gorra", "sombrero", "cap", "casco")) return AlfaUiIconKind.Hat;
+            if (Has("hair", "pelo", "peinado")) return AlfaUiIconKind.Face;
+            if (Has("pantal", "bottom", "jean")) return AlfaUiIconKind.Customize;
+            if (Has("mochila", "backpack")) return AlfaUiIconKind.Explore;
+            if (Has("accesor", "accessor")) return AlfaUiIconKind.Crown;
             if (Has("skin", "piel", "tono", "cara", "face")) return AlfaUiIconKind.Face;
             if (Has("shoe", "slipper", "pantufla", "calzado")) return AlfaUiIconKind.Slipper;
             if (Has("pajama", "pijama", "outfit", "ropa", "shirt", "remera", "camis")) return AlfaUiIconKind.Customize;

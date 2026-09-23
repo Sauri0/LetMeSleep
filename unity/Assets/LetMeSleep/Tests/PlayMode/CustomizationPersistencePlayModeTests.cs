@@ -318,11 +318,27 @@ namespace LetMeSleep.Tests.PlayMode
             }
         }
 
+        /// <summary>
+        /// v0.3.0: the build scene carries the production modular provider, so a schema-1 file migrates to schema 2 on
+        /// boot. These tests cover the basic mode that stays the fallback when no modular runtime resolves; the scene's
+        /// provider is detached after Awake/OnEnable and before AlfaApplication.Start (sceneLoaded runs in between).
+        /// </summary>
+        private static void DetachSceneModularProvider(Scene scene, LoadSceneMode mode)
+        {
+            foreach (var root in scene.GetRootGameObjects())
+                foreach (var app in root.GetComponentsInChildren<AlfaApplication>(true)) app.ModularCustomizationProvider = null;
+        }
+
         private IEnumerator ReloadBootScene()
         {
-            AsyncOperation load = SceneManager.LoadSceneAsync(BootScene, LoadSceneMode.Single);
-            Assert.That(load, Is.Not.Null, $"{BootScene} must be present and enabled in Build Settings.");
-            while (!load.isDone) yield return null;
+            SceneManager.sceneLoaded += DetachSceneModularProvider;
+            try
+            {
+                AsyncOperation load = SceneManager.LoadSceneAsync(BootScene, LoadSceneMode.Single);
+                Assert.That(load, Is.Not.Null, $"{BootScene} must be present and enabled in Build Settings.");
+                while (!load.isDone) yield return null;
+            }
+            finally { SceneManager.sceneLoaded -= DetachSceneModularProvider; }
             yield return null;
             application = Object.FindFirstObjectByType<AlfaApplication>();
             Assert.That(application, Is.Not.Null, "The boot scene must start AlfaApplication.");

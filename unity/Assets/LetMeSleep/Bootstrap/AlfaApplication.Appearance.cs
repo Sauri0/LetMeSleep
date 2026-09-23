@@ -25,6 +25,7 @@ namespace LetMeSleep.Bootstrap
 
         private void TickAppearance(double now)
         {
+            DressFreshModularVisuals(now);
             if (now < appearanceAt) return;
             appearanceAt = now + 2;
             peerAppearanceState.Synchronize(room?.Current, lobby?.Code);
@@ -53,6 +54,34 @@ namespace LetMeSleep.Bootstrap
                 foreach(var actor in activeRoster)
                     if(game.World.Actors.TryGetValue(actor.ActorId,out var proxy)) ApplyLive(proxy.GetComponentInChildren<CharacterView>(),actor.OwnerPuid);
         }
+        private double freshVisualsAt;
+
+        /// <summary>
+        /// Modular appearances are applied as soon as a menu, lobby or gameplay actor appears (checked four times a
+        /// second) instead of at the next two-second appearance tick, so a new actor never shows the authored
+        /// default look (pajama and nightcap) before switching to its owner's outfit.
+        /// </summary>
+        private void DressFreshModularVisuals(double now)
+        {
+            if (!ModularCustomizationAvailable || now < freshVisualsAt) return;
+            freshVisualsAt = now + .25;
+            if (menuCharacters && menuCharacters.activeInHierarchy)
+                foreach (var view in menuCharacters.GetComponentsInChildren<CharacterView>()) DressIfFresh(view, LocalId);
+            if (lobbyMovement && room?.Current != null)
+                foreach (var member in room.Current.Members)
+                    if (lobbyMovement.TryGetVisual(member.Id, out var visual) && visual) DressIfFresh(visual.GetComponentInChildren<CharacterView>(), member.Id);
+            if (game && activeRoster != null)
+                foreach (var actor in activeRoster)
+                    if (game.World.Actors.TryGetValue(actor.ActorId, out var proxy) && proxy) DressIfFresh(proxy.GetComponentInChildren<CharacterView>(), actor.OwnerPuid);
+        }
+
+        private void DressIfFresh(CharacterView view, string owner)
+        {
+            if (!view) return;
+            var assembler = view.GetComponent<CharacterModularVisualAssembler>();
+            if (assembler && !assembler.HasAppliedParts) ApplyLive(view, owner);
+        }
+
         private void ApplyLive(CharacterView view,string owner)
         {
             if (!view) return;

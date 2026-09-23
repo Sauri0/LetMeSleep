@@ -40,6 +40,21 @@ namespace LetMeSleep.Content.Characters
             public int MaterialIndex;
             [Tooltip("Catalog slot whose selected Color option drives this material index.")]
             public string ColorSlotId;
+            [Tooltip("0 applies the chosen colour as is; 0.3 applies it 30 % darker (authored shade facets).")]
+            [Range(0f, .9f)] public float Shade;
+            [Tooltip("0 keeps the chosen colour's alpha; a positive value forces this alpha (translucent membranes).")]
+            [Range(0f, 1f)] public float Alpha;
+        }
+
+        /// <summary>A renderer of this part that stays hidden while another slot of the same role has a visible
+        /// (non-none) selection, e.g. the top of a hairstyle under any hat. Presentation only: the selection, the
+        /// catalog fingerprint and the wire format are unchanged.</summary>
+        [Serializable]
+        public sealed class ConditionalRendererBinding
+        {
+            public Renderer Renderer;
+            [Tooltip("Catalog slot of the same role whose non-none selection hides the renderer.")]
+            public string HiddenWhenSlotSelected;
         }
 
         public CustomizationRole Role;
@@ -55,5 +70,7 @@ namespace LetMeSleep.Content.Characters
         public ColorChannelBinding[] ColorChannels = Array.Empty<ColorChannelBinding>();
         [Tooltip("Renderers that must follow CharacterView first-person head visibility.")]
         public Renderer[] FirstPersonHeadRenderers = Array.Empty<Renderer>();
+        [Tooltip("Renderers hidden while another slot of the role has a non-none selection (hair under hats).")]
+        public ConditionalRendererBinding[] ConditionalRenderers = Array.Empty<ConditionalRendererBinding>();
     }
 }
