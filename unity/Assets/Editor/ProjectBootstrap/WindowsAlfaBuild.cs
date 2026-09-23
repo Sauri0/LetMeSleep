@@ -109,7 +109,8 @@ namespace LetMeSleep.Editor
             }
             finally
             {
-                if (File.Exists(onlineConfig)) File.Delete(onlineConfig);
+                foreach (string file in new[] { onlineConfig, onlineConfig + ".meta" }) // both git-ignored
+                    if (File.Exists(file)) File.Delete(file);
             }
             bool succeeded = report.summary.result == BuildResult.Succeeded && report.summary.totalErrors == 0;
             string[] releaseProblems = succeeded && release ? ReleaseProblems(LastOutput) : new string[0];
