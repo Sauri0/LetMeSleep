@@ -25,6 +25,7 @@ namespace LetMeSleep.Online
         private bool membershipDirty = true;
         private bool disposed;
         private readonly PacketHandlerList packetHandlers = new PacketHandlerList();
+        private readonly PeerPacketBudget receiveBudget = new PeerPacketBudget();
         private static readonly Action<Exception> LogHandlerFailure = error => UnityEngine.Debug.LogException(error);
         // Each consumer runs isolated: one failing handler must not cut the drain for everyone else.
         public event Action<string, byte, ArraySegment<byte>> PacketReceived
@@ -88,8 +89,10 @@ namespace LetMeSleep.Online
             if (!SessionUsable) return;
             if (membershipDirty || links.HasDueRetry(Now)) ReconcileMembers();
             var options = new ReceivePacketOptions { LocalUserId = connection.LocalUserId, MaxDataSizeBytes = MaximumPacketBytes };
-            // Bound work even if a member floods the room. Payload validation is the next layer.
-            for (int packet = 0; packet < 128; packet++)
+            double now = Now;
+            // Bound work even if a member floods the room. Payload validation is the next layer. A sender above its
+            // budget is discarded here, cheaply, so it cannot hold back the packets queued behind it by other members.
+            for (int packet = 0; packet < PeerPacketBudget.ReadsPerFrame; packet++)
             {
                 ProductUserId peer = null;
                 var sourceSocket = new SocketId();
@@ -99,7 +102,9 @@ namespace LetMeSleep.Online
                 if (result != Result.Success) break;
                 if (room.State != LobbyState.Connected || peer == null || sourceSocket.SocketName != socket.SocketName || !IsSupportedChannel(channel)) continue;
                 string member = peer.ToString();
-                if (room.Contains(member)) packetHandlers.Dispatch(member, channel, new ArraySegment<byte>(receiveBuffer, 0, (int)length), LogHandlerFailure);
+                if (!room.Contains(member)) continue;
+                if (!receiveBudget.TryAccept(member, now)) { ReportIssue(member, "ReceiveBudgetExceeded", now); continue; }
+                packetHandlers.Dispatch(member, channel, new ArraySegment<byte>(receiveBuffer, 0, (int)length), LogHandlerFailure);
             }
         }
 
@@ -117,7 +122,7 @@ namespace LetMeSleep.Online
             double now = Now;
             string local = connection.LocalUserId?.ToString();
             links.Reconcile(room.State == LobbyState.Connected ? room.CaptureMembers() : Array.Empty<string>(), local, now, acceptNow, closeNow);
-            foreach (var member in closeNow) Close(member);
+            foreach (var member in closeNow) { Close(member); receiveBudget.Forget(member); }
             foreach (var member in acceptNow) Accept(member, now);
         }
 
@@ -182,7 +187,7 @@ namespace LetMeSleep.Online
             p2p.RemoveNotifyPeerConnectionClosed(closedNotification);
             var close = new CloseConnectionsOptions { LocalUserId = connection.LocalUserId, SocketId = socket };
             p2p.CloseConnections(ref close);
-            links.Clear();
+            links.Clear(); receiveBudget.Clear();
             packetHandlers.Clear(); PeerStateChanged = null; DeliveryIssue = null;
         }
     }
