@@ -15,26 +15,27 @@ MonoBehaviour:
   entries:
   - MapId: hf-isla-del-laguito-v2
     DisplayName: Isla del laguito
+    CameraFarPlane: 160
     Prefab: {fileID: 1099540524772273299, guid: 795ff893e2d34f94bab5c9abb1233ed9, type: 3}
     Lighting:
       MapId: 0
-      Skybox: {fileID: 2100000, guid: a9cf3ab4ea4e26444a7e3f400a8c8e8f, type: 2}
+      Skybox: {fileID: 2100000, guid: 4752afb77574391489b635f0c519bbd1, type: 2}
       SunWorldRotation: {x: 0.38791162, y: -0.2747084, z: 0.12230806, w: 0.87126374}
-      SunColor: {r: 1, g: 0.94, b: 0.82, a: 1}
-      SunUnityIntensity: 1.05
+      SunColor: {r: 1, g: 0.95, b: 0.84, a: 1}
+      SunUnityIntensity: 1.25
       SunShadows: 2
-      AmbientSky: {r: 0.6, g: 0.72, b: 0.85, a: 1}
-      AmbientEquator: {r: 0.45, g: 0.5, b: 0.55, a: 1}
-      AmbientGround: {r: 0.28, g: 0.3, b: 0.26, a: 1}
+      AmbientSky: {r: 0.58, g: 0.72, b: 0.9, a: 1}
+      AmbientEquator: {r: 0.56, g: 0.62, b: 0.62, a: 1}
+      AmbientGround: {r: 0.36, g: 0.34, b: 0.26, a: 1}
       AmbientIntensity: 1
-      ReflectionIntensity: 1
-      FogEnabled: 0
-      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-      FogMode: 3
-      FogStart: 0
-      FogEnd: 300
+      ReflectionIntensity: 0.6
+      FogEnabled: 1
+      FogColor: {r: 0.72, g: 0.86, b: 0.96, a: 1}
+      FogMode: 1
+      FogStart: 45
+      FogEnd: 150
       FogDensity: 0.01
-      VolumeProfile: {fileID: 0}
+      VolumeProfile: {fileID: 11400000, guid: 7a49b0d1b96d7d043aae709c430c9297, type: 2}
       VolumeWeight: 1
       CullingMask: -1073741825
       LocalLights: []
@@ -43,26 +44,27 @@ MonoBehaviour:
     SuppressLightPaths: []
   - MapId: hf-casa-del-patio-v1
     DisplayName: Casa del patio
+    CameraFarPlane: 0
     Prefab: {fileID: 1212557850719198287, guid: e9dd8500e4fe1f047b262251ac1ec315, type: 3}
     Lighting:
       MapId: 1
-      Skybox: {fileID: 2100000, guid: fcb5d519da824e244b45e54ea32149d6, type: 2}
-      SunWorldRotation: {x: 0.38791162, y: -0.2747084, z: 0.12230806, w: 0.87126374}
-      SunColor: {r: 0.5, g: 0.65, b: 1, a: 1}
-      SunUnityIntensity: 0.1
+      Skybox: {fileID: 2100000, guid: 5c88d0c9d7545424ea80bfb686dbf227, type: 2}
+      SunWorldRotation: {x: 0.2961374, y: 0.16561121, z: -0.052217014, w: 0.9392278}
+      SunColor: {r: 0.62, g: 0.74, b: 1, a: 1}
+      SunUnityIntensity: 0.14
       SunShadows: 2
-      AmbientSky: {r: 0.05, g: 0.08, b: 0.14, a: 1}
-      AmbientEquator: {r: 0.03, g: 0.045, b: 0.075, a: 1}
-      AmbientGround: {r: 0.015, g: 0.02, b: 0.035, a: 1}
+      AmbientSky: {r: 0.13, g: 0.18, b: 0.32, a: 1}
+      AmbientEquator: {r: 0.1, g: 0.11, b: 0.18, a: 1}
+      AmbientGround: {r: 0.06, g: 0.055, b: 0.07, a: 1}
       AmbientIntensity: 1
-      ReflectionIntensity: 1
-      FogEnabled: 0
-      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-      FogMode: 3
-      FogStart: 0
-      FogEnd: 300
+      ReflectionIntensity: 0.5
+      FogEnabled: 1
+      FogColor: {r: 0.15, g: 0.21, b: 0.38, a: 1}
+      FogMode: 1
+      FogStart: 18
+      FogEnd: 90
       FogDensity: 0.01
-      VolumeProfile: {fileID: 0}
+      VolumeProfile: {fileID: 11400000, guid: 435999e8a162654478085d5bdc2e6d65, type: 2}
       VolumeWeight: 1
       CullingMask: -1073741825
       LocalLights: []
@@ -72,235 +74,278 @@ MonoBehaviour:
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.2
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Porch_Lamp_R_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.2
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Rear_Lamp_L_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.2
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Rear_Lamp_R_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.2
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Shed_Lamp_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.2
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor.001
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor.002
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor.003
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Interior_Living_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.76, b: 0.52, a: 1}
+        UnityIntensity: 1.6
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 1
+        Flicker: 0
     - AnchorPath: Environment/CASA_Interior_Kitchen_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.76, b: 0.52, a: 1}
+        UnityIntensity: 1.6
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Interior_Foyer_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.76, b: 0.52, a: 1}
+        UnityIntensity: 1.6
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 1
+        Flicker: 0
     - AnchorPath: Environment/CASA_Interior_HallRear_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.76, b: 0.52, a: 1}
+        UnityIntensity: 1.6
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Interior_BathGround_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.76, b: 0.52, a: 1}
+        UnityIntensity: 1.6
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Interior_BedroomOne_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.76, b: 0.52, a: 1}
+        UnityIntensity: 1.6
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Interior_BedroomTwo_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.76, b: 0.52, a: 1}
+        UnityIntensity: 1.6
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Interior_BathUpper_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.76, b: 0.52, a: 1}
+        UnityIntensity: 1.6
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Interior_UpperLanding_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.76, b: 0.52, a: 1}
+        UnityIntensity: 1.6
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Fireplace_Practical_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.28, b: 0.055, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.42, b: 0.12, a: 1}
+        UnityIntensity: 3
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0.3
     - AnchorPath: Environment/CASA_Bedside_One_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.66, b: 0.34, a: 1}
+        UnityIntensity: 2
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/CASA_Bedside_Two_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.66, b: 0.34, a: 1}
+        UnityIntensity: 2
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     SuppressLightPaths: []
   - MapId: hf-campamento-pinar-v2
     DisplayName: Campamento del pinar
+    CameraFarPlane: 0
     Prefab: {fileID: 1010624027987843496, guid: e24d5cb6631d382429bc0b92cc0e76f3, type: 3}
     Lighting:
       MapId: 2
-      Skybox: {fileID: 2100000, guid: a1b0563c10797514f85dba6de16a42fc, type: 2}
-      SunWorldRotation: {x: 0.38791162, y: -0.2747084, z: 0.12230806, w: 0.87126374}
-      SunColor: {r: 0.55, g: 0.7, b: 1, a: 1}
-      SunUnityIntensity: 0.08
+      Skybox: {fileID: 2100000, guid: 911ea3393013d014b99fbe9ec396f5df, type: 2}
+      SunWorldRotation: {x: 0.29813322, y: -0.124485046, z: 0.039249983, w: 0.9455578}
+      SunColor: {r: 0.6, g: 0.74, b: 1, a: 1}
+      SunUnityIntensity: 0.14
       SunShadows: 2
-      AmbientSky: {r: 0.05, g: 0.08, b: 0.14, a: 1}
-      AmbientEquator: {r: 0.03, g: 0.045, b: 0.075, a: 1}
-      AmbientGround: {r: 0.015, g: 0.02, b: 0.035, a: 1}
+      AmbientSky: {r: 0.12, g: 0.19, b: 0.33, a: 1}
+      AmbientEquator: {r: 0.09, g: 0.13, b: 0.2, a: 1}
+      AmbientGround: {r: 0.05, g: 0.06, b: 0.07, a: 1}
       AmbientIntensity: 1
-      ReflectionIntensity: 1
-      FogEnabled: 0
-      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-      FogMode: 3
-      FogStart: 0
-      FogEnd: 300
+      ReflectionIntensity: 0.5
+      FogEnabled: 1
+      FogColor: {r: 0.14, g: 0.23, b: 0.4, a: 1}
+      FogMode: 1
+      FogStart: 12
+      FogEnd: 78
       FogDensity: 0.01
-      VolumeProfile: {fileID: 0}
+      VolumeProfile: {fileID: 11400000, guid: eb82900fdb93b824b9c0a728ba17e9bc, type: 2}
       VolumeWeight: 1
       CullingMask: -1073741825
       LocalLights: []
@@ -310,162 +355,194 @@ MonoBehaviour:
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.38, b: 0.08, a: 1}
-        UnityIntensity: 5
-        Range: 8
+        Color: {r: 1, g: 0.45, b: 0.12, a: 1}
+        UnityIntensity: 4.5
+        Range: 11
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 1
+        Flicker: 0.35
     - AnchorPath: Environment/LGT_Fire_Outer
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.24, a: 1}
-        UnityIntensity: 1.5
-        Range: 10
+        Color: {r: 1, g: 0.6, b: 0.25, a: 1}
+        UnityIntensity: 3
+        Range: 16
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0.25
     - AnchorPath: Environment/LGT_Lantern_00
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lantern_01
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lantern_02
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lantern_03
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lantern_04
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lantern_05
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lantern_06
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lantern_07
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lantern_08
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Jetty_Lantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lookout_Ambient
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 0.5, g: 0.62, b: 0.95, a: 1}
-        UnityIntensity: 2.5
+        UnityIntensity: 2
         Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lantern_09
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_Lantern_10
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 9
+        Range: 10
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_CAMP_Shelter
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.31, a: 1}
+        Color: {r: 1, g: 0.66, b: 0.34, a: 1}
         UnityIntensity: 3
-        Range: 6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 0
+        Flicker: 0
     - AnchorPath: Environment/LGT_CAMP_Washroom
       Settings:
         Anchor: {fileID: 0}
@@ -475,90 +552,105 @@ MonoBehaviour:
         Range: 3
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_01
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.2
+        Range: 3
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_02
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.2
+        Range: 3
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_03
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.2
+        Range: 3
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_04
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.2
+        Range: 3
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_05
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.2
+        Range: 3
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_06
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.2
+        Range: 3
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     SuppressLightPaths: []
   - MapId: hf-yate-a-la-deriva-v3
     DisplayName: Yate a la deriva
+    CameraFarPlane: 200
     Prefab: {fileID: 9175423909353019758, guid: 7f33a3894da9bf64eacffe5122892362, type: 3}
     Lighting:
       MapId: 3
-      Skybox: {fileID: 2100000, guid: b01f4d703ee5b6d4d93871fa4830235a, type: 2}
+      Skybox: {fileID: 2100000, guid: 715009b037d2c3f469fb8d5f28f51982, type: 2}
       SunWorldRotation: {x: 0.3633556, y: 0.3964268, z: -0.17463778, w: 0.82481515}
-      SunColor: {r: 1, g: 0.84, b: 0.62, a: 1}
-      SunUnityIntensity: 1.05
+      SunColor: {r: 1, g: 0.93, b: 0.8, a: 1}
+      SunUnityIntensity: 1.2
       SunShadows: 2
-      AmbientSky: {r: 0.6, g: 0.72, b: 0.85, a: 1}
-      AmbientEquator: {r: 0.45, g: 0.5, b: 0.55, a: 1}
-      AmbientGround: {r: 0.28, g: 0.3, b: 0.26, a: 1}
+      AmbientSky: {r: 0.58, g: 0.72, b: 0.9, a: 1}
+      AmbientEquator: {r: 0.56, g: 0.62, b: 0.64, a: 1}
+      AmbientGround: {r: 0.4, g: 0.38, b: 0.32, a: 1}
       AmbientIntensity: 1
-      ReflectionIntensity: 1
-      FogEnabled: 0
-      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-      FogMode: 3
-      FogStart: 0
-      FogEnd: 300
+      ReflectionIntensity: 0.6
+      FogEnabled: 1
+      FogColor: {r: 0.76, g: 0.88, b: 0.97, a: 1}
+      FogMode: 1
+      FogStart: 40
+      FogEnd: 190
       FogDensity: 0.01
-      VolumeProfile: {fileID: 0}
+      VolumeProfile: {fileID: 11400000, guid: eb6f90ab63abb0249b6a5c03418c589a, type: 2}
       VolumeWeight: 1
       CullingMask: -1073741825
       LocalLights: []
@@ -568,85 +660,98 @@ MonoBehaviour:
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.8, b: 0.55, a: 1}
+        UnityIntensity: 1.1
+        Range: 5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 1
+        Flicker: 0
     - AnchorPath: Environment/YATE_Anchor_Practical_Galley
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.8, b: 0.55, a: 1}
+        UnityIntensity: 1.1
+        Range: 5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 1
+        Flicker: 0
     - AnchorPath: Environment/YATE_Anchor_Practical_CabinPort
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.8, b: 0.55, a: 1}
+        UnityIntensity: 1.1
+        Range: 5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/YATE_Anchor_Practical_CabinStarboard
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.8, b: 0.55, a: 1}
+        UnityIntensity: 1.1
+        Range: 5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/YATE_Anchor_Practical_LowerCorridor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.8, b: 0.55, a: 1}
+        UnityIntensity: 1.1
+        Range: 5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/YATE_Anchor_Practical_Bathroom
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.8, b: 0.55, a: 1}
+        UnityIntensity: 1.1
+        Range: 5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     SuppressLightPaths: []
   - MapId: hf-puerto-del-faro-v1
     DisplayName: Puerto del faro
+    CameraFarPlane: 125
     Prefab: {fileID: 2844855311516430381, guid: f2b8e858ac929674b81713bc4b8ae578, type: 3}
     Lighting:
       MapId: 4
-      Skybox: {fileID: 2100000, guid: 281f35eb01e5c9248b51d29764683247, type: 2}
-      SunWorldRotation: {x: 0.35349724, y: 0.5461676, z: -0.27234113, w: 0.70892245}
-      SunColor: {r: 0.56, g: 0.7, b: 1, a: 1}
-      SunUnityIntensity: 0.8
+      Skybox: {fileID: 2100000, guid: a26a74c04bc89714a897f565dcf0b882, type: 2}
+      SunWorldRotation: {x: 0.11041345, y: 0.60283697, z: -0.08472322, w: 0.78563243}
+      SunColor: {r: 1, g: 0.66, b: 0.52, a: 1}
+      SunUnityIntensity: 0.75
       SunShadows: 2
-      AmbientSky: {r: 0.16, g: 0.23, b: 0.38, a: 1}
-      AmbientEquator: {r: 0.12, g: 0.16, b: 0.23, a: 1}
-      AmbientGround: {r: 0.06, g: 0.08, b: 0.13, a: 1}
+      AmbientSky: {r: 0.34, g: 0.33, b: 0.52, a: 1}
+      AmbientEquator: {r: 0.36, g: 0.3, b: 0.38, a: 1}
+      AmbientGround: {r: 0.13, g: 0.12, b: 0.16, a: 1}
       AmbientIntensity: 1
-      ReflectionIntensity: 1
-      FogEnabled: 0
-      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-      FogMode: 3
-      FogStart: 0
-      FogEnd: 300
+      ReflectionIntensity: 0.5
+      FogEnabled: 1
+      FogColor: {r: 0.66, g: 0.56, b: 0.72, a: 1}
+      FogMode: 1
+      FogStart: 30
+      FogEnd: 115
       FogDensity: 0.01
-      VolumeProfile: {fileID: 0}
+      VolumeProfile: {fileID: 11400000, guid: 77957607a1ae8d34baaf89329d89d3f0, type: 2}
       VolumeWeight: 1
       CullingMask: -1073741825
       LocalLights: []
@@ -656,210 +761,252 @@ MonoBehaviour:
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.6, b: 0.25, a: 1}
-        UnityIntensity: 3.5
-        Range: 12
+        Color: {r: 1, g: 0.72, b: 0.35, a: 1}
+        UnityIntensity: 6
+        Range: 16
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_01_BedsideLamp
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.3, a: 1}
+        UnityIntensity: 2
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_01_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_01_InteriorFill
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.7, b: 0.4, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.42, a: 1}
+        UnityIntensity: 2.6
+        Range: 6.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 0
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_02_BedsideLamp
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.3, a: 1}
+        UnityIntensity: 2
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_02_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_02_InteriorFill
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.7, b: 0.4, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.42, a: 1}
+        UnityIntensity: 2.6
+        Range: 6.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 0
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_03_BedsideLamp
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.3, a: 1}
+        UnityIntensity: 2
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_03_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_03_InteriorFill
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.7, b: 0.4, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.42, a: 1}
+        UnityIntensity: 2.6
+        Range: 6.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 0
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Workshop_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Workshop_BenchLamp
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.3, a: 1}
+        UnityIntensity: 2
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Workshop_Interior
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.65, b: 0.32, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.42, a: 1}
+        UnityIntensity: 2.6
+        Range: 6.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 0
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Pier_1_EndLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_Pier_2_EndLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_1
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_2
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_3
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_4
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_5
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_6
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6, b: 0.26, a: 1}
+        UnityIntensity: 3.8
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
     SuppressLightPaths: []
