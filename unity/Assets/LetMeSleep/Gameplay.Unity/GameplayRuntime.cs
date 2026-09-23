@@ -310,8 +310,19 @@ namespace LetMeSleep.Gameplay.Unity
         private void PublishUnreportedEnd()
         {
             if (finishedSent || roundConfig == null || Authority.Config == null) return;
-            var latest = Authority.CaptureSnapshot();
-            if (latest.SimulationPhase != SimulationPhase.Ended || latest.SessionEpoch != roundConfig.SessionEpoch || latest.RoundId != roundConfig.RoundId) return;
+            if (Authority.Config.SessionEpoch != roundConfig.SessionEpoch || Authority.Config.RoundId != roundConfig.RoundId) return;
+            GameSessionState latest;
+            try { latest = Authority.CaptureSnapshot(); }
+            catch (Exception error)
+            {
+                // An end that cannot be captured must still reach Results exactly once instead of
+                // throwing on every host frame and leaving the room in Playing.
+                finishedSent = true;
+                Debug.LogException(error);
+                RoundFinished?.Invoke(Authority.EndReason, Authority.Winner);
+                return;
+            }
+            if (latest.SimulationPhase != SimulationPhase.Ended) return;
             PublishHostState(latest);
         }
         private BotObservation ObserveBot(ActorSnapshot self, GameSessionState state)

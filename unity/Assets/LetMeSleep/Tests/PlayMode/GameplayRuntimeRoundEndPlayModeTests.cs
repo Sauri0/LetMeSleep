@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using LetMeSleep.Core;
 using LetMeSleep.Gameplay;
 using LetMeSleep.Gameplay.Unity;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 
 namespace LetMeSleep.Tests.PlayMode
@@ -88,6 +91,21 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(finished[0].Reason, Is.EqualTo(RoundEndReason.TimeExpired));
             Assert.DoesNotThrow(runtime.TickHost, "A published end is not retried every frame.");
             Assert.That(finished, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void EndThatCannotBeCapturedStillReachesResultsOnceWithoutThrowingEveryFrame()
+        {
+            runtime.TickHost();
+            // Simulate an authority state the snapshot validator rejects (e.g. a Tasks goal of 0).
+            typeof(GameplayAuthority).GetField("blood", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(runtime.Authority, float.NaN);
+            runtime.Authority.RemoveActor(2, ActorRemovalReason.Left);
+            Assert.Throws<ArgumentException>(() => runtime.Authority.CaptureSnapshot());
+
+            LogAssert.Expect(LogType.Exception, new Regex("Invalid session snapshot"));
+            Assert.DoesNotThrow(runtime.TickHost, "The host frame must survive an uncapturable end.");
+            Assert.DoesNotThrow(runtime.TickHost, "The failure is reported once, not on every frame.");
+            Assert.That(finished, Is.EqualTo(new[] { (RoundEndReason.OpponentLeft, PlayerRole.Human) }));
         }
 
         [Test]

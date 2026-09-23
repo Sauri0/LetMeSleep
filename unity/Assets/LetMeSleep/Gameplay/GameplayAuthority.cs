@@ -87,6 +87,9 @@ namespace LetMeSleep.Gameplay
         public GameplayRoundConfig Config => config;
         public uint CurrentTick => tick;
         public bool IsRunning => config != null && phase == SimulationPhase.Running;
+        // Available even when a snapshot cannot be captured, so an end is always reportable.
+        public RoundEndReason EndReason => result;
+        public PlayerRole Winner => winner;
         public GameplayAuthority(IGameplayWorld world) { this.world = world ?? throw new ArgumentNullException(nameof(world)); }
 
         public void BeginRound(GameplayRoundConfig next, IReadOnlyList<SpawnActor> roster)

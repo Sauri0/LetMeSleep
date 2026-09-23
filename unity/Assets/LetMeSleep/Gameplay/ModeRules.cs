@@ -138,11 +138,15 @@ namespace LetMeSleep.Gameplay
         {
             if (!people.TryGetValue(actorId, out var p)) return;
             people.Remove(actorId);
+            // The last human leaving ends the round (OpponentLeft/Aborted). Keep the last reachable goal:
+            // a Tasks snapshot with no opportunities or a zero goal is invalid and would stop the end from publishing.
+            if (people.Count == 0) return;
             int current = (int)Math.Min(int.MaxValue, tick / config.ModeRules.TaskCadenceTicks);
             int finished = Math.Min(slotsPerPerson, current);
             if (current < slotsPerPerson && p.Slot == current && p.Finished) finished++;
-            Opportunities = Math.Max(0, Opportunities - (slotsPerPerson - finished));
-            Goal = GoalFor(Opportunities);
+            // Each remaining human keeps at least one slot, so both stay >= 1 and >= Completed.
+            Opportunities = Math.Max(Math.Max(1, Completed), Opportunities - (slotsPerPerson - finished));
+            Goal = Math.Max(1, GoalFor(Opportunities));
         }
         public TaskAssignment Capture(uint actorId)
         {

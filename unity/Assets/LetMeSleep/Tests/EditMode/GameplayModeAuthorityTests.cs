@@ -477,6 +477,51 @@ namespace LetMeSleep.Tests.EditMode
             a.RemoveActor(2, ActorRemovalReason.Left);
             Assert.That(a.CaptureSnapshot().ViableTaskOpportunities, Is.EqualTo(4), "Mosquito departures do not change task opportunities.");
         }
+        // The end snapshot must stay valid: a Tasks snapshot with goal 0 throws and the host could never publish the end.
+        [Test] public void LastHumanLeavingDuringTheFirstSlotEndsWithAPublishableSnapshot()
+        {
+            var a = Start(new World(), GameModes.Tasks); Step(a, 10);
+            Assert.That(a.CapturePrivate(1).TaskAssignment.Status, Is.EqualTo(TaskAssignmentStatus.Active), "The first task is still open.");
+            a.RemoveActor(1, ActorRemovalReason.Left);
+            Assert.That(a.IsRunning, Is.False);
+            GameSessionState state = null;
+            Assert.DoesNotThrow(() => state = a.CaptureSnapshot());
+            Assert.That(state.SimulationPhase, Is.EqualTo(SimulationPhase.Ended));
+            Assert.That(state.Result, Is.EqualTo(RoundEndReason.OpponentLeft));
+            Assert.That(state.Winner, Is.EqualTo(PlayerRole.Mosquito));
+            Assert.That(state.TasksGoal, Is.GreaterThanOrEqualTo(1));
+            Assert.That(state.ViableTaskOpportunities, Is.GreaterThanOrEqualTo(state.TasksGoal));
+        }
+        [Test] public void BothHumansLeavingDuringTheFirstSlotEndWithAPublishableSnapshot()
+        {
+            var a = Start(new World(), GameModes.Tasks, secondHuman: true); Step(a, 5);
+            a.RemoveActor(3, ActorRemovalReason.Left);
+            Assert.That(a.IsRunning, Is.True);
+            Assert.That(a.CaptureSnapshot().ViableTaskOpportunities, Is.EqualTo(3));
+            a.RemoveActor(1, ActorRemovalReason.Disconnected);
+            GameSessionState state = null;
+            Assert.DoesNotThrow(() => state = a.CaptureSnapshot());
+            Assert.That(state.Result, Is.EqualTo(RoundEndReason.OpponentLeft));
+            Assert.That(state.TasksGoal, Is.EqualTo(2), "The last reachable goal is kept for the results screen.");
+            Assert.That(state.ViableTaskOpportunities, Is.EqualTo(3));
+        }
+        [Test] public void EveryDepartureOrderKeepsTasksSnapshotsValid()
+        {
+            // Departures across the first two slots (unassigned, active, completed and missed tasks).
+            foreach (bool work in new[] { false, true })
+            foreach (int leaveAt in new[] { 0, 1, 10, 239, 240, 241, 299, 300, 301, 450, 599 })
+            {
+                string label = (work ? "after work, " : "idle, ") + "departure at " + leaveAt;
+                var a = Start(new World(), GameModes.Tasks, secondHuman: true, secondMosquito: true);
+                if (work) for (int i = 0; i < 4; i++) { Use(a, 3); Step(a); }
+                Step(a, Math.Max(0, leaveAt - (int)a.CurrentTick));
+                a.RemoveActor(3, ActorRemovalReason.Left);
+                Assert.DoesNotThrow(() => a.CaptureSnapshot(), "first " + label);
+                a.RemoveActor(1, ActorRemovalReason.Left);
+                Assert.DoesNotThrow(() => a.CaptureSnapshot(), "last " + label);
+                Assert.That(a.CaptureSnapshot().Result, Is.EqualTo(RoundEndReason.OpponentLeft), label);
+            }
+        }
     }
 }
 
