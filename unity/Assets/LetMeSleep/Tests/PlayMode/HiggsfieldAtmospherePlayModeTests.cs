@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LetMeSleep.Bootstrap;
+using LetMeSleep.Content.Environment;
 using LetMeSleep.Presentation;
 using NUnit.Framework;
 using UnityEditor;
@@ -25,6 +26,7 @@ namespace LetMeSleep.Tests.PlayMode
         private const string LightingRigPath = "Assets/LetMeSleep/Presentation/Generated/Prefabs/LMS_AlfaLightingRoot.prefab";
         private const string SkyShader = "LetMeSleep/Higgsfield/GradientSky";
         private const float PresetFarPlane = 100f;
+        private const string LobbyPrefabPath = "Assets/LetMeSleep/Content/Environment/AlfaMaps/Prefabs/PrivateLobby.prefab";
         private readonly List<Object> created = new List<Object>();
 
         [UnityTest]
@@ -90,12 +92,95 @@ namespace LetMeSleep.Tests.PlayMode
                 foreach (var water in map.GetComponentsInChildren<HiggsfieldGpuWater>(true).Where(w => w.IsBound))
                     Assert.That(water.CurrentParameters.UseFog, Is.EqualTo(lighting.FogEnabled), entry.MapId + " GPU water fog");
 
+                // Round 2 art direction: halos, 3-layer flames, renderer overrides, night windows, rim light.
+                var halos = map.GetComponentsInChildren<Transform>(true).Where(x => x.name == HiggsfieldAtmosphereVisuals.HaloName).ToArray();
+                var flames = map.GetComponentsInChildren<Transform>(true).Where(x => x.name == HiggsfieldAtmosphereVisuals.FlameName).ToArray();
+                Assert.That(halos.Length, Is.EqualTo(entry.LocalLights.Count(l => l.Settings.HaloSize > 0)), entry.MapId + " halos");
+                Assert.That(flames.Length, Is.EqualTo(entry.LocalLights.Count(l => l.Settings.FlameHeight > 0)), entry.MapId + " flames");
+                foreach (var flame in flames)
+                {
+                    Assert.That(flame.GetComponentsInChildren<Renderer>().Length, Is.EqualTo(3), entry.MapId + " flame layers");
+                    Assert.That(Vector3.Angle(flame.up, Vector3.up), Is.LessThan(0.5f), entry.MapId + " flames stand upright");
+                }
+                foreach (var visual in halos.Concat(flames))
+                    Assert.That(visual.GetComponentsInChildren<Collider>(true), Is.Empty, entry.MapId + " atmosphere visuals are not geometry");
+                var overrides = entry.RendererOverrides.Select(o => new { Binding = o, Renderer = Find(map.transform, o.Path).GetComponent<Renderer>() }).ToArray();
+                var colliderEnabled = overrides.Where(o => o.Renderer.GetComponent<Collider>()).ToDictionary(o => o.Renderer, o => o.Renderer.GetComponent<Collider>().enabled);
+                foreach (var item in overrides)
+                {
+                    if (item.Binding.Hide) Assert.That(item.Renderer.enabled, Is.False, item.Binding.Path + " hidden");
+                    if (item.Binding.CastShadowsOff) Assert.That(item.Renderer.shadowCastingMode, Is.EqualTo(UnityEngine.Rendering.ShadowCastingMode.Off), item.Binding.Path);
+                    if (item.Binding.SwapTo) CollectionAssert.Contains(item.Renderer.sharedMaterials, item.Binding.SwapTo, item.Binding.Path + " swapped");
+                    if (item.Binding.IgnoreLocalLights) Assert.That(item.Renderer.renderingLayerMask & 1u, Is.EqualTo(0u), item.Binding.Path + " moon-only layer");
+                }
+                foreach (var pair in colliderEnabled) Assert.That(pair.Key.GetComponent<Collider>().enabled, Is.EqualTo(pair.Value), "colliders untouched");
+                foreach (var swap in lighting.MaterialSwaps)
+                    Assert.That(map.GetComponentsInChildren<Renderer>(true).Any(r => r.sharedMaterials.Contains(swap.From)), Is.False, entry.MapId + " swapped " + swap.From.name);
+                Assert.That(Shader.GetGlobalFloat("_LMS_InteriorCount"), Is.EqualTo(lighting.InteriorVolumes.Length), entry.MapId + " interiors");
+                var rim = rig.GetComponentInChildren<HiggsfieldRimLight>();
+                Assert.That(rim != null, Is.EqualTo(lighting.CharacterRimIntensity > 0), entry.MapId + " rim light");
+
                 rig.UnbindHiggsfield();
+                yield return null;
+                Assert.That(map.GetComponentsInChildren<Transform>(true).Count(x => x.name == HiggsfieldAtmosphereVisuals.HaloName ||
+                    x.name == HiggsfieldAtmosphereVisuals.FlameName), Is.Zero, entry.MapId + " visuals removed");
+                var pristine = entry.Prefab.transform;
+                foreach (var item in overrides)
+                {
+                    var source = Find(pristine, item.Binding.Path).GetComponent<Renderer>();
+                    Assert.That(item.Renderer.enabled, Is.EqualTo(source.enabled), item.Binding.Path + " restored");
+                    Assert.That(item.Renderer.shadowCastingMode, Is.EqualTo(source.shadowCastingMode), item.Binding.Path + " shadows restored");
+                    CollectionAssert.AreEqual(source.sharedMaterials, item.Renderer.sharedMaterials, item.Binding.Path + " materials restored");
+                    Assert.That(item.Renderer.renderingLayerMask, Is.EqualTo(source.renderingLayerMask), item.Binding.Path + " layers restored");
+                }
+                Assert.That(Shader.GetGlobalFloat("_LMS_InteriorCount"), Is.Zero, entry.MapId + " interiors cleared");
+                Assert.That(rig.GetComponentInChildren<HiggsfieldRimLight>(), Is.Null, entry.MapId + " rim removed");
                 Assert.That(RenderSettings.fog, Is.EqualTo(fogBefore), entry.MapId + " fog restored");
                 Assert.That(RenderSettings.skybox, Is.SameAs(skyBefore), entry.MapId + " sky restored");
                 Object.Destroy(map.gameObject);
                 yield return null;
             }
+        }
+
+        [UnityTest]
+        public IEnumerator LobbyGetsHalosNightWindowAndGarlandsWithoutColliders()
+        {
+            var rigRoot = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(LightingRigPath));
+            created.Add(rigRoot);
+            var rig = rigRoot.GetComponentInChildren<AlfaLightingRig>();
+            Assert.That(rig.AtmosphereKit, Is.Not.Null, "lighting rig prefab references the atmosphere kit");
+            Assert.That(rig.AtmosphereKit.IsComplete, Is.True);
+            var lobby = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(LobbyPrefabPath)).GetComponent<EnvironmentMapDefinition>();
+            created.Add(lobby.gameObject);
+            int collidersBefore = lobby.GetComponentsInChildren<Collider>(true).Length;
+            yield return null;
+
+            rig.BindMap(lobby.PresentationAnchors, false);
+            yield return null;
+            int lanterns = lobby.PresentationAnchors.GetComponentsInChildren<Transform>(true).Count(x => x.name.StartsWith("LightAnchor_Lobby_Lantern"));
+            Assert.That(lanterns, Is.GreaterThan(0));
+            Assert.That(lobby.GetComponentsInChildren<Transform>(true).Count(x => x.name == HiggsfieldAtmosphereVisuals.HaloName), Is.EqualTo(lanterns), "sconce halos");
+            Assert.That(lobby.GetComponentsInChildren<Transform>(true).Count(x => x.name == HiggsfieldAtmosphereVisuals.StringLightsName), Is.GreaterThan(0), "garlands");
+            var canvas = lobby.transform.Find("Furnishings/Lobby_Domestic/Menu_FramedNightLake/Canvas").GetComponent<Renderer>();
+            Assert.That(canvas.sharedMaterial, Is.SameAs(rig.AtmosphereKit.MenuWindowMaterial), "night window with moon");
+            Assert.That(lobby.GetComponentsInChildren<Collider>(true).Length, Is.EqualTo(collidersBefore), "no colliders added to the lobby");
+
+            rig.BindMap(lobby.PresentationAnchors, false); // Rebinding replaces, never duplicates.
+            yield return null;
+            Assert.That(lobby.GetComponentsInChildren<Transform>(true).Count(x => x.name == HiggsfieldAtmosphereVisuals.HaloName), Is.EqualTo(lanterns), "halos not duplicated");
+        }
+
+        private static Transform Find(Transform root, string path)
+        {
+            Transform current = root;
+            foreach (string segment in path.Split('/'))
+            {
+                Transform next = null;
+                for (int i = 0; i < current.childCount; i++) if (current.GetChild(i).name == segment) next = current.GetChild(i);
+                Assert.That(next, Is.Not.Null, "Missing path " + path);
+                current = next;
+            }
+            return current;
         }
 
         [UnityTest]

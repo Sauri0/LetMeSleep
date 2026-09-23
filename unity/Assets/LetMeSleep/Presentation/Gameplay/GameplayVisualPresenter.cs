@@ -181,6 +181,8 @@ namespace LetMeSleep.Presentation.Gameplay
                 if (locomotionAudio) locomotionAudio.RegisterLocomotion(gait);
             }
             visuals.Add(proxy.ActorId, binding);
+            // v0.3.0 night legibility: the map's character rim light (if any) only lights this rendering layer.
+            if (proxy.Role == PlayerRole.Mosquito) HiggsfieldRimLight.MarkCharacter(instance);
             if(VisualAttentionFactory.TryInstall(instance,false,out var attention,out var reason))
             {
                 var target=instance.GetComponent<GameplayAttentionTarget>();

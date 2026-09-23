@@ -229,6 +229,12 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(rig, "nightSkybox", nightSkybox);
                 Assign(rig, "mapLightLowTemplate", mapLightLowTemplate);
                 Assign(rig, "mapLightMediumTemplate", mapLightMediumTemplate);
+                // v0.3.0: keep the atmosphere kit (lobby halos, night window, garlands) authored by
+                // HiggsfieldAtmosphereCorrection when the lighting prefab is rebuilt.
+                var atmosphereKit = AssetDatabase.LoadAssetAtPath<HiggsfieldAtmosphereKit>(
+                    PresentationRoot + "/HiggsfieldAtmosphereKit.asset");
+                if (atmosphereKit != null)
+                    Assign(rig, "atmosphereKit", atmosphereKit);
                 rig.ApplyPreset();
                 moon.lightmapBakeType = LightmapBakeType.Mixed;
 

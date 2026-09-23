@@ -38,7 +38,40 @@ namespace LetMeSleep.Presentation
             public int ShadowResolutionTier = UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierHigh;
             // v0.3.0: soft visual flicker for fire/candle sources, fraction of intensity (0 = steady, max 0.6).
             public float Flicker;
+            // v0.3.0 art direction: light position relative to the anchor, in MAP axes (imported anchors can be
+            // rotated), e.g. a lantern light moved off its post. Halo and flame offsets use map axes too.
+            public Vector3 LocalOffset;
+            // v0.3.0: camera-facing halo (metres, 0 = none) at HaloOffset; HaloColor is sRGB with alpha = opacity.
+            public float HaloSize;
+            public Vector3 HaloOffset;
+            public Color HaloColor = new Color(1f, 0.702f, 0.278f, 0.35f);
+            public float HaloIntensity = 1f;
+            // v0.3.0: three-layer stylized flame (outer height in metres, 0 = none), base at FlameOffset.
+            public float FlameHeight;
+            public Vector3 FlameOffset;
         }
+
+        /// <summary>Map-wide material replacement on the bound instance (e.g. windows to the night-window shader).</summary>
+        [Serializable] public sealed class MaterialSwap
+        {
+            public Material From;
+            public Material To;
+        }
+
+        /// <summary>Per-renderer visual override on the bound instance; resolved from relative paths, never stored.</summary>
+        [Serializable] public sealed class RendererOverride
+        {
+            public Renderer Target;
+            public bool Hide;
+            public bool CastShadowsOff;
+            // Lit by the moon and ambient but not by map-local lights (e.g. a lantern post next to its own lantern).
+            public bool IgnoreLocalLights;
+            public Material SwapFrom;
+            public Material SwapTo;
+        }
+
+        /// <summary>URP rendering layer that only the moon/sun lights; map-local lights keep the default layer.</summary>
+        public const int MoonOnlyRenderingLayer = 6;
 
         [Serializable] public sealed class Configuration
         {
@@ -60,7 +93,21 @@ namespace LetMeSleep.Presentation
             public LocalSource[] LocalLights = Array.Empty<LocalSource>();
             // Explicit extra scene lights owned by the integrating Bootstrap, if any.
             public Light[] SuppressLights = Array.Empty<Light>();
+            // v0.3.0 atmosphere (visual only; never touches colliders, spawns, navigation or ContentHash).
+            public HiggsfieldAtmosphereKit Kit;
+            public MaterialSwap[] MaterialSwaps = Array.Empty<MaterialSwap>();
+            // Map-local interiors: the night-window shader shows the night sky from inside, warm glass from outside.
+            public Bounds[] InteriorVolumes = Array.Empty<Bounds>();
+            public RendererOverride[] RendererOverrides = Array.Empty<RendererOverride>();
+            // Warm red kicker on characters tagged with the rim rendering layer (night legibility), 0 = off.
+            public Color CharacterRimColor = new Color(1f, 0.416f, 0.416f);
+            public float CharacterRimIntensity;
         }
+
+        public const int MaximumInteriorVolumes = 8;
+        private static readonly int InteriorMinId = Shader.PropertyToID("_LMS_InteriorMin");
+        private static readonly int InteriorMaxId = Shader.PropertyToID("_LMS_InteriorMax");
+        private static readonly int InteriorCountId = Shader.PropertyToID("_LMS_InteriorCount");
 
         public bool IsBound { get; private set; }
         public Transform MapRoot { get; private set; }
@@ -89,6 +136,17 @@ namespace LetMeSleep.Presentation
         private float oldVolumeWeight;
         private bool oldVolumeEnabled;
         private readonly List<KeyValuePair<HiggsfieldGpuWater, bool>> waterFog = new List<KeyValuePair<HiggsfieldGpuWater, bool>>();
+        private readonly List<GameObject> visuals = new List<GameObject>();
+        private readonly Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
+        private readonly Dictionary<Renderer, bool> originalEnabled = new Dictionary<Renderer, bool>();
+        private readonly Dictionary<Renderer, ShadowCastingMode> originalShadows = new Dictionary<Renderer, ShadowCastingMode>();
+        private readonly Dictionary<Renderer, uint> originalLayers = new Dictionary<Renderer, uint>();
+        private uint oldSunLayers;
+        private bool sunLayersChanged;
+        private HiggsfieldRimLight rimLight;
+        public int AtmosphereVisualCount => visuals.Count;
+        public int OverriddenRendererCount => originalMaterials.Count + originalEnabled.Count + originalShadows.Count + originalLayers.Count;
+        public HiggsfieldRimLight RimLight => rimLight;
 
         public static void Validate(Transform root, Light sun, Configuration config)
         {
@@ -116,7 +174,54 @@ namespace LetMeSleep.Presentation
                 if (!ValidShadowTier(source.ShadowResolutionTier) || !Finite(source.Flicker) || source.Flicker < 0 ||
                     source.Flicker > HiggsfieldLightFlicker.MaximumAmplitude)
                     throw new ArgumentException("Invalid local shadow tier (0..2) or flicker (0..0.6).");
+                ValidateVisual(source, config.Kit);
             }
+            ValidateAtmosphere(root, config);
+        }
+
+        public static void ValidateVisual(LocalSource source, HiggsfieldAtmosphereKit kit)
+        {
+            if (!FiniteVector(source.LocalOffset) || source.LocalOffset.magnitude > 3f || !FiniteVector(source.HaloOffset) ||
+                source.HaloOffset.magnitude > 3f || !FiniteVector(source.FlameOffset) || source.FlameOffset.magnitude > 3f)
+                throw new ArgumentException("Local light, halo and flame offsets must be finite and within 3 m of the anchor.");
+            if (!Finite(source.HaloSize) || source.HaloSize < 0 || source.HaloSize > 6 || !Finite(source.HaloIntensity) ||
+                source.HaloIntensity < 0 || source.HaloIntensity > 16 || !Finite(source.FlameHeight) || source.FlameHeight < 0 ||
+                source.FlameHeight > 4)
+                throw new ArgumentException("Halo size 0..6 m, halo intensity 0..16 and flame height 0..4 m required.");
+            CheckColor(source.HaloColor);
+            if (source.HaloColor.a > 1) throw new ArgumentException("Halo opacity must be 0..1.");
+            if ((source.HaloSize > 0 || source.FlameHeight > 0) && (!kit || !kit.IsComplete))
+                throw new ArgumentException("Halos and flames need a complete HiggsfieldAtmosphereKit.");
+        }
+
+        public static void ValidateAtmosphere(Transform root, Configuration config)
+        {
+            if (config.MaterialSwaps == null || config.InteriorVolumes == null || config.RendererOverrides == null)
+                throw new ArgumentException("Atmosphere arrays must be initialized.");
+            if (config.InteriorVolumes.Length > MaximumInteriorVolumes)
+                throw new ArgumentException("At most " + MaximumInteriorVolumes + " interior volumes.");
+            foreach (var volume in config.InteriorVolumes)
+                if (!FiniteVector(volume.center) || !FiniteVector(volume.size) || volume.size.x <= 0 || volume.size.y <= 0 || volume.size.z <= 0)
+                    throw new ArgumentException("Interior volumes need finite centers and positive sizes.");
+            var sources = new HashSet<Material>();
+            foreach (var swap in config.MaterialSwaps)
+                if (swap == null || !swap.From || !swap.To || swap.From == swap.To || !sources.Add(swap.From))
+                    throw new ArgumentException("Material swaps need distinct non-null From and a different To.");
+            var targets = new HashSet<Renderer>();
+            foreach (var item in config.RendererOverrides)
+            {
+                if (item == null || !item.Target || (root && !item.Target.transform.IsChildOf(root)) || !targets.Add(item.Target))
+                    throw new ArgumentException("Renderer overrides need distinct renderers owned by the map.");
+                if ((item.SwapFrom == null) != (item.SwapTo == null) || (item.SwapFrom && item.SwapFrom == item.SwapTo))
+                    throw new ArgumentException("Renderer material swap needs both From and a different To.");
+                if (item.SwapFrom && Array.IndexOf(item.Target.sharedMaterials, item.SwapFrom) < 0)
+                    throw new ArgumentException("Renderer override swap source is not on the renderer: " + item.Target.name);
+                if (!item.Hide && !item.CastShadowsOff && !item.IgnoreLocalLights && !item.SwapFrom)
+                    throw new ArgumentException("Renderer override does nothing: " + item.Target.name);
+            }
+            CheckColor(config.CharacterRimColor);
+            if (!Finite(config.CharacterRimIntensity) || config.CharacterRimIntensity < 0 || config.CharacterRimIntensity > HiggsfieldRimLight.MaximumIntensity)
+                throw new ArgumentException("Character rim intensity 0..3 required.");
         }
 
         /// <param name="lowTierTemplate">Optional disabled Light whose URP data uses the Low shadow tier (tier is editor-only data).</param>
@@ -192,14 +297,102 @@ namespace LetMeSleep.Presentation
                     light.type = source.Type; light.color = source.Color; light.intensity = source.UnityIntensity;
                     light.range = source.Range; light.spotAngle = source.SpotAngle; light.innerSpotAngle = source.InnerSpotAngle;
                     light.shadows = source.Shadows; light.cullingMask = config.CullingMask; light.bounceIntensity = 0;
+                    go.transform.position = source.Anchor.position + root.rotation * source.LocalOffset;
                     light.enabled = true;
                     go.SetActive(true);
                     if (source.Flicker > 0)
                         go.AddComponent<HiggsfieldLightFlicker>().Configure(source.Flicker, StableSeed(source.Anchor.name));
+                    if (source.HaloSize > 0)
+                        visuals.Add(HiggsfieldAtmosphereVisuals.CreateHalo(source.Anchor, root.rotation * source.HaloOffset, source.HaloSize,
+                            source.HaloColor, source.HaloIntensity, config.Kit.HaloMaterial));
+                    if (source.FlameHeight > 0)
+                        visuals.Add(HiggsfieldAtmosphereVisuals.CreateFlame(source.Anchor, root.rotation * source.FlameOffset, source.FlameHeight,
+                            config.Kit, StableSeed(source.Anchor.name)));
+                }
+                ApplyRendererAtmosphere(root, config, sun);
+                if (config.CharacterRimIntensity > 0)
+                {
+                    var rimObject = new GameObject("Higgsfield_CharacterRim");
+                    rimObject.transform.SetParent(transform, false);
+                    rimObject.AddComponent<Light>();
+                    rimLight = rimObject.AddComponent<HiggsfieldRimLight>();
+                    rimLight.Configure(config.CharacterRimColor, config.CharacterRimIntensity);
                 }
                 DynamicGI.UpdateEnvironment();
             }
             catch { Unbind(); throw; }
+        }
+
+        private void ApplyRendererAtmosphere(Transform root, Configuration config, Light sun)
+        {
+            if (config.MaterialSwaps.Length > 0)
+            {
+                var map = new Dictionary<Material, Material>();
+                foreach (var swap in config.MaterialSwaps) map[swap.From] = swap.To;
+                foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+                {
+                    var materials = renderer.sharedMaterials;
+                    bool changed = false;
+                    for (int i = 0; i < materials.Length; i++)
+                        if (materials[i] && map.TryGetValue(materials[i], out var replacement)) { materials[i] = replacement; changed = true; }
+                    if (!changed) continue;
+                    if (!originalMaterials.ContainsKey(renderer)) originalMaterials.Add(renderer, renderer.sharedMaterials);
+                    renderer.sharedMaterials = materials;
+                }
+            }
+            foreach (var item in config.RendererOverrides)
+            {
+                var renderer = item.Target;
+                if (item.SwapFrom)
+                {
+                    var materials = renderer.sharedMaterials;
+                    for (int i = 0; i < materials.Length; i++) if (materials[i] == item.SwapFrom) materials[i] = item.SwapTo;
+                    if (!originalMaterials.ContainsKey(renderer)) originalMaterials.Add(renderer, renderer.sharedMaterials);
+                    renderer.sharedMaterials = materials;
+                }
+                if (item.Hide)
+                {
+                    if (!originalEnabled.ContainsKey(renderer)) originalEnabled.Add(renderer, renderer.enabled);
+                    renderer.enabled = false;
+                }
+                if (item.CastShadowsOff)
+                {
+                    if (!originalShadows.ContainsKey(renderer)) originalShadows.Add(renderer, renderer.shadowCastingMode);
+                    renderer.shadowCastingMode = ShadowCastingMode.Off;
+                }
+                if (item.IgnoreLocalLights)
+                {
+                    if (!originalLayers.ContainsKey(renderer)) originalLayers.Add(renderer, renderer.renderingLayerMask);
+                    renderer.renderingLayerMask = (renderer.renderingLayerMask & ~1u) | (1u << MoonOnlyRenderingLayer);
+                }
+            }
+            if (originalLayers.Count > 0 && sun)
+            {
+                var data = sun.GetUniversalAdditionalLightData();
+                oldSunLayers = data.renderingLayers;
+                data.renderingLayers = oldSunLayers | (1u << MoonOnlyRenderingLayer);
+                sunLayersChanged = true;
+            }
+            SetInteriorVolumes(root, config.InteriorVolumes);
+        }
+
+        /// <summary>Publishes map interiors (world AABBs) for LetMeSleep/Higgsfield/NightWindow; empty clears them.</summary>
+        public static void SetInteriorVolumes(Transform root, Bounds[] volumes)
+        {
+            var min = new Vector4[MaximumInteriorVolumes];
+            var max = new Vector4[MaximumInteriorVolumes];
+            int count = volumes == null ? 0 : Mathf.Min(volumes.Length, MaximumInteriorVolumes);
+            for (int i = 0; i < count; i++)
+            {
+                Bounds local = volumes[i];
+                Vector3 a = root ? root.TransformPoint(local.min) : local.min;
+                Vector3 b = root ? root.TransformPoint(local.max) : local.max;
+                min[i] = Vector3.Min(a, b);
+                max[i] = Vector3.Max(a, b);
+            }
+            Shader.SetGlobalVectorArray(InteriorMinId, min);
+            Shader.SetGlobalVectorArray(InteriorMaxId, max);
+            Shader.SetGlobalFloat(InteriorCountId, count);
         }
 
         private void Suppress(Light light)
@@ -219,6 +412,26 @@ namespace LetMeSleep.Presentation
                 if (Application.isPlaying) Destroy(light.gameObject); else DestroyImmediate(light.gameObject);
             }
             spawned.Clear();
+            foreach (var item in visuals)
+                if (item) { item.SetActive(false); if (Application.isPlaying) Destroy(item); else DestroyImmediate(item); }
+            visuals.Clear();
+            foreach (var item in originalMaterials) if (item.Key) item.Key.sharedMaterials = item.Value;
+            originalMaterials.Clear();
+            foreach (var item in originalEnabled) if (item.Key) item.Key.enabled = item.Value;
+            originalEnabled.Clear();
+            foreach (var item in originalShadows) if (item.Key) item.Key.shadowCastingMode = item.Value;
+            originalShadows.Clear();
+            foreach (var item in originalLayers) if (item.Key) item.Key.renderingLayerMask = item.Value;
+            originalLayers.Clear();
+            if (sunLayersChanged && primary) primary.GetUniversalAdditionalLightData().renderingLayers = oldSunLayers;
+            sunLayersChanged = false;
+            SetInteriorVolumes(null, null);
+            if (rimLight)
+            {
+                rimLight.gameObject.SetActive(false);
+                if (Application.isPlaying) Destroy(rimLight.gameObject); else DestroyImmediate(rimLight.gameObject);
+            }
+            rimLight = null;
             foreach (var item in waterFog)
             {
                 if (!item.Key || !item.Key.IsBound) continue;
@@ -249,6 +462,7 @@ namespace LetMeSleep.Presentation
         private void OnDisable() => Unbind();
         private void OnDestroy() => Unbind();
         private static bool Finite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
+        private static bool FiniteVector(Vector3 v) => Finite(v.x) && Finite(v.y) && Finite(v.z);
         public static bool ValidShadowTier(int tier) =>
             tier == UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierLow ||
             tier == UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierMedium ||
