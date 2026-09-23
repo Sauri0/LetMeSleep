@@ -3,9 +3,9 @@
   "project": "Let me sleep",
   "generator": "art_source/unity/environments/v030_props/build_props.py",
   "sources": {
-    "build_props.py": "47b1d5b11050731e770e29c3b5cf358c1bca78c71d3fc377f403a4948a9c9f9a",
-    "props_catalog.py": "756d5d89359f9d5375075471d8bd039e43c197f7248a68e2d5a2b62991a5781f",
-    "props_lib.py": "c362e1040b3678ef2e7e6e08b39b15e01259d855696efd7d4d0d694dbb5982cd"
+    "build_props.py": "b430844e2801bd80041cc343188a2f3172b28ef9a03df757002da12f34732eed",
+    "props_catalog.py": "b84d7d6de84e77a0c14eb766e954c250bcef99598a2ead9866b83f8f41309b4d",
+    "props_lib.py": "8858b1a3bf9fafe45e0a784a6e4730e213b67efd846a64fb3fbf6373a2f42e65"
   },
   "blender": "5.2.1 LTS",
   "units": "metres (1 Blender unit = 1 m)",
@@ -5165,18 +5165,18 @@
       "name": "BedSleeper",
       "asset": "Prop_BedSleeper",
       "fbx": "Prop_BedSleeper.fbx",
-      "fbx_sha256": "d9729d773a1d070f99e5c51de15b8a83c3ad7d117be857612cea71a7accf2d56",
+      "fbx_sha256": "62d2c165885d9a762b3e8d860f2f5e83fc9fbbff32fb81b447299f6a2d801ea4",
       "display_name_es": "Cama con durmiente (acolchado alto)",
       "category": "bedroom",
       "mount": "floor",
       "dimensions_m": {
         "x": 0.89,
         "y": 2.13,
-        "z": 1.1538
+        "z": 1.1714
       },
       "unity_size_m": {
         "x": 0.89,
-        "y": 1.1538,
+        "y": 1.1714,
         "z": 2.13
       },
       "triangles": 1316,
@@ -5349,11 +5349,11 @@
           "blender_m": [
             0.0,
             0.43,
-            1.1341
+            1.147
           ],
           "unity_local_m": [
             -0.0,
-            1.1341,
+            1.147,
             -0.43
           ],
           "normal_blender": [

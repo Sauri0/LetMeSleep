@@ -6,7 +6,7 @@ from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
 ROOT=Path(__file__).resolve().parent;sys.path.insert(0,str(ROOT))
-from author_human_facial import CONTRACT,preview_pose
+from author_human_facial import CONTRACT,MOUTH_SHAPES,preview_pose
 from audit_human_joints import load
 from verify_human_menu import activate,action_for_rig
 
@@ -21,7 +21,8 @@ def main():
         action=action_for_rig('MenuSeatedIdle')
         activate(rig,action,1)
         shapes={key.name:[v.co.copy() for v in key.data] for key in head.data.shape_keys.key_blocks}
-        expected={name for names in CONTRACT['blink_samples'].values() for name in names}
+        # The blink samples plus the v0.3.0 animation mouth morphs (author_human_facial.MOUTH_SHAPES).
+        expected={name for names in CONTRACT['blink_samples'].values() for name in names}|set(MOUTH_SHAPES)
         assert set(shapes)==expected,(kind,set(shapes),expected)
         bind={}
         for side,center in CONTRACT['eye_bind_centers_source_m'].items():

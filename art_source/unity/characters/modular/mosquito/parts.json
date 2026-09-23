@@ -684,7 +684,7 @@
       ],
       "facial_impact": "None",
       "note": "Body, legs and the bone-driven eyes (Pupil/Lid bones) with the same geometry as the host.",
-      "sha256": "e635e9da900dc191fee44219cefc998bb6cda9df449ab297106cd66abdb184f0"
+      "sha256": "0455b831970083c6bad6706d707854d89a4bd2ca1fd4d7f6567291acb685192a"
     },
     {
       "role": "Mosquito",
@@ -738,7 +738,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "3ef263e0c8ddc210b182c085e40ade8b2aae07e6f135a486fc9b044ecd7c27d0"
+      "sha256": "b026f9280d6c562114a3ebb87d2c5bf7ac33fad0bfc234db5f97706c4abefd42"
     },
     {
       "role": "Mosquito",
@@ -792,7 +792,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "0e337cf13a94cab2db9d4ced03150e77fdad7d70475497e2ea3321a9f650f959"
+      "sha256": "df44f309cfebdb65f599ca8330f7446c8e5d96acd0d652838568cb0f76f7bfd3"
     },
     {
       "role": "Mosquito",
@@ -846,7 +846,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "bef4ec70ed53f639a2443b5618343ae7124c56ebdced063075b98e3418315c98"
+      "sha256": "067aedde35c5b7e2f478a9f4f40bf28eac51b47d6ce33323cd30997838ca77b5"
     },
     {
       "role": "Mosquito",
@@ -898,7 +898,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "5939035cabf345e5dffea9948b358014f02041c071e1a027eff9db381b7daecf"
+      "sha256": "8ba2f1fc048c442a9230ec29a1767b713190ab1ee4e031fa6bf99c9547c46c3a"
     },
     {
       "role": "Mosquito",
@@ -960,7 +960,7 @@
       ],
       "facial_impact": "None",
       "note": "Tip 34% shorter than Socket.Mouth; ProboscisTip follows it.",
-      "sha256": "10b506248085e936c66fa5fa99dd0adbcd12249ebfc3bff1e7f23b981d2a6de3"
+      "sha256": "6b0c797b82cbcfec6b8b457edd0cfcc7c327bc84958c81eedf37f3a868c33dea"
     },
     {
       "role": "Mosquito",
@@ -1022,7 +1022,7 @@
       ],
       "facial_impact": "None",
       "note": "Tip 30% past Socket.Mouth; ProboscisTip follows it.",
-      "sha256": "9771067c31939555b8c4315490e9f4c601afc45cdf398fa2e8bbaa56d5d6728e"
+      "sha256": "6e8e17b560e89e5cb8b18741f5580822a6c78d38869ae662756a790cf4997f9c"
     },
     {
       "role": "Mosquito",
@@ -1074,7 +1074,7 @@
       ],
       "facial_impact": "None",
       "note": "Hooked arc that still ends on Socket.Mouth.",
-      "sha256": "b72f0ea68264f8d0047d3abbe06e211d797adb04ee25f9d3df7033bd320a7ed5"
+      "sha256": "65f3b6d9d3b46ba9378645701352bd788eeac06ad99bfec0853914489285fdc7"
     },
     {
       "role": "Mosquito",
@@ -1111,7 +1111,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "60a27dfac76402d33a3c9092d3c2d76b07dfb31f807e3fa10053f396ab45b075"
+      "sha256": "fd29c9e233be9c2972e199139f75c73327cc67ddbe29da9e054d55307c9c5cd1"
     },
     {
       "role": "Mosquito",
@@ -1148,7 +1148,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "c113afcc50e464ba21bb4027849a1dea518266d6dd41c6ac379bea40ea778a8f"
+      "sha256": "c9f02b5e2a8cc4cde5e0ea26d35c675dc2495787e0793764d43701028a7198f3"
     },
     {
       "role": "Mosquito",
@@ -1186,7 +1186,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "c3eb986e12d26cff680feab6197163e6eb1cb86914d9309bf3826eebd05eeb43"
+      "sha256": "a828c5abf65f9b4654ae35a6770d47f34b0836f56d1222bf32027efb9e179340"
     },
     {
       "role": "Mosquito",
@@ -1216,7 +1216,7 @@
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "cb25fd656d921ab0a513962c752496bbf26e8d9dced8d8e53131c348cd2efd52"
+      "sha256": "90779bbd53bf03d97874d3105c275e1d98a4893878335d756bc44fef2b62aa76"
     },
     {
       "role": "Mosquito",
@@ -1247,7 +1247,7 @@
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "e4bfa7945fcf2f8e70dc717b624bbcc307aed7795447aa4f096dd45bf8c1e790"
+      "sha256": "9d976bc68fb47798f8a11ee64a68d38cc2af2651f836d68fca0a49c3ec8f1710"
     }
   ],
   "material_palette": [
@@ -1462,11 +1462,11 @@
     }
   ],
   "source_sha256": {
-    "author_modular_parts.py": "d885dae475df73630d185b174e7f941fcd5ee1c69effedabe815f366c4f03ff1",
-    "build_characters.py": "d2154f0ea2c36e9de7fcf8e27d3067ba4d6d609a96a9ff050e72d9b55be6030b",
+    "author_modular_parts.py": "e3bc6a6f01742e77b033492cae51a22f1936767722c330219cf5aed246730b5f",
+    "build_characters.py": "4b80cf65517bd781834d712078e090de071d66f40f02a6d4903a1b0739427fb3",
     "author_human_geometry.py": "a5f355b31f9245b676dde3469fd96fd2167353cf1517318539684af763129789",
     "author_human_joints.py": "296447f1a1981009d12f3a5b2b872848386666ac4b5f4fc0d8626b0b0b4a2329",
-    "author_human_facial.py": "9c0d9d7e81480feb46fab3b1861c72a4cd4331e6722a9f9082e0eab89ca2dc3d",
+    "author_human_facial.py": "183e13f25d82e6d0f245abe749aeb273be6f5de3e8ba3d35316ca28b3f7d73e7",
     "author_mosquito_geometry.py": "2a3cf7a6080fdbe26fb171d5eb5c06d70f0e9445d6acbe5271cb8f7d6f705eb1",
     "author_mosquito_face.py": "86e43f08c555fb07b3abe8ac60e6cc4aa71b5d1e8257cdd72b013c5d72bb7179"
   },

@@ -139,9 +139,9 @@
   "tool_grip_validated": false,
   "seat_skin_contact_validated": false,
   "visual_approval": false,
-  "base_blend_sha256": "6242933aa69a3eb6905fc850a44895d9d7f507216cbd96b172f07d972bf59f5a",
-  "base_fbx_sha256": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2",
-  "base_audit_sha256": "a06a1214accdaa65b32a42e372a352172543a14dbf499c67d032043e203609be",
+  "base_blend_sha256": "bed48acb799dfc69590200d3de04dfcb52f944dec45558cd3acb0e89d6fd87c3",
+  "base_fbx_sha256": "96871c02c4344325ed8293f6146bf5c0a1bdfb6fc9c52274a125ff9120cca562",
+  "base_audit_sha256": "f0e20e6800dde5fc5b8d178cddeaf65f77a5f9128d07553de5469c6e3402f8ec",
   "bind_bones": [
     {
       "name": "Root",
@@ -1148,9 +1148,9 @@
     {
       "name": "Human_EyeWhiteShade",
       "color": {
-        "r": 0.886274516582489,
-        "g": 0.8941176533699036,
-        "b": 0.9254902005195618,
+        "r": 0.9019607901573181,
+        "g": 0.9098039269447327,
+        "b": 0.9333333373069763,
         "a": 1.0
       },
       "roughness": 0.6000000238418579
@@ -1168,9 +1168,9 @@
     {
       "name": "Human_Nightcap",
       "color": {
-        "r": 0.7843137383460999,
-        "g": 0.19607843458652496,
-        "b": 0.18039216101169586,
+        "r": 0.6901960968971252,
+        "g": 0.16470588743686676,
+        "b": 0.15294118225574493,
         "a": 1.0
       },
       "roughness": 0.949999988079071
@@ -1179,8 +1179,8 @@
       "name": "Human_NightcapBand",
       "color": {
         "r": 0.5568627715110779,
-        "g": 0.10196078568696976,
-        "b": 0.0941176488995552,
+        "g": 0.13333334028720856,
+        "b": 0.125490203499794,
         "a": 1.0
       },
       "roughness": 0.949999988079071
@@ -1188,9 +1188,9 @@
     {
       "name": "Human_PajamaDots",
       "color": {
-        "r": 0.9019607901573181,
-        "g": 0.8627451062202454,
-        "b": 0.7843137383460999,
+        "r": 0.8627451062202454,
+        "g": 0.8470588326454163,
+        "b": 0.8078431487083435,
         "a": 1.0
       },
       "roughness": 0.8799999952316284
@@ -1201,6 +1201,16 @@
         "r": 0.1764705926179886,
         "g": 0.30980393290519714,
         "b": 0.6039215922355652,
+        "a": 1.0
+      },
+      "roughness": 0.8799999952316284
+    },
+    {
+      "name": "Human_PantsShade",
+      "color": {
+        "r": 0.13725490868091583,
+        "g": 0.250980406999588,
+        "b": 0.4941176474094391,
         "a": 1.0
       },
       "roughness": 0.8799999952316284
@@ -1218,9 +1228,19 @@
     {
       "name": "Human_Shirt",
       "color": {
-        "r": 0.9098039269447327,
-        "g": 0.8627451062202454,
-        "b": 0.772549033164978,
+        "r": 0.8745098114013672,
+        "g": 0.7568627595901489,
+        "b": 0.5843137502670288,
+        "a": 1.0
+      },
+      "roughness": 0.9200000166893005
+    },
+    {
+      "name": "Human_ShirtShade",
+      "color": {
+        "r": 0.7568627595901489,
+        "g": 0.6352941393852234,
+        "b": 0.46666666865348816,
         "a": 1.0
       },
       "roughness": 0.9200000166893005
@@ -1264,8 +1284,10 @@
         "Human_Skin",
         "Human_Pajamas",
         "Human_PajamaDots",
+        "Human_PantsShade",
         "Human_SlipperSole",
-        "Human_Slipper"
+        "Human_Slipper",
+        "Human_ShirtShade"
       ]
     },
     {
@@ -1299,8 +1321,8 @@
       ]
     }
   ],
-  "triangles": 17864,
-  "vertices": 9182,
+  "triangles": 21563,
+  "vertices": 11435,
   "blend_shapes": {
     "HumanHead": [
       "Blink25.L",
@@ -1310,7 +1332,10 @@
       "Blink25.R",
       "Blink50.R",
       "Blink75.R",
-      "Blink.R"
+      "Blink.R",
+      "Smile",
+      "MouthO",
+      "Frown"
     ]
   },
   "facial_contract": {
@@ -1425,22 +1450,22 @@
       -0.1289,
       1.4703
     ],
-    "lowest_body_bed_z_m": 0.579,
+    "lowest_body_bed_z_m": 0.5723,
     "body_bounds_bed_m": [
       [
         -0.22496281564235687,
         -0.6979151964187622,
-        0.5789923667907715
+        0.5722726583480835
       ],
       [
         0.31274574995040894,
-        0.9709400534629822,
-        1.200384259223938
+        0.9815425276756287,
+        1.2088818550109863
       ]
     ]
   },
   "files_sha256": {
-    "LMS_HumanMenu.blend": "e1832719362967ca619ad4215e85ae2e9aaed5fbc2d74cf343d72871f92088f7",
-    "LMS_HumanMenu.fbx": "2f8c859391a443e5aa297bb8cfc338493e60a33eb4a75960945191cf199dfd96"
+    "LMS_HumanMenu.blend": "c0fa6180ed41b593d684e4fd7504542a8d8818e8dbbbf5d0f7b4b4e127e7c0d1",
+    "LMS_HumanMenu.fbx": "09ac2258495d6df14c1c2abc3ad1548e864a3e290af20dad1579447b37b294ce"
   }
 }

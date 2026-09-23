@@ -2,8 +2,8 @@
   "species": "Human",
   "mesh_count": 5,
   "bones": 65,
-  "triangles": 17864,
-  "vertices": 9182,
+  "triangles": 21563,
+  "vertices": 11435,
   "unweighted_vertices": 0,
   "bad_weight_sums": 0,
   "degenerate_triangles": 0,
@@ -233,13 +233,13 @@
   ],
   "bounds_max": [
     0.9720883369445801,
-    0.18427348136901855,
-    1.7640000581741333
+    0.24210910499095917,
+    1.7660000324249268
   ],
   "dimensions": [
     1.9442545771598816,
-    0.42527347803115845,
-    1.7640000581741333
+    0.48310910165309906,
+    1.7660000324249268
   ],
   "sockets": [
     "Socket.Eye",
@@ -259,8 +259,10 @@
         "Human_Skin",
         "Human_Pajamas",
         "Human_PajamaDots",
+        "Human_PantsShade",
         "Human_SlipperSole",
-        "Human_Slipper"
+        "Human_Slipper",
+        "Human_ShirtShade"
       ]
     },
     {
@@ -411,6 +413,16 @@
     "faces": 7,
     "flipped": 7,
     "vertices": 12
+  },
+  "eye_white_normals": {
+    "faces": 192,
+    "bend": 0.62,
+    "target": [
+      0.0,
+      -0.9284767508506775,
+      0.371390700340271
+    ],
+    "lowest_normal_z": -0.2667
   },
   "bone_names": [
     "Root",
@@ -1400,8 +1412,10 @@
     "Human_NightcapBand",
     "Human_PajamaDots",
     "Human_Pajamas",
+    "Human_PantsShade",
     "Human_Piping",
     "Human_Shirt",
+    "Human_ShirtShade",
     "Human_Skin",
     "Human_Slipper",
     "Human_SlipperSole"
@@ -1430,9 +1444,9 @@
     {
       "name": "Human_EyeWhiteShade",
       "color": {
-        "r": 0.886274516582489,
-        "g": 0.8941176533699036,
-        "b": 0.9254902005195618,
+        "r": 0.9019607901573181,
+        "g": 0.9098039269447327,
+        "b": 0.9333333373069763,
         "a": 1.0
       },
       "roughness": 0.6000000238418579
@@ -1450,9 +1464,9 @@
     {
       "name": "Human_Nightcap",
       "color": {
-        "r": 0.7843137383460999,
-        "g": 0.19607843458652496,
-        "b": 0.18039216101169586,
+        "r": 0.6901960968971252,
+        "g": 0.16470588743686676,
+        "b": 0.15294118225574493,
         "a": 1.0
       },
       "roughness": 0.949999988079071
@@ -1461,8 +1475,8 @@
       "name": "Human_NightcapBand",
       "color": {
         "r": 0.5568627715110779,
-        "g": 0.10196078568696976,
-        "b": 0.0941176488995552,
+        "g": 0.13333334028720856,
+        "b": 0.125490203499794,
         "a": 1.0
       },
       "roughness": 0.949999988079071
@@ -1470,9 +1484,9 @@
     {
       "name": "Human_PajamaDots",
       "color": {
-        "r": 0.9019607901573181,
-        "g": 0.8627451062202454,
-        "b": 0.7843137383460999,
+        "r": 0.8627451062202454,
+        "g": 0.8470588326454163,
+        "b": 0.8078431487083435,
         "a": 1.0
       },
       "roughness": 0.8799999952316284
@@ -1483,6 +1497,16 @@
         "r": 0.1764705926179886,
         "g": 0.30980393290519714,
         "b": 0.6039215922355652,
+        "a": 1.0
+      },
+      "roughness": 0.8799999952316284
+    },
+    {
+      "name": "Human_PantsShade",
+      "color": {
+        "r": 0.13725490868091583,
+        "g": 0.250980406999588,
+        "b": 0.4941176474094391,
         "a": 1.0
       },
       "roughness": 0.8799999952316284
@@ -1500,9 +1524,19 @@
     {
       "name": "Human_Shirt",
       "color": {
-        "r": 0.9098039269447327,
-        "g": 0.8627451062202454,
-        "b": 0.772549033164978,
+        "r": 0.8745098114013672,
+        "g": 0.7568627595901489,
+        "b": 0.5843137502670288,
+        "a": 1.0
+      },
+      "roughness": 0.9200000166893005
+    },
+    {
+      "name": "Human_ShirtShade",
+      "color": {
+        "r": 0.7568627595901489,
+        "g": 0.6352941393852234,
+        "b": 0.46666666865348816,
         "a": 1.0
       },
       "roughness": 0.9200000166893005
@@ -1541,21 +1575,21 @@
   "passed": true,
   "errors": [],
   "files_sha256": {
-    "LMS_Human_alpha.blend": "e90780e2578df17aa31f7d89dd0bf4216e606e4c469d486f9b453eaec218a50f",
-    "LMS_Human_alpha.fbx": "2e4fbcdece1177e72d551fb8e148b3878df9161eb0b3f3450fd4acbf89e8d4b6"
+    "LMS_Human_alpha.blend": "bed48acb799dfc69590200d3de04dfcb52f944dec45558cd3acb0e89d6fd87c3",
+    "LMS_Human_alpha.fbx": "96871c02c4344325ed8293f6146bf5c0a1bdfb6fc9c52274a125ff9120cca562"
   },
   "locomotion_reauthoring": {
-    "baseline_blend_sha256": "431c5d63b0b4d0e32b88803b4ffd020e87cb9f84d919f8cf995c79a69e47d7cd",
-    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v030-anim\\art_source\\unity\\characters\\.validation\\v030-anim-r4a\\base",
+    "baseline_blend_sha256": "ca92e925f793685c31ab8b1591fb2442a8db6621d26e3c018e1c25811a33c243",
+    "baseline_root": "N:\\LetMeSleep\\Validation\\V030\\Integration\\blender\\integ-a\\base",
     "scene_before": {
-      "meshes": "8a3a0879acfd254ecb181611e2b256aca369e61499f568acbc6307ae54345cee",
+      "meshes": "382854f909157e91c7267b3a057ffc48f21300ee69685d7d08a23bedba70bc84",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
-      "winding": "f475a1cde2fb82f59b9eb1e252b73cb9378619f216854b0a42293465ac168c1a"
+      "winding": "e4e5c1b12099de4015e8cdbf208752b3ed1f679889607da3b229bde73702e17a"
     },
     "scene_after": {
-      "meshes": "8a3a0879acfd254ecb181611e2b256aca369e61499f568acbc6307ae54345cee",
+      "meshes": "382854f909157e91c7267b3a057ffc48f21300ee69685d7d08a23bedba70bc84",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
-      "winding": "f475a1cde2fb82f59b9eb1e252b73cb9378619f216854b0a42293465ac168c1a"
+      "winding": "e4e5c1b12099de4015e8cdbf208752b3ed1f679889607da3b229bde73702e17a"
     },
     "actions_before": {
       "Human_Blink": "33809c4a6e207e3060f95d586cc9b98eda6de6a09917e1343e5852e1b4e2e463",
@@ -1624,8 +1658,8 @@
       "Human_Yawn"
     ],
     "files_sha256": {
-      "LMS_Human_alpha.blend": "e90780e2578df17aa31f7d89dd0bf4216e606e4c469d486f9b453eaec218a50f",
-      "LMS_Human_alpha.fbx": "2e4fbcdece1177e72d551fb8e148b3878df9161eb0b3f3450fd4acbf89e8d4b6"
+      "LMS_Human_alpha.blend": "bed48acb799dfc69590200d3de04dfcb52f944dec45558cd3acb0e89d6fd87c3",
+      "LMS_Human_alpha.fbx": "96871c02c4344325ed8293f6146bf5c0a1bdfb6fc9c52274a125ff9120cca562"
     },
     "author": {
       "clips": [

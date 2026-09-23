@@ -1034,7 +1034,7 @@
       ],
       "facial_impact": "None",
       "note": "Bare arms, feet and ankles (the authored head, neck and hands stay on the host).",
-      "sha256": "f159df1e4fe1c14be463880e03a6eb1889e5655ba5ec97631535ab56d598d4e7"
+      "sha256": "cdccdb964498ca5a04d3bda914002571749c13effeca68b818b66bd899be7fd6"
     },
     {
       "role": "Human",
@@ -1082,7 +1082,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "8928216538415d2308d2391d21753669fcbb5f086f27e9c38d40690774766f39"
+      "sha256": "fe1ace51d4707062189c76f5bff8e1151e779440667c1c19c9645c351f7f0d22"
     },
     {
       "role": "Human",
@@ -1131,7 +1131,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "43177840dd411777ca986166ee0a691b9616e071f7fba72a94dc170e8ddd33f5"
+      "sha256": "93442ba3e0a9627796d903b79bc899d9c6f6639bcc331938379e109df74fe1f6"
     },
     {
       "role": "Human",
@@ -1161,7 +1161,7 @@
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "5751cbe2d1020ab0e4a5080ddc913518b6d432dd9b046cb5288163cb56232a76"
+      "sha256": "eb503c9b8c441fb2b77ee55a2469c03f0854b30faad38df8f1aa1dd16a51e997"
     },
     {
       "role": "Human",
@@ -1191,7 +1191,7 @@
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "651610457dd755d0f085771e09be98df17b5efdc623660feb5d7efc069dd7c1b"
+      "sha256": "9c7e53f88c5e7e719c4383526d358381e647e581f4f52717edd0609cc688221b"
     },
     {
       "role": "Human",
@@ -1249,7 +1249,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "f3309e7e64aedcf14c254f8b0ab2d51a3841d19fbdb157150d206bc6dba85615"
+      "sha256": "7b401b0b59166538538426464911ba01f4d30b5f7932a3289da21e29a9e62f60"
     },
     {
       "role": "Human",
@@ -1307,7 +1307,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "7719cf75c42ce632bccbab8d5cef359329a8622845e6f10cdda4aaa93738ef89"
+      "sha256": "9b1478dbe5bbec312c65866f929e4e11cbf4896a7c6c5eaeb5af055c947509bc"
     },
     {
       "role": "Human",
@@ -1365,7 +1365,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "61f8b23278429712898d36be2260b4d2715fc766beae526b3ed86383de50f5b2"
+      "sha256": "66f3d6668c2c739e7dfdffecccfd4242f499e49b9917fc2d46f41c0da1311a69"
     },
     {
       "role": "Human",
@@ -1394,7 +1394,7 @@
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "4aa229224705ed0bd3db5e42531c3e9906076e8d06f959b0065561e0205f3b25"
+      "sha256": "19fbdf21232862659d79768db329d62325a1e53f9da8cd6d874e18f4769e66ce"
     },
     {
       "role": "Human",
@@ -1423,7 +1423,7 @@
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "423a8a032e2174d6724d866e539ad0fa0223abf75c9b39c46f2e9c933bcba018"
+      "sha256": "c4404e3ddc202f6c742c642741714f861be9680d1370ba3d85774f76f688f93e"
     },
     {
       "role": "Human",
@@ -1451,7 +1451,7 @@
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "f4d253bfbaa0bf949f55829ac9633bbf5e705af220317af605d6c81eab7b143a"
+      "sha256": "333c947c6f4249f60ec5517398743cfbad8edc0c91029cabf2825258256e810a"
     },
     {
       "role": "Human",
@@ -1480,7 +1480,7 @@
       "colors": [],
       "facial_impact": "OccludesExistingFace",
       "note": "",
-      "sha256": "53d67d7c3335b9cf899c1c11059af1ed645e0fddb546d33d306cf724f7f36967"
+      "sha256": "b41d2ec3d3192119db7c5e98ee54a715050e7b9fec65fe1b8544e3bf59f464b1"
     },
     {
       "role": "Human",
@@ -1531,7 +1531,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "c72844d5540b29cdb434d2f351e349901a93eca3a67be4086250adc467b8e0ab"
+      "sha256": "b512ecae82f8a1f070781a09110936f8a04bb2d1d491e8ccefff09b3059227db"
     },
     {
       "role": "Human",
@@ -1565,7 +1565,7 @@
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "dbb498cbba3975bdc60f5254743db0af84cbd1572aff68e21260d3b42ff98542"
+      "sha256": "d29a4e03ed457c480103e5d9210028dddf7491a356e7a2a929fa4cb74f4aa4db"
     },
     {
       "role": "Human",
@@ -1597,7 +1597,7 @@
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "75464e8c1d30dfcd8815602db2ca78671aeecfa9c7c85852b9f299aa612cb69d"
+      "sha256": "5fc3243816b1497d8ef2cdeb72d22b492b74f03b78c58b586f578982deeb227e"
     },
     {
       "role": "Human",
@@ -1629,7 +1629,7 @@
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "1b49081d0b0499fbf298df2241907390a9ad2d801fc59d7e2cd19f148425b21e"
+      "sha256": "3bcc85f45f2e13feb8b56b9b4042a472f50f0fd2cc4cd22d73eb89b45f495f4a"
     }
   ],
   "material_palette": [
@@ -1922,10 +1922,10 @@
   ],
   "source_sha256": {
     "author_modular_parts.py": "e3bc6a6f01742e77b033492cae51a22f1936767722c330219cf5aed246730b5f",
-    "build_characters.py": "d2154f0ea2c36e9de7fcf8e27d3067ba4d6d609a96a9ff050e72d9b55be6030b",
+    "build_characters.py": "4b80cf65517bd781834d712078e090de071d66f40f02a6d4903a1b0739427fb3",
     "author_human_geometry.py": "a5f355b31f9245b676dde3469fd96fd2167353cf1517318539684af763129789",
     "author_human_joints.py": "296447f1a1981009d12f3a5b2b872848386666ac4b5f4fc0d8626b0b0b4a2329",
-    "author_human_facial.py": "9c0d9d7e81480feb46fab3b1861c72a4cd4331e6722a9f9082e0eab89ca2dc3d",
+    "author_human_facial.py": "183e13f25d82e6d0f245abe749aeb273be6f5de3e8ba3d35316ca28b3f7d73e7",
     "author_mosquito_geometry.py": "2a3cf7a6080fdbe26fb171d5eb5c06d70f0e9445d6acbe5271cb8f7d6f705eb1",
     "author_mosquito_face.py": "86e43f08c555fb07b3abe8ac60e6cc4aa71b5d1e8257cdd72b013c5d72bb7179"
   },

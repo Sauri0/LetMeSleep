@@ -1,6 +1,6 @@
 {
-  "status": "v0.3.0 scenes: + MenuSleep (10 s loop, slow breathing, one dream stir) and MenuSleepSwat (1.6 s clumsy, still-asleep slap) lying on the left side in Prop_BedSleeper (UI-06 screen 1); seated clips unchanged in authoring. Previous: v0.3.0 sketch human (round 7, review corrections: the mouth cavity faces its own axis so back-face culling keeps it (an open mouth no longer shows the scene behind the head) and a ~110 mm shorter nightcap tail puts the pompom behind the ear at ear-lobe height (bottom z ~1.393, above the side jaw ring); round 6 (art-director corrections): rounded-box face with the chin 45 mm lower at 1.300 (mouth 1.40, Socket.Eye 1.53), vertical cheek walls to a jaw bevel and a flat 150 mm chin, skull ~15% narrower at the eyes (~302 mm, globes cover ~87%), 20 mm 3D wedge brows under a 12 mm lower cap band, block sideburns (no temple fringe strands), close-fitting sleeves (arm + 15 mm, 100% UpperArm) under a ~17 deg shoulder line, straight 8-sided arm prisms (-10%), +10% longer hands with a loose idle fist, thick closed slippers on a 20 mm #1E2440 sole, 23-24 cream #E6DCC8 45 mm dots per leg incl. back of thighs and seat) regenerated from art_source human base; native numeric gates passed; Unity import and artistic approval pending",
-  "selected_raw_directory": "N:/LetMeSleep/Validation/V030/Scenes/menu-human/run6",
+  "status": "Integration claude/v0.3.0: regenerated from the combined human base (characters round 9 geometry + modular review r1, animation rounds 1-4 facial/motion sources) with the v0.3.0 scene clips. v0.3.0 scenes: + MenuSleep (10 s loop, slow breathing, one dream stir) and MenuSleepSwat (1.6 s clumsy, still-asleep slap) lying on the left side in Prop_BedSleeper (UI-06 screen 1); seated clips unchanged in authoring. Previous: v0.3.0 sketch human (round 9 in chars; round 7, review corrections: the mouth cavity faces its own axis so back-face culling keeps it (an open mouth no longer shows the scene behind the head) and a ~110 mm shorter nightcap tail puts the pompom behind the ear at ear-lobe height (bottom z ~1.393, above the side jaw ring); round 6 (art-director corrections): rounded-box face with the chin 45 mm lower at 1.300 (mouth 1.40, Socket.Eye 1.53), vertical cheek walls to a jaw bevel and a flat 150 mm chin, skull ~15% narrower at the eyes (~302 mm, globes cover ~87%), 20 mm 3D wedge brows under a 12 mm lower cap band, block sideburns (no temple fringe strands), close-fitting sleeves (arm + 15 mm, 100% UpperArm) under a ~17 deg shoulder line, straight 8-sided arm prisms (-10%), +10% longer hands with a loose idle fist, thick closed slippers on a 20 mm #1E2440 sole, 23-24 cream #E6DCC8 45 mm dots per leg incl. back of thighs and seat) regenerated from art_source human base; native numeric gates passed; Unity import and artistic approval pending",
+  "selected_raw_directory": "N:/LetMeSleep/Validation/V030/Integration/blender/integ-a/menu",
   "clips": {
     "MenuSeatedIdle": 8.0,
     "MenuLook": 4.0,
@@ -10,9 +10,9 @@
     "MenuSleepSwat": 1.6
   },
   "numeric_gates_passed": true,
-  "samples_both_formats": 920,
+  "samples_both_formats": 1620,
   "max_source_fbx_bone_difference_m": 1.3574019336422494e-06,
-  "max_boundary_mesh_difference_m": 6.880400407680986e-07,
+  "max_boundary_mesh_difference_m": 6.59029018506288e-07,
   "max_foot_error_m": 5.969069167437188e-07,
   "min_pelvis_cloth_height_m": 0.5890000462532043,
   "seat_top_height_m": 0.575,
@@ -133,21 +133,23 @@
     "No full moving sequence or Unity approval yet"
   ],
   "file_sha256": {
-    "LMS_HumanMenu.blend": "e1832719362967ca619ad4215e85ae2e9aaed5fbc2d74cf343d72871f92088f7",
-    "LMS_HumanMenu.fbx": "2f8c859391a443e5aa297bb8cfc338493e60a33eb4a75960945191cf199dfd96",
-    "sleep_envelope.json": "38ca3f759256348841bbf6ba9ea08d1d95f58d2a1ca596c0eaca1d9f98c86081"
+    "LMS_HumanMenu.blend": "c0fa6180ed41b593d684e4fd7504542a8d8818e8dbbbf5d0f7b4b4e127e7c0d1",
+    "LMS_HumanMenu.fbx": "09ac2258495d6df14c1c2abc3ad1548e864a3e290af20dad1579447b37b294ce",
+    "sleep_envelope.json": "399323a91a2526212b5c0beaeb885119a8bd51b42832df1d99f9bab6ddfbe431",
+    "menu_audit.json": "fa29783ba5be7bfe8561a5bf701014c104fb70f19a4cf4ebf7d71a6703335eff",
+    "menu_motion_audit.json": "85609db68a8d239784a2b9ff7ddcda682a80a5dac1377af7fa266ea425915083"
   },
   "v030_regeneration": {
-    "round": "human-r7",
-    "source": "art_source/unity/characters/human/LMS_Human_alpha.blend (build_characters.py --species Human, 15-clip base; snapshot .validation/v030-human-r7/base15)",
+    "round": "integration-v0.3.0",
+    "source": "art_source/unity/characters/human/LMS_Human_alpha.blend (build_characters.py --species Human + export_human_locomotion gait promotion; snapshot N:/LetMeSleep/Validation/V030/Integration/blender/integ-a/base)",
     "checks": {
       "verify_human_menu": true,
       "audit_human_facial": true,
       "audit_human_joints": true
     },
     "check_reports": {
-      "facial_audit": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r7\\menu\\facial_audit.json",
-      "joint_audit": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r7\\menu\\joint_audit.json"
+      "facial_audit": "N:/LetMeSleep/Validation/V030/Integration/blender/integ-a/menu/facial_audit.json",
+      "joint_audit": "N:/LetMeSleep/Validation/V030/Integration/blender/integ-a/menu/joint_audit.json"
     },
     "legacy_evidence": "evidence/ and review/ images/logs describe the previous (pre-v0.3.0) pajama-jacket geometry and were not regenerated"
   },
@@ -158,7 +160,7 @@
       -0.7703,
       0.8354
     ],
-    "lowest_body_bed_z_m": 0.579,
+    "lowest_body_bed_z_m": 0.5723,
     "envelope": "menu/sleep_envelope.json feeds props_catalog.bed_sleeper (quilt clears the sleeper by QUILT_CLEARANCE)",
     "eyes": "closed by the Unity menu scene (Blink blend shapes)",
     "check_renders": "N:/LetMeSleep/Validation/V030/Scenes/menu-human/check7",
