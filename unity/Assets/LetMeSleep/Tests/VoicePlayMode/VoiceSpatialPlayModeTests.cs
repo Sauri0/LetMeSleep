@@ -52,6 +52,9 @@ namespace LetMeSleep.Tests.VoicePlayMode
         [UnityTest]
         public IEnumerator FadeOutAndDestroy_RemovesTheVoiceWithoutResidualAudio()
         {
+            // Earlier PlayMode fixtures can leave music or ambience playing; silence only those pre-existing
+            // sources so the tap measures what the voice leaves behind.
+            foreach (var other in Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None)) other.Stop();
             ListenerTap tap = MakeListener(Vector3.zero);
             VoicePlayoutStream stream = MakeStream(new Vector3(0f, 0f, 2f), 8);
             GameObject root = stream.gameObject;
@@ -90,11 +93,13 @@ namespace LetMeSleep.Tests.VoicePlayMode
         public void Probe_TellsAClosedRoomFromOpenAir()
         {
             var probe = new VoiceAcousticProbe();
-            VoiceRoomSample outside = probe.Room(new Vector3(0f, 1.5f, 0f));
+            // Far from the origin: earlier PlayMode fixtures may leave colliders around (0, 0, 0).
+            Vector3 far = new Vector3(0f, 0f, 6000f);
+            VoiceRoomSample outside = probe.Room(far + new Vector3(0f, 1.5f, 0f));
             Assert.That(outside.Interior, Is.EqualTo(0f)); Assert.That(outside.Wet, Is.LessThan(.05f));
-            MakeRoom(new Vector3(40f, 1.5f, 0f), new Vector3(4f, 3f, 5f));
+            MakeRoom(far + new Vector3(40f, 1.5f, 0f), new Vector3(4f, 3f, 5f));
             Physics.SyncTransforms();
-            VoiceRoomSample inside = probe.Room(new Vector3(40f, 1.5f, 0f));
+            VoiceRoomSample inside = probe.Room(far + new Vector3(40f, 1.5f, 0f));
             Assert.That(inside.Interior, Is.GreaterThan(.9f));
             Assert.That(inside.DecaySeconds, Is.GreaterThan(outside.DecaySeconds + .1f));
             Assert.That(20f * Mathf.Log10(inside.Wet / outside.Wet), Is.GreaterThan(15f), "Room reverb ≥ 15 dB more send than open air.");
