@@ -104,7 +104,8 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(actions.LastEditedRole, Is.EqualTo(AlfaRole.Mosquito));
             AssertOption(actions.LastModularPreview, CustomizationRole.Human, "human.hair", "long");
             AssertOption(actions.LastModularPreview, CustomizationRole.Mosquito, "mosquito.base", "body-b");
-            Assert.That(CustomizationTextNamed(ui, "Status").text, Does.Contain("llegará cuando estén listas"));
+            // v0.3 art direction: no "coming later" notice (the viewer approximates the parts instead).
+            Assert.That(CustomizationTextNamed(ui, "Status").text, Does.Not.Contain("llegará"));
             Assert.That(Find(ui.transform, "Thumbnail").GetComponent<UnityEngine.UI.Image>().sprite, Is.SameAs(thumbnail),
                 "Only the supplied, real thumbnail is rendered for a visual option.");
 
@@ -208,8 +209,10 @@ namespace LetMeSleep.Tests.PlayMode
             if (option < 0 || option + 1 >= args.Length)
                 Assert.Ignore("Requires an explicit modular customization evidence output directory.");
             string output = Path.GetFullPath(args[option + 1]);
-            string validationRoot = Path.GetFullPath("N:/LetMeSleep/Validation/V020").TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            Assert.That(output.StartsWith(validationRoot, StringComparison.OrdinalIgnoreCase), Is.True);
+            bool underValidation = new[] { "N:/LetMeSleep/Validation/V020", "N:/LetMeSleep/Validation/V030" }
+                .Select(root => Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar)
+                .Any(root => output.StartsWith(root, StringComparison.OrdinalIgnoreCase));
+            Assert.That(underValidation, Is.True, "Evidence must be written under the V020 or V030 validation roots.");
             Directory.CreateDirectory(output);
 
             var snapshot = EvidenceSnapshot();
@@ -231,7 +234,6 @@ namespace LetMeSleep.Tests.PlayMode
                 canvas.planeDistance = 1f;
                 yield return null;
                 Invoke(ui, "SelectModularCategory", "human.style_2");
-                ScrollToBottom(Find(ui.transform, "CategoryScroll"));
                 yield return null;
                 yield return new WaitForSecondsRealtime(.2f);
                 CaptureModularCanvas(output, camera, canvas, receipt, 1280, 720, AlfaRole.Human, true);
@@ -263,15 +265,20 @@ namespace LetMeSleep.Tests.PlayMode
                 Canvas.ForceUpdateCanvases();
                 Transform view = Find(ui.transform, "CustomizationView");
                 Transform options = Find(view, "OptionsPanel");
+                // Scroll once the capture resolution is applied: the rail only overflows at the final canvas size.
+                if (expectedRole == AlfaRole.Human) ScrollToBottom(Find(view, "CategoryScroll"));
                 var fields = Find(options, "ModularFields") as RectTransform;
                 var footer = Find(options, "Actions") as RectTransform;
                 Assert.That(fields, Is.Not.Null); Assert.That(footer, Is.Not.Null);
                 Assert.That(CustomizationTextNamed(ui, "CategoryTitle").text,
                     Does.Contain(expectedRole == AlfaRole.Human ? "HUMANO" : "MOSQUITO"));
+                // v0.3 stage 2: categories live in the left rail (UI-06), options stay in OptionsPanel.
+                Transform rail = Find(view, "CategoryRail");
+                Assert.That(rail, Is.Not.Null);
                 if (expectedRole == AlfaRole.Human)
-                    AssertScrollItemVisible(Find(options, "CategoryScroll"), Find(options, "ModularCategory_10"));
+                    AssertScrollItemVisible(Find(rail, "CategoryScroll"), Find(rail, "ModularCategory_10"));
                 else
-                    AssertScrollItemVisible(Find(options, "CategoryScroll"), Find(options, "ModularCategory_11"));
+                    AssertScrollItemVisible(Find(rail, "CategoryScroll"), Find(rail, "ModularCategory_11"));
                 if (requiresColorSwatch)
                     Assert.That(Find(options, "ColorSwatch"), Is.Not.Null,
                         "The selected long-label category exposes its catalogued color state.");
@@ -279,7 +286,7 @@ namespace LetMeSleep.Tests.PlayMode
                 fields.GetWorldCorners(fieldCorners); footer.GetWorldCorners(footerCorners);
                 Assert.That(fieldCorners[0].y, Is.GreaterThanOrEqualTo(footerCorners[1].y - .01f),
                     "The modular scroll area overlaps the footer at " + width + "x" + height);
-                foreach (var label in options.GetComponentsInChildren<TextMeshProUGUI>(true))
+                foreach (var label in view.GetComponentsInChildren<TextMeshProUGUI>(false))
                 {
                     label.ForceMeshUpdate(false, false);
                     Assert.That(label.isTextOverflowing, Is.False, label.name + " overflows at " + width + "x" + height);
@@ -288,7 +295,7 @@ namespace LetMeSleep.Tests.PlayMode
                 pixels.ReadPixels(new Rect(0, 0, width, height), 0, 0); pixels.Apply();
                 File.WriteAllBytes(Path.Combine(output, "modular-customization-" + width + "x" + height + ".png"), pixels.EncodeToPNG());
                 receipt.AppendLine(width + "x" + height + ": role=" + expectedRole + " categories=10 labels=long scroll=" +
-                    (Find(options, "CategoryScroll") != null && Find(options, "OptionsScroll") != null) +
+                    (Find(view, "CategoryScroll") != null && Find(options, "OptionsScroll") != null) +
                     " colorState=" + requiresColorSwatch);
             }
             finally

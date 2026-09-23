@@ -429,7 +429,8 @@ namespace LetMeSleep.Bootstrap
             {
                 showingResults = true;
                 ui.PresentResults(new ResultsUiState(state.Winner == PlayerRole.Human ? MatchOutcome.Humans : state.Winner == PlayerRole.Mosquito ? MatchOutcome.Mosquitoes : MatchOutcome.Interrupted,
-                    training, training || lobby?.IsOwner == true, state.BloodCollected, state.BloodGoal, (float)state.HostTime, ModeHudText.ResultReason(state.Result), trainingRole: trainingRole, modeId: state.ModeId, mapId: state.MapId, tasksCompleted: state.TasksCompleted, tasksGoal: state.TasksGoal, mosquitoesAlive: state.Actors.Count(a => a.Role == PlayerRole.Mosquito && !a.Eliminated))); return;
+                    training, training || lobby?.IsOwner == true, state.BloodCollected, state.BloodGoal, (float)state.HostTime, ModeHudText.ResultReason(state.Result), trainingRole: trainingRole, modeId: state.ModeId, mapId: state.MapId, tasksCompleted: state.TasksCompleted, tasksGoal: state.TasksGoal, mosquitoesAlive: state.Actors.Count(a => a.Role == PlayerRole.Mosquito && !a.Eliminated),
+                    humansCount: state.Actors.Count(a => a.Role == PlayerRole.Human), mosquitoesCount: state.Actors.Count(a => a.Role == PlayerRole.Mosquito))); return;
             }
             var actor = state.Actors.FirstOrDefault(a => a.ActorId == game.LocalActorId); var personal = ModeHudText.LocalPrivate(state, game.LocalActorId, game.LocalPrivate);
             var role = actor?.Role == PlayerRole.Mosquito ? AlfaRole.Mosquito : AlfaRole.Human;
@@ -464,7 +465,10 @@ namespace LetMeSleep.Bootstrap
                 networkMessage: !training && gameNetwork != null && !gameNetwork.Ready ? "Esperando a los jugadores…" : "",
                 modeId: state.ModeId, tasksCompleted: state.TasksCompleted, tasksGoal: state.TasksGoal,
                 mosquitoesAlive: state.Actors.Count(a => a.Role == PlayerRole.Mosquito && !a.Eliminated), livesRemaining: actor?.LivesRemaining ?? 0,
-                privateTaskText: privateTask, taskProgress01: taskProgress, equipment: equipment));
+                privateTaskText: privateTask, taskProgress01: taskProgress, equipment: equipment,
+                mosquitoesTotal: state.Actors.Count(a => a.Role == PlayerRole.Mosquito),
+                humansActive: state.Actors.Count(a => a.Role == PlayerRole.Human && !a.Eliminated && a.LifeState != LifeState.Fainted),
+                humansTotal: state.Actors.Count(a => a.Role == PlayerRole.Human)));
         }
         private void ObserveCombatFeedback(GameplayEvent item)
         {

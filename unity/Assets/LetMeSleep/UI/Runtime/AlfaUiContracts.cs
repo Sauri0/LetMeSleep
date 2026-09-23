@@ -140,6 +140,15 @@ namespace LetMeSleep.UI
 
     public interface ISpectatorActions { void SpectateNext(); }
 
+    /// <summary>
+    /// Optional, implemented next to <see cref="IMenuActions"/>: the waiting-room character of a member, so the
+    /// UI can float that player's name over it (UI-06 screen 3). Return false when the member has no avatar.
+    /// </summary>
+    public interface ILobbyPresenceSource
+    {
+        bool TryGetLobbyAvatar(string memberId, out Transform avatar, out Camera camera);
+    }
+
     public interface IRoomModeActions
     {
         void SetRoomMode(string modeId);
@@ -270,6 +279,8 @@ namespace LetMeSleep.UI
         public bool RulesPending { get; }
         public string ModeId { get; }
         public int RoundSeconds { get; }
+        /// <summary>Seconds until the round starts on its own, when the room runs a start countdown; null otherwise.</summary>
+        public int? StartCountdownSeconds { get; }
 
         public LobbyUiState(
             bool isOwner,
@@ -285,8 +296,10 @@ namespace LetMeSleep.UI
             bool canExplore = false,
             bool startPending = false,
             bool isWaiting = true,
-            bool rulesPending = false, string modeId = GameModes.Blood, int roundSeconds = 180)
+            bool rulesPending = false, string modeId = GameModes.Blood, int roundSeconds = 180, int? startCountdownSeconds = null)
         {
+            if (startCountdownSeconds.HasValue && startCountdownSeconds.Value < 0) throw new ArgumentOutOfRangeException(nameof(startCountdownSeconds));
+            StartCountdownSeconds = startCountdownSeconds;
             ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode.");
             if (roundSeconds < 30 || roundSeconds > 1800) throw new ArgumentOutOfRangeException(nameof(roundSeconds));
             RoundSeconds = roundSeconds;
@@ -584,12 +597,21 @@ namespace LetMeSleep.UI
         public float StateProgress01 { get; }
         public string NetworkMessage { get; }
         public EquipmentHudUiState Equipment { get; }
+        /// <summary>Mosquitoes in the round (alive or not); -1 when the caller does not know it.</summary>
+        public int MosquitoesTotal { get; }
+        /// <summary>Humans still able to act (not eliminated nor fainted); -1 when unknown.</summary>
+        public int HumansActive { get; }
+        /// <summary>Humans in the round; -1 when unknown.</summary>
+        public int HumansTotal { get; }
 
         public BloodHudUiState(AlfaRole role, float secondsRemaining, float bloodCurrent, float bloodTarget,
             string interaction = "", string contextHint = "", HudActorState actorState = HudActorState.Normal,
             float stateProgress01 = 0f, string networkMessage = "", string modeId = GameModes.Blood, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0, int livesRemaining = 0, string privateTaskText = "", float taskProgress01 = 0,
-            EquipmentHudUiState equipment = null)
+            EquipmentHudUiState equipment = null, int mosquitoesTotal = -1, int humansActive = -1, int humansTotal = -1)
         {
+            MosquitoesTotal = mosquitoesTotal < 0 ? -1 : mosquitoesTotal;
+            HumansTotal = humansTotal < 0 ? -1 : humansTotal;
+            HumansActive = humansActive < 0 ? -1 : humansActive;
             Role = role; ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode.");
             TasksCompleted = Math.Max(0, tasksCompleted); TasksGoal = Math.Max(0, tasksGoal); MosquitoesAlive = Math.Max(0, mosquitoesAlive); LivesRemaining = Math.Max(0, livesRemaining);
             PrivateTaskText = role == AlfaRole.Human && modeId == GameModes.Tasks ? privateTaskText ?? string.Empty : string.Empty;
@@ -621,10 +643,16 @@ namespace LetMeSleep.UI
         public float ElapsedSeconds { get; }
         public string Reason { get; }
         public AlfaRole TrainingRole { get; }
+        /// <summary>Players on each team this round (the results scoreboard); -1 when unknown.</summary>
+        public int HumansCount { get; }
+        public int MosquitoesCount { get; }
 
         public ResultsUiState(MatchOutcome outcome, bool isTraining, bool isOwner, float bloodCurrent,
-            float bloodTarget, float elapsedSeconds, string reason = "", AlfaRole trainingRole = AlfaRole.Human, string modeId = GameModes.Blood, string mapId = RoomRules.AlfaMap, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0)
+            float bloodTarget, float elapsedSeconds, string reason = "", AlfaRole trainingRole = AlfaRole.Human, string modeId = GameModes.Blood, string mapId = RoomRules.AlfaMap, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0,
+            int humansCount = -1, int mosquitoesCount = -1)
         {
+            HumansCount = humansCount < 0 ? -1 : humansCount;
+            MosquitoesCount = mosquitoesCount < 0 ? -1 : mosquitoesCount;
             ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode."); MapId = mapId; TasksCompleted = tasksCompleted; TasksGoal = tasksGoal; MosquitoesAlive = mosquitoesAlive;
             Outcome = outcome;
             IsTraining = isTraining;
@@ -655,5 +683,25 @@ namespace LetMeSleep.UI
             var normalized = Normalize(value);
             return normalized.Length <= 5 ? normalized : normalized.Substring(0, 5) + "-" + normalized.Substring(5);
         }
+
+        /// <summary>
+        /// Formats a code that is being edited and maps the caret to the same logical place: after the same
+        /// number of code characters, past the separator once the first group is complete. Typing or pasting
+        /// "ABCDE-FGHIJ" one character at a time therefore yields "ABCDE-FGHIJ", never "ABCDE-GHIJF".
+        /// </summary>
+        public static string FormatForEditing(string raw, int caret, out int formattedCaret)
+        {
+            raw = raw ?? string.Empty;
+            caret = Math.Max(0, Math.Min(caret, raw.Length));
+            var codeCharactersBeforeCaret = 0;
+            for (var i = 0; i < caret; i++)
+                if (IsCodeCharacter(raw[i])) codeCharactersBeforeCaret++;
+            var formatted = FormatForDisplay(raw);
+            formattedCaret = codeCharactersBeforeCaret + (codeCharactersBeforeCaret > 5 ? 1 : 0);
+            formattedCaret = Math.Min(formattedCaret, formatted.Length);
+            return formatted;
+        }
+
+        private static bool IsCodeCharacter(char c) => c != '-' && !char.IsWhiteSpace(c);
     }
 }

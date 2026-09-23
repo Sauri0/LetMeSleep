@@ -29,7 +29,41 @@ namespace LetMeSleep.UI
         Flyswatter,
         Slipper,
         ElectricRacket,
-        Aerosol
+        Aerosol,
+        // v0.3 (UI-06) pictograms, drawn by docs/unity/ui/tools/build_ui_icons.py.
+        Gear,
+        House,
+        Enter,
+        Map,
+        Lock,
+        Wifi,
+        Warning,
+        Invite,
+        Crown,
+        Refresh,
+        ChevronLeft,
+        ChevronRight,
+        ChevronDown,
+        Key,
+        Microphone,
+        Info,
+        Close,
+        // v0.3 stage 2: customization categories, settings tabs and HUD (Hands, Flyswatter, Slipper,
+        // ElectricRacket, Aerosol and Blood above also have PNGs now, so they no longer use the bar fallback).
+        Palette,
+        Dice,
+        Undo,
+        Mouse,
+        Eye,
+        Wings,
+        Proboscis,
+        Hat,
+        Face,
+        Accessibility,
+        Trophy,
+        Bolt,
+        // v0.3 stage 2, art-direction pass.
+        Heart
     }
 
     [DisallowMultipleComponent]
@@ -177,6 +211,18 @@ namespace LetMeSleep.UI
                     break;
                 case AlfaUiIconKind.Back:
                     Arrow(Vector2.zero, true);
+                    break;
+                case AlfaUiIconKind.ChevronLeft:
+                    Bar(new Vector2(-0.04f, 0.12f), new Vector2(0.12f, 0.4f), -42f);
+                    Bar(new Vector2(-0.04f, -0.12f), new Vector2(0.12f, 0.4f), 42f);
+                    break;
+                case AlfaUiIconKind.ChevronRight:
+                    Bar(new Vector2(0.04f, 0.12f), new Vector2(0.12f, 0.4f), 42f);
+                    Bar(new Vector2(0.04f, -0.12f), new Vector2(0.12f, 0.4f), -42f);
+                    break;
+                case AlfaUiIconKind.ChevronDown:
+                    Bar(new Vector2(-0.12f, 0.02f), new Vector2(0.12f, 0.4f), 42f);
+                    Bar(new Vector2(0.12f, 0.02f), new Vector2(0.12f, 0.4f), -42f);
                     break;
                 case AlfaUiIconKind.Crosshair:
                     Crosshair(0.86f);

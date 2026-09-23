@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using LetMeSleep.Bootstrap;
@@ -255,8 +256,7 @@ namespace LetMeSleep.Tests.PlayMode
             if (option < 0) return;
             Assert.That(option + 1, Is.LessThan(args.Length), "-customizationSaveEvidence requires an output directory.");
             string output = Path.GetFullPath(args[option + 1]);
-            string validationRoot = Path.GetFullPath("N:/LetMeSleep/Validation/V020").TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            Assert.That(output.StartsWith(validationRoot, StringComparison.OrdinalIgnoreCase), Is.True, "Evidence must stay under Validation/V020.");
+            Assert.That(UnderValidationRoot(output), Is.True, "Evidence must stay under Validation/V020 or Validation/V030.");
             Directory.CreateDirectory(output);
 
             var camera = new GameObject("CustomizationSaveEvidenceCamera", typeof(Camera)).GetComponent<Camera>();
@@ -391,15 +391,18 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(actual.SameValues(expected), Is.True, label);
         }
 
+        private static bool UnderValidationRoot(string path) => new[] { "N:/LetMeSleep/Validation/V020", "N:/LetMeSleep/Validation/V030" }
+            .Select(root => Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar)
+            .Any(root => path.StartsWith(root, StringComparison.OrdinalIgnoreCase));
+
         private static string RequireIsolatedDataPath()
         {
             string[] args = Environment.GetCommandLineArgs();
             int option = Array.IndexOf(args, "--lms-validation-data");
             if (option < 0 || option + 1 >= args.Length)
-                Assert.Ignore("Requires --lms-validation-data under N:/LetMeSleep/Validation/V020.");
+                Assert.Ignore("Requires --lms-validation-data under N:/LetMeSleep/Validation/V020 or V030.");
             string path = Path.GetFullPath(args[option + 1]);
-            string validationRoot = Path.GetFullPath("N:/LetMeSleep/Validation/V020").TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            Assert.That(path.StartsWith(validationRoot, StringComparison.OrdinalIgnoreCase), Is.True, "Use an isolated V020 validation directory.");
+            Assert.That(UnderValidationRoot(path), Is.True, "Use an isolated V020 or V030 validation directory.");
             Assert.That(Path.GetFileName(path).StartsWith("CustomizationPersistencePlayModeTests-", StringComparison.Ordinal), Is.True,
                 "The isolated directory name must make cleanup explicit.");
             return path;
