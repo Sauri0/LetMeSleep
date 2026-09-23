@@ -178,6 +178,69 @@ namespace LetMeSleep.Tests.EditMode
                 Assert.That(receiver.Accept(member, Segment(packet), now), Is.True);
         }
 
+        private const byte ResumeKind = 27, SnapshotKind = 24;
+
+        [Test]
+        public void IncompleteSnapshotsCannotEvictAPendingReliableResume()
+        {
+            var sender = new MessageFraming();
+            var receiver = new MessageFraming(kind => kind == SnapshotKind);
+            var resume = sender.Encode(ResumeKind, Payload(MessageFraming.ChunkBytes * 2 + 5, 3)).ToArray();
+            var first = sender.Encode(SnapshotKind, Payload(MessageFraming.ChunkBytes + 10, 5)).ToArray();
+            var second = sender.Encode(SnapshotKind, Payload(MessageFraming.ChunkBytes + 20, 7)).ToArray();
+            var delivered = new List<byte>();
+            receiver.MessageReceived += (_, kind, __) => delivered.Add(kind);
+
+            // A lost ResumeBegin fragment is being retransmitted while two snapshots each lose a fragment.
+            Assert.That(receiver.Accept("member", Segment(resume[0]), 0), Is.True);
+            Assert.That(receiver.Accept("member", Segment(resume[1]), 0), Is.True);
+            Assert.That(receiver.Accept("member", Segment(first[0]), 0), Is.True);
+            Assert.That(receiver.Accept("member", Segment(second[0]), 0), Is.True, "The older incomplete snapshot is the one evicted.");
+            Assert.That(receiver.Accept("member", Segment(resume[2]), .5), Is.True);
+
+            Assert.That(delivered, Is.EqualTo(new[] { ResumeKind }), "The reliable ResumeBegin must still complete.");
+            Assert.That(receiver.Accept("member", Segment(second[1]), .6), Is.True);
+            Assert.That(delivered, Is.EqualTo(new[] { ResumeKind, SnapshotKind }));
+        }
+
+        [Test]
+        public void ExpendableFragmentIsDroppedWhenBothSlotsHoldReliableMessages()
+        {
+            var sender = new MessageFraming();
+            var receiver = new MessageFraming(kind => kind == SnapshotKind);
+            var a = sender.Encode(ResumeKind, Payload(MessageFraming.ChunkBytes + 1, 1)).ToArray();
+            var b = sender.Encode(ResumeKind, Payload(MessageFraming.ChunkBytes + 2, 2)).ToArray();
+            var snapshot = sender.Encode(SnapshotKind, Payload(MessageFraming.ChunkBytes + 3, 4)).ToArray();
+            int delivered = 0;
+            receiver.MessageReceived += (_, __, ___) => delivered++;
+            receiver.Accept("member", Segment(a[0]), 0);
+            receiver.Accept("member", Segment(b[0]), 0);
+            Assert.That(receiver.Accept("member", Segment(snapshot[0]), 0), Is.False);
+            receiver.Accept("member", Segment(a[1]), 0);
+            receiver.Accept("member", Segment(b[1]), 0);
+            Assert.That(delivered, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void WithoutExpendableKindsTheOldestAssemblyIsStillEvicted()
+        {
+            var sender = new MessageFraming();
+            var receiver = new MessageFraming();
+            var a = sender.Encode(1, Payload(MessageFraming.ChunkBytes + 1, 1)).ToArray();
+            var b = sender.Encode(1, Payload(MessageFraming.ChunkBytes + 2, 2)).ToArray();
+            var c = sender.Encode(1, Payload(MessageFraming.ChunkBytes + 3, 3)).ToArray();
+            int delivered = 0;
+            receiver.MessageReceived += (_, __, ___) => delivered++;
+            receiver.Accept("member", Segment(a[0]), 0);
+            receiver.Accept("member", Segment(b[0]), 0);
+            Assert.That(receiver.Accept("member", Segment(c[0]), 0), Is.True);
+            receiver.Accept("member", Segment(b[1]), 0);
+            receiver.Accept("member", Segment(c[1]), 0);
+            Assert.That(delivered, Is.EqualTo(2));
+            receiver.Accept("member", Segment(a[1]), 0);
+            Assert.That(delivered, Is.EqualTo(2), "a was evicted (FIFO); its last fragment cannot complete it.");
+        }
+
         private static byte[] Payload(int length, int seed)
         {
             var data = new byte[length];

@@ -21,7 +21,8 @@ namespace LetMeSleep.Online
         private readonly Func<IReadOnlyList<DoorDefinition>> doors;
         private readonly Func<IReadOnlyList<ToolPickupDefinition>> tools;
         private readonly Func<IReadOnlyList<ObjectiveDefinition>> objectives;
-        private readonly MessageFraming framing = new MessageFraming();
+        // Snapshots, private state and input are superseded every tick; Begin/ResumeBegin/Ack/Action/Event are not.
+        private readonly MessageFraming framing = new MessageFraming(kind => kind == Snapshot || kind == Private || kind == Input);
         private readonly HashSet<string> waiting = new HashSet<string>(StringComparer.Ordinal);
         private readonly Dictionary<string, ResumeAttempt> resuming = new Dictionary<string, ResumeAttempt>(StringComparer.Ordinal);
         private ulong resumeChallenge, acceptedResumeChallenge;

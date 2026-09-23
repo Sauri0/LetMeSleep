@@ -15,9 +15,16 @@ namespace LetMeSleep.Online
             internal int Total, Received;
             internal double Expires;
         }
+        public const int PendingPerMember = 2;
         private readonly Dictionary<string, List<Pending>> pending = new Dictionary<string, List<Pending>>(StringComparer.Ordinal);
+        private readonly Func<byte, bool> isExpendable;
         private uint nextId;
         public event Action<string, byte, byte[]> MessageReceived;
+
+        /// <param name="isExpendableKind">Kinds that are superseded by newer copies (unreliable snapshots, input).
+        /// When a member's reassembly slots are full they are evicted first and never displace other kinds.</param>
+        public MessageFraming(Func<byte, bool> isExpendableKind = null) { isExpendable = isExpendableKind; }
+        private bool Expendable(byte kind) => isExpendable != null && isExpendable(kind);
 
         public IEnumerable<byte[]> Encode(byte kind, byte[] payload)
         {
@@ -65,13 +72,20 @@ namespace LetMeSleep.Online
                 }
                 foreach (var key in expired) pending.Remove(key);
                 if (pending.Count >= 16) return false;
-                slots = new List<Pending>(2); pending.Add(member, slots);
+                slots = new List<Pending>(PendingPerMember); pending.Add(member, slots);
             }
             slots.RemoveAll(item => item.Expires <= now);
             var assembly = slots.Find(item => item.Id == id);
             if (assembly == null)
             {
-                if (slots.Count == 2) slots.RemoveAt(0);
+                if (slots.Count >= PendingPerMember)
+                {
+                    // Prefer losing an incomplete expendable message; reliable control data (e.g. ResumeBegin)
+                    // is only displaced by other non-expendable data, oldest first.
+                    int victim = slots.FindIndex(item => Expendable(item.Kind));
+                    if (victim < 0) { if (Expendable(kind)) return false; victim = 0; }
+                    slots.RemoveAt(victim);
+                }
                 assembly = new Pending { Id = id, Kind = kind, Total = total, Parts = new byte[count][], Expires = now + 2 };
                 slots.Add(assembly);
             }
