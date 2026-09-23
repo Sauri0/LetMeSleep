@@ -123,7 +123,8 @@ namespace LetMeSleep.Core
             if (protocol != Protocol) return RoomError.IncompatibleVersion;
             if (!ValidIdentity(id, name)) return RoomError.InvalidMember;
             if (members.Any(m => m.Id == id)) return RoomError.DuplicateMember;
-            if (phase != RoomPhase.Waiting && phase != RoomPhase.Playing) return RoomError.WrongPhase;
+            // Late members wait unassigned; ReturnToWaiting clears roles, so Results admits them too.
+            if (phase != RoomPhase.Waiting && phase != RoomPhase.Playing && phase != RoomPhase.Results) return RoomError.WrongPhase;
             if (members.Count >= RoomRules.Capacity) return RoomError.Full;
             members.Add(new Member { Id = id, Name = name.Trim() });
             revision++;
