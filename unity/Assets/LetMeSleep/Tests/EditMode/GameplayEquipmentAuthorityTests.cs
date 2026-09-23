@@ -341,5 +341,33 @@ namespace LetMeSleep.Tests.EditMode
             for(int i=0;i<35;i++)s.Host.Advance(new HostTick(s.Host.CurrentTick+1));
             Assert.That(s.Host.CaptureSnapshot().ToolEffects.Count,Is.Zero);
         }
+        [TestCase(ActionKind.CancelThrow)] [TestCase(ActionKind.SelectInventorySlot)]
+        public void CancellingAStrikeCannotSkipItsCooldown(ActionKind cancel)
+        {
+            var s=new Session();s.World.PlanStrike=true;s.Tick();
+            s.Act(ActionKind.Primary);s.Tick();uint start=s.Host.CurrentTick;
+            Assert.That(s.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==1).StrikeState.StartTick,Is.EqualTo(start));
+            while(s.Host.CurrentTick<start+9)s.Tick();
+            if(cancel==ActionKind.SelectInventorySlot)s.Act(cancel,true,0);else s.Act(cancel);
+            s.Act(ActionKind.Primary);s.Tick();
+            Assert.That(s.Private.Rejection,Is.EqualTo(CommandReject.Cooldown),"A mouse-wheel/CancelThrow pair must not restart the swing.");
+            Assert.That(s.Host.DrainEvents().Count(e=>e.Kind==GameplayEventKind.StrikeStarted),Is.EqualTo(1));
+            while(s.Host.CurrentTick<start+18)s.Tick();
+            s.Act(ActionKind.Primary);s.Tick();
+            Assert.That(s.Private.Rejection,Is.EqualTo(CommandReject.None),"The natural 19-tick hands cycle is unchanged.");
+            Assert.That(s.Host.CaptureSnapshot().Actors.Single(a=>a.ActorId==1).StrikeState.StartTick,Is.EqualTo(start+19));
+        }
+        [Test] public void PickingUpDuringASwatterStrikeCannotSkipItsCooldown()
+        {
+            var s=new Session(GameplayTools.Flyswatter);s.Pickup(1);s.World.PlanStrike=true;
+            s.Act(ActionKind.Primary);s.Tick();uint start=s.Host.CurrentTick;
+            while(s.Host.CurrentTick<start+9)s.Tick();
+            s.World.Candidate=2;s.Act(ActionKind.Use);s.Act(ActionKind.Primary);s.Tick();
+            Assert.That(s.World.Items[2].OwnerActorId,Is.EqualTo(1),"The pickup itself still succeeds.");
+            Assert.That(s.Private.Rejection,Is.EqualTo(CommandReject.Cooldown));
+            while(s.Host.CurrentTick<start+23)s.Tick();
+            s.Act(ActionKind.Primary);s.Tick();
+            Assert.That(s.Private.Rejection,Is.EqualTo(CommandReject.None),"The swatter's scaled 24-tick cycle is unchanged.");
+        }
     }
 }

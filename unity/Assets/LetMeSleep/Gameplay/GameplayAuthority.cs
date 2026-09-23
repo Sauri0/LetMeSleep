@@ -31,6 +31,8 @@ namespace LetMeSleep.Gameplay
             internal uint Revision = 1, ViewRevision = 1, PoseRevision, InputSequence, ActionSequence, InputTick, RateTick, HelpTarget;
             internal int InputCount, ActionCount, Lives;
             internal uint TaskInterruptTick;
+            // Earliest tick a new strike may start. Survives CancelThrow/slot changes/pickups that reset Strike.
+            internal uint NextStrikeTick;
             internal float HelpWork;
             internal bool AwaitingRespawn;
             internal bool Connected = true;
@@ -290,10 +292,11 @@ namespace LetMeSleep.Gameplay
                         if (a.EquippedTool == GameplayTools.Slipper) { a.Rejection = CommandReject.InvalidState; break; }
                         if (a.EquippedTool == GameplayTools.ElectricRacket) { if (a.PrimaryArmed) BeginRacketPulse(a); else a.Rejection = CommandReject.InvalidState; break; }
                         if (a.EquippedTool == GameplayTools.Aerosol) break; // Emission follows fresh PrimaryHeld once per host tick.
-                        if (a.Strike.Phase != StrikePhase.None) { a.Rejection = CommandReject.Cooldown; break; }
+                        if (a.Strike.Phase != StrikePhase.None || tick < a.NextStrikeTick) { a.Rejection = CommandReject.Cooldown; break; }
                         if (world.TryPlanStrike(a.Spawn.ActorId, c.AimForward, a.EquippedTool, out a.Plan))
                         {
                             a.HitActors.Clear(); a.StrikeBlocked = false; a.Strike = new StrikeState(++strikeId, a.Plan.ToolId, a.Plan.Hand, StrikePhase.Windup, tick, a.Plan.Origin, a.Plan.Target, a.Plan.Normal, 0);
+                            a.NextStrikeTick = tick + StrikeCycleTicks(a.Plan.ToolId);
                             Emit(GameplayEventKind.StrikeStarted, a, 0, a.Plan.Target, a.Plan.Normal);
                         }
                         else a.Rejection = CommandReject.OutOfReach;
@@ -449,11 +452,14 @@ namespace LetMeSleep.Gameplay
                 else Detach(a);
             }
         }
+        private static float StrikeTimeScale(string toolId) => GameplayTools.IsFlyswatter(toolId) ? HumanEquipmentProfile.FlyswatterTimeMultiplier : 1;
+        // UpdateStrike clears a strike once its normalized time reaches .6 s; the next one may start one tick later.
+        private static uint StrikeCycleTicks(string toolId) => (uint)Math.Ceiling(.6f * 30 * StrikeTimeScale(toolId) - .001f) + 1;
         private void UpdateStrike(Actor a)
         {
             if (!a.Connected || a.Strike.Phase == StrikePhase.None || a.State != LifeState.Active || boundsHeldActors.Contains(a.Spawn.ActorId)) return;
             var s = a.Strike; float elapsed = (tick - s.StartTick) / 30f;
-            float timeScale = GameplayTools.IsFlyswatter(s.ToolId) ? HumanEquipmentProfile.FlyswatterTimeMultiplier : 1;
+            float timeScale = StrikeTimeScale(s.ToolId);
             float normalizedElapsed = elapsed / timeScale;
             if (normalizedElapsed >= .6f) { a.Strike = default; return; }
             var nextPhase = normalizedElapsed < .08f ? StrikePhase.Windup : normalizedElapsed < .25f ? StrikePhase.Active : StrikePhase.Recovery;
