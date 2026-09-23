@@ -66,6 +66,11 @@ namespace LetMeSleep.Editor
             finally { UnityEngine.Object.DestroyImmediate(transient); }
             PlayerSettings.productName = "Let me sleep";
             PlayerSettings.bundleVersion = version;
+            // v0.3.0 smoke: the Direct3D12 runtime (D3D12Core.dll) crashed with 0xC0000005 while the player shut down in
+            // 2 of 4 runs; Direct3D11 exited cleanly in every run with the same frames. Keep D3D12 only as a fallback.
+            PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64, false);
+            PlayerSettings.SetGraphicsAPIs(BuildTarget.StandaloneWindows64,
+                new[] { UnityEngine.Rendering.GraphicsDeviceType.Direct3D11, UnityEngine.Rendering.GraphicsDeviceType.Direct3D12 });
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(BuildScene, true) };
             AssetDatabase.SaveAssets();
             Debug.Log("LMS_PREPARED " + version + ": review and commit settings before building.");
