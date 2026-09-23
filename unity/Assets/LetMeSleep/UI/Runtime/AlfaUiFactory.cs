@@ -964,6 +964,122 @@ namespace LetMeSleep.UI
         }
 
         /// <summary>
+        /// Scroll view whose content is a fixed-column grid (UI-06 swatch and thumbnail grids). Same frame, mask and
+        /// optional auto-hiding scrollbar as <see cref="ScrollView"/>.
+        /// </summary>
+        internal RectTransform GridScrollView(Transform parent, string name, out RectTransform content, float preferredHeight,
+            Vector2 cellSize, Vector2 spacing, int columns, bool scrollbar = true)
+        {
+            var root = ScrollView(parent, name, out content, preferredHeight, scrollbar);
+            var vertical = content.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
+            if (vertical != null) UnityEngine.Object.DestroyImmediate(vertical);
+            var grid = content.gameObject.AddComponent<UnityEngine.UI.GridLayoutGroup>();
+            ConfigureGrid(grid, cellSize, spacing, columns);
+            return root;
+        }
+
+        internal static void ConfigureGrid(UnityEngine.UI.GridLayoutGroup grid, Vector2 cellSize, Vector2 spacing, int columns)
+        {
+            grid.cellSize = cellSize;
+            grid.spacing = spacing;
+            grid.constraint = UnityEngine.UI.GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = Mathf.Max(1, columns);
+            grid.startAxis = UnityEngine.UI.GridLayoutGroup.Axis.Horizontal;
+            grid.childAlignment = TextAnchor.UpperLeft;
+            grid.padding = new RectOffset(2, 2, 2, 2);
+        }
+
+        /// <summary>Keyboard key cap (UI-06 control legend): light rounded cap with the key in the display face.</summary>
+        internal RectTransform KeyCap(Transform parent, string name, string key, float height = 40f)
+        {
+            var cap = Panel(parent, name, AlfaUiTheme.Hex("DDE6F5"), -1f, height, AlfaUiTheme.SmallRadius);
+            SetSurface(cap, Color.white, AlfaUiTheme.Hex("B9C7DD"), AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.55f), AlfaUiTheme.WithAlpha(Color.black, 0.35f));
+            var label = Text(cap, "Key", key, AlfaUiTheme.MinTextSize, AlfaUiTheme.Ink900, TextAlignmentOptions.Center, true);
+            label.textWrappingMode = TextWrappingModes.NoWrap;
+            label.overflowMode = TextOverflowModes.Overflow;
+            label.characterSpacing = 1f;
+            Fill(label.rectTransform, 8f, 8f, 2f, 2f);
+            var width = Mathf.Max(height, label.GetPreferredValues(key, 1000f, height).x + 20f);
+            var layout = cap.GetComponent<UnityEngine.UI.LayoutElement>();
+            layout.minWidth = layout.preferredWidth = width;
+            layout.minHeight = height;
+            layout.flexibleWidth = 0f;
+            cap.sizeDelta = new Vector2(width, height);
+            return cap;
+        }
+
+        /// <summary>Rounded progress track with a gradient fill; set the fill's anchorMax.x to the ratio.</summary>
+        internal static UnityEngine.UI.Image ProgressBar(Transform parent, string name, Color fill, out RectTransform track)
+        {
+            var root = Node(name, parent, typeof(UnityEngine.UI.Image));
+            var trackImage = root.GetComponent<UnityEngine.UI.Image>();
+            trackImage.sprite = AlfaUiSkin.Fill(6f);
+            trackImage.type = UnityEngine.UI.Image.Type.Sliced;
+            trackImage.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.85f);
+            trackImage.raycastTarget = false;
+            track = root.GetComponent<RectTransform>();
+            var fillNode = Node("Fill", root.transform, typeof(UnityEngine.UI.Image), typeof(AlfaUiSurface));
+            var fillImage = fillNode.GetComponent<UnityEngine.UI.Image>();
+            fillImage.sprite = AlfaUiSkin.Fill(6f);
+            fillImage.type = UnityEngine.UI.Image.Type.Sliced;
+            fillImage.color = Color.white;
+            fillImage.raycastTarget = false;
+            var surface = fillNode.GetComponent<AlfaUiSurface>();
+            surface.RadiusKey = 6;
+            SetBarColor(fillImage, fill);
+            Fill(fillImage.rectTransform);
+            fillImage.rectTransform.anchorMax = new Vector2(0f, 1f);
+            return fillImage;
+        }
+
+        internal static void SetBarColor(UnityEngine.UI.Image fill, Color color)
+        {
+            SetSurface(fill, Color.Lerp(color, Color.white, 0.22f), Color.Lerp(color, Color.black, 0.12f), Color.clear, Color.clear);
+        }
+
+        private static Sprite radialVignetteSprite;
+
+        /// <summary>Transparent centre fading to opaque corners: soft studio vignette over the 3D viewer.</summary>
+        internal static Sprite RadialVignetteSprite()
+        {
+            if (radialVignetteSprite != null) return radialVignetteSprite;
+            const int size = 128;
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false, true)
+            {
+                name = "LMS UI radial vignette",
+                hideFlags = HideFlags.HideAndDontSave,
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
+            var pixels = new Color32[size * size];
+            for (var y = 0; y < size; y++)
+            for (var x = 0; x < size; x++)
+            {
+                var dx = (x + 0.5f) / size * 2f - 1f;
+                var dy = (y + 0.5f) / size * 2f - 1f;
+                var t = Mathf.InverseLerp(0.45f, 1.35f, Mathf.Sqrt(dx * dx + dy * dy));
+                var alpha = t * t * (3f - 2f * t);
+                pixels[y * size + x] = new Color32(255, 255, 255, (byte)Mathf.RoundToInt(255f * alpha));
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+            radialVignetteSprite = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), 100f);
+            radialVignetteSprite.name = texture.name;
+            radialVignetteSprite.hideFlags = HideFlags.HideAndDontSave;
+            return radialVignetteSprite;
+        }
+
+        /// <summary>Anchors a rect to a parent region with explicit edge offsets (stretched columns).</summary>
+        internal static void Place(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
+        {
+            rect.anchorMin = anchorMin;
+            rect.anchorMax = anchorMax;
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.offsetMin = offsetMin;
+            rect.offsetMax = offsetMax;
+        }
+
+        /// <summary>
         /// UI-06 list row: inset well, white title in the display face, secondary subtitle and, when it carries
         /// real state (ready / not ready), a coloured status bar on the right.
         /// </summary>

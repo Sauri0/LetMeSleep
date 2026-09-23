@@ -22,16 +22,26 @@ ALFA_KINDS = ['Online','Human','Customize','Mosquito','Audio','Video','Controls'
 # v0.3 (UI-06) pictograms. Same conventions: white RGBA silhouettes, 128 px, tinted at runtime.
 V030_KINDS = ['Gear','House','Enter','Map','Lock','Wifi','Warning','Invite','Crown','Refresh','ChevronLeft','ChevronRight',
               'ChevronDown','Key','Microphone','Info','Copy','Clock','Close']
-import sys
-REQUESTED = [a for a in sys.argv[1:] if not a.startswith('-')] or (ALFA_KINDS + V030_KINDS)
+# v0.3 stage 2: equipment slots (were procedural bars), customization categories, settings tabs and HUD.
+V030_STAGE2_KINDS = ['Hands','Flyswatter','Slipper','ElectricRacket','Aerosol','Blood','Palette','Dice','Undo','Mouse','Eye',
+                     'Wings','Proboscis','Hat','Face','Accessibility','Trophy','Bolt']
+import sys, math
+REQUESTED = [a for a in sys.argv[1:] if not a.startswith('-')] or (ALFA_KINDS + V030_KINDS + V030_STAGE2_KINDS)
+CLEAR = (0,0,0,0)
 for kind in REQUESTED:
     im = Image.new('RGBA', (128*S,128*S))
     d = ImageDraw.Draw(im)
-    def poly(points): d.polygon([(int(x*S),int(y*S)) for x,y in points],fill='white')
-    def ellipse(box): d.ellipse(tuple(int(v*S) for v in box),fill='white')
-    def line(points, width=8): d.line([(int(x*S),int(y*S)) for x,y in points], fill='white', width=width*S, joint='curve')
-    def rect(box, radius=0): d.rounded_rectangle(tuple(int(v*S) for v in box),radius=radius*S,fill='white')
-    def head(cx, cy, r): ellipse((cx-r,cy-r,cx+r,cy+r))
+    def poly(points, fill='white'): d.polygon([(int(x*S),int(y*S)) for x,y in points],fill=fill)
+    def ellipse(box, fill='white'): d.ellipse(tuple(int(v*S) for v in box),fill=fill)
+    def line(points, width=8, fill='white'): d.line([(int(x*S),int(y*S)) for x,y in points], fill=fill, width=width*S, joint='curve')
+    def rect(box, radius=0, fill='white'): d.rounded_rectangle(tuple(int(v*S) for v in box),radius=radius*S,fill=fill)
+    def head(cx, cy, r, fill='white'): ellipse((cx-r,cy-r,cx+r,cy+r), fill)
+    def oval(cx, cy, rx, ry, angle, fill='white', steps=48):
+        a = math.radians(angle)
+        pts = [(cx + rx*math.cos(t)*math.cos(a) - ry*math.sin(t)*math.sin(a),
+                cy + rx*math.cos(t)*math.sin(a) + ry*math.sin(t)*math.cos(a))
+               for t in (2*math.pi*i/steps for i in range(steps))]
+        poly(pts, fill)
     def bust(cx, y, scale=1):
         head(cx,y,15*scale)
         d.rounded_rectangle(tuple(int(v*S) for v in (cx-27*scale,y+21*scale,cx+27*scale,y+57*scale)),radius=int(12*scale*S),fill='white')
@@ -147,6 +157,108 @@ for kind in REQUESTED:
     elif kind=='Clock':
         d.ellipse((10*S,10*S,118*S,118*S),outline='white',width=11*S)
         line([(64,64),(64,30)],10); line([(64,64),(88,78)],10); head(64,64,8)
+    # --- stage 2 -------------------------------------------------------------------------------------------
+    elif kind=='Hands':
+        # Open palm: rounded palm, four fingers and a thumb.
+        rect((34,58,96,116),20)
+        for x, top in [(36,26),(52,14),(68,16),(84,28)]:
+            rect((x,top,x+13,78),7)
+        line([(40,90),(16,64)],15); head(16,64,7)
+    elif kind=='Flyswatter':
+        # Perforated square head on a diagonal handle.
+        line([(16,114),(58,72)],11); head(16,114,6)
+        rect((56,8,120,72),12)
+        for gx in range(3):
+            for gy in range(3):
+                head(71+gx*17, 23+gy*17, 5, CLEAR)
+        line([(58,72),(66,64)],13)
+    elif kind=='Slipper':
+        # Top view of a slipper: footprint-shaped sole and a wide strap across the instep.
+        def rot(x, y, a=-38, cx=64, cy=64):
+            ra = math.radians(a); x -= cx; y -= cy
+            return (cx + x*math.cos(ra) - y*math.sin(ra), cy + x*math.sin(ra) + y*math.cos(ra))
+        sole = [rot(64 + 56*math.cos(t), 64 + (28 if math.cos(t) > 0 else 21)*math.sin(t)) for t in (2*math.pi*i/64 for i in range(64))]
+        poly(sole)
+        strap = [rot(76 + 17*math.cos(t), 64 + 36*math.sin(t)) for t in (2*math.pi*i/48 for i in range(48))]
+        for dx in (-19, 19):
+            d.line([tuple(int(v*S) for v in rot(76 + dx, 64 - 40)), tuple(int(v*S) for v in rot(76 + dx, 64 + 40))], fill=CLEAR, width=6*S)
+        poly(strap)
+        for dx in (-17, 17):
+            d.line([tuple(int(v*S) for v in rot(76 + dx, 64 - 26)), tuple(int(v*S) for v in rot(76 + dx, 64 + 26))], fill=CLEAR, width=3*S)
+    elif kind=='ElectricRacket':
+        # Oval racket frame, handle and a lightning bolt inside.
+        oval(70,48,44,38,-30)
+        oval(70,48,33,27,-30,CLEAR)
+        line([(40,84),(16,114)],12); head(16,114,6)
+        poly([(76,20),(58,52),(70,52),(62,78),(86,42),(73,42),(82,20)])
+    elif kind=='Aerosol':
+        # Spray can with cap, nozzle and a mist of dots.
+        rect((26,40,78,120),12); rect((34,24,70,42),6)
+        rect((64,18,84,28),4)
+        for x, y, r in [(98,16,6),(110,30,5),(100,40,5),(114,10,4),(118,46,4)]: head(x,y,r)
+        rect((26,64,78,72),0,CLEAR)
+    elif kind=='Blood':
+        # Drop.
+        poly([(64,8),(98,64),(30,64)]); head(64,78,36)
+        head(50,84,8,CLEAR)
+    elif kind=='Palette':
+        # Painter's palette with a thumb hole and four paint wells.
+        head(64,64,54)
+        head(86,88,13,CLEAR); poly([(86,100),(118,122),(128,96),(98,82)],CLEAR)
+        for x, y in [(40,40),(64,28),(88,40),(34,68)]: head(x,y,9,CLEAR)
+    elif kind=='Dice':
+        rect((14,14,114,114),22)
+        for x, y in [(38,38),(90,38),(64,64),(38,90),(90,90)]: head(x,y,10,CLEAR)
+    elif kind=='Undo':
+        d.arc((26*S,26*S,112*S,112*S),200,110,fill='white',width=13*S)
+        poly([(6,52),(44,30),(46,72)])
+    elif kind=='Mouse':
+        rect((32,8,96,120),32)
+        rect((40,16,88,112),26,CLEAR)
+        line([(64,12),(64,58)],6); line([(34,58),(94,58)],6)
+        rect((58,26,70,46),6)
+    elif kind=='Eye':
+        # Almond from two circle arcs through the eye corners, then iris and highlight.
+        k = 48; r = math.hypot(58, k)
+        upper = [(64 + r*math.cos(t), 64 + k - r*math.sin(t)) for t in
+                 [math.acos(58/r) + (math.acos(-58/r) - math.acos(58/r))*i/24 for i in range(25)]]
+        lower = [(x, 128 - y) for x, y in reversed(upper)]
+        poly(upper + lower)
+        head(64,64,25,CLEAR); head(64,64,18); head(70,58,5,CLEAR)
+    elif kind=='Wings':
+        # Two faceted wings on a small body, as the sketch's mosquito wing styles.
+        poly([(56,72),(20,6),(4,24),(8,62),(38,90)])
+        poly([(72,72),(108,6),(124,24),(120,62),(90,90)])
+        line([(54,70),(18,16)],4,CLEAR); line([(74,70),(110,16)],4,CLEAR)
+        line([(40,84),(10,44)],3,CLEAR); line([(88,84),(118,44)],3,CLEAR)
+        oval(64,92,11,26,0)
+    elif kind=='Proboscis':
+        # Front view of the mosquito head: two huge eyes over a long, thin proboscis.
+        oval(64,42,50,32,0)
+        head(42,40,17,CLEAR); head(86,40,17,CLEAR); head(46,44,7); head(82,44,7)
+        poly([(56,66),(72,66),(66,124),(62,124)])
+        line([(46,14),(30,2)],5); line([(82,14),(98,2)],5)
+    elif kind=='Hat':
+        # Sleeping cap (nightcap) with its pompom.
+        poly([(14,96),(40,40),(70,18),(98,26),(112,50),(84,40),(96,96)])
+        rect((8,92,104,114),10)
+        head(114,58,12)
+    elif kind=='Face':
+        head(64,64,54)
+        head(44,54,9,CLEAR); head(84,54,9,CLEAR)
+        d.arc((38*S,56*S,90*S,98*S),20,160,fill=CLEAR,width=8*S)
+    elif kind=='Accessibility':
+        d.ellipse((6*S,6*S,122*S,122*S),outline='white',width=9*S)
+        head(64,32,9)
+        line([(32,48),(96,48)],9); line([(64,48),(64,78)],10)
+        line([(64,76),(46,104)],9); line([(64,76),(82,104)],9)
+    elif kind=='Trophy':
+        poly([(28,14),(100,14),(94,58),(64,76),(34,58)])
+        d.arc((6*S,18*S,46*S,62*S),90,270,fill='white',width=9*S)
+        d.arc((82*S,18*S,122*S,62*S),270,90,fill='white',width=9*S)
+        rect((56,72,72,98)); rect((32,96,96,116),6)
+    elif kind=='Bolt':
+        poly([(76,6),(24,72),(58,72),(46,122),(104,50),(70,50),(90,6)])
     dest = OUT / (kind+'.png')
     im.resize((128,128),Image.Resampling.LANCZOS).save(dest)
     meta(dest)

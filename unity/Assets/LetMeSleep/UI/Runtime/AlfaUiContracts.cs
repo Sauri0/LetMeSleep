@@ -597,12 +597,21 @@ namespace LetMeSleep.UI
         public float StateProgress01 { get; }
         public string NetworkMessage { get; }
         public EquipmentHudUiState Equipment { get; }
+        /// <summary>Mosquitoes in the round (alive or not); -1 when the caller does not know it.</summary>
+        public int MosquitoesTotal { get; }
+        /// <summary>Humans still able to act (not eliminated nor fainted); -1 when unknown.</summary>
+        public int HumansActive { get; }
+        /// <summary>Humans in the round; -1 when unknown.</summary>
+        public int HumansTotal { get; }
 
         public BloodHudUiState(AlfaRole role, float secondsRemaining, float bloodCurrent, float bloodTarget,
             string interaction = "", string contextHint = "", HudActorState actorState = HudActorState.Normal,
             float stateProgress01 = 0f, string networkMessage = "", string modeId = GameModes.Blood, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0, int livesRemaining = 0, string privateTaskText = "", float taskProgress01 = 0,
-            EquipmentHudUiState equipment = null)
+            EquipmentHudUiState equipment = null, int mosquitoesTotal = -1, int humansActive = -1, int humansTotal = -1)
         {
+            MosquitoesTotal = mosquitoesTotal < 0 ? -1 : mosquitoesTotal;
+            HumansTotal = humansTotal < 0 ? -1 : humansTotal;
+            HumansActive = humansActive < 0 ? -1 : humansActive;
             Role = role; ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode.");
             TasksCompleted = Math.Max(0, tasksCompleted); TasksGoal = Math.Max(0, tasksGoal); MosquitoesAlive = Math.Max(0, mosquitoesAlive); LivesRemaining = Math.Max(0, livesRemaining);
             PrivateTaskText = role == AlfaRole.Human && modeId == GameModes.Tasks ? privateTaskText ?? string.Empty : string.Empty;
@@ -634,10 +643,16 @@ namespace LetMeSleep.UI
         public float ElapsedSeconds { get; }
         public string Reason { get; }
         public AlfaRole TrainingRole { get; }
+        /// <summary>Players on each team this round (the results scoreboard); -1 when unknown.</summary>
+        public int HumansCount { get; }
+        public int MosquitoesCount { get; }
 
         public ResultsUiState(MatchOutcome outcome, bool isTraining, bool isOwner, float bloodCurrent,
-            float bloodTarget, float elapsedSeconds, string reason = "", AlfaRole trainingRole = AlfaRole.Human, string modeId = GameModes.Blood, string mapId = RoomRules.AlfaMap, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0)
+            float bloodTarget, float elapsedSeconds, string reason = "", AlfaRole trainingRole = AlfaRole.Human, string modeId = GameModes.Blood, string mapId = RoomRules.AlfaMap, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0,
+            int humansCount = -1, int mosquitoesCount = -1)
         {
+            HumansCount = humansCount < 0 ? -1 : humansCount;
+            MosquitoesCount = mosquitoesCount < 0 ? -1 : mosquitoesCount;
             ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode."); MapId = mapId; TasksCompleted = tasksCompleted; TasksGoal = tasksGoal; MosquitoesAlive = mosquitoesAlive;
             Outcome = outcome;
             IsTraining = isTraining;

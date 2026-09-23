@@ -47,7 +47,21 @@ namespace LetMeSleep.UI
         Key,
         Microphone,
         Info,
-        Close
+        Close,
+        // v0.3 stage 2: customization categories, settings tabs and HUD (Hands, Flyswatter, Slipper,
+        // ElectricRacket, Aerosol and Blood above also have PNGs now, so they no longer use the bar fallback).
+        Palette,
+        Dice,
+        Undo,
+        Mouse,
+        Eye,
+        Wings,
+        Proboscis,
+        Hat,
+        Face,
+        Accessibility,
+        Trophy,
+        Bolt
     }
 
     [DisallowMultipleComponent]

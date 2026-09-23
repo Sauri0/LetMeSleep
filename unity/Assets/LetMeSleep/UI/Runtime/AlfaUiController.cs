@@ -11,11 +11,10 @@ using UnityEngine.InputSystem;
 namespace LetMeSleep.UI
 {
     [DisallowMultipleComponent]
-    public sealed class AlfaUiController : MonoBehaviour
+    public sealed partial class AlfaUiController : MonoBehaviour
     {
         public const string BloodModeId = "blood";
         public const string HousePatioMapId = "house-patio-v1";
-        private static readonly int[] FrameLimitOptions = { 0, 30, 60, 90, 120, 144, 165, 240 };
         private static readonly int[] RoundDurationOptions = { 30, 60, 90, 120, 150, 180, 240, 300, 420, 600, 900, 1200, 1800 };
 
         private readonly Dictionary<AlfaUiScreen, GameObject> screens = new Dictionary<AlfaUiScreen, GameObject>();
@@ -28,7 +27,6 @@ namespace LetMeSleep.UI
         private IMenuActions actions;
         private AlfaUiFactory factory;
         private AlfaUiScreen screen;
-        private AlfaUiScreen settingsReturnScreen;
         private OnlineUiState onlineState = new OnlineUiState();
         private LobbyUiState lobbyState;
         private TrainingUiState trainingState = new TrainingUiState();
@@ -38,20 +36,10 @@ namespace LetMeSleep.UI
         private TextMeshProUGUI trainingMapLabel, trainingModeLabel, roomModeLabel, roomDurationLabel;
         private UnityEngine.UI.Button trainingModePrevious, trainingModeNext, roomModePrevious, roomModeNext,
             roomDurationPrevious, roomDurationNext;
-        private TextMeshProUGUI hudTask, hudLives, hudStaminaLabel, hudThrowLabel, hudSwapOffer;
-        private readonly TextMeshProUGUI[] hudEquipmentLabels = new TextMeshProUGUI[4];
-        private readonly AlfaUiIcon[] hudEquipmentIcons = new AlfaUiIcon[4];
-        private GameObject hudTaskPanel, hudReticle, hudEquipmentPanel, hudThrowTrack;
-        private RectTransform hudEquipmentRect, hudStaminaLabelRect, hudStaminaTrackRect, hudThrowRect, hudSwapRect;
-        private bool isSpectator;
-        private UnityEngine.UI.Image hudTaskFill, hudStaminaFill, hudThrowFill;
-        private AlfaUiIcon hudScoreIcon;
         private UnityEngine.UI.Button trainingMapPrevious, trainingMapNext;
         private CustomizationUiState customizationState;
         private BasicCustomizationDraft customizationDraft;
         private AppearanceSelection modularCustomizationDraft;
-        private SettingsUiState settingsState;
-        private AlfaSettingsDraft settingsDraft;
         private VoiceUiState voiceState = new VoiceUiState(false, false, false, false, string.Empty, "V", string.Empty, null);
         private bool initialized;
         private bool createMode;
@@ -74,7 +62,6 @@ namespace LetMeSleep.UI
         private string modularSelectedSlotId = string.Empty;
         private AlfaUiScreen customizationReturnScreen = AlfaUiScreen.MainMenu;
         private string customizationLobbyCode = string.Empty;
-        private bool settingsApplyLatched;
         private bool resultsActionLatched;
         private string rememberedPlayerName = string.Empty;
         private bool gameplayIsTraining;
@@ -152,10 +139,6 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.RawImage trainingHumanPortrait;
         private UnityEngine.UI.RawImage trainingMosquitoPortrait;
         private readonly List<RenderTexture> renderedPortraits = new List<RenderTexture>();
-        private TextMeshProUGUI hudVoiceChipLabel;
-        private GameObject hudVoiceChip;
-        private readonly UnityEngine.UI.Image[] hudEquipmentSlots = new UnityEngine.UI.Image[4];
-        private readonly TextMeshProUGUI[] hudEquipmentNumbers = new TextMeshProUGUI[4];
 
         private TextMeshProUGUI lobbyCode;
         private TextMeshProUGUI lobbyHeaderTitle;
@@ -182,78 +165,10 @@ namespace LetMeSleep.UI
         private TextMeshProUGUI trainingBackLabel;
         private TextMeshProUGUI trainingStatus;
 
-        private CharacterPreviewOrbit previewOrbit;
-        private TextMeshProUGUI customizationPreviewTitle;
-        private AlfaUiIcon customizationPreviewIcon;
-        private TextMeshProUGUI customizationCategoryTitle;
-        private TextMeshProUGUI customizationStatus;
-        private RectTransform humanPaletteRoot;
-        private RectTransform pajamaPaletteRoot;
-        private RectTransform mosquitoPaletteRoot;
-        private GameObject humanCustomizationFields;
-        private GameObject mosquitoCustomizationFields;
-        private GameObject modularCustomizationFields;
-        private RectTransform modularCategoryRoot;
-        private RectTransform modularOptionRoot;
-        private UnityEngine.UI.Button customizationHumanButton;
-        private UnityEngine.UI.Button customizationMosquitoButton;
-        private CanvasGroup customizationControlsGroup;
-        private UnityEngine.UI.Button customizationSaveButton;
-        private TextMeshProUGUI customizationSaveLabel;
-        private UnityEngine.UI.Button customizationResetButton;
 
-        private UnityEngine.UI.Slider masterVolume;
-        private UnityEngine.UI.Slider musicVolume;
-        private UnityEngine.UI.Slider effectsVolume;
-        private UnityEngine.UI.Slider voiceVolume;
-        private TMP_Dropdown voiceDeviceDropdown;
-        private TextMeshProUGUI pushToTalkBindingLabel;
-        private UnityEngine.UI.Slider humanSensitivity;
-        private UnityEngine.UI.Slider mosquitoSensitivity;
-        private UnityEngine.UI.Toggle fullScreen;
-        private UnityEngine.UI.Toggle vSync;
-        private UnityEngine.UI.Toggle invertY;
-        private UnityEngine.UI.Toggle reduceMenuMotion;
-        private TextMeshProUGUI resolutionValue;
-        private TextMeshProUGUI qualityValue;
-        private TMP_Dropdown frameLimitDropdown;
-        private TextMeshProUGUI settingsStatus;
-        private GameObject videoSettings;
-        private GameObject rebindNote;
-        private UnityEngine.UI.Button settingsApplyButton;
-        private TextMeshProUGUI settingsApplyLabel;
-        private CanvasGroup settingsControlsGroup;
 
-        private TextMeshProUGUI hudClock;
-        private TextMeshProUGUI hudBlood;
-        private TextMeshProUGUI hudInteraction;
-        private TextMeshProUGUI hudHint;
-        private TextMeshProUGUI hudActorState;
-        private TextMeshProUGUI hudNetwork;
-        private TextMeshProUGUI hudVoice;
-        private TextMeshProUGUI hudRoleLabel;
-        private AlfaUiIcon hudRoleIcon;
-        private UnityEngine.UI.Image hudRoleBackground;
-        private UnityEngine.UI.Image hudBloodFill;
-        private GameObject hudPromptPanel;
-        private GameObject hudHintPanel;
-        private GameObject hudStatePanel;
-        private UnityEngine.UI.Image hudProgress;
 
-        private UnityEngine.UI.Button pauseLeaveButton;
-        private TextMeshProUGUI pauseLeaveLabel;
-        private UnityEngine.UI.Button pauseVoiceMuteButton;
-        private TextMeshProUGUI pauseVoiceMuteLabel;
-        private TextMeshProUGUI pauseVoiceStatus;
-        private RectTransform pauseVoicePeers;
-        private string pauseVoiceKey = string.Empty;
 
-        private TextMeshProUGUI resultsTitle;
-        private TextMeshProUGUI resultsStats;
-        private TextMeshProUGUI resultsPrimaryLabel;
-        private UnityEngine.UI.Button resultsPrimary;
-        private UnityEngine.UI.Button resultsLeave;
-        private ResultsUiState resultsState;
 
         private GameObject confirmModal;
         private TextMeshProUGUI confirmTitle;
@@ -522,23 +437,6 @@ namespace LetMeSleep.UI
         private static Color MemberStatusColor(LobbyMemberUiState member, Color notReady) =>
             !member.Connected ? AlfaUiTheme.Disabled : member.Ready ? AlfaUiTheme.StatusOk : notReady;
 
-        private void RebuildPauseVoicePeers()
-        {
-            if (pauseVoicePeers == null || voiceState == null) return;
-            string key = string.Join("|", voiceState.Participants.Select(item => item.MemberId + ":" + item.Muted + ":" + item.Speaking));
-            if (key == pauseVoiceKey) return;
-            pauseVoiceKey = key;
-            for (int i = pauseVoicePeers.childCount - 1; i >= 0; i--) Destroy(pauseVoicePeers.GetChild(i).gameObject);
-            foreach (VoiceParticipantUiState participant in voiceState.Participants)
-            {
-                string label = participant.Muted ? participant.DisplayName + " · ACTIVAR" : participant.DisplayName + (participant.Speaking ? " · HABLANDO" : " · SILENCIAR");
-                string memberId = participant.MemberId; bool nextMuted = !participant.Muted;
-                var button = factory.Button(pauseVoicePeers, "VoicePeer-" + memberId.GetHashCode(), label,
-                    () => (actions as IVoiceActions)?.SetPeerVoiceMuted(memberId, nextMuted), false, false, 38f, AlfaUiIconKind.Audio);
-                button.interactable = actions is IVoiceActions;
-            }
-        }
-
         public void SetRoomMaps(IReadOnlyList<TrainingMapOption> maps)
         {
             var copy = maps == null ? Array.Empty<TrainingMapOption>() : maps.ToArray();
@@ -697,8 +595,8 @@ namespace LetMeSleep.UI
                 resultsActionLatched = busy;
                 resultsPrimary.interactable = !busy && TrainingModeAvailable;
                 resultsLeave.interactable = !trainingCancelLatched;
-                resultsPrimaryLabel.text = busy ? "PREPARANDO…" : "REPETIR ENTRENAMIENTO";
-                resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = busy ?
+                resultsPrimaryLabel.text = busy ? "PREPARANDO…" : "JUGAR DE NUEVO";
+                resultsLeaveLabel.text = busy ?
                     trainingCancelLatched ? "CANCELANDO…" : "CANCELAR" : "VOLVER AL MENÚ";
             }
             UpdateTrainingMapView();
@@ -718,98 +616,6 @@ namespace LetMeSleep.UI
             SetScreen(AlfaUiScreen.Training, trainingState.SelectedRole == AlfaRole.Human ? "TrainingHumanButton" : "TrainingMosquitoButton");
         }
 
-        public void PresentCustomization(CustomizationUiState state)
-        {
-            customizationState = state ?? throw new ArgumentNullException(nameof(state));
-            customizationSaveLatched = state.IsSaving;
-            customizationControlsGroup.interactable = !customizationSaveLatched;
-            customizationControlsGroup.blocksRaycasts = !customizationSaveLatched;
-            if (state.Mode == CustomizationUiMode.Modular)
-            {
-                customizationDraft = null;
-                modularCustomizationDraft = state.DraftSelection.Copy();
-                modularEditedRole = state.EditedRole;
-                EnsureModularSelectedSlot();
-                BuildModularCustomization();
-                ResetModularScrollPositions();
-            }
-            else
-            {
-                modularCustomizationDraft = null;
-                modularSelectedSlotId = string.Empty;
-                customizationDraft = state.Draft.Copy();
-                BuildPalette(humanPaletteRoot, state.SkinColors, customizationDraft.SkinColorId, option => SetCustomizationColor("skin", option));
-                BuildPalette(pajamaPaletteRoot, state.PajamaColors, customizationDraft.PajamaColorId, option => SetCustomizationColor("pajama", option));
-                BuildPalette(mosquitoPaletteRoot, state.MosquitoColors, customizationDraft.MosquitoColorId, option => SetCustomizationColor("mosquito", option));
-            }
-            UpdateCustomizationView();
-        }
-
-        public void ShowCustomization()
-        {
-            if (customizationState == null) PresentCustomization(DefaultCustomization());
-            if (screen != AlfaUiScreen.Customization)
-            {
-                customizationReturnScreen = screen == AlfaUiScreen.Lobby && lobbyState?.IsWaiting == true
-                    ? AlfaUiScreen.Lobby : AlfaUiScreen.MainMenu;
-                customizationLobbyCode = customizationReturnScreen == AlfaUiScreen.Lobby ? lobbyState.RoomCode : string.Empty;
-                if (customizationState.Mode == CustomizationUiMode.Modular)
-                {
-                    customizationSessionBaseline = null;
-                    modularCustomizationSessionBaseline = modularCustomizationDraft.Copy();
-                }
-                else
-                {
-                    modularCustomizationSessionBaseline = null;
-                    customizationSessionBaseline = customizationDraft.Copy();
-                }
-            }
-            AlfaRole role = customizationState.Mode == CustomizationUiMode.Modular ? modularEditedRole : customizationDraft.Role;
-            SetScreen(AlfaUiScreen.Customization, role == AlfaRole.Human ? "CustomizationHumanButton" : "CustomizationMosquitoButton");
-            previewOrbit?.Show(role);
-        }
-
-        public void PresentSettings(SettingsUiState state)
-        {
-            settingsState = state ?? throw new ArgumentNullException(nameof(state));
-            settingsApplyLatched = state.IsApplying;
-            settingsDraft = state.Draft.Copy();
-            AlfaUiMotionPreferences.ReducedMotion = settingsDraft.ReduceMenuMotion;
-            settingsControlsGroup.interactable = !settingsApplyLatched;
-            settingsControlsGroup.blocksRaycasts = !settingsApplyLatched;
-            masterVolume.SetValueWithoutNotify(settingsDraft.MasterVolume);
-            musicVolume.SetValueWithoutNotify(settingsDraft.MusicVolume);
-            effectsVolume.SetValueWithoutNotify(settingsDraft.EffectsVolume);
-            voiceVolume.SetValueWithoutNotify(settingsDraft.VoiceVolume);
-            humanSensitivity.SetValueWithoutNotify(settingsDraft.HumanSensitivity);
-            mosquitoSensitivity.SetValueWithoutNotify(settingsDraft.MosquitoSensitivity);
-            UpdateSliderValue(masterVolume);
-            UpdateSliderValue(musicVolume);
-            UpdateSliderValue(effectsVolume);
-            UpdateSliderValue(voiceVolume);
-            UpdateSliderValue(humanSensitivity);
-            UpdateSliderValue(mosquitoSensitivity);
-            fullScreen.SetIsOnWithoutNotify(settingsDraft.FullScreen);
-            vSync.SetIsOnWithoutNotify(settingsDraft.VSync);
-            var frameLimitIndex = Array.IndexOf(FrameLimitOptions, settingsDraft.FrameLimit);
-            frameLimitDropdown.SetValueWithoutNotify(Mathf.Max(0, frameLimitIndex));
-            frameLimitDropdown.RefreshShownValue();
-            invertY.SetIsOnWithoutNotify(settingsDraft.InvertY);
-            reduceMenuMotion.SetIsOnWithoutNotify(settingsDraft.ReduceMenuMotion);
-            reduceMenuMotion.transform.parent.gameObject.SetActive(state.SupportsReducedMenuMotion);
-            videoSettings.SetActive(state.SupportsVideo);
-            rebindNote.SetActive(state.SupportsRebinding);
-            var deviceOptions = new[] { "ELEGÍ UN MICRÓFONO" }.Concat(state.VoiceDevices).ToList();
-            voiceDeviceDropdown.ClearOptions(); voiceDeviceDropdown.AddOptions(deviceOptions);
-            int voiceDeviceIndex = state.VoiceDevices.ToList().FindIndex(device => string.Equals(device, settingsDraft.VoiceDevice, StringComparison.Ordinal));
-            voiceDeviceDropdown.SetValueWithoutNotify(voiceDeviceIndex + 1); voiceDeviceDropdown.RefreshShownValue();
-            pushToTalkBindingLabel.text = "PTT · " + (voiceState?.BindingLabel ?? "V");
-            settingsStatus.text = state.IsApplying ? "Aplicando ajustes…" : state.Message;
-            settingsApplyButton.interactable = !settingsApplyLatched && !settingsDraft.SameValues(state.Saved);
-            settingsApplyLabel.text = settingsApplyLatched ? "APLICANDO…" : "APLICAR";
-            UpdateSettingsCycles();
-        }
-
         public void PresentVoice(VoiceUiState state)
         {
             voiceState = state ?? throw new ArgumentNullException(nameof(state));
@@ -826,90 +632,10 @@ namespace LetMeSleep.UI
             if (pauseVoiceMuteLabel != null)
                 pauseVoiceMuteLabel.text = state.LocalMuted ? "ACTIVAR MI MICRÓFONO" : "SILENCIAR MI MICRÓFONO";
             if (pauseVoiceMuteButton != null) pauseVoiceMuteButton.interactable = state.InRoom && actions is IVoiceActions;
-            if (pushToTalkBindingLabel != null) pushToTalkBindingLabel.text = "PTT · " + state.BindingLabel;
+            UpdatePushToTalkRow();
             UpdateLobbyVoiceMarkers();
             UpdateLobbyVoicePanel();
             RebuildPauseVoicePeers();
-        }
-
-        public void OpenSettings(AlfaUiScreen returnTo)
-        {
-            if (settingsState == null) PresentSettings(DefaultSettings());
-            settingsReturnScreen = returnTo;
-            if (returnTo == AlfaUiScreen.Gameplay || returnTo == AlfaUiScreen.Pause)
-                actions.SetGameplayInputBlocked(true);
-            SetScreen(AlfaUiScreen.Settings, "MasterVolumeSlider");
-        }
-
-        public void PresentHud(BloodHudUiState state)
-        {
-            if (state == null) throw new ArgumentNullException(nameof(state));
-            isSpectator = state.IsSpectator;
-            hudClock.text = FormatClock(state.SecondsRemaining);
-            hudBlood.text = AlfaModeText.Score(state.ModeId, state.BloodCurrent, state.BloodTarget, state.TasksCompleted, state.TasksGoal, state.MosquitoesAlive);
-            hudScoreIcon.Kind = state.ModeId == GameModes.Blood ? AlfaUiIconKind.Blood : state.ModeId == GameModes.Tasks ? AlfaUiIconKind.Ready : AlfaUiIconKind.Mosquito;
-            hudBlood.fontSize = state.ModeId == GameModes.Survival ? AlfaUiTheme.MinTextSize : 22f;
-            var bloodRatio = state.ModeId == GameModes.Tasks ? (state.TasksGoal > 0 ? Mathf.Clamp01((float)state.TasksCompleted / state.TasksGoal) : 0) : state.BloodTarget > 0f ? Mathf.Clamp01(state.BloodCurrent / state.BloodTarget) : 0f;
-            hudBloodFill.transform.parent.gameObject.SetActive(state.ModeId != GameModes.Survival);
-            hudTaskPanel.SetActive(!state.IsSpectator && !string.IsNullOrWhiteSpace(state.PrivateTaskText));
-            hudTask.text = state.PrivateTaskText;
-            hudTaskFill.rectTransform.anchorMax = new Vector2(state.TaskProgress01, 1f);
-            hudLives.text = state.IsSpectator ? "ESPECTADOR" : state.Role == AlfaRole.Mosquito && state.ModeId != GameModes.Blood ? $"VIDAS  {state.LivesRemaining}" : string.Empty;
-            var equipment = state.IsSpectator ? null : state.Equipment;
-            hudEquipmentPanel.SetActive(equipment != null);
-            if (equipment != null)
-            {
-                hudEquipmentLabels[0].text = "MANOS\n<color=#A8B8D8>SIN OBJETO</color>";
-                hudEquipmentIcons[0].Kind = AlfaUiIconKind.Hands;
-                for (int i = 0; i < equipment.Slots.Count; i++)
-                {
-                    var slot = equipment.Slots[i];
-                    hudEquipmentLabels[i + 1].text = slot.Label +
-                        (slot.ResourceText.Length == 0 ? "" : "\n<color=#A8B8D8>" + slot.ResourceText + "</color>");
-                    hudEquipmentIcons[i + 1].Kind = slot.Icon;
-                }
-                for (int i = 0; i < hudEquipmentLabels.Length; i++)
-                {
-                    // Selection is the blue plate with the 3-unit frame (UI-06), not a text marker.
-                    bool selected = equipment.SelectedSlot == i - 1;
-                    SetEquipmentSlotSelected(i, selected);
-                    hudEquipmentLabels[i].color = AlfaUiTheme.Sheet100;
-                    hudEquipmentIcons[i].color = selected ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Moon200;
-                    if (hudEquipmentNumbers[i] != null) hudEquipmentNumbers[i].color = selected ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Moon200;
-                }
-                hudStaminaLabel.text = "ESTAMINA  " + Mathf.RoundToInt(equipment.Stamina01 * 100) + "%";
-                hudStaminaFill.rectTransform.anchorMax = new Vector2(equipment.Stamina01, 1f);
-                bool charging = equipment.ThrowCharge01 > 0 || equipment.ThrowAwaitingRelease;
-                hudThrowTrack.SetActive(charging);
-                hudThrowLabel.text = equipment.ThrowAwaitingRelease ? "LANZAMIENTO PENDIENTE" : "CARGA PANTUFLA  " + Mathf.RoundToInt(equipment.ThrowCharge01 * 100) + "% · SOLTÁ CLIC";
-                hudThrowFill.rectTransform.anchorMax = new Vector2(equipment.ThrowCharge01, 1f);
-                hudSwapOffer.text = equipment.SwapOfferText;
-                var hasSwapOffer = !string.IsNullOrWhiteSpace(equipment.SwapOfferText);
-                hudSwapOffer.gameObject.SetActive(hasSwapOffer);
-                UpdateEquipmentLayout(charging, hasSwapOffer);
-            }
-            hudReticle.SetActive(!state.IsSpectator);
-            hudBloodFill.rectTransform.anchorMax = new Vector2(bloodRatio, 1f);
-            hudRoleLabel.text = state.Role == AlfaRole.Human ? "HUMANO" : "MOSQUITO";
-            hudRoleIcon.Kind = state.Role == AlfaRole.Human ? AlfaUiIconKind.Human : AlfaUiIconKind.Mosquito;
-            hudRoleIcon.color = state.Role == AlfaRole.Human ? AlfaUiTheme.Sky400 : AlfaUiTheme.Pajama500;
-            var roleColor = state.Role == AlfaRole.Human ? AlfaUiTheme.Sky400 : AlfaUiTheme.Pajama500;
-            hudRoleBackground.color = new Color(roleColor.r, roleColor.g, roleColor.b, 0.22f);
-            AlfaUiFactory.SetFrame(hudRoleBackground, AlfaUiTheme.WithAlpha(roleColor, 0.9f));
-            hudInteraction.text = state.Interaction;
-            hudHint.text = string.IsNullOrWhiteSpace(state.ContextHint) ? DefaultRoleHint(state.Role) : state.ContextHint;
-            hudActorState.text = state.ModeId != GameModes.Blood && state.ActorState == HudActorState.Extracting ? "INTERRUMPIENDO" : ActorStateText(state.Role, state.ActorState);
-            hudActorState.color = state.ActorState == HudActorState.Normal ? AlfaUiTheme.Moon200 : AlfaUiTheme.Pajama500;
-            hudProgress.transform.parent.gameObject.SetActive(state.ActorState == HudActorState.Extracting || state.ActorState == HudActorState.Recovering);
-            var rect = hudProgress.rectTransform;
-            rect.anchorMax = new Vector2(state.StateProgress01, 1f);
-            hudNetwork.text = state.NetworkMessage;
-            hudPromptPanel.SetActive(!string.IsNullOrWhiteSpace(hudInteraction.text));
-            hudHintPanel.SetActive(!string.IsNullOrWhiteSpace(hudHint.text));
-            hudStatePanel.SetActive(!string.IsNullOrWhiteSpace(hudActorState.text) ||
-                state.ActorState == HudActorState.Extracting || state.ActorState == HudActorState.Recovering);
-            if (screen != AlfaUiScreen.Gameplay && screen != AlfaUiScreen.Pause && screen != AlfaUiScreen.Settings)
-                ShowGameplay();
         }
 
         public void ShowGameplay()
@@ -926,37 +652,6 @@ namespace LetMeSleep.UI
         {
             gameplayIsTraining = isTraining;
             ShowGameplay();
-        }
-
-        public void PresentResults(ResultsUiState state)
-        {
-            resultsState = state ?? throw new ArgumentNullException(nameof(state));
-            gameplayIsTraining = state.IsTraining;
-            resultsActionLatched = false;
-            trainingStartLatched = false;
-            trainingCancelLatched = false;
-            trainingState = new TrainingUiState(state.TrainingRole, false, modeId: state.ModeId);
-            selectedTrainingMapId = state.MapId;
-            actions.SetGameplayInputBlocked(true);
-            resultsTitle.text = state.Outcome == MatchOutcome.Humans ? "GANARON LOS HUMANOS" :
-                state.Outcome == MatchOutcome.Mosquitoes ? "GANARON LOS MOSQUITOS" : "RONDA INTERRUMPIDA";
-            var reason = string.IsNullOrWhiteSpace(state.Reason) ? string.Empty : "\n" + state.Reason;
-            resultsStats.text = AlfaModeText.Name(state.ModeId) + "\n" + AlfaModeText.ResultScore(state.ModeId, state.BloodCurrent, state.BloodTarget, state.TasksCompleted, state.TasksGoal, state.MosquitoesAlive) + $"\nTiempo: {FormatClock(state.ElapsedSeconds)}{reason}";
-            resultsPrimary.gameObject.SetActive(state.IsTraining || state.IsOwner);
-            resultsPrimary.interactable = !state.IsTraining || TrainingModeAvailable;
-            resultsLeave.interactable = true;
-            resultsPrimaryLabel.text = state.IsTraining ? "REPETIR ENTRENAMIENTO" : "VOLVER AL LOBBY";
-            resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = state.IsTraining ? "VOLVER AL MENÚ" : "SALIR DE LA SALA";
-            if (!state.IsTraining && !state.IsOwner) resultsStats.text += "\n\nESPERANDO AL ANFITRIÓN…";
-            if (state.IsTraining && !HasSelectedTrainingMap) resultsStats.text += "\n\n" + NoTrainingMaps;
-            SetScreen(AlfaUiScreen.Results, resultsPrimary.gameObject.activeSelf ? "ResultsPrimaryButton" : "ResultsLeaveButton");
-        }
-
-        public void ShowPause()
-        {
-            actions.SetGameplayInputBlocked(true);
-            pauseLeaveLabel.text = gameplayIsTraining ? "VOLVER AL MENÚ" : "SALIR DE LA SALA";
-            SetScreen(AlfaUiScreen.Pause, "PauseContinueButton");
         }
 
         private void BuildViews(AlfaUiDependencies dependencies)
@@ -1581,6 +1276,7 @@ namespace LetMeSleep.UI
             if (!initialized) return;
             if (screen == AlfaUiScreen.Lobby) LayoutLobbyRoster();
             UpdateLobbyNametags();
+            UpdateHudLayoutIfResized();
         }
 
         private void BuildTraining(AlfaUiDependencies dependencies)
@@ -1754,409 +1450,6 @@ namespace LetMeSleep.UI
             renderedPortraits.Clear();
         }
 
-        private void BuildCustomization(AlfaUiDependencies dependencies)
-        {
-            var view = factory.View("CustomizationView", transform, false);
-            SetSceneScrim(view, 0.72f);
-            screens[AlfaUiScreen.Customization] = view;
-            var safe = factory.SafeArea(view.transform, 48f, 48f, 40f, 40f);
-            var columns = factory.Horizontal(safe, "Columns", 28f, TextAnchor.MiddleCenter);
-            customizationControlsGroup = columns.gameObject.AddComponent<CanvasGroup>();
-            AlfaUiFactory.Fill(columns);
-            var previewPanel = factory.Panel(columns, "PreviewPanel", AlfaUiTheme.Night800, 900f, 900f);
-            previewPanel.gameObject.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 0f;
-            var previewViewport = AlfaUiFactory.Node("PreviewViewport", previewPanel);
-            AlfaUiFactory.Fill(previewViewport.GetComponent<RectTransform>(), 20f, 20f, 118f, 104f);
-            var rawNode = AlfaUiFactory.Node("CharacterPreview", previewViewport.transform, typeof(UnityEngine.UI.RawImage),
-                typeof(UnityEngine.UI.AspectRatioFitter), typeof(CharacterPreviewOrbit));
-            AlfaUiFactory.Fill(rawNode.GetComponent<RectTransform>());
-            var raw = rawNode.GetComponent<UnityEngine.UI.RawImage>();
-            raw.color = Color.white;
-            var previewAspect = rawNode.GetComponent<UnityEngine.UI.AspectRatioFitter>();
-            previewAspect.aspectMode = UnityEngine.UI.AspectRatioFitter.AspectMode.FitInParent;
-            previewAspect.aspectRatio = dependencies.Preview?.Texture != null && dependencies.Preview.Texture.height > 0 ?
-                (float)dependencies.Preview.Texture.width / dependencies.Preview.Texture.height : 1f;
-            previewOrbit = rawNode.GetComponent<CharacterPreviewOrbit>();
-            previewOrbit.Initialize(raw, dependencies.Preview);
-            var stageHeader = factory.Panel(previewPanel, "StageHeader",
-                new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.9f));
-            Anchor(stageHeader, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -20f), new Vector2(-40f, 80f));
-            customizationPreviewIcon = factory.Icon(stageHeader, "StageMark", AlfaUiIconKind.Human, AlfaUiTheme.Sky400);
-            Anchor(customizationPreviewIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(18f, 0f), new Vector2(40f, 40f));
-            customizationPreviewTitle = factory.Text(stageHeader, "Title", "VISTA EN VIVO · HUMANO", 25f,
-                AlfaUiTheme.Sheet100, TextAlignmentOptions.BottomLeft, true);
-            AlfaUiFactory.Fill(customizationPreviewTitle.rectTransform, 72f, 18f, 6f, 40f);
-            var orbitHint = factory.Text(stageHeader, "OrbitHint", "ARRASTRÁ PARA GIRAR · RUEDA PARA ZOOM", AlfaUiTheme.MinTextSize,
-                AlfaUiTheme.Moon200, TextAlignmentOptions.TopLeft, true);
-            orbitHint.textWrappingMode = TextWrappingModes.NoWrap;
-            AlfaUiFactory.Fill(orbitHint.rectTransform, 72f, 18f, 42f, 4f);
-            var unavailable = factory.Text(previewPanel, "PreviewUnavailable", "El visor 3D se conecta al personaje del juego.", AlfaUiTheme.BodySize,
-                AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            Anchor(unavailable.rectTransform, new Vector2(0.2f, 0.45f), new Vector2(0.8f, 0.55f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
-            unavailable.gameObject.SetActive(!previewOrbit.IsBound);
-            var angles = factory.Horizontal(previewPanel, "PreviewAngles", 8f, TextAnchor.MiddleCenter);
-            Anchor(angles, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 20f), new Vector2(-40f, 66f));
-            AlfaUiFactory.QuietButton(factory.Button(angles, "PreviewFrontButton", "FRENTE", () => previewOrbit.SetAngle(PreviewAngle.Front), false, false, 66f), 22f);
-            AlfaUiFactory.QuietButton(factory.Button(angles, "PreviewSideButton", "PERFIL", () => previewOrbit.SetAngle(PreviewAngle.Side), false, false, 66f), 22f);
-            AlfaUiFactory.QuietButton(factory.Button(angles, "PreviewBackButton", "ESPALDA", () => previewOrbit.SetAngle(PreviewAngle.Back), false, false, 66f), 22f);
-            AlfaUiFactory.QuietButton(factory.Button(angles, "PreviewResetButton", "CENTRAR", () => previewOrbit.ResetView(), false, false, 66f), 22f);
-
-            var optionsPanel = factory.Panel(columns, "OptionsPanel", AlfaUiTheme.Night700, 720f, 900f);
-            var content = factory.Vertical(optionsPanel, "Content", 8f);
-            AlfaUiFactory.Fill(content, 20f, 20f, 20f, 192f);
-            factory.SectionHeader(content, "Header", "PERSONALIZAR", AlfaUiIconKind.Customize, AlfaUiTheme.Lamp400);
-            var roleRow = factory.Horizontal(content, "RoleTabs", 10f, TextAnchor.MiddleCenter);
-            customizationHumanButton = factory.FeatureButton(roleRow, "CustomizationHumanButton", "HUMANO", "PIJAMA Y GORRO",
-                () => SetCustomizationRole(AlfaRole.Human), AlfaUiIconKind.Human, true, false, 76f);
-            customizationMosquitoButton = factory.FeatureButton(roleRow, "CustomizationMosquitoButton", "MOSQUITO", "COLOR DEL CUERPO",
-                () => SetCustomizationRole(AlfaRole.Mosquito), AlfaUiIconKind.Mosquito, false, false, 76f);
-            customizationCategoryTitle = factory.Text(content, "CategoryTitle", "PALETA DEL HUMANO", AlfaUiTheme.LabelSize,
-                AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
-            factory.Divider(content, "CategoryDivider", new Color(AlfaUiTheme.Border.r, AlfaUiTheme.Border.g, AlfaUiTheme.Border.b, 0.52f));
-            humanCustomizationFields = factory.Vertical(content, "HumanFields", 8f).gameObject;
-            factory.Caption(humanCustomizationFields.transform, "SkinLabel", "TONO DE PIEL");
-            humanPaletteRoot = CreatePaletteLayout(humanCustomizationFields.transform, "SkinPalette");
-            factory.Caption(humanCustomizationFields.transform, "PajamaLabel", "COLOR DE PIJAMA");
-            pajamaPaletteRoot = CreatePaletteLayout(humanCustomizationFields.transform, "PajamaPalette");
-            factory.Text(humanCustomizationFields.transform, "DefaultClothes", "Predeterminado: pijama, pantuflas y gorro de noche.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
-            mosquitoCustomizationFields = factory.Vertical(content, "MosquitoFields", 10f).gameObject;
-            factory.Caption(mosquitoCustomizationFields.transform, "MosquitoColorLabel", "COLOR DE CUERPO");
-            mosquitoPaletteRoot = CreatePaletteLayout(mosquitoCustomizationFields.transform, "MosquitoPalette");
-            modularCustomizationFields = factory.Vertical(content, "ModularFields", 8f).gameObject;
-            factory.Caption(modularCustomizationFields.transform, "CategoryLabel", "CATEGORÍAS");
-            factory.ScrollView(modularCustomizationFields.transform, "CategoryScroll", out modularCategoryRoot, 134f);
-            factory.Caption(modularCustomizationFields.transform, "OptionsLabel", "OPCIONES");
-            factory.ScrollView(modularCustomizationFields.transform, "OptionsScroll", out modularOptionRoot, 210f);
-            modularCustomizationFields.SetActive(false);
-            customizationStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            var footer = factory.Vertical(optionsPanel, "Actions", 10f);
-            Anchor(footer, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 20f), new Vector2(-40f, 148f));
-            customizationSaveButton = factory.Button(footer, "CustomizationSaveButton", "APLICAR", SaveCustomization, true, false, 72f, AlfaUiIconKind.Ready);
-            ApplyPositiveStyle(customizationSaveButton);
-            customizationSaveLabel = customizationSaveButton.GetComponentInChildren<TextMeshProUGUI>();
-            var secondary = factory.Horizontal(footer, "SecondaryActions", 12f);
-            customizationResetButton = factory.Button(secondary, "CustomizationResetButton", "DESHACER CAMBIOS", ResetCustomization, false, false, 66f);
-            AlfaUiFactory.QuietButton(customizationResetButton, 22f);
-            AlfaUiFactory.QuietButton(factory.Button(secondary, "CustomizationBackButton", "VOLVER", CloseCustomization, false, false, 66f, AlfaUiIconKind.Back), 22f);
-        }
-
-        private void BuildSettings()
-        {
-            var view = factory.View("SettingsView", transform, false);
-            SetSceneScrim(view, 0.78f);
-            screens[AlfaUiScreen.Settings] = view;
-            var panel = CenteredPanel(view.transform, "SettingsCard", 1280f, 990f);
-            panel.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night800;
-            var content = factory.Vertical(panel, "Content", 12f);
-            settingsControlsGroup = content.gameObject.AddComponent<CanvasGroup>();
-            AlfaUiFactory.Fill(content, 30f, 30f, 26f, 26f);
-            factory.SectionHeader(content, "Header", "AJUSTES", AlfaUiIconKind.Settings, AlfaUiTheme.Sky400);
-            factory.Caption(content, "Intro", "AJUSTÁ SONIDO, IMAGEN Y CONTROLES");
-
-            var sections = factory.Horizontal(content, "Sections", 18f, TextAnchor.UpperCenter);
-            var sectionsLayout = sections.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-            sectionsLayout.preferredHeight = 712f;
-            sectionsLayout.flexibleHeight = 0f;
-
-            var leftColumn = factory.Vertical(sections, "LeftColumn", 16f);
-            var leftLayout = leftColumn.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-            leftLayout.preferredWidth = 570f;
-            leftLayout.flexibleWidth = 1f;
-
-            var audioPanel = factory.Panel(leftColumn, "AudioPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f), -1f, 384f);
-            var audio = factory.Vertical(audioPanel, "AudioContent", 10f);
-            AlfaUiFactory.Fill(audio, 22f, 22f, 20f, 20f);
-            factory.SectionHeader(audio, "AudioHeader", "AUDIO", AlfaUiIconKind.Audio, AlfaUiTheme.Lamp400);
-            masterVolume = AddSliderField(audio, "VOLUMEN GENERAL", "MasterVolumeSlider", value => ChangeSetting(draft => draft.MasterVolume = value));
-            musicVolume = AddSliderField(audio, "MÚSICA", "MusicVolumeSlider", value => ChangeSetting(draft => draft.MusicVolume = value));
-            effectsVolume = AddSliderField(audio, "EFECTOS", "EffectsVolumeSlider", value => ChangeSetting(draft => draft.EffectsVolume = value));
-            voiceVolume = AddSliderField(audio, "VOCES", "VoiceVolumeSlider", value => ChangeSetting(draft => draft.VoiceVolume = value));
-            voiceDeviceDropdown = factory.Dropdown(audio, "VoiceDeviceDropdown", new[] { "ELEGÍ UN MICRÓFONO" }, index =>
-            {
-                string device = index > 0 && settingsState != null && index - 1 < settingsState.VoiceDevices.Count ? settingsState.VoiceDevices[index - 1] : string.Empty;
-                ChangeSetting(draft => draft.VoiceDevice = device);
-            });
-
-            var controlsPanel = factory.Panel(leftColumn, "ControlsPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f), -1f, 312f);
-            var controls = factory.Vertical(controlsPanel, "ControlsContent", 10f);
-            AlfaUiFactory.Fill(controls, 22f, 22f, 20f, 20f);
-            factory.SectionHeader(controls, "ControlsHeader", "CONTROLES", AlfaUiIconKind.Controls, AlfaUiTheme.Mint400);
-            humanSensitivity = AddSliderField(controls, "SENSIBILIDAD HUMANO", "HumanSensitivitySlider", value => ChangeSetting(draft => draft.HumanSensitivity = value), 0.1f, 2f);
-            mosquitoSensitivity = AddSliderField(controls, "SENSIBILIDAD MOSQUITO", "MosquitoSensitivitySlider", value => ChangeSetting(draft => draft.MosquitoSensitivity = value), 0.1f, 2f);
-            invertY = factory.Toggle(controls, "InvertYToggle", "INVERTIR EJE VERTICAL", value => ChangeSetting(draft => draft.InvertY = value));
-            var pttButton = factory.Button(controls, "PushToTalkRebindButton", "PTT · V", () =>
-                (actions as IVoiceActions)?.BeginPushToTalkRebind((path, label) =>
-                {
-                    if (settingsDraft != null) settingsDraft.PushToTalkBinding = path;
-                    if (pushToTalkBindingLabel != null) pushToTalkBindingLabel.text = "PTT · " + label;
-                }), false, false, 44f, AlfaUiIconKind.Audio);
-            pushToTalkBindingLabel = pttButton.GetComponentInChildren<TextMeshProUGUI>();
-            rebindNote = pttButton.gameObject;
-
-            var videoPanel = factory.Panel(sections, "VideoPanel", new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, 0.96f), 570f, 712f);
-            videoPanel.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1f;
-            videoSettings = videoPanel.gameObject;
-            var video = factory.Vertical(videoPanel, "VideoContent", 10f);
-            AlfaUiFactory.Fill(video, 22f, 22f, 20f, 20f);
-            factory.SectionHeader(video, "VideoHeader", "VIDEO", AlfaUiIconKind.Video, AlfaUiTheme.Sky400);
-            fullScreen = factory.Toggle(video, "FullScreenToggle", "PANTALLA COMPLETA", value => ChangeSetting(draft => draft.FullScreen = value));
-            resolutionValue = AddCycleField(video, "RESOLUCIÓN", "Resolution", -1, 1, delta =>
-                ChangeSetting(draft => draft.ResolutionIndex = Cycle(draft.ResolutionIndex, delta, settingsState?.Resolutions.Count ?? 0)), 150f, 200f);
-            qualityValue = AddCycleField(video, "CALIDAD", "Quality", -1, 1, delta =>
-                ChangeSetting(draft => draft.QualityIndex = Cycle(draft.QualityIndex, delta, settingsState?.Qualities.Count ?? 0)), 150f, 200f);
-            vSync = factory.Toggle(video, "VSyncToggle", "SINCRONIZACIÓN VERTICAL", value => ChangeSetting(draft => draft.VSync = value));
-            factory.Caption(video, "FrameLimitLabel", "LÍMITE DE FPS");
-            frameLimitDropdown = factory.Dropdown(video, "FrameLimitDropdown",
-                FrameLimitOptions.Select(FrameLimitLabel).ToArray(), index =>
-                    ChangeSetting(draft => draft.FrameLimit = FrameLimitOptions[Mathf.Clamp(index, 0, FrameLimitOptions.Length - 1)]));
-            reduceMenuMotion = factory.Toggle(video, "ReduceMenuMotionToggle", "REDUCIR MOVIMIENTO DEL MENÚ",
-                value => ChangeSetting(draft => draft.ReduceMenuMotion = value));
-            // The backend opts in only after persistence and the real scene effect are wired.
-            reduceMenuMotion.transform.parent.gameObject.SetActive(false);
-            settingsStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            var buttons = factory.Horizontal(content, "Actions", 12f, TextAnchor.MiddleCenter);
-            settingsApplyButton = factory.Button(buttons, "SettingsApplyButton", "APLICAR", ApplySettings, true, false, 66f, AlfaUiIconKind.Ready);
-            ApplyPositiveStyle(settingsApplyButton);
-            settingsApplyLabel = settingsApplyButton.GetComponentInChildren<TextMeshProUGUI>();
-            AlfaUiFactory.QuietButton(factory.Button(buttons, "SettingsResetButton", "DESHACER CAMBIOS", ResetSettings, false, false, 66f), 22f);
-            AlfaUiFactory.QuietButton(factory.Button(buttons, "SettingsBackButton", "VOLVER", CloseSettings, false, false, 66f, AlfaUiIconKind.Back), 22f);
-        }
-
-        private void BuildHud()
-        {
-            var view = factory.View("GameplayHudView", transform, false);
-            screens[AlfaUiScreen.Gameplay] = view;
-            var role = factory.Panel(view.transform, "RoleBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.78f));
-            Anchor(role, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(26f, -22f), new Vector2(188f, 52f));
-            hudRoleBackground = role.GetComponent<UnityEngine.UI.Image>();
-            hudRoleIcon = factory.Icon(role, "RoleIcon", AlfaUiIconKind.Human, AlfaUiTheme.Sky400);
-            Anchor(hudRoleIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(30f, 30f));
-            hudRoleLabel = factory.Text(role, "RoleLabel", "HUMANO", 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
-            hudRoleLabel.textWrappingMode = TextWrappingModes.NoWrap;
-            AlfaUiFactory.Fill(hudRoleLabel.rectTransform, 46f, 10f, 4f, 4f);
-
-            var clock = factory.Panel(view.transform, "ClockBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f));
-            Anchor(clock, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(1f, 1f), new Vector2(-6f, -22f), new Vector2(156f, 60f));
-            var clockIcon = factory.Icon(clock, "ClockIcon", AlfaUiIconKind.Clock, AlfaUiTheme.Lamp400);
-            Anchor(clockIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(28f, 28f));
-            hudClock = factory.Text(clock, "Clock", "03:00", 32f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
-            hudClock.textWrappingMode = TextWrappingModes.NoWrap;
-            AlfaUiFactory.Fill(hudClock.rectTransform, 44f, 10f, 4f, 4f);
-
-            var blood = factory.Panel(view.transform, "BloodBadge", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f));
-            Anchor(blood, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 1f), new Vector2(6f, -22f), new Vector2(290f, 60f));
-            var bloodIcon = factory.Icon(blood, "BloodIcon", AlfaUiIconKind.Blood, AlfaUiTheme.Pajama500); hudScoreIcon = bloodIcon;
-            Anchor(bloodIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 3f), new Vector2(30f, 30f));
-            hudBlood = factory.Text(blood, "Blood", "SANGRE  0 / 20", 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
-            hudBlood.textWrappingMode = TextWrappingModes.NoWrap;
-            AlfaUiFactory.Fill(hudBlood.rectTransform, 50f, 12f, 3f, 17f);
-            var bloodTrack = AlfaUiFactory.Node("BloodTrack", blood, typeof(UnityEngine.UI.Image));
-            var bloodTrackImage = bloodTrack.GetComponent<UnityEngine.UI.Image>();
-            bloodTrackImage.color = AlfaUiTheme.Night600;
-            bloodTrackImage.raycastTarget = false;
-            Anchor(bloodTrack.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(14f, 9f), new Vector2(-28f, 7f));
-            var bloodFill = AlfaUiFactory.Node("Fill", bloodTrack.transform, typeof(UnityEngine.UI.Image));
-            hudBloodFill = bloodFill.GetComponent<UnityEngine.UI.Image>();
-            hudBloodFill.color = AlfaUiTheme.Pajama500;
-            hudBloodFill.raycastTarget = false;
-            AlfaUiFactory.Fill(hudBloodFill.rectTransform);
-            hudBloodFill.rectTransform.anchorMax = new Vector2(0f, 1f);
-
-            hudNetwork = factory.Text(view.transform, "NetworkState", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.StatusWarn, TextAlignmentOptions.Right);
-            Anchor(hudNetwork.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -24f), new Vector2(460f, 56f));
-            // Push-to-talk / voice state on a chip (text.secondary on ink) so it reads over any sky or wall.
-            var voiceChip = factory.Panel(view.transform, "VoiceChip", AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.82f), -1f, -1f, AlfaUiTheme.SmallRadius);
-            AlfaUiFactory.SetSurface(voiceChip, frame: AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.8f), shadow: AlfaUiTheme.WithAlpha(Color.black, 0.3f));
-            voiceChip.anchorMin = voiceChip.anchorMax = voiceChip.pivot = new Vector2(1f, 1f);
-            voiceChip.anchoredPosition = new Vector2(-28f, -84f);
-            var chipLayout = voiceChip.gameObject.AddComponent<UnityEngine.UI.HorizontalLayoutGroup>();
-            chipLayout.padding = new RectOffset(12, 14, 5, 5);
-            chipLayout.spacing = 8f;
-            chipLayout.childAlignment = TextAnchor.MiddleCenter;
-            chipLayout.childControlWidth = chipLayout.childControlHeight = true;
-            chipLayout.childForceExpandWidth = chipLayout.childForceExpandHeight = false;
-            var chipFit = voiceChip.gameObject.AddComponent<UnityEngine.UI.ContentSizeFitter>();
-            chipFit.horizontalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
-            chipFit.verticalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
-            var mic = factory.Icon(voiceChip, "VoiceIcon", AlfaUiIconKind.Microphone, AlfaUiTheme.Moon200);
-            var micLayout = mic.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-            micLayout.preferredWidth = micLayout.preferredHeight = micLayout.minWidth = micLayout.minHeight = 22f;
-            hudVoice = factory.Text(voiceChip, "VoiceState", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center, true);
-            hudVoice.textWrappingMode = TextWrappingModes.NoWrap;
-            hudVoice.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 0f;
-            hudVoiceChip = voiceChip.gameObject;
-            hudVoiceChip.SetActive(false);
-
-            hudPromptPanel = factory.Panel(view.transform, "InteractionPrompt", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.88f)).gameObject;
-            // Keep a deliberate gutter before the right-aligned equipment belt at 720p.
-            Anchor(hudPromptPanel.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 34f), new Vector2(440f, 54f));
-            hudInteraction = factory.Text(hudPromptPanel.transform, "Interaction", string.Empty, 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
-            AlfaUiFactory.Fill(hudInteraction.rectTransform, 16f, 16f, 6f, 6f);
-
-            hudStatePanel = factory.Panel(view.transform, "ActorStatePanel", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.9f)).gameObject;
-            Anchor(hudStatePanel.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 104f), new Vector2(440f, 64f));
-            hudActorState = factory.Text(hudStatePanel.transform, "ActorState", string.Empty, 22f, AlfaUiTheme.Pajama500, TextAlignmentOptions.Center, true);
-            AlfaUiFactory.Fill(hudActorState.rectTransform, 16f, 16f, 5f, 20f);
-            var progressRoot = AlfaUiFactory.Node("StateProgress", hudStatePanel.transform, typeof(UnityEngine.UI.Image));
-            var progressTrack = progressRoot.GetComponent<UnityEngine.UI.Image>();
-            progressTrack.color = AlfaUiTheme.Night600;
-            progressTrack.raycastTarget = false;
-            Anchor(progressRoot.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(14f, 10f), new Vector2(-28f, 8f));
-            var fill = AlfaUiFactory.Node("Fill", progressRoot.transform, typeof(UnityEngine.UI.Image));
-            hudProgress = fill.GetComponent<UnityEngine.UI.Image>();
-            hudProgress.color = AlfaUiTheme.Lamp400;
-            hudProgress.raycastTarget = false;
-            AlfaUiFactory.Fill(hudProgress.rectTransform);
-
-            hudHintPanel = factory.Panel(view.transform, "ContextHintPanel", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, 0.72f)).gameObject;
-            // Compact two-line context stays left of the central interaction prompt at both target resolutions.
-            Anchor(hudHintPanel.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(26f, 26f), new Vector2(640f, 78f));
-            hudHint = factory.Text(hudHintPanel.transform, "ContextHint", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Left);
-            hudHint.textWrappingMode = TextWrappingModes.Normal;
-            hudHint.enableAutoSizing = false;
-            hudHint.overflowMode = TextOverflowModes.Overflow;
-            AlfaUiFactory.Fill(hudHint.rectTransform, 16f, 16f, 10f, 10f);
-            hudLives = factory.Text(view.transform, "Lives", string.Empty, 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
-            Anchor(hudLives.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -84f), new Vector2(280f, 34f));
-            hudTaskPanel = factory.Panel(view.transform, "PrivateTask", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, .9f)).gameObject;
-            Anchor(hudTaskPanel.GetComponent<RectTransform>(), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -128f), new Vector2(440f, 124f));
-            hudTask = factory.Text(hudTaskPanel.transform, "PrivateTaskText", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left);
-            hudTask.textWrappingMode = TextWrappingModes.Normal;
-            AlfaUiFactory.Fill(hudTask.rectTransform, 18f, 18f, 10f, 26f);
-            var taskTrack = AlfaUiFactory.Node("TaskProgress", hudTaskPanel.transform, typeof(UnityEngine.UI.Image));
-            taskTrack.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night600;
-            Anchor(taskTrack.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), new Vector2(18f, 12f), new Vector2(-36f, 8f));
-            hudTaskFill = AlfaUiFactory.Node("Fill", taskTrack.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
-            hudTaskFill.color = AlfaUiTheme.Mint400; hudTaskFill.raycastTarget = false; AlfaUiFactory.Fill(hudTaskFill.rectTransform);
-            hudTaskPanel.SetActive(false);
-
-            // Private equipment belt: hands plus three slots. The selected slot is the primary blue plate with the
-            // 3-unit accent frame (UI-06 slots); the number sits top-left, no text markers.
-            hudEquipmentPanel = factory.Panel(view.transform, "PrivateEquipment", new Color(AlfaUiTheme.Ink900.r, AlfaUiTheme.Ink900.g, AlfaUiTheme.Ink900.b, .80f)).gameObject;
-            hudEquipmentRect = hudEquipmentPanel.GetComponent<RectTransform>();
-            Anchor(hudEquipmentRect, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-26f, 26f), new Vector2(700f, EquipmentBaseHeight));
-            for (int i = 0; i < 4; i++)
-            {
-                var slot = factory.Panel(hudEquipmentPanel.transform, "EquipmentSlotPlate" + i,
-                    new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, .82f));
-                Anchor(slot, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(12f + i * 169f, -10f), new Vector2(160f, EquipmentSlotHeight));
-                AlfaUiFactory.SetSurface(slot, shadow: Color.clear);
-                hudEquipmentSlots[i] = slot.GetComponent<UnityEngine.UI.Image>();
-                var number = factory.Text(slot, "EquipmentNumber" + i, i.ToString(), 22f, AlfaUiTheme.Moon200, TextAlignmentOptions.TopLeft, true);
-                number.name = "EquipmentNumber" + i;
-                Anchor(number.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(10f, -3f), new Vector2(26f, 30f));
-                hudEquipmentNumbers[i] = number;
-                hudEquipmentIcons[i] = factory.Icon(slot, "EquipmentIcon" + i, i == 0 ? AlfaUiIconKind.Hands : AlfaUiIconKind.None, AlfaUiTheme.Moon200);
-                Anchor(hudEquipmentIcons[i].rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(38f, -6f), new Vector2(28f, 28f));
-                hudEquipmentLabels[i] = factory.Text(slot, "EquipmentSlot" + i, i == 0 ? "MANOS" : "VACÍO", AlfaUiTheme.MinTextSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.TopLeft, true);
-                hudEquipmentLabels[i].textWrappingMode = TextWrappingModes.Normal;
-                hudEquipmentLabels[i].overflowMode = TextOverflowModes.Overflow;
-                hudEquipmentLabels[i].characterSpacing = 1f;
-                hudEquipmentLabels[i].lineSpacing = -8f;
-                AlfaUiFactory.Fill(hudEquipmentLabels[i].rectTransform, 10f, 6f, 36f, 2f);
-            }
-            hudStaminaLabel = factory.Text(hudEquipmentPanel.transform, "StaminaLabel", "ESTAMINA  100%", AlfaUiTheme.MinTextSize, AlfaUiTheme.Mint400, TextAlignmentOptions.Left, true);
-            hudStaminaLabelRect = hudStaminaLabel.rectTransform;
-            Anchor(hudStaminaLabelRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), new Vector2(0f, -(EquipmentSlotHeight + 16f)), new Vector2(-28f, 32f));
-            var staminaTrack = AlfaUiFactory.Node("StaminaTrack", hudEquipmentPanel.transform, typeof(UnityEngine.UI.Image));
-            staminaTrack.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night600;
-            hudStaminaTrackRect = staminaTrack.GetComponent<RectTransform>();
-            Anchor(hudStaminaTrackRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), new Vector2(0f, -(EquipmentSlotHeight + 52f)), new Vector2(-28f, 8f));
-            hudStaminaFill = AlfaUiFactory.Node("Fill", staminaTrack.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
-            hudStaminaFill.color = AlfaUiTheme.Mint400; hudStaminaFill.raycastTarget = false; AlfaUiFactory.Fill(hudStaminaFill.rectTransform);
-            hudThrowTrack = AlfaUiFactory.Node("ThrowCharge", hudEquipmentPanel.transform).gameObject;
-            hudThrowRect = hudThrowTrack.GetComponent<RectTransform>();
-            Anchor(hudThrowRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), new Vector2(0f, -EquipmentBaseHeight), new Vector2(-28f, 50f));
-            hudThrowLabel = factory.Text(hudThrowTrack.transform, "ThrowLabel", "CARGA PANTUFLA", AlfaUiTheme.MinTextSize, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left, true);
-            Anchor(hudThrowLabel.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), Vector2.zero, new Vector2(0f, 34f));
-            var throwBar = AlfaUiFactory.Node("Track", hudThrowTrack.transform, typeof(UnityEngine.UI.Image));
-            throwBar.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night600;
-            Anchor(throwBar.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(.5f, 0f), Vector2.zero, new Vector2(0f, 8f));
-            hudThrowFill = AlfaUiFactory.Node("Fill", throwBar.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
-            hudThrowFill.color = AlfaUiTheme.Lamp400; hudThrowFill.raycastTarget = false; AlfaUiFactory.Fill(hudThrowFill.rectTransform);
-            hudSwapOffer = factory.Text(hudEquipmentPanel.transform, "SwapOffer", string.Empty, AlfaUiTheme.MinTextSize, AlfaUiTheme.StatusWarn, TextAlignmentOptions.Left, true);
-            hudSwapOffer.textWrappingMode = TextWrappingModes.Normal;
-            hudSwapOffer.overflowMode = TextOverflowModes.Overflow;
-            hudSwapRect = hudSwapOffer.rectTransform;
-            Anchor(hudSwapRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f), new Vector2(0f, -EquipmentBaseHeight), new Vector2(-28f, 60f));
-            hudEquipmentPanel.SetActive(false);
-            var reticle = factory.Icon(view.transform, "Reticle", AlfaUiIconKind.Crosshair, AlfaUiTheme.Sheet100); hudReticle = reticle.gameObject;
-            Anchor(reticle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(18f, 18f));
-        }
-
-        private const float EquipmentSlotHeight = 122f;
-        private const float EquipmentBaseHeight = EquipmentSlotHeight + 76f;
-
-        private void UpdateEquipmentLayout(bool charging, bool hasSwapOffer)
-        {
-            var nextTop = EquipmentBaseHeight - 6f;
-            if (charging)
-            {
-                Anchor(hudThrowRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f),
-                    new Vector2(0f, -nextTop), new Vector2(-28f, 50f));
-                nextTop += 56f;
-            }
-            if (hasSwapOffer)
-            {
-                Anchor(hudSwapRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(.5f, 1f),
-                    new Vector2(0f, -nextTop), new Vector2(-28f, 60f));
-                nextTop += 66f;
-            }
-            hudEquipmentRect.sizeDelta = new Vector2(700f, charging || hasSwapOffer ? nextTop + 4f : EquipmentBaseHeight);
-        }
-
-        /// <summary>Equipment slot plate: selected = primary blue with the 3-unit accent.blue frame.</summary>
-        private void SetEquipmentSlotSelected(int index, bool selected)
-        {
-            var plate = hudEquipmentSlots[index];
-            if (plate == null) return;
-            var translucent = new Color(AlfaUiTheme.Night700.r, AlfaUiTheme.Night700.g, AlfaUiTheme.Night700.b, .82f);
-            plate.color = selected ? Color.white : translucent;
-            AlfaUiFactory.SetSurface(plate, selected ? AlfaUiTheme.PrimaryHi : Color.white, selected ? AlfaUiTheme.Primary : new Color(0.8f, 0.84f, 0.9f, 1f),
-                selected ? AlfaUiTheme.Sky400 : AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.95f), Color.clear);
-            AlfaUiFactory.MarkSelectedFrame(plate, selected);
-            if (selected) AlfaUiFactory.SetSurface(plate, shadow: AlfaUiTheme.WithAlpha(AlfaUiTheme.PrimaryHi, 0.4f));
-        }
-
-        private void BuildPause()
-        {
-            var view = factory.View("PauseView", transform, false);
-            view.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Scrim;
-            view.GetComponent<UnityEngine.UI.Image>().raycastTarget = true;
-            screens[AlfaUiScreen.Pause] = view;
-            var panel = CenteredPanel(view.transform, "PauseCard", 720f, 760f);
-            var content = factory.Vertical(panel, "Content", 10f);
-            AlfaUiFactory.Fill(content, 34f, 34f, 30f, 30f);
-            factory.Title(content, "Title", "PARTIDA EN PAUSA", AlfaUiTheme.HeaderTitleSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
-            factory.Button(content, "PauseContinueButton", "CONTINUAR", ResumeFromPause, true, false, 68f, AlfaUiIconKind.Play);
-            factory.Button(content, "PauseSettingsButton", "AJUSTES", () => OpenSettings(AlfaUiScreen.Pause), false, false, 58f, AlfaUiIconKind.Settings);
-            factory.Button(content, "PauseControlsButton", "CONTROLES", () => OpenSettings(AlfaUiScreen.Pause), false, false, 58f, AlfaUiIconKind.Training);
-            pauseVoiceStatus = factory.Text(content, "PauseVoiceStatus", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            pauseVoiceMuteButton = factory.Button(content, "PauseVoiceMuteButton", "SILENCIAR MI MICRÓFONO", () =>
-                (actions as IVoiceActions)?.SetLocalVoiceMuted(!voiceState.LocalMuted), false, false, 48f, AlfaUiIconKind.Audio);
-            pauseVoiceMuteLabel = pauseVoiceMuteButton.GetComponentInChildren<TextMeshProUGUI>();
-            pauseVoicePeers = factory.Vertical(content, "PauseVoicePeers", 4f);
-            var voicePeersLayout = pauseVoicePeers.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-            voicePeersLayout.preferredHeight = 190f; voicePeersLayout.flexibleHeight = 1f;
-            pauseLeaveButton = factory.Button(content, "PauseLeaveButton", "SALIR DE LA SALA", LeaveGameplayContext, false, true, 58f, AlfaUiIconKind.Exit);
-            pauseLeaveLabel = pauseLeaveButton.GetComponentInChildren<TextMeshProUGUI>();
-        }
-
-        private void BuildResults()
-        {
-            var view = factory.View("ResultsView", transform, false);
-            view.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Scrim;
-            view.GetComponent<UnityEngine.UI.Image>().raycastTarget = true;
-            screens[AlfaUiScreen.Results] = view;
-            var panel = CenteredPanel(view.transform, "ResultsCard", 780f, 580f);
-            var content = factory.Vertical(panel, "Content", 22f, TextAnchor.MiddleCenter);
-            AlfaUiFactory.Fill(content, 40f, 40f, 34f, 34f);
-            resultsTitle = factory.Title(content, "Title", "RONDA INTERRUMPIDA", 52f, AlfaUiTheme.Lamp400, TextAlignmentOptions.Center);
-            resultsStats = factory.Text(content, "Stats", string.Empty, AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
-            resultsPrimary = factory.Button(content, "ResultsPrimaryButton", "VOLVER AL LOBBY", ResultsPrimaryAction, true, false, 68f, AlfaUiIconKind.Play);
-            resultsPrimaryLabel = resultsPrimary.GetComponentInChildren<TextMeshProUGUI>();
-            resultsLeave = factory.Button(content, "ResultsLeaveButton", "SALIR DE LA SALA", ResultsLeaveAction, false, true, 58f, AlfaUiIconKind.Exit);
-        }
 
         private void BuildConfirm()
         {
@@ -2181,44 +1474,6 @@ namespace LetMeSleep.UI
             var panel = factory.Panel(parent, name, AlfaUiTheme.Night700, width, height);
             Anchor(panel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(width, height));
             return panel;
-        }
-
-        private void AddReadOnlyField(Transform parent, string label, string value)
-        {
-            var panel = factory.Panel(parent, label + "Field", AlfaUiTheme.Ink900, -1f, 62f);
-            var row = factory.Horizontal(panel, "Content", 12f, TextAnchor.MiddleCenter);
-            AlfaUiFactory.Fill(row, 16f, 16f, 8f, 8f);
-            factory.Text(row, "Label", label, AlfaUiTheme.LabelSize, AlfaUiTheme.Disabled);
-            factory.Text(row, "Value", value, AlfaUiTheme.BodySize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Right);
-        }
-
-        private UnityEngine.UI.Slider AddSliderField(Transform parent, string label, string name, UnityEngine.Events.UnityAction<float> callback, float min = 0f, float max = 1f)
-        {
-            var row = factory.Horizontal(parent, name + "Row", 18f, TextAnchor.MiddleCenter);
-            var labelText = factory.Text(row, "Label", label, AlfaUiTheme.LabelSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
-            labelText.textWrappingMode = TextWrappingModes.NoWrap;
-            var labelLayout = labelText.GetComponent<UnityEngine.UI.LayoutElement>();
-            labelLayout.minWidth = 236f;
-            labelLayout.preferredWidth = 236f;
-            labelLayout.flexibleWidth = 0f;
-            var slider = factory.Slider(row, name, min, max, callback);
-            slider.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 200f;
-            var valueText = factory.Text(row, "Value", string.Empty, AlfaUiTheme.MinTextSize, AlfaUiTheme.Moon200, TextAlignmentOptions.Right, true);
-            valueText.textWrappingMode = TextWrappingModes.NoWrap;
-            var valueLayout = valueText.GetComponent<UnityEngine.UI.LayoutElement>();
-            valueLayout.minWidth = 66f;
-            valueLayout.preferredWidth = 66f;
-            valueLayout.flexibleWidth = 0f;
-            slider.onValueChanged.AddListener(_ => UpdateSliderValue(slider));
-            UpdateSliderValue(slider);
-            return slider;
-        }
-
-        private static void UpdateSliderValue(UnityEngine.UI.Slider slider)
-        {
-            var valueText = slider.transform.parent.Find("Value").GetComponent<TextMeshProUGUI>();
-            valueText.text = Mathf.Approximately(slider.maxValue, 1f) ?
-                Mathf.RoundToInt(slider.value * 100f) + "%" : slider.value.ToString("0.00") + "×";
         }
 
         private TextMeshProUGUI AddCycleField(Transform parent, string label, string name, int previous, int next, Action<int> changed,
@@ -2542,7 +1797,7 @@ namespace LetMeSleep.UI
                 resultsPrimary.interactable = false;
                 resultsPrimaryLabel.text = "PREPARANDO…";
                 resultsLeave.interactable = true;
-                resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = "CANCELAR";
+                resultsLeaveLabel.text = "CANCELAR";
             }
             else
             {
@@ -2566,408 +1821,9 @@ namespace LetMeSleep.UI
             if (screen == AlfaUiScreen.Results)
             {
                 resultsLeave.interactable = false;
-                resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = "CANCELANDO…";
+                resultsLeaveLabel.text = "CANCELANDO…";
             }
             actions.CancelTraining();
-        }
-
-        private void SetCustomizationRole(AlfaRole role)
-        {
-            if (customizationState == null || customizationSaveLatched || customizationState.IsReadOnly) return;
-            if (customizationState.Mode == CustomizationUiMode.Modular)
-            {
-                modularEditedRole = role;
-                modularSelectedSlotId = string.Empty;
-                EnsureModularSelectedSlot();
-                BuildModularCustomization();
-                ResetModularScrollPositions();
-                UpdateCustomizationView();
-                // The selection is unchanged; this lets the provider update the local role preview only.
-                SendModularPreview();
-                return;
-            }
-            if (customizationDraft == null) return;
-            customizationDraft.Role = role;
-            UpdateCustomizationView();
-            actions.PreviewCustomization(customizationDraft.Copy());
-        }
-
-        private void SetCustomizationColor(string category, NamedColorOption option)
-        {
-            if (customizationDraft == null || option == null || customizationSaveLatched || customizationState?.IsReadOnly == true) return;
-            if (category == "skin") customizationDraft.SkinColorId = option.Id;
-            else if (category == "pajama") customizationDraft.PajamaColorId = option.Id;
-            else customizationDraft.MosquitoColorId = option.Id;
-            UpdateCustomizationView();
-            actions.PreviewCustomization(customizationDraft.Copy());
-        }
-
-        private static CustomizationRole ToCustomizationRole(AlfaRole role) =>
-            role == AlfaRole.Human ? CustomizationRole.Human : CustomizationRole.Mosquito;
-
-        private IEnumerable<CustomizationSlotSnapshot> VisibleModularSlots()
-        {
-            if (customizationState?.Catalog == null) return Enumerable.Empty<CustomizationSlotSnapshot>();
-            CustomizationRole role = ToCustomizationRole(modularEditedRole);
-            return customizationState.Catalog.Slots.Where(slot => slot.Role == role &&
-                !string.IsNullOrWhiteSpace(slot.Label) &&
-                slot.Options.Any(option => !string.IsNullOrWhiteSpace(option.Label)));
-        }
-
-        private void EnsureModularSelectedSlot()
-        {
-            if (VisibleModularSlots().Any(slot => string.Equals(slot.SlotId, modularSelectedSlotId, StringComparison.Ordinal))) return;
-            modularSelectedSlotId = VisibleModularSlots().Select(slot => slot.SlotId).FirstOrDefault() ?? string.Empty;
-        }
-
-        private void BuildModularCustomization()
-        {
-            if (modularCategoryRoot == null || modularOptionRoot == null) return;
-            AlfaUiFactory.Clear(modularCategoryRoot);
-            AlfaUiFactory.Clear(modularOptionRoot);
-            foreach (var slot in VisibleModularSlots())
-            {
-                var capturedSlot = slot;
-                bool selected = string.Equals(slot.SlotId, modularSelectedSlotId, StringComparison.Ordinal);
-                var button = factory.Button(modularCategoryRoot, "ModularCategory_" + slot.WireSlotId,
-                    slot.Label,
-                    () => SelectModularCategory(capturedSlot.SlotId), false, false, 54f);
-                ApplyModularButtonStyle(button, selected);
-            }
-
-            var current = VisibleModularSlots().FirstOrDefault(slot =>
-                string.Equals(slot.SlotId, modularSelectedSlotId, StringComparison.Ordinal));
-            if (current == null) return;
-            string selectedOption = modularCustomizationDraft.For(ToCustomizationRole(modularEditedRole)).OptionFor(current.SlotId);
-            foreach (var option in current.Options.Where(item => !string.IsNullOrWhiteSpace(item.Label)))
-            {
-                var capturedOption = option;
-                bool selected = string.Equals(option.OptionId, selectedOption, StringComparison.Ordinal);
-                var button = factory.Button(modularOptionRoot,
-                    "ModularOption_" + current.WireSlotId + "_" + option.WireOptionId,
-                    option.Label,
-                    () => SetModularCustomizationOption(current.SlotId, capturedOption.OptionId), false, false, 60f);
-                ApplyModularButtonStyle(button, selected);
-                AddModularOptionVisual(button, current, option);
-            }
-        }
-
-        private void ResetModularScrollPositions()
-        {
-            ResetScrollPosition(modularCategoryRoot);
-            ResetScrollPosition(modularOptionRoot);
-        }
-
-        private static void ResetScrollPosition(RectTransform content)
-        {
-            var scroll = content?.GetComponentInParent<UnityEngine.UI.ScrollRect>();
-            if (scroll == null) return;
-            scroll.StopMovement();
-            scroll.horizontalNormalizedPosition = 0f;
-            scroll.verticalNormalizedPosition = 1f;
-        }
-
-        private void AddModularOptionVisual(UnityEngine.UI.Button button, CustomizationSlotSnapshot slot,
-            CustomizationOptionSnapshot option)
-        {
-            Sprite thumbnail = option.HasSwatch ? null : customizationState.ThumbnailResolver?.Invoke(slot.SlotId, option.OptionId);
-            if (!option.HasSwatch && thumbnail == null) return;
-            var visual = AlfaUiFactory.Node(option.HasSwatch ? "ColorSwatch" : "Thumbnail", button.transform, typeof(UnityEngine.UI.Image));
-            var image = visual.GetComponent<UnityEngine.UI.Image>();
-            image.raycastTarget = false;
-            if (option.HasSwatch) image.color = ColorFromRgba(option.SwatchRgba);
-            else
-            {
-                image.sprite = thumbnail;
-                image.preserveAspect = true;
-            }
-            Anchor(visual.GetComponent<RectTransform>(), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f),
-                new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(36f, 36f));
-            var label = button.GetComponentInChildren<TextMeshProUGUI>();
-            if (label != null) AlfaUiFactory.Fill(label.rectTransform, 58f, 16f, 8f, 8f);
-        }
-
-        private static Color ColorFromRgba(uint value) => new Color(
-            ((value >> 24) & 255) / 255f,
-            ((value >> 16) & 255) / 255f,
-            ((value >> 8) & 255) / 255f,
-            (value & 255) / 255f);
-
-        private static void ApplyModularButtonStyle(UnityEngine.UI.Button button, bool selected)
-        {
-            AlfaUiFactory.SetSelected(button, selected);
-            var label = button.GetComponentInChildren<TextMeshProUGUI>();
-            if (label != null)
-            {
-                label.alignment = TextAlignmentOptions.Left;
-                label.enableAutoSizing = true;
-                label.fontSizeMin = AlfaUiTheme.MinTextSize;
-                label.fontSizeMax = 23f;
-            }
-        }
-
-        private void SelectModularCategory(string slotId)
-        {
-            if (customizationState?.Mode != CustomizationUiMode.Modular || customizationSaveLatched || customizationState.IsReadOnly) return;
-            if (!VisibleModularSlots().Any(slot => string.Equals(slot.SlotId, slotId, StringComparison.Ordinal))) return;
-            modularSelectedSlotId = slotId;
-            BuildModularCustomization();
-        }
-
-        private void SetModularCustomizationOption(string slotId, string optionId)
-        {
-            if (customizationState?.Mode != CustomizationUiMode.Modular || customizationSaveLatched || customizationState.IsReadOnly) return;
-            if (!customizationState.Catalog.TrySlot(slotId, out var slot) || slot.Role != ToCustomizationRole(modularEditedRole) ||
-                !slot.TryOption(optionId, out var option) || string.IsNullOrWhiteSpace(option.Label)) return;
-            var next = modularCustomizationDraft.Copy();
-            next.For(ToCustomizationRole(modularEditedRole)).SetOption(slotId, optionId);
-            if (!customizationState.Catalog.TryNormalize(next, out var normalized, out var error))
-            {
-                customizationStatus.text = "No se pudo seleccionar esa opción. Probá otra.";
-                return;
-            }
-            modularCustomizationDraft = normalized;
-            BuildModularCustomization();
-            UpdateCustomizationView();
-            SendModularPreview();
-        }
-
-        private void SendModularPreview()
-        {
-            if (actions is IModularCustomizationActions modularActions)
-            {
-                modularActions.PreviewModularCustomization(modularCustomizationDraft.Copy(), modularEditedRole);
-                return;
-            }
-            customizationStatus.text = "Esta selección todavía no se puede guardar.";
-        }
-
-        private static RectTransform CreatePaletteLayout(Transform parent, string name)
-        {
-            var node = AlfaUiFactory.Node(name, parent, typeof(UnityEngine.UI.GridLayoutGroup));
-            var grid = node.GetComponent<UnityEngine.UI.GridLayoutGroup>();
-            grid.constraint = UnityEngine.UI.GridLayoutGroup.Constraint.FixedColumnCount;
-            grid.constraintCount = 3;
-            grid.cellSize = new Vector2(216f, 66f);
-            grid.spacing = new Vector2(8f, 8f);
-            grid.startAxis = UnityEngine.UI.GridLayoutGroup.Axis.Horizontal;
-            return node.GetComponent<RectTransform>();
-        }
-
-        private void BuildPalette(RectTransform parent, IReadOnlyList<NamedColorOption> options, string selectedId, Action<NamedColorOption> selected)
-        {
-            AlfaUiFactory.Clear(parent);
-            foreach (var option in options)
-            {
-                var captured = option;
-                var button = factory.Button(parent, "Color_" + option.Id, option.Label, () => selected(captured), AlfaButtonStyle.Secondary, 66f);
-                var buttonLabel = button.GetComponentInChildren<TextMeshProUGUI>();
-                buttonLabel.alignment = TextAlignmentOptions.Left;
-                AlfaUiFactory.Fill(buttonLabel.rectTransform, 52f, 8f, 8f, 8f);
-                buttonLabel.enableAutoSizing = false;
-                buttonLabel.fontSize = 22f;
-                buttonLabel.textWrappingMode = TextWrappingModes.NoWrap;
-                button.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 112f;
-                var contrast = RelativeLuminance(option.Color) > 0.5f ? AlfaUiTheme.Ink900 : AlfaUiTheme.Sheet100;
-                var swatch = factory.Panel(button.transform, "Swatch", option.Color, -1f, -1f, 6f);
-                AlfaUiFactory.SetSurface(swatch, bottom: Color.white, frame: AlfaUiTheme.WithAlpha(contrast, 0.55f), shadow: Color.clear);
-                Anchor(swatch, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(30f, 30f));
-                var selectionMark = factory.Icon(swatch, "SelectionMark", AlfaUiIconKind.Ready, contrast);
-                AlfaUiFactory.Fill(selectionMark.rectTransform, 6f, 6f, 6f, 6f);
-                selectionMark.gameObject.SetActive(option.Id == selectedId);
-                MarkSelected(button, option.Id == selectedId);
-            }
-        }
-
-        /// <summary>Selected options: primary fill and the 3-unit accent frame; the check mark keeps it readable without colour.</summary>
-        private static void MarkSelected(Component target, bool selected)
-        {
-            if (target is UnityEngine.UI.Button button) AlfaUiFactory.SetSelected(button, selected, AlfaButtonStyle.Secondary);
-            else if (target != null && target.TryGetComponent(out UnityEngine.UI.Button owner)) AlfaUiFactory.SetSelected(owner, selected, AlfaButtonStyle.Secondary);
-            else AlfaUiFactory.MarkSelectedFrame(target, selected);
-        }
-
-        private void UpdateCustomizationView()
-        {
-            if (customizationState == null) return;
-            bool modular = customizationState.Mode == CustomizationUiMode.Modular;
-            if (modular && modularCustomizationDraft == null) return;
-            if (!modular && customizationDraft == null) return;
-            var role = modular ? modularEditedRole : customizationDraft.Role;
-            var human = role == AlfaRole.Human;
-            bool editable = !customizationState.IsReadOnly;
-            humanCustomizationFields.SetActive(editable && !modular && human);
-            mosquitoCustomizationFields.SetActive(editable && !modular && !human);
-            modularCustomizationFields.SetActive(editable && modular);
-            customizationHumanButton.interactable = editable && !customizationSaveLatched;
-            customizationMosquitoButton.interactable = editable && !customizationSaveLatched;
-            customizationResetButton.interactable = editable && !customizationSaveLatched;
-            SetRoleButtonSelection(customizationHumanButton, human, AlfaRole.Human);
-            SetRoleButtonSelection(customizationMosquitoButton, !human, AlfaRole.Mosquito);
-            customizationPreviewTitle.text = human ? "VISTA EN VIVO · HUMANO" : "VISTA EN VIVO · MOSQUITO";
-            customizationPreviewIcon.Kind = human ? AlfaUiIconKind.Human : AlfaUiIconKind.Mosquito;
-            customizationPreviewIcon.color = human ? AlfaUiTheme.Sky400 : AlfaUiTheme.Pajama500;
-            customizationCategoryTitle.text = !editable ? "PERSONALIZACIÓN NO DISPONIBLE" : modular
-                ? (VisibleModularSlots().Any() ? "CATEGORÍAS DEL " + (human ? "HUMANO" : "MOSQUITO") : "SIN OPCIONES DISPONIBLES")
-                : human ? "PALETA DEL HUMANO" : "PALETA DEL MOSQUITO";
-            previewOrbit?.Show(role);
-            if (customizationSaveLatched) customizationStatus.text = "Aplicando apariencia…";
-            else if (customizationState.IsReadOnly)
-                customizationStatus.text = string.IsNullOrWhiteSpace(customizationState.Message)
-                    ? "Esta personalización todavía no está disponible en esta versión."
-                    : customizationState.Message;
-            else if (modular && !customizationState.ModularPreviewAvailable)
-                customizationStatus.text = string.IsNullOrWhiteSpace(customizationState.Message)
-                    ? "La vista de estas piezas llegará cuando estén listas en el juego."
-                    : customizationState.Message;
-            else customizationStatus.text = customizationState.Message;
-            bool dirty = modular
-                ? !modularCustomizationDraft.CanonicalEquals(customizationState.PublishedSelection)
-                : !customizationDraft.SameValues(customizationState.Saved);
-            customizationSaveButton.interactable = editable && !customizationSaveLatched && dirty;
-            customizationSaveLabel.text = customizationSaveLatched ? "APLICANDO…" : "APLICAR";
-            if (!modular)
-            {
-                MarkPalette(humanPaletteRoot, customizationDraft.SkinColorId);
-                MarkPalette(pajamaPaletteRoot, customizationDraft.PajamaColorId);
-                MarkPalette(mosquitoPaletteRoot, customizationDraft.MosquitoColorId);
-            }
-        }
-
-        private static void MarkPalette(Transform parent, string selectedId)
-        {
-            foreach (Transform child in parent)
-            {
-                var selected = child.name == "Color_" + selectedId;
-                MarkSelected(child, selected);
-                var selectionMark = child.Find("Swatch/SelectionMark");
-                if (selectionMark != null) selectionMark.gameObject.SetActive(selected);
-            }
-        }
-
-        private void SaveCustomization()
-        {
-            if (customizationState == null || customizationSaveLatched || customizationState.IsSaving || customizationState.IsReadOnly) return;
-            if (customizationState.Mode == CustomizationUiMode.Modular)
-            {
-                if (modularCustomizationDraft == null) return;
-                var modularActions = actions as IModularCustomizationActions;
-                if (modularActions == null)
-                {
-                    customizationStatus.text = "Esta selección todavía no se puede guardar.";
-                    return;
-                }
-                customizationSaveLatched = true;
-                customizationSaveButton.interactable = false;
-                customizationSaveLabel.text = "APLICANDO…";
-                customizationStatus.text = "Aplicando apariencia…";
-                modularActions.SaveModularCustomization(modularCustomizationDraft.Copy(), modularEditedRole);
-                return;
-            }
-            if (customizationDraft == null) return;
-            customizationSaveLatched = true;
-            customizationSaveButton.interactable = false;
-            customizationSaveLabel.text = "APLICANDO…";
-            customizationStatus.text = "Aplicando apariencia…";
-            actions.SaveCustomization(customizationDraft.Copy());
-        }
-
-        private void ResetCustomization()
-        {
-            if (customizationState == null || customizationSaveLatched || customizationState.IsReadOnly) return;
-            if (customizationState.Mode == CustomizationUiMode.Modular)
-            {
-                modularCustomizationDraft = (modularCustomizationSessionBaseline ?? customizationState.DraftSelection).Copy();
-                BuildModularCustomization();
-                UpdateCustomizationView();
-                SendModularPreview();
-                return;
-            }
-            customizationDraft = (customizationSessionBaseline ?? customizationState.Draft).Copy();
-            UpdateCustomizationView();
-            actions.PreviewCustomization(customizationDraft.Copy());
-        }
-
-        private void CloseCustomization()
-        {
-            if (customizationSaveLatched) return;
-            var returnScreen = customizationReturnScreen;
-            var returnLobbyCode = customizationLobbyCode;
-            customizationSessionBaseline = null;
-            modularCustomizationSessionBaseline = null;
-            modularSelectedSlotId = string.Empty;
-            customizationReturnScreen = AlfaUiScreen.MainMenu;
-            customizationLobbyCode = string.Empty;
-            if (returnScreen == AlfaUiScreen.Lobby && lobbyState?.IsWaiting == true && string.Equals(lobbyState.RoomCode, returnLobbyCode, StringComparison.Ordinal))
-                SetScreen(AlfaUiScreen.Lobby, "LobbyReadyButton");
-            else ShowMainMenu();
-        }
-
-        private void ChangeSetting(Action<AlfaSettingsDraft> mutation)
-        {
-            if (settingsDraft == null || settingsState == null || settingsApplyLatched || settingsState.IsApplying) return;
-            mutation(settingsDraft);
-            settingsApplyButton.interactable = !settingsDraft.SameValues(settingsState.Saved);
-            UpdateSettingsCycles();
-        }
-
-        private void UpdateSettingsCycles()
-        {
-            if (settingsDraft == null || settingsState == null) return;
-            resolutionValue.text = ItemAt(settingsState.Resolutions, settingsDraft.ResolutionIndex);
-            qualityValue.text = ItemAt(settingsState.Qualities, settingsDraft.QualityIndex);
-        }
-
-        private void ApplySettings()
-        {
-            if (settingsDraft == null || settingsState == null || settingsApplyLatched || settingsState.IsApplying) return;
-            settingsApplyLatched = true;
-            settingsApplyButton.interactable = false;
-            settingsApplyLabel.text = "APLICANDO…";
-            settingsStatus.text = "Aplicando ajustes…";
-            actions.ApplySettings(settingsDraft.Copy());
-        }
-
-        private void ResetSettings()
-        {
-            if (settingsState == null || settingsApplyLatched) return;
-            settingsDraft = settingsState.Saved.Copy();
-            PresentSettings(new SettingsUiState(settingsState.Saved, settingsDraft, settingsState.Resolutions,
-                settingsState.Qualities, settingsState.SupportsVideo, settingsState.SupportsRebinding,
-                supportsReducedMenuMotion: settingsState.SupportsReducedMenuMotion, voiceDevices: settingsState.VoiceDevices));
-        }
-
-        private void CloseSettings()
-        {
-            if (settingsApplyLatched) return;
-            if (SettingsDirty())
-            {
-                ShowConfirm("¿DESCARTAR CAMBIOS?", "Los ajustes no aplicados se perderán.", "SEGUIR EDITANDO", "DESCARTAR", ReturnFromSettings);
-                return;
-            }
-            ReturnFromSettings();
-        }
-
-        private void ReturnFromSettings()
-        {
-            if (settingsReturnScreen == AlfaUiScreen.Gameplay)
-                actions.SetGameplayInputBlocked(false);
-            SetScreen(settingsReturnScreen, settingsReturnScreen == AlfaUiScreen.Pause ? "PauseContinueButton" : "MainSettingsButton");
-        }
-
-        private void ResultsPrimaryAction()
-        {
-            if (resultsState == null || resultsActionLatched) return;
-            if (resultsState.IsTraining)
-            {
-                StartTrainingIntent(resultsState.TrainingRole, true);
-                return;
-            }
-            resultsActionLatched = true;
-            resultsPrimary.interactable = false;
-            resultsPrimaryLabel.text = "VOLVIENDO…";
-            resultsLeave.interactable = false;
-            actions.ReturnToLobby();
         }
 
         private void BeginRound()
@@ -2985,43 +1841,6 @@ namespace LetMeSleep.UI
             lobbyStatus.text = "Iniciando ronda…";
             Focus(lobbyReadyButton.interactable ? lobbyReadyButton.gameObject : lobbyCopyButton.gameObject);
             actions.StartRound();
-        }
-
-        private void ResultsLeaveAction()
-        {
-            if (resultsState != null && resultsState.IsTraining && TrainingBusy)
-            {
-                RequestTrainingCancel();
-                return;
-            }
-            if (resultsState != null && resultsState.IsTraining)
-            {
-                resultsActionLatched = true;
-                resultsPrimary.interactable = false;
-                resultsLeave.interactable = false;
-                resultsLeave.GetComponentInChildren<TextMeshProUGUI>().text = "SALIENDO…";
-                LeaveActiveTraining();
-            }
-            else ConfirmLeave();
-        }
-
-        private void LeaveGameplayContext()
-        {
-            if (gameplayIsTraining)
-                ShowConfirm("¿SALIR DEL ENTRENAMIENTO?", "Volverás al menú principal.", "VOLVER", "SALIR", LeaveActiveTraining);
-            else ConfirmLeave();
-        }
-
-        private void LeaveActiveTraining()
-        {
-            actions.CancelTraining();
-            ShowMainMenu();
-        }
-
-        private void ResumeFromPause()
-        {
-            actions.ResumeGame();
-            ShowGameplay();
         }
 
         private void BeginLobbyExploration()
@@ -3108,7 +1927,10 @@ namespace LetMeSleep.UI
                     if (!customizationSaveLatched) CloseCustomization(); else handled = false;
                     break;
                 case AlfaUiScreen.Settings:
-                    if (!settingsApplyLatched) CloseSettings(); else handled = false;
+                    // The Esc that cancels a push-to-talk rebind must not also leave the screen.
+                    if (pttRebinding) CancelPushToTalkRebindUi();
+                    else if (!settingsApplyLatched) CloseSettings();
+                    else handled = false;
                     break;
                 case AlfaUiScreen.Gameplay: ShowPause(); break;
                 case AlfaUiScreen.Pause: ResumeFromPause(); break;
@@ -3243,30 +2065,17 @@ namespace LetMeSleep.UI
                     return customizationState?.Mode == CustomizationUiMode.Modular
                         ? modularEditedRole == AlfaRole.Mosquito ? "CustomizationMosquitoButton" : "CustomizationHumanButton"
                         : customizationDraft != null && customizationDraft.Role == AlfaRole.Mosquito ? "CustomizationMosquitoButton" : "CustomizationHumanButton";
-                case AlfaUiScreen.Settings: return "MasterVolumeSlider";
+                case AlfaUiScreen.Settings: return SettingsDefaultFocus();
                 case AlfaUiScreen.Pause: return "PauseContinueButton";
                 case AlfaUiScreen.Results: return resultsPrimary != null && resultsPrimary.gameObject.activeSelf ? "ResultsPrimaryButton" : "ResultsLeaveButton";
                 default: return null;
             }
         }
 
-        private bool CustomizationDirty() => customizationState != null &&
-            (customizationState.Mode == CustomizationUiMode.Modular
-                ? modularCustomizationDraft != null && !modularCustomizationDraft.CanonicalEquals(customizationState.PublishedSelection)
-                : customizationDraft != null && !customizationDraft.SameValues(customizationState.Saved));
-        private bool SettingsDirty() => settingsState != null && settingsDraft != null && !settingsDraft.SameValues(settingsState.Saved);
         private bool OnlineBusy => onlineSubmissionLatched || onlineState.IsBusy;
         private bool TrainingBusy => trainingStartLatched || trainingState.IsLoading;
         private static bool IsOnlineError(OnlineOperationPhase phase) => phase == OnlineOperationPhase.RecoverableError ||
             phase == OnlineOperationPhase.IncompatibleVersion || phase == OnlineOperationPhase.RoomClosed;
-
-        private static void SetRoleButtonSelection(UnityEngine.UI.Button button, bool selected, AlfaRole role)
-        {
-            // UI-06 selection: primary blue fill and a 3-unit accent.blue frame; unselected tabs stay navy.
-            AlfaUiFactory.SetSelected(button, selected, AlfaButtonStyle.Secondary);
-            var rail = button.transform.Find("FocusRail");
-            if (rail != null) rail.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.WithAlpha(Color.white, selected ? 0.9f : 0f);
-        }
 
         private static void ApplyPositiveStyle(UnityEngine.UI.Button button) => AlfaUiFactory.ApplyStyle(button, AlfaButtonStyle.Success);
 
@@ -3277,39 +2086,11 @@ namespace LetMeSleep.UI
             image.raycastTarget = true;
         }
 
-        private static string ActorStateText(AlfaRole role, HudActorState state)
-        {
-            switch (state)
-            {
-                case HudActorState.Spectating: return "ELIMINADO · OBSERVANDO";
-                case HudActorState.Extracting: return "EXTRAYENDO";
-                case HudActorState.Bitten: return role == AlfaRole.Human ? "TE ESTÁN PICANDO · MIRÁ Y GOLPEÁ" : string.Empty;
-                case HudActorState.Recovering: return "RECUPERANDO…";
-                case HudActorState.Fainted: return "DESMAYADO";
-                case HudActorState.Stunned: return "ATURDIDO";
-                case HudActorState.Attached: return "[E] DESPRENDERTE";
-                default: return string.Empty;
-            }
-        }
-
-        private static string DefaultRoleHint(AlfaRole role) => role == AlfaRole.Mosquito ?
-            "W · volar hacia la mira   ·   Soltá W · frenar" : string.Empty;
-
         private static string FormatClock(float seconds)
         {
             var total = Mathf.Max(0, Mathf.CeilToInt(seconds));
             return $"{total / 60:00}:{total % 60:00}";
         }
-
-        private static int Cycle(int current, int delta, int count)
-        {
-            if (count <= 0) return 0;
-            return (current + delta % count + count) % count;
-        }
-
-        private static string FrameLimitLabel(int value) => value <= 0 ? "SIN LÍMITE" : value + " FPS";
-
-        private static string ItemAt(IReadOnlyList<string> items, int index) => items != null && index >= 0 && index < items.Count ? items[index] : "—";
 
         private static float RelativeLuminance(Color color) => 0.2126f * color.linear.r + 0.7152f * color.linear.g + 0.0722f * color.linear.b;
 
@@ -3317,49 +2098,6 @@ namespace LetMeSleep.UI
         {
             var normalized = (value ?? string.Empty).Trim();
             return normalized.Length <= 24 ? normalized : normalized.Substring(0, 24);
-        }
-
-        private static CustomizationUiState DefaultCustomization()
-        {
-            var skin = new[]
-            {
-                new NamedColorOption("warm-light", "CLARO", new Color(0.88f, 0.67f, 0.50f)),
-                new NamedColorOption("warm-medium", "MEDIO", new Color(0.67f, 0.43f, 0.29f)),
-                new NamedColorOption("warm-deep", "OSCURO", new Color(0.35f, 0.20f, 0.16f))
-            };
-            var pajamas = new[]
-            {
-                new NamedColorOption("blue", "AZUL", AlfaUiTheme.Sky400),
-                new NamedColorOption("coral", "CORAL", AlfaUiTheme.Pajama500),
-                new NamedColorOption("green", "VERDE", AlfaUiTheme.Mint400)
-            };
-            var mosquitoes = new[]
-            {
-                new NamedColorOption("red", "ROJO", AlfaUiTheme.Pajama500),
-                new NamedColorOption("blue", "AZUL", AlfaUiTheme.Sky400),
-                new NamedColorOption("green", "VERDE", new Color(0.32f, 0.56f, 0.35f))
-            };
-            var saved = new BasicCustomizationDraft(AlfaRole.Human, "warm-medium", "blue", "red");
-            return new CustomizationUiState(skin, pajamas, mosquitoes, saved);
-        }
-
-        private static SettingsUiState DefaultSettings()
-        {
-            var saved = new AlfaSettingsDraft
-            {
-                MasterVolume = 1f,
-                MusicVolume = 0.8f,
-                EffectsVolume = 1f,
-                VoiceVolume = .8f,
-                PushToTalkBinding = "<Keyboard>/v",
-                FullScreen = true,
-                VSync = false,
-                FrameLimit = 0,
-                HumanSensitivity = 1f,
-                MosquitoSensitivity = 1f,
-                InvertY = false
-            };
-            return new SettingsUiState(saved, saved, Array.Empty<string>(), Array.Empty<string>(), false, false);
         }
 
         private static void Anchor(RectTransform rect, Vector2 min, Vector2 max, Vector2 pivot, Vector2 position, Vector2 size)
