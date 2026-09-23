@@ -44,20 +44,23 @@ namespace LetMeSleep.Presentation.Gameplay
             // Do not adopt an unrelated preinstalled writer.
             if (view.GetComponent<HumanLocomotionPresenter>()) return false;
             var created = view.gameObject.AddComponent<HumanLocomotionPresenter>();
+            AvatarMask mask = null;
             try
             {
                 created.Configure(actorId, view.Animator, gaits, left, right, "human-four-gaits-20260913");
                 // v0.3.0 optional layers: legs keep walking while the Swat plays on the Chest subtree, and the
                 // crouched gait replaces the sliding static crouch. Older controllers simply lack the clips.
                 AnimationClip strike = Find(source, "Human_Swat"), crouchWalk = Find(source, "Human_CrouchWalk");
-                AvatarMask mask = strike ? UpperBodyMask(view.Animator.transform) : null;
+                mask = strike ? UpperBodyMask(view.Animator.transform) : null;
                 if (strike && !mask) strike = null;
-                if (strike || crouchWalk) created.ConfigureOverlays(strike, mask, crouchWalk);
+                // The presenter owns the runtime mask and destroys it with itself (respawns never accumulate masks).
+                if (strike || crouchWalk) { created.ConfigureOverlays(strike, mask, crouchWalk, true); mask = null; }
                 presenter = created;
                 return true;
             }
             catch (ArgumentException)
             {
+                if (mask) UnityEngine.Object.Destroy(mask);
                 created.enabled = false;
                 UnityEngine.Object.Destroy(created);
                 return false;

@@ -28,6 +28,15 @@ AIR_FLAP_RADIANS = .58
 WING_V_SPAN = (.52, .67, .52)
 WING_V_NORMAL = (.60, -.77, .22)
 STUNNED_FRAMES = 37
+# v0.3.0 review: knocked out BELLY UP (abdomen resting on the floor, legs kicking in the air, wings
+# splayed flat) instead of sitting upright on the tail; Recover is a short 0.4 s roll back onto the six
+# feet (the authority's Recovering window) instead of the 1.2 s tail played at 3x.
+KO_ROLL = math.pi
+KO_PITCH = .10
+KO_ABDOMEN = -.55
+KO_WING_FLAP = -.95
+KO_WING_FOLD = .50
+RECOVER_FRAMES = 13
 
 
 def flight_channels(t, hover=False):
@@ -319,7 +328,9 @@ def mosquito(c):
             data = evaluated.to_mesh()
             lowest = min(lowest, min((evaluated.matrix_world @ v.co).z for v in data.vertices))
             evaluated.to_mesh_clear()
-        p.translate('Thorax', (0, 0, SUPPORT_Z - lowest))
+        # Additive: the knockout roll already moved the thorax about its centre.
+        thorax = p.rig.pose.bones['Thorax']
+        thorax.location += p.rest['Thorax'].to_3x3().inverted() @ Vector((0, 0, SUPPORT_Z - lowest))
         p.update()
 
     def hit(t):
@@ -332,45 +343,56 @@ def mosquito(c):
 
     sampled(c, 'Hit', 19, hit)
 
-    def fall_pose(u):
+    def body_roll(roll, pitch=0.):
+        # Whole body about its own long axis (source Y) through the thorax centre; Root never moves.
+        from author_mosquito_geometry import THORAX_CENTER
+        p.update()
+        centre = Vector(THORAX_CENTER)
+        turn = (Matrix.Translation(centre) @ Matrix.Rotation(pitch, 4, 'X') @ Matrix.Rotation(roll, 4, 'Y')
+                @ Matrix.Translation(-centre))
+        p.rig.pose.bones['Thorax'].matrix = turn @ p.rest['Thorax']
+        p.update()
+
+    def knocked_out(u, t=0., wobble=0.):
+        """u=0 upright stance -> u=1 belly up; t/wobble drive the dizzy loop."""
         stance()
-        p.rotate('Thorax', (.25 + .90 * u, .12 * math.sin(math.pi * u), .40 + .85 * u))
-        p.rotate('Abdomen01', (-.12 * u, 0, 0))
+        body_roll(KO_ROLL * u, KO_PITCH * u)
+        p.rotate('Abdomen01', ((KO_ABDOMEN + .06 * wobble * math.sin(TAU * 2 * t)) * u, 0, 0))
+        p.rotate('Abdomen02', (-.10 * u, 0, 0))
+        p.rotate('Head', (.22 * wobble * math.sin(TAU * t) * u, .10 * wobble * math.sin(TAU * t + 1.1) * u,
+                          .34 * wobble * math.sin(TAU * 2 * t + .6) * u))
         legs_air(.73 + .27 * u)
-        wings(.12 - .20 * u, .24 + .32 * u, 1 - u)
+        if wobble:
+            for side, sign in (('L', 1), ('R', -1)):
+                for i in range(1, 4):
+                    knee = p.rig.pose.bones[f'Leg{i}02.{side}']
+                    knee.rotation_euler.x += .55 * wobble * math.sin(TAU * (2 * t + .17 * i + (.5 if sign < 0 else 0)))
+        # Wings splay flat on the floor on either side of the flipped body, with weak twitches.
+        twitch = .10 * wobble * math.sin(TAU * 3 * t) ** 2
+        wings(.12 + (KO_WING_FLAP - .12) * u + twitch, .24 + (KO_WING_FOLD - .24) * u, 1 - u)
         settle_to_support()
+
+    def fall_pose(u):
+        # Comic tumble: the flinch of Hit rolls on over onto the back while the legs flail.
+        knocked_out(u)
         return p.snapshot()
 
     sampled(c, 'Fall', 31, lambda t: fall_pose(smooth(t)))
 
     def recover(t):
-        # Unroll and establish six-foot support, with final pose equal to PerchIdle.
+        # 0.4 s: roll back over and reach the six feet down; final pose equals PerchIdle.
         u = 1 - smooth(t)
-        stance()
-        p.rotate('Thorax', (1.15 * u, .12 * math.sin(math.pi * u), 1.25 * u))
-        p.rotate('Abdomen01', (-.12 * u, 0, 0))
-        legs_air(u)
-        wings(.12 - .20 * u, .24 + .32 * u, 1 - u)
-        if u > 1e-8:
-            settle_to_support()
+        if u <= 1e-8:
+            stance()
+            return p.snapshot()
+        knocked_out(u)
         return p.snapshot()
 
-    sampled(c, 'Recover', 37, recover)
+    sampled(c, 'Recover', RECOVER_FRAMES, recover)
 
     def stunned(t):
-        # v0.3.0: dizzy on its back after a knockdown (loop), the pose Fall ends in, with the legs
-        # kicking in the air, weak wing twitches and a wobbling head (was: the final pose of Hit).
-        stance()
-        p.rotate('Thorax', (1.15, .06 * math.sin(TAU * t), 1.25))
-        p.rotate('Abdomen01', (-.12 + .05 * math.sin(TAU * 2 * t), 0, 0))
-        p.rotate('Head', (.10 * math.sin(TAU * t), 0, .14 * math.sin(TAU * 2 * t + .6)))
-        legs_air(1)
-        for side, sign in (('L', 1), ('R', -1)):
-            for i in range(1, 4):
-                knee = p.rig.pose.bones[f'Leg{i}02.{side}']
-                knee.rotation_euler.x += .45 * math.sin(TAU * (2 * t + .17 * i + (.5 if sign < 0 else 0)))
-        wings(-.08 + .12 * math.sin(TAU * 3 * t) ** 2, .56, 0)
-        settle_to_support()
+        # Dizzy belly up (loop): legs kicking, wing twitches, the head wobbling.
+        knocked_out(1, t, 1)
         return p.snapshot()
 
     sampled(c, 'StunnedLoop', STUNNED_FRAMES, stunned)

@@ -26,6 +26,10 @@ namespace LetMeSleep.Presentation
         // ~12 deg) and fades out toward first person or a collapsed orbit. Collision sweeps include it.
         [SerializeField, Min(0f)] private float framingSlope = 0.22f;
         [SerializeField, Min(0f)] private float maximumFramingLift = 0.36f;
+        // v0.3.0 review: W flies along the aim, so the lifted camera turns down just enough for the central
+        // reticle to cross the real flight line (from the body along the view) at this distance; closer
+        // targets sit a few cm under the reticle, and the body itself stays clear below it.
+        [SerializeField, Min(0f)] private float reticleConvergenceMeters = 4f;
 
         private struct RenderState { public Renderer Renderer; public bool ForceOff; }
         private struct BodyPart { public Transform Bone; public Bounds Bounds; }
@@ -53,6 +57,11 @@ namespace LetMeSleep.Presentation
         private bool initialized;
 
         public float DesiredDistance => desiredDistance;
+        public float ReticleConvergenceMeters => reticleConvergenceMeters;
+        /// <summary>World origin of the flight line (the body pivot), for reticle alignment checks.</summary>
+        public Vector3 FlightLineOrigin => pivot ? pivot.position : Vector3.zero;
+        /// <summary>World direction of the flight line (the authoritative view, smoothed like the orbit).</summary>
+        public Vector3 FlightLineDirection => smoothedRotation * Vector3.forward;
         public float ResolvedDistance => smoothedDistance;
         /// <summary>Camera-space upward offset of the orbit pivot for the requested distance.</summary>
         public float FramingLift(float requestedDistance) =>
@@ -118,10 +127,20 @@ namespace LetMeSleep.Presentation
                     outwardDampingSeconds, Mathf.Infinity, Time.unscaledDeltaTime);
             }
 
-            cameraTransform.SetPositionAndRotation(
-                resolvedPivot - smoothedRotation * Vector3.forward * smoothedDistance,
-                smoothedRotation);
+            Vector3 cameraPosition = resolvedPivot - smoothedRotation * Vector3.forward * smoothedDistance;
+            cameraTransform.SetPositionAndRotation(cameraPosition, ReticleRotation(cameraPosition));
             UpdateLocalOcclusion();
+        }
+
+        /// <summary>The view rotation turned (minimally) so the screen centre crosses the flight line at the
+        /// convergence distance; identity when the camera already sits on that line (first person).</summary>
+        private Quaternion ReticleRotation(Vector3 cameraPosition)
+        {
+            if (!pivot || !(reticleConvergenceMeters > 0f)) return smoothedRotation;
+            Vector3 forward = smoothedRotation * Vector3.forward;
+            Vector3 direction = pivot.position + forward * reticleConvergenceMeters - cameraPosition;
+            if (direction.sqrMagnitude < 1e-6f || Vector3.Dot(direction, forward) <= 0f) return smoothedRotation;
+            return Quaternion.FromToRotation(forward, direction.normalized) * smoothedRotation;
         }
 
         public void SetView(Quaternion authoritativeViewRotation, float requestedDistance)

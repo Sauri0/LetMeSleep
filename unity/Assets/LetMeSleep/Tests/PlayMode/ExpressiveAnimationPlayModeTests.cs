@@ -195,6 +195,50 @@ namespace LetMeSleep.Tests.PlayMode
             Object.DestroyImmediate(mask);
         }
 
+        /// <summary>
+        /// Between two keys every bone must interpolate like a rotation, not like three Euler angles: a
+        /// gimbal-adjacent Euler pair (deep thigh flexion, raised arms) interpolated per axis swings the limb
+        /// through an unrelated pose for one frame (the crouch-walk foot at hip height).
+        /// </summary>
+        [Test]
+        public void AuthoredClipsInterpolateBetweenKeysWithoutFlips()
+        {
+            var worst = new List<string>();
+            foreach (var path in new[] { HumanPrefab, MosquitoPrefab })
+            {
+                var instance = Track(Object.Instantiate(Load(path)));
+                var animator = instance.GetComponentInChildren<Animator>();
+                var bones = animator.GetComponentsInChildren<Transform>(true);
+                var before = new Quaternion[bones.Length];
+                var after = new Quaternion[bones.Length];
+                foreach (var clip in animator.runtimeAnimatorController.animationClips)
+                {
+                    float rate = clip.frameRate > 0 ? clip.frameRate : 30f;
+                    int frames = Mathf.RoundToInt(clip.length * rate);
+                    float maximum = 0, step = 0; string where = "", stepWhere = "";
+                    for (int k = 0; k < frames; k++)
+                    {
+                        clip.SampleAnimation(animator.gameObject, k / rate);
+                        for (int i = 0; i < bones.Length; i++) before[i] = bones[i].localRotation;
+                        clip.SampleAnimation(animator.gameObject, (k + 1) / rate);
+                        for (int i = 0; i < bones.Length; i++) after[i] = bones[i].localRotation;
+                        clip.SampleAnimation(animator.gameObject, (k + .5f) / rate);
+                        for (int i = 0; i < bones.Length; i++)
+                        {
+                            float deviation = Quaternion.Angle(bones[i].localRotation, Quaternion.Slerp(before[i], after[i], .5f));
+                            if (deviation > maximum) { maximum = deviation; where = $"{bones[i].name}@{k}"; }
+                            // A bone never turns 75+ deg in one 1/30 s key step (the fastest wingbeat turns ~40).
+                            float turn = Quaternion.Angle(before[i], after[i]);
+                            if (turn > step) { step = turn; stepWhere = $"{bones[i].name}@{k}"; }
+                        }
+                    }
+                    if (maximum > 6f) worst.Add($"{clip.name} mid-key {where} {maximum:F1} deg");
+                    if (step > 75f) worst.Add($"{clip.name} key step {stepWhere} {step:F1} deg");
+                }
+            }
+            Assert.That(worst, Is.Empty, "Mid-key rotations leave the rotation between their keys: " + string.Join(", ", worst));
+        }
+
         [UnityTest]
         public IEnumerator HumanJumpUsesAirClipsAndLandsWithoutTheFaintClip()
         {
@@ -309,14 +353,22 @@ namespace LetMeSleep.Tests.PlayMode
             var brow = Find(human.transform, "Brow.L"); var jaw = Find(human.transform, "Jaw");
             humanRig.SetMood(FacialMood.Neutral);
             Settle(humanRig);
-            Vector3 browNeutral = brow.position; Quaternion jawNeutral = jaw.rotation;
+            Vector3 browNeutral = brow.position; Quaternion jawNeutral = jaw.localRotation;
             humanRig.PrepareForAnimation();
             humanRig.SetMood(FacialMood.Surprised);
             Settle(humanRig);
-            Assert.That(Vector3.Dot(brow.position - browNeutral, human.transform.up), Is.GreaterThan(.006f), "Surprised lifts the brows.");
-            Assert.That(Quaternion.Angle(jaw.rotation, jawNeutral), Is.GreaterThan(8f), "Surprised drops the jaw.");
+            var eye = Find(human.transform, "Eye.L");
+            Assert.That(humanRig.SupportsEyeScale, Is.True);
+            Assert.That(eye.lossyScale.magnitude, Is.GreaterThan(1.1f * Vector3.one.magnitude * EyeScaleOf(human)), "Surprised widens the eyes.");
+            // Local: the surprised head also tips back, which cancels the open jaw in world space.
+            Assert.That(Quaternion.Angle(jaw.localRotation, jawNeutral), Is.GreaterThan(8f), "Surprised drops the jaw.");
             humanRig.PrepareForAnimation();
             Assert.That(Vector3.Distance(brow.position, browNeutral), Is.LessThan(.0005f), "The rig restores its own writes.");
+            humanRig.SetMood(FacialMood.Angry);
+            Settle(humanRig);
+            Assert.That(Vector3.Dot(brow.position - browNeutral, human.transform.up), Is.LessThan(-.006f), "Angry lowers the brows.");
+            humanRig.PrepareForAnimation();
+            Assert.That(eye.localScale.x, Is.EqualTo(eye.localScale.y).Within(1e-4f), "The squint is restored.");
 
             var mosquito = Track(Object.Instantiate(Load(MosquitoPrefab)));
             Assert.That(VisualAttentionFactory.TryInstall(mosquito, true, out var mosquitoRig, out reason), Is.True, reason);
@@ -354,15 +406,288 @@ namespace LetMeSleep.Tests.PlayMode
             var ray = new Ray(camera.transform.position, camera.transform.forward);
             Vector3 closest = ray.origin + ray.direction * Vector3.Dot(body.transform.position - ray.origin, ray.direction);
             float clearance = Vector3.Dot(closest - body.transform.position, camera.transform.up);
-            Assert.That(clearance, Is.GreaterThan(lift * .9f), "The reticle ray passes above the pivot.");
+            Assert.That(clearance, Is.GreaterThan(lift * .7f), "The reticle ray passes above the pivot.");
             Assert.That(body.GetComponent<Collider>().bounds.IntersectRay(ray), Is.False, "The body does not cover the reticle.");
+            // W flies along the view: the reticle crosses that flight line at the convergence distance.
+            Assert.That(ReticleMiss(camera, follow, follow.ReticleConvergenceMeters), Is.LessThan(.01f));
+            Assert.That(ReticleMiss(camera, follow, 3f), Is.LessThan(.05f));
+            Assert.That(ReticleMiss(camera, follow, 5f), Is.LessThan(.05f));
             Assert.That(follow.ResolvedDistance, Is.GreaterThan(.75f));
             follow.SetView(Quaternion.identity, 0);
             yield return new WaitForSecondsRealtime(.3f);
             Assert.That(follow.FramingLift(0), Is.Zero, "First person has no framing offset.");
         }
 
+        [UnityTest]
+        public IEnumerator MosquitoReticleConvergesWithTheFlightLineWhileTurning()
+        {
+            var cameraObject = Track(new GameObject("ConvergenceCamera", typeof(Camera)));
+            var camera = cameraObject.GetComponent<Camera>(); camera.enabled = false; camera.nearClipPlane = .01f;
+            var follow = cameraObject.AddComponent<MosquitoFollowCamera>();
+            var body = Track(new GameObject("Body")); body.transform.position = new Vector3(0, 1, 0);
+            follow.SetCollisionFilter(_ => false);
+            follow.BindAnchors(body.transform, body.transform);
+            float worst = 0;
+            for (int i = 0; i < 40; i++)
+            {
+                follow.SetView(Quaternion.Euler(-20 + i, i * 6, 0), 1.6f);
+                yield return null;
+                if (i > 20) worst = Mathf.Max(worst, ReticleMiss(camera, follow, follow.ReticleConvergenceMeters));
+            }
+            yield return new WaitForSecondsRealtime(.4f);
+            Assert.That(ReticleMiss(camera, follow, follow.ReticleConvergenceMeters), Is.LessThan(.01f));
+            Assert.That(worst, Is.LessThan(.25f), "Even mid-turn the reticle stays near the flight line.");
+        }
+
+        [UnityTest]
+        public IEnumerator HumanLandingWithTheGaitBoundDipsTheHipsAndSquashes()
+        {
+            var fixture = Human(false, out var proxy, out var view, out var binding);
+            Assert.That(HumanLocomotionSetup.TryConfigure(view, proxy.ActorId, out var gait), Is.True);
+            binding.BindLocomotion(gait);
+            var hips = Find(view.Animator.transform, "Hips"); var rootBone = Find(view.Animator.transform, "Root");
+            uint tick = 1;
+            binding.ApplySnapshot(HumanState(Vector3.zero, Vector3.zero, true), tick++);
+            yield return new WaitForSecondsRealtime(.3f);
+            float standing = hips.position.y - view.transform.position.y;
+            float start = Time.realtimeSinceStartup;
+            while (Time.realtimeSinceStartup - start < .75f)
+            {
+                float air = Time.realtimeSinceStartup - start;
+                binding.ApplySnapshot(HumanState(new Vector3(0, Mathf.Max(0, 4.6f * air - 6f * air * air), 0),
+                    new Vector3(0, 4.6f - 12f * air, 0), false), tick++);
+                yield return new WaitForSecondsRealtime(1f / 30f);
+            }
+            binding.ApplySnapshot(HumanState(Vector3.zero, Vector3.zero, true), tick++);
+            float contact = Time.realtimeSinceStartup, lowest = float.MaxValue, squash = float.MaxValue;
+            do
+            {
+                yield return null;
+                lowest = Mathf.Min(lowest, hips.position.y - view.transform.position.y);
+                squash = Mathf.Min(squash, rootBone.localScale.y);
+            } while (Time.realtimeSinceStartup - contact < .1f);
+            Assert.That(binding.TemporaryMotion, Is.EqualTo(Ids.HumanLand));
+            Assert.That(lowest, Is.LessThan(standing - .04f), "The hips visibly dip within 100 ms of touchdown.");
+            Assert.That(squash, Is.LessThan(.95f), "The body squashes within 100 ms of touchdown.");
+            Object.Destroy(fixture);
+        }
+
+        [UnityTest]
+        public IEnumerator CrouchWalkFeetStayLowAndKneesMoveContinuously()
+        {
+            var fixture = Human(false, out var proxy, out var view, out var binding);
+            Assert.That(HumanLocomotionSetup.TryConfigure(view, proxy.ActorId, out var gait), Is.True);
+            binding.BindLocomotion(gait);
+            Transform F(string n) => Find(view.Animator.transform, n);
+            var feet = new[] { F("Foot.L"), F("Foot.R") }; var knees = new[] { F("LowerLeg.L"), F("LowerLeg.R") };
+            var thighs = new[] { F("UpperLeg.L"), F("UpperLeg.R") };
+            uint tick = 1; float z = 0, highest = 0, jump = 0; var previous = new float[2]; bool crouched = false;
+            float start = Time.realtimeSinceStartup, nextSend = start;
+            while (Time.realtimeSinceStartup - start < 2.6f)
+            {
+                float t = Time.realtimeSinceStartup - start;
+                if (Time.realtimeSinceStartup >= nextSend)
+                {
+                    z += 1.55f / 30f; nextSend += 1f / 30f;
+                    binding.ApplySnapshot(HumanState(new Vector3(0, 0, z), new Vector3(0, 0, 1.55f), true, Mathf.Clamp01((t - .4f) / .3f)), tick++);
+                }
+                yield return null;
+                bool settled = t > 1.0f && gait.CrouchWeight > .99f && binding.UsingLocomotion;
+                for (int i = 0; i < 2; i++)
+                {
+                    float knee = TwoBoneSolver.InnerAngle(thighs[i].position, knees[i].position, feet[i].position);
+                    if (settled)
+                    {
+                        highest = Mathf.Max(highest, feet[i].position.y - view.transform.position.y);
+                        if (crouched) jump = Mathf.Max(jump, Mathf.Abs(knee - previous[i]));
+                    }
+                    previous[i] = knee;
+                }
+                crouched = settled;
+            }
+            Assert.That(binding.UsingLocomotion, Is.True, "The crouched body keeps walking on the gait graph.");
+            // Ankle rest height .12 m + the larger of swing lift (.07) and heel peel (.09) + 2 cm.
+            Assert.That(highest, Is.LessThan(.23f), "No crouch-walk frame lifts a foot toward the hip.");
+            Assert.That(jump, Is.LessThan(25f), "The knee angle changes continuously frame to frame.");
+            Object.Destroy(fixture);
+        }
+
+        [UnityTest]
+        public IEnumerator StoppingBlendsThroughAnIntermediatePose()
+        {
+            var fixture = Human(false, out var proxy, out var view, out var binding);
+            Assert.That(HumanLocomotionSetup.TryConfigure(view, proxy.ActorId, out var gait), Is.True);
+            binding.BindLocomotion(gait);
+            var bones = view.Animator.GetComponentsInChildren<Transform>(true);
+            uint tick = 1; float z = 0;
+            for (int i = 0; i < 30; i++)
+            {
+                z += 1.55f / 30f;
+                binding.ApplySnapshot(HumanState(new Vector3(0, 0, z), new Vector3(0, 0, 1.55f), true), tick++);
+                yield return new WaitForSecondsRealtime(1f / 30f);
+            }
+            Assert.That(binding.UsingLocomotion, Is.True);
+            var walking = Capture(bones);
+            binding.ApplySnapshot(HumanState(new Vector3(0, 0, z), Vector3.zero, true), tick++);
+            float stop = Time.realtimeSinceStartup;
+            Quaternion[] early = null;
+            while (Time.realtimeSinceStartup - stop < .6f)
+            {
+                yield return null;
+                if (early == null && Time.realtimeSinceStartup - stop >= .09f) early = Capture(bones);
+            }
+            Assert.That(binding.UsingLocomotion, Is.False, "Standing still hands the pose back to the controller.");
+            var idle = Capture(bones);
+            int widest = 0; float total = 0;
+            for (int i = 0; i < bones.Length; i++)
+            {
+                float angle = Quaternion.Angle(walking[i], idle[i]);
+                if (angle > total) { total = angle; widest = i; }
+            }
+            Assert.That(total, Is.GreaterThan(5f), "The stride differs from the idle pose.");
+            float done = Quaternion.Angle(walking[widest], early[widest]), left = Quaternion.Angle(early[widest], idle[widest]);
+            Assert.That(done, Is.GreaterThan(.1f * total), bones[widest].name + " has started to settle at 90 ms.");
+            Assert.That(left, Is.GreaterThan(.1f * total), bones[widest].name + " is still between stride and idle at 90 ms (no pop).");
+            Object.Destroy(fixture);
+        }
+
+        [UnityTest]
+        public IEnumerator FlyswatterStrikeAtMaximumReachStillConnects()
+        {
+            var fixture = Human(false, out var proxy, out var view, out var binding);
+            var tool = Object.Instantiate(Load("Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Flyswatter.prefab"));
+            var socket = view.GetAnchor("ToolSocket_R");
+            Assert.That(socket, Is.Not.Null);
+            tool.transform.SetParent(socket, false);
+            var toolView = tool.GetComponent<ToolView>();
+            tool.transform.rotation = socket.rotation * Quaternion.Inverse(toolView.Grip.rotation) * tool.transform.rotation;
+            tool.transform.position += socket.position - toolView.Grip.position;
+            binding.BindTool(GameplayTools.Flyswatter, tool);
+            uint tick = 1;
+            binding.ApplySnapshot(HumanState(Vector3.zero, Vector3.zero, true, tool: GameplayTools.Flyswatter), tick++);
+            yield return new WaitForSecondsRealtime(.2f);
+            Vector3 shoulder = Find(view.Animator.transform, "UpperArm.R").position;
+            float reach = GameplayTools.FlyswatterShoulderReach;
+            Vector3 origin = shoulder + (Vector3.forward + Vector3.right * .45f).normalized * reach;
+            Vector3 target = shoulder + (Vector3.forward - Vector3.right * .25f).normalized * reach;
+            float worst = 0, start = Time.realtimeSinceStartup; string assists = "";
+            while (true)
+            {
+                float s = Time.realtimeSinceStartup - start;
+                if (s >= StrikeVisualTrajectory.Duration) break;
+                var phase = s < StrikeVisualTrajectory.SweepStart ? StrikePhase.Windup :
+                    s < StrikeVisualTrajectory.SweepStart + StrikeVisualTrajectory.SweepDuration ? StrikePhase.Active : StrikePhase.Recovery;
+                var strike = new StrikeState(9, GameplayTools.Flyswatter, 1, phase, tick, origin.ToFloat(), target.ToFloat(), Float3.Up,
+                    s / StrikeVisualTrajectory.Duration);
+                binding.ApplySnapshot(HumanState(Vector3.zero, Vector3.zero, true, strike: strike, tool: GameplayTools.Flyswatter), tick++);
+                yield return null;
+                if (phase == StrikePhase.Active && binding.LastArmReachResidualMeters >= worst)
+                {
+                    worst = binding.LastArmReachResidualMeters;
+                    assists = $" (clavicle {binding.LastClavicleAssistDegrees:F1} deg, chest {binding.LastTorsoAssistDegrees:F1} deg at s={s:F3})";
+                }
+            }
+            Assert.That(binding.LastElbowInnerDegrees, Is.LessThanOrEqualTo(140.5f));
+            Assert.That(worst, Is.LessThan(.02f), "At the authority's maximum flyswatter reach the visual swat still connects" + assists);
+            Object.Destroy(tool);
+            Object.Destroy(fixture);
+        }
+
+        [UnityTest]
+        public IEnumerator MosquitoKnockoutLiesBellyUpAndRecoversInTime()
+        {
+            var root = Track(new GameObject("MosquitoKnockout"));
+            var proxy = root.AddComponent<GameplayActorProxy>();
+            proxy.Initialize(new SpawnActor(9, "mosquito", PlayerRole.Mosquito, Float3.Zero));
+            var visual = Object.Instantiate(Load(MosquitoPrefab), root.transform);
+            var view = visual.GetComponent<CharacterView>();
+            var binding = visual.AddComponent<ActorVisualBinding>();
+            binding.Initialize(proxy, null, view, false);
+            uint tick = 1;
+            binding.ApplySnapshot(MosquitoState(LifeState.Stunned, new Vector3(0, .06f, 0), Vector3.zero), tick++);
+            yield return new WaitForSecondsRealtime(.8f);
+            Assert.That(binding.CurrentMotion, Is.EqualTo(Ids.MosquitoStunnedLoop));
+            var thorax = Find(view.Animator.transform, "Thorax");
+            float feet = 0; int count = 0;
+            foreach (var bone in view.Animator.GetComponentsInChildren<Transform>(true))
+                if (bone.name.StartsWith("Leg") && bone.name.Contains("03.")) { feet += bone.position.y; count++; }
+            Assert.That(count, Is.EqualTo(6));
+            Assert.That(feet / count, Is.GreaterThan(thorax.position.y), "Knocked out belly up: the six feet point at the sky.");
+            var recovering = new ActorSnapshot(9, PlayerRole.Mosquito, LifeState.Recovering, 1, new Float3(0, .06f, 0), Float3.Zero,
+                Rotation.Identity, Float3.Forward, 0, 0, 1, 1, true, 0, 0, null, null, default, tick + 12);
+            binding.ApplySnapshot(recovering, tick);
+            yield return null;
+            Assert.That(binding.CurrentMotion, Is.EqualTo(Ids.MosquitoRecover));
+            Assert.That(view.Animator.speed, Is.InRange(.9f, 1.3f), "The short Recover clip fits the 0.4 s window at normal speed.");
+            float normalized = view.Animator.GetNextAnimatorStateInfo(0).normalizedTime;
+            if (!view.Animator.IsInTransition(0)) normalized = view.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            Assert.That(normalized, Is.LessThan(.25f), "Recover starts from its beginning (the belly-up roll), not its tail.");
+        }
+
+        [Test]
+        public void EveryMoodDiffersFromEveryOtherAtAGlance()
+        {
+            var moods = new[] { FacialMood.Neutral, FacialMood.Happy, FacialMood.Angry, FacialMood.Alert, FacialMood.Sleepy,
+                FacialMood.Surprised, FacialMood.Focused, FacialMood.Dizzy, FacialMood.Excited, FacialMood.Yawning };
+            foreach (bool human in new[] { true, false })
+                for (int a = 0; a < moods.Length; a++)
+                    for (int b = a + 1; b < moods.Length; b++)
+                        Assert.That(FacialMoodShape.Distance(FacialMoodShape.For(moods[a]), FacialMoodShape.For(moods[b]), human),
+                            Is.GreaterThan(.6f), $"{(human ? "human" : "mosquito")} {moods[a]} vs {moods[b]}");
+        }
+
+        [UnityTest]
+        public IEnumerator UpperBodyMasksDoNotAccumulateOverRespawns()
+        {
+            int Masks() { int n = 0; foreach (var mask in Resources.FindObjectsOfTypeAll<AvatarMask>()) if (mask && mask.name == "LMS_HumanUpperBody") n++; return n; }
+            int before = Masks();
+            for (int i = 0; i < 3; i++)
+            {
+                var fixture = Human(false, out var proxy, out var view, out var binding);
+                Assert.That(HumanLocomotionSetup.TryConfigure(view, proxy.ActorId, out var gait), Is.True);
+                Assert.That(Masks(), Is.EqualTo(before + 1));
+                Object.Destroy(fixture);
+                yield return null;
+                yield return null;
+            }
+            Assert.That(Masks(), Is.EqualTo(before), "A destroyed gait presenter destroys its runtime mask.");
+        }
+
+        [UnityTest]
+        public IEnumerator HumanLongIdleYawnsWithTheHandsAboveTheHead()
+        {
+            var fixture = Human(false, out var proxy, out var view, out var binding);
+            var crown = Find(view.Animator.transform, "Socket.Head"); var knuckles = Find(view.Animator.transform, "Middle01.L");
+            VisualAttentionFactory.TryInstall(view.gameObject, false, out _, out _);
+            binding.ApplySnapshot(HumanState(Vector3.zero, Vector3.zero, true), 1);
+            float start = Time.realtimeSinceStartup, highest = float.MinValue;
+            bool yawned = false;
+            while (Time.realtimeSinceStartup - start < GameplayMoodPolicy.IdleSleepySeconds + 3.5f)
+            {
+                yield return null;
+                if (binding.TemporaryMotion == Ids.HumanYawn) yawned = true;
+                if (yawned) highest = Mathf.Max(highest, knuckles.position.y - crown.position.y);
+            }
+            Assert.That(yawned, Is.True, "A long calm idle plays the Yawn body clip.");
+            Assert.That(highest, Is.GreaterThan(.03f), "The stretch lifts the fists above the crown of the head.");
+            Object.Destroy(fixture);
+        }
+
         // ------------------------------------------------------------------ helpers
+
+        private static float ReticleMiss(Camera camera, MosquitoFollowCamera follow, float distance)
+        {
+            Vector3 point = follow.FlightLineOrigin + follow.FlightLineDirection * distance;
+            var ray = new Ray(camera.transform.position, camera.transform.forward);
+            return Vector3.Cross(ray.direction, point - ray.origin).magnitude;
+        }
+
+        private static Quaternion[] Capture(Transform[] bones)
+        {
+            var result = new Quaternion[bones.Length];
+            for (int i = 0; i < bones.Length; i++) result[i] = bones[i].localRotation;
+            return result;
+        }
 
         private GameObject Human(bool local, out GameplayActorProxy proxy, out CharacterView view, out ActorVisualBinding binding)
         {
@@ -377,8 +702,12 @@ namespace LetMeSleep.Tests.PlayMode
         }
 
         private static ActorSnapshot HumanState(Vector3 position, Vector3 velocity, bool grounded, float crouch = 0,
-            StrikeState strike = default) => new ActorSnapshot(7, PlayerRole.Human, LifeState.Active, 1, position.ToFloat(),
-            velocity.ToFloat(), Rotation.Identity, Float3.Forward, 0, 0, 1, 1, grounded, crouch, 0, null, null, strike, 0);
+            StrikeState strike = default, string tool = null)
+        {
+            return new ActorSnapshot(7, PlayerRole.Human, LifeState.Active, 1, position.ToFloat(),
+                velocity.ToFloat(), Rotation.Identity, Float3.Forward, 0, 0, 1, 1, grounded, crouch, 0, null, null, strike, 0,
+                tool ?? GameplayTools.Hands);
+        }
 
         private static ActorSnapshot MosquitoState(LifeState state, Vector3 position, Vector3 velocity) => new ActorSnapshot(
             9, PlayerRole.Mosquito, state, 1, position.ToFloat(), velocity.ToFloat(), Rotation.Identity, Float3.Forward,
@@ -389,6 +718,12 @@ namespace LetMeSleep.Tests.PlayMode
 
         private static FacialMood Mood(GameplayMoodPolicy policy, PlayerRole role, LifeState state, double now, bool near = false) =>
             policy.Evaluate(Frame(role, state, near), now).Mood;
+
+        private static float EyeScaleOf(GameObject human)
+        {
+            var parent = Find(human.transform, "Eye.L").parent;
+            return parent ? parent.lossyScale.magnitude / Vector3.one.magnitude : 1f;
+        }
 
         private static void Settle(VisualAttentionRig rig)
         {

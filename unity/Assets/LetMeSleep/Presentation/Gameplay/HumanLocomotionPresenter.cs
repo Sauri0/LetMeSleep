@@ -42,6 +42,7 @@ namespace LetMeSleep.Presentation.Gameplay
         private AnimationClip[] clips;
         private AnimationClip strikeClip, crouchClip;
         private AvatarMask upperBodyMask;
+        private bool ownsMask;
         private Transform leftFoot, rightFoot;
         private PlayableGraph graph;
         private AnimationClipPlayable[] clipPlayables;
@@ -77,11 +78,12 @@ namespace LetMeSleep.Presentation.Gameplay
             Suspend();
             ActorId = actorId; animator = target; clips = nextClips;
             leftFoot = left; rightFoot = right; ProfileRevision = profileRevision; clock = next;
-            strikeClip = crouchClip = null; upperBodyMask = null;
+            strikeClip = crouchClip = null; ReleaseMask();
         }
 
-        /// <summary>Optional v0.3.0 layers; null arguments leave the corresponding feature off.</summary>
-        public void ConfigureOverlays(AnimationClip strike, AvatarMask upperBody, AnimationClip crouchWalk)
+        /// <summary>Optional v0.3.0 layers; null arguments leave the corresponding feature off. With ownsMask the
+        /// presenter destroys the (per-actor, runtime-created) mask when it is replaced or destroyed.</summary>
+        public void ConfigureOverlays(AnimationClip strike, AvatarMask upperBody, AnimationClip crouchWalk, bool ownsMask = false)
         {
             if (clock == null) throw new InvalidOperationException("Configure the gait clips first.");
             if ((strike && strike.legacy) || (crouchWalk && (crouchWalk.legacy || crouchWalk.length <= 0)))
@@ -89,7 +91,17 @@ namespace LetMeSleep.Presentation.Gameplay
             if (strike && (!upperBody || upperBody.transformCount == 0))
                 throw new ArgumentException("The strike layer needs an upper-body transform mask.");
             Suspend();
-            strikeClip = strike; upperBodyMask = strike ? upperBody : null; crouchClip = crouchWalk;
+            if (upperBodyMask != upperBody) ReleaseMask();
+            strikeClip = strike; crouchClip = crouchWalk;
+            upperBodyMask = strike ? upperBody : null;
+            this.ownsMask = upperBodyMask && ownsMask;
+            if (!strike && upperBody && ownsMask) Destroy(upperBody);
+        }
+
+        private void ReleaseMask()
+        {
+            if (ownsMask && upperBodyMask) Destroy(upperBodyMask);
+            upperBodyMask = null; ownsMask = false;
         }
 
         /// <summary>Per frame, before EvaluateRenderedPose: crouch amount 0..1, strike layer weight and clip time.</summary>
@@ -229,6 +241,6 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private static bool Finite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
         private void OnDisable() => Suspend();
-        private void OnDestroy() { Suspend(); ContactReady = null; }
+        private void OnDestroy() { Suspend(); ReleaseMask(); ContactReady = null; }
     }
 }

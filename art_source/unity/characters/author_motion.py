@@ -30,6 +30,13 @@ UPPER_ARM_TWIST=40.0
 IDLE_FIST_ANGLES=(.55,.65,.45)
 RELAXED_THUMB=.55
 VICTORY_FIST_ANGLES=(1.25,1.15,.95)
+# v0.3.0 review: one sneaking crouch shared by Human_Crouch (static) and Human_CrouchWalk. Gait
+# parameters follow human_locomotion_contract (contacts L at 0 and R at .5, 0.96875 m per cycle = the
+# Walk profile at the 1.55 m/s crouch speed); 'hip' is the UpperLeg origin height.
+CROUCH=dict(clip='Human_CrouchWalk',speed=1.55,contacts=3.2,duty=.56,hip=.395,rise=.012,lift=.07,ramp=.22)
+CROUCH_SPINE,CROUCH_CHEST,CROUCH_NECK,CROUCH_HEAD=.46,.62,-.56,-.24
+CROUCH_HIPS_BACK=.07
+CROUCH_HEEL=.09
 
 def smooth(t):
     t=max(0,min(1,t)); return t*t*t*(t*(t*6-15)+10)
@@ -56,7 +63,19 @@ class Pose:
         y=direction.normalized(); z=(normal-y*normal.dot(y)).normalized(); x=y.cross(z).normalized()
         matrix=Matrix((x,y,z)).transposed().to_4x4(); matrix.translation=origin
         self.rig.pose.bones[name].matrix=matrix; self.update()
-    def chain(self,upper,lower,target,pole,end=None,end_rotation=None):
+    def point_swing(self,name,origin,direction):
+        """Orient a bone along direction by the minimal swing from its rest axis in the current parent
+        frame. Unlike point() with a fixed normal hint, the roll never flips by 180 deg when the bone
+        crosses that hint (a thigh passing horizontal in a deep crouch), which Unity would interpolate
+        between two keys as a limb swinging through an unrelated pose."""
+        bone=self.rig.pose.bones[name]; parent=bone.parent
+        base=self.rest[name].to_3x3()
+        if parent is not None:
+            base=(parent.matrix.to_3x3()@self.rest[parent.name].to_3x3().inverted())@base
+        axis=base@Vector((0,1,0))
+        matrix=(axis.rotation_difference(Vector(direction).normalized()).to_matrix()@base).to_4x4()
+        matrix.translation=origin; bone.matrix=matrix; self.update()
+    def chain(self,upper,lower,target,pole,end=None,end_rotation=None,swing_roll=False):
         self.update(); u=self.rig.pose.bones[upper]; l=self.rig.pose.bones[lower]
         origin=u.head.copy(); a=u.bone.length; b=l.bone.length
         d=Vector(target)-origin; length=d.length; direction=d.normalized()
@@ -66,8 +85,12 @@ class Pose:
         along=(a*a-b*b+length*length)/(2*length)
         pole=Vector(pole)-origin; bend=(pole-direction*pole.dot(direction)).normalized()
         joint=origin+direction*along+bend*math.sqrt(max(0,a*a-along*along))
-        self.point(upper,origin,joint-origin,Vector((0,-1,0)))
-        self.point(lower,joint,target-joint,Vector((0,-1,0)))
+        if swing_roll:
+            self.point_swing(upper,origin,joint-origin)
+            self.point_swing(lower,joint,target-joint)
+        else:
+            self.point(upper,origin,joint-origin,Vector((0,-1,0)))
+            self.point(lower,joint,target-joint,Vector((0,-1,0)))
         if end:
             matrix=(end_rotation if end_rotation is not None else self.rest[end]).copy()
             matrix.translation=target; self.rig.pose.bones[end].matrix=matrix; self.update()
@@ -107,8 +130,15 @@ def sampled(c,name,end,pose_fn):
                     for key in curve.keyframe_points: key.interpolation='LINEAR'
 
 def _mix(a,b,t):
-    """Normalized blend of two direction vectors (t=0 -> a)."""
-    return (Vector(a)*(1-t)+Vector(b)*t).normalized()
+    """Spherical blend of two direction vectors (t=0 -> a) at constant angular speed. A linear blend of
+    nearly opposite directions (an arm going from hanging to straight up) passes near the zero vector and
+    whips through the frames around it; Unity then interpolates those keys as a spin (v0.3.0 review)."""
+    a=Vector(a).normalized(); b=Vector(b).normalized()
+    dot=max(-1.,min(1.,a.dot(b)))
+    if dot>.99995: return (a*(1-t)+b*t).normalized()
+    theta=math.acos(dot); sine=math.sin(theta)
+    if sine<1e-4: return (a*(1-t)+b*t).normalized()
+    return ((a*math.sin((1-t)*theta)+b*math.sin(t*theta))/sine).normalized()
 
 def human(c):
     p=Pose(c)
@@ -141,11 +171,11 @@ def human(c):
         """Blend from the hanging arm (amount 0) to the given raised directions (amount 1)."""
         arm(side,s,_mix(HANG_UPPER(s),upper,amount),_mix(HANG_LOWER(s),lower,amount),
             _mix(HANG_PALM(s),palm,amount),_mix(HANG_NORMAL(s),upper_normal,amount))
-    def legs(feet=None):
+    def legs(feet=None,swing_roll=False):
         for side,s in [('L',1),('R',-1)]:
             offset=feet[side] if feet else (0,0)
             p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*.125,offset[0],.12+offset[1]),
-                    (s*.125,-.6,.42),'Foot.'+side)
+                    (s*.125,-.6,.42),'Foot.'+side,swing_roll=swing_roll)
     def base(squat=0,lean=0,breathe=0,feet=None):
         p.reset(); p.translate('Hips',(0,.11*squat,-.42*squat-STAND_DROP))
         p.rotate('Chest',(lean+breathe,0,0));p.rotate('Neck',(-lean*.35,0,0));p.update()
@@ -191,7 +221,25 @@ def human(c):
             p.rotate('LowerArm.'+side,(.6 if run else .2,0,0));p.fingers(side,.2)
         return p.snapshot()
     sampled(c,'Walk',41,lambda t:gait(t,False));sampled(c,'Run',25,lambda t:gait(t,True))
-    def crouch(t):base(squat=smooth(min(1,t/.6)),lean=.95*smooth(min(1,t/.6)));return p.snapshot()
+    # v0.3.0 review: the static Crouch and the crouched gait share one sneaking pose (hips, torso, head
+    # and paws in front of the knees), so stopping or starting to move while crouched never swaps between
+    # a ~60 deg fold with arms hanging to the floor and an upright walk. Its eye (~0.93 m) stays inside the
+    # 1.0 m crouched capsule and next to the crouched head volume (0.89 m) in first and third person.
+    def crouch_torso(u=1.,bob=0.):
+        p.rotate('Spine',(CROUCH_SPINE*u,0,0));p.rotate('Chest',((CROUCH_CHEST+bob)*u,0,0))
+        p.rotate('Neck',(CROUCH_NECK*u,0,0));p.rotate('Head',(CROUCH_HEAD*u,0,0));p.update()
+    def crouch_arms(u=1.,swing=0.):
+        for side,s in [('L',1),('R',-1)]:
+            sw=s*swing
+            raised(side,s,(s*.30,-.42-sw,-.86),(s*.08,-.80-sw,-.52),(-s*.8,-.3,-.2),u)
+            relaxed_fingers(side,1-.1*u)
+    def crouch(t):
+        u=smooth(min(1,t/.6))
+        p.reset();p.translate('Hips',(0,CROUCH_HIPS_BACK*u,(CROUCH['hip']-.78)*u-STAND_DROP*(1-u)));p.update()
+        crouch_torso(u)
+        crouch_arms(u)
+        legs({'L':(-.05*u,0),'R':(.07*u,0)},swing_roll=True)
+        return p.snapshot()
     sampled(c,'Crouch',31,crouch)
     def jump(t):
         squat=.48*pulse(t,0,.18,.38)+.40*pulse(t,.65,.82,1)
@@ -235,12 +283,51 @@ def human(c):
     centers=[p.rig.pose.bones['Hand.'+s].matrix@Vector((0,.042,0)) for s in ['L','R']]
     c.contact={'clap_palm_center_distance_m':(centers[0]-centers[1]).length,'approximate_palm_thickness_m':.048,
                'target_surface_gap_m':.002,'sample_frame':15}
+    def arm_between(side,s,a,b,u):
+        """Arm between two direction sets (upper, lower, palm, upper normal); u=0 -> a."""
+        arm(side,s,_mix(a[0],b[0],u),_mix(a[1],b[1],u),_mix(a[2],b[2],u),_mix(a[3],b[3],u))
+    def grip_fingers(side,g):
+        """Relaxed idle fingers (g=0) to the closed grip of the swat (g=1)."""
+        for digit in ['Index','Middle','Ring','Little']:
+            for i,(angle,full) in enumerate(zip(IDLE_FIST_ANGLES,FINGER_JOINT_ANGLES),1):
+                p.rotate(f'{digit}{i:02d}.{side}',(angle*(1-g)+full*g-full*FINGER_REST_AMOUNT,0,0))
+        for i,angle in enumerate(FINGER_JOINT_ANGLES,1):
+            p.rotate(f'Thumb{i:02d}.{side}',(angle*(RELAXED_THUMB*(1-g)+g-FINGER_REST_AMOUNT)*THUMB_CURL_FACTOR,0,0))
     def swat(t):
-        base();p.fingers('R',1)
-        a=pulse(t,0,.30,.78); strike=pulse(t,.3,.48,1)
-        p.rotate('UpperArm.R',(-.8*a+.85*strike,.15*a-.25*strike,1.20-.45*strike))
-        p.rotate('LowerArm.R',(.35+.5*a-.25*strike,0,0));p.rotate('Chest',(.10*strike,-.10*a+.15*strike,0))
-        p.rotate('Brow.L',(0,.14*strike,0));p.rotate('Brow.R',(0,-.14*strike,0))
+        """v0.3.0 review: a whole-body comic swat. Anticipation (0-.30): the knees dip, the hips and chest
+        turn the striking shoulder back (~23 deg) and the torso leans back while the right hand cocks
+        above the ear. Strike (.30-.46): the chest whips across (~27 deg the other way) and forward
+        (~16 deg), the hips follow and the knees give. Follow-through (.46-.72) with the arm across the
+        body, then it settles (.72-1) into exactly the idle pose (hanging arm, relaxed hand), so the
+        next clip never pops. The gameplay arm IK owns the arm during the authoritative sweep."""
+        wind=pulse(t,0,.30,.46); hit=pulse(t,.30,.46,1.)
+        dip=.07*pulse(t,.04,.28,.50)+.10*pulse(t,.34,.50,.92)
+        yaw=-.40*wind+.47*hit; lean=-.06*wind+.28*hit
+        p.reset();p.translate('Hips',(0,.05*dip,-.42*dip-STAND_DROP))
+        p.rotate('Hips',(0,.30*yaw,0));p.rotate('Spine',(.30*lean,.30*yaw,0))
+        p.rotate('Chest',(.70*lean,.40*yaw,.05*hit));p.rotate('Neck',(-.45*lean,-.45*yaw,0))
+        p.rotate('Shoulder.R',(0,0,-.30*wind+.12*hit));p.rotate('Shoulder.L',(0,0,.06*wind))
+        p.update()
+        legs({'L':(-.02-.04*hit,0),'R':(.03+.02*wind,0)})
+        # Upper-arm roll hints chosen so the roll never whips through the hint direction (<=31 deg per frame).
+        rest=(HANG_UPPER(-1),HANG_LOWER(-1),HANG_PALM(-1),HANG_NORMAL(-1))
+        cocked=(Vector((-.62,.30,.62)),Vector((.05,-.30,.95)),Vector((.3,-.9,0)),Vector((-.203,-.946,.254)))
+        across=(Vector((.18,-.96,.18)),Vector((.45,-.88,.05)),Vector((.9,-.3,-.2)),Vector((.774,.027,-.632)))
+        follow=(Vector((.40,-.60,-.55)),Vector((.62,-.25,-.65)),Vector((.5,.6,.1)),Vector((.5,.3,.8)))
+        if t<.30: arm_between('R',-1,rest,cocked,smooth(t/.30))
+        elif t<.52: arm_between('R',-1,cocked,across,smooth((t-.30)/.22))
+        elif t<.72: arm_between('R',-1,across,follow,smooth((t-.52)/.20))
+        else: arm_between('R',-1,follow,rest,smooth((t-.72)/.28))
+        grip_fingers('R',1-smooth((t-.72)/.28) if t>.72 else smooth(t/.12))
+        # The free arm counterbalances: out and back on the wind-up, forward with the strike.
+        free=(Vector((.45,.35,-.82)),Vector((.30,.10,-.95)),HANG_PALM(1),HANG_NORMAL(1))
+        brace=(Vector((.25,-.45,-.86)),Vector((.15,-.75,-.64)),HANG_PALM(1),HANG_NORMAL(1))
+        hang('L',1)
+        if wind>0 or hit>0:
+            lu=HANG_UPPER(1);ll=HANG_LOWER(1)
+            upper=_mix(_mix(lu,free[0],wind),brace[0],hit*(1-wind));lower=_mix(_mix(ll,free[1],wind),brace[1],hit*(1-wind))
+            arm('L',1,upper,lower,HANG_PALM(1));relaxed_fingers('L')
+        p.rotate('Brow.L',(0,.14*hit,0));p.rotate('Brow.R',(0,-.14*hit,0))
         return p.snapshot()
     sampled(c,'Swat',31,swat)
     def hit(t):
@@ -295,49 +382,64 @@ def human(c):
         p.rotate('Jaw',(-.13,0,0));brows(.008)
         return p.snapshot()
     sampled(c,'FallAir',31,fall_air)
-    # Crouched walk sampled by the same gait clock as the four gaits: contacts L at 0 and R at .5,
-    # 0.96875 m per cycle (the Walk profile at the 1.55 m/s crouch speed).
+    # Crouched walk sampled by the same gait clock as the four gaits (see CROUCH above).
     from human_locomotion_contract import foot as gait_foot, hip_height as gait_hip, distance as gait_distance
-    CROUCH=dict(clip='Human_CrouchWalk',speed=1.55,contacts=3.2,duty=.62,hip=.50,rise=.022,lift=.075,ramp=.22)
     c.contact['crouch_walk_distance_per_cycle_m']=gait_distance(CROUCH)
     def crouch_walk(t):
         p.reset()
-        p.translate('Hips',(0,.03,gait_hip(t,CROUCH)-.78))
-        p.rotate('Spine',(.30,0,0));p.rotate('Chest',(.42+.015*math.sin(TAU*2*t),0,0))
-        p.rotate('Neck',(-.42,0,0));p.rotate('Head',(-.16,0,0));p.update()
+        p.translate('Hips',(0,CROUCH_HIPS_BACK,gait_hip(t,CROUCH)-.78));p.update()
+        crouch_torso(1,.015*math.sin(TAU*2*t))
         for side,s,offset in [('L',1,0.),('R',-1,.5)]:
             forward,z,_=gait_foot(t+offset,CROUCH)
-            p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*.125,-forward,z),(s*.125,-.6,.42),'Foot.'+side)
-        for side,s in [('L',1),('R',-1)]:
-            swing=s*.22*math.cos(TAU*t)*-1
-            raised(side,s,(s*.28,-.35-swing,-.9),(s*.10,-.75-swing,-.6),(-s*.8,-.3,-.2),1)
-            relaxed_fingers(side,.9)
+            # The trailing heel peels off the floor (toes stay down) so the low hips never drop the rear
+            # knee onto the floor; continuous in 'forward' across the stance/swing boundary.
+            # The peel and the swing lift do not stack: the ankle rises by the larger of the two.
+            heel=CROUCH_HEEL*smooth((-forward-.03)/.20)
+            roll=Matrix.Rotation(math.atan2(heel,.225),4,'X')@p.rest['Foot.'+side]
+            ankle=.12+max(z-.12,heel)
+            p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*.125,-forward,ankle),(s*.125,-.6,.42),'Foot.'+side,roll,swing_roll=True)
+        crouch_arms(1,.22*math.cos(TAU*t))
         return p.snapshot()
     sampled(c,'CrouchWalk',61,crouch_walk)
     def yawn(t):
-        """Long idle: a big stretching yawn (3 s), arms up behind the head, chest arched, jaw wide."""
+        """Long idle: a big stretching yawn (3 s). The clavicles lift and both arms reach straight up so the
+        fists end above the head (v0.3.0 review), the chest arches back and the jaw opens wide."""
         a=pulse(t,.05,.36,.86); mouth=pulse(t,.14,.42,.80)
-        base(lean=-.12*a,breathe=.02*math.sin(math.pi*min(1,t/.4)))
+        base(lean=-.14*a,breathe=.02*math.sin(math.pi*min(1,t/.4)))
         for side,s in [('L',1),('R',-1)]:
-            raised(side,s,(s*.78,.06,.62),(-s*.25,.20,.95),(-s*.2,.9,.3),a)
-            relaxed_fingers(side,1-.6*a)
-        p.rotate('Neck',(-.10*a,0,0));p.rotate('Head',(-.22*a,0,.05*a))
-        p.rotate('Jaw',(-.36*mouth,0,0));brows(.005*a)
+            p.rotate('Shoulder.'+side,(0,0,s*.34*a))
+        p.update()
+        for side,s in [('L',1),('R',-1)]:
+            raised(side,s,(s*.30,.10,.95),(-s*.12,.04,1.),(-s*.2,.9,.3),a)
+            relaxed_fingers(side,1-.2*a)
+        p.rotate('Neck',(-.10*a,0,0));p.rotate('Head',(-.24*a,0,.05*a))
+        p.rotate('Jaw',(-.38*mouth,0,0));brows(.005*a)
         return p.snapshot()
     sampled(c,'Yawn',91,yawn)
     def victory(t):
-        """Results: both fists up, knees bouncing, a happy shout (loop, 1 s)."""
-        b=.5-.5*math.cos(TAU*t); pump=math.sin(TAU*t)
-        base(squat=.07*b,lean=-.06-.03*b)
+        """Results (loop, 1 s): two springy cheers per loop. The knees dip deep and push up onto the toes
+        of a tiny hop, the fists pump from shoulder height to straight up, the head bobs and the mouth
+        shouts (v0.3.0 review: the first version moved the hips only 3 cm)."""
+        w=TAU*2*t
+        dip=.5+.5*math.cos(w)          # 1 at t=0 and .5: the knees are bent
+        up=1-dip
+        base(squat=.26*dip,lean=.10*dip-.08*up)
+        p.translate('Hips',(0,.11*.26*dip,-.42*.26*dip+.035*up*up-STAND_DROP));p.update()
+        legs({'L':(0,.035*up*up),'R':(0,.035*up*up)})
         for side,s in [('L',1),('R',-1)]:
-            raised(side,s,(s*.62,-.18,.76+.05*pump),(s*.10,-.22,.97),(-s*.45,-.88,0),1)
+            p.rotate('Shoulder.'+side,(0,0,s*.22*up))
+        p.update()
+        for side,s in [('L',1),('R',-1)]:
+            raised(side,s,_mix((s*.80,-.30,.35),(s*.55,-.15,.82),up),_mix((s*.05,-.35,.94),(s*.12,-.20,.97),up),
+                   (-s*.45,-.88,0),1)
             # Tight fists (knuckles folded, not the claw of a partial curl), thumb over the fingers.
             for digit in ['Index','Middle','Ring','Little']:
                 for i,(angle,full) in enumerate(zip(VICTORY_FIST_ANGLES,FINGER_JOINT_ANGLES),1):
                     p.rotate(f'{digit}{i:02d}.{side}',(angle-full*FINGER_REST_AMOUNT,0,0))
             for i,angle in enumerate(FINGER_JOINT_ANGLES,1):
                 p.rotate(f'Thumb{i:02d}.{side}',(angle*(.95-FINGER_REST_AMOUNT)*THUMB_CURL_FACTOR,0,0))
-        p.rotate('Head',(-.05-.03*b,0,0));p.rotate('Jaw',(-.30-.06*b,0,0));brows(.006)
+        p.rotate('Neck',(-.04*up,0,0));p.rotate('Head',(-.10*up+.06*dip,0,.04*math.sin(TAU*t)))
+        p.rotate('Jaw',(-.26-.12*up,0,0));brows(.004+.004*up)
         return p.snapshot()
     sampled(c,'Victory',31,victory)
     c.contact['minimum_leg_reach_margin_m']=p.minimum_reach_margin

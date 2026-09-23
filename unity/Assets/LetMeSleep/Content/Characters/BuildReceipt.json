@@ -1,8 +1,8 @@
 {
     "builder": "v030-characters-10-expressive-motion",
     "unityVersion": "6000.3.24f1",
-    "sourceDigest": "dd052b6a40a051438b09e5c83f4489a1c4c4ff94b79c36b1d81a57383512d40a",
-    "builderDigest": "6b58fd6a9e12d7155ff04d3a4a5117bea0ddd84c5a1fb44f2ac66adc4dc498bc",
+    "sourceDigest": "716f708571ced9e1534a42fa85c88d77b939e12f3ee5ce6be1ea5c6416414ffb",
+    "builderDigest": "619f6040324df5560d8cd48812f5ced3bc72b98f4aeeeac5b3eaa508a5b94303",
     "success": true,
     "scope": "Imported assets and sampled animation structure; no playtest, visual approval or performance claim",
     "errors": [],
@@ -171,7 +171,7 @@
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
             "rootStationary": true,
-            "maximumLoopFootDelta": 0.00010910608398262411,
+            "maximumLoopFootDelta": 0.00010906692477874458,
             "motions": [
                 {
                     "Id": 0,
@@ -445,7 +445,7 @@
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
             "rootStationary": true,
-            "maximumLoopFootDelta": 0.00010910608398262411,
+            "maximumLoopFootDelta": 0.00010906692477874458,
             "motions": [
                 {
                     "Id": 0,

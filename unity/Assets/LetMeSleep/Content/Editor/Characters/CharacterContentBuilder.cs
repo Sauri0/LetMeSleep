@@ -217,7 +217,9 @@ namespace LetMeSleep.Content.Characters.Editor
             importer.avatarSetup = audit.clips.Length > 0 ? ModelImporterAvatarSetup.CreateFromThisModel : ModelImporterAvatarSetup.NoAvatar;
             importer.importAnimation = audit.clips.Length > 0;
             importer.animationCompression = ModelImporterAnimationCompression.Off;
-            importer.resampleCurves = false;
+            // v0.3.0 review: quaternion keys per source frame. Euler curves interpolated per axis swing a limb near
+            // gimbal (deep crouch thigh, raised arms) through an unrelated pose between two keys.
+            importer.resampleCurves = true;
             if (audit.clips.Length > 0)
             {
                 importer.motionNodeName = "Root";

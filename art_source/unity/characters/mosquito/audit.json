@@ -138,9 +138,9 @@
     {
       "name": "Mosquito_Recover",
       "start": 1,
-      "end": 37,
+      "end": 13,
       "fps": 30,
-      "duration_seconds": 1.2,
+      "duration_seconds": 0.4,
       "loop": false,
       "root_motion": false
     },

@@ -73,7 +73,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleCurves: 0
+    resampleCurves: 1
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: Root
@@ -502,7 +502,7 @@ ModelImporter:
       takeName: LMS_MosquitoRig|Mosquito_Recover
       internalID: 4381588541359481699
       firstFrame: 0
-      lastFrame: 36
+      lastFrame: 12
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
