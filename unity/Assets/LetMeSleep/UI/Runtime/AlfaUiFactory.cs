@@ -227,7 +227,51 @@ namespace LetMeSleep.UI
             return material;
         }
 
-        /// <summary>Disabled keeps the button's intent at half opacity (APLICAR stays green, dimmed).</summary>
+        private static readonly Dictionary<TMP_FontAsset, Material> ComicMaterials = new Dictionary<TMP_FontAsset, Material>();
+
+        /// <summary>
+        /// Results title (UI-06 9): the logo's comic face, #0B1426 contour (about 8 units at 116) and a hard ink
+        /// drop shadow underneath.
+        /// </summary>
+        internal TextMeshProUGUI ComicTitle(Transform parent, string name, string value, float size, Color color)
+        {
+            var text = Text(parent, name, value, size, color, TextAlignmentOptions.Center, true);
+            var comic = AlfaUiTheme.Comic(dependencies);
+            text.font = comic;
+            text.fontStyle = comic != AlfaUiTheme.Body(dependencies) ? FontStyles.Normal : FontStyles.Bold;
+            text.characterSpacing = 2f;
+            text.fontSize = Mathf.Max(size, AlfaUiTheme.MinTextSize);
+            var material = ComicMaterial(text.font);
+            if (material != null) text.fontSharedMaterial = material;
+            return text;
+        }
+
+        private static Material ComicMaterial(TMP_FontAsset font)
+        {
+            if (font == null || font.material == null) return null;
+            if (ComicMaterials.TryGetValue(font, out var cached) && cached != null) return cached;
+            var material = new Material(font.material) { name = font.name + " UI comic title", hideFlags = HideFlags.HideAndDontSave };
+            if (material.HasProperty(ShaderUtilities.ID_OutlineWidth))
+            {
+                material.SetColor(ShaderUtilities.ID_OutlineColor, AlfaUiTheme.Ink900);
+                material.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.5f);
+                material.SetFloat(ShaderUtilities.ID_FaceDilate, 0.32f);
+                material.EnableKeyword(ShaderUtilities.Keyword_Outline);
+            }
+            if (material.HasProperty(ShaderUtilities.ID_UnderlayColor))
+            {
+                material.EnableKeyword(ShaderUtilities.Keyword_Underlay);
+                material.SetColor(ShaderUtilities.ID_UnderlayColor, AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.9f));
+                material.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 0.15f);
+                material.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, -0.75f);
+                material.SetFloat(ShaderUtilities.ID_UnderlayDilate, 0.5f);
+                material.SetFloat(ShaderUtilities.ID_UnderlaySoftness, 0.02f);
+            }
+            ComicMaterials[font] = material;
+            return material;
+        }
+
+        /// <summary>Disabled keeps the button's intent colours; only its label and icon dim to 55 % (APLICAR stays green).</summary>
         internal static void KeepIntentWhenDisabled(UnityEngine.UI.Button button)
         {
             var surface = button != null ? button.GetComponent<AlfaUiSurface>() : null;
@@ -497,6 +541,7 @@ namespace LetMeSleep.UI
             var surface = target != null ? target.GetComponent<AlfaUiSurface>() : null;
             if (surface == null) return;
             surface.ThickFrame = selected;
+            surface.SelectedKeepsLook = selected;
             if (selected)
             {
                 surface.FrameColor = AlfaUiTheme.Sky400;
@@ -504,6 +549,7 @@ namespace LetMeSleep.UI
                 surface.ShadowColor = AlfaUiTheme.WithAlpha(AlfaUiTheme.PrimaryHi, 0.45f);
             }
             surface.Refresh();
+            target.GetComponent<AlfaUiFocusMotion>()?.RefreshLook();
         }
 
         /// <summary>Puts a factory button label in the display face at a given size (menu rail 30, CTAs 34).</summary>
@@ -1040,7 +1086,7 @@ namespace LetMeSleep.UI
         }
 
         /// <summary>Keyboard key cap (UI-06 control legend): light rounded cap with the key in the display face.</summary>
-        internal RectTransform KeyCap(Transform parent, string name, string key, float height = 40f)
+        internal RectTransform KeyCap(Transform parent, string name, string key, float height = 40f, float padding = 20f)
         {
             var cap = Panel(parent, name, AlfaUiTheme.Hex("DDE6F5"), -1f, height, AlfaUiTheme.SmallRadius);
             SetSurface(cap, Color.white, AlfaUiTheme.Hex("B9C7DD"), AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.55f), AlfaUiTheme.WithAlpha(Color.black, 0.35f));
@@ -1048,8 +1094,8 @@ namespace LetMeSleep.UI
             label.textWrappingMode = TextWrappingModes.NoWrap;
             label.overflowMode = TextOverflowModes.Overflow;
             label.characterSpacing = 1f;
-            Fill(label.rectTransform, 8f, 8f, 2f, 2f);
-            var width = Mathf.Max(height, label.GetPreferredValues(key, 1000f, height).x + 20f);
+            Fill(label.rectTransform, padding * 0.4f, padding * 0.4f, 2f, 2f);
+            var width = Mathf.Max(height, label.GetPreferredValues(key, 1000f, height).x + padding);
             var layout = cap.GetComponent<UnityEngine.UI.LayoutElement>();
             layout.minWidth = layout.preferredWidth = width;
             layout.minHeight = height;
@@ -1349,6 +1395,13 @@ namespace LetMeSleep.UI
             RefreshInteractable();
         }
 
+        /// <summary>Re-applies the enabled/disabled look after a selection or intent change.</summary>
+        internal void RefreshLook()
+        {
+            shownInteractable = null;
+            RefreshInteractable();
+        }
+
         private void RefreshInteractable()
         {
             if (selectable == null) selectable = GetComponent<UnityEngine.UI.Selectable>();
@@ -1362,7 +1415,9 @@ namespace LetMeSleep.UI
                 surface.Refresh();
             }
             AlfaUiTheme.DisabledColors(out _, out _, out _, out var disabledAlpha);
-            var factor = interactable ? 1f : disabledAlpha;
+            // A selected control keeps its content; a kept intent (APLICAR) dims it to 55 %; the rest to 50 %.
+            var factor = interactable || (surface != null && surface.SelectedKeepsLook) ? 1f
+                : surface != null && surface.DisabledKeepsIntent ? AlfaUiTheme.KeptIntentContentAlpha : disabledAlpha;
             foreach (var pair in content)
             {
                 if (pair.Key == null) continue;

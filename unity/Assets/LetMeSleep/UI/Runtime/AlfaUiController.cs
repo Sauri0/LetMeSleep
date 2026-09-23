@@ -630,7 +630,7 @@ namespace LetMeSleep.UI
             if (pauseVoiceStatus != null)
                 pauseVoiceStatus.text = string.IsNullOrWhiteSpace(state.Notice) ? state.ScopeLabel : state.Notice;
             if (pauseVoiceMuteLabel != null)
-                pauseVoiceMuteLabel.text = state.LocalMuted ? "ACTIVAR MI MICRÓFONO" : "SILENCIAR MI MICRÓFONO";
+                pauseVoiceMuteLabel.text = state.LocalMuted ? "ACTIVAR MI VOZ" : "SILENCIARME";
             if (pauseVoiceMuteButton != null) pauseVoiceMuteButton.interactable = state.InRoom && actions is IVoiceActions;
             UpdatePushToTalkRow();
             UpdateLobbyVoiceMarkers();
@@ -716,8 +716,10 @@ namespace LetMeSleep.UI
             motto.textWrappingMode = TextWrappingModes.NoWrap;
             motto.overflowMode = TextOverflowModes.Overflow;
             motto.GetComponent<UnityEngine.UI.LayoutElement>().minHeight = 30f;
-            var version = string.IsNullOrWhiteSpace(Application.version) ? "ALFA" : Application.version.Replace("-", " / ").ToUpperInvariant();
-            var versionText = factory.Text(view.transform, "Version", version + "  ·  WINDOWS", AlfaUiTheme.MinTextSize, AlfaUiTheme.Disabled, TextAlignmentOptions.BottomRight);
+            // The build's own version (Application.version, e.g. 0.3.0), never a hard-coded one.
+            var version = string.IsNullOrWhiteSpace(Application.version) ? "SIN VERSIÓN" : "VERSIÓN " + Application.version.Replace("-", " / ").ToUpperInvariant();
+            var versionText = factory.Text(view.transform, "Version", version + "  ·  WINDOWS", AlfaUiTheme.MinTextSize, AlfaUiTheme.Moon200, TextAlignmentOptions.BottomRight, true);
+            versionText.characterSpacing = AlfaUiTheme.CaptionTracking;
             versionText.textWrappingMode = TextWrappingModes.NoWrap;
             Anchor(versionText.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-40f, 24f), new Vector2(420f, 30f));
         }
@@ -1331,13 +1333,14 @@ namespace LetMeSleep.UI
             cardTitle.textWrappingMode = TextWrappingModes.NoWrap;
             Anchor(cardTitle.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -18f), new Vector2(-32f, 46f));
 
-            // Image area: 546 x 296 at 1080p, filled edge to edge by the role portrait (see ApplyTrainingPortrait).
+            // Image area: 546 x 308 at 1080p. The painted figure is framed on itself (ApplyTrainingPortrait): the
+            // human from the top of the nightcap to the hips, the mosquito whole; the head is never cut.
             var portraitFrame = factory.Inset(card, "PortraitFrame", -1f, AlfaUiTheme.ButtonRadius);
             AlfaUiFactory.SetSurface(portraitFrame, AlfaUiTheme.WithAlpha(Color.Lerp(team, Color.black, 0.35f), 0.9f),
                 AlfaUiTheme.WithAlpha(Color.Lerp(team, Color.black, 0.7f), 0.95f), Color.clear);
             portraitFrame.GetComponent<UnityEngine.UI.Image>().color = Color.white;
-            Anchor(portraitFrame, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -72f), new Vector2(-42f, 296f));
-            var mask = AlfaUiFactory.Node("PortraitMask", portraitFrame, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Mask));
+            Anchor(portraitFrame, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -70f), new Vector2(-42f, 308f));
+            var mask = AlfaUiFactory.Node("PortraitMask", portraitFrame, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Mask), typeof(AlfaUiArtFit));
             var maskImage = mask.GetComponent<UnityEngine.UI.Image>();
             maskImage.sprite = AlfaUiSkin.Fill(AlfaUiTheme.ButtonRadius);
             maskImage.type = UnityEngine.UI.Image.Type.Sliced;
@@ -1384,10 +1387,11 @@ namespace LetMeSleep.UI
         }
 
         /// <summary>
-        /// Fills each training card image area (546 x 296 at 1080p). Order: an illustration in
-        /// Resources/AlfaUiPortraits/Human or /Mosquito (another team paints them; PNG as Sprite or Texture, drawn
-        /// "cover" so it fills the area), else a one-off snapshot of the in-game model rendered through the
-        /// customization preview rig with blue (human) or red (mosquito) lighting, else the large role pictogram.
+        /// Fills each training card image area (546 x 308 at 1080p). Order: the painted full-body figure in
+        /// Resources/AlfaUiPortraits/Human or /Mosquito (transparent PNG), framed on the figure itself: the human from
+        /// the top of the head (with a margin) down to the hips, the mosquito whole ("contain", anchored at the top),
+        /// so the head is never cut; else a one-off snapshot of the in-game model rendered through the customization
+        /// preview rig (already framed, drawn "cover"); else the large role pictogram.
         /// </summary>
         private void EnsureTrainingPortraits()
         {
@@ -1400,8 +1404,22 @@ namespace LetMeSleep.UI
             if (target == null || target.texture != null) return;
             Texture texture = null;
             var illustration = LoadRolePortrait(role);
-            if (illustration != null) texture = illustration.texture;
-            else if (portraitSetup != null && portraitSetup.IsUsable && (previewOrbit == null || screen != AlfaUiScreen.Customization))
+            if (illustration != null)
+            {
+                target.texture = illustration.texture;
+                target.enabled = true;
+                var fit = target.transform.parent.GetComponent<AlfaUiArtFit>();
+                if (fit != null)
+                {
+                    fit.Target = target;
+                    fit.FromTop = role == AlfaRole.Human ? 0.6f : 1f;
+                    fit.Pad = role == AlfaRole.Human ? 0.05f : 0.05f;
+                    fit.Apply();
+                }
+                HideTrainingPortraitFallback(target);
+                return;
+            }
+            if (portraitSetup != null && portraitSetup.IsUsable && (previewOrbit == null || screen != AlfaUiScreen.Customization))
             {
                 var rendered = AlfaRolePortrait.Render(portraitSetup, role, 1092, 592);
                 if (rendered != null)
@@ -1412,14 +1430,19 @@ namespace LetMeSleep.UI
             }
             if (texture == null) return;
             target.texture = texture;
-            // The image area is a fixed 546 x 296 frame; its rect may not be laid out yet on first show.
-            const float areaAspect = 546f / 296f;
+            // The image area is a fixed 546 x 308 frame; its rect may not be laid out yet on first show.
+            const float areaAspect = 546f / 308f;
             var textureAspect = texture.height > 0 ? (float)texture.width / texture.height : areaAspect;
             // Cover: crop the longer side instead of letterboxing.
             target.uvRect = textureAspect > areaAspect
                 ? new Rect((1f - areaAspect / textureAspect) * 0.5f, 0f, areaAspect / textureAspect, 1f)
                 : new Rect(0f, (1f - textureAspect / areaAspect) * 0.5f, 1f, textureAspect / areaAspect);
             target.enabled = true;
+            HideTrainingPortraitFallback(target);
+        }
+
+        private static void HideTrainingPortraitFallback(UnityEngine.UI.RawImage target)
+        {
             foreach (var name in new[] { "PortraitGlow", "PortraitIcon" })
             {
                 var fallback = target.transform.parent.Find(name);

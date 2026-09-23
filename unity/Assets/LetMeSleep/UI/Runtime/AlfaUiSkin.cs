@@ -229,6 +229,11 @@ namespace LetMeSleep.UI
         /// dimmed to 50 %, when there is nothing to apply).
         /// </summary>
         internal bool DisabledKeepsIntent;
+        /// <summary>
+        /// A selected control (tab, option, slot) keeps its selected look while its card is not interactable, e.g.
+        /// GENERAL stays highlighted in Ajustes while a push-to-talk key is awaited.
+        /// </summary>
+        internal bool SelectedKeepsLook;
         internal Color ShadowColor = Color.clear;
         internal Vector2 ShadowOffset = new Vector2(0f, -AlfaUiTheme.ShadowOffset);
         internal Color FocusFrameColor = Color.clear;
@@ -268,13 +273,11 @@ namespace LetMeSleep.UI
             var bottom = FocusRecolorsFill ? Color.Lerp(GradientBottom, FocusGradientBottom, focusAmount) : GradientBottom;
             var frameColor = Color.Lerp(FrameColor, FocusFrameColor, focusAmount);
             var shadowColor = Color.Lerp(ShadowColor, FocusShadowColor, focusAmount);
-            if (Disabled && DisabledKeepsIntent)
+            if (Disabled && (DisabledKeepsIntent || SelectedKeepsLook))
             {
-                // The UI blends in linear space: 0.36 coverage reads as the requested ~50 % green over the navy.
-                top = AlfaUiTheme.WithAlpha(GradientTop, GradientTop.a * 0.36f);
-                bottom = AlfaUiTheme.WithAlpha(GradientBottom, GradientBottom.a * 0.36f);
-                frameColor = AlfaUiTheme.WithAlpha(FrameColor, FrameColor.a * 0.45f);
-                shadowColor = AlfaUiTheme.WithAlpha(ShadowColor, ShadowColor.a * 0.3f);
+                // Intent kept in full (UI-06: an inactive APLICAR is still the #2E9E48 -> #46C45F green, only its
+                // content dims to 55 %); a selected tab keeps its blue. Only the glow underneath is softened.
+                shadowColor = AlfaUiTheme.WithAlpha(ShadowColor, ShadowColor.a * 0.6f);
             }
             else if (Disabled)
             {

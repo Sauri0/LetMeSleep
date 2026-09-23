@@ -11,15 +11,19 @@ namespace LetMeSleep.UI
     /// <summary>
     /// Customization (UI-06 screens 5-6, PER-08): role tabs HUMANO (blue) / MOSQUITO (red) on top; a category rail
     /// with icons on the left (human PERSONAJE / COLORES / ACCESORIOS; mosquito CUERPO / ALAS / OJOS / PROBÓSCIDE /
-    /// COLORES, the ones this build cannot change yet dimmed with a padlock); the 3D viewer in the middle, in the
-    /// painted warm bedroom on a wooden pedestal (drag to rotate, CENTRAR); on the right the options as 80-unit
-    /// swatches in four columns or picture cards, the "VISTA PREVIA" row with three small renders (FRENTE, ESPALDA,
-    /// LADO) that also turn the viewer, ALEATORIO, DESHACER and one call to action, always APLICAR (green, dimmed
-    /// to 50 % when there is nothing to apply). With a modular catalogue every category of the role is a section of
-    /// one scrolling list (the rail jumps to it), so wing styles and eyes are seen together as in the sketch; each
-    /// option has its own picture and, while the game cannot assemble the parts yet, the viewer shows an
-    /// approximation (bone scale and shape, body tint). Presentations never rebuild controls that did not change, so
-    /// scroll position and keyboard focus survive each selection (ui-presentation-audio-8).
+    /// COLORES, the ones this build cannot change yet dimmed with a padlock) sized to its buttons, with a summary card
+    /// of the role (its picture and what is chosen) filling the rest of the column above VOLVER; the 3D viewer in the
+    /// middle, in the painted warm bedroom on a wooden pedestal (drag to rotate, CENTRAR; the mosquito seen from the
+    /// front with both wings in a V); on the right the options (stage 3: colours as a 3-column grid of 64-unit
+    /// swatches with the chosen one shown big beside it; nine clothes colours, six skin tones, eight mosquito
+    /// colours), then the "VISTA PREVIA" row (FRENTE, ESPALDA, LADO, about 165 x 265 at 1080p in every mode, inside
+    /// the content margin), ALEATORIO / DESHACER 12 units under it and one call to action, always APLICAR (the full
+    /// green; with nothing to apply only its label dims). With a modular catalogue every category of the role is a
+    /// section of one scrolling list (the rail jumps to it) whose cards are sized to leave a fixed 12-unit scrollbar
+    /// channel, with a 24-unit fade at the bottom edge; each option has its own picture and, while the game cannot
+    /// assemble the parts yet, the viewer shows an approximation (bone scale, rounded wings, angry brows and lids,
+    /// body tint). Presentations never rebuild controls that did not change, so scroll position and keyboard focus
+    /// survive each selection (ui-presentation-audio-8).
     /// </summary>
     public sealed partial class AlfaUiController
     {
@@ -33,13 +37,31 @@ namespace LetMeSleep.UI
         private const float CustomizationRailWidth = 300f;
         private const float CustomizationOptionsWidth = 560f;
         private const float CustomizationGap = 22f;
-        private const float CustomizationFooterHeight = 158f;
-        private const int SwatchColumns = 4;
+        private const float CustomizationFooterHeight = 82f;
+        private const float CustomizationContentPadding = 24f;
+        private const float CustomizationContentWidth = CustomizationOptionsWidth - 2f * CustomizationContentPadding;
+        private const float CategoryButtonHeight = 74f;
+        private const float CategorySpacing = 10f;
+        private const float RailInset = 14f;
+        private const float RailFooter = RailInset + 64f + RailInset;
+        private const float SummaryMinHeight = 250f;
+        private const int SwatchColumns = 3;
         private const int CardColumns = 4;
+        private const int ModularSwatchColumns = 5;
+        private const float ScrollChannel = 12f;
         private const float PreviewThumbAspect = 0.62f;
-        private static readonly Vector2 SwatchCell = new Vector2(80f, 80f);
-        private static readonly Vector2 CardCell = new Vector2(114f, 140f);
+        private const float PreviewRowPreferred = 318f;
+        private const float PreviewRowMinimum = 150f;
+        // Basic palettes (UI-06 5): 3 columns of 64-unit swatches (76-unit buttons).
+        private static readonly Vector2 SwatchCell = new Vector2(76f, 76f);
+        private const float SwatchInset = 6f;
+        private static readonly Vector2 ModularSwatchCell = new Vector2(80f, 80f);
+        // Modular picture cards: four per row with a 12-unit scrollbar channel (panel - 24 inset - 12 channel - 3 gaps).
+        // 126 tall: two complete sections (caption + one row each) fit the list at 1080p, so no row is cut there.
+        private static readonly Vector2 CardCell = new Vector2(Mathf.Floor((CustomizationContentWidth - 24f - ScrollChannel - 3f * 12f) / CardColumns), 126f);
+        private const float PreviewExtraMaximum = 120f;
         private static readonly Vector2 GridSpacing = new Vector2(12f, 12f);
+        private static readonly Color NightcapRed = AlfaUiTheme.Hex("C8322E");
 
         private CharacterPreviewOrbit previewOrbit;
         private GameObject customizationPreviewUnavailable;
@@ -65,6 +87,23 @@ namespace LetMeSleep.UI
         private GameObject modularOptionFade;
         private UnityEngine.UI.LayoutElement previewRowLayout;
         private UnityEngine.UI.LayoutElement modularFieldsLayout;
+        private GameObject optionsSpacer;
+        private RectTransform customizationRail;
+        private RectTransform basicCategoryRect;
+        private RectTransform modularCategoryRect;
+        private RectTransform roleSummary;
+        private TextMeshProUGUI roleSummaryTitle;
+        private AlfaUiIcon roleSummaryIcon;
+        private UnityEngine.UI.RawImage roleSummaryPortrait;
+        private AlfaUiArtFit roleSummaryFit;
+        private RectTransform roleSummaryPortraitFrame;
+        private TextMeshProUGUI roleSummaryNote;
+        private readonly List<(RectTransform row, UnityEngine.UI.Image dot, TextMeshProUGUI label, TextMeshProUGUI value)> roleSummaryRows =
+            new List<(RectTransform, UnityEngine.UI.Image, TextMeshProUGUI, TextMeshProUGUI)>();
+        private float customizationLaidOutRailHeight = -1f;
+        private float customizationLaidOutOptionsHeight = -1f;
+        private readonly Dictionary<RectTransform, (UnityEngine.UI.Image swatch, TextMeshProUGUI name)> paletteChoices =
+            new Dictionary<RectTransform, (UnityEngine.UI.Image, TextMeshProUGUI)>();
         private UnityEngine.UI.Button customizationHumanButton;
         private UnityEngine.UI.Button customizationMosquitoButton;
         private CanvasGroup customizationControlsGroup;
@@ -106,7 +145,7 @@ namespace LetMeSleep.UI
             roleTabs.GetComponent<UnityEngine.UI.HorizontalLayoutGroup>().childForceExpandHeight = true;
             // Right of the title (never over it, down to 5:4), roughly centred over the viewer at 16:9.
             Anchor(roleTabs, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(480f, 0f), new Vector2(760f, CustomizationHeaderHeight));
-            customizationHumanButton = factory.FeatureButton(roleTabs, "CustomizationHumanButton", "HUMANO", "PIJAMA, PANTUFLAS Y GORRO",
+            customizationHumanButton = factory.FeatureButton(roleTabs, "CustomizationHumanButton", "HUMANO", "PIEL, ROPA Y ACCESORIOS",
                 () => SetCustomizationRole(AlfaRole.Human), AlfaUiIconKind.Human, false, false, CustomizationHeaderHeight);
             customizationMosquitoButton = factory.FeatureButton(roleTabs, "CustomizationMosquitoButton", "MOSQUITO", "CUERPO Y COLORES",
                 () => SetCustomizationRole(AlfaRole.Mosquito), AlfaUiIconKind.Mosquito, false, false, CustomizationHeaderHeight);
@@ -129,9 +168,12 @@ namespace LetMeSleep.UI
         {
             var rail = factory.Panel(layout, "CategoryRail", AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.96f));
             AlfaUiFactory.Place(rail, new Vector2(0f, 0f), new Vector2(0f, 1f), Vector2.zero, new Vector2(CustomizationRailWidth, -CustomizationColumnsTop));
+            customizationRail = rail;
 
-            var basic = factory.Vertical(rail, "BasicCategories", 10f);
-            AlfaUiFactory.Fill(basic, 14f, 14f, 14f, 96f);
+            // Categories at the top, sized to their buttons (LayoutCustomizationRail); the role summary fills the rest.
+            var basic = factory.Vertical(rail, "BasicCategories", CategorySpacing);
+            Anchor(basic, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -RailInset), new Vector2(-2f * RailInset, 240f));
+            basicCategoryRect = basic;
             basicCategoryRail = basic.gameObject;
             // Human (UI-06 5): PERSONAJE, COLORES, ACCESORIOS.
             basicCategoryButtons[SkinCategory] = CategoryButton(basic, "CustomizationCategory_" + SkinCategory, "PERSONAJE",
@@ -157,15 +199,164 @@ namespace LetMeSleep.UI
                 AlfaUiIconKind.Palette, () => SelectBasicCategory(MosquitoCategory));
 
             var modular = AlfaUiFactory.Node("ModularCategories", rail).GetComponent<RectTransform>();
-            AlfaUiFactory.Fill(modular, 12f, 12f, 12f, 92f);
+            Anchor(modular, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -12f), new Vector2(-24f, 400f));
+            modularCategoryRect = modular;
             modularCategoryRail = modular.gameObject;
             var categoryScroll = factory.ScrollView(modular, "CategoryScroll", out modularCategoryRoot, 400f, true);
             AlfaUiFactory.Fill(categoryScroll);
             modularCategoryRoot.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().spacing = 10f;
             modularCategoryRail.SetActive(false);
 
+            BuildRoleSummary(rail);
+
             var back = factory.Button(rail, "CustomizationBackButton", "VOLVER", CloseCustomization, AlfaButtonStyle.Secondary, 64f, AlfaUiIconKind.Back);
             Anchor((RectTransform)back.transform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 14f), new Vector2(-28f, 64f));
+        }
+
+        /// <summary>
+        /// Role card under the categories (fills the rail down to VOLVER): the role's picture, what is chosen for
+        /// each part (with its colour) and one honest note about what is fixed in this build.
+        /// </summary>
+        private void BuildRoleSummary(RectTransform rail)
+        {
+            roleSummary = factory.Inset(rail, "RoleSummary", -1f, AlfaUiTheme.ButtonRadius);
+            var header = factory.Horizontal(roleSummary, "Header", 10f, TextAnchor.MiddleLeft);
+            Anchor(header, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -12f), new Vector2(-28f, 32f));
+            roleSummaryIcon = factory.Icon(header, "Icon", AlfaUiIconKind.Human, AlfaUiTheme.Sky400);
+            var iconLayout = roleSummaryIcon.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+            iconLayout.minWidth = iconLayout.preferredWidth = iconLayout.minHeight = iconLayout.preferredHeight = 28f;
+            roleSummaryTitle = factory.Title(header, "Title", "TU HUMANO", 26f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineLeft);
+            roleSummaryTitle.textWrappingMode = TextWrappingModes.NoWrap;
+
+            var frame = AlfaUiFactory.Node("SummaryPortrait", roleSummary, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Mask), typeof(AlfaUiArtFit))
+                .GetComponent<RectTransform>();
+            var frameImage = frame.GetComponent<UnityEngine.UI.Image>();
+            frameImage.sprite = AlfaUiSkin.Fill(AlfaUiTheme.SmallRadius);
+            frameImage.type = UnityEngine.UI.Image.Type.Sliced;
+            frameImage.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Night600, 0.6f);
+            frameImage.raycastTarget = false;
+            frame.GetComponent<UnityEngine.UI.Mask>().showMaskGraphic = true;
+            roleSummaryPortraitFrame = frame;
+            roleSummaryPortrait = AlfaUiFactory.Node("Portrait", frame, typeof(UnityEngine.UI.RawImage)).GetComponent<UnityEngine.UI.RawImage>();
+            roleSummaryPortrait.raycastTarget = false;
+            roleSummaryFit = frame.GetComponent<AlfaUiArtFit>();
+            roleSummaryFit.Target = roleSummaryPortrait;
+
+            var rows = factory.Vertical(roleSummary, "SummaryRows", 2f);
+            Anchor(rows, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 12f), new Vector2(-28f, 4f * 32f + 3f * 2f + 58f));
+            for (var i = 0; i < 4; i++)
+            {
+                var row = factory.Horizontal(rows, "SummaryRow" + i, 8f, TextAnchor.MiddleLeft);
+                var rowLayout = row.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+                rowLayout.minHeight = rowLayout.preferredHeight = 32f;
+                var dot = AlfaUiFactory.Node("Dot", row, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.LayoutElement)).GetComponent<UnityEngine.UI.Image>();
+                dot.sprite = AlfaUiSkin.Circle();
+                dot.raycastTarget = false;
+                var dotLayout = dot.GetComponent<UnityEngine.UI.LayoutElement>();
+                dotLayout.minWidth = dotLayout.preferredWidth = dotLayout.minHeight = dotLayout.preferredHeight = 18f;
+                var label = factory.Caption(row, "Label", string.Empty);
+                label.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1f;
+                var value = factory.Text(row, "Value", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineRight, true);
+                value.textWrappingMode = TextWrappingModes.NoWrap;
+                value.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 0f;
+                roleSummaryRows.Add((row, dot, label, value));
+            }
+            roleSummaryNote = factory.Text(rows, "Note", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.TopLeft);
+            roleSummaryNote.textWrappingMode = TextWrappingModes.Normal;
+            roleSummaryNote.overflowMode = TextOverflowModes.Overflow;
+            roleSummaryNote.GetComponent<UnityEngine.UI.LayoutElement>().minHeight = 54f;
+        }
+
+        /// <summary>
+        /// Rail heights from its content: the category buttons (or the modular list, scrolling only when it has to),
+        /// then the summary card down to VOLVER, hidden when less than 250 units would be left for it.
+        /// </summary>
+        private void LayoutCustomizationRail()
+        {
+            if (customizationRail == null) return;
+            var height = customizationRail.rect.height;
+            if (height <= 1f) return;
+            customizationLaidOutRailHeight = height;
+            var modular = modularCategoryRail.activeSelf;
+            var buttons = 0;
+            var root = modular ? modularCategoryRoot : (Transform)basicCategoryRect;
+            foreach (Transform child in root) if (child.gameObject.activeSelf) buttons++;
+            var needed = buttons * CategoryButtonHeight + Mathf.Max(0, buttons - 1) * CategorySpacing + (modular ? 12f : 0f);
+            var available = height - RailInset - RailFooter;
+            var summary = needed + RailInset + SummaryMinHeight <= available;
+            var categories = summary ? needed : available;
+            if (modular) modularCategoryRect.sizeDelta = new Vector2(-24f, categories);
+            else basicCategoryRect.sizeDelta = new Vector2(-2f * RailInset, categories);
+            roleSummary.gameObject.SetActive(summary && customizationState != null && !customizationState.IsReadOnly);
+            if (!roleSummary.gameObject.activeSelf) return;
+            var top = RailInset + categories + RailInset;
+            var summaryHeight = height - top - RailFooter;
+            Anchor(roleSummary, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -top), new Vector2(-2f * RailInset, summaryHeight));
+            // Picture between the header and the rows when there is room for it.
+            var rowsHeight = ((RectTransform)roleSummaryRows[0].row.parent).sizeDelta.y;
+            var pictureHeight = summaryHeight - 12f - 32f - 10f - 10f - rowsHeight - 12f;
+            roleSummaryPortraitFrame.gameObject.SetActive(pictureHeight >= 90f);
+            if (pictureHeight >= 90f)
+            {
+                Anchor(roleSummaryPortraitFrame, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -54f), new Vector2(-28f, pictureHeight));
+                roleSummaryFit.Apply();
+            }
+        }
+
+        /// <summary>Summary rows: what is chosen per part, with its colour; the note says what is fixed.</summary>
+        private void UpdateRoleSummary(bool human, bool modular)
+        {
+            if (roleSummary == null) return;
+            roleSummaryTitle.text = human ? "TU HUMANO" : "TU MOSQUITO";
+            roleSummaryIcon.Kind = human ? AlfaUiIconKind.Human : AlfaUiIconKind.Mosquito;
+            roleSummaryIcon.color = human ? AlfaUiTheme.Sky400 : AlfaUiTheme.StatusWarn;
+            var art = LoadRolePortrait(human ? AlfaRole.Human : AlfaRole.Mosquito);
+            roleSummaryPortrait.texture = art != null ? art.texture : null;
+            roleSummaryPortrait.enabled = art != null;
+            roleSummaryFit.FromTop = human ? 0.62f : 1f;
+            roleSummaryFit.Pad = human ? 0.05f : 0.04f;
+            roleSummaryFit.Apply();
+            var rows = new List<(string label, string value, Color? color)>();
+            if (modular)
+            {
+                var loadout = modularCustomizationDraft?.For(ToCustomizationRole(modularEditedRole));
+                foreach (var slot in VisibleModularSlots())
+                {
+                    if (rows.Count == 4) break;
+                    if (loadout == null || !slot.TryOption(loadout.OptionFor(slot.SlotId) ?? string.Empty, out var option)) continue;
+                    rows.Add((slot.Label.ToUpperInvariant(), option.Label, option.HasSwatch ? ColorFromRgba(option.SwatchRgba) : (Color?)null));
+                }
+                roleSummaryNote.text = "Se ve en el visor y en VISTA PREVIA.";
+            }
+            else if (human && customizationDraft != null)
+            {
+                var skin = customizationState.SkinColors.FirstOrDefault(option => option.Id == customizationDraft.SkinColorId);
+                var clothes = customizationState.PajamaColors.FirstOrDefault(option => option.Id == customizationDraft.PajamaColorId);
+                rows.Add(("PIEL", skin?.Label ?? "—", skin?.Color));
+                rows.Add(("PANTALÓN", clothes?.Label ?? "—", clothes?.Color));
+                rows.Add(("REMERA", "Crema", AlfaUiTheme.Hex("E8DCC5")));
+                rows.Add(("GORRO", "Rojo", NightcapRed));
+                roleSummaryNote.text = "Pantuflas y gorro de dormir rojo.";
+            }
+            else if (customizationDraft != null)
+            {
+                var body = customizationState.MosquitoColors.FirstOrDefault(option => option.Id == customizationDraft.MosquitoColorId);
+                rows.Add(("CUERPO", body?.Label ?? "—", body?.Color));
+                rows.Add(("ALAS", "Facetadas", (Color?)null));
+                rows.Add(("OJOS", "Grandes", (Color?)null));
+                rows.Add(("PROBÓSCIDE", "Estándar", (Color?)null));
+                roleSummaryNote.text = "Alas, ojos y probóscide: próximamente.";
+            }
+            for (var i = 0; i < roleSummaryRows.Count; i++)
+            {
+                var entry = roleSummaryRows[i];
+                var used = i < rows.Count;
+                entry.row.gameObject.SetActive(used);
+                if (!used) continue;
+                entry.label.text = rows[i].label;
+                entry.value.text = rows[i].value;
+                entry.dot.color = rows[i].color ?? Color.clear;
+            }
         }
 
         private UnityEngine.UI.Button CategoryButton(Transform parent, string name, string label, AlfaUiIconKind icon, UnityEngine.Events.UnityAction callback)
@@ -296,7 +487,7 @@ namespace LetMeSleep.UI
                 new Vector2(0f, -CustomizationColumnsTop));
 
             var content = factory.Vertical(optionsPanel, "Content", 12f);
-            AlfaUiFactory.Fill(content, 24f, 24f, 20f, 20f + CustomizationFooterHeight + 14f);
+            AlfaUiFactory.Fill(content, CustomizationContentPadding, CustomizationContentPadding, 20f, 20f + CustomizationFooterHeight + 14f);
             content.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().childForceExpandHeight = false;
             customizationCategoryTitle = factory.Caption(content, "CategoryTitle", "OPCIONES DEL HUMANO");
 
@@ -305,12 +496,12 @@ namespace LetMeSleep.UI
             SectionCaption(skinPaletteGroup.transform, "SkinCaption", "TONO DE PIEL");
             humanPaletteRoot = CreatePaletteLayout(skinPaletteGroup.transform, "SkinPalette");
             pajamaPaletteGroup = factory.Vertical(humanCustomizationFields.transform, "PajamaGroup", 10f).gameObject;
-            SectionCaption(pajamaPaletteGroup.transform, "PajamaCaption", "COLOR DEL PIJAMA");
+            SectionCaption(pajamaPaletteGroup.transform, "PajamaCaption", "COLORES DE ROPA");
             pajamaPaletteRoot = CreatePaletteLayout(pajamaPaletteGroup.transform, "PajamaPalette");
-            factory.Text(pajamaPaletteGroup.transform, "DefaultClothes", "El color tiñe el pijama y el gorro de dormir.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
+            factory.Text(pajamaPaletteGroup.transform, "DefaultClothes", "Tiñe el pantalón. Remera crema y gorro rojo.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
             BuildAccessories(humanCustomizationFields.transform);
             mosquitoCustomizationFields = factory.Vertical(content, "MosquitoFields", 10f).gameObject;
-            SectionCaption(mosquitoCustomizationFields.transform, "MosquitoCaption", "COLOR DEL CUERPO");
+            SectionCaption(mosquitoCustomizationFields.transform, "MosquitoCaption", "COLOR DE CUERPO");
             mosquitoPaletteRoot = CreatePaletteLayout(mosquitoCustomizationFields.transform, "MosquitoPalette");
 
             modularCustomizationFields = factory.Vertical(content, "ModularFields", 8f).gameObject;
@@ -322,11 +513,16 @@ namespace LetMeSleep.UI
             optionsLayout.spacing = 16f;
             optionsLayout.padding = new RectOffset(6, 6, 6, 10);
             modularOptionScroll = optionsScroll.GetComponent<UnityEngine.UI.ScrollRect>();
+            // A fixed 12-unit channel for the scrollbar: the cards are sized to end before it (CORTAS is never cut).
+            modularOptionScroll.verticalScrollbarVisibility = UnityEngine.UI.ScrollRect.ScrollbarVisibility.AutoHide;
+            modularOptionScroll.viewport.offsetMax = new Vector2(-(6f + ScrollChannel), -6f);
+            // 24-unit fade (#15264A to 0 %) at the bottom edge while more options are below, so a half-cut row never
+            // reads as the last one.
             var optionsFade = AlfaUiFactory.Node("OptionsFade", optionsScroll, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
             optionsFade.sprite = AlfaUiFactory.VerticalFadeSprite();
-            optionsFade.color = AlfaUiTheme.Night700;
+            optionsFade.color = Color.Lerp(AlfaUiTheme.Night700, AlfaUiTheme.PanelInset, 0.55f);
             optionsFade.raycastTarget = false;
-            Anchor(optionsFade.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(-6f, 2f), new Vector2(-24f, 28f));
+            Anchor(optionsFade.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(-(ScrollChannel * 0.5f), 6f), new Vector2(-(12f + ScrollChannel), 32f));
             modularOptionFade = optionsFade.gameObject;
             modularOptionFade.SetActive(false);
             modularCustomizationFields.SetActive(false);
@@ -346,13 +542,23 @@ namespace LetMeSleep.UI
             customizationStatus = factory.Text(content, "Status", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.TopLeft);
             customizationStatus.overflowMode = TextOverflowModes.Overflow;
 
+            // Basic mode: the options stay at the top; VISTA PREVIA, ALEATORIO / DESHACER and APLICAR form the
+            // bottom cluster, so any spare height sits between the two groups instead of above ALEATORIO.
+            optionsSpacer = AlfaUiFactory.Node("OptionsSpacer", content, typeof(UnityEngine.UI.LayoutElement)).gameObject;
+            var spacerLayout = optionsSpacer.GetComponent<UnityEngine.UI.LayoutElement>();
+            spacerLayout.minHeight = 0f;
+            spacerLayout.flexibleHeight = 1f;
+
             BuildPreviewRow(content);
 
-            var footer = AlfaUiFactory.Node("Actions", optionsPanel).GetComponent<RectTransform>();
-            Anchor(footer, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 20f), new Vector2(-48f, CustomizationFooterHeight));
-            var secondary = factory.Horizontal(footer, "SecondaryActions", 12f, TextAnchor.MiddleCenter);
+            // ALEATORIO / DESHACER right under VISTA PREVIA (12 units, the content spacing).
+            var secondary = factory.Horizontal(content, "SecondaryActions", 12f, TextAnchor.MiddleCenter);
             secondary.GetComponent<UnityEngine.UI.HorizontalLayoutGroup>().childForceExpandWidth = true;
-            Anchor(secondary, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(0f, 64f));
+            var secondaryLayout = secondary.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+            secondaryLayout.minHeight = secondaryLayout.preferredHeight = 64f;
+
+            var footer = AlfaUiFactory.Node("Actions", optionsPanel).GetComponent<RectTransform>();
+            Anchor(footer, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 20f), new Vector2(-2f * CustomizationContentPadding, CustomizationFooterHeight));
             customizationRandomButton = factory.Button(secondary, "CustomizationRandomButton", "ALEATORIO", RandomizeCustomization,
                 AlfaButtonStyle.Secondary, 64f, AlfaUiIconKind.Dice);
             customizationResetButton = factory.Button(secondary, "CustomizationResetButton", "DESHACER", ResetCustomization,
@@ -377,8 +583,8 @@ namespace LetMeSleep.UI
         }
 
         /// <summary>
-        /// ACCESORIOS (UI-06 5): what the human always wears in this build, the nightcap (tinted with the pajama
-        /// colour) and the slippers. They are shown as worn, not as choices, because there are no alternatives yet.
+        /// ACCESORIOS (UI-06 5): what the human always wears in this build, the red nightcap and the slippers.
+        /// They are shown as worn, not as choices, because there are no alternatives yet.
         /// </summary>
         private void BuildAccessories(Transform parent)
         {
@@ -390,7 +596,7 @@ namespace LetMeSleep.UI
             gridLayout.minHeight = gridLayout.preferredHeight = 174f;
             accessoryHatIcon = AccessoryCard(grid.transform, "AccessoryHat", "GORRO DE DORMIR", AlfaUiIconKind.Hat);
             AccessoryCard(grid.transform, "AccessorySlippers", "PANTUFLAS", AlfaUiIconKind.Slipper);
-            factory.Text(accessoriesGroup.transform, "AccessoriesNote", "Siempre puestos. El gorro usa el color del pijama.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
+            factory.Text(accessoriesGroup.transform, "AccessoriesNote", "Siempre puestos. El gorro de dormir es rojo.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
         }
 
         private AlfaUiIcon AccessoryCard(Transform parent, string name, string label, AlfaUiIconKind kind)
@@ -417,17 +623,21 @@ namespace LetMeSleep.UI
         {
             var row = factory.Vertical(content, "PreviewRow", 8f);
             previewRowLayout = row.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-            previewRowLayout.minHeight = 208f;
+            // About 165 x 265 per view at 1080p in both modes; shrinks (never below 150) on short canvases.
+            previewRowLayout.minHeight = PreviewRowMinimum;
+            previewRowLayout.preferredHeight = PreviewRowPreferred;
+            previewRowLayout.flexibleHeight = 0f;
             factory.Caption(row, "PreviewCaption", "VISTA PREVIA");
             var thumbs = AlfaUiFactory.Node("PreviewThumbs", row, typeof(UnityEngine.UI.LayoutElement), typeof(AlfaUiAspectRow)).GetComponent<RectTransform>();
             var thumbsLayout = thumbs.GetComponent<UnityEngine.UI.LayoutElement>();
-            thumbsLayout.minHeight = 170f;
+            thumbsLayout.minHeight = PreviewRowMinimum - 34f;
             thumbsLayout.flexibleHeight = 1f;
             var fit = thumbs.GetComponent<AlfaUiAspectRow>();
             fit.ItemAspect = PreviewThumbAspect;
             fit.LabelHeight = 32f;
             fit.Spacing = 14f;
-            fit.MaxImageHeight = 290f;
+            fit.MaxImageHeight = 400f;
+            fit.MinItemAspect = 0.42f;
             var labels = new[] { "FRENTE", "ESPALDA", "LADO" };
             var names = new[] { "PreviewFrontButton", "PreviewBackButton", "PreviewSideButton" };
             var yaws = new float[3];
@@ -653,8 +863,8 @@ namespace LetMeSleep.UI
             modularSectionCaptions[slot.SlotId] = SectionCaption(section, "SectionCaption", SectionTitle(slot));
             var labelled = slot.Options.Where(item => !string.IsNullOrWhiteSpace(item.Label)).ToList();
             var swatches = labelled.Count > 0 && labelled.All(item => item.HasSwatch);
-            var cell = swatches ? SwatchCell : CardCell;
-            var columns = swatches ? SwatchColumns : CardColumns;
+            var cell = swatches ? ModularSwatchCell : CardCell;
+            var columns = swatches ? ModularSwatchColumns : CardColumns;
             var gridNode = AlfaUiFactory.Node("Grid_" + slot.WireSlotId, section, typeof(UnityEngine.UI.GridLayoutGroup), typeof(UnityEngine.UI.LayoutElement));
             AlfaUiFactory.ConfigureGrid(gridNode.GetComponent<UnityEngine.UI.GridLayoutGroup>(), cell, GridSpacing, columns);
             var rows = Mathf.CeilToInt(labelled.Count / (float)columns);
@@ -678,7 +888,7 @@ namespace LetMeSleep.UI
             var optionId = option.OptionId;
             var name = "ModularOption_" + slot.WireSlotId + "_" + option.WireOptionId;
             var button = factory.Button(grid, name, swatchGrid ? string.Empty : option.Label, () => SetModularCustomizationOption(slotId, optionId),
-                AlfaButtonStyle.Secondary, swatchGrid ? SwatchCell.y : CardCell.y);
+                AlfaButtonStyle.Secondary, swatchGrid ? ModularSwatchCell.y : CardCell.y);
             modularOptionButtons[name] = button;
             var label = button.transform.Find("Label").GetComponent<TextMeshProUGUI>();
             if (swatchGrid)
@@ -693,13 +903,13 @@ namespace LetMeSleep.UI
             label.fontSizeMin = AlfaUiTheme.MinTextSize;
             label.fontSizeMax = 22f;
             label.lineSpacing = -14f;
-            AlfaUiFactory.Fill(label.rectTransform, 5f, 5f, 80f, 4f);
+            AlfaUiFactory.Fill(label.rectTransform, 5f, 5f, 70f, 4f);
             Sprite thumbnail = option.HasSwatch ? null : customizationState.ThumbnailResolver?.Invoke(slot.SlotId, option.OptionId);
             var art = option.HasSwatch || thumbnail != null ? null : OptionArt(ClassifyOption(slot, option).ArtName);
             if (option.HasSwatch)
             {
                 var swatch = AddOptionSwatch(button, "ColorSwatch", ColorFromRgba(option.SwatchRgba), 0f);
-                Anchor(swatch, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -8f), new Vector2(66f, 66f));
+                Anchor(swatch, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -8f), new Vector2(58f, 58f));
             }
             else if (thumbnail != null || art != null)
             {
@@ -708,7 +918,7 @@ namespace LetMeSleep.UI
                 image.sprite = thumbnail != null ? thumbnail : art;
                 image.preserveAspect = true;
                 image.raycastTarget = false;
-                Anchor(image.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -4f), new Vector2(88f, 76f));
+                Anchor(image.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -4f), new Vector2(CardCell.x - 18f, 64f));
             }
             else
             {
@@ -924,12 +1134,36 @@ namespace LetMeSleep.UI
             return pool[customizationRandom.Next(pool.Count)];
         }
 
-        private static RectTransform CreatePaletteLayout(Transform parent, string name)
+        /// <summary>
+        /// Palette row (UI-06 5): a 3-column grid of 64-unit swatches on the left and, beside it, the chosen colour
+        /// shown big with its name. Returns the grid (its children are the "Color_&lt;id&gt;" buttons).
+        /// </summary>
+        private RectTransform CreatePaletteLayout(Transform parent, string name)
         {
-            var node = AlfaUiFactory.Node(name, parent, typeof(UnityEngine.UI.GridLayoutGroup), typeof(UnityEngine.UI.LayoutElement));
+            var row = factory.Horizontal(parent, name + "Row", 24f, TextAnchor.UpperLeft);
+            var node = AlfaUiFactory.Node(name, row, typeof(UnityEngine.UI.GridLayoutGroup), typeof(UnityEngine.UI.LayoutElement));
             var grid = node.GetComponent<UnityEngine.UI.GridLayoutGroup>();
             AlfaUiFactory.ConfigureGrid(grid, SwatchCell, GridSpacing, SwatchColumns);
-            return node.GetComponent<RectTransform>();
+            var gridLayout = node.GetComponent<UnityEngine.UI.LayoutElement>();
+            gridLayout.minWidth = gridLayout.preferredWidth = SwatchColumns * SwatchCell.x + (SwatchColumns - 1) * GridSpacing.x + 4f;
+            gridLayout.flexibleWidth = 0f;
+
+            var choice = factory.Inset(row, name.Replace("Palette", "Choice"), -1f, AlfaUiTheme.ButtonRadius);
+            var choiceLayout = choice.GetComponent<UnityEngine.UI.LayoutElement>();
+            choiceLayout.flexibleWidth = 1f;
+            choiceLayout.minHeight = choiceLayout.preferredHeight = 2f * SwatchCell.y + GridSpacing.y;
+            var caption = factory.Caption(choice, "Caption", "ELEGIDO");
+            caption.alignment = TextAlignmentOptions.Center;
+            Anchor(caption.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -8f), new Vector2(-16f, 26f));
+            var swatch = factory.Panel(choice, "ChosenSwatch", Color.white, -1f, -1f, AlfaUiTheme.ButtonRadius);
+            AlfaUiFactory.SetSurface(swatch, Color.white, new Color(0.86f, 0.86f, 0.86f, 1f), AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.45f), AlfaUiTheme.WithAlpha(Color.black, 0.35f));
+            Anchor(swatch, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -38f), new Vector2(84f, 84f));
+            var chosenName = factory.Text(choice, "ChosenName", string.Empty, 26f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Top, true);
+            chosenName.textWrappingMode = TextWrappingModes.NoWrap;
+            Anchor(chosenName.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -128f), new Vector2(-16f, 32f));
+            var rect = node.GetComponent<RectTransform>();
+            paletteChoices[rect] = (swatch.GetComponent<UnityEngine.UI.Image>(), chosenName);
+            return rect;
         }
 
         /// <summary>Builds a palette grid only when its options changed (ids, names or colours); otherwise keeps it.</summary>
@@ -944,7 +1178,7 @@ namespace LetMeSleep.UI
                 var captured = option;
                 var button = factory.Button(parent, "Color_" + option.Id, string.Empty, () => selected(captured), AlfaButtonStyle.Secondary, SwatchCell.y);
                 button.transform.Find("Label").gameObject.SetActive(false);
-                AddOptionSwatch(button, "Swatch", option.Color, 9f);
+                AddOptionSwatch(button, "Swatch", option.Color, SwatchInset);
             }
             var rows = Mathf.CeilToInt(options.Count / (float)SwatchColumns);
             var layout = parent.GetComponent<UnityEngine.UI.LayoutElement>();
@@ -953,10 +1187,14 @@ namespace LetMeSleep.UI
             if (focused != null && screen == AlfaUiScreen.Customization) Focus(focused);
         }
 
-        private static void MarkPalette(Transform parent, string selectedId)
+        private void MarkPalette(RectTransform parent, string selectedId, IReadOnlyList<NamedColorOption> options)
         {
             foreach (Transform child in parent)
                 MarkOption(child.GetComponent<UnityEngine.UI.Button>(), child.name == "Color_" + selectedId);
+            if (!paletteChoices.TryGetValue(parent, out var choice)) return;
+            var chosen = options?.FirstOrDefault(option => option.Id == selectedId);
+            choice.swatch.color = chosen != null ? chosen.Color : AlfaUiTheme.Night600;
+            choice.name.text = chosen != null ? chosen.Label : "—";
         }
 
         private void UpdateCustomizationView()
@@ -985,10 +1223,9 @@ namespace LetMeSleep.UI
                 if (MosquitoLockedCategories.Contains(pair.Key)) continue;
                 AlfaUiFactory.SetSelected(pair.Value, pair.Key == basicCategory);
             }
-            // Few options (basic mode): the angle views take the free height; many (modular): the list does.
+            // Basic mode: spare height between the options and the bottom cluster; modular: the list takes it.
             modularFieldsLayout.flexibleHeight = modular ? 1f : 0f;
-            previewRowLayout.flexibleHeight = modular ? 0f : 1f;
-            previewRowLayout.preferredHeight = modular ? 208f : -1f;
+            optionsSpacer.SetActive(!modular);
 
             customizationHumanButton.interactable = editable && !customizationSaveLatched;
             customizationMosquitoButton.interactable = editable && !customizationSaveLatched;
@@ -1006,13 +1243,13 @@ namespace LetMeSleep.UI
             }
             customizationCategoryTitle.text = !editable ? "PERSONALIZACIÓN NO DISPONIBLE" : modular && !VisibleModularSlots().Any()
                 ? "SIN OPCIONES DISPONIBLES" : "OPCIONES DEL " + (human ? "HUMANO" : "MOSQUITO");
+            // In the modular list every section has its own caption: the panel title would only push rows off.
+            customizationCategoryTitle.gameObject.SetActive(!editable || !modular || !VisibleModularSlots().Any());
             customizationSelectionLabel.text = selectionName;
-            customizationSelectionLabel.transform.parent.gameObject.SetActive(!string.IsNullOrEmpty(selectionName));
-            if (!modular && accessoryHatIcon != null)
-            {
-                var pajama = customizationState.PajamaColors.FirstOrDefault(option => option.Id == customizationDraft.PajamaColorId);
-                accessoryHatIcon.color = pajama != null ? Color.Lerp(pajama.Color, Color.white, 0.18f) : AlfaUiTheme.Sheet100;
-            }
+            // Basic palettes show the chosen colour big beside the grid; the line is for other selections only.
+            customizationSelectionLabel.transform.parent.gameObject.SetActive(modular && !string.IsNullOrEmpty(selectionName));
+            // The nightcap is always red (it is not tinted by the clothes colour).
+            if (accessoryHatIcon != null) accessoryHatIcon.color = NightcapRed;
             foreach (var view in previewAngleViews)
             {
                 var placeholder = view != null ? view.transform.parent.Find("ViewPlaceholder")?.GetComponent<AlfaUiIcon>() : null;
@@ -1037,10 +1274,48 @@ namespace LetMeSleep.UI
             customizationRandomButton.interactable = editable && !customizationSaveLatched && (!modular || VisibleModularSlots().Any());
             if (!modular)
             {
-                MarkPalette(humanPaletteRoot, customizationDraft.SkinColorId);
-                MarkPalette(pajamaPaletteRoot, customizationDraft.PajamaColorId);
-                MarkPalette(mosquitoPaletteRoot, customizationDraft.MosquitoColorId);
+                MarkPalette(humanPaletteRoot, customizationDraft.SkinColorId, customizationState.SkinColors);
+                MarkPalette(pajamaPaletteRoot, customizationDraft.PajamaColorId, customizationState.PajamaColors);
+                MarkPalette(mosquitoPaletteRoot, customizationDraft.MosquitoColorId, customizationState.MosquitoColors);
             }
+            if (editable) UpdateRoleSummary(human, modular);
+            LayoutCustomizationRail();
+            LayoutCustomizationOptions();
+        }
+
+        /// <summary>
+        /// Basic mode: VISTA PREVIA takes up to 120 units of the spare height (its views grow taller), so no big empty
+        /// band is left between the palette and the previews; any rest goes to the spacer above them.
+        /// </summary>
+        private void LayoutCustomizationOptions()
+        {
+            if (previewRowLayout == null) return;
+            var content = (RectTransform)previewRowLayout.transform.parent;
+            var height = content.rect.height;
+            if (height <= 1f) return;
+            customizationLaidOutOptionsHeight = height;
+            var modular = customizationState?.Mode == CustomizationUiMode.Modular;
+            var extra = 0f;
+            if (!modular)
+            {
+                previewRowLayout.preferredHeight = PreviewRowPreferred;
+                UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(content);
+                var group = content.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
+                var used = 0f;
+                var count = 0;
+                foreach (Transform child in content)
+                {
+                    if (!child.gameObject.activeSelf) continue;
+                    var element = child.GetComponent<UnityEngine.UI.LayoutElement>();
+                    if (element != null && element.ignoreLayout) continue;
+                    count++;
+                    if (child.gameObject == optionsSpacer) continue;
+                    used += UnityEngine.UI.LayoutUtility.GetPreferredHeight((RectTransform)child);
+                }
+                used += group.spacing * Mathf.Max(0, count - 1) + group.padding.vertical;
+                extra = Mathf.Clamp(height - used, 0f, PreviewExtraMaximum);
+            }
+            previewRowLayout.preferredHeight = PreviewRowPreferred + extra;
         }
 
         /// <summary>
@@ -1071,6 +1346,15 @@ namespace LetMeSleep.UI
         }
 
         private void UpdateOptionsFade() => UpdateScrollFade(modularOptionScroll, modularOptionFade);
+
+        /// <summary>Per-frame upkeep while customizing: the options fade and the rail layout after a resize.</summary>
+        private void UpdateCustomizationLayout()
+        {
+            UpdateOptionsFade();
+            if (customizationRail != null && Mathf.Abs(customizationRail.rect.height - customizationLaidOutRailHeight) > 0.5f) LayoutCustomizationRail();
+            var content = previewRowLayout != null ? (RectTransform)previewRowLayout.transform.parent : null;
+            if (content != null && Mathf.Abs(content.rect.height - customizationLaidOutOptionsHeight) > 0.5f) LayoutCustomizationOptions();
+        }
 
         /// <summary>Role tab: HUMANO selected is primary blue, MOSQUITO selected is danger red; both with the 3-unit frame.</summary>
         private static void SetRoleTabSelection(UnityEngine.UI.Button button, bool selected, AlfaRole role)
@@ -1167,23 +1451,23 @@ namespace LetMeSleep.UI
         {
             var skin = new[]
             {
-                new NamedColorOption("warm-light", "Claro", new Color(0.88f, 0.67f, 0.50f)),
-                new NamedColorOption("warm-medium", "Medio", new Color(0.67f, 0.43f, 0.29f)),
-                new NamedColorOption("warm-deep", "Oscuro", new Color(0.35f, 0.20f, 0.16f))
+                new NamedColorOption("light", "Claro", AlfaUiTheme.Hex("E8B380")),
+                new NamedColorOption("warm", "Cálido", AlfaUiTheme.Hex("C98B5A")),
+                new NamedColorOption("dark", "Oscuro", AlfaUiTheme.Hex("451F12"))
             };
             var pajamas = new[]
             {
-                new NamedColorOption("blue", "Azul", AlfaUiTheme.Sky400),
-                new NamedColorOption("coral", "Coral", AlfaUiTheme.Pajama500),
-                new NamedColorOption("green", "Verde", AlfaUiTheme.Mint400)
+                new NamedColorOption("blue", "Azul", AlfaUiTheme.Hex("2D4F9A")),
+                new NamedColorOption("red", "Rojo", AlfaUiTheme.Hex("A62B29")),
+                new NamedColorOption("green", "Verde", AlfaUiTheme.Hex("2E6B45"))
             };
             var mosquitoes = new[]
             {
-                new NamedColorOption("red", "Rojo", AlfaUiTheme.Pajama500),
-                new NamedColorOption("blue", "Azul", AlfaUiTheme.Sky400),
-                new NamedColorOption("green", "Verde", new Color(0.32f, 0.56f, 0.35f))
+                new NamedColorOption("red", "Rojo", AlfaUiTheme.Hex("9E2228")),
+                new NamedColorOption("blue", "Azul", AlfaUiTheme.Hex("2B4C85")),
+                new NamedColorOption("green", "Oliva", AlfaUiTheme.Hex("4F5C2E"))
             };
-            var saved = new BasicCustomizationDraft(AlfaRole.Human, "warm-medium", "blue", "red");
+            var saved = new BasicCustomizationDraft(AlfaRole.Human, "warm", "blue", "red");
             return new CustomizationUiState(skin, pajamas, mosquitoes, saved);
         }
     }
@@ -1196,6 +1480,8 @@ namespace LetMeSleep.UI
     internal sealed class AlfaUiAspectRow : MonoBehaviour
     {
         internal float ItemAspect = 0.73f;
+        /// <summary>Narrowest image aspect when the row is taller than its width needs (the views grow taller).</summary>
+        internal float MinItemAspect = 0.73f;
         internal float LabelHeight = 32f;
         internal float Spacing = 12f;
         internal float MaxImageHeight = 230f;
@@ -1211,9 +1497,13 @@ namespace LetMeSleep.UI
             foreach (Transform child in transform) if (child.gameObject.activeSelf) count++;
             if (count == 0 || rect.rect.width <= 1f || rect.rect.height <= 1f) return;
             var maxWidth = (rect.rect.width - Spacing * (count - 1)) / count;
-            var imageHeight = Mathf.Min(MaxImageHeight, rect.rect.height - LabelHeight - 12f, maxWidth / ItemAspect);
-            imageHeight = Mathf.Max(40f, imageHeight);
-            var itemWidth = imageHeight * ItemAspect + 12f;
+            // The item is the image plus a 12-unit frame: never wider than its share of the row (it used to start
+            // 18 units left of the content margin and reach the panel edge at 720p and 5:4). A taller row makes the
+            // images taller (down to MinItemAspect) instead of leaving empty height.
+            var imageHeight = Mathf.Max(40f, Mathf.Min(MaxImageHeight, rect.rect.height - LabelHeight - 12f));
+            var imageWidth = Mathf.Min(maxWidth - 12f, imageHeight * ItemAspect);
+            if (imageWidth < imageHeight * MinItemAspect) imageHeight = Mathf.Max(40f, imageWidth / Mathf.Max(0.05f, MinItemAspect));
+            var itemWidth = imageWidth + 12f;
             var itemHeight = imageHeight + LabelHeight + 12f;
             var total = itemWidth * count + Spacing * (count - 1);
             var x = -total * 0.5f + itemWidth * 0.5f;

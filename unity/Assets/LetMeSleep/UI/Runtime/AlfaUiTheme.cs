@@ -58,6 +58,8 @@ namespace LetMeSleep.UI
         internal static readonly Color LabelInk = Hex("8FA6CC");    // small uppercase field labels
         internal static readonly Color LogoCream = Hex("EACEAB");   // wordmark subtitle
 
+        /// <summary>Label/icon opacity of a disabled control that keeps its intent colours (inactive APLICAR).</summary>
+        internal const float KeptIntentContentAlpha = 0.55f;
         internal const float FocusDuration = 0.16f;
         internal const float EntranceDuration = 0.19f;
 
@@ -102,6 +104,13 @@ namespace LetMeSleep.UI
         }
 
         internal static bool HasDisplayFont(AlfaUiDependencies dependencies) => Display(dependencies) != Body(dependencies);
+
+        /// <summary>
+        /// Comic face of the logo (Bangers, the scene's heading font) for the big results title (UI-06 9); the
+        /// display face when no distinct heading font is injected.
+        /// </summary>
+        internal static TMP_FontAsset Comic(AlfaUiDependencies dependencies) =>
+            dependencies?.HeadingFont != null && dependencies.HeadingFont != dependencies.BodyFont ? dependencies.HeadingFont : Display(dependencies);
 
         internal static TMP_FontAsset Body(AlfaUiDependencies dependencies) =>
             dependencies?.BodyFont != null ? dependencies.BodyFont :

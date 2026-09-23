@@ -504,7 +504,13 @@ namespace LetMeSleep.Bootstrap
         public void SpectateNext() { if (spectator) spectator.NextTarget(); }
         public void SetGameplayInputBlocked(bool blocked) { game?.SetInputBlocked(blocked); }
         public void ResumeGame() { if (game?.LatestSnapshot != null) { game.SetInputBlocked(false); ui.ShowGameplay(); } }
-        public void ReturnToLobby() { if (training) LeaveRoom(); else room?.ReturnToLobby(); }
+        public void ReturnToLobby()
+        {
+            if (training) { LeaveRoom(); return; }
+            // Pause "VOLVER A LA SALA" (UI-06 8): mid-round only the host can end the round, then everyone returns.
+            if (lobby?.IsOwner == true && room?.Current?.Phase == RoomPhase.Playing) room.FinishRound();
+            room?.ReturnToLobby();
+        }
         private void OnGameNetworkFailed(string reason) => InterruptGame("Se perdió la conexión con la partida. " + reason);
         private void InterruptGame(string reason)
         {

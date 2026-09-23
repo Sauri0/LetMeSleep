@@ -25,6 +25,7 @@ namespace LetMeSleep.UI
         private const int FallbackPreviewLayer = 30;
         private const int ViewWidth = 248;
         private const int ViewHeight = 400;
+        private const int ViewTargetHeight = 440;
         private GameObject pedestal;
         private Material pedestalTopMaterial;
         private Material pedestalSideMaterial;
@@ -65,6 +66,11 @@ namespace LetMeSleep.UI
         private IReadOnlyList<PreviewPartStyle> approximation;
         private GameObject approximatedInstance;
         private readonly List<BoneEdit> boneEdits = new List<BoneEdit>();
+        // Approximation extras: rounded wing membranes and angry brows (with their meshes and materials), and the
+        // original wing renderers they replace while shown.
+        private readonly List<Object> approximationObjects = new List<Object>();
+        private readonly List<Renderer> hiddenRenderers = new List<Renderer>();
+        private static readonly Color BrowColor = new Color(0.165f, 0.102f, 0.102f, 1f); // #2A1A1A
 
         public bool IsBound => setup != null && setup.IsUsable;
         public GameObject CurrentInstance => instance;
@@ -232,11 +238,28 @@ namespace LetMeSleep.UI
         {
             approximation = styles;
             RestoreBoneEdits();
+            ClearApproximationObjects();
             approximatedInstance = null;
             RequestViews();
         }
 
-        private float DefaultYaw => visibleRole == AlfaRole.Mosquito ? 35f : 0f;
+        // The mosquito faces the camera with both wings open in a V (UI-06 6), turned just enough to read its body.
+        private float DefaultYaw => visibleRole == AlfaRole.Mosquito ? 15f : 0f;
+
+        /// <summary>
+        /// Before this frame's animation: undo last frame's approximate edits where nothing else wrote the bone, so
+        /// the LateUpdate edit always starts from the fresh pose and never compounds (animator, blink or none).
+        /// </summary>
+        private void Update()
+        {
+            for (var i = 0; i < boneEdits.Count; i++)
+            {
+                var edit = boneEdits[i];
+                if (edit.Bone == null || !edit.HasBase) continue;
+                if (edit.Bone.localScale == edit.WrittenScale) edit.Bone.localScale = edit.BaseScale;
+                if (edit.Bone.localRotation == edit.WrittenRotation) edit.Bone.localRotation = edit.BaseRotation;
+            }
+        }
 
         private void OnRectTransformDimensionsChange()
         {
@@ -249,6 +272,10 @@ namespace LetMeSleep.UI
             if (!IsBound || !previewVisible) return;
             if (targetDirty) EnsureTarget();
             ApplyApproximationEdits();
+            // The angle views follow their frames' aspect (VISTA PREVIA grows taller when the panel has room).
+            for (var i = 0; i < viewImages.Length && i < viewTargets.Length; i++)
+                if (viewTargets[i] != null && viewImages[i] != null && Mathf.Abs(ViewAspect(viewImages[i]) - (float)viewTargets[i].width / viewTargets[i].height) > 0.03f)
+                    RequestViews();
             if (viewsDueFrame >= 0 && Time.frameCount >= viewsDueFrame && instance != null) RenderViews();
         }
 
@@ -670,9 +697,18 @@ namespace LetMeSleep.UI
                 {
                     var image = viewImages[i];
                     if (image == null) continue;
+                    var aspect = ViewAspect(image);
+                    var width = Mathf.Clamp(Mathf.RoundToInt(ViewTargetHeight * aspect), 64, 1024);
+                    if (viewTargets[i] != null && (viewTargets[i].width != width || viewTargets[i].height != ViewTargetHeight))
+                    {
+                        if (image.texture == viewTargets[i]) image.texture = null;
+                        viewTargets[i].Release();
+                        Destroy(viewTargets[i]);
+                        viewTargets[i] = null;
+                    }
                     if (viewTargets[i] == null)
                     {
-                        viewTargets[i] = new RenderTexture(ViewWidth, ViewHeight, 24, RenderTextureFormat.ARGB32)
+                        viewTargets[i] = new RenderTexture(width, ViewTargetHeight, 24, RenderTextureFormat.ARGB32)
                         {
                             name = "LMS customization angle view " + i,
                             antiAliasing = 4,
@@ -681,7 +717,7 @@ namespace LetMeSleep.UI
                         viewTargets[i].Create();
                     }
                     setup.Stage.localRotation = Quaternion.Euler(0f, i < viewYaws.Length ? viewYaws[i] : 0f, 0f);
-                    var aspect = (float)ViewWidth / ViewHeight;
+                    aspect = (float)width / ViewTargetHeight;
                     var fit = FitDistance(aspect, false, true) * 1.04f;
                     var focusWorld = setup.Stage.TransformPoint(characterFocusLocal);
                     cameraTransform.position = focusWorld + Vector3.forward * fit;
@@ -712,6 +748,13 @@ namespace LetMeSleep.UI
             }
         }
 
+        /// <summary>Displayed aspect of an angle view (its frame), the default 248 x 400 before layout.</summary>
+        private static float ViewAspect(UnityEngine.UI.RawImage image)
+        {
+            var rect = image != null ? image.rectTransform.rect : Rect.zero;
+            return rect.width > 1f && rect.height > 1f ? Mathf.Clamp(rect.width / rect.height, 0.3f, 1.5f) : (float)ViewWidth / ViewHeight;
+        }
+
         private struct BoneEdit
         {
             public Transform Bone;
@@ -725,8 +768,8 @@ namespace LetMeSleep.UI
         }
 
         /// <summary>
-        /// Re-applies the approximate edits after animation every frame: when the animator (or the face attention)
-        /// wrote a new pose the edit starts from it; otherwise it keeps its own base, so nothing compounds.
+        /// Re-applies the approximate edits after animation every frame, on top of the pose written this frame
+        /// (Update restored last frame's edit, so nothing compounds).
         /// </summary>
         private void ApplyApproximationEdits()
         {
@@ -734,6 +777,7 @@ namespace LetMeSleep.UI
             if (approximatedInstance != instance)
             {
                 RestoreBoneEdits();
+                ClearApproximationObjects();
                 approximatedInstance = instance;
                 ResolveApproximation();
             }
@@ -741,12 +785,9 @@ namespace LetMeSleep.UI
             {
                 var edit = boneEdits[i];
                 if (edit.Bone == null) continue;
-                if (!edit.HasBase || edit.Bone.localScale != edit.WrittenScale || edit.Bone.localRotation != edit.WrittenRotation)
-                {
-                    edit.BaseScale = edit.Bone.localScale;
-                    edit.BaseRotation = edit.Bone.localRotation;
-                    edit.HasBase = true;
-                }
+                edit.BaseScale = edit.Bone.localScale;
+                edit.BaseRotation = edit.Bone.localRotation;
+                edit.HasBase = true;
                 edit.Bone.localScale = Vector3.Scale(edit.BaseScale, edit.Scale);
                 edit.Bone.localRotation = edit.BaseRotation * edit.Rotation;
                 edit.WrittenScale = edit.Bone.localScale;
@@ -760,10 +801,20 @@ namespace LetMeSleep.UI
             foreach (var edit in boneEdits)
             {
                 if (edit.Bone == null || !edit.HasBase) continue;
-                edit.Bone.localScale = edit.BaseScale;
-                edit.Bone.localRotation = edit.BaseRotation;
+                if (edit.Bone.localScale == edit.WrittenScale) edit.Bone.localScale = edit.BaseScale;
+                if (edit.Bone.localRotation == edit.WrittenRotation) edit.Bone.localRotation = edit.BaseRotation;
             }
             boneEdits.Clear();
+        }
+
+        private void ClearApproximationObjects()
+        {
+            foreach (var item in approximationObjects)
+                if (item != null) Destroy(item);
+            approximationObjects.Clear();
+            foreach (var renderer in hiddenRenderers)
+                if (renderer != null) renderer.enabled = true;
+            hiddenRenderers.Clear();
         }
 
         private void ResolveApproximation()
@@ -774,11 +825,13 @@ namespace LetMeSleep.UI
                 switch (style.Part)
                 {
                     case PreviewPart.Wings:
-                        // Bone Y runs along the wing (Blender bone axis); X/Z are its breadth.
-                        var wing = style.Variant == "Round" ? new Vector3(1.6f, 0.72f, 1.6f) : style.Variant == "Long" ? new Vector3(0.58f, 1.5f, 0.58f)
+                        // Bone Y runs along the wing (the rig's wing vertices span local Y 0..0.36); X/Z are its breadth.
+                        // REDONDAS: X 1.4 / Y 0.7 and a rounded membrane in place of the pointed one.
+                        var wing = style.Variant == "Round" ? new Vector3(1.4f, 0.7f, 1.4f) : style.Variant == "Long" ? new Vector3(0.58f, 1.5f, 0.58f)
                             : style.Variant == "Short" ? new Vector3(1f, 0.55f, 1f) : Vector3.one;
                         Edit("Wing.L", wing, Quaternion.identity);
                         Edit("Wing.R", wing, Quaternion.identity);
+                        if (style.Variant == "Round") RoundWings();
                         break;
                     case PreviewPart.Eyes:
                         var eye = style.Variant == "Small" ? 0.78f : style.Variant == "Big" ? 1.18f : 1f;
@@ -786,14 +839,15 @@ namespace LetMeSleep.UI
                         Edit("Pupil.R", Vector3.one * eye, Quaternion.identity);
                         if (style.Variant == "Angry")
                         {
-                            // Upper lids lowered and tilted towards the nose.
-                            Edit("LidUpper.L", Vector3.one, Quaternion.Euler(30f, 0f, -28f));
-                            Edit("LidUpper.R", Vector3.one, Quaternion.Euler(30f, 0f, 28f));
+                            // ENOJADOS: dark wedge brows over each eye and the upper lids closed 30 degrees.
+                            Edit("LidUpper.L", Vector3.one, LidClosure("LidUpper.L", 30f));
+                            Edit("LidUpper.R", Vector3.one, LidClosure("LidUpper.R", 30f));
+                            AngryBrows();
                         }
                         else if (style.Variant == "Sleepy")
                         {
-                            Edit("LidUpper.L", Vector3.one, Quaternion.Euler(48f, 0f, 0f));
-                            Edit("LidUpper.R", Vector3.one, Quaternion.Euler(48f, 0f, 0f));
+                            Edit("LidUpper.L", Vector3.one, LidClosure("LidUpper.L", 48f));
+                            Edit("LidUpper.R", Vector3.one, LidClosure("LidUpper.R", 48f));
                         }
                         if (style.Variant == "Big" || style.Variant == "Small") Edit("Head", Vector3.one * (style.Variant == "Big" ? 1.12f : 0.9f), Quaternion.identity);
                         break;
@@ -822,6 +876,267 @@ namespace LetMeSleep.UI
                 boneEdits.Add(new BoneEdit { Bone = bone, Scale = scale, Rotation = rotation });
                 return;
             }
+        }
+
+        /// <summary>
+        /// Partial closure of a lid bone about the rig's own closing axis (read by name from the character's facial
+        /// contract: the UI has no reference to Presentation); -Y by 90 degrees is the imported mosquito rig's value.
+        /// </summary>
+        private Quaternion LidClosure(string boneName, float degrees)
+        {
+            var axis = Vector3.down;
+            var sign = 1f;
+            foreach (var component in instance.GetComponentsInChildren<Component>(true))
+            {
+                if (component == null || component.GetType().Name != "VisualAttentionContract") continue;
+                var rig = component.GetType().GetField("Rig")?.GetValue(component);
+                if (rig == null) break;
+                foreach (var side in new[] { "LeftLids", "RightLids" })
+                {
+                    if (!(rig.GetType().GetField(side)?.GetValue(rig) is System.Array lids)) continue;
+                    foreach (var lid in lids)
+                    {
+                        if (lid == null) continue;
+                        var type = lid.GetType();
+                        var bone = type.GetField("Bone")?.GetValue(lid) as Transform;
+                        if (bone == null || bone.name != boneName) continue;
+                        if (type.GetField("LocalAxis")?.GetValue(lid) is Vector3 localAxis && localAxis.sqrMagnitude > 0.0001f) axis = localAxis.normalized;
+                        if (type.GetField("ClosedAngleDegrees")?.GetValue(lid) is float closed && Mathf.Abs(closed) > 0.001f) sign = Mathf.Sign(closed);
+                    }
+                }
+                break;
+            }
+            return Quaternion.AngleAxis(sign * degrees, axis);
+        }
+
+        /// <summary>
+        /// REDONDAS: a rounded (elliptical) membrane with its rim, built in each wing bone's space from the wing's own
+        /// vertices (same root, length and plane), shown instead of the pointed membrane and veins.
+        /// </summary>
+        private void RoundWings()
+        {
+            SkinnedMeshRenderer membranes = null, veins = null;
+            foreach (var skin in instance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                var materials = skin.sharedMaterials;
+                if (materials.Length == 0 || materials[0] == null) continue;
+                if (materials[0].name.StartsWith("Mosquito_WingEdge", System.StringComparison.Ordinal) || materials[0].name.StartsWith("Mosquito_WingVein", System.StringComparison.Ordinal)) veins = skin;
+                else if (materials[0].name.StartsWith("Mosquito_Wing", System.StringComparison.Ordinal)) membranes = skin;
+            }
+            if (membranes == null || membranes.sharedMesh == null || !membranes.sharedMesh.isReadable) return;
+            var mesh = membranes.sharedMesh;
+            var vertices = mesh.vertices;
+            var weights = mesh.boneWeights;
+            var bindposes = mesh.bindposes;
+            var bones = membranes.bones;
+            var built = 0;
+            for (var b = 0; b < bones.Length && b < bindposes.Length; b++)
+            {
+                var bone = bones[b];
+                if (bone == null || (bone.name != "Wing.L" && bone.name != "Wing.R")) continue;
+                var points = new List<Vector3>();
+                for (var v = 0; v < vertices.Length && v < weights.Length; v++)
+                    if (weights[v].boneIndex0 == b && weights[v].weight0 > 0.5f) points.Add(bindposes[b].MultiplyPoint3x4(vertices[v]));
+                if (points.Count < 3) continue;
+                var mean = Vector3.zero;
+                float minY = float.MaxValue, maxY = float.MinValue;
+                foreach (var point in points)
+                {
+                    mean += point;
+                    minY = Mathf.Min(minY, point.y);
+                    maxY = Mathf.Max(maxY, point.y);
+                }
+                mean /= points.Count;
+                // The membrane lies in the plane of the bone axis (Y) and its main direction across X/Z.
+                float xx = 0f, xz = 0f, zz = 0f;
+                foreach (var point in points)
+                {
+                    var dx = point.x - mean.x;
+                    var dz = point.z - mean.z;
+                    xx += dx * dx; xz += dx * dz; zz += dz * dz;
+                }
+                var angle = 0.5f * Mathf.Atan2(2f * xz, xx - zz);
+                var across = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
+                var halfWidth = 0f;
+                foreach (var point in points) halfWidth = Mathf.Max(halfWidth, Mathf.Abs(Vector3.Dot(point - mean, across)));
+                var centre = new Vector3(mean.x, (minY + maxY) * 0.5f, mean.z);
+                var halfLength = (maxY - minY) * 0.5f;
+                var membraneMaterial = membranes.sharedMaterials[0];
+                var rimMaterial = veins != null && veins.sharedMaterials.Length > 0 ? veins.sharedMaterials[0] : membraneMaterial;
+                AddOverlay(bone, "RoundWing." + bone.name, EllipseMesh(centre, Vector3.up, across, halfLength, halfWidth, 0f), membraneMaterial, membranes.gameObject.layer);
+                AddOverlay(bone, "RoundWingRim." + bone.name, EllipseMesh(centre, Vector3.up, across, halfLength, halfWidth, halfLength * 0.02f), rimMaterial, membranes.gameObject.layer);
+                built++;
+            }
+            if (built == 0) return;
+            membranes.enabled = false;
+            hiddenRenderers.Add(membranes);
+            if (veins != null)
+            {
+                veins.enabled = false;
+                hiddenRenderers.Add(veins);
+            }
+        }
+
+        /// <summary>Double-sided ellipse (fan) or, with a rim width, the elliptical rim strip.</summary>
+        private static Mesh EllipseMesh(Vector3 centre, Vector3 along, Vector3 across, float a, float b, float rim)
+        {
+            const int segments = 32;
+            var vertices = new List<Vector3>();
+            var triangles = new List<int>();
+            Vector3 Point(float t, float scale) => centre + along * (Mathf.Cos(t) * a * scale) + across * (Mathf.Sin(t) * b * scale);
+            if (rim <= 0f)
+            {
+                vertices.Add(centre);
+                for (var i = 0; i <= segments; i++) vertices.Add(Point(Mathf.PI * 2f * i / segments, 1f));
+                for (var i = 1; i <= segments; i++)
+                {
+                    triangles.Add(0); triangles.Add(i); triangles.Add(i + 1);
+                    triangles.Add(0); triangles.Add(i + 1); triangles.Add(i);
+                }
+            }
+            else
+            {
+                var inner = 1f - rim / Mathf.Max(0.0001f, Mathf.Min(a, b));
+                for (var i = 0; i <= segments; i++)
+                {
+                    var t = Mathf.PI * 2f * i / segments;
+                    vertices.Add(Point(t, 1f));
+                    vertices.Add(Point(t, inner));
+                }
+                for (var i = 0; i < segments; i++)
+                {
+                    var o = i * 2;
+                    triangles.Add(o); triangles.Add(o + 2); triangles.Add(o + 1);
+                    triangles.Add(o + 1); triangles.Add(o + 2); triangles.Add(o + 3);
+                    triangles.Add(o); triangles.Add(o + 1); triangles.Add(o + 2);
+                    triangles.Add(o + 1); triangles.Add(o + 3); triangles.Add(o + 2);
+                }
+            }
+            var mesh = new Mesh { name = "LMS preview approximation", hideFlags = HideFlags.HideAndDontSave };
+            mesh.SetVertices(vertices);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        private void AddOverlay(Transform parent, string name, Mesh mesh, Material material, int layer)
+        {
+            var node = new GameObject(name, typeof(MeshFilter), typeof(MeshRenderer));
+            node.layer = layer;
+            node.transform.SetParent(parent, false);
+            node.GetComponent<MeshFilter>().sharedMesh = mesh;
+            var renderer = node.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            approximationObjects.Add(node);
+            approximationObjects.Add(mesh);
+        }
+
+        /// <summary>
+        /// ENOJADOS: a dark #2A1A1A wedge over each eye, lower towards the middle of the face (about 26 degrees),
+        /// parented to the head. The eyes are found from the eye-white surface of the character's skin mesh.
+        /// </summary>
+        private void AngryBrows()
+        {
+            Transform head = null;
+            foreach (var bone in instance.GetComponentsInChildren<Transform>(true))
+                if (bone.name == "Head") { head = bone; break; }
+            if (head == null) return;
+            var root = instance.transform;
+            var eyes = new List<Bounds>();
+            foreach (var skin in instance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                var materials = skin.sharedMaterials;
+                var sub = System.Array.FindIndex(materials, material => material != null && material.name.Contains("EyeWhite"));
+                if (sub < 0 || skin.sharedMesh == null) continue;
+                var baked = new Mesh();
+                try
+                {
+                    skin.BakeMesh(baked, true);
+                    if (sub >= baked.subMeshCount) continue;
+                    var vertices = baked.vertices;
+                    foreach (var side in new[] { -1f, 1f })
+                    {
+                        var found = false;
+                        var bounds = new Bounds();
+                        foreach (var index in baked.GetTriangles(sub))
+                        {
+                            var point = root.InverseTransformPoint(skin.transform.TransformPoint(vertices[index]));
+                            if (Mathf.Sign(point.x) != side) continue;
+                            if (!found) { bounds = new Bounds(point, Vector3.zero); found = true; }
+                            else bounds.Encapsulate(point);
+                        }
+                        if (found) eyes.Add(bounds);
+                    }
+                }
+                finally
+                {
+                    Destroy(baked);
+                }
+                break;
+            }
+            if (eyes.Count == 0) return;
+            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Universal Render Pipeline/Simple Lit");
+            if (shader == null) return;
+            var material = new Material(shader) { name = "LMS preview angry brow", hideFlags = HideFlags.HideAndDontSave };
+            if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", BrowColor);
+            if (material.HasProperty("_Color")) material.SetColor("_Color", BrowColor);
+            if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.15f);
+            approximationObjects.Add(material);
+            foreach (var eye in eyes)
+            {
+                var inward = eye.center.x < 0f ? 1f : -1f;
+                var length = eye.size.x * 0.92f;
+                var thickness = eye.size.y * 0.2f;
+                var depth = eye.size.z * 0.3f;
+                var mesh = WedgeMesh(length, thickness, depth, inward);
+                var node = new GameObject("AngryBrow" + (eye.center.x < 0f ? ".L" : ".R"), typeof(MeshFilter), typeof(MeshRenderer));
+                node.layer = instance.layer;
+                node.transform.SetParent(root, false);
+                // On the top of the eye, a little forward, so it sits on the eye instead of sticking out like a horn.
+                node.transform.localPosition = new Vector3(eye.center.x + inward * eye.size.x * 0.05f, eye.max.y - thickness * 0.15f, eye.center.z + eye.size.z * 0.3f);
+                node.transform.localRotation = Quaternion.Euler(0f, 0f, -inward * 26f);
+                node.transform.SetParent(head, true);
+                node.GetComponent<MeshFilter>().sharedMesh = mesh;
+                var renderer = node.GetComponent<MeshRenderer>();
+                renderer.sharedMaterial = material;
+                renderer.shadowCastingMode = ShadowCastingMode.Off;
+                approximationObjects.Add(node);
+                approximationObjects.Add(mesh);
+            }
+        }
+
+        /// <summary>Flat-shaded wedge along X: full thickness at the outer end, 55 % at the inner end (+X when inward is 1).</summary>
+        private static Mesh WedgeMesh(float length, float thickness, float depth, float inward)
+        {
+            var half = length * 0.5f;
+            float outerX = -half * inward, innerX = half * inward;
+            float outerH = thickness * 0.5f, innerH = thickness * 0.5f * 0.55f;
+            float front = depth * 0.5f, back = -depth * 0.5f;
+            var corners = new[]
+            {
+                new Vector3(outerX, -outerH, front), new Vector3(outerX, outerH, front), new Vector3(innerX, innerH, front), new Vector3(innerX, -innerH, front),
+                new Vector3(outerX, -outerH, back), new Vector3(outerX, outerH, back), new Vector3(innerX, innerH, back), new Vector3(innerX, -innerH, back)
+            };
+            var faces = new[] { new[] { 0, 1, 2, 3 }, new[] { 7, 6, 5, 4 }, new[] { 1, 5, 6, 2 }, new[] { 4, 0, 3, 7 }, new[] { 4, 5, 1, 0 }, new[] { 3, 2, 6, 7 } };
+            var vertices = new List<Vector3>();
+            var triangles = new List<int>();
+            foreach (var face in faces)
+            {
+                var start = vertices.Count;
+                foreach (var index in face) vertices.Add(corners[index]);
+                // Both windings: the brow reads from any angle whatever the handedness of the face order.
+                triangles.AddRange(new[] { start, start + 1, start + 2, start, start + 2, start + 3 });
+                triangles.AddRange(new[] { start, start + 2, start + 1, start, start + 3, start + 2 });
+            }
+            var mesh = new Mesh { name = "LMS preview brow", hideFlags = HideFlags.HideAndDontSave };
+            mesh.SetVertices(vertices);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
         }
 
         /// <summary>Body colour through the character view on the clone (looked up by name: UI has no reference to it).</summary>
@@ -862,6 +1177,7 @@ namespace LetMeSleep.UI
 
         private void OnDestroy()
         {
+            ClearApproximationObjects();
             if (setup?.Camera != null) setup.Camera.enabled = false;
             if (instance != null) Destroy(instance);
             if (pedestal != null)
