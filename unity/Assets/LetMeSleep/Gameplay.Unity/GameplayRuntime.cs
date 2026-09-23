@@ -257,7 +257,9 @@ namespace LetMeSleep.Gameplay.Unity
         }
         public void TickHost()
         {
-            if (!IsHost || Authority == null || !Authority.IsRunning) return;
+            if (!IsHost || Authority == null) return;
+            // A round can also end outside Advance: RemoveActor when a team empties, or EndRound.
+            if (!Authority.IsRunning) { PublishUnreportedEnd(); return; }
             if (CaptureLocalInput) SendLocal();
             uint next = Authority.CurrentTick + 1;
             var snapshot = Authority.CaptureSnapshot();
@@ -274,12 +276,31 @@ namespace LetMeSleep.Gameplay.Unity
                 Authority.SubmitBotInput(commands.Input); if (commands.Action.HasValue) Authority.SubmitBotAction(commands.Action.Value);
             }
             Authority.Advance(new HostTick(next));
-            var latest = Authority.CaptureSnapshot(); ApplySnapshot(latest);
+            PublishHostState(Authority.CaptureSnapshot());
+        }
+        private void PublishHostState(GameSessionState latest)
+        {
+            ApplySnapshot(latest);
             LocalPrivate = Authority.CapturePrivate(LocalActorId); if (LocalPrivate != null) PrivateReady?.Invoke(LocalPrivate);
             foreach (var item in Authority.DrainEvents()) ApplyEvent(item);
+            bool ended = latest.SimulationPhase == SimulationPhase.Ended;
             snapshotAccumulator += 1f / 30;
-            if (snapshotAccumulator >= .05f || latest.SimulationPhase == SimulationPhase.Ended) { snapshotAccumulator -= .05f; SnapshotReady?.Invoke(latest); }
-            if (latest.SimulationPhase == SimulationPhase.Ended && !finishedSent) { finishedSent = true; RoundFinished?.Invoke(latest.Result, latest.Winner); }
+            try
+            {
+                if (snapshotAccumulator >= .05f || ended) { snapshotAccumulator -= .05f; SnapshotReady?.Invoke(latest); }
+            }
+            finally
+            {
+                // The room must reach Results even if a transport listener throws while publishing the end.
+                if (ended && !finishedSent) { finishedSent = true; RoundFinished?.Invoke(latest.Result, latest.Winner); }
+            }
+        }
+        private void PublishUnreportedEnd()
+        {
+            if (finishedSent || roundConfig == null || Authority.Config == null) return;
+            var latest = Authority.CaptureSnapshot();
+            if (latest.SimulationPhase != SimulationPhase.Ended || latest.SessionEpoch != roundConfig.SessionEpoch || latest.RoundId != roundConfig.RoundId) return;
+            PublishHostState(latest);
         }
         private BotObservation ObserveBot(ActorSnapshot self, GameSessionState state)
         {

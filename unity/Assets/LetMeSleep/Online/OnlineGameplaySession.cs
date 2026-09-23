@@ -31,6 +31,7 @@ namespace LetMeSleep.Online
         private byte[] beginPacket;
         private double now, barrierStart, retryAt, lastOwnerPacket;
         private bool disposed, failed, clockStarted, receivedSnapshot;
+        private int encodeFailuresReported;
         public bool Ready => config != null && !failed && room.Current?.Phase == RoomPhase.Playing
             && config.RoundId == (ulong)room.Current.Round && (!lobby.IsOwner || waiting.Count == 0);
         public event Action<GameplayRoundConfig, IReadOnlyList<SpawnActor>> BeginReceived;
@@ -103,15 +104,36 @@ namespace LetMeSleep.Online
         public void SendAction(PlayerActionCommand action) { if (Ready && !lobby.IsOwner) Send(lobby.OwnerId, Action, GameplayWireCodec.Encode(action), true); }
         public void SendSnapshot(GameSessionState snapshot)
         {
-            if (Ready && lobby.IsOwner && SnapshotMatchesRound(snapshot)) Broadcast(Snapshot, GameplayWireCodec.Encode(snapshot), snapshot.SimulationPhase == SimulationPhase.Ended);
+            if (!Ready || !lobby.IsOwner || !SnapshotMatchesRound(snapshot)) return;
+            byte[] data;
+            try { data = GameplayWireCodec.Encode(snapshot); }
+            catch (InvalidDataException error) { ReportEncodeFailure(Snapshot, error); return; }
+            Broadcast(Snapshot, data, snapshot.SimulationPhase == SimulationPhase.Ended);
         }
         public void SendPrivate(string owner, ActorPrivateState state)
         {
-            if (Ready && lobby.IsOwner && owner != localId && PrivateMatchesRound(state)
-                && roster.Any(a => a.OwnerPuid == owner && a.ActorId == state.ActorId))
-                Send(owner, Private, GameplayWireCodec.Encode(state), false);
+            if (!Ready || !lobby.IsOwner || owner == localId || !PrivateMatchesRound(state)
+                || !roster.Any(a => a.OwnerPuid == owner && a.ActorId == state.ActorId)) return;
+            byte[] data;
+            try { data = GameplayWireCodec.Encode(state); }
+            catch (InvalidDataException error) { ReportEncodeFailure(Private, error); return; }
+            Send(owner, Private, data, false);
         }
-        public void SendEvent(GameplayEvent item) { if (Ready && lobby.IsOwner && item.SessionEpoch == config.SessionEpoch && item.RoundId == config.RoundId) Broadcast(Event, GameplayWireCodec.Encode(item), true); }
+        public void SendEvent(GameplayEvent item)
+        {
+            if (!Ready || !lobby.IsOwner || item.SessionEpoch != config.SessionEpoch || item.RoundId != config.RoundId) return;
+            byte[] data;
+            try { data = GameplayWireCodec.Encode(item); }
+            catch (InvalidDataException error) { ReportEncodeFailure(Event, error); return; }
+            Broadcast(Event, data, true);
+        }
+        // A host-side DTO that fails wire validation must not abort the host tick (and with it the round end).
+        private void ReportEncodeFailure(byte kind, InvalidDataException error)
+        {
+            if (encodeFailuresReported >= 3) return;
+            encodeFailuresReported++;
+            UnityEngine.Debug.LogError("LMS_GAMEPLAY_ENCODE_FAILED kind=" + kind + " " + error.Message);
+        }
         private void ResumeMember(string peer)
         {
             if (disposed || failed || !lobby.IsOwner || config == null || room.Current?.Phase != RoomPhase.Playing
