@@ -47,5 +47,15 @@ namespace LetMeSleep.Bootstrap
         /// </summary>
         public static bool ShouldTearDown(LobbyState state, bool intentionalLeave, bool joinedRoom)
             => !intentionalLeave && (state == LobbyState.Closed || (state == LobbyState.Failed && joinedRoom));
+
+        /// <summary>
+        /// Error shown after a teardown, or null for the plain "room closed" notice. A reason the client already
+        /// gave for leaving (a rejected handshake: "No se pudo entrar: …") wins over the failure of that same
+        /// Leave (Leave_*, LobbyTimedOut), which would otherwise replace it with a misleading lost-connection error.
+        /// </summary>
+        public static string TeardownError(LobbyState state, string lobbyErrorCode, string closingError)
+            => !string.IsNullOrEmpty(closingError) ? closingError
+                : state == LobbyState.Failed ? "Se perdió la conexión con la sala (" + lobbyErrorCode + "). Volvé a intentarlo."
+                : null;
     }
 }

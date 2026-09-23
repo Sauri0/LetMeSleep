@@ -178,8 +178,10 @@ namespace LetMeSleep.Bootstrap
                 bool failed = lobby.State == LobbyState.Failed;
                 StopVoiceRoom(); StopGame(); StopLobbyMovement(); ResetRoomState(); LoadMap(false);
                 menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu(); ui.ShowJoinRoom();
-                if (failed) { lastError = lobby.ErrorCode; ShowOnlineError("Se perdió la conexión con la sala (" + lobby.ErrorCode + "). Volvé a intentarlo."); }
-                else if (closingError.Length > 0) ShowOnlineError(closingError);
+                // Also keeps Update from re-reporting this failure as a join error.
+                if (failed) lastError = lobby.ErrorCode;
+                string error = RoomTeardownPolicy.TeardownError(lobby.State, lobby.ErrorCode, closingError);
+                if (error != null) ShowOnlineError(error);
                 else ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.RoomClosed));
             }
         }

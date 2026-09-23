@@ -50,6 +50,20 @@ namespace LetMeSleep.Tests.EditMode
         }
 
         [Test]
+        public void RejectedHandshakeKeepsItsReasonWhenTheFollowingLeaveFails()
+        {
+            // Update calls lobby.Leave() after "No se pudo entrar: X"; that Leave can end Failed (Leave_*, LobbyTimedOut).
+            Assert.That(RoomTeardownPolicy.ShouldTearDown(LobbyState.Failed, false, true), Is.True);
+            Assert.That(RoomTeardownPolicy.TeardownError(LobbyState.Failed, "LobbyTimedOut", "No se pudo entrar: Full"),
+                Is.EqualTo("No se pudo entrar: Full"));
+            Assert.That(RoomTeardownPolicy.TeardownError(LobbyState.Closed, "", "No se pudo entrar: Full"),
+                Is.EqualTo("No se pudo entrar: Full"));
+            Assert.That(RoomTeardownPolicy.TeardownError(LobbyState.Failed, "AuthenticationLost", ""),
+                Is.EqualTo("Se perdió la conexión con la sala (AuthenticationLost). Volvé a intentarlo."));
+            Assert.That(RoomTeardownPolicy.TeardownError(LobbyState.Closed, "", ""), Is.Null, "A host closing the room shows the plain notice.");
+        }
+
+        [Test]
         public void JoinFailuresAndIntentionalLeavesKeepTheirOwnFlow()
         {
             Assert.That(RoomTeardownPolicy.ShouldTearDown(LobbyState.Failed, false, false), Is.False, "Join errors stay on the join screen.");
