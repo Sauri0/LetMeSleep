@@ -6,6 +6,10 @@ Shader "LetMeSleep/Higgsfield/GradientSky"
     //   ground color below the horizon, horizon blend exponent, a wide sun glow, a sharp sun/moon disc with an
     //   optional crescent and a short halo (radius in disc radii), a sparse star field for night maps and flat
     //   stylized cumulus clouds for day maps (ENV-04). No textures.
+    // v0.3.0 r3 (maps-r3 #10): _CloudStyle 1 draws sketch cumulus instead of noise blobs: a band of clouds near the
+    // horizon (bases between _CloudBaseMin and _CloudBaseMax degrees, none at the zenith), each a union of round puffs
+    // cut by a flat base, lit on top and shaded at the base. _RidgeColor (alpha = opacity) adds hazy distant cliffs and
+    // ridges on the horizon (aerial perspective toward the horizon color).
     Properties
     {
         _HorizonColor("Horizon (match fog color)", Color)=(.42,.62,.72,1)
@@ -31,6 +35,12 @@ Shader "LetMeSleep/Higgsfield/GradientSky"
         _CloudColor("Cloud lit color", Color)=(1,1,1,1)
         _CloudShade("Cloud underside color", Color)=(0.78,0.85,0.95,1)
         _CloudOpacity("Cloud opacity", Range(0,1))=0.95
+        _CloudStyle("Cloud style (0 noise, 1 cumulus band)", Float)=0
+        _CloudWidth("Cumulus width (degrees)", Range(4,60))=18
+        _CloudBaseMin("Cumulus base, lowest (degrees)", Range(0,40))=5
+        _CloudBaseMax("Cumulus base, highest (degrees)", Range(0,60))=16
+        _RidgeColor("Distant ridge (sRGB, alpha = opacity)", Color)=(0.5,0.6,0.7,0)
+        _RidgeHeight("Distant ridge height (degrees)", Range(0,15))=3
     }
     SubShader
     {
@@ -65,6 +75,12 @@ Shader "LetMeSleep/Higgsfield/GradientSky"
                 half4 _CloudColor;
                 half4 _CloudShade;
                 half _CloudOpacity;
+                half _CloudStyle;
+                half _CloudWidth;
+                half _CloudBaseMin;
+                half _CloudBaseMax;
+                half4 _RidgeColor;
+                half _RidgeHeight;
             CBUFFER_END
             struct Attributes { float4 positionOS:POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct Varyings { float4 positionCS:SV_POSITION; float3 direction:TEXCOORD0; UNITY_VERTEX_OUTPUT_STEREO };
@@ -100,6 +116,20 @@ Shader "LetMeSleep/Higgsfield/GradientSky"
                 return ValueNoise(p) * 0.58 + ValueNoise(p * 2.03 + 7.1) * 0.27 + ValueNoise(p * 4.1 + 3.7) * 0.15;
             }
             float AngleTo(float3 d, float3 center) { return 2.0 * asin(saturate(length(d - center) * 0.5)); }
+
+            // One cumulus: union of five round puffs cut by a flat base. p in cloud widths, origin at the base center.
+            float CumulusDistance(float2 p, float seed)
+            {
+                float d = 1e3;
+                [unroll] for (int j = 0; j < 5; j++)
+                {
+                    float fj = j;
+                    float x = -0.36 + fj * 0.18 + (Hash21(float2(seed, fj * 7.3)) - 0.5) * 0.06;
+                    float r = (j == 2 ? 0.27 : (j == 1 || j == 3) ? 0.21 : 0.13) * lerp(0.82, 1.18, Hash21(float2(fj * 3.1, seed)));
+                    d = min(d, length(p - float2(x, r * 0.55)) - r);
+                }
+                return max(d, -p.y);
+            }
 
             Varyings Vert(Attributes input)
             {
@@ -159,15 +189,66 @@ Shader "LetMeSleep/Higgsfield/GradientSky"
                     color+=_StarColor.rgb*star*(.55+.45*Hash31(cell+3.0));
                 }
 
-                // Flat stylized clouds on a virtual dome (day maps).
-                if (_CloudCoverage>0.001 && height>0.0)
+                // Distant hazy ridges/cliffs on the horizon (day maps, optional).
+                float azimuthDeg = degrees(atan2(direction.z, direction.x));
+                float elevationDeg = degrees(asin(clamp(direction.y, -1.0, 1.0)));
+                float2 pixelDeg = float2(fwidth(azimuthDeg), fwidth(elevationDeg));
+                pixelDeg.x = pixelDeg.x > 180.0 ? pixelDeg.y : pixelDeg.x; // atan2 seam
+                if (_RidgeColor.a > 0.001)
                 {
+                    float wrapped = azimuthDeg + 180.0;
+                    float ridge = _RidgeHeight * (0.25 + 0.75 * ValueNoise(float2(wrapped * 0.045, 1.7)) + 0.25 * ValueNoise(float2(wrapped * 0.21, 4.2)));
+                    // Flat-topped cliffs: quantize part of the ridge.
+                    ridge = lerp(ridge, floor(ridge * 1.5) / 1.5 + 0.35, 0.35);
+                    float inside = 1.0 - smoothstep(ridge - pixelDeg.y, ridge + pixelDeg.y, elevationDeg);
+                    inside *= smoothstep(-2.0, -0.2, elevationDeg);
+                    float haze = saturate(elevationDeg / max(ridge, 0.1));
+                    float3 ridgeColor = lerp(_HorizonColor.rgb, _RidgeColor.rgb, 0.45 + 0.55 * haze);
+                    color = lerp(color, ridgeColor, inside * _RidgeColor.a);
+                }
+
+                if (_CloudCoverage>0.001 && height>0.0 && _CloudStyle>0.5)
+                {
+                    // Sketch cumulus band: flat bases near the horizon, scalloped tops, nothing at the zenith.
+                    float drift = _Time.y * _CloudSpeed * 30.0;
+                    [unroll] for (int layer = 0; layer < 2; layer++)
+                    {
+                        float width = _CloudWidth * (layer == 0 ? 1.0 : 0.6);
+                        float cellWidth = width * 1.45;
+                        float cells = max(1.0, floor(360.0 / cellWidth));
+                        cellWidth = 360.0 / cells;
+                        float az = azimuthDeg + 180.0 + drift * (layer == 0 ? 1.0 : 0.7) + layer * 11.0;
+                        float index = floor(az / cellWidth);
+                        [unroll] for (int k = -1; k <= 1; k++)
+                        {
+                            float idx = index + k;
+                            float wrappedIdx = idx - cells * floor(idx / cells);
+                            float seed = wrappedIdx + layer * 57.0;
+                            float present = step(Hash21(float2(seed, 3.7)), _CloudCoverage);
+                            float h2 = Hash21(float2(seed, 11.1));
+                            float h3 = Hash21(float2(seed, 23.9));
+                            float cloudWidth = width * lerp(0.65, 1.1, h3);
+                            float centerAz = (idx + 0.5 + (h2 - 0.5) * 0.3) * cellWidth;
+                            float baseEl = lerp(_CloudBaseMin, _CloudBaseMax, layer == 0 ? h2 : h2 * 0.5);
+                            float2 p = float2((az - centerAz) / cloudWidth, (elevationDeg - baseEl) / cloudWidth);
+                            float dist = CumulusDistance(p, seed);
+                            float aa = max(max(pixelDeg.x, pixelDeg.y) / cloudWidth * 1.2, 1e-4);
+                            float shape = (1.0 - smoothstep(-aa, aa, dist)) * present;
+                            // Lit tops, cooler flat base, a slightly darker outline band inside the silhouette.
+                            float lit = smoothstep(0.02, 0.32, p.y) * (0.75 + 0.25 * smoothstep(-0.06, -0.01, dist));
+                            float3 cloud = lerp(_CloudShade.rgb, _CloudColor.rgb, lit);
+                            color = lerp(color, cloud, shape * _CloudOpacity * (layer == 0 ? 1.0 : 0.92));
+                        }
+                    }
+                }
+                else if (_CloudCoverage>0.001 && height>0.0)
+                {
+                    // Legacy flat stylized clouds on a virtual dome.
                     float2 uv=direction.xz/(height+0.18)*_CloudScale+_Time.y*_CloudSpeed*float2(1.0,0.35);
                     float field=CloudField(uv);
                     float threshold=1.0-_CloudCoverage;
                     float edge=max(fwidth(field)*1.2,0.003);
                     float shape=smoothstep(threshold,threshold+edge,field);
-                    // Underside shading: density just "below" (toward the viewer's horizon) darkens the base.
                     float lower=CloudField(uv+float2(0.0,-0.09)*_CloudScale);
                     float lit=saturate((field-lower)*5.0+0.55+(field-threshold)*2.0);
                     float3 cloud=lerp(_CloudShade.rgb,_CloudColor.rgb,lit);

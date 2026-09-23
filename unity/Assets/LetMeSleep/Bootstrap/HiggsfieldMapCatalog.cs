@@ -37,6 +37,23 @@ namespace LetMeSleep.Bootstrap
             public bool IgnoreLocalLights;
             public Material SwapFrom;
             public Material SwapTo;
+            // v0.3.0 r3: extra URP rendering layers (e.g. lantern-pool receivers).
+            public int AddLightLayers;
+            // v0.3.0 r4: further material slots of the same renderer (e.g. both stone swatches of one stairway mesh).
+            public HiggsfieldMapLighting.MaterialSwap[] ExtraSwaps = Array.Empty<HiggsfieldMapLighting.MaterialSwap>();
+        }
+
+        /// <summary>
+        /// v0.3.0 r4 (director #1/#9): authored initial view yaw of one spawn point, in degrees clockwise from +Z seen from
+        /// above (the GameplayRuntime yaw convention). The imported spawn EMPTYs carry no rotation, so without this every
+        /// player started looking along +Z, often at a wall or an empty meadow. Gameplay data, applied by AlfaApplication to
+        /// the local player's view when a round begins; spawn positions are untouched.
+        /// </summary>
+        [Serializable] public sealed class SpawnFacing
+        {
+            public bool Human;
+            public int Index;
+            public float YawDegrees;
         }
 
         [Serializable] public sealed class Entry
@@ -51,6 +68,21 @@ namespace LetMeSleep.Bootstrap
             public LocalLightBinding[] LocalLights = Array.Empty<LocalLightBinding>();
             public string[] SuppressLightPaths = Array.Empty<string>();
             public RendererOverrideBinding[] RendererOverrides = Array.Empty<RendererOverrideBinding>();
+            public SpawnFacing[] SpawnFacings = Array.Empty<SpawnFacing>();
+            /// <summary>
+            /// v0.3.0 visual-only decoration (props, lamp lights, halos) authored in map space and instantiated by
+            /// AlfaApplication.LoadMap as a child of the map instance before lighting is bound. Optional; see ValidateDecor.
+            /// </summary>
+            public GameObject Decor;
+
+            /// <summary>Authored yaw (degrees) for the spawn point at <paramref name="index"/> of the role, if any.</summary>
+            public bool TryGetSpawnYaw(bool human, int index, out float yawDegrees)
+            {
+                foreach (var facing in SpawnFacings ?? Array.Empty<SpawnFacing>())
+                    if (facing != null && facing.Human == human && facing.Index == index) { yawDegrees = facing.YawDegrees; return true; }
+                yawDegrees = 0f;
+                return false;
+            }
         }
 
         [SerializeField] private Entry[] entries = Array.Empty<Entry>();
@@ -76,6 +108,76 @@ namespace LetMeSleep.Bootstrap
                 if (!Finite(entry.CameraFarPlane) || (entry.CameraFarPlane != 0 && (entry.CameraFarPlane < 10 || entry.CameraFarPlane > 1000)))
                     throw new InvalidOperationException("Camera far must be zero or 10..1000 metres: " + entry.MapId);
                 ResolveEntryLighting(entry, entry.Prefab.transform); // Validate paths and values without creating lights.
+                ValidateSpawnFacings(entry);
+                ValidateDecor(entry.Decor, entry.MapId);
+            }
+        }
+
+        public const int MaximumDecorLights = 10;
+        public const int MaximumDecorRenderers = 480;
+        public const float MaximumDecorLightRange = 10f;
+        private const int PreviewLayer = 30;
+        // Components that would turn decoration into gameplay (IsWorldCollider treats any collider under MapRoot as world
+        // geometry) or into a second camera/listener. Resolved by name where Bootstrap does not reference the assembly.
+        private static readonly string[] ForbiddenDecorComponents =
+        {
+            "GameplaySurface", "GameplayDoor", "GameplayToolPickup", "GameplayRecoveryVolume", "GameplayObjectiveCatalog",
+            "EnvironmentMapDefinition", "HiggsfieldLowPolyWater", "HiggsfieldGpuWater", "HiggsfieldGpuWaterBinding",
+            "CharacterView", "Animator", "AudioSource", "ParticleSystem"
+        };
+        private static readonly string[] AllowedDecorBehaviours = { "HiggsfieldDecorDressing", "UniversalAdditionalLightData" };
+
+        /// <summary>
+        /// Map decoration contract (MAPA-SISTEMAS maps, extension point Decor): a prefab asset in map space (identity root)
+        /// made only of transforms, mesh renderers, Point/Spot lights without shadows and the decor dressing component. No
+        /// Collider, Rigidbody, Joint, Camera, AudioListener or gameplay component; at most <see cref="MaximumDecorLights"/>
+        /// lights (range up to <see cref="MaximumDecorLightRange"/> m, never on the preview layer) and
+        /// <see cref="MaximumDecorRenderers"/> renderers. Placement clearance (routes, portals, spawns, objectives) and surface
+        /// support are checked by the editor decor validator and the PlayMode decor tests.
+        /// </summary>
+        public static void ValidateDecor(GameObject decor, string mapId)
+        {
+            if (!decor) return;
+            if (decor.scene.IsValid()) throw new InvalidOperationException("Decor must be a prefab asset, not a scene object: " + mapId);
+            var root = decor.transform;
+            if (root.localPosition.sqrMagnitude > 1e-8f || Quaternion.Angle(root.localRotation, Quaternion.identity) > .01f ||
+                (root.localScale - Vector3.one).sqrMagnitude > 1e-8f)
+                throw new InvalidOperationException("Decor root must be an identity transform in map space: " + mapId);
+            int lights = 0, renderers = 0;
+            foreach (var component in decor.GetComponentsInChildren<Component>(true))
+            {
+                if (!component) throw new InvalidOperationException("Decor has a missing component/script: " + mapId);
+                string type = component.GetType().Name;
+                if (component is Collider || component is Rigidbody || component is Joint || component is Camera || component is AudioListener ||
+                    Array.IndexOf(ForbiddenDecorComponents, type) >= 0)
+                    throw new InvalidOperationException("Decor must stay visual only (" + type + " on " + component.name + "): " + mapId);
+                if (component is Renderer) renderers++;
+                if (component is Light light)
+                {
+                    lights++;
+                    if ((light.type != LightType.Point && light.type != LightType.Spot) || light.shadows != LightShadows.None ||
+                        (light.cullingMask & (1 << PreviewLayer)) != 0 || !Finite(light.intensity) || light.intensity < 0 ||
+                        !Finite(light.range) || light.range <= 0 || light.range > MaximumDecorLightRange)
+                        throw new InvalidOperationException("Decor lights must be shadowless Point/Spot, off the preview layer, range 0.." +
+                            MaximumDecorLightRange + " m (" + light.name + "): " + mapId);
+                }
+                if (component is MonoBehaviour && Array.IndexOf(AllowedDecorBehaviours, type) < 0)
+                    throw new InvalidOperationException("Decor script not allowed (" + type + "): " + mapId);
+            }
+            if (lights > MaximumDecorLights) throw new InvalidOperationException("Decor has " + lights + " lights (max " + MaximumDecorLights + "): " + mapId);
+            if (renderers > MaximumDecorRenderers) throw new InvalidOperationException("Decor has " + renderers + " renderers (max " + MaximumDecorRenderers + "): " + mapId);
+        }
+
+        private static void ValidateSpawnFacings(Entry entry)
+        {
+            if (entry.SpawnFacings == null) throw new InvalidOperationException("Spawn facings must be initialized: " + entry.MapId);
+            var seen = new HashSet<(bool, int)>();
+            foreach (var facing in entry.SpawnFacings)
+            {
+                var points = facing == null ? null : facing.Human ? entry.Prefab.HumanSpawnPoints : entry.Prefab.MosquitoSpawnPoints;
+                if (facing == null || points == null || facing.Index < 0 || facing.Index >= points.Length || !points[facing.Index] ||
+                    !Finite(facing.YawDegrees) || facing.YawDegrees < -360f || facing.YawDegrees > 360f || !seen.Add((facing.Human, facing.Index)))
+                    throw new InvalidOperationException("Spawn facing needs an existing distinct spawn index and a yaw within +-360 degrees: " + entry.MapId);
             }
         }
 
@@ -142,13 +244,7 @@ namespace LetMeSleep.Bootstrap
                     throw new InvalidOperationException("Invalid local light shadow tier or flicker: " + entry.MapId);
                 try { HiggsfieldMapLighting.ValidateVisual(light, source.Kit); }
                 catch (ArgumentException error) { throw new InvalidOperationException(entry.MapId + " " + binding.AnchorPath + ": " + error.Message); }
-                locals[i] = new HiggsfieldMapLighting.LocalSource { Anchor = anchor, Type = light.Type,
-                    Color = light.Color, UnityIntensity = light.UnityIntensity, Range = light.Range,
-                    SpotAngle = light.SpotAngle, InnerSpotAngle = light.InnerSpotAngle, Shadows = light.Shadows,
-                    ShadowResolutionTier = light.ShadowResolutionTier, Flicker = light.Flicker,
-                    LocalOffset = light.LocalOffset, HaloSize = light.HaloSize, HaloOffset = light.HaloOffset,
-                    HaloColor = light.HaloColor, HaloIntensity = light.HaloIntensity,
-                    FlameHeight = light.FlameHeight, FlameOffset = light.FlameOffset };
+                locals[i] = light.CloneFor(anchor); // Every serialized value, bound to the instance anchor.
             }
             var suppressed = new Light[entry.SuppressLightPaths.Length];
             var lights = new HashSet<Light>();
@@ -175,7 +271,8 @@ namespace LetMeSleep.Bootstrap
                 if (found.Length != 1) throw new InvalidOperationException("Renderer override path must resolve one Renderer: " + binding.Path);
                 overrides[i] = new HiggsfieldMapLighting.RendererOverride { Target = found[0], Hide = binding.Hide,
                     CastShadowsOff = binding.CastShadowsOff, IgnoreLocalLights = binding.IgnoreLocalLights,
-                    SwapFrom = binding.SwapFrom, SwapTo = binding.SwapTo };
+                    SwapFrom = binding.SwapFrom, SwapTo = binding.SwapTo, AddLightLayers = binding.AddLightLayers,
+                    ExtraSwaps = (HiggsfieldMapLighting.MaterialSwap[])(binding.ExtraSwaps ?? Array.Empty<HiggsfieldMapLighting.MaterialSwap>()).Clone() };
             }
             resolved.RendererOverrides = overrides;
             resolved.MaterialSwaps = (HiggsfieldMapLighting.MaterialSwap[])(source.MaterialSwaps ?? Array.Empty<HiggsfieldMapLighting.MaterialSwap>()).Clone();

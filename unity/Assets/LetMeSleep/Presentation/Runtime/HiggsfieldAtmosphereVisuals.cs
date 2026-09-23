@@ -16,16 +16,28 @@ namespace LetMeSleep.Presentation
         public const string HaloName = "Higgsfield_Halo";
         public const string FlameName = "Higgsfield_Flame";
         public const string StringLightsName = "Higgsfield_StringLights";
+        public const string BeamName = "Higgsfield_Beam";
+        public const string GlintName = "Higgsfield_Glint";
+        public const string PoolName = "Higgsfield_Pool";
 
         private static readonly int HaloColorId = Shader.PropertyToID("_HaloColor");
         private static readonly int HaloIntensityId = Shader.PropertyToID("_HaloIntensity");
         private static readonly int FlameSeedId = Shader.PropertyToID("_FlameSeed");
-        private static Mesh haloQuad, bulb, box;
+        private static readonly int HaloToleranceId = Shader.PropertyToID("_HaloDepthTolerance");
+        private static readonly int HaloCoreId = Shader.PropertyToID("_HaloCore");
+        private static readonly int BeamColorId = Shader.PropertyToID("_BeamColor");
+        private static readonly int GlintColorId = Shader.PropertyToID("_GlintColor");
+        private static readonly int GlintSizeId = Shader.PropertyToID("_GlintSize");
+        private static readonly int PoolColorId = Shader.PropertyToID("_PoolColor");
+        private static Mesh haloQuad, bulb, box, beamCone, glintQuad;
         private static readonly Mesh[] flameLayers = new Mesh[3];
 
         /// <param name="offset">World-axis offset from the parent position (imported anchors may be rotated).</param>
         /// <param name="color">sRGB color; alpha is the halo opacity (0..1).</param>
-        public static GameObject CreateHalo(Transform parent, Vector3 offset, float size, Color color, float intensity, Material material)
+        /// <param name="depthTolerance">Metres the scene may sit in front of the halo center before it fades (0 = automatic).</param>
+        /// <param name="core">Bright round core boost (0 = the halo material's default).</param>
+        public static GameObject CreateHalo(Transform parent, Vector3 offset, float size, Color color, float intensity, Material material,
+            float depthTolerance = 0f, float core = 0f)
         {
             var go = NewUpright(HaloName, parent, offset);
             go.transform.localScale = Vector3.Scale(go.transform.localScale, Vector3.one * Mathf.Max(0.01f, size));
@@ -33,8 +45,77 @@ namespace LetMeSleep.Presentation
             var block = new MaterialPropertyBlock();
             block.SetColor(HaloColorId, color);
             block.SetFloat(HaloIntensityId, Mathf.Max(0f, intensity));
+            block.SetFloat(HaloToleranceId, Mathf.Max(0f, depthTolerance));
+            if (core > 0f) block.SetFloat(HaloCoreId, core);
             renderer.SetPropertyBlock(block);
             return go;
+        }
+
+        /// <summary>
+        /// Rotating light shafts (lighthouse, v0.3.0 r3): <paramref name="count"/> soft additive cones starting at the lamp,
+        /// evenly spaced around the vertical axis, tilted by <paramref name="tilt"/> degrees (positive = up) and swept at
+        /// <paramref name="speed"/> degrees per second. Color is sRGB; alpha = opacity (about 0.15 reads as a faint beam).
+        /// </summary>
+        public static GameObject CreateBeam(Transform parent, Vector3 offset, float length, float radius, int count, float tilt, float speed,
+            Color color, Material material, float seed)
+        {
+            var root = NewUpright(BeamName, parent, offset);
+            var sweep = root.AddComponent<HiggsfieldBeamSweep>();
+            sweep.DegreesPerSecond = speed;
+            sweep.Phase = seed * 37f;
+            count = Mathf.Clamp(count, 1, 4);
+            for (int i = 0; i < count; i++)
+            {
+                var pivot = NewPiece(BeamName + "_" + i, root.transform, Vector3.zero);
+                pivot.transform.localRotation = Quaternion.Euler(0f, i * 360f / count, 0f) * Quaternion.Euler(-tilt, 0f, 0f);
+                pivot.transform.localScale = new Vector3(Mathf.Max(0.01f, radius), Mathf.Max(0.01f, radius), Mathf.Max(0.05f, length));
+                var renderer = Render(pivot, BeamCone, material);
+                var block = new MaterialPropertyBlock();
+                block.SetColor(BeamColorId, color);
+                renderer.SetPropertyBlock(block);
+            }
+            return root;
+        }
+
+        /// <summary>
+        /// Warm reflection streak of a lamp on night water (v0.3.0 r3): a flat additive strip lying on the water surface
+        /// at <paramref name="surface"/> (world), turned toward the camera by the shader so it always reads as the
+        /// vertical glitter line under the lamp. Color is sRGB; alpha = opacity.
+        /// </summary>
+        public static GameObject CreateGlint(Transform parent, Vector3 surface, float length, float width, Color color, Material material, float seed)
+        {
+            var go = NewUpright(GlintName, parent, surface - parent.position);
+            var renderer = Render(go, GlintQuad, material);
+            var block = new MaterialPropertyBlock();
+            block.SetColor(GlintColorId, color);
+            block.SetVector(GlintSizeId, new Vector4(Mathf.Max(0.05f, width), Mathf.Max(0.1f, length), seed, 0f));
+            renderer.SetPropertyBlock(block);
+            return go;
+        }
+
+        /// <summary>
+        /// Small hanging lantern (v0.3.0 r4, director #1: the camp shelter gets "un farol chico propio"): warm glowing glass
+        /// box (kit bulb material) with a dark cap, base, corner posts and a short hanger, centered on the light. Visual only.
+        /// </summary>
+        public static GameObject CreateLantern(Transform parent, Vector3 offset, float size, HiggsfieldAtmosphereKit kit)
+        {
+            const string name = "Higgsfield_Lantern";
+            var root = NewUpright(name, parent, offset);
+            size = Mathf.Clamp(size, 0.05f, 1f);
+            void Piece(string piece, Vector3 center, Vector3 scale, Material material)
+            {
+                var go = NewPiece(piece, root.transform, center * size);
+                go.transform.localScale = scale * size;
+                Render(go, Box, material);
+            }
+            Piece("Glass", Vector3.zero, new Vector3(0.62f, 0.82f, 0.62f), kit.BulbMaterial);
+            Piece("Cap", new Vector3(0f, 0.5f, 0f), new Vector3(0.9f, 0.18f, 0.9f), kit.WireMaterial);
+            Piece("CapTop", new Vector3(0f, 0.64f, 0f), new Vector3(0.5f, 0.12f, 0.5f), kit.WireMaterial);
+            Piece("Base", new Vector3(0f, -0.48f, 0f), new Vector3(0.8f, 0.14f, 0.8f), kit.WireMaterial);
+            for (int i = 0; i < 4; i++)
+                Piece("Post", new Vector3((i & 1) == 0 ? -0.33f : 0.33f, 0f, (i & 2) == 0 ? -0.33f : 0.33f), new Vector3(0.07f, 0.9f, 0.07f), kit.WireMaterial);
+            Piece("Hanger", new Vector3(0f, 1.05f, 0f), new Vector3(0.04f, 0.8f, 0.04f), kit.WireMaterial);
+            return root;
         }
 
         /// <summary>Three nested flame layers; <paramref name="height"/> is the outer flame height in metres.</summary>
@@ -137,6 +218,77 @@ namespace LetMeSleep.Presentation
                 // The shader turns the quad toward the camera: cull against a cube, not the flat quad.
                 haloQuad.bounds = new Bounds(Vector3.zero, Vector3.one * 1.2f);
                 return haloQuad;
+            }
+        }
+
+        /// <summary>
+        /// Warm pool of light on the ground (v0.3.0 r3): a box decal centered on <paramref name="ground"/> (world), 2 x radius
+        /// wide and 1 m tall (0.35 m below to 0.65 m above the ground); the shader tints only the scene surfaces inside it.
+        /// </summary>
+        public static GameObject CreatePool(Transform parent, Vector3 ground, float radius, Color color, Material material)
+        {
+            var go = NewUpright(PoolName, parent, ground + Vector3.up * 0.15f - parent.position);
+            go.transform.localScale = Vector3.Scale(go.transform.localScale, new Vector3(radius * 2f, 1f, radius * 2f));
+            var renderer = Render(go, Box, material);
+            var block = new MaterialPropertyBlock();
+            block.SetColor(PoolColorId, color);
+            renderer.SetPropertyBlock(block);
+            return go;
+        }
+
+        /// <summary>Open cone along +Z from a small ring at the apex to a unit ring at z = 1; uv.x = distance along the shaft.</summary>
+        public static Mesh BeamCone
+        {
+            get
+            {
+                if (beamCone) return beamCone;
+                const int sides = 16;
+                const float apex = 0.18f; // A small start radius so the shaft leaves the lens, not a point.
+                var vertices = new List<Vector3>();
+                var normals = new List<Vector3>();
+                var uvs = new List<Vector2>();
+                var triangles = new List<int>();
+                for (int ring = 0; ring < 2; ring++)
+                {
+                    float z = ring;
+                    float r = ring == 0 ? apex : 1f;
+                    for (int s = 0; s <= sides; s++)
+                    {
+                        float a = s * Mathf.PI * 2f / sides;
+                        var radial = new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f);
+                        vertices.Add(radial * r + Vector3.forward * z);
+                        normals.Add((radial - Vector3.forward * (1f - apex)).normalized);
+                        uvs.Add(new Vector2(z, s / (float)sides));
+                    }
+                }
+                for (int s = 0; s < sides; s++)
+                {
+                    int a = s, b = s + 1, c = s + sides + 1, d = s + sides + 2;
+                    triangles.Add(a); triangles.Add(c); triangles.Add(b);
+                    triangles.Add(b); triangles.Add(c); triangles.Add(d);
+                }
+                beamCone = new Mesh { name = "Higgsfield_BeamCone", hideFlags = HideFlags.DontSave };
+                beamCone.SetVertices(vertices);
+                beamCone.SetNormals(normals);
+                beamCone.SetUVs(0, uvs);
+                beamCone.SetTriangles(triangles, 0);
+                beamCone.RecalculateBounds();
+                return beamCone;
+            }
+        }
+
+        /// <summary>Unit strip for the water glint; the shader places and orients it (bounds sized for 30 m streaks).</summary>
+        public static Mesh GlintQuad
+        {
+            get
+            {
+                if (glintQuad) return glintQuad;
+                glintQuad = new Mesh { name = "Higgsfield_GlintQuad", hideFlags = HideFlags.DontSave };
+                glintQuad.vertices = new[] { new Vector3(-.5f, 0, 0), new Vector3(.5f, 0, 0), new Vector3(.5f, 0, 1), new Vector3(-.5f, 0, 1) };
+                glintQuad.uv = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
+                glintQuad.triangles = new[] { 0, 2, 1, 0, 3, 2 };
+                glintQuad.bounds = new Bounds(Vector3.zero, new Vector3(62f, 2f, 62f));
+                return glintQuad;
             }
         }
 

@@ -5,7 +5,7 @@ import bpy
 from mathutils import Vector
 
 ROOT=Path(__file__).resolve().parent;sys.path.insert(0,str(ROOT))
-from human_menu_contract import CLIPS,CONTRACT,FPS,source_point
+from human_menu_contract import CLIPS,CONTRACT,FPS,SEATED_CLIPS,SLEEP_CLIPS,SLEEP_CONTRACT,source_point
 
 
 def curves(action):
@@ -62,7 +62,7 @@ def main():
         extras=[a for a in bpy.data.actions if a not in actions.values()]
         # One FBX take is imported as separate armature and shape-key actions.
         # Validate both channel families rather than counting unrelated IDs.
-        assert len(extras) in [0,4]
+        assert len(extras) in [0,len(CLIPS)]
         for extra in extras:
             assert any(extra.name.endswith(name) for name in CLIPS)
             assert all(f.data_path.startswith('key_blocks[') for f in curves(extra))
@@ -78,6 +78,21 @@ def main():
         for name,action in actions.items():
             start,end=map(float,action.frame_range)
             assert abs(start-1)<1e-6 and abs((end-start)/FPS-CLIPS[name])<1e-6
+            if name in SLEEP_CLIPS:
+                # Lying clips: Root fixed, top hand/head traced; seat, feet and grip gates are seated-only.
+                records=[];head_samples={};poses=[];root_error=0
+                for frame in range(1,int(end)+1):
+                    activate(rig,action,frame);verts=evaluated(meshes)
+                    current={b.name:list(rig.matrix_world@b.head) for b in rig.pose.bones};head_samples[frame]=current
+                    root_error=max(root_error,Vector(current['Root']).length)
+                    records.append({'frame':frame,'head_m':current['Head'],'hand_L_m':current['Hand.L'],'hand_R_m':current['Hand.R']})
+                    if frame in [start,end]:poses.append(verts)
+                if root_error>.0001:errors.append(kind+'/'+name+': Root moved')
+                heads[(kind,name)]=head_samples;boundaries[(kind,name)]=poses
+                rows.append({'format':kind,'clip':name,'samples':records,'max_root_error_m':root_error,
+                             'source_sha256':source['files_sha256'][path.name]})
+                print('LMS_MENU_AUDITED '+json.dumps({'format':kind,'clip':name,'samples':len(records)}),flush=True)
+                continue
             times=sorted(set(list(range(1,int(end)+1))+([22.0] if name=='MenuSwat' else [])))
             records=[];head_samples={};poses=[];floor=999;root_error=0;foot_error=0;seat_min=999;intrusions=0
             for frame in times:
@@ -122,11 +137,17 @@ def main():
         fidelity.append({'clip':name,'max_bone_difference_m':maximum})
         if maximum>.002:errors.append(name+': source/FBX pose mismatch')
     for kind in ['blend','fbx']:
-        for left,right in [('MenuSeatedIdle','MenuSeatedIdle'),('MenuSeatedIdle','MenuLook'),('MenuLook','MenuSwat'),('MenuSwat','MenuReturn'),('MenuReturn','MenuSeatedIdle')]:
+        for left,right in [('MenuSeatedIdle','MenuSeatedIdle'),('MenuSeatedIdle','MenuLook'),('MenuLook','MenuSwat'),('MenuSwat','MenuReturn'),('MenuReturn','MenuSeatedIdle'),
+                           ('MenuSleep','MenuSleep'),('MenuSleepSwat','MenuSleep')]:
             a=boundaries[(kind,left)][-1];b=boundaries[(kind,right)][0]
             maximum=max((p-q).length for name in a for p,q in zip(a[name],b[name]))
             links.append({'format':kind,'from':left,'to':right,'max_mesh_boundary_difference_m':maximum})
             if maximum>.002:errors.append(kind+'/'+left+'->'+right+': boundary mismatch')
+        # The sleeping swat starts on the MenuSleep t=0 pose too.
+        a=boundaries[(kind,'MenuSleep')][0];b=boundaries[(kind,'MenuSleepSwat')][0]
+        maximum=max((p-q).length for name in a for p,q in zip(a[name],b[name]))
+        links.append({'format':kind,'from':'MenuSleep@0','to':'MenuSleepSwat@0','max_mesh_boundary_difference_m':maximum})
+        if maximum>.002:errors.append(kind+'/MenuSleep@0->MenuSleepSwat@0: boundary mismatch')
     result={'passed_numeric_gates':not errors,'errors':errors,'scope':'Integer-frame native source/FBX, fixed feet/Root and clip boundaries; not visual/grip/seat approval',
             'actions':rows,'source_fbx':fidelity,'boundaries':links,'layouts':layouts,'tool_geometry_included':False,
             'tool_trace_note':'Production grip rotation-offset convention applied to source grip and impact point; full real prop shown in witness',

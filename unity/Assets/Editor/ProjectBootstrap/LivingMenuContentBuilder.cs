@@ -18,7 +18,9 @@ namespace LetMeSleep.Editor
         private const string Root = "Assets/LetMeSleep/Content/Characters";
         private const string Model = Root + "/Models/LMS_HumanMenu.fbx";
         private const string Prefab = Root + "/Prefabs/LMS_HumanMenu.prefab";
-        private static readonly string[] States = { "MenuSeatedIdle", "MenuLook", "MenuSwat", "MenuReturn" };
+        // v0.3.0: MenuSleep (loop) and MenuSleepSwat lie the actor in Prop_BedSleeper (UI-06 screen 1).
+        private static readonly string[] States = { "MenuSeatedIdle", "MenuLook", "MenuSwat", "MenuReturn", "MenuSleep", "MenuSleepSwat" };
+        private static readonly string[] Loops = { "MenuSeatedIdle", "MenuSleep" };
 
         public static void BuildAndBind(AlfaApplication app)
         {
@@ -48,7 +50,7 @@ namespace LetMeSleep.Editor
                 return new ModelImporterClipAnimation
                 {
                     name = name, takeName = take.takeName, firstFrame = take.firstFrame, lastFrame = take.lastFrame,
-                    loopTime = name == States[0], loopPose = false, lockRootRotation = true, lockRootHeightY = true,
+                    loopTime = Array.IndexOf(Loops, name) >= 0, loopPose = false, lockRootRotation = true, lockRootHeightY = true,
                     lockRootPositionXZ = true, keepOriginalOrientation = true, keepOriginalPositionY = true, keepOriginalPositionXZ = true
                 };
             }).ToArray();
@@ -68,10 +70,12 @@ namespace LetMeSleep.Editor
             app.MenuLook = clips.Single(c => c.name == States[1]);
             app.MenuSwat = clips.Single(c => c.name == States[2]);
             app.MenuReturn = clips.Single(c => c.name == States[3]);
+            app.MenuSleep = clips.Single(c => c.name == States[4]);
+            app.MenuSleepSwat = clips.Single(c => c.name == States[5]);
             app.MenuMosquitoFlight = AssetDatabase.LoadAllAssetsAtPath(Root + "/Models/LMS_Mosquito_alpha.fbx")
                 .OfType<AnimationClip>().Single(c => c.name == "Mosquito_Fly");
             if (!app.MenuFlyswatterPrefab) throw new InvalidDataException("Missing menu flyswatter prefab");
-            Debug.Log("LMS_LIVING_MENU_CONTENT_BUILT: dedicated actor, four seated clips and mosquito flight; native visual review pending.");
+            Debug.Log("LMS_LIVING_MENU_CONTENT_BUILT: dedicated actor, four seated and two sleeping clips and mosquito flight; native visual review pending.");
         }
 
         private static void BuildDecorativePrefab(GameObject production)

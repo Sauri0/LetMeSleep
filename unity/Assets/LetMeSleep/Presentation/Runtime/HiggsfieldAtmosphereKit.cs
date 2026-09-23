@@ -21,6 +21,12 @@ namespace LetMeSleep.Presentation
         public Material WireMaterial;
         [Tooltip("LetMeSleep/Higgsfield/NightWindow forced to night (menu/lobby window: night sky, stars and moon).")]
         public Material MenuWindowMaterial;
+        [Tooltip("v0.3.0 r3 LetMeSleep/Higgsfield/Beam: additive rotating light shaft (lighthouse). Optional.")]
+        public Material BeamMaterial;
+        [Tooltip("v0.3.0 r3 LetMeSleep/Higgsfield/Glint: warm reflection streak of a lamp on night water. Optional.")]
+        public Material GlintMaterial;
+        [Tooltip("v0.3.0 r3 LetMeSleep/Higgsfield/Pool: warm ground pool decal under a lantern. Optional.")]
+        public Material PoolMaterial;
 
         public bool IsComplete => HaloMaterial && FlameOuter && FlameMiddle && FlameCore && BulbMaterial && WireMaterial && MenuWindowMaterial;
     }

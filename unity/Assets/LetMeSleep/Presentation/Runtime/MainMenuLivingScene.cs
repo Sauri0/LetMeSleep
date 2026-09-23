@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HumanBeat = LetMeSleep.Presentation.MenuReactionPolicy.Beat;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -30,12 +31,47 @@ namespace LetMeSleep.Presentation
             public float LookSeconds = 2f, SwatSeconds = 1.2f, ReturnSeconds = 1.6f;
             [Range(0, 1)] public float SwatContactNormalized = .5f;
             public Vector3 MosquitoRotationOffset;
+            // v0.3.0 sleeping menu (UI-06 screen 1). With MenuSleep set the human lies at HumanSeatRoot (the bed's sleeper
+            // anchor) looping MenuSleep with the eyes held closed; the seated clips are not used. When the mosquito is about
+            // to pass within SwatRadius of HumanReactionAnchor (the ear) the sleeper does MenuSleepSwat, a clumsy slap that
+            // starts and ends on the MenuSleep t=0 pose, then at most once per SleepSwatCooldownSeconds.
+            public AnimationClip MenuSleep, MenuSleepSwat;
+            public SkinnedMeshRenderer SleepEyelids;
+            public string[] SleepEyelidShapes;
+            public float SleepSwatCooldownSeconds = 8f;
+            [Tooltip("Sleeping menu: point the hovering mosquito faces (default: the sleeper's ear).")]
+            public Transform MosquitoFaceTarget;
+            // v0.3.0 scenes r2 (director #2/#3): flattened sleeping lids with closed-eye lines and a small smile, the head
+            // turned toward SleepFaceToward (the menu camera), and the mosquito looking toward its face target so its black
+            // pupils face the viewer. SleepFace null keeps the authored face.
+            public SleepingFaceRig.Settings SleepFace;
+            public Transform SleepHeadBone, SleepLeftEye, SleepRightEye, SleepFaceToward;
+            public Vector3 SleepEyeForward = Vector3.up, SleepHeadForward = Vector3.forward, SleepHeadUp = Vector3.up;
+            [Range(0f, 1f)] public float MosquitoFacing = .85f;
+            // Director #3: the menu mosquito's black pupils read at >= 30 % of the eye diameter (authored ~25 %): the pupil
+            // pivots scale across their look axis (never along it) after animation.
+            public Transform[] MosquitoPupils;
+            public Vector3 MosquitoPupilForward = Vector3.forward;
+            public float MosquitoPupilScale = 1f;
+            // Director #3: matte black pupils in the menu (per-material property block on Mosquito_Expression); < 0 = off.
+            public float MosquitoPupilSmoothness = -1f;
+            // Director #3: hover flutter. With FlightHoverTime >= 0 the flight clip plays a fast narrow flutter around that
+            // time (the wings' widest spread) instead of the full wingbeat, so the silhouette keeps its wingspan.
+            public float FlightHoverTime = -1f, FlightHoverWobble = .02f, FlightHoverRate = 9f;
         }
 
         private Bindings bindings;
         private PlayableGraph graph;
         private AnimationMixerPlayable humanMixer;
-        private AnimationClipPlayable idle, look, swat, returning, flight;
+        private AnimationClipPlayable idle, look, swat, returning, flight, sleep, sleepSwat;
+        private int[] eyelidIndices;
+        private SleepingFaceRig sleepFace;
+        public SleepingFaceRig SleepFace => sleepFace;
+        private readonly float[] eyelidWeights=new float[4];
+        private readonly List<(Renderer renderer,int index,MaterialPropertyBlock original)> pupilSlots=new List<(Renderer,int,MaterialPropertyBlock)>();
+        private MaterialPropertyBlock pupilBlock;
+        private bool pupilSlotsScanned;
+        private float sinceSleepSwat;
         private bool configured, requestedActive = true, reducedMotion, running;
         private double elapsed;
         private int lastSampleFrame=-1;
@@ -68,9 +104,12 @@ namespace LetMeSleep.Presentation
             }
         }
 
+        public bool Sleeping => configured && bindings != null && bindings.MenuSleep;
+
         public bool Configure(Bindings value)
         {
             Release();
+            bool sleeping = value != null && value.MenuSleep;
             if (value == null || !Owned(value.HumanRoot) || !Owned(value.MosquitoRoot) ||
                 value.HumanRoot == value.MosquitoRoot || value.HumanRoot.IsChildOf(value.MosquitoRoot) ||
                 value.MosquitoRoot.IsChildOf(value.HumanRoot) || !value.HumanSeatRoot ||
@@ -78,15 +117,17 @@ namespace LetMeSleep.Presentation
                 !ValidAnimator(value.HumanAnimator, value.HumanRoot) ||
                 !ValidAnimator(value.MosquitoAnimator, value.MosquitoRoot) ||
                 !ValidAttention(value.HumanAttention,value.HumanRoot) || !ValidAttention(value.MosquitoAttention,value.MosquitoRoot) ||
-                !ValidClip(value.MenuSeatedIdle) || !ValidClip(value.MenuSwat) || !ValidClip(value.MenuReturn) || !ValidClip(value.MenuLook) || !ValidClip(value.Flight) ||
-                (value.MenuLook && !ValidClip(value.MenuLook)) ||
+                (sleeping ? !ValidClip(value.MenuSleep) || !ValidClip(value.MenuSleepSwat) || !FinitePositive(value.SleepSwatCooldownSeconds) ||
+                    (value.SleepEyelids && (value.SleepEyelidShapes == null || value.SleepEyelidShapes.Length != 8 || !value.SleepEyelids.transform.IsChildOf(value.HumanRoot)))
+                 : !ValidClip(value.MenuSeatedIdle) || !ValidClip(value.MenuSwat) || !ValidClip(value.MenuReturn) || !ValidClip(value.MenuLook)) ||
+                !ValidClip(value.Flight) ||
                 value.FlightPoints == null || value.FlightPoints.Length < 4 ||
                 !FinitePositive(value.CycleSeconds) || !FinitePositive(value.FirstLookAfterSeconds) ||
                 !FinitePositive(value.LookSeconds) || !FinitePositive(value.SwatSeconds) || !FinitePositive(value.ReturnSeconds) ||
                 !FinitePositive(value.NoticeRadius) || !FinitePositive(value.SwatRadius) ||
                 float.IsNaN(value.SwatContactNormalized) || float.IsInfinity(value.SwatContactNormalized))
             {
-                Debug.LogError("MainMenuLivingScene requires decorative children, seated clips and at least four flight anchors.", this);
+                Debug.LogError("MainMenuLivingScene requires decorative children, seated (or sleeping) clips and at least four flight anchors.", this);
                 return false;
             }
             foreach (var point in value.FlightPoints)
@@ -106,8 +147,33 @@ namespace LetMeSleep.Presentation
                 HumanReactionAnchor=value.HumanReactionAnchor, HumanReactionOffset=value.HumanReactionOffset,
                 NoticeRadius=value.NoticeRadius, SwatRadius=value.SwatRadius,
                 SwatContactNormalized=Mathf.Clamp01(value.SwatContactNormalized),
-                MosquitoRotationOffset=value.MosquitoRotationOffset
+                MosquitoRotationOffset=value.MosquitoRotationOffset,
+                MenuSleep=value.MenuSleep, MenuSleepSwat=value.MenuSleepSwat, SleepEyelids=value.SleepEyelids,
+                SleepEyelidShapes=value.SleepEyelidShapes==null ? null : (string[])value.SleepEyelidShapes.Clone(),
+                SleepSwatCooldownSeconds=value.SleepSwatCooldownSeconds, MosquitoFaceTarget=value.MosquitoFaceTarget,
+                SleepFace=value.SleepFace, SleepHeadBone=value.SleepHeadBone, SleepLeftEye=value.SleepLeftEye, SleepRightEye=value.SleepRightEye,
+                SleepFaceToward=value.SleepFaceToward, SleepEyeForward=value.SleepEyeForward, SleepHeadForward=value.SleepHeadForward,
+                SleepHeadUp=value.SleepHeadUp, MosquitoFacing=Mathf.Clamp01(value.MosquitoFacing),
+                MosquitoPupils=value.MosquitoPupils==null ? null : (Transform[])value.MosquitoPupils.Clone(),
+                MosquitoPupilForward=value.MosquitoPupilForward, MosquitoPupilScale=Mathf.Clamp(value.MosquitoPupilScale,.5f,2f),
+                MosquitoPupilSmoothness=Mathf.Min(1f,value.MosquitoPupilSmoothness),
+                FlightHoverTime=value.FlightHoverTime, FlightHoverWobble=Mathf.Max(0f,value.FlightHoverWobble), FlightHoverRate=Mathf.Max(0f,value.FlightHoverRate)
             };
+            if (sleeping)
+            {
+                // The cycle only needs to hold the swat plus a quiet stretch; there is no look/return beat.
+                bindings.CycleSeconds=Mathf.Max(value.CycleSeconds,value.FirstLookAfterSeconds+value.MenuSleepSwat.length+2f);
+                eyelidIndices=null;
+                if (bindings.SleepEyelids && bindings.SleepEyelids.sharedMesh)
+                {
+                    eyelidIndices=new int[8];
+                    for (int i=0;i<8;i++)
+                    {
+                        eyelidIndices[i]=bindings.SleepEyelids.sharedMesh.GetBlendShapeIndex(bindings.SleepEyelidShapes[i]);
+                        if (eyelidIndices[i]<0) { eyelidIndices=null; break; }
+                    }
+                }
+            }
             elapsed=0;
             configured = true;
             if (isActiveAndEnabled && requestedActive) Begin();
@@ -153,6 +219,30 @@ namespace LetMeSleep.Presentation
                 Prepare(bindings.HumanAnimator); Prepare(bindings.MosquitoAnimator);
                 graph=PlayableGraph.Create("MainMenuLivingScene");
                 graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
+                if (bindings.MenuSleep)
+                {
+                    humanMixer=AnimationMixerPlayable.Create(graph,2);
+                    sleep=Clip(bindings.MenuSleep); sleepSwat=Clip(bindings.MenuSleepSwat);
+                    graph.Connect(sleep,0,humanMixer,0); graph.Connect(sleepSwat,0,humanMixer,1);
+                    AnimationPlayableOutput.Create(graph,"Sleeping human",bindings.HumanAnimator).SetSourcePlayable(humanMixer);
+                    flight=Clip(bindings.Flight);
+                    AnimationPlayableOutput.Create(graph,"Flying mosquito",bindings.MosquitoAnimator).SetSourcePlayable(flight);
+                    // The bedroom set owns the lamp and moon lights; no seat key/fill here.
+                    warm=CreateLight("Menu warm seat light",bindings.WarmLightAnchor,new Color(1f,.76f,.53f),1.2f,3.5f);
+                    cool=CreateLight("Menu cool fill",bindings.CoolLightAnchor,new Color(.58f,.72f,1f),.45f,3.8f);
+                    beat=HumanBeat.Idle; beatTime=0; sinceSleepSwat=0;
+                    if(bindings.MosquitoAttention) bindings.MosquitoAttention.SetReducedMotion(reducedMotion);
+                    if (bindings.SleepFace!=null && bindings.SleepEyelids && bindings.SleepHeadBone && bindings.SleepEyelidShapes!=null &&
+                        bindings.SleepHeadBone.IsChildOf(bindings.HumanRoot))
+                        sleepFace=SleepingFaceRig.TryCreate(bindings.SleepFace,bindings.SleepEyelids,bindings.SleepHeadBone,bindings.SleepLeftEye,
+                            bindings.SleepRightEye,bindings.SleepEyeForward,bindings.SleepHeadForward,bindings.SleepHeadUp,
+                            new[]{bindings.SleepEyelidShapes[0],bindings.SleepEyelidShapes[1],bindings.SleepEyelidShapes[2],bindings.SleepEyelidShapes[3]},
+                            new[]{bindings.SleepEyelidShapes[4],bindings.SleepEyelidShapes[5],bindings.SleepEyelidShapes[6],bindings.SleepEyelidShapes[7]},
+                            bindings.SleepFaceToward);
+                    lastSampleFrame=-1;
+                    graph.Play();
+                    return;
+                }
                 humanMixer=AnimationMixerPlayable.Create(graph,4);
                 idle=Clip(bindings.MenuSeatedIdle); swat=Clip(bindings.MenuSwat); returning=Clip(bindings.MenuReturn);
                 graph.Connect(idle,0,humanMixer,0); graph.Connect(swat,0,humanMixer,2); graph.Connect(returning,0,humanMixer,3);
@@ -218,7 +308,7 @@ namespace LetMeSleep.Presentation
             if (!running) return;
             if (!ReferencesAlive()) { End(); return; }
             // Menu clock deliberately follows unscaled time, without writing any game clock.
-            if (!reducedMotion) { elapsed += Time.unscaledDeltaTime; beatTime += Time.unscaledDeltaTime; }
+            if (!reducedMotion) { elapsed += Time.unscaledDeltaTime; beatTime += Time.unscaledDeltaTime; sinceSleepSwat += Time.unscaledDeltaTime; }
         }
         private void LateUpdate()
         {
@@ -229,6 +319,7 @@ namespace LetMeSleep.Presentation
         }
         private void Sample(float deltaSeconds=0)
         {
+            if (bindings.MenuSleep) { SampleSleeping(deltaSeconds); return; }
             float phase=FlightPhase(elapsed);
             Vector3 currentPosition,currentTangent;
             Path(phase,out currentPosition,out currentTangent);
@@ -282,6 +373,127 @@ namespace LetMeSleep.Presentation
                 bindings.MosquitoAttention.EvaluateAfterAnimation(deltaSeconds);
             }
         }
+        /// <summary>Sleeping sample: MenuSleep loops, the clumsy swat fires near the ear, eyelids stay shut.</summary>
+        private void SampleSleeping(float deltaSeconds)
+        {
+            float phase=FlightPhase(elapsed);
+            Vector3 position,tangent;
+            Path(phase,out position,out tangent);
+            Transform ear=bindings.HumanReactionAnchor ? bindings.HumanReactionAnchor : bindings.HumanSeatRoot;
+            float swatLength=bindings.MenuSleepSwat.length;
+            float contact=swatLength*.5f;
+            Vector3 predicted,predictedTangent;
+            Path(FlightPhase(elapsed+contact),out predicted,out predictedTangent);
+            if (reducedMotion) { if (beat!=HumanBeat.Idle) ChangeBeat(HumanBeat.Idle); }
+            else if (beat==HumanBeat.Idle && elapsed>=bindings.FirstLookAfterSeconds && sinceSleepSwat>=bindings.SleepSwatCooldownSeconds &&
+                     Vector3.Distance(predicted,ear.position)<=bindings.SwatRadius)
+            { ChangeBeat(HumanBeat.Swat); sinceSleepSwat=0; }
+            else if (beat==HumanBeat.Swat && beatTime>=swatLength) ChangeBeat(HumanBeat.Idle);
+            float swatWeight=0;
+            if (beat==HumanBeat.Swat)
+                swatWeight=Mathf.SmoothStep(0,1,beatTime/.2f)*Mathf.SmoothStep(0,1,(swatLength-beatTime)/.3f);
+            humanMixer.SetInputWeight(0,1-swatWeight); humanMixer.SetInputWeight(1,swatWeight);
+            sleep.SetTime(reducedMotion ? 0 : elapsed % bindings.MenuSleep.length);
+            sleepSwat.SetTime(beat==HumanBeat.Swat ? Mathf.Min(beatTime,swatLength) : 0);
+            if (bindings.FlightHoverTime>=0f)
+            {
+                float hover=reducedMotion ? bindings.FlightHoverTime
+                    : bindings.FlightHoverTime+bindings.FlightHoverWobble*Mathf.Sin((float)(elapsed*bindings.FlightHoverRate*2.0*Math.PI));
+                flight.SetTime(Mathf.Repeat(hover,bindings.Flight.length));
+            }
+            else flight.SetTime(reducedMotion ? 0 : elapsed % bindings.Flight.length);
+            bindings.HumanRoot.SetPositionAndRotation(bindings.HumanSeatRoot.position,bindings.HumanSeatRoot.rotation);
+            bindings.MosquitoRoot.position=position;
+            if (tangent.sqrMagnitude>.000001f)
+            {
+                Vector3 ahead,aheadTangent;
+                Path(Mathf.Repeat(phase+.002f,1),out ahead,out aheadTangent);
+                float bank=reducedMotion ? 0 : Mathf.Clamp(-Vector3.SignedAngle(tangent,aheadTangent,Vector3.up)*2,-12,12);
+                // Hovering around its victim: the body keeps turning toward the sleeper's ear (eyes toward the room) instead
+                // of flying tail-first along the loop.
+                Vector3 toTarget=(bindings.MosquitoFaceTarget ? bindings.MosquitoFaceTarget.position : ear.position)-position;
+                Vector3 face=toTarget.sqrMagnitude>.0001f ? Vector3.Slerp(tangent.normalized,toTarget.normalized,bindings.MosquitoFacing) : tangent;
+                bindings.MosquitoRoot.rotation=Quaternion.LookRotation(face,Vector3.up)*Quaternion.Euler(0,0,bank)*Quaternion.Euler(bindings.MosquitoRotationOffset);
+            }
+            if (bindings.MosquitoAttention) bindings.MosquitoAttention.PrepareForAnimation();
+            graph.Evaluate(0);
+            WriteClosedEyes();
+            sleepFace?.Apply();
+            ScalePupils(bindings.MosquitoPupilScale);
+            MattePupils();
+            if (bindings.MosquitoAttention)
+            {
+                // Looking toward the viewer side (not the far ear) keeps the black pupils visible from the menu camera.
+                bindings.MosquitoAttention.SetLookTarget(bindings.MosquitoFaceTarget ? bindings.MosquitoFaceTarget : ear);
+                bindings.MosquitoAttention.EvaluateAfterAnimation(deltaSeconds);
+            }
+        }
+
+        private void ScalePupils(float factor)
+        {
+            if (bindings.MosquitoPupils==null) return;
+            Vector3 axis=bindings.MosquitoPupilForward.normalized;
+            Vector3 across=new Vector3(1f-Mathf.Abs(axis.x),1f-Mathf.Abs(axis.y),1f-Mathf.Abs(axis.z));
+            Vector3 scale=Vector3.one+across*(factor-1f);
+            foreach (var pupil in bindings.MosquitoPupils)
+                if (pupil && pupil.IsChildOf(bindings.MosquitoRoot)) pupil.localScale=scale;
+        }
+
+        private void MattePupils()
+        {
+            if (bindings.MosquitoPupilSmoothness<0f || !bindings.MosquitoRoot) return;
+            if (!pupilSlotsScanned)
+            {
+                pupilSlotsScanned=true;
+                foreach (var renderer in bindings.MosquitoRoot.GetComponentsInChildren<Renderer>(true))
+                {
+                    var materials=renderer.sharedMaterials;
+                    for (int i=0;i<materials.Length;i++)
+                    {
+                        if (!materials[i] || !materials[i].name.StartsWith("Mosquito_Expression",StringComparison.Ordinal)) continue;
+                        var original=new MaterialPropertyBlock();
+                        renderer.GetPropertyBlock(original,i);
+                        pupilSlots.Add((renderer,i,original));
+                    }
+                }
+            }
+            pupilBlock??=new MaterialPropertyBlock();
+            // Read back every frame: the character view may have set its own colour block on the same slot.
+            foreach (var slot in pupilSlots)
+            {
+                if (!slot.renderer) continue;
+                slot.renderer.GetPropertyBlock(pupilBlock,slot.index);
+                pupilBlock.SetFloat(SmoothnessId,bindings.MosquitoPupilSmoothness);
+                slot.renderer.SetPropertyBlock(pupilBlock,slot.index);
+            }
+        }
+
+        private static readonly int SmoothnessId=Shader.PropertyToID("_Smoothness");
+
+        private void RestorePupils()
+        {
+            foreach (var slot in pupilSlots)
+                if (slot.renderer) slot.renderer.SetPropertyBlock(slot.original.isEmpty ? null : slot.original,slot.index);
+            pupilSlots.Clear(); pupilSlotsScanned=false;
+        }
+
+        private void WriteClosedEyes()
+        {
+            if (eyelidIndices==null || !bindings.SleepEyelids) return;
+            BlinkWeightPolicy.Fill(1f,eyelidWeights);
+            for (int i=0;i<4;i++)
+            {
+                bindings.SleepEyelids.SetBlendShapeWeight(eyelidIndices[i],eyelidWeights[i]);
+                bindings.SleepEyelids.SetBlendShapeWeight(eyelidIndices[4+i],eyelidWeights[i]);
+            }
+        }
+
+        private void OpenEyes()
+        {
+            if (eyelidIndices==null || !bindings.SleepEyelids) return;
+            foreach (int index in eyelidIndices) bindings.SleepEyelids.SetBlendShapeWeight(index,0);
+        }
+
         private void ChangeBeat(HumanBeat next)
         {
             if(next==HumanBeat.Settle) settleLookTime=Mathf.Clamp01(beatTime/bindings.LookSeconds)*bindings.MenuLook.length;
@@ -312,6 +524,10 @@ namespace LetMeSleep.Presentation
             if(bindings.HumanAttention) { bindings.HumanAttention.PrepareForAnimation(); bindings.HumanAttention.ClearLookTarget(); }
             if(bindings.MosquitoAttention) { bindings.MosquitoAttention.PrepareForAnimation(); bindings.MosquitoAttention.ClearLookTarget(); }
             if(graph.IsValid()) graph.Destroy();
+            sleepFace?.Dispose(); sleepFace=null;
+            if (bindings.MosquitoPupils!=null) ScalePupils(1f);
+            RestorePupils();
+            if(bindings.MenuSleep) OpenEyes();
             humanState.Restore(bindings.HumanAnimator); mosquitoState.Restore(bindings.MosquitoAnimator);
             if(bindings.HumanRoot) { bindings.HumanRoot.localPosition=humanPosition; bindings.HumanRoot.localRotation=humanRotation; }
             if(bindings.MosquitoRoot) { bindings.MosquitoRoot.localPosition=mosquitoPosition; bindings.MosquitoRoot.localRotation=mosquitoRotation; }
@@ -319,6 +535,6 @@ namespace LetMeSleep.Presentation
             if(cool) { cool.enabled=false; Destroy(cool.gameObject); }
             warm=null; cool=null;
         }
-        private void Release() { End(); configured=false; bindings=null; elapsed=0; beat=HumanBeat.Idle; beatTime=0; }
+        private void Release() { End(); configured=false; bindings=null; elapsed=0; beat=HumanBeat.Idle; beatTime=0; eyelidIndices=null; }
     }
 }

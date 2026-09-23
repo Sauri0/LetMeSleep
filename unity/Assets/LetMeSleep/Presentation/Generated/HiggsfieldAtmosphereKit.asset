@@ -19,3 +19,6 @@ MonoBehaviour:
   BulbMaterial: {fileID: 2100000, guid: 874e8e0743a99d542b32f19702fc643a, type: 2}
   WireMaterial: {fileID: 2100000, guid: 7a159c3abee71ad4b820aa5043488393, type: 2}
   MenuWindowMaterial: {fileID: 2100000, guid: ee7f1d3cd6104c9468de83b6fae71edf, type: 2}
+  BeamMaterial: {fileID: 2100000, guid: 52d9808d06f3ac6488a92698c9493d32, type: 2}
+  GlintMaterial: {fileID: 2100000, guid: 55d1c4975c8e10f4a8293aa29d7599b0, type: 2}
+  PoolMaterial: {fileID: 2100000, guid: b0b266f0e0203744996d7c34bcba7c74, type: 2}

@@ -444,6 +444,17 @@ namespace LetMeSleep.Gameplay.Unity
             if (!IsHost) SnapshotReady?.Invoke(snapshot);
         }
         public void ApplySnapshot(GameSessionState snapshot, double renderHostTime) => ApplySnapshot(snapshot);
+        /// <summary>
+        /// v0.3.0 (maps director #1/#9): initial local view yaw right after BeginRound, from the map's authored spawn facing
+        /// (radians, 0 = +Z, clockwise seen from above). Level pitch; the next input command carries it to the host.
+        /// </summary>
+        public void FaceLocalView(float yawRadians)
+        {
+            if (!MathEx.Finite(yawRadians)) throw new ArgumentException("Finite spawn yaw required.");
+            yaw = Mathf.Repeat(yawRadians + Mathf.PI, Mathf.PI * 2) - Mathf.PI; pitch = 0;
+            mosquitoLookReady = false; // The mosquito look frame re-seeds from LocalViewForward.
+            held = new PlayerInputCommand(default, default, 0, yaw, pitch, LocalViewForward);
+        }
         private static bool BodyControlsAvailable(LifeState state) =>
             state != LifeState.Falling && state != LifeState.Fainted && state != LifeState.Stunned &&
             state != LifeState.Recovering && state != LifeState.Eliminated;

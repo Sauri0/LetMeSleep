@@ -62,7 +62,19 @@ namespace LetMeSleep.Content.Characters
         }
 
         public bool IsFirstPerson => firstPerson;
-        private void OnEnable() { SetFirstPersonVisibility(firstPerson); RefreshAnchors(); }
+        private bool headShownToCamera;
+        private void OnEnable()
+        {
+            SetFirstPersonVisibility(firstPerson); RefreshAnchors();
+            RenderPipelineManager.beginCameraRendering += ShowHeadToOtherCameras;
+            RenderPipelineManager.endCameraRendering += HideHeadAfterCamera;
+        }
+        private void OnDisable()
+        {
+            RenderPipelineManager.beginCameraRendering -= ShowHeadToOtherCameras;
+            RenderPipelineManager.endCameraRendering -= HideHeadAfterCamera;
+            if (headShownToCamera) { headShownToCamera = false; SetFirstPersonVisibility(firstPerson); }
+        }
         private void LateUpdate() => RefreshAnchors();
 
         public void SetFirstPersonVisibility(bool enabled)
@@ -73,6 +85,34 @@ namespace LetMeSleep.Content.Characters
                 if (renderer == null) continue;
                 renderer.shadowCastingMode = enabled ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On;
             }
+        }
+
+        // v0.3.0 (maps director #9): first person hides the head only from the camera that sits inside it. Free, spectator
+        // and capture cameras render the local human with its head; the head keeps casting shadows for every camera, and
+        // between renders the renderers stay in the first-person (shadow-only) state.
+        private void ShowHeadToOtherCameras(ScriptableRenderContext context, Camera camera)
+        {
+            if (!firstPerson || camera == null || HeadRenderers == null || HeadRenderers.Length == 0) return;
+            bool any = false;
+            var head = new Bounds();
+            foreach (var renderer in HeadRenderers)
+            {
+                if (renderer == null) continue;
+                if (!any) { head = renderer.bounds; any = true; } else head.Encapsulate(renderer.bounds);
+            }
+            if (!any) return;
+            head.Expand(0.3f);
+            if (head.Contains(camera.transform.position)) return; // The first-person eye.
+            foreach (var renderer in HeadRenderers)
+                if (renderer != null) renderer.shadowCastingMode = ShadowCastingMode.On;
+            headShownToCamera = true;
+        }
+
+        private void HideHeadAfterCamera(ScriptableRenderContext context, Camera camera)
+        {
+            if (!headShownToCamera) return;
+            headShownToCamera = false;
+            SetFirstPersonVisibility(firstPerson);
         }
 
         public Transform GetAnchor(string name)

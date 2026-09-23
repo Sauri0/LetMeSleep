@@ -420,6 +420,7 @@ namespace LetMeSleep.Bootstrap
             game.LocalActorId = local.ActorId; game.LocalPrincipal = local.OwnerPuid;
             game.MouseSensitivity = .002f * (local.Role == PlayerRole.Human ? settings.HumanSensitivity : settings.MosquitoSensitivity);
             game.InvertY = settings.InvertY; game.BeginRound(config, roster);
+            FaceAuthoredSpawn(local);
             SyncVoiceContext();
             if (!training) RecordPlaytest("RoundStarted",state:game.LatestSnapshot,role:local.Role.ToString());
             MenuCamera.enabled = false; MenuCamera.GetComponent<AudioListener>().enabled = false;
@@ -431,12 +432,50 @@ namespace LetMeSleep.Bootstrap
         }
         private SpawnActor[] MakeRoster(RoomView view)
         {
-            int human = 0, mosquito = 0;
+            int human = 0, mosquito = 0, humans = view.Members.Count(m => m.Role == PlayerRole.Human);
             return view.Members.Select((m, i) => new SpawnActor((uint)i + 1, m.Id, m.Role,
-                SpawnPoint(m.Role == PlayerRole.Human, m.Role == PlayerRole.Human ? human++ : mosquito++))).ToArray();
+                SpawnPoint(m.Role == PlayerRole.Human, m.Role == PlayerRole.Human ? human++ : mosquito++, humans))).ToArray();
         }
-        private Float3 SpawnPoint(bool human, int index)
-        { var points = human ? map.HumanSpawnPoints : map.MosquitoSpawnPoints; return points[index % points.Length].position.ToFloat(); }
+        // v0.3.0 (maps director #1/#9): the imported spawn EMPTYs carry no rotation, so the local view starts at the
+        // map catalog's authored facing for that spawn (e.g. the camp spawn looks at the fire, not at a tent wall).
+        private void FaceAuthoredSpawn(SpawnActor local)
+        {
+            var entry = HiggsfieldMaps && map ? HiggsfieldMaps.Entries.FirstOrDefault(e => e.MapId == map.MapId) : null;
+            if (entry == null) return;
+            bool human = local.Role == PlayerRole.Human;
+            var points = human ? map.HumanSpawnPoints : map.MosquitoSpawnPoints;
+            for (int i = 0; i < (points?.Length ?? 0); i++)
+            {
+                if (!points[i]) continue;
+                var p = points[i].position;
+                if (Mathf.Abs(p.x - local.Position.X) > .01f || Mathf.Abs(p.y - local.Position.Y) > .01f || Mathf.Abs(p.z - local.Position.Z) > .01f) continue;
+                if (entry.TryGetSpawnYaw(human, i, out float yaw)) game.FaceLocalView(yaw * Mathf.Deg2Rad);
+                return;
+            }
+        }
+        private Float3 SpawnPoint(bool human, int index, int humansInRound = 1)
+        {
+            if (human) return map.HumanSpawnPoints[index % map.HumanSpawnPoints.Length].position.ToFloat();
+            var order = MosquitoSpawnOrder(map, humansInRound);
+            return map.MosquitoSpawnPoints[order[index % order.Length]].position.ToFloat();
+        }
+
+        /// <summary>
+        /// v0.3.0 scenes r2 (director #9): mosquitoes start at least <see cref="MinimumSpawnSeparation"/> m from every human
+        /// spawn used this round, so nobody is bitten in the first second ("TE ESTÁN PICANDO" at 02:59). Authored order among
+        /// the far-enough points, then the rest from the farthest; deterministic (the host sends the positions).
+        /// </summary>
+        public const float MinimumSpawnSeparation = 6f;
+        public static int[] MosquitoSpawnOrder(EnvironmentMapDefinition definition, int humansInRound)
+        {
+            var mosquitoes = definition.MosquitoSpawnPoints;
+            var humans = definition.HumanSpawnPoints;
+            int used = Mathf.Clamp(humansInRound, 1, Mathf.Max(1, humans.Length));
+            float Nearest(int i) => Enumerable.Range(0, used).Min(h => Vector3.Distance(mosquitoes[i].position, humans[h % humans.Length].position));
+            var far = Enumerable.Range(0, mosquitoes.Length).Where(i => Nearest(i) >= MinimumSpawnSeparation);
+            var near = Enumerable.Range(0, mosquitoes.Length).Where(i => Nearest(i) < MinimumSpawnSeparation).OrderByDescending(Nearest);
+            return far.Concat(near).ToArray();
+        }
         private void PresentGame(GameSessionState state)
         {
             ObservePlaytestResult(state);
@@ -581,6 +620,14 @@ namespace LetMeSleep.Bootstrap
             LightingRig.UnbindHiggsfield();
             if (map) { map.gameObject.SetActive(false); Destroy(map.gameObject); }
             map = Instantiate(entry != null ? entry.Prefab.gameObject : house ? HousePrefab : LobbyPrefab).GetComponent<EnvironmentMapDefinition>();
+            // v0.3.0 visual-only decoration, child of the map (destroyed with it) and present before lighting binds so its
+            // renderers get the map's interior ambient and light layers. Validated by the catalog: never a collider.
+            if (entry != null && entry.Decor) InstantiateDecor(entry.Decor, "_LMS_Decor");
+            if (entry == null && !house)
+            {
+                if (LobbyDecorPrefab) InstantiateDecor(LobbyDecorPrefab, "_LMS_LobbyDecor");
+                if (MenuBedroomPrefab) InstantiateDecor(MenuBedroomPrefab, "_LMS_MenuBedroom");
+            }
             if (entry != null) LightingRig.BindHiggsfield(map.transform, HiggsfieldMaps.ResolveLighting(mapId, map));
             else LightingRig.BindMap(map.PresentationAnchors,house);
             MenuCamera.enabled = true; MenuCamera.GetComponent<AudioListener>().enabled = true;
@@ -596,6 +643,12 @@ namespace LetMeSleep.Bootstrap
                 CreateLivingMenu();
             }
             if (ui) OnUiScreenChanged(ui.CurrentScreen);
+        }
+        private GameObject InstantiateDecor(GameObject prefab, string name)
+        {
+            var decor = Instantiate(prefab, map.transform, false);
+            decor.name = name;
+            return decor;
         }
         private void OnUiScreenChanged(AlfaUiScreen screen)
         {
