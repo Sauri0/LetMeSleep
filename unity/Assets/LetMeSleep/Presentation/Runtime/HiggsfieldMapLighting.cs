@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace LetMeSleep.Presentation
 {
@@ -32,6 +33,11 @@ namespace LetMeSleep.Presentation
             public float Range = float.NaN;
             public float SpotAngle = 90, InnerSpotAngle = 60;
             public LightShadows Shadows = LightShadows.None;
+            // v0.3.0: URP additional-light shadow tier (0 Low, 1 Medium, 2 High = URP default) for shadowed
+            // sources, so interiors do not overflow the 2048 shadow atlas and get downscaled.
+            public int ShadowResolutionTier = UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierHigh;
+            // v0.3.0: soft visual flicker for fire/candle sources, fraction of intensity (0 = steady, max 0.6).
+            public float Flicker;
         }
 
         [Serializable] public sealed class Configuration
@@ -82,6 +88,7 @@ namespace LetMeSleep.Presentation
         private VolumeProfile oldVolumeProfile;
         private float oldVolumeWeight;
         private bool oldVolumeEnabled;
+        private readonly List<KeyValuePair<HiggsfieldGpuWater, bool>> waterFog = new List<KeyValuePair<HiggsfieldGpuWater, bool>>();
 
         public static void Validate(Transform root, Light sun, Configuration config)
         {
@@ -106,10 +113,16 @@ namespace LetMeSleep.Presentation
                 if (!Finite(source.Range) || source.Range <= 0 || !Finite(source.SpotAngle) || !Finite(source.InnerSpotAngle) ||
                     source.SpotAngle <= 0 || source.SpotAngle >= 180 || source.InnerSpotAngle < 0 || source.InnerSpotAngle > source.SpotAngle)
                     throw new ArgumentException("Invalid local range or spot angles.");
+                if (!ValidShadowTier(source.ShadowResolutionTier) || !Finite(source.Flicker) || source.Flicker < 0 ||
+                    source.Flicker > HiggsfieldLightFlicker.MaximumAmplitude)
+                    throw new ArgumentException("Invalid local shadow tier (0..2) or flicker (0..0.6).");
             }
         }
 
-        public void Bind(Transform root, Light sun, Volume globalVolume, Configuration config, IEnumerable<Light> previousLights)
+        /// <param name="lowTierTemplate">Optional disabled Light whose URP data uses the Low shadow tier (tier is editor-only data).</param>
+        /// <param name="mediumTierTemplate">Optional disabled Light whose URP data uses the Medium shadow tier.</param>
+        public void Bind(Transform root, Light sun, Volume globalVolume, Configuration config, IEnumerable<Light> previousLights,
+            Light lowTierTemplate = null, Light mediumTierTemplate = null)
         {
             Validate(root, sun, config); // Failed validation does not disturb the current binding.
             Unbind();
@@ -143,15 +156,46 @@ namespace LetMeSleep.Presentation
                 RenderSettings.fog = config.FogEnabled; RenderSettings.fogMode = config.FogMode; RenderSettings.fogColor = config.FogColor;
                 RenderSettings.fogStartDistance = config.FogStart; RenderSettings.fogEndDistance = config.FogEnd; RenderSettings.fogDensity = config.FogDensity;
                 if (volume) { volume.sharedProfile = config.VolumeProfile; volume.weight = config.VolumeWeight; volume.enabled = config.VolumeProfile != null; }
+                // Unlit GPU ocean opts into scene fog only while this map's fog is on, so it fades into the horizon.
+                foreach (var water in root.GetComponentsInChildren<HiggsfieldGpuWater>(true))
+                {
+                    if (!water.IsBound) continue;
+                    var parameters = water.CurrentParameters;
+                    waterFog.Add(new KeyValuePair<HiggsfieldGpuWater, bool>(water, parameters.UseFog));
+                    if (parameters.UseFog == config.FogEnabled) continue;
+                    parameters.UseFog = config.FogEnabled;
+                    water.SetParameters(parameters);
+                }
                 foreach (var source in config.LocalLights)
                 {
-                    var go = new GameObject("Higgsfield_LocalLight");
-                    go.SetActive(false); go.transform.SetParent(source.Anchor, false);
-                    var light = go.AddComponent<Light>(); spawned.Add(light);
+                    // URP's per-light shadow tier is serialized-only data: lower tiers come from the rig's templates.
+                    Light template = source.Shadows == LightShadows.None ? null
+                        : source.ShadowResolutionTier == UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierLow ? lowTierTemplate
+                        : source.ShadowResolutionTier == UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierMedium ? mediumTierTemplate
+                        : null;
+                    GameObject go;
+                    Light light;
+                    if (template)
+                    {
+                        light = Instantiate(template, source.Anchor, false);
+                        go = light.gameObject;
+                        go.SetActive(false); go.name = "Higgsfield_LocalLight";
+                        go.transform.localPosition = Vector3.zero; go.transform.localRotation = Quaternion.identity; go.transform.localScale = Vector3.one;
+                    }
+                    else
+                    {
+                        go = new GameObject("Higgsfield_LocalLight");
+                        go.SetActive(false); go.transform.SetParent(source.Anchor, false);
+                        light = go.AddComponent<Light>();
+                    }
+                    spawned.Add(light);
                     light.type = source.Type; light.color = source.Color; light.intensity = source.UnityIntensity;
                     light.range = source.Range; light.spotAngle = source.SpotAngle; light.innerSpotAngle = source.InnerSpotAngle;
                     light.shadows = source.Shadows; light.cullingMask = config.CullingMask; light.bounceIntensity = 0;
+                    light.enabled = true;
                     go.SetActive(true);
+                    if (source.Flicker > 0)
+                        go.AddComponent<HiggsfieldLightFlicker>().Configure(source.Flicker, StableSeed(source.Anchor.name));
                 }
                 DynamicGI.UpdateEnvironment();
             }
@@ -175,6 +219,15 @@ namespace LetMeSleep.Presentation
                 if (Application.isPlaying) Destroy(light.gameObject); else DestroyImmediate(light.gameObject);
             }
             spawned.Clear();
+            foreach (var item in waterFog)
+            {
+                if (!item.Key || !item.Key.IsBound) continue;
+                var parameters = item.Key.CurrentParameters;
+                if (parameters.UseFog == item.Value) continue;
+                parameters.UseFog = item.Value;
+                item.Key.SetParameters(parameters);
+            }
+            waterFog.Clear();
             foreach (var item in suppressed) if (item.Key) item.Key.enabled = item.Value;
             suppressed.Clear();
             if (primary)
@@ -196,6 +249,19 @@ namespace LetMeSleep.Presentation
         private void OnDisable() => Unbind();
         private void OnDestroy() => Unbind();
         private static bool Finite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
+        public static bool ValidShadowTier(int tier) =>
+            tier == UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierLow ||
+            tier == UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierMedium ||
+            tier == UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierHigh;
+        private static float StableSeed(string text)
+        {
+            unchecked
+            {
+                int hash = 23;
+                foreach (char c in text ?? string.Empty) hash = hash * 31 + c;
+                return (hash & 0xFFFF) / 97f;
+            }
+        }
         private static void Nonnegative(float value) { if (!Finite(value) || value < 0) throw new ArgumentException("Explicit finite nonnegative Unity intensity/environment values required."); }
         private static void CheckColor(Color value) { Nonnegative(value.r); Nonnegative(value.g); Nonnegative(value.b); Nonnegative(value.a); }
     }

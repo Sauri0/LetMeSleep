@@ -72,6 +72,7 @@ namespace LetMeSleep.Presentation
             controlledCamera.fieldOfView = preset.HumanVerticalFov;
             controlledCamera.nearClipPlane = preset.HumanNearPlane;
             controlledCamera.farClipPlane = preset.FarPlane;
+            CameraPostProcessingPolicy.ApplyGameplay(controlledCamera);
         }
 
         public void BindEye(Transform anchor, System.Action refreshAnchor = null)

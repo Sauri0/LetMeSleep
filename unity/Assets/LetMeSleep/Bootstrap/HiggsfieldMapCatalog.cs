@@ -121,9 +121,13 @@ namespace LetMeSleep.Bootstrap
                     light.SpotAngle <= 0 || light.SpotAngle >= 180 || light.InnerSpotAngle < 0 || light.InnerSpotAngle > light.SpotAngle ||
                     !Enum.IsDefined(typeof(LightShadows), light.Shadows))
                     throw new InvalidOperationException("Invalid local light range/angles/shadows.");
+                if (!HiggsfieldMapLighting.ValidShadowTier(light.ShadowResolutionTier) || !Finite(light.Flicker) ||
+                    light.Flicker < 0 || light.Flicker > HiggsfieldLightFlicker.MaximumAmplitude)
+                    throw new InvalidOperationException("Invalid local light shadow tier or flicker: " + entry.MapId);
                 locals[i] = new HiggsfieldMapLighting.LocalSource { Anchor = anchor, Type = light.Type,
                     Color = light.Color, UnityIntensity = light.UnityIntensity, Range = light.Range,
-                    SpotAngle = light.SpotAngle, InnerSpotAngle = light.InnerSpotAngle, Shadows = light.Shadows };
+                    SpotAngle = light.SpotAngle, InnerSpotAngle = light.InnerSpotAngle, Shadows = light.Shadows,
+                    ShadowResolutionTier = light.ShadowResolutionTier, Flicker = light.Flicker };
             }
             var suppressed = new Light[entry.SuppressLightPaths.Length];
             var lights = new HashSet<Light>();

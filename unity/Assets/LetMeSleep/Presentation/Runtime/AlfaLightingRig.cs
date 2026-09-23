@@ -12,6 +12,11 @@ namespace LetMeSleep.Presentation
         private const int PreviewLayer = 30;
         private const int MaximumShadowedLocalLights = 4;
         private const int MaximumShadowedLocalLightsPerZone = 2;
+        // v0.3.0 menu/lobby ("sala") mood, UI-06 screens 1 and 3: navy night room, cool moon fill and
+        // warm lamp pools that the AlfaGlobalVolume bloom turns into halos.
+        private const float LobbyMoonScale = 0.45f;
+        private static readonly Color LobbyFillColor = new Color(0.55f, 0.66f, 1f);
+        private const float LobbyFillIntensity = 0.38f;
 
         [SerializeField] private AlfaPresentationPreset preset = null;
         [SerializeField] private Light moon = null;
@@ -33,7 +38,8 @@ namespace LetMeSleep.Presentation
             if (!higgsfieldLighting) higgsfieldLighting = gameObject.AddComponent<HiggsfieldMapLighting>();
             var previousLights = new List<Light>(mapLights);
             if (lobbyFill) previousLights.Add(lobbyFill);
-            higgsfieldLighting.Bind(mapRoot, moon, globalVolume, configuration, previousLights);
+            higgsfieldLighting.Bind(mapRoot, moon, globalVolume, configuration, previousLights,
+                mapLightLowTemplate, mapLightMediumTemplate);
         }
 
         public void UnbindHiggsfield()
@@ -71,8 +77,8 @@ namespace LetMeSleep.Presentation
             if (lobbyFill != null)
             {
                 lobbyFill.type = LightType.Directional;
-                lobbyFill.color = new Color(0.76f, 0.84f, 1f);
-                lobbyFill.intensity = 0.55f;
+                lobbyFill.color = LobbyFillColor;
+                lobbyFill.intensity = LobbyFillIntensity;
                 lobbyFill.shadows = LightShadows.None;
                 lobbyFill.bounceIntensity = 0f;
                 lobbyFill.cullingMask &= ~(1 << PreviewLayer);
@@ -97,6 +103,8 @@ namespace LetMeSleep.Presentation
             ApplyPreset();
             ApplyAmbientProfile(house);
             moon.shadowStrength = house ? 0.72f : 0.48f;
+            if (!house)
+                moon.intensity = preset.MoonIntensityLux * LobbyMoonScale;
             if (lobbyFill != null)
                 lobbyFill.enabled = !house;
 
@@ -217,8 +225,8 @@ namespace LetMeSleep.Presentation
             // menu camera axis preserves their graphic shading without leaving half of a
             // face unlit when the cool directional key hits from the side.
             LocalLightProfile profile = new LocalLightProfile(
-                new Color(0.90f, 0.86f, 0.80f),
-                0.72f,
+                new Color(0.95f, 0.84f, 0.72f),
+                0.55f,
                 8.5f,
                 false,
                 LocalShadowTier.Low,
@@ -253,13 +261,13 @@ namespace LetMeSleep.Presentation
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = house
                 ? new Color(0.30f, 0.36f, 0.48f)
-                : new Color(0.23f, 0.26f, 0.34f);
+                : new Color(0.26f, 0.31f, 0.50f);
             RenderSettings.ambientEquatorColor = house
                 ? new Color(0.22f, 0.23f, 0.30f)
-                : new Color(0.15f, 0.15f, 0.18f);
+                : new Color(0.22f, 0.23f, 0.34f);
             RenderSettings.ambientGroundColor = house
                 ? new Color(0.15f, 0.14f, 0.19f)
-                : new Color(0.075f, 0.07f, 0.085f);
+                : new Color(0.08f, 0.075f, 0.10f);
             RenderSettings.ambientIntensity = house ? 1f : 1.08f;
             RenderSettings.reflectionIntensity = house ? 0.42f : 0.52f;
             RenderSettings.subtractiveShadowColor = new Color(0.018f, 0.025f, 0.045f);
@@ -276,7 +284,7 @@ namespace LetMeSleep.Presentation
             if (Contains(anchorName, "Patio"))
                 return new LocalLightProfile(new Color(0.42f, 0.58f, 0.92f), 0.42f, 5.5f, false, LocalShadowTier.Low, LightType.Point);
             if (Contains(anchorName, "Lobby"))
-                return new LocalLightProfile(new Color(1f, 0.62f, 0.30f), 0.48f, 3.6f, false, LocalShadowTier.Low);
+                return new LocalLightProfile(new Color(1f, 0.60f, 0.28f), 3.2f, 6.5f, false, LocalShadowTier.Low);
             if (Contains(anchorName, "Bedroom"))
                 return new LocalLightProfile(new Color(1f, 0.58f, 0.32f), 0.90f, 3.7f, true, LocalShadowTier.Low);
             if (Contains(anchorName, "Living"))
