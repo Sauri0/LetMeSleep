@@ -3,6 +3,7 @@
 Usage:
   blender --background --factory-startup --python render_modular_preview.py -- <Human|Mosquito> <out_dir> <prefix>
           [slot=option ...] [--views front,threequarter,side,back] [--closeup head|feet|body|wings|face]
+          [--stance] [--perch-v]  (mosquito idle wing aim; --perch-v: the perched V of claude/v030-anim)
 
 Only the host renderers that stay authored in Unity are shown (human: head with its hair sideburns
 and neck, and the hands; mosquito: none) plus the selected parts; a part renderer whose
@@ -23,6 +24,8 @@ species, out_dir, prefix = args[0], Path(args[1]), args[2]
 rest = args[3:]
 views = ['front', 'threequarter', 'side', 'back']
 closeup = None
+stance = False
+perch_v = False
 selection = {}
 i = 0
 while i < len(rest):
@@ -30,6 +33,12 @@ while i < len(rest):
         views = rest[i + 1].split(','); i += 2; continue
     if rest[i] == '--closeup':
         closeup = rest[i + 1]; i += 2; continue
+    if rest[i] == '--stance':
+        stance = True; i += 1; continue
+    if rest[i] == '--perch-v':
+        # the perched V of claude/v030-anim (author_mosquito_motion WING_V_*), to preview the blades after
+        # that branch is merged: it rotates the geometry's stance frame onto this one
+        stance = perch_v = True; i += 1; continue
     slot, option = rest[i].split('=')
     selection[slot] = option
     i += 1
@@ -46,10 +55,13 @@ chosen.update(selection)
 HOST_KEEP = ('HeadAuthoredPlanes', 'MouthCavity', 'EyeWhite.', 'Pupil.', 'Brow.', 'HeadNose', 'Ear.', 'HeadHair', 'Neck',
              'HeadLid', 'HandSkin.') if species == 'Human' else ()
 hidden_by = {}
+shown_by = {}
 for part in manifest['parts']:
     for r in part['renderers']:
         if r['hidden_when_slot_selected']:
             hidden_by[(part['slot'], part['option'], r['name'])] = r['hidden_when_slot_selected']
+        if r.get('shown_when_slot_selected'):
+            shown_by[(part['slot'], part['option'], r['name'])] = r['shown_when_slot_selected']
 scene = bpy.context.scene
 for obj in scene.objects:
     if obj.type != 'MESH':
@@ -60,8 +72,14 @@ for obj in scene.objects:
         blocker = hidden_by.get((slot, obj.get('lms_option'), obj.get('lms_renderer', obj.name)))
         if on and blocker and chosen.get(blocker, 'none') != 'none':
             on = False
+        needs = shown_by.get((slot, obj.get('lms_option'), obj.get('lms_renderer', obj.name)))
+        if on and needs and chosen.get(needs, 'none') == 'none':
+            on = False
     else:
         on = obj.name.startswith(HOST_KEEP) if HOST_KEEP else False
+        # the host's authored hair is alpha-clipped in Unity while any headwear is worn
+        if on and obj.name.startswith('HeadHair') and chosen.get('human.headwear', 'none') != 'none':
+            on = False
     obj.hide_render = not on
     obj.hide_viewport = not on
 
@@ -85,6 +103,28 @@ if species == 'Human':
     rig.pose.bones['UpperArm.L'].rotation_euler.z = -1.2
     rig.pose.bones['UpperArm.R'].rotation_euler.z = 1.2
 bpy.context.view_layer.update()
+if species == 'Mosquito' and stance:
+    # author_mosquito_motion.stance(): Rz(sign * .24) @ Ry(-sign * .12) about the axilla (armature space)
+    from mathutils import Matrix
+    V_SPAN, V_NORMAL = (.52, .67, .52), (.60, -.77, .22)
+
+    def frame(span, hint):
+        span = Vector(span).normalized()
+        normal = (Vector(hint) - span * Vector(hint).dot(span)).normalized()
+        return Matrix((span, normal, span.cross(normal))).transposed()
+
+    import sys as _sys
+    _sys.path.insert(0, str(HERE))
+    from author_mosquito_geometry import WING_STANCE_SPAN, WING_STANCE_NORMAL
+    opening = (frame(V_SPAN, V_NORMAL) @ frame(WING_STANCE_SPAN, WING_STANCE_NORMAL).transposed()).to_4x4() if perch_v else Matrix.Identity(4)
+    mirror = Matrix.Diagonal((-1, 1, 1, 1))
+    for side, sign in (('L', 1), ('R', -1)):
+        rest_m = rig.data.bones['Wing.' + side].matrix_local.copy()
+        origin = rest_m.translation.copy()
+        spread = opening if sign > 0 else mirror @ opening @ mirror
+        rotation = spread @ Matrix.Rotation(sign * .24, 4, 'Z') @ Matrix.Rotation(-sign * .12, 4, 'Y')
+        rig.pose.bones['Wing.' + side].matrix = Matrix.Translation(origin) @ rotation @ Matrix.Translation(-origin) @ rest_m
+        bpy.context.view_layer.update()
 deps = bpy.context.evaluated_depsgraph_get()
 pts = []
 for o in scene.objects:
@@ -121,7 +161,8 @@ cam_data.ortho_scale = size * 1.2
 camera = bpy.data.objects.new('SheetCamera', cam_data)
 scene.collection.objects.link(camera)
 scene.camera = camera
-angles = {'front': 0, 'threequarter': 35, 'side': 90, 'back': 180, 'threequarterback': 145, 'left': -90}
+angles = {'front': 0, 'threequarter': 35, 'side': 90, 'back': 180, 'threequarterback': 145, 'left': -90,
+          'right45': 45, 'left45': -45}
 for view in views:
     a = math.radians(angles[view])
     offset = Vector((math.sin(a), -math.cos(a), 0.12)) * size * 4

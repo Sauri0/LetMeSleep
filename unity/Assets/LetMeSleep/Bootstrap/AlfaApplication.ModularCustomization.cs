@@ -103,7 +103,8 @@ namespace LetMeSleep.Bootstrap
             previewModularAppearance = local.Copy();
             if (SavePreferences())
             {
-                customizationMessage = "La personalización se migró al catálogo modular.";
+                // The migration is silent for the player: the same look, now in the modular catalogue.
+                customizationMessage = string.Empty;
                 return true;
             }
 
@@ -157,7 +158,8 @@ namespace LetMeSleep.Bootstrap
                 localModularAppearanceDraft, modularEditedRole, message: customizationMessage,
                 modularPreviewAvailable: true,
                 thumbnailResolver: (slotId, optionId) => modularCustomizationRuntime.Catalog.TryGetAssets(
-                    slotId, optionId, out _, out var thumbnail) ? thumbnail : null);
+                    slotId, optionId, out _, out var thumbnail) ? thumbnail : null,
+                colorSlotApplies: modularCustomizationRuntime.ColorSlotApplies);
             return true;
         }
 

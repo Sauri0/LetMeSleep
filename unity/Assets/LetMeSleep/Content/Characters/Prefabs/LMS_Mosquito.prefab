@@ -31,37 +31,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1837316653378405775}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1678677590469856383
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9046015504428320004}
-  m_Layer: 0
-  m_Name: CustomizationParts
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9046015504428320004
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1678677590469856383}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5833783383147978916}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3100370629210151502
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,9 +105,9 @@ GameObject:
   - component: {fileID: 4885229714814820998}
   - component: {fileID: 3732719119732265235}
   - component: {fileID: 2608018652447596919}
-  - component: {fileID: 2218559057121987025}
-  - component: {fileID: 3561668041994973994}
-  - component: {fileID: 6897348757835890454}
+  - component: {fileID: 1551003172577074585}
+  - component: {fileID: 5845912463335198787}
+  - component: {fileID: 4762466965701555266}
   m_Layer: 0
   m_Name: LMS_Mosquito
   m_TagString: Untagged
@@ -210,26 +179,36 @@ MonoBehaviour:
     Category: Mosquito
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 8789935923613130652}
     MaterialIndex: 1
     Category: Mosquito
     Shade: 0.177
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 8789935923613130652}
     MaterialIndex: 2
     Category: Mosquito
     Shade: 0.352
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 8789935923613130652}
     MaterialIndex: 3
     Category: Mosquito
     Shade: 0.424
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 8789935923613130652}
     MaterialIndex: 4
     Category: Mosquito
     Shade: 0.352
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   Motions:
   - Id: 0
     StateName: Base Layer.Idle
@@ -313,7 +292,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.055
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2218559057121987025
+--- !u!114 &1551003172577074585
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -370,7 +349,7 @@ MonoBehaviour:
     EyeYawLimit: 12
     EyePitchLimit: 10
     ManualEvaluation: 0
---- !u!114 &3561668041994973994
+--- !u!114 &5845912463335198787
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -386,13 +365,13 @@ MonoBehaviour:
   View: {fileID: 3732719119732265235}
   RigId: lms.mosquito.v030
   ExpectedVisualScale: {x: 0.5, y: 0.5, z: 0.5}
-  PartsRoot: {fileID: 9046015504428320004}
+  PartsRoot: {fileID: 4676723740246801740}
   OwnedBaseRenderers:
   - {fileID: 8789935923613130652}
   - {fileID: 3820084007829755480}
   - {fileID: 2435733221056538835}
   ColorChannels: []
---- !u!114 &6897348757835890454
+--- !u!114 &4762466965701555266
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -503,6 +482,37 @@ Transform:
   - {fileID: 2556277553963910433}
   m_Father: {fileID: 4885229714814820998}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6235257444918626950
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4676723740246801740}
+  m_Layer: 0
+  m_Name: CustomizationParts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4676723740246801740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6235257444918626950}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5833783383147978916}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6588113366004598660
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,7 +543,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2220078670369983165}
-  - {fileID: 9046015504428320004}
+  - {fileID: 4676723740246801740}
   m_Father: {fileID: 4885229714814820998}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7214826076517560811

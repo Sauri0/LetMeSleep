@@ -37,7 +37,7 @@ namespace LetMeSleep.Tests.PlayMode
         /// to default looks. Changing a swatch, code, option or part GUID is a network change: bump the catalog
         /// revision and update this constant on purpose.
         /// </summary>
-        private const string PinnedFingerprint = "f1b7401a48ea6672608b0573a7285ff2c2af934e7579bcf0507e081235f630ff";
+        private const string PinnedFingerprint = "534a131f6f14022ec3fa60a5cf2fe71d3ee0ede4fa52836733bafe911375e6d7";
 
         private static readonly (string Slot, int Wire, string Default)[] ExpectedSlots =
         {
@@ -69,7 +69,7 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(catalog.TryCreateSnapshot(out var snapshot, out var errors), Is.True, string.Join("; ", errors ?? new string[0]));
             Assert.That(snapshot.RuntimeReady, Is.True);
             Assert.That(snapshot.CatalogId, Is.EqualTo("lms.v030.characters"));
-            Assert.That(snapshot.Revision, Is.EqualTo(1));
+            Assert.That(snapshot.Revision, Is.EqualTo(2));
             Assert.That(snapshot.Slots.Count, Is.EqualTo(ExpectedSlots.Length).And.LessThanOrEqualTo(CustomizationCatalogSnapshot.MaximumSelectedSlots));
             foreach (var (slotId, wire, defaultId) in ExpectedSlots)
             {
@@ -222,14 +222,14 @@ namespace LetMeSleep.Tests.PlayMode
             outfit.Human.SetOption("human.pajama", "verde"); // worn by nothing with jeans: must not block the outfit
             Assert.That(assembler.TryApply(view, catalog, outfit, CustomizationRole.Human, out var error), Is.True, error);
             var parts = actor.GetComponentsInChildren<SkinnedMeshRenderer>(true).Where(item => item.name.StartsWith("HumanPart", StringComparison.Ordinal)).ToArray();
-            foreach (string head in new[] { "HumanPartHeadwear", "HumanPartHair", "HumanPartHairTop", "HumanPartGlasses" })
+            foreach (string head in new[] { "HumanPartHeadwear", "HumanPartHairUnderHat", "HumanPartHairTop", "HumanPartGlasses" })
             {
                 var renderer = parts.Single(item => item.name == head);
                 Assert.That(view.HeadRenderers, Does.Contain(renderer), head + " must follow first-person head visibility");
                 Assert.That(renderer.shadowCastingMode, Is.EqualTo(ShadowCastingMode.ShadowsOnly), head + " hidden from the local camera");
             }
-            Assert.That(parts.Single(item => item.name == "HumanPartHairTop").enabled, Is.False, "the crown of the hair hides under a hat");
-            Assert.That(parts.Single(item => item.name == "HumanPartHair").enabled, Is.True, "the curls under the cap stay");
+            Assert.That(parts.Single(item => item.name == "HumanPartHairTop").enabled, Is.False, "the full hairstyle hides under a hat");
+            Assert.That(parts.Single(item => item.name == "HumanPartHairUnderHat").enabled, Is.True, "the flat under-hat curls show");
             var top = parts.Single(item => item.name == "HumanPartTop");
             AssertTint(top, "Human_Shirt", new Color32(0xC8, 0x32, 0x2E, 255), 0);
             int shadeIndex = Array.FindIndex(top.sharedMaterials, m => m.name == "Human_ShirtShade");
@@ -242,6 +242,8 @@ namespace LetMeSleep.Tests.PlayMode
             // The replaced parts are destroyed at the end of the frame (deactivated now): look at active objects only.
             var hairTop = actor.GetComponentsInChildren<SkinnedMeshRenderer>(false).Single(item => item.name == "HumanPartHairTop");
             Assert.That(hairTop.enabled, Is.True, "without a hat the whole hairstyle shows");
+            var underHat = actor.GetComponentsInChildren<SkinnedMeshRenderer>(false).Single(item => item.name == "HumanPartHairUnderHat");
+            Assert.That(underHat.enabled, Is.False, "the under-hat variant shows only under a hat");
 
             var mosquito = Own(Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs + "LMS_Mosquito.prefab")));
             yield return null;
@@ -293,6 +295,124 @@ namespace LetMeSleep.Tests.PlayMode
                 Assert.That(Vector3.Distance(parts.min, authored.min), Is.LessThan(tolerance), name + " min " + parts.min + " vs " + authored.min);
                 Assert.That(Vector3.Distance(parts.max, authored.max), Is.LessThan(tolerance), name + " max " + parts.max + " vs " + authored.max);
             }
+        }
+
+        /// <summary>
+        /// Review r1 #1: under every hat each hairstyle shows only its flat variant, which (like the host's authored
+        /// hair) stays within 5 mm of the skull in the idle pose; without a hat only the full style shows.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator EveryHairUnderEveryHatHugsTheSkull()
+        {
+            var catalog = LoadCatalog();
+            Assert.That(catalog.TryCreateSnapshot(out var snapshot, out _), Is.True);
+            var actor = Own(Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs + "LMS_Human.prefab")));
+            yield return null;
+            var view = actor.GetComponent<CharacterView>();
+            var assembler = actor.GetComponent<CharacterModularVisualAssembler>();
+            view.Animator.enabled = false;
+            var idle = view.Motions.First(motion => motion.StateName.EndsWith(".Idle", StringComparison.Ordinal));
+            var clip = view.Animator.runtimeAnimatorController.animationClips.First(item => item.name == idle.ClipName);
+            var head = view.Animator.GetComponentsInChildren<SkinnedMeshRenderer>(true).Single(item => item.name == "HumanHead");
+            snapshot.TrySlot("human.hair", out var hairSlot);
+            snapshot.TrySlot("human.headwear", out var hatSlot);
+            foreach (var hair in hairSlot.Options)
+                foreach (var hat in hatSlot.Options)
+                {
+                    var outfit = snapshot.DefaultSelection();
+                    outfit.Human.SetOption("human.hair", hair.OptionId);
+                    outfit.Human.SetOption("human.headwear", hat.OptionId);
+                    Assert.That(assembler.TryApply(view, catalog, outfit, CustomizationRole.Human, out var error), Is.True, error);
+                    clip.SampleAnimation(view.Animator.gameObject, clip.length * .3f);
+                    yield return null;
+                    var worn = actor.GetComponent<CharacterCustomizationHost>().PartsRoot.GetComponentsInChildren<SkinnedMeshRenderer>(false)
+                        .Where(item => item.name.StartsWith("HumanPartHair", StringComparison.Ordinal)).ToArray();
+                    bool hatOn = hat.Kind != CustomizationOptionKind.None;
+                    Assert.That(worn.Where(item => item.name == "HumanPartHairTop").All(item => item.enabled != hatOn), Is.True,
+                        hair.OptionId + "/" + hat.OptionId + ": the full style shows only without a hat");
+                    foreach (var under in worn.Where(item => item.name == "HumanPartHairUnderHat"))
+                    {
+                        Assert.That(under.enabled, Is.EqualTo(hatOn), hair.OptionId + "/" + hat.OptionId + ": the flat variant shows only under a hat");
+                        if (!hatOn) continue;
+                        float farthest = FarthestFromSkin(under, head);
+                        Assert.That(farthest, Is.LessThanOrEqualTo(.0055f), hair.OptionId + "/" + hat.OptionId + " under-hat hair must stay within 5 mm of the skull");
+                    }
+                }
+        }
+
+        /// <summary>Review r1 #6: the bite anchor (ProboscisTip) is the real tip of every proboscis option.</summary>
+        [UnityTest]
+        public IEnumerator EveryProboscisTipIsTheBiteAnchor()
+        {
+            var catalog = LoadCatalog();
+            Assert.That(catalog.TryCreateSnapshot(out var snapshot, out _), Is.True);
+            var actor = Own(Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs + "LMS_Mosquito.prefab")));
+            yield return null;
+            var view = actor.GetComponent<CharacterView>();
+            var assembler = actor.GetComponent<CharacterModularVisualAssembler>();
+            view.Animator.enabled = false;
+            var mouth = view.Animator.GetComponentsInChildren<Transform>(true).Single(item => item.name == "Socket.Mouth");
+            var probe = view.Animator.GetComponentsInChildren<Transform>(true).Single(item => item.name == "Proboscis");
+            snapshot.TrySlot("mosquito.proboscis", out var slot);
+            foreach (var option in slot.Options)
+            {
+                var outfit = snapshot.DefaultSelection();
+                outfit.Mosquito.SetOption("mosquito.proboscis", option.OptionId);
+                Assert.That(assembler.TryApply(view, catalog, outfit, CustomizationRole.Mosquito, out var error), Is.True, error);
+                yield return null;
+                view.RefreshAnchors();
+                var renderer = actor.GetComponent<CharacterCustomizationHost>().PartsRoot.GetComponentsInChildren<SkinnedMeshRenderer>(false)
+                    .Single(item => item.name == "MosquitoPartProboscis");
+                var mesh = new Mesh();
+                Vector3 tip;
+                try
+                {
+                    renderer.BakeMesh(mesh, true);
+                    var axis = (mouth.position - probe.position).normalized;
+                    tip = mesh.vertices.Select(v => renderer.transform.TransformPoint(v)).OrderByDescending(p => Vector3.Dot(p - probe.position, axis)).First();
+                }
+                finally { Object.DestroyImmediate(mesh); }
+                var anchor = view.GetAnchor("ProboscisTip").position;
+                // The proboscis at 0.5 visual scale: 3 mm in world is 6 mm of source length.
+                Assert.That(Vector3.Distance(anchor, tip), Is.LessThan(.003f), option.OptionId + ": ProboscisTip " + anchor + " vs tip " + tip);
+                bool offset = view.TryGetAnchorOffset("ProboscisTip", out _);
+                Assert.That(offset, Is.EqualTo(option.OptionId == "corta" || option.OptionId == "larga"), option.OptionId + " anchor offset");
+            }
+            assembler.ClearAppliedParts();
+            view.RefreshAnchors();
+            Assert.That(Vector3.Distance(view.GetAnchor("ProboscisTip").position, mouth.position), Is.LessThan(1e-5f),
+                "without parts the anchor is back on Socket.Mouth");
+        }
+
+        /// <summary>Review r1 #14: colours with nothing to tint are reported as not applying (the UI dims them).</summary>
+        [Test]
+        public void ColoursWithoutAWornConsumerDoNotApply()
+        {
+            var provider = new GameObject("provider").AddComponent<ModularCustomizationRuntimeProvider>();
+            Own(provider.gameObject);
+            provider.Catalog = LoadCatalog();
+            provider.LegacyMappings = new[]
+            {
+                (LegacyCustomizationKind.Skin, "light", "human.skin", "claro"), (LegacyCustomizationKind.Skin, "warm", "human.skin", "calido"),
+                (LegacyCustomizationKind.Skin, "tan", "human.skin", "bronce"), (LegacyCustomizationKind.Skin, "dark", "human.skin", "oscuro"),
+                (LegacyCustomizationKind.Pajama, "blue", "human.pajama", "azul"), (LegacyCustomizationKind.Pajama, "red", "human.pajama", "rojo"),
+                (LegacyCustomizationKind.Pajama, "green", "human.pajama", "verde"), (LegacyCustomizationKind.Pajama, "purple", "human.pajama", "violeta"),
+                (LegacyCustomizationKind.Pajama, "yellow", "human.pajama", "mostaza"), (LegacyCustomizationKind.Mosquito, "red", "mosquito.color", "natural"),
+                (LegacyCustomizationKind.Mosquito, "blue", "mosquito.color", "hielo"), (LegacyCustomizationKind.Mosquito, "green", "mosquito.color", "bosque"),
+                (LegacyCustomizationKind.Mosquito, "purple", "mosquito.color", "fantasia")
+            }.Select(item => new LegacyCustomizationMapping { Kind = item.Item1, LegacyId = item.Item2, SlotId = item.Item3, OptionId = item.Item4 }).ToArray();
+            Assert.That(provider.TryResolve(AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs + "LMS_Human.prefab"),
+                AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs + "LMS_Mosquito.prefab"), out var runtime, out var reason), Is.True, reason);
+            var outfit = runtime.Snapshot.DefaultSelection();
+            Assert.That(runtime.ColorSlotApplies(outfit, CustomizationRole.Human, "human.pajama"), Is.True, "pajama colour with the pajama");
+            Assert.That(runtime.ColorSlotApplies(outfit, CustomizationRole.Mosquito, "mosquito.accent_color"), Is.False, "no markings");
+            Assert.That(runtime.ColorSlotApplies(outfit, CustomizationRole.Human, "human.hair_color"), Is.True, "the host hair always shows");
+            outfit.Human.SetOption("human.bottom", "jean");
+            outfit.Human.SetOption("human.top", "buzo");
+            outfit.Mosquito.SetOption("mosquito.markings", "anillos");
+            Assert.That(runtime.ColorSlotApplies(outfit, CustomizationRole.Human, "human.pajama"), Is.False, "pajama colour with jeans");
+            Assert.That(runtime.ColorSlotApplies(outfit, CustomizationRole.Human, "human.top_color"), Is.True, "the hoodie takes the top colour");
+            Assert.That(runtime.ColorSlotApplies(outfit, CustomizationRole.Mosquito, "mosquito.accent_color"), Is.True, "rings");
         }
 
         // ------------------------------------------------------------------ build scene and preferences
@@ -410,6 +530,55 @@ namespace LetMeSleep.Tests.PlayMode
             }
             Assert.That(first, Is.False, "no skinned vertices");
             return result;
+        }
+
+        /// <summary>Largest distance from the vertices of a baked part to the host head's skin triangles.</summary>
+        private static float FarthestFromSkin(SkinnedMeshRenderer part, SkinnedMeshRenderer head)
+        {
+            int skin = Array.FindIndex(head.sharedMaterials, m => m && m.name == "Human_Skin");
+            Assert.That(skin, Is.GreaterThanOrEqualTo(0));
+            var headMesh = new Mesh();
+            var partMesh = new Mesh();
+            try
+            {
+                head.BakeMesh(headMesh, true);
+                part.BakeMesh(partMesh, true);
+                var headVertices = headMesh.vertices.Select(v => head.transform.TransformPoint(v)).ToArray();
+                var triangles = headMesh.GetTriangles(skin);
+                float farthest = 0f;
+                foreach (var vertex in partMesh.vertices)
+                {
+                    var p = part.transform.TransformPoint(vertex);
+                    float nearest = float.MaxValue;
+                    for (int i = 0; i < triangles.Length; i += 3)
+                        nearest = Mathf.Min(nearest, (ClosestOnTriangle(p, headVertices[triangles[i]], headVertices[triangles[i + 1]],
+                            headVertices[triangles[i + 2]]) - p).magnitude);
+                    farthest = Mathf.Max(farthest, nearest);
+                }
+                return farthest;
+            }
+            finally { Object.DestroyImmediate(headMesh); Object.DestroyImmediate(partMesh); }
+        }
+
+        private static Vector3 ClosestOnTriangle(Vector3 p, Vector3 a, Vector3 b, Vector3 c)
+        {
+            Vector3 ab = b - a, ac = c - a, ap = p - a;
+            float d1 = Vector3.Dot(ab, ap), d2 = Vector3.Dot(ac, ap);
+            if (d1 <= 0 && d2 <= 0) return a;
+            Vector3 bp = p - b;
+            float d3 = Vector3.Dot(ab, bp), d4 = Vector3.Dot(ac, bp);
+            if (d3 >= 0 && d4 <= d3) return b;
+            float vc = d1 * d4 - d3 * d2;
+            if (vc <= 0 && d1 >= 0 && d3 <= 0) return a + ab * (d1 / (d1 - d3));
+            Vector3 cp = p - c;
+            float d5 = Vector3.Dot(ab, cp), d6 = Vector3.Dot(ac, cp);
+            if (d6 >= 0 && d5 <= d6) return c;
+            float vb = d5 * d2 - d1 * d6;
+            if (vb <= 0 && d2 >= 0 && d6 <= 0) return a + ac * (d2 / (d2 - d6));
+            float va = d3 * d6 - d5 * d4;
+            if (va <= 0 && d4 - d3 >= 0 && d5 - d6 >= 0) return b + (c - b) * ((d4 - d3) / ((d4 - d3) + (d5 - d6)));
+            float denominator = 1f / (va + vb + vc);
+            return a + ab * (vb * denominator) + ac * (vc * denominator);
         }
 
         private static Color Unpack(uint value) => new Color32((byte)(value >> 24), (byte)(value >> 16), (byte)(value >> 8), (byte)value);

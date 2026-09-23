@@ -127,13 +127,18 @@ MonoBehaviour:
     ColorSlotId: human.pajama
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   - Renderer: {fileID: 4141269665894384818}
     MaterialIndex: 2
     ColorSlotId: human.pajama
     Shade: 0.193
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []
 --- !u!1 &3546375135645887126
 GameObject:
   m_ObjectHideFlags: 0

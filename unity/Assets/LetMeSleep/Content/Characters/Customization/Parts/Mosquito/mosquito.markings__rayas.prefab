@@ -101,8 +101,11 @@ MonoBehaviour:
     ColorSlotId: mosquito.accent_color
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []
 --- !u!1 &6514427867957579443
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,6 +195,6 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0.000009201467, y: 0.07032907, z: 0.12137908}
-    m_Extent: {x: 0.041047875, y: 0.121534616, z: 0.13794732}
+    m_Center: {x: 0.0000000037252903, y: 0.03790239, z: 0.1690737}
+    m_Extent: {x: 0.017082995, y: 0.08910793, z: 0.09025269}
   m_DirtyAABB: 0

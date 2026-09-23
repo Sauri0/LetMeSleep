@@ -144,8 +144,11 @@ MonoBehaviour:
     ColorSlotId: mosquito.wing_color
     Shade: 0
     Alpha: 0.5
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []
 --- !u!1 &866746036845020340
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,8 +239,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0.000000007450581, y: 0.13955396, z: 0.08884168}
-    m_Extent: {x: 0.21910715, y: 0.09841123, z: 0.0890927}
+    m_Center: {x: -0.000000007450581, y: 0.15645087, z: 0.06924285}
+    m_Extent: {x: 0.21222517, y: 0.08460293, z: 0.06946933}
   m_DirtyAABB: 0
 --- !u!1 &5725918012394946201
 GameObject:
@@ -328,6 +331,6 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0.000000014901161, y: 0.13935357, z: 0.088756815}
-    m_Extent: {x: 0.21906516, y: 0.098121464, z: 0.08900808}
+    m_Center: {x: 0.000000014901161, y: 0.1406288, z: 0.0845408}
+    m_Extent: {x: 0.22558703, y: 0.10002145, z: 0.08479206}
   m_DirtyAABB: 0

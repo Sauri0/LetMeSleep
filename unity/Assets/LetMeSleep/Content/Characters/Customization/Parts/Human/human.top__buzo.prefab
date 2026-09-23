@@ -221,10 +221,15 @@ MonoBehaviour:
     ColorSlotId: human.top_color
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   - Renderer: {fileID: 698329429779351201}
     MaterialIndex: 0
     ColorSlotId: human.top_color
     Shade: 0.157
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []

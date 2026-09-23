@@ -200,20 +200,29 @@ MonoBehaviour:
     ColorSlotId: mosquito.color
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   - Renderer: {fileID: 1669253951949295660}
     MaterialIndex: 1
     ColorSlotId: mosquito.color
     Shade: 0.177
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   - Renderer: {fileID: 1669253951949295660}
     MaterialIndex: 3
     ColorSlotId: mosquito.color
     Shade: 0.424
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   - Renderer: {fileID: 1669253951949295660}
     MaterialIndex: 2
     ColorSlotId: mosquito.color
     Shade: 0.352
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []

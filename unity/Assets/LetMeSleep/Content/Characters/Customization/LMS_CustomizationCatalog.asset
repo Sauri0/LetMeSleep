@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LMS_CustomizationCatalog
   m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterCustomizationCatalog
   CatalogId: lms.v030.characters
-  Revision: 1
+  Revision: 2
   Slots:
   - Role: 0
     SlotId: human.base
@@ -80,7 +80,7 @@ MonoBehaviour:
     CompatibilityFamily: 
   - Role: 0
     SlotId: human.top_color
-    Label: COLOR DE REMERA
+    Label: COLOR DE PRENDA
     WireSlotId: 9
     Required: 1
     AllowsNone: 0
@@ -221,7 +221,7 @@ MonoBehaviour:
     HasSwatch: 1
     Swatch:
       serializedVersion: 2
-      rgba: 4288134374
+      rgba: 4287279338
     AssetId: 
     RuntimeAsset: {fileID: 0}
     Thumbnail: {fileID: 0}
@@ -237,7 +237,7 @@ MonoBehaviour:
     HasSwatch: 1
     Swatch:
       serializedVersion: 2
-      rgba: 4286754531
+      rgba: 4285307609
     AssetId: 
     RuntimeAsset: {fileID: 0}
     Thumbnail: {fileID: 0}

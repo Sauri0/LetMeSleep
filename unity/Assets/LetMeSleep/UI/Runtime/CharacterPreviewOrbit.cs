@@ -41,6 +41,9 @@ namespace LetMeSleep.UI
         private float backdropAspect = 1.6f;
         private Light rimLight;
         private Light fillLight;
+        // Warm bounce from the wooden pedestal, low on the camera side: the viewer camera sits at chest height, so it
+        // sees the undersides of the jaw, the pompom and the arms, which the scene's dark ground ambient left black.
+        private Light bounceLight;
         private int characterPointCount;
         private Vector3 characterFocusLocal;
         private RenderTexture ownTarget;
@@ -57,6 +60,8 @@ namespace LetMeSleep.UI
         private float maxDistance = 4.2f;
         private float zoomFactor = 1f;
         private float characterRadius = 1f;
+        private bool flightPreview;
+        private float flightLift;
         private readonly List<Vector3> framingPoints = new List<Vector3>();
         private readonly List<Vector3> viewPoints = new List<Vector3>();
         // The clone is spawned in its bind pose (arms out): the framing is measured again once it has been animated.
@@ -142,6 +147,8 @@ namespace LetMeSleep.UI
             setup.Stage.localRotation = Quaternion.identity;
             instance = Instantiate(prefab, setup.Stage, false);
             instance.name = role + "UiPreview";
+            flightPreview = false;
+            flightLift = 0f;
             boneEdits.Clear();
             approximatedInstance = null;
             yaw = DefaultYaw;
@@ -205,6 +212,43 @@ namespace LetMeSleep.UI
             RecalculateFraming();
             ApplyOrbit();
             RequestViews();
+        }
+
+        /// <summary>True while the mosquito hovers over the pedestal in its flight loop (UI-06 6 "VISTA PREVIA EN VUELO").</summary>
+        public bool FlightPreview => flightPreview;
+
+        /// <summary>
+        /// UI-06 6 "VISTA PREVIA EN VUELO": the mosquito rises over the pedestal and plays its hover loop (wings
+        /// beating) so wings, colours and accessories can be judged in flight; false perches it again. Only the
+        /// mosquito flies; the pedestal stays on the floor and the camera keeps the angle.
+        /// </summary>
+        public bool SetFlightPreview(bool enabled)
+        {
+            var on = enabled && visibleRole == AlfaRole.Mosquito && instance != null && IsBound;
+            if (on == flightPreview) return flightPreview;
+            flightPreview = on;
+            // The clone's own controller: its hover loop in the air, its idle on the pedestal (no transitions to fight).
+            var state = Animator.StringToHash(on ? "Base Layer.Hover" : "Base Layer.Idle");
+            if (instance != null)
+                foreach (var animator in instance.GetComponentsInChildren<Animator>(true))
+                    if (animator.runtimeAnimatorController != null && animator.HasState(0, state))
+                        animator.CrossFadeInFixedTime(state, 0.2f, 0);
+            if (instance != null)
+            {
+                var height = 0f;
+                if (characterPointCount > 0)
+                {
+                    var bounds = new Bounds(framingPoints[0], Vector3.zero);
+                    for (var i = 1; i < characterPointCount && i < framingPoints.Count; i++) bounds.Encapsulate(framingPoints[i]);
+                    height = bounds.size.y;
+                }
+                flightLift = on ? height * 0.35f : 0f;
+                instance.transform.localPosition = new Vector3(0f, flightLift, 0f);
+                RecalculateFraming();
+                ApplyOrbit();
+                RequestViews();
+            }
+            return flightPreview;
         }
 
         public void Zoom(float delta)
@@ -427,6 +471,7 @@ namespace LetMeSleep.UI
             // Point lights on the preview layer only (never a directional that could become the scene's main light).
             if (rimLight == null) rimLight = StudioLight("PreviewRimLight", RimColor);
             if (fillLight == null) fillLight = StudioLight("PreviewFillLight", new Color(1f, 0.9f, 0.78f));
+            if (bounceLight == null) bounceLight = StudioLight("PreviewBounceLight", new Color(1f, 0.78f, 0.58f));
         }
 
         private Light StudioLight(string name, Color color)
@@ -448,6 +493,7 @@ namespace LetMeSleep.UI
             if (backdrop != null) backdrop.SetActive(active);
             if (rimLight != null) rimLight.gameObject.SetActive(active);
             if (fillLight != null) fillLight.gameObject.SetActive(active);
+            if (bounceLight != null) bounceLight.gameObject.SetActive(active);
         }
 
         private void DestroyStudio()
@@ -456,6 +502,7 @@ namespace LetMeSleep.UI
             if (backdrop != null) { Destroy(backdrop); backdrop = null; }
             if (rimLight != null) { Destroy(rimLight.gameObject); rimLight = null; }
             if (fillLight != null) { Destroy(fillLight.gameObject); fillLight = null; }
+            if (bounceLight != null) { Destroy(bounceLight.gameObject); bounceLight = null; }
         }
 
         private static Mesh QuadMesh()
@@ -626,6 +673,12 @@ namespace LetMeSleep.UI
                 fillLight.range = reach * 3f;
                 fillLight.intensity = 0.8f * reach * reach;
             }
+            if (bounceLight != null)
+            {
+                bounceLight.transform.position = focusWorld + (-forward * 0.55f - Vector3.up * 0.8f).normalized * reach;
+                bounceLight.range = reach * 3f;
+                bounceLight.intensity = 0.55f * reach * reach;
+            }
         }
 
         /// <summary>
@@ -698,7 +751,14 @@ namespace LetMeSleep.UI
             foreach (var point in framingPoints) character.Encapsulate(point);
             characterPointCount = framingPoints.Count;
             characterFocusLocal = character.center;
-            PlacePedestal(character);
+            if (flightLift > 0f)
+            {
+                // Hovering: the pedestal stays on the floor under the flying mosquito.
+                var grounded = character;
+                grounded.SetMinMax(character.min - new Vector3(0f, flightLift, 0f), character.max);
+                PlacePedestal(grounded);
+            }
+            else PlacePedestal(character);
             var combined = new Bounds(framingPoints[0], Vector3.zero);
             foreach (var point in framingPoints) combined.Encapsulate(point);
             focusLocal = combined.center;
@@ -1209,6 +1269,7 @@ namespace LetMeSleep.UI
             if (backdrop != null) Destroy(backdrop);
             if (rimLight != null) Destroy(rimLight.gameObject);
             if (fillLight != null) Destroy(fillLight.gameObject);
+            if (bounceLight != null) Destroy(bounceLight.gameObject);
             if (backdropMesh != null) Destroy(backdropMesh);
             if (backdropMaterial != null) Destroy(backdropMaterial);
             if (pedestalTopMaterial != null) Destroy(pedestalTopMaterial);

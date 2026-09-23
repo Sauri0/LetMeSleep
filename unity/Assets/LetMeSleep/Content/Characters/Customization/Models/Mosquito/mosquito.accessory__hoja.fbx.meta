@@ -12,6 +12,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Mosquito_LeafUnder
+    second: {fileID: 2100000, guid: 7cc16652a060e2d47a2da368516cefdf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Mosquito_LeafVein
     second: {fileID: 2100000, guid: daff9c2f3a11d234c981204e3cab1ba3, type: 2}
   materials:

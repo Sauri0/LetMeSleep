@@ -127,8 +127,11 @@ MonoBehaviour:
     ColorSlotId: human.skin
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []
 --- !u!1 &6139475435691428503
 GameObject:
   m_ObjectHideFlags: 0

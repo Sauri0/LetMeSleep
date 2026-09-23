@@ -198,6 +198,7 @@ namespace LetMeSleep.Bootstrap
                 supportsReducedMenuMotion: livingMenu && livingMenu.IsConfigured,
                 voiceDevices: VoiceMicrophoneCapture.Devices));
             PresentVoiceBinding();
+            ui.SetLocalLook(LocalLookKey(AlfaRole.Human), LocalLookKey(AlfaRole.Mosquito));
             if (TryCreateModularUiState(out var modularState)) ui.PresentCustomization(modularState);
             else ui.PresentCustomization(new CustomizationUiState(Skins, Pajamas, MosquitoColors, appearance, localAppearanceDraft,
                 isSaving: false, message: customizationMessage, isReadOnly: preferenceWritesBlocked));

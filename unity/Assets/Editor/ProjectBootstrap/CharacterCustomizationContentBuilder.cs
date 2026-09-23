@@ -40,7 +40,7 @@ namespace LetMeSleep.Editor
         public const string CatalogPath = Root + "/LMS_CustomizationCatalog.asset";
         public const string ReceiptPath = Root + "/CustomizationBuildReceipt.json";
         public const string CatalogId = "lms.v030.characters";
-        public const int CatalogRevision = 1;
+        public const int CatalogRevision = 2;
         public const string HumanRigId = "lms.human.v030";
         public const string MosquitoRigId = "lms.mosquito.v030";
         public const string ScenePath = "Assets/Scenes/LetMeSleepHiggsfield.unity";
@@ -52,6 +52,9 @@ namespace LetMeSleep.Editor
         private static string SourceRoot => Path.GetFullPath(Path.Combine(Application.dataPath, "../../art_source/unity/characters"));
 
         public static readonly string[] HostPrefabs = { "LMS_Human", "LMS_Human_FirstPerson", "LMS_HumanMenu", "LMS_Mosquito" };
+        // Lowest brightness factor of the eye whites under the darkest skin tone (linear, see CharacterView): the
+        // factor follows the skin tone's luminance (relative to the default) to the power .8, e.g. .34 for Morena.
+        public const float EyeWhiteFloor = .30f;
 
         // ------------------------------------------------------------------ catalog definition
         private sealed class OptionSpec
@@ -87,7 +90,9 @@ namespace LetMeSleep.Editor
         /// <summary>
         /// The production catalog. Wire slot codes 5 (facial hair), 13 (gloves), 19 (mosquito eyes: they need a new
         /// facial certification) and 21 (legs) stay reserved. Never renumber or reuse a code; retire an option by
-        /// clearing its label. Colour defaults equal the authored palette (Human_Skin #C98B5A, Human_Shirt
+        /// clearing its label. r2 (review r1): the two lightest skin tones are warmer and more saturated (the lightest
+        /// read white in the viewer and grey-lavender in the blue lobby) and the top colour is "COLOR DE PRENDA" (it
+        /// also tints the hoodie). Colour defaults equal the authored palette (Human_Skin #C98B5A, Human_Shirt
         /// #DFC195, Human_Pajamas #2D4F9A, Human_Hair #3A2619, Mosquito_Shell #9E2228, Mosquito_Wing #CCC4F6), so
         /// the default modular look is the authored character.
         /// </summary>
@@ -103,7 +108,7 @@ namespace LetMeSleep.Editor
             {
                 baseHuman,
                 Slot(human, 2, "human.skin", "TONO DE PIEL", "calido", false,
-                    Swatch(1, "muy-claro", "Muy claro", "#E6BC97"), Swatch(2, "claro", "Claro", "#E3AE82"),
+                    Swatch(1, "muy-claro", "Muy claro", "#EAB08A"), Swatch(2, "claro", "Claro", "#D99A6C"),
                     Swatch(3, "calido", "Cálido", "#C98B5A"), Swatch(4, "bronce", "Bronce", "#9C6139"),
                     Swatch(5, "morena", "Morena", "#744528"), Swatch(6, "oscuro", "Oscuro", "#4E2C1C")),
                 Slot(human, 3, "human.hair", "PELO", "corto", false,
@@ -119,7 +124,7 @@ namespace LetMeSleep.Editor
                     None("Sin lentes"), Part(1, "redondos", "Redondos"), Part(2, "sol", "De sol")),
                 Slot(human, 8, "human.top", "REMERA", "remera", false,
                     Part(1, "remera", "Remera"), Part(2, "buzo", "Buzo con capucha")),
-                Slot(human, 9, "human.top_color", "COLOR DE REMERA", "crema", false,
+                Slot(human, 9, "human.top_color", "COLOR DE PRENDA", "crema", false,
                     Swatch(1, "crema", "Crema", "#DFC195"), Swatch(2, "blanco", "Blanco", "#ECE9E2"),
                     Swatch(3, "gris", "Gris", "#8B919D"), Swatch(4, "negro", "Negro", "#34373F"),
                     Swatch(5, "rojo", "Rojo", "#C8322E"), Swatch(6, "azul", "Azul", "#2F6FD6"),
@@ -199,10 +204,12 @@ namespace LetMeSleep.Editor
             public string role, slot, option, fbx, facial_impact, note, sha256;
             public RendererRecord[] renderers;
             public ColorRecord[] colors;
+            public AnchorRecord[] anchor_offsets;
         }
+        [Serializable] private sealed class AnchorRecord { public string anchor, bone; public float[] point_blender_m; }
         [Serializable] private sealed class RendererRecord
         {
-            public string name, hidden_when_slot_selected;
+            public string name, hidden_when_slot_selected, shown_when_slot_selected;
             public int triangles;
             public string[] materials, bones;
             public bool first_person_head;
@@ -213,7 +220,7 @@ namespace LetMeSleep.Editor
 
         [Serializable] public sealed class Receipt
         {
-            public string builder = "v030-modular-customization-1";
+            public string builder = "v030-modular-customization-2";
             public string catalogId, fingerprint;
             public int revision, slots, options, parts;
             public bool runtimeReady, providerInstalled;
@@ -245,6 +252,9 @@ namespace LetMeSleep.Editor
             {
                 var manifest = ReadManifest(species);
                 ValidateRig(species, manifest);
+                // Part-only palette materials follow parts.json on every install (a remapped FBX no longer lists its
+                // embedded materials, so the import step alone would keep a material's first colour forever).
+                foreach (var entry in manifest.material_palette.Where(item => item.@new)) UpsertMaterial(entry.name, manifest);
                 foreach (var record in manifest.parts)
                     prefabs[record.slot + "/" + record.option] = BuildPart(species, manifest, record);
             }
@@ -252,6 +262,7 @@ namespace LetMeSleep.Editor
                 foreach (var option in slot.Options.Where(item => item.Kind == CustomizationOptionKind.SkinnedPart))
                     Require(prefabs.ContainsKey(slot.Id + "/" + option.Id), "Missing part export for " + slot.Id + "/" + option.Id);
             var catalog = WriteCatalog(definition, prefabs);
+            EnsureClippableHair();
             var hosts = HostPrefabs.Select(InstallHost).ToArray();
             AssetDatabase.SaveAssets();
             string[] thumbnails = Array.Empty<string>();
@@ -374,6 +385,9 @@ namespace LetMeSleep.Editor
                     if (!string.IsNullOrEmpty(rendererRecord.hidden_when_slot_selected))
                         conditional.Add(new CharacterCustomizationPart.ConditionalRendererBinding
                         { Renderer = skin, HiddenWhenSlotSelected = rendererRecord.hidden_when_slot_selected });
+                    if (!string.IsNullOrEmpty(rendererRecord.shown_when_slot_selected))
+                        conditional.Add(new CharacterCustomizationPart.ConditionalRendererBinding
+                        { Renderer = skin, HiddenWhenSlotSelected = rendererRecord.shown_when_slot_selected, ShowOnlyWhileSelected = true });
                     foreach (var colour in (record.colors ?? Array.Empty<ColorRecord>()).Where(item => item.renderer == rendererRecord.name))
                     {
                         int index = Array.FindIndex(skin.sharedMaterials, material => material && material.name == colour.material);
@@ -391,12 +405,82 @@ namespace LetMeSleep.Editor
                 part.ColorChannels = colours.ToArray();
                 part.FirstPersonHeadRenderers = heads.ToArray();
                 part.ConditionalRenderers = conditional.ToArray();
+                part.AnchorOffsets = (record.anchor_offsets ?? Array.Empty<AnchorRecord>())
+                    .Select(item => new CharacterCustomizationPart.AnchorOffsetBinding
+                    { AnchorName = item.anchor, LocalPosition = AnchorOffsetLocal(model, manifest, item) }).ToArray();
                 string path = PartsRoot + "/" + species + "/" + record.slot + "__" + record.option + ".prefab";
                 var saved = PrefabUtility.SaveAsPrefabAsset(root, path);
                 Require(saved != null, "Could not save part prefab " + path);
                 return saved;
             }
             finally { Object.DestroyImmediate(root); }
+        }
+
+        /// <summary>
+        /// A part point given in Blender armature space (parts.json) expressed in the local space of the anchor's
+        /// source bone of the imported model, which is in its bind pose. The Blender-to-model mapping is fitted
+        /// (least squares) on every bone head, so it holds whatever axis conversion the FBX import applied.
+        /// </summary>
+        private static Vector3 AnchorOffsetLocal(GameObject model, Manifest manifest, AnchorRecord record)
+        {
+            Require(record != null && record.point_blender_m != null && record.point_blender_m.Length == 3 && !string.IsNullOrEmpty(record.anchor),
+                "Bad anchor offset record in the parts manifest.");
+            var transforms = model.GetComponentsInChildren<Transform>(true);
+            Transform Named(string name)
+            {
+                var found = transforms.Where(item => item.name == name).ToArray();
+                Require(found.Length == 1, "Part model needs exactly one bone " + name);
+                return found[0];
+            }
+            // Normal equations of  model = A * blender + t  over the bone heads (4 unknowns per axis).
+            var ata = new double[4, 4];
+            var atb = new double[3, 4];
+            int count = 0;
+            foreach (var bone in manifest.bind_bones)
+            {
+                var target = transforms.FirstOrDefault(item => item.name == bone.name);
+                if (target == null) continue;
+                var b = new double[] { bone.head_blender_m[0], bone.head_blender_m[1], bone.head_blender_m[2], 1 };
+                var m = model.transform.InverseTransformPoint(target.position);
+                for (int i = 0; i < 4; i++)
+                {
+                    for (int j = 0; j < 4; j++) ata[i, j] += b[i] * b[j];
+                    atb[0, i] += m.x * b[i]; atb[1, i] += m.y * b[i]; atb[2, i] += m.z * b[i];
+                }
+                count++;
+            }
+            Require(count >= 8, "Too few bones to map the anchor offset of " + record.anchor);
+            var point = new double[] { record.point_blender_m[0], record.point_blender_m[1], record.point_blender_m[2], 1 };
+            var mapped = new Vector3();
+            for (int axis = 0; axis < 3; axis++)
+            {
+                var row = Solve4(ata, new[] { atb[axis, 0], atb[axis, 1], atb[axis, 2], atb[axis, 3] });
+                mapped[axis] = (float)(row[0] * point[0] + row[1] * point[1] + row[2] * point[2] + row[3]);
+            }
+            var source = Named(string.IsNullOrEmpty(record.bone) ? "Socket.Mouth" : record.bone);
+            var local = source.InverseTransformPoint(model.transform.TransformPoint(mapped));
+            Require(local.magnitude < 1f, "Anchor offset of " + record.anchor + " is implausibly far from its bone.");
+            return new Vector3((float)Math.Round(local.x, 5), (float)Math.Round(local.y, 5), (float)Math.Round(local.z, 5));
+        }
+
+        private static double[] Solve4(double[,] matrix, double[] vector)
+        {
+            var a = new double[4, 5];
+            for (int i = 0; i < 4; i++) { for (int j = 0; j < 4; j++) a[i, j] = matrix[i, j]; a[i, 4] = vector[i]; }
+            for (int column = 0; column < 4; column++)
+            {
+                int pivot = column;
+                for (int row = column + 1; row < 4; row++) if (Math.Abs(a[row, column]) > Math.Abs(a[pivot, column])) pivot = row;
+                Require(Math.Abs(a[pivot, column]) > 1e-12, "Singular bone mapping for an anchor offset.");
+                for (int j = 0; j < 5; j++) { var swap = a[column, j]; a[column, j] = a[pivot, j]; a[pivot, j] = swap; }
+                for (int row = 0; row < 4; row++)
+                {
+                    if (row == column) continue;
+                    var factor = a[row, column] / a[column, column];
+                    for (int j = column; j < 5; j++) a[row, j] -= factor * a[column, j];
+                }
+            }
+            return new[] { a[0, 4] / a[0, 0], a[1, 4] / a[1, 1], a[2, 4] / a[2, 2], a[3, 4] / a[3, 3] };
         }
 
         private static void ImportPartModel(string source, string assetPath, Manifest manifest)
@@ -470,6 +554,29 @@ namespace LetMeSleep.Editor
             material.renderQueue = -1;
             EditorUtility.SetDirty(material);
             return material;
+        }
+
+        /// <summary>
+        /// Human_Hair (the host's authored hair and every hairstyle part) uses alpha clipping: a colour block with alpha
+        /// 0 removes the authored hair under a hat, alpha 1 (every swatch, and the plain material in the basic mode)
+        /// renders it exactly as before. Idempotent; runs after CharacterContentBuilder rebuilt the palette.
+        /// </summary>
+        private static void EnsureClippableHair()
+        {
+            var material = SharedMaterial("Human_Hair");
+            bool changed = material.GetFloat("_AlphaClip") < .5f || Mathf.Abs(material.GetFloat("_Cutoff") - .5f) > 1e-4f ||
+                           !material.IsKeywordEnabled("_ALPHATEST_ON") || material.renderQueue != (int)RenderQueue.AlphaTest ||
+                           material.GetTag("RenderType", false) != "TransparentCutout";
+            if (!changed) return;
+            material.SetFloat("_AlphaClip", 1f);
+            material.SetFloat("_Cutoff", .5f);
+            material.EnableKeyword("_ALPHATEST_ON");
+            material.SetOverrideTag("RenderType", "TransparentCutout");
+            material.renderQueue = (int)RenderQueue.AlphaTest;
+            var colour = material.GetColor("_BaseColor");
+            if (colour.a < 1f) { colour.a = 1f; material.SetColor("_BaseColor", colour); }
+            EditorUtility.SetDirty(material);
+            AssetDatabase.SaveAssets();
         }
 
         private static Material SharedMaterial(string name)
@@ -611,11 +718,20 @@ namespace LetMeSleep.Editor
                             string material = renderer.sharedMaterials[i] ? renderer.sharedMaterials[i].name : string.Empty;
                             if (material == "Human_Skin")
                                 channels.Add(new CharacterCustomizationPart.ColorChannelBinding { Renderer = renderer, MaterialIndex = i, ColorSlotId = "human.skin" });
+                            // r2 (review r1): the authored hair (10-14 mm sideburns, a hard lower edge) is clipped away under
+                            // any hat; the hairstyle's own flat under-hat variant (<= 5 mm) takes its place.
                             if (material == "Human_Hair")
-                                channels.Add(new CharacterCustomizationPart.ColorChannelBinding { Renderer = renderer, MaterialIndex = i, ColorSlotId = "human.hair_color" });
+                                channels.Add(new CharacterCustomizationPart.ColorChannelBinding
+                                { Renderer = renderer, MaterialIndex = i, ColorSlotId = "human.hair_color", HiddenWhileSlotSelected = "human.headwear" });
+                            // r2 (review r1): the eye whites keep their white but are dimmed with darker skin tones, so on
+                            // a dark face at night they no longer read ~4.5x brighter than the face (see EyeWhiteFloor).
+                            if (material == "Character_EyeWhite" || material == "Human_EyeWhiteShade")
+                                channels.Add(new CharacterCustomizationPart.ColorChannelBinding
+                                { Renderer = renderer, MaterialIndex = i, ColorSlotId = "human.skin", LuminanceFloor = EyeWhiteFloor });
                         }
-                    Require(channels.Count(item => item.ColorSlotId == "human.skin") == 3 && channels.Any(item => item.ColorSlotId == "human.hair_color"),
-                        prefabName + " authored head/hands lack the skin or hair materials.");
+                    Require(channels.Count(item => item.ColorSlotId == "human.skin" && item.LuminanceFloor <= 0) == 3 &&
+                            channels.Any(item => item.ColorSlotId == "human.hair_color") && channels.Any(item => item.LuminanceFloor > 0),
+                        prefabName + " authored head/hands lack the skin, hair or eye-white materials.");
                     host.ColorChannels = channels.ToArray();
                 }
                 else
@@ -755,6 +871,87 @@ namespace LetMeSleep.Editor
             }
         }
 
+        private static Transform Bone(GameObject actor, string name) =>
+            actor.GetComponentsInChildren<Transform>(true).FirstOrDefault(item => item.name == name);
+
+        private static IEnumerable<Vector3> BakedPoints(SkinnedMeshRenderer skin)
+        {
+            var mesh = new Mesh();
+            try
+            {
+                skin.BakeMesh(mesh, true);
+                return mesh.vertices.Select(v => skin.transform.TransformPoint(v)).ToArray();
+            }
+            finally { Object.DestroyImmediate(mesh); }
+        }
+
+        /// <summary>
+        /// UI-06 screen 6 "ESTILO DE ALAS": only the pair of wings, big, seen from the front. Every other renderer is
+        /// hidden and each wing bone is turned about its root so its membrane faces the camera with the span 32 deg
+        /// out from the vertical: the three shapes read as leaves side by side, whatever the idle aim.
+        /// </summary>
+        private static Framing FrameWings(GameObject actor, CharacterView view, List<Renderer> hidden)
+        {
+            var wings = actor.GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                .Where(item => item.enabled && item.name.StartsWith("MosquitoPartWing", StringComparison.Ordinal)).ToArray();
+            var membranes = wings.Where(item => item.name == "MosquitoPartWings").ToArray();
+            Require(membranes.Length == 1, "Wing thumbnail needs the MosquitoPartWings renderer.");
+            foreach (var renderer in actor.GetComponentsInChildren<Renderer>(true))
+                if (renderer.enabled && !wings.Contains(renderer)) { renderer.enabled = false; hidden.Add(renderer); }
+            var toCamera = Orbit(0f, 6f);
+            var right = Vector3.Cross(Vector3.up, toCamera).normalized;
+            var thorax = Bone(actor, "Thorax");
+            foreach (var side in new[] { "L", "R" })
+            {
+                var bone = Bone(actor, "Wing." + side);
+                Require(bone != null && thorax != null, "Mosquito wing bones missing.");
+                var root = bone.position;
+                var outward = Vector3.ProjectOnPlane(root - thorax.position, toCamera);
+                if (outward.sqrMagnitude < 1e-10f) outward = side == "L" ? right : -right;
+                outward = Vector3.Project(outward, right).normalized;
+                var points = BakedPoints(membranes[0]).Where(p => Vector3.Dot(p - thorax.position, outward) > 0).ToArray();
+                Require(points.Length > 8, "Wing thumbnail found no membrane on side " + side);
+                var tip = points.OrderByDescending(p => (p - root).sqrMagnitude).First();
+                var span = (tip - root).normalized;
+                var chordPoint = points.OrderByDescending(p => Vector3.ProjectOnPlane(p - root, span).sqrMagnitude).First();
+                var chord = Vector3.ProjectOnPlane(chordPoint - root, span).normalized;
+                var normal = Vector3.Cross(span, chord).normalized;
+                var targetSpan = (Vector3.up * Mathf.Cos(32f * Mathf.Deg2Rad) + outward * Mathf.Sin(32f * Mathf.Deg2Rad)).normalized;
+                var targetNormal = Vector3.Dot(normal, toCamera) >= 0 ? toCamera : -toCamera;
+                var turn = Quaternion.LookRotation(targetNormal, targetSpan) * Quaternion.Inverse(Quaternion.LookRotation(normal, span));
+                bone.rotation = turn * bone.rotation;
+                bone.position = root;
+            }
+            var all = wings.SelectMany(BakedPoints).ToArray();
+            var centre = all.Aggregate(Vector3.zero, (sum, p) => sum + p) / all.Length;
+            var up = Vector3.up;
+            float half = 0f;
+            foreach (var p in all)
+            {
+                var d = p - centre;
+                half = Mathf.Max(half, Mathf.Abs(Vector3.Dot(d, up)), Mathf.Abs(Vector3.Dot(d, right)));
+            }
+            var bounds = new Bounds(all[0], Vector3.zero);
+            foreach (var p in all) bounds.Encapsulate(p);
+            return new Framing(bounds.center.x, bounds.center.y, bounds.center.z, half * 1.08f, 0f, 6f);
+        }
+
+        /// <summary>UI-06 / PER-07 markings: the abdomen alone, seen from the side and a little behind and above
+        /// (wings hidden so rings, spots and stripes read).</summary>
+        private static Framing FrameAbdomen(GameObject actor, CharacterView view, List<Renderer> hidden)
+        {
+            foreach (var renderer in actor.GetComponentsInChildren<Renderer>(true))
+                if (renderer.enabled && renderer.name.StartsWith("MosquitoPartWing", StringComparison.Ordinal))
+                { renderer.enabled = false; hidden.Add(renderer); }
+            var first = Bone(actor, "Abdomen01");
+            var second = Bone(actor, "Abdomen02");
+            Require(first != null && second != null, "Mosquito abdomen bones missing.");
+            var tip = second.position + (second.position - first.position) * 1.35f;
+            var centre = (first.position + tip) * .5f;
+            var half = Vector3.Distance(first.position, tip) * .62f;
+            return new Framing(centre.x, centre.y, centre.z, half, 118f, 26f);
+        }
+
         private static Vector3 Orbit(float yaw, float pitch)
         {
             var horizontal = Quaternion.Euler(0, yaw, 0) * Vector3.forward;
@@ -826,6 +1023,9 @@ namespace LetMeSleep.Editor
                                 foreach (var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>(true))
                                 { skin.updateWhenOffscreen = true; skin.forceMatrixRecalculationPerRender = true; }
                                 var framing = FramingFor(slot.SlotId);
+                                var hidden = new List<Renderer>();
+                                if (slot.SlotId == "mosquito.wings") framing = FrameWings(actor, view, hidden);
+                                else if (slot.SlotId == "mosquito.markings") framing = FrameAbdomen(actor, view, hidden);
                                 var offset = Orbit(framing.Yaw, framing.Pitch);
                                 camera.orthographicSize = framing.Half;
                                 camera.transform.position = framing.Centre + offset * 6f;
@@ -834,6 +1034,7 @@ namespace LetMeSleep.Editor
                                 fill.transform.rotation = Quaternion.LookRotation(-Orbit(framing.Yaw + 70f, 12f), Vector3.up);
                                 string path = ThumbnailPath(slot.SlotId, option.OptionId);
                                 RenderPng(camera, path);
+                                foreach (var renderer in hidden) if (renderer) renderer.enabled = true;
                                 written.Add(path);
                             }
                         assembler.ClearAppliedParts();

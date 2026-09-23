@@ -90,8 +90,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0, y: 1.6784996, z: 0.022691056}
-    m_Extent: {x: 0.20143086, y: 0.0884999, z: 0.17086603}
+    m_Center: {x: 0, y: 1.6684996, z: 0.022691056}
+    m_Extent: {x: 0.20123106, y: 0.07849991, z: 0.17066602}
   m_DirtyAABB: 0
 --- !u!1 &7316296968942070852
 GameObject:
@@ -218,3 +218,4 @@ MonoBehaviour:
   FirstPersonHeadRenderers:
   - {fileID: 5909557056034785940}
   ConditionalRenderers: []
+  AnchorOffsets: []

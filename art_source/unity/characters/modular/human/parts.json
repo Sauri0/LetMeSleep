@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "modular-parts-v030-r1",
+  "revision": "modular-parts-v030-r2",
   "species": "Human",
   "rig_id": "lms.human.v030",
   "rig_signature_sha256": "bf07a58f32b3b5bc24ce7285a2b8fa2aaa20ce9b2c4956a5987e29a35a7487c1",
@@ -1018,9 +1018,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "HumanPartBase",
@@ -1032,7 +1034,7 @@
       ],
       "facial_impact": "None",
       "note": "Bare arms, feet and ankles (the authored head, neck and hands stay on the host).",
-      "sha256": "dff7f51cc9fcb2ccfa87097df0c5970c6b7f46a6612b404a334a44c6a01bb3d3"
+      "sha256": "f159df1e4fe1c14be463880e03a6eb1889e5655ba5ec97631535ab56d598d4e7"
     },
     {
       "role": "Human",
@@ -1057,9 +1059,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "HumanPartTop",
@@ -1078,7 +1082,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "8714826cb96bf174da45b6ef990148a4cc0f3090e99166161701dd44fa0ce556"
+      "sha256": "8928216538415d2308d2391d21753669fcbb5f086f27e9c38d40690774766f39"
     },
     {
       "role": "Human",
@@ -1104,9 +1108,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "HumanPartBottom",
@@ -1125,7 +1131,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "149669f587b4eda5a2292893c3431f0b495924d067c0655864302cac1bc1fd45"
+      "sha256": "43177840dd411777ca986166ee0a691b9616e071f7fba72a94dc170e8ddd33f5"
     },
     {
       "role": "Human",
@@ -1147,13 +1153,15 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "f5dde3f6833a1c1d625143b6e5ef13c5aa07e2ea8000d2844dbba70a020128e8"
+      "sha256": "5751cbe2d1020ab0e4a5080ddc913518b6d432dd9b046cb5288163cb56232a76"
     },
     {
       "role": "Human",
@@ -1175,13 +1183,15 @@
           ],
           "errors": [],
           "first_person_head": true,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "11b62e2619ed1ce410d856082063d9219e08dc3d444d0eb64967c52a96edf483"
+      "sha256": "651610457dd755d0f085771e09be98df17b5efdc623660feb5d7efc069dd7c1b"
     },
     {
       "role": "Human",
@@ -1201,12 +1211,36 @@
           ],
           "errors": [],
           "first_person_head": true,
-          "hidden_when_slot_selected": "human.headwear"
+          "hidden_when_slot_selected": "human.headwear",
+          "shown_when_slot_selected": ""
+        },
+        {
+          "name": "HumanPartHairUnderHat",
+          "triangles": 1928,
+          "vertices": 966,
+          "materials": [
+            "Human_Hair"
+          ],
+          "bones": [
+            "Head"
+          ],
+          "errors": [],
+          "first_person_head": true,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": "human.headwear"
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "HumanPartHairTop",
+          "material": "Human_Hair",
+          "slot": "human.hair_color",
+          "shade_reference": "",
+          "alpha": -1
+        },
+        {
+          "renderer": "HumanPartHairUnderHat",
           "material": "Human_Hair",
           "slot": "human.hair_color",
           "shade_reference": "",
@@ -1215,7 +1249,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "15e248ed40a93ce1293b15efcee332abf79d71a243e98645ef59378a7d0e959e"
+      "sha256": "f3309e7e64aedcf14c254f8b0ab2d51a3841d19fbdb157150d206bc6dba85615"
     },
     {
       "role": "Human",
@@ -1224,9 +1258,9 @@
       "fbx": "human.hair__despeinado.fbx",
       "renderers": [
         {
-          "name": "HumanPartHair",
-          "triangles": 144,
-          "vertices": 88,
+          "name": "HumanPartHairTop",
+          "triangles": 3436,
+          "vertices": 1722,
           "materials": [
             "Human_Hair"
           ],
@@ -1235,12 +1269,13 @@
           ],
           "errors": [],
           "first_person_head": true,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "human.headwear",
+          "shown_when_slot_selected": ""
         },
         {
-          "name": "HumanPartHairTop",
-          "triangles": 1180,
-          "vertices": 636,
+          "name": "HumanPartHairUnderHat",
+          "triangles": 1928,
+          "vertices": 966,
           "materials": [
             "Human_Hair"
           ],
@@ -1249,19 +1284,21 @@
           ],
           "errors": [],
           "first_person_head": true,
-          "hidden_when_slot_selected": "human.headwear"
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": "human.headwear"
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
-          "renderer": "HumanPartHair",
+          "renderer": "HumanPartHairTop",
           "material": "Human_Hair",
           "slot": "human.hair_color",
           "shade_reference": "",
           "alpha": -1
         },
         {
-          "renderer": "HumanPartHairTop",
+          "renderer": "HumanPartHairUnderHat",
           "material": "Human_Hair",
           "slot": "human.hair_color",
           "shade_reference": "",
@@ -1270,7 +1307,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "d77ef745e10269f2c054831638f5d917b4db901526e106276c8e946e503df5c9"
+      "sha256": "7719cf75c42ce632bccbab8d5cef359329a8622845e6f10cdda4aaa93738ef89"
     },
     {
       "role": "Human",
@@ -1279,9 +1316,9 @@
       "fbx": "human.hair__rulos.fbx",
       "renderers": [
         {
-          "name": "HumanPartHair",
-          "triangles": 360,
-          "vertices": 216,
+          "name": "HumanPartHairTop",
+          "triangles": 4604,
+          "vertices": 2306,
           "materials": [
             "Human_Hair"
           ],
@@ -1290,12 +1327,13 @@
           ],
           "errors": [],
           "first_person_head": true,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "human.headwear",
+          "shown_when_slot_selected": ""
         },
         {
-          "name": "HumanPartHairTop",
-          "triangles": 1384,
-          "vertices": 754,
+          "name": "HumanPartHairUnderHat",
+          "triangles": 1928,
+          "vertices": 966,
           "materials": [
             "Human_Hair"
           ],
@@ -1304,19 +1342,21 @@
           ],
           "errors": [],
           "first_person_head": true,
-          "hidden_when_slot_selected": "human.headwear"
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": "human.headwear"
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
-          "renderer": "HumanPartHair",
+          "renderer": "HumanPartHairTop",
           "material": "Human_Hair",
           "slot": "human.hair_color",
           "shade_reference": "",
           "alpha": -1
         },
         {
-          "renderer": "HumanPartHairTop",
+          "renderer": "HumanPartHairUnderHat",
           "material": "Human_Hair",
           "slot": "human.hair_color",
           "shade_reference": "",
@@ -1325,7 +1365,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "23ccf4a13e2e56cf98b9bf1b45bc341ec6caeb98594bff4f26732860b7502885"
+      "sha256": "61f8b23278429712898d36be2260b4d2715fc766beae526b3ed86383de50f5b2"
     },
     {
       "role": "Human",
@@ -1346,13 +1386,15 @@
           ],
           "errors": [],
           "first_person_head": true,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "f999d460d9e51210be587a09062421080a5b1705d77a5e5bb99de368209388bc"
+      "sha256": "4aa229224705ed0bd3db5e42531c3e9906076e8d06f959b0065561e0205f3b25"
     },
     {
       "role": "Human",
@@ -1373,13 +1415,15 @@
           ],
           "errors": [],
           "first_person_head": true,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "83e84b7ed6d4cd7cf3ee4d39401951dbddb307a2baec61be996c87b49b8fbaf5"
+      "sha256": "423a8a032e2174d6724d866e539ad0fa0223abf75c9b39c46f2e9c933bcba018"
     },
     {
       "role": "Human",
@@ -1399,13 +1443,15 @@
           ],
           "errors": [],
           "first_person_head": true,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "4ea328367c654abb75f0d85f35d3e527b2795e658336737ab43d904913468596"
+      "sha256": "f4d253bfbaa0bf949f55829ac9633bbf5e705af220317af605d6c81eab7b143a"
     },
     {
       "role": "Human",
@@ -1415,8 +1461,8 @@
       "renderers": [
         {
           "name": "HumanPartGlasses",
-          "triangles": 598,
-          "vertices": 313,
+          "triangles": 1110,
+          "vertices": 569,
           "materials": [
             "Human_GlassesFrame",
             "Human_GlassesLens"
@@ -1426,13 +1472,15 @@
           ],
           "errors": [],
           "first_person_head": true,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "OccludesExistingFace",
       "note": "",
-      "sha256": "d8d53e37442eca898053453ad935a320584a460b77442a54fa1b2346f13e6d59"
+      "sha256": "53d67d7c3335b9cf899c1c11059af1ed645e0fddb546d33d306cf724f7f36967"
     },
     {
       "role": "Human",
@@ -1460,9 +1508,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "HumanPartTop",
@@ -1481,7 +1531,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "37f78f3d14e4e35efc1d3fb34709d4a9718ff52a18deb2f9cc1123f07e03d69b"
+      "sha256": "c72844d5540b29cdb434d2f351e349901a93eca3a67be4086250adc467b8e0ab"
     },
     {
       "role": "Human",
@@ -1507,13 +1557,15 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "05c65beaa47bcf184920bb4879e1e8638d4f97604019e43ccf5b3c627a5c9559"
+      "sha256": "dbb498cbba3975bdc60f5254743db0af84cbd1572aff68e21260d3b42ff98542"
     },
     {
       "role": "Human",
@@ -1537,13 +1589,15 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "59ea8fb9aee8a18493b0ce985bf75a28be4770020bb20f233b16271c26e29705"
+      "sha256": "75464e8c1d30dfcd8815602db2ca78671aeecfa9c7c85852b9f299aa612cb69d"
     },
     {
       "role": "Human",
@@ -1553,25 +1607,29 @@
       "renderers": [
         {
           "name": "HumanPartBack",
-          "triangles": 618,
-          "vertices": 327,
+          "triangles": 722,
+          "vertices": 383,
           "materials": [
             "Human_Backpack",
             "Human_BackpackTrim",
             "Human_BackpackAccent"
           ],
           "bones": [
-            "Chest"
+            "Chest",
+            "Hips",
+            "Spine"
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "847000476979807cd039157e64be04fd4b113dda77a7f20df21784b3cb2c9eb9"
+      "sha256": "1b49081d0b0499fbf298df2241907390a9ad2d801fc59d7e2cd19f148425b21e"
     }
   ],
   "material_palette": [
@@ -1611,9 +1669,9 @@
     {
       "name": "Human_Beanie",
       "color": {
-        "r": 0.8666666746139526,
-        "g": 0.6352941393852234,
-        "b": 0.2078431397676468,
+        "r": 0.30588236451148987,
+        "g": 0.32156863808631897,
+        "b": 0.364705890417099,
         "a": 1.0
       },
       "roughness": 0.949999988079071,
@@ -1622,9 +1680,9 @@
     {
       "name": "Human_BeanieCuff",
       "color": {
-        "r": 0.6470588445663452,
-        "g": 0.43529412150382996,
-        "b": 0.10980392247438431,
+        "r": 0.20392157137393951,
+        "g": 0.21568627655506134,
+        "b": 0.24705882370471954,
         "a": 1.0
       },
       "roughness": 0.949999988079071,
@@ -1682,7 +1740,7 @@
         "b": 0.1921568661928177,
         "a": 1.0
       },
-      "roughness": 0.18000000715255737,
+      "roughness": 0.800000011920929,
       "new": true
     },
     {
@@ -1863,7 +1921,7 @@
     }
   ],
   "source_sha256": {
-    "author_modular_parts.py": "1aa3a6ecf4f73ae907a60766c24644075c5fb3f79cb41dbe91af9880668d9791",
+    "author_modular_parts.py": "e3bc6a6f01742e77b033492cae51a22f1936767722c330219cf5aed246730b5f",
     "build_characters.py": "d2154f0ea2c36e9de7fcf8e27d3067ba4d6d609a96a9ff050e72d9b55be6030b",
     "author_human_geometry.py": "a5f355b31f9245b676dde3469fd96fd2167353cf1517318539684af763129789",
     "author_human_joints.py": "296447f1a1981009d12f3a5b2b872848386666ac4b5f4fc0d8626b0b0b4a2329",

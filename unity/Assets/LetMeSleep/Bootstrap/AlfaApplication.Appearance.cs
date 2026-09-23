@@ -102,6 +102,33 @@ namespace LetMeSleep.Bootstrap
                     Pick(Skins, draft?.SkinColorId), Pick(Pajamas, draft?.PajamaColorId), Pick(MosquitoColors, draft?.MosquitoColorId), local);
             }).ToArray();
         }
+        /// <summary>UI studio subjects (the HUD face) wear the local player's published look.</summary>
+        private void DressLocalLook(UnityEngine.GameObject subject, AlfaRole role)
+        {
+            var view = subject ? subject.GetComponentInChildren<CharacterView>(true) : null;
+            if (view) ApplyLive(view, training ? "practice" : LocalId);
+        }
+
+        /// <summary>Opaque key of the published look of a role; empty while it is the default character.</summary>
+        private string LocalLookKey(AlfaRole role)
+        {
+            if (ModularCustomizationAvailable && publishedModularAppearance != null)
+            {
+                var customizationRole = role == AlfaRole.Mosquito ? CustomizationRole.Mosquito : CustomizationRole.Human;
+                var defaults = modularCustomizationRuntime.Snapshot.DefaultSelection().For(customizationRole);
+                var chosen = publishedModularAppearance.For(customizationRole);
+                var parts = chosen.Selections.OrderBy(item => item.SlotId, StringComparer.Ordinal)
+                    .Where(item => item.OptionId != defaults.OptionFor(item.SlotId))
+                    .Select(item => item.SlotId + "=" + item.OptionId).ToArray();
+                return string.Join("|", parts);
+            }
+            if (appearance == null) return string.Empty;
+            return role == AlfaRole.Mosquito
+                ? (appearance.MosquitoColorId == "red" ? string.Empty : appearance.MosquitoColorId)
+                : (appearance.SkinColorId == "warm" && appearance.PajamaColorId == "blue" ? string.Empty
+                    : appearance.SkinColorId + "/" + appearance.PajamaColorId);
+        }
+
         private void ApplyLive(CharacterView view,string owner)
         {
             if (!view) return;

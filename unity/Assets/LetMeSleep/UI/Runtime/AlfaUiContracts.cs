@@ -83,6 +83,8 @@ namespace LetMeSleep.UI
         public GameObject HumanPrefab { get; }
         public GameObject MosquitoPrefab { get; }
         public Action<GameObject, Camera> OnPreviewCreated { get; }
+        // Optional: dresses a one-off UI studio subject (the HUD face) in the local player's published look.
+        public Action<GameObject, AlfaRole> DressLocalLook { get; }
 
         public CharacterPreviewSetup(Camera camera, Transform stage, RenderTexture texture, GameObject humanPrefab, GameObject mosquitoPrefab)
             : this(camera, stage, texture, humanPrefab, mosquitoPrefab, null)
@@ -91,6 +93,12 @@ namespace LetMeSleep.UI
 
         public CharacterPreviewSetup(Camera camera, Transform stage, RenderTexture texture, GameObject humanPrefab,
             GameObject mosquitoPrefab, Action<GameObject, Camera> onPreviewCreated)
+            : this(camera, stage, texture, humanPrefab, mosquitoPrefab, onPreviewCreated, null)
+        {
+        }
+
+        public CharacterPreviewSetup(Camera camera, Transform stage, RenderTexture texture, GameObject humanPrefab,
+            GameObject mosquitoPrefab, Action<GameObject, Camera> onPreviewCreated, Action<GameObject, AlfaRole> dressLocalLook)
         {
             Camera = camera;
             Stage = stage;
@@ -98,6 +106,7 @@ namespace LetMeSleep.UI
             HumanPrefab = humanPrefab;
             MosquitoPrefab = mosquitoPrefab;
             OnPreviewCreated = onPreviewCreated;
+            DressLocalLook = dressLocalLook;
         }
 
         public bool IsUsable => Camera != null && Stage != null && Texture != null && HumanPrefab != null && MosquitoPrefab != null;
@@ -416,6 +425,8 @@ namespace LetMeSleep.UI
         public bool ModularPreviewAvailable { get; }
         // UI-only lookup. A null result means that the option is rendered by its visible name alone.
         public Func<string, string, Sprite> ThumbnailResolver { get; }
+        // UI-only hint: false when a Color slot tints nothing the role wears with that selection (shown as "no aplica").
+        public Func<AppearanceSelection, CustomizationRole, string, bool> ColorSlotApplies { get; }
         public bool IsSaving { get; }
         // A retained profile can be visible but cannot safely be edited by this build.
         public bool IsReadOnly { get; }
@@ -451,7 +462,8 @@ namespace LetMeSleep.UI
             string message = "",
             bool modularPreviewAvailable = false,
             Func<string, string, Sprite> thumbnailResolver = null,
-            bool isReadOnly = false)
+            bool isReadOnly = false,
+            Func<AppearanceSelection, CustomizationRole, string, bool> colorSlotApplies = null)
         {
             if (catalog == null) throw new ArgumentNullException(nameof(catalog));
             if (editedRole != AlfaRole.Human && editedRole != AlfaRole.Mosquito)
@@ -468,6 +480,7 @@ namespace LetMeSleep.UI
             EditedRole = editedRole;
             ModularPreviewAvailable = modularPreviewAvailable;
             ThumbnailResolver = thumbnailResolver;
+            ColorSlotApplies = colorSlotApplies;
             IsSaving = isSaving;
             IsReadOnly = isReadOnly;
             Message = message ?? string.Empty;

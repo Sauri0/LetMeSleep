@@ -19,6 +19,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Mosquito_Petal
     second: {fileID: 2100000, guid: 672304bf87e681f4e8f39e773bc6d7c0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mosquito_PetalUnder
+    second: {fileID: 2100000, guid: 304460a1d81f7a24dbe4eca63ea1a642, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

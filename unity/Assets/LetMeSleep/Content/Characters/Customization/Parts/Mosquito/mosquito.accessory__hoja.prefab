@@ -98,6 +98,7 @@ MonoBehaviour:
   ColorChannels: []
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []
 --- !u!1 &8201384184896909310
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,6 +157,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: a4f7ac9bedb012542b37e588290fdf54, type: 2}
+  - {fileID: 2100000, guid: 7cc16652a060e2d47a2da368516cefdf, type: 2}
   - {fileID: 2100000, guid: daff9c2f3a11d234c981204e3cab1ba3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -188,6 +190,6 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0.000000018626451, y: 0.17638722, z: -0.04922807}
-    m_Extent: {x: 0.04495004, y: 0.046992138, z: 0.0895704}
+    m_Center: {x: 0.000000018626451, y: 0.17885867, z: -0.051261008}
+    m_Extent: {x: 0.04495005, y: 0.061448976, z: 0.08549927}
   m_DirtyAABB: 0

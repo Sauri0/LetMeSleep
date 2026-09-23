@@ -46,7 +46,7 @@ import author_mosquito_motion  # noqa: E402
 
 OUT = HERE / 'modular'
 RIG_IDS = {'Human': 'lms.human.v030', 'Mosquito': 'lms.mosquito.v030'}
-REVISION = 'modular-parts-v030-r1'
+REVISION = 'modular-parts-v030-r2'
 
 
 # ----------------------------------------------------------------------------- helpers
@@ -213,14 +213,19 @@ def weights_from(source_objects, radius=.05):
 # ----------------------------------------------------------------------------- part registry
 class Part:
     def __init__(self, species, slot, option, renderers, colors=(), conditional=None, fp_head=False,
-                 facial='None', note=''):
+                 facial='None', note='', shown_only=None, anchors=()):
         self.species, self.slot, self.option = species, slot, option
         # renderer name -> list of scene objects
         self.renderers = renderers
         # (renderer, material name, colour slot, shade reference material or None, alpha override)
         self.colors = list(colors)
-        # renderer -> slot id whose non-none selection hides that renderer (hair under hats)
+        # renderer -> slot id whose non-none selection hides that renderer (the full hairstyle under hats)
         self.conditional = conditional or {}
+        # renderer -> slot id: the renderer shows ONLY while that slot has a non-none selection (hair under a hat)
+        self.shown_only = shown_only or {}
+        # (host anchor name, source bone, point in bind/armature space): the anchor follows this point of the part
+        # instead of the bone head (a proboscis whose tip is not on Socket.Mouth keeps the bite on its real tip)
+        self.anchors = list(anchors)
         self.fp_head = fp_head
         self.facial = facial
         self.note = note
@@ -270,14 +275,88 @@ def build_human_parts():
              {'HumanPartHeadwear': [O[n] for n in ('NightcapBand', 'NightcapCrown', 'NightcapTail', 'NightcapPom')]},
              fp_head=True)
 
-    # ---- hair (always visible part + top that any hat hides) -----------------------------
+    # ---- hair ------------------------------------------------------------------------------
+    # r2 (modular review r1): under a hat the r1 hair showed the host's authored sideburns (10-14 mm off the skull,
+    # a hard lower edge) plus the style's side tufts or curls: a black plate at the temple under the cap brim, a
+    # studded disc under the beanie. Now every hat hides the host's authored hair (its Human_Hair channel on
+    # HumanHead is alpha-clipped while a headwear is worn, see CharacterCustomizationContentBuilder) and each
+    # hairstyle has two variants:
+    #   * HumanPartHairTop - the full style (crown, the style's sideburns and nape over the host hair, locks or
+    #     curls), hidden while any headwear is worn;
+    #   * HumanPartHairUnderHat - the style under a hat: one flat slab <= 5 mm off the skull from under the hat
+    #     edge to the hair line, its lower edge bevelled to 1 mm (plain for corto, flat points for despeinado,
+    #     flat scallops for rulos), tucked at the nape; shown only while a headwear is worn.
     hair = mats['Human_Hair']
     COLS = ag.COLS
+    HB = ag.HAIR_BOTTOM
+    hb_keys = sorted(HB)
+    UNDER_HAT_MAX = .0050
+    # Under a hat: the host slab's shape at <= 5 mm, the last row 1 mm (a bevel that meets the skin).
+    THIN_ROWS = [(0.0, .0040), (.17, .0045), (.34, .0046), (.51, .0046), (.68, .0045), (.84, .0036), (1.0, .0010)]
+    THIN_SIDEBURN = 1.08
+    # Without a hat: the style's sideburns and nape cover the host slab (ag.HAIR_ROWS, 10 mm, 14 mm sideburns)
+    # by 1.8 mm, reach 6 mm below its hard lower edge and end in a bevel there.
+    COVER = .0018
+    FULL_ROWS = [(t, d + COVER) for t, d in ag.HAIR_ROWS if t < .9] + [(.97, .0100 + COVER), (1.0, .0022)]
+
+    def authored_bottom(c):
+        """Lower edge of the host's authored hair at a fractional column (sideburn 3.64 .. nape 7 .. 10.36)."""
+        m = min(c % COLS, COLS - c % COLS)
+        if m <= hb_keys[0]:
+            return HB[hb_keys[0]]
+        if m >= hb_keys[-1]:
+            return HB[hb_keys[-1]]
+        for a, b in zip(hb_keys, hb_keys[1:]):
+            if a <= m <= b:
+                return HB[a] + (HB[b] - HB[a]) * (m - a) / (b - a)
+
+    def full_thickness(c):
+        m = min(c % COLS, COLS - c % COLS)
+        return ag.SIDEBURN_THICKNESS if ag.SIDEBURN_COLUMNS[0] <= m <= ag.SIDEBURN_COLUMNS[1] else 1.0
+
+    def thin_thickness(c):
+        m = min(c % COLS, COLS - c % COLS)
+        return THIN_SIDEBURN if ag.SIDEBURN_COLUMNS[0] <= m <= ag.SIDEBURN_COLUMNS[1] else 1.0
+
+    ARC = [3.60 + k * (10.40 - 3.60) / 68 for k in range(69)]
+
+    def edge_slab(columns, top_fn, bottom_fn, profile, thick_fn=None, inner=-.002):
+        """Closed shell hugging the skull from top_fn(c) to bottom_fn(c) over an open arc of columns.
+        profile: [(t, distance)] from the top row (t 0) to the lower edge (t 1)."""
+        outer_rows, inner_rows = [], []
+        for t, d in profile:
+            orow, irow = [], []
+            for c in columns:
+                z = top_fn(c) + (bottom_fn(c) - top_fn(c)) * t
+                k = thick_fn(c) if thick_fn else 1.0
+                orow.append(Vector(ag.radial_surface(skull, z, c, d * k)))
+                irow.append(Vector(ag.radial_surface(skull, z, c, inner)))
+            outer_rows.append(orow)
+            inner_rows.append(irow)
+        rows, cols = len(outer_rows), len(columns)
+        verts = [p for row in outer_rows for p in row] + [p for row in inner_rows for p in row]
+        base = rows * cols
+        faces = []
+        for r in range(rows - 1):
+            for c in range(cols - 1):
+                a = r * cols + c
+                faces.append((a, a + 1, a + cols + 1, a + cols))
+                faces.append((base + a + cols, base + a + cols + 1, base + a + 1, base + a))
+        for c in range(cols - 1):
+            faces.append((c + 1, c, base + c, base + c + 1))
+            top = (rows - 1) * cols + c
+            faces.append((top, top + 1, base + top + 1, base + top))
+        for r in range(rows - 1):
+            a = r * cols
+            faces.append((a + cols, a, base + a, base + a + cols))
+            b = r * cols + cols - 1
+            faces.append((b, b + cols, base + b + cols, base + b))
+        return verts, faces
 
     def hairline(c):
-        """Bottom of the top shell per skull column (0 front, 7 back)."""
+        """Bottom of the crown shell per skull column (0 front, 7 back)."""
         c = c % COLS
-        d = min(c, COLS - c)          # 0 front .. 7 back
+        d = min(c, COLS - c)
         return {0: 1.651, 1: 1.653, 2: 1.648, 3: 1.636}.get(int(round(d)), 1.630) if d < 3.5 else 1.630
 
     def shell_rings(distance, columns=28, bottom_offset=0.0, jitter=0.0, seed=1.0):
@@ -293,7 +372,6 @@ def build_human_parts():
                     d += jitter * (h(j, k, seed) - .5) * 2
                 ring.append(Vector(ag.radial_surface(skull, z, c, d)))
             rows.append(ring)
-        # soft dome to the apex
         last = rows[-1]
         cx = sum(p.x for p in last) / len(last)
         cy = sum(p.y for p in last) / len(last)
@@ -327,95 +405,171 @@ def build_human_parts():
         inner, apex_i = shell_rings(-.004)
         return closed_cap(outer, apex_o, inner, apex_i)
 
-    def tuft(root_c, root_z, length, direction, width=.013, sides=5, seed=0.0, base_distance=.004):
-        base = Vector(ag.radial_surface(skull, root_z, root_c, base_distance))
-        outward = (Vector(ag.radial_surface(skull, root_z, root_c, .05)) - base).normalized()
-        d = (outward * direction[0] + Vector((0, 0, 1)) * direction[1] +
-             Vector((0, -1, 0)) * direction[2] + Vector((1, 0, 0)) * direction[3])
-        d.normalize()
-        # base polygon perpendicular to d
-        a = d.cross(Vector((0, 0, 1)) if abs(d.z) < .9 else Vector((1, 0, 0))).normalized()
-        b = d.cross(a)
-        verts = []
-        for j in range(sides):
-            ang = math.tau * j / sides + h(root_c, root_z, seed) * math.tau
-            r = width * (.8 + .4 * h(j, root_c, seed))
-            verts.append(base - d * .006 + a * math.cos(ang) * r + b * math.sin(ang) * r)
-        tip = base + d * length + a * (h(seed, 3.1) - .5) * .01
-        mid = [base + d * length * .45 + (p - base) * .55 for p in verts]
-        verts = verts + mid + [tip]
-        n = sides
-        faces = [tuple(reversed(range(n)))]
-        faces += [(j, (j + 1) % n, n + (j + 1) % n, n + j) for j in range(n)]
-        faces += [(n + j, n + (j + 1) % n, 2 * n) for j in range(n)]
-        return verts, faces
+    def points_edge(c, tips):
+        """Downward offset (negative) of a lower edge with flat pointed locks: tips = [(column, depth, half width)]."""
+        m = min(c % COLS, COLS - c % COLS)
+        return -max([0.0] + [depth * max(0.0, 1 - abs(m - col) / hw) ** 1.3 for col, depth, hw in tips])
 
-    # corto: a short, faceted cap of hair; under any hat only the authored sideburns remain.
-    top = hair_top(seed=1.3)
-    corto_top = make_mesh('HairCortoTop', *top, [hair], 'Head')
-    add_part('Human', 'human.hair', 'corto', {'HumanPartHairTop': [corto_top]},
-             colors=[('HumanPartHairTop', 'Human_Hair', 'human.hair_color', None, None)],
-             conditional={'HumanPartHairTop': 'human.headwear'}, fp_head=True)
+    def scallop_edge(c, depth=.0085, lobe=.62):
+        """Downward offset of a lower edge made of round lobes (curls lying flat)."""
+        u = (c - 3.60) / lobe
+        return -depth * abs(math.sin(math.pi * u)) ** .6
 
-    # despeinado: chunky spikes on the crown and a messy forward fringe; short tufts that
-    # stick out under the band over the ears and at the nape even with a hat on.
-    parts = [hair_top(distance=.0120, jitter=.004, seed=2.1)]
-    # (column, root z, length, (outward, up, forward, left)) - chunky strands, the front ones falling
-    # over the forehead as a messy fringe, the crown ones sticking up and back.
-    spikes = [(0.0, 1.664, .048, (.30, -.25, 1.0, .05)), (0.9, 1.662, .044, (.45, -.20, .85, .35)),
-              (13.1, 1.662, .044, (.45, -.20, .85, -.35)), (1.9, 1.666, .040, (.85, -.10, .45, .20)),
-              (12.1, 1.666, .040, (.85, -.10, .45, -.20)), (2.9, 1.662, .036, (1.0, .05, .10, 0)),
-              (11.1, 1.662, .036, (1.0, .05, .10, 0)), (0.5, 1.696, .050, (.25, .80, .55, .15)),
-              (13.5, 1.696, .048, (.25, .80, .55, -.20)), (2.4, 1.694, .046, (.70, .70, .10, .10)),
-              (11.6, 1.694, .046, (.70, .70, .10, -.10)), (4.1, 1.682, .044, (.85, .45, -.30, 0)),
-              (9.9, 1.682, .044, (.85, .45, -.30, 0)), (5.6, 1.672, .046, (.75, .35, -.65, 0)),
-              (8.4, 1.672, .046, (.75, .35, -.65, 0)), (7.0, 1.668, .048, (.55, .30, -.90, 0)),
-              (6.2, 1.710, .050, (.20, 1.0, -.45, .20)), (7.8, 1.710, .050, (.20, 1.0, -.45, -.20)),
-              (1.4, 1.714, .046, (.10, 1.0, .20, .30)), (12.6, 1.714, .046, (.10, 1.0, .20, -.30)),
-              (3.9, 1.712, .044, (.35, 1.0, -.10, .35)), (10.1, 1.712, .044, (.35, 1.0, -.10, -.35))]
-    for k, (c, z, length, d) in enumerate(spikes):
-        parts.append(tuft(c, z, length, d, width=.024 + .006 * h(k, 3.3), seed=k + .5, base_distance=.004))
-    messy_top = make_mesh('HairDespeinadoTop', *merge(*parts), [hair], 'Head')
-    sides = []
-    for k, (c, z, length, d) in enumerate([(3.9, 1.595, .030, (1.0, -.15, .3, 0)), (4.6, 1.600, .032, (1.0, -.25, 0, 0)),
-                                           (10.1, 1.595, .030, (1.0, -.15, .3, 0)), (9.4, 1.600, .032, (1.0, -.25, 0, 0)),
-                                           (5.7, 1.575, .030, (1.0, -.35, -.3, 0)), (8.3, 1.575, .030, (1.0, -.35, -.3, 0)),
-                                           (6.6, 1.560, .028, (1.0, -.55, -.2, .1)), (7.4, 1.560, .028, (1.0, -.55, -.2, -.1))]):
-        sides.append(tuft(c, z, length * 1.15, d, width=.016, seed=k + 20.5, base_distance=.003))
-    messy_sides = make_mesh('HairDespeinadoSides', *merge(*sides), [hair], 'Head')
-    add_part('Human', 'human.hair', 'despeinado', {'HumanPartHair': [messy_sides], 'HumanPartHairTop': [messy_top]},
-             colors=[('HumanPartHair', 'Human_Hair', 'human.hair_color', None, None),
-                     ('HumanPartHairTop', 'Human_Hair', 'human.hair_color', None, None)],
-             conditional={'HumanPartHairTop': 'human.headwear'}, fp_head=True)
+    def full_sides(bottom_offset_fn):
+        """The style's sideburns and nape without a hat: over the host slab (1.8 mm proud), 6 mm below its edge
+        plus the style's points or lobes, bevelled at the bottom."""
+        return edge_slab(ARC, lambda c: ag.HAIR_TOP, lambda c: authored_bottom(c) - .006 + bottom_offset_fn(c), FULL_ROWS,
+                         thick_fn=full_thickness)
 
-    # rulos: faceted curls; a round crown of big curls (hidden under hats) and a ring of
-    # smaller curls around the sides and nape that peeks out from under any hat.
-    curls = [hair_top(distance=.009, jitter=.002, seed=3.3)]
-    k = 0
-    for z, count, radius, dist in ((1.650, 11, .031, .015), (1.684, 10, .034, .019), (1.708, 6, .033, .016)):
-        for j in range(count):
-            c = (j + .5 * (k % 2)) * COLS / count
-            front = min(c % COLS, COLS - c % COLS)
-            zz = z + (.010 if z < 1.66 and front < 1.8 else 0)  # the fringe curls sit a little higher
-            centre = Vector(ag.radial_surface(skull, zz, c, dist))
-            curls.append(icosphere(centre, radius * (.88 + .24 * h(j, z)), 1, .14, j + z))
-        k += 1
-    curls.append(icosphere((0, .006, 1.742), .038, 1, .12, 9.1))
-    curls.append(icosphere((.030, -.030, 1.735), .031, 1, .12, 9.7))
-    curls.append(icosphere((-.030, .040, 1.735), .031, 1, .12, 9.9))
-    curly_top = make_mesh('HairRulosTop', *merge(*curls), [hair], 'Head')
-    ring = []
-    for j, c in enumerate([3.75, 4.35, 4.95, 5.6, 6.3, 7.0, 7.7, 8.4, 9.05, 9.65, 10.25]):
-        for z, radius, dist in ((1.603, .0205, .012), (1.568, .0175, .010)):
-            if z < 1.58 and (3.9 < c < 5.2 or 8.8 < c < 10.1):
-                continue  # ears
-            centre = Vector(ag.radial_surface(skull, z, c, dist))
-            ring.append(icosphere(centre, radius * (.9 + .2 * h(j, z, 2)), 1, .12, j * 3.7 + z))
-    curly_sides = make_mesh('HairRulosSides', *merge(*ring), [hair], 'Head')
-    add_part('Human', 'human.hair', 'rulos', {'HumanPartHair': [curly_sides], 'HumanPartHairTop': [curly_top]},
-             colors=[('HumanPartHair', 'Human_Hair', 'human.hair_color', None, None),
-                     ('HumanPartHairTop', 'Human_Hair', 'human.hair_color', None, None)],
-             conditional={'HumanPartHairTop': 'human.headwear'}, fp_head=True)
+    def under_hat_band(bottom_offset_fn):
+        """The style under a hat: one slab <= 5 mm off the skull from under every hat edge (1.640) to the host hair
+        line plus the style's flat points or lobes, bevelled to 1 mm at the bottom."""
+        assert max(d * THIN_SIDEBURN for _, d in THIN_ROWS) <= UNDER_HAT_MAX
+        return edge_slab(ARC, lambda c: 1.640, lambda c: authored_bottom(c) + bottom_offset_fn(c), THIN_ROWS,
+                         thick_fn=thin_thickness)
+
+    def head_out(p):
+        return (Vector(p) - Vector((0, .005, 1.585))).normalized()
+
+    def lock(path, widths, thick, sides=8):
+        """A big rounded lock: a flat lofted strip (width across, thin outward) along a path near the scalp, its
+        tip closed by a small cap (blunt, never a spike)."""
+        pts = [Vector(p) for p in path]
+        rings = []
+        for i, p in enumerate(pts):
+            t = (pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)]).normalized()
+            n = head_out(p)
+            n = (n - t * n.dot(t)).normalized()
+            b = t.cross(n)
+            ring = []
+            for j in range(sides):
+                a = math.tau * (j + .5) / sides
+                ring.append(p + b * widths[i] * math.cos(a) + n * thick[i] * math.sin(a) + n * thick[i] * .35)
+            rings.append(ring)
+        return loft(rings)
+
+    def surface_path(c0, z0, c1, z1, lift, samples=6, base=.010, bulge=.006):
+        """Points from (c0, z0) to (c1, z1) over the skull, rising from `base` to `base + lift` off it."""
+        out = []
+        for k in range(samples):
+            f = k / (samples - 1)
+            c, z = c0 + (c1 - c0) * f, z0 + (z1 - z0) * f
+            d = base + lift * f ** 1.6 + bulge * math.sin(math.pi * f)
+            if z <= 1.712:
+                out.append(ag.radial_surface(skull, z, c, d))
+            else:
+                out.append(tuple(Vector(ag.radial_surface(skull, 1.712, c, d)) + Vector((0, 0, (z - 1.712) * .8))))
+        return out
+
+    # corto: a short faceted crown over the host's sideburns and nape; under hats a plain thin slab.
+    corto_top = make_mesh('HairCortoTop', *hair_top(seed=1.3), [hair], 'Head')
+    corto_under = make_mesh('HairCortoUnderHat', *under_hat_band(lambda c: 0.0), [hair], 'Head')
+    add_part('Human', 'human.hair', 'corto', {'HumanPartHairTop': [corto_top], 'HumanPartHairUnderHat': [corto_under]},
+             colors=[('HumanPartHairTop', 'Human_Hair', 'human.hair_color', None, None),
+                     ('HumanPartHairUnderHat', 'Human_Hair', 'human.hair_color', None, None)],
+             conditional={'HumanPartHairTop': 'human.headwear'}, shown_only={'HumanPartHairUnderHat': 'human.headwear'},
+             fp_head=True)
+
+    def volume_shell(extra, base=.0100, hairline_fn=None, lean=None, columns=28, rows=8):
+        """The hair mass as ONE closed faceted volume: the crown shell (hairline to apex) pushed out by extra(p)
+        along the head's outward direction (and sideways by lean(p) for swept locks). Lumps merge into each
+        other, so the style reads as grouped volumes, never as studs on a smooth cap."""
+        hairline_fn = hairline_fn or hairline
+        def ring(t):
+            out = []
+            for j in range(columns):
+                c = j * COLS / columns
+                z0 = hairline_fn(c)
+                out.append(Vector(ag.radial_surface(skull, z0 + (1.706 - z0) * t, c, 0.0)))
+            return out
+        base_rows = [ring(k / (rows - 1)) for k in range(rows)]
+        last = base_rows[-1]
+        cx = sum(p.x for p in last) / len(last)
+        cy = sum(p.y for p in last) / len(last)
+        for z, s in ((1.713, .80), (1.719, .58), (1.723, .34)):
+            base_rows.append([Vector((cx + (p.x - cx) * s, cy + (p.y - cy) * s, z)) for p in last])
+        apex_base = Vector((cx, cy, 1.726))
+
+        def push(p, distance):
+            n = head_out(p)
+            q = p + n * (distance + extra(p))
+            return q + lean(p) if lean else q
+        outer = [[push(p, base * (1.15 if k == 0 else 1.0)) for p in row] for k, row in enumerate(base_rows)]
+        inner = [[p + head_out(p) * -.004 for p in row] for row in base_rows]
+        return closed_cap(outer, push(apex_base, base), inner, apex_base + Vector((0, 0, -.004)))
+
+    def bump(p, centre, radius, height, power=1.5):
+        d = (Vector(p) - centre).length
+        return height * max(0.0, 1 - (d / radius) ** 2) ** power
+
+    def on_skull(c, z, d=0.0):
+        return Vector(ag.radial_surface(skull, z, c, d)) if z <= 1.706 else Vector((0, .010, z))
+
+    # despeinado (PER-05 MESSY): one chunky volume whose tufts rise into faceted locks leaning in different
+    # directions (fringe forward over the forehead, crown up and back, sides out) and a jagged, lower fringe
+    # line; sideburns and nape end in a few flat points. Under hats the same points lie flat (<= 5 mm).
+    messy_tips_full = [(3.72, .016, .34), (4.95, .012, .40), (5.75, .018, .42), (6.55, .020, .38), (7.0, .013, .30)]
+    messy_tips_under = [(3.72, .010, .30), (4.95, .008, .36), (5.75, .012, .40), (6.55, .013, .36), (7.0, .009, .28)]
+    # (column, height, tuft height, radius, lean (outward, up, forward, left))
+    tufts = [(0.0, 1.686, .034, .055, (0, -.3, 1.0, .25)), (1.5, 1.688, .032, .054, (0, -.2, .8, -.6)),
+             (12.5, 1.688, .032, .054, (0, -.2, .8, .6)), (2.9, 1.706, .040, .058, (.3, .7, -.2, -.7)),
+             (11.1, 1.706, .040, .058, (.3, .7, -.2, .7)), (5.2, 1.700, .038, .058, (.2, .6, -.8, -.3)),
+             (8.8, 1.700, .038, .058, (.2, .6, -.8, .3)), (4.2, 1.660, .030, .050, (.6, -.2, -.3, -.8)),
+             (9.8, 1.660, .030, .050, (.6, -.2, -.3, .8)), (7.0, 1.664, .032, .056, (.2, -.4, -.9, 0))]
+    tuft_data = []
+    for c, z, height, radius, (o, u, fw, lf) in tufts:
+        centre = on_skull(c, z, .010) if z <= 1.706 else Vector((0, .010, 1.736))
+        direction = head_out(centre) * o + Vector((0, 0, 1)) * u + Vector((0, -1, 0)) * fw + Vector((1, 0, 0)) * lf
+        tuft_data.append((centre, radius, height, direction.normalized()))
+
+    def messy_extra(p):
+        return max([0.0] + [bump(p, centre, radius, height, 1.0) for centre, radius, height, _ in tuft_data]) + .003
+
+    def messy_lean(p):
+        total = Vector()
+        for centre, radius, height, direction in tuft_data:
+            total += direction * bump(p, centre, radius, height * .85, 1.6)
+        return total
+
+    def messy_hairline(c):
+        m = min(c % COLS, COLS - c % COLS)
+        if m > 2.6:
+            return hairline(c)
+        # a lower, jagged fringe: three chunks fall onto the forehead (stay above the brows, z >= 1.626)
+        return max(1.626, hairline(c) - .014 - .010 * abs(math.sin(math.pi * (c + .5) / 1.3)))
+
+    messy_top = make_mesh('HairDespeinadoTop', *merge(
+        volume_shell(messy_extra, .0105, messy_hairline, messy_lean),
+        full_sides(lambda c: points_edge(c, messy_tips_full))), [hair], 'Head')
+    messy_under = make_mesh('HairDespeinadoUnderHat', *under_hat_band(lambda c: points_edge(c, messy_tips_under)),
+                            [hair], 'Head')
+    add_part('Human', 'human.hair', 'despeinado',
+             {'HumanPartHairTop': [messy_top], 'HumanPartHairUnderHat': [messy_under]},
+             colors=[('HumanPartHairTop', 'Human_Hair', 'human.hair_color', None, None),
+                     ('HumanPartHairUnderHat', 'Human_Hair', 'human.hair_color', None, None)],
+             conditional={'HumanPartHairTop': 'human.headwear'}, shown_only={'HumanPartHairUnderHat': 'human.headwear'},
+             fp_head=True)
+
+    # rulos (PER-05 CURLY): one volume of ten big rounded curl clusters that merge into each other (a lumpy
+    # outline, no smooth cap between them) over scalloped sideburns and nape; under hats the scallops lie flat.
+    cluster_data = [(on_skull(c, z, .010), radius, height) for c, z, radius, height in (
+        (0.7, 1.690, .052, .046), (13.3, 1.690, .052, .046), (2.8, 1.688, .054, .050), (11.2, 1.688, .054, .050),
+        (5.2, 1.684, .054, .050), (8.8, 1.684, .054, .050), (4.2, 1.636, .046, .036), (9.8, 1.636, .046, .036),
+        (7.0, 1.638, .050, .042), (0.0, 1.762, .062, .040))]
+
+    def curly_extra(p):
+        # overlapping round lumps; the max keeps each cluster round where two meet (a crease between them)
+        return max([0.0] + [bump(p, centre, radius, height, .60) for centre, radius, height in cluster_data])
+
+    curly_top = make_mesh('HairRulosTop', *merge(
+        volume_shell(curly_extra, .0070, rows=12, columns=40), full_sides(lambda c: scallop_edge(c, .011))),
+        [hair], 'Head')
+    curly_under = make_mesh('HairRulosUnderHat', *under_hat_band(lambda c: scallop_edge(c)), [hair], 'Head')
+    add_part('Human', 'human.hair', 'rulos', {'HumanPartHairTop': [curly_top], 'HumanPartHairUnderHat': [curly_under]},
+             colors=[('HumanPartHairTop', 'Human_Hair', 'human.hair_color', None, None),
+                     ('HumanPartHairUnderHat', 'Human_Hair', 'human.hair_color', None, None)],
+             conditional={'HumanPartHairTop': 'human.headwear'}, shown_only={'HumanPartHairUnderHat': 'human.headwear'},
+             fp_head=True)
 
     # ---- headwear ------------------------------------------------------------------------
     red, red_dark = mats['Human_Nightcap'], mats['Human_NightcapBand']
@@ -459,7 +613,10 @@ def build_human_parts():
                        dome=((.64, .012), (.32, .019)))
     lip = [[Vector(ag.radial_surface(skull, cap_bottom(j * COLS / 28), j * COLS / 28, .001)) for j in range(28)]]
     cap_crown = make_mesh('CapCrown', *solid_cap(rows, apex, lip), [red], 'Head')
-    # visor: front arc of the crown's bottom ring, reaching forward and a little down
+    # visor: front arc of the crown's bottom ring, reaching forward and down. r2 (review r1): the flat, thin
+    # visor made the cap read as a skull cap from the front; it now tilts VISOR_PITCH down at the centre
+    # (~13 deg more than r1) and is VISOR_THICKNESS thick, so PER-04/05's brim shows from the front.
+    VISOR_PITCH, VISOR_THICKNESS = math.radians(19.0), .0070
     bottom_ring = rows[0]
     arc = [j for j in range(28) if min(j * COLS / 28, COLS - j * COLS / 28) <= 3.4]
     arc = sorted(arc, key=lambda j: ((j * COLS / 28 + 7) % COLS))
@@ -470,12 +627,12 @@ def build_human_parts():
         inner = bottom_ring[j] + Vector((0, 0, .004))
         outward = Vector((inner.x, inner.y + .02, 0)).normalized()
         reach = .112 * (1 - d ** 2.2) + .012
-        droop = .010 + .016 * d ** 1.5
+        droop = reach * .75 * math.tan(VISOR_PITCH) + .016 * d ** 1.5
         outer = inner + outward * reach * .35 + Vector((0, -1, 0)) * reach * .75 + Vector((0, 0, -droop))
         top_pts.append((inner, outer))
     verts, faces = [], []
     for inner, outer in top_pts:
-        verts += [inner, outer, outer + Vector((0, 0, -.0055)), inner + Vector((0, 0, -.0055))]
+        verts += [inner, outer, outer + Vector((0, 0, -VISOR_THICKNESS)), inner + Vector((0, 0, -VISOR_THICKNESS))]
     n = len(top_pts)
     fm = []
     for i in range(n - 1):
@@ -500,25 +657,26 @@ def build_human_parts():
     cap_seams = make_mesh('CapSeams', *merge(*seams), [red_dark], 'Head')
     add_part('Human', 'human.headwear', 'gorra', {'HumanPartHeadwear': [cap_crown, visor, button, cap_seams]}, fp_head=True)
 
-    # gorro de lana: mustard knit beanie, ribbed crown and a thick folded cuff.
-    wool, wool_cuff = palette('Human_Beanie', '#DDA235', .95), palette('Human_BeanieCuff', '#A56F1C', .95)
+    # gorro de lana (PER-04/05 BEANIE): r2 (review r1) charcoal grey knit, a rounded crown without the r1 drop
+    # point (it read as an onion or a helmet) and a folded cuff one tone darker, 7 mm prouder than the crown.
+    wool, wool_cuff = palette('Human_Beanie', '#4E525D', .95), palette('Human_BeanieCuff', '#34373F', .95)
     beanie_bottom = lambda c: 1.627 if min(c % COLS, COLS - c % COLS) < 2.4 else (1.607 if min(c % COLS, COLS - c % COLS) < 4.8 else 1.590)
     cuff_rows = []
     for k, (dz, d) in enumerate(((0, .004), (0.002, .0175), (.040, .0185), (.045, .0110))):
         cuff_rows.append([Vector(ag.radial_surface(skull, beanie_bottom(j * COLS / 28) + dz, j * COLS / 28,
-                                                   d + (.0012 if (j % 2 == 0 and 0 < k < 3) else 0))) for j in range(28)])
+                                                   d + (.0010 if (j % 2 == 0 and 0 < k < 3) else 0))) for j in range(28)])
     cv, cf = loft(cuff_rows, caps=(False, False))
     cf += [(3 * 28 + j, 3 * 28 + (j + 1) % 28, (j + 1) % 28, j) for j in range(28)]  # closed folded ring
     beanie_cuff = make_mesh('BeanieCuff', cv, cf, [wool_cuff], 'Head')
-    rows, apex = crown(lambda c: beanie_bottom(c) + .040, 1.708, (.0105, .0150, .0180, .0190, .0185), rib=.0024,
-                       apex_z=1.767, dome=((.84, .022), (.62, .038), (.34, .048)))
+    rows, apex = crown(lambda c: beanie_bottom(c) + .040, 1.708, (.0100, .0140, .0160, .0165, .0160), rib=.0008,
+                       apex_z=1.747, dome=((.86, .016), (.66, .028), (.40, .035)))
     lip = [[Vector(ag.radial_surface(skull, beanie_bottom(j * COLS / 28) + .040, j * COLS / 28, .004)) for j in range(28)]]
     beanie_crown = make_mesh('BeanieCrown', *solid_cap(rows, apex, lip), [wool], 'Head')
     add_part('Human', 'human.headwear', 'gorro-lana', {'HumanPartHeadwear': [beanie_cuff, beanie_crown]}, fp_head=True)
 
     # ---- glasses -------------------------------------------------------------------------
     frame = palette('Human_GlassesFrame', '#1E1C24', .45)
-    lens = palette('Human_GlassesLens', '#1B2231', .18)
+    lens = palette('Human_GlassesLens', '#1B2231', .80)  # r2: a glossy lens made a hexagonal highlight that read as a pupil
     rx, rz = EYE_RADIUS, EYE_RADIUS * EYE_HEIGHT_FACTOR
 
     def ring_frame(centre, ax, az, y, thick=.0055, depth=.0065, segments=18):
@@ -542,21 +700,35 @@ def build_human_parts():
                (s * .214, .010, 1.560), (s * .214, .062, 1.552), (s * .204, .098, 1.522)]
         return tube_along(pts, [.0034] * len(pts), sides=5)
 
-    # redondos: big round wire frames around the huge eyes (the eyes stay visible)
-    yf = -.160
-    ax = math.sqrt(max(0.0, rx * rx - (EYE_CENTERS['L'][1] - yf) ** 2)) + .0065
-    az = math.sqrt(max(0.0, rz * rz - (rz / rx) ** 2 * (EYE_CENTERS['L'][1] - yf) ** 2)) + .0070
+    # redondos: big round frames around the huge eyes (the eyes stay visible). r2 (review r1): in r1 the ring cut
+    # the globe 28 mm behind its front, so from 3/4 the white poked out of the rim and seemed to pass through it.
+    # The ring now stands in front of the globe (12 mm behind its tip, never touching it), 17 % taller and
+    # centred 12 mm outward (the two globes almost touch, so it cannot grow toward the nose), with a 26 mm deep
+    # rim that hides the globe's edge from +-45 deg.
+    yf = -.186
+    ax, az, shift = .078, rz * 1.17, .012
     pieces = []
     for side in ('L', 'R'):
         cx, _, cz = EYE_CENTERS[side]
-        pieces.append(ring_frame((cx, 0, cz), ax, az, yf))
-        pieces.append(temples((abs(cx) + ax, yf + .006, cz + .012), side))
+        cx += math.copysign(shift, cx)
+        pieces.append(ring_frame((cx, 0, cz), ax, az, yf + .0100, thick=.0060, depth=.0260))
+        pieces.append(temples((abs(cx) + ax, yf + .016, cz + .012), side))
     pieces.append(tube_along([(-.014, yf - .004, 1.562), (0, yf - .007, 1.566), (.014, yf - .004, 1.562)], [.003] * 3, sides=5))
     round_glasses = make_mesh('GlassesRound', *merge(*pieces), [frame], 'Head')
     add_part('Human', 'human.glasses', 'redondos', {'HumanPartGlasses': [round_glasses]}, fp_head=True)
 
-    # de sol: dark wayfarer-like lenses with a heavy top bar, in front of the eye lids
+    # de sol: dark wayfarer-like lenses with a heavy top bar, in front of the eye lids. r2 (review r1): lenses
+    # 7 % wider (they already meet at the nose) and 14 % taller, curved round the globes: each lens is a shell of
+    # five rings whose depth follows the outer wrap but always stays 8 mm in front of the faceted eye globe, so
+    # the white never pokes through (r1's flat fan let the globe's side through from 3/4) and the outer side still
+    # wraps back round the globe from +-45 deg.
     yl = -.214
+    ew, eh = EYE_RADIUS * 1.02, EYE_RADIUS * EYE_HEIGHT_FACTOR * 1.02  # faceted globe (vertices on the circumcircle)
+
+    def eye_front(x, z, cx, cz):
+        u = 1 - ((x - cx) / ew) ** 2 - ((z - cz) / eh) ** 2
+        return EYE_CENTERS['L'][1] - ew * math.sqrt(u) if u > 0 else None
+
     pieces, fm = [], []
     for side in ('L', 'R'):
         cx, _, cz = EYE_CENTERS[side]
@@ -564,30 +736,50 @@ def build_human_parts():
         outline = []
         for i in range(16):
             a = math.tau * i / 16
-            x = .075 * math.copysign(abs(math.cos(a)) ** .55, math.cos(a))
-            z = .074 * math.copysign(abs(math.sin(a)) ** .70, math.sin(a))
+            x = .080 * math.copysign(abs(math.cos(a)) ** .55, math.cos(a))
+            z = .084 * math.copysign(abs(math.sin(a)) ** .70, math.sin(a))
             if z > 0:
                 z *= 1.04
+            if x * s > 0:
+                x *= 1.10  # the outer side reaches further round the globe
             if abs(cx + x) < .004:
                 x = math.copysign(.004, cx) - cx
             outline.append((cx + x, cz + .004 + z))
-        # wrap: the outer side and the lower rim bend back around the big eye globes
-        wrap = lambda x, z: yl + .048 * max(0.0, (abs(x) - .060) / .080) ** 1.6 + .020 * max(0.0, (cz - .02 - z) / .06) ** 2
-        front = [Vector((x, wrap(x, z), z)) for x, z in outline]
+
+        def depth(x, z):
+            # the outer side and the lower rim bend back round the globe, never closer than 8 mm to it
+            y = yl + .066 * max(0.0, (abs(x) - .056) / .084) ** 1.5 + .020 * max(0.0, (cz - .02 - z) / .06) ** 2
+            front_of_eye = eye_front(x, z, cx, cz)
+            return y if front_of_eye is None else min(y, front_of_eye - .008)
+
+        centre = (cx, cz + .004)
+        rings = []
+        for t in (.30, .55, .75, .90, 1.0):
+            ring = []
+            for x, z in outline:
+                px, pz = centre[0] + (x - centre[0]) * t, centre[1] + (z - centre[1]) * t
+                ring.append(Vector((px, depth(px, pz), pz)))
+            rings.append(ring)
+        n = len(outline)
+        cen_f = Vector((centre[0], depth(*centre) - .0012, centre[1]))
+        front = [p for ring in rings for p in ring] + [cen_f]
         back = [p + Vector((0, .0035, 0)) for p in front]
-        cen_f = Vector((cx, yl - .003, cz + .004))
-        cen_b = cen_f + Vector((0, .0035, 0))
-        verts = front + back + [cen_f, cen_b]
-        n = len(front)
-        faces = [(j, (j + 1) % n, 2 * n) for j in range(n)] + [((j + 1) % n + n, j + n, 2 * n + 1) for j in range(n)]
-        faces += [(j + n, (j + 1) % n + n, (j + 1) % n, j) for j in range(n)]
+        verts = front + back
+        c, m = len(front) - 1, len(front)
+        faces = [(j, (j + 1) % n, c) for j in range(n)]
+        for r in range(len(rings) - 1):
+            faces += [(r * n + (j + 1) % n, r * n + j, (r + 1) * n + j, (r + 1) * n + (j + 1) % n) for j in range(n)]
+        faces += [tuple(i + m for i in reversed(f)) for f in list(faces)]
+        last = (len(rings) - 1) * n
+        faces += [(last + (j + 1) % n, last + j, last + j + m, last + (j + 1) % n + m) for j in range(n)]
         pieces.append((verts, faces))
         fm += [1] * len(faces)
-        rim = tube_along([front[j] + Vector((0, -.001, 0)) for j in range(n)] + [front[0] + Vector((0, -.001, 0))],
-                         [.0042 if front[j].z > cz + .03 else .0030 for j in range(n)] + [.0042], sides=5)
+        edge = rings[-1]
+        rim = tube_along([edge[j] + Vector((0, -.001, 0)) for j in range(n)] + [edge[0] + Vector((0, -.001, 0))],
+                         [.0042 if edge[j].z > cz + .03 else .0030 for j in range(n)] + [.0042], sides=5)
         pieces.append(rim)
         fm += [0] * len(rim[1])
-        t = temples((abs(cx) + .072, yl + .044, cz + .030), side)
+        t = temples((abs(cx) + .086, yl + .080, cz + .030), side)
         pieces.append(t)
         fm += [0] * len(t[1])
     bridge = tube_along([(-.012, yl - .002, 1.576), (0, yl - .004, 1.580), (.012, yl - .002, 1.576)], [.0035] * 3, sides=5)
@@ -845,11 +1037,18 @@ def build_human_parts():
     fv, ff = loft(flap_rings)
     pack_flap = make_mesh('BackpackFlap', fv, ff, [trim], 'Chest')
     straps = []
+    # r2 (review r1): the shoulder straps no longer stop mid-chest; each runs down the chest, turns under the
+    # arm along the side of the ribs and ends on the pack's lower corner (PER-01 human 03).
+    lower = []
     for s in (1, -1):
         pts = [(s * .098, .150, 1.150), (s * .112, .110, 1.236), (s * .120, .050, 1.268), (s * .124, -.030, 1.262),
-               (s * .122, -.098, 1.222), (s * .120, -.142, 1.140), (s * .118, -.148, 1.060), (s * .114, -.140, .990)]
+               (s * .122, -.098, 1.222), (s * .120, -.142, 1.140), (s * .118, -.148, 1.060), (s * .122, -.144, 1.005)]
         straps.append(tube_along(pts, [.026] * len(pts), sides=4, flat=.20, up_hint=Vector((s * .2, 0, 1))))
+        under = [(s * .122, -.144, 1.005), (s * .150, -.126, .972), (s * .184, -.082, .952), (s * .205, -.010, .942),
+                 (s * .204, .064, .928), (s * .182, .128, .906), (s * .142, .176, .884)]
+        lower.append(tube_along(under, [.024] * len(under), sides=4, flat=.22, up_hint=Vector((s, 0, .15))))
     strap_obj = make_mesh('BackpackStraps', *merge(*straps), [trim], 'Chest')
+    lower_obj = make_mesh('BackpackLowerStraps', *merge(*lower), [trim], body_weights)
     buckles = []
     for s in (1, -1):
         buckles.append(tube_along([(s * .119, -.146, 1.100), (s * .119, -.147, 1.080)], [.014, .014], sides=4, flat=.4,
@@ -858,7 +1057,7 @@ def build_human_parts():
     buckles.append(tube_along([(0, .262, 1.194), (0, .220, 1.222), (0, .178, 1.214)], [.007] * 3, sides=5))
     pack_accent = make_mesh('BackpackAccent', *merge(*buckles), [accent], 'Chest')
     add_part('Human', 'human.back', 'mochila',
-             {'HumanPartBack': [pack_body, pack_pocket, pack_flap, strap_obj, pack_accent]})
+             {'HumanPartBack': [pack_body, pack_pocket, pack_flap, strap_obj, lower_obj, pack_accent]})
 
 
 # ============================================================================= MOSQUITO
@@ -888,36 +1087,66 @@ def build_mosquito_parts():
                                                                             'WingVein.Branch.', 'WingVein.Branch2.', 'WingVein.Branch3.')
                                                        for s in ('L', 'R'))]},
              colors=wing_colors)
-    original = (mg.WING_OUTLINE, mg.WING_RIDGE)
+    def leaf_wing(tag, length, lead, trail, raise_=(.012, .006), stations=10):
+        """A leaf membrane in the same stance frame as the production wing (author_mosquito_geometry._wing_frame:
+        the idle aim, and the perched V of the animation, rotate these blades exactly like the clasicas), drawn
+        from span stations: leading edge lead(f) (<= 0), trailing edge trail(f) (>= 0), f = u / length, a raised
+        alternating midrib and real thickness. Veins: the leading edge and the midrib (thin, same materials)."""
+        membranes, veins = [], []
+        for side, sign in (('L', 1), ('R', -1)):
+            root = Vector((sign * .017, 0, .082))
+            span, chord, normal = (Vector(v) for v in mg._wing_frame(sign))
+            # (u, v, raise) samples: leading edge, midrib, trailing edge per station; the tip is one point
+            rows = []
+            for k in range(stations + 1):
+                f = k / stations
+                u = length * f
+                if k in (0, stations):
+                    rows.append([(u, 0.0, 0.0)])  # the root (inside the thorax) and the tip are single points
+                    continue
+                vl, vt = lead(f), trail(f)
+                mid = vl + (vt - vl) * .40
+                rows.append([(u, vl, 0.0), (u, mid, raise_[k % 2] if 0 < k else 0.0), (u, vt, 0.0)])
+            pts, faces = [], []
+            index = []
+            for row in rows:
+                index.append([])
+                for u, v, r in row:
+                    index[-1].append(len(pts))
+                    pts.append(root + (span * u + chord * v) * mg.WING_SCALE + normal * r * mg.WING_SCALE * .5)
+            root_i, b = index[0][0], index[1]
+            faces += [(root_i, b[0], b[1]), (root_i, b[1], b[2])]
+            for k in range(1, stations - 1):
+                a, b = index[k], index[k + 1]
+                faces += [(a[0], b[0], b[1]), (a[0], b[1], a[1]), (a[1], b[1], b[2]), (a[1], b[2], a[2])]
+            a, tip = index[stations - 1], index[stations][0]
+            faces += [(a[0], tip, a[1]), (a[1], tip, a[2])]
+            count = len(pts)
+            thick = [p - normal * mg.WING_THICKNESS for p in pts]
+            verts = pts + thick
+            all_faces = faces + [tuple(i + count for i in reversed(f)) for f in faces]
+            outline = [index[0][0]] + [row[0] for row in index[1:-1]] + [index[-1][0]] + [row[2] for row in reversed(index[1:-1])]
+            all_faces += [(outline[(i + 1) % len(outline)], outline[i], outline[i] + count, outline[(i + 1) % len(outline)] + count)
+                          for i in range(len(outline))]
+            if sign < 0:
+                all_faces = [tuple(reversed(f)) for f in all_faces]
+            membranes.append(make_mesh(f'Wing{tag}Membrane.{side}', verts, all_faces, [wing], 'Wing.' + side))
+            lead_pts = [verts[index[0][0]]] + [verts[row[0]] for row in index[1:-1]] + [verts[index[-1][0]]]
+            mid_pts = [verts[row[1]] for row in index[1:-1]]
+            veins.append(bc.strip(f'Wing{tag}LeadingEdge.{side}', lead_pts, .0004, edge, 'Wing.' + side))
+            veins.append(bc.strip(f'Wing{tag}Vein.{side}', [verts[index[0][0]]] + mid_pts + [verts[index[-1][0]]], .00050,
+                                  vein, 'Wing.' + side))
+        return membranes, veins
 
-    def wing_variant(tag, outline, ridge):
-        mg.WING_OUTLINE = tuple((u * mg.WING_SCALE, v * mg.WING_SCALE) for u, v in outline)
-        mg.WING_RIDGE = tuple((u * mg.WING_SCALE, v * mg.WING_SCALE) for u, v in ridge)
-        try:
-            membranes, veins = [], []
-            for side, sign in (('L', 1), ('R', -1)):
-                verts, faces = mg.wing_mesh(sign)
-                membranes.append(make_mesh(f'Wing{tag}Membrane.{side}', verts, faces, [wing], 'Wing.' + side))
-                for prefix, indices, width, key in mg.WING_VEINS:
-                    strip = bc.strip(f'Wing{tag}{prefix}{side}', [verts[i] for i in indices], width,
-                                     vein if key == 'vein' else edge, 'Wing.' + side)
-                    veins.append(strip)
-            return membranes, veins
-        finally:
-            mg.WING_OUTLINE, mg.WING_RIDGE = original
-
-    # redondas: short, broad, rounded blades (PER-05 ROUNDED)
-    m, v = wing_variant('Round',
-                        ((0, 0), (.055, -.012), (.108, -.018), (.158, -.015), (.200, -.002),
-                         (.196, .036), (.165, .070), (.112, .086), (.046, .032)),
-                        ((.052, .014), (.092, .030), (.130, .036), (.162, .030), (.186, .014)))
+    # redondas (PER-06/07 ROUNDED): r2 (review r1) a short broad oval, leaf proportion ~0.45 (width / length),
+    # widest past the middle and a round tip; the r1 blade was too close to clasicas once seen in the idle.
+    m, v = leaf_wing('Round', .206, lambda f: -.014 * math.sin(math.pi * f ** .85) ** .9,
+                     lambda f: .079 * math.sin(math.pi * min(1.0, f ** 1.05)) ** .55 * (1 - .10 * f))
     add_part('Mosquito', 'mosquito.wings', 'redondas', {'MosquitoPartWings': m, 'MosquitoPartWingVeins': v},
              colors=[('MosquitoPartWings', 'Mosquito_Wing', 'mosquito.wing_color', None, .50)])
-    # largas: long narrow lance blades (PER-05 LONG)
-    m, v = wing_variant('Long',
-                        ((0, 0), (.088, -.006), (.170, -.009), (.250, -.006), (.330, 0),
-                         (.268, .018), (.190, .037), (.118, .046), (.046, .016)),
-                        ((.070, .010), (.122, .019), (.180, .018), (.235, .012), (.284, .006)))
+    # largas (PER-06/07 LONG): a long lance leaf, proportion ~0.23 (r1 was a 0.17 needle), widest at a third.
+    m, v = leaf_wing('Long', .300, lambda f: -.010 * math.sin(math.pi * f ** .8) ** .8,
+                     lambda f: .058 * math.sin(math.pi * f ** .62) ** .95)
     add_part('Mosquito', 'mosquito.wings', 'largas', {'MosquitoPartWings': m, 'MosquitoPartWingVeins': v},
              colors=[('MosquitoPartWings', 'Mosquito_Wing', 'mosquito.wing_color', None, .50)])
 
@@ -952,14 +1181,17 @@ def build_mosquito_parts():
                 poly.material_index = 2
         return obj
 
+    # r2 (review r1): corta and larga end off Socket.Mouth, so the bite anchor ProboscisTip follows their real
+    # tip (a per-option anchor offset applied by the assembler): the tip touches the skin in every bite.
+    short_tip, long_tip = base_point.lerp(mouth, .66), base_point.lerp(mouth, 1.30)
     add_part('Mosquito', 'mosquito.proboscis', 'corta',
-             {'MosquitoPartProboscis': [proboscis('Short', base_point.lerp(mouth, .66), .0118, .0016)]},
-             colors=shell_bindings('MosquitoPartProboscis')[:3],
-             note='Tip 34% shorter than Socket.Mouth: the bite anchor keeps the gameplay tip.')
+             {'MosquitoPartProboscis': [proboscis('Short', short_tip, .0118, .0016)]},
+             colors=shell_bindings('MosquitoPartProboscis')[:3], anchors=[('ProboscisTip', 'Socket.Mouth', short_tip)],
+             note='Tip 34% shorter than Socket.Mouth; ProboscisTip follows it.')
     add_part('Mosquito', 'mosquito.proboscis', 'larga',
-             {'MosquitoPartProboscis': [proboscis('Long', base_point.lerp(mouth, 1.30), .0104, .0006)]},
-             colors=shell_bindings('MosquitoPartProboscis')[:3],
-             note='Tip 30% past Socket.Mouth (reaches into the bitten surface).')
+             {'MosquitoPartProboscis': [proboscis('Long', long_tip, .0104, .0006)]},
+             colors=shell_bindings('MosquitoPartProboscis')[:3], anchors=[('ProboscisTip', 'Socket.Mouth', long_tip)],
+             note='Tip 30% past Socket.Mouth; ProboscisTip follows it.')
     add_part('Mosquito', 'mosquito.proboscis', 'curva',
              {'MosquitoPartProboscis': [proboscis('Curved', mouth, .0115, .0009, control=(0, -.176, .104))]},
              colors=shell_bindings('MosquitoPartProboscis')[:3],
@@ -1033,30 +1265,12 @@ def build_mosquito_parts():
         last = 4 * (len(ts) - 1)
         faces += [(0, 2, 3, 1), (last, last + 1, last + 3, last + 2)]
         stripes.append((verts, faces))
-    # and three chevrons across the thorax crest (PER-07 RACING / TRIBAL)
-    chevrons = []
+    # r2 (review r1): the r1 thorax chevrons were thin cream '^' wires with z-fighting on the crest facets; the
+    # racing stripes stay on the abdomen only (PER-07 RACING).
     thorax = O['Thorax']
     tbvh = bvh_of(thorax)
-    for k, y in enumerate((-.010, .020, .050)):
-        pts = []
-        for x in (-.040, -.020, 0, .020, .040):
-            yy = y + abs(x) * .45
-            loc, normal, _, _ = tbvh.ray_cast(Vector((x, yy, .40)), Vector((0, 0, -1)))
-            pts.append((loc, normal))
-        outer = [(l + nrm * .0016 + Vector((0, -.0055, 0)), l + nrm * .0016 + Vector((0, .0055, 0))) for l, nrm in pts]
-        inner = [(l - nrm * .0012 + Vector((0, -.0055, 0)), l - nrm * .0012 + Vector((0, .0055, 0))) for l, nrm in pts]
-        verts, faces = [], []
-        for (o0, o1), (i0, i1) in zip(outer, inner):
-            verts += [o0, o1, i1, i0]
-        for r in range(len(pts) - 1):
-            a, b = 4 * r, 4 * (r + 1)
-            faces += [(a, b, b + 1, a + 1), (a + 3, a + 2, b + 2, b + 3), (a, a + 3, b + 3, b), (a + 1, b + 1, b + 2, a + 2)]
-        last = 4 * (len(pts) - 1)
-        faces += [(0, 1, 2, 3), (last, last + 3, last + 2, last + 1)]
-        chevrons.append((verts, faces))
     stripes_obj = make_mesh('MarkingStripes', *merge(*stripes), [accent], abdomen_weights)
-    chevrons_obj = make_mesh('MarkingChevrons', *merge(*chevrons), [accent], 'Thorax')
-    add_part('Mosquito', 'mosquito.markings', 'rayas', {'MosquitoPartMarkings': [stripes_obj, chevrons_obj]},
+    add_part('Mosquito', 'mosquito.markings', 'rayas', {'MosquitoPartMarkings': [stripes_obj]},
              colors=[('MosquitoPartMarkings', 'Mosquito_Accent', 'mosquito.accent_color', None, None)])
 
     # lunares: ladybug-like spots on the abdomen facets and the thorax
@@ -1104,14 +1318,18 @@ def build_mosquito_parts():
              colors=[('MosquitoPartMarkings', 'Mosquito_Accent', 'mosquito.accent_color', None, None)])
 
     # ---- accessories -------------------------------------------------------------------------
-    leaf_m = palette('Mosquito_Leaf', '#5DAA3A', .80)
+    leaf_m = palette('Mosquito_Leaf', '#6DBE45', .80)  # r2: brighter, the front view reads green, not a dark helmet
     leaf_vein = palette('Mosquito_LeafVein', '#3C7A2A', .85)
     petal_m = palette('Mosquito_Petal', '#F6F3EA', .75)
+    # r2 (review r1): the undersides face the floor and only get ground ambient (a black 'helmet' under the leaf
+    # from the front, grey-brown petals from behind): they get their own, lighter albedo.
+    leaf_under = palette('Mosquito_LeafUnder', '#A6D77A', .85)
+    petal_under = palette('Mosquito_PetalUnder', '#FFF7EC', .80)
     centre_m = palette('Mosquito_FlowerCentre', '#F2B92E', .80)
     # hoja: a leaf worn as a little hat across the tops of the eye cups, stem curling up behind
     LEAF = 1.55
     centre = Vector((0, -.046, .196))
-    along = Vector((0, -1, .30)).normalized()
+    along = Vector((0, -1, .55)).normalized()
     across = Vector((1, 0, 0))
     up = along.cross(across).normalized() * -1
     stations = [LEAF * (-.050 + .106 * i / 8) for i in range(9)]
@@ -1133,7 +1351,9 @@ def build_mosquito_parts():
         faces += [(a, a + m2, b + m2, b), (a + 2, b + 2, b + 2 + m2, a + 2 + m2)]
     last = 3 * 8
     faces += [(0, 1, 2, 2 + m2, 1 + m2, m2), (last + 2, last + 1, last, last + m2, last + 1 + m2, last + 2 + m2)]
-    leaf = make_mesh('AccessoryLeaf', verts, faces, [leaf_m], 'Head')
+    # r2: tipped 6 deg further forward so the top face shows from the front; bottom faces use the underside tone
+    leaf_fm = [1 if all(i >= m2 for i in f) else 0 for f in faces]
+    leaf = make_mesh('AccessoryLeaf', verts, faces, [leaf_m, leaf_under], 'Head', face_materials=leaf_fm)
     stem_pts = [centre + along * (LEAF * -.046) + up * .004, centre + along * (LEAF * -.056) + up * .016,
                 centre + along * (LEAF * -.058) + up * .032, centre + along * (LEAF * -.049) + up * .043]
     mid = [centre + along * (LEAF * u) + up * (.0090 + .006 * math.cos((u + .05) / .106 * math.pi - math.pi / 2))
@@ -1160,7 +1380,9 @@ def build_mosquito_parts():
         verts = [p + fn * .0012 for p in top_v] + [p - fn * .0012 for p in top_v]
         faces = [(0, 1, 2, 3), (7, 6, 5, 4), (0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)]
         petals.append((verts, faces))
-    petals_obj = make_mesh('AccessoryPetals', *merge(*petals), [petal_m], 'Head')
+    petal_verts, petal_faces = merge(*petals)
+    petal_fm = [1 if all(i % 8 >= 4 for i in f) else 0 for f in petal_faces]
+    petals_obj = make_mesh('AccessoryPetals', petal_verts, petal_faces, [petal_m, petal_under], 'Head', face_materials=petal_fm)
     disc = icosphere(fc + fn * .004, .0085 * FLOWER, 1, .06, 7.7, scale=(1, 1, .55))
     stemf = tube_along([fc - fn * .002, fc - fn * .014], [.0026, .0026], sides=5)
     centre_obj = make_mesh('AccessoryFlowerCentre', *disc, [centre_m], 'Head')
@@ -1257,7 +1479,10 @@ def export(species, character):
             'role': species, 'slot': part.slot, 'option': part.option, 'fbx': path.name,
             'renderers': [{'name': obj.name, **audits[obj.name],
                            'first_person_head': part.fp_head,
-                           'hidden_when_slot_selected': part.conditional.get(obj.name, '')} for obj in renderers],
+                           'hidden_when_slot_selected': part.conditional.get(obj.name, ''),
+                           'shown_when_slot_selected': part.shown_only.get(obj.name, '')} for obj in renderers],
+            'anchor_offsets': [{'anchor': a, 'bone': b, 'point_blender_m': [round(v, 6) for v in point]}
+                               for a, b, point in part.anchors],
             'colors': [{'renderer': r, 'material': m, 'slot': s, 'shade_reference': ref or '', 'alpha': a if a is not None else -1}
                        for r, m, s, ref, a in part.colors if m in audits.get(r, {}).get('materials', [])],
             'facial_impact': part.facial, 'note': part.note,

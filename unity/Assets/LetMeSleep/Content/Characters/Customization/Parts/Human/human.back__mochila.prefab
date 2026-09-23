@@ -124,6 +124,7 @@ MonoBehaviour:
   ColorChannels: []
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []
 --- !u!1 &8311048766292719339
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,6 +216,6 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0.0001116395, y: 1.0731267, z: 0.060682595}
-    m_Extent: {x: 0.15062031, y: 0.21312699, z: 0.22684577}
+    m_Center: {x: 0, y: 1.0731267, z: 0.060706623}
+    m_Extent: {x: 0.22103819, y: 0.21312699, z: 0.22682172}
   m_DirtyAABB: 0

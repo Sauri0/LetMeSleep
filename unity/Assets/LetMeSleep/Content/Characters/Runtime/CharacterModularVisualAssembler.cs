@@ -40,6 +40,7 @@ namespace LetMeSleep.Content.Characters
             public readonly List<CharacterView.ColorBinding> Colors = new List<CharacterView.ColorBinding>();
             public readonly List<Renderer> Renderers = new List<Renderer>();
             public readonly List<Renderer> Hidden = new List<Renderer>();
+            public readonly List<KeyValuePair<string, Vector3>> AnchorOffsets = new List<KeyValuePair<string, Vector3>>();
         }
 
         private struct ColorTarget : IEquatable<ColorTarget>
@@ -57,6 +58,7 @@ namespace LetMeSleep.Content.Characters
             new Dictionary<ColorTarget, MaterialPropertyBlock>();
         private Renderer[] appliedHeads = Array.Empty<Renderer>();
         private CharacterView.ColorBinding[] appliedColors = Array.Empty<CharacterView.ColorBinding>();
+        private KeyValuePair<string, Vector3>[] appliedAnchorOffsets = Array.Empty<KeyValuePair<string, Vector3>>();
         private Renderer[] appliedRenderers = Array.Empty<Renderer>();
         private CharacterCustomizationHost appliedHost;
         private bool mirroredForceOff;
@@ -118,6 +120,7 @@ namespace LetMeSleep.Content.Characters
             RestoreAuthoredColorBlocks();
             appliedHeads = Array.Empty<Renderer>();
             appliedColors = Array.Empty<CharacterView.ColorBinding>();
+            appliedAnchorOffsets = Array.Empty<KeyValuePair<string, Vector3>>();
             appliedRenderers = Array.Empty<Renderer>();
             appliedHost = null;
             mirroredForceOff = false;
@@ -187,7 +190,16 @@ namespace LetMeSleep.Content.Characters
             }
             if (selectedBaseCount != 1)
             { error = "The selected role must provide exactly one modular base."; return false; }
+            var offsetAnchors = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var item in result.Parts)
+                foreach (var offset in item.Part.AnchorOffsets ?? Array.Empty<CharacterCustomizationPart.AnchorOffsetBinding>())
+                    if (!offsetAnchors.Add(offset.AnchorName))
+                    { error = "Two worn parts move the same anchor: " + offset.AnchorName; return false; }
             if (!TryValidateColorBindings(result, out error)) return false;
+            foreach (var channel in host.ColorChannels ?? Array.Empty<CharacterCustomizationPart.ColorChannelBinding>())
+                if (!string.IsNullOrEmpty(channel.HiddenWhileSlotSelected) &&
+                    (!snapshot.TrySlot(channel.HiddenWhileSlotSelected, out var hidingSlot) || hidingSlot.Role != role))
+                { error = "Host colour channel hides with an unknown slot: " + channel.HiddenWhileSlotSelected; return false; }
             result.Key = BuildKey(snapshot, normalized, role);
             plan = result;
             error = string.Empty;
@@ -306,6 +318,11 @@ namespace LetMeSleep.Content.Characters
                     !conditional.Add(binding.Renderer) || !plan.Snapshot.TrySlot(binding.HiddenWhenSlotSelected, out var other) ||
                     other.Role != plan.Role || other.SlotId == slot.SlotId)
                 { error = "Conditional renderer needs an owned renderer and another slot of the same role: " + option.OptionId; return false; }
+            foreach (var offset in part.AnchorOffsets ?? Array.Empty<CharacterCustomizationPart.AnchorOffsetBinding>())
+                if (offset == null || string.IsNullOrEmpty(offset.AnchorName) || plan.View.GetAnchor(offset.AnchorName) == null ||
+                    float.IsNaN(offset.LocalPosition.x) || float.IsNaN(offset.LocalPosition.y) || float.IsNaN(offset.LocalPosition.z) ||
+                    float.IsInfinity(offset.LocalPosition.sqrMagnitude) || offset.LocalPosition.sqrMagnitude > 1f)
+                { error = "Anchor offset needs an existing host anchor and a finite point within 1 unit of its bone: " + option.OptionId; return false; }
             error = string.Empty;
             return true;
         }
@@ -361,7 +378,8 @@ namespace LetMeSleep.Content.Characters
                 foreach (var source in plan.Host.ColorChannels ?? Array.Empty<CharacterCustomizationPart.ColorChannelBinding>())
                     prepared.Colors.Add(new CharacterView.ColorBinding
                     { Renderer = source.Renderer, MaterialIndex = source.MaterialIndex, Category = source.ColorSlotId,
-                      Shade = source.Shade, Alpha = source.Alpha });
+                      Shade = source.Shade, Alpha = source.Alpha, LuminanceFloor = source.LuminanceFloor,
+                      Hidden = !string.IsNullOrEmpty(source.HiddenWhileSlotSelected) && IsWorn(plan, source.HiddenWhileSlotSelected) });
 
                 foreach (var item in plan.Parts)
                 {
@@ -392,10 +410,15 @@ namespace LetMeSleep.Content.Characters
                     foreach (var color in item.Part.ColorChannels ?? Array.Empty<CharacterCustomizationPart.ColorChannelBinding>())
                         prepared.Colors.Add(new CharacterView.ColorBinding
                         { Renderer = rendererMap[color.Renderer], MaterialIndex = color.MaterialIndex, Category = color.ColorSlotId,
-                          Shade = color.Shade, Alpha = color.Alpha });
+                          Shade = color.Shade, Alpha = color.Alpha, LuminanceFloor = color.LuminanceFloor });
                     prepared.Renderers.AddRange(rendererMap.Values);
+                    // Hidden while the other slot is worn (the full hairstyle under a hat) or, inverted, shown only
+                    // while it is worn (the flat under-hat variant).
                     foreach (var conditional in item.Part.ConditionalRenderers ?? Array.Empty<CharacterCustomizationPart.ConditionalRendererBinding>())
-                        if (IsWorn(plan, conditional.HiddenWhenSlotSelected)) prepared.Hidden.Add(rendererMap[conditional.Renderer]);
+                        if (IsWorn(plan, conditional.HiddenWhenSlotSelected) != conditional.ShowOnlyWhileSelected)
+                            prepared.Hidden.Add(rendererMap[conditional.Renderer]);
+                    foreach (var offset in item.Part.AnchorOffsets ?? Array.Empty<CharacterCustomizationPart.AnchorOffsetBinding>())
+                        prepared.AnchorOffsets.Add(new KeyValuePair<string, Vector3>(offset.AnchorName, offset.LocalPosition));
 
                     foreach (var socket in item.Part.SocketParts ?? Array.Empty<CharacterCustomizationPart.SocketBinding>())
                     {
@@ -420,6 +443,7 @@ namespace LetMeSleep.Content.Characters
             var previousObjects = appliedObjects.ToArray();
             var previousHeads = appliedHeads;
             var previousColors = appliedColors;
+            var previousAnchorOffsets = appliedAnchorOffsets;
             var previousView = appliedView;
             bool previousSuppressed = baseSuppressed;
             bool capturedThisAttempt = !baseStatesCaptured;
@@ -430,7 +454,7 @@ namespace LetMeSleep.Content.Characters
             {
                 if (previousView != null && previousView != plan.View)
                     previousView.ClearCustomizationBindings(this);
-                plan.View.SetCustomizationBindings(this, staged.Heads.ToArray(), staged.Colors.ToArray());
+                plan.View.SetCustomizationBindings(this, staged.Heads.ToArray(), staged.Colors.ToArray(), staged.AnchorOffsets.ToArray());
                 foreach (var color in plan.Colors) plan.View.ApplyColor(color.Key, color.Value);
                 foreach (var renderer in plan.Host.OwnedBaseRenderers) if (renderer != null) renderer.enabled = false;
                 baseSuppressed = true;
@@ -450,7 +474,7 @@ namespace LetMeSleep.Content.Characters
             {
                 RestoreColorBlocks(attemptBlocks);
                 if (previousView != null)
-                    previousView.SetCustomizationBindings(this, previousHeads, previousColors);
+                    previousView.SetCustomizationBindings(this, previousHeads, previousColors, previousAnchorOffsets);
                 else plan.View.ClearCustomizationBindings(this);
                 if (previousSuppressed)
                     foreach (var renderer in plan.Host.OwnedBaseRenderers) if (renderer != null) renderer.enabled = false;
@@ -469,6 +493,7 @@ namespace LetMeSleep.Content.Characters
             appliedObjects.AddRange(staged.Objects);
             appliedHeads = staged.Heads.ToArray();
             appliedColors = staged.Colors.ToArray();
+            appliedAnchorOffsets = staged.AnchorOffsets.ToArray();
             appliedRenderers = staged.Renderers.Where(item => item != null).Distinct().ToArray();
             appliedHost = plan.Host;
             if (previousView != plan.View) mirroredForceOff = false;

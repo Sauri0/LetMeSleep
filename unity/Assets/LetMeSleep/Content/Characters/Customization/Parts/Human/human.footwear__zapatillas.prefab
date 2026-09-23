@@ -219,3 +219,4 @@ MonoBehaviour:
   ColorChannels: []
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []

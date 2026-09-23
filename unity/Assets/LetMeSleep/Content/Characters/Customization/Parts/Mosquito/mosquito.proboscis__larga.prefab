@@ -195,15 +195,24 @@ MonoBehaviour:
     ColorSlotId: mosquito.color
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   - Renderer: {fileID: 6077139506515369266}
     MaterialIndex: 1
     ColorSlotId: mosquito.color
     Shade: 0.177
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   - Renderer: {fileID: 6077139506515369266}
     MaterialIndex: 2
     ColorSlotId: mosquito.color
     Shade: 0.352
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets:
+  - AnchorName: ProboscisTip
+    LocalPosition: {x: -0, y: 0.0372, z: 0.0294}

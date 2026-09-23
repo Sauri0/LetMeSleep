@@ -32,6 +32,13 @@ namespace LetMeSleep.Content.Characters
             /// <summary>0 keeps the alpha of the chosen colour; a positive value forces it (a wing membrane keeps its
             /// authored translucency whatever the colour swatch).</summary>
             public float Alpha;
+            /// <summary>0 tints with the chosen colour. A positive value keeps the material's own colour and dims it
+            /// with the chosen colour's brightness (relative to the authored skin), never below this factor: eye
+            /// whites stay white on light skin and are a little darker on dark skin, so they never glow at night.</summary>
+            public float LuminanceFloor;
+            /// <summary>Alpha 0 on this material index (clipped away by an alpha-clip material), e.g. the authored
+            /// hair under a hat, which a hairstyle part replaces.</summary>
+            public bool Hidden;
         }
 
         [Serializable]
@@ -56,13 +63,20 @@ namespace LetMeSleep.Content.Characters
         private ColorBinding[] authoredColors;
         private Dictionary<Component, RuntimeBindings> customizationBindings;
         private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
+        // Linear luminance of the authored skin (#C98B5A): eye whites dimmed by LuminanceFloor bindings keep their full
+        // white at this skin tone and lighter ones.
+        private const float ReferenceSkinLuminance = .316f;
         private static readonly int Motion = UnityEngine.Animator.StringToHash("Motion");
 
         private sealed class RuntimeBindings
         {
             public Renderer[] Heads;
             public ColorBinding[] Colors;
+            public KeyValuePair<string, Vector3>[] AnchorOffsets;
         }
+
+        // Anchor name -> point in its source bone's local space, supplied by worn customization parts.
+        private Dictionary<string, Vector3> anchorOffsets;
 
         public bool IsFirstPerson => firstPerson;
         private void OnEnable() { SetFirstPersonVisibility(firstPerson); RefreshAnchors(); }
@@ -89,8 +103,9 @@ namespace LetMeSleep.Content.Characters
             foreach (var binding in Anchors)
             {
                 if (binding.Anchor == null || binding.SourceBone == null) continue;
-                binding.Anchor.SetPositionAndRotation(binding.SourceBone.position,
-                    binding.SourceBone.rotation * binding.RotationOffset);
+                var position = anchorOffsets != null && anchorOffsets.TryGetValue(binding.Name, out var local)
+                    ? binding.SourceBone.TransformPoint(local) : binding.SourceBone.position;
+                binding.Anchor.SetPositionAndRotation(position, binding.SourceBone.rotation * binding.RotationOffset);
             }
         }
 
@@ -113,7 +128,11 @@ namespace LetMeSleep.Content.Characters
         public void SetMosquitoColor(Color color) => SetColor("Mosquito", color);
         public void ApplyColor(string channel, Color color) => SetColor(channel, color);
 
-        internal void SetCustomizationBindings(Component owner, Renderer[] heads, ColorBinding[] colors)
+        internal void SetCustomizationBindings(Component owner, Renderer[] heads, ColorBinding[] colors) =>
+            SetCustomizationBindings(owner, heads, colors, null);
+
+        internal void SetCustomizationBindings(Component owner, Renderer[] heads, ColorBinding[] colors,
+            KeyValuePair<string, Vector3>[] anchorOffsetsByName)
         {
             if (ReferenceEquals(owner, null)) throw new ArgumentNullException(nameof(owner));
             if (customizationBindings == null)
@@ -125,7 +144,9 @@ namespace LetMeSleep.Content.Characters
             customizationBindings[owner] = new RuntimeBindings
             {
                 Heads = (heads ?? Array.Empty<Renderer>()).Where(item => item != null).Distinct().ToArray(),
-                Colors = (colors ?? Array.Empty<ColorBinding>()).Where(item => item != null).ToArray()
+                Colors = (colors ?? Array.Empty<ColorBinding>()).Where(item => item != null).ToArray(),
+                AnchorOffsets = (anchorOffsetsByName ?? Array.Empty<KeyValuePair<string, Vector3>>())
+                    .Where(item => !string.IsNullOrEmpty(item.Key)).ToArray()
             };
             RebuildCustomizationBindings();
         }
@@ -140,7 +161,9 @@ namespace LetMeSleep.Content.Characters
                 authoredHeadRenderers = null;
                 authoredColors = null;
                 customizationBindings = null;
+                anchorOffsets = null;
                 SetFirstPersonVisibility(firstPerson);
+                RefreshAnchors();
                 return;
             }
             RebuildCustomizationBindings();
@@ -153,7 +176,21 @@ namespace LetMeSleep.Content.Characters
                 .Distinct().ToArray();
             Colors = (authoredColors ?? Array.Empty<ColorBinding>())
                 .Concat(customizationBindings.Values.SelectMany(item => item.Colors)).Where(item => item != null).ToArray();
+            anchorOffsets = null;
+            foreach (var pair in customizationBindings.Values.SelectMany(item => item.AnchorOffsets ?? Array.Empty<KeyValuePair<string, Vector3>>()))
+            {
+                if (anchorOffsets == null) anchorOffsets = new Dictionary<string, Vector3>(StringComparer.Ordinal);
+                anchorOffsets[pair.Key] = pair.Value;
+            }
             SetFirstPersonVisibility(firstPerson);
+            RefreshAnchors();
+        }
+
+        /// <summary>True while a worn customization part moves this anchor off its source bone head.</summary>
+        public bool TryGetAnchorOffset(string name, out Vector3 localPosition)
+        {
+            localPosition = Vector3.zero;
+            return anchorOffsets != null && anchorOffsets.TryGetValue(name, out localPosition);
         }
 
         private void SetColor(string category, Color color)
@@ -165,7 +202,21 @@ namespace LetMeSleep.Content.Characters
                 binding.Renderer.GetPropertyBlock(colorBlock, binding.MaterialIndex);
                 float keep = 1 - Mathf.Clamp01(binding.Shade);
                 float alpha = binding.Alpha > 0 ? Mathf.Clamp01(binding.Alpha) : color.a;
-                colorBlock.SetColor(BaseColor, new Color(color.r * keep, color.g * keep, color.b * keep, alpha));
+                var tint = color;
+                if (binding.LuminanceFloor > 0)
+                {
+                    var materials = binding.Renderer.sharedMaterials;
+                    var own = binding.MaterialIndex < materials.Length && materials[binding.MaterialIndex] != null &&
+                              materials[binding.MaterialIndex].HasProperty(BaseColor)
+                        ? materials[binding.MaterialIndex].GetColor(BaseColor) : Color.white;
+                    var linear = color.linear;
+                    float luminance = .2126f * linear.r + .7152f * linear.g + .0722f * linear.b;
+                    float factor = Mathf.Clamp(Mathf.Pow(luminance / ReferenceSkinLuminance, .8f), Mathf.Clamp01(binding.LuminanceFloor), 1f);
+                    tint = (own.linear * factor).gamma;
+                    alpha = own.a;
+                }
+                if (binding.Hidden) alpha = 0f;
+                colorBlock.SetColor(BaseColor, new Color(tint.r * keep, tint.g * keep, tint.b * keep, alpha));
                 binding.Renderer.SetPropertyBlock(colorBlock, binding.MaterialIndex);
                 colorBlock.Clear();
             }

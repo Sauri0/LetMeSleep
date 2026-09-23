@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2035257614398730653
+--- !u!1 &2821092417030378007
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7020078333663673278}
-  - component: {fileID: 299287633920243780}
+  - component: {fileID: 606709465443613047}
+  - component: {fileID: 5355624968925366207}
   m_Layer: 0
-  m_Name: HumanPartHair
+  m_Name: HumanPartHairUnderHat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7020078333663673278
+--- !u!4 &606709465443613047
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2035257614398730653}
+  m_GameObject: {fileID: 2821092417030378007}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,13 +32,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3224096828560597319}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!137 &299287633920243780
+--- !u!137 &5355624968925366207
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2035257614398730653}
+  m_GameObject: {fileID: 2821092417030378007}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -84,13 +84,13 @@ SkinnedMeshRenderer:
   m_Quality: 4
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 2749987102074375151, guid: ff8750714de2bcf40abfab8e977c4574, type: 3}
+  m_Mesh: {fileID: -4404754851373275182, guid: ff8750714de2bcf40abfab8e977c4574, type: 3}
   m_Bones: []
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0.00081527233, y: 1.581672, z: 0.07409857}
-    m_Extent: {x: 0.21869583, y: 0.0355469, z: 0.12219329}
+    m_Center: {x: 0, y: 1.5464996, z: 0.060652718}
+    m_Extent: {x: 0.19000033, y: 0.09350002, z: 0.11861576}
   m_DirtyAABB: 0
 --- !u!1 &5491926975617156044
 GameObject:
@@ -122,8 +122,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7020078333663673278}
   - {fileID: 2461901447164283851}
+  - {fileID: 606709465443613047}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4530729663429464876
@@ -145,7 +145,7 @@ MonoBehaviour:
   TargetVisualScale: {x: 1, y: 1, z: 1}
   FacialImpact: 0
   SkinnedRenderers:
-  - Renderer: {fileID: 299287633920243780}
+  - Renderer: {fileID: 6785036270072029594}
     RootBonePath: LMS_HumanRig/Root
     BonePaths:
     - LMS_HumanRig/Root
@@ -213,7 +213,7 @@ MonoBehaviour:
     - LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R
     - LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Toe.R
     - LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Socket.Foot.R
-  - Renderer: {fileID: 6785036270072029594}
+  - Renderer: {fileID: 5355624968925366207}
     RootBonePath: LMS_HumanRig/Root
     BonePaths:
     - LMS_HumanRig/Root
@@ -283,22 +283,31 @@ MonoBehaviour:
     - LMS_HumanRig/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Socket.Foot.R
   SocketParts: []
   ColorChannels:
-  - Renderer: {fileID: 299287633920243780}
-    MaterialIndex: 0
-    ColorSlotId: human.hair_color
-    Shade: 0
-    Alpha: 0
   - Renderer: {fileID: 6785036270072029594}
     MaterialIndex: 0
     ColorSlotId: human.hair_color
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
+  - Renderer: {fileID: 5355624968925366207}
+    MaterialIndex: 0
+    ColorSlotId: human.hair_color
+    Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   FirstPersonHeadRenderers:
-  - {fileID: 299287633920243780}
   - {fileID: 6785036270072029594}
+  - {fileID: 5355624968925366207}
   ConditionalRenderers:
   - Renderer: {fileID: 6785036270072029594}
     HiddenWhenSlotSelected: human.headwear
+    ShowOnlyWhileSelected: 0
+  - Renderer: {fileID: 5355624968925366207}
+    HiddenWhenSlotSelected: human.headwear
+    ShowOnlyWhileSelected: 1
+  AnchorOffsets: []
 --- !u!1 &8265317334998541872
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,6 +397,6 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0, y: 1.6930082, z: 0.01835218}
-    m_Extent: {x: 0.1912832, y: 0.063008666, z: 0.18149672}
+    m_Center: {x: 0, y: 1.6081139, z: 0.029387057}
+    m_Extent: {x: 0.20240287, y: 0.16633439, z: 0.19633295}
   m_DirtyAABB: 0

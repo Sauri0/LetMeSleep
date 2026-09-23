@@ -329,5 +329,8 @@ MonoBehaviour:
     ColorSlotId: mosquito.wing_color
     Shade: 0
     Alpha: 0.5
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []

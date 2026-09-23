@@ -1,8 +1,8 @@
 {
-    "builder": "v030-modular-customization-1",
+    "builder": "v030-modular-customization-2",
     "catalogId": "lms.v030.characters",
-    "fingerprint": "f1b7401a48ea6672608b0573a7285ff2c2af934e7579bcf0507e081235f630ff",
-    "revision": 1,
+    "fingerprint": "534a131f6f14022ec3fa60a5cf2fe71d3ee0ede4fa52836733bafe911375e6d7",
+    "revision": 2,
     "slots": 20,
     "options": 82,
     "parts": 29,

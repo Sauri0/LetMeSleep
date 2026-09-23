@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7599799878027015182}
-  - {fileID: 8741429314997038421}
+  - {fileID: 874388806159650367}
   m_Father: {fileID: 1148042351287699800}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1636930950111187044
@@ -251,37 +251,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 813667628332102615}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5982741855276121907
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8741429314997038421}
-  m_Layer: 0
-  m_Name: CustomizationParts
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8741429314997038421
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5982741855276121907}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5209091549246475499}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7604493959391735396
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,6 +289,37 @@ Transform:
   - {fileID: 8145986139087368518}
   m_Father: {fileID: 1148042351287699800}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7609091191497801129
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 874388806159650367}
+  m_Layer: 0
+  m_Name: CustomizationParts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &874388806159650367
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7609091191497801129}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5209091549246475499}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8410320189168980418
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,9 +331,9 @@ GameObject:
   - component: {fileID: 1148042351287699800}
   - component: {fileID: 6399267936585410066}
   - component: {fileID: 7854026478028426998}
-  - component: {fileID: 4572516665118419566}
-  - component: {fileID: 521961925666832957}
-  - component: {fileID: 8660263181039462350}
+  - component: {fileID: 4268316665964290679}
+  - component: {fileID: 8558284607420391107}
+  - component: {fileID: 898332066307248486}
   m_Layer: 0
   m_Name: LMS_Human
   m_TagString: Untagged
@@ -411,31 +411,43 @@ MonoBehaviour:
     Category: Skin
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 2322434122650286657}
     MaterialIndex: 0
     Category: Skin
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 7948600991889706432}
     MaterialIndex: 1
     Category: Skin
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 7948600991889706432}
     MaterialIndex: 2
     Category: Pajamas
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 7948600991889706432}
     MaterialIndex: 4
     Category: Pajamas
     Shade: 0.193
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 7340666564473348143}
     MaterialIndex: 0
     Category: Skin
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   Motions:
   - Id: 0
     StateName: Base Layer.Idle
@@ -529,7 +541,7 @@ CapsuleCollider:
   m_Height: 1.72
   m_Direction: 1
   m_Center: {x: 0, y: 0.86, z: 0}
---- !u!114 &4572516665118419566
+--- !u!114 &4268316665964290679
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -574,7 +586,7 @@ MonoBehaviour:
     EyeYawLimit: 22
     EyePitchLimit: 15
     ManualEvaluation: 0
---- !u!114 &521961925666832957
+--- !u!114 &8558284607420391107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -590,7 +602,7 @@ MonoBehaviour:
   View: {fileID: 6399267936585410066}
   RigId: lms.human.v030
   ExpectedVisualScale: {x: 1, y: 1, z: 1}
-  PartsRoot: {fileID: 8741429314997038421}
+  PartsRoot: {fileID: 874388806159650367}
   OwnedBaseRenderers:
   - {fileID: 7948600991889706432}
   - {fileID: 1329330042654496620}
@@ -600,22 +612,44 @@ MonoBehaviour:
     ColorSlotId: human.skin
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
+  - Renderer: {fileID: 7340666564473348143}
+    MaterialIndex: 2
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0.3
+    HiddenWhileSlotSelected: 
+  - Renderer: {fileID: 7340666564473348143}
+    MaterialIndex: 3
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0.3
+    HiddenWhileSlotSelected: 
   - Renderer: {fileID: 7340666564473348143}
     MaterialIndex: 4
     ColorSlotId: human.hair_color
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: human.headwear
   - Renderer: {fileID: 8688976865872343376}
     MaterialIndex: 0
     ColorSlotId: human.skin
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   - Renderer: {fileID: 2322434122650286657}
     MaterialIndex: 0
     ColorSlotId: human.skin
     Shade: 0
     Alpha: 0
---- !u!114 &8660263181039462350
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
+--- !u!114 &898332066307248486
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

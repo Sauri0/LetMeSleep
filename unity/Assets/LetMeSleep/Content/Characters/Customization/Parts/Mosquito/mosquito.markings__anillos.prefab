@@ -101,8 +101,11 @@ MonoBehaviour:
     ColorSlotId: mosquito.accent_color
     Shade: 0
     Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
   FirstPersonHeadRenderers: []
   ConditionalRenderers: []
+  AnchorOffsets: []
 --- !u!1 &7650969057386220902
 GameObject:
   m_ObjectHideFlags: 0

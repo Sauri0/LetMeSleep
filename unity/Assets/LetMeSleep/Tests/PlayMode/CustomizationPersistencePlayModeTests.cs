@@ -45,10 +45,13 @@ namespace LetMeSleep.Tests.PlayMode
         private AlfaApplication application;
         private AlfaUiController ui;
 
+        private bool ownsDataOverride;
+
         [UnitySetUp]
         public IEnumerator LoadIsolatedBootScene()
         {
-            dataPath = RequireIsolatedDataPath();
+            dataPath = RequireIsolatedDataPath(out ownsDataOverride);
+            if (ownsDataOverride) SetDataOverride(dataPath);
             ResetFixtureDirectory();
             WritePreferences(Published(), LocalDraft());
             yield return ReloadBootScene();
@@ -60,6 +63,20 @@ namespace LetMeSleep.Tests.PlayMode
             if (application != null) application.CancelTraining();
             yield return null;
             if (!string.IsNullOrEmpty(dataPath)) ResetFixtureDirectory();
+            if (ownsDataOverride)
+            {
+                SetDataOverride(null);
+                if (Directory.Exists(dataPath)) Directory.Delete(dataPath, true);
+                ownsDataOverride = false;
+            }
+        }
+
+        /// <summary>Points AlfaApplication (editor/dev builds only) at this fixture's own data folder.</summary>
+        private static void SetDataOverride(string path)
+        {
+            var field = typeof(AlfaApplication).GetField("validationDataOverride", BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.That(field, Is.Not.Null, "AlfaApplication must expose its editor validation data override.");
+            field.SetValue(null, path);
         }
 
         [UnityTest]
@@ -411,7 +428,12 @@ namespace LetMeSleep.Tests.PlayMode
             .Select(root => Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar)
             .Any(root => path.StartsWith(root, StringComparison.OrdinalIgnoreCase));
 
-        private static string RequireIsolatedDataPath()
+        /// <summary>
+        /// This fixture deletes its data folder, so it only ever works in one named "CustomizationPersistencePlayModeTests-*".
+        /// Given such a folder it uses it; given any other validation directory (a full suite shares one) it creates its
+        /// own "CustomizationPersistencePlayModeTests-&lt;id&gt;" inside it and points the application there.
+        /// </summary>
+        private static string RequireIsolatedDataPath(out bool ownsOverride)
         {
             string[] args = Environment.GetCommandLineArgs();
             int option = Array.IndexOf(args, "--lms-validation-data");
@@ -419,10 +441,14 @@ namespace LetMeSleep.Tests.PlayMode
                 Assert.Ignore("Requires --lms-validation-data under N:/LetMeSleep/Validation/V020 or V030.");
             string path = Path.GetFullPath(args[option + 1]);
             Assert.That(UnderValidationRoot(path), Is.True, "Use an isolated V020 or V030 validation directory.");
-            Assert.That(Path.GetFileName(path).StartsWith("CustomizationPersistencePlayModeTests-", StringComparison.Ordinal), Is.True,
+            ownsOverride = !Path.GetFileName(path).StartsWith(FixturePrefix, StringComparison.Ordinal);
+            if (ownsOverride) path = Path.Combine(path, FixturePrefix + Guid.NewGuid().ToString("N").Substring(0, 12));
+            Assert.That(Path.GetFileName(path).StartsWith(FixturePrefix, StringComparison.Ordinal), Is.True,
                 "The isolated directory name must make cleanup explicit.");
             return path;
         }
+
+        private const string FixturePrefix = "CustomizationPersistencePlayModeTests-";
     }
 }
 #endif

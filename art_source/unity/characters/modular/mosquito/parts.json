@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "modular-parts-v030-r1",
+  "revision": "modular-parts-v030-r2",
   "species": "Mosquito",
   "rig_id": "lms.mosquito.v030",
   "rig_signature_sha256": "85d06d69cd4db0638e5f9b3ca5db8cd62237eb764e31873a99e31abf1adf76d4",
@@ -647,9 +647,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "MosquitoPartBody",
@@ -682,7 +684,7 @@
       ],
       "facial_impact": "None",
       "note": "Body, legs and the bone-driven eyes (Pupil/Lid bones) with the same geometry as the host.",
-      "sha256": "cb157a836f30ef20062b1bd2680f7f8d9fe74a7c83ff327219461a895d312dbd"
+      "sha256": "e635e9da900dc191fee44219cefc998bb6cda9df449ab297106cd66abdb184f0"
     },
     {
       "role": "Mosquito",
@@ -703,7 +705,8 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         },
         {
           "name": "MosquitoPartWingVeins",
@@ -719,9 +722,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "MosquitoPartWings",
@@ -733,7 +738,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "f2003fa6b2698895a2fd109d4b268ef68f55957bfbd1bb7d93f40b8143b005a2"
+      "sha256": "3ef263e0c8ddc210b182c085e40ade8b2aae07e6f135a486fc9b044ecd7c27d0"
     },
     {
       "role": "Mosquito",
@@ -743,8 +748,8 @@
       "renderers": [
         {
           "name": "MosquitoPartWings",
-          "triangles": 104,
-          "vertices": 56,
+          "triangles": 224,
+          "vertices": 116,
           "materials": [
             "Mosquito_Wing"
           ],
@@ -754,12 +759,13 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         },
         {
           "name": "MosquitoPartWingVeins",
-          "triangles": 528,
-          "vertices": 288,
+          "triangles": 512,
+          "vertices": 264,
           "materials": [
             "Mosquito_WingEdge",
             "Mosquito_WingVein"
@@ -770,9 +776,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "MosquitoPartWings",
@@ -784,7 +792,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "361044ab5ad64b25cfa72e1b31e23b971e4e8587e5d302271d3c3054aa03dfe1"
+      "sha256": "0e337cf13a94cab2db9d4ced03150e77fdad7d70475497e2ea3321a9f650f959"
     },
     {
       "role": "Mosquito",
@@ -794,8 +802,8 @@
       "renderers": [
         {
           "name": "MosquitoPartWings",
-          "triangles": 104,
-          "vertices": 56,
+          "triangles": 224,
+          "vertices": 116,
           "materials": [
             "Mosquito_Wing"
           ],
@@ -805,12 +813,13 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         },
         {
           "name": "MosquitoPartWingVeins",
-          "triangles": 528,
-          "vertices": 288,
+          "triangles": 512,
+          "vertices": 264,
           "materials": [
             "Mosquito_WingEdge",
             "Mosquito_WingVein"
@@ -821,9 +830,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "MosquitoPartWings",
@@ -835,7 +846,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "ff510e31b10b0ee264adb3fab468d786f260a441e595ff886b2cf29418171430"
+      "sha256": "bef4ec70ed53f639a2443b5618343ae7124c56ebdced063075b98e3418315c98"
     },
     {
       "role": "Mosquito",
@@ -857,9 +868,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "MosquitoPartProboscis",
@@ -885,7 +898,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "c2ccd18cf1a55e3179a75f87aefd9c3a92f034e5ab4e0b43b44e1daa395cb08d"
+      "sha256": "5939035cabf345e5dffea9948b358014f02041c071e1a027eff9db381b7daecf"
     },
     {
       "role": "Mosquito",
@@ -907,7 +920,19 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [
+        {
+          "anchor": "ProboscisTip",
+          "bone": "Socket.Mouth",
+          "point_blender_m": [
+            0.0,
+            -0.14784,
+            0.03332
+          ]
         }
       ],
       "colors": [
@@ -934,8 +959,8 @@
         }
       ],
       "facial_impact": "None",
-      "note": "Tip 34% shorter than Socket.Mouth: the bite anchor keeps the gameplay tip.",
-      "sha256": "c1fba24a9c87f3e95938ffdcbb9029832b0f9e870e4a0779de1d3bef53783dcd"
+      "note": "Tip 34% shorter than Socket.Mouth; ProboscisTip follows it.",
+      "sha256": "10b506248085e936c66fa5fa99dd0adbcd12249ebfc3bff1e7f23b981d2a6de3"
     },
     {
       "role": "Mosquito",
@@ -957,7 +982,19 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [
+        {
+          "anchor": "ProboscisTip",
+          "bone": "Socket.Mouth",
+          "point_blender_m": [
+            0.0,
+            -0.2272,
+            -0.0294
+          ]
         }
       ],
       "colors": [
@@ -984,8 +1021,8 @@
         }
       ],
       "facial_impact": "None",
-      "note": "Tip 30% past Socket.Mouth (reaches into the bitten surface).",
-      "sha256": "c72081d5b61d6d8c8401301ee945e9e01f01cace2c5610d059ae2c09904518c8"
+      "note": "Tip 30% past Socket.Mouth; ProboscisTip follows it.",
+      "sha256": "9771067c31939555b8c4315490e9f4c601afc45cdf398fa2e8bbaa56d5d6728e"
     },
     {
       "role": "Mosquito",
@@ -1007,9 +1044,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "MosquitoPartProboscis",
@@ -1035,7 +1074,7 @@
       ],
       "facial_impact": "None",
       "note": "Hooked arc that still ends on Socket.Mouth.",
-      "sha256": "ad8e11952b7b8334541eba7d044040b47dce0f09e87d163c8d5141c396ce242a"
+      "sha256": "b72f0ea68264f8d0047d3abbe06e211d797adb04ee25f9d3df7033bd320a7ed5"
     },
     {
       "role": "Mosquito",
@@ -1056,9 +1095,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "MosquitoPartMarkings",
@@ -1070,7 +1111,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "135e7b97dec0a90ced3556b97939f953125d4a2f9601d17831e7f03b53f786fe"
+      "sha256": "60a27dfac76402d33a3c9092d3c2d76b07dfb31f807e3fa10053f396ab45b075"
     },
     {
       "role": "Mosquito",
@@ -1080,21 +1121,22 @@
       "renderers": [
         {
           "name": "MosquitoPartMarkings",
-          "triangles": 532,
-          "vertices": 276,
+          "triangles": 424,
+          "vertices": 216,
           "materials": [
             "Mosquito_Accent"
           ],
           "bones": [
             "Abdomen01",
-            "Abdomen02",
-            "Thorax"
+            "Abdomen02"
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "MosquitoPartMarkings",
@@ -1106,7 +1148,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "3164eadbc18739fedd24aa3a1ab4005d77da0f4b38457f9b221d6910b709d421"
+      "sha256": "c113afcc50e464ba21bb4027849a1dea518266d6dd41c6ac379bea40ea778a8f"
     },
     {
       "role": "Mosquito",
@@ -1128,9 +1170,11 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [
         {
           "renderer": "MosquitoPartMarkings",
@@ -1142,7 +1186,7 @@
       ],
       "facial_impact": "None",
       "note": "",
-      "sha256": "93ce453b8689384efb1eedf9bcada92d328597bd3455b2b2eeed0212a70cf81c"
+      "sha256": "c3eb986e12d26cff680feab6197163e6eb1cb86914d9309bf3826eebd05eeb43"
     },
     {
       "role": "Mosquito",
@@ -1156,6 +1200,7 @@
           "vertices": 90,
           "materials": [
             "Mosquito_Leaf",
+            "Mosquito_LeafUnder",
             "Mosquito_LeafVein"
           ],
           "bones": [
@@ -1163,13 +1208,15 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "02bd7538c66953df06d7b51ddb3ff8f7915c83045f8f0c6f83ae22055d2a3882"
+      "sha256": "cb25fd656d921ab0a513962c752496bbf26e8d9dced8d8e53131c348cd2efd52"
     },
     {
       "role": "Mosquito",
@@ -1183,6 +1230,7 @@
           "vertices": 78,
           "materials": [
             "Mosquito_Petal",
+            "Mosquito_PetalUnder",
             "Mosquito_FlowerCentre",
             "Mosquito_LeafVein"
           ],
@@ -1191,13 +1239,15 @@
           ],
           "errors": [],
           "first_person_head": false,
-          "hidden_when_slot_selected": ""
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
         }
       ],
+      "anchor_offsets": [],
       "colors": [],
       "facial_impact": "None",
       "note": "",
-      "sha256": "0506e2391035d8e53a2d9aedd000e481eaada0f04439a2444e1afba807649ea2"
+      "sha256": "e4bfa7945fcf2f8e70dc717b624bbcc307aed7795447aa4f096dd45bf8c1e790"
     }
   ],
   "material_palette": [
@@ -1259,12 +1309,23 @@
     {
       "name": "Mosquito_Leaf",
       "color": {
-        "r": 0.364705890417099,
-        "g": 0.6666666865348816,
-        "b": 0.22745098173618317,
+        "r": 0.4274509847164154,
+        "g": 0.7450980544090271,
+        "b": 0.2705882489681244,
         "a": 1.0
       },
       "roughness": 0.800000011920929,
+      "new": true
+    },
+    {
+      "name": "Mosquito_LeafUnder",
+      "color": {
+        "r": 0.6509804129600525,
+        "g": 0.843137264251709,
+        "b": 0.47843137383461,
+        "a": 1.0
+      },
+      "roughness": 0.8500000238418579,
       "new": true
     },
     {
@@ -1309,6 +1370,17 @@
         "a": 1.0
       },
       "roughness": 0.75,
+      "new": true
+    },
+    {
+      "name": "Mosquito_PetalUnder",
+      "color": {
+        "r": 1.0,
+        "g": 0.9686274528503418,
+        "b": 0.9254902005195618,
+        "a": 1.0
+      },
+      "roughness": 0.800000011920929,
       "new": true
     },
     {
@@ -1390,7 +1462,7 @@
     }
   ],
   "source_sha256": {
-    "author_modular_parts.py": "1aa3a6ecf4f73ae907a60766c24644075c5fb3f79cb41dbe91af9880668d9791",
+    "author_modular_parts.py": "d885dae475df73630d185b174e7f941fcd5ee1c69effedabe815f366c4f03ff1",
     "build_characters.py": "d2154f0ea2c36e9de7fcf8e27d3067ba4d6d609a96a9ff050e72d9b55be6030b",
     "author_human_geometry.py": "a5f355b31f9245b676dde3469fd96fd2167353cf1517318539684af763129789",
     "author_human_joints.py": "296447f1a1981009d12f3a5b2b872848386666ac4b5f4fc0d8626b0b0b4a2329",
