@@ -28,9 +28,8 @@ namespace LetMeSleep.Tests.PlayMode
         public IEnumerator LoadBootScene()
         {
             // Without an isolated data directory the application would migrate and overwrite the developer's
-            // real preferences under N:/LetMeSleep/UserData/Unity.
-            if (Array.IndexOf(Environment.GetCommandLineArgs(), "--lms-validation-data") < 0)
-                Assert.Ignore("Requires --lms-validation-data <isolated directory>.");
+            // real preferences under N:/LetMeSleep/UserData/Unity (or whatever folder the argument names).
+            ValidationDataGuard.RequireDedicatedDataPath();
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;

@@ -20,6 +20,19 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(ValidationDataGuard.IsDedicatedRunDirectory(path, Roots), Is.False);
         }
 
+        [TestCase(new string[0], ValidationDataGuard.DataArgument.Missing)]
+        [TestCase(new[] { "Unity.exe", "--lms-validation-data" }, ValidationDataGuard.DataArgument.Rejected)]
+        [TestCase(new[] { "--lms-validation-data", "relative/data" }, ValidationDataGuard.DataArgument.Rejected)]
+        [TestCase(new[] { "--lms-validation-data", "N:/LetMeSleep/UserData/Unity" }, ValidationDataGuard.DataArgument.Rejected)]
+        [TestCase(new[] { "--lms-validation-data", "C:/Users/player/AppData/LocalLow/LetMeSleep" }, ValidationDataGuard.DataArgument.Rejected)]
+        [TestCase(new[] { "--lms-validation-data", "N:/LetMeSleep/Validation/V030" }, ValidationDataGuard.DataArgument.Rejected)]
+        [TestCase(new[] { "-batchmode", "--lms-validation-data", "N:/LetMeSleep/Validation/V030/fixes/run-01/data" }, ValidationDataGuard.DataArgument.Dedicated)]
+        public void ApplicationDataArgumentMustNameADedicatedRunDirectory(string[] args, object expected)
+        {
+            // TrainingBootstrapPlayModeTests boots AlfaApplication, which rewrites preferences in this directory.
+            Assert.That(ValidationDataGuard.ResolveDataArgument(args, Roots, out _), Is.EqualTo(expected));
+        }
+
         [TestCase("N:/LetMeSleep/Validation/V020/ModularPersistence-01")]
         [TestCase("N:/LetMeSleep/Validation/V030/fixes/run-01/data/")]
         public void DedicatedRunDirectoriesBelowARootAreAccepted(string path)
