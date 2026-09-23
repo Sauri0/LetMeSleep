@@ -31,6 +31,8 @@ namespace LetMeSleep.Gameplay
             internal uint Revision = 1, ViewRevision = 1, PoseRevision, InputSequence, ActionSequence, InputTick, RateTick, HelpTarget;
             internal int InputCount, ActionCount, Lives;
             internal uint TaskInterruptTick;
+            // Earliest tick a new strike may start. Survives CancelThrow/slot changes/pickups that reset Strike.
+            internal uint NextStrikeTick;
             internal float HelpWork;
             internal bool AwaitingRespawn;
             internal bool Connected = true;
@@ -51,6 +53,7 @@ namespace LetMeSleep.Gameplay
             internal SurfaceAttachment? Surface;
             internal Float3 SurfaceNormal, SurfaceForward;
             internal int SurfaceTransitionTicks, SurfaceApproachTicks;
+            internal int FallingTicks;
             internal BiteAttachment? Bite;
             internal StrikePlan Plan;
             internal StrikeState Strike;
@@ -84,6 +87,9 @@ namespace LetMeSleep.Gameplay
         public GameplayRoundConfig Config => config;
         public uint CurrentTick => tick;
         public bool IsRunning => config != null && phase == SimulationPhase.Running;
+        // Available even when a snapshot cannot be captured, so an end is always reportable.
+        public RoundEndReason EndReason => result;
+        public PlayerRole Winner => winner;
         public GameplayAuthority(IGameplayWorld world) { this.world = world ?? throw new ArgumentNullException(nameof(world)); }
 
         public void BeginRound(GameplayRoundConfig next, IReadOnlyList<SpawnActor> roster)
@@ -290,10 +296,11 @@ namespace LetMeSleep.Gameplay
                         if (a.EquippedTool == GameplayTools.Slipper) { a.Rejection = CommandReject.InvalidState; break; }
                         if (a.EquippedTool == GameplayTools.ElectricRacket) { if (a.PrimaryArmed) BeginRacketPulse(a); else a.Rejection = CommandReject.InvalidState; break; }
                         if (a.EquippedTool == GameplayTools.Aerosol) break; // Emission follows fresh PrimaryHeld once per host tick.
-                        if (a.Strike.Phase != StrikePhase.None) { a.Rejection = CommandReject.Cooldown; break; }
+                        if (a.Strike.Phase != StrikePhase.None || tick < a.NextStrikeTick) { a.Rejection = CommandReject.Cooldown; break; }
                         if (world.TryPlanStrike(a.Spawn.ActorId, c.AimForward, a.EquippedTool, out a.Plan))
                         {
                             a.HitActors.Clear(); a.StrikeBlocked = false; a.Strike = new StrikeState(++strikeId, a.Plan.ToolId, a.Plan.Hand, StrikePhase.Windup, tick, a.Plan.Origin, a.Plan.Target, a.Plan.Normal, 0);
+                            a.NextStrikeTick = tick + StrikeCycleTicks(a.Plan.ToolId);
                             Emit(GameplayEventKind.StrikeStarted, a, 0, a.Plan.Target, a.Plan.Normal);
                         }
                         else a.Rejection = CommandReject.OutOfReach;
@@ -409,7 +416,7 @@ namespace LetMeSleep.Gameplay
             var moved = a.Spawn.Role == PlayerRole.Human ? world.MoveHuman(query) : world.MoveMosquito(query);
             a.Position = moved.Position; a.Velocity = moved.Velocity; a.Grounded = moved.Grounded; a.Crouch = moved.CrouchFraction;
             a.Motion += (a.Position - old).Length / (a.Spawn.Role == PlayerRole.Human ? 1.2f : .3f); a.PoseRevision++;
-            if (a.State == LifeState.Falling && a.Grounded)
+            if (a.State == LifeState.Falling && (a.Grounded || WedgedFall(a)))
             {
                 a.Recovery = config.Balance.RecoveryBaseSeconds; a.Velocity = default;
                 SetState(a, a.Spawn.Role == PlayerRole.Human ? LifeState.Fainted : LifeState.Stunned); Emit(GameplayEventKind.RecoveryStarted, a);
@@ -449,11 +456,14 @@ namespace LetMeSleep.Gameplay
                 else Detach(a);
             }
         }
+        private static float StrikeTimeScale(string toolId) => GameplayTools.IsFlyswatter(toolId) ? HumanEquipmentProfile.FlyswatterTimeMultiplier : 1;
+        // UpdateStrike clears a strike once its normalized time reaches .6 s; the next one may start one tick later.
+        private static uint StrikeCycleTicks(string toolId) => (uint)Math.Ceiling(.6f * 30 * StrikeTimeScale(toolId) - .001f) + 1;
         private void UpdateStrike(Actor a)
         {
             if (!a.Connected || a.Strike.Phase == StrikePhase.None || a.State != LifeState.Active || boundsHeldActors.Contains(a.Spawn.ActorId)) return;
             var s = a.Strike; float elapsed = (tick - s.StartTick) / 30f;
-            float timeScale = GameplayTools.IsFlyswatter(s.ToolId) ? HumanEquipmentProfile.FlyswatterTimeMultiplier : 1;
+            float timeScale = StrikeTimeScale(s.ToolId);
             float normalizedElapsed = elapsed / timeScale;
             if (normalizedElapsed >= .6f) { a.Strike = default; return; }
             var nextPhase = normalizedElapsed < .08f ? StrikePhase.Windup : normalizedElapsed < .25f ? StrikePhase.Active : StrikePhase.Recovery;
@@ -618,13 +628,18 @@ namespace LetMeSleep.Gameplay
             }
         }
         private void EmitDoor(Door door, uint source) => events.Add(new GameplayEvent(config.SessionEpoch, config.RoundId, ++eventId, tick, GameplayEventKind.DoorChanged, source, 0, door.Revision, door.Definition.HingePosition, Float3.Up, door.Snapshot));
+        // A fall that never reports ground (e.g. a V-shaped crease of steep faces) must not incapacitate forever:
+        // after 3 s of falling while barely moving the actor lands where it is and starts the normal recovery.
+        private const int WedgedFallTicks = 90;
+        private const float WedgedSpeedSquared = .25f;
+        private static bool WedgedFall(Actor a) => ++a.FallingTicks >= WedgedFallTicks && a.Velocity.LengthSquared < WedgedSpeedSquared;
         private static bool CanAct(Actor a) => a.State != LifeState.Eliminated && a.State != LifeState.Falling && a.State != LifeState.Stunned && a.State != LifeState.Fainted && a.State != LifeState.Recovering;
         private static void ClearHeld(Actor a) { a.Input = default; a.Jump = false; a.BiteArmed = false; a.ThrowCharge.Cancel(); a.SwapOffer = null; }
         private static void SetState(Actor a, LifeState state)
         {
             if (a.State == state) return;
             bool wasControllable = CanAct(a);
-            a.State = state; a.Revision++; a.SurfaceApproachTicks = 0;
+            a.State = state; a.Revision++; a.SurfaceApproachTicks = 0; a.FallingTicks = 0;
             if (a.Spawn.Role == PlayerRole.Mosquito && state == LifeState.Recovering)
                 a.MosquitoBody = Rotation.Look(MathEx.Aim(a.Yaw, 0), Float3.Up);
             if (!CanAct(a) || !wasControllable) ClearHeld(a);
@@ -658,6 +673,7 @@ namespace LetMeSleep.Gameplay
         {
             if (!actors.TryGetValue(actorId, out var leaving)) return;
             DropAllTools(leaving); actors.Remove(actorId);
+            if (leaving.Spawn.Role == PlayerRole.Human && IsRunning) taskRules?.RemovePerson(actorId, tick);
             foreach (var id in toolEffects.Where(p => p.Value.Snapshot.SourceActorId == actorId).Select(p => p.Key).ToArray()) toolEffects.Remove(id);
             foreach (var a in actors.Values.Where(a => a.Bite.HasValue && a.Bite.Value.VictimId == actorId)) Detach(a);
             Synchronize();

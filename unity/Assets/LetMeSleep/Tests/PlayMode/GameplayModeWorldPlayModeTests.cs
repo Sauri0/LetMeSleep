@@ -132,6 +132,30 @@ namespace LetMeSleep.Tests.PlayMode
         }
 
         [Test]
+        public void TasksRoundWhoseOnlyHumanLeavesInTheFirstSlotReachesResultsOnce()
+        {
+            var fixture = CreateTaskMap(new Vector3(0, .002f, 0));
+            var runtime = fixture.Runtime;
+            runtime.BeginRound(Config(fixture.World.GetObjectiveDefinitions()), Roster(new Float3(0, .002f, 0)));
+            var finished = new System.Collections.Generic.List<(RoundEndReason Reason, PlayerRole Winner)>();
+            var published = new System.Collections.Generic.List<GameSessionState>();
+            runtime.RoundFinished += (reason, winner) => finished.Add((reason, winner));
+            runtime.SnapshotReady += published.Add;
+            for (int i = 0; i < 10; i++) runtime.TickHost();
+            Assert.That(runtime.LatestSnapshot.SimulationPhase, Is.EqualTo(SimulationPhase.Running));
+
+            // The only human leaves before finishing or missing the first task (goal would recompute to 0).
+            runtime.Authority.RemoveActor(1, ActorRemovalReason.Left);
+            Assert.DoesNotThrow(runtime.TickHost);
+            Assert.DoesNotThrow(runtime.TickHost);
+
+            Assert.That(finished, Has.Count.EqualTo(1), "The room must leave Playing exactly once.");
+            Assert.That(finished[0], Is.EqualTo((RoundEndReason.OpponentLeft, PlayerRole.Mosquito)));
+            Assert.That(published.Count(state => state.SimulationPhase == SimulationPhase.Ended), Is.EqualTo(1));
+            Assert.That(runtime.LatestSnapshot.TasksGoal, Is.GreaterThanOrEqualTo(1));
+        }
+
+        [Test]
         public void ToolDetourUsesOpenAuthoredRouteAndRejectsPositionOutsideItsRegions()
         {
             var fixture = CreateDistributedTaskMap();

@@ -13,13 +13,14 @@ namespace LetMeSleep.Tests.EditMode
         {
             public bool Available = true, Work = true, Respawn = true, Valid = true, FreeRecovery = true, Bite = false, Surface = false;
             public bool Assignable = true;
+            public bool WedgedMosquito;
             public Float3? HumanPosition;
             public uint Hit = 2;
             public int MosquitoMoves, StrikePlans, StrikeSweeps;
             public void BeginRound(IReadOnlyList<SpawnActor> a, IReadOnlyList<DoorDefinition> d) { }
             public void SynchronizeActors(IReadOnlyList<ActorSnapshot> a) { }
             public MotorResult MoveHuman(in MotorQuery q) => new MotorResult(HumanPosition ?? q.Position, default, true, Float3.Up, 0);
-            public MotorResult MoveMosquito(in MotorQuery q) { MosquitoMoves++; return new MotorResult(q.Position, default, true, Float3.Up, 0); }
+            public MotorResult MoveMosquito(in MotorQuery q) { MosquitoMoves++; return new MotorResult(q.Position, default, !WedgedMosquito, Float3.Up, 0); }
             public bool TrySurface(in SurfaceQuery q, out SurfaceContact c) { c = new SurfaceContact(new SurfaceAttachment(1, 1, Float3.Zero, -Float3.Forward, Float3.Up), Float3.Zero, -Float3.Forward); return Surface; }
             public bool ResolveSurface(in SurfaceAttachment a, out SurfaceContact c) { c = new SurfaceContact(a, Float3.Zero, -Float3.Forward); return Surface; }
             public bool TryBiteContact(in BiteQuery q, out BiteContact c) { c = new BiteContact(new BiteAttachment(1, 1, Float3.Zero, Float3.Up, 1), Float3.Forward * .3f, Float3.Up); return Bite; }
@@ -429,6 +430,97 @@ namespace LetMeSleep.Tests.EditMode
             a.SetActorConnected(4, false); Assert.That(a.CapturePrivate(4).HelpTargetId, Is.Zero);
             Step(a, 35); Assert.That(Actor(a).LivesRemaining, Is.EqualTo(2));
             Assert.That(a.DrainEvents().Count(e => e.Kind == GameplayEventKind.HelpEnded && e.SourceActorId == 4), Is.EqualTo(1));
+        }
+        [Test] public void WedgedFallLandsAndRecoversInsteadOfIncapacitatingForever()
+        {
+            var w = new World { WedgedMosquito = true }; var a = Start(w, GameModes.Blood); Strike(a);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.Falling), "Knocked down, the motor never reports ground.");
+            Step(a, 80);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.Falling), "Short falls keep waiting for ground.");
+            Step(a, 20);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.Stunned));
+            Assert.That(a.DrainEvents().Count(e => e.Kind == GameplayEventKind.RecoveryStarted && e.SourceActorId == 2), Is.EqualTo(1));
+            Step(a, 60);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.Flying), "The normal recovery completes.");
+        }
+        // 30 s, cadence 300, deadline 240: three task slots per human.
+        [Test] public void DepartedHumanNoLongerCountsTowardTheCollectiveGoal()
+        {
+            var a = Start(new World(), GameModes.Tasks, secondHuman: true); Step(a);
+            Assert.That(a.CaptureSnapshot().ViableTaskOpportunities, Is.EqualTo(6)); Assert.That(a.CaptureSnapshot().TasksGoal, Is.EqualTo(4));
+            a.RemoveActor(3, ActorRemovalReason.Left);
+            var state = a.CaptureSnapshot();
+            Assert.That(a.IsRunning, Is.True);
+            Assert.That(state.ViableTaskOpportunities, Is.EqualTo(3), "Only the remaining human's slots stay reachable.");
+            Assert.That(state.TasksGoal, Is.LessThanOrEqualTo(state.TasksCompleted + 3), "The goal must remain reachable by the humans still playing.");
+            Assert.That(state.TasksGoal, Is.EqualTo(2));
+            // The remaining human completes every slot and wins, instead of a guaranteed TasksMissed.
+            for (int slot = 0; slot < 3; slot++)
+            {
+                for (int guard = 0; guard < 900 && a.IsRunning && (a.CapturePrivate(1).TaskAssignment == null || a.CapturePrivate(1).TaskAssignment.Status != TaskAssignmentStatus.Active); guard++) Step(a);
+                for (int i = 0; i < 4; i++) { Use(a); Step(a); }
+            }
+            Step(a, 900 - (int)a.CurrentTick);
+            Assert.That(a.CaptureSnapshot().TasksCompleted, Is.EqualTo(3));
+            Assert.That(a.CaptureSnapshot().Result, Is.EqualTo(RoundEndReason.TasksMet));
+        }
+        [Test] public void DepartedHumanKeepsCompletedAndPastOpportunities()
+        {
+            var a = Start(new World(), GameModes.Tasks, secondHuman: true, goal: 5);
+            for (int i = 0; i < 4; i++) { Use(a, 3); Step(a); }
+            Assert.That(a.CaptureSnapshot().TasksCompleted, Is.EqualTo(1));
+            a.RemoveActor(3, ActorRemovalReason.Disconnected);
+            var state = a.CaptureSnapshot();
+            Assert.That(state.TasksCompleted, Is.EqualTo(1), "Completed work is never taken away.");
+            Assert.That(state.ViableTaskOpportunities, Is.EqualTo(4), "Its finished slot stays counted; its future slots are dropped.");
+            Assert.That(state.TasksGoal, Is.EqualTo(4), "A configured goal is capped by the remaining opportunities.");
+            a.RemoveActor(2, ActorRemovalReason.Left);
+            Assert.That(a.CaptureSnapshot().ViableTaskOpportunities, Is.EqualTo(4), "Mosquito departures do not change task opportunities.");
+        }
+        // The end snapshot must stay valid: a Tasks snapshot with goal 0 throws and the host could never publish the end.
+        [Test] public void LastHumanLeavingDuringTheFirstSlotEndsWithAPublishableSnapshot()
+        {
+            var a = Start(new World(), GameModes.Tasks); Step(a, 10);
+            Assert.That(a.CapturePrivate(1).TaskAssignment.Status, Is.EqualTo(TaskAssignmentStatus.Active), "The first task is still open.");
+            a.RemoveActor(1, ActorRemovalReason.Left);
+            Assert.That(a.IsRunning, Is.False);
+            GameSessionState state = null;
+            Assert.DoesNotThrow(() => state = a.CaptureSnapshot());
+            Assert.That(state.SimulationPhase, Is.EqualTo(SimulationPhase.Ended));
+            Assert.That(state.Result, Is.EqualTo(RoundEndReason.OpponentLeft));
+            Assert.That(state.Winner, Is.EqualTo(PlayerRole.Mosquito));
+            Assert.That(state.TasksGoal, Is.GreaterThanOrEqualTo(1));
+            Assert.That(state.ViableTaskOpportunities, Is.GreaterThanOrEqualTo(state.TasksGoal));
+        }
+        [Test] public void BothHumansLeavingDuringTheFirstSlotEndWithAPublishableSnapshot()
+        {
+            var a = Start(new World(), GameModes.Tasks, secondHuman: true); Step(a, 5);
+            a.RemoveActor(3, ActorRemovalReason.Left);
+            Assert.That(a.IsRunning, Is.True);
+            Assert.That(a.CaptureSnapshot().ViableTaskOpportunities, Is.EqualTo(3));
+            a.RemoveActor(1, ActorRemovalReason.Disconnected);
+            GameSessionState state = null;
+            Assert.DoesNotThrow(() => state = a.CaptureSnapshot());
+            Assert.That(state.Result, Is.EqualTo(RoundEndReason.OpponentLeft));
+            Assert.That(state.TasksGoal, Is.EqualTo(2), "The last reachable goal is kept for the results screen.");
+            Assert.That(state.ViableTaskOpportunities, Is.EqualTo(3));
+        }
+        [Test] public void EveryDepartureOrderKeepsTasksSnapshotsValid()
+        {
+            // Departures across the first two slots (unassigned, active, completed and missed tasks).
+            foreach (bool work in new[] { false, true })
+            foreach (int leaveAt in new[] { 0, 1, 10, 239, 240, 241, 299, 300, 301, 450, 599 })
+            {
+                string label = (work ? "after work, " : "idle, ") + "departure at " + leaveAt;
+                var a = Start(new World(), GameModes.Tasks, secondHuman: true, secondMosquito: true);
+                if (work) for (int i = 0; i < 4; i++) { Use(a, 3); Step(a); }
+                Step(a, Math.Max(0, leaveAt - (int)a.CurrentTick));
+                a.RemoveActor(3, ActorRemovalReason.Left);
+                Assert.DoesNotThrow(() => a.CaptureSnapshot(), "first " + label);
+                a.RemoveActor(1, ActorRemovalReason.Left);
+                Assert.DoesNotThrow(() => a.CaptureSnapshot(), "last " + label);
+                Assert.That(a.CaptureSnapshot().Result, Is.EqualTo(RoundEndReason.OpponentLeft), label);
+            }
         }
     }
 }

@@ -66,7 +66,11 @@ namespace LetMeSleep.Gameplay.Unity
 #endif
         private readonly Dictionary<uint, BotController> bots = new Dictionary<uint, BotController>();
         private readonly ReplicaStateGate replicaGate = new ReplicaStateGate();
-        private float accumulator, yaw, pitch, sendAccumulator, snapshotAccumulator;
+        private float yaw, pitch, sendAccumulator, snapshotAccumulator;
+        // Bounded 30 Hz time debt: a stall pauses simulated time instead of fast-forwarding it for everyone.
+        private readonly FixedStepClock hostClock = new FixedStepClock();
+        private int droppedSinceReport;
+        private float nextDebtReport;
         private uint inputSequence, actionSequence, knownViewRevision;
         private bool biteNeedsRelease, wasAttached, focus = true, finishedSent;
         private bool controlsNeedRelease;
@@ -83,7 +87,7 @@ namespace LetMeSleep.Gameplay.Unity
         public void BeginRound(GameplayRoundConfig config, IReadOnlyList<SpawnActor> roster)
         {
             if (!World) Awake();
-            roundConfig = config; accumulator = sendAccumulator = snapshotAccumulator = 0; inputSequence = actionSequence = knownViewRevision = 0; yaw = pitch = 0; cameraDistance = 0; finishedSent = false;
+            roundConfig = config; hostClock.Reset(); sendAccumulator = snapshotAccumulator = 0; inputSequence = actionSequence = knownViewRevision = 0; yaw = pitch = 0; cameraDistance = 0; finishedSent = false;
             LatestSnapshot = null; LocalPrivate = null; held = default;
             replicaGate.Reset(config);
             queuedActions.Clear(); bots.Clear(); localThrow = null; biteNeedsRelease = true; wasAttached = false; controlsNeedRelease = false; mosquitoLookReady = false;
@@ -123,16 +127,30 @@ namespace LetMeSleep.Gameplay.Unity
             if (CaptureLocalInput) PollInput();
             if (IsHost && AutomaticTick)
             {
-                accumulator += Time.unscaledDeltaTime;
-                int steps = 0;
-                while (accumulator >= 1f / 30 && steps++ < 8) { TickHost(); accumulator -= 1f / 30; }
-                // Retain time debt; do not silently shorten the round on a slow frame.
+                // Round length stays in ticks; debt beyond the clock's bound is dropped rather than replayed.
+                int steps = hostClock.Advance(Time.unscaledDeltaTime, out int dropped);
+                for (int step = 0; step < steps; step++)
+                {
+                    // The measured cost lets the clock run fewer ticks per frame when ticks are expensive.
+                    long started = System.Diagnostics.Stopwatch.GetTimestamp();
+                    TickHost();
+                    hostClock.ReportStepCost((float)((System.Diagnostics.Stopwatch.GetTimestamp() - started) / (double)System.Diagnostics.Stopwatch.Frequency));
+                }
+                ReportDroppedTicks(dropped);
             }
             else if (!IsHost && CaptureLocalInput)
             {
                 sendAccumulator += Time.unscaledDeltaTime;
                 if (sendAccumulator >= 1f / 30) { sendAccumulator %= 1f / 30; SendLocal(); }
             }
+        }
+        private void ReportDroppedTicks(int dropped)
+        {
+            if (dropped <= 0) return;
+            droppedSinceReport += dropped;
+            if (Time.unscaledTime < nextDebtReport) return;
+            Debug.LogWarning("LMS_TICK_DEBT_DROPPED ticks=" + droppedSinceReport);
+            droppedSinceReport = 0; nextDebtReport = Time.unscaledTime + 5;
         }
         private void PollInput()
         {
@@ -257,7 +275,9 @@ namespace LetMeSleep.Gameplay.Unity
         }
         public void TickHost()
         {
-            if (!IsHost || Authority == null || !Authority.IsRunning) return;
+            if (!IsHost || Authority == null) return;
+            // A round can also end outside Advance: RemoveActor when a team empties, or EndRound.
+            if (!Authority.IsRunning) { PublishUnreportedEnd(); return; }
             if (CaptureLocalInput) SendLocal();
             uint next = Authority.CurrentTick + 1;
             var snapshot = Authority.CaptureSnapshot();
@@ -274,12 +294,42 @@ namespace LetMeSleep.Gameplay.Unity
                 Authority.SubmitBotInput(commands.Input); if (commands.Action.HasValue) Authority.SubmitBotAction(commands.Action.Value);
             }
             Authority.Advance(new HostTick(next));
-            var latest = Authority.CaptureSnapshot(); ApplySnapshot(latest);
+            PublishHostState(Authority.CaptureSnapshot());
+        }
+        private void PublishHostState(GameSessionState latest)
+        {
+            ApplySnapshot(latest);
             LocalPrivate = Authority.CapturePrivate(LocalActorId); if (LocalPrivate != null) PrivateReady?.Invoke(LocalPrivate);
             foreach (var item in Authority.DrainEvents()) ApplyEvent(item);
+            bool ended = latest.SimulationPhase == SimulationPhase.Ended;
             snapshotAccumulator += 1f / 30;
-            if (snapshotAccumulator >= .05f || latest.SimulationPhase == SimulationPhase.Ended) { snapshotAccumulator -= .05f; SnapshotReady?.Invoke(latest); }
-            if (latest.SimulationPhase == SimulationPhase.Ended && !finishedSent) { finishedSent = true; RoundFinished?.Invoke(latest.Result, latest.Winner); }
+            try
+            {
+                if (snapshotAccumulator >= .05f || ended) { snapshotAccumulator -= .05f; SnapshotReady?.Invoke(latest); }
+            }
+            finally
+            {
+                // The room must reach Results even if a transport listener throws while publishing the end.
+                if (ended && !finishedSent) { finishedSent = true; RoundFinished?.Invoke(latest.Result, latest.Winner); }
+            }
+        }
+        private void PublishUnreportedEnd()
+        {
+            if (finishedSent || roundConfig == null || Authority.Config == null) return;
+            if (Authority.Config.SessionEpoch != roundConfig.SessionEpoch || Authority.Config.RoundId != roundConfig.RoundId) return;
+            GameSessionState latest;
+            try { latest = Authority.CaptureSnapshot(); }
+            catch (Exception error)
+            {
+                // An end that cannot be captured must still reach Results exactly once instead of
+                // throwing on every host frame and leaving the room in Playing.
+                finishedSent = true;
+                Debug.LogException(error);
+                RoundFinished?.Invoke(Authority.EndReason, Authority.Winner);
+                return;
+            }
+            if (latest.SimulationPhase != SimulationPhase.Ended) return;
+            PublishHostState(latest);
         }
         private BotObservation ObserveBot(ActorSnapshot self, GameSessionState state)
         {

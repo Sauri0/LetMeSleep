@@ -407,10 +407,14 @@ namespace LetMeSleep.Tests.PlayMode
         private void AssertNoTemporaryFiles()
             => Assert.That(Directory.GetFiles(dataPath, "preferences.json.tmp-*"), Is.Empty);
 
+        // Deletes only what this fixture creates: the directory can be a shared run folder holding other evidence.
         private void ResetFixtureDirectory()
         {
-            if (Directory.Exists(dataPath)) Directory.Delete(dataPath, true);
             Directory.CreateDirectory(dataPath);
+            if (File.Exists(PreferencePath)) File.Delete(PreferencePath);
+            if (File.Exists(BackupPath)) File.Delete(BackupPath);
+            if (Directory.Exists(BackupPath)) Directory.Delete(BackupPath, true); // ForceWriteFailure's blocker
+            foreach (string temporary in Directory.GetFiles(dataPath, "preferences.json.tmp-*")) File.Delete(temporary);
         }
 
         private string PreferencePath => Path.Combine(dataPath, "preferences.json");
@@ -472,11 +476,10 @@ namespace LetMeSleep.Tests.PlayMode
             string[] args = Environment.GetCommandLineArgs();
             int option = Array.IndexOf(args, "--lms-validation-data");
             if (option < 0 || option + 1 >= args.Length)
-                Assert.Ignore("Requires --lms-validation-data under N:/LetMeSleep/Validation/V020.");
-            string path = Path.GetFullPath(args[option + 1]);
-            string root = Path.GetFullPath("N:/LetMeSleep/Validation/V020").TrimEnd(Path.DirectorySeparatorChar)
-                + Path.DirectorySeparatorChar;
-            Assert.That(path.StartsWith(root, StringComparison.OrdinalIgnoreCase), Is.True);
+                Assert.Ignore("Requires --lms-validation-data below a validation root.");
+            string path = ValidationDataGuard.Normalize(args[option + 1]);
+            Assert.That(ValidationDataGuard.IsDedicatedRunDirectory(path), Is.True,
+                "Use a dedicated directory below " + string.Join(" or ", ValidationDataGuard.Roots) + ", never a root itself.");
             return path;
         }
 

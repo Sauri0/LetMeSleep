@@ -90,7 +90,8 @@ namespace LetMeSleep.Core
     // Neither UI visibility nor the caller-supplied display name grants authority.
     public sealed class RoomSession
     {
-        public const string Protocol = "lms-unity-020-4";
+        // Also the EOS lobby bucket: 0.2.0 and 0.3.0 players never see or join each other's rooms.
+        public const string Protocol = "lms-unity-030-1";
         public const double ReconnectReservationSeconds = 30;
         private sealed class Member
         {
@@ -123,7 +124,8 @@ namespace LetMeSleep.Core
             if (protocol != Protocol) return RoomError.IncompatibleVersion;
             if (!ValidIdentity(id, name)) return RoomError.InvalidMember;
             if (members.Any(m => m.Id == id)) return RoomError.DuplicateMember;
-            if (phase != RoomPhase.Waiting && phase != RoomPhase.Playing) return RoomError.WrongPhase;
+            // Late members wait unassigned; ReturnToWaiting clears roles, so Results admits them too.
+            if (phase != RoomPhase.Waiting && phase != RoomPhase.Playing && phase != RoomPhase.Results) return RoomError.WrongPhase;
             if (members.Count >= RoomRules.Capacity) return RoomError.Full;
             members.Add(new Member { Id = id, Name = name.Trim() });
             revision++;

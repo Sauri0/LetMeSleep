@@ -188,6 +188,7 @@ namespace LetMeSleep.Bootstrap
                 QualitySettings.names, true, true, message: saveError,
                 supportsReducedMenuMotion: livingMenu && livingMenu.IsConfigured,
                 voiceDevices: VoiceMicrophoneCapture.Devices));
+            PresentVoiceBinding();
             if (TryCreateModularUiState(out var modularState)) ui.PresentCustomization(modularState);
             else ui.PresentCustomization(new CustomizationUiState(Skins, Pajamas, MosquitoColors, appearance, localAppearanceDraft,
                 isSaving: false, message: customizationMessage, isReadOnly: preferenceWritesBlocked));

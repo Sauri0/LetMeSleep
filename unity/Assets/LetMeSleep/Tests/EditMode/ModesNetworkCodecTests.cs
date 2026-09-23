@@ -174,7 +174,7 @@ namespace LetMeSleep.Tests.EditMode
         [Test]
         public void ReleaseProtocolAndWireSchemasAreExplicitlyDecoupledFromAlpha()
         {
-            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-4"));
+            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-030-1"));
             Assert.That(RoomWireCodec.Version, Is.EqualTo(3));
             Assert.That(GameplayWireCodec.Version, Is.EqualTo(5));
         }

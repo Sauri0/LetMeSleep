@@ -38,10 +38,16 @@ namespace LetMeSleep.Online
         private ulong expiryNotification;
         private double clock;
         private int authGeneration;
+        // Renewal of a still-valid session: P2P keeps working and failed Logins retry until the token expires.
+        private bool refreshing;
+        private int refreshFailures;
+        private double refreshRetryAt = -1;
         public ConnectionState State { get; private set; }
         public string FailureCode { get; private set; } = "";
         public ProductUserId LocalUserId { get; private set; }
         public PlatformInterface Platform => platform;
+        /// <summary>True while the local product user can send and receive P2P packets.</summary>
+        public bool CanUseSession => platform != null && EosSessionRefresh.CanUseSession(State, refreshing, LocalUserId != null);
         public event Action<ConnectionState> StateChanged;
 
         public void Initialize(EosConfiguration config, string name, string cacheDirectory)
@@ -87,7 +93,8 @@ namespace LetMeSleep.Online
             clock = monotonicSeconds;
             if (State == ConnectionState.Disposed) return;
             platform?.Tick();
-            if (State == ConnectionState.SigningIn && clock >= deadline) Fail("SignInTimedOut");
+            if (State == ConnectionState.SigningIn && clock >= deadline) { Fail("SignInTimedOut"); return; }
+            if (State == ConnectionState.SigningIn && refreshing && refreshRetryAt >= 0 && clock >= refreshRetryAt) { refreshRetryAt = -1; Login(); }
         }
 
         private void OnDeviceCreated(ref CreateDeviceIdCallbackInfo info)
@@ -120,6 +127,13 @@ namespace LetMeSleep.Online
         {
             if (State != ConnectionState.SigningIn || !(info.ClientData is int generation) || generation != authGeneration) return;
             if (info.ResultCode == Result.Success) { LoggedIn(info.LocalUserId); return; }
+            if (refreshing && info.ResultCode != Result.InvalidUser)
+            {
+                // A transient failure (e.g. a short network drop) must not close the room while the token is valid.
+                var retry = EosSessionRefresh.NextAttempt(clock, deadline, ++refreshFailures);
+                if (retry.HasValue) { refreshRetryAt = retry.Value; return; }
+                Fail("Login_" + info.ResultCode); return;
+            }
             if (info.ResultCode != Result.InvalidUser) { Fail("Login_" + info.ResultCode); return; }
             var create = new CreateUserOptions { ContinuanceToken = info.ContinuanceToken };
             platform.GetConnectInterface().CreateUser(ref create, authGeneration, OnUserCreated);
@@ -134,7 +148,7 @@ namespace LetMeSleep.Online
 
         private void LoggedIn(ProductUserId id)
         {
-            LocalUserId = id;
+            LocalUserId = id; refreshing = false; refreshFailures = 0; refreshRetryAt = -1;
             if (expiryNotification == 0)
             {
                 var options = new AddNotifyAuthExpirationOptions();
@@ -146,12 +160,13 @@ namespace LetMeSleep.Online
         private void OnAuthExpiring(ref AuthExpirationCallbackInfo info)
         {
             if (State != ConnectionState.Ready) return;
-            deadline = clock + 30;
+            refreshing = true; refreshFailures = 0; refreshRetryAt = -1;
+            deadline = clock + EosSessionRefresh.WindowSeconds;
             authGeneration++; SetState(ConnectionState.SigningIn);
             Login();
         }
 
-        private void Fail(string code) { FailureCode = code; SetState(ConnectionState.Failed); }
+        private void Fail(string code) { refreshing = false; refreshRetryAt = -1; FailureCode = code; SetState(ConnectionState.Failed); }
         private void SetState(ConnectionState state) { State = state; StateChanged?.Invoke(state); }
 
         public void Dispose()

@@ -47,7 +47,9 @@ namespace LetMeSleep.Bootstrap
         private string closingError = "";
         private bool intentionalLeave;
         private bool quiescing;
-        private int activeRound = -1;
+        // Keyed by room code and round: every new room numbers its rounds from 1 again.
+        private readonly ActiveRoundTracker activeRound = new ActiveRoundTracker();
+        private bool roomJoined;
         private RoomPhase lastPhase = RoomPhase.Closed;
         private SpawnActor[] activeRoster;
         private AlfaRole trainingRole;
@@ -124,7 +126,9 @@ namespace LetMeSleep.Bootstrap
         private void BeginOnline(string name, string code)
         {
             if (quiescing) return;
-            if (pendingOnline || lobby?.State == LobbyState.Connected || lobby?.State == LobbyState.Leaving) return;
+            var entry = OnlineEntryPolicy.Evaluate(pendingOnline, lobby?.State);
+            if (entry == OnlineEntryDecision.IgnoreDuplicate) return;
+            if (entry == OnlineEntryDecision.WaitForPreviousRoom) { ShowOnlineError("Todavía estamos cerrando la sala anterior. Probá de nuevo en unos segundos."); return; }
             playerName = (name ?? "").Trim(); if (playerName.Length == 0 || playerName.Length > 24) { ShowOnlineError("Escribí un nombre de hasta 24 caracteres."); return; }
             intentionalLeave = false; closingError = ""; createOnline = code == null; joinCode = code; pendingOnline = true; lastError = "";
             SavePreferences(); ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.Connecting, canCancel: true));
@@ -147,11 +151,12 @@ namespace LetMeSleep.Bootstrap
         private void OpenPendingRoom()
         {
             if (quiescing) return;
-            initializedRoomMap = false;
+            ResetRoomState();
             pendingOnline = false;
-            StopVoiceRoom(); room?.Dispose(); transport?.Dispose(); lobby?.Dispose();
+            StopVoiceRoom(); StopGame(); StopLobbyMovement(); room?.Dispose(); transport?.Dispose(); lobby?.Dispose();
             lobby = new EosLobbySession(connection); transport = new EosPeerTransport(connection, lobby);
             transport.PeerStateChanged += ObservePlaytestPeer;
+            transport.DeliveryIssue += ObservePlaytestDelivery;
             peerAppearanceState.Clear(); appliedAppearance.Clear(); appearanceAt = 0;
             transport.PacketReceived += ReceiveAppearance;
             room = new OnlineRoomCoordinator(connection, lobby, transport, playerName);
@@ -166,8 +171,23 @@ namespace LetMeSleep.Bootstrap
             if (quiescing) return;
             RecordPlaytest("Lobby",lobby.State.ToString());
             SyncVoiceContext();
-            if (lobby.State == LobbyState.Closed && !intentionalLeave)
-            { StopVoiceRoom(); StopGame(); StopLobbyMovement(); LoadMap(false); ui.ShowJoinRoom(); if(closingError.Length>0) ShowOnlineError(closingError); else ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.RoomClosed)); }
+            if (lobby.State == LobbyState.Connected) roomJoined = true;
+            if (RoomTeardownPolicy.ShouldTearDown(lobby.State, intentionalLeave, roomJoined))
+            {
+                // The room is gone without the player leaving (host left, or the lobby failed after joining).
+                bool failed = lobby.State == LobbyState.Failed;
+                StopVoiceRoom(); StopGame(); StopLobbyMovement(); ResetRoomState(); LoadMap(false);
+                menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu(); ui.ShowJoinRoom();
+                // Also keeps Update from re-reporting this failure as a join error.
+                if (failed) lastError = lobby.ErrorCode;
+                string error = RoomTeardownPolicy.TeardownError(lobby.State, lobby.ErrorCode, closingError);
+                if (error != null) ShowOnlineError(error);
+                else ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.RoomClosed));
+            }
+        }
+        private void ResetRoomState()
+        {
+            activeRound.Reset(); lastPhase = RoomPhase.Closed; initializedRoomMap = false; roomJoined = false;
         }
         public void CancelOnline()
         {
@@ -254,7 +274,7 @@ namespace LetMeSleep.Bootstrap
             ObservePlaytestRoom(view);
             training = false;
             var localMember = view.Members.FirstOrDefault(member => member.Id == LocalId);
-            if (view.Phase == RoomPhase.Playing && localMember != null && localMember.Role == PlayerRole.Unassigned)
+            if ((view.Phase == RoomPhase.Playing || view.Phase == RoomPhase.Results) && localMember != null && localMember.Role == PlayerRole.Unassigned)
             {
                 StopGame(); StopLobbyMovement(); PresentLateJoinWaiting(view); SyncVoiceContext(view); lastPhase = view.Phase; return;
             }
@@ -263,11 +283,11 @@ namespace LetMeSleep.Bootstrap
                 if (lastPhase != RoomPhase.Waiting) { StopGame(); LoadMap(false); menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu(); }
                 SyncLobbyMovement(view); SyncVoiceContext(view); PresentRoom(view);
             }
-            else if (view.Phase == RoomPhase.Playing && activeRound != view.Round)
+            else if (view.Phase == RoomPhase.Playing && activeRound.IsNewRound(lobby.Code, view.Round))
             {
                 try
                 {
-                    StopLobbyMovement(); PrepareGame(false, view.Rules.MapId); activeRound = view.Round;
+                    StopLobbyMovement(); PrepareGame(false, view.Rules.MapId); activeRound.Begin(lobby.Code, view.Round);
                     gameNetwork = new OnlineGameplaySession(lobby, room, transport, LocalId, map.ContentHash,
                         game.Authority, game, () => game.World.GetDoorDefinitions(), () => game.World.GetToolDefinitions(), () => GetObjectivesForMode(view.Rules.ModeId));
                     gameNetwork.BeginReceived += BeginGame;
@@ -320,8 +340,9 @@ namespace LetMeSleep.Bootstrap
             var members = view.Members.Select(member => new LobbyMemberUiState(member.Id, member.Name, member.Ready, member.Connected));
             string mapLabel = view.Rules.MapId == RoomRules.AlfaMap ? "Casa con patio" :
                 HiggsfieldMaps?.Entries.FirstOrDefault(entry => entry.MapId == view.Rules.MapId)?.DisplayName ?? "Mapa no instalado";
+            string status = view.Phase == RoomPhase.Results ? "La ronda terminó. Esperá a que el anfitrión vuelva a la sala." : "La ronda está en curso.";
             ui.PresentLobby(new LobbyUiState(false, lobby.Code, members, false, false, view.Rules.HumanCount,
-                false, "La ronda está en curso.", view.Rules.MapId, mapLabel, canExplore: false,
+                false, status, view.Rules.MapId, mapLabel, canExplore: false,
                 isWaiting: false, modeId: view.Rules.ModeId, roundSeconds: view.Rules.RoundSeconds));
         }
         public void LeaveRoom()
@@ -329,7 +350,7 @@ namespace LetMeSleep.Bootstrap
             if (quiescing) return;
             RecordPlaytest("LeaveRequested",lobby?.IsOwner==true ? "Owner" : "Guest");
             pendingOnline = false; intentionalLeave = true; StopVoiceRoom(); StopGame(); StopLobbyMovement(); lobby?.Leave(); room?.Dispose(); room = null;
-            transport?.Dispose(); transport = null; lastPhase = RoomPhase.Closed; activeRound = -1;
+            transport?.Dispose(); transport = null; ResetRoomState();
             LoadMap(false); menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu(); ui.ShowMainMenu();
         }
         public void StartTraining(AlfaRole role, string modeId, string mapId)

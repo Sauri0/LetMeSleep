@@ -263,7 +263,7 @@ namespace LetMeSleep.Bootstrap
         {
             error = string.Empty;
             if (!instance || selection == null || modularCustomizationRuntime == null) return false;
-            var view = instance.GetComponent<CharacterView>() ?? instance.GetComponentInChildren<CharacterView>(true);
+            var view = UnityComponents.OnSelfOrChildren<CharacterView>(instance);
             var role = editedRole == AlfaRole.Mosquito ? CustomizationRole.Mosquito : CustomizationRole.Human;
             return view && modularCustomizationRuntime.TryApply(view, selection, role, out error);
         }

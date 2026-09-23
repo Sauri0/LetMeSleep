@@ -32,7 +32,7 @@ namespace LetMeSleep.Bootstrap
         private readonly Dictionary<uint, VoicePeerRoute> routes = new Dictionary<uint, VoicePeerRoute>();
         private readonly AudioMixerGroup voiceGroup;
         private InputAction pushToTalk;
-        private InputActionRebindingExtensions.RebindingOperation rebind;
+        private bool rebinding;
         private RoomView view;
         private GameplayRoundConfig config;
         private SpawnActor[] roster;
@@ -54,7 +54,7 @@ namespace LetMeSleep.Bootstrap
             this.lobby = lobby ?? throw new ArgumentNullException(nameof(lobby));
             this.mixer = mixer;
             this.ui = ui ?? throw new ArgumentNullException(nameof(ui));
-            capture = owner.GetComponent<VoiceMicrophoneCapture>() ?? owner.AddComponent<VoiceMicrophoneCapture>();
+            capture = UnityComponents.GetOrAdd<VoiceMicrophoneCapture>(owner);
             session = new VoiceOnlineSession(new VoiceEosChannelTransport(sharedTransport ?? throw new ArgumentNullException(nameof(sharedTransport)), lobby));
             voiceGroup = mixer?.FindMatchingGroups("Voice").FirstOrDefault();
             capture.FrameCaptured += OnCapturedFrame;
@@ -126,26 +126,15 @@ namespace LetMeSleep.Bootstrap
             if (paused) capture.EndPushToTalk();
         }
 
-        public void BeginRebind(Action<string, string> completed)
+        // The application rebinds on a temporary action; the live one only pauses and is rebuilt by Configure.
+        public void SetRebinding(bool active)
         {
             ThrowIfDisposed();
-            rebind?.Cancel(); pushToTalk.Disable();
-            rebind = pushToTalk.PerformInteractiveRebinding(0)
-                .WithControlsExcluding("<Gamepad>")
-                .WithControlsExcluding("<Joystick>")
-                .WithControlsExcluding("<Touchscreen>")
-                .WithControlsExcluding("<XRController>")
-                .WithCancelingThrough("<Keyboard>/escape")
-                .OnCancel(operation => { operation.Dispose(); rebind = null; pushToTalk.Enable(); PublishUi(true); })
-                .OnComplete(operation =>
-                {
-                    bindingPath = pushToTalk.bindings[0].effectivePath;
-                    bindingLabel = BindingLabel(bindingPath);
-                    operation.Dispose(); rebind = null; pushToTalk.Enable();
-                    completed?.Invoke(bindingPath, bindingLabel); PublishUi(true);
-                });
-            notice = "Presioná una tecla o botón del mouse · Esc para cancelar";
-            rebind.Start(); PublishUi(true);
+            if (active == rebinding) return;
+            rebinding = active;
+            if (active) { capture.EndPushToTalk(); pushToTalk?.Disable(); notice = PushToTalkBindings.WaitingNotice; }
+            else { pushToTalk?.Enable(); if (notice == PushToTalkBindings.WaitingNotice) notice = string.Empty; }
+            PublishUi(true);
         }
 
         private VoiceRoundContext BuildContext(out string key, out string label)
@@ -166,7 +155,8 @@ namespace LetMeSleep.Bootstrap
             if (!string.IsNullOrEmpty(local.OwnerPuid))
             {
                 var connected = new HashSet<string>(view.Members.Where(member => member.Connected).Select(member => member.Id), StringComparer.Ordinal);
-                var routes = roster.Where(actor => actor.OwnerPuid != localMemberId && connected.Contains(actor.OwnerPuid))
+                // The host view can arrive before this client's EOS lobby notification: route only lobby members.
+                var routes = roster.Where(actor => actor.OwnerPuid != localMemberId && connected.Contains(actor.OwnerPuid) && lobby.Contains(actor.OwnerPuid))
                     .Select(actor => new VoicePeerRoute(actor.OwnerPuid, actor.ActorId, false, false, actor.Role == PlayerRole.Mosquito)).ToArray();
                 label = "RONDA · VOZ DE PROXIMIDAD";
                 key = ContextKey(config.SessionEpoch, config.RoundId, local.ActorId, routes);
@@ -187,8 +177,10 @@ namespace LetMeSleep.Bootstrap
             if (localIndex < 0) { key = string.Empty; return null; }
             uint localActor = checked((uint)localIndex + 1);
             bool initiallyAudible = label.StartsWith("ESPERA", StringComparison.Ordinal);
+            // Actor slots come from the full room view so they agree on every client; peers this client's
+            // lobby does not list yet are routed after its lobby notification (the key then changes).
             var peers = members.Select((member, index) => new { member, actor = checked((uint)index + 1) })
-                .Where(item => item.member != localMemberId)
+                .Where(item => item.member != localMemberId && lobby.Contains(item.member))
                 .Select(item => new VoicePeerRoute(item.member, item.actor, initiallyAudible, initiallyAudible, false)).ToArray();
             key = ContextKey(epoch, round, localActor, peers) + ":" + label;
             return new VoiceRoundContext(epoch, round, localActor, true, true, peers);
@@ -326,8 +318,9 @@ namespace LetMeSleep.Bootstrap
             pushToTalk?.Disable(); pushToTalk?.Dispose();
             try { pushToTalk = new InputAction("PushToTalk", InputActionType.Button, bindingPath); }
             catch (ArgumentException) { bindingPath = "<Keyboard>/v"; pushToTalk = new InputAction("PushToTalk", InputActionType.Button, bindingPath); }
-            bindingLabel = BindingLabel(bindingPath);
-            pushToTalk.started += BeginPushToTalk; pushToTalk.canceled += EndPushToTalk; pushToTalk.Enable();
+            bindingLabel = PushToTalkBindings.Label(bindingPath);
+            pushToTalk.started += BeginPushToTalk; pushToTalk.canceled += EndPushToTalk;
+            if (!rebinding) pushToTalk.Enable();
         }
 
         private void UpdateDucking(double now)
@@ -356,7 +349,7 @@ namespace LetMeSleep.Bootstrap
                 audibleActors.TryGetValue(route.ActorId, out bool audible) && audible && !session.IsMemberMuted(route.MemberId),
                 session.IsMemberMuted(route.MemberId), speakingUntil.TryGetValue(route.ActorId, out double until) && until > now)).ToArray();
             ui.PresentVoice(new VoiceUiState(view != null, session.LocalMuted, session.IsTransmitting, DeviceAvailable(),
-                scopeLabel, bindingLabel, notice, peers));
+                scopeLabel, rebinding ? PushToTalkBindings.WaitingLabel : bindingLabel, notice, peers));
         }
 
         private bool DeviceAvailable() => !string.IsNullOrEmpty(selectedDevice) &&
@@ -372,19 +365,13 @@ namespace LetMeSleep.Bootstrap
         private static string ContextKey(ulong epoch, ulong round, uint localActor, IEnumerable<VoicePeerRoute> peers)
             => epoch + ":" + round + ":" + localActor + ":" + string.Join("|", peers.Select(peer => peer.MemberId + "=" + peer.ActorId));
 
-        private static string BindingLabel(string path)
-        {
-            string value = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
-            return string.IsNullOrWhiteSpace(value) ? "V" : value.ToUpperInvariant();
-        }
-
         private void ThrowIfDisposed() { if (disposed) throw new ObjectDisposedException(nameof(VoiceRuntimeCoordinator)); }
 
         public void Dispose()
         {
             if (disposed) return;
             capture.FrameCaptured -= OnCapturedFrame; capture.CaptureStopped -= OnCaptureStopped;
-            capture.EndPushToTalk(); rebind?.Cancel(); rebind?.Dispose(); rebind = null;
+            capture.EndPushToTalk();
             pushToTalk?.Disable(); pushToTalk?.Dispose(); pushToTalk = null;
             session.FrameDecoded -= OnFrameDecoded; session.LocalTransmissionStopped -= capture.EndPushToTalk; session.Dispose();
             if (ducked && mixer != null) { mixer.SetFloat("MusicVolume", savedMusicDb); mixer.SetFloat("AmbienceVolume", savedAmbienceDb); }
