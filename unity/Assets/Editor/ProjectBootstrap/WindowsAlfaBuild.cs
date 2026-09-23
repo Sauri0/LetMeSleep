@@ -123,7 +123,11 @@ namespace LetMeSleep.Editor
             // Internal receipt: package-v030.ps1 checks it and leaves it out of the ZIP.
             File.WriteAllText(LastOutput + "/build-receipt.json", JsonUtility.ToJson(new Receipt { result = report.summary.result.ToString(),
                 errors = report.summary.totalErrors, unity = Application.unityVersion, outputBytes = report.summary.totalSize,
-                utc = DateTime.UtcNow.ToString("O"), sourceCommit = sourceCommit, sourceDirty = SourceDirty(), version = PlayerSettings.bundleVersion,
+                utc = DateTime.UtcNow.ToString("O"), sourceCommit = sourceCommit,
+                // BuildCandidate refuses a dirty tree before building, so the input is exactly sourceCommit.
+                // Unity rewrites dynamic font atlases and URP prefilter flags while building; list them separately.
+                sourceDirty = false, modifiedByBuild = Git("diff --name-only").Split(new[] { '
+' }, StringSplitOptions.RemoveEmptyEntries), version = PlayerSettings.bundleVersion,
                 profile = release ? "release" : "development", developmentBuild = !release, releaseProblems = releaseProblems }, true));
             // Same line format as earlier candidates (runbooks parse it); the profile goes on its own line.
             Debug.Log("LMS_BUILD_PROFILE " + (release ? "release" : "development"));
@@ -297,7 +301,7 @@ namespace LetMeSleep.Editor
             public bool sourceDirty, developmentBuild;
             public int errors;
             public ulong outputBytes;
-            public string[] releaseProblems;
+            public string[] releaseProblems, modifiedByBuild;
         }
     }
 }
