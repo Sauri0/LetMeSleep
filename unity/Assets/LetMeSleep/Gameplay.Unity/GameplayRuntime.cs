@@ -325,11 +325,41 @@ namespace LetMeSleep.Gameplay.Unity
                 // throwing on every host frame and leaving the room in Playing.
                 finishedSent = true;
                 Debug.LogException(error);
-                RoundFinished?.Invoke(Authority.EndReason, Authority.Winner);
+                PublishFallbackEnd(EndedFromLastValidSnapshot());
                 return;
             }
             if (latest.SimulationPhase != SimulationPhase.Ended) return;
             PublishHostState(latest);
+        }
+        // Same order as PublishHostState: clients still get the queued events (RoundEnded among them, so the
+        // authority queue is emptied for this round) and a reliable Ended snapshot, and RoundFinished always runs.
+        private void PublishFallbackEnd(GameSessionState ended)
+        {
+            try
+            {
+                if (ended != null) ApplySnapshot(ended);
+                foreach (var item in Authority.DrainEvents()) ApplyEvent(item);
+                if (ended != null) SnapshotReady?.Invoke(ended);
+            }
+            finally { RoundFinished?.Invoke(Authority.EndReason, Authority.Winner); }
+        }
+        // The last snapshot this host validated and published for the round, marked Ended with the authority's
+        // result. Roster and objects are the last known valid ones; null when there is none to rebuild from.
+        private GameSessionState EndedFromLastValidSnapshot()
+        {
+            var last = LatestSnapshot;
+            if (last == null || last.SessionEpoch != roundConfig.SessionEpoch || last.RoundId != roundConfig.RoundId
+                || Authority.EndReason == RoundEndReason.None) return null;
+            uint tick = Math.Max(last.HostTick, Authority.CurrentTick), elapsed = tick - last.HostTick;
+            uint remaining = last.TimeRemainingTicks > elapsed ? last.TimeRemainingTicks - elapsed : 0;
+            try
+            {
+                return new GameSessionState(last.SessionEpoch, last.RoundId, tick, last.MapId, last.ContentHash, last.BalanceHash,
+                    last.ModeId, SimulationPhase.Ended, remaining, last.BloodCollected, last.BloodGoal, Authority.EndReason,
+                    Authority.Winner, last.Actors, last.Doors, last.ToolPickups, last.TasksCompleted, last.TasksGoal,
+                    last.ViableTaskOpportunities, last.ToolEffects);
+            }
+            catch (ArgumentException error) { Debug.LogWarning("LMS_ROUND_END_FALLBACK_REJECTED " + error.Message); return null; }
         }
         private BotObservation ObserveBot(ActorSnapshot self, GameSessionState state)
         {

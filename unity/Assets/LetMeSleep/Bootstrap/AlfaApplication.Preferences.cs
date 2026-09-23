@@ -28,16 +28,25 @@ namespace LetMeSleep.Bootstrap
         private int launchSavedWidth, launchSavedHeight;
         // Defaults (warm/blue/red) equal the v0.3.0 sketch palette authored in the character audits
         // (Human_Skin #C98B5A, Human_Pajamas #2D4F9A, Mosquito_Shell #9E2228); IDs and wire format unchanged.
+        // v0.3.0 UI stage 3 (UI-06 5-6, PER-04): six skin tones, nine clothes colours (the pajama trousers; the
+        // shirt stays cream and the nightcap red) and eight mosquito colours. The original ids keep their values;
+        // the new ids (fair, brown; sky, orange, pink, gray; forest, sand, ice, toxic) have no legacy modular
+        // mapping, so a draft using them simply is not migrated to a modular catalogue (TryMigrateLegacyPreferences).
         private static readonly NamedColorOption[] Skins = {
-            new NamedColorOption("light", "Claro", new Color(.91f,.7f,.5f)), new NamedColorOption("warm", "Cálido", new Color(.788f,.545f,.353f)),
-            new NamedColorOption("tan", "Bronce", new Color(.54f,.29f,.16f)), new NamedColorOption("dark", "Oscuro", new Color(.27f,.12f,.07f)) };
+            new NamedColorOption("fair", "Muy claro", new Color(.941f,.788f,.627f)), new NamedColorOption("light", "Claro", new Color(.91f,.7f,.5f)),
+            new NamedColorOption("warm", "Cálido", new Color(.788f,.545f,.353f)), new NamedColorOption("tan", "Bronce", new Color(.54f,.29f,.16f)),
+            new NamedColorOption("brown", "Morena", new Color(.4f,.216f,.125f)), new NamedColorOption("dark", "Oscuro", new Color(.27f,.12f,.07f)) };
         private static readonly NamedColorOption[] Pajamas = {
-            new NamedColorOption("blue", "Azul", new Color(.176f,.31f,.604f)), new NamedColorOption("red", "Rojo", new Color(.65f,.17f,.16f)),
-            new NamedColorOption("green", "Verde", new Color(.16f,.4f,.27f)), new NamedColorOption("purple", "Violeta", new Color(.4f,.22f,.56f)),
-            new NamedColorOption("yellow", "Mostaza", new Color(.72f,.54f,.18f)) };
+            new NamedColorOption("blue", "Azul", new Color(.176f,.31f,.604f)), new NamedColorOption("sky", "Celeste", new Color(.361f,.561f,.839f)),
+            new NamedColorOption("green", "Verde", new Color(.16f,.4f,.27f)), new NamedColorOption("red", "Rojo", new Color(.65f,.17f,.16f)),
+            new NamedColorOption("purple", "Violeta", new Color(.4f,.22f,.56f)), new NamedColorOption("yellow", "Mostaza", new Color(.72f,.54f,.18f)),
+            new NamedColorOption("orange", "Naranja", new Color(.816f,.4f,.165f)), new NamedColorOption("pink", "Rosa", new Color(.78f,.357f,.541f)),
+            new NamedColorOption("gray", "Gris", new Color(.357f,.384f,.439f)) };
         private static readonly NamedColorOption[] MosquitoColors = {
             new NamedColorOption("red", "Rojo", new Color(.62f,.133f,.157f)), new NamedColorOption("blue", "Azul", new Color(.17f,.3f,.52f)),
-            new NamedColorOption("green", "Oliva", new Color(.31f,.36f,.18f)), new NamedColorOption("purple", "Violeta", new Color(.37f,.2f,.43f)) };
+            new NamedColorOption("green", "Oliva", new Color(.31f,.36f,.18f)), new NamedColorOption("purple", "Violeta", new Color(.37f,.2f,.43f)),
+            new NamedColorOption("forest", "Bosque", new Color(.184f,.42f,.227f)), new NamedColorOption("sand", "Desierto", new Color(.722f,.537f,.29f)),
+            new NamedColorOption("ice", "Hielo", new Color(.498f,.655f,.788f)), new NamedColorOption("toxic", "Tóxico", new Color(.486f,.702f,.259f)) };
         private void LoadPreferences()
         {
             settings.QualityIndex = Math.Max(0,Array.IndexOf(QualitySettings.names,"PC"));

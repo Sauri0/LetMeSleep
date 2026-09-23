@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LetMeSleep.Content.Characters;
+using LetMeSleep.Core;
 using LetMeSleep.Core.Customization;
 using LetMeSleep.UI;
 
@@ -82,6 +84,24 @@ namespace LetMeSleep.Bootstrap
             if (assembler && !assembler.HasAppliedParts) ApplyLive(view, owner);
         }
 
+        /// <summary>
+        /// v0.3 results (UI-06 9): the colours of each player of the round, so every celebrating figure looks like
+        /// its player (the local one from the saved look, peers from their published basic look, the rest default).
+        /// Read-only: nothing is published or applied.
+        /// </summary>
+        private ResultsFigureUiState[] ResultsFigures()
+        {
+            if (activeRoster == null) return Array.Empty<ResultsFigureUiState>();
+            var localOwner = training ? "practice" : LocalId;
+            return activeRoster.Select(actor =>
+            {
+                var local = actor.OwnerPuid == localOwner;
+                var draft = local ? appearance : !actor.IsBot && peerAppearanceState.TryGetLegacy(actor.OwnerPuid, out var peer) ? peer : null;
+                UnityEngine.Color? Pick(NamedColorOption[] palette, string id) => draft == null ? (UnityEngine.Color?)null : palette.FirstOrDefault(c => c.Id == id)?.Color;
+                return new ResultsFigureUiState(actor.Role == PlayerRole.Mosquito ? AlfaRole.Mosquito : AlfaRole.Human,
+                    Pick(Skins, draft?.SkinColorId), Pick(Pajamas, draft?.PajamaColorId), Pick(MosquitoColors, draft?.MosquitoColorId), local);
+            }).ToArray();
+        }
         private void ApplyLive(CharacterView view,string owner)
         {
             if (!view) return;

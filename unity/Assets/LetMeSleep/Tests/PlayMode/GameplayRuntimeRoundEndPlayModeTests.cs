@@ -49,6 +49,8 @@ namespace LetMeSleep.Tests.PlayMode
         [Test]
         public void TeamLeftOutsideAdvanceIsPublishedOnceOnTheNextHostTick()
         {
+            var events = new List<GameplayEvent>();
+            runtime.EventReady += events.Add;
             runtime.TickHost();
             Assert.That(runtime.LatestSnapshot.SimulationPhase, Is.EqualTo(SimulationPhase.Running));
             Assert.That(finished, Is.Empty);
@@ -67,6 +69,8 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(published.Count(state => state.SimulationPhase == SimulationPhase.Ended), Is.EqualTo(1));
             Assert.That(runtime.LatestSnapshot.SimulationPhase, Is.EqualTo(SimulationPhase.Ended), "The host HUD shows the results instead of a frozen round.");
             Assert.That(runtime.LatestSnapshot.Actors.Select(actor => actor.ActorId), Is.EqualTo(new uint[] { 1 }));
+            Assert.That(events.Count(item => item.Kind == GameplayEventKind.RoundEnded), Is.EqualTo(1), "RoundEnded reaches clients once.");
+            Assert.That(runtime.Authority.DrainEvents(), Is.Empty, "Nothing of this round stays queued.");
         }
 
         [Test]
@@ -96,7 +100,10 @@ namespace LetMeSleep.Tests.PlayMode
         [Test]
         public void EndThatCannotBeCapturedStillReachesResultsOnceWithoutThrowingEveryFrame()
         {
+            var events = new List<GameplayEvent>();
+            runtime.EventReady += events.Add;
             runtime.TickHost();
+            GameSessionState lastValid = runtime.LatestSnapshot;
             // Simulate an authority state the snapshot validator rejects (e.g. a Tasks goal of 0).
             typeof(GameplayAuthority).GetField("blood", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(runtime.Authority, float.NaN);
             runtime.Authority.RemoveActor(2, ActorRemovalReason.Left);
@@ -105,7 +112,25 @@ namespace LetMeSleep.Tests.PlayMode
             LogAssert.Expect(LogType.Exception, new Regex("Invalid session snapshot"));
             Assert.DoesNotThrow(runtime.TickHost, "The host frame must survive an uncapturable end.");
             Assert.DoesNotThrow(runtime.TickHost, "The failure is reported once, not on every frame.");
+            Assert.DoesNotThrow(runtime.TickHost);
+            LogAssert.NoUnexpectedReceived();
             Assert.That(finished, Is.EqualTo(new[] { (RoundEndReason.OpponentLeft, PlayerRole.Human) }));
+
+            // Clients still get a reliable Ended snapshot (the last valid state with the authority's result) ...
+            GameSessionState[] ended = published.Where(state => state.SimulationPhase == SimulationPhase.Ended).ToArray();
+            Assert.That(ended, Has.Length.EqualTo(1), "Exactly one Ended snapshot, not one per frame.");
+            Assert.That(published.Last(), Is.SameAs(ended[0]));
+            Assert.That(ended[0].Result, Is.EqualTo(RoundEndReason.OpponentLeft));
+            Assert.That(ended[0].Winner, Is.EqualTo(PlayerRole.Human));
+            Assert.That(ended[0].SessionEpoch, Is.EqualTo(lastValid.SessionEpoch));
+            Assert.That(ended[0].RoundId, Is.EqualTo(lastValid.RoundId));
+            Assert.That(ended[0].HostTick, Is.EqualTo(runtime.Authority.CurrentTick));
+            Assert.That(ended[0].BloodCollected, Is.EqualTo(lastValid.BloodCollected), "Never the NaN that failed validation.");
+            Assert.That(runtime.LatestSnapshot, Is.SameAs(ended[0]), "The host HUD shows the results instead of a frozen round.");
+            // ... and the queued RoundEnded event, which leaves the authority queue empty.
+            Assert.That(events.Count(item => item.Kind == GameplayEventKind.RoundEnded), Is.EqualTo(1));
+            Assert.That(events.Single(item => item.Kind == GameplayEventKind.RoundEnded).Reason, Is.EqualTo(RoundEndReason.OpponentLeft));
+            Assert.That(runtime.Authority.DrainEvents(), Is.Empty);
         }
 
         [Test]

@@ -205,12 +205,13 @@ namespace LetMeSleep.Tests.PlayMode
                 foreach (var other in new[] { "GeneralPanel", "AudioPanel", "VideoPanel", "ControlsPanel", "AccessibilityPanel" })
                     Assert.That(Find(other).gameObject.activeSelf, Is.EqualTo(other == page), tab + " shows " + other);
             }
-            // Twin controls of the same option stay in sync (mouse sensitivity: GENERAL and CONTROLES).
-            Find("GeneralHumanSensitivitySlider").GetComponent<UnityEngine.UI.Slider>().value = 1.5f;
-            Assert.That(Find("HumanSensitivitySlider").GetComponent<UnityEngine.UI.Slider>().value, Is.EqualTo(1.5f).Within(0.001f));
-            Find("MasterVolumeSlider").GetComponent<UnityEngine.UI.Slider>().value = 0.2f;
+            // Twin controls of the same option stay in sync (general volume: GENERAL and AUDIO, stage 3).
+            Find("GeneralMasterVolumeSlider").GetComponent<UnityEngine.UI.Slider>().value = 0.35f;
+            Assert.That(Find("MasterVolumeSlider").GetComponent<UnityEngine.UI.Slider>().value, Is.EqualTo(0.35f).Within(0.001f));
+            Find("HumanSensitivitySlider").GetComponent<UnityEngine.UI.Slider>().value = 1.5f;
             Find("SettingsResetButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
             Assert.That(Find("MasterVolumeSlider").GetComponent<UnityEngine.UI.Slider>().value, Is.EqualTo(saved.MasterVolume).Within(0.001f));
+            Assert.That(Find("GeneralMasterVolumeSlider").GetComponent<UnityEngine.UI.Slider>().value, Is.EqualTo(saved.MasterVolume).Within(0.001f));
             Assert.That(Find("HumanSensitivitySlider").GetComponent<UnityEngine.UI.Slider>().value, Is.EqualTo(saved.HumanSensitivity).Within(0.001f));
         }
 
@@ -281,12 +282,16 @@ namespace LetMeSleep.Tests.PlayMode
                     new EquipmentSlotUiState("AEROSOL", "2,9 s", AlfaUiIconKind.Aerosol)
                 }, 0, .6f, swapOfferText: "E · REEMPLAZAR\nMATAMOSCAS POR PANTUFLA"), mosquitoesTotal: 4));
             yield return UseCanvas(1920, 1080);
+            // Stage 3: bitten = edge vignette + chip under the crosshair; the swap offer is the "E" chip beside it.
             Assert.That(Label("ObjectiveValue"), Does.Contain("18").And.Not.Contain(","), "Blood is shown in whole units.");
-            Assert.That(Find("SwapOfferChip").gameObject.activeSelf, Is.True);
-            Assert.That(Label("SwapOffer"), Is.EqualTo("E · REEMPLAZAR MATAMOSCAS POR PANTUFLA"), "One line, one replacement notice.");
-            Assert.That(Find("InteractionPrompt").gameObject.activeSelf, Is.False, "The confirm prompt would repeat the swap chip.");
-            Assert.That(Label("ActorState"), Does.Contain("TE ESTÁN PICANDO"), "Being bitten is the central banner.");
-            Assert.That(Find("ContextHintPanel").gameObject.activeSelf, Is.False, "The corner toast never repeats the banner.");
+            Assert.That(Find("SwapOfferChip"), Is.Null, "The swap offer is the interaction chip, not a second notice.");
+            Assert.That(Find("InteractionPrompt").gameObject.activeSelf, Is.True);
+            Assert.That(Label("PromptKey0/Key"), Is.EqualTo("E"));
+            Assert.That(Label("Interaction"), Is.EqualTo("Reemplazar matamoscas por pantufla"), "One line, one replacement notice.");
+            Assert.That(Find("BittenChip").gameObject.activeSelf, Is.True, "Being bitten is a chip under the crosshair.");
+            Assert.That(Find("BittenVignette").gameObject.activeSelf, Is.True, "... and a red vignette on the edges.");
+            Assert.That(Label("ActorState"), Does.Not.Contain("PICANDO"), "The bottom banner no longer repeats it.");
+            Assert.That(Find("ContextHintPanel").gameObject.activeSelf, Is.False, "The corner toast never repeats the chip.");
             var slot = (RectTransform)Find("EquipmentSlotPlate1");
             Assert.That(slot.rect.width, Is.EqualTo(80f).Within(0.5f), "Inventory slots are 80 units.");
             Assert.That(Label("EquipmentNumber1"), Is.EqualTo("1"));
@@ -294,7 +299,8 @@ namespace LetMeSleep.Tests.PlayMode
                 "Objects 1-3 first, the hands (key 0) close the row.");
             Assert.That(Find("EquipmentSlotPlate1").GetComponent<UnityEngine.UI.Image>().color, Is.EqualTo(new Color(0.118f, 0.2f, 0.345f, 1f)).Using(ColorComparer),
                 "The selected slot keeps the navy #1E3358 fill (the frame marks it).");
-            Assert.That(Find("PrivateEquipment").GetComponent<UnityEngine.UI.Image>().color.a, Is.GreaterThanOrEqualTo(0.9f), "The tray is opaque enough to read.");
+            Assert.That(Find("PrivateEquipment").GetComponent<UnityEngine.UI.Image>().color.a, Is.LessThan(0.01f), "Loose slots: there is no tray behind them.");
+            Assert.That(Find("EquipmentSlotPlate2").GetComponent<UnityEngine.UI.Image>().color.a, Is.GreaterThanOrEqualTo(0.95f), "Each slot is opaque on its own.");
         }
 
         [UnityTest]
@@ -311,6 +317,7 @@ namespace LetMeSleep.Tests.PlayMode
             var panel = (RectTransform)Find("ContextHintPanel");
             Assert.That(panel.rect.width, Is.LessThanOrEqualTo(340f), "Compact legend.");
             Assert.That(Label("Lives"), Does.Contain("VIDAS 2"));
+            Assert.That(Find("InteractionPrompt").gameObject.activeSelf, Is.False, "The legend already says E · Picar.");
             Assert.That(Find("Hearts").Cast<Transform>().Count(heart => heart.gameObject.activeSelf), Is.EqualTo(2), "One heart per life.");
         }
 
@@ -333,12 +340,14 @@ namespace LetMeSleep.Tests.PlayMode
             Invoke("SetCustomizationRole", AlfaRole.Mosquito);
             yield return null;
             Assert.That(Label("CustomizationCategory_mosquito/Label"), Is.EqualTo("COLORES"), "The colours category fits in one line.");
-            foreach (var locked in new[] { "CustomizationCategory_mosquito-body", "CustomizationCategory_mosquito-wings", "CustomizationCategory_mosquito-eyes", "CustomizationCategory_mosquito-proboscis" })
-            {
-                Assert.That(Find(locked).gameObject.activeInHierarchy, Is.True, locked);
-                Assert.That(Find(locked).GetComponent<UnityEngine.UI.Button>().interactable, Is.False, locked + " is locked in this build");
-                Assert.That(Find(locked + "/Lock"), Is.Not.Null);
-            }
+            // Director pass (UI-06 6): the rail keeps CUERPO and COLORES, both live; what this build lacks is a locked
+            // card inside CUERPO, never a locked rail entry.
+            Assert.That(Find("CustomizationCategory_mosquito-body").gameObject.activeInHierarchy, Is.True);
+            Assert.That(Find("CustomizationCategory_mosquito-body").GetComponent<UnityEngine.UI.Button>().interactable, Is.True, "CUERPO is live.");
+            Assert.That(Label("CustomizationCategory_mosquito-body/Label"), Is.EqualTo("CUERPO"));
+            foreach (var gone in new[] { "CustomizationCategory_mosquito-wings", "CustomizationCategory_mosquito-eyes", "CustomizationCategory_mosquito-proboscis" })
+                Assert.That(Find(gone), Is.Null, gone);
+            Assert.That(Find("MosquitoStyle_Wings_Round/Lock"), Is.Not.Null, "REDONDAS is a locked card.");
             Assert.That(Label("CustomizationSaveButton/Label"), Is.EqualTo("APLICAR"), "Changing the look keeps the same call to action.");
             Assert.That(Find("CustomizationSaveButton").GetComponent<UnityEngine.UI.Button>().interactable, Is.True);
         }
@@ -390,15 +399,16 @@ namespace LetMeSleep.Tests.PlayMode
             var general = Find("GeneralPanel");
             Assert.That(general.Find("LanguageRow"), Is.Not.Null, "GENERAL shows the language.");
             Assert.That(general.Find("PushToTalkRow"), Is.Not.Null, "GENERAL has the voice chat key.");
-            Assert.That(general.GetComponentsInChildren<UnityEngine.UI.Slider>(true).Any(slider => slider.name.Contains("Volume")), Is.False,
-                "Volumes live only in AUDIO.");
+            foreach (var slider in new[] { "HumanSensitivitySlider", "MosquitoSensitivitySlider", "GeneralMasterVolumeSlider", "GeneralMusicVolumeSlider", "GeneralEffectsVolumeSlider" })
+                Assert.That(general.GetComponentsInChildren<UnityEngine.UI.Slider>(true).Any(item => item.name == slider), Is.True, "GENERAL has " + slider + " (UI-06).");
+            Assert.That(Find("ControlsPanel").GetComponentsInChildren<UnityEngine.UI.Slider>(true), Is.Empty, "The sensitivity is not repeated in CONTROLES.");
             Assert.That(general.Find("GeneralFullScreenRow"), Is.Null, "Full screen lives only in VIDEO.");
             Assert.That(Find("AudioPanel").GetComponentsInChildren<UnityEngine.UI.Slider>(true).Any(slider => slider.name == "MasterVolumeSlider"), Is.True);
             var apply = Find("SettingsApplyButton").GetComponent<UnityEngine.UI.Button>();
             Assert.That(apply.interactable, Is.False);
             var surface = Find("SettingsApplyButton").GetComponent("AlfaUiSurface");
             var keepsIntent = surface.GetType().GetField("DisabledKeepsIntent", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(surface);
-            Assert.That(keepsIntent, Is.EqualTo(true), "APLICAR stays green (at 50 %) with nothing to apply.");
+            Assert.That(keepsIntent, Is.EqualTo(true), "APLICAR stays green (content at 55 %) with nothing to apply.");
             Find("PushToTalkRebindButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
             Assert.That(Label("Actions/Status"), Is.Empty, "A single waiting text: the row's.");
             Assert.That(Label("PushToTalkNote"), Is.EqualTo("Esc cancela"));
@@ -415,9 +425,10 @@ namespace LetMeSleep.Tests.PlayMode
             var card = (RectTransform)Find("PauseCard");
             var voice = (RectTransform)Find("PauseVoicePanel");
             Assert.That(voice.rect.height, Is.LessThan(card.rect.height), "The voice panel is smaller than the pause menu.");
+            Assert.That(voice.rect.width, Is.LessThanOrEqualTo(card.rect.width * 0.7f + 1f), "The voice panel is at most 70 % of the menu width.");
             var viewport = Find("PauseVoiceScroll").GetComponent<UnityEngine.UI.ScrollRect>().viewport;
             var rows = viewport.rect.height / (52f + 8f);
-            Assert.That(Mathf.Abs(viewport.rect.height - (3 * 52f + 2 * 8f)), Is.LessThan(1f), "The list shows three whole rows: " + rows);
+            Assert.That(Mathf.Abs(viewport.rect.height - (3 * 52f + 2 * 8f + 6f)), Is.LessThan(1f), "Three whole rows, two gaps and the list padding: " + rows);
             Assert.That(Find("PeersFade").gameObject.activeSelf, Is.True, "More rows below: the bottom edge fades.");
         }
 
@@ -463,7 +474,7 @@ namespace LetMeSleep.Tests.PlayMode
                 ui.PresentHud(HumanHud());
                 Canvas.ForceUpdateCanvases();
                 AssertNoOverlap(size, "RoleBadge", "ClockBadge", "NetworkState", "TeamCounter", "VoiceChip", "PrivateTask",
-                    "PrivateEquipment", "SwapOfferChip", "InteractionPrompt", "ActorStatePanel", "ContextHintPanel");
+                    "PrivateEquipment", "BittenChip", "InteractionPrompt", "ActorStatePanel", "ContextHintPanel");
                 ui.PresentHud(MosquitoHud());
                 Canvas.ForceUpdateCanvases();
                 AssertNoOverlap(size, "RoleBadge", "LivesChip", "ClockBadge", "TeamCounter", "VoiceChip", "InteractionPrompt",
